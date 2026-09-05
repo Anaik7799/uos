@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pi-Mono x C3I User Guide</title>
+<style>
+  :root { --bg:#0a0e17; --card:#141922; --text:#e0e6ed; --muted:#7a8fa6; --accent:#00d4aa; --pi:#4d96ff; --border:#1e2a3a; --success:#3dd68c; --warning:#f5a623; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:system-ui,sans-serif; background:var(--bg); color:var(--text); overflow:hidden; height:100vh; }
+  .slide { display:none; width:100vw; height:100vh; padding:50px 70px; position:absolute; top:0; left:0; animation:fadeIn .3s; }
+  .slide.active { display:flex; flex-direction:column; }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  h1 { font-size:2.6rem; background:linear-gradient(135deg,var(--accent),var(--pi)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:12px; }
+  h2 { font-size:1.8rem; color:var(--accent); margin-bottom:20px; }
+  h3 { font-size:1.3rem; color:var(--pi); margin:12px 0 6px; }
+  p { font-size:1rem; line-height:1.5; color:var(--muted); margin-bottom:10px; }
+  .card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; margin-bottom:12px; }
+  pre { background:#0d1117; border:1px solid var(--border); border-radius:8px; padding:16px; font-family:'JetBrains Mono',monospace; font-size:.85rem; overflow-x:auto; color:var(--success); margin:8px 0 16px; }
+  code { font-family:'JetBrains Mono',monospace; background:rgba(0,212,170,.1); padding:2px 6px; border-radius:4px; font-size:.9rem; }
+  table { width:100%; border-collapse:collapse; font-size:.9rem; }
+  th { background:var(--card); color:var(--accent); padding:8px 12px; text-align:left; border-bottom:2px solid var(--accent); }
+  td { padding:6px 12px; border-bottom:1px solid var(--border); }
+  ul { margin:8px 0 8px 20px; }
+  li { margin:4px 0; font-size:.95rem; }
+  .grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+  .tag { display:inline-block; padding:3px 10px; border-radius:16px; font-size:.75rem; margin:2px; }
+  .tag.pi { background:rgba(77,150,255,.2); color:var(--pi); }
+  .tag.c3i { background:rgba(0,212,170,.2); color:var(--accent); }
+  .progress-bar { height:3px; background:var(--border); position:fixed; top:0; left:0; right:0; z-index:100; }
+  .progress-bar .fill { height:100%; background:linear-gradient(90deg,var(--accent),var(--pi)); transition:width .3s; }
+  .nav { position:fixed; bottom:24px; right:30px; display:flex; gap:10px; z-index:100; }
+  .nav button { background:var(--card); border:1px solid var(--border); color:var(--text); padding:8px 16px; border-radius:6px; cursor:pointer; }
+  .nav button:hover { border-color:var(--accent); }
+  .counter { position:fixed; bottom:28px; left:30px; color:var(--muted); font-family:monospace; font-size:.85rem; }
+</style>
+</head>
+<body>
+<div class="progress-bar"><div class="fill" id="prog"></div></div>
+<div class="counter" id="cnt"></div>
+<div class="nav"><button onclick="prev()">Prev</button><button onclick="next()">Next</button></div>
+
+<div class="slide active" id="s1">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
+    <h1>Pi-Mono x C3I</h1>
+    <p style="font-size:1.6rem;color:var(--text)">User Guide</p>
+    <div style="margin:30px 0">
+      <span class="tag pi">Pi v0.67.68</span>
+      <span class="tag c3i">C3I v22.10.0</span>
+    </div>
+    <p>Getting started with the unified 242K LOC agentic platform</p>
+    <p style="margin-top:30px;font-size:.9rem">Navigate: Arrow keys or buttons | 8 slides</p>
+  </div>
+</div>
+
+<div class="slide" id="s2">
+  <h2>1. Quick Start</h2>
+  <div class="grid-2">
+    <div>
+      <h3>Build Pi</h3>
+      <pre>cd sub-projects/pi-mono
+npm install
+npm run build</pre>
+      <h3>Run Pi CLI</h3>
+      <pre>node packages/coding-agent/dist/cli.js --help
+# Or:
+./pi-test.sh</pre>
+    </div>
+    <div>
+      <h3>With Providers</h3>
+      <pre># Google (default)
+pi --provider google --model gemini-2.5-flash
+
+# Anthropic
+pi --provider anthropic --model claude-sonnet-4-6
+
+# Local Ollama
+pi --provider openai --model gemma3 \
+  --api-key ollama \
+  --base-url http://localhost:11434/v1</pre>
+      <p>Set API keys via environment variables:<br>
+      <code>ANTHROPIC_API_KEY</code>, <code>OPENAI_API_KEY</code>, <code>GOOGLE_API_KEY</code></p>
+    </div>
+  </div>
+</div>
+
+<div class="slide" id="s3">
+  <h2>2. Tools & Skills</h2>
+  <div class="grid-2">
+    <div>
+      <div class="card">
+        <h3>14 Built-In Tools</h3>
+        <table>
+          <tr><td><code>read</code></td><td>Read file contents</td></tr>
+          <tr><td><code>bash</code></td><td>Execute shell commands</td></tr>
+          <tr><td><code>edit</code></td><td>Edit files with diffs</td></tr>
+          <tr><td><code>write</code></td><td>Write file contents</td></tr>
+          <tr><td><code>grep</code></td><td>Search in files</td></tr>
+          <tr><td><code>find</code></td><td>Find files by pattern</td></tr>
+          <tr><td><code>ls</code></td><td>List directory</td></tr>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <h3>Skills (Markdown)</h3>
+        <pre>---
+name: my-skill
+description: Does something useful
+---
+Instructions for the agent...</pre>
+        <p>Place in <code>.pi/skills/</code> or <code>~/.pi/skills/</code></p>
+      </div>
+      <div class="card">
+        <h3>+ 73 C3I MCP Tools</h3>
+        <p>With bridge active, Pi accesses all C3I tools:<br>
+        knowledge_search, plan_status, gleam_build, system_health, etc.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" id="s4">
+  <h2>3. Slash Commands</h2>
+  <div class="grid-3">
+    <div class="card">
+      <h3>Session</h3>
+      <ul>
+        <li><code>/session</code> — Show info</li>
+        <li><code>/new</code> — New session</li>
+        <li><code>/resume</code> — Resume session</li>
+        <li><code>/fork</code> — Fork at point</li>
+        <li><code>/tree</code> — Branch tree</li>
+        <li><code>/export</code> — Export HTML</li>
+        <li><code>/compact</code> — Compact context</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Model</h3>
+      <ul>
+        <li><code>/model</code> — Select model</li>
+        <li><code>/scoped-models</code> — Cycling set</li>
+        <li><code>Ctrl+P</code> — Quick switch</li>
+      </ul>
+      <h3>Config</h3>
+      <ul>
+        <li><code>/settings</code> — Settings menu</li>
+        <li><code>/hotkeys</code> — Shortcuts</li>
+        <li><code>/reload</code> — Reload all</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Misc</h3>
+      <ul>
+        <li><code>/copy</code> — Copy to clipboard</li>
+        <li><code>/share</code> — GitHub gist</li>
+        <li><code>/name</code> — Set display name</li>
+        <li><code>/changelog</code> — Show changes</li>
+        <li><code>/login</code> — OAuth login</li>
+        <li><code>/quit</code> — Exit</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="slide" id="s5">
+  <h2>4. Extensions System</h2>
+  <div class="grid-2">
+    <div>
+      <div class="card">
+        <h3>60+ Event Types</h3>
+        <table>
+          <tr><th>Category</th><th>Events</th></tr>
+          <tr><td>Agent Lifecycle</td><td>start, end</td></tr>
+          <tr><td>Turn</td><td>start, end</td></tr>
+          <tr><td>Message</td><td>start, update, end</td></tr>
+          <tr><td>Tool Execution</td><td>start, update, end</td></tr>
+          <tr><td>Tool Call/Result</td><td>bash, edit, read, write, grep, find, ls, custom</td></tr>
+          <tr><td>Session</td><td>start, compact, shutdown, fork, switch, tree</td></tr>
+          <tr><td>Input</td><td>input, user_bash</td></tr>
+          <tr><td>Provider</td><td>before_request, after_response</td></tr>
+          <tr><td>Resources</td><td>discover</td></tr>
+          <tr><td>Context</td><td>context management</td></tr>
+          <tr><td>Model</td><td>model_select</td></tr>
+        </table>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <h3>C3I Integration via Extensions</h3>
+        <p>The C3I bridge runs as a Pi extension that:</p>
+        <ul>
+          <li>Publishes all events to Zenoh mesh</li>
+          <li>Registers 73 MCP tools as Pi tools</li>
+          <li>Gates L0 tools via Guardian</li>
+          <li>Syncs sessions to Smriti.db</li>
+          <li>Injects OTel spans for tracing</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Install Extensions</h3>
+        <pre>pi install github:user/extension
+pi list
+pi remove github:user/extension</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" id="s6">
+  <h2>5. Architecture</h2>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;gap:24px;font-family:monospace;font-size:.9rem">
+    <div class="card" style="border-color:var(--pi);text-align:center;min-width:180px">
+      <h3>Pi-Mono</h3>
+      <p>Node.js</p>
+      <p style="color:var(--pi)">15 LLM Providers</p>
+      <p>Agent Runtime</p>
+      <p>TUI + Web UI</p>
+      <p>Extensions</p>
+    </div>
+    <div style="color:var(--muted);font-size:2rem">&harr;</div>
+    <div class="card" style="border-color:var(--warning);text-align:center;min-width:180px">
+      <h3 style="color:var(--warning)">Bridge</h3>
+      <p>pi_agent.gleam</p>
+      <p>c3i-bridge.ts</p>
+      <p>Zenoh publisher</p>
+      <p>Tool federation</p>
+    </div>
+    <div style="color:var(--muted);font-size:2rem">&harr;</div>
+    <div class="card" style="border-color:var(--accent);text-align:center;min-width:180px">
+      <h3>C3I Mesh</h3>
+      <p>Gleam + Rust</p>
+      <p style="color:var(--accent)">73 MCP Tools</p>
+      <p>Zenoh Backbone</p>
+      <p>Safety Kernel</p>
+      <p>Smriti.db</p>
+    </div>
+  </div>
+</div>
+
+<div class="slide" id="s7">
+  <h2>6. Safety & Constraints</h2>
+  <table>
+    <tr><th>ID</th><th>Constraint</th><th>What It Means For You</th></tr>
+    <tr><td>SC-PI-001</td><td>Events to Zenoh</td><td>All Pi activity visible in C3I dashboard</td></tr>
+    <tr><td>SC-PI-002</td><td>Guardian for L0</td><td>Dangerous ops need your approval</td></tr>
+    <tr><td>SC-PI-003</td><td>Smriti.db</td><td>Sessions never lost (database-backed)</td></tr>
+    <tr><td>SC-PI-004</td><td>Circuit breakers</td><td>LLM failures handled gracefully</td></tr>
+    <tr><td>SC-PI-005</td><td>Safety kernel</td><td>Pi can't bypass system protections</td></tr>
+    <tr><td>SC-PI-010</td><td>PII scrubbing</td><td>Personal data cleaned before LLM calls</td></tr>
+  </table>
+  <div class="card" style="margin-top:20px">
+    <h3>Troubleshooting</h3>
+    <div class="grid-2">
+      <div>
+        <p><code>tsgo</code> build fails &rarr; <code>npm install @typescript/native-preview-linux-x64</code></p>
+        <p>No API key &rarr; Set <code>ANTHROPIC_API_KEY</code> etc.</p>
+        <p>TUI garbled &rarr; <code>TERM=xterm-256color</code></p>
+      </div>
+      <div>
+        <p>Sessions not persisting &rarr; Check Smriti bridge</p>
+        <p>Zenoh events missing &rarr; Check router on TCP 7447</p>
+        <p>Tools not found &rarr; Verify c3i-bridge extension loaded</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="slide" id="s8">
+  <h2>7. File Locations & Links</h2>
+  <table>
+    <tr><th>Item</th><th>Path</th></tr>
+    <tr><td>Pi source</td><td><code>sub-projects/pi-mono/</code></td></tr>
+    <tr><td>Pi CLI</td><td><code>sub-projects/pi-mono/packages/coding-agent/dist/cli.js</code></td></tr>
+    <tr><td>Integration rule</td><td><code>.claude/rules/pi-integration.md</code></td></tr>
+    <tr><td>Symbiosis plan</td><td><code>docs/plans/pi-mono-symbiosis-plan.md</code></td></tr>
+    <tr><td>Journal</td><td><code>docs/journal/20260419-pi-mono-symbiosis-analysis.md</code></td></tr>
+    <tr><td>Analysis slides</td><td><a href="pi-mono-analysis.html" style="color:var(--accent)">pi-mono-analysis.html</a> (12 slides)</td></tr>
+    <tr><td>This guide</td><td><a href="pi-mono-userguide.html" style="color:var(--accent)">pi-mono-userguide.html</a> (8 slides)</td></tr>
+  </table>
+  <div class="card" style="margin-top:20px;text-align:center">
+    <h3 style="color:var(--success)">Links (Tailscale)</h3>
+    <p style="font-size:1.1rem">
+      Analysis: <a href="https://vm-1.tail55d152.ts.net:8090/pi-mono-analysis.html" style="color:var(--accent)">https://vm-1.tail55d152.ts.net:8090/pi-mono-analysis.html</a><br>
+      User Guide: <a href="https://vm-1.tail55d152.ts.net:8090/pi-mono-userguide.html" style="color:var(--accent)">https://vm-1.tail55d152.ts.net:8090/pi-mono-userguide.html</a>
+    </p>
+    <p style="margin-top:12px">Server running 24x7 as daemon on port 8090</p>
+  </div>
+</div>
+
+<script>
+let c=0;const s=document.querySelectorAll('.slide'),t=s.length;
+function show(n){s.forEach(x=>x.classList.remove('active'));c=((n%t)+t)%t;s[c].classList.add('active');document.getElementById('prog').style.width=((c+1)/t*100)+'%';document.getElementById('cnt').textContent=(c+1)+'/'+t;}
+function next(){show(c+1)} function prev(){show(c-1)}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();next()}if(e.key==='ArrowLeft'){e.preventDefault();prev()}});
+show(0);
+</script>
+</body>
+</html>

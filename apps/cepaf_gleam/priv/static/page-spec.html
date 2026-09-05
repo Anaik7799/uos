@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Page-Spec Conformance — C3I Cockpit</title>
+<style>
+  :root {
+    --bg: #0a0e17;
+    --card: #141922;
+    --text: #e0e6ed;
+    --muted: #7a8fa6;
+    --border: #1e2a3a;
+    --accent: #00d4aa;
+    --green: #3dd68c;
+    --amber: #f5a623;
+    --red: #ff4757;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: system-ui, -apple-system, sans-serif;
+    background: var(--bg); color: var(--text); padding: 1.5rem;
+  }
+  h1 { font-size: 1.4rem; margin: 0 0 0.25rem; color: var(--accent); }
+  .meta { color: var(--muted); font-size: 0.85rem; margin-bottom: 1rem; }
+  .meta code { background: var(--card); padding: 2px 6px; border-radius: 4px; }
+  .grid {
+    display: grid; gap: 0.75rem;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  }
+  .tile {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 0.75rem 1rem;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .tile:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,212,170,0.1); }
+  .tile.aligned { border-left: 4px solid var(--green); }
+  .tile.drift   { border-left: 4px solid var(--amber); }
+  .tile.misaligned { border-left: 4px solid var(--red); }
+  .tile-name { font-weight: 600; font-size: 0.95rem; }
+  .tile-score { font-size: 1.5rem; font-weight: 700; margin: 0.2rem 0; }
+  .tile-status { font-size: 0.78rem; letter-spacing: 0.5px; opacity: 0.85; }
+  .tile-detail { font-size: 0.78rem; color: var(--muted); margin-top: 0.25rem; }
+  .summary {
+    display: flex; gap: 1.5rem; padding: 0.75rem 1rem; margin-bottom: 1rem;
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+  }
+  .summary-item { font-size: 0.9rem; }
+  .summary-item b { color: var(--accent); font-size: 1.1rem; }
+  .pulse { animation: pulse 2s infinite; }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  .stamp { font-size: 0.72rem; color: var(--muted); margin-top: 1rem; opacity: 0.7; }
+</style>
+</head>
+<body>
+  <h1>Page-Spec Conformance Cockpit</h1>
+  <div class="meta">
+    SC-PAGE-SPEC-007 — auto-refresh every 5s.
+    Source: <code>/api/v1/page-spec/all</code> +
+    fallback dynamic dispatch <code>/api/v1/page-spec/{name}</code>.
+    Anti-pattern guard: <code>zk-3346fc607a1ef9e6</code> "Stub That Lies".
+  </div>
+  <div class="summary" id="summary">
+    <div class="summary-item">Pages: <b id="total">…</b></div>
+    <div class="summary-item">Aligned: <b id="aligned">…</b></div>
+    <div class="summary-item">Drift: <b id="drift">…</b></div>
+    <div class="summary-item">Misaligned: <b id="misaligned">…</b></div>
+    <div class="summary-item">Last refresh: <b id="ts">…</b></div>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="stamp">
+    STAMP: SC-PAGE-SPEC-001..008 · SC-AGUI-UI-007 · SC-GLM-UI-010 ·
+    Probe: length&gt;2 ∧ ¬contains(error) — empty {} / [] correctly fail.
+  </div>
+
+<script>
+const ALL_PAGES = [
+  "planning","dashboard","immune","knowledge","verification","zenoh",
+  "cockpit","agents","telemetry","metabolic","mcp","podman","config","git",
+  "holon","kms","smriti","prajna","bridge","federation","singularity",
+  "evolution","bicameral","biomorphic","homeostasis","integrity",
+  "health-grid","substrate","database","component-demo","planning-dashboard"
+];
+
+function fmtTime(ms) {
+  const d = new Date(ms || Date.now());
+  return d.toLocaleTimeString();
+}
+
+function renderTile(name, p) {
+  const status = p.alignment_status || "UNKNOWN";
+  const klass = status === "ALIGNED" ? "aligned"
+              : status === "DRIFT"   ? "drift"
+              : "misaligned";
+  const score = p.alignment_score_pct ?? 0;
+  return `<div class="tile ${klass}">
+    <div class="tile-name">${name}</div>
+    <div class="tile-score">${score}%</div>
+    <div class="tile-status">${status}</div>
+    <div class="tile-detail">${p.present ?? 0}/${p.expected ?? 0} probes · ${p.path || ""}</div>
+  </div>`;
+}
+
+async function refresh() {
+  // First grab the explicit-checker fleet
+  let pages = {};
+  try {
+    const r = await fetch('/api/v1/page-spec/all');
+    if (r.ok) {
+      const d = await r.json();
+      pages = d.pages || {};
+    }
+  } catch (e) {}
+
+  // Fill in remaining via dynamic dispatch — concurrent
+  const missing = ALL_PAGES.filter(p => !(p in pages));
+  await Promise.all(missing.map(async (p) => {
+    try {
+      const r = await fetch('/api/v1/page-spec/' + p);
+      if (r.ok) {
+        const d = await r.json();
+        pages[p] = d;
+      }
+    } catch (e) {}
+  }));
+
+  // Compute summary
+  const tiles = ALL_PAGES.map(name => {
+    const p = pages[name] || { alignment_status: "UNKNOWN", alignment_score_pct: 0 };
+    return renderTile(name, p);
+  }).join("");
+
+  const aligned = Object.values(pages).filter(p => p.alignment_status === "ALIGNED").length;
+  const drift = Object.values(pages).filter(p => p.alignment_status === "DRIFT").length;
+  const misaligned = Object.values(pages).filter(p => p.alignment_status === "MISALIGNED").length;
+
+  document.getElementById('grid').innerHTML = tiles;
+  document.getElementById('total').textContent = ALL_PAGES.length;
+  document.getElementById('aligned').textContent = aligned;
+  document.getElementById('drift').textContent = drift;
+  document.getElementById('misaligned').textContent = misaligned;
+  document.getElementById('ts').textContent = fmtTime();
+}
+
+refresh();
+setInterval(refresh, 5000);  // SC-PAGE-SPEC-007 — 5s refresh
+</script>
+</body>
+</html>

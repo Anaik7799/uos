@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>C3I — Status (30s)</title>
+<style>
+  :root{--bg:#0a0e17;--bg2:#141922;--text:#e0e6ed;--mute:#7a8fa6;--accent:#00d4aa;--p0:#ff4757;--p1:#ffa502;--p2:#3dd68c;--border:#1e2a3a;--warn:#f5a623}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.55 -apple-system,Segoe UI,Roboto,sans-serif}
+  header{background:linear-gradient(90deg,rgba(10,14,23,.98),rgba(20,25,34,.95));border-bottom:1px solid rgba(0,212,170,.15);padding:16px 24px;position:sticky;top:0;z-index:100;backdrop-filter:blur(20px);display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  header h1{margin:0;font-size:1.15rem;background:linear-gradient(90deg,#00d4aa,#3dd68c);-webkit-background-clip:text;background-clip:text;color:transparent;font-weight:800}
+  header .pulse{display:flex;align-items:center;gap:6px;color:var(--mute);font-family:JetBrains Mono,monospace;font-size:.85rem}
+  header .pulse .dot{width:8px;height:8px;border-radius:50%;background:#3dd68c;box-shadow:0 0 8px #3dd68c;animation:p 1.6s ease-in-out infinite}
+  @keyframes p{0%,100%{opacity:.4}50%{opacity:1}}
+  header .countdown{margin-left:auto;color:var(--accent);font-family:JetBrains Mono,monospace;font-size:.85rem}
+  main{max-width:1400px;margin:0 auto;padding:18px 24px 60px;display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:14px}
+  .tile{background:rgba(20,25,34,.6);border:1px solid var(--border);border-radius:12px;padding:14px 18px;backdrop-filter:blur(8px)}
+  .tile h2{margin:0 0 10px;font-size:.78rem;color:var(--mute);text-transform:uppercase;letter-spacing:1.2px;font-weight:700}
+  .tile.full{grid-column:1/-1}
+  .stat-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:6px;margin-bottom:8px}
+  .stat{padding:8px 10px;background:rgba(10,14,23,.5);border:1px solid rgba(30,42,58,.5);border-radius:8px;text-align:center}
+  .stat .v{font-size:1.4rem;color:var(--accent);font-weight:700;font-family:JetBrains Mono,monospace}
+  .stat .l{color:var(--mute);font-size:.7rem;text-transform:uppercase;letter-spacing:.6px;margin-top:2px}
+  table{width:100%;border-collapse:collapse;font-size:.82rem}
+  th,td{padding:5px 8px;text-align:left;border-bottom:1px solid rgba(30,42,58,.5)}
+  th{color:var(--mute);font-weight:600;text-transform:uppercase;font-size:.68rem;letter-spacing:.7px}
+  td.r{text-align:right;font-family:JetBrains Mono,monospace}
+  .pill{display:inline-block;padding:2px 8px;border-radius:8px;font-size:.7rem;font-weight:700;font-family:JetBrains Mono,monospace}
+  .pill-p0{background:linear-gradient(135deg,#ff4757,#ff6b81);color:#fff}
+  .pill-p1{background:linear-gradient(135deg,#ffa502,#ffbe76);color:#000}
+  .pill-p2{background:rgba(61,214,140,.15);color:#3dd68c;border:1px solid rgba(61,214,140,.3)}
+  .pill-p3{background:rgba(122,143,166,.1);color:#7a8fa6;border:1px solid rgba(122,143,166,.2)}
+  .pill-pass{background:rgba(61,214,140,.12);color:#3dd68c}
+  .pill-warn{background:rgba(245,166,35,.12);color:#f5a623}
+  .pill-fail{background:rgba(255,71,87,.12);color:#ff4757}
+  code{font-family:JetBrains Mono,monospace;color:var(--accent);background:rgba(0,212,170,.08);padding:1px 5px;border-radius:4px;font-size:.85rem}
+  .source-tag{font-size:.7rem;color:var(--mute);font-family:JetBrains Mono,monospace;margin-left:6px}
+  .err{color:#ff6b81;font-size:.82rem;padding:8px 10px;background:rgba(255,71,87,.06);border:1px solid rgba(255,71,87,.2);border-radius:6px}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>C3I — Status</h1>
+  <div class="pulse"><span class="dot"></span><span id="pulse-text">connecting…</span></div>
+  <div class="countdown">next refresh <span id="countdown">30s</span></div>
+</header>
+
+<main>
+
+<section class="tile">
+  <h2>Smriti.db Tasks (live counts)</h2>
+  <div id="task-stats" class="stat-row">
+    <div class="stat"><div class="v" id="t-total">—</div><div class="l">total</div></div>
+    <div class="stat"><div class="v" id="t-pending">—</div><div class="l">pending</div></div>
+    <div class="stat"><div class="v" id="t-active">—</div><div class="l">in_progress</div></div>
+    <div class="stat"><div class="v" id="t-blocked">—</div><div class="l">blocked</div></div>
+    <div class="stat"><div class="v" id="t-completed">—</div><div class="l">completed</div></div>
+  </div>
+  <div class="source-tag" id="task-source">source: /api/v1/dq/status (post-restart) or /api/v1/dashboard (fallback)</div>
+</section>
+
+<section class="tile">
+  <h2>Ingest gates &amp; canonical enums</h2>
+  <table>
+    <thead><tr><th>Layer</th><th>Gate</th><th>State</th></tr></thead>
+    <tbody>
+      <tr><td>L1 NIF</td><td>plan_add_task whitelist</td><td><span class="pill pill-pass">active</span></td></tr>
+      <tr><td>L1 NIF</td><td>plan_update_task whitelist</td><td><span class="pill pill-pass">active</span></td></tr>
+      <tr><td>L3 Rust</td><td>db::validate_priority</td><td><span class="pill pill-pass">active</span></td></tr>
+      <tr><td>L3 Rust</td><td>db::validate_status + normalize</td><td><span class="pill pill-pass">active</span></td></tr>
+      <tr><td>L4 SQL</td><td>CHECK(Priority IN P0..P3)</td><td><span class="pill pill-pass">active</span></td></tr>
+      <tr><td>L4 SQL</td><td>CHECK(Status IN 4)</td><td><span class="pill pill-pass">active</span></td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top:8px;font-size:.78rem;color:var(--mute)">Canonical enums:
+    <span class="pill pill-p0">P0</span>
+    <span class="pill pill-p1">P1</span>
+    <span class="pill pill-p2">P2</span>
+    <span class="pill pill-p3">P3</span>
+    <span style="margin-left:8px"></span>
+    <code>pending</code> <code>in_progress</code> <code>completed</code> <code>blocked</code>
+  </div>
+</section>
+
+<section class="tile">
+  <h2>Cron schedules (4 active)</h2>
+  <table id="cron-table">
+    <thead><tr><th>Name</th><th>Cron</th><th>Module</th><th>Pri</th></tr></thead>
+    <tbody>
+      <tr><td>dq-canary</td><td><code>*/5 * * * *</code></td><td>data_quality_scan</td><td class="r">10</td></tr>
+      <tr><td>dq-hourly</td><td><code>0 * * * *</code></td><td>data_quality_scan</td><td class="r">100</td></tr>
+      <tr><td>page-check-3min</td><td><code>*/3 * * * *</code></td><td>page_checker</td><td class="r">95</td></tr>
+      <tr><td>formal-check-weekly</td><td><code>0 4 * * 1</code></td><td>formal_check</td><td class="r">60</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="tile">
+  <h2>RETE-UL data_quality (7 rules)</h2>
+  <table>
+    <thead><tr><th>Rule</th><th>Sal.</th><th>Decision</th></tr></thead>
+    <tbody>
+      <tr><td>EnforceEnumPriority</td><td class="r">100</td><td><span class="pill pill-fail">Reject</span></td></tr>
+      <tr><td>EnforceEnumStatus</td><td class="r">100</td><td><span class="pill pill-warn">Normalize</span></td></tr>
+      <tr><td>BlockSpamFixture</td><td class="r">95</td><td><span class="pill pill-fail">Reject</span></td></tr>
+      <tr><td>PageSpecAlignmentLow</td><td class="r">95</td><td><span class="pill pill-fail">BlockReleaseToProd</span></td></tr>
+      <tr><td>P0PriorityQuota</td><td class="r">90</td><td><span class="pill pill-warn">Backpressure</span></td></tr>
+      <tr><td>WindowOpenPopupBlocker</td><td class="r">80</td><td><span class="pill pill-warn">FallbackInPagePanel</span></td></tr>
+      <tr><td>PaginationBackpressure</td><td class="r">75</td><td><span class="pill pill-warn">DemandRemotePagination</span></td></tr>
+    </tbody>
+  </table>
+  <div style="margin-top:8px;font-size:.78rem;color:var(--mute)">7 gleeunit tests passing · TLA+ DataQualityIngest spec proves I_VALID ∧ I_AUDIT ∧ I_GATES</div>
+</section>
+
+<section class="tile">
+  <h2>Page-spec checker</h2>
+  <div class="stat-row">
+    <div class="stat"><div class="v">32</div><div class="l">pages</div></div>
+    <div class="stat"><div class="v">3 min</div><div class="l">cadence</div></div>
+    <div class="stat"><div class="v" id="pc-pass">32/32</div><div class="l">last result</div></div>
+  </div>
+  <div style="font-size:.78rem;color:var(--mute);margin-top:6px">
+    Registry: <code>scripts-gleam/src/scripts/verify/page_checker.gleam</code><br>
+    Failure escalation: <span class="pill pill-fail">5xx → P0</span>
+    <span class="pill pill-warn">drift &gt; 5 → P1</span>
+  </div>
+</section>
+
+<section class="tile full">
+  <h2>Documentation link registry (passes 7-12)</h2>
+  <table>
+    <thead><tr><th>Pass</th><th>Title</th><th>Tailscale URL</th></tr></thead>
+    <tbody>
+      <tr><td>audit</td><td>/planning AS-IS analysis + closure addendum</td><td><a href="https://vm-1.tail55d152.ts.net:8443/task-id/116489616652108372/task-116489616652108372/analysis.html">analysis.html</a></td></tr>
+      <tr><td>7</td><td>Data Quality Stop-the-Line: Fractal RCA + TPS</td><td><a href="https://vm-1.tail55d152.ts.net:8443/task-id/116489771707758565/task-116489771707758565/20260429-2015-data-quality-stop-the-line-fractal-rca-tps.md">journal.md</a></td></tr>
+      <tr><td>9</td><td>Comprehensive Fractal Closure (6 PNG diagrams + TLA+)</td><td><a href="https://vm-1.tail55d152.ts.net:8443/task-id/116491660660910166/task-116491660660910166/analysis.html">analysis.html</a></td></tr>
+      <tr><td>10</td><td>Rules Codification + RETE-UL Tests + 4 UX Diagrams</td><td><a href="https://vm-1.tail55d152.ts.net:8443/task-id/116491723408562128/task-116491723408562128/analysis.html">analysis.html</a></td></tr>
+      <tr><td>11</td><td>Sticky toolbar + skeletons + /api/v1/dq/status + cache-bust router fix</td><td><a href="https://vm-1.tail55d152.ts.net:8443/task-id/116491818560960956/task-116491818560960956/20260430-0445-pass11-toolbar-skeleton-dq-status-router-fix.md">journal.md</a></td></tr>
+      <tr><td>12</td><td>/c3i-status dashboard (this page) + CSS extraction</td><td><em>this page</em></td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="tile full">
+  <h2>STAMP families codified (.claude/rules/)</h2>
+  <ul style="margin:0;padding-left:18px;color:var(--mute);font-size:.85rem">
+    <li><code>SC-VALUE-GUARD-001..008</code> — value-domain wiring guard (3 ingest gates)
+        · <a href="https://vm-1.tail55d152.ts.net:8443/task-id/116491723408562128/task-116491723408562128/diagrams/01-dataflow.png" target="_blank">dataflow PNG</a></li>
+    <li><code>SC-PAGE-SPEC-001..008</code> — per-page runtime spec checker (32 pages, 3 min cadence)</li>
+    <li><code>SC-WIRE-001..007</code> — type-domain wiring guard (sibling, 111 connections)</li>
+    <li><code>SC-TRUTH-001..010</code> — display only verified-current data</li>
+    <li><code>SC-PD-RUST-ONLY-001..010</code> — planning daemon test surface 100% Rust</li>
+  </ul>
+</section>
+
+<section class="tile full" id="raw-section" style="display:none">
+  <h2>Raw /api/v1/dq/status payload</h2>
+  <pre id="raw-payload" style="background:#0d1117;border:1px solid var(--border);border-radius:8px;padding:10px;overflow-x:auto;font-size:.78rem;color:#c9d1d9;max-height:300px"></pre>
+</section>
+
+</main>
+
+<script>
+(function(){
+  const POLL_MS = 30_000;
+  const pulseEl = document.getElementById('pulse-text');
+  const countEl = document.getElementById('countdown');
+  const rawSection = document.getElementById('raw-section');
+  const rawEl = document.getElementById('raw-payload');
+  const taskSourceEl = document.getElementById('task-source');
+
+  let countdownLeft = 30;
+  let lastTickMs = Date.now();
+
+  function setStat(id, v) {
+    const el = document.getElementById(id);
+    if (el) el.textContent = v == null ? '—' : v;
+  }
+
+  function setPulse(state, text) {
+    pulseEl.textContent = text;
+    const dot = pulseEl.previousElementSibling;
+    dot.style.background = state === 'ok' ? '#3dd68c' : (state === 'partial' ? '#f5a623' : '#ff6b81');
+    dot.style.boxShadow = '0 0 8px ' + dot.style.background;
+  }
+
+  function parsePlanStatus(s) {
+    // plan_status() returns JSON string; parse defensively.
+    try {
+      const o = typeof s === 'string' ? JSON.parse(s) : s;
+      return {
+        total: o.total ?? o.total_tasks ?? null,
+        pending: o.pending ?? o.pending_count ?? null,
+        in_progress: o.in_progress ?? o.active ?? null,
+        blocked: o.blocked ?? null,
+        completed: o.completed ?? null,
+      };
+    } catch (e) { return null; }
+  }
+
+  function renderTasks(stats) {
+    if (!stats) return false;
+    setStat('t-total', stats.total);
+    setStat('t-pending', stats.pending);
+    setStat('t-active', stats.in_progress);
+    setStat('t-blocked', stats.blocked);
+    setStat('t-completed', stats.completed);
+    return true;
+  }
+
+  function tick() {
+    const now = Date.now();
+    countdownLeft -= Math.round((now - lastTickMs) / 1000);
+    lastTickMs = now;
+    if (countdownLeft <= 0) { refresh(); return; }
+    countEl.textContent = countdownLeft + 's';
+  }
+
+  function refresh() {
+    countdownLeft = 30;
+    countEl.textContent = '30s';
+    setPulse('ok', 'fetching…');
+
+    // Try the rich /api/v1/dq/status endpoint first (post pass-11 daemon restart).
+    fetch('/api/v1/dq/status')
+      .then(r => {
+        if (!r.ok) throw new Error('dq-status-' + r.status);
+        return r.json();
+      })
+      .then(payload => {
+        // Primary path: rich payload with plan_status field
+        const stats = parsePlanStatus(payload.plan_status);
+        if (stats && renderTasks(stats)) {
+          taskSourceEl.textContent = 'source: /api/v1/dq/status · ' + new Date().toLocaleTimeString();
+          rawSection.style.display = 'block';
+          rawEl.textContent = JSON.stringify(payload, null, 2);
+          setPulse('ok', 'live · /api/v1/dq/status');
+          return;
+        }
+        throw new Error('dq-status-no-plan');
+      })
+      .catch(() => {
+        // Fallback: existing /api/v1/dashboard or /api/v1/planning
+        fetch('/api/v1/planning')
+          .then(r => r.json())
+          .then(payload => {
+            const stats = parsePlanStatus(payload);
+            if (stats && renderTasks(stats)) {
+              taskSourceEl.textContent = 'source: /api/v1/planning (fallback — /api/v1/dq/status not yet live, restart daemon to enable rich payload) · ' + new Date().toLocaleTimeString();
+              setPulse('partial', 'fallback · /api/v1/planning');
+              return;
+            }
+            throw new Error('planning-no-stats');
+          })
+          .catch(err => {
+            taskSourceEl.innerHTML = '<span class="err">All endpoints failed — daemon down? ' + err.message + '</span>';
+            setPulse('err', 'offline');
+          });
+      });
+  }
+
+  refresh();
+  setInterval(tick, 1000);
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,115 @@
+//// [C3I-SIL6-MSTS] <c3i-module><identity><module>cepaf_gleam/gateway/telegram_app</module></identity>
+////   <fractal-topology><layer>L5_COGNITIVE</layer></fractal-topology>
+////   <compliance><stamp-controls>SC-ZENOH-005, SC-ZMOF-001, SC-OPENCLAW-001</stamp-controls></compliance>
+//// </c3i-module>
+////
+//// Telegram Agentic UI Renderer (Cognitive Plane).
+//// Translates AG-UI 32-event protocol into rich Telegram payloads.
+//// Dispatches motor intents to Rust via Zenoh.
+
+import cepaf_gleam/agui/events.{type AgUiEvent, TextMessageChunk, TextMessageContent, TextMessageEnd, TextMessageStart}
+import cepaf_gleam/agui/zenoh_bus
+import cepaf_gleam/zenoh/client as zenoh
+import gleam/dynamic
+import gleam/erlang/process.{type Subject}
+import gleam/json
+import gleam/list
+import gleam/option.{type Option, None, Some}
+import gleam/otp/actor
+import gleam/string
+
+/// State for the Telegram App actor.
+pub type State {
+  State(
+    zenoh_session: zenoh.Session,
+    /// Map of run_id to Telegram message_id for in-place edits.
+    active_messages: List(#(String, String)),
+    /// Map of run_id to accumulated text.
+    text_buffers: List(#(String, String)),
+  )
+}
+
+pub type Message {
+  OnAgUiEvent(AgUiEvent)
+}
+
+/// Start the Telegram App actor.
+pub fn start(session: zenoh.Session) -> Result(Subject(Message), String) {
+  actor.start(State(session, [], []), handle_message)
+  |> Result.map_error(fn(_) { "Failed to start Telegram App actor" })
+}
+
+fn handle_message(msg: Message, state: State) -> actor.Next(Message, State) {
+  case msg {
+    OnAgUiEvent(event) -> {
+      let new_state = process_event(event, state)
+      actor.continue(new_state)
+    }
+  }
+}
+
+fn process_event(event: AgUiEvent, state: State) -> State {
+  case event.event_type {
+    TextMessageStart -> {
+      // Initialize a new message block
+      State(..state, text_buffers: [#(event.run_id, ""), ..state.text_buffers])
+    }
+
+    TextMessageContent | TextMessageChunk -> {
+      // Append content and trigger a debounced update intent
+      let delta = extract_delta(event.payload)
+      let current_text =
+        list.key_find(state.text_buffers, event.run_id)
+        |> Result.unwrap("")
+      let new_text = current_text <> delta
+      
+      let updated_buffers = list.key_set(state.text_buffers, event.run_id, new_text)
+      
+      // Dispatch intent to Rust
+      dispatch_telegram_intent(state.zenoh_session, event.run_id, new_text, state.active_messages)
+      
+      State(..state, text_buffers: updated_buffers)
+    }
+
+    TextMessageEnd -> {
+      // Finalize the message
+      state
+    }
+
+    _ -> state
+  }
+}
+
+fn extract_delta(payload: json.Json) -> String {
+  // Assume payload has a "delta" or "content" field
+  let decoder = dynamic.field("delta", dynamic.string)
+  case json.decode_bits(json.to_bit_array(payload), decoder) {
+    Ok(d) -> d
+    Error(_) -> ""
+  }
+}
+
+fn dispatch_telegram_intent(
+  session: zenoh.Session,
+  run_id: String,
+  text: String,
+  active_messages: List(#(String, String)),
+) {
+  let message_id = list.key_find(active_messages, run_id)
+  
+  let method = case message_id {
+    Ok(_) -> "editMessageText"
+    Error(_) -> "sendMessage"
+  }
+  
+  let payload = json.object([
+    #("method", json.string(method)),
+    #("run_id", json.string(run_id)),
+    #("text", json.string(text)),
+    #("parse_mode", json.string("MarkdownV2")),
+  ])
+  
+  // Topic: indrajaal/l4/system/mcp/req/gateway/telegram
+  let topic = "indrajaal/l4/system/mcp/req/gateway/telegram"
+  let _ = zenoh.put(session, topic, json.to_string(payload))
+}

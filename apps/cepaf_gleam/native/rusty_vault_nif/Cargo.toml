@@ -1,0 +1,58 @@
+[package]
+name = "rusty_vault_nif"
+version = "0.1.0"
+edition = "2021"
+authors = ["C3I Team <abhijit.naik@bountytek.com>"]
+description = "RustyVault NIF for cepaf_gleam — sealed K/V vault with western-crypto-only OpenSSL"
+license = "Apache-2.0"
+
+[lib]
+name = "rusty_vault_nif"
+crate-type = ["cdylib"]
+
+[dependencies]
+rustler = "0.37"
+rusty_vault = { path = "../../../../sub-projects/rusty_vault_vendored", default-features = false, features = ["crypto_adaptor_openssl"] }
+zeroize = { version = "1", features = ["zeroize_derive"] }
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+once_cell = "1.19"
+chrono = "0.4"
+anyhow = "1.0"
+thiserror = "1.0"
+argon2 = "0.5"
+rand_core = { version = "0.6", features = ["std"] }
+# tss-esapi: Pass-36 Track A — wired behind the `tpm` cargo feature.
+# libtss2-dev (4.1.3) confirmed installed on build host.
+# Default build remains TPM-free; `--features tpm` enables real TPM2_Unseal.
+tss-esapi = { version = "7", optional = true }
+rusqlite = { version = "0.31", features = ["bundled"] }
+# Wave 7 Track 1: AES-256-GCM authenticated encryption for kv_entries.value.
+# RustCrypto, audited, no_std-friendly. SC-VAULT-CRYPTO-001 (no Tongsuo).
+aes-gcm = "0.10"
+# SC-FP-RUST Pass-2 (2026-05-01) — vault-attack-surface budget per AOR-FP-RUST-006.
+# nutype FIRST: refinement types for SecretName, Ttl, Region. derive_more second.
+# proptest is dev-only. Reject tower/rayon/winnow/recursion/rpds for vault.
+# See .claude/rules/functional-programming-rust.md SC-FP-RUST-011.
+nutype = { version = "0.7", features = ["serde", "regex"] }
+derive_more = { version = "2.0", features = ["full"] }
+
+[features]
+default = []
+# Pass-36 Track A: enable real TPM 2.0 PCR 7 unseal via tss-esapi.
+# Without this feature the `tpm_unseal_pcr7_real` symbol is absent and
+# `tpm_unseal_pcr7` returns the stable "tpm_unseal_not_yet_wired" token.
+tpm = ["tss-esapi"]
+
+# Workspace-level safety net: ensure no transitive dep can patch openssl/openssl-sys
+# back to Tongsuo. SC-VAULT-CRYPTO-001 enforcement.
+# (Since the vendored RustyVault now has no [patch.crates-io], crates.io upstream is used.
+#  This redundant declaration documents the intent and acts as defense-in-depth.)
+[patch.crates-io]
+# (intentionally empty — no patches; openssl from crates.io)
+
+[dev-dependencies]
+tempfile = "3"
+# SC-FP-RUST-008: proptest properties on vault state machine (sealed-on-boot,
+# Ttl monotonicity, refinement validator both-ways per [zk-139840e16ed2b21e]).
+proptest = "1.11"

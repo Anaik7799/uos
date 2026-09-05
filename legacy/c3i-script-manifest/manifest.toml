@@ -1,0 +1,11 @@
+# Legacy C3I Script Census & Porting Dispositions
+# All legacy scripts are inert differential evidence; no shell scripts admitted into UOS runtime.
+
+[meta]
+authority = "A0_reference"
+executable_in_uos = false
+
+[scripts]
+"scripts/dev/build.sh" = { disposition = "REPLACED_BY_JUJUTSU_AND_GLEAM", target = "tools/uos" }
+"scripts/agents/bootstrap.sh" = { disposition = "PORTED_TO_GLEAM_OTP", target = "apps/cepaf_gleam" }
+"scripts/journal/bundle.sh" = { disposition = "PORTED_TO_GLEAM", target = "governance/journal" }

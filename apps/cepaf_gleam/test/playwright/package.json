@@ -1,0 +1,15 @@
+{
+  "name": "c3i-playwright-tests",
+  "private": true,
+  "scripts": {
+    "test": "playwright test --project=chromium",
+    "test:all": "playwright test",
+    "test:components": "playwright test e2e_component_demo.spec.ts --project=chromium",
+    "test:allium": "playwright test e2e_allium_viewer.spec.ts --project=chromium",
+    "test:pages": "playwright test e2e_all_pages.spec.ts --project=chromium",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.0"
+  }
+}

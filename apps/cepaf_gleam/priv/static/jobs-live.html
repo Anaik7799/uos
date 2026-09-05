@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>C3I /jobs/live — sched telemetry</title>
+<style>
+:root{--bg:#0a0e17;--card:#141922;--text:#e0e6ed;--accent:#00d4aa;--border:#1e2a3a;--ok:#3dd68c;--err:#ff5555;--warn:#ffb86c;--info:#8be9fd;--muted:#6b7280}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);padding:1rem}
+h1{color:var(--accent);font-size:1.1rem;margin-bottom:.5rem}
+.hdr{background:var(--card);padding:.75rem 1rem;border-radius:6px;border:1px solid var(--border);display:flex;gap:2rem;margin-bottom:1rem;font-family:monospace;font-size:.85rem}
+.hdr span b{color:var(--accent)}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+th{background:#0f141d;text-align:left;padding:.5rem .75rem;border-bottom:1px solid var(--border);font-size:.8rem;color:var(--muted);font-weight:500}
+td{padding:.4rem .75rem;border-bottom:1px solid var(--border);font-family:monospace;font-size:.8rem}
+tr:hover td{background:#0f141d}
+.urn{color:var(--info);max-width:32rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ok{color:var(--ok)} .err{color:var(--err)} .warn{color:var(--warn)} .muted{color:var(--muted)}
+.ctrl{display:flex;gap:.5rem;margin-bottom:.5rem;align-items:center}
+.ctrl input,.ctrl select{background:#0f141d;color:var(--text);border:1px solid var(--border);border-radius:4px;padding:.3rem .5rem;font-family:monospace;font-size:.8rem}
+.btn{background:var(--accent);color:#0a0e17;border:none;border-radius:4px;padding:.3rem .8rem;cursor:pointer;font-weight:600;font-size:.8rem}
+.btn:hover{filter:brightness(1.1)}
+.log{background:#000;color:#0f0;padding:.5rem;border-radius:4px;font-family:monospace;font-size:.75rem;max-height:14rem;overflow:auto;margin-top:1rem;border:1px solid var(--border)}
+</style>
+</head>
+<body>
+<h1>🛰 /jobs/live — sched telemetry stream (SC-SCHED-TELE-005)</h1>
+<div class="hdr">
+  <span>Status <b id="conn">connecting…</b></span>
+  <span>Events <b id="seq">0</b></span>
+  <span>Jobs <b id="count">0</b></span>
+  <span>Dropped <b id="dropped">0</b></span>
+  <span>URN taxonomy: <code>urn:c3i:job:&lt;queue&gt;:&lt;id&gt;</code></span>
+</div>
+<div class="ctrl">
+  <label>Queue filter:</label>
+  <select id="queue-filter">
+    <option value="">all</option>
+    <option>critical</option>
+    <option>default</option>
+    <option>maintenance</option>
+    <option>delivery</option>
+    <option>ingest</option>
+    <option>build</option>
+  </select>
+  <label>Pattern:</label>
+  <input id="pattern" size="40" value="indrajaal/l4/sched/**">
+  <button class="btn" id="reconnect">Reconnect</button>
+  <button class="btn" id="pause">Pause</button>
+</div>
+
+<table>
+  <thead><tr>
+    <th style="width:34rem">URN</th><th>Queue</th><th>State</th><th>Worker</th><th>Last event</th><th>At</th>
+  </tr></thead>
+  <tbody id="rows"></tbody>
+</table>
+
+<div class="log" id="log"></div>
+
+<script>
+const rows = new Map(); // urn → row
+let seq = 0, dropped = 0, paused = false;
+const tbody = document.getElementById('rows');
+const log = document.getElementById('log');
+const qf = document.getElementById('queue-filter');
+
+function render() {
+  tbody.innerHTML = '';
+  const filter = qf.value.trim();
+  const visible = [...rows.values()].filter(r => !filter || r.queue === filter);
+  document.getElementById('count').textContent = visible.length;
+  visible.sort((a,b)=> b.last_at.localeCompare(a.last_at));
+  for (const r of visible) {
+    const tr = document.createElement('tr');
+    const cls = r.state === 'completed' ? 'ok'
+              : r.state === 'failed' || r.state === 'timeout' ? 'err'
+              : r.state === 'cancelled' || r.state === 'retryable' ? 'warn'
+              : '';
+    tr.innerHTML = `<td class="urn">${r.urn}</td>
+      <td>${r.queue||'?'}</td>
+      <td class="${cls}">${r.state||'enqueued'}</td>
+      <td>${r.worker||''}</td>
+      <td class="muted">${r.last_summary||''}</td>
+      <td class="muted">${r.last_at||''}</td>`;
+    tbody.appendChild(tr);
+  }
+}
+
+function applyEvent(ev) {
+  seq++; document.getElementById('seq').textContent = seq;
+  if (!ev.urn || !ev.urn.startsWith('urn:c3i:job:')) {
+    logLine(`[skip] ${ev.urn || ev.key} ${ev.event || ''}`);
+    return;
+  }
+  const urn = ev.urn;
+  const prev = rows.get(urn) || { urn, queue: ev.queue, worker: ev.worker };
+  const state = {
+    enqueued:'enqueued', started:'executing', completed:'completed',
+    failed:'failed', timeout:'timeout', cancelled:'cancelled',
+    retryable:'retryable', discarded:'discarded'
+  }[ev.event] || prev.state;
+  const next = { ...prev, queue: ev.queue||prev.queue, worker: ev.worker||prev.worker, state, last_at: ev.at, last_summary: ev.event };
+  rows.set(urn, next);
+  render();
+  logLine(`${ev.at} ${urn} ${ev.event}`);
+}
+
+function logLine(s) {
+  log.innerHTML += s + "\n";
+  log.scrollTop = log.scrollHeight;
+}
+
+let es;
+function connect() {
+  document.getElementById('conn').textContent = 'connecting…';
+  // Wrapped SSE endpoint (sa-plan-daemon adds this as part of SCHED-TELE-CEPAF-UI)
+  const pat = encodeURIComponent(document.getElementById('pattern').value);
+  es = new EventSource(`/api/v1/sched/sse?pattern=${pat}`);
+  es.onopen = () => document.getElementById('conn').textContent = 'connected';
+  es.onerror = () => document.getElementById('conn').textContent = 'disconnected';
+  es.onmessage = m => {
+    if (paused) return;
+    try { applyEvent(JSON.parse(m.data)); } catch(e) {}
+  };
+}
+document.getElementById('reconnect').onclick = () => { if (es) es.close(); connect(); };
+document.getElementById('pause').onclick = e => { paused = !paused; e.target.textContent = paused ? 'Resume' : 'Pause'; };
+qf.onchange = render;
+connect();
+</script>
+</body>
+</html>

@@ -1,0 +1,220 @@
+/* C3I /planning RADICAL Command-Center Layout (extracted from planning-grid.js pass-12 P3 #21).
+ *
+ * Source-of-truth: this file. Previously inlined as ~5 KB JS string causing
+ * SC-FILESIZE-001 / SC-MUDA-001 pressure on planning-grid.js. Extraction
+ * lets the browser cache the rules separately and lets future edits be CSS
+ * not JS string escaping.
+ *
+ * Loaded via <link rel="stylesheet"> injected from planning-grid.js.
+ */
+
+main { padding: 0 !important; max-width: 100% !important; }
+.w-full { padding: 0 !important; }
+
+.page-header {
+  display: flex !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 8px 16px !important;
+  margin: 0 !important;
+  background: linear-gradient(90deg, rgba(10,14,23,.98), rgba(20,25,34,.95)) !important;
+  border-bottom: 1px solid rgba(0,212,170,.15) !important;
+}
+.page-header h1 { font-size: 1.1rem !important; margin: 0 !important; white-space: nowrap !important; }
+.page-header .page-subtitle, .sub, .cognitive-multilayer-display, .section-actions { display: none !important; }
+.page-header + div {
+  display: flex !important;
+  align-items: center !important;
+  padding: 6px 16px !important;
+  margin: 0 !important;
+  background: rgba(10,14,23,.95) !important;
+  border-bottom: 1px solid var(--border) !important;
+  border-radius: 0 !important;
+  gap: 16px !important;
+  font-size: .88rem !important;
+}
+
+.card-grid {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  gap: 8px !important;
+  margin: 0 !important;
+  padding: 4px 16px !important;
+  background: rgba(10,14,23,.95) !important;
+  border-bottom: 1px solid var(--border) !important;
+  overflow-x: auto !important;
+  max-height: none !important;
+}
+.card-grid .card {
+  flex: 0 0 auto !important;
+  padding: 4px !important;
+  border: none !important;
+  background: transparent !important;
+  min-width: auto !important;
+}
+.card-grid svg { width: 56px !important; height: 56px !important; }
+
+.section {
+  margin: 2px 0 !important;
+  padding: 10px 16px !important;
+  background: rgba(15,19,28,.98) !important;
+  border: none !important;
+  border-radius: 0 !important;
+  border-left: 3px solid transparent !important;
+  box-shadow: none !important;
+}
+.section:hover { border-left-color: rgba(0,212,170,.3) !important; }
+.section-title, .section > p:first-child, h2, h3 {
+  font-size: .78rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 1.5px !important;
+  color: #555e6e !important;
+  margin: 0 0 6px !important;
+  padding: 0 !important;
+  border: none !important;
+  font-weight: 600 !important;
+}
+
+#grid-section {
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 100 !important;
+  background: rgba(10,14,23,.98) !important;
+  backdrop-filter: blur(20px) !important;
+  padding: 6px 16px !important;
+  margin: 0 !important;
+  border-bottom: 1px solid rgba(0,212,170,.1) !important;
+}
+
+.btn { padding: 4px 12px !important; font-size: .82rem !important; border-radius: 16px !important; }
+.btn-primary { background: var(--accent) !important; color: #0a0e17 !important; font-weight: 700 !important; }
+
+#fractal-filter-chips {
+  display: flex !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  gap: 3px !important;
+  padding: 2px 0 !important;
+  scrollbar-width: none !important;
+}
+#fractal-filter-chips::-webkit-scrollbar { display: none; }
+#fractal-filter-chips .btn {
+  padding: 3px 10px !important;
+  font-size: .78rem !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+#ai-search-input {
+  border-radius: 4px !important;
+  padding: 8px 14px !important;
+  background: #0a0e17 !important;
+  border: 1px solid #1e2a3a !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: .88rem !important;
+  color: var(--accent) !important;
+}
+#ai-search-input::placeholder { color: #3a4555 !important; }
+#ai-search-input:focus {
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 1px var(--accent) !important;
+}
+
+#grid-status {
+  background: #0a0e17 !important;
+  padding: 6px 16px !important;
+  border-radius: 0 !important;
+  border: none !important;
+  border-top: 1px solid #1e2a3a !important;
+  border-bottom: 1px solid #1e2a3a !important;
+  font-family: 'JetBrains Mono', monospace !important;
+  font-size: .85rem !important;
+}
+
+#blocked-grid { border-left: 3px solid #ff4757 !important; margin: 4px 0 !important; }
+#active-grid  { border-left: 3px solid #00d4aa !important; margin: 4px 0 !important; }
+#all-grid     { border-left: 3px solid #4d96ff !important; margin: 4px 0 !important; }
+
+.tabulator { border: none !important; border-radius: 0 !important; font-size: .85rem !important; }
+.tabulator .tabulator-header {
+  background: #0d1117 !important;
+  border-bottom: 1px solid #1e2a3a !important;
+  min-height: 32px !important;
+}
+.tabulator .tabulator-header .tabulator-col {
+  padding: 4px 8px !important;
+  border-right: 1px solid #1a2030 !important;
+  font-size: .82rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: .5px !important;
+  color: #7a8fa6 !important;
+}
+.tabulator-row {
+  min-height: 38px !important;
+  border-bottom: 1px solid #141922 !important;
+  font-size: .85rem !important;
+}
+.tabulator-row:nth-child(even) { background: rgba(13,17,23,.5) !important; }
+.tabulator-row:hover {
+  background: rgba(0,212,170,.05) !important;
+  border-left: 2px solid var(--accent) !important;
+}
+.tabulator-cell { padding: 4px 8px !important; }
+
+.tabulator-footer {
+  background: #0d1117 !important;
+  padding: 4px 8px !important;
+  border-top: 1px solid #1e2a3a !important;
+}
+.tabulator-footer .tabulator-page.active {
+  background: var(--accent) !important;
+  color: #0a0e17 !important;
+}
+
+.page-header + div + div {
+  height: 3px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  overflow: hidden !important;
+}
+
+.detail-panel {
+  background: #0a0e17 !important;
+  border: 1px solid #1e2a3a !important;
+  border-radius: 6px !important;
+  font-family: 'JetBrains Mono', monospace !important;
+}
+
+/* SC-AGUI-UI-008 / audit P3 #20 — standardised 4-breakpoint system aligned with
+ * material.css (Mobile <600 / Tablet 600-839 / Desktop 840-1199 / Wide ≥1200).
+ *
+ * Tabulator row min-height steps:
+ *   Mobile  ≤ 599 px  → 44 px  (WCAG 2.1 AA touch target)
+ *   Tablet  600-839   → 44 px  (still touch-friendly, larger viewport)
+ *   Desktop 840-1199  → 38 px  (mouse, density-friendly)
+ *   Wide    ≥ 1200    → 38 px  (same as desktop)
+ *
+ * Card-grid SVG dimensions step from 44 (mobile) → 56 (tablet+) for icon density.
+ */
+
+/* Mobile <600px */
+@media (max-width: 599px) {
+  .page-header h1 { font-size: .95rem !important; }
+  .card-grid { padding: 2px 8px !important; }
+  .card-grid svg { width: 44px !important; height: 44px !important; }
+  .section { padding: 6px 8px !important; }
+  #grid-section { padding: 4px 8px !important; }
+  /* SC-AGUI-UI-009 — touch-target ≥ 44 px on mobile */
+  .tabulator-row { min-height: 44px !important; }
+}
+
+/* Tablet 600-839px — keep touch-friendly row height, normal density elsewhere */
+@media (min-width: 600px) and (max-width: 839px) {
+  .card-grid svg { width: 50px !important; height: 50px !important; }
+  /* SC-AGUI-UI-009 — touch-target ≥ 44 px on tablet too (pointer:coarse common) */
+  .tabulator-row { min-height: 44px !important; }
+}
+
+/* Desktop 840px+ — already has the 38 px row (default earlier in file). No override needed. */

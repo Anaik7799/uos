@@ -1,0 +1,35 @@
+{
+  "name": "c3i-planning-effect",
+  "version": "1.0.0",
+  "description": "Pass-29 — Effect-TS planning-grid IIFE collapse (operator-gated H-risk)",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "npm run build:planning && npm run build:agui && npm run build:shell-runtime && npm run build:page && npm run build:sw-register && npm run build:planning-utils && npm run build:verification && npm run build:immune && npm run build:knowledge && npm run build:substrate && npm run build:podman && npm run build:agents && npm run build:zenoh && npm run build:telemetry && npm run build:cockpit && npm run build:dashboard && npm run build:sw",
+    "build:podman": "esbuild src/podman-grid.ts --bundle --format=iife --target=es2020 --minify --outfile=../static/podman-grid.bundled.js",
+    "build:agents": "esbuild src/agents-grid.ts --bundle --format=iife --target=es2020 --minify --outfile=../static/agents-grid.bundled.js",
+    "build:zenoh": "esbuild src/zenoh-grid.ts --bundle --format=iife --target=es2020 --minify --outfile=../static/zenoh-grid.bundled.js",
+    "build:telemetry": "esbuild src/telemetry-grid.ts --bundle --format=iife --target=es2020 --minify --outfile=../static/telemetry-grid.bundled.js",
+    "build:cockpit": "esbuild src/cockpit-grid.ts --bundle --format=iife --target=es2020 --minify --outfile=../static/cockpit-grid.bundled.js",
+    "build:dashboard": "esbuild src/dashboard-grid.ts --bundle --format=iife --target=es2020 --minify --outfile=../static/dashboard-grid.bundled.js",
+    "build:sw": "esbuild src/sw.ts --bundle --format=iife --target=es2020 --minify --outfile=../static/sw.bundled.js",
+    "build:knowledge": "esbuild src/knowledge-grid.ts --bundle --format=iife --target=es2020 --minify --outfile=../static/knowledge-grid.bundled.js",
+    "build:substrate": "esbuild src/substrate-grid.ts --bundle --format=iife --target=es2020 --minify --outfile=../static/substrate-grid.bundled.js",
+    "build:sw-register": "esbuild src/sw-register.ts --bundle --format=iife --target=es2020 --minify --outfile=../static/sw-register.bundled.js",
+    "build:planning-utils": "esbuild src/planning-utils.ts --bundle --format=iife --target=es2020 --minify --outfile=../static/planning-utils.bundled.js",
+    "build:verification": "esbuild src/verification-grid.ts --bundle --format=iife --target=es2020 --minify --outfile=../static/verification-grid.bundled.js",
+    "build:immune": "esbuild src/immune-grid.ts --bundle --format=iife --target=es2020 --minify --outfile=../static/immune-grid.bundled.js",
+    "build:planning": "esbuild src/planning-grid.ts --bundle --format=iife --target=es2020 --minify --outfile=../static/planning-grid.bundled.js",
+    "build:agui": "esbuild src/agui-chrome.ts --bundle --format=iife --target=es2020 --minify --outfile=../static/agui-chrome.bundled.js",
+    "build:shell-runtime": "esbuild src/shell-runtime.ts --bundle --format=iife --target=es2020 --minify --outfile=../static/shell-runtime.bundled.js",
+    "build:page": "esbuild src/page-grid.ts --bundle --format=iife --target=es2020 --minify --outfile=../static/page-grid.bundled.js",
+    "build:dev": "esbuild src/planning-grid.ts --bundle --format=iife --target=es2020 --sourcemap --outfile=../static/planning-grid.bundled.js && esbuild src/agui-chrome.ts --bundle --format=iife --target=es2020 --sourcemap --outfile=../static/agui-chrome.bundled.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.21.0",
+    "typescript": "^5.4.0"
+  },
+  "dependencies": {
+    "effect": "^3.0.0"
+  }
+}

@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pi-Mono x C3I Symbiosis Analysis</title>
+<style>
+  :root {
+    --bg: #0a0e17;
+    --card: #141922;
+    --text: #e0e6ed;
+    --muted: #7a8fa6;
+    --accent: #00d4aa;
+    --success: #3dd68c;
+    --warning: #f5a623;
+    --critical: #ff4757;
+    --border: #1e2a3a;
+    --pi-color: #4d96ff;
+    --c3i-color: #00d4aa;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow: hidden;
+    height: 100vh;
+  }
+  .slide {
+    display: none;
+    width: 100vw;
+    height: 100vh;
+    padding: 60px 80px;
+    position: absolute;
+    top: 0; left: 0;
+    animation: fadeIn 0.3s ease;
+  }
+  .slide.active { display: flex; flex-direction: column; }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  h1 {
+    font-size: 2.8rem;
+    font-weight: 700;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, var(--accent), var(--pi-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  h2 { font-size: 2rem; color: var(--accent); margin-bottom: 24px; }
+  h3 { font-size: 1.4rem; color: var(--pi-color); margin: 16px 0 8px; }
+  p { font-size: 1.1rem; line-height: 1.6; color: var(--muted); margin-bottom: 12px; }
+  .subtitle { font-size: 1.3rem; color: var(--muted); margin-bottom: 40px; }
+
+  .grid { display: grid; gap: 24px; flex: 1; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    backdrop-filter: blur(10px);
+  }
+  .card.accent { border-color: var(--accent); }
+  .card.pi { border-color: var(--pi-color); }
+  .card.success { border-color: var(--success); }
+  .card.warning { border-color: var(--warning); }
+  .card.critical { border-color: var(--critical); }
+
+  .stat { text-align: center; padding: 20px; }
+  .stat .number {
+    font-size: 3rem;
+    font-weight: 800;
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .stat .label { font-size: 0.9rem; color: var(--muted); margin-top: 4px; }
+  .stat.pi .number { color: var(--pi-color); }
+  .stat.c3i .number { color: var(--accent); }
+  .stat.combined .number {
+    background: linear-gradient(135deg, var(--accent), var(--pi-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+  th { background: var(--card); color: var(--accent); padding: 10px 14px; text-align: left; border-bottom: 2px solid var(--accent); }
+  td { padding: 8px 14px; border-bottom: 1px solid var(--border); }
+  tr:hover { background: rgba(0,212,170,0.05); }
+
+  .tag { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; margin: 2px; }
+  .tag.pi { background: rgba(77,150,255,0.2); color: var(--pi-color); }
+  .tag.c3i { background: rgba(0,212,170,0.2); color: var(--accent); }
+  .tag.new { background: rgba(61,214,140,0.2); color: var(--success); }
+
+  .progress-bar {
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+  }
+  .progress-bar .fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--pi-color));
+    border-radius: 2px;
+    transition: width 0.3s ease;
+  }
+
+  .nav {
+    position: fixed;
+    bottom: 30px;
+    right: 40px;
+    display: flex;
+    gap: 12px;
+    z-index: 100;
+  }
+  .nav button {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  .nav button:hover { border-color: var(--accent); }
+
+  .slide-counter {
+    position: fixed;
+    bottom: 35px;
+    left: 40px;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.9rem;
+  }
+
+  .fractal-grid { display: grid; grid-template-columns: repeat(8, 1fr); gap: 8px; }
+  .fractal-cell {
+    aspect-ratio: 1;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+  }
+  .fractal-cell.filled { background: rgba(0,212,170,0.3); border: 1px solid var(--accent); }
+  .fractal-cell.pi-fill { background: rgba(77,150,255,0.3); border: 1px solid var(--pi-color); }
+  .fractal-cell.empty { background: rgba(122,143,166,0.1); border: 1px solid var(--border); }
+  .fractal-cell.symbiosis {
+    background: linear-gradient(135deg, rgba(0,212,170,0.3), rgba(77,150,255,0.3));
+    border: 1px solid var(--success);
+  }
+
+  .arch-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    flex: 1;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+  }
+  .arch-box {
+    padding: 16px 24px;
+    border-radius: 10px;
+    text-align: center;
+    min-width: 160px;
+  }
+  .arch-box.pi { background: rgba(77,150,255,0.15); border: 2px solid var(--pi-color); }
+  .arch-box.c3i { background: rgba(0,212,170,0.15); border: 2px solid var(--accent); }
+  .arch-box.bridge { background: rgba(245,166,35,0.15); border: 2px solid var(--warning); }
+  .arch-arrow { color: var(--muted); font-size: 1.5rem; }
+
+  ul { margin: 8px 0 8px 24px; }
+  li { margin: 4px 0; font-size: 0.95rem; line-height: 1.5; }
+
+  .two-col { display: flex; gap: 40px; flex: 1; }
+  .two-col > div { flex: 1; }
+
+  .sanskrit {
+    font-style: italic;
+    color: var(--warning);
+    font-size: 1.1rem;
+    margin-top: 20px;
+    text-align: center;
+    padding: 16px;
+    border-top: 1px solid var(--border);
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar"><div class="fill" id="progress"></div></div>
+<div class="slide-counter" id="counter"></div>
+<div class="nav">
+  <button onclick="prev()">Prev</button>
+  <button onclick="next()">Next</button>
+</div>
+
+<!-- SLIDE 1: Title -->
+<div class="slide active" id="s1">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center">
+    <h1 style="font-size:3.5rem">Pi-Mono x C3I</h1>
+    <p class="subtitle" style="font-size:1.8rem;margin-top:8px">Full Symbiosis Analysis</p>
+    <div style="margin:40px 0">
+      <span class="tag pi">Pi v0.67.68</span>
+      <span class="tag c3i">C3I v22.10.0</span>
+      <span class="tag new">172K + 70K = 242K LOC</span>
+    </div>
+    <p style="color:var(--muted)">2026-04-19 | Fractal Integration Assessment</p>
+    <div class="sanskrit">
+      सहनाववतु। सह नौ भुनक्तु। सह वीर्यं करवावहै।<br>
+      May we be nourished together. May we work with great vigor together.
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 2: What is Pi? -->
+<div class="slide" id="s2">
+  <h2>What is Pi-Mono?</h2>
+  <p>Open-source AI agent toolkit by Mario Zechner (badlogic). MIT License. TypeScript monorepo.</p>
+  <div class="grid grid-4" style="margin-top:24px">
+    <div class="card stat pi"><div class="number">594</div><div class="label">TypeScript Files</div></div>
+    <div class="card stat pi"><div class="number">172K</div><div class="label">Lines of Code</div></div>
+    <div class="card stat pi"><div class="number">7</div><div class="label">Packages</div></div>
+    <div class="card stat pi"><div class="number">15</div><div class="label">LLM Providers</div></div>
+  </div>
+  <div class="grid grid-3" style="margin-top:20px">
+    <div class="card pi">
+      <h3>pi-ai (27K LOC)</h3>
+      <p>Unified multi-provider LLM API. OpenAI, Anthropic, Google, Bedrock, Mistral, Azure, Vertex, Groq, etc.</p>
+    </div>
+    <div class="card pi">
+      <h3>pi-agent-core (1.9K LOC)</h3>
+      <p>Agent runtime with tool calling, state management, event system, steering/follow-up queues.</p>
+    </div>
+    <div class="card pi">
+      <h3>pi-coding-agent (43K LOC)</h3>
+      <p>Interactive CLI agent. Sessions, extensions (60+ hooks), skills, slash commands, compaction.</p>
+    </div>
+  </div>
+  <div class="grid grid-4" style="margin-top:12px">
+    <div class="card pi"><h3>pi-tui (11K)</h3><p>Differential rendering TUI</p></div>
+    <div class="card pi"><h3>pi-web-ui (15K)</h3><p>Web chat components</p></div>
+    <div class="card pi"><h3>pi-mom (4K)</h3><p>Slack bot delegation</p></div>
+    <div class="card pi"><h3>pi-pods (2K)</h3><p>vLLM GPU management</p></div>
+  </div>
+</div>
+
+<!-- SLIDE 3: C3I Current State -->
+<div class="slide" id="s3">
+  <h2>C3I Current State</h2>
+  <p>Gleam-first cybernetic command-and-control cockpit for distributed mesh orchestration.</p>
+  <div class="grid grid-4" style="margin-top:24px">
+    <div class="card stat c3i"><div class="number">70K+</div><div class="label">Lines of Code</div></div>
+    <div class="card stat c3i"><div class="number">73</div><div class="label">MCP Tools</div></div>
+    <div class="card stat c3i"><div class="number">9.2K+</div><div class="label">Tests Passing</div></div>
+    <div class="card stat c3i"><div class="number">2,679</div><div class="label">ZK Holons</div></div>
+  </div>
+  <div class="grid grid-3" style="margin-top:20px">
+    <div class="card accent">
+      <h3>Gleam Platform</h3>
+      <ul>
+        <li>Lustre SSR (31 pages)</li>
+        <li>Wisp REST API</li>
+        <li>ANSI TUI + split-screen</li>
+        <li>AG-UI 32 event types</li>
+        <li>A2UI 233 components</li>
+      </ul>
+    </div>
+    <div class="card accent">
+      <h3>Rust Cortex (9.1K LOC)</h3>
+      <ul>
+        <li>6-tier hedged inference</li>
+        <li>52 GRL rules (RETE-UL)</li>
+        <li>Circuit breakers</li>
+        <li>PipelineTracer</li>
+        <li>RAG + semantic cache</li>
+      </ul>
+    </div>
+    <div class="card accent">
+      <h3>Infrastructure</h3>
+      <ul>
+        <li>Zenoh pub/sub mesh</li>
+        <li>16-container genome</li>
+        <li>SIL-6 safety kernel</li>
+        <li>OTel observability</li>
+        <li>Smriti.db (SQLite ACID)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="grid grid-3" style="margin-top:12px">
+    <div class="card"><h3>85 Rules</h3><p>.claude/rules/ (67 active, 18 deprecated)</p></div>
+    <div class="card"><h3>36 Agents</h3><p>.claude/agents/ (25 eng + 6 sales + 5 ops)</p></div>
+    <div class="card"><h3>50 Commands</h3><p>.claude/commands/ (22 eng + 28 sales)</p></div>
+  </div>
+</div>
+
+<!-- SLIDE 4: Why Symbiosis? -->
+<div class="slide" id="s4">
+  <h2>Why Symbiosis?</h2>
+  <p>Pi and C3I occupy complementary niches. Neither competes — they complete each other.</p>
+  <div class="two-col" style="margin-top:30px">
+    <div>
+      <div class="card pi" style="margin-bottom:20px">
+        <h3>Pi Excels At</h3>
+        <ul>
+          <li><strong>Interactive Agent UX</strong> — rich TUI, chat, sessions</li>
+          <li><strong>LLM Provider Diversity</strong> — 15 providers out of box</li>
+          <li><strong>Extension System</strong> — 60+ lifecycle hooks</li>
+          <li><strong>Session Management</strong> — branching, forking, export</li>
+          <li><strong>Web Components</strong> — drop-in ChatPanel</li>
+          <li><strong>Slack Integration</strong> — MOM bot</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="card accent" style="margin-bottom:20px">
+        <h3>C3I Excels At</h3>
+        <ul>
+          <li><strong>Distributed Infrastructure</strong> — Zenoh mesh</li>
+          <li><strong>Safety Kernel</strong> — SIL-6, Guardian, 2oo3 voting</li>
+          <li><strong>Observability</strong> — OTel over Zenoh, full tracing</li>
+          <li><strong>Knowledge Management</strong> — 2,679 holon Zettelkasten</li>
+          <li><strong>Rule Engine</strong> — 98 RETE-UL rules, 23 domains</li>
+          <li><strong>Type Safety</strong> — Gleam exhaustive ADTs</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="card success" style="text-align:center;padding:20px;margin-top:10px">
+    <h3 style="color:var(--success)">Together = Complete Agentic Platform</h3>
+    <p>242K LOC | 87 tools | 44 event types | 15 providers | SIL-6 safety | Zenoh mesh</p>
+  </div>
+</div>
+
+<!-- SLIDE 5: Functional Equivalence -->
+<div class="slide" id="s5">
+  <h2>Functional Equivalence Map</h2>
+  <div style="overflow-y:auto;flex:1">
+    <table>
+      <tr><th>Feature</th><th>Pi-Mono</th><th>C3I</th><th>Gap</th></tr>
+      <tr><td>LLM Providers</td><td style="color:var(--pi-color)">15 providers</td><td>4 hedged</td><td style="color:var(--success)">Pi MORE + C3I fallback</td></tr>
+      <tr><td>Agent Runtime</td><td>Agent class (543 LOC)</td><td>cortex.gleam+rs (1.9K)</td><td style="color:var(--success)">COMPLEMENTARY</td></tr>
+      <tr><td>Tools</td><td>14 tools</td><td style="color:var(--accent)">73 MCP tools</td><td style="color:var(--success)">C3I 5.2x MORE</td></tr>
+      <tr><td>Event Types</td><td>12 AgentEvent</td><td style="color:var(--accent)">32 AG-UI</td><td style="color:var(--success)">C3I RICHER</td></tr>
+      <tr><td>Extension Hooks</td><td style="color:var(--pi-color)">60+ types</td><td>5 hooks</td><td style="color:var(--warning)">Pi 12x MORE</td></tr>
+      <tr><td>Session Mgmt</td><td style="color:var(--pi-color)">Branching/forking</td><td>50-msg window</td><td style="color:var(--warning)">Pi MORE</td></tr>
+      <tr><td>TUI Quality</td><td style="color:var(--pi-color)">Differential render</td><td>ANSI raw</td><td style="color:var(--warning)">Pi BETTER</td></tr>
+      <tr><td>Web UI</td><td>Chat components</td><td>31 SSR pages</td><td style="color:var(--success)">COMPLEMENTARY</td></tr>
+      <tr><td>Messaging</td><td>Slack</td><td>Telegram+GChat</td><td style="color:var(--success)">COMPLEMENTARY</td></tr>
+      <tr><td>Persistence</td><td>JSONL files</td><td style="color:var(--accent)">SQLite ACID</td><td style="color:var(--success)">C3I SUPERIOR</td></tr>
+      <tr><td>Type Safety</td><td>TypeBox runtime</td><td style="color:var(--accent)">Gleam compile-time</td><td style="color:var(--success)">Gleam SAFER</td></tr>
+      <tr><td>Safety Kernel</td><td>Basic blocking</td><td style="color:var(--accent)">SIL-6 Guardian</td><td style="color:var(--success)">C3I SUPERIOR</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- SLIDE 6: Fractal Integration Matrix -->
+<div class="slide" id="s6">
+  <h2>Fractal Layer Integration (L0-L7)</h2>
+  <div style="overflow-y:auto;flex:1">
+    <table>
+      <tr><th>Layer</th><th>C3I Component</th><th>Pi Component</th><th>Integration</th></tr>
+      <tr>
+        <td><span class="tag" style="background:rgba(255,107,107,0.2);color:#ff6b6b">L0 Constitutional</span></td>
+        <td>Guardian, Psi invariants</td>
+        <td>beforeToolCall blocking</td>
+        <td>Pi tool gates enforce L0 invariants</td>
+      </tr>
+      <tr>
+        <td><span class="tag" style="background:rgba(255,217,61,0.2);color:#ffd93d">L1 Atomic</span></td>
+        <td>Debug trace, OTel spans</td>
+        <td>onPayload/onResponse</td>
+        <td>Pi callbacks wired to OTel spans</td>
+      </tr>
+      <tr>
+        <td><span class="tag" style="background:rgba(107,203,119,0.2);color:#6bcb77">L2 Component</span></td>
+        <td>A2UI catalog (233)</td>
+        <td>Web components, TypeBox</td>
+        <td>A2UI renders Pi web components</td>
+      </tr>
+      <tr>
+        <td><span class="tag" style="background:rgba(77,150,255,0.2);color:#4d96ff">L3 Transaction</span></td>
+        <td>Planning, Smriti.db</td>
+        <td>Session manager, JSONL</td>
+        <td>Shared SQLite backend</td>
+      </tr>
+      <tr>
+        <td><span class="tag" style="background:rgba(155,89,182,0.2);color:#9b59b6">L4 System</span></td>
+        <td>Podman orchestration</td>
+        <td>Pi pods (vLLM)</td>
+        <td>Unified container mgmt</td>
+      </tr>
+      <tr>
+        <td><span class="tag" style="background:rgba(0,212,170,0.2);color:#00d4aa">L5 Cognitive</span></td>
+        <td>OODA cortex, RETE-UL</td>
+        <td>Agent loop, 15 providers</td>
+        <td>Pi = inference frontend for cortex</td>
+      </tr>
+      <tr>
+        <td><span class="tag" style="background:rgba(231,76,60,0.2);color:#e74c3c">L6 Ecosystem</span></td>
+        <td>Zenoh mesh, agent collab</td>
+        <td>Extension event bus</td>
+        <td>Extension events bridged to Zenoh</td>
+      </tr>
+      <tr>
+        <td><span class="tag" style="background:rgba(243,156,18,0.2);color:#f39c12">L7 Federation</span></td>
+        <td>Gateway (TG/GChat)</td>
+        <td>MOM (Slack), session share</td>
+        <td>Multi-platform gateway union</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- SLIDE 7: Biomorphic Mapping -->
+<div class="slide" id="s7">
+  <h2>Biomorphic Integration (7 Subsystems)</h2>
+  <div style="overflow-y:auto;flex:1">
+    <table>
+      <tr><th>Subsystem</th><th>C3I Current</th><th>Pi Addition</th><th>Symbiosis</th></tr>
+      <tr>
+        <td>Nervous (L1)</td>
+        <td>WebSocket 1s push</td>
+        <td style="color:var(--pi-color)">TUI diff rendering &lt;16ms</td>
+        <td style="color:var(--success)">Pi rendering replaces raw ANSI</td>
+      </tr>
+      <tr>
+        <td>Immune (L0)</td>
+        <td>Wiring guard, type system</td>
+        <td style="color:var(--pi-color)">before/afterToolCall hooks</td>
+        <td style="color:var(--success)">Pi hooks = immune checkpoints</td>
+      </tr>
+      <tr>
+        <td>Circulatory (L6)</td>
+        <td>Zenoh pub/sub mesh</td>
+        <td style="color:var(--pi-color)">AgentEvent stream (12 types)</td>
+        <td style="color:var(--success)">Pi events published to Zenoh</td>
+      </tr>
+      <tr>
+        <td>Skeletal (L2)</td>
+        <td>Gleam ADTs (domain.gleam)</td>
+        <td style="color:var(--pi-color)">TypeBox schemas</td>
+        <td style="color:var(--success)">JSON bridge: Gleam <-> TypeBox</td>
+      </tr>
+      <tr>
+        <td>Digestive (L3)</td>
+        <td>NIF pipeline</td>
+        <td style="color:var(--pi-color)">transformContext, convertToLlm</td>
+        <td style="color:var(--success)">Shared context transform pipe</td>
+      </tr>
+      <tr>
+        <td>Reproductive (L7)</td>
+        <td>Autopoiesis (templates)</td>
+        <td style="color:var(--pi-color)">Session sharing (HuggingFace)</td>
+        <td style="color:var(--success)">Sessions become training data</td>
+      </tr>
+      <tr>
+        <td>Endocrine (L5)</td>
+        <td>OODA loop, 98 RETE rules</td>
+        <td style="color:var(--pi-color)">Steering messages, follow-ups</td>
+        <td style="color:var(--success)">Pi steering = OODA Orient injection</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- SLIDE 8: Architecture -->
+<div class="slide" id="s8">
+  <h2>Integration Architecture</h2>
+  <div class="arch-flow">
+    <div class="arch-box pi">
+      <strong>Pi-Mono</strong><br>
+      Node.js / Bun<br><br>
+      15 LLM Providers<br>
+      Agent Runtime<br>
+      TUI + Web UI<br>
+      Extensions<br>
+      Slack Bot
+    </div>
+    <div class="arch-arrow">&harr;</div>
+    <div class="arch-box bridge">
+      <strong>Bridge</strong><br>
+      TypeScript + Gleam<br><br>
+      pi_agent.gleam<br>
+      c3i-bridge.ts<br>
+      Zenoh publisher<br>
+      Tool federation<br>
+      Session adapter
+    </div>
+    <div class="arch-arrow">&harr;</div>
+    <div class="arch-box c3i">
+      <strong>C3I Mesh</strong><br>
+      Gleam + Rust<br><br>
+      73 MCP Tools<br>
+      Zenoh Backbone<br>
+      Safety Kernel<br>
+      Smriti.db<br>
+      RETE-UL Rules
+    </div>
+  </div>
+  <div class="grid grid-3" style="margin-top:20px">
+    <div class="card">
+      <h3>Zenoh Topics</h3>
+      <p style="font-family:monospace;font-size:0.85rem">
+        indrajaal/pi/events/**<br>
+        indrajaal/pi/tools/**<br>
+        indrajaal/pi/sessions/**
+      </p>
+    </div>
+    <div class="card">
+      <h3>Tool Federation</h3>
+      <p>73 C3I MCP + 14 Pi tools<br>= <strong>87 federated tools</strong></p>
+    </div>
+    <div class="card">
+      <h3>Event Unification</h3>
+      <p>32 AG-UI + 12 Pi events<br>= <strong>44 event types</strong></p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 9: Implementation Roadmap -->
+<div class="slide" id="s9">
+  <h2>10-Week Integration Roadmap</h2>
+  <div style="overflow-y:auto;flex:1">
+    <div class="grid grid-2" style="gap:16px">
+      <div class="card accent">
+        <h3>Phase 1: Bridge (Week 1-2)</h3>
+        <ul>
+          <li>Create pi_agent.gleam (Gleam wrapper)</li>
+          <li>Create c3i-bridge.ts (TypeScript bridge)</li>
+          <li>JSON-RPC communication layer</li>
+          <li>Basic tool forwarding</li>
+        </ul>
+      </div>
+      <div class="card pi">
+        <h3>Phase 2: Providers (Week 3-4)</h3>
+        <ul>
+          <li>Register C3I as Pi LLM provider</li>
+          <li>Pi-ai as inference frontend</li>
+          <li>C3I cortex as orchestrator</li>
+          <li>Shared model registry (1000+ models)</li>
+        </ul>
+      </div>
+      <div class="card success">
+        <h3>Phase 3: Tools (Week 5-6)</h3>
+        <ul>
+          <li>73 MCP tools as Pi AgentTools</li>
+          <li>14 Pi tools as MCP endpoints</li>
+          <li>Guardian gating for L0 tools</li>
+          <li>Tool result Zenoh publishing</li>
+        </ul>
+      </div>
+      <div class="card warning">
+        <h3>Phase 4: UI (Week 7-8)</h3>
+        <ul>
+          <li>Pi ChatPanel in Lustre pages</li>
+          <li>Pi TUI in C3I split-screen</li>
+          <li>Shared WebSocket transport</li>
+          <li>Theme synchronization</li>
+        </ul>
+      </div>
+      <div class="card critical">
+        <h3>Phase 5: Mesh (Week 9-10)</h3>
+        <ul>
+          <li>Pi events -> Zenoh topics</li>
+          <li>Zenoh -> Pi extension hooks</li>
+          <li>OTel tracing for Pi operations</li>
+          <li>Full bidirectional integration</li>
+        </ul>
+      </div>
+      <div class="card" style="display:flex;align-items:center;justify-content:center">
+        <div class="stat combined">
+          <div class="number">242K</div>
+          <div class="label">Lines of unified agentic platform</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 10: Risk & STAMP -->
+<div class="slide" id="s10">
+  <h2>STAMP Constraints & Risk Assessment</h2>
+  <div class="two-col">
+    <div>
+      <h3 style="color:var(--accent)">SC-PI Constraints (10 new)</h3>
+      <table>
+        <tr><th>ID</th><th>Constraint</th><th>Sev</th></tr>
+        <tr><td>SC-PI-001</td><td>Events to Zenoh</td><td style="color:var(--critical)">CRIT</td></tr>
+        <tr><td>SC-PI-002</td><td>Guardian gate for L0</td><td style="color:var(--critical)">CRIT</td></tr>
+        <tr><td>SC-PI-003</td><td>Smriti.db persistence</td><td style="color:var(--warning)">HIGH</td></tr>
+        <tr><td>SC-PI-004</td><td>Circuit breaker compliance</td><td style="color:var(--warning)">HIGH</td></tr>
+        <tr><td>SC-PI-005</td><td>Safety kernel bypass prevention</td><td style="color:var(--critical)">CRIT</td></tr>
+        <tr><td>SC-PI-006</td><td>Lustre SSR compatibility</td><td style="color:var(--warning)">HIGH</td></tr>
+        <tr><td>SC-PI-007</td><td>Split-screen TUI merge</td><td>MED</td></tr>
+        <tr><td>SC-PI-008</td><td>Model registry sync</td><td style="color:var(--warning)">HIGH</td></tr>
+        <tr><td>SC-PI-009</td><td>Skill discoverability</td><td>MED</td></tr>
+        <tr><td>SC-PI-010</td><td>PII scrubbing compliance</td><td style="color:var(--critical)">CRIT</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3 style="color:var(--critical)">FMEA Risk Matrix</h3>
+      <table>
+        <tr><th>Risk</th><th>RPN</th></tr>
+        <tr><td>Session data divergence</td><td style="color:var(--warning)">105</td></tr>
+        <tr><td>Pi extension breaks Zenoh</td><td>72</td></tr>
+        <tr><td>Pi web-ui breaks Lustre</td><td>72</td></tr>
+        <tr><td>LLM calls bypass breaker</td><td>64</td></tr>
+        <tr><td>Node.js crashes BEAM</td><td>54</td></tr>
+        <tr><td>API key leakage</td><td>36</td></tr>
+        <tr><td>Dependency conflicts</td><td>30</td></tr>
+      </table>
+      <p style="margin-top:16px;font-size:0.9rem">All RPNs &lt; 200. No immediate action required.<br>Highest risk (105): mitigated by SC-PI-003.</p>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 11: Combined Capabilities -->
+<div class="slide" id="s11">
+  <h2>Combined Capabilities</h2>
+  <div class="grid grid-4" style="margin-top:20px">
+    <div class="card stat combined"><div class="number">15</div><div class="label">LLM Providers + Hedged Fallback</div></div>
+    <div class="card stat combined"><div class="number">87</div><div class="label">Federated Tools</div></div>
+    <div class="card stat combined"><div class="number">44</div><div class="label">Unified Event Types</div></div>
+    <div class="card stat combined"><div class="number">65</div><div class="label">Extension Hooks</div></div>
+  </div>
+  <div class="grid grid-3" style="margin-top:20px">
+    <div class="card">
+      <h3>Messaging Platforms</h3>
+      <ul>
+        <li><span class="tag pi">Slack (MOM)</span></li>
+        <li><span class="tag c3i">Telegram</span></li>
+        <li><span class="tag c3i">Google Chat</span></li>
+        <li><span class="tag c3i">WhatsApp</span></li>
+        <li><span class="tag c3i">Matrix/Sutra</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>UI Surfaces</h3>
+      <ul>
+        <li><span class="tag c3i">Lustre SSR (31 pages)</span></li>
+        <li><span class="tag pi">Pi TUI (diff rendering)</span></li>
+        <li><span class="tag pi">Pi Web ChatPanel</span></li>
+        <li><span class="tag c3i">C3I Split-Screen TUI</span></li>
+        <li><span class="tag c3i">Wisp REST API</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>Compute</h3>
+      <ul>
+        <li><span class="tag c3i">14 Rust NIFs</span></li>
+        <li><span class="tag c3i">98 RETE-UL rules</span></li>
+        <li><span class="tag c3i">Zenoh mesh (4 routers)</span></li>
+        <li><span class="tag pi">vLLM GPU pods</span></li>
+        <li><span class="tag c3i">16-container genome</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="sanskrit" style="margin-top:20px">
+    Pi = Sensory/Motor Cortex (L1 + L5)<br>
+    C3I = Nervous System Backbone (L0 + L6)<br>
+    Together = Complete Biomorphic Organism
+  </div>
+</div>
+
+<!-- SLIDE 12: Conclusion -->
+<div class="slide" id="s12">
+  <h2>Conclusion</h2>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+    <div class="grid grid-2" style="margin-bottom:30px">
+      <div class="card pi" style="text-align:center;padding:30px">
+        <h3 style="font-size:1.8rem">Pi-Mono</h3>
+        <p style="font-size:1.2rem">172,149 LOC</p>
+        <p>Agent UX | 15 Providers | Extensions</p>
+      </div>
+      <div class="card accent" style="text-align:center;padding:30px">
+        <h3 style="font-size:1.8rem">C3I</h3>
+        <p style="font-size:1.2rem">70,000+ LOC</p>
+        <p>Mesh Infra | Safety Kernel | Observability</p>
+      </div>
+    </div>
+    <div class="card success" style="text-align:center;padding:30px">
+      <h3 style="font-size:2rem;color:var(--success)">Symbiosis = 242K LOC Unified Agentic Platform</h3>
+      <p style="font-size:1.1rem;margin-top:12px">
+        87 tools | 44 events | 15 providers | SIL-6 safety | Zenoh mesh |
+        Production TUI | Web components | 5 messaging platforms
+      </p>
+    </div>
+    <div class="sanskrit">
+      This is Cambrian explosion for C3I<br>
+      A major evolutionary leap enabled by symbiosis, not de novo development
+    </div>
+  </div>
+</div>
+
+<script>
+let current = 0;
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+
+function show(n) {
+  slides.forEach(s => s.classList.remove('active'));
+  current = ((n % total) + total) % total;
+  slides[current].classList.add('active');
+  document.getElementById('progress').style.width = ((current + 1) / total * 100) + '%';
+  document.getElementById('counter').textContent = (current + 1) + ' / ' + total;
+}
+
+function next() { show(current + 1); }
+function prev() { show(current - 1); }
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+  if (e.key === 'Home') { e.preventDefault(); show(0); }
+  if (e.key === 'End') { e.preventDefault(); show(total - 1); }
+});
+
+show(0);
+</script>
+</body>
+</html>
