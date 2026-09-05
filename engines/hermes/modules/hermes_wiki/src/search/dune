@@ -1,0 +1,5 @@
+(library
+ (name hermes_wiki_search)
+ (wrapped false)
+ (modules wiki_search)
+ (libraries hermes_wiki_core wiki_core))

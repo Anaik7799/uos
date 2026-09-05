@@ -1,0 +1,14 @@
+{
+  "scenario_id": "loop.continuation_prompt",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "997b3f8a233f16d017913b975dd2863a4c331d5ed9e9b25c10048b1d4e02a974",
+  "trace": {
+    "results": {
+      "length_truncated": "[System: Your previous response was truncated by the output length limit. Continue exactly where you left off. Do not restart or repeat prior text. Finish the answer directly.]",
+      "partial_stub": "[System: The previous response was cut off by a network error mid-stream. Continue exactly where you left off. Do not restart or repeat prior text. Finish the answer directly.]",
+      "partial_with_tools": "[System: Your previous tool call (write_file, patch, search) was too large and the stream timed out before it could be delivered. Do NOT retry the same tool call with the same large content. Instead, break the content into multiple smaller tool calls (e.g. use multiple patch calls or write smaller files). Each tool call's arguments must be under ~8K tokens to avoid stream timeouts.]"
+    }
+  }
+}

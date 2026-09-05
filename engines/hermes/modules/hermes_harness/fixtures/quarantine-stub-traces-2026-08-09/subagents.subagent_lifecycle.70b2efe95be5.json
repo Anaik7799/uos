@@ -1,0 +1,13 @@
+{
+  "scenario_id": "subagents.subagent_lifecycle",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "14f1d6a9b8e62bcf90790ff7b6759623f1a95fb17bc865fa82fddbd1255defee",
+  "trace": {
+    "messages": [
+      { "content": "stub for subagent_lifecycle", "role": "user" }
+    ],
+    "model": "openai/gpt-5.4"
+  }
+}

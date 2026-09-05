@@ -1,0 +1,28 @@
+; PORTED from /home/an/dev/ver/harness (2026-08-13). The dune library graph,
+; read from source, so a PREDICTIVE blast radius can stop being free text.
+; A leaf: it must be reachable from any suite that wants its own cone, so it
+; depends on nothing but the standard library.
+(library
+ (name hermes_dune_graph)
+ (wrapped false)
+ (modules dune_graph))
+
+(executable
+ (name gen_stanza)
+ (modules gen_stanza)
+ (libraries hermes_dune_graph))
+
+(executable
+ (name test_dune_graph)
+ (modules test_dune_graph)
+ (libraries hermes_dune_graph hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name migrate_targets)
+ (modules migrate_targets)
+ (libraries hermes_dune_graph))
+
+(executable
+ (name cone_shape)
+ (modules cone_shape)
+ (libraries hermes_dune_graph))

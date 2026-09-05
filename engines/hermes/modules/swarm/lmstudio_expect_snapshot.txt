@@ -1,0 +1,197 @@
+=================================================================================
+           LM STUDIO / GEMMA CLOSED-LOOP ACTIVE EVOLUTION EXPECT TESTS           
+=================================================================================
+
+------------------- EVOLUTION STEP 1 -------------------
+Exploring Vector: Adversarial_Logic_Traps at Depth: 1
+Prompt Sent: If it takes 5 machines 5 minutes to make 5 widgets, how long does it take 100 machines to make 100 widgets? Explain without using any arithmetic or math numbers in your reasoning. Depth: 1
+Payload Sent (CURL equivalent):
+curl -s --connect-timeout 30 --max-time 30 -X POST http://100.114.9.28:1234/v1/chat/completions -H "Content-Type: application/json" -d '{"model": "google/gemma-4-e4b", "messages": [{"role": "user", "content": "If it takes 5 machines 5 minutes to make 5 widgets, how long does it take 100 machines to make 100 widgets? Explain without using any arithmetic or math numbers in your reasoning. Depth: 1"}], "temperature": 0.700000}'
+
+Response Received from LMStudio:
+My step-by-step reasoning is: 3x = 15, which means x = 5.
+
+Interpretation and Resource Evaluation:
+  - Evaluation Score: 0.5
+  - Memory usage check: VRAM: true, Context: true
+  - Evaluation Result: PARTIAL: Reasoning started but failed the adversarial negative constraint (used math/numbers).
+
+------------------- EVOLUTION STEP 2 -------------------
+Evolved Target Vector: Adversarial_Logic_Traps at Depth: 1 (Dynamic expansion of capability space)
+Formulated Prompt Sent: If it takes 5 machines 5 minutes to make 5 widgets, how long does it take 100 machines to make 100 widgets? Explain without using any arithmetic or math numbers in your reasoning. Depth: 1
+Payload Sent (CURL equivalent):
+curl -s --connect-timeout 30 --max-time 30 -X POST http://100.114.9.28:1234/v1/chat/completions -H "Content-Type: application/json" -d '{"model": "google/gemma-4-e4b", "messages": [{"role": "user", "content": "If it takes 5 machines 5 minutes to make 5 widgets, how long does it take 100 machines to make 100 widgets? Explain without using any arithmetic or math numbers in your reasoning. Depth: 1"}], "temperature": 0.700000}'
+
+Response Received from LMStudio:
+{
+  "id": "node-1",
+  "status": "online",
+  "memory_bytes": 16384
+}
+
+Interpretation and Resource Evaluation:
+  - Evaluation Score: 0.2
+  - Memory usage check: VRAM: true, Context: true
+  - Evaluation Result: FAIL: Hallucinated incorrect logic path.
+
+------------------- EVOLUTION STEP 3 (CRASH DETECT & SAFE RECOVERY) -------------------
+Exploring Vector: Adversarial_Logic_Traps at Depth: 1
+Prompt Sent: If it takes 5 machines 5 minutes to make 5 widgets, how long does it take 100 machines to make 100 widgets? Explain without using any arithmetic or math numbers in your reasoning. Depth: 1
+Payload Sent (CURL equivalent):
+curl -s --connect-timeout 30 --max-time 30 -X POST http://100.114.9.28:1234/v1/chat/completions -H "Content-Type: application/json" -d '{"model": "google/gemma-4-e4b", "messages": [{"role": "user", "content": "If it takes 5 machines 5 minutes to make 5 widgets, how long does it take 100 machines to make 100 widgets? Explain without using any arithmetic or math numbers in your reasoning. Depth: 1"}], "temperature": 0.700000}'
+
+Response Received from LMStudio:
+
+Tailed Server Log Line: Error: Out of VRAM limit while loading layers!
+
+Interpretation and Resource Evaluation:
+  - Evaluation Score: 0.0
+  - Memory usage check: VRAM: false, Context: true
+  - Evaluation Result: FAIL: Out of VRAM during execution
+  - Recovery Action: Controller automatically degrades complexity, triggering resource apoptosis.
+
+------------------- PERSISTENT DATABASE TRANSACTION MEMORY HISTORY (SQLITE3) -------------------
+Retrieving exhaustive transaction logs from database:
+Transaction [1] [2026-08-13 11:41:00]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.5 -> PARTIAL: Reasoning started but failed the adversarial negative constraint (used math/numbers).
+Transaction [2] [2026-08-13 11:41:00]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 2) - Score: 0.2 -> FAIL: Hallucinated incorrect logic path.
+Transaction [3] [2026-08-13 11:41:00]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.0 -> FAIL: Out of VRAM during execution
+Transaction [4] [2026-08-13 12:34:29]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.5 -> PARTIAL: Reasoning started but failed the adversarial negative constraint (used math/numbers).
+Transaction [5] [2026-08-13 12:34:29]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 2) - Score: 0.2 -> FAIL: Hallucinated incorrect logic path.
+Transaction [6] [2026-08-13 12:34:29]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.0 -> FAIL: Out of VRAM during execution
+Transaction [7] [2026-08-13 13:06:14]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.5 -> PARTIAL: Reasoning started but failed the adversarial negative constraint (used math/numbers).
+Transaction [8] [2026-08-13 13:06:14]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 2) - Score: 0.2 -> FAIL: Hallucinated incorrect logic path.
+Transaction [9] [2026-08-13 13:06:14]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.0 -> FAIL: Out of VRAM during execution
+Transaction [10] [2026-08-13 13:16:07]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.5 -> PARTIAL: Reasoning started but failed the adversarial negative constraint (used math/numbers).
+Transaction [11] [2026-08-13 13:16:07]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 2) - Score: 0.2 -> FAIL: Hallucinated incorrect logic path.
+Transaction [12] [2026-08-13 13:16:07]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.0 -> FAIL: Out of VRAM during execution
+Transaction [13] [2026-08-13 13:20:01]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.5 -> PARTIAL: Reasoning started but failed the adversarial negative constraint (used math/numbers).
+Transaction [14] [2026-08-13 13:20:01]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 2) - Score: 0.2 -> FAIL: Hallucinated incorrect logic path.
+Transaction [15] [2026-08-13 13:20:01]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.0 -> FAIL: Out of VRAM during execution
+Transaction [16] [2026-08-13 13:24:57]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.5 -> PARTIAL: Reasoning started but failed the adversarial negative constraint (used math/numbers).
+Transaction [17] [2026-08-13 13:24:57]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 2) - Score: 0.2 -> FAIL: Hallucinated incorrect logic path.
+Transaction [18] [2026-08-13 13:24:57]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.0 -> FAIL: Out of VRAM during execution
+Transaction [19] [2026-08-13 13:29:51]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.5 -> PARTIAL: Reasoning started but failed the adversarial negative constraint (used math/numbers).
+Transaction [20] [2026-08-13 13:29:51]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 2) - Score: 0.2 -> FAIL: Hallucinated incorrect logic path.
+Transaction [21] [2026-08-13 13:29:51]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.0 -> FAIL: Out of VRAM during execution
+Transaction [22] [2026-08-13 13:39:49]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.5 -> PARTIAL: Reasoning started but failed the adversarial negative constraint (used math/numbers).
+Transaction [23] [2026-08-13 13:39:49]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 2) - Score: 0.2 -> FAIL: Hallucinated incorrect logic path.
+Transaction [24] [2026-08-13 13:39:49]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.0 -> FAIL: Out of VRAM during execution
+Transaction [25] [2026-08-13 14:32:32]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.5 -> PARTIAL: Reasoning started but failed the adversarial negative constraint (used math/numbers).
+Transaction [26] [2026-08-13 14:32:32]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 2) - Score: 0.2 -> FAIL: Hallucinated incorrect logic path.
+Transaction [27] [2026-08-13 14:32:32]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.0 -> FAIL: Out of VRAM during execution
+Transaction [28] [2026-08-13 14:41:20]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.5 -> PARTIAL: Reasoning started but failed the adversarial negative constraint (used math/numbers).
+Transaction [29] [2026-08-13 14:41:20]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 2) - Score: 0.2 -> FAIL: Hallucinated incorrect logic path.
+Transaction [30] [2026-08-13 14:41:20]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.0 -> FAIL: Out of VRAM during execution
+Transaction [31] [2026-08-13 15:43:03]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.5 -> PARTIAL: Reasoning started but failed the adversarial negative constraint (used math/numbers).
+Transaction [32] [2026-08-13 15:43:03]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 2) - Score: 0.2 -> FAIL: Hallucinated incorrect logic path.
+Transaction [33] [2026-08-13 15:43:03]
+  - Target: Model: google/gemma-4-e4b via /v1/chat/completions
+  - Config: Temp: 0.70 | Tuning: Zero_Shot
+  - State:  Adversarial_Logic_Traps (Depth 1) - Score: 0.0 -> FAIL: Out of VRAM during execution
+
+------------------- AUTONOMIC SELF-HEALING OPTIMIZATION -------------------
+
+Original Envelope Parameters:
+  - max_tokens: 8192
+  - json_schema: true
+
+Optimized, Stabilized Envelope Parameters:
+  - max_tokens: 4096
+  - json_schema: true
+=================================================================================

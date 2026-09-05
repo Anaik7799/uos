@@ -1,0 +1,253 @@
+; Operations offload: repository verification expressed as a declarative
+; intent and executed by the swarm engine (Sop_execution), so an agent
+; spends one command and one line of context on a pass that used to cost
+; ~40 commands and their full scrollback.
+;
+; It lives OUTSIDE modules/hermes_wiki on purpose: the wiki engine's dune
+; carries a guard law forbidding any hermes_harness_* dependency, and this
+; module needs one. Keeping it here satisfies the law instead of widening it.
+
+(library
+ (name hermes_ops_capability_core)
+ (wrapped false)
+ (modules ops_capability)
+ (libraries digestif))
+
+(library
+ (name hermes_ops_capability)
+ (wrapped false)
+ (modules ops_capability_gate module_intent)
+ (libraries (re_export hermes_ops_capability_core)
+  hermes_stanza hermes_fpp_window_authority))
+
+(library
+ (name hermes_ops_config_authority)
+ (wrapped false)
+ (modules ops_config ops_config_ontology ops_config_atlas ops_config_algebra)
+ (libraries digestif))
+
+(library
+ (name hermes_debugging)
+ (wrapped false)
+ (modules debug_ontology debug_dependability debug_intent debug_algebra debug_protocol)
+ (libraries hermes_ops_capability_core digestif))
+
+(library
+ (name hermes_external_access)
+ (wrapped false)
+ (modules external_access external_access_runtime external_access_observability external_access_otp_register external_access_census)
+ (libraries hermes_ops_capability_core hermes_wiki_fpp digestif unix))
+
+; ---------------------------------------------------------------- leaves
+;
+; These three modules used to live in the aggregate below, which depends
+; on hermes_ops_dashboard. That made them unreachable from the dashboard's
+; own Run_formal_relation, because importing them would have closed
+;
+;   hermes_ops_dashboard -> hermes_ops -> hermes_ops_dashboard
+;
+; and Task 5's formal relation must assert cross-model window disjointness
+; over the exact five models, two of which are here. Copying their spans
+; into the formula was rejected: it would create the stale second
+; authority the formula exists to detect.
+;
+; No .ml moved or was renamed. Only module OWNERSHIP changed, and the
+; aggregate re-exports all three, so every existing consumer keeps the
+; same unwrapped module names.
+;
+; Governance had to come out too. Ops_topology.governance_channels derives
+; monitor channels from Ops_governance.obligations, so leaving governance
+; in the aggregate would have moved the cycle rather than broken it. It is
+; a valid leaf: its only non-stdlib qualifier is Ops_capability — the
+; Fpp_model., Ops_command. and Ops_command_runtime. occurrences in that
+; file are all inside string literals, verified rather than assumed.
+(library
+ (name hermes_ops_governance)
+ (wrapped false)
+ (modules ops_governance)
+ (libraries hermes_ops_capability_core))
+
+(library
+ (name hermes_ops_topology)
+ (wrapped false)
+ (modules ops_topology)
+ (libraries hermes_ops_governance hermes_ops_capability_core
+   hermes_fpp_window_authority hermes_wiki_fpp))
+
+(library
+ (name hermes_ops_completion_topology)
+ (wrapped false)
+ (modules ops_completion_topology)
+ (libraries hermes_fpp_window_authority hermes_wiki_fpp))
+
+; ------------------------------------------------------------- aggregate
+(library
+ (name hermes_ops)
+ (wrapped false)
+ (modules ops_verify ops_mutate ops_formal ops_agents ops_config_gate ops_config_docs module_intent_docs debug_docs ops_command ops_governance_model ops_governance_formal ops_mbse ops_observability ops_completion_history ops_command_runtime ops_command_service ops_mcp ops_zenoh ops_verification_target)
+ (libraries (re_export hermes_ops_capability)
+   (re_export hermes_ops_config_authority)
+   (re_export hermes_debugging)
+   (re_export hermes_ops_governance)
+   (re_export hermes_ops_topology)
+   (re_export hermes_ops_completion_topology)
+   hermes_fpp_window_authority hermes_harness_sop_execution hermes_harness_harness_topology
+   hermes_harness_hermes_zenoh hermes_wiki_fpp hermes_wiki_mbse hermes_harness_orientation_history
+   hermes_dependability_sqlite_location hermes_dependability_sqlite digestif yojson unix
+   hermes_ops_dashboard))
+
+(executable
+ (name ops_main)
+ (public_name ops)
+ (modules ops_main)
+ (libraries hermes_ops hermes_wiki_fpp hermes_wiki_topology))
+
+(executable
+ (name test_ops_verify)
+ (modules test_ops_verify)
+ (libraries hermes_ops hermes_wiki_fpp hermes_wiki_topology
+   hermes_harness_suite_telemetry))
+
+(executable
+ (name test_ops_verification_target)
+ (modules test_ops_verification_target)
+ (libraries hermes_ops hermes_dependability_sqlite_test_support
+   hermes_harness_suite_telemetry))
+
+(executable
+ (name test_ops_mutate)
+ (modules test_ops_mutate)
+ (libraries hermes_ops hermes_harness_suite_telemetry))
+
+(executable
+ (name test_ops_config)
+ (modules test_ops_config)
+ (libraries hermes_ops hermes_harness_suite_telemetry))
+
+(executable
+ (name test_ops_config_fractal)
+ (modules test_ops_config_fractal)
+ (libraries hermes_ops_config_authority hermes_harness_suite_telemetry
+  hermes_stanza))
+
+(executable
+ (name test_ops_capability)
+ (modules test_ops_capability)
+ (libraries hermes_ops_capability_core hermes_harness_suite_telemetry))
+
+(executable
+ (name test_ops_capability_gate)
+ (modules test_ops_capability_gate)
+ (libraries hermes_ops_capability hermes_harness_suite_telemetry))
+
+(executable
+ (name test_module_intent)
+ (modules test_module_intent)
+ (libraries hermes_ops hermes_harness_suite_telemetry))
+
+(executable
+ (name test_debug_system)
+ (modules test_debug_system)
+ (libraries hermes_debugging hermes_harness_suite_telemetry))
+
+(executable
+ (name test_external_access_fractal)
+ (modules test_external_access_fractal)
+ (libraries hermes_external_access hermes_harness_suite_telemetry))
+
+(executable
+ (name test_external_access_formal)
+ (modules test_external_access_formal)
+ (libraries hermes_external_access hermes_harness_suite_telemetry))
+
+(executable
+ (name test_external_access_smt)
+ (modules test_external_access_smt)
+ (libraries hermes_external_access smtml hermes_harness_suite_telemetry))
+
+(executable
+ (name test_external_access_rete)
+ (modules test_external_access_rete)
+ (libraries hermes_external_access hermes_ops_dashboard hermes_harness_suite_telemetry))
+
+(executable
+ (name test_external_access_stan)
+ (modules test_external_access_stan)
+ (libraries hermes_external_access hermes_ops_dashboard hermes_harness_suite_telemetry))
+
+(executable
+ (name test_external_access_runtime)
+ (modules test_external_access_runtime)
+ (libraries hermes_external_access hermes_harness_suite_telemetry))
+
+(executable
+ (name test_external_access_observability)
+ (modules test_external_access_observability)
+ (libraries hermes_external_access hermes_harness_suite_telemetry))
+
+(executable
+ (name test_external_access_otp_register)
+ (modules test_external_access_otp_register)
+ (libraries hermes_external_access hermes_harness_suite_telemetry))
+
+(executable
+ (name test_external_access_census)
+ (modules test_external_access_census)
+ (libraries hermes_external_access hermes_harness_suite_telemetry))
+
+(executable
+ (name test_ops_command)
+ (modules test_ops_command)
+ (libraries hermes_ops yojson hermes_harness_suite_telemetry))
+
+(executable
+ (name test_ops_governance)
+ (modules test_ops_governance)
+ (libraries hermes_ops hermes_wiki_fpp hermes_harness_suite_telemetry))
+
+(executable
+ (name test_ops_command_runtime)
+ (modules test_ops_command_runtime)
+ (libraries hermes_ops yojson hermes_harness_suite_telemetry))
+
+(executable
+ (name test_ops_mcp)
+ (modules test_ops_mcp)
+ (libraries hermes_ops yojson hermes_harness_suite_telemetry))
+
+(executable
+ (name test_ops_zenoh)
+ (modules test_ops_zenoh)
+ (libraries hermes_ops yojson hermes_harness_suite_telemetry))
+
+(executable
+ (name test_ops_governance_model)
+ (modules test_ops_governance_model)
+ (libraries hermes_ops hermes_harness_suite_telemetry))
+
+(executable
+ (name test_ops_governance_formal)
+ (modules test_ops_governance_formal)
+ (libraries hermes_ops hermes_harness_suite_telemetry))
+
+(executable
+ (name test_ops_completion_history)
+ (modules test_ops_completion_history)
+ (libraries hermes_ops hermes_dependability_sqlite_test_support
+   hermes_harness_suite_telemetry))
+
+(executable
+ (name test_ops_command_service)
+ (modules test_ops_command_service)
+ (libraries hermes_ops hermes_dependability_sqlite_test_support
+   hermes_harness_suite_telemetry))
+
+(executable
+ (name test_ops_formal_staging)
+ (modules test_ops_formal_staging)
+ (libraries hermes_ops hermes_harness_suite_telemetry))
+
+(executable
+ (name test_ops_mbse)
+ (modules test_ops_mbse)
+ (libraries hermes_ops hermes_harness_suite_telemetry))

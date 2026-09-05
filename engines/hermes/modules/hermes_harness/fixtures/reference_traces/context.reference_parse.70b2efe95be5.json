@@ -1,0 +1,133 @@
+{
+  "scenario_id": "context.reference_parse",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "334429a75c80e5b0542160d3e9fad062c787cada53dba5be7604002ccc92ecac",
+  "trace": {
+    "results": {
+      "balanced_parens_kept": [
+        {
+          "end": 22,
+          "kind": "url",
+          "line_end": null,
+          "line_start": null,
+          "raw": "@url:https://x.io/a(b)",
+          "start": 0,
+          "target": "https://x.io/a(b)"
+        }
+      ],
+      "file_plain": [
+        {
+          "end": 25,
+          "kind": "file",
+          "line_end": null,
+          "line_start": null,
+          "raw": "@file:src/main.ml",
+          "start": 8,
+          "target": "src/main.ml"
+        }
+      ],
+      "file_quoted_range": [
+        {
+          "end": 21,
+          "kind": "file",
+          "line_end": 20,
+          "line_start": 10,
+          "raw": "@file:'a b.txt':10-20",
+          "start": 0,
+          "target": "a b.txt"
+        }
+      ],
+      "file_single_line": [
+        {
+          "end": 17,
+          "kind": "file",
+          "line_end": 15,
+          "line_start": 15,
+          "raw": "@file:src/x.ml:15",
+          "start": 0,
+          "target": "src/x.ml"
+        }
+      ],
+      "git_bang": [
+        {
+          "end": 12,
+          "kind": "git",
+          "line_end": null,
+          "line_start": null,
+          "raw": "@git:HEAD~3!",
+          "start": 0,
+          "target": "HEAD~3"
+        }
+      ],
+      "lookbehind_slash": [],
+      "lookbehind_word": [],
+      "no_boundary": [],
+      "quoted_backtick_range": [
+        {
+          "end": 23,
+          "kind": "file",
+          "line_end": 4,
+          "line_start": 3,
+          "raw": "@file:`quoted path`:3-4",
+          "start": 0,
+          "target": "quoted path"
+        }
+      ],
+      "simple_at_end": [
+        {
+          "end": 11,
+          "kind": "staged",
+          "line_end": null,
+          "line_start": null,
+          "raw": "@staged",
+          "start": 4,
+          "target": ""
+        }
+      ],
+      "simple_refs": [
+        {
+          "end": 5,
+          "kind": "diff",
+          "line_end": null,
+          "line_start": null,
+          "raw": "@diff",
+          "start": 0,
+          "target": ""
+        },
+        {
+          "end": 17,
+          "kind": "staged",
+          "line_end": null,
+          "line_start": null,
+          "raw": "@staged",
+          "start": 10,
+          "target": ""
+        }
+      ],
+      "trailing_punct": [
+        {
+          "end": 14,
+          "kind": "folder",
+          "line_end": null,
+          "line_start": null,
+          "raw": "@folder:docs/,",
+          "start": 0,
+          "target": "docs/"
+        }
+      ],
+      "unbalanced_paren_stripped": [
+        {
+          "end": 20,
+          "kind": "url",
+          "line_end": null,
+          "line_start": null,
+          "raw": "@url:https://x.io/a)",
+          "start": 0,
+          "target": "https://x.io/a"
+        }
+      ]
+    }
+  }
+}

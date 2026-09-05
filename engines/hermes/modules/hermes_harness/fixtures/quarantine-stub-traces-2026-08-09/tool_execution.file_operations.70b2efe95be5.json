@@ -1,0 +1,11 @@
+{
+  "scenario_id": "tool_execution.file_operations",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "aa635c19e45a54d0df8b6a71e4bf94b34b75ea11088638356b4b837a5eb67d23",
+  "trace": {
+    "messages": [ { "content": "stub for file_operations", "role": "user" } ],
+    "model": "openai/gpt-5.4"
+  }
+}

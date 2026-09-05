@@ -1,0 +1,11 @@
+; The workspace scan policy — the OUTERMOST gate. dune evaluates ONLY
+; what production needs: modules/ and the root. Everything else is data:
+; vendored inputs, parked legacy, incubating projects (they build in
+; isolation until they graduate), runtime state, generated output.
+(data_only_dirs third_party vendor external generated ui_web webedit rust
+ scripts tools providers state zigvm_legacy _gospel projects docs
+ ; libev-4.33: an autotools C build tree left by an opam depext install.
+ ; It carries no dune files today, so it produced no stanzas — but dune
+ ; TRAVERSED it on every scan, contradicting this policy's own claim, and
+ ; it was one stray dune file from joining the build.
+ libev-4.33)

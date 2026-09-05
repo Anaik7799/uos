@@ -1,0 +1,17 @@
+{
+  "scenario_id": "compress.skill_markers",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "5763b2ffcaaa5221292c6b202917dd5b46a917f9ab5b9407974e652aa8f48456",
+  "trace": {
+    "results": {
+      "extract_ignores_broken": [],
+      "extract_two_dedup": [ "alpha", "beta" ],
+      "marker_shape": "[SKILL_PRUNED: content lost in compression; reload with skill_view(name='pdf-tools')]",
+      "reinject_missing": "The work continued.\n\n## Pruned Skills\n[SKILL_PRUNED: content lost in compression; reload with skill_view(name='alpha')]\n[SKILL_PRUNED: content lost in compression; reload with skill_view(name='beta')]\n(The listed skills' instructions were pruned during context compression. Reload with the skill_view call in each marker before relying on that skill; one reload per skill is enough — ignore any older markers for the same skill.)",
+      "reinject_no_names": "untouched",
+      "reinject_survivor_untouched": "kept: [SKILL_PRUNED: content lost in compression; reload with skill_view(name='alpha')]"
+    }
+  }
+}

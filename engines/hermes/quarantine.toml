@@ -1,0 +1,12 @@
+# Hermes Engine Quarantine & Prototype Inventory
+# Tracks prototypes withheld from production execution authority.
+
+[[prototype]]
+path = "modules/hermes_server/hermes_server.ml"
+status = "QUARANTINED_REQUIREMENTS_ONLY"
+reason = "Fabricated status paths and unauthenticated HTTP endpoints."
+
+[[prototype]]
+path = "modules/hermes_vision/vision_server.ml"
+status = "QUARANTINED_REQUIREMENTS_ONLY"
+reason = "Unbounded vision worker and unauthenticated socket exposure."

@@ -1,0 +1,11 @@
+{
+  "scenario_id": "mcp.mcp_supervision",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "f1dfac68003837de1e34dd12af039dbe9e3fd339b62454a713255cec1a643fc8",
+  "trace": {
+    "messages": [ { "content": "stub for mcp_supervision", "role": "user" } ],
+    "model": "openai/gpt-5.4"
+  }
+}

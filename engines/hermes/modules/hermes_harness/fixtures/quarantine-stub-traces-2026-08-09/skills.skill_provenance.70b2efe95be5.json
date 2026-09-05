@@ -1,0 +1,13 @@
+{
+  "scenario_id": "skills.skill_provenance",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "649018fb80fec2ccce4872531065d08912364e8ddc4b941aa9754a76b7fe5285",
+  "trace": {
+    "messages": [
+      { "content": "stub for skill_provenance", "role": "user" }
+    ],
+    "model": "openai/gpt-5.4"
+  }
+}

@@ -1,0 +1,149 @@
+{
+  "scenario_id": "tool.patch_parse",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "6080170d5d09490b9ca8aaffd366ae7cc601d69f800279c855eab8c29ad5f7ac",
+  "trace": {
+    "results": {
+      "add_file": {
+        "error": null,
+        "operations": [
+          {
+            "content": null,
+            "file_path": "new.txt",
+            "hunks": [
+              {
+                "context_hint": null,
+                "lines": [
+                  { "content": "line one", "prefix": "+" },
+                  { "content": "line two", "prefix": "+" }
+                ]
+              }
+            ],
+            "new_path": null,
+            "operation": "OperationType.ADD"
+          }
+        ]
+      },
+      "crlf_body": {
+        "error": null,
+        "operations": [
+          {
+            "content": null,
+            "file_path": "c.ml",
+            "hunks": [
+              {
+                "context_hint": "h",
+                "lines": [
+                  { "content": "ctx", "prefix": " " },
+                  { "content": "new", "prefix": "+" }
+                ]
+              }
+            ],
+            "new_path": null,
+            "operation": "OperationType.UPDATE"
+          }
+        ]
+      },
+      "delete_file": {
+        "error": null,
+        "operations": [
+          {
+            "content": null,
+            "file_path": "dead.ml",
+            "hunks": [],
+            "new_path": null,
+            "operation": "OperationType.DELETE"
+          }
+        ]
+      },
+      "empty": { "error": null, "operations": [] },
+      "implicit_context_line": {
+        "error": null,
+        "operations": [
+          {
+            "content": null,
+            "file_path": "d.ml",
+            "hunks": [
+              {
+                "context_hint": " ",
+                "lines": [
+                  { "content": "bare context", "prefix": " " },
+                  { "content": "new", "prefix": "+" }
+                ]
+              }
+            ],
+            "new_path": null,
+            "operation": "OperationType.UPDATE"
+          }
+        ]
+      },
+      "move_file": {
+        "error": null,
+        "operations": [
+          {
+            "content": null,
+            "file_path": "old.ml",
+            "hunks": [],
+            "new_path": "new.ml",
+            "operation": "OperationType.MOVE"
+          }
+        ]
+      },
+      "multi_op": {
+        "error": null,
+        "operations": [
+          {
+            "content": null,
+            "file_path": "x",
+            "hunks": [
+              {
+                "context_hint": " ",
+                "lines": [
+                  { "content": "a", "prefix": " " },
+                  { "content": "b", "prefix": "+" }
+                ]
+              }
+            ],
+            "new_path": null,
+            "operation": "OperationType.UPDATE"
+          },
+          {
+            "content": null,
+            "file_path": "y",
+            "hunks": [],
+            "new_path": null,
+            "operation": "OperationType.DELETE"
+          }
+        ]
+      },
+      "no_markers": { "error": null, "operations": [] },
+      "update_no_hunks_errors": {
+        "error": "Parse error: UPDATE 'b.ml': no hunks found",
+        "operations": []
+      },
+      "update_one_hunk": {
+        "error": null,
+        "operations": [
+          {
+            "content": null,
+            "file_path": "a.ml",
+            "hunks": [
+              {
+                "context_hint": "ctx",
+                "lines": [
+                  { "content": "old", "prefix": " " },
+                  { "content": "gone", "prefix": "-" },
+                  { "content": "added", "prefix": "+" }
+                ]
+              }
+            ],
+            "new_path": null,
+            "operation": "OperationType.UPDATE"
+          }
+        ]
+      }
+    }
+  }
+}

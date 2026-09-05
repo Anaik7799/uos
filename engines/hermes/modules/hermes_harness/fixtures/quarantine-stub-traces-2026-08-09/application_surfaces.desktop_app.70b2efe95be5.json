@@ -1,0 +1,11 @@
+{
+  "scenario_id": "application_surfaces.desktop_app",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "c8bdfedda45b4d5eb7208d6462c2cc2e1e22d9ebeb41263dcf3d3eb87e7f76e1",
+  "trace": {
+    "messages": [ { "content": "stub for desktop_app", "role": "user" } ],
+    "model": "openai/gpt-5.4"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "scenario_id": "sub.kanban",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "0f4e837844eae549d4c1fc1e79a0c0388c66b007d84b18237e5b61937bd29c53",
+  "trace": {
+    "results": {
+      "normalize_profile_none_sentinel": null,
+      "normalize_profile_real_value": "alice",
+      "ok_envelope_basic": "{\"ok\": true, \"count\": 3}",
+      "parse_bool_float_one_control": {
+        "error": "x must be a boolean or 'true'/'false'",
+        "value": false
+      },
+      "parse_bool_int_one": { "error": null, "value": true },
+      "parse_bool_yes": { "error": null, "value": true },
+      "parse_worker_full": {
+        "ok": {
+          "body": "Find bugs",
+          "max_runtime_seconds": null,
+          "priority": 0,
+          "profile": "researcher",
+          "skills": [ "python", "testing" ],
+          "title": "Find bugs"
+        }
+      },
+      "parse_worker_stray_colon": {
+        "ok": {
+          "body": "b",
+          "max_runtime_seconds": null,
+          "priority": 0,
+          "profile": "a",
+          "skills": [ "c:d" ],
+          "title": "b"
+        }
+      },
+      "parse_worker_too_few": {
+        "error": "worker must be profile:title or profile:title:skill,skill"
+      },
+      "require_text_blank": { "error": "goal is required" },
+      "swarm_context_basic": "\n\n## Swarm protocol\n- Swarm root / shared blackboard: `r1`.\n- Read sibling/parent handoffs from Kanban context before working.\n- Put machine-readable facts in completion metadata.\n- Put cross-worker notes on the root task using structured comments.\n- Goal: g\n"
+    }
+  }
+}

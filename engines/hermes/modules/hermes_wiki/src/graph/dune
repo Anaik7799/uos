@@ -1,0 +1,11 @@
+(library
+ (name hermes_wiki_graph)
+ (wrapped false)
+ (modules wiki_graph discourse)
+ (libraries hermes_wiki_core))
+
+(library
+ (name hermes_wiki_similarity)
+ (wrapped false)
+ (modules wiki_similarity)
+ (libraries hermes_wiki_core hermes_wiki_graph))

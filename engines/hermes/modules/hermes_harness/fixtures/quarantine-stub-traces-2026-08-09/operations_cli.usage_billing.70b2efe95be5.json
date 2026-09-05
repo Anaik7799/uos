@@ -1,0 +1,11 @@
+{
+  "scenario_id": "operations_cli.usage_billing",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "ea8692c9ee6fc1a66dd53f6cc296837b8bc6e91ea3d5e2558c33c120e41e04af",
+  "trace": {
+    "messages": [ { "content": "stub for usage_billing", "role": "user" } ],
+    "model": "openai/gpt-5.4"
+  }
+}

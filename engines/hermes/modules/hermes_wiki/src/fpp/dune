@@ -1,0 +1,30 @@
+; The diagnostic substrate + F Prime metamodel + pure simulator live inside
+; the wiki folder so the knowledge system carries its actor-model and
+; diagnostic discipline. The harness reuses these (harness -> wiki is the
+; permitted direction); NOTHING here references hermes_harness_* — the guard
+; law in test_hermes_wiki enforces that narrow boundary. Wiki_topology also
+; depends on the neutral hermes_fpp_window_authority leaf below.
+
+(library
+ (name hermes_wiki_diag)
+ (wrapped false)
+ (modules fractal_diagnostic)
+ (libraries yojson))
+
+(library
+ (name hermes_wiki_fpp)
+ (wrapped false)
+ (modules fpp_model)
+ (libraries hermes_wiki_diag))
+
+(library
+ (name hermes_wiki_fpp_interp)
+ (wrapped false)
+ (modules fpp_interp)
+ (libraries hermes_wiki_fpp))
+
+(library
+ (name hermes_wiki_topology)
+ (wrapped false)
+ (modules wiki_topology)
+ (libraries hermes_fpp_window_authority hermes_wiki_fpp))

@@ -1,0 +1,26 @@
+{
+  "scenario_id": "cli.approval",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "1f5586cf4a42518b11a24f1adaf14a08821ad716efed2411d7eecd2b956cea10",
+  "trace": {
+    "results": {
+      "apply_indices_dedup": { "ok": [ 0, 2 ] },
+      "apply_indices_invalid": {
+        "error": "invalid selection 'abc' — expected numbers like 1,3"
+      },
+      "apply_indices_range": { "error": "selection 9 out of range (1..3)" },
+      "glob_flag_second": "git *",
+      "glob_plain_second": "git status *",
+      "glob_single": "ls",
+      "glob_unsafe": null,
+      "operator_and": true,
+      "operator_none": false,
+      "root_binary_mkfs": true,
+      "root_binary_path": true,
+      "unsafe_class_boundary_control": false,
+      "unsafe_class_word": true
+    }
+  }
+}

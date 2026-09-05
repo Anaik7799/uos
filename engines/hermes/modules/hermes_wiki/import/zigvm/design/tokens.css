@@ -1,0 +1,52 @@
+/* GENERATED from harness/figma_design.ml via dump_figma_design.exe — do not hand-edit.
+   Regenerate: dune exec ./harness/dump_figma_design.exe + this jq projection. */
+:root {
+  --line: #dce2e5; /* border/default -> color/neutral/200 */
+  --muted: #65737b; /* content/muted -> color/neutral/500 */
+  --ink: #182126; /* content/primary -> color/neutral/900 */
+  --selected: #2f6fbb; /* data/selected -> color/blue/500 */
+  --accent: #087f5b; /* status/accent -> color/green/700 */
+  --error: #bd2c2c; /* status/error -> color/red/700 */
+  --warning: #b65d05; /* status/warning -> color/amber/700 */
+  --bg: #f5f7f8; /* surface/background -> color/neutral/50 */
+  --panel: #ffffff; /* surface/panel -> color/neutral/0 */
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px;
+  --space-6: 24px; --space-8: 32px; --space-12: 48px; --space-16: 64px;
+  --radius-control: 4px; --radius-panel: 6px; --radius-dialog: 12px;
+  --control-min: 44px; --content-max: 1440px;
+  --type-body: 14px/1.45 Inter, sans-serif; --type-title: 28px/1.2 Inter, sans-serif;
+  --elevation-panel: 0 4px 16px rgba(0,0,0,.12);
+}
+@media (prefers-color-scheme: dark) { :root {
+  --line: #344047; /* border/default -> color/neutral/700 */
+  --muted: #9eaaaf; /* content/muted -> color/neutral/300 */
+  --ink: #edf2f3; /* content/primary -> color/neutral/25 */
+  --selected: #2f6fbb; /* data/selected -> color/blue/500 */
+  --accent: #3ecf9a; /* status/accent -> color/green/300 */
+  --error: #ff7474; /* status/error -> color/red/300 */
+  --warning: #f0a14a; /* status/warning -> color/amber/300 */
+  --bg: #151a1d; /* surface/background -> color/neutral/950 */
+  --panel: #1d2428; /* surface/panel -> color/neutral/850 */
+} }
+:root[data-theme="dark"] {
+  --line: #344047;
+  --muted: #9eaaaf;
+  --ink: #edf2f3;
+  --selected: #2f6fbb;
+  --accent: #3ecf9a;
+  --error: #ff7474;
+  --warning: #f0a14a;
+  --bg: #151a1d;
+  --panel: #1d2428;
+}
+:root[data-theme="light"] {
+  --line: #dce2e5;
+  --muted: #65737b;
+  --ink: #182126;
+  --selected: #2f6fbb;
+  --accent: #087f5b;
+  --error: #bd2c2c;
+  --warning: #b65d05;
+  --bg: #f5f7f8;
+  --panel: #ffffff;
+}

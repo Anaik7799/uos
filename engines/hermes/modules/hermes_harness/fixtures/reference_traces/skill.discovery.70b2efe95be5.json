@@ -1,0 +1,55 @@
+{
+  "scenario_id": "skill.discovery",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "fa1eebcb95030fee9496b611fcb998450e56c5023618e2beb319a9d9a7dff9da",
+  "trace": {
+    "results": {
+      "path_error_posix_absolute": "Skill name must be a relative path within the skills directory.",
+      "path_error_relative": null,
+      "path_error_traversal": "Skill name cannot contain '..' path traversal components.",
+      "path_error_windows_relative_drive": "Skill name must be a relative path within the skills directory.",
+      "prereq_env_vars": {
+        "commands": [ "git" ],
+        "env_vars": [ "FOO", "BAR" ]
+      },
+      "prereq_missing": { "commands": [], "env_vars": [] },
+      "required_env_dedup": [
+        { "name": "DUP", "prompt": "Enter value for DUP" }
+      ],
+      "required_env_full": [
+        {
+          "help": "setup help",
+          "name": "PLAIN_VAR",
+          "prompt": "Enter value for PLAIN_VAR"
+        },
+        {
+          "help": "docs here",
+          "name": "WITH_HELP",
+          "optional": true,
+          "prompt": "Enter value for WITH_HELP"
+        },
+        {
+          "help": "https://x.io",
+          "name": "SECRET_KEY",
+          "prompt": "Enter value for SECRET_KEY"
+        },
+        {
+          "help": "setup help",
+          "name": "LEGACY_VAR",
+          "prompt": "Enter value for LEGACY_VAR"
+        }
+      ],
+      "required_env_invalid_name": [],
+      "sort_skills": [
+        { "category": null, "name": "alpha" },
+        { "category": "b", "name": "beta" },
+        { "category": "b", "name": "zeta" }
+      ],
+      "tags_bracket_string": [ "x", "y", "z" ],
+      "tags_empty": [],
+      "tags_list": [ "alpha", "beta" ]
+    }
+  }
+}

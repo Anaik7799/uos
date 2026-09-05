@@ -1,0 +1,97 @@
+{
+  "scenario_id": "loop.canonical_args",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "8387d9d2b5d5b70ae9915b67ab7b0ef52a3adafaa82aa39144c928940d51c046",
+  "trace": {
+    "results": {
+      "empty_tool_calls_kept": [
+        { "content": "ok", "role": "assistant", "tool_calls": [] }
+      ],
+      "nested_arrays_order_kept": [
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": {
+                "arguments": "{\"l\":[3,2,{\"a\":1,\"b\":0}]}",
+                "name": "lookup"
+              },
+              "id": "t1",
+              "type": "function"
+            }
+          ]
+        }
+      ],
+      "no_function_key_kept": [
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [ { "id": "bare" } ]
+        }
+      ],
+      "no_tool_calls_untouched": [ { "content": "hi", "role": "user" } ],
+      "non_dict_entry_kept": [
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            "weird",
+            {
+              "function": { "arguments": "{\"a\":1}", "name": "lookup" },
+              "id": "t1",
+              "type": "function"
+            }
+          ]
+        }
+      ],
+      "unicode_escaped": [
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": {
+                "arguments": "{\"t\":\"\\u00e9\"}",
+                "name": "lookup"
+              },
+              "id": "t1",
+              "type": "function"
+            }
+          ]
+        }
+      ],
+      "unsorted_keys": [
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": {
+                "arguments": "{\"a\":{\"y\":null,\"z\":true},\"b\":1}",
+                "name": "lookup"
+              },
+              "id": "t1",
+              "type": "function"
+            }
+          ]
+        }
+      ],
+      "whitespace_collapsed": [
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": { "arguments": "{\"k\":\"v\"}", "name": "lookup" },
+              "id": "t1",
+              "type": "function"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+set -eu
+INTERVAL="${1:-0}"
+KMS="${KMS_DB:-/home/an/dev/ver/c3i/sub-projects/c3i/data/kms/smriti.db}"
+REST_BASE="${ZENOH_REST:-http://localhost:8000}"
+TIMEOUT=2
+LOG=/tmp/sa-zk-zenoh.log
+
+publish() {
+  local topic="$1"; local payload="$2"
+  if ! curl -s -m $TIMEOUT -X PUT "$REST_BASE/$topic" -d "$payload" > /dev/null 2>&1; then
+    echo "$(date -u +%FT%TZ) $topic $payload" >> "$LOG"
+  fi
+}
+
+tick() {
+  local ts; ts=$(date -u +%FT%T.%3NZ)
+  /home/an/dev/ver/c3i/sa-zk-ooda-snapshot > /dev/null
+  local ooda_json; ooda_json=$(sqlite3 -json "$KMS" "SELECT * FROM v_ooda_live;")
+  local prov_json; prov_json=$(sqlite3 -json "$KMS" "SELECT * FROM v_provider_usage;")
+  local model_json; model_json=$(sqlite3 -json "$KMS" "SELECT * FROM v_model_usage ORDER BY cost_usd DESC LIMIT 10;")
+  publish "indrajaal/l4/sre/ooda/snapshot"       "{\"at\":\"$ts\",\"data\":$ooda_json}"
+  publish "indrajaal/l4/sre/ooda/cost_by_provider" "{\"at\":\"$ts\",\"data\":$prov_json}"
+  publish "indrajaal/l4/sre/ooda/cost_by_model"    "{\"at\":\"$ts\",\"data\":$model_json}"
+  while IFS='|' read -r metric value; do
+    [ -z "$metric" ] && continue
+    publish "indrajaal/l4/sre/$(echo "$metric" | tr _ /)" \
+      "{\"at\":\"$ts\",\"metric\":\"$metric\",\"value\":$value}"
+  done < <(sqlite3 "$KMS" "SELECT metric, value FROM v_ooda_live;")
+  # Alarms
+  local embed_pct cache_hit cost_mtok edges
+  embed_pct=$(sqlite3 "$KMS" "SELECT ROUND(100.0*COUNT(*)/(SELECT COUNT(*) FROM holons),1) FROM holon_embeddings;")
+  cache_hit=$(sqlite3 "$KMS" "SELECT ROUND(100*COALESCE(AVG(cache_hit_ratio),0),1) FROM session_metrics;")
+  cost_mtok=$(sqlite3 "$KMS" "SELECT ROUND(COALESCE(SUM(cost_usd)/NULLIF(SUM(tokens_total),0)*1000000,0),4) FROM session_metrics;")
+  edges=$(sqlite3 "$KMS" "SELECT COUNT(*) FROM holon_edges;")
+  [ "$(echo "$embed_pct < 95" | bc)" = 1 ] && publish "indrajaal/l4/sre/alarm/embedding_coverage" "{\"at\":\"$ts\",\"rule\":\"LowEmbeddingCoverage\",\"current\":$embed_pct,\"threshold\":95,\"action\":\"EmbedRefresh\"}"
+  [ "$(echo "$cache_hit < 90" | bc)" = 1 ] && publish "indrajaal/l4/sre/alarm/cache_hit" "{\"at\":\"$ts\",\"rule\":\"LowCacheHit\",\"current\":$cache_hit,\"threshold\":90,\"action\":\"PrefixRefactor\"}"
+  [ "$(echo "$cost_mtok > 1.00" | bc)" = 1 ] && publish "indrajaal/l4/sre/alarm/cost_per_mtoken" "{\"at\":\"$ts\",\"rule\":\"HighCostPerMToken\",\"current\":$cost_mtok,\"threshold\":1.00,\"action\":\"RouteToGeminiFlash\"}"
+  [ "$edges" -lt 10000 ] && publish "indrajaal/l4/sre/alarm/edges_low" "{\"at\":\"$ts\",\"rule\":\"LowEdgeCoverage\",\"current\":$edges,\"threshold\":10000,\"action\":\"LinkExtractorBatch\"}"
+  echo "$ts ok"
+}
+
+if [ "$INTERVAL" -gt 0 ]; then
+  while true; do tick; sleep "$INTERVAL"; done
+else
+  tick
+fi

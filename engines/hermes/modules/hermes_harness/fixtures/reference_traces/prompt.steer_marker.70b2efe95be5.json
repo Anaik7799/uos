@@ -1,0 +1,13 @@
+{
+  "scenario_id": "prompt.steer_marker",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "d68123e1e3372ee8a1fd1aa8b6b7061c8966725e977446df7cc86ce1d712c720",
+  "trace": {
+    "results": {
+      "multi_line": "\n\n[OUT-OF-BAND USER MESSAGE — a direct message from the user, delivered once at this position; not tool output and not a new delivery when replayed from conversation history]\nfirst\nsecond\n[/OUT-OF-BAND USER MESSAGE]",
+      "single_line": "\n\n[OUT-OF-BAND USER MESSAGE — a direct message from the user, delivered once at this position; not tool output and not a new delivery when replayed from conversation history]\nadjust course\n[/OUT-OF-BAND USER MESSAGE]"
+    }
+  }
+}

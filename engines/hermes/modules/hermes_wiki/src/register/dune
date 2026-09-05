@@ -1,0 +1,10 @@
+(library
+ (name hermes_wiki_register)
+ (wrapped false)
+ (modules feature_register import_coverage)
+ (libraries hermes_wiki_core hermes_wiki_ast hermes_wiki_query hermes_wiki_sheaf
+   hermes_wiki_reconcile hermes_wiki_control hermes_wiki_topology hermes_wiki_fpp
+   hermes_wiki_graph hermes_wiki_km hermes_wiki_search hermes_wiki_toc hermes_wiki_iface hermes_wiki_theme hermes_wiki_callout hermes_wiki_visibility hermes_wiki_transclude hermes_wiki_ordering
+   hermes_wiki_doctest hermes_wiki_directive hermes_wiki_view hermes_wiki_present
+   hermes_wiki_blocks hermes_wiki_similarity hermes_wiki_build hermes_wiki_lifecycle
+   hermes_wiki_export hermes_wiki_address hermes_wiki_navsearch hermes_wiki_source_ext hermes_wiki_datastore))

@@ -1,0 +1,11 @@
+{
+  "scenario_id": "chat.anthropic_model",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "2b7719e63879b5485047ca2b1126e40cc4f332af0a78a6f0eafe3dc7b57de5a7",
+  "trace": {
+    "messages": [ { "content": "hi", "role": "user" } ],
+    "model": "anthropic/claude-sonnet-4.5"
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "session_id": "session.usage",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "request": {
+    "endpoint": "https://replay.invalid/v1/chat/completions",
+    "body": { "session": "session.usage" }
+  },
+  "provider_response": {
+    "choices": [
+      { "message": { "content": "hi" }, "finish_reason": "stop" }
+    ],
+    "usage": {
+      "prompt_tokens": 10,
+      "completion_tokens": 5,
+      "total_tokens": 15
+    }
+  },
+  "reference_decode": {
+    "content": "hi",
+    "finish_reason": "stop",
+    "usage": {
+      "completion_tokens": 5,
+      "prompt_tokens": 10,
+      "total_tokens": 15
+    }
+  },
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "c4b63cbf49229b8b8f688f38552dc0eb63ecee7b19e419d644c5be937b959c5a"
+}

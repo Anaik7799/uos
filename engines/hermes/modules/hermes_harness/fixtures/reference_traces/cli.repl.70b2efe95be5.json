@@ -1,0 +1,26 @@
+{
+  "scenario_id": "cli.repl",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "1dbc68526155d336cdf50dccc6daa1b3fda04125cad2c99befc7adf5cef22667",
+  "trace": {
+    "results": {
+      "clean_summary_collapse": "multi space text",
+      "clean_summary_suppress": "==SUPPRESS==",
+      "coalesce_session_name": [ "-c", "my session name", "chat" ],
+      "dashboard_runtime_full": [ "dashboard", "[::1]", 9200 ],
+      "dashboard_runtime_none": null,
+      "footer_rule_dashes": true,
+      "footer_rule_short": false,
+      "format_sessions_basic": "ID                               Source        Msgs  Title / Preview\n----------------------------------------------------------------------------------\nabc123                           cli              4  hello",
+      "format_sessions_empty": "No sessions found.",
+      "probe_host_brackets": "::1",
+      "provider_name_capitalize": "Myserver.com",
+      "provider_name_localhost": "Local (localhost:8080)",
+      "strip_ansi_sgr": "red plain",
+      "strip_footer_full": "hi",
+      "strip_footer_none": "just output"
+    }
+  }
+}

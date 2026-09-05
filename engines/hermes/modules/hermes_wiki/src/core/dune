@@ -1,0 +1,5 @@
+(library
+ (name wiki_core)
+ (wrapped false)
+ (modules wiki_baseline wiki_digest)
+ (libraries unix))

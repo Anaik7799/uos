@@ -1,0 +1,228 @@
+(library
+ (name hermes_agent_loop_conversation_loop)
+ (wrapped false)
+ (modules conversation_loop)
+ (libraries yojson hermes_harness_turn_budget hermes_agent_loop_message_hygiene))
+
+(library
+ (name hermes_agent_loop_prompt_assembly)
+ (wrapped false)
+ (modules prompt_assembly)
+ (libraries yojson hermes_agent_loop_message_hygiene))
+
+(library
+ (name hermes_agent_loop_context_engine)
+ (wrapped false)
+ (modules context_engine)
+ (libraries yojson hermes_agent_loop_message_hygiene))
+
+(library
+ (name hermes_agent_loop_context_compression)
+ (wrapped false)
+ (modules context_compression)
+ (libraries yojson hermes_agent_loop_message_hygiene))
+
+(library
+ (name hermes_agent_loop_turn_finalization)
+ (wrapped false)
+ (modules turn_finalization)
+ (libraries yojson hermes_agent_loop_message_hygiene))
+
+(library
+ (name hermes_agent_loop_interrupt_control)
+ (wrapped false)
+ (modules interrupt_control)
+ (libraries yojson hermes_harness_turn_budget))
+
+(library
+ (name hermes_agent_loop_message_hygiene)
+ (wrapped false)
+ (modules message_hygiene)
+ (libraries yojson))
+
+(library
+ (name hermes_agent_loop_message_repairs)
+ (wrapped false)
+ (modules message_repairs)
+ (libraries yojson))
+
+(test
+ (name test_message_repairs)
+ (modules test_message_repairs)
+ (libraries hermes_agent_loop_message_repairs hermes_harness_suite_telemetry yojson))
+
+(library
+ (name hermes_agent_loop_json_canonical)
+ (wrapped false)
+ (modules json_canonical)
+ (libraries yojson))
+
+(library
+ (name hermes_agent_loop_loop_send_path)
+ (wrapped false)
+ (modules loop_send_path)
+ (libraries yojson hermes_agent_loop_json_canonical))
+
+(test
+ (name test_json_canonical)
+ (modules test_json_canonical)
+ (libraries hermes_agent_loop_json_canonical hermes_agent_loop_loop_send_path
+   hermes_harness_suite_telemetry yojson))
+
+(library
+ (name hermes_agent_loop_prompt_units)
+ (wrapped false)
+ (modules prompt_units))
+
+(library
+ (name hermes_agent_loop_context_units)
+ (wrapped false)
+ (modules context_units))
+
+(library
+ (name hermes_agent_loop_compress_units)
+ (wrapped false)
+ (modules compress_units))
+
+(library
+ (name hermes_agent_loop_finalize_units)
+ (wrapped false)
+ (modules finalize_units)
+ (libraries yojson))
+
+(library
+ (name hermes_agent_loop_redact_units)
+ (wrapped false)
+ (modules redact_units))
+
+(test
+ (name test_redact_units)
+ (modules test_redact_units)
+ (libraries hermes_agent_loop_redact_units hermes_harness_suite_telemetry))
+
+(library
+ (name hermes_agent_loop_tool_units)
+ (wrapped false)
+ (modules tool_units)
+ (libraries yojson))
+
+(test
+ (name test_tool_units)
+ (modules test_tool_units)
+ (libraries hermes_agent_loop_tool_units hermes_harness_suite_telemetry yojson))
+
+(library
+ (name hermes_agent_loop_context_file_units)
+ (wrapped false)
+ (modules context_file_units)
+ (libraries yojson))
+
+(library
+ (name hermes_agent_loop_memory_units)
+ (wrapped false)
+ (modules memory_units)
+ (libraries yojson))
+
+(test
+ (name test_files_memory_units)
+ (modules test_files_memory_units)
+ (libraries hermes_agent_loop_context_file_units hermes_agent_loop_memory_units
+   hermes_harness_suite_telemetry yojson))
+
+(library
+ (name hermes_agent_loop_skill_units)
+ (wrapped false)
+ (modules skill_units)
+ (libraries yojson hermes_agent_loop_memory_units))
+
+(test
+ (name test_skill_units)
+ (modules test_skill_units)
+ (libraries hermes_agent_loop_skill_units hermes_harness_suite_telemetry yojson))
+
+(library
+ (name hermes_agent_loop_interactive_cli_units)
+ (wrapped false)
+ (modules interactive_cli_units)
+ (libraries yojson))
+
+(library
+ (name hermes_agent_loop_mcp_units)
+ (wrapped false)
+ (modules mcp_units)
+ (libraries yojson unix hermes_agent_loop_memory_units))
+
+(library
+ (name hermes_agent_loop_subagent_units)
+ (wrapped false)
+ (modules subagent_units)
+ (libraries yojson hermes_agent_loop_memory_units))
+
+(test
+ (name test_subagent_units)
+ (modules test_subagent_units)
+ (libraries hermes_agent_loop_subagent_units hermes_harness_suite_telemetry yojson))
+
+(test
+ (name test_mcp_units)
+ (modules test_mcp_units)
+ (libraries hermes_agent_loop_mcp_units hermes_harness_suite_telemetry yojson))
+
+(test
+ (name test_interactive_cli_units)
+ (modules test_interactive_cli_units)
+ (libraries hermes_agent_loop_interactive_cli_units hermes_harness_suite_telemetry yojson))
+
+(test
+ (name test_slice_units)
+ (modules test_slice_units)
+ (libraries hermes_agent_loop_prompt_units hermes_agent_loop_context_units
+   hermes_agent_loop_compress_units hermes_agent_loop_finalize_units
+   hermes_harness_suite_telemetry yojson))
+
+(test
+ (name test_conversation_loop)
+ (modules test_conversation_loop)
+ (libraries hermes_agent_loop_conversation_loop hermes_harness_turn_budget hermes_agent_loop_message_hygiene hermes_harness_suite_telemetry yojson))
+
+(test
+ (name test_prompt_assembly)
+ (modules test_prompt_assembly)
+ (libraries hermes_agent_loop_prompt_assembly hermes_agent_loop_message_hygiene hermes_harness_suite_telemetry yojson))
+
+(test
+ (name test_context_engine)
+ (modules test_context_engine)
+ (libraries hermes_agent_loop_context_engine hermes_agent_loop_message_hygiene hermes_harness_suite_telemetry yojson))
+
+(test
+ (name test_context_engine_stress)
+ (modules test_context_engine_stress)
+ (libraries hermes_agent_loop_context_engine hermes_agent_loop_message_hygiene hermes_harness_suite_telemetry yojson))
+
+(test
+ (name test_context_compression)
+ (modules test_context_compression)
+ (libraries hermes_agent_loop_context_compression hermes_agent_loop_message_hygiene hermes_harness_suite_telemetry yojson))
+
+(test
+ (name stress_test_context_compression)
+ (modules stress_test_context_compression)
+ (libraries hermes_agent_loop_context_compression hermes_agent_loop_message_hygiene yojson))
+
+(test
+ (name test_turn_finalization)
+ (modules test_turn_finalization)
+ (libraries hermes_agent_loop_turn_finalization hermes_agent_loop_message_hygiene hermes_harness_suite_telemetry yojson))
+
+(test
+ (name stress_test_turn_finalization)
+ (modules stress_test_turn_finalization)
+ (libraries hermes_agent_loop_turn_finalization hermes_agent_loop_message_hygiene yojson))
+
+
+(test
+ (name test_hz_nrm_01)
+ (modules test_hz_nrm_01)
+ (libraries hermes_agent_loop_conversation_loop hermes_agent_loop_prompt_assembly
+   hermes_harness_parity_normalizer hermes_harness_suite_telemetry yojson))

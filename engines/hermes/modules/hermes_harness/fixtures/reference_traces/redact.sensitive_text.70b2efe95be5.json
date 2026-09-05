@@ -1,0 +1,27 @@
+{
+  "scenario_id": "redact.sensitive_text",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "556f924f364fdcd3c700e35d40ce28d9584ec80ccc49c5159d64f0df3985a290",
+  "trace": {
+    "results": {
+      "aws_exact_sixteen": "aws AKIAIO...MPLE here",
+      "bare_userinfo_masked_then_starred": "https://***@github.com/org/repo.git",
+      "bearer_jwt_header": "Authorization: Bearer eyJhbG...c2ln via https://api.host",
+      "clean_prose": "no secrets in this line",
+      "db_connstring": "postgresql://svc:***@db.internal:5432/app",
+      "github_pat": "ghp_AB...1234",
+      "gitlab_pat": "glpat-...cDEF",
+      "jwt_bare": "token eyJhbG...dXJl end",
+      "openai_key": "key sk-pro...G7h8 used",
+      "params_pass_through_when_off": "https://api.example.com/cb?code=abc123&state=xyz",
+      "percent_decoded_param": "https://x.io/cb?a%70i_key=***",
+      "raw_authorization": "Authorization: some-opaque-token-value-123456 *** https://api.host",
+      "sensitive_params": "https://api.example.com/cb?code=***&state=xyz&api-key=***#frag",
+      "short_key_floor": "***",
+      "userinfo_user_pass": "https://alice:***@example.com/x",
+      "x_api_key_header": "GET https://api.local x-api-key: 123456...ghij"
+    }
+  }
+}

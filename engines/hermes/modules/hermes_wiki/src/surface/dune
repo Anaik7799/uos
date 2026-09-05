@@ -1,0 +1,11 @@
+(library
+ (name hermes_wiki_export)
+ (wrapped false)
+ (modules wiki_export)
+ (libraries hermes_wiki_core hermes_wiki_ast))
+
+(library
+ (name hermes_wiki_navsearch)
+ (wrapped false)
+ (modules wiki_navsearch)
+ (libraries hermes_wiki_core hermes_wiki_search hermes_wiki_graph hermes_wiki_toc))

@@ -1,0 +1,66 @@
+{
+  "scenario_id": "route.fallback_chain",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "ad69f0de27af339e7f6308f6f3df74ff093a893a130d5e8b6225bf30c6aa40d5",
+  "trace": {
+    "results": [
+      [],
+      [],
+      [
+        { "model": "a", "provider": "openrouter" },
+        { "model": "b", "provider": "nous" }
+      ],
+      [
+        {
+          "base_url": "http://h:11434/v1",
+          "model": "m",
+          "provider": "ollama"
+        }
+      ],
+      [
+        {
+          "base_url": "https://O.ai/v1",
+          "model": "GPT",
+          "provider": "OpenRouter"
+        },
+        { "model": "glm", "provider": "zai" }
+      ],
+      [ { "model": "m2", "provider": "p2" } ],
+      [
+        {
+          "api_key": "sk",
+          "key_env": "K",
+          "model": "x",
+          "provider": "c",
+          "tag": null,
+          "temperature": 0.2
+        }
+      ],
+      [
+        { "base_url": "", "model": "b", "provider": "a" },
+        { "base_url": null, "model": "d", "provider": "c" }
+      ],
+      [
+        { "base_url": "http://x:1", "model": "m", "provider": "l" },
+        { "base_url": "http://x:2", "model": "m", "provider": "l" }
+      ],
+      [ { "model": "k2", "provider": "kimi" } ],
+      [
+        { "model": "456", "provider": "123" },
+        { "model": "m", "provider": "True" }
+      ],
+      [ { "model": "g3", "provider": "gemini" } ],
+      [],
+      [
+        {
+          "base_url": "http://10.0.0.5:8000/v1",
+          "model": "q",
+          "provider": "vllm"
+        }
+      ],
+      [ { "base_url": 8080, "model": "b", "provider": "a" } ]
+    ]
+  }
+}

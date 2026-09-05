@@ -1,0 +1,183 @@
+(library
+ (name hermes_harness_sop_execution)
+ (wrapped false)
+ (modules sop_execution)
+ (libraries hermes_harness_harness_topology hermes_harness_fractal_ontology
+   hermes_harness_formal_coverage hermes_wiki_fpp yojson unix hermes_harness_swarm_algebra))
+
+(executable
+ (name test_sop_execution)
+ (modules test_sop_execution)
+ (libraries hermes_harness_sop_execution hermes_harness_harness_topology
+   hermes_harness_fractal_ontology hermes_harness_formal_coverage
+   hermes_wiki_fpp yojson unix hermes_harness_suite_telemetry))
+
+(executable
+ (name test_sop_execution_stress)
+ (modules test_sop_execution_stress)
+ (libraries hermes_harness_sop_execution hermes_harness_harness_topology
+   hermes_harness_fractal_ontology hermes_harness_formal_coverage
+   hermes_wiki_fpp yojson unix hermes_harness_suite_telemetry))
+
+(executable
+ (name test_sop_execution_containment)
+ (modules test_sop_execution_containment)
+ (libraries hermes_harness_sop_execution unix hermes_harness_suite_telemetry))
+
+(executable
+ (name test_challenger_m3_2)
+ (modules test_challenger_m3_2)
+ (libraries hermes_harness_sop_execution hermes_harness_harness_topology
+   hermes_harness_fractal_ontology hermes_harness_formal_coverage
+   hermes_wiki_fpp yojson unix hermes_harness_suite_telemetry))
+
+; `test_challenger_m3_stress` was a byte-identical copy of
+; `test_sop_execution_stress` (same asserts, differing only in its
+; ~suite: telemetry string). It was deleted 2026-08-12: a suite counted
+; twice inflates the battery denominator with zero added information,
+; and `ops_verify.ml:82` derives that denominator from the `test_*.ml`
+; glob, so removing the source removes the claim without a phantom skip.
+
+(executable
+ (name test_challenger_m5_2_stress)
+ (modules test_challenger_m5_2_stress)
+ (libraries hermes_harness_sop_execution hermes_harness_harness_topology
+   hermes_harness_fractal_ontology hermes_harness_formal_coverage
+   hermes_wiki_fpp yojson unix hermes_harness_suite_telemetry))
+
+(executable
+ (name test_vision_swarm_adapter)
+ (modules test_vision_swarm_adapter)
+ (libraries hermes_harness_swarm_algebra hermes_harness_suite_telemetry))
+
+(executable
+ (name test_swarm_bridge_reservation)
+ (modules test_swarm_bridge_reservation)
+ (libraries hermes_harness_suite_telemetry))
+
+(executable
+ (name test_datarhei_vision)
+ (modules test_datarhei_vision)
+ (libraries hermes_harness_swarm_algebra alcotest qcheck str
+   hermes_harness_suite_telemetry))
+
+(rule
+ (alias runtest)
+ (action
+  (progn
+   (run ./test_sop_execution.exe)
+   (run ./test_sop_execution_stress.exe)
+   (run ./test_vision_swarm_adapter.exe)
+   (run ./test_swarm_bridge_reservation.exe)
+   (run ./test_datarhei_vision.exe)
+   (run ./test_swarm_chaos.exe))))
+
+(library
+ (name hermes_harness_swarm_algebra)
+ (wrapped false)
+ (modules swarm_ontology swarm_algebra swarm_agents intent_config swarm_api swarm_fpp swarm_memory swarm_zenoh swarm_km datarhei_intent datarhei_ffi ffmpeg_ontology ffmpeg_algebra ffmpeg_intent ffmpeg_controller ffmpeg_fpp vision_swarm_adapter lmstudio_intent lmstudio_fpp lmstudio_sysml lmstudio_controller lmstudio_monitor lmstudio_explorer lmstudio_db lmstudio_optimizer lmstudio_razer_probe lmstudio_oracle_bridge lmstudio_dashboard_ontology lmstudio_dashboard_web)
+ (foreign_stubs (language c) (names datarhei_stubs))
+ (libraries hermes_harness_fractal_ontology yojson hermes_wiki_fpp unix sqlite3 dream tyxml))
+
+(executable
+ (name run_lmstudio_dashboard)
+ (modules run_lmstudio_dashboard)
+ (libraries hermes_harness_swarm_algebra run_swarm_bridge_programme sa_plan))
+
+(executable
+ (name test_lmstudio_dashboard_web)
+ (modules test_lmstudio_dashboard_web)
+ (libraries hermes_harness_swarm_algebra hermes_harness_suite_telemetry))
+
+(executable
+ (name run_lmstudio_dashboard_playwright)
+ (modules run_lmstudio_dashboard_playwright)
+ (libraries hermes_harness_swarm_algebra playwright eio_main base64 yojson unix))
+
+(rule
+ (alias runtest)
+ (action (run ./test_lmstudio_dashboard_web.exe)))
+
+(executable
+ (name test_swarm_chaos)
+ (modules test_swarm_chaos)
+ (libraries hermes_harness_swarm_algebra hermes_harness_suite_telemetry))
+
+(executable
+ (name test_swarm_fuzz)
+ (modules test_swarm_fuzz)
+ (libraries hermes_harness_qcheck_seed hermes_harness_swarm_algebra qcheck hermes_harness_suite_telemetry))
+
+(rule
+ (alias runtest)
+ (action (run ./test_swarm_fuzz.exe)))
+
+(executable
+ (name test_swarm_unit)
+ (modules test_swarm_unit)
+ (libraries hermes_harness_swarm_algebra hermes_harness_suite_telemetry))
+
+(rule
+ (alias runtest)
+ (action (run ./test_swarm_unit.exe)))
+
+(executable
+ (name test_lmstudio_monitor)
+ (modules test_lmstudio_monitor)
+ (libraries hermes_harness_swarm_algebra hermes_harness_suite_telemetry))
+
+(rule
+ (alias runtest)
+ (action (run ./test_lmstudio_monitor.exe)))
+
+(executable
+ (name swarm_cli)
+ (public_name swarm)
+ (modules swarm_cli)
+ (libraries hermes_harness_swarm_algebra cmdliner))
+
+
+(executable
+ (name test_ffmpeg_swarm)
+ (modules test_ffmpeg_swarm)
+ (libraries hermes_harness_swarm_algebra hermes_harness_suite_telemetry))
+
+(rule
+ (alias runtest)
+ (action (run ./test_ffmpeg_swarm.exe)))
+
+(executable
+ (name test_vision_lifecycle)
+ (modules test_vision_lifecycle)
+ (libraries hermes_harness_sop_execution hermes_harness_harness_topology
+   hermes_harness_fractal_ontology hermes_harness_formal_coverage
+   hermes_wiki_fpp yojson unix hermes_harness_swarm_algebra
+   hermes_harness_suite_telemetry))
+
+(rule
+ (alias runtest)
+ (action (run ./test_vision_lifecycle.exe)))
+
+(executable
+ (name run_vision_pipeline)
+ (modules run_vision_pipeline)
+ (libraries hermes_harness_swarm_algebra))
+
+(executable
+ (name test_lmstudio_expect)
+ (modules test_lmstudio_expect)
+ (libraries hermes_harness_swarm_algebra hermes_harness_suite_telemetry))
+
+(rule
+ (alias runtest)
+ (action (run ./test_lmstudio_expect.exe)))
+
+(executable
+ (name test_lmstudio_live)
+ (modules test_lmstudio_live)
+ (libraries hermes_harness_swarm_algebra hermes_harness_suite_telemetry yojson unix))
+
+(executable
+ (name test_lmstudio_continuous_swarm)
+ (modules test_lmstudio_continuous_swarm)
+ (libraries hermes_harness_swarm_algebra hermes_harness_suite_telemetry yojson unix))

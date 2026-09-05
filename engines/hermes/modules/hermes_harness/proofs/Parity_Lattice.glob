@@ -1,0 +1,276 @@
+DIGEST caea23242523e583bab25c8fbe7e9aab
+FParity_Lattice
+R907:910 Stdlib.Lists.List <> <> lib
+R912:919 Stdlib.Arith.PeanoNat <> <> lib
+R929:941 Stdlib.Lists.List ListNotations <> mod
+ind 955:961 <> verdict
+constr 977:984 <> Unmapped
+constr 990:996 <> Blocked
+constr 1002:1009 <> Verified
+constr 1015:1023 <> Divergent
+scheme 955:961 <> verdict_rect
+scheme 955:961 <> verdict_ind
+scheme 955:961 <> verdict_rec
+scheme 955:961 <> verdict_sind
+def 1193:1196 <> rank
+R1203:1209 Parity_Lattice <> verdict ind
+binder 1199:1199 <> v:3
+R1214:1216 Corelib.Init.Datatypes <> nat ind
+R1229:1229 Parity_Lattice <> v:3 var
+R1240:1247 Parity_Lattice <> Verified constr
+R1258:1265 Parity_Lattice <> Unmapped constr
+R1276:1282 Parity_Lattice <> Blocked constr
+R1293:1301 Parity_Lattice <> Divergent constr
+def 1327:1333 <> combine
+R1342:1348 Parity_Lattice <> verdict ind
+binder 1336:1336 <> a:5
+binder 1338:1338 <> b:6
+R1353:1359 Parity_Lattice <> verdict ind
+R1369:1375 Stdlib.Arith.PeanoNat Nat leb def
+R1378:1381 Parity_Lattice <> rank def
+R1383:1383 Parity_Lattice <> b:6 var
+R1387:1390 Parity_Lattice <> rank def
+R1392:1392 Parity_Lattice <> a:5 var
+R1407:1407 Parity_Lattice <> b:6 var
+R1400:1400 Parity_Lattice <> a:5 var
+def 1422:1434 <> grants_credit
+R1441:1447 Parity_Lattice <> verdict ind
+binder 1437:1437 <> v:7
+R1452:1455 Corelib.Init.Datatypes <> bool ind
+R1468:1468 Parity_Lattice <> v:7 var
+R1475:1482 Parity_Lattice <> Verified constr
+R1487:1490 Corelib.Init.Datatypes <> true constr
+R1499:1503 Corelib.Init.Datatypes <> false constr
+def 1676:1679 <> gate
+R1688:1694 Parity_Lattice <> verdict ind
+binder 1682:1682 <> a:9
+binder 1684:1684 <> b:10
+R1699:1705 Parity_Lattice <> verdict ind
+R1715:1727 Parity_Lattice <> grants_credit def
+R1729:1729 Parity_Lattice <> a:9 var
+R1753:1753 Parity_Lattice <> a:9 var
+R1736:1742 Parity_Lattice <> combine def
+R1744:1744 Parity_Lattice <> a:9 var
+R1746:1746 Parity_Lattice <> b:10 var
+prf 1842:1853 <> combine_comm
+binder 1864:1864 <> a:11
+binder 1866:1866 <> b:12
+R1880:1882 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1869:1875 Parity_Lattice <> combine def
+R1877:1877 Parity_Lattice <> a:11 var
+R1879:1879 Parity_Lattice <> b:12 var
+R1883:1889 Parity_Lattice <> combine def
+R1891:1891 Parity_Lattice <> b:12 var
+R1893:1893 Parity_Lattice <> a:11 var
+prf 1944:1956 <> combine_assoc
+binder 1967:1967 <> a:13
+binder 1969:1969 <> b:14
+binder 1971:1971 <> c:15
+R1999:2001 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1976:1982 Parity_Lattice <> combine def
+R1985:1991 Parity_Lattice <> combine def
+R1993:1993 Parity_Lattice <> a:13 var
+R1995:1995 Parity_Lattice <> b:14 var
+R1998:1998 Parity_Lattice <> c:15 var
+R2002:2008 Parity_Lattice <> combine def
+R2010:2010 Parity_Lattice <> a:13 var
+R2013:2019 Parity_Lattice <> combine def
+R2021:2021 Parity_Lattice <> b:14 var
+R2023:2023 Parity_Lattice <> c:15 var
+prf 2078:2089 <> combine_idem
+binder 2100:2100 <> a:16
+R2114:2116 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2103:2109 Parity_Lattice <> combine def
+R2111:2111 Parity_Lattice <> a:16 var
+R2113:2113 Parity_Lattice <> a:16 var
+R2117:2117 Parity_Lattice <> a:16 var
+prf 2165:2181 <> divergent_absorbs
+binder 2192:2192 <> a:17
+R2228:2231 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R2216:2218 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2197:2203 Parity_Lattice <> combine def
+R2205:2213 Parity_Lattice <> Divergent constr
+R2215:2215 Parity_Lattice <> a:17 var
+R2219:2227 Parity_Lattice <> Divergent constr
+R2251:2253 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2232:2238 Parity_Lattice <> combine def
+R2240:2240 Parity_Lattice <> a:17 var
+R2242:2250 Parity_Lattice <> Divergent constr
+R2254:2262 Parity_Lattice <> Divergent constr
+prf 2317:2333 <> verified_identity
+binder 2344:2344 <> a:18
+R2369:2372 Corelib.Init.Logic <> ::type_scope:x_'/\'_x not
+R2365:2367 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2347:2353 Parity_Lattice <> combine def
+R2355:2362 Parity_Lattice <> Verified constr
+R2364:2364 Parity_Lattice <> a:18 var
+R2368:2368 Parity_Lattice <> a:18 var
+R2391:2393 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2373:2379 Parity_Lattice <> combine def
+R2381:2381 Parity_Lattice <> a:18 var
+R2383:2390 Parity_Lattice <> Verified constr
+R2394:2394 Parity_Lattice <> a:18 var
+prf 2449:2468 <> credit_only_verified
+binder 2479:2479 <> v:19
+R2506:2510 Corelib.Init.Logic <> ::type_scope:x_'<->'_x not
+R2499:2501 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2484:2496 Parity_Lattice <> grants_credit def
+R2498:2498 Parity_Lattice <> v:19 var
+R2502:2505 Corelib.Init.Datatypes <> true constr
+R2512:2514 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2511:2511 Parity_Lattice <> v:19 var
+R2515:2522 Parity_Lattice <> Verified constr
+prf 2604:2629 <> combine_credit_conjunction
+binder 2640:2640 <> a:20
+binder 2642:2642 <> b:21
+R2674:2676 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2647:2659 Parity_Lattice <> grants_credit def
+R2662:2668 Parity_Lattice <> combine def
+R2670:2670 Parity_Lattice <> a:20 var
+R2672:2672 Parity_Lattice <> b:21 var
+R2677:2680 Corelib.Init.Datatypes <> andb def
+R2701:2713 Parity_Lattice <> grants_credit def
+R2715:2715 Parity_Lattice <> b:21 var
+R2683:2695 Parity_Lattice <> grants_credit def
+R2697:2697 Parity_Lattice <> a:20 var
+prf 2894:2914 <> gate_no_credit_stands
+binder 2925:2925 <> a:22
+binder 2927:2927 <> b:23
+R2955:2958 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R2947:2949 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2932:2944 Parity_Lattice <> grants_credit def
+R2946:2946 Parity_Lattice <> a:22 var
+R2950:2954 Corelib.Init.Datatypes <> false constr
+R2967:2969 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2959:2962 Parity_Lattice <> gate def
+R2964:2964 Parity_Lattice <> a:22 var
+R2966:2966 Parity_Lattice <> b:23 var
+R2970:2970 Parity_Lattice <> a:22 var
+R3001:3004 Parity_Lattice <> gate def
+prf 3045:3061 <> gate_credit_folds
+binder 3072:3072 <> a:24
+binder 3074:3074 <> b:25
+R3101:3104 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R3094:3096 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R3079:3091 Parity_Lattice <> grants_credit def
+R3093:3093 Parity_Lattice <> a:24 var
+R3097:3100 Corelib.Init.Datatypes <> true constr
+R3113:3115 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R3105:3108 Parity_Lattice <> gate def
+R3110:3110 Parity_Lattice <> a:24 var
+R3112:3112 Parity_Lattice <> b:25 var
+R3116:3122 Parity_Lattice <> combine def
+R3124:3124 Parity_Lattice <> a:24 var
+R3126:3126 Parity_Lattice <> b:25 var
+R3157:3160 Parity_Lattice <> gate def
+prf 3201:3228 <> gate_never_grants_uncredited
+binder 3239:3239 <> a:26
+binder 3241:3241 <> b:27
+R3277:3280 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R3270:3272 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R3246:3258 Parity_Lattice <> grants_credit def
+R3261:3264 Parity_Lattice <> gate def
+R3266:3266 Parity_Lattice <> a:26 var
+R3268:3268 Parity_Lattice <> b:27 var
+R3273:3276 Corelib.Init.Datatypes <> true constr
+R3296:3298 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R3281:3293 Parity_Lattice <> grants_credit def
+R3295:3295 Parity_Lattice <> a:26 var
+R3299:3302 Corelib.Init.Datatypes <> true constr
+def 4001:4016 <> roll_up_required
+R4024:4027 Corelib.Init.Datatypes <> list ind
+R4029:4035 Parity_Lattice <> verdict ind
+binder 4019:4020 <> vs:28
+R4040:4046 Parity_Lattice <> verdict ind
+R4059:4060 Parity_Lattice <> vs:28 var
+R4071:4072 Stdlib.Lists.List ListNotations ::list_scope:'['_']' not
+R4077:4084 Parity_Lattice <> Unmapped constr
+R4095:4103 Stdlib.Lists.List <> fold_left def
+R4116:4123 Parity_Lattice <> Verified constr
+R4113:4114 Parity_Lattice <> vs:28 var
+R4105:4111 Parity_Lattice <> combine def
+prf 4222:4237 <> combine_rank_max
+binder 4248:4248 <> a:30
+binder 4250:4250 <> b:31
+R4271:4273 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R4253:4256 Parity_Lattice <> rank def
+R4259:4265 Parity_Lattice <> combine def
+R4267:4267 Parity_Lattice <> a:30 var
+R4269:4269 Parity_Lattice <> b:31 var
+R4274:4280 Stdlib.Arith.PeanoNat Nat max def
+R4283:4286 Parity_Lattice <> rank def
+R4288:4288 Parity_Lattice <> a:30 var
+R4292:4295 Parity_Lattice <> rank def
+R4297:4297 Parity_Lattice <> b:31 var
+prf 4499:4515 <> fold_combine_rank
+binder 4526:4527 <> vs:32
+binder 4529:4529 <> a:33
+R4563:4565 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R4534:4537 Parity_Lattice <> rank def
+R4540:4548 Stdlib.Lists.List <> fold_left def
+R4561:4561 Parity_Lattice <> a:33 var
+R4558:4559 Parity_Lattice <> vs:32 var
+R4550:4556 Parity_Lattice <> combine def
+R4566:4574 Stdlib.Lists.List <> fold_left def
+R4599:4602 Parity_Lattice <> rank def
+R4604:4604 Parity_Lattice <> a:33 var
+R4585:4587 Corelib.Lists.ListDef <> map def
+R4594:4595 Parity_Lattice <> vs:32 var
+R4589:4592 Parity_Lattice <> rank def
+R4576:4582 Stdlib.Arith.PeanoNat Nat max def
+R4704:4719 Parity_Lattice <> combine_rank_max thm
+R4704:4719 Parity_Lattice <> combine_rank_max thm
+R4704:4719 Parity_Lattice <> combine_rank_max thm
+prf 4851:4871 <> rollup_empty_unmapped
+R4894:4896 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R4875:4890 Parity_Lattice <> roll_up_required def
+R4892:4893 Stdlib.Lists.List ListNotations ::list_scope:'['_']' not
+R4897:4904 Parity_Lattice <> Unmapped constr
+prf 5026:5041 <> rollup_singleton
+binder 5052:5052 <> v:34
+R5075:5077 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R5055:5070 Parity_Lattice <> roll_up_required def
+R5072:5072 Stdlib.Lists.List ListNotations ::list_scope:'['_x_']' not
+R5074:5074 Stdlib.Lists.List ListNotations ::list_scope:'['_x_']' not
+R5073:5073 Parity_Lattice <> v:34 var
+R5078:5078 Parity_Lattice <> v:34 var
+prf 5290:5318 <> rollup_divergent_absorbs_left
+binder 5329:5329 <> v:35
+R5365:5367 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R5334:5349 Parity_Lattice <> roll_up_required def
+R5351:5351 Stdlib.Lists.List ListNotations ::list_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5361:5362 Stdlib.Lists.List ListNotations ::list_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5364:5364 Stdlib.Lists.List ListNotations ::list_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5352:5360 Parity_Lattice <> Divergent constr
+R5363:5363 Parity_Lattice <> v:35 var
+R5368:5376 Parity_Lattice <> Divergent constr
+prf 5424:5453 <> rollup_divergent_absorbs_right
+binder 5464:5464 <> v:36
+R5500:5502 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R5469:5484 Parity_Lattice <> roll_up_required def
+R5486:5486 Stdlib.Lists.List ListNotations ::list_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5488:5489 Stdlib.Lists.List ListNotations ::list_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5499:5499 Stdlib.Lists.List ListNotations ::list_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5487:5487 Parity_Lattice <> v:36 var
+R5490:5498 Parity_Lattice <> Divergent constr
+R5503:5511 Parity_Lattice <> Divergent constr
+prf 5723:5749 <> rollup_unmapped_blocks_left
+binder 5760:5760 <> v:37
+R5795:5798 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R5765:5780 Parity_Lattice <> roll_up_required def
+R5782:5782 Stdlib.Lists.List ListNotations ::list_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5791:5792 Stdlib.Lists.List ListNotations ::list_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5794:5794 Stdlib.Lists.List ListNotations ::list_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5783:5790 Parity_Lattice <> Unmapped constr
+R5793:5793 Parity_Lattice <> v:37 var
+R5799:5806 Parity_Lattice <> Verified constr
+prf 5855:5882 <> rollup_unmapped_blocks_right
+binder 5893:5893 <> v:38
+R5928:5931 Corelib.Init.Logic <> ::type_scope:x_'<>'_x not
+R5898:5913 Parity_Lattice <> roll_up_required def
+R5915:5915 Stdlib.Lists.List ListNotations ::list_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5917:5918 Stdlib.Lists.List ListNotations ::list_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5927:5927 Stdlib.Lists.List ListNotations ::list_scope:'['_x_';'_x_';'_'..'_';'_x_']' not
+R5916:5916 Parity_Lattice <> v:38 var
+R5919:5926 Parity_Lattice <> Unmapped constr
+R5932:5939 Parity_Lattice <> Verified constr

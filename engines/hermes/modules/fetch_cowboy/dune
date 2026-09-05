@@ -1,0 +1,6 @@
+; Isolated orchestration executable (like sa_plan/, ui_web/, webedit/) — fetches
+; the cowboy/ranch/cowlib dep tree via rebar3 with the pinned OTP-30 toolchain so
+; the beams load in zigvm. Stdlib + unix only; NEVER linked into zigvm_harness.
+(executable
+ (name fetch_cowboy)
+ (libraries unix))

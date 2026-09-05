@@ -1,0 +1,92 @@
+(executable
+ (name verify_agent_surface_sync)
+ (modules verify_agent_surface_sync)
+ (libraries unix yojson))
+
+(library
+ (name agent_time_hook)
+ (wrapped false)
+ (modules agent_time_hook)
+ (libraries unix yojson))
+
+(executable
+ (name test_agent_time_hook)
+ (modules test_agent_time_hook)
+ (libraries agent_time_hook yojson hermes_harness_suite_telemetry))
+
+(executable
+ (name run_agent_time_hook)
+ (modules run_agent_time_hook)
+ (libraries agent_time_hook))
+
+(executable
+ (name test_phase0_programme)
+ (modules phase0_programme test_phase0_programme)
+ (libraries sa_plan hermes_harness_suite_telemetry))
+
+(executable
+ (name system_engg_plan_bridge)
+ (modules phase0_programme system_engg_plan_bridge)
+ (libraries sa_plan))
+
+(executable
+ (name test_system_engg_plan_bridge)
+ (modules phase0_programme test_system_engg_plan_bridge)
+ (libraries sa_plan hermes_harness_suite_telemetry))
+
+(library
+ (name run_swarm_bridge_programme)
+ (wrapped false)
+ (modules run_swarm_bridge_programme)
+ (libraries sa_plan yojson unix hermes_harness_resource_envelope))
+
+(executable
+ (name test_run_swarm_bridge_programme)
+ (modules test_run_swarm_bridge_programme)
+ (libraries run_swarm_bridge_programme sa_plan hermes_harness_suite_telemetry
+   hermes_harness_resource_envelope threads))
+
+(executable
+ (name run_swarm_bridge_plan_bridge)
+ (modules run_swarm_bridge_plan_bridge)
+ (libraries run_swarm_bridge_programme sa_plan yojson unix))
+
+(executable
+ (name test_exact_head_gate)
+ (modules exact_head_gate test_exact_head_gate)
+ (libraries unix hermes_harness_suite_telemetry))
+
+(executable
+ (name run_exact_head_gate)
+ (modules exact_head_gate run_exact_head_gate)
+ (libraries unix))
+
+(executable
+ (name test_license_policy)
+ (modules license_policy test_license_policy)
+ (libraries digestif uri hermes_harness_suite_telemetry))
+
+(executable
+ (name test_source_artifact)
+ (modules source_artifact test_source_artifact)
+ (libraries digestif uri core unix hermes_harness_suite_telemetry))
+
+(executable
+ (name test_authority_manifest)
+ (modules source_artifact license_policy authority_manifest authority_catalog authority_lock test_authority_manifest)
+ (libraries digestif uri yojson core unix hermes_harness_suite_telemetry))
+
+(executable
+ (name generate_lock)
+ (modules source_artifact license_policy authority_manifest authority_catalog authority_lock generate_lock)
+ (libraries digestif uri yojson core unix))
+
+(executable
+ (name test_collateral_verifier)
+ (modules source_artifact license_policy authority_manifest authority_catalog authority_lock collateral_verifier test_collateral_verifier)
+ (libraries digestif uri yojson core unix hermes_harness_suite_telemetry))
+
+(executable
+ (name verify_source_authorities)
+ (modules source_artifact license_policy authority_manifest authority_catalog authority_lock collateral_verifier verify_source_authorities)
+ (libraries digestif uri yojson core unix))

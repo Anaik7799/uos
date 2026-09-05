@@ -1,0 +1,5 @@
+(library
+ (name sa_plan)
+ (public_name hermes_workspace.sa_plan)
+ (libraries core sqlite3 yojson)
+ (preprocess (pps ppx_jane)))

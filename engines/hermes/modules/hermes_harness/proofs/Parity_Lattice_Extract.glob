@@ -1,0 +1,5 @@
+DIGEST 1f8b1dd2f755a7717c3a996ab2c9b4f7
+FParity_Lattice_Extract
+R104:113 Stdlib.extraction.Extraction <> <> lib
+R140:153 Stdlib.extraction.ExtrOcamlBasic <> <> lib
+R155:169 Stdlib.extraction.ExtrOcamlNatInt <> <> lib

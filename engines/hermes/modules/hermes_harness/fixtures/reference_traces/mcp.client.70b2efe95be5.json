@@ -1,0 +1,32 @@
+{
+  "scenario_id": "mcp.client",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "a04001c8ad0cf92891961ee50a718021c63421a13676c82d92fe4facbfd08fe7",
+  "trace": {
+    "results": {
+      "fingerprint_absent_args": "0faa40d7c571704d",
+      "fingerprint_basic": "dd003c39d640be9b",
+      "matches_filter_bare_string": true,
+      "matches_filter_exact_only": false,
+      "matches_filter_glob": true,
+      "normalize_definitions_ref": {
+        "$defs": { "Foo": { "type": "string" } },
+        "$ref": "#/$defs/Foo"
+      },
+      "normalize_null": { "properties": {}, "type": "object" },
+      "normalize_nullable_union": { "nullable": true, "type": "string" },
+      "normalize_property_named_definitions": {
+        "properties": { "definitions": { "type": "array" } },
+        "type": "object"
+      },
+      "normalize_required_pruned": {
+        "properties": { "a": {} },
+        "required": [ "a" ],
+        "type": "object"
+      },
+      "prefixed_name": "mcp__my_srv__do_thing"
+    }
+  }
+}

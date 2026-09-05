@@ -1,0 +1,16 @@
+{
+  "scenario_id": "finalize.pure_tail",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "98bb2e91bfc9a80325ac4d13fe5dd4b260597b84bf2156559a28df9bd39c2c17",
+  "trace": {
+    "results": {
+      "blank_multimodal_is_tail": true,
+      "calls_no_content": true,
+      "calls_with_text": false,
+      "empty_calls_not_tail": false,
+      "image_only_is_tail": true
+    }
+  }
+}

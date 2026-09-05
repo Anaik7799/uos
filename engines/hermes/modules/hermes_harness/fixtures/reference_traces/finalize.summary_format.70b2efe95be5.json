@@ -1,0 +1,21 @@
+{
+  "scenario_id": "finalize.summary_format",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "65fc0f3edb6aeb180a496d59c81a9425da47e76cf7b3fb76432423838aa73c25",
+  "trace": {
+    "results": {
+      "diff_counts": [ 3, 1 ],
+      "elapsed_long": "61m01s",
+      "elapsed_minutes": "1m05s",
+      "elapsed_negative": "0.0s",
+      "elapsed_subminute": "12.4s",
+      "elapsed_zero": "0.0s",
+      "plural_ies": "1 entry",
+      "plural_many": "3 files",
+      "plural_one": "1 file",
+      "plural_ses": "1 process"
+    }
+  }
+}

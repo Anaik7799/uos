@@ -1,0 +1,27 @@
+{
+  "scenario_id": "sub.async",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "49381810caa226a1e15b532238d5a7e161ec84d009f0f59c6bb5d5a2ba8c543b",
+  "trace": {
+    "results": {
+      "children_activity_2tuple": [
+        { "api_calls": 3, "current_tool": "grep" }
+      ],
+      "children_activity_3tuple": [
+        {
+          "api_calls": 3,
+          "current_tool": "grep",
+          "seconds_since_activity": 9.800000000000001
+        }
+      ],
+      "children_activity_not_iterable": null,
+      "matches_selectors_all_default": { "raw": "", "truthy": false },
+      "matches_selectors_hit": { "raw": true, "truthy": true },
+      "one_line_collapses_ws": "a b c",
+      "one_line_falsy_zero": "",
+      "one_line_truncates": "abcdef …(+2 chars)"
+    }
+  }
+}

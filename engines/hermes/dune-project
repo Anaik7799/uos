@@ -1,0 +1,9 @@
+(lang dune 3.0)
+
+(name hermes_workspace)
+
+(package
+ (name hermes_workspace)
+ (synopsis "The Hermes workspace: evidence harness, wiki/ZK/KM system, components")
+ (description
+  "One workspace, six strata: modules/ (production), projects/ (incubation), docs/hermes/ (record), state/ (runtime), zigvm_legacy/ (parked), and external|third_party|vendor/ (vendored). The root dune scan policy admits modules/ and treats the other declared roots as data."))

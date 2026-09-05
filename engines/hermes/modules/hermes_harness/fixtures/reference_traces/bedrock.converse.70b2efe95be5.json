@@ -1,0 +1,215 @@
+{
+  "scenario_id": "bedrock.converse",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "b7aa1cf438ce020369cfb1ff25b5def65a63b4aebf12ba1f9f2eb74b3d04be50",
+  "trace": {
+    "results": [
+      {
+        "inferenceConfig": { "maxTokens": 1024, "temperature": 0.5 },
+        "messages": [ { "content": [ { "text": "hi" } ], "role": "user" } ],
+        "modelId": "us.anthropic.claude-sonnet-4-5-20250929-v1:0",
+        "system": [
+          { "text": "be brief" }, { "cachePoint": { "type": "default" } }
+        ],
+        "toolConfig": {
+          "tools": [
+            {
+              "toolSpec": {
+                "description": "",
+                "inputSchema": {
+                  "json": {
+                    "properties": { "city": { "type": "string" } },
+                    "type": "object"
+                  }
+                },
+                "name": "get_weather"
+              }
+            },
+            { "cachePoint": { "type": "default" } }
+          ]
+        }
+      },
+      {
+        "inferenceConfig": { "maxTokens": 4096 },
+        "messages": [ { "content": [ { "text": "x" } ], "role": "user" } ],
+        "modelId": "anthropic.claude-opus-4-7-v1:0"
+      },
+      {
+        "inferenceConfig": { "maxTokens": 4096, "temperature": 0.9 },
+        "messages": [ { "content": [ { "text": "x" } ], "role": "user" } ],
+        "modelId": "eu.anthropic.claude-opus-4-6-v1"
+      },
+      {
+        "inferenceConfig": { "maxTokens": 4096, "temperature": 0.2 },
+        "messages": [
+          { "content": [ { "text": "u1" } ], "role": "user" },
+          {
+            "content": [
+              { "text": "a1" }, { "cachePoint": { "type": "default" } }
+            ],
+            "role": "assistant"
+          },
+          { "content": [ { "text": "u2" } ], "role": "user" }
+        ],
+        "modelId": "amazon.nova-pro-v1:0",
+        "system": [
+          { "text": "s" }, { "cachePoint": { "type": "default" } }
+        ]
+      },
+      {
+        "inferenceConfig": { "maxTokens": 4096 },
+        "messages": [ { "content": [ { "text": "x" } ], "role": "user" } ],
+        "modelId": "us.deepseek.r1-v1:0"
+      },
+      {
+        "inferenceConfig": {
+          "maxTokens": 4096,
+          "stopSequences": [ "END" ],
+          "topP": 0.7
+        },
+        "messages": [
+          { "content": [ { "text": "(empty)" } ], "role": "user" },
+          { "content": [ { "text": "lead" } ], "role": "assistant" },
+          { "content": [ { "text": "q" } ], "role": "user" }
+        ],
+        "modelId": "meta.llama3-70b-instruct-v1:0",
+        "toolConfig": {
+          "tools": [
+            {
+              "toolSpec": {
+                "description": "",
+                "inputSchema": {
+                  "json": { "properties": {}, "type": "object" }
+                },
+                "name": "t"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "inferenceConfig": { "maxTokens": 4096 },
+        "messages": [
+          { "content": [ { "text": "q" } ], "role": "user" },
+          {
+            "content": [
+              {
+                "toolUse": {
+                  "input": { "a": 1 },
+                  "name": "f",
+                  "toolUseId": "call_1"
+                }
+              }
+            ],
+            "role": "assistant"
+          },
+          {
+            "content": [
+              {
+                "toolResult": {
+                  "content": [ { "text": "{\"ok\": true, \"n\": 2}" } ],
+                  "toolUseId": "call_1"
+                }
+              }
+            ],
+            "role": "user"
+          },
+          { "content": [ { "text": "(empty)" } ], "role": "assistant" },
+          { "content": [ { "text": "(empty)" } ], "role": "user" }
+        ],
+        "modelId": "mistral.mistral-large-2407-v1:0"
+      },
+      {
+        "inferenceConfig": { "maxTokens": 4096 },
+        "messages": [],
+        "modelId": "amazon.titan-text-express-v1"
+      },
+      {
+        "inferenceConfig": { "maxTokens": 4096 },
+        "messages": [
+          { "content": [ { "text": "q" } ], "role": "user" },
+          { "content": [ { "text": "(empty)" } ], "role": "assistant" },
+          { "content": [ { "text": "(empty)" } ], "role": "user" }
+        ],
+        "modelId": "meta.llama3-8b-instruct-v1:0"
+      },
+      {
+        "inferenceConfig": { "maxTokens": 4096 },
+        "messages": [ { "content": [ { "text": "q" } ], "role": "user" } ],
+        "modelId": "mistral.mixtral-8x7b-instruct-v0:1",
+        "system": [ { "text": "a" }, { "text": "b" } ]
+      },
+      {
+        "inferenceConfig": { "maxTokens": 4096 },
+        "messages": [
+          { "content": [ { "text": "q" } ], "role": "user" },
+          {
+            "content": [
+              { "toolUse": { "input": {}, "name": "f", "toolUseId": "c1" } },
+              {
+                "toolUse": {
+                  "input": [ 1, 2 ],
+                  "name": "g",
+                  "toolUseId": "c2"
+                }
+              }
+            ],
+            "role": "assistant"
+          },
+          {
+            "content": [
+              {
+                "toolResult": {
+                  "content": [ { "text": "ok" } ],
+                  "toolUseId": "c1"
+                }
+              },
+              {
+                "toolResult": {
+                  "content": [ { "text": "(empty)" } ],
+                  "toolUseId": "c2"
+                }
+              }
+            ],
+            "role": "user"
+          }
+        ],
+        "modelId": "cohere.command-r-v1:0"
+      },
+      {
+        "inferenceConfig": { "maxTokens": 4096 },
+        "messages": [ { "content": [ { "text": "42" } ], "role": "user" } ],
+        "modelId": "amazon.titan-text-lite-v1"
+      },
+      {
+        "guardrailConfig": {
+          "guardrailIdentifier": "gr1",
+          "guardrailVersion": "1"
+        },
+        "inferenceConfig": { "maxTokens": 4096 },
+        "messages": [
+          {
+            "content": [
+              { "text": "(empty)" },
+              { "text": "(empty)" },
+              { "text": "[Image: https://x/y.png]" },
+              { "text": "raw" }
+            ],
+            "role": "user"
+          },
+          {
+            "content": [
+              { "toolUse": { "input": {}, "name": "g", "toolUseId": "c2" } },
+              { "cachePoint": { "type": "default" } }
+            ],
+            "role": "assistant"
+          },
+          { "content": [ { "text": "(empty)" } ], "role": "user" }
+        ],
+        "modelId": "amazon.nova-lite-v1:0"
+      }
+    ]
+  }
+}

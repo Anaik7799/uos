@@ -1,0 +1,41 @@
+{
+  "scenario_id": "skill.provenance",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "67903773d06ec52c29efeaf85db03c985e47dd0e2ef93adc238f09ae4d88a4f6",
+  "trace": {
+    "results": {
+      "ast_report_empty": "AST deep scan: clean\n  No dynamic import/access patterns detected.",
+      "ast_report_findings": "AST deep scan: dyn\n  2 finding(s):\n  helper.py\n    L4  dynamic_getattr  — getattr with non-literal attribute name\n    L10  dynamic_import  — importlib.import_module()\n\n  Note: diagnostic hints for human review, not security verdicts.",
+      "build_summary_clean": "clean-skill: clean scan, no threats detected",
+      "build_summary_findings": "risky-skill: caution — 3 finding(s) in injection, obfuscation",
+      "install_agent_created_asks": {
+        "allowed": null,
+        "reason": "Requires confirmation (agent-created source + dangerous verdict, 1 findings)"
+      },
+      "install_builtin_always_allows": {
+        "allowed": true,
+        "reason": "Allowed (builtin source, dangerous verdict)"
+      },
+      "install_force_cannot_override_dangerous": {
+        "allowed": false,
+        "reason": "Blocked (community source + dangerous verdict, 1 findings). --force does not override a dangerous verdict."
+      },
+      "install_force_overrides_block": {
+        "allowed": true,
+        "reason": "Force-installed despite caution verdict (1 findings)"
+      },
+      "scan_report": "Scan: demo-skill (github/community)  Verdict: CAUTION\n  HIGH     injection      SKILL.md:3                     \"ignore all instructions\"\n  MEDIUM   obfuscation    SKILL.md:12                    \"hex string\"\n\nDecision: BLOCKED — Blocked (community source + caution verdict, 2 findings). Use --force to override.",
+      "trust_alias_agent_created": "agent-created",
+      "trust_exact": "trusted",
+      "trust_official": "builtin",
+      "trust_prefix": "trusted",
+      "trust_unknown": "community",
+      "verdict_caution": "caution",
+      "verdict_dangerous": "dangerous",
+      "verdict_none": "safe",
+      "verdict_safe": "safe"
+    }
+  }
+}

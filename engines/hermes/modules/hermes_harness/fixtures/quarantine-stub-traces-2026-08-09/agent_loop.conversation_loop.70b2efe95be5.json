@@ -1,0 +1,13 @@
+{
+  "scenario_id": "agent_loop.conversation_loop",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "d95ff5517ccc7ec5f65721d60265eafa15a64d3d66cd07a8495fb04f1420ce9d",
+  "trace": {
+    "messages": [
+      { "content": "stub for conversation_loop", "role": "user" }
+    ],
+    "model": "openai/gpt-5.4"
+  }
+}

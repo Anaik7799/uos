@@ -1,0 +1,17 @@
+; The Bonsai wiki frontend. `(modes js)` is what produces wiki_app.bc.js,
+; which test_wiki_frontend reads to prove the bundle carries our mount
+; point, the data island, the filter affordance, and NO write path.
+; a8ceecc replaced this stanza with vision_ui rather than adding beside
+; it, so the artifact stopped being built and all five checks failed on
+; a missing file. Restored verbatim from a8ceecc^; the two executables
+; have disjoint (modules ...) and coexist.
+(executable
+ (name wiki_app)
+ (modules wiki_app)
+ (modes js)
+ (libraries core bonsai_web virtual_dom js_of_ocaml yojson)
+ (preprocess (pps ppx_jane js_of_ocaml-ppx bonsai.ppx_bonsai)))
+
+(executable
+ (name vision_ui)
+ (modules vision_ui))

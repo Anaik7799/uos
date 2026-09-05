@@ -1,0 +1,4 @@
+(executable
+ (name hermes_server)
+ (public_name hermes_server)
+ (libraries dream tyxml bonsai unix hermes_harness_capability_catalog))

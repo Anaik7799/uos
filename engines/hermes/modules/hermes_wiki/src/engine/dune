@@ -1,0 +1,102 @@
+; The self-contained wiki/ZK engine. NO dependency on hermes_harness_* —
+; the guard law in test_hermes_wiki reads these dune files and refuses a
+; harness reference, so lifting hermes_wiki/ into a new project keeps
+; building. Tiers: ast (deps: none) -> core (unix) -> query/sheaf -> httpd.
+
+(library
+ (name hermes_wiki_include)
+ (wrapped false)
+ (modules wiki_include))
+
+(library
+ (name hermes_wiki_ast)
+ (wrapped false)
+ (modules wiki_ast)
+ (libraries hermes_wiki_include hermes_wiki_callout))
+
+(library
+ (name hermes_wiki_ref)
+ (wrapped false)
+ (modules wiki_ref))
+
+(library
+ (name hermes_wiki_core)
+ (wrapped false)
+ (modules hermes_wiki)
+ (libraries unix hermes_wiki_ast hermes_wiki_ref hermes_wiki_include))
+
+(library
+ (name hermes_wiki_query)
+ (wrapped false)
+ (modules wiki_query)
+ (libraries hermes_wiki_core))
+
+(library
+ (name hermes_wiki_sheaf)
+ (wrapped false)
+ (modules dep_sheaf)
+ (libraries hermes_wiki_core))
+
+(library
+ (name hermes_wiki_httpd)
+ (wrapped false)
+ (modules hermes_httpd)
+ (libraries unix threads.posix))
+
+(library
+ (name hermes_wiki_toc)
+ (wrapped false)
+ (modules wiki_toc)
+ (libraries hermes_wiki_core hermes_wiki_ast))
+
+(library
+ (name hermes_wiki_callout)
+ (wrapped false)
+ (modules wiki_callout))
+
+(library
+ (name hermes_wiki_visibility)
+ (wrapped false)
+ (modules wiki_visibility)
+ (libraries hermes_wiki_core))
+
+(library
+ (name hermes_wiki_transclude)
+ (wrapped false)
+ (modules wiki_transclude))
+
+(library
+ (name hermes_wiki_ordering)
+ (wrapped false)
+ (modules wiki_ordering)
+ (libraries hermes_wiki_core))
+
+(library
+ (name hermes_wiki_directive)
+ (wrapped false)
+ (modules wiki_directive)
+ (libraries hermes_wiki_core hermes_wiki_ast))
+
+(library
+ (name hermes_wiki_view)
+ (wrapped false)
+ (modules wiki_view)
+ (libraries hermes_wiki_core hermes_wiki_query))
+
+(library
+ (name hermes_wiki_blocks)
+ (wrapped false)
+ (modules wiki_blocks)
+ (libraries hermes_wiki_core hermes_wiki_ast))
+
+(library
+ (name hermes_wiki_address)
+ (wrapped false)
+ (modules wiki_address)
+ (libraries hermes_wiki_core hermes_wiki_ref))
+
+(library
+ (name hermes_wiki_datastore)
+ (wrapped false)
+ (modules wiki_datastore)
+ (libraries hermes_wiki_core hermes_wiki_query))

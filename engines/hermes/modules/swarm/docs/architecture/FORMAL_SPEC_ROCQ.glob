@@ -1,0 +1,53 @@
+DIGEST 6c141996109b5dd629735028e973a3ed
+FFORMAL_SPEC_ROCQ
+R177:188 Corelib.Init.Nat <> <> lib
+R206:219 Stdlib.Lists.List <> <> lib
+ind 233:242 <> SwarmAgent
+constr 258:268 <> Synthesizer
+constr 272:279 <> CyberNav
+constr 283:293 <> Conservator
+constr 297:302 <> Critic
+constr 306:311 <> Weaver
+constr 317:325 <> Conductor
+constr 329:338 <> Topologist
+constr 342:350 <> Sensorium
+constr 354:362 <> Byzantine
+constr 366:371 <> Chrono
+constr 377:382 <> Crypto
+constr 386:392 <> Quantum
+constr 396:404 <> Kinematic
+constr 408:414 <> Fluidic
+constr 418:425 <> HiveMind
+scheme 233:242 <> SwarmAgent_rect
+scheme 233:242 <> SwarmAgent_ind
+scheme 233:242 <> SwarmAgent_rec
+scheme 233:242 <> SwarmAgent_sind
+def 440:454 <> is_core_council
+R461:470 FORMAL_SPEC_ROCQ <> SwarmAgent ind
+binder 457:457 <> a:3
+R483:486 Corelib.Init.Logic <> True ind
+prf 562:580 <> swarm_bounded_to_15
+R595:604 FORMAL_SPEC_ROCQ <> SwarmAgent ind
+binder 591:591 <> a:4
+R607:621 FORMAL_SPEC_ROCQ <> is_core_council def
+R623:623 FORMAL_SPEC_ROCQ <> a:4 var
+R665:665 Corelib.Init.Logic <> I constr
+R665:665 Corelib.Init.Logic <> I constr
+R665:665 Corelib.Init.Logic <> I constr
+R665:665 Corelib.Init.Logic <> I constr
+R665:665 Corelib.Init.Logic <> I constr
+R665:665 Corelib.Init.Logic <> I constr
+R665:665 Corelib.Init.Logic <> I constr
+R665:665 Corelib.Init.Logic <> I constr
+R665:665 Corelib.Init.Logic <> I constr
+R665:665 Corelib.Init.Logic <> I constr
+R665:665 Corelib.Init.Logic <> I constr
+R665:665 Corelib.Init.Logic <> I constr
+R665:665 Corelib.Init.Logic <> I constr
+R665:665 Corelib.Init.Logic <> I constr
+R665:665 Corelib.Init.Logic <> I constr
+R665:665 Corelib.Init.Logic <> I constr
+ax 793:806 <> dag_is_acyclic
+R810:813 Corelib.Init.Logic <> True ind
+prf 825:835 <> no_deadlock
+R839:852 FORMAL_SPEC_ROCQ <> dag_is_acyclic prfax

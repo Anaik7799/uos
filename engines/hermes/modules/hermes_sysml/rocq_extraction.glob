@@ -1,0 +1,300 @@
+DIGEST b900611067c1a676e5de5c7d5f207deb
+Frocq_extraction
+R15:32 Stdlib.Strings.String <> <> lib
+R50:62 Stdlib.Bool.Bool <> <> lib
+ind 76:85 <> ooda_state
+constr 101:104 <> Idle
+constr 110:116 <> Observe
+constr 122:127 <> Orient
+constr 133:138 <> Decide
+constr 144:146 <> Act
+scheme 76:85 <> ooda_state_rect
+scheme 76:85 <> ooda_state_ind
+scheme 76:85 <> ooda_state_rec
+scheme 76:85 <> ooda_state_sind
+rec 157:163 <> context
+proj 190:205 <> anomaly_detected
+proj 217:226 <> data_ready
+proj 238:250 <> decision_made
+proj 262:276 <> action_complete
+R209:212 Corelib.Init.Datatypes <> bool ind
+R230:233 Corelib.Init.Datatypes <> bool ind
+R254:257 Corelib.Init.Datatypes <> bool ind
+R280:283 Corelib.Init.Datatypes <> bool ind
+def 300:309 <> next_state
+R316:325 rocq_extraction <> ooda_state ind
+binder 312:312 <> s:8
+R335:341 rocq_extraction <> context rec
+binder 329:331 <> ctx:9
+R346:355 rocq_extraction <> ooda_state ind
+R365:380 rocq_extraction <> anomaly_detected proj
+R382:384 rocq_extraction <> ctx:9 var
+R420:420 rocq_extraction <> s:8 var
+R433:436 rocq_extraction <> Idle constr
+R444:453 rocq_extraction <> data_ready proj
+R455:457 rocq_extraction <> ctx:9 var
+R477:480 rocq_extraction <> Idle constr
+R464:470 rocq_extraction <> Observe constr
+R488:494 rocq_extraction <> Observe constr
+R502:511 rocq_extraction <> data_ready proj
+R513:515 rocq_extraction <> ctx:9 var
+R534:540 rocq_extraction <> Observe constr
+R522:527 rocq_extraction <> Orient constr
+R548:553 rocq_extraction <> Orient constr
+R561:573 rocq_extraction <> decision_made proj
+R575:577 rocq_extraction <> ctx:9 var
+R596:601 rocq_extraction <> Orient constr
+R584:589 rocq_extraction <> Decide constr
+R609:614 rocq_extraction <> Decide constr
+R622:634 rocq_extraction <> decision_made proj
+R636:638 rocq_extraction <> ctx:9 var
+R654:659 rocq_extraction <> Decide constr
+R645:647 rocq_extraction <> Act constr
+R667:669 rocq_extraction <> Act constr
+R677:691 rocq_extraction <> action_complete proj
+R693:695 rocq_extraction <> ctx:9 var
+R712:714 rocq_extraction <> Act constr
+R702:705 rocq_extraction <> Idle constr
+R395:401 rocq_extraction <> Observe constr
+prf 768:791 <> anomaly_always_overrides
+binder 802:802 <> s:11
+binder 804:806 <> ctx:12
+R838:843 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R831:833 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R811:826 rocq_extraction <> anomaly_detected proj
+R828:830 rocq_extraction <> ctx:12 var
+R834:837 Corelib.Init.Datatypes <> true constr
+R860:862 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R844:853 rocq_extraction <> next_state def
+R855:855 rocq_extraction <> s:11 var
+R857:859 rocq_extraction <> ctx:12 var
+R863:869 rocq_extraction <> Observe constr
+R906:915 rocq_extraction <> next_state def
+prf 960:989 <> normal_transition_idle_observe
+binder 1000:1002 <> ctx:13
+R1035:1040 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R1027:1029 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1007:1022 rocq_extraction <> anomaly_detected proj
+R1024:1026 rocq_extraction <> ctx:13 var
+R1030:1034 Corelib.Init.Datatypes <> false constr
+R1062:1067 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R1055:1057 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1041:1050 rocq_extraction <> data_ready proj
+R1052:1054 rocq_extraction <> ctx:13 var
+R1058:1061 Corelib.Init.Datatypes <> true constr
+R1087:1089 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1068:1077 rocq_extraction <> next_state def
+R1079:1082 rocq_extraction <> Idle constr
+R1084:1086 rocq_extraction <> ctx:13 var
+R1090:1096 rocq_extraction <> Observe constr
+R1133:1142 rocq_extraction <> next_state def
+prf 1188:1215 <> normal_transition_idle_stuck
+binder 1226:1228 <> ctx:14
+R1261:1266 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R1253:1255 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1233:1248 rocq_extraction <> anomaly_detected proj
+R1250:1252 rocq_extraction <> ctx:14 var
+R1256:1260 Corelib.Init.Datatypes <> false constr
+R1289:1294 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R1281:1283 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1267:1276 rocq_extraction <> data_ready proj
+R1278:1280 rocq_extraction <> ctx:14 var
+R1284:1288 Corelib.Init.Datatypes <> false constr
+R1314:1316 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1295:1304 rocq_extraction <> next_state def
+R1306:1309 rocq_extraction <> Idle constr
+R1311:1313 rocq_extraction <> ctx:14 var
+R1317:1320 rocq_extraction <> Idle constr
+R1357:1366 rocq_extraction <> next_state def
+prf 1412:1443 <> normal_transition_observe_orient
+binder 1454:1456 <> ctx:15
+R1489:1494 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R1481:1483 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1461:1476 rocq_extraction <> anomaly_detected proj
+R1478:1480 rocq_extraction <> ctx:15 var
+R1484:1488 Corelib.Init.Datatypes <> false constr
+R1516:1521 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R1509:1511 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1495:1504 rocq_extraction <> data_ready proj
+R1506:1508 rocq_extraction <> ctx:15 var
+R1512:1515 Corelib.Init.Datatypes <> true constr
+R1544:1546 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1522:1531 rocq_extraction <> next_state def
+R1533:1539 rocq_extraction <> Observe constr
+R1541:1543 rocq_extraction <> ctx:15 var
+R1547:1552 rocq_extraction <> Orient constr
+R1589:1598 rocq_extraction <> next_state def
+prf 1644:1674 <> normal_transition_observe_stuck
+binder 1685:1687 <> ctx:16
+R1720:1725 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R1712:1714 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1692:1707 rocq_extraction <> anomaly_detected proj
+R1709:1711 rocq_extraction <> ctx:16 var
+R1715:1719 Corelib.Init.Datatypes <> false constr
+R1748:1753 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R1740:1742 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1726:1735 rocq_extraction <> data_ready proj
+R1737:1739 rocq_extraction <> ctx:16 var
+R1743:1747 Corelib.Init.Datatypes <> false constr
+R1776:1778 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1754:1763 rocq_extraction <> next_state def
+R1765:1771 rocq_extraction <> Observe constr
+R1773:1775 rocq_extraction <> ctx:16 var
+R1779:1785 rocq_extraction <> Observe constr
+R1822:1831 rocq_extraction <> next_state def
+prf 1877:1907 <> normal_transition_orient_decide
+binder 1918:1920 <> ctx:17
+R1953:1958 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R1945:1947 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1925:1940 rocq_extraction <> anomaly_detected proj
+R1942:1944 rocq_extraction <> ctx:17 var
+R1948:1952 Corelib.Init.Datatypes <> false constr
+R1983:1988 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R1976:1978 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1959:1971 rocq_extraction <> decision_made proj
+R1973:1975 rocq_extraction <> ctx:17 var
+R1979:1982 Corelib.Init.Datatypes <> true constr
+R2010:2012 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R1989:1998 rocq_extraction <> next_state def
+R2000:2005 rocq_extraction <> Orient constr
+R2007:2009 rocq_extraction <> ctx:17 var
+R2013:2018 rocq_extraction <> Decide constr
+R2055:2064 rocq_extraction <> next_state def
+prf 2110:2139 <> normal_transition_orient_stuck
+binder 2150:2152 <> ctx:18
+R2185:2190 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R2177:2179 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2157:2172 rocq_extraction <> anomaly_detected proj
+R2174:2176 rocq_extraction <> ctx:18 var
+R2180:2184 Corelib.Init.Datatypes <> false constr
+R2216:2221 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R2208:2210 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2191:2203 rocq_extraction <> decision_made proj
+R2205:2207 rocq_extraction <> ctx:18 var
+R2211:2215 Corelib.Init.Datatypes <> false constr
+R2243:2245 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2222:2231 rocq_extraction <> next_state def
+R2233:2238 rocq_extraction <> Orient constr
+R2240:2242 rocq_extraction <> ctx:18 var
+R2246:2251 rocq_extraction <> Orient constr
+R2288:2297 rocq_extraction <> next_state def
+prf 2343:2370 <> normal_transition_decide_act
+binder 2381:2383 <> ctx:19
+R2416:2421 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R2408:2410 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2388:2403 rocq_extraction <> anomaly_detected proj
+R2405:2407 rocq_extraction <> ctx:19 var
+R2411:2415 Corelib.Init.Datatypes <> false constr
+R2446:2451 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R2439:2441 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2422:2434 rocq_extraction <> decision_made proj
+R2436:2438 rocq_extraction <> ctx:19 var
+R2442:2445 Corelib.Init.Datatypes <> true constr
+R2473:2475 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2452:2461 rocq_extraction <> next_state def
+R2463:2468 rocq_extraction <> Decide constr
+R2470:2472 rocq_extraction <> ctx:19 var
+R2476:2478 rocq_extraction <> Act constr
+R2515:2524 rocq_extraction <> next_state def
+prf 2570:2599 <> normal_transition_decide_stuck
+binder 2610:2612 <> ctx:20
+R2645:2650 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R2637:2639 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2617:2632 rocq_extraction <> anomaly_detected proj
+R2634:2636 rocq_extraction <> ctx:20 var
+R2640:2644 Corelib.Init.Datatypes <> false constr
+R2676:2681 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R2668:2670 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2651:2663 rocq_extraction <> decision_made proj
+R2665:2667 rocq_extraction <> ctx:20 var
+R2671:2675 Corelib.Init.Datatypes <> false constr
+R2703:2705 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2682:2691 rocq_extraction <> next_state def
+R2693:2698 rocq_extraction <> Decide constr
+R2700:2702 rocq_extraction <> ctx:20 var
+R2706:2711 rocq_extraction <> Decide constr
+R2748:2757 rocq_extraction <> next_state def
+prf 2803:2828 <> normal_transition_act_idle
+binder 2839:2841 <> ctx:21
+R2874:2879 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R2866:2868 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2846:2861 rocq_extraction <> anomaly_detected proj
+R2863:2865 rocq_extraction <> ctx:21 var
+R2869:2873 Corelib.Init.Datatypes <> false constr
+R2906:2911 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R2899:2901 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2880:2894 rocq_extraction <> action_complete proj
+R2896:2898 rocq_extraction <> ctx:21 var
+R2902:2905 Corelib.Init.Datatypes <> true constr
+R2930:2932 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R2912:2921 rocq_extraction <> next_state def
+R2923:2925 rocq_extraction <> Act constr
+R2927:2929 rocq_extraction <> ctx:21 var
+R2933:2936 rocq_extraction <> Idle constr
+R2973:2982 rocq_extraction <> next_state def
+prf 3028:3054 <> normal_transition_act_stuck
+binder 3065:3067 <> ctx:22
+R3100:3105 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R3092:3094 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R3072:3087 rocq_extraction <> anomaly_detected proj
+R3089:3091 rocq_extraction <> ctx:22 var
+R3095:3099 Corelib.Init.Datatypes <> false constr
+R3133:3138 Corelib.Init.Logic <> ::type_scope:x_'->'_x not
+R3125:3127 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R3106:3120 rocq_extraction <> action_complete proj
+R3122:3124 rocq_extraction <> ctx:22 var
+R3128:3132 Corelib.Init.Datatypes <> false constr
+R3157:3159 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R3139:3148 rocq_extraction <> next_state def
+R3150:3152 rocq_extraction <> Act constr
+R3154:3156 rocq_extraction <> ctx:22 var
+R3160:3162 rocq_extraction <> Act constr
+R3199:3208 rocq_extraction <> next_state def
+prf 3337:3356 <> exhaustiveness_check
+binder 3367:3367 <> s:23
+binder 3369:3371 <> ctx:24
+R3402:3407 Corelib.Init.Logic <> ::type_scope:x_'\/'_x not
+R3392:3394 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R3376:3385 rocq_extraction <> next_state def
+R3387:3387 rocq_extraction <> s:23 var
+R3389:3391 rocq_extraction <> ctx:24 var
+R3395:3401 rocq_extraction <> Observe constr
+R3433:3438 Corelib.Init.Logic <> ::type_scope:x_'\/'_x not
+R3424:3426 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R3408:3417 rocq_extraction <> next_state def
+R3419:3419 rocq_extraction <> s:23 var
+R3421:3423 rocq_extraction <> ctx:24 var
+R3427:3432 rocq_extraction <> Orient constr
+R3464:3469 Corelib.Init.Logic <> ::type_scope:x_'\/'_x not
+R3455:3457 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R3439:3448 rocq_extraction <> next_state def
+R3450:3450 rocq_extraction <> s:23 var
+R3452:3454 rocq_extraction <> ctx:24 var
+R3458:3463 rocq_extraction <> Decide constr
+R3492:3497 Corelib.Init.Logic <> ::type_scope:x_'\/'_x not
+R3486:3488 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R3470:3479 rocq_extraction <> next_state def
+R3481:3481 rocq_extraction <> s:23 var
+R3483:3485 rocq_extraction <> ctx:24 var
+R3489:3491 rocq_extraction <> Act constr
+R3514:3516 Corelib.Init.Logic <> ::type_scope:x_'='_x not
+R3498:3507 rocq_extraction <> next_state def
+R3509:3509 rocq_extraction <> s:23 var
+R3511:3513 rocq_extraction <> ctx:24 var
+R3517:3520 rocq_extraction <> Idle constr
+R3555:3564 rocq_extraction <> next_state def
+R3579:3594 rocq_extraction <> anomaly_detected proj
+R3579:3594 rocq_extraction <> anomaly_detected proj
+R3657:3666 rocq_extraction <> data_ready proj
+R3657:3666 rocq_extraction <> data_ready proj
+R3766:3775 rocq_extraction <> data_ready proj
+R3766:3775 rocq_extraction <> data_ready proj
+R3860:3872 rocq_extraction <> decision_made proj
+R3860:3872 rocq_extraction <> decision_made proj
+R3971:3983 rocq_extraction <> decision_made proj
+R3971:3983 rocq_extraction <> decision_made proj
+R4096:4110 rocq_extraction <> action_complete proj
+R4096:4110 rocq_extraction <> action_complete proj
+R4236:4245 Corelib.extraction.Extraction <> <> lib
+R4293:4296 Corelib.Init.Datatypes <> bool ind
+R4346:4351 Stdlib.Strings.String <> string ind

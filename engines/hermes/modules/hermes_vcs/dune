@@ -1,0 +1,116 @@
+(library
+ (name hermes_vcs)
+ (wrapped false)
+ (modules jj_id jj_error jj_budget jj_operation jj_revset jj_path jj_split_manifest
+  jj_action_kind jj_recovery_schema jj_partition jj_campaign_action jj_policy
+  jj_approval jj_writer_lease mainline_carrier_policy jj_source_manifest
+  jj_secret_scan jj_readback jj_receipt_core jj_intent jj_codec
+  jj_ontology jj_algebra jj_sysml jj_fpp)
+ (libraries digestif yojson))
+
+(library
+ (name hermes_jj_protocol)
+ (wrapped false)
+ (modules jj_command_contract jj_process_protocol jj_target_protocol
+  jj_dependency_schema jj_release_protocol
+  jj_runtime_manifest jj_runtime_current_protocol
+  jj_recovery_transition_port_protocol jj_completion_store_protocol
+  jj_formal_obligations jj_source_authority)
+ (libraries hermes_vcs digestif))
+
+(executable
+ (name test_jj_bypass_quarantine)
+ (modules test_jj_bypass_quarantine)
+ (libraries hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_jj_operation)
+ (modules test_jj_operation)
+ (libraries hermes_vcs hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_jj_revset_manifest)
+ (modules test_jj_revset_manifest)
+ (libraries hermes_vcs hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_jj_command_contract)
+ (modules test_jj_command_contract)
+ (libraries hermes_jj_protocol hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_jj_completion_store_protocol)
+ (modules test_jj_completion_store_protocol)
+ (libraries hermes_jj_protocol hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_jj_target_protocol)
+ (modules test_jj_target_protocol)
+ (libraries hermes_jj_protocol hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_jj_release_protocol)
+ (modules test_jj_release_protocol)
+ (libraries hermes_jj_protocol hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_jj_action_kind)
+ (modules test_jj_action_kind)
+ (libraries hermes_vcs hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_jj_dependency_schema)
+ (modules test_jj_dependency_schema)
+ (libraries hermes_jj_protocol hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_jj_runtime_manifest)
+ (modules test_jj_runtime_manifest)
+ (libraries hermes_jj_protocol hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_jj_runtime_current_protocol)
+ (modules test_jj_runtime_current_protocol)
+ (libraries hermes_jj_protocol hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_jj_recovery_transition_port_protocol)
+ (modules test_jj_recovery_transition_port_protocol)
+ (libraries hermes_jj_protocol hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_jj_recovery_schema)
+ (modules test_jj_recovery_schema)
+ (libraries hermes_vcs hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_jj_intent)
+ (modules test_jj_intent)
+ (libraries hermes_vcs hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_jj_partition)
+ (modules test_jj_partition)
+ (libraries hermes_vcs hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_jj_policy)
+ (modules test_jj_policy)
+ (libraries hermes_vcs hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_jj_receipt)
+ (modules jj_source_manifest_cases jj_secret_receipt_cases jj_readback_cases
+  test_jj_receipt)
+ (libraries hermes_vcs hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_jj_fractal_authority)
+ (modules jj_ontology_sysml_cases jj_algebra_fpp_cases jj_source_formal_cases
+  test_jj_fractal_authority)
+ (libraries hermes_jj_protocol hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_jj_campaign_action)
+ (modules test_jj_campaign_action)
+ (libraries hermes_vcs hermes_harness_suite_telemetry hermes_stanza))

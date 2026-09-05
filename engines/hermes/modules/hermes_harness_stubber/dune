@@ -1,0 +1,3 @@
+(executable
+ (name parallel_agent_generator)
+ (libraries hermes_harness_capability_catalog))

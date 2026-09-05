@@ -1,0 +1,8 @@
+; MACHINE-GENERATED library: coqc extraction of proofs/Parity_Lattice.v via
+; Parity_Lattice_Extract.v (Coq 8.20.1 on the rocq-iris side switch). Do not
+; edit by hand -- the proof gate's freshness law byte-compares a fresh
+; extraction against these files whenever a coqc toolchain is available.
+(library
+ (name hermes_harness_parity_lattice_extracted)
+ (wrapped false)
+ (modules parity_lattice_extracted))

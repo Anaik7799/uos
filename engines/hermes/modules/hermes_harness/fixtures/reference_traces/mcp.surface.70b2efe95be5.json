@@ -1,0 +1,61 @@
+{
+  "scenario_id": "mcp.surface",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "0d7d4e0b0bf931c9f74854ff57964b0637e91fd16f56489bb4131fb916c33b20",
+  "trace": {
+    "results": {
+      "coerce_int_bool_is_int": 1,
+      "coerce_int_clamped": 100,
+      "extract_attachments_image_url": [
+        { "type": "image", "url": "http://x/y.png" }
+      ],
+      "extract_attachments_media_tag": [
+        { "path": "foo.png", "type": "media" }
+      ],
+      "extract_content_falsy_dict": "",
+      "extract_content_text_only": "hi",
+      "row_to_entry_basic": {
+        "chat_type": null,
+        "created_at": "1970-01-02T03:46:40",
+        "display_name": "",
+        "input_tokens": 3,
+        "origin": {
+          "chat_id": null,
+          "chat_type": null,
+          "platform": "telegram",
+          "thread_id": null,
+          "user_id": null
+        },
+        "output_tokens": 7,
+        "platform": "telegram",
+        "session_id": "5",
+        "session_key": "",
+        "total_tokens": 10,
+        "updated_at": "1970-01-02T03:46:40"
+      },
+      "row_to_entry_zero_last_active": {
+        "chat_type": null,
+        "created_at": "1970-01-02T03:46:40",
+        "display_name": "",
+        "input_tokens": 0,
+        "origin": {
+          "chat_id": null,
+          "chat_type": null,
+          "platform": "telegram",
+          "thread_id": null,
+          "user_id": null
+        },
+        "output_tokens": 0,
+        "platform": "telegram",
+        "session_id": "6",
+        "session_key": "",
+        "total_tokens": 0,
+        "updated_at": "1970-01-02T03:46:40"
+      },
+      "ts_float_iso_string": 10.0,
+      "ts_float_numeric_string": 5.5
+    }
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "scenario_id": "hygiene.list_repairs",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "ee71605c01180d946756617f8654bdad6a1f40891cfee9725af770853c950815",
+  "trace": {
+    "results": {
+      "blank_text_block_healed": [
+        { "content": "[response interrupted]", "role": "user" },
+        { "content": "real", "role": "user" }
+      ],
+      "call_id_coalesced": [
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "call_id": "cx",
+              "function": { "arguments": "{}", "name": "lookup" },
+              "id": "cy",
+              "type": "function"
+            }
+          ]
+        },
+        { "content": "found", "role": "tool", "tool_call_id": "cx" }
+      ],
+      "codex_carrier_not_healed": [
+        {
+          "codex_message_items": [ { "type": "message" } ],
+          "content": "",
+          "role": "assistant"
+        },
+        { "content": "go", "role": "user" }
+      ],
+      "duplicate_ids_collapsed": [
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": { "arguments": "{}", "name": "a" },
+              "id": "c3",
+              "type": "function"
+            }
+          ]
+        },
+        { "content": "r1", "role": "tool", "tool_call_id": "c3" }
+      ],
+      "empty_name_sentinel": [
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": { "arguments": "{}", "name": "invalid_tool_call" },
+              "id": "c1",
+              "type": "function"
+            }
+          ]
+        },
+        { "content": "result", "role": "tool", "tool_call_id": "c1" }
+      ],
+      "empty_non_final_healed": [
+        { "content": "[response interrupted]", "role": "assistant" },
+        { "content": "next", "role": "user" },
+        { "content": "", "role": "assistant" }
+      ],
+      "empty_tool_calls_dropped": [
+        { "content": "ok", "role": "assistant" }
+      ],
+      "heal_then_drop_order": [
+        { "content": "[response interrupted]", "role": "assistant" },
+        { "content": "next", "role": "user" }
+      ],
+      "invalid_role_dropped": [ { "content": "hi", "role": "user" } ],
+      "missing_result_stubbed": [
+        {
+          "content": null,
+          "role": "assistant",
+          "tool_calls": [
+            {
+              "function": { "arguments": "{}", "name": "lookup" },
+              "id": "c2",
+              "type": "function"
+            }
+          ]
+        },
+        {
+          "content": "[Result unavailable — see context summary above]",
+          "name": "lookup",
+          "role": "tool",
+          "tool_call_id": "c2"
+        },
+        { "content": "then", "role": "user" }
+      ],
+      "orphaned_result_dropped": [ { "content": "q", "role": "user" } ]
+    }
+  }
+}

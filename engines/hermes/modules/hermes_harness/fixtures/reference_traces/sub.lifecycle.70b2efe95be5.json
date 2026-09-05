@@ -1,0 +1,40 @@
+{
+  "scenario_id": "sub.lifecycle",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "e3baedb1c67e4d69fc0967c62fcdafb64a3162fcc98d66b393ed568b50e14702",
+  "trace": {
+    "results": {
+      "capability_basic": "340adcb77048585ccb3e162c80ee56679e6424537d9099914b49b5120226ba6d",
+      "capability_none_vs_empty_parent": "340adcb77048585ccb3e162c80ee56679e6424537d9099914b49b5120226ba6d",
+      "handle_extra_key": { "error": "Malformed subagent handle." },
+      "handle_missing_key": { "error": "Malformed subagent handle." },
+      "handle_round_trip": {
+        "ok": {
+          "capability": "x",
+          "contract_version": 1,
+          "correlation_id": null,
+          "created_at": 1.5,
+          "depth": 0,
+          "model": null,
+          "parent_session_id": null,
+          "provider": null,
+          "role": "leaf",
+          "subagent_id": "sa1"
+        }
+      },
+      "validate_blank_goal": {
+        "error": "goal must be a non-empty string of at most 16000 characters."
+      },
+      "validate_broadens_parent": {
+        "error": "Requested toolsets would broaden parent permissions."
+      },
+      "validate_minimal": { "ok": true },
+      "validate_rejects_timeout": {
+        "error": "Per-launch timeout is not supported; configure delegation timeout explicitly."
+      },
+      "validate_unknown_toolset": { "error": "Unknown toolsets: web." }
+    }
+  }
+}

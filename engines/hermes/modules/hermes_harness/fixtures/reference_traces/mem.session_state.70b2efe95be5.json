@@ -1,0 +1,31 @@
+{
+  "scenario_id": "mem.session_state",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "3db71f0f6f3592931a53abaf075570dfeca948ec1234a8e394378ad82d56208d",
+  "trace": {
+    "results": {
+      "cwd_clause_trailing_slash": [
+        "(s.cwd = ? OR s.cwd LIKE ? ESCAPE '\\' OR s.cwd LIKE ? ESCAPE '\\')",
+        [ "/work/proj", "/work/proj/%", "/work/proj\\\\%" ]
+      ],
+      "cwd_clause_wildcards": [
+        "(s.cwd = ? OR s.cwd LIKE ? ESCAPE '\\' OR s.cwd LIKE ? ESCAPE '\\')",
+        [
+          "/w_ork/100%done", "/w\\_ork/100\\%done/%",
+          "/w\\_ork/100\\%done\\\\%"
+        ]
+      ],
+      "hash_empty": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "hash_prompt": "75357d685f238b6afd7738be9786fdafde641eb6ca9a3be7471939715a68a4de",
+      "workspace_clause": [
+        "(s.git_repo_root = ? OR (COALESCE(s.git_repo_root, '') = '' AND (s.cwd = ? OR s.cwd LIKE ? ESCAPE '\\' OR s.cwd LIKE ? ESCAPE '\\')))",
+        [ "/repo/root", "/repo/root", "/repo/root/%", "/repo/root\\\\%" ]
+      ],
+      "workspace_cwd_fallback": "/tmp/scratch",
+      "workspace_git_wins": "/repo/root",
+      "workspace_unbound": null
+    }
+  }
+}

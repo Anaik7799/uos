@@ -1,0 +1,17 @@
+{
+  "scenario_id": "prompt.frontmatter_strip",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "33a4a9fb1a1b4f1822764c02c882fd91a112c4153222cc9b4db05459baf9cf5d",
+  "trace": {
+    "results": {
+      "bom_tolerated": "after bom",
+      "empty_body_returns_original": "---\nk: v\n---\n",
+      "extra_newlines_stripped": "body",
+      "no_closing_fence_kept": "---\nk: v\nno close",
+      "normal_frontmatter": "body text",
+      "plain_passthrough": "hello\nworld"
+    }
+  }
+}

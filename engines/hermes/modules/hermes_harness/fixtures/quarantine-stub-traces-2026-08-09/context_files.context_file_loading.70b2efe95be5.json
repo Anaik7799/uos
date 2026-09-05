@@ -1,0 +1,13 @@
+{
+  "scenario_id": "context_files.context_file_loading",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "10bc7a48232ad44fcd214cf3abd60e38919d1455e6ae250e1b5400921bbefef6",
+  "trace": {
+    "messages": [
+      { "content": "stub for context_file_loading", "role": "user" }
+    ],
+    "model": "openai/gpt-5.4"
+  }
+}

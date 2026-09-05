@@ -1,0 +1,25 @@
+; The toolchain gate. The pure derivation is a LIBRARY so the test links
+; the shipped code rather than a copy of it — the first cut duplicated it
+; by value and the two copies had already diverged. `unix` is the only
+; production verification also links the pure Ed25519 verification leaf so
+; the pinned provider self-test is evidence from the shipped implementation.
+
+(library
+ (name toolchain_core)
+ (wrapped false)
+ (modules toolchain_core))
+
+(executable
+ (name toolchain_check)
+ (modules toolchain_check)
+ (libraries unix toolchain_core hermes_dependability_approval_crypto))
+
+(executable
+ (name test_toolchain_check)
+ (modules test_toolchain_check)
+ (libraries toolchain_core hermes_harness_suite_telemetry))
+
+(executable
+ (name test_tool_hygiene)
+ (modules test_tool_hygiene)
+ (libraries hermes_harness_suite_telemetry))

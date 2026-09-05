@@ -1,0 +1,6 @@
+(library
+ (name wiki_server)
+ (wrapped false)
+ (modules wiki_routes wiki_dream)
+ (libraries dream
+ yojson))

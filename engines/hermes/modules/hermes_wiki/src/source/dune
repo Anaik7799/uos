@@ -1,0 +1,17 @@
+
+(library
+ (name hermes_wiki_iface)
+ (wrapped false)
+ (modules wiki_iface))
+
+(library
+ (name hermes_wiki_doctest)
+ (wrapped false)
+ (modules wiki_doctest)
+ (libraries hermes_wiki_core))
+
+(library
+ (name hermes_wiki_source_ext)
+ (wrapped false)
+ (modules wiki_source_ext)
+ (libraries hermes_wiki_core hermes_wiki_iface hermes_wiki_include))

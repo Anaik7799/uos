@@ -1,0 +1,414 @@
+vision atlas
+  Source   --feeds--> Encode  
+  Encode   --feeds--> Package 
+  Package  --feeds--> Serve   
+  Serve    --feeds--> Play    
+  Observe  --observes--> Play    
+  Observe  --observes--> Source  
+  Source   --governs--> Observe 
+  Source    level=L1/family origin=environment
+  Encode    level=L2/capability origin=environment
+  Package   level=L3/contract origin=implementation
+  Serve     level=L4/fixture origin=control
+  Play      level=L5/trace origin=environment
+  Observe   level=L6/receipt origin=evidence
+gstreamer ontology
+  states: NULL -> READY -> PAUSED -> PLAYING
+  filesrc        L1/family      environment  serves=Source
+    law:    the file opens and pushes buffers downstream
+    hazard: the file opens and the pipeline stays PAUSED forever, never prerolling
+  videotestsrc   L1/family      environment  serves=Source
+    law:    a synthetic pattern is generated at the negotiated caps
+    hazard: the pattern generates at caps nothing downstream can accept, and negotiation stalls
+  udpsrc         L1/family      environment  serves=Source
+    law:    datagrams arrive and become buffers with increasing timestamps
+    hazard: the socket binds and no datagram ever arrives, which is indistinguishable from idle
+  decodebin      L2/capability  environment  serves=Encode
+    law:    a decoder is selected AND its dynamic pad is linked downstream
+    hazard: the DYNAMIC pad is never linked, so no data flows and no error is ever posted — the classic GStreamer silent hang
+  videoconvert   L2/capability  environment  serves=Encode
+    law:    upstream caps are converted to something the encoder accepts
+    hazard: conversion succeeds into caps the encoder then refuses, stalling negotiation
+  x264enc        L2/capability  environment  serves=Encode
+    law:    raw frames become an h264 elementary stream
+    hazard: the encoder buffers input and emits nothing while the bus stays silent
+  vp8enc         L2/capability  environment  serves=Encode
+    law:    raw frames become a vp8 elementary stream
+    hazard: the encoder runs at a bitrate that produces frames nothing can decode
+  hlssink2       L3/contract    implementation serves=Package
+    law:    a playlist is written naming segments that exist and are non-empty
+    hazard: a playlist is written naming segments already deleted by the rolling window
+  udpsink        L4/fixture     control      serves=Serve
+    law:    packets leave the host toward the declared destination
+    hazard: packets are sent to a black hole; udp gives no delivery signal at all
+  appsink        L6/receipt     evidence     serves=Observe
+    law:    buffers are handed to our code and are actually consumed
+    hazard: buffers arrive with no callback attached and are silently dropped
+vlc ontology (oracle, never author)
+  play_url         L4/fixture     environment  serves=Serve
+    law:    the URL opens and pictures are decoded from it
+    hazard: VLC retries and buffers indefinitely on an unreachable URL rather than failing, so the run hangs instead of reporting
+  play_file        L1/family      environment  serves=Source
+    law:    the file opens and pictures are decoded from it
+    hazard: a truncated file plays to Ended and reports no error at all
+  sout_transcode   L2/capability  environment  serves=Encode
+    law:    the transcode chain runs with the codecs that were declared
+    hazard: an unavailable codec silently falls back, so the chain that ran is not the one declared
+  sout_standard    L3/contract    environment  serves=Package
+    law:    the output reaches the declared destination in the declared mux
+    hazard: the destination is unreachable and output is discarded without a diagnostic
+  snapshot         L6/receipt     evidence     serves=Observe
+    law:    a decoded frame is written to disk and is non-empty
+    hazard: a snapshot is written before the first frame decodes, producing a valid but BLANK image that compares as a real capture
+  stats            L5/trace       evidence     serves=Play
+    law:    decoded and lost picture counters are readable and advance
+    hazard: the counters read zero both before playback starts and when it never starts
+  leniencies (each hides a defect):
+    skipped_frames       corrupt frames were dropped and playback continued, so a damaged stream looks watchable
+    demuxer_fallback     a different demuxer was chosen than the container declared, so the format under test is not the format that was exercised
+    codec_fallback       a software decoder replaced the expected one, so a hardware-path defect is invisible
+    sout_stage_dropped   a missing stream-output module was skipped rather than refused, so the chain that ran is not the chain that was declared
+    ended_without_error  playback reached Ended on input it could not fully read, so a truncated file reports the same terminal state as a whole one
+obs ontology (compositor: loss is silent and the output stays continuous)
+  scene_composite            L2/capability  environment  gl=true serves=Encode
+    law:    the scene is drawn at the configured frame rate with every source visible
+    hazard: the scene renders at a reduced rate and the output stays continuous, so loss is invisible without the counters
+  source.media_file          L1/family      environment  gl=false serves=Source
+    law:    the file decodes and its pictures appear in the composite
+    hazard: the file ends and the source renders BLACK rather than stopping the scene
+  source.display_capture     L1/family      environment  gl=true serves=Source
+    law:    the screen's pixels reach the composite
+    hazard: capture succeeds on a blanked or locked screen and yields black frames
+  source.window_capture      L1/family      environment  gl=true serves=Source
+    law:    the named window's pixels reach the composite
+    hazard: the window is minimised or closed and the source renders BLACK while remaining 'active'
+  source.video_device        L1/family      environment  gl=false serves=Source
+    law:    the device opens and delivers frames at the negotiated format
+    hazard: the device is held by another process and yields the last frame forever
+  source.browser_source      L1/family      environment  gl=true serves=Source
+    law:    the embedded page renders and its pixels reach the composite
+    hazard: the page fails to load and renders transparent, compositing as nothing
+  source.image_source        L1/family      environment  gl=false serves=Source
+    law:    the still decodes and is drawn
+    hazard: a missing file renders as an empty layer without a diagnostic
+  output.stream_rtmp         L4/fixture     environment  gl=false serves=Serve
+    law:    encoded frames are accepted by the ingest and acknowledged
+    hazard: the ingest drops the connection and OBS RECONNECTS silently, so the output looks live through a gap
+  output.record_file         L3/contract    implementation gl=false serves=Package
+    law:    the file grows and its container is finalised on stop
+    hazard: the process is killed rather than stopped, leaving an unfinalised container that most players still open
+  output.virtual_camera      L4/fixture     environment  gl=false serves=Serve
+    law:    the loopback device exists and other programs can open it
+    hazard: the loopback module is absent and the output silently does nothing
+  encoder_x264               L2/capability  environment  gl=false serves=Encode
+    law:    frames are encoded within the frame budget, with none skipped
+    hazard: the encoder falls behind and frames are SKIPPED before encoding, which the output stream cannot reveal
+  stats_counters             L5/trace       evidence     gl=false serves=Observe
+    law:    all three loss counters are readable
+    hazard: the counters read zero before a run starts and after one that never began
+  websocket_control          LX/control-plane control      gl=false serves=Play
+    law:    a command is authenticated, applied, and its effect is observable
+    hazard: a command is accepted and acknowledged without being applied
+  loss counters:
+    render_lag     environment  the compositor could not draw the scene in time — the GPU is the constraint
+    encoding_lag   control      frames were SKIPPED before encoding because the encoder fell behind — the CPU budget is the constraint
+    network_drop   environment  frames were encoded and then discarded because the output could not ship them — the link is the constraint
+jmeter ontology (the measurement is about the generator until proven otherwise)
+  thread_group                 L2/capability  environment    serves=Serve
+    law:    the declared concurrency is actually reached and sustained
+    hazard: the ramp-up is longer than the test, so the declared concurrency is never reached and the result describes a smaller load than the one reported
+  http_sampler                 L4/fixture     environment    serves=Serve
+    law:    each request is issued and its response fully read
+    hazard: the response is counted before the body is read, so a server that stalls mid-body is recorded as fast
+  assertion                    L3/contract    implementation serves=Package
+    law:    the response BODY is checked, not merely its status code
+    hazard: no assertion is attached, so every 200 passes — including an error page served with 200
+  constant_throughput_timer    L2/capability  environment    serves=Serve
+    law:    requests are issued on a schedule independent of how fast the server replies
+    hazard: without pacing the client slows when the server does, hiding exactly the latency the test exists to find
+  summary_report               L6/receipt     evidence       serves=Observe
+    law:    percentiles are reported alongside the mean
+    hazard: only the mean is read, so a server stalling one request in a hundred passes cleanly
+  distributed_mode             LX/control-plane control        serves=Serve
+    law:    every worker's clock and results are reconciled into one series
+    hazard: one worker fails to start and the aggregate silently describes less load than intended
+  contaminants (each makes a green report meaningless):
+    no_assertion           a sampler passes on any HTTP 200, including a 200 carrying an error page, so '100% success' means only that the socket worked
+    client_saturated       the generator's own CPU or connection pool was the limit, so the latency reported is the client queueing rather than the server responding
+    coordinated_omission   an unpaced client sends FEWER requests when the server slows, so the slow responses are never issued and never measured — latency improves on paper as the server gets worse
+    gui_mode               the GUI consumes the CPU it is measuring with, so the generator competes with its own measurement
+    jvm_pause              a garbage-collection pause inside the generator is charged to the server, appearing as a response-time spike the server never caused
+libav ontology (in-process: a failure here takes the harness with it)
+  version_query          L0/product     environment    alloc=false unlock=false expires=false
+    law:    the version reported is the LINKED library's, not a binary on PATH
+    hazard: the header version and the linked version differ, so struct layouts disagree and fields are read at the wrong offsets
+  open_input             L1/family      environment    alloc=true unlock=true expires=false
+    law:    a context is allocated and the caller holds the obligation to close it
+    hazard: the context is allocated and never closed, leaking memory the OCaml GC cannot see, so the process grows with no heap growth to explain it
+  find_stream_info       L2/capability  environment    alloc=true unlock=true expires=false
+    law:    stream parameters are populated before any decode is attempted
+    hazard: it is skipped, and decode proceeds against uninitialised parameters that happen to be zero
+  send_packet            L3/contract    implementation alloc=false unlock=true expires=false
+    law:    a packet is accepted, or EAGAIN says the decoder must be drained first
+    hazard: EAGAIN is treated as an error, aborting a decode that was working and only needed to be drained
+  receive_frame          L3/contract    implementation alloc=true unlock=true expires=false
+    law:    a frame is produced, or EAGAIN says more input is required
+    hazard: any negative return is treated as failure, so a normal EAGAIN ends the loop and the file reports as undecodable
+  frame_buffer_access    L6/receipt     implementation alloc=false unlock=false expires=false
+    law:    pixels are read only while the frame reference is still held
+    hazard: a Bigarray built over the frame ALIASES memory libav owns; after unref it is a live OCaml value pointing at freed memory, and the segfault lands somewhere unrelated
+  unref_frame            L5/trace       implementation alloc=false unlock=false expires=true
+    law:    the reference is dropped and every view onto it becomes unusable
+    hazard: unref runs while a zero-copy view is still reachable from OCaml, which no type in the binding prevents unless it was designed to
+  close_input            L1/family      implementation alloc=false unlock=false expires=true
+    law:    the context is freed exactly once and no view outlives it
+    hazard: the context is closed twice, or closed while frames derived from it are still held
+  return codes: EAGAIN=-11 EOF=-541478725 — both negative, NEITHER a failure
+browser video surface
+  media_element      L3/contract    environment  serves=Play
+    law:    a <video> element exists and exposes its media interface
+    hazard: the element exists on every engine and decodes nothing without a codec
+  codec_support      L3/contract    environment  serves=Play
+    law:    the engine reports it can decode the codec we actually serve
+    hazard: canPlayType returns the empty string for 'no', which is falsy but not absent
+  frame_callback     L5/trace       evidence     serves=Play
+    law:    a per-composited-frame callback fires and carries mediaTime
+    hazard: the function exists and is never called because no frame is ever composited
+  playback_quality   L5/trace       evidence     serves=Play
+    law:    dropped and total frame counters are readable and advance
+    hazard: the counters read zero both when playback is perfect and when it never began
+  capture_stream     L6/receipt     evidence     serves=Observe
+    law:    captureStream yields a live track carrying decoded video
+    hazard: captureStream returns a stream whose video track list is empty
+  media_recorder     L6/receipt     evidence     serves=Observe
+    law:    MediaRecorder accepts that track and emits non-empty blobs
+    hazard: recording starts and every dataavailable blob has size zero
+  media_source       L4/fixture     environment  serves=Play
+    law:    MediaSource accepts a SourceBuffer for our mime and codec
+    hazard: MediaSource exists but isTypeSupported is false for the codec we serve
+  web_codecs         L5/trace       environment  serves=Observe
+    law:    VideoDecoder is configurable for the codec and emits VideoFrames
+    hazard: VideoDecoder constructs and configure() rejects asynchronously
+  web_rtc            L4/fixture     environment  serves=Play
+    law:    an RTCPeerConnection can be constructed and negotiate a video track
+    hazard: the peer connection constructs and never negotiates a media section
+  universal codecs: vp9, av1
+vision FPP model (instance base 0x4000)
+  visionPipeline   cmds=2 events=6 channels=11
+  visionControl    cmds=1 events=2 channels=4
+    channel vision_source_verdict
+    channel vision_encode_verdict
+    channel vision_package_verdict
+    channel vision_serve_verdict
+    channel vision_play_verdict
+    channel vision_observe_verdict
+    channel vision_stages_live
+    channel vision_stages_unknown
+    channel vision_coverage_end_to_end
+    channel vision_telemetry_published
+    channel vision_telemetry_unpublished
+    channel vision_control_accepted
+    channel vision_control_refused
+    channel vision_restart_promoted
+    channel vision_restart_rolled_back
+FMEA: 58 failure modes, 0 UNDETECTED
+  [ 6] pipeline.Observe                   EVIDENCE_FALSE probed:probe_observe
+       the capture is compared against itself, so any stream would pass
+  [ 6] browser.frame_callback             EVIDENCE_FALSE probed:browser_probe:frame_callback
+       the function exists and is never called because no frame is ever composited
+  [ 6] browser.playback_quality           EVIDENCE_FALSE probed:browser_probe:playback_quality
+       the counters read zero both when playback is perfect and when it never began
+  [ 6] browser.capture_stream             EVIDENCE_FALSE probed:browser_probe:capture_stream
+       captureStream returns a stream whose video track list is empty
+  [ 6] browser.media_recorder             EVIDENCE_FALSE probed:browser_probe:media_recorder
+       recording starts and every dataavailable blob has size zero
+  [ 6] gstreamer.appsink                  EVIDENCE_FALSE probed:gst_produces/gst_decodes
+       buffers arrive with no callback attached and are silently dropped
+  [ 6] vlc.snapshot                       EVIDENCE_FALSE probed:vlc_decodes/leniencies_in
+       a snapshot is written before the first frame decodes, producing a valid but BLANK image that compares as a real capture
+  [ 6] vlc.stats                          EVIDENCE_FALSE probed:vlc_decodes/leniencies_in
+       the counters read zero both before playback starts and when it never starts
+  [ 6] obs.stats_counters                 EVIDENCE_FALSE probed:obs_log/obs_capability
+       the counters read zero before a run starts and after one that never began
+  [ 6] jmeter.summary_report              EVIDENCE_FALSE probed:jmeter_report/contaminants_in_report
+       only the mean is read, so a server stalling one request in a hundred passes cleanly
+  [ 4] pipeline.Package                   stream_lost    probed:probe_package
+       a playlist is written naming segments that were already deleted
+  [ 4] pipeline.Serve                     stream_lost    probed:probe_serve
+       the playlist is served while its segments 404, so playback stalls silently
+  [ 4] gstreamer.hlssink2                 stream_lost    probed:gst_produces/gst_decodes
+       a playlist is written naming segments already deleted by the rolling window
+  [ 4] gstreamer.udpsink                  stream_lost    probed:gst_produces/gst_decodes
+       packets are sent to a black hole; udp gives no delivery signal at all
+  [ 4] obs.output.record_file             stream_lost    probed:obs_log/obs_capability
+       the process is killed rather than stopped, leaving an unfinalised container that most players still open
+  [ 4] obs.websocket_control              stream_lost    probed:obs_log/obs_capability
+       a command is accepted and acknowledged without being applied
+  [ 4] jmeter.assertion                   stream_lost    probed:jmeter_report/contaminants_in_report
+       no assertion is attached, so every 200 passes — including an error page served with 200
+  [ 4] jmeter.distributed_mode            stream_lost    probed:jmeter_report/contaminants_in_report
+       one worker fails to start and the aggregate silently describes less load than intended
+  [ 4] libav.send_packet                  stream_lost    probed:libav_leaks/libav_codes/libav_version_skew
+       EAGAIN is treated as an error, aborting a decode that was working and only needed to be drained
+  [ 4] libav.receive_frame                stream_lost    probed:libav_leaks/libav_codes/libav_version_skew
+       any negative return is treated as failure, so a normal EAGAIN ends the loop and the file reports as undecodable
+  [ 4] libav.frame_buffer_access          stream_lost    probed:libav_leaks/libav_codes/libav_version_skew
+       a Bigarray built over the frame ALIASES memory libav owns; after unref it is a live OCaml value pointing at freed memory, and the segfault lands somewhere unrelated
+  [ 4] libav.unref_frame                  stream_lost    probed:libav_leaks/libav_codes/libav_version_skew
+       unref runs while a zero-copy view is still reachable from OCaml, which no type in the binding prevents unless it was designed to
+  [ 4] libav.close_input                  stream_lost    probed:libav_leaks/libav_codes/libav_version_skew
+       the context is closed twice, or closed while frames derived from it are still held
+  [ 2] pipeline.Source                    degraded       probed:probe_source
+       the source runs but emits a frozen frame, so the ordinal never advances
+  [ 2] pipeline.Encode                    degraded       probed:probe_encode
+       the encoder accepts input and writes a stream nothing can decode
+  [ 2] pipeline.Play                      degraded       probed:probe_play
+       the player element exists and reports readiness without ever painting a frame
+  [ 2] browser.media_element              degraded       probed:browser_probe:media_element
+       the element exists on every engine and decodes nothing without a codec
+  [ 2] browser.codec_support              degraded       probed:browser_probe:codec_support
+       canPlayType returns the empty string for 'no', which is falsy but not absent
+  [ 2] browser.media_source               degraded       probed:browser_probe:media_source
+       MediaSource exists but isTypeSupported is false for the codec we serve
+  [ 2] browser.web_codecs                 degraded       probed:browser_probe:web_codecs
+       VideoDecoder constructs and configure() rejects asynchronously
+  [ 2] browser.web_rtc                    degraded       probed:browser_probe:web_rtc
+       the peer connection constructs and never negotiates a media section
+  [ 2] gstreamer.filesrc                  degraded       probed:gst_produces/gst_decodes
+       the file opens and the pipeline stays PAUSED forever, never prerolling
+  [ 2] gstreamer.videotestsrc             degraded       probed:gst_produces/gst_decodes
+       the pattern generates at caps nothing downstream can accept, and negotiation stalls
+  [ 2] gstreamer.udpsrc                   degraded       probed:gst_produces/gst_decodes
+       the socket binds and no datagram ever arrives, which is indistinguishable from idle
+  [ 2] gstreamer.decodebin                degraded       probed:gst_produces/gst_decodes
+       the DYNAMIC pad is never linked, so no data flows and no error is ever posted — the classic GStreamer silent hang
+  [ 2] gstreamer.videoconvert             degraded       probed:gst_produces/gst_decodes
+       conversion succeeds into caps the encoder then refuses, stalling negotiation
+  [ 2] gstreamer.x264enc                  degraded       probed:gst_produces/gst_decodes
+       the encoder buffers input and emits nothing while the bus stays silent
+  [ 2] gstreamer.vp8enc                   degraded       probed:gst_produces/gst_decodes
+       the encoder runs at a bitrate that produces frames nothing can decode
+  [ 2] vlc.play_url                       degraded       probed:vlc_decodes/leniencies_in
+       VLC retries and buffers indefinitely on an unreachable URL rather than failing, so the run hangs instead of reporting
+  [ 2] vlc.play_file                      degraded       probed:vlc_decodes/leniencies_in
+       a truncated file plays to Ended and reports no error at all
+  [ 2] vlc.sout_transcode                 degraded       probed:vlc_decodes/leniencies_in
+       an unavailable codec silently falls back, so the chain that ran is not the one declared
+  [ 2] vlc.sout_standard                  degraded       probed:vlc_decodes/leniencies_in
+       the destination is unreachable and output is discarded without a diagnostic
+  [ 2] obs.scene_composite                degraded       probed:obs_log/obs_capability
+       the scene renders at a reduced rate and the output stays continuous, so loss is invisible without the counters
+  [ 2] obs.source.media_file              degraded       probed:obs_log/obs_capability
+       the file ends and the source renders BLACK rather than stopping the scene
+  [ 2] obs.source.display_capture         degraded       probed:obs_log/obs_capability
+       capture succeeds on a blanked or locked screen and yields black frames
+  [ 2] obs.source.window_capture          degraded       probed:obs_log/obs_capability
+       the window is minimised or closed and the source renders BLACK while remaining 'active'
+  [ 2] obs.source.video_device            degraded       probed:obs_log/obs_capability
+       the device is held by another process and yields the last frame forever
+  [ 2] obs.source.browser_source          degraded       probed:obs_log/obs_capability
+       the page fails to load and renders transparent, compositing as nothing
+  [ 2] obs.source.image_source            degraded       probed:obs_log/obs_capability
+       a missing file renders as an empty layer without a diagnostic
+  [ 2] obs.output.stream_rtmp             degraded       probed:obs_log/obs_capability
+       the ingest drops the connection and OBS RECONNECTS silently, so the output looks live through a gap
+  [ 2] obs.output.virtual_camera          degraded       probed:obs_log/obs_capability
+       the loopback module is absent and the output silently does nothing
+  [ 2] obs.encoder_x264                   degraded       probed:obs_log/obs_capability
+       the encoder falls behind and frames are SKIPPED before encoding, which the output stream cannot reveal
+  [ 2] jmeter.thread_group                degraded       probed:jmeter_report/contaminants_in_report
+       the ramp-up is longer than the test, so the declared concurrency is never reached and the result describes a smaller load than the one reported
+  [ 2] jmeter.http_sampler                degraded       probed:jmeter_report/contaminants_in_report
+       the response is counted before the body is read, so a server that stalls mid-body is recorded as fast
+  [ 2] jmeter.constant_throughput_timer   degraded       probed:jmeter_report/contaminants_in_report
+       without pacing the client slows when the server does, hiding exactly the latency the test exists to find
+  [ 2] libav.version_query                degraded       probed:libav_leaks/libav_codes/libav_version_skew
+       the header version and the linked version differ, so struct layouts disagree and fields are read at the wrong offsets
+  [ 2] libav.open_input                   degraded       probed:libav_leaks/libav_codes/libav_version_skew
+       the context is allocated and never closed, leaking memory the OCaml GC cannot see, so the process grows with no heap growth to explain it
+  [ 2] libav.find_stream_info             degraded       probed:libav_leaks/libav_codes/libav_version_skew
+       it is skipped, and decode proceeds against uninitialised parameters that happen to be zero
+
+STPA: 16 unsafe control actions, 0 with NOTHING enforcing the constraint
+  restart            not_provided       enforced
+    when: the running image differs from the built one and the pipeline is degraded
+    then: the old image serves indefinitely and the fix never reaches production
+    must: a digest change must eventually produce a restart
+    by:   Vision_restart.supervise_once (digest compared each tick)
+  restart            provided_unsafe    enforced
+    when: the replacement image is broken
+    then: the service is taken down and cannot come back
+    must: the old instance must not be retired until the replacement passes a health gate
+    by:   Vision_restart.execute (law 1, chaos-tested over 7 failure modes)
+  restart            wrong_timing       enforced
+    when: in-flight segment requests have not finished
+    then: viewers see refused connections mid-stream
+    must: accepting must stop and in-flight responses must finish before the swap
+    by:   Vision_restart.execute (Draining precedes Starting)
+  restart            stopped_too_soon   enforced
+    when: the gate ran before the replacement had opened its listener
+    then: a healthy replacement is rolled back, or a broken one is promoted
+    must: the gate must ask what the stage probes ask, not whether the process exists
+    by:   Vision_control (ffmpeg gate is probe_package; server gate polls /whoami)
+  start_pipeline     provided_unsafe    enforced
+    when: a pipeline is already running against the same output directory
+    then: two encoders write one playlist and the stream becomes undecodable
+    must: starting must be refused while another pipeline owns the output
+    by:   Vision_controller.start (lock_holder checked BEFORE the spawn)
+  start_pipeline     not_provided       enforced
+    when: the pipeline has died and nothing restarts it
+    then: the stream ends silently while the server keeps serving a stale playlist
+    must: a dead pipeline must be detected and reported
+    by:   Vision_controller.probe_source (Absent when the process exited)
+  stop_pipeline      stopped_too_soon   enforced
+    when: SIGKILL before the muxer finalises
+    then: an unfinalised container that most players still open, so corruption is invisible
+    must: stopping must send SIGTERM and wait before escalating
+    by:   Vision_controller.stop (TERM, settle, then KILL)
+  stop_pipeline      wrong_timing       enforced
+    when: stop is issued while a capture is being compared
+    then: the comparison reads a truncated capture and reports a false divergence
+    must: a capture in progress must complete or be discarded, never half-read
+    by:   Vision_serve POST /capture (reads to Content-Length; a short read is a 500 and nothing is written)
+  start_pipeline     wrong_timing       enforced
+    when: started before the output directory exists or is writable
+    then: ffmpeg exits immediately and the failure looks like a bad intent
+    must: the sink must be created and writable before the process is spawned
+    by:   Vision_controller.start (mkdir_p before create_process)
+  start_pipeline     stopped_too_soon   enforced
+    when: probed before the first segment boundary
+    then: a healthy pipeline reports Unknown and is treated as broken
+    must: a pipeline must be given time to reach its first segment before judgement
+    by:   Vision_controller.probe_package (Unknown, not Absent, before the playlist)
+  stop_pipeline      not_provided       enforced
+    when: a run ends without stopping the pipeline it started
+    then: an orphan ffmpeg holds the output directory and corrupts the next run
+    must: every started pipeline must be stopped on every exit path
+    by:   Vision_controller (at_exit walks started_pipelines)
+  stop_pipeline      provided_unsafe    enforced
+    when: stop is issued to a pid that has been reused by another process
+    then: an unrelated process is killed
+    must: a pid must be validated as ours before a signal is sent to it
+    by:   Vision_controller.stop_pid (owns_pid gates every signal)
+  publish_telemetry  not_provided       enforced
+    when: the router is unreachable
+    then: the mesh view is incomplete and looks the same as a healthy quiet system
+    must: an unpublished observation must be counted and disclosed
+    by:   Vision_telemetry.render (reports 'mesh view incomplete')
+  publish_telemetry  provided_unsafe    enforced
+    when: a payload carries a credential or a private path
+    then: secrets are broadcast to every subscriber on the mesh
+    must: published payloads must contain only observations, never configuration
+    by:   Vision_telemetry.redact (applied to every payload before it goes out)
+  publish_telemetry  wrong_timing       enforced
+    when: published before the probe completed
+    then: a verdict is broadcast that the probe later contradicts
+    must: telemetry must be published from a completed observation
+    by:   Vision_run (publishes after probe_all returns)
+  publish_telemetry  stopped_too_soon   enforced
+    when: the run exits before the last observation is flushed
+    then: the mesh's last view of a failing run is a healthy one
+    must: the terminal observation must be published before exit
+    by:   Vision_telemetry (at_exit warns when a run published and never closed)
+
+{"resourceSpans":[{"resource":{"attributes":[{"key":"service.name","value":{"stringValue":"hermes_vision"}},{"key":"hermes.run_id","value":{"stringValue":"expect-fixed-run"}},{"key":"hermes.fpp_instance_base","value":{"stringValue":"0x4000"}}]},"scopeSpans":[{"scope":{"name":"hermes_vision"},"spans":[{"traceId":"22403e89dbf73c25526f5d1113499e7c","spanId":"73478f1975ced7c6","name":"vision.source","kind":"SPAN_KIND_INTERNAL","status":{"code":"STATUS_CODE_UNSET"},"durationMs":0.000,"attributes":[{"key":"hermes.run_id","value":{"stringValue":"expect-fixed-run"}},{"key":"hermes.stage","value":{"stringValue":"Source"}},{"key":"hermes.verdict","value":{"stringValue":"UNKNOWN"}},{"key":"hermes.fractal_level","value":{"stringValue":"L1/family"}},{"key":"hermes.rca_origin","value":{"stringValue":"environment"}},{"key":"hermes.fpp_channel","value":{"stringValue":"vision_source_verdict"}},{"key":"hermes.why","value":{"stringValue":"not run"}}]},{"traceId":"22403e89dbf73c25526f5d1113499e7c","spanId":"4118167a143d2d63","name":"vision.encode","kind":"SPAN_KIND_INTERNAL","status":{"code":"STATUS_CODE_UNSET"},"durationMs":0.000,"attributes":[{"key":"hermes.run_id","value":{"stringValue":"expect-fixed-run"}},{"key":"hermes.stage","value":{"stringValue":"Encode"}},{"key":"hermes.verdict","value":{"stringValue":"UNKNOWN"}},{"key":"hermes.fractal_level","value":{"stringValue":"L2/capability"}},{"key":"hermes.rca_origin","value":{"stringValue":"environment"}},{"key":"hermes.fpp_channel","value":{"stringValue":"vision_encode_verdict"}},{"key":"hermes.why","value":{"stringValue":"not run"}}]},{"traceId":"22403e89dbf73c25526f5d1113499e7c","spanId":"fd73f43fcd326467","name":"vision.package","kind":"SPAN_KIND_INTERNAL","status":{"code":"STATUS_CODE_UNSET"},"durationMs":0.000,"attributes":[{"key":"hermes.run_id","value":{"stringValue":"expect-fixed-run"}},{"key":"hermes.stage","value":{"stringValue":"Package"}},{"key":"hermes.verdict","value":{"stringValue":"UNKNOWN"}},{"key":"hermes.fractal_level","value":{"stringValue":"L3/contract"}},{"key":"hermes.rca_origin","value":{"stringValue":"implementation"}},{"key":"hermes.fpp_channel","value":{"stringValue":"vision_package_verdict"}},{"key":"hermes.why","value":{"stringValue":"not run"}}]},{"traceId":"22403e89dbf73c25526f5d1113499e7c","spanId":"aed83b2b56ebc12e","name":"vision.serve","kind":"SPAN_KIND_INTERNAL","status":{"code":"STATUS_CODE_UNSET"},"durationMs":0.000,"attributes":[{"key":"hermes.run_id","value":{"stringValue":"expect-fixed-run"}},{"key":"hermes.stage","value":{"stringValue":"Serve"}},{"key":"hermes.verdict","value":{"stringValue":"UNKNOWN"}},{"key":"hermes.fractal_level","value":{"stringValue":"L4/fixture"}},{"key":"hermes.rca_origin","value":{"stringValue":"control"}},{"key":"hermes.fpp_channel","value":{"stringValue":"vision_serve_verdict"}},{"key":"hermes.why","value":{"stringValue":"not run"}}]},{"traceId":"22403e89dbf73c25526f5d1113499e7c","spanId":"5d4a57dfeb9d849f","name":"vision.play","kind":"SPAN_KIND_INTERNAL","status":{"code":"STATUS_CODE_UNSET"},"durationMs":0.000,"attributes":[{"key":"hermes.run_id","value":{"stringValue":"expect-fixed-run"}},{"key":"hermes.stage","value":{"stringValue":"Play"}},{"key":"hermes.verdict","value":{"stringValue":"UNKNOWN"}},{"key":"hermes.fractal_level","value":{"stringValue":"L5/trace"}},{"key":"hermes.rca_origin","value":{"stringValue":"environment"}},{"key":"hermes.fpp_channel","value":{"stringValue":"vision_play_verdict"}},{"key":"hermes.why","value":{"stringValue":"not run"}}]},{"traceId":"22403e89dbf73c25526f5d1113499e7c","spanId":"9cf27f5ae95e7624","name":"vision.observe","kind":"SPAN_KIND_INTERNAL","status":{"code":"STATUS_CODE_UNSET"},"durationMs":0.000,"attributes":[{"key":"hermes.run_id","value":{"stringValue":"expect-fixed-run"}},{"key":"hermes.stage","value":{"stringValue":"Observe"}},{"key":"hermes.verdict","value":{"stringValue":"UNKNOWN"}},{"key":"hermes.fractal_level","value":{"stringValue":"L6/receipt"}},{"key":"hermes.rca_origin","value":{"stringValue":"evidence"}},{"key":"hermes.fpp_channel","value":{"stringValue":"vision_observe_verdict"}},{"key":"hermes.why","value":{"stringValue":"not run"}}]}]}]}]}

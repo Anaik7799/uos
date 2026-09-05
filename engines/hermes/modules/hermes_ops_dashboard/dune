@@ -1,0 +1,180 @@
+(library
+ (name hermes_ops_dashboard)
+ (wrapped false)
+ (modules run_root_bootstrap run_dependency_authority run_abandonment_authority run_jj_runtime_registry run_jj_authority run_model run_snapshot run_event_store run_metrics run_resource_sampler
+   run_trace run_fast_path run_ontology run_atlas run_algebra run_topology run_mbse
+   run_formal_relation run_formal run_safety run_intelligence
+   run_analysis_z3_worker_protocol run_analysis run_assurance run_fpp_authority
+   run_effect_authority run_swarm_preparation run_conditional_authority run_swarm_bridge
+   run_operator_authority)
+ ; hermes_ops_topology and hermes_ops_completion_topology are the two
+ ; operations models Run_formal_relation must assert over. They were
+ ; unreachable while they sat in aggregate hermes_ops, which depends on
+ ; this library; the leaf split in modules/hermes_ops/dune is what makes
+ ; this line legal. Depending on aggregate hermes_ops from here is still
+ ; a cycle and always will be — take the leaves, never the aggregate.
+ (libraries hermes_fpp_window_authority hermes_ops_topology
+   hermes_ops_completion_topology hermes_harness_harness_topology hermes_wiki_topology
+   hermes_ops_capability hermes_ops_capability_core hermes_external_access hermes_debugging hermes_harness_fractal_ontology
+   hermes_harness_resource_envelope hermes_harness_hermes_rete
+   hermes_harness_ruliad hermes_harness_receipt_reliability
+   hermes_wiki_fpp hermes_sysml
+   hermes_dependability_authority_store hermes_dependability_owner_inventory
+   hermes_dependability_abandonment_protocol hermes_dependability_dispatch_store
+   hermes_dependability_filesystem hermes_dependability_clock
+   hermes_dependability_process_protocol hermes_dependability_approval
+   hermes_dependability_writer_lease hermes_dependability_sqlite
+   hermes_ops_config_authority hermes_vcs hermes_jj_protocol digestif yojson domainslib unix smtml fpath
+   mtime.clock hermes_harness_sop_execution threads))
+
+(executable
+ (name test_run_model)
+ (modules test_run_model)
+ (libraries hermes_ops_dashboard hermes_ops_capability_core yojson
+   hermes_harness_suite_telemetry))
+
+(executable
+ (name test_run_fpp_authority)
+ (modules test_run_fpp_authority)
+ (libraries hermes_ops_dashboard yojson hermes_harness_suite_telemetry))
+
+(executable
+ (name test_run_snapshot)
+ (modules test_run_snapshot)
+ (libraries hermes_ops_dashboard hermes_ops_capability_core yojson
+   hermes_harness_suite_telemetry))
+
+(executable
+ (name test_run_event_store)
+ (modules test_run_event_store)
+ (libraries hermes_ops_dashboard hermes_ops_capability_core
+   hermes_dependability_sqlite_test_support
+   hermes_harness_suite_telemetry))
+
+(executable
+ (name test_run_effect_authority)
+ (modules test_run_effect_authority)
+ (libraries hermes_ops_dashboard hermes_ops_capability_core
+   hermes_dependability_sqlite_test_support
+   hermes_harness_suite_telemetry))
+
+(executable
+ (name test_run_governance)
+ (modules test_run_governance)
+ (libraries hermes_ops_dashboard hermes_ops_capability_core
+   hermes_harness_fractal_ontology yojson unix
+   hermes_harness_suite_telemetry))
+
+(executable
+ (name test_run_model_surfaces)
+ (modules test_run_model_surfaces)
+ (libraries hermes_ops_dashboard hermes_ops hermes_wiki_fpp
+   hermes_wiki_topology hermes_harness_harness_topology hermes_sysml yojson
+   hermes_harness_suite_telemetry))
+
+(executable
+ (name gen_run_model)
+ (modules gen_run_model)
+ (libraries hermes_ops_dashboard unix yojson))
+
+(executable
+ (name test_run_safety)
+ (modules test_run_safety)
+ (libraries hermes_ops_dashboard hermes_ops_capability_core
+   hermes_dependability_sqlite_test_support hermes_harness_suite_telemetry))
+
+(executable
+ (name test_run_intelligence)
+ (modules test_run_intelligence)
+ (libraries hermes_ops_dashboard hermes_ops_capability_core
+   hermes_harness_suite_telemetry))
+
+(executable
+ (name test_run_analysis)
+ (modules test_run_analysis)
+ (link_deps run_analysis_z3_worker.exe)
+ (libraries hermes_ops_dashboard hermes_ops_capability_core
+   hermes_harness_suite_telemetry))
+
+(executable
+ (name run_analysis_z3_worker)
+ (modules run_analysis_z3_worker)
+ (libraries hermes_ops_dashboard ctypes.foreign))
+
+(executable
+ (name test_run_analysis_z3_worker_protocol)
+ (modules test_run_analysis_z3_worker_protocol)
+ (libraries hermes_ops_dashboard hermes_harness_suite_telemetry))
+
+(executable
+ (name test_run_analysis_z3_worker)
+ (modules test_run_analysis_z3_worker)
+ (link_deps run_analysis_z3_worker.exe)
+ (libraries hermes_ops_dashboard hermes_harness_suite_telemetry))
+
+(executable
+ (name test_run_assurance)
+ (modules test_run_assurance)
+ (libraries hermes_ops_dashboard hermes_ops_capability_core
+   hermes_harness_suite_telemetry))
+
+(executable
+ (name test_run_operator_authority)
+ (modules test_run_operator_authority)
+ (libraries hermes_ops_dashboard hermes_ops_capability_core
+   hermes_harness_suite_telemetry))
+
+(executable
+ (name test_run_swarm_bridge)
+ (modules test_run_swarm_bridge)
+ (link_deps run_analysis_z3_worker.exe)
+ (libraries hermes_ops_dashboard hermes_ops_capability
+   hermes_dependability_sqlite_test_support hermes_harness_suite_telemetry))
+
+(executable
+ (name test_run_swarm_preparation)
+ (modules test_run_swarm_preparation)
+ (libraries hermes_ops_dashboard hermes_ops_capability_core yojson
+   hermes_harness_suite_telemetry))
+
+(executable
+ (name test_run_root_bootstrap)
+ (modules test_run_root_bootstrap)
+ (libraries hermes_ops_dashboard
+   hermes_dependability_sqlite_test_support
+   hermes_harness_suite_telemetry))
+
+(executable
+ (name test_run_dependency_authority)
+ (modules test_run_dependency_authority)
+ (libraries hermes_ops_dashboard hermes_ops_capability_core
+   hermes_harness_suite_telemetry))
+
+(executable
+ (name test_run_abandonment_authority)
+ (modules test_run_abandonment_authority)
+ (libraries hermes_ops_dashboard hermes_harness_suite_telemetry))
+
+(executable
+ (name test_run_conditional_authority)
+ (modules test_run_conditional_authority)
+ (libraries hermes_ops_dashboard hermes_vcs
+   hermes_harness_suite_telemetry))
+
+(executable
+ (name test_run_jj_runtime_registry)
+ (modules test_run_jj_runtime_registry)
+ (libraries hermes_ops_dashboard hermes_dependability_sqlite_test_support
+   hermes_harness_suite_telemetry))
+
+(executable
+ (name test_run_jj_authority)
+ (modules test_run_jj_authority)
+ (libraries hermes_ops_dashboard hermes_harness_suite_telemetry))
+
+(executable
+ (name test_run_formal_relational)
+ (modules test_run_formal_relational)
+ (libraries hermes_ops_dashboard hermes_wiki_fpp hermes_fpp_window_authority
+   hermes_harness_harness_topology hermes_wiki_topology
+   hermes_harness_suite_telemetry))

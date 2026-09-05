@@ -1,0 +1,281 @@
+(library
+ (name hermes_dependability_core)
+ (wrapped false)
+ (modules dependability_intent dependability_graph dependability_algebra
+   dependability_ontology dependability_atlas dependability_surface)
+ (libraries hermes_ops_capability_core digestif yojson))
+
+(library
+ (name hermes_dependability_clock)
+ (wrapped false)
+ (modules dependability_clock)
+ (libraries digestif mtime.clock ptime.clock.os))
+
+(library
+ (name hermes_dependability_abandonment_protocol)
+ (wrapped false)
+ (modules dependability_abandonment_protocol)
+ (libraries hermes_dependability_core digestif))
+
+(library
+ (name hermes_dependability_approval_crypto)
+ (wrapped false)
+ (modules dependability_approval_crypto)
+ (libraries hermes_dependability_core mirage-crypto-ec digestif))
+
+(library
+ (name hermes_dependability_credential)
+ (wrapped false)
+ (modules dependability_credential)
+ (libraries hermes_dependability_core hermes_dependability_clock digestif))
+
+(library
+ (name hermes_dependability_filesystem)
+ (wrapped false)
+ (modules dependability_filesystem)
+ (libraries hermes_dependability_core hermes_dependability_clock digestif fpath))
+
+(library
+ (name hermes_dependability_sqlite_location)
+ (wrapped false)
+ (modules dependability_sqlite_location)
+ (libraries hermes_dependability_core hermes_dependability_filesystem digestif))
+
+(library
+ (name hermes_dependability_network)
+ (wrapped false)
+ (modules dependability_network)
+ (libraries hermes_dependability_core hermes_dependability_clock
+   hermes_dependability_credential digestif))
+
+(library
+ (name hermes_dependability_owner_inventory)
+ (wrapped false)
+ (modules dependability_owner_inventory)
+ (libraries hermes_dependability_core digestif))
+
+(library
+ (name hermes_dependability_authority_store)
+ (wrapped false)
+ (modules dependability_authority_store)
+ (libraries hermes_dependability_core hermes_dependability_owner_inventory
+   hermes_dependability_clock hermes_dependability_filesystem
+   hermes_dependability_sqlite digestif))
+
+(library
+ (name hermes_dependability_dispatch_store)
+ (wrapped false)
+ (modules dependability_dispatch_store)
+ (libraries hermes_dependability_core hermes_dependability_owner_inventory
+   hermes_dependability_abandonment_protocol
+   hermes_dependability_authority_store hermes_dependability_clock
+   hermes_dependability_sqlite hermes_vcs digestif))
+
+(library
+ (name hermes_dependability_approval)
+ (wrapped false)
+ (modules dependability_approval)
+ (libraries hermes_dependability_authority_store
+   hermes_dependability_dispatch_store hermes_dependability_approval_crypto
+   hermes_dependability_clock hermes_vcs digestif))
+
+(library
+ (name hermes_dependability_recovery_vault)
+ (wrapped false)
+ (modules dependability_recovery_vault)
+ (libraries hermes_dependability_core hermes_dependability_owner_inventory
+   hermes_dependability_authority_store hermes_dependability_filesystem
+   hermes_dependability_clock hermes_vcs digestif unix))
+
+(library
+ (name hermes_dependability_completion_store)
+ (wrapped false)
+ (modules dependability_completion_store)
+ (libraries hermes_dependability_core hermes_dependability_owner_inventory
+   hermes_dependability_authority_store hermes_dependability_clock
+   hermes_dependability_sqlite_location hermes_dependability_sqlite
+   hermes_jj_protocol digestif))
+
+(library
+ (name hermes_dependability_writer_lease)
+ (wrapped false)
+ (modules dependability_writer_lease)
+ (libraries hermes_dependability_authority_store
+   hermes_dependability_owner_inventory hermes_dependability_approval
+   hermes_dependability_filesystem hermes_dependability_clock hermes_vcs
+   digestif unix))
+
+(library
+ (name hermes_dependability_sqlite)
+ (wrapped false)
+ (modules dependability_sqlite sqlite_lifecycle_model)
+ (libraries hermes_dependability_core hermes_dependability_sqlite_location
+   digestif sqlite3 yojson))
+
+(library
+ (name hermes_dependability_solver)
+ (wrapped false)
+ (modules sqlite_lifecycle_solver)
+ (libraries hermes_dependability_sqlite mtime.clock unix))
+
+(library
+ (name hermes_dependability_process_protocol)
+ (wrapped false)
+ (modules dependability_process_protocol)
+ (libraries hermes_dependability_core hermes_vcs hermes_jj_protocol digestif))
+
+(library
+ (name hermes_dependability_process)
+ (wrapped false)
+ (modules dependability_process)
+ (libraries hermes_dependability_clock hermes_dependability_process_protocol
+   digestif unix))
+
+(library
+ (name hermes_dependability_process_test_support)
+ (wrapped false)
+ (modules dependability_process_test_protocol)
+ (libraries hermes_dependability_process_protocol hermes_dependability_process))
+
+(library
+ (name hermes_dependability_sqlite_test_support)
+ (wrapped false)
+ (modules dependability_sqlite_test_protocol)
+ (libraries hermes_dependability_sqlite_location hermes_dependability_sqlite unix))
+
+(library
+ (name hermes_dependability_topology)
+ (wrapped false)
+ (modules dependability_topology)
+ (libraries hermes_wiki_fpp digestif yojson))
+
+(executable
+ (name test_dependability_core)
+ (modules test_dependability_core)
+ (libraries hermes_dependability_core hermes_harness_suite_telemetry))
+
+(executable
+ (name test_dependability_clock)
+ (modules test_dependability_clock)
+ (libraries hermes_dependability_clock hermes_harness_suite_telemetry))
+
+(executable
+ (name test_dependability_abandonment_protocol)
+ (modules test_dependability_abandonment_protocol)
+ (libraries hermes_dependability_abandonment_protocol hermes_harness_suite_telemetry))
+
+(executable
+ (name test_dependability_approval_crypto)
+ (modules test_dependability_approval_crypto)
+ (libraries hermes_dependability_approval_crypto hermes_harness_suite_telemetry))
+
+(executable
+ (name test_dependability_credential)
+ (modules test_dependability_credential)
+ (libraries hermes_dependability_credential hermes_harness_suite_telemetry))
+
+(executable
+ (name test_dependability_filesystem)
+ (modules test_dependability_filesystem)
+ (libraries hermes_dependability_filesystem hermes_harness_suite_telemetry))
+
+(executable
+ (name test_dependability_sqlite_location)
+ (modules test_dependability_sqlite_location)
+ (libraries hermes_dependability_sqlite_location hermes_harness_suite_telemetry))
+
+(executable
+ (name test_dependability_network)
+ (modules test_dependability_network)
+ (libraries hermes_dependability_network hermes_harness_suite_telemetry))
+
+(executable
+ (name test_dependability_owner_inventory)
+ (modules test_dependability_owner_inventory)
+ (libraries hermes_dependability_owner_inventory hermes_harness_suite_telemetry))
+
+(executable
+ (name test_dependability_authority_store)
+ (modules test_dependability_authority_store)
+ (libraries hermes_dependability_authority_store
+   hermes_dependability_sqlite_test_support hermes_harness_suite_telemetry))
+
+(executable
+ (name test_dependability_dispatch_store)
+ (modules test_dependability_dispatch_store)
+ (libraries hermes_dependability_dispatch_store
+   hermes_dependability_sqlite_test_support hermes_harness_suite_telemetry))
+
+(executable
+ (name test_dependability_approval)
+ (modules test_dependability_approval)
+ (libraries hermes_dependability_approval hermes_harness_suite_telemetry
+   hermes_dependability_sqlite_test_support))
+
+(executable
+ (name test_dependability_recovery_vault)
+ (modules test_dependability_recovery_vault)
+ (libraries hermes_dependability_recovery_vault
+   hermes_dependability_sqlite_test_support hermes_harness_suite_telemetry))
+
+(executable
+ (name test_dependability_completion_store)
+ (modules test_dependability_completion_store)
+ (libraries hermes_dependability_completion_store
+   hermes_dependability_sqlite_test_support hermes_harness_suite_telemetry))
+
+(executable
+ (name test_dependability_writer_lease)
+ (modules test_dependability_writer_lease)
+ (libraries hermes_dependability_writer_lease
+   hermes_dependability_sqlite_test_support hermes_harness_suite_telemetry))
+
+(executable
+ (name test_dependability_graph)
+ (modules test_dependability_graph)
+ (libraries hermes_dependability_core hermes_harness_suite_telemetry))
+
+(executable
+ (name test_dependability_meta)
+ (modules test_dependability_meta)
+ (libraries hermes_dependability_core hermes_dependability_topology hermes_harness_suite_telemetry))
+
+(executable
+ (name test_dependability_surface)
+ (modules test_dependability_surface)
+ (libraries hermes_dependability_core yojson hermes_harness_suite_telemetry))
+
+(executable
+ (name test_sqlite_lifecycle_model)
+ (modules test_sqlite_lifecycle_model)
+ (libraries hermes_dependability_sqlite hermes_dependability_sqlite_test_support
+   hermes_harness_suite_telemetry))
+
+(executable
+ (name test_sqlite_lifecycle_smt)
+ (modules test_sqlite_lifecycle_smt)
+ (libraries hermes_dependability_sqlite hermes_dependability_solver
+   hermes_dependability_sqlite_test_support hermes_harness_suite_telemetry))
+
+(executable
+ (name dependability_process_fixture)
+ (modules dependability_process_fixture)
+ (libraries unix))
+
+(executable
+ (name test_dependability_process)
+ (modules test_dependability_process)
+ (libraries hermes_dependability_process_test_support hermes_harness_suite_telemetry)
+ (link_deps dependability_process_fixture.exe))
+
+(executable
+ (name test_dependability_process_protocol)
+ (modules test_dependability_process_protocol)
+ (libraries hermes_dependability_process_protocol hermes_harness_suite_telemetry))
+
+(executable
+ (name test_dependability_topology)
+ (modules test_dependability_topology)
+ (libraries hermes_dependability_topology hermes_wiki_fpp
+   hermes_harness_harness_topology hermes_wiki_topology hermes_ops
+   hermes_ops_dashboard yojson hermes_harness_suite_telemetry))

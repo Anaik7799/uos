@@ -1,0 +1,5 @@
+(library
+ (name wiki_render)
+ (wrapped false)
+ (modules wiki_tyxml)
+ (libraries tyxml))

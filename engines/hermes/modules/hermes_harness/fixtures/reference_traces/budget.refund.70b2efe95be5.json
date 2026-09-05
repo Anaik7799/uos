@@ -1,0 +1,13 @@
+{
+  "scenario_id": "budget.refund",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "93190b04ee3d83ec4a729849b7a6983c03bcff25fd57b111f271ce6c07f5d8ed",
+  "trace": {
+    "consumes": [ true, true, true ],
+    "max_total": 2,
+    "remaining": 0,
+    "used": 2
+  }
+}

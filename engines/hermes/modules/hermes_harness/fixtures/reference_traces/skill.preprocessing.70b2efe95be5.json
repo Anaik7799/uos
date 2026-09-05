@@ -1,0 +1,36 @@
+{
+  "scenario_id": "skill.preprocessing",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "5b8420fe39584bf296b61f98cec87f757ce866ddf05720efdb14804799ade705",
+  "trace": {
+    "results": {
+      "config_vars_default_zero": [
+        {
+          "default": 0,
+          "description": "the threshold",
+          "key": "threshold",
+          "prompt": "the threshold"
+        }
+      ],
+      "config_vars_missing_desc": [],
+      "description_absent": { "description": "", "truncated": false },
+      "description_strips": {
+        "description": "quoted note",
+        "truncated": false
+      },
+      "description_truncates": {
+        "description": "this description is deliberately much longer than the six...",
+        "truncated": true
+      },
+      "platform_macos_matches_darwin": true,
+      "platform_no_match": false,
+      "platform_none_declared": true,
+      "platform_termux_flag": true,
+      "template_both": "/d / s1",
+      "template_dir": "cd /skills/foo/x",
+      "template_empty_session_id": "sid=${HERMES_SESSION_ID}"
+    }
+  }
+}

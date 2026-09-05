@@ -1,0 +1,37 @@
+; The neutral FPP window authority. It is a LEAF on purpose: Task 5's
+; formal relation lives in hermes_ops_dashboard and must reach the same
+; allocations that hermes_ops projections declare, while hermes_ops
+; already depends on the dashboard. Anything this library depends on
+; must therefore stay below the dashboard — hermes_wiki_fpp (for
+; Fpp_model) and digestif are, and aggregate hermes_ops is not and never
+; may be added here.
+(library
+ (name hermes_fpp_window_authority)
+ (wrapped false)
+ (modules fpp_window_authority)
+ (libraries hermes_wiki_fpp digestif))
+
+; The TEST may depend upward on the projections it audits — an executable
+; closes no library cycle. This is what lets the sole-authority guard
+; compare the registry against all five real models before the leaf split
+; that Task 1 proper performs.
+(executable
+ (name test_fpp_window_authority)
+ (modules test_fpp_window_authority)
+ (libraries hermes_fpp_window_authority hermes_wiki_fpp
+   hermes_harness_harness_topology hermes_wiki_topology
+   hermes_harness_suite_telemetry))
+
+; Wired in now that it is green (25/0), as the RED-phase comment promised.
+; It reads the five projections from disk, so it must run from the
+; workspace root; source_tree makes dune rerun it when any of them change,
+; which is the point — this is the guard that keeps the registry the SOLE
+; authority rather than a sixth copy that happens to agree.
+(rule
+ (alias runtest)
+ (deps
+  (source_tree %{workspace_root}/modules/hermes_harness)
+  (source_tree %{workspace_root}/modules/hermes_wiki/src/fpp)
+  (source_tree %{workspace_root}/modules/hermes_ops)
+  (source_tree %{workspace_root}/modules/hermes_ops_dashboard))
+ (action (chdir %{workspace_root} (run %{exe:test_fpp_window_authority.exe}))))

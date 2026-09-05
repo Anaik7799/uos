@@ -1,0 +1,47 @@
+(library
+ (name hermes_sysml)
+ (modules sysml_types sysml_algebra sysml_grammar sysml_vocabularies sysml_flows sysml_activity trace_projection oml_projection gospel_contracts)
+ (modules_without_implementation gospel_contracts)
+)
+
+(test
+ (name test_sysml_algebra)
+ (modules test_sysml_algebra)
+ (libraries hermes_harness_qcheck_seed hermes_sysml qcheck hermes_harness_suite_telemetry))
+
+(test
+ (name test_agent_chaos)
+ (modules test_agent_chaos)
+ (libraries hermes_harness_qcheck_seed hermes_sysml qcheck hermes_harness_suite_telemetry))
+
+(test
+ (name test_agent_property)
+ (modules test_agent_property)
+ (libraries hermes_harness_qcheck_seed hermes_sysml qcheck hermes_harness_suite_telemetry))
+
+(test
+ (name test_agent_bdd)
+ (modules test_agent_bdd)
+ (libraries hermes_sysml ounit2 hermes_harness_suite_telemetry))
+
+(test
+ (name test_agent_tdd)
+ (modules test_agent_tdd)
+ (libraries hermes_sysml ounit2 hermes_harness_suite_telemetry))
+
+(executable
+ (name z3_topology_check)
+ (modules z3_topology_check)
+ (libraries hermes_sysml unix)
+)
+
+(executable
+ (name zenoh_mesh)
+ (modules zenoh_mesh)
+ (libraries hermes_sysml unix)
+)
+
+(executable
+ (name test_agent_fuzz)
+ (modules test_agent_fuzz)
+ (libraries hermes_harness_qcheck_seed hermes_sysml qcheck hermes_harness_suite_telemetry))

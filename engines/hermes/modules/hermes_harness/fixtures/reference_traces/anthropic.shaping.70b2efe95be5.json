@@ -1,0 +1,75 @@
+{
+  "scenario_id": "anthropic.shaping",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "f09c275526bef490ba73ef885b3320b4c0c169460d57dc59a7ed7f8edf0e7235",
+  "trace": {
+    "results": [
+      [],
+      [
+        {
+          "description": "d",
+          "input_schema": { "properties": {}, "type": "object" },
+          "name": "f"
+        }
+      ],
+      [
+        {
+          "description": "1",
+          "input_schema": { "properties": {}, "type": "object" },
+          "name": "g"
+        },
+        {
+          "description": "e1",
+          "input_schema": { "properties": {}, "type": "object" },
+          "name": ""
+        },
+        {
+          "description": "e2",
+          "input_schema": { "properties": {}, "type": "object" },
+          "name": ""
+        }
+      ],
+      [
+        {
+          "cache_control": { "type": "ephemeral" },
+          "description": "",
+          "input_schema": {
+            "properties": { "x": { "type": "string" } },
+            "type": "object"
+          },
+          "name": "h"
+        }
+      ],
+      [
+        {
+          "description": "",
+          "input_schema": {
+            "description": "pick",
+            "properties": {},
+            "type": "object"
+          },
+          "name": "j"
+        }
+      ],
+      [
+        {
+          "description": "",
+          "input_schema": { "properties": {}, "type": "object" },
+          "name": "k"
+        }
+      ],
+      "claude-3-5-sonnet",
+      "claude-3-7",
+      "us.anthropic.claude-3.5",
+      "gpt-5.4",
+      "gemini-2.5-pro",
+      "Claude-Opus-4-1",
+      "tool_0",
+      "call_abc_9_z",
+      "___",
+      "keep-9_A"
+    ]
+  }
+}

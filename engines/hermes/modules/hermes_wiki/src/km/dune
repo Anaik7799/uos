@@ -1,0 +1,11 @@
+(library
+ (name hermes_wiki_km)
+ (wrapped false)
+ (modules journal)
+ (libraries hermes_wiki_core))
+
+(library
+ (name hermes_wiki_lifecycle)
+ (wrapped false)
+ (modules wiki_lifecycle)
+ (libraries hermes_wiki_core))

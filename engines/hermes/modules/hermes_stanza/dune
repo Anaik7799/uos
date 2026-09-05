@@ -1,0 +1,31 @@
+; PORTED from /home/an/dev/ver/harness (2026-08-13). Generated witnesses for
+; the dune library graph. A leaf with NO dependencies: everything that names a
+; library must reach this, including Suite_telemetry.
+;
+; A value of Stanza.t proves the library exists. There is no constructor from
+; a string, which is what makes a blast radius unforgeable.
+(library
+ (name hermes_stanza)
+ (wrapped false)
+ (modules stanza))
+
+; Drift is a BUILD FAILURE. The (deps (source_tree ...)) is LOAD-BEARING, not
+; hygiene: without it dune materialises only the part of modules/ the current
+; target needs, and the generator silently sees a fraction of the graph. In
+; the origin repository that was 86 libraries instead of 171.
+(rule
+ (targets stanza.ml.gen)
+ (deps (source_tree %{workspace_root}/modules))
+ (action
+  (with-stdout-to stanza.ml.gen
+   (chdir %{workspace_root} (run %{exe:../hermes_dune_graph/gen_stanza.exe})))))
+
+(rule
+ (targets stanza.mli.gen)
+ (deps (source_tree %{workspace_root}/modules))
+ (action
+  (with-stdout-to stanza.mli.gen
+   (chdir %{workspace_root} (run %{exe:../hermes_dune_graph/gen_stanza.exe} --mli)))))
+
+(rule (alias runtest) (action (diff stanza.ml stanza.ml.gen)))
+(rule (alias runtest) (action (diff stanza.mli stanza.mli.gen)))

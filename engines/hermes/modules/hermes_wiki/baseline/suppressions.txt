@@ -1,0 +1,2 @@
+# typed suppressions — kind|key|reason|YYYY-MM-DD (expiry optional). R2: every
+# entry is disclosed in every audit output. An empty reason is refused.

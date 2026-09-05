@@ -1,0 +1,47 @@
+(library
+ (name hermes_nix)
+ (wrapped false)
+ (modules nix_id nix_error nix_budget nix_intent nix_ontology nix_atlas
+  nix_algebra nix_sysml nix_policy nix_receipt_core nix_operation
+  nix_command_contract nix_controller)
+ (libraries digestif yojson unix))
+
+(executable
+ (name test_nix_intent)
+ (modules test_nix_intent)
+ (libraries hermes_nix hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_nix_ontology)
+ (modules test_nix_ontology)
+ (libraries hermes_nix hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_nix_algebra)
+ (modules test_nix_algebra)
+ (libraries hermes_nix hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_nix_sysml)
+ (modules test_nix_sysml)
+ (libraries hermes_nix hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_nix_policy)
+ (modules test_nix_policy)
+ (libraries hermes_nix hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_nix_receipt)
+ (modules test_nix_receipt)
+ (libraries hermes_nix hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_nix_command_contract)
+ (modules test_nix_command_contract)
+ (libraries hermes_nix hermes_harness_suite_telemetry hermes_stanza))
+
+(executable
+ (name test_nix_operation)
+ (modules test_nix_operation)
+ (libraries hermes_nix hermes_harness_suite_telemetry hermes_stanza))

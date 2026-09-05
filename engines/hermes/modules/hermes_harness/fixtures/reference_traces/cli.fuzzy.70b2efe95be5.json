@@ -1,0 +1,21 @@
+{
+  "scenario_id": "cli.fuzzy",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "f7d95e4b87741c6ff2c3cc04a94f5d630272ad3fd72dacf7613f71562ae52cf5",
+  "trace": {
+    "results": {
+      "boundary_camel": true,
+      "boundary_start": true,
+      "filter_ranked": [ 1, 0 ],
+      "move_wraps": 30,
+      "radio_plain_string": "plain",
+      "radio_plain_styled": "ab",
+      "reconcile_snap": [ 10, 0 ],
+      "score_none": null,
+      "score_prefix": 40.86,
+      "scroll_advance": 5
+    }
+  }
+}

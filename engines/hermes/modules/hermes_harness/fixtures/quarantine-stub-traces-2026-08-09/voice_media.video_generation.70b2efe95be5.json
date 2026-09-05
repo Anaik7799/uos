@@ -1,0 +1,13 @@
+{
+  "scenario_id": "voice_media.video_generation",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "f711c61f32c9443e97429452f89f7f1d03b1f58dc13566380fc77e15d95dc5a1",
+  "trace": {
+    "messages": [
+      { "content": "stub for video_generation", "role": "user" }
+    ],
+    "model": "openai/gpt-5.4"
+  }
+}

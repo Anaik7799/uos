@@ -1,0 +1,9 @@
+; The MBSE spine: the feature register projected into SysML v2, OML and
+; OpenMBEE MMS. Depends on hermes_sysml for the shared model types and
+; the existing OWL/TTL emitters (R14 — reuse, do not reinvent).
+
+(library
+ (name hermes_wiki_mbse)
+ (wrapped false)
+ (modules feature_model)
+ (libraries hermes_wiki_register hermes_sysml))

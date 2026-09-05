@@ -1,0 +1,23 @@
+{
+  "scenario_id": "tool.result",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "e073400d70d01061b88bff3ce230f06ef1a079e94fc04027b504cb4656eee5f8",
+  "trace": {
+    "results": {
+      "canonical_sorts": "{\"a\":{\"z\":true},\"b\":1}",
+      "canonical_unicode": "{\"t\":\"café\"}",
+      "classify_error_json": [ true, " [error]" ],
+      "classify_error_prefix": [ true, " [error]" ],
+      "classify_none": [ false, "" ],
+      "classify_terminal_fail": [ true, " [exit 2]" ],
+      "classify_terminal_ok": [ false, "" ],
+      "classify_write_landed": [ false, "" ],
+      "landed_error_false": false,
+      "landed_nonmutating": false,
+      "landed_patch_success": true,
+      "landed_write_true": true
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "scenario_id": "gemini.schema",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "52bd8d52fb4c70e7a3ad53d12fdc10eda52ff8056f38065ba977730ac808b96b",
+  "trace": {
+    "results": [
+      { "properties": {}, "type": "object" },
+      { "properties": {}, "type": "object" },
+      {
+        "properties": {
+          "mode": { "enum": [ "1", "2" ], "type": "integer" },
+          "q": { "minLength": 1, "type": "string" },
+          "tags": {
+            "items": { "format": "slug", "type": "string" },
+            "type": "array"
+          }
+        },
+        "required": [ "q" ],
+        "type": "object"
+      },
+      { "anyOf": [ { "type": "string" }, { "type": "integer" } ] },
+      { "type": "object" },
+      { "enum": [ "a", "a", "b" ], "type": "string" }
+    ]
+  }
+}

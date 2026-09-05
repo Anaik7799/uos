@@ -1,0 +1,10 @@
+(library
+ (name hermes_wiki_theme)
+ (wrapped false)
+ (modules wiki_theme))
+
+(library
+ (name hermes_wiki_present)
+ (wrapped false)
+ (modules wiki_present)
+ (libraries hermes_wiki_core hermes_wiki_ast hermes_wiki_theme))

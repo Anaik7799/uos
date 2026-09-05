@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# sa-zk-metrics — agentic-friendly KPI snapshot for ZK/token/cost telemetry
+# Usage: sa-zk-metrics [--json|--table|--ooda]  [--agent pi|claude|gemini]  [--since '24 hours'|'7 days'|'1 hour']
+set -eu
+KMS="${KMS_DB:-/home/an/dev/ver/c3i/sub-projects/c3i/data/kms/smriti.db}"
+MODE="${1:---table}"
+shift || true
+
+case "$MODE" in
+  --json)
+    sqlite3 -json "$KMS" <<SQL
+SELECT
+ (SELECT json_object('v', json_group_array(json_object('metric',metric,'value',value))) FROM v_ooda_live) AS ooda,
+ (SELECT json_group_array(json_object('agent',agent,'sessions',sessions,'tokens',tokens,'cost_usd',cost_usd,'cache_hit',avg_cache_hit,'citation_rate',citation_rate,'cost_per_citation',cost_per_citation)) FROM v_cost_by_agent) AS agents;
+SQL
+    ;;
+  --ooda|*)
+    printf "═══ OODA LIVE (smriti.db) ═══\n"
+    sqlite3 -header -column "$KMS" "SELECT * FROM v_ooda_live;"
+    printf "\n═══ COST BY AGENT ═══\n"
+    sqlite3 -header -column "$KMS" "SELECT * FROM v_cost_by_agent;"
+    printf "\n═══ TOP 5 COSTLY SESSIONS ═══\n"
+    sqlite3 -header -column "$KMS" "SELECT substr(session_id,1,26) AS session, agent, tokens_total, ROUND(cost_usd,2) AS usd, zk_citations AS cites, ROUND(cache_hit_ratio*100,1) AS hit_pct FROM session_metrics ORDER BY cost_usd DESC LIMIT 5;"
+    printf "\n═══ PIPELINE STAGE LATENCY (top 10) ═══\n"
+    sqlite3 -header -column "$KMS" "SELECT stage, COUNT(*) AS calls, ROUND(AVG(duration_ms),1) AS avg_ms, MAX(duration_ms) AS max_ms FROM pipeline_stage_metrics GROUP BY stage ORDER BY 2 DESC LIMIT 10;"
+    printf "\n═══ HEALTH THRESHOLDS ═══\n"
+    sqlite3 "$KMS" "SELECT
+      CASE WHEN (SELECT 1.0*COUNT(*)/(SELECT COUNT(*) FROM holons) FROM holon_embeddings) >= 0.95 THEN '✅' ELSE '⚠️' END || ' embed_coverage_95p: ' ||
+        ROUND((SELECT 100.0*COUNT(*)/(SELECT COUNT(*) FROM holons) FROM holon_embeddings),1) || '% (target 95%)'
+      UNION ALL SELECT
+        CASE WHEN COALESCE(AVG(cache_hit_ratio),0) >= 0.9 THEN '✅' ELSE '⚠️' END || ' cache_hit_ratio_90p: ' ||
+        ROUND(100*COALESCE(AVG(cache_hit_ratio),0),1) || '% (target 90%)' FROM session_metrics
+      UNION ALL SELECT
+        CASE WHEN COALESCE(SUM(cost_usd)/NULLIF(SUM(zk_citations),0),0) <= 0.05 THEN '✅' ELSE '⚠️' END || ' cost_per_citation_target: \$' ||
+        ROUND(COALESCE(SUM(cost_usd)/NULLIF(SUM(zk_citations),0),0),4) || ' (target \$0.05)' FROM session_metrics
+      UNION ALL SELECT
+        CASE WHEN COUNT(*) >= 10000 THEN '✅' ELSE '⚠️' END || ' edges_total: ' || COUNT(*) || ' (target 10000+)' FROM holon_edges;"
+    ;;
+esac

@@ -1,0 +1,19 @@
+{
+  "scenario_id": "tool.approval_normalize",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "2b376cccdd3309cb6cbf8030d0ff27083e8a33b6daea19af318ce04311588a5f",
+  "trace": {
+    "results": {
+      "bool_false": false,
+      "bool_true": true,
+      "int_value": false,
+      "null_value": false,
+      "str_approve_upper": true,
+      "str_garbage": false,
+      "str_no": false,
+      "str_on": true
+    }
+  }
+}

@@ -1,0 +1,53 @@
+; The acceptance ratchet for the render baseline: classify every pin delta
+; before a re-pin, and BLOCK on removals unless explicitly acknowledged.
+(library
+ (name wiki_baseline_triage)
+ (wrapped false)
+ (modules baseline_triage))
+
+(executable
+ (name gen_render_baseline)
+ (modules gen_render_baseline)
+ (libraries wiki_core hermes_wiki_core wiki_baseline_triage))
+
+(executable
+ (name test_baseline_triage)
+ (modules test_baseline_triage)
+ (libraries wiki_baseline_triage wiki_suite_telemetry))
+
+(rule
+ (alias runtest)
+ (action (run %{exe:test_baseline_triage.exe})))
+
+(executable
+ (name wiki_audit)
+ (modules wiki_audit)
+ (libraries hermes_wiki_core hermes_wiki_control hermes_wiki_register hermes_wiki_query
+   hermes_wiki_graph hermes_wiki_diag hermes_wiki_toc hermes_wiki_visibility hermes_wiki_transclude
+   hermes_wiki_ordering hermes_wiki_mbse hermes_wiki_lifecycle wiki_core unix))
+
+(executable
+ (name schema_backfill)
+ (modules schema_backfill)
+ (libraries hermes_wiki_core hermes_wiki_control unix))
+
+(executable
+ (name wiki_dashboard)
+ (modules wiki_dashboard)
+ (libraries hermes_wiki_core hermes_wiki_control hermes_wiki_register hermes_wiki_graph
+   hermes_wiki_search hermes_wiki_topology hermes_wiki_fpp hermes_wiki_mbse unix))
+
+(executable
+ (name wiki_find)
+ (modules wiki_find)
+ (libraries hermes_wiki_core hermes_wiki_search))
+
+(executable
+ (name wiki_queue)
+ (modules wiki_queue)
+ (libraries hermes_wiki_register))
+
+(executable
+ (name gen_feature_model)
+ (modules gen_feature_model)
+ (libraries hermes_wiki_mbse unix))

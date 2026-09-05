@@ -1,0 +1,36 @@
+{
+  "scenario_id": "codex.shapes",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "90c94a4b0b001b8e37d016870db93af2e4c2f492c92fb944438eeebc013a9d61",
+  "trace": {
+    "results": [
+      [
+        { "text": "hi", "type": "input_text" },
+        { "text": "there", "type": "input_text" }
+      ],
+      [ { "text": "yo", "type": "output_text" } ],
+      [],
+      [
+        {
+          "detail": "high",
+          "image_url": "http://x/i.png",
+          "type": "input_image"
+        }
+      ],
+      [ { "image_url": "http://y", "type": "input_image" } ],
+      [ { "text": "t", "type": "input_text" } ],
+      "completed",
+      "in_progress",
+      "completed",
+      "completed",
+      "completed",
+      "",
+      "  keep  ",
+      "[1 image] a b",
+      "[2 images]",
+      "42"
+    ]
+  }
+}

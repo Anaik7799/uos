@@ -1,0 +1,24 @@
+{
+  "scenario_id": "mcp.supervision",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "252633c828e5c499a120badf6c0adddb44bb6509015328ed42dad4eb24f2b2f3",
+  "trace": {
+    "results": {
+      "command_basename_path": "bash",
+      "is_suspicious_clean": false,
+      "validate_egress_glued_word_control": [],
+      "validate_egress_isolated_word": [
+        "MCP server 'srv' uses shell interpreter 'bash' with network egress in args"
+      ],
+      "validate_ioc_hit": [
+        "MCP server 'srv' contains a known hermes-0day indicator-of-compromise ('hermes-0day')"
+      ],
+      "validate_non_shell_interpreter": [],
+      "validate_persistence_authorized_keys": [
+        "MCP server 'srv' uses shell interpreter 'sh' to write to an OS persistence surface (SSH keys / PAM / sudoers / cron / shell rc) — this is the hermes-0day backdoor shape, not a real MCP server"
+      ]
+    }
+  }
+}

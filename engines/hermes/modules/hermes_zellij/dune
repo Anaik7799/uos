@@ -1,0 +1,32 @@
+(library
+ (name hermes_zellij)
+ (wrapped false)
+ (modules zellij_intent zellij_algebra zellij_ontology zellij_atlas
+   zellij_projection zellij_observe zellij_configurator)
+ (libraries digestif yojson unix hermes_harness_resource_envelope))
+
+(executable
+ (name test_zellij_model)
+ (modules test_zellij_model)
+ (libraries hermes_zellij hermes_harness_suite_telemetry))
+
+(executable
+ (name test_zellij_projection)
+ (modules test_zellij_projection)
+ (libraries hermes_zellij yojson hermes_harness_suite_telemetry))
+
+(executable
+ (name test_zellij_live)
+ (modules test_zellij_live)
+ (libraries hermes_zellij hermes_harness_suite_telemetry unix))
+
+(executable
+ (name zellij_attach)
+ (modules zellij_attach)
+ (libraries hermes_zellij unix))
+
+(executable
+ (name zellij_main)
+ (modules zellij_main)
+ (libraries hermes_zellij unix)
+ (link_deps zellij_attach.exe))

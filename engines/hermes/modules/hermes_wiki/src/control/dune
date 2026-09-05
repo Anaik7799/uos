@@ -1,0 +1,5 @@
+(library
+ (name hermes_wiki_control)
+ (wrapped false)
+ (modules ratchet suppression backfill wiki_otel wiki_diagnostics)
+ (libraries hermes_wiki_reconcile hermes_wiki_diag))

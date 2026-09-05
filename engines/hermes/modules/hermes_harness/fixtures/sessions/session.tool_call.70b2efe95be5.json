@@ -1,0 +1,32 @@
+{
+  "session_id": "session.tool_call",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "request": {
+    "endpoint": "https://replay.invalid/v1/chat/completions",
+    "body": { "session": "session.tool_call" }
+  },
+  "provider_response": {
+    "choices": [
+      {
+        "message": {
+          "content": null,
+          "tool_calls": [
+            {
+              "id": "call_1",
+              "function": { "name": "lookup", "arguments": "{}" }
+            }
+          ]
+        },
+        "finish_reason": "tool_calls"
+      }
+    ]
+  },
+  "reference_decode": {
+    "content": null,
+    "finish_reason": "tool_calls",
+    "tool_calls": [ { "arguments": "{}", "id": "call_1", "name": "lookup" } ]
+  },
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "365b6e9e0db78e13aeb254ea365fb3b151dd72af4d3fa8f508d865001a887f58"
+}

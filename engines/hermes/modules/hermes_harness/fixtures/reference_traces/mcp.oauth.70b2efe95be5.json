@@ -1,0 +1,29 @@
+{
+  "scenario_id": "mcp.oauth",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "d4827da06acfd06b936c17d1b46e412b96cf6b01da9d7d388feb9fa3862ba7f8",
+  "trace": {
+    "results": {
+      "apply_defaults_figma_empty": {
+        "client_name": "Claude Code",
+        "scope": "mcp:connect",
+        "token_endpoint_auth_method": "client_secret_post"
+      },
+      "apply_defaults_preserves_explicit": {
+        "client_name": "Mine",
+        "scope": "mcp:connect",
+        "token_endpoint_auth_method": "client_secret_post"
+      },
+      "humanize_figma": "'figma' is Figma's remote MCP — DCR is allowlisted by exact client_name (\"Claude Code\" and \"Codex\" work; most other names 403). Hermes defaults to client_name: 'Claude Code' automatically. If you set oauth.client_name yourself, change it to one of those, or clear it and re-run:\n  hermes mcp login figma",
+      "humanize_registration_403": "'srv' only allows pre-approved OAuth clients — it rejected client registration (403), so no browser flow can start. Options: set oauth.client_name to a name the provider allowlists, add a pre-registered client (oauth: {client_id: ..., client_secret: ...}), or use the provider's stdio / API-key / local server instead.",
+      "humanize_unrelated_error": null,
+      "safe_filename_all_invalid": "default",
+      "safe_filename_sanitizes": "my_server",
+      "same_endpoint_case_insensitive": true,
+      "same_endpoint_different_paths": false,
+      "same_endpoint_root_vs_empty": true
+    }
+  }
+}

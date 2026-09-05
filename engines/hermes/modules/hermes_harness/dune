@@ -1,0 +1,1325 @@
+(library
+ (name hermes_harness_core)
+ (wrapped false)
+ (modules core))
+
+(library
+ (name hermes_harness_inventory)
+ (wrapped false)
+ (modules inventory)
+ (libraries digestif unix))
+
+(library
+ (name hermes_harness_evidence)
+ (wrapped false)
+ (modules evidence_store)
+ (libraries hermes_harness_core hermes_harness_inventory sqlite3))
+
+(library
+ (name hermes_harness_evidence_import)
+ (wrapped false)
+ (modules evidence_import)
+ (libraries digestif sqlite3))
+
+(library
+ (name hermes_harness_bootstrap)
+ (wrapped false)
+ (modules bootstrap)
+ (libraries hermes_harness_core unix))
+
+(library
+ (name hermes_harness_report)
+ (wrapped false)
+ (modules report)
+ (libraries hermes_harness_core hermes_harness_inventory hermes_harness_parity))
+
+(library
+ (name hermes_harness_parity)
+ (wrapped false)
+ (modules parity_tracker)
+ (libraries hermes_harness_evidence hermes_harness_feature_catalog))
+
+(library
+ (name hermes_harness_feature_catalog)
+ (wrapped false)
+ (modules feature_catalog))
+
+(library
+ (name hermes_harness_fractal_parity)
+ (wrapped false)
+ (modules fractal_parity))
+
+(library
+ (name hermes_harness_evolution_model)
+ (wrapped false)
+ (modules evolution_model))
+
+(library
+ (name hermes_harness_capability_catalog)
+ (wrapped false)
+ (modules capability_catalog))
+
+(library
+ (name hermes_harness_fractal_catalog)
+ (wrapped false)
+ (modules fractal_catalog)
+ (libraries hermes_harness_evidence hermes_harness_feature_catalog hermes_harness_capability_catalog))
+
+(library
+ (name hermes_harness_contract_catalog)
+ (wrapped false)
+ (modules contract_catalog))
+
+(library
+ (name hermes_harness_ocaml_only_guard)
+ (wrapped false)
+ (modules ocaml_only_guard))
+
+(library
+ (name hermes_harness_parity_normalizer)
+ (wrapped false)
+ (modules parity_normalizer)
+ (libraries yojson))
+
+(library
+ (name hermes_harness_reference_capture)
+ (wrapped false)
+ (modules reference_capture)
+ (libraries hermes_harness_parity_normalizer hermes_harness_bootstrap
+   hermes_harness_inventory yojson unix))
+
+(library
+ (name hermes_harness_gospel_check)
+ (wrapped false)
+ (modules gospel_check)
+ (libraries unix))
+
+(library
+ (name hermes_harness_reference_artifacts)
+ (wrapped false)
+ (modules reference_artifacts)
+ (libraries hermes_harness_evidence hermes_harness_inventory hermes_harness_capability_catalog))
+
+(library
+ (name hermes_harness_plan)
+ (wrapped false)
+ (modules hermes_plan)
+ (libraries sa_plan unix))
+
+(library
+ (name hermes_harness_openrouter_contract)
+ (wrapped false)
+ (modules openrouter_contract)
+ (libraries yojson))
+
+(library
+ (name hermes_harness_turn_budget)
+ (wrapped false)
+ (modules turn_budget))
+
+(library
+ (name hermes_harness_info_math)
+ (wrapped false)
+ (modules info_math))
+
+(executable
+ (name test_info_math)
+ (modules test_info_math)
+ (libraries hermes_harness_info_math hermes_harness_suite_telemetry))
+
+(rule
+ (alias runtest)
+ (action (run %{exe:test_info_math.exe})))
+
+(library
+ (name hermes_harness_diff_triage)
+ (wrapped false)
+ (modules diff_triage))
+
+(executable
+ (name test_diff_triage)
+ (modules test_diff_triage)
+ (libraries hermes_harness_diff_triage hermes_harness_suite_telemetry))
+
+(rule
+ (alias runtest)
+ (action (run %{exe:test_diff_triage.exe})))
+
+; Bayesian state classification over expect/parity evidence. Emitted IN
+; ADDITION to the standard logs; nothing here may move a parity verdict.
+(library
+ (name hermes_harness_expect_posterior)
+ (wrapped false)
+ (modules expect_posterior))
+
+(executable
+ (name test_expect_posterior)
+ (modules test_expect_posterior)
+ (libraries hermes_harness_expect_posterior hermes_harness_suite_telemetry))
+
+(library
+ (name hermes_harness_orientation_history)
+ (wrapped false)
+ (modules orientation_history)
+ (libraries sqlite3 unix))
+
+(executable
+ (name test_orientation_history)
+ (modules test_orientation_history)
+ (libraries hermes_harness_orientation_history hermes_harness_suite_telemetry
+   hermes_harness_expect_posterior))
+
+(rule
+ (alias runtest)
+ (action (run %{exe:test_orientation_history.exe})))
+
+(executable
+ (name orientation_snapshot)
+ (modules orientation_snapshot)
+ (libraries hermes_harness_orientation_history unix))
+
+; Rete + Ruliad run BEFORE any agent sees the data. Reuses the existing
+; engines (R14) rather than standing a second one beside them.
+(executable
+ (name test_r30_adoption)
+ (modules test_r30_adoption)
+ (libraries hermes_harness_suite_telemetry))
+
+(rule
+ (alias runtest)
+ (deps (source_tree %{workspace_root}/modules) %{workspace_root}/modules/hermes_harness/baseline/r30-adoption.txt)
+ (action (chdir %{workspace_root} (run %{exe:test_r30_adoption.exe}))))
+
+(library
+ (name hermes_harness_qcheck_seed)
+ (wrapped false)
+ (modules qcheck_seed)
+ (libraries qcheck-core.runner))
+
+(library
+ (name hermes_harness_suite_telemetry)
+ (wrapped false)
+ (modules suite_telemetry)
+ (libraries hermes_stanza))
+
+(executable
+ (name test_suite_telemetry)
+ (modules test_suite_telemetry)
+ (libraries hermes_harness_suite_telemetry hermes_stanza))
+
+(rule
+ (alias runtest)
+ (action (run %{exe:test_suite_telemetry.exe})))
+
+(library
+ (name hermes_harness_posterior_assessment)
+ (wrapped false)
+ (modules posterior_assessment)
+ (libraries hermes_harness_expect_posterior hermes_harness_hermes_rete
+   hermes_harness_ruliad))
+
+(executable
+ (name test_posterior_assessment)
+ (modules test_posterior_assessment)
+ (libraries hermes_harness_posterior_assessment hermes_harness_suite_telemetry))
+
+(rule
+ (alias runtest)
+ (action (run %{exe:test_posterior_assessment.exe})))
+
+(rule
+ (alias runtest)
+ (action (run %{exe:test_expect_posterior.exe})))
+
+(library
+ (name hermes_harness_message_hygiene)
+ (wrapped false)
+ (modules message_hygiene)
+ (libraries yojson))
+
+(library
+ (name hermes_harness_turn_preflight)
+ (wrapped false)
+ (modules turn_preflight)
+ (libraries hermes_harness_openrouter_contract hermes_harness_turn_budget hermes_harness_message_hygiene yojson))
+
+(library
+ (name hermes_harness_openrouter_transport)
+ (wrapped false)
+ (modules openrouter_transport)
+ (libraries hermes_harness_openrouter_contract yojson))
+
+(executable
+ (name hermes_harness)
+ (modules hermes_harness)
+ (libraries hermes_harness_core hermes_harness_inventory hermes_harness_evidence hermes_harness_bootstrap hermes_harness_report hermes_harness_parity hermes_harness_fractal_catalog hermes_harness_reference_artifacts hermes_harness_contract_catalog hermes_harness_gospel_check unix))
+
+(executable
+ (name hermes_plan_bridge)
+ (modules hermes_plan_bridge)
+ (libraries hermes_harness_plan unix))
+
+(executable
+ (name test_core)
+ (modules test_core)
+ (libraries hermes_harness_suite_telemetry hermes_harness_core hermes_harness_bootstrap))
+
+(executable
+ (name test_inventory)
+ (modules test_inventory)
+ (libraries hermes_harness_suite_telemetry hermes_harness_inventory))
+
+(executable
+ (name test_evidence_store)
+ (modules test_evidence_store)
+ (libraries hermes_harness_suite_telemetry hermes_harness_evidence hermes_harness_core hermes_harness_inventory))
+
+(executable
+ (name test_evidence_import)
+ (modules test_evidence_import)
+ (libraries hermes_harness_suite_telemetry hermes_harness_evidence_import sqlite3))
+
+(rule
+ (alias runtest)
+ (action (run %{exe:test_evidence_import.exe})))
+
+(executable
+ (name render_evidence_import_plan)
+ (modules render_evidence_import_plan)
+ (libraries hermes_harness_evidence_import))
+
+(executable
+ (name test_cli)
+ (modules test_cli)
+ (libraries hermes_harness_suite_telemetry unix))
+
+(executable
+ (name test_openrouter_contract)
+ (modules test_openrouter_contract)
+ (libraries hermes_harness_suite_telemetry hermes_harness_openrouter_contract yojson))
+
+(executable
+ (name test_turn_budget)
+ (modules test_turn_budget)
+ (libraries hermes_harness_suite_telemetry hermes_harness_turn_budget))
+
+(executable
+ (name test_message_hygiene)
+ (modules test_message_hygiene)
+ (libraries hermes_harness_suite_telemetry hermes_harness_message_hygiene yojson))
+
+(executable
+ (name test_challenger_m1)
+ (modules test_challenger_m1)
+ (libraries hermes_harness_suite_telemetry hermes_harness_turn_budget hermes_harness_message_hygiene yojson))
+
+
+(executable
+ (name test_turn_preflight)
+ (modules test_turn_preflight)
+ (libraries hermes_harness_suite_telemetry hermes_harness_turn_preflight hermes_harness_openrouter_contract hermes_harness_turn_budget yojson))
+
+(executable
+ (name test_openrouter_transport)
+ (modules test_openrouter_transport)
+ (libraries hermes_harness_suite_telemetry hermes_harness_openrouter_transport hermes_harness_openrouter_contract yojson))
+
+(executable
+ (name test_parity_tracker)
+ (modules test_parity_tracker)
+ (libraries hermes_harness_suite_telemetry hermes_harness_parity hermes_harness_feature_catalog))
+
+(executable
+ (name test_fractal_parity)
+ (modules test_fractal_parity)
+ (libraries hermes_harness_suite_telemetry hermes_harness_fractal_parity))
+
+(executable
+ (name test_evolution_model)
+ (modules test_evolution_model)
+ (libraries hermes_harness_suite_telemetry hermes_harness_evolution_model))
+
+(executable
+ (name test_fractal_catalog)
+ (modules test_fractal_catalog)
+ (libraries hermes_harness_suite_telemetry hermes_harness_fractal_catalog hermes_harness_evidence hermes_harness_feature_catalog
+   hermes_harness_capability_catalog))
+
+(executable
+ (name capture_reference_traces)
+ (modules capture_reference_traces)
+ (libraries hermes_harness_reference_capture hermes_harness_parity_normalizer
+   hermes_harness_bootstrap hermes_harness_inventory yojson unix))
+
+(executable
+ (name test_reference_capture)
+ (modules test_reference_capture)
+ (libraries hermes_harness_suite_telemetry hermes_harness_reference_capture hermes_harness_parity_normalizer
+   hermes_harness_inventory yojson unix))
+
+(executable
+ (name test_parity_normalizer)
+ (modules test_parity_normalizer)
+ (libraries hermes_harness_suite_telemetry hermes_harness_parity_normalizer yojson))
+
+(executable
+ (name test_ocaml_only_guard)
+ (modules test_ocaml_only_guard)
+ (libraries hermes_harness_suite_telemetry hermes_harness_ocaml_only_guard unix))
+
+(executable
+ (name test_contract_catalog)
+ (modules test_contract_catalog)
+ (libraries hermes_harness_suite_telemetry hermes_harness_contract_catalog hermes_harness_capability_catalog
+   hermes_harness_evidence hermes_harness_core hermes_harness_inventory))
+
+(executable
+ (name test_reference_artifacts)
+ (modules test_reference_artifacts)
+ (libraries hermes_harness_suite_telemetry hermes_harness_reference_artifacts hermes_harness_capability_catalog
+   hermes_harness_evidence hermes_harness_bootstrap))
+
+(executable
+ (name test_capability_catalog)
+ (modules test_capability_catalog)
+ (libraries hermes_harness_suite_telemetry hermes_harness_capability_catalog hermes_harness_feature_catalog
+   hermes_harness_bootstrap))
+
+(executable
+ (name test_hermes_plan)
+ (modules test_hermes_plan)
+ (libraries hermes_harness_suite_telemetry hermes_harness_plan))
+
+(library
+ (name hermes_harness_dependency_smt)
+ (wrapped false)
+ (modules dependency_smt)
+ (libraries hermes_harness_capability_catalog unix))
+
+(executable
+ (name test_dependency_smt)
+ (modules test_dependency_smt)
+ (libraries hermes_harness_suite_telemetry hermes_harness_dependency_smt hermes_harness_capability_catalog unix))
+
+(library
+ (name hermes_harness_capture_diagnostic)
+ (wrapped false)
+ (modules capture_diagnostic)
+ (libraries hermes_wiki_diag hermes_harness_reference_capture))
+
+(executable
+ (name test_fractal_diagnostic)
+ (modules test_fractal_diagnostic)
+ (libraries hermes_harness_suite_telemetry hermes_wiki_diag hermes_harness_capture_diagnostic hermes_harness_reference_capture yojson))
+
+(library
+ (name hermes_harness_parity_algebra)
+ (wrapped false)
+ (modules parity_algebra)
+ (libraries hermes_wiki_diag))
+
+(executable
+ (name test_parity_algebra)
+ (modules test_parity_algebra)
+ (libraries hermes_harness_suite_telemetry hermes_harness_parity_algebra hermes_wiki_diag))
+
+(library
+ (name hermes_harness_fractal_ontology)
+ (wrapped false)
+ (modules fractal_ontology)
+ (libraries hermes_sysml))
+
+(executable
+ (name test_fractal_ontology)
+ (modules test_fractal_ontology)
+ (libraries hermes_harness_suite_telemetry hermes_harness_fractal_ontology))
+
+(library
+ (name hermes_harness_formal_specs)
+ (wrapped false)
+ (modules formal_specs)
+ (libraries hermes_harness_parity_algebra hermes_wiki_diag
+   hermes_harness_capture_diagnostic
+   hermes_harness_reference_capture hermes_harness_harness_config unix))
+
+(executable
+ (name test_formal_specs)
+ (modules test_formal_specs)
+ (libraries hermes_harness_suite_telemetry hermes_harness_formal_specs hermes_harness_parity_algebra
+   hermes_wiki_diag unix))
+
+(library
+ (name hermes_harness_parity_compare)
+ (wrapped false)
+ (modules parity_compare)
+ (libraries hermes_harness_openrouter_contract hermes_harness_openrouter_transport hermes_harness_parity_normalizer
+   hermes_harness_parity_algebra hermes_wiki_diag hermes_harness_capture_diagnostic
+   hermes_harness_reference_capture hermes_harness_evidence
+   hermes_harness_turn_budget hermes_agent_loop_message_hygiene
+   hermes_agent_loop_message_repairs hermes_agent_loop_loop_send_path
+   hermes_agent_loop_prompt_units hermes_agent_loop_context_units
+   hermes_agent_loop_compress_units hermes_agent_loop_finalize_units
+   hermes_agent_loop_redact_units hermes_agent_loop_tool_units
+   hermes_agent_loop_context_file_units hermes_agent_loop_memory_units
+   hermes_agent_loop_skill_units hermes_agent_loop_interactive_cli_units
+   hermes_agent_loop_mcp_units hermes_agent_loop_subagent_units
+   hermes_agent_loop_conversation_loop hermes_agent_loop_prompt_assembly
+   hermes_agent_loop_context_engine hermes_agent_loop_context_compression
+   hermes_agent_loop_turn_finalization
+   hermes_harness_session_fixture
+   hermes_harness_replay_executor hermes_harness_path_safety
+   hermes_harness_retry_utils hermes_harness_route_resolution
+   hermes_harness_anthropic_adapter hermes_harness_codex_message_shapes
+   hermes_harness_gemini_schema hermes_harness_bedrock_converse
+   hermes_harness_inventory yojson))
+
+(executable
+ (name compare_reference_traces)
+ (modules compare_reference_traces)
+ (libraries hermes_harness_parity_compare hermes_harness_parity_normalizer
+   hermes_harness_parity_algebra hermes_wiki_diag
+   hermes_harness_resource_envelope hermes_harness_control_plane
+   hermes_harness_homeostasis hermes_harness_gospel_check hermes_harness_parity_intent
+   hermes_harness_hermes_zenoh hermes_harness_parity_ledger
+   hermes_harness_evidence hermes_harness_bootstrap hermes_harness_inventory unix))
+
+(executable
+ (name test_parity_compare)
+ (modules test_parity_compare)
+ (libraries hermes_harness_suite_telemetry hermes_harness_parity_compare hermes_harness_parity_normalizer
+   hermes_harness_parity_algebra hermes_wiki_diag
+   hermes_harness_reference_capture hermes_harness_session_fixture
+   hermes_harness_evidence hermes_harness_inventory yojson unix))
+
+(executable
+ (name capture_decode_traces)
+ (modules capture_decode_traces)
+ (libraries hermes_harness_parity_compare hermes_harness_reference_capture
+   hermes_harness_parity_normalizer hermes_harness_bootstrap
+   hermes_harness_inventory yojson unix))
+
+(executable
+ (name capture_budget_traces)
+ (modules capture_budget_traces)
+ (libraries hermes_harness_parity_compare hermes_harness_reference_capture
+   hermes_harness_parity_normalizer hermes_harness_bootstrap
+   hermes_harness_inventory yojson unix))
+
+(executable
+ (name capture_session_traces)
+ (modules capture_session_traces)
+ (libraries hermes_harness_parity_compare hermes_harness_reference_capture
+   hermes_harness_session_fixture hermes_harness_parity_normalizer
+   hermes_harness_bootstrap hermes_harness_inventory yojson unix))
+
+(executable
+ (name capture_path_traces)
+ (modules capture_path_traces)
+ (libraries hermes_harness_parity_compare hermes_harness_reference_capture
+   hermes_harness_parity_normalizer hermes_harness_bootstrap
+   hermes_harness_inventory yojson unix))
+
+(executable
+ (name capture_message_hygiene_traces)
+ (modules capture_message_hygiene_traces)
+ (libraries hermes_harness_parity_compare hermes_harness_reference_capture
+   hermes_harness_parity_normalizer hermes_harness_bootstrap
+   hermes_harness_inventory yojson unix))
+
+(executable
+ (name capture_loop_traces)
+ (modules capture_loop_traces)
+ (libraries hermes_harness_parity_compare hermes_harness_reference_capture
+   hermes_harness_parity_normalizer hermes_harness_bootstrap
+   hermes_harness_inventory yojson unix))
+
+(executable
+ (name capture_slice_traces)
+ (modules capture_slice_traces)
+ (libraries hermes_harness_parity_compare hermes_harness_reference_capture
+   hermes_harness_parity_normalizer hermes_harness_bootstrap
+   hermes_harness_inventory yojson unix))
+
+(library
+ (name hermes_harness_parity_ledger)
+ (wrapped false)
+ (modules parity_ledger)
+ (libraries hermes_harness_info_math))
+
+(executable
+ (name test_parity_ledger)
+ (modules test_parity_ledger)
+ (libraries hermes_harness_suite_telemetry hermes_harness_parity_ledger))
+
+(executable
+ (name capture_retry_traces)
+ (modules capture_retry_traces)
+ (libraries hermes_harness_parity_compare hermes_harness_reference_capture
+   hermes_harness_parity_normalizer hermes_harness_bootstrap
+   hermes_harness_inventory yojson unix))
+
+(executable
+ (name capture_route_traces)
+ (modules capture_route_traces)
+ (libraries hermes_harness_parity_compare hermes_harness_reference_capture
+   hermes_harness_parity_normalizer hermes_harness_bootstrap
+   hermes_harness_inventory yojson unix))
+
+(executable
+ (name capture_anthropic_traces)
+ (modules capture_anthropic_traces)
+ (libraries hermes_harness_parity_compare hermes_harness_reference_capture
+   hermes_harness_parity_normalizer hermes_harness_bootstrap
+   hermes_harness_inventory yojson unix))
+
+(executable
+ (name capture_codex_traces)
+ (modules capture_codex_traces)
+ (libraries hermes_harness_parity_compare hermes_harness_reference_capture
+   hermes_harness_parity_normalizer hermes_harness_bootstrap
+   hermes_harness_inventory yojson unix))
+
+(executable
+ (name capture_gemini_traces)
+ (modules capture_gemini_traces)
+ (libraries hermes_harness_parity_compare hermes_harness_reference_capture
+   hermes_harness_parity_normalizer hermes_harness_bootstrap
+   hermes_harness_inventory yojson unix))
+
+(library
+ (name hermes_harness_resource_envelope)
+ (wrapped false)
+ (modules resource_envelope)
+ (libraries hermes_wiki_diag unix))
+
+(executable
+ (name test_resource_envelope)
+ (modules test_resource_envelope)
+ (libraries hermes_harness_suite_telemetry hermes_harness_resource_envelope hermes_wiki_diag
+   yojson unix))
+
+(library
+ (name hermes_harness_fractal_countermeasures)
+ (wrapped false)
+ (modules fractal_countermeasures)
+ (libraries hermes_wiki_diag))
+
+(executable
+ (name test_fractal_countermeasures)
+ (modules test_fractal_countermeasures)
+ (libraries hermes_harness_suite_telemetry hermes_harness_fractal_countermeasures hermes_wiki_diag))
+
+(library
+ (name hermes_harness_replay_executor)
+ (wrapped false)
+ (modules replay_executor)
+ (libraries hermes_harness_openrouter_transport))
+
+(library
+ (name hermes_harness_session_fixture)
+ (wrapped false)
+ (modules session_fixture)
+ (libraries hermes_harness_reference_capture hermes_harness_parity_normalizer yojson unix))
+
+(library
+ (name hermes_harness_determinism_verifier)
+ (wrapped false)
+ (modules determinism_verifier)
+ (libraries hermes_harness_reference_capture hermes_harness_parity_normalizer
+   hermes_wiki_diag yojson))
+
+(executable
+ (name test_determinism_verifier)
+ (modules test_determinism_verifier)
+ (libraries hermes_harness_suite_telemetry hermes_harness_determinism_verifier hermes_harness_parity_normalizer
+   hermes_wiki_diag yojson))
+
+(executable
+ (name verify_determinism)
+ (modules verify_determinism)
+ (libraries hermes_harness_parity_compare hermes_harness_determinism_verifier
+   hermes_harness_session_fixture hermes_harness_parity_normalizer
+   hermes_wiki_diag hermes_harness_bootstrap
+   hermes_harness_inventory yojson unix))
+
+(executable
+ (name test_session_fixture)
+ (modules test_session_fixture)
+ (libraries hermes_harness_suite_telemetry hermes_harness_session_fixture hermes_harness_parity_normalizer yojson unix))
+
+(executable
+ (name test_replay_executor)
+ (modules test_replay_executor)
+ (libraries hermes_harness_suite_telemetry hermes_harness_replay_executor hermes_harness_openrouter_transport
+   hermes_harness_openrouter_contract yojson))
+
+(library
+ (name hermes_harness_hermes_analysis)
+ (wrapped false)
+ (modules hermes_analysis))
+
+(executable
+ (name test_hermes_analysis)
+ (modules test_hermes_analysis)
+ (libraries hermes_harness_suite_telemetry hermes_harness_hermes_analysis unix))
+
+(library
+ (name hermes_harness_hermes_imports)
+ (wrapped false)
+ (modules hermes_imports)
+ (libraries hermes_harness_hermes_analysis))
+
+(executable
+ (name test_hermes_imports)
+ (modules test_hermes_imports)
+ (libraries hermes_harness_suite_telemetry hermes_harness_hermes_imports unix))
+
+(executable
+ (name render_import_graph)
+ (modules render_import_graph)
+ (libraries hermes_harness_hermes_imports hermes_harness_capability_catalog
+   hermes_harness_bootstrap))
+
+(library
+ (name hermes_harness_path_safety)
+ (wrapped false)
+ (modules path_safety))
+
+(executable
+ (name test_path_safety)
+ (modules test_path_safety)
+ (libraries hermes_harness_suite_telemetry hermes_harness_path_safety))
+
+(library
+ (name hermes_harness_retry_utils)
+ (wrapped false)
+ (modules retry_utils)
+ (libraries yojson))
+
+(executable
+ (name test_retry_utils)
+ (modules test_retry_utils)
+ (libraries hermes_harness_suite_telemetry hermes_harness_retry_utils yojson))
+
+(library
+ (name hermes_harness_blueprint)
+ (wrapped false)
+ (modules blueprint)
+ (libraries hermes_harness_parity_algebra hermes_wiki_diag))
+
+(executable
+ (name test_blueprint)
+ (modules test_blueprint)
+ (libraries hermes_harness_suite_telemetry hermes_harness_blueprint hermes_harness_parity_algebra
+   hermes_wiki_diag))
+
+(executable
+ (name reconcile_blueprint)
+ (modules reconcile_blueprint)
+ (libraries hermes_harness_blueprint hermes_harness_parity_algebra
+   hermes_wiki_diag))
+
+(library
+ (name hermes_harness_harness_config)
+ (wrapped false)
+ (modules harness_config)
+ (libraries hermes_harness_blueprint hermes_harness_parity_algebra
+   hermes_harness_resource_envelope hermes_wiki_diag
+   hermes_harness_fractal_ontology hermes_sysml))
+
+(library
+ (name hermes_harness_evidence_rollup)
+ (wrapped false)
+ (modules evidence_rollup)
+ (libraries hermes_harness_evidence hermes_harness_parity_algebra))
+
+(executable
+ (name test_evidence_rollup)
+ (modules test_evidence_rollup)
+ (libraries hermes_harness_suite_telemetry hermes_harness_evidence_rollup hermes_harness_evidence
+   hermes_harness_parity_algebra hermes_harness_control_plane
+   hermes_harness_homeostasis))
+
+(library
+ (name hermes_harness_hermes_rete)
+ (wrapped false)
+ (modules hermes_rete))
+
+; The embedded Rust rule engine (rust/drift_engine): built hermetically by cargo
+; from committed, vendored sources (--offline, no network), then linked as a
+; foreign archive. The OCaml side talks to it through one C stub.
+(rule
+ (targets libhermes_drift_engine.a)
+ ; rebuild when the crate's own sources change; the vendored deps are pinned by
+ ; Cargo.lock, and the build is --offline against the committed vendor dir.
+ (deps ../../rust/drift_engine/Cargo.toml ../../rust/drift_engine/Cargo.lock
+       ../../rust/drift_engine/src/lib.rs)
+ (action
+  (no-infer
+   (progn
+    ; cargo builds the SOURCE crate in place (dune's source_tree copy skips
+    ; dot-dirs, which breaks vendored checksums). Paths are relative to this
+    ; rule's cwd: _build/default/hermes_harness -> ../../.. is the source root.
+    (run cargo build --release --offline
+         --manifest-path ../../../../rust/drift_engine/Cargo.toml
+         --config "source.crates-io.replace-with='vendored-sources'"
+         --config "source.vendored-sources.directory='../../../../rust/drift_engine/vendor'")
+    ; run-cp, not dune copy: run's args are cwd-relative (like the cargo call
+    ; above), while dune's copy resolves against the source dir.
+    (run cp ../../../../rust/drift_engine/target/release/libhermes_drift_engine.a
+         libhermes_drift_engine.a)))))
+
+(library
+ (name hermes_harness_rust_rules)
+ (wrapped false)
+ (modules rust_rules)
+ (foreign_stubs (language c) (names hde_stubs))
+ (foreign_archives hermes_drift_engine)
+ (c_library_flags (-lpthread -ldl -lm))
+ (libraries yojson))
+
+(executable
+ (name test_rust_rules)
+ (modules test_rust_rules)
+ (libraries hermes_harness_suite_telemetry hermes_harness_rust_rules hermes_harness_hermes_rete yojson))
+
+(executable
+ (name test_hermes_rete)
+ (modules test_hermes_rete)
+ (libraries hermes_harness_suite_telemetry hermes_harness_hermes_rete))
+
+(executable
+ (name run_config)
+ (modules run_config)
+ (libraries hermes_harness_harness_config hermes_harness_blueprint
+   hermes_harness_evidence_rollup hermes_harness_evidence
+   hermes_harness_parity_compare hermes_harness_contract_catalog
+   hermes_harness_capability_catalog hermes_harness_gospel_check
+   hermes_harness_determinism_verifier hermes_harness_session_fixture
+   hermes_harness_resource_envelope hermes_harness_parity_dashboard
+   hermes_harness_control_plane hermes_harness_homeostasis
+   hermes_harness_hermes_zenoh
+   hermes_harness_parity_normalizer hermes_harness_parity_algebra
+   hermes_harness_drift_rules hermes_harness_parity_intent
+   hermes_harness_bootstrap hermes_harness_inventory unix))
+
+(executable
+ (name test_harness_config)
+ (modules test_harness_config)
+ (libraries hermes_harness_suite_telemetry hermes_harness_harness_config hermes_harness_blueprint
+   hermes_harness_parity_algebra hermes_harness_resource_envelope
+   hermes_harness_fractal_ontology))
+
+(library
+ (name hermes_harness_runtime_coverage)
+ (wrapped false)
+ (modules runtime_coverage))
+
+(executable
+ (name test_runtime_coverage)
+ (modules test_runtime_coverage)
+ (libraries hermes_harness_suite_telemetry hermes_harness_runtime_coverage))
+
+(executable
+ (name verify_runtime_coverage)
+ (modules verify_runtime_coverage)
+ (libraries hermes_harness_runtime_coverage hermes_harness_reference_capture
+   hermes_harness_capability_catalog hermes_harness_parity_normalizer
+   hermes_harness_bootstrap hermes_harness_inventory yojson unix))
+
+(library
+ (name hermes_harness_parity_dashboard)
+ (wrapped false)
+ (modules parity_dashboard)
+ (libraries hermes_harness_capability_catalog hermes_wiki_diag
+   hermes_harness_fractal_ontology hermes_harness_fractal_countermeasures
+   hermes_harness_hermes_analysis hermes_harness_evidence
+   hermes_harness_evidence_rollup hermes_harness_parity_intent
+   hermes_harness_parity_algebra hermes_harness_contract_catalog
+   hermes_harness_control_plane hermes_harness_homeostasis unix))
+
+(executable
+ (name render_parity_dashboard)
+ (modules render_parity_dashboard)
+ (libraries hermes_harness_parity_dashboard))
+
+(executable
+ (name test_parity_dashboard)
+ (modules test_parity_dashboard)
+ (libraries hermes_harness_suite_telemetry hermes_harness_parity_dashboard hermes_harness_hermes_analysis
+   hermes_harness_capability_catalog))
+
+(executable
+ (name bench_rules)
+ (modules bench_rules)
+ (libraries hermes_harness_rust_rules hermes_harness_hermes_rete yojson unix))
+
+(library
+ (name hermes_harness_drift_rules)
+ (wrapped false)
+ (modules drift_rules)
+ (libraries hermes_harness_hermes_rete hermes_harness_blueprint
+   hermes_harness_parity_algebra hermes_wiki_diag
+   hermes_harness_fractal_countermeasures))
+
+(executable
+ (name test_drift_rules)
+ (modules test_drift_rules)
+ (libraries hermes_harness_suite_telemetry hermes_harness_drift_rules hermes_harness_blueprint
+   hermes_harness_parity_algebra))
+
+(library
+ (name hermes_harness_receipt_reliability)
+ (wrapped false)
+ (modules receipt_reliability)
+ (libraries hermes_harness_evidence_rollup hermes_harness_parity_algebra))
+
+(executable
+ (name test_receipt_reliability)
+ (modules test_receipt_reliability)
+ (libraries hermes_harness_suite_telemetry hermes_harness_receipt_reliability))
+
+(executable
+ (name stan_receipts)
+ (modules stan_receipts)
+ (libraries hermes_harness_receipt_reliability hermes_harness_evidence_rollup
+   hermes_harness_evidence hermes_harness_capability_catalog
+   hermes_harness_bootstrap hermes_harness_inventory))
+
+(library
+ (name hermes_harness_ruliad)
+ (wrapped false)
+ (modules ruliad))
+
+(executable
+ (name test_ruliad)
+ (modules test_ruliad)
+ (libraries hermes_harness_suite_telemetry hermes_harness_ruliad))
+
+(library
+ (name hermes_harness_parity_intent)
+ (wrapped false)
+ (modules parity_intent)
+ (libraries hermes_harness_blueprint hermes_harness_parity_algebra
+   hermes_harness_capability_catalog))
+
+(executable
+ (name ruliad_frontier)
+ (modules ruliad_frontier)
+ (libraries hermes_harness_ruliad hermes_harness_parity_intent
+   hermes_harness_blueprint hermes_harness_parity_algebra
+   hermes_harness_evidence_rollup hermes_harness_evidence
+   hermes_harness_bootstrap hermes_harness_inventory unix))
+
+(library
+ (name hermes_harness_ruliad_rules)
+ (wrapped false)
+ (modules ruliad_rules))
+
+(executable
+ (name test_ruliad_rules)
+ (modules test_ruliad_rules)
+ (libraries hermes_harness_suite_telemetry hermes_harness_ruliad_rules))
+
+(executable
+ (name test_quint_frontier)
+ (modules test_quint_frontier)
+ (libraries hermes_harness_suite_telemetry hermes_harness_ruliad hermes_harness_parity_intent
+   hermes_harness_blueprint hermes_harness_parity_algebra unix))
+
+(library
+ (name hermes_harness_rocq_lattice)
+ (wrapped false)
+ (modules rocq_lattice))
+
+(executable
+ (name test_rocq_lattice)
+ (modules test_rocq_lattice)
+ (libraries hermes_harness_suite_telemetry hermes_harness_rocq_lattice hermes_harness_parity_lattice_extracted
+   hermes_harness_parity_algebra hermes_harness_harness_config unix))
+
+(executable
+ (name test_smtml_lattice)
+ (modules test_smtml_lattice)
+ (libraries hermes_harness_suite_telemetry smtml hermes_harness_formal_specs fpath))
+
+(library
+ (name hermes_harness_route_resolution)
+ (wrapped false)
+ (modules route_resolution)
+ (libraries yojson))
+
+(executable
+ (name test_route_resolution)
+ (modules test_route_resolution)
+ (libraries hermes_harness_suite_telemetry hermes_harness_route_resolution yojson))
+
+(library
+ (name hermes_harness_anthropic_adapter)
+ (wrapped false)
+ (modules anthropic_adapter)
+ (libraries yojson))
+
+(executable
+ (name test_anthropic_adapter)
+ (modules test_anthropic_adapter)
+ (libraries hermes_harness_suite_telemetry hermes_harness_anthropic_adapter yojson))
+
+(library
+ (name hermes_harness_converge)
+ (wrapped false)
+ (modules converge))
+
+(executable
+ (name test_converge)
+ (modules test_converge)
+ (libraries hermes_harness_suite_telemetry hermes_harness_converge))
+
+(library
+ (name hermes_harness_homeostasis)
+ (wrapped false)
+ (modules homeostasis))
+
+(library
+ (name hermes_harness_control_plane)
+ (wrapped false)
+ (modules control_plane)
+ (libraries hermes_harness_homeostasis))
+
+; Zenoh publisher: links the PREBUILT vendored zenoh-c static library
+; (vendor/zenoh-c, mirrored into the build tree by dune) through one C stub --
+; the same foreign-archive discipline as the Rust rule engine. No new external
+; tool: FFI, not a subprocess, so the permitted-oracle list is untouched.
+(rule
+ (targets libzenohc.a)
+ (deps ../../vendor/zenoh-c/lib/libzenohc.a)
+ (action (copy ../../vendor/zenoh-c/lib/libzenohc.a libzenohc.a)))
+
+(library
+ (name hermes_harness_hermes_zenoh)
+ (wrapped false)
+ (modules hermes_zenoh)
+ (foreign_stubs (language c) (names hz_stubs)
+  (flags (:standard -I%{project_root}/vendor/zenoh-c/include))
+  ; vendor/ is data_only: files are mirrored into _build lazily, only when
+  ; something depends on them -- the headers must be declared or the include
+  ; path above points at an empty directory.
+  (extra_deps (glob_files %{project_root}/vendor/zenoh-c/include/*.h)))
+ (foreign_archives zenohc)
+ (c_library_flags (-lpthread -ldl -lm -lrt))
+ (libraries unix threads))
+
+(executable
+ (name test_hermes_zenoh)
+ (modules test_hermes_zenoh)
+ (libraries hermes_harness_suite_telemetry hermes_harness_hermes_zenoh unix))
+
+(executable
+ (name test_control_plane)
+ (modules test_control_plane)
+ (libraries hermes_harness_suite_telemetry hermes_harness_control_plane hermes_harness_homeostasis))
+
+(executable
+ (name test_homeostasis)
+ (modules test_homeostasis)
+ (libraries hermes_harness_suite_telemetry hermes_harness_homeostasis))
+
+(executable
+ (name auto_converge)
+ (modules auto_converge)
+ (libraries hermes_harness_converge hermes_harness_blueprint hermes_harness_parity_intent
+   hermes_harness_parity_compare hermes_harness_evidence_rollup hermes_harness_drift_rules
+   hermes_harness_parity_algebra hermes_harness_parity_normalizer hermes_harness_bootstrap
+   hermes_harness_inventory hermes_harness_homeostasis hermes_harness_evidence
+   hermes_harness_control_plane hermes_harness_gospel_check
+   hermes_harness_hermes_zenoh
+   hermes_harness_resource_envelope hermes_wiki_diag unix))
+
+(library
+ (name hermes_harness_codex_message_shapes)
+ (wrapped false)
+ (modules codex_message_shapes)
+ (libraries yojson))
+
+(executable
+ (name test_codex_message_shapes)
+ (modules test_codex_message_shapes)
+ (libraries hermes_harness_suite_telemetry hermes_harness_codex_message_shapes yojson))
+
+(library
+ (name hermes_harness_gemini_schema)
+ (wrapped false)
+ (modules gemini_schema)
+ (libraries yojson))
+
+(executable
+ (name test_gemini_schema)
+ (modules test_gemini_schema)
+ (libraries hermes_harness_suite_telemetry hermes_harness_gemini_schema yojson))
+
+(library
+ (name hermes_harness_bedrock_converse)
+ (wrapped false)
+ (modules bedrock_converse)
+ (libraries yojson))
+
+(executable
+ (name test_bedrock_converse)
+ (modules test_bedrock_converse)
+ (libraries hermes_harness_suite_telemetry hermes_harness_bedrock_converse yojson))
+
+(executable
+ (name capture_bedrock_traces)
+ (modules capture_bedrock_traces)
+ (libraries hermes_harness_parity_compare hermes_harness_reference_capture
+   hermes_harness_parity_normalizer hermes_harness_bootstrap
+   hermes_harness_inventory yojson unix))
+
+(library
+ (name hermes_harness_harness_topology)
+ (wrapped false)
+ (modules harness_topology)
+ (libraries hermes_fpp_window_authority hermes_wiki_fpp hermes_harness_fractal_ontology
+   hermes_wiki_diag yojson))
+
+(executable
+ (name test_harness_topology)
+ (modules test_harness_topology)
+ (libraries hermes_harness_suite_telemetry hermes_harness_harness_topology hermes_wiki_fpp
+   hermes_wiki_diag yojson))
+
+(executable
+ (name test_fprime_smt)
+ (modules test_fprime_smt)
+ (libraries hermes_harness_suite_telemetry smtml hermes_harness_harness_topology hermes_wiki_fpp
+   yojson))
+
+(executable
+ (name render_fprime_atlas)
+ (modules render_fprime_atlas)
+ (libraries hermes_harness_harness_topology hermes_wiki_diag
+   yojson unix))
+
+(executable
+ (name test_fpp_interp)
+ (modules test_fpp_interp)
+ (libraries hermes_harness_suite_telemetry hermes_wiki_fpp_interp hermes_wiki_fpp
+   hermes_harness_harness_topology))
+
+(library
+ (name hermes_harness_fpp_usecases)
+ (wrapped false)
+ (modules fpp_usecases)
+ (libraries hermes_wiki_fpp hermes_wiki_fpp_interp
+   hermes_harness_parity_algebra hermes_harness_control_plane
+   hermes_harness_homeostasis
+   hermes_harness_harness_topology))
+
+(executable
+ (name test_fpp_bdd)
+ (modules test_fpp_bdd)
+ (libraries hermes_harness_suite_telemetry hermes_harness_fpp_usecases hermes_wiki_fpp_interp
+   hermes_wiki_fpp yojson))
+
+(executable
+ (name test_fpp_fuzz)
+ (modules test_fpp_fuzz)
+ (libraries hermes_harness_suite_telemetry hermes_wiki_fpp hermes_wiki_fpp_interp
+   hermes_harness_harness_topology hermes_wiki_diag yojson
+   unix))
+
+(executable
+ (name test_smtml_alerts)
+ (modules test_smtml_alerts)
+ (libraries hermes_harness_suite_telemetry smtml))
+
+(executable
+ (name test_converge_formal)
+ (modules test_converge_formal)
+ (libraries hermes_harness_suite_telemetry smtml hermes_wiki_fpp hermes_wiki_fpp_interp
+   hermes_harness_harness_topology))
+
+(library
+ (name hermes_harness_formal_coverage)
+ (wrapped false)
+ (modules formal_coverage)
+ (libraries hermes_wiki_fpp hermes_harness_fpp_usecases
+   hermes_harness_harness_topology hermes_harness_fractal_ontology yojson))
+
+(executable
+ (name test_formal_coverage)
+ (modules test_formal_coverage)
+ (libraries hermes_harness_suite_telemetry hermes_harness_formal_coverage hermes_wiki_fpp
+   hermes_harness_fpp_usecases hermes_harness_harness_topology
+   hermes_harness_fractal_ontology yojson))
+
+(executable
+ (name render_formal_coverage)
+ (modules render_formal_coverage)
+ (libraries hermes_harness_formal_coverage unix))
+
+(executable
+ (name test_fpp_performance)
+ (modules test_fpp_performance)
+ (libraries hermes_harness_suite_telemetry hermes_wiki_fpp hermes_wiki_fpp_interp
+   hermes_harness_harness_topology hermes_harness_formal_coverage
+   hermes_harness_control_plane hermes_harness_homeostasis
+   hermes_wiki_diag yojson unix))
+
+(library
+ (name hermes_harness_web_read_model)
+ (wrapped false)
+ (modules web_read_model)
+ (libraries hermes_harness_fractal_ontology hermes_harness_formal_coverage
+   hermes_harness_fpp_usecases hermes_wiki_core
+   hermes_harness_evidence hermes_harness_evidence_rollup
+   hermes_harness_parity_algebra yojson unix))
+
+(library
+ (name hermes_harness_site_build)
+ (wrapped false)
+ (modules site_build)
+ (libraries hermes_harness_web_read_model hermes_wiki_core
+   hermes_harness_fractal_ontology hermes_harness_formal_coverage
+   hermes_harness_fpp_usecases hermes_harness_harness_topology
+   hermes_harness_gap_plan yojson))
+
+(executable
+ (name test_site_build)
+ (modules test_site_build)
+ (libraries unix hermes_harness_suite_telemetry hermes_harness_site_build hermes_harness_web_read_model
+   hermes_wiki_core hermes_harness_fractal_ontology
+   hermes_harness_formal_coverage hermes_harness_fpp_usecases yojson))
+
+(library
+ (name hermes_harness_gap_plan)
+ (wrapped false)
+ (modules gap_plan)
+ (libraries hermes_harness_fractal_ontology hermes_harness_formal_coverage
+   hermes_harness_fpp_usecases hermes_wiki_core
+   hermes_wiki_diag))
+
+(executable
+ (name render_site)
+ (modules render_site)
+ (libraries hermes_harness_site_build hermes_harness_web_read_model
+   hermes_wiki_core yojson unix))
+
+(executable
+ (name serve_site)
+ (modules serve_site)
+ (libraries hermes_harness_site_build hermes_harness_web_read_model
+   hermes_wiki_httpd hermes_wiki_diag unix))
+
+
+
+
+(executable
+ (name serve_dream)
+ (modules serve_dream)
+ (libraries wiki_server hermes_harness_site_build hermes_harness_web_read_model
+   hermes_wiki_httpd dream yojson))
+
+(library
+ (name hermes_harness_agent_model)
+ (wrapped false)
+ (modules hermes_agent_model)
+ (libraries hermes_sysml))
+
+(library
+ (name hermes_harness_e2e_framework)
+ (wrapped false)
+ (modules e2e_framework)
+ (libraries hermes_harness_resource_envelope hermes_wiki_diag unix))
+
+(library
+ (name hermes_harness_e2e_tier1_tests)
+ (wrapped false)
+ (modules e2e_tier1_tests)
+ (libraries hermes_harness_e2e_framework hermes_agent_loop_message_hygiene hermes_harness_turn_budget
+   hermes_agent_loop_conversation_loop hermes_agent_loop_prompt_assembly
+   hermes_agent_loop_context_engine hermes_agent_loop_context_compression
+   hermes_agent_loop_turn_finalization yojson))
+
+(library
+ (name hermes_harness_e2e_tier2_tests)
+ (wrapped false)
+ (modules e2e_tier2_tests)
+ (libraries hermes_harness_e2e_framework hermes_agent_loop_message_hygiene hermes_harness_turn_budget
+   hermes_agent_loop_conversation_loop hermes_agent_loop_prompt_assembly
+   hermes_agent_loop_context_engine hermes_agent_loop_context_compression
+   hermes_agent_loop_turn_finalization yojson))
+
+(library
+ (name hermes_harness_e2e_tier3_tests)
+ (wrapped false)
+ (modules e2e_tier3_tests)
+ (libraries hermes_harness_e2e_framework hermes_agent_loop_message_hygiene hermes_harness_turn_budget
+   hermes_agent_loop_conversation_loop hermes_agent_loop_prompt_assembly
+   hermes_agent_loop_context_engine hermes_agent_loop_context_compression
+   hermes_agent_loop_turn_finalization yojson qcheck))
+
+(library
+ (name hermes_harness_e2e_tier4_tests)
+ (wrapped false)
+ (modules e2e_tier4_tests)
+ (libraries hermes_harness_e2e_framework hermes_agent_loop_message_hygiene hermes_harness_turn_budget
+   hermes_agent_loop_conversation_loop hermes_agent_loop_prompt_assembly
+   hermes_agent_loop_context_engine hermes_agent_loop_context_compression
+   hermes_agent_loop_turn_finalization yojson))
+
+(executable
+ (name run_e2e_tests)
+ (public_name hermes_run_e2e_tests)
+ (modules run_e2e_tests)
+ (libraries hermes_harness_e2e_framework hermes_harness_e2e_tier1_tests hermes_harness_e2e_tier2_tests
+   hermes_harness_e2e_tier3_tests hermes_harness_e2e_tier4_tests
+   hermes_harness_resource_envelope hermes_wiki_diag unix))
+
+(executable
+ (name test_challenger_m1_2)
+ (modules test_challenger_m1_2)
+ (libraries hermes_harness_suite_telemetry hermes_harness_turn_budget hermes_harness_message_hygiene yojson))
+
+(executable
+ (name test_challenger_e2e_framework)
+ (modules test_challenger_e2e_framework)
+ (libraries hermes_harness_suite_telemetry hermes_harness_e2e_framework hermes_harness_resource_envelope hermes_wiki_diag unix))
+
+(executable
+ (name test_challenger_m2_1)
+ (modules test_challenger_m2_1)
+ (libraries hermes_harness_suite_telemetry hermes_harness_e2e_framework hermes_agent_loop_message_hygiene hermes_harness_turn_budget
+   hermes_agent_loop_conversation_loop hermes_agent_loop_prompt_assembly
+   hermes_agent_loop_context_engine hermes_agent_loop_context_compression
+   hermes_agent_loop_turn_finalization yojson unix))
+
+(executable
+ (name test_challenger_m3_1)
+ (modules test_challenger_m3_1)
+ (libraries hermes_harness_suite_telemetry hermes_harness_e2e_framework hermes_harness_e2e_tier1_tests hermes_harness_e2e_tier2_tests
+   hermes_harness_e2e_tier3_tests hermes_harness_e2e_tier4_tests
+   hermes_agent_loop_message_hygiene hermes_harness_turn_budget
+   hermes_agent_loop_conversation_loop hermes_agent_loop_prompt_assembly
+   hermes_agent_loop_context_engine hermes_agent_loop_context_compression
+   hermes_agent_loop_turn_finalization yojson qcheck unix))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(executable
+ (name preflight_vision_pipeline)
+ (modules preflight_vision_pipeline)
+ (libraries hermes_harness_resource_envelope))

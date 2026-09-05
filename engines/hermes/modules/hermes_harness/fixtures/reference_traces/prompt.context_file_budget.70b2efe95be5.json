@@ -1,0 +1,16 @@
+{
+  "scenario_id": "prompt.context_file_budget",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "07729a7c11dc89df01152a4aaa2d2c2133f31e5e63eefc003345df8ede4efe44",
+  "trace": {
+    "results": {
+      "huge_window_ceilinged": 500000,
+      "mid_window_scales": 24000,
+      "small_window_floors": 20000,
+      "unknown_window": 20000,
+      "zero_window": 20000
+    }
+  }
+}

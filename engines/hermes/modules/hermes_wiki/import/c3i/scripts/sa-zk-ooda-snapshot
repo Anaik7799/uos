@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# sa-zk-ooda-snapshot — writes full OODA JSON feed incl. model/provider to docs/journal/ooda-live.json
+set -eu
+KMS="${KMS_DB:-/home/an/dev/ver/c3i/sub-projects/c3i/data/kms/smriti.db}"
+OUT_A="/home/an/dev/ver/c3i/docs/journal/ooda-live.json"
+OUT_B="/home/an/dev/ver/c3i/sub-projects/c3i/docs/journal/ooda-live.json"
+
+OODA=$(sqlite3 -json "$KMS" "SELECT * FROM v_ooda_live;")
+COST=$(sqlite3 -json "$KMS" "SELECT * FROM v_cost_by_agent;")
+PROV=$(sqlite3 -json "$KMS" "SELECT * FROM v_provider_usage;")
+MODEL=$(sqlite3 -json "$KMS" "SELECT * FROM v_model_usage ORDER BY cost_usd DESC LIMIT 15;")
+OPTIM=$(sqlite3 -json "$KMS" "SELECT * FROM v_cost_optimization;")
+STAGE=$(sqlite3 -json "$KMS" "SELECT stage, COUNT(*) AS calls, ROUND(AVG(duration_ms),1) AS avg_ms, MAX(duration_ms) AS max_ms FROM pipeline_stage_metrics GROUP BY stage ORDER BY 2 DESC LIMIT 12;")
+TOP=$(sqlite3 -json "$KMS" "SELECT session_id, agent, provider, model, tokens_total, cost_usd, zk_citations, cache_hit_ratio FROM session_metrics ORDER BY cost_usd DESC LIMIT 10;")
+RECENT=$(sqlite3 -json "$KMS" "SELECT session_id, agent, provider, model, started_at, tokens_total, cost_usd FROM session_metrics ORDER BY started_at DESC LIMIT 10;")
+CHEAP=$(sqlite3 -json "$KMS" "SELECT model_id, provider, input_per_million, output_per_million, context_window, tier FROM model_pricing WHERE tier IN ('cheap','local') ORDER BY input_per_million LIMIT 10;")
+ALARMS=$(sqlite3 -json "$KMS" "
+  SELECT 'LowEmbeddingCoverage' AS rule,
+         (SELECT ROUND(100.0*COUNT(*)/(SELECT COUNT(*) FROM holons),1) FROM holon_embeddings) AS value,
+         95 AS threshold, 'EmbedRefresh' AS action
+  UNION ALL SELECT 'LowCacheHit',
+         ROUND(100*COALESCE(AVG(cache_hit_ratio),0),1), 90, 'PrefixRefactor' FROM session_metrics
+  UNION ALL SELECT 'HighCostPerMToken',
+         ROUND(COALESCE(SUM(cost_usd)/NULLIF(SUM(tokens_total),0)*1000000,0),4), 1.00, 'RouteToGeminiFlash' FROM session_metrics
+  UNION ALL SELECT 'LowEdgeCoverage',
+         (SELECT COUNT(*) FROM holon_edges), 10000, 'LinkExtractorBatch';")
+cat > "$OUT_A" <<JSON
+{"generated_at_utc":"$(date -u +%FT%T.%3NZ)","ooda":$OODA,"cost_by_agent":$COST,"cost_by_provider":$PROV,"cost_by_model":$MODEL,"optimization_scenarios":$OPTIM,"pipeline_stages":$STAGE,"top_cost_sessions":$TOP,"recent_sessions":$RECENT,"cheapest_models":$CHEAP,"alarms":$ALARMS}
+JSON
+cp "$OUT_A" "$OUT_B"
+echo "wrote $(wc -c <"$OUT_A") bytes"

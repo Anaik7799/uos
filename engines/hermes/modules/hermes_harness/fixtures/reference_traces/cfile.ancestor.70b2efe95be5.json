@@ -1,0 +1,16 @@
+{
+  "scenario_id": "cfile.ancestor",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "2bf1db7f0315cb451356e7c2a2a35823c2d072d9bf4fefab632858818cbeba34",
+  "trace": {
+    "results": {
+      "ancestor": true,
+      "not_ancestor": false,
+      "prefix_not_component": false,
+      "same": true,
+      "sibling": false
+    }
+  }
+}

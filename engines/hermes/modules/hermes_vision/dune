@@ -1,0 +1,104 @@
+(library
+ (name hermes_vision)
+ (wrapped false)
+ (modules vision_intent vision_ontology vision_algebra vision_atlas vision_controller vision_telemetry vision_control vision_js vision_browser_api vision_gstreamer vision_vlc vision_obs vision_jmeter vision_libav_ontology vision_libav vision_restart vision_safety vision_fpp vision_swarm vision_compare vision_tool_probe vision_otel vision_rules vision_infer vision_smt vision_ruliad vision_metrics vision_nx vision_yolo vision_scenario vision_ort_safety vision_ort)
+ ; hermes_harness_sop_execution is deliberately ABSENT. vision_swarm.ml
+ ; was the sole unauthorized direct caller of the engine; it is now pure
+ ; preparation, and nothing else in this directory used the library.
+ ; Re-adding it would restore the bypass the swarm scanner exists to
+ ; refuse — execution belongs to the canonical bridge, not here.
+ (libraries unix ctypes ctypes.foreign nx hermes_wiki_fpp hermes_harness_hermes_zenoh)
+ (c_library_flags (-lavformat -lavcodec -lavutil)))
+
+; The Dream dashboard for the vision pipeline. It lived in
+; modules/hermes_wiki/src/backend, where its (libraries ... dream lwt.unix
+; hermes_harness_hermes_zenoh) broke the wiki self-containment law that
+; engine/dune and fpp/dune both state in their own comments: the wiki/ZK
+; engine depends on no hermes_harness_*. The dashboard is a vision concern,
+; so it moves to the vision module rather than the law bending around it.
+; It is its OWN executable — dream and lwt stay off the hermes_vision
+; library's dependencies, which nothing else here needs.
+(executable
+ (name vision_server)
+ (modules vision_server)
+ (libraries dream lwt.unix hermes_harness_hermes_zenoh)
+ (preprocess (pps lwt_ppx)))
+
+(executable
+ (name vision_serve)
+ (modules vision_serve)
+ (libraries hermes_vision unix))
+
+(executable
+ (name vision_run)
+ (modules vision_run)
+ (libraries hermes_vision unix))
+
+(executable
+ (name test_vision_pipeline)
+ (modules test_vision_pipeline)
+ (libraries hermes_vision unix hermes_harness_suite_telemetry))
+
+; The ORT safety gates read vendored data by REPO-ROOT-RELATIVE path
+; (vendor/onnxruntime/{onnxruntime_c_api.h,ortapi-field-order.txt}).
+; Run from this module's build directory those paths do not resolve,
+; table_length () reads 0, and check_ordinal degrades to Unavailable —
+; so the four bounds assertions saw Unavailable where they require
+; Failed. The gate itself was correct; only its data was out of reach.
+; chdir to the workspace root, where data_only_dirs has placed vendor/,
+; and declare the tree so dune reruns the test when the table changes.
+(rule
+ (alias runtest)
+ (deps (source_tree %{workspace_root}/vendor/onnxruntime))
+ (action (chdir %{workspace_root} (run %{exe:test_vision_pipeline.exe}))))
+
+(executable
+ (name vision_control_serve)
+ (modules vision_control_serve)
+ (libraries hermes_vision unix))
+
+(executable
+ (name vision_browser_capture)
+ (modules vision_browser_capture)
+ (libraries hermes_vision unix))
+
+(executable
+ (name vision_libav_probe)
+ (modules vision_libav_probe)
+ (libraries hermes_vision ctypes ctypes.foreign))
+
+(executable
+ (name test_vision_fuzz)
+ (modules test_vision_fuzz)
+ (libraries hermes_vision unix hermes_harness_suite_telemetry))
+
+(rule
+ (alias runtest)
+ (action (run ./test_vision_fuzz.exe)))
+
+(executable
+ (name vision_render_all)
+ (modules vision_render_all)
+ (libraries hermes_vision))
+
+; EXPECT TEST. The ontologies are data, and data changes silently: a
+; hazard reworded, an origin flipped, a channel renamed. None breaks a
+; structural test; all change what the system claims. This makes each
+; one a reviewable diff. Regenerate with:
+;   dune promote modules/hermes_vision
+(rule
+ (alias runtest)
+ (action
+  (progn
+   (with-stdout-to vision.actual (run %{exe:vision_render_all.exe}))
+   (diff vision.expected vision.actual))))
+
+(executable
+ (name gen_scenarios)
+ (modules gen_scenarios)
+ (libraries hermes_vision unix))
+
+(executable
+ (name ort_probe)
+ (modules ort_probe)
+ (libraries hermes_vision ctypes ctypes.foreign unix))

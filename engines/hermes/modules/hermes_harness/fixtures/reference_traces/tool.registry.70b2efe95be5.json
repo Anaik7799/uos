@@ -1,0 +1,19 @@
+{
+  "scenario_id": "tool.registry",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "9eda6f99b2baf05cda1856a5b286386c6c5219a00161a1bc3b6218e5a82d7c3a",
+  "trace": {
+    "results": {
+      "activate_none": false,
+      "activate_off": false,
+      "activate_yes": true,
+      "budget_capped": 8000,
+      "budget_pct_leg": 8000,
+      "budget_unknown_window": 8000,
+      "estimate_empty": 0,
+      "estimate_two": 39
+    }
+  }
+}

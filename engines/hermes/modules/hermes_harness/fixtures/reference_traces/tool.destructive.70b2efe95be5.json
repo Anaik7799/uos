@@ -1,0 +1,25 @@
+{
+  "scenario_id": "tool.destructive",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "2bd76461a247e301ef6373e1b235a4d790d1b5564778a2c47a5a0d763a2e7988",
+  "trace": {
+    "results": {
+      "cp_backtick": true,
+      "dd_cmd": true,
+      "empty": false,
+      "git_reset": true,
+      "git_status_safe": false,
+      "mv_piped": true,
+      "plain_echo": false,
+      "redirect_append_safe": false,
+      "redirect_overwrite": true,
+      "rm_after_and": true,
+      "rm_after_semi": true,
+      "rm_at_start": true,
+      "rmdir_word_only": false,
+      "sed_inplace": true
+    }
+  }
+}

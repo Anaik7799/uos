@@ -1,0 +1,40 @@
+{
+  "scenario_id": "sub.moa",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "bff475377a4704e2e0304c6344e0a01c16880d7dc00675729e1cfe672806fc7d",
+  "trace": {
+    "results": {
+      "degraded_notice_silent_policy": "",
+      "failed_labels_order": [ "a", "b" ],
+      "flatten_skips_non_text": "hi",
+      "is_failed_case_insensitive": true,
+      "merge_extra_body_caller_wins": { "a": 2, "b": 3 },
+      "peel_shape_a_merged_string": [ { "content": "base", "role": "user" } ],
+      "peel_shape_c_own_message": [],
+      "preset_temp_absent": null,
+      "preset_temp_explicit_zero": 0.0,
+      "reference_messages_lone_user": [
+        { "content": "hello", "role": "user" }
+      ],
+      "reference_messages_tool_after_assistant": [
+        { "content": "run it", "role": "user" },
+        {
+          "content": "on it\n[tool result: output here]",
+          "role": "assistant"
+        },
+        {
+          "content": "[The conversation above is the current state of the task. Give your most intelligent judgement: what is going on, what should happen next, what risks or mistakes you see, and how the acting agent should proceed.]",
+          "role": "user"
+        }
+      ],
+      "render_calls_with_args": "[called tool: search({\"q\": \"x\"})]",
+      "sanitize_session_id_basic": "a_b_",
+      "slot_label_with_reasoning": "openai:gpt[reasoning=high]",
+      "successful_refs_filters": [ [ "a", "ok text", null ] ],
+      "truncate_over_budget": "01234\n[... 10 chars omitted ...]\nfghij",
+      "truncate_short_passthrough": "short"
+    }
+  }
+}

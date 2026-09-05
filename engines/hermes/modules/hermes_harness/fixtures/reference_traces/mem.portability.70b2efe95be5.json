@@ -1,0 +1,35 @@
+{
+  "scenario_id": "mem.portability",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "e293806badb03e4c2a1418c1359e65cfc9121e1286627f17c595d3655f3356ea",
+  "trace": {
+    "results": {
+      "float_bad": null,
+      "float_from_int": 3.0,
+      "float_from_str": 2.5,
+      "float_none": null,
+      "int_default_bad": 7,
+      "int_default_none": 7,
+      "int_from_float": { "ok": true, "value": 4 },
+      "int_none": { "ok": true, "value": null },
+      "json_obj_bad_str": {
+        "error": "value must be valid JSON",
+        "ok": false
+      },
+      "json_obj_dict": { "ok": true, "value": "{\"b\": 2}" },
+      "json_obj_str": { "ok": true, "value": "{\"a\": 1}" },
+      "json_obj_wrong_shape": {
+        "error": "value must be a JSON object",
+        "ok": false
+      },
+      "reasoning_parses": { "k": true },
+      "reasoning_passthrough": 9,
+      "reasoning_unparseable": "not json",
+      "text_bad_type": { "error": "value must be a string", "ok": false },
+      "text_none": { "ok": true, "value": null },
+      "text_str": { "ok": true, "value": "hello" }
+    }
+  }
+}

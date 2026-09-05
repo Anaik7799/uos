@@ -1,0 +1,26 @@
+{
+  "scenario_id": "skill.sync",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "442bf2736d637cdb20dec6664a53c0dd8afe230d39339a3924598e145950308b",
+  "trace": {
+    "results": {
+      "canonical_sorts_compact": "{\"a\":[1,2],\"z\":1}",
+      "manifest_parse_malformed": null,
+      "manifest_roundtrip": "{\"skills\":[{\"enabled\":false,\"name\":\"alpha\"},{\"enabled\":true,\"name\":\"beta\"}],\"type\":\"sync-manifest\",\"version\":1}",
+      "merge_ours_only": "ours",
+      "merge_overlap": "overlap",
+      "merge_theirs_only": "theirs",
+      "merge_unanimous_absent": "none",
+      "merge_unanimous_present": "either",
+      "parse_bool_empty_is_false": false,
+      "parse_bool_real_bool": true,
+      "parse_bool_unrecognized": null,
+      "parse_bool_yes": true,
+      "tracked_mod_no_origin": false,
+      "tracked_mod_true": true,
+      "wire_address": "sha256:b94d27b9934d3e08a52e52d7da7dabfac484efe37a5380ee9088f7ace2efcde9"
+    }
+  }
+}

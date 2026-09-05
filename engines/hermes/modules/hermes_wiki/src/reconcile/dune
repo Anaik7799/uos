@@ -1,0 +1,4 @@
+(library
+ (name hermes_wiki_reconcile)
+ (wrapped false)
+ (modules reconcile))

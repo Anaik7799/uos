@@ -1,0 +1,215 @@
+(library
+ (name wiki_suite_telemetry)
+ (modules wiki_suite_telemetry)
+ (libraries hermes_stanza))
+
+(executable
+ (name test_wiki_tyxml)
+ (modules test_wiki_tyxml)
+ (libraries wiki_suite_telemetry wiki_render tyxml))
+
+(executable
+ (name test_wiki_routes)
+ (modules test_wiki_routes)
+ (libraries wiki_suite_telemetry wiki_server dream))
+
+(executable
+ (name test_wiki_frontend)
+ (modules test_wiki_frontend)
+ (libraries wiki_suite_telemetry))
+
+(executable
+ (name test_wiki_baseline)
+ (modules test_wiki_baseline)
+ (libraries wiki_suite_telemetry wiki_core))
+
+(executable
+ (name test_render_baseline)
+ (modules test_render_baseline)
+ (libraries wiki_suite_telemetry wiki_core hermes_wiki_core))
+
+(executable
+ (name test_hermes_wiki)
+ (modules test_hermes_wiki)
+ (libraries wiki_suite_telemetry hermes_wiki_core str))
+
+(executable
+ (name test_wiki_ref)
+ (modules test_wiki_ref)
+ (libraries wiki_suite_telemetry hermes_wiki_ref hermes_wiki_core))
+
+(executable
+ (name test_wiki_include)
+ (modules test_wiki_include)
+ (libraries wiki_suite_telemetry hermes_wiki_include hermes_wiki_core))
+
+(executable
+ (name test_wiki_ast)
+ (modules test_wiki_ast)
+ (libraries wiki_suite_telemetry hermes_wiki_core hermes_wiki_ast str))
+
+(executable
+ (name test_wiki_query)
+ (modules test_wiki_query)
+ (libraries wiki_suite_telemetry hermes_wiki_query hermes_wiki_core))
+
+(executable
+ (name test_dep_sheaf)
+ (modules test_dep_sheaf)
+ (libraries wiki_suite_telemetry hermes_wiki_sheaf hermes_wiki_core))
+
+(executable
+ (name test_hermes_httpd)
+ (modules test_hermes_httpd)
+ (libraries wiki_suite_telemetry hermes_wiki_httpd unix threads.posix))
+
+(executable
+ (name test_wiki_topology)
+ (modules test_wiki_topology)
+ (libraries wiki_suite_telemetry hermes_wiki_topology hermes_wiki_fpp hermes_wiki_diag))
+
+(executable
+ (name test_feature_register)
+ (modules test_feature_register)
+ (libraries wiki_suite_telemetry hermes_wiki_register hermes_wiki_core))
+
+(executable
+ (name test_fpp_model)
+ (modules test_fpp_model)
+ (libraries wiki_suite_telemetry hermes_wiki_fpp hermes_wiki_diag yojson unix))
+
+(executable
+ (name test_reconcile)
+ (modules test_reconcile)
+ (libraries wiki_suite_telemetry hermes_wiki_reconcile hermes_wiki_register smtml))
+
+(executable
+ (name test_ratchet)
+ (modules test_ratchet)
+ (libraries wiki_suite_telemetry hermes_wiki_control hermes_wiki_topology hermes_wiki_fpp str))
+
+(executable
+ (name test_wiki_graph)
+ (modules test_wiki_graph)
+ (libraries wiki_suite_telemetry hermes_wiki_graph hermes_wiki_core))
+
+(executable
+ (name test_km_journal)
+ (modules test_km_journal)
+ (libraries wiki_suite_telemetry hermes_wiki_km))
+
+(executable
+ (name test_wiki_search)
+ (modules test_wiki_search)
+ (libraries wiki_suite_telemetry hermes_wiki_search hermes_wiki_graph hermes_wiki_core))
+
+(executable
+ (name test_wiki_diagnostics)
+ (modules test_wiki_diagnostics)
+ (libraries wiki_suite_telemetry hermes_wiki_control hermes_wiki_diag))
+
+(executable
+ (name test_claude_artifacts)
+ (modules test_claude_artifacts)
+ (libraries wiki_suite_telemetry str))
+
+(executable
+ (name test_wiki_toc)
+ (modules test_wiki_toc)
+ (libraries wiki_suite_telemetry hermes_wiki_toc hermes_wiki_core hermes_wiki_ast))
+
+(executable
+ (name test_wiki_iface)
+ (modules test_wiki_iface)
+ (libraries wiki_suite_telemetry hermes_wiki_iface))
+
+(executable
+ (name test_wiki_theme)
+ (modules test_wiki_theme)
+ (libraries wiki_suite_telemetry hermes_wiki_theme))
+
+(executable
+ (name test_wiki_visibility)
+ (modules test_wiki_visibility)
+ (libraries wiki_suite_telemetry hermes_wiki_visibility hermes_wiki_core hermes_wiki_topology hermes_wiki_fpp))
+
+(executable
+ (name test_wiki_transclude)
+ (modules test_wiki_transclude)
+ (libraries wiki_suite_telemetry hermes_wiki_transclude))
+
+(executable
+ (name test_wiki_ordering)
+ (modules test_wiki_ordering)
+ (libraries wiki_suite_telemetry hermes_wiki_ordering hermes_wiki_core hermes_wiki_search hermes_wiki_topology
+   hermes_wiki_fpp))
+
+(executable
+ (name test_wiki_doctest)
+ (modules test_wiki_doctest)
+ (libraries wiki_suite_telemetry hermes_wiki_doctest hermes_wiki_core))
+
+(executable
+ (name test_wiki_directive)
+ (modules test_wiki_directive)
+ (libraries wiki_suite_telemetry hermes_wiki_directive hermes_wiki_core hermes_wiki_ast))
+
+(executable
+ (name test_wiki_view)
+ (modules test_wiki_view)
+ (libraries wiki_suite_telemetry hermes_wiki_view hermes_wiki_core hermes_wiki_query))
+
+(executable
+ (name test_wiki_present)
+ (modules test_wiki_present)
+ (libraries wiki_suite_telemetry hermes_wiki_present hermes_wiki_core hermes_wiki_ast hermes_wiki_theme))
+
+(executable
+ (name test_feature_model)
+ (modules test_feature_model)
+ (libraries wiki_suite_telemetry hermes_wiki_mbse hermes_wiki_register hermes_sysml))
+
+(executable
+ (name test_wiki_blocks)
+ (modules test_wiki_blocks)
+ (libraries wiki_suite_telemetry hermes_wiki_blocks hermes_wiki_core hermes_wiki_ast))
+
+(executable
+ (name test_wiki_similarity)
+ (modules test_wiki_similarity)
+ (libraries wiki_suite_telemetry hermes_wiki_similarity hermes_wiki_core hermes_wiki_graph))
+
+(executable
+ (name test_wiki_build)
+ (modules test_wiki_build)
+ (libraries wiki_suite_telemetry hermes_wiki_build hermes_wiki_core hermes_wiki_sheaf))
+
+(executable
+ (name test_wiki_lifecycle)
+ (modules test_wiki_lifecycle)
+ (libraries wiki_suite_telemetry hermes_wiki_lifecycle hermes_wiki_core))
+
+(executable
+ (name test_wiki_export)
+ (modules test_wiki_export)
+ (libraries wiki_suite_telemetry hermes_wiki_export hermes_wiki_core hermes_wiki_ast hermes_wiki_search))
+
+(executable
+ (name test_wiki_address)
+ (modules test_wiki_address)
+ (libraries wiki_suite_telemetry hermes_wiki_address hermes_wiki_core hermes_wiki_ref))
+
+(executable
+ (name test_wiki_navsearch)
+ (modules test_wiki_navsearch)
+ (libraries wiki_suite_telemetry hermes_wiki_navsearch hermes_wiki_core hermes_wiki_search hermes_wiki_graph hermes_wiki_toc))
+
+(executable
+ (name test_wiki_source_ext)
+ (modules test_wiki_source_ext)
+ (libraries wiki_suite_telemetry hermes_wiki_source_ext hermes_wiki_core hermes_wiki_iface hermes_wiki_include))
+
+(executable
+ (name test_wiki_datastore)
+ (modules test_wiki_datastore)
+ (libraries wiki_suite_telemetry hermes_wiki_datastore hermes_wiki_core hermes_wiki_query))

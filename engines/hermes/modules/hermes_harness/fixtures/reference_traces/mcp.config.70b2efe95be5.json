@@ -1,0 +1,28 @@
+{
+  "scenario_id": "mcp.config",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "13434f2a65e274214049838cef5a703000822f61c21efd5b93f962eefac9b4f3",
+  "trace": {
+    "results": {
+      "bearer_headers_shape": {
+        "Authorization": "Bearer ${MCP_SRV_API_KEY}"
+      },
+      "build_server_config_http_api_key": { "command": "" },
+      "env_key_sanitizes": "MCP_MY_SERVER_API_KEY",
+      "expand_install_dir_missing": {
+        "error": "manifest references ${INSTALL_DIR} but no install block exists"
+      },
+      "expand_install_dir_ok": { "ok": "/opt/x/bin" },
+      "parse_env_bad_name": { "error": "Invalid --env variable name '1BAD'" },
+      "parse_env_maxsplit": { "ok": { "BAZ": "a=b=c", "FOO": "bar" } },
+      "parse_env_no_equals": {
+        "error": "Invalid --env value 'no-equals-sign' (expected KEY=VALUE)"
+      },
+      "parse_env_value_not_stripped": { "ok": { "KEY": " value" } },
+      "strip_bearer_prefix": "abc123",
+      "strip_bearer_short": "abc"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "scenario_id": "chat.max_tokens",
+  "snapshot_digest": "70b2efe95be51e0658eb919b14168cff6b0a0a4f344652fcaecfc75543fa2cf6",
+  "reference_revision": "87fd0ed25210f86bbaf0cea0839be9e4e0b3869f",
+  "normalization": "hermes-parity-v1[choices[].message.id,created,extra_body.session_id,id,system_fingerprint,usage.total_time]",
+  "normalized_digest": "901c1ad81a741556538aad7f556ad7f73075b2e2fc9f6422f9319a648a18ae65",
+  "trace": {
+    "max_tokens": 256,
+    "messages": [ { "content": "hi", "role": "user" } ],
+    "model": "openai/gpt-5.4"
+  }
+}
