@@ -1,0 +1,122 @@
+# 20260905-1801-uos-zk-km-corpus-index.md
+# UOS Unified Knowledge Graph & Corpus Directory
+
+Tags: `#fractal-l0`, `#fractal-l1`, `#fractal-l2`, `#fractal-l3`, `#fractal-l4`, `#fractal-l5`, `#fractal-l6`, `#fractal-l7`, `#fractal-l8`, `#fractal-l9`, `#zk-adr`, `#zero-muda`, `#km-triad`, `#wiki-index`
+
+## §1.0 Living Knowledge Graph Topology
+
+The Unified Operational System (UOS) synthesizes knowledge artifacts from all language domains and development lineages into a unified directed hypergraph. Each node represents a verified theorem, architectural decision, code contract, or operational standard.
+
+```mermaid
+graph LR
+    subgraph WIKI["Hermes Wiki Plane"]
+        W_MASTER["[[wiki:20260905-1721-master-knowledge-graph]]"]
+        W_INDEX["[[wiki:20260905-1801-corpus-index]]"]
+        W_FRACTAL["[[wiki:fractal-atlas]]"]
+    end
+
+    subgraph ZK["ZigVM Zettelkasten Plane"]
+        Z_MOC["[[zk:moc-uos-unified-master]]"]
+        Z_ADRS["[[zk:ADR-001]] ... [[zk:ADR-016]]"]
+        Z_ALGEBRA["[[zk:algebra-driven-doctrine]]"]
+    end
+
+    subgraph EVIDENCE["C3I Evidence & Safety Plane"]
+        E_STAMP["STAMP / STPA Safety Lattices"]
+        E_LEAN["Lean 4 Formal Proofs"]
+        E_QUINT["Quint Parity Frontier"]
+        E_OTEL["W3C OTel / Correlated Logs"]
+    end
+
+    W_INDEX <--> Z_MOC
+    Z_MOC <--> Z_ADRS
+    Z_ADRS <--> E_STAMP
+    E_STAMP <--> E_LEAN
+    E_LEAN <--> E_QUINT
+    E_QUINT <--> W_MASTER
+    E_OTEL <--> W_INDEX
+```
+
+---
+
+## §2.0 Fractal Layer Taxonomy & Knowledge Coordinate Matrix
+
+Every artifact in the knowledge base is located by an explicit 13D trace coordinate:
+$$(L, C, F, S, I, P, M, \Phi)$$
+where:
+- $L \in \{L_0, L_1, \dots, L_9\}$ (Fractal Layer)
+- $C$ = Component Identity
+- $F$ = Feature Identity
+- $S$ = Surface Plane (Lustre Web / Wisp REST / ANSI TUI)
+- $I$ = Interaction Semantic
+- $P$ = Operational Plane (Control / Data / Evidence / Intelligence)
+- $M$ = Migration Disposition
+- $\Phi$ = Formal Verification Profile (Lean 4 / Quint / Gospel / Rete-UL)
+
+### Fractal Classification Table
+
+| Layer | Semantic Designation | Governing Specification | ZK Decision Record | Invariant & Proof |
+|---|---|---|---|---|
+| **$L_0$** | Microkernel Allocator & Constitutional Safety | `contracts/rules/km-wiki-zk-contract.md` | `[[zk:ADR-006]]`, `[[zk:ADR-016]]` | $\Psi_0$: Absolute root NVMe lock (`HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736"`) |
+| **$L_1$** | Term JIT & Atomic Operations | `apps/cepaf_gleam/src/cepaf_gleam/ha/trace_context.gleam` | `[[zk:ADR-002]]`, `[[zk:ADR-003]]` | $\Psi_1$: W3C 128-bit distributed trace correlation; NUL byte ingress trap |
+| **$L_2$** | Instruction Dispatch & Domain Components | `apps/cepaf_gleam/src/graphene_nif.erl` | `[[zk:ADR-008]]`, `[[zk:ADR-009]]` | $\Psi_2$: Zero-Muda Graphene exclusion; pure Erlang 2D vector calculation |
+| **$L_3$** | Byte Parity & State Transactions | `formal/lean/TwoLattice_STM.lean` | `[[zk:ADR-003]]` | $\Psi_3$: Single-writer exclusive lease; 100-byte SQLite header check |
+| **$L_4$** | STM Concurrency & System Runtime | `apps/cepaf_gleam/src/cepaf_gleam/substrate/file_system.gleam` | `[[zk:ADR-011]]` | $\Psi_4$: Non-interference of telemetry reads with WAL writes; Jujutsu monorepo isolation |
+| **$L_5$** | Actor Supervision & Cognitive OODA | `apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam` | `[[zk:ADR-001]]`, `[[zk:ADR-007]]` | $\Psi_5$: 2oo3 multi-agent consensus; OTP 29 supervisor isolation budgets |
+| **$L_6$** | Zero-Trust Gate & Security Interceptor | `engines/hermes/modules/hermes_harness/agent_dispatch_hook.ml` | `[[zk:ADR-002]]`, `[[zk:ADR-004]]` | $\Psi_6$: Authentic Cryptokit SHA-256 tool payload verification; SQL injection trap |
+| **$L_7$** | Probabilistic Telemetry & Federation | `contracts/evidence/c3i_fractal_observability_spec.json` | `[[zk:ADR-004]]`, `[[zk:ADR-005]]` | $\Psi_7$: Universal structured C3I JSON logging with non-zero trace ID |
+| **$L_8$** | Living Ontology & Knowledge Graph | `docs/wiki/20260905-1721-uos-master-knowledge-graph-and-living-ontology.md` | `[[zk:ADR-010]]`, `[[zk:ADR-014]]` | $\Psi_8$: Bidirectional transclusion completeness; 100% functional mapping |
+| **$L_9$** | Autonomous Federation & Self-Evolution | `governance/capability-inventory/wiki-zk-km.toml` | `[[zk:ADR-015]]`, `[[zk:ADR-016]]` | $\Psi_9$: Sovereign operational transfer; 17/17 EV-cycle doctor gates operational |
+
+---
+
+## §3.0 Cross-Language C3I Control Architecture Implementation
+
+The operational system coordinates across five distinct language tiers:
+
+1. **Gleam/OTP 29 (`apps/cepaf_gleam/`)**:
+   - High-level actor supervision (`uos_sup.gleam`), MVU presentation (Lustre), REST API (Wisp), ANSI terminal (TUI).
+   - Pure functional OODA state loops across all fractal layers.
+2. **Hermes OCaml 5.5 (`engines/hermes/`)**:
+   - Zero-trust MCP interception (`run_agent_dispatch_hook.exe`) using Cryptokit SHA-256.
+   - Wiki lifecycle, AST compilation, and TyXML rendering (`engines/hermes/modules/hermes_wiki`).
+   - Differential parity testing and honest skip telemetry reporting (`test_quint_frontier.ml`).
+3. **Pure Erlang Engine (`apps/cepaf_gleam/src/graphene_nif.erl`)**:
+   - Zero-Muda 2D vector mathematics, polygon transforms, and SVG pipeline.
+   - Zero C/Rust NIF shared libraries loaded; 100% pure functional BEAM VM execution.
+4. **Rust / Kubernetes Safety Controller (`ops/kubernetes/nas-k8s-lab/`)**:
+   - Storage safety interlock locking root NVMe serial `HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736"`.
+   - Library-level invariant enforcement in `kube_apply::apply_all`.
+5. **Modular MAX Worker (`services/inference/max/`)**:
+   - Isolated AI inference worker running under supervised stdio pipes.
+
+---
+
+## §4.0 Bi-Directional Transclusion Registry
+
+- Permanent MOC: `[[zk:20260905-1801-moc-uos-unified-master]]`
+- ADR Directory:
+  - `[[zk:ADR-001]]` Closed Rete Fact Schema
+  - `[[zk:ADR-002]]` Embedded NUL Byte Trap
+  - `[[zk:ADR-003]]` 100-Byte SQLite Header
+  - `[[zk:ADR-004]]` Persistent Zenoh Session
+  - `[[zk:ADR-005]]` Dual-Host Tailnet Topology
+  - `[[zk:ADR-006]]` Twelve-Pillar Fractal Architecture
+  - `[[zk:ADR-007]]` Tripartite Cross-Agent Review
+  - `[[zk:ADR-008]]` Codebase Unification Strategy
+  - `[[zk:ADR-009]]` Functional Relocation into Gleam
+  - `[[zk:ADR-010]]` Seven-Level Fractal Granularity
+  - `[[zk:ADR-011]]` Tripartite Surface Parity
+  - `[[zk:ADR-012]]` Four-Cycle Tripartite Audit
+  - `[[zk:ADR-013]]` Multi-Domain Verification
+  - `[[zk:ADR-014]]` Comprehensive KPI Integration
+  - `[[zk:ADR-015]]` Sovereign Operational Transfer
+  - `[[zk:ADR-016]]` Master Fractal Ratification
+- Formal Proofs:
+  - `[[zk:TwoLattice_STM]]` (`formal/lean/TwoLattice_STM.lean`)
+  - `[[zk:Traceability]]` (`formal/lean/Traceability.lean`)
+  - `[[zk:parity_frontier]]` (`formal/quint/parity_frontier.qnt`)
+- Rule Contracts:
+  - `[[wiki:km-wiki-zk-contract]]` (`contracts/rules/km-wiki-zk-contract.md`)
+  - `[[wiki:dmc-tcm-mandate]]` (`contracts/rules/dmc-tcm-mandate.md`)
+  - `[[wiki:timestamp-mandate]]` (`contracts/rules/timestamp-mandate.md`)

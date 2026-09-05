@@ -1,0 +1,141 @@
+---
+id: e973455b-06ed-4c23-0880-bc7e889342a4
+status: draft
+last_verified: 2026-08-05
+verified_by: harness
+---
+# MoC: Agent action audit log (2026) (Notion)
+
+Deterministic map of content for the **features--notion-agent-audit** community (125 notes), drafted by the harness from the live link graph (LPA communities, journal 20260729-1056 §7.13). Regenerated only when the membership hash changes; promote by editing `status:`.
+
+membership: e121dee04cb047a47c4311456f8c23d1
+
+## Members (by connectedness)
+
+- [[features--readme|Feature database — Notion & Obsidian coverage]] · degree 240
+- [[skills--wiki-design--skill|Wiki design — Notion as the reference]] · degree 124
+- [[skills--zk-knowledge-base--skill|The ZK knowledge base — the harness's self-model]] · degree 117
+- [[journal--20260729-zk-reference-formalization|ZK reference & formalization arc — feature DB, coverage algebra, the unified spec (2026-07-29)]] · degree 10
+- [[features--notion-site-fractal|Notion site fractal — notion.com's own IA mapped to our surfaces]] · degree 8
+- [[journal--20260729-zk-audit-coherence-maintenance|ZK steady-state maintenance №1 — zk-audit-coherence (2026-07-29)]] · degree 8
+- [[journal--20260729-1056-zk-wiki-mcp-ai-architecture-recommendations|ZK/Wiki System Architecture: Agentic MCP & AI Integration]] · degree 7
+- [[features--notion-ai-block|AI block (Notion)]] · degree 5
+- [[features--notion-ai-generation|Notion AI: writing / autofill / translate / meeting notes (Notion)]] · degree 5
+- [[features--notion-ai-qna|Notion AI: Q&A over workspace (Notion)]] · degree 5
+- [[features--notion-api|Public API & integrations (Notion)]] · degree 5
+- [[features--notion-apps-offline|Desktop/mobile apps · offline (Notion)]] · degree 5
+- [[features--notion-backlinks-panel|Backlinks section (Notion)]] · degree 5
+- [[features--notion-bookmark|Bookmark / link preview (Notion)]] · degree 5
+- [[features--notion-breadcrumb|Breadcrumb (Notion)]] · degree 5
+- [[features--notion-bulleted-list|Bulleted list (Notion)]] · degree 5
+- [[features--notion-button-automation|Button (automation block) (Notion)]] · degree 5
+- [[features--notion-callout|Callout (Notion)]] · degree 5
+- [[features--notion-code-block|Code block (Notion)]] · degree 5
+- [[features--notion-columns|Columns / layout (Notion)]] · degree 5
+- [[features--notion-comments|Comments & discussions (Notion)]] · degree 5
+- [[features--notion-custom-emoji|Custom emoji (Notion)]] · degree 5
+- [[features--notion-db-automations|Database automations (Notion)]] · degree 5
+- [[features--notion-db-board|Database: Board (kanban) (Notion)]] · degree 5
+- [[features--notion-db-calendar|Database: Calendar view (Notion)]] · degree 5
+- [[features--notion-db-chart|Database: Charts (Notion)]] · degree 5
+- [[features--notion-db-filter-sort|Filters & sorts (Notion)]] · degree 5
+- [[features--notion-db-forms|Forms (Notion)]] · degree 5
+- [[features--notion-db-gallery|Database: Gallery view (Notion)]] · degree 5
+- [[features--notion-db-group|Grouping / sub-groups (Notion)]] · degree 5
+- [[features--notion-db-linked-views|Linked views of databases (Notion)]] · degree 5
+- [[features--notion-db-list|Database: List view (Notion)]] · degree 5
+- [[features--notion-db-subitems|Sub-items & dependencies (Notion)]] · degree 5
+- [[features--notion-db-table|Database: Table view (Notion)]] · degree 5
+- [[features--notion-db-templates|Database templates (+recurring) (Notion)]] · degree 5
+- [[features--notion-db-timeline|Database: Timeline view (Notion)]] · degree 5
+- [[features--notion-design-language|Notion design language — look, feel, and navigation cues]] · degree 5
+- [[features--notion-divider|Divider (Notion)]] · degree 5
+- [[features--notion-duplicate-move|Duplicate / move (Notion)]] · degree 5
+- [[features--notion-ecosystem-apps|Web Clipper · Notion Calendar · Notion Mail (Notion)]] · degree 5
+- [[features--notion-embeds|Embeds (Figma, Maps, PDF, tweets…) (Notion)]] · degree 5
+- [[features--notion-emoji|Emoji (Notion)]] · degree 5
+- [[features--notion-enterprise|SSO · SCIM · audit log (Notion)]] · degree 5
+- [[features--notion-equation|Equation (KaTeX) (Notion)]] · degree 5
+- [[features--notion-export|Export (md/html/pdf/csv) (Notion)]] · degree 5
+- [[features--notion-favorites|Favorites & recents (Notion)]] · degree 5
+- [[features--notion-headings|Headings 1–3 (+ toggle headings) (Notion)]] · degree 5
+- [[features--notion-icons-covers|Page icons & covers (Notion)]] · degree 5
+- [[features--notion-import|Import (Notion)]] · degree 5
+- [[features--notion-locked-pages|Locked pages (Notion)]] · degree 5
+- [[features--notion-media|Image · video · audio · file (Notion)]] · degree 5
+- [[features--notion-mention|Mentions (@page @person @date) (Notion)]] · degree 5
+- [[features--notion-nested-pages|Nested pages (Notion)]] · degree 5
+- [[features--notion-notifications|Notifications / inbox (Notion)]] · degree 5
+- [[features--notion-numbered-list|Numbered list (Notion)]] · degree 5
+- [[features--notion-ontology|Notion ontology — the concept model]] · degree 5
+- [[features--notion-page-analytics|Page analytics (Notion)]] · degree 5
+- [[features--notion-page-history|Page history / versions (Notion)]] · degree 5
+- [[features--notion-page-templates|Page templates (Notion)]] · degree 5
+- [[features--notion-paragraph|Paragraph text (Notion)]] · degree 5
+- [[features--notion-permissions|Sharing & permissions (guests, groups) (Notion)]] · degree 5
+- [[features--notion-prop-audit|Property: Created/Edited time & by (Notion)]] · degree 5
+- [[features--notion-prop-date|Property: Date (Notion)]] · degree 5
+- [[features--notion-prop-files|Property: Files & media (Notion)]] · degree 5
+- [[features--notion-prop-formula|Property: Formula (Notion)]] · degree 5
+- [[features--notion-prop-multiselect|Property: Multi-select (Notion)]] · degree 5
+- [[features--notion-prop-person|Property: Person (Notion)]] · degree 5
+- [[features--notion-prop-relation|Property: Relation (Notion)]] · degree 5
+- [[features--notion-prop-rollup|Property: Rollup (Notion)]] · degree 5
+- [[features--notion-prop-scalar|Property: Number / URL / Email / Phone (Notion)]] · degree 5
+- [[features--notion-prop-select|Property: Select / Status (Notion)]] · degree 5
+- [[features--notion-prop-uid|Property: Unique ID (Notion)]] · degree 5
+- [[features--notion-publish-sites|Publish to web / Notion Sites (Notion)]] · degree 5
+- [[features--notion-quick-find|Quick Find (⌘K) (Notion)]] · degree 5
+- [[features--notion-quote|Quote (Notion)]] · degree 5
+- [[features--notion-realtime-coedit|Real-time co-editing (Notion)]] · degree 5
+- [[features--notion-simple-table|Simple table (Notion)]] · degree 5
+- [[features--notion-synced-block|Synced block (Notion)]] · degree 5
+- [[features--notion-teamspaces|Teamspaces (Notion)]] · degree 5
+- [[features--notion-template-button|Template button (Notion)]] · degree 5
+- [[features--notion-toc-block|Table of contents (Notion)]] · degree 5
+- [[features--notion-todo-checkbox|To-do checkbox (Notion)]] · degree 5
+- [[features--notion-toggle-list|Toggle list (Notion)]] · degree 5
+- [[features--notion-trash-restore|Trash & restore (Notion)]] · degree 5
+- [[features--notion-typography|Typography toggles (serif/mono, small, full-width) (Notion)]] · degree 5
+- [[features--notion-webhooks|Webhooks (Notion)]] · degree 5
+- [[features--notion-wiki-verification|Wiki verification (owner · verify · expiry) (Notion)]] · degree 5
+- [[features--obsidian-backlinks-obs|Backlinks pane (Obsidian)]] · degree 5
+- [[features--obsidian-bases|Bases (2025 core database) (Obsidian)]] · degree 5
+- [[features--obsidian-block-refs|Block references ^id (Obsidian)]] · degree 5
+- [[features--obsidian-bookmarks-obs|Bookmarks / starred (Obsidian)]] · degree 5
+- [[features--obsidian-canvas|Canvas (Obsidian)]] · degree 5
+- [[features--obsidian-daily-notes|Daily notes (Obsidian)]] · degree 5
+- [[features--obsidian-dataview|Dataview / Datacore (plugin) (Obsidian)]] · degree 5
+- [[features--obsidian-embeds-obs|Embeds — note / block / heading transclusion (Obsidian)]] · degree 5
+- [[features--obsidian-excalidraw|Excalidraw (plugin) (Obsidian)]] · degree 5
+- [[features--obsidian-footnotes|Footnotes (Obsidian)]] · degree 5
+- [[features--obsidian-graph-analysis|Graph analysis plugins (Obsidian)]] · degree 5
+- [[features--obsidian-graph-view|Graph view (+ local graph) (Obsidian)]] · degree 5
+- [[features--obsidian-kanban-plugin|Kanban (plugin) (Obsidian)]] · degree 5
+- [[features--obsidian-local-vault|Local-first markdown vault (Obsidian)]] · degree 5
+- [[features--obsidian-math-obs|Math (MathJax) (Obsidian)]] · degree 5
+- [[features--obsidian-mermaid|Mermaid diagrams (Obsidian)]] · degree 5
+- [[features--obsidian-outline|Outline pane (Obsidian)]] · degree 5
+- [[features--obsidian-properties-obs|Properties (frontmatter UI) (Obsidian)]] · degree 5
+- [[features--obsidian-search-operators|Search operators (Obsidian)]] · degree 5
+- [[features--obsidian-spaced-repetition|Spaced repetition (plugin) (Obsidian)]] · degree 5
+- [[features--obsidian-sync-publish|Obsidian Sync / Publish (paid) (Obsidian)]] · degree 5
+- [[features--obsidian-tags-obs|Tags (nested) (Obsidian)]] · degree 5
+- [[features--obsidian-templates-obs|Templates / Templater (Obsidian)]] · degree 5
+- [[features--obsidian-themes|Themes / CSS snippets (Obsidian)]] · degree 5
+- [[features--obsidian-unlinked-mentions|Unlinked mentions (Obsidian)]] · degree 5
+- [[features--obsidian-uri-mobile|URI scheme · mobile apps (Obsidian)]] · degree 5
+- [[features--obsidian-version-history-obs|Version history (Sync) (Obsidian)]] · degree 5
+- [[features--obsidian-wikilinks|Wikilinks + aliases (Obsidian)]] · degree 5
+- [[features--obsidian-word-count|Word count (Obsidian)]] · degree 5
+- [[features--notion-agent-audit|Agent action audit log (2026) (Notion)]] · degree 4
+- [[features--notion-agents|Notion Agents / Workers (2026) (Notion)]] · degree 4
+- [[features--notion-custom-agents-mcp|Custom Agents + MCP connections (2026) (Notion)]] · degree 4
+- [[features--notion-html-block|Interactive HTML blocks (2026) (Notion)]] · degree 4
+- [[features--notion-notion-cli|Notion CLI (2026, for devs & coding agents) (Notion)]] · degree 4
+- [[features--notion-sync-connectors|Sync any data source (connectors, Beta 2026) (Notion)]] · degree 4
+- [[features--obsidian-callouts-obs|Callouts (> [!note]) (Obsidian)]] · degree 4
+- [[journal--20260729-zk-web-surfacing|ZK web surfacing — every capability, one click away (2026-07-29)]] · degree 4
+- [[system-fractal-principles|Current System Concepts and Principles]] · degree 4
+
+`#anchors` `#area-blocks` `#area-db` `#area-pages` `#area-platform` `#area-plugins` `#area-vault` `#cov-gap` `#cov-na` `#cov-native` `#cov-partial` `#cov-strong` `#design` `#feature` `#feature-db` `#formal` `#journal` `#maintenance` `#notion-2026` `#ontology` `#src-notion` `#src-obsidian` `#tag` `#tags` `#wiki` `#zettelkasten`

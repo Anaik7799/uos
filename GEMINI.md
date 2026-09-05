@@ -65,6 +65,55 @@ OTel spans are transported over Zenoh topics `indrajaal/otel/spans/**` for distr
 
 ---
 
+## §2.7 Cross-Language Implementation of the C3I Control
+
+#### Cross-Language Implementation of the C3I Control
+
+The Unified Operational System distributes C3I control functions across explicit language domains according to safety, formal verification, and performance characteristics:
+
+1. **Gleam/OTP (Supervision, Intent, State Machines & OODA Loops)**:
+   - **Supervision**: `uos_sup.gleam` root 4-domain supervisor (Apps, Engines, Services, Intelligence) with strict isolation and child restart budgets.
+   - **Controllers**: Pure functional Gleam implementations of Prajna circuit breakers (`prajna/circuit_breaker.gleam`), Lyapunov windowed trend detectors (`ha/lyapunov_proof.gleam`), 2oo3 constitutional consensus (`fractal/l0_constitutional.gleam`), and dead-man's-switch freshness monitors (`ha/freshness_monitor.gleam`).
+   - **Telemetry**: Universal structured C3I JSON logging via `correlated_log.gleam` with 128-bit W3C OTel `trace_id` and fractal layer annotations ($L_0 \dots L_9$).
+
+2. **Hermes OCaml (Evidence, Bounded Analysis, Differential Oracles & Interception)**:
+   - **Evidence Store**: Authoritative SQLite WAL append-only ledgers and differential parity comparison (`test_parity_algebra.exe`, `test_parity_compare.exe`).
+   - **Zero-Trust Interceptor**: `run_agent_dispatch_hook.exe` validating MCP tool payloads with authentic `Cryptokit` SHA-256 digestion, trapping embedded NUL bytes (code `-2`) and raw SQL injections (code `-3`).
+   - **Formal Rules**: Gospel contracts, bounded Z3 solver workers, and Rete-UL forward-chaining rule engines evaluated against simple independent reference oracles.
+
+3. **ZigVM (Deterministic Execution Kernel & Storage Engine)**:
+   - **Kernel**: Pure Zig deterministic runtime engine (`engines/zigvm`).
+   - **VFS**: Descriptor-relative, race-free, symlink-aware filesystem abstraction.
+   - **Memory**: Linear allocation arenas and lockless ring buffers with zero garbage collection overhead.
+
+4. **Rust / NIFs (Bounded Kernels & Hardware Safety Interlocks)**:
+   - **Bounded Kernels**: Short, deterministic, non-blocking C-ABI functions under `native/`.
+   - **Hardware Safety**: Production Kubernetes and Rook-Ceph storage controller (`ops/kubernetes/nas-k8s-lab/src/spec.rs`) strictly locking host OS NVMe serial `HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736"` against OSD wiping or allocation.
+
+5. **Modular MAX / Mojo (Isolated AI Inference Tier)**:
+   - **Daemon**: Python is strictly quarantined to `services/inference/max/max_worker.py`.
+   - **Protocol**: Length-delimited JSON-RPC over standard I/O pipes supervised by OTP.
+
+6. **Lean 4 & Quint (Mathematical & Temporal Authority)**:
+   - **13D Traceability**: `formal/lean/Traceability.lean` proves coordinate conservation $\Delta \vec{\mathcal{T}}_{13} \equiv \mathbf{0}$ and fail-closed indicator $\mathbb{I}(\text{Trust})$.
+   - **Two-Lattice STM**: `formal/lean/TwoLattice_STM.lean` proves telemetry observation non-interference and single-writer exclusive lease mutex.
+   - **Quint Parity**: `formal/quint/parity_frontier.qnt` simulates intent closure invariants.
+
+---
+
+## §2.8 Knowledge Management, Wiki & Zettelkasten Architecture (`#km-triad`)
+
+The UOS knowledge system unifies three foundational corpora into an integrated, bidirectionally linked living knowledge graph:
+1. **Hermes Wiki Engine** (`engines/hermes/modules/hermes_wiki`): AST parsing, Gospel-specified contracts, transclusion (`[[wiki:...]]`), vector similarity, and TyXML rendering. Master index at `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`.
+2. **ZigVM Zettelkasten (ZK)** (`docs/zk/`): Permanent architectural decision records (`ADR-001` through `ADR-016`), Maps of Content (`[[zk:20260905-1801-moc-uos-unified-master]]`), and fractal design invariants (`[[zk:...]]`).
+3. **C3I Living Ontology & Evidence Plane** (`docs/wiki/`, `governance/`): STAMP/STPA safety lattices, SQLite living catalogs, and 13D trace coordinates.
+
+**Graphene Policy**: Graphene is NOT required. All 2D vector mathematics, polygon transforms, and SVG state rendering are implemented in pure Erlang (`apps/cepaf_gleam/src/graphene_nif.erl`) and Hermes OCaml, upholding Zero-Muda compliance (0 Bevy, 0 Graphite, 0 foreign NIF shared libraries).
+
+**Mandatory Timestamp Rule**: All newly generated documentation, wiki articles, journals, and handovers MUST carry the canonical `YYYYMMDD-HHSS-` timestamp prefix (e.g. `20260905-1801-`), verified by `tools/uos timestamp-check`.
+
+---
+
 ## §3.0 Triple-Interface Mandate (SC-GLM-UI-001)
 
 Every new page, dashboard, or interactive component MUST be implemented THREE times:

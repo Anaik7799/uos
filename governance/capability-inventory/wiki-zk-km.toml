@@ -27,6 +27,32 @@ source = "uos"
 path = "docs/wiki"
 state = "admitted"
 specification = "docs/wiki/20260905-1721-uos-master-knowledge-graph-and-living-ontology.md"
+corpus_index = "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+
+[[km_root]]
+id = "KM-UOS-ZK"
+source = "uos"
+path = "docs/zk"
+state = "admitted"
+master_moc = "docs/zk/20260905-1801-moc-uos-unified-master.md"
+adrs = [
+  "ADR-001-closed-rete-fact-schema",
+  "ADR-002-embedded-nul-ingress-trap",
+  "ADR-003-pure-100-byte-sqlite-header",
+  "ADR-004-supervised-persistent-zenoh-session",
+  "ADR-005-dual-host-topology-tailnet-wiki",
+  "ADR-006-twelve-pillar-fractal-architecture",
+  "ADR-007-tripartite-cross-agent-review",
+  "ADR-008-nas-1-codebase-unification-strategy",
+  "ADR-009-functional-relocation-into-gleam",
+  "ADR-010-seven-level-fractal-granularity",
+  "ADR-011-tripartite-surface-parity",
+  "ADR-012-four-cycle-deep-tripartite-audit",
+  "ADR-013-multi-domain-deep-verification",
+  "ADR-014-comprehensive-kpi-integration-closure",
+  "ADR-015-master-codex-session-handover",
+  "ADR-016-master-fractal-ratification"
+]
 
 [wiki_tags]
 fractal_layers = ["#fractal-l0", "#fractal-l1", "#fractal-l2", "#fractal-l3", "#fractal-l4", "#fractal-l5", "#fractal-l6", "#fractal-l7", "#fractal-l8", "#fractal-l9"]
