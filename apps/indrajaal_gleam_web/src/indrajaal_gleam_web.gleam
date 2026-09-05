@@ -3,6 +3,7 @@ import cepaf_gleam/ui/lustre/knowledge_explorer
 import cepaf_gleam/ui/lustre/pi_startup_visualizer
 import cepaf_gleam/ui/lustre/zk_decision_matrix
 import cepaf_gleam/ui/wisp/router as c3i_router
+import cepaf_gleam/verification/unified_fractal_web_verifier as ufwv
 import gleam/bit_array
 import gleam/bytes_tree
 import gleam/erlang/process
@@ -47,6 +48,13 @@ pub fn main() {
       ["api", "verify", "checks"] -> {
         let json_body =
           "{\"status\":\"ok\",\"contract\":\"SC-ROCHA-001\",\"domains_passing\":5,\"checks_total\":18,\"checks_passing\":18,\"ev_cycles_total\":20,\"ev_cycles_passing\":20,\"rocha_tagged_docs\":43,\"tailscale_fqdn\":\"http://nas-1.tail55d152.ts.net:4100\",\"zero_muda\":true,\"storage_safety\":true,\"dal_a\":\"SIL-6\"}"
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["api", "verify", "features"] -> {
+        let json_body = ufwv.features_to_json_telemetry()
         response.new(200)
         |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
         |> response.prepend_header("content-type", "application/json")
@@ -138,6 +146,32 @@ pub fn main() {
           relative_file,
           "Comprehensive Verification Checklist: " <> relative_file,
           "checklist",
+        )
+      }
+      ["fractal-matrix", ..rest] -> {
+        let relative_file = case rest {
+          [] ->
+            "docs/design/20260905-2148-uos-unified-fractal-web-and-site-verification-matrix.md"
+          [file] -> "docs/design/" <> file
+          parts -> "docs/design/" <> string.join(parts, "/")
+        }
+        render_repo_file_response(
+          relative_file,
+          "Unified Fractal Verification Matrix: " <> relative_file,
+          "fractal-matrix",
+        )
+      }
+      ["verify-matrix", ..rest] -> {
+        let relative_file = case rest {
+          [] ->
+            "docs/design/20260905-2148-uos-unified-fractal-web-and-site-verification-matrix.md"
+          [file] -> "docs/design/" <> file
+          parts -> "docs/design/" <> string.join(parts, "/")
+        }
+        render_repo_file_response(
+          relative_file,
+          "Unified Fractal Verification Matrix: " <> relative_file,
+          "fractal-matrix",
         )
       }
       ["wiki", ..rest] -> {
@@ -425,6 +459,12 @@ fn render_nav(active: String) -> String {
     False -> ""
   }
   <> " style='color:#f2cc60;font-weight:bold'>Verification Checklist</a>
+    <a href='/fractal-matrix' "
+  <> case active == "fractal-matrix" {
+    True -> "class='active'"
+    False -> ""
+  }
+  <> " style='color:#38bdf8;font-weight:bold'>Fractal Verification Matrix</a>
     <a href='/docs/' "
   <> case active == "docs" {
     True -> "class='active'"

@@ -14,6 +14,7 @@
 import cepaf_gleam/verification/unified_fractal_web_verifier as ufwv
 import gleam/dict
 import gleam/list
+import gleam/string
 import gleeunit/should
 
 // -----------------------------------------------------------------------------
@@ -271,4 +272,301 @@ pub fn master_full_fractal_verification_runner_test() {
   report.failed_checks |> should.equal(0)
   report.layers_evaluated |> should.equal(8)
   report.is_ratified |> should.be_true()
+}
+
+// -----------------------------------------------------------------------------
+// Collation & Integration: 4-Tensor Completeness Tests
+// -----------------------------------------------------------------------------
+
+pub fn collation_covers_all_36_features_test() {
+  let features = ufwv.all_collated_features()
+  list.length(features) |> should.equal(36)
+
+  // 100% of collated features must be in Pass state
+  list.each(features, fn(f) {
+    case f.status {
+      ufwv.Pass -> Nil
+      ufwv.Fail(_reason) -> should.fail()
+    }
+  })
+}
+
+pub fn collation_covers_all_8_fractal_layers_test() {
+  let l0 = ufwv.features_by_layer(ufwv.L0Constitutional)
+  let l1 = ufwv.features_by_layer(ufwv.L1Atomic)
+  let l2 = ufwv.features_by_layer(ufwv.L2Component)
+  let l3 = ufwv.features_by_layer(ufwv.L3Transaction)
+  let l4 = ufwv.features_by_layer(ufwv.L4System)
+  let l5 = ufwv.features_by_layer(ufwv.L5Cognitive)
+  let l6 = ufwv.features_by_layer(ufwv.L6Ecosystem)
+  let l7 = ufwv.features_by_layer(ufwv.L7Federation)
+
+  { list.length(l0) >= 4 } |> should.be_true()
+  { list.length(l1) >= 4 } |> should.be_true()
+  { list.length(l2) >= 6 } |> should.be_true()
+  { list.length(l3) >= 4 } |> should.be_true()
+  { list.length(l4) >= 6 } |> should.be_true()
+  { list.length(l5) >= 4 } |> should.be_true()
+  { list.length(l6) >= 4 } |> should.be_true()
+  { list.length(l7) >= 4 } |> should.be_true()
+}
+
+pub fn collation_covers_all_6_feature_vectors_test() {
+  let f1 = ufwv.features_by_vector(ufwv.F1SecurityContainment)
+  let f2 = ufwv.features_by_vector(ufwv.F2NavigabilityReachability)
+  let f3 = ufwv.features_by_vector(ufwv.F3RenderingErgonomics)
+  let f4 = ufwv.features_by_vector(ufwv.F4ProtocolTelemetry)
+  let f5 = ufwv.features_by_vector(ufwv.F5CyberneticsProofs)
+  let f6 = ufwv.features_by_vector(ufwv.F6KnowledgeNetwork)
+
+  { list.length(f1) >= 4 } |> should.be_true()
+  { list.length(f2) >= 4 } |> should.be_true()
+  { list.length(f3) >= 7 } |> should.be_true()
+  { list.length(f4) >= 6 } |> should.be_true()
+  { list.length(f5) >= 5 } |> should.be_true()
+  { list.length(f6) >= 5 } |> should.be_true()
+}
+
+pub fn collation_covers_all_5_verification_surfaces_test() {
+  let s_browser = ufwv.features_by_surface(ufwv.SurfaceBrowser)
+  let s_tui = ufwv.features_by_surface(ufwv.SurfaceTUI)
+  let s_api = ufwv.features_by_surface(ufwv.SurfaceAPI)
+  let s_bus = ufwv.features_by_surface(ufwv.SurfaceBus)
+  let s_cli = ufwv.features_by_surface(ufwv.SurfaceCLI)
+
+  { list.length(s_browser) >= 12 } |> should.be_true()
+  { list.length(s_tui) >= 2 } |> should.be_true()
+  { list.length(s_api) >= 8 } |> should.be_true()
+  { list.length(s_bus) >= 1 } |> should.be_true()
+  { list.length(s_cli) >= 6 } |> should.be_true()
+}
+
+pub fn collation_covers_all_3_engines_test() {
+  let zigvm = ufwv.features_by_engine(ufwv.EngineZigVM)
+  let c3i = ufwv.features_by_engine(ufwv.EngineC3I)
+  let indrajaal = ufwv.features_by_engine(ufwv.EngineIndrajaal)
+
+  { list.length(zigvm) >= 7 } |> should.be_true()
+  { list.length(c3i) >= 20 } |> should.be_true()
+  { list.length(indrajaal) >= 8 } |> should.be_true()
+}
+
+pub fn feature_tracking_table_markdown_generation_test() {
+  let table = ufwv.generate_feature_tracking_table()
+  let has_header = string.contains(table, "| ID | Feature Name |")
+  let has_pass = string.contains(table, "🟢 PASS")
+  let has_drive_feat = string.contains(table, "FEAT-L0-01")
+
+  has_header |> should.be_true()
+  has_pass |> should.be_true()
+  has_drive_feat |> should.be_true()
+}
+
+pub fn feature_json_telemetry_generation_test() {
+  let json = ufwv.features_to_json_telemetry()
+  let has_total = string.contains(json, "\"total_features\":36")
+  let has_passing = string.contains(json, "\"passing_features\":36")
+  let has_ok = string.contains(json, "\"status\":\"ok\"")
+
+  has_total |> should.be_true()
+  has_passing |> should.be_true()
+  has_ok |> should.be_true()
+}
+
+// =============================================================================
+// Wiki, ZK & KM Verification Tests
+// =============================================================================
+
+pub fn wiki_ast_parsing_verification_test() {
+  let ok_ast = ufwv.verify_wiki_ast_parsing(True, True)
+  ok_ast.status |> should.equal(ufwv.Pass)
+
+  let bad_ast = ufwv.verify_wiki_ast_parsing(False, True)
+  case bad_ast.status {
+    ufwv.Fail(_) -> Nil
+    ufwv.Pass -> should.fail()
+  }
+}
+
+pub fn gospel_specification_verification_test() {
+  let ok_gospel = ufwv.verify_gospel_specification(True, True)
+  ok_gospel.status |> should.equal(ufwv.Pass)
+
+  let bad_gospel = ufwv.verify_gospel_specification(False, True)
+  case bad_gospel.status {
+    ufwv.Fail(_) -> Nil
+    ufwv.Pass -> should.fail()
+  }
+}
+
+pub fn transclusion_engine_verification_test() {
+  let ok_trans = ufwv.verify_transclusion_engine(4, 0)
+  ok_trans.status |> should.equal(ufwv.Pass)
+
+  let cycle_trans = ufwv.verify_transclusion_engine(4, 1)
+  case cycle_trans.status {
+    ufwv.Fail(_) -> Nil
+    ufwv.Pass -> should.fail()
+  }
+
+  let deep_trans = ufwv.verify_transclusion_engine(12, 0)
+  case deep_trans.status {
+    ufwv.Fail(_) -> Nil
+    ufwv.Pass -> should.fail()
+  }
+}
+
+pub fn pagerank_graph_science_verification_test() {
+  let ok_ppr = ufwv.verify_pagerank_graph_science(0.85, 0.00001)
+  ok_ppr.status |> should.equal(ufwv.Pass)
+
+  let bad_ppr = ufwv.verify_pagerank_graph_science(0.50, 0.00001)
+  case bad_ppr.status {
+    ufwv.Fail(_) -> Nil
+    ufwv.Pass -> should.fail()
+  }
+}
+
+pub fn zk_decision_matrix_verification_test() {
+  let ok_zk = ufwv.verify_zk_decision_matrix(16, 12)
+  ok_zk.status |> should.equal(ufwv.Pass)
+
+  let deficit_zk = ufwv.verify_zk_decision_matrix(15, 12)
+  case deficit_zk.status {
+    ufwv.Fail(_) -> Nil
+    ufwv.Pass -> should.fail()
+  }
+}
+
+pub fn rocha_biosemiotics_indexing_verification_test() {
+  let ok_rocha = ufwv.verify_rocha_biosemiotic_indexing(True, 43)
+  ok_rocha.status |> should.equal(ufwv.Pass)
+
+  let bad_rocha = ufwv.verify_rocha_biosemiotic_indexing(False, 43)
+  case bad_rocha.status {
+    ufwv.Fail(_) -> Nil
+    ufwv.Pass -> should.fail()
+  }
+}
+
+// =============================================================================
+// 145-Feature ZigVM Wiki/ZK/KM & 181-Feature Unified System Tests
+// =============================================================================
+
+pub fn wiki_zk_km_145_features_mapping_test() {
+  let zf_features = ufwv.all_wiki_zk_km_fractal_features()
+  list.length(zf_features) |> should.equal(145)
+
+  // Every mapped feature has valid status Pass
+  let all_pass =
+    list.all(zf_features, fn(f) {
+      case f.status {
+        ufwv.Pass -> True
+        ufwv.Fail(_) -> False
+      }
+    })
+  all_pass |> should.be_true()
+}
+
+pub fn unified_system_181_features_collation_test() {
+  let unified = ufwv.all_unified_system_features()
+  list.length(unified) |> should.equal(181)
+
+  // All 181 features pass without error
+  let all_pass =
+    list.all(unified, fn(f) {
+      case f.status {
+        ufwv.Pass -> True
+        ufwv.Fail(_) -> False
+      }
+    })
+  all_pass |> should.be_true()
+}
+
+pub fn unified_system_layer_coverage_test() {
+  let l0 = ufwv.unified_features_by_layer(ufwv.L0Constitutional)
+  let l1 = ufwv.unified_features_by_layer(ufwv.L1Atomic)
+  let l2 = ufwv.unified_features_by_layer(ufwv.L2Component)
+  let l3 = ufwv.unified_features_by_layer(ufwv.L3Transaction)
+  let l4 = ufwv.unified_features_by_layer(ufwv.L4System)
+  let l5 = ufwv.unified_features_by_layer(ufwv.L5Cognitive)
+  let l6 = ufwv.unified_features_by_layer(ufwv.L6Ecosystem)
+  let l7 = ufwv.unified_features_by_layer(ufwv.L7Federation)
+
+  { list.length(l0) >= 10 } |> should.be_true()
+  { list.length(l1) >= 10 } |> should.be_true()
+  { list.length(l2) >= 15 } |> should.be_true()
+  { list.length(l3) >= 60 } |> should.be_true()
+  { list.length(l4) >= 10 } |> should.be_true()
+  { list.length(l5) >= 15 } |> should.be_true()
+  { list.length(l6) >= 20 } |> should.be_true()
+  { list.length(l7) >= 10 } |> should.be_true()
+}
+
+pub fn unified_system_vector_coverage_test() {
+  let v1 = ufwv.unified_features_by_vector(ufwv.F1SecurityContainment)
+  let v2 = ufwv.unified_features_by_vector(ufwv.F2NavigabilityReachability)
+  let v3 = ufwv.unified_features_by_vector(ufwv.F3RenderingErgonomics)
+  let v4 = ufwv.unified_features_by_vector(ufwv.F4ProtocolTelemetry)
+  let v5 = ufwv.unified_features_by_vector(ufwv.F5CyberneticsProofs)
+  let v6 = ufwv.unified_features_by_vector(ufwv.F6KnowledgeNetwork)
+
+  { list.length(v1) >= 10 } |> should.be_true()
+  { list.length(v2) >= 15 } |> should.be_true()
+  { list.length(v3) >= 25 } |> should.be_true()
+  { list.length(v4) >= 10 } |> should.be_true()
+  { list.length(v5) >= 10 } |> should.be_true()
+  { list.length(v6) >= 90 } |> should.be_true()
+}
+
+pub fn unified_system_surface_coverage_test() {
+  let s_browser = ufwv.unified_features_by_surface(ufwv.SurfaceBrowser)
+  let s_tui = ufwv.unified_features_by_surface(ufwv.SurfaceTUI)
+  let s_api = ufwv.unified_features_by_surface(ufwv.SurfaceAPI)
+  let s_bus = ufwv.unified_features_by_surface(ufwv.SurfaceBus)
+  let s_cli = ufwv.unified_features_by_surface(ufwv.SurfaceCLI)
+
+  { list.length(s_browser) >= 60 } |> should.be_true()
+  { list.length(s_tui) >= 2 } |> should.be_true()
+  { list.length(s_api) >= 10 } |> should.be_true()
+  { list.length(s_bus) >= 3 } |> should.be_true()
+  { list.length(s_cli) >= 70 } |> should.be_true()
+}
+
+pub fn unified_system_engine_coverage_test() {
+  let zigvm = ufwv.unified_features_by_engine(ufwv.EngineZigVM)
+  let c3i = ufwv.unified_features_by_engine(ufwv.EngineC3I)
+  let indrajaal = ufwv.unified_features_by_engine(ufwv.EngineIndrajaal)
+
+  { list.length(zigvm) >= 150 } |> should.be_true()
+  { list.length(c3i) >= 20 } |> should.be_true()
+  { list.length(indrajaal) >= 8 } |> should.be_true()
+}
+
+pub fn unified_system_table_markdown_generation_test() {
+  let table = ufwv.generate_unified_system_tracking_table()
+  let has_header = string.contains(table, "| ID | Feature Name |")
+  let has_pass = string.contains(table, "🟢 PASS")
+  let has_wiki_core = string.contains(table, "WIKI-CORE-001")
+  let has_adr = string.contains(table, "ADR-001")
+
+  has_header |> should.be_true()
+  has_pass |> should.be_true()
+  has_wiki_core |> should.be_true()
+  has_adr |> should.be_true()
+}
+
+pub fn unified_system_telemetry_json_test() {
+  let json = ufwv.unified_system_to_json_telemetry()
+  let has_total = string.contains(json, "\"total_features\":181")
+  let has_passing = string.contains(json, "\"passing_features\":181")
+  let has_web = string.contains(json, "\"web_features\":36")
+  let has_wiki = string.contains(json, "\"wiki_zk_km_features\":145")
+  let has_ok = string.contains(json, "\"status\":\"ok\"")
+
+  has_total |> should.be_true()
+  has_passing |> should.be_true()
+  has_web |> should.be_true()
+  has_wiki |> should.be_true()
+  has_ok |> should.be_true()
 }
