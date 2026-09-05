@@ -7,9 +7,8 @@
 import gleeunit/should
 import gleam/erlang/process
 import cepaf_gleam/knowledge/annotation_actor.{
-  Completed, DocAnnotationResult, GetMetrics, Idle, KnowledgeMetrics,
-  Reset, ScanDocument, TriggerAnnotationRun, calculate_sheaf_coherence,
-  inspect_document, initial_state, start,
+  Completed, GetMetrics, ScanDocument, TriggerAnnotationRun,
+  calculate_sheaf_coherence, inspect_document, initial_state, start,
 }
 
 pub fn inspect_document_rocha_closure_test() {

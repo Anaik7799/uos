@@ -1,3 +1,7 @@
+import cepaf_gleam/ui/lustre/feature_tracker_view
+import cepaf_gleam/ui/lustre/knowledge_explorer
+import cepaf_gleam/ui/lustre/pi_startup_visualizer
+import cepaf_gleam/ui/lustre/zk_decision_matrix
 import cepaf_gleam/ui/wisp/router as c3i_router
 import gleam/bit_array
 import gleam/bytes_tree
@@ -6,6 +10,7 @@ import gleam/http/request.{type Request}
 import gleam/http/response.{type Response}
 import gleam/io
 import gleam/string
+import lustre/element
 import mist.{type Connection, type ResponseData}
 
 @external(erlang, "indrajaal_web_ffi", "read_repo_file")
@@ -59,6 +64,54 @@ pub fn main() {
         |> response.set_body(
           mist.Bytes(bytes_tree.from_string(render_planning_dashboard())),
         )
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["features"] -> {
+        let el = feature_tracker_view.view(feature_tracker_view.init())
+        let content_html = element.to_string(el)
+        let page =
+          render_lustre_page(
+            "145-Feature Living Tracker",
+            "features",
+            content_html,
+          )
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["knowledge-explorer"] -> {
+        let el = knowledge_explorer.view(knowledge_explorer.init())
+        let content_html = element.to_string(el)
+        let page =
+          render_lustre_page(
+            "Knowledge & Wiki Explorer",
+            "knowledge-explorer",
+            content_html,
+          )
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["zk-matrix"] -> {
+        let el = zk_decision_matrix.view(zk_decision_matrix.init())
+        let content_html = element.to_string(el)
+        let page =
+          render_lustre_page("ZK Decision Matrix", "zk-matrix", content_html)
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["pi-startup"] -> {
+        let el = pi_startup_visualizer.view(pi_startup_visualizer.init())
+        let content_html = element.to_string(el)
+        let page =
+          render_lustre_page(
+            "Pi Startup Visualizer",
+            "pi-startup",
+            content_html,
+          )
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
         |> response.prepend_header("content-type", "text/html")
       }
       ["testing", ..rest] -> {
@@ -312,9 +365,33 @@ fn render_nav(active: String) -> String {
     False -> ""
   }
   <> " style='color:#00e5ff'>AG-UI Real-Time SSE</a>
+    <a href='/pi-startup' "
+  <> case active == "pi-startup" {
+    True -> "class='active'"
+    False -> ""
+  }
+  <> " style='color:#38bdf8;font-weight:bold'>Pi Startup Visualizer</a>
 
     <div class='sep'></div>
     <div class='nav-section-title'>KNOWLEDGE BASE</div>
+    <a href='/features' "
+  <> case active == "features" {
+    True -> "class='active'"
+    False -> ""
+  }
+  <> " style='color:#ffc107;font-weight:bold'>145-Feature Living Tracker</a>
+    <a href='/knowledge-explorer' "
+  <> case active == "knowledge-explorer" {
+    True -> "class='active'"
+    False -> ""
+  }
+  <> " style='color:#a855f7;font-weight:bold'>Knowledge Explorer</a>
+    <a href='/zk-matrix' "
+  <> case active == "zk-matrix" {
+    True -> "class='active'"
+    False -> ""
+  }
+  <> " style='color:#34d399;font-weight:bold'>ZK Decision Matrix</a>
     <a href='/wiki' "
   <> case active == "wiki" {
     True -> "class='active'"
@@ -416,6 +493,65 @@ fn render_breadcrumbs_loop(
       render_breadcrumbs_loop(rest, cur_path, link)
     }
   }
+}
+
+fn render_lustre_page(
+  title: String,
+  active: String,
+  content_html: String,
+) -> String {
+  "<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title>" <> title <> " - Indrajaal C3I Cockpit</title>
+  <script src='https://cdn.tailwindcss.com'></script>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: 'SF Mono', 'Fira Code', -apple-system, monospace; background: #0a0a0a; color: #e0e0e0; }
+    .shell { display: flex; min-height: 100vh; }
+    .nav { width: 250px; background: #111; border-right: 1px solid #222; padding: 1rem 0; flex-shrink: 0; }
+    .nav-brand { border-bottom: 1px solid #222; margin-bottom: 0.8rem; }
+    .nav-section-title { font-size: 0.68rem; font-weight: bold; color: #888; padding: 0.4rem 1rem 0.2rem 1rem; text-transform: uppercase; letter-spacing: 0.5px; }
+    .nav a { display: block; padding: 0.55rem 1rem; color: #888; text-decoration: none; border-left: 3px solid transparent; font-size: 0.85rem; }
+    .nav a:hover { background: #1a1a1a; color: #fff; }
+    .nav a.active { color: #ffc107; border-left-color: #ffc107; background: #1a1a1a; font-weight: bold; }
+    .nav .sep { height: 1px; background: #222; margin: 0.6rem 1rem; }
+    .main { flex: 1; padding: 2rem; max-width: 1400px; }
+    .header-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem; }
+    .badge { display: inline-block; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-family: monospace; }
+    .badge-tailscale { background: #1f6feb22; border: 1px solid #1f6feb; color: #58a6ff; font-weight: bold; }
+    .badge-fractal { background: #23863622; border: 1px solid #238636; color: #3fb950; font-weight: bold; }
+    .badge-muda { background: #d2992222; border: 1px solid #d29922; color: #e3b341; font-weight: bold; }
+    .badge-safety { background: #da363322; border: 1px solid #da3633; color: #f85149; font-weight: bold; }
+    .site-footer { margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid #222; font-size: 0.8rem; color: #888; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.8rem; }
+  </style>
+</head>
+<body>
+  <div class='shell'>"
+  <> render_nav(active)
+  <> "<main class='main'>
+      <div class='header-bar'>
+        <div>
+          <a href='http://nas-1.tail55d152.ts.net:4100/' class='badge badge-tailscale' style='text-decoration:none'>Tailnet: http://nas-1.tail55d152.ts.net:4100</a>
+          <span class='badge badge-fractal'>SIL-6 / L0-L9 Fractal</span>
+          <span class='badge badge-muda'>Zero-Muda Pure BEAM</span>
+          <span class='badge badge-muda'>#rocha-semiotics</span>
+          <span class='badge badge-muda'>#cybernetics</span>
+          <span class='badge badge-safety'>Root NVMe 25503L801736 Locked</span>
+        </div>
+        <div style='font-size:0.8rem;color:#888'>
+          <span>Status: <strong style='color:#4caf50'>OPERATIONAL</strong></span>
+        </div>
+      </div>"
+  <> render_checklist_accordion()
+  <> "<div class='my-4'>"
+  <> content_html
+  <> "</div>"
+  <> render_footer()
+  <> "</main></div></body></html>"
 }
 
 fn render_document_view(
@@ -781,6 +917,86 @@ fn render_shell() -> String {
             <p>STAMP/STPA safety lattices, SQLite living catalogs, and tri-sovereign verification proofs across AGY, Claude, and Codex.</p>
           </a>
         </div>
+      </div>
+
+      <!-- Interactive Lustre MVU Cockpits & Living Knowledge Engines -->
+      <div class='card' style='margin-top:1rem;'>
+        <h2>
+          <span>Interactive Lustre MVU Cockpits &amp; Living Knowledge Engines</span>
+          <span style='font-size:0.75rem;color:#ffc107'>PURE BEAM SSR &bull; ZERO CLIENT JS</span>
+        </h2>
+        <div class='grid-2'>
+          <a href='/features' class='hub-btn' style='border-color:#ffc107'>
+            <h3 style='color:#ffc107'>145-Feature Living Tracker &rarr;</h3>
+            <p>Interactive Lustre data matrix for all 145 ZigVM Wiki, ZK, and KM features across 11 categories with tier filter chips and provenance inspector.</p>
+          </a>
+          <a href='/pi-startup' class='hub-btn' style='border-color:#38bdf8'>
+            <h3 style='color:#38bdf8'>Pi Runtime Startup &amp; Telemetry Visualizer &rarr;</h3>
+            <p>7-stage lifecycle decomposition with intelligent contextual messaging, animated glowing progress cards, and real-time AG-UI event streaming.</p>
+          </a>
+          <a href='/knowledge-explorer' class='hub-btn' style='border-color:#a855f7'>
+            <h3 style='color:#a855f7'>Knowledge &amp; Wiki Explorer &rarr;</h3>
+            <p>Biosemiotic transclusion engine for [[wiki:...]] and [[zk:...]] syntax with interactive tag filtering and document inspector.</p>
+          </a>
+          <a href='/zk-matrix' class='hub-btn' style='border-color:#34d399'>
+            <h3 style='color:#34d399'>Zettelkasten Decision Matrix &rarr;</h3>
+            <p>Visual decision matrix of all 16 permanent ADRs (ADR-001..ADR-016) with formal oracle indicators and upstream/downstream contract lineage.</p>
+          </a>
+        </div>
+      </div>
+
+      <!-- Master 5-Cycle & Pi Lifecycle Architecture Card -->
+      <div class='card' style='margin-top:1rem;'>
+        <h2>
+          <span>Master 5-Cycle &amp; Pi Lifecycle Architecture</span>
+          <a href='/docs/design/20260905-2048-uos-5-evolutionary-cycles-and-pi-lifecycle-diagram-tome.md' style='font-size:0.75rem;color:#58a6ff;text-decoration:none'>View Diagram Tome &rarr;</a>
+        </h2>
+        <pre class='bg-black border border-neutral-800 rounded p-4 text-xs font-mono text-neutral-300 overflow-x-auto leading-tight select-all'>
++===================================================================================================+
+|                     UNIFIED OPERATIONAL SYSTEM (UOS) MASTER SYSTEM STACK                          |
+|                       Tailscale FQDN: http://nas-1.tail55d152.ts.net:4100                         |
++===================================================================================================+
+|  LAYER 5: HUMAN &amp; AGENT PRESENTATION TIER (Pure Lustre MVU SSR + ANSI TUI + SSE)                  |
+|  +---------------------------+---------------------------+-------------------------------------+  |
+|  | EV-01: Knowledge Explorer | EV-02: ZK Decision Matrix | EV-03: Pi Startup Visualizer        |  |
+|  | [Transclusions/Rocha Tags]| [16 Permanent ADRs/Badges]| [7-Stage Glowing Lifecycle + AG-UI] |  |
+|  +---------------------------+---------------------------+-------------------------------------+  |
+|  | EV-04: 145-Feature Matrix | EV-05: Web Shell &amp; Router | AG-UI 32-Event Stream Widget        |  |
+|  | [11 Categories / 3 Tiers] | [Grouped Sidebar + Nav]   | [/ag-ui/events SSE EventSource]     |  |
+|  +---------------------------+---------------------------+-------------------------------------+  |
++===================================================================================================+
+|  LAYER 4: ACTORS, EVENT BUS &amp; CLASSIFIERS (BEAM OTP 29 GenServer / Actor Swarms)                  |
+|  +---------------------------+---------------------------+-------------------------------------+  |
+|  | Pi Startup Classifier     | Knowledge Annotation Actor| Prajna Circuit Breaker              |  |
+|  | [Regex Parser / Timeout]  | [Biosemiotic AST Tagging] | [Half-Open / Closed / Trip Guard]   |  |
+|  +---------------------------+---------------------------+-------------------------------------+  |
+|  | Zenoh-MCP-OTel Backplane  | AG-UI 32-Event Bus        | Lyapunov Stability Proof Monitor    |  |
+|  | [indrajaal/otel/span/**]  | [RFC 6902 JSON Patches]   | [V_dot &lt;= -lambda * V Windowed]     |  |
+|  +---------------------------+---------------------------+-------------------------------------+  |
++===================================================================================================+
+|  LAYER 3: MULTI-LANGUAGE ENGINE LAYER (Hermes OCaml + ZigVM + MAX Python)                         |
+|  +---------------------------+---------------------------+-------------------------------------+  |
+|  | Hermes OCaml (Evidence)   | ZigVM Kernel (Execution)  | MAX Mojo/Python (AI Inference)      |  |
+|  | - Gospel Formal Contracts | - Descriptor VFS Backend  | - Quarantined in Isolated Daemon    |  |
+|  | - SQLite WAL Double-Entry | - Zero-GC Ring Buffers    | - Length-delimited JSON-RPC pipes   |  |
+|  | - Z3 Solver Worker Tree   | - Linear Memory Arenas    | - Supervised by OTP Child Spec      |  |
+|  +---------------------------+---------------------------+-------------------------------------+  |
++===================================================================================================+
+|  LAYER 2: MATHEMATICAL &amp; FORMAL PROOFS (Lean 4 + Quint)                                            |
+|  +---------------------------------------------------------------------------------------------+  |
+|  | - Lean 4 Traceability: Coordinate Conservation Delta T_13 = 0, Indicator I(Trust)           |  |
+|  | - Lean 4 TwoLattice_STM: Telemetry Observation Non-Interference Proof                       |  |
+|  | - Quint Parity: Parity Frontier Intent-Closure Invariants (parity_frontier.qnt)             |  |
+|  +---------------------------------------------------------------------------------------------+  |
++===================================================================================================+
+|  LAYER 1: HARDWARE SAFETY &amp; PERSISTENCE (Rust / Linux Kernel / Ceph / NVMe)                       |
+|  +---------------------------------------------------------------------------------------------+  |
+|  | - HARD_DENIED_SYSTEM_OS_SERIAL = '25503L801736' (Strict OS Root NVMe Protection in spec.rs) |  |
+|  | - Standalone Jujutsu Monorepo (.jj/): 0 native Git mutation commands                        |  |
+|  | - Pure Erlang graphene_nif.erl: Zero foreign NIF shared objects, 0 Bevy, 0 Graphite         |  |
+|  +---------------------------------------------------------------------------------------------+  |
++===================================================================================================+
+        </pre>
       </div>
 
       <!-- Cross-Language Implementation of C3I Control -->
