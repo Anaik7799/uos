@@ -69,3 +69,52 @@ frameworks = [
   "OCaml Playwright Bindings & Gospel Contracts",
   "Gleam Wallaby Emulation Suite"
 ]
+
+[skills_and_superpowers]
+total_cataloged = 16
+key_skills = [
+  "using-superpowers",
+  "lustre-gleam-ui-expert",
+  "c3i-page-evolution",
+  "ocaml-playwright-control",
+  "chrome-devtools",
+  "zk-knowledge-base",
+  "wiki-design",
+  "living-ontology",
+  "infranodus-design-superset",
+  "formal-verification-pipeline",
+  "writing-gospel-specifications",
+  "algebraic-fractal-structures",
+  "systematic-debugging",
+  "test-driven-development",
+  "timestamp-sync",
+  "patrol-marionette-test"
+]
+
+[standards_and_algorithms]
+total_cataloged = 19
+google_standards = [
+  "Core Web Vitals (LCP, INP, CLS)",
+  "PageRank & Personalized PageRank (PPR)",
+  "HITS (Hubs & Authorities)",
+  "SimHash & MinHash (LSH)",
+  "BM25 / BM25F Search Ranking",
+  "W3C OpenTelemetry (OTel)",
+  "Lighthouse CI / WCAG 2.1 AA",
+  "Schema.org & JSON-LD"
+]
+mediawiki_standards = [
+  "Aho-Corasick Multi-Pattern Automaton",
+  "Myers Diff & Patience Diff",
+  "Transclusion Engine & Cycle Guard (Tarjan SCC)",
+  "Parsoid Round-Trip Fidelity",
+  "Category Sheaf & DAG Invariants"
+]
+zettelkasten_standards = [
+  "Adjacency Matrix Inversion (Backlinks)",
+  "Obsidian Block Anchors (^id)",
+  "Louvain & Leiden Modularity Clustering",
+  "Vector Cosine Distance Retrieval",
+  "Dung Abstract Argumentation Framework",
+  "Rocha Biosemiotics Symbol-Matter Cut"
+]
