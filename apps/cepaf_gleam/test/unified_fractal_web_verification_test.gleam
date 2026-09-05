@@ -11,6 +11,7 @@
 // Full Fractal Coverage: Layers L0 through L7.
 // =============================================================================
 
+import cepaf_gleam/verification/ocaml_parity_verifier as opv
 import cepaf_gleam/verification/unified_fractal_web_verifier as ufwv
 import gleam/dict
 import gleam/list
@@ -569,4 +570,180 @@ pub fn unified_system_telemetry_json_test() {
   has_web |> should.be_true()
   has_wiki |> should.be_true()
   has_ok |> should.be_true()
+}
+
+// =============================================================================
+// OCaml Testing Functionality Ported to Pure Gleam
+// =============================================================================
+
+pub fn ocaml_parity_algebra_lattice_laws_test() {
+  let all_verdicts = [opv.Unmapped, opv.Blocked, opv.Verified, opv.Divergent]
+
+  // Distinct names (4)
+  let names = list.map(all_verdicts, opv.verdict_name)
+  let unique_names = list.unique(names)
+  list.length(unique_names) |> should.equal(4)
+
+  // Credit granting: Only Verified grants credit
+  opv.grants_credit(opv.Verified) |> should.be_true()
+  opv.grants_credit(opv.Unmapped) |> should.be_false()
+  opv.grants_credit(opv.Blocked) |> should.be_false()
+  opv.grants_credit(opv.Divergent) |> should.be_false()
+
+  // Defect assertion: Only Divergent asserts defect
+  opv.asserts_defect(opv.Divergent) |> should.be_true()
+  opv.asserts_defect(opv.Verified) |> should.be_false()
+  opv.asserts_defect(opv.Unmapped) |> should.be_false()
+  opv.asserts_defect(opv.Blocked) |> should.be_false()
+
+  // Commutativity: combine(a, b) == combine(b, a)
+  list.each(all_verdicts, fn(a) {
+    list.each(all_verdicts, fn(b) {
+      opv.combine(a, b) |> should.equal(opv.combine(b, a))
+    })
+  })
+
+  // Idempotence: combine(a, a) == a
+  list.each(all_verdicts, fn(a) {
+    opv.combine(a, a) |> should.equal(a)
+  })
+
+  // Divergent Dominance: combine(Divergent, a) == Divergent
+  list.each(all_verdicts, fn(a) {
+    opv.combine(opv.Divergent, a) |> should.equal(opv.Divergent)
+  })
+}
+
+pub fn ocaml_parity_algebra_rollup_vacuous_truth_law_test() {
+  // Required roll_up over empty set is Unmapped, NEVER Verified (Anti-Vacuous Truth Law)
+  opv.roll_up(True, []) |> should.equal(opv.Unmapped)
+
+  // Optional roll_up over empty set returns Verified
+  opv.roll_up(False, []) |> should.equal(opv.Verified)
+
+  // Single verified child yields Verified
+  opv.roll_up(True, [opv.Verified]) |> should.equal(opv.Verified)
+
+  // One Divergent among multiple Verified yields Divergent (Severity Dominance)
+  opv.roll_up(True, [opv.Verified, opv.Divergent, opv.Verified])
+  |> should.equal(opv.Divergent)
+
+  // Blocked outranks Unmapped
+  opv.roll_up(True, [opv.Unmapped, opv.Blocked])
+  |> should.equal(opv.Blocked)
+}
+
+pub fn ocaml_differential_trace_normalization_and_comparison_test() {
+  let ref_trace = "[timestamp=2026-09-05T20:00:00Z] PID=1234\nState: Nominal\nScore: 1.0"
+  let cand_trace = "[timestamp=2026-09-05T22:30:15Z] PID=9876\nState: Nominal\nScore: 1.0"
+
+  // Compare should normalize ephemeral timestamps/PIDs and yield Verified
+  let res_match = opv.compare_traces(ref_trace, cand_trace)
+  case res_match {
+    Ok(v) -> v |> should.equal(opv.Verified)
+    Error(_) -> should.fail()
+  }
+
+  // Different payload yields Divergent
+  let diff_trace = "[timestamp=2026-09-05T22:30:15Z] PID=9876\nState: Degraded\nScore: 0.5"
+  let res_diff = opv.compare_traces(ref_trace, diff_trace)
+  case res_diff {
+    Ok(v) -> v |> should.equal(opv.Divergent)
+    Error(_) -> should.fail()
+  }
+
+  // Stub trace detection blocks credit immediately
+  let stub_trace = "mock payload: stub for feature verification"
+  opv.detect_stub_trace(stub_trace) |> should.be_true()
+  let res_stub = opv.compare_traces(ref_trace, stub_trace)
+  case res_stub {
+    Error(opv.StubDetected(_)) -> Nil
+    _ -> should.fail()
+  }
+}
+
+pub fn ocaml_docs_wiki_block_render_laws_test() {
+  let results = opv.run_all_block_render_laws()
+  list.length(results) |> should.equal(10)
+
+  let all_pass = list.all(results, fn(r) { r.passed })
+  all_pass |> should.be_true()
+}
+
+pub fn ocaml_docs_wiki_inline_render_laws_test() {
+  let results = opv.run_all_inline_render_laws()
+  list.length(results) |> should.equal(6)
+
+  let all_pass = list.all(results, fn(r) { r.passed })
+  all_pass |> should.be_true()
+}
+
+pub fn ocaml_zk_hypergraph_science_laws_test() {
+  // Clean DAG
+  let dag_edges = [#("ADR-001", "ADR-002"), #("ADR-002", "ADR-003")]
+  opv.detect_graph_cycle(dag_edges) |> should.equal(opv.AcyclicDAG)
+
+  // Direct self-cycle: A -> A
+  let self_edges = [#("ADR-001", "ADR-001")]
+  case opv.detect_graph_cycle(self_edges) {
+    opv.CycleDetected(_) -> Nil
+    opv.AcyclicDAG -> should.fail()
+  }
+
+  // Mutual cycle: A -> B and B -> A
+  let cycle_edges = [#("ADR-001", "ADR-002"), #("ADR-002", "ADR-001")]
+  case opv.detect_graph_cycle(cycle_edges) {
+    opv.CycleDetected(_) -> Nil
+    opv.AcyclicDAG -> should.fail()
+  }
+
+  // Graph density calculation
+  let density = opv.compute_graph_density(4, 6)
+  density |> should.equal(1.0)
+}
+
+pub fn ocaml_zero_trust_security_interceptor_test() {
+  // Safe payload emits SHA-256
+  let safe_payload = "{\"action\":\"query\",\"topic\":\"c3i/test\"}"
+  let res_safe = opv.verify_zero_trust_payload(safe_payload)
+  case res_safe {
+    Ok(hash) -> { string.length(hash) |> should.equal(64) }
+    Error(_) -> should.fail()
+  }
+
+  // NUL byte traps with code -2
+  let nul_payload = "{\"action\":\"inject\u{0000}bad\"}"
+  let res_nul = opv.verify_zero_trust_payload(nul_payload)
+  case res_nul {
+    Error(code) -> code |> should.equal(opv.err_nul_byte_detected)
+    Ok(_) -> should.fail()
+  }
+
+  // SQL injection traps with code -3
+  let sql_payload = "{\"query\":\"SELECT * FROM notes WHERE id = 1 OR 1=1\"}"
+  let res_sql = opv.verify_zero_trust_payload(sql_payload)
+  case res_sql {
+    Error(code) -> code |> should.equal(opv.err_sql_injection_detected)
+    Ok(_) -> should.fail()
+  }
+
+  // Writer lease freshness
+  opv.verify_writer_lease_freshness(1000, 1500, 2000) |> should.be_true()
+  opv.verify_writer_lease_freshness(1000, 3500, 2000) |> should.be_false()
+  opv.verify_writer_lease_freshness(2000, 1000, 2000) |> should.be_false()
+}
+
+pub fn ocaml_parallel_selfcheck_scalability_test() {
+  let suite = [
+    #("check_math_entropy", fn() { True }),
+    #("check_bevy_muda_zero", fn() { True }),
+    #("check_graphite_muda_zero", fn() { True }),
+    #("check_mock_failure", fn() { False }),
+  ]
+
+  let summary = opv.run_selfcheck_suite(suite)
+  summary.total |> should.equal(4)
+  summary.passed |> should.equal(3)
+  summary.failed |> should.equal(1)
+  summary.failures |> should.equal(["check_mock_failure"])
 }
