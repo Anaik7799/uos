@@ -102,15 +102,19 @@ pub fn execute(cmd: UosCommand) -> Int {
             file_exists("apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam")
           let contract_ok =
             file_exists("contracts/rules/tailscale-web-fqdn-mandate.md")
-          case server_ok && contract_ok {
+          let testing_spec_ok =
+            file_exists(
+              "docs/design/20260905-1820-c3i-indrajaal-comprehensive-testing-protocol-specification.md",
+            )
+          case server_ok && contract_ok && testing_spec_ok {
             True -> {
               io.println(
-                "  [PASS] Tailscale FQDN web routing active and documented",
+                "  [PASS] Tailscale FQDN web routing active, testing spec and contract documented",
               )
               0
             }
             False -> {
-              io.println("  [FAIL] Tailscale FQDN web contract or server missing")
+              io.println("  [FAIL] Tailscale FQDN web contract, server, or testing spec missing")
               1
             }
           }
@@ -285,12 +289,26 @@ pub fn execute(cmd: UosCommand) -> Int {
         "  - AG-UI Real-Time Stream: http://nas-1.tail55d152.ts.net:4100/ag-ui/events",
       )
       io.println("")
+      io.println("Testing & Verification Specifications:")
+      io.println(
+        "  - Comprehensive Testing Protocol: http://nas-1.tail55d152.ts.net:4100/testing",
+      )
+      io.println(
+        "  - 9-Modality Test Protocol:       http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/test/full_nine_dimension_test_protocol_test.gleam",
+      )
+      io.println(
+        "  - 381 UI Regression Test Suite:   http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/test/comprehensive_ui_regression_test.gleam",
+      )
+      io.println("")
       io.println("Knowledge Management (KM) Triad:")
       io.println(
         "  - Wiki Master Corpus Index: http://nas-1.tail55d152.ts.net:4100/wiki",
       )
       io.println(
         "  - ZK Master MOC (16 ADRs):  http://nas-1.tail55d152.ts.net:4100/zk",
+      )
+      io.println(
+        "  - KM Triad Hub:             http://nas-1.tail55d152.ts.net:4100/km",
       )
       io.println(
         "  - ADR-001 (Rete Schema):    http://nas-1.tail55d152.ts.net:4100/zk/20260904-150139-adr-001-closed-rete-fact-schema-and-strict-typing-invariant.md",
