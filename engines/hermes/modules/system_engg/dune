@@ -19,6 +19,18 @@
  (modules run_agent_time_hook)
  (libraries agent_time_hook))
 
+(library
+ (name agent_dispatch_hook)
+ (wrapped false)
+ (modules agent_dispatch_hook)
+ (libraries unix str yojson))
+
+(executable
+ (name run_agent_dispatch_hook)
+ (modules run_agent_dispatch_hook)
+ (libraries agent_dispatch_hook unix yojson str))
+
+
 (executable
  (name test_phase0_programme)
  (modules phase0_programme test_phase0_programme)
