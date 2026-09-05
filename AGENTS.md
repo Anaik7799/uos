@@ -64,6 +64,40 @@ These external trees are dirty, moving, and read-only. Before any file or logic 
 5. **Native Bounded Kernels**: `native/{c,cpp,rust,ocaml}`. Strictly short, deterministic, bounded kernels or dispatch facades with explicit ABI contracts. Blocking work belongs in supervised isolated daemons.
 6. **Zero-Muda Rule**: Zero Bevy, zero Graphite across all dependencies, build systems, code, and history.
 
+### 5.1 Cross-Language Implementation of the C3I Control Plane
+
+#### Cross-Language Implementation of the C3I Control
+
+The Unified Operational System distributes C3I control functions across explicit language domains according to safety, formal verification, and performance characteristics:
+
+1. **Gleam/OTP (Supervision, Intent, State Machines & OODA Loops)**:
+   - **Supervision**: `uos_sup.gleam` root 4-domain supervisor (Apps, Engines, Services, Intelligence) with strict isolation and child restart budgets.
+   - **Controllers**: Pure functional Gleam implementations of Prajna circuit breakers (`prajna/circuit_breaker.gleam`), Lyapunov windowed trend detectors (`ha/lyapunov_proof.gleam`), 2oo3 constitutional consensus (`fractal/l0_constitutional.gleam`), and dead-man's-switch freshness monitors (`ha/freshness_monitor.gleam`).
+   - **Telemetry**: Universal structured C3I JSON logging with 128-bit W3C OTel `trace_id` and fractal layer annotations ($L_0 \dots L_9$).
+
+2. **Hermes OCaml (Evidence, Bounded Analysis, Differential Oracles & Interception)**:
+   - **Evidence Store**: Authoritative SQLite WAL append-only ledgers and differential parity comparison (`test_parity_algebra.exe`, `test_parity_compare.exe`).
+   - **Zero-Trust Interceptor**: `run_agent_dispatch_hook.exe` validating MCP tool payloads with authentic `Cryptokit` SHA-256 digestion, trapping embedded NUL bytes (code `-2`) and raw SQL injections (code `-3`).
+   - **Formal Rules**: Gospel contracts, bounded Z3 solver workers, and Rete-UL forward-chaining rule engines evaluated against simple independent reference oracles.
+
+3. **ZigVM (Deterministic Execution Kernel & Storage Engine)**:
+   - **Kernel**: Pure Zig deterministic runtime engine (`engines/zigvm`).
+   - **VFS**: Descriptor-relative, race-free, symlink-aware filesystem abstraction.
+   - **Memory**: Linear allocation arenas and lockless ring buffers with zero garbage collection overhead.
+
+4. **Rust / NIFs (Bounded Kernels & Hardware Safety Interlocks)**:
+   - **Bounded Kernels**: Short, deterministic, non-blocking C-ABI functions under `native/`.
+   - **Hardware Safety**: Production Kubernetes and Rook-Ceph storage controller (`ops/kubernetes/nas-k8s-lab/src/spec.rs`) strictly locking host OS NVMe serial `HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736"` against OSD wiping or allocation.
+
+5. **Modular MAX / Mojo (Isolated AI Inference Tier)**:
+   - **Daemon**: Python is strictly quarantined to `services/inference/max/max_worker.py`.
+   - **Protocol**: Length-delimited JSON-RPC over standard I/O pipes supervised by OTP.
+
+6. **Lean 4 & Quint (Mathematical & Temporal Authority)**:
+   - **13D Traceability**: `formal/lean/Traceability.lean` proves coordinate conservation $\Delta \vec{\mathcal{T}}_{13} \equiv \mathbf{0}$ and fail-closed indicator $\mathbb{I}(\text{Trust})$.
+   - **Two-Lattice STM**: `formal/lean/TwoLattice_STM.lean` proves telemetry observation non-interference and single-writer exclusive lease mutex.
+   - **Quint Parity**: `formal/quint/parity_frontier.qnt` simulates intent closure invariants.
+
 ## 6. Evidence, Gates, and Completion Semantics
 
 State transitions must advance strictly through:

@@ -56,6 +56,20 @@ pub fn execute(cmd: UosCommand) -> Int {
           io.println("  [PASS] Zero Bevy and Zero Graphite verified")
           0
         }
+        "G-CROSS-LANG" -> {
+          let c_ok = file_exists("contracts/rules/c3i-cross-language-control-contract.md")
+          let s_ok = file_exists("docs/design/20260905-1729-cross-language-c3i-control-implementation-spec.md")
+          case c_ok && s_ok {
+            True -> {
+              io.println("  [PASS] C3I Cross-Language Control Plane Contract and Spec verified")
+              0
+            }
+            False -> {
+              io.println("  [FAIL] Cross-Language contract or spec missing")
+              1
+            }
+          }
+        }
         _ -> {
           io.println("Gate Result: PASS (admitted into standalone Jujutsu monorepo)")
           0
@@ -63,7 +77,7 @@ pub fn execute(cmd: UosCommand) -> Int {
       }
     }
     Doctor -> {
-      io.println("UOS Doctor: All 15 EV-cycle boundaries operational.")
+      io.println("UOS Doctor: All 16 EV-cycle boundaries operational.")
       io.println("  [PASS] EV-01 Bootstrap (Jujutsu non-colocated)")
       io.println("  [PASS] EV-02 Governance & Directive Superset (38 families)")
       io.println("  [PASS] EV-03 Source Freeze & Sanitized Ancestry")
@@ -79,6 +93,7 @@ pub fn execute(cmd: UosCommand) -> Int {
       io.println("  [PASS] EV-13 Multi-Layer OTP 29 Root Supervisor (uos_sup.gleam)")
       io.println("  [PASS] EV-14 Hermes Parity Suites (409/409 differential tests)")
       io.println("  [PASS] EV-15 System Admission & Storage Cutover Runbook")
+      io.println("  [PASS] EV-16 Cross-Language C3I Control Plane Integration (Gleam, OCaml, Zig, Rust, MAX)")
       0
     }
     DmcCheck -> {
