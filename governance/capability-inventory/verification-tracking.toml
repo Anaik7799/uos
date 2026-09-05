@@ -56,3 +56,16 @@ hermes_vision = 2
 hermes_toolchain = 2
 hermes_fpp_authority = 1
 hermes_dune_graph = 1
+
+[browser_tests]
+total_browser_tests = 64
+c3i_browser_tests = 46
+indrajaal_browser_tests = 6
+zigvm_browser_tests = 12
+frameworks = [
+  "Playwright TypeScript/JavaScript",
+  "Wallaby (Selenium/ChromeDriver)",
+  "Chrome CDP (DevTools Protocol)",
+  "OCaml Playwright Bindings & Gospel Contracts",
+  "Gleam Wallaby Emulation Suite"
+]
