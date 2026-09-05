@@ -1,0 +1,58 @@
+# UOS Canonical Verification Tracking & Cross-Language Parity Registry
+[meta]
+source = "UOS-VERIFICATION-TRACKING-2026-09-05"
+authority = "A0_reference"
+database_path = "data/sqlite/uos_verification_tracking.sqlite3"
+generated_at = "2026-09-05T22:13:41Z"
+
+[summary]
+total_unified_features = 181
+web_cockpit_features = 36
+wiki_zk_km_features = 145
+total_ocaml_tests_mapped = 432
+hermes_module_tests = 326
+zigvm_harness_tests = 106
+checklist_domains = 5
+checklist_checkpoints = 18
+total_gleam_tests_passing = 9875
+compiler_warnings = 0
+zero_muda = true
+storage_safety_locked = true
+
+[database_schema]
+tables = [
+  "schema_version",
+  "feature_catalog",
+  "ocaml_test_catalog",
+  "verification_check_catalog",
+  "verification_runs"
+]
+
+[tailscale_endpoints]
+base_fqdn = "http://nas-1.tail55d152.ts.net:4100"
+dashboard = "http://nas-1.tail55d152.ts.net:4100/"
+fractal_matrix = "http://nas-1.tail55d152.ts.net:4100/fractal-matrix"
+checklist = "http://nas-1.tail55d152.ts.net:4100/checklist"
+api_checks = "http://nas-1.tail55d152.ts.net:4100/api/verify/checks"
+api_features = "http://nas-1.tail55d152.ts.net:4100/api/verify/features"
+api_ocaml_parity = "http://nas-1.tail55d152.ts.net:4100/api/verify/ocaml-parity"
+peer_runtime = "http://vm-1.tail55d152.ts.net:8088"
+
+[ocaml_subsystem_breakdown]
+harness = 106
+hermes_harness = 86
+hermes_wiki = 69
+hermes_ops = 35
+hermes_dependability = 25
+hermes_ops_dashboard = 23
+hermes_vcs = 19
+hermes_agent_loop = 19
+swarm = 18
+system_engg = 9
+hermes_nix = 8
+hermes_sysml = 6
+hermes_zellij = 3
+hermes_vision = 2
+hermes_toolchain = 2
+hermes_fpp_authority = 1
+hermes_dune_graph = 1
