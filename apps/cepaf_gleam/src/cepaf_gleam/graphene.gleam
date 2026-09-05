@@ -16,8 +16,6 @@
 ////     <morphism type="injective">
 ////       6 Rust crates -> 1 NIF -> 22 NIF functions -> 55+ typed Gleam functions.
 ////       Packages: graphene (graph), tiny-skia (render), kurbo (paths),
-////       bevy_ecs/math/color (ECS+3D), mermaid-rs-renderer (diagrams).
-////       Naming: graphene_*, skia_*, kurbo_*, bevy_*, mermaid_*
 ////     </morphism>
 ////   </transformations>
 //// </c3i-module>
@@ -345,7 +343,7 @@ fn nif_render_component(c: String, p: String) -> Result(Nil, String)
 fn nif_render_all_diagrams(d: String) -> Result(String, String)
 
 // ═══════════════════════════════════════════════════════════════
-// KURBO — Vector Paths from Graphite (kurbo_*)
+// KURBO — Vector Paths (kurbo_*)
 // 5 NIF + 5 typed wrappers = 10 functions
 // ═══════════════════════════════════════════════════════════════
 
@@ -499,181 +497,8 @@ fn nif_svg_shape(s: String) -> Result(String, String)
 @external(erlang, "graphene_nif", "vec2_math")
 fn nif_vec2_math(op: String, p: String) -> Result(String, String)
 
-// ═══════════════════════════════════════════════════════════════
-// BEVY ECS (bevy_ecs_*)
-// 3 NIF = 3 functions
-// ═══════════════════════════════════════════════════════════════
-
-/// Spawn an ECS entity with JSON component data.
-pub fn bevy_ecs_spawn(components_json: String) -> Result(String, String) {
-  nif_ecs_spawn(components_json)
-}
-
-/// Query all entities in the persistent ECS world.
-pub fn bevy_ecs_query_all() -> Result(String, String) {
-  nif_ecs_query_all()
-}
-
-/// Clear all entities from the ECS world.
-pub fn bevy_ecs_clear() -> Result(String, String) {
-  nif_ecs_clear()
-}
-
-@external(erlang, "graphene_nif", "ecs_spawn")
-fn nif_ecs_spawn(c: String) -> Result(String, String)
-
-@external(erlang, "graphene_nif", "ecs_query_all")
-fn nif_ecs_query_all() -> Result(String, String)
-
-@external(erlang, "graphene_nif", "ecs_clear")
-fn nif_ecs_clear() -> Result(String, String)
-
-// ═══════════════════════════════════════════════════════════════
-// BEVY MATH (bevy_math_*)
-// 1 NIF + 5 typed wrappers = 6 functions
-// ═══════════════════════════════════════════════════════════════
-
-/// Raw 3D math operation + JSON params.
-pub fn bevy_math_op(
-  operation: String,
-  params_json: String,
-) -> Result(String, String) {
-  nif_bevy_math_op(operation, params_json)
-}
-
-/// Cross product of two 3D vectors.
-pub fn bevy_math_vec3_cross(a: Point3, b: Point3) -> Result(String, String) {
-  nif_bevy_math_op(
-    "vec3_cross",
-    json.object([#("a", p3j(a)), #("b", p3j(b))]) |> json.to_string(),
-  )
-}
-
-/// Rotate a 3D point around axis by angle (degrees).
-pub fn bevy_math_quat_rotate(
-  axis: Point3,
-  angle_deg: Float,
-  point: Point3,
-) -> Result(String, String) {
-  nif_bevy_math_op(
-    "quat_rotate",
-    json.object([
-      #("axis", p3j(axis)),
-      #("angle", json.float(angle_deg)),
-      #("point", p3j(point)),
-    ])
-      |> json.to_string(),
-  )
-}
-
-/// Apply Mat4 transform (translate + scale) to a 3D point.
-pub fn bevy_math_mat4_transform(
-  translate: Point3,
-  scale: Point3,
-  point: Point3,
-) -> Result(String, String) {
-  nif_bevy_math_op(
-    "mat4_transform",
-    json.object([
-      #("translate", p3j(translate)),
-      #("scale", p3j(scale)),
-      #("point", p3j(point)),
-    ])
-      |> json.to_string(),
-  )
-}
-
-/// Linearly interpolate between two 3D points.
-pub fn bevy_math_vec3_lerp(
-  a: Point3,
-  b: Point3,
-  t: Float,
-) -> Result(String, String) {
-  nif_bevy_math_op(
-    "vec3_lerp",
-    json.object([#("a", p3j(a)), #("b", p3j(b)), #("t", json.float(t))])
-      |> json.to_string(),
-  )
-}
-
-/// Perpendicular of a 2D vector.
-pub fn bevy_math_vec2_perp(v: Point2) -> Result(String, String) {
-  nif_bevy_math_op(
-    "vec2_perp",
-    json.object([#("v", p2j(v))]) |> json.to_string(),
-  )
-}
-
-@external(erlang, "graphene_nif", "bevy_math_op")
-fn nif_bevy_math_op(op: String, p: String) -> Result(String, String)
-
-// ═══════════════════════════════════════════════════════════════
-// BEVY COLOR (bevy_color_*)
-// 1 NIF + 5 typed wrappers = 6 functions
-// ═══════════════════════════════════════════════════════════════
-
-/// Raw color conversion operation + JSON params.
-pub fn bevy_color_convert(
-  operation: String,
-  params_json: String,
-) -> Result(String, String) {
-  nif_bevy_color_convert(operation, params_json)
-}
-
-/// RGBA -> HSLA.
-pub fn bevy_color_srgba_to_hsla(color: Rgba) -> Result(String, String) {
-  nif_bevy_color_convert("srgba_to_hsla", rgba_json(color))
-}
-
-/// HSLA -> RGBA.
-pub fn bevy_color_hsla_to_srgba(
-  h: Float,
-  s: Float,
-  l: Float,
-  a: Float,
-) -> Result(String, String) {
-  nif_bevy_color_convert(
-    "hsla_to_srgba",
-    json.object([
-      #("h", json.float(h)),
-      #("s", json.float(s)),
-      #("l", json.float(l)),
-      #("a", json.float(a)),
-    ])
-      |> json.to_string(),
-  )
-}
-
-/// RGBA -> OKLCH perceptual color space.
-pub fn bevy_color_srgba_to_oklch(color: Rgba) -> Result(String, String) {
-  nif_bevy_color_convert("srgba_to_oklch", rgba_json(color))
-}
-
-/// Hex string -> RGBA.
-pub fn bevy_color_hex_to_srgba(hex: String) -> Result(String, String) {
-  nif_bevy_color_convert(
-    "hex_to_srgba",
-    json.object([#("hex", json.string(hex))]) |> json.to_string(),
-  )
-}
-
-/// RGBA -> Hex string.
-pub fn bevy_color_srgba_to_hex(color: Rgba) -> Result(String, String) {
-  nif_bevy_color_convert("srgba_to_hex", rgba_json(color))
-}
-
-fn rgba_json(c: Rgba) -> String {
-  json.object([
-    #("r", json.float(c.r)),
-    #("g", json.float(c.g)),
-    #("b", json.float(c.b)),
-    #("a", json.float(c.a)),
-  ])
-  |> json.to_string()
-}
-
-@external(erlang, "graphene_nif", "bevy_color_convert")
-fn nif_bevy_color_convert(op: String, p: String) -> Result(String, String)
+// [ZERO-MUDA] Bevy ECS, Bevy Math, and Bevy Color have been permanently purged
+// from UOS architecture per Rule 1 and Gate G-MUDA.
 
 // ═══════════════════════════════════════════════════════════════
 // MERMAID — Diagram Renderer (mermaid_*)

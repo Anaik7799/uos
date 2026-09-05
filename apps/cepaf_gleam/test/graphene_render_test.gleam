@@ -481,69 +481,7 @@ pub fn vec2_angle_test() {
   graphene.kurbo_vec2_math("angle", "{\"a\":[1,0],\"b\":[0,1]}")
   |> should.be_ok()
 }
-
-// Bevy ECS tests
-
-pub fn ecs_spawn_test() {
-  graphene.bevy_ecs_spawn(
-    "{\"name\":\"zenoh-router\",\"type\":\"container\",\"health\":95}",
-  )
-  |> should.be_ok()
-}
-
-pub fn ecs_query_all_test() {
-  graphene.bevy_ecs_query_all() |> should.be_ok()
-}
-
-pub fn ecs_clear_test() {
-  graphene.bevy_ecs_clear() |> should.be_ok()
-}
-
-// Bevy Math tests
-
-pub fn bevy_vec3_cross_test() {
-  graphene.bevy_math_op("vec3_cross", "{\"a\":[1,0,0],\"b\":[0,1,0]}")
-  |> should.be_ok()
-}
-
-pub fn bevy_quat_rotate_test() {
-  graphene.bevy_math_op(
-    "quat_rotate",
-    "{\"axis\":[0,1,0],\"angle\":90,\"point\":[1,0,0]}",
-  )
-  |> should.be_ok()
-}
-
-pub fn bevy_mat4_transform_test() {
-  graphene.bevy_math_op(
-    "mat4_transform",
-    "{\"translate\":[10,20,0],\"scale\":[2,2,1],\"point\":[5,5,0]}",
-  )
-  |> should.be_ok()
-}
-
-// Bevy Color tests
-
-pub fn bevy_hex_to_srgba_test() {
-  graphene.bevy_color_convert("hex_to_srgba", "{\"hex\":\"#00d4aa\"}")
-  |> should.be_ok()
-}
-
-pub fn bevy_srgba_to_hsla_test() {
-  graphene.bevy_color_convert(
-    "srgba_to_hsla",
-    "{\"r\":0.0,\"g\":0.83,\"b\":0.67,\"a\":1.0}",
-  )
-  |> should.be_ok()
-}
-
-pub fn bevy_srgba_to_hex_test() {
-  graphene.bevy_color_convert(
-    "srgba_to_hex",
-    "{\"r\":1.0,\"g\":0.28,\"b\":0.34}",
-  )
-  |> should.be_ok()
-}
+// [ZERO-MUDA] Bevy tests purged.
 
 // Mermaid tests
 
@@ -701,64 +639,9 @@ pub fn vec2_lerp_typed_test() {
   |> should.be_ok()
 }
 
-// §5b Typed bevy_math wrappers
-pub fn quat_rotate_test() {
-  graphene.bevy_math_quat_rotate(
-    Point3(0.0, 1.0, 0.0),
-    90.0,
-    Point3(1.0, 0.0, 0.0),
-  )
-  |> should.be_ok()
-}
+// [ZERO-MUDA] Purged remaining bevy math calls.
 
-pub fn mat4_transform_test() {
-  graphene.bevy_math_mat4_transform(
-    Point3(10.0, 20.0, 0.0),
-    Point3(2.0, 2.0, 1.0),
-    Point3(5.0, 5.0, 0.0),
-  )
-  |> should.be_ok()
-}
-
-pub fn vec3_lerp_test() {
-  graphene.bevy_math_vec3_lerp(
-    Point3(0.0, 0.0, 0.0),
-    Point3(10.0, 20.0, 30.0),
-    0.5,
-  )
-  |> should.be_ok()
-}
-
-pub fn vec2_perp_test() {
-  graphene.bevy_math_vec2_perp(Point2(1.0, 0.0)) |> should.be_ok()
-}
-
-pub fn vec3_cross_typed_test() {
-  graphene.bevy_math_vec3_cross(Point3(1.0, 0.0, 0.0), Point3(0.0, 1.0, 0.0))
-  |> should.be_ok()
-}
-
-// §5c Typed bevy_color wrappers
-pub fn srgba_to_hsla_test() {
-  graphene.bevy_color_srgba_to_hsla(Rgba(0.0, 0.83, 0.67, 1.0))
-  |> should.be_ok()
-}
-
-pub fn hsla_to_srgba_test() {
-  graphene.bevy_color_hsla_to_srgba(160.0, 1.0, 0.42, 1.0) |> should.be_ok()
-}
-
-pub fn srgba_to_oklch_test() {
-  graphene.bevy_color_srgba_to_oklch(Rgba(1.0, 0.0, 0.0, 1.0)) |> should.be_ok()
-}
-
-pub fn hex_to_rgba_typed_test() {
-  graphene.bevy_color_hex_to_srgba("#ff4757") |> should.be_ok()
-}
-
-pub fn rgba_to_hex_typed_test() {
-  graphene.bevy_color_srgba_to_hex(Rgba(0.0, 0.83, 0.67, 1.0)) |> should.be_ok()
-}
+// [ZERO-MUDA] Bevy math/color tests purged.
 
 // §6b Typed mermaid builders
 pub fn build_mermaid_flowchart_test() {

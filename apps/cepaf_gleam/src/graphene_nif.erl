@@ -4,8 +4,6 @@
          render_state_diagram/6, render_component/2, render_all_diagrams/1,
          svg_path_from_points/1, svg_path_analyze/1, svg_path_transform/2,
          svg_shape/1, vec2_math/2,
-         ecs_spawn/1, ecs_query_all/0, ecs_clear/0,
-         bevy_math_op/2, bevy_color_convert/2,
          mermaid_render/2, mermaid_render_to_file/2,
          kurbo_affine_op/2, kurbo_geometry_op/2, kurbo_bezier_op/2,
          mermaid_render_with_options/2, skia_draw_to_png/4,
@@ -45,8 +43,6 @@ vec2_math(_Operation, _ParamsJson) -> {error, <<"NIF not loaded">>}.
 ecs_spawn(_ComponentsJson) -> {error, <<"NIF not loaded">>}.
 ecs_query_all() -> {error, <<"NIF not loaded">>}.
 ecs_clear() -> {error, <<"NIF not loaded">>}.
-bevy_math_op(_Operation, _ParamsJson) -> {error, <<"NIF not loaded">>}.
-bevy_color_convert(_Operation, _ParamsJson) -> {error, <<"NIF not loaded">>}.
 mermaid_render(_MermaidText, _OutputFormat) -> {error, <<"NIF not loaded">>}.
 mermaid_render_to_file(_MermaidText, _OutputPath) -> {error, <<"NIF not loaded">>}.
 kurbo_affine_op(_Op, _Params) -> {error, <<"NIF not loaded">>}.
