@@ -1,0 +1,134 @@
+{
+  "schema_version": 1,
+  "observed_at_utc": "2026-09-05T22:40:42Z",
+  "status": "MATERIALIZED_DISPATCH_DISABLED",
+  "request": "create sa-plan taks, hjobs and workflow with temporal",
+  "workspace": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests",
+  "observed_revision": "886e094d8a8d2a2470e0cac9946daedf33cc87a9",
+  "db_path": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/state/ocaml_gleam_tests/sa_plan.sqlite3",
+  "db_permissions": "0600",
+  "db_policy": "Live SQLite state is ignored by JJ; replay typed registration in the target store, never copy a live DB/WAL into source control.",
+  "plan_id": "uos/ocaml-gleam-tests/v1",
+  "workflow_id": "uos/ocaml-gleam-tests/v1/workflow",
+  "queue": "uos-ocaml-gleam-v1-reserved",
+  "tasks": 75,
+  "jobs": 74,
+  "workflows": 1,
+  "workflow_state": "running",
+  "execution_meaning": "Store lifecycle record only; no Temporal service or worker started.",
+  "dispatch_enabled": false,
+  "completed_tasks": 0,
+  "executing_tasks": 0,
+  "ready_tasks": 1,
+  "job_attempts": 0,
+  "capabilities_unavailable": [
+    "Temporal server/SDK",
+    "signals",
+    "durable timers",
+    "workflow cancellation",
+    "dependency-gated job dispatcher"
+  ],
+  "source_baseline_sha256": "fa274d8d918ca0d845f995651a8be508048f28c5d73da7367f2fcdea4a11ea51",
+  "spec": "governance/testing/ocaml_gleam/20260905-2251-sa-plan-workflow-spec.json",
+  "creation_and_readback": [
+    {
+      "cmd": "PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:$PATH UOS_PLAN_PORT=/tmp/uos-sa-plan-build/default/orchestration/ocaml_gleam_plan/plan_port.exe UOS_PLAN_DB=/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/state/ocaml_gleam_tests/sa_plan.sqlite3 UOS_PLAN_OPERATION=register gleam run",
+      "chunk_id": "257ec7",
+      "wall_time_seconds": 0.107645793,
+      "exit_code": 0,
+      "original_token_count": 83,
+      "output": "   Compiled in 0.02s\n    Running ocaml_gleam_orchestration.main\n{\"plan_id\":\"uos/ocaml-gleam-tests/v1\",\"workflow_id\":\"uos/ocaml-gleam-tests/v1/workflow\",\"queue\":\"uos-ocaml-gleam-v1-reserved\",\"task_count\":75,\"job_count\":74,\"workflow_state\":\"running\",\"dispatch_enabled\":false,\"completed\":0,\"executing\":0,\"ready\":1,\"job_attempts\":0}\n"
+    },
+    {
+      "cmd": "PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:$PATH UOS_PLAN_PORT=/tmp/uos-sa-plan-build/default/orchestration/ocaml_gleam_plan/plan_port.exe UOS_PLAN_DB=/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/state/ocaml_gleam_tests/sa_plan.sqlite3 UOS_PLAN_OPERATION=status gleam run",
+      "chunk_id": "1edac5",
+      "wall_time_seconds": 0.111451511,
+      "exit_code": 0,
+      "original_token_count": 83,
+      "output": "   Compiled in 0.02s\n    Running ocaml_gleam_orchestration.main\n{\"plan_id\":\"uos/ocaml-gleam-tests/v1\",\"workflow_id\":\"uos/ocaml-gleam-tests/v1/workflow\",\"queue\":\"uos-ocaml-gleam-v1-reserved\",\"task_count\":75,\"job_count\":74,\"workflow_state\":\"running\",\"dispatch_enabled\":false,\"completed\":0,\"executing\":0,\"ready\":1,\"job_attempts\":0}\n"
+    }
+  ],
+  "final_tests": [
+    {
+      "label": "orchestration",
+      "cmd": "PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:$PATH UOS_PLAN_PORT=/tmp/uos-sa-plan-build/default/orchestration/ocaml_gleam_plan/plan_port.exe UOS_PLAN_FIXTURE=/tmp/uos-sa-plan-build/default/orchestration/ocaml_gleam_plan/testing/plan_fixture.exe UOS_PLAN_TEST_ROOT=/tmp/uos-sa-plan-tests.EISql5 gleam test",
+      "workdir": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/tests/ocaml_gleam_orchestration",
+      "chunk_id": "c632fd",
+      "wall_time_seconds": 0.664335354,
+      "exit_code": 0,
+      "original_token_count": 60,
+      "output": "  Compiling ocaml_gleam_orchestration\n   Compiled in 0.37s\n    Running ocaml_gleam_orchestration_test.main\n\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m\n9 passed, no failures\u001b[39m\n"
+    },
+    {
+      "label": "inventory",
+      "cmd": "PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:$PATH UOS_INVENTORY_TEST_ROOT=/tmp/uos-inventory-tests.4iB2Fq gleam test",
+      "workdir": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/tools/ocaml_test_inventory",
+      "chunk_id": "b9baa6",
+      "wall_time_seconds": 0.15610417,
+      "exit_code": 0,
+      "original_token_count": 44,
+      "output": "   Compiled in 0.02s\n    Running ocaml_test_inventory_test.main\n\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m\n7 passed, no failures\u001b[39m\n"
+    },
+    {
+      "label": "counterparts",
+      "cmd": "PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:$PATH gleam test",
+      "workdir": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/tests/ocaml_counterparts",
+      "chunk_id": "96e8bb",
+      "wall_time_seconds": 0.784094332,
+      "exit_code": 0,
+      "original_token_count": 63,
+      "output": "   Compiled in 0.02s\n    Running ocaml_counterparts_test.main\n\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m\n14 passed, no failures\u001b[39m\n"
+    },
+    {
+      "label": "original",
+      "cmd": "dune exec modules/hermes_harness/test_parity_algebra.exe",
+      "workdir": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/engines/hermes",
+      "chunk_id": "76a80a",
+      "wall_time_seconds": 0.162636407,
+      "exit_code": 0,
+      "original_token_count": 121,
+      "output": "parity algebra suite\n  unit         done\n  property     done\n  bdd          done\n  feature      done\n  fuzz         done\n  chaos        done\n  structure    done\n\npassed: 146   failed: 0\nAS-IS test_parity_algebra: 146/146 passed, 0 failed, 0 skipped\nPREDICTIVE test_parity_algebra: 17 dependent(s) at risk if this is wrong: hermes_harness_blueprint, hermes_harness_drift_rules, hermes_harness_evidence_rollup, hermes_harness_formal_coverage, hermes_harness_formal_specs … +12 more\n"
+    }
+  ],
+  "review": {
+    "sa_plan": {
+      "initial": "Needs fixes",
+      "addressed": [
+        "assert retained workflow kind/input/full history and job name/worker/args/max_attempts sentinels",
+        "include 13-section execution journal and this receipt",
+        "tighten temp root to explicit UOS_PLAN_TEST_ROOT",
+        "assert reserved queue/backend/no Temporal server/representative DAG dependencies"
+      ],
+      "re_review": "Approved: all Important findings and prior minor findings addressed; no new Critical/Important breakage. Minor checklist wording clarified."
+    },
+    "parity": {
+      "initial": "Missing two report.verdict assertions",
+      "fix": "Added both verdict assertions; two report-only mutants killed",
+      "re_review": "All findings addressed, no new Critical/Important breakage"
+    },
+    "inventory": {
+      "scope": "Task2a only",
+      "verdict": "Approved, no Critical/Important findings",
+      "minor": [
+        "parent-directory symlink regression test not yet added",
+        "third-party OTP29 cold-build warnings"
+      ]
+    }
+  },
+  "remaining": [
+    "Expanded Dune and nonstandard testcase classification (OGL.02)",
+    "Gleam counterparts for remaining suites",
+    "FMEA scoring and execution readiness gates",
+    "Real Temporal integration and gated worker dispatcher require implementation/configuration; not claimed here"
+  ],
+  "skills_applied": [
+    "c3i-temporal-orchestration",
+    "cepaf-planning-expert",
+    "gleam-expert",
+    "test-driven-development",
+    "requesting-code-review",
+    "subagent-driven-development",
+    "using-jj-workspaces",
+    "journal-protocol"
+  ]
+}

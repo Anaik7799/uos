@@ -1,0 +1,318 @@
+{
+  "schema_version": 1,
+  "status": "passed_pending_independent_review",
+  "scope": "Task 1: complete additive Gleam counterpart of test_parity_algebra.ml, with bounded native operation transport",
+  "observed_at_utc": "2026-09-05T22:27:43Z",
+  "document_identity_utc": "2026-09-05T22:05:09Z",
+  "clock": {
+    "command": "chronyc tracking",
+    "output": "Could not open connection to daemon",
+    "status": "host synchronization recheck unavailable inside sandbox; no fresh NTP assertion"
+  },
+  "workspace": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests",
+  "case_map": "tests/ocaml_counterparts/fixtures/20260905-2209-parity-case-map.json",
+  "case_mapping": {
+    "source_labels": 42,
+    "original_nominal_check_multiplicity": 146,
+    "layers": [
+      "unit",
+      "property",
+      "BDD",
+      "feature",
+      "fuzz",
+      "chaos",
+      "structure"
+    ],
+    "exhaustive_domains": [
+      4,
+      16,
+      64
+    ],
+    "random_vectors": 2000,
+    "chaos_children": [
+      100000,
+      10000
+    ]
+  },
+  "files_changed": [
+    "tests/ocaml_counterparts/.gitignore",
+    "tests/ocaml_counterparts/gleam.toml",
+    "tests/ocaml_counterparts/manifest.toml",
+    "tests/ocaml_counterparts/src/ocaml_counterparts/native.gleam",
+    "tests/ocaml_counterparts/test/ocaml_counterparts_test.gleam",
+    "tests/ocaml_counterparts/test/hermes_harness/parity_algebra_test.gleam",
+    "tests/ocaml_counterparts/test/transport_test.gleam",
+    "tests/ocaml_counterparts/test/export_vectors.gleam",
+    "tests/ocaml_counterparts/test/mutation_probe.gleam",
+    "tests/ocaml_counterparts/fixtures/20260905-2209-parity-random-vectors.json",
+    "tests/ocaml_counterparts/fixtures/20260905-2209-parity-case-map.json",
+    "engines/hermes/test_ports/parity/dune",
+    "engines/hermes/test_ports/parity/parity_port.ml",
+    "engines/hermes/test_ports/parity/fault_port.ml",
+    "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json",
+    "tests/ocaml_counterparts/test/scale_mutation_probe.gleam"
+  ],
+  "preservation": {
+    "original_source_edits": 0,
+    "original_dune_edits": 0,
+    "original_runner_wrapping": false,
+    "original_suite_run_by_this_agent": false,
+    "global_preservation_gate": "controller-owned; not asserted by this report",
+    "vcs_mutations_by_this_agent": 0
+  },
+  "red": [
+    {
+      "command": "env PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:/home/an/.nix-profile/bin:/usr/bin:/bin gleam test",
+      "cwd": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/tests/ocaml_counterparts",
+      "exit_code": 1,
+      "phase": "before native adapter/client implementation",
+      "output_excerpt": "test: hermes_harness@parity_algebra_test.bdd_empty_required_test\nError(\"native adapter not implemented\")\nshould be ok\n0 passed, 1 failures"
+    },
+    {
+      "command": "env PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:/home/an/.nix-profile/bin:/usr/bin:/bin gleam test",
+      "exit_code": 1,
+      "phase": "all seven source layers before native implementation",
+      "output_excerpt": "Error(\"native adapter not implemented\")\n0 passed, 7 failures"
+    },
+    {
+      "command": "env PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:/home/an/.nix-profile/bin:/usr/bin:/bin gleam test",
+      "exit_code": 1,
+      "phase": "transport tests before client/fixture implementation",
+      "output_excerpt": "faults_test: Error(\"native adapter not implemented\") should equal Error(\"malformed_frame\")\n0 passed, 10 failures"
+    },
+    {
+      "command": "env PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:/home/an/.nix-profile/bin:/usr/bin:/bin gleam test",
+      "exit_code": 1,
+      "phase": "JSON depth and timeout cleanup regression assertions before implementation",
+      "output_excerpt": "bounded_json_test: Error(\"identity_mismatch\") should equal Error(\"json_depth\")\ntimeout_reaps_direct_child_test: Error(Enoent) should be ok\n11 passed, 2 failures"
+    },
+    {
+      "command": "env PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:/home/an/.nix-profile/bin:/usr/bin:/bin gleam test",
+      "exit_code": 1,
+      "phase": "strict error-envelope assertion before implementation",
+      "output_excerpt": "strict_envelope_test: Error(\"native_error\") should equal Error(\"malformed_json\")\n13 passed, 1 failures"
+    }
+  ],
+  "green": [
+    {
+      "command": "dune build test_ports/parity/parity_port.exe test_ports/parity/fault_port.exe",
+      "cwd": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/engines/hermes",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": "gleam format --check",
+      "cwd": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/tests/ocaml_counterparts",
+      "exit_code": 0,
+      "output": ""
+    },
+    {
+      "command": "gleam check",
+      "cwd": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/tests/ocaml_counterparts",
+      "exit_code": 0,
+      "output": "Checking ocaml_counterparts\nCompiled in 0.02s"
+    },
+    {
+      "command": "env PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:/home/an/.nix-profile/bin:/usr/bin:/bin gleam test",
+      "cwd": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/tests/ocaml_counterparts",
+      "exit_code": 0,
+      "output": "   Checking ocaml_counterparts\n   Compiled in 0.02s\n  Compiling ocaml_counterparts\n   Compiled in 0.41s\n    Running ocaml_counterparts_test.main\n..............\n14 passed, no failures\n",
+      "test_functions_passed": 14,
+      "failures": 0
+    },
+    {
+      "command": "gleam format --check; gleam check; env PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:/home/an/.nix-profile/bin:/usr/bin:/bin gleam test",
+      "cwd": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/tests/ocaml_counterparts",
+      "exit_code": 0,
+      "output": "   Compiled in 0.01s\n   Compiled in 0.01s\n    Running ocaml_counterparts_test.main\n..............\n14 passed, no failures\n",
+      "test_functions_passed": 14,
+      "failures": 0
+    }
+  ],
+  "versions": {
+    "yojson": "3.0.0",
+    "gleam": "1.16.0",
+    "ocaml": "5.5.0",
+    "dune": "3.23.1",
+    "otp": "29",
+    "erts": "17.0.6",
+    "otp_bin": "/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin",
+    "hex": {
+      "gleam_stdlib": "0.71.0",
+      "gleam_erlang": "1.3.0",
+      "gleam_json": "3.1.0",
+      "exception": "2.1.0",
+      "gleeunit": "1.9.0",
+      "simplifile": "2.4.0",
+      "filepath": "1.1.2"
+    }
+  },
+  "hashes": {
+    "engines/hermes/modules/hermes_harness/test_parity_algebra.ml": "13644f83e002d23fc26338ebdd4ca92ccd6a6b6482cf9ab93af9cf0ff9c62644",
+    "engines/hermes/modules/hermes_harness/parity_algebra.ml": "06a742ba3696d477d39c698054e1eaf9c22d0449adddee0fa721bfdcb0f4d379",
+    "engines/hermes/modules/hermes_wiki/src/fpp/fractal_diagnostic.ml": "d9a08faf720906062446ed0e6d3f67cd1d84bc3173390620661656388c77d7f2",
+    "tests/ocaml_counterparts/manifest.toml": "be7f805cffb8e0e496f0bcb7cac83af3a53aa8059181e0935a84909ea8979387",
+    "tests/ocaml_counterparts/src/ocaml_counterparts/native.gleam": "099b67f3b6ac997d90893e95c4790c4f21c94651f6ad1f5bd4918ff18d095a29",
+    "tests/ocaml_counterparts/test/hermes_harness/parity_algebra_test.gleam": "044421b1c426d6d75093b7c7f6ee283622a76331d997032ca1f78e493949527c",
+    "tests/ocaml_counterparts/test/transport_test.gleam": "23331860c38a618976717942b7a7006a3cadf24d7c4a4d794d86e7c167d5dd0a",
+    "tests/ocaml_counterparts/fixtures/20260905-2209-parity-case-map.json": "ec223a052354bb81293b0288cbe8fc49ebeda41f3ff20deee3c01b90c67b9f3c",
+    "engines/hermes/test_ports/parity/parity_port.ml": "80950dd9cb6139289bc738a331bc977972ddb291e42f7d2cdb51acd2671cf1c6",
+    "engines/hermes/test_ports/parity/fault_port.ml": "a98f14f67e97ad085781f1431b137b1828d1d11710e99bcc65eb94fad9441c23",
+    "engines/hermes/test_ports/parity/dune": "a00b9e6bebfe67d804a63a5b0028411a39d25c104a35f7f83eefe66fbbdbe4dc",
+    "engines/hermes/_build/default/test_ports/parity/parity_port.exe": "79caa1f04c38bc71162081a0117ff74fc6d32c6c33c745cf55722241d26d2ab6",
+    "engines/hermes/_build/default/test_ports/parity/fault_port.exe": "2e03b8b223eca969f59d15b7c4c57c6141ea85b5faf060ecfbb30a828b3cc13d",
+    "tests/ocaml_counterparts/test/scale_mutation_probe.gleam": "fb3f395d54f32d629235663f44d6a38086297c76f077db53944a2eeb62b18a26"
+  },
+  "dependency_identity": "Exact direct Hex versions in gleam.toml; transitive versions and package checksums in manifest.toml; native adapter links real hermes_harness_parity_algebra, hermes_wiki_diag, yojson, unix",
+  "random_vector_identity": {
+    "fixture": "tests/ocaml_counterparts/fixtures/20260905-2209-parity-random-vectors.json",
+    "sha256": "463824c80dd77bc8b7044c84eebac06dddfeefa05bdbbf60619951475aca38ac",
+    "seed": 20260808,
+    "generator": "OCaml 5.5.0 Random.init 20260808; each of 2000 iterations Random.int 12; List.init size (fun _ -> List.nth [Unmapped;Blocked;Verified;Divergent] (Random.int 4)); Random.bool (); no other random calls",
+    "ordering": "same inputs and required flag sequence as original source lines 195-202; native library report calls consume no Random values",
+    "verification": "fuzz_test compares every regenerated ordered (inputs,required) pair to fixture before asserting source invariants",
+    "export_command": "env PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:/home/an/.nix-profile/bin:/usr/bin:/bin gleam run -m export_vectors"
+  },
+  "transport": {
+    "framing": "4-byte big-endian unsigned byte count + UTF-8 JSON",
+    "max_frame_bytes": 8388608,
+    "max_json_depth": 64,
+    "deadline_ms": 30000,
+    "inflight_per_process": 1,
+    "success_requires": "one complete frame, correct version/id/operation, exclusive result or structured error, and process exit 0",
+    "send": "erlang:port_command/3 with nosuspend; send and response share monotonic deadline",
+    "cleanup": "explicit /usr/bin/kill -KILL <direct child pid> via spawn_executable plus port_close; direct timeout fixture process absence observed through /proc",
+    "faults_tested": [
+      "malformed frame",
+      "truncated frame",
+      "oversized frame header",
+      "malformed JSON",
+      "id mismatch",
+      "version mismatch",
+      "operation mismatch",
+      "structured native error",
+      "nonzero exit",
+      "deadline timeout",
+      "missing executable",
+      "unknown operation",
+      "invalid typed native argument",
+      "depth >64",
+      "oversized request",
+      "malformed structured error",
+      "both result and error",
+      "missing result"
+    ],
+    "no_authored_erlang_helpers": true,
+    "no_shell_interpolation": true,
+    "no_nif": true
+  },
+  "mutants_killed": [
+    {
+      "id": "required-empty-vacuous-truth",
+      "mutated_source_sha256": "a58c1c5c487419ec337d31d902a2b268e608d215f739f8cabce31318d4bfe742",
+      "mutant_executable_sha256": "2da69e6ca4d14c03ae615e69ada509bce0648646cad6e7fa83f7025e7ad0bc45",
+      "isolation": "/tmp/uos-parity-mutation.7ieYQw",
+      "change": "copied parity_algebra.ml required-empty branch Unmapped -> Verified; no original source or normal adapter mutation",
+      "build_command": "ocamlfind ocamlopt -package yojson,unix -linkpkg -I <original diag byte objects> -I <original diag native objects> <original hermes_wiki_diag.cmxa> parity_algebra.ml parity_port.ml -o mutant.exe",
+      "normal_control": {
+        "command": "env PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:/home/an/.nix-profile/bin:/usr/bin:/bin gleam run -m mutation_probe -- /home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/engines/hermes/_build/default/test_ports/parity/parity_port.exe",
+        "exit_code": 0,
+        "output": "Compiled in 0.01s\nRunning mutation_probe.main"
+      },
+      "mutant": {
+        "command": "env PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:/home/an/.nix-profile/bin:/usr/bin:/bin gleam run -m mutation_probe -- /tmp/uos-parity-mutation.7ieYQw/mutant.exe",
+        "exit_code": 1,
+        "output": "runtime error: panic\nOk(\"verified\")\nshould equal\nOk(\"unmapped\")"
+      }
+    },
+    {
+      "id": "report-only-100000-children",
+      "change": "Isolated copied Parity_algebra.report sets only the report record verdict to Verified at 100000 children. Parity_algebra.roll_up remains unchanged.",
+      "isolated_directory": "/tmp/uos-parity-report-mutation.Euh4OL/blocked",
+      "mutated_source_sha256": "4cacfcd04c27e33669d3350d8fca0da253df076a08e0fefa93c1e342990d3996",
+      "mutant_executable_sha256": "e8a5cec09022cbdb019a296096231a7ff540c7ef7501fdcf711ca0869b3277b7",
+      "build_command": "ocamlfind ocamlopt -package yojson,unix -linkpkg -I /home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/engines/hermes/_build/default/modules/hermes_wiki/src/fpp/.hermes_wiki_diag.objs/byte -I /home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/engines/hermes/_build/default/modules/hermes_wiki/src/fpp/.hermes_wiki_diag.objs/native /home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/engines/hermes/_build/default/modules/hermes_wiki/src/fpp/hermes_wiki_diag.cmxa parity_algebra.ml parity_port.ml -o mutant.exe",
+      "probe": {
+        "command": "env PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:/home/an/.nix-profile/bin:/usr/bin:/bin gleam run -m scale_mutation_probe -- /tmp/uos-parity-report-mutation.Euh4OL/blocked/mutant.exe",
+        "exit_code": 1,
+        "output": "   Compiled in 0.02s\n    Running scale_mutation_probe.main\nruntime error: panic\n\n\n\"verified\"\nshould equal\n\"blocked\"\n\nstacktrace:\n  gleeunit/should.equal src/gleeunit/should.gleam:10\n  hermes_harness/parity_algebra_test.chaos_with_report test/hermes_harness/parity_algebra_test.gleam:217\n\n"
+      }
+    },
+    {
+      "id": "report-only-10000-children",
+      "change": "Isolated copied Parity_algebra.report sets only the report record verdict to Verified at 10000 children. Parity_algebra.roll_up remains unchanged.",
+      "isolated_directory": "/tmp/uos-parity-report-mutation.Euh4OL/divergent",
+      "mutated_source_sha256": "127ffe3321f94ab6970cd7953fa8ad49a84333ef6f3a7c69df781cc6253ce542",
+      "mutant_executable_sha256": "df8534c9e4a60d9b19fca721c9f20fa666fbb68d37cdbfa8e61e525ce76078fc",
+      "build_command": "ocamlfind ocamlopt -package yojson,unix -linkpkg -I /home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/engines/hermes/_build/default/modules/hermes_wiki/src/fpp/.hermes_wiki_diag.objs/byte -I /home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/engines/hermes/_build/default/modules/hermes_wiki/src/fpp/.hermes_wiki_diag.objs/native /home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/engines/hermes/_build/default/modules/hermes_wiki/src/fpp/hermes_wiki_diag.cmxa parity_algebra.ml parity_port.ml -o mutant.exe",
+      "probe": {
+        "command": "env PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:/home/an/.nix-profile/bin:/usr/bin:/bin gleam run -m scale_mutation_probe -- /tmp/uos-parity-report-mutation.Euh4OL/divergent/mutant.exe",
+        "exit_code": 1,
+        "output": "   Compiled in 0.02s\n    Running scale_mutation_probe.main\nruntime error: panic\n\n\n\"verified\"\nshould equal\n\"divergent\"\n\nstacktrace:\n  gleeunit/should.equal src/gleeunit/should.gleam:10\n  hermes_harness/parity_algebra_test.chaos_with_report test/hermes_harness/parity_algebra_test.gleam:224\n\n"
+      }
+    }
+  ],
+  "unverified_limits": [
+    "Independent review, final JJ revision binding, and full preservation gate are controller-owned and pending.",
+    "No full migration coverage claim: this report covers one original source suite.",
+    "No process-tree/process-group/solver/stateful-suite admission; cleanup evidence is for a single direct process only.",
+    "Timeout cancellation depends on Linux /proc and /usr/bin/kill; other operating systems unverified.",
+    "Cold OTP29 build emits deprecated-catch warnings from pinned dependency-generated Erlang; authored Gleam passes check/format, warm build clean.",
+    "No new standalone prover invocation or full UOS admission performed.",
+    "Fresh host NTP receipt unavailable in the sandbox; observed clock recorded without synchronized-clock claim."
+  ],
+  "review_fix": {
+    "observed_at_utc": "2026-09-05T22:36:25Z",
+    "finding": "Important review finding: chaos_test checked rolled but omitted the report.verdict assertions made by original source lines 232 and 240.",
+    "fix": "Added explicit report.verdict = blocked for 100000 children and report.verdict = divergent for 10000 children; kept independent rolled assertions. Shared only the test assertion body through chaos_with_report for exact mutation sensitivity.",
+    "case_map_updated": [
+      "parity-033",
+      "parity-035"
+    ],
+    "original_source_sha256_unchanged": {
+      "parity_algebra": "06a742ba3696d477d39c698054e1eaf9c22d0449adddee0fa721bfdcb0f4d379",
+      "test_parity_algebra": "13644f83e002d23fc26338ebdd4ca92ccd6a6b6482cf9ab93af9cf0ff9c62644"
+    },
+    "green": {
+      "command": "gleam format --check; gleam check; env PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:/home/an/.nix-profile/bin:/usr/bin:/bin gleam test",
+      "cwd": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/tests/ocaml_counterparts",
+      "exit_code": 0,
+      "output": "   Compiled in 0.01s\n   Compiled in 0.01s\n    Running ocaml_counterparts_test.main\n..............\n14 passed, no failures\n",
+      "test_functions_passed": 14,
+      "failures": 0
+    },
+    "normal_mutation_control": {
+      "command": "env PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:/home/an/.nix-profile/bin:/usr/bin:/bin gleam run -m scale_mutation_probe -- /home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/engines/hermes/_build/default/test_ports/parity/parity_port.exe",
+      "exit_code": 0,
+      "output": "  Compiling ocaml_counterparts\n   Compiled in 0.33s\n    Running scale_mutation_probe.main\n"
+    },
+    "mutations": [
+      {
+        "id": "report-only-100000-children",
+        "change": "Isolated copied Parity_algebra.report sets only the report record verdict to Verified at 100000 children. Parity_algebra.roll_up remains unchanged.",
+        "isolated_directory": "/tmp/uos-parity-report-mutation.Euh4OL/blocked",
+        "mutated_source_sha256": "4cacfcd04c27e33669d3350d8fca0da253df076a08e0fefa93c1e342990d3996",
+        "mutant_executable_sha256": "e8a5cec09022cbdb019a296096231a7ff540c7ef7501fdcf711ca0869b3277b7",
+        "build_command": "ocamlfind ocamlopt -package yojson,unix -linkpkg -I /home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/engines/hermes/_build/default/modules/hermes_wiki/src/fpp/.hermes_wiki_diag.objs/byte -I /home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/engines/hermes/_build/default/modules/hermes_wiki/src/fpp/.hermes_wiki_diag.objs/native /home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/engines/hermes/_build/default/modules/hermes_wiki/src/fpp/hermes_wiki_diag.cmxa parity_algebra.ml parity_port.ml -o mutant.exe",
+        "probe": {
+          "command": "env PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:/home/an/.nix-profile/bin:/usr/bin:/bin gleam run -m scale_mutation_probe -- /tmp/uos-parity-report-mutation.Euh4OL/blocked/mutant.exe",
+          "exit_code": 1,
+          "output": "   Compiled in 0.02s\n    Running scale_mutation_probe.main\nruntime error: panic\n\n\n\"verified\"\nshould equal\n\"blocked\"\n\nstacktrace:\n  gleeunit/should.equal src/gleeunit/should.gleam:10\n  hermes_harness/parity_algebra_test.chaos_with_report test/hermes_harness/parity_algebra_test.gleam:217\n\n"
+        }
+      },
+      {
+        "id": "report-only-10000-children",
+        "change": "Isolated copied Parity_algebra.report sets only the report record verdict to Verified at 10000 children. Parity_algebra.roll_up remains unchanged.",
+        "isolated_directory": "/tmp/uos-parity-report-mutation.Euh4OL/divergent",
+        "mutated_source_sha256": "127ffe3321f94ab6970cd7953fa8ad49a84333ef6f3a7c69df781cc6253ce542",
+        "mutant_executable_sha256": "df8534c9e4a60d9b19fca721c9f20fa666fbb68d37cdbfa8e61e525ce76078fc",
+        "build_command": "ocamlfind ocamlopt -package yojson,unix -linkpkg -I /home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/engines/hermes/_build/default/modules/hermes_wiki/src/fpp/.hermes_wiki_diag.objs/byte -I /home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/engines/hermes/_build/default/modules/hermes_wiki/src/fpp/.hermes_wiki_diag.objs/native /home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/engines/hermes/_build/default/modules/hermes_wiki/src/fpp/hermes_wiki_diag.cmxa parity_algebra.ml parity_port.ml -o mutant.exe",
+        "probe": {
+          "command": "env PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:/home/an/.nix-profile/bin:/usr/bin:/bin gleam run -m scale_mutation_probe -- /tmp/uos-parity-report-mutation.Euh4OL/divergent/mutant.exe",
+          "exit_code": 1,
+          "output": "   Compiled in 0.02s\n    Running scale_mutation_probe.main\nruntime error: panic\n\n\n\"verified\"\nshould equal\n\"divergent\"\n\nstacktrace:\n  gleeunit/should.equal src/gleeunit/should.gleam:10\n  hermes_harness/parity_algebra_test.chaos_with_report test/hermes_harness/parity_algebra_test.gleam:224\n\n"
+        }
+      }
+    ]
+  }
+}

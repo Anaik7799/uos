@@ -1,6 +1,6 @@
 # Additive Gleam counterparts for all UOS-owned OCaml tests
 
-Status: DESIGN FOR REVIEW; implementation not started. Document identity timestamp: 2026-09-05T21:42:49Z (UTC). Source digests observed at 2026-09-05T21:43:48Z.
+Status: APPROVED FOR IMPLEMENTATION by the operator's subsequent "approved." reply. Document identity timestamp: 2026-09-05T21:42:49Z (UTC). Source digests observed at 2026-09-05T21:43:48Z. Execution begins with the [first implementation batch](../plans/20260905-2209-additive-ocaml-gleam-tests-plan.md).
 
 Tags: `#fractal-l0` `#fractal-l2` `#fractal-l7` `#zk-adr` `#zero-muda`.
 
@@ -16,7 +16,7 @@ The latest operator instruction is authoritative:
 
 Add genuine Gleam counterparts for every UOS-owned OCaml test suite. Existing OCaml test sources, fixtures, helpers, Dune declarations, and runners remain unchanged permanently. They are not deprecated, renamed, replaced, or scheduled for later removal. OCaml production libraries and formal proofs retain their current language and authority. No external/vendor source tree is modified.
 
-The operator has confirmed the side-by-side scope in chat. This written design remains pending review under the architectural brainstorming workflow. It supersedes the earlier suggestion of retiring originals after parity; it does not claim that any new test has already been implemented.
+The operator confirmed the side-by-side scope and subsequently approved this written design. It supersedes the earlier suggestion of retiring originals after parity. Approval authorizes implementation, but does not establish that any new test has passed.
 
 ## Observed baseline
 

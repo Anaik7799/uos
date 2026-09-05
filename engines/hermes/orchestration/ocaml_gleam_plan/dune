@@ -1,0 +1,10 @@
+(library
+ (name ocaml_gleam_plan)
+ (wrapped false)
+ (modules migration_plan)
+ (libraries sa_plan yojson))
+
+(executable
+ (name plan_port)
+ (modules plan_port)
+ (libraries ocaml_gleam_plan sa_plan yojson unix))

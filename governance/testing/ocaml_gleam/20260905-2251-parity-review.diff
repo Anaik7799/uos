@@ -1,0 +1,2074 @@
+Task 1 code/case-map review. Baseline: 50f8739213461a080b35f2a35cb7810d8c97d1a1. Head observed: bb32bf222d9ab1a4df52bcc09c1e75b4b4939efc.
+Generated 179954-byte fixture omitted from this text package ONLY: tests/ocaml_counterparts/fixtures/20260905-2209-parity-random-vectors.json SHA256 463824c80dd77bc8b7044c84eebac06dddfeefa05bdbbf60619951475aca38ac; inspect selectively at that path for a specific fixture risk. Complete generator/assertion/code/case-map diff follows.
+diff --git a/engines/hermes/test_ports/parity/dune b/engines/hermes/test_ports/parity/dune
+new file mode 100644
+index 0000000000..b672407c10
+--- /dev/null
++++ b/engines/hermes/test_ports/parity/dune
+@@ -0,0 +1,9 @@
++(executable
++ (name parity_port)
++ (modules parity_port)
++ (libraries hermes_harness_parity_algebra hermes_wiki_diag yojson unix))
++
++(executable
++ (name fault_port)
++ (modules fault_port)
++ (libraries yojson unix))
+diff --git a/engines/hermes/test_ports/parity/fault_port.ml b/engines/hermes/test_ports/parity/fault_port.ml
+new file mode 100644
+index 0000000000..b9da6c1d72
+--- /dev/null
++++ b/engines/hermes/test_ports/parity/fault_port.ml
+@@ -0,0 +1,31 @@
++(* Deliberately hostile protocol peer; never used as parity evidence. *)
++let frame bytes =
++  output_binary_int stdout (String.length bytes);
++  output_string stdout bytes;
++  flush stdout
++let () =
++  let length = input_binary_int stdin in
++  if length < 0 || length > 8 * 1024 * 1024 then exit 2;
++  let req = Yojson.Basic.from_string (really_input_string stdin length) in
++  let get key = Yojson.Basic.Util.member key req in
++  let mode = Sys.argv.(1) in
++  match mode with
++  | "malformed_frame" -> output_string stdout "bad"; flush stdout
++  | "truncated" -> output_binary_int stdout 100; output_string stdout "{}"; flush stdout
++  | "oversized" -> output_binary_int stdout (8 * 1024 * 1024 + 1); flush stdout
++  | "malformed_json" -> frame "{"
++  | "nonzero" -> exit 7
++  | "timeout" ->
++    if Array.length Sys.argv > 2 then (
++      let channel = open_out Sys.argv.(2) in
++      Printf.fprintf channel "%d\n" (Unix.getpid ());
++      close_out channel);
++    Unix.sleep 60
++  | _ ->
++    let id = if mode = "wrong_id" then `String "other" else get "id" in
++    let version = if mode = "wrong_version" then `Int 2 else get "version" in
++    let operation = if mode = "wrong_operation" then `String "other" else get "operation" in
++    let payload = if mode = "native_error" then
++      "error", `Assoc ["code", `String "fixture_failure"; "message", `String "injected native error"]
++      else "result", `Null in
++    frame (Yojson.Basic.to_string (`Assoc ["version", version; "id", id; "operation", operation; payload]))
+diff --git a/engines/hermes/test_ports/parity/parity_port.ml b/engines/hermes/test_ports/parity/parity_port.ml
+new file mode 100644
+index 0000000000..05a4eb53a3
+--- /dev/null
++++ b/engines/hermes/test_ports/parity/parity_port.ml
+@@ -0,0 +1,86 @@
++(* Operation adapter only. Assertions and verdicts belong to Gleam. *)
++module P = Parity_algebra
++let limit = 8 * 1024 * 1024
++let all = [P.Unmapped; P.Blocked; P.Verified; P.Divergent]
++let s x = `String x
++let i x = `Int x
++let b x = `Bool x
++let name v = s (P.name v)
++let obj xs = `Assoc xs
++let get key = function
++  | `Assoc xs -> (match List.assoc_opt key xs with Some x -> x | None -> invalid_arg ("missing " ^ key))
++  | _ -> invalid_arg "expected object"
++let string = function `String s -> s | _ -> invalid_arg "expected string"
++let boolean = function `Bool b -> b | _ -> invalid_arg "expected boolean"
++let verdict = function
++  | `String "unmapped" -> P.Unmapped | `String "blocked" -> P.Blocked
++  | `String "verified" -> P.Verified | `String "divergent" -> P.Divergent
++  | _ -> invalid_arg "unknown verdict"
++let verdicts = function `List xs -> List.map verdict xs | _ -> invalid_arg "expected verdict array"
++let report required vs =
++  let r = P.report ~required vs in
++  let rolled = P.roll_up ~required vs in
++  obj ["rolled", name rolled; "verdict", name r.verdict;
++    "total", i r.total; "verified", i r.verified; "blocked", i r.blocked;
++    "divergent", i r.divergent; "unmapped", i r.unmapped;
++    "percent", i (P.credit_percent r); "rendered", s (P.render_report r);
++    "grants_credit", b (P.grants_credit rolled)]
++let execute operation args = match operation with
++  | "observe" ->
++    obj ["identity", name P.identity;
++      "verdicts", `List (List.map (fun v -> obj ["name", name v;
++        "rank", i (P.rank v); "grants_credit", b (P.grants_credit v);
++        "asserts_defect", b (P.asserts_defect v)]) all);
++      "combine", `List (List.map (fun a -> `List (List.map (fun c -> name (P.combine a c)) all)) all);
++      "impacts", `List (List.map (fun v -> name (P.of_diagnostic_impact v))
++        [Fractal_diagnostic.Blocks_credit; Fractal_diagnostic.Denies_credit; Fractal_diagnostic.No_effect])]
++  | "report" -> report (boolean (get "required" args)) (verdicts (get "verdicts" args))
++  | "vectors" ->
++    Random.init 20260808;
++    let random () = List.nth all (Random.int 4) in
++    let vectors = List.init 2000 (fun _ ->
++      let size = Random.int 12 in
++      let vs = List.init size (fun _ -> random ()) in
++      let required = Random.bool () in
++      obj ["inputs", `List (List.map name vs); "required", b required;
++        "report", report required vs]) in
++    obj ["seed", i 20260808; "vectors", `List vectors]
++  | _ -> invalid_arg "unknown operation"
++
++(* Guard JSON nesting before the recursive parser; frame bytes are separately bounded. *)
++let bounded_json text =
++  let depth = ref 0 and quoted = ref false and escaped = ref false in
++  String.iter (fun c ->
++    if !quoted then
++      if !escaped then escaped := false else if c = '\\' then escaped := true
++      else if c = '"' then quoted := false
++    else match c with
++      | '"' -> quoted := true
++      | '[' | '{' -> incr depth; if !depth > 64 then invalid_arg "JSON nesting exceeds 64"
++      | ']' | '}' -> decr depth
++      | _ -> ()) text;
++  Yojson.Basic.from_string text
++
++let main () =
++  Sys.set_signal Sys.sigalrm (Sys.Signal_handle (fun _ -> exit 124));
++  ignore (Unix.alarm 30);
++  let length = input_binary_int stdin in
++  if length < 0 || length > limit then invalid_arg "frame too large";
++  let request = bounded_json (really_input_string stdin length) in
++  let id = string (get "id" request) in
++  let operation = string (get "operation" request) in
++  let version = get "version" request in
++  let response =
++    try
++      if version <> i 1 then invalid_arg "unsupported version";
++      let args = get "arguments" request in
++      (match args with `Assoc _ -> () | _ -> invalid_arg "arguments must be object");
++      ["result", execute operation args]
++    with Invalid_argument message -> ["error", obj ["code", s "invalid_request"; "message", s message]]
++  in
++  let bytes = Yojson.Basic.to_string (obj (["version", version; "id", s id; "operation", s operation] @ response)) in
++  if String.length bytes > limit then invalid_arg "response too large";
++  output_binary_int stdout (String.length bytes);
++  output_string stdout bytes;
++  flush stdout
++let () = try main () with _ -> exit 2
+diff --git a/tests/ocaml_counterparts/.gitignore b/tests/ocaml_counterparts/.gitignore
+new file mode 100644
+index 0000000000..84c048a73c
+--- /dev/null
++++ b/tests/ocaml_counterparts/.gitignore
+@@ -0,0 +1,1 @@
++/build/
+diff --git a/tests/ocaml_counterparts/fixtures/20260905-2209-parity-case-map.json b/tests/ocaml_counterparts/fixtures/20260905-2209-parity-case-map.json
+new file mode 100644
+index 0000000000..6e7eb5e06e
+--- /dev/null
++++ b/tests/ocaml_counterparts/fixtures/20260905-2209-parity-case-map.json
+@@ -0,0 +1,1148 @@
++{
++  "schema_version": 1,
++  "status": "executed_passed_pending_independent_review",
++  "source_sha256": "13644f83e002d23fc26338ebdd4ca92ccd6a6b6482cf9ab93af9cf0ff9c62644",
++  "source_boundary": "test_parity_algebra.exe -> hermes_harness_parity_algebra + hermes_wiki_diag; original runner unchanged",
++  "counterpart_boundary": "Gleam -> one-shot parity_port.exe -> same native libraries",
++  "source_labels": 42,
++  "original_nominal_checks": 146,
++  "cases": [
++    {
++      "id": "parity-001",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:22",
++      "source_label": "UNIT verdict names are distinct",
++      "fixture": [
++        "unmapped",
++        "blocked",
++        "verified",
++        "divergent"
++      ],
++      "expected": "four distinct native names",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "unit_and_structure_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-002",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:23",
++      "source_label": "UNIT verified grants credit",
++      "fixture": [
++        "verified"
++      ],
++      "expected": "true",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "unit_and_structure_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-003",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:28",
++      "source_label": "UNIT <verdict> withholds credit",
++      "fixture": [
++        "unmapped",
++        "blocked",
++        "divergent"
++      ],
++      "expected": "false for each",
++      "original_nominal_check_multiplicity": 3,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "unit_and_structure_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-004",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:31",
++      "source_label": "UNIT divergent asserts a defect",
++      "fixture": [
++        "divergent"
++      ],
++      "expected": "true",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "unit_and_structure_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-005",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:36",
++      "source_label": "UNIT <verdict> asserts no defect",
++      "fixture": [
++        "unmapped",
++        "blocked",
++        "verified"
++      ],
++      "expected": "false for each",
++      "original_nominal_check_multiplicity": 3,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "unit_and_structure_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-006",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:50",
++      "source_label": "PROPERTY combine is commutative",
++      "fixture": [
++        [
++          "unmapped",
++          "unmapped"
++        ],
++        [
++          "unmapped",
++          "blocked"
++        ],
++        [
++          "unmapped",
++          "verified"
++        ],
++        [
++          "unmapped",
++          "divergent"
++        ],
++        [
++          "blocked",
++          "unmapped"
++        ],
++        [
++          "blocked",
++          "blocked"
++        ],
++        [
++          "blocked",
++          "verified"
++        ],
++        [
++          "blocked",
++          "divergent"
++        ],
++        [
++          "verified",
++          "unmapped"
++        ],
++        [
++          "verified",
++          "blocked"
++        ],
++        [
++          "verified",
++          "verified"
++        ],
++        [
++          "verified",
++          "divergent"
++        ],
++        [
++          "divergent",
++          "unmapped"
++        ],
++        [
++          "divergent",
++          "blocked"
++        ],
++        [
++          "divergent",
++          "verified"
++        ],
++        [
++          "divergent",
++          "divergent"
++        ]
++      ],
++      "expected": "native combine(a,b) = native combine(b,a)",
++      "original_nominal_check_multiplicity": 16,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "property_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-007",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:65",
++      "source_label": "PROPERTY combine is associative",
++      "fixture": [
++        [
++          "unmapped",
++          "unmapped",
++          "unmapped"
++        ],
++        [
++          "unmapped",
++          "unmapped",
++          "blocked"
++        ],
++        [
++          "unmapped",
++          "unmapped",
++          "verified"
++        ],
++        [
++          "unmapped",
++          "unmapped",
++          "divergent"
++        ],
++        [
++          "unmapped",
++          "blocked",
++          "unmapped"
++        ],
++        [
++          "unmapped",
++          "blocked",
++          "blocked"
++        ],
++        [
++          "unmapped",
++          "blocked",
++          "verified"
++        ],
++        [
++          "unmapped",
++          "blocked",
++          "divergent"
++        ],
++        [
++          "unmapped",
++          "verified",
++          "unmapped"
++        ],
++        [
++          "unmapped",
++          "verified",
++          "blocked"
++        ],
++        [
++          "unmapped",
++          "verified",
++          "verified"
++        ],
++        [
++          "unmapped",
++          "verified",
++          "divergent"
++        ],
++        [
++          "unmapped",
++          "divergent",
++          "unmapped"
++        ],
++        [
++          "unmapped",
++          "divergent",
++          "blocked"
++        ],
++        [
++          "unmapped",
++          "divergent",
++          "verified"
++        ],
++        [
++          "unmapped",
++          "divergent",
++          "divergent"
++        ],
++        [
++          "blocked",
++          "unmapped",
++          "unmapped"
++        ],
++        [
++          "blocked",
++          "unmapped",
++          "blocked"
++        ],
++        [
++          "blocked",
++          "unmapped",
++          "verified"
++        ],
++        [
++          "blocked",
++          "unmapped",
++          "divergent"
++        ],
++        [
++          "blocked",
++          "blocked",
++          "unmapped"
++        ],
++        [
++          "blocked",
++          "blocked",
++          "blocked"
++        ],
++        [
++          "blocked",
++          "blocked",
++          "verified"
++        ],
++        [
++          "blocked",
++          "blocked",
++          "divergent"
++        ],
++        [
++          "blocked",
++          "verified",
++          "unmapped"
++        ],
++        [
++          "blocked",
++          "verified",
++          "blocked"
++        ],
++        [
++          "blocked",
++          "verified",
++          "verified"
++        ],
++        [
++          "blocked",
++          "verified",
++          "divergent"
++        ],
++        [
++          "blocked",
++          "divergent",
++          "unmapped"
++        ],
++        [
++          "blocked",
++          "divergent",
++          "blocked"
++        ],
++        [
++          "blocked",
++          "divergent",
++          "verified"
++        ],
++        [
++          "blocked",
++          "divergent",
++          "divergent"
++        ],
++        [
++          "verified",
++          "unmapped",
++          "unmapped"
++        ],
++        [
++          "verified",
++          "unmapped",
++          "blocked"
++        ],
++        [
++          "verified",
++          "unmapped",
++          "verified"
++        ],
++        [
++          "verified",
++          "unmapped",
++          "divergent"
++        ],
++        [
++          "verified",
++          "blocked",
++          "unmapped"
++        ],
++        [
++          "verified",
++          "blocked",
++          "blocked"
++        ],
++        [
++          "verified",
++          "blocked",
++          "verified"
++        ],
++        [
++          "verified",
++          "blocked",
++          "divergent"
++        ],
++        [
++          "verified",
++          "verified",
++          "unmapped"
++        ],
++        [
++          "verified",
++          "verified",
++          "blocked"
++        ],
++        [
++          "verified",
++          "verified",
++          "verified"
++        ],
++        [
++          "verified",
++          "verified",
++          "divergent"
++        ],
++        [
++          "verified",
++          "divergent",
++          "unmapped"
++        ],
++        [
++          "verified",
++          "divergent",
++          "blocked"
++        ],
++        [
++          "verified",
++          "divergent",
++          "verified"
++        ],
++        [
++          "verified",
++          "divergent",
++          "divergent"
++        ],
++        [
++          "divergent",
++          "unmapped",
++          "unmapped"
++        ],
++        [
++          "divergent",
++          "unmapped",
++          "blocked"
++        ],
++        [
++          "divergent",
++          "unmapped",
++          "verified"
++        ],
++        [
++          "divergent",
++          "unmapped",
++          "divergent"
++        ],
++        [
++          "divergent",
++          "blocked",
++          "unmapped"
++        ],
++        [
++          "divergent",
++          "blocked",
++          "blocked"
++        ],
++        [
++          "divergent",
++          "blocked",
++          "verified"
++        ],
++        [
++          "divergent",
++          "blocked",
++          "divergent"
++        ],
++        [
++          "divergent",
++          "verified",
++          "unmapped"
++        ],
++        [
++          "divergent",
++          "verified",
++          "blocked"
++        ],
++        [
++          "divergent",
++          "verified",
++          "verified"
++        ],
++        [
++          "divergent",
++          "verified",
++          "divergent"
++        ],
++        [
++          "divergent",
++          "divergent",
++          "unmapped"
++        ],
++        [
++          "divergent",
++          "divergent",
++          "blocked"
++        ],
++        [
++          "divergent",
++          "divergent",
++          "verified"
++        ],
++        [
++          "divergent",
++          "divergent",
++          "divergent"
++        ]
++      ],
++      "expected": "native combine(combine(a,b),c) = native combine(a,combine(b,c))",
++      "original_nominal_check_multiplicity": 64,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "property_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-008",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:73",
++      "source_label": "PROPERTY combine is idempotent",
++      "fixture": [
++        "unmapped",
++        "blocked",
++        "verified",
++        "divergent"
++      ],
++      "expected": "native combine(a,a) = a",
++      "original_nominal_check_multiplicity": 4,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "property_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-009",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:81",
++      "source_label": "PROPERTY identity is neutral",
++      "fixture": [
++        "unmapped",
++        "blocked",
++        "verified",
++        "divergent"
++      ],
++      "expected": "native combine(native identity,a) = a",
++      "original_nominal_check_multiplicity": 4,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "property_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-010",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:89",
++      "source_label": "PROPERTY divergent absorbs",
++      "fixture": [
++        "unmapped",
++        "blocked",
++        "verified",
++        "divergent"
++      ],
++      "expected": "native combine(divergent,a) = divergent",
++      "original_nominal_check_multiplicity": 4,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "property_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-011",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:102",
++      "source_label": "PROPERTY roll-up grants credit only when every child does",
++      "fixture": [
++        [
++          "unmapped",
++          "unmapped"
++        ],
++        [
++          "unmapped",
++          "blocked"
++        ],
++        [
++          "unmapped",
++          "verified"
++        ],
++        [
++          "unmapped",
++          "divergent"
++        ],
++        [
++          "blocked",
++          "unmapped"
++        ],
++        [
++          "blocked",
++          "blocked"
++        ],
++        [
++          "blocked",
++          "verified"
++        ],
++        [
++          "blocked",
++          "divergent"
++        ],
++        [
++          "verified",
++          "unmapped"
++        ],
++        [
++          "verified",
++          "blocked"
++        ],
++        [
++          "verified",
++          "verified"
++        ],
++        [
++          "verified",
++          "divergent"
++        ],
++        [
++          "divergent",
++          "unmapped"
++        ],
++        [
++          "divergent",
++          "blocked"
++        ],
++        [
++          "divergent",
++          "verified"
++        ],
++        [
++          "divergent",
++          "divergent"
++        ]
++      ],
++      "expected": "after.credit = before.credit AND added is verified; unit layer independently verifies native grants_credit for all added verdicts",
++      "original_nominal_check_multiplicity": 16,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "property_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-012",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:111",
++      "source_label": "PROPERTY roll-up is order independent",
++      "fixture": [
++        [
++          "verified",
++          "blocked",
++          "unmapped"
++        ],
++        [
++          "unmapped",
++          "blocked",
++          "verified"
++        ]
++      ],
++      "expected": "native rollups equal",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "property_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-013",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:123",
++      "source_label": "BDD an empty required node is unmapped, not verified",
++      "fixture": {
++        "required": true,
++        "verdicts": []
++      },
++      "expected": "unmapped; also initial RED in bdd_empty_required_test",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "bdd_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-014",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:126",
++      "source_label": "BDD an empty required node grants no credit",
++      "fixture": {
++        "required": true,
++        "verdicts": []
++      },
++      "expected": "false",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "bdd_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-015",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:134",
++      "source_label": "BDD one blocked child blocks the family",
++      "fixture": [
++        "verified",
++        "verified",
++        "blocked"
++      ],
++      "expected": "blocked",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "bdd_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-016",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:142",
++      "source_label": "BDD divergence outranks blockage",
++      "fixture": [
++        "blocked",
++        "divergent"
++      ],
++      "expected": "divergent",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "bdd_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-017",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:149",
++      "source_label": "BDD all verified children verify the family",
++      "fixture": [
++        "verified",
++        "verified"
++      ],
++      "expected": "verified",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "bdd_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-018",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:156",
++      "source_label": "BDD blocked credit maps to Blocked, not Divergent",
++      "fixture": [
++        "Fractal_diagnostic.Blocks_credit"
++      ],
++      "expected": "blocked",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "bdd_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-019",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:160",
++      "source_label": "BDD denied credit maps to Divergent",
++      "fixture": [
++        "Fractal_diagnostic.Denies_credit"
++      ],
++      "expected": "divergent",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "bdd_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-020",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:170",
++      "source_label": "FEATURE report counts children",
++      "fixture": [
++        "verified",
++        "verified",
++        "blocked",
++        "unmapped"
++      ],
++      "expected": "total = 4",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "feature_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-021",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:171",
++      "source_label": "FEATURE report counts verified",
++      "fixture": [
++        "verified",
++        "verified",
++        "blocked",
++        "unmapped"
++      ],
++      "expected": "verified = 2",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "feature_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-022",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:172",
++      "source_label": "FEATURE report counts blocked",
++      "fixture": [
++        "verified",
++        "verified",
++        "blocked",
++        "unmapped"
++      ],
++      "expected": "blocked = 1",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "feature_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-023",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:173",
++      "source_label": "FEATURE report counts unmapped",
++      "fixture": [
++        "verified",
++        "verified",
++        "blocked",
++        "unmapped"
++      ],
++      "expected": "unmapped = 1",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "feature_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-024",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:174",
++      "source_label": "FEATURE report verdict is the roll-up",
++      "fixture": [
++        "verified",
++        "verified",
++        "blocked",
++        "unmapped"
++      ],
++      "expected": "verdict and rolled = blocked",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "feature_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-025",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:175",
++      "source_label": "FEATURE percent is verified/total",
++      "fixture": [
++        "verified",
++        "verified",
++        "blocked",
++        "unmapped"
++      ],
++      "expected": "percent = 50",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "feature_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-026",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:184",
++      "source_label": "FEATURE nearly-complete percent is high",
++      "fixture": {
++        "head": "blocked",
++        "tail": {
++          "repeat": "verified",
++          "count": 94
++        }
++      },
++      "expected": "percent = 98",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "feature_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-027",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:187",
++      "source_label": "FEATURE nearly-complete is still not verified",
++      "fixture": {
++        "head": "blocked",
++        "tail": {
++          "repeat": "verified",
++          "count": 94
++        }
++      },
++      "expected": "verdict != verified",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "feature_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-028",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:190",
++      "source_label": "FEATURE report renders",
++      "fixture": {
++        "head": "blocked",
++        "tail": {
++          "repeat": "verified",
++          "count": 94
++        }
++      },
++      "expected": "rendered length > 0",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "feature_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-029",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:217",
++      "source_label": "FUZZ algebra invariants hold",
++      "fixture": {
++        "fixture": "fixtures/20260905-2209-parity-random-vectors.json",
++        "count": 2000
++      },
++      "expected": "Each vector: report.verdict=rolled; category sum=total; 0<=percent<=100; credit implies all verified; divergent membership implies divergent rollup. All asserted in Gleam; additional total=input length check.",
++      "original_nominal_check_multiplicity": 0,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "fuzz_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-030",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:218",
++      "source_label": "FUZZ algebra does not raise",
++      "fixture": {
++        "fixture": "fixtures/20260905-2209-parity-random-vectors.json",
++        "count": 2000
++      },
++      "expected": "Any native exception/nonzero exit/timeout fails should.be_ok; no passing skip",
++      "original_nominal_check_multiplicity": 0,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "fuzz_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-031",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:220",
++      "source_label": "FUZZ 2000 random roll-ups hold every invariant",
++      "fixture": {
++        "fixture": "fixtures/20260905-2209-parity-random-vectors.json",
++        "count": 2000
++      },
++      "expected": "2000 records; all source invariants asserted for each; exact ordered inputs and required flags equal pinned fixture",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "fuzz_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-032",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:231",
++      "source_label": "CHAOS 100k children counted",
++      "fixture": {
++        "head": "blocked",
++        "tail": {
++          "repeat": "verified",
++          "count": 99999
++        }
++      },
++      "expected": "total = 100000",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "chaos_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-033",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:232",
++      "source_label": "CHAOS one blocked child still blocks",
++      "fixture": {
++        "head": "blocked",
++        "tail": {
++          "repeat": "verified",
++          "count": 99999
++        }
++      },
++      "expected": "rolled = blocked",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "chaos_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-034",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:235",
++      "source_label": "CHAOS percent does not overflow",
++      "fixture": {
++        "head": "blocked",
++        "tail": {
++          "repeat": "verified",
++          "count": 99999
++        }
++      },
++      "expected": "percent = 99",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "chaos_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-035",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:240",
++      "source_label": "CHAOS mass divergence is divergent",
++      "fixture": {
++        "repeat": "divergent",
++        "count": 10000
++      },
++      "expected": "rolled = divergent",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "chaos_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-036",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:241",
++      "source_label": "CHAOS mass divergence is 0%",
++      "fixture": {
++        "repeat": "divergent",
++        "count": 10000
++      },
++      "expected": "percent = 0",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "chaos_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-037",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:247",
++      "source_label": "CHAOS empty optional node is verified",
++      "fixture": {
++        "required": false,
++        "verdicts": []
++      },
++      "expected": "verified",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "chaos_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-038",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:250",
++      "source_label": "CHAOS empty required node is unmapped",
++      "fixture": {
++        "required": true,
++        "verdicts": []
++      },
++      "expected": "unmapped",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "chaos_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-039",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:256",
++      "source_label": "STRUCTURE every verdict enumerated",
++      "fixture": [
++        "unmapped",
++        "blocked",
++        "verified",
++        "divergent"
++      ],
++      "expected": "four native verdict records",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "unit_and_structure_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-040",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:261",
++      "source_label": "STRUCTURE exactly one verdict grants credit",
++      "fixture": [
++        "unmapped",
++        "blocked",
++        "verified",
++        "divergent"
++      ],
++      "expected": "one native grants_credit true",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "unit_and_structure_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-041",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:264",
++      "source_label": "STRUCTURE exactly one verdict asserts a defect",
++      "fixture": [
++        "unmapped",
++        "blocked",
++        "verified",
++        "divergent"
++      ],
++      "expected": "one native asserts_defect true",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "unit_and_structure_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    },
++    {
++      "id": "parity-042",
++      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:272",
++      "source_label": "STRUCTURE two verdicts withhold without accusing",
++      "fixture": [
++        "unmapped",
++        "blocked",
++        "verified",
++        "divergent"
++      ],
++      "expected": "two native records with !credit AND !defect",
++      "original_nominal_check_multiplicity": 1,
++      "gleam_module": "hermes_harness/parity_algebra_test",
++      "gleam_function": "unit_and_structure_test",
++      "counterpart_kind": "Gleam assertions against native OCaml operations",
++      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
++    }
++  ],
++  "additional_checks": [
++    "Exact rank/name/credit/defect tuples for four verdicts",
++    "No_effect maps to unmapped",
++    "Report divergent count and exact rendered report",
++    "Input count equals report total in 2000 fuzz vectors",
++    "Exact OCaml-generated vector fixture identity",
++    "14 total gleeunit functions including strict transport bounds and fault behavior"
++  ],
++  "limits": [
++    "Mapping and execution do not imply full migration admission or formal prover execution",
++    "Two source FUZZ failure handlers have nominal multiplicity zero; both map to failing counterpart outcomes"
++  ]
++}
+diff --git a/tests/ocaml_counterparts/gleam.toml b/tests/ocaml_counterparts/gleam.toml
+new file mode 100644
+index 0000000000..b74536d623
+--- /dev/null
++++ b/tests/ocaml_counterparts/gleam.toml
+@@ -0,0 +1,13 @@
++name = "ocaml_counterparts"
++version = "0.1.0"
++target = "erlang"
++
++[dependencies]
++gleam_stdlib = "== 0.71.0"
++gleam_erlang = "== 1.3.0"
++gleam_json = "== 3.1.0"
++exception = "== 2.1.0"
++
++[dev-dependencies]
++gleeunit = "== 1.9.0"
++simplifile = "== 2.4.0"
+diff --git a/tests/ocaml_counterparts/manifest.toml b/tests/ocaml_counterparts/manifest.toml
+new file mode 100644
+index 0000000000..5046035ab6
+--- /dev/null
++++ b/tests/ocaml_counterparts/manifest.toml
+@@ -0,0 +1,20 @@
++# This file was generated by Gleam
++# You typically do not need to edit this file
++
++packages = [
++  { name = "exception", version = "2.1.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "exception", source = "hex", outer_checksum = "329D269D5C2A314F7364BD2711372B6F2C58FA6F39981572E5CA68624D291F8C" },
++  { name = "filepath", version = "1.1.2", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "filepath", source = "hex", outer_checksum = "B06A9AF0BF10E51401D64B98E4B627F1D2E48C154967DA7AF4D0914780A6D40A" },
++  { name = "gleam_erlang", version = "1.3.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_erlang", source = "hex", outer_checksum = "1124AD3AA21143E5AF0FC5CF3D9529F6DB8CA03E43A55711B60B6B7B3874375C" },
++  { name = "gleam_json", version = "3.1.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_json", source = "hex", outer_checksum = "44FDAA8847BE8FC48CA7A1C089706BD54BADCC4C45B237A992EDDF9F2CDB2836" },
++  { name = "gleam_stdlib", version = "0.71.0", build_tools = ["gleam"], requirements = [], otp_app = "gleam_stdlib", source = "hex", outer_checksum = "702F3BC2A14793906880B1078B19A6165F87323AEE8D0C4A34085846336FCAAE" },
++  { name = "gleeunit", version = "1.9.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleeunit", source = "hex", outer_checksum = "DA9553CE58B67924B3C631F96FE3370C49EB6D6DC6B384EC4862CC4AAA718F3C" },
++  { name = "simplifile", version = "2.4.0", build_tools = ["gleam"], requirements = ["filepath", "gleam_stdlib"], otp_app = "simplifile", source = "hex", outer_checksum = "7C18AFA4FED0B4CE1FA5B0B4BAC1FA1744427054EA993565F6F3F82E5453170D" },
++]
++
++[requirements]
++exception = { version = "== 2.1.0" }
++gleam_erlang = { version = "== 1.3.0" }
++gleam_json = { version = "== 3.1.0" }
++gleam_stdlib = { version = "== 0.71.0" }
++gleeunit = { version = "== 1.9.0" }
++simplifile = { version = "== 2.4.0" }
+diff --git a/tests/ocaml_counterparts/src/ocaml_counterparts/native.gleam b/tests/ocaml_counterparts/src/ocaml_counterparts/native.gleam
+new file mode 100644
+index 0000000000..bf7a572f36
+--- /dev/null
++++ b/tests/ocaml_counterparts/src/ocaml_counterparts/native.gleam
+@@ -0,0 +1,297 @@
++import exception
++import gleam/bit_array
++import gleam/dynamic.{type Dynamic}
++import gleam/dynamic/decode
++import gleam/erlang/port.{type Port}
++import gleam/erlang/process
++import gleam/int
++import gleam/json
++import gleam/result
++
++const limit = 8_388_608
++
++const adapter = "../../engines/hermes/_build/default/test_ports/parity/parity_port.exe"
++
++pub fn fixture_path() -> String {
++  "../../engines/hermes/_build/default/test_ports/parity/fault_port.exe"
++}
++
++type Executable {
++  SpawnExecutable(String)
++}
++
++type Option {
++  Binary
++  Args(List(String))
++  StderrToStdout
++}
++
++type ExitOption {
++  ExitStatus
++}
++
++type OsPid {
++  OsPid
++}
++
++type Unit {
++  Millisecond
++}
++
++type Event {
++  Data(BitArray)
++  Exited(Int)
++}
++
++type SendOption {
++  Nosuspend
++}
++
++@external(erlang, "erlang", "open_port")
++fn open_port(executable: Executable, options: List(Dynamic)) -> Port
++
++@external(erlang, "erlang", "port_command")
++fn command(port: Port, bytes: BitArray, options: List(SendOption)) -> Bool
++
++@external(erlang, "erlang", "port_close")
++fn close(port: Port) -> Bool
++
++@external(erlang, "erlang", "port_info")
++fn port_pid(port: Port, item: OsPid) -> #(OsPid, Int)
++
++@external(erlang, "erlang", "element")
++fn element(index: Int, message: Dynamic) -> Dynamic
++
++@external(erlang, "erlang", "monotonic_time")
++fn clock(unit: Unit) -> Int
++
++@external(erlang, "gleam_stdlib", "identity")
++fn dynamic(value: a) -> Dynamic
++
++fn options(argv: List(String)) -> List(Dynamic) {
++  [dynamic(Binary), dynamic(ExitStatus), dynamic(Args(argv))]
++}
++
++fn event(message: Dynamic) -> Event {
++  let payload = element(2, message)
++  let tag = element(1, payload)
++  let value = element(2, payload)
++  case tag == dynamic(ExitStatus) {
++    True -> {
++      let assert Ok(code) = decode.run(value, decode.int)
++      Exited(code)
++    }
++    False -> {
++      let assert Ok(bytes) = decode.run(value, decode.bit_array)
++      Data(bytes)
++    }
++  }
++}
++
++fn terminate(port: Port, pid: Int) {
++  // Direct executable invocation, never a shell; this pure adapter has no children.
++  let _ =
++    exception.rescue(fn() {
++      let killer =
++        open_port(SpawnExecutable("/usr/bin/kill"), [
++          dynamic(StderrToStdout),
++          ..options(["-KILL", int.to_string(pid)])
++        ])
++      let selector =
++        process.new_selector() |> process.select_record(killer, 1, event)
++      let _ = process.selector_receive(selector, 1000)
++      let _ = exception.rescue(fn() { close(killer) })
++      Nil
++    })
++  let _ = exception.rescue(fn() { close(port) })
++  Nil
++}
++
++pub fn request(
++  operation: String,
++  arguments: json.Json,
++) -> Result(Dynamic, String) {
++  request_with(adapter, [], operation, arguments, 30_000)
++}
++
++pub fn request_with(
++  path: String,
++  argv: List(String),
++  operation: String,
++  arguments: json.Json,
++  timeout: Int,
++) -> Result(Dynamic, String) {
++  let id = "parity-1"
++  let payload =
++    json.object([
++      #("version", json.int(1)),
++      #("id", json.string(id)),
++      #("operation", json.string(operation)),
++      #("arguments", arguments),
++    ])
++    |> json.to_string
++    |> bit_array.from_string
++  let size = bit_array.byte_size(payload)
++  case size > limit || timeout < 1 || timeout > 30_000 {
++    True -> Error("request_bounds")
++    False -> {
++      use p <- result.try(
++        exception.rescue(fn() {
++          open_port(SpawnExecutable(path), options(argv))
++        })
++        |> result.map_error(fn(_) { "spawn_failed" }),
++      )
++      let #(_, pid) = port_pid(p, OsPid)
++      let outcome =
++        exception.rescue(fn() {
++          let deadline = clock(Millisecond) + timeout
++          let selector =
++            process.new_selector() |> process.select_record(p, 1, event)
++          case command(p, <<size:32-big, payload:bits>>, [Nosuspend]) {
++            True -> receive(selector, <<>>, deadline)
++            False -> Error("port_busy")
++          }
++        })
++        |> result.unwrap(Error("port_error"))
++      case outcome {
++        Error("nonzero_exit") -> Nil
++        Error(_) -> terminate(p, pid)
++        Ok(_) -> Nil
++      }
++      use raw <- result.try(outcome)
++      use bytes <- result.try(frame(raw))
++      decode_reply(bytes, id, operation)
++    }
++  }
++}
++
++fn receive(
++  selector: process.Selector(Event),
++  bytes: BitArray,
++  deadline: Int,
++) -> Result(BitArray, String) {
++  let remaining = deadline - clock(Millisecond)
++  case remaining <= 0 {
++    True -> Error("timeout")
++    False -> {
++      case process.selector_receive(selector, remaining) {
++        Error(_) -> Error("timeout")
++        Ok(Exited(code)) ->
++          case code {
++            0 -> Ok(bytes)
++            _ -> Error("nonzero_exit")
++          }
++        Ok(Data(chunk)) -> {
++          let joined = <<bytes:bits, chunk:bits>>
++          case bit_array.byte_size(joined) > limit + 4 {
++            True -> Error("oversized_frame")
++            False ->
++              case joined {
++                <<size:32-big, _:bytes>> if size > limit ->
++                  Error("oversized_frame")
++                _ -> receive(selector, joined, deadline)
++              }
++          }
++        }
++      }
++    }
++  }
++}
++
++fn frame(bytes: BitArray) -> Result(BitArray, String) {
++  case bytes {
++    <<size:32-big, payload:bytes>> ->
++      case bit_array.byte_size(payload) {
++        actual if actual < size -> Error("truncated_frame")
++        actual if actual > size -> Error("malformed_frame")
++        _ -> Ok(payload)
++      }
++    _ -> Error("malformed_frame")
++  }
++}
++
++pub fn decode_reply(
++  bytes: BitArray,
++  id: String,
++  operation: String,
++) -> Result(Dynamic, String) {
++  use _ <- result.try(check_depth(bytes, 0, False, False))
++  use text <- result.try(
++    bit_array.to_string(bytes) |> result.map_error(fn(_) { "malformed_json" }),
++  )
++  use value <- result.try(
++    json.parse(text, decode.dynamic)
++    |> result.map_error(fn(_) { "malformed_json" }),
++  )
++  let identity = {
++    use version <- decode.field("version", decode.int)
++    use response_id <- decode.field("id", decode.string)
++    use response_op <- decode.field("operation", decode.string)
++    decode.success(#(version, response_id, response_op))
++  }
++  case decode.run(value, identity) {
++    Ok(#(1, response_id, response_op))
++      if response_id == id && response_op == operation
++    -> {
++      let error =
++        decode.run(value, decode.field("error", decode.dynamic, decode.success))
++      let payload =
++        decode.run(
++          value,
++          decode.field("result", decode.dynamic, decode.success),
++        )
++      case error, payload {
++        Ok(error), Error(_) -> {
++          let structured_error = {
++            use code <- decode.field("code", decode.string)
++            use message <- decode.field("message", decode.string)
++            decode.success(#(code, message))
++          }
++          case decode.run(error, structured_error) {
++            Ok(_) -> Error("native_error")
++            Error(_) -> Error("malformed_json")
++          }
++        }
++        Error(_), Ok(payload) -> Ok(payload)
++        _, _ -> Error("malformed_json")
++      }
++    }
++    _ -> Error("identity_mismatch")
++  }
++}
++
++fn check_depth(
++  bytes: BitArray,
++  depth: Int,
++  quoted: Bool,
++  escaped: Bool,
++) -> Result(Nil, String) {
++  case bytes {
++    <<>> -> Ok(Nil)
++    <<byte, rest:bytes>> ->
++      case quoted {
++        True ->
++          case escaped {
++            True -> check_depth(rest, depth, True, False)
++            False ->
++              case byte {
++                92 -> check_depth(rest, depth, True, True)
++                34 -> check_depth(rest, depth, False, False)
++                _ -> check_depth(rest, depth, True, False)
++              }
++          }
++        False ->
++          case byte {
++            34 -> check_depth(rest, depth, True, False)
++            91 | 123 ->
++              case depth >= 64 {
++                True -> Error("json_depth")
++                False -> check_depth(rest, depth + 1, False, False)
++              }
++            93 | 125 -> check_depth(rest, depth - 1, False, False)
++            _ -> check_depth(rest, depth, False, False)
++          }
++      }
++    _ -> Error("malformed_json")
++  }
++}
+diff --git a/tests/ocaml_counterparts/test/export_vectors.gleam b/tests/ocaml_counterparts/test/export_vectors.gleam
+new file mode 100644
+index 0000000000..3afdc4b9ea
+--- /dev/null
++++ b/tests/ocaml_counterparts/test/export_vectors.gleam
+@@ -0,0 +1,33 @@
++import gleam/dynamic/decode
++import gleam/json
++import gleam/list
++import gleeunit/should
++import ocaml_counterparts/native
++import simplifile
++
++pub fn main() {
++  let reply = native.request("vectors", json.object([])) |> should.be_ok
++  let decoder = {
++    use inputs <- decode.field("inputs", decode.list(decode.string))
++    use required <- decode.field("required", decode.bool)
++    decode.success(
++      json.object([
++        #("inputs", json.array(inputs, json.string)),
++        #("required", json.bool(required)),
++      ]),
++    )
++  }
++  let vectors =
++    decode.run(
++      reply,
++      decode.field("vectors", decode.list(decoder), decode.success),
++    )
++    |> should.be_ok
++  list.length(vectors) |> should.equal(2000)
++  simplifile.create_directory_all("fixtures") |> should.be_ok
++  simplifile.write(
++    "fixtures/20260905-2209-parity-random-vectors.json",
++    json.array(vectors, fn(v) { v }) |> json.to_string,
++  )
++  |> should.be_ok
++}
+diff --git a/tests/ocaml_counterparts/test/hermes_harness/parity_algebra_test.gleam b/tests/ocaml_counterparts/test/hermes_harness/parity_algebra_test.gleam
+new file mode 100644
+index 0000000000..9673c23651
+--- /dev/null
++++ b/tests/ocaml_counterparts/test/hermes_harness/parity_algebra_test.gleam
+@@ -0,0 +1,210 @@
++import gleam/dynamic.{type Dynamic}
++import gleam/dynamic/decode
++import gleam/json
++import gleam/list
++import gleam/string
++import gleeunit/should
++import ocaml_counterparts/native
++import simplifile
++
++// Catches the vacuous-truth bug: required empty evidence must withhold credit.
++pub fn bdd_empty_required_test() {
++  let reply =
++    native.request(
++      "report",
++      json.object([
++        #("required", json.bool(True)),
++        #("verdicts", json.array([], json.string)),
++      ]),
++    )
++  let value = reply |> should.be_ok
++  value
++  |> decode.run(decode.field("rolled", decode.string, decode.success))
++  |> should.equal(Ok("unmapped"))
++}
++
++fn call(op: String, args: json.Json) -> Dynamic {
++  native.request(op, args) |> should.be_ok
++}
++
++fn field(value: Dynamic, key: String, decoder: decode.Decoder(a)) -> a {
++  decode.run(value, decode.field(key, decoder, decode.success)) |> should.be_ok
++}
++
++const all = ["unmapped", "blocked", "verified", "divergent"]
++
++fn report(required: Bool, verdicts: List(String)) -> Dynamic {
++  call(
++    "report",
++    json.object([
++      #("required", json.bool(required)),
++      #("verdicts", json.array(verdicts, json.string)),
++    ]),
++  )
++}
++
++fn rolled(value: Dynamic) -> String {
++  field(value, "rolled", decode.string)
++}
++
++fn number(value: Dynamic, key: String) -> Int {
++  field(value, key, decode.int)
++}
++
++fn text(value: Dynamic, key: String) -> String {
++  field(value, key, decode.string)
++}
++
++fn flag(value: Dynamic, key: String) -> Bool {
++  field(value, key, decode.bool)
++}
++
++// Rejects swapped constructors, credit/defect conflation and wrong severity.
++pub fn unit_and_structure_test() {
++  let values =
++    call("observe", json.object([]))
++    |> field("verdicts", decode.list(decode.dynamic))
++  list.length(values) |> should.equal(4)
++  list.map(values, text(_, "name"))
++  |> list.unique
++  |> list.length
++  |> should.equal(4)
++  list.each(
++    list.zip(values, [
++      #("unmapped", 1, False, False),
++      #("blocked", 2, False, False),
++      #("verified", 0, True, False),
++      #("divergent", 3, False, True),
++    ]),
++    fn(pair) {
++      let #(v, #(name, rank, credit, defect)) = pair
++      text(v, "name") |> should.equal(name)
++      number(v, "rank") |> should.equal(rank)
++      flag(v, "grants_credit") |> should.equal(credit)
++      flag(v, "asserts_defect") |> should.equal(defect)
++    },
++  )
++  list.count(values, flag(_, "grants_credit")) |> should.equal(1)
++  list.count(values, flag(_, "asserts_defect")) |> should.equal(1)
++  list.count(values, fn(v) {
++    !flag(v, "grants_credit") && !flag(v, "asserts_defect")
++  })
++  |> should.equal(2)
++}
++
++fn combined(matrix: List(List(String)), a: String, b: String) -> String {
++  let row = list.zip(all, matrix) |> list.key_find(a) |> should.be_ok
++  list.zip(all, row) |> list.key_find(b) |> should.be_ok
++}
++
++// Exhaustive laws use actual native combine outputs, including nested results.
++pub fn property_test() {
++  let observed = call("observe", json.object([]))
++  let matrix =
++    field(observed, "combine", decode.list(decode.list(decode.string)))
++  let identity = text(observed, "identity")
++  list.each(all, fn(a) {
++    combined(matrix, a, a) |> should.equal(a)
++    combined(matrix, identity, a) |> should.equal(a)
++    combined(matrix, "divergent", a) |> should.equal("divergent")
++    list.each(all, fn(b) {
++      combined(matrix, a, b) |> should.equal(combined(matrix, b, a))
++      let before = report(True, [a])
++      let after = report(True, [a, b])
++      flag(after, "grants_credit")
++      |> should.equal(flag(before, "grants_credit") && b == "verified")
++      list.each(all, fn(c) {
++        combined(matrix, combined(matrix, a, b), c)
++        |> should.equal(combined(matrix, a, combined(matrix, b, c)))
++      })
++    })
++  })
++  rolled(report(True, ["verified", "blocked", "unmapped"]))
++  |> should.equal(rolled(report(True, ["unmapped", "blocked", "verified"])))
++}
++
++pub fn bdd_test() {
++  let empty = report(True, [])
++  rolled(empty) |> should.equal("unmapped")
++  flag(empty, "grants_credit") |> should.be_false
++  rolled(report(True, ["verified", "verified", "blocked"]))
++  |> should.equal("blocked")
++  rolled(report(True, ["blocked", "divergent"])) |> should.equal("divergent")
++  rolled(report(True, ["verified", "verified"])) |> should.equal("verified")
++  let impacts =
++    call("observe", json.object([]))
++    |> field("impacts", decode.list(decode.string))
++  impacts |> should.equal(["blocked", "divergent", "unmapped"])
++}
++
++pub fn feature_test() {
++  let r = report(True, ["verified", "verified", "blocked", "unmapped"])
++  list.map(
++    ["total", "verified", "blocked", "unmapped", "divergent", "percent"],
++    number(r, _),
++  )
++  |> should.equal([4, 2, 1, 1, 0, 50])
++  rolled(r) |> should.equal("blocked")
++  text(r, "verdict") |> should.equal("blocked")
++  text(r, "rendered")
++  |> should.equal(
++    "blocked (2/4 verified, 1 blocked, 0 divergent, 1 unmapped, 50%)",
++  )
++  let nearly = report(True, ["blocked", ..list.repeat("verified", 94)])
++  number(nearly, "percent") |> should.equal(98)
++  should.be_false(text(nearly, "verdict") == "verified")
++  should.be_true(string.length(text(nearly, "rendered")) > 0)
++}
++
++// OCaml exports original Random.init/int/List.init/bool order with observations.
++pub fn fuzz_test() {
++  let vectors =
++    call("vectors", json.object([]))
++    |> field("vectors", decode.list(decode.dynamic))
++  list.length(vectors) |> should.equal(2000)
++  let inputs_decoder = {
++    use inputs <- decode.field("inputs", decode.list(decode.string))
++    use required <- decode.field("required", decode.bool)
++    decode.success(#(inputs, required))
++  }
++  let fixture =
++    simplifile.read("fixtures/20260905-2209-parity-random-vectors.json")
++    |> should.be_ok
++    |> json.parse(decode.list(inputs_decoder))
++    |> should.be_ok
++  list.map(vectors, fn(v) { decode.run(v, inputs_decoder) |> should.be_ok })
++  |> should.equal(fixture)
++  list.each(vectors, fn(v) {
++    let inputs = field(v, "inputs", decode.list(decode.string))
++    let r = field(v, "report", decode.dynamic)
++    text(r, "verdict") |> should.equal(rolled(r))
++    should.equal(
++      number(r, "verified")
++        + number(r, "blocked")
++        + number(r, "divergent")
++        + number(r, "unmapped"),
++      number(r, "total"),
++    )
++    number(r, "total") |> should.equal(list.length(inputs))
++    let percent = number(r, "percent")
++    should.be_true(percent >= 0 && percent <= 100)
++    should.be_true(
++      !flag(r, "grants_credit") || list.all(inputs, fn(v) { v == "verified" }),
++    )
++    should.be_true(
++      !list.contains(inputs, "divergent") || rolled(r) == "divergent",
++    )
++  })
++}
++
++pub fn chaos_test() {
++  let r = report(True, ["blocked", ..list.repeat("verified", 99_999)])
++  number(r, "total") |> should.equal(100_000)
++  rolled(r) |> should.equal("blocked")
++  number(r, "percent") |> should.equal(99)
++  let bad = report(True, list.repeat("divergent", 10_000))
++  rolled(bad) |> should.equal("divergent")
++  number(bad, "percent") |> should.equal(0)
++  rolled(report(False, [])) |> should.equal("verified")
++  rolled(report(True, [])) |> should.equal("unmapped")
++}
+diff --git a/tests/ocaml_counterparts/test/mutation_probe.gleam b/tests/ocaml_counterparts/test/mutation_probe.gleam
+new file mode 100644
+index 0000000000..ffed8d3d46
+--- /dev/null
++++ b/tests/ocaml_counterparts/test/mutation_probe.gleam
+@@ -0,0 +1,29 @@
++import gleam/dynamic/decode
++import gleam/erlang/charlist.{type Charlist}
++import gleam/json
++import gleeunit/should
++import ocaml_counterparts/native
++
++@external(erlang, "init", "get_plain_arguments")
++fn arguments() -> List(Charlist)
++
++// Run with: gleam run -m mutation_probe -- /absolute/path/to/isolated/adapter
++// The normal adapter has no mutation flag and the original source is untouched.
++pub fn main() {
++  let assert [path] = arguments()
++  let value =
++    native.request_with(
++      charlist.to_string(path),
++      [],
++      "report",
++      json.object([
++        #("required", json.bool(True)),
++        #("verdicts", json.array([], json.string)),
++      ]),
++      30_000,
++    )
++    |> should.be_ok
++  value
++  |> decode.run(decode.field("rolled", decode.string, decode.success))
++  |> should.equal(Ok("unmapped"))
++}
+diff --git a/tests/ocaml_counterparts/test/ocaml_counterparts_test.gleam b/tests/ocaml_counterparts/test/ocaml_counterparts_test.gleam
+new file mode 100644
+index 0000000000..ecd12adf5e
+--- /dev/null
++++ b/tests/ocaml_counterparts/test/ocaml_counterparts_test.gleam
+@@ -0,0 +1,5 @@
++import gleeunit
++
++pub fn main() {
++  gleeunit.main()
++}
+diff --git a/tests/ocaml_counterparts/test/transport_test.gleam b/tests/ocaml_counterparts/test/transport_test.gleam
+new file mode 100644
+index 0000000000..60db95b067
+--- /dev/null
++++ b/tests/ocaml_counterparts/test/transport_test.gleam
+@@ -0,0 +1,111 @@
++import gleam/bit_array
++import gleam/erlang/process
++import gleam/int
++import gleam/json
++import gleam/list
++import gleam/string
++import gleeunit/should
++import ocaml_counterparts/native
++import simplifile
++
++pub fn faults_test() {
++  list.each(
++    [
++      #("malformed_frame", "malformed_frame"),
++      #("truncated", "truncated_frame"),
++      #("oversized", "oversized_frame"),
++      #("malformed_json", "malformed_json"),
++      #("wrong_id", "identity_mismatch"),
++      #("wrong_version", "identity_mismatch"),
++      #("wrong_operation", "identity_mismatch"),
++      #("native_error", "native_error"),
++      #("nonzero", "nonzero_exit"),
++      #("timeout", "timeout"),
++    ],
++    fn(pair) {
++      let #(mode, expected) = pair
++      native.request_with(
++        native.fixture_path(),
++        [mode],
++        "observe",
++        json.object([]),
++        200,
++      )
++      |> should.equal(Error(expected))
++    },
++  )
++}
++
++pub fn missing_executable_test() {
++  native.request_with(
++    "/nonexistent/uos-parity-adapter",
++    [],
++    "observe",
++    json.object([]),
++    200,
++  )
++  |> should.equal(Error("spawn_failed"))
++}
++
++pub fn native_request_errors_test() {
++  native.request("unknown", json.object([]))
++  |> should.equal(Error("native_error"))
++  native.request("report", json.object([#("required", json.string("yes"))]))
++  |> should.equal(Error("native_error"))
++}
++
++pub fn bounded_json_test() {
++  let deep = string.repeat("[", 65) <> "0" <> string.repeat("]", 65)
++  native.decode_reply(bit_array.from_string(deep), "parity-1", "observe")
++  |> should.equal(Error("json_depth"))
++}
++
++@external(erlang, "erlang", "unique_integer")
++fn unique_integer() -> Int
++
++pub fn timeout_reaps_direct_child_test() {
++  let path =
++    "/tmp/uos-parity-timeout-" <> int.to_string(unique_integer()) <> ".pid"
++  native.request_with(
++    native.fixture_path(),
++    ["timeout", path],
++    "observe",
++    json.object([]),
++    200,
++  )
++  |> should.equal(Error("timeout"))
++  let pid = simplifile.read(path) |> should.be_ok |> string.trim
++  process.sleep(20)
++  simplifile.is_directory("/proc/" <> pid) |> should.equal(Ok(False))
++  simplifile.delete_file(path) |> should.be_ok
++}
++
++pub fn oversized_request_test() {
++  native.request_with(
++    native.fixture_path(),
++    [],
++    "observe",
++    json.string(string.repeat("x", 8_388_609)),
++    200,
++  )
++  |> should.equal(Error("request_bounds"))
++}
++
++pub fn strict_envelope_test() {
++  list.each(
++    [
++      "\"error\":false",
++      "\"error\":{\"code\":7,\"message\":null}",
++      "\"error\":{\"code\":\"bad\",\"message\":\"bad\"},\"result\":null",
++      "\"other\":null",
++    ],
++    fn(payload) {
++      let body =
++        "{\"version\":1,\"id\":\"parity-1\",\"operation\":\"observe\","
++        <> payload
++        <> "}"
++      native.decode_reply(bit_array.from_string(body), "parity-1", "observe")
++      |> should.equal(Error("malformed_json"))
++    },
++  )
++}
+

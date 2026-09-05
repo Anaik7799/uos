@@ -1,0 +1,9 @@
+(executable
+ (name parity_port)
+ (modules parity_port)
+ (libraries hermes_harness_parity_algebra hermes_wiki_diag yojson unix))
+
+(executable
+ (name fault_port)
+ (modules fault_port)
+ (libraries yojson unix))

@@ -1,0 +1,63 @@
+{
+  "task": "4-sa-plan-registration",
+  "status": "implemented-awaiting-independent-review",
+  "request": "create sa-plan taks, hjobs and workflow with temporal",
+  "head_observed": "b33f4539e01422e042805845dfbc6f42e43e1c4a",
+  "behavior": "Add-only typed Store registration: 75 tasks, 74 namespaced reserved jobs, one local Temporal-style workflow; no worker or production effects.",
+  "tdd": {
+    "red": {
+      "exit": 1,
+      "passed": 0,
+      "failed": 1,
+      "observation": "register returned Error(native_error) while typed materialize was explicitly unimplemented"
+    },
+    "green": {
+      "exit": 0,
+      "passed": 9,
+      "failed": 0
+    }
+  },
+  "commands": [
+    "dune build --build-dir /tmp/uos-sa-plan-build orchestration/ocaml_gleam_plan/plan_port.exe orchestration/ocaml_gleam_plan/testing/plan_fixture.exe",
+    "PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:$PATH UOS_PLAN_PORT=/tmp/uos-sa-plan-build/default/orchestration/ocaml_gleam_plan/plan_port.exe UOS_PLAN_FIXTURE=/tmp/uos-sa-plan-build/default/orchestration/ocaml_gleam_plan/testing/plan_fixture.exe UOS_PLAN_TEST_ROOT=/tmp/uos-sa-plan-tests.OMxAF7 gleam test",
+    "gleam format"
+  ],
+  "tests": [
+    "registration counts",
+    "exact replay and reopened process readback",
+    "missing status does not create DB",
+    "undeclared/traversal paths rejected",
+    "symlink state rejected",
+    "outer transaction rollback",
+    "workflow input conflict retained",
+    "job conflict causes rollback",
+    "task dependency claims enforced and jobs unclaimed"
+  ],
+  "warnings": [
+    "Cold Gleam stdlib build emits OTP29 dependency deprecated-catch warnings, not new authored Erlang.",
+    "Initial test scaffold decoder arity corrected before genuine RED; not counted as RED."
+  ],
+  "limitations": [
+    "No Temporal server/SDK present; Store history only.",
+    "Job queue itself does not check task DAG; no dispatcher exists, dedicated local queue reserved.",
+    "Status opens existing Store through open_db; no hostile/concurrent filesystem isolation claim.",
+    "Persistent UOS state not yet materialized; tests use /tmp.",
+    "Task 2 preservation tool still pending. No full migration or 318-file test-case completeness claim."
+  ],
+  "original_files_edited": [],
+  "review_fix": {
+    "immutable_sentinels": "Gleam now asserts workflow kind/input/full ordered history and job name/worker/args/max_attempts after rejection.",
+    "governance": "Updated all thirteen sections as applicable in docs/journal/20260905-2209-additive-test-execution-journal.md; distinct actual-state receipt in governance/testing/ocaml_gleam/20260905-2251-sa-plan-registration-receipt.json and full handoff/spec linked there.",
+    "minor_fixes": "Temporary paths require the explicit generated UOS_PLAN_TEST_ROOT; Gleam asserts reserved queue/local backend/no Temporal server and OGL.04 dependencies.",
+    "baseline_binding": "Immutable specification/job payload now include source baseline SHA256 fa274d8d918ca0d845f995651a8be508048f28c5d73da7367f2fcdea4a11ea51.",
+    "final_tests": "9 passed, no failures; exit 0 on final code using fresh /tmp/uos-sa-plan-tests.EISql5; full command/output in registration receipt.",
+    "persistent_state": "75 tasks, 74 jobs, 1 workflow materialized; replay/status agree; completed=0, executing=0, ready=1, job_attempts=0, dispatch=false. No worker or Temporal server started.",
+    "review_status": "Scoped re-review approved: all Important findings addressed, no new Critical/Important breakage. Initial report remains historical evidence."
+  },
+  "skills": [
+    "c3i-temporal-orchestration",
+    "cepaf-planning-expert",
+    "requesting-code-review",
+    "test-driven-development"
+  ]
+}
