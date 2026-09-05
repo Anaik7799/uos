@@ -1,0 +1,91 @@
+# UOS Superpowers Capability Inventory
+[meta]
+source = "UOS-AGENT-CAPABILITY-INVENTORY-2026-09-05"
+external_version_observed = "6.3.0"
+authority = "A0_reference"
+status = "EXTERNAL_PIN_REQUIRED"
+
+[[superpower]]
+name = "brainstorming"
+source = "external_superpowers"
+version = "6.3.0"
+state = "classified"
+
+[[superpower]]
+name = "dispatching-parallel-agents"
+source = "external_superpowers"
+version = "6.3.0"
+state = "classified"
+
+[[superpower]]
+name = "executing-plans"
+source = "external_superpowers"
+version = "6.3.0"
+state = "classified"
+
+[[superpower]]
+name = "finishing-a-development-branch"
+source = "external_superpowers"
+version = "6.3.0"
+state = "classified"
+
+[[superpower]]
+name = "receiving-code-review"
+source = "external_superpowers"
+version = "6.3.0"
+state = "classified"
+
+[[superpower]]
+name = "requesting-code-review"
+source = "external_superpowers"
+version = "6.3.0"
+state = "classified"
+
+[[superpower]]
+name = "subagent-driven-development"
+source = "external_superpowers"
+version = "6.3.0"
+state = "classified"
+
+[[superpower]]
+name = "systematic-debugging"
+source = "external_superpowers"
+version = "6.3.0"
+state = "classified"
+
+[[superpower]]
+name = "test-driven-development"
+source = "external_superpowers"
+version = "6.3.0"
+state = "classified"
+
+[[superpower]]
+name = "using-git-worktrees"
+source = "external_superpowers"
+version = "6.3.0"
+state = "classified"
+
+[[superpower]]
+name = "using-superpowers"
+source = "external_superpowers"
+version = "6.3.0"
+state = "classified"
+
+[[superpower]]
+name = "verification-before-completion"
+source = "external_superpowers"
+version = "6.3.0"
+state = "classified"
+
+[[superpower]]
+name = "writing-plans"
+source = "external_superpowers"
+version = "6.3.0"
+state = "classified"
+
+[[superpower]]
+name = "writing-skills"
+source = "external_superpowers"
+version = "6.3.0"
+state = "classified"
+

@@ -1,0 +1,14 @@
+# UOS Time Protocol: Clock Domains & Types
+[meta]
+protocol = "SC-TIME"
+status = "NORMALIZED"
+
+[domains]
+civil_clock = "Wall-clock UTC / Local Timezone (host-observed)"
+monotonic_clock = "High-resolution monotonic timer (nanoseconds)"
+telemetry_clock = "OpenTelemetry epoch timestamps (nanoseconds since UNIX epoch)"
+
+[measurements]
+host_ntp_offset = "Host OS offset measured via chrony/timesync receipt"
+system_to_model_delta = "Offset between system clock and LLM model response timestamp"
+agent_context_delta = "Freshness duration of agent operational context"

@@ -1,0 +1,47 @@
+# UOS Policy Mapping: Source Inputs -> Canonical UOS Subsystems
+
+[meta]
+total_policy_identities = 44
+external_root_inputs = 14
+scoped_policy_inputs = 28
+uos_identities = 2
+
+[subsystem_mapping]
+"DIR-AUTH-001" = { target_owner = "apps/cepaf_gleam", language = "Gleam", admission_gate = "G-AUTH" }
+"DIR-READ-001" = { target_owner = "apps/cepaf_gleam", language = "Gleam", admission_gate = "G-READ" }
+"DIR-LANG-001" = { target_owner = "governance/policy", language = "Declarative", admission_gate = "G-LANG" }
+"DIR-VCS-001" = { target_owner = "governance/vcs", language = "Jujutsu", admission_gate = "G-VCS" }
+"DIR-AUTO-001" = { target_owner = "apps/cepaf_gleam", language = "Gleam", admission_gate = "G-AUTO" }
+"DIR-AGT-001" = { target_owner = "apps/cepaf_gleam", language = "Gleam", admission_gate = "G-AGENT" }
+"DIR-SYM-001" = { target_owner = "intelligence/rete", language = "Gleam", admission_gate = "G-SYM" }
+"DIR-SKL-001" = { target_owner = "governance/capability-inventory", language = "TOML/Gleam", admission_gate = "G-SKILL" }
+"DIR-SUP-001" = { target_owner = "governance/capability-inventory", language = "TOML", admission_gate = "G-SUPERPOWER" }
+"DIR-HOOK-001" = { target_owner = "apps/cepaf_gleam", language = "Gleam", admission_gate = "G-HOOK" }
+"DIR-TOOL-001" = { target_owner = "tools/uos", language = "Gleam", admission_gate = "G-TOOL" }
+"DIR-PLAN-001" = { target_owner = "apps/cepaf_gleam", language = "Gleam", admission_gate = "G-PLAN" }
+"DIR-GATE-001" = { target_owner = "ops/gates", language = "Gleam", admission_gate = "G-GATE" }
+"DIR-TEST-001" = { target_owner = "tests", language = "Gleam/OCaml/Zig", admission_gate = "G-TEST" }
+"DIR-UI-001" = { target_owner = "apps/cepaf_gleam/tui", language = "Gleam", admission_gate = "G-UI" }
+"DIR-AGUI-001" = { target_owner = "apps/cepaf_gleam/agui", language = "Gleam", admission_gate = "G-AGUI" }
+"DIR-A2UI-001" = { target_owner = "apps/cepaf_gleam/a2ui", language = "Gleam", admission_gate = "G-A2UI" }
+"DIR-OBS-001" = { target_owner = "ops/telemetry", language = "Gleam", admission_gate = "G-OBS" }
+"DIR-MCP-001" = { target_owner = "services/mcp", language = "Gleam", admission_gate = "G-MCP" }
+"DIR-CONFIG-001" = { target_owner = "ops/nix", language = "Nix", admission_gate = "G-CONFIG" }
+"DIR-DB-001" = { target_owner = "data/sqlite", language = "SQL/Gleam", admission_gate = "G-DB" }
+"DIR-SWARM-001" = { target_owner = "apps/cepaf_gleam/swarm", language = "Gleam/OTP", admission_gate = "G-SWARM" }
+"DIR-ALG-001" = { target_owner = "engines/hermes", language = "OCaml", admission_gate = "G-ALG" }
+"DIR-FORMAL-001" = { target_owner = "formal/hermes", language = "OCaml/Z3", admission_gate = "G-FORMAL" }
+"DIR-RULE-001" = { target_owner = "intelligence/rete", language = "Gleam", admission_gate = "G-RULE" }
+"DIR-BAYES-001" = { target_owner = "intelligence/bayes", language = "Gleam/OCaml", admission_gate = "G-BAYES" }
+"DIR-SAFE-001" = { target_owner = "ops/safety", language = "Gleam", admission_gate = "G-SAFE" }
+"DIR-SEC-001" = { target_owner = "ops/quarantine", language = "Gleam", admission_gate = "G-SEC" }
+"DIR-HA-001" = { target_owner = "apps/cepaf_gleam/sup", language = "Gleam/OTP", admission_gate = "G-HA" }
+"DIR-INF-001" = { target_owner = "services/inference/max", language = "Modular MAX/Python", admission_gate = "G-INF" }
+"DIR-BROWSER-001" = { target_owner = "services/browser", language = "OCaml/Playwright", admission_gate = "G-BROWSER" }
+"DIR-FIGMA-001" = { target_owner = "services/figma", language = "OCaml", admission_gate = "G-FIGMA" }
+"DIR-TIME-001" = { target_owner = "governance/time", language = "Gleam", admission_gate = "G-TIME" }
+"DIR-JOURNAL-001" = { target_owner = "governance/journal", language = "Gleam", admission_gate = "G-JOURNAL" }
+"DIR-PKM-001" = { target_owner = "data/zk", language = "Gleam", admission_gate = "G-PKM" }
+"DIR-SRE-001" = { target_owner = "ops/sre", language = "Gleam", admission_gate = "G-SRE" }
+"DIR-DOC-001" = { target_owner = "docs", language = "Markdown", admission_gate = "G-DOC" }
+"DIR-INTF-001" = { target_owner = "contracts", language = "IDL", admission_gate = "G-INTF" }

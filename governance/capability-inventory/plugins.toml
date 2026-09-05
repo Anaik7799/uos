@@ -1,0 +1,11 @@
+# UOS Plugins Capability Inventory
+[meta]
+source = "UOS-AGENT-CAPABILITY-INVENTORY-2026-09-05"
+authority = "A0_reference"
+
+[[plugin]]
+name = "indrajaal-lsp"
+version = "3.1.0"
+source = "c3i"
+status = "REFERENCE_OR_PORT"
+

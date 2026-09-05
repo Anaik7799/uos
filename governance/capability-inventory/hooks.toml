@@ -1,0 +1,9 @@
+# UOS Hooks Capability Inventory
+[meta]
+source = "UOS-AGENT-CAPABILITY-INVENTORY-2026-09-05"
+authority = "A0_reference"
+
+[c3i]
+claude_command_count = 16
+status = "CLASSIFIED"
+

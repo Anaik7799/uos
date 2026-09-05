@@ -1,0 +1,335 @@
+# UOS Agents Capability Inventory
+[meta]
+source = "UOS-AGENT-CAPABILITY-INVENTORY-2026-09-05"
+authority = "A0_reference"
+
+[[agent]]
+name = "full-symbiosis-supervisor"
+source = "harness"
+state = "classified"
+
+[[agent]]
+name = "hermes-completion-supervisor"
+source = "harness"
+state = "classified"
+
+[[agent]]
+name = "hermes-debugging-supervisor"
+source = "harness"
+state = "classified"
+
+[[agent]]
+name = "hermes-external-access-auditor"
+source = "harness"
+state = "classified"
+
+[[agent]]
+name = "wiki-auditor"
+source = "harness"
+state = "classified"
+
+[[agent]]
+name = "abhi-sales-agent"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "agentic-ui-designer"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "build-supervisor"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "cepaf-bridge-analyzer"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "code-debugger"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "code-evolution"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "code-reviewer"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "constitutional-verifier"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "coverage-audit-agent"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "cpig-validator"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "cpu-governor-supervisor"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "daily-artifact-sync"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "deploy-supervisor"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "design-supervisor"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "dispatcher-registry-validator"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "effect-ts-architect"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "effect-ts-iife-enforcer"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "feature-evolution-agent"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "fmea-analyzer"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "fp-core-rust-architect"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "fractal-architect"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "fractal-autopilot-orchestrator"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "full-symbiosis-supervisor"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "functional-runtime-supervisor"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "fy27-sales-executor"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "gleam-coverage-engineer"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "guardian-operator"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "holon-analyzer"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "hyperscaler-analyzer"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "immune-chaos-agent"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "impact-analyzer"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "journal-artifact-publisher"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "marionette-explorer"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "master-supervisor"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "observability-analyzer"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "operate-supervisor"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "p0p1-track-supervisor"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "pass5-auto-pipeline-agent"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "patrol-test-agent"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "pi-evolution-verifier"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "prajna-operator"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "robustness-analyzer"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "safety-validator"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "sales-competitive-agent"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "sales-forecast-agent"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "sales-outreach-agent"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "sales-research-agent"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "script-finder"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "sil6-validator"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "test-generator"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "ui-report-quality-auditor"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "vault-track-a-tpm"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "vault-track-b-persistence"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "vault-track-c-kms"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "vault-track-d-gcp-sm"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "vault-track-e-caller-flip"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "vault-track-f-smriti-select"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "vault-track-supervisor"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "vault-validator"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "wallaby-coverage-engineer"
+source = "c3i"
+state = "classified"
+
+[[agent]]
+name = "zenoh-mesh-analyzer"
+source = "c3i"
+state = "classified"
+

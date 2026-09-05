@@ -1,0 +1,25 @@
+# UOS Journal Protocol: SC-JOURNAL
+[meta]
+protocol = "SC-JOURNAL"
+required_sections_count = 13
+status = "MANDATORY"
+
+[sections]
+1 = "Scope & Trigger"
+2 = "Pre-State Assessment"
+3 = "Execution Detail"
+4 = "Root Cause Analysis"
+5 = "Fix Taxonomy"
+6 = "Patterns & Anti-Patterns Discovered"
+7 = "Verification Matrix"
+8 = "Files Modified"
+9 = "Architectural Observations"
+10 = "Remaining Gaps"
+11 = "Metrics Summary"
+12 = "STAMP & Constitutional Alignment"
+13 = "Conclusion"
+
+[scaling]
+trivial = { min_files = 1, max_files = 3, detail = "1-2 lines per section" }
+standard = { min_files = 4, max_files = 14, detail = "Full paragraph detail (esp. sections 6-13)" }
+major = { min_files = 15, detail = "Subsections, diagrams, and mathematical models" }

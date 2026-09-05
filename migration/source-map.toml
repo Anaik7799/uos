@@ -1,0 +1,43 @@
+# UOS Source Ingestion Mapping
+# Defines target coordinates for all ingested source families.
+
+[sources]
+
+[sources.c3i]
+external_root = "/home/an/dev/ver/c3i"
+revision_hint = "47f9322329fcda2fdbd7061988f586c65db00d17"
+working_copy = "DIRTY_READ_ONLY"
+mappings = [
+  { source = "lib/cepaf_gleam", target = "apps/cepaf_gleam", language = "Gleam", status = "ACTIVE_MIGRATION" },
+  { source = "sub-projects/scripts-gleam", target = "tools/scripts-gleam", language = "Gleam", status = "PORT" },
+  { source = ".claude/skills", target = "governance/capability-inventory/skills/c3i", language = "Markdown", status = "EVIDENCE_ONLY" },
+  { source = "docs", target = "docs/source-evidence/c3i", language = "Markdown", status = "HISTORICAL" },
+  { source = "lib/c3i", target = "legacy/c3i-elixir", language = "Elixir", status = "REFERENCE_ORACLE" }
+]
+
+[sources.zigvm]
+external_root = "/home/an/dev/ver/zigvm"
+revision_hint = "3cf87fedbc51e37c64eee057c30a553f9d346170"
+working_copy = "DIRTY_READ_ONLY"
+mappings = [
+  { source = "src", target = "engines/zigvm/src", language = "Zig", status = "ACTIVE_MIGRATION" },
+  { source = "skills", target = "governance/capability-inventory/skills/zigvm", language = "Markdown", status = "EVIDENCE_ONLY" },
+  { source = "docs/zk", target = "data/zk", language = "Markdown", status = "KNOWLEDGE_BASE" }
+]
+
+[sources.harness_bionic]
+external_root = "/home/an/NAS-setup/harness-bionic"
+revision_hint = "8a03c14f47c229db4cb086270b94c618ca8b1e06"
+working_copy = "DIRTY_READ_ONLY"
+mappings = [
+  { source = "modules/hermes_harness", target = "engines/hermes", language = "OCaml", status = "ACTIVE_MIGRATION" },
+  { source = "wiki", target = "docs/wiki", language = "Markdown", status = "KNOWLEDGE_BASE" }
+]
+
+[sources.k8s_lab]
+external_root = "/home/an/NAS-setup/k8s-lab"
+revision_hint = "UNTRACKED_LOCAL"
+working_copy = "LOCAL_DIR"
+mappings = [
+  { source = "rendered", target = "ops/k8s/rendered", language = "YAML", status = "CONFIG" }
+]

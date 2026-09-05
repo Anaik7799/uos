@@ -1,0 +1,22 @@
+# UOS Duplicate Artifact Resolution Registry
+# Governs deduplication rules across multiple divergent source lineages.
+
+[[resolution]]
+name = "full-symbiosis"
+type = "skill"
+sources = [
+  { root = "c3i", locator = ".claude/skills/full-symbiosis/SKILL.md", digest = "c3i-digest" },
+  { root = "harness", locator = ".claude/skills/full-symbiosis/SKILL.md", digest = "harness-digest" }
+]
+decision = "UNIFY_IN_UOS_GOVERNANCE"
+rationale = "Harmonized into canonical UOS symbiotic agent policy under governance/capability-inventory/skills.toml."
+
+[[resolution]]
+name = "AGENTS.md"
+type = "policy"
+sources = [
+  { root = "c3i-vm", locator = "/home/an/dev/ver/c3i/AGENTS.md" },
+  { root = "c3i-nas-hist", locator = "/home/an/NAS-setup/c3i/AGENTS.md" }
+]
+decision = "PRESERVE_BOTH_IN_EVIDENCE"
+rationale = "Retain VM-1 as current external input and NAS-setup/c3i as historical snapshot; neither is canonical UOS authority."

@@ -1,0 +1,45 @@
+# UOS MCP Capability Inventory
+[meta]
+source = "UOS-AGENT-CAPABILITY-INVENTORY-2026-09-05"
+authority = "A0_reference"
+
+[quarantine]
+incident = "INC-ZIGVM-MCP-OAUTH-001"
+item = "dev/ver/zigvm/.mcp.json"
+status = "QUARANTINED_SECRET_OMITTED"
+
+[[server]]
+name = "zigvm-harness"
+source = "zigvm"
+state = "classified"
+
+[[server]]
+name = "google-workspace"
+source = "zigvm"
+state = "classified"
+
+[[server]]
+name = "hermes-ops"
+source = "harness"
+state = "classified"
+
+[[server]]
+name = "zigvm-harness"
+source = "harness"
+state = "classified"
+
+[[server]]
+name = "stitch"
+source = "harness"
+state = "classified"
+
+[[server]]
+name = "c3i"
+source = "c3i"
+state = "classified"
+
+[[server]]
+name = "playwright"
+source = "c3i"
+state = "classified"
+

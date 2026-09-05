@@ -1,0 +1,14 @@
+# UOS Time Protocol: Drift Policy & Bands
+[meta]
+protocol = "SC-TIME"
+status = "NORMALIZED"
+
+[bands]
+nominal = { max_seconds = 2.0, action = "LOG" }
+minor = { min_seconds = 2.0, max_seconds = 5.0, action = "WARN" }
+warning = { min_seconds = 5.0, max_seconds = 10.0, action = "ALERT" }
+critical = { min_seconds = 10.0, action = "HALT_ADMISSION" }
+
+[context_refresh]
+refresh_cadence_seconds = 1800 # 30 minutes
+stale_threshold_seconds = 2400 # 40 minutes (triggers corrective directive)

@@ -1,0 +1,802 @@
+# UOS Skills Capability Inventory
+# Canonical union count: 129
+# Total project-owned roots union: 219
+
+[meta]
+source = "UOS-AGENT-CAPABILITY-INVENTORY-2026-09-05"
+canonical_core_union = 129
+all_project_roots_union = 219
+authority = "A0_reference"
+
+[zigvm]
+root = "/home/an/dev/ver/zigvm/skills"
+logical_count = 31
+reference_only_count = 6
+
+[harness]
+root = "/home/an/NAS-setup/harness-bionic/.claude/skills"
+logical_count = 18
+
+[c3i]
+primary_root = "/home/an/dev/ver/c3i/.claude/skills"
+logical_count = 81
+[[skill]]
+name = "algebra-driven-ocaml"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "algebraic-fractal-structures"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "approach-b-zero-muda-observability"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "bonsai-ui-development"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "c3i-temporal-orchestration"
+source = "zigvm"
+reference_only = true
+state = "classified"
+
+[[skill]]
+name = "capability-eq-flip"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "codex-symbiosis"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "docs-design"
+source = "zigvm"
+reference_only = true
+state = "classified"
+
+[[skill]]
+name = "formal-technique-selection"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "formal-verification-pipeline"
+source = "zigvm"
+reference_only = true
+state = "classified"
+
+[[skill]]
+name = "fractal-decision-calculus"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "fractal-workspace-audit"
+source = "zigvm"
+reference_only = true
+state = "classified"
+
+[[skill]]
+name = "gemini-symbiosis"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "harness-supervisor"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "infranodus-design-superset"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "living-ontology"
+source = "zigvm"
+reference_only = true
+state = "classified"
+
+[[skill]]
+name = "mobile-first-adaptive-ui"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "ocaml-figma-control"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "ocaml-playwright-control"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "ocaml-scripting"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "otp-conformance-protocol"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "production-readiness"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "raven-ml-substrate"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "resource-preflight"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "smp-concurrency-slice"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "smtml-solver-substrate"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "stan-probabilistic-substrate"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "stpa-safety-protocol"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "tyxml-conversion"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "wiki-design"
+source = "zigvm"
+reference_only = true
+state = "classified"
+
+[[skill]]
+name = "zk-knowledge-base"
+source = "zigvm"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "agentic-expect-testing"
+source = "harness"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "controlled-external-access"
+source = "harness"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "feature-landing"
+source = "harness"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "fractal-evidence-orientation"
+source = "harness"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "full-symbiosis"
+source = "harness"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "hermes-formal-verification"
+source = "harness"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "hermes-functional-envelope"
+source = "harness"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "hermes-parallel-generation"
+source = "harness"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "hermes-wiki-zk"
+source = "harness"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "jujutsu-vcs"
+source = "harness"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "operations-ui-system"
+source = "harness"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "swarm-offload"
+source = "harness"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "swarm-usage"
+source = "harness"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "systematic-debugging"
+source = "harness"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "whole-system-completion"
+source = "harness"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "wiki-site-design"
+source = "harness"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "wiki-zk-operations"
+source = "harness"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "workspace-structure"
+source = "harness"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "abm-campaign"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "agentic-ui-evolve"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "allium"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "artifact-sync"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "business-analysis"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "c3i-page-evolution"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "cepaf-planning-expert"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "cepaf-podman-expert"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "cepaf-zenoh-expert"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "channel-strategy"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "competitive-intel"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "crm-hygiene"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "deal-review"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "demand-forecast"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "design-win-tracker"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "distill"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "effect-ts-architect"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "effect-ts-iife-enforcer"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "elicit"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "evolve"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "fast-evolve"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "feature-evolution"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "fp-core-rust-architect"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "fractal-autopilot"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "full-symbiosis"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "fy-annual-plan"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "fy27-account-sprint"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "fy27-competitive-war-room"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "fy27-csv-export"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "fy27-deal-accelerator"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "fy27-linkedin-ops"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "fy27-log"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "fy27-obsidian-sync"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "fy27-pipeline-review"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "fy27-salesnav-ops"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "fy27-status"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "fy27-weekly-rhythm"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "fy27-zk-brief"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "gleam-expert"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "gtm-strategy"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "journal-artifact-publisher"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "journal-protocol"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "learn-rule"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "linkedin-outreach"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "lustre-gleam-ui-expert"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "marionette-explore"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "mesh-resurrection"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "multilayer-swarm"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "observe"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "pass5-auto"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "patrol-marionette-test"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "pi-prompt"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "pi-symbiosis-evolve"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "pi-verify"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "predict"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "pricing-strategy"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "propagate"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "proposal-builder"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "qbr-template"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "revenue-ops"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "safe-rust-x-safety"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "sales"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "sales-analyze"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "sales-brief"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "sales-call-prep"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "sales-email"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "sales-forecast"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "sales-hunt"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "sales-prospecting"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "semi-market-intel"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "strategic-account-plan"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "swarm-verification-expert"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "system-engineering-sop"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "tam-sizing"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "territory-plan"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "timestamp-sync"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "ui-report-quality"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "win-loss-analysis"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "zk-cost"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "zk-learn"
+source = "c3i"
+reference_only = false
+state = "classified"
+
+[[skill]]
+name = "zk-recall"
+source = "c3i"
+reference_only = false
+state = "classified"
+

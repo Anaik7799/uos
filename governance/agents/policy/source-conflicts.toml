@@ -1,0 +1,30 @@
+# UOS Source Policy Conflicts & Resolutions
+# Preserves source differences byte-for-byte; unifies under explicit resolution rules.
+
+[[conflict]]
+id = "CONF-TIME-FMT-001"
+title = "Timestamp Format Divergence"
+description = "Harness uses YYYYMMDD-HHSS (hour and seconds, no minutes). ZigVM uses YYYYMMDD-HHMMSS (hour, minutes, seconds)."
+disposition = "UNRESOLVED_PRESERVED_NAMESPACES"
+resolution = "Preserve historical strings verbatim in typed source namespaces. UOS-canonical timestamp format uses ISO-8601 UTC plus nanosecond monotonic offset, with collision-resistant SHA-256 content digest."
+
+[[conflict]]
+id = "CONF-VCS-GIT-001"
+title = "Native Git vs Jujutsu"
+description = "C3I and external skills mention git/worktree/commit/push. UOS mandates standalone Jujutsu."
+disposition = "NORMALIZED"
+resolution = "All active workflows translated to jj commit, change, bookmark, and sibling workspaces. Native git commands prohibited in UOS."
+
+[[conflict]]
+id = "CONF-BEVY-GRAPHITE-001"
+title = "Bevy & Graphite Legacy Presence"
+description = "Legacy trees contain Bevy ECS and Graphite rendering code."
+disposition = "SAFETY_OVERRIDDEN"
+resolution = "Zero-Muda policy strictly bars Bevy and Graphite from UOS source, dependencies, runtime, and imported history."
+
+[[conflict]]
+id = "CONF-C3I-VM-VS-HIST-001"
+title = "C3I VM-1 vs Historical NAS Snapshot Divergence"
+description = "Historical NAS-setup/c3i/AGENTS.md differs from dev/ver/c3i/AGENTS.md."
+disposition = "PRESERVED_AS_SEPARATE_LINEAGE"
+resolution = "Both lineages retained as read-only historical evidence. Neither is silently preferred. VM-1 is current external input."

@@ -1,0 +1,19 @@
+# UOS Journal Publication Protocol
+[meta]
+protocol = "SC-PUBLISH"
+default_state = "prepared-awaiting-authorization"
+
+[bundle_contents]
+required_artifacts = [
+  "journal.md (Markdown 13 sections)",
+  "analysis.html (Self-contained HTML analysis)",
+  "slide_deck.md (HTML slide deck)",
+  "email_draft.txt (Email draft with delivery intent)",
+  "handoff_index.md (Operator handoff index)",
+  "links_manifest.json (Cryptographic SHA-256 links manifest)",
+  "task_evidence.json (Execution receipts and test matrices)"
+]
+
+[delivery]
+external_send_requires_operator_authorization = true
+quarantine_preflight = true

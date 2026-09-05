@@ -1,0 +1,22 @@
+# UOS Knowledge Management, Wiki & Zettelkasten Inventory
+[meta]
+source = "UOS-AGENT-CAPABILITY-INVENTORY-2026-09-05"
+authority = "A0_reference"
+
+[[km_root]]
+id = "KM-ZIGVM-ZK"
+source = "zigvm"
+path = "/home/an/dev/ver/zigvm/docs/zk"
+state = "classified"
+
+[[km_root]]
+id = "KM-HARNESS-WIKI"
+source = "harness-bionic"
+path = "/home/an/NAS-setup/harness-bionic/wiki"
+state = "classified"
+
+[[km_root]]
+id = "KM-C3I-DOCS"
+source = "c3i"
+path = "/home/an/dev/ver/c3i/docs"
+state = "classified"

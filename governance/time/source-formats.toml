@@ -1,0 +1,9 @@
+# UOS Time Protocol: Source Formats
+[meta]
+protocol = "SC-TIME"
+status = "PRESERVED_SEPARATE"
+
+[formats]
+harness_bionic = "YYYYMMDD-HHSS (hour and seconds, no minutes - PRESERVED)"
+zigvm = "YYYYMMDD-HHMMSS (hour, minutes, seconds - PRESERVED)"
+canonical_uos = "ISO-8601 UTC + nanosecond monotonic offset + SHA-256 content digest"

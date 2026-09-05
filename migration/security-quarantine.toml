@@ -1,0 +1,37 @@
+# UOS Security & Secret Quarantine Ledger
+# Presence-only incident tracking; secret bytes and hashes are strictly barred.
+
+[[incident]]
+id = "INC-HARNESS-SSH-INJECTOR-001"
+source_locator = "/home/an/NAS-setup/harness-bionic/tools/ssh_injector"
+category = "CREDENTIAL_INJECTOR"
+status = "QUARANTINED_PROHIBITED"
+action = "PERMANENT_EXCLUSION_FROM_IMPORT"
+
+[[incident]]
+id = "INC-ZIGVM-MCP-OAUTH-001"
+source_locator = "/home/an/dev/ver/zigvm/.mcp.json"
+category = "OAUTH_CLIENT_SECRET"
+status = "QUARANTINED_SECRET_OMITTED"
+action = "REDACTED_BEFORE_IMPORT"
+
+[[incident]]
+id = "INC-UOS-REVIEW-PREFLIGHT-001"
+source_locator = "/home/an/NAS-setup/docs/design/2026-09-04-uos-complete-information-inventory.md"
+category = "SUSPECTED_UNCLASSIFIED_TOKEN"
+status = "WITHHELD_PENDING_CLASSIFICATION"
+action = "PRE_READ_INTAKE_HOLD_ACTIVE"
+
+[[incident]]
+id = "INC-UOS-REVIEW-PREFLIGHT-002"
+source_locator = "/home/an/NAS-setup/c3i/docs/journal/20260904-uos-full-history-evidence-review-journal.md"
+category = "SUSPECTED_UNCLASSIFIED_TOKEN"
+status = "WITHHELD_PENDING_CLASSIFICATION"
+action = "PRE_READ_INTAKE_HOLD_ACTIVE"
+
+[[incident]]
+id = "INC-BEVY-GRAPHITE-PROHIBITION"
+source_locator = "legacy/* (bevy, graphite)"
+category = "PROHIBITED_DEPENDENCY"
+status = "ZERO_MUDA_BARRED"
+action = "PERMANENT_EXCLUSION"

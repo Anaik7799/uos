@@ -1,0 +1,22 @@
+# UOS Version Control Policy Configuration
+[vcs]
+engine = "jujutsu"
+min_version = "0.44.0"
+mode = "non-colocated"
+git_backing_store = ".jj/repo/store/git"
+allow_native_git = false
+
+[bookmarks]
+protected = ["main", "release/*"]
+active_integration_prefix = "integration/"
+allow_direct_commit_to_main = false
+require_two_key_admission_for_main = true
+
+[workspaces]
+sibling_workspace_root = "../.uos-workspaces"
+permitted_workspace_patterns = ["ws-*", "agent-*", "gate-*"]
+
+[safety]
+pre_snapshot_secret_scan = true
+anti_git_gate = true
+zero_muda_bevy_graphite_scan = true

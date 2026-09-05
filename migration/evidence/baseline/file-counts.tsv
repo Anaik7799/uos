@@ -1,0 +1,5 @@
+source	path	file_count_depth3
+c3i	/home/an/dev/ver/c3i	2806
+zigvm	/home/an/dev/ver/zigvm	3756
+harness-bionic	/home/an/NAS-setup/harness-bionic	3374
+k8s-lab	/home/an/NAS-setup/k8s-lab	54

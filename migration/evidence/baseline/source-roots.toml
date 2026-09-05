@@ -1,0 +1,25 @@
+# UOS Source Roots Baseline Census
+
+[c3i]
+path = "/home/an/dev/ver/c3i"
+head_commit = "47f9322329fcda2fdbd7061988f586c65db00d17"
+vcs = "git"
+status = "dirty"
+
+[zigvm]
+path = "/home/an/dev/ver/zigvm"
+head_commit = "3cf87fedbc51e37c64eee057c30a553f9d346170"
+vcs = "git"
+status = "dirty"
+
+[harness_bionic]
+path = "/home/an/NAS-setup/harness-bionic"
+head_commit = "8a03c14f47c229db4cb086270b94c618ca8b1e06"
+vcs = "jujutsu-on-git"
+status = "dirty"
+
+[k8s_lab]
+path = "/home/an/NAS-setup/k8s-lab"
+head_commit = "NONE"
+vcs = "none"
+status = "local_dir"

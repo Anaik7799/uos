@@ -1,0 +1,4 @@
+/home/an/dev/ver/c3i/apps/cepaf_gleam
+/home/an/dev/ver/zigvm/src
+/home/an/NAS-setup/harness-bionic/modules/hermes_harness
+/home/an/NAS-setup/k8s-lab/rendered
