@@ -1,5 +1,11 @@
 # 20260905-1721- UOS Master Knowledge Graph, Wiki, ZK & Living Ontology Specification
 
+- **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260905-1721-uos-master-knowledge-graph-and-living-ontology.md](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260905-1721-uos-master-knowledge-graph-and-living-ontology.md)
+- **Fractal Coordinates**: `#fractal-l0` `#fractal-l1` `#fractal-l2` `#fractal-l3` `#fractal-l4` `#fractal-l5`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zero-muda` `#tailscale-web`
+- **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
+
+
 ## 1. Executive Summary & Knowledge Architecture
 
 This document establishes the authoritative Unified Operational System (UOS) Knowledge Management (KM) Architecture, unifying three historically federated knowledge networks into a single, cohesive, bidirectional, and verified knowledge graph.

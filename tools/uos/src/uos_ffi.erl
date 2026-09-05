@@ -1,5 +1,5 @@
 -module(uos_ffi).
--export([get_arguments/0, file_exists/1, matches_timestamp_format/1]).
+-export([get_arguments/0, file_exists/1, matches_timestamp_format/1, file_contains/2]).
 
 get_arguments() ->
     Args = init:get_plain_arguments(),
@@ -24,3 +24,24 @@ matches_timestamp_format(Filename) ->
         {match, _} -> true;
         _ -> false
     end.
+
+file_contains(Path, Pattern) ->
+    RealPath = case file:read_file(Path) of
+        {ok, Bin} -> {ok, Bin};
+        _ ->
+            RootPath = filename:join(["/home/an/NAS-setup/uos", Path]),
+            file:read_file(RootPath)
+    end,
+    case RealPath of
+        {ok, Content} ->
+            PatternBin = case is_list(Pattern) of
+                true -> unicode:characters_to_binary(Pattern);
+                false -> Pattern
+            end,
+            case binary:match(Content, PatternBin) of
+                nomatch -> false;
+                _ -> true
+            end;
+        _ -> false
+    end.
+

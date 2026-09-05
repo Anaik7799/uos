@@ -6,6 +6,12 @@ verified_by: harness
 ---
 # MoC: ZigVM → OTP 30-rc Full Equivalence — Program Plan (As-Is vs To-Be, KPIs)
 
+- **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/zk/moc-journal-20260718-zigvm-otp-parity-full-plan-journal.md](http://nas-1.tail55d152.ts.net:4100/docs/zk/moc-journal-20260718-zigvm-otp-parity-full-plan-journal.md)
+- **Fractal Coordinates**: `#fractal-l0` `#fractal-l1` `#fractal-l2` `#fractal-l3` `#fractal-l4` `#fractal-l5`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zero-muda` `#tailscale-web`
+- **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
+
+
 Deterministic map of content for the **journal--20260718-zigvm-otp-parity-full-plan-journal** community (44 notes), drafted by the harness from the live link graph (LPA communities, journal 20260729-1056 §7.13). Regenerated only when the membership hash changes; promote by editing `status:`.
 
 membership: ecc1197c94f18d397737f66811422e8d

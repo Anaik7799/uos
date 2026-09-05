@@ -1,5 +1,11 @@
 # 20260905-1755-codex-findings-resolution-and-km-triad-journal.md
 
+- **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/journal/20260905-1755-codex-findings-resolution-and-km-triad-journal.md](http://nas-1.tail55d152.ts.net:4100/docs/journal/20260905-1755-codex-findings-resolution-and-km-triad-journal.md)
+- **Fractal Coordinates**: `#fractal-l0 #fractal-l1 #fractal-l5`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zero-muda` `#tailscale-web`
+- **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
+
+
 ## 1. Scope & Trigger
 - **Trigger**: Execution of user mandate to complete full functionality, resolve sovereign verification findings delivered by Codex in `task-3201` (`docs/handover/reviews/codex_verification_review.md`), enforce operator directive `"graphene is not required"` across all codebases, enforce mandatory `YYYYMMDD-HHSS-` document prefixes, and integrate the Knowledge Management (KM), Wiki, and ZK triad into UOS.
 - **Scope**:

@@ -6,6 +6,12 @@ verified_by: harness
 ---
 # MoC: Algebra-Driven OCaml Doctrine: System Integration Ontology
 
+- **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/zk/moc-algebra-driven-ocaml-doctrine.md](http://nas-1.tail55d152.ts.net:4100/docs/zk/moc-algebra-driven-ocaml-doctrine.md)
+- **Fractal Coordinates**: `#fractal-l0` `#fractal-l1` `#fractal-l2` `#fractal-l3` `#fractal-l4` `#fractal-l5`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zero-muda` `#tailscale-web`
+- **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
+
+
 Deterministic map of content for the **algebra-driven-ocaml-doctrine** community (31 notes), drafted by the harness from the live link graph (LPA communities, journal 20260729-1056 §7.13). Regenerated only when the membership hash changes; promote by editing `status:`.
 
 membership: 3f74a911bc702b4ef5ba7fde2e132f12

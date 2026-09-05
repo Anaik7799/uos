@@ -6,6 +6,11 @@ verified_by: agent
 ---
 # ADR-014: Quad-Cycle III Sovereign Tripartite Audit and Comprehensive KPI Integration Closure
 
+- **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-160005-adr-014-quad-cycle-iii-sovereign-tripartite-audit-and-comprehensive-kpi-integration-closure.md](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-160005-adr-014-quad-cycle-iii-sovereign-tripartite-audit-and-comprehensive-kpi-integration-closure.md)
+- **Fractal Coordinates**: `#fractal-l8` `#fractal-l5`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zk-adr` `#zero-muda` `#tailscale-web`
+- **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
+
 _Decision record (ADR) — captured in the Zettelkasten as part of the SDLC/SRE loop._
 
 ## Context (as-is)
@@ -41,3 +46,10 @@ Quad-cycle verification adds logging and attestation rigor, but ensures absolute
 Relying on sampling or partial audits was rejected as violating zero-trust and defense-in-depth principles.
 
 #decision #adr
+
+---
+
+## Navigation & Backlinks
+- **Zettelkasten Master MOC**: [`docs/zk/20260905-1801-moc-uos-unified-master.md`](http://nas-1.tail55d152.ts.net:4100/zk)
+- **Hermes Wiki Corpus Index**: [`docs/wiki/20260905-1801-uos-zk-km-corpus-index.md`](http://nas-1.tail55d152.ts.net:4100/wiki)
+- **Review Tome**: [`docs/design/20260905-1845-uos-wiki-zk-km-synthesis-review-tome.md`](http://nas-1.tail55d152.ts.net:4100/docs/design/20260905-1845-uos-wiki-zk-km-synthesis-review-tome.md)

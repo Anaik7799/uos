@@ -5,7 +5,7 @@
 **Canonical Scope**: Unified Operational System (UOS) — C3I Cockpit & Indrajaal Mesh  
 **Tailscale FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/design/20260905-1820-c3i-indrajaal-comprehensive-testing-protocol-specification.md](http://nas-1.tail55d152.ts.net:4100/docs/design/20260905-1820-c3i-indrajaal-comprehensive-testing-protocol-specification.md)  
 **Direct IP**: [http://100.87.7.78:4100/docs/design/20260905-1820-c3i-indrajaal-comprehensive-testing-protocol-specification.md](http://100.87.7.78:4100/docs/design/20260905-1820-c3i-indrajaal-comprehensive-testing-protocol-specification.md)  
-**Fractal Tags**: `#testing-protocol`, `#gold-standard-c1-c8`, `#fractal-l0` through `#fractal-l9`, `#zk-adr`, `#zero-muda`, `#km-triad`, `#c3i-control`, `#tailscale-web`
+**Fractal Tags**: `#rocha-semiotics`, `#cybernetics`, `#testing-protocol`, `#gold-standard-c1-c8`, `#fractal-l0` through `#fractal-l9`, `#zk-adr`, `#zero-muda`, `#km-triad`, `#c3i-control`, `#tailscale-web`
 
 ---
 

@@ -128,6 +128,33 @@ All dashboards, web views, wiki pages, ZK ADRs, and file viewers MUST provide fu
 
 ---
 
+## §2.10 Universal Comprehensive Verification Checklist & Uniform Site Navigation (SC-CHECKLIST-001)
+
+Per explicit operator directive, every webpage rendered across UOS and every canonical Markdown document MUST display the **Comprehensive Verification Checklist** and adhere to the **Uniform Cohesive Site Navigation Structure**:
+
+- **Contract Reference**: `contracts/rules/comprehensive-checklist-contract.md` (`SC-CHECKLIST-001`)
+- **Specification**: `docs/design/20260905-1835-comprehensive-web-and-md-checklist-specification.md` (`SPEC-CHECKLIST-NAV-001`)
+- **Live Specification Link**: [http://nas-1.tail55d152.ts.net:4100/checklist](http://nas-1.tail55d152.ts.net:4100/checklist)
+- **Gate**: `tools/uos gate G-CHECKLIST` (Doctor `EV-19: PASS`)
+
+### 5 Domains & 18 Checkpoints:
+1. **Metadata, Timestamp & Tailscale Navigation**: `CHK-01-TIME` (`YYYYMMDD-HHSS-` prefix), `CHK-02-TAIL` (Tailscale FQDN links), `CHK-03-FRACT` (`#fractal-l0..l9` tags), `CHK-04-KM` (`[[wiki:...]]` and `[[zk:...]]` transclusions).
+2. **Zero-Muda Purity & Hardware Storage Safety**: `CHK-05-MUDA` (0 Bevy, 0 Graphite), `CHK-06-GRAPH` (Pure Erlang graphene_nif.erl, no foreign NIFs), `CHK-07-DRIVE` (Root OS NVMe `25503L801736` locked).
+3. **Testing Gold Standard & Mathematical Gates**: `CHK-08-C1C8` (C1–C8 Gold Standard), `CHK-09-MATH` (H ≥ 2.5b, CCM ≥ 90%, D_EA ≤ 10%, ITQS ≥ 0.85), `CHK-10-9MOD` (Full 9-modality test protocol), `CHK-11-REGR` (381 UI regression tests).
+4. **Cross-Language Control & Observability**: `CHK-12-GLEAM` (Gleam/OTP 29 `uos_sup.gleam`, Prajna breakers), `CHK-13-HERMES` (Hermes OCaml ledgers, Gospel, Z3), `CHK-14-ZIGVM` (Zig deterministic kernel, VFS), `CHK-15-MAX` (MAX/Mojo isolated daemon), `CHK-16-OTEL` (Universal C3I Telemetry with microsecond UTC ISO 8601 timestamps ending in `Z`).
+5. **Tri-Sovereign Governance & VCS Purity**: `CHK-17-SOV` (AGY, Claude, Codex tri-sovereign consensus), `CHK-18-JJ` (Standalone Jujutsu `.jj/` with 0 native Git mutations).
+
+### Uniform Cohesive Site Structure:
+1. **Unified Sidebar**: Persistent links to Cockpit Dashboard, Planning, Testing, AG-UI Stream, Wiki Index, ZK Master MOC, ADR Catalog, Living Ontology Hub, Verification Checklist, Documentation Tree, and File Explorer.
+2. **Top Status Bar**: Live clickable Tailscale FQDN URL with copy-to-clipboard, SIL-6 fractal badge, Zero-Muda badge, and hardware drive interlock indicator.
+3. **Interactive Checklist Accordion**: Embedded at the top of every webpage and document view.
+4. **Dual View Mode**: Seamless toggle between "Rendered Markdown" and "Raw Source Code".
+5. **Breadcrumb Hierarchy**: Clickable breadcrumb trail linking every level back to Cockpit.
+6. **Bottom Prev/Next Controls**: Linear document reading path with back-to-top navigation.
+7. **Persistent Footer**: Tailscale base host (`nas-1.tail55d152.ts.net:4100`), peer host (`vm-1.tail55d152.ts.net:8088`), and BEAM OTP 29 runtime status.
+
+---
+
 ## §3.0 Triple-Interface Mandate (SC-GLM-UI-001)
 
 Every new page, dashboard, or interactive component MUST be implemented THREE times:

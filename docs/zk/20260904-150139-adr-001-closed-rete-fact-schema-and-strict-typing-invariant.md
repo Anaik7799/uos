@@ -6,6 +6,11 @@ verified_by: agent
 ---
 # ADR-001: Closed RETE Fact Schema and Strict Typing Invariant
 
+- **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-150139-adr-001-closed-rete-fact-schema-and-strict-typing-invariant.md](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-150139-adr-001-closed-rete-fact-schema-and-strict-typing-invariant.md)
+- **Fractal Coordinates**: `#fractal-l5` `#fractal-l1`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zk-adr` `#zero-muda` `#tailscale-web`
+- **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
+
 _Decision record (ADR) — captured in the Zettelkasten as part of the SDLC/SRE loop._
 
 ## Context (as-is)
@@ -37,3 +42,10 @@ Documented in 2026-09-04-source-backed-operational-catalogue.md and master desig
 Requires producers to adhere strictly to the declared fact schema; prevents ad-hoc field injection without explicit schema evolution.
 
 #decision #adr
+
+---
+
+## Navigation & Backlinks
+- **Zettelkasten Master MOC**: [`docs/zk/20260905-1801-moc-uos-unified-master.md`](http://nas-1.tail55d152.ts.net:4100/zk)
+- **Hermes Wiki Corpus Index**: [`docs/wiki/20260905-1801-uos-zk-km-corpus-index.md`](http://nas-1.tail55d152.ts.net:4100/wiki)
+- **Review Tome**: [`docs/design/20260905-1845-uos-wiki-zk-km-synthesis-review-tome.md`](http://nas-1.tail55d152.ts.net:4100/docs/design/20260905-1845-uos-wiki-zk-km-synthesis-review-tome.md)

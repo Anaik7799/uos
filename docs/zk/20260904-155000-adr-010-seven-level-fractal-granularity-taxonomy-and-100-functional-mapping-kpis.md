@@ -6,6 +6,11 @@ verified_by: agent
 ---
 # ADR-010: Seven-Level Fractal Granularity Taxonomy and 100% Functional Mapping KPIs
 
+- **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-155000-adr-010-seven-level-fractal-granularity-taxonomy-and-100-functional-mapping-kpis.md](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-155000-adr-010-seven-level-fractal-granularity-taxonomy-and-100-functional-mapping-kpis.md)
+- **Fractal Coordinates**: `#fractal-l8` `#fractal-l5`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zk-adr` `#zero-muda` `#tailscale-web`
+- **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
+
 _Decision record (ADR) — captured in the Zettelkasten as part of the SDLC/SRE loop._
 
 ## Context (as-is)
@@ -41,3 +46,10 @@ Requires rigorous compliance checks at all 7 levels for any code modification; c
 Loose hierarchical grouping without explicit 7-level mathematical mapping allowed unverified gaps between high-level documentation and low-level C-ABI code.
 
 #decision #adr
+
+---
+
+## Navigation & Backlinks
+- **Zettelkasten Master MOC**: [`docs/zk/20260905-1801-moc-uos-unified-master.md`](http://nas-1.tail55d152.ts.net:4100/zk)
+- **Hermes Wiki Corpus Index**: [`docs/wiki/20260905-1801-uos-zk-km-corpus-index.md`](http://nas-1.tail55d152.ts.net:4100/wiki)
+- **Review Tome**: [`docs/design/20260905-1845-uos-wiki-zk-km-synthesis-review-tome.md`](http://nas-1.tail55d152.ts.net:4100/docs/design/20260905-1845-uos-wiki-zk-km-synthesis-review-tome.md)

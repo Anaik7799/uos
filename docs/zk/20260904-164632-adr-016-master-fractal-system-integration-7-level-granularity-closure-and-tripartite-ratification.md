@@ -6,6 +6,11 @@ verified_by: agent
 ---
 # ADR-016: Master Fractal System Integration, 7-Level Granularity Closure, and Tripartite Ratification
 
+- **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-164632-adr-016-master-fractal-system-integration-7-level-granularity-closure-and-tripartite-ratification.md](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-164632-adr-016-master-fractal-system-integration-7-level-granularity-closure-and-tripartite-ratification.md)
+- **Fractal Coordinates**: `#fractal-l0` `#fractal-l7`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zk-adr` `#zero-muda` `#tailscale-web`
+- **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
+
 _Decision record (ADR) — captured in the Zettelkasten as part of the SDLC/SRE loop._
 
 ## Context (as-is)
@@ -41,3 +46,10 @@ Maintaining strict 7-level fractal traceability and dual-host byte parity requir
 Maintaining separate uncoordinated repositories or using external subprocess IPC for OCaml/Rust was rejected due to latency penalties, failure-domain coupling, and memory leaks.
 
 #decision #adr
+
+---
+
+## Navigation & Backlinks
+- **Zettelkasten Master MOC**: [`docs/zk/20260905-1801-moc-uos-unified-master.md`](http://nas-1.tail55d152.ts.net:4100/zk)
+- **Hermes Wiki Corpus Index**: [`docs/wiki/20260905-1801-uos-zk-km-corpus-index.md`](http://nas-1.tail55d152.ts.net:4100/wiki)
+- **Review Tome**: [`docs/design/20260905-1845-uos-wiki-zk-km-synthesis-review-tome.md`](http://nas-1.tail55d152.ts.net:4100/docs/design/20260905-1845-uos-wiki-zk-km-synthesis-review-tome.md)

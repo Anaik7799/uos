@@ -6,6 +6,11 @@ verified_by: agent
 ---
 # ADR-015: Master Codex Session Handover, Full Trajectory Archive and Sovereign Operational Transfer
 
+- **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-160159-adr-015-master-codex-session-handover-full-trajectory-archive-and-sovereign-operational-transfer.md](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-160159-adr-015-master-codex-session-handover-full-trajectory-archive-and-sovereign-operational-transfer.md)
+- **Fractal Coordinates**: `#fractal-l9` `#fractal-l7`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zk-adr` `#zero-muda` `#tailscale-web`
+- **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
+
 _Decision record (ADR) — captured in the Zettelkasten as part of the SDLC/SRE loop._
 
 ## Context (as-is)
@@ -41,3 +46,10 @@ Generating an exhaustive single-document handover requires significant serializa
 Partial or ephemeral handover via chat memory was rejected because long-horizon multi-agent collaboration requires an inviolate, machine-verifiable, byte-for-byte replicated handover document.
 
 #decision #adr
+
+---
+
+## Navigation & Backlinks
+- **Zettelkasten Master MOC**: [`docs/zk/20260905-1801-moc-uos-unified-master.md`](http://nas-1.tail55d152.ts.net:4100/zk)
+- **Hermes Wiki Corpus Index**: [`docs/wiki/20260905-1801-uos-zk-km-corpus-index.md`](http://nas-1.tail55d152.ts.net:4100/wiki)
+- **Review Tome**: [`docs/design/20260905-1845-uos-wiki-zk-km-synthesis-review-tome.md`](http://nas-1.tail55d152.ts.net:4100/docs/design/20260905-1845-uos-wiki-zk-km-synthesis-review-tome.md)

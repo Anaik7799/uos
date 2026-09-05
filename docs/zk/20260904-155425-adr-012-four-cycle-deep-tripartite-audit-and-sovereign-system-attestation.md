@@ -6,6 +6,11 @@ verified_by: agent
 ---
 # ADR-012: Four-Cycle Deep Tripartite Audit and Sovereign System Attestation
 
+- **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-155425-adr-012-four-cycle-deep-tripartite-audit-and-sovereign-system-attestation.md](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-155425-adr-012-four-cycle-deep-tripartite-audit-and-sovereign-system-attestation.md)
+- **Fractal Coordinates**: `#fractal-l5` `#fractal-l0`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zk-adr` `#zero-muda` `#tailscale-web`
+- **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
+
 _Decision record (ADR) — captured in the Zettelkasten as part of the SDLC/SRE loop._
 
 ## Context (as-is)
@@ -41,3 +46,10 @@ Performing four exhaustive review cycles incurs verification overhead but guaran
 Single-cycle review or single-model self-attestation was rejected as insufficient to guarantee defense-in-depth across heterogeneous safety, formal, and runtime domains.
 
 #decision #adr
+
+---
+
+## Navigation & Backlinks
+- **Zettelkasten Master MOC**: [`docs/zk/20260905-1801-moc-uos-unified-master.md`](http://nas-1.tail55d152.ts.net:4100/zk)
+- **Hermes Wiki Corpus Index**: [`docs/wiki/20260905-1801-uos-zk-km-corpus-index.md`](http://nas-1.tail55d152.ts.net:4100/wiki)
+- **Review Tome**: [`docs/design/20260905-1845-uos-wiki-zk-km-synthesis-review-tome.md`](http://nas-1.tail55d152.ts.net:4100/docs/design/20260905-1845-uos-wiki-zk-km-synthesis-review-tome.md)

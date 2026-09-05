@@ -6,6 +6,12 @@ verified_by: harness
 ---
 # MoC: HANDOFF — beam-zig, ALL 14 MILESTONES COMPLETE (2026-07-11)
 
+- **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/zk/moc-handoff.md](http://nas-1.tail55d152.ts.net:4100/docs/zk/moc-handoff.md)
+- **Fractal Coordinates**: `#fractal-l0` `#fractal-l1` `#fractal-l2` `#fractal-l3` `#fractal-l4` `#fractal-l5`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zero-muda` `#tailscale-web`
+- **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
+
+
 Deterministic map of content for the **handoff** community (52 notes), drafted by the harness from the live link graph (LPA communities, journal 20260729-1056 §7.13). Regenerated only when the membership hash changes; promote by editing `status:`.
 
 membership: 93afd648f06920c13afe9bedf9ebf4cf

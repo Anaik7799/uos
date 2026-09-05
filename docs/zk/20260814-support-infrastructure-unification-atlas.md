@@ -15,6 +15,12 @@ verified_by: Gemini
 
 # Support Infrastructure Unification & Capability Atlas
 
+- **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/zk/20260814-support-infrastructure-unification-atlas.md](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260814-support-infrastructure-unification-atlas.md)
+- **Fractal Coordinates**: `#fractal-l0` `#fractal-l1` `#fractal-l2` `#fractal-l3` `#fractal-l4` `#fractal-l5`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zero-muda` `#tailscale-web`
+- **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
+
+
 ## Context & Purpose
 
 This Map of Content (MoC) establishes the ground truth, formal invariants, and architectural wiring for the 20 net-new support infrastructure, knowledge management, wiki/ZK, algebraic atlas, worker sandboxing, and high-assurance dependability capabilities unified from `harness-bionic` into `zigvm`.

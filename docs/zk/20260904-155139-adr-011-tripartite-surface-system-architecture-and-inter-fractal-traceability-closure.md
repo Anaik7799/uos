@@ -6,6 +6,11 @@ verified_by: agent
 ---
 # ADR-011: Tripartite Surface System Architecture and Inter-Fractal Traceability Closure
 
+- **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-155139-adr-011-tripartite-surface-system-architecture-and-inter-fractal-traceability-closure.md](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-155139-adr-011-tripartite-surface-system-architecture-and-inter-fractal-traceability-closure.md)
+- **Fractal Coordinates**: `#fractal-l4` `#fractal-l2`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zk-adr` `#zero-muda` `#tailscale-web`
+- **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
+
 _Decision record (ADR) — captured in the Zettelkasten as part of the SDLC/SRE loop._
 
 ## Context (as-is)
@@ -41,3 +46,10 @@ Evolutionary learning cannot bypass hard zero-trust gates, requiring formal chan
 Allowing evolutionary algorithms to directly mutate operational code was rejected as violating STPA safety invariants and fail-closed zero-trust principles.
 
 #decision #adr
+
+---
+
+## Navigation & Backlinks
+- **Zettelkasten Master MOC**: [`docs/zk/20260905-1801-moc-uos-unified-master.md`](http://nas-1.tail55d152.ts.net:4100/zk)
+- **Hermes Wiki Corpus Index**: [`docs/wiki/20260905-1801-uos-zk-km-corpus-index.md`](http://nas-1.tail55d152.ts.net:4100/wiki)
+- **Review Tome**: [`docs/design/20260905-1845-uos-wiki-zk-km-synthesis-review-tome.md`](http://nas-1.tail55d152.ts.net:4100/docs/design/20260905-1845-uos-wiki-zk-km-synthesis-review-tome.md)

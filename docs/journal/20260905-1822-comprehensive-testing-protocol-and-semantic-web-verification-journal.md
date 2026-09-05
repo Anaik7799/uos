@@ -5,7 +5,7 @@
 **Operator Directive**: "verify all webpages with actual page content is semantically and content wise correct, get the comprehensive testing protocol used by c3i and indrajaal, all .md and wiki, zk and km must be accessible from internet via tailscale"  
 **Canonical Scope**: Unified Operational System (UOS)  
 **Tailscale Base FQDN**: [http://nas-1.tail55d152.ts.net:4100](http://nas-1.tail55d152.ts.net:4100)  
-**Tags**: `#testing-protocol`, `#gold-standard-c1-c8`, `#fractal-l0`..`#fractal-l9`, `#zk-adr`, `#zero-muda`, `#km-triad`, `#c3i-control`, `#tailscale-web`
+**Tags**: `#rocha-semiotics`, `#cybernetics`, `#testing-protocol`, `#gold-standard-c1-c8`, `#fractal-l0`..`#fractal-l9`, `#zk-adr`, `#zero-muda`, `#km-triad`, `#c3i-control`, `#tailscale-web`
 
 ---
 

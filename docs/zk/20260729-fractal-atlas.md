@@ -6,6 +6,12 @@ id: f429f37a-a8b2-4c26-b58a-7c2322f36ec2
 ---
 # Fractal Atlas — every object × every layer, one graph
 
+- **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/zk/20260729-fractal-atlas.md](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260729-fractal-atlas.md)
+- **Fractal Coordinates**: `#fractal-l0` `#fractal-l1` `#fractal-l2` `#fractal-l3` `#fractal-l4` `#fractal-l5`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zero-muda` `#tailscale-web`
+- **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
+
+
 The zigvm system is fractal: the same algebra-law-mutant-gate discipline repeats
 at every scale. This atlas is the **top-level index note** connecting every
 fractal object across every layer, so any component is reachable from here in

@@ -7,10 +7,7 @@ read_repo_file(RelativePath) ->
         true -> binary_to_list(RelativePath);
         false -> RelativePath
     end,
-    CleanPath = case PathStr of
-        "/" ++ Rest -> Rest;
-        P -> P
-    end,
+    CleanPath = normalize_repo_path(PathStr),
     FullPath = filename:join([Root, CleanPath]),
     case filelib:is_dir(FullPath) of
         true ->
@@ -103,3 +100,23 @@ list_repo_dir(RelativePath) ->
             {ok, Bins};
         {error, Reason} -> {error, list_to_binary(atom_to_list(Reason))}
     end.
+
+normalize_repo_path(P) ->
+    P1 = strip_prefix(P, "file:///home/an/NAS-setup/uos/"),
+    P2 = strip_prefix(P1, "http://nas-1.tail55d152.ts.net:4100/"),
+    P3 = strip_prefix(P2, "http://100.87.7.78:4100/"),
+    P4 = strip_prefix(P3, "/home/an/NAS-setup/uos/"),
+    P5 = strip_prefix(P4, "home/an/NAS-setup/uos/"),
+    P6 = strip_prefix(P5, "/files/"),
+    P7 = strip_prefix(P6, "files/"),
+    case P7 of
+        "/" ++ Rest -> Rest;
+        Clean -> Clean
+    end.
+
+strip_prefix(Str, Prefix) ->
+    case string:prefix(Str, Prefix) of
+        nomatch -> Str;
+        Rest -> Rest
+    end.
+

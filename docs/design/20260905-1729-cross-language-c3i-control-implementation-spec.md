@@ -1,5 +1,11 @@
 # Cross-Language Implementation of the C3I Control Plane Specification
 
+- **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/design/20260905-1729-cross-language-c3i-control-implementation-spec.md](http://nas-1.tail55d152.ts.net:4100/docs/design/20260905-1729-cross-language-c3i-control-implementation-spec.md)
+- **Fractal Coordinates**: `#fractal-l0` `#fractal-l1` `#fractal-l2` `#fractal-l3` `#fractal-l4` `#fractal-l5`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zero-muda` `#tailscale-web`
+- **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
+
+
 - **Document ID:** `20260905-1729-cross-language-c3i-control-implementation-spec`
 - **Timestamp:** `20260905-1729` (Civil: 2026-09-05 17:40 Europe/Stockholm / 15:40 UTC)
 - **Status:** SEALED & ADMITTED

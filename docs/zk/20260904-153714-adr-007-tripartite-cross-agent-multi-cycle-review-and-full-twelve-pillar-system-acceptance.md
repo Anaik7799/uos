@@ -6,6 +6,11 @@ verified_by: agent
 ---
 # ADR-007: Tripartite Cross-Agent Multi-Cycle Review and Full Twelve-Pillar System Acceptance
 
+- **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-153714-adr-007-tripartite-cross-agent-multi-cycle-review-and-full-twelve-pillar-system-acceptance.md](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-153714-adr-007-tripartite-cross-agent-multi-cycle-review-and-full-twelve-pillar-system-acceptance.md)
+- **Fractal Coordinates**: `#fractal-l5` `#fractal-l0`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zk-adr` `#zero-muda` `#tailscale-web`
+- **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
+
 _Decision record (ADR) — captured in the Zettelkasten as part of the SDLC/SRE loop._
 
 ## Context (as-is)
@@ -41,3 +46,10 @@ Requires continuous synchronization of design artifacts and journals across all 
 Single-agent approval was rejected as insufficient for critical infrastructure safety; dual-agent approval without deep formal theorem auditing left mathematical non-interference unverified.
 
 #decision #adr
+
+---
+
+## Navigation & Backlinks
+- **Zettelkasten Master MOC**: [`docs/zk/20260905-1801-moc-uos-unified-master.md`](http://nas-1.tail55d152.ts.net:4100/zk)
+- **Hermes Wiki Corpus Index**: [`docs/wiki/20260905-1801-uos-zk-km-corpus-index.md`](http://nas-1.tail55d152.ts.net:4100/wiki)
+- **Review Tome**: [`docs/design/20260905-1845-uos-wiki-zk-km-synthesis-review-tome.md`](http://nas-1.tail55d152.ts.net:4100/docs/design/20260905-1845-uos-wiki-zk-km-synthesis-review-tome.md)

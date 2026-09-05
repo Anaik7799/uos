@@ -1,4 +1,10 @@
 # 20260905-1801-uos-zk-km-corpus-index.md
+
+- **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260905-1801-uos-zk-km-corpus-index.md](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260905-1801-uos-zk-km-corpus-index.md)
+- **Fractal Coordinates**: `#fractal-l0 #fractal-l1 #fractal-l2 #fractal-l3 #fractal-l4 #fractal-l5 #fractal-l6 #fractal-l7 #fractal-l8 #fractal-l9`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zero-muda` `#tailscale-web`
+- **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
+
 # UOS Unified Knowledge Graph & Corpus Directory
 
 Tags: `#fractal-l0`, `#fractal-l1`, `#fractal-l2`, `#fractal-l3`, `#fractal-l4`, `#fractal-l5`, `#fractal-l6`, `#fractal-l7`, `#fractal-l8`, `#fractal-l9`, `#zk-adr`, `#zero-muda`, `#km-triad`, `#wiki-index`
@@ -116,7 +122,12 @@ The operational system coordinates across five distinct language tiers:
   - `[[zk:TwoLattice_STM]]` (`formal/lean/TwoLattice_STM.lean`)
   - `[[zk:Traceability]]` (`formal/lean/Traceability.lean`)
   - `[[zk:parity_frontier]]` (`formal/quint/parity_frontier.qnt`)
-- Rule Contracts:
+- Rule Contracts & Synthesis Tomes:
+  - `[[wiki:20260905-2020-uos-grand-synthesis-review-tome-wiki-zk-km]]` ([Grand Synthesis Review Tome](http://nas-1.tail55d152.ts.net:4100/docs/design/20260905-2020-uos-grand-synthesis-review-tome-wiki-zk-km.md))
+  - `[[wiki:20260905-1845-uos-wiki-zk-km-synthesis-review-tome]]` ([Synthesis Review Tome](http://nas-1.tail55d152.ts.net:4100/docs/design/20260905-1845-uos-wiki-zk-km-synthesis-review-tome.md))
+  - `[[wiki:rocha-semiotics-cybernetics-contract]]` (`contracts/rules/rocha-semiotics-cybernetics-contract.md`)
+  - `[[wiki:comprehensive-checklist-contract]]` (`contracts/rules/comprehensive-checklist-contract.md`)
   - `[[wiki:km-wiki-zk-contract]]` (`contracts/rules/km-wiki-zk-contract.md`)
   - `[[wiki:dmc-tcm-mandate]]` (`contracts/rules/dmc-tcm-mandate.md`)
   - `[[wiki:timestamp-mandate]]` (`contracts/rules/timestamp-mandate.md`)
+

@@ -1,5 +1,11 @@
 # 20260905-1816- Universal Tailscale FQDN Web Navigation Integration Journal
 
+- **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/journal/20260905-1816-tailscale-web-fqdn-integration-journal.md](http://nas-1.tail55d152.ts.net:4100/docs/journal/20260905-1816-tailscale-web-fqdn-integration-journal.md)
+- **Fractal Coordinates**: `#fractal-l0 #fractal-l4 #fractal-l7`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zero-muda` `#tailscale-web`
+- **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
+
+
 ## 1. Scope & Trigger
 - **Scope**: Direct integration of full Tailscale FQDN links across all dashboards, web pages, wiki articles, ZK decision records, APIs, and file viewers in the Unified Operational System (UOS).
 - **Trigger**: Operator explicit mandate:

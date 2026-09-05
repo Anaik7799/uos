@@ -6,6 +6,11 @@ verified_by: agent
 ---
 # ADR-009: Distinct Functional Relocation from OCaml and Rust into Native Gleam
 
+- **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-154524-adr-009-distinct-functional-relocation-from-ocaml-and-rust-into-native-gleam.md](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-154524-adr-009-distinct-functional-relocation-from-ocaml-and-rust-into-native-gleam.md)
+- **Fractal Coordinates**: `#fractal-l2` `#fractal-l1`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zk-adr` `#zero-muda` `#tailscale-web`
+- **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
+
 _Decision record (ADR) — captured in the Zettelkasten as part of the SDLC/SRE loop._
 
 ## Context (as-is)
@@ -41,3 +46,10 @@ Requires maintaining type-accurate Gleam bindings for NIF interfaces; ensures me
 Retaining separate background daemons for Dream and planning_daemon was rejected due to inter-process socket latency and operational drift.
 
 #decision #adr
+
+---
+
+## Navigation & Backlinks
+- **Zettelkasten Master MOC**: [`docs/zk/20260905-1801-moc-uos-unified-master.md`](http://nas-1.tail55d152.ts.net:4100/zk)
+- **Hermes Wiki Corpus Index**: [`docs/wiki/20260905-1801-uos-zk-km-corpus-index.md`](http://nas-1.tail55d152.ts.net:4100/wiki)
+- **Review Tome**: [`docs/design/20260905-1845-uos-wiki-zk-km-synthesis-review-tome.md`](http://nas-1.tail55d152.ts.net:4100/docs/design/20260905-1845-uos-wiki-zk-km-synthesis-review-tome.md)

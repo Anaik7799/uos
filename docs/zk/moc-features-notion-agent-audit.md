@@ -6,6 +6,12 @@ verified_by: harness
 ---
 # MoC: Agent action audit log (2026) (Notion)
 
+- **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/zk/moc-features-notion-agent-audit.md](http://nas-1.tail55d152.ts.net:4100/docs/zk/moc-features-notion-agent-audit.md)
+- **Fractal Coordinates**: `#fractal-l0` `#fractal-l1` `#fractal-l2` `#fractal-l3` `#fractal-l4` `#fractal-l5`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zero-muda` `#tailscale-web`
+- **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
+
+
 Deterministic map of content for the **features--notion-agent-audit** community (125 notes), drafted by the harness from the live link graph (LPA communities, journal 20260729-1056 §7.13). Regenerated only when the membership hash changes; promote by editing `status:`.
 
 membership: e121dee04cb047a47c4311456f8c23d1

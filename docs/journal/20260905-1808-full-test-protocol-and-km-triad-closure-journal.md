@@ -1,5 +1,11 @@
 # 20260905-1808- Full Test Protocol, Zero-Muda Graphene Eradication, and KM Triad Closure Journal
 
+- **Tailscale Web FQDN**: [http://nas-1.tail55d152.ts.net:4100/docs/journal/20260905-1808-full-test-protocol-and-km-triad-closure-journal.md](http://nas-1.tail55d152.ts.net:4100/docs/journal/20260905-1808-full-test-protocol-and-km-triad-closure-journal.md)
+- **Fractal Coordinates**: `#fractal-l0 #fractal-l5 #fractal-l8`
+- **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zero-muda` `#tailscale-web`
+- **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
+
+
 ## 1. Scope & Trigger
 - **Scope**: Final system closure of the Unified Operational System (UOS) at `/home/an/NAS-setup/uos`.
 - **Trigger**: Direct operator mandate:

@@ -7,7 +7,7 @@ This repository is the canonical Unified Operational System (UOS).
 - Canonical workspace: `/home/an/NAS-setup/uos`
 - Target VCS: standalone, non-colocated Jujutsu only (`.jj/`)
 - Current phase: active migration, governance establishment, and formal implementation
-- EV-Cycle Status: `EV-01` through `EV-15` admitted; `DMC-TCM` completed; `Full 9-Modality Test Protocol` 100% green; `Fractal Dependability & C3I Observability` sealed; `Codex Sovereign Verification` active.
+- EV-Cycle Status: `EV-01` through `EV-19` admitted; `DMC-TCM` completed; `Full 9-Modality Test Protocol` 100% green; `Comprehensive Verification Checklist & Uniform Site Navigation` verified; `Codex Sovereign Verification` active.
 - Mandatory Timestamp Rule: All generated docs must carry `YYYYMMDD-HHSS-` timestamp prefix (Operator Directive, `contracts/rules/timestamp-mandate.md`).
 - Strict Zero-Muda: Bevy and Graphite are permanently barred from source, dependencies, runtime roles, and imported history.
 - External source trees are read-only evidence; no unvetted artifacts enter UOS without two-key verification.
@@ -123,6 +123,14 @@ Per explicit operator mandate and contract `contracts/rules/tailscale-web-fqdn-m
 - **Live File & Doc Viewer**: `http://nas-1.tail55d152.ts.net:4100/files/<path>` and `http://nas-1.tail55d152.ts.net:4100/docs/<path>`
 - **Peer Runtime Host**: `http://vm-1.tail55d152.ts.net:8088` (Tailscale IP: `100.78.98.18`)
 
+### 5.3 Universal Comprehensive Verification Checklist & Uniform Site Navigation (`#checklist-nav`)
+
+Per operator mandate (`contracts/rules/comprehensive-checklist-contract.md` `SC-CHECKLIST-001` and `SPEC-CHECKLIST-NAV-001`), every webpage and `.md` file MUST provide the 5-domain, 18-checkpoint verification structure and adhere to the uniform, cohesive site architecture:
+1. **Interactive Checklist Component**: 18/18 checks rendered via expandable accordion component on every single web screen and document view.
+2. **5 Verification Domains**: (1) Metadata/Timestamp/Tailscale Navigation, (2) Zero-Muda Purity & Storage Safety, (3) Testing Gold Standard C1–C8 & 4 Math Gates, (4) Cross-Language Control & Observability, (5) Tri-Sovereign Governance & Jujutsu Monorepo.
+3. **Uniform Cohesive Navigation**: Grouped Sidebar (Command & Control, Knowledge Base, Repository & Gov), Top Status Bar with clickable Tailscale FQDN URL and click-to-copy, Breadcrumb hierarchy, Dual View Mode (Rendered Markdown vs Raw Source toggle), Bottom linear Prev/Next navigation, and Persistent System Footer.
+4. **Machine Verification**: Validated by `tools/uos checklist`, gate `G-CHECKLIST`, and `tools/uos doctor` EV-19.
+
 ## 6. Evidence, Gates, and Completion Semantics
 
 State transitions must advance strictly through:
@@ -170,7 +178,8 @@ Scaling boundaries: trivial (1–3 files: 1–2 lines/sec), standard (4–14 fil
 
 ```text
 UOS TARGET: STANDALONE JUJUTSU MONOREPO OPERATIONAL & RATIFIED
-CURRENT EV-CYCLE: EV-18 (TAILSCALE FQDN WEB NAVIGATION ACTIVE ON nas-1.tail55d152.ts.net:4100)
+CURRENT EV-CYCLE: EV-19 (COMPREHENSIVE CHECKLIST & UNIFORM SITE NAVIGATION 18/18 PASS ON nas-1.tail55d152.ts.net:4100)
+CHECKLIST STATUS: 5 DOMAINS, 18/18 CHECKS 100% GREEN (SC-CHECKLIST-001, G-CHECKLIST PASS)
 DMC & TCM STATUS: ADMITTED & PROVED IN LEAN 4 (Traceability.lean)
 TEST PROTOCOL: 9 MODALITIES 100% GREEN (>10,600 TESTS, 206 CORE GLEAM, 2037 HARNESS)
 FRACTAL OBSERVABILITY: UNIVERSAL C3I CONTRACT ENFORCED (c3i_fractal_observability_spec.json)
