@@ -56,6 +56,26 @@ import gleam/string
 @external(erlang, "cepaf_gleam_ffi", "system_time_nanos")
 fn system_time_nanos() -> Int
 
+@external(erlang, "cepaf_gleam_ffi", "nanos_to_iso8601")
+fn nanos_to_iso8601(nanos: Int) -> String
+
+/// Map short layer identifier to canonical fractal layer enum
+pub fn layer_to_fractal_enum(layer: String) -> String {
+  case layer {
+    "L0" | "L0_MICROKERNEL_ALLOCATOR" -> "L0_MICROKERNEL_ALLOCATOR"
+    "L1" | "L1_TERM_JIT" -> "L1_TERM_JIT"
+    "L2" | "L2_INSTRUCTION_DISPATCH" -> "L2_INSTRUCTION_DISPATCH"
+    "L3" | "L3_BYTE_PARITY" -> "L3_BYTE_PARITY"
+    "L4" | "L4_STM_CONCURRENCY" -> "L4_STM_CONCURRENCY"
+    "L5" | "L5_ACTOR_SUPERVISION" -> "L5_ACTOR_SUPERVISION"
+    "L6" | "L6_ZERO_TRUST_GATE" -> "L6_ZERO_TRUST_GATE"
+    "L7" | "L7_PROBABILISTIC_TELEMETRY" -> "L7_PROBABILISTIC_TELEMETRY"
+    "L8" | "L8_LIVING_ONTOLOGY" -> "L8_LIVING_ONTOLOGY"
+    "L9" | "L9_AUTONOMOUS_FEDERATION" -> "L9_AUTONOMOUS_FEDERATION"
+    _ -> "L5_ACTOR_SUPERVISION"
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
@@ -204,21 +224,35 @@ pub fn format_plain(entry: LogEntry) -> String {
 ///   }
 /// }
 pub fn to_json(entry: LogEntry) -> String {
+  let parent_json = case entry.trace.parent_span_id {
+    "" -> "null"
+    p -> "\"" <> p <> "\""
+  }
   string.concat([
     "{",
     "\"timestamp\":",
     int.to_string(entry.timestamp),
-    ",\"severity\":\"",
+    ",\"timestamp_utc\":\"",
+    nanos_to_iso8601(entry.timestamp),
+    "\",\"severity\":\"",
     level_to_string(entry.level),
     "\",\"severity_number\":",
     int.to_string(level_to_otel_severity(entry.level)),
-    ",\"body\":\"",
+    ",\"fractal_layer\":\"",
+    layer_to_fractal_enum(entry.trace.layer),
+    "\",\"holon_id\":\"c3i_control_node_1\"",
+    ",\"subsystem\":\"gleam_control\"",
+    ",\"message\":\"",
+    escape_json_string(entry.message),
+    "\",\"body\":\"",
     escape_json_string(entry.message),
     "\",\"trace_id\":\"",
     entry.trace.trace_id,
     "\",\"span_id\":\"",
     entry.trace.span_id,
-    "\",\"attributes\":{",
+    "\",\"parent_span_id\":",
+    parent_json,
+    ",\"attributes\":{",
     "\"layer\":\"",
     entry.trace.layer,
     "\",\"operation\":\"",

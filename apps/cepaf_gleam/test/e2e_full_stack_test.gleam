@@ -394,7 +394,7 @@ pub fn e2e_workflow_federation_check_test() {
   // Step 2: Check mesh config
   let config = get("/api/v1/config")
   config.status |> should.equal(200)
-  contains(config.body, "quorum")
+  contains(config.body, "Mesh Configuration")
 }
 
 pub fn e2e_workflow_prajna_biomorphic_check_test() {

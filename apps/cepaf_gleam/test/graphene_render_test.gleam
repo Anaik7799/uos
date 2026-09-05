@@ -1,6 +1,6 @@
 import cepaf_gleam/graphene.{
-  Point2, Point3, Rgba, StateEdge, StateMachine, StateNode, SvgCircle,
-  SvgPolygon, SvgRect, SvgStar, Transform2D,
+  Point2, StateEdge, StateMachine, StateNode, SvgCircle, SvgPolygon, SvgRect,
+  SvgStar, Transform2D,
 }
 import cepaf_gleam/testing/nav_graph
 import gleam/list

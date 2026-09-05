@@ -474,10 +474,6 @@ fn p2j(p: Point2) -> json.Json {
   json.preprocessed_array([json.float(p.x), json.float(p.y)])
 }
 
-fn p3j(p: Point3) -> json.Json {
-  json.preprocessed_array([json.float(p.x), json.float(p.y), json.float(p.z)])
-}
-
 fn p2_pair(a: Point2, b: Point2) -> String {
   json.object([#("a", p2j(a)), #("b", p2j(b))]) |> json.to_string()
 }

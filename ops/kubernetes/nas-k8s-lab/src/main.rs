@@ -33,6 +33,8 @@ enum Command {
 async fn main() -> Result<()> {
     let cli = Cli::parse();
     let spec = LabSpec::default();
+    spec.validate_safety_invariants()
+        .map_err(|e| anyhow::anyhow!(e))?;
 
     match cli.command {
         Command::Summary => {

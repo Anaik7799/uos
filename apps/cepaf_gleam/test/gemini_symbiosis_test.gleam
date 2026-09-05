@@ -12,8 +12,14 @@ import gleam/string
 import gleeunit/should
 
 fn get_root() -> String {
-  case file_system.run_cmd("git rev-parse --show-toplevel") {
-    Ok(root) -> string.trim(root)
+  case file_system.run_cmd("jj root 2>/dev/null") {
+    Ok(root) -> {
+      let trimmed = string.trim(root)
+      case trimmed {
+        "" -> "."
+        _ -> trimmed
+      }
+    }
     Error(_) -> "."
   }
 }

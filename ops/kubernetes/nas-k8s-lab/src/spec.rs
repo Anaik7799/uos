@@ -56,6 +56,7 @@ pub struct VmSpec {
 pub struct OsdDevice {
     pub host_device: &'static str,
     pub class: &'static str,
+    pub serial: Option<&'static str>,
 }
 
 impl Default for LabSpec {
@@ -106,10 +107,12 @@ impl Default for LabSpec {
                         OsdDevice {
                             host_device: "/dev/nvme1n1",
                             class: "nvme",
+                            serial: Some("25503L802767"),
                         },
                         OsdDevice {
                             host_device: "/dev/sda",
                             class: "hdd",
+                            serial: None,
                         },
                     ],
                 },
@@ -123,10 +126,12 @@ impl Default for LabSpec {
                         OsdDevice {
                             host_device: "/dev/sdb",
                             class: "hdd",
+                            serial: None,
                         },
                         OsdDevice {
                             host_device: "/dev/sdc",
                             class: "hdd",
+                            serial: None,
                         },
                     ],
                 },
@@ -139,6 +144,7 @@ impl Default for LabSpec {
                     osd_devices: vec![OsdDevice {
                         host_device: "/dev/sdd",
                         class: "hdd",
+                        serial: None,
                     }],
                 },
             ],
@@ -188,8 +194,16 @@ impl LabSpec {
     pub fn validate_safety_invariants(&self) -> Result<(), &'static str> {
         for vm in &self.vms {
             for osd in &vm.osd_devices {
-                if osd.host_device == self.host.os_disk {
+                if osd.host_device == self.host.os_disk || osd.host_device.starts_with("/dev/nvme0n1") {
                     return Err("HARD_DENIED: OSD device matches host OS root disk!");
+                }
+                if let Some(s) = osd.serial {
+                    if s == Self::HARD_DENIED_SYSTEM_OS_SERIAL {
+                        return Err("HARD_DENIED: Candidate device matches protected OS host root drive serial 25503L801736");
+                    }
+                }
+                if osd.host_device.starts_with("/dev/nvme") && osd.serial.is_none() {
+                    return Err("REJECTED: NVMe device admission requires verified immutable hardware serial number");
                 }
             }
         }
@@ -211,6 +225,20 @@ mod tests {
     fn test_spec_safety_invariants_fail_on_collision() {
         let mut spec = LabSpec::default();
         spec.vms[0].osd_devices[0].host_device = spec.host.os_disk;
+        assert!(spec.validate_safety_invariants().is_err());
+    }
+
+    #[test]
+    fn test_spec_safety_invariants_fail_on_serial_collision() {
+        let mut spec = LabSpec::default();
+        spec.vms[0].osd_devices[0].serial = Some(LabSpec::HARD_DENIED_SYSTEM_OS_SERIAL);
+        assert!(spec.validate_safety_invariants().is_err());
+    }
+
+    #[test]
+    fn test_spec_safety_invariants_fail_on_missing_nvme_serial() {
+        let mut spec = LabSpec::default();
+        spec.vms[0].osd_devices[0].serial = None;
         assert!(spec.validate_safety_invariants().is_err());
     }
 }

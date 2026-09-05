@@ -62,12 +62,25 @@ These external trees are dirty, moving, and read-only. Before any file or logic 
 3. **Formal Evidence & Analysis**: Hermes (`engines/hermes`). OCaml/Dune engine for Gospel contracts, Z3 queries, differential oracles, and bounded formal verification.
 4. **Isolated AI Inference**: Modular MAX/Mojo (`services/inference/max`). Python is strictly confined to this supervised daemon service.
 5. **Native Bounded Kernels**: `native/{c,cpp,rust,ocaml}`. Strictly short, deterministic, bounded kernels or dispatch facades with explicit ABI contracts. Blocking work belongs in supervised isolated daemons.
-6. **Zero-Muda Rule**: Zero Bevy, zero Graphite across all dependencies, build systems, code, and history.
+6. **Zero-Muda Rule**: Zero Bevy and Graphite are prohibited in UOS source, dependencies, APIs, runtime roles and imported history. Keep exclusion provenance; do not delete legacy trees during ordinary planning or migration. Graphene is not required: all 2D vector mathematics, transforms, and graph operations are implemented in pure Erlang/Gleam or Hermes OCaml, maintaining Zero-Muda purity without foreign NIFs.
+
+### 5.0 Knowledge Management, Wiki & Zettelkasten Architecture (`#km-triad`)
+
+The UOS knowledge system unifies three foundational corpora into an integrated,
+bidirectionally linked living knowledge graph:
+1. **Hermes Wiki Engine** (`engines/hermes/modules/hermes_wiki`): AST parsing,
+   Gospel-specified contracts, transclusion (`[[wiki:...]]`), vector similarity,
+   and TyXML rendering.
+2. **ZigVM Zettelkasten (ZK)** (`/home/an/dev/ver/zigvm/docs/zk/`): Permanent
+   architectural decision records (`ADR-001` through `ADR-016`), Maps of Content
+   (MOCs), and fractal design invariants (`[[zk:...]]`).
+3. **C3I Living Ontology & Evidence Plane** (`/home/an/dev/ver/c3i/docs/`):
+   STAMP/STPA safety lattices, SQLite living catalogs, and 13D trace coordinates.
+All newly generated documentation, wiki articles, and journals MUST bear the
+canonical `YYYYMMDD-HHSS-` timestamp prefix and standardized fractal tags
+(`#fractal-l0`..`#fractal-l9`, `#zk-adr`, `#zero-muda`).
 
 ### 5.1 Cross-Language Implementation of the C3I Control Plane
-
-#### Cross-Language Implementation of the C3I Control
-
 The Unified Operational System distributes C3I control functions across explicit language domains according to safety, formal verification, and performance characteristics:
 
 1. **Gleam/OTP (Supervision, Intent, State Machines & OODA Loops)**:

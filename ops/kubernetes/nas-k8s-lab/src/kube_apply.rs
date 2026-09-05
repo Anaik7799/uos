@@ -10,6 +10,8 @@ use serde_json::json;
 use std::collections::BTreeMap;
 
 pub async fn apply_all(spec: &LabSpec) -> Result<()> {
+    spec.validate_safety_invariants()
+        .map_err(|e| anyhow::anyhow!(e))?;
     let client = Client::try_default().await?;
     apply_namespaces(client.clone(), spec).await?;
     apply_rook_resources(client.clone(), spec).await?;

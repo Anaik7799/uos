@@ -20,3 +20,23 @@ id = "KM-C3I-DOCS"
 source = "c3i"
 path = "/home/an/dev/ver/c3i/docs"
 state = "classified"
+
+[[km_root]]
+id = "KM-UOS-WIKI"
+source = "uos"
+path = "docs/wiki"
+state = "admitted"
+specification = "docs/wiki/20260905-1721-uos-master-knowledge-graph-and-living-ontology.md"
+
+[wiki_tags]
+fractal_layers = ["#fractal-l0", "#fractal-l1", "#fractal-l2", "#fractal-l3", "#fractal-l4", "#fractal-l5", "#fractal-l6", "#fractal-l7", "#fractal-l8", "#fractal-l9"]
+knowledge_families = ["#zk-adr", "#zk-moc", "#zk-slipbox", "#zk-permanent", "#zk-transclusion", "#km-lifecycle"]
+formal_profiles = ["#formal-lean4", "#formal-quint", "#formal-gospel", "#formal-z3", "#proof-0axiom"]
+safety_controls = ["#stamp-stpa", "#fmea-rank", "#zero-trust", "#fail-closed", "#root-drive-denial"]
+control_plane = ["#gleam-otp", "#hermes-ocaml", "#zigvm-kernel", "#modular-max", "#c3i-control"]
+zero_muda = ["#zero-muda", "#bevy-purged", "#graphite-excluded", "#graphene-not-required"]
+
+[graphene_policy]
+status = "NOT_REQUIRED"
+rationale = "Zero-Muda compliance; pure Erlang/Gleam OTP and Hermes OCaml provide all vector mathematics and graph algorithms with zero external C/Rust NIF dependencies."
+

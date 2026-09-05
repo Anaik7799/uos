@@ -1,7 +1,7 @@
 -module(cepaf_gleam_ffi).
 
 -export([hackney_request/5, hackney_http_request/4, get_uid/0, sha256/1, sqrt/1, get_arguments/0]).
--export([system_time_nanos/0]).
+-export([system_time_nanos/0, nanos_to_iso8601/1]).
 -export([sqlite_open/1, sqlite_exec/2, sqlite_q/3, sqlite_close/1]).
 -export([podman_uds_request/4]).
 -export([duckdb_open/1, duckdb_connection/1, duckdb_query/2, duckdb_execute/2, duckdb_ensure_schema/1, duckdb_fetch_all/1, duckdb_columns/1]).
@@ -209,6 +209,12 @@ hackney_http_request(Method, Url, Headers, Body) ->
 
 system_time_nanos() ->
     erlang:system_time(nanosecond).
+
+nanos_to_iso8601(Nanos) when is_integer(Nanos) ->
+    Seconds = Nanos div 1000000000,
+    MicroPart = (Nanos rem 1000000000) div 1000,
+    {{Y, M, D}, {H, Mi, S}} = calendar:system_time_to_universal_time(Seconds, second),
+    list_to_binary(io_lib:format("~4..0B-~2..0B-~2..0BT~2..0B:~2..0B:~2..0B.~6..0BZ", [Y, M, D, H, Mi, S, MicroPart])).
 
 get_uid() ->
     Raw = case os:getenv("UID") of

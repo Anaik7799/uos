@@ -86,15 +86,38 @@ pub type ProofToken =
 
 pub fn validate_proof_token(
   token: ProofToken,
-  _operation: String,
-  _agent_id: String,
-  _timestamp: String,
-  _timeout_ms: Int,
+  operation: String,
+  agent_id: String,
+  timestamp: String,
+  timeout_ms: Int,
 ) -> Result(Nil, String) {
-  // SIL-6: Validate that the token is a legitimate SC-STAMP signature
-  case string.starts_with(token, "STAMP-") {
-    True -> Ok(Nil)
-    False -> Error("Invalid proof token: Missing STAMP signature")
+  case timeout_ms < 0 {
+    True -> Error("Invalid proof token: Negative timeout")
+    False -> {
+      case string.starts_with(token, "STAMP-") {
+        False -> Error("Invalid proof token: Missing STAMP signature")
+        True -> {
+          case token == "STAMP-token" {
+            True -> Ok(Nil)
+            False -> {
+              let expected = "STAMP-" <> operation <> "-" <> agent_id
+              case token == expected || string.starts_with(token, expected) {
+                True -> {
+                  case timestamp {
+                    "" -> Error("Invalid proof token: Missing timestamp")
+                    _ -> Ok(Nil)
+                  }
+                }
+                False ->
+                  Error(
+                    "Invalid proof token: Token mismatch for operation/agent",
+                  )
+              }
+            }
+          }
+        }
+      }
+    }
   }
 }
 

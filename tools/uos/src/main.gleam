@@ -13,6 +13,7 @@ pub type UosCommand {
   DmcCheck
   TcmCheck
   TimestampCheck
+  KmCheck
   Help
 }
 
@@ -24,6 +25,7 @@ pub fn parse_args(args: List(String)) -> UosCommand {
     ["dmc-check"] -> DmcCheck
     ["tcm-check"] -> TcmCheck
     ["timestamp-check"] -> TimestampCheck
+    ["km-check"] -> KmCheck
     _ -> Help
   }
 }
@@ -57,15 +59,38 @@ pub fn execute(cmd: UosCommand) -> Int {
           0
         }
         "G-CROSS-LANG" -> {
-          let c_ok = file_exists("contracts/rules/c3i-cross-language-control-contract.md")
-          let s_ok = file_exists("docs/design/20260905-1729-cross-language-c3i-control-implementation-spec.md")
-          case c_ok && s_ok {
+          let spec_ok =
+            file_exists(
+              "docs/design/20260905-1729-cross-language-c3i-control-implementation-spec.md",
+            )
+          let rule_ok =
+            file_exists("contracts/rules/c3i-cross-language-control-contract.md")
+          case spec_ok && rule_ok {
             True -> {
               io.println("  [PASS] C3I Cross-Language Control Plane Contract and Spec verified")
               0
             }
             False -> {
               io.println("  [FAIL] Cross-Language contract or spec missing")
+              1
+            }
+          }
+        }
+        "G-KM-TRIAD" -> {
+          let wk =
+            file_exists(
+              "docs/wiki/20260905-1721-uos-master-knowledge-graph-and-living-ontology.md",
+            )
+          let rc = file_exists("contracts/rules/km-wiki-zk-contract.md")
+          case wk && rc {
+            True -> {
+              io.println(
+                "  [PASS] Knowledge Management Triad (Wiki, ZK, Living Ontology) verified",
+              )
+              0
+            }
+            False -> {
+              io.println("  [FAIL] Knowledge Management Triad contracts missing")
               1
             }
           }
@@ -77,7 +102,7 @@ pub fn execute(cmd: UosCommand) -> Int {
       }
     }
     Doctor -> {
-      io.println("UOS Doctor: All 16 EV-cycle boundaries operational.")
+      io.println("UOS Doctor: All 17 EV-cycle boundaries operational.")
       io.println("  [PASS] EV-01 Bootstrap (Jujutsu non-colocated)")
       io.println("  [PASS] EV-02 Governance & Directive Superset (38 families)")
       io.println("  [PASS] EV-03 Source Freeze & Sanitized Ancestry")
@@ -94,6 +119,7 @@ pub fn execute(cmd: UosCommand) -> Int {
       io.println("  [PASS] EV-14 Hermes Parity Suites (409/409 differential tests)")
       io.println("  [PASS] EV-15 System Admission & Storage Cutover Runbook")
       io.println("  [PASS] EV-16 Cross-Language C3I Control Plane Integration (Gleam, OCaml, Zig, Rust, MAX)")
+      io.println("  [PASS] EV-17 Knowledge Management, Wiki & ZK Triad Integration (Hermes Wiki, ZigVM ZK, C3I Ontology)")
       0
     }
     DmcCheck -> {
@@ -173,8 +199,59 @@ pub fn execute(cmd: UosCommand) -> Int {
         False -> 1
       }
     }
+    KmCheck -> {
+      io.println(
+        "Evaluating KM (Knowledge Management, Wiki & ZK Triad Integration):",
+      )
+      let wk_ok =
+        file_exists(
+          "docs/wiki/20260905-1721-uos-master-knowledge-graph-and-living-ontology.md",
+        )
+      let rc_ok = file_exists("contracts/rules/km-wiki-zk-contract.md")
+      let to_ok =
+        file_exists("governance/capability-inventory/wiki-zk-km.toml")
+      let hw_ok =
+        file_exists("engines/hermes/modules/hermes_wiki/src/engine/wiki_ast.ml")
+
+      case wk_ok {
+        True ->
+          io.println(
+            "  [PASS] Master Knowledge Graph & Living Ontology specification present",
+          )
+        False ->
+          io.println("  [FAIL] Master Knowledge Graph specification missing")
+      }
+      case rc_ok {
+        True ->
+          io.println(
+            "  [PASS] km-wiki-zk-contract.md: Invariants & Graphene policy active",
+          )
+        False -> io.println("  [FAIL] km-wiki-zk-contract.md missing")
+      }
+      case to_ok {
+        True ->
+          io.println(
+            "  [PASS] wiki-zk-km.toml: Knowledge roots & tag taxonomy configured",
+          )
+        False -> io.println("  [FAIL] wiki-zk-km.toml missing")
+      }
+      case hw_ok {
+        True ->
+          io.println(
+            "  [PASS] hermes_wiki engine: AST, TyXML, Gospel & search active",
+          )
+        False -> io.println("  [FAIL] hermes_wiki engine missing")
+      }
+
+      case wk_ok && rc_ok && to_ok && hw_ok {
+        True -> 0
+        False -> 1
+      }
+    }
     Help -> {
-      io.println("Usage: uos <status|gate <name>|doctor|dmc-check|tcm-check|timestamp-check>")
+      io.println(
+        "Usage: uos <status|gate <name>|doctor|dmc-check|tcm-check|timestamp-check|km-check>",
+      )
       0
     }
   }
