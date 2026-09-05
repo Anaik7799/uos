@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DeepSeek Cordis Spatiotemporal Coeffect Contract",
+  "version": "1.0.0",
+  "timestamp": "2026-09-05T16:52:15+02:00",
+  "governance": {
+    "authority": "UOS-CANONICAL-AGENT-POLICY",
+    "boundary": "contracts/spatiotemporal",
+    "lineage": "DeepSeek Cordis Reactive Engine & Paper"
+  },
+  "coordinates": {
+    "temporal": {
+      "epoch_ms": "integer",
+      "monotonicity_ticket": "integer",
+      "causal_depth": "integer",
+      "clock_source": "string (UTC_HOST_MONOTONIC)",
+      "drift_tolerance_ms": 2000
+    },
+    "spatial": {
+      "node_id": "string",
+      "cluster_zone": "string",
+      "holon_cell": "string",
+      "memory_locality": "string (NUMA_AWARE)"
+    }
+  },
+  "algebra": {
+    "coeffect_type": "SPATIOTEMPORAL_COEFFECT_MONOID",
+    "operators": [
+      "temporal_join",
+      "causal_reversal",
+      "horizon_fencing",
+      "rollback_to_checkpoint"
+    ],
+    "invariants": [
+      "monotonic_time_strictly_increasing",
+      "causality_preserved_across_holons",
+      "drift_exceeding_5s_raises_warning",
+      "drift_exceeding_10s_halts_admission"
+    ]
+  }
+}

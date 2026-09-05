@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "UOS Unified MCP Capability Contract",
+  "version": "1.0.0",
+  "timestamp": "2026-09-05T16:50:00+02:00",
+  "governance": {
+    "authority": "UOS-CANONICAL-AGENT-POLICY",
+    "symbiosis_mode": "ZIGVM_C3I_UNIFIED_CONTROL_LOOP"
+  },
+  "tool_families": {
+    "c3i_planning": [
+      {
+        "name": "plan_status",
+        "description": "Get task count summary from Planning SQLite store"
+      },
+      {
+        "name": "plan_list_pending",
+        "description": "List all non-completed tasks"
+      },
+      {
+        "name": "plan_list",
+        "description": "List tasks filtered by status"
+      },
+      {
+        "name": "plan_get",
+        "description": "Get single task by ID"
+      },
+      {
+        "name": "plan_add",
+        "description": "Add new task with title and priority"
+      },
+      {
+        "name": "plan_update",
+        "description": "Update task status"
+      },
+      {
+        "name": "plan_search",
+        "description": "Full-text search over tasks"
+      }
+    ],
+    "c3i_system_telemetry": [
+      {
+        "name": "system_health",
+        "description": "Live health metrics of containers and network"
+      },
+      {
+        "name": "system_dashboard",
+        "description": "High-level operational overview"
+      },
+      {
+        "name": "system_immune",
+        "description": "Immune system and threat posture"
+      },
+      {
+        "name": "system_zenoh",
+        "description": "Zenoh mesh router connectivity"
+      },
+      {
+        "name": "system_verification",
+        "description": "Status of verification tests"
+      }
+    ],
+    "c3i_ooda_metabolic": [
+      {
+        "name": "metabolic_state",
+        "description": "Metabolic rates and resource consumption"
+      },
+      {
+        "name": "ooda_phase",
+        "description": "Current cognitive OODA cycle phase"
+      },
+      {
+        "name": "ooda_decide",
+        "description": "Trigger decision frame transition"
+      }
+    ],
+    "zigvm_control_loop": [
+      {
+        "name": "control_loop",
+        "description": "OODA observe/act over SQLite evidence"
+      },
+      {
+        "name": "log_ooda",
+        "description": "Append raw OODA log entry"
+      },
+      {
+        "name": "next_slice",
+        "description": "Determine next evolutionary slice from backlog"
+      },
+      {
+        "name": "record_cycle",
+        "description": "Record completion of evolutionary cycle"
+      }
+    ],
+    "zigvm_safety_registry": [
+      {
+        "name": "safety_status",
+        "description": "STAMP/STPA safety census, UCAs, and constraints"
+      },
+      {
+        "name": "criticality",
+        "description": "Criticality level assessment across subsystems"
+      },
+      {
+        "name": "registry_status",
+        "description": "Formal coverage and module registry status"
+      }
+    ],
+    "zigvm_verification_gates": [
+      {
+        "name": "run_selfcheck",
+        "description": "Execute harness battery selfcheck mode"
+      },
+      {
+        "name": "run_gate",
+        "description": "Execute deterministic admission gate"
+      },
+      {
+        "name": "run_conformance",
+        "description": "Execute conformance test suite"
+      },
+      {
+        "name": "verify_formal",
+        "description": "Verify formal Gospel/Z3 specifications"
+      }
+    ],
+    "zigvm_zk_knowledge": [
+      {
+        "name": "zk_search",
+        "description": "Search Zettelkasten knowledge notes"
+      },
+      {
+        "name": "zk_read_note",
+        "description": "Read full note content by ID"
+      },
+      {
+        "name": "zk_author_note",
+        "description": "Author new ZK knowledge note"
+      },
+      {
+        "name": "zk_record_decision",
+        "description": "Record architectural decision frame"
+      }
+    ],
+    "sa_bridge": [
+      {
+        "name": "sa_bridge_submit",
+        "description": "Submit task or plan to Sa-Plan bridge"
+      },
+      {
+        "name": "zenoh_publish",
+        "description": "Publish telemetry to Zenoh pub/sub key"
+      },
+      {
+        "name": "zenoh_ping",
+        "description": "Verify low-latency Zenoh peer connectivity"
+      }
+    ]
+  }
+}

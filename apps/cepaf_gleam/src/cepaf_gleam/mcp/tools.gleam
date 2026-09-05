@@ -450,5 +450,135 @@ pub fn get_tool_definitions() -> List(ToolDefinition) {
         #("properties", json.object([])),
       ]),
     ),
+    // -- ZigVM / Hermes Harness Control Loop & Safety tools --
+    ToolDefinition(
+      name: "control_loop",
+      description: "OODA observe/act over SQLite evidence store",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "phase",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("observe or act")),
+              ]),
+            ),
+            #(
+              "content",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Log content for act phase")),
+              ]),
+            ),
+            #(
+              "layer",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Target layer (default L2)")),
+              ]),
+            ),
+          ]),
+        ),
+      ]),
+    ),
+    ToolDefinition(
+      name: "safety_status",
+      description: "STAMP/STPA safety census: total UCAs, priority bands, enforced constraints",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #("properties", json.object([])),
+      ]),
+    ),
+    ToolDefinition(
+      name: "registry_status",
+      description: "Formal coverage and module registry status",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #("properties", json.object([])),
+      ]),
+    ),
+    ToolDefinition(
+      name: "run_selfcheck",
+      description: "Run harness engine selfcheck battery mode (db|graph|cache|sched|ooda|sweep|mutants)",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "name",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Mode name")),
+              ]),
+            ),
+          ]),
+        ),
+        #("required", json.array(["name"], json.string)),
+      ]),
+    ),
+    ToolDefinition(
+      name: "run_gate",
+      description: "Execute deterministic admission gate check",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "name",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Gate name (e.g., GATE-DETERMINACY)")),
+              ]),
+            ),
+          ]),
+        ),
+        #("required", json.array(["name"], json.string)),
+      ]),
+    ),
+    ToolDefinition(
+      name: "zk_search",
+      description: "Search Zettelkasten knowledge notes by query string",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "query",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Search query")),
+              ]),
+            ),
+          ]),
+        ),
+        #("required", json.array(["query"], json.string)),
+      ]),
+    ),
+    ToolDefinition(
+      name: "sa_bridge_submit",
+      description: "Submit task or plan to Sa-Plan bridge",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "task",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Task title or payload")),
+              ]),
+            ),
+          ]),
+        ),
+        #("required", json.array(["task"], json.string)),
+      ]),
+    ),
   ]
 }

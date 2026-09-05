@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "UOS Modular MAX/Mojo Isolated Inference Contract",
+  "version": "1.0.0",
+  "timestamp": "2026-09-05T16:51:50+02:00",
+  "governance": {
+    "authority": "UOS-CANONICAL-AGENT-POLICY",
+    "boundary": "services/inference/max",
+    "execution_model": "SUPERVISED_EXTERNAL_PORT_LENGTH_DELIMITED"
+  },
+  "protocol": {
+    "framing": "4_BYTE_BE_LENGTH_DELIMITED_JSON",
+    "transport": "STDIO_OR_UNIX_SOCKET",
+    "encoding": "UTF-8"
+  },
+  "requests": {
+    "infer": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "model": {
+          "type": "string"
+        },
+        "prompt": {
+          "type": "string"
+        },
+        "max_tokens": {
+          "type": "integer",
+          "default": 512
+        },
+        "temperature": {
+          "type": "number",
+          "default": 0.2
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "default": 5000
+        }
+      },
+      "required": [
+        "id",
+        "prompt"
+      ]
+    },
+    "health": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ]
+    }
+  },
+  "responses": {
+    "infer_result": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "ok",
+            "error",
+            "timeout"
+          ]
+        },
+        "text": {
+          "type": "string"
+        },
+        "prompt_tokens": {
+          "type": "integer"
+        },
+        "completion_tokens": {
+          "type": "integer"
+        },
+        "latency_us": {
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "status"
+      ]
+    }
+  }
+}

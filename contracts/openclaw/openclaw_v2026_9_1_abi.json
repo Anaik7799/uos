@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OpenClaw v2026.9.1 Gateway ABI Specification",
+  "version": "2026.9.1",
+  "timestamp": "2026-09-05T16:52:15+02:00",
+  "governance": {
+    "authority": "UOS-CANONICAL-AGENT-POLICY",
+    "boundary": "contracts/openclaw",
+    "stability": "STABLE_COMPATIBILITY_BASELINE"
+  },
+  "magic_bytes": "0x434C4157",
+  "version_tuple": [
+    2026,
+    9,
+    1
+  ],
+  "protocol": {
+    "framing": "BINARY_TLV_LENGTH_PREFIXED",
+    "crypto": "ED25519_SESSION_FENCING",
+    "endpoints": [
+      {
+        "path": "/v1/gateway/handshake",
+        "method": "POST",
+        "auth": "SESSION_INIT"
+      },
+      {
+        "path": "/v1/gateway/dispatch",
+        "method": "POST",
+        "auth": "BEARER_FENCED"
+      },
+      {
+        "path": "/v1/gateway/telemetry",
+        "method": "GET",
+        "auth": "READ_ONLY"
+      }
+    ]
+  },
+  "invariants": [
+    "zero_plaintext_credentials",
+    "monotonic_sequence_enforced",
+    "heartbeat_interval_ms_30000",
+    "lease_timeout_ms_60000"
+  ]
+}
