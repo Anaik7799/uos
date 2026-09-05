@@ -17,7 +17,7 @@ Observed toolchain: Gleam 1.16.0, OCaml 5.5.0, Dune 3.23.1, JJ 0.44.0. Chrony: N
 
 Task 1: implemented and independently reviewed — 14 Gleam tests pass over real native observations. Reviewer found two omitted large-case report.verdict assertions; both added, both isolated report-only mutants killed, re-review accepted. Untouched source suite: 146 passed, 0 failed.
 Task 2a: implemented and reviewed — 7 Gleam preservation tests pass; real altered-file CLI exits 1. Both canonical and isolated roots match all 318 baseline candidate hashes. Task 2's expanded Dune/nonstandard testcase classification remains OPEN (OGL.02).
-Task 3: scoped evidence/handoff prepared; final JJ binding pending below. No full-migration or full-system completion claim.
+Task 3: scoped evidence/handoff saved. Tested implementation JJ change `lnkouorqowypsuprsuuuytxsqpzrmvpp`, commit `f8847e769b8ea9e00f052b8166e2a839a634b0e2`. Final source checks still show 318/318 unchanged in both roots; non-new Hermes source diff empty. No full-migration or full-system completion claim.
 Task 4: MATERIALIZED and independently reviewed, dispatch disabled — operator request "create sa-plan taks, hjobs and workflow with temporal". Typed Store contains 75 tasks, 74 reserved jobs, 1 local Temporal-style workflow. Separate-process replay/readback agrees, job attempts 0, completed/executing tasks 0. No Temporal server or worker execution claimed. Re-review approved all blocking fixes; a minor scoped-checklist wording inconsistency was clarified.
 
 Preflight conflict scan:

@@ -30,6 +30,8 @@ Persistent state is at
 `/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/state/ocaml_gleam_tests/sa_plan.sqlite3`,
 mode 0600, ignored by JJ. Canonical UOS remains
 `/home/an/NAS-setup/uos`. The feature workspace has not been merged.
+Tested implementation: JJ change `lnkouorqowypsuprsuuuytxsqpzrmvpp`,
+commit `f8847e769b8ea9e00f052b8166e2a839a634b0e2`.
 Do not copy the live SQLite/WAL into source control: replay the typed registrar
 in the intended store after integration approval.
 

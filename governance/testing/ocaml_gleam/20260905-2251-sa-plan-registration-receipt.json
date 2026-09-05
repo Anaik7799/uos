@@ -1,5 +1,7 @@
 {
   "schema_version": 1,
+  "tested_implementation_jj_commit": "f8847e769b8ea9e00f052b8166e2a839a634b0e2",
+  "tested_implementation_jj_change": "lnkouorqowypsuprsuuuytxsqpzrmvpp",
   "observed_at_utc": "2026-09-05T22:40:42Z",
   "status": "MATERIALIZED_DISPATCH_DISABLED",
   "request": "create sa-plan taks, hjobs and workflow with temporal",

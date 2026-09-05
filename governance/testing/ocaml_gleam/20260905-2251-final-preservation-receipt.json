@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "tested_implementation_jj_commit": "f8847e769b8ea9e00f052b8166e2a839a634b0e2",
+  "baseline": "governance/testing/ocaml_gleam/20260905-2149-source-candidates.json",
+  "baseline_sha256": "fa274d8d918ca0d845f995651a8be508048f28c5d73da7367f2fcdea4a11ea51",
+  "runs": [
+    {
+      "source": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests",
+      "command": "PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:$PATH UOS_INVENTORY_FILE=/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/governance/testing/ocaml_gleam/20260905-2149-source-candidates.json UOS_INVENTORY_ROOT=/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests gleam run",
+      "chunk_id": "0c37c3",
+      "wall_time_seconds": 0.15879932,
+      "exit_code": 0,
+      "original_token_count": 52,
+      "output": "   Compiled in 0.01s\n    Running ocaml_test_inventory.main\n{\"source_root\":\"/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests\",\"candidate_entries\":318,\"preserved\":true,\"case_coverage\":null,\"findings\":[]}\n"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos",
+      "command": "PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:$PATH UOS_INVENTORY_FILE=/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/governance/testing/ocaml_gleam/20260905-2149-source-candidates.json UOS_INVENTORY_ROOT=/home/an/NAS-setup/uos gleam run",
+      "chunk_id": "80c585",
+      "wall_time_seconds": 0.123782636,
+      "exit_code": 0,
+      "original_token_count": 44,
+      "output": "   Compiled in 0.01s\n    Running ocaml_test_inventory.main\n{\"source_root\":\"/home/an/NAS-setup/uos\",\"candidate_entries\":318,\"preserved\":true,\"case_coverage\":null,\"findings\":[]}\n"
+    }
+  ],
+  "source_diff": {
+    "command": "jj diff --summary 'engines/hermes ~ (engines/hermes/test_ports | engines/hermes/orchestration)'",
+    "output": "",
+    "exit_code": 0,
+    "meaning": "All original Hermes source/fixtures/Dune files unchanged from the isolated workspace parent; only new adapter/orchestration directories were added."
+  },
+  "limitations": [
+    "318 candidate files, not complete testcase census",
+    "working-tree readback is not an atomic concurrent snapshot",
+    "canonical counterpart candidates checked; no claim every external repository is unchanged"
+  ],
+  "checks": [
+    {
+      "package": "tests/ocaml_counterparts",
+      "command": "gleam format --check && gleam check",
+      "chunk_id": "33a873",
+      "wall_time_seconds": 0.0000055,
+      "exit_code": 0,
+      "original_token_count": 6,
+      "output": "   Compiled in 0.01s\n"
+    },
+    {
+      "package": "tests/ocaml_gleam_orchestration",
+      "command": "gleam format --check && gleam check",
+      "chunk_id": "90edf2",
+      "wall_time_seconds": 0.000004088,
+      "exit_code": 0,
+      "original_token_count": 6,
+      "output": "   Compiled in 0.01s\n"
+    },
+    {
+      "package": "tools/ocaml_test_inventory",
+      "command": "gleam format --check && gleam check",
+      "chunk_id": "ffed95",
+      "wall_time_seconds": 0.000006011,
+      "exit_code": 0,
+      "original_token_count": 6,
+      "output": "   Compiled in 0.01s\n"
+    }
+  ]
+}
