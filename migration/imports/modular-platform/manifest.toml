@@ -1,0 +1,5 @@
+[modular]
+platform_commit = "b4497b7ce9ba96331c72c637ad41b44bab374f33"
+tags = ["max/v26.5.0", "mojo/v1.0.0"]
+skills_commit = "433a06cfa494afe7e297873909e0f73ef01afcfa"
+status = "CLASSIFIED_MAPPED"

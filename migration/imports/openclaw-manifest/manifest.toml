@@ -1,0 +1,8 @@
+[openclaw]
+version = "v2026.9.1"
+tag_object = "74be8c0d44623711fde78c70bc40f5a633dc4f56"
+peeled_commit = "ad6fe23aecb9b833d68139b0ddc9f239b894d2f1"
+source_tree = "2ce5f65ded3e49cd1722a605c761c32ce57193bf"
+license = "MIT"
+conformance_profile = "OC-FULL-v2026.9.1"
+status = "CLASSIFIED_MAPPED"
