@@ -114,6 +114,20 @@ The UOS knowledge system unifies three foundational corpora into an integrated, 
 
 ---
 
+## §2.9 Universal Tailscale FQDN Web Navigation (SC-TAILSCALE-WEB-001)
+
+All dashboards, web views, wiki pages, ZK ADRs, and file viewers MUST provide full, clickable Tailscale FQDN links:
+- **Base FQDN**: `http://nas-1.tail55d152.ts.net:4100` (Tailscale IP: `100.87.7.78`)
+- **Main Cockpit Dashboard**: `http://nas-1.tail55d152.ts.net:4100/`
+- **Planning Cockpit**: `http://nas-1.tail55d152.ts.net:4100/planning`
+- **AG-UI Real-Time Stream**: `http://nas-1.tail55d152.ts.net:4100/ag-ui/events`
+- **Hermes Wiki Master Index**: `http://nas-1.tail55d152.ts.net:4100/wiki`
+- **ZigVM ZK Master MOC**: `http://nas-1.tail55d152.ts.net:4100/zk`
+- **File / Doc Viewer**: `http://nas-1.tail55d152.ts.net:4100/files/<path>` and `http://nas-1.tail55d152.ts.net:4100/docs/<path>`
+- **Peer Runtime Host**: `http://vm-1.tail55d152.ts.net:8088` (Tailscale IP: `100.78.98.18`)
+
+---
+
 ## §3.0 Triple-Interface Mandate (SC-GLM-UI-001)
 
 Every new page, dashboard, or interactive component MUST be implemented THREE times:

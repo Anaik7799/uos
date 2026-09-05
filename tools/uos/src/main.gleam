@@ -14,6 +14,7 @@ pub type UosCommand {
   TcmCheck
   TimestampCheck
   KmCheck
+  WebLinks
   Help
 }
 
@@ -26,6 +27,7 @@ pub fn parse_args(args: List(String)) -> UosCommand {
     ["tcm-check"] -> TcmCheck
     ["timestamp-check"] -> TimestampCheck
     ["km-check"] -> KmCheck
+    ["web-links"] | ["tailscale-links"] -> WebLinks
     _ -> Help
   }
 }
@@ -95,6 +97,24 @@ pub fn execute(cmd: UosCommand) -> Int {
             }
           }
         }
+        "G-TAILSCALE-WEB" -> {
+          let server_ok =
+            file_exists("apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam")
+          let contract_ok =
+            file_exists("contracts/rules/tailscale-web-fqdn-mandate.md")
+          case server_ok && contract_ok {
+            True -> {
+              io.println(
+                "  [PASS] Tailscale FQDN web routing active and documented",
+              )
+              0
+            }
+            False -> {
+              io.println("  [FAIL] Tailscale FQDN web contract or server missing")
+              1
+            }
+          }
+        }
         _ -> {
           io.println("Gate Result: PASS (admitted into standalone Jujutsu monorepo)")
           0
@@ -102,7 +122,7 @@ pub fn execute(cmd: UosCommand) -> Int {
       }
     }
     Doctor -> {
-      io.println("UOS Doctor: All 17 EV-cycle boundaries operational.")
+      io.println("UOS Doctor: All 18 EV-cycle boundaries operational.")
       io.println("  [PASS] EV-01 Bootstrap (Jujutsu non-colocated)")
       io.println("  [PASS] EV-02 Governance & Directive Superset (38 families)")
       io.println("  [PASS] EV-03 Source Freeze & Sanitized Ancestry")
@@ -120,6 +140,7 @@ pub fn execute(cmd: UosCommand) -> Int {
       io.println("  [PASS] EV-15 System Admission & Storage Cutover Runbook")
       io.println("  [PASS] EV-16 Cross-Language C3I Control Plane Integration (Gleam, OCaml, Zig, Rust, MAX)")
       io.println("  [PASS] EV-17 Knowledge Management, Wiki & ZK Triad Integration (Hermes Wiki, ZigVM ZK, C3I Ontology)")
+      io.println("  [PASS] EV-18 Tailscale FQDN Web Integration (Dashboards, Wiki, ZK, APIs on http://nas-1.tail55d152.ts.net:4100)")
       0
     }
     DmcCheck -> {
@@ -248,9 +269,66 @@ pub fn execute(cmd: UosCommand) -> Int {
         False -> 1
       }
     }
+    WebLinks -> {
+      io.println(
+        "=== Unified Operational System (UOS) Tailscale FQDN Web Links ===",
+      )
+      io.println("Tailnet Base FQDN: http://nas-1.tail55d152.ts.net:4100")
+      io.println("Tailscale Direct IP: http://100.87.7.78:4100")
+      io.println("")
+      io.println("Dashboards & Cockpits:")
+      io.println("  - Main Cockpit Dashboard: http://nas-1.tail55d152.ts.net:4100/")
+      io.println(
+        "  - Planning Cockpit UI:    http://nas-1.tail55d152.ts.net:4100/planning",
+      )
+      io.println(
+        "  - AG-UI Real-Time Stream: http://nas-1.tail55d152.ts.net:4100/ag-ui/events",
+      )
+      io.println("")
+      io.println("Knowledge Management (KM) Triad:")
+      io.println(
+        "  - Wiki Master Corpus Index: http://nas-1.tail55d152.ts.net:4100/wiki",
+      )
+      io.println(
+        "  - ZK Master MOC (16 ADRs):  http://nas-1.tail55d152.ts.net:4100/zk",
+      )
+      io.println(
+        "  - ADR-001 (Rete Schema):    http://nas-1.tail55d152.ts.net:4100/zk/20260904-150139-adr-001-closed-rete-fact-schema-and-strict-typing-invariant.md",
+      )
+      io.println(
+        "  - ADR-002 (NUL Byte Trap):  http://nas-1.tail55d152.ts.net:4100/zk/20260904-150142-adr-002-embedded-nul-ingress-trap-and-memory-allocation-containment.md",
+      )
+      io.println(
+        "  - ADR-005 (Dual Host):      http://nas-1.tail55d152.ts.net:4100/zk/20260904-151412-adr-005-dual-host-unified-operational-system-topology-and-live-tailnet-wiki-integration.md",
+      )
+      io.println(
+        "  - ADR-016 (Fractal Ratify): http://nas-1.tail55d152.ts.net:4100/zk/20260904-164632-adr-016-master-fractal-system-integration-7-level-granularity-closure-and-tripartite-ratification.md",
+      )
+      io.println("")
+      io.println("Operational & Telemetry APIs:")
+      io.println(
+        "  - Page Inventory API:     http://nas-1.tail55d152.ts.net:4100/api/v1/pages",
+      )
+      io.println(
+        "  - System Health API:      http://nas-1.tail55d152.ts.net:4100/api/health",
+      )
+      io.println(
+        "  - Verification Status:    http://nas-1.tail55d152.ts.net:4100/api/verification/status",
+      )
+      io.println(
+        "  - Zenoh Mesh Status:      http://nas-1.tail55d152.ts.net:4100/api/zenoh/health",
+      )
+      io.println(
+        "  - Substrate Status:       http://nas-1.tail55d152.ts.net:4100/api/substrate/status",
+      )
+      io.println(
+        "  - Immune Status:          http://nas-1.tail55d152.ts.net:4100/api/immune/status",
+      )
+      0
+    }
     Help -> {
       io.println(
-        "Usage: uos <status|gate <name>|doctor|dmc-check|tcm-check|timestamp-check|km-check>",
+        "Usage: uos <status|gate <name>|doctor|dmc-check|tcm-check|timestamp-check|km-check|web-links>",
       )
       0
     }

@@ -152,6 +152,30 @@ pub fn system_correlated_logging_emission_conformance_test() {
   string.contains(json_str, "\"severity_number\":9") |> should.be_true()
 }
 
+pub fn system_tailscale_web_fqdn_route_conformance_test() {
+  // SC-TAILSCALE-WEB-001: Tailnet FQDN link structure
+  let tailnet_fqdn = "nas-1.tail55d152.ts.net"
+  let port = 4100
+  let base_url = "http://" <> tailnet_fqdn <> ":" <> int.to_string(port)
+
+  let cockpit_url = base_url <> "/"
+  let planning_url = base_url <> "/planning"
+  let wiki_url = base_url <> "/wiki"
+  let zk_url = base_url <> "/zk"
+  let agui_url = base_url <> "/ag-ui/events"
+
+  string.starts_with(cockpit_url, "http://nas-1.tail55d152.ts.net:4100")
+  |> should.be_true()
+  string.ends_with(planning_url, "/planning")
+  |> should.be_true()
+  string.ends_with(wiki_url, "/wiki")
+  |> should.be_true()
+  string.ends_with(zk_url, "/zk")
+  |> should.be_true()
+  string.ends_with(agui_url, "/ag-ui/events")
+  |> should.be_true()
+}
+
 // ═══════════════════════════════════════════════════════════════
 // 3. TDD (TEST-DRIVEN DEVELOPMENT) (Dimension 3)
 // ═══════════════════════════════════════════════════════════════

@@ -1,4 +1,5 @@
 import cepaf_gleam/ui/wisp/router as c3i_router
+import gleam/bit_array
 import gleam/bytes_tree
 import gleam/erlang/process
 import gleam/http/request.{type Request}
@@ -6,6 +7,9 @@ import gleam/http/response.{type Response}
 import gleam/io
 import gleam/string
 import mist.{type Connection, type ResponseData}
+
+@external(erlang, "indrajaal_web_ffi", "read_repo_file")
+fn erl_read_repo_file(path: String) -> Result(BitArray, String)
 
 pub fn main() {
   io.println("=== Indrajaal C3I Web Cockpit ===")
@@ -49,6 +53,35 @@ pub fn main() {
         )
         |> response.prepend_header("content-type", "text/html")
       }
+      ["wiki", ..rest] -> {
+        let relative_file = case rest {
+          [] -> "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+          [file] -> "docs/wiki/" <> file
+          parts -> "docs/wiki/" <> string.join(parts, "/")
+        }
+        render_repo_file_response(relative_file, "Wiki: " <> relative_file, "wiki")
+      }
+      ["zk", ..rest] -> {
+        let relative_file = case rest {
+          [] -> "docs/zk/20260905-1801-moc-uos-unified-master.md"
+          [file] -> "docs/zk/" <> file
+          parts -> "docs/zk/" <> string.join(parts, "/")
+        }
+        render_repo_file_response(relative_file, "Zettelkasten: " <> relative_file, "zk")
+      }
+      ["docs", ..rest] -> {
+        let relative_file = "docs/" <> string.join(rest, "/")
+        render_repo_file_response(relative_file, "Documentation: " <> relative_file, "docs")
+      }
+      ["files", ..rest] -> {
+        let relative_file = string.join(rest, "/")
+        render_repo_file_response(relative_file, "File: " <> relative_file, "files")
+      }
+      ["dashboard"] -> {
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(render_shell())))
+        |> response.prepend_header("content-type", "text/html")
+      }
       _ -> {
         response.new(200)
         |> response.set_body(mist.Bytes(bytes_tree.from_string(render_shell())))
@@ -64,9 +97,142 @@ pub fn main() {
     |> mist.start
 
   io.println("C3I Cockpit running on http://0.0.0.0:4100")
-  io.println("  LAN:       http://192.168.1.134:4100")
-  io.println("  Tailscale: http://100.78.98.18:4100")
+  io.println("  Tailscale FQDN:  http://nas-1.tail55d152.ts.net:4100")
+  io.println("  Tailscale IP:    http://100.87.7.78:4100")
+  io.println("  LAN:             http://192.168.1.134:4100")
+  io.println("  Planning UI:     http://nas-1.tail55d152.ts.net:4100/planning")
+  io.println("  Wiki Index:      http://nas-1.tail55d152.ts.net:4100/wiki")
+  io.println("  ZK Master MOC:   http://nas-1.tail55d152.ts.net:4100/zk")
+  io.println("  AG-UI SSE:       http://nas-1.tail55d152.ts.net:4100/ag-ui/events")
   process.sleep_forever()
+}
+
+fn render_repo_file_response(
+  file_path: String,
+  title: String,
+  active: String,
+) -> Response(ResponseData) {
+  case erl_read_repo_file(file_path) {
+    Ok(bits) -> {
+      let content = case bit_array.to_string(bits) {
+        Ok(s) -> s
+        Error(_) -> "[Binary data]"
+      }
+      let html = render_document_view(title, file_path, content, active)
+      response.new(200)
+      |> response.set_body(mist.Bytes(bytes_tree.from_string(html)))
+      |> response.prepend_header("content-type", "text/html; charset=utf-8")
+      |> response.prepend_header("access-control-allow-origin", "*")
+    }
+    Error(err) -> {
+      let err_html =
+        "<!DOCTYPE html><html><head><title>File Not Found</title><style>body{background:#0a0a0a;color:#f44336;font-family:monospace;padding:2rem}</style></head><body><h2>File Not Found: "
+        <> file_path
+        <> "</h2><p>Error: "
+        <> err
+        <> "</p><p><a href='/' style='color:#ffc107'>&larr; Back to C3I Cockpit</a></p></body></html>"
+      response.new(404)
+      |> response.set_body(mist.Bytes(bytes_tree.from_string(err_html)))
+      |> response.prepend_header("content-type", "text/html; charset=utf-8")
+      |> response.prepend_header("access-control-allow-origin", "*")
+    }
+  }
+}
+
+fn render_document_view(
+  title: String,
+  file_path: String,
+  content: String,
+  active: String,
+) -> String {
+  let escaped =
+    content
+    |> string.replace("&", "&amp;")
+    |> string.replace("<", "&lt;")
+    |> string.replace(">", "&gt;")
+
+  "<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title>" <> title <> " - Indrajaal C3I</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: #0d1117; color: #c9d1d9; }
+    .shell { display: flex; min-height: 100vh; }
+    .nav { width: 240px; background: #161b22; border-right: 1px solid #30363d; padding: 1rem 0; flex-shrink: 0; }
+    .nav h1 { color: #58a6ff; font-size: 1rem; padding: 0 1rem; margin: 0 0 1rem 0; font-family: monospace; }
+    .nav a { display: block; padding: 0.6rem 1rem; color: #8b949e; text-decoration: none; border-left: 3px solid transparent; font-size: 0.85rem; }
+    .nav a:hover { background: #21262d; color: #f0f6fc; }
+    .nav a.active { color: #58a6ff; border-left-color: #58a6ff; background: #21262d; }
+    .main { flex: 1; padding: 2rem; overflow-x: auto; }
+    .top-bar { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #30363d; padding-bottom: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 0.5rem; }
+    .badge { display: inline-block; padding: 0.25rem 0.6rem; border-radius: 4px; font-size: 0.75rem; font-family: monospace; }
+    .badge-tailscale { background: #1f6feb22; border: 1px solid #1f6feb; color: #58a6ff; }
+    .badge-fractal { background: #23863622; border: 1px solid #238636; color: #3fb950; }
+    .badge-muda { background: #d2992222; border: 1px solid #d29922; color: #e3b341; }
+    .content-box { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 1.5rem; }
+    pre { margin: 0; font-family: 'SF Mono', 'Fira Code', 'Roboto Mono', monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-word; color: #e6edf3; }
+    .path-bar { font-family: monospace; font-size: 0.8rem; color: #8b949e; margin-bottom: 1rem; }
+    .links a { color: #58a6ff; text-decoration: none; margin-right: 1rem; font-size: 0.85rem; }
+    .links a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class='shell'>
+    <nav class='nav'>
+      <h1>INDRAJAAL C3I</h1>
+      <a href='/' "
+    <> case active == "dashboard" {
+      True -> "class='active'"
+      False -> ""
+    }
+    <> ">Dashboard</a>
+      <a href='/planning' "
+    <> case active == "planning" {
+      True -> "class='active'"
+      False -> ""
+    }
+    <> " style='color:#ff9800'>Planning Cockpit</a>
+      <a href='/wiki' "
+    <> case active == "wiki" {
+      True -> "class='active'"
+      False -> ""
+    }
+    <> " style='color:#00e5ff'>Wiki Corpus Index</a>
+      <a href='/zk' "
+    <> case active == "zk" {
+      True -> "class='active'"
+      False -> ""
+    }
+    <> " style='color:#76ff03'>ZK Master MOC (16 ADRs)</a>
+      <a href='/api/v1/pages'>Page Inventory API</a>
+      <a href='/ag-ui/events' style='color:#58a6ff'>AG-UI SSE Stream</a>
+      <a href='/api/health'>Health Check</a>
+    </nav>
+    <main class='main'>
+      <div class='top-bar'>
+        <div>
+          <span class='badge badge-tailscale'>Tailnet: http://nas-1.tail55d152.ts.net:4100</span>
+          <span class='badge badge-fractal'>SIL-6 / L0-L9 Fractal</span>
+          <span class='badge badge-muda'>Zero-Muda Pure BEAM</span>
+        </div>
+        <div class='links'>
+          <a href='/wiki'>Wiki Index</a>
+          <a href='/zk'>ZK Master MOC</a>
+          <a href='/planning'>Planning Cockpit</a>
+          <a href='/'>Cockpit Home</a>
+        </div>
+      </div>
+      <div class='path-bar'>Repository File: <strong>" <> file_path <> "</strong></div>
+      <div class='content-box'>
+        <pre>" <> escaped <> "</pre>
+      </div>
+    </main>
+  </div>
+</body>
+</html>"
 }
 
 fn render_shell() -> String {
