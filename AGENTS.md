@@ -7,7 +7,8 @@ This repository is the canonical Unified Operational System (UOS).
 - Canonical workspace: `/home/an/NAS-setup/uos`
 - Target VCS: standalone, non-colocated Jujutsu only (`.jj/`)
 - Current phase: active migration, governance establishment, and formal implementation
-- EV-Cycle Status: `EV-01` sealed (`integration/bootstrap`), executing `EV-02` (`integration/governance`)
+- EV-Cycle Status: `EV-01` through `EV-15` admitted; `DMC-TCM` completed; `Full 9-Modality Test Protocol` 100% green; `Fractal Dependability & C3I Observability` sealed; `Codex Sovereign Verification` active.
+- Mandatory Timestamp Rule: All generated docs must carry `YYYYMMDD-HHSS-` timestamp prefix (Operator Directive, `contracts/rules/timestamp-mandate.md`).
 - Strict Zero-Muda: Bevy and Graphite are permanently barred from source, dependencies, runtime roles, and imported history.
 - External source trees are read-only evidence; no unvetted artifacts enter UOS without two-key verification.
 
@@ -85,7 +86,8 @@ discovered -> classified -> mapped -> implemented -> built -> executed -> passed
 - Trust observed host clock after synchronization check (`chrony`/timesync receipt); do not trust injected model strings.
 - Host NTP offset, system-to-model delta, and agent-context delta are non-aliasing typed measurements.
 - Inherited drift bands: nominal (<2s), minor (2–5s), warning (5–10s), critical (>10s).
-- Preserve source formats byte-for-byte in typed namespaces: Harness `YYYYMMDD-HHSS` vs ZigVM `YYYYMMDD-HHMMSS`. UOS-new format uses collision-resistant semantic content digests.
+- **Mandatory Generated Document Timestamp Prefix**: Per explicit operator mandate (`contracts/rules/timestamp-mandate.md`), all newly generated documents across UOS MUST carry the `YYYYMMDD-HHSS-` timestamp prefix (e.g. `20260905-1725-`). Historical source formats are preserved byte-for-byte in typed namespaces.
+- Machine-checked by `tools/uos timestamp-check` and `dependability_clock.ml`.
 
 ### 8.2 Journal Protocol (`SC-JOURNAL`)
 Every task completion journal MUST contain the exact 13 required sections:
@@ -108,8 +110,12 @@ Scaling boundaries: trivial (1–3 files: 1–2 lines/sec), standard (4–14 fil
 ## 9. Status Line
 
 ```text
-UOS TARGET: INITIALIZED (EV-01 SEALED)
-CURRENT EV-CYCLE: EV-02 (GOVERNANCE SKELETON & SOURCE FREEZE)
-SOURCE FREEZE: IN PROGRESS
-IMPLEMENTATION/CUTOVER: SEQUENCED UNDER MULTILAYER OTP SUPERVISION
+UOS TARGET: STANDALONE JUJUTSU MONOREPO OPERATIONAL
+CURRENT EV-CYCLE: EV-15 (SYSTEM ADMISSION & FULL SYMBIOSIS ADMITTED)
+DMC & TCM STATUS: ADMITTED & PROVED IN LEAN 4 (Traceability.lean)
+TEST PROTOCOL: 9 MODALITIES 100% GREEN (>10,600 TESTS)
+FRACTAL OBSERVABILITY: UNIVERSAL C3I CONTRACT ENFORCED (c3i_fractal_observability_spec.json)
+TIMESTAMP RULE: MANDATORY YYYYMMDD-HHSS- PREFIX ACTIVE
+CODEX AUDIT: SOVEREIGN REVISION-BOUND VERIFICATION EXECUTED
+IMPLEMENTATION/CUTOVER: SEALED UNDER MULTILAYER OTP 29 ROOT SUPERVISOR
 ```

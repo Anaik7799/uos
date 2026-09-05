@@ -182,4 +182,35 @@ impl LabSpec {
         out.push_str("safety: audit legacy storage before any wipe or passthrough\n");
         out
     }
+
+    pub const HARD_DENIED_SYSTEM_OS_SERIAL: &'static str = "25503L801736";
+
+    pub fn validate_safety_invariants(&self) -> Result<(), &'static str> {
+        for vm in &self.vms {
+            for osd in &vm.osd_devices {
+                if osd.host_device == self.host.os_disk {
+                    return Err("HARD_DENIED: OSD device matches host OS root disk!");
+                }
+            }
+        }
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_spec_safety_invariants_pass() {
+        let spec = LabSpec::default();
+        assert!(spec.validate_safety_invariants().is_ok());
+    }
+
+    #[test]
+    fn test_spec_safety_invariants_fail_on_collision() {
+        let mut spec = LabSpec::default();
+        spec.vms[0].osd_devices[0].host_device = spec.host.os_disk;
+        assert!(spec.validate_safety_invariants().is_err());
+    }
 }

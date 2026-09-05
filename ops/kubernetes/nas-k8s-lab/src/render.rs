@@ -5,6 +5,8 @@ use std::fs;
 use std::path::Path;
 
 pub fn render_all(spec: &LabSpec, out: &Path) -> Result<()> {
+    spec.validate_safety_invariants()
+        .map_err(|e| anyhow::anyhow!(e))?;
     fs::create_dir_all(out).with_context(|| format!("create {}", out.display()))?;
     fs::create_dir_all(out.join("libvirt"))?;
     fs::create_dir_all(out.join("cloud-init"))?;

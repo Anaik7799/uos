@@ -23,12 +23,12 @@
  (name agent_dispatch_hook)
  (wrapped false)
  (modules agent_dispatch_hook)
- (libraries unix str yojson))
+ (libraries unix str yojson cryptokit))
 
 (executable
  (name run_agent_dispatch_hook)
  (modules run_agent_dispatch_hook)
- (libraries agent_dispatch_hook unix yojson str))
+ (libraries agent_dispatch_hook unix yojson str cryptokit))
 
 
 (executable

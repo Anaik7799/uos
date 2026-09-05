@@ -29,7 +29,9 @@ let contains_raw_sql_injection s =
   ) patterns
 
 let sha256_hex s =
-  Digest.to_hex (Digest.string s)
+  let h = Cryptokit.Hash.sha256 () in
+  h#add_string s;
+  Cryptokit.transform_string (Cryptokit.Hexa.encode ()) h#result
 
 let get_iso_timestamp () =
   let t = Unix.gettimeofday () in

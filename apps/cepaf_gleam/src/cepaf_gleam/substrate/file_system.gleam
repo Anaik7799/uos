@@ -59,7 +59,11 @@ pub fn run_cmd(cmd: String) -> Result(String, String) {
   }
 }
 
-pub fn git_sync(path: String, message: String) -> Result(String, String) {
-  let cmd = "git add " <> path <> " && git commit -m \"" <> message <> "\""
+pub fn vcs_sync(message: String) -> Result(String, String) {
+  let cmd = "jj describe -m \"" <> message <> "\""
   run_cmd(cmd)
+}
+
+pub fn git_sync(_path: String, _message: String) -> Result(String, String) {
+  Error("UOS_VCS_MANDATE: Native git mutation is barred in UOS. Use Jujutsu (jj).")
 }
