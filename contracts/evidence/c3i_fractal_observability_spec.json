@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "C3I Universal Fractal Observability & Correlated Logging Contract",
+  "version": "1.0.0",
+  "timestamp": "2026-09-05T17:16:00+02:00",
+  "governance": {
+    "authority": "UOS-CANONICAL-AGENT-POLICY",
+    "boundary": "contracts/evidence",
+    "lineage": "C3I SIL-6 Correlated Logging & OTel W3C Standard"
+  },
+  "schema": {
+    "type": "object",
+    "required": [
+      "trace_id",
+      "span_id",
+      "timestamp_utc",
+      "fractal_layer",
+      "holon_id",
+      "severity_number",
+      "subsystem",
+      "message"
+    ],
+    "properties": {
+      "trace_id": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{32}$",
+        "description": "128-bit W3C OpenTelemetry distributed trace ID"
+      },
+      "span_id": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{16}$",
+        "description": "64-bit W3C OpenTelemetry span ID"
+      },
+      "parent_span_id": {
+        "type": ["string", "null"],
+        "pattern": "^[0-9a-f]{16}$"
+      },
+      "timestamp_utc": {
+        "type": "string",
+        "format": "date-time",
+        "description": "Microsecond-accurate UTC ISO 8601 timestamp"
+      },
+      "fractal_layer": {
+        "type": "string",
+        "enum": [
+          "L0_MICROKERNEL_ALLOCATOR",
+          "L1_TERM_JIT",
+          "L2_INSTRUCTION_DISPATCH",
+          "L3_BYTE_PARITY",
+          "L4_STM_CONCURRENCY",
+          "L5_ACTOR_SUPERVISION",
+          "L6_ZERO_TRUST_GATE",
+          "L7_PROBABILISTIC_TELEMETRY",
+          "L8_LIVING_ONTOLOGY",
+          "L9_AUTONOMOUS_FEDERATION"
+        ]
+      },
+      "holon_id": {
+        "type": "string",
+        "description": "Unique holon identity in the biomorphic mesh"
+      },
+      "severity_number": {
+        "type": "integer",
+        "enum": [5, 9, 13, 17, 21],
+        "description": "5=DEBUG, 9=INFO, 13=WARN, 17=ERROR, 21=FATAL"
+      },
+      "subsystem": {
+        "type": "string",
+        "enum": [
+          "gleam_control",
+          "hermes_oracle",
+          "zigvm_runtime",
+          "rust_kernel",
+          "max_inference",
+          "agent_interceptor"
+        ]
+      },
+      "message": {
+        "type": "string"
+      },
+      "attributes": {
+        "type": "object"
+      },
+      "evidence_sha256": {
+        "type": ["string", "null"],
+        "pattern": "^[0-9a-f]{64}$"
+      }
+    }
+  },
+  "invariants": [
+    "SC-LOG-001: Structured JSON emission across all subsystems",
+    "SC-LOG-003: Absolute quarantine and scrub of PII, keys, credentials, and tokens",
+    "SC-OTEL-002: Mandatory W3C trace correlation on every event",
+    "SC-TWO-LATTICE-001: Non-interfering read ring buffer decoupling telemetry from SQLite WAL evidence",
+    "SC-TIME-001: Wall-clock UTC monotonic timestamp with drift bounds (<2s nominal, >10s halt)"
+  ]
+}
