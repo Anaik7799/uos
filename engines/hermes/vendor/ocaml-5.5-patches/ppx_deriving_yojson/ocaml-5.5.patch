@@ -1,0 +1,16 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Mon, 3 Aug 2026 15:07:45 +0200
+Subject: [PATCH] compat: migrate alias names to OCaml 5.5 AST
+
+
+diff --git a/src/ppx_deriving_yojson.ml b/src/ppx_deriving_yojson.ml
+index c933ca2..1a75cdb 100644
+--- a/src/ppx_deriving_yojson.ml
++++ b/src/ppx_deriving_yojson.ml
+@@ -151 +151 @@ and ser_expr_of_only_typ ~quoter typ =
+-    [%expr fun x -> [%e evar ("poly_"^name.txt)] x; [%e ser_expr_of_typ typ] x]
++    [%expr fun x -> [%e evar ("poly_"^name)] x; [%e ser_expr_of_typ typ] x]
+@@ -282 +282 @@ and desu_expr_of_only_typ ~quoter ~path typ =
+-    [%expr fun x -> [%e evar ("poly_"^name.txt)] x; [%e desu_expr_of_typ ~path typ] x]
++    [%expr fun x -> [%e evar ("poly_"^name)] x; [%e desu_expr_of_typ ~path typ] x]

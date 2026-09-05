@@ -1,0 +1,500 @@
+From 049fba902c63a1d6b079149cf127668cf08e87b8 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Sun, 2 Aug 2026 23:44:18 +0200
+Subject: [PATCH 1/2] compat: rename effect identifiers for OCaml 5.5
+
+---
+ web/driver.ml                                 |  4 +-
+ web/effect.ml                                 |  8 ++--
+ web/effect.mli                                | 12 +++---
+ .../rpc_effect_introspection.ml               |  4 +-
+ web/persistent_var.ml                         | 16 ++++----
+ web/persistent_var.mli                        |  4 +-
+ web/rpc_effect.mli                            | 20 +++++-----
+ web/rpc_effect_kernel/introspection_intf.ml   |  4 +-
+ web/rpc_effect_kernel/rpc_effect_kernel.ml    | 40 +++++++++----------
+ web/rpc_effect_kernel/rpc_effect_kernel.mli   | 22 +++++-----
+ web/view/src/bonsai_web_legacy_view.mli       |  4 +-
+ 11 files changed, 69 insertions(+), 69 deletions(-)
+
+diff --git a/web/driver.ml b/web/driver.ml
+index ec9e8f1..897e675 100644
+--- a/web/driver.ml
++++ b/web/driver.ml
+@@ -253,8 +253,8 @@ let recompute
+ 
+ let result (T { bonsai_driver; _ }) = Bonsai_driver.result bonsai_driver
+ 
+-let schedule_event (T { bonsai_driver; _ }) effect =
+-  Bonsai_driver.schedule_event bonsai_driver effect
++let schedule_event (T { bonsai_driver; _ }) effect_value =
++  Bonsai_driver.schedule_event bonsai_driver effect_value
+ ;;
+ 
+ let destroy (T { on_stop; _ }) = on_stop ()
+diff --git a/web/effect.ml b/web/effect.ml
+index 6200f9a..ef6d051 100644
+--- a/web/effect.ml
++++ b/web/effect.ml
+@@ -52,8 +52,8 @@ module Focus = struct
+           Option.value_map
+             name_for_testing
+             ~f:(fun name_for_testing ->
+-              ( print_s [%message "focus effect for" name_for_testing]
+-              , print_s [%message "blur effect for" name_for_testing] ))
++              ( print_s [%message "focus effect_value for" name_for_testing]
++              , print_s [%message "blur effect_value for" name_for_testing] ))
+             ~default:(Ignore, Ignore)
+         in
+         fun _graph ->
+@@ -215,12 +215,12 @@ let to_js_promise : type a. a t -> a Browser_js_types.js_promise Js.t =
+     in
+     Js.Unsafe.fun_call create_promise [| Js.Unsafe.inject f |]
+   in
+-  fun effect ->
++  fun effect_value ->
+     let f ~on_resolved ~on_rejected =
+       Ui_effect.Expert.eval
+         ~on_exn:(fun exn -> Js_error.attach_js_backtrace exn ~force:false |> on_rejected)
+         ~f:on_resolved
+-        effect
++        effect_value
+     in
+     create_js_promise ~f
+ ;;
+diff --git a/web/effect.mli b/web/effect.mli
+index 86f0971..8a2f275 100644
+--- a/web/effect.mli
++++ b/web/effect.mli
+@@ -15,7 +15,7 @@ module Focus : sig
+ 
+   (** [on_effect] returns a [Vdom.Attr.t] and two [unit Effect.t]s that focus/blur the
+       [Vdom.Node.t] containing the [Vdom.Attr.t]. The attr should not be used on more than
+-      one [Vdom.Node.t], as only the first element will be focused/blurred when the effect
++      one [Vdom.Node.t], as only the first element will be focused/blurred when the effect_value
+       runs.
+ 
+       If [prevent_scroll] is true, the browser will not scroll the element into view after
+@@ -78,8 +78,8 @@ val on_change_set_document_title : string Bonsai.t -> Bonsai.graph -> unit
+ (** [of_js_promise] takes a JavaScript promise and converts it into a
+     ['a Or_error.t Effect.t].
+ 
+-    **Important**: This effect will only be run once even if scheduled multiple times.
+-    Unlike other effects, which execute every time they are scheduled, this effect will
++    **Important**: This effect_value will only be run once even if scheduled multiple times.
++    Unlike other effects, which execute every time they are scheduled, this effect_value will
+     resolve to the exact same in-memory value/reference every time it is bound/mapped.
+ 
+     [on_exn]'s argument is (typically) a JavaScript error object. *)
+@@ -90,14 +90,14 @@ val of_js_promise
+ 
+ (** [of_js_promise_exn] takes a JavaScript promise and converts it into an [Effect.t].
+ 
+-    **Important**: This effect will only be run once even if scheduled multiple times.
+-    Unlike other effects, which execute every time they are scheduled, this effect will
++    **Important**: This effect_value will only be run once even if scheduled multiple times.
++    Unlike other effects, which execute every time they are scheduled, this effect_value will
+     resolve to the exact same in-memory value/reference every time it is bound/mapped.
+ 
+     Note that if the promise raises an exception, it will not be handled here and will not
+     be caught by a try-catch block. *)
+ val of_js_promise_exn : 'a. 'a Browser_js_types.js_promise Js.t -> 'a Effect.t
+ 
+-(** [to_js_promise] immediately runs the given effect in a JavaScript promise. All
++(** [to_js_promise] immediately runs the given effect_value in a JavaScript promise. All
+     exceptions must be handled directly with promises *)
+ val to_js_promise : 'a. 'a Effect.t -> 'a Browser_js_types.js_promise Js.t
+diff --git a/web/for_introspection/rpc_effect_introspection.ml b/web/for_introspection/rpc_effect_introspection.ml
+index f761e2b..77499b4 100644
+--- a/web/for_introspection/rpc_effect_introspection.ml
++++ b/web/for_introspection/rpc_effect_introspection.ml
+@@ -245,12 +245,12 @@ let rpc_name ~rpc_kind =
+ 
+ let time_rpc_effect
+   ~(rpc_kind : Rpc_effect_protocol.Rpc_kind.t)
+-  (effect : 'query -> 'response Effect.t)
++  (effect_value : 'query -> 'response Effect.t)
+   =
+   let name = rpc_name ~rpc_kind in
+   fun query ->
+     let%bind.Effect timer = Effect.of_sync_fun Javascript_profiling.Timer.start () in
+-    let%map.Effect response = effect query in
++    let%map.Effect response = effect_value query in
+     let () =
+       let measurement = Javascript_profiling.Timer.stop timer in
+       Javascript_profiling.measure ~track:"RPC Effect" ~color:Tertiary name measurement
+diff --git a/web/persistent_var.ml b/web/persistent_var.ml
+index 9c3ab88..e799475 100644
+--- a/web/persistent_var.ml
++++ b/web/persistent_var.ml
+@@ -6,7 +6,7 @@ type 'a t =
+   { var : 'a Bonsai.Expert.Var.t
+   ; setter : 'a -> unit
+   ; clear : unit -> unit
+-  ; effect : 'a -> unit Effect.t
++  ; effect_value : 'a -> unit Effect.t
+   }
+ 
+ let getter_setter kind =
+@@ -47,22 +47,22 @@ let create (type a) (module M : Sexpable with type t = a) kind ~unique_id ~defau
+   let var = Bonsai.Expert.Var.create value in
+   let setter t = t |> M.sexp_of_t |> Sexp.to_string_mach |> setter unique_id in
+   let clear () = deleter unique_id in
+-  let effect =
++  let effect_value =
+     Effect.of_sync_fun (fun a ->
+       setter a;
+       Bonsai.Expert.Var.set var a)
+   in
+-  { var; setter; clear; effect }
++  { var; setter; clear; effect_value }
+ ;;
+ 
+-let set ?(here = Stdlib.Lexing.dummy_pos) { var; setter; clear = _; effect = _ } a =
++let set ?(here = Stdlib.Lexing.dummy_pos) { var; setter; clear = _; effect_value = _ } a =
+   setter a;
+   Bonsai.Expert.Var.set ~here var a
+ ;;
+ 
+-let value { var; setter = _; clear = _; effect = _ } = Bonsai.Expert.Var.value var
++let value { var; setter = _; clear = _; effect_value = _ } = Bonsai.Expert.Var.value var
+ 
+-let update { var; setter; clear = _; effect = _ } ~f =
++let update { var; setter; clear = _; effect_value = _ } ~f =
+   Bonsai.Expert.Var.update var ~f:(fun old ->
+     let new_ = f old in
+     setter new_;
+@@ -70,5 +70,5 @@ let update { var; setter; clear = _; effect = _ } ~f =
+ ;;
+ 
+ let get { var; _ } = Bonsai.Expert.Var.get var
+-let clear_persistence { var = _; setter = _; clear; effect = _ } = clear ()
+-let effect { effect; _ } = effect
++let clear_persistence { var = _; setter = _; clear; effect_value = _ } = clear ()
++let effect_value { effect_value; _ } = effect_value
+diff --git a/web/persistent_var.mli b/web/persistent_var.mli
+index 04ebdff..54e9fb6 100644
+--- a/web/persistent_var.mli
++++ b/web/persistent_var.mli
+@@ -37,7 +37,7 @@ val value : 'a t -> 'a Bonsai.t
+     [update] afterwards will still store the value back again.) *)
+ val clear_persistence : 'a t -> unit
+ 
+-(** By asking for the vars effect, you get a function that can be easily threaded through
++(** By asking for the vars effect_value, you get a function that can be easily threaded through
+     your components and triggered inside an action-application or inside of an event
+     listener. *)
+-val effect : 'a t -> 'a -> unit Effect.t
++val effect_value : 'a t -> 'a -> unit Effect.t
+diff --git a/web/rpc_effect.mli b/web/rpc_effect.mli
+index 6aab6a0..1678d55 100644
+--- a/web/rpc_effect.mli
++++ b/web/rpc_effect.mli
+@@ -36,7 +36,7 @@ module Shared_poller = Rpc_effect_kernel.Shared_poller
+ module Inflight_query_id = Rpc_effect_kernel.Inflight_query_id
+ 
+ module Rpc : sig
+-  (** An effect for sending a particular RPC to a particular place.
++  (** An effect_value for sending a particular RPC to a particular place.
+ 
+       [where_to_connect] defaults to [self ~on_conn_failure:Retry_until_success]. *)
+   val dispatcher
+@@ -237,12 +237,12 @@ module Rpc : sig
+     -> Bonsai.graph
+     -> 'output Bonsai.t
+ 
+-  (** Like [poll], but returns the poll result and querying effect separately. This allows
+-      for more flexible composition and custom handling of the state. The returned effect
++  (** Like [poll], but returns the poll result and querying effect_value separately. This allows
++      for more flexible composition and custom handling of the state. The returned effect_value
+       can be scheduled to send/re-send the RPC.
+ 
+-      Unlike [poll], this function does not automatically schedule the effect - no RPCs
+-      occur unless you explicitly schedule the returned effect yourself. *)
++      Unlike [poll], this function does not automatically schedule the effect_value - no RPCs
++      occur unless you explicitly schedule the returned effect_value yourself. *)
+   val manual_poll
+     :  ?here:Stdlib.Lexing.position
+     -> ?sexp_of_query:('query -> Sexp.t)
+@@ -276,7 +276,7 @@ module Rpc : sig
+ end
+ 
+ module Polling_state_rpc : sig
+-  (** An effect for dispatching on a particular Polling_state_rpc with a particular query.
++  (** An effect_value for dispatching on a particular Polling_state_rpc with a particular query.
+       When the computation is deactivated, it asks the server to cleanup any cached data,
+       so that there is no memory leak. If this cleanup fails, then
+       [on_forget_client_error] is called with the error. *)
+@@ -382,12 +382,12 @@ module Polling_state_rpc : sig
+     -> Bonsai.graph
+     -> 'output Bonsai.t
+ 
+-  (** Like [poll], but returns the poll result and querying effect separately. This allows
+-      for more flexible composition and custom handling of the state. The returned effect
++  (** Like [poll], but returns the poll result and querying effect_value separately. This allows
++      for more flexible composition and custom handling of the state. The returned effect_value
+       can be scheduled to send/re-send the RPC.
+ 
+-      Unlike [poll], this function does not automatically schedule the effect - no RPCs
+-      occur unless you explicitly schedule the returned effect yourself. *)
++      Unlike [poll], this function does not automatically schedule the effect_value - no RPCs
++      occur unless you explicitly schedule the returned effect_value yourself. *)
+   val manual_poll
+     :  ?here:Stdlib.Lexing.position
+     -> ?sexp_of_query:('query -> Sexp.t)
+diff --git a/web/rpc_effect_kernel/introspection_intf.ml b/web/rpc_effect_kernel/introspection_intf.ml
+index 48943cc..d7011f6 100644
+--- a/web/rpc_effect_kernel/introspection_intf.ml
++++ b/web/rpc_effect_kernel/introspection_intf.ml
+@@ -2,7 +2,7 @@ open! Core
+ open Bonsai
+ open Bonsai_introspection_protocol
+ 
+-(** This module contains functions and effects for "introspecting" rpc effect rpc's.
++(** This module contains functions and effects for "introspecting" rpc effect_value rpc's.
+ 
+     This is how the Rpc_effect module communicates rpc information to the bonsai chrome
+     extension's devtool panel. This module is meant to be used by bonsai internals and not
+@@ -101,5 +101,5 @@ module No_instrospection : S = struct
+   let trace_connection _ = ()
+   let just_sent_query_with_id _ = ()
+   let just_sent_ignored_query () = ()
+-  let time_rpc_effect ~rpc_kind:_ effect = effect
++  let time_rpc_effect ~rpc_kind:_ effect_value = effect_value
+ end
+diff --git a/web/rpc_effect_kernel/rpc_effect_kernel.ml b/web/rpc_effect_kernel/rpc_effect_kernel.ml
+index 8f68877..63f11b5 100644
+--- a/web/rpc_effect_kernel/rpc_effect_kernel.ml
++++ b/web/rpc_effect_kernel/rpc_effect_kernel.ml
+@@ -558,8 +558,8 @@ module Poll_behavior = struct
+         ('response -> [ `Continue | `Stop_polling ]) Bonsai.t
+ end
+ 
+-(* This returns ONLY the state machine model and effect that returns the response. No
+-   Bonsai.Edge.* APIs are used here - the effect must be manually scheduled. *)
++(* This returns ONLY the state machine model and effect_value that returns the response. No
++   Bonsai.Edge.* APIs are used here - the effect_value must be manually scheduled. *)
+ let generic_polling_state_machine
+   (type query response)
+   ~(rpc_kind : Rpc_effect_protocol.Rpc_kind.t Bonsai.t)
+@@ -674,7 +674,7 @@ let generic_polling_state_machine
+     | Finished x -> Finished (Or_error.map x ~f:get_response)
+   in
+   let (module Rpc_effect_introspection) = !introspection in
+-  let effect =
++  let effect_value =
+     let path = Bonsai.path_id graph in
+     let get_current_time = Bonsai.Clock.get_current_time graph in
+     let%arr dispatcher
+@@ -726,14 +726,14 @@ let generic_polling_state_machine
+         Effect.return (Error (Error.of_string "Request aborted"))
+       | Bonsai.Effect_throttling.Poll_result.Finished response -> Effect.return response
+   in
+-  let effect =
+-    let%arr rpc_kind and effect in
+-    Rpc_effect_introspection.time_rpc_effect ~rpc_kind effect
++  let effect_value =
++    let%arr rpc_kind and effect_value in
++    Rpc_effect_introspection.time_rpc_effect ~rpc_kind effect_value
+   in
+   let%arr { last_ok_response; last_error; inflight_queries } = response
+-  and effect in
++  and effect_value in
+   let inflight_query = Option.map ~f:snd (Map.max_elt inflight_queries) in
+-  { Poll_accumulator.last_ok_response; last_error; inflight_query }, effect
++  { Poll_accumulator.last_ok_response; last_error; inflight_query }, effect_value
+ ;;
+ 
+ (* This adds scheduling (Edge APIs) on top of the accumulator API and returns a
+@@ -777,7 +777,7 @@ let generic_poll_or_error
+       ~here
+       graph
+   in
+-  let effect =
++  let effect_value =
+     let%arr effect_with_response in
+     fun query ->
+       let open Effect.Let_syntax in
+@@ -785,7 +785,7 @@ let generic_poll_or_error
+       let%map (_ : 'response Or_error.t) = effect_with_response query in
+       ()
+   in
+-  (* Below are four constructs that schedule the effect to run:
++  (* Below are four constructs that schedule the effect_value to run:
+ 
+      * [on_activate] * When the [query] changes * When the [where_to_connect] changes * On
+      an interval
+@@ -800,16 +800,16 @@ let generic_poll_or_error
+       ~equal:equal_query
+       query
+       ~callback:
+-        (let%arr effect in
++        (let%arr effect_value in
+          fun prev query ->
+            match prev with
+-           | Some _ -> effect query
++           | Some _ -> effect_value query
+            | None -> Effect.Ignore)
+       graph
+   in
+   let send_rpc_effect =
+-    let%arr effect and query in
+-    effect query
++    let%arr effect_value and query in
++    effect_value query
+   in
+   let () =
+     Bonsai.Edge.on_change'
+@@ -860,8 +860,8 @@ let generic_poll_or_error
+   in
+   let () = Bonsai.Edge.lifecycle ~on_activate:send_rpc_effect graph in
+   let send_rpc_effect =
+-    let%arr effect and query in
+-    effect query
++    let%arr effect_value and query in
++    effect_value query
+   in
+   let%arr poll_accumulator and send_rpc_effect in
+   poll_accumulator
+@@ -1550,7 +1550,7 @@ module Our_rpc = struct
+     let (module Rpc_effect_introspection) = !introspection in
+     let get_current_time = Bonsai.Clock.get_current_time graph in
+     let path = Bonsai.path_id graph in
+-    let effect =
++    let effect_value =
+       let%arr dispatcher and get_current_time and path and rpc_kind in
+       fun query ->
+         match%bind.Effect Rpc_effect_introspection.should_record_effect with
+@@ -1569,8 +1569,8 @@ module Our_rpc = struct
+             ~query
+             ~here
+     in
+-    let%arr rpc_kind and effect in
+-    Rpc_effect_introspection.time_rpc_effect ~rpc_kind effect
++    let%arr rpc_kind and effect_value in
++    Rpc_effect_introspection.time_rpc_effect ~rpc_kind effect_value
+   ;;
+ 
+   let dispatcher
+@@ -2409,7 +2409,7 @@ module Status = struct
+         graph
+     in
+     (* We want connection status to reset immediately, without needing to wait a frame for
+-       an [on_change] to take effect. We do so with: * A [scope_model], which swaps out
++       an [on_change] to take effect_value. We do so with: * A [scope_model], which swaps out
+        our state immediately. * An on_change, which instructs the old, now-inactive state
+        machine to reset itself back to "initial" state. *)
+     let () =
+diff --git a/web/rpc_effect_kernel/rpc_effect_kernel.mli b/web/rpc_effect_kernel/rpc_effect_kernel.mli
+index 51c84d8..ccc4d5b 100644
+--- a/web/rpc_effect_kernel/rpc_effect_kernel.mli
++++ b/web/rpc_effect_kernel/rpc_effect_kernel.mli
+@@ -17,7 +17,7 @@ module On_conn_failure : sig
+       For almost all polling RPCs, and most one-shot RPCs, [Surface_error_to_rpc] is
+       preferable. However, with one-shot RPCs, you might then want to repeatedly retry the
+       RPC until it succeeds. The [Retry_until_success] option can be useful here, but if
+-      the connection never succeeds, the effect will never resolve. *)
++      the connection never succeeds, the effect_value will never resolve. *)
+   type t =
+     | Surface_error_to_rpc
+     | Retry_until_success
+@@ -100,7 +100,7 @@ module Shared_poller : sig
+ end
+ 
+ module Rpc : sig
+-  (** An effect for sending a particular RPC to a particular place.
++  (** An effect_value for sending a particular RPC to a particular place.
+ 
+       [where_to_connect] defaults to [self ~on_conn_failure:Retry_until_success]. *)
+   val dispatcher
+@@ -316,12 +316,12 @@ module Rpc : sig
+     -> Bonsai.graph
+     -> 'output Bonsai.t
+ 
+-  (** Like [poll], but returns the poll result and querying effect separately. This allows
+-      for more flexible composition and custom handling of the state. The returned effect
++  (** Like [poll], but returns the poll result and querying effect_value separately. This allows
++      for more flexible composition and custom handling of the state. The returned effect_value
+       can be scheduled to send/re-send the RPC.
+ 
+-      Unlike [poll], this function does not automatically schedule the effect - no polling
+-      happens unless you explicitly schedule the returned effect yourself. *)
++      Unlike [poll], this function does not automatically schedule the effect_value - no polling
++      happens unless you explicitly schedule the returned effect_value yourself. *)
+   val manual_poll
+     :  ?here:Stdlib.Lexing.position
+     -> ?sexp_of_query:('query -> Sexp.t)
+@@ -355,7 +355,7 @@ module Rpc : sig
+ end
+ 
+ module Polling_state_rpc : sig
+-  (** An effect for dispatching on a particular Polling_state_rpc with a particular query.
++  (** An effect_value for dispatching on a particular Polling_state_rpc with a particular query.
+       When the computation is deactivated, it asks the server to cleanup any cached data,
+       so that there is no memory leak. If this cleanup fails, then
+       [on_forget_client_error] is called with the error. *)
+@@ -461,12 +461,12 @@ module Polling_state_rpc : sig
+     -> Bonsai.graph
+     -> 'output Bonsai.t
+ 
+-  (** Like [poll], but returns the poll result and querying effect separately. This allows
+-      for more flexible composition and custom handling of the state. The returned effect
++  (** Like [poll], but returns the poll result and querying effect_value separately. This allows
++      for more flexible composition and custom handling of the state. The returned effect_value
+       can be scheduled to send/re-send the RPC.
+ 
+-      Unlike [poll], this function does not automatically schedule the effect - no polling
+-      happens unless you explicitly schedule the returned effect yourself. *)
++      Unlike [poll], this function does not automatically schedule the effect_value - no polling
++      happens unless you explicitly schedule the returned effect_value yourself. *)
+   val manual_poll
+     :  ?here:Stdlib.Lexing.position
+     -> ?sexp_of_query:('query -> Sexp.t)
+diff --git a/web/view/src/bonsai_web_legacy_view.mli b/web/view/src/bonsai_web_legacy_view.mli
+index 8f4fd1d..1581c3c 100644
+--- a/web/view/src/bonsai_web_legacy_view.mli
++++ b/web/view/src/bonsai_web_legacy_view.mli
+@@ -222,7 +222,7 @@ val vbox_wrap
+     - [intent] is used by the theme to color and style the button to indicate the intent
+       of the button.
+     - [tooltip] is used to display some text near the button when hovered.
+-    - [on_click] contains an effect to schedule when the button is clicked
++    - [on_click] contains an effect_value to schedule when the button is clicked
+ 
+     The unnamed string parameter is used as the label for the button *)
+ val button
+@@ -325,7 +325,7 @@ val tooltip'
+     provide context.
+ 
+     If [on_dismiss] is provided, the badge will have a dismiss button, which will run the
+-    provided effect on click. *)
++    provided effect_value on click. *)
+ val badge
+   :  Theme.t
+   -> ?attrs:Vdom.Attr.t list
+-- 
+2.51.2
+
+
+From f584e10c9cb362753ff000fdf87cf2475d5240b2 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Mon, 3 Aug 2026 00:47:49 +0200
+Subject: [PATCH 2/2] compat: remove private patdiff review wrapper
+
+---
+ web/view/partial_render_table_styling/dune | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/web/view/partial_render_table_styling/dune b/web/view/partial_render_table_styling/dune
+index 9d0117f..cc0183e 100644
+--- a/web/view/partial_render_table_styling/dune
++++ b/web/view/partial_render_table_styling/dune
+@@ -25,4 +25,4 @@
+  (alias default)
+  (deps autosize_cols_table_styling.css default_table_styling.css)
+  (action
+-  (bash "%{bin:patdiff-for-review} %{bin:patdiff} %{deps} > %{targets}")))
++  (bash "%{bin:patdiff} -ascii %{deps} > %{targets} || test $? = 1")))
+-- 
+2.51.2
+

@@ -1,0 +1,28 @@
+diff --git a/src/ppx_deriving_qcheck/ppx_deriving_qcheck.ml b/src/ppx_deriving_qcheck/ppx_deriving_qcheck.ml
+index 8ed6fd3..95baf56 100644
+--- a/src/ppx_deriving_qcheck/ppx_deriving_qcheck.ml
++++ b/src/ppx_deriving_qcheck/ppx_deriving_qcheck.ml
+@@ -57,15 +57,15 @@ let pattern_name pat : string =
+     the actual body using these args. *)
+ let rec args_and_body expr : (string list * expression) =
+   match expr.pexp_desc with
+-  | Pexp_function (fargs, _constraint, Pfunction_body expr) ->
++  (* ast500 has no Pexp_function (params, constraint, body): a lambda is a
++     curried Pexp_fun carrying exactly one parameter. Recursing through the
++     chain reproduces the 5.2 behaviour — positional (Nolabel) parameters
++     contribute a name, labelled and optional ones are skipped but still
++     traversed, which is what the original filter_map over fargs did. *)
++  | Pexp_fun (Nolabel, _, p, expr) ->
+      let (args, body) = args_and_body expr in
+-     let pats =
+-       List.filter_map (function
+-         | { pparam_desc = Pparam_val (Nolabel, _, p); _ } -> Some (pattern_name p)
+-         | _ -> None
+-       ) fargs
+-     in
+-     (pats @ args, body)
++     (pattern_name p :: args, body)
++  | Pexp_fun (_, _, _, expr) -> args_and_body expr
+   | _ -> ([], expr)
+ 
+ (** {2. Recursive generators} *)

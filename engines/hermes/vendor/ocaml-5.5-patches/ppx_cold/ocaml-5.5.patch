@@ -1,0 +1,28 @@
+From 602b8adffd4ab9a6d85582feb3d3b57ec7649c8e Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Sun, 2 Aug 2026 23:59:08 +0200
+Subject: [PATCH] compat: admit Base v0.18 and ppxlib 0.38
+
+---
+ ppx_cold.opam | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/ppx_cold.opam b/ppx_cold.opam
+index 4f7dbf6..db01e15 100644
+--- a/ppx_cold.opam
++++ b/ppx_cold.opam
+@@ -12,9 +12,9 @@ build: [
+ ]
+ depends: [
+   "ocaml"  {>= "5.1.0"}
+-  "base"   {>= "v0.17" & < "v0.18"}
++  "base"   {>= "v0.17" & < "v0.19"}
+   "dune"   {>= "3.11.0"}
+-  "ppxlib" {>= "0.28.0"}
++  "ppxlib" {>= "0.28.0" & < "0.39.0"}
+ ]
+ available: arch != "arm32" & arch != "x86_32"
+ synopsis: "Expands [@cold] into [@inline never][@specialise never][@local never]"
+-- 
+2.51.2
+

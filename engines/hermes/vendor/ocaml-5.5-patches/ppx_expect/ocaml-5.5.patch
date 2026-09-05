@@ -1,0 +1,44 @@
+From d7ea37cc432cf60a667d6f13ac240c2eff248402 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Mon, 3 Aug 2026 00:54:36 +0200
+Subject: [PATCH] compat: preserve Dune expect-test source paths
+
+---
+ ppx_expect.opam               | 2 +-
+ runtime/ppx_expect_runtime.ml | 7 +------
+ 2 files changed, 2 insertions(+), 7 deletions(-)
+
+diff --git a/ppx_expect.opam b/ppx_expect.opam
+index b43e2c1..6062af2 100644
+--- a/ppx_expect.opam
++++ b/ppx_expect.opam
+@@ -20,7 +20,7 @@ depends: [
+   "ppx_inline_test"
+   "stdio"
+   "dune"            {>= "3.17.0"}
+-  "ppxlib"          {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"          {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Cram like framework for OCaml"
+diff --git a/runtime/ppx_expect_runtime.ml b/runtime/ppx_expect_runtime.ml
+index 05092ea..e4c02e4 100644
+--- a/runtime/ppx_expect_runtime.ml
++++ b/runtime/ppx_expect_runtime.ml
+@@ -8,12 +8,7 @@ let () =
+     Stdlib.Sys.chdir (force Current_file.initial_dir);
+     Test_node.Global_results_table.process_each_file
+       ~f:(fun ~filename ~test_nodes ~postprocess ->
+-        let filename =
+-          match Ppx_inline_test_lib.source_tree_root () with
+-          | None -> filename
+-          | Some source_tree_root ->
+-            Stdlib.Filename.concat source_tree_root (Stdlib.Filename.basename filename)
+-        in
++        (* Public Dune reports the build-context source copy as an absolute path. *)
+         Write_corrected_file.f
+           test_nodes
+           ~use_color:(Ppx_inline_test_lib.use_color ())
+-- 
+2.51.2
+

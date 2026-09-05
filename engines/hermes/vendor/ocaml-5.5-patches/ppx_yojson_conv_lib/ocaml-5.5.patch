@@ -1,0 +1,25 @@
+From 68e166f898d29c09242aff7dbd482bbdf5c0dae1 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Mon, 3 Aug 2026 00:01:26 +0200
+Subject: [PATCH] compat: admit Yojson 3 runtime
+
+---
+ ppx_yojson_conv_lib.opam | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ppx_yojson_conv_lib.opam b/ppx_yojson_conv_lib.opam
+index 1c37e60..8b3f6fe 100644
+--- a/ppx_yojson_conv_lib.opam
++++ b/ppx_yojson_conv_lib.opam
+@@ -13,7 +13,7 @@ build: [
+ depends: [
+   "ocaml" {>= "5.1.0"}
+   "dune"   {>= "3.17.0"}
+-  "yojson" {>= "1.7.0" & < "3.0.0"}
++  "yojson" {>= "1.7.0" & < "4.0.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Runtime lib for ppx_yojson_conv"
+-- 
+2.51.2
+

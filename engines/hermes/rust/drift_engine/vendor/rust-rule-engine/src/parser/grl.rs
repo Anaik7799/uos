@@ -1,0 +1,2097 @@
+use crate::engine::module::{ExportItem, ExportList, ImportType, ItemType, ModuleManager};
+use crate::engine::rule::{Condition, ConditionGroup, Rule};
+use crate::errors::{Result, RuleEngineError};
+use crate::types::{ActionType, Operator, Value};
+use chrono::{DateTime, Utc};
+use rexile::Pattern;
+use std::collections::HashMap;
+use std::sync::OnceLock;
+
+// Stream syntax parser module
+#[cfg(feature = "streaming")]
+pub mod stream_syntax;
+
+// Cached main regexes - compiled once at startup
+static RULE_REGEX: OnceLock<Pattern> = OnceLock::new();
+static RULE_SPLIT_REGEX: OnceLock<Pattern> = OnceLock::new();
+static DEFMODULE_REGEX: OnceLock<Pattern> = OnceLock::new();
+static DEFMODULE_SPLIT_REGEX: OnceLock<Pattern> = OnceLock::new();
+static WHEN_THEN_REGEX: OnceLock<Pattern> = OnceLock::new();
+static SALIENCE_REGEX: OnceLock<Pattern> = OnceLock::new();
+static TEST_CONDITION_REGEX: OnceLock<Pattern> = OnceLock::new();
+static TYPED_TEST_CONDITION_REGEX: OnceLock<Pattern> = OnceLock::new();
+static FUNCTION_CALL_REGEX: OnceLock<Pattern> = OnceLock::new();
+static CONDITION_REGEX: OnceLock<Pattern> = OnceLock::new();
+static METHOD_CALL_REGEX: OnceLock<Pattern> = OnceLock::new();
+static FUNCTION_BINDING_REGEX: OnceLock<Pattern> = OnceLock::new();
+static MULTIFIELD_COLLECT_REGEX: OnceLock<Pattern> = OnceLock::new();
+static MULTIFIELD_COUNT_REGEX: OnceLock<Pattern> = OnceLock::new();
+static MULTIFIELD_FIRST_REGEX: OnceLock<Pattern> = OnceLock::new();
+static MULTIFIELD_LAST_REGEX: OnceLock<Pattern> = OnceLock::new();
+static MULTIFIELD_EMPTY_REGEX: OnceLock<Pattern> = OnceLock::new();
+static MULTIFIELD_NOT_EMPTY_REGEX: OnceLock<Pattern> = OnceLock::new();
+static SIMPLE_CONDITION_REGEX: OnceLock<Pattern> = OnceLock::new();
+
+// Helper functions to get or initialize regexes
+fn rule_regex() -> &'static Pattern {
+    RULE_REGEX.get_or_init(|| {
+        Pattern::new(r#"rule\s+(?:"([^"]+)"|([a-zA-Z_]\w*))\s*([^{]*)\{(.+)\}"#)
+            .expect("Invalid rule regex pattern")
+    })
+}
+
+fn rule_split_regex() -> &'static Pattern {
+    RULE_SPLIT_REGEX.get_or_init(|| {
+        Pattern::new(r#"(?s)rule\s+(?:"[^"]+"|[a-zA-Z_]\w*).*?\}"#)
+            .expect("Invalid rule split regex pattern")
+    })
+}
+
+fn defmodule_regex() -> &'static Pattern {
+    DEFMODULE_REGEX.get_or_init(|| {
+        Pattern::new(r#"defmodule\s+([A-Z_]\w*)\s*\{([^}]*)\}"#)
+            .expect("Invalid defmodule regex pattern")
+    })
+}
+
+fn defmodule_split_regex() -> &'static Pattern {
+    DEFMODULE_SPLIT_REGEX.get_or_init(|| {
+        Pattern::new(r#"(?s)defmodule\s+[A-Z_]\w*\s*\{[^}]*\}"#)
+            .expect("Invalid defmodule split regex pattern")
+    })
+}
+
+fn when_then_regex() -> &'static Pattern {
+    WHEN_THEN_REGEX.get_or_init(|| {
+        Pattern::new(r"when\s+(.+?)\s+then\s+(.+)").expect("Invalid when-then regex pattern")
+    })
+}
+
+fn salience_regex() -> &'static Pattern {
+    SALIENCE_REGEX
+        .get_or_init(|| Pattern::new(r"salience\s+(\d+)").expect("Invalid salience regex pattern"))
+}
+
+fn test_condition_regex() -> &'static Pattern {
+    TEST_CONDITION_REGEX.get_or_init(|| {
+        Pattern::new(r#"^test\s*\(\s*([a-zA-Z_]\w*)\s*\(([^)]*)\)\s*\)$"#)
+            .expect("Invalid test condition regex")
+    })
+}
+
+fn typed_test_condition_regex() -> &'static Pattern {
+    TYPED_TEST_CONDITION_REGEX.get_or_init(|| {
+        Pattern::new(r#"\$(\w+)\s*:\s*(\w+)\s*\(\s*(.+?)\s*\)"#)
+            .expect("Invalid typed test condition regex")
+    })
+}
+
+fn function_call_regex() -> &'static Pattern {
+    FUNCTION_CALL_REGEX.get_or_init(|| {
+        Pattern::new(r#"([a-zA-Z_]\w*)\s*\(([^)]*)\)\s*(>=|<=|==|!=|>|<|contains|startsWith|endsWith|matches|in)\s*(.+)"#)
+            .expect("Invalid function call regex")
+    })
+}
+
+fn condition_regex() -> &'static Pattern {
+    CONDITION_REGEX.get_or_init(|| {
+        Pattern::new(r#"([a-zA-Z_][a-zA-Z0-9_]*(?:\.[a-zA-Z_][a-zA-Z0-9_]*)*(?:\s*[+\-*/%]\s*[a-zA-Z0-9_\.]+)*)\s*(>=|<=|==|!=|>|<|contains|startsWith|endsWith|matches|in)\s*(.+)"#)
+            .expect("Invalid condition regex")
+    })
+}
+
+fn method_call_regex() -> &'static Pattern {
+    METHOD_CALL_REGEX.get_or_init(|| {
+        Pattern::new(r#"\$(\w+)\.(\w+)\s*\(([^)]*)\)"#).expect("Invalid method call regex")
+    })
+}
+
+fn function_binding_regex() -> &'static Pattern {
+    FUNCTION_BINDING_REGEX.get_or_init(|| {
+        Pattern::new(r#"(\w+)\s*\(\s*(.+?)?\s*\)"#).expect("Invalid function binding regex")
+    })
+}
+
+fn multifield_collect_regex() -> &'static Pattern {
+    MULTIFIELD_COLLECT_REGEX.get_or_init(|| {
+        Pattern::new(r#"^([a-zA-Z_]\w*\.[a-zA-Z_]\w*)\s+(\$\?[a-zA-Z_]\w*)$"#)
+            .expect("Invalid multifield collect regex")
+    })
+}
+
+fn multifield_count_regex() -> &'static Pattern {
+    MULTIFIELD_COUNT_REGEX.get_or_init(|| {
+        Pattern::new(r#"^([a-zA-Z_]\w*\.[a-zA-Z_]\w*)\s+count\s*(>=|<=|==|!=|>|<)\s*(.+)$"#)
+            .expect("Invalid multifield count regex")
+    })
+}
+
+fn multifield_first_regex() -> &'static Pattern {
+    MULTIFIELD_FIRST_REGEX.get_or_init(|| {
+        Pattern::new(r#"^([a-zA-Z_]\w*\.[a-zA-Z_]\w*)\s+first(?:\s+(\$[a-zA-Z_]\w*))?$"#)
+            .expect("Invalid multifield first regex")
+    })
+}
+
+fn multifield_last_regex() -> &'static Pattern {
+    MULTIFIELD_LAST_REGEX.get_or_init(|| {
+        Pattern::new(r#"^([a-zA-Z_]\w*\.[a-zA-Z_]\w*)\s+last(?:\s+(\$[a-zA-Z_]\w*))?$"#)
+            .expect("Invalid multifield last regex")
+    })
+}
+
+fn multifield_empty_regex() -> &'static Pattern {
+    MULTIFIELD_EMPTY_REGEX.get_or_init(|| {
+        Pattern::new(r#"^([a-zA-Z_]\w*\.[a-zA-Z_]\w*)\s+empty$"#)
+            .expect("Invalid multifield empty regex")
+    })
+}
+
+fn multifield_not_empty_regex() -> &'static Pattern {
+    MULTIFIELD_NOT_EMPTY_REGEX.get_or_init(|| {
+        Pattern::new(r#"^([a-zA-Z_]\w*\.[a-zA-Z_]\w*)\s+not_empty$"#)
+            .expect("Invalid multifield not_empty regex")
+    })
+}
+
+fn simple_condition_regex() -> &'static Pattern {
+    SIMPLE_CONDITION_REGEX.get_or_init(|| {
+        Pattern::new(r#"(\w+)\s*(>=|<=|==|!=|>|<)\s*(.+)"#).expect("Invalid simple condition regex")
+    })
+}
+
+/// GRL (Grule Rule Language) Parser
+/// Parses Grule-like syntax into Rule objects
+pub struct GRLParser;
+
+/// Parsed rule attributes from GRL header
+#[derive(Debug, Default)]
+struct RuleAttributes {
+    pub no_loop: bool,
+    pub lock_on_active: bool,
+    pub agenda_group: Option<String>,
+    pub activation_group: Option<String>,
+    pub date_effective: Option<DateTime<Utc>>,
+    pub date_expires: Option<DateTime<Utc>>,
+}
+
+/// Result from parsing GRL with modules
+#[derive(Debug, Clone)]
+pub struct ParsedGRL {
+    /// Parsed rules
+    pub rules: Vec<Rule>,
+    /// Module manager with configured modules
+    pub module_manager: ModuleManager,
+    /// Map of rule name to module name
+    pub rule_modules: HashMap<String, String>,
+}
+
+impl Default for ParsedGRL {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl ParsedGRL {
+    pub fn new() -> Self {
+        Self {
+            rules: Vec::new(),
+            module_manager: ModuleManager::new(),
+            rule_modules: HashMap::new(),
+        }
+    }
+}
+
+impl GRLParser {
+    /// Parse a single rule from GRL syntax
+    ///
+    /// Example GRL syntax:
+    /// ```grl
+    /// rule CheckAge "Age verification rule" salience 10 {
+    ///     when
+    ///         User.Age >= 18 && User.Country == "US"
+    ///     then
+    ///         User.IsAdult = true;
+    ///         Retract("User");
+    /// }
+    /// ```
+    pub fn parse_rule(grl_text: &str) -> Result<Rule> {
+        let mut parser = GRLParser;
+        parser.parse_single_rule(grl_text)
+    }
+
+    /// Parse multiple rules from GRL text
+    pub fn parse_rules(grl_text: &str) -> Result<Vec<Rule>> {
+        let mut parser = GRLParser;
+        parser.parse_multiple_rules(grl_text)
+    }
+
+    /// Parse GRL text with module support
+    ///
+    /// Example:
+    /// ```grl
+    /// defmodule SENSORS {
+    ///   export: all
+    /// }
+    ///
+    /// defmodule CONTROL {
+    ///   import: SENSORS (rules * (templates temperature))
+    /// }
+    ///
+    /// rule "CheckTemp" {
+    ///   when temperature.value > 28
+    ///   then println("Hot");
+    /// }
+    /// ```
+    pub fn parse_with_modules(grl_text: &str) -> Result<ParsedGRL> {
+        let mut parser = GRLParser;
+        parser.parse_grl_with_modules(grl_text)
+    }
+
+    fn parse_grl_with_modules(&mut self, grl_text: &str) -> Result<ParsedGRL> {
+        let mut result = ParsedGRL::new();
+
+        // First, parse and register all modules
+        for module_match in defmodule_split_regex().find_iter(grl_text) {
+            let module_def = module_match.as_str();
+            self.parse_and_register_module(module_def, &mut result.module_manager)?;
+        }
+
+        // Remove all defmodule blocks from text before parsing rules
+        let rules_text = defmodule_split_regex().replace_all(grl_text, "");
+
+        // Then parse all rules from cleaned text
+        let rules = self.parse_multiple_rules(&rules_text)?;
+
+        // Try to assign rules to modules based on comments
+        for rule in rules {
+            let module_name = self.extract_module_from_context(grl_text, &rule.name);
+            result
+                .rule_modules
+                .insert(rule.name.clone(), module_name.clone());
+
+            // Add rule to module in manager
+            if let Ok(module) = result.module_manager.get_module_mut(&module_name) {
+                module.add_rule(&rule.name);
+            }
+
+            result.rules.push(rule);
+        }
+
+        Ok(result)
+    }
+
+    fn parse_and_register_module(
+        &self,
+        module_def: &str,
+        manager: &mut ModuleManager,
+    ) -> Result<()> {
+        // Parse: defmodule MODULE_NAME { export: all/none, import: ... }
+        if let Some(captures) = defmodule_regex().captures(module_def) {
+            let module_name = captures.get(1).unwrap().to_string();
+            let module_body = captures.get(2).unwrap();
+
+            // Create module (ignore if already exists)
+            let _ = manager.create_module(&module_name);
+            let module = manager.get_module_mut(&module_name)?;
+
+            // Parse export directive
+            if let Some(export_type) = self.extract_directive(module_body, "export:") {
+                let exports = if export_type.trim() == "all" {
+                    ExportList::All
+                } else if export_type.trim() == "none" {
+                    ExportList::None
+                } else {
+                    // Parse pattern-based exports
+                    ExportList::Specific(vec![ExportItem {
+                        item_type: ItemType::All,
+                        pattern: export_type.trim().to_string(),
+                    }])
+                };
+                module.set_exports(exports);
+            }
+
+            // Parse import directives
+            let import_lines: Vec<&str> = module_body
+                .lines()
+                .filter(|line| line.trim().starts_with("import:"))
+                .collect();
+
+            for import_line in import_lines {
+                if let Some(import_spec) = self.extract_directive(import_line, "import:") {
+                    // Parse: "MODULE_A (rules * (templates foo))"
+                    self.parse_import_spec(&module_name, &import_spec, manager)?;
+                }
+            }
+        }
+
+        Ok(())
+    }
+
+    fn extract_directive(&self, text: &str, directive: &str) -> Option<String> {
+        if let Some(pos) = text.find(directive) {
+            let after_directive = &text[pos + directive.len()..];
+
+            // Find the end of the directive (next directive, or end of block)
+            let end = after_directive
+                .find("import:")
+                .or_else(|| after_directive.find("export:"))
+                .unwrap_or(after_directive.len());
+
+            Some(after_directive[..end].trim().to_string())
+        } else {
+            None
+        }
+    }
+
+    fn parse_import_spec(
+        &self,
+        importing_module: &str,
+        spec: &str,
+        manager: &mut ModuleManager,
+    ) -> Result<()> {
+        // Parse: "SENSORS (rules * (templates temperature))"
+        let parts: Vec<&str> = spec.splitn(2, '(').collect();
+        if parts.is_empty() {
+            return Ok(());
+        }
+
+        let source_module = parts[0].trim().to_string();
+        let rest = if parts.len() > 1 { parts[1] } else { "" };
+
+        // Check if we're importing rules or templates
+        if rest.contains("rules") {
+            manager.import_from(importing_module, &source_module, ImportType::AllRules, "*")?;
+        }
+
+        if rest.contains("templates") {
+            manager.import_from(
+                importing_module,
+                &source_module,
+                ImportType::AllTemplates,
+                "*",
+            )?;
+        }
+
+        Ok(())
+    }
+
+    fn extract_module_from_context(&self, grl_text: &str, rule_name: &str) -> String {
+        // Look backward from rule to find the module comment
+        if let Some(rule_pos) = grl_text
+            .find(&format!("rule \"{}\"", rule_name))
+            .or_else(|| grl_text.find(&format!("rule {}", rule_name)))
+        {
+            // Look backward for ;; MODULE: comment
+            let before = &grl_text[..rule_pos];
+            if let Some(module_pos) = before.rfind(";; MODULE:") {
+                let after_module_marker = &before[module_pos + 10..];
+                if let Some(end_of_line) = after_module_marker.find('\n') {
+                    let module_line = &after_module_marker[..end_of_line].trim();
+                    // Extract module name from "SENSORS - Temperature Monitoring"
+                    if let Some(first_word) = module_line.split_whitespace().next() {
+                        return first_word.to_string();
+                    }
+                }
+            }
+        }
+
+        // Default to MAIN
+        "MAIN".to_string()
+    }
+
+    fn parse_single_rule(&mut self, grl_text: &str) -> Result<Rule> {
+        let cleaned = self.clean_text(grl_text);
+
+        // Extract rule components using cached regex
+        let captures =
+            rule_regex()
+                .captures(&cleaned)
+                .ok_or_else(|| RuleEngineError::ParseError {
+                    message: format!("Invalid GRL rule format. Input: {}", cleaned),
+                })?;
+
+        // Rule name can be either quoted (group 1) or unquoted (group 2)
+        let rule_name = if let Some(quoted_name) = captures.get(1) {
+            quoted_name.to_string()
+        } else if let Some(unquoted_name) = captures.get(2) {
+            unquoted_name.to_string()
+        } else {
+            return Err(RuleEngineError::ParseError {
+                message: "Could not extract rule name".to_string(),
+            });
+        };
+
+        // Attributes section (group 3)
+        let attributes_section = captures.get(3).unwrap_or("");
+
+        // Rule body (group 4)
+        let rule_body = captures.get(4).unwrap();
+
+        // Parse salience from attributes section
+        let salience = self.extract_salience(attributes_section)?;
+
+        // Parse when and then sections using cached regex
+        let when_then_captures =
+            when_then_regex()
+                .captures(rule_body)
+                .ok_or_else(|| RuleEngineError::ParseError {
+                    message: "Missing when or then clause".to_string(),
+                })?;
+
+        let when_clause = when_then_captures.get(1).unwrap().trim();
+        let then_clause = when_then_captures.get(2).unwrap().trim();
+
+        // Parse conditions and actions
+        let conditions = self.parse_when_clause(when_clause)?;
+        let actions = self.parse_then_clause(then_clause)?;
+
+        // Parse all attributes from rule header
+        let attributes = self.parse_rule_attributes(attributes_section)?;
+
+        // Build rule
+        let mut rule = Rule::new(rule_name, conditions, actions);
+        rule = rule.with_priority(salience);
+
+        // Apply parsed attributes
+        if attributes.no_loop {
+            rule = rule.with_no_loop(true);
+        }
+        if attributes.lock_on_active {
+            rule = rule.with_lock_on_active(true);
+        }
+        if let Some(agenda_group) = attributes.agenda_group {
+            rule = rule.with_agenda_group(agenda_group);
+        }
+        if let Some(activation_group) = attributes.activation_group {
+            rule = rule.with_activation_group(activation_group);
+        }
+        if let Some(date_effective) = attributes.date_effective {
+            rule = rule.with_date_effective(date_effective);
+        }
+        if let Some(date_expires) = attributes.date_expires {
+            rule = rule.with_date_expires(date_expires);
+        }
+
+        Ok(rule)
+    }
+
+    fn parse_multiple_rules(&mut self, grl_text: &str) -> Result<Vec<Rule>> {
+        // Split by rule boundaries - support both quoted and unquoted rule names
+        // Use DOTALL flag to match newlines in rule body
+        let mut rules = Vec::new();
+
+        for rule_match in rule_split_regex().find_iter(grl_text) {
+            let rule_text = rule_match.as_str();
+            let rule = self.parse_single_rule(rule_text)?;
+            rules.push(rule);
+        }
+
+        Ok(rules)
+    }
+
+    /// Parse rule attributes from the rule header
+    fn parse_rule_attributes(&self, rule_header: &str) -> Result<RuleAttributes> {
+        let mut attributes = RuleAttributes::default();
+
+        // Extract the attributes section (after rule name/description, before opening brace)
+        // This ensures we don't match keywords inside description strings
+        // Strategy: Find all quoted strings and remove them, then check for attributes
+        let mut attrs_section = rule_header.to_string();
+
+        // Remove all quoted strings (descriptions) to avoid false matches
+        let quoted_regex = Pattern::new(r#""[^"]*""#).map_err(|e| RuleEngineError::ParseError {
+            message: format!("Invalid quoted string regex: {}", e),
+        })?;
+        attrs_section = quoted_regex.replace_all(&attrs_section, "").to_string();
+
+        // Also remove the "rule" keyword and rule name (if unquoted)
+        if let Some(rule_pos) = attrs_section.find("rule") {
+            // Find the next space or attribute keyword after "rule"
+            let after_rule = &attrs_section[rule_pos + 4..];
+            if let Some(first_keyword) = after_rule
+                .find("salience")
+                .or_else(|| after_rule.find("no-loop"))
+                .or_else(|| after_rule.find("lock-on-active"))
+                .or_else(|| after_rule.find("agenda-group"))
+                .or_else(|| after_rule.find("activation-group"))
+                .or_else(|| after_rule.find("date-effective"))
+                .or_else(|| after_rule.find("date-expires"))
+            {
+                attrs_section = after_rule[first_keyword..].to_string();
+            }
+        }
+
+        // Now check for boolean attributes using word boundaries
+        let no_loop_regex =
+            Pattern::new(r"\bno-loop\b").map_err(|e| RuleEngineError::ParseError {
+                message: format!("Invalid no-loop regex: {}", e),
+            })?;
+        let lock_on_active_regex =
+            Pattern::new(r"\block-on-active\b").map_err(|e| RuleEngineError::ParseError {
+                message: format!("Invalid lock-on-active regex: {}", e),
+            })?;
+
+        if no_loop_regex.is_match(&attrs_section) {
+            attributes.no_loop = true;
+        }
+        if lock_on_active_regex.is_match(&attrs_section) {
+            attributes.lock_on_active = true;
+        }
+
+        // Parse agenda-group attribute
+        if let Some(agenda_group) = self.extract_quoted_attribute(rule_header, "agenda-group")? {
+            attributes.agenda_group = Some(agenda_group);
+        }
+
+        // Parse activation-group attribute
+        if let Some(activation_group) =
+            self.extract_quoted_attribute(rule_header, "activation-group")?
+        {
+            attributes.activation_group = Some(activation_group);
+        }
+
+        // Parse date-effective attribute
+        if let Some(date_str) = self.extract_quoted_attribute(rule_header, "date-effective")? {
+            attributes.date_effective = Some(self.parse_date_string(&date_str)?);
+        }
+
+        // Parse date-expires attribute
+        if let Some(date_str) = self.extract_quoted_attribute(rule_header, "date-expires")? {
+            attributes.date_expires = Some(self.parse_date_string(&date_str)?);
+        }
+
+        Ok(attributes)
+    }
+
+    /// Extract quoted attribute value from rule header
+    fn extract_quoted_attribute(&self, header: &str, attribute: &str) -> Result<Option<String>> {
+        let pattern = format!(r#"{}\s+"([^"]+)""#, attribute);
+        let regex = Pattern::new(&pattern).map_err(|e| RuleEngineError::ParseError {
+            message: format!("Invalid attribute regex for {}: {}", attribute, e),
+        })?;
+
+        if let Some(captures) = regex.captures(header) {
+            if let Some(value) = captures.get(1) {
+                return Ok(Some(value.to_string()));
+            }
+        }
+
+        Ok(None)
+    }
+
+    /// Parse date string in various formats
+    fn parse_date_string(&self, date_str: &str) -> Result<DateTime<Utc>> {
+        // Try ISO 8601 format first
+        if let Ok(date) = DateTime::parse_from_rfc3339(date_str) {
+            return Ok(date.with_timezone(&Utc));
+        }
+
+        // Try simple date formats
+        let formats = ["%Y-%m-%d", "%Y-%m-%dT%H:%M:%S", "%d-%b-%Y", "%d-%m-%Y"];
+
+        for format in &formats {
+            if let Ok(naive_date) = chrono::NaiveDateTime::parse_from_str(date_str, format) {
+                return Ok(naive_date.and_utc());
+            }
+            if let Ok(naive_date) = chrono::NaiveDate::parse_from_str(date_str, format) {
+                let datetime =
+                    naive_date
+                        .and_hms_opt(0, 0, 0)
+                        .ok_or_else(|| RuleEngineError::ParseError {
+                            message: format!("Invalid time for date: {}", naive_date),
+                        })?;
+                return Ok(datetime.and_utc());
+            }
+        }
+
+        Err(RuleEngineError::ParseError {
+            message: format!("Unable to parse date: {}", date_str),
+        })
+    }
+
+    /// Extract salience value from attributes section
+    fn extract_salience(&self, attributes_section: &str) -> Result<i32> {
+        if let Some(captures) = salience_regex().captures(attributes_section) {
+            if let Some(salience_match) = captures.get(1) {
+                return salience_match
+                    .parse::<i32>()
+                    .map_err(|e| RuleEngineError::ParseError {
+                        message: format!("Invalid salience value: {}", e),
+                    });
+            }
+        }
+
+        Ok(0) // Default salience
+    }
+
+    fn clean_text(&self, text: &str) -> String {
+        text.lines()
+            .map(|line| line.trim())
+            .filter(|line| !line.is_empty() && !line.starts_with("//"))
+            .collect::<Vec<_>>()
+            .join(" ")
+    }
+
+    fn parse_when_clause(&self, when_clause: &str) -> Result<ConditionGroup> {
+        // Handle logical operators with proper parentheses support
+        let trimmed = when_clause.trim();
+
+        // Strip outer parentheses if they exist
+        let clause = if trimmed.starts_with('(') && trimmed.ends_with(')') {
+            // Check if these are the outermost parentheses
+            let inner = &trimmed[1..trimmed.len() - 1];
+            if self.is_balanced_parentheses(inner) {
+                inner
+            } else {
+                trimmed
+            }
+        } else {
+            trimmed
+        };
+
+        // Parse OR at the top level (lowest precedence)
+        if let Some(parts) = self.split_logical_operator(clause, "||") {
+            return self.parse_or_parts(parts);
+        }
+
+        // Parse AND (higher precedence)
+        if let Some(parts) = self.split_logical_operator(clause, "&&") {
+            return self.parse_and_parts(parts);
+        }
+
+        // Handle NOT condition
+        if clause.trim_start().starts_with("!") {
+            return self.parse_not_condition(clause);
+        }
+
+        // Handle EXISTS condition
+        if clause.trim_start().starts_with("exists(") {
+            return self.parse_exists_condition(clause);
+        }
+
+        // Handle FORALL condition
+        if clause.trim_start().starts_with("forall(") {
+            return self.parse_forall_condition(clause);
+        }
+
+        // Handle ACCUMULATE condition
+        if clause.trim_start().starts_with("accumulate(") {
+            return self.parse_accumulate_condition(clause);
+        }
+
+        // Single condition
+        self.parse_single_condition(clause)
+    }
+
+    fn is_balanced_parentheses(&self, text: &str) -> bool {
+        let mut count = 0;
+        for ch in text.chars() {
+            match ch {
+                '(' => count += 1,
+                ')' => {
+                    count -= 1;
+                    if count < 0 {
+                        return false;
+                    }
+                }
+                _ => {}
+            }
+        }
+        count == 0
+    }
+
+    fn split_logical_operator(&self, clause: &str, operator: &str) -> Option<Vec<String>> {
+        let mut parts = Vec::new();
+        let mut current_part = String::new();
+        let mut paren_count = 0;
+        let mut chars = clause.chars().peekable();
+
+        while let Some(ch) = chars.next() {
+            match ch {
+                '(' => {
+                    paren_count += 1;
+                    current_part.push(ch);
+                }
+                ')' => {
+                    paren_count -= 1;
+                    current_part.push(ch);
+                }
+                '&' if operator == "&&" && paren_count == 0 && chars.peek() == Some(&'&') => {
+                    chars.next(); // consume second &
+                    parts.push(current_part.trim().to_string());
+                    current_part.clear();
+                }
+                '|' if operator == "||" && paren_count == 0 && chars.peek() == Some(&'|') => {
+                    chars.next(); // consume second |
+                    parts.push(current_part.trim().to_string());
+                    current_part.clear();
+                }
+                _ => {
+                    current_part.push(ch);
+                }
+            }
+        }
+
+        if !current_part.trim().is_empty() {
+            parts.push(current_part.trim().to_string());
+        }
+
+        if parts.len() > 1 {
+            Some(parts)
+        } else {
+            None
+        }
+    }
+
+    fn parse_or_parts(&self, parts: Vec<String>) -> Result<ConditionGroup> {
+        let mut conditions = Vec::new();
+        for part in parts {
+            let condition = self.parse_when_clause(&part)?;
+            conditions.push(condition);
+        }
+
+        if conditions.is_empty() {
+            return Err(RuleEngineError::ParseError {
+                message: "No conditions found in OR".to_string(),
+            });
+        }
+
+        let mut iter = conditions.into_iter();
+        let mut result = iter
+            .next()
+            .expect("Iterator cannot be empty after empty check");
+        for condition in iter {
+            result = ConditionGroup::or(result, condition);
+        }
+
+        Ok(result)
+    }
+
+    fn parse_and_parts(&self, parts: Vec<String>) -> Result<ConditionGroup> {
+        let mut conditions = Vec::new();
+        for part in parts {
+            let condition = self.parse_when_clause(&part)?;
+            conditions.push(condition);
+        }
+
+        if conditions.is_empty() {
+            return Err(RuleEngineError::ParseError {
+                message: "No conditions found in AND".to_string(),
+            });
+        }
+
+        let mut iter = conditions.into_iter();
+        let mut result = iter
+            .next()
+            .expect("Iterator cannot be empty after empty check");
+        for condition in iter {
+            result = ConditionGroup::and(result, condition);
+        }
+
+        Ok(result)
+    }
+
+    fn parse_not_condition(&self, clause: &str) -> Result<ConditionGroup> {
+        let inner_clause = clause
+            .strip_prefix('!')
+            .ok_or_else(|| RuleEngineError::ParseError {
+                message: format!("Expected '!' prefix in NOT condition: {}", clause),
+            })?
+            .trim();
+        let inner_condition = self.parse_when_clause(inner_clause)?;
+        Ok(ConditionGroup::not(inner_condition))
+    }
+
+    fn parse_exists_condition(&self, clause: &str) -> Result<ConditionGroup> {
+        let clause = clause.trim_start();
+        if !clause.starts_with("exists(") || !clause.ends_with(")") {
+            return Err(RuleEngineError::ParseError {
+                message: "Invalid exists syntax. Expected: exists(condition)".to_string(),
+            });
+        }
+
+        // Extract content between parentheses
+        let inner_clause = &clause[7..clause.len() - 1]; // Remove "exists(" and ")"
+        let inner_condition = self.parse_when_clause(inner_clause)?;
+        Ok(ConditionGroup::exists(inner_condition))
+    }
+
+    fn parse_forall_condition(&self, clause: &str) -> Result<ConditionGroup> {
+        let clause = clause.trim_start();
+        if !clause.starts_with("forall(") || !clause.ends_with(")") {
+            return Err(RuleEngineError::ParseError {
+                message: "Invalid forall syntax. Expected: forall(condition)".to_string(),
+            });
+        }
+
+        // Extract content between parentheses
+        let inner_clause = &clause[7..clause.len() - 1]; // Remove "forall(" and ")"
+        let inner_condition = self.parse_when_clause(inner_clause)?;
+        Ok(ConditionGroup::forall(inner_condition))
+    }
+
+    fn parse_accumulate_condition(&self, clause: &str) -> Result<ConditionGroup> {
+        let clause = clause.trim_start();
+        if !clause.starts_with("accumulate(") || !clause.ends_with(")") {
+            return Err(RuleEngineError::ParseError {
+                message: "Invalid accumulate syntax. Expected: accumulate(pattern, function)"
+                    .to_string(),
+            });
+        }
+
+        // Extract content between parentheses
+        let inner = &clause[11..clause.len() - 1]; // Remove "accumulate(" and ")"
+
+        // Split by comma at the top level (not inside parentheses)
+        let parts = self.split_accumulate_parts(inner)?;
+
+        if parts.len() != 2 {
+            return Err(RuleEngineError::ParseError {
+                message: format!(
+                    "Invalid accumulate syntax. Expected 2 parts (pattern, function), got {}",
+                    parts.len()
+                ),
+            });
+        }
+
+        let pattern_part = parts[0].trim();
+        let function_part = parts[1].trim();
+
+        // Parse the pattern: Order($amount: amount, status == "completed")
+        let (source_pattern, extract_field, source_conditions) =
+            self.parse_accumulate_pattern(pattern_part)?;
+
+        // Parse the function: sum($amount)
+        let (function, function_arg) = self.parse_accumulate_function(function_part)?;
+
+        // For now, we'll create a placeholder result variable
+        // In a full implementation, this would be extracted from the parent context
+        // e.g., from "$total: accumulate(...)"
+        let result_var = "$result".to_string();
+
+        Ok(ConditionGroup::accumulate(
+            result_var,
+            source_pattern,
+            extract_field,
+            source_conditions,
+            function,
+            function_arg,
+        ))
+    }
+
+    fn split_accumulate_parts(&self, content: &str) -> Result<Vec<String>> {
+        let mut parts = Vec::new();
+        let mut current = String::new();
+        let mut paren_depth = 0;
+
+        for ch in content.chars() {
+            match ch {
+                '(' => {
+                    paren_depth += 1;
+                    current.push(ch);
+                }
+                ')' => {
+                    paren_depth -= 1;
+                    current.push(ch);
+                }
+                ',' if paren_depth == 0 => {
+                    parts.push(current.trim().to_string());
+                    current.clear();
+                }
+                _ => {
+                    current.push(ch);
+                }
+            }
+        }
+
+        if !current.trim().is_empty() {
+            parts.push(current.trim().to_string());
+        }
+
+        Ok(parts)
+    }
+
+    fn parse_accumulate_pattern(&self, pattern: &str) -> Result<(String, String, Vec<String>)> {
+        // Pattern format: Order($amount: amount, status == "completed", category == "electronics")
+        // We need to extract:
+        // - source_pattern: "Order"
+        // - extract_field: "amount" (from $amount: amount)
+        // - source_conditions: ["status == \"completed\"", "category == \"electronics\""]
+
+        let pattern = pattern.trim();
+
+        // Find the opening parenthesis to get the pattern type
+        let paren_pos = pattern
+            .find('(')
+            .ok_or_else(|| RuleEngineError::ParseError {
+                message: format!("Invalid accumulate pattern: missing '(' in '{}'", pattern),
+            })?;
+
+        let source_pattern = pattern[..paren_pos].trim().to_string();
+
+        // Extract content between parentheses
+        if !pattern.ends_with(')') {
+            return Err(RuleEngineError::ParseError {
+                message: format!("Invalid accumulate pattern: missing ')' in '{}'", pattern),
+            });
+        }
+
+        let inner = &pattern[paren_pos + 1..pattern.len() - 1];
+
+        // Split by comma (respecting nested parentheses and quotes)
+        let parts = self.split_pattern_parts(inner)?;
+
+        let mut extract_field = String::new();
+        let mut source_conditions = Vec::new();
+
+        for part in parts {
+            let part = part.trim();
+
+            // Check if this is a variable binding: $var: field
+            if part.contains(':') && part.starts_with('$') {
+                if let Some(colon_pos) = part.find(':') {
+                    extract_field = part[colon_pos + 1..].trim().to_string();
+                }
+            } else if part.contains("==")
+                || part.contains("!=")
+                || part.contains(">=")
+                || part.contains("<=")
+                || part.contains('>')
+                || part.contains('<')
+            {
+                // This is a condition
+                source_conditions.push(part.to_string());
+            }
+        }
+
+        Ok((source_pattern, extract_field, source_conditions))
+    }
+
+    fn split_pattern_parts(&self, content: &str) -> Result<Vec<String>> {
+        let mut parts = Vec::new();
+        let mut current = String::new();
+        let mut paren_depth = 0;
+        let mut in_quotes = false;
+        let mut quote_char = ' ';
+
+        for ch in content.chars() {
+            match ch {
+                '"' | '\'' if !in_quotes => {
+                    in_quotes = true;
+                    quote_char = ch;
+                    current.push(ch);
+                }
+                '"' | '\'' if in_quotes && ch == quote_char => {
+                    in_quotes = false;
+                    current.push(ch);
+                }
+                '(' if !in_quotes => {
+                    paren_depth += 1;
+                    current.push(ch);
+                }
+                ')' if !in_quotes => {
+                    paren_depth -= 1;
+                    current.push(ch);
+                }
+                ',' if !in_quotes && paren_depth == 0 => {
+                    parts.push(current.trim().to_string());
+                    current.clear();
+                }
+                _ => {
+                    current.push(ch);
+                }
+            }
+        }
+
+        if !current.trim().is_empty() {
+            parts.push(current.trim().to_string());
+        }
+
+        Ok(parts)
+    }
+
+    fn parse_accumulate_function(&self, function_str: &str) -> Result<(String, String)> {
+        // Function format: sum($amount) or count() or average($price)
+
+        let function_str = function_str.trim();
+
+        let paren_pos = function_str
+            .find('(')
+            .ok_or_else(|| RuleEngineError::ParseError {
+                message: format!(
+                    "Invalid accumulate function: missing '(' in '{}'",
+                    function_str
+                ),
+            })?;
+
+        let function_name = function_str[..paren_pos].trim().to_string();
+
+        if !function_str.ends_with(')') {
+            return Err(RuleEngineError::ParseError {
+                message: format!(
+                    "Invalid accumulate function: missing ')' in '{}'",
+                    function_str
+                ),
+            });
+        }
+
+        let args = &function_str[paren_pos + 1..function_str.len() - 1];
+        let function_arg = args.trim().to_string();
+
+        Ok((function_name, function_arg))
+    }
+
+    fn parse_single_condition(&self, clause: &str) -> Result<ConditionGroup> {
+        // Remove outer parentheses if they exist (handle new syntax like "(user.age >= 18)")
+        let trimmed_clause = clause.trim();
+        let clause_to_parse = if trimmed_clause.starts_with('(') && trimmed_clause.ends_with(')') {
+            trimmed_clause[1..trimmed_clause.len() - 1].trim()
+        } else {
+            trimmed_clause
+        };
+
+        // === STREAM PATTERNS ===
+        // Check for stream pattern syntax: "var: Type from stream(...)"
+        #[cfg(feature = "streaming")]
+        if clause_to_parse.contains("from stream(") {
+            return self.parse_stream_pattern_condition(clause_to_parse);
+        }
+
+        // === MULTI-FIELD PATTERNS ===
+        // Handle multi-field patterns before other patterns
+        // These must be checked first to avoid conflict with standard patterns
+
+        // Pattern 1: Field.array $?var (Collect operation with variable binding)
+        // Example: Order.items $?all_items
+        if let Some(captures) = multifield_collect_regex().captures(clause_to_parse) {
+            let field = captures.get(1).unwrap().to_string();
+            let variable = captures.get(2).unwrap().to_string();
+
+            // Create a multifield Collect condition
+            // Note: This will need to be handled by the engine
+            let condition = Condition::with_multifield_collect(field, variable);
+            return Ok(ConditionGroup::single(condition));
+        }
+
+        // Pattern 2: Field.array contains "value"
+        // Example: Product.tags contains "electronics"
+        // This is already handled by the standard regex, but we need to distinguish array contains
+
+        // Pattern 3: Field.array count operator value
+        // Example: Order.items count > 0, Order.items count >= 5
+        if let Some(captures) = multifield_count_regex().captures(clause_to_parse) {
+            let field = captures.get(1).unwrap().to_string();
+            let operator_str = captures.get(2).unwrap();
+            let value_str = captures.get(3).unwrap().trim();
+
+            let operator = Operator::from_str(operator_str).ok_or_else(|| {
+                RuleEngineError::InvalidOperator {
+                    operator: operator_str.to_string(),
+                }
+            })?;
+
+            let value = self.parse_value(value_str)?;
+
+            let condition = Condition::with_multifield_count(field, operator, value);
+            return Ok(ConditionGroup::single(condition));
+        }
+
+        // Pattern 4: Field.array first [optional: $var or operator value]
+        // Example: Queue.tasks first, Queue.tasks first $first_task
+        if let Some(captures) = multifield_first_regex().captures(clause_to_parse) {
+            let field = captures.get(1).unwrap().to_string();
+            let variable = captures.get(2).map(|m| m.to_string());
+
+            let condition = Condition::with_multifield_first(field, variable);
+            return Ok(ConditionGroup::single(condition));
+        }
+
+        // Pattern 5: Field.array last [optional: $var]
+        // Example: Queue.tasks last, Queue.tasks last $last_task
+        if let Some(captures) = multifield_last_regex().captures(clause_to_parse) {
+            let field = captures.get(1).unwrap().to_string();
+            let variable = captures.get(2).map(|m| m.to_string());
+
+            let condition = Condition::with_multifield_last(field, variable);
+            return Ok(ConditionGroup::single(condition));
+        }
+
+        // Pattern 6: Field.array empty
+        // Example: ShoppingCart.items empty
+        if let Some(captures) = multifield_empty_regex().captures(clause_to_parse) {
+            let field = captures.get(1).unwrap().to_string();
+
+            let condition = Condition::with_multifield_empty(field);
+            return Ok(ConditionGroup::single(condition));
+        }
+
+        // Pattern 7: Field.array not_empty
+        // Example: ShoppingCart.items not_empty
+        if let Some(captures) = multifield_not_empty_regex().captures(clause_to_parse) {
+            let field = captures.get(1).unwrap().to_string();
+
+            let condition = Condition::with_multifield_not_empty(field);
+            return Ok(ConditionGroup::single(condition));
+        }
+
+        // === END MULTI-FIELD PATTERNS ===
+
+        // Handle Test CE: test(functionName(args...))
+        // This is a CLIPS-inspired feature for arbitrary boolean expressions
+        if let Some(captures) = test_condition_regex().captures(clause_to_parse) {
+            let function_name = captures.get(1).unwrap().to_string();
+            let args_str = captures.get(2).unwrap();
+
+            // Parse arguments
+            let args: Vec<String> = if args_str.trim().is_empty() {
+                Vec::new()
+            } else {
+                args_str
+                    .split(',')
+                    .map(|arg| arg.trim().to_string())
+                    .collect()
+            };
+
+            let condition = Condition::with_test(function_name, args);
+            return Ok(ConditionGroup::single(condition));
+        }
+
+        // Handle typed object conditions like: $TestCar : TestCarClass( speedUp == true && speed < maxSpeed )
+        if let Some(captures) = typed_test_condition_regex().captures(clause_to_parse) {
+            let _object_name = captures.get(1).unwrap();
+            let _object_type = captures.get(2).unwrap();
+            let conditions_str = captures.get(3).unwrap();
+
+            // Parse conditions inside parentheses
+            return self.parse_conditions_within_object(conditions_str);
+        }
+
+        // Try to parse function call pattern: functionName(arg1, arg2, ...) operator value
+        if let Some(captures) = function_call_regex().captures(clause_to_parse) {
+            let function_name = captures.get(1).unwrap().to_string();
+            let args_str = captures.get(2).unwrap();
+            let operator_str = captures.get(3).unwrap();
+            let value_str = captures.get(4).unwrap().trim();
+
+            // Parse arguments
+            let args: Vec<String> = if args_str.trim().is_empty() {
+                Vec::new()
+            } else {
+                args_str
+                    .split(',')
+                    .map(|arg| arg.trim().to_string())
+                    .collect()
+            };
+
+            let operator = Operator::from_str(operator_str).ok_or_else(|| {
+                RuleEngineError::InvalidOperator {
+                    operator: operator_str.to_string(),
+                }
+            })?;
+
+            let value = self.parse_value(value_str)?;
+
+            let condition = Condition::with_function(function_name, args, operator, value);
+            return Ok(ConditionGroup::single(condition));
+        }
+
+        // Parse expressions like: User.Age >= 18, Product.Price < 100.0, user.age >= 18, etc.
+        // Support both PascalCase (User.Age) and lowercase (user.age) field naming
+        // Also support arithmetic expressions like: User.Age % 3 == 0, User.Price * 2 > 100
+        let captures = condition_regex().captures(clause_to_parse).ok_or_else(|| {
+            RuleEngineError::ParseError {
+                message: format!("Invalid condition format: {}", clause_to_parse),
+            }
+        })?;
+
+        let left_side = captures.get(1).unwrap().trim().to_string();
+        let operator_str = captures.get(2).unwrap();
+        let value_str = captures.get(3).unwrap().trim();
+
+        let operator =
+            Operator::from_str(operator_str).ok_or_else(|| RuleEngineError::InvalidOperator {
+                operator: operator_str.to_string(),
+            })?;
+
+        let value = self.parse_value(value_str)?;
+
+        // Check if left_side contains arithmetic operators - if yes, it's an expression
+        if left_side.contains('+')
+            || left_side.contains('-')
+            || left_side.contains('*')
+            || left_side.contains('/')
+            || left_side.contains('%')
+        {
+            // This is an arithmetic expression - use Test CE
+            // Format: test(left_side operator value)
+            let test_expr = format!("{} {} {}", left_side, operator_str, value_str);
+            let condition = Condition::with_test(test_expr, vec![]);
+            Ok(ConditionGroup::single(condition))
+        } else {
+            // Simple field reference
+            let condition = Condition::new(left_side, operator, value);
+            Ok(ConditionGroup::single(condition))
+        }
+    }
+
+    fn parse_conditions_within_object(&self, conditions_str: &str) -> Result<ConditionGroup> {
+        // Parse conditions like: speedUp == true && speed < maxSpeed
+        let parts: Vec<&str> = conditions_str.split("&&").collect();
+
+        let mut conditions = Vec::new();
+        for part in parts {
+            let trimmed = part.trim();
+            let condition = self.parse_simple_condition(trimmed)?;
+            conditions.push(condition);
+        }
+
+        // Combine with AND
+        if conditions.is_empty() {
+            return Err(RuleEngineError::ParseError {
+                message: "No conditions found".to_string(),
+            });
+        }
+
+        let mut iter = conditions.into_iter();
+        let mut result = iter
+            .next()
+            .expect("Iterator cannot be empty after empty check");
+        for condition in iter {
+            result = ConditionGroup::and(result, condition);
+        }
+
+        Ok(result)
+    }
+
+    fn parse_simple_condition(&self, clause: &str) -> Result<ConditionGroup> {
+        // Parse simple condition like: speedUp == true or speed < maxSpeed
+        let captures = simple_condition_regex().captures(clause).ok_or_else(|| {
+            RuleEngineError::ParseError {
+                message: format!("Invalid simple condition format: {}", clause),
+            }
+        })?;
+
+        let field = captures.get(1).unwrap().to_string();
+        let operator_str = captures.get(2).unwrap();
+        let value_str = captures.get(3).unwrap().trim();
+
+        let operator =
+            Operator::from_str(operator_str).ok_or_else(|| RuleEngineError::InvalidOperator {
+                operator: operator_str.to_string(),
+            })?;
+
+        let value = self.parse_value(value_str)?;
+
+        let condition = Condition::new(field, operator, value);
+        Ok(ConditionGroup::single(condition))
+    }
+
+    fn parse_value(&self, value_str: &str) -> Result<Value> {
+        let trimmed = value_str.trim();
+
+        // Array literal: ["value1", "value2", 123]
+        if trimmed.starts_with('[') && trimmed.ends_with(']') {
+            return self.parse_array_literal(trimmed);
+        }
+
+        // String literal
+        if (trimmed.starts_with('"') && trimmed.ends_with('"'))
+            || (trimmed.starts_with('\'') && trimmed.ends_with('\''))
+        {
+            let unquoted = &trimmed[1..trimmed.len() - 1];
+            return Ok(Value::String(unquoted.to_string()));
+        }
+
+        // Boolean
+        if trimmed.eq_ignore_ascii_case("true") {
+            return Ok(Value::Boolean(true));
+        }
+        if trimmed.eq_ignore_ascii_case("false") {
+            return Ok(Value::Boolean(false));
+        }
+
+        // Null
+        if trimmed.eq_ignore_ascii_case("null") {
+            return Ok(Value::Null);
+        }
+
+        // Number (try integer first, then float)
+        if let Ok(int_val) = trimmed.parse::<i64>() {
+            return Ok(Value::Integer(int_val));
+        }
+
+        if let Ok(float_val) = trimmed.parse::<f64>() {
+            return Ok(Value::Number(float_val));
+        }
+
+        // Expression with arithmetic operators (e.g., "Order.quantity * Order.price")
+        // Detect: contains operators AND (contains field reference OR multiple tokens)
+        if self.is_expression(trimmed) {
+            return Ok(Value::Expression(trimmed.to_string()));
+        }
+
+        // Field reference (like User.Name)
+        if trimmed.contains('.') {
+            return Ok(Value::String(trimmed.to_string()));
+        }
+
+        // Variable reference (identifier without quotes or dots)
+        // This handles cases like: order_qty = moq
+        // where 'moq' should be evaluated as a variable reference at runtime
+        if self.is_identifier(trimmed) {
+            return Ok(Value::Expression(trimmed.to_string()));
+        }
+
+        // Default to string
+        Ok(Value::String(trimmed.to_string()))
+    }
+
+    /// Check if a string is a valid identifier (variable name)
+    /// Valid identifiers: alphanumeric + underscore, starts with letter or underscore
+    fn is_identifier(&self, s: &str) -> bool {
+        if s.is_empty() {
+            return false;
+        }
+        let first_char = s.chars().next().expect("Cannot be empty after empty check");
+        if !first_char.is_alphabetic() && first_char != '_' {
+            return false;
+        }
+
+        // First character must be letter or underscore
+        let first_char = s.chars().next().unwrap();
+        if !first_char.is_alphabetic() && first_char != '_' {
+            return false;
+        }
+
+        // Rest must be alphanumeric or underscore
+        s.chars().all(|c| c.is_alphanumeric() || c == '_')
+    }
+
+    /// Check if a string is an arithmetic expression
+    fn is_expression(&self, s: &str) -> bool {
+        // Check for arithmetic operators
+        let has_operator = s.contains('+')
+            || s.contains('-')
+            || s.contains('*')
+            || s.contains('/')
+            || s.contains('%');
+
+        // Check for field references (contains .)
+        let has_field_ref = s.contains('.');
+
+        // Check for multiple tokens (spaces between operands/operators)
+        let has_spaces = s.contains(' ');
+
+        // Expression if: has operator AND (has field reference OR has spaces)
+        has_operator && (has_field_ref || has_spaces)
+    }
+
+    /// Parse array literal like ["value1", "value2", 123]
+    fn parse_array_literal(&self, array_str: &str) -> Result<Value> {
+        let content = array_str.trim();
+        if !content.starts_with('[') || !content.ends_with(']') {
+            return Err(RuleEngineError::ParseError {
+                message: format!("Invalid array literal: {}", array_str),
+            });
+        }
+
+        let inner = content[1..content.len() - 1].trim();
+        if inner.is_empty() {
+            return Ok(Value::Array(vec![]));
+        }
+
+        // Split by comma, handling quoted strings
+        let mut elements = Vec::new();
+        let mut current_element = String::new();
+        let mut in_quotes = false;
+        let mut quote_char = ' ';
+
+        for ch in inner.chars() {
+            match ch {
+                '"' | '\'' if !in_quotes => {
+                    in_quotes = true;
+                    quote_char = ch;
+                    current_element.push(ch);
+                }
+                c if in_quotes && c == quote_char => {
+                    in_quotes = false;
+                    current_element.push(ch);
+                }
+                ',' if !in_quotes => {
+                    if !current_element.trim().is_empty() {
+                        elements.push(current_element.trim().to_string());
+                    }
+                    current_element.clear();
+                }
+                _ => {
+                    current_element.push(ch);
+                }
+            }
+        }
+
+        // Don't forget the last element
+        if !current_element.trim().is_empty() {
+            elements.push(current_element.trim().to_string());
+        }
+
+        // Parse each element
+        let mut array_values = Vec::new();
+        for elem in elements {
+            let value = self.parse_value(&elem)?;
+            array_values.push(value);
+        }
+
+        Ok(Value::Array(array_values))
+    }
+
+    fn parse_then_clause(&self, then_clause: &str) -> Result<Vec<ActionType>> {
+        let statements: Vec<&str> = then_clause
+            .split(';')
+            .map(|s| s.trim())
+            .filter(|s| !s.is_empty())
+            .collect();
+
+        let mut actions = Vec::new();
+
+        for statement in statements {
+            let action = self.parse_action_statement(statement)?;
+            actions.push(action);
+        }
+
+        Ok(actions)
+    }
+
+    fn parse_action_statement(&self, statement: &str) -> Result<ActionType> {
+        let trimmed = statement.trim();
+
+        // Method call: $Object.method(args)
+        if let Some(captures) = method_call_regex().captures(trimmed) {
+            let object = captures.get(1).unwrap().to_string();
+            let method = captures.get(2).unwrap().to_string();
+            let args_str = captures.get(3).unwrap();
+
+            let args = if args_str.trim().is_empty() {
+                Vec::new()
+            } else {
+                self.parse_method_args(args_str)?
+            };
+
+            return Ok(ActionType::MethodCall {
+                object,
+                method,
+                args,
+            });
+        }
+
+        // Check for compound assignment operators first (+=, -=, etc.)
+        if let Some(plus_eq_pos) = trimmed.find("+=") {
+            // Append operator: Field += Value
+            let field = trimmed[..plus_eq_pos].trim().to_string();
+            let value_str = trimmed[plus_eq_pos + 2..].trim();
+            let value = self.parse_value(value_str)?;
+
+            return Ok(ActionType::Append { field, value });
+        }
+
+        // Assignment: Field = Value
+        if let Some(eq_pos) = trimmed.find('=') {
+            let field = trimmed[..eq_pos].trim().to_string();
+            let value_str = trimmed[eq_pos + 1..].trim();
+            let value = self.parse_value(value_str)?;
+
+            return Ok(ActionType::Set { field, value });
+        }
+
+        // Function calls: update($Object), retract($Object), etc.
+        if let Some(captures) = function_binding_regex().captures(trimmed) {
+            let function_name = captures.get(1).unwrap();
+            let args_str = captures.get(2).unwrap_or("");
+
+            match function_name.to_lowercase().as_str() {
+                "retract" => {
+                    // Extract object name from $Object
+                    let object_name = if let Some(stripped) = args_str.strip_prefix('$') {
+                        stripped.to_string()
+                    } else {
+                        args_str.to_string()
+                    };
+                    Ok(ActionType::Retract {
+                        object: object_name,
+                    })
+                }
+                "log" => {
+                    let message = if args_str.is_empty() {
+                        "Log message".to_string()
+                    } else {
+                        let value = self.parse_value(args_str.trim())?;
+                        value.to_string()
+                    };
+                    Ok(ActionType::Log { message })
+                }
+                "activateagendagroup" | "activate_agenda_group" => {
+                    let agenda_group = if args_str.is_empty() {
+                        return Err(RuleEngineError::ParseError {
+                            message: "ActivateAgendaGroup requires agenda group name".to_string(),
+                        });
+                    } else {
+                        let value = self.parse_value(args_str.trim())?;
+                        match value {
+                            Value::String(s) => s,
+                            _ => value.to_string(),
+                        }
+                    };
+                    Ok(ActionType::ActivateAgendaGroup {
+                        group: agenda_group,
+                    })
+                }
+                "schedulerule" | "schedule_rule" => {
+                    // Parse delay and target rule: ScheduleRule(5000, "next-rule")
+                    let parts: Vec<&str> = args_str.split(',').collect();
+                    if parts.len() != 2 {
+                        return Err(RuleEngineError::ParseError {
+                            message: "ScheduleRule requires delay_ms and rule_name".to_string(),
+                        });
+                    }
+
+                    let delay_ms = self.parse_value(parts[0].trim())?;
+                    let rule_name = self.parse_value(parts[1].trim())?;
+
+                    let delay_ms = match delay_ms {
+                        Value::Integer(i) => i as u64,
+                        Value::Number(f) => f as u64,
+                        _ => {
+                            return Err(RuleEngineError::ParseError {
+                                message: "ScheduleRule delay_ms must be a number".to_string(),
+                            })
+                        }
+                    };
+
+                    let rule_name = match rule_name {
+                        Value::String(s) => s,
+                        _ => rule_name.to_string(),
+                    };
+
+                    Ok(ActionType::ScheduleRule {
+                        delay_ms,
+                        rule_name,
+                    })
+                }
+                "completeworkflow" | "complete_workflow" => {
+                    let workflow_id = if args_str.is_empty() {
+                        return Err(RuleEngineError::ParseError {
+                            message: "CompleteWorkflow requires workflow_id".to_string(),
+                        });
+                    } else {
+                        let value = self.parse_value(args_str.trim())?;
+                        match value {
+                            Value::String(s) => s,
+                            _ => value.to_string(),
+                        }
+                    };
+                    Ok(ActionType::CompleteWorkflow {
+                        workflow_name: workflow_id,
+                    })
+                }
+                "setworkflowdata" | "set_workflow_data" => {
+                    // Parse key=value: SetWorkflowData("key=value")
+                    let data_str = args_str.trim();
+
+                    // Simple key=value parsing
+                    let (key, value) = if let Some(eq_pos) = data_str.find('=') {
+                        let key = data_str[..eq_pos].trim().trim_matches('"');
+                        let value_str = data_str[eq_pos + 1..].trim();
+                        let value = self.parse_value(value_str)?;
+                        (key.to_string(), value)
+                    } else {
+                        return Err(RuleEngineError::ParseError {
+                            message: "SetWorkflowData data must be in key=value format".to_string(),
+                        });
+                    };
+
+                    Ok(ActionType::SetWorkflowData { key, value })
+                }
+                _ => {
+                    // All other functions become custom actions
+                    let params = if args_str.is_empty() {
+                        HashMap::new()
+                    } else {
+                        self.parse_function_args_as_params(args_str)?
+                    };
+
+                    Ok(ActionType::Custom {
+                        action_type: function_name.to_string(),
+                        params,
+                    })
+                }
+            }
+        } else {
+            // Custom statement
+            Ok(ActionType::Custom {
+                action_type: "statement".to_string(),
+                params: {
+                    let mut params = HashMap::new();
+                    params.insert("statement".to_string(), Value::String(trimmed.to_string()));
+                    params
+                },
+            })
+        }
+    }
+
+    fn parse_method_args(&self, args_str: &str) -> Result<Vec<Value>> {
+        if args_str.trim().is_empty() {
+            return Ok(Vec::new());
+        }
+
+        // Handle expressions like: $TestCar.Speed + $TestCar.SpeedIncrement
+        let mut args = Vec::new();
+        let parts: Vec<&str> = args_str.split(',').collect();
+
+        for part in parts {
+            let trimmed = part.trim();
+
+            // Handle arithmetic expressions
+            if trimmed.contains('+')
+                || trimmed.contains('-')
+                || trimmed.contains('*')
+                || trimmed.contains('/')
+            {
+                // For now, store as string - the engine will evaluate
+                args.push(Value::String(trimmed.to_string()));
+            } else {
+                args.push(self.parse_value(trimmed)?);
+            }
+        }
+
+        Ok(args)
+    }
+
+    /// Parse function arguments as parameters for custom actions
+    fn parse_function_args_as_params(&self, args_str: &str) -> Result<HashMap<String, Value>> {
+        let mut params = HashMap::new();
+
+        if args_str.trim().is_empty() {
+            return Ok(params);
+        }
+
+        // Parse positional parameters as numbered args
+        let parts: Vec<&str> = args_str.split(',').collect();
+        for (i, part) in parts.iter().enumerate() {
+            let trimmed = part.trim();
+            let value = self.parse_value(trimmed)?;
+
+            // Use simple numeric indexing - engine will resolve references dynamically
+            params.insert(i.to_string(), value);
+        }
+
+        Ok(params)
+    }
+
+    /// Parse stream pattern condition
+    /// Example: "login: LoginEvent from stream(\"logins\") over window(10 min, sliding)"
+    #[cfg(feature = "streaming")]
+    fn parse_stream_pattern_condition(&self, clause: &str) -> Result<ConditionGroup> {
+        use crate::engine::rule::{StreamWindow, StreamWindowType};
+        use crate::parser::grl::stream_syntax::parse_stream_pattern;
+
+        // Parse using nom parser
+        let parse_result =
+            parse_stream_pattern(clause).map_err(|e| RuleEngineError::ParseError {
+                message: format!("Failed to parse stream pattern: {:?}", e),
+            })?;
+
+        let (_, pattern) = parse_result;
+
+        // Convert WindowType from parser to StreamWindowType
+        let window = pattern.source.window.map(|w| StreamWindow {
+            duration: w.duration,
+            window_type: match w.window_type {
+                crate::parser::grl::stream_syntax::WindowType::Sliding => StreamWindowType::Sliding,
+                crate::parser::grl::stream_syntax::WindowType::Tumbling => {
+                    StreamWindowType::Tumbling
+                }
+                crate::parser::grl::stream_syntax::WindowType::Session { timeout } => {
+                    StreamWindowType::Session { timeout }
+                }
+            },
+        });
+
+        Ok(ConditionGroup::stream_pattern(
+            pattern.var_name,
+            pattern.event_type,
+            pattern.source.stream_name,
+            window,
+        ))
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::GRLParser;
+
+    #[test]
+    fn test_parse_simple_rule() {
+        let grl = r#"
+        rule "CheckAge" salience 10 {
+            when
+                User.Age >= 18
+            then
+                log("User is adult");
+        }
+        "#;
+
+        let rules = GRLParser::parse_rules(grl).unwrap();
+        assert_eq!(rules.len(), 1);
+        let rule = &rules[0];
+        assert_eq!(rule.name, "CheckAge");
+        assert_eq!(rule.salience, 10);
+        assert_eq!(rule.actions.len(), 1);
+    }
+
+    #[test]
+    fn test_parse_complex_condition() {
+        let grl = r#"
+        rule "ComplexRule" {
+            when
+                User.Age >= 18 && User.Country == "US"
+            then
+                User.Qualified = true;
+        }
+        "#;
+
+        let rules = GRLParser::parse_rules(grl).unwrap();
+        assert_eq!(rules.len(), 1);
+        let rule = &rules[0];
+        assert_eq!(rule.name, "ComplexRule");
+    }
+
+    #[test]
+    fn test_parse_new_syntax_with_parentheses() {
+        let grl = r#"
+        rule "Default Rule" salience 10 {
+            when
+                (user.age >= 18)
+            then
+                set(user.status, "approved");
+        }
+        "#;
+
+        let rules = GRLParser::parse_rules(grl).unwrap();
+        assert_eq!(rules.len(), 1);
+        let rule = &rules[0];
+        assert_eq!(rule.name, "Default Rule");
+        assert_eq!(rule.salience, 10);
+        assert_eq!(rule.actions.len(), 1);
+
+        // Check that the action is parsed as a Custom action (set is now custom)
+        match &rule.actions[0] {
+            crate::types::ActionType::Custom {
+                action_type,
+                params,
+            } => {
+                assert_eq!(action_type, "set");
+                assert_eq!(
+                    params.get("0"),
+                    Some(&crate::types::Value::String("user.status".to_string()))
+                );
+                assert_eq!(
+                    params.get("1"),
+                    Some(&crate::types::Value::String("approved".to_string()))
+                );
+            }
+            _ => panic!("Expected Custom action, got: {:?}", rule.actions[0]),
+        }
+    }
+
+    #[test]
+    fn test_parse_complex_nested_conditions() {
+        let grl = r#"
+        rule "Complex Business Rule" salience 10 {
+            when
+                (((user.vipStatus == true) && (order.amount > 500)) || ((date.isHoliday == true) && (order.hasCoupon == true)))
+            then
+                apply_discount(20000);
+        }
+        "#;
+
+        let rules = GRLParser::parse_rules(grl).unwrap();
+        assert_eq!(rules.len(), 1);
+        let rule = &rules[0];
+        assert_eq!(rule.name, "Complex Business Rule");
+        assert_eq!(rule.salience, 10);
+        assert_eq!(rule.actions.len(), 1);
+
+        // Check that the action is parsed as a Custom action (apply_discount is now custom)
+        match &rule.actions[0] {
+            crate::types::ActionType::Custom {
+                action_type,
+                params,
+            } => {
+                assert_eq!(action_type, "apply_discount");
+                assert_eq!(params.get("0"), Some(&crate::types::Value::Integer(20000)));
+            }
+            _ => panic!("Expected Custom action, got: {:?}", rule.actions[0]),
+        }
+    }
+
+    #[test]
+    fn test_parse_no_loop_attribute() {
+        let grl = r#"
+        rule "NoLoopRule" no-loop salience 15 {
+            when
+                User.Score < 100
+            then
+                set(User.Score, User.Score + 10);
+        }
+        "#;
+
+        let rules = GRLParser::parse_rules(grl).unwrap();
+        assert_eq!(rules.len(), 1);
+        let rule = &rules[0];
+        assert_eq!(rule.name, "NoLoopRule");
+        assert_eq!(rule.salience, 15);
+        assert!(rule.no_loop, "Rule should have no-loop=true");
+    }
+
+    #[test]
+    fn test_parse_no_loop_different_positions() {
+        // Test no-loop before salience
+        let grl1 = r#"
+        rule "Rule1" no-loop salience 10 {
+            when User.Age >= 18
+            then log("adult");
+        }
+        "#;
+
+        // Test no-loop after salience
+        let grl2 = r#"
+        rule "Rule2" salience 10 no-loop {
+            when User.Age >= 18
+            then log("adult");
+        }
+        "#;
+
+        let rules1 = GRLParser::parse_rules(grl1).unwrap();
+        let rules2 = GRLParser::parse_rules(grl2).unwrap();
+
+        assert_eq!(rules1.len(), 1);
+        assert_eq!(rules2.len(), 1);
+
+        assert!(rules1[0].no_loop, "Rule1 should have no-loop=true");
+        assert!(rules2[0].no_loop, "Rule2 should have no-loop=true");
+
+        assert_eq!(rules1[0].salience, 10);
+        assert_eq!(rules2[0].salience, 10);
+    }
+
+    #[test]
+    fn test_parse_without_no_loop() {
+        let grl = r#"
+        rule "RegularRule" salience 5 {
+            when
+                User.Active == true
+            then
+                log("active user");
+        }
+        "#;
+
+        let rules = GRLParser::parse_rules(grl).unwrap();
+        assert_eq!(rules.len(), 1);
+        let rule = &rules[0];
+        assert_eq!(rule.name, "RegularRule");
+        assert!(!rule.no_loop, "Rule should have no-loop=false by default");
+    }
+
+    #[test]
+    fn test_parse_exists_pattern() {
+        let grl = r#"
+        rule "ExistsRule" salience 20 {
+            when
+                exists(Customer.tier == "VIP")
+            then
+                System.premiumActive = true;
+        }
+        "#;
+
+        let rules = GRLParser::parse_rules(grl).unwrap();
+        assert_eq!(rules.len(), 1);
+        let rule = &rules[0];
+        assert_eq!(rule.name, "ExistsRule");
+        assert_eq!(rule.salience, 20);
+
+        // Check that condition is EXISTS pattern
+        match &rule.conditions {
+            crate::engine::rule::ConditionGroup::Exists(_) => {
+                // Test passes
+            }
+            _ => panic!(
+                "Expected EXISTS condition group, got: {:?}",
+                rule.conditions
+            ),
+        }
+    }
+
+    #[test]
+    fn test_parse_forall_pattern() {
+        let grl = r#"
+        rule "ForallRule" salience 15 {
+            when
+                forall(Order.status == "processed")
+            then
+                Shipping.enabled = true;
+        }
+        "#;
+
+        let rules = GRLParser::parse_rules(grl).unwrap();
+        assert_eq!(rules.len(), 1);
+        let rule = &rules[0];
+        assert_eq!(rule.name, "ForallRule");
+
+        // Check that condition is FORALL pattern
+        match &rule.conditions {
+            crate::engine::rule::ConditionGroup::Forall(_) => {
+                // Test passes
+            }
+            _ => panic!(
+                "Expected FORALL condition group, got: {:?}",
+                rule.conditions
+            ),
+        }
+    }
+
+    #[test]
+    fn test_parse_combined_patterns() {
+        let grl = r#"
+        rule "CombinedRule" salience 25 {
+            when
+                exists(Customer.tier == "VIP") && !exists(Alert.priority == "high")
+            then
+                System.vipMode = true;
+        }
+        "#;
+
+        let rules = GRLParser::parse_rules(grl).unwrap();
+        assert_eq!(rules.len(), 1);
+        let rule = &rules[0];
+        assert_eq!(rule.name, "CombinedRule");
+
+        // Check that condition is AND with EXISTS and NOT(EXISTS) patterns
+        match &rule.conditions {
+            crate::engine::rule::ConditionGroup::Compound {
+                left,
+                operator,
+                right,
+            } => {
+                assert_eq!(*operator, crate::types::LogicalOperator::And);
+
+                // Left should be EXISTS
+                match left.as_ref() {
+                    crate::engine::rule::ConditionGroup::Exists(_) => {
+                        // Expected
+                    }
+                    _ => panic!("Expected EXISTS in left side, got: {:?}", left),
+                }
+
+                // Right should be NOT(EXISTS)
+                match right.as_ref() {
+                    crate::engine::rule::ConditionGroup::Not(inner) => {
+                        match inner.as_ref() {
+                            crate::engine::rule::ConditionGroup::Exists(_) => {
+                                // Expected
+                            }
+                            _ => panic!("Expected EXISTS inside NOT, got: {:?}", inner),
+                        }
+                    }
+                    _ => panic!("Expected NOT in right side, got: {:?}", right),
+                }
+            }
+            _ => panic!("Expected compound condition, got: {:?}", rule.conditions),
+        }
+    }
+
+    #[test]
+    fn test_parse_in_operator() {
+        let grl = r#"
+        rule "TestInOperator" salience 75 {
+            when
+                User.role in ["admin", "moderator", "vip"]
+            then
+                User.access = "granted";
+        }
+        "#;
+
+        let rules = GRLParser::parse_rules(grl).unwrap();
+        assert_eq!(rules.len(), 1);
+        let rule = &rules[0];
+        assert_eq!(rule.name, "TestInOperator");
+        assert_eq!(rule.salience, 75);
+
+        // Check the condition
+        match &rule.conditions {
+            crate::engine::rule::ConditionGroup::Single(cond) => {
+                // The field might be in expression format
+                println!("Condition: {:?}", cond);
+                assert_eq!(cond.operator, crate::types::Operator::In);
+
+                // Value should be an array
+                match &cond.value {
+                    crate::types::Value::Array(arr) => {
+                        assert_eq!(arr.len(), 3);
+                        assert_eq!(arr[0], crate::types::Value::String("admin".to_string()));
+                        assert_eq!(arr[1], crate::types::Value::String("moderator".to_string()));
+                        assert_eq!(arr[2], crate::types::Value::String("vip".to_string()));
+                    }
+                    _ => panic!("Expected Array value, got {:?}", cond.value),
+                }
+            }
+            _ => panic!("Expected Single condition, got: {:?}", rule.conditions),
+        }
+    }
+
+    #[test]
+    fn test_parse_startswith_endswith_operators() {
+        let grl = r#"
+        rule "StringMethods" salience 50 {
+            when
+                User.email startsWith "admin@" &&
+                User.filename endsWith ".txt"
+            then
+                User.validated = true;
+        }
+        "#;
+
+        let rules = GRLParser::parse_rules(grl).unwrap();
+        assert_eq!(rules.len(), 1);
+        let rule = &rules[0];
+        assert_eq!(rule.name, "StringMethods");
+        assert_eq!(rule.salience, 50);
+
+        // Check the compound condition (AND)
+        match &rule.conditions {
+            crate::engine::rule::ConditionGroup::Compound {
+                left,
+                operator,
+                right,
+            } => {
+                assert_eq!(*operator, crate::types::LogicalOperator::And);
+
+                // Left should be startsWith
+                match left.as_ref() {
+                    crate::engine::rule::ConditionGroup::Single(cond) => {
+                        assert_eq!(cond.operator, crate::types::Operator::StartsWith);
+                    }
+                    _ => panic!("Expected Single condition for startsWith, got: {:?}", left),
+                }
+
+                // Right should be endsWith
+                match right.as_ref() {
+                    crate::engine::rule::ConditionGroup::Single(cond) => {
+                        assert_eq!(cond.operator, crate::types::Operator::EndsWith);
+                    }
+                    _ => panic!("Expected Single condition for endsWith, got: {:?}", right),
+                }
+            }
+            _ => panic!("Expected Compound condition, got: {:?}", rule.conditions),
+        }
+    }
+}

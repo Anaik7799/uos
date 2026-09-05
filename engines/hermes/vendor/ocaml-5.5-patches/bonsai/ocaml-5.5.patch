@@ -1,0 +1,1405 @@
+From e2f82b14ebf20c026dc5fddacf655b7855e6df1f Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Sun, 2 Aug 2026 23:42:19 +0200
+Subject: [PATCH 1/4] compat: rename effect identifiers for OCaml 5.5
+
+---
+ .../effect_sequencer/effect_sequencer.ml      | 18 ++--
+ .../effect_sequencer/effect_sequencer.mli     | 22 ++---
+ .../effects/bonsai_kernel_effects.ml          | 18 ++--
+ .../effects/bonsai_kernel_effects.mli         |  8 +-
+ .../fixed_point/bonsai_kernel_fixed_point.mli |  4 +-
+ .../id_gen/bonsai_kernel_id_gen.mli           |  2 +-
+ .../bonsai_kernel_one_at_a_time.ml            |  6 +-
+ .../bonsai_kernel_one_at_a_time.mli           | 10 +--
+ .../proc/bonsai_extra_proc.ml                 |  8 +-
+ .../proc/bonsai_extra_proc.mli                | 34 ++++----
+ .../bonsai_kernel_selection_state.mli         |  2 +-
+ .../throttle/bonsai_kernel_throttle.ml        | 14 ++--
+ .../throttle/bonsai_kernel_throttle.mli       |  6 +-
+ .../bonsai_kernel_value_utilities.mli         |  6 +-
+ .../wait_effect/bonsai_kernel_wait_effect.ml  |  2 +-
+ .../wait_effect/bonsai_kernel_wait_effect.mli |  4 +-
+ src/cont.ml                                   | 16 ++--
+ src/cont.mli                                  | 82 +++++++++----------
+ src/driver/bonsai_driver.ml                   |  4 +-
+ src/proc.ml                                   | 64 +++++++--------
+ src/proc/proc_intf.ml                         | 56 ++++++-------
+ src/stabilization_tracker.ml                  |  2 +-
+ 22 files changed, 194 insertions(+), 194 deletions(-)
+
+diff --git a/bonsai_kernel_components/effect_sequencer/effect_sequencer.ml b/bonsai_kernel_components/effect_sequencer/effect_sequencer.ml
+index c88eb11..c70e26c 100644
+--- a/bonsai_kernel_components/effect_sequencer/effect_sequencer.ml
++++ b/bonsai_kernel_components/effect_sequencer/effect_sequencer.ml
+@@ -2,15 +2,15 @@ open! Core
+ module Bonsai = Bonsai_proc
+ module Effect = Ui_effect
+ 
+-(* Between each sequenced effect, we keep an open-ended link to the next effect, whenever
+-   that may occur. Sequencing an effect involves hooking onto the most recent link, and
+-   then making a new link connected to the newly sequenced effect. Whenever an effect
+-   finishes, it triggers the link so that the next effect will start. The semantics are
++(* Between each sequenced effect_value, we keep an open-ended link to the next effect_value, whenever
++   that may occur. Sequencing an effect_value involves hooking onto the most recent link, and
++   then making a new link connected to the newly sequenced effect_value. Whenever an effect_value
++   finishes, it triggers the link so that the next effect_value will start. The semantics are
+    very similar to those of [Svar].
+ 
+-   If effect completes before the next effect is attached to its link, then we mark the
+-   link as having already been finished. When the next effect is sees this marking, it
+-   knows to begin immediately, rather than waiting for the previous effect to complete
++   If effect_value completes before the next effect_value is attached to its link, then we mark the
++   link as having already been finished. When the next effect_value is sees this marking, it
++   knows to begin immediately, rather than waiting for the previous effect_value to complete
+    (because it knows that it already has).
+ *)
+ 
+@@ -27,14 +27,14 @@ end
+ 
+ let create = Bonsai.Expert.thunk For_non_bonsai_users.create
+ 
+-let run (t : t) ~this_effect_doesn't_call_run:effect =
++let run (t : t) ~this_effect_doesn't_call_run:effect_value =
+   Effect.Private.make ~request:() ~evaluator:(fun callback ->
+     let previous = !t in
+     let current = { finished = false; upon_finish = (fun () -> ()) } in
+     let on_exn = Effect.Private.Callback.on_exn callback in
+     let run_effect () =
+       Effect.Expert.eval
+-        effect
++        effect_value
+         ~f:(fun result ->
+           Effect.Expert.handle
+             (Effect.Private.Callback.respond_to callback result)
+diff --git a/bonsai_kernel_components/effect_sequencer/effect_sequencer.mli b/bonsai_kernel_components/effect_sequencer/effect_sequencer.mli
+index 87c5b7f..89550c0 100644
+--- a/bonsai_kernel_components/effect_sequencer/effect_sequencer.mli
++++ b/bonsai_kernel_components/effect_sequencer/effect_sequencer.mli
+@@ -1,29 +1,29 @@
+ open! Core
+ module Effect = Ui_effect
+ 
+-(** A sequencer for ensuring that the current effect completes before the next one starts. *)
++(** A sequencer for ensuring that the current effect_value completes before the next one starts. *)
+ type t
+ 
+ (** Makes a new sequencer. *)
+ val create : Bonsai.graph -> t Bonsai.t
+ 
+-(** Produces an effect that first waits in line until all the effects in front of it are
+-    finished running, and then runs the provided effect.
++(** Produces an effect_value that first waits in line until all the effects in front of it are
++    finished running, and then runs the provided effect_value.
+ 
+     A couple points of emphasis:
+-    - Like the provided effect, using the resulting effect multiple times will do the
+-      side-effect multiple times (unlike [_ Deferred.t]).
+-    - The effect starts waiting in line _when the effect runs_, rather than when [run] is
+-      called. Consequently, using the effect multiple times means that each run of the
+-      effect will be waiting in line individually, rather than all of them sharing a spot
++    - Like the provided effect_value, using the resulting effect_value multiple times will do the
++      side-effect_value multiple times (unlike [_ Deferred.t]).
++    - The effect_value starts waiting in line _when the effect_value runs_, rather than when [run] is
++      called. Consequently, using the effect_value multiple times means that each run of the
++      effect_value will be waiting in line individually, rather than all of them sharing a spot
+       in line.
+ 
+-    Based on these points, you can think of [run] as a function that returns the an effect
+-    that is almost exactly like the effect it was given, but "more atomic", in that it
++    Based on these points, you can think of [run] as a function that returns the an effect_value
++    that is almost exactly like the effect_value it was given, but "more atomic", in that it
+     won't get interleaved with other effects sent through the same sequencer.
+ 
+     WARNING: It's very easy to "deadlock" with this function. Just call [run] within the
+-    effect that you pass to [run], using the same sequencer for both. The result is that
++    effect_value that you pass to [run], using the same sequencer for both. The result is that
+     the returned function will never complete. (although, it's worth noting, the rest of
+     your program won't be blocked from running). *)
+ val run : t -> this_effect_doesn't_call_run:'a Effect.t -> 'a Effect.t
+diff --git a/bonsai_kernel_components/effects/bonsai_kernel_effects.ml b/bonsai_kernel_components/effects/bonsai_kernel_effects.ml
+index 4b3bfed..3a14a00 100644
+--- a/bonsai_kernel_components/effects/bonsai_kernel_effects.ml
++++ b/bonsai_kernel_components/effects/bonsai_kernel_effects.ml
+@@ -3,7 +3,7 @@ module Bonsai = Bonsai.Cont
+ module Effect = Bonsai.Effect
+ open Bonsai.Let_syntax
+ 
+-let exactly_once effect graph =
++let exactly_once effect_value graph =
+   let has_run, set_has_run =
+     Bonsai.state ~equal:[%equal: Bool.t] false ~sexp_of_model:[%sexp_of: Bool.t] graph
+   in
+@@ -14,7 +14,7 @@ let exactly_once effect graph =
+       Bonsai.Edge.lifecycle
+         ~on_activate:
+           (let%map set_has_run
+-           and event = effect in
++           and event = effect_value in
+            Effect.Many [ set_has_run true; event ])
+         graph;
+       Bonsai.return ())
+@@ -22,15 +22,15 @@ let exactly_once effect graph =
+   ()
+ ;;
+ 
+-let exactly_once_with_value ?sexp_of_model ?equal effect graph =
++let exactly_once_with_value ?sexp_of_model ?equal effect_value graph =
+   let value, set_value = Bonsai.state_opt ?sexp_of_model ?equal graph in
+   let%sub () =
+     match%sub value with
+     | None ->
+       Bonsai.Edge.lifecycle
+         ~on_activate:
+-          (let%map set_value and effect in
+-           let%bind.Effect r = effect in
++          (let%map set_value and effect_value in
++           let%bind.Effect r = effect_value in
+            set_value (Some r))
+         graph;
+       Bonsai.return ()
+@@ -43,8 +43,8 @@ let bonk graph =
+   let (_ : unit Bonsai.t), bonk =
+     Bonsai.state_machine
+       ~default_model:()
+-      ~apply_action:(fun context () effect ->
+-        Bonsai.Apply_action_context.schedule_event context effect)
++      ~apply_action:(fun context () effect_value ->
++        Bonsai.Apply_action_context.schedule_event context effect_value)
+       graph
+   in
+   bonk
+@@ -59,11 +59,11 @@ let chain_incr_effects input graph =
+         match input, effect_fns with
+         | Bonsai.Computation_status.Inactive, _ | _, [] -> ()
+         | Active input, effect_fn :: dependents ->
+-          let effect =
++          let effect_value =
+             let%bind.Ui_effect () = effect_fn input in
+             Bonsai.Apply_action_context.inject ctx dependents
+           in
+-          Bonsai.Apply_action_context.schedule_event ctx effect)
++          Bonsai.Apply_action_context.schedule_event ctx effect_value)
+       graph
+   in
+   inject
+diff --git a/bonsai_kernel_components/effects/bonsai_kernel_effects.mli b/bonsai_kernel_components/effects/bonsai_kernel_effects.mli
+index 900ee2c..ac6992c 100644
+--- a/bonsai_kernel_components/effects/bonsai_kernel_effects.mli
++++ b/bonsai_kernel_components/effects/bonsai_kernel_effects.mli
+@@ -7,7 +7,7 @@ module Effect := Bonsai.Effect
+ val exactly_once : unit Effect.t Bonsai.t -> Bonsai.graph -> unit
+ 
+ (** As its name implies, [exactly_once] runs the event passed in via [Bonsai.t] exactly
+-    once. The return value is stored and returned. [None] is returned while the effect is
++    once. The return value is stored and returned. [None] is returned while the effect_value is
+     executing. *)
+ val exactly_once_with_value
+   :  ?sexp_of_model:('a -> Sexp.t)
+@@ -16,14 +16,14 @@ val exactly_once_with_value
+   -> Bonsai.graph
+   -> 'a option Bonsai.t
+ 
+-(** [bonk] returns a function which takes an effect and transforms it into the same
+-    effect, but it will be enqueued onto the Bonsai action queue instead of running
++(** [bonk] returns a function which takes an effect_value and transforms it into the same
++    effect_value, but it will be enqueued onto the Bonsai action queue instead of running
+     immediately. This can be useful in niche situations where you have a batch of effects
+     that would otherwise interleave and have bad performance behavior. *)
+ val bonk : Bonsai.graph -> (unit Effect.t -> unit Effect.t) Bonsai.t
+ 
+ (** [chain_incr_effects input effects] allows you to sequentially schedule effects that
+-    depend on a common ['a Bonsai.t], while ensuring that no effect will receive a stale
++    depend on a common ['a Bonsai.t], while ensuring that no effect_value will receive a stale
+     input. This function short-circuits if the input becomes inactive while actions are
+     still being applied.
+ 
+diff --git a/bonsai_kernel_components/fixed_point/bonsai_kernel_fixed_point.mli b/bonsai_kernel_components/fixed_point/bonsai_kernel_fixed_point.mli
+index 682b050..bc3e448 100644
+--- a/bonsai_kernel_components/fixed_point/bonsai_kernel_fixed_point.mli
++++ b/bonsai_kernel_components/fixed_point/bonsai_kernel_fixed_point.mli
+@@ -18,8 +18,8 @@ val with_inject_fixed_point
+   -> Bonsai.graph
+   -> 'result Bonsai.t
+ 
+-(** [with_self_effect] gives access to an effect which produces the output ['a] within the
+-    body of [f]. This can be useful if you'd like to install an effect handling function
++(** [with_self_effect] gives access to an effect_value which produces the output ['a] within the
++    body of [f]. This can be useful if you'd like to install an effect_value handling function
+     on [f] whose logic depends on its current value. *)
+ val with_self_effect
+   :  ?sexp_of_model:('a -> Sexp.t)
+diff --git a/bonsai_kernel_components/id_gen/bonsai_kernel_id_gen.mli b/bonsai_kernel_components/id_gen/bonsai_kernel_id_gen.mli
+index af92a8f..2f998d0 100644
+--- a/bonsai_kernel_components/id_gen/bonsai_kernel_id_gen.mli
++++ b/bonsai_kernel_components/id_gen/bonsai_kernel_id_gen.mli
+@@ -2,7 +2,7 @@ open! Core
+ module Bonsai := Bonsai.Cont
+ 
+ (** Id_gen builds a component which generates unique identifiers by starting at 0 and
+-    incrementing by one every time that the effect is called.
++    incrementing by one every time that the effect_value is called.
+ 
+     The functor is parameteraized on the size of integer (int vs int63 vs int64), and it's
+     also a generative functor, so invoking the functor multiple times times will mint new
+diff --git a/bonsai_kernel_components/one_at_a_time/bonsai_kernel_one_at_a_time.ml b/bonsai_kernel_components/one_at_a_time/bonsai_kernel_one_at_a_time.ml
+index 75f8a8c..628c34c 100644
+--- a/bonsai_kernel_components/one_at_a_time/bonsai_kernel_one_at_a_time.ml
++++ b/bonsai_kernel_components/one_at_a_time/bonsai_kernel_one_at_a_time.ml
+@@ -24,7 +24,7 @@ module Lock_action = struct
+   [@@deriving sexp]
+ end
+ 
+-let effect f graph =
++let effect_value f graph =
+   let status, inject_status =
+     Bonsai.actor
+       graph
+@@ -43,7 +43,7 @@ let effect f graph =
+           Busy, response
+         | Release -> Idle, true)
+   in
+-  let effect =
++  let effect_value =
+     let%arr inject_status and f in
+     let open Ui_effect.Let_syntax in
+     fun query ->
+@@ -59,5 +59,5 @@ let effect f graph =
+          | Ok result -> Response.Result result
+          | Error exn -> Response.Exn exn)
+   in
+-  effect, status
++  effect_value, status
+ ;;
+diff --git a/bonsai_kernel_components/one_at_a_time/bonsai_kernel_one_at_a_time.mli b/bonsai_kernel_components/one_at_a_time/bonsai_kernel_one_at_a_time.mli
+index b6fe48c..411217e 100644
+--- a/bonsai_kernel_components/one_at_a_time/bonsai_kernel_one_at_a_time.mli
++++ b/bonsai_kernel_components/one_at_a_time/bonsai_kernel_one_at_a_time.mli
+@@ -17,11 +17,11 @@ module Response : sig
+   [@@deriving sexp_of]
+ end
+ 
+-(** Turns the input effect into an effect which ensures that only one instance of it is
+-    running at a time. If another instance of the effect is already running, then [Busy]
+-    is returned instead of running the effect. In addition, it also returns a value
+-    representing whether or not an instance of the effect is in progress. *)
+-val effect
++(** Turns the input effect_value into an effect_value which ensures that only one instance of it is
++    running at a time. If another instance of the effect_value is already running, then [Busy]
++    is returned instead of running the effect_value. In addition, it also returns a value
++    representing whether or not an instance of the effect_value is in progress. *)
++val effect_value
+   :  ('query -> 'response Ui_effect.t) Bonsai.t
+   -> Bonsai.graph
+   -> ('query -> 'response Response.t Ui_effect.t) Bonsai.t * Status.t Bonsai.t
+diff --git a/bonsai_kernel_components/proc/bonsai_extra_proc.ml b/bonsai_kernel_components/proc/bonsai_extra_proc.ml
+index e7339c8..0de1943 100644
+--- a/bonsai_kernel_components/proc/bonsai_extra_proc.ml
++++ b/bonsai_kernel_components/proc/bonsai_extra_proc.ml
+@@ -20,8 +20,8 @@ let pipe ?sexp_of graph =
+   Bonsai.both enqueue dequeue
+ ;;
+ 
+-let exactly_once effect graph =
+-  Bonsai_extra.Effects.exactly_once effect graph;
++let exactly_once effect_value graph =
++  Bonsai_extra.Effects.exactly_once effect_value graph;
+   Bonsai.return ()
+ ;;
+ 
+@@ -151,8 +151,8 @@ let value_stability = Bonsai_extra.Value_stability.value_stability
+ module One_at_a_time = struct
+   include Bonsai_extra.One_at_a_time
+ 
+-  let effect send_effect graph =
+-    let send, status = effect send_effect graph in
++  let effect_value send_effect graph =
++    let send, status = effect_value send_effect graph in
+     Bonsai.both send status
+   ;;
+ end
+diff --git a/bonsai_kernel_components/proc/bonsai_extra_proc.mli b/bonsai_kernel_components/proc/bonsai_extra_proc.mli
+index 908a4a7..407b458 100644
+--- a/bonsai_kernel_components/proc/bonsai_extra_proc.mli
++++ b/bonsai_kernel_components/proc/bonsai_extra_proc.mli
+@@ -19,8 +19,8 @@ val with_inject_fixed_point
+   -> Bonsai.graph
+   -> 'result Bonsai.t
+ 
+-(** [with_self_effect] gives access to an effect which produces the output ['a] within the
+-    body of [f]. This can be useful if you'd like to install an effect handling function
++(** [with_self_effect] gives access to an effect_value which produces the output ['a] within the
++    body of [f]. This can be useful if you'd like to install an effect_value handling function
+     on [f] whose logic depends on its current value. *)
+ val with_self_effect
+   :  ?sexp_of_model:('a -> Sexp.t)
+@@ -42,7 +42,7 @@ val pipe
+ val exactly_once : unit Effect.t Bonsai.t -> Bonsai.graph -> unit Bonsai.t
+ 
+ (** As its name implies, [exactly_once] runs the event passed in via [Bonsai.t] exactly
+-    once. The return value is stored and returned. [None] is returned while the effect is
++    once. The return value is stored and returned. [None] is returned while the effect_value is
+     executing. *)
+ val exactly_once_with_value
+   :  ?sexp_of_model:('a -> Sexp.t)
+@@ -51,10 +51,10 @@ val exactly_once_with_value
+   -> Bonsai.graph
+   -> 'a option Bonsai.t
+ 
+-(** Extends a Bonsai.t by providing a setter effect that can be used to override the
++(** Extends a Bonsai.t by providing a setter effect_value that can be used to override the
+     returned value. The computation will initially evaluate to the input [Bonsai.t]. Once
+-    the returned overriding effect is dispatched at least once, the computation will
+-    evaluate to the override value provided. The effect can be scheduled more than once to
++    the returned overriding effect_value is dispatched at least once, the computation will
++    evaluate to the override value provided. The effect_value can be scheduled more than once to
+     update the override. Use with [Bonsai.with_model_resetter] in order to revert the
+     override. *)
+ val value_with_override
+@@ -118,7 +118,7 @@ val state_dynamic_model
+   -> ('model * ('model -> unit Effect.t)) Bonsai.t
+ 
+ (** Id_gen builds a component which generates unique identifiers by starting at 0 and
+-    incrementing by one every time that the effect is called.
++    incrementing by one every time that the effect_value is called.
+ 
+     The functor is parameteraized on the size of integer (int vs int63 vs int64), and it's
+     also a generative functor, so invoking the functor multiple times times will mint new
+@@ -226,27 +226,27 @@ module One_at_a_time : sig
+   module Status = Bonsai_extra.One_at_a_time.Status
+   module Response = Bonsai_extra.One_at_a_time.Response
+ 
+-  (** Turns the input effect into an effect which ensures that only one instance of it is
+-      running at a time. If another instance of the effect is already running, then [Busy]
+-      is returned instead of running the effect. In addition, it also returns a value
+-      representing whether or not an instance of the effect is in progress.
++  (** Turns the input effect_value into an effect_value which ensures that only one instance of it is
++      running at a time. If another instance of the effect_value is already running, then [Busy]
++      is returned instead of running the effect_value. In addition, it also returns a value
++      representing whether or not an instance of the effect_value is in progress.
+ 
+-      CAREFUL: If the effect function raises while it is executing, then the status will
+-      stay at busy, since the computation is unable to witness that the effect completed. *)
+-  val effect
++      CAREFUL: If the effect_value function raises while it is executing, then the status will
++      stay at busy, since the computation is unable to witness that the effect_value completed. *)
++  val effect_value
+     :  ('query -> 'response Effect.t) Bonsai.t
+     -> Bonsai.graph
+     -> (('query -> 'response Response.t Effect.t) * Status.t) Bonsai.t
+ end
+ 
+-(** [bonk] returns a function which takes an effect and transforms it into the same
+-    effect, but it will be enqueued onto the Bonsai action queue instead of running
++(** [bonk] returns a function which takes an effect_value and transforms it into the same
++    effect_value, but it will be enqueued onto the Bonsai action queue instead of running
+     immediately. This can be useful in niche situations where you have a batch of effects
+     that would otherwise interleave and have bad performance behavior. *)
+ val bonk : Bonsai.graph -> (unit Effect.t -> unit Effect.t) Bonsai.t
+ 
+ (** [chain_incr_effects input effects] allows you to sequentially schedule effects that
+-    depend on a common ['a Bonsai.t], while ensuring that no effect will receive a stale
++    depend on a common ['a Bonsai.t], while ensuring that no effect_value will receive a stale
+     input. This function short-circuits if the input becomes inactive while actions are
+     still being applied.
+ 
+diff --git a/bonsai_kernel_components/selection_list/bonsai_kernel_selection_state.mli b/bonsai_kernel_components/selection_list/bonsai_kernel_selection_state.mli
+index fee5924..653ccf7 100644
+--- a/bonsai_kernel_components/selection_list/bonsai_kernel_selection_state.mli
++++ b/bonsai_kernel_components/selection_list/bonsai_kernel_selection_state.mli
+@@ -11,7 +11,7 @@ open! Core
+     When the list of items changes, the selection is kept if it is still present;
+     otherwise it is recomputed by a user-provided [selection_policy]. *)
+ module One_of_many : sig
+-  (** The current selected item and an effect to set the desired selection. The setter
++  (** The current selected item and an effect_value to set the desired selection. The setter
+       updates the stored selection immediately; the displayed selection will follow the
+       rules described above. *)
+   type 'a t = 'a Bonsai.t * ('a -> unit Bonsai.Effect.t) Bonsai.t
+diff --git a/bonsai_kernel_components/throttle/bonsai_kernel_throttle.ml b/bonsai_kernel_components/throttle/bonsai_kernel_throttle.ml
+index 68a168a..95db37e 100644
+--- a/bonsai_kernel_components/throttle/bonsai_kernel_throttle.ml
++++ b/bonsai_kernel_components/throttle/bonsai_kernel_throttle.ml
+@@ -27,7 +27,7 @@ end
+ let apply_when_active
+   ~(ctx : (_ Action.t, unit) Bonsai.Apply_action_context.t)
+   ~sleep
+-  ~effect
++  ~effect_value
+   (model : _ Model.t)
+   (action : _ Action.t)
+   : _ Model.t
+@@ -35,7 +35,7 @@ let apply_when_active
+   let perform_effect input =
+     let run_effect_and_wait =
+       let open Bonsai.Effect.Let_syntax in
+-      let%bind output = effect input in
++      let%bind output = effect_value input in
+       let%bind () = Bonsai.Apply_action_context.inject ctx (Resolve_effect output) in
+       let%bind () = sleep in
+       let%bind () = Bonsai.Apply_action_context.inject ctx Finish_sleep in
+@@ -68,21 +68,21 @@ let apply_when_inactive (model : _ Model.t) (action : _ Action.t) : _ Model.t =
+ 
+ let apply_action ctx input model action =
+   match input with
+-  | Bonsai.Computation_status.Active (sleep_for, effect) ->
++  | Bonsai.Computation_status.Active (sleep_for, effect_value) ->
+     let sleep =
+       Bonsai.Time_source.sleep (Bonsai.Apply_action_context.time_source ctx) sleep_for
+     in
+-    apply_when_active ~ctx ~sleep ~effect model action
++    apply_when_active ~ctx ~sleep ~effect_value model action
+   | Inactive -> apply_when_inactive model action
+ ;;
+ 
+-let effect_throttle input ~equal ~wait ~effect graph =
++let effect_throttle input ~equal ~wait ~effect_value graph =
+   let state, inject_action =
+     Bonsai.state_machine_with_input
+       ~default_model:Model.default
+       ~reset:(fun _ _ -> Model.default)
+       ~apply_action
+-      (Bonsai.both (Bonsai.return wait) effect)
++      (Bonsai.both (Bonsai.return wait) effect_value)
+       graph
+   in
+   let callback =
+@@ -98,7 +98,7 @@ let effect_throttle input ~equal ~wait ~effect graph =
+ 
+ let value_throttle ~wait ~equal value graph =
+   let opt =
+-    effect_throttle ~effect:(Bonsai.return Effect.return) ~equal ~wait value graph
++    effect_throttle ~effect_value:(Bonsai.return Effect.return) ~equal ~wait value graph
+   in
+   let%arr value and opt in
+   Option.value opt ~default:value
+diff --git a/bonsai_kernel_components/throttle/bonsai_kernel_throttle.mli b/bonsai_kernel_components/throttle/bonsai_kernel_throttle.mli
+index f71deae..a46f971 100644
+--- a/bonsai_kernel_components/throttle/bonsai_kernel_throttle.mli
++++ b/bonsai_kernel_components/throttle/bonsai_kernel_throttle.mli
+@@ -1,9 +1,9 @@
+ open! Core
+ open! Bonsai
+ 
+-(** [effect_throttle input ~effect] performs [effect value] every time the value is
++(** [effect_throttle input ~effect_value] performs [effect_value value] every time the value is
+     changed, but throttles the effects to be dispatched at most [wait] after they are
+-    resolved. The effect is performed on both the leading and trailing edge.
++    resolved. The effect_value is performed on both the leading and trailing edge.
+ 
+     Common use cases include:
+     - Search inputs: Trigger API calls as users type, without overwhelming your backend
+@@ -18,7 +18,7 @@ val effect_throttle
+   :  'input Bonsai.t
+   -> equal:('input -> 'input -> bool)
+   -> wait:Time_ns.Span.t
+-  -> effect:('input -> 'output Effect.t) Bonsai.t
++  -> effect_value:('input -> 'output Effect.t) Bonsai.t
+   -> Bonsai.graph
+   -> 'output option Bonsai.t
+ 
+diff --git a/bonsai_kernel_components/value_utilities/bonsai_kernel_value_utilities.mli b/bonsai_kernel_components/value_utilities/bonsai_kernel_value_utilities.mli
+index f6c358f..284adcf 100644
+--- a/bonsai_kernel_components/value_utilities/bonsai_kernel_value_utilities.mli
++++ b/bonsai_kernel_components/value_utilities/bonsai_kernel_value_utilities.mli
+@@ -2,10 +2,10 @@ open! Core
+ module Bonsai := Bonsai.Cont
+ module Effect := Bonsai.Effect
+ 
+-(** Extends a Bonsai.t by providing a setter effect that can be used to override the
++(** Extends a Bonsai.t by providing a setter effect_value that can be used to override the
+     returned value. The computation will initially evaluate to the input [Bonsai.t]. Once
+-    the returned overriding effect is dispatched at least once, the computation will
+-    evaluate to the override value provided. The effect can be scheduled more than once to
++    the returned overriding effect_value is dispatched at least once, the computation will
++    evaluate to the override value provided. The effect_value can be scheduled more than once to
+     update the override. Use with [Bonsai.with_model_resetter_n] in order to revert the
+     override (see the corresponding test in test/test_cont.ml for an example). *)
+ val value_with_override
+diff --git a/bonsai_kernel_components/wait_effect/bonsai_kernel_wait_effect.ml b/bonsai_kernel_components/wait_effect/bonsai_kernel_wait_effect.ml
+index 78a157d..94a9a29 100644
+--- a/bonsai_kernel_components/wait_effect/bonsai_kernel_wait_effect.ml
++++ b/bonsai_kernel_components/wait_effect/bonsai_kernel_wait_effect.ml
+@@ -29,7 +29,7 @@ let upon condition graph =
+     not (List.is_empty callbacks)
+   in
+   (* Because we don't have a version of [on_change] that allows us to optionally schedule
+-     an effect, using the lower-level [after_display] should result in fewer effects being
++     an effect_value, using the lower-level [after_display] should result in fewer effects being
+      scheduled. *)
+   let after_display =
+     let%arr inject and condition and has_pending_callbacks in
+diff --git a/bonsai_kernel_components/wait_effect/bonsai_kernel_wait_effect.mli b/bonsai_kernel_components/wait_effect/bonsai_kernel_wait_effect.mli
+index e302f2c..5c8ddb1 100644
+--- a/bonsai_kernel_components/wait_effect/bonsai_kernel_wait_effect.mli
++++ b/bonsai_kernel_components/wait_effect/bonsai_kernel_wait_effect.mli
+@@ -1,7 +1,7 @@
+ open! Core
+ 
+-(** [upon condition graph] returns an effect that resolves whenever [condition] is [true].
++(** [upon condition graph] returns an effect_value that resolves whenever [condition] is [true].
+ 
+-    If the condition is already true at the time the effect is scheduled, it will resolve
++    If the condition is already true at the time the effect_value is scheduled, it will resolve
+     immediately. Otherwise it will resolve the next time the condition becomes true. *)
+ val upon : bool Bonsai.t -> Bonsai.graph -> unit Bonsai.Effect.t Bonsai.t
+diff --git a/src/cont.ml b/src/cont.ml
+index 7f727ac..6b3383b 100644
+--- a/src/cont.ml
++++ b/src/cont.ml
+@@ -960,10 +960,10 @@ let with_model_resetter_n
+     -> unpacked * _
+   =
+   fun ?(here = Stdlib.Lexing.dummy_pos) ~f ~n graph ->
+-  let packed, effect =
++  let packed, effect_value =
+     with_model_resetter ~here graph ~f:(fun graph -> Autopack.pack ~here ~n (f graph))
+   in
+-  Autopack.unpack ~here ~n packed, effect
++  Autopack.unpack ~here ~n packed, effect_value
+ ;;
+ 
+ let with_model_resetter' ?(here = Stdlib.Lexing.dummy_pos) ~f graph =
+@@ -1232,7 +1232,7 @@ module Edge = struct
+       ?equal_result
+       starting
+       value
+-      ~effect
++      ~effect_value
+       graph
+       =
+       Proc.Edge.Poll.effect_on_change
+@@ -1243,7 +1243,7 @@ module Edge = struct
+         ?equal_result
+         starting
+         value
+-        ~effect
++        ~effect_value
+       |> perform ~here graph
+     ;;
+ 
+@@ -1252,13 +1252,13 @@ module Edge = struct
+       ?sexp_of_model
+       ?equal
+       starting
+-      ~effect
++      ~effect_value
+       graph
+       =
+       perform
+         ~here
+         graph
+-        (Proc.Edge.Poll.manual_refresh ~here ?sexp_of_model ?equal starting ~effect)
++        (Proc.Edge.Poll.manual_refresh ~here ?sexp_of_model ?equal starting ~effect_value)
+     ;;
+ 
+     let manual_refresh
+@@ -1266,10 +1266,10 @@ module Edge = struct
+       ?sexp_of_model
+       ?equal
+       starting
+-      ~effect
++      ~effect_value
+       graph
+       =
+-      manual_refresh__for_proc2 ~here ?sexp_of_model ?equal starting ~effect graph
++      manual_refresh__for_proc2 ~here ?sexp_of_model ?equal starting ~effect_value graph
+       |> split ~here graph
+     ;;
+   end
+diff --git a/src/cont.mli b/src/cont.mli
+index 3f7581b..120eb06 100644
+--- a/src/cont.mli
++++ b/src/cont.mli
+@@ -119,7 +119,7 @@ val transpose_opt : ?here:Stdlib.Lexing.position -> 'a t option -> 'a option t
+ 
+     You must provide a "starting" value for the state.
+ 
+-    [?reset] is called when the reset effect of a grandparent [Bonsai.with_model_resetter]
++    [?reset] is called when the reset effect_value of a grandparent [Bonsai.with_model_resetter]
+     is called, and allows you to decide what to do when the model is reset. It defaults to
+     a function that ignores the current model and returns the "starting" value.
+ 
+@@ -187,7 +187,7 @@ module Apply_action_context : sig
+       things that are only legal inside of [apply_action]:
+       1. Access the application time source directly. This is most likely useful to read
+          the current time or sleep for some time span
+-      2. "inject" a value corresponding to the state-machine's action type into an effect
++      2. "inject" a value corresponding to the state-machine's action type into an effect_value
+          that can be scheduled.
+       3. Directly schedule effects. *)
+ 
+@@ -204,7 +204,7 @@ type ('model, 'action, 'response) resetter :=
+ (** [Bonsai.state_machine] allows you to build a state machine whose state is initialized
+     to whatever you pass to [default_model], and the state machine transitions states
+     using the [apply_action] function. The current state and a function for injecting an
+-    action into a schedulable effect are returned.
++    action into a schedulable effect_value are returned.
+ 
+     [?sexp_of_action] is used to provide more information to debugging tools.
+ 
+@@ -298,7 +298,7 @@ val actor_with_input
+ 
+ module Actor (Action : T1) : sig
+   (** Unlike the traditional [actor] and [actor_with_input] functions, the [Actor] functor
+-      allows the type of the value returned inside of the effect to change based on which
++      allows the type of the value returned inside of the effect_value to change based on which
+       action is being handled.
+ 
+       Example:
+@@ -567,10 +567,10 @@ val with_model_resetter_n'
+     you to inspect the ['a] value from inside of a [let%bind.Effect] chain which might
+     have been changed by previous effects. It is analogous to [peek] on other abstract
+     data types, including [Deferred.t]s and [Mvar.t]s, but more constrained in that you
+-    still can only read from within an effect bind.
++    still can only read from within an effect_value bind.
+ 
+-    The ['a Computation_state.t] returned by the effect means that if the value was
+-    inactive at the time it is peeked, then the effect will be unable to retrieve it. *)
++    The ['a Computation_state.t] returned by the effect_value means that if the value was
++    inactive at the time it is peeked, then the effect_value will be unable to retrieve it. *)
+ val peek
+   :  ?here:Stdlib.Lexing.position
+   -> 'a t
+@@ -603,10 +603,10 @@ module Clock : sig
+       the time-span argument.
+ 
+       [when_to_start_next_effect] has the following behavior
+-      | `Wait_period_after_previous_effect_starts_blocking -> If the previous effect takes longer than [period], we wait until it finishes before starting the next effect.
+-      | `Wait_period_after_previous_effect_finishes_blocking -> The effect will always be executed [period] after the previous effect finishes.
+-      | `Every_multiple_of_period_non_blocking -> Executes the effect at a regular interval.
+-      | `Every_multiple_of_period_blocking -> Same as `Every_multiple_of_second, but skips a beat if the previous effect is still running.
++      | `Wait_period_after_previous_effect_starts_blocking -> If the previous effect_value takes longer than [period], we wait until it finishes before starting the next effect_value.
++      | `Wait_period_after_previous_effect_finishes_blocking -> The effect_value will always be executed [period] after the previous effect_value finishes.
++      | `Every_multiple_of_period_non_blocking -> Executes the effect_value at a regular interval.
++      | `Every_multiple_of_period_blocking -> Same as `Every_multiple_of_second, but skips a beat if the previous effect_value is still running.
+       v} *)
+   val every
+     :  ?here:Stdlib.Lexing.position
+@@ -622,13 +622,13 @@ module Clock : sig
+     -> graph
+     -> unit
+ 
+-  (** Produces an effect that can be used to query the current time. *)
++  (** Produces an effect_value that can be used to query the current time. *)
+   val get_current_time : ?here:Stdlib.Lexing.position -> graph -> Time_ns.t Effect.t t
+ 
+-  (** Produces an effect that can be used to sleep for some amount of time. *)
++  (** Produces an effect_value that can be used to sleep for some amount of time. *)
+   val sleep : ?here:Stdlib.Lexing.position -> graph -> (Time_ns.Span.t -> unit Effect.t) t
+ 
+-  (** Produces an effect that can be used to sleep until some timestamp. *)
++  (** Produces an effect_value that can be used to sleep until some timestamp. *)
+   val until : ?here:Stdlib.Lexing.position -> graph -> (Time_ns.t -> unit Effect.t) t
+ 
+   module Expert : sig
+@@ -640,7 +640,7 @@ module Clock : sig
+ end
+ 
+ module Edge : sig
+-  (** [Bonsai.Edge.on_change] is used to schedule an effect whenever some [Bonsai.t]
++  (** [Bonsai.Edge.on_change] is used to schedule an effect_value whenever some [Bonsai.t]
+       changes. The [equal] function is used to determine if a value is the same or not.
+       The callback is _always_ invoked the first time that this component is becomes
+       active. The callback is invoked at most once per frame and will be called with the
+@@ -676,14 +676,14 @@ module Edge : sig
+ 
+   (** [Bonsai.Edge.lifecycle] is used to add effects to Bonsai's lifecycle events. Using
+       this, you can witness component activation and deactivation, as well as schedule an
+-      effect.
++      effect_value.
+ 
+       Most lifecycle events are run at the end of every frame, so incremental updates and
+       DOM updates will be run before those lifecycle events.
+ 
+       [before_display] lifecycle events are the exception; they are run before the view is
+       updated. Changes made in [before_display] effects can trigger other [before_display]
+-      effects to trigger in the same frame, but each individual effect can only run at
++      effects to trigger in the same frame, but each individual effect_value can only run at
+       most once per frame.
+ 
+       Lifecycle events are run in the following order:
+@@ -701,7 +701,7 @@ module Edge : sig
+     -> graph
+     -> unit
+ 
+-  (** Just like [lifecycle] except that each effect is optional *)
++  (** Just like [lifecycle] except that each effect_value is optional *)
+   val lifecycle'
+     :  ?here:Stdlib.Lexing.position
+     -> ?on_activate:unit Effect.t option t
+@@ -711,31 +711,31 @@ module Edge : sig
+     -> graph
+     -> unit
+ 
+-  (** [before_display] will schedule an effect right before the dom is updated. *)
++  (** [before_display] will schedule an effect_value right before the dom is updated. *)
+   val before_display : ?here:Stdlib.Lexing.position -> unit Effect.t t -> graph -> unit
+ 
+-  (** Just like [before_display] except that the effect is optional *)
++  (** Just like [before_display] except that the effect_value is optional *)
+   val before_display'
+     :  ?here:Stdlib.Lexing.position
+     -> unit Effect.t option t
+     -> graph
+     -> unit
+ 
+-  (** [after_display] will schedule an effect at the end of every frame. *)
++  (** [after_display] will schedule an effect_value at the end of every frame. *)
+   val after_display : ?here:Stdlib.Lexing.position -> unit Effect.t t -> graph -> unit
+ 
+-  (** Just like [after_display] except that the effect is optional *)
++  (** Just like [after_display] except that the effect_value is optional *)
+   val after_display'
+     :  ?here:Stdlib.Lexing.position
+     -> unit Effect.t option t
+     -> graph
+     -> unit
+ 
+-  (** [wait_before_display] gives you an effect that will block until the beginning of the
++  (** [wait_before_display] gives you an effect_value that will block until the beginning of the
+       next frame. *)
+   val wait_before_display : ?here:Stdlib.Lexing.position -> graph -> unit Effect.t t
+ 
+-  (** [wait_after_display] gives you an effect that will block until the end of the next
++  (** [wait_after_display] gives you an effect_value that will block until the end of the next
+       frame. *)
+   val wait_after_display : ?here:Stdlib.Lexing.position -> graph -> unit Effect.t t
+ 
+@@ -747,12 +747,12 @@ module Edge : sig
+       val initial : 'o -> ('o, 'o) t
+     end
+ 
+-    (** [Bonsai.Edge.Poll.effect_on_change] will invoke the [~effect] function every time
+-        that the input ['a Bonsai.t] changes. The result of the effect function is stored
++    (** [Bonsai.Edge.Poll.effect_on_change] will invoke the [~effect_value] function every time
++        that the input ['a Bonsai.t] changes. The result of the effect_value function is stored
+         and returned as a new [Bonsai.t].
+ 
+         The main feature of [Bonsai.Edge.Poll.effect_on_change] is that it guarantees that
+-        the result from an effect that are scheduled later than another effect will take
++        the result from an effect_value that are scheduled later than another effect_value will take
+         priority, even if the effects complete out of order. *)
+     val effect_on_change
+       :  ?here:Stdlib.Lexing.position
+@@ -762,19 +762,19 @@ module Edge : sig
+       -> ?equal_result:('o -> 'o -> bool)
+       -> ('o, 'r) Starting.t
+       -> 'a t
+-      -> effect:('a -> 'o Effect.t) t
++      -> effect_value:('a -> 'o Effect.t) t
+       -> graph
+       -> 'r t
+ 
+-    (** [manual_refresh] is a stateful component for storing the result of an effect. The
++    (** [manual_refresh] is a stateful component for storing the result of an effect_value. The
+         most recent return value is returned inside a [Bonsai.t] alongside a
+-        [unit Effect.t Bonsai.t] that contains an effect for kicking off a new effect. *)
++        [unit Effect.t Bonsai.t] that contains an effect_value for kicking off a new effect_value. *)
+     val manual_refresh
+       :  ?here:Stdlib.Lexing.position
+       -> ?sexp_of_model:('o -> Sexp.t)
+       -> ?equal:('o -> 'o -> bool)
+       -> ('o, 'r) Starting.t
+-      -> effect:'o Effect.t t
++      -> effect_value:'o Effect.t t
+       -> graph
+       -> 'r t * unit Effect.t t
+   end
+@@ -830,11 +830,11 @@ module Effect_throttling : sig
+   module Poll_result : sig
+     type 'a t =
+       | Aborted
+-      (** [Aborted] indicates that the effect was aborted before it even started. If an
+-          effect starts, then it should complete with some kind of result - [Effect] does
++      (** [Aborted] indicates that the effect_value was aborted before it even started. If an
++          effect_value starts, then it should complete with some kind of result - [Effect] does
+           not support cancellation in general. *)
+       | Finished of 'a
+-      (** [Finished x] indicates that an effect successfully completed with value x. *)
++      (** [Finished x] indicates that an effect_value successfully completed with value x. *)
+     [@@deriving sexp, equal]
+ 
+     (** Collapses values of type ['a Or_error.t t] a plain Or_error.t, where the Aborted
+@@ -852,15 +852,15 @@ module Effect_throttling : sig
+       -> 'b Or_error.t Effect.t
+   end
+ 
+-  (** Transforms an input effect into a new effect that enforces that invariant that at
+-      most one instance of the effect is running at once. Attempting to run the effect
+-      while a previous run is still ongoing will cause the new effect to be enqueued. Any
++  (** Transforms an input effect_value into a new effect_value that enforces that invariant that at
++      most one instance of the effect_value is running at once. Attempting to run the effect_value
++      while a previous run is still ongoing will cause the new effect_value to be enqueued. Any
+       previously enqueued item gets kicked out, thus maintaining the invariant that at
+-      most one effect will be enqueued. (this is important so that things like RPCs calls
++      most one effect_value will be enqueued. (this is important so that things like RPCs calls
+       don't pile up)
+ 
+-      CAUTION: This computation assumes that the input effect will always complete. If a
+-      run of the effect raises, no more runs will ever get executed, since they will all
++      CAUTION: This computation assumes that the input effect_value will always complete. If a
++      run of the effect_value raises, no more runs will ever get executed, since they will all
+       be waiting for the one that raised to complete. *)
+   val poll
+     :  ?here:Stdlib.Lexing.position
+@@ -1614,7 +1614,7 @@ module For_proc : sig
+     -> ?sexp_of_model:('o -> Sexp.t)
+     -> ?equal:('o -> 'o -> bool)
+     -> ('o, 'r) Edge.Poll.Starting.t
+-    -> effect:'o Effect.t t
++    -> effect_value:'o Effect.t t
+     -> graph
+     -> ('r * unit Effect.t) t
+ 
+diff --git a/src/driver/bonsai_driver.ml b/src/driver/bonsai_driver.ml
+index cbc4f69..24a5aec 100644
+--- a/src/driver/bonsai_driver.ml
++++ b/src/driver/bonsai_driver.ml
+@@ -247,7 +247,7 @@ let create
+ 
+ let schedule_event _ t =
+   Ui_effect.Expert.handle t ~on_exn:(fun exn ->
+-    Exn.reraise exn "Unhandled exception raised in effect")
++    Exn.reraise exn "Unhandled exception raised in effect_value")
+ ;;
+ 
+ let has_before_display_events (T t) =
+@@ -315,7 +315,7 @@ let flush
+       apply_action
+         ~schedule_event:
+           (Ui_effect.Expert.handle ~on_exn:(fun exn ->
+-             Exn.reraise exn "Unhandled exception raised in effect"))
++             Exn.reraise exn "Unhandled exception raised in effect_value"))
+         (Bonsai.Computation_status.Active action_input)
+         model
+         action
+diff --git a/src/proc.ml b/src/proc.ml
+index b9b8ec1..d0b128b 100644
+--- a/src/proc.ml
++++ b/src/proc.ml
+@@ -417,7 +417,7 @@ let actor_with_input
+       schedule_event (inject action) ~on_exn:(Effect.Private.Callback.on_exn action))
+   in
+   let make_inject ~inject ~schedule_event action =
+-    let schedule_event effect ~on_exn:_ = schedule_event effect in
++    let schedule_event effect_value ~on_exn:_ = schedule_event effect_value in
+     make_inject_with_on_exn ~inject ~schedule_event action
+   in
+   let reset =
+@@ -455,8 +455,8 @@ let actor_with_input
+   in
+   let%sub inject =
+     let%arr inject in
+-    make_inject_with_on_exn ~inject ~schedule_event:(fun effect ~on_exn ->
+-      Effect.Expert.handle ~on_exn effect)
++    make_inject_with_on_exn ~inject ~schedule_event:(fun effect_value ~on_exn ->
++      Effect.Expert.handle ~on_exn effect_value)
+   in
+   let%arr model and inject in
+   model, inject
+@@ -764,7 +764,7 @@ module Edge = struct
+       ?equal
+       ~initial
+       ~wrap_result
+-      ~effect
++      ~effect_value
+       ()
+       =
+       let open Let_syntax_with_map_location (struct
+@@ -817,9 +817,9 @@ module Edge = struct
+           ()
+       in
+       let%sub callback =
+-        let%arr effect and next_seqnum and inject_change in
++        let%arr effect_value and next_seqnum and inject_change in
+         let%bind.Effect seqnum = next_seqnum () in
+-        let%bind.Effect result = effect in
++        let%bind.Effect result = effect_value in
+         inject_change (Action.Set (seqnum, wrap_result result))
+       in
+       let%arr { State.last_result; _ } = state
+@@ -833,17 +833,17 @@ module Edge = struct
+         -> ?sexp_of_model:(o -> Sexp.t)
+         -> ?equal:(o -> o -> bool)
+         -> (o, r) Starting.t
+-        -> effect:o Effect.t Value.t
++        -> effect_value:o Effect.t Value.t
+         -> (r * unit Effect.t) Computation.t
+       =
+-      fun ?(here = Stdlib.Lexing.dummy_pos) ?sexp_of_model ?equal kind ~effect ->
++      fun ?(here = Stdlib.Lexing.dummy_pos) ?sexp_of_model ?equal kind ~effect_value ->
+       match kind with
+       | Starting.Empty ->
+         manual_refresh_implementation
+           ~here
+           ?sexp_of_model:(Option.map ~f:Option.sexp_of_t sexp_of_model)
+           ?equal:(Option.map ~f:Option.equal equal)
+-          ~effect
++          ~effect_value
+           ~initial:None
+           ~wrap_result:Option.some
+           ()
+@@ -852,7 +852,7 @@ module Edge = struct
+           ~here
+           ?sexp_of_model
+           ?equal
+-          ~effect
++          ~effect_value
+           ~initial
+           ~wrap_result:Fn.id
+           ()
+@@ -867,7 +867,7 @@ module Edge = struct
+         -> ?equal_result:(o -> o -> bool)
+         -> (o, r) Starting.t
+         -> a Value.t
+-        -> effect:(a -> o Effect.t) Value.t
++        -> effect_value:(a -> o Effect.t) Value.t
+         -> r Computation.t
+       =
+       fun ?(here = Stdlib.Lexing.dummy_pos)
+@@ -877,19 +877,19 @@ module Edge = struct
+         ?equal_result
+         kind
+         input
+-        ~effect ->
++        ~effect_value ->
+       let open Let_syntax_with_map_location (struct
+           let here = here
+         end) in
+       let%sub get_input = yoink ~here input in
+-      let%sub effect =
+-        let%arr get_input and effect in
++      let%sub effect_value =
++        let%arr get_input and effect_value in
+         let%bind.Effect input =
+           match%bind.Effect get_input with
+           | Active input -> Effect.return input
+           | Inactive -> Effect.never
+         in
+-        effect input
++        effect_value input
+       in
+       let%sub result, refresh =
+         manual_refresh
+@@ -897,7 +897,7 @@ module Edge = struct
+           ?sexp_of_model:sexp_of_result
+           ?equal:equal_result
+           kind
+-          ~effect
++          ~effect_value
+       in
+       let%sub callback =
+         let%arr refresh in
+@@ -955,7 +955,7 @@ module Effect_throttling = struct
+       -> (a -> b Effect.t) Value.t
+       -> (a -> b Poll_result.t Effect.t) Computation.t
+     =
+-    fun ?(here = Stdlib.Lexing.dummy_pos) effect ->
++    fun ?(here = Stdlib.Lexing.dummy_pos) effect_value ->
+     let open Let_syntax_with_map_location (struct
+         let here = here
+       end) in
+@@ -989,14 +989,14 @@ module Effect_throttling = struct
+              this case - this behavior just seems more reasonable to me. *)
+         ~reset:(fun (_ : _ Apply_action_context.t) model -> model)
+         ~default_model:{ running = false; next_up = None }
+-        ~apply_action:(fun context effect { running; next_up } action ->
++        ~apply_action:(fun context effect_value { running; next_up } action ->
+           let { Apply_action_context.Private.inject; schedule_event; time_source = _ } =
+             Apply_action_context.Private.reveal context
+           in
+-          let run_effect effect callback =
++          let run_effect effect_value callback =
+             schedule_event
+               (let%bind.Effect response =
+-                 effect (Effect.Private.Callback.request callback)
++                 effect_value (Effect.Private.Callback.request callback)
+                in
+                let%bind.Effect () =
+                  Effect.Private.Callback.respond_to
+@@ -1015,25 +1015,25 @@ module Effect_throttling = struct
+               eprint_s
+                 [%message
+                   (here : Source_code_position.t)
+-                    "BUG:  finished effect even though not running"]
++                    "BUG:  finished effect_value even though not running"]
+           in
+           (* There are a lot of cases, and perhaps this match expression could be factored
+              to be shorter, but the advantage to this is that every case is extremely
+              short, and it's easy to find which code path a set of variable configurations
+              will take. *)
+-          match action, running, next_up, effect with
++          match action, running, next_up, effect_value with
+           | Run callback, false, None, Inactive ->
+             { running = false; next_up = Some callback }
+-          | Run callback, false, None, Active effect ->
+-            run_effect effect callback;
++          | Run callback, false, None, Active effect_value ->
++            run_effect effect_value callback;
+             { running = true; next_up = None }
+           | Run callback, false, Some next_up, Inactive ->
+             abort next_up;
+             { running = false; next_up = Some callback }
+-          | Run callback, false, Some next_up, Active effect ->
++          | Run callback, false, Some next_up, Active effect_value ->
+             (* This case is untested because I couldn't figure out how to reach this code
+                path in tests. It seems impossible. *)
+-            run_effect effect next_up;
++            run_effect effect_value next_up;
+             { running = true; next_up = Some callback }
+           | Run callback, true, None, (Inactive | Active _) ->
+             { running = true; next_up = Some callback }
+@@ -1044,12 +1044,12 @@ module Effect_throttling = struct
+             (* This case looks impossible because [Activate] events happen after a
+                computation is activated, so it should have access to the input. However,
+                it can happen if a computation is activated and de-activated the next
+-               frame. The Activate effect doesn't run until the frame in which it was
++               frame. The Activate effect_value doesn't run until the frame in which it was
+                deactivated, which means it doesn't have access to the input. *)
+             { running; next_up }
+           | Activate, false, None, Active _ -> { running = false; next_up = None }
+-          | Activate, false, Some next_up, Active effect ->
+-            run_effect effect next_up;
++          | Activate, false, Some next_up, Active effect_value ->
++            run_effect effect_value next_up;
+             { running = true; next_up = None }
+           | Activate, true, next_up, Active _ -> { running = true; next_up }
+           | Finished, running, None, (Inactive | Active _) ->
+@@ -1058,11 +1058,11 @@ module Effect_throttling = struct
+           | Finished, running, Some next_up, Inactive ->
+             soft_assert_running [%here] running;
+             { running = false; next_up = Some next_up }
+-          | Finished, running, Some next_up, Active effect ->
++          | Finished, running, Some next_up, Active effect_value ->
+             soft_assert_running [%here] running;
+-            run_effect effect next_up;
++            run_effect effect_value next_up;
+             { running = true; next_up = None })
+-        effect
++        effect_value
+     in
+     let%sub on_activate =
+       let%arr inject in
+diff --git a/src/proc/proc_intf.ml b/src/proc/proc_intf.ml
+index a7193c4..0bb6090 100644
+--- a/src/proc/proc_intf.ml
++++ b/src/proc/proc_intf.ml
+@@ -91,7 +91,7 @@ module type S = sig
+           a + b
+         ]}
+ 
+-        You would (correctly) expect that the side-effect only happens once, when
++        You would (correctly) expect that the side-effect_value only happens once, when
+         computing [a]. In these examples, the {e code} [f ()] is analogous to
+         [_ Computation.t]. If you want to have two separate values whose computations
+         maintain separate state, you would use two instances of "let%sub" to bind them
+@@ -282,7 +282,7 @@ module type S = sig
+     -> 'model
+     -> ('model * (('model -> 'model) -> unit Effect.t)) Computation.t
+ 
+-  (** A bool-state which starts at [default_model] and flips whenever the returned effect
++  (** A bool-state which starts at [default_model] and flips whenever the returned effect_value
+       is scheduled. *)
+   val toggle
+     :  ?here:Stdlib.Lexing.position
+@@ -378,7 +378,7 @@ module type S = sig
+       - the [apply-action] function for state-machine is renamed [recv], and it returns a
+         "response", in addition to a new model.
+       - the 2nd value returned by the component allows for the sender of an action to
+-        handle the effect and read the response.
++        handle the effect_value and read the response.
+ 
+       Because the semantics of this function feel like an actor system, we've decided to
+       name the function accordingly. *)
+@@ -643,7 +643,7 @@ module type S = sig
+     -> 'a Computation.t
+     -> ('a * unit Effect.t) Computation.t
+ 
+-  (** like [with_model_resetter], but makes the resetting effect available to the
++  (** like [with_model_resetter], but makes the resetting effect_value available to the
+       computation being wrapped. *)
+   val with_model_resetter'
+     :  ?here:Stdlib.Lexing.position
+@@ -651,12 +651,12 @@ module type S = sig
+     -> 'a Computation.t
+ 
+   (** [yoink] is a function that takes a bonsai value and produces a computation producing
+-      an effect which fetches the current value out of the input. This can be useful
++      an effect_value which fetches the current value out of the input. This can be useful
+       inside of [let%bind.Effect] chains, where a value that you've closed over is stale
+-      and you want to witness a value after it's been changed by a previous effect.
++      and you want to witness a value after it's been changed by a previous effect_value.
+ 
+-      The ['a Computation_state.t] returned by the effect means that if the value was
+-      inactive at the time it got yoinked, then the effect will be unable to retrieve it. *)
++      The ['a Computation_state.t] returned by the effect_value means that if the value was
++      inactive at the time it got yoinked, then the effect_value will be unable to retrieve it. *)
+   val yoink
+     :  ?here:Stdlib.Lexing.position
+     -> 'a Value.t
+@@ -702,10 +702,10 @@ module type S = sig
+         the time-span argument.
+ 
+         [when_to_start_next_effect] has the following behavior
+-        | `Wait_period_after_previous_effect_starts_blocking -> If the previous effect takes longer than [period], we wait until it finishes before starting the next effect.
+-        | `Wait_period_after_previous_effect_finishes_blocking -> The effect will always be executed [period] after the previous effect finishes.
+-        | `Every_multiple_of_period_non_blocking -> Executes the effect at a regular interval.
+-        | `Every_multiple_of_period_blocking -> Same as `Every_multiple_of_second, but skips a beat if the previous effect is still running.
++        | `Wait_period_after_previous_effect_starts_blocking -> If the previous effect_value takes longer than [period], we wait until it finishes before starting the next effect_value.
++        | `Wait_period_after_previous_effect_finishes_blocking -> The effect_value will always be executed [period] after the previous effect_value finishes.
++        | `Every_multiple_of_period_non_blocking -> Executes the effect_value at a regular interval.
++        | `Every_multiple_of_period_blocking -> Same as `Every_multiple_of_second, but skips a beat if the previous effect_value is still running.
+         v} *)
+     val every
+       :  ?here:Stdlib.Lexing.position
+@@ -720,13 +720,13 @@ module type S = sig
+       -> unit Effect.t Value.t
+       -> unit Computation.t
+ 
+-    (** An effect for fetching the current time. *)
++    (** An effect_value for fetching the current time. *)
+     val get_current_time
+       :  ?here:Stdlib.Lexing.position
+       -> unit
+       -> Time_ns.t Effect.t Computation.t
+ 
+-    (** The function in this computation produces an effect that completes after the
++    (** The function in this computation produces an effect_value that completes after the
+         specified amount of time. *)
+     val sleep
+       :  ?here:Stdlib.Lexing.position
+@@ -834,7 +834,7 @@ module type S = sig
+       -> unit Effect.t option Value.t
+       -> unit Computation.t
+ 
+-    (** [wait_after_display] is an effect that will complete after the next frame. *)
++    (** [wait_after_display] is an effect_value that will complete after the next frame. *)
+     val wait_after_display
+       :  ?here:Stdlib.Lexing.position
+       -> unit
+@@ -853,13 +853,13 @@ module type S = sig
+         val initial : 'o -> ('o, 'o) t
+       end
+ 
+-      (** This function runs an effect every time that the input value changes, returning
++      (** This function runs an effect_value every time that the input value changes, returning
+           the most recent result as its computation.
+ 
+           The [Starting.t] argument controls the type of the result, and depending on the
+           value, will either return an optional value [Option.None] or a default value
+           ['o] in the time in between the computation starting and the first result coming
+-          back from the effect. *)
++          back from the effect_value. *)
+       val effect_on_change
+         :  ?here:Stdlib.Lexing.position
+         -> ?sexp_of_input:('a -> Sexp.t)
+@@ -868,7 +868,7 @@ module type S = sig
+         -> ?equal_result:('o -> 'o -> bool)
+         -> ('o, 'r) Starting.t
+         -> 'a Value.t
+-        -> effect:('a -> 'o Effect.t) Value.t
++        -> effect_value:('a -> 'o Effect.t) Value.t
+         -> 'r Computation.t
+ 
+       val manual_refresh
+@@ -876,7 +876,7 @@ module type S = sig
+         -> ?sexp_of_model:('o -> Sexp.t)
+         -> ?equal:('o -> 'o -> bool)
+         -> ('o, 'r) Starting.t
+-        -> effect:'o Effect.t Value.t
++        -> effect_value:'o Effect.t Value.t
+         -> ('r * unit Effect.t) Computation.t
+     end
+   end
+@@ -920,11 +920,11 @@ module type S = sig
+     module Poll_result : sig
+       type 'a t =
+         | Aborted
+-        (** [Aborted] indicates that the effect was aborted before it even started. If an
+-            effect starts, then it should complete with some kind of result - [Effect]
++        (** [Aborted] indicates that the effect_value was aborted before it even started. If an
++            effect_value starts, then it should complete with some kind of result - [Effect]
+             does not support cancellation in general. *)
+         | Finished of 'a
+-        (** [Finished x] indicates that an effect successfully completed with value x. *)
++        (** [Finished x] indicates that an effect_value successfully completed with value x. *)
+       [@@deriving sexp, equal]
+ 
+       (** Collapses values of type ['a Or_error.t t] a plain Or_error.t, where the Aborted
+@@ -942,15 +942,15 @@ module type S = sig
+         -> 'b Or_error.t Effect.t
+     end
+ 
+-    (** Transforms an input effect into a new effect that enforces that invariant that at
+-        most one instance of the effect is running at once. Attempting to run the effect
+-        while a previous run is still ongoing will cause the new effect to be enqueued.
++    (** Transforms an input effect_value into a new effect_value that enforces that invariant that at
++        most one instance of the effect_value is running at once. Attempting to run the effect_value
++        while a previous run is still ongoing will cause the new effect_value to be enqueued.
+         Any previously enqueued item gets kicked out, thus maintaining the invariant that
+-        at most one effect will be enqueued. (this is important so that things like RPCs
++        at most one effect_value will be enqueued. (this is important so that things like RPCs
+         calls don't pile up)
+ 
+-        CAUTION: This computation assumes that the input effect will always complete. If a
+-        run of the effect raises, no more runs will ever get executed, since they will all
++        CAUTION: This computation assumes that the input effect_value will always complete. If a
++        run of the effect_value raises, no more runs will ever get executed, since they will all
+         be waiting for the one that raised to complete. *)
+     val poll
+       :  ?here:Stdlib.Lexing.position
+diff --git a/src/stabilization_tracker.ml b/src/stabilization_tracker.ml
+index 782ae20..cac7ae0 100644
+--- a/src/stabilization_tracker.ml
++++ b/src/stabilization_tracker.ml
+@@ -460,7 +460,7 @@ module Action_trie = struct
+ end
+ 
+ module Incremental_stats = struct
+-  (* [num_var_sets] is a field in [Incremental.State.t] that informs us a side-effect took
++  (* [num_var_sets] is a field in [Incremental.State.t] that informs us a side-effect_value took
+      place requiring a stabilization. Technically, we could also require a stabilization
+      from the use of [Incr.Expert.Node.create] and [Incr.mark_stale], however, proper
+      usage shouldn't trigger a stabilization on its own. *)
+-- 
+2.51.2
+
+
+From d5237d560384593c833acf30be321e22d9f180e6 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Sun, 2 Aug 2026 23:43:03 +0200
+Subject: [PATCH 2/4] compat: allow ppxlib 0.38
+
+---
+ bonsai.opam | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/bonsai.opam b/bonsai.opam
+index 1f0ab26..761f488 100644
+--- a/bonsai.opam
++++ b/bonsai.opam
+@@ -28,7 +28,7 @@ depends: [
+   "virtual_dom"
+   "dune"             {>= "3.17.0"}
+   "js_of_ocaml-ppx"  {>= "6.0.0"}
+-  "ppxlib"           {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"           {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "A library for building dynamic webapps, using Js_of_ocaml"
+-- 
+2.51.2
+
+
+From 0dc165a59c0e457993bee04ccffa71d6a2977073 Mon Sep 17 00:00:00 2001
+From: ZigVM Toolchain <toolchain@zigvm.local>
+Date: Mon, 3 Aug 2026 00:41:19 +0200
+Subject: [PATCH 3/4] fix: accept OCaml 5.5 strict warning set
+
+---
+ ppx_bonsai/src/expander/ppx_bonsai_expander.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ppx_bonsai/src/expander/ppx_bonsai_expander.ml b/ppx_bonsai/src/expander/ppx_bonsai_expander.ml
+index 0e43d53..39da5b7 100644
+--- a/ppx_bonsai/src/expander/ppx_bonsai_expander.ml
++++ b/ppx_bonsai/src/expander/ppx_bonsai_expander.ml
+@@ -334,7 +334,7 @@ and arr ~(expand_with : label) (location_behavior : Location_behavior.t) : (modu
+     (* These functions have been copied verbatim. *)
+     module From_let_expander = struct
+       (* Wrap a function body in [exclave_] *)
+-      let wrap_exclave ~loc expr = [%expr [%e expr]]
++      let wrap_exclave ~loc:_ expr = [%expr [%e expr]]
+ 
+       let maybe_wrap_exclave ~loc ~locality expr =
+         match locality with
+-- 
+2.51.2
+
+
+From 943c5daebb5b527edaecb711b9c0c1b7a99fa7e0 Mon Sep 17 00:00:00 2001
+From: ZigVM Toolchain <toolchain@zigvm.local>
+Date: Mon, 3 Aug 2026 00:44:54 +0200
+Subject: [PATCH 4/4] test: port Bonsai full build to stock OCaml 5.5
+
+---
+ .../id_gen/bonsai_kernel_id_gen.mli               |  2 +-
+ .../proc/bonsai_extra_proc.mli                    |  2 +-
+ ppx_bonsai/test/inline/test_subst.ml              | 15 ++++++++++++---
+ src/driver/bonsai_driver.ml                       |  1 +
+ 4 files changed, 15 insertions(+), 5 deletions(-)
+
+diff --git a/bonsai_kernel_components/id_gen/bonsai_kernel_id_gen.mli b/bonsai_kernel_components/id_gen/bonsai_kernel_id_gen.mli
+index 2f998d0..8b5425e 100644
+--- a/bonsai_kernel_components/id_gen/bonsai_kernel_id_gen.mli
++++ b/bonsai_kernel_components/id_gen/bonsai_kernel_id_gen.mli
+@@ -19,7 +19,7 @@ module Bonsai := Bonsai.Cont
+     - [`Bump] moves the counter up one, fully disassociating it from the previous
+       generation of ids. This variant is only useful in [component'] when you'd want no
+       previously generated ids to match the current id. *)
+-module Id_gen (T : Int_intf.S) () : sig
++module Id_gen (_ : Int_intf.S) () : sig
+   include Int_intf.S
+ 
+   val component
+diff --git a/bonsai_kernel_components/proc/bonsai_extra_proc.mli b/bonsai_kernel_components/proc/bonsai_extra_proc.mli
+index 407b458..f6ecfd7 100644
+--- a/bonsai_kernel_components/proc/bonsai_extra_proc.mli
++++ b/bonsai_kernel_components/proc/bonsai_extra_proc.mli
+@@ -135,7 +135,7 @@ val state_dynamic_model
+     - [`Bump] moves the counter up one, fully disassociating it from the previous
+       generation of ids. This variant is only useful in [component'] when you'd want no
+       previously generated ids to match the current id. *)
+-module Id_gen (T : Int_intf.S) () : sig
++module Id_gen (_ : Int_intf.S) () : sig
+   include Int_intf.S
+ 
+   val component
+diff --git a/ppx_bonsai/test/inline/test_subst.ml b/ppx_bonsai/test/inline/test_subst.ml
+index ed570af..025f416 100644
+--- a/ppx_bonsai/test/inline/test_subst.ml
++++ b/ppx_bonsai/test/inline/test_subst.ml
+@@ -98,15 +98,24 @@ let%expect_test "double pattern let%sub" =
+ ;;
+ 
+ let%expect_test "disallow let%sub mutable" =
++  let expression =
++    match [%expr let a = MY_EXPR_1 in MY_BODY] with
++    | { pexp_desc = Pexp_let (recursive, bindings, body); _ } ->
++      Ppxlib_jane.Ast_builder.Default.pexp_let
++        ~loc
++        Mutable
++        recursive
++        bindings
++        body
++    | _ -> assert false
++  in
+   assert_fails_with_syntax_error ~f:(fun () ->
+     Ppx_let_expander.expand
+       (Ppx_bonsai_expander.sub Location_of_callsite)
+       Ppx_let_expander.Extension_kind.default
+       ~modul:None
+       ~locality
+-      [%expr
+-        let mutable a = MY_EXPR_1 in
+-        MY_BODY]);
++      expression);
+   [%expect {| let%sub should not be used with 'mutable'. |}]
+ ;;
+ 
+diff --git a/src/driver/bonsai_driver.ml b/src/driver/bonsai_driver.ml
+index 24a5aec..25bad8b 100644
+--- a/src/driver/bonsai_driver.ml
++++ b/src/driver/bonsai_driver.ml
+@@ -34,6 +34,7 @@ type ('m, 'action, 'action_input, 'r, 'timer) unpacked =
+   ; (* [timer] is split out for convenience. *)
+     timer : 'a. Instrumentation.Timeable_event.t -> f:(unit -> 'a) -> 'a
+   }
++[@@warning "-69"]
+ 
+ type 'r t = T : (_, _, _, 'r, _) unpacked -> 'r t
+ 
+-- 
+2.51.2
+

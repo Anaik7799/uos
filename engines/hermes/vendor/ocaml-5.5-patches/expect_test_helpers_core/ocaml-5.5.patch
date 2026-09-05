@@ -1,0 +1,48 @@
+From 8c8125668d82028cb5e175e4f9bb11c350802a87 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Sun, 2 Aug 2026 23:37:51 +0200
+Subject: [PATCH] compat: use global comparison in local wrapper
+
+---
+ src/expect_test_helpers_core.ml      | 2 +-
+ src/expect_test_helpers_core_intf.ml | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/src/expect_test_helpers_core.ml b/src/expect_test_helpers_core.ml
+index c8c056e..dacf974 100644
+--- a/src/expect_test_helpers_core.ml
++++ b/src/expect_test_helpers_core.ml
+@@ -43,7 +43,7 @@ let[@mode m] print_and_check_stable_internal
+   let module M = struct
+     include M
+ 
+-    let%template[@mode m = (m, global)] equal = ([%compare.equal: t] [@mode.explicit m])
++    let equal left right = Int.equal (M.compare left right) 0
+   end
+   in
+   print_s
+diff --git a/src/expect_test_helpers_core_intf.ml b/src/expect_test_helpers_core_intf.ml
+index bf6e112..1010cbc 100644
+--- a/src/expect_test_helpers_core_intf.ml
++++ b/src/expect_test_helpers_core_intf.ml
+@@ -105,7 +105,7 @@ module type Expect_test_helpers_core = sig
+     -> ?max_binable_length:int (** default is [Int.max_value] *)
+     -> ?sexp_style:Sexp_style.t (** default is [Dynamic.get sexp_style] *)
+     -> ?here:Stdlib.Lexing.position
+-    -> ((module Stable_type with type t = 'a)[@mode m])
++    -> (module Stable_type with type t = 'a)
+     -> 'a list
+     -> unit
+   [@@mode m = (local, global)]
+@@ -119,7 +119,7 @@ module type Expect_test_helpers_core = sig
+     -> ?max_binable_length:int (** default is [Int.max_value] *)
+     -> ?sexp_style:Sexp_style.t (** default is [Dynamic.get sexp_style] *)
+     -> ?here:Stdlib.Lexing.position
+-    -> ((module Stable_int63able_type with type t = 'a)[@mode m])
++    -> (module Stable_int63able_type with type t = 'a)
+     -> 'a list
+     -> unit
+   [@@mode m = (local, global)]
+-- 
+2.51.2
+

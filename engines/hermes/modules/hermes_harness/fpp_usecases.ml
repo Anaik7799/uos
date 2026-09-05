@@ -425,7 +425,7 @@ let codegen =
       "the frontier machine's second encoding"
       [ Then_law
           ( "specs/parity_frontier.qnt exists and is non-empty",
-            fun () -> anchored "modules/hermes_harness/specs/parity_frontier.qnt" ) ];
+            fun () -> anchored "modules/hermes_harness/quint_specs/parity_frontier.qnt" ) ];
     on_harness "atlas regeneration preconditions hold right now"
       "the fail-closed gates render_fprime_atlas checks before writing"
       [ Then_law

@@ -1,0 +1,92 @@
+From c6c0c4c60e1de504feb494ef1bd150602fb977a3 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Sun, 2 Aug 2026 23:30:50 +0200
+Subject: [PATCH] compat: target stable ppxlib Ast500
+
+---
+ src/ppx/ppx_lwt.ml | 31 ++++++-------------------------
+ 1 file changed, 6 insertions(+), 25 deletions(-)
+
+diff --git a/src/ppx/ppx_lwt.ml b/src/ppx/ppx_lwt.ml
+index 9d55f0c2..a3ec3748 100644
+--- a/src/ppx/ppx_lwt.ml
++++ b/src/ppx/ppx_lwt.ml
+@@ -57,7 +57,6 @@ let gen_bindings l =
+   let aux i binding =
+     { binding with
+       pvb_pat = pvar ~loc:binding.pvb_expr.pexp_loc (gen_name i);
+-      pvb_constraint = None;
+     }
+   in
+   List.mapi aux l
+@@ -73,13 +72,7 @@ let gen_binds e_loc l e =
+       in
+       let fun_ =
+         let loc = e_loc in
+-        match binding.pvb_constraint with
+-        | None -> [%expr (fun [%p binding.pvb_pat] -> [%e aux (i+1) t])]
+-        | Some (Pvc_constraint { locally_abstract_univars = []; typ }) ->
+-            [%expr (fun ([%p binding.pvb_pat] : [%t typ]) -> [%e aux (i+1) t])]
+-        | _ ->
+-            (* no support for more advanced type annotations *)
+-            Location.Error.(raise (make ~loc "unsupported value binding constraint" ~sub:[]))
++        [%expr (fun [%p binding.pvb_pat] -> [%e aux (i+1) t])]
+       in
+       let new_exp =
+           let loc = e_loc in
+@@ -151,12 +144,12 @@ let lwt_expression mapper exp attributes ext_loc =
+       match exns with
+       | [] ->
+         let loc = !default_loc in
+-        [%expr Lwt.bind [%e e] [%e pexp_function_cases ~loc cases]]
++        [%expr Lwt.bind [%e e] [%e pexp_function ~loc cases]]
+       | _  ->
+         let loc = !default_loc in
+         [%expr Lwt.try_bind (fun () -> [%e e])
+-                                   [%e pexp_function_cases ~loc cases]
+-                                   [%e pexp_function_cases ~loc exns]]
++                                   [%e pexp_function ~loc cases]
++                                   [%e pexp_function ~loc exns]]
+     in
+     Some (mapper#expression { new_exp with pexp_attributes })
+ 
+@@ -230,7 +223,7 @@ let lwt_expression mapper exp attributes ext_loc =
+           Lwt.backtrace_catch
+             (fun exn -> try Lwt.reraise exn with exn -> exn)
+             (fun () -> [%e expr])
+-            [%e pexp_function_cases ~loc cases]
++            [%e pexp_function ~loc cases]
+         ]
+     in
+     Some (mapper#expression { new_exp with pexp_attributes })
+@@ -255,7 +248,7 @@ let lwt_expression mapper exp attributes ext_loc =
+     in
+     let new_exp =
+       let loc = !default_loc in
+-      [%expr Lwt.bind [%e cond] [%e pexp_function_cases ~loc cases]]
++      [%expr Lwt.bind [%e cond] [%e pexp_function ~loc cases]]
+     in
+     Some (mapper#expression { new_exp with pexp_attributes })
+ 
+@@ -346,18 +339,6 @@ class mapper = object (self)
+             (Lwt_main.run [@ocaml.ppwarning [%e warning]])
+               [%e super#expression exp]]
+ 
+-      | [%stri let%lwt [%p? var] : [%t? typ] = [%e? exp]] ->
+-        let warning =
+-          estring ~loc:!default_loc
+-            ("let%lwt should not be used at the module item level.\n" ^
+-             "Replace let%lwt x = e by let x = Lwt_main.run (e)")
+-        in
+-        let loc = !default_loc in
+-        [%stri
+-          let [%p var] : [%t typ] =
+-            (Lwt_main.run [@ocaml.ppwarning [%e warning]])
+-              [%e super#expression exp]]
+-
+       | x -> super#structure_item x);
+ end
+ 
+-- 
+2.51.2
+

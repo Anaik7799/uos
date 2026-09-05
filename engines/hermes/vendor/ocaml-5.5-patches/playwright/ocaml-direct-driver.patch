@@ -1,0 +1,148 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Mon, 3 Aug 2026 15:16:49 +0200
+Subject: [PATCH] driver: use OCaml transport and validate cache
+
+
+diff --git a/dune-project b/dune-project
+index 62f91f4..f945a66 100644
+--- a/dune-project
++++ b/dune-project
+@@ -26,0 +27 @@
++  (curl (>= 0.10.0))
+diff --git a/lib/driver.ml b/lib/driver.ml
+index 177ea75..91b2a3d 100644
+--- a/lib/driver.ml
++++ b/lib/driver.ml
+@@ -1 +1 @@
+-let version = "1.59.1"
++let version = "1.59.0"
+@@ -18,27 +18,18 @@ let get_zip_name () =
+-  let os = Sys.os_type in
+-  if os = "Win32" || os = "Cygwin" then
+-    "win32_x64" (* TODO: detect arm64 *)
+-  else
+-    let uname_s =
+-      let ic = Unix.open_process_in "uname -s" in
+-      let res = input_line ic in
+-      close_in ic;
+-      String.trim res
+-    in
+-    let uname_m =
+-      let ic = Unix.open_process_in "uname -m" in
+-      let res = input_line ic in
+-      close_in ic;
+-      String.trim res
+-    in
+-    match uname_s, uname_m with
+-    | "Darwin", "arm64" -> "mac-arm64"
+-    | "Darwin", ("x86_64" | "amd64") -> "mac"
+-    | "Linux", ("x86_64" | "amd64") -> "linux"
+-    | "Linux", ("aarch64" | "arm64") -> "linux-arm64"
+-    | _ ->
+-      failwith
+-        (Printf.sprintf
+-           "Unsupported platform for bundled Playwright driver: %s/%s"
+-           uname_s
+-           uname_m)
++  match Sys.getenv_opt "PLAYWRIGHT_OCAML_PLATFORM" with
++  | Some platform -> platform
++  | None when Sys.os_type = "Win32" || Sys.os_type = "Cygwin" -> "win32_x64"
++  | None when Sys.file_exists "/proc/sys/kernel/ostype" ->
++      begin match Sys.getenv_opt "PLAYWRIGHT_OCAML_ARCH" with
++      | Some ("aarch64" | "arm64") -> "linux-arm64"
++      | Some ("x86_64" | "amd64") | None -> "linux"
++      | Some architecture ->
++          failwith ("Unsupported Linux architecture: " ^ architecture)
++      end
++  | None when Sys.file_exists "/System/Library/CoreServices" ->
++      begin match Sys.getenv_opt "PLAYWRIGHT_OCAML_ARCH" with
++      | Some ("aarch64" | "arm64") -> "mac-arm64"
++      | Some ("x86_64" | "amd64") | None -> "mac"
++      | Some architecture ->
++          failwith ("Unsupported macOS architecture: " ^ architecture)
++      end
++  | None -> failwith "Unsupported platform; set PLAYWRIGHT_OCAML_PLATFORM"
+@@ -65,0 +57,9 @@ let remove_file_if_exists path =
++let rec remove_tree path =
++  if Sys.file_exists path then
++    if Sys.is_directory path then begin
++      Sys.readdir path
++      |> Array.iter (fun name -> remove_tree (Filename.concat path name));
++      Unix.rmdir path
++    end
++    else Sys.remove path
++
+@@ -99 +99,3 @@ let make_driver_executables dir =
+-let extract_zip ~zip_path ~dst_dir =
++let extract_bundle ~platform ~zip_path ~dst_dir =
++  let prefix = "driver/" ^ platform ^ "/" in
++  let prefix_length = String.length prefix in
+@@ -106,6 +108,14 @@ let extract_zip ~zip_path ~dst_dir =
+-        let target = path_of_segments dst_dir (zip_entry_segments entry.Zip.filename) in
+-        if entry.Zip.is_directory then
+-          mkdir_p target
+-        else begin
+-          mkdir_p (Filename.dirname target);
+-          Zip.copy_entry_to_file zip entry target
++        if String.length entry.Zip.filename > prefix_length
++           && String.sub entry.Zip.filename 0 prefix_length = prefix
++        then begin
++          let relative =
++            String.sub entry.Zip.filename prefix_length
++              (String.length entry.Zip.filename - prefix_length)
++          in
++          let target = path_of_segments dst_dir (zip_entry_segments relative) in
++          if entry.Zip.is_directory then
++            mkdir_p target
++          else begin
++            mkdir_p (Filename.dirname target);
++            Zip.copy_entry_to_file zip entry target
++          end
+@@ -114,0 +125,18 @@ let extract_zip ~zip_path ~dst_dir =
++let driver_ready dir =
++  Sys.file_exists (path_of_segments dir ["package"; "cli.js"])
++  && (Sys.file_exists (Filename.concat dir "node")
++      || Sys.file_exists (Filename.concat dir "node.exe"))
++
++let download_file ~url ~path =
++  let channel = open_out_bin path in
++  let handle = Curl.init () in
++  Fun.protect
++    ~finally:(fun () -> Curl.cleanup handle; close_out_noerr channel)
++    (fun () ->
++      Curl.set_url handle url;
++      Curl.set_followlocation handle true;
++      Curl.set_failonerror handle true;
++      Curl.set_writefunction handle (fun chunk -> output_string channel chunk; String.length chunk);
++      Curl.perform handle;
++      flush channel)
++
+@@ -117 +145,2 @@ let download () =
+-  if not (Sys.file_exists dir) then begin
++  if not (driver_ready dir) then begin
++    remove_tree dir;
+@@ -120,2 +149,6 @@ let download () =
+-    let url = Printf.sprintf "https://cdn.playwright.dev/builds/driver/playwright-%s-%s.zip" version zip_name in
+-    let zip_path = Filename.concat dir "driver.zip" in
++    let url =
++      Printf.sprintf
++        "https://repo1.maven.org/maven2/com/microsoft/playwright/driver-bundle/%s/driver-bundle-%s.jar"
++        version version
++    in
++    let zip_path = Filename.concat dir "driver-bundle.jar" in
+@@ -123,3 +156,2 @@ let download () =
+-    let res = Sys.command (Printf.sprintf "curl -sL %s -o %s" (Filename.quote url) (Filename.quote zip_path)) in
+-    if res <> 0 then failwith "Failed to download Playwright driver";
+-    extract_zip ~zip_path ~dst_dir:dir;
++    download_file ~url ~path:zip_path;
++    extract_bundle ~platform:zip_name ~zip_path ~dst_dir:dir;
+@@ -126,0 +159 @@ let download () =
++    if not (driver_ready dir) then failwith "Downloaded Playwright driver is incomplete";
+diff --git a/lib/dune b/lib/dune
+index e25cb40..7efd50f 100644
+--- a/lib/dune
++++ b/lib/dune
+@@ -4 +4 @@
+- (libraries yojson eio eio_linux base64 zip)
++ (libraries yojson eio eio_linux base64 zip curl)

@@ -1,0 +1,102 @@
+From 6d217e329ea729d61ccdd8d6e7fa915a1148458a Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Sun, 2 Aug 2026 23:36:54 +0200
+Subject: [PATCH] compat: use global comparisons in local wrappers
+
+---
+ src/expect_test_helpers_base.ml      |  8 ++++----
+ src/expect_test_helpers_base_intf.ml | 10 +++++-----
+ 2 files changed, 9 insertions(+), 9 deletions(-)
+
+diff --git a/src/expect_test_helpers_base.ml b/src/expect_test_helpers_base.ml
+index 2528f90..29e8249 100644
+--- a/src/expect_test_helpers_base.ml
++++ b/src/expect_test_helpers_base.ml
+@@ -421,7 +421,7 @@ let require_equal
+     ~hide_positions
+     ?sexp_style
+     ~here
+-    ((M.equal [@mode m]) x y)
++    (M.equal x y)
+     ~if_false_then_print_s [@nontail]
+ ;;
+ 
+@@ -442,7 +442,7 @@ let require_not_equal
+     ~hide_positions
+     ?sexp_style
+     ~here
+-    (not ((M.equal [@mode m]) x y))
++    (not (M.equal x y))
+     ~if_false_then_print_s:(fun () ->
+       Some
+         [%message
+@@ -473,7 +473,7 @@ let require_compare_equal
+     (module struct
+       include M
+ 
+-      let%template[@mode m = (m, global)] equal = ([%compare.equal: t] [@mode.explicit m])
++      let equal left right = Int.equal (M.compare left right) 0
+     end)
+     x
+     y
+@@ -499,7 +499,7 @@ let require_compare_not_equal
+     (module struct
+       include M
+ 
+-      let%template[@mode m = (m, global)] equal = ([%compare.equal: t] [@mode.explicit m])
++      let equal left right = Int.equal (M.compare left right) 0
+     end)
+     x
+     y
+diff --git a/src/expect_test_helpers_base_intf.ml b/src/expect_test_helpers_base_intf.ml
+index 4c4b447..e2c7bbe 100644
+--- a/src/expect_test_helpers_base_intf.ml
++++ b/src/expect_test_helpers_base_intf.ml
+@@ -351,7 +351,7 @@ module type Expect_test_helpers_base = sig
+     -> ?message:string
+     -> ?sexp_style:Sexp_style.t (** default is [Dynamic.get sexp_style] *)
+     -> ?here:Stdlib.Lexing.position
+-    -> ((module With_equal with type t = 'a)[@mode m])
++    -> (module With_equal with type t = 'a)
+     -> 'a
+     -> 'a
+     -> unit
+@@ -365,7 +365,7 @@ module type Expect_test_helpers_base = sig
+     -> ?message:string
+     -> ?sexp_style:Sexp_style.t (** default is [Dynamic.get sexp_style] *)
+     -> ?here:Stdlib.Lexing.position
+-    -> ((module With_equal with type t = 'a)[@mode m])
++    -> (module With_equal with type t = 'a)
+     -> 'a
+     -> 'a
+     -> unit
+@@ -378,7 +378,7 @@ module type Expect_test_helpers_base = sig
+     -> ?message:string
+     -> ?sexp_style:Sexp_style.t (** default is [Dynamic.get sexp_style] *)
+     -> ?here:Stdlib.Lexing.position
+-    -> ((module With_compare with type t = 'a)[@mode m])
++    -> (module With_compare with type t = 'a)
+     -> 'a
+     -> 'a
+     -> unit
+@@ -392,7 +392,7 @@ module type Expect_test_helpers_base = sig
+     -> ?message:string
+     -> ?sexp_style:Sexp_style.t (** default is [Dynamic.get sexp_style] *)
+     -> ?here:Stdlib.Lexing.position
+-    -> ((module With_compare with type t = 'a)[@mode m])
++    -> (module With_compare with type t = 'a)
+     -> 'a
+     -> 'a
+     -> unit]
+@@ -641,7 +641,7 @@ module type Expect_test_helpers_base = sig
+     -> ?hide_positions:bool (** default is [false] when [cr=CR], [true otherwise] *)
+     -> ?sexp_style:Sexp_style.t (** default is to use [Dynamic.get sexp_style] *)
+     -> ?here:Stdlib.Lexing.position
+-    -> ((module With_equal with type t = 'a)[@mode m])
++    -> (module With_equal with type t = 'a)
+     -> (module With_round_trip with type t = 'a) list
+     -> 'a list
+     -> unit
+-- 
+2.51.2
+

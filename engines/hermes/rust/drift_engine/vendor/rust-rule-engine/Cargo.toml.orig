@@ -1,0 +1,218 @@
+[package]
+name = "rust-rule-engine"
+version = "1.21.1"
+edition = "2021"
+authors = ["Ton That Vu <ttvuhm@gmail.com>"]
+description = "A blazing-fast Rust rule engine with RETE algorithm, backward chaining inference, and GRL (Grule Rule Language) syntax. Features: forward/backward chaining, pattern matching, unification, O(1) rule indexing, TMS, expression evaluation, method calls, streaming with Redis state backend, watermarking, and custom functions. Production-ready for business rules, expert systems, real-time stream processing, and decision automation."
+license = "MIT"
+readme = "README.md"
+repository = "https://github.com/KSD-CO/rust-rule-engine"
+documentation = "https://docs.rs/rust-rule-engine"
+keywords = ["rules", "engine", "grl", "ai", "ml"]
+categories = ["algorithms", "data-structures", "science"]
+exclude = [
+    "tests/*",
+    ".github/*",
+    "benchmarks/*",
+]
+
+[package.metadata.docs.rs]
+all-features = true
+rustdoc-args = ["--cfg", "docsrs"]
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+rexile = "0.5.5"
+thiserror = "2.0"
+chrono = { version = "0.4", features = ["serde"] }
+log = "0.4"
+tokio = { version = "1.52.3", features = ["full"], optional = true }
+nom = "8.0"
+redis = { version = "1.2", features = ["tokio-comp", "connection-manager"], optional = true }
+
+[features]
+default = []
+streaming = ["tokio"]
+streaming-redis = ["streaming", "redis"]
+backward-chaining = []
+
+[dev-dependencies]
+criterion = { version = "0.8", features = ["html_reports"] }
+tokio = { version = "1.52.3", features = ["full"] }
+serde_yaml = "0.9"  # Used in tests/grl_harness_data.rs
+
+# Core benchmarks
+[[bench]]
+name = "engine_comparison_benchmark"
+harness = false
+
+[[bench]]
+name = "alpha_indexing_benchmark"
+harness = false
+
+[[bench]]
+name = "rete_optimization_benchmark"
+harness = false
+
+[[bench]]
+name = "backward_chaining_benchmarks"
+harness = false
+required-features = ["backward-chaining"]
+
+[[bench]]
+name = "backward_chaining_index_benchmark"
+harness = false
+required-features = ["backward-chaining"]
+
+[[bench]]
+name = "parallel_benchmarks"
+harness = false
+
+[[bench]]
+name = "clone_optimization_benchmark"
+harness = false
+
+
+# Binary for large-scale testing
+[[bin]]
+name = "rete_1m_rules_benchmark"
+path = "benches/rete_1m_rules_benchmark.rs"
+
+# ============================================================================
+# EXAMPLES - Streamlined from 108 to 26 essential examples (v1.16.0)
+# ============================================================================
+
+# 01 - Getting Started (4 examples)
+[[example]]
+name = "grule_demo"
+path = "examples/01-getting-started/grule_demo.rs"
+
+[[example]]
+name = "fraud_detection"
+path = "examples/01-getting-started/fraud_detection.rs"
+
+[[example]]
+name = "expression_demo"
+path = "examples/01-getting-started/expression_demo.rs"
+
+[[example]]
+name = "method_calls_demo"
+path = "examples/01-getting-started/method_calls_demo.rs"
+
+[[example]]
+name = "in_operator_demo"
+path = "examples/01-getting-started/in_operator_demo.rs"
+
+[[example]]
+name = "string_methods_demo"
+path = "examples/01-getting-started/string_methods_demo.rs"
+
+# 02 - RETE Engine (5 examples)
+[[example]]
+name = "rete_demo"
+path = "examples/02-rete-engine/rete_demo.rs"
+
+[[example]]
+name = "rete_grl_demo"
+path = "examples/02-rete-engine/rete_grl_demo.rs"
+
+[[example]]
+name = "rete_typed_facts_demo"
+path = "examples/02-rete-engine/rete_typed_facts_demo.rs"
+
+[[example]]
+name = "rete_deffacts_demo"
+path = "examples/02-rete-engine/rete_deffacts_demo.rs"
+
+[[example]]
+name = "tms_demo"
+path = "examples/02-rete-engine/tms_demo.rs"
+
+# 03 - Advanced Features (6 examples)
+[[example]]
+name = "accumulate_grl_demo"
+path = "examples/03-advanced-features/accumulate_grl_demo.rs"
+
+[[example]]
+name = "conflict_resolution_demo"
+path = "examples/03-advanced-features/conflict_resolution_demo.rs"
+
+[[example]]
+name = "grl_no_loop_demo"
+path = "examples/03-advanced-features/grl_no_loop_demo.rs"
+
+[[example]]
+name = "action_handlers_grl_demo"
+path = "examples/03-advanced-features/action_handlers_grl_demo.rs"
+
+[[example]]
+name = "rule_templates_demo"
+path = "examples/03-advanced-features/rule_templates_demo.rs"
+
+[[example]]
+name = "streaming_with_rules_demo"
+path = "examples/03-advanced-features/streaming_with_rules_demo.rs"
+required-features = ["streaming"]
+
+# 05 - Performance (3 examples)
+[[example]]
+name = "quick_engine_comparison"
+path = "examples/05-performance/quick_engine_comparison.rs"
+
+[[example]]
+name = "parallel_engine_demo"
+path = "examples/05-performance/parallel_engine_demo.rs"
+
+[[example]]
+name = "memory_usage_comparison"
+path = "examples/05-performance/memory_usage_comparison.rs"
+
+# 07 - Advanced RETE (2 examples)
+[[example]]
+name = "rete_p3_incremental"
+path = "examples/07-advanced-rete/rete_p3_incremental.rs"
+
+[[example]]
+name = "rete_ul_drools_style"
+path = "examples/07-advanced-rete/rete_ul_drools_style.rs"
+
+# 09 - Backward Chaining (4 examples)
+[[example]]
+name = "simple_query_demo"
+path = "examples/09-backward-chaining/simple_query_demo.rs"
+required-features = ["backward-chaining"]
+
+[[example]]
+name = "ecommerce_approval_demo"
+path = "examples/09-backward-chaining/ecommerce_approval_demo.rs"
+required-features = ["backward-chaining"]
+
+[[example]]
+name = "medical_diagnosis_demo"
+path = "examples/09-backward-chaining/medical_diagnosis_demo.rs"
+required-features = ["backward-chaining"]
+
+[[example]]
+name = "grl_query_demo"
+path = "examples/09-backward-chaining/grl_query_demo.rs"
+required-features = ["backward-chaining"]
+
+[[example]]
+name = "proof_graph_cache_demo"
+path = "examples/09-backward-chaining/proof_graph_cache_demo.rs"
+required-features = ["backward-chaining"]
+
+# 10 - Module System (2 examples)
+[[example]]
+name = "smart_home_modules"
+path = "examples/10-module-system/smart_home_modules.rs"
+
+[[example]]
+name = "phase3_demo"
+path = "examples/10-module-system/phase3_demo.rs"
+
+
+[[bin]]
+name = "memory_usage_benchmark"
+path = "benches/memory_usage_benchmark.rs"

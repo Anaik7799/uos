@@ -1,0 +1,1270 @@
+From eb9f33554341814ec283e0820e170f4de3be5965 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Sun, 2 Aug 2026 23:40:05 +0200
+Subject: [PATCH 1/2] compat: rename reserved OCaml 5.5 effect identifiers
+
+---
+ css_gen/src/css_gen.mli                       |   2 +-
+ .../test/jsdom/test_time_value_normalizing.ml |   2 +-
+ src/attr.ml                                   |   2 +-
+ src/attr.mli                                  |   4 +-
+ src/effect.ml                                 |   2 +-
+ src/effect.mli                                |   4 +-
+ src/event_listener.ml                         |   2 +-
+ src/global_listeners.ml                       |   2 +-
+ src/global_listeners.mli                      |   2 +-
+ test/helpers/node_helpers.ml                  |   2 +-
+ tyxml/virtual_dom_tyxml.ml                    |   2 +-
+ ui_effect/src/ui_effect.ml                    |  10 +-
+ ui_effect/src/ui_effect_intf.ml               |  38 ++---
+ .../test/test_deferred_and_result_monads.ml   |  50 +++----
+ ui_effect/test/test_effect_error_handling.ml  | 138 +++++++++---------
+ ui_effect/test/test_parallel_effects.ml       |  92 ++++++------
+ .../ui_effect_of_deferred.mli                 |   6 +-
+ 17 files changed, 180 insertions(+), 180 deletions(-)
+
+diff --git a/css_gen/src/css_gen.mli b/css_gen/src/css_gen.mli
+index d799443..0a444de 100644
+--- a/css_gen/src/css_gen.mli
++++ b/css_gen/src/css_gen.mli
+@@ -247,7 +247,7 @@ val empty : t
+ val is_empty : t -> bool
+ 
+ (** Set the position attribute and optionally top, bottom,left,right Note that left and
+-    top have no effect when position is `Static. *)
++    top have no effect_value when position is `Static. *)
+ val position
+   :  ?top:Length.t
+   -> ?bottom:Length.t
+diff --git a/input_widgets/test/jsdom/test_time_value_normalizing.ml b/input_widgets/test/jsdom/test_time_value_normalizing.ml
+index f604678..37753af 100644
+--- a/input_widgets/test/jsdom/test_time_value_normalizing.ml
++++ b/input_widgets/test/jsdom/test_time_value_normalizing.ml
+@@ -130,7 +130,7 @@ let%expect_test "time input: user edits while focused do not get clobbered by mo
+      (simulating normalization) and fire the on_input callback via
+      [set_input_element_value]. *)
+   Handle.set_input_element_value handle ~selector ~value:"14:30" ~here:[%here];
+-  (* After this frame, Bonsai processes the on_input effect and updates state to
++  (* After this frame, Bonsai processes the on_input effect_value and updates state to
+      [Some (Time_ns.Ofday.of_string "14:30")]. The hook will be called with new_value =
+      "14:30:00.000" but the DOM has "14:30". *)
+   Handle.one_frame handle;
+diff --git a/src/attr.ml b/src/attr.ml
+index 0141639..a4e1bd2 100644
+--- a/src/attr.ml
++++ b/src/attr.ml
+@@ -51,7 +51,7 @@ end = struct
+       lazy
+         (Dom.handler (fun e ->
+            Effect.Expert.handle e (handler e) ~on_exn:(fun exn ->
+-             Exn.reraise exn "Unhandled exception raised in effect");
++             Exn.reraise exn "Unhandled exception raised in effect_value");
+            Js._true))
+     in
+     T { handler; lowered; type_id }
+diff --git a/src/attr.mli b/src/attr.mli
+index b9ede23..72151b9 100644
+--- a/src/attr.mli
++++ b/src/attr.mli
+@@ -266,7 +266,7 @@ module Single_focus_hook () : sig
+   (* CONSIDER USING [Bonsai_web.Effect.Focus.*] functions *)
+ 
+   (* A hook that makes the element it is attached to become focused immediately after the
+-     attribute is applied. Afterward, the attribute has no effect on the element or any
++     attribute is applied. Afterward, the attribute has no effect_value on the element or any
+      other element.
+ 
+      Since an element in the virtual dom can be removed and re-inserted into the DOM, a
+@@ -280,7 +280,7 @@ module Single_focus_hook () : sig
+ 
+      This functor creates a new instance of a focus attribute. Since each functor
+      instantiation is distinct, avoid calling this from within an Incremental graph, or
+-     you will not get the desired effect. *)
++     you will not get the desired effect_value. *)
+ 
+   val attr : [ `Read_the_docs__this_hook_is_unpredictable ] -> after:unit Ui_effect.t -> t
+ end
+diff --git a/src/effect.ml b/src/effect.ml
+index ae5e9e7..cf1f0db 100644
+--- a/src/effect.ml
++++ b/src/effect.ml
+@@ -102,7 +102,7 @@ let () =
+ module Expert = struct
+   let handle_non_dom_event_exn t =
+     Expert.handle t ~on_exn:(fun exn ->
+-      Exn.reraise exn "Unhandled exception raised in effect")
++      Exn.reraise exn "Unhandled exception raised in effect_value")
+   ;;
+ 
+   let handle ~on_exn ?on_further_exns dom_event event =
+diff --git a/src/effect.mli b/src/effect.mli
+index 4752bd6..8284151 100644
+--- a/src/effect.mli
++++ b/src/effect.mli
+@@ -45,7 +45,7 @@ type 'a t +=
+           new code.
+ 
+           [Prevent_default] has a gotcha: it never returns, so anything chained on it
+-          using [bind] will not run. It is not safe to remove from effect chains blindly. *)
++          using [bind] will not run. It is not safe to remove from effect_value chains blindly. *)
+   | Open :
+       { url : string
+       ; target : Open_url_target.t
+@@ -75,7 +75,7 @@ type 'a t +=
+     ]} *)
+ val sequence_as_sibling : unit t -> unless_stopped:(unit -> unit t) -> unit t
+ 
+-(** [open_url ~in_ url] creates an effect that opens the given URL. *)
++(** [open_url ~in_ url] creates an effect_value that opens the given URL. *)
+ val open_url : ?in_:Open_url_target.t -> string -> unit t
+ 
+ (** For registering a handler for Viewport_changed events. Note that if this functor is
+diff --git a/src/event_listener.ml b/src/event_listener.ml
+index c5263b5..ca9a91f 100644
+--- a/src/event_listener.ml
++++ b/src/event_listener.ml
+@@ -64,7 +64,7 @@ struct
+       let handler =
+         Dom.handler (fun ev ->
+           Effect.Expert.handle ev (f ev) ~on_exn:(fun exn ->
+-            Exn.reraise exn "Unhandled exception raised in effect");
++            Exn.reraise exn "Unhandled exception raised in effect_value");
+           Js._true)
+       in
+       Dom_html.addEventListener target X.event_kind handler use_capture
+diff --git a/src/global_listeners.ml b/src/global_listeners.ml
+index 7c8e2a5..50f0673 100644
+--- a/src/global_listeners.ml
++++ b/src/global_listeners.ml
+@@ -135,7 +135,7 @@ let beforeunload ~phase ~f =
+       event##.returnValue := Js.string "this string can be anything";
+       Effect.Ignore
+     | `Do_nothing -> Effect.Ignore
+-    | `Custom_best_effort effect -> effect
++    | `Custom_best_effort effect_value -> effect_value
+   in
+   Beforeunload.create phase ~f |> Attr.create_hook "global-beforeunload-listener"
+ ;;
+diff --git a/src/global_listeners.mli b/src/global_listeners.mli
+index 88ffa57..e30e76a 100644
+--- a/src/global_listeners.mli
++++ b/src/global_listeners.mli
+@@ -63,7 +63,7 @@ val visibilitychange
+   -> f:(Dom_html.event Js.t -> unit Ui_effect.t)
+   -> Attr.t
+ 
+-(* Chrome may not allow Javascript to run after a user requests a tab close, so an effect
++(* Chrome may not allow Javascript to run after a user requests a tab close, so an effect_value
+    passed into `Custom_best_effort may or may not execute to completion *)
+ val beforeunload
+   :  phase:Phase.t
+diff --git a/test/helpers/node_helpers.ml b/test/helpers/node_helpers.ml
+index 63cd35b..73c227b 100644
+--- a/test/helpers/node_helpers.ml
++++ b/test/helpers/node_helpers.ml
+@@ -641,7 +641,7 @@ let get_hook_value t ~type_id ~name =
+ let trigger_hook t ~type_id ~name ~f ~arg =
+   Ui_effect.Expert.handle
+     (f (get_hook_value t ~type_id ~name) arg)
+-    ~on_exn:(fun exn -> Exn.reraise exn "Unhandled exception raised in effect")
++    ~on_exn:(fun exn -> Exn.reraise exn "Unhandled exception raised in effect_value")
+ ;;
+ 
+ module User_actions = struct
+diff --git a/tyxml/virtual_dom_tyxml.ml b/tyxml/virtual_dom_tyxml.ml
+index 9b930c7..86a61ce 100644
+--- a/tyxml/virtual_dom_tyxml.ml
++++ b/tyxml/virtual_dom_tyxml.ml
+@@ -39,7 +39,7 @@ module Xml = struct
+   let attr_ev name cvt_to_vdom_event =
+     let f e =
+       Effect.Expert.handle e (cvt_to_vdom_event e) ~on_exn:(fun exn ->
+-        Base.Exn.reraise exn "Unhandled exception raised in effect");
++        Base.Exn.reraise exn "Unhandled exception raised in effect_value");
+       Js._true
+     in
+     Attr.property name (Js.Unsafe.inject (Dom.handler f))
+diff --git a/ui_effect/src/ui_effect.ml b/ui_effect/src/ui_effect.ml
+index 76598f8..983c18d 100644
+--- a/ui_effect/src/ui_effect.ml
++++ b/ui_effect/src/ui_effect.ml
+@@ -172,7 +172,7 @@ let protect t ~finally =
+   (* We first evaluate both effects in order. *)
+   bind (try_with t ~rest:`Raise) ~f:(fun result ->
+     bind (try_with finally ~rest:`Raise) ~f:(fun finally ->
+-      (* Then, we ensure that if both [t] and [finally] raise, the effect passes [t]'s
++      (* Then, we ensure that if both [t] and [finally] raise, the effect_value passes [t]'s
+          error to [on_exn] and [finally]'s error to [on_further_exns]. *)
+       of_fun ~f:(fun ~callback ~on_exn ->
+         match result, finally with
+@@ -362,9 +362,9 @@ let both_parallel a b =
+         callback (a, b)
+       | _ -> ()
+     in
+-    let dispatch effect ref =
++    let dispatch effect_value ref =
+       Expert.eval
+-        effect
++        effect_value
+         ~f:(fun x ->
+           ref := Some x;
+           maybe_finalize ())
+@@ -385,7 +385,7 @@ let all_parallel xs =
+       let complete_one i v =
+         match Array.get results i with
+         | Some _ ->
+-          (* this branch can only be hit if an effect completes multiple times *)
++          (* this branch can only be hit if an effect_value completes multiple times *)
+           ()
+         | None ->
+           Array.set results i (Some v);
+@@ -398,7 +398,7 @@ let all_parallel xs =
+                   Stdio.eprint_s
+                     [%message
+                       "BUG in ui_effect.ml: length of [all_parallel x] is not equal to \
+-                       length of [x]. The result of an effect is missing."
++                       length of [x]. The result of an effect_value is missing."
+                         [%here]];
+                   None
+                 | Some _ as e -> e)
+diff --git a/ui_effect/src/ui_effect_intf.ml b/ui_effect/src/ui_effect_intf.ml
+index d3ed8b2..2704a08 100644
+--- a/ui_effect/src/ui_effect_intf.ml
++++ b/ui_effect/src/ui_effect_intf.ml
+@@ -57,10 +57,10 @@ module type Effect = sig
+       `and` will run at the same time instead of being sequenced. *)
+   module Par : Monad.S with type 'a t := 'a t
+ 
+-  (** An effect that never completes *)
++  (** An effect_value that never completes *)
+   val never : 'a t
+ 
+-  (** Produces an effect that raises an exception when the effect is performed.
++  (** Produces an effect_value that raises an exception when the effect_value is performed.
+ 
+       Note: As long as this is handled by either [try_with]/[try_with_or_error] or
+       [Expert.handle]/[Expert.eval] (with a non-raising [on_exn]), no exceptions will ever
+@@ -78,13 +78,13 @@ module type Effect = sig
+       [raise_error]. *)
+   val lower_or_error : 'a Or_error.t t -> 'a t
+ 
+-  (** If evaluating the given effect produces an exception before producing a value,
++  (** If evaluating the given effect_value produces an exception before producing a value,
+       [try_with] will return the first exn in the error side of the [Result.t].
+ 
+       If [rest] is [`Call f], [try_with] will use [f] to handle any further exns produced.
+       Otherwise, they will be raised further (i.e. visible to [iter_errors], [try_with],
+       and eventual [Expert.handle]/[Expert.eval] calls), although they cannot cause the
+-      effect itself to raise (i.e. further [try_with]s will result in Ok and handle them
++      effect_value itself to raise (i.e. further [try_with]s will result in Ok and handle them
+       via its [rest] parameter). *)
+   val try_with
+     :  ?rest:[ `Raise | `Call of Exn.t -> unit ] (** default is [`Raise] *)
+@@ -97,7 +97,7 @@ module type Effect = sig
+     -> 'a t
+     -> 'a Or_error.t t
+ 
+-  (** If exceptions are produced in the course of evaluating the input effect, the
++  (** If exceptions are produced in the course of evaluating the input effect_value, the
+       function passed to [iter_errors] will be invoked with those errors. Multiple errors
+       can be produced from functions such as [both_parallel], [all_parallel], and
+       [protect]. This doesn't _handle_ the errors, but you can record or print the error.
+@@ -110,12 +110,12 @@ module type Effect = sig
+       to its next handler, evaluate [f b], and then raise [b] to its next handler. *)
+   val iter_errors : 'a t -> f:(Exn.t -> unit t) -> 'a t
+ 
+-  (** [protect] runs an effect, and after the effect completes (including if it fails with
+-      an exception), it also runs the [finally] effect.
++  (** [protect] runs an effect_value, and after the effect_value completes (including if it fails with
++      an exception), it also runs the [finally] effect_value.
+ 
+-      If the given effect raises an exception, [protect] will output an effect that also
++      If the given effect_value raises an exception, [protect] will output an effect_value that also
+       raises that exception after executing [finally] (even if [finally] also raises). If
+-      [finally] raises (but not the given effect), the output of [protect] will raise with
++      [finally] raises (but not the given effect_value), the output of [protect] will raise with
+       that exception. *)
+   val protect : 'a t -> finally:unit t -> 'a t
+ 
+@@ -129,7 +129,7 @@ module type Effect = sig
+   (** like [all_parallel], but for [unit Effect.t]s. *)
+   val all_parallel_unit : unit t list -> unit t
+ 
+-  (** If creating an effect could be expensive, you can wrap its construction in a lazy
++  (** If creating an effect_value could be expensive, you can wrap its construction in a lazy
+       and pass it to this function so that its construction will be deferred until it's
+       about to be evaluated. *)
+   val lazy_ : 'a t Lazy.t -> 'a t
+@@ -144,12 +144,12 @@ module type Effect = sig
+ 
+       Note that, unlike [of_deferred_fun], the function must return immediately, so it's
+       not possible to test the behaviour of tour app between calling the function and the
+-      effect becoming 'determined'. If you need to do this, see [of_svar] and
++      effect_value becoming 'determined'. If you need to do this, see [of_svar] and
+       [of_query_response_tracker] below. *)
+   val of_sync_fun : ('query -> 'result) -> 'query -> 'result t
+ 
+   (** Like [of_sync_fun] but with a pre-applied unit query. Side-effects in the function
+-      will be run every time that the resulting effect is scheduled *)
++      will be run every time that the resulting effect_value is scheduled *)
+   val of_thunk : (unit -> 'result) -> 'result t
+ 
+   (** Like [of_sync_fun] but with an extra [on_exn] parameter that can be passed into
+@@ -167,12 +167,12 @@ module type Effect = sig
+     S1 with type 'a action := 'a Handler.Action.t and type 'a t := 'a t
+ 
+   module Expert : sig
+-    (** [eval t ~f] runs the given effect, and calls [f] when the effect completes, or
+-        [on_exn] if the effect does not return a result due to an exception. This function
++    (** [eval t ~f] runs the given effect_value, and calls [f] when the effect_value completes, or
++        [on_exn] if the effect_value does not return a result due to an exception. This function
+         should not be called while constructing effects; it's intended for use by
+         libraries that actually schedule effects, such as Bonsai, or Virtual_dom.
+ 
+-        [on_further_exns] is called on exceptions that occur after the effect has gotten a
++        [on_further_exns] is called on exceptions that occur after the effect_value has gotten a
+         result/exn. For example, if every branch of an [all_parallel] call raises an
+         exception, [on_exn] would be called on the first exn, while [on_further_exns]
+         would be called on the rest. There is no guarantee that the callbacks will be
+@@ -207,17 +207,17 @@ module type Effect = sig
+ 
+   module Private : sig
+     module Callback : sig
+-      type 'a effect := 'a t
++      type 'a effect_value := 'a t
+       type ('a, 'b) t
+ 
+       val make
+         :  request:'a
+-        -> on_response:('b -> unit effect)
++        -> on_response:('b -> unit effect_value)
+         -> on_exn:(Exn.t -> unit)
+         -> ('a, 'b) t
+ 
+       val request : ('a, 'b) t -> 'a
+-      val respond_to : ('a, 'b) t -> 'b -> unit effect
++      val respond_to : ('a, 'b) t -> 'b -> unit effect_value
+       val on_exn : _ t -> Exn.t -> unit
+     end
+ 
+@@ -274,7 +274,7 @@ module type Effect = sig
+       val peek : 'a t -> 'a option
+     end
+ 
+-    (** Create an effect from a function that returns an [Svar.t]. This is mostly useful
++    (** Create an effect_value from a function that returns an [Svar.t]. This is mostly useful
+         in testing, to emulate a ['query -> 'result Deferred.t] function that does not
+         return immediately. You may find [Query_response_tracker] a more convenient
+         interface than using [of_svar] directly. *)
+diff --git a/ui_effect/test/test_deferred_and_result_monads.ml b/ui_effect/test/test_deferred_and_result_monads.ml
+index 64eeca6..a4bd6c5 100644
+--- a/ui_effect/test/test_deferred_and_result_monads.ml
++++ b/ui_effect/test/test_deferred_and_result_monads.ml
+@@ -4,31 +4,31 @@ module Effect = Ui_effect
+ module%test [@name "Effect.Result"] _ = struct
+   open Effect.Result.Let_syntax
+ 
+-  let test_effect effect =
++  let test_effect effect_value =
+     Effect.Expert.handle
+       ~on_exn:raise
+-      (let%bind.Effect effect in
+-       Effect.print_s [%message (effect : (string, string) Result.t)])
++      (let%bind.Effect effect_value in
++       Effect.print_s [%message (effect_value : (string, string) Result.t)])
+   ;;
+ 
+   let%expect_test "monad bind works as expected" =
+-    let effect =
++    let effect_value =
+       let%bind () = return () in
+       let%bind () = Effect.Result.fail "I am printing but I'm the failure type" in
+       return "I should not print since the previous one fails"
+     in
+-    test_effect effect;
+-    [%expect {| (effect (Error "I am printing but I'm the failure type")) |}]
++    test_effect effect_value;
++    [%expect {| (effect_value (Error "I am printing but I'm the failure type")) |}]
+   ;;
+ 
+   let%expect_test "monadic map works as expected" =
+-    let effect =
++    let effect_value =
+       let%bind () = return () in
+       let%map () = Effect.Result.fail "I am printing but I'm the failure type" in
+       "I should not print since the previous one fails"
+     in
+-    test_effect effect;
+-    [%expect {| (effect (Error "I am printing but I'm the failure type")) |}]
++    test_effect effect_value;
++    [%expect {| (effect_value (Error "I am printing but I'm the failure type")) |}]
+   ;;
+ end
+ 
+@@ -48,11 +48,11 @@ module%test [@name "Combining Effect.Result"] _ = struct
+     ;;
+   end
+ 
+-  let test_effect effect =
++  let test_effect effect_value =
+     Effect.Expert.handle
+       ~on_exn:raise
+-      (let%bind.Effect effect in
+-       Effect.print_s [%message (effect : (C.t, Error.t) Result.t)])
++      (let%bind.Effect effect_value in
++       Effect.print_s [%message (effect_value : (C.t, Error.t) Result.t)])
+   ;;
+ 
+   let combine_errors err_a err_b =
+@@ -63,21 +63,21 @@ module%test [@name "Combining Effect.Result"] _ = struct
+     let a = return `A in
+     let b = return "Inner B" in
+     Effect.Result.combine a b ~ok:C.from_a_b ~err:combine_errors |> test_effect;
+-    [%expect {| (effect (Ok (A "Inner B"))) |}]
++    [%expect {| (effect_value (Ok (A "Inner B"))) |}]
+   ;;
+ 
+   let%expect_test "Fail A, B ok" =
+     let b = return "B" in
+     let a = Effect.Result.fail (Error.create_s [%message "fail a"]) in
+     Effect.Result.combine a b ~ok:C.from_a_b ~err:combine_errors |> test_effect;
+-    [%expect {| (effect (Error "fail a")) |}]
++    [%expect {| (effect_value (Error "fail a")) |}]
+   ;;
+ 
+   let%expect_test "A ok, Fail B" =
+     let a = return `A in
+     let b = Effect.Result.fail (Error.create_s [%message "fail b"]) in
+     Effect.Result.combine a b ~ok:C.from_a_b ~err:combine_errors |> test_effect;
+-    [%expect {| (effect (Error "fail b")) |}]
++    [%expect {| (effect_value (Error "fail b")) |}]
+   ;;
+ 
+   let%expect_test "Fail both" =
+@@ -85,41 +85,41 @@ module%test [@name "Combining Effect.Result"] _ = struct
+     let b = Effect.Result.fail (Error.create_s [%message "fail b"]) in
+     Effect.Result.combine a b ~ok:C.from_a_b ~err:combine_errors |> test_effect;
+     [%expect
+-      {| (effect (Error ("combining two errors" (err_a "fail a") (err_b "fail b")))) |}]
++      {| (effect_value (Error ("combining two errors" (err_a "fail a") (err_b "fail b")))) |}]
+   ;;
+ end
+ 
+ module%test [@name "Effect.Or_error"] _ = struct
+   open Effect.Or_error.Let_syntax
+ 
+-  let test_effect effect =
++  let test_effect effect_value =
+     Effect.Expert.handle
+       ~on_exn:raise
+-      (let%bind.Effect effect in
+-       Effect.print_s [%message (effect : string Or_error.t)])
++      (let%bind.Effect effect_value in
++       Effect.print_s [%message (effect_value : string Or_error.t)])
+   ;;
+ 
+   let%expect_test "monad bind works as expected" =
+-    let effect =
++    let effect_value =
+       let%bind () = return () in
+       let%bind () =
+         Effect.Or_error.error_string "I am printing but I'm the failure type"
+       in
+       return "I should not print since the previous one fails"
+     in
+-    test_effect effect;
+-    [%expect {| (effect (Error "I am printing but I'm the failure type")) |}]
++    test_effect effect_value;
++    [%expect {| (effect_value (Error "I am printing but I'm the failure type")) |}]
+   ;;
+ 
+   let%expect_test "monadic map works as expected" =
+-    let effect =
++    let effect_value =
+       let%bind () = return () in
+       let%map () =
+         Effect.Or_error.error_s [%message "I am printing but I'm the failure type"]
+       in
+       "I should not print since the previous one fails"
+     in
+-    test_effect effect;
+-    [%expect {| (effect (Error "I am printing but I'm the failure type")) |}]
++    test_effect effect_value;
++    [%expect {| (effect_value (Error "I am printing but I'm the failure type")) |}]
+   ;;
+ end
+diff --git a/ui_effect/test/test_effect_error_handling.ml b/ui_effect/test/test_effect_error_handling.ml
+index 3258e4d..ec8c698 100644
+--- a/ui_effect/test/test_effect_error_handling.ml
++++ b/ui_effect/test/test_effect_error_handling.ml
+@@ -90,7 +90,7 @@ module%test [@name "Effects that raise"] _ = struct
+       |}]
+   ;;
+ 
+-  let%expect_test "Raising in Many effect" =
++  let%expect_test "Raising in Many effect_value" =
+     let effects =
+       [ Effect.Ignore
+       ; Effect.raise_s [%message "second in many raised"]
+@@ -98,8 +98,8 @@ module%test [@name "Effects that raise"] _ = struct
+       ; Effect.raise_s [%message "fourth in many raised"]
+       ]
+     in
+-    let effect = Effect.Many effects in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++    let effect_value = Effect.Many effects in
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect
+       {|
+       ("handled by on_exn" (exn "second in many raised"))
+@@ -158,7 +158,7 @@ module%test [@name "Effect.try_with and Effect.try_with_or_error"] _ = struct
+       { f =
+           (fun try_with ->
+             let module _ = struct
+-              let%expect_test "try_with on non-raising effect" =
++              let%expect_test "try_with on non-raising effect_value" =
+                 let normal_effect = Effect.Ignore in
+                 let handled_effect =
+                   match%map try_with normal_effect with
+@@ -169,7 +169,7 @@ module%test [@name "Effect.try_with and Effect.try_with_or_error"] _ = struct
+                 [%expect {| Ok! |}]
+               ;;
+ 
+-              let%expect_test "try_with on raising effect" =
++              let%expect_test "try_with on raising effect_value" =
+                 let handled_effect =
+                   match%map try_with raise_effect with
+                   | Ok () -> print_endline "Ok!"
+@@ -179,7 +179,7 @@ module%test [@name "Effect.try_with and Effect.try_with_or_error"] _ = struct
+                 [%expect {| Error! |}]
+               ;;
+ 
+-              let%expect_test "try_with on sequential raising effect" =
++              let%expect_test "try_with on sequential raising effect_value" =
+                 let handled_effect =
+                   match%map try_with sequential_raise_effect with
+                   | Ok () -> print_endline "Ok!"
+@@ -189,7 +189,7 @@ module%test [@name "Effect.try_with and Effect.try_with_or_error"] _ = struct
+                 [%expect {| Error! |}]
+               ;;
+ 
+-              let%expect_test "try_with on parallel raising effect" =
++              let%expect_test "try_with on parallel raising effect_value" =
+                 let handled_effect =
+                   match%map try_with parallel_raise_effect with
+                   | Ok () -> print_endline "Ok!"
+@@ -277,14 +277,14 @@ module%test [@name "Effect.iter_errors"] _ = struct
+   let print_iter_errors = print_iter_errors_str "seen by iter_errors"
+ 
+   let%expect_test "iter_errors with no errors" =
+-    let effect = Effect.iter_errors Effect.Ignore ~f:print_iter_errors in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++    let effect_value = Effect.iter_errors Effect.Ignore ~f:print_iter_errors in
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect {| |}]
+   ;;
+ 
+   let%expect_test "iter_errors with one error" =
+-    let effect = Effect.iter_errors raise_effect ~f:print_iter_errors in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++    let effect_value = Effect.iter_errors raise_effect ~f:print_iter_errors in
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect
+       {|
+       ("seen by iter_errors" (exn "this is an exn!"))
+@@ -293,8 +293,8 @@ module%test [@name "Effect.iter_errors"] _ = struct
+   ;;
+ 
+   let%expect_test "iter_errors with sequential errors" =
+-    let effect = Effect.iter_errors sequential_raise_effect ~f:print_iter_errors in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++    let effect_value = Effect.iter_errors sequential_raise_effect ~f:print_iter_errors in
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect
+       {|
+       ("seen by iter_errors" (exn (which_exn 0)))
+@@ -337,8 +337,8 @@ module%test [@name "Effect.iter_errors"] _ = struct
+ 
+   let%expect_test "on_exn raises" =
+     (try
+-       let effect = Effect.iter_errors raise_effect ~f:print_iter_errors in
+-       Effect.Expert.handle effect ~on_exn:Base.raise
++       let effect_value = Effect.iter_errors raise_effect ~f:print_iter_errors in
++       Effect.Expert.handle effect_value ~on_exn:Base.raise
+      with
+      | exn -> print_s [%message "raised" (exn : Exn.t)]);
+     [%expect
+@@ -349,8 +349,8 @@ module%test [@name "Effect.iter_errors"] _ = struct
+   ;;
+ 
+   let%expect_test "iter_errors with parallel errors" =
+-    let effect = Effect.iter_errors parallel_raise_effect ~f:print_iter_errors in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++    let effect_value = Effect.iter_errors parallel_raise_effect ~f:print_iter_errors in
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     (* Notice that the [iter_errors] handlers are not all called together - they are
+        intermixed with their respective exn handlers. Since effects are implemented via
+        callbacks (and not all effects are synchronous), I don't think there's a good way
+@@ -374,8 +374,8 @@ module%test [@name "Effect.iter_errors"] _ = struct
+     let tried_effect =
+       Effect.try_with parallel_raise_effect ~rest:`Raise |> Effect.ignore_m
+     in
+-    let effect = Effect.iter_errors tried_effect ~f:print_iter_errors in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++    let effect_value = Effect.iter_errors tried_effect ~f:print_iter_errors in
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect
+       {|
+       ("seen by iter_errors" (exn (which_exn 1)))
+@@ -399,8 +399,8 @@ module%test [@name "Effect.iter_errors"] _ = struct
+       Effect.try_with parallel_raise_effect ~rest:(`Call custom_on_further_exns)
+       |> Effect.ignore_m
+     in
+-    let effect = Effect.iter_errors tried_effect ~f:print_iter_errors in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++    let effect_value = Effect.iter_errors tried_effect ~f:print_iter_errors in
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect
+       {|
+       ("handled by try_with" (exn (which_exn 1)))
+@@ -411,8 +411,8 @@ module%test [@name "Effect.iter_errors"] _ = struct
+   ;;
+ 
+   let%expect_test "iter_errors waits for [f]'s output to complete" =
+-    let effect = Effect.iter_errors raise_effect ~f:(fun _ -> Effect.never) in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++    let effect_value = Effect.iter_errors raise_effect ~f:(fun _ -> Effect.never) in
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect {| |}]
+   ;;
+ end
+@@ -421,15 +421,15 @@ module%test [@name "Effect.protect"] _ = struct
+   let print_finally_str str = Effect.print_s [%message str]
+   let print_finally = print_finally_str "finally executed"
+ 
+-  let%expect_test "protect with successful effect" =
+-    let effect = Effect.protect Effect.Ignore ~finally:print_finally in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++  let%expect_test "protect with successful effect_value" =
++    let effect_value = Effect.protect Effect.Ignore ~finally:print_finally in
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect {| "finally executed" |}]
+   ;;
+ 
+-  let%expect_test "protect with raising effect" =
+-    let effect = Effect.protect raise_effect ~finally:print_finally in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++  let%expect_test "protect with raising effect_value" =
++    let effect_value = Effect.protect raise_effect ~finally:print_finally in
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect
+       {|
+       "finally executed"
+@@ -437,9 +437,9 @@ module%test [@name "Effect.protect"] _ = struct
+       |}]
+   ;;
+ 
+-  let%expect_test "protect with parallel raising effect" =
+-    let effect = Effect.protect parallel_raise_effect ~finally:print_finally in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++  let%expect_test "protect with parallel raising effect_value" =
++    let effect_value = Effect.protect parallel_raise_effect ~finally:print_finally in
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect
+       {|
+       "finally executed"
+@@ -451,17 +451,17 @@ module%test [@name "Effect.protect"] _ = struct
+       |}]
+   ;;
+ 
+-  let%expect_test "protect with finally effect that raises" =
++  let%expect_test "protect with finally effect_value that raises" =
+     let raising_finally = Effect.raise_s [%message "finally raised!"] in
+-    let effect = Effect.protect Effect.Ignore ~finally:raising_finally in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++    let effect_value = Effect.protect Effect.Ignore ~finally:raising_finally in
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect {| ("handled by on_exn" (exn "finally raised!")) |}]
+   ;;
+ 
+   let%expect_test "protect with both main and finally effects raising" =
+     let raising_finally = Effect.raise_s [%message "finally raised!"] in
+-    let effect = Effect.protect raise_effect ~finally:raising_finally in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++    let effect_value = Effect.protect raise_effect ~finally:raising_finally in
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect
+       {|
+       ("handled by on_exn" (exn "this is an exn!"))
+@@ -501,8 +501,8 @@ module%test [@name "Effect.protect"] _ = struct
+     let inner_finally = Effect.raise_s [%message "inner finally raised"] in
+     let outer_finally = Effect.raise_s [%message "outer finally raised"] in
+     let inner_effect = Effect.protect main_effect ~finally:inner_finally in
+-    let effect = Effect.protect inner_effect ~finally:outer_finally in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++    let effect_value = Effect.protect inner_effect ~finally:outer_finally in
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     (* Note that the outer raise exn handler is called before the inner raise. We could
+        call [on_further_exns] on the inner exn before the outer one to prevent this, but
+        it would change the order of other things in unintuitive ways (e.g. [iter_errors]
+@@ -517,12 +517,12 @@ module%test [@name "Effect.protect"] _ = struct
+   ;;
+ 
+   let%expect_test "protect with try_with" =
+-    let effect =
++    let effect_value =
+       Effect.protect
+         (Effect.try_with raise_effect |> Effect.ignore_m)
+         ~finally:print_finally
+     in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect {| "finally executed" |}]
+   ;;
+ 
+@@ -531,12 +531,12 @@ module%test [@name "Effect.protect"] _ = struct
+       print_s [%message "seen by iter_errors" (exn : Exn.t)];
+       Effect.Ignore
+     in
+-    let effect =
++    let effect_value =
+       Effect.protect
+         (Effect.iter_errors parallel_raise_effect ~f:print_iter_errors)
+         ~finally:print_finally
+     in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect
+       {|
+       ("seen by iter_errors" (exn (which_exn 0)))
+@@ -553,10 +553,10 @@ module%test [@name "Effect.protect"] _ = struct
+       |}]
+   ;;
+ 
+-  let%expect_test "protect with never effect" =
+-    let effect = Effect.protect Effect.never ~finally:print_finally in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
+-    (* The never effect doesn't complete, so finally should not execute *)
++  let%expect_test "protect with never effect_value" =
++    let effect_value = Effect.protect Effect.never ~finally:print_finally in
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
++    (* The never effect_value doesn't complete, so finally should not execute *)
+     [%expect {| |}]
+   ;;
+ 
+@@ -571,8 +571,8 @@ module%test [@name "Effect.protect"] _ = struct
+   ;;
+ 
+   let%expect_test "protect with multiple finally effects in parallel" =
+-    let effect = Effect.protect Effect.Ignore ~finally:parallel_raise_effect in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++    let effect_value = Effect.protect Effect.Ignore ~finally:parallel_raise_effect in
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect
+       {|
+       ("handled by on_exn" (exn (which_exn 0)))
+@@ -630,9 +630,9 @@ module%test [@name "Effect.protect"] _ = struct
+ end
+ 
+ module%test [@name "reraising should only wrap exns once"] _ = struct
+-  let handle effect =
++  let handle effect_value =
+     try
+-      Effect.Expert.handle effect ~on_exn:(fun exn -> Exn.reraise exn "reraising...")
++      Effect.Expert.handle effect_value ~on_exn:(fun exn -> Exn.reraise exn "reraising...")
+     with
+     | exn -> print_s (Exn.sexp_of_t exn)
+   ;;
+@@ -675,26 +675,26 @@ end
+ (* just to make sure we don't miss adding [try...with] anywhere *)
+ module%test [@name "Raising at various places"] _ = struct
+   let%expect_test "Raising inside bind function" =
+-    let effect =
++    let effect_value =
+       let%bind () = Effect.Ignore in
+       failwith "this is a raised exn!"
+     in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect {| ("handled by on_exn" (exn (Failure "this is a raised exn!"))) |}]
+   ;;
+ 
+   let%expect_test "Raising inside map function" =
+-    let effect =
++    let effect_value =
+       let%map () = Effect.Ignore in
+       failwith "this is a raised exn!"
+     in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect {| ("handled by on_exn" (exn (Failure "this is a raised exn!"))) |}]
+   ;;
+ 
+   let%expect_test "Raising inside lazy" =
+-    let effect = Effect.lazy_ (lazy (failwith "this is a raised exn!")) in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++    let effect_value = Effect.lazy_ (lazy (failwith "this is a raised exn!")) in
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect {| ("handled by on_exn" (exn (Failure "this is a raised exn!"))) |}]
+   ;;
+ 
+@@ -716,31 +716,31 @@ module%test [@name "Raising at various places"] _ = struct
+   ;;
+ 
+   let%expect_test "Raising inside of_sync_fun" =
+-    let effect = Effect.of_sync_fun (fun () -> failwith "sync fun raised!") () in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++    let effect_value = Effect.of_sync_fun (fun () -> failwith "sync fun raised!") () in
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect {| ("handled by on_exn" (exn (Failure "sync fun raised!"))) |}]
+   ;;
+ 
+   let%expect_test "Raising inside of_thunk" =
+-    let effect = Effect.of_thunk (fun () -> failwith "thunk raised!") in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++    let effect_value = Effect.of_thunk (fun () -> failwith "thunk raised!") in
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect {| ("handled by on_exn" (exn (Failure "thunk raised!"))) |}]
+   ;;
+ 
+   let%expect_test "Raising inside Expert.of_fun" =
+-    let effect =
++    let effect_value =
+       Effect.Expert.of_fun ~f:(fun ~callback:_ ~on_exn:_ -> failwith "callback raised!")
+     in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect {| ("handled by on_exn" (exn (Failure "callback raised!"))) |}]
+   ;;
+ 
+   let%expect_test "Raising in iter_errors callback function" =
+-    let effect =
++    let effect_value =
+       Effect.iter_errors raise_effect ~f:(fun _ ->
+         failwith "iter_errors callback raised!")
+     in
+-    Effect.Expert.handle effect ~on_exn ~on_further_exns;
++    Effect.Expert.handle effect_value ~on_exn ~on_further_exns;
+     [%expect
+       {|
+       ("handled by on_exn" (exn "this is an exn!"))
+@@ -755,12 +755,12 @@ module%test
+      enclosing call to [of_thunk'] and co., but not [of_thunk] and co."] _ =
+ struct
+   let%expect_test "[handle] inside [of_thunk]" =
+-    let effect =
++    let effect_value =
+       Effect.of_thunk (fun () ->
+         Effect.Expert.handle raise_effect ~on_exn:(fun exn ->
+           Exn.reraise exn "No access to [on_exn], must raise!"))
+     in
+-    (try Effect.Expert.handle effect ~on_exn ~on_further_exns with
++    (try Effect.Expert.handle effect_value ~on_exn ~on_further_exns with
+      | e -> print_s [%message (e : Exn.t)]);
+     [%expect
+       {|
+@@ -771,10 +771,10 @@ struct
+   ;;
+ 
+   let%expect_test "[handle] inside [of_thunk']" =
+-    let effect =
++    let effect_value =
+       Effect.of_thunk' (fun () ~on_exn -> Effect.Expert.handle raise_effect ~on_exn)
+     in
+-    (try Effect.Expert.handle effect ~on_exn ~on_further_exns with
++    (try Effect.Expert.handle effect_value ~on_exn ~on_further_exns with
+      | e -> print_s [%message (e : Exn.t)]);
+     [%expect {| ("handled by on_exn" (exn "this is an exn!")) |}]
+   ;;
+diff --git a/ui_effect/test/test_parallel_effects.ml b/ui_effect/test/test_parallel_effects.ml
+index 6eafdc0..158d0b2 100644
+--- a/ui_effect/test/test_parallel_effects.ml
++++ b/ui_effect/test/test_parallel_effects.ml
+@@ -11,7 +11,7 @@ module Svar = struct
+ end
+ 
+ module Degenerate_svar = struct
+-  (* the degenerate svar allows multiple resumptions of an effect *)
++  (* the degenerate svar allows multiple resumptions of an effect_value *)
+ 
+   let create () =
+     let setter = ref (fun _ -> ()) in
+@@ -48,7 +48,7 @@ let%expect_test "Effect.both_parallel" =
+   bisimulate_both_boths ~f:(fun both ~expect_diff:_ ->
+     let fill_eff1, eff1 = Svar.create () in
+     let fill_eff2, eff2 = Svar.create () in
+-    let effect =
++    let effect_value =
+       let%map a, b =
+         both
+           (let%map () = eff1 in
+@@ -58,23 +58,23 @@ let%expect_test "Effect.both_parallel" =
+            print_endline "eff2 done";
+            2)
+       in
+-      printf "effect done: %d %d" a b
++      printf "effect_value done: %d %d" a b
+     in
+-    Effect.Expert.handle effect ~on_exn:Base.raise;
++    Effect.Expert.handle effect_value ~on_exn:Base.raise;
+     fill_eff1 ();
+     [%expect {| eff1 done |}];
+     fill_eff2 ();
+     [%expect
+       {|
+       eff2 done
+-      effect done: 1 2
++      effect_value done: 1 2
+       |}])
+ ;;
+ 
+ let%expect_test "Effect.both_parallel using let%map syntax" =
+   let fill_eff1, eff1 = Svar.create () in
+   let fill_eff2, eff2 = Svar.create () in
+-  let effect =
++  let effect_value =
+     let%map.Effect.Par a =
+       let%map () = eff1 in
+       print_endline "eff1 done";
+@@ -84,23 +84,23 @@ let%expect_test "Effect.both_parallel using let%map syntax" =
+       print_endline "eff2 done";
+       2
+     in
+-    printf "effect done: %d %d" a b
++    printf "effect_value done: %d %d" a b
+   in
+-  Effect.Expert.handle effect ~on_exn:Base.raise;
++  Effect.Expert.handle effect_value ~on_exn:Base.raise;
+   fill_eff1 ();
+   [%expect {| eff1 done |}];
+   fill_eff2 ();
+   [%expect
+     {|
+     eff2 done
+-    effect done: 1 2
++    effect_value done: 1 2
+     |}]
+ ;;
+ 
+ let%expect_test "Effect.both_parallel using let%bind syntax" =
+   let fill_eff1, eff1 = Svar.create () in
+   let fill_eff2, eff2 = Svar.create () in
+-  let effect =
++  let effect_value =
+     let%bind.Effect.Par a =
+       let%map () = eff1 in
+       print_endline "eff1 done";
+@@ -110,23 +110,23 @@ let%expect_test "Effect.both_parallel using let%bind syntax" =
+       print_endline "eff2 done";
+       2
+     in
+-    return (printf "effect done: %d %d" a b)
++    return (printf "effect_value done: %d %d" a b)
+   in
+-  Effect.Expert.handle effect ~on_exn:Base.raise;
++  Effect.Expert.handle effect_value ~on_exn:Base.raise;
+   fill_eff1 ();
+   [%expect {| eff1 done |}];
+   fill_eff2 ();
+   [%expect
+     {|
+     eff2 done
+-    effect done: 1 2
++    effect_value done: 1 2
+     |}]
+ ;;
+ 
+ let%expect_test "Effect.both_parallel using let%map syntax - filled in reverse" =
+   let fill_eff1, eff1 = Svar.create () in
+   let fill_eff2, eff2 = Svar.create () in
+-  let effect =
++  let effect_value =
+     let%map.Effect.Par a =
+       let%map () = eff1 in
+       print_endline "eff1 done";
+@@ -136,23 +136,23 @@ let%expect_test "Effect.both_parallel using let%map syntax - filled in reverse"
+       print_endline "eff2 done";
+       2
+     in
+-    printf "effect done: %d %d" a b
++    printf "effect_value done: %d %d" a b
+   in
+-  Effect.Expert.handle effect ~on_exn:Base.raise;
++  Effect.Expert.handle effect_value ~on_exn:Base.raise;
+   fill_eff2 ();
+   [%expect {| eff2 done |}];
+   fill_eff1 ();
+   [%expect
+     {|
+     eff1 done
+-    effect done: 1 2
++    effect_value done: 1 2
+     |}]
+ ;;
+ 
+ let%expect_test "Effect.both_parallel using let%bind syntax - filled in reverse" =
+   let fill_eff1, eff1 = Svar.create () in
+   let fill_eff2, eff2 = Svar.create () in
+-  let effect =
++  let effect_value =
+     let%bind.Effect.Par a =
+       let%map () = eff1 in
+       print_endline "eff1 done";
+@@ -162,16 +162,16 @@ let%expect_test "Effect.both_parallel using let%bind syntax - filled in reverse"
+       print_endline "eff2 done";
+       2
+     in
+-    return (printf "effect done: %d %d" a b)
++    return (printf "effect_value done: %d %d" a b)
+   in
+-  Effect.Expert.handle effect ~on_exn:Base.raise;
++  Effect.Expert.handle effect_value ~on_exn:Base.raise;
+   fill_eff2 ();
+   [%expect {| eff2 done |}];
+   fill_eff1 ();
+   [%expect
+     {|
+     eff1 done
+-    effect done: 1 2
++    effect_value done: 1 2
+     |}]
+ ;;
+ 
+@@ -179,7 +179,7 @@ let%expect_test "Effect.both_parallel degenerate" =
+   bisimulate_both_boths ~f:(fun both ~expect_diff ->
+     let fill_eff1, eff1 = Degenerate_svar.create () in
+     let fill_eff2, eff2 = Degenerate_svar.create () in
+-    let effect =
++    let effect_value =
+       let%map a, b =
+         both
+           (let%map () = eff1 in
+@@ -189,9 +189,9 @@ let%expect_test "Effect.both_parallel degenerate" =
+            print_endline "eff2 done";
+            2)
+       in
+-      printf "effect done: %d %d" a b
++      printf "effect_value done: %d %d" a b
+     in
+-    Effect.Expert.handle effect ~on_exn:Base.raise;
++    Effect.Expert.handle effect_value ~on_exn:Base.raise;
+     fill_eff1 ();
+     [%expect {| eff1 done |}];
+     fill_eff1 ();
+@@ -200,7 +200,7 @@ let%expect_test "Effect.both_parallel degenerate" =
+     [%expect
+       {|
+       eff2 done
+-      effect done: 1 2
++      effect_value done: 1 2
+       |}];
+     fill_eff2 ();
+     expect_diff ~parallel:(fun () -> [%expect {| |}]) ~normal:(fun () -> [%expect {| |}]);
+@@ -214,7 +214,7 @@ let%expect_test "Effect.both_parallel already filled" =
+     fill_eff1 ();
+     let fill_eff2, eff2 = Svar.create () in
+     fill_eff2 ();
+-    let effect =
++    let effect_value =
+       let%map a, b =
+         both
+           (let%map () = eff1 in
+@@ -224,14 +224,14 @@ let%expect_test "Effect.both_parallel already filled" =
+            print_endline "eff2 done";
+            2)
+       in
+-      printf "effect done: %d %d" a b
++      printf "effect_value done: %d %d" a b
+     in
+-    Effect.Expert.handle effect ~on_exn:Base.raise;
++    Effect.Expert.handle effect_value ~on_exn:Base.raise;
+     [%expect
+       {|
+       eff1 done
+       eff2 done
+-      effect done: 1 2
++      effect_value done: 1 2
+       |}])
+ ;;
+ 
+@@ -239,7 +239,7 @@ let%expect_test "Effect.both_parallel out of order" =
+   bisimulate_both_boths ~f:(fun both ~expect_diff ->
+     let fill_eff1, eff1 = Svar.create () in
+     let fill_eff2, eff2 = Svar.create () in
+-    let effect =
++    let effect_value =
+       let%map a, b =
+         both
+           (let%map () = eff1 in
+@@ -249,9 +249,9 @@ let%expect_test "Effect.both_parallel out of order" =
+            print_endline "eff2 done";
+            2)
+       in
+-      printf "effect done: %d %d" a b
++      printf "effect_value done: %d %d" a b
+     in
+-    Effect.Expert.handle effect ~on_exn:Base.raise;
++    Effect.Expert.handle effect_value ~on_exn:Base.raise;
+     fill_eff2 ();
+     (* NOTE: This test shows that the effects in [all] are only filled in order, while
+        both_parallel allows out-of-order effects to be filled earlier. *)
+@@ -264,14 +264,14 @@ let%expect_test "Effect.both_parallel out of order" =
+         [%expect
+           {|
+           eff1 done
+-          effect done: 1 2
++          effect_value done: 1 2
+           |}])
+       ~normal:(fun () ->
+         [%expect
+           {|
+           eff1 done
+           eff2 done
+-          effect done: 1 2
++          effect_value done: 1 2
+           |}]))
+ ;;
+ 
+@@ -295,11 +295,11 @@ let%expect_test "Effect.all_parallel" =
+       print_endline "eff3 done";
+       3
+     in
+-    let effect =
++    let effect_value =
+       let%map all = all [ eff1; eff2; eff3 ] in
+       print_s [%message (all : int list)]
+     in
+-    Effect.Expert.handle effect ~on_exn:Base.raise;
++    Effect.Expert.handle effect_value ~on_exn:Base.raise;
+     fill_eff1 ();
+     [%expect {| eff1 done |}];
+     fill_eff2 ();
+@@ -332,11 +332,11 @@ let%expect_test "Effect.all_parallel degenerate" =
+       print_endline "eff3 done";
+       3
+     in
+-    let effect =
++    let effect_value =
+       let%map all = all [ eff1; eff2; eff3 ] in
+       print_s [%message (all : int list)]
+     in
+-    Effect.Expert.handle effect ~on_exn:Base.raise;
++    Effect.Expert.handle effect_value ~on_exn:Base.raise;
+     fill_eff1 ();
+     [%expect {| eff1 done |}];
+     fill_eff1 ();
+@@ -378,11 +378,11 @@ let%expect_test "Effect.all_parallel already filled" =
+       print_endline "eff3 done";
+       3
+     in
+-    let effect =
++    let effect_value =
+       let%map all = all [ eff1; eff2; eff3 ] in
+       print_s [%message (all : int list)]
+     in
+-    Effect.Expert.handle effect ~on_exn:Base.raise;
++    Effect.Expert.handle effect_value ~on_exn:Base.raise;
+     [%expect
+       {|
+       eff1 done
+@@ -412,11 +412,11 @@ let%expect_test "Effect.all_parallel out of order" =
+       print_endline "eff3 done";
+       3
+     in
+-    let effect =
++    let effect_value =
+       let%map all = all [ eff1; eff2; eff3 ] in
+       print_s [%message (all : int list)]
+     in
+-    Effect.Expert.handle effect ~on_exn:Base.raise;
++    Effect.Expert.handle effect_value ~on_exn:Base.raise;
+     fill_eff2 ();
+     expect_diff
+       ~parallel:(fun () -> [%expect {| eff2 done |}])
+@@ -427,7 +427,7 @@ let%expect_test "Effect.all_parallel out of order" =
+       ~normal:(fun () -> [%expect {| |}]);
+     fill_eff1 ();
+     (* NOTE: In the "normal"/non-parallel case, none of the events occurs unless they its
+-       previous effect in the list has occurred. *)
++       previous effect_value in the list has occurred. *)
+     expect_diff
+       ~parallel:(fun () ->
+         [%expect
+@@ -462,11 +462,11 @@ let%expect_test "Effect.all_parallel_unit sanity check" =
+       let%bind () = eff3 in
+       Effect.print_s [%message "eff3 done"]
+     in
+-    let effect =
++    let effect_value =
+       let%bind () = all_unit [ eff1; eff2; eff3 ] in
+       Effect.print_s [%message "all done!"]
+     in
+-    Effect.Expert.handle effect ~on_exn:Base.raise;
++    Effect.Expert.handle effect_value ~on_exn:Base.raise;
+     fill_eff2 ();
+     expect_diff
+       ~parallel:(fun () -> [%expect {| "eff2 done" |}])
+@@ -477,7 +477,7 @@ let%expect_test "Effect.all_parallel_unit sanity check" =
+       ~normal:(fun () -> [%expect {| |}]);
+     fill_eff1 ();
+     (* NOTE: In the "normal"/non-parallel case, none of the events occurs unless they its
+-       previous effect in the list has occurred. *)
++       previous effect_value in the list has occurred. *)
+     expect_diff
+       ~parallel:(fun () ->
+         [%expect
+diff --git a/ui_effect_of_deferred/ui_effect_of_deferred.mli b/ui_effect_of_deferred/ui_effect_of_deferred.mli
+index e70d806..da5174b 100644
+--- a/ui_effect_of_deferred/ui_effect_of_deferred.mli
++++ b/ui_effect_of_deferred/ui_effect_of_deferred.mli
+@@ -2,11 +2,11 @@ open! Base
+ open! Async_kernel
+ 
+ (** [of_deferred_fun] is a way to convert from a deferred-returning function to an
+-    effect-returning function. This function is commonly used to wrap RPC calls. *)
++    effect_value-returning function. This function is commonly used to wrap RPC calls. *)
+ val of_deferred_fun : ('query -> 'response Deferred.t) -> 'query -> 'response Ui_effect.t
+ 
+ (** Like [of_deferred_fun] but with a pre-applied unit query. Side-effects in the function
+-    will be run every time that the resulting effect is scheduled *)
++    will be run every time that the resulting effect_value is scheduled *)
+ val of_deferred_thunk : (unit -> 'response Deferred.t) -> 'response Ui_effect.t
+ 
+ (** Like [of_deferred_fun] but with an extra [on_exn] parameter that can be passed into
+@@ -22,6 +22,6 @@ val of_deferred_thunk'
+   :  (unit -> on_exn:(Exn.t -> unit) -> 'response Deferred.t)
+   -> 'response Ui_effect.t
+ 
+-(** [expert_handle_as_deferred] will return a function that schedules the effect, and
++(** [expert_handle_as_deferred] will return a function that schedules the effect_value, and
+     returns the result as a [Deferred.t]. *)
+ val expert_handle_as_deferred : 'a Ui_effect.t -> 'a Deferred.t
+-- 
+2.51.2
+
+
+From d22e2e30e2bba602080e4abac6e6966f3e02ee31 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Mon, 3 Aug 2026 00:49:25 +0200
+Subject: [PATCH 2/2] compat: accept anonymous functor parameter on OCaml 5.5
+
+---
+ src/effect.mli | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/effect.mli b/src/effect.mli
+index 8284151..8ba011f 100644
+--- a/src/effect.mli
++++ b/src/effect.mli
+@@ -80,7 +80,7 @@ val open_url : ?in_:Open_url_target.t -> string -> unit t
+ 
+ (** For registering a handler for Viewport_changed events. Note that if this functor is
+     called multiple times, each handler will see all of the events. *)
+-module Define_visibility (VH : Visibility_handler) : sig end
++module Define_visibility (_ : Visibility_handler) : sig end
+ 
+ module Expert : sig
+   (** [handle t] looks up the [Handler.handle] function in the table of [Define]d
+-- 
+2.51.2
+

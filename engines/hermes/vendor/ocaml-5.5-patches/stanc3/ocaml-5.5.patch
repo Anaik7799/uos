@@ -1,0 +1,25 @@
+From 8b20da745e30fa7925e0f6fc7b53db4b4341ded4 Mon Sep 17 00:00:00 2001
+From: ZigVM Toolchain <toolchain@zigvm.local>
+Date: Mon, 3 Aug 2026 00:38:52 +0200
+Subject: [PATCH] fix: use public Base Hashtbl key signature
+
+---
+ src/analysis_and_optimization/Monotone_framework_sigs.mli | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/analysis_and_optimization/Monotone_framework_sigs.mli b/src/analysis_and_optimization/Monotone_framework_sigs.mli
+index aa51f92..ea18642 100644
+--- a/src/analysis_and_optimization/Monotone_framework_sigs.mli
++++ b/src/analysis_and_optimization/Monotone_framework_sigs.mli
+@@ -9,7 +9,7 @@ open Core
+ module type FLOWGRAPH = sig
+   type labels
+ 
+-  include Base__.Hashtbl_intf.Key.S with type t = labels
++  include Base.Hashtbl.Key.S with type t = labels
+ 
+   val initials : labels Set.Poly.t
+   val successors : (labels, labels Set.Poly.t) Map.Poly.t
+-- 
+2.51.2
+

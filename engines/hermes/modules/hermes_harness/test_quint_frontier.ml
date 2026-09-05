@@ -32,7 +32,7 @@ let system : (string list, string) Ruliad.system =
 let quint_verdict invariant =
   let command =
     Printf.sprintf
-      "quint run modules/hermes_harness/specs/parity_frontier.qnt --main parity_frontier \
+      "quint run modules/hermes_harness/quint_specs/parity_frontier.qnt --main parity_frontier \
        --invariant %s --max-steps 20 --max-samples 200 --seed 0x1 >/dev/null 2>&1"
       invariant
   in

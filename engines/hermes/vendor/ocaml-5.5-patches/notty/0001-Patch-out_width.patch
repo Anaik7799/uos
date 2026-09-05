@@ -1,0 +1,23 @@
+From 6a1fd5d801435dc533c7794b5f78f740c1365c18 Mon Sep 17 00:00:00 2001
+From: zigvm contributors <maintainers@zigvm.local>
+Date: Fri, 31 Jul 2026 09:56:30 +0200
+Subject: [PATCH] Patch out_width
+
+---
+ src/notty.ml | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/src/notty.ml b/src/notty.ml
+index 7385083..7da7913 100644
+--- a/src/notty.ml
++++ b/src/notty.ml
+@@ -393,6 +393,7 @@ module I = struct
+         (* Not entirely clear; either or both could be void: *)
+         ; out_spaces = (fun w -> line := !line <|> char (top_a attr) ' ' w 1)
+         ; out_indent = (fun w -> line := !line <|> char (top_a attr) ' ' w 1)
++        ; out_width = (fun _s ~pos:_ ~len -> len)
+       } in
+       pp_set_formatter_stag_functions fmt {
+         (pp_get_formatter_stag_functions fmt ()) with
+-- 
+2.51.2

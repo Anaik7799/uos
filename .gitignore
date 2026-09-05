@@ -80,3 +80,7 @@ Thumbs.db
 .idea/
 .vscode/
 .zig-cache/
+
+# Large vendor binaries
+*.so
+*.a

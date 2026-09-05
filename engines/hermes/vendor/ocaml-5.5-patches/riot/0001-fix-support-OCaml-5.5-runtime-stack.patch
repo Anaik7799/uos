@@ -1,0 +1,131 @@
+From 759cf1b9d8096b8ca4d53eff62b495a4ae3927bb Mon Sep 17 00:00:00 2001
+From: zigvm contributors <maintainers@zigvm.local>
+Date: Sun, 2 Aug 2026 21:35:38 +0200
+Subject: [PATCH] fix: support OCaml 5.5 runtime stack
+
+---
+ dune-project                                 | 6 +++---
+ packages/riot-runtime/scheduler/scheduler.ml | 4 ++--
+ packages/riot-stdlib/application.ml          | 4 +---
+ packages/riot-stdlib/crypto.ml               | 2 +-
+ packages/riot/riot.mli                       | 4 +---
+ riot.opam                                    | 6 +++---
+ test/send_interval_test.ml                   | 2 +-
+ test/ssl_test.ml                             | 2 +-
+ 8 files changed, 13 insertions(+), 17 deletions(-)
+
+diff --git a/dune-project b/dune-project
+index e60f450..55fdaf7 100644
+--- a/dune-project
++++ b/dune-project
+@@ -34,10 +34,10 @@
+   (config (>= "0.0.1"))
+   (gluon (>= "0.0.1"))
+   (mdx (and :with-test (>= "2.3.1")))
+-  (mirage-crypto (>= "0.11.2"))
+-  (mirage-crypto-rng (>= "0.11.2"))
++  (mirage-crypto (>= "2.2.0"))
++  (mirage-crypto-rng (>= "2.2.0"))
+   (mtime (>= "2.0.0"))
+-  (ocaml (>= "5.1"))
++  (ocaml (>= "5.5"))
+   (odoc (and :with-doc (>= "2.2.2")))
+   (ptime (>= "1.1.0"))
+   rio
+diff --git a/packages/riot-runtime/scheduler/scheduler.ml b/packages/riot-runtime/scheduler/scheduler.ml
+index f122e7b..6d8dd28 100644
+--- a/packages/riot-runtime/scheduler/scheduler.ml
++++ b/packages/riot-runtime/scheduler/scheduler.ml
+@@ -285,10 +285,10 @@ module Scheduler = struct
+           Log.trace (fun f ->
+               f "Process %a: yielding" Pid.pp (Process.pid proc));
+           k Yield
+-      | effect ->
++      | unhandled ->
+           Log.trace (fun f ->
+               f "Process %a: unhandled effect" Pid.pp (Process.pid proc));
+-          k (Reperform effect)
++          k (Reperform unhandled)
+     in
+     { perform }
+ 
+diff --git a/packages/riot-stdlib/application.ml b/packages/riot-stdlib/application.ml
+index 75227df..8ee3866 100644
+--- a/packages/riot-stdlib/application.ml
++++ b/packages/riot-stdlib/application.ml
+@@ -1,7 +1,5 @@
+ module type Intf = sig
+   val start :
+     unit ->
+-    ( Pid.t,
+-      ([> `Application_error of string | `Supervisor_error ] as 'err) )
+-    result
++    (Pid.t, [> `Application_error of string | `Supervisor_error ]) result
+ end
+diff --git a/packages/riot-stdlib/crypto.ml b/packages/riot-stdlib/crypto.ml
+index 2920108..153c013 100644
+--- a/packages/riot-stdlib/crypto.ml
++++ b/packages/riot-stdlib/crypto.ml
+@@ -1,4 +1,4 @@
+-let () = Mirage_crypto_rng_unix.initialize (module Mirage_crypto_rng.Fortuna)
++let () = Mirage_crypto_rng_unix.use_default ()
+ 
+ (* Some of the code from below is based on the randomconv repository.
+    Source: https://github.com/hannesm/randomconv/
+diff --git a/packages/riot/riot.mli b/packages/riot/riot.mli
+index dfe762b..00c1ef2 100644
+--- a/packages/riot/riot.mli
++++ b/packages/riot/riot.mli
+@@ -187,9 +187,7 @@ module Application : sig
+   module type Intf = sig
+     val start :
+       unit ->
+-      ( Pid.t,
+-        ([> `Application_error of string | `Supervisor_error ] as 'err) )
+-      result
++      (Pid.t, [> `Application_error of string | `Supervisor_error ]) result
+   end
+ end
+ 
+diff --git a/riot.opam b/riot.opam
+index afd9f3b..97455b9 100644
+--- a/riot.opam
++++ b/riot.opam
+@@ -15,10 +15,10 @@ depends: [
+   "config" {>= "0.0.1"}
+   "gluon" {>= "0.0.1"}
+   "mdx" {with-test & >= "2.3.1"}
+-  "mirage-crypto" {>= "0.11.2"}
+-  "mirage-crypto-rng" {>= "0.11.2"}
++  "mirage-crypto" {>= "2.2.0"}
++  "mirage-crypto-rng" {>= "2.2.0"}
+   "mtime" {>= "2.0.0"}
+-  "ocaml" {>= "5.1"}
++  "ocaml" {>= "5.5"}
+   "odoc" {with-doc & >= "2.2.2"}
+   "ptime" {>= "1.1.0"}
+   "rio"
+diff --git a/test/send_interval_test.ml b/test/send_interval_test.ml
+index 04f267f..6b9feff 100644
+--- a/test/send_interval_test.ml
++++ b/test/send_interval_test.ml
+@@ -20,4 +20,4 @@ let main () =
+ 
+   shutdown ()
+ 
+-let () = Riot.run @@ main
++let () = Riot.run ~config:(Config.make ~workers:0 ()) @@ main
+diff --git a/test/ssl_test.ml b/test/ssl_test.ml
+index cc5ae24..0cddc57 100644
+--- a/test/ssl_test.ml
++++ b/test/ssl_test.ml
+@@ -1,6 +1,6 @@
+ open Riot
+ 
+-let () = Mirage_crypto_rng_unix.initialize (module Mirage_crypto_rng.Fortuna)
++let () = Mirage_crypto_rng_unix.use_default ()
+ 
+ type Message.t += Received of string
+ 
+-- 
+2.51.2

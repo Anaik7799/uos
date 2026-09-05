@@ -695,7 +695,7 @@ let components =
           (Sre, Addressed "the live frontier's next-move options are the operator's real choices; 30 build orders, all converging, means order is free") ] };
     { id = "quint_frontier";
       level = LX_control;
-      module_path = "modules/hermes_harness/specs/parity_frontier.qnt + test_quint_frontier.ml";
+      module_path = "modules/hermes_harness/quint_specs/parity_frontier.qnt + test_quint_frontier.ml";
       purpose = "the quint differential: the frontier machine specified twice, verdicts compared";
       algebra =
         { carrier = "one state machine in two encodings: the .qnt spec and the OCaml transition system";

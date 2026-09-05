@@ -1,0 +1,240 @@
+diff --git a/gospel.opam b/gospel.opam
+index d28a760..fdc45a3 100644
+--- a/gospel.opam
++++ b/gospel.opam
+@@ -33,7 +33,8 @@ build: [
+   ]
+ ]
+ depends: [
+-  "ocaml" {>= "4.11" & <= "5.3.0" }
++  # upper bound lifted: this tree carries the ast500 / OCaml-5.5 port
++  "ocaml" {>= "4.11"}
+   "ocamlfind"
+   "dune" {>= "3.0.0"}
+   "dune-build-info"
+diff --git a/src/Opprintast.ml b/src/Opprintast.ml
+index e2c7654..12a95e0 100644
+--- a/src/Opprintast.ml
++++ b/src/Opprintast.ml
+@@ -58,7 +58,8 @@ let varify_type_constructors var_names t =
+       | Ptyp_object (lst, o) -> Ptyp_object (List.map loop_object_field lst, o)
+       | Ptyp_class (longident, lst) -> Ptyp_class (longident, List.map loop lst)
+       | Ptyp_alias (core_type, str) ->
+-          check_variable var_names t.ptyp_loc str.txt;
++          (* ast500 carries a bare string here, not a string loc. *)
++          check_variable var_names t.ptyp_loc str;
+           Ptyp_alias (loop core_type, str)
+       | Ptyp_variant (row_field_list, flag, lbl_lst_option) ->
+           Ptyp_variant
+@@ -71,7 +72,7 @@ let varify_type_constructors var_names t =
+       | Ptyp_package (longident, lst) ->
+           Ptyp_package (longident, List.map (fun (n, typ) -> (n, loop typ)) lst)
+       | Ptyp_extension (s, arg) -> Ptyp_extension (s, arg)
+-      | Ptyp_open (longident, core_type) -> Ptyp_open (longident, loop core_type)
++      (* ast500 has no Ptyp_open in core_type_desc. *)
+     in
+     { t with ptyp_desc = desc }
+   and loop_row_field field =
+@@ -372,7 +373,8 @@ and core_type ctxt f x =
+         pp f "@[<2>%a@;->@;%a@]" (* FIXME remove parens later *)
+           (type_with_label ctxt) (l, ct1) (core_type ctxt) ct2
+     | Ptyp_alias (ct, s) ->
+-        pp f "@[<2>%a@;as@;%a@]" (core_type1 ctxt) ct tyvar_loc s
++        (* ast500: bare string in Ptyp_alias, so tyvar not tyvar_loc *)
++        pp f "@[<2>%a@;as@;%a@]" (core_type1 ctxt) ct tyvar s
+     | Ptyp_poly ([], ct) -> core_type ctxt f ct
+     | Ptyp_poly (sl, ct) ->
+         pp f "@[<2>%a%a@]"
+@@ -685,34 +687,10 @@ and sugar_expr ctxt f e =
+         | _ -> false)
+     | _ -> false
+ 
+-and function_param ctxt f param =
+-  match param.pparam_desc with
+-  | Pparam_val (a, b, c) -> label_exp ctxt f (a, b, c)
+-  | Pparam_newtype ty -> pp f "(type %s)@;" ty.txt
+-
+-and function_body ctxt f function_body =
+-  match function_body with
+-  | Pfunction_body body -> expression ctxt f body
+-  | Pfunction_cases (cases, _, attrs) ->
+-      pp f "@[<hv>function%a%a@]"
+-        (item_attributes ctxt) attrs
+-        (case_list ctxt) cases
+-
+-and type_constraint ctxt f constraint_ =
+-  match constraint_ with
+-  | Pconstraint ty ->
+-      pp f ":@;%a" (core_type ctxt) ty
+-  | Pcoerce (ty1, ty2) ->
+-      pp f "%a:>@;%a"
+-        (option ~first:":@;" (core_type ctxt)) ty1
+-        (core_type ctxt) ty2
+-
+-and function_params_then_body ctxt f params constraint_ body ~delimiter =
+-  pp f "%a%a%s@;%a"
+-    (list (function_param ctxt) ~sep:"") params
+-    (option (type_constraint ctxt)) constraint_
+-    delimiter
+-    (function_body (under_functionrhs ctxt)) body
++(* ast500 has no function_param / function_body / type_constraint records:
++   a function is Pexp_fun (label, default, pattern, body) and a match-style
++   function is Pexp_function cases. The 5.2-only helpers are dropped and the
++   printing sites below are written in the ast500 shape instead. *)
+ 
+ and expression ctxt f x =
+   if x.pexp_attributes <> [] then
+@@ -721,7 +699,7 @@ and expression ctxt f x =
+       (attributes ctxt) x.pexp_attributes
+   else
+     match x.pexp_desc with
+-    | Pexp_function _ | Pexp_match _ | Pexp_try _ | Pexp_sequence _
++    | Pexp_function _ | Pexp_fun _ | Pexp_match _ | Pexp_try _ | Pexp_sequence _
+     | Pexp_newtype _
+       when ctxt.pipe || ctxt.semi ->
+         paren true (expression reset_ctxt) f x
+@@ -733,31 +711,21 @@ and expression ctxt f x =
+         paren true (expression reset_ctxt) f x
+     | Pexp_newtype (lid, e) ->
+         pp f "@[<2>fun@;(type@;%s)@;->@;%a@]" lid.txt (expression ctxt) e
+-    | Pexp_function (params, c, body) ->
+-        begin match params, c with
+-        (* Omit [fun] if there are no params. *)
+-        | [], None ->
+-            (* If function cases are a direct body of a function,
+-               the function node should be wrapped in parens so
+-               it doesn't become part of the enclosing function. *)
+-            let should_paren =
+-              match body with
+-              | Pfunction_cases _ -> ctxt.functionrhs
+-              | Pfunction_body _ -> false
+-            in
+-            let ctxt' = if should_paren then reset_ctxt else ctxt in
+-            pp f "@[<2>%a@]" (paren should_paren (function_body ctxt')) body
+-        | [], Some c ->
+-            pp f "@[<2>(%a@;%a)@]"
+-              (function_body ctxt) body
+-              (type_constraint ctxt) c
+-        | _ :: _, _ ->
+-          pp f "@[<2>fun@;%a@]"
+-            (fun f () ->
+-               function_params_then_body ctxt f params c body ~delimiter:"->")
+-            ();
+-
+-        end
++    (* ast500: a lambda is Pexp_fun and a match-style function is
++       Pexp_function over cases. Function cases as the direct body of a
++       function are parenthesised so they do not attach to the enclosing
++       function, which is the invariant the 5.2 `functionrhs` flag carried. *)
++    | Pexp_fun (l, e0, p, e) ->
++        pp f "@[<2>fun@;%a->@;%a@]" (label_exp ctxt) (l, e0, p)
++          (expression (under_functionrhs ctxt))
++          e
++    | Pexp_function cases ->
++        let should_paren = ctxt.functionrhs in
++        let ctxt' = if should_paren then reset_ctxt else ctxt in
++        pp f "@[<2>%a@]"
++          (paren should_paren (fun f cases ->
++               pp f "@[<hv>function%a@]" (case_list ctxt') cases))
++          cases
+     | Pexp_match (e, l) ->
+         pp f "@[<hv0>@[<hv0>@[<2>match %a@]@ with@]%a@]" (expression reset_ctxt)
+           e (case_list ctxt) l
+@@ -1095,7 +1063,7 @@ and class_field ctxt f x =
+             pvb_expr = e;
+             pvb_attributes = [];
+             pvb_loc = Location.none;
+-            pvb_constraint = None;
++            (* ast500 value_binding has no pvb_constraint field. *)
+           }
+       in
+       pp f "@[<2>method%s %a%a@]%a" (override ovf) private_flag pf
+@@ -1336,8 +1304,7 @@ and module_expr ctxt f x =
+     | Pmod_apply (me1, me2) ->
+         pp f "(%a)(%a)" (module_expr ctxt) me1 (module_expr ctxt) me2
+         (* Cf: #7200 *)
+-    | Pmod_apply_unit me1 ->
+-        pp f "(%a)()" (module_expr ctxt) me1
++    (* ast500 has no Pmod_apply_unit; unit application is a Pmod_apply. *)
+     | Pmod_unpack e -> pp f "(val@ %a)" (expression ctxt) e
+     | Pmod_extension e -> extension ctxt f e
+ 
+@@ -1368,8 +1335,13 @@ and binding ctxt f { pvb_pat = p; pvb_expr = x; _ } =
+   let rec pp_print_pexp_function f x =
+     if x.pexp_attributes <> [] then pp f "=@;%a" (expression ctxt) x
+     else match x.pexp_desc with
+-      | Pexp_function (params, c, body) ->
+-          function_params_then_body ctxt f params c body ~delimiter:"="
++      (* ast500: collect curried Pexp_fun params onto the binding's left
++         side, which is what function_params_then_body did in 5.2. *)
++      | Pexp_fun (label, eo, p, e) ->
++          if label = Nolabel then
++            pp f "%a@ %a" (simple_pattern ctxt) p pp_print_pexp_function e
++          else
++            pp f "%a@ %a" (label_exp ctxt) (label, eo, p) pp_print_pexp_function e
+       | Pexp_newtype (str, e) ->
+           pp f "(type@ %s)@ %a" str.txt pp_print_pexp_function e
+       | _ -> pp f "=@;%a" (expression ctxt) x
+diff --git a/src/typing.ml b/src/typing.ml
+index 6f6e8d2..52a902a 100644
+--- a/src/typing.ml
++++ b/src/typing.ml
+@@ -110,6 +110,23 @@ let rec ty_of_core ns cty =
+       (* TODO check what to do with the arg_label *)
+       let ty1, ty2 = ((ty_of_core ns) ct1, (ty_of_core ns) ct2) in
+       ty_app ~loc ts_arrow [ ty1; ty2 ]
++  (* SAME TWO APPROXIMATIONS AS parse_core BELOW, and they must be applied in
++     BOTH places: this is the second of gospel's two core-type mapping
++     functions, and patching only the other one left `assert false` reachable —
++     an internal error rather than a diagnostic — for any interface that
++     mentions an explicitly quantified type or a polymorphic variant here.
++
++     Ptyp_poly: the quantifier is ERASED and the body mapped; gospel's type
++     language has no rank-n types. The bound names still map through Ptyp_var
++     above, so nothing is left dangling.
++
++     Ptyp_variant: admitted as OPAQUE — a fresh type variable, exactly as
++     Ptyp_any is treated one arm up. A specification written about such a value
++     is checked against an unknown type and therefore CONSTRAINS NOTHING. This
++     is an approximation, not support, and the bound must travel with any
++     gospel verdict cited as evidence. *)
++  | Ptyp_poly (_, ct) -> ty_of_core ns ct
++  | Ptyp_variant _ -> { ty_node = Tyvar (create_tv (Ident.create ~loc "_")) }
+   | _ -> assert false
+ 
+ (** Typing terms *)
+@@ -624,9 +641,31 @@ let type_type_declaration kid crcm ns r tdl =
+     | Ptyp_extension _ -> W.(error ~loc (Unsupported "type extension"))
+     | Ptyp_object _ -> W.(error ~loc (Unsupported "object type"))
+     | Ptyp_package _ -> W.(error ~loc (Unsupported "first class module"))
+-    | Ptyp_poly _ -> W.(error ~loc (Unsupported "polymorphic type"))
+-    | Ptyp_open _ -> W.(error ~loc (Unsupported "local open on type"))
+-    | Ptyp_variant _ -> W.(error ~loc (Unsupported "polymorphic variant"))
++    (* OCaml 5.5's stdlib puts explicit universal quantification in
++       camlinternalFormatBasics.mli, which every interface reaches through
++       Printf/Format. Rejecting it made gospel unable to read the 5.5 stdlib at
++       all. Bind the quantified names as ordinary type variables and recurse
++       into the body: gospel's type language has no rank-n types, so this
++       erases the quantifier rather than modelling it, which is sound for the
++       signature scanning gospel does here and is why the bound names must be
++       added to [tvl] instead of being ignored. *)
++    | Ptyp_poly (vars, ct) ->
++        let tvl =
++          List.fold_left
++            (fun acc v -> Mstr.add v.txt (tv_of_string ~loc v.txt) acc)
++            tvl vars
++        in
++        parse_core alias tvl ct
++    (* ast500 has no Ptyp_open in core_type_desc; the arm is unreachable. *)
++    (* Same 5.5-stdlib reason as Ptyp_poly above. Gospel's type language has no
++       polymorphic variants, so the type is admitted as OPAQUE — a fresh type
++       variable, exactly as Ptyp_any is treated. This is an APPROXIMATION, not
++       support: a specification written about a polymorphic-variant value is
++       checked against an unknown type and therefore constrains nothing. It is
++       admissible only because the constructs reached here are stdlib internals
++       no specification refers to. This bound must be disclosed wherever a
++       gospel verdict is cited as evidence. *)
++    | Ptyp_variant _ -> { ty_node = Tyvar (create_tv (Ident.create ~loc "_")) }
+   and visit ~alias s td =
+     let parse_params (ct, vi) (tvl, params, vs) =
+       let loc = ct.ptyp_loc in

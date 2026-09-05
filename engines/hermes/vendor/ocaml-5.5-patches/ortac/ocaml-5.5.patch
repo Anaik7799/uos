@@ -1,0 +1,42 @@
+diff --git a/plugins/qcheck-stm/src/config.ml b/plugins/qcheck-stm/src/config.ml
+index ae41ed5..fba8a17 100644
+--- a/plugins/qcheck-stm/src/config.ml
++++ b/plugins/qcheck-stm/src/config.ml
+@@ -292,7 +292,8 @@ let get_weights cfg_uc lens name mb =
+   let open Ast_pattern in
+   let destruct =
+     pstr_value drop
+-      (value_binding ~constraint_:drop ~pat:(ppat_var __') ~expr:(eint __)
++      (* ast500 value_binding has no constraint field to drop *)
++      (value_binding ~pat:(ppat_var __') ~expr:(eint __)
+       ^:: nil)
+   and error stri =
+     let loc = stri.pstr_loc in
+diff --git a/plugins/qcheck-stm/src/ir_of_gospel.ml b/plugins/qcheck-stm/src/ir_of_gospel.ml
+index 12eb394..86d9f2f 100644
+--- a/plugins/qcheck-stm/src/ir_of_gospel.ml
++++ b/plugins/qcheck-stm/src/ir_of_gospel.ml
+@@ -157,7 +157,8 @@ let ty_var_substitution config (vd : val_description) =
+     | Ptyp_alias (_, _)
+     | Ptyp_variant (_, _, _)
+     | Ptyp_poly (_, _)
+-    | Ptyp_package _ | Ptyp_extension _ | Ptyp_open _ ->
++    (* ast500 has no Ptyp_open *)
++    | Ptyp_package _ | Ptyp_extension _ ->
+         failwith "not supported"
+   in
+   aux [] value_type
+diff --git a/plugins/qcheck-stm/src/stm_of_ir.ml b/plugins/qcheck-stm/src/stm_of_ir.ml
+index 8f9e90c..8a2ba8d 100644
+--- a/plugins/qcheck-stm/src/stm_of_ir.ml
++++ b/plugins/qcheck-stm/src/stm_of_ir.ml
+@@ -83,7 +83,8 @@ let subst_core_type inst ty =
+         | Ptyp_alias (_, _)
+         | Ptyp_variant (_, _, _)
+         | Ptyp_poly (_, _)
+-        | Ptyp_package _ | Ptyp_extension _ | Ptyp_open _ ->
++        (* ast500 has no Ptyp_open *)
++        | Ptyp_package _ | Ptyp_extension _ ->
+             failwith "Case should not happen in `subst_core_type'");
+     }
+   in

@@ -1,0 +1,273 @@
+From 3fa6023ab15a187da590f8300c93a2507471c38e Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Sun, 2 Aug 2026 21:31:35 +0200
+Subject: [PATCH 1/2] fix: support OCaml 5.5 PPX AST
+
+---
+ .ocamlformat       |  2 +-
+ CHANGES.md         |  5 +++++
+ config.opam        |  4 ++--
+ config/cfg_ppx.ml  | 21 ++++++++++++---------
+ config/ppx.t/run.t | 25 +++++++++++++++----------
+ dune-project       |  4 ++--
+ 6 files changed, 37 insertions(+), 24 deletions(-)
+
+diff --git a/.ocamlformat b/.ocamlformat
+index 7df62da..93464b3 100644
+--- a/.ocamlformat
++++ b/.ocamlformat
+@@ -1,2 +1,2 @@
+ profile = default
+-version = 0.26.1
+\ No newline at end of file
++version = 0.29.0
+diff --git a/CHANGES.md b/CHANGES.md
+index 4a09b9f..200fa8c 100644
+--- a/CHANGES.md
++++ b/CHANGES.md
+@@ -1,3 +1,8 @@
++# Unreleased
++
++* Support the unified function-expression and unit module-application AST in
++  OCaml 5.5 and ppxlib 0.38.
++
+ # 0.0.3 
+ 
+ * Refactored expression evaluation – thanks @gpetiot :clap:
+diff --git a/config.opam b/config.opam
+index 78bcd45..cb8c9a4 100644
+--- a/config.opam
++++ b/config.opam
+@@ -12,8 +12,8 @@ tags: [
+ homepage: "https://github.com/ocaml-sys/config.ml"
+ bug-reports: "https://github.com/ocaml-sys/config.ml/issues"
+ depends: [
+-  "ocaml" {>= "5.1"}
+-  "ppxlib" {>= "0.31.0"}
++  "ocaml" {>= "5.5"}
++  "ppxlib" {>= "0.38.0"}
+   "spices" {>= "0.0.2"}
+   "dune" {>= "3.11"}
+   "odoc" {with-doc}
+diff --git a/config/cfg_ppx.ml b/config/cfg_ppx.ml
+index 62b960e..3fb51f5 100644
+--- a/config/cfg_ppx.ml
++++ b/config/cfg_ppx.ml
+@@ -7,8 +7,8 @@ let is_config_tag str = String.equal str tag || String.equal str short_tag
+ let user_env =
+   Unix.environment () |> Array.to_list
+   |> List.map (fun kv ->
+-         let[@warning "-8"] (k :: v) = String.split_on_char '=' kv in
+-         (k, String.concat "=" v))
++      let[@warning "-8"] (k :: v) = String.split_on_char '=' kv in
++      (k, String.concat "=" v))
+ 
+ let env =
+   user_env
+@@ -123,12 +123,15 @@ let rec apply_config_on_expression (exp : expression) =
+         let exp = apply_config_on_expression exp in
+         let cases = apply_config_on_cases cases in
+         Pexp_match (exp, cases)
+-    | Pexp_fun (arg_label, exp_opt, pat, exp) ->
+-        let exp = apply_config_on_expression exp in
+-        Pexp_fun (arg_label, exp_opt, pat, exp)
+-    | Pexp_function cases ->
+-        let cases = apply_config_on_cases cases in
+-        Pexp_function cases
++    | Pexp_function (params, type_constraint, body) ->
++        let body =
++          match body with
++          | Pfunction_body exp ->
++              Pfunction_body (apply_config_on_expression exp)
++          | Pfunction_cases (cases, loc, attrs) ->
++              Pfunction_cases (apply_config_on_cases cases, loc, attrs)
++        in
++        Pexp_function (params, type_constraint, body)
+     | Pexp_let (rec_flag, vbs, exp) ->
+         let exp = apply_config_on_expression exp in
+         Pexp_let (rec_flag, vbs, exp)
+@@ -168,7 +171,7 @@ let apply_config_on_module_type mod_type =
+ let rec apply_config_on_module_expr mod_expr =
+   match mod_expr.pmod_desc with
+   | Pmod_apply _ | Pmod_unpack _ | Pmod_extension _ | Pmod_ident _
+-  | Pmod_functor _ ->
++  | Pmod_functor _ | Pmod_apply_unit _ ->
+       mod_expr
+   | Pmod_structure structs ->
+       let new_structs =
+diff --git a/config/ppx.t/run.t b/config/ppx.t/run.t
+index 4183c2f..fd6978d 100644
+--- a/config/ppx.t/run.t
++++ b/config/ppx.t/run.t
+@@ -3,7 +3,8 @@
+     {
+       tool_name = "ppx_driver";
+       include_dirs = [];
+-      load_path = [];
++      hidden_include_dirs = [];
++      load_path = ([], []);
+       open_modules = [];
+       for_package = None;
+       debug = false;
+@@ -11,7 +12,7 @@
+       use_vmthreads = false;
+       recursive_types = false;
+       principal = false;
+-      transparent_modules = false;
++      no_alias_deps = false;
+       unboxed_types = false;
+       unsafe_string = false;
+       cookies = []
+@@ -47,7 +48,8 @@
+     {
+       tool_name = "ppx_driver";
+       include_dirs = [];
+-      load_path = [];
++      hidden_include_dirs = [];
++      load_path = ([], []);
+       open_modules = [];
+       for_package = None;
+       debug = false;
+@@ -55,7 +57,7 @@
+       use_vmthreads = false;
+       recursive_types = false;
+       principal = false;
+-      transparent_modules = false;
++      no_alias_deps = false;
+       unboxed_types = false;
+       unsafe_string = false;
+       cookies = []
+@@ -87,7 +89,8 @@
+     {
+       tool_name = "ppx_driver";
+       include_dirs = [];
+-      load_path = [];
++      hidden_include_dirs = [];
++      load_path = ([], []);
+       open_modules = [];
+       for_package = None;
+       debug = false;
+@@ -95,7 +98,7 @@
+       use_vmthreads = false;
+       recursive_types = false;
+       principal = false;
+-      transparent_modules = false;
++      no_alias_deps = false;
+       unboxed_types = false;
+       unsafe_string = false;
+       cookies = []
+@@ -134,7 +137,8 @@
+     {
+       tool_name = "ppx_driver";
+       include_dirs = [];
+-      load_path = [];
++      hidden_include_dirs = [];
++      load_path = ([], []);
+       open_modules = [];
+       for_package = None;
+       debug = false;
+@@ -142,7 +146,7 @@
+       use_vmthreads = false;
+       recursive_types = false;
+       principal = false;
+-      transparent_modules = false;
++      no_alias_deps = false;
+       unboxed_types = false;
+       unsafe_string = false;
+       cookies = []
+@@ -155,7 +159,8 @@
+     {
+       tool_name = "ppx_driver";
+       include_dirs = [];
+-      load_path = [];
++      hidden_include_dirs = [];
++      load_path = ([], []);
+       open_modules = [];
+       for_package = None;
+       debug = false;
+@@ -163,7 +168,7 @@
+       use_vmthreads = false;
+       recursive_types = false;
+       principal = false;
+-      transparent_modules = false;
++      no_alias_deps = false;
+       unboxed_types = false;
+       unsafe_string = false;
+       cookies = []
+diff --git a/dune-project b/dune-project
+index c559de4..b035200 100644
+--- a/dune-project
++++ b/dune-project
+@@ -19,8 +19,8 @@
+   (synopsis "Ergonomic, lightweight conditional compilation through attributes")
+   (description "Config implements the [@@config] annotation, to conditionally compile modules. You can use a small boolean language to check for conditions including some built-in ones and environment variables.")
+   (depends
+-    (ocaml (>= "5.1"))
+-    (ppxlib (>= 0.31.0))
++    (ocaml (>= "5.5"))
++    (ppxlib (>= 0.38.0))
+     (spices (>= "0.0.2"))
+     dune)
+   (tags (conditional compilation target_os target_arch arch os system)))
+-- 
+2.51.2
+
+
+From b795988b1eaeab9207a0718f2ce76046a98a5fed Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Sun, 2 Aug 2026 22:51:13 +0200
+Subject: [PATCH 2/2] compat: target the stable ppxlib AST
+
+---
+ config/cfg_ppx.ml | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
+
+diff --git a/config/cfg_ppx.ml b/config/cfg_ppx.ml
+index 3fb51f5..62b960e 100644
+--- a/config/cfg_ppx.ml
++++ b/config/cfg_ppx.ml
+@@ -7,8 +7,8 @@ let is_config_tag str = String.equal str tag || String.equal str short_tag
+ let user_env =
+   Unix.environment () |> Array.to_list
+   |> List.map (fun kv ->
+-      let[@warning "-8"] (k :: v) = String.split_on_char '=' kv in
+-      (k, String.concat "=" v))
++         let[@warning "-8"] (k :: v) = String.split_on_char '=' kv in
++         (k, String.concat "=" v))
+ 
+ let env =
+   user_env
+@@ -123,15 +123,12 @@ let rec apply_config_on_expression (exp : expression) =
+         let exp = apply_config_on_expression exp in
+         let cases = apply_config_on_cases cases in
+         Pexp_match (exp, cases)
+-    | Pexp_function (params, type_constraint, body) ->
+-        let body =
+-          match body with
+-          | Pfunction_body exp ->
+-              Pfunction_body (apply_config_on_expression exp)
+-          | Pfunction_cases (cases, loc, attrs) ->
+-              Pfunction_cases (apply_config_on_cases cases, loc, attrs)
+-        in
+-        Pexp_function (params, type_constraint, body)
++    | Pexp_fun (arg_label, exp_opt, pat, exp) ->
++        let exp = apply_config_on_expression exp in
++        Pexp_fun (arg_label, exp_opt, pat, exp)
++    | Pexp_function cases ->
++        let cases = apply_config_on_cases cases in
++        Pexp_function cases
+     | Pexp_let (rec_flag, vbs, exp) ->
+         let exp = apply_config_on_expression exp in
+         Pexp_let (rec_flag, vbs, exp)
+@@ -171,7 +168,7 @@ let apply_config_on_module_type mod_type =
+ let rec apply_config_on_module_expr mod_expr =
+   match mod_expr.pmod_desc with
+   | Pmod_apply _ | Pmod_unpack _ | Pmod_extension _ | Pmod_ident _
+-  | Pmod_functor _ | Pmod_apply_unit _ ->
++  | Pmod_functor _ ->
+       mod_expr
+   | Pmod_structure structs ->
+       let new_structs =
+-- 
+2.51.2
+

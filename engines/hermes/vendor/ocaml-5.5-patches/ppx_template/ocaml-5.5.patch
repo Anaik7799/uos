@@ -1,0 +1,170 @@
+From 8e36b226b52e2b9bf38c04eb32f17fe9a42445f2 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Sun, 2 Aug 2026 22:56:12 +0200
+Subject: [PATCH 1/5] compat: keep template paths in the migrated AST
+
+---
+ expander/with_constraint.ml | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/expander/with_constraint.ml b/expander/with_constraint.ml
+index b5136b4..45229b1 100644
+--- a/expander/with_constraint.ml
++++ b/expander/with_constraint.ml
+@@ -5,7 +5,7 @@ open Import.Result.Let_syntax
+ module Path = struct
+   type t =
+     | No_prefix
+-    | Prefix of Longident.t
++    | Prefix of longident
+ 
+   let dot t str =
+     match t with
+-- 
+2.51.2
+
+
+From 181036b2c4ec197bd51bb7354358d35b68f81884 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Sun, 2 Aug 2026 22:56:37 +0200
+Subject: [PATCH 2/5] compat: admit the tested ppxlib package version
+
+---
+ ppx_template.opam | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ppx_template.opam b/ppx_template.opam
+index 64f307b..4fdaf60 100644
+--- a/ppx_template.opam
++++ b/ppx_template.opam
+@@ -17,7 +17,7 @@ depends: [
+   "ppxlib_jane"
+   "sexplib0"
+   "dune"               {>= "3.17.0"}
+-  "ppxlib"             {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"             {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "C++-style templates for kind, mode, modality, and allocator polymorphism"
+-- 
+2.51.2
+
+
+From 4e92d9e66c231c905d741faaa51094c9d9fd79d1 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Sun, 2 Aug 2026 23:12:45 +0200
+Subject: [PATCH 3/5] compat: traverse constrained parameter package types
+
+---
+ expander/monomorphize.ml | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/expander/monomorphize.ml b/expander/monomorphize.ml
+index cc53a5e..7f1e3d6 100644
+--- a/expander/monomorphize.ml
++++ b/expander/monomorphize.ml
+@@ -467,6 +467,14 @@ let t :> Context.t t =
+     method! module_expr = self#visit_mono Module_expr ~f:super#module_expr
+     method! core_type = self#visit_mono Core_type ~f:super#core_type
+ 
++    method! pattern ctx pattern =
++      match pattern.ppat_desc with
++      | Ppat_constraint (inner, typ) ->
++        { pattern with
++          ppat_desc = Ppat_constraint (self#pattern ctx inner, self#core_type ctx typ)
++        }
++      | _ -> super#pattern ctx pattern
++
+     method! module_type ctx mty =
+       self#visit_mono Module_type ctx mty ~f:(fun ctx mty ->
+         let mty_res =
+-- 
+2.51.2
+
+
+From 0c0d8f6fa6da2dc3939679b84ae06c0d45e1753a Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Sun, 2 Aug 2026 23:16:30 +0200
+Subject: [PATCH 4/5] compat: mangle constrained pattern types
+
+---
+ expander/mangle.ml       | 9 +++++----
+ expander/monomorphize.ml | 8 --------
+ 2 files changed, 5 insertions(+), 12 deletions(-)
+
+diff --git a/expander/mangle.ml b/expander/mangle.ml
+index 11cde46..f9d14df 100644
+--- a/expander/mangle.ml
++++ b/expander/mangle.ml
+@@ -259,11 +259,12 @@ let t =
+       match Ppxlib_jane.Shim.Pattern_desc.of_parsetree pattern_desc with
+       | Ppat_any | Ppat_var _ | Ppat_alias _ -> super#pattern_desc suffix pattern_desc
+       | Ppat_constraint (pat, typ, modes) ->
+-        self#pattern suffix pat
+-        |> map_fst ~f:(fun pat ->
+-          Ppxlib_jane.Shim.Pattern_desc.to_parsetree
++        let pat, pat_outcome = self#pattern suffix pat in
++        let typ, typ_outcome = self#option self#core_type suffix typ in
++        ( Ppxlib_jane.Shim.Pattern_desc.to_parsetree
+             ~loc:pat.ppat_loc
+-            (Ppat_constraint (pat, typ, modes)))
++            (Ppat_constraint (pat, typ, modes))
++        , Outcome.mangled_either pat_outcome typ_outcome )
+       | _ ->
+         (* If the user didn't request a polymorphic binding, or they only requested the
+            [value] kinds, don't complain. *)
+diff --git a/expander/monomorphize.ml b/expander/monomorphize.ml
+index 7f1e3d6..cc53a5e 100644
+--- a/expander/monomorphize.ml
++++ b/expander/monomorphize.ml
+@@ -467,14 +467,6 @@ let t :> Context.t t =
+     method! module_expr = self#visit_mono Module_expr ~f:super#module_expr
+     method! core_type = self#visit_mono Core_type ~f:super#core_type
+ 
+-    method! pattern ctx pattern =
+-      match pattern.ppat_desc with
+-      | Ppat_constraint (inner, typ) ->
+-        { pattern with
+-          ppat_desc = Ppat_constraint (self#pattern ctx inner, self#core_type ctx typ)
+-        }
+-      | _ -> super#pattern ctx pattern
+-
+     method! module_type ctx mty =
+       self#visit_mono Module_type ctx mty ~f:(fun ctx mty ->
+         let mty_res =
+-- 
+2.51.2
+
+
+From 0ed2b21cc38456771b5a4cc70ccbb0fb8b58d1cf Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Sun, 2 Aug 2026 23:18:45 +0200
+Subject: [PATCH 5/5] compat: limit constrained type mangling to packages
+
+---
+ expander/mangle.ml | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
+
+diff --git a/expander/mangle.ml b/expander/mangle.ml
+index f9d14df..96b197d 100644
+--- a/expander/mangle.ml
++++ b/expander/mangle.ml
+@@ -260,7 +260,14 @@ let t =
+       | Ppat_any | Ppat_var _ | Ppat_alias _ -> super#pattern_desc suffix pattern_desc
+       | Ppat_constraint (pat, typ, modes) ->
+         let pat, pat_outcome = self#pattern suffix pat in
+-        let typ, typ_outcome = self#option self#core_type suffix typ in
++        let typ, typ_outcome =
++          match typ with
++          | Some ({ ptyp_desc = Ptyp_package _; _ } as typ)
++            when not (Suffix.is_empty suffix) ->
++            let typ, outcome = self#core_type suffix typ in
++            Some typ, outcome
++          | _ -> typ, Did_not_mangle
++        in
+         ( Ppxlib_jane.Shim.Pattern_desc.to_parsetree
+             ~loc:pat.ppat_loc
+             (Ppat_constraint (pat, typ, modes))
+-- 
+2.51.2
+

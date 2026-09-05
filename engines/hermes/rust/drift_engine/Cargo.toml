@@ -1,0 +1,19 @@
+# Embedded GRL rule engine for the Hermes harness (user directive: embed
+# rust-rule-engine and integrate with OCaml). Compiled as a staticlib with a
+# two-function C ABI (hde_eval / hde_free, JSON in and out); the OCaml side owns
+# every judgement about what the results mean, and the OCaml hermes_rete engine
+# stays the differential reference the embedded engine is checked against.
+[package]
+name = "hermes_drift_engine"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["staticlib"]
+
+[dependencies]
+rust-rule-engine = "1.21.1"
+serde_json = "1"
+
+[profile.release]
+panic = "abort"

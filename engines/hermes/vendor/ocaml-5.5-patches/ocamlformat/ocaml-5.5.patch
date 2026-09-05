@@ -1,0 +1,27 @@
+From c3dc7f77d6684181c3581ee2fc6ad0d38f496596 Mon Sep 17 00:00:00 2001
+From: Your Name <your.email@example.com>
+Date: Sun, 2 Aug 2026 23:55:10 +0200
+Subject: [PATCH] compat: use Base comparator observer
+
+---
+ lib/Non_overlapping_interval_tree.ml | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/lib/Non_overlapping_interval_tree.ml b/lib/Non_overlapping_interval_tree.ml
+index df58d296..9a620a59 100644
+--- a/lib/Non_overlapping_interval_tree.ml
++++ b/lib/Non_overlapping_interval_tree.ml
+@@ -102,7 +102,9 @@ module Make (Itv : IN) = struct
+         (list roots cut_break (fun root ->
+              let children = children tree root in
+              vbox 1
+-               ( str (Sexp.to_string_hum (Itv.comparator.sexp_of_t root))
++               ( str
++                   (Sexp.to_string_hum
++                      (Comparator.sexp_of_t Itv.comparator root))
+                $ wrap_if
+                    (not (List.is_empty children))
+                    (cut_break $ str "{")
+-- 
+2.51.2
+

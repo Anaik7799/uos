@@ -1,0 +1,1173 @@
+From 7d630909c9a7d6d8e1e1283ac8322d95fca1d600 Mon Sep 17 00:00:00 2001
+From: ZigVM Toolchain <toolchain@zigvm.invalid>
+Date: Sun, 2 Aug 2026 22:34:49 +0200
+Subject: [PATCH] compat: admit ppxlib 0.38 for OCaml 5.5
+
+---
+ packages/base/base.v0.18~preview.130.106+341/opam               | 2 +-
+ .../base_quickcheck.v0.18~preview.130.106+341/opam              | 2 +-
+ packages/bonsai/bonsai.v0.18~preview.130.106+341/opam           | 2 +-
+ packages/browser/browser.v0.18~preview.130.106+341/opam         | 2 +-
+ .../capitalization.v0.18~preview.130.106+341/opam               | 2 +-
+ packages/hardcaml/hardcaml.v0.18~preview.130.106+341/opam       | 2 +-
+ packages/mlt_parser/mlt_parser.v0.18~preview.130.106+341/opam   | 2 +-
+ .../ppx_accessor/ppx_accessor.v0.18~preview.130.106+341/opam    | 2 +-
+ .../ppx_anonymous_record.v0.18~preview.130.106+341/opam         | 2 +-
+ packages/ppx_array/ppx_array.v0.18~preview.130.106+341/opam     | 2 +-
+ .../ppx_array_base.v0.18~preview.130.106+341/opam               | 2 +-
+ packages/ppx_assert/ppx_assert.v0.18~preview.130.106+341/opam   | 2 +-
+ packages/ppx_base/ppx_base.v0.18~preview.130.106+341/opam       | 2 +-
+ packages/ppx_bench/ppx_bench.v0.18~preview.130.106+341/opam     | 2 +-
+ .../ppx_bin_and_sexp_digest.v0.18~preview.130.106+341/opam      | 2 +-
+ .../ppx_bin_prot/ppx_bin_prot.v0.18~preview.130.106+341/opam    | 2 +-
+ packages/ppx_builtin/ppx_builtin.v0.18~preview.130.106+341/opam | 2 +-
+ .../ppx_c_bindings.v0.18~preview.130.106+341/opam               | 2 +-
+ packages/ppx_compare/ppx_compare.v0.18~preview.130.106+341/opam | 2 +-
+ .../ppx_conv_func/ppx_conv_func.v0.18~preview.130.106+341/opam  | 2 +-
+ packages/ppx_css/ppx_css.v0.18~preview.130.106+341/opam         | 2 +-
+ .../ppx_csv_conv/ppx_csv_conv.v0.18~preview.130.106+341/opam    | 2 +-
+ .../ppx_custom_printf.v0.18~preview.130.106+341/opam            | 2 +-
+ .../ppx_debug_assert.v0.18~preview.130.106+341/opam             | 2 +-
+ .../ppx_delta_types.v0.18~preview.130.106+341/opam              | 2 +-
+ packages/ppx_demo/ppx_demo.v0.18~preview.130.106+341/opam       | 2 +-
+ .../ppx_derive_at_runtime.v0.18~preview.130.106+341/opam        | 2 +-
+ packages/ppx_diff/ppx_diff.v0.18~preview.130.106+341/opam       | 2 +-
+ .../ppx_disable_unused_warnings.v0.18~preview.130.106+341/opam  | 2 +-
+ .../ppx_embed_file.v0.18~preview.130.106+341/opam               | 2 +-
+ .../ppx_enumerate/ppx_enumerate.v0.18~preview.130.106+341/opam  | 2 +-
+ packages/ppx_expect/ppx_expect.v0.18~preview.130.106+341/opam   | 2 +-
+ .../ppx_fields_conv.v0.18~preview.130.106+341/opam              | 2 +-
+ .../ppx_fixed_literal.v0.18~preview.130.106+341/opam            | 2 +-
+ .../ppx_fuelproof/ppx_fuelproof.v0.18~preview.130.106+341/opam  | 2 +-
+ .../ppx_globalize/ppx_globalize.v0.18~preview.130.106+341/opam  | 2 +-
+ .../ppx_hardcaml/ppx_hardcaml.v0.18~preview.130.106+341/opam    | 2 +-
+ packages/ppx_hash/ppx_hash.v0.18~preview.130.106+341/opam       | 2 +-
+ packages/ppx_helpers/ppx_helpers.v0.18~preview.130.106+341/opam | 2 +-
+ packages/ppx_here/ppx_here.v0.18~preview.130.106+341/opam       | 2 +-
+ packages/ppx_html/ppx_html.v0.18~preview.130.106+341/opam       | 2 +-
+ .../ppx_ignore_instrumentation.v0.18~preview.130.106+341/opam   | 2 +-
+ .../ppx_inline_test.v0.18~preview.130.106+341/opam              | 2 +-
+ .../ppx_int63_literal.v0.18~preview.130.106+341/opam            | 2 +-
+ packages/ppx_jane/ppx_jane.v0.18~preview.130.106+341/opam       | 2 +-
+ .../ppx_js_style/ppx_js_style.v0.18~preview.130.106+341/opam    | 2 +-
+ .../ppx_jsonaf_conv.v0.18~preview.130.106+341/opam              | 2 +-
+ packages/ppx_let/ppx_let.v0.18~preview.130.106+341/opam         | 2 +-
+ packages/ppx_loc/ppx_loc.v0.18~preview.130.106+341/opam         | 2 +-
+ packages/ppx_log/ppx_log.v0.18~preview.130.106+341/opam         | 2 +-
+ .../ppx_module_timer.v0.18~preview.130.106+341/opam             | 2 +-
+ packages/ppx_optcomp/ppx_optcomp.v0.18~preview.130.106+341/opam | 2 +-
+ .../ppx_optional/ppx_optional.v0.18~preview.130.106+341/opam    | 2 +-
+ .../ppx_pattern_bind.v0.18~preview.130.106+341/opam             | 2 +-
+ .../ppx_pipebang/ppx_pipebang.v0.18~preview.130.106+341/opam    | 2 +-
+ .../ppx_portable/ppx_portable.v0.18~preview.130.106+341/opam    | 2 +-
+ .../ppx_quick_test.v0.18~preview.130.106+341/opam               | 2 +-
+ packages/ppx_rope/ppx_rope.v0.18~preview.130.106+341/opam       | 2 +-
+ .../ppx_sexp_conv/ppx_sexp_conv.v0.18~preview.130.106+341/opam  | 2 +-
+ .../ppx_sexp_digest.v0.18~preview.130.106+341/opam              | 2 +-
+ .../ppx_sexp_message.v0.18~preview.130.106+341/opam             | 2 +-
+ .../ppx_sexp_value.v0.18~preview.130.106+341/opam               | 2 +-
+ .../ppx_shorthand/ppx_shorthand.v0.18~preview.130.106+341/opam  | 2 +-
+ .../ppx_simple_xml_conv.v0.18~preview.130.106+341/opam          | 2 +-
+ packages/ppx_stable/ppx_stable.v0.18~preview.130.106+341/opam   | 2 +-
+ .../ppx_stable_witness.v0.18~preview.130.106+341/opam           | 2 +-
+ packages/ppx_string/ppx_string.v0.18~preview.130.106+341/opam   | 2 +-
+ .../ppx_string_conv.v0.18~preview.130.106+341/opam              | 2 +-
+ .../ppx_template/ppx_template.v0.18~preview.130.106+341/opam    | 2 +-
+ packages/ppx_tydi/ppx_tydi.v0.18~preview.130.106+341/opam       | 2 +-
+ .../ppx_typed_fields.v0.18~preview.130.106+341/opam             | 2 +-
+ .../ppx_typerep_conv.v0.18~preview.130.106+341/opam             | 2 +-
+ .../ppx_var_name/ppx_var_name.v0.18~preview.130.106+341/opam    | 2 +-
+ .../ppx_variants_conv.v0.18~preview.130.106+341/opam            | 2 +-
+ packages/ppx_with/ppx_with.v0.18~preview.130.106+341/opam       | 2 +-
+ .../ppx_xml_conv/ppx_xml_conv.v0.18~preview.130.106+341/opam    | 2 +-
+ .../ppx_yojson_conv.v0.18~preview.130.106+341/opam              | 2 +-
+ packages/ppxlib_jane/ppxlib_jane.v0.18~preview.130.106+341/opam | 2 +-
+ .../roundtrippable_command_param.v0.18~preview.130.106+341/opam | 2 +-
+ .../sexp_grammar/sexp_grammar.v0.18~preview.130.106+341/opam    | 2 +-
+ packages/streamable/streamable.v0.18~preview.130.106+341/opam   | 2 +-
+ .../toplevel_expect_test.v0.18~preview.130.106+341/opam         | 2 +-
+ packages/uri_parsing/uri_parsing.v0.18~preview.130.106+341/opam | 2 +-
+ 83 files changed, 83 insertions(+), 83 deletions(-)
+
+diff --git a/packages/base/base.v0.18~preview.130.106+341/opam b/packages/base/base.v0.18~preview.130.106+341/opam
+index 9aaeb18..f56d4b1 100644
+--- a/packages/base/base.v0.18~preview.130.106+341/opam
++++ b/packages/base/base.v0.18~preview.130.106+341/opam
+@@ -23,7 +23,7 @@ depends: [
+   "sexplib0"                {= "v0.18~preview.130.106+341"}
+   "dune"                    {>= "3.17.0"}
+   "dune-configurator"
+-  "ppxlib"                  {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"                  {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Full standard library replacement for OCaml"
+diff --git a/packages/base_quickcheck/base_quickcheck.v0.18~preview.130.106+341/opam b/packages/base_quickcheck/base_quickcheck.v0.18~preview.130.106+341/opam
+index 87bf428..f34213e 100644
+--- a/packages/base_quickcheck/base_quickcheck.v0.18~preview.130.106+341/opam
++++ b/packages/base_quickcheck/base_quickcheck.v0.18~preview.130.106+341/opam
+@@ -27,7 +27,7 @@ depends: [
+   "splittable_random"   {= "v0.18~preview.130.106+341"}
+   "dune"                {>= "3.17.0"}
+   "ocaml-compiler-libs" {>= "v0.11.0"}
+-  "ppxlib"              {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"              {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/bonsai/bonsai.v0.18~preview.130.106+341/opam b/packages/bonsai/bonsai.v0.18~preview.130.106+341/opam
+index 7cc7aba..d6fbe42 100644
+--- a/packages/bonsai/bonsai.v0.18~preview.130.106+341/opam
++++ b/packages/bonsai/bonsai.v0.18~preview.130.106+341/opam
+@@ -28,7 +28,7 @@ depends: [
+   "virtual_dom"      {= "v0.18~preview.130.106+341"}
+   "dune"             {>= "3.17.0"}
+   "js_of_ocaml-ppx"  {>= "6.0.0"}
+-  "ppxlib"           {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"           {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "A library for building dynamic webapps, using Js_of_ocaml"
+diff --git a/packages/browser/browser.v0.18~preview.130.106+341/opam b/packages/browser/browser.v0.18~preview.130.106+341/opam
+index 6eb48b8..eb72f10 100644
+--- a/packages/browser/browser.v0.18~preview.130.106+341/opam
++++ b/packages/browser/browser.v0.18~preview.130.106+341/opam
+@@ -17,7 +17,7 @@ depends: [
+   "gen_js_api"      {>= "1.0.8"}
+   "js_of_ocaml"     {>= "6.0.0"}
+   "js_of_ocaml-ppx" {>= "6.0.0"}
+-  "ppxlib"          {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"          {>= "0.33.0" & < "0.39.0"}
+   "promise_jsoo"    {= "0.4.3"}
+ ]
+ available: arch != "x86_32"
+diff --git a/packages/capitalization/capitalization.v0.18~preview.130.106+341/opam b/packages/capitalization/capitalization.v0.18~preview.130.106+341/opam
+index 94013e5..b7ef585 100644
+--- a/packages/capitalization/capitalization.v0.18~preview.130.106+341/opam
++++ b/packages/capitalization/capitalization.v0.18~preview.130.106+341/opam
+@@ -16,7 +16,7 @@ depends: [
+   "base"     {= "v0.18~preview.130.106+341"}
+   "ppx_base" {= "v0.18~preview.130.106+341"}
+   "dune"     {>= "3.17.0"}
+-  "ppxlib"   {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"   {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/hardcaml/hardcaml.v0.18~preview.130.106+341/opam b/packages/hardcaml/hardcaml.v0.18~preview.130.106+341/opam
+index ae63b7d..3314834 100644
+--- a/packages/hardcaml/hardcaml.v0.18~preview.130.106+341/opam
++++ b/packages/hardcaml/hardcaml.v0.18~preview.130.106+341/opam
+@@ -24,7 +24,7 @@ depends: [
+   "sexplib"       {= "v0.18~preview.130.106+341"}
+   "stdio"         {= "v0.18~preview.130.106+341"}
+   "dune"          {>= "3.17.0"}
+-  "ppxlib"        {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"        {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "RTL Hardware Design in OCaml"
+diff --git a/packages/mlt_parser/mlt_parser.v0.18~preview.130.106+341/opam b/packages/mlt_parser/mlt_parser.v0.18~preview.130.106+341/opam
+index 06b8af4..0da0595 100644
+--- a/packages/mlt_parser/mlt_parser.v0.18~preview.130.106+341/opam
++++ b/packages/mlt_parser/mlt_parser.v0.18~preview.130.106+341/opam
+@@ -17,7 +17,7 @@ depends: [
+   "ppx_expect" {= "v0.18~preview.130.106+341"}
+   "ppx_jane"   {= "v0.18~preview.130.106+341"}
+   "dune"       {>= "3.17.0"}
+-  "ppxlib"     {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"     {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Parsing of top-expect files"
+diff --git a/packages/ppx_accessor/ppx_accessor.v0.18~preview.130.106+341/opam b/packages/ppx_accessor/ppx_accessor.v0.18~preview.130.106+341/opam
+index 333eefe..8a92b8f 100644
+--- a/packages/ppx_accessor/ppx_accessor.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_accessor/ppx_accessor.v0.18~preview.130.106+341/opam
+@@ -17,7 +17,7 @@ depends: [
+   "base"        {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane" {= "v0.18~preview.130.106+341"}
+   "dune"        {>= "3.17.0"}
+-  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"      {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/ppx_anonymous_record/ppx_anonymous_record.v0.18~preview.130.106+341/opam b/packages/ppx_anonymous_record/ppx_anonymous_record.v0.18~preview.130.106+341/opam
+index f11bfcf..cf44b57 100644
+--- a/packages/ppx_anonymous_record/ppx_anonymous_record.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_anonymous_record/ppx_anonymous_record.v0.18~preview.130.106+341/opam
+@@ -18,7 +18,7 @@ depends: [
+   "ppx_string"  {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane" {= "v0.18~preview.130.106+341"}
+   "dune"        {>= "3.17.0"}
+-  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"      {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/ppx_array/ppx_array.v0.18~preview.130.106+341/opam b/packages/ppx_array/ppx_array.v0.18~preview.130.106+341/opam
+index 575d766..9ccecdf 100644
+--- a/packages/ppx_array/ppx_array.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_array/ppx_array.v0.18~preview.130.106+341/opam
+@@ -18,7 +18,7 @@ depends: [
+   "ppx_template"   {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane"    {= "v0.18~preview.130.106+341"}
+   "dune"           {>= "3.17.0"}
+-  "ppxlib"         {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"         {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/ppx_array_base/ppx_array_base.v0.18~preview.130.106+341/opam b/packages/ppx_array_base/ppx_array_base.v0.18~preview.130.106+341/opam
+index b9c3904..85a1e51 100644
+--- a/packages/ppx_array_base/ppx_array_base.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_array_base/ppx_array_base.v0.18~preview.130.106+341/opam
+@@ -16,7 +16,7 @@ depends: [
+   "ppx_helpers" {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane" {= "v0.18~preview.130.106+341"}
+   "dune"        {>= "3.17.0"}
+-  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"      {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Defines array functions used in [Base.Array]."
+diff --git a/packages/ppx_assert/ppx_assert.v0.18~preview.130.106+341/opam b/packages/ppx_assert/ppx_assert.v0.18~preview.130.106+341/opam
+index 60f7334..1021887 100644
+--- a/packages/ppx_assert/ppx_assert.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_assert/ppx_assert.v0.18~preview.130.106+341/opam
+@@ -19,7 +19,7 @@ depends: [
+   "ppx_sexp_conv" {= "v0.18~preview.130.106+341"}
+   "ppx_template"  {= "v0.18~preview.130.106+341"}
+   "dune"          {>= "3.17.0"}
+-  "ppxlib"        {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"        {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Assert-like extension nodes that raise useful errors on failure"
+diff --git a/packages/ppx_base/ppx_base.v0.18~preview.130.106+341/opam b/packages/ppx_base/ppx_base.v0.18~preview.130.106+341/opam
+index e74c39b..91f64eb 100644
+--- a/packages/ppx_base/ppx_base.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_base/ppx_base.v0.18~preview.130.106+341/opam
+@@ -20,7 +20,7 @@ depends: [
+   "ppx_shorthand" {= "v0.18~preview.130.106+341"}
+   "ppx_template"  {= "v0.18~preview.130.106+341"}
+   "dune"          {>= "3.17.0"}
+-  "ppxlib"        {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"        {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Base set of ppx rewriters"
+diff --git a/packages/ppx_bench/ppx_bench.v0.18~preview.130.106+341/opam b/packages/ppx_bench/ppx_bench.v0.18~preview.130.106+341/opam
+index 86c9751..1e86688 100644
+--- a/packages/ppx_bench/ppx_bench.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_bench/ppx_bench.v0.18~preview.130.106+341/opam
+@@ -16,7 +16,7 @@ depends: [
+   "ppx_inline_test" {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane"     {= "v0.18~preview.130.106+341"}
+   "dune"            {>= "3.17.0"}
+-  "ppxlib"          {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"          {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Syntax extension for writing in-line benchmarks in ocaml code"
+diff --git a/packages/ppx_bin_and_sexp_digest/ppx_bin_and_sexp_digest.v0.18~preview.130.106+341/opam b/packages/ppx_bin_and_sexp_digest/ppx_bin_and_sexp_digest.v0.18~preview.130.106+341/opam
+index e528b1f..bcc98fb 100644
+--- a/packages/ppx_bin_and_sexp_digest/ppx_bin_and_sexp_digest.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_bin_and_sexp_digest/ppx_bin_and_sexp_digest.v0.18~preview.130.106+341/opam
+@@ -20,7 +20,7 @@ depends: [
+   "ppx_jane"                 {= "v0.18~preview.130.106+341"}
+   "ppx_sexp_digest"          {= "v0.18~preview.130.106+341"}
+   "dune"                     {>= "3.17.0"}
+-  "ppxlib"                   {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"                   {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/ppx_bin_prot/ppx_bin_prot.v0.18~preview.130.106+341/opam b/packages/ppx_bin_prot/ppx_bin_prot.v0.18~preview.130.106+341/opam
+index 43d78c8..1aa4471 100644
+--- a/packages/ppx_bin_prot/ppx_bin_prot.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_bin_prot/ppx_bin_prot.v0.18~preview.130.106+341/opam
+@@ -20,7 +20,7 @@ depends: [
+   "ppxlib_jane"         {= "v0.18~preview.130.106+341"}
+   "dune"                {>= "3.17.0"}
+   "ocaml-compiler-libs" {>= "v0.11.0"}
+-  "ppxlib"              {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"              {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Generation of bin_prot readers and writers from types"
+diff --git a/packages/ppx_builtin/ppx_builtin.v0.18~preview.130.106+341/opam b/packages/ppx_builtin/ppx_builtin.v0.18~preview.130.106+341/opam
+index 7a466e4..3ea853d 100644
+--- a/packages/ppx_builtin/ppx_builtin.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_builtin/ppx_builtin.v0.18~preview.130.106+341/opam
+@@ -16,7 +16,7 @@ depends: [
+   "ppxlib_jane"         {= "v0.18~preview.130.106+341"}
+   "dune"                {>= "3.17.0"}
+   "ocaml-compiler-libs" {>= "v0.11.0"}
+-  "ppxlib"              {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"              {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Elides unsupported [@@builtin] attributes."
+diff --git a/packages/ppx_c_bindings/ppx_c_bindings.v0.18~preview.130.106+341/opam b/packages/ppx_c_bindings/ppx_c_bindings.v0.18~preview.130.106+341/opam
+index 7fbf0a2..f738a17 100644
+--- a/packages/ppx_c_bindings/ppx_c_bindings.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_c_bindings/ppx_c_bindings.v0.18~preview.130.106+341/opam
+@@ -19,7 +19,7 @@ depends: [
+   "ppx_jane"       {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane"    {= "v0.18~preview.130.106+341"}
+   "dune"           {>= "3.17.0"}
+-  "ppxlib"         {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"         {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Easily write C bindings from within OCaml"
+diff --git a/packages/ppx_compare/ppx_compare.v0.18~preview.130.106+341/opam b/packages/ppx_compare/ppx_compare.v0.18~preview.130.106+341/opam
+index 62480c9..c00d23c 100644
+--- a/packages/ppx_compare/ppx_compare.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_compare/ppx_compare.v0.18~preview.130.106+341/opam
+@@ -19,7 +19,7 @@ depends: [
+   "ppx_template"  {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane"   {= "v0.18~preview.130.106+341"}
+   "dune"          {>= "3.17.0"}
+-  "ppxlib"        {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"        {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Generation of comparison functions from types"
+diff --git a/packages/ppx_conv_func/ppx_conv_func.v0.18~preview.130.106+341/opam b/packages/ppx_conv_func/ppx_conv_func.v0.18~preview.130.106+341/opam
+index 99808ab..24b845e 100644
+--- a/packages/ppx_conv_func/ppx_conv_func.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_conv_func/ppx_conv_func.v0.18~preview.130.106+341/opam
+@@ -16,7 +16,7 @@ depends: [
+   "base"        {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane" {= "v0.18~preview.130.106+341"}
+   "dune"        {>= "3.17.0"}
+-  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"      {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Deprecated"
+diff --git a/packages/ppx_css/ppx_css.v0.18~preview.130.106+341/opam b/packages/ppx_css/ppx_css.v0.18~preview.130.106+341/opam
+index 264bf0f..42e454d 100644
+--- a/packages/ppx_css/ppx_css.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_css/ppx_css.v0.18~preview.130.106+341/opam
+@@ -31,7 +31,7 @@ depends: [
+   "js_of_ocaml-ppx"     {>= "6.0.0"}
+   "ocaml-compiler-libs" {>= "v0.11.0"}
+   "ocamlgraph"          {= "2.0.0"}
+-  "ppxlib"              {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"              {>= "0.33.0" & < "0.39.0"}
+   "sedlex"              {>= "3.6"}
+ ]
+ available: arch != "x86_32"
+diff --git a/packages/ppx_csv_conv/ppx_csv_conv.v0.18~preview.130.106+341/opam b/packages/ppx_csv_conv/ppx_csv_conv.v0.18~preview.130.106+341/opam
+index f4b2ef2..2bdbb85 100644
+--- a/packages/ppx_csv_conv/ppx_csv_conv.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_csv_conv/ppx_csv_conv.v0.18~preview.130.106+341/opam
+@@ -18,7 +18,7 @@ depends: [
+   "ppx_conv_func"   {= "v0.18~preview.130.106+341"}
+   "ppx_fields_conv" {= "v0.18~preview.130.106+341"}
+   "dune"            {>= "3.17.0"}
+-  "ppxlib"          {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"          {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Generate functions to read/write records in csv format"
+diff --git a/packages/ppx_custom_printf/ppx_custom_printf.v0.18~preview.130.106+341/opam b/packages/ppx_custom_printf/ppx_custom_printf.v0.18~preview.130.106+341/opam
+index 66f81ed..aa2fddd 100644
+--- a/packages/ppx_custom_printf/ppx_custom_printf.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_custom_printf/ppx_custom_printf.v0.18~preview.130.106+341/opam
+@@ -16,7 +16,7 @@ depends: [
+   "base"          {= "v0.18~preview.130.106+341"}
+   "ppx_sexp_conv" {= "v0.18~preview.130.106+341"}
+   "dune"          {>= "3.17.0"}
+-  "ppxlib"        {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"        {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Printf-style format-strings for user-defined string conversion"
+diff --git a/packages/ppx_debug_assert/ppx_debug_assert.v0.18~preview.130.106+341/opam b/packages/ppx_debug_assert/ppx_debug_assert.v0.18~preview.130.106+341/opam
+index 94f513f..b810083 100644
+--- a/packages/ppx_debug_assert/ppx_debug_assert.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_debug_assert/ppx_debug_assert.v0.18~preview.130.106+341/opam
+@@ -14,7 +14,7 @@ build: [
+ depends: [
+   "ocaml"  {>= "5.2.0"}
+   "dune"   {>= "3.17.0"}
+-  "ppxlib" {>= "0.33.0" & < "0.36.0"}
++  "ppxlib" {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Ppx for debug assertions"
+diff --git a/packages/ppx_delta_types/ppx_delta_types.v0.18~preview.130.106+341/opam b/packages/ppx_delta_types/ppx_delta_types.v0.18~preview.130.106+341/opam
+index c7fc394..d23f1de 100644
+--- a/packages/ppx_delta_types/ppx_delta_types.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_delta_types/ppx_delta_types.v0.18~preview.130.106+341/opam
+@@ -18,7 +18,7 @@ depends: [
+   "ppx_jane"   {= "v0.18~preview.130.106+341"}
+   "ppx_stable" {= "v0.18~preview.130.106+341"}
+   "dune"       {>= "3.17.0"}
+-  "ppxlib"     {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"     {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/ppx_demo/ppx_demo.v0.18~preview.130.106+341/opam b/packages/ppx_demo/ppx_demo.v0.18~preview.130.106+341/opam
+index af240a7..4987034 100644
+--- a/packages/ppx_demo/ppx_demo.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_demo/ppx_demo.v0.18~preview.130.106+341/opam
+@@ -21,7 +21,7 @@ depends: [
+   "ppxlib_jane"              {= "v0.18~preview.130.106+341"}
+   "re2"                      {= "v0.18~preview.130.106+341"}
+   "dune"                     {>= "3.17.0"}
+-  "ppxlib"                   {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"                   {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/ppx_derive_at_runtime/ppx_derive_at_runtime.v0.18~preview.130.106+341/opam b/packages/ppx_derive_at_runtime/ppx_derive_at_runtime.v0.18~preview.130.106+341/opam
+index 8147843..6c2d9a4 100644
+--- a/packages/ppx_derive_at_runtime/ppx_derive_at_runtime.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_derive_at_runtime/ppx_derive_at_runtime.v0.18~preview.130.106+341/opam
+@@ -21,7 +21,7 @@ depends: [
+   "ppxlib_jane"              {= "v0.18~preview.130.106+341"}
+   "dune"                     {>= "3.17.0"}
+   "ocaml-compiler-libs"      {>= "v0.11.0"}
+-  "ppxlib"                   {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"                   {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Define a new ppx deriver by naming a runtime module."
+diff --git a/packages/ppx_diff/ppx_diff.v0.18~preview.130.106+341/opam b/packages/ppx_diff/ppx_diff.v0.18~preview.130.106+341/opam
+index 01b1ac6..89ac43d 100644
+--- a/packages/ppx_diff/ppx_diff.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_diff/ppx_diff.v0.18~preview.130.106+341/opam
+@@ -20,7 +20,7 @@ depends: [
+   "ppx_template"       {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane"        {= "v0.18~preview.130.106+341"}
+   "dune"               {>= "3.17.0"}
+-  "ppxlib"             {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"             {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/ppx_disable_unused_warnings/ppx_disable_unused_warnings.v0.18~preview.130.106+341/opam b/packages/ppx_disable_unused_warnings/ppx_disable_unused_warnings.v0.18~preview.130.106+341/opam
+index b38fa94..8306e35 100644
+--- a/packages/ppx_disable_unused_warnings/ppx_disable_unused_warnings.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_disable_unused_warnings/ppx_disable_unused_warnings.v0.18~preview.130.106+341/opam
+@@ -15,7 +15,7 @@ build: [
+ depends: [
+   "ocaml"  {>= "5.1.0"}
+   "dune"   {>= "3.17.0"}
+-  "ppxlib" {>= "0.33.0" & < "0.36.0"}
++  "ppxlib" {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/ppx_embed_file/ppx_embed_file.v0.18~preview.130.106+341/opam b/packages/ppx_embed_file/ppx_embed_file.v0.18~preview.130.106+341/opam
+index d7217f3..91bd815 100644
+--- a/packages/ppx_embed_file/ppx_embed_file.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_embed_file/ppx_embed_file.v0.18~preview.130.106+341/opam
+@@ -16,7 +16,7 @@ depends: [
+   "core"     {= "v0.18~preview.130.106+341"}
+   "ppx_jane" {= "v0.18~preview.130.106+341"}
+   "dune"     {>= "3.17.0"}
+-  "ppxlib"   {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"   {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/ppx_enumerate/ppx_enumerate.v0.18~preview.130.106+341/opam b/packages/ppx_enumerate/ppx_enumerate.v0.18~preview.130.106+341/opam
+index 2074fd7..2007a87 100644
+--- a/packages/ppx_enumerate/ppx_enumerate.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_enumerate/ppx_enumerate.v0.18~preview.130.106+341/opam
+@@ -16,7 +16,7 @@ depends: [
+   "basement"    {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane" {= "v0.18~preview.130.106+341"}
+   "dune"        {>= "3.17.0"}
+-  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"      {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Generate a list containing all values of a finite type"
+diff --git a/packages/ppx_expect/ppx_expect.v0.18~preview.130.106+341/opam b/packages/ppx_expect/ppx_expect.v0.18~preview.130.106+341/opam
+index a28de46..926ba9a 100644
+--- a/packages/ppx_expect/ppx_expect.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_expect/ppx_expect.v0.18~preview.130.106+341/opam
+@@ -21,7 +21,7 @@ depends: [
+   "ppx_inline_test" {= "v0.18~preview.130.106+341"}
+   "stdio"           {= "v0.18~preview.130.106+341"}
+   "dune"            {>= "3.17.0"}
+-  "ppxlib"          {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"          {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Cram like framework for OCaml"
+diff --git a/packages/ppx_fields_conv/ppx_fields_conv.v0.18~preview.130.106+341/opam b/packages/ppx_fields_conv/ppx_fields_conv.v0.18~preview.130.106+341/opam
+index 949aa37..87ab5bc 100644
+--- a/packages/ppx_fields_conv/ppx_fields_conv.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_fields_conv/ppx_fields_conv.v0.18~preview.130.106+341/opam
+@@ -18,7 +18,7 @@ depends: [
+   "ppx_helpers" {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane" {= "v0.18~preview.130.106+341"}
+   "dune"        {>= "3.17.0"}
+-  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"      {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Generation of accessor and iteration functions for ocaml records"
+diff --git a/packages/ppx_fixed_literal/ppx_fixed_literal.v0.18~preview.130.106+341/opam b/packages/ppx_fixed_literal/ppx_fixed_literal.v0.18~preview.130.106+341/opam
+index e53e586..7567a09 100644
+--- a/packages/ppx_fixed_literal/ppx_fixed_literal.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_fixed_literal/ppx_fixed_literal.v0.18~preview.130.106+341/opam
+@@ -15,7 +15,7 @@ depends: [
+   "ocaml"  {>= "5.1.0"}
+   "base"   {= "v0.18~preview.130.106+341"}
+   "dune"   {>= "3.17.0"}
+-  "ppxlib" {>= "0.33.0" & < "0.36.0"}
++  "ppxlib" {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Simpler notation for fixed point literals"
+diff --git a/packages/ppx_fuelproof/ppx_fuelproof.v0.18~preview.130.106+341/opam b/packages/ppx_fuelproof/ppx_fuelproof.v0.18~preview.130.106+341/opam
+index 63e31c7..f15a3b8 100644
+--- a/packages/ppx_fuelproof/ppx_fuelproof.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_fuelproof/ppx_fuelproof.v0.18~preview.130.106+341/opam
+@@ -19,7 +19,7 @@ depends: [
+   "ppx_sexp_conv" {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane"   {= "v0.18~preview.130.106+341"}
+   "dune"          {>= "3.17.0"}
+-  "ppxlib"        {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"        {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Get better error messages and improve mode crossing for types"
+diff --git a/packages/ppx_globalize/ppx_globalize.v0.18~preview.130.106+341/opam b/packages/ppx_globalize/ppx_globalize.v0.18~preview.130.106+341/opam
+index 7e08007..177f7f6 100644
+--- a/packages/ppx_globalize/ppx_globalize.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_globalize/ppx_globalize.v0.18~preview.130.106+341/opam
+@@ -16,7 +16,7 @@ depends: [
+   "ppx_helpers" {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane" {= "v0.18~preview.130.106+341"}
+   "dune"        {>= "3.17.0"}
+-  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"      {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/ppx_hardcaml/ppx_hardcaml.v0.18~preview.130.106+341/opam b/packages/ppx_hardcaml/ppx_hardcaml.v0.18~preview.130.106+341/opam
+index a19447b..f9f1869 100644
+--- a/packages/ppx_hardcaml/ppx_hardcaml.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_hardcaml/ppx_hardcaml.v0.18~preview.130.106+341/opam
+@@ -17,7 +17,7 @@ depends: [
+   "hardcaml" {= "v0.18~preview.130.106+341"}
+   "ppx_jane" {= "v0.18~preview.130.106+341"}
+   "dune"     {>= "3.17.0"}
+-  "ppxlib"   {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"   {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Rewrite OCaml records for use as Hardcaml Interfaces"
+diff --git a/packages/ppx_hash/ppx_hash.v0.18~preview.130.106+341/opam b/packages/ppx_hash/ppx_hash.v0.18~preview.130.106+341/opam
+index b4d1527..f6816dc 100644
+--- a/packages/ppx_hash/ppx_hash.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_hash/ppx_hash.v0.18~preview.130.106+341/opam
+@@ -19,7 +19,7 @@ depends: [
+   "ppxlib_jane"             {= "v0.18~preview.130.106+341"}
+   "dune"                    {>= "3.17.0"}
+   "ocaml-compiler-libs"     {>= "v0.11.0"}
+-  "ppxlib"                  {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"                  {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/ppx_helpers/ppx_helpers.v0.18~preview.130.106+341/opam b/packages/ppx_helpers/ppx_helpers.v0.18~preview.130.106+341/opam
+index b03dd38..9f8577d 100644
+--- a/packages/ppx_helpers/ppx_helpers.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_helpers/ppx_helpers.v0.18~preview.130.106+341/opam
+@@ -16,7 +16,7 @@ depends: [
+   "ppxlib_jane" {= "v0.18~preview.130.106+341"}
+   "sexplib0"    {= "v0.18~preview.130.106+341"}
+   "dune"        {>= "3.17.0"}
+-  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"      {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Miscellaneous helpers for writing PPXes"
+diff --git a/packages/ppx_here/ppx_here.v0.18~preview.130.106+341/opam b/packages/ppx_here/ppx_here.v0.18~preview.130.106+341/opam
+index 15ac73e..b516c7b 100644
+--- a/packages/ppx_here/ppx_here.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_here/ppx_here.v0.18~preview.130.106+341/opam
+@@ -15,7 +15,7 @@ depends: [
+   "base"        {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane" {= "v0.18~preview.130.106+341"}
+   "dune"        {>= "3.17.0"}
+-  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"      {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Expands [%here] into its location"
+diff --git a/packages/ppx_html/ppx_html.v0.18~preview.130.106+341/opam b/packages/ppx_html/ppx_html.v0.18~preview.130.106+341/opam
+index a709310..b361072 100644
+--- a/packages/ppx_html/ppx_html.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_html/ppx_html.v0.18~preview.130.106+341/opam
+@@ -27,7 +27,7 @@ depends: [
+   "dune"                     {>= "3.17.0"}
+   "js_of_ocaml-ppx"          {>= "6.0.0"}
+   "ocaml-compiler-libs"      {>= "v0.11.0"}
+-  "ppxlib"                   {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"                   {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/ppx_ignore_instrumentation/ppx_ignore_instrumentation.v0.18~preview.130.106+341/opam b/packages/ppx_ignore_instrumentation/ppx_ignore_instrumentation.v0.18~preview.130.106+341/opam
+index ba5af0b..1b90e86 100644
+--- a/packages/ppx_ignore_instrumentation/ppx_ignore_instrumentation.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_ignore_instrumentation/ppx_ignore_instrumentation.v0.18~preview.130.106+341/opam
+@@ -15,7 +15,7 @@ build: [
+ depends: [
+   "ocaml"  {>= "5.1.0"}
+   "dune"   {>= "3.17.0"}
+-  "ppxlib" {>= "0.33.0" & < "0.36.0"}
++  "ppxlib" {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Ignore Jane Street specific instrumentation extensions"
+diff --git a/packages/ppx_inline_test/ppx_inline_test.v0.18~preview.130.106+341/opam b/packages/ppx_inline_test/ppx_inline_test.v0.18~preview.130.106+341/opam
+index 45ce5e5..7c8bec0 100644
+--- a/packages/ppx_inline_test/ppx_inline_test.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_inline_test/ppx_inline_test.v0.18~preview.130.106+341/opam
+@@ -19,7 +19,7 @@ depends: [
+   "sexplib0"    {= "v0.18~preview.130.106+341"}
+   "time_now"    {= "v0.18~preview.130.106+341"}
+   "dune"        {>= "3.17.0"}
+-  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"      {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Syntax extension for writing in-line tests in ocaml code"
+diff --git a/packages/ppx_int63_literal/ppx_int63_literal.v0.18~preview.130.106+341/opam b/packages/ppx_int63_literal/ppx_int63_literal.v0.18~preview.130.106+341/opam
+index 3dde640..7d99ffb 100644
+--- a/packages/ppx_int63_literal/ppx_int63_literal.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_int63_literal/ppx_int63_literal.v0.18~preview.130.106+341/opam
+@@ -15,7 +15,7 @@ depends: [
+   "ocaml"  {>= "5.2.0"}
+   "base"   {= "v0.18~preview.130.106+341"}
+   "dune"   {>= "3.17.0"}
+-  "ppxlib" {>= "0.33.0" & < "0.36.0"}
++  "ppxlib" {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Syntax extension for writing int63 literals."
+diff --git a/packages/ppx_jane/ppx_jane.v0.18~preview.130.106+341/opam b/packages/ppx_jane/ppx_jane.v0.18~preview.130.106+341/opam
+index 105eeb1..443fe50 100644
+--- a/packages/ppx_jane/ppx_jane.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_jane/ppx_jane.v0.18~preview.130.106+341/opam
+@@ -46,7 +46,7 @@ depends: [
+   "ppx_var_name"                {= "v0.18~preview.130.106+341"}
+   "ppx_variants_conv"           {= "v0.18~preview.130.106+341"}
+   "dune"                        {>= "3.17.0"}
+-  "ppxlib"                      {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"                      {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Standard Jane Street ppx rewriters"
+diff --git a/packages/ppx_js_style/ppx_js_style.v0.18~preview.130.106+341/opam b/packages/ppx_js_style/ppx_js_style.v0.18~preview.130.106+341/opam
+index fc816ed..0e8f375 100644
+--- a/packages/ppx_js_style/ppx_js_style.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_js_style/ppx_js_style.v0.18~preview.130.106+341/opam
+@@ -18,7 +18,7 @@ depends: [
+   "dune"                {>= "3.17.0"}
+   "ocaml-compiler-libs" {>= "v0.11.0"}
+   "odoc-parser"
+-  "ppxlib"              {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"              {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Code style checker for Jane Street Packages"
+diff --git a/packages/ppx_jsonaf_conv/ppx_jsonaf_conv.v0.18~preview.130.106+341/opam b/packages/ppx_jsonaf_conv/ppx_jsonaf_conv.v0.18~preview.130.106+341/opam
+index 742e14c..76f7497 100644
+--- a/packages/ppx_jsonaf_conv/ppx_jsonaf_conv.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_jsonaf_conv/ppx_jsonaf_conv.v0.18~preview.130.106+341/opam
+@@ -21,7 +21,7 @@ depends: [
+   "ppx_template"   {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane"    {= "v0.18~preview.130.106+341"}
+   "dune"           {>= "3.17.0"}
+-  "ppxlib"         {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"         {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "[@@deriving] plugin to generate Jsonaf conversion functions"
+diff --git a/packages/ppx_let/ppx_let.v0.18~preview.130.106+341/opam b/packages/ppx_let/ppx_let.v0.18~preview.130.106+341/opam
+index 43474cd..cb3e57c 100644
+--- a/packages/ppx_let/ppx_let.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_let/ppx_let.v0.18~preview.130.106+341/opam
+@@ -17,7 +17,7 @@ depends: [
+   "ppx_here"    {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane" {= "v0.18~preview.130.106+341"}
+   "dune"        {>= "3.17.0"}
+-  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"      {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Monadic let-bindings"
+diff --git a/packages/ppx_loc/ppx_loc.v0.18~preview.130.106+341/opam b/packages/ppx_loc/ppx_loc.v0.18~preview.130.106+341/opam
+index 996d894..1f82c9d 100644
+--- a/packages/ppx_loc/ppx_loc.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_loc/ppx_loc.v0.18~preview.130.106+341/opam
+@@ -16,7 +16,7 @@ depends: [
+   "core"     {= "v0.18~preview.130.106+341"}
+   "ppx_jane" {= "v0.18~preview.130.106+341"}
+   "dune"     {>= "3.17.0"}
+-  "ppxlib"   {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"   {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "A ppx for referencing code locations and names."
+diff --git a/packages/ppx_log/ppx_log.v0.18~preview.130.106+341/opam b/packages/ppx_log/ppx_log.v0.18~preview.130.106+341/opam
+index 6f02977..b5671c9 100644
+--- a/packages/ppx_log/ppx_log.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_log/ppx_log.v0.18~preview.130.106+341/opam
+@@ -28,7 +28,7 @@ depends: [
+   "sexplib"           {= "v0.18~preview.130.106+341"}
+   "stdio"             {= "v0.18~preview.130.106+341"}
+   "dune"              {>= "3.17.0"}
+-  "ppxlib"            {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"            {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/ppx_module_timer/ppx_module_timer.v0.18~preview.130.106+341/opam b/packages/ppx_module_timer/ppx_module_timer.v0.18~preview.130.106+341/opam
+index 98bd755..c726bf2 100644
+--- a/packages/ppx_module_timer/ppx_module_timer.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_module_timer/ppx_module_timer.v0.18~preview.130.106+341/opam
+@@ -19,7 +19,7 @@ depends: [
+   "stdio"       {= "v0.18~preview.130.106+341"}
+   "time_now"    {= "v0.18~preview.130.106+341"}
+   "dune"        {>= "3.17.0"}
+-  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"      {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Ppx rewriter that records top-level module startup times"
+diff --git a/packages/ppx_optcomp/ppx_optcomp.v0.18~preview.130.106+341/opam b/packages/ppx_optcomp/ppx_optcomp.v0.18~preview.130.106+341/opam
+index f791e8f..b93582d 100644
+--- a/packages/ppx_optcomp/ppx_optcomp.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_optcomp/ppx_optcomp.v0.18~preview.130.106+341/opam
+@@ -16,7 +16,7 @@ depends: [
+   "ppxlib_jane"         {= "v0.18~preview.130.106+341"}
+   "dune"                {>= "3.17.0"}
+   "ocaml-compiler-libs" {>= "v0.11.0"}
+-  "ppxlib"              {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"              {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Optional compilation for OCaml"
+diff --git a/packages/ppx_optional/ppx_optional.v0.18~preview.130.106+341/opam b/packages/ppx_optional/ppx_optional.v0.18~preview.130.106+341/opam
+index 9f4374e..e5231c2 100644
+--- a/packages/ppx_optional/ppx_optional.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_optional/ppx_optional.v0.18~preview.130.106+341/opam
+@@ -16,7 +16,7 @@ depends: [
+   "base"        {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane" {= "v0.18~preview.130.106+341"}
+   "dune"        {>= "3.17.0"}
+-  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"      {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Pattern matching on flat options"
+diff --git a/packages/ppx_pattern_bind/ppx_pattern_bind.v0.18~preview.130.106+341/opam b/packages/ppx_pattern_bind/ppx_pattern_bind.v0.18~preview.130.106+341/opam
+index ab6baa9..9e1d813 100644
+--- a/packages/ppx_pattern_bind/ppx_pattern_bind.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_pattern_bind/ppx_pattern_bind.v0.18~preview.130.106+341/opam
+@@ -17,7 +17,7 @@ depends: [
+   "ppx_let"     {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane" {= "v0.18~preview.130.106+341"}
+   "dune"        {>= "3.17.0"}
+-  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"      {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "A ppx for writing fast incremental bind nodes in a pattern match"
+diff --git a/packages/ppx_pipebang/ppx_pipebang.v0.18~preview.130.106+341/opam b/packages/ppx_pipebang/ppx_pipebang.v0.18~preview.130.106+341/opam
+index b47d697..8fbc93e 100644
+--- a/packages/ppx_pipebang/ppx_pipebang.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_pipebang/ppx_pipebang.v0.18~preview.130.106+341/opam
+@@ -15,7 +15,7 @@ depends: [
+   "ocaml"       {>= "5.1.0"}
+   "ppxlib_jane" {= "v0.18~preview.130.106+341"}
+   "dune"        {>= "3.17.0"}
+-  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"      {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/ppx_portable/ppx_portable.v0.18~preview.130.106+341/opam b/packages/ppx_portable/ppx_portable.v0.18~preview.130.106+341/opam
+index 928223d..576ce50 100644
+--- a/packages/ppx_portable/ppx_portable.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_portable/ppx_portable.v0.18~preview.130.106+341/opam
+@@ -17,7 +17,7 @@ depends: [
+   "ppx_js_style" {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane"  {= "v0.18~preview.130.106+341"}
+   "dune"         {>= "3.17.0"}
+-  "ppxlib"       {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"       {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/ppx_quick_test/ppx_quick_test.v0.18~preview.130.106+341/opam b/packages/ppx_quick_test/ppx_quick_test.v0.18~preview.130.106+341/opam
+index 0f6aa6b..7d31743 100644
+--- a/packages/ppx_quick_test/ppx_quick_test.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_quick_test/ppx_quick_test.v0.18~preview.130.106+341/opam
+@@ -31,7 +31,7 @@ depends: [
+   "stdio"                     {= "v0.18~preview.130.106+341"}
+   "dune"                      {>= "3.17.0"}
+   "ocaml-compiler-libs"       {>= "v0.11.0"}
+-  "ppxlib"                    {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"                    {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/ppx_rope/ppx_rope.v0.18~preview.130.106+341/opam b/packages/ppx_rope/ppx_rope.v0.18~preview.130.106+341/opam
+index ab1382b..1bab799 100644
+--- a/packages/ppx_rope/ppx_rope.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_rope/ppx_rope.v0.18~preview.130.106+341/opam
+@@ -17,7 +17,7 @@ depends: [
+   "jane_rope"  {= "v0.18~preview.130.106+341"}
+   "ppx_string" {= "v0.18~preview.130.106+341"}
+   "dune"       {>= "3.17.0"}
+-  "ppxlib"     {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"     {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Ppx extension for string interpolation using ropes"
+diff --git a/packages/ppx_sexp_conv/ppx_sexp_conv.v0.18~preview.130.106+341/opam b/packages/ppx_sexp_conv/ppx_sexp_conv.v0.18~preview.130.106+341/opam
+index 8cab5b2..66b09c4 100644
+--- a/packages/ppx_sexp_conv/ppx_sexp_conv.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_sexp_conv/ppx_sexp_conv.v0.18~preview.130.106+341/opam
+@@ -18,7 +18,7 @@ depends: [
+   "ppxlib_jane" {= "v0.18~preview.130.106+341"}
+   "sexplib0"    {= "v0.18~preview.130.106+341"}
+   "dune"        {>= "3.17.0"}
+-  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"      {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "[@@deriving] plugin to generate S-expression conversion functions"
+diff --git a/packages/ppx_sexp_digest/ppx_sexp_digest.v0.18~preview.130.106+341/opam b/packages/ppx_sexp_digest/ppx_sexp_digest.v0.18~preview.130.106+341/opam
+index 46e44a5..e014f6c 100644
+--- a/packages/ppx_sexp_digest/ppx_sexp_digest.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_sexp_digest/ppx_sexp_digest.v0.18~preview.130.106+341/opam
+@@ -21,7 +21,7 @@ depends: [
+   "sexp_grammar"             {= "v0.18~preview.130.106+341"}
+   "stdio"                    {= "v0.18~preview.130.106+341"}
+   "dune"                     {>= "3.17.0"}
+-  "ppxlib"                   {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"                   {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "A ppx extension for hashing the sexp_grammar of a type."
+diff --git a/packages/ppx_sexp_message/ppx_sexp_message.v0.18~preview.130.106+341/opam b/packages/ppx_sexp_message/ppx_sexp_message.v0.18~preview.130.106+341/opam
+index a93543a..6436df6 100644
+--- a/packages/ppx_sexp_message/ppx_sexp_message.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_sexp_message/ppx_sexp_message.v0.18~preview.130.106+341/opam
+@@ -17,7 +17,7 @@ depends: [
+   "ppx_here"      {= "v0.18~preview.130.106+341"}
+   "ppx_sexp_conv" {= "v0.18~preview.130.106+341"}
+   "dune"          {>= "3.17.0"}
+-  "ppxlib"        {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"        {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "A ppx rewriter for easy construction of s-expressions"
+diff --git a/packages/ppx_sexp_value/ppx_sexp_value.v0.18~preview.130.106+341/opam b/packages/ppx_sexp_value/ppx_sexp_value.v0.18~preview.130.106+341/opam
+index db0b33c..e9916d4 100644
+--- a/packages/ppx_sexp_value/ppx_sexp_value.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_sexp_value/ppx_sexp_value.v0.18~preview.130.106+341/opam
+@@ -17,7 +17,7 @@ depends: [
+   "ppx_here"      {= "v0.18~preview.130.106+341"}
+   "ppx_sexp_conv" {= "v0.18~preview.130.106+341"}
+   "dune"          {>= "3.17.0"}
+-  "ppxlib"        {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"        {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/ppx_shorthand/ppx_shorthand.v0.18~preview.130.106+341/opam b/packages/ppx_shorthand/ppx_shorthand.v0.18~preview.130.106+341/opam
+index 46a4a62..57312c5 100644
+--- a/packages/ppx_shorthand/ppx_shorthand.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_shorthand/ppx_shorthand.v0.18~preview.130.106+341/opam
+@@ -15,7 +15,7 @@ depends: [
+   "ocaml"       {>= "5.1.0"}
+   "ppxlib_jane" {= "v0.18~preview.130.106+341"}
+   "dune"        {>= "3.17.0"}
+-  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"      {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "A grab-bag of small but useful AST transformations"
+diff --git a/packages/ppx_simple_xml_conv/ppx_simple_xml_conv.v0.18~preview.130.106+341/opam b/packages/ppx_simple_xml_conv/ppx_simple_xml_conv.v0.18~preview.130.106+341/opam
+index 01f0740..e66f8cb 100644
+--- a/packages/ppx_simple_xml_conv/ppx_simple_xml_conv.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_simple_xml_conv/ppx_simple_xml_conv.v0.18~preview.130.106+341/opam
+@@ -20,7 +20,7 @@ depends: [
+   "ppxlib_jane"  {= "v0.18~preview.130.106+341"}
+   "simple_xml"   {= "v0.18~preview.130.106+341"}
+   "dune"         {>= "3.17.0"}
+-  "ppxlib"       {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"       {>= "0.33.0" & < "0.39.0"}
+   "xmlm"         {>= "1.4.0"}
+ ]
+ available: arch != "x86_32"
+diff --git a/packages/ppx_stable/ppx_stable.v0.18~preview.130.106+341/opam b/packages/ppx_stable/ppx_stable.v0.18~preview.130.106+341/opam
+index 823f160..1bbf2be 100644
+--- a/packages/ppx_stable/ppx_stable.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_stable/ppx_stable.v0.18~preview.130.106+341/opam
+@@ -17,7 +17,7 @@ depends: [
+   "ppx_template" {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane"  {= "v0.18~preview.130.106+341"}
+   "dune"         {>= "3.17.0"}
+-  "ppxlib"       {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"       {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Stable types conversions generator"
+diff --git a/packages/ppx_stable_witness/ppx_stable_witness.v0.18~preview.130.106+341/opam b/packages/ppx_stable_witness/ppx_stable_witness.v0.18~preview.130.106+341/opam
+index fa97373..d76efec 100644
+--- a/packages/ppx_stable_witness/ppx_stable_witness.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_stable_witness/ppx_stable_witness.v0.18~preview.130.106+341/opam
+@@ -17,7 +17,7 @@ depends: [
+   "basement"    {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane" {= "v0.18~preview.130.106+341"}
+   "dune"        {>= "3.17.0"}
+-  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"      {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: """\
+diff --git a/packages/ppx_string/ppx_string.v0.18~preview.130.106+341/opam b/packages/ppx_string/ppx_string.v0.18~preview.130.106+341/opam
+index 2dd0d84..c917b5a 100644
+--- a/packages/ppx_string/ppx_string.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_string/ppx_string.v0.18~preview.130.106+341/opam
+@@ -17,7 +17,7 @@ depends: [
+   "ppx_base"     {= "v0.18~preview.130.106+341"}
+   "ppx_template" {= "v0.18~preview.130.106+341"}
+   "dune"         {>= "3.17.0"}
+-  "ppxlib"       {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"       {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Ppx extension for string interpolation"
+diff --git a/packages/ppx_string_conv/ppx_string_conv.v0.18~preview.130.106+341/opam b/packages/ppx_string_conv/ppx_string_conv.v0.18~preview.130.106+341/opam
+index 7080c2a..993c3e2 100644
+--- a/packages/ppx_string_conv/ppx_string_conv.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_string_conv/ppx_string_conv.v0.18~preview.130.106+341/opam
+@@ -19,7 +19,7 @@ depends: [
+   "ppx_string"     {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane"    {= "v0.18~preview.130.106+341"}
+   "dune"           {>= "3.17.0"}
+-  "ppxlib"         {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"         {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Ppx extension for generating of_string & to_string"
+diff --git a/packages/ppx_template/ppx_template.v0.18~preview.130.106+341/opam b/packages/ppx_template/ppx_template.v0.18~preview.130.106+341/opam
+index fde2db3..2bfea9b 100644
+--- a/packages/ppx_template/ppx_template.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_template/ppx_template.v0.18~preview.130.106+341/opam
+@@ -18,7 +18,7 @@ depends: [
+   "ppxlib_jane"        {= "v0.18~preview.130.106+341"}
+   "sexplib0"           {= "v0.18~preview.130.106+341"}
+   "dune"               {>= "3.17.0"}
+-  "ppxlib"             {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"             {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/ppx_tydi/ppx_tydi.v0.18~preview.130.106+341/opam b/packages/ppx_tydi/ppx_tydi.v0.18~preview.130.106+341/opam
+index 275bf65..01e2406 100644
+--- a/packages/ppx_tydi/ppx_tydi.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_tydi/ppx_tydi.v0.18~preview.130.106+341/opam
+@@ -14,7 +14,7 @@ depends: [
+   "ocaml"  {>= "5.1.0"}
+   "base"   {= "v0.18~preview.130.106+341"}
+   "dune"   {>= "3.17.0"}
+-  "ppxlib" {>= "0.33.0" & < "0.36.0"}
++  "ppxlib" {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Let expressions, inferring pattern type from expression."
+diff --git a/packages/ppx_typed_fields/ppx_typed_fields.v0.18~preview.130.106+341/opam b/packages/ppx_typed_fields/ppx_typed_fields.v0.18~preview.130.106+341/opam
+index 527a048..780a691 100644
+--- a/packages/ppx_typed_fields/ppx_typed_fields.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_typed_fields/ppx_typed_fields.v0.18~preview.130.106+341/opam
+@@ -29,7 +29,7 @@ depends: [
+   "sexplib0"         {= "v0.18~preview.130.106+341"}
+   "univ_map"         {= "v0.18~preview.130.106+341"}
+   "dune"             {>= "3.17.0"}
+-  "ppxlib"           {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"           {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "GADT-based field accessors and utilities"
+diff --git a/packages/ppx_typerep_conv/ppx_typerep_conv.v0.18~preview.130.106+341/opam b/packages/ppx_typerep_conv/ppx_typerep_conv.v0.18~preview.130.106+341/opam
+index e899040..eeb5061 100644
+--- a/packages/ppx_typerep_conv/ppx_typerep_conv.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_typerep_conv/ppx_typerep_conv.v0.18~preview.130.106+341/opam
+@@ -20,7 +20,7 @@ depends: [
+   "ppxlib_jane"  {= "v0.18~preview.130.106+341"}
+   "typerep"      {= "v0.18~preview.130.106+341"}
+   "dune"         {>= "3.17.0"}
+-  "ppxlib"       {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"       {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Generation of runtime types from type declarations"
+diff --git a/packages/ppx_var_name/ppx_var_name.v0.18~preview.130.106+341/opam b/packages/ppx_var_name/ppx_var_name.v0.18~preview.130.106+341/opam
+index 7e7a495..bebd64f 100644
+--- a/packages/ppx_var_name/ppx_var_name.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_var_name/ppx_var_name.v0.18~preview.130.106+341/opam
+@@ -15,7 +15,7 @@ depends: [
+   "ocaml"  {>= "5.1.0"}
+   "base"   {= "v0.18~preview.130.106+341"}
+   "dune"   {>= "3.17.0"}
+-  "ppxlib" {>= "0.33.0" & < "0.36.0"}
++  "ppxlib" {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/ppx_variants_conv/ppx_variants_conv.v0.18~preview.130.106+341/opam b/packages/ppx_variants_conv/ppx_variants_conv.v0.18~preview.130.106+341/opam
+index 9185010..909b7b5 100644
+--- a/packages/ppx_variants_conv/ppx_variants_conv.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_variants_conv/ppx_variants_conv.v0.18~preview.130.106+341/opam
+@@ -17,7 +17,7 @@ depends: [
+   "ppxlib_jane" {= "v0.18~preview.130.106+341"}
+   "variantslib" {= "v0.18~preview.130.106+341"}
+   "dune"        {>= "3.17.0"}
+-  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"      {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/ppx_with/ppx_with.v0.18~preview.130.106+341/opam b/packages/ppx_with/ppx_with.v0.18~preview.130.106+341/opam
+index 76b4ce0..627bec0 100644
+--- a/packages/ppx_with/ppx_with.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_with/ppx_with.v0.18~preview.130.106+341/opam
+@@ -15,7 +15,7 @@ depends: [
+   "base"        {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane" {= "v0.18~preview.130.106+341"}
+   "dune"        {>= "3.17.0"}
+-  "ppxlib"      {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"      {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "A ppx writer for consisely building scoped operations"
+diff --git a/packages/ppx_xml_conv/ppx_xml_conv.v0.18~preview.130.106+341/opam b/packages/ppx_xml_conv/ppx_xml_conv.v0.18~preview.130.106+341/opam
+index 9059391..396bfc5 100644
+--- a/packages/ppx_xml_conv/ppx_xml_conv.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_xml_conv/ppx_xml_conv.v0.18~preview.130.106+341/opam
+@@ -18,7 +18,7 @@ depends: [
+   "ppx_conv_func"   {= "v0.18~preview.130.106+341"}
+   "ppx_fields_conv" {= "v0.18~preview.130.106+341"}
+   "dune"            {>= "3.17.0"}
+-  "ppxlib"          {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"          {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Generate XML conversion functions from records"
+diff --git a/packages/ppx_yojson_conv/ppx_yojson_conv.v0.18~preview.130.106+341/opam b/packages/ppx_yojson_conv/ppx_yojson_conv.v0.18~preview.130.106+341/opam
+index 4b9b328..6f3b7ab 100644
+--- a/packages/ppx_yojson_conv/ppx_yojson_conv.v0.18~preview.130.106+341/opam
++++ b/packages/ppx_yojson_conv/ppx_yojson_conv.v0.18~preview.130.106+341/opam
+@@ -19,7 +19,7 @@ depends: [
+   "ppx_yojson_conv_lib" {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane"         {= "v0.18~preview.130.106+341"}
+   "dune"                {>= "3.17.0"}
+-  "ppxlib"              {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"              {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "[@@deriving] plugin to generate Yojson conversion functions"
+diff --git a/packages/ppxlib_jane/ppxlib_jane.v0.18~preview.130.106+341/opam b/packages/ppxlib_jane/ppxlib_jane.v0.18~preview.130.106+341/opam
+index 7272fba..8248a53 100644
+--- a/packages/ppxlib_jane/ppxlib_jane.v0.18~preview.130.106+341/opam
++++ b/packages/ppxlib_jane/ppxlib_jane.v0.18~preview.130.106+341/opam
+@@ -14,7 +14,7 @@ build: [
+ depends: [
+   "ocaml"  {>= "5.1.0"}
+   "dune"   {>= "3.17.0"}
+-  "ppxlib" {>= "0.33.0" & < "0.36.0"}
++  "ppxlib" {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Utilities for working with Jane Street AST constructs"
+diff --git a/packages/roundtrippable_command_param/roundtrippable_command_param.v0.18~preview.130.106+341/opam b/packages/roundtrippable_command_param/roundtrippable_command_param.v0.18~preview.130.106+341/opam
+index 773bb24..540ef24 100644
+--- a/packages/roundtrippable_command_param/roundtrippable_command_param.v0.18~preview.130.106+341/opam
++++ b/packages/roundtrippable_command_param/roundtrippable_command_param.v0.18~preview.130.106+341/opam
+@@ -28,7 +28,7 @@ depends: [
+   "univ_map"         {= "v0.18~preview.130.106+341"}
+   "variantslib"      {= "v0.18~preview.130.106+341"}
+   "dune"             {>= "3.17.0"}
+-  "ppxlib"           {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"           {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis:
+diff --git a/packages/sexp_grammar/sexp_grammar.v0.18~preview.130.106+341/opam b/packages/sexp_grammar/sexp_grammar.v0.18~preview.130.106+341/opam
+index bf2fcb8..c96f79b 100644
+--- a/packages/sexp_grammar/sexp_grammar.v0.18~preview.130.106+341/opam
++++ b/packages/sexp_grammar/sexp_grammar.v0.18~preview.130.106+341/opam
+@@ -29,7 +29,7 @@ depends: [
+   "ppx_sexp_message"         {= "v0.18~preview.130.106+341"}
+   "ppx_template"             {= "v0.18~preview.130.106+341"}
+   "dune"                     {>= "3.17.0"}
+-  "ppxlib"                   {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"                   {>= "0.33.0" & < "0.39.0"}
+   "zarith"                   {>= "1.11"}
+ ]
+ available: arch != "x86_32"
+diff --git a/packages/streamable/streamable.v0.18~preview.130.106+341/opam b/packages/streamable/streamable.v0.18~preview.130.106+341/opam
+index 1b93dd1..1de5de6 100644
+--- a/packages/streamable/streamable.v0.18~preview.130.106+341/opam
++++ b/packages/streamable/streamable.v0.18~preview.130.106+341/opam
+@@ -22,7 +22,7 @@ depends: [
+   "ppx_jane"         {= "v0.18~preview.130.106+341"}
+   "ppxlib_jane"      {= "v0.18~preview.130.106+341"}
+   "dune"             {>= "3.17.0"}
+-  "ppxlib"           {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"           {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "A collection of types suitable for incremental serialization."
+diff --git a/packages/toplevel_expect_test/toplevel_expect_test.v0.18~preview.130.106+341/opam b/packages/toplevel_expect_test/toplevel_expect_test.v0.18~preview.130.106+341/opam
+index 476e942..26c546c 100644
+--- a/packages/toplevel_expect_test/toplevel_expect_test.v0.18~preview.130.106+341/opam
++++ b/packages/toplevel_expect_test/toplevel_expect_test.v0.18~preview.130.106+341/opam
+@@ -26,7 +26,7 @@ depends: [
+   "dune"                {>= "3.17.0"}
+   "ocaml-compiler-libs" {>= "v0.11.0"}
+   "ocamlfind"           {>= "1.7.2"}
+-  "ppxlib"              {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"              {>= "0.33.0" & < "0.39.0"}
+ ]
+ available: arch != "x86_32"
+ synopsis: "Expectation tests for the OCaml toplevel"
+diff --git a/packages/uri_parsing/uri_parsing.v0.18~preview.130.106+341/opam b/packages/uri_parsing/uri_parsing.v0.18~preview.130.106+341/opam
+index b03993d..c2265b5 100644
+--- a/packages/uri_parsing/uri_parsing.v0.18~preview.130.106+341/opam
++++ b/packages/uri_parsing/uri_parsing.v0.18~preview.130.106+341/opam
+@@ -22,7 +22,7 @@ depends: [
+   "base64"           {>= "3.4.0"}
+   "dune"             {>= "3.17.0"}
+   "js_of_ocaml-ppx"  {>= "6.0.0"}
+-  "ppxlib"           {>= "0.33.0" & < "0.36.0"}
++  "ppxlib"           {>= "0.33.0" & < "0.39.0"}
+   "re"               {>= "1.8.0"}
+   "uri"              {>= "3.0.0"}
+ ]
+-- 
+2.51.2
+
