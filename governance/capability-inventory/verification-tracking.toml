@@ -32,7 +32,8 @@ tables = [
   "dmc_tcm_catalog",
   "algebraic_atlas_catalog",
   "denotational_intent_catalog",
-  "master_test_inventory"
+  "master_test_inventory",
+  "journal_catalog"
 ]
 
 [dmc_tcm]
@@ -148,3 +149,13 @@ zettelkasten_standards = [
   "Dung Abstract Argumentation Framework",
   "Rocha Biosemiotics Symbol-Matter Cut"
 ]
+
+[journals]
+latest_journal_id = "JRN-20260905-2254-DEFINITIVE-OMNIBUS"
+latest_journal_path = "docs/journal/20260905-2254-uos-definitive-master-verification-and-5-evolutionary-cycles-omnibus-journal.md"
+master_ledger_id = "LEDGER-20260905-2252-EV-CYCLES-MASTER"
+master_ledger_path = "docs/design/20260905-2252-uos-5-evolutionary-cycles-master-web-verification-ledger.md"
+ratification_certificate_path = "docs/design/20260905-2242-uos-claude-fable-sovereign-review-certificate.md"
+ratified_by = "Claude Fable 5.1"
+ratification_status = "unconditional_sovereign_ratification"
+
