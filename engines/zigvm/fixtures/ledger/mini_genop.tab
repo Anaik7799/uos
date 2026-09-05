@@ -1,0 +1,21 @@
+# mini genop.tab fixture for the E1.1 ledger parser unit-law.
+# Grammar exercised (mirrors third_party/otp/lib/compiler/src/genop.tab):
+#   - lines starting with '#' (and '##' doc lines) are comments -> skipped
+#   - the BEAM_FORMAT_NUMBER=N directive line -> skipped
+#   - blank lines -> skipped
+#   - an entry line is exactly "NN: name/arity" -> kept as (name, arity, false)
+#   - an obsolete/removed op carries the '-' marker on the NAME, not the
+#     number, e.g. "142: -obsolete_op/2" -> kept as ("obsolete_op", 2, true)
+BEAM_FORMAT_NUMBER=0
+
+## @spec label Lbl
+1: label/1
+2: func_info/3
+3: int_code_end/0
+
+# an obsolete op marked with a leading '-' on the name is still parsed, but
+# tagged obsolete rather than skipped:
+142: -obsolete_op/2
+
+64: move/2
+69: put_list/3

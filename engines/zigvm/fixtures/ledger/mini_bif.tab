@@ -1,0 +1,16 @@
+#
+# mini bif.tab fixture for the E0.5 ledger parser unit-law.
+# Grammar exercised (mirrors third_party/otp/erts/emulator/beam/bif.tab):
+#   - lines starting with '#' are comments -> skipped
+#   - blank lines -> skipped
+#   - an entry line is "<type> <module>:<name>/<arity> [C-name...]"
+#     where <type> is one of bif | ubif | hbif
+#   - <name> may be a single-quoted atom for operators/keywords (e.g. '+') ->
+#     the surrounding quotes are stripped so the unit is erlang:+/2
+#   - trailing whitespace-separated C-name columns are ignored
+#
+ubif erlang:abs/1
+ubif erlang:'+'/2			splus_2
+bif erlang:atom_to_list/1
+hbif erlang:erase/1
+bif lists:reverse/2

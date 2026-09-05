@@ -1,0 +1,79 @@
+FUNCTION sum 1
+label
+func_info
+label
+is_nonempty_list
+allocate
+get_list
+call
+{gc_bif,'+'}
+deallocate
+return
+label
+is_nil
+move
+return
+FUNCTION len 1
+label
+func_info
+label
+is_nonempty_list
+allocate
+get_tl
+call
+{gc_bif,'+'}
+deallocate
+return
+label
+is_nil
+move
+return
+FUNCTION rev 1
+label
+func_info
+label
+move
+call_only
+FUNCTION rev 2
+label
+func_info
+label
+is_nonempty_list
+test_heap
+get_list
+put_list
+call_only
+label
+is_nil
+move
+return
+FUNCTION seq 1
+label
+func_info
+label
+is_eq_exact
+move
+return
+label
+{gc_bif,'-'}
+allocate
+move
+move
+call
+test_heap
+put_list
+deallocate
+return
+FUNCTION module_info 0
+label
+func_info
+label
+move
+call_ext_only
+FUNCTION module_info 1
+label
+func_info
+label
+move
+move
+call_ext_only
