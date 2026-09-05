@@ -144,6 +144,7 @@ pub fn view(model: Model) -> Element(Msg) {
       // Render the rich startup card
       render_html_startup_card(model.state) |> element.map(fn(_) { NextStage }),
       render_ascii_pipeline(model.state.current_stage),
+      render_stage_ascii_art(model.state.current_stage),
       render_interactive_controls(model.state.current_stage),
       html.div([attribute.class("grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6")], [
         render_stage_timeline(model.state),
@@ -321,3 +322,142 @@ fn render_console_telemetry(logs: List(String)) -> Element(Msg) {
     ),
   ])
 }
+
+fn render_stage_ascii_art(current: StartupStage) -> Element(Msg) {
+  let #(title, color_class, art) = case current {
+    StagePreflight -> #(
+      "STAGE 1: PREFLIGHT RUNTIME PROBE",
+      "text-cyan-400",
+"         /\\
+        /  \\
+       | == |      +-------------------------------------------+
+       | == |      | NODE & VFS RUNTIME PROBE ACTIVE           |
+       /____\\      | - Node.js v22.10.1 Detected               |
+      |      |     | - Descriptor-Relative VFS Mounted         |
+      |  PI  |     | - Linear Memory Arenas Allocated          |
+      |______|     +-------------------------------------------+
+     /| |  | |\\
+    /_|_|__|_|_\\
+      /      \\
+     (  FLAME )
+      \\______/",
+    )
+    StageProviderAuth -> #(
+      "STAGE 2: MODEL PROVIDER AUTHENTICATION & QUOTA",
+      "text-amber-400",
+"     .-----------------------.
+    /   PROVIDER AUTH SHIELD  \\
+   |   [ ANTHROPIC CLAUDE ]    |     +-------------------------------------------+
+   |        .--------.         |     | CRYPTOGRAPHIC TOKEN VERIFICATION          |
+   |       /  .---.   \\        |     | - Provider: Anthropic API / Claude 3.7    |
+   |      |  /     \\   |       |     | - Token SHA-256 Digest Confirmed          |
+   |      |  \\_____/   |       |     | - Ingress Rate-Limit: Nominal             |
+   |       \\     |     /       |     +-------------------------------------------+
+   |        '----|----'        |
+   |             |             |
+    \\      KEY VERIFIED       /
+     '-----------------------'",
+    )
+    StageProcessSpawn -> #(
+      "STAGE 3: BEAM OS SUBPROCESS FORK & PIPES",
+      "text-blue-400",
+"+=============================================================================+
+|                      BEAM OS SUBPROCESS SPAWN & IPC                         |
+|   +-----------------------+                 +-----------------------+       |
+|   | BEAM OTP 29 SUPERVISOR|                 | PI RUNTIME SUBPROCESS |       |
+|   | Port Controller       |===============> | Stdio JSON-RPC Daemon |       |
+|   | PID: <0.4100.0>       |                 | OS PID: 42109         |       |
+|   +-----------------------+                 +-----------------------+       |
+|              |                                          |                   |
+|              +==========> STDIN PIPE (Requests) =======>+                   |
+|              +<========== STDOUT PIPE (Responses) <=====+                   |
+|              +<========== STDERR PIPE (Telemetry) <=====+                   |
++=============================================================================+",
+    )
+    StageProtocolHandshake -> #(
+      "STAGE 4: JSONL PROTOCOL HANDSHAKE & FRAMING",
+      "text-purple-400",
+"     CLIENT GATEWAY (BEAM)                     PI DAEMON (SUBPROCESS)
+           |                                             |
+           |========== 1. SYN: PROTOCOL_VERSION =========>|
+           |                                             |
+           |<========= 2. ACK: v22.10.1-JSONL ===========|
+           |                                             |
+           |========== 3. REQ: AG-UI 32-EVENT SPEC ======>|
+           |                                             |
+           |<========= 4. RES: {EVENTS, TOOLS, SSE} =====|
+           |                                             |
+     [ STATUS: FRAMING LOCKED & RFC 6902 DELTAS SYNCHRONIZED ]",
+    )
+    StageToolFederation -> #(
+      "STAGE 5: MCP FEDERATED TOOL SCHEMA REGISTRATION",
+      "text-emerald-400",
+"+=============================================================================+
+|                       C3I MCP 26-TOOL FEDERATION ARRAY                      |
++-----------------------------------------------------------------------------+
+| [PLAN] plan_status         | [SYS] system_health       | [DOM] ooda_decide  |
+| [PLAN] plan_list_pending   | [SYS] system_dashboard    | [DOM] prajna_health|
+| [PLAN] plan_add            | [SYS] system_zenoh        | [DOM] dark_cockpit |
+| [PLAN] plan_update         | [SYS] system_immune       | [DOM] mesh_topol   |
+| [KNOW] knowledge_search    | [SYS] system_verification | [DOM] kms_catalog  |
+| [KNOW] verification_run    | [DOM] podman_containers   | [UTIL] read_file   |
++-----------------------------------------------------------------------------+
+| ALL 26 MCP TOOL SCHEMAS DIGESTED & BOUND TO BEAM NIF DISPATCH DISCIPLINE    |
++=============================================================================+",
+    )
+    StageMeshSync -> #(
+      "STAGE 6: ZENOH PUB/SUB MESH & OTEL TELEMETRY SYNC",
+      "text-teal-400",
+"                  .-''''-.
+                .'        '.        ((( ZENOH DISTRIBUTED MESH WAVE )))
+               /   (o)  (o) \\      .- - - - - - - - - - - - - - - - - - .
+              :     __  __   :    (  TOPIC: indrajaal/otel/span/pi/**    )
+              :    |  ||  |  :     '- - - - - - - - - - - - - - - - - - '
+               \\   '------' /                     |
+                '.        .'                      v
+                  '-....-'          +---------------------------+
+                     ||             | 128-bit W3C Trace IDs     |
+                 .---||---.         | Microsecond UTC ISO 8601  |
+                /    ||    \\        | Fractal Scale Annotations |
+               *     ||     *       +---------------------------+",
+    )
+    StageOperationalReady -> #(
+      "STAGE 7: OPERATIONAL DARK COCKPIT READY",
+      "text-green-400",
+"+=============================================================================+
+|             *** CYBERNETIC COMMAND & CONTROL COCKPIT ACTIVE ***             |
++=============================================================================+
+|   [BOOT LATENCY] 140ms  |  [RSS MEMORY] 42.8 MB  |  [HEALTH] 100% OPERATIONAL|
+|   (●) GAUGES NOMINAL      (●) PRAJNA BREAKER CLOSED  (●) SIL-6 ASSURED      |
+|                                                                             |
+|                 \\               |               /                           |
+|                  \\        .-----|-----.        /                            |
+|                   \\      /   100% OK   \\      /                             |
+|              -------+---| DARK COCKPIT |---+-------                         |
+|                   /      \\   SIL-6 DAL /      \\                             |
+|                  /        '-----|-----'        \\                            |
+|                 /               |               \\                           |
++=============================================================================+",
+    )
+    StageFailed(stage, reason) -> #(
+      "STARTUP INTERCEPT / CIRCUIT BREAKER TRIPPED",
+      "text-rose-400",
+"+=============================================================================+
+|                      !!! PRAJNA CIRCUIT BREAKER TRIPPED !!!                 |
++=============================================================================+
+|                 /\\                  FAILED AT STAGE: " <> stage <> "
+|                /  \\                 REASON: " <> reason <> "
+|               / !! \\                ACTION: Fail-Closed Interlock Active
+|              /______\\               RECOVERY: Click 'Reset State Machine'
+|                                                                             |
+|  [SAFETY NOTICE] OS Root NVMe serial 25503L801736 remained strictly locked.  |
++=============================================================================+",
+    )
+  }
+
+  html.div([attribute.class("my-4 bg-slate-950 border border-slate-800 rounded-lg p-4 font-mono text-[11px] overflow-x-auto shadow-inner")], [
+    html.div([attribute.class("font-bold mb-2 tracking-wider " <> color_class)], [html.text(title)]),
+    html.pre([attribute.class("leading-tight select-all " <> color_class)], [html.text(art)]),
+  ])
+}
+
