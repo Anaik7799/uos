@@ -187,8 +187,8 @@
 
 (rule
  (alias runtest)
- (deps (source_tree %{workspace_root}/modules) %{workspace_root}/modules/hermes_harness/baseline/r30-adoption.txt)
- (action (chdir %{workspace_root} (run %{exe:test_r30_adoption.exe}))))
+ (deps (source_tree %{project_root}/modules) %{project_root}/modules/hermes_harness/baseline/r30-adoption.txt)
+ (action (chdir %{project_root} (run %{exe:test_r30_adoption.exe}))))
 
 (library
  (name hermes_harness_qcheck_seed)

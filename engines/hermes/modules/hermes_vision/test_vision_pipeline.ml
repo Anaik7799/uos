@@ -33,6 +33,7 @@ let repo_root =
   lazy
     (let rec up dir depth =
        if depth > 12 then "."
+       else if (Sys.file_exists (Filename.concat dir "dune-project") && Sys.is_directory (Filename.concat dir "modules")) || Sys.file_exists (Filename.concat dir ".jj") then dir
        else if Sys.file_exists (Filename.concat dir ".git") then dir
        else
          let parent = Filename.dirname dir in

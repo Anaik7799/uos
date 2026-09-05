@@ -49,8 +49,11 @@
 ; and declare the tree so dune reruns the test when the table changes.
 (rule
  (alias runtest)
- (deps (source_tree %{workspace_root}/vendor/onnxruntime))
- (action (chdir %{workspace_root} (run %{exe:test_vision_pipeline.exe}))))
+ (deps (source_tree %{project_root}/vendor/onnxruntime))
+ (action
+  (chdir %{project_root}
+   (setenv LD_LIBRARY_PATH "/home/an/.nix-portable/nix/store/wavv74sn7l8l21pvdpnwshjfz4nz0fqz-openblas-0.3.30/lib:%{env:LD_LIBRARY_PATH=}"
+    (run %{exe:test_vision_pipeline.exe})))))
 
 (executable
  (name vision_control_serve)
