@@ -1,0 +1,21 @@
+# UOS Formal Specification Authority Registry
+[meta]
+schema = "UOS-FORMAL-MANIFEST-v1"
+authorities_count = 9
+
+[authorities.gospel]
+status = "ACTIVE_AUTHORITY"
+scope = "OCaml engine interfaces (.mli contracts)"
+
+[authorities.z3]
+status = "BOUNDED_WORKER_ONLY"
+scope = "Satisfiability queries for state invariants"
+
+[authorities.lean]
+version = "4.33.0"
+status = "PREPARED_ISOLATED"
+scope = "Lockstep freshness and kernel core theorems"
+
+[authorities.tla]
+status = "MODEL_CHECKER"
+scope = "Distributed consensus and supervisor state machines"
