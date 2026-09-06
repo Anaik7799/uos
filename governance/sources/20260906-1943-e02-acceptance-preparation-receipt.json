@@ -1,0 +1,38 @@
+{
+  "schema": "uos.execution-support-review.v1",
+  "observed_at_utc": "2026-09-06T19:09:43Z",
+  "support_task": "S07",
+  "worker": "codex-e02-prep",
+  "master_task": "E02",
+  "status": "COMPLETED_SCOPED_PREPARATION",
+  "source_candidate": "6eadde491681265dde692054d81118594a0b5443",
+  "manifest_sha256": "b706f9a99dfaf6018772b2a819084ea3373a3ee720ed774b57e7f92792d8ee02",
+  "locators": [
+    "governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json:286",
+    "tests/acceptance/registry.ml:13",
+    "tests/acceptance/run.ml:45",
+    "tests/acceptance/golden/receipt.schema.json:36",
+    "governance/sources/20260906-2043-incoming-main-6eadde49-review-receipt.json"
+  ],
+  "coordinator_check": "Reread exact manifest E02 fixture and implementation/acceptance clauses; preparation agrees with independent incoming implementation rejection.",
+  "exact_fixture": {
+    "id": "E02-regression",
+    "given": {"adapter":"missing_adapter","required":true,"expected_exit":0,"fixture":"temporary_isolated"},
+    "when": [{"op":"runner.verify"}],
+    "expect": {"exit_code":2,"status":"ERROR","passing_tests":0,"children_reaped":true}
+  },
+  "required_repairs": [
+    "Implement runner.verify as an actual generic operation resolving the given adapter, independent of expect.",
+    "Strictly decode fixtures/actions and operation inputs; reject unknown fields, missing fields, invalid types and duplicate keys.",
+    "Use an allowlisted registry and generic recursive expected-observation assertions, without task-ID pass switches.",
+    "Bound monotonic duration, stdout, stderr and worker descendants; include normal-exit descendants with closed output descriptors.",
+    "Keep built, executed and passed distinct; measure timings and bind explicit candidate/source identities.",
+    "Write closed-schema receipts atomically; missing adapters and executables, skipped required cases and resource failures get no implementation credit.",
+    "Run positive control, deliberate assertion failure, malformed input, missing executable, timeout, output quotas, child cleanup and source/revision mismatch controls."
+  ],
+  "dependency": "E01 must complete before executing master E02. The immutable reserved queue remains dispatch-disabled until P01.",
+  "resource_scope": "Existing Resource_envelope operational observation is unavailable; E02 must not fabricate an operational preflight pass or treat the pure evaluator as authority.",
+  "source_ingestion_count": 0,
+  "implementation_credit": false,
+  "system_admission_granted": false
+}

@@ -29,7 +29,12 @@
     {"id":"S01","worker":"codex-tracker","scope":"bounded manual task/job/workflow ownership helper"},
     {"id":"S02","worker":"codex-audit","scope":"71-task consistency and shared-file audit; canonical 17-aspect mapping"},
     {"id":"S03","worker":"codex-e01","scope":"E01 snapshot implementation, controls and review fixes"},
-    {"id":"S04","worker":"codex-incoming-review","scope":"independent review of concurrent main E01-E03 changes"}
+    {"id":"S04","worker":"codex-incoming-review","scope":"independent review of concurrent main E01-E03 changes"},
+    {"id":"S05","worker":"codex-e01-review","scope":"independent E01 acceptance and adversarial process review"},
+    {"id":"S06","worker":"codex-root-research","scope":"primary testing references and source-to-UOS preparation"},
+    {"id":"S07","worker":"codex-e02-prep","scope":"read-only E02 contract and adversarial test preparation"},
+    {"id":"S08","worker":"codex-e01-r4","scope":"fresh stronger E01 fourth-round process-group cleanup repair"},
+    {"id":"S09","worker":"codex-tracker-r4","scope":"fresh stronger tracker fourth-round descriptor-bound JSON repair"}
   ],
   "serialization_constraints": [
     {"tasks":["M05","A02"],"path":"apps/cepaf_gleam/src/cepaf_gleam/fpp/dmc_tcm.gleam","rule":"M05 integration precedes A02 edits of this path"},
@@ -59,7 +64,9 @@
     {"id":"RUL-004","decision":"Resource_envelope operational sensing remains unavailable and nonpassing; record bootstrap observations separately","reason":"Existing module exports no operational observation receipt constructor","cost_if_wrong":"E02 requires a reviewed observation owner before claiming resource-admitted runtime behavior"},
     {"id":"RUL-005","decision":"Review concurrent main 6eadde49 as incoming code without transferring its PASS receipts","reason":"Fabricated fallback clock/tool metadata and equality-based signature credit found in E01; E02/E03 independent review requested","cost_if_wrong":"reverification and repair work; incoming history preserved"},
     {"id":"RUL-006","decision":"Apply shared-file serialization outside the immutable dependency manifest","reason":"Three unordered write-write pairs discovered by the audit","cost_if_wrong":"extra rebases; no dropped requirements"},
-    {"id":"RUL-007","decision":"Do not equate old test totals, source lists, or planned schemas with present candidate execution","reason":"Two-key candidate-bound evidence requirement","cost_if_wrong":"extra checks instead of false completion"}
+    {"id":"RUL-007","decision":"Do not equate old test totals, source lists, or planned schemas with present candidate execution","reason":"Two-key candidate-bound evidence requirement","cost_if_wrong":"extra checks instead of false completion"},
+    {"id":"RUL-008","decision":"Assign fresh stronger implementers at repair round four for E01 and tracker","reason":"Independent controls still found a normal-exit child leak and separate hash/parse file opens after three repair rounds; subagent-driven-development requires fresh stronger review judgment","cost_if_wrong":"additional bounded repair effort; no existing source or completion history discarded"},
+    {"id":"RUL-009","decision":"Withdraw the review's 30.1-second timing assertion and retain the independently observed live descendant PID evidence","reason":"The duration measured persistent-shell tool yielding, not actual command duration; the same-shell process observation directly establishes the cleanup defect","cost_if_wrong":"reproduce precise timing only when needed; no unsupported runtime metric retained"}
   ],
   "system_admission_granted": false
 }

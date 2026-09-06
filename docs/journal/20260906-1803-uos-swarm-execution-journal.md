@@ -20,6 +20,12 @@ Four dedicated workspaces were created from the planning candidate. Root coordin
 
 An elapsed host-tool approval wait outlasted initial leases. S00/S01/S03 were reclaimed explicitly; stale ownership was not used to complete work. The Store still reported one completed master task and zero completed implementation tasks after concurrent changes arrived.
 
+S02 completed after coordinator verification of all four source digests, 71 exact task/file/dependency rows and 17 canonical names. S04 completed its independent review with a rejection receipt for incoming `6eadde49`; actual probes showed an ignored timeout, uncapped output, an unreaped background child (subsequently killed), fixture-alias admission and false CLI passes. [The review receipt](http://nas-1.tail55d152.ts.net:4100/files/governance/sources/20260906-2043-incoming-main-6eadde49-review-receipt.json) preserves those observations. S05 reviews the E01 repair independently. E01 and S01 remain under substantive code review, not completed based on initial test counts.
+
+S06 reread nine primary references and recorded source-to-UOS technique mappings in the [research refresh](http://nas-1.tail55d152.ts.net:4100/files/governance/sources/20260906-1856-uos-primary-testing-research-refresh.json). These support later E05 adoption work: browser traces, rendering reference tests, Parsoid AST/DOM mutations, measured user experience, graph constraints, provenance and link validation. No upstream code or fixture bytes were imported; full per-file license and revision review remains open.
+
+S07 completed read-only E02 contract and negative-control preparation. E01 round three passed 13 existing cases but a new closed-output descendant fixture proved that normal exit skipped process-group cleanup. S08 assigns a fresh stronger implementer to that fourth repair round. The tracker passed 19 scratch checks; S09 repairs the remaining separate hash/parse reads and FIFO-open boundedness before any live use. E01 was reclaimed as master attempt three after expiry. These additional repairs do not grant implementation credit.
+
 ## 4. Root Cause Analysis
 
 The original reserved queue does not enforce task dependencies, and its claim operation cannot select a task ID. Dispatching it directly would allow jobs before prerequisites. Dedicated support queues therefore track supervised work until P01 proves production scheduling. Source metadata and planning state were also being confused with executed results: the incoming E01 implementation substitutes plausible clock and version strings when probes fail and grants signature credit when candidate strings match.
@@ -43,7 +49,7 @@ Rulings RUL-001 through RUL-007 are recorded in the overlay. In particular, hist
 | Initial tracker | Twelve scratch checks passed; review identified lease unit, evidence and test-isolation gaps | Repair required |
 | Live health | HTTP response reports version 1.0.0 and zenoh_connected=false; no candidate revision field | Reachability only; build identity UNKNOWN |
 | Live verification API | Reports 18 checks and 20 EV cycles without invocation-bound receipts | No admission |
-| Host clock | Chrony reference 2026-09-06 18:24:39 UTC, Normal, system 0.000312158 seconds slow | Scoped synchronized clock observation |
+| Host clock | Chrony reference 2026-09-06 18:59:19 UTC, Normal, system 0.000386633 seconds slow | Scoped synchronized clock observation |
 | Concurrent main | 6eadde49 introduced 16 files and three source modifications while branches remained isolated | Incoming review required |
 | Source preservation | Feature changes occur in isolated UOS workspaces; no source ingestion or live DB copying | Scoped operational discipline |
 
@@ -101,6 +107,10 @@ The two diagrams have identical nodes and edges. Each feature's cycle records ob
 ## 10. Remaining Gaps
 
 E01 must pass strengthened boundedness, identity stability and historical evidence tests. The tracker needs reviewed lease/evidence handling. E02/E03 incoming changes require independent review and actual acceptance; their existing receipts are insufficient. Production Resource_envelope sensing is unavailable. P01 must reconcile reserved intents with supervised execution history. All other tasks retain their original acceptance gates and linked dependencies.
+
+E01 review round 1 identified output capture, revision stability, source binding and HTTP/build identity gaps. Scoped re-review found a missing nested JSON-field crash, inaccurate cleanup/metadata fields and a source-side-effect regression; the implementer is fixing these before the acceptance gate. Tracker round 2 addresses evidence-path traversal/symlinks and bounded hashing. The manual tracker must explicitly refuse external-store dependencies until P03 supplies the admitted federation adapter.
+
+Round-four scope is now specific: kill the established process group after a probe's normal exit as well as timeout; parse exactly the bounded file bytes whose digest was checked. The review's earlier 30.1-second timing claim was withdrawn because it described tool yielding; the directly observed live descendant is the valid cleanup evidence. All repair evidence remains tied to its exact reviewed revision.
 
 ## 11. Metrics Summary
 
