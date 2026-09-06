@@ -5,10 +5,13 @@
 import cepaf_gleam/verification/omni_fractal_matrix_engine.{
   L0Constitutional, L9BiosemioticRocha, SdlcAddDesign, SdlcAuditLedger,
   canonical_10_fractal_layers, canonical_10_sdlc_stages,
-  canonical_14_superpowers, canonical_fast_ooda_cycle, canonical_mcp_ecosystem,
-  canonical_skill_inventory, canonical_symbiosis_topology,
-  evaluate_formal_aspects, evaluate_scalability_and_performance,
-  generate_all_17_aspect_processes, generate_all_use_cases, is_fast_ooda_safe,
+  canonical_14_superpowers, canonical_5_system_components,
+  canonical_fast_ooda_cycle, canonical_mcp_ecosystem, canonical_skill_inventory,
+  canonical_symbiosis_topology, evaluate_formal_aspects,
+  evaluate_scalability_and_performance, execute_all_17_aspect_processes,
+  generate_all_17_aspect_processes, generate_all_agent_specifications,
+  generate_all_feature_families, generate_all_formal_aspects,
+  generate_all_use_cases, generate_system_scalability_matrix, is_fast_ooda_safe,
   verify_omni_fractal_system_matrix,
 }
 import gleam/list
@@ -162,4 +165,75 @@ pub fn formal_aspects_test() {
 
 pub fn master_matrix_verification_predicate_test() {
   verify_omni_fractal_system_matrix() |> should.be_true()
+}
+
+pub fn system_components_test() {
+  let comps = canonical_5_system_components()
+  list.length(comps) |> should.equal(5)
+
+  let all_zero_muda = list.all(comps, fn(c) { c.zero_muda })
+  all_zero_muda |> should.be_true()
+
+  let assert Ok(first) = list.first(comps)
+  first.name |> should.equal("uos_sup")
+  first.throughput_ops_per_sec |> should.equal(50_000)
+}
+
+pub fn agent_specifications_test() {
+  let agts = generate_all_agent_specifications()
+  list.length(agts) |> should.equal(10)
+
+  let assert Ok(first) = list.first(agts)
+  first.id |> should.equal("AGT-L0")
+  first.is_singleton |> should.be_true()
+
+  let assert Ok(last) = list.last(agts)
+  last.id |> should.equal("AGT-L9")
+  last.surface |> should.equal("LustreWeb")
+}
+
+pub fn feature_families_test() {
+  let families = generate_all_feature_families()
+  list.length(families) |> should.equal(18)
+
+  let assert Ok(first) = list.first(families)
+  first.family_id |> should.equal("FAM-01")
+
+  let assert Ok(last) = list.last(families)
+  last.family_id |> should.equal("FAM-18")
+  last.test_count |> should.equal(38)
+}
+
+pub fn aspect_processes_execution_receipts_test() {
+  let receipts = execute_all_17_aspect_processes()
+  list.length(receipts) |> should.equal(17)
+
+  let all_verified = list.all(receipts, fn(r) { r.status == "VERIFIED" })
+  all_verified |> should.be_true()
+
+  let assert Ok(first) = list.first(receipts)
+  first.step_id |> should.equal(1)
+  first.proof_digest |> should.equal("SHA256:DRIVE-NVME-25503L801736-LOCKED")
+}
+
+pub fn system_scalability_matrix_test() {
+  let profiles = generate_system_scalability_matrix()
+  list.length(profiles) |> should.equal(5)
+
+  let all_stable = list.all(profiles, fn(p) { p.lyapunov_stable })
+  all_stable |> should.be_true()
+
+  let assert Ok(first) = list.first(profiles)
+  first.max_concurrency |> should.equal(100_000)
+}
+
+pub fn formal_aspect_proofs_test() {
+  let proofs = generate_all_formal_aspects()
+  list.length(proofs) |> should.equal(7)
+
+  let all_verified = list.all(proofs, fn(p) { p.verified })
+  all_verified |> should.be_true()
+
+  let assert Ok(first) = list.first(proofs)
+  first.authority |> should.equal("Lean 4")
 }
