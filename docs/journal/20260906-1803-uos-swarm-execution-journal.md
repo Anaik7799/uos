@@ -40,6 +40,10 @@ S18 completed the [semantic browser-controller review](http://nas-1.tail55d152.t
 
 ## 4. Root Cause Analysis
 
+At integrated candidate `bc63b84725cd37a38d4f3e25742bb71f80c73e53`, E02 passed independent contract (20 assertions), process (9 real cases), runner (72 assertions), snapshot (14 cases), and closed-schema checks. A separate SIGTERM probe first rejected predecessor `5d17c9c0d93632339377f87ccc40b938f21e768a` because OCaml's portable negative signal value produced exit 117. The repaired Linux mapping now observes exit 143 and complete scoped cleanup. These heterogeneous counts are kept separate. The [reviewed E02 receipt](http://nas-1.tail55d152.ts.net:4100/files/governance/sources/20260906-2025-e02-integrated-acceptance-receipt.json) includes exact input/source digests, raw CLI receipts, limits, failures and all 17 aspects. Native Store completed E02 and S11-S13 after that review. S16 completed preparation only; its malformed skill YAML, missing reference, inventory drift and legacy policy conflicts remain H01/H02 obligations.
+
+The next dependency-ready wave is E03, E04, Q01 and N01 under support jobs S19-S22. Three existing agent threads take fresh bounded task briefs; root handles peer diagnosis and serializes adapter integration. The runtime still refuses additional threads, so no extra container swarm or unmeasured cost savings are claimed. The tested E02 parent is frozen; further coordination uses a child change before new agent branches are created.
+
 The original reserved queue does not enforce task dependencies, and its claim operation cannot select a task ID. Dispatching it directly would allow jobs before prerequisites. Dedicated support queues therefore track supervised work until P01 proves production scheduling. Source metadata and planning state were also being confused with executed results: the incoming E01 implementation substitutes plausible clock and version strings when probes fail and grants signature credit when candidate strings match.
 
 ## 5. Fix Taxonomy
@@ -63,6 +67,7 @@ Later rulings record stronger fourth-round implementers, withdrawal of an incorr
 | Initial tracker | Twelve scratch checks passed; review identified lease unit, evidence and test-isolation gaps | Repair required |
 | Integrated E01 | 14 cases and exact manifest fixture pass at 88d07b35; normal-exit descendants covered | E01 VERIFIED_SCOPED and completed in sa-plan |
 | Integrated tracker | 44 scratch assertions pass at 88d07b35, including descriptor races/FIFO/lease ownership | Manual support feature VERIFIED_SCOPED; no automatic-dispatch admission |
+| Integrated E02 | 20 contract assertions, 9 process cases, 72 runner assertions, 14 snapshot cases; SIGTERM exit 143; three closed-schema receipts at bc63b847 | E02 VERIFIED_SCOPED and completed in sa-plan; negative assertion success grants no adapter implementation credit |
 | Source inventory preparation | 36 part digests/counts verified; 161 OCaml records remain UNRUN | Metadata preparation only |
 | Live health | HTTP response reports version 1.0.0 and zenoh_connected=false; no candidate revision field | Reachability only; build identity UNKNOWN |
 | Live verification API | Reports 18 checks and 20 EV cycles without invocation-bound receipts | No admission |
@@ -123,7 +128,7 @@ The two diagrams have identical nodes and edges. Each feature's cycle records ob
 
 ## 10. Remaining Gaps
 
-E01 and the manual tracker now passed their scoped gates; E02 is implementing strict contracts, generic assertions, bounded adapter execution and atomic receipts. E02/E03 incoming receipts remain insufficient. Production Resource_envelope sensing is unavailable. P01 must reconcile reserved intents with supervised execution history. All other tasks retain their original acceptance gates and linked dependencies.
+E01, E02 and the manual tracker passed their scoped gates. E03, E04, Q01 and N01 are the next dependency-ready implementation wave. Historical incoming E02/E03 receipts remain insufficient and are superseded only by specifically reviewed new evidence. Production Resource_envelope sensing is unavailable. P01 must reconcile reserved intents with supervised execution history. All other tasks retain their original acceptance gates and linked dependencies.
 
 E01 review round 1 identified output capture, revision stability, source binding and HTTP/build identity gaps. Scoped re-review found a missing nested JSON-field crash, inaccurate cleanup/metadata fields and a source-side-effect regression; the implementer is fixing these before the acceptance gate. Tracker round 2 addresses evidence-path traversal/symlinks and bounded hashing. The manual tracker must explicitly refuse external-store dependencies until P03 supplies the admitted federation adapter.
 
@@ -139,4 +144,4 @@ The controller cannot use advisory source claims or model outputs to authorize i
 
 ## 13. Conclusion
 
-Execution is active. PLAN00 and E01 are complete; E02 is executing, leaving 69 master implementation tasks including E02 unfinished. The linked legacy programme remains open. Jujutsu preserves incoming history and reviewed repairs, while immutable programme intent and truthful runtime history remain distinct. No full-system, browser, actor ecology, DMC/TCM or final admission claim follows from this foundation work.
+Execution is active. PLAN00, E01 and E02 are complete, leaving 68 master tasks unfinished. The linked legacy programme remains open. Jujutsu preserves incoming history and reviewed repairs, while immutable programme intent and truthful runtime history remain distinct. No full-system, browser, actor ecology, DMC/TCM or final admission claim follows from this foundation work.

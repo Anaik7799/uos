@@ -43,7 +43,11 @@
     {"id":"S15","worker":"codex-root-peer","scope":"read-only VM-1 HTTP endpoint, listener and service owner preparation"},
     {"id":"S16","worker":"codex-skills-prep","scope":"read-only installed skill structure and AGY/Codex repair evidence preparation; reused existing agent slot after lower-cost new thread refusal"},
     {"id":"S17","worker":"codex-root-zenoh","scope":"read-only native Zenoh contract, source and upstream release compatibility preparation"},
-    {"id":"S18","worker":"codex-root-browser-prep","scope":"read-only semantic browser-controller defects and V01/V02 closure preparation"}
+    {"id":"S18","worker":"codex-root-browser-prep","scope":"read-only semantic browser-controller defects and V01/V02 closure preparation"},
+    {"id":"S19","worker":"codex-e03","scope":"E03 shared production evidence evaluation and CLI/API/UI truthfulness"},
+    {"id":"S20","worker":"codex-e04","scope":"E04 source/document/test census and explicit close-reading frontier"},
+    {"id":"S21","worker":"codex-q01","scope":"Q01 two targeted compiler warning repairs with assertions preserved"},
+    {"id":"S22","worker":"codex-root-n01","scope":"N01 peer endpoint provenance, identity, navigation and unavailable-state reporting"}
   ],
   "serialization_constraints": [
     {"tasks":["M05","A02"],"path":"apps/cepaf_gleam/src/cepaf_gleam/fpp/dmc_tcm.gleam","rule":"M05 integration precedes A02 edits of this path"},
@@ -77,7 +81,8 @@
     {"id":"RUL-008","decision":"Assign fresh stronger implementers at repair round four for E01 and tracker","reason":"Independent controls still found a normal-exit child leak and separate hash/parse file opens after three repair rounds; subagent-driven-development requires fresh stronger review judgment","cost_if_wrong":"additional bounded repair effort; no existing source or completion history discarded"},
     {"id":"RUL-009","decision":"Withdraw the review's 30.1-second timing assertion and retain the independently observed live descendant PID evidence","reason":"The duration measured persistent-shell tool yielding, not actual command duration; the same-shell process observation directly establishes the cleanup defect","cost_if_wrong":"reproduce precise timing only when needed; no unsupported runtime metric retained"},
     {"id":"RUL-010","decision":"Freeze the integration parent before creating agent branches; continue coordinator work on a new change","reason":"Late documentation finalization rebased E02's working copy; its owner recovered all edits from JJ operation history and updated stale state","cost_if_wrong":"extra recovery and revision review; no source changes may be silently dropped"},
-    {"id":"RUL-011","decision":"Include actual API handler and page checklist in E03's owned refinement","reason":"The existing E03 acceptance clause requires CLI/UI/API agreement, but additional hardcoded-success paths were found outside the original file list","cost_if_wrong":"additional scoped Gleam/test edits and downstream serialized integration"}
+    {"id":"RUL-011","decision":"Include actual API handler and page checklist in E03's owned refinement","reason":"The existing E03 acceptance clause requires CLI/UI/API agreement, but additional hardcoded-success paths were found outside the original file list","cost_if_wrong":"additional scoped Gleam/test edits and downstream serialized integration"},
+    {"id":"RUL-012","decision":"Workers implement disjoint production and adapter modules; root serializes central acceptance registry and bound-source integration","reason":"E03, E04, Q01 and N01 all need E02 adapters but otherwise have independent production ownership","cost_if_wrong":"additional integrated adapter review; no shared-file edits silently lost"}
   ],
   "system_admission_granted": false
 }

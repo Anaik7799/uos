@@ -1,0 +1,824 @@
+{
+  "schema": "uos.feature-acceptance-review.v1",
+  "feature": "E02",
+  "status": "VERIFIED_SCOPED",
+  "master_plan": "uos/full-implementation/20260906-1655",
+  "manifest_sha256": "b706f9a99dfaf6018772b2a819084ea3373a3ee720ed774b57e7f92792d8ee02",
+  "observed_at_utc": "2026-09-06T20:16:25Z",
+  "candidate": {
+    "change_id": "qnukrnxmtxpvqvlwotvzzonktvnlsswx",
+    "commit_id": "bc63b84725cd37a38d4f3e25742bb71f80c73e53",
+    "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+  },
+  "reviewer": "codex-root",
+  "review_method": "Independent source review, fresh execution on integrated immutable revision, negative signal probe and independent closed-schema validation.",
+  "source_files": [
+    {
+      "path": "tests/acceptance/contract.ml",
+      "sha256": "1f18aef2c78f2b62e75e2ffdadcdf435a9da8a91d810f105a6b9a79449b3dd77"
+    },
+    {
+      "path": "tests/acceptance/contract_test.ml",
+      "sha256": "356e59985be3e194c67b5d125f12645edc08f05743b896a717eaab0681e79790"
+    },
+    {
+      "path": "tests/acceptance/process_supervisor.ml",
+      "sha256": "55802f7e78efb732058a88da63635fcb624d5bd9e30e0aededdc72d1121990bf"
+    },
+    {
+      "path": "tests/acceptance/process_supervisor_test.ml",
+      "sha256": "e299cead063668ba111e498f9755fce343bc273b3efb24f83b18f00d61917bfe"
+    },
+    {
+      "path": "tests/acceptance/registry.ml",
+      "sha256": "19c00eb69a1d5b691dcf9d525ed23b4dd1f951bfa768a6d035d90a02b5b7fd77"
+    },
+    {
+      "path": "tests/acceptance/run.ml",
+      "sha256": "f5a0a7d3842d8e3fe9ae13c0617ed85d2348cb9500b797d7488fe81e9c736fbe"
+    },
+    {
+      "path": "tests/acceptance/runner_test.ml",
+      "sha256": "2cf6d984a0fd6603211c226fced514b56a4b12e07b55449f95fc96655ed379a6"
+    },
+    {
+      "path": "tests/acceptance/golden/receipt.schema.json",
+      "sha256": "ad67d6d9f9d4e852c67e2901d9b881dfe083ab77a2e3897c2acaedf35d1eb3da"
+    }
+  ],
+  "runtime_key": [
+    {
+      "suite": "contract",
+      "command": "timeout 1200s ocaml tests/acceptance/contract_test.ml",
+      "exit_code": 0,
+      "passed_count": 20,
+      "count_unit": "assertions"
+    },
+    {
+      "suite": "process",
+      "command": "timeout 1200s ocaml tests/acceptance/process_supervisor_test.ml",
+      "exit_code": 0,
+      "passed_count": 9,
+      "count_unit": "real process cases"
+    },
+    {
+      "suite": "runner",
+      "command": "timeout 1200s ocaml tests/acceptance/runner_test.ml",
+      "exit_code": 0,
+      "passed_count": 72,
+      "count_unit": "assertions"
+    },
+    {
+      "suite": "snapshot",
+      "command": "timeout 1200s ocaml tests/acceptance/candidate_snapshot_test.ml",
+      "exit_code": 0,
+      "passed_count": 14,
+      "count_unit": "cases"
+    }
+  ],
+  "specification_key": {
+    "manifest_acceptance": "E02.acceptance_case and implementation_steps/acceptance_gate",
+    "schema": "tests/acceptance/golden/receipt.schema.json",
+    "validator": "/usr/bin/jsonschema (Draft2020-12)",
+    "validation_exits": [ 0, 0, 0 ],
+    "warning": "Installed schema CLI reports deprecation; H03 owns toolchain replay maintenance."
+  },
+  "receipt_observations": [
+    {
+      "task": "E02",
+      "source_path": "/tmp/uos-acceptance-receipts/20260906-2017-1356736099-293b919a-task-e02-acceptance-receipt.json",
+      "sha256": "0af7388ddf4d621803e5d3802f25ac0dadf57be9bfa4ebad28c0703cc0bef3b0",
+      "process_exit": 0,
+      "receipt": {
+        "schema": "uos.acceptance-receipt.v2",
+        "receipt_id": "RCPT-ACCEPT-E02-20260906-2017-1356736099-293b919a",
+        "task_id": "E02",
+        "case_id": "E02-regression",
+        "operation": "runner.verify",
+        "observed_at_utc": "2026-09-06T20:13:17Z",
+        "manifest": {
+          "path": "governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json",
+          "sha256": "b706f9a99dfaf6018772b2a819084ea3373a3ee720ed774b57e7f92792d8ee02"
+        },
+        "candidate": {
+          "change_id": "qnukrnxmtxpvqvlwotvzzonktvnlsswx",
+          "commit_id": "bc63b84725cd37a38d4f3e25742bb71f80c73e53",
+          "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+        },
+        "sources": [
+          {
+            "path": "tools/verification/candidate_snapshot.ml",
+            "sha256": "d133755696100822b355d1f1164ac1ecdd064142338efe2d2a0f41092954e507"
+          },
+          {
+            "path": "tests/acceptance/contract.ml",
+            "sha256": "1f18aef2c78f2b62e75e2ffdadcdf435a9da8a91d810f105a6b9a79449b3dd77"
+          },
+          {
+            "path": "tests/acceptance/process_supervisor.ml",
+            "sha256": "55802f7e78efb732058a88da63635fcb624d5bd9e30e0aededdc72d1121990bf"
+          },
+          {
+            "path": "tests/acceptance/registry.ml",
+            "sha256": "19c00eb69a1d5b691dcf9d525ed23b4dd1f951bfa768a6d035d90a02b5b7fd77"
+          },
+          {
+            "path": "tests/acceptance/run.ml",
+            "sha256": "f5a0a7d3842d8e3fe9ae13c0617ed85d2348cb9500b797d7488fe81e9c736fbe"
+          },
+          {
+            "path": "tests/acceptance/golden/receipt.schema.json",
+            "sha256": "ad67d6d9f9d4e852c67e2901d9b881dfe083ab77a2e3897c2acaedf35d1eb3da"
+          }
+        ],
+        "limits": {
+          "timeout_ms": 0,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "term_grace_ms": 0
+        },
+        "states": { "built": true, "executed": true, "passed": false },
+        "observation": {
+          "operation_supported": true,
+          "adapter_registered": false,
+          "status": "ERROR",
+          "exit_code": 2,
+          "passing_tests": 0,
+          "children_reaped": true,
+          "timed_out": false,
+          "stdout_overflow": false,
+          "stderr_overflow": false,
+          "stdout": "",
+          "stderr": "required=true: adapter is not registered: missing_adapter",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "e2378bab0c5835c26fcb6d00eee03a9562a0089d86ccdf15f22646d35fc3ca94",
+          "raw_json": null,
+          "raw_json_sha256": null,
+          "duration_ms": 0.030387000000020592
+        },
+        "assertion": { "passed": true, "mismatches": [] },
+        "timings": {
+          "operation_ms": 0.030387000000020592,
+          "assertion_ms": 0.015298999999968643,
+          "receipt_atomic_write_calibration_ms": 0.2773819999999372
+        },
+        "system_admission_granted": false
+      }
+    },
+    {
+      "task": "E01",
+      "source_path": "/tmp/uos-acceptance-receipts/20260906-2017-1794593252-293b919a-task-e01-acceptance-receipt.json",
+      "sha256": "c9dfb3de97a082508be4b33c65fabf885ff32e559d587daf32f4ebd8779f8ad4",
+      "process_exit": 0,
+      "receipt": {
+        "schema": "uos.acceptance-receipt.v2",
+        "receipt_id": "RCPT-ACCEPT-E01-20260906-2017-1794593252-293b919a",
+        "task_id": "E01",
+        "case_id": "E01-regression",
+        "operation": "candidate.snapshot",
+        "observed_at_utc": "2026-09-06T20:13:17Z",
+        "manifest": {
+          "path": "governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json",
+          "sha256": "b706f9a99dfaf6018772b2a819084ea3373a3ee720ed774b57e7f92792d8ee02"
+        },
+        "candidate": {
+          "change_id": "qnukrnxmtxpvqvlwotvzzonktvnlsswx",
+          "commit_id": "bc63b84725cd37a38d4f3e25742bb71f80c73e53",
+          "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+        },
+        "sources": [
+          {
+            "path": "tools/verification/candidate_snapshot.ml",
+            "sha256": "d133755696100822b355d1f1164ac1ecdd064142338efe2d2a0f41092954e507"
+          },
+          {
+            "path": "tests/acceptance/contract.ml",
+            "sha256": "1f18aef2c78f2b62e75e2ffdadcdf435a9da8a91d810f105a6b9a79449b3dd77"
+          },
+          {
+            "path": "tests/acceptance/process_supervisor.ml",
+            "sha256": "55802f7e78efb732058a88da63635fcb624d5bd9e30e0aededdc72d1121990bf"
+          },
+          {
+            "path": "tests/acceptance/registry.ml",
+            "sha256": "19c00eb69a1d5b691dcf9d525ed23b4dd1f951bfa768a6d035d90a02b5b7fd77"
+          },
+          {
+            "path": "tests/acceptance/run.ml",
+            "sha256": "f5a0a7d3842d8e3fe9ae13c0617ed85d2348cb9500b797d7488fe81e9c736fbe"
+          },
+          {
+            "path": "tests/acceptance/golden/receipt.schema.json",
+            "sha256": "ad67d6d9f9d4e852c67e2901d9b881dfe083ab77a2e3897c2acaedf35d1eb3da"
+          }
+        ],
+        "limits": {
+          "timeout_ms": 120000,
+          "stdout_bytes": 131072,
+          "stderr_bytes": 65536,
+          "term_grace_ms": 100
+        },
+        "states": { "built": true, "executed": true, "passed": true },
+        "observation": {
+          "operation_supported": true,
+          "adapter_registered": true,
+          "status": "PASS",
+          "exit_code": 0,
+          "passing_tests": 1,
+          "children_reaped": true,
+          "timed_out": false,
+          "stdout_overflow": false,
+          "stderr_overflow": false,
+          "stdout": "{\"schema\":\"uos.candidate-snapshot.v1\",\"operation\":\"candidate.snapshot\",\"status\":\"SNAPSHOT_CAPTURED_NONPASSING\",\"admitted\":false,\"candidate\":{\"alias\":\"current-jj\",\"workspace\":\"/home/an/NAS-setup/uos/.uos-workspaces/execution-control\",\"change_id\":\"qnukrnxmtxpvqvlwotvzzonktvnlsswx\",\"commit_id\":\"bc63b84725cd37a38d4f3e25742bb71f80c73e53\"},\"evidence_candidate\":\"older-jj\",\"inherited_credit\":\"STALE\",\"source_mode\":\"read_only\",\"source_writes\":0,\"source_write_observation\":{\"method\":\"jj_diff_summary_before_after\",\"source_writes_scope\":\"candidate_snapshot_internal_requested_writes\",\"workspace_state_unchanged\":true,\"net_source_changes_observed\":0,\"external_probe_side_effects\":\"not_observed_beyond_workspace_delta\",\"limitation\":\"ignored paths and transient writes reverted between observations are not detectable\",\"source_preservation_credit\":false,\"credit\":false},\"signature_credit\":false,\"records\":{\"change_id\":{\"status\":\"observed\",\"locator\":\"jj://@/change-id\",\"value\":\"qnukrnxmtxpvqvlwotvzzonktvnlsswx\",\"credit\":false},\"commit_id\":{\"status\":\"observed\",\"locator\":\"jj://@/commit-id\",\"value\":\"bc63b84725cd37a38d4f3e25742bb71f80c73e53\",\"credit\":false},\"dirty_manifest\":{\"status\":\"observed\",\"locator\":\"jj://@/diff-summary\",\"exit_code\":0,\"entries\":\"\",\"clean\":true,\"timed_out\":false,\"output_overflow\":false,\"direct_child_reaped\":true,\"process_group_termination_attempted\":true,\"duration_ms\":24,\"credit\":false},\"served_build\":{\"status\":\"unavailable\",\"locator\":\"http://127.0.0.1:9/unavailable\",\"exit_code\":7,\"output\":\"__UOS_HTTP__000\",\"timed_out\":false,\"output_overflow\":false,\"direct_child_reaped\":true,\"process_group_termination_attempted\":true,\"duration_ms\":5,\"credit\":false,\"build_identity_status\":\"UNKNOWN\",\"served_candidate\":null,\"identity_credit\":false,\"admission_credit\":false},\"tool_versions\":[{\"tool\":\"jj\",\"observation\":{\"status\":\"observed\",\"locator\":\"path://jj\",\"exit_code\":0,\"output\":\"jj 0.44.0\",\"timed_out\":false,\"output_overflow\":false,\"direct_child_reaped\":true,\"process_group_termination_attempted\":true,\"duration_ms\":5,\"credit\":false}},{\"tool\":\"ocamlc\",\"observation\":{\"status\":\"observed\",\"locator\":\"path://ocamlc\",\"exit_code\":0,\"output\":\"5.5.0\",\"timed_out\":false,\"output_overflow\":false,\"direct_child_reaped\":true,\"process_group_termination_attempted\":true,\"duration_ms\":5,\"credit\":false}},{\"tool\":\"dune\",\"observation\":{\"status\":\"observed\",\"locator\":\"path://dune\",\"exit_code\":0,\"output\":\"3.23.1\",\"timed_out\":false,\"output_overflow\":false,\"direct_child_reaped\":true,\"process_group_termination_attempted\":true,\"duration_ms\":14,\"credit\":false}},{\"tool\":\"gleam\",\"observation\":{\"status\":\"observed\",\"locator\":\"path://gleam\",\"exit_code\":0,\"output\":\"gleam 1.16.0\",\"timed_out\":false,\"output_overflow\":false,\"direct_child_reaped\":true,\"process_group_termination_attempted\":true,\"duration_ms\":2,\"credit\":false}},{\"tool\":\"zig\",\"observation\":{\"status\":\"unavailable\",\"locator\":\"path://zig\",\"exit_code\":127,\"output\":\"\",\"timed_out\":false,\"output_overflow\":false,\"direct_child_reaped\":true,\"process_group_termination_attempted\":true,\"duration_ms\":0,\"credit\":false}}],\"clock_receipt\":{\"status\":\"unavailable\",\"locator\":\"chrony://tracking\",\"exit_code\":1,\"output\":\"\",\"timed_out\":false,\"output_overflow\":false,\"direct_child_reaped\":true,\"process_group_termination_attempted\":true,\"duration_ms\":1,\"credit\":false},\"writer_inventory\":{\"status\":\"observed_process_names_only\",\"process_names\":[\"codex\"],\"writer_quiescence\":\"not_established\",\"credit\":false},\"candidate_stability\":{\"status\":\"stable\",\"start_change_id\":\"qnukrnxmtxpvqvlwotvzzonktvnlsswx\",\"end_change_id\":\"qnukrnxmtxpvqvlwotvzzonktvnlsswx\",\"start_commit_id\":\"bc63b84725cd37a38d4f3e25742bb71f80c73e53\",\"end_commit_id\":\"bc63b84725cd37a38d4f3e25742bb71f80c73e53\",\"credit\":false}},\"review_binding\":{\"status\":\"bound\",\"receipt_path\":\"governance/sources/20260906-1620-codex-review-agy-forensic-reconciliation-receipt.json\",\"receipt_sha256\":\"191dae268e3a95c4df1aae660a7243d3b975f78f6f6fc9cab918629d104542b4\",\"expected_receipt_sha256\":\"191dae268e3a95c4df1aae660a7243d3b975f78f6f6fc9cab918629d104542b4\",\"receipt_candidate_change_id\":\"tvkzvzkszursuknruwvyuklwqntluzpq\",\"receipt_candidate_commit_id\":\"53308442c6ef81c509abbf402e9b44f58801f6d1\",\"reason\":\"receipt digest, schema, change and commit are pinned\",\"credit\":false},\"claims\":[{\"id\":\"standalone-jj-candidate-identity\",\"classification\":\"current-supported\",\"locator\":\"jj://@\",\"locator_state\":\"observed_current_candidate\",\"review_revision\":\"53308442c6ef81c509abbf402e9b44f58801f6d1\",\"rationale\":\"the current change and commit identifiers were observed from Jujutsu\"},{\"id\":\"inherited-all-passed\",\"classification\":\"stale\",\"locator\":\"HANDOVER_TO_CODEX.md:30\",\"locator_state\":\"receipt_candidate_comparison\",\"review_revision\":\"53308442c6ef81c509abbf402e9b44f58801f6d1\",\"rationale\":\"the advertised receipt is bound to a different candidate\"},{\"id\":\"new-fpp-code-operational\",\"classification\":\"unrun\",\"locator\":\"apps/cepaf_gleam/src/cepaf_gleam/fpp/agent_factory.gleam:68\",\"locator_state\":\"source_only_no_runtime_receipt\",\"review_revision\":\"53308442c6ef81c509abbf402e9b44f58801f6d1\",\"rationale\":\"source presence does not demonstrate current runtime behavior\"},{\"id\":\"agent-factory-clock-current\",\"classification\":\"contradicted\",\"locator\":\"apps/cepaf_gleam/src/cepaf_gleam/fpp/agent_factory.gleam:88\",\"locator_state\":\"matches_reviewed_finding\",\"review_revision\":\"53308442c6ef81c509abbf402e9b44f58801f6d1\",\"rationale\":\"agent creation and telemetry use fixed timestamp literals\"},{\"id\":\"tcm-clock-current\",\"classification\":\"contradicted\",\"locator\":\"apps/cepaf_gleam/src/cepaf_gleam/fpp/dmc_tcm.gleam:245\",\"locator_state\":\"matches_reviewed_finding\",\"review_revision\":\"53308442c6ef81c509abbf402e9b44f58801f6d1\",\"rationale\":\"the timestamp formatter embeds a fixed calendar date and hour\"},{\"id\":\"cli-checks-verified\",\"classification\":\"contradicted\",\"locator\":\"tools/uos/src/main.gleam:220\",\"locator_state\":\"matches_reviewed_finding\",\"review_revision\":\"53308442c6ef81c509abbf402e9b44f58801f6d1\",\"rationale\":\"doctor and checklist print constant passing summaries\"},{\"id\":\"simulated-ocaml-ingestion\",\"classification\":\"contradicted\",\"locator\":\"apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam:126\",\"locator_state\":\"matches_reviewed_finding\",\"review_revision\":\"53308442c6ef81c509abbf402e9b44f58801f6d1\",\"rationale\":\"the reviewed knowledge path simulates worker execution and ingestion\"},{\"id\":\"constant-metrics\",\"classification\":\"contradicted\",\"locator\":\"apps/cepaf_gleam/src/cepaf_gleam/verification/omni_fractal_matrix_engine.gleam:412\",\"locator_state\":\"matches_reviewed_finding\",\"review_revision\":\"53308442c6ef81c509abbf402e9b44f58801f6d1\",\"rationale\":\"fixed metrics and model claims are not invocation-bound measurements\"},{\"id\":\"system-ratification-signature\",\"classification\":\"unrun\",\"locator\":\"governance/sources/20260906-1620-codex-review-agy-forensic-reconciliation-receipt.json#findings/F04\",\"locator_state\":\"bound_review_finding_no_current_signature\",\"review_revision\":\"53308442c6ef81c509abbf402e9b44f58801f6d1\",\"rationale\":\"the advertised independent system ratification is not authenticated\"},{\"id\":\"handover-tag-current\",\"classification\":\"stale\",\"locator\":\"tag/20260906-1649-single-file-session-handover-to-codex-ratified\",\"locator_state\":\"bound_review_candidate_is_older\",\"review_revision\":\"53308442c6ef81c509abbf402e9b44f58801f6d1\",\"rationale\":\"the advertised tag predates the implementation-backlog reconciliation\"},{\"id\":\"zero-warning-test-run\",\"classification\":\"stale\",\"locator\":\"governance/sources/20260906-1620-codex-review-agy-forensic-reconciliation-receipt.json#commands/gleam-tests\",\"locator_state\":\"bound_to_review_candidate\",\"review_revision\":\"53308442c6ef81c509abbf402e9b44f58801f6d1\",\"rationale\":\"the recorded completed run reports two compiler warnings\"},{\"id\":\"dry-run-census-admitted\",\"classification\":\"unrun\",\"locator\":\"governance/sources/20260906-1930-c3i-vm1-artifacts-ingestion-receipt.json\",\"locator_state\":\"no_current_admission_receipt\",\"review_revision\":\"53308442c6ef81c509abbf402e9b44f58801f6d1\",\"rationale\":\"a dry-run census does not establish sanitized candidate ingestion\"},{\"id\":\"nine-modality-browser-coverage\",\"classification\":\"unrun\",\"locator\":\"HANDOVER_TO_CODEX.md:60\",\"locator_state\":\"no_current_execution_receipts\",\"review_revision\":\"53308442c6ef81c509abbf402e9b44f58801f6d1\",\"rationale\":\"test totals and HTTP probes do not execute the advertised modalities\"},{\"id\":\"rust-storage-validator-covered\",\"classification\":\"contradicted\",\"locator\":\"ops/kubernetes/nas-k8s-lab/tests/hardware_identity_test.rs:8\",\"locator_state\":\"matches_reviewed_finding\",\"review_revision\":\"53308442c6ef81c509abbf402e9b44f58801f6d1\",\"rationale\":\"three reviewed tests exercise a test-local helper instead of production validation\"},{\"id\":\"evolutionary-cycles-ratified\",\"classification\":\"contradicted\",\"locator\":\"apps/cepaf_gleam/src/cepaf_gleam/fpp/evolutionary_cycles.gleam:377\",\"locator_state\":\"matches_reviewed_finding\",\"review_revision\":\"53308442c6ef81c509abbf402e9b44f58801f6d1\",\"rationale\":\"cycle status and digest-like evidence are constants, not receipts\"}],\"source_metadata\":[{\"path\":\"governance/sources/20260906-0606-agy-handover-source-receipt.json\",\"present\":true,\"bytes\":56202,\"modified_unix_seconds\":1788716688.200669,\"inspection\":\"allowlisted_metadata_only\",\"content_read\":false,\"digest_computed\":false,\"observed_sha256\":null},{\"path\":\"governance/sources/20260906-1620-codex-review-agy-forensic-reconciliation-receipt.json\",\"present\":true,\"bytes\":15029,\"modified_unix_seconds\":1788716688.2012544,\"inspection\":\"allowlisted_bound_receipt\",\"content_read\":true,\"digest_computed\":true,\"observed_sha256\":\"191dae268e3a95c4df1aae660a7243d3b975f78f6f6fc9cab918629d104542b4\"},{\"path\":\"governance/sources/20260906-1655-uos-sa-plan-registration-receipt.json\",\"present\":true,\"bytes\":61972,\"modified_unix_seconds\":1788716688.2013175,\"inspection\":\"allowlisted_metadata_only\",\"content_read\":false,\"digest_computed\":false,\"observed_sha256\":null},{\"path\":\"governance/sources/20260906-1930-c3i-vm1-artifacts-ingestion-receipt.json\",\"present\":true,\"bytes\":4028,\"modified_unix_seconds\":1788716688.2013724,\"inspection\":\"allowlisted_metadata_only\",\"content_read\":false,\"digest_computed\":false,\"observed_sha256\":null}],\"quarantines\":[{\"incident\":\"Harness SSH injector\",\"source_root\":\"/home/an/dev/ver/harness-bionic\",\"source_root_present\":true,\"material_presence\":\"not_observed_by_policy\",\"inspection\":\"presence_only\",\"secret_bytes_read\":false},{\"incident\":\"ZigVM OAuth secret\",\"source_root\":\"/home/an/dev/ver/zigvm\",\"source_root_present\":true,\"material_presence\":\"not_observed_by_policy\",\"inspection\":\"presence_only\",\"secret_bytes_read\":false}],\"resource_envelope\":{\"module\":\"engines/hermes/modules/hermes_harness/resource_envelope.mli\",\"operational_status\":\"implemented_unavailable\",\"reason\":\"controlled external-resource observation owner injection is not implemented\",\"receipt_bound\":false,\"credit\":false},\"execution_bounds\":{\"outer_timeout_seconds\":1200,\"probe_timeout_seconds_max\":5,\"probe_output_bytes_max\":65536,\"termination_grace_ms\":50}}\n",
+          "stderr": "",
+          "stdout_sha256": "b3cfb727bdfdb6c49279ddcdd2807101ce54c0028e52a0cc3d6258a14576ebd2",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "raw_json": "{\"inherited_credit\":\"STALE\",\"source_writes\":0,\"records\":[\"change_id\",\"commit_id\",\"dirty_manifest\",\"served_build\",\"tool_versions\",\"clock_receipt\"],\"signature_credit\":false}",
+          "raw_json_sha256": "472ccda403063120fc880c7405bd54dda75edd20d9cd0e21f101ccd74465d81c",
+          "duration_ms": 496.42722299999997
+        },
+        "assertion": { "passed": true, "mismatches": [] },
+        "timings": {
+          "operation_ms": 496.42722299999997,
+          "assertion_ms": 0.08779500000000162,
+          "receipt_atomic_write_calibration_ms": 8.202496000000004
+        },
+        "system_admission_granted": false
+      }
+    },
+    {
+      "task": "E03",
+      "source_path": "/tmp/uos-acceptance-receipts/20260906-2017-1360247974-293b919a-task-e03-acceptance-receipt.json",
+      "sha256": "df33f1f31319234864ca552a19c3ae2129ce6e7d9111f00463b9d0a64e535d23",
+      "process_exit": 1,
+      "receipt": {
+        "schema": "uos.acceptance-receipt.v2",
+        "receipt_id": "RCPT-ACCEPT-E03-20260906-2017-1360247974-293b919a",
+        "task_id": "E03",
+        "case_id": "E03-regression",
+        "operation": "verification.evaluate",
+        "observed_at_utc": "2026-09-06T20:13:17Z",
+        "manifest": {
+          "path": "governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json",
+          "sha256": "b706f9a99dfaf6018772b2a819084ea3373a3ee720ed774b57e7f92792d8ee02"
+        },
+        "candidate": {
+          "change_id": "qnukrnxmtxpvqvlwotvzzonktvnlsswx",
+          "commit_id": "bc63b84725cd37a38d4f3e25742bb71f80c73e53",
+          "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+        },
+        "sources": [
+          {
+            "path": "tools/verification/candidate_snapshot.ml",
+            "sha256": "d133755696100822b355d1f1164ac1ecdd064142338efe2d2a0f41092954e507"
+          },
+          {
+            "path": "tests/acceptance/contract.ml",
+            "sha256": "1f18aef2c78f2b62e75e2ffdadcdf435a9da8a91d810f105a6b9a79449b3dd77"
+          },
+          {
+            "path": "tests/acceptance/process_supervisor.ml",
+            "sha256": "55802f7e78efb732058a88da63635fcb624d5bd9e30e0aededdc72d1121990bf"
+          },
+          {
+            "path": "tests/acceptance/registry.ml",
+            "sha256": "19c00eb69a1d5b691dcf9d525ed23b4dd1f951bfa768a6d035d90a02b5b7fd77"
+          },
+          {
+            "path": "tests/acceptance/run.ml",
+            "sha256": "f5a0a7d3842d8e3fe9ae13c0617ed85d2348cb9500b797d7488fe81e9c736fbe"
+          },
+          {
+            "path": "tests/acceptance/golden/receipt.schema.json",
+            "sha256": "ad67d6d9f9d4e852c67e2901d9b881dfe083ab77a2e3897c2acaedf35d1eb3da"
+          }
+        ],
+        "limits": {
+          "timeout_ms": 0,
+          "stdout_bytes": 0,
+          "stderr_bytes": 0,
+          "term_grace_ms": 0
+        },
+        "states": { "built": false, "executed": false, "passed": false },
+        "observation": {
+          "operation_supported": false,
+          "adapter_registered": false,
+          "status": "ERROR",
+          "exit_code": 2,
+          "passing_tests": 0,
+          "children_reaped": true,
+          "timed_out": false,
+          "stdout_overflow": false,
+          "stderr_overflow": false,
+          "stdout": "",
+          "stderr": "operation is not registered: verification.evaluate",
+          "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stderr_sha256": "c54d8e80e7d9eb4033497bd0aafe56ed43e470eb9017953312968b1800e6cda1",
+          "raw_json": null,
+          "raw_json_sha256": null,
+          "duration_ms": 0.005570000000010289
+        },
+        "assertion": {
+          "passed": false,
+          "mismatches": [
+            {
+              "path": "$.admitted",
+              "reason": "missing expected field",
+              "expected_json": "false",
+              "expected_sha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa",
+              "expected_truncated": false,
+              "actual_json": null,
+              "actual_sha256": null,
+              "actual_truncated": false
+            },
+            {
+              "path": "$.status",
+              "reason": "value differs",
+              "expected_json": "\"UNRUN\"",
+              "expected_sha256": "0867ddfcae8a7485fc402283f266ca2e78b59f0b07d8bc883dc45c75d5dcdf02",
+              "expected_truncated": false,
+              "actual_json": "\"ERROR\"",
+              "actual_sha256": "f717e7d817dbc0e03438173773012fc4130215c3d24c7c36c7cff8a9936b8301",
+              "actual_truncated": false
+            },
+            {
+              "path": "$.exit_code",
+              "reason": "value differs",
+              "expected_json": "1",
+              "expected_sha256": "6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b",
+              "expected_truncated": false,
+              "actual_json": "2",
+              "actual_sha256": "d4735e3a265e16eee03f59718b9b5d03019c07d8b6c51f90da3a666eec13ab35",
+              "actual_truncated": false
+            },
+            {
+              "path": "$.metrics_available",
+              "reason": "missing expected field",
+              "expected_json": "false",
+              "expected_sha256": "fcbcf165908dd18a9e49f7ff27810176db8e9f63b4352213741664245224f8aa",
+              "expected_truncated": false,
+              "actual_json": null,
+              "actual_sha256": null,
+              "actual_truncated": false
+            }
+          ]
+        },
+        "timings": {
+          "operation_ms": 0.005570000000010289,
+          "assertion_ms": 0.023744999999908423,
+          "receipt_atomic_write_calibration_ms": 0.6033649999999113
+        },
+        "system_admission_granted": false
+      }
+    }
+  ],
+  "independent_signal_probe": {
+    "path": "/tmp/uos-e02-signal-review.ml",
+    "sha256": "c04620794690fd57854dca88e15778197961442e0e077b6e477a276c2707a0ca",
+    "portable_sigterm": -11,
+    "observed_exit": 143,
+    "children_reaped": true,
+    "process_exit": 0
+  },
+  "rejected_predecessor": {
+    "candidate": "5d17c9c0d93632339377f87ccc40b938f21e768a",
+    "observed_exit": 117,
+    "expected_linux_sigterm_exit": 143,
+    "probe_exit": 1
+  },
+  "cycle_17": [
+    {
+      "aspect_id": 1,
+      "name": "Substrate & Hardware Storage Interlock",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "The acceptance harness does not implement or modify this subsystem.",
+      "orient": "Apply the E02 acceptance specification to actual code and runtime observations; retain unrelated obligations.",
+      "decision": "Complete scoped E02 only; remaining owner Q02",
+      "action": "Retain the owning task and its actual acceptance frontier.",
+      "verification": "Scope review only; no browser, actor, service, storage or final admission credit.",
+      "source_locators": [
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/process_supervisor_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "qnukrnxmtxpvqvlwotvzzonktvnlsswx",
+        "commit_id": "bc63b84725cd37a38d4f3e25742bb71f80c73e53",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "E02",
+      "remaining_obligations": "Q02"
+    },
+    {
+      "aspect_id": 2,
+      "name": "Standalone Jujutsu Monorepo Discipline",
+      "state": "VERIFIED_SCOPED",
+      "observe": "Integrated isolated feature and audit revisions under standalone JJ.",
+      "orient": "Apply the E02 acceptance specification to actual code and runtime observations; retain unrelated obligations.",
+      "decision": "Complete scoped E02 only; remaining owner R01-R03",
+      "action": "Preserve all incoming history and review immutable commits.",
+      "verification": "Observed integrated candidate bc63b847; reviewed predecessor signal defect retained as nonpassing evidence.",
+      "source_locators": [
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/process_supervisor_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "qnukrnxmtxpvqvlwotvzzonktvnlsswx",
+        "commit_id": "bc63b84725cd37a38d4f3e25742bb71f80c73e53",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "E02",
+      "remaining_obligations": "R01-R03"
+    },
+    {
+      "aspect_id": 3,
+      "name": "Zero-Muda Purity & Waste Elimination",
+      "state": "VERIFIED_SCOPED",
+      "observe": "Only new UOS acceptance tooling was repaired; original OCaml evidence was unchanged.",
+      "orient": "Apply the E02 acceptance specification to actual code and runtime observations; retain unrelated obligations.",
+      "decision": "Complete scoped E02 only; remaining owner E05/H03",
+      "action": "Use installed bounded OCaml/Linux interfaces and a purpose-built schema validator.",
+      "verification": "Reviewed eight changed paths; no forbidden runtime or external source import introduced by this feature.",
+      "source_locators": [
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/process_supervisor_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "qnukrnxmtxpvqvlwotvzzonktvnlsswx",
+        "commit_id": "bc63b84725cd37a38d4f3e25742bb71f80c73e53",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "E02",
+      "remaining_obligations": "E05/H03"
+    },
+    {
+      "aspect_id": 4,
+      "name": "Gleam/OTP 29 4-Domain Root Supervisor",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "The acceptance harness does not implement or modify this subsystem.",
+      "orient": "Apply the E02 acceptance specification to actual code and runtime observations; retain unrelated obligations.",
+      "decision": "Complete scoped E02 only; remaining owner A01-A10",
+      "action": "Retain the owning task and its actual acceptance frontier.",
+      "verification": "Scope review only; no browser, actor, service, storage or final admission credit.",
+      "source_locators": [
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/process_supervisor_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "qnukrnxmtxpvqvlwotvzzonktvnlsswx",
+        "commit_id": "bc63b84725cd37a38d4f3e25742bb71f80c73e53",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "E02",
+      "remaining_obligations": "A01-A10"
+    },
+    {
+      "aspect_id": 5,
+      "name": "ZigVM Deterministic Engine & 8 VFS Laws",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "The acceptance harness does not implement or modify this subsystem.",
+      "orient": "Apply the E02 acceptance specification to actual code and runtime observations; retain unrelated obligations.",
+      "decision": "Complete scoped E02 only; remaining owner H01-H03",
+      "action": "Retain the owning task and its actual acceptance frontier.",
+      "verification": "Scope review only; no browser, actor, service, storage or final admission credit.",
+      "source_locators": [
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/process_supervisor_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "qnukrnxmtxpvqvlwotvzzonktvnlsswx",
+        "commit_id": "bc63b84725cd37a38d4f3e25742bb71f80c73e53",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "E02",
+      "remaining_obligations": "H01-H03"
+    },
+    {
+      "aspect_id": 6,
+      "name": "Hermes Formal Evidence, Gospel & Z3",
+      "state": "VERIFIED_SCOPED",
+      "observe": "The prior acceptance runner could hide missing adapters and leak detached descendants.",
+      "orient": "Apply the E02 acceptance specification to actual code and runtime observations; retain unrelated obligations.",
+      "decision": "Complete scoped E02 only; remaining owner M08",
+      "action": "Implement strict bounded JSON, typed registry, isolated subreaper and atomic receipts.",
+      "verification": "20 contract assertions, 9 real process cases and 72 runner assertions passed; broader Gospel/Z3 authority remains with M08.",
+      "source_locators": [
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/process_supervisor_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "qnukrnxmtxpvqvlwotvzzonktvnlsswx",
+        "commit_id": "bc63b84725cd37a38d4f3e25742bb71f80c73e53",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "E02",
+      "remaining_obligations": "M08"
+    },
+    {
+      "aspect_id": 7,
+      "name": "Mathematical Authority & Conservation",
+      "state": "VERIFIED_SCOPED",
+      "observe": "Expectations, unknown operations and missing evidence must not manufacture passing observations.",
+      "orient": "Apply the E02 acceptance specification to actual code and runtime observations; retain unrelated obligations.",
+      "decision": "Complete scoped E02 only; remaining owner M01-M08",
+      "action": "Separate observed operation state from recursive assertion results; reject malformed/duplicate/nonfinite/oversized inputs.",
+      "verification": "Discriminating positive, assertion-failure, missing executable, timeout, output, source/revision and signal controls passed; no new Lean proof or global mathematical admission claimed.",
+      "source_locators": [
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/process_supervisor_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "qnukrnxmtxpvqvlwotvzzonktvnlsswx",
+        "commit_id": "bc63b84725cd37a38d4f3e25742bb71f80c73e53",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "E02",
+      "remaining_obligations": "M01-M08"
+    },
+    {
+      "aspect_id": 8,
+      "name": "Biosemiotic Cybernetics & Rocha Cut",
+      "state": "VERIFIED_SCOPED",
+      "observe": "A successful negative regression must not grant the missing implementation authority.",
+      "orient": "Apply the E02 acceptance specification to actual code and runtime observations; retain unrelated obligations.",
+      "decision": "Complete scoped E02 only; remaining owner M03/P01",
+      "action": "Keep E02 assertion PASS alongside underlying ERROR, unregistered adapter and zero passing tests.",
+      "verification": "Exact E02 receipt is schema-valid and system_admission_granted=false; unsupported E03 exits1.",
+      "source_locators": [
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/process_supervisor_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "qnukrnxmtxpvqvlwotvzzonktvnlsswx",
+        "commit_id": "bc63b84725cd37a38d4f3e25742bb71f80c73e53",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "E02",
+      "remaining_obligations": "M03/P01"
+    },
+    {
+      "aspect_id": 9,
+      "name": "Quarantined Modular MAX/Mojo Inference",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "The acceptance harness does not implement or modify this subsystem.",
+      "orient": "Apply the E02 acceptance specification to actual code and runtime observations; retain unrelated obligations.",
+      "decision": "Complete scoped E02 only; remaining owner H03",
+      "action": "Retain the owning task and its actual acceptance frontier.",
+      "verification": "Scope review only; no browser, actor, service, storage or final admission credit.",
+      "source_locators": [
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/process_supervisor_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "qnukrnxmtxpvqvlwotvzzonktvnlsswx",
+        "commit_id": "bc63b84725cd37a38d4f3e25742bb71f80c73e53",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "E02",
+      "remaining_obligations": "H03"
+    },
+    {
+      "aspect_id": 10,
+      "name": "Zenoh OoZ & MoZ Mesh Telemetry Backplane",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "The acceptance harness does not implement or modify this subsystem.",
+      "orient": "Apply the E02 acceptance specification to actual code and runtime observations; retain unrelated obligations.",
+      "decision": "Complete scoped E02 only; remaining owner Z01-Z12",
+      "action": "Retain the owning task and its actual acceptance frontier.",
+      "verification": "Scope review only; no browser, actor, service, storage or final admission credit.",
+      "source_locators": [
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/process_supervisor_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "qnukrnxmtxpvqvlwotvzzonktvnlsswx",
+        "commit_id": "bc63b84725cd37a38d4f3e25742bb71f80c73e53",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "E02",
+      "remaining_obligations": "Z01-Z12"
+    },
+    {
+      "aspect_id": 11,
+      "name": "AG-UI 32-Event SSE Stream Protocol",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "The acceptance harness does not implement or modify this subsystem.",
+      "orient": "Apply the E02 acceptance specification to actual code and runtime observations; retain unrelated obligations.",
+      "decision": "Complete scoped E02 only; remaining owner A08/A09/Z12",
+      "action": "Retain the owning task and its actual acceptance frontier.",
+      "verification": "Scope review only; no browser, actor, service, storage or final admission credit.",
+      "source_locators": [
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/process_supervisor_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "qnukrnxmtxpvqvlwotvzzonktvnlsswx",
+        "commit_id": "bc63b84725cd37a38d4f3e25742bb71f80c73e53",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "E02",
+      "remaining_obligations": "A08/A09/Z12"
+    },
+    {
+      "aspect_id": 12,
+      "name": "A2UI 233-Component Declarative Catalog",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "The acceptance harness does not implement or modify this subsystem.",
+      "orient": "Apply the E02 acceptance specification to actual code and runtime observations; retain unrelated obligations.",
+      "decision": "Complete scoped E02 only; remaining owner W01-W09",
+      "action": "Retain the owning task and its actual acceptance frontier.",
+      "verification": "Scope review only; no browser, actor, service, storage or final admission credit.",
+      "source_locators": [
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/process_supervisor_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "qnukrnxmtxpvqvlwotvzzonktvnlsswx",
+        "commit_id": "bc63b84725cd37a38d4f3e25742bb71f80c73e53",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "E02",
+      "remaining_obligations": "W01-W09"
+    },
+    {
+      "aspect_id": 13,
+      "name": "Penta-Stack Multi-Interface Accessibility",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "The acceptance harness does not implement or modify this subsystem.",
+      "orient": "Apply the E02 acceptance specification to actual code and runtime observations; retain unrelated obligations.",
+      "decision": "Complete scoped E02 only; remaining owner V01-V07",
+      "action": "Retain the owning task and its actual acceptance frontier.",
+      "verification": "Scope review only; no browser, actor, service, storage or final admission credit.",
+      "source_locators": [
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/process_supervisor_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "qnukrnxmtxpvqvlwotvzzonktvnlsswx",
+        "commit_id": "bc63b84725cd37a38d4f3e25742bb71f80c73e53",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "E02",
+      "remaining_obligations": "V01-V07"
+    },
+    {
+      "aspect_id": 14,
+      "name": "Universal Tailscale FQDN Web Navigation",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "The acceptance harness does not implement or modify this subsystem.",
+      "orient": "Apply the E02 acceptance specification to actual code and runtime observations; retain unrelated obligations.",
+      "decision": "Complete scoped E02 only; remaining owner N01/W01/W04",
+      "action": "Retain the owning task and its actual acceptance frontier.",
+      "verification": "Scope review only; no browser, actor, service, storage or final admission credit.",
+      "source_locators": [
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/process_supervisor_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "qnukrnxmtxpvqvlwotvzzonktvnlsswx",
+        "commit_id": "bc63b84725cd37a38d4f3e25742bb71f80c73e53",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "E02",
+      "remaining_obligations": "N01/W01/W04"
+    },
+    {
+      "aspect_id": 15,
+      "name": "Comprehensive Verification Checklist",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "The acceptance harness does not implement or modify this subsystem.",
+      "orient": "Apply the E02 acceptance specification to actual code and runtime observations; retain unrelated obligations.",
+      "decision": "Complete scoped E02 only; remaining owner E03/W04",
+      "action": "Retain the owning task and its actual acceptance frontier.",
+      "verification": "Scope review only; no browser, actor, service, storage or final admission credit.",
+      "source_locators": [
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/process_supervisor_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "qnukrnxmtxpvqvlwotvzzonktvnlsswx",
+        "commit_id": "bc63b84725cd37a38d4f3e25742bb71f80c73e53",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "E02",
+      "remaining_obligations": "E03/W04"
+    },
+    {
+      "aspect_id": 16,
+      "name": "Knowledge Management Triad (Wiki/ZK/Ont)",
+      "state": "VERIFIED_SCOPED",
+      "observe": "Revision, manifest, source and output provenance are required for replay.",
+      "orient": "Apply the E02 acceptance specification to actual code and runtime observations; retain unrelated obligations.",
+      "decision": "Complete scoped E02 only; remaining owner E04-E08/H01-H02",
+      "action": "Bind six production source inputs and preserve raw observed receipts with SHA-256 hashes.",
+      "verification": "Root independently validated E01/E02/E03 receipts at bc63b847 against the closed Draft2020-12 schema; corpus and skill implementation remain open.",
+      "source_locators": [
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/process_supervisor_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "qnukrnxmtxpvqvlwotvzzonktvnlsswx",
+        "commit_id": "bc63b84725cd37a38d4f3e25742bb71f80c73e53",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "E02",
+      "remaining_obligations": "E04-E08/H01-H02"
+    },
+    {
+      "aspect_id": 17,
+      "name": "Sa-Plan & Bionic Durable Workflows",
+      "state": "VERIFIED_SCOPED",
+      "observe": "E02 is claimed by codex-root at attempt3; S11-S13 register the nested work.",
+      "orient": "Apply the E02 acceptance specification to actual code and runtime observations; retain unrelated obligations.",
+      "decision": "Complete scoped E02 only; remaining owner P01-P04",
+      "action": "Complete through native Store only after this scoped review, keeping original reserved intents inert.",
+      "verification": "This receipt is review evidence; subsequent Store workflow/task/job completion is recorded separately. P01-P04 remain required.",
+      "source_locators": [
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/process_supervisor_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "qnukrnxmtxpvqvlwotvzzonktvnlsswx",
+        "commit_id": "bc63b84725cd37a38d4f3e25742bb71f80c73e53",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "E02",
+      "remaining_obligations": "P01-P04"
+    }
+  ],
+  "limitations": [
+    "Linux ordinary fork descendants and cooperative abort are the tested subreaper scope. Arbitrary clone/ptrace, external cgroup movement and forced helper/host loss are not proved contained; incomplete authority stays nonpassing.",
+    "The registered E01 adapter uses an explicit unavailable loopback service control; its successful snapshot contract is not live service health or deployed-candidate evidence.",
+    "Receipt states describe operation execution; a passing negative assertion does not turn a missing adapter into an implementation pass.",
+    "Candidate/input identity is revision scoped. No signatures, global source preservation, broad formal proofs, native transport or full resource-sensor admission follows.",
+    "The full E04-E08/M/A/Z/W/V/H/R/P/K/Q/N programme and the legacy test-port obligations remain open."
+  ],
+  "system_admission_granted": false
+}
