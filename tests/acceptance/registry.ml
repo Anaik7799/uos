@@ -1,87 +1,291 @@
 #use "topfind";;
-#require "bos.setup";;
 #require "yojson";;
 
-(* tests/acceptance/registry.ml
-   Maps acceptance operation names to executable adapters and handles missing adapters honestly. *)
-
 #use "./tests/acceptance/contract.ml";;
+#use "./tests/acceptance/process_supervisor.ml";;
 
-open Bos
-open Yojson.Basic.Util
+(** Typed, allowlisted production adapter registry for acceptance operations.
+    Expected observations are deliberately absent from every adapter interface. *)
 
-let run_cmd_bounded ?(timeout_sec=5.0) args =
-  let t0 = Unix.gettimeofday () in
-  let cmd = Cmd.of_list args in
-  match OS.Cmd.(run_out ~err:err_null cmd |> out_string) with
-  | Ok (res, (_, `Exited code)) ->
-    let dt = (Unix.gettimeofday () -. t0) *. 1000.0 in
-    (code, String.trim res, dt, true)
-  | Ok (res, (_, `Signaled _)) ->
-    (137, "Process signaled / killed", 0.0, true)
-  | Error (`Msg msg) ->
-    (2, msg, 0.0, true)
+let default_process_limits =
+  { timeout_ms = 120_000; stdout_limit = 131_072; stderr_limit = 65_536;
+    term_grace_ms = 100 }
 
-let dispatch_adapter (op: string) (fixture: Yojson.Basic.t) : observation =
-  match op with
-  | "candidate.snapshot" ->
-    let fixture_str = Yojson.Basic.to_string fixture in
-    let (code, output, dt, reaped) =
-      run_cmd_bounded ["ocaml"; "tools/verification/candidate_snapshot.ml"; "--fixture"; fixture_str]
-    in
-    if code = 0 then
-      let j_opt =
-        try Some (Yojson.Basic.from_string output)
-        with _ -> None
+let error_observation ?(operation_supported = true) ?(adapter_registered = false)
+    ?(built = true) ?(executed = true) ?(children_reaped = true) ?(exit_code = 2)
+    message =
+  { operation_supported; adapter_registered; built; executed; passed = false;
+    exit_code; status = Status_error; passing_tests = 0; children_reaped;
+    timed_out = false; stdout_overflow = false; stderr_overflow = false;
+    stdout = ""; stderr = message; duration_ms = 0.; data = None;
+    applied_limits = no_process_limits }
+
+let fail_observation ?(operation_supported = true) ?(adapter_registered = true)
+    ?(built = true) ?(executed = true) ?(children_reaped = true) ?(exit_code = 1)
+    message =
+  { operation_supported; adapter_registered; built; executed; passed = false;
+    exit_code; status = Status_fail; passing_tests = 0; children_reaped;
+    timed_out = false; stdout_overflow = false; stderr_overflow = false;
+    stdout = ""; stderr = message; duration_ms = 0.; data = None;
+    applied_limits = no_process_limits }
+
+let termination_exit_code = function
+  | Exited code -> Ok code
+  | Signaled signal ->
+      if Sys.os_type <> "Unix" || not (Sys.file_exists "/proc/self/stat") then
+        Error "signal normalization is supported only on Linux"
+      else
+        let linux_signal = Sys.signal_to_int signal in
+        if linux_signal < 1 || linux_signal > 64 then
+          Error
+            (Printf.sprintf
+               "unmapped Linux signal: portable=%d converted=%d"
+               signal linux_signal)
+        else Ok (128 + linux_signal)
+  | Timed_out -> Ok 124
+  | Output_limit -> Ok 125
+
+let receipt_limits_of_process limits =
+  { receipt_timeout_ms = limits.timeout_ms;
+    receipt_stdout_bytes = limits.stdout_limit;
+    receipt_stderr_bytes = limits.stderr_limit;
+    receipt_term_grace_ms = limits.term_grace_ms }
+
+let command_observation ~limits ~expected_exit result =
+  match termination_exit_code result.termination with
+  | Error normalization_error ->
+      let raw_signal =
+        match result.termination with Signaled signal -> `Int signal | _ -> `Null
       in
-      {
-        exit_code = 0;
-        status = Pass;
-        passing_tests = 1;
-        children_reaped = reaped;
-        raw_output = output;
-        data = j_opt;
-      }
-    else
-      {
-        exit_code = code;
-        status = Fail;
-        passing_tests = 0;
-        children_reaped = reaped;
-        raw_output = output;
-        data = None;
-      }
-  | "verification.evaluate" ->
-    let runtime_rcpt = try member "runtime_receipt" fixture |> to_string with _ -> "" in
-    let formal_rcpt = try member "formal_receipt" fixture |> to_string with _ -> "" in
-    let metric_inputs = try member "metric_inputs" fixture |> to_list with _ -> [] in
-    let has_runtime = runtime_rcpt <> "missing" && runtime_rcpt <> "" in
-    let has_formal = formal_rcpt <> "missing" && formal_rcpt <> "" in
-    let admitted = has_runtime && has_formal in
-    let status_str = if admitted then "ADMITTED" else "UNRUN" in
-    let exit_code = if admitted then 0 else 1 in
-    let metrics_available = metric_inputs <> [] in
-    let eval_data = `Assoc [
-      ("admitted", `Bool admitted);
-      ("status", `String status_str);
-      ("exit_code", `Int exit_code);
-      ("metrics_available", `Bool metrics_available)
-    ] in
-    {
-      exit_code = exit_code;
-      status = (if admitted then Pass else Fail);
-      passing_tests = (if admitted then 1 else 0);
-      children_reaped = true;
-      raw_output = Yojson.Basic.to_string eval_data;
-      data = Some eval_data;
-    }
-  | _ ->
-    (* Unknown adapter fails honestly per E02-regression spec *)
-    {
-      exit_code = 2;
-      status = Error;
-      passing_tests = 0;
-      children_reaped = true;
-      raw_output = Printf.sprintf "No adapter registered for operation: %s" op;
-      data = None;
-    }
+      { operation_supported = true; adapter_registered = true; built = true;
+        executed = true; passed = false; exit_code = 2; status = Status_error;
+        passing_tests = 0; children_reaped = result.children_reaped;
+        timed_out = false; stdout_overflow = result.stdout_truncated;
+        stderr_overflow = result.stderr_truncated; stdout = result.stdout;
+        stderr = normalization_error; duration_ms = result.duration_ms;
+        data =
+          Some
+            (`Assoc
+              [ ("termination", `String "UNMAPPED_SIGNAL");
+                ("raw_portable_signal", raw_signal);
+                ("normalization_error", `String normalization_error) ]);
+        applied_limits = receipt_limits_of_process limits }
+  | Ok code ->
+      let timed_out = result.termination = Timed_out in
+      let output_limit = result.termination = Output_limit in
+      let process_terminated =
+        match result.termination with Exited _ | Signaled _ -> true | _ -> false
+      in
+      let succeeded =
+        process_terminated
+        && code = expected_exit
+        && not result.stdout_truncated
+        && not result.stderr_truncated
+        && result.children_reaped
+      in
+      { operation_supported = true; adapter_registered = true; built = true;
+        executed = true; passed = succeeded; exit_code = code;
+        status =
+          (if succeeded then Status_pass
+           else if timed_out || output_limit || code = 127
+           then Status_error else Status_fail);
+        passing_tests = (if succeeded then 1 else 0);
+        children_reaped = result.children_reaped; timed_out;
+        stdout_overflow = result.stdout_truncated;
+        stderr_overflow = result.stderr_truncated;
+        stdout = result.stdout; stderr = result.stderr;
+        duration_ms = result.duration_ms; data = None;
+        applied_limits = receipt_limits_of_process limits }
+
+type command_id =
+  | Candidate_snapshot_command
+  | Missing_executable_control
+  | Timeout_control
+  | Stdout_overflow_control
+  | Stderr_overflow_control
+  | Closed_descendant_control
+  | Signal_term_control
+
+let command_argv = function
+  | Candidate_snapshot_command -> [ "opam" ]
+  | Missing_executable_control -> [ "/definitely/missing/uos-acceptance-command" ]
+  | Timeout_control -> [ "/bin/sh"; "-c"; "sleep 30" ]
+  | Stdout_overflow_control -> [ "/bin/sh"; "-c"; "head -c 4096 /dev/zero" ]
+  | Stderr_overflow_control -> [ "/bin/sh"; "-c"; "head -c 4096 /dev/zero >&2" ]
+  | Closed_descendant_control ->
+      [ "/bin/sh"; "-c"; "(exec 1>&- 2>&-; sleep 30) & exit 0" ]
+  | Signal_term_control -> [ "/bin/sh"; "-c"; "kill -TERM $$" ]
+
+let command_dependencies = function
+  | Candidate_snapshot_command -> [ "opam"; "ocaml"; "jj"; "chronyc"; "curl" ]
+  | Missing_executable_control -> []
+  | Timeout_control | Closed_descendant_control -> [ "/bin/sh"; "sleep" ]
+  | Signal_term_control -> [ "/bin/sh" ]
+  | Stdout_overflow_control | Stderr_overflow_control -> [ "/bin/sh"; "head" ]
+
+let allowed_dependencies =
+  [ "opam"; "ocaml"; "jj"; "chronyc"; "curl"; "/bin/sh"; "sleep"; "head" ]
+
+let command_allowed id =
+  let argv = command_argv id in
+  let executable_allowed =
+    match argv with
+    | "opam" :: _ | "/bin/sh" :: _ | "/definitely/missing/uos-acceptance-command" :: _ -> true
+    | _ -> false
+  in
+  executable_allowed
+  && List.for_all (fun dependency -> List.mem dependency allowed_dependencies)
+       (command_dependencies id)
+
+let run_command ?(limits = default_process_limits) ~expected_exit id =
+  if not (command_allowed id) then
+    error_observation ~adapter_registered:true ~executed:false
+      "command or dependency is outside the registry allowlist"
+  else
+    run_bounded limits (command_argv id)
+    |> command_observation ~limits ~expected_exit
+
+type runner_adapter =
+  | Internal_pass
+  | Command_control of command_id * process_limits
+
+let runner_adapters =
+  [ ("runner.control.pass.v1", Internal_pass);
+    ("runner.control.missing-executable.v1",
+      Command_control (Missing_executable_control, { default_process_limits with timeout_ms = 1_000 }));
+    ("runner.control.timeout.v1",
+      Command_control (Timeout_control, { default_process_limits with timeout_ms = 100 }));
+    ("runner.control.stdout-overflow.v1",
+      Command_control (Stdout_overflow_control,
+        { default_process_limits with timeout_ms = 1_000; stdout_limit = 64 }));
+    ("runner.control.stderr-overflow.v1",
+      Command_control (Stderr_overflow_control,
+        { default_process_limits with timeout_ms = 1_000; stderr_limit = 64 }));
+    ("runner.control.closed-descendant.v1",
+      Command_control (Closed_descendant_control,
+        { default_process_limits with timeout_ms = 1_000 }));
+    ("runner.control.signal-term.v1",
+      Command_control (Signal_term_control,
+        { default_process_limits with timeout_ms = 1_000 })) ]
+
+let dispatch_runner_adapter fixture =
+  match List.assoc_opt fixture.adapter runner_adapters with
+  | None ->
+      error_observation
+        (Printf.sprintf "required=%b: adapter is not registered: %s"
+           fixture.required fixture.adapter)
+  | Some _ when fixture.fixture <> "temporary_isolated" ->
+      error_observation ~adapter_registered:true ~executed:false
+        ("fixture is not registered: " ^ fixture.fixture)
+  | Some Internal_pass ->
+      let measured_exit = 0 in
+      let succeeded = measured_exit = fixture.expected_exit in
+      { operation_supported = true; adapter_registered = true; built = true;
+        executed = true; passed = succeeded; exit_code = measured_exit;
+        status = (if succeeded then Status_pass else Status_fail);
+        passing_tests = (if succeeded then 1 else 0); children_reaped = true;
+        timed_out = false; stdout_overflow = false; stderr_overflow = false;
+        stdout = "runner control measured exit 0"; stderr = ""; duration_ms = 0.;
+        data = None; applied_limits = no_process_limits }
+  | Some (Command_control (command, limits)) ->
+      run_command ~limits ~expected_exit:fixture.expected_exit command
+
+let runner_verify given =
+  match decode_runner_fixture given with
+  | Error error ->
+      error_observation ~executed:false (string_of_contract_error error)
+  | Ok fixture -> dispatch_runner_adapter fixture
+
+let decode_candidate_fixture json =
+  let path = "$.given" in
+  match first_duplicate_or_nested path json with
+  | Error _ as error -> error
+  | Ok () ->
+      match assoc_at path json with
+      | Error _ as error -> error
+      | Ok fields ->
+          match exact_fields path
+                  [ "candidate"; "evidence_candidate"; "source_mode";
+                    "clock_source"; "inherited_claim" ] fields with
+          | Error _ as error -> error
+          | Ok () ->
+              let get name = required_field path name fields string_at in
+              match get "candidate", get "evidence_candidate", get "source_mode",
+                    get "clock_source", get "inherited_claim" with
+              | Ok candidate, Ok evidence_candidate, Ok source_mode,
+                Ok clock_source, Ok inherited_claim ->
+                  Ok (candidate, evidence_candidate, source_mode, clock_source, inherited_claim)
+              | Error error, _, _, _, _ | _, Error error, _, _, _
+              | _, _, Error error, _, _ | _, _, _, Error error, _
+              | _, _, _, _, Error error -> Error error
+
+let candidate_projection raw =
+  try
+    let json = Yojson.Basic.from_string raw in
+    match json with
+    | `Assoc fields ->
+        let required name = List.assoc name fields in
+        let observed_record_names =
+          match required "records" with
+          | `Assoc records -> List.map fst records
+          | _ -> raise Exit
+        in
+        let projected_record_names =
+          [ "change_id"; "commit_id"; "dirty_manifest"; "served_build";
+            "tool_versions"; "clock_receipt" ]
+        in
+        if not
+             (List.for_all
+                (fun name -> List.mem name observed_record_names)
+                projected_record_names)
+        then raise Exit;
+        Ok (`Assoc
+          [ ("inherited_credit", required "inherited_credit");
+            ("source_writes", required "source_writes");
+            ("records",
+              `List
+                (List.map (fun name -> `String name) projected_record_names));
+            ("signature_credit", required "signature_credit") ])
+    | _ -> Error "candidate snapshot output is not an object"
+  with
+  | Yojson.Json_error message -> Error ("candidate snapshot emitted malformed JSON: " ^ message)
+  | Not_found | Exit -> Error "candidate snapshot output lacks required fields"
+
+let candidate_snapshot given =
+  match decode_candidate_fixture given with
+  | Error error -> error_observation ~executed:false (string_of_contract_error error)
+  | Ok (candidate, evidence_candidate, source_mode, clock_source, inherited_claim) ->
+      let command =
+        [ "opam"; "exec"; "--"; "ocaml"; "tools/verification/candidate_snapshot.ml";
+          "snapshot"; "--candidate"; candidate; "--evidence-candidate"; evidence_candidate;
+          "--source-mode"; source_mode; "--clock-source"; clock_source;
+          "--inherited-claim"; inherited_claim; "--served-url";
+          "http://127.0.0.1:9/unavailable" ]
+      in
+      let base =
+        if not (command_allowed Candidate_snapshot_command) then
+          error_observation ~adapter_registered:true ~executed:false
+            "candidate snapshot dependencies are outside the allowlist"
+        else
+          run_bounded default_process_limits command
+          |> command_observation ~limits:default_process_limits ~expected_exit:0
+      in
+      if base.exit_code <> 0 || base.timed_out || base.stdout_overflow
+         || base.stderr_overflow
+      then base
+      else
+        match candidate_projection base.stdout with
+        | Error message -> { base with passed = false; status = Status_error;
+                                       passing_tests = 0; stderr = message; data = None }
+        | Ok projection -> { base with data = Some projection }
+
+let supported_operations =
+  [ ("runner.verify", runner_verify);
+    ("candidate.snapshot", candidate_snapshot) ]
+
+let dispatch_operation operation given =
+  match List.assoc_opt operation supported_operations with
+  | None ->
+      error_observation ~operation_supported:false ~built:false ~executed:false
+        ("operation is not registered: " ^ operation)
+  | Some handler -> handler given
