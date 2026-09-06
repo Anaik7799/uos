@@ -371,6 +371,51 @@ pub fn fractal_diagnostic_component() -> domain.Component {
 
 // ------------------------------------------------------------- Full Model
 
+pub fn canonical_packets() -> List(domain.TlmPacket) {
+  [
+    domain.TlmPacket(
+      packet_id: 1,
+      packet_name: "ControlSweepPacket",
+      channel_ids: [0, 1],
+      level: 1,
+    ),
+    domain.TlmPacket(
+      packet_id: 2,
+      packet_name: "EvidenceStatePacket",
+      channel_ids: [0, 1],
+      level: 1,
+    ),
+    domain.TlmPacket(
+      packet_id: 3,
+      packet_name: "ParityComparePacket",
+      channel_ids: [5, 6],
+      level: 2,
+    ),
+  ]
+}
+
+pub fn canonical_subtopologies() -> List(domain.Subtopology) {
+  [
+    domain.Subtopology(
+      name: "EvidencePipelineSubtopo",
+      instances: [
+        Instance("parity_compare", "parity_compare", 0x800, None, None, None, None),
+        Instance("evidence_store", "evidence_store", 0x600, None, None, None, None),
+      ],
+      connections: [
+        Connection(
+          Endpoint("parity_compare", "receipts", None),
+          Endpoint("evidence_store", "record", None),
+        ),
+      ],
+      exported_ports: [
+        domain.ExportedPort("receiptIn", "evidence_store", "record"),
+        domain.ExportedPort("verdictsOut", "parity_compare", "verdicts"),
+      ],
+    ),
+  ]
+}
+
 pub fn canonical_harness_model() -> Model {
   let comps = [
     inventory_component(),
@@ -471,5 +516,7 @@ pub fn canonical_harness_model() -> Model {
     machines: [canonical_converge_loop()],
     instances: insts,
     topologies: [topo],
+    packets: canonical_packets(),
+    subtopologies: canonical_subtopologies(),
   )
 }

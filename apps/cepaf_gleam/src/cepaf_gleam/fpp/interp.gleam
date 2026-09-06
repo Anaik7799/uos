@@ -26,10 +26,16 @@ pub type MachineState {
   MachineState(current: String, log: List(String))
 }
 
+pub type HierarchicalMachineState {
+  HierarchicalMachineState(active_path: List(String), log: List(String))
+}
+
 pub fn init_machine(machine: StateMachine) -> Result(MachineState, String) {
   case machine {
     domain.ExternalMachine(name) ->
       Error("External machine " <> name <> " has no executable behavior")
+    domain.HierarchicalMachine(_, _, _, _, _, _, _) ->
+      Error("Use init_hsm for HierarchicalMachine")
     InternalMachine(
       machine_name: _,
       signals: _,
@@ -51,6 +57,252 @@ pub fn init_machine(machine: StateMachine) -> Result(MachineState, String) {
   }
 }
 
+pub fn init_hsm(
+  machine: StateMachine,
+) -> Result(HierarchicalMachineState, String) {
+  case machine {
+    domain.HierarchicalMachine(
+      machine_name: _,
+      signals: _,
+      guards: _,
+      actions: _,
+      root_states: roots,
+      choices: _,
+      initial: #(init_actions, init_root_name),
+    ) -> {
+      case find_hstate_and_path(roots, init_root_name, []) {
+        Error(_) ->
+          Error("Initial root state " <> init_root_name <> " not found in HSM")
+        Ok(#(root_st, root_path)) -> {
+          let init_log = list.append(init_actions, root_st.entry)
+          let #(full_path, full_log) =
+            enter_initial_sub_states(root_st, root_path, init_log)
+          Ok(HierarchicalMachineState(active_path: full_path, log: full_log))
+        }
+      }
+    }
+    _ -> Error("init_hsm expects a HierarchicalMachine")
+  }
+}
+
+fn find_hstate_and_path(
+  states: List(domain.HierarchicalState),
+  target: String,
+  current_path: List(String),
+) -> Result(#(domain.HierarchicalState, List(String)), Nil) {
+  case states {
+    [] -> Error(Nil)
+    [s, ..rest] -> {
+      let path = list.append(current_path, [s.name])
+      case s.name == target {
+        True -> Ok(#(s, path))
+        False -> {
+          case find_hstate_and_path(s.sub_states, target, path) {
+            Ok(found) -> Ok(found)
+            Error(_) -> find_hstate_and_path(rest, target, current_path)
+          }
+        }
+      }
+    }
+  }
+}
+
+fn enter_initial_sub_states(
+  state: domain.HierarchicalState,
+  current_path: List(String),
+  current_log: List(String),
+) -> #(List(String), List(String)) {
+  case state.initial_sub_state {
+    None -> #(current_path, current_log)
+    Some(sub_name) -> {
+      case list.find(state.sub_states, fn(sub) { sub.name == sub_name }) {
+        Error(_) -> #(current_path, current_log)
+        Ok(sub) -> {
+          let next_path = list.append(current_path, [sub.name])
+          let next_log = list.append(current_log, sub.entry)
+          enter_initial_sub_states(sub, next_path, next_log)
+        }
+      }
+    }
+  }
+}
+
+fn common_ancestor_path(
+  p1: List(String),
+  p2: List(String),
+  acc: List(String),
+) -> List(String) {
+  case p1, p2 {
+    [x, ..r1], [y, ..r2] if x == y ->
+      common_ancestor_path(r1, r2, list.append(acc, [x]))
+    _, _ -> acc
+  }
+}
+
+pub fn dispatch_hsm_signal(
+  machine: StateMachine,
+  guards: List(#(String, Bool)),
+  state: HierarchicalMachineState,
+  signal: String,
+) -> Result(HierarchicalMachineState, String) {
+  case machine {
+    domain.HierarchicalMachine(
+      machine_name: _,
+      signals: _,
+      guards: _,
+      actions: _,
+      root_states: roots,
+      choices: choices,
+      initial: _,
+    ) -> {
+      // Find the first state in active_path (from leaf up to root) that handles the signal
+      let reversed_path = list.reverse(state.active_path)
+      let handler =
+        find_handling_hstate(roots, reversed_path, signal, guards)
+
+      case handler {
+        Error(_) -> {
+          // Unhandled signal in active hierarchy is dropped per FPP specification
+          Ok(state)
+        }
+        Ok(#(_handling_st, transition)) -> {
+          // Resolve transition target
+          case
+            resolve_hsm_target(transition.target, roots, choices, guards)
+          {
+            Error(e) -> Error(e)
+            Ok(#(target_st, target_path)) -> {
+              let lca =
+                common_ancestor_path(state.active_path, target_path, [])
+              let lca_depth = list.length(lca)
+
+              // States to exit: below LCA in active path, exited in reverse order (leaf first)
+              let states_to_exit =
+                list.drop(state.active_path, lca_depth)
+                |> list.reverse
+
+              let exit_actions =
+                collect_exit_actions(roots, states_to_exit, [])
+
+              // Transition do_actions
+              let log_after_exit =
+                list.append(state.log, exit_actions)
+                |> list.append(transition.do_actions)
+
+              // States to enter: below LCA down to target_st
+              let states_to_enter = list.drop(target_path, lca_depth)
+              let entry_actions =
+                collect_entry_actions(roots, states_to_enter, [])
+
+              let log_after_entry =
+                list.append(log_after_exit, entry_actions)
+
+              // Recursively enter initial sub_states of target if any
+              let #(final_path, final_log) =
+                enter_initial_sub_states(target_st, target_path, log_after_entry)
+
+              Ok(HierarchicalMachineState(
+                active_path: final_path,
+                log: final_log,
+              ))
+            }
+          }
+        }
+      }
+    }
+    _ -> Error("dispatch_hsm_signal expects a HierarchicalMachine")
+  }
+}
+
+fn find_handling_hstate(
+  roots: List(domain.HierarchicalState),
+  path_from_leaf: List(String),
+  signal: String,
+  guards: List(#(String, Bool)),
+) -> Result(#(domain.HierarchicalState, domain.Transition), Nil) {
+  case path_from_leaf {
+    [] -> Error(Nil)
+    [name, ..rest] -> {
+      case find_hstate_and_path(roots, name, []) {
+        Error(_) -> find_handling_hstate(roots, rest, signal, guards)
+        Ok(#(st, _)) -> {
+          case
+            list.find(st.transitions, fn(t) {
+              t.on_signal == signal && eval_guard(t.guard, guards)
+            })
+          {
+            Ok(trans) -> Ok(#(st, trans))
+            Error(_) -> find_handling_hstate(roots, rest, signal, guards)
+          }
+        }
+      }
+    }
+  }
+}
+
+fn resolve_hsm_target(
+  target: domain.Target,
+  roots: List(domain.HierarchicalState),
+  choices: List(domain.Choice),
+  guards: List(#(String, Bool)),
+) -> Result(#(domain.HierarchicalState, List(String)), String) {
+  case target {
+    domain.ToState(name) -> {
+      case find_hstate_and_path(roots, name, []) {
+        Ok(found) -> Ok(found)
+        Error(_) -> Error("Target state " <> name <> " not found in HSM")
+      }
+    }
+    domain.ToChoice(name) -> {
+      case list.find(choices, fn(c) { c.choice_name == name }) {
+        Error(_) -> Error("Choice node " <> name <> " not found in HSM")
+        Ok(choice) -> {
+          let is_true = eval_guard(Some(choice.choice_guard), guards)
+          let #(_actions, next_target) = case is_true {
+            True -> choice.if_true
+            False -> choice.if_false
+          }
+          resolve_hsm_target(next_target, roots, choices, guards)
+        }
+      }
+    }
+  }
+}
+
+fn collect_exit_actions(
+  roots: List(domain.HierarchicalState),
+  state_names: List(String),
+  acc: List(String),
+) -> List(String) {
+  case state_names {
+    [] -> acc
+    [name, ..rest] -> {
+      let actions = case find_hstate_and_path(roots, name, []) {
+        Ok(#(st, _)) -> st.exit
+        Error(_) -> []
+      }
+      collect_exit_actions(roots, rest, list.append(acc, actions))
+    }
+  }
+}
+
+fn collect_entry_actions(
+  roots: List(domain.HierarchicalState),
+  state_names: List(String),
+  acc: List(String),
+) -> List(String) {
+  case state_names {
+    [] -> acc
+    [name, ..rest] -> {
+      let actions = case find_hstate_and_path(roots, name, []) {
+        Ok(#(st, _)) -> st.entry
+        Error(_) -> []
+      }
+      collect_entry_actions(roots, rest, list.append(acc, actions))
+    }
+  }
+}
+
 pub fn dispatch_signal(
   machine: StateMachine,
   guards: List(#(String, Bool)),
@@ -60,6 +312,8 @@ pub fn dispatch_signal(
   case machine {
     domain.ExternalMachine(name) ->
       Error("External machine " <> name <> " has no executable behavior")
+    domain.HierarchicalMachine(_, _, _, _, _, _, _) ->
+      Error("Use dispatch_hsm_signal for HierarchicalMachine")
     InternalMachine(
       machine_name: _,
       signals: _,

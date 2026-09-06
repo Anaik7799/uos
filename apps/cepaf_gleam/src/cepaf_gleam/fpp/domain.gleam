@@ -223,6 +223,18 @@ pub type Choice {
   )
 }
 
+pub type HierarchicalState {
+  HierarchicalState(
+    name: String,
+    parent: Option(String),
+    entry: List(String),
+    exit: List(String),
+    transitions: List(Transition),
+    sub_states: List(HierarchicalState),
+    initial_sub_state: Option(String),
+  )
+}
+
 pub type StateMachine {
   ExternalMachine(machine_name: String)
   InternalMachine(
@@ -234,6 +246,15 @@ pub type StateMachine {
     choices: List(Choice),
     initial: #(List(String), String),
   )
+  HierarchicalMachine(
+    machine_name: String,
+    signals: List(SignalDef),
+    guards: List(String),
+    actions: List(String),
+    root_states: List(HierarchicalState),
+    choices: List(Choice),
+    initial: #(List(String), String),
+  )
 }
 
 // ----------------------------------------------------------------- Components
@@ -242,6 +263,10 @@ pub type ComponentKind {
   Passive
   Queued
   Active
+}
+
+pub type PortInterface {
+  PortInterface(interface_name: String, ports: List(PortInstance))
 }
 
 pub type Component {
@@ -298,6 +323,28 @@ pub type Graph {
   Pattern(pattern: PatternKind, source: String, targets: List(String))
 }
 
+pub type ExportedPort {
+  ExportedPort(name: String, instance_name: String, port_name: String)
+}
+
+pub type Subtopology {
+  Subtopology(
+    name: String,
+    instances: List(Instance),
+    connections: List(Connection),
+    exported_ports: List(ExportedPort),
+  )
+}
+
+pub type TlmPacket {
+  TlmPacket(
+    packet_id: Int,
+    packet_name: String,
+    channel_ids: List(Int),
+    level: Int,
+  )
+}
+
 pub type Topology {
   Topology(topo_name: String, members: List(String), graphs: List(Graph))
 }
@@ -312,6 +359,8 @@ pub type Model {
     machines: List(StateMachine),
     instances: List(Instance),
     topologies: List(Topology),
+    packets: List(TlmPacket),
+    subtopologies: List(Subtopology),
   )
 }
 

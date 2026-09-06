@@ -1,7 +1,10 @@
 import cepaf_gleam/api/denotational_intent_router
+import cepaf_gleam/fpp/dictionary
+import cepaf_gleam/fpp/topology
 import cepaf_gleam/ui/lustre/biosemiotics_radar
 import cepaf_gleam/ui/lustre/cybernetic_brain_matrix
 import cepaf_gleam/ui/lustre/feature_tracker_view
+import cepaf_gleam/ui/lustre/fpp_topology_view
 import cepaf_gleam/ui/lustre/gospel_z3_parity_explorer
 import cepaf_gleam/ui/lustre/hyperdimensional_zk_hologram
 import cepaf_gleam/ui/lustre/km_sheaf_traversal
@@ -251,6 +254,15 @@ pub fn main() {
         |> response.prepend_header("content-type", "application/json")
         |> response.prepend_header("access-control-allow-origin", "*")
       }
+      ["api", "fpp", "dictionary"] -> {
+        let fpp_model = topology.canonical_harness_model()
+        let json_body =
+          dictionary.generate_ground_dictionary_json(fpp_model, "HermesHarness")
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
       ["api", ..] -> {
         let json_body = c3i_router.route(path)
         response.new(200)
@@ -263,6 +275,19 @@ pub fn main() {
         |> response.set_body(
           mist.Bytes(bytes_tree.from_string(render_planning_dashboard())),
         )
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["fpp-topology"] -> {
+        let el = fpp_topology_view.view(fpp_topology_view.init())
+        let content_html = element.to_string(el)
+        let page =
+          render_lustre_page(
+            "NASA JPL F Prime / FPP Flight Topology",
+            "fpp-topology",
+            content_html,
+          )
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
         |> response.prepend_header("content-type", "text/html")
       }
       ["features"] -> {
@@ -827,6 +852,10 @@ fn render_nav(active: String) -> String {
     True -> "class='active'"
     False -> ""
   } <> " style='color:#10b981;font-weight:bold'>Unified Verification Patrol</a>
+    <a href='/fpp-topology' " <> case active == "fpp-topology" {
+    True -> "class='active'"
+    False -> ""
+  } <> " style='color:#38bdf8;font-weight:bold'>🚀 F Prime Flight Topology</a>
 
     <div class='sep'></div>
     <div class='nav-section-title'>KNOWLEDGE BASE</div>
