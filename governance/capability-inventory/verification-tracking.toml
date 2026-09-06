@@ -156,6 +156,7 @@ latest_journal_path = "docs/journal/20260906-0743-uos-codex-master-navigational-
 master_ledger_id = "LEDGER-20260905-2315-AGY-EV-CYCLES"
 master_ledger_path = "docs/design/20260905-2315-uos-5-evolutionary-cycles-agy-web-verification-ledger.md"
 ratification_certificate_path = "docs/design/20260905-2315-uos-agy-sovereign-review-certificate.md"
+codex_master_prompt_certificate_path = "docs/design/20260906-0748-uos-claude-fable-master-prompt-and-navigational-algebra-review-certificate.md"
 ratified_by = "AGY (Google DeepMind / Antigravity) & Claude Fable 5.1 & Codex"
 ratification_status = "tri_sovereign_unconditional_ratification"
 
