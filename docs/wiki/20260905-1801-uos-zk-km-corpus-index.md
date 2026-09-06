@@ -141,6 +141,8 @@ The operational system coordinates across five distinct language tiers:
   - `[[zk:ADR-051]]` Omni-Fractal Cartesian Tensor Generation & Systemic Ratification ([ADR-051 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-1755-adr-051-omni-fractal-full-generation-and-systemic-ratification.md))
   - `[[wiki:20260906-1800-uos-omni-fractal-systemic-cartesian-tensor-closure-wiki]]` ([Omni-Fractal Systemic Cartesian Tensor Closure Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1800-uos-omni-fractal-systemic-cartesian-tensor-closure-wiki.md))
   - `[[zk:ADR-052]]` Omni-Fractal Systemic Cartesian Tensor Closure & Live Telemetry Wiring ([ADR-052 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-1800-adr-052-omni-fractal-systemic-cartesian-tensor-closure.md))
+  - `[[wiki:20260906-1800-uos-codex-session-handover-and-cartesian-tensor-wiki]]` ([Codex Session Handover Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1800-uos-codex-session-handover-and-cartesian-tensor-wiki.md))
+  - `[[zk:ADR-053]]` Master Session Handover to OpenAI Codex ([ADR-053 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-1800-adr-053-master-session-handover-to-codex-cartesian-tensor-closure.md))
 
 
 
