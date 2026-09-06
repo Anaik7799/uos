@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+set -euo pipefail
+BIN="/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/sa_plan/test/sa_plan_main.exe"
+if [[ ! -x "$BIN" ]]; then
+  (cd /home/an/NAS-setup/uos/engines/hermes && dune build modules/sa_plan/test/sa_plan_main.exe)
+fi
+exec "$BIN" "$@"

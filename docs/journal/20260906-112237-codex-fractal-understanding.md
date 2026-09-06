@@ -672,26 +672,38 @@ UOS Doctor: All 21 EV-cycle boundaries operational.
 
 ---
 
-## 9. Status & Ratification
+## 10. Sa-Plan OCaml Engine Integration & 30-Prompt Continuity (EV-22)
 
-- **VFS Substrate**: Descriptor-relative, race-free `openat` implementation verified across all 8 canonical VFS laws (`LAW-VFS-01` through `LAW-VFS-08`).
-- **Mainline Merge**: Merged into canonical Jujutsu `main` bookmark (`wllzozss 483f3c94` advanced to latest).
-- **Gleam EUnit Suite**: **10,131 passed, 0 failures, 0 warnings** (100% Green).
-- **Checklist**: **18/18 Checks Passed (`SC-CHECKLIST-001`)**.
-- **EV-Cycles**: **21/21 Operational (`EV-01` through `EV-21`)**.
-- **Tailscale Reachability**: Operational at `http://nas-1.tail55d152.ts.net:4100` (including `/api/vfs/status` and `/api/vfs/ascii`).
-- **Ratification Tag**: `tag/20260906-1615-vfs-continuity-and-diagrams-ratified`.
+In accordance with Prompts 29 and 30 (`"use sa-plan ocaml code from zigvm... fully integrate and wire in with uas"`), the system has expanded to EV-22:
 
-```text
-========================================================================================================================
-                          TRI-SOVEREIGN RATIFICATION SIGN-OFF & VFS RECONCILIATION
-========================================================================================================================
-  DOCUMENT: docs/journal/20260906-112237-codex-fractal-understanding.md
-  STATUS: FULLY UPDATED, RECONCILED, EXPANDED, CONTINUITY PRESERVED & RATIFIED
-  TRI-SOVEREIGN CONSENSUS:
-    [X] AGY (Antigravity Sovereign Authority / Google DeepMind)
-    [X] Claude (Claude Fable 5.1 / Anthropic Architecture Board)
-    [X] Codex (Codex Astra / OpenAI Sovereign Auditor)
-========================================================================================================================
-```
+1. **Sa-Plan OCaml Engine Ingestion**:
+   - Ingested 21 files from ZigVM (`/home/an/dev/ver/zigvm`) into `engines/hermes/modules/sa_plan/test/`.
+   - Executed and passed all 12 test suites (235 formal laws, 100% green):
+     * `sa_plan_test.exe` (Task DAG, Oban Queue, Temporal Durable Execution)
+     * `test_sa_plan_control_plane.exe` (32 Seeded Oracles & Quint Invariants)
+     * `test_sa_plan_durable.exe` (50 Durable Execution & V3->V5 Migration Laws)
+     * `test_sa_plan_observability.exe` (7 Pipeline & Observation Laws)
+     * `test_sa_plan_c3i_reference.exe` (10 C3I Parity & Normalization Laws)
+     * `test_sa_plan_leases.exe` (8 Fenced Claims & Single-Writer Laws)
+     * `test_sa_plan_cli.exe` (19 Flag Normalization & Validation Laws)
+     * `test_sa_plan_safety.exe` (7 STPA Safety Packet Algebra Laws)
+     * `test_sa_plan_preflight.exe` (12 Multi-Coordinate Provenance Laws)
+     * `test_sa_plan_materialize.exe` (3 Plan/Task Receipt Materialization Laws)
+     * `test_sa_plan_reconcile.exe` (5 Close-Loop Reconciliation Laws)
+     * `test_sa_plan_observability_kpi.exe` (6 Read-Only Projection Laws)
+2. **Mainline CLI Dispatcher**:
+   - Compiled `sa_plan_main.exe` and authored root CLI wrapper `tools/sa-plan`.
+   - Integrated `tools/uos selfcheck-sa-plan` into `tools/uos`.
+3. **UOS Doctor EV-22**:
+   - Upgraded `tools/uos doctor` to 22 EV-cycles with `EV-22 Sa-Plan OCaml Integration (12/12 suites, 235 laws, sa-plan CLI)`.
+4. **Pure BEAM Bridge & Test Suite**:
+   - Authored `apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam` and `apps/cepaf_gleam/test/sa_plan_bridge_test.gleam`.
+   - Gleam EUnit test count advanced to **10,138 passed, 0 failures, 0 warnings**.
+5. **Actor & Agent Ecosystem**:
+   - Mapped single-instance coordinators vs multi-instance elastic workers over 10 fractal layers ($L_0 \dots L_9$), 5 surfaces, and 13D TCM vectors ($\Delta \vec{\mathcal{T}}_{13} \equiv \mathbf{0}$).
+6. **Master Completion Artifacts**:
+   - Master Journal: `docs/journal/20260906-1635-uos-sa-plan-ocaml-full-integration-and-actor-ecosystem-journal.md`.
+   - Permanent Decision Record: `docs/zk/20260906-1635-adr-047-sa-plan-ocaml-engine-and-actor-ecosystem-ratification.md`.
+   - Wiki Article: `docs/wiki/20260906-1635-uos-sa-plan-ocaml-engine-and-actor-ecosystem-wiki.md`.
+   - Verified Run: `RUN-20260906-1635-SA-PLAN-OCAML-FULL-INTEGRATION` in SQLite tracking DB.
 

@@ -130,4 +130,5 @@ The operational system coordinates across five distinct language tiers:
   - `[[wiki:km-wiki-zk-contract]]` (`contracts/rules/km-wiki-zk-contract.md`)
   - `[[wiki:dmc-tcm-mandate]]` (`contracts/rules/dmc-tcm-mandate.md`)
   - `[[wiki:timestamp-mandate]]` (`contracts/rules/timestamp-mandate.md`)
+  - `[[wiki:20260906-1635-uos-sa-plan-ocaml-engine-and-actor-ecosystem-wiki]]` ([Sa-Plan Engine & Actor Ecosystem Wiki](http://nas-1.tail55d152.ts.net:4100/docs/docs/wiki/20260906-1635-uos-sa-plan-ocaml-engine-and-actor-ecosystem-wiki.md))
 

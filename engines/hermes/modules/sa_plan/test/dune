@@ -1,0 +1,63 @@
+(executable
+ (name sa_plan_main)
+ (public_name sa-plan)
+ (modules sa_plan_main sa_plan_cli sa_plan_work sa_plan_manual journal_markdown_html)
+ (libraries bos core core_unix time_now yojson sa_plan))
+
+(executable
+ (name sa_plan_test)
+ (modules sa_plan_test)
+ (libraries core core_unix sa_plan))
+
+(executable
+ (name test_sa_plan_control_plane)
+ (modules test_sa_plan_control_plane quint_rt sa_plan_ooda_bridge)
+ (libraries sa_plan))
+
+(executable
+ (name test_sa_plan_durable)
+ (modules test_sa_plan_durable)
+ (libraries core core_unix sa_plan sqlite3))
+
+(executable
+ (name test_sa_plan_observability)
+ (modules test_sa_plan_observability)
+ (libraries core core_unix sa_plan))
+
+(executable
+ (name test_sa_plan_c3i_reference)
+ (modules test_sa_plan_c3i_reference)
+ (libraries core core_unix sa_plan))
+
+(executable
+ (name test_sa_plan_leases)
+ (modules test_sa_plan_leases)
+ (libraries core core_unix sa_plan))
+
+(executable
+ (name test_sa_plan_cli)
+ (modules test_sa_plan_cli sa_plan_cli))
+
+(executable
+ (name test_sa_plan_safety)
+ (modules test_sa_plan_safety sa_plan_safety))
+
+(executable
+ (name test_sa_plan_preflight)
+ (modules test_sa_plan_preflight sa_plan_preflight)
+ (libraries core sa_plan))
+
+(executable
+ (name test_sa_plan_materialize)
+ (modules test_sa_plan_materialize sa_plan_materialize)
+ (libraries sa_plan))
+
+(executable
+ (name test_sa_plan_reconcile)
+ (modules test_sa_plan_reconcile sa_plan_reconcile)
+ (libraries sa_plan))
+
+(executable
+ (name test_sa_plan_observability_kpi)
+ (modules test_sa_plan_observability_kpi sa_plan_observability_kpi)
+ (libraries sa_plan))
