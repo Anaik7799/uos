@@ -8,6 +8,7 @@ import cepaf_gleam/fpp/ontology
 import cepaf_gleam/fpp/topology
 import cepaf_gleam/sdlc/aspect_agent_ecosystem
 import cepaf_gleam/sdlc/aspect_processing_agent
+import cepaf_gleam/sdlc/planes_ascii_architecture
 import cepaf_gleam/ui/lustre/biosemiotics_radar
 import cepaf_gleam/ui/lustre/cybernetic_brain_matrix
 import cepaf_gleam/ui/lustre/feature_tracker_view
@@ -324,6 +325,20 @@ pub fn main() {
         let agents = aspect_processing_agent.init_all_14_processing_agents()
         let json_body =
           aspect_processing_agent.encode_processing_agents_json(agents)
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["api", "fpp", "planes", "ascii"] -> {
+        let text_body = planes_ascii_architecture.all_planes_ascii()
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(text_body)))
+        |> response.prepend_header("content-type", "text/plain; charset=utf-8")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["api", "fpp", "planes", "json"] -> {
+        let json_body = planes_ascii_architecture.encode_planes_json()
         response.new(200)
         |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
         |> response.prepend_header("content-type", "application/json")
