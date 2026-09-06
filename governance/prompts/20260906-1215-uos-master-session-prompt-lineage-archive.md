@@ -417,6 +417,18 @@ use sa-plan ocaml code from zigvm. fully intrgare an wire in with uas. cover all
 
 ---
 
+### Prompt 31 (UOS Lineage - P31)
+- **Origin**: Active Session Operational Directive
+- **Timestamp Reference**: `2026-09-06T14:43:15Z`
+- **Verbatim Text**:
+```text
+docs/hermes/journal/20260906-1424-fractal-system-reference-map.md.
+```
+- **Architectural Analysis & System Response**:
+  Authored and integrated the canonical **Hermes Master Journal: Fractal System Reference Map & Architectural Cartography** at `docs/hermes/journal/20260906-1424-fractal-system-reference-map.md` (with synchronized mirror in `docs/journal/`). Provides the exhaustive, unified reference mapping across all 10 fractal layers ($L_0 \dots L_9$), 5 operational surfaces (`LustreWeb`, `WispApi`, `AnsiTui`, `AgUiSse`, `MozZenoh`), 17 system aspects, cross-language runtime boundaries, 65/191 concurrency topology, and the complete 31-prompt historical lineage.
+
+---
+
 ## 3. Evolutionary Traceability Matrix
 
 | Prompt | Target Subsystem | Key Invariant Enforced | Governing Artifacts |
@@ -447,13 +459,15 @@ use sa-plan ocaml code from zigvm. fully intrgare an wire in with uas. cover all
 | **P28** | Master VFS Journal | Complete 28-prompt 13-sec journal & ADR-046 closure | `ADR-046`, `docs/journal/20260906-1620-` |
 | **P29** | Sa-Plan Ingestion | Port Hermes OCaml Sa-Plan engine from ZigVM | `engines/hermes/modules/sa_plan/` |
 | **P30** | Sa-Plan Full Wire | 12 suites, 235 laws, EV-22, 17 aspects, actors | `ADR-047`, `docs/journal/20260906-1635-` |
+| **P31** | Reference Map | Hermes Master Journal Fractal Cartography (L0..L9 x 5 surfaces)| `docs/hermes/journal/20260906-1424-` |
 
 ---
 
 ## 4. Verification & Ratification Sign-Off
 
 ```text
-PROMPT LINEAGE INTEGRITY: 30/30 PROMPTS ARCHIVED VERBATIM (100% AUDITED)
+PROMPT LINEAGE INTEGRITY: 31/31 PROMPTS ARCHIVED VERBATIM (100% AUDITED)
+FRACTAL REFERENCE MAP: docs/hermes/journal/20260906-1424-fractal-system-reference-map.md ACTIVE
 SA-PLAN OCAML INTEGRATION: 12/12 SUITES, 235 FORMAL LAWS PASSING (100% GREEN)
 CLI DISPATCH INTEGRATION: tools/sa-plan OPERATIONAL & IN-CODE VERIFIED
 KM TRIAD STATUS: DOCS, JOURNAL, WIKI, ZK, AND KB 100% SETUP AND VERIFIED
