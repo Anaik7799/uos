@@ -334,15 +334,15 @@ source = "c3i"
 state = "classified"
 
 # =============================================================================
-# Canonical C3I Sovereign Aerospace Agent Ecology (48 Types across L0..L9)
+# Canonical C3I Sovereign Aerospace Agent Ecology (72 Types across L0..L9)
 # =============================================================================
 # Standardized across:
-# - C3I SDLC System (16 Agents)
-# - C3I SRE System (16 Agents)
-# - C3I Verification System (16 Agents)
+# - C3I SDLC System (24 Agents)
+# - C3I SRE System (24 Agents)
+# - C3I Verification System (24 Agents)
 # =============================================================================
 
-# --- C3I SDLC System (16 Agents) ---
+# --- C3I SDLC System (24 Agents) ---
 [[agent]]
 name = "c3i-sdlc-parameter-database-custodian-agent"
 kind = "ParameterDatabase"
@@ -357,9 +357,10 @@ base_id = 4288
 id_span = 64
 queue_policy = "Block"
 sdlc_phase = "Configuration & Calibration"
-sre_resilience_tier = "SIL-6 / Zero-Mutation Invariant"
-operational_domain = "Persistent Ground & Flight Parameters"
-evidence_contracts = ["SC-PARAM-001", "SC-STORAGE-001"]
+sre_resilience_tier = "SIL-3 / ACID Persistent"
+operational_domain = "Parameter Management & Storage"
+evidence_contracts = ["SC-FPP-004", "SC-DMC-001"]
+description = "Implements Svc::PrmDb parameter updates, boundary validation, non-volatile slot commits, and ground station synchronization."
 
 [[agent]]
 name = "c3i-sdlc-mission-phase-orchestrator-agent"
@@ -375,9 +376,10 @@ base_id = 4352
 id_span = 64
 queue_policy = "Assert"
 sdlc_phase = "Mission Orchestration"
-sre_resilience_tier = "SIL-6 / Deterministic LCA Transition"
-operational_domain = "Autonomous Flight Sequencing"
-evidence_contracts = ["SC-HSM-LCA-001", "SC-MISSION-001"]
+sre_resilience_tier = "SIL-5 / Critical Autonomous"
+operational_domain = "Mission Phase Autonomy"
+evidence_contracts = ["SC-FPP-003", "SC-TCM-001"]
+description = "Complex spacecraft operational phase management using David Harel HSM LCA transitions and nested fault handling."
 
 [[agent]]
 name = "c3i-sdlc-cognitive-ooda-intent-arbiter-agent"
@@ -393,9 +395,10 @@ base_id = 4544
 id_span = 64
 queue_policy = "Block"
 sdlc_phase = "Autonomous Planning"
-sre_resilience_tier = "SIL-5 / Bounded Token Budget"
-operational_domain = "Intent Interpretation & Policy Adjudication"
-evidence_contracts = ["SC-OODA-001", "SC-COGNITIVE-001"]
+sre_resilience_tier = "SIL-4 / Gated Intent"
+operational_domain = "Cognitive Decision & OODA"
+evidence_contracts = ["SC-FPP-INTENT-001", "SC-ROCHA-001"]
+description = "Autonomous decision-making using telemetry sheaf inputs, ontology Rete rules, and generating typed Denotational Flight Intents."
 
 [[agent]]
 name = "c3i-sdlc-living-meta-evolution-supervisor-agent"
@@ -411,9 +414,10 @@ base_id = 4736
 id_span = 64
 queue_policy = "Assert"
 sdlc_phase = "Meta-Evolution & Hot-Reloading"
-sre_resilience_tier = "SIL-5 / Atomic Beam Module Cutover"
-operational_domain = "Self-Directed Code Evolution"
-evidence_contracts = ["SC-EVOLVE-001", "SC-KM-TRIAD-001"]
+sre_resilience_tier = "SIL-6 / Sovereign Core"
+operational_domain = "Meta-System Evolution & Governance"
+evidence_contracts = ["SC-ONTO-001", "SC-FPP-004"]
+description = "Dynamic ontology schema validation, 5-tier algebraic atlas verification, and topological closure maintenance."
 
 [[agent]]
 name = "c3i-sdlc-payload-science-processor-agent"
@@ -427,11 +431,12 @@ fractal_tag = "#fractal-l3"
 component_kind = "Queued"
 base_id = 4928
 id_span = 64
-queue_policy = "Drop"
-sdlc_phase = "Mission Orchestration"
-sre_resilience_tier = "SIL-4 / Soft Failure Permitted"
-operational_domain = "Experimental Data Processing"
-evidence_contracts = ["SC-PAYLOAD-001", "SC-SCIENCE-001"]
+queue_policy = "Block"
+sdlc_phase = "Science Operations"
+sre_resilience_tier = "SIL-3 / High Throughput"
+operational_domain = "Scientific Instruments & Payloads"
+evidence_contracts = ["SC-FPP-001", "SC-DMC-001"]
+description = "Supervised payload instruments, high-rate data collection, on-board semantic filtering, and scientific data staging."
 
 [[agent]]
 name = "c3i-sdlc-km-triad-knowledge-sync-agent"
@@ -442,14 +447,15 @@ source = "c3i_fpp_flight"
 state = "verified_admitted"
 fractal_layer = "L5"
 fractal_tag = "#fractal-l5"
-component_kind = "Active"
+component_kind = "Queued"
 base_id = 5056
 id_span = 64
 queue_policy = "Block"
-sdlc_phase = "Operations & Reliability"
-sre_resilience_tier = "SIL-5 / Eventual ZK Parity"
-operational_domain = "Bidirectional Wiki, ZK & Ontology Sync"
-evidence_contracts = ["SC-KM-TRIAD-001", "SC-TIME-001"]
+sdlc_phase = "Documentation & Knowledge Ledgering"
+sre_resilience_tier = "SIL-3 / Consistent Sheaf"
+operational_domain = "Knowledge Management & Synthesis"
+evidence_contracts = ["SC-KM-001", "SC-TIME-001"]
+description = "Bidirectional synchronization across Hermes Wiki, ZigVM ZK ADRs, and C3I Living Ontology with YYYYMMDD-HHSS- timestamp enforcement."
 
 [[agent]]
 name = "c3i-sdlc-appup-hot-reload-coordinator-agent"
@@ -464,10 +470,11 @@ component_kind = "Active"
 base_id = 5824
 id_span = 64
 queue_policy = "Assert"
-sdlc_phase = "Meta-Evolution & Hot-Reloading"
-sre_resilience_tier = "SIL-5 / Atomic Cutover with Zero Loss"
-operational_domain = "OTP Release Upgrade & State Migration"
-evidence_contracts = ["SC-APPUP-001", "SC-HOTRELOAD-001"]
+sdlc_phase = "Two-Phase Appup Release Upgrades"
+sre_resilience_tier = "SIL-5 / Atomic Cutover"
+operational_domain = "Zero-Downtime System Upgrade"
+evidence_contracts = ["SC-APPUP-001", "SC-RELEASE-001"]
+description = "Coordinates atomic two-phase commit state migration and release upgrades without process restarts."
 
 [[agent]]
 name = "c3i-sdlc-slm-bif-isolated-inference-agent"
@@ -481,11 +488,12 @@ fractal_tag = "#fractal-l5"
 component_kind = "Active"
 base_id = 5888
 id_span = 64
-queue_policy = "Block"
-sdlc_phase = "Autonomous Planning"
-sre_resilience_tier = "SIL-4 / Bounded Max 5ms Execution"
-operational_domain = "Deterministic AI Intent Parsing"
-evidence_contracts = ["SC-SLM-001", "SC-INFERENCE-001"]
+queue_policy = "Drop"
+sdlc_phase = "Sub-5ms Token Scoring & Extraction"
+sre_resilience_tier = "SIL-4 / Real-Time Bounded"
+operational_domain = "Edge Neural Intelligence"
+evidence_contracts = ["SC-SLM-BIF-001"]
+description = "Executes low-latency neural token scoring and cognitive intention parsing in < 5ms via SLM BIFs."
 
 [[agent]]
 name = "c3i-sdlc-fast-pattern-bitmask-filter-agent"
@@ -496,14 +504,15 @@ source = "c3i_fpp_flight"
 state = "verified_admitted"
 fractal_layer = "L5"
 fractal_tag = "#fractal-l5"
-component_kind = "Active"
+component_kind = "Queued"
 base_id = 5952
 id_span = 64
 queue_policy = "Drop"
-sdlc_phase = "Execution & Flight Runtime"
-sre_resilience_tier = "SIL-5 / SIMD Bitmask Evaluation"
-operational_domain = "High-Throughput Match Specifications"
-evidence_contracts = ["SC-FILTER-001", "SC-BITMASK-001"]
+sdlc_phase = "Match Specification Compilation"
+sre_resilience_tier = "SIL-5 / Constant-Time"
+operational_domain = "High-Throughput Telemetry Filtering"
+evidence_contracts = ["SC-MATCHSPEC-001"]
+description = "Compiles match specifications into bytecode for wire-speed filtering of telemetry tuples."
 
 [[agent]]
 name = "c3i-sdlc-dynamic-agent-bytecode-synthesizer-agent"
@@ -518,10 +527,11 @@ component_kind = "Active"
 base_id = 6080
 id_span = 64
 queue_policy = "Block"
-sdlc_phase = "Meta-Evolution & Hot-Reloading"
+sdlc_phase = "Runtime Bytecode Compilation"
 sre_resilience_tier = "SIL-5 / Hot Deployable"
 operational_domain = "Metamorphic Self-Synthesis"
 evidence_contracts = ["SC-AGENT-CODEGEN-001"]
+description = "Compiles high-level FPP state machine specifications into native ZigVM bytecode during runtime reconfiguration."
 
 [[agent]]
 name = "c3i-sdlc-architecture-synthesizer-agent"
@@ -540,6 +550,7 @@ sdlc_phase = "Specification & Invariant Definition"
 sre_resilience_tier = "SIL-6 / Fail-Closed"
 operational_domain = "Formal Architecture Specification"
 evidence_contracts = ["SC-SDLC-SPEC-001", "SC-FORMAL-001"]
+description = "Formal architecture specification, AST decomposition, and domain model synthesis across all fractal layers."
 
 [[agent]]
 name = "c3i-sdlc-contract-code-generator-agent"
@@ -558,6 +569,7 @@ sdlc_phase = "Synthesis & Code Evolution"
 sre_resilience_tier = "SIL-5 / Deterministic CodeGen"
 operational_domain = "Automated Gospel & FPP Code Synthesis"
 evidence_contracts = ["SC-CODEGEN-001", "SC-GOSPEL-001"]
+description = "Automated pure BEAM Gleam code and Gospel contract generation from NASA JPL FPP formal models."
 
 [[agent]]
 name = "c3i-sdlc-static-analysis-and-linter-auditor-agent"
@@ -576,6 +588,7 @@ sdlc_phase = "Verification & Gatekeeping"
 sre_resilience_tier = "SIL-6 / Zero-Warning Invariant"
 operational_domain = "Zero-Warning & Zero-Muda Quality Linter"
 evidence_contracts = ["SC-MUDA-001", "SC-LINT-001"]
+description = "Strict zero-warning, zero-muda, and dead-code elimination enforcement across Gleam, OCaml, and Rust codelines."
 
 [[agent]]
 name = "c3i-sdlc-release-packaging-orchestrator-agent"
@@ -594,6 +607,7 @@ sdlc_phase = "Release & Appup Cutover"
 sre_resilience_tier = "SIL-5 / Cryptographic Manifest"
 operational_domain = "Deterministic Release Packaging & SBOM"
 evidence_contracts = ["SC-RELEASE-001", "SC-SBOM-001"]
+description = "Deterministic release tarball assembly, CycloneDX SBOM generation, and cryptographic two-key release signing."
 
 [[agent]]
 name = "c3i-sdlc-documentation-transclusion-sync-agent"
@@ -612,6 +626,7 @@ sdlc_phase = "Documentation & Knowledge Sync"
 sre_resilience_tier = "SIL-5 / Eventual ZK Parity"
 operational_domain = "Living KM & Transclusion Synchronizer"
 evidence_contracts = ["SC-TIME-001", "SC-KM-TRIAD-001"]
+description = "Enforces mandatory YYYYMMDD-HHSS- timestamp prefix and transclusion link integrity across Wiki and ZK corpora."
 
 [[agent]]
 name = "c3i-sdlc-evolutionary-loop-governor-agent"
@@ -630,8 +645,161 @@ sdlc_phase = "Meta-Evolution & Hot-Reloading"
 sre_resilience_tier = "SIL-6 / Tri-Sovereign Consensus"
 operational_domain = "Codex-Claude Evolutionary Cycle Engine"
 evidence_contracts = ["SC-EVOLUTION-001", "SC-SOV-001"]
+description = "Supervises the recursive multi-cycle Codex-Claude evolutionary iteration, Shannon entropy, and convergence algebra."
 
-# --- C3I SRE System (16 Agents) ---
+[[agent]]
+name = "c3i-sdlc-graph-workflow-orchestrator-agent"
+kind = "SdlcGraphWorkflowOrchestrator"
+formal_name = "C3I SDLC Graph Workflow Orchestrator Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L5"
+fractal_tag = "#fractal-l5"
+component_kind = "Active"
+base_id = 7168
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "ADK Graph & Workflows"
+sre_resilience_tier = "SIL-4 / High Availability"
+operational_domain = "Workflow Orchestration"
+evidence_contracts = ["SC-ADK-001", "SC-FPP-049"]
+description = "ADK graph workflow execution engine with conditional routing and loops"
+
+[[agent]]
+name = "c3i-sdlc-session-memory-replay-agent"
+kind = "SdlcSessionMemoryReplay"
+formal_name = "C3I SDLC Session Memory Replay Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L4"
+fractal_tag = "#fractal-l4"
+component_kind = "Active"
+base_id = 7232
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "State Persistence & Replay"
+sre_resilience_tier = "SIL-4 / High Availability"
+operational_domain = "Session & Memory"
+evidence_contracts = ["SC-ADK-002", "SC-FPP-050"]
+description = "ADK stateful session manager with long-term episodic/semantic memory store"
+
+[[agent]]
+name = "c3i-sdlc-a2a-multi-agent-delegation-agent"
+kind = "SdlcA2aMultiAgentDelegation"
+formal_name = "C3I SDLC A2A Multi Agent Delegation Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L6"
+fractal_tag = "#fractal-l6"
+component_kind = "Active"
+base_id = 7296
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "A2A Inter-Agent Protocol"
+sre_resilience_tier = "SIL-4 / High Availability"
+operational_domain = "Multi-Agent Swarm"
+evidence_contracts = ["SC-ADK-003", "SC-FPP-051"]
+description = "ADK Agent-to-Agent horizontal delegation and subagent swarm routing"
+
+[[agent]]
+name = "c3i-sdlc-tool-registry-mcp-bridge-agent"
+kind = "SdlcToolRegistryMcpBridge"
+formal_name = "C3I SDLC Tool Registry MCP Bridge Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L3"
+fractal_tag = "#fractal-l3"
+component_kind = "Active"
+base_id = 7360
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "MCP Protocol & Schemas"
+sre_resilience_tier = "SIL-4 / High Availability"
+operational_domain = "Tool Execution & MCP"
+evidence_contracts = ["SC-ADK-004", "SC-FPP-052"]
+description = "ADK vertical tool context dispatcher and federated MCP server connector"
+
+[[agent]]
+name = "c3i-sdlc-ontology-infranodus-synthesizer-agent"
+kind = "SdlcOntologyInfranodusSynthesizer"
+formal_name = "C3I SDLC Ontology Infranodus Synthesizer Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L8"
+fractal_tag = "#fractal-l8"
+component_kind = "Active"
+base_id = 7424
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Ontology Engineering"
+sre_resilience_tier = "SIL-5 / Safety Critical"
+operational_domain = "Ontology & Semantics"
+evidence_contracts = ["SC-ONTO-002", "SC-FPP-053"]
+description = "Infranodus semantic network synthesis, topic modeling, and Notion ontology"
+
+[[agent]]
+name = "c3i-sdlc-design-system-figma-bridge-agent"
+kind = "SdlcDesignSystemFigmaBridge"
+formal_name = "C3I SDLC Design System Figma Bridge Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L2"
+fractal_tag = "#fractal-l2"
+component_kind = "Active"
+base_id = 7488
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Design-to-Code Pipeline"
+sre_resilience_tier = "SIL-3 / Standard"
+operational_domain = "Design System & UI"
+evidence_contracts = ["SC-FIGMA-001", "SC-FPP-054"]
+description = "Figma design contract translator, tokens.json parser, and layout tree generator"
+
+[[agent]]
+name = "c3i-sdlc-gospel-ortac-specification-agent"
+kind = "SdlcGospelOrtacSpecification"
+formal_name = "C3I SDLC Gospel Ortac Specification Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L1"
+fractal_tag = "#fractal-l1"
+component_kind = "Active"
+base_id = 7552
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Formal Contract Synthesis"
+sre_resilience_tier = "SIL-6 / Sovereign Core"
+operational_domain = "Contract Specification"
+evidence_contracts = ["SC-GOSPEL-001", "SC-FPP-055"]
+description = "Gospel contract specification synthesizer and Ortac runtime monitoring generator"
+
+[[agent]]
+name = "c3i-sdlc-algebraic-atlas-router-agent"
+kind = "SdlcAlgebraicAtlasRouter"
+formal_name = "C3I SDLC Algebraic Atlas Router Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L7"
+fractal_tag = "#fractal-l7"
+component_kind = "Active"
+base_id = 7616
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Topological Mapping"
+sre_resilience_tier = "SIL-6 / Sovereign Core"
+operational_domain = "Algebraic Atlas"
+evidence_contracts = ["SC-ATLAS-001", "SC-FPP-056"]
+description = "12-layer Algebraic Atlas coordinator, Route Algebra, and Table/HTML morphisms"
+
+# --- C3I SRE System (24 Agents) ---
 [[agent]]
 name = "c3i-sre-sentinel-health-and-circuit-breaker-agent"
 kind = "SreSentinel"
@@ -646,9 +814,10 @@ base_id = 4416
 id_span = 64
 queue_policy = "Drop"
 sdlc_phase = "Operations & Reliability"
-sre_resilience_tier = "SIL-6 / Lyapunov Stable (-0.082)"
-operational_domain = "Site Reliability & Chaos Resilience"
+sre_resilience_tier = "SIL-4 / Real-Time Watchdog"
+operational_domain = "SRE & Resilience Telemetry"
 evidence_contracts = ["SC-CHECKLIST-001", "SC-MATH-001"]
+description = "Real-time rate-group deadline monitoring, Lyapunov exponential decay tracking (lambda <= -0.05), and MTTR enforcement."
 
 [[agent]]
 name = "c3i-sre-cybernetic-immune-self-healing-agent"
@@ -662,11 +831,12 @@ fractal_tag = "#fractal-l4"
 component_kind = "Active"
 base_id = 4480
 id_span = 64
-queue_policy = "Assert"
-sdlc_phase = "Operations & Reliability"
-sre_resilience_tier = "SIL-6 / Phase Attractor Convergence"
-operational_domain = "Automated Anomaly Neutralization"
-evidence_contracts = ["SC-IMMUNE-001", "SC-SRE-001"]
+queue_policy = "Block"
+sdlc_phase = "Immune Response & Self-Healing"
+sre_resilience_tier = "SIL-5 / Auto-Remediating"
+operational_domain = "Cybernetic Self-Healing"
+evidence_contracts = ["SC-PRAJNA-001", "SC-LYAPUNOV-001"]
+description = "Fault Detection, Isolation, and Recovery (FDIR); Prajna 3-state circuit breaker tripping and automated recovery within HSM substates."
 
 [[agent]]
 name = "c3i-sre-swarm-mesh-topology-coordinator-agent"
@@ -680,11 +850,12 @@ fractal_tag = "#fractal-l6"
 component_kind = "Active"
 base_id = 4608
 id_span = 64
-queue_policy = "Block"
+queue_policy = "Drop"
 sdlc_phase = "Ecosystem Coordination"
-sre_resilience_tier = "SIL-5 / Dynamic Partition Healing"
-operational_domain = "Decentralized Multi-Agent Mesh"
-evidence_contracts = ["SC-SWARM-001", "SC-ZENOH-MESH-001"]
+sre_resilience_tier = "SIL-3 / Partition Tolerant"
+operational_domain = "Distributed Swarm Consensus"
+evidence_contracts = ["SC-FPP-004", "SC-ZENOH-001"]
+description = "Peer-to-peer A2A coordination across distributed nodes, sheaf restriction maps, and boundary agreement verification."
 
 [[agent]]
 name = "c3i-sre-ground-uplink-and-downlink-gateway-agent"
@@ -698,11 +869,12 @@ fractal_tag = "#fractal-l7"
 component_kind = "Active"
 base_id = 4672
 id_span = 64
-queue_policy = "Assert"
+queue_policy = "Block"
 sdlc_phase = "Uplink/Downlink Gateway"
-sre_resilience_tier = "SIL-6 / Cryptographic Auth & Nonce"
-operational_domain = "CCSDS Packet Telecommand & Telemetry"
-evidence_contracts = ["SC-CCSDS-001", "SC-GATEWAY-001"]
+sre_resilience_tier = "SIL-4 / DTN Bounded"
+operational_domain = "Deep Space Communications"
+evidence_contracts = ["SC-FPP-006", "SC-TAILSCALE-WEB-001"]
+description = "CCSDS Space Packet Protocol decoding, Delay-Tolerant Networking (DTN) bundle storage, ground dictionary schema binding."
 
 [[agent]]
 name = "c3i-sre-descriptor-relative-vfs-storage-custodian-agent"
@@ -717,10 +889,11 @@ component_kind = "Active"
 base_id = 4992
 id_span = 64
 queue_policy = "Assert"
-sdlc_phase = "Operations & Reliability"
-sre_resilience_tier = "SIL-6 / Hard Disk Interlock Enforced"
-operational_domain = "Race-Free File & Snapshot Storage"
-evidence_contracts = ["SC-STORAGE-001", "SC-VFS-001"]
+sdlc_phase = "Bare-Metal Security & Interlocks"
+sre_resilience_tier = "SIL-6 / DAL-A Hardware Locked"
+operational_domain = "Hardware & Storage Safety"
+evidence_contracts = ["SC-STORAGE-001", "HARD_DENIED_SYSTEM_OS_SERIAL"]
+description = "Physical drive allocation, partition health monitoring, and absolute fail-closed locking of OS root NVMe 25503L801736."
 
 [[agent]]
 name = "c3i-sre-deterministic-reduction-scheduler-agent"
@@ -734,11 +907,12 @@ fractal_tag = "#fractal-l1"
 component_kind = "Active"
 base_id = 5248
 id_span = 64
-queue_policy = "Assert"
-sdlc_phase = "Execution & Flight Runtime"
-sre_resilience_tier = "SIL-6 / Deterministic 4000-Reductions"
-operational_domain = "Preemptive Cooperative Scheduling"
-evidence_contracts = ["SC-SCHED-001", "SC-REDUCTION-001"]
+queue_policy = "Block"
+sdlc_phase = "Microsecond Actuator Execution"
+sre_resilience_tier = "SIL-6 / Real-Time Bounded"
+operational_domain = "Deterministic Runtime Engine"
+evidence_contracts = ["SC-ZIGVM-REDUCTIONS-001"]
+description = "Enforces 4,000-reduction budget yield points (proc.zig), preventing starvation and priority inversion."
 
 [[agent]]
 name = "c3i-sre-linear-arena-memory-reclaimer-agent"
@@ -752,11 +926,12 @@ fractal_tag = "#fractal-l1"
 component_kind = "Active"
 base_id = 5376
 id_span = 64
-queue_policy = "Assert"
-sdlc_phase = "Execution & Flight Runtime"
-sre_resilience_tier = "SIL-6 / O(1) Memory Reset"
-operational_domain = "Zero-GC Arena Memory Lifecycle"
-evidence_contracts = ["SC-ARENA-001", "SC-MEMORY-001"]
+queue_policy = "Drop"
+sdlc_phase = "Process Apoptosis & Lifecycle"
+sre_resilience_tier = "SIL-6 / O(1) Reset"
+operational_domain = "Zero-Muda Memory Management"
+evidence_contracts = ["SC-MUDA-001", "SC-ZIGVM-ARENA-001"]
+description = "Executes process apoptosis and reclaims linear execution frames in O(1) time without GC pauses."
 
 [[agent]]
 name = "c3i-sre-lockless-hamt-storage-engine-agent"
@@ -771,10 +946,11 @@ component_kind = "Active"
 base_id = 5440
 id_span = 64
 queue_policy = "Block"
-sdlc_phase = "Execution & Flight Runtime"
-sre_resilience_tier = "SIL-5 / Non-Blocking CAS Concurrency"
-operational_domain = "High-Concurrency In-Memory State"
-evidence_contracts = ["SC-HAMT-001", "SC-CONCURRENCY-001"]
+sdlc_phase = "High-Frequency Telemetry Cache"
+sre_resilience_tier = "SIL-5 / Non-Blocking CAS"
+operational_domain = "Concurrent In-Memory Storage"
+evidence_contracts = ["SC-ZIGVM-HAMT-001"]
+description = "Provides sub-microsecond atomic state exchange and parameter storage using lockless HAMT ETS."
 
 [[agent]]
 name = "c3i-sre-tagged-pointer-nan-box-guard-agent"
@@ -785,14 +961,15 @@ source = "c3i_fpp_flight"
 state = "verified_admitted"
 fractal_layer = "L2"
 fractal_tag = "#fractal-l2"
-component_kind = "Active"
+component_kind = "Queued"
 base_id = 5504
 id_span = 64
 queue_policy = "Assert"
-sdlc_phase = "Execution & Flight Runtime"
+sdlc_phase = "64-bit NaN-Box Pointer Invariant"
 sre_resilience_tier = "SIL-6 / Zero Memory Corruption"
-operational_domain = "Type-Safe 64-bit Word Representation"
-evidence_contracts = ["SC-NANBOX-001", "SC-WORD-001"]
+operational_domain = "Memory Coherence & Term Safety"
+evidence_contracts = ["SC-DMC-001", "SC-ZIGVM-TERM-001"]
+description = "Validates 64-bit NaN-boxed tagged pointer representation and prevents pointer escaping."
 
 [[agent]]
 name = "c3i-sre-hierarchical-timer-wheel-jitter-agent"
@@ -807,10 +984,11 @@ component_kind = "Active"
 base_id = 5568
 id_span = 64
 queue_policy = "Drop"
-sdlc_phase = "Execution & Flight Runtime"
-sre_resilience_tier = "SIL-6 / Microsecond Jitter Bound"
-operational_domain = "Multi-Resolution Low-Overhead Timers"
-evidence_contracts = ["SC-TIMER-001", "SC-REALTIME-001"]
+sdlc_phase = "Real-Time Clock & Jitter Control"
+sre_resilience_tier = "SIL-5 / Sub-2us Drift"
+operational_domain = "Timing & Actuation Sequencing"
+evidence_contracts = ["SC-TIME-001", "SC-ZIGVM-TIMER-001"]
+description = "Manages 4-level timing bucket wheels with < 2us jitter for precision flight command dispatch."
 
 [[agent]]
 name = "c3i-sre-crash-consistent-wal-replay-agent"
@@ -825,10 +1003,11 @@ component_kind = "Active"
 base_id = 5696
 id_span = 64
 queue_policy = "Assert"
-sdlc_phase = "Operations & Reliability"
-sre_resilience_tier = "SIL-6 / Guaranteed Idempotent Replay"
-operational_domain = "Atomic Durability & Replay Log"
-evidence_contracts = ["SC-WAL-001", "SC-RECOVERY-001"]
+sdlc_phase = "Write-Ahead Log & Deterministic Replay"
+sre_resilience_tier = "SIL-6 / Zero Data Loss"
+operational_domain = "Crash Resilience & State Recovery"
+evidence_contracts = ["SC-ZIGVM-WAL-001"]
+description = "Appends transaction logs with CRC32 checksums and provides deterministic state reconstitution."
 
 [[agent]]
 name = "c3i-sre-epidemic-gossip-convergence-agent"
@@ -843,10 +1022,11 @@ component_kind = "Active"
 base_id = 6016
 id_span = 64
 queue_policy = "Drop"
-sdlc_phase = "Ecosystem Coordination"
-sre_resilience_tier = "SIL-5 / Guaranteed O(log N) Propagation"
-operational_domain = "Decentralized Cluster State Sync"
-evidence_contracts = ["SC-GOSSIP-001", "SC-CONVERGENCE-001"]
+sdlc_phase = "Decentralized Failure Detection"
+sre_resilience_tier = "SIL-5 / Epidemic Convergence"
+operational_domain = "Distributed Swarm Health"
+evidence_contracts = ["SC-GOSSIP-001", "SC-CRDT-001"]
+description = "Disseminates swarm node heartbeats, CRDT state updates, and failure alerts in < 50ms."
 
 [[agent]]
 name = "c3i-sre-lyapunov-trend-detector-agent"
@@ -865,6 +1045,7 @@ sdlc_phase = "Operations & Reliability"
 sre_resilience_tier = "SIL-6 / Lyapunov Negative Drift"
 operational_domain = "Continuous Lyapunov Stability Proof"
 evidence_contracts = ["SC-SRE-LYAPUNOV-001", "SC-MATH-001"]
+description = "Windowed numerical trajectory tracking proving negative Lyapunov exponents (lambda < 0) and early bifurcation warning."
 
 [[agent]]
 name = "c3i-sre-chaos-fault-injector-agent"
@@ -883,6 +1064,7 @@ sdlc_phase = "Operations & Reliability"
 sre_resilience_tier = "SIL-5 / Bounded Blast Radius"
 operational_domain = "Controlled Chaos & Fault Injection"
 evidence_contracts = ["SC-CHAOS-001", "SC-SRE-RECOVERY-001"]
+description = "Controlled chaos injection, network partition simulation, and automatic Prajna circuit-breaker tripping validation."
 
 [[agent]]
 name = "c3i-sre-freshness-dead-mans-monitor-agent"
@@ -901,6 +1083,7 @@ sdlc_phase = "Operations & Reliability"
 sre_resilience_tier = "SIL-6 / Microsecond Precision"
 operational_domain = "Dead-Man's Switch & Clock Drift"
 evidence_contracts = ["SC-FRESHNESS-001", "SC-TIME-SYNC-001"]
+description = "Monitors microsecond host NTP clock drift and triggers fail-safe safe-holds on expired dead-man switch intervals."
 
 [[agent]]
 name = "c3i-sre-preemptive-cpu-budget-governor-agent"
@@ -919,8 +1102,161 @@ sdlc_phase = "Operations & Reliability"
 sre_resilience_tier = "SIL-6 / Runaway Loop Prevention"
 operational_domain = "Preemptive Reduction Quota Enforcement"
 evidence_contracts = ["SC-REDUCTION-BUDGET-001", "SC-CPU-GOV-001"]
+description = "Enforces per-process reduction limits and dynamic scheduling priority adjustment to prevent starvation."
 
-# --- C3I Verification System (16 Agents) ---
+[[agent]]
+name = "c3i-sre-runner-lifecycle-hook-supervisor-agent"
+kind = "SreRunnerLifecycleHookSupervisor"
+formal_name = "C3I SRE Runner Lifecycle Hook Supervisor Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L4"
+fractal_tag = "#fractal-l4"
+component_kind = "Active"
+base_id = 7680
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Lifecycle Hook Governance"
+sre_resilience_tier = "SIL-5 / Safety Critical"
+operational_domain = "Runtime Supervision"
+evidence_contracts = ["SC-ADK-005", "SC-FPP-057"]
+description = "ADK Runner execution loop supervisor enforcing 6 before/after lifecycle hooks"
+
+[[agent]]
+name = "c3i-sre-plugin-policy-guardrail-agent"
+kind = "SrePluginPolicyGuardrail"
+formal_name = "C3I SRE Plugin Policy Guardrail Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L0"
+fractal_tag = "#fractal-l0"
+component_kind = "Active"
+base_id = 7744
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Policy Enforcement"
+sre_resilience_tier = "SIL-6 / Sovereign Core"
+operational_domain = "Security Guardrails"
+evidence_contracts = ["SC-ADK-006", "SC-FPP-058"]
+description = "ADK BasePlugin security policies, input/output content filtering, and quota locks"
+
+[[agent]]
+name = "c3i-sre-opentelemetry-span-tracer-agent"
+kind = "SreOpenTelemetrySpanTracer"
+formal_name = "C3I SRE OpenTelemetry Span Tracer Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L2"
+fractal_tag = "#fractal-l2"
+component_kind = "Active"
+base_id = 7808
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "OTel Tracing & Context"
+sre_resilience_tier = "SIL-4 / High Availability"
+operational_domain = "Telemetry & Observability"
+evidence_contracts = ["SC-OTEL-002", "SC-FPP-059"]
+description = "Universal OpenTelemetry distributed span tracer over Zenoh pub/sub mesh"
+
+[[agent]]
+name = "c3i-sre-saplan-task-leaser-agent"
+kind = "SreSaPlanTaskLeaser"
+formal_name = "C3I SRE SaPlan Task Leaser Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L3"
+fractal_tag = "#fractal-l3"
+component_kind = "Active"
+base_id = 7872
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Durable Workflow Leasing"
+sre_resilience_tier = "SIL-5 / Safety Critical"
+operational_domain = "Task Durability"
+evidence_contracts = ["SC-SAPLAN-001", "SC-FPP-060"]
+description = "Sa-plan durable workflow coordinator, at-least-once task leasing, and idempotent jobs"
+
+[[agent]]
+name = "c3i-sre-rete-fail-closed-admission-agent"
+kind = "SreReteFailClosedAdmission"
+formal_name = "C3I SRE Rete Fail Closed Admission Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L0"
+fractal_tag = "#fractal-l0"
+component_kind = "Active"
+base_id = 7936
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Fail-Closed Governance"
+sre_resilience_tier = "SIL-6 / Sovereign Core"
+operational_domain = "Rule Admission & Gate"
+evidence_contracts = ["SC-RETE-001", "SC-FPP-061"]
+description = "Rete-UL forward-chaining rule engine enforcing fail-closed state transition gates"
+
+[[agent]]
+name = "c3i-sre-forecast-predictive-preflight-agent"
+kind = "SreForecastPredictivePreflight"
+formal_name = "C3I SRE Forecast Predictive Preflight Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L5"
+fractal_tag = "#fractal-l5"
+component_kind = "Active"
+base_id = 8000
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Preflight Resource Planning"
+sre_resilience_tier = "SIL-4 / High Availability"
+operational_domain = "Predictive Operations"
+evidence_contracts = ["SC-FORECAST-001", "SC-FPP-062"]
+description = "Predictive resource preflight, Bayesian execution duration learning, and cost control"
+
+[[agent]]
+name = "c3i-sre-stpa-safety-controller-agent"
+kind = "SreStpaSafetyController"
+formal_name = "C3I SRE STPA Safety Controller Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L0"
+fractal_tag = "#fractal-l0"
+component_kind = "Active"
+base_id = 8064
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Hazard & UCA Prevention"
+sre_resilience_tier = "SIL-6 / Sovereign Core"
+operational_domain = "Safety Control Loop"
+evidence_contracts = ["SC-STPA-001", "SC-FPP-063"]
+description = "STAMP/STPA safety control loop, Unsafe Control Action (UCA) interception, and FMEA"
+
+[[agent]]
+name = "c3i-sre-database-actor-wal-serializer-agent"
+kind = "SreDatabaseActorWalSerializer"
+formal_name = "C3I SRE Database Actor WAL Serializer Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L3"
+fractal_tag = "#fractal-l3"
+component_kind = "Active"
+base_id = 8128
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Durable WAL Storage"
+sre_resilience_tier = "SIL-6 / Sovereign Core"
+operational_domain = "Evidence Persistence"
+evidence_contracts = ["SC-DB-001", "SC-FPP-064"]
+description = "SQLite Db actor evidence serializer enforcing WAL append-only Zero-Trust records"
+
+# --- C3I Verification System (24 Agents) ---
 [[agent]]
 name = "c3i-verification-constitutional-guardian-agent"
 kind = "ConstitutionalGuardian"
@@ -938,6 +1274,7 @@ sdlc_phase = "Verification & Gatekeeping"
 sre_resilience_tier = "SIL-6 / Fail-Closed"
 operational_domain = "Constitutional Safety & Governance"
 evidence_contracts = ["SC-CHECKLIST-001", "SC-STORAGE-001", "SC-FPP-INTENT-001"]
+description = "Enforces Psi-0..5 invariants, DAL-A hardware interlock on OS NVMe 25503L801736, and 2oo3 constitutional consensus."
 
 [[agent]]
 name = "c3i-verification-deterministic-flight-controller-agent"
@@ -951,11 +1288,12 @@ fractal_tag = "#fractal-l1"
 component_kind = "Active"
 base_id = 4160
 id_span = 64
-queue_policy = "Assert"
+queue_policy = "Block"
 sdlc_phase = "Execution & Flight Runtime"
-sre_resilience_tier = "SIL-6 / Real-Time Bounded"
-operational_domain = "Deterministic Actuator & Guidance"
-evidence_contracts = ["SC-GLM-UI-001", "SC-ACTUATOR-001"]
+sre_resilience_tier = "SIL-4 / Real-Time Bounded"
+operational_domain = "Avionics Real-Time Control"
+evidence_contracts = ["SC-FPP-002", "SC-TCM-001"]
+description = "Sub-millisecond periodic command execution, actuator trajectory dispatching, and hardware register bridging."
 
 [[agent]]
 name = "c3i-verification-avionics-telemetry-stream-agent"
@@ -971,9 +1309,10 @@ base_id = 4224
 id_span = 64
 queue_policy = "Drop"
 sdlc_phase = "Telemetry Streaming"
-sre_resilience_tier = "SIL-5 / Non-Blocking RingBuffer"
-operational_domain = "High-Rate Sensor Telemetry"
-evidence_contracts = ["SC-GLM-ZEN-001", "SC-OTEL-001"]
+sre_resilience_tier = "SIL-2 / Non-Blocking"
+operational_domain = "Telemetry & Observability"
+evidence_contracts = ["SC-FPP-005", "SC-OTEL-001"]
+description = "Aggregates channel samples, generates CCSDS-compatible packets, and streams telemetry over Zenoh/WebSocket."
 
 [[agent]]
 name = "c3i-verification-formal-gospel-and-z3-oracle-agent"
@@ -988,10 +1327,11 @@ component_kind = "Active"
 base_id = 4800
 id_span = 64
 queue_policy = "Assert"
-sdlc_phase = "Verification & Gatekeeping"
-sre_resilience_tier = "SIL-6 / Gospel & Z3 Provable"
-operational_domain = "Mathematical Theorem & Invariant Proof"
-evidence_contracts = ["SC-FORMAL-001", "SC-Z3-SOLVER-001"]
+sdlc_phase = "Formal Mathematical Proof"
+sre_resilience_tier = "SIL-6 / Zero-Defect"
+operational_domain = "Formal Verification & Proofs"
+evidence_contracts = ["SC-LEAN-001", "SC-GOSPEL-001"]
+description = "Gospel specification verification, bounded Z3 SMT queries, OCaml differential oracle parity checking, and two-key verification."
 
 [[agent]]
 name = "c3i-verification-cockpit-telemetry-presenter-agent"
@@ -1002,14 +1342,15 @@ source = "c3i_fpp_flight"
 state = "verified_admitted"
 fractal_layer = "L2"
 fractal_tag = "#fractal-l2"
-component_kind = "Passive"
+component_kind = "Active"
 base_id = 4864
 id_span = 64
 queue_policy = "Drop"
-sdlc_phase = "Operations & Reliability"
-sre_resilience_tier = "SIL-4 / Degraded Fallback OK"
-operational_domain = "Tripartite Lustre/Wisp/TUI Dashboard"
-evidence_contracts = ["SC-GLM-UI-001", "SC-A2UI-001"]
+sdlc_phase = "User Experience & Cockpit Delivery"
+sre_resilience_tier = "SIL-2 / Low-Latency"
+operational_domain = "Human-Machine Interface (HMI)"
+evidence_contracts = ["SC-AGUI-001", "SC-A2UI-001"]
+description = "Binds 32 AG-UI lifecycle events to Lustre WebUI, ANSI TUI, and Wisp REST streaming endpoints over Tailscale FQDN."
 
 [[agent]]
 name = "c3i-verification-hardware-drive-safety-interlock-agent"
@@ -1024,10 +1365,11 @@ component_kind = "Active"
 base_id = 5120
 id_span = 64
 queue_policy = "Assert"
-sdlc_phase = "Verification & Gatekeeping"
-sre_resilience_tier = "SIL-6 / Fail-Closed Storage Lock"
-operational_domain = "Host OS NVMe Serial 25503L801736 Denial"
-evidence_contracts = ["SC-STORAGE-001", "SC-CHECKLIST-001"]
+sdlc_phase = "Runtime Safety Kernel"
+sre_resilience_tier = "SIL-6 / Fail-Closed"
+operational_domain = "Hardware Storage Protection"
+evidence_contracts = ["SC-STORAGE-001", "SC-FPP-INTENT-001"]
+description = "Guarantees block-driver level isolation and permanent denial of root OS NVMe serial 25503L801736."
 
 [[agent]]
 name = "c3i-verification-rocha-semiotic-cut-guard-agent"
@@ -1038,14 +1380,15 @@ source = "c3i_fpp_flight"
 state = "verified_admitted"
 fractal_layer = "L0"
 fractal_tag = "#fractal-l0"
-component_kind = "Active"
+component_kind = "Queued"
 base_id = 5184
 id_span = 64
 queue_policy = "Assert"
 sdlc_phase = "Formal Semantic Architecture"
-sre_resilience_tier = "SIL-6 / Mathematical Boundary Invariant"
-operational_domain = "Syntax-Dynamics Decoupling"
-evidence_contracts = ["SC-ROCHA-001", "SC-CYBERNETICS-001"]
+sre_resilience_tier = "SIL-5 / Informational Closure"
+operational_domain = "Biosemiotic Cybernetics"
+evidence_contracts = ["SC-ROCHA-001", "SC-DMC-001"]
+description = "Maintains biosemiotic decoupling between informational signs (code) and dynamic material laws (physics)."
 
 [[agent]]
 name = "c3i-verification-substrate-reactor-event-multiplexer-agent"
@@ -1060,10 +1403,11 @@ component_kind = "Active"
 base_id = 5312
 id_span = 64
 queue_policy = "Block"
-sdlc_phase = "Execution & Flight Runtime"
-sre_resilience_tier = "SIL-6 / Non-Blocking epoll/kqueue"
-operational_domain = "I/O Multiplexing & Kernel Events"
-evidence_contracts = ["SC-REACTOR-001", "SC-KERNEL-001"]
+sdlc_phase = "I/O Multiplexing & Kernel Events"
+sre_resilience_tier = "SIL-5 / High-Throughput"
+operational_domain = "Non-Blocking Async I/O"
+evidence_contracts = ["SC-ZIGVM-REACTOR-001"]
+description = "Drives non-blocking epoll/kqueue event demuxing and row-polymorphic struct event propagation."
 
 [[agent]]
 name = "c3i-verification-do-178c-level-a-mc/dc-tap-agent"
@@ -1074,14 +1418,15 @@ source = "c3i_fpp_flight"
 state = "verified_admitted"
 fractal_layer = "L3"
 fractal_tag = "#fractal-l3"
-component_kind = "Active"
+component_kind = "Queued"
 base_id = 5632
 id_span = 64
-queue_policy = "Assert"
-sdlc_phase = "Verification & Gatekeeping"
-sre_resilience_tier = "SIL-6 / Full Branch Condition Audit"
-operational_domain = "DO-178C Structural Coverage Tap"
+queue_policy = "Block"
+sdlc_phase = "DO-178C Level-A MC/DC Compliance"
+sre_resilience_tier = "SIL-6 / Auditable Trail"
+operational_domain = "Avionics Verification & Certification"
 evidence_contracts = ["SC-DO178C-001", "SC-MCDC-001"]
+description = "Records in-flight truth tables for branch conditions to achieve 100% DO-178C Level-A coverage."
 
 [[agent]]
 name = "c3i-verification-cross-runtime-bisimulation-agent"
@@ -1092,14 +1437,15 @@ source = "c3i_fpp_flight"
 state = "verified_admitted"
 fractal_layer = "L3"
 fractal_tag = "#fractal-l3"
-component_kind = "Active"
+component_kind = "Queued"
 base_id = 5760
 id_span = 64
-queue_policy = "Assert"
-sdlc_phase = "Verification & Gatekeeping"
-sre_resilience_tier = "SIL-6 / Parity Failure Trap"
-operational_domain = "Hermes OCaml vs Gleam BEAM Parity"
-evidence_contracts = ["SC-PARITY-001", "SC-BISIM-001"]
+queue_policy = "Drop"
+sdlc_phase = "Cross-Runtime Bisimulation"
+sre_resilience_tier = "SIL-5 / Mathematical Closure"
+operational_domain = "Formal Parity & Coherence"
+evidence_contracts = ["SC-BISIM-001", "SC-PARITY-001"]
+description = "Continuously proves trace equivalence between Gleam HSM specifications and ZigVM bytecode slices."
 
 [[agent]]
 name = "c3i-verification-checklist-auditor-agent"
@@ -1118,6 +1464,7 @@ sdlc_phase = "Verification & Gatekeeping"
 sre_resilience_tier = "SIL-6 / 100% Green Gate"
 operational_domain = "Universal 18-Checkpoint Gatekeeper"
 evidence_contracts = ["SC-CHECKLIST-001", "SPEC-CHECKLIST-NAV-001"]
+description = "Continuous machine verification of the 18-checkpoint, 5-domain Comprehensive Verification Checklist (SC-CHECKLIST-001)."
 
 [[agent]]
 name = "c3i-verification-4-math-gates-certifier-agent"
@@ -1136,6 +1483,7 @@ sdlc_phase = "Verification & Gatekeeping"
 sre_resilience_tier = "SIL-6 / Mathematical Certainty"
 operational_domain = "4 Mathematical Gates Evaluation"
 evidence_contracts = ["SC-MATH-001", "SC-ENTROPY-001"]
+description = "Certifies the 4 Mathematical Gates: Shannon Entropy H >= 2.5b, CCM >= 90%, Divergence D_EA <= 10%, ITQS >= 0.85."
 
 [[agent]]
 name = "c3i-verification-9-modality-test-executor-agent"
@@ -1154,6 +1502,7 @@ sdlc_phase = "Verification & Gatekeeping"
 sre_resilience_tier = "SIL-6 / Full Test Spectrum"
 operational_domain = "9-Modality Test Protocol Orchestration"
 evidence_contracts = ["SC-9MOD-001", "SC-TEST-GOLD-001"]
+description = "Orchestrates the full 9-modality test protocol spanning Unit, System, TDD, BDD, Performance, Scale, Property, Fuzz, and Chaos."
 
 [[agent]]
 name = "c3i-verification-64-browser-matrix-tester-agent"
@@ -1172,6 +1521,7 @@ sdlc_phase = "Verification & Gatekeeping"
 sre_resilience_tier = "SIL-5 / Playwright & Wallaby Parity"
 operational_domain = "64 Browser-Based Tests Execution"
 evidence_contracts = ["SC-BROWSER-TEST-001", "SC-UI-QUALITY-001"]
+description = "Automated headless runner and telemetry aggregator for all 64 browser-based Playwright, Wallaby, and CDP tests."
 
 [[agent]]
 name = "c3i-verification-13d-tcm-coordinate-protector-agent"
@@ -1190,6 +1540,7 @@ sdlc_phase = "Verification & Gatekeeping"
 sre_resilience_tier = "SIL-6 / Lean 4 Proved"
 operational_domain = "13D TCM Coordinate Conservation"
 evidence_contracts = ["SC-DMC-TCM-001", "formal/lean/Traceability.lean"]
+description = "Proves 13-dimensional traceability coordinate conservation Delta T_13 = 0 and fail-closed indicator I(Trust) in Lean 4."
 
 [[agent]]
 name = "c3i-verification-zero-muda-purity-enforcer-agent"
@@ -1208,3 +1559,157 @@ sdlc_phase = "Verification & Gatekeeping"
 sre_resilience_tier = "SIL-6 / Absolute Elimination of Muda"
 operational_domain = "Zero Bevy & Zero Graphite Purity Enforcement"
 evidence_contracts = ["SC-MUDA-001", "contracts/rules/zero-muda-rule.md"]
+description = "Proves absolute Zero-Muda compliance: 0 Bevy, 0 Graphite, 0 foreign NIF shared libraries, and pure Erlang graphene_nif."
+
+[[agent]]
+name = "c3i-verification-adk-eval-benchmark-agent"
+kind = "VerificationAdkEvalBenchmark"
+formal_name = "C3I Verification ADK Eval Benchmark Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L5"
+fractal_tag = "#fractal-l5"
+component_kind = "Active"
+base_id = 8192
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Automated Agent Scoring"
+sre_resilience_tier = "SIL-5 / Safety Critical"
+operational_domain = "Benchmark Evaluation"
+evidence_contracts = ["SC-ADK-007", "SC-FPP-065"]
+description = "ADK evaluation benchmark executor (adk eval), criteria scoring, and rubric certifier"
+
+[[agent]]
+name = "c3i-verification-simulation-environment-agent"
+kind = "VerificationSimulationEnvironment"
+formal_name = "C3I Verification Simulation Environment Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L6"
+fractal_tag = "#fractal-l6"
+component_kind = "Active"
+base_id = 8256
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Synthetic Dialogue Testing"
+sre_resilience_tier = "SIL-4 / High Availability"
+operational_domain = "Simulation & Replay"
+evidence_contracts = ["SC-ADK-008", "SC-FPP-066"]
+description = "ADK user and environment simulator, synthetic input generator, and multi-turn tester"
+
+[[agent]]
+name = "c3i-verification-lean-formal-proof-oracle-agent"
+kind = "VerificationLeanFormalProofOracle"
+formal_name = "C3I Verification Lean Formal Proof Oracle Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L0"
+fractal_tag = "#fractal-l0"
+component_kind = "Active"
+base_id = 8320
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Mathematical Verification"
+sre_resilience_tier = "SIL-6 / Sovereign Core"
+operational_domain = "Formal Proofs"
+evidence_contracts = ["SC-LEAN-001", "SC-FPP-067"]
+description = "Lean 4 coordinate conservation oracle (Delta T_13 = 0) and TwoLattice_STM verifier"
+
+[[agent]]
+name = "c3i-verification-pinned-otp-differential-agent"
+kind = "VerificationPinnedOtpDifferential"
+formal_name = "C3I Verification Pinned OTP Differential Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L1"
+fractal_tag = "#fractal-l1"
+component_kind = "Active"
+base_id = 8384
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "OTP Conformance Ratchet"
+sre_resilience_tier = "SIL-6 / Sovereign Core"
+operational_domain = "Differential Testing"
+evidence_contracts = ["SC-OTP-001", "SC-FPP-068"]
+description = "Pinned OTP 30 differential oracle, opcode conformance rachet, and corpus evaluator"
+
+[[agent]]
+name = "c3i-verification-mutation-adequacy-killer-agent"
+kind = "VerificationMutationAdequacyKiller"
+formal_name = "C3I Verification Mutation Adequacy Killer Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L2"
+fractal_tag = "#fractal-l2"
+component_kind = "Active"
+base_id = 8448
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Mutant Adequacy Scoring"
+sre_resilience_tier = "SIL-5 / Safety Critical"
+operational_domain = "Mutation Testing"
+evidence_contracts = ["SC-MUTATION-001", "SC-FPP-069"]
+description = "Causal mutant generator and kill score analyzer (MUTATION_LOG.md) across test suites"
+
+[[agent]]
+name = "c3i-verification-sheaf-gluing-harmonizer-agent"
+kind = "VerificationSheafGluingHarmonizer"
+formal_name = "C3I Verification Sheaf Gluing Harmonizer Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L7"
+fractal_tag = "#fractal-l7"
+component_kind = "Active"
+base_id = 8512
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Algebraic Consistency"
+sre_resilience_tier = "SIL-6 / Sovereign Core"
+operational_domain = "Sheaf Verification"
+evidence_contracts = ["SC-SHEAF-001", "SC-FPP-070"]
+description = "Sheaf-theoretic consistency verifier ensuring local section gluing on boundaries"
+
+[[agent]]
+name = "c3i-verification-playwright-control-auditor-agent"
+kind = "VerificationPlaywrightControlAuditor"
+formal_name = "C3I Verification Playwright Control Auditor Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L4"
+fractal_tag = "#fractal-l4"
+component_kind = "Active"
+base_id = 8576
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "End-to-End Testing"
+sre_resilience_tier = "SIL-4 / High Availability"
+operational_domain = "Browser Automation"
+evidence_contracts = ["SC-PLAYWRIGHT-001", "SC-FPP-071"]
+description = "Playwright upstream control surface auditor, headless CDP tester, and visual oracle"
+
+[[agent]]
+name = "c3i-verification-zk-km-knowledge-currency-agent"
+kind = "VerificationZkKmKnowledgeCurrency"
+formal_name = "C3I Verification ZK KM Knowledge Currency Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L8"
+fractal_tag = "#fractal-l8"
+component_kind = "Active"
+base_id = 8640
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Currency Certification"
+sre_resilience_tier = "SIL-5 / Safety Critical"
+operational_domain = "Knowledge Integrity"
+evidence_contracts = ["SC-KM-001", "SC-FPP-072"]
+description = "ZK anomalies detector, wiki AST validator, and document registry currency sync"
+

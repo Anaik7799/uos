@@ -1,9 +1,9 @@
 {
   "schema": "uos.full-implementation-plan-receipt.v1",
   "workspace_root": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main",
-  "clock_utc": "2026-09-06T08:49:32Z",
-  "host_sync": "Reference ID    : B97DBE7B (ntp-nts-3.ps5.canonical.com)\nStratum         : 3\nRef time (UTC)  : Sun Sep 06 08:39:42 2026\nSystem time     : 0.000232366 seconds slow of NTP time\nLast offset     : -0.000162678 seconds\nRMS offset      : 0.000789091 seconds\nFrequency       : 4.024 ppm slow\nResidual freq   : -0.004 ppm\nSkew            : 0.231 ppm\nRoot delay      : 0.030858625 seconds\nRoot dispersion : 0.001823602 seconds\nUpdate interval : 1040.7 seconds\nLeap status     : Normal",
-  "candidate_before_receipt": "vtqzooyxpnxrwwzvsynzlonpmqwwtonw d2dc92fa557bf4b59085a237095386b7d0e9c6d1",
+  "clock_utc": "2026-09-06T08:51:00Z",
+  "host_sync": "Reference ID    : B97DBE7B (ntp-nts-3.ps5.canonical.com)\nStratum         : 3\nRef time (UTC)  : Sun Sep 06 08:39:42 2026\nSystem time     : 0.000226175 seconds slow of NTP time\nLast offset     : -0.000162678 seconds\nRMS offset      : 0.000789091 seconds\nFrequency       : 4.024 ppm slow\nResidual freq   : -0.004 ppm\nSkew            : 0.231 ppm\nRoot delay      : 0.030858625 seconds\nRoot dispersion : 0.001932522 seconds\nUpdate interval : 1040.7 seconds\nLeap status     : Normal",
+  "candidate_before_receipt": "wrwnokpzypvymvxuxkyvnqqwnowttnnr 054ee60d22925055c09ff4750c0a30a8bffe487c",
   "status": "PLAN_METADATA_VALIDATED_IMPLEMENTATION_UNRUN",
   "tasks": 60,
   "requirements": 35,

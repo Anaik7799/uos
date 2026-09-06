@@ -104,6 +104,30 @@ pub type AgentKind {
   VerificationBrowserMatrixTester
   VerificationTcmCoordinateProtector
   VerificationZeroMudaPurityEnforcer
+  SdlcGraphWorkflowOrchestrator
+  SdlcSessionMemoryReplay
+  SdlcA2aMultiAgentDelegation
+  SdlcToolRegistryMcpBridge
+  SdlcOntologyInfranodusSynthesizer
+  SdlcDesignSystemFigmaBridge
+  SdlcGospelOrtacSpecification
+  SdlcAlgebraicAtlasRouter
+  SreRunnerLifecycleHookSupervisor
+  SrePluginPolicyGuardrail
+  SreOpenTelemetrySpanTracer
+  SreSaPlanTaskLeaser
+  SreReteFailClosedAdmission
+  SreForecastPredictivePreflight
+  SreStpaSafetyController
+  SreDatabaseActorWalSerializer
+  VerificationAdkEvalBenchmark
+  VerificationSimulationEnvironment
+  VerificationLeanFormalProofOracle
+  VerificationPinnedOtpDifferential
+  VerificationMutationAdequacyKiller
+  VerificationSheafGluingHarmonizer
+  VerificationPlaywrightControlAuditor
+  VerificationZkKmKnowledgeCurrency
 }
 
 pub fn agent_kind_to_string(kind: AgentKind) -> String {
@@ -156,6 +180,31 @@ pub fn agent_kind_to_string(kind: AgentKind) -> String {
     VerificationBrowserMatrixTester -> "VerificationBrowserMatrixTester"
     VerificationTcmCoordinateProtector -> "VerificationTcmCoordinateProtector"
     VerificationZeroMudaPurityEnforcer -> "VerificationZeroMudaPurityEnforcer"
+    SdlcGraphWorkflowOrchestrator -> "SdlcGraphWorkflowOrchestrator"
+    SdlcSessionMemoryReplay -> "SdlcSessionMemoryReplay"
+    SdlcA2aMultiAgentDelegation -> "SdlcA2aMultiAgentDelegation"
+    SdlcToolRegistryMcpBridge -> "SdlcToolRegistryMcpBridge"
+    SdlcOntologyInfranodusSynthesizer -> "SdlcOntologyInfranodusSynthesizer"
+    SdlcDesignSystemFigmaBridge -> "SdlcDesignSystemFigmaBridge"
+    SdlcGospelOrtacSpecification -> "SdlcGospelOrtacSpecification"
+    SdlcAlgebraicAtlasRouter -> "SdlcAlgebraicAtlasRouter"
+    SreRunnerLifecycleHookSupervisor -> "SreRunnerLifecycleHookSupervisor"
+    SrePluginPolicyGuardrail -> "SrePluginPolicyGuardrail"
+    SreOpenTelemetrySpanTracer -> "SreOpenTelemetrySpanTracer"
+    SreSaPlanTaskLeaser -> "SreSaPlanTaskLeaser"
+    SreReteFailClosedAdmission -> "SreReteFailClosedAdmission"
+    SreForecastPredictivePreflight -> "SreForecastPredictivePreflight"
+    SreStpaSafetyController -> "SreStpaSafetyController"
+    SreDatabaseActorWalSerializer -> "SreDatabaseActorWalSerializer"
+    VerificationAdkEvalBenchmark -> "VerificationAdkEvalBenchmark"
+    VerificationSimulationEnvironment -> "VerificationSimulationEnvironment"
+    VerificationLeanFormalProofOracle -> "VerificationLeanFormalProofOracle"
+    VerificationPinnedOtpDifferential -> "VerificationPinnedOtpDifferential"
+    VerificationMutationAdequacyKiller -> "VerificationMutationAdequacyKiller"
+    VerificationSheafGluingHarmonizer -> "VerificationSheafGluingHarmonizer"
+    VerificationPlaywrightControlAuditor ->
+      "VerificationPlaywrightControlAuditor"
+    VerificationZkKmKnowledgeCurrency -> "VerificationZkKmKnowledgeCurrency"
   }
 }
 
@@ -211,6 +260,32 @@ pub fn string_to_agent_kind(s: String) -> Result(AgentKind, Nil) {
       Ok(VerificationTcmCoordinateProtector)
     "VerificationZeroMudaPurityEnforcer" ->
       Ok(VerificationZeroMudaPurityEnforcer)
+    "SdlcGraphWorkflowOrchestrator" -> Ok(SdlcGraphWorkflowOrchestrator)
+    "SdlcSessionMemoryReplay" -> Ok(SdlcSessionMemoryReplay)
+    "SdlcA2aMultiAgentDelegation" -> Ok(SdlcA2aMultiAgentDelegation)
+    "SdlcToolRegistryMcpBridge" -> Ok(SdlcToolRegistryMcpBridge)
+    "SdlcOntologyInfranodusSynthesizer" -> Ok(SdlcOntologyInfranodusSynthesizer)
+    "SdlcDesignSystemFigmaBridge" -> Ok(SdlcDesignSystemFigmaBridge)
+    "SdlcGospelOrtacSpecification" -> Ok(SdlcGospelOrtacSpecification)
+    "SdlcAlgebraicAtlasRouter" -> Ok(SdlcAlgebraicAtlasRouter)
+    "SreRunnerLifecycleHookSupervisor" -> Ok(SreRunnerLifecycleHookSupervisor)
+    "SrePluginPolicyGuardrail" -> Ok(SrePluginPolicyGuardrail)
+    "SreOpenTelemetrySpanTracer" -> Ok(SreOpenTelemetrySpanTracer)
+    "SreSaPlanTaskLeaser" -> Ok(SreSaPlanTaskLeaser)
+    "SreReteFailClosedAdmission" -> Ok(SreReteFailClosedAdmission)
+    "SreForecastPredictivePreflight" -> Ok(SreForecastPredictivePreflight)
+    "SreStpaSafetyController" -> Ok(SreStpaSafetyController)
+    "SreDatabaseActorWalSerializer" -> Ok(SreDatabaseActorWalSerializer)
+    "VerificationAdkEvalBenchmark" -> Ok(VerificationAdkEvalBenchmark)
+    "VerificationSimulationEnvironment" -> Ok(VerificationSimulationEnvironment)
+    "VerificationLeanFormalProofOracle" -> Ok(VerificationLeanFormalProofOracle)
+    "VerificationPinnedOtpDifferential" -> Ok(VerificationPinnedOtpDifferential)
+    "VerificationMutationAdequacyKiller" ->
+      Ok(VerificationMutationAdequacyKiller)
+    "VerificationSheafGluingHarmonizer" -> Ok(VerificationSheafGluingHarmonizer)
+    "VerificationPlaywrightControlAuditor" ->
+      Ok(VerificationPlaywrightControlAuditor)
+    "VerificationZkKmKnowledgeCurrency" -> Ok(VerificationZkKmKnowledgeCurrency)
     _ -> Error(Nil)
   }
 }
@@ -3745,6 +3820,1182 @@ fn build_verification_zero_muda_enforcer_spec() -> AgentTypeSpec {
   )
 }
 
+fn build_sdlc_graph_workflow_orchestrator_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_sdlc_graph_workflow_orchestrator_spec"],
+      exit: ["stop_build_sdlc_graph_workflow_orchestrator_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SdlcGraphWorkflowOrchestratorHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: SdlcGraphWorkflowOrchestrator,
+    name: "C3I SDLC Graph Workflow Orchestrator Agent",
+    c3i_system: C3iSdlc,
+    fractal_layer: 5,
+    fractal_tag: "#fractal-l5",
+    fpp_component_kind: Active,
+    base_id: 0x1c00,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "ADK graph workflow execution engine with conditional routing and loops",
+    operational_domain: "Workflow Orchestration",
+    sdlc_phase: "ADK Graph & Workflows",
+    sre_resilience_tier: "SIL-4 / High Availability",
+    evidence_contracts: ["SC-ADK-001", "SC-FPP-049"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sdlc_session_memory_replay_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_sdlc_session_memory_replay_spec"],
+      exit: ["stop_build_sdlc_session_memory_replay_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SdlcSessionMemoryReplayHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: SdlcSessionMemoryReplay,
+    name: "C3I SDLC Session Memory Replay Agent",
+    c3i_system: C3iSdlc,
+    fractal_layer: 4,
+    fractal_tag: "#fractal-l4",
+    fpp_component_kind: Active,
+    base_id: 0x1c40,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "ADK stateful session manager with long-term episodic/semantic memory store",
+    operational_domain: "Session & Memory",
+    sdlc_phase: "State Persistence & Replay",
+    sre_resilience_tier: "SIL-4 / High Availability",
+    evidence_contracts: ["SC-ADK-002", "SC-FPP-050"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sdlc_a2a_multi_agent_delegation_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_sdlc_a2a_multi_agent_delegation_spec"],
+      exit: ["stop_build_sdlc_a2a_multi_agent_delegation_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SdlcA2aMultiAgentDelegationHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: SdlcA2aMultiAgentDelegation,
+    name: "C3I SDLC A2A Multi Agent Delegation Agent",
+    c3i_system: C3iSdlc,
+    fractal_layer: 6,
+    fractal_tag: "#fractal-l6",
+    fpp_component_kind: Active,
+    base_id: 0x1c80,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "ADK Agent-to-Agent horizontal delegation and subagent swarm routing",
+    operational_domain: "Multi-Agent Swarm",
+    sdlc_phase: "A2A Inter-Agent Protocol",
+    sre_resilience_tier: "SIL-4 / High Availability",
+    evidence_contracts: ["SC-ADK-003", "SC-FPP-051"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sdlc_tool_registry_mcp_bridge_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_sdlc_tool_registry_mcp_bridge_spec"],
+      exit: ["stop_build_sdlc_tool_registry_mcp_bridge_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SdlcToolRegistryMcpBridgeHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: SdlcToolRegistryMcpBridge,
+    name: "C3I SDLC Tool Registry MCP Bridge Agent",
+    c3i_system: C3iSdlc,
+    fractal_layer: 3,
+    fractal_tag: "#fractal-l3",
+    fpp_component_kind: Active,
+    base_id: 0x1cc0,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "ADK vertical tool context dispatcher and federated MCP server connector",
+    operational_domain: "Tool Execution & MCP",
+    sdlc_phase: "MCP Protocol & Schemas",
+    sre_resilience_tier: "SIL-4 / High Availability",
+    evidence_contracts: ["SC-ADK-004", "SC-FPP-052"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sdlc_ontology_infranodus_synthesizer_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_sdlc_ontology_infranodus_synthesizer_spec"],
+      exit: ["stop_build_sdlc_ontology_infranodus_synthesizer_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SdlcOntologyInfranodusSynthesizerHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: SdlcOntologyInfranodusSynthesizer,
+    name: "C3I SDLC Ontology Infranodus Synthesizer Agent",
+    c3i_system: C3iSdlc,
+    fractal_layer: 8,
+    fractal_tag: "#fractal-l8",
+    fpp_component_kind: Active,
+    base_id: 0x1d00,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Infranodus semantic network synthesis, topic modeling, and Notion ontology",
+    operational_domain: "Ontology & Semantics",
+    sdlc_phase: "Ontology Engineering",
+    sre_resilience_tier: "SIL-5 / Safety Critical",
+    evidence_contracts: ["SC-ONTO-002", "SC-FPP-053"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sdlc_design_system_figma_bridge_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_sdlc_design_system_figma_bridge_spec"],
+      exit: ["stop_build_sdlc_design_system_figma_bridge_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SdlcDesignSystemFigmaBridgeHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: SdlcDesignSystemFigmaBridge,
+    name: "C3I SDLC Design System Figma Bridge Agent",
+    c3i_system: C3iSdlc,
+    fractal_layer: 2,
+    fractal_tag: "#fractal-l2",
+    fpp_component_kind: Active,
+    base_id: 0x1d40,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Figma design contract translator, tokens.json parser, and layout tree generator",
+    operational_domain: "Design System & UI",
+    sdlc_phase: "Design-to-Code Pipeline",
+    sre_resilience_tier: "SIL-3 / Standard",
+    evidence_contracts: ["SC-FIGMA-001", "SC-FPP-054"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sdlc_gospel_ortac_specification_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_sdlc_gospel_ortac_specification_spec"],
+      exit: ["stop_build_sdlc_gospel_ortac_specification_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SdlcGospelOrtacSpecificationHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: SdlcGospelOrtacSpecification,
+    name: "C3I SDLC Gospel Ortac Specification Agent",
+    c3i_system: C3iSdlc,
+    fractal_layer: 1,
+    fractal_tag: "#fractal-l1",
+    fpp_component_kind: Active,
+    base_id: 0x1d80,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Gospel contract specification synthesizer and Ortac runtime monitoring generator",
+    operational_domain: "Contract Specification",
+    sdlc_phase: "Formal Contract Synthesis",
+    sre_resilience_tier: "SIL-6 / Sovereign Core",
+    evidence_contracts: ["SC-GOSPEL-001", "SC-FPP-055"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sdlc_algebraic_atlas_router_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_sdlc_algebraic_atlas_router_spec"],
+      exit: ["stop_build_sdlc_algebraic_atlas_router_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SdlcAlgebraicAtlasRouterHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: SdlcAlgebraicAtlasRouter,
+    name: "C3I SDLC Algebraic Atlas Router Agent",
+    c3i_system: C3iSdlc,
+    fractal_layer: 7,
+    fractal_tag: "#fractal-l7",
+    fpp_component_kind: Active,
+    base_id: 0x1dc0,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "12-layer Algebraic Atlas coordinator, Route Algebra, and Table/HTML morphisms",
+    operational_domain: "Algebraic Atlas",
+    sdlc_phase: "Topological Mapping",
+    sre_resilience_tier: "SIL-6 / Sovereign Core",
+    evidence_contracts: ["SC-ATLAS-001", "SC-FPP-056"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sre_runner_lifecycle_hook_supervisor_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_sre_runner_lifecycle_hook_supervisor_spec"],
+      exit: ["stop_build_sre_runner_lifecycle_hook_supervisor_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SreRunnerLifecycleHookSupervisorHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: SreRunnerLifecycleHookSupervisor,
+    name: "C3I SRE Runner Lifecycle Hook Supervisor Agent",
+    c3i_system: C3iSre,
+    fractal_layer: 4,
+    fractal_tag: "#fractal-l4",
+    fpp_component_kind: Active,
+    base_id: 0x1e00,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "ADK Runner execution loop supervisor enforcing 6 before/after lifecycle hooks",
+    operational_domain: "Runtime Supervision",
+    sdlc_phase: "Lifecycle Hook Governance",
+    sre_resilience_tier: "SIL-5 / Safety Critical",
+    evidence_contracts: ["SC-ADK-005", "SC-FPP-057"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sre_plugin_policy_guardrail_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_sre_plugin_policy_guardrail_spec"],
+      exit: ["stop_build_sre_plugin_policy_guardrail_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SrePluginPolicyGuardrailHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: SrePluginPolicyGuardrail,
+    name: "C3I SRE Plugin Policy Guardrail Agent",
+    c3i_system: C3iSre,
+    fractal_layer: 0,
+    fractal_tag: "#fractal-l0",
+    fpp_component_kind: Active,
+    base_id: 0x1e40,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "ADK BasePlugin security policies, input/output content filtering, and quota locks",
+    operational_domain: "Security Guardrails",
+    sdlc_phase: "Policy Enforcement",
+    sre_resilience_tier: "SIL-6 / Sovereign Core",
+    evidence_contracts: ["SC-ADK-006", "SC-FPP-058"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sre_open_telemetry_span_tracer_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_sre_open_telemetry_span_tracer_spec"],
+      exit: ["stop_build_sre_open_telemetry_span_tracer_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SreOpenTelemetrySpanTracerHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: SreOpenTelemetrySpanTracer,
+    name: "C3I SRE OpenTelemetry Span Tracer Agent",
+    c3i_system: C3iSre,
+    fractal_layer: 2,
+    fractal_tag: "#fractal-l2",
+    fpp_component_kind: Active,
+    base_id: 0x1e80,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Universal OpenTelemetry distributed span tracer over Zenoh pub/sub mesh",
+    operational_domain: "Telemetry & Observability",
+    sdlc_phase: "OTel Tracing & Context",
+    sre_resilience_tier: "SIL-4 / High Availability",
+    evidence_contracts: ["SC-OTEL-002", "SC-FPP-059"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sre_sa_plan_task_leaser_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_sre_sa_plan_task_leaser_spec"],
+      exit: ["stop_build_sre_sa_plan_task_leaser_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SreSaPlanTaskLeaserHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: SreSaPlanTaskLeaser,
+    name: "C3I SRE SaPlan Task Leaser Agent",
+    c3i_system: C3iSre,
+    fractal_layer: 3,
+    fractal_tag: "#fractal-l3",
+    fpp_component_kind: Active,
+    base_id: 0x1ec0,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Sa-plan durable workflow coordinator, at-least-once task leasing, and idempotent jobs",
+    operational_domain: "Task Durability",
+    sdlc_phase: "Durable Workflow Leasing",
+    sre_resilience_tier: "SIL-5 / Safety Critical",
+    evidence_contracts: ["SC-SAPLAN-001", "SC-FPP-060"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sre_rete_fail_closed_admission_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_sre_rete_fail_closed_admission_spec"],
+      exit: ["stop_build_sre_rete_fail_closed_admission_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SreReteFailClosedAdmissionHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: SreReteFailClosedAdmission,
+    name: "C3I SRE Rete Fail Closed Admission Agent",
+    c3i_system: C3iSre,
+    fractal_layer: 0,
+    fractal_tag: "#fractal-l0",
+    fpp_component_kind: Active,
+    base_id: 0x1f00,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Rete-UL forward-chaining rule engine enforcing fail-closed state transition gates",
+    operational_domain: "Rule Admission & Gate",
+    sdlc_phase: "Fail-Closed Governance",
+    sre_resilience_tier: "SIL-6 / Sovereign Core",
+    evidence_contracts: ["SC-RETE-001", "SC-FPP-061"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sre_forecast_predictive_preflight_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_sre_forecast_predictive_preflight_spec"],
+      exit: ["stop_build_sre_forecast_predictive_preflight_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SreForecastPredictivePreflightHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: SreForecastPredictivePreflight,
+    name: "C3I SRE Forecast Predictive Preflight Agent",
+    c3i_system: C3iSre,
+    fractal_layer: 5,
+    fractal_tag: "#fractal-l5",
+    fpp_component_kind: Active,
+    base_id: 0x1f40,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Predictive resource preflight, Bayesian execution duration learning, and cost control",
+    operational_domain: "Predictive Operations",
+    sdlc_phase: "Preflight Resource Planning",
+    sre_resilience_tier: "SIL-4 / High Availability",
+    evidence_contracts: ["SC-FORECAST-001", "SC-FPP-062"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sre_stpa_safety_controller_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_sre_stpa_safety_controller_spec"],
+      exit: ["stop_build_sre_stpa_safety_controller_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SreStpaSafetyControllerHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: SreStpaSafetyController,
+    name: "C3I SRE STPA Safety Controller Agent",
+    c3i_system: C3iSre,
+    fractal_layer: 0,
+    fractal_tag: "#fractal-l0",
+    fpp_component_kind: Active,
+    base_id: 0x1f80,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "STAMP/STPA safety control loop, Unsafe Control Action (UCA) interception, and FMEA",
+    operational_domain: "Safety Control Loop",
+    sdlc_phase: "Hazard & UCA Prevention",
+    sre_resilience_tier: "SIL-6 / Sovereign Core",
+    evidence_contracts: ["SC-STPA-001", "SC-FPP-063"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sre_database_actor_wal_serializer_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_sre_database_actor_wal_serializer_spec"],
+      exit: ["stop_build_sre_database_actor_wal_serializer_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SreDatabaseActorWalSerializerHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: SreDatabaseActorWalSerializer,
+    name: "C3I SRE Database Actor WAL Serializer Agent",
+    c3i_system: C3iSre,
+    fractal_layer: 3,
+    fractal_tag: "#fractal-l3",
+    fpp_component_kind: Active,
+    base_id: 0x1fc0,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "SQLite Db actor evidence serializer enforcing WAL append-only Zero-Trust records",
+    operational_domain: "Evidence Persistence",
+    sdlc_phase: "Durable WAL Storage",
+    sre_resilience_tier: "SIL-6 / Sovereign Core",
+    evidence_contracts: ["SC-DB-001", "SC-FPP-064"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_verification_adk_eval_benchmark_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_verification_adk_eval_benchmark_spec"],
+      exit: ["stop_build_verification_adk_eval_benchmark_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "VerificationAdkEvalBenchmarkHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: VerificationAdkEvalBenchmark,
+    name: "C3I Verification ADK Eval Benchmark Agent",
+    c3i_system: C3iVerification,
+    fractal_layer: 5,
+    fractal_tag: "#fractal-l5",
+    fpp_component_kind: Active,
+    base_id: 0x2000,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "ADK evaluation benchmark executor (adk eval), criteria scoring, and rubric certifier",
+    operational_domain: "Benchmark Evaluation",
+    sdlc_phase: "Automated Agent Scoring",
+    sre_resilience_tier: "SIL-5 / Safety Critical",
+    evidence_contracts: ["SC-ADK-007", "SC-FPP-065"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_verification_simulation_environment_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_verification_simulation_environment_spec"],
+      exit: ["stop_build_verification_simulation_environment_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "VerificationSimulationEnvironmentHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: VerificationSimulationEnvironment,
+    name: "C3I Verification Simulation Environment Agent",
+    c3i_system: C3iVerification,
+    fractal_layer: 6,
+    fractal_tag: "#fractal-l6",
+    fpp_component_kind: Active,
+    base_id: 0x2040,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "ADK user and environment simulator, synthetic input generator, and multi-turn tester",
+    operational_domain: "Simulation & Replay",
+    sdlc_phase: "Synthetic Dialogue Testing",
+    sre_resilience_tier: "SIL-4 / High Availability",
+    evidence_contracts: ["SC-ADK-008", "SC-FPP-066"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_verification_lean_formal_proof_oracle_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_verification_lean_formal_proof_oracle_spec"],
+      exit: ["stop_build_verification_lean_formal_proof_oracle_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "VerificationLeanFormalProofOracleHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: VerificationLeanFormalProofOracle,
+    name: "C3I Verification Lean Formal Proof Oracle Agent",
+    c3i_system: C3iVerification,
+    fractal_layer: 0,
+    fractal_tag: "#fractal-l0",
+    fpp_component_kind: Active,
+    base_id: 0x2080,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Lean 4 coordinate conservation oracle (Delta T_13 = 0) and TwoLattice_STM verifier",
+    operational_domain: "Formal Proofs",
+    sdlc_phase: "Mathematical Verification",
+    sre_resilience_tier: "SIL-6 / Sovereign Core",
+    evidence_contracts: ["SC-LEAN-001", "SC-FPP-067"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_verification_pinned_otp_differential_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_verification_pinned_otp_differential_spec"],
+      exit: ["stop_build_verification_pinned_otp_differential_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "VerificationPinnedOtpDifferentialHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: VerificationPinnedOtpDifferential,
+    name: "C3I Verification Pinned OTP Differential Agent",
+    c3i_system: C3iVerification,
+    fractal_layer: 1,
+    fractal_tag: "#fractal-l1",
+    fpp_component_kind: Active,
+    base_id: 0x20c0,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Pinned OTP 30 differential oracle, opcode conformance rachet, and corpus evaluator",
+    operational_domain: "Differential Testing",
+    sdlc_phase: "OTP Conformance Ratchet",
+    sre_resilience_tier: "SIL-6 / Sovereign Core",
+    evidence_contracts: ["SC-OTP-001", "SC-FPP-068"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_verification_mutation_adequacy_killer_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_verification_mutation_adequacy_killer_spec"],
+      exit: ["stop_build_verification_mutation_adequacy_killer_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "VerificationMutationAdequacyKillerHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: VerificationMutationAdequacyKiller,
+    name: "C3I Verification Mutation Adequacy Killer Agent",
+    c3i_system: C3iVerification,
+    fractal_layer: 2,
+    fractal_tag: "#fractal-l2",
+    fpp_component_kind: Active,
+    base_id: 0x2100,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Causal mutant generator and kill score analyzer (MUTATION_LOG.md) across test suites",
+    operational_domain: "Mutation Testing",
+    sdlc_phase: "Mutant Adequacy Scoring",
+    sre_resilience_tier: "SIL-5 / Safety Critical",
+    evidence_contracts: ["SC-MUTATION-001", "SC-FPP-069"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_verification_sheaf_gluing_harmonizer_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_verification_sheaf_gluing_harmonizer_spec"],
+      exit: ["stop_build_verification_sheaf_gluing_harmonizer_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "VerificationSheafGluingHarmonizerHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: VerificationSheafGluingHarmonizer,
+    name: "C3I Verification Sheaf Gluing Harmonizer Agent",
+    c3i_system: C3iVerification,
+    fractal_layer: 7,
+    fractal_tag: "#fractal-l7",
+    fpp_component_kind: Active,
+    base_id: 0x2140,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Sheaf-theoretic consistency verifier ensuring local section gluing on boundaries",
+    operational_domain: "Sheaf Verification",
+    sdlc_phase: "Algebraic Consistency",
+    sre_resilience_tier: "SIL-6 / Sovereign Core",
+    evidence_contracts: ["SC-SHEAF-001", "SC-FPP-070"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_verification_playwright_control_auditor_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_verification_playwright_control_auditor_spec"],
+      exit: ["stop_build_verification_playwright_control_auditor_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "VerificationPlaywrightControlAuditorHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: VerificationPlaywrightControlAuditor,
+    name: "C3I Verification Playwright Control Auditor Agent",
+    c3i_system: C3iVerification,
+    fractal_layer: 4,
+    fractal_tag: "#fractal-l4",
+    fpp_component_kind: Active,
+    base_id: 0x2180,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Playwright upstream control surface auditor, headless CDP tester, and visual oracle",
+    operational_domain: "Browser Automation",
+    sdlc_phase: "End-to-End Testing",
+    sre_resilience_tier: "SIL-4 / High Availability",
+    evidence_contracts: ["SC-PLAYWRIGHT-001", "SC-FPP-071"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_verification_zk_km_knowledge_currency_spec() -> AgentTypeSpec {
+  let active_state =
+    HierarchicalState(
+      name: "Active",
+      parent: None,
+      entry: ["init_build_verification_zk_km_knowledge_currency_spec"],
+      exit: ["stop_build_verification_zk_km_knowledge_currency_spec"],
+      transitions: [
+        Transition(
+          on_signal: "tick",
+          guard: None,
+          do_actions: ["execute_cycle"],
+          target: ToState("Active"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "VerificationZkKmKnowledgeCurrencyHSM",
+      signals: make_signals(["tick"]),
+      guards: [],
+      actions: ["execute_cycle"],
+      root_states: [active_state],
+      choices: [],
+      initial: #([], "Active"),
+    )
+
+  AgentTypeSpec(
+    kind: VerificationZkKmKnowledgeCurrency,
+    name: "C3I Verification ZK KM Knowledge Currency Agent",
+    c3i_system: C3iVerification,
+    fractal_layer: 8,
+    fractal_tag: "#fractal-l8",
+    fpp_component_kind: Active,
+    base_id: 0x21c0,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "ZK anomalies detector, wiki AST validator, and document registry currency sync",
+    operational_domain: "Knowledge Integrity",
+    sdlc_phase: "Currency Certification",
+    sre_resilience_tier: "SIL-5 / Safety Critical",
+    evidence_contracts: ["SC-KM-001", "SC-FPP-072"],
+    hsm_machine: hsm,
+  )
+}
+
 pub fn all_agent_types() -> List(AgentTypeSpec) {
   [
     build_guardian_spec(),
@@ -3795,6 +5046,30 @@ pub fn all_agent_types() -> List(AgentTypeSpec) {
     build_verification_browser_matrix_tester_spec(),
     build_verification_tcm_protector_spec(),
     build_verification_zero_muda_enforcer_spec(),
+    build_sdlc_graph_workflow_orchestrator_spec(),
+    build_sdlc_session_memory_replay_spec(),
+    build_sdlc_a2a_multi_agent_delegation_spec(),
+    build_sdlc_tool_registry_mcp_bridge_spec(),
+    build_sdlc_ontology_infranodus_synthesizer_spec(),
+    build_sdlc_design_system_figma_bridge_spec(),
+    build_sdlc_gospel_ortac_specification_spec(),
+    build_sdlc_algebraic_atlas_router_spec(),
+    build_sre_runner_lifecycle_hook_supervisor_spec(),
+    build_sre_plugin_policy_guardrail_spec(),
+    build_sre_open_telemetry_span_tracer_spec(),
+    build_sre_sa_plan_task_leaser_spec(),
+    build_sre_rete_fail_closed_admission_spec(),
+    build_sre_forecast_predictive_preflight_spec(),
+    build_sre_stpa_safety_controller_spec(),
+    build_sre_database_actor_wal_serializer_spec(),
+    build_verification_adk_eval_benchmark_spec(),
+    build_verification_simulation_environment_spec(),
+    build_verification_lean_formal_proof_oracle_spec(),
+    build_verification_pinned_otp_differential_spec(),
+    build_verification_mutation_adequacy_killer_spec(),
+    build_verification_sheaf_gluing_harmonizer_spec(),
+    build_verification_playwright_control_auditor_spec(),
+    build_verification_zk_km_knowledge_currency_spec(),
   ]
 }
 
