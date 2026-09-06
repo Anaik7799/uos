@@ -1,0 +1,340 @@
+{
+  "schema": "uos.skills-preparation-receipt.v1",
+  "receipt_id": "20260906-2101-skills-preparation",
+  "observed_at_local": "2026-09-06T21:55:01+02:00",
+  "observed_at_utc": "2026-09-06T19:55:01Z",
+  "host": "nas-1",
+  "status": "PREPARATION_ONLY_H01_H02_UNFINISHED",
+  "admission_granted": false,
+  "repairs_applied": false,
+  "external_source_writes": 0,
+  "repository_files_created": 1,
+  "candidate": {
+    "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/skills-preparation",
+    "change_id": "zsypmxottwqvyslyyrlpsontlnppkmlx",
+    "base_commit_id": "05cfb07d3b9d5346c2b61fcbee740b3595cc6c1c"
+  },
+  "navigation": {
+    "planning": "http://nas-1.tail55d152.ts.net:4100/planning",
+    "receipt": "http://nas-1.tail55d152.ts.net:4100/files/governance/sources/20260906-2101-skills-preparation-receipt.json"
+  },
+  "scope": {
+    "support_task": "S16",
+    "future_tasks": ["H01", "H02"],
+    "mode": "read_only_preparation",
+    "method": [
+      "resolved active skill-link metadata",
+      "parsed bounded SKILL.md frontmatter with OCaml yaml",
+      "checked name and description shape",
+      "checked safe path-like local references for presence",
+      "reviewed canonical inventory and existing repair/handover receipts"
+    ]
+  },
+  "observed_installation_surfaces": [
+    {
+      "surface": "AGY installed skills",
+      "root": "/home/an/.gemini/config/skills",
+      "active_skill_documents": 172,
+      "frontmatter_yaml_valid": 171,
+      "frontmatter_yaml_invalid": 1,
+      "missing_active_skill_document": 0,
+      "state": "OBSERVED_PARTIAL_HEALTH"
+    },
+    {
+      "surface": "repository agent skills",
+      "root": ".agents/skills",
+      "active_links": 170,
+      "uos_owned_directories": 1,
+      "active_skill_documents": 171,
+      "broken_active_links": 0,
+      "inactive_backup_links_excluded": 1,
+      "state": "OBSERVED_STRUCTURAL_ONLY"
+    },
+    {
+      "surface": "repository Codex skill summaries",
+      "root": ".codex/skills",
+      "active_links": 170,
+      "active_skill_documents": 170,
+      "broken_active_links": 0,
+      "inactive_backup_links_excluded": 1,
+      "state": "OBSERVED_STRUCTURAL_ONLY"
+    },
+    {
+      "surface": "user-local Codex skills",
+      "root": "/home/an/.codex/skills",
+      "top_level_skill_entries": 134,
+      "top_level_links": 115,
+      "top_level_direct_skill_directories": 19,
+      "builtin_system_skill_documents": 6,
+      "broken_active_links": 0,
+      "plugin_cache_link_targets_excluded_from_content_read": 8,
+      "non_cache_top_level_frontmatter_inspected": 126,
+      "state": "OBSERVED_PARTIAL_HEALTH"
+    }
+  ],
+  "mirror_observations": {
+    "repo_agents_and_repo_codex_common_link_count": 170,
+    "common_link_name_and_target_maps_equal": true,
+    "repo_agents_additional_uos_skill": "tensor-space-evolution",
+    "gemini_skills_absent_from_both_repo_link_mirrors": [
+      "forecasting-driven-operations",
+      "stage-durability"
+    ],
+    "mirror_health": "DRIFT_OBSERVED",
+    "credit": false
+  },
+  "manifest_observations": [
+    {
+      "locator": "/home/an/.gemini/config/skills/.datacloud_skills_manifest",
+      "scope": "Data Cloud installer subset only",
+      "skill_entries": 29,
+      "status_installed": 29,
+      "non_installed_entries": 0,
+      "disabled_fields_present": 0,
+      "error_fields_present": 0,
+      "interpretation": "The observed installer states are not semantic, dependency, example, or runtime health evidence. Omitted disabled/error fields are not equivalent to independently observed false/null values."
+    },
+    {
+      "locator": "skill-repair/SKILL.md#Skill-Context",
+      "scope": "generic repair workflow",
+      "observation": "The workflow requires a supplied manifest path before repair, but no repository-wide skill installation manifest was located. The Data Cloud subset manifest cannot represent every installed skill.",
+      "credit": false
+    }
+  ],
+  "structural_findings": [
+    {
+      "id": "SKILL-YAML-001",
+      "severity": "error",
+      "skill": "forecasting-driven-operations",
+      "locators": [
+        "/home/an/.gemini/config/skills/forecasting-driven-operations/SKILL.md:3",
+        "/home/an/.codex/skills/forecasting-driven-operations/SKILL.md:3"
+      ],
+      "observation": "OCaml Yaml.of_string rejects the frontmatter because the unquoted description contains a mapping colon after '(2026-08-20)'.",
+      "installation_effect": "parse health unavailable",
+      "repair_state": "UNFINISHED"
+    },
+    {
+      "id": "SKILL-REF-001",
+      "severity": "error",
+      "skill": "gcp-pipeline-resource-provisioning",
+      "locator": ".agents/skills/gcp-pipeline-resource-provisioning/SKILL.md:59",
+      "declared_target": "references/gcp-pipeline-resource-provisioning_spec.md",
+      "target_present_at_owning_skill_root": false,
+      "repair_state": "UNFINISHED"
+    },
+    {
+      "id": "SKILL-INVENTORY-001",
+      "severity": "error",
+      "locator": "governance/capability-inventory/skills.toml",
+      "declared_canonical_core_union": 129,
+      "observed_table_entries": 132,
+      "observed_unique_names": 131,
+      "duplicate_names": ["full-symbiosis"],
+      "observation": "The two admitted Codex additions are present while the meta count remains 129; the table also retains source-specific duplicate full-symbiosis entries.",
+      "repair_state": "UNFINISHED"
+    },
+    {
+      "id": "SKILL-MIRROR-001",
+      "severity": "error",
+      "locator": "governance/capability-inventory/skills.toml:803",
+      "observation": "forecasting-driven-operations and stage-durability are marked admitted in the canonical inventory but are absent from both repository link mirrors.",
+      "repair_state": "UNFINISHED"
+    }
+  ],
+  "reference_triage": [
+    {
+      "skills": ["fractal-autopilot"],
+      "declared_from_skill": [
+        "scripts/fractal_feature_evolution_suite.sh",
+        "scripts/recursive_feature_convergence.sh",
+        "scripts/update_task_link_registry.sh"
+      ],
+      "installed_relative_targets_present": false,
+      "historical_c3i_root_targets_present": true,
+      "classification": "external_source_coupling_requires_uos_adaptation"
+    },
+    {
+      "skills": ["ocaml-scripting", "ocaml-playwright-control"],
+      "declared_from_skill": ["scripts/setup_ocaml_550.ml"],
+      "installed_relative_targets_present": false,
+      "historical_zigvm_root_target_present": true,
+      "classification": "external_source_coupling_requires_uos_adaptation"
+    },
+    {
+      "skills": ["pi-prompt"],
+      "declared_from_skill": ["scripts/pi/daemon"],
+      "historical_c3i_project_module_present": true,
+      "classification": "external_runtime_and_side_effect_workflow_not_admitted"
+    },
+    {
+      "tokens": [
+        "bigquery-data-transfer-service:assets/tables",
+        "ocaml-scripting:scripts/my_helper.ml",
+        "skill-creator example reference and asset names",
+        "imagegen:assets/variants"
+      ],
+      "classification": "illustrative_or_domain_text_not_counted_as_missing_dependencies"
+    }
+  ],
+  "semantic_findings": [
+    {
+      "id": "SKILL-SEM-001",
+      "skill": "cepaf-zenoh-expert",
+      "locator": ".codex/skills/cepaf-zenoh-expert/SKILL.md",
+      "state": "LEGACY_SOURCE_EVIDENCE_REQUIRES_ADAPTATION",
+      "issues": [
+        "line 8 mandates zenoh-erl without candidate comparison or benchmark evidence",
+        "lines 10-13 mandate the historical Indrajaal namespace without UOS candidate authority",
+        "line 14 confuses JSON data encoding with the UTF-8 BitArray byte representation",
+        "lines 30-32 provide a subscriber function containing only a comment",
+        "line 36 prescribes an environment toggle without a candidate-bound dependency receipt"
+      ],
+      "required_z01_alignment": [
+        "compare the actual pinned NIF candidates and select the most feature-rich measured implementation",
+        "benchmark the selected candidate under bounded representative workloads",
+        "cover binary payloads explicitly",
+        "inventory and test all pinned-version APIs",
+        "replace the empty subscriber example with a safe runnable UOS example"
+      ],
+      "credit": false
+    },
+    {
+      "id": "SKILL-SEM-002",
+      "skill": "ocaml-playwright-control",
+      "locator": ".codex/skills/ocaml-playwright-control/SKILL.md",
+      "state": "LEGACY_SOURCE_EVIDENCE_REQUIRES_ADAPTATION",
+      "issues": [
+        "lines 8-11 point to ZigVM-specific ontology documents",
+        "line 15 requires harness/*.ml while UOS browser sources are under tests/web_quality/*.ml",
+        "line 29 depends on the historical ZigVM setup script",
+        "line 35 requires zigvm_playwright_ontology rather than a candidate-bound UOS verifier"
+      ],
+      "useful_boundary_retained": "typed OCaml lifecycle and verdict ownership",
+      "unrun_credit": false
+    },
+    {
+      "id": "SKILL-SEM-003",
+      "skill": "wiki-design",
+      "locator": ".codex/skills/wiki-design/SKILL.md",
+      "state": "LEGACY_SOURCE_EVIDENCE_REQUIRES_ADAPTATION",
+      "observation": "The skill names historical harness/docs_wiki.ml and ZigVM wiki/ZK surfaces. H01 must map the useful two-way-navigation contract to Hermes and current UOS routes and execute it before admission.",
+      "credit": false
+    },
+    {
+      "id": "SKILL-SEM-004",
+      "skill": "stage-durability",
+      "locator": "/home/an/.codex/skills/stage-durability/SKILL.md",
+      "state": "CONTRADICTS_CURRENT_UOS_POLICY",
+      "issues": [
+        "line 13 requires YYYYMMDD-HHMMSS while the canonical UOS rule requires YYYYMMDD-HHSS",
+        "lines 24-46 direct automatic Sa-plan Store mutations without respecting task-specific ownership",
+        "line 50 claims linkage in every mirror, contradicted by observed mirror absence",
+        "the claimed AGENTS.md Stage Durability Law was not found"
+      ],
+      "inventory_state_observed": "admitted",
+      "admission_reconciliation_required": true,
+      "credit": false
+    }
+  ],
+  "existing_receipt_review": [
+    {
+      "locator": "governance/agents/repairs/20260906-0631-agy-config/20260906-0631-repair.json",
+      "schema": "uos.agy-config-repair.v1",
+      "recorded_status": "APPLIED_HASH_VERIFIED",
+      "record_count": 18,
+      "scope": "paired .agents/.gemini hooks and eight rule files",
+      "skill_repairs_covered": 0,
+      "interpretation": "Relevant AGY configuration history, but not a skill installation or runtime health receipt. Current hashes were not re-certified in this preparation audit."
+    },
+    {
+      "locator": "tests/web_quality/20260906-0631-agy-config-repair.ml",
+      "observation": "The existing OCaml controller stages backups and hash-bound hook/rule changes; it is not a generic H01 skill repair verifier.",
+      "execution": "UNRUN"
+    },
+    {
+      "locator": "tests/web_quality/20260906-0631-inputs/20260906-0631-local-review-register.json:216",
+      "observation": "The register says skill-repair was used for earlier parse repairs, but no dedicated canonical Codex skill-repair manifest or receipt was located.",
+      "classification": "UNVERIFIED_CLAIM"
+    },
+    {
+      "locator": "governance/sources/20260906-0606-agy-handover-source-receipt.json",
+      "observation": "Four skill sources are recorded with historical hashes and the receipt explicitly keeps implementation work open; this is source provenance, not current installation health."
+    },
+    {
+      "locator": "governance/sources/20260906-1620-codex-review-agy-forensic-reconciliation-receipt.json",
+      "observation": "Its limitations explicitly state that agent and skill health was not freshly certified."
+    },
+    {
+      "locators": [
+        "governance/sources/20260906-2000-codex-session-handover-receipt.json",
+        "governance/sources/20260906-2200-codex-session-handover-receipt.json"
+      ],
+      "observation": "The broad handover states contain no candidate-bound skill discovery, dependency, example, connector, or browser health receipt.",
+      "classification": "NO_H01_H02_CREDIT"
+    }
+  ],
+  "future_h01_actions": [
+    {
+      "priority": 1,
+      "action": "Implement tools/verification/skill_contract.ml and discriminating tests from the H01 manifest contract. Parse full YAML, require name/description/path agreement, report missing dependencies, compare admitted mirrors, and fail closed on unavailable targets."
+    },
+    {
+      "priority": 2,
+      "action": "Repair forecasting-driven-operations frontmatter through an authorized staged global-home workflow, then create a dedicated manifest receipt. Do not infer success from symlink presence."
+    },
+    {
+      "priority": 3,
+      "action": "Reconcile skills.toml counts, duplicate provenance, admitted states, and the two missing repository mirrors. Downgrade or adapt stage-durability before any renewed admission."
+    },
+    {
+      "priority": 4,
+      "action": "Supply or remove the missing GCP reference and adapt external C3I/ZigVM script paths into UOS-owned, bounded, runnable examples before admission."
+    },
+    {
+      "priority": 5,
+      "action": "Adapt cepaf-zenoh-expert, ocaml-playwright-control, and wiki-design to current UOS authority and paths; preserve legacy text as source evidence."
+    },
+    {
+      "priority": 6,
+      "action": "Generate ASCII and Mermaid from one typed graph model and compare node, edge, label, and group parity for the exact H01 negative fixture."
+    }
+  ],
+  "future_h02_checks": [
+    "Run actual bounded AGY and Codex core inference and skill discovery entry points and bind sanitized receipts to the candidate revision.",
+    "Test required tool calls, unavailable dependencies, error propagation, restart, and recovery while separating core usability from integration health.",
+    "Keep Stitch OAuth client configuration missing unless supplied through the authorized credential mechanism; never log credential material.",
+    "Provision and test a supported pinned browser driver without reading or admitting browser caches.",
+    "Treat the eight user-local plugin-cache links as presence-only until a separate authorized plugin audit.",
+    "Reject /tmp/uos-browser-cycles.ml as browser safety evidence: it was not run here and lines 119-120 treat an empty onclick attribute as safe without proving absence of side effects."
+  ],
+  "exclusions": [
+    "No skill, rule, hook, manifest, user-home, external source, or Sa-plan Store mutation was performed.",
+    "No plugin-cache content was read.",
+    "No secrets, authentication values, private keys, live DB/WAL/SHM, compiler caches, browser caches, or model weights were read, hashed, or copied.",
+    "No network action, connector call, browser launch, native load, example execution, or runtime health assertion was performed.",
+    "External C3I and ZigVM skill documents were read only through allowlisted SKILL.md paths; referenced targets were checked by path presence only.",
+    "H01 and H02 remain PLANNED and unfinished."
+  ],
+  "health_summary": {
+    "observed": [
+      "all active repo skill links resolve",
+      "all active installation entries examined have SKILL.md",
+      "one malformed YAML frontmatter document",
+      "one missing declared local reference",
+      "repository mirror and inventory drift",
+      "legacy semantic authority conflicts"
+    ],
+    "unverified": [
+      "skill triggers and declared tool availability",
+      "safe example execution",
+      "dependency closure",
+      "mirror content digests",
+      "AGY/Codex core runtime health",
+      "connectors and OAuth",
+      "browser driver and native integrations",
+      "diagram parity"
+    ],
+    "full_health_asserted": false
+  }
+}
