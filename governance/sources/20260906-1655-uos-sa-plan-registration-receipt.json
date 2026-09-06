@@ -1,0 +1,1879 @@
+{
+  "schema": "uos.sa-plan-registration-receipt.v1",
+  "status": "PLAN_REGISTERED_VERIFIED_IMPLEMENTATION_UNRUN",
+  "clock_utc": "2026-09-06T17:22:33Z",
+  "database": "/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3",
+  "manifest": "governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json",
+  "manifest_sha256": "b706f9a99dfaf6018772b2a819084ea3373a3ee720ed774b57e7f92792d8ee02",
+  "adapter_sha256": "10d6e732789cc9d58ac0dd85d976bad1ab20af39b20f20bd72f9bead7487078e",
+  "runtime_library": "/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/sa_plan/sa_plan.cma",
+  "runtime_library_sha256": "0bb374a8c5a6f3d7cd25273da41ffa2e83a9c1ef5f8128d979a34eea00e2c654",
+  "jj_candidate": "yupqvvlnmlwxpwkslpkzktuwvmwnkkqy f9f7323dc082e4d9c6d9e4d5073ef313de1962b2",
+  "selftest": {
+    "status": "PASSED",
+    "checks": [
+      "registration-and-readback", "idempotent-replay", "unknown-dependency",
+      "cycle", "task-metadata-drift", "failed-update-preserves-state",
+      "atomic-rollback", "dependency-claim-rejection",
+      "planning-only-completion", "completion-replay"
+    ],
+    "count": 10,
+    "scratch_store": "/tmp/uos-sa-plan-execution-selftest-c9ddda.sqlite3",
+    "scope": "registration-and-planning-only"
+  },
+  "observed": {
+    "schema": "uos.sa-plan-execution-observation.v1",
+    "plan_id": "uos/full-implementation/20260906-1655",
+    "tasks": 71,
+    "completed": 1,
+    "ready": 1,
+    "executing": 0,
+    "jobs": 71,
+    "workflows": 13,
+    "implementation_tasks": 70,
+    "implementation_completed": 0,
+    "implementation_attempts": 0,
+    "task_records": [
+      {
+        "id": "PLAN00",
+        "state": "completed",
+        "attempt": 1,
+        "dependencies": [],
+        "priority": 100
+      },
+      {
+        "id": "E01",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "PLAN00" ],
+        "priority": 100
+      },
+      {
+        "id": "E02",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E01" ],
+        "priority": 100
+      },
+      {
+        "id": "E03",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E02" ],
+        "priority": 100
+      },
+      {
+        "id": "E04",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E01", "E02" ],
+        "priority": 80
+      },
+      {
+        "id": "Q01",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E02" ],
+        "priority": 50
+      },
+      {
+        "id": "N01",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E01", "E02" ],
+        "priority": 80
+      },
+      {
+        "id": "E05",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E04" ],
+        "priority": 80
+      },
+      {
+        "id": "E08",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E02", "E03", "E04" ],
+        "priority": 80
+      },
+      {
+        "id": "M01",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E02", "E03" ],
+        "priority": 100
+      },
+      {
+        "id": "P02",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E02", "E03" ],
+        "priority": 100
+      },
+      {
+        "id": "Q02",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E02", "E03" ],
+        "priority": 100
+      },
+      {
+        "id": "M02",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E02", "M01" ],
+        "priority": 100
+      },
+      {
+        "id": "A01",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E05", "M01" ],
+        "priority": 80
+      },
+      {
+        "id": "A07",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E05", "M01" ],
+        "priority": 80
+      },
+      {
+        "id": "Z01",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E04", "E05", "M01" ],
+        "priority": 100
+      },
+      {
+        "id": "W01",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E04", "E08" ],
+        "priority": 100
+      },
+      {
+        "id": "H01",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E02", "E04", "E05" ],
+        "priority": 100
+      },
+      {
+        "id": "P03",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E04", "P02" ],
+        "priority": 100
+      },
+      {
+        "id": "E06",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E02", "E04", "E05", "M02" ],
+        "priority": 80
+      },
+      {
+        "id": "M03",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E03", "M02" ],
+        "priority": 100
+      },
+      {
+        "id": "A04",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "A01", "M02" ],
+        "priority": 80
+      },
+      {
+        "id": "Z02",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E02", "Z01" ],
+        "priority": 100
+      },
+      {
+        "id": "H02",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E03", "H01" ],
+        "priority": 80
+      },
+      {
+        "id": "M04",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "M01", "M03" ],
+        "priority": 100
+      },
+      {
+        "id": "W02",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E06", "W01" ],
+        "priority": 100
+      },
+      {
+        "id": "M05",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "M03", "M04" ],
+        "priority": 100
+      },
+      {
+        "id": "M06",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "M02", "M04" ],
+        "priority": 80
+      },
+      {
+        "id": "V01",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E02", "W01", "W02" ],
+        "priority": 100
+      },
+      {
+        "id": "M07",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E08", "M01", "M06" ],
+        "priority": 80
+      },
+      {
+        "id": "A02",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "A01", "M06" ],
+        "priority": 80
+      },
+      {
+        "id": "A08",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "A07", "M02", "M06" ],
+        "priority": 80
+      },
+      {
+        "id": "Z03",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "M05", "Z02" ],
+        "priority": 100
+      },
+      {
+        "id": "W03",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "M06", "W01" ],
+        "priority": 100
+      },
+      {
+        "id": "P01",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E02", "E03", "M05" ],
+        "priority": 100
+      },
+      {
+        "id": "K01",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E06", "M05" ],
+        "priority": 100
+      },
+      {
+        "id": "E07",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E04", "E06", "P01", "P03" ],
+        "priority": 80
+      },
+      {
+        "id": "M08",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E02", "M04", "M05", "M06", "M07" ],
+        "priority": 80
+      },
+      {
+        "id": "A03",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "A02", "M03" ],
+        "priority": 80
+      },
+      {
+        "id": "A05",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "A02", "A04", "M03", "M05" ],
+        "priority": 80
+      },
+      {
+        "id": "Z04",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "M04", "Z03" ],
+        "priority": 80
+      },
+      {
+        "id": "W04",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E03", "W02", "W03" ],
+        "priority": 80
+      },
+      {
+        "id": "K03",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E06", "K01", "Z02" ],
+        "priority": 80
+      },
+      {
+        "id": "A06",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "A05", "E04", "M07" ],
+        "priority": 80
+      },
+      {
+        "id": "A09",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "A03", "A05", "A08", "M08" ],
+        "priority": 80
+      },
+      {
+        "id": "Z05",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "M03", "Z04" ],
+        "priority": 80
+      },
+      {
+        "id": "W05",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E07", "M03", "W02", "W03" ],
+        "priority": 80
+      },
+      {
+        "id": "H03",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E02", "H01", "M08" ],
+        "priority": 80
+      },
+      {
+        "id": "Z06",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "Z05" ],
+        "priority": 80
+      },
+      {
+        "id": "W06",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "M05", "M06", "M07", "W05" ],
+        "priority": 80
+      },
+      {
+        "id": "K02",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E04", "E05", "K01", "W05" ],
+        "priority": 100
+      },
+      {
+        "id": "Z07",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "Z05", "Z06" ],
+        "priority": 80
+      },
+      {
+        "id": "W07",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "M06", "W06" ],
+        "priority": 80
+      },
+      {
+        "id": "Z08",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "Z06", "Z07" ],
+        "priority": 80
+      },
+      {
+        "id": "Z09",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "M05", "Z08" ],
+        "priority": 80
+      },
+      {
+        "id": "Z10",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E05", "Z09" ],
+        "priority": 80
+      },
+      {
+        "id": "Z11",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "E03", "Z10" ],
+        "priority": 80
+      },
+      {
+        "id": "V04",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "A09", "E07", "M07", "W07", "Z10" ],
+        "priority": 80
+      },
+      {
+        "id": "V05",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "A09", "M08", "W06", "Z10" ],
+        "priority": 80
+      },
+      {
+        "id": "Z12",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "A05", "E08", "M03", "M04", "Z11" ],
+        "priority": 80
+      },
+      {
+        "id": "A10",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "A06", "A09", "W06", "Z12" ],
+        "priority": 80
+      },
+      {
+        "id": "W08",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "A06", "M07", "W04", "Z12" ],
+        "priority": 80
+      },
+      {
+        "id": "P04",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "P01", "P02", "W04", "Z12" ],
+        "priority": 80
+      },
+      {
+        "id": "W09",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "W04", "W05", "W07", "W08" ],
+        "priority": 80
+      },
+      {
+        "id": "V02",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "A10", "V01", "W09" ],
+        "priority": 80
+      },
+      {
+        "id": "V03",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "V01", "W09" ],
+        "priority": 80
+      },
+      {
+        "id": "V06",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "H03", "W09", "Z11" ],
+        "priority": 80
+      },
+      {
+        "id": "V07",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "A10", "V02", "V03", "V04", "V05", "V06" ],
+        "priority": 80
+      },
+      {
+        "id": "R01",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [
+          "E08", "H02", "H03", "K02", "K03", "N01", "P04", "Q01", "Q02",
+          "V07"
+        ],
+        "priority": 80
+      },
+      {
+        "id": "R02",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [
+          "H02", "R01", "V02", "V03", "V04", "V05", "V06", "V07"
+        ],
+        "priority": 80
+      },
+      {
+        "id": "R03",
+        "state": "available",
+        "attempt": 0,
+        "dependencies": [ "R02" ],
+        "priority": 80
+      }
+    ],
+    "job_records": [
+      {
+        "id": "uos/full-implementation/20260906-1655/job/A01",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/A02",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/A03",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/A04",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/A05",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/A06",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/A07",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/A08",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/A09",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/A10",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/E01",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/E02",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/E03",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/E04",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/E05",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/E06",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/E07",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/E08",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/H01",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/H02",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/H03",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/K01",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/K02",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/K03",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/M01",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/M02",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/M03",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/M04",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/M05",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/M06",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/M07",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/M08",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/N01",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/P01",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/P02",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/P03",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/P04",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/PLAN00",
+        "state": "completed",
+        "attempt": 1,
+        "queue": "uos-full-implementation-20260906-1655-reserved-planning",
+        "result": "{\"scope\":\"planning-and-registration-only\",\"manifest_sha256\":\"b706f9a99dfaf6018772b2a819084ea3373a3ee720ed774b57e7f92792d8ee02\",\"registration_readback_verified\":true,\"implementation_cases_executed\":0}"
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/Q01",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/Q02",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/R01",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/R02",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/R03",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/V01",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/V02",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/V03",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/V04",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/V05",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/V06",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/V07",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/W01",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/W02",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/W03",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/W04",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/W05",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/W06",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/W07",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/W08",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/W09",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/Z01",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/Z02",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/Z03",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/Z04",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/Z05",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/Z06",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/Z07",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/Z08",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/Z09",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/Z10",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/Z11",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/job/Z12",
+        "state": "available",
+        "attempt": 0,
+        "queue": "uos-full-implementation-20260906-1655-reserved",
+        "result": null
+      }
+    ],
+    "workflow_records": [
+      {
+        "id": "uos/full-implementation/20260906-1655/workflow",
+        "state": "running",
+        "event_count": 2
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/workflow/a",
+        "state": "running",
+        "event_count": 1
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/workflow/e",
+        "state": "running",
+        "event_count": 1
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/workflow/h",
+        "state": "running",
+        "event_count": 1
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/workflow/k",
+        "state": "running",
+        "event_count": 1
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/workflow/m",
+        "state": "running",
+        "event_count": 1
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/workflow/n",
+        "state": "running",
+        "event_count": 1
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/workflow/p",
+        "state": "running",
+        "event_count": 1
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/workflow/q",
+        "state": "running",
+        "event_count": 1
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/workflow/r",
+        "state": "running",
+        "event_count": 1
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/workflow/v",
+        "state": "running",
+        "event_count": 1
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/workflow/w",
+        "state": "running",
+        "event_count": 1
+      },
+      {
+        "id": "uos/full-implementation/20260906-1655/workflow/z",
+        "state": "running",
+        "event_count": 1
+      }
+    ]
+  },
+  "legacy_plan": {
+    "plan_id": "uos/ocaml-gleam-tests/v1",
+    "database": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/state/ocaml_gleam_tests/sa_plan.sqlite3",
+    "workflow_id": "uos/ocaml-gleam-tests/v1/workflow",
+    "task_count": 75,
+    "job_count": 74,
+    "workflow_count": 1,
+    "observed_tasks_available": 75,
+    "observed_job_attempts": 0,
+    "observed_workflow_state": "running",
+    "writer_ownership_changed": false,
+    "tasks": [
+      {
+        "master_tasks": [ "E07" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL",
+        "title": "Additive Gleam counterparts; retain every OCaml original",
+        "parent_id": null,
+        "dependencies": [ "OGL.94" ]
+      },
+      {
+        "master_tasks": [ "E04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.00",
+        "title": "Freeze and validate source inventory; preserve originals and Dune files",
+        "parent_id": "OGL",
+        "dependencies": []
+      },
+      {
+        "master_tasks": [ "M08", "H03" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.01",
+        "title": "Verify pinned OTP29, Gleam, OCaml and native build readiness",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.00" ]
+      },
+      {
+        "master_tasks": [ "E04", "E06" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.02",
+        "title": "Implement Gleam preservation gate and expanded Dune classification",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.00" ]
+      },
+      {
+        "master_tasks": [ "E06", "M06" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.03",
+        "title": "Implement all seven parity-algebra layers and bounded native adapter",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.01" ]
+      },
+      {
+        "master_tasks": [ "E07" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.04",
+        "title": "Independently review pilot, case map, transport and mutation evidence",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.02", "OGL.03" ]
+      },
+      {
+        "master_tasks": [ "E07" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.05",
+        "title": "Admit pilot pattern only after fresh source-preservation and parity evidence",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.04" ]
+      },
+      {
+        "master_tasks": [ "E04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M01.D",
+        "title": "hermes_agent_loop: classify 17 candidates; enumerate cases and fixtures",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.00" ]
+      },
+      {
+        "master_tasks": [ "E07" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M01.P",
+        "title": "hermes_agent_loop: implement traced Gleam assertions over original libraries",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M01.D", "OGL.05" ]
+      },
+      {
+        "master_tasks": [ "E07", "V04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M01.V",
+        "title": "hermes_agent_loop: execute both suites, boundaries, properties and mutants",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M01.P", "OGL.02" ]
+      },
+      {
+        "master_tasks": [ "E07", "R02" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M01.R",
+        "title": "hermes_agent_loop: independent source-case and safety review",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M01.V" ]
+      },
+      {
+        "master_tasks": [ "E04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M02.D",
+        "title": "hermes_dependability: classify 23 candidates; enumerate cases and fixtures",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.00" ]
+      },
+      {
+        "master_tasks": [ "E07" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M02.P",
+        "title": "hermes_dependability: implement traced Gleam assertions over original libraries",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M02.D", "OGL.05" ]
+      },
+      {
+        "master_tasks": [ "E07", "V04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M02.V",
+        "title": "hermes_dependability: execute both suites, boundaries, properties and mutants",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M02.P", "OGL.02" ]
+      },
+      {
+        "master_tasks": [ "E07", "R02" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M02.R",
+        "title": "hermes_dependability: independent source-case and safety review",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M02.V" ]
+      },
+      {
+        "master_tasks": [ "E04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M03.D",
+        "title": "hermes_dune_graph: classify 1 candidates; enumerate cases and fixtures",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.00" ]
+      },
+      {
+        "master_tasks": [ "E07" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M03.P",
+        "title": "hermes_dune_graph: implement traced Gleam assertions over original libraries",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M03.D", "OGL.05" ]
+      },
+      {
+        "master_tasks": [ "E07", "V04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M03.V",
+        "title": "hermes_dune_graph: execute both suites, boundaries, properties and mutants",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M03.P", "OGL.02" ]
+      },
+      {
+        "master_tasks": [ "E07", "R02" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M03.R",
+        "title": "hermes_dune_graph: independent source-case and safety review",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M03.V" ]
+      },
+      {
+        "master_tasks": [ "E04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M04.D",
+        "title": "hermes_fpp_authority: classify 1 candidates; enumerate cases and fixtures",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.00" ]
+      },
+      {
+        "master_tasks": [ "E07" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M04.P",
+        "title": "hermes_fpp_authority: implement traced Gleam assertions over original libraries",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M04.D", "OGL.05" ]
+      },
+      {
+        "master_tasks": [ "E07", "V04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M04.V",
+        "title": "hermes_fpp_authority: execute both suites, boundaries, properties and mutants",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M04.P", "OGL.02" ]
+      },
+      {
+        "master_tasks": [ "E07", "R02" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M04.R",
+        "title": "hermes_fpp_authority: independent source-case and safety review",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M04.V" ]
+      },
+      {
+        "master_tasks": [ "E04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M05.D",
+        "title": "hermes_harness: classify 82 candidates; enumerate cases and fixtures",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.00" ]
+      },
+      {
+        "master_tasks": [ "E07" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M05.P",
+        "title": "hermes_harness: implement traced Gleam assertions over original libraries",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M05.D", "OGL.05" ]
+      },
+      {
+        "master_tasks": [ "E07", "V04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M05.V",
+        "title": "hermes_harness: execute both suites, boundaries, properties and mutants",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M05.P", "OGL.02" ]
+      },
+      {
+        "master_tasks": [ "E07", "R02" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M05.R",
+        "title": "hermes_harness: independent source-case and safety review",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M05.V" ]
+      },
+      {
+        "master_tasks": [ "E04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M06.D",
+        "title": "hermes_nix: classify 8 candidates; enumerate cases and fixtures",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.00" ]
+      },
+      {
+        "master_tasks": [ "E07" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M06.P",
+        "title": "hermes_nix: implement traced Gleam assertions over original libraries",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M06.D", "OGL.05" ]
+      },
+      {
+        "master_tasks": [ "E07", "V04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M06.V",
+        "title": "hermes_nix: execute both suites, boundaries, properties and mutants",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M06.P", "OGL.02" ]
+      },
+      {
+        "master_tasks": [ "E07", "R02" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M06.R",
+        "title": "hermes_nix: independent source-case and safety review",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M06.V" ]
+      },
+      {
+        "master_tasks": [ "E04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M07.D",
+        "title": "hermes_ops: classify 35 candidates; enumerate cases and fixtures",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.00" ]
+      },
+      {
+        "master_tasks": [ "E07" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M07.P",
+        "title": "hermes_ops: implement traced Gleam assertions over original libraries",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M07.D", "OGL.05" ]
+      },
+      {
+        "master_tasks": [ "E07", "V04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M07.V",
+        "title": "hermes_ops: execute both suites, boundaries, properties and mutants",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M07.P", "OGL.02" ]
+      },
+      {
+        "master_tasks": [ "E07", "R02" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M07.R",
+        "title": "hermes_ops: independent source-case and safety review",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M07.V" ]
+      },
+      {
+        "master_tasks": [ "E04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M08.D",
+        "title": "hermes_ops_dashboard: classify 23 candidates; enumerate cases and fixtures",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.00" ]
+      },
+      {
+        "master_tasks": [ "E07" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M08.P",
+        "title": "hermes_ops_dashboard: implement traced Gleam assertions over original libraries",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M08.D", "OGL.05" ]
+      },
+      {
+        "master_tasks": [ "E07", "V04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M08.V",
+        "title": "hermes_ops_dashboard: execute both suites, boundaries, properties and mutants",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M08.P", "OGL.02" ]
+      },
+      {
+        "master_tasks": [ "E07", "R02" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M08.R",
+        "title": "hermes_ops_dashboard: independent source-case and safety review",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M08.V" ]
+      },
+      {
+        "master_tasks": [ "E04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M09.D",
+        "title": "hermes_sysml: classify 6 candidates; enumerate cases and fixtures",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.00" ]
+      },
+      {
+        "master_tasks": [ "E07" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M09.P",
+        "title": "hermes_sysml: implement traced Gleam assertions over original libraries",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M09.D", "OGL.05" ]
+      },
+      {
+        "master_tasks": [ "E07", "V04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M09.V",
+        "title": "hermes_sysml: execute both suites, boundaries, properties and mutants",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M09.P", "OGL.02" ]
+      },
+      {
+        "master_tasks": [ "E07", "R02" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M09.R",
+        "title": "hermes_sysml: independent source-case and safety review",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M09.V" ]
+      },
+      {
+        "master_tasks": [ "E04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M10.D",
+        "title": "hermes_toolchain: classify 2 candidates; enumerate cases and fixtures",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.00" ]
+      },
+      {
+        "master_tasks": [ "E07" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M10.P",
+        "title": "hermes_toolchain: implement traced Gleam assertions over original libraries",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M10.D", "OGL.05" ]
+      },
+      {
+        "master_tasks": [ "E07", "V04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M10.V",
+        "title": "hermes_toolchain: execute both suites, boundaries, properties and mutants",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M10.P", "OGL.02" ]
+      },
+      {
+        "master_tasks": [ "E07", "R02" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M10.R",
+        "title": "hermes_toolchain: independent source-case and safety review",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M10.V" ]
+      },
+      {
+        "master_tasks": [ "E04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M11.D",
+        "title": "hermes_vcs: classify 19 candidates; enumerate cases and fixtures",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.00" ]
+      },
+      {
+        "master_tasks": [ "E07" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M11.P",
+        "title": "hermes_vcs: implement traced Gleam assertions over original libraries",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M11.D", "OGL.05" ]
+      },
+      {
+        "master_tasks": [ "E07", "V04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M11.V",
+        "title": "hermes_vcs: execute both suites, boundaries, properties and mutants",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M11.P", "OGL.02" ]
+      },
+      {
+        "master_tasks": [ "E07", "R02" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M11.R",
+        "title": "hermes_vcs: independent source-case and safety review",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M11.V" ]
+      },
+      {
+        "master_tasks": [ "E04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M12.D",
+        "title": "hermes_vision: classify 2 candidates; enumerate cases and fixtures",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.00" ]
+      },
+      {
+        "master_tasks": [ "E07" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M12.P",
+        "title": "hermes_vision: implement traced Gleam assertions over original libraries",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M12.D", "OGL.05" ]
+      },
+      {
+        "master_tasks": [ "E07", "V04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M12.V",
+        "title": "hermes_vision: execute both suites, boundaries, properties and mutants",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M12.P", "OGL.02" ]
+      },
+      {
+        "master_tasks": [ "E07", "R02" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M12.R",
+        "title": "hermes_vision: independent source-case and safety review",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M12.V" ]
+      },
+      {
+        "master_tasks": [ "E04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M13.D",
+        "title": "hermes_wiki: classify 69 candidates; enumerate cases and fixtures",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.00" ]
+      },
+      {
+        "master_tasks": [ "E07" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M13.P",
+        "title": "hermes_wiki: implement traced Gleam assertions over original libraries",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M13.D", "OGL.05" ]
+      },
+      {
+        "master_tasks": [ "E07", "V04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M13.V",
+        "title": "hermes_wiki: execute both suites, boundaries, properties and mutants",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M13.P", "OGL.02" ]
+      },
+      {
+        "master_tasks": [ "E07", "R02" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M13.R",
+        "title": "hermes_wiki: independent source-case and safety review",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M13.V" ]
+      },
+      {
+        "master_tasks": [ "E04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M14.D",
+        "title": "hermes_zellij: classify 3 candidates; enumerate cases and fixtures",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.00" ]
+      },
+      {
+        "master_tasks": [ "E07" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M14.P",
+        "title": "hermes_zellij: implement traced Gleam assertions over original libraries",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M14.D", "OGL.05" ]
+      },
+      {
+        "master_tasks": [ "E07", "V04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M14.V",
+        "title": "hermes_zellij: execute both suites, boundaries, properties and mutants",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M14.P", "OGL.02" ]
+      },
+      {
+        "master_tasks": [ "E07", "R02" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M14.R",
+        "title": "hermes_zellij: independent source-case and safety review",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M14.V" ]
+      },
+      {
+        "master_tasks": [ "E04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M15.D",
+        "title": "swarm: classify 18 candidates; enumerate cases and fixtures",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.00" ]
+      },
+      {
+        "master_tasks": [ "E07" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M15.P",
+        "title": "swarm: implement traced Gleam assertions over original libraries",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M15.D", "OGL.05" ]
+      },
+      {
+        "master_tasks": [ "E07", "V04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M15.V",
+        "title": "swarm: execute both suites, boundaries, properties and mutants",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M15.P", "OGL.02" ]
+      },
+      {
+        "master_tasks": [ "E07", "R02" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M15.R",
+        "title": "swarm: independent source-case and safety review",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M15.V" ]
+      },
+      {
+        "master_tasks": [ "E04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M16.D",
+        "title": "system_engg: classify 9 candidates; enumerate cases and fixtures",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.00" ]
+      },
+      {
+        "master_tasks": [ "E07" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M16.P",
+        "title": "system_engg: implement traced Gleam assertions over original libraries",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M16.D", "OGL.05" ]
+      },
+      {
+        "master_tasks": [ "E07", "V04" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M16.V",
+        "title": "system_engg: execute both suites, boundaries, properties and mutants",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M16.P", "OGL.02" ]
+      },
+      {
+        "master_tasks": [ "E07", "R02" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.M16.R",
+        "title": "system_engg: independent source-case and safety review",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.M16.V" ]
+      },
+      {
+        "master_tasks": [ "E07", "E08" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.91",
+        "title": "Integrate all family evidence; report unknowns and nonstandard tests",
+        "parent_id": "OGL",
+        "dependencies": [
+          "OGL.M01.R", "OGL.M02.R", "OGL.M03.R", "OGL.M04.R", "OGL.M05.R",
+          "OGL.M06.R", "OGL.M07.R", "OGL.M08.R", "OGL.M09.R", "OGL.M10.R",
+          "OGL.M11.R", "OGL.M12.R", "OGL.M13.R", "OGL.M14.R", "OGL.M15.R",
+          "OGL.M16.R"
+        ]
+      },
+      {
+        "master_tasks": [ "E04", "R01" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.92",
+        "title": "Recheck every original test, fixture, helper and Dune declaration unchanged",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.91" ]
+      },
+      {
+        "master_tasks": [ "V04", "V05", "V07" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.93",
+        "title": "Run final differential, fault, formal and mutation gates; reject vacuity",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.91" ]
+      },
+      {
+        "master_tasks": [ "E07", "R02" ],
+        "registration_action": "LINK_EXISTING_DO_NOT_DUPLICATE",
+        "observed_state": "available",
+        "execution_authority": "existing-sa-plan-writer",
+        "id": "OGL.94",
+        "title": "Independent final review and explicit operator integration handoff",
+        "parent_id": "OGL",
+        "dependencies": [ "OGL.92", "OGL.93" ]
+      }
+    ]
+  },
+  "dispatch_enabled": false,
+  "temporal_service_connected": false,
+  "system_admission_granted": false
+}

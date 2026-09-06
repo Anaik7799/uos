@@ -1,0 +1,82 @@
+{
+  "schema": "uos.execution-additions.v1",
+  "tasks": [
+    {
+      "id": "PLAN00", "workstream": "P", "title": "Register and verify this sa-plan execution programme", "priority": "P0", "depends_on": [], "requirements": ["RQ31", "RQ33"], "scope": "planning_only",
+      "files": [{"mode":"create","path":"tools/sa_plan_execution.ml"},{"mode":"create","path":"governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json"}],
+      "implementation_steps": ["Validate all task IDs, dependencies, requirements and review mappings before a write.", "Register tasks, reserved jobs and workflows through Sa_plan.Store in one transaction; replay without duplicates.", "Read every registered record back, compare the contract, and complete only this planning task after registration checks pass."],
+      "acceptance_case": {"id":"PLAN00-registration","given":{"empty_store":true,"second_registration":"identical"},"when":[{"op":"plan.register"},{"op":"plan.register"},{"op":"plan.status"}],"expect":{"tasks":71,"jobs":71,"workflows":13,"duplicates":0,"implementation_cases_executed":0}},
+      "acceptance_gate": "Identical replay preserves records; unknown dependency, cycle and changed payload fail; no implementation job is dispatched."
+    },
+    {
+      "id":"P01", "workstream":"P", "title":"Implement dependency-gated sa-plan job dispatch and fenced completion", "priority":"P0", "depends_on":["E02","E03","M05"], "requirements":["RQ19","RQ20","RQ31","RQ33"],
+      "files":[{"mode":"create","path":"apps/cepaf_gleam/src/cepaf_gleam/planning/execution_dispatcher.gleam"},{"mode":"create","path":"apps/cepaf_gleam/test/execution_dispatcher_test.gleam"}],
+      "implementation_steps":["Dispatch only from a named plan and queue with a current task lease, candidate-bound authorization, and satisfied local and external evidence dependencies.","Use stable task/job/activity IDs and attempt fencing; reject stale completion and prevent effects before task claim.","Enforce a 1200-second command budget, cancellation and process-tree cleanup; retry only declared idempotent work and record each result in sa-plan."],
+      "acceptance_case":{"id":"P01-dispatch","given":{"job":"available","task_dependency":"incomplete","external_receipt":"missing"},"when":[{"op":"execution.dispatch"}],"expect":{"effect_count":0,"task_completed":false,"job_dispatched":false,"reason":"DEPENDENCY_UNSATISFIED"}},
+      "acceptance_gate":"Negative controls cover job/task mismatch, missing external receipt, stale lease, replay, worker crash and timeout; a satisfied-dependency positive control produces one observed effect."
+    },
+    {
+      "id":"P02", "workstream":"P", "title":"Make sa-plan CLI status and workflow views explicitly plan-aware", "priority":"P0", "depends_on":["E02","E03"], "requirements":["RQ31","RQ33","RQ34"],
+      "files":[{"mode":"modify","path":"tools/sa-plan"},{"mode":"create","path":"apps/cepaf_gleam/src/cepaf_gleam/planning/cli.gleam"},{"mode":"create","path":"apps/cepaf_gleam/test/sa_plan_cli_integration_test.gleam"}],
+      "implementation_steps":["Add a Gleam CLI facade with explicit plan selection for list/tree/status/watch and UI projections; preserve the imported OCaml CLI/test originals and route documented legacy commands explicitly.","Expose actual task dependencies, job arguments and workflow state through typed read-only Store views and the bounded Store adapter.","Reject unknown plan IDs and malformed requests with nonzero process exit; bind output to the selected database and plan."],
+      "acceptance_case":{"id":"P02-plan-isolation","given":{"plans":["uos/one","uos/two"],"selected":"uos/two","different_counts":true},"when":[{"op":"planning.status"}],"expect":{"reported_plan":"uos/two","cross_plan_records":0,"unknown_plan_exit":1}},
+      "acceptance_gate":"Two independently populated plans remain isolated in all status projections; no hardcoded-plan fallback."
+    },
+    {
+      "id":"P03", "workstream":"P", "title":"Federate the existing 75-task OCaml-to-Gleam plan without resetting it", "priority":"P0", "depends_on":["E04","P02"], "requirements":["RQ01","RQ02","RQ03","RQ31","RQ33"],
+      "files":[{"mode":"create","path":"apps/cepaf_gleam/src/cepaf_gleam/planning/linked_plan.gleam"},{"mode":"create","path":"apps/cepaf_gleam/test/linked_plan_test.gleam"},{"mode":"inspect","path":"governance/testing/ocaml_gleam/20260905-2251-sa-plan-workflow-spec.json"}],
+      "implementation_steps":["Resolve the existing uos/ocaml-gleam-tests/v1 plan, its 75 task IDs, 74 jobs and workflow using its actual store and original ownership.","Map every legacy task to an E/M/A/W/V/R obligation and provide read-only status plus candidate-bound completion receipt references.","Keep old IDs, attempts, results and histories intact. Route future mutations through its owning sa-plan writer; any store relocation requires an explicit migration receipt and owner coordination."],
+      "acceptance_case":{"id":"P03-legacy-federation","given":{"legacy_tasks":75,"legacy_jobs":74,"legacy_workflows":1,"repeat_link":true},"when":[{"op":"planning.link_legacy"}],"expect":{"new_execution_copies":0,"legacy_history_changes":0,"mapped_tasks":75,"unknown_state_credit":false}},
+      "acceptance_gate":"Every legacy ID is mapped once; E07 cannot close before required legacy completion receipts match the current source-preservation and parity candidate."
+    },
+    {
+      "id":"P04", "workstream":"P", "title":"Connect the Gleam planning cockpit to actual sa-plan records", "priority":"P1", "depends_on":["P01","P02","Z12","W04"], "requirements":["RQ14","RQ18","RQ21","RQ23","RQ31","RQ34"],
+      "files":[{"mode":"modify","path":"apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam"},{"mode":"create","path":"apps/cepaf_gleam/test/planning_cockpit_live_test.gleam"}],
+      "implementation_steps":["Use a supervised bounded Store adapter owned by Gleam and an explicitly modeled Zenoh gateway for domain communication.","Render selected plan, dependencies, leases, jobs, workflow history, unknown evidence and errors from observations rather than fixtures.","Verify a real record transition appears in UI/API with matching IDs and trace coordinates, and disconnected storage is reported as unavailable."],
+      "acceptance_case":{"id":"P04-live-planning","given":{"observed_task":"E01","store_available":false},"when":[{"op":"planning.render"}],"expect":{"status":"UNAVAILABLE","constant_green":false,"task_completed":false}},
+      "acceptance_gate":"Real Store mutation/readback reaches the browser; live and disconnected cases have captured DOM/accessibility/network evidence."
+    },
+    {
+      "id":"K01", "workstream":"K", "title":"Replace the simulated OCaml receipt with a real bounded worker", "priority":"P0", "depends_on":["E06","M05"], "requirements":["RQ05","RQ06","RQ12","RQ13","RQ20","RQ31"],
+      "files":[{"mode":"modify","path":"apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam"},{"mode":"create","path":"engines/hermes/modules/hermes_wiki/uos_knowledge_worker.ml"},{"mode":"create","path":"engines/hermes/modules/hermes_wiki/uos_knowledge_worker.mli"},{"mode":"create","path":"apps/cepaf_gleam/test/ocaml_knowledge_worker_integration_test.gleam"}],
+      "implementation_steps":["Define a versioned bounded request/result protocol, real cryptographic payload digest and process identity; obtain typed authorization before dispatch.","Launch and supervise the OCaml worker through a bounded subprocess adapter; collect actual stdout, exit, duration and oracle provenance.","Return nonpassing results for missing worker, malformed frames, timeout, process death and unsupported queries; remove fixed COMMITTED/GOSPEL_VERIFIED receipts."],
+      "acceptance_case":{"id":"K01-worker-absent","given":{"worker_executable":"missing","payloads_same_length":["abc","xyz"]},"when":[{"op":"knowledge.worker_call"}],"expect":{"status":"UNAVAILABLE","verified":false,"digests_distinct":true,"leaked_children":0}},
+      "acceptance_gate":"A positive call proves a real worker PID and independent output; missing/crashed/timed-out workers never return verified receipts."
+    },
+    {
+      "id":"K02", "workstream":"K", "title":"Implement real journal ingestion and cited corpus retrieval", "priority":"P0", "depends_on":["K01","E04","E05","W05"], "requirements":["RQ01","RQ02","RQ03","RQ21","RQ22","RQ25","RQ31"],
+      "files":[{"mode":"modify","path":"apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_vertical_slice_engine.gleam"},{"mode":"modify","path":"apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam"},{"mode":"create","path":"apps/cepaf_gleam/test/journal_ingestion_integration_test.gleam"}],
+      "implementation_steps":["Read allowlisted candidate files and parse their real AST/frontmatter/sections; reject absent or malformed journals.","Compute content digests from actual permitted bytes and build a source-revision/dirty-manifest/per-file provenance bundle before corpus admission.","Retrieve citations from the actual admitted index; return locations and matching digests, propagate stale/missing source status and expose true API results."],
+      "acceptance_case":{"id":"K02-real-input","given":{"journal_path":"nonexistent.md","declared_sections":13,"census_kind":"dry_run"},"when":[{"op":"knowledge.ingest"}],"expect":{"status":"NOT_FOUND","sections_count":0,"admitted_files":0,"verified_green":false}},
+      "acceptance_gate":"Different real inputs produce correct distinct metadata and digests; no dry-run count becomes ingestion credit; citations resolve to admitted original content."
+    },
+    {
+      "id":"K03", "workstream":"K", "title":"Run independent Rust and OCaml knowledge conformance oracles", "priority":"P1", "depends_on":["K01","Z02","E06"], "requirements":["RQ03","RQ05","RQ06","RQ20","RQ31"],
+      "files":[{"mode":"modify","path":"apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_vertical_slice_engine.gleam"},{"mode":"create","path":"apps/cepaf_gleam/test/knowledge_differential_integration_test.gleam"}],
+      "implementation_steps":["Invoke independently pinned native and OCaml implementations with the same versioned fixture, collecting actual outputs and hashes.","Compare normalized semantic outputs without sharing expected values or copying one implementation's digest into the other.","Inject a deliberate one-side mismatch and missing-oracle control; report mismatch/unavailable with no parity credit."],
+      "acceptance_case":{"id":"K03-differential-mutant","given":{"rust_output":"mutated","ocaml_output":"reference"},"when":[{"op":"knowledge.compare_oracles"}],"expect":{"parity_matched":false,"verified_green":false,"independent_invocations":2}},
+      "acceptance_gate":"Positive independent execution matches and one-side mutants fail; fixed shared-digest implementations cannot satisfy the gate."
+    },
+    {
+      "id":"Q01", "workstream":"Q", "title":"Remove the two observed compiler warnings and record the actual result", "priority":"P2", "depends_on":["E02"], "requirements":["RQ05","RQ31","RQ33"],
+      "files":[{"mode":"modify","path":"apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam"},{"mode":"modify","path":"apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam"}],
+      "implementation_steps":["Remove the unused type import and use or remove the redundant inventory binding while preserving assertions.","Run the affected tests and required compiler checks with captured diagnostics; record the exact current warning count.","Correct downstream handover warning claims only using the resulting candidate-bound receipt."],
+      "acceptance_case":{"id":"Q01-compiler-diagnostics","given":{"prior_warning_count":2},"when":[{"op":"compiler.check_affected_tests"}],"expect":{"targeted_unused_warnings":0,"assertions_removed":0}},
+      "acceptance_gate":"Actual compiler output contains neither targeted warning; no implementation-mirroring test is added for this low-impact cleanup."
+    },
+    {
+      "id":"Q02", "workstream":"Q", "title":"Make all storage-safety assertions exercise the production admission path", "priority":"P0", "depends_on":["E02","E03"], "requirements":["RQ20","RQ31","RQ32"],
+      "files":[{"mode":"modify","path":"ops/kubernetes/nas-k8s-lab/tests/hardware_identity_test.rs"},{"mode":"modify","path":"ops/kubernetes/nas-k8s-lab/src/spec.rs"}],
+      "implementation_steps":["Route protected-serial, missing-serial and valid-secondary-device fixtures through the production validator, moving the tested module boundary only if necessary.","Remove the duplicate test-local validator as an oracle; preserve the immutable protected serial in production.","Prove a production-check mutant is detected in an isolated non-destructive fixture; never exercise a real disk wipe."],
+      "acceptance_case":{"id":"Q02-production-serial","given":{"serial":"25503L801736","production_check_mutated":true},"when":[{"op":"storage.run_production_validation_tests"}],"expect":{"mutant_detected":true,"physical_disk_operations":0}},
+      "acceptance_gate":"Safety fixtures call production code; deleting the production rejection causes the suite to fail."
+    },
+    {
+      "id":"N01", "workstream":"N", "title":"Diagnose and restore the advertised VM-1 HTTP endpoint", "priority":"P1", "depends_on":["E01","E02"], "requirements":["RQ18","RQ23","RQ31","RQ34"],
+      "files":[{"mode":"create","path":"tests/acceptance/peer_http_service_test.ml"},{"mode":"inspect","path":"docs/design/20260906-1649-codex-master-session-handover.md"}],
+      "implementation_steps":["Distinguish name resolution, Tailnet reachability, listener state, service ownership and application health using bounded read-only probes.","Fix the identified service configuration through its owner and authorized service controls, or correct an obsolete advertised endpoint with provenance.","Capture a response carrying actual service/build identity, check linked navigation, and test unavailable-state reporting; do not equate TCP reachability with system health."],
+      "acceptance_case":{"id":"N01-peer-unavailable","given":{"endpoint":"http://vm-1.tail55d152.ts.net:8088","connection":"refused"},"when":[{"op":"peer.health"}],"expect":{"status":"UNAVAILABLE","system_green":false,"timeout_seconds":1200}},
+      "acceptance_gate":"The advertised endpoint responds correctly with service identity or an evidence-backed corrected URL; failure remains visible in UI and sa-plan."
+    }
+  ]
+}
