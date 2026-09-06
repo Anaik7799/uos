@@ -2,24 +2,17 @@
 //// [C3I-SIL6-ASPECT-AGENTS-TEST] ASPECT AGENT ECOSYSTEM VERIFICATION TEST
 //// =============================================================================
 
-import gleeunit/should
+import cepaf_gleam/sdlc/aspect_agent_ecosystem.{
+  encode_aspect_coverage_json, encode_aspect_features_json,
+  get_all_aspect_feature_details, get_all_features, get_all_fractal_aspects,
+  get_aspect_coverage, get_aspect_features, get_aspect_squad_agents,
+  get_total_aspect_squad_agents, lookup_aspect_by_agent,
+  lookup_aspect_by_feature, verify_all_features_covered,
+  verify_full_aspect_coverage,
+}
 import gleam/list
 import gleam/string
-import cepaf_gleam/sdlc/aspect_agent_ecosystem.{
-  get_all_fractal_aspects,
-  get_aspect_coverage,
-  get_aspect_features,
-  get_aspect_squad_agents,
-  get_all_features,
-  get_all_aspect_feature_details,
-  get_total_aspect_squad_agents,
-  verify_full_aspect_coverage,
-  verify_all_features_covered,
-  lookup_aspect_by_feature,
-  lookup_aspect_by_agent,
-  encode_aspect_coverage_json,
-  encode_aspect_features_json,
-}
+import gleeunit/should
 
 pub fn all_14_aspects_mapped_test() {
   let aspects = get_all_fractal_aspects()
@@ -97,7 +90,9 @@ pub fn lookup_by_feature_and_agent_test() {
 
   let res2 = lookup_aspect_by_agent("VerifCc4StorageSafetyAuditor")
   case res2 {
-    Ok(d) -> d.aspect_name |> should.equal("Six Fractal Completeness Criteria (CC1-CC6)")
+    Ok(d) ->
+      d.aspect_name
+      |> should.equal("Six Fractal Completeness Criteria (CC1-CC6)")
     Error(_) -> should.fail()
   }
 }

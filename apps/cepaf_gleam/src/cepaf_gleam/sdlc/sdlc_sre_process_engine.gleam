@@ -682,4 +682,3 @@ pub fn oodavr_stage_to_string(stage: OodavrStage) -> String {
     OodavrRecord -> "RECORD"
   }
 }
-

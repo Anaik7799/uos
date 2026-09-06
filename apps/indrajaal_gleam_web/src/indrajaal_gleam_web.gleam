@@ -8,6 +8,7 @@ import cepaf_gleam/fpp/ontology
 import cepaf_gleam/fpp/topology
 import cepaf_gleam/sdlc/aspect_agent_ecosystem
 import cepaf_gleam/sdlc/aspect_processing_agent
+import cepaf_gleam/nif/zenoh_rete_bridge as nif_bridge
 import cepaf_gleam/sdlc/planes_ascii_architecture
 import cepaf_gleam/ui/lustre/biosemiotics_radar
 import cepaf_gleam/ui/lustre/cybernetic_brain_matrix
@@ -339,6 +340,14 @@ pub fn main() {
       }
       ["api", "fpp", "planes", "json"] -> {
         let json_body = planes_ascii_architecture.encode_planes_json()
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["api", "nif", "status"] -> {
+        let report = nif_bridge.evaluate_nif_subsystem()
+        let json_body = nif_bridge.encode_nif_report_json(report)
         response.new(200)
         |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
         |> response.prepend_header("content-type", "application/json")

@@ -13,12 +13,12 @@
 //// =============================================================================
 
 import cepaf_gleam/sdlc/aspect_agent_ecosystem.{
-  type FractalAspect, AspectCapabilityPoset,
-  AspectCodeSurfaces, AspectCompletenessCriteria, AspectComponentPacket,
-  AspectDesignLattice, AspectHorizontalSubsystems, AspectInteractionPaths,
-  AspectOntologyFaculties, AspectOrthogonalPlanes, AspectProductionConjunction,
-  AspectSaPlanDurability, AspectSemanticStrata, AspectVerticalLadder,
-  AspectWikiPipeline, get_all_fractal_aspects, get_aspect_feature_detail,
+  type FractalAspect, AspectCapabilityPoset, AspectCodeSurfaces,
+  AspectCompletenessCriteria, AspectComponentPacket, AspectDesignLattice,
+  AspectHorizontalSubsystems, AspectInteractionPaths, AspectOntologyFaculties,
+  AspectOrthogonalPlanes, AspectProductionConjunction, AspectSaPlanDurability,
+  AspectSemanticStrata, AspectVerticalLadder, AspectWikiPipeline,
+  get_all_fractal_aspects, get_aspect_feature_detail,
 }
 import gleam/float
 import gleam/json
@@ -114,7 +114,9 @@ pub type AspectProcessingState {
 // Initialization of the 14 Aspect Processing Agents
 // =============================================================================
 
-pub fn init_aspect_processing_agent(aspect: FractalAspect) -> AspectProcessingState {
+pub fn init_aspect_processing_agent(
+  aspect: FractalAspect,
+) -> AspectProcessingState {
   let detail = get_aspect_feature_detail(aspect)
   let features_len = list.length(detail.features)
   let squad_len = list.length(detail.squad_agents)
@@ -256,7 +258,7 @@ pub fn init_aspect_processing_agent(aspect: FractalAspect) -> AspectProcessingSt
         secondary_layers: [8, 9],
         fractal_dimension: 2.414,
         lyapunov_exponent: -0.79,
-        shannon_entropy: 3.10,
+        shannon_entropy: 3.1,
         processor_agent_name: "OntologyFacultiesProcessingAgent",
         squad_agent_count: squad_len,
         features_count: features_len,
@@ -288,7 +290,7 @@ pub fn init_aspect_processing_agent(aspect: FractalAspect) -> AspectProcessingSt
         secondary_layers: [3, 6],
         fractal_dimension: 1.68,
         lyapunov_exponent: -0.45,
-        shannon_entropy: 2.80,
+        shannon_entropy: 2.8,
         processor_agent_name: "WikiPipelineProcessingAgent",
         squad_agent_count: squad_len,
         features_count: features_len,
@@ -302,9 +304,9 @@ pub fn init_aspect_processing_agent(aspect: FractalAspect) -> AspectProcessingSt
         aspect_name: detail.aspect_name,
         primary_layer: 0,
         secondary_layers: [2, 4],
-        fractal_dimension: 1.50,
+        fractal_dimension: 1.5,
         lyapunov_exponent: -0.95,
-        shannon_entropy: 3.30,
+        shannon_entropy: 3.3,
         processor_agent_name: "ProductionConjunctionProcessingAgent",
         squad_agent_count: squad_len,
         features_count: features_len,
@@ -318,7 +320,7 @@ pub fn init_aspect_processing_agent(aspect: FractalAspect) -> AspectProcessingSt
         aspect_name: detail.aspect_name,
         primary_layer: 8,
         secondary_layers: [0, 5],
-        fractal_dimension: 1.80,
+        fractal_dimension: 1.8,
         lyapunov_exponent: -0.71,
         shannon_entropy: 2.95,
         processor_agent_name: "CapabilityPosetProcessingAgent",
@@ -453,8 +455,7 @@ pub fn encode_processing_agents_json(
       ])
     })
 
-  let total_feat =
-    list.fold(agents, 0, fn(acc, a) { acc + a.features_count })
+  let total_feat = list.fold(agents, 0, fn(acc, a) { acc + a.features_count })
   let total_squad =
     list.fold(agents, 0, fn(acc, a) { acc + a.squad_agent_count })
 
@@ -463,7 +464,10 @@ pub fn encode_processing_agents_json(
     #("total_aspect_processors", json.int(list.length(agents))),
     #("total_features_governed", json.int(total_feat)),
     #("total_squad_agents_active", json.int(total_squad)),
-    #("all_fractally_aligned", json.bool(verify_all_aspects_fractally_aligned(agents))),
+    #(
+      "all_fractally_aligned",
+      json.bool(verify_all_aspects_fractally_aligned(agents)),
+    ),
     #("processors", json.array(items, fn(x) { x })),
   ])
   |> json.to_string

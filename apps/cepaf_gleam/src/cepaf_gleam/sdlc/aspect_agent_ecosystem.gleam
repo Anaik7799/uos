@@ -698,24 +698,28 @@ pub fn verify_all_features_covered() -> Bool {
   list.length(details) == 14
   && list.length(all_features) == 104
   && list.all(details, fn(d) {
-    let squad_match = list.length(d.squad_agents) == list.length(get_aspect_squad_agents(d.aspect))
+    let squad_match =
+      list.length(d.squad_agents)
+      == list.length(get_aspect_squad_agents(d.aspect))
     d.features != [] && squad_match
   })
   && get_total_aspect_squad_agents() == 256
 }
 
-pub fn lookup_aspect_by_feature(feature_keyword: String) -> Result(AspectFeatureDetail, Nil) {
+pub fn lookup_aspect_by_feature(
+  feature_keyword: String,
+) -> Result(AspectFeatureDetail, Nil) {
   let details = get_all_aspect_feature_details()
   list.find(details, fn(d) {
     list.any(d.features, fn(f) { string.contains(f, feature_keyword) })
   })
 }
 
-pub fn lookup_aspect_by_agent(agent_name: String) -> Result(AspectFeatureDetail, Nil) {
+pub fn lookup_aspect_by_agent(
+  agent_name: String,
+) -> Result(AspectFeatureDetail, Nil) {
   let details = get_all_aspect_feature_details()
-  list.find(details, fn(d) {
-    list.contains(d.squad_agents, agent_name)
-  })
+  list.find(details, fn(d) { list.contains(d.squad_agents, agent_name) })
 }
 
 pub fn encode_aspect_coverage_json(aspects: List(AspectCoverage)) -> String {
@@ -727,7 +731,10 @@ pub fn encode_aspect_coverage_json(aspects: List(AspectCoverage)) -> String {
         #("primary_agent_kind", json.string(cov.primary_agent_kind)),
         #("squad_size", json.int(cov.squad_size)),
         #("governing_contract", json.string(cov.governing_contract)),
-        #("formal_verification_method", json.string(cov.formal_verification_method)),
+        #(
+          "formal_verification_method",
+          json.string(cov.formal_verification_method),
+        ),
       ])
     })
 
@@ -741,7 +748,9 @@ pub fn encode_aspect_coverage_json(aspects: List(AspectCoverage)) -> String {
   |> json.to_string
 }
 
-pub fn encode_aspect_features_json(details: List(AspectFeatureDetail)) -> String {
+pub fn encode_aspect_features_json(
+  details: List(AspectFeatureDetail),
+) -> String {
   let items =
     list.map(details, fn(d) {
       json.object([
@@ -751,7 +760,10 @@ pub fn encode_aspect_features_json(details: List(AspectFeatureDetail)) -> String
         #("features", json.array(d.features, json.string)),
         #("squad_agents", json.array(d.squad_agents, json.string)),
         #("governing_contract", json.string(d.governing_contract)),
-        #("formal_verification_method", json.string(d.formal_verification_method)),
+        #(
+          "formal_verification_method",
+          json.string(d.formal_verification_method),
+        ),
       ])
     })
 

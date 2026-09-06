@@ -3,9 +3,9 @@
 // ==============================================================================
 
 import cepaf_gleam/sdlc/forecasting_engine.{
-  ConfidenceEstimated, ConfidenceMeasured, ConfidenceUnknown,
-  SliceForecast, ToolDebouncedEdit, ToolTrappedViolation,
-  confidence_meet, evaluate_prediction_maximization, evaluate_tool_invocation,
+  ConfidenceEstimated, ConfidenceMeasured, ConfidenceUnknown, SliceForecast,
+  ToolDebouncedEdit, ToolTrappedViolation, confidence_meet,
+  evaluate_prediction_maximization, evaluate_tool_invocation,
   fold_slices_into_goal, generate_prebrief_forecast_block,
 }
 import gleam/string
@@ -68,13 +68,13 @@ pub fn prebrief_forecast_block_formatting_test() {
 
   block |> string.contains("PRE-BRIEF FORECAST") |> should.equal(True)
   block |> string.contains("Estimated Duration: 1000 ms") |> should.equal(True)
-  block |> string.contains("Aggregate Confidence: Measured") |> should.equal(True)
+  block
+  |> string.contains("Aggregate Confidence: Measured")
+  |> should.equal(True)
 }
 
 pub fn prediction_maximization_transition_test() {
-  case
-    evaluate_prediction_maximization(ConfidenceUnknown, ConfidenceMeasured)
-  {
+  case evaluate_prediction_maximization(ConfidenceUnknown, ConfidenceMeasured) {
     forecasting_engine.TransitionValid(from, to) -> {
       from |> should.equal(ConfidenceUnknown)
       to |> should.equal(ConfidenceMeasured)
@@ -84,9 +84,7 @@ pub fn prediction_maximization_transition_test() {
   }
   |> should.equal(True)
 
-  case
-    evaluate_prediction_maximization(ConfidenceMeasured, ConfidenceUnknown)
-  {
+  case evaluate_prediction_maximization(ConfidenceMeasured, ConfidenceUnknown) {
     forecasting_engine.TransitionDegradation(from, to) -> {
       from |> should.equal(ConfidenceMeasured)
       to |> should.equal(ConfidenceUnknown)

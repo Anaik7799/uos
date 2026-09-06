@@ -226,11 +226,14 @@ pub fn all_planes_ascii() -> String {
 pub fn encode_planes_json() -> String {
   json.object([
     #("status", json.string("ok")),
-    #("planes", json.object([
-      #("control_plane", json.string(control_plane_ascii())),
-      #("data_plane", json.string(data_plane_ascii())),
-      #("verification_plane", json.string(verification_plane_ascii())),
-    ])),
+    #(
+      "planes",
+      json.object([
+        #("control_plane", json.string(control_plane_ascii())),
+        #("data_plane", json.string(data_plane_ascii())),
+        #("verification_plane", json.string(verification_plane_ascii())),
+      ]),
+    ),
   ])
   |> json.to_string
 }

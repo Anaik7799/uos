@@ -133,12 +133,7 @@ pub fn workflow_activity_test() {
       1_773_312_001_000,
     )
   let assert Ok(store3) =
-    complete_workflow(
-      store2,
-      "WF-01",
-      "verification_pass",
-      1_773_312_002_000,
-    )
+    complete_workflow(store2, "WF-01", "verification_pass", 1_773_312_002_000)
 
   let assert Ok(wf) = list.first(store3.workflows)
   wf.status |> should.equal(WorkflowCompleted)

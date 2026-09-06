@@ -278,10 +278,9 @@ pub fn component_packet_validation_test() {
 
   // Invalid packet with insufficient mutants (< 2)
   let invalid_packet =
-    sdlc_sre_process_engine.ComponentPacket(
-      ..valid_packet,
-      mutants: ["Single mutant"],
-    )
+    sdlc_sre_process_engine.ComponentPacket(..valid_packet, mutants: [
+      "Single mutant",
+    ])
   sdlc_sre_process_engine.validate_component_packet(invalid_packet)
   |> should.equal(False)
 }
@@ -397,4 +396,3 @@ pub fn agent_topology_and_oodavr_test() {
   )
   |> should.equal("RECORD")
 }
-

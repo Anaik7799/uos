@@ -2,55 +2,24 @@
 //// [C3I-SIL6-CODEX-MAP-TEST] CODEX FRACTAL SYSTEM MAPPING VERIFICATION TEST
 //// =============================================================================
 
-import gleeunit/should
-import gleam/list
-import gleam/int
 import cepaf_gleam/verification/codex_fractal_system_mapping.{
-  ComponentPacket,
-  validate_component_packet,
-  list_all_vertical_layers,
-  get_vertical_mapping,
-  list_all_system_planes,
-  get_plane_mapping,
-  StratumA,
-  StratumB,
-  StratumC,
-  get_stratum_mapping,
-  verify_stratum_isolation,
-  get_subsystem_mapping,
-  count_all_subsystems,
-  get_all_code_surface_mappings,
-  ProductionReadiness,
-  evaluate_production_readiness,
-  StateAbsent,
-  StateUntested,
-  StateEquiv,
-  StateEq,
-  capability_state_leq,
-  capability_state_meet,
-  PhaseObserve,
-  PhaseOrient,
-  PhaseDecide,
-  PhaseAct,
-  PhaseVerify,
-  PhaseRecord,
-  advance_oodavr_phase,
-  is_oodavr_cycle_closed,
-  OodavrState,
-  TierL0MetaOrchestrator,
-  ResolvedInPureBeam,
-  get_sa_plan_residual_audit,
-  list_all_system_paths,
-  get_system_path_flow,
-  list_all_design_stages,
-  get_design_lattice_mapping,
-  list_all_faculties,
-  get_faculty_mapping,
-  CompletenessCriteria,
-  evaluate_system_completeness,
-  WikiPipelineRecursion,
-  verify_wiki_pipeline_recursion,
+  CompletenessCriteria, ComponentPacket, OodavrState, PhaseAct, PhaseDecide,
+  PhaseObserve, PhaseOrient, PhaseRecord, PhaseVerify, ProductionReadiness,
+  ResolvedInPureBeam, StateAbsent, StateEq, StateEquiv, StateUntested, StratumA,
+  StratumB, StratumC, TierL0MetaOrchestrator, WikiPipelineRecursion,
+  advance_oodavr_phase, capability_state_leq, capability_state_meet,
+  count_all_subsystems, evaluate_production_readiness,
+  evaluate_system_completeness, get_all_code_surface_mappings,
+  get_design_lattice_mapping, get_faculty_mapping, get_plane_mapping,
+  get_sa_plan_residual_audit, get_stratum_mapping, get_subsystem_mapping,
+  get_system_path_flow, get_vertical_mapping, is_oodavr_cycle_closed,
+  list_all_design_stages, list_all_faculties, list_all_system_paths,
+  list_all_system_planes, list_all_vertical_layers, validate_component_packet,
+  verify_stratum_isolation, verify_wiki_pipeline_recursion,
 }
+import gleam/int
+import gleam/list
+import gleeunit/should
 
 pub fn component_packet_validation_test() {
   let valid_packet =
@@ -71,8 +40,7 @@ pub fn component_packet_validation_test() {
   validate_component_packet(valid_packet)
   |> should.be_true
 
-  let invalid_packet_empty_judge =
-    ComponentPacket(..valid_packet, judge: "")
+  let invalid_packet_empty_judge = ComponentPacket(..valid_packet, judge: "")
   validate_component_packet(invalid_packet_empty_judge)
   |> should.be_false
 
@@ -255,8 +223,7 @@ pub fn oodavr_phase_transitions_test() {
   is_oodavr_cycle_closed(closed_state)
   |> should.be_true
 
-  let incomplete_state =
-    OodavrState(..closed_state, gate_passed: False)
+  let incomplete_state = OodavrState(..closed_state, gate_passed: False)
   is_oodavr_cycle_closed(incomplete_state)
   |> should.be_false
 }
@@ -264,8 +231,10 @@ pub fn oodavr_phase_transitions_test() {
 pub fn sa_plan_residual_resolution_test() {
   let audit = get_sa_plan_residual_audit()
   audit.status |> should.equal(ResolvedInPureBeam)
-  audit.engine_module |> should.equal("apps/cepaf_gleam/src/cepaf_gleam/sdlc/sa_plan_engine.gleam")
-  audit.test_module |> should.equal("apps/cepaf_gleam/test/sa_plan_engine_test.gleam")
+  audit.engine_module
+  |> should.equal("apps/cepaf_gleam/src/cepaf_gleam/sdlc/sa_plan_engine.gleam")
+  audit.test_module
+  |> should.equal("apps/cepaf_gleam/test/sa_plan_engine_test.gleam")
 }
 
 pub fn system_paths_flow_test() {

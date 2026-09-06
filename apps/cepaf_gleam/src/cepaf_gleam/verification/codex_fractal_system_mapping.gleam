@@ -251,49 +251,77 @@ pub fn get_plane_mapping(plane: SystemPlane) -> PlaneMapping {
         plane: PlaneRuntime,
         plane_name: "runtime",
         primary_flow: "BEAM OTP 29 supervisor, ZigVM execution, services, processes, effects",
-        uos_subsystems: ["uos_sup.gleam", "indrajaal_gleam_web", "services/inference/max"],
+        uos_subsystems: [
+          "uos_sup.gleam",
+          "indrajaal_gleam_web",
+          "services/inference/max",
+        ],
       )
     PlaneOracle ->
       PlaneMapping(
         plane: PlaneOracle,
         plane_name: "oracle",
         primary_flow: "semantic domains, initial encodings, fixtures, differential specs",
-        uos_subsystems: ["test_parity_algebra.exe", "dmc_tcm_algebraic_atlas.gleam", "formal/lean/"],
+        uos_subsystems: [
+          "test_parity_algebra.exe",
+          "dmc_tcm_algebraic_atlas.gleam",
+          "formal/lean/",
+        ],
       )
     PlaneVerification ->
       PlaneMapping(
         plane: PlaneVerification,
         plane_name: "verification",
         primary_flow: "generators, mutants, formal judges, selfchecks, gates",
-        uos_subsystems: ["master_verification_registry.gleam", "ocaml_differential_oracle.gleam", "tools/uos checklist"],
+        uos_subsystems: [
+          "master_verification_registry.gleam",
+          "ocaml_differential_oracle.gleam",
+          "tools/uos checklist",
+        ],
       )
     PlaneEvidence ->
       PlaneMapping(
         plane: PlaneEvidence,
         plane_name: "evidence",
         primary_flow: "SQLite WAL ledgers, Jujutsu revision, verdicts, baselines",
-        uos_subsystems: ["data/sqlite/uos_verification_tracking.sqlite3", "governance/sources/"],
+        uos_subsystems: [
+          "data/sqlite/uos_verification_tracking.sqlite3",
+          "governance/sources/",
+        ],
       )
     PlaneGovernance ->
       PlaneMapping(
         plane: PlaneGovernance,
         plane_name: "governance",
         primary_flow: "STPA, CAST, Rete-UL, OODA, ratchets, tri-sovereign admission",
-        uos_subsystems: ["contracts/rules/", "governance/agents/", "spec.rs hardware lock"],
+        uos_subsystems: [
+          "contracts/rules/",
+          "governance/agents/",
+          "spec.rs hardware lock",
+        ],
       )
     PlaneKnowledge ->
       PlaneMapping(
         plane: PlaneKnowledge,
         plane_name: "knowledge",
         primary_flow: "docs, skills, ontology, ZK ADRs, wiki, generated views",
-        uos_subsystems: ["docs/zk/", "docs/wiki/", "docs/design/", ".agents/skills/"],
+        uos_subsystems: [
+          "docs/zk/",
+          "docs/wiki/",
+          "docs/design/",
+          ".agents/skills/",
+        ],
       )
     PlaneOrchestration ->
       PlaneMapping(
         plane: PlaneOrchestration,
         plane_name: "orchestration",
         primary_flow: "Sa-Plan, Prajna, MCP, 256 agents, bounded OODAVR slices",
-        uos_subsystems: ["sa_plan_engine.gleam", "forecasting_engine.gleam", "agui/"],
+        uos_subsystems: [
+          "sa_plan_engine.gleam",
+          "forecasting_engine.gleam",
+          "agui/",
+        ],
       )
   }
 }
@@ -394,41 +422,274 @@ pub type SubsystemMapping {
   )
 }
 
-pub fn get_subsystem_mapping(subsystem_id: String) -> Result(SubsystemMapping, Nil) {
+pub fn get_subsystem_mapping(
+  subsystem_id: String,
+) -> Result(SubsystemMapping, Nil) {
   case subsystem_id {
-    "S1" -> Ok(SubsystemMapping("S1", "Terms", CategoryData, "src/beam/term.zig", "apps/cepaf_gleam/src/cepaf_gleam/ui/domain.gleam"))
-    "S2" -> Ok(SubsystemMapping("S2", "Numbers", CategoryData, "src/beam/bignum.zig", "gleam/int, gleam/float, native/c/"))
-    "S3" -> Ok(SubsystemMapping("S3", "Atoms", CategoryData, "src/beam/atom.zig", "BEAM native atoms, erlang.atom"))
-    "S4" -> Ok(SubsystemMapping("S4", "Maps", CategoryData, "src/beam/map.zig", "gleam/dict, erlang maps"))
-    "S5" -> Ok(SubsystemMapping("S5", "Binaries", CategoryData, "src/beam/binary.zig", "gleam/bit_array, gleam/bytes_builder"))
-    "S6" -> Ok(SubsystemMapping("S6", "Funs/Records", CategoryData, "src/beam/closure.zig", "Gleam higher-order functions & custom types"))
-    "S7" -> Ok(SubsystemMapping("S7", "Hashing", CategoryData, "src/beam/hash.zig", "apps/cepaf_gleam/src/c3i_nif.erl, Cryptokit SHA-256"))
-    "S8" -> Ok(SubsystemMapping("S8", "ETF (External Term Format)", CategoryData, "src/beam/etf.zig", "erlang:term_to_binary, binary_to_term"))
-    "S9" -> Ok(SubsystemMapping("S9", "Unicode", CategoryData, "src/beam/unicode.zig", "gleam/string utf-8 native handling"))
-    "S10" -> Ok(SubsystemMapping("S10", "Printing", CategoryData, "src/beam/io.zig", "gleam/io, ANSI renderers, correlated_log"))
-    "S11" -> Ok(SubsystemMapping("S11", "GC (Garbage Collection)", CategoryMemory, "src/beam/gc.zig", "BEAM per-process generational GC"))
-    "S12" -> Ok(SubsystemMapping("S12", "Allocators", CategoryMemory, "src/runtime/allocator.zig", "Zig linear arenas, BEAM allocators"))
-    "S13" -> Ok(SubsystemMapping("S13", "Interpreter", CategoryExecution, "src/vm/interpreter.zig", "engines/zigvm/src/vm/, BEAM VM"))
-    "S14" -> Ok(SubsystemMapping("S14", "JIT", CategoryExecution, "src/vm/jit.zig", "BEAM OTP 29 native JIT compiler"))
-    "S15" -> Ok(SubsystemMapping("S15", "Loader", CategoryExecution, "src/vm/loader.zig", "BEAM code loader, Gleam module registry"))
-    "S16" -> Ok(SubsystemMapping("S16", "Code/Hot Load", CategoryExecution, "src/vm/hot_load.zig", "BEAM dynamic code upgrade, Prajna hot reload"))
-    "S17" -> Ok(SubsystemMapping("S17", "Scheduler", CategoryConcurrency, "src/runtime/scheduler.zig", "BEAM pre-emptive multi-core scheduler (16:16)"))
-    "S18" -> Ok(SubsystemMapping("S18", "Signals", CategoryConcurrency, "src/runtime/signal.zig", "BEAM process signal queue, exit trapping"))
-    "S19" -> Ok(SubsystemMapping("S19", "Mailbox", CategoryConcurrency, "src/runtime/mailbox.zig", "gleam/erlang/process, OTP actor mailboxes"))
-    "S20" -> Ok(SubsystemMapping("S20", "Monitors/Links", CategoryConcurrency, "src/runtime/monitor.zig", "OTP process monitor/link, uos_sup isolation"))
-    "S21" -> Ok(SubsystemMapping("S21", "Timers", CategoryConcurrency, "src/runtime/timer.zig", "gleam/erlang/process.send_after, OTP timer wheel"))
-    "S22" -> Ok(SubsystemMapping("S22", "ETS", CategoryStorage, "src/storage/ets.zig", "apps/cepaf_gleam/src/cepaf_gleam/c3i/ets.gleam"))
-    "S23" -> Ok(SubsystemMapping("S23", "Match Specs", CategoryStorage, "src/storage/match_spec.zig", "ETS match specifications, Gleam pattern matching"))
-    "S24" -> Ok(SubsystemMapping("S24", "Registry/Persistent State", CategoryStorage, "src/storage/registry.zig", "data/sqlite/uos_verification_tracking.sqlite3"))
-    "S25" -> Ok(SubsystemMapping("S25", "Ports/IO", CategoryCommunication, "src/io/port.zig", "Gleam port drivers, length-delimited JSON-RPC"))
-    "S26" -> Ok(SubsystemMapping("S26", "Drivers/NIFs", CategoryCommunication, "src/nif/dispatch.zig", "c3i_nif.erl, native/ (C-ABI bounded kernels)"))
-    "S27" -> Ok(SubsystemMapping("S27", "Distribution", CategoryCommunication, "src/dist/protocol.zig", "Zenoh pub/sub mesh, Tailscale overlay mesh"))
-    "S28" -> Ok(SubsystemMapping("S28", "BIF Dispatch & Families", CategorySurface, "src/bif/dispatch.zig", "BEAM built-in functions, Gleam stdlib"))
-    "S29" -> Ok(SubsystemMapping("S29", "Tracing", CategoryObservation, "src/trace/tracer.zig", "Universal C3I Telemetry, OTel over Zenoh (OoZ)"))
-    "S30" -> Ok(SubsystemMapping("S30", "Diagnostics", CategoryObservation, "src/diag/system.zig", "tools/uos doctor, Lyapunov trend proofs"))
-    "S31" -> Ok(SubsystemMapping("S31", "Concurrency Substrate", CategoryConcurrency, "src/runtime/atomic.zig", "Lockless ring buffers, Two-Lattice STM in Lean"))
-    "S32" -> Ok(SubsystemMapping("S32", "Generic Containers", CategoryFoundation, "src/util/container.zig", "Gleam list, dict, set, queue"))
-    "S33" -> Ok(SubsystemMapping("S33", "Boot", CategoryFoundation, "src/boot/init.zig", "uos_sup root supervisor, tools/uos entrypoint"))
+    "S1" ->
+      Ok(SubsystemMapping(
+        "S1",
+        "Terms",
+        CategoryData,
+        "src/beam/term.zig",
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/domain.gleam",
+      ))
+    "S2" ->
+      Ok(SubsystemMapping(
+        "S2",
+        "Numbers",
+        CategoryData,
+        "src/beam/bignum.zig",
+        "gleam/int, gleam/float, native/c/",
+      ))
+    "S3" ->
+      Ok(SubsystemMapping(
+        "S3",
+        "Atoms",
+        CategoryData,
+        "src/beam/atom.zig",
+        "BEAM native atoms, erlang.atom",
+      ))
+    "S4" ->
+      Ok(SubsystemMapping(
+        "S4",
+        "Maps",
+        CategoryData,
+        "src/beam/map.zig",
+        "gleam/dict, erlang maps",
+      ))
+    "S5" ->
+      Ok(SubsystemMapping(
+        "S5",
+        "Binaries",
+        CategoryData,
+        "src/beam/binary.zig",
+        "gleam/bit_array, gleam/bytes_builder",
+      ))
+    "S6" ->
+      Ok(SubsystemMapping(
+        "S6",
+        "Funs/Records",
+        CategoryData,
+        "src/beam/closure.zig",
+        "Gleam higher-order functions & custom types",
+      ))
+    "S7" ->
+      Ok(SubsystemMapping(
+        "S7",
+        "Hashing",
+        CategoryData,
+        "src/beam/hash.zig",
+        "apps/cepaf_gleam/src/c3i_nif.erl, Cryptokit SHA-256",
+      ))
+    "S8" ->
+      Ok(SubsystemMapping(
+        "S8",
+        "ETF (External Term Format)",
+        CategoryData,
+        "src/beam/etf.zig",
+        "erlang:term_to_binary, binary_to_term",
+      ))
+    "S9" ->
+      Ok(SubsystemMapping(
+        "S9",
+        "Unicode",
+        CategoryData,
+        "src/beam/unicode.zig",
+        "gleam/string utf-8 native handling",
+      ))
+    "S10" ->
+      Ok(SubsystemMapping(
+        "S10",
+        "Printing",
+        CategoryData,
+        "src/beam/io.zig",
+        "gleam/io, ANSI renderers, correlated_log",
+      ))
+    "S11" ->
+      Ok(SubsystemMapping(
+        "S11",
+        "GC (Garbage Collection)",
+        CategoryMemory,
+        "src/beam/gc.zig",
+        "BEAM per-process generational GC",
+      ))
+    "S12" ->
+      Ok(SubsystemMapping(
+        "S12",
+        "Allocators",
+        CategoryMemory,
+        "src/runtime/allocator.zig",
+        "Zig linear arenas, BEAM allocators",
+      ))
+    "S13" ->
+      Ok(SubsystemMapping(
+        "S13",
+        "Interpreter",
+        CategoryExecution,
+        "src/vm/interpreter.zig",
+        "engines/zigvm/src/vm/, BEAM VM",
+      ))
+    "S14" ->
+      Ok(SubsystemMapping(
+        "S14",
+        "JIT",
+        CategoryExecution,
+        "src/vm/jit.zig",
+        "BEAM OTP 29 native JIT compiler",
+      ))
+    "S15" ->
+      Ok(SubsystemMapping(
+        "S15",
+        "Loader",
+        CategoryExecution,
+        "src/vm/loader.zig",
+        "BEAM code loader, Gleam module registry",
+      ))
+    "S16" ->
+      Ok(SubsystemMapping(
+        "S16",
+        "Code/Hot Load",
+        CategoryExecution,
+        "src/vm/hot_load.zig",
+        "BEAM dynamic code upgrade, Prajna hot reload",
+      ))
+    "S17" ->
+      Ok(SubsystemMapping(
+        "S17",
+        "Scheduler",
+        CategoryConcurrency,
+        "src/runtime/scheduler.zig",
+        "BEAM pre-emptive multi-core scheduler (16:16)",
+      ))
+    "S18" ->
+      Ok(SubsystemMapping(
+        "S18",
+        "Signals",
+        CategoryConcurrency,
+        "src/runtime/signal.zig",
+        "BEAM process signal queue, exit trapping",
+      ))
+    "S19" ->
+      Ok(SubsystemMapping(
+        "S19",
+        "Mailbox",
+        CategoryConcurrency,
+        "src/runtime/mailbox.zig",
+        "gleam/erlang/process, OTP actor mailboxes",
+      ))
+    "S20" ->
+      Ok(SubsystemMapping(
+        "S20",
+        "Monitors/Links",
+        CategoryConcurrency,
+        "src/runtime/monitor.zig",
+        "OTP process monitor/link, uos_sup isolation",
+      ))
+    "S21" ->
+      Ok(SubsystemMapping(
+        "S21",
+        "Timers",
+        CategoryConcurrency,
+        "src/runtime/timer.zig",
+        "gleam/erlang/process.send_after, OTP timer wheel",
+      ))
+    "S22" ->
+      Ok(SubsystemMapping(
+        "S22",
+        "ETS",
+        CategoryStorage,
+        "src/storage/ets.zig",
+        "apps/cepaf_gleam/src/cepaf_gleam/c3i/ets.gleam",
+      ))
+    "S23" ->
+      Ok(SubsystemMapping(
+        "S23",
+        "Match Specs",
+        CategoryStorage,
+        "src/storage/match_spec.zig",
+        "ETS match specifications, Gleam pattern matching",
+      ))
+    "S24" ->
+      Ok(SubsystemMapping(
+        "S24",
+        "Registry/Persistent State",
+        CategoryStorage,
+        "src/storage/registry.zig",
+        "data/sqlite/uos_verification_tracking.sqlite3",
+      ))
+    "S25" ->
+      Ok(SubsystemMapping(
+        "S25",
+        "Ports/IO",
+        CategoryCommunication,
+        "src/io/port.zig",
+        "Gleam port drivers, length-delimited JSON-RPC",
+      ))
+    "S26" ->
+      Ok(SubsystemMapping(
+        "S26",
+        "Drivers/NIFs",
+        CategoryCommunication,
+        "src/nif/dispatch.zig",
+        "c3i_nif.erl, native/ (C-ABI bounded kernels)",
+      ))
+    "S27" ->
+      Ok(SubsystemMapping(
+        "S27",
+        "Distribution",
+        CategoryCommunication,
+        "src/dist/protocol.zig",
+        "Zenoh pub/sub mesh, Tailscale overlay mesh",
+      ))
+    "S28" ->
+      Ok(SubsystemMapping(
+        "S28",
+        "BIF Dispatch & Families",
+        CategorySurface,
+        "src/bif/dispatch.zig",
+        "BEAM built-in functions, Gleam stdlib",
+      ))
+    "S29" ->
+      Ok(SubsystemMapping(
+        "S29",
+        "Tracing",
+        CategoryObservation,
+        "src/trace/tracer.zig",
+        "Universal C3I Telemetry, OTel over Zenoh (OoZ)",
+      ))
+    "S30" ->
+      Ok(SubsystemMapping(
+        "S30",
+        "Diagnostics",
+        CategoryObservation,
+        "src/diag/system.zig",
+        "tools/uos doctor, Lyapunov trend proofs",
+      ))
+    "S31" ->
+      Ok(SubsystemMapping(
+        "S31",
+        "Concurrency Substrate",
+        CategoryConcurrency,
+        "src/runtime/atomic.zig",
+        "Lockless ring buffers, Two-Lattice STM in Lean",
+      ))
+    "S32" ->
+      Ok(SubsystemMapping(
+        "S32",
+        "Generic Containers",
+        CategoryFoundation,
+        "src/util/container.zig",
+        "Gleam list, dict, set, queue",
+      ))
+    "S33" ->
+      Ok(SubsystemMapping(
+        "S33",
+        "Boot",
+        CategoryFoundation,
+        "src/boot/init.zig",
+        "uos_sup root supervisor, tools/uos entrypoint",
+      ))
     _ -> Error(Nil)
   }
 }
@@ -588,7 +849,10 @@ pub fn capability_state_leq(s1: CapabilityState, s2: CapabilityState) -> Bool {
   capability_state_to_int(s1) <= capability_state_to_int(s2)
 }
 
-pub fn capability_state_meet(s1: CapabilityState, s2: CapabilityState) -> CapabilityState {
+pub fn capability_state_meet(
+  s1: CapabilityState,
+  s2: CapabilityState,
+) -> CapabilityState {
   case capability_state_to_int(s1) <= capability_state_to_int(s2) {
     True -> s1
     False -> s2
@@ -639,7 +903,8 @@ pub fn advance_oodavr_phase(current: OodavrPhase) -> OodavrPhase {
 
 pub fn is_oodavr_cycle_closed(state: OodavrState) -> Bool {
   case state.current_phase {
-    PhaseRecord -> state.sa_plan_bound && state.gate_passed && state.rete_recorded
+    PhaseRecord ->
+      state.sa_plan_bound && state.gate_passed && state.rete_recorded
     _ -> False
   }
 }
@@ -827,18 +1092,80 @@ pub type StageLatticeMapping {
   )
 }
 
-pub fn get_design_lattice_mapping(stage: DesignLatticeStage) -> StageLatticeMapping {
+pub fn get_design_lattice_mapping(
+  stage: DesignLatticeStage,
+) -> StageLatticeMapping {
   case stage {
-    W0Carriers -> StageLatticeMapping(W0Carriers, "W0", "Carriers", "OCaml design algebra, tokens, contracts")
-    W1Planning -> StageLatticeMapping(W1Planning, "W1", "Planning", "Slice planning & phase-runbook totality")
-    W2DesignProjection -> StageLatticeMapping(W2DesignProjection, "W2", "Design Projection", "Figma/Stitch canvas projections")
-    W3Generator -> StageLatticeMapping(W3Generator, "W3", "Generator", "Tokens & layout generator readback")
-    W4Refinement -> StageLatticeMapping(W4Refinement, "W4", "Refinement", "Interactive variants & accessibility auditing")
-    W5Runtime -> StageLatticeMapping(W5Runtime, "W5", "Runtime", "Lustre MVU server-side component rendering")
-    W6Verification -> StageLatticeMapping(W6Verification, "W6", "Verification", "5 viewport classes & color mode captures")
-    W7Publication -> StageLatticeMapping(W7Publication, "W7", "Publication", "Design publication byte equality check")
-    W8Evidence -> StageLatticeMapping(W8Evidence, "W8", "Evidence", "AIP fixity hashes & journal entries")
-    W9Governance -> StageLatticeMapping(W9Governance, "W9", "Governance", "SC-DESIGN rules in Zero-Trust record_cycle")
+    W0Carriers ->
+      StageLatticeMapping(
+        W0Carriers,
+        "W0",
+        "Carriers",
+        "OCaml design algebra, tokens, contracts",
+      )
+    W1Planning ->
+      StageLatticeMapping(
+        W1Planning,
+        "W1",
+        "Planning",
+        "Slice planning & phase-runbook totality",
+      )
+    W2DesignProjection ->
+      StageLatticeMapping(
+        W2DesignProjection,
+        "W2",
+        "Design Projection",
+        "Figma/Stitch canvas projections",
+      )
+    W3Generator ->
+      StageLatticeMapping(
+        W3Generator,
+        "W3",
+        "Generator",
+        "Tokens & layout generator readback",
+      )
+    W4Refinement ->
+      StageLatticeMapping(
+        W4Refinement,
+        "W4",
+        "Refinement",
+        "Interactive variants & accessibility auditing",
+      )
+    W5Runtime ->
+      StageLatticeMapping(
+        W5Runtime,
+        "W5",
+        "Runtime",
+        "Lustre MVU server-side component rendering",
+      )
+    W6Verification ->
+      StageLatticeMapping(
+        W6Verification,
+        "W6",
+        "Verification",
+        "5 viewport classes & color mode captures",
+      )
+    W7Publication ->
+      StageLatticeMapping(
+        W7Publication,
+        "W7",
+        "Publication",
+        "Design publication byte equality check",
+      )
+    W8Evidence ->
+      StageLatticeMapping(
+        W8Evidence,
+        "W8",
+        "Evidence",
+        "AIP fixity hashes & journal entries",
+      )
+    W9Governance ->
+      StageLatticeMapping(
+        W9Governance,
+        "W9",
+        "Governance",
+        "SC-DESIGN rules in Zero-Trust record_cycle",
+      )
   }
 }
 
@@ -875,30 +1202,75 @@ pub type OntologyFaculty {
 }
 
 pub type FacultyMapping {
-  FacultyMapping(
-    faculty: OntologyFaculty,
-    name: String,
-    uos_carrier: String,
-  )
+  FacultyMapping(faculty: OntologyFaculty, name: String, uos_carrier: String)
 }
 
 pub fn get_faculty_mapping(faculty: OntologyFaculty) -> FacultyMapping {
   case faculty {
-    FacultyPerception -> FacultyMapping(FacultyPerception, "Perception", "Universal C3I Telemetry, OTel over Zenoh")
-    FacultyMemory -> FacultyMapping(FacultyMemory, "Memory", "SQLite WAL, ZK ADRs (ADR-001..032), Smriti DB")
-    FacultyReasoning -> FacultyMapping(FacultyReasoning, "Reasoning", "Hermes Z3 bounded solver, Gospel contracts")
+    FacultyPerception ->
+      FacultyMapping(
+        FacultyPerception,
+        "Perception",
+        "Universal C3I Telemetry, OTel over Zenoh",
+      )
+    FacultyMemory ->
+      FacultyMapping(
+        FacultyMemory,
+        "Memory",
+        "SQLite WAL, ZK ADRs (ADR-001..032), Smriti DB",
+      )
+    FacultyReasoning ->
+      FacultyMapping(
+        FacultyReasoning,
+        "Reasoning",
+        "Hermes Z3 bounded solver, Gospel contracts",
+      )
     FacultyLearning -> faculty_learning_mapping()
-    FacultyDecision -> FacultyMapping(FacultyDecision, "Decision", "Prajna consensus (2oo3), Lyapunov window proofs")
-    FacultyOrchestration -> FacultyMapping(FacultyOrchestration, "Orchestration", "Sa-Plan engine, uos_sup 4-domain supervisor")
-    FacultyActuation -> FacultyMapping(FacultyActuation, "Actuation", "ZigVM VFS kernel, Gleam actors, bounded NIFs")
-    FacultyReflex -> FacultyMapping(FacultyReflex, "Reflex", "Prajna circuit breakers, Freshness dead-man monitor")
-    FacultySelfModel -> FacultyMapping(FacultySelfModel, "Self-Model", "Living Ontology catalog, DMC/TCM coordinate atlas")
-    FacultyVisualization -> FacultyMapping(FacultyVisualization, "Visualization", "Lustre MVU web cockpit, ANSI TUI sparklines")
+    FacultyDecision ->
+      FacultyMapping(
+        FacultyDecision,
+        "Decision",
+        "Prajna consensus (2oo3), Lyapunov window proofs",
+      )
+    FacultyOrchestration ->
+      FacultyMapping(
+        FacultyOrchestration,
+        "Orchestration",
+        "Sa-Plan engine, uos_sup 4-domain supervisor",
+      )
+    FacultyActuation ->
+      FacultyMapping(
+        FacultyActuation,
+        "Actuation",
+        "ZigVM VFS kernel, Gleam actors, bounded NIFs",
+      )
+    FacultyReflex ->
+      FacultyMapping(
+        FacultyReflex,
+        "Reflex",
+        "Prajna circuit breakers, Freshness dead-man monitor",
+      )
+    FacultySelfModel ->
+      FacultyMapping(
+        FacultySelfModel,
+        "Self-Model",
+        "Living Ontology catalog, DMC/TCM coordinate atlas",
+      )
+    FacultyVisualization ->
+      FacultyMapping(
+        FacultyVisualization,
+        "Visualization",
+        "Lustre MVU web cockpit, ANSI TUI sparklines",
+      )
   }
 }
 
 fn faculty_learning_mapping() -> FacultyMapping {
-  FacultyMapping(FacultyLearning, "Learning", "Immune antibody synthesis, mutation counterexample store")
+  FacultyMapping(
+    FacultyLearning,
+    "Learning",
+    "Immune antibody synthesis, mutation counterexample store",
+  )
 }
 
 pub fn list_all_faculties() -> List(OntologyFaculty) {
@@ -963,4 +1335,3 @@ pub fn verify_wiki_pipeline_recursion(pipeline: WikiPipelineRecursion) -> Bool {
   && pipeline.immutable_render_context
   && pipeline.lossless_projection_verified
 }
-

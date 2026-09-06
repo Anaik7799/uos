@@ -2,20 +2,18 @@
 //// [C3I-SIL6-ASPECT-PROCESSING-TEST] FRACTAL ASPECT PROCESSING AGENTS TEST
 //// =============================================================================
 
-import gleeunit/should
+import cepaf_gleam/sdlc/aspect_agent_ecosystem.{
+  AspectComponentPacket, AspectVerticalLadder,
+}
+import cepaf_gleam/sdlc/aspect_processing_agent.{
+  CycleSuccess, encode_processing_agents_json,
+  execute_all_aspects_processing_cycle, execute_fractal_processing_cycle,
+  init_all_14_processing_agents, lookup_processing_agent_by_aspect,
+  lookup_processing_agent_by_layer, verify_all_aspects_fractally_aligned,
+}
 import gleam/list
 import gleam/string
-import cepaf_gleam/sdlc/aspect_agent_ecosystem.{AspectComponentPacket, AspectVerticalLadder}
-import cepaf_gleam/sdlc/aspect_processing_agent.{
-  init_all_14_processing_agents,
-  execute_fractal_processing_cycle,
-  execute_all_aspects_processing_cycle,
-  verify_all_aspects_fractally_aligned,
-  lookup_processing_agent_by_layer,
-  lookup_processing_agent_by_aspect,
-  encode_processing_agents_json,
-  CycleSuccess,
-}
+import gleeunit/should
 
 pub fn init_all_14_processing_agents_test() {
   let agents = init_all_14_processing_agents()
@@ -98,13 +96,15 @@ pub fn lookup_agent_by_layer_and_aspect_test() {
 
   let cp_res = lookup_processing_agent_by_aspect(AspectComponentPacket, agents)
   case cp_res {
-    Ok(a) -> a.processor_agent_name |> should.equal("ComponentPacketProcessingAgent")
+    Ok(a) ->
+      a.processor_agent_name |> should.equal("ComponentPacketProcessingAgent")
     Error(_) -> should.fail()
   }
 
   let vl_res = lookup_processing_agent_by_aspect(AspectVerticalLadder, agents)
   case vl_res {
-    Ok(a) -> a.processor_agent_name |> should.equal("VerticalLadderProcessingAgent")
+    Ok(a) ->
+      a.processor_agent_name |> should.equal("VerticalLadderProcessingAgent")
     Error(_) -> should.fail()
   }
 }
@@ -116,6 +116,7 @@ pub fn processing_agents_json_encoding_test() {
   string.contains(json_str, "\"status\":\"ok\"") |> should.be_true
   string.contains(json_str, "\"total_aspect_processors\":14") |> should.be_true
   string.contains(json_str, "\"total_features_governed\":104") |> should.be_true
-  string.contains(json_str, "\"total_squad_agents_active\":256") |> should.be_true
+  string.contains(json_str, "\"total_squad_agents_active\":256")
+  |> should.be_true
   string.contains(json_str, "\"all_fractally_aligned\":true") |> should.be_true
 }

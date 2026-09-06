@@ -184,7 +184,10 @@ pub fn claim_task(
       case task.status {
         TaskPending -> {
           let new_status =
-            TaskClaimed(worker, lease_until_ms: current_time_ms + lease_duration_ms)
+            TaskClaimed(
+              worker,
+              lease_until_ms: current_time_ms + lease_duration_ms,
+            )
           let updated_tasks =
             list.map(store.tasks, fn(t) {
               case t.id == task_id {

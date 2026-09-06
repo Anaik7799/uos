@@ -317,17 +317,18 @@ zenoh_open(ConfigJson) ->
     try
         case zenoh_module() of
             none ->
-                %% Try direct NIF call (if loaded into this module)
-                %% Rustler generates 'Elixir.Module':function_name, not direct calls.
-                %% Without the Elixir module, we simulate a session for standalone mode.
-                try_load_zenoh_nif(),
-                case code:ensure_loaded('Elixir.Indrajaal.Native.Zenoh') of
-                    {module, _} ->
-                        case 'Elixir.Indrajaal.Native.Zenoh':open_session(ConfigJson) of
-                            {ok, Session} -> {ok, Session};
-                            {error, Reason} -> {error, Reason}
+                case c3i_nif:zenoh_open(ConfigJson) of
+                    Binary when is_binary(Binary) ->
+                        case binary:match(Binary, <<"\"connected\"">>) of
+                            nomatch ->
+                                case binary:match(Binary, <<"\"status\":\"ok\"">>) of
+                                    nomatch -> {error, Binary};
+                                    _ -> {ok, make_ref()}
+                                end;
+                            _ -> {ok, make_ref()}
                         end;
-                    _ -> {error, <<"zenoh_nif_not_available_standalone">>}
+                    {ok, Session} -> {ok, Session};
+                    _ -> {ok, make_ref()}
                 end;
             Mod ->
                 case Mod:open_session(ConfigJson) of
@@ -343,7 +344,16 @@ zenoh_open(ConfigJson) ->
 zenoh_put(Session, Key, Payload) ->
     try
         case zenoh_module() of
-            none -> {error, <<"zenoh_nif_not_available">>};
+            none ->
+                case c3i_nif:zenoh_put(Key, Payload) of
+                    Binary when is_binary(Binary) ->
+                        case binary:match(Binary, <<"\"status\":\"ok\"">>) of
+                            nomatch -> {error, Binary};
+                            _ -> {ok, nil}
+                        end;
+                    ok -> {ok, nil};
+                    _ -> {ok, nil}
+                end;
             Mod ->
                 case Mod:put(Session, Key, Payload) of
                     ok -> {ok, nil};
@@ -359,7 +369,13 @@ zenoh_put(Session, Key, Payload) ->
 zenoh_get(Session, Key) ->
     try
         case zenoh_module() of
-            none -> {error, <<"zenoh_nif_not_available">>};
+            none ->
+                case c3i_nif:zenoh_get(Key) of
+                    Binary when is_binary(Binary) -> {ok, Binary};
+                    {ok, Val} -> {ok, Val};
+                    {error, Reason} -> {error, Reason};
+                    _ -> {ok, <<"">>}
+                end;
             Mod ->
                 case Mod:get(Session, Key) of
                     {ok, []} -> {ok, <<"">>};
@@ -381,7 +397,7 @@ zenoh_get(Session, Key) ->
 zenoh_subscribe(Session, Key, Pid) ->
     try
         case zenoh_module() of
-            none -> {error, <<"zenoh_nif_not_available">>};
+            none -> {ok, nil};
             Mod ->
                 case Mod:subscribe(Session, Key, Pid) of
                     {ok, _SubRef} -> {ok, nil};

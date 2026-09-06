@@ -96,7 +96,8 @@ pub fn fold_slices_into_goal(
       )
     _ -> {
       let total_eta = list.fold(slices, 0, fn(acc, s) { acc + s.eta_ms })
-      let total_fuel = list.fold(slices, 0, fn(acc, s) { acc + s.fuel_estimate })
+      let total_fuel =
+        list.fold(slices, 0, fn(acc, s) { acc + s.fuel_estimate })
       let all_reg = list.all(slices, fn(s) { s.is_registered })
 
       let agg_conf =
