@@ -18,7 +18,9 @@ membership: 1fa80a2cd5cc5783b06cb475241a7a08
 
 ## Members (by connectedness)
 
+- [[20260906-0836-adr-017-tri-sovereign-10d-tensor-evolution-master-handover-to-codex-session|ADR-017 · Tri-Sovereign 10D Tensor Evolution Master Handover to Codex Session]] · degree 100
 - [[doc-map|Documentation Map]] · degree 73
+
 - [[otp30-epoch-index|OTP-30 Epoch Index]] · degree 60
 - [[journal--20260804-infranodus-design-superset-journal|InfraNodus Design Superset, Figma, Stitch, GetDesign, and Impeccable Journal]] · degree 30
 - [[playwright-ocaml-ontology|Playwright OCaml System Ontology]] · degree 12

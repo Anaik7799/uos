@@ -25,7 +25,7 @@ graph TD
    - Bidirectional transclusion syntax `[[wiki:...]]` and similarity graph calculation (`wiki_similarity.ml`).
    - Server-side typed TyXML rendering without client JavaScript.
 2. **ZigVM Zettelkasten** (`docs/zk/`):
-   - Permanent Architectural Decision Records ([`ADR-001`](file:///home/an/NAS-setup/uos/docs/zk/20260904-150139-adr-001-closed-rete-fact-schema-and-strict-typing-invariant.md) through [`ADR-016`](file:///home/an/NAS-setup/uos/docs/zk/20260904-164632-adr-016-master-fractal-system-integration-7-level-granularity-closure-and-tripartite-ratification.md)).
+   - Permanent Architectural Decision Records ([`ADR-001`](file:///home/an/NAS-setup/uos/docs/zk/20260904-150139-adr-001-closed-rete-fact-schema-and-strict-typing-invariant.md) through [`ADR-017`](file:///home/an/NAS-setup/uos/docs/zk/20260906-0836-adr-017-tri-sovereign-10d-tensor-evolution-master-handover-to-codex-session.md)).
    - Structural Maps of Content (MOCs) preserving algebra-driven doctrines and fractal layers.
 3. **C3I Living Ontology & Evidence Plane** (`docs/wiki/`, `governance/`):
    - STAMP/STPA safety lattices, SQLite living catalogs, and 13D trace coordinates.
@@ -33,7 +33,7 @@ graph TD
 
 ---
 
-## §2.0 Permanent Architectural Decision Records (ADR-001..ADR-016)
+## §2.0 Permanent Architectural Decision Records (ADR-001..ADR-017)
 
 | ADR ID | Document File | Layer | Tailscale Live View | Core Invariant & Decision Summary |
 |---|---|---|---|---|
@@ -53,6 +53,8 @@ graph TD
 | **ADR-014** | [`20260904-160005-adr-014-quad-cycle-iii-sovereign-tripartite-audit-and-comprehensive-kpi-integration-closure.md`](file:///home/an/NAS-setup/uos/docs/zk/20260904-160005-adr-014-quad-cycle-iii-sovereign-tripartite-audit-and-comprehensive-kpi-integration-closure.md) | <span class="badge badge-fractal">#fractal-l8</span> | [ADR-014 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-160005-adr-014-quad-cycle-iii-sovereign-tripartite-audit-and-comprehensive-kpi-integration-closure.md) | Comprehensive KPI integration closure across SRE, SDLC, formal verification, and runtime metrics. |
 | **ADR-015** | [`20260904-160159-adr-015-master-codex-session-handover-full-trajectory-archive-and-sovereign-operational-transfer.md`](file:///home/an/NAS-setup/uos/docs/zk/20260904-160159-adr-015-master-codex-session-handover-full-trajectory-archive-and-sovereign-operational-transfer.md) | <span class="badge badge-fractal">#fractal-l9</span> | [ADR-015 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-160159-adr-015-master-codex-session-handover-full-trajectory-archive-and-sovereign-operational-transfer.md) | Sovereign operational transfer from C3I to standalone Jujutsu UOS repository. |
 | **ADR-016** | [`20260904-164632-adr-016-master-fractal-system-integration-7-level-granularity-closure-and-tripartite-ratification.md`](file:///home/an/NAS-setup/uos/docs/zk/20260904-164632-adr-016-master-fractal-system-integration-7-level-granularity-closure-and-tripartite-ratification.md) | <span class="badge badge-fractal">#fractal-l0</span> | [ADR-016 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260904-164632-adr-016-master-fractal-system-integration-7-level-granularity-closure-and-tripartite-ratification.md) | Final system ratification; 17 EV-cycle doctor gates operational; zero-muda guarantee. |
+| **ADR-017** | [`20260906-0836-adr-017-tri-sovereign-10d-tensor-evolution-master-handover-to-codex-session.md`](file:///home/an/NAS-setup/uos/docs/zk/20260906-0836-adr-017-tri-sovereign-10d-tensor-evolution-master-handover-to-codex-session.md) | <span class="badge badge-fractal">#fractal-l9</span> | [ADR-017 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-0836-adr-017-tri-sovereign-10d-tensor-evolution-master-handover-to-codex-session.md) | Sovereign master handover to Codex session: 10D tensor manifold, STPA/FMEA, reusable prompt, and operational transfer. |
+
 
 ---
 
