@@ -88,12 +88,18 @@ This required establishing an exhaustive, in-code, formally proven, and document
      - `SaPlanResidualAudit` verifying `ResolvedInPureBeam`.
 2. **Engineered Comprehensive In-Code Test Suite**:
    - Created [`apps/cepaf_gleam/test/codex_fractal_system_mapping_test.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/test/codex_fractal_system_mapping_test.gleam):
-     - 10 unit and property tests verifying all 10 dimensions.
-     - Executed via `gleam test` yielding **10,093 passing tests (0 failures)**.
-3. **Authored Canonical Specification & Permanent ADR**:
+     - 15 unit and property tests verifying all 15 fractal dimensions.
+     - Executed via `gleam test` yielding **10,098 passing tests (0 failures)**.
+3. **Engineered Comprehensive Second Fractal Pass**:
+   - Added Universal 5-Stage Interaction Fractal (`Source -> Interface -> Transformation -> Observer -> Governor`) across all 7 canonical system paths (Work, Semantics, Verification, Admission, Self-Model, Operations UI, Responsive Verification).
+   - Added 10-Stage Design & Web-UI Lattice ($W_0 \dots W_9$) with active trapping of all 4 STPA UCA hazard types (Not performed, Performed wrongly, Out of order, Wrong duration).
+   - Added Living Ontology 10 Faculties (Perception, Memory, Reasoning, Learning, Decision, Orchestration, Actuation, Reflex, Self-Model, Visualization).
+   - Added Six Fractal Completeness Criteria ($CC_1 \dots CC_6$).
+   - Added Wiki & ZK Compiler Pipeline Recursion (lossless projection, backlink inversion, Aho-Corasick mention search).
+4. **Authored Canonical Specification & Permanent ADR**:
    - Authored [`docs/design/20260906-1155-codex-fractal-understanding-uos-canonical-mapping-spec.md`](file:///home/an/NAS-setup/uos/docs/design/20260906-1155-codex-fractal-understanding-uos-canonical-mapping-spec.md).
    - Authored [`docs/zk/20260906-1155-adr-032-codex-fractal-understanding-and-uos-system-mapping.md`](file:///home/an/NAS-setup/uos/docs/zk/20260906-1155-adr-032-codex-fractal-understanding-and-uos-system-mapping.md).
-4. **Verified Tooling & Invariants**:
+5. **Verified Tooling & Invariants**:
    - `tools/uos checklist`: 18/18 checks passed.
    - `tools/uos doctor`: 20/20 EV-cycles operational.
    - `tools/uos timestamp-check`: All timestamps conform to `YYYYMMDD-HHSS-`.
@@ -126,7 +132,12 @@ The original ZigVM implementation on VM-1 left task durability in an unverified 
 | Capability Poset | Lattice Test | $\text{ABSENT} < \text{UNTESTED} < \text{EQUIV} < \text{EQ}$ | Meet verified | PASS |
 | OODAVR Cycle | State Machine | Observe $\to \dots \to$ Record | Strict cycle verified | PASS |
 | Sa-Plan Residual | Audit State | Resolved in Pure BEAM | `ResolvedInPureBeam` | PASS |
-| Total Gleam Tests | EUnit / Gleeunit | Full repository suite | 10,093 passed | PASS |
+| 7 System Paths | Flow Test | 5-stage flows on 7 paths | 7/7 verified | PASS |
+| 10 Design Stages | Lattice Test | $W_0 \dots W_9$ mapped | 10/10 verified | PASS |
+| 10 Ontology Faculties | Faculty Test | 10 active faculties | 10/10 verified | PASS |
+| Completeness Criteria | Logic Test | $CC_1 \dots CC_6$ satisfied | Conjunction verified | PASS |
+| Wiki Pipeline Recursion | Pipeline Test | Lossless projection verified | Verified active | PASS |
+| Total Gleam Tests | EUnit / Gleeunit | Full repository suite | 10,098 passed | PASS |
 | EV-Cycle Doctor | `tools/uos` | All 20 EV-cycles | 20/20 green | PASS |
 | Verification Checklist | `tools/uos` | All 18 checks | 18/18 green | PASS |
 

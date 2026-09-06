@@ -672,3 +672,295 @@ pub fn get_sa_plan_residual_audit() -> SaPlanResidualAudit {
     status: ResolvedInPureBeam,
   )
 }
+
+// =============================================================================
+// 11. Universal 5-Stage Interaction Fractal & 7 System Paths
+// =============================================================================
+
+pub type InteractionStage {
+  StageSource
+  StageInterface
+  StageTransformation
+  StageObserverEvidence
+  StageGovernor
+}
+
+pub type SystemPathType {
+  PathWork
+  PathSemantics
+  PathVerification
+  PathAdmission
+  PathSelfModel
+  PathOperationsUi
+  PathResponsiveVerification
+}
+
+pub type SystemPathFlow {
+  SystemPathFlow(
+    path: SystemPathType,
+    name: String,
+    source: String,
+    interface: String,
+    transformation: String,
+    observer: String,
+    governor: String,
+  )
+}
+
+pub fn get_system_path_flow(path: SystemPathType) -> SystemPathFlow {
+  case path {
+    PathWork ->
+      SystemPathFlow(
+        path: PathWork,
+        name: "Work Path",
+        source: "OodaSupervisor",
+        interface: "SliceBacklog",
+        transformation: "SaPlanOrchestrator",
+        observer: "AgentWorkerSurface",
+        governor: "uos_sup modules/components",
+      )
+    PathSemantics ->
+      SystemPathFlow(
+        path: PathSemantics,
+        name: "Semantics Path",
+        source: "OracleBoundary + fixtures",
+        interface: "OracleDifferentials",
+        transformation: "OracleEncodings <-> FinalEncodings",
+        observer: "observations / traces",
+        governor: "Gospel differential contracts",
+      )
+    PathVerification ->
+      SystemPathFlow(
+        path: PathVerification,
+        name: "Verification Path",
+        source: "seeds / corpus",
+        interface: "generators",
+        transformation: "laws <- mutants",
+        observer: "sequential/DAG/formal judges",
+        governor: "CanonicalGate -> CycleEvidence",
+      )
+    PathAdmission ->
+      SystemPathFlow(
+        path: PathAdmission,
+        name: "Admission Path",
+        source: "CycleEvidence",
+        interface: "safety/formal/ratchet facts",
+        transformation: "ZeroTrustRuleGate (Hermes OCaml)",
+        observer: "RecordCycleAdmission",
+        governor: "SQLiteEvidenceStore (WAL) + JJ Commit",
+      )
+    PathSelfModel ->
+      SystemPathFlow(
+        path: PathSelfModel,
+        name: "Self-Model Path",
+        source: "repository + evidence + docs + runtime",
+        interface: "LivingOntology",
+        transformation: "wiki / atlas / grid projections",
+        observer: "agents and operators",
+        governor: "Tri-Sovereign Architecture Board",
+      )
+    PathOperationsUi ->
+      SystemPathFlow(
+        path: PathOperationsUi,
+        name: "Operations UI Path",
+        source: "Triple-interface (Lustre + Wisp + ANSI TUI)",
+        interface: "TypedWebReadModel",
+        transformation: "HarnessDbActor / C3I State",
+        observer: "Live Cockpit (nas-1:4100)",
+        governor: "Report-Only Isolation Gatekeeper",
+      )
+    PathResponsiveVerification ->
+      SystemPathFlow(
+        path: PathResponsiveVerification,
+        name: "Responsive Verification Path",
+        source: "protocol specifications",
+        interface: "browser emulation bridge (Playwright/Wallaby)",
+        transformation: "controller -> browser/driver",
+        observer: "typed observations & snapshots",
+        governor: "OODA laws -> JSON/PNG evidence",
+      )
+  }
+}
+
+pub fn list_all_system_paths() -> List(SystemPathType) {
+  [
+    PathWork,
+    PathSemantics,
+    PathVerification,
+    PathAdmission,
+    PathSelfModel,
+    PathOperationsUi,
+    PathResponsiveVerification,
+  ]
+}
+
+// =============================================================================
+// 12. 10-Stage Design & Web-UI Lattice (W0--W9) & 4 UCA Hazard Types
+// =============================================================================
+
+pub type DesignLatticeStage {
+  W0Carriers
+  W1Planning
+  W2DesignProjection
+  W3Generator
+  W4Refinement
+  W5Runtime
+  W6Verification
+  W7Publication
+  W8Evidence
+  W9Governance
+}
+
+pub type UcaHazardType {
+  UcaNotPerformed
+  UcaPerformedWrongly
+  UcaOutOfOrder
+  UcaWrongDuration
+}
+
+pub type StageLatticeMapping {
+  StageLatticeMapping(
+    stage: DesignLatticeStage,
+    code: String,
+    name: String,
+    primary_activity: String,
+  )
+}
+
+pub fn get_design_lattice_mapping(stage: DesignLatticeStage) -> StageLatticeMapping {
+  case stage {
+    W0Carriers -> StageLatticeMapping(W0Carriers, "W0", "Carriers", "OCaml design algebra, tokens, contracts")
+    W1Planning -> StageLatticeMapping(W1Planning, "W1", "Planning", "Slice planning & phase-runbook totality")
+    W2DesignProjection -> StageLatticeMapping(W2DesignProjection, "W2", "Design Projection", "Figma/Stitch canvas projections")
+    W3Generator -> StageLatticeMapping(W3Generator, "W3", "Generator", "Tokens & layout generator readback")
+    W4Refinement -> StageLatticeMapping(W4Refinement, "W4", "Refinement", "Interactive variants & accessibility auditing")
+    W5Runtime -> StageLatticeMapping(W5Runtime, "W5", "Runtime", "Lustre MVU server-side component rendering")
+    W6Verification -> StageLatticeMapping(W6Verification, "W6", "Verification", "5 viewport classes & color mode captures")
+    W7Publication -> StageLatticeMapping(W7Publication, "W7", "Publication", "Design publication byte equality check")
+    W8Evidence -> StageLatticeMapping(W8Evidence, "W8", "Evidence", "AIP fixity hashes & journal entries")
+    W9Governance -> StageLatticeMapping(W9Governance, "W9", "Governance", "SC-DESIGN rules in Zero-Trust record_cycle")
+  }
+}
+
+pub fn list_all_design_stages() -> List(DesignLatticeStage) {
+  [
+    W0Carriers,
+    W1Planning,
+    W2DesignProjection,
+    W3Generator,
+    W4Refinement,
+    W5Runtime,
+    W6Verification,
+    W7Publication,
+    W8Evidence,
+    W9Governance,
+  ]
+}
+
+// =============================================================================
+// 13. Living Ontology 10 Faculties
+// =============================================================================
+
+pub type OntologyFaculty {
+  FacultyPerception
+  FacultyMemory
+  FacultyReasoning
+  FacultyLearning
+  FacultyDecision
+  FacultyOrchestration
+  FacultyActuation
+  FacultyReflex
+  FacultySelfModel
+  FacultyVisualization
+}
+
+pub type FacultyMapping {
+  FacultyMapping(
+    faculty: OntologyFaculty,
+    name: String,
+    uos_carrier: String,
+  )
+}
+
+pub fn get_faculty_mapping(faculty: OntologyFaculty) -> FacultyMapping {
+  case faculty {
+    FacultyPerception -> FacultyMapping(FacultyPerception, "Perception", "Universal C3I Telemetry, OTel over Zenoh")
+    FacultyMemory -> FacultyMapping(FacultyMemory, "Memory", "SQLite WAL, ZK ADRs (ADR-001..032), Smriti DB")
+    FacultyReasoning -> FacultyMapping(FacultyReasoning, "Reasoning", "Hermes Z3 bounded solver, Gospel contracts")
+    FacultyLearning -> faculty_learning_mapping()
+    FacultyDecision -> FacultyMapping(FacultyDecision, "Decision", "Prajna consensus (2oo3), Lyapunov window proofs")
+    FacultyOrchestration -> FacultyMapping(FacultyOrchestration, "Orchestration", "Sa-Plan engine, uos_sup 4-domain supervisor")
+    FacultyActuation -> FacultyMapping(FacultyActuation, "Actuation", "ZigVM VFS kernel, Gleam actors, bounded NIFs")
+    FacultyReflex -> FacultyMapping(FacultyReflex, "Reflex", "Prajna circuit breakers, Freshness dead-man monitor")
+    FacultySelfModel -> FacultyMapping(FacultySelfModel, "Self-Model", "Living Ontology catalog, DMC/TCM coordinate atlas")
+    FacultyVisualization -> FacultyMapping(FacultyVisualization, "Visualization", "Lustre MVU web cockpit, ANSI TUI sparklines")
+  }
+}
+
+fn faculty_learning_mapping() -> FacultyMapping {
+  FacultyMapping(FacultyLearning, "Learning", "Immune antibody synthesis, mutation counterexample store")
+}
+
+pub fn list_all_faculties() -> List(OntologyFaculty) {
+  [
+    FacultyPerception,
+    FacultyMemory,
+    FacultyReasoning,
+    FacultyLearning,
+    FacultyDecision,
+    FacultyOrchestration,
+    FacultyActuation,
+    FacultyReflex,
+    FacultySelfModel,
+    FacultyVisualization,
+  ]
+}
+
+// =============================================================================
+// 14. Six Fractal Completeness Criteria
+// =============================================================================
+
+pub type CompletenessCriteria {
+  CompletenessCriteria(
+    cc1_ladder_and_planes_total: Bool,
+    cc2_component_placement: Bool,
+    cc3_live_artifact_attached: Bool,
+    cc4_interaction_endpoints_declared: Bool,
+    cc5_critical_paths_closed: Bool,
+    cc6_component_packet_on_change: Bool,
+  )
+}
+
+pub fn evaluate_system_completeness(criteria: CompletenessCriteria) -> Bool {
+  criteria.cc1_ladder_and_planes_total
+  && criteria.cc2_component_placement
+  && criteria.cc3_live_artifact_attached
+  && criteria.cc4_interaction_endpoints_declared
+  && criteria.cc5_critical_paths_closed
+  && criteria.cc6_component_packet_on_change
+}
+
+// =============================================================================
+// 15. Wiki / ZK Compiler Pipeline Recursion
+// =============================================================================
+
+pub type WikiPipelineRecursion {
+  WikiPipelineRecursion(
+    corpus_prefix_size: Int,
+    worker_count: Int,
+    backlink_inversion_active: Bool,
+    aho_corasick_mention_active: Bool,
+    immutable_render_context: Bool,
+    lossless_projection_verified: Bool,
+  )
+}
+
+pub fn verify_wiki_pipeline_recursion(pipeline: WikiPipelineRecursion) -> Bool {
+  pipeline.corpus_prefix_size > 0
+  && pipeline.worker_count >= 1
+  && pipeline.backlink_inversion_active
+  && pipeline.aho_corasick_mention_active
+  && pipeline.immutable_render_context
+  && pipeline.lossless_projection_verified
+}
+

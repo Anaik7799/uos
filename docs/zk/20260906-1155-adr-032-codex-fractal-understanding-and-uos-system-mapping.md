@@ -72,7 +72,7 @@ How do we systematically map, instantiate, and formally verify the 11-field comp
 ## 2. Decision
 
 We ratify the canonical system mapping of Codex's fractal understanding to UOS, grounded in:
-1. **Machine-Checked Verification in Pure BEAM**: Authored [`apps/cepaf_gleam/src/cepaf_gleam/verification/codex_fractal_system_mapping.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/verification/codex_fractal_system_mapping.gleam) and test suite [`codex_fractal_system_mapping_test.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/test/codex_fractal_system_mapping_test.gleam) (10/10 tests passing green, bringing total Gleam tests to **10,093**).
+1. **Machine-Checked Verification in Pure BEAM**: Authored [`apps/cepaf_gleam/src/cepaf_gleam/verification/codex_fractal_system_mapping.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/verification/codex_fractal_system_mapping.gleam) and test suite [`codex_fractal_system_mapping_test.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/test/codex_fractal_system_mapping_test.gleam) (15/15 tests passing green, bringing total Gleam tests to **10,098**).
 2. **Reusable Component Packet (11 Fields)**: Programmatically validated via `validate_component_packet/1`.
 3. **Refinement Ladder ($L_0 \dots L_{10}$)**: Fully mapped from repository boundary to governance.
 4. **Nine Orthogonal Planes**: All 9 interaction planes mapped to concrete UOS subsystems.
@@ -80,6 +80,11 @@ We ratify the canonical system mapping of Codex's fractal understanding to UOS, 
 6. **Thirty-Three Subsystems ($S_1 \dots S_{33}$)**: Every OTP subsystem mapped to its exact BEAM/Gleam carrier.
 7. **Twelve Code Surfaces**: 100% parity across semantic implementation, harness CLI, durable SQLite, Zero-Trust dispatch, forecasting meet lattice, Lean formal models, and typed browser control.
 8. **Permanent Resolution of the Sa-Plan Residual**: Resolved through `sa_plan_engine.gleam` on BEAM, advancing status from `Unavailable_observed` to `ResolvedInPureBeam`.
+9. **Universal 5-Stage Flow & 7 Critical System Paths**: Formalized `Source -> Interface -> Transformation -> Observer -> Governor` across Work, Semantics, Verification, Admission, Self-Model, Operations UI, and Responsive Verification.
+10. **10-Stage Design Lattice ($W_0 \dots W_9$) & 4 UCA Types**: Verified against Not performed, Performed wrongly, Out of order, and Wrong duration hazard states.
+11. **Living Ontology 10 Faculties**: Perception, Memory, Reasoning, Learning, Decision, Orchestration, Actuation, Reflex, Self-Model, and Visualization.
+12. **Six Completeness Criteria ($CC_1 \dots CC_6$)**: Programmatically checked via `evaluate_system_completeness/1`.
+13. **Wiki Pipeline Recursion**: Verified lossless projection, backlink inversion, and Aho-Corasick mention search via `verify_wiki_pipeline_recursion/1`.
 
 ---
 
@@ -90,6 +95,7 @@ We ratify the canonical system mapping of Codex's fractal understanding to UOS, 
 3. **INV-CODEX-MAP-003 (Fail-Closed Storage Safety)**: Host OS NVMe `HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736"` strictly locked fail-closed.
 4. **INV-CODEX-MAP-004 (Production Conjunction)**: Production readiness evaluates strictly as $F \land C \land O \land P \land S \land R$.
 5. **INV-CODEX-MAP-005 (Poset Discipline)**: Capability states satisfy $\text{ABSENT} < \text{UNTESTED} < \text{EQUIV} < \text{EQ}$; false-EQ claims are barred.
+6. **INV-CODEX-MAP-006 (Interaction Separation)**: Report-only observers never mint gate truth without typed governor authorization.
 
 ---
 
@@ -98,8 +104,8 @@ We ratify the canonical system mapping of Codex's fractal understanding to UOS, 
 ### Positive
 - Unified, consistent conceptual and executable model bridging ZigVM doctrine and UOS production reality.
 - The VM-1 planning CLI residual is permanently resolved in UOS without external dependencies.
-- All 33 subsystems and 12 code surfaces have clear, unambiguous owners in UOS.
-- Clean compilation with 0 warnings (`SC-MUDA-001`) and 10,093 passing tests.
+- All 33 subsystems, 12 code surfaces, 10 ontology faculties, and 7 system paths have clear, unambiguous owners in UOS.
+- Clean compilation with 0 warnings (`SC-MUDA-001`) and 10,098 passing tests.
 
 ### Negative / Trade-offs
 - Requires ongoing discipline to ensure new modules instantiate all 11 fields of the Reusable Component Packet.

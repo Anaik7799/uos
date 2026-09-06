@@ -40,6 +40,16 @@ import cepaf_gleam/verification/codex_fractal_system_mapping.{
   TierL0MetaOrchestrator,
   ResolvedInPureBeam,
   get_sa_plan_residual_audit,
+  list_all_system_paths,
+  get_system_path_flow,
+  list_all_design_stages,
+  get_design_lattice_mapping,
+  list_all_faculties,
+  get_faculty_mapping,
+  CompletenessCriteria,
+  evaluate_system_completeness,
+  WikiPipelineRecursion,
+  verify_wiki_pipeline_recursion,
 }
 
 pub fn component_packet_validation_test() {
@@ -256,4 +266,77 @@ pub fn sa_plan_residual_resolution_test() {
   audit.status |> should.equal(ResolvedInPureBeam)
   audit.engine_module |> should.equal("apps/cepaf_gleam/src/cepaf_gleam/sdlc/sa_plan_engine.gleam")
   audit.test_module |> should.equal("apps/cepaf_gleam/test/sa_plan_engine_test.gleam")
+}
+
+pub fn system_paths_flow_test() {
+  let paths = list_all_system_paths()
+  list.length(paths) |> should.equal(7)
+  list.each(paths, fn(p) {
+    let flow = get_system_path_flow(p)
+    flow.name |> should.not_equal("")
+    flow.source |> should.not_equal("")
+    flow.interface |> should.not_equal("")
+    flow.transformation |> should.not_equal("")
+    flow.observer |> should.not_equal("")
+    flow.governor |> should.not_equal("")
+  })
+}
+
+pub fn design_lattice_stages_test() {
+  let stages = list_all_design_stages()
+  list.length(stages) |> should.equal(10)
+  list.each(stages, fn(s) {
+    let mapping = get_design_lattice_mapping(s)
+    mapping.code |> should.not_equal("")
+    mapping.name |> should.not_equal("")
+    mapping.primary_activity |> should.not_equal("")
+  })
+}
+
+pub fn ontology_faculties_test() {
+  let faculties = list_all_faculties()
+  list.length(faculties) |> should.equal(10)
+  list.each(faculties, fn(f) {
+    let mapping = get_faculty_mapping(f)
+    mapping.name |> should.not_equal("")
+    mapping.uos_carrier |> should.not_equal("")
+  })
+}
+
+pub fn system_completeness_criteria_test() {
+  let complete =
+    CompletenessCriteria(
+      cc1_ladder_and_planes_total: True,
+      cc2_component_placement: True,
+      cc3_live_artifact_attached: True,
+      cc4_interaction_endpoints_declared: True,
+      cc5_critical_paths_closed: True,
+      cc6_component_packet_on_change: True,
+    )
+  evaluate_system_completeness(complete)
+  |> should.be_true
+
+  evaluate_system_completeness(
+    CompletenessCriteria(..complete, cc5_critical_paths_closed: False),
+  )
+  |> should.be_false
+}
+
+pub fn wiki_pipeline_recursion_test() {
+  let valid_pipeline =
+    WikiPipelineRecursion(
+      corpus_prefix_size: 512,
+      worker_count: 4,
+      backlink_inversion_active: True,
+      aho_corasick_mention_active: True,
+      immutable_render_context: True,
+      lossless_projection_verified: True,
+    )
+  verify_wiki_pipeline_recursion(valid_pipeline)
+  |> should.be_true
+
+  verify_wiki_pipeline_recursion(
+    WikiPipelineRecursion(..valid_pipeline, worker_count: 0),
+  )
+  |> should.be_false
 }
