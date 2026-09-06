@@ -334,151 +334,877 @@ source = "c3i"
 state = "classified"
 
 # =============================================================================
-# NASA JPL F Prime / FPP Aerospace Agent Types (16 Types across L0..L9)
+# Canonical C3I Sovereign Aerospace Agent Ecology (48 Types across L0..L9)
+# =============================================================================
+# Standardized across:
+# - C3I SDLC System (16 Agents)
+# - C3I SRE System (16 Agents)
+# - C3I Verification System (16 Agents)
 # =============================================================================
 
+# --- C3I SDLC System (16 Agents) ---
 [[agent]]
-name = "constitutional-guardian-agent"
-source = "fpp_flight"
-state = "verified_admitted"
-fractal_layer = "L0"
-base_id = 4096
-id_span = 64
-hsm = "GuardianHSM"
-
-[[agent]]
-name = "deterministic-flight-controller-agent"
-source = "fpp_flight"
-state = "verified_admitted"
-fractal_layer = "L1"
-base_id = 4160
-id_span = 64
-hsm = "FlightControllerHSM"
-
-[[agent]]
-name = "avionics-telemetry-agent"
-source = "fpp_flight"
+name = "c3i-sdlc-parameter-database-custodian-agent"
+kind = "ParameterDatabase"
+formal_name = "C3I SDLC Parameter Database Custodian Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
 state = "verified_admitted"
 fractal_layer = "L2"
-base_id = 4224
-id_span = 64
-hsm = "TelemetryHSM"
-
-[[agent]]
-name = "parameter-database-agent"
-source = "fpp_flight"
-state = "verified_admitted"
-fractal_layer = "L2"
+fractal_tag = "#fractal-l2"
+component_kind = "Queued"
 base_id = 4288
 id_span = 64
-hsm = "PrmDbHSM"
+queue_policy = "Block"
+sdlc_phase = "Configuration & Calibration"
+sre_resilience_tier = "SIL-6 / Zero-Mutation Invariant"
+operational_domain = "Persistent Ground & Flight Parameters"
+evidence_contracts = ["SC-PARAM-001", "SC-STORAGE-001"]
 
 [[agent]]
-name = "mission-phase-hsm-agent"
-source = "fpp_flight"
+name = "c3i-sdlc-mission-phase-orchestrator-agent"
+kind = "MissionPhaseHsm"
+formal_name = "C3I SDLC Mission Phase Orchestrator Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
 state = "verified_admitted"
 fractal_layer = "L3"
+fractal_tag = "#fractal-l3"
+component_kind = "Active"
 base_id = 4352
 id_span = 64
-hsm = "MissionPhaseHSM"
+queue_policy = "Assert"
+sdlc_phase = "Mission Orchestration"
+sre_resilience_tier = "SIL-6 / Deterministic LCA Transition"
+operational_domain = "Autonomous Flight Sequencing"
+evidence_contracts = ["SC-HSM-LCA-001", "SC-MISSION-001"]
 
 [[agent]]
-name = "sre-sentinel-agent"
-source = "fpp_flight"
-state = "verified_admitted"
-fractal_layer = "L4"
-base_id = 4416
-id_span = 64
-hsm = "SreSentinelHSM"
-
-[[agent]]
-name = "cybernetic-immune-agent"
-source = "fpp_flight"
-state = "verified_admitted"
-fractal_layer = "L4"
-base_id = 4480
-id_span = 64
-hsm = "CyberneticImmuneHSM"
-
-[[agent]]
-name = "cognitive-ooda-intent-agent"
-source = "fpp_flight"
+name = "c3i-sdlc-cognitive-ooda-intent-arbiter-agent"
+kind = "CognitiveOodaIntent"
+formal_name = "C3I SDLC Cognitive OODA Intent Arbiter Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
 state = "verified_admitted"
 fractal_layer = "L5"
+fractal_tag = "#fractal-l5"
+component_kind = "Active"
 base_id = 4544
 id_span = 64
-hsm = "CognitiveOodaHSM"
+queue_policy = "Block"
+sdlc_phase = "Autonomous Planning"
+sre_resilience_tier = "SIL-5 / Bounded Token Budget"
+operational_domain = "Intent Interpretation & Policy Adjudication"
+evidence_contracts = ["SC-OODA-001", "SC-COGNITIVE-001"]
 
 [[agent]]
-name = "swarm-mesh-agent"
-source = "fpp_flight"
-state = "verified_admitted"
-fractal_layer = "L6"
-base_id = 4608
-id_span = 64
-hsm = "SwarmMeshHSM"
-
-[[agent]]
-name = "ground-gateway-agent"
-source = "fpp_flight"
-state = "verified_admitted"
-fractal_layer = "L7"
-base_id = 4672
-id_span = 64
-hsm = "GroundGatewayHSM"
-
-[[agent]]
-name = "living-meta-evolution-agent"
-source = "fpp_flight"
+name = "c3i-sdlc-living-meta-evolution-supervisor-agent"
+kind = "LivingMetaEvolution"
+formal_name = "C3I SDLC Living Meta-Evolution Supervisor Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
 state = "verified_admitted"
 fractal_layer = "L9"
+fractal_tag = "#fractal-l9"
+component_kind = "Active"
 base_id = 4736
 id_span = 64
-hsm = "LivingMetaEvolutionHSM"
+queue_policy = "Assert"
+sdlc_phase = "Meta-Evolution & Hot-Reloading"
+sre_resilience_tier = "SIL-5 / Atomic Beam Module Cutover"
+operational_domain = "Self-Directed Code Evolution"
+evidence_contracts = ["SC-EVOLVE-001", "SC-KM-TRIAD-001"]
 
 [[agent]]
-name = "formal-oracle-agent"
-source = "fpp_flight"
-state = "verified_admitted"
-fractal_layer = "L0"
-base_id = 4800
-id_span = 64
-hsm = "FormalOracleHSM"
-
-[[agent]]
-name = "cockpit-telemetry-agent"
-source = "fpp_flight"
-state = "verified_admitted"
-fractal_layer = "L2"
-base_id = 4864
-id_span = 64
-hsm = "CockpitTelemetryHSM"
-
-[[agent]]
-name = "payload-science-agent"
-source = "fpp_flight"
+name = "c3i-sdlc-payload-science-processor-agent"
+kind = "PayloadScience"
+formal_name = "C3I SDLC Payload Science Processor Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
 state = "verified_admitted"
 fractal_layer = "L3"
+fractal_tag = "#fractal-l3"
+component_kind = "Queued"
 base_id = 4928
 id_span = 64
-hsm = "PayloadScienceHSM"
+queue_policy = "Drop"
+sdlc_phase = "Mission Orchestration"
+sre_resilience_tier = "SIL-4 / Soft Failure Permitted"
+operational_domain = "Experimental Data Processing"
+evidence_contracts = ["SC-PAYLOAD-001", "SC-SCIENCE-001"]
 
 [[agent]]
-name = "storage-custodian-agent"
-source = "fpp_flight"
-state = "verified_admitted"
-fractal_layer = "L1"
-base_id = 4992
-id_span = 64
-hsm = "StorageCustodianHSM"
-
-[[agent]]
-name = "km-sync-agent"
-source = "fpp_flight"
+name = "c3i-sdlc-km-triad-knowledge-sync-agent"
+kind = "KmSync"
+formal_name = "C3I SDLC KM Triad Knowledge Sync Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
 state = "verified_admitted"
 fractal_layer = "L5"
+fractal_tag = "#fractal-l5"
+component_kind = "Active"
 base_id = 5056
 id_span = 64
-hsm = "KmSyncHSM"
+queue_policy = "Block"
+sdlc_phase = "Operations & Reliability"
+sre_resilience_tier = "SIL-5 / Eventual ZK Parity"
+operational_domain = "Bidirectional Wiki, ZK & Ontology Sync"
+evidence_contracts = ["SC-KM-TRIAD-001", "SC-TIME-001"]
 
+[[agent]]
+name = "c3i-sdlc-appup-hot-reload-coordinator-agent"
+kind = "AppupHotReloadCoordinator"
+formal_name = "C3I SDLC Appup Hot Reload Coordinator Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L4"
+fractal_tag = "#fractal-l4"
+component_kind = "Active"
+base_id = 5824
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Meta-Evolution & Hot-Reloading"
+sre_resilience_tier = "SIL-5 / Atomic Cutover with Zero Loss"
+operational_domain = "OTP Release Upgrade & State Migration"
+evidence_contracts = ["SC-APPUP-001", "SC-HOTRELOAD-001"]
 
+[[agent]]
+name = "c3i-sdlc-slm-bif-isolated-inference-agent"
+kind = "SlmBifInference"
+formal_name = "C3I SDLC SLM BIF Isolated Inference Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L5"
+fractal_tag = "#fractal-l5"
+component_kind = "Active"
+base_id = 5888
+id_span = 64
+queue_policy = "Block"
+sdlc_phase = "Autonomous Planning"
+sre_resilience_tier = "SIL-4 / Bounded Max 5ms Execution"
+operational_domain = "Deterministic AI Intent Parsing"
+evidence_contracts = ["SC-SLM-001", "SC-INFERENCE-001"]
+
+[[agent]]
+name = "c3i-sdlc-fast-pattern-bitmask-filter-agent"
+kind = "FastPatternFilter"
+formal_name = "C3I SDLC Fast Pattern Bitmask Filter Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L5"
+fractal_tag = "#fractal-l5"
+component_kind = "Active"
+base_id = 5952
+id_span = 64
+queue_policy = "Drop"
+sdlc_phase = "Execution & Flight Runtime"
+sre_resilience_tier = "SIL-5 / SIMD Bitmask Evaluation"
+operational_domain = "High-Throughput Match Specifications"
+evidence_contracts = ["SC-FILTER-001", "SC-BITMASK-001"]
+
+[[agent]]
+name = "c3i-sdlc-dynamic-agent-bytecode-synthesizer-agent"
+kind = "DynamicAgentBytecodeSynthesizer"
+formal_name = "C3I SDLC Dynamic Agent Bytecode Synthesizer Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L9"
+fractal_tag = "#fractal-l9"
+component_kind = "Active"
+base_id = 6080
+id_span = 64
+queue_policy = "Block"
+sdlc_phase = "Meta-Evolution & Hot-Reloading"
+sre_resilience_tier = "SIL-5 / Hot Deployable"
+operational_domain = "Metamorphic Self-Synthesis"
+evidence_contracts = ["SC-AGENT-CODEGEN-001"]
+
+[[agent]]
+name = "c3i-sdlc-architecture-synthesizer-agent"
+kind = "SdlcArchitectureSynthesizer"
+formal_name = "C3I SDLC Architecture Synthesizer Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L0"
+fractal_tag = "#fractal-l0"
+component_kind = "Active"
+base_id = 6144
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Specification & Invariant Definition"
+sre_resilience_tier = "SIL-6 / Fail-Closed"
+operational_domain = "Formal Architecture Specification"
+evidence_contracts = ["SC-SDLC-SPEC-001", "SC-FORMAL-001"]
+
+[[agent]]
+name = "c3i-sdlc-contract-code-generator-agent"
+kind = "SdlcContractCodeGenerator"
+formal_name = "C3I SDLC Contract Code Generator Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L1"
+fractal_tag = "#fractal-l1"
+component_kind = "Active"
+base_id = 6208
+id_span = 64
+queue_policy = "Block"
+sdlc_phase = "Synthesis & Code Evolution"
+sre_resilience_tier = "SIL-5 / Deterministic CodeGen"
+operational_domain = "Automated Gospel & FPP Code Synthesis"
+evidence_contracts = ["SC-CODEGEN-001", "SC-GOSPEL-001"]
+
+[[agent]]
+name = "c3i-sdlc-static-analysis-and-linter-auditor-agent"
+kind = "SdlcStaticAnalysisAuditor"
+formal_name = "C3I SDLC Static Analysis & Linter Auditor Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L2"
+fractal_tag = "#fractal-l2"
+component_kind = "Active"
+base_id = 6272
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Verification & Gatekeeping"
+sre_resilience_tier = "SIL-6 / Zero-Warning Invariant"
+operational_domain = "Zero-Warning & Zero-Muda Quality Linter"
+evidence_contracts = ["SC-MUDA-001", "SC-LINT-001"]
+
+[[agent]]
+name = "c3i-sdlc-release-packaging-orchestrator-agent"
+kind = "SdlcReleasePackagingOrchestrator"
+formal_name = "C3I SDLC Release Packaging Orchestrator Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L4"
+fractal_tag = "#fractal-l4"
+component_kind = "Active"
+base_id = 6336
+id_span = 64
+queue_policy = "Block"
+sdlc_phase = "Release & Appup Cutover"
+sre_resilience_tier = "SIL-5 / Cryptographic Manifest"
+operational_domain = "Deterministic Release Packaging & SBOM"
+evidence_contracts = ["SC-RELEASE-001", "SC-SBOM-001"]
+
+[[agent]]
+name = "c3i-sdlc-documentation-transclusion-sync-agent"
+kind = "SdlcDocumentationTransclusionSync"
+formal_name = "C3I SDLC Documentation Transclusion Sync Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L6"
+fractal_tag = "#fractal-l6"
+component_kind = "Active"
+base_id = 6400
+id_span = 64
+queue_policy = "Drop"
+sdlc_phase = "Documentation & Knowledge Sync"
+sre_resilience_tier = "SIL-5 / Eventual ZK Parity"
+operational_domain = "Living KM & Transclusion Synchronizer"
+evidence_contracts = ["SC-TIME-001", "SC-KM-TRIAD-001"]
+
+[[agent]]
+name = "c3i-sdlc-evolutionary-loop-governor-agent"
+kind = "SdlcEvolutionaryLoopGovernor"
+formal_name = "C3I SDLC Evolutionary Loop Governor Agent"
+c3i_system = "C3I-SDLC"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L9"
+fractal_tag = "#fractal-l9"
+component_kind = "Active"
+base_id = 6464
+id_span = 64
+queue_policy = "Block"
+sdlc_phase = "Meta-Evolution & Hot-Reloading"
+sre_resilience_tier = "SIL-6 / Tri-Sovereign Consensus"
+operational_domain = "Codex-Claude Evolutionary Cycle Engine"
+evidence_contracts = ["SC-EVOLUTION-001", "SC-SOV-001"]
+
+# --- C3I SRE System (16 Agents) ---
+[[agent]]
+name = "c3i-sre-sentinel-health-and-circuit-breaker-agent"
+kind = "SreSentinel"
+formal_name = "C3I SRE Sentinel Health & Circuit Breaker Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L4"
+fractal_tag = "#fractal-l4"
+component_kind = "Active"
+base_id = 4416
+id_span = 64
+queue_policy = "Drop"
+sdlc_phase = "Operations & Reliability"
+sre_resilience_tier = "SIL-6 / Lyapunov Stable (-0.082)"
+operational_domain = "Site Reliability & Chaos Resilience"
+evidence_contracts = ["SC-CHECKLIST-001", "SC-MATH-001"]
+
+[[agent]]
+name = "c3i-sre-cybernetic-immune-self-healing-agent"
+kind = "CyberneticImmune"
+formal_name = "C3I SRE Cybernetic Immune Self-Healing Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L4"
+fractal_tag = "#fractal-l4"
+component_kind = "Active"
+base_id = 4480
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Operations & Reliability"
+sre_resilience_tier = "SIL-6 / Phase Attractor Convergence"
+operational_domain = "Automated Anomaly Neutralization"
+evidence_contracts = ["SC-IMMUNE-001", "SC-SRE-001"]
+
+[[agent]]
+name = "c3i-sre-swarm-mesh-topology-coordinator-agent"
+kind = "SwarmMesh"
+formal_name = "C3I SRE Swarm Mesh Topology Coordinator Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L6"
+fractal_tag = "#fractal-l6"
+component_kind = "Active"
+base_id = 4608
+id_span = 64
+queue_policy = "Block"
+sdlc_phase = "Ecosystem Coordination"
+sre_resilience_tier = "SIL-5 / Dynamic Partition Healing"
+operational_domain = "Decentralized Multi-Agent Mesh"
+evidence_contracts = ["SC-SWARM-001", "SC-ZENOH-MESH-001"]
+
+[[agent]]
+name = "c3i-sre-ground-uplink-and-downlink-gateway-agent"
+kind = "GroundGateway"
+formal_name = "C3I SRE Ground Uplink & Downlink Gateway Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L7"
+fractal_tag = "#fractal-l7"
+component_kind = "Active"
+base_id = 4672
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Uplink/Downlink Gateway"
+sre_resilience_tier = "SIL-6 / Cryptographic Auth & Nonce"
+operational_domain = "CCSDS Packet Telecommand & Telemetry"
+evidence_contracts = ["SC-CCSDS-001", "SC-GATEWAY-001"]
+
+[[agent]]
+name = "c3i-sre-descriptor-relative-vfs-storage-custodian-agent"
+kind = "StorageCustodian"
+formal_name = "C3I SRE Descriptor-Relative VFS Storage Custodian Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L1"
+fractal_tag = "#fractal-l1"
+component_kind = "Active"
+base_id = 4992
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Operations & Reliability"
+sre_resilience_tier = "SIL-6 / Hard Disk Interlock Enforced"
+operational_domain = "Race-Free File & Snapshot Storage"
+evidence_contracts = ["SC-STORAGE-001", "SC-VFS-001"]
+
+[[agent]]
+name = "c3i-sre-deterministic-reduction-scheduler-agent"
+kind = "DeterministicReductionScheduler"
+formal_name = "C3I SRE Deterministic Reduction Scheduler Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L1"
+fractal_tag = "#fractal-l1"
+component_kind = "Active"
+base_id = 5248
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Execution & Flight Runtime"
+sre_resilience_tier = "SIL-6 / Deterministic 4000-Reductions"
+operational_domain = "Preemptive Cooperative Scheduling"
+evidence_contracts = ["SC-SCHED-001", "SC-REDUCTION-001"]
+
+[[agent]]
+name = "c3i-sre-linear-arena-memory-reclaimer-agent"
+kind = "LinearArenaReclaimer"
+formal_name = "C3I SRE Linear Arena Memory Reclaimer Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L1"
+fractal_tag = "#fractal-l1"
+component_kind = "Active"
+base_id = 5376
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Execution & Flight Runtime"
+sre_resilience_tier = "SIL-6 / O(1) Memory Reset"
+operational_domain = "Zero-GC Arena Memory Lifecycle"
+evidence_contracts = ["SC-ARENA-001", "SC-MEMORY-001"]
+
+[[agent]]
+name = "c3i-sre-lockless-hamt-storage-engine-agent"
+kind = "LocklessHamtStorage"
+formal_name = "C3I SRE Lockless HAMT Storage Engine Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L2"
+fractal_tag = "#fractal-l2"
+component_kind = "Active"
+base_id = 5440
+id_span = 64
+queue_policy = "Block"
+sdlc_phase = "Execution & Flight Runtime"
+sre_resilience_tier = "SIL-5 / Non-Blocking CAS Concurrency"
+operational_domain = "High-Concurrency In-Memory State"
+evidence_contracts = ["SC-HAMT-001", "SC-CONCURRENCY-001"]
+
+[[agent]]
+name = "c3i-sre-tagged-pointer-nan-box-guard-agent"
+kind = "TaggedPointerGuard"
+formal_name = "C3I SRE Tagged Pointer NaN-Box Guard Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L2"
+fractal_tag = "#fractal-l2"
+component_kind = "Active"
+base_id = 5504
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Execution & Flight Runtime"
+sre_resilience_tier = "SIL-6 / Zero Memory Corruption"
+operational_domain = "Type-Safe 64-bit Word Representation"
+evidence_contracts = ["SC-NANBOX-001", "SC-WORD-001"]
+
+[[agent]]
+name = "c3i-sre-hierarchical-timer-wheel-jitter-agent"
+kind = "HierarchicalTimerWheel"
+formal_name = "C3I SRE Hierarchical Timer Wheel Jitter Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L2"
+fractal_tag = "#fractal-l2"
+component_kind = "Active"
+base_id = 5568
+id_span = 64
+queue_policy = "Drop"
+sdlc_phase = "Execution & Flight Runtime"
+sre_resilience_tier = "SIL-6 / Microsecond Jitter Bound"
+operational_domain = "Multi-Resolution Low-Overhead Timers"
+evidence_contracts = ["SC-TIMER-001", "SC-REALTIME-001"]
+
+[[agent]]
+name = "c3i-sre-crash-consistent-wal-replay-agent"
+kind = "CrashWalReplay"
+formal_name = "C3I SRE Crash-Consistent WAL Replay Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L3"
+fractal_tag = "#fractal-l3"
+component_kind = "Active"
+base_id = 5696
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Operations & Reliability"
+sre_resilience_tier = "SIL-6 / Guaranteed Idempotent Replay"
+operational_domain = "Atomic Durability & Replay Log"
+evidence_contracts = ["SC-WAL-001", "SC-RECOVERY-001"]
+
+[[agent]]
+name = "c3i-sre-epidemic-gossip-convergence-agent"
+kind = "EpidemicGossip"
+formal_name = "C3I SRE Epidemic Gossip Convergence Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L6"
+fractal_tag = "#fractal-l6"
+component_kind = "Active"
+base_id = 6016
+id_span = 64
+queue_policy = "Drop"
+sdlc_phase = "Ecosystem Coordination"
+sre_resilience_tier = "SIL-5 / Guaranteed O(log N) Propagation"
+operational_domain = "Decentralized Cluster State Sync"
+evidence_contracts = ["SC-GOSSIP-001", "SC-CONVERGENCE-001"]
+
+[[agent]]
+name = "c3i-sre-lyapunov-trend-detector-agent"
+kind = "SreLyapunovTrendDetector"
+formal_name = "C3I SRE Lyapunov Trend Detector Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L4"
+fractal_tag = "#fractal-l4"
+component_kind = "Active"
+base_id = 6528
+id_span = 64
+queue_policy = "Drop"
+sdlc_phase = "Operations & Reliability"
+sre_resilience_tier = "SIL-6 / Lyapunov Negative Drift"
+operational_domain = "Continuous Lyapunov Stability Proof"
+evidence_contracts = ["SC-SRE-LYAPUNOV-001", "SC-MATH-001"]
+
+[[agent]]
+name = "c3i-sre-chaos-fault-injector-agent"
+kind = "SreChaosFaultInjector"
+formal_name = "C3I SRE Chaos Fault Injector Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L4"
+fractal_tag = "#fractal-l4"
+component_kind = "Active"
+base_id = 6592
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Operations & Reliability"
+sre_resilience_tier = "SIL-5 / Bounded Blast Radius"
+operational_domain = "Controlled Chaos & Fault Injection"
+evidence_contracts = ["SC-CHAOS-001", "SC-SRE-RECOVERY-001"]
+
+[[agent]]
+name = "c3i-sre-freshness-dead-mans-monitor-agent"
+kind = "SreFreshnessMonitor"
+formal_name = "C3I SRE Freshness Dead-Mans Monitor Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L2"
+fractal_tag = "#fractal-l2"
+component_kind = "Active"
+base_id = 6656
+id_span = 64
+queue_policy = "Drop"
+sdlc_phase = "Operations & Reliability"
+sre_resilience_tier = "SIL-6 / Microsecond Precision"
+operational_domain = "Dead-Man's Switch & Clock Drift"
+evidence_contracts = ["SC-FRESHNESS-001", "SC-TIME-SYNC-001"]
+
+[[agent]]
+name = "c3i-sre-preemptive-cpu-budget-governor-agent"
+kind = "SreCpuBudgetGovernor"
+formal_name = "C3I SRE Preemptive CPU Budget Governor Agent"
+c3i_system = "C3I-SRE"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L1"
+fractal_tag = "#fractal-l1"
+component_kind = "Active"
+base_id = 6720
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Operations & Reliability"
+sre_resilience_tier = "SIL-6 / Runaway Loop Prevention"
+operational_domain = "Preemptive Reduction Quota Enforcement"
+evidence_contracts = ["SC-REDUCTION-BUDGET-001", "SC-CPU-GOV-001"]
+
+# --- C3I Verification System (16 Agents) ---
+[[agent]]
+name = "c3i-verification-constitutional-guardian-agent"
+kind = "ConstitutionalGuardian"
+formal_name = "C3I Verification Constitutional Guardian Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L0"
+fractal_tag = "#fractal-l0"
+component_kind = "Active"
+base_id = 4096
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Verification & Gatekeeping"
+sre_resilience_tier = "SIL-6 / Fail-Closed"
+operational_domain = "Constitutional Safety & Governance"
+evidence_contracts = ["SC-CHECKLIST-001", "SC-STORAGE-001", "SC-FPP-INTENT-001"]
+
+[[agent]]
+name = "c3i-verification-deterministic-flight-controller-agent"
+kind = "DeterministicFlightController"
+formal_name = "C3I Verification Deterministic Flight Controller Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L1"
+fractal_tag = "#fractal-l1"
+component_kind = "Active"
+base_id = 4160
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Execution & Flight Runtime"
+sre_resilience_tier = "SIL-6 / Real-Time Bounded"
+operational_domain = "Deterministic Actuator & Guidance"
+evidence_contracts = ["SC-GLM-UI-001", "SC-ACTUATOR-001"]
+
+[[agent]]
+name = "c3i-verification-avionics-telemetry-stream-agent"
+kind = "AvionicsTelemetry"
+formal_name = "C3I Verification Avionics Telemetry Stream Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L2"
+fractal_tag = "#fractal-l2"
+component_kind = "Active"
+base_id = 4224
+id_span = 64
+queue_policy = "Drop"
+sdlc_phase = "Telemetry Streaming"
+sre_resilience_tier = "SIL-5 / Non-Blocking RingBuffer"
+operational_domain = "High-Rate Sensor Telemetry"
+evidence_contracts = ["SC-GLM-ZEN-001", "SC-OTEL-001"]
+
+[[agent]]
+name = "c3i-verification-formal-gospel-and-z3-oracle-agent"
+kind = "FormalOracle"
+formal_name = "C3I Verification Formal Gospel & Z3 Oracle Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L0"
+fractal_tag = "#fractal-l0"
+component_kind = "Active"
+base_id = 4800
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Verification & Gatekeeping"
+sre_resilience_tier = "SIL-6 / Gospel & Z3 Provable"
+operational_domain = "Mathematical Theorem & Invariant Proof"
+evidence_contracts = ["SC-FORMAL-001", "SC-Z3-SOLVER-001"]
+
+[[agent]]
+name = "c3i-verification-cockpit-telemetry-presenter-agent"
+kind = "CockpitTelemetry"
+formal_name = "C3I Verification Cockpit Telemetry Presenter Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L2"
+fractal_tag = "#fractal-l2"
+component_kind = "Passive"
+base_id = 4864
+id_span = 64
+queue_policy = "Drop"
+sdlc_phase = "Operations & Reliability"
+sre_resilience_tier = "SIL-4 / Degraded Fallback OK"
+operational_domain = "Tripartite Lustre/Wisp/TUI Dashboard"
+evidence_contracts = ["SC-GLM-UI-001", "SC-A2UI-001"]
+
+[[agent]]
+name = "c3i-verification-hardware-drive-safety-interlock-agent"
+kind = "HardwareDriveInterlock"
+formal_name = "C3I Verification Hardware Drive Safety Interlock Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L0"
+fractal_tag = "#fractal-l0"
+component_kind = "Active"
+base_id = 5120
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Verification & Gatekeeping"
+sre_resilience_tier = "SIL-6 / Fail-Closed Storage Lock"
+operational_domain = "Host OS NVMe Serial 25503L801736 Denial"
+evidence_contracts = ["SC-STORAGE-001", "SC-CHECKLIST-001"]
+
+[[agent]]
+name = "c3i-verification-rocha-semiotic-cut-guard-agent"
+kind = "RochaSemioticCutGuard"
+formal_name = "C3I Verification Rocha Semiotic Cut Guard Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L0"
+fractal_tag = "#fractal-l0"
+component_kind = "Active"
+base_id = 5184
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Formal Semantic Architecture"
+sre_resilience_tier = "SIL-6 / Mathematical Boundary Invariant"
+operational_domain = "Syntax-Dynamics Decoupling"
+evidence_contracts = ["SC-ROCHA-001", "SC-CYBERNETICS-001"]
+
+[[agent]]
+name = "c3i-verification-substrate-reactor-event-multiplexer-agent"
+kind = "SubstrateReactor"
+formal_name = "C3I Verification Substrate Reactor Event Multiplexer Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L1"
+fractal_tag = "#fractal-l1"
+component_kind = "Active"
+base_id = 5312
+id_span = 64
+queue_policy = "Block"
+sdlc_phase = "Execution & Flight Runtime"
+sre_resilience_tier = "SIL-6 / Non-Blocking epoll/kqueue"
+operational_domain = "I/O Multiplexing & Kernel Events"
+evidence_contracts = ["SC-REACTOR-001", "SC-KERNEL-001"]
+
+[[agent]]
+name = "c3i-verification-do-178c-level-a-mc/dc-tap-agent"
+kind = "McdcAvionicsTap"
+formal_name = "C3I Verification DO-178C Level-A MC/DC Tap Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L3"
+fractal_tag = "#fractal-l3"
+component_kind = "Active"
+base_id = 5632
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Verification & Gatekeeping"
+sre_resilience_tier = "SIL-6 / Full Branch Condition Audit"
+operational_domain = "DO-178C Structural Coverage Tap"
+evidence_contracts = ["SC-DO178C-001", "SC-MCDC-001"]
+
+[[agent]]
+name = "c3i-verification-cross-runtime-bisimulation-agent"
+kind = "DifferentialBisimulation"
+formal_name = "C3I Verification Cross-Runtime Bisimulation Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L3"
+fractal_tag = "#fractal-l3"
+component_kind = "Active"
+base_id = 5760
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Verification & Gatekeeping"
+sre_resilience_tier = "SIL-6 / Parity Failure Trap"
+operational_domain = "Hermes OCaml vs Gleam BEAM Parity"
+evidence_contracts = ["SC-PARITY-001", "SC-BISIM-001"]
+
+[[agent]]
+name = "c3i-verification-checklist-auditor-agent"
+kind = "VerificationChecklistAuditor"
+formal_name = "C3I Verification Checklist Auditor Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L0"
+fractal_tag = "#fractal-l0"
+component_kind = "Active"
+base_id = 6784
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Verification & Gatekeeping"
+sre_resilience_tier = "SIL-6 / 100% Green Gate"
+operational_domain = "Universal 18-Checkpoint Gatekeeper"
+evidence_contracts = ["SC-CHECKLIST-001", "SPEC-CHECKLIST-NAV-001"]
+
+[[agent]]
+name = "c3i-verification-4-math-gates-certifier-agent"
+kind = "VerificationMathGateCertifier"
+formal_name = "C3I Verification 4 Math Gates Certifier Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L0"
+fractal_tag = "#fractal-l0"
+component_kind = "Active"
+base_id = 6848
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Verification & Gatekeeping"
+sre_resilience_tier = "SIL-6 / Mathematical Certainty"
+operational_domain = "4 Mathematical Gates Evaluation"
+evidence_contracts = ["SC-MATH-001", "SC-ENTROPY-001"]
+
+[[agent]]
+name = "c3i-verification-9-modality-test-executor-agent"
+kind = "VerificationNineModalityExecutor"
+formal_name = "C3I Verification 9-Modality Test Executor Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L3"
+fractal_tag = "#fractal-l3"
+component_kind = "Active"
+base_id = 6912
+id_span = 64
+queue_policy = "Block"
+sdlc_phase = "Verification & Gatekeeping"
+sre_resilience_tier = "SIL-6 / Full Test Spectrum"
+operational_domain = "9-Modality Test Protocol Orchestration"
+evidence_contracts = ["SC-9MOD-001", "SC-TEST-GOLD-001"]
+
+[[agent]]
+name = "c3i-verification-64-browser-matrix-tester-agent"
+kind = "VerificationBrowserMatrixTester"
+formal_name = "C3I Verification 64 Browser Matrix Tester Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L2"
+fractal_tag = "#fractal-l2"
+component_kind = "Active"
+base_id = 6976
+id_span = 64
+queue_policy = "Block"
+sdlc_phase = "Verification & Gatekeeping"
+sre_resilience_tier = "SIL-5 / Playwright & Wallaby Parity"
+operational_domain = "64 Browser-Based Tests Execution"
+evidence_contracts = ["SC-BROWSER-TEST-001", "SC-UI-QUALITY-001"]
+
+[[agent]]
+name = "c3i-verification-13d-tcm-coordinate-protector-agent"
+kind = "VerificationTcmCoordinateProtector"
+formal_name = "C3I Verification 13D TCM Coordinate Protector Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L0"
+fractal_tag = "#fractal-l0"
+component_kind = "Active"
+base_id = 7040
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Verification & Gatekeeping"
+sre_resilience_tier = "SIL-6 / Lean 4 Proved"
+operational_domain = "13D TCM Coordinate Conservation"
+evidence_contracts = ["SC-DMC-TCM-001", "formal/lean/Traceability.lean"]
+
+[[agent]]
+name = "c3i-verification-zero-muda-purity-enforcer-agent"
+kind = "VerificationZeroMudaPurityEnforcer"
+formal_name = "C3I Verification Zero-Muda Purity Enforcer Agent"
+c3i_system = "C3I-VERIFICATION"
+source = "c3i_fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L0"
+fractal_tag = "#fractal-l0"
+component_kind = "Active"
+base_id = 7104
+id_span = 64
+queue_policy = "Assert"
+sdlc_phase = "Verification & Gatekeeping"
+sre_resilience_tier = "SIL-6 / Absolute Elimination of Muda"
+operational_domain = "Zero Bevy & Zero Graphite Purity Enforcement"
+evidence_contracts = ["SC-MUDA-001", "contracts/rules/zero-muda-rule.md"]

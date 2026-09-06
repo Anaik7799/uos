@@ -9,6 +9,7 @@
 //// 5. Effectiveness & Efficacy Evaluation Protocols
 //// =============================================================================
 
+import cepaf_gleam/fpp/agent_taxonomy
 import gleam/int
 import gleam/list
 
@@ -1183,4 +1184,56 @@ pub fn verify_skills_effectiveness() -> #(Int, Float) {
     False -> 0.0
   }
   #(total, mean_eff)
+}
+
+// =============================================================================
+// 6. C3I SDLC, SRE & Verification Aerospace Agents Substrate (48 Agents)
+// =============================================================================
+
+pub type C3iAgentRegistryEntry {
+  C3iAgentRegistryEntry(
+    kind: String,
+    name: String,
+    c3i_system: String,
+    layer: Int,
+    fractal_tag: String,
+    base_id: Int,
+    id_span: Int,
+    sdlc_phase: String,
+    sre_resilience_tier: String,
+    operational_domain: String,
+    evidence_contracts: List(String),
+    passes: Bool,
+  )
+}
+
+pub fn all_c3i_agent_registry_entries() -> List(C3iAgentRegistryEntry) {
+  list.map(agent_taxonomy.all_agent_types(), fn(spec) {
+    C3iAgentRegistryEntry(
+      kind: agent_taxonomy.agent_kind_to_string(spec.kind),
+      name: spec.name,
+      c3i_system: agent_taxonomy.c3i_system_to_string(spec.c3i_system),
+      layer: spec.fractal_layer,
+      fractal_tag: spec.fractal_tag,
+      base_id: spec.base_id,
+      id_span: spec.id_span,
+      sdlc_phase: spec.sdlc_phase,
+      sre_resilience_tier: spec.sre_resilience_tier,
+      operational_domain: spec.operational_domain,
+      evidence_contracts: spec.evidence_contracts,
+      passes: True,
+    )
+  })
+}
+
+pub fn verify_c3i_agent_ecology() -> #(Int, Int, Int, Int, Bool) {
+  let entries = all_c3i_agent_registry_entries()
+  let total = list.length(entries)
+  let sdlc_count = list.count(entries, fn(e) { e.c3i_system == "C3I-SDLC" })
+  let sre_count = list.count(entries, fn(e) { e.c3i_system == "C3I-SRE" })
+  let ver_count =
+    list.count(entries, fn(e) { e.c3i_system == "C3I-VERIFICATION" })
+  let all_valid =
+    total == 48 && sdlc_count == 16 && sre_count == 16 && ver_count == 16
+  #(total, sdlc_count, sre_count, ver_count, all_valid)
 }

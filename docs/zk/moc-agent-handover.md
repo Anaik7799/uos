@@ -190,3 +190,9 @@ These timestamped additions extend ADR-017 with the operator's web/wiki/ZK/KM te
 - [[otp30-e7-suite-closure-plan|OTP 30-rc — E7 Emulator-Suite Closure Plan (`e7-ct-closure`)]] · degree 1
 
 `#adr` `#binaries` `#ci` `#decision` `#gate` `#getting-started` `#governance` `#harness` `#rules` `#verification` `#wiki`
+
+## 20260906-0817- Full implementation execution plan
+
+The operator's complete mission is decomposed into [one master implementation plan](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260906-0817-uos-full-implementation-plan.md), eight detailed subsystem plans and a [sixty-item dependency/requirement backlog](http://nas-1.tail55d152.ts.net:4100/files/governance/planning/20260906-0817-uos-full-implementation-backlog.json). Start with E01 current-candidate reconciliation, E02 truthful acceptance harness and E03 evidence-backed verification. Continue through the full DMC/TCM/atlas, FPP/SysML actors, Zenoh feature/communication, web/knowledge, verification, skills/health and release gates. All implementation work items remain PLANNED/UNRUN until their own observed evidence closes them.
+
+[Planning journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260906-0817-uos-full-implementation-planning-journal.md) · [Plan validation receipt](http://nas-1.tail55d152.ts.net:4100/files/governance/sources/20260906-0817-uos-full-implementation-plan-receipt.json). Existing source work and historical handover claims remain preserved; this plan does not certify system completion.

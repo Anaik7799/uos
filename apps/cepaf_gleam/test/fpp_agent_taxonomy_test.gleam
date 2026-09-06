@@ -1,14 +1,14 @@
 //// =============================================================================
-//// [UOS-FPP-AGENT-TEST] NASA JPL F Prime Aerospace Agent Taxonomy Test Suite
+//// [UOS-C3I-AGENT-TEST] C3I SDLC, SRE & Verification Aerospace Agent Test Suite
 //// =============================================================================
-//// Comprehensive formal tests for the 32 FPP Aerospace Agent Types:
-//// 1. All 32 canonical agent types exist and span fractal layers L0-L9
-//// 2. DMC Base-ID window disjointness proof across all 32 agent types
+//// Comprehensive formal tests for the 48 C3I Sovereign Aerospace Agent Types:
+//// 1. All 48 canonical agent types exist across SDLC (16), SRE (16), and Verification (16)
+//// 2. DMC Base-ID window disjointness proof across all 48 agent types [0x1000..0x1C00)
 //// 3. Full HSM initialization and active path verification
 //// 4. Hierarchical signal dispatch with LCA transition sequencing
 //// 5. Telemetry sampling and TCM 13D vector conservation
 //// 6. DAL-A hardware safety interlock rejection on OS NVMe 25503L801736
-//// 7. Typed JSON catalog and instance encoding
+//// 7. Typed JSON catalog and instance encoding with C3I pillar breakdowns
 //// =============================================================================
 
 import cepaf_gleam/fpp/agent_factory.{
@@ -16,15 +16,14 @@ import cepaf_gleam/fpp/agent_factory.{
   execute_agent_intent, heartbeat, instantiate_agent,
 }
 import cepaf_gleam/fpp/agent_taxonomy.{
-  AppupHotReloadCoordinator, AvionicsTelemetry, CognitiveOodaIntent,
-  ConstitutionalGuardian, CrashWalReplay, DeterministicFlightController,
-  DeterministicReductionScheduler, DifferentialBisimulation,
-  DynamicAgentBytecodeSynthesizer, EpidemicGossip, FastPatternFilter,
-  HardwareDriveInterlock, HierarchicalTimerWheel, LinearArenaReclaimer,
-  LivingMetaEvolution, LocklessHamtStorage, McdcAvionicsTap, MissionPhaseHsm,
-  RochaSemioticCutGuard, SlmBifInference, StorageCustodian, SubstrateReactor,
-  TaggedPointerGuard, all_agent_types, encode_agent_catalog_json,
-  find_agent_type_spec, verify_agent_base_id_disjointness,
+  AvionicsTelemetry, CognitiveOodaIntent, ConstitutionalGuardian,
+  CrashWalReplay, DeterministicFlightController,
+  DeterministicReductionScheduler, HardwareDriveInterlock, LocklessHamtStorage,
+  MissionPhaseHsm, SdlcArchitectureSynthesizer, SdlcContractCodeGenerator,
+  SreChaosFaultInjector, SreLyapunovTrendDetector, SreSentinel, SubstrateReactor,
+  VerificationChecklistAuditor, VerificationZeroMudaPurityEnforcer,
+  all_agent_types, encode_agent_catalog_json, find_agent_type_spec, sdlc_agents,
+  sre_agents, verification_agents, verify_agent_base_id_disjointness,
 }
 import cepaf_gleam/fpp/dmc_tcm.{
   hard_denied_system_os_serial, verify_tcm_13d_conservation,
@@ -36,83 +35,64 @@ import gleam/list
 import gleam/string
 import gleeunit/should
 
-pub fn all_32_agent_types_exist_test() {
+pub fn all_48_agent_types_exist_test() {
   let specs = all_agent_types()
   list.length(specs)
-  |> should.equal(32)
+  |> should.equal(48)
 
-  // Verify original 16 types are present
+  // Verify 16 SDLC Agents
+  list.length(sdlc_agents())
+  |> should.equal(16)
+
+  // Verify 16 SRE Agents
+  list.length(sre_agents())
+  |> should.equal(16)
+
+  // Verify 16 Verification Agents
+  list.length(verification_agents())
+  |> should.equal(16)
+
+  // Check sample representatives from each pillar
   find_agent_type_spec(ConstitutionalGuardian)
   |> should.be_ok
 
   find_agent_type_spec(DeterministicFlightController)
   |> should.be_ok
 
+  find_agent_type_spec(SreSentinel)
+  |> should.be_ok
+
   find_agent_type_spec(MissionPhaseHsm)
   |> should.be_ok
 
-  find_agent_type_spec(CognitiveOodaIntent)
-  |> should.be_ok
-
-  find_agent_type_spec(LivingMetaEvolution)
-  |> should.be_ok
-
-  find_agent_type_spec(StorageCustodian)
-  |> should.be_ok
-
-  // Verify newly incorporated ZigVM full-subsystem variants are present
   find_agent_type_spec(HardwareDriveInterlock)
-  |> should.be_ok
-
-  find_agent_type_spec(RochaSemioticCutGuard)
   |> should.be_ok
 
   find_agent_type_spec(DeterministicReductionScheduler)
   |> should.be_ok
 
-  find_agent_type_spec(SubstrateReactor)
+  find_agent_type_spec(SdlcArchitectureSynthesizer)
   |> should.be_ok
 
-  find_agent_type_spec(LinearArenaReclaimer)
+  find_agent_type_spec(SdlcContractCodeGenerator)
   |> should.be_ok
 
-  find_agent_type_spec(LocklessHamtStorage)
+  find_agent_type_spec(SreLyapunovTrendDetector)
   |> should.be_ok
 
-  find_agent_type_spec(TaggedPointerGuard)
+  find_agent_type_spec(SreChaosFaultInjector)
   |> should.be_ok
 
-  find_agent_type_spec(HierarchicalTimerWheel)
+  find_agent_type_spec(VerificationChecklistAuditor)
   |> should.be_ok
 
-  find_agent_type_spec(McdcAvionicsTap)
-  |> should.be_ok
-
-  find_agent_type_spec(CrashWalReplay)
-  |> should.be_ok
-
-  find_agent_type_spec(DifferentialBisimulation)
-  |> should.be_ok
-
-  find_agent_type_spec(AppupHotReloadCoordinator)
-  |> should.be_ok
-
-  find_agent_type_spec(SlmBifInference)
-  |> should.be_ok
-
-  find_agent_type_spec(FastPatternFilter)
-  |> should.be_ok
-
-  find_agent_type_spec(EpidemicGossip)
-  |> should.be_ok
-
-  find_agent_type_spec(DynamicAgentBytecodeSynthesizer)
+  find_agent_type_spec(VerificationZeroMudaPurityEnforcer)
   |> should.be_ok
 }
 
 pub fn base_id_window_disjointness_dmc_test() {
   let specs = all_agent_types()
-  // Prove that all 32 agent base-ID intervals [B_i, B_i + 64) are pairwise disjoint
+  // Prove that all 48 agent base-ID intervals [B_i, B_i + 64) are pairwise disjoint
   verify_agent_base_id_disjointness(specs)
   |> should.equal(True)
 }
@@ -168,6 +148,22 @@ pub fn agent_instantiation_and_hsm_init_test() {
   let assert Ok(wal) = instantiate_agent(CrashWalReplay, "wal-01")
   wal.hsm_state.active_path
   |> should.equal(["Appending"])
+
+  // 10. SDLC Architecture Synthesizer
+  let assert Ok(arch) =
+    instantiate_agent(SdlcArchitectureSynthesizer, "arch-01")
+  arch.hsm_state.active_path
+  |> should.equal(["Modeling"])
+
+  // 11. SRE Lyapunov Trend Detector
+  let assert Ok(lyap) = instantiate_agent(SreLyapunovTrendDetector, "lyap-01")
+  lyap.hsm_state.active_path
+  |> should.equal(["WindowSampling"])
+
+  // 12. Verification Checklist Auditor
+  let assert Ok(chk) = instantiate_agent(VerificationChecklistAuditor, "chk-01")
+  chk.hsm_state.active_path
+  |> should.equal(["ScanningChecklist"])
 }
 
 pub fn agent_hsm_signal_dispatch_and_lca_transition_test() {
@@ -214,6 +210,34 @@ pub fn agent_hsm_signal_dispatch_and_lca_transition_test() {
   let assert Ok(appended_wal) = dispatch_signal(replaying_wal, "replay_done")
   appended_wal.hsm_state.active_path
   |> should.equal(["Appending"])
+
+  // SDLC Arch: Modeling -> Decomposing -> Synthesized
+  let assert Ok(arch) =
+    instantiate_agent(SdlcArchitectureSynthesizer, "arch-01")
+  let assert Ok(decomp) = dispatch_signal(arch, "start_decomposition")
+  decomp.hsm_state.active_path
+  |> should.equal(["Decomposing"])
+  let assert Ok(synth) = dispatch_signal(decomp, "verify_invariants")
+  synth.hsm_state.active_path
+  |> should.equal(["Synthesized"])
+
+  // SRE Lyapunov: WindowSampling -> EvaluatingLambda -> TrendStable
+  let assert Ok(lyap) = instantiate_agent(SreLyapunovTrendDetector, "lyap-01")
+  let assert Ok(eval_lyap) = dispatch_signal(lyap, "sample_tick")
+  eval_lyap.hsm_state.active_path
+  |> should.equal(["EvaluatingLambda"])
+  let assert Ok(stable_lyap) = dispatch_signal(eval_lyap, "lambda_computed")
+  stable_lyap.hsm_state.active_path
+  |> should.equal(["TrendStable"])
+
+  // Verification Checklist: ScanningChecklist -> DomainEvaluated -> Checklist18Green
+  let assert Ok(chk) = instantiate_agent(VerificationChecklistAuditor, "chk-01")
+  let assert Ok(eval_chk) = dispatch_signal(chk, "audit_check")
+  eval_chk.hsm_state.active_path
+  |> should.equal(["DomainEvaluated"])
+  let assert Ok(green_chk) = dispatch_signal(eval_chk, "all_domains_pass")
+  green_chk.hsm_state.active_path
+  |> should.equal(["Checklist18Green"])
 }
 
 pub fn agent_telemetry_and_heartbeat_lifecycle_test() {
@@ -283,22 +307,52 @@ pub fn agent_json_catalog_serialization_test() {
   let specs = all_agent_types()
   let catalog_json = encode_agent_catalog_json(specs)
 
-  string.contains(catalog_json, "\"total_agent_types\":32")
+  string.contains(catalog_json, "\"total_agent_types\":48")
+  |> should.equal(True)
+
+  string.contains(catalog_json, "\"sdlc_agents_count\":16")
+  |> should.equal(True)
+
+  string.contains(catalog_json, "\"sre_agents_count\":16")
+  |> should.equal(True)
+
+  string.contains(catalog_json, "\"verification_agents_count\":16")
   |> should.equal(True)
 
   string.contains(catalog_json, "\"SC-FPP-AGENT-TAXONOMY-001\"")
   |> should.equal(True)
 
-  string.contains(catalog_json, "Constitutional Guardian Agent")
+  string.contains(
+    catalog_json,
+    "C3I Verification Constitutional Guardian Agent",
+  )
   |> should.equal(True)
 
-  string.contains(catalog_json, "Hardware Drive Interlock Agent")
+  string.contains(
+    catalog_json,
+    "C3I Verification Hardware Drive Safety Interlock Agent",
+  )
   |> should.equal(True)
 
-  string.contains(catalog_json, "Deterministic Reduction Scheduler Agent")
+  string.contains(
+    catalog_json,
+    "C3I SRE Deterministic Reduction Scheduler Agent",
+  )
   |> should.equal(True)
 
-  string.contains(catalog_json, "Dynamic Agent Bytecode Synthesizer Agent")
+  string.contains(
+    catalog_json,
+    "C3I SDLC Dynamic Agent Bytecode Synthesizer Agent",
+  )
+  |> should.equal(True)
+
+  string.contains(catalog_json, "C3I SDLC Architecture Synthesizer Agent")
+  |> should.equal(True)
+
+  string.contains(catalog_json, "C3I SRE Lyapunov Trend Detector Agent")
+  |> should.equal(True)
+
+  string.contains(catalog_json, "C3I Verification Checklist Auditor Agent")
   |> should.equal(True)
 
   // Verify single agent instance JSON serialization

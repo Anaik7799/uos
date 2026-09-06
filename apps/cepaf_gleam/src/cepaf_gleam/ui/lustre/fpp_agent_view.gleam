@@ -10,8 +10,8 @@
 //// =============================================================================
 
 import cepaf_gleam/fpp/agent_taxonomy.{
-  type AgentKind, type AgentTypeSpec, all_agent_types,
-  verify_agent_base_id_disjointness,
+  type AgentKind, type AgentTypeSpec, C3iSdlc, C3iSre, C3iVerification,
+  all_agent_types, verify_agent_base_id_disjointness,
 }
 import cepaf_gleam/fpp/dmc_tcm.{hard_denied_system_os_serial}
 import cepaf_gleam/fpp/domain.{Active, Assert, Block, Drop, Passive, Queued}
@@ -33,6 +33,7 @@ pub type Model {
     active_tab: String,
     simulated_signal: String,
     simulated_target: String,
+    filter_pillar: String,
   )
 }
 
@@ -41,6 +42,7 @@ pub type Msg {
   SelectTab(String)
   SetSignal(String)
   SetTarget(String)
+  SetFilterPillar(String)
 }
 
 pub fn init() -> Model {
@@ -49,6 +51,7 @@ pub fn init() -> Model {
     active_tab: "catalog",
     simulated_signal: "evaluate_intent",
     simulated_target: "SAFE_DATA_NVME_02",
+    filter_pillar: "ALL",
   )
 }
 
@@ -58,6 +61,7 @@ pub fn update(model: Model, msg: Msg) -> Model {
     SelectTab(tab) -> Model(..model, active_tab: tab)
     SetSignal(sig) -> Model(..model, simulated_signal: sig)
     SetTarget(tgt) -> Model(..model, simulated_target: tgt)
+    SetFilterPillar(p) -> Model(..model, filter_pillar: p)
   }
 }
 
@@ -157,7 +161,7 @@ fn render_kpis(specs: List(AgentTypeSpec), dmc_verified: Bool) -> Element(Msg) {
     render_kpi_card(
       "CANONICAL AGENT TYPES",
       int.to_string(total_agents) <> " Types",
-      "Full spectrum across L0-L9",
+      "16 SDLC | 16 SRE | 16 Verification",
       "border-amber-500/40 bg-gray-900/80 text-amber-400",
     ),
     render_kpi_card(
@@ -166,7 +170,7 @@ fn render_kpis(specs: List(AgentTypeSpec), dmc_verified: Bool) -> Element(Msg) {
         True -> "100% DISJOINT"
         False -> "COLLISION DETECTED"
       },
-      "[0x1000, 0x1400) Span=64",
+      "[0x1000, 0x1C00) Span=64",
       "border-emerald-500/40 bg-gray-900/80 text-emerald-400",
     ),
     render_kpi_card(
@@ -220,7 +224,7 @@ fn render_kpi_card(
 
 fn render_tab_nav(active_tab: String) -> Element(Msg) {
   let tabs = [
-    #("catalog", "Agent Catalog (16 Types)"),
+    #("catalog", "C3I Agent Catalog (48 Types)"),
     #("matrix", "Multi-Dimensional Matrix (6D)"),
     #("simulator", "HSM & Intent Simulator"),
     #("checklist", "18/18 Verification Checklist"),
@@ -253,9 +257,17 @@ fn render_tab_nav(active_tab: String) -> Element(Msg) {
 // -----------------------------------------------------------------------------
 
 fn render_catalog_view(
-  _model: Model,
+  model: Model,
   specs: List(AgentTypeSpec),
 ) -> Element(Msg) {
+  let filtered_specs = case model.filter_pillar {
+    "SDLC" -> list.filter(specs, fn(s) { s.c3i_system == C3iSdlc })
+    "SRE" -> list.filter(specs, fn(s) { s.c3i_system == C3iSre })
+    "VERIFICATION" ->
+      list.filter(specs, fn(s) { s.c3i_system == C3iVerification })
+    _ -> specs
+  }
+
   html.div([attribute.class("space-y-4")], [
     html.div(
       [
@@ -267,18 +279,83 @@ fn render_catalog_view(
         html.div(
           [
             attribute.class(
-              "p-4 border-b border-gray-800 flex justify-between items-center",
+              "p-4 border-b border-gray-800 flex flex-wrap justify-between items-center gap-3",
             ),
           ],
           [
-            html.h3(
-              [attribute.class("font-bold text-amber-400 font-mono text-sm")],
-              [
-                html.text("FPP AEROSPACE AGENT SPECIFICATIONS (16 TYPES)"),
-              ],
-            ),
-            html.span([attribute.class("text-xs font-mono text-gray-400")], [
-              html.text("Sorted by Fractal Layer (L0 -> L9)"),
+            html.div([], [
+              html.h3(
+                [attribute.class("font-bold text-amber-400 font-mono text-sm")],
+                [
+                  html.text(
+                    "C3I SOVEREIGN AEROSPACE AGENT CATALOG (48 CANONICAL TYPES)",
+                  ),
+                ],
+              ),
+              html.span([attribute.class("text-xs font-mono text-gray-400")], [
+                html.text("Unified across C3I SDLC, SRE & Verification Systems"),
+              ]),
+            ]),
+            html.div([attribute.class("flex gap-2 text-xs font-mono")], [
+              html.button(
+                [
+                  attribute.class(
+                    "px-3 py-1 rounded border "
+                    <> case model.filter_pillar == "ALL" {
+                      True -> "bg-gray-700 text-white border-gray-500 font-bold"
+                      False ->
+                        "bg-gray-800 text-gray-400 border-gray-700 hover:text-gray-200"
+                    },
+                  ),
+                  event.on_click(SetFilterPillar("ALL")),
+                ],
+                [html.text("All (48)")],
+              ),
+              html.button(
+                [
+                  attribute.class(
+                    "px-3 py-1 rounded border "
+                    <> case model.filter_pillar == "SDLC" {
+                      True ->
+                        "bg-cyan-950 text-cyan-300 border-cyan-600 font-bold"
+                      False ->
+                        "bg-gray-800 text-cyan-500 border-gray-700 hover:text-cyan-300"
+                    },
+                  ),
+                  event.on_click(SetFilterPillar("SDLC")),
+                ],
+                [html.text("C3I-SDLC (16)")],
+              ),
+              html.button(
+                [
+                  attribute.class(
+                    "px-3 py-1 rounded border "
+                    <> case model.filter_pillar == "SRE" {
+                      True ->
+                        "bg-amber-950 text-amber-300 border-amber-600 font-bold"
+                      False ->
+                        "bg-gray-800 text-amber-500 border-gray-700 hover:text-amber-300"
+                    },
+                  ),
+                  event.on_click(SetFilterPillar("SRE")),
+                ],
+                [html.text("C3I-SRE (16)")],
+              ),
+              html.button(
+                [
+                  attribute.class(
+                    "px-3 py-1 rounded border "
+                    <> case model.filter_pillar == "VERIFICATION" {
+                      True ->
+                        "bg-emerald-950 text-emerald-300 border-emerald-600 font-bold"
+                      False ->
+                        "bg-gray-800 text-emerald-500 border-gray-700 hover:text-emerald-300"
+                    },
+                  ),
+                  event.on_click(SetFilterPillar("VERIFICATION")),
+                ],
+                [html.text("C3I-VERIFY (16)")],
+              ),
             ]),
           ],
         ),
@@ -295,6 +372,7 @@ fn render_catalog_view(
                   html.th([attribute.class("p-3")], [
                     html.text("Agent Type & Name"),
                   ]),
+                  html.th([attribute.class("p-3")], [html.text("C3I Pillar")]),
                   html.th([attribute.class("p-3")], [html.text("Layer")]),
                   html.th([attribute.class("p-3")], [html.text("Component")]),
                   html.th([attribute.class("p-3")], [
@@ -312,7 +390,7 @@ fn render_catalog_view(
               ],
             ),
             html.tbody([attribute.class("divide-y divide-gray-800/60")], {
-              list.map(specs, fn(spec) {
+              list.map(filtered_specs, fn(spec) {
                 let comp_str = case spec.fpp_component_kind {
                   Active -> "Active"
                   Queued -> "Queued"
@@ -352,6 +430,37 @@ fn render_catalog_view(
                           html.text(spec.description),
                         ],
                       ),
+                    ]),
+                    html.td([attribute.class("p-3")], [
+                      case spec.c3i_system {
+                        C3iSdlc ->
+                          html.span(
+                            [
+                              attribute.class(
+                                "px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-950 text-cyan-300 border border-cyan-800",
+                              ),
+                            ],
+                            [html.text("C3I-SDLC")],
+                          )
+                        C3iSre ->
+                          html.span(
+                            [
+                              attribute.class(
+                                "px-2 py-0.5 rounded text-[10px] font-bold bg-amber-950 text-amber-300 border border-amber-800",
+                              ),
+                            ],
+                            [html.text("C3I-SRE")],
+                          )
+                        C3iVerification ->
+                          html.span(
+                            [
+                              attribute.class(
+                                "px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-800",
+                              ),
+                            ],
+                            [html.text("C3I-VERIFY")],
+                          )
+                      },
                     ]),
                     html.td([attribute.class("p-3")], [
                       html.span(

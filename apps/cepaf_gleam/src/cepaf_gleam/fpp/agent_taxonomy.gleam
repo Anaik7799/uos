@@ -1,9 +1,9 @@
 //// =============================================================================
-//// [UOS-FPP-AGENT-TAXONOMY] NASA JPL F Prime / FPP Aerospace Agent Taxonomy
+//// [UOS-C3I-AGENT-TAXONOMY] C3I SDLC, SRE & Verification Aerospace Agent Ecology
 //// =============================================================================
-//// Formal specification of all 16 canonical agent types created via the FPP
-//// pure BEAM substrate across all fractal layers (L0..L9), components, SDLC,
-//// SRE resilience tiers, and evidence systems.
+//// Formal specification of all 48 canonical sovereign agent types created via
+//// the FPP pure BEAM substrate across all 3 C3I pillars (SDLC, SRE, Verification)
+//// and fractal layers (L0..L9), components, SRE resilience tiers, and evidence.
 //// =============================================================================
 
 import cepaf_gleam/fpp/domain.{
@@ -27,6 +27,33 @@ fn make_signals(names: List(String)) -> List(SignalDef) {
 // =============================================================================
 // Agent Kind Enumeration
 // =============================================================================
+
+// =============================================================================
+// C3I Subsystem Classification Pillar
+// =============================================================================
+
+pub type C3iSystem {
+  C3iSdlc
+  C3iSre
+  C3iVerification
+}
+
+pub fn c3i_system_to_string(sys: C3iSystem) -> String {
+  case sys {
+    C3iSdlc -> "C3I-SDLC"
+    C3iSre -> "C3I-SRE"
+    C3iVerification -> "C3I-VERIFICATION"
+  }
+}
+
+pub fn string_to_c3i_system(s: String) -> Result(C3iSystem, Nil) {
+  case s {
+    "C3I-SDLC" -> Ok(C3iSdlc)
+    "C3I-SRE" -> Ok(C3iSre)
+    "C3I-VERIFICATION" -> Ok(C3iVerification)
+    _ -> Error(Nil)
+  }
+}
 
 pub type AgentKind {
   ConstitutionalGuardian
@@ -61,6 +88,22 @@ pub type AgentKind {
   FastPatternFilter
   EpidemicGossip
   DynamicAgentBytecodeSynthesizer
+  SdlcArchitectureSynthesizer
+  SdlcContractCodeGenerator
+  SdlcStaticAnalysisAuditor
+  SdlcReleasePackagingOrchestrator
+  SdlcDocumentationTransclusionSync
+  SdlcEvolutionaryLoopGovernor
+  SreLyapunovTrendDetector
+  SreChaosFaultInjector
+  SreFreshnessMonitor
+  SreCpuBudgetGovernor
+  VerificationChecklistAuditor
+  VerificationMathGateCertifier
+  VerificationNineModalityExecutor
+  VerificationBrowserMatrixTester
+  VerificationTcmCoordinateProtector
+  VerificationZeroMudaPurityEnforcer
 }
 
 pub fn agent_kind_to_string(kind: AgentKind) -> String {
@@ -97,6 +140,22 @@ pub fn agent_kind_to_string(kind: AgentKind) -> String {
     FastPatternFilter -> "FastPatternFilter"
     EpidemicGossip -> "EpidemicGossip"
     DynamicAgentBytecodeSynthesizer -> "DynamicAgentBytecodeSynthesizer"
+    SdlcArchitectureSynthesizer -> "SdlcArchitectureSynthesizer"
+    SdlcContractCodeGenerator -> "SdlcContractCodeGenerator"
+    SdlcStaticAnalysisAuditor -> "SdlcStaticAnalysisAuditor"
+    SdlcReleasePackagingOrchestrator -> "SdlcReleasePackagingOrchestrator"
+    SdlcDocumentationTransclusionSync -> "SdlcDocumentationTransclusionSync"
+    SdlcEvolutionaryLoopGovernor -> "SdlcEvolutionaryLoopGovernor"
+    SreLyapunovTrendDetector -> "SreLyapunovTrendDetector"
+    SreChaosFaultInjector -> "SreChaosFaultInjector"
+    SreFreshnessMonitor -> "SreFreshnessMonitor"
+    SreCpuBudgetGovernor -> "SreCpuBudgetGovernor"
+    VerificationChecklistAuditor -> "VerificationChecklistAuditor"
+    VerificationMathGateCertifier -> "VerificationMathGateCertifier"
+    VerificationNineModalityExecutor -> "VerificationNineModalityExecutor"
+    VerificationBrowserMatrixTester -> "VerificationBrowserMatrixTester"
+    VerificationTcmCoordinateProtector -> "VerificationTcmCoordinateProtector"
+    VerificationZeroMudaPurityEnforcer -> "VerificationZeroMudaPurityEnforcer"
   }
 }
 
@@ -134,6 +193,24 @@ pub fn string_to_agent_kind(s: String) -> Result(AgentKind, Nil) {
     "FastPatternFilter" -> Ok(FastPatternFilter)
     "EpidemicGossip" -> Ok(EpidemicGossip)
     "DynamicAgentBytecodeSynthesizer" -> Ok(DynamicAgentBytecodeSynthesizer)
+    "SdlcArchitectureSynthesizer" -> Ok(SdlcArchitectureSynthesizer)
+    "SdlcContractCodeGenerator" -> Ok(SdlcContractCodeGenerator)
+    "SdlcStaticAnalysisAuditor" -> Ok(SdlcStaticAnalysisAuditor)
+    "SdlcReleasePackagingOrchestrator" -> Ok(SdlcReleasePackagingOrchestrator)
+    "SdlcDocumentationTransclusionSync" -> Ok(SdlcDocumentationTransclusionSync)
+    "SdlcEvolutionaryLoopGovernor" -> Ok(SdlcEvolutionaryLoopGovernor)
+    "SreLyapunovTrendDetector" -> Ok(SreLyapunovTrendDetector)
+    "SreChaosFaultInjector" -> Ok(SreChaosFaultInjector)
+    "SreFreshnessMonitor" -> Ok(SreFreshnessMonitor)
+    "SreCpuBudgetGovernor" -> Ok(SreCpuBudgetGovernor)
+    "VerificationChecklistAuditor" -> Ok(VerificationChecklistAuditor)
+    "VerificationMathGateCertifier" -> Ok(VerificationMathGateCertifier)
+    "VerificationNineModalityExecutor" -> Ok(VerificationNineModalityExecutor)
+    "VerificationBrowserMatrixTester" -> Ok(VerificationBrowserMatrixTester)
+    "VerificationTcmCoordinateProtector" ->
+      Ok(VerificationTcmCoordinateProtector)
+    "VerificationZeroMudaPurityEnforcer" ->
+      Ok(VerificationZeroMudaPurityEnforcer)
     _ -> Error(Nil)
   }
 }
@@ -146,6 +223,7 @@ pub type AgentTypeSpec {
   AgentTypeSpec(
     kind: AgentKind,
     name: String,
+    c3i_system: C3iSystem,
     fractal_layer: Int,
     fractal_tag: String,
     fpp_component_kind: ComponentKind,
@@ -281,7 +359,8 @@ fn build_guardian_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: ConstitutionalGuardian,
-    name: "Constitutional Guardian Agent",
+    name: "C3I Verification Constitutional Guardian Agent",
+    c3i_system: C3iVerification,
     fractal_layer: 0,
     fractal_tag: "#fractal-l0",
     fpp_component_kind: Active,
@@ -409,7 +488,8 @@ fn build_flight_controller_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: DeterministicFlightController,
-    name: "Deterministic Flight Controller Agent",
+    name: "C3I Verification Deterministic Flight Controller Agent",
+    c3i_system: C3iVerification,
     fractal_layer: 1,
     fractal_tag: "#fractal-l1",
     fpp_component_kind: Active,
@@ -475,7 +555,8 @@ fn build_telemetry_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: AvionicsTelemetry,
-    name: "Avionics Telemetry & Packetizer Agent",
+    name: "C3I Verification Avionics Telemetry Stream Agent",
+    c3i_system: C3iVerification,
     fractal_layer: 2,
     fractal_tag: "#fractal-l2",
     fpp_component_kind: Active,
@@ -547,7 +628,8 @@ fn build_prm_db_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: ParameterDatabase,
-    name: "Non-Volatile Parameter Database Agent",
+    name: "C3I SDLC Parameter Database Custodian Agent",
+    c3i_system: C3iSdlc,
     fractal_layer: 2,
     fractal_tag: "#fractal-l2",
     fpp_component_kind: Queued,
@@ -662,7 +744,8 @@ fn build_mission_phase_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: MissionPhaseHsm,
-    name: "Autonomous Mission Phase HSM Agent",
+    name: "C3I SDLC Mission Phase Orchestrator Agent",
+    c3i_system: C3iSdlc,
     fractal_layer: 3,
     fractal_tag: "#fractal-l3",
     fpp_component_kind: Active,
@@ -710,7 +793,8 @@ fn build_sre_sentinel_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: SreSentinel,
-    name: "SRE Sentinel & Lyapunov Health Agent",
+    name: "C3I SRE Sentinel Health & Circuit Breaker Agent",
+    c3i_system: C3iSre,
     fractal_layer: 4,
     fractal_tag: "#fractal-l4",
     fpp_component_kind: Active,
@@ -776,7 +860,8 @@ fn build_cybernetic_immune_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: CyberneticImmune,
-    name: "Cybernetic Immune & FDIR Agent",
+    name: "C3I SRE Cybernetic Immune Self-Healing Agent",
+    c3i_system: C3iSre,
     fractal_layer: 4,
     fractal_tag: "#fractal-l4",
     fpp_component_kind: Active,
@@ -862,7 +947,8 @@ fn build_cognitive_ooda_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: CognitiveOodaIntent,
-    name: "Cognitive OODA & Intent Reasoning Agent",
+    name: "C3I SDLC Cognitive OODA Intent Arbiter Agent",
+    c3i_system: C3iSdlc,
     fractal_layer: 5,
     fractal_tag: "#fractal-l5",
     fpp_component_kind: Active,
@@ -910,7 +996,8 @@ fn build_swarm_mesh_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: SwarmMesh,
-    name: "Swarm Mesh & Ecosystem Agent",
+    name: "C3I SRE Swarm Mesh Topology Coordinator Agent",
+    c3i_system: C3iSre,
     fractal_layer: 6,
     fractal_tag: "#fractal-l6",
     fpp_component_kind: Active,
@@ -958,7 +1045,8 @@ fn build_ground_gateway_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: GroundGateway,
-    name: "Ground Gateway & DTN Agent",
+    name: "C3I SRE Ground Uplink & Downlink Gateway Agent",
+    c3i_system: C3iSre,
     fractal_layer: 7,
     fractal_tag: "#fractal-l7",
     fpp_component_kind: Active,
@@ -1006,7 +1094,8 @@ fn build_living_meta_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: LivingMetaEvolution,
-    name: "Living Biomorphic Meta-Evolution Agent",
+    name: "C3I SDLC Living Meta-Evolution Supervisor Agent",
+    c3i_system: C3iSdlc,
     fractal_layer: 9,
     fractal_tag: "#fractal-l9",
     fpp_component_kind: Active,
@@ -1054,7 +1143,8 @@ fn build_formal_oracle_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: FormalOracle,
-    name: "Formal Verification & Gospel Parity Agent",
+    name: "C3I Verification Formal Gospel & Z3 Oracle Agent",
+    c3i_system: C3iVerification,
     fractal_layer: 0,
     fractal_tag: "#fractal-l0",
     fpp_component_kind: Active,
@@ -1102,7 +1192,8 @@ fn build_cockpit_telemetry_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: CockpitTelemetry,
-    name: "AG-UI & A2UI Tri-Modal Cockpit Agent",
+    name: "C3I Verification Cockpit Telemetry Presenter Agent",
+    c3i_system: C3iVerification,
     fractal_layer: 2,
     fractal_tag: "#fractal-l2",
     fpp_component_kind: Active,
@@ -1150,7 +1241,8 @@ fn build_payload_science_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: PayloadScience,
-    name: "Autonomous Science & Payload Agent",
+    name: "C3I SDLC Payload Science Processor Agent",
+    c3i_system: C3iSdlc,
     fractal_layer: 3,
     fractal_tag: "#fractal-l3",
     fpp_component_kind: Queued,
@@ -1198,7 +1290,8 @@ fn build_storage_custodian_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: StorageCustodian,
-    name: "Hardware Interlock & Storage Custodian Agent",
+    name: "C3I SRE Descriptor-Relative VFS Storage Custodian Agent",
+    c3i_system: C3iSre,
     fractal_layer: 1,
     fractal_tag: "#fractal-l1",
     fpp_component_kind: Active,
@@ -1246,7 +1339,8 @@ fn build_km_sync_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: KmSync,
-    name: "Knowledge Triad (#km-triad) Sync Agent",
+    name: "C3I SDLC KM Triad Knowledge Sync Agent",
+    c3i_system: C3iSdlc,
     fractal_layer: 5,
     fractal_tag: "#fractal-l5",
     fpp_component_kind: Queued,
@@ -1323,7 +1417,8 @@ fn build_hardware_drive_interlock_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: HardwareDriveInterlock,
-    name: "Hardware Drive Interlock Agent",
+    name: "C3I Verification Hardware Drive Safety Interlock Agent",
+    c3i_system: C3iVerification,
     fractal_layer: 0,
     fractal_tag: "#fractal-l0",
     fpp_component_kind: Active,
@@ -1371,7 +1466,8 @@ fn build_rocha_cut_guard_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: RochaSemioticCutGuard,
-    name: "Rocha Semiotic Cut Guard Agent",
+    name: "C3I Verification Rocha Semiotic Cut Guard Agent",
+    c3i_system: C3iVerification,
     fractal_layer: 0,
     fractal_tag: "#fractal-l0",
     fpp_component_kind: Queued,
@@ -1446,7 +1542,8 @@ fn build_reduction_scheduler_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: DeterministicReductionScheduler,
-    name: "Deterministic Reduction Scheduler Agent",
+    name: "C3I SRE Deterministic Reduction Scheduler Agent",
+    c3i_system: C3iSre,
     fractal_layer: 1,
     fractal_tag: "#fractal-l1",
     fpp_component_kind: Active,
@@ -1521,7 +1618,8 @@ fn build_substrate_reactor_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: SubstrateReactor,
-    name: "Substrate Reactor Agent",
+    name: "C3I Verification Substrate Reactor Event Multiplexer Agent",
+    c3i_system: C3iVerification,
     fractal_layer: 1,
     fractal_tag: "#fractal-l1",
     fpp_component_kind: Active,
@@ -1596,7 +1694,8 @@ fn build_linear_arena_reclaimer_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: LinearArenaReclaimer,
-    name: "Linear Arena Reclaimer Agent",
+    name: "C3I SRE Linear Arena Memory Reclaimer Agent",
+    c3i_system: C3iSre,
     fractal_layer: 1,
     fractal_tag: "#fractal-l1",
     fpp_component_kind: Active,
@@ -1644,7 +1743,8 @@ fn build_lockless_hamt_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: LocklessHamtStorage,
-    name: "Lockless HAMT Storage Agent",
+    name: "C3I SRE Lockless HAMT Storage Engine Agent",
+    c3i_system: C3iSre,
     fractal_layer: 2,
     fractal_tag: "#fractal-l2",
     fpp_component_kind: Active,
@@ -1696,7 +1796,8 @@ fn build_tagged_pointer_guard_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: TaggedPointerGuard,
-    name: "Tagged Pointer Guard Agent",
+    name: "C3I SRE Tagged Pointer NaN-Box Guard Agent",
+    c3i_system: C3iSre,
     fractal_layer: 2,
     fractal_tag: "#fractal-l2",
     fpp_component_kind: Queued,
@@ -1748,7 +1849,8 @@ fn build_hierarchical_timer_wheel_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: HierarchicalTimerWheel,
-    name: "Hierarchical Timer Wheel Agent",
+    name: "C3I SRE Hierarchical Timer Wheel Jitter Agent",
+    c3i_system: C3iSre,
     fractal_layer: 2,
     fractal_tag: "#fractal-l2",
     fpp_component_kind: Active,
@@ -1800,7 +1902,8 @@ fn build_mcdc_tap_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: McdcAvionicsTap,
-    name: "MC/DC Avionics TAP Agent",
+    name: "C3I Verification DO-178C Level-A MC/DC Tap Agent",
+    c3i_system: C3iVerification,
     fractal_layer: 3,
     fractal_tag: "#fractal-l3",
     fpp_component_kind: Queued,
@@ -1882,7 +1985,8 @@ fn build_crash_wal_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: CrashWalReplay,
-    name: "Crash WAL Replay Agent",
+    name: "C3I SRE Crash-Consistent WAL Replay Agent",
+    c3i_system: C3iSre,
     fractal_layer: 3,
     fractal_tag: "#fractal-l3",
     fpp_component_kind: Active,
@@ -1934,7 +2038,8 @@ fn build_differential_bisim_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: DifferentialBisimulation,
-    name: "Differential Bisimulation Agent",
+    name: "C3I Verification Cross-Runtime Bisimulation Agent",
+    c3i_system: C3iVerification,
     fractal_layer: 3,
     fractal_tag: "#fractal-l3",
     fpp_component_kind: Queued,
@@ -2016,7 +2121,8 @@ fn build_appup_coordinator_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: AppupHotReloadCoordinator,
-    name: "Appup Hot Reload Coordinator Agent",
+    name: "C3I SDLC Appup Hot Reload Coordinator Agent",
+    c3i_system: C3iSdlc,
     fractal_layer: 4,
     fractal_tag: "#fractal-l4",
     fpp_component_kind: Active,
@@ -2064,7 +2170,8 @@ fn build_slm_bif_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: SlmBifInference,
-    name: "SLM BIF Inference Agent",
+    name: "C3I SDLC SLM BIF Isolated Inference Agent",
+    c3i_system: C3iSdlc,
     fractal_layer: 5,
     fractal_tag: "#fractal-l5",
     fpp_component_kind: Active,
@@ -2116,7 +2223,8 @@ fn build_fast_pattern_filter_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: FastPatternFilter,
-    name: "Fast Pattern Filter Agent",
+    name: "C3I SDLC Fast Pattern Bitmask Filter Agent",
+    c3i_system: C3iSdlc,
     fractal_layer: 5,
     fractal_tag: "#fractal-l5",
     fpp_component_kind: Queued,
@@ -2168,7 +2276,8 @@ fn build_epidemic_gossip_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: EpidemicGossip,
-    name: "Epidemic Gossip Agent",
+    name: "C3I SRE Epidemic Gossip Convergence Agent",
+    c3i_system: C3iSre,
     fractal_layer: 6,
     fractal_tag: "#fractal-l6",
     fpp_component_kind: Active,
@@ -2216,7 +2325,8 @@ fn build_bytecode_synthesizer_spec() -> AgentTypeSpec {
 
   AgentTypeSpec(
     kind: DynamicAgentBytecodeSynthesizer,
-    name: "Dynamic Agent Bytecode Synthesizer Agent",
+    name: "C3I SDLC Dynamic Agent Bytecode Synthesizer Agent",
+    c3i_system: C3iSdlc,
     fractal_layer: 9,
     fractal_tag: "#fractal-l9",
     fpp_component_kind: Active,
@@ -2228,6 +2338,1409 @@ fn build_bytecode_synthesizer_spec() -> AgentTypeSpec {
     sdlc_phase: "Runtime Bytecode Compilation",
     sre_resilience_tier: "SIL-5 / Hot Deployable",
     evidence_contracts: ["SC-AGENT-CODEGEN-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sdlc_arch_synth_spec() -> AgentTypeSpec {
+  let modeling =
+    HierarchicalState(
+      name: "Modeling",
+      parent: None,
+      entry: ["arch_modeling_init"],
+      exit: ["arch_model_ready"],
+      transitions: [
+        Transition(
+          on_signal: "start_decomposition",
+          guard: None,
+          do_actions: ["decompose_fractal_layers"],
+          target: ToState("Decomposing"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let decomposing =
+    HierarchicalState(
+      name: "Decomposing",
+      parent: None,
+      entry: ["arch_decomposition_active"],
+      exit: ["arch_decomposition_done"],
+      transitions: [
+        Transition(
+          on_signal: "verify_invariants",
+          guard: None,
+          do_actions: ["validate_ast_invariants"],
+          target: ToState("Synthesized"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let synthesized =
+    HierarchicalState(
+      name: "Synthesized",
+      parent: None,
+      entry: ["arch_spec_sealed"],
+      exit: ["arch_spec_reopened"],
+      transitions: [
+        Transition(
+          on_signal: "synthesis_complete",
+          guard: None,
+          do_actions: ["publish_architecture_spec"],
+          target: ToState("Modeling"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SdlcArchSynthHSM",
+      signals: make_signals([
+        "start_decomposition", "verify_invariants", "synthesis_complete",
+      ]),
+      guards: ["is_valid_fractal_topology"],
+      actions: [
+        "decompose_fractal_layers", "validate_ast_invariants",
+        "publish_architecture_spec",
+      ],
+      root_states: [modeling, decomposing, synthesized],
+      choices: [],
+      initial: #([], "Modeling"),
+    )
+
+  AgentTypeSpec(
+    kind: SdlcArchitectureSynthesizer,
+    name: "C3I SDLC Architecture Synthesizer Agent",
+    c3i_system: C3iSdlc,
+    fractal_layer: 0,
+    fractal_tag: "#fractal-l0",
+    fpp_component_kind: Active,
+    base_id: 0x1800,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Formal architecture specification, AST decomposition, and domain model synthesis across all fractal layers.",
+    operational_domain: "Formal Architecture Specification",
+    sdlc_phase: "Specification & Invariant Definition",
+    sre_resilience_tier: "SIL-6 / Fail-Closed",
+    evidence_contracts: ["SC-SDLC-SPEC-001", "SC-FORMAL-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sdlc_contract_gen_spec() -> AgentTypeSpec {
+  let idle =
+    HierarchicalState(
+      name: "Idle",
+      parent: None,
+      entry: ["codegen_idle_entry"],
+      exit: ["codegen_started"],
+      transitions: [
+        Transition(
+          on_signal: "fpp_model_received",
+          guard: None,
+          do_actions: ["parse_fpp_ast"],
+          target: ToState("GeneratingCode"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let generating =
+    HierarchicalState(
+      name: "GeneratingCode",
+      parent: None,
+      entry: ["emitting_gleam_modules"],
+      exit: ["code_emission_complete"],
+      transitions: [
+        Transition(
+          on_signal: "compilation_pass",
+          guard: None,
+          do_actions: ["verify_type_conformance"],
+          target: ToState("CompilingTypes"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let compiling =
+    HierarchicalState(
+      name: "CompilingTypes",
+      parent: None,
+      entry: ["checking_type_soundness"],
+      exit: ["type_soundness_verified"],
+      transitions: [
+        Transition(
+          on_signal: "codegen_reset",
+          guard: None,
+          do_actions: ["flush_codegen_pipeline"],
+          target: ToState("Idle"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SdlcContractGenHSM",
+      signals: make_signals([
+        "fpp_model_received", "compilation_pass", "codegen_reset",
+      ]),
+      guards: ["is_clean_type_ast"],
+      actions: [
+        "parse_fpp_ast", "verify_type_conformance", "flush_codegen_pipeline",
+      ],
+      root_states: [idle, generating, compiling],
+      choices: [],
+      initial: #([], "Idle"),
+    )
+
+  AgentTypeSpec(
+    kind: SdlcContractCodeGenerator,
+    name: "C3I SDLC Contract Code Generator Agent",
+    c3i_system: C3iSdlc,
+    fractal_layer: 1,
+    fractal_tag: "#fractal-l1",
+    fpp_component_kind: Active,
+    base_id: 0x1840,
+    id_span: 64,
+    queue_policy: Block,
+    description: "Automated pure BEAM Gleam code and Gospel contract generation from NASA JPL FPP formal models.",
+    operational_domain: "Automated Gospel & FPP Code Synthesis",
+    sdlc_phase: "Synthesis & Code Evolution",
+    sre_resilience_tier: "SIL-5 / Deterministic CodeGen",
+    evidence_contracts: ["SC-CODEGEN-001", "SC-GOSPEL-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sdlc_static_analysis_spec() -> AgentTypeSpec {
+  let auditing =
+    HierarchicalState(
+      name: "Auditing",
+      parent: None,
+      entry: ["static_linter_start"],
+      exit: ["linter_pass_complete"],
+      transitions: [
+        Transition(
+          on_signal: "scan_tree",
+          guard: None,
+          do_actions: ["scan_for_compiler_warnings"],
+          target: ToState("Auditing"),
+        ),
+        Transition(
+          on_signal: "audit_passed",
+          guard: None,
+          do_actions: ["certify_zero_warning_purity"],
+          target: ToState("Clean"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let clean =
+    HierarchicalState(
+      name: "Clean",
+      parent: None,
+      entry: ["zero_muda_certified"],
+      exit: ["audit_retriggered"],
+      transitions: [
+        Transition(
+          on_signal: "scan_tree",
+          guard: None,
+          do_actions: ["recheck_codebase_integrity"],
+          target: ToState("Auditing"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SdlcStaticAnalysisHSM",
+      signals: make_signals(["scan_tree", "audit_passed"]),
+      guards: ["is_zero_warning"],
+      actions: [
+        "scan_for_compiler_warnings", "certify_zero_warning_purity",
+        "recheck_codebase_integrity",
+      ],
+      root_states: [auditing, clean],
+      choices: [],
+      initial: #([], "Auditing"),
+    )
+
+  AgentTypeSpec(
+    kind: SdlcStaticAnalysisAuditor,
+    name: "C3I SDLC Static Analysis & Linter Auditor Agent",
+    c3i_system: C3iSdlc,
+    fractal_layer: 2,
+    fractal_tag: "#fractal-l2",
+    fpp_component_kind: Active,
+    base_id: 0x1880,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Strict zero-warning, zero-muda, and dead-code elimination enforcement across Gleam, OCaml, and Rust codelines.",
+    operational_domain: "Zero-Warning & Zero-Muda Quality Linter",
+    sdlc_phase: "Verification & Gatekeeping",
+    sre_resilience_tier: "SIL-6 / Zero-Warning Invariant",
+    evidence_contracts: ["SC-MUDA-001", "SC-LINT-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sdlc_release_packager_spec() -> AgentTypeSpec {
+  let staging =
+    HierarchicalState(
+      name: "Staging",
+      parent: None,
+      entry: ["release_staging_entry"],
+      exit: ["release_staged"],
+      transitions: [
+        Transition(
+          on_signal: "package_trigger",
+          guard: None,
+          do_actions: ["assemble_release_artifacts"],
+          target: ToState("GeneratingSbom"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let sbom =
+    HierarchicalState(
+      name: "GeneratingSbom",
+      parent: None,
+      entry: ["generating_cyclonedx_sbom"],
+      exit: ["sbom_verified"],
+      transitions: [
+        Transition(
+          on_signal: "package_sealed",
+          guard: None,
+          do_actions: ["sign_release_cryptographically"],
+          target: ToState("Sealed"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let sealed =
+    HierarchicalState(
+      name: "Sealed",
+      parent: None,
+      entry: ["release_ready_for_cutover"],
+      exit: ["release_archive_stored"],
+      transitions: [
+        Transition(
+          on_signal: "package_trigger",
+          guard: None,
+          do_actions: ["reset_packager"],
+          target: ToState("Staging"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SdlcReleasePackagerHSM",
+      signals: make_signals(["package_trigger", "package_sealed"]),
+      guards: ["is_two_key_signed"],
+      actions: [
+        "assemble_release_artifacts", "sign_release_cryptographically",
+        "reset_packager",
+      ],
+      root_states: [staging, sbom, sealed],
+      choices: [],
+      initial: #([], "Staging"),
+    )
+
+  AgentTypeSpec(
+    kind: SdlcReleasePackagingOrchestrator,
+    name: "C3I SDLC Release Packaging Orchestrator Agent",
+    c3i_system: C3iSdlc,
+    fractal_layer: 4,
+    fractal_tag: "#fractal-l4",
+    fpp_component_kind: Active,
+    base_id: 0x18C0,
+    id_span: 64,
+    queue_policy: Block,
+    description: "Deterministic release tarball assembly, CycloneDX SBOM generation, and cryptographic two-key release signing.",
+    operational_domain: "Deterministic Release Packaging & SBOM",
+    sdlc_phase: "Release & Appup Cutover",
+    sre_resilience_tier: "SIL-5 / Cryptographic Manifest",
+    evidence_contracts: ["SC-RELEASE-001", "SC-SBOM-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sdlc_doc_sync_spec() -> AgentTypeSpec {
+  let indexing =
+    HierarchicalState(
+      name: "Indexing",
+      parent: None,
+      entry: ["indexing_wiki_zk_corpora"],
+      exit: ["index_up_to_date"],
+      transitions: [
+        Transition(
+          on_signal: "scan_docs",
+          guard: None,
+          do_actions: ["validate_timestamp_prefix"],
+          target: ToState("ValidatingPrefix"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let validating =
+    HierarchicalState(
+      name: "ValidatingPrefix",
+      parent: None,
+      entry: ["checking_yyyy_mm_dd_prefix"],
+      exit: ["all_docs_prefixed"],
+      transitions: [
+        Transition(
+          on_signal: "sync_complete",
+          guard: None,
+          do_actions: ["commit_transclusion_graph"],
+          target: ToState("Synced"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let synced =
+    HierarchicalState(
+      name: "Synced",
+      parent: None,
+      entry: ["km_triad_in_parity"],
+      exit: ["docs_modified"],
+      transitions: [
+        Transition(
+          on_signal: "scan_docs",
+          guard: None,
+          do_actions: ["reindex_corpus"],
+          target: ToState("Indexing"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SdlcDocSyncHSM",
+      signals: make_signals(["scan_docs", "sync_complete"]),
+      guards: ["has_valid_timestamp_prefix"],
+      actions: [
+        "validate_timestamp_prefix", "commit_transclusion_graph",
+        "reindex_corpus",
+      ],
+      root_states: [indexing, validating, synced],
+      choices: [],
+      initial: #([], "Indexing"),
+    )
+
+  AgentTypeSpec(
+    kind: SdlcDocumentationTransclusionSync,
+    name: "C3I SDLC Documentation Transclusion Sync Agent",
+    c3i_system: C3iSdlc,
+    fractal_layer: 6,
+    fractal_tag: "#fractal-l6",
+    fpp_component_kind: Active,
+    base_id: 0x1900,
+    id_span: 64,
+    queue_policy: Drop,
+    description: "Enforces mandatory YYYYMMDD-HHSS- timestamp prefix and transclusion link integrity across Wiki and ZK corpora.",
+    operational_domain: "Living KM & Transclusion Synchronizer",
+    sdlc_phase: "Documentation & Knowledge Sync",
+    sre_resilience_tier: "SIL-5 / Eventual ZK Parity",
+    evidence_contracts: ["SC-TIME-001", "SC-KM-TRIAD-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sdlc_evolution_governor_spec() -> AgentTypeSpec {
+  let iterating =
+    HierarchicalState(
+      name: "Iterating",
+      parent: None,
+      entry: ["cycle_stepping_active"],
+      exit: ["cycle_step_finished"],
+      transitions: [
+        Transition(
+          on_signal: "step_cycle",
+          guard: None,
+          do_actions: ["advance_codex_claude_cycle"],
+          target: ToState("EvaluatingEntropy"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let evaluating =
+    HierarchicalState(
+      name: "EvaluatingEntropy",
+      parent: None,
+      entry: ["measuring_shannon_entropy"],
+      exit: ["entropy_bound_verified"],
+      transitions: [
+        Transition(
+          on_signal: "cycles_ratified",
+          guard: None,
+          do_actions: ["ratify_tri_sovereign_consensus"],
+          target: ToState("Converged"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let converged =
+    HierarchicalState(
+      name: "Converged",
+      parent: None,
+      entry: ["evolution_cycle_sealed"],
+      exit: ["new_cycles_requested"],
+      transitions: [
+        Transition(
+          on_signal: "step_cycle",
+          guard: None,
+          do_actions: ["reopen_evolutionary_loop"],
+          target: ToState("Iterating"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SdlcEvolutionGovernorHSM",
+      signals: make_signals(["step_cycle", "cycles_ratified"]),
+      guards: ["is_entropy_sufficient"],
+      actions: [
+        "advance_codex_claude_cycle", "ratify_tri_sovereign_consensus",
+        "reopen_evolutionary_loop",
+      ],
+      root_states: [iterating, evaluating, converged],
+      choices: [],
+      initial: #([], "Iterating"),
+    )
+
+  AgentTypeSpec(
+    kind: SdlcEvolutionaryLoopGovernor,
+    name: "C3I SDLC Evolutionary Loop Governor Agent",
+    c3i_system: C3iSdlc,
+    fractal_layer: 9,
+    fractal_tag: "#fractal-l9",
+    fpp_component_kind: Active,
+    base_id: 0x1940,
+    id_span: 64,
+    queue_policy: Block,
+    description: "Supervises the recursive multi-cycle Codex-Claude evolutionary iteration, Shannon entropy, and convergence algebra.",
+    operational_domain: "Codex-Claude Evolutionary Cycle Engine",
+    sdlc_phase: "Meta-Evolution & Hot-Reloading",
+    sre_resilience_tier: "SIL-6 / Tri-Sovereign Consensus",
+    evidence_contracts: ["SC-EVOLUTION-001", "SC-SOV-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sre_lyapunov_detector_spec() -> AgentTypeSpec {
+  let sampling =
+    HierarchicalState(
+      name: "WindowSampling",
+      parent: None,
+      entry: ["sampling_telemetry_window"],
+      exit: ["telemetry_window_full"],
+      transitions: [
+        Transition(
+          on_signal: "sample_tick",
+          guard: None,
+          do_actions: ["compute_trajectory_drift"],
+          target: ToState("EvaluatingLambda"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let evaluating =
+    HierarchicalState(
+      name: "EvaluatingLambda",
+      parent: None,
+      entry: ["solving_least_squares_lambda"],
+      exit: ["lambda_computed_exit"],
+      transitions: [
+        Transition(
+          on_signal: "lambda_computed",
+          guard: None,
+          do_actions: ["verify_negative_exponent"],
+          target: ToState("TrendStable"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let stable =
+    HierarchicalState(
+      name: "TrendStable",
+      parent: None,
+      entry: ["asymptotically_stable_state"],
+      exit: ["new_window_started"],
+      transitions: [
+        Transition(
+          on_signal: "sample_tick",
+          guard: None,
+          do_actions: ["shift_sample_window"],
+          target: ToState("WindowSampling"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SreLyapunovTrendHSM",
+      signals: make_signals(["sample_tick", "lambda_computed"]),
+      guards: ["is_lambda_negative"],
+      actions: [
+        "compute_trajectory_drift", "verify_negative_exponent",
+        "shift_sample_window",
+      ],
+      root_states: [sampling, evaluating, stable],
+      choices: [],
+      initial: #([], "WindowSampling"),
+    )
+
+  AgentTypeSpec(
+    kind: SreLyapunovTrendDetector,
+    name: "C3I SRE Lyapunov Trend Detector Agent",
+    c3i_system: C3iSre,
+    fractal_layer: 4,
+    fractal_tag: "#fractal-l4",
+    fpp_component_kind: Active,
+    base_id: 0x1980,
+    id_span: 64,
+    queue_policy: Drop,
+    description: "Windowed numerical trajectory tracking proving negative Lyapunov exponents (lambda < 0) and early bifurcation warning.",
+    operational_domain: "Continuous Lyapunov Stability Proof",
+    sdlc_phase: "Operations & Reliability",
+    sre_resilience_tier: "SIL-6 / Lyapunov Negative Drift",
+    evidence_contracts: ["SC-SRE-LYAPUNOV-001", "SC-MATH-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sre_chaos_injector_spec() -> AgentTypeSpec {
+  let dormant =
+    HierarchicalState(
+      name: "Dormant",
+      parent: None,
+      entry: ["chaos_dormant_entry"],
+      exit: ["chaos_armed"],
+      transitions: [
+        Transition(
+          on_signal: "arm_chaos",
+          guard: None,
+          do_actions: ["prepare_bounded_fault"],
+          target: ToState("InjectingFault"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let injecting =
+    HierarchicalState(
+      name: "InjectingFault",
+      parent: None,
+      entry: ["fault_injection_active"],
+      exit: ["fault_burst_complete"],
+      transitions: [
+        Transition(
+          on_signal: "trigger_partition",
+          guard: None,
+          do_actions: ["observe_circuit_breaker_trip"],
+          target: ToState("ObservingRecovery"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let observing =
+    HierarchicalState(
+      name: "ObservingRecovery",
+      parent: None,
+      entry: ["monitoring_reconvergence"],
+      exit: ["system_healed"],
+      transitions: [
+        Transition(
+          on_signal: "fault_cleared",
+          guard: None,
+          do_actions: ["certify_self_healing_time"],
+          target: ToState("Dormant"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SreChaosInjectorHSM",
+      signals: make_signals(["arm_chaos", "trigger_partition", "fault_cleared"]),
+      guards: ["is_safe_test_environment"],
+      actions: [
+        "prepare_bounded_fault", "observe_circuit_breaker_trip",
+        "certify_self_healing_time",
+      ],
+      root_states: [dormant, injecting, observing],
+      choices: [],
+      initial: #([], "Dormant"),
+    )
+
+  AgentTypeSpec(
+    kind: SreChaosFaultInjector,
+    name: "C3I SRE Chaos Fault Injector Agent",
+    c3i_system: C3iSre,
+    fractal_layer: 4,
+    fractal_tag: "#fractal-l4",
+    fpp_component_kind: Active,
+    base_id: 0x19C0,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Controlled chaos injection, network partition simulation, and automatic Prajna circuit-breaker tripping validation.",
+    operational_domain: "Controlled Chaos & Fault Injection",
+    sdlc_phase: "Operations & Reliability",
+    sre_resilience_tier: "SIL-5 / Bounded Blast Radius",
+    evidence_contracts: ["SC-CHAOS-001", "SC-SRE-RECOVERY-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sre_freshness_monitor_spec() -> AgentTypeSpec {
+  let monitoring =
+    HierarchicalState(
+      name: "Monitoring",
+      parent: None,
+      entry: ["freshness_timer_start"],
+      exit: ["heartbeat_received"],
+      transitions: [
+        Transition(
+          on_signal: "heartbeat_tick",
+          guard: None,
+          do_actions: ["reset_deadmans_timer"],
+          target: ToState("Monitoring"),
+        ),
+        Transition(
+          on_signal: "drift_warning",
+          guard: None,
+          do_actions: ["flag_clock_skew"],
+          target: ToState("Warning"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let warning =
+    HierarchicalState(
+      name: "Warning",
+      parent: None,
+      entry: ["drift_exceeded_threshold"],
+      exit: ["drift_corrected"],
+      transitions: [
+        Transition(
+          on_signal: "heartbeat_tick",
+          guard: None,
+          do_actions: ["realign_timesync"],
+          target: ToState("Monitoring"),
+        ),
+        Transition(
+          on_signal: "ttl_expired",
+          guard: None,
+          do_actions: ["trip_deadmans_safehold"],
+          target: ToState("SafeHoldTripped"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let safehold =
+    HierarchicalState(
+      name: "SafeHoldTripped",
+      parent: None,
+      entry: ["emergency_hold_active"],
+      exit: ["manual_clearance_granted"],
+      transitions: [
+        Transition(
+          on_signal: "reset_monitor",
+          guard: None,
+          do_actions: ["clear_deadmans_safehold"],
+          target: ToState("Monitoring"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SreFreshnessMonitorHSM",
+      signals: make_signals([
+        "heartbeat_tick", "drift_warning", "ttl_expired", "reset_monitor",
+      ]),
+      guards: ["is_clock_synchronized"],
+      actions: [
+        "reset_deadmans_timer", "flag_clock_skew", "realign_timesync",
+        "trip_deadmans_safehold", "clear_deadmans_safehold",
+      ],
+      root_states: [monitoring, warning, safehold],
+      choices: [],
+      initial: #([], "Monitoring"),
+    )
+
+  AgentTypeSpec(
+    kind: SreFreshnessMonitor,
+    name: "C3I SRE Freshness Dead-Mans Monitor Agent",
+    c3i_system: C3iSre,
+    fractal_layer: 2,
+    fractal_tag: "#fractal-l2",
+    fpp_component_kind: Active,
+    base_id: 0x1A00,
+    id_span: 64,
+    queue_policy: Drop,
+    description: "Monitors microsecond host NTP clock drift and triggers fail-safe safe-holds on expired dead-man switch intervals.",
+    operational_domain: "Dead-Man's Switch & Clock Drift",
+    sdlc_phase: "Operations & Reliability",
+    sre_resilience_tier: "SIL-6 / Microsecond Precision",
+    evidence_contracts: ["SC-FRESHNESS-001", "SC-TIME-SYNC-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_sre_cpu_budget_governor_spec() -> AgentTypeSpec {
+  let tracking =
+    HierarchicalState(
+      name: "TrackingReductions",
+      parent: None,
+      entry: ["reduction_budget_init"],
+      exit: ["reduction_slice_finished"],
+      transitions: [
+        Transition(
+          on_signal: "reduction_tick",
+          guard: None,
+          do_actions: ["decrement_process_budget"],
+          target: ToState("TrackingReductions"),
+        ),
+        Transition(
+          on_signal: "budget_exceeded",
+          guard: None,
+          do_actions: ["preempt_runaway_process"],
+          target: ToState("Throttling"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let throttling =
+    HierarchicalState(
+      name: "Throttling",
+      parent: None,
+      entry: ["yield_mandated"],
+      exit: ["next_timeslice_ready"],
+      transitions: [
+        Transition(
+          on_signal: "timeslice_reclaimed",
+          guard: None,
+          do_actions: ["restore_nominal_priority"],
+          target: ToState("TrackingReductions"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SreCpuGovernorHSM",
+      signals: make_signals([
+        "reduction_tick", "budget_exceeded", "timeslice_reclaimed",
+      ]),
+      guards: ["is_quota_bounded"],
+      actions: [
+        "decrement_process_budget", "preempt_runaway_process",
+        "restore_nominal_priority",
+      ],
+      root_states: [tracking, throttling],
+      choices: [],
+      initial: #([], "TrackingReductions"),
+    )
+
+  AgentTypeSpec(
+    kind: SreCpuBudgetGovernor,
+    name: "C3I SRE Preemptive CPU Budget Governor Agent",
+    c3i_system: C3iSre,
+    fractal_layer: 1,
+    fractal_tag: "#fractal-l1",
+    fpp_component_kind: Active,
+    base_id: 0x1A40,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Enforces per-process reduction limits and dynamic scheduling priority adjustment to prevent starvation.",
+    operational_domain: "Preemptive Reduction Quota Enforcement",
+    sdlc_phase: "Operations & Reliability",
+    sre_resilience_tier: "SIL-6 / Runaway Loop Prevention",
+    evidence_contracts: ["SC-REDUCTION-BUDGET-001", "SC-CPU-GOV-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_verification_checklist_auditor_spec() -> AgentTypeSpec {
+  let scanning =
+    HierarchicalState(
+      name: "ScanningChecklist",
+      parent: None,
+      entry: ["evaluating_18_checkpoints"],
+      exit: ["checkpoint_batch_done"],
+      transitions: [
+        Transition(
+          on_signal: "audit_check",
+          guard: None,
+          do_actions: ["evaluate_single_checkpoint"],
+          target: ToState("DomainEvaluated"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let domain_eval =
+    HierarchicalState(
+      name: "DomainEvaluated",
+      parent: None,
+      entry: ["aggregating_5_domains"],
+      exit: ["all_domains_tallied"],
+      transitions: [
+        Transition(
+          on_signal: "all_domains_pass",
+          guard: None,
+          do_actions: ["ratify_18_18_checklist"],
+          target: ToState("Checklist18Green"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let green =
+    HierarchicalState(
+      name: "Checklist18Green",
+      parent: None,
+      entry: ["checklist_gate_ratified"],
+      exit: ["recheck_triggered"],
+      transitions: [
+        Transition(
+          on_signal: "checklist_reset",
+          guard: None,
+          do_actions: ["clear_checklist_cache"],
+          target: ToState("ScanningChecklist"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "VerificationChecklistHSM",
+      signals: make_signals([
+        "audit_check", "all_domains_pass", "checklist_reset",
+      ]),
+      guards: ["is_18_of_18_passing"],
+      actions: [
+        "evaluate_single_checkpoint", "ratify_18_18_checklist",
+        "clear_checklist_cache",
+      ],
+      root_states: [scanning, domain_eval, green],
+      choices: [],
+      initial: #([], "ScanningChecklist"),
+    )
+
+  AgentTypeSpec(
+    kind: VerificationChecklistAuditor,
+    name: "C3I Verification Checklist Auditor Agent",
+    c3i_system: C3iVerification,
+    fractal_layer: 0,
+    fractal_tag: "#fractal-l0",
+    fpp_component_kind: Active,
+    base_id: 0x1A80,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Continuous machine verification of the 18-checkpoint, 5-domain Comprehensive Verification Checklist (SC-CHECKLIST-001).",
+    operational_domain: "Universal 18-Checkpoint Gatekeeper",
+    sdlc_phase: "Verification & Gatekeeping",
+    sre_resilience_tier: "SIL-6 / 100% Green Gate",
+    evidence_contracts: ["SC-CHECKLIST-001", "SPEC-CHECKLIST-NAV-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_verification_math_gate_certifier_spec() -> AgentTypeSpec {
+  let collecting =
+    HierarchicalState(
+      name: "CollectingMetrics",
+      parent: None,
+      entry: ["sampling_math_metrics"],
+      exit: ["metrics_pool_ready"],
+      transitions: [
+        Transition(
+          on_signal: "metrics_ready",
+          guard: None,
+          do_actions: ["evaluate_4_math_gates"],
+          target: ToState("Gating"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let gating =
+    HierarchicalState(
+      name: "Gating",
+      parent: None,
+      entry: ["checking_entropy_and_itqs"],
+      exit: ["thresholds_checked"],
+      transitions: [
+        Transition(
+          on_signal: "gates_passed",
+          guard: None,
+          do_actions: ["issue_math_certificate"],
+          target: ToState("Certified"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let certified =
+    HierarchicalState(
+      name: "Certified",
+      parent: None,
+      entry: ["math_gates_ratified_active"],
+      exit: ["re_evaluating_metrics"],
+      transitions: [
+        Transition(
+          on_signal: "metrics_ready",
+          guard: None,
+          do_actions: ["refresh_metrics"],
+          target: ToState("CollectingMetrics"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "VerificationMathGatesHSM",
+      signals: make_signals(["metrics_ready", "gates_passed"]),
+      guards: ["satisfies_math_thresholds"],
+      actions: [
+        "evaluate_4_math_gates", "issue_math_certificate", "refresh_metrics",
+      ],
+      root_states: [collecting, gating, certified],
+      choices: [],
+      initial: #([], "CollectingMetrics"),
+    )
+
+  AgentTypeSpec(
+    kind: VerificationMathGateCertifier,
+    name: "C3I Verification 4 Math Gates Certifier Agent",
+    c3i_system: C3iVerification,
+    fractal_layer: 0,
+    fractal_tag: "#fractal-l0",
+    fpp_component_kind: Active,
+    base_id: 0x1AC0,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Certifies the 4 Mathematical Gates: Shannon Entropy H >= 2.5b, CCM >= 90%, Divergence D_EA <= 10%, ITQS >= 0.85.",
+    operational_domain: "4 Mathematical Gates Evaluation",
+    sdlc_phase: "Verification & Gatekeeping",
+    sre_resilience_tier: "SIL-6 / Mathematical Certainty",
+    evidence_contracts: ["SC-MATH-001", "SC-ENTROPY-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_verification_nine_modality_executor_spec() -> AgentTypeSpec {
+  let queued =
+    HierarchicalState(
+      name: "SuiteQueued",
+      parent: None,
+      entry: ["test_protocol_queued"],
+      exit: ["dispatching_modality"],
+      transitions: [
+        Transition(
+          on_signal: "dispatch_suite",
+          guard: None,
+          do_actions: ["execute_modality_suite"],
+          target: ToState("ExecutingModality"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let executing =
+    HierarchicalState(
+      name: "ExecutingModality",
+      parent: None,
+      entry: ["running_tests_concurrently"],
+      exit: ["modality_completed"],
+      transitions: [
+        Transition(
+          on_signal: "all_suites_green",
+          guard: None,
+          do_actions: ["ratify_full_protocol"],
+          target: ToState("ProtocolComplete"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let complete =
+    HierarchicalState(
+      name: "ProtocolComplete",
+      parent: None,
+      entry: ["protocol_100_percent_green"],
+      exit: ["new_run_queued"],
+      transitions: [
+        Transition(
+          on_signal: "dispatch_suite",
+          guard: None,
+          do_actions: ["reset_protocol_runner"],
+          target: ToState("SuiteQueued"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "VerificationNineModalityHSM",
+      signals: make_signals(["dispatch_suite", "all_suites_green"]),
+      guards: ["is_zero_failures"],
+      actions: [
+        "execute_modality_suite", "ratify_full_protocol",
+        "reset_protocol_runner",
+      ],
+      root_states: [queued, executing, complete],
+      choices: [],
+      initial: #([], "SuiteQueued"),
+    )
+
+  AgentTypeSpec(
+    kind: VerificationNineModalityExecutor,
+    name: "C3I Verification 9-Modality Test Executor Agent",
+    c3i_system: C3iVerification,
+    fractal_layer: 3,
+    fractal_tag: "#fractal-l3",
+    fpp_component_kind: Active,
+    base_id: 0x1B00,
+    id_span: 64,
+    queue_policy: Block,
+    description: "Orchestrates the full 9-modality test protocol spanning Unit, System, TDD, BDD, Performance, Scale, Property, Fuzz, and Chaos.",
+    operational_domain: "9-Modality Test Protocol Orchestration",
+    sdlc_phase: "Verification & Gatekeeping",
+    sre_resilience_tier: "SIL-6 / Full Test Spectrum",
+    evidence_contracts: ["SC-9MOD-001", "SC-TEST-GOLD-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_verification_browser_matrix_tester_spec() -> AgentTypeSpec {
+  let ready =
+    HierarchicalState(
+      name: "HeadlessReady",
+      parent: None,
+      entry: ["headless_browser_pool_online"],
+      exit: ["launching_browser_suite"],
+      transitions: [
+        Transition(
+          on_signal: "launch_browser",
+          guard: None,
+          do_actions: ["execute_page_asserts"],
+          target: ToState("TestingRoutes"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let testing =
+    HierarchicalState(
+      name: "TestingRoutes",
+      parent: None,
+      entry: ["asserting_dom_elements"],
+      exit: ["all_routes_tested"],
+      transitions: [
+        Transition(
+          on_signal: "matrix_complete",
+          guard: None,
+          do_actions: ["certify_64_suites_green"],
+          target: ToState("MatrixPassed"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let passed =
+    HierarchicalState(
+      name: "MatrixPassed",
+      parent: None,
+      entry: ["matrix_efficacy_verified"],
+      exit: ["matrix_run_restarted"],
+      transitions: [
+        Transition(
+          on_signal: "launch_browser",
+          guard: None,
+          do_actions: ["flush_browser_sessions"],
+          target: ToState("HeadlessReady"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "VerificationBrowserMatrixHSM",
+      signals: make_signals(["launch_browser", "matrix_complete"]),
+      guards: ["is_all_routes_green"],
+      actions: [
+        "execute_page_asserts", "certify_64_suites_green",
+        "flush_browser_sessions",
+      ],
+      root_states: [ready, testing, passed],
+      choices: [],
+      initial: #([], "HeadlessReady"),
+    )
+
+  AgentTypeSpec(
+    kind: VerificationBrowserMatrixTester,
+    name: "C3I Verification 64 Browser Matrix Tester Agent",
+    c3i_system: C3iVerification,
+    fractal_layer: 2,
+    fractal_tag: "#fractal-l2",
+    fpp_component_kind: Active,
+    base_id: 0x1B40,
+    id_span: 64,
+    queue_policy: Block,
+    description: "Automated headless runner and telemetry aggregator for all 64 browser-based Playwright, Wallaby, and CDP tests.",
+    operational_domain: "64 Browser-Based Tests Execution",
+    sdlc_phase: "Verification & Gatekeeping",
+    sre_resilience_tier: "SIL-5 / Playwright & Wallaby Parity",
+    evidence_contracts: ["SC-BROWSER-TEST-001", "SC-UI-QUALITY-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_verification_tcm_protector_spec() -> AgentTypeSpec {
+  let tracking =
+    HierarchicalState(
+      name: "TrackingCoordinates",
+      parent: None,
+      entry: ["coordinate_vector_init"],
+      exit: ["coordinate_transition_detected"],
+      transitions: [
+        Transition(
+          on_signal: "tcm_transition",
+          guard: None,
+          do_actions: ["calculate_coordinate_delta"],
+          target: ToState("ProvingConservation"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let proving =
+    HierarchicalState(
+      name: "ProvingConservation",
+      parent: None,
+      entry: ["evaluating_lean4_conservation"],
+      exit: ["conservation_proved"],
+      transitions: [
+        Transition(
+          on_signal: "conservation_pass",
+          guard: None,
+          do_actions: ["certify_delta_zero"],
+          target: ToState("Conserved"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let conserved =
+    HierarchicalState(
+      name: "Conserved",
+      parent: None,
+      entry: ["tcm_13d_conserved_state"],
+      exit: ["new_transition_event"],
+      transitions: [
+        Transition(
+          on_signal: "tcm_transition",
+          guard: None,
+          do_actions: ["cycle_tcm_tracker"],
+          target: ToState("TrackingCoordinates"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "VerificationTcmProtectorHSM",
+      signals: make_signals(["tcm_transition", "conservation_pass"]),
+      guards: ["is_delta_zero"],
+      actions: [
+        "calculate_coordinate_delta", "certify_delta_zero", "cycle_tcm_tracker",
+      ],
+      root_states: [tracking, proving, conserved],
+      choices: [],
+      initial: #([], "TrackingCoordinates"),
+    )
+
+  AgentTypeSpec(
+    kind: VerificationTcmCoordinateProtector,
+    name: "C3I Verification 13D TCM Coordinate Protector Agent",
+    c3i_system: C3iVerification,
+    fractal_layer: 0,
+    fractal_tag: "#fractal-l0",
+    fpp_component_kind: Active,
+    base_id: 0x1B80,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Proves 13-dimensional traceability coordinate conservation Delta T_13 = 0 and fail-closed indicator I(Trust) in Lean 4.",
+    operational_domain: "13D TCM Coordinate Conservation",
+    sdlc_phase: "Verification & Gatekeeping",
+    sre_resilience_tier: "SIL-6 / Lean 4 Proved",
+    evidence_contracts: ["SC-DMC-TCM-001", "formal/lean/Traceability.lean"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_verification_zero_muda_enforcer_spec() -> AgentTypeSpec {
+  let scanning =
+    HierarchicalState(
+      name: "ScanningCodeline",
+      parent: None,
+      entry: ["zero_muda_purity_scan_init"],
+      exit: ["scan_completed"],
+      transitions: [
+        Transition(
+          on_signal: "run_purity_scan",
+          guard: None,
+          do_actions: ["grep_for_bevy_and_graphite"],
+          target: ToState("VerifyingPurity"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let verifying =
+    HierarchicalState(
+      name: "VerifyingPurity",
+      parent: None,
+      entry: ["evaluating_dependency_graph"],
+      exit: ["purity_confirmed"],
+      transitions: [
+        Transition(
+          on_signal: "scan_complete",
+          guard: None,
+          do_actions: ["certify_zero_muda_purity"],
+          target: ToState("PureZeroMuda"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let pure_state =
+    HierarchicalState(
+      name: "PureZeroMuda",
+      parent: None,
+      entry: ["zero_muda_100_percent_green"],
+      exit: ["purity_recheck_scheduled"],
+      transitions: [
+        Transition(
+          on_signal: "run_purity_scan",
+          guard: None,
+          do_actions: ["reset_purity_scanner"],
+          target: ToState("ScanningCodeline"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "VerificationZeroMudaHSM",
+      signals: make_signals(["run_purity_scan", "scan_complete"]),
+      guards: ["is_bevy_graphite_zero"],
+      actions: [
+        "grep_for_bevy_and_graphite", "certify_zero_muda_purity",
+        "reset_purity_scanner",
+      ],
+      root_states: [scanning, verifying, pure_state],
+      choices: [],
+      initial: #([], "ScanningCodeline"),
+    )
+
+  AgentTypeSpec(
+    kind: VerificationZeroMudaPurityEnforcer,
+    name: "C3I Verification Zero-Muda Purity Enforcer Agent",
+    c3i_system: C3iVerification,
+    fractal_layer: 0,
+    fractal_tag: "#fractal-l0",
+    fpp_component_kind: Active,
+    base_id: 0x1BC0,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Proves absolute Zero-Muda compliance: 0 Bevy, 0 Graphite, 0 foreign NIF shared libraries, and pure Erlang graphene_nif.",
+    operational_domain: "Zero Bevy & Zero Graphite Purity Enforcement",
+    sdlc_phase: "Verification & Gatekeeping",
+    sre_resilience_tier: "SIL-6 / Absolute Elimination of Muda",
+    evidence_contracts: ["SC-MUDA-001", "contracts/rules/zero-muda-rule.md"],
     hsm_machine: hsm,
   )
 }
@@ -2266,12 +3779,47 @@ pub fn all_agent_types() -> List(AgentTypeSpec) {
     build_fast_pattern_filter_spec(),
     build_epidemic_gossip_spec(),
     build_bytecode_synthesizer_spec(),
+    build_sdlc_arch_synth_spec(),
+    build_sdlc_contract_gen_spec(),
+    build_sdlc_static_analysis_spec(),
+    build_sdlc_release_packager_spec(),
+    build_sdlc_doc_sync_spec(),
+    build_sdlc_evolution_governor_spec(),
+    build_sre_lyapunov_detector_spec(),
+    build_sre_chaos_injector_spec(),
+    build_sre_freshness_monitor_spec(),
+    build_sre_cpu_budget_governor_spec(),
+    build_verification_checklist_auditor_spec(),
+    build_verification_math_gate_certifier_spec(),
+    build_verification_nine_modality_executor_spec(),
+    build_verification_browser_matrix_tester_spec(),
+    build_verification_tcm_protector_spec(),
+    build_verification_zero_muda_enforcer_spec(),
   ]
 }
 
 pub fn find_agent_type_spec(kind: AgentKind) -> Result(AgentTypeSpec, Nil) {
   let all = all_agent_types()
   list.find(all, fn(spec) { spec.kind == kind })
+}
+
+pub fn sdlc_agents() -> List(AgentTypeSpec) {
+  list.filter(all_agent_types(), fn(s) { s.c3i_system == C3iSdlc })
+}
+
+pub fn sre_agents() -> List(AgentTypeSpec) {
+  list.filter(all_agent_types(), fn(s) { s.c3i_system == C3iSre })
+}
+
+pub fn verification_agents() -> List(AgentTypeSpec) {
+  list.filter(all_agent_types(), fn(s) { s.c3i_system == C3iVerification })
+}
+
+pub fn filter_by_c3i_system(
+  specs: List(AgentTypeSpec),
+  sys: C3iSystem,
+) -> List(AgentTypeSpec) {
+  list.filter(specs, fn(s) { s.c3i_system == sys })
 }
 
 /// Proves that all 16 agent base-ID windows [base_id, base_id + id_span) are
@@ -2312,6 +3860,7 @@ pub fn encode_agent_type_spec_json(spec: AgentTypeSpec) -> json.Json {
   json.object([
     #("kind", json.string(agent_kind_to_string(spec.kind))),
     #("name", json.string(spec.name)),
+    #("c3i_system", json.string(c3i_system_to_string(spec.c3i_system))),
     #("fractal_layer", json.int(spec.fractal_layer)),
     #("fractal_tag", json.string(spec.fractal_tag)),
     #("base_id", json.int(spec.base_id)),
@@ -2328,9 +3877,16 @@ pub fn encode_agent_type_spec_json(spec: AgentTypeSpec) -> json.Json {
 }
 
 pub fn encode_agent_catalog_json(specs: List(AgentTypeSpec)) -> String {
+  let sdlc_count = list.count(specs, fn(s) { s.c3i_system == C3iSdlc })
+  let sre_count = list.count(specs, fn(s) { s.c3i_system == C3iSre })
+  let ver_count = list.count(specs, fn(s) { s.c3i_system == C3iVerification })
+
   json.object([
     #("status", json.string("ok")),
     #("total_agent_types", json.int(list.length(specs))),
+    #("sdlc_agents_count", json.int(sdlc_count)),
+    #("sre_agents_count", json.int(sre_count)),
+    #("verification_agents_count", json.int(ver_count)),
     #("contract", json.string("SC-FPP-AGENT-TAXONOMY-001")),
     #("agents", json.array(specs, of: encode_agent_type_spec_json)),
   ])

@@ -33,8 +33,20 @@ tables = [
   "algebraic_atlas_catalog",
   "denotational_intent_catalog",
   "master_test_inventory",
-  "journal_catalog"
+  "journal_catalog",
+  "c3i_agent_catalog"
 ]
+
+[c3i_agents]
+total_sovereign_agents = 48
+c3i_sdlc_agents = 16
+c3i_sre_agents = 16
+c3i_verification_agents = 16
+base_id_range = "0x1000..0x1C00"
+base_id_window_disjoint = true
+hsm_semantics = "David Harel LCA transition with bubbling and drop"
+dmc_13d_conserved = true
+
 
 [dmc_tcm]
 contract = "contracts/rules/dmc-tcm-mandate.md"
