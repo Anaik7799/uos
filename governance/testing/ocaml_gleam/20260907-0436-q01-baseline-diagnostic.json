@@ -1,0 +1,13 @@
+{
+  "schema": "uos.q01.compiler-diagnostic-baseline.v1",
+  "observed_at_utc": "2026-09-06T22:24:00Z",
+  "candidate_before_fix": "4b841fb82ec5fa4bced8849e3ec3d6f5963763f5",
+  "command": "gleam check",
+  "exit_code": 0,
+  "targeted_unused_warnings": 2,
+  "diagnostics": [
+    {"path":"apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam","line":8,"kind":"Unused imported type","subject":"CitedKnowledgeItem"},
+    {"path":"apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam","line":60,"kind":"Unused variable","subject":"inventory"}
+  ],
+  "raw_evidence_locator": "governance/sources/20260906-1620-codex-review-agy-forensic-reconciliation-receipt.json#implementation.compiler_warnings"
+}
