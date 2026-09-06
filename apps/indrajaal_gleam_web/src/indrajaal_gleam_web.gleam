@@ -310,6 +310,15 @@ pub fn main() {
         |> response.prepend_header("content-type", "application/json")
         |> response.prepend_header("access-control-allow-origin", "*")
       }
+      ["api", "fpp", "aspects", "features"] -> {
+        let details = aspect_agent_ecosystem.get_all_aspect_feature_details()
+        let json_body =
+          aspect_agent_ecosystem.encode_aspect_features_json(details)
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
       ["api", "fpp", "intent"] -> {
         let serial = case req.query {
           Some(q) ->
