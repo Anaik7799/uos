@@ -1,0 +1,4456 @@
+{
+  "schema": "uos.execution-audit.task-metadata.v1",
+  "generated_at_utc": "2026-09-06T17:52:57Z",
+  "timestamp_prefix": "20260906-1957-",
+  "status": "AUDIT_COMPLETE_PLAN_REQUIRES_SCHEMA_AND_SERIALIZATION_FIXES",
+  "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-audit",
+  "candidate_observation": {
+    "observed_source_commit_id_before_audit_artifacts": "9edb957afd9e285c64f7c7c3844bf12d0c58bfe3",
+    "working_copy_change_id": "yvownwzkvnnmwktzrzsnqnxwsuluwlkl",
+    "parent_candidate_commit_id": "c5c048dda1facf4aafa1891659f001a2f4262320",
+    "parent_candidate_change_id": "yupqvvlnmlwxpwkslpkzktuwvmwnkkqy",
+    "parent_bookmarks": [
+      "integration/sa-plan-execution-20260906-1655",
+      "main"
+    ],
+    "source_candidate_jj_status_before_audit_artifacts": "clean",
+    "current_workspace_jj_status": "dirty_by_two_audit_artifacts",
+    "audit_description_applied": true,
+    "source_writers_quiesced": false,
+    "chrony_receipt": "UNAVAILABLE: chronyc tracking could not open connection to daemon"
+  },
+  "source_inputs": [
+    {
+      "path": "governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json",
+      "sha256": "b706f9a99dfaf6018772b2a819084ea3373a3ee720ed774b57e7f92792d8ee02",
+      "locator": "#/tasks"
+    },
+    {
+      "path": "governance/sources/20260906-1620-codex-review-agy-forensic-reconciliation-receipt.json",
+      "sha256": "191dae268e3a95c4df975f78f6f6fc9cab918629d104542b4",
+      "locator": "#/findings;#/implementation;#/commands;#/http_observations"
+    },
+    {
+      "path": "HANDOVER_TO_CODEX.md",
+      "sha256": "0174e48cf2a7a64d0330f578d9ffc3d944633fc81b5eaa67426ce083e2eb4882",
+      "locator": "lines 22,30-67,77-84,194-218,278,323-331"
+    },
+    {
+      "path": "docs/journal/20260906-1620-codex-review-agy-forensic-reconciliation.md",
+      "sha256": "a0e1e210a5758467db9bd379981d2a9866e9b0cac293ec4154a09b306a2efcc1",
+      "locator": "lines 27-29,50-116,140-173,224-250"
+    }
+  ],
+  "canonical_17_source": {
+    "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/omni_fractal_matrix_engine.gleam",
+    "locator": "lines 375-393",
+    "function": "generate_all_17_aspect_processes",
+    "names": [
+      "Substrate & Hardware Storage Interlock",
+      "Standalone Jujutsu Monorepo Discipline",
+      "Zero-Muda Purity & Waste Elimination",
+      "Gleam/OTP 29 4-Domain Root Supervisor",
+      "ZigVM Deterministic Engine & 8 VFS Laws",
+      "Hermes Formal Evidence, Gospel & Z3",
+      "Mathematical Authority & Conservation",
+      "Biosemiotic Cybernetics & Rocha Cut",
+      "Quarantined Modular MAX/Mojo Inference",
+      "Zenoh OoZ & MoZ Mesh Telemetry Backplane",
+      "AG-UI 32-Event SSE Stream Protocol",
+      "A2UI 233-Component Declarative Catalog",
+      "Penta-Stack Multi-Interface Accessibility",
+      "Universal Tailscale FQDN Web Navigation",
+      "Comprehensive Verification Checklist",
+      "Knowledge Management Triad (Wiki/ZK/Ont)",
+      "Sa-Plan & Bionic Durable Workflows"
+    ]
+  },
+  "task_rows": [
+    {
+      "id": "E01",
+      "workstream": "E",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "PLAN00"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "tools/verification/candidate_snapshot.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/acceptance/candidate_snapshot_test.ml"
+        },
+        {
+          "mode": "inspect",
+          "path": "HANDOVER_TO_CODEX.md"
+        },
+        {
+          "mode": "inspect",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/evolutionary_cycles.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 2,
+        "modify": 0,
+        "inspect": 2,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "E01-regression",
+        "interface_operation": "candidate.snapshot",
+        "when_operations": [
+          "candidate.snapshot"
+        ],
+        "expected_fields": [
+          "inherited_credit",
+          "records",
+          "signature_credit",
+          "source_writes"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/candidate_snapshot_test.ml",
+        "validation_command_scope": "bootstrap_direct_probe"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "E02",
+      "workstream": "E",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "E01"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "tests/acceptance/contract.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/acceptance/run.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/acceptance/registry.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/acceptance/runner_test.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/acceptance/golden/receipt.schema.json"
+        }
+      ],
+      "own_file_counts": {
+        "total": 5,
+        "create": 5,
+        "modify": 0,
+        "inspect": 0,
+        "task_test_files": 5
+      },
+      "acceptance": {
+        "id": "E02-regression",
+        "interface_operation": "runner.verify",
+        "when_operations": [
+          "runner.verify"
+        ],
+        "expected_fields": [
+          "children_reaped",
+          "exit_code",
+          "passing_tests",
+          "status"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task E02",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "E03",
+      "workstream": "E",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "E02"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "tools/uos/src/main.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "tools/uos/src/uos.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/evolutionary_cycles.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/master_verification_registry.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/verification_truth_test.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "tools/uos/test/exit_status_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 6,
+        "create": 2,
+        "modify": 4,
+        "inspect": 0,
+        "task_test_files": 2
+      },
+      "acceptance": {
+        "id": "E03-regression",
+        "interface_operation": "verification.evaluate",
+        "when_operations": [
+          "verification.evaluate"
+        ],
+        "expected_fields": [
+          "admitted",
+          "exit_code",
+          "metrics_available",
+          "status"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task E03",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "E04",
+      "workstream": "E",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "E01",
+        "E02"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "tools/ocaml_test_inventory/src/ocaml_test_inventory/inventory.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "tools/ocaml_test_inventory/src/ocaml_test_inventory/files.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "tools/source_review/census.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tools/source_review/census_test.ml"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 2,
+        "modify": 2,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "E04-regression",
+        "interface_operation": "census.classify",
+        "when_operations": [
+          "census.classify"
+        ],
+        "expected_fields": [
+          "complete_review",
+          "executed_tests",
+          "files_accounted",
+          "unreadable"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task E04",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "E05",
+      "workstream": "E",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "E04"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "tools/source_review/adoption.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/acceptance/adoption_test.ml"
+        },
+        {
+          "mode": "create",
+          "path": "governance/sources/20260906-0817-adoption-protocol.md"
+        }
+      ],
+      "own_file_counts": {
+        "total": 3,
+        "create": 3,
+        "modify": 0,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "E05-regression",
+        "interface_operation": "source.admit",
+        "when_operations": [
+          "source.admit"
+        ],
+        "expected_fields": [
+          "admitted",
+          "reason_codes",
+          "source_writes"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task E05",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "E06",
+      "workstream": "E",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "E02",
+        "E04",
+        "E05",
+        "M02"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/ocaml_differential_oracle.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/ocaml_parity_verifier.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "tests/differential/run_oracle.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/differential/fixture_codec.ml"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/ocaml_oracle_contract_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 5,
+        "create": 3,
+        "modify": 2,
+        "inspect": 0,
+        "task_test_files": 3
+      },
+      "acceptance": {
+        "id": "E06-regression",
+        "interface_operation": "oracle.compare",
+        "when_operations": [
+          "oracle.compare"
+        ],
+        "expected_fields": [
+          "equivalent",
+          "original_source_changed",
+          "status"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task E06",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "E07",
+      "workstream": "E",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "E04",
+        "E06",
+        "P01",
+        "P03"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/test_contract.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/knowledge_html_port_test.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/knowledge_wiki_port_test.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/knowledge_zk_port_test.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/knowledge_km_port_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 5,
+        "create": 5,
+        "modify": 0,
+        "inspect": 0,
+        "task_test_files": 4
+      },
+      "acceptance": {
+        "id": "E07-regression",
+        "interface_operation": "migration.coverage",
+        "when_operations": [
+          "migration.coverage"
+        ],
+        "expected_fields": [
+          "coverage_complete",
+          "rejected_with_reason",
+          "required_missing"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task E07",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "E08",
+      "workstream": "E",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "E02",
+        "E03",
+        "E04"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/trace_ledger.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/master_verification_registry.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "tools/planning_ledger/src/uos_planning_ledger.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/trace_ledger_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 2,
+        "modify": 2,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "E08-regression",
+        "interface_operation": "ledger.validate",
+        "when_operations": [
+          "ledger.validate"
+        ],
+        "expected_fields": [
+          "admitted",
+          "receipt_state",
+          "trace_connected"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task E08",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "M01",
+      "workstream": "M",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "E02",
+        "E03"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "contracts/rules/dmc-tcm-mandate.md"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/semantics/vocabulary.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/semantics_vocabulary_test.gleam"
+        },
+        {
+          "mode": "inspect",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/dmc_tcm.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 2,
+        "modify": 1,
+        "inspect": 1,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "M01-regression",
+        "interface_operation": "semantics.resolve",
+        "when_operations": [
+          "semantics.resolve"
+        ],
+        "expected_fields": [
+          "aliased_domains",
+          "all_have_carrier_and_observation",
+          "distinct_domains"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task M01",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "M02",
+      "workstream": "M",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "E02",
+        "M01"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/semantics/intent.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/semantics/reference.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/intent.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/intent_denotation_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 3,
+        "modify": 1,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "M02-regression",
+        "interface_operation": "intent.denote",
+        "when_operations": [
+          "intent.denote"
+        ],
+        "expected_fields": [
+          "effects",
+          "result",
+          "state"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task M02",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "M03",
+      "workstream": "M",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "E03",
+        "M02"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/semantics/authorization.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/semantics/effects.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/api/denotational_intent_router.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/api/denotational_intent_api.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/intent.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/intent_authorization_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 6,
+        "create": 3,
+        "modify": 3,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "M03-regression",
+        "interface_operation": "intent.authorize_and_execute",
+        "when_operations": [
+          "intent.authorize_and_execute"
+        ],
+        "expected_fields": [
+          "authoritative_state_changed",
+          "decision",
+          "effect_count"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task M03",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "M04",
+      "workstream": "M",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "M01",
+        "M03"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/web_quality_contract.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/dmc_tcm_algebraic_atlas.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/dmc_tcm.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/semantics/trace.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/trace13_mutation_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 5,
+        "create": 2,
+        "modify": 3,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "M04-regression",
+        "interface_operation": "trace.check",
+        "when_operations": [
+          "trace.check"
+        ],
+        "expected_fields": [
+          "single_field_mutations_rejected",
+          "unapproved_pair_mutations_rejected",
+          "unchanged_control_passes"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task M04",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "M05",
+      "workstream": "M",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "M03",
+        "M04"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/semantics/clock.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/semantics/lease.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/dmc_tcm.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/agent_factory.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/lease_clock_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 6,
+        "create": 3,
+        "modify": 3,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "M05-regression",
+        "interface_operation": "lease.apply",
+        "when_operations": [
+          "lease.apply"
+        ],
+        "expected_fields": [
+          "command",
+          "monotonic_order_preserved",
+          "wall_clock_jump_reported",
+          "writes"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task M05",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "M06",
+      "workstream": "M",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "M02",
+        "M04"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/semantics/morphism.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/graph.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/graph_verification.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/morphism_graph_laws_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 3,
+        "modify": 1,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "M06-regression",
+        "interface_operation": "graph.verify",
+        "when_operations": [
+          "graph.verify"
+        ],
+        "expected_fields": [
+          "counterexample",
+          "reference_algorithm",
+          "valid_functor"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task M06",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "M07",
+      "workstream": "M",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "E08",
+        "M01",
+        "M06"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/semantics/atlas.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/semantics/sheaf.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/algebraic_atlas.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/fpp_atlas_view.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/atlas_sheaf_laws_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 5,
+        "create": 3,
+        "modify": 2,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "M07-regression",
+        "interface_operation": "atlas.glue",
+        "when_operations": [
+          "atlas.glue"
+        ],
+        "expected_fields": [
+          "accepts_caller_omitted_overlap",
+          "conflicting_key",
+          "layer_count",
+          "result"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task M07",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "M08",
+      "workstream": "M",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "E02",
+        "M04",
+        "M05",
+        "M06",
+        "M07"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "tools/web_quality_gate.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tools/verification/formal_worker.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/formal/worker_test.ml"
+        },
+        {
+          "mode": "modify",
+          "path": "formal/lean/Traceability.lean"
+        },
+        {
+          "mode": "modify",
+          "path": "formal/lean/TwoLattice_STM.lean"
+        },
+        {
+          "mode": "modify",
+          "path": "formal/quint/parity_frontier.qnt"
+        },
+        {
+          "mode": "modify",
+          "path": "formal/registry/formal-manifest.toml"
+        }
+      ],
+      "own_file_counts": {
+        "total": 7,
+        "create": 2,
+        "modify": 5,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "M08-regression",
+        "interface_operation": "formal.check",
+        "when_operations": [
+          "formal.check"
+        ],
+        "expected_fields": [
+          "admitted",
+          "process_tree_reaped",
+          "status"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task M08",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "A01",
+      "workstream": "A",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "E05",
+        "M01"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/parser.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/domain.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/conformance.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/fpp_parser_conformance_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 3,
+        "modify": 1,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "A01-regression",
+        "interface_operation": "fpp.parse",
+        "when_operations": [
+          "fpp.parse"
+        ],
+        "expected_fields": [
+          "accepted",
+          "diagnostic_has_source_span",
+          "unsupported_construct_not_dropped"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task A01",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "A02",
+      "workstream": "A",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "A01",
+        "M06"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/topology.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/domain.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/dmc_tcm.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/fpp_topology_contract_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 1,
+        "modify": 3,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "A02-regression",
+        "interface_operation": "fpp.validate_topology",
+        "when_operations": [
+          "fpp.validate_topology"
+        ],
+        "expected_fields": [
+          "errors",
+          "valid"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task A02",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "A03",
+      "workstream": "A",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "A02",
+        "M03"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/dictionary.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/prm_db.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/packetizer.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/fpp_wire_vectors_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 1,
+        "modify": 3,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "A03-regression",
+        "interface_operation": "fpp.decode_packet",
+        "when_operations": [
+          "fpp.decode_packet"
+        ],
+        "expected_fields": [
+          "dictionary_drift",
+          "packet",
+          "parameter_writes"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task A03",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "A04",
+      "workstream": "A",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "A01",
+        "M02"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/interp.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/domain.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/test/fpp_hsm_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 3,
+        "create": 0,
+        "modify": 3,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "A04-regression",
+        "interface_operation": "fpp.hsm_step",
+        "when_operations": [
+          "fpp.hsm_step"
+        ],
+        "expected_fields": [
+          "actions_run_once",
+          "active_path",
+          "entry_order",
+          "exit_order"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task A04",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "A05",
+      "workstream": "A",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "A02",
+        "A04",
+        "M03",
+        "M05"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/actor.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/interp.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/fpp_actor_runtime_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 1,
+        "modify": 3,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "A05-regression",
+        "interface_operation": "actor.run",
+        "when_operations": [
+          "actor.run"
+        ],
+        "expected_fields": [
+          "applied",
+          "dropped",
+          "queue_depth",
+          "reply_stage",
+          "supervisor_observed"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task A05",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "A06",
+      "workstream": "A",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "A05",
+        "E04",
+        "M07"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/agent_taxonomy.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/agent_factory.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/miq_services.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/ontology.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/agent_role_runtime_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 5,
+        "create": 1,
+        "modify": 4,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "A06-regression",
+        "interface_operation": "actor.role_workflow",
+        "when_operations": [
+          "actor.role_workflow"
+        ],
+        "expected_fields": [
+          "corpus_writes",
+          "finding",
+          "proposal_requires_policy",
+          "timestamp_source"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task A06",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "A07",
+      "workstream": "A",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "E05",
+        "M01"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/sysml/ast.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/sysml/parser.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/sysml/resolve.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/sysml/typecheck.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/sysml_conformance_test.gleam"
+        },
+        {
+          "mode": "inspect",
+          "path": "engines/hermes/modules/hermes_sysml/sysml_grammar.ml"
+        }
+      ],
+      "own_file_counts": {
+        "total": 6,
+        "create": 5,
+        "modify": 0,
+        "inspect": 1,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "A07-regression",
+        "interface_operation": "sysml.validate",
+        "when_operations": [
+          "sysml.validate"
+        ],
+        "expected_fields": [
+          "errors_have_locations",
+          "original_hermes_changed",
+          "unit_valued_model",
+          "valid"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task A07",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "A08",
+      "workstream": "A",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "A07",
+        "M02",
+        "M06"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/sysml/semantics.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/sysml/interchange.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/sysml/requirements.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/sysml_behavior_roundtrip_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 4,
+        "modify": 0,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "A08-regression",
+        "interface_operation": "sysml.roundtrip",
+        "when_operations": [
+          "sysml.roundtrip"
+        ],
+        "expected_fields": [
+          "diagnostic",
+          "equivalent",
+          "stable_ids_preserved"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task A08",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "A09",
+      "workstream": "A",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "A03",
+        "A05",
+        "A08",
+        "M08"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/sysml/fpp_projection.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/runtime_projection.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/model_runtime_correspondence_test.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "formal/quint/actor_correspondence.qnt"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 4,
+        "modify": 0,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "A09-regression",
+        "interface_operation": "model.compare_trace",
+        "when_operations": [
+          "model.compare_trace"
+        ],
+        "expected_fields": [
+          "admitted",
+          "correspondence",
+          "counterexample_step"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task A09",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "A10",
+      "workstream": "A",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "A06",
+        "A09",
+        "W06",
+        "Z12"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/knowledge_workflow.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/verification_workflow.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/ecology_journeys_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 3,
+        "modify": 1,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "A10-regression",
+        "interface_operation": "ecology.journey",
+        "when_operations": [
+          "ecology.journey"
+        ],
+        "expected_fields": [
+          "corpus_writes",
+          "finding_visible",
+          "policy_checked",
+          "receive_observed",
+          "send_observed",
+          "trace_chain_complete"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task A10",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "Z01",
+      "workstream": "Z",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "E04",
+        "E05",
+        "M01"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/capabilities.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "tools/verification/zenoh_api_inventory.ml"
+        },
+        {
+          "mode": "inspect",
+          "path": "apps/cepaf_gleam/native/c3i_nif/Cargo.toml"
+        },
+        {
+          "mode": "inspect",
+          "path": "apps/cepaf_gleam/native/c3i_nif/src/zenoh_nif.rs"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/zenoh_capability_inventory_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 5,
+        "create": 3,
+        "modify": 0,
+        "inspect": 2,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "Z01-regression",
+        "interface_operation": "zenoh.inventory",
+        "when_operations": [
+          "zenoh.inventory"
+        ],
+        "expected_fields": [
+          "missing_api_rows_block_completion",
+          "performance_winner",
+          "selected_runtime_version"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task Z01",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "Z02",
+      "workstream": "Z",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "E02",
+        "Z01"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/native/c3i_nif/src/lib.rs"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/c3i_nif.erl"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/indrajaal_native_zenoh.erl"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam_ffi.erl"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/client.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/zenoh_native_abi_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 6,
+        "create": 1,
+        "modify": 5,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "Z02-regression",
+        "interface_operation": "zenoh.native_load",
+        "when_operations": [
+          "zenoh.native_load"
+        ],
+        "expected_fields": [
+          "empty_success",
+          "phantom_session",
+          "status",
+          "string_substring_error_classification"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task Z02",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "Z03",
+      "workstream": "Z",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "M05",
+        "Z02"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/native/c3i_nif/src/zenoh_nif.rs"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/native/c3i_nif/src/zenoh_session.rs"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/session.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/moz/client.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/zenoh_session_lifecycle_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 5,
+        "create": 3,
+        "modify": 2,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "Z03-regression",
+        "interface_operation": "zenoh.session_lifecycle",
+        "when_operations": [
+          "zenoh.session_lifecycle"
+        ],
+        "expected_fields": [
+          "all_resources_released",
+          "normal_scheduler_blocked",
+          "old_alias_result",
+          "other_session_unaffected",
+          "reopen_generation_changed"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task Z03",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "Z04",
+      "workstream": "Z",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "M04",
+        "Z03"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/native/c3i_nif/src/zenoh_codec.rs"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/types.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/config.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/key_expr.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/zenoh_codec_key_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 5,
+        "create": 5,
+        "modify": 0,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "Z04-regression",
+        "interface_operation": "zenoh.codec_roundtrip",
+        "when_operations": [
+          "zenoh.codec_roundtrip"
+        ],
+        "expected_fields": [
+          "attachment_preserved",
+          "bytes_preserved",
+          "invalid_config_rejected",
+          "kind_preserved",
+          "wildcard_publication_rejected"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task Z04",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "Z05",
+      "workstream": "Z",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "M03",
+        "Z04"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/native/c3i_nif/src/zenoh_pubsub.rs"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/pubsub.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/zenoh_pubsub_runtime_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 3,
+        "create": 3,
+        "modify": 0,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "Z05-regression",
+        "interface_operation": "zenoh.pubsub",
+        "when_operations": [
+          "zenoh.pubsub"
+        ],
+        "expected_fields": [
+          "authorization_checked",
+          "empty_put_not_accepted",
+          "oversize_poll_rejected",
+          "owner_cleanup",
+          "received_kind"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task Z05",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "Z06",
+      "workstream": "Z",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "Z05"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/native/c3i_nif/src/zenoh_query.rs"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/query.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/zenoh_query_runtime_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 3,
+        "create": 3,
+        "modify": 0,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "Z06-regression",
+        "interface_operation": "zenoh.query",
+        "when_operations": [
+          "zenoh.query"
+        ],
+        "expected_fields": [
+          "cancellation_observed",
+          "delete_reply_distinct",
+          "error_reply_not_dropped",
+          "late_replies_rejected",
+          "reply_memory_bounded"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task Z06",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "Z07",
+      "workstream": "Z",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "Z05",
+        "Z06"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/native/c3i_nif/src/zenoh_discovery.rs"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/discovery.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/liveliness.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/zenoh_discovery_liveness_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 4,
+        "modify": 0,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "Z07-regression",
+        "interface_operation": "zenoh.liveliness",
+        "when_operations": [
+          "zenoh.liveliness"
+        ],
+        "expected_fields": [
+          "disappearance_observed",
+          "history_observed",
+          "reappearance_observed",
+          "token_does_not_grant_write_authority"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task Z07",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "Z08",
+      "workstream": "Z",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "Z06",
+        "Z07"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/qos.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/qos_policy.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/native/c3i_nif/src/zenoh_qos.rs"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/zenoh_qos_load_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 3,
+        "modify": 1,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "Z08-regression",
+        "interface_operation": "zenoh.qos",
+        "when_operations": [
+          "zenoh.qos"
+        ],
+        "expected_fields": [
+          "command_success_not_fabricated",
+          "mailbox_within_budget",
+          "scheduler_responsive",
+          "telemetry_loss_reported"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task Z08",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "Z09",
+      "workstream": "Z",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "M05",
+        "Z08"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/native/c3i_nif/src/zenoh_advanced.rs"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/native/c3i_nif/src/zenoh_shm.rs"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/advanced.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/shared_memory.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/zenoh_advanced_shm_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 5,
+        "create": 5,
+        "modify": 0,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "Z09-regression",
+        "interface_operation": "zenoh.recover",
+        "when_operations": [
+          "zenoh.recover"
+        ],
+        "expected_fields": [
+          "buffer_reclaimed",
+          "duplicates_not_committed_twice",
+          "missing_sample_reported",
+          "no_use_after_free",
+          "recovery_window_enforced"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task Z09",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "Z10",
+      "workstream": "Z",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "E05",
+        "Z09"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/ecosystem.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "tests/zenoh/profiles/transport_matrix.json"
+        },
+        {
+          "mode": "create",
+          "path": "tests/zenoh/ecosystem_probe.ml"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/zenoh_ecosystem_contract_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 4,
+        "modify": 0,
+        "inspect": 0,
+        "task_test_files": 3
+      },
+      "acceptance": {
+        "id": "Z10-regression",
+        "interface_operation": "zenoh.ecosystem",
+        "when_operations": [
+          "zenoh.ecosystem"
+        ],
+        "expected_fields": [
+          "all_profiles_claimed_pass",
+          "denied_effects",
+          "missing_target_state",
+          "persistence_observed"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task Z10",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "Z11",
+      "workstream": "Z",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "E03",
+        "Z10"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "tests/zenoh/benchmark.ml"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/native/c3i_nif/benches/transport_boundary.rs"
+        },
+        {
+          "mode": "create",
+          "path": "tests/zenoh/benchmark_analysis.ml"
+        }
+      ],
+      "own_file_counts": {
+        "total": 3,
+        "create": 3,
+        "modify": 0,
+        "inspect": 0,
+        "task_test_files": 2
+      },
+      "acceptance": {
+        "id": "Z11-regression",
+        "interface_operation": "zenoh.benchmark",
+        "when_operations": [
+          "zenoh.benchmark"
+        ],
+        "expected_fields": [
+          "mock_or_pubsub_results_excluded",
+          "ranking_available",
+          "status"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task Z11",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "Z12",
+      "workstream": "Z",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "A05",
+        "E08",
+        "M03",
+        "M04",
+        "Z11"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/domain_router.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/moz/client.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/agui/zenoh_bus.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/bridge/zenoh_mcp.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/zenoh_adapter.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/zenoh_domain_edges_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 6,
+        "create": 2,
+        "modify": 4,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "Z12-regression",
+        "interface_operation": "zenoh.edge_audit",
+        "when_operations": [
+          "zenoh.edge_audit"
+        ],
+        "expected_fields": [
+          "complete",
+          "http_gateway_accounted",
+          "unmigrated_edges"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task Z12",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "W01",
+      "workstream": "W",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "E04",
+        "E08"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/routes.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/components.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "tools/verification/route_manifest.ml"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/route_manifest_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 5,
+        "create": 4,
+        "modify": 1,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "W01-regression",
+        "interface_operation": "web.manifest",
+        "when_operations": [
+          "web.manifest"
+        ],
+        "expected_fields": [
+          "components_require_per_page_instances",
+          "frontier_remaining",
+          "mismatch",
+          "whole_site_complete"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task W01",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "W02",
+      "workstream": "W",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "E06",
+        "W01"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/indrajaal_gleam_web/test/document_render_contract_test.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/markdown.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/document_ast.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/document_security_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 5,
+        "create": 2,
+        "modify": 3,
+        "inspect": 0,
+        "task_test_files": 2
+      },
+      "acceptance": {
+        "id": "W02-regression",
+        "interface_operation": "web.render",
+        "when_operations": [
+          "web.render"
+        ],
+        "expected_fields": [
+          "newline_semantics_preserved",
+          "raw_source_preserved",
+          "script_executed",
+          "unsafe_protocol_active"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task W02",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "W03",
+      "workstream": "W",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "M06",
+        "W01"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/links.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/navigation.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/graph_verification.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/navigation_laws_test.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "tests/web_quality/link_probe.ml"
+        }
+      ],
+      "own_file_counts": {
+        "total": 5,
+        "create": 4,
+        "modify": 1,
+        "inspect": 0,
+        "task_test_files": 2
+      },
+      "acceptance": {
+        "id": "W03-regression",
+        "interface_operation": "web.resolve_link",
+        "when_operations": [
+          "web.resolve_link"
+        ],
+        "expected_fields": [
+          "http_200_credit",
+          "reason_codes",
+          "valid_target"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task W03",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "W04",
+      "workstream": "W",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "E03",
+        "W02",
+        "W03"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/site_shell.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/verification_checklist.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/site_shell_contract_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 3,
+        "modify": 1,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "W04-regression",
+        "interface_operation": "web.shell",
+        "when_operations": [
+          "web.shell"
+        ],
+        "expected_fields": [
+          "checkpoint_count",
+          "domain_count",
+          "focus_visible",
+          "horizontal_overflow",
+          "overall_admitted",
+          "sidebar_groups"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task W04",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "W05",
+      "workstream": "W",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "E07",
+        "M03",
+        "W02",
+        "W03"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/wiki_transclusion_engine.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/wiki.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/transclusion.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/wiki_semantics_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 3,
+        "modify": 1,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "W05-regression",
+        "interface_operation": "wiki.expand",
+        "when_operations": [
+          "wiki.expand"
+        ],
+        "expected_fields": [
+          "bounded",
+          "cycle",
+          "result",
+          "source_documents_unchanged"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task W05",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "W06",
+      "workstream": "W",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "M05",
+        "M06",
+        "M07",
+        "W05"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/zettelkasten.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/ontology.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/corpus.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/knowledge_graph_integrity_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 4,
+        "modify": 0,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "W06-regression",
+        "interface_operation": "knowledge.index",
+        "when_operations": [
+          "knowledge.index"
+        ],
+        "expected_fields": [
+          "backlinks_consistent",
+          "original_source_changed",
+          "provenance_retained",
+          "redirect_or_reference_update_recorded"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task W06",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "W07",
+      "workstream": "W",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "M06",
+        "W06"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/search.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/knowledge_search.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/knowledge_search_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 3,
+        "create": 3,
+        "modify": 0,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "W07-regression",
+        "interface_operation": "knowledge.search",
+        "when_operations": [
+          "knowledge.search"
+        ],
+        "expected_fields": [
+          "empty_state_has_next_action",
+          "filter_state_survives_back",
+          "forbidden_results",
+          "ranking_compared_to_judgments"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task W07",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "W08",
+      "workstream": "W",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "A06",
+        "M07",
+        "W04",
+        "Z12"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/fpp_topology_view.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/fpp_atlas_view.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/fpp_agent_view.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/zenoh_mesh.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/dashboard_observation_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 6,
+        "create": 1,
+        "modify": 5,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "W08-regression",
+        "interface_operation": "web.dashboard",
+        "when_operations": [
+          "web.dashboard"
+        ],
+        "expected_fields": [
+          "admitted_badge",
+          "connected_badge",
+          "metric_value",
+          "recovery_action_visible"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task W08",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "W09",
+      "workstream": "W",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "W04",
+        "W05",
+        "W07",
+        "W08"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/design_tokens.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/site_shell.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "tests/web_quality/experience_tasks.json"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/ui_state_contract_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 3,
+        "modify": 1,
+        "inspect": 0,
+        "task_test_files": 2
+      },
+      "acceptance": {
+        "id": "W09-regression",
+        "interface_operation": "web.experience",
+        "when_operations": [
+          "web.experience"
+        ],
+        "expected_fields": [
+          "clipping",
+          "content_loss",
+          "error_recovery_discoverable",
+          "focus_restored",
+          "task_completed"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task W09",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "V01",
+      "workstream": "V",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "E02",
+        "W01",
+        "W02"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "tests/web_quality/browser_harness.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/web_quality/artifact_store.ml"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/browser_emulation_bridge.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "tests/web_quality/browser_harness_test.ml"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 3,
+        "modify": 1,
+        "inspect": 0,
+        "task_test_files": 3
+      },
+      "acceptance": {
+        "id": "V01-regression",
+        "interface_operation": "browser.probe",
+        "when_operations": [
+          "browser.probe"
+        ],
+        "expected_fields": [
+          "emulation_credit",
+          "missing_browser_reported",
+          "semantic_cycles_passed",
+          "status"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task V01",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "V02",
+      "workstream": "V",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "A10",
+        "V01",
+        "W09"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "tests/web_quality/cycle_controller.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/web_quality/cycle_contract.ml"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/browser_cycle_ledger.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/browser_cycle_ledger_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 4,
+        "modify": 0,
+        "inspect": 0,
+        "task_test_files": 3
+      },
+      "acceptance": {
+        "id": "V02-regression",
+        "interface_operation": "browser.cycle_admission",
+        "when_operations": [
+          "browser.cycle_admission"
+        ],
+        "expected_fields": [
+          "admitted",
+          "reason",
+          "required_cycles",
+          "semantic_cycles"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task V02",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "V03",
+      "workstream": "V",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "V01",
+        "W09"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "tests/web_quality/accessibility.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/web_quality/visual_review.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/web_quality/accessibility_cases.json"
+        }
+      ],
+      "own_file_counts": {
+        "total": 3,
+        "create": 3,
+        "modify": 0,
+        "inspect": 0,
+        "task_test_files": 3
+      },
+      "acceptance": {
+        "id": "V03-regression",
+        "interface_operation": "browser.accessibility",
+        "when_operations": [
+          "browser.accessibility"
+        ],
+        "expected_fields": [
+          "passed",
+          "violations",
+          "visual_equality_overrides_semantics"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task V03",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "V04",
+      "workstream": "V",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "A09",
+        "E07",
+        "M07",
+        "W07",
+        "Z10"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "tests/property/run.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/fuzz/run.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/fuzz/corpus_manifest.json"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/stateful_property_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 4,
+        "modify": 0,
+        "inspect": 0,
+        "task_test_files": 4
+      },
+      "acceptance": {
+        "id": "V04-regression",
+        "interface_operation": "fuzz.campaign",
+        "when_operations": [
+          "fuzz.campaign"
+        ],
+        "expected_fields": [
+          "coverage_guided_claim",
+          "failures_shrunk",
+          "resource_bounds_enforced",
+          "seed_replayable"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task V04",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "V05",
+      "workstream": "V",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "A09",
+        "M08",
+        "W06",
+        "Z10"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "tests/compiler/fixtures.gleam.txt"
+        },
+        {
+          "mode": "create",
+          "path": "tests/compiler/run.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/mutation/run.ml"
+        },
+        {
+          "mode": "modify",
+          "path": "tools/web_quality_gate.ml"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 3,
+        "modify": 1,
+        "inspect": 0,
+        "task_test_files": 3
+      },
+      "acceptance": {
+        "id": "V05-regression",
+        "interface_operation": "verification.mutation",
+        "when_operations": [
+          "verification.mutation"
+        ],
+        "expected_fields": [
+          "admitted",
+          "all_required_mutants_must_be_killed",
+          "negative_compile_case_failed",
+          "solver_vacuity_rejected"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task V05",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "V06",
+      "workstream": "V",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "H03",
+        "W09",
+        "Z11"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "tests/performance/web_and_actor.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/performance/experience_analysis.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/performance/workload_contract.json"
+        }
+      ],
+      "own_file_counts": {
+        "total": 3,
+        "create": 3,
+        "modify": 0,
+        "inspect": 0,
+        "task_test_files": 3
+      },
+      "acceptance": {
+        "id": "V06-regression",
+        "interface_operation": "experience.measure",
+        "when_operations": [
+          "experience.measure"
+        ],
+        "expected_fields": [
+          "failures_retained",
+          "field_claim_available",
+          "lab_and_field_separate",
+          "task_success_rate"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task V06",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "V07",
+      "workstream": "V",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "A10",
+        "V02",
+        "V03",
+        "V04",
+        "V05",
+        "V06"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "tests/system/ecology_bdd.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/system/fault_scenarios.json"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/system_recovery_contract_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 3,
+        "create": 3,
+        "modify": 0,
+        "inspect": 0,
+        "task_test_files": 3
+      },
+      "acceptance": {
+        "id": "V07-regression",
+        "interface_operation": "system.recover",
+        "when_operations": [
+          "system.recover"
+        ],
+        "expected_fields": [
+          "durable_effect_count",
+          "observer_writes",
+          "recovery_bounded",
+          "retry_receipt_correlated",
+          "ui_state_truthful"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task V07",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "H01",
+      "workstream": "H",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "E02",
+        "E04",
+        "E05"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "governance/capability-inventory/skills.toml"
+        },
+        {
+          "mode": "create",
+          "path": "tools/verification/skill_contract.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/skills/skill_contract_test.ml"
+        },
+        {
+          "mode": "modify",
+          "path": "contracts/rules/diagram-ascii-mermaid-mandate.md"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 2,
+        "modify": 2,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "H01-regression",
+        "interface_operation": "skills.verify",
+        "when_operations": [
+          "skills.verify"
+        ],
+        "expected_fields": [
+          "admitted",
+          "diagram_parity",
+          "mirror_drift_reported",
+          "missing_dependency_reported"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task H01",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "H02",
+      "workstream": "H",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "E03",
+        "H01"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "tools/verification/agent_health.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/agents/health_contract_test.ml"
+        },
+        {
+          "mode": "inspect",
+          "path": "tests/web_quality/20260906-0631-agy-config-repair.ml"
+        }
+      ],
+      "own_file_counts": {
+        "total": 3,
+        "create": 2,
+        "modify": 0,
+        "inspect": 1,
+        "task_test_files": 2
+      },
+      "acceptance": {
+        "id": "H02-regression",
+        "interface_operation": "agents.health",
+        "when_operations": [
+          "agents.health"
+        ],
+        "expected_fields": [
+          "all_integrations_healthy",
+          "core_usable",
+          "remaining",
+          "secrets_logged"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task H02",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "H03",
+      "workstream": "H",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "E02",
+        "H01",
+        "M08"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "tests/web_quality/20260906-0606-replay-guide.md"
+        },
+        {
+          "mode": "create",
+          "path": "tools/verification/environment.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/dx/setup_replay_test.ml"
+        },
+        {
+          "mode": "modify",
+          "path": "tools/README.md"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 2,
+        "modify": 2,
+        "inspect": 0,
+        "task_test_files": 2
+      },
+      "acceptance": {
+        "id": "H03-regression",
+        "interface_operation": "dx.replay",
+        "when_operations": [
+          "dx.replay"
+        ],
+        "expected_fields": [
+          "commands_documented",
+          "execution_receipts_generated",
+          "missing_dependency_diagnostic",
+          "uses_hidden_tmp_paths"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task H03",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "R01",
+      "workstream": "R",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "E08",
+        "H02",
+        "H03",
+        "K02",
+        "K03",
+        "N01",
+        "P04",
+        "Q01",
+        "Q02",
+        "V07"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/release.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/otp_release.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "tools/verification/release_manifest.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/release/cutover_test.ml"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 2,
+        "modify": 2,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "R01-regression",
+        "interface_operation": "release.prepare",
+        "when_operations": [
+          "release.prepare"
+        ],
+        "expected_fields": [
+          "admitted",
+          "deploy",
+          "reason",
+          "rollback_ready"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task R01",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "R02",
+      "workstream": "R",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "H02",
+        "R01",
+        "V02",
+        "V03",
+        "V04",
+        "V05",
+        "V06",
+        "V07"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "tools/verification/admission.ml"
+        },
+        {
+          "mode": "create",
+          "path": "tests/release/admission_test.ml"
+        },
+        {
+          "mode": "modify",
+          "path": "tools/uos/src/main.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 3,
+        "create": 2,
+        "modify": 1,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "R02-regression",
+        "interface_operation": "release.admit",
+        "when_operations": [
+          "release.admit"
+        ],
+        "expected_fields": [
+          "admitted",
+          "missing_cases",
+          "signature_credit"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task R02",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "CONSISTENT"
+    },
+    {
+      "id": "R03",
+      "workstream": "R",
+      "source_kind": "original-backlog",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "R02"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "tools/verification/completion_report.ml"
+        },
+        {
+          "mode": "modify",
+          "path": "HANDOVER_TO_CODEX.md"
+        },
+        {
+          "mode": "modify",
+          "path": "docs/zk/moc-agent-handover.md"
+        },
+        {
+          "mode": "modify",
+          "path": "governance/capability-inventory/verification-tracking.toml"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 1,
+        "modify": 3,
+        "inspect": 0,
+        "task_test_files": 0
+      },
+      "acceptance": {
+        "id": "R03-regression",
+        "interface_operation": "release.publish_status",
+        "when_operations": [
+          "release.publish_status"
+        ],
+        "expected_fields": [
+          "journal_sections",
+          "old_claims_preserved_as_history",
+          "status",
+          "trace_chain_complete"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task R03",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "REVIEW_NO_TASK_TEST_FILE"
+    },
+    {
+      "id": "PLAN00",
+      "workstream": "P",
+      "source_kind": "review-or-planning-gap",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "tools/sa_plan_execution.ml"
+        },
+        {
+          "mode": "create",
+          "path": "governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json"
+        }
+      ],
+      "own_file_counts": {
+        "total": 2,
+        "create": 2,
+        "modify": 0,
+        "inspect": 0,
+        "task_test_files": 0
+      },
+      "acceptance": {
+        "id": "PLAN00-registration",
+        "interface_operation": null,
+        "when_operations": [
+          "plan.register",
+          "plan.register",
+          "plan.status"
+        ],
+        "expected_fields": [
+          "duplicates",
+          "implementation_cases_executed",
+          "jobs",
+          "tasks",
+          "workflows"
+        ],
+        "validation_command": "timeout 1200s ocaml tools/sa_plan_execution.ml selftest governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json",
+        "validation_command_scope": "registration_selftest"
+      },
+      "own_file_acceptance_consistency": "DEFECT_MISSING_INTERFACE_SCHEMA"
+    },
+    {
+      "id": "P01",
+      "workstream": "P",
+      "source_kind": "review-or-planning-gap",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "E02",
+        "E03",
+        "M05"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/execution_dispatcher.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/execution_dispatcher_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 2,
+        "create": 2,
+        "modify": 0,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "P01-dispatch",
+        "interface_operation": null,
+        "when_operations": [
+          "execution.dispatch"
+        ],
+        "expected_fields": [
+          "effect_count",
+          "job_dispatched",
+          "reason",
+          "task_completed"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task P01",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "DEFECT_MISSING_INTERFACE_SCHEMA"
+    },
+    {
+      "id": "P02",
+      "workstream": "P",
+      "source_kind": "review-or-planning-gap",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "E02",
+        "E03"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "tools/sa-plan"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/cli.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/sa_plan_cli_integration_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 3,
+        "create": 2,
+        "modify": 1,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "P02-plan-isolation",
+        "interface_operation": null,
+        "when_operations": [
+          "planning.status"
+        ],
+        "expected_fields": [
+          "cross_plan_records",
+          "reported_plan",
+          "unknown_plan_exit"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task P02",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "DEFECT_MISSING_INTERFACE_SCHEMA"
+    },
+    {
+      "id": "P03",
+      "workstream": "P",
+      "source_kind": "review-or-planning-gap",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "E04",
+        "P02"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/linked_plan.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/linked_plan_test.gleam"
+        },
+        {
+          "mode": "inspect",
+          "path": "governance/testing/ocaml_gleam/20260905-2251-sa-plan-workflow-spec.json"
+        }
+      ],
+      "own_file_counts": {
+        "total": 3,
+        "create": 2,
+        "modify": 0,
+        "inspect": 1,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "P03-legacy-federation",
+        "interface_operation": null,
+        "when_operations": [
+          "planning.link_legacy"
+        ],
+        "expected_fields": [
+          "legacy_history_changes",
+          "mapped_tasks",
+          "new_execution_copies",
+          "unknown_state_credit"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task P03",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "DEFECT_MISSING_INTERFACE_SCHEMA"
+    },
+    {
+      "id": "P04",
+      "workstream": "P",
+      "source_kind": "review-or-planning-gap",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "P01",
+        "P02",
+        "W04",
+        "Z12"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/planning_cockpit_live_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 2,
+        "create": 1,
+        "modify": 1,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "P04-live-planning",
+        "interface_operation": null,
+        "when_operations": [
+          "planning.render"
+        ],
+        "expected_fields": [
+          "constant_green",
+          "status",
+          "task_completed"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task P04",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "DEFECT_MISSING_INTERFACE_SCHEMA"
+    },
+    {
+      "id": "K01",
+      "workstream": "K",
+      "source_kind": "review-or-planning-gap",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "E06",
+        "M05"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "engines/hermes/modules/hermes_wiki/uos_knowledge_worker.ml"
+        },
+        {
+          "mode": "create",
+          "path": "engines/hermes/modules/hermes_wiki/uos_knowledge_worker.mli"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/ocaml_knowledge_worker_integration_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 4,
+        "create": 3,
+        "modify": 1,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "K01-worker-absent",
+        "interface_operation": null,
+        "when_operations": [
+          "knowledge.worker_call"
+        ],
+        "expected_fields": [
+          "digests_distinct",
+          "leaked_children",
+          "status",
+          "verified"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task K01",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "DEFECT_MISSING_INTERFACE_SCHEMA"
+    },
+    {
+      "id": "K02",
+      "workstream": "K",
+      "source_kind": "review-or-planning-gap",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "E04",
+        "E05",
+        "K01",
+        "W05"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_vertical_slice_engine.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/journal_ingestion_integration_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 3,
+        "create": 1,
+        "modify": 2,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "K02-real-input",
+        "interface_operation": null,
+        "when_operations": [
+          "knowledge.ingest"
+        ],
+        "expected_fields": [
+          "admitted_files",
+          "sections_count",
+          "status",
+          "verified_green"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task K02",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "DEFECT_MISSING_INTERFACE_SCHEMA"
+    },
+    {
+      "id": "K03",
+      "workstream": "K",
+      "source_kind": "review-or-planning-gap",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "E06",
+        "K01",
+        "Z02"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_vertical_slice_engine.gleam"
+        },
+        {
+          "mode": "create",
+          "path": "apps/cepaf_gleam/test/knowledge_differential_integration_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 2,
+        "create": 1,
+        "modify": 1,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "K03-differential-mutant",
+        "interface_operation": null,
+        "when_operations": [
+          "knowledge.compare_oracles"
+        ],
+        "expected_fields": [
+          "independent_invocations",
+          "parity_matched",
+          "verified_green"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task K03",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "DEFECT_MISSING_INTERFACE_SCHEMA"
+    },
+    {
+      "id": "Q01",
+      "workstream": "Q",
+      "source_kind": "review-or-planning-gap",
+      "status": "PLANNED",
+      "priority": "P2",
+      "depends_on": [
+        "E02"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam"
+        },
+        {
+          "mode": "modify",
+          "path": "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam"
+        }
+      ],
+      "own_file_counts": {
+        "total": 2,
+        "create": 0,
+        "modify": 2,
+        "inspect": 0,
+        "task_test_files": 2
+      },
+      "acceptance": {
+        "id": "Q01-compiler-diagnostics",
+        "interface_operation": null,
+        "when_operations": [
+          "compiler.check_affected_tests"
+        ],
+        "expected_fields": [
+          "assertions_removed",
+          "targeted_unused_warnings"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task Q01",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "DEFECT_MISSING_INTERFACE_SCHEMA"
+    },
+    {
+      "id": "Q02",
+      "workstream": "Q",
+      "source_kind": "review-or-planning-gap",
+      "status": "PLANNED",
+      "priority": "P0",
+      "depends_on": [
+        "E02",
+        "E03"
+      ],
+      "own_files": [
+        {
+          "mode": "modify",
+          "path": "ops/kubernetes/nas-k8s-lab/tests/hardware_identity_test.rs"
+        },
+        {
+          "mode": "modify",
+          "path": "ops/kubernetes/nas-k8s-lab/src/spec.rs"
+        }
+      ],
+      "own_file_counts": {
+        "total": 2,
+        "create": 0,
+        "modify": 2,
+        "inspect": 0,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "Q02-production-serial",
+        "interface_operation": null,
+        "when_operations": [
+          "storage.run_production_validation_tests"
+        ],
+        "expected_fields": [
+          "mutant_detected",
+          "physical_disk_operations"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task Q02",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "DEFECT_MISSING_INTERFACE_SCHEMA"
+    },
+    {
+      "id": "N01",
+      "workstream": "N",
+      "source_kind": "review-or-planning-gap",
+      "status": "PLANNED",
+      "priority": "P1",
+      "depends_on": [
+        "E01",
+        "E02"
+      ],
+      "own_files": [
+        {
+          "mode": "create",
+          "path": "tests/acceptance/peer_http_service_test.ml"
+        },
+        {
+          "mode": "inspect",
+          "path": "docs/design/20260906-1649-codex-master-session-handover.md"
+        }
+      ],
+      "own_file_counts": {
+        "total": 2,
+        "create": 1,
+        "modify": 0,
+        "inspect": 1,
+        "task_test_files": 1
+      },
+      "acceptance": {
+        "id": "N01-peer-unavailable",
+        "interface_operation": null,
+        "when_operations": [
+          "peer.health"
+        ],
+        "expected_fields": [
+          "status",
+          "system_green",
+          "timeout_seconds"
+        ],
+        "validation_command": "timeout 1200s ocaml tests/acceptance/run.ml --backlog governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json --task N01",
+        "validation_command_scope": "task_selector_present"
+      },
+      "own_file_acceptance_consistency": "DEFECT_MISSING_INTERFACE_SCHEMA"
+    }
+  ],
+  "shared_files": [
+    {
+      "path": "HANDOVER_TO_CODEX.md",
+      "consumers": [
+        {
+          "task": "E01",
+          "workstream": "E",
+          "mode": "inspect"
+        },
+        {
+          "task": "R03",
+          "workstream": "R",
+          "mode": "modify"
+        }
+      ],
+      "pairwise": [
+        {
+          "task_a": "E01",
+          "mode_a": "inspect",
+          "task_b": "R03",
+          "mode_b": "modify",
+          "conflict_class": "write_inspect",
+          "direct_dependency_relation": "no_direct_edge"
+        }
+      ]
+    },
+    {
+      "path": "apps/cepaf_gleam/native/c3i_nif/src/zenoh_nif.rs",
+      "consumers": [
+        {
+          "task": "Z01",
+          "workstream": "Z",
+          "mode": "inspect"
+        },
+        {
+          "task": "Z03",
+          "workstream": "Z",
+          "mode": "modify"
+        }
+      ],
+      "pairwise": [
+        {
+          "task_a": "Z01",
+          "mode_a": "inspect",
+          "task_b": "Z03",
+          "mode_b": "modify",
+          "conflict_class": "write_inspect",
+          "direct_dependency_relation": "no_direct_edge"
+        }
+      ]
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/agent_factory.gleam",
+      "consumers": [
+        {
+          "task": "M05",
+          "workstream": "M",
+          "mode": "modify"
+        },
+        {
+          "task": "A06",
+          "workstream": "A",
+          "mode": "modify"
+        }
+      ],
+      "pairwise": [
+        {
+          "task_a": "M05",
+          "mode_a": "modify",
+          "task_b": "A06",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "no_direct_edge"
+        }
+      ]
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/dmc_tcm.gleam",
+      "consumers": [
+        {
+          "task": "M01",
+          "workstream": "M",
+          "mode": "inspect"
+        },
+        {
+          "task": "M04",
+          "workstream": "M",
+          "mode": "modify"
+        },
+        {
+          "task": "M05",
+          "workstream": "M",
+          "mode": "modify"
+        },
+        {
+          "task": "A02",
+          "workstream": "A",
+          "mode": "modify"
+        }
+      ],
+      "pairwise": [
+        {
+          "task_a": "M01",
+          "mode_a": "inspect",
+          "task_b": "M04",
+          "mode_b": "modify",
+          "conflict_class": "write_inspect",
+          "direct_dependency_relation": "a_before_b_direct"
+        },
+        {
+          "task_a": "M01",
+          "mode_a": "inspect",
+          "task_b": "M05",
+          "mode_b": "modify",
+          "conflict_class": "write_inspect",
+          "direct_dependency_relation": "no_direct_edge"
+        },
+        {
+          "task_a": "M01",
+          "mode_a": "inspect",
+          "task_b": "A02",
+          "mode_b": "modify",
+          "conflict_class": "write_inspect",
+          "direct_dependency_relation": "no_direct_edge"
+        },
+        {
+          "task_a": "M04",
+          "mode_a": "modify",
+          "task_b": "M05",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "a_before_b_direct"
+        },
+        {
+          "task_a": "M04",
+          "mode_a": "modify",
+          "task_b": "A02",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "no_direct_edge"
+        },
+        {
+          "task_a": "M05",
+          "mode_a": "modify",
+          "task_b": "A02",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "no_direct_edge"
+        }
+      ]
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/domain.gleam",
+      "consumers": [
+        {
+          "task": "A01",
+          "workstream": "A",
+          "mode": "modify"
+        },
+        {
+          "task": "A02",
+          "workstream": "A",
+          "mode": "modify"
+        },
+        {
+          "task": "A04",
+          "workstream": "A",
+          "mode": "modify"
+        }
+      ],
+      "pairwise": [
+        {
+          "task_a": "A01",
+          "mode_a": "modify",
+          "task_b": "A02",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "a_before_b_direct"
+        },
+        {
+          "task_a": "A01",
+          "mode_a": "modify",
+          "task_b": "A04",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "a_before_b_direct"
+        },
+        {
+          "task_a": "A02",
+          "mode_a": "modify",
+          "task_b": "A04",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "no_direct_edge"
+        }
+      ]
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/evolutionary_cycles.gleam",
+      "consumers": [
+        {
+          "task": "E01",
+          "workstream": "E",
+          "mode": "inspect"
+        },
+        {
+          "task": "E03",
+          "workstream": "E",
+          "mode": "modify"
+        }
+      ],
+      "pairwise": [
+        {
+          "task_a": "E01",
+          "mode_a": "inspect",
+          "task_b": "E03",
+          "mode_b": "modify",
+          "conflict_class": "write_inspect",
+          "direct_dependency_relation": "no_direct_edge"
+        }
+      ]
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/intent.gleam",
+      "consumers": [
+        {
+          "task": "M02",
+          "workstream": "M",
+          "mode": "modify"
+        },
+        {
+          "task": "M03",
+          "workstream": "M",
+          "mode": "modify"
+        }
+      ],
+      "pairwise": [
+        {
+          "task_a": "M02",
+          "mode_a": "modify",
+          "task_b": "M03",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "a_before_b_direct"
+        }
+      ]
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/interp.gleam",
+      "consumers": [
+        {
+          "task": "A04",
+          "workstream": "A",
+          "mode": "modify"
+        },
+        {
+          "task": "A05",
+          "workstream": "A",
+          "mode": "modify"
+        }
+      ],
+      "pairwise": [
+        {
+          "task_a": "A04",
+          "mode_a": "modify",
+          "task_b": "A05",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "a_before_b_direct"
+        }
+      ]
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+      "consumers": [
+        {
+          "task": "K01",
+          "workstream": "K",
+          "mode": "modify"
+        },
+        {
+          "task": "K02",
+          "workstream": "K",
+          "mode": "modify"
+        }
+      ],
+      "pairwise": [
+        {
+          "task_a": "K01",
+          "mode_a": "modify",
+          "task_b": "K02",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "a_before_b_direct"
+        }
+      ]
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_vertical_slice_engine.gleam",
+      "consumers": [
+        {
+          "task": "K02",
+          "workstream": "K",
+          "mode": "modify"
+        },
+        {
+          "task": "K03",
+          "workstream": "K",
+          "mode": "modify"
+        }
+      ],
+      "pairwise": [
+        {
+          "task_a": "K02",
+          "mode_a": "modify",
+          "task_b": "K03",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "no_direct_edge"
+        }
+      ]
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/moz/client.gleam",
+      "consumers": [
+        {
+          "task": "Z03",
+          "workstream": "Z",
+          "mode": "modify"
+        },
+        {
+          "task": "Z12",
+          "workstream": "Z",
+          "mode": "modify"
+        }
+      ],
+      "pairwise": [
+        {
+          "task_a": "Z03",
+          "mode_a": "modify",
+          "task_b": "Z12",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "no_direct_edge"
+        }
+      ]
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/fpp_atlas_view.gleam",
+      "consumers": [
+        {
+          "task": "M07",
+          "workstream": "M",
+          "mode": "modify"
+        },
+        {
+          "task": "W08",
+          "workstream": "W",
+          "mode": "modify"
+        }
+      ],
+      "pairwise": [
+        {
+          "task_a": "M07",
+          "mode_a": "modify",
+          "task_b": "W08",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "a_before_b_direct"
+        }
+      ]
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/site_shell.gleam",
+      "consumers": [
+        {
+          "task": "W04",
+          "workstream": "W",
+          "mode": "create"
+        },
+        {
+          "task": "W09",
+          "workstream": "W",
+          "mode": "modify"
+        }
+      ],
+      "pairwise": [
+        {
+          "task_a": "W04",
+          "mode_a": "create",
+          "task_b": "W09",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "a_before_b_direct"
+        }
+      ]
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam",
+      "consumers": [
+        {
+          "task": "M05",
+          "workstream": "M",
+          "mode": "modify"
+        },
+        {
+          "task": "A05",
+          "workstream": "A",
+          "mode": "modify"
+        },
+        {
+          "task": "A10",
+          "workstream": "A",
+          "mode": "modify"
+        }
+      ],
+      "pairwise": [
+        {
+          "task_a": "M05",
+          "mode_a": "modify",
+          "task_b": "A05",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "a_before_b_direct"
+        },
+        {
+          "task_a": "M05",
+          "mode_a": "modify",
+          "task_b": "A10",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "no_direct_edge"
+        },
+        {
+          "task_a": "A05",
+          "mode_a": "modify",
+          "task_b": "A10",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "no_direct_edge"
+        }
+      ]
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/graph_verification.gleam",
+      "consumers": [
+        {
+          "task": "M06",
+          "workstream": "M",
+          "mode": "modify"
+        },
+        {
+          "task": "W03",
+          "workstream": "W",
+          "mode": "modify"
+        }
+      ],
+      "pairwise": [
+        {
+          "task_a": "M06",
+          "mode_a": "modify",
+          "task_b": "W03",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "a_before_b_direct"
+        }
+      ]
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/master_verification_registry.gleam",
+      "consumers": [
+        {
+          "task": "E03",
+          "workstream": "E",
+          "mode": "modify"
+        },
+        {
+          "task": "E08",
+          "workstream": "E",
+          "mode": "modify"
+        }
+      ],
+      "pairwise": [
+        {
+          "task_a": "E03",
+          "mode_a": "modify",
+          "task_b": "E08",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "a_before_b_direct"
+        }
+      ]
+    },
+    {
+      "path": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam",
+      "consumers": [
+        {
+          "task": "W01",
+          "workstream": "W",
+          "mode": "modify"
+        },
+        {
+          "task": "W02",
+          "workstream": "W",
+          "mode": "modify"
+        },
+        {
+          "task": "W04",
+          "workstream": "W",
+          "mode": "modify"
+        },
+        {
+          "task": "W08",
+          "workstream": "W",
+          "mode": "modify"
+        }
+      ],
+      "pairwise": [
+        {
+          "task_a": "W01",
+          "mode_a": "modify",
+          "task_b": "W02",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "a_before_b_direct"
+        },
+        {
+          "task_a": "W01",
+          "mode_a": "modify",
+          "task_b": "W04",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "no_direct_edge"
+        },
+        {
+          "task_a": "W01",
+          "mode_a": "modify",
+          "task_b": "W08",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "no_direct_edge"
+        },
+        {
+          "task_a": "W02",
+          "mode_a": "modify",
+          "task_b": "W04",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "a_before_b_direct"
+        },
+        {
+          "task_a": "W02",
+          "mode_a": "modify",
+          "task_b": "W08",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "no_direct_edge"
+        },
+        {
+          "task_a": "W04",
+          "mode_a": "modify",
+          "task_b": "W08",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "a_before_b_direct"
+        }
+      ]
+    },
+    {
+      "path": "tools/uos/src/main.gleam",
+      "consumers": [
+        {
+          "task": "E03",
+          "workstream": "E",
+          "mode": "modify"
+        },
+        {
+          "task": "R02",
+          "workstream": "R",
+          "mode": "modify"
+        }
+      ],
+      "pairwise": [
+        {
+          "task_a": "E03",
+          "mode_a": "modify",
+          "task_b": "R02",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "no_direct_edge"
+        }
+      ]
+    },
+    {
+      "path": "tools/web_quality_gate.ml",
+      "consumers": [
+        {
+          "task": "M08",
+          "workstream": "M",
+          "mode": "modify"
+        },
+        {
+          "task": "V05",
+          "workstream": "V",
+          "mode": "modify"
+        }
+      ],
+      "pairwise": [
+        {
+          "task_a": "M08",
+          "mode_a": "modify",
+          "task_b": "V05",
+          "mode_b": "modify",
+          "conflict_class": "write_write",
+          "direct_dependency_relation": "a_before_b_direct"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "task_count": 71,
+    "task_rows": 71,
+    "interface_schema_missing": 11,
+    "operation_mismatches": 0,
+    "empty_expect": 0,
+    "review_no_task_test_file": 1,
+    "shared_path_count": 19,
+    "pairwise_shared_file_count": 33,
+    "write_write_shared_path_count": 16,
+    "transitive_unordered_write_write_pairs": [
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/dmc_tcm.gleam",
+        "task_a": "M05",
+        "task_b": "A02"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/domain.gleam",
+        "task_a": "A02",
+        "task_b": "A04"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_vertical_slice_engine.gleam",
+        "task_a": "K02",
+        "task_b": "K03"
+      }
+    ]
+  }
+}
