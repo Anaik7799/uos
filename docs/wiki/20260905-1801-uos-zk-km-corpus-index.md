@@ -145,6 +145,8 @@ The operational system coordinates across five distinct language tiers:
   - `[[zk:ADR-053]]` Master Session Handover to OpenAI Codex ([ADR-053 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-1800-adr-053-master-session-handover-to-codex-cartesian-tensor-closure.md))
   - `[[wiki:20260906-1830-uos-15-evolutionary-and-functional-cycles-wiki]]` ([15 Evolutionary & Functional Cycles Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1830-uos-15-evolutionary-and-functional-cycles-wiki.md))
   - `[[zk:ADR-054]]` 15 Evolutionary & Functional Cycles Ratification ([ADR-054 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-1830-adr-054-15-evolutionary-and-functional-cycles-ratification.md))
+  - `[[wiki:20260906-1900-uos-c3i-integrated-knowledge-runtime-wiki]]` ([C3I Integrated Knowledge Runtime Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1900-uos-c3i-integrated-knowledge-runtime-wiki.md))
+  - `[[zk:ADR-055]]` C3I Integrated Knowledge Runtime & 15 Evolutionary Cycles Ratification ([ADR-055 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-1900-adr-055-c3i-integrated-knowledge-runtime-and-15-cycles-ratification.md))
 
 
 

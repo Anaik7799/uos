@@ -13,7 +13,9 @@ import cepaf_gleam/verification/omni_fractal_matrix_engine.{
   generate_all_feature_families, generate_all_formal_aspects,
   generate_all_use_cases, generate_system_scalability_matrix, is_fast_ooda_safe,
   verify_omni_fractal_system_matrix, encode_omni_matrix_json,
-  generate_all_15_evolutionary_cycles, execute_evolutionary_cycle,
+  generate_all_15_evolutionary_cycles, generate_wave2_evolutionary_cycles,
+  generate_all_30_evolutionary_cycles, generate_all_evolutionary_cycles,
+  execute_evolutionary_cycle,
 }
 import gleam/list
 import gleam/string
@@ -244,7 +246,7 @@ pub fn encode_omni_matrix_json_test() {
   let json_str = encode_omni_matrix_json()
   string.contains(json_str, "\"status\":\"ok\"") |> should.be_true()
   string.contains(json_str, "\"contract\":\"SC-OMNI-FRACTAL-001\"") |> should.be_true()
-  string.contains(json_str, "\"ev_cycle\":\"EV-24..EV-39\"") |> should.be_true()
+  string.contains(json_str, "\"ev_cycle\":\"EV-25..EV-54\"") |> should.be_true()
   string.contains(json_str, "\"cartesian_closure\":true") |> should.be_true()
   string.contains(json_str, "\"components_count\":5") |> should.be_true()
   string.contains(json_str, "\"agents_count\":10") |> should.be_true()
@@ -252,7 +254,7 @@ pub fn encode_omni_matrix_json_test() {
   string.contains(json_str, "\"aspect_processes_count\":17") |> should.be_true()
   string.contains(json_str, "\"scalability_profiles_count\":5") |> should.be_true()
   string.contains(json_str, "\"formal_proofs_count\":7") |> should.be_true()
-  string.contains(json_str, "\"evolutionary_cycles_count\":15") |> should.be_true()
+  string.contains(json_str, "\"evolutionary_cycles_count\":30") |> should.be_true()
 }
 
 pub fn all_15_evolutionary_cycles_test() {
@@ -270,8 +272,31 @@ pub fn all_15_evolutionary_cycles_test() {
   last.verified |> should.be_true()
 }
 
+pub fn wave2_evolutionary_cycles_test() {
+  let cycles = generate_wave2_evolutionary_cycles()
+  list.length(cycles) |> should.equal(15)
+
+  let assert Ok(first) = list.first(cycles)
+  first.cycle_id |> should.equal("EV-40")
+  first.status |> should.equal("OPERATIONAL")
+  first.verified |> should.be_true()
+
+  let assert Ok(last) = list.last(cycles)
+  last.cycle_id |> should.equal("EV-54")
+  last.status |> should.equal("OPERATIONAL")
+  last.verified |> should.be_true()
+}
+
+pub fn all_30_evolutionary_cycles_test() {
+  let cycles = generate_all_30_evolutionary_cycles()
+  list.length(cycles) |> should.equal(30)
+
+  let all_cycles = generate_all_evolutionary_cycles()
+  list.length(all_cycles) |> should.equal(30)
+}
+
 pub fn execute_evolutionary_cycles_test() {
-  let cycles = generate_all_15_evolutionary_cycles()
+  let cycles = generate_all_30_evolutionary_cycles()
   let all_passed = list.all(cycles, execute_evolutionary_cycle)
   all_passed |> should.be_true()
 }

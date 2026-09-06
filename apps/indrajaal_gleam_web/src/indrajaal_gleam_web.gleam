@@ -6,6 +6,7 @@ import cepaf_gleam/fpp/dmc_tcm
 import cepaf_gleam/fpp/intent
 import cepaf_gleam/fpp/ontology
 import cepaf_gleam/fpp/topology
+import cepaf_gleam/knowledge/c3i_knowledge_runtime
 import cepaf_gleam/sdlc/aspect_agent_ecosystem
 import cepaf_gleam/sdlc/aspect_processing_agent
 import cepaf_gleam/nif/zenoh_rete_bridge as nif_bridge
@@ -269,6 +270,53 @@ pub fn main() {
       }
       ["api", "verify", "omni-matrix"] -> {
         let json_body = omni_fractal_matrix_engine.encode_omni_matrix_json()
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["api", "verify", "c3i-knowledge"] -> {
+        let json_body = c3i_knowledge_runtime.get_c3i_knowledge_runtime_status()
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["api", "knowledge", "query"] -> {
+        let items = c3i_knowledge_runtime.ingest_c3i_knowledge_inventory()
+        let json_body =
+          json.object([
+            #("status", json.string("ok")),
+            #("contract", json.string("SPEC-C3I-KNOWLEDGE-RUNTIME-001")),
+            #("total_items", json.int(list.length(items))),
+            #(
+              "items",
+              json.array(items, fn(item) {
+                json.object([
+                  #("id", json.string(item.id)),
+                  #("title", json.string(item.title)),
+                  #("source_path", json.string(item.source_path)),
+                  #("citation_text", json.string(item.citation_text)),
+                  #("initial_trust", json.float(item.initial_trust)),
+                  #("decayed_trust", json.float(item.decayed_trust)),
+                  #("verified", json.bool(item.verified)),
+                ])
+              }),
+            ),
+          ])
+          |> json.to_string
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["api", "knowledge", "cited-recall"] -> {
+        let recall =
+          c3i_knowledge_runtime.query_cited_recall(
+            "C3I",
+            0.5,
+          )
+        let json_body = c3i_knowledge_runtime.encode_recall_result_json(recall)
         response.new(200)
         |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
         |> response.prepend_header("content-type", "application/json")
