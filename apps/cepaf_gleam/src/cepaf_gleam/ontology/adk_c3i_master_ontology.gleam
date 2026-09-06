@@ -312,11 +312,36 @@ pub fn build_canonical_master_ontology() -> MasterOntologyGraph {
     OntologyEdge("c3i-sre-pillar", RelGoverns, "adk-runner-hooks", 1.0),
     OntologyEdge("c3i-sre-pillar", RelGoverns, "adk-session-deltas", 1.0),
     OntologyEdge("c3i-sre-pillar", RelProtects, "adk-plugins-guardrails", 1.0),
-    OntologyEdge("c3i-verification-pillar", RelVerifies, "adk-eval-framework", 1.0),
-    OntologyEdge("c3i-verification-pillar", RelVerifies, "inv-hardware-storage-lock", 1.0),
-    OntologyEdge("c3i-verification-pillar", RelVerifies, "inv-rocha-semiotic-cut", 1.0),
-    OntologyEdge("c3i-verification-pillar", RelVerifies, "inv-zero-muda-purity", 1.0),
-    OntologyEdge("c3i-verification-pillar", RelVerifies, "inv-dmc-disjoint-windows", 1.0),
+    OntologyEdge(
+      "c3i-verification-pillar",
+      RelVerifies,
+      "adk-eval-framework",
+      1.0,
+    ),
+    OntologyEdge(
+      "c3i-verification-pillar",
+      RelVerifies,
+      "inv-hardware-storage-lock",
+      1.0,
+    ),
+    OntologyEdge(
+      "c3i-verification-pillar",
+      RelVerifies,
+      "inv-rocha-semiotic-cut",
+      1.0,
+    ),
+    OntologyEdge(
+      "c3i-verification-pillar",
+      RelVerifies,
+      "inv-zero-muda-purity",
+      1.0,
+    ),
+    OntologyEdge(
+      "c3i-verification-pillar",
+      RelVerifies,
+      "inv-dmc-disjoint-windows",
+      1.0,
+    ),
 
     // ZigVM Lifecycle Stage Flow
     OntologyEdge("zigvm-stg1-ontology", RelTransmutes, "zigvm-stg2-design", 1.0),
@@ -326,8 +351,18 @@ pub fn build_canonical_master_ontology() -> MasterOntologyGraph {
     OntologyEdge("zigvm-stg5-sre", RelSubsumes, "zigvm-stg6-km", 1.0),
 
     // Invariant Enforcement
-    OntologyEdge("inv-hardware-storage-lock", RelProtects, "c3i-sre-pillar", 1.0),
-    OntologyEdge("inv-dmc-disjoint-windows", RelProtects, "c3i-sdlc-pillar", 1.0),
+    OntologyEdge(
+      "inv-hardware-storage-lock",
+      RelProtects,
+      "c3i-sre-pillar",
+      1.0,
+    ),
+    OntologyEdge(
+      "inv-dmc-disjoint-windows",
+      RelProtects,
+      "c3i-sdlc-pillar",
+      1.0,
+    ),
     OntologyEdge("inv-rocha-semiotic-cut", RelGoverns, "zigvm-stg2-design", 1.0),
     OntologyEdge("inv-zero-muda-purity", RelGoverns, "zigvm-stg3-code", 1.0),
   ]
@@ -352,11 +387,17 @@ pub fn total_edges_count(graph: MasterOntologyGraph) -> Int {
   list.length(graph.edges)
 }
 
-pub fn find_entity_by_id(graph: MasterOntologyGraph, id: String) -> Result(OntologyEntity, Nil) {
+pub fn find_entity_by_id(
+  graph: MasterOntologyGraph,
+  id: String,
+) -> Result(OntologyEntity, Nil) {
   list.find(graph.entities, fn(e) { e.id == id })
 }
 
-pub fn filter_entities_by_domain(graph: MasterOntologyGraph, domain: OntologyDomain) -> List(OntologyEntity) {
+pub fn filter_entities_by_domain(
+  graph: MasterOntologyGraph,
+  domain: OntologyDomain,
+) -> List(OntologyEntity) {
   list.filter(graph.entities, fn(e) { e.domain == domain })
 }
 
@@ -365,7 +406,8 @@ pub fn verify_master_ontology_integrity(graph: MasterOntologyGraph) -> Bool {
   let has_edges = graph.edges != []
   let all_edges_valid =
     list.all(graph.edges, fn(edge) {
-      let from_exists = list.any(graph.entities, fn(e) { e.id == edge.from_entity })
+      let from_exists =
+        list.any(graph.entities, fn(e) { e.id == edge.from_entity })
       let to_exists = list.any(graph.entities, fn(e) { e.id == edge.to_entity })
       from_exists && to_exists
     })

@@ -39,12 +39,7 @@ pub fn stage_to_string(stage: LifecycleStage) -> String {
 
 /// Infranodus Semantic Network Graph Node
 pub type SemanticNode {
-  SemanticNode(
-    id: String,
-    label: String,
-    cluster: Int,
-    centrality: Float,
-  )
+  SemanticNode(id: String, label: String, cluster: Int, centrality: Float)
 }
 
 /// Infranodus Semantic Network Manifest
@@ -108,7 +103,9 @@ pub type LifecycleStatusReport {
 pub const hard_denied_system_os_serial = "25503L801736"
 
 /// Evaluate Intent through the Denotational Gatekeeper
-pub fn evaluate_denotational_intent(intent: DenotationalIntent) -> IntentAdmissionVerdict {
+pub fn evaluate_denotational_intent(
+  intent: DenotationalIntent,
+) -> IntentAdmissionVerdict {
   case intent.device_serial == hard_denied_system_os_serial {
     True ->
       IntentDenied(
@@ -116,10 +113,12 @@ pub fn evaluate_denotational_intent(intent: DenotationalIntent) -> IntentAdmissi
       )
     False -> {
       // TCM Coordinate Conservation check: sum of coordinate deltas must equal 0
-      let delta_sum = list.fold(intent.tcm_coordinates, 0, fn(acc, x) { acc + x })
+      let delta_sum =
+        list.fold(intent.tcm_coordinates, 0, fn(acc, x) { acc + x })
       case delta_sum >= 0 {
         True -> IntentAdmitted("trace-intent-" <> intent.intent_id)
-        False -> IntentDenied("TCM coordinate conservation violated (Delta T_13 < 0)")
+        False ->
+          IntentDenied("TCM coordinate conservation violated (Delta T_13 < 0)")
       }
     }
   }
@@ -131,7 +130,11 @@ pub fn verify_sre_health_vector(vec: SreHealthVector) -> Bool {
   let entropy_ok = vec.entropy_shannon >=. 2.5
   let freshness_ok = vec.freshness_seconds <= 30
   let cpu_ok = vec.cpu_budget_ratio <=. 0.85
-  lyapunov_ok && entropy_ok && freshness_ok && cpu_ok && vec.storage_interlock_safe
+  lyapunov_ok
+  && entropy_ok
+  && freshness_ok
+  && cpu_ok
+  && vec.storage_interlock_safe
 }
 
 /// Generate Full Lifecycle Status Report

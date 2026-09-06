@@ -25,8 +25,9 @@ import cepaf_gleam/fpp/agent_taxonomy.{
   SreRunnerLifecycleHookSupervisor, SreSentinel, SreTimeTravelStateRollback,
   SubstrateReactor, VerificationAdkEvalBenchmark, VerificationChecklistAuditor,
   VerificationMasterChecklistGatekeeper, VerificationZeroMudaPurityEnforcer,
-  all_agent_types, encode_agent_catalog_json, find_agent_type_spec, sdlc_agents,
-  sre_agents, verification_agents, verify_agent_base_id_disjointness,
+  all_agent_types, encode_agent_catalog_json, find_agent_type_spec,
+  intelligence_agents, sdlc_agents, sre_agents, verification_agents,
+  verify_agent_base_id_disjointness,
 }
 import cepaf_gleam/fpp/dmc_tcm.{
   hard_denied_system_os_serial, verify_tcm_13d_conservation,
@@ -38,22 +39,26 @@ import gleam/list
 import gleam/string
 import gleeunit/should
 
-pub fn all_96_agent_types_exist_test() {
+pub fn all_256_agent_types_exist_test() {
   let specs = all_agent_types()
   list.length(specs)
-  |> should.equal(96)
+  |> should.equal(256)
 
-  // Verify 32 SDLC Agents
+  // Verify 64 SDLC Agents
   list.length(sdlc_agents())
-  |> should.equal(32)
+  |> should.equal(64)
 
-  // Verify 32 SRE Agents
+  // Verify 64 SRE Agents
   list.length(sre_agents())
-  |> should.equal(32)
+  |> should.equal(64)
 
-  // Verify 32 Verification Agents
+  // Verify 64 Verification Agents
   list.length(verification_agents())
-  |> should.equal(32)
+  |> should.equal(64)
+
+  // Verify 64 Intelligence Agents
+  list.length(intelligence_agents())
+  |> should.equal(64)
 
   // Check sample representatives from each pillar
   find_agent_type_spec(ConstitutionalGuardian)
@@ -328,16 +333,19 @@ pub fn agent_json_catalog_serialization_test() {
   let specs = all_agent_types()
   let catalog_json = encode_agent_catalog_json(specs)
 
-  string.contains(catalog_json, "\"total_agent_types\":96")
+  string.contains(catalog_json, "\"total_agent_types\":256")
   |> should.equal(True)
 
-  string.contains(catalog_json, "\"sdlc_agents_count\":32")
+  string.contains(catalog_json, "\"sdlc_agents_count\":64")
   |> should.equal(True)
 
-  string.contains(catalog_json, "\"sre_agents_count\":32")
+  string.contains(catalog_json, "\"sre_agents_count\":64")
   |> should.equal(True)
 
-  string.contains(catalog_json, "\"verification_agents_count\":32")
+  string.contains(catalog_json, "\"verification_agents_count\":64")
+  |> should.equal(True)
+
+  string.contains(catalog_json, "\"intelligence_agents_count\":64")
   |> should.equal(True)
 
   string.contains(catalog_json, "\"SC-FPP-AGENT-TAXONOMY-001\"")

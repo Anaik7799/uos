@@ -144,7 +144,8 @@ pub fn stpa_loss_to_string(loss: StpaLoss) -> String {
   case loss {
     LossL1FalseConformance -> "L-1 False Conformance Claim"
     LossL2SilentRegression -> "L-2 Silent Parity/Coverage Regression"
-    LossL3EvidenceContamination -> "L-3 Evidence Corruption or Out-of-Band Mutation"
+    LossL3EvidenceContamination ->
+      "L-3 Evidence Corruption or Out-of-Band Mutation"
     LossL4WastedEffort -> "L-4 Large-Scale Wasted Effort"
     LossL5BoundaryPurity -> "L-5 Repository Purity & Boundary Violation"
   }
@@ -162,8 +163,10 @@ pub fn stpa_hazard_to_string(hazard: StpaHazard) -> String {
   case hazard {
     HazardH1GreenWithDefect -> "H-1 Gate reports GREEN while defect exists"
     HazardH2RatchetWeakened -> "H-2 Ratchet, baseline, or threshold weakened"
-    HazardH3EvidenceDiverged -> "H-3 Telemetry/Evidence store diverges from physical reality"
-    HazardH4StorageInterlockBypassed -> "H-4 Hardware storage interlock bypassed"
+    HazardH3EvidenceDiverged ->
+      "H-3 Telemetry/Evidence store diverges from physical reality"
+    HazardH4StorageInterlockBypassed ->
+      "H-4 Hardware storage interlock bypassed"
     HazardH5RunawayReductions -> "H-5 Runaway reductions or deadlocks"
   }
 }
@@ -228,7 +231,7 @@ pub fn verify_slice_mutation_adequacy(
   }
 
   // Pass criteria: total >= 2 mutants planted per slice, 0 survived
-  let passes = total >= 2 && survived == 0 && kill_rate >=. 0.90
+  let passes = total >= 2 && survived == 0 && kill_rate >=. 0.9
   #(total, killed, equiv, kill_rate, passes)
 }
 
@@ -304,4 +307,121 @@ pub fn format_cast_incident_entry(incident: CastIncidentRecord) -> String {
     ],
     "",
   )
+}
+
+// ------------------------------------------------------------------------------
+// 7. Multi-Paradigm Testing Disciplines (TESTING_DISCIPLINES.md)
+// ------------------------------------------------------------------------------
+
+pub type TestingDiscipline {
+  BddDiscipline(scenario_path: String, requirement_statement: String)
+  TddDiscipline(law_name: String, mutant_id: String)
+  PropertyDiscipline(generator_seed: Int, fixture_totality_checked: Bool)
+  ChaosDiscipline(fault_injection_id: String, invariant_asserted: String)
+  CorpusDiscipline(compiled_module_path: String, execution_time_ms: Int)
+  FormalSmtDiscipline(
+    negation_asserted: Bool,
+    solver_result: SmtSolverResult,
+    has_nontrivial_negative_control: Bool,
+  )
+}
+
+// ------------------------------------------------------------------------------
+// 8. SMT Solver Evidence Obligations (Negation, Unsat, Negative Control)
+// ------------------------------------------------------------------------------
+
+pub type SmtSolverResult {
+  SmtUnsat
+  SmtSat(counterexample: String)
+  SmtUnknown
+}
+
+pub fn evaluate_smt_obligation(
+  negation_asserted: Bool,
+  result: SmtSolverResult,
+  control_is_sat: Bool,
+) -> Bool {
+  // SMT is evidence ONLY if:
+  // 1. Asserted the NEGATION (negation_asserted == True)
+  // 2. Solver returned Unsat
+  // 3. Negative control came back Sat (control_is_sat == True)
+  // Any SmtUnknown fails closed alongside Sat!
+  case negation_asserted, result, control_is_sat {
+    True, SmtUnsat, True -> True
+    _, _, _ -> False
+  }
+}
+
+// ------------------------------------------------------------------------------
+// 9. Chaos Invariant Assertion & Fault Injection (C-1 .. C-10)
+// ------------------------------------------------------------------------------
+
+pub type ChaosFaultType {
+  FaultPublishInterruption
+  FaultRecordCycleKill
+  FaultConcurrentWriterContention
+  FaultOfflineRetrieval
+  FaultClockSkewInjection
+  FaultSchedulerSaturation
+}
+
+pub type ChaosVerificationVerdict {
+  ChaosInvariantHeld(details: String)
+  ChaosInvariantViolated(hazard: StpaHazard, loss: StpaLoss)
+}
+
+pub fn evaluate_chaos_experiment(
+  _fault: ChaosFaultType,
+  outcome_invariant_holds: Bool,
+) -> ChaosVerificationVerdict {
+  case outcome_invariant_holds {
+    True ->
+      ChaosInvariantHeld("Invariant maintained under fault injection seam")
+    False ->
+      ChaosInvariantViolated(
+        HazardH3EvidenceDiverged,
+        LossL3EvidenceContamination,
+      )
+  }
+}
+
+// ------------------------------------------------------------------------------
+// 10. Fixture Totality Rule ("Symmetric Fixture over Asymmetric Code")
+// ------------------------------------------------------------------------------
+
+pub fn check_fixture_totality(
+  symmetric_operands_tested: Bool,
+  real_artifact_executed: Bool,
+) -> Bool {
+  // A slice needs both operand position enumeration and real artifact execution
+  symmetric_operands_tested && real_artifact_executed
+}
+
+// ------------------------------------------------------------------------------
+// 11. Bayesian Forecasting & Predictive Preflight (SDLC_SRE_PROCESS.md)
+// ------------------------------------------------------------------------------
+
+pub type BayesianForecastingSpec {
+  BayesianForecastingSpec(
+    prior_duration_ms: Float,
+    variance: Float,
+    observed_fuel: Int,
+    confidence_interval: Float,
+  )
+}
+
+pub type ForecastingStatus {
+  ForecastWithinBudget(estimated_remaining_fuel: Int)
+  ForecastBudgetExhausted(required_fuel: Int, allocated_quota: Int)
+}
+
+pub fn evaluate_forecasting_preflight(
+  spec: BayesianForecastingSpec,
+  quota_limit_fuel: Int,
+) -> ForecastingStatus {
+  let estimated = spec.observed_fuel
+  case estimated <= quota_limit_fuel {
+    True -> ForecastWithinBudget(quota_limit_fuel - estimated)
+    False -> ForecastBudgetExhausted(estimated, quota_limit_fuel)
+  }
 }

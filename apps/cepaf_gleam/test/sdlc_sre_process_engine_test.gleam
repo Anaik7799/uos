@@ -20,7 +20,8 @@ pub fn lifecycle_specs_completeness_test() {
   list.length(specs) |> should.equal(5)
 
   let tiers = list.map(specs, fn(s) { s.tier })
-  tiers |> should.equal([TierOperation, TierTask, TierSlice, TierEpoch, TierPin])
+  tiers
+  |> should.equal([TierOperation, TierTask, TierSlice, TierEpoch, TierPin])
 
   let names = list.map(tiers, lifecycle_tier_to_string)
   names |> should.equal(["Operation", "Task", "Slice", "Epoch", "Pin"])
@@ -133,4 +134,121 @@ pub fn cast_incident_formatting_test() {
   string.contains(entry, "CAST-20260906-01") |> should.equal(True)
   string.contains(entry, "G-CHECKLIST") |> should.equal(True)
   string.contains(entry, "RESOLVED") |> should.equal(True)
+}
+
+pub fn smt_evidence_obligation_test() {
+  // Test valid proof: negation asserted, Unsat returned, and non-trivial control Sat
+  sdlc_sre_process_engine.evaluate_smt_obligation(
+    True,
+    sdlc_sre_process_engine.SmtUnsat,
+    True,
+  )
+  |> should.equal(True)
+
+  // Fail case 1: Theorem asserted directly instead of negation
+  sdlc_sre_process_engine.evaluate_smt_obligation(
+    False,
+    sdlc_sre_process_engine.SmtUnsat,
+    True,
+  )
+  |> should.equal(False)
+
+  // Fail case 2: Solver returned Sat (counterexample exists)
+  sdlc_sre_process_engine.evaluate_smt_obligation(
+    True,
+    sdlc_sre_process_engine.SmtSat("x = 0"),
+    True,
+  )
+  |> should.equal(False)
+
+  // Fail case 3: Solver returned Unknown (must fail closed)
+  sdlc_sre_process_engine.evaluate_smt_obligation(
+    True,
+    sdlc_sre_process_engine.SmtUnknown,
+    True,
+  )
+  |> should.equal(False)
+
+  // Fail case 4: Negative control was not Sat (tautology / vacuous proof caught)
+  sdlc_sre_process_engine.evaluate_smt_obligation(
+    True,
+    sdlc_sre_process_engine.SmtUnsat,
+    False,
+  )
+  |> should.equal(False)
+}
+
+pub fn chaos_invariant_test() {
+  // Safe run: invariant holds
+  let verdict_pass =
+    sdlc_sre_process_engine.evaluate_chaos_experiment(
+      sdlc_sre_process_engine.FaultClockSkewInjection,
+      True,
+    )
+  case verdict_pass {
+    sdlc_sre_process_engine.ChaosInvariantHeld(_) -> True
+    _ -> False
+  }
+  |> should.equal(True)
+
+  // Unsafe run: invariant violated -> trips STPA hazard and loss
+  let verdict_fail =
+    sdlc_sre_process_engine.evaluate_chaos_experiment(
+      sdlc_sre_process_engine.FaultConcurrentWriterContention,
+      False,
+    )
+  case verdict_fail {
+    sdlc_sre_process_engine.ChaosInvariantViolated(hazard, loss) -> {
+      hazard |> should.equal(sdlc_sre_process_engine.HazardH3EvidenceDiverged)
+      loss |> should.equal(sdlc_sre_process_engine.LossL3EvidenceContamination)
+      True
+    }
+    _ -> False
+  }
+  |> should.equal(True)
+}
+
+pub fn fixture_totality_rule_test() {
+  // Symmetric operands tested and real artifact executed
+  sdlc_sre_process_engine.check_fixture_totality(True, True)
+  |> should.equal(True)
+
+  // Missing symmetric operand position test
+  sdlc_sre_process_engine.check_fixture_totality(False, True)
+  |> should.equal(False)
+
+  // Missing real artifact execution
+  sdlc_sre_process_engine.check_fixture_totality(True, False)
+  |> should.equal(False)
+}
+
+pub fn bayesian_forecasting_preflight_test() {
+  let spec =
+    sdlc_sre_process_engine.BayesianForecastingSpec(
+      prior_duration_ms: 120.0,
+      variance: 15.0,
+      observed_fuel: 450,
+      confidence_interval: 0.95,
+    )
+
+  // Within budget
+  case sdlc_sre_process_engine.evaluate_forecasting_preflight(spec, 1000) {
+    sdlc_sre_process_engine.ForecastWithinBudget(remaining) -> {
+      remaining |> should.equal(550)
+      True
+    }
+    _ -> False
+  }
+  |> should.equal(True)
+
+  // Budget exhausted
+  case sdlc_sre_process_engine.evaluate_forecasting_preflight(spec, 300) {
+    sdlc_sre_process_engine.ForecastBudgetExhausted(required, quota) -> {
+      required |> should.equal(450)
+      quota |> should.equal(300)
+      True
+    }
+    _ -> False
+  }
+  |> should.equal(True)
 }

@@ -46,7 +46,8 @@ pub fn denotational_intent_hardware_interlock_test() {
     IntentDenied(reason) -> {
       let assert True = string.contains(reason, "25503L801736")
     }
-    IntentAdmitted(_) -> panic as "Hardware interlock failed to block root OS NVMe!"
+    IntentAdmitted(_) ->
+      panic as "Hardware interlock failed to block root OS NVMe!"
   }
 
   // 2. Allowed intent on normal Ceph disk

@@ -7,9 +7,9 @@
 import cepaf_gleam/ontology/adk_c3i_master_ontology.{
   DomainAdkFramework, DomainC3iEcology, DomainFormalInvariants,
   DomainZigvmLifecycle, build_canonical_master_ontology,
-  encode_master_ontology_json, export_ontology_graphml, filter_entities_by_domain,
-  find_entity_by_id, total_edges_count, total_entities_count,
-  verify_master_ontology_integrity,
+  encode_master_ontology_json, export_ontology_graphml,
+  filter_entities_by_domain, find_entity_by_id, total_edges_count,
+  total_entities_count, verify_master_ontology_integrity,
 }
 import gleam/list
 import gleam/string
@@ -31,7 +31,8 @@ pub fn master_ontology_domain_distribution_test() {
   let adk_entities = filter_entities_by_domain(graph, DomainAdkFramework)
   let c3i_entities = filter_entities_by_domain(graph, DomainC3iEcology)
   let zigvm_entities = filter_entities_by_domain(graph, DomainZigvmLifecycle)
-  let invariant_entities = filter_entities_by_domain(graph, DomainFormalInvariants)
+  let invariant_entities =
+    filter_entities_by_domain(graph, DomainFormalInvariants)
 
   let assert True = list.length(adk_entities) >= 9
   let assert True = list.length(c3i_entities) == 3
