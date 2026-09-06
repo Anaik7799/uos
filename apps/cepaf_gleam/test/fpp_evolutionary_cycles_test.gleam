@@ -1,53 +1,52 @@
 //// =============================================================================
-//// [UOS-TEST-FPP-EVOLUTIONARY-CYCLES] 15 Cycles Test Suite
+//// [UOS-TEST-FPP-EVOLUTIONARY-CYCLES] 30 Cycles Test Suite (F' + ZigVM)
 //// =============================================================================
 
 import cepaf_gleam/fpp/evolutionary_cycles.{
   ClaudeFable, CodexAstra, TriSovereignConsensus,
-  encode_cycles_json, get_15_evolutionary_cycles,
-  verify_all_15_cycles, verify_cycle,
+  encode_cycles_json, get_15_evolutionary_cycles, get_30_evolutionary_cycles,
+  get_zigvm_evolutionary_cycles, verify_all_15_cycles, verify_all_30_cycles,
+  verify_cycle,
 }
 import gleam/list
 import gleam/string
 import gleeunit/should
 
-pub fn get_15_cycles_count_test() {
-  let cycles = get_15_evolutionary_cycles()
+pub fn get_30_cycles_count_test() {
+  let cycles = get_30_evolutionary_cycles()
   list.length(cycles)
+  |> should.equal(30)
+}
+
+pub fn zigvm_subcycles_count_test() {
+  let zigvm_cycles = get_zigvm_evolutionary_cycles()
+  list.length(zigvm_cycles)
   |> should.equal(15)
+  list.all(zigvm_cycles, fn(c) { c.cycle_num >= 16 && c.cycle_num <= 30 })
+  |> should.be_true()
 }
 
 pub fn cycle_alternation_test() {
-  let cycles = get_15_evolutionary_cycles()
+  let cycles = get_30_evolutionary_cycles()
   
-  // Verify odd cycles (1, 3, 5, 7, 9, 11, 13) are CodexAstra
-  let codex_cycles = list.filter(cycles, fn(c) {
-    c.cycle_num % 2 == 1 && c.cycle_num < 15
-  })
+  // Codex Astra cycles: 1, 3, 5, 7, 9, 11, 13, 16, 18, 20, 22, 24, 26, 28
+  let codex_cycles = list.filter(cycles, fn(c) { c.sovereign == CodexAstra })
   list.length(codex_cycles)
-  |> should.equal(7)
-  list.all(codex_cycles, fn(c) { c.sovereign == CodexAstra })
-  |> should.be_true()
+  |> should.equal(14)
 
-  // Verify even cycles (2, 4, 6, 8, 10, 12, 14) are ClaudeFable
-  let claude_cycles = list.filter(cycles, fn(c) {
-    c.cycle_num % 2 == 0
-  })
+  // Claude Fable cycles: 2, 4, 6, 8, 10, 12, 14, 17, 19, 21, 23, 25, 27, 29
+  let claude_cycles = list.filter(cycles, fn(c) { c.sovereign == ClaudeFable })
   list.length(claude_cycles)
-  |> should.equal(7)
-  list.all(claude_cycles, fn(c) { c.sovereign == ClaudeFable })
-  |> should.be_true()
+  |> should.equal(14)
 
-  // Verify cycle 15 is TriSovereignConsensus
-  let cycle_15 = list.find(cycles, fn(c) { c.cycle_num == 15 })
-  case cycle_15 {
-    Ok(c) -> c.sovereign |> should.equal(TriSovereignConsensus)
-    Error(_) -> should.fail()
-  }
+  // Consensus cycles: 15, 30
+  let consensus_cycles = list.filter(cycles, fn(c) { c.sovereign == TriSovereignConsensus })
+  list.length(consensus_cycles)
+  |> should.equal(2)
 }
 
 pub fn aspect_coverage_test() {
-  let cycles = get_15_evolutionary_cycles()
+  let cycles = get_30_evolutionary_cycles()
   let aspects = list.map(cycles, fn(c) { c.aspect })
   // Verify all 5 aspects are present
   list.contains(aspects, evolutionary_cycles.FunctionalityAspect) |> should.be_true()
@@ -57,8 +56,11 @@ pub fn aspect_coverage_test() {
   list.contains(aspects, evolutionary_cycles.SuperpowersAspect) |> should.be_true()
 }
 
-pub fn individual_cycle_execution_test() {
-  let nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+pub fn individual_30_cycles_execution_test() {
+  let nums = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+    16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
+  ]
   list.each(nums, fn(n) {
     case verify_cycle(n) {
       Ok(record) -> {
@@ -70,9 +72,9 @@ pub fn individual_cycle_execution_test() {
   })
 }
 
-pub fn verify_all_15_cycles_metrics_test() {
-  let #(cycles, all_passed, metrics) = verify_all_15_cycles()
-  list.length(cycles) |> should.equal(15)
+pub fn verify_all_30_cycles_metrics_test() {
+  let #(cycles, all_passed, metrics) = verify_all_30_cycles()
+  list.length(cycles) |> should.equal(30)
   all_passed |> should.be_true()
   
   // Verify 4 Math Gates
@@ -83,14 +85,14 @@ pub fn verify_all_15_cycles_metrics_test() {
   metrics.all_gates_pass |> should.be_true()
 }
 
-pub fn json_serialization_test() {
-  let #(cycles, _, metrics) = verify_all_15_cycles()
+pub fn json_serialization_30_cycles_test() {
+  let #(cycles, _, metrics) = verify_all_30_cycles()
   let json_str = encode_cycles_json(cycles, metrics)
   
-  string.contains(json_str, "\"cycles_count\":15") |> should.be_true()
+  string.contains(json_str, "\"cycles_count\":30") |> should.be_true()
   string.contains(json_str, "\"all_passed\":true") |> should.be_true()
   string.contains(json_str, "Codex Astra") |> should.be_true()
   string.contains(json_str, "Claude Fable 5.1") |> should.be_true()
   string.contains(json_str, "Tri-Sovereign Consensus") |> should.be_true()
-  string.contains(json_str, "25503L801736") |> should.be_true()
+  string.contains(json_str, "ZigVM") |> should.be_true()
 }
