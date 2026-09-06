@@ -35,6 +35,7 @@ import cepaf_gleam/ui/lustre/zk_graph_visualizer
 import cepaf_gleam/ui/wisp/router as c3i_router
 import cepaf_gleam/verification/browser_emulation_bridge
 import cepaf_gleam/verification/dmc_biosemiotics_interlock
+import cepaf_gleam/verification/omni_fractal_matrix_engine
 import cepaf_gleam/verification/unified_fractal_web_verifier as ufwv
 import cepaf_gleam/verification/unified_verification_supervisor
 import cepaf_gleam/verification/vfs_selfcheck
@@ -261,6 +262,13 @@ pub fn main() {
       ["api", "verify", "ocaml-parity"] -> {
         let json_body =
           "{\"status\":\"ok\",\"contract\":\"SC-OCAML-PARITY-001\",\"parity_algebra\":\"semilattice_join\",\"vacuous_truth_protection\":true,\"trace_normalizer\":true,\"render_laws_passing\":16,\"graph_laws_passing\":true,\"zero_trust_interceptor\":true,\"tests_passing\":9875}"
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["api", "verify", "omni-matrix"] -> {
+        let json_body = omni_fractal_matrix_engine.encode_omni_matrix_json()
         response.new(200)
         |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
         |> response.prepend_header("content-type", "application/json")

@@ -137,8 +137,10 @@ The operational system coordinates across five distinct language tiers:
   - `[[zk:ADR-049]]` Omni-Fractal Systemic Symbiosis Ratification ([ADR-049 Live View](http://nas-1.tail55d152.ts.net:4100/docs/docs/zk/20260906-1730-adr-049-omni-fractal-systemic-symbiosis-ratification.md))
   - `[[wiki:20260906-1745-uos-omni-fractal-mainline-merge-and-sovereign-closure-wiki]]` ([Omni-Fractal Mainline Merge & Sovereign Closure Wiki](http://nas-1.tail55d152.ts.net:4100/docs/docs/wiki/20260906-1745-uos-omni-fractal-mainline-merge-and-sovereign-closure-wiki.md))
   - `[[zk:ADR-050]]` Omni-Fractal Mainline Merge & Sovereign Closure ([ADR-050 Live View](http://nas-1.tail55d152.ts.net:4100/docs/docs/zk/20260906-1745-adr-050-omni-fractal-mainline-merge-and-sovereign-closure.md))
-  - `[[wiki:20260906-1755-uos-omni-fractal-full-generation-and-systemic-ratification-wiki]]` ([Omni-Fractal Full Generation & Systemic Ratification Wiki](http://nas-1.tail55d152.ts.net:4100/docs/docs/wiki/20260906-1755-uos-omni-fractal-full-generation-and-systemic-ratification-wiki.md))
-  - `[[zk:ADR-051]]` Omni-Fractal Cartesian Tensor Generation & Systemic Ratification ([ADR-051 Live View](http://nas-1.tail55d152.ts.net:4100/docs/docs/zk/20260906-1755-adr-051-omni-fractal-full-generation-and-systemic-ratification.md))
+  - `[[wiki:20260906-1755-uos-omni-fractal-full-generation-and-systemic-ratification-wiki]]` ([Omni-Fractal Full Generation & Systemic Ratification Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1755-uos-omni-fractal-full-generation-and-systemic-ratification-wiki.md))
+  - `[[zk:ADR-051]]` Omni-Fractal Cartesian Tensor Generation & Systemic Ratification ([ADR-051 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-1755-adr-051-omni-fractal-full-generation-and-systemic-ratification.md))
+  - `[[wiki:20260906-1800-uos-omni-fractal-systemic-cartesian-tensor-closure-wiki]]` ([Omni-Fractal Systemic Cartesian Tensor Closure Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-1800-uos-omni-fractal-systemic-cartesian-tensor-closure-wiki.md))
+  - `[[zk:ADR-052]]` Omni-Fractal Systemic Cartesian Tensor Closure & Live Telemetry Wiring ([ADR-052 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-1800-adr-052-omni-fractal-systemic-cartesian-tensor-closure.md))
 
 
 

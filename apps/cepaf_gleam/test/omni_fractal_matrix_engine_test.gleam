@@ -12,9 +12,10 @@ import cepaf_gleam/verification/omni_fractal_matrix_engine.{
   generate_all_17_aspect_processes, generate_all_agent_specifications,
   generate_all_feature_families, generate_all_formal_aspects,
   generate_all_use_cases, generate_system_scalability_matrix, is_fast_ooda_safe,
-  verify_omni_fractal_system_matrix,
+  verify_omni_fractal_system_matrix, encode_omni_matrix_json,
 }
 import gleam/list
+import gleam/string
 import gleeunit/should
 
 pub fn canonical_10_fractal_layers_test() {
@@ -236,4 +237,18 @@ pub fn formal_aspect_proofs_test() {
 
   let assert Ok(first) = list.first(proofs)
   first.authority |> should.equal("Lean 4")
+}
+
+pub fn encode_omni_matrix_json_test() {
+  let json_str = encode_omni_matrix_json()
+  string.contains(json_str, "\"status\":\"ok\"") |> should.be_true()
+  string.contains(json_str, "\"contract\":\"SC-OMNI-FRACTAL-001\"") |> should.be_true()
+  string.contains(json_str, "\"ev_cycle\":\"EV-24\"") |> should.be_true()
+  string.contains(json_str, "\"cartesian_closure\":true") |> should.be_true()
+  string.contains(json_str, "\"components_count\":5") |> should.be_true()
+  string.contains(json_str, "\"agents_count\":10") |> should.be_true()
+  string.contains(json_str, "\"feature_families_count\":18") |> should.be_true()
+  string.contains(json_str, "\"aspect_processes_count\":17") |> should.be_true()
+  string.contains(json_str, "\"scalability_profiles_count\":5") |> should.be_true()
+  string.contains(json_str, "\"formal_proofs_count\":7") |> should.be_true()
 }
