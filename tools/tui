@@ -19,6 +19,7 @@ Usage:
   tools/tui [command] [args...]
 
 Commands:
+  start | live         Start interactive live TUI Cockpit monitor (hotkey navigation)
   auth                 Display AGY Sovereign Authentication Status & L0-L7 Permissions
   split                Render Split-Screen TUI Dashboard (Swarm TAB + Test KPIs)
   dashboard | cockpit  Render Biomorphic Cockpit TUI Dashboard (OODA, Genome, Schedulers)
@@ -31,6 +32,7 @@ Commands:
   help                 Show this help message
 
 Examples:
+  tools/tui start
   tools/tui auth
   tools/tui split
   tools/tui dashboard
@@ -45,9 +47,182 @@ run_erl() {
   erl -noshell -pa ${EBIN_PATHS} -eval "$1"
 }
 
-CMD="${1:-split}"
+CMD="${1:-start}"
 
 case "$CMD" in
+  start|live|interactive)
+    VIEW_MODE="dashboard"
+    INTERVAL="${INTERVAL:-2}"
+    ONCE=0
+    for arg in "${@:2}"; do
+      case "$arg" in
+        --once) ONCE=1 ;;
+        --interval=*) INTERVAL="${arg#*=}" ;;
+        -*) ;;
+        *) VIEW_MODE="$arg" ;;
+      esac
+    done
+    if [ ! -t 0 ]; then
+      ONCE=1
+    fi
+
+    cleanup() {
+      printf "\033[?25h" 2>/dev/null || true
+      stty echo 2>/dev/null || true
+    }
+    trap cleanup EXIT INT TERM
+
+    printf "\033[?25l" 2>/dev/null || true
+    stty -echo 2>/dev/null || true
+
+    PAGES=(
+      dashboard planning verification immune zenoh podman prajna substrate
+      metabolic telemetry kms mcp federation health_product agents holon
+      config git database bridge smriti integrity evolution biomorphic
+      homeostasis bicameral singularity markdown_preview hook_subsystem
+      voice ruliology fmea pipeline_tracer
+    )
+    PAGE_IDX=0
+
+    while true; do
+      HEALTH_INFO=$(curl -s --connect-timeout 1 http://127.0.0.1:4100/api/health 2>/dev/null || echo '{"status":"offline"}')
+      SERVER_STATUS=$(echo "$HEALTH_INFO" | grep -o '"status":"[^"]*"' | head -1 | cut -d'"' -f4 || echo "offline")
+      CONTAINERS=$(echo "$HEALTH_INFO" | grep -o '"healthy_count":[0-9]*' | head -1 | cut -d':' -f2 || echo "16")
+      THREAT=$(echo "$HEALTH_INFO" | grep -o '"threat_level":"[^"]*"' | head -1 | cut -d'"' -f4 || echo "nominal")
+      TIMESTAMP_UTC=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+      printf "\033[2J\033[H"
+      printf "\033[1;36m╔══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╗\033[0m\n"
+      printf "\033[1;36m║\033[0m \033[1;32mUOS C3I SOVEREIGN COCKPIT TUI\033[0m — \033[1;37mAGY SOVEREIGN SESSION (L0-L7 FULL ACCESS)\033[0m                              \033[1;36m║\033[0m\n"
+      printf "\033[1;36m║\033[0m \033[33mHOST:\033[0m nas-1.tail55d152.ts.net:4100 │ \033[33mUTC:\033[0m %-20s │ \033[33mSRV:\033[0m %-7s │ \033[33mPODS:\033[0m %-2s/16 │ \033[33mSEC:\033[0m %-8s \033[1;36m║\033[0m\n" \
+        "$TIMESTAMP_UTC" "$SERVER_STATUS" "$CONTAINERS" "$THREAT"
+      printf "\033[1;36m╠══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╣\033[0m\n"
+      printf "\033[1;36m║\033[0m \033[1;37m[1]\033[0m Split \033[1;37m[2]\033[0m Cockpit \033[1;37m[3]\033[0m Auth \033[1;37m[4]\033[0m Stream \033[1;37m[5]\033[0m Bio \033[1;37m[6]\033[0m Homeo \033[1;37m[7]\033[0m Bicam \033[1;37m[8]\033[0m Evol \033[1;37m[9]\033[0m Preflight \033[1;37m[N/P]\033[0m Page \033[1;37m[Q]\033[0m Quit \033[1;36m║\033[0m\n"
+      printf "\033[1;36m╚══════════════════════════════════════════════════════════════════════════════════════════════════════════════════════╝\033[0m\n\n"
+
+      case "$VIEW_MODE" in
+        dashboard|cockpit)
+          run_erl 'Output = cepaf_gleam@ui@tui@dashboard_view:render(cepaf_gleam@ui@lustre@app:init()), io:put_chars(Output), io:nl(), init:stop().'
+          ;;
+        split)
+          run_erl '
+            D = cepaf_gleam@ui@lustre@planning_dashboard:init(),
+            T = cepaf_gleam@testing@test_dashboard:init(),
+            M = cepaf_gleam@ui@tui@split_screen:init_split_screen(D, T),
+            io:put_chars(cepaf_gleam@ui@tui@split_screen:render_frame(M)),
+            io:nl(), init:stop().
+          '
+          ;;
+        auth)
+          run_erl '
+            io:put_chars(cepaf_gleam@ui@tui@auth_view:render(<<"agy">>, full_access, [<<"sovereign">>, <<"admin">>, <<"operator">>], true, true)),
+            io:nl(), init:stop().
+          '
+          ;;
+        stream)
+          run_erl '
+            Events = cepaf_gleam@agui@event_stream_widget:demo_events(),
+            io:put_chars(cepaf_gleam@agui@event_stream_widget:render_ansi(Events, 12)),
+            io:nl(), init:stop().
+          '
+          ;;
+        biomorphic)
+          run_erl '
+            Init = cepaf_gleam@ui@lustre@biomorphic:init(),
+            Bio = {subsystem_health, <<"Bio">>, <<"healthy">>, 1.0, <<"metabolism nominal">>},
+            Neuro = {subsystem_health, <<"Neuro">>, <<"healthy">>, 0.98, <<"synaptic firing nominal">>},
+            Immune = {subsystem_health, <<"Immune">>, <<"healthy">>, 1.0, <<"antibodies active">>},
+            M = cepaf_gleam@ui@lustre@biomorphic:update(Init, {health_loaded, Bio, Neuro, Immune, 0.99, <<"nominal">>}),
+            io:put_chars(cepaf_gleam@ui@tui@biomorphic_view:render(M)),
+            io:nl(), init:stop().
+          '
+          ;;
+        homeostasis)
+          run_erl '
+            Pid = {pid_state, 1.0, 0.995, 0.005, 0.05, 1.0, 0.1, 0.05},
+            Init = cepaf_gleam@ui@lustre@homeostasis:init(),
+            M = cepaf_gleam@ui@lustre@homeostasis:update(Init, {pid_loaded, Pid, true, 99.5, 600}),
+            io:put_chars(cepaf_gleam@ui@tui@homeostasis_view:render(M)),
+            io:nl(), init:stop().
+          '
+          ;;
+        bicameral)
+          run_erl '
+            G = {chamber, <<"Guardian">>, <<"approve">>, <<"t1">>, 0},
+            S = {chamber, <<"Sentinel">>, <<"approve">>, <<"t2">>, 0},
+            C = {chamber, <<"Cortex">>, <<"approve">>, <<"t3">>, 0},
+            Init = cepaf_gleam@ui@lustre@bicameral:init(),
+            M = cepaf_gleam@ui@lustre@bicameral:update(Init, {state_loaded, G, S, C, 14, 0}),
+            io:put_chars(cepaf_gleam@ui@tui@bicameral_view:render(M)),
+            io:nl(), init:stop().
+          '
+          ;;
+        evolution)
+          run_erl '
+            Init = cepaf_gleam@ui@lustre@evolution:init(),
+            M = cepaf_gleam@ui@lustre@evolution:update(Init, {metrics_loaded, 2.67, 42, 0.03, 0.95, 88, <<"2026-09-06T18:20:00Z">>}),
+            io:put_chars(cepaf_gleam@ui@tui@evolution_view:render(M)),
+            io:nl(), init:stop().
+          '
+          ;;
+        preflight)
+          run_erl '
+            Result = cepaf_gleam@testing@flight_check:run_preflight(),
+            Checks = erlang:element(2, Result),
+            Passed = erlang:element(3, Result),
+            io:format("=== PREFLIGHT FLIGHT CHECK (Passed: ~p) ===~n~n", [Passed]),
+            lists:foreach(fun(C) ->
+              Name = erlang:element(2, C),
+              Status = erlang:element(4, C),
+              io:format("  [~s] ~-32s : ~p~n", [case Status of check_passed -> "PASS"; _ -> "SKIP" end, Name, Status])
+            end, Checks),
+            io:nl(), init:stop().
+          '
+          ;;
+        page)
+          CUR_PAGE="${PAGES[$PAGE_IDX]}"
+          run_erl "
+            TargetPage = ${CUR_PAGE},
+            Ctx = {render_context, TargetPage, healthy, [], true},
+            io:put_chars(cepaf_gleam@ui@tui@renderer:render_frame(Ctx)),
+            io:nl(), init:stop().
+          "
+          ;;
+        *)
+          VIEW_MODE="dashboard"
+          continue
+          ;;
+      esac
+
+      if [ "$ONCE" -eq 1 ]; then
+        break
+      fi
+
+      read -t "$INTERVAL" -n 1 KEY || true
+      case "${KEY:-}" in
+        1) VIEW_MODE="split" ;;
+        2) VIEW_MODE="dashboard" ;;
+        3) VIEW_MODE="auth" ;;
+        4) VIEW_MODE="stream" ;;
+        5) VIEW_MODE="biomorphic" ;;
+        6) VIEW_MODE="homeostasis" ;;
+        7) VIEW_MODE="bicameral" ;;
+        8) VIEW_MODE="evolution" ;;
+        9) VIEW_MODE="preflight" ;;
+        n|N)
+          VIEW_MODE="page"
+          PAGE_IDX=$(( (PAGE_IDX + 1) % ${#PAGES[@]} ))
+          ;;
+        p|P)
+          VIEW_MODE="page"
+          PAGE_IDX=$(( (PAGE_IDX - 1 + ${#PAGES[@]}) % ${#PAGES[@]} ))
+          ;;
+        q|Q) break ;;
+        *) ;;
+      esac
+    done
+    ;;
+
   auth)
     run_erl '
       Output = cepaf_gleam@ui@tui@auth_view:render(
