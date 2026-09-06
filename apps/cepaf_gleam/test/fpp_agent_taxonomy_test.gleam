@@ -1,9 +1,9 @@
 //// =============================================================================
 //// [UOS-C3I-AGENT-TEST] C3I SDLC, SRE & Verification Aerospace Agent Test Suite
 //// =============================================================================
-//// Comprehensive formal tests for the 48 C3I Sovereign Aerospace Agent Types:
-//// 1. All 48 canonical agent types exist across SDLC (16), SRE (16), and Verification (16)
-//// 2. DMC Base-ID window disjointness proof across all 48 agent types [0x1000..0x1C00)
+//// Comprehensive formal tests for the 72 C3I Sovereign Aerospace Agent Types:
+//// 1. All 72 canonical agent types exist across SDLC (16), SRE (16), and Verification (16)
+//// 2. DMC Base-ID window disjointness proof across all 72 agent types [0x1000..0x1C00)
 //// 3. Full HSM initialization and active path verification
 //// 4. Hierarchical signal dispatch with LCA transition sequencing
 //// 5. Telemetry sampling and TCM 13D vector conservation
@@ -16,14 +16,16 @@ import cepaf_gleam/fpp/agent_factory.{
   execute_agent_intent, heartbeat, instantiate_agent,
 }
 import cepaf_gleam/fpp/agent_taxonomy.{
-  AvionicsTelemetry, CognitiveOodaIntent, ConstitutionalGuardian,
-  CrashWalReplay, DeterministicFlightController,
-  DeterministicReductionScheduler, HardwareDriveInterlock, LocklessHamtStorage,
-  MissionPhaseHsm, SdlcArchitectureSynthesizer, SdlcContractCodeGenerator,
-  SreChaosFaultInjector, SreLyapunovTrendDetector, SreSentinel, SubstrateReactor,
-  VerificationChecklistAuditor, VerificationZeroMudaPurityEnforcer,
-  all_agent_types, encode_agent_catalog_json, find_agent_type_spec, sdlc_agents,
-  sre_agents, verification_agents, verify_agent_base_id_disjointness,
+  AvionicsTelemetry, CognitiveOodaIntent, ConstitutionalGuardian, CrashWalReplay,
+  DeterministicFlightController, DeterministicReductionScheduler,
+  HardwareDriveInterlock, LocklessHamtStorage, MissionPhaseHsm,
+  SdlcArchitectureSynthesizer, SdlcContractCodeGenerator,
+  SdlcGraphWorkflowOrchestrator, SreChaosFaultInjector,
+  SreLyapunovTrendDetector, SreRunnerLifecycleHookSupervisor, SreSentinel,
+  SubstrateReactor, VerificationAdkEvalBenchmark, VerificationChecklistAuditor,
+  VerificationZeroMudaPurityEnforcer, all_agent_types, encode_agent_catalog_json,
+  find_agent_type_spec, sdlc_agents, sre_agents, verification_agents,
+  verify_agent_base_id_disjointness,
 }
 import cepaf_gleam/fpp/dmc_tcm.{
   hard_denied_system_os_serial, verify_tcm_13d_conservation,
@@ -35,22 +37,22 @@ import gleam/list
 import gleam/string
 import gleeunit/should
 
-pub fn all_48_agent_types_exist_test() {
+pub fn all_72_agent_types_exist_test() {
   let specs = all_agent_types()
   list.length(specs)
-  |> should.equal(48)
+  |> should.equal(72)
 
   // Verify 16 SDLC Agents
   list.length(sdlc_agents())
-  |> should.equal(16)
+  |> should.equal(24)
 
   // Verify 16 SRE Agents
   list.length(sre_agents())
-  |> should.equal(16)
+  |> should.equal(24)
 
   // Verify 16 Verification Agents
   list.length(verification_agents())
-  |> should.equal(16)
+  |> should.equal(24)
 
   // Check sample representatives from each pillar
   find_agent_type_spec(ConstitutionalGuardian)
@@ -86,13 +88,22 @@ pub fn all_48_agent_types_exist_test() {
   find_agent_type_spec(VerificationChecklistAuditor)
   |> should.be_ok
 
+  find_agent_type_spec(SdlcGraphWorkflowOrchestrator)
+  |> should.be_ok
+
+  find_agent_type_spec(SreRunnerLifecycleHookSupervisor)
+  |> should.be_ok
+
+  find_agent_type_spec(VerificationAdkEvalBenchmark)
+  |> should.be_ok
+
   find_agent_type_spec(VerificationZeroMudaPurityEnforcer)
   |> should.be_ok
 }
 
 pub fn base_id_window_disjointness_dmc_test() {
   let specs = all_agent_types()
-  // Prove that all 48 agent base-ID intervals [B_i, B_i + 64) are pairwise disjoint
+  // Prove that all 72 agent base-ID intervals [B_i, B_i + 64) are pairwise disjoint
   verify_agent_base_id_disjointness(specs)
   |> should.equal(True)
 }
@@ -307,16 +318,16 @@ pub fn agent_json_catalog_serialization_test() {
   let specs = all_agent_types()
   let catalog_json = encode_agent_catalog_json(specs)
 
-  string.contains(catalog_json, "\"total_agent_types\":48")
+  string.contains(catalog_json, "\"total_agent_types\":72")
   |> should.equal(True)
 
-  string.contains(catalog_json, "\"sdlc_agents_count\":16")
+  string.contains(catalog_json, "\"sdlc_agents_count\":24")
   |> should.equal(True)
 
-  string.contains(catalog_json, "\"sre_agents_count\":16")
+  string.contains(catalog_json, "\"sre_agents_count\":24")
   |> should.equal(True)
 
-  string.contains(catalog_json, "\"verification_agents_count\":16")
+  string.contains(catalog_json, "\"verification_agents_count\":24")
   |> should.equal(True)
 
   string.contains(catalog_json, "\"SC-FPP-AGENT-TAXONOMY-001\"")

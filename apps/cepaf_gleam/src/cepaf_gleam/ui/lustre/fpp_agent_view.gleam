@@ -161,7 +161,7 @@ fn render_kpis(specs: List(AgentTypeSpec), dmc_verified: Bool) -> Element(Msg) {
     render_kpi_card(
       "CANONICAL AGENT TYPES",
       int.to_string(total_agents) <> " Types",
-      "16 SDLC | 16 SRE | 16 Verification",
+      "24 SDLC | 24 SRE | 24 Verification",
       "border-amber-500/40 bg-gray-900/80 text-amber-400",
     ),
     render_kpi_card(
@@ -170,7 +170,7 @@ fn render_kpis(specs: List(AgentTypeSpec), dmc_verified: Bool) -> Element(Msg) {
         True -> "100% DISJOINT"
         False -> "COLLISION DETECTED"
       },
-      "[0x1000, 0x1C00) Span=64",
+      "[0x1000, 0x2200) Span=64",
       "border-emerald-500/40 bg-gray-900/80 text-emerald-400",
     ),
     render_kpi_card(
@@ -224,7 +224,7 @@ fn render_kpi_card(
 
 fn render_tab_nav(active_tab: String) -> Element(Msg) {
   let tabs = [
-    #("catalog", "C3I Agent Catalog (48 Types)"),
+    #("catalog", "C3I Agent Catalog (72 Types)"),
     #("matrix", "Multi-Dimensional Matrix (6D)"),
     #("simulator", "HSM & Intent Simulator"),
     #("checklist", "18/18 Verification Checklist"),
@@ -288,7 +288,7 @@ fn render_catalog_view(
                 [attribute.class("font-bold text-amber-400 font-mono text-sm")],
                 [
                   html.text(
-                    "C3I SOVEREIGN AEROSPACE AGENT CATALOG (48 CANONICAL TYPES)",
+                    "C3I SOVEREIGN AEROSPACE AGENT CATALOG (72 CANONICAL TYPES)",
                   ),
                 ],
               ),
@@ -309,7 +309,7 @@ fn render_catalog_view(
                   ),
                   event.on_click(SetFilterPillar("ALL")),
                 ],
-                [html.text("All (48)")],
+                [html.text("All (72)")],
               ),
               html.button(
                 [
@@ -324,7 +324,7 @@ fn render_catalog_view(
                   ),
                   event.on_click(SetFilterPillar("SDLC")),
                 ],
-                [html.text("C3I-SDLC (16)")],
+                [html.text("C3I-SDLC (24)")],
               ),
               html.button(
                 [
@@ -339,7 +339,7 @@ fn render_catalog_view(
                   ),
                   event.on_click(SetFilterPillar("SRE")),
                 ],
-                [html.text("C3I-SRE (16)")],
+                [html.text("C3I-SRE (24)")],
               ),
               html.button(
                 [
@@ -354,7 +354,7 @@ fn render_catalog_view(
                   ),
                   event.on_click(SetFilterPillar("VERIFICATION")),
                 ],
-                [html.text("C3I-VERIFY (16)")],
+                [html.text("C3I-VERIFY (24)")],
               ),
             ]),
           ],

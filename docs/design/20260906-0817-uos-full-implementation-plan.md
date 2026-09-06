@@ -387,6 +387,16 @@ Use existing source registers first. E04/E05 extend exact revisions, source loca
 | Deployment/schema/native upgrade regressions | Reproducible release, canary criteria and exercised rollback before cutover | R01 |
 | Evidence/media expires or cannot be retrieved | Retention/digest/retrieval checks; invalidate affected admission | V01/R02/R03 |
 
+## Validate the plan package itself
+
+Run from /home/an/NAS-setup/uos:
+
+```text
+ocaml tools/validate_implementation_plan.ml
+```
+
+This existing first-party validator checks task/requirement IDs, the dependency DAG, file ownership and planned creations, JSON fixture parity between plans and backlog, diagram parity, document links/checkpoints, journal sections and the selected original OCaml digests. It reads chrony for timestamp provenance and writes the linked plan receipt. It executes zero implementation acceptance cases. A green plan metadata receipt does not admit the product.
+
 ## Admission and completion
 
 A release requires every selected source/test obligation accounted for, all required upstream clauses/API profiles implemented and executed, all L0-L9 laws bound to actual behavior, all actor roles/domain edges observed, all final-candidate page/component cycles passed, required skill/agent integrations healthy, no prohibited ingestion/storage operation, fresh formal/runtime keys, authentic independent review, and complete durable provenance. R02 is the only full admission gate; a work item or partial profile may be verified without claiming the whole programme complete.
@@ -446,4 +456,3 @@ R03 publishes the timestamped matrices, source register, native comparison, mode
 | Governance/Jujutsu | CHK-18-DOCS | Timestamped plans, machine backlog, thirteen-section journal and handover continuity. |
 
 </details>
-
