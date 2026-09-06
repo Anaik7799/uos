@@ -1,12 +1,17 @@
 import cepaf_gleam/api/denotational_intent_router
 import cepaf_gleam/ui/lustre/biosemiotics_radar
+import cepaf_gleam/ui/lustre/cybernetic_brain_matrix
 import cepaf_gleam/ui/lustre/feature_tracker_view
-import cepaf_gleam/ui/lustre/knowledge_explorer
+import cepaf_gleam/ui/lustre/gospel_z3_parity_explorer
+import cepaf_gleam/ui/lustre/hyperdimensional_zk_hologram
 import cepaf_gleam/ui/lustre/km_sheaf_traversal
+import cepaf_gleam/ui/lustre/knowledge_explorer
 import cepaf_gleam/ui/lustre/navigational_omnisearch
+import cepaf_gleam/ui/lustre/omni_modal_console
 import cepaf_gleam/ui/lustre/pi_startup_visualizer
 import cepaf_gleam/ui/lustre/recursive_patrol_hud
 import cepaf_gleam/ui/lustre/sovereign_tensor_cockpit
+import cepaf_gleam/ui/lustre/sre_cybernetic_immune_engine
 import cepaf_gleam/ui/lustre/sre_resilience_matrix
 import cepaf_gleam/ui/lustre/tensor_fractal_atlas
 import cepaf_gleam/ui/lustre/ux_dx_cx_auditor
@@ -462,6 +467,76 @@ pub fn main() {
         |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
         |> response.prepend_header("content-type", "text/html")
       }
+      ["zk-hologram"] -> {
+        let hologram = hyperdimensional_zk_hologram.build_canonical_hologram()
+        let el = hyperdimensional_zk_hologram.render_zk_hologram_view(hologram)
+        let content_html = element.to_string(el)
+        let page =
+          render_lustre_page(
+            "Hyperdimensional ZK Hologram",
+            "zk-hologram",
+            content_html,
+          )
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["sre-immune"] -> {
+        let engine = sre_cybernetic_immune_engine.build_canonical_engine()
+        let el = sre_cybernetic_immune_engine.render_sre_immune_view(engine)
+        let content_html = element.to_string(el)
+        let page =
+          render_lustre_page(
+            "SRE Cybernetic Immune Engine",
+            "sre-immune",
+            content_html,
+          )
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["omni-console"] -> {
+        let console = omni_modal_console.build_canonical_console()
+        let el = omni_modal_console.render_omni_console_view(console)
+        let content_html = element.to_string(el)
+        let page =
+          render_lustre_page(
+            "Omni-Modal Accessibility Console",
+            "omni-console",
+            content_html,
+          )
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["gospel-explorer"] -> {
+        let explorer = gospel_z3_parity_explorer.build_canonical_explorer()
+        let el = gospel_z3_parity_explorer.render_gospel_explorer_view(explorer)
+        let content_html = element.to_string(el)
+        let page =
+          render_lustre_page(
+            "Gospel & Z3 Formal Parity Explorer",
+            "gospel-explorer",
+            content_html,
+          )
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["brain-matrix"] -> {
+        let brain = cybernetic_brain_matrix.build_canonical_brain()
+        let el = cybernetic_brain_matrix.render_cybernetic_brain_view(brain)
+        let content_html = element.to_string(el)
+        let page =
+          render_lustre_page(
+            "Holistic Cybernetic Brain Matrix",
+            "brain-matrix",
+            content_html,
+          )
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
       ["testing", ..rest] -> {
         let relative_file = case rest {
           [] ->
@@ -826,6 +901,26 @@ fn render_nav(active: String) -> String {
     True -> "class='active'"
     False -> ""
   } <> " style='color:#f59e0b;font-weight:bold'>Sovereign Tensor Cockpit</a>
+    <a href='/zk-hologram' " <> case active == "zk-hologram" {
+    True -> "class='active'"
+    False -> ""
+  } <> " style='color:#ec4899;font-weight:bold'>ZK Knowledge Hologram</a>
+    <a href='/sre-immune' " <> case active == "sre-immune" {
+    True -> "class='active'"
+    False -> ""
+  } <> " style='color:#10b981;font-weight:bold'>Cybernetic Immune Engine</a>
+    <a href='/omni-console' " <> case active == "omni-console" {
+    True -> "class='active'"
+    False -> ""
+  } <> " style='color:#38bdf8;font-weight:bold'>Omni-Modal Console</a>
+    <a href='/gospel-explorer' " <> case active == "gospel-explorer" {
+    True -> "class='active'"
+    False -> ""
+  } <> " style='color:#eab308;font-weight:bold'>Gospel Formal Explorer</a>
+    <a href='/brain-matrix' " <> case active == "brain-matrix" {
+    True -> "class='active'"
+    False -> ""
+  } <> " style='color:#8b5cf6;font-weight:bold'>Living Brain Matrix</a>
 
     <div class='sep'></div>
     <div class='nav-section-title'>REPOSITORY &amp; GOV</div>
@@ -1042,11 +1137,18 @@ pub fn render_document_view(
     .markdown-body hr { border: 0; height: 1px; background: #30363d; margin: 1.5rem 0; }
     .markdown-body a { color: #58a6ff; text-decoration: none; }
     .markdown-body a:hover { text-decoration: underline; }
+    .document-nav { width: 250px; flex-shrink: 0; }
+    .document-nav .nav { width: 100%; min-height: 100%; }
+    .mobile-nav-toggle { display: none; }
     .wiki-tag { display: inline-block; padding: 0.15rem 0.45rem; background: #1f6feb22; border: 1px solid #1f6feb; border-radius: 4px; color: #58a6ff; font-weight: 600; font-size: 0.82rem; text-decoration: none; margin: 0 0.15rem; }
     .zk-tag { display: inline-block; padding: 0.15rem 0.45rem; background: #23863622; border: 1px solid #238636; border-radius: 4px; color: #3fb950; font-weight: 600; font-size: 0.82rem; text-decoration: none; margin: 0 0.15rem; }
     #raw-content { display: none; margin: 0; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-word; color: #e6edf3; }
     @media (max-width: 700px) {
       .shell { display: block; }
+      .document-nav { width: 100%; }
+      .mobile-nav-toggle { display: block; width: 100%; min-height: 44px; padding: 0.75rem 1rem; border: 1px solid #30363d; background: #161b22; color: #c9d1d9; text-align: left; cursor: pointer; }
+      .document-nav .nav { display: none; }
+      .document-nav.nav-expanded .nav { display: block; }
       .nav { width: 100%; border-right: 0; border-bottom: 1px solid #30363d; }
       .main { min-width: 0; max-width: 100%; padding: 1rem; }
       .top-bar, .path-bar { flex-direction: column; align-items: stretch; gap: 0.75rem; }
@@ -1061,9 +1163,9 @@ pub fn render_document_view(
   </style>
 </head>
 <body>
-  <div class='shell'>" <> render_nav(active) <> "<main class='main'>" <> render_breadcrumbs(
-    file_path,
-  ) <> "<div class='top-bar'>
+  <div class='shell'><div class='document-nav' id='document-navigation'><button class='mobile-nav-toggle' aria-expanded='false' aria-controls='document-nav-content' onclick='toggleNavigation()'>Navigation</button><div id='document-nav-content'>" <> render_nav(
+    active,
+  ) <> "</div></div><main class='main'>" <> render_breadcrumbs(file_path) <> "<div class='top-bar'>
         <div>
           <a href='http://nas-1.tail55d152.ts.net:4100/" <> file_path <> "' class='badge badge-tailscale' style='text-decoration:none'>Tailnet: http://nas-1.tail55d152.ts.net:4100/" <> file_path <> "</a>
           <span class='badge badge-fractal'>SIL-6 / L0-L9 Fractal</span>
@@ -1099,6 +1201,11 @@ pub fn render_document_view(
       </div>" <> render_footer() <> "</main>
   </div>
   <script>
+    function toggleNavigation() {
+      var navigation = document.getElementById('document-navigation');
+      var expanded = navigation.classList.toggle('nav-expanded');
+      navigation.querySelector('.mobile-nav-toggle').setAttribute('aria-expanded', expanded ? 'true' : 'false');
+    }
     function toggleView() {
       var rendered = document.getElementById('rendered-content');
       var raw = document.getElementById('raw-content');
