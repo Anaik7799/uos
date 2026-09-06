@@ -1,37 +1,80 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "AcceptanceTestReceipt",
+  "$id": "https://uos.invalid/schemas/acceptance-receipt-v2.json",
+  "title": "UOS Acceptance Receipt v2",
   "type": "object",
-  "required": [
-    "receipt_id",
-    "task_id",
-    "operation",
-    "timestamp_utc",
-    "exit_code",
-    "status",
-    "passing_tests",
-    "children_reaped",
-    "candidate"
-  ],
+  "additionalProperties": false,
+  "required": ["schema", "receipt_id", "task_id", "case_id", "operation", "observed_at_utc", "manifest", "candidate", "sources", "limits", "states", "observation", "assertion", "timings", "system_admission_granted"],
   "properties": {
-    "receipt_id": { "type": "string" },
-    "task_id": { "type": "string" },
-    "operation": { "type": "string" },
-    "timestamp_utc": { "type": "string" },
-    "exit_code": { "type": "integer" },
-    "status": { "type": "string", "enum": ["PASS", "FAIL", "ERROR"] },
-    "passing_tests": { "type": "integer" },
-    "children_reaped": { "type": "boolean" },
+    "schema": {"const": "uos.acceptance-receipt.v2"},
+    "receipt_id": {"type": "string", "minLength": 1, "maxLength": 256},
+    "task_id": {"type": "string", "minLength": 1, "maxLength": 96},
+    "case_id": {"type": "string", "minLength": 1, "maxLength": 128},
+    "operation": {"type": "string", "pattern": "^[A-Za-z0-9_-]+\\.[A-Za-z0-9_.-]+$"},
+    "observed_at_utc": {"type": "string", "format": "date-time"},
+    "manifest": {"$ref": "#/$defs/binding"},
+    "candidate": {"$ref": "#/$defs/candidate"},
+    "sources": {"type": "array", "minItems": 5, "maxItems": 16, "items": {"$ref": "#/$defs/binding"}},
+    "limits": {"$ref": "#/$defs/limits"},
+    "states": {"$ref": "#/$defs/states"},
+    "observation": {"$ref": "#/$defs/observation"},
+    "assertion": {"$ref": "#/$defs/assertion"},
+    "timings": {"$ref": "#/$defs/timings"},
+    "system_admission_granted": {"const": false}
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "binding": {
+      "type": "object", "additionalProperties": false, "required": ["path", "sha256"],
+      "properties": {"path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha256"}}
+    },
     "candidate": {
-      "type": "object",
-      "required": ["change_id", "commit_id"],
+      "type": "object", "additionalProperties": false, "required": ["change_id", "commit_id", "workspace"],
+      "properties": {"change_id": {"type": "string", "minLength": 32}, "commit_id": {"type": "string", "pattern": "^[0-9a-f]{40}$"}, "workspace": {"type": "string", "minLength": 1}}
+    },
+    "limits": {
+      "type": "object", "additionalProperties": false, "required": ["timeout_ms", "stdout_bytes", "stderr_bytes", "term_grace_ms"],
+      "properties": {"timeout_ms": {"type": "integer", "minimum": 0}, "stdout_bytes": {"type": "integer", "minimum": 0}, "stderr_bytes": {"type": "integer", "minimum": 0}, "term_grace_ms": {"type": "integer", "minimum": 0}}
+    },
+    "states": {
+      "type": "object", "additionalProperties": false, "required": ["built", "executed", "passed"],
+      "properties": {"built": {"type": "boolean"}, "executed": {"type": "boolean"}, "passed": {"type": "boolean"}}
+    },
+    "observation": {
+      "type": "object", "additionalProperties": false,
+      "required": ["operation_supported", "adapter_registered", "status", "exit_code", "passing_tests", "children_reaped", "timed_out", "stdout_overflow", "stderr_overflow", "stdout", "stderr", "stdout_sha256", "stderr_sha256", "raw_json", "raw_json_sha256", "duration_ms"],
       "properties": {
-        "change_id": { "type": "string" },
-        "commit_id": { "type": "string" }
+        "operation_supported": {"type": "boolean"}, "adapter_registered": {"type": "boolean"},
+        "status": {"enum": ["PASS", "FAIL", "ERROR"]}, "exit_code": {"type": "integer"},
+        "passing_tests": {"type": "integer", "minimum": 0}, "children_reaped": {"type": "boolean"},
+        "timed_out": {"type": "boolean"}, "stdout_overflow": {"type": "boolean"}, "stderr_overflow": {"type": "boolean"},
+        "stdout": {"type": "string", "maxLength": 131072}, "stderr": {"type": "string", "maxLength": 65536},
+        "stdout_sha256": {"$ref": "#/$defs/sha256"}, "stderr_sha256": {"$ref": "#/$defs/sha256"},
+        "raw_json": {"type": ["string", "null"], "maxLength": 131072}, "raw_json_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "duration_ms": {"type": "number", "minimum": 0}
       }
     },
-    "duration_ms": { "type": "number" },
-    "observations": { "type": "object" }
-  },
-  "additionalProperties": true
+    "assertion": {
+      "type": "object", "additionalProperties": false, "required": ["passed", "mismatches"],
+      "properties": {"passed": {"type": "boolean"}, "mismatches": {"type": "array", "items": {"$ref": "#/$defs/mismatch"}}}
+    },
+    "mismatch": {
+      "type": "object", "additionalProperties": false,
+      "required": ["path", "reason", "expected_json", "expected_sha256", "expected_truncated", "actual_json", "actual_sha256", "actual_truncated"],
+      "properties": {
+        "path": {"type": "string", "maxLength": 512},
+        "reason": {"type": "string", "maxLength": 1024},
+        "expected_json": {"type": ["string", "null"], "maxLength": 4096},
+        "expected_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "expected_truncated": {"type": "boolean"},
+        "actual_json": {"type": ["string", "null"], "maxLength": 4096},
+        "actual_sha256": {"anyOf": [{"$ref": "#/$defs/sha256"}, {"type": "null"}]},
+        "actual_truncated": {"type": "boolean"}
+      }
+    },
+    "timings": {
+      "type": "object", "additionalProperties": false, "required": ["operation_ms", "assertion_ms", "receipt_atomic_write_calibration_ms"],
+      "properties": {"operation_ms": {"type": "number", "minimum": 0}, "assertion_ms": {"type": "number", "minimum": 0}, "receipt_atomic_write_calibration_ms": {"type": "number", "minimum": 0}}
+    }
+  }
 }
