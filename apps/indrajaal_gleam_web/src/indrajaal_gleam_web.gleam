@@ -1,4 +1,5 @@
 import cepaf_gleam/api/denotational_intent_router
+import cepaf_gleam/fpp/agent_taxonomy
 import cepaf_gleam/fpp/algebraic_atlas
 import cepaf_gleam/fpp/dictionary
 import cepaf_gleam/fpp/dmc_tcm
@@ -8,6 +9,7 @@ import cepaf_gleam/fpp/topology
 import cepaf_gleam/ui/lustre/biosemiotics_radar
 import cepaf_gleam/ui/lustre/cybernetic_brain_matrix
 import cepaf_gleam/ui/lustre/feature_tracker_view
+import cepaf_gleam/ui/lustre/fpp_agent_view
 import cepaf_gleam/ui/lustre/fpp_atlas_view
 import cepaf_gleam/ui/lustre/fpp_topology_view
 import cepaf_gleam/ui/lustre/gospel_z3_parity_explorer
@@ -286,6 +288,14 @@ pub fn main() {
         |> response.prepend_header("content-type", "application/json")
         |> response.prepend_header("access-control-allow-origin", "*")
       }
+      ["api", "fpp", "agents"] -> {
+        let specs = agent_taxonomy.all_agent_types()
+        let json_body = agent_taxonomy.encode_agent_catalog_json(specs)
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
       ["api", "fpp", "intent"] -> {
         let serial = case req.query {
           Some(q) ->
@@ -355,6 +365,19 @@ pub fn main() {
           render_lustre_page(
             "NASA JPL F Prime 5-Tier Algebraic Atlas & Living Ontology",
             "fpp-atlas",
+            content_html,
+          )
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["fpp-agents"] -> {
+        let el = fpp_agent_view.view(fpp_agent_view.init())
+        let content_html = element.to_string(el)
+        let page =
+          render_lustre_page(
+            "NASA JPL F Prime Aerospace Agent Cockpit",
+            "fpp-agents",
             content_html,
           )
         response.new(200)
@@ -931,6 +954,10 @@ fn render_nav(active: String) -> String {
     True -> "class='active'"
     False -> ""
   } <> " style='color:#f59e0b;font-weight:bold'>🌌 F Prime Algebraic Atlas</a>
+    <a href='/fpp-agents' " <> case active == "fpp-agents" {
+    True -> "class='active'"
+    False -> ""
+  } <> " style='color:#a855f7;font-weight:bold'>🤖 F Prime Aerospace Agents</a>
 
     <div class='sep'></div>
     <div class='nav-section-title'>KNOWLEDGE BASE</div>

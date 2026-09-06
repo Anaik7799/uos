@@ -82,11 +82,11 @@ let ()=
   assert_unique "Zenoh feature family"(List.map(str "id")families);
   assert_unique "Zenoh candidate"(List.map(str "id")candidates);
   assert_unique "Zenoh flag"(List.map to_string(list "feature_flags_observed_1_9" programme));
-  let check_refs rows=List.iter(fun r->List.iter(fun id->
-    if not(List.mem(to_string id)source_ids)then failwith("unresolved Zenoh source: "^to_string id))rows) in
-  List.iter(fun r->check_refs(list "source_ids" r)[r])candidates;
-  check_refs(list "source_ids" programme)[programme];
-  check_refs(list "benchmark_source_ids" programme)[programme];
+  let check_refs refs=List.iter(fun id->
+    if not(List.mem(to_string id)source_ids)then failwith("unresolved Zenoh source: "^to_string id))refs in
+  List.iter(fun r->check_refs(list "source_ids" r))candidates;
+  check_refs(list "source_ids" programme);
+  check_refs(list "benchmark_source_ids" programme);
   List.iter(fun field->if member field programme<>`Bool false then failwith("review cannot certify "^field))
     ["full_upstream_api_census_complete";"full_implementation_complete";"native_benchmarks_executed"];
   List.iter(fun row->

@@ -1,9 +1,9 @@
 {
   "schema": "uos.agy-handover-source-receipt.v1",
-  "clock_utc": "2026-09-06T07:31:18Z",
+  "clock_utc": "2026-09-06T07:32:22Z",
   "host_sync": "Reference ID    : B97DBE7B (ntp-nts-3.ps5.canonical.com)\nStratum         : 3\nRef time (UTC)  : Sun Sep 06 06:39:05 2026\nSystem time     : 0.001856710 seconds slow of NTP time\nLast offset     : -0.001074504 seconds\nRMS offset      : 0.000726469 seconds\nFrequency       : 3.482 ppm slow\nResidual freq   : -0.028 ppm\nSkew            : 0.190 ppm\nRoot delay      : 0.031077361 seconds\nRoot dispersion : 0.001620074 seconds\nUpdate interval : 1030.9 seconds\nLeap status     : Normal",
   "host_sync_receipt_time": "2026-09-06T06:40:33Z",
-  "candidate_before_receipt": "pqyovlpotsprknmxyonkouymtvzrysux 487b14ea33a102a25b9004ad3253336b8e123b46",
+  "candidate_before_receipt": "qwpnnskvquqpqwvoqoltqqowxtnylwqv ab1e98d759df42d0780c3ffd0a99ab4b9e13a0e5",
   "status": "PROMPT_AND_REVIEW_DELIVERED_IMPLEMENTATION_PROGRAMME_OPEN",
   "source_writers_quiesced": false,
   "external_code_ingested": false,
@@ -1116,8 +1116,8 @@
     {
       "path": "docs/zk/20260906-0606-agy-handover-understanding-and-actor-ecology-plan.md",
       "resolved_path": "/home/an/NAS-setup/uos/docs/zk/20260906-0606-agy-handover-understanding-and-actor-ecology-plan.md",
-      "bytes": 35183,
-      "sha256": "a282a46b2d015b84a006419faf85bf29ff57d2c61e15a236587449b838f63d3a",
+      "bytes": 35239,
+      "sha256": "e95aeabf1fc67332cc78ce4b33dabcde14be9703357cb42dc702e9eb2a1347f4",
       "stable_during_metadata_capture": true
     },
     {
@@ -1159,8 +1159,8 @@
   "publisher": {
     "path": "tests/web_quality/20260906-0606-publish-handover.ml",
     "resolved_path": "/home/an/NAS-setup/uos/tests/web_quality/20260906-0606-publish-handover.ml",
-    "bytes": 11565,
-    "sha256": "b141f19adea02b3a95466f3965f130cc8508847ada65d2b7c097d4b36cb2f3fd",
+    "bytes": 11522,
+    "sha256": "2081d4c3a8953b96066fbbd0d1723560ac005925841e5d0f313598f892ec8189",
     "stable_during_metadata_capture": true
   },
   "publisher_input": {

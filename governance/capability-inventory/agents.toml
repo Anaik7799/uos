@@ -333,3 +333,152 @@ name = "zenoh-mesh-analyzer"
 source = "c3i"
 state = "classified"
 
+# =============================================================================
+# NASA JPL F Prime / FPP Aerospace Agent Types (16 Types across L0..L9)
+# =============================================================================
+
+[[agent]]
+name = "constitutional-guardian-agent"
+source = "fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L0"
+base_id = 4096
+id_span = 64
+hsm = "GuardianHSM"
+
+[[agent]]
+name = "deterministic-flight-controller-agent"
+source = "fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L1"
+base_id = 4160
+id_span = 64
+hsm = "FlightControllerHSM"
+
+[[agent]]
+name = "avionics-telemetry-agent"
+source = "fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L2"
+base_id = 4224
+id_span = 64
+hsm = "TelemetryHSM"
+
+[[agent]]
+name = "parameter-database-agent"
+source = "fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L2"
+base_id = 4288
+id_span = 64
+hsm = "PrmDbHSM"
+
+[[agent]]
+name = "mission-phase-hsm-agent"
+source = "fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L3"
+base_id = 4352
+id_span = 64
+hsm = "MissionPhaseHSM"
+
+[[agent]]
+name = "sre-sentinel-agent"
+source = "fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L4"
+base_id = 4416
+id_span = 64
+hsm = "SreSentinelHSM"
+
+[[agent]]
+name = "cybernetic-immune-agent"
+source = "fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L4"
+base_id = 4480
+id_span = 64
+hsm = "CyberneticImmuneHSM"
+
+[[agent]]
+name = "cognitive-ooda-intent-agent"
+source = "fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L5"
+base_id = 4544
+id_span = 64
+hsm = "CognitiveOodaHSM"
+
+[[agent]]
+name = "swarm-mesh-agent"
+source = "fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L6"
+base_id = 4608
+id_span = 64
+hsm = "SwarmMeshHSM"
+
+[[agent]]
+name = "ground-gateway-agent"
+source = "fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L7"
+base_id = 4672
+id_span = 64
+hsm = "GroundGatewayHSM"
+
+[[agent]]
+name = "living-meta-evolution-agent"
+source = "fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L9"
+base_id = 4736
+id_span = 64
+hsm = "LivingMetaEvolutionHSM"
+
+[[agent]]
+name = "formal-oracle-agent"
+source = "fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L0"
+base_id = 4800
+id_span = 64
+hsm = "FormalOracleHSM"
+
+[[agent]]
+name = "cockpit-telemetry-agent"
+source = "fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L2"
+base_id = 4864
+id_span = 64
+hsm = "CockpitTelemetryHSM"
+
+[[agent]]
+name = "payload-science-agent"
+source = "fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L3"
+base_id = 4928
+id_span = 64
+hsm = "PayloadScienceHSM"
+
+[[agent]]
+name = "storage-custodian-agent"
+source = "fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L1"
+base_id = 4992
+id_span = 64
+hsm = "StorageCustodianHSM"
+
+[[agent]]
+name = "km-sync-agent"
+source = "fpp_flight"
+state = "verified_admitted"
+fractal_layer = "L5"
+base_id = 5056
+id_span = 64
+hsm = "KmSyncHSM"
+
+

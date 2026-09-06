@@ -118,7 +118,7 @@ Upstream references used for this extension are [Zenoh 1.8.0 API](https://docs.r
 
 The benchmark plan compares as-found and common-version builds separately, with the same hardware, topology, workload, QoS and authentication. It measures boundary cost, independently observed delivery, query round trip and durable command acknowledgment separately, with raw samples, repeated runs, justified tail percentiles, throughput/goodput, losses, CPU/memory and BEAM scheduler/mailbox impact. Test fan-out, concurrency, sizes, batching, shared memory, overload and reconnect. Use an upstream Rust control to isolate wrapper overhead. Choose a Pareto-efficient candidate only after correctness and safety gates pass; no performance winner is assigned now.
 
-Concurrent UOS FPP work is visible in the shared Jujutsu working copy, including dictionary/packetizer/parameter/topology modules and new tests. It was not authored or verified by this handover review. Reconcile the current candidate and test receipts at UOS-H01 before implementing duplicate work or promoting older inspection conclusions to current status.
+Concurrent UOS FPP work is visible in the shared Jujutsu history and working copy, including dictionary/packetizer/parameter/topology modules and new FPP DMC/TCM, intent, ontology, atlas and UI tests. It was not authored or verified by this handover review. Reconcile the current candidate and test receipts at UOS-H01 before implementing duplicate work or promoting older inspection conclusions to current status.
 
 ## Proposed actor ecology
 
