@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # DMC & TCM Behavioral Rule Mandate
 
 - **Authority:** `UOS-CANONICAL-AGENT-POLICY`

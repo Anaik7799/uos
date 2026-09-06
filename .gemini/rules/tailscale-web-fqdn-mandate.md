@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # Tailscale FQDN Web Navigation & Ingress Contract
 
 - **Contract ID**: `SC-TAILSCALE-WEB-001`

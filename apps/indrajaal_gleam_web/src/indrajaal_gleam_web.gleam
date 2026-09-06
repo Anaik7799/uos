@@ -3,6 +3,11 @@ import cepaf_gleam/ui/lustre/feature_tracker_view
 import cepaf_gleam/ui/lustre/knowledge_explorer
 import cepaf_gleam/ui/lustre/pi_startup_visualizer
 import cepaf_gleam/ui/lustre/zk_decision_matrix
+import cepaf_gleam/ui/lustre/zk_graph_visualizer
+import cepaf_gleam/ui/lustre/biosemiotics_radar
+import cepaf_gleam/ui/lustre/navigational_omnisearch
+import cepaf_gleam/ui/lustre/recursive_patrol_hud
+import cepaf_gleam/ui/lustre/wiki_transclusion_engine
 import cepaf_gleam/ui/wisp/router as c3i_router
 import cepaf_gleam/verification/browser_emulation_bridge
 import cepaf_gleam/verification/dmc_biosemiotics_interlock
@@ -281,6 +286,64 @@ pub fn main() {
         let content_html = element.to_string(el)
         let page =
           render_lustre_page("ZK Decision Matrix", "zk-matrix", content_html)
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["zk-graph"] -> {
+        let graph = zk_graph_visualizer.build_canonical_zk_graph()
+        let el = zk_graph_visualizer.render_zk_graph_view(graph)
+        let content_html = element.to_string(el)
+        let page =
+          render_lustre_page("ZK Network Graph", "zk-graph", content_html)
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["wiki-preview"] -> {
+        let tags = [
+          wiki_transclusion_engine.WikiTag("20260905-1801-corpus"),
+          wiki_transclusion_engine.ZkTag("ADR-001"),
+          wiki_transclusion_engine.ZkTag("ADR-016"),
+        ]
+        let diff = wiki_transclusion_engine.DiffSummary(additions: 12, deletions: 0, unchanged: 180)
+        let el = wiki_transclusion_engine.render_transclusion_preview_view(tags, diff)
+        let content_html = element.to_string(el)
+        let page =
+          render_lustre_page("Hermes Wiki Transclusion & Parsoid", "wiki-preview", content_html)
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["biosemiotics"] -> {
+        let radar = biosemiotics_radar.build_canonical_radar()
+        let el = biosemiotics_radar.render_biosemiotics_view(radar)
+        let radar_svg = biosemiotics_radar.render_svg_radar_html(radar)
+        let content_html = element.to_string(el) <> "<div style='margin-top:1.5rem'>" <> radar_svg <> "</div>"
+        let page =
+          render_lustre_page("Rocha Biosemiotics Radar", "biosemiotics", content_html)
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["omnisearch"] -> {
+        let corpus = navigational_omnisearch.canonical_search_corpus()
+        let results = navigational_omnisearch.execute_omnisearch("", corpus)
+        let el = navigational_omnisearch.render_omnisearch_view(results)
+        let content_html = element.to_string(el)
+        let page =
+          render_lustre_page("Category Route Omnisearch", "omnisearch", content_html)
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["verify-patrol-live"] -> {
+        let hud = recursive_patrol_hud.init_hud()
+        let completed = recursive_patrol_hud.run_all_four_cycles(hud)
+        let el = recursive_patrol_hud.render_patrol_hud_view(completed)
+        let content_html = element.to_string(el)
+        let page =
+          render_lustre_page("Autonomous 4-Cycle Patrol HUD", "verify-patrol-live", content_html)
         response.new(200)
         |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
         |> response.prepend_header("content-type", "text/html")
@@ -603,6 +666,10 @@ fn render_nav(active: String) -> String {
     True -> "class='active'"
     False -> ""
   } <> " style='color:#34d399;font-weight:bold'>ZK Decision Matrix</a>
+    <a href='/zk-graph' " <> case active == "zk-graph" {
+    True -> "class='active'"
+    False -> ""
+  } <> " style='color:#38bdf8;font-weight:bold'>ZK Network Graph (SVG)</a>
     <a href='/wiki' " <> case active == "wiki" {
     True -> "class='active'"
     False -> ""
@@ -619,6 +686,22 @@ fn render_nav(active: String) -> String {
     True -> "class='active'"
     False -> ""
   } <> " style='color:#e3b341'>Living Ontology Hub</a>
+    <a href='/wiki-preview' " <> case active == "wiki-preview" {
+    True -> "class='active'"
+    False -> ""
+  } <> " style='color:#818cf8;font-weight:bold'>Wiki Transclusion &amp; Diff</a>
+    <a href='/biosemiotics' " <> case active == "biosemiotics" {
+    True -> "class='active'"
+    False -> ""
+  } <> " style='color:#34d399;font-weight:bold'>Biosemiotics Safety Radar</a>
+    <a href='/omnisearch' " <> case active == "omnisearch" {
+    True -> "class='active'"
+    False -> ""
+  } <> " style='color:#fbbf24;font-weight:bold'>Category Omnisearch</a>
+    <a href='/verify-patrol-live' " <> case active == "verify-patrol-live" {
+    True -> "class='active'"
+    False -> ""
+  } <> " style='color:#ec4899;font-weight:bold'>Autonomous Patrol HUD</a>
 
     <div class='sep'></div>
     <div class='nav-section-title'>REPOSITORY &amp; GOV</div>

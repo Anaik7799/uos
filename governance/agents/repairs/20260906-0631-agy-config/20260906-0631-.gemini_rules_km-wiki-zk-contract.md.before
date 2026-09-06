@@ -1,7 +1,3 @@
----
-trigger: always_on
----
-
 # 20260905-1739- UOS Knowledge Management, Wiki & ZK Contract
 
 ## Contract Invariants

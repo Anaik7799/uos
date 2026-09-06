@@ -1,3 +1,7 @@
+---
+trigger: always_on
+---
+
 # Comprehensive Web & Markdown Checklist Contract
 
 - **Contract ID**: `SC-CHECKLIST-001`

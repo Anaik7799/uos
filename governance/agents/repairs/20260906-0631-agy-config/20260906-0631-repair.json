@@ -1,0 +1,132 @@
+{
+  "schema": "uos.agy-config-repair.v1",
+  "status": "APPLIED_HASH_VERIFIED",
+  "records": [
+    {
+      "path": ".agents/hooks.json",
+      "before_sha256": "c101fbad0b4eb14ffef7c5ee7b7000509174fea0abeab2754abecdafc10643ae",
+      "after_sha256": "8b169ab5a15b6c22308d12d44282863b7a0e5139ec171e85f247d7815c410c6c",
+      "backup": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.agents_hooks.json.before",
+      "staged": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.agents_hooks.json.after"
+    },
+    {
+      "path": ".agents/rules/comprehensive-checklist-contract.md",
+      "before_sha256": "6ecab3b60b4d0f09595ebc91479fc0b78b0318687c9cf10c2a65c745678f7279",
+      "after_sha256": "ce4ff31b8d3bdefba3ad40bc2039d0d2536c95759a9a342cabf1e43ee6d3330e",
+      "backup": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.agents_rules_comprehensive-checklist-contract.md.before",
+      "staged": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.agents_rules_comprehensive-checklist-contract.md.after"
+    },
+    {
+      "path": ".agents/rules/dmc-tcm-mandate.md",
+      "before_sha256": "f9ca5f514818c2339ef38b58afda2e4bb8bcbc08b83599db5d4158a3b1ba8c2f",
+      "after_sha256": "904c632cedb1757b2e74d101d78eae5026641feb33812ac89e61c934c3f51038",
+      "backup": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.agents_rules_dmc-tcm-mandate.md.before",
+      "staged": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.agents_rules_dmc-tcm-mandate.md.after"
+    },
+    {
+      "path": ".agents/rules/full-symbiosis.md",
+      "before_sha256": "3eb8a632fbc3a9ac0b286f589ba51b42be004d356375150b2f8463f1fc102ccb",
+      "after_sha256": "7aad314f863196130c58faf26b43e9ccb7d4d0687589cfc1d8c715c1295e50cd",
+      "backup": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.agents_rules_full-symbiosis.md.before",
+      "staged": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.agents_rules_full-symbiosis.md.after"
+    },
+    {
+      "path": ".agents/rules/km-wiki-zk-contract.md",
+      "before_sha256": "b3e756ef3bf84116e61989449f623f06f57be3dba61d12e63cddc62dc6812021",
+      "after_sha256": "2c5ee6eabd250163ff1509ae4d7d6c8dd3e5dadddc262d943739ebc4cf82a2b2",
+      "backup": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.agents_rules_km-wiki-zk-contract.md.before",
+      "staged": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.agents_rules_km-wiki-zk-contract.md.after"
+    },
+    {
+      "path": ".agents/rules/rocha-semiotics-cybernetics-contract.md",
+      "before_sha256": "c53dd6e89c61bdb3eb9ebb1270f5b5acecb28527a4136f2693fab36f11079535",
+      "after_sha256": "be3613f58215561770cf3026305d53a903b006d62556b62d4e16e003d7f975f0",
+      "backup": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.agents_rules_rocha-semiotics-cybernetics-contract.md.before",
+      "staged": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.agents_rules_rocha-semiotics-cybernetics-contract.md.after"
+    },
+    {
+      "path": ".agents/rules/tailscale-web-fqdn-mandate.md",
+      "before_sha256": "42caa3e23f15fa33bf035e29aebb34879c8d6f576ade22bb94f56607a566195d",
+      "after_sha256": "e4c86f731e9da7652c320041edc4e21d89b30e0a5229f49255113f078f882659",
+      "backup": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.agents_rules_tailscale-web-fqdn-mandate.md.before",
+      "staged": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.agents_rules_tailscale-web-fqdn-mandate.md.after"
+    },
+    {
+      "path": ".agents/rules/timestamp-mandate.md",
+      "before_sha256": "16f6fd7ea07f4f0b0d68a358735d6c7a59effac3b1186b32000d72e12fc52d74",
+      "after_sha256": "37d18b69514c08d6830fca6aa117869293200ae202e76b0267e40974f0938fc6",
+      "backup": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.agents_rules_timestamp-mandate.md.before",
+      "staged": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.agents_rules_timestamp-mandate.md.after"
+    },
+    {
+      "path": ".agents/rules/uos-governance.md",
+      "before_sha256": "b3c1448c073907b17e9b51d6ebd0bb9e63707509c229fabadd336aec12f5d936",
+      "after_sha256": "d377c50719dc6798dcd8c0159a9a679e91d83f56369b75e807d11e5d0d783564",
+      "backup": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.agents_rules_uos-governance.md.before",
+      "staged": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.agents_rules_uos-governance.md.after"
+    },
+    {
+      "path": ".gemini/hooks.json",
+      "before_sha256": "c101fbad0b4eb14ffef7c5ee7b7000509174fea0abeab2754abecdafc10643ae",
+      "after_sha256": "8b169ab5a15b6c22308d12d44282863b7a0e5139ec171e85f247d7815c410c6c",
+      "backup": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.gemini_hooks.json.before",
+      "staged": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.gemini_hooks.json.after"
+    },
+    {
+      "path": ".gemini/rules/comprehensive-checklist-contract.md",
+      "before_sha256": "6ecab3b60b4d0f09595ebc91479fc0b78b0318687c9cf10c2a65c745678f7279",
+      "after_sha256": "ce4ff31b8d3bdefba3ad40bc2039d0d2536c95759a9a342cabf1e43ee6d3330e",
+      "backup": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.gemini_rules_comprehensive-checklist-contract.md.before",
+      "staged": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.gemini_rules_comprehensive-checklist-contract.md.after"
+    },
+    {
+      "path": ".gemini/rules/dmc-tcm-mandate.md",
+      "before_sha256": "f9ca5f514818c2339ef38b58afda2e4bb8bcbc08b83599db5d4158a3b1ba8c2f",
+      "after_sha256": "904c632cedb1757b2e74d101d78eae5026641feb33812ac89e61c934c3f51038",
+      "backup": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.gemini_rules_dmc-tcm-mandate.md.before",
+      "staged": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.gemini_rules_dmc-tcm-mandate.md.after"
+    },
+    {
+      "path": ".gemini/rules/full-symbiosis.md",
+      "before_sha256": "3eb8a632fbc3a9ac0b286f589ba51b42be004d356375150b2f8463f1fc102ccb",
+      "after_sha256": "7aad314f863196130c58faf26b43e9ccb7d4d0687589cfc1d8c715c1295e50cd",
+      "backup": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.gemini_rules_full-symbiosis.md.before",
+      "staged": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.gemini_rules_full-symbiosis.md.after"
+    },
+    {
+      "path": ".gemini/rules/km-wiki-zk-contract.md",
+      "before_sha256": "b3e756ef3bf84116e61989449f623f06f57be3dba61d12e63cddc62dc6812021",
+      "after_sha256": "2c5ee6eabd250163ff1509ae4d7d6c8dd3e5dadddc262d943739ebc4cf82a2b2",
+      "backup": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.gemini_rules_km-wiki-zk-contract.md.before",
+      "staged": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.gemini_rules_km-wiki-zk-contract.md.after"
+    },
+    {
+      "path": ".gemini/rules/rocha-semiotics-cybernetics-contract.md",
+      "before_sha256": "c53dd6e89c61bdb3eb9ebb1270f5b5acecb28527a4136f2693fab36f11079535",
+      "after_sha256": "be3613f58215561770cf3026305d53a903b006d62556b62d4e16e003d7f975f0",
+      "backup": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.gemini_rules_rocha-semiotics-cybernetics-contract.md.before",
+      "staged": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.gemini_rules_rocha-semiotics-cybernetics-contract.md.after"
+    },
+    {
+      "path": ".gemini/rules/tailscale-web-fqdn-mandate.md",
+      "before_sha256": "42caa3e23f15fa33bf035e29aebb34879c8d6f576ade22bb94f56607a566195d",
+      "after_sha256": "e4c86f731e9da7652c320041edc4e21d89b30e0a5229f49255113f078f882659",
+      "backup": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.gemini_rules_tailscale-web-fqdn-mandate.md.before",
+      "staged": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.gemini_rules_tailscale-web-fqdn-mandate.md.after"
+    },
+    {
+      "path": ".gemini/rules/timestamp-mandate.md",
+      "before_sha256": "16f6fd7ea07f4f0b0d68a358735d6c7a59effac3b1186b32000d72e12fc52d74",
+      "after_sha256": "37d18b69514c08d6830fca6aa117869293200ae202e76b0267e40974f0938fc6",
+      "backup": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.gemini_rules_timestamp-mandate.md.before",
+      "staged": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.gemini_rules_timestamp-mandate.md.after"
+    },
+    {
+      "path": ".gemini/rules/uos-governance.md",
+      "before_sha256": "b3c1448c073907b17e9b51d6ebd0bb9e63707509c229fabadd336aec12f5d936",
+      "after_sha256": "d377c50719dc6798dcd8c0159a9a679e91d83f56369b75e807d11e5d0d783564",
+      "backup": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.gemini_rules_uos-governance.md.before",
+      "staged": "/home/an/NAS-setup/uos/governance/agents/repairs/20260906-0631-agy-config/20260906-0631-.gemini_rules_uos-governance.md.after"
+    }
+  ]
+}
