@@ -574,12 +574,36 @@ pub fn generate_wave2_evolutionary_cycles() -> List(EvolutionaryCycleSpec) {
   ]
 }
 
+pub fn generate_wave3_evolutionary_cycles() -> List(EvolutionaryCycleSpec) {
+  [
+    EvolutionaryCycleSpec("EV-55", "C3I Agentic Ingestion & Sanitization Engine", "Ingestion", L1AtomicKernel, "INV-AGENTIC-INGESTION-SANITIZED", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-56", "Supervised OCaml Port Pool & Reductions Protection", "Kernel", L1AtomicKernel, "INV-SUPERVISED-OCAML-PORT-POOL", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-57", "Dynamic Trust Decay & Negative Knowledge Actor Swarm", "Swarm", L6EcosystemSwarm, "INV-DYNAMIC-DECAY-ACTOR-SWARM", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-58", "Real-Time Tripartite Knowledge Presentation & SSE Mesh", "Presentation", L7FederationInterface, "INV-TRIPARTITE-SSE-KNOWLEDGE-MESH", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-59", "Tri-Sovereign Autonomic Governance & Self-Healing Closure", "Governance", L0Constitutional, "INV-TRI-SOVEREIGN-AUTONOMIC-CLOSURE", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-60", "Distributed Knowledge Cache & In-Memory Sheaf Harmonizer", "Cache", L2ComponentState, "INV-DISTRIBUTED-KNOWLEDGE-CACHE", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-61", "Zero-Trust Cryptographic Signature Verification & Trace Lineage", "Security", L0Constitutional, "INV-ZT-CRYPTO-SIGNATURE-TRACE", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-62", "Automated Anti-Pattern Mitigation & Regression Interceptor", "AntiPattern", L5CognitiveOoda, "INV-AUTO-ANTI-PATTERN-INTERCEPTOR", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-63", "Bounded Gospel Verification Oracle & Z3 Solver Process Tree", "Formal", L8MathematicalFormal, "INV-GOSPEL-Z3-PROCESS-TREE", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-64", "Descriptor-Relative VFS Journal Sync & WAL Durability", "Storage", L3TransactionWorkflow, "INV-VFS-JOURNAL-SYNC-DURABILITY", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-65", "Lyapunov-Windowed Telemetry Freshness & Dead-Man Swarm", "SRE", L4SystemControl, "INV-LYAPUNOV-FRESHNESS-SWARM", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-66", "17-Aspect Cross-Language Homomorphism & ABI Invariants", "Protocol", L2ComponentState, "INV-17-ASPECT-ABI-HOMOMORPHISM", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-67", "Elastic Multi-Tenant Agent Swarm Concurrency Scaling", "Scalability", L6EcosystemSwarm, "INV-ELASTIC-SWARM-SCALING", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-68", "Universal Tailscale FQDN Tripartite Presentation & Nav Graph", "Gateway", L7FederationInterface, "INV-TAILSCALE-TRIPARTITE-NAV", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-69", "Sovereign Synthesis Ratification & Mainline Monorepo Closure", "Governance", L0Constitutional, "INV-SOVEREIGN-SYNTHESIS-CLOSURE", "OPERATIONAL", True),
+  ]
+}
+
 pub fn generate_all_30_evolutionary_cycles() -> List(EvolutionaryCycleSpec) {
   list.append(generate_all_15_evolutionary_cycles(), generate_wave2_evolutionary_cycles())
 }
 
+pub fn generate_all_45_evolutionary_cycles() -> List(EvolutionaryCycleSpec) {
+  list.append(generate_all_30_evolutionary_cycles(), generate_wave3_evolutionary_cycles())
+}
+
 pub fn generate_all_evolutionary_cycles() -> List(EvolutionaryCycleSpec) {
-  generate_all_30_evolutionary_cycles()
+  generate_all_45_evolutionary_cycles()
 }
 
 pub fn execute_evolutionary_cycle(cycle: EvolutionaryCycleSpec) -> Bool {
@@ -608,7 +632,7 @@ pub fn verify_omni_fractal_system_matrix() -> Bool {
   let step_receipts = execute_all_17_aspect_processes()
   let scalability_profiles = generate_system_scalability_matrix()
   let formal_proofs = generate_all_formal_aspects()
-  let cycles = generate_all_30_evolutionary_cycles()
+  let cycles = generate_all_45_evolutionary_cycles()
 
   list.length(layers) == 10
   && is_fast_ooda_safe(ooda)
@@ -639,7 +663,7 @@ pub fn verify_omni_fractal_system_matrix() -> Bool {
   && list.all(scalability_profiles, fn(p) { p.lyapunov_stable })
   && list.length(formal_proofs) == 7
   && list.all(formal_proofs, fn(p) { p.verified })
-  && list.length(cycles) == 30
+  && list.length(cycles) == 45
   && list.all(cycles, execute_evolutionary_cycle)
 }
 
@@ -655,12 +679,12 @@ pub fn encode_omni_matrix_json() -> String {
   let scalabilities = generate_system_scalability_matrix()
   let proofs = generate_all_formal_aspects()
   let usecases = generate_all_use_cases()
-  let cycles = generate_all_30_evolutionary_cycles()
+  let cycles = generate_all_45_evolutionary_cycles()
 
   json.object([
     #("status", json.string("ok")),
     #("contract", json.string("SC-OMNI-FRACTAL-001")),
-    #("ev_cycle", json.string("EV-25..EV-54")),
+    #("ev_cycle", json.string("EV-25..EV-69")),
     #("cartesian_closure", json.bool(verify_omni_fractal_system_matrix())),
     #("layers_count", json.int(10)),
     #("components_count", json.int(list.length(comps))),

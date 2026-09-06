@@ -136,6 +136,23 @@ pub fn create_envelope(
   )
 }
 
+/// Detects zero-trust ingress violations (embedded NUL bytes or raw SQL injection)
+pub fn detect_zero_trust_ingress_violations(
+  payload: String,
+) -> Result(Nil, String) {
+  case string.contains(payload, "\u{0000}") {
+    True -> Error("Embedded NUL byte detected in ingress payload")
+    False ->
+      case
+        string.contains(string.lowercase(payload), "drop table")
+        || string.contains(string.lowercase(payload), "union select")
+      {
+        True -> Error("Raw SQL injection attempt detected in payload")
+        False -> Ok(Nil)
+      }
+  }
+}
+
 /// Executes a call to the supervised Hermes OCaml worker port
 pub fn execute_ocaml_worker_port_call(
   envelope: CrossLanguageEnvelope,

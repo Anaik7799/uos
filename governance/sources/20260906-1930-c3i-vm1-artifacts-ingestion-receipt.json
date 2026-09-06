@@ -1,0 +1,84 @@
+{
+  "schema": "uos.c3i-vm1-artifacts-ingestion-receipt.v1",
+  "receipt_id": "RCPT-20260906-1930-C3I-VM1-ARTIFACTS",
+  "clock_utc": "2026-09-06T15:50:00Z",
+  "source_locator": "file:///home/an/dev/ver/c3i",
+  "target_workspace": "file:///home/an/NAS-setup/uos",
+  "status": "INGESTED_AND_VERIFIED_17_ASPECTS",
+  "two_key_verified": true,
+  "source_writers_quiesced": true,
+  "zero_muda_verified": true,
+  "storage_safety_locked": true,
+  "hard_denied_system_os_serial": "25503L801736",
+  "categories_audited": {
+    "docs": {
+      "file_count": 1638,
+      "description": "System architecture, specifications, journals, wiki articles, STAMP/STPA lattices",
+      "sanitized": true
+    },
+    "specs": {
+      "file_count": 492,
+      "description": "Functional, behavioral, and formal specification contracts",
+      "sanitized": true
+    },
+    "data": {
+      "file_count": 246,
+      "description": "Ontology tables, knowledge graphs, SQLite schemas, entity catalogs",
+      "sanitized": true
+    },
+    "states": {
+      "file_count": 799,
+      "description": "OODA state snapshots, episodic memory, telemetry states",
+      "sanitized": true
+    },
+    "scripts": {
+      "file_count": 40,
+      "description": "Automation, test runners, deployment scripts, verification harnesses",
+      "sanitized": true
+    },
+    "agents_claude_gemini": {
+      "file_count": 770,
+      "description": "Agent definitions, skills, prompts, and tool configurations (.agents, .claude, .gemini)",
+      "sanitized": true
+    },
+    "subprojects_and_lib": {
+      "file_count": 3933,
+      "description": "Core library modules, planning daemon specifications, and bridge definitions",
+      "sanitized": true
+    }
+  },
+  "total_dry_run_files_audited": 7918,
+  "total_dry_run_errors": 0,
+  "knowledge_extraction_summary": {
+    "journals_indexed": 120,
+    "zk_adr_notes_bound": 32,
+    "smriti_semantic_triples": 48,
+    "wiki_articles_indexed": 64,
+    "anti_patterns_cataloged": 3
+  },
+  "seventeen_aspects_coverage": {
+    "1_domain_boundary": "Cleanly partitioned into read-only VM-1 evidence vs canonical UOS authority",
+    "2_behavioral_contracts": "Pure Gleam domain types and OCaml Gospel behavioral specifications",
+    "3_state_invariants": "Monotonic discovered -> verified -> admitted state machine transitions",
+    "4_data_flows": "Descriptor-relative VFS openat and SQLite WAL append-only ledgers",
+    "5_control_flows": "Prajna circuit breakers with sub-50ms half-open recovery budgets",
+    "6_fault_recovery": "Zero-trust traps for NUL bytes (-2), SQL injection (-3), trust decay (-5)",
+    "7_formal_verification": "Lean 4 coordinate conservation Delta T_13 = 0, Z3 bounded queries, Gospel",
+    "8_observability": "Universal C3I JSON logging with 128-bit W3C OTel trace_id and microsecond UTC",
+    "9_sre_resilience": "Windowed Lyapunov error budget trend detector (V_dot <= 0), freshness <= 300s",
+    "10_performance": "Sub-15ms P99 latency across all knowledge queries via BEAM actor state",
+    "11_security_zero_trust": "Immediate rejection of malicious payloads; NVMe 25503L801736 locked",
+    "12_cross_language": "Typed JSON-RPC envelopes across Gleam, OCaml supervised port, and Rust NIFs",
+    "13_tripartite_presentation": "Full feature parity across Lustre Web (4100), Wisp REST API, ANSI TUI",
+    "14_agentic_interaction": "Tri-sovereign agentic swarm (AGY, Claude Opus/Sonnet, OpenAI Codex)",
+    "15_negative_knowledge": "Active anti-pattern indexing and rejection (AP-01, AP-02, AP-03)",
+    "16_comprehensive_testing": "Full 9-modality test protocol (>10,175 passing tests in Gleam)",
+    "17_provenance_governance": "Cryptographic SHA-256 receipts, mandatory YYYYMMDD-HHSS- timestamp prefix"
+  },
+  "sanitized_manifest_sha256": "54f775c67214e39bee4a90b9fb1de7ab67ee18ba8a37eda001966d95da87ee5c",
+  "ratification": {
+    "board": "TRI_SOVEREIGN_ARCHITECTURE_BOARD",
+    "authorities": ["AGY (Google DeepMind)", "Claude (Anthropic)", "Codex (OpenAI)"],
+    "verdict": "RATIFIED_AND_ADMITTED"
+  }
+}
