@@ -1,0 +1,415 @@
+{
+  "schema": "uos.codex-handover-review.v1",
+  "receipt_id": "20260906-1620-codex-review-agy-forensic-reconciliation",
+  "status": "REVIEW_COMPLETE_CORRECTIONS_REQUIRED",
+  "clock_utc": "2026-09-06T16:46:20Z",
+  "timestamp_projection": "UTC YYYYMMDD-HHSS (hour and seconds)",
+  "host_sync": {
+    "tool": "chronyc tracking",
+    "leap_status": "Normal",
+    "reference_time_utc": "2026-09-06T16:41:24Z",
+    "system_offset_seconds_fast": 0.001066748
+  },
+  "candidate": {
+    "workspace": "/home/an/NAS-setup/uos",
+    "commit_id": "53308442c6ef81c509abbf402e9b44f58801f6d1",
+    "change_id": "tvkzvzkszursuknruwvyuklwqntluzpq",
+    "bookmark": "main",
+    "clean_before_review_files": true,
+    "external_writers_quiesced_by_review": false,
+    "served_build_identity_verified": false,
+    "review_writes": [
+      "docs/journal/20260906-1620-codex-review-agy-forensic-reconciliation.md",
+      "governance/sources/20260906-1620-codex-review-agy-forensic-reconciliation-receipt.json"
+    ]
+  },
+  "handover_tag": {
+    "bookmark": "tag/20260906-1649-single-file-session-handover-to-codex-ratified",
+    "commit_id": "bd7ddf4d759aa4f87d405da175c16239cd30ee2a",
+    "includes_backlog_reconciliation": false
+  },
+  "review_document": {
+    "path": "docs/journal/20260906-1620-codex-review-agy-forensic-reconciliation.md",
+    "sha256": "a0e1e210a5758467db9bd379981d2a9866e9b0cac293ec4154a09b306a2efcc1",
+    "url": "http://nas-1.tail55d152.ts.net:4100/docs/journal/20260906-1620-codex-review-agy-forensic-reconciliation.md"
+  },
+  "source_inputs": [
+    {
+      "path": "HANDOVER_TO_CODEX.md",
+      "sha256": "0174e48cf2a7a64d0330f578d9ffc3d944633fc81b5eaa67426ce083e2eb4882"
+    },
+    {
+      "path": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "sha256": "0174e48cf2a7a64d0330f578d9ffc3d944633fc81b5eaa67426ce083e2eb4882"
+    },
+    {
+      "path": "docs/journal/20260906-1840-uos-forensic-system-state-and-backlog-reconciliation-journal.md",
+      "sha256": "a2a50b6549da4012eb2acf44966cea308df92a6f62101fbd0784c31a660444aa"
+    },
+    {
+      "path": "tools/uos/src/main.gleam",
+      "sha256": "82cd0f4dec53eaa6f825733851b6a4b3c114765590ae8c597a1bf5c182b4a760"
+    },
+    {
+      "path": "tools/uos/src/uos.gleam",
+      "sha256": "3d26f36b9acbc0708f8757638fd7f48343067fa2f58cb32b7f051d8de0f98750"
+    },
+    {
+      "path": "tools/uos/src/uos_ffi.erl",
+      "sha256": "06e3d73b4104461ac4627b6da155bb3e2489fc55eb84a51fb31981293e65174b"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_vertical_slice_engine.gleam",
+      "sha256": "724b74bcb6564844836ced15ac396529b6c929ef8896e9321a12176f455a3f25"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+      "sha256": "67fc1a6dfef7f7a22d873d5ea48876b82ec49a2b791bead5e3e47bbf3d5d46a4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/omni_fractal_matrix_engine.gleam",
+      "sha256": "491421351691f4a934da9323de49d834ce1dc1f933409bbfc0296e8a77cd3df1"
+    },
+    {
+      "path": "formal/lean/Traceability.lean",
+      "sha256": "c81143d6023d3a5ab56333781e0136050f7163f7eb3155b0846760b62db1598c"
+    },
+    {
+      "path": "governance/planning/20260906-0817-uos-full-implementation-backlog.json",
+      "sha256": "3ba4e8951b2bc6c7b3f543588ee7cd8ba0a058e54253538c554af214b7330ac0"
+    },
+    {
+      "path": "governance/sources/20260906-1930-c3i-vm1-artifacts-ingestion-receipt.json",
+      "sha256": "dbd7caaf9f90a560db779f8045d3197b7c5d2bf9c3d9ed44f8aecaf7ffaa46ec"
+    }
+  ],
+  "mirror_comparisons": [
+    {
+      "canonical": "HANDOVER_TO_CODEX.md",
+      "mirror": "/home/an/.gemini/antigravity-cli/brain/659c397f-48dd-4da4-ac44-9afcc98ed903/20260906-1649-codex-master-session-handover.md",
+      "equal": true,
+      "sha256": "0174e48cf2a7a64d0330f578d9ffc3d944633fc81b5eaa67426ce083e2eb4882"
+    },
+    {
+      "canonical": "docs/journal/20260906-1840-uos-forensic-system-state-and-backlog-reconciliation-journal.md",
+      "mirror": "/home/an/.gemini/antigravity-cli/brain/659c397f-48dd-4da4-ac44-9afcc98ed903/20260906-1840-uos-forensic-system-state-and-backlog-reconciliation-journal.md",
+      "equal": true,
+      "sha256": "a2a50b6549da4012eb2acf44966cea308df92a6f62101fbd0784c31a660444aa"
+    }
+  ],
+  "resolved_document_concerns": [
+    "EV-36 restored; consecutive 84-item inventory",
+    "60-task backlog and eight workstreams restored"
+  ],
+  "findings": [
+    {
+      "id": "F01",
+      "priority": "P1",
+      "status": "OPEN",
+      "title": "Doctor, checklist and CLI exit behavior cannot establish verification",
+      "locators": [
+        "tools/uos/src/main.gleam:219",
+        "tools/uos/src/main.gleam:661",
+        "tools/uos/src/uos.gleam:6",
+        "tools/uos/src/uos_ffi.erl:15"
+      ]
+    },
+    {
+      "id": "F02",
+      "priority": "P1",
+      "status": "OPEN",
+      "title": "Inspected knowledge path simulates OCaml execution and ingestion",
+      "locators": [
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam:126",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam:157",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_vertical_slice_engine.gleam:76"
+      ]
+    },
+    {
+      "id": "F03",
+      "priority": "P1",
+      "status": "OPEN",
+      "title": "Constant metrics and model claims do not establish implementation correctness",
+      "locators": [
+        "apps/cepaf_gleam/src/cepaf_gleam/verification/omni_fractal_matrix_engine.gleam:412",
+        "apps/cepaf_gleam/src/cepaf_gleam/verification/omni_fractal_matrix_engine.gleam:733",
+        "formal/lean/Traceability.lean:131",
+        "apps/cepaf_gleam/src/cepaf_gleam/fpp/dmc_tcm.gleam:231"
+      ]
+    },
+    {
+      "id": "F04",
+      "priority": "P1",
+      "status": "OPEN",
+      "title": "Independent Codex system ratification is not authenticated",
+      "locators": [
+        "docs/journal/20260906-1840-uos-forensic-system-state-and-backlog-reconciliation-journal.md:36",
+        "docs/journal/20260906-1840-uos-forensic-system-state-and-backlog-reconciliation-journal.md:43",
+        "docs/design/20260906-1649-codex-master-session-handover.md:336"
+      ]
+    },
+    {
+      "id": "F05",
+      "priority": "P2",
+      "status": "OPEN",
+      "title": "Advertised handover tag predates backlog reconciliation",
+      "locators": [
+        "tag/20260906-1649-single-file-session-handover-to-codex-ratified",
+        "docs/design/20260906-1649-codex-master-session-handover.md:293"
+      ]
+    },
+    {
+      "id": "F06",
+      "priority": "P2",
+      "status": "OPEN",
+      "title": "Zero-warning claim contradicts completed run",
+      "locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam:8",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam:60",
+        "docs/journal/20260906-1840-uos-forensic-system-state-and-backlog-reconciliation-journal.md:94"
+      ]
+    },
+    {
+      "id": "F07",
+      "priority": "P2",
+      "status": "OPEN",
+      "title": "Dry-run census lacks sufficient bound ingestion provenance",
+      "locators": [
+        "governance/sources/20260906-1930-c3i-vm1-artifacts-ingestion-receipt.json",
+        "docs/design/20260906-1649-codex-master-session-handover.md:64"
+      ]
+    },
+    {
+      "id": "F08",
+      "priority": "P2",
+      "status": "OPEN",
+      "title": "Browser and nine-modality coverage not demonstrated by totals or HTTP probes",
+      "locators": [
+        "docs/journal/20260906-1840-uos-forensic-system-state-and-backlog-reconciliation-journal.md:27",
+        "docs/journal/20260906-1840-uos-forensic-system-state-and-backlog-reconciliation-journal.md:298"
+      ]
+    },
+    {
+      "id": "F09",
+      "priority": "P2",
+      "status": "OPEN",
+      "title": "Three Rust tests exercise a test-local helper rather than production validator",
+      "locators": [
+        "ops/kubernetes/nas-k8s-lab/tests/hardware_identity_test.rs:8"
+      ]
+    }
+  ],
+  "commands": [
+    {
+      "id": "gleam-tests",
+      "argv": [
+        "timeout",
+        "120s",
+        "env",
+        "ERL_FLAGS=+S 4:4",
+        "gleam",
+        "test"
+      ],
+      "cwd": "/home/an/NAS-setup/uos/apps/cepaf_gleam",
+      "execution": "Completed earlier in this same continuous review before timeout preference changed",
+      "sandbox": "approved outside sandbox",
+      "exit_code": 0,
+      "passed": 10188,
+      "failed": 0,
+      "compiler_warnings": 2,
+      "log": {
+        "path": "/tmp/uos-1649-review-gleam-tests-unsandboxed.log",
+        "sha256": "8c7813ccffc83e790a1523cea4c8a3322fc67206e41528e88542dd7a1dc99189"
+      }
+    },
+    {
+      "id": "restricted-gleam-attempt",
+      "status": "ENVIRONMENT_RESTRICTED_SUPERSEDED",
+      "exit_code": 1,
+      "passed": 10009,
+      "failed": 179,
+      "limitation": "TCP permission and SQLite access failures; successful approved rerun prevents attributing these 179 failures to the product"
+    },
+    {
+      "id": "rust-tests",
+      "argv": [
+        "timeout",
+        "1200s",
+        "cargo",
+        "test",
+        "--locked",
+        "--offline",
+        "--manifest-path",
+        "ops/kubernetes/nas-k8s-lab/Cargo.toml"
+      ],
+      "cwd": "/home/an/NAS-setup/uos",
+      "exit_code": 0,
+      "passed": 7,
+      "failed": 0,
+      "production_spec_tests": 4,
+      "test_local_helper_tests": 3,
+      "log": {
+        "path": "/tmp/uos-1840-review-rust-tests.log",
+        "sha256": "e79711a6607ba260c9f6d1bd70c56f82c09da12bbe01b2710339bfcda15ee710"
+      }
+    },
+    {
+      "id": "unknown-cli",
+      "argv": [
+        "gleam",
+        "run",
+        "__handover_review_unknown__"
+      ],
+      "cwd": "/home/an/NAS-setup/uos/tools/uos",
+      "exit_code": 0,
+      "observed_output": "Usage printed for unknown command",
+      "interpretation": "Failure result not propagated to process exit",
+      "log": {
+        "path": "/tmp/uos-1649-review-cli-unknown.log",
+        "sha256": "5e323ee28f92a5e2480ad16eb5512ea0cf946042257b3084d5d440f7ef83cb9c"
+      }
+    },
+    {
+      "id": "verify-all",
+      "argv": [
+        "gleam",
+        "run",
+        "verify-all"
+      ],
+      "cwd": "/home/an/NAS-setup/uos/tools/uos",
+      "exit_code": 0,
+      "observed_summary": "VERIFICATION RESULT: 100% ALL CHECKS PASS — UOS FULL SYSTEM RATIFIED",
+      "admission_credit": false,
+      "limitation": "Static output and file-presence checks cannot establish claimed system verification",
+      "log": {
+        "path": "/tmp/uos-1649-review-verify-all.log",
+        "sha256": "d85aad2f30e6792345477d4a6773aa651c9ab08ffcf9aebf0863b354d500ca21"
+      }
+    }
+  ],
+  "http_observations": [
+    {
+      "url": "http://nas-1.tail55d152.ts.net:4100/",
+      "method": "GET",
+      "http_status": 200,
+      "scope": "HTTP reachability only"
+    },
+    {
+      "url": "http://nas-1.tail55d152.ts.net:4100/planning",
+      "method": "GET",
+      "http_status": 200,
+      "scope": "HTTP reachability only"
+    },
+    {
+      "url": "http://nas-1.tail55d152.ts.net:4100/testing",
+      "method": "GET",
+      "http_status": 200,
+      "scope": "HTTP reachability only"
+    },
+    {
+      "url": "http://nas-1.tail55d152.ts.net:4100/checklist",
+      "method": "GET",
+      "http_status": 200,
+      "scope": "HTTP reachability only"
+    },
+    {
+      "url": "http://nas-1.tail55d152.ts.net:4100/wiki",
+      "method": "GET",
+      "http_status": 200,
+      "scope": "HTTP reachability only"
+    },
+    {
+      "url": "http://nas-1.tail55d152.ts.net:4100/zk",
+      "method": "GET",
+      "http_status": 200,
+      "scope": "HTTP reachability only"
+    },
+    {
+      "url": "http://nas-1.tail55d152.ts.net:4100/api/verify/omni-matrix",
+      "method": "GET",
+      "http_status": 200,
+      "scope": "HTTP reachability only"
+    },
+    {
+      "url": "http://nas-1.tail55d152.ts.net:4100/api/verify/checks",
+      "method": "GET",
+      "http_status": 200,
+      "scope": "HTTP reachability only"
+    },
+    {
+      "url": "http://nas-1.tail55d152.ts.net:4100/docs/design/20260906-1649-codex-master-session-handover.md",
+      "method": "GET",
+      "http_status": 200,
+      "scope": "HTTP reachability only"
+    },
+    {
+      "url": "http://nas-1.tail55d152.ts.net:4100/api/knowledge/vertical-slice",
+      "method": "GET",
+      "http_status": 200,
+      "scope": "HTTP reachability only"
+    },
+    {
+      "url": "http://nas-1.tail55d152.ts.net:4100/docs/journal/20260906-1840-uos-forensic-system-state-and-backlog-reconciliation-journal.md",
+      "method": "GET",
+      "http_status": 200,
+      "content_type": "text/html; charset=utf-8",
+      "response_bytes": 48538,
+      "body": {
+        "path": "/tmp/uos-1840-review-journal.html",
+        "sha256": "3c29c3adc58745bf11f98758c7050eb8e7094174b3ed5f75b3789acccfb1ae8c"
+      }
+    },
+    {
+      "url": "http://nas-1.tail55d152.ts.net:4100/ag-ui/events",
+      "method": "HEAD",
+      "http_status": 200,
+      "content_type": "text/event-stream",
+      "event_delivery_verified": false
+    },
+    {
+      "url": "http://vm-1.tail55d152.ts.net:8088",
+      "method": "GET",
+      "http_status": null,
+      "curl_status": "000",
+      "curl_exit_code": 7,
+      "result": "Connection failed",
+      "confirmed_outside_sandbox": true
+    }
+  ],
+  "knowledge_api_body": {
+    "path": "/tmp/uos-1649-review-slice.json",
+    "sha256": "6eef1604377fcd6f95e91351d5744cc41a43c0fa2398670dd7b277767449c236",
+    "claimed_green": true,
+    "real_ocaml_worker_verified": false,
+    "real_journal_ingestion_verified": false,
+    "real_rust_ocaml_differential_execution_verified": false
+  },
+  "implementation": {
+    "tasks": 60,
+    "task_status": "PLANNED",
+    "cases_executed_by_review": 0,
+    "next_order": [
+      "E01",
+      "E02",
+      "E03",
+      "remaining dependency-ordered tasks"
+    ],
+    "browser_cycles_executed_by_review": 0,
+    "external_source_code_ingested": false,
+    "original_ocaml_files_edited": 0,
+    "system_admission_granted": false
+  },
+  "new_verification_timeout_seconds": 1200,
+  "limitations": [
+    "Targeted document and source review, not an exhaustive whole-system audit.",
+    "Passing test counts are scoped to executed assertions and do not establish coverage across all nine modalities.",
+    "Proof toolchains were not invoked; Lean was not found on the review PATH.",
+    "Browser interactions, screenshots, accessibility, videos and four cycles per page/component were not executed.",
+    "Agent/skill health and full Zenoh/FPP/SysML conformance were not freshly certified.",
+    "External writers were not quiesced; selected canonical source hashes are review provenance, not sanitized external ingestion admission.",
+    "Raw logs reside in /tmp and may not survive cleanup; summaries and hashes are retained here.",
+    "The existing implementation-plan validator was read but not rerun, to avoid rewriting its receipt.",
+    "No independent Claude/Codex system approval or release admission is created by this review."
+  ]
+}
+
