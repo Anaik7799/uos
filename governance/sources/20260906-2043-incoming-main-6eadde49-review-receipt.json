@@ -1,0 +1,163 @@
+{
+  "schema": "uos.independent-code-review-receipt.v1",
+  "review_id": "S04-INCOMING-6EADDE49",
+  "support_plan_id": "uos/execution-support/20260906-1747",
+  "support_task_id": "S04",
+  "worker": "codex-incoming-review",
+  "observed_at_local": "2026-09-06T20:44:43+02:00",
+  "observed_at_utc": "2026-09-06T18:44:43Z",
+  "clock_receipt": {
+    "source": "chronyc tracking",
+    "reference_id": "B97DBE7B",
+    "stratum": 3,
+    "system_offset_seconds": -0.000533341,
+    "last_offset_seconds": -0.000332680,
+    "leap_status": "Normal",
+    "drift_band": "nominal"
+  },
+  "candidate_under_review": {
+    "change_id": "uppkwurvysuzoslnzksswomswllvpktl",
+    "commit_id": "6eadde491681265dde692054d81118594a0b5443",
+    "parent_commit_id": "c5c048dda1fa",
+    "manifest": "governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json",
+    "manifest_sha256": "b706f9a99dfaf6018772b2a819084ea3373a3ee720ed774b57e7f92792d8ee02"
+  },
+  "review_artifact": {
+    "workspace": ".uos-workspaces/incoming-review",
+    "change_id": "nqumyrzzxkzrlswxzkllpxkyrmwosxxq",
+    "candidate_is_parent": true
+  },
+  "verdict": "REJECTED_IMPLEMENTATION_CREDIT",
+  "admission_claimed": false,
+  "findings": [
+    {
+      "id": "IR-P0-01",
+      "severity": "P0",
+      "title": "E02 bounded-process and cleanup claims are false",
+      "locators": [
+        "tests/acceptance/registry.ml:13",
+        "tests/acceptance/registry.ml:16",
+        "tests/acceptance/registry.ml:19",
+        "tests/acceptance/registry.ml:74"
+      ],
+      "observation": "A 10ms requested timeout ran for 1004.7ms; 288893 bytes were captured without a quota; children_reaped=true was returned while a background child was alive.",
+      "required_correction": "Use monotonic deadlines, capped stdout/stderr capture, process-group TERM/KILL and observed waitpid reaping; add timeout, output-limit and grandchild-cleanup tests."
+    },
+    {
+      "id": "IR-P0-02",
+      "severity": "P0",
+      "title": "E02 is task-special-cased rather than a strict generic harness",
+      "locators": [
+        "tests/acceptance/run.ml:45",
+        "tests/acceptance/run.ml:62",
+        "tests/acceptance/run.ml:86",
+        "tests/acceptance/runner_test.ml:25"
+      ],
+      "observation": "runner.verify exercises the unknown-operation fallback; strict fixture decoding, recursive expectation comparison, command/dependency allowlists and the mandated negative matrix are absent.",
+      "required_correction": "Decode the exact fixture schema, reject unknown/missing fields, dispatch typed allowlisted adapters and compare complete observations generically."
+    },
+    {
+      "id": "IR-P0-03",
+      "severity": "P0",
+      "title": "E03 admits fixture aliases without evidence",
+      "locators": [
+        "tests/acceptance/registry.ml:54",
+        "tests/acceptance/registry.ml:58",
+        "tests/acceptance/registry.ml:60",
+        "apps/cepaf_gleam/test/verification_truth_test.gleam:23"
+      ],
+      "observation": "Equal nonempty fake receipt aliases with required fields omitted and an extra unknown field produced admitted=true, status=ADMITTED and exit_code=0; the Gleam evaluator exists only in a test file.",
+      "required_correction": "Validate distinct runtime and formal receipt contents, signatures, hashes and candidate IDs in production code; run removal, candidate-change and measured-input mutants against that code."
+    },
+    {
+      "id": "IR-P0-04",
+      "severity": "P0",
+      "title": "E03 leaves constant production verification and false-green CLI paths",
+      "locators": [
+        "apps/cepaf_gleam/src/cepaf_gleam/fpp/evolutionary_cycles.gleam:801",
+        "apps/cepaf_gleam/src/cepaf_gleam/fpp/evolutionary_cycles.gleam:1244",
+        "apps/cepaf_gleam/src/cepaf_gleam/verification/master_verification_registry.gleam:46",
+        "tools/uos/src/main.gleam:98",
+        "tools/uos/src/main.gleam:161",
+        "tools/uos/src/main.gleam:219"
+      ],
+      "observation": "The two required production verification modules are unchanged; fixed metrics and hardcoded True/PASS values remain. Doctor printed 84 PASS claims and exited 0 without evaluating receipts.",
+      "required_correction": "Replace constants and file-presence credit with shared typed evidence decisions consumed by CLI, UI and API; missing denominators or receipts must be nonpassing."
+    },
+    {
+      "id": "IR-P0-05",
+      "severity": "P0",
+      "title": "E01 fabricates unavailable observations and grants signature credit by alias equality",
+      "locators": [
+        "tools/verification/candidate_snapshot.ml:49",
+        "tools/verification/candidate_snapshot.ml:67",
+        "tools/verification/candidate_snapshot.ml:78",
+        "tools/verification/candidate_snapshot.ml:103",
+        "tools/verification/candidate_snapshot.ml:125"
+      ],
+      "observation": "An arbitrary alias/alias fixture produced SUPPORTED and signature_credit=true; unavailable chrony/tool probes receive nominal or version defaults, while source_writes and record presence are constants.",
+      "required_correction": "Represent probe failures explicitly, bind concrete full candidate IDs, observe source state, and keep signature credit false unless the existing cryptographic approval authority verifies a current signed context."
+    },
+    {
+      "id": "IR-P1-06",
+      "severity": "P1",
+      "title": "Receipts are non-atomic, incomplete and not bound to the final candidate",
+      "locators": [
+        "tests/acceptance/contract.ml:28",
+        "tests/acceptance/run.ml:97",
+        "tests/acceptance/run.ml:119",
+        "tests/acceptance/run.ml:123",
+        "tests/acceptance/golden/receipt.schema.json:33",
+        "tools/uos/src/uos_ffi.erl:19"
+      ],
+      "observation": "Duration is fixed at 12.5ms; writes are direct; required hashes, limits, raw observations and built/executed/passed states are absent. Committed E01/E02/E03 receipts bind three intermediate commits, none 6eadde49. CLI fallback reads mutable canonical main from an isolated workspace.",
+      "required_correction": "Bind an explicit workspace/candidate, record monotonic measured duration and complete provenance, write via temp-file plus rename, enforce a closed schema, and eliminate the mutable-main fallback."
+    }
+  ],
+  "probe_evidence": {
+    "probe_script": "/tmp/uos_incoming_review_probe.ml",
+    "probe_script_sha256": "ac3b0ae2cd97cfae98fb993d62ded410586a0ef1ca6c234e37eb16325aff4e05",
+    "commands": [
+      {
+        "command": "timeout 20s ocaml /tmp/uos_incoming_review_probe.ml",
+        "exit_code": 0,
+        "observations": [
+          "timeout_probe requested_ms=10 actual_ms=1004.7 code=0",
+          "fake_receipt_probe admitted=true status=ADMITTED exit=0",
+          "output_quota_probe captured_bytes=288893",
+          "cleanup_probe claimed_reaped=true child_alive=true",
+          "probe child was killed and absence subsequently confirmed"
+        ]
+      },
+      {
+        "command": "gleam run -m uos -- gate UNKNOWN_GATE_FOR_TEST",
+        "working_directory": "tools/uos",
+        "exit_code": 1,
+        "observation": "OS nonzero propagation works for an unknown gate."
+      },
+      {
+        "command": "gleam run -m uos -- doctor",
+        "working_directory": "tools/uos",
+        "exit_code": 0,
+        "observation": "Printed unconditional EV-01 through EV-84 PASS claims."
+      },
+      {
+        "command": "gleam test",
+        "working_directory": "tools/uos",
+        "exit_code": 0,
+        "observation": "12 tests passed; this does not discharge the findings above."
+      }
+    ]
+  },
+  "positive_parts": [
+    "Unknown operations return ERROR with exit code 2.",
+    "The base status and receipt types are reusable scaffolding.",
+    "The uos_ffi halt path propagates a failing gate to the OS process exit code."
+  ],
+  "reuse_locators": [
+    "engines/hermes/modules/hermes_ops_dashboard/run_analysis.ml:1334",
+    "engines/hermes/modules/hermes_ops_dashboard/gen_run_model.ml:27",
+    "engines/hermes/modules/hermes_dependability/dependability_approval.mli:38"
+  ],
+  "scope_note": "Independent read-only review of pinned candidate behavior. This receipt grants no implementation, verification or admission credit."
+}
