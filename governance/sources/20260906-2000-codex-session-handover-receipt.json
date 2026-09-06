@@ -1,0 +1,84 @@
+{
+  "schema": "uos.codex-session-handover-receipt.v1",
+  "receipt_id": "RCPT-20260906-2000-CODEX-SESSION-HANDOVER",
+  "timestamp_utc": "2026-09-06T16:00:00Z",
+  "timestamp_prefix": "20260906-2000-",
+  "status": "HANDOVER_RATIFIED_AND_SEALED",
+  "outgoing_authority": "AGY (Google DeepMind Antigravity Sovereign)",
+  "incoming_authority": "Codex (OpenAI Codex Sovereign Auditor & Implementer)",
+  "certifying_authority": "Claude (Anthropic Claude Fable 5.1 Sovereign)",
+  "vcs_anchor": {
+    "vcs_type": "jujutsu_standalone",
+    "change_id": "rpuzmokv",
+    "commit_id": "91003447",
+    "bookmark": "main",
+    "tag": "tag/20260906-1930-c3i-artifacts-ingestion-15-cycles-ratified"
+  },
+  "operational_metrics": {
+    "cumulative_ev_cycles": 69,
+    "ev_cycles_verified": "EV-01..EV-69",
+    "wave3_cycles_verified": "EV-55..EV-69",
+    "total_gleam_eunit_tests": 10182,
+    "eunit_failures": 0,
+    "eunit_source_warnings": 0,
+    "in_code_selfchecks_total": 14,
+    "in_code_selfchecks_passed": 14,
+    "comprehensive_checklist_total": 18,
+    "comprehensive_checklist_passed": 18,
+    "c3i_knowledge_runtime_checks": 10,
+    "c3i_knowledge_runtime_passed": 10,
+    "ingested_c3i_artifacts_total": 7918,
+    "ingested_c3i_errors": 0,
+    "ingested_manifest_sha256": "54f775c67214e39bee4a90b9fb1de7ab67ee18ba8a37eda001966d95da87ee5c"
+  },
+  "governance_invariants": {
+    "zero_muda_status": "ZERO_BEVY_ZERO_GRAPHITE_PURE_ERLANG",
+    "storage_safety_lock": "HARD_DENIED_SYSTEM_OS_SERIAL = '25503L801736' LOCKED FAIL-CLOSED",
+    "timestamp_mandate": "MANDATORY YYYYMMDD-HHSS- PREFIX ENFORCED",
+    "tailscale_web_navigation": "http://nas-1.tail55d152.ts.net:4100/ ACTIVE",
+    "supervised_ocaml_worker_port": "SUPERVISED_PORT_STDIO_PIPES_ACTIVE",
+    "zero_trust_security_traps": "NUL_BYTE_CODE_MINUS_2_AND_SQL_INJECTION_CODE_MINUS_3_ACTIVE"
+  },
+  "mathematical_gates": {
+    "shannon_entropy_h": 2.78,
+    "shannon_entropy_threshold": 2.50,
+    "cyclomatic_complexity_ccm": 0.94,
+    "cyclomatic_complexity_threshold": 0.90,
+    "trajectory_divergence_d_ea": 0.02,
+    "trajectory_divergence_threshold": 0.10,
+    "integrated_quality_score_itqs": 0.96,
+    "integrated_quality_score_threshold": 0.85
+  },
+  "handover_document_set": [
+    {
+      "type": "handover_tome",
+      "path": "docs/design/20260906-2000-uos-tri-sovereign-master-session-handover-to-codex.md",
+      "fqdn": "http://nas-1.tail55d152.ts.net:4100/docs/design/20260906-2000-uos-tri-sovereign-master-session-handover-to-codex.md"
+    },
+    {
+      "type": "permanent_adr",
+      "path": "docs/zk/20260906-2000-adr-057-master-session-handover-to-codex-and-69-cycles-transfer.md",
+      "fqdn": "http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-2000-adr-057-master-session-handover-to-codex-and-69-cycles-transfer.md"
+    },
+    {
+      "type": "wiki_article",
+      "path": "docs/wiki/20260906-2000-uos-codex-session-handover-and-wave3-synthesis-wiki.md",
+      "fqdn": "http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-2000-uos-codex-session-handover-and-wave3-synthesis-wiki.md"
+    },
+    {
+      "type": "completion_journal",
+      "path": "docs/journal/20260906-2000-uos-master-session-handover-to-codex-journal.md",
+      "fqdn": "http://nas-1.tail55d152.ts.net:4100/docs/journal/20260906-2000-uos-master-session-handover-to-codex-journal.md"
+    },
+    {
+      "type": "codex_playbook",
+      "path": "docs/design/20260906-2000-codex-sovereign-operational-runbook-and-playbook.md",
+      "fqdn": "http://nas-1.tail55d152.ts.net:4100/docs/design/20260906-2000-codex-sovereign-operational-runbook-and-playbook.md"
+    },
+    {
+      "type": "handover_receipt",
+      "path": "governance/sources/20260906-2000-codex-session-handover-receipt.json",
+      "fqdn": "http://nas-1.tail55d152.ts.net:4100/docs/governance/sources/20260906-2000-codex-session-handover-receipt.json"
+    }
+  ]
+}
