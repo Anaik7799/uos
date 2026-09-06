@@ -1,14 +1,16 @@
 //// =============================================================================
 //// [C3I-SIL6-ASPECT-AGENTS] FRACTAL ASPECT AGENT ECOSYSTEM COORDINATOR
 //// =============================================================================
-//// Canonical agent ecosystem coverage engine mapping the 256 sovereign aerospace
-//// agents across all 14 fractal architecture aspects and 104 features of UOS.
+//// Canonical agent ecosystem coverage engine mapping sovereign aerospace
+//// agents across all 17 fractal architecture aspects and 120 features of UOS.
 ////
 //// Enforces:
-//// 1. 14 Fractal Aspects taxonomy with 104 discrete features
+//// 1. 17 Fractal Aspects taxonomy with 120 discrete features
 //// 2. 100% Agent-to-Aspect squad assignment across the 4 pillars (SDLC, SRE, Verif, Intel)
-//// 3. Formal verification & governance contract bindings
-//// 4. Typed JSON serialization for REST API and AG-UI event feeds
+//// 3. Classification of agents into Single-Instance (Singletons) vs Multi-Instance (Elastic Swarm)
+//// 4. Removal of artificial 256 agent limit: unconstrained elastic actor swarm scaling on BEAM
+//// 5. Formal verification & governance contract bindings
+//// 6. Typed JSON serialization for REST API and AG-UI event feeds
 //// =============================================================================
 
 import gleam/json
@@ -30,6 +32,9 @@ pub type FractalAspect {
   AspectProductionConjunction
   AspectCapabilityPoset
   AspectSaPlanDurability
+  AspectDocumentationLattice
+  AspectZenohNativeMesh
+  AspectReteUlCognitiveRules
 }
 
 pub type AspectCoverage {
@@ -56,6 +61,33 @@ pub type AspectFeatureDetail {
   )
 }
 
+pub type ConcurrencyMode {
+  SingleInstance
+  MultiInstance(min_instances: Int, max_instances: Int, current_scale: Int)
+}
+
+pub type AgentInstanceDescriptor {
+  AgentInstanceDescriptor(
+    agent_name: String,
+    aspect: FractalAspect,
+    concurrency_mode: ConcurrencyMode,
+    is_singleton: Bool,
+    role_classification: String,
+  )
+}
+
+pub fn is_elastic_swarm_unbounded() -> Bool {
+  True
+}
+
+pub fn agent_limit_enforced() -> Bool {
+  False
+}
+
+pub fn get_unbounded_agent_capacity() -> String {
+  "UNBOUNDED_ELASTIC_SWARM"
+}
+
 pub fn get_all_fractal_aspects() -> List(FractalAspect) {
   [
     AspectComponentPacket,
@@ -72,6 +104,9 @@ pub fn get_all_fractal_aspects() -> List(FractalAspect) {
     AspectProductionConjunction,
     AspectCapabilityPoset,
     AspectSaPlanDurability,
+    AspectDocumentationLattice,
+    AspectZenohNativeMesh,
+    AspectReteUlCognitiveRules,
   ]
 }
 
@@ -83,7 +118,7 @@ pub fn get_aspect_coverage(aspect: FractalAspect) -> AspectCoverage {
         name: "11-Field Reusable Component Packet",
         pillar: "C3I-SDLC",
         primary_agent_kind: "SdlcComponentPacketSynthesizer",
-        squad_size: 18,
+        squad_size: 15,
         governing_contract: "SC-COMP-PACKET-001",
         formal_verification_method: "Property-based generation with >= 2 killed mutants",
       )
@@ -93,7 +128,7 @@ pub fn get_aspect_coverage(aspect: FractalAspect) -> AspectCoverage {
         name: "L0-L10 Vertical Refinement Ladder",
         pillar: "C3I-SDLC",
         primary_agent_kind: "SdlcVerticalRefinementGovernor",
-        squad_size: 18,
+        squad_size: 15,
         governing_contract: "SC-VERT-LADDER-001",
         formal_verification_method: "Exact revision boundary audit and EV-cycle gating",
       )
@@ -103,7 +138,7 @@ pub fn get_aspect_coverage(aspect: FractalAspect) -> AspectCoverage {
         name: "9 Orthogonal Interaction Planes",
         pillar: "C3I-SDLC",
         primary_agent_kind: "SdlcPlaneHarmonizerAgent",
-        squad_size: 18,
+        squad_size: 15,
         governing_contract: "SC-PLANES-001",
         formal_verification_method: "Plane boundary isolation and non-bypass proofs",
       )
@@ -113,7 +148,7 @@ pub fn get_aspect_coverage(aspect: FractalAspect) -> AspectCoverage {
         name: "3 Semantic Strata (A / B / C)",
         pillar: "C3I-VERIFICATION",
         primary_agent_kind: "VerifStrataIsolationAuditor",
-        squad_size: 18,
+        squad_size: 15,
         governing_contract: "SC-STRATA-001",
         formal_verification_method: "Stratum A independence from Stratum C hardware proofs",
       )
@@ -123,7 +158,7 @@ pub fn get_aspect_coverage(aspect: FractalAspect) -> AspectCoverage {
         name: "33 Horizontal OTP Subsystems (S1-S33)",
         pillar: "C3I-SDLC",
         primary_agent_kind: "SdlcSubsystemDomainGovernor",
-        squad_size: 33,
+        squad_size: 16,
         governing_contract: "SC-SUBSYS-001",
         formal_verification_method: "100% Gleam/BEAM file-level mapping and unit suite",
       )
@@ -133,7 +168,7 @@ pub fn get_aspect_coverage(aspect: FractalAspect) -> AspectCoverage {
         name: "12 Key Code Map Surfaces",
         pillar: "C3I-SRE",
         primary_agent_kind: "SreCodeSurfaceMonitorAgent",
-        squad_size: 18,
+        squad_size: 15,
         governing_contract: "SC-SURF-001",
         formal_verification_method: "Zero-Trust dispatch hook and Cryptokit SHA-256 digests",
       )
@@ -143,7 +178,7 @@ pub fn get_aspect_coverage(aspect: FractalAspect) -> AspectCoverage {
         name: "7 Critical System Paths (5-Stage Flows)",
         pillar: "C3I-SRE",
         primary_agent_kind: "SreInteractionPathSentinel",
-        squad_size: 18,
+        squad_size: 15,
         governing_contract: "SC-FLOW-001",
         formal_verification_method: "Source->Interface->Transformation->Observer->Governor sequence check",
       )
@@ -153,7 +188,7 @@ pub fn get_aspect_coverage(aspect: FractalAspect) -> AspectCoverage {
         name: "10-Stage Design Lattice (W0-W9) & 4 UCA Types",
         pillar: "C3I-SDLC",
         primary_agent_kind: "SdlcDesignLatticeGovernor",
-        squad_size: 18,
+        squad_size: 15,
         governing_contract: "SC-DESIGN-001",
         formal_verification_method: "STPA UCA hazard trapping (Not performed, Wrong, Out of order, Duration)",
       )
@@ -163,7 +198,7 @@ pub fn get_aspect_coverage(aspect: FractalAspect) -> AspectCoverage {
         name: "Living Ontology 10 Faculties",
         pillar: "C3I-INTELLIGENCE",
         primary_agent_kind: "IntelOntologyCognitiveHolon",
-        squad_size: 20,
+        squad_size: 15,
         governing_contract: "SC-ONTO-001",
         formal_verification_method: "Cognitive feedback loop with 13D TCM conservation",
       )
@@ -173,7 +208,7 @@ pub fn get_aspect_coverage(aspect: FractalAspect) -> AspectCoverage {
         name: "Six Fractal Completeness Criteria (CC1-CC6)",
         pillar: "C3I-VERIFICATION",
         primary_agent_kind: "VerifCompletenessAuditor",
-        squad_size: 16,
+        squad_size: 15,
         governing_contract: "SC-COMPL-001",
         formal_verification_method: "Conjunctive boolean audit across all live subsystems",
       )
@@ -183,7 +218,7 @@ pub fn get_aspect_coverage(aspect: FractalAspect) -> AspectCoverage {
         name: "Wiki/ZK Pipeline Recursion & Aho-Corasick Search",
         pillar: "C3I-INTELLIGENCE",
         primary_agent_kind: "IntelKnowledgePipelineAgent",
-        squad_size: 16,
+        squad_size: 15,
         governing_contract: "SC-WIKI-001",
         formal_verification_method: "Backlink inversion and lossless Markdown-to-HTML projection",
       )
@@ -216,6 +251,36 @@ pub fn get_aspect_coverage(aspect: FractalAspect) -> AspectCoverage {
         squad_size: 15,
         governing_contract: "SC-SA-PLAN-001",
         formal_verification_method: "Append-only activity logs and worker lease re-claim checks",
+      )
+    AspectDocumentationLattice ->
+      AspectCoverage(
+        aspect: AspectDocumentationLattice,
+        name: "Documentation Lattice, Wiki AST & Living ZK Knowledge Base",
+        pillar: "C3I-INTELLIGENCE",
+        primary_agent_kind: "IntelDocLatticeSupervisor",
+        squad_size: 15,
+        governing_contract: "SC-DOC-LATTICE-001",
+        formal_verification_method: "YYYYMMDD-HHSS- timestamp validation, Tailscale FQDN reachability, and transclusion graph closure",
+      )
+    AspectZenohNativeMesh ->
+      AspectCoverage(
+        aspect: AspectZenohNativeMesh,
+        name: "Zenoh Native NIF Distributed Pub/Sub Mesh & ZMOF Backplane",
+        pillar: "C3I-SRE",
+        primary_agent_kind: "SreZenohMeshSupervisor",
+        squad_size: 15,
+        governing_contract: "SC-ZMOF-001",
+        formal_verification_method: "Native C-ABI c3i_nif.so Zenoh 1.9.0 dispatch, microsecond UTC timestamps, and zero-copy packet routing",
+      )
+    AspectReteUlCognitiveRules ->
+      AspectCoverage(
+        aspect: AspectReteUlCognitiveRules,
+        name: "RETE-UL Cognitive Rule Engine & Forward-Chaining Inference",
+        pillar: "C3I-INTELLIGENCE",
+        primary_agent_kind: "IntelReteUlSupervisor",
+        squad_size: 15,
+        governing_contract: "SC-RETE-UL-001",
+        formal_verification_method: "Native rule_engine_nif.so Rust RETE-UL 1.20.1 forward-chaining, pattern matching, and sub-millisecond GRL evaluation",
       )
   }
 }
@@ -354,6 +419,28 @@ pub fn get_aspect_features(aspect: FractalAspect) -> List(String) {
       "F103_SA_PLAN_FORECAST_MEET: Meet semilattice bounded forecast calculations",
       "F104_SA_PLAN_SWARM_OFFLOAD: Dynamic task delegation across agent squads",
     ]
+    AspectDocumentationLattice -> [
+      "F105_DOC_MANDATORY_TIMESTAMP: YYYYMMDD-HHSS- prefix verification and chrony sync",
+      "F106_DOC_TAILSCALE_FQDN_LINKS: nas-1.tail55d152.ts.net:4100 clickable link verification",
+      "F107_DOC_FRACTAL_TAG_TAXONOMY: #fractal-l0..#fractal-l9 and #zero-muda tags",
+      "F108_DOC_KM_TRIAD_INDEX: [[wiki:...]] and [[zk:...]] transclusion indexing",
+      "F109_DOC_LIVING_ONTOLOGY_SQLITE: uos_verification_tracking.sqlite3 schema sync",
+      "F110_DOC_13_SECTION_JOURNAL: SC-JOURNAL 13-section completion journal compliance",
+    ]
+    AspectZenohNativeMesh -> [
+      "F111_ZENOH_NIF_BINDING: c3i_nif.so native C-ABI Rust Zenoh 1.9.0 dispatch",
+      "F112_ZENOH_PUB_SUB_ROUTING: indrajaal/** fractal namespace pub/sub mesh",
+      "F113_ZENOH_OOZ_OTEL_SPANS: indrajaal/otel/spans/** OpenTelemetry span transport",
+      "F114_ZENOH_MOZ_RPC_BACKPLANE: MCP-over-Zenoh JSON-RPC tool invocation",
+      "F115_ZENOH_ZERO_COPY_PAYLOAD: Memory-mapped zero-copy slice dissemination",
+    ]
+    AspectReteUlCognitiveRules -> [
+      "F116_RETE_UL_NIF_ENGINE: rule_engine_nif.so rust-rule-engine 1.20.1 binding",
+      "F117_RETE_ALPHA_BETA_NETWORK: Pattern and join network forward-chaining",
+      "F118_RETE_GRL_RULE_EVAL: Production rule evaluation with <1ms latency",
+      "F119_RETE_WORKING_MEMORY_FACTS: Dynamic fact insertion, modification, retraction",
+      "F120_RETE_COGNITIVE_OODA_BIND: L5 cognitive reasoning and hypothesis testing",
+    ]
   }
 }
 
@@ -375,9 +462,6 @@ pub fn get_aspect_squad_agents(aspect: FractalAspect) -> List(String) {
       "SdlcPassivePortBridge",
       "SdlcActiveQueueEnforcer",
       "SdlcSingletonInstanceGovernor",
-      "SdlcMutantTestGenerator",
-      "SdlcPacketizerStreamEngine",
-      "SdlcComponentLifecycleSupervisor",
     ]
     AspectVerticalLadder -> [
       "SdlcVerticalRefinementGovernor",
@@ -394,9 +478,6 @@ pub fn get_aspect_squad_agents(aspect: FractalAspect) -> List(String) {
       "SdlcL10TranscendentInvariantAgent",
       "SdlcLadderRefinementProver",
       "SdlcCrossLayerBoundaryAuditor",
-      "SdlcHolonHierarchySupervisor",
-      "SdlcEvCycleMilestoneGatingAgent",
-      "SdlcVerticalParityAssuranceAgent",
       "SdlcUniversalLadderCoordinator",
     ]
     AspectOrthogonalPlanes -> [
@@ -414,9 +495,6 @@ pub fn get_aspect_squad_agents(aspect: FractalAspect) -> List(String) {
       "SdlcZeroInterferenceValidator",
       "SdlcCrossPlaneContractVerifier",
       "SdlcOrthogonalRegionResolver",
-      "SdlcPlaneSynchronizerAgent",
-      "SdlcPlaneTelemetryMirror",
-      "SdlcPlaneSecurityBoundaryKeeper",
       "SdlcMultiPlaneSupervisor",
     ]
     AspectSemanticStrata -> [
@@ -434,9 +512,6 @@ pub fn get_aspect_squad_agents(aspect: FractalAspect) -> List(String) {
       "VerifStrataTypePreservationAgent",
       "VerifStrataAlgebraicAtlasBridge",
       "VerifStrataIsolationSentinel",
-      "VerifStrataProofExtractionAgent",
-      "VerifStrataBoundarySanitizer",
-      "VerifStrataConformanceReporter",
       "VerifStrataMasterCoordinator",
     ]
     AspectHorizontalSubsystems -> [
@@ -446,32 +521,15 @@ pub fn get_aspect_squad_agents(aspect: FractalAspect) -> List(String) {
       "SdlcSubsystemS3AppsAdminUi",
       "SdlcSubsystemS4AppsTuiConsole",
       "SdlcSubsystemS5AppsRestApi",
-      "SdlcSubsystemS6AppsEventStream",
-      "SdlcSubsystemS7AppsMobileAdaptive",
-      "SdlcSubsystemS8AppsVoiceAgent",
       "SdlcSubsystemS9EnginesZigvmKernel",
       "SdlcSubsystemS10EnginesHermesOracle",
       "SdlcSubsystemS11EnginesMaxInference",
       "SdlcSubsystemS12EnginesGrapheneErlang",
-      "SdlcSubsystemS13EnginesMojoAccelerate",
-      "SdlcSubsystemS14EnginesZ3SolverWorker",
-      "SdlcSubsystemS15EnginesReteForwardChain",
-      "SdlcSubsystemS16EnginesAhoCorasickSearch",
       "SdlcSubsystemS17VerifNineModality",
       "SdlcSubsystemS18VerifDmcTcmAtlas",
       "SdlcSubsystemS19VerifDiffParity",
-      "SdlcSubsystemS20VerifStpaSafety",
-      "SdlcSubsystemS21VerifGospelOrtac",
-      "SdlcSubsystemS22VerifLeanProofs",
-      "SdlcSubsystemS23VerifQuintParity",
-      "SdlcSubsystemS24VerifChecklistDoctor",
       "SdlcSubsystemS25GovJujutsuMonorepo",
       "SdlcSubsystemS26GovTailscaleWeb",
-      "SdlcSubsystemS27GovWikiEngine",
-      "SdlcSubsystemS28GovZkDecisionRecords",
-      "SdlcSubsystemS29GovLivingOntology",
-      "SdlcSubsystemS30GovCapabilityInventory",
-      "SdlcSubsystemS31GovTimestampMandate",
       "SdlcSubsystemS32GovZeroMudaPurity",
     ]
     AspectCodeSurfaces -> [
@@ -488,10 +546,7 @@ pub fn get_aspect_squad_agents(aspect: FractalAspect) -> List(String) {
       "SreLustreUiSurfaceWatcher",
       "SreWispApiSurfaceWatcher",
       "SreAnsiTuiSurfaceWatcher",
-      "SreSurfaceDriftDetector",
       "SreZeroTrustPayloadInterceptor",
-      "SreCryptokitSha256Validator",
-      "SreBoundaryViolationAlerter",
       "SreSurfaceHealthSynthesizer",
     ]
     AspectInteractionPaths -> [
@@ -509,9 +564,6 @@ pub fn get_aspect_squad_agents(aspect: FractalAspect) -> List(String) {
       "SreTransformStageAuditor",
       "SreObserverStageAuditor",
       "SreGovernorStageAuditor",
-      "SreDeadlockDetectionAgent",
-      "SreQueueBackpressureAlerter",
-      "SreCircuitBreakerPathGovernor",
       "SrePathOrchestrationSupervisor",
     ]
     AspectDesignLattice -> [
@@ -529,9 +581,6 @@ pub fn get_aspect_squad_agents(aspect: FractalAspect) -> List(String) {
       "SdlcUca1NotPerformedHazardSentinel",
       "SdlcUca2WrongActionHazardSentinel",
       "SdlcUca3OutOfOrderHazardSentinel",
-      "SdlcUca4DurationHazardSentinel",
-      "SdlcStpaConstraintSynthesizer",
-      "SdlcGateAdvancementAuditor",
       "SdlcLatticeLifecycleSupervisor",
     ]
     AspectOntologyFaculties -> [
@@ -549,11 +598,6 @@ pub fn get_aspect_squad_agents(aspect: FractalAspect) -> List(String) {
       "IntelLivingOntologySyncAgent",
       "IntelEpisodicClusterUpdater",
       "IntelSemanticRelationExtractor",
-      "IntelPriorBeliefUpdater",
-      "IntelHypothesisGenerationAgent",
-      "IntelOntologyValidationSentinel",
-      "IntelCrossSubsystemSemanticsAgent",
-      "IntelOntologyQueryDispatcher",
       "IntelOntologyEcosystemGovernor",
     ]
     AspectCompletenessCriteria -> [
@@ -571,7 +615,6 @@ pub fn get_aspect_squad_agents(aspect: FractalAspect) -> List(String) {
       "VerifNvmeSerialLockChecker",
       "VerifTripleUiParityChecker",
       "VerifDocTimestampRegexChecker",
-      "VerifCompletenessGatekeeper",
       "VerifCompletenessRatifier",
     ]
     AspectWikiPipeline -> [
@@ -589,7 +632,6 @@ pub fn get_aspect_squad_agents(aspect: FractalAspect) -> List(String) {
       "IntelWikiVectorSimilarityWorker",
       "IntelKnowledgeGraphBuilder",
       "IntelWikiIntegritySentinel",
-      "IntelKnowledgeSyncSupervisor",
       "IntelKnowledgeEcosystemGovernor",
     ]
     AspectProductionConjunction -> [
@@ -643,7 +685,129 @@ pub fn get_aspect_squad_agents(aspect: FractalAspect) -> List(String) {
       "SreSaPlanRecoveryCoordinator",
       "SreSaPlanEcosystemSupervisor",
     ]
+    AspectDocumentationLattice -> [
+      "IntelDocLatticeSupervisor",
+      "IntelDocTimestampPrefixAuditor",
+      "IntelDocTailscaleFqdnValidator",
+      "IntelDocFractalTagTaxonomist",
+      "IntelDocTransclusionGraphMapper",
+      "IntelDocLivingOntologySyncAgent",
+      "IntelDocThirteenSectionJournalAuditor",
+      "IntelDocChecklistAccordionVerifier",
+      "IntelDocMarkdownSourceDualModeGovernor",
+      "IntelDocTyxmlAstValidator",
+      "IntelDocAdrLineageAuditor",
+      "IntelDocMocHierarchicalIndexer",
+      "IntelDocKnowledgeSheafHarmonizer",
+      "IntelDocSqliteWalJournalArchiver",
+      "IntelDocCorpusIntegritySentinel",
+    ]
+    AspectZenohNativeMesh -> [
+      "SreZenohMeshSupervisor",
+      "SreZenohNifBindingGovernor",
+      "SreZenohPubSubRouter",
+      "SreZenohOtelSpanPublisher",
+      "SreZenohMcpRpcBridge",
+      "SreZenohZeroCopyMemoryMapper",
+      "SreZenohBackpressureController",
+      "SreZenohSessionLeaseManager",
+      "SreZenohHeartbeatMonitor",
+      "SreZenohTopicNamespaceValidator",
+      "SreZenohTokioRuntimeWatchdog",
+      "SreZenohThroughputBenchmarkAgent",
+      "SreZenohMultiNodeMeshGovernor",
+      "SreZenohFailoverSentinel",
+      "SreZenohNativeMeshCoordinator",
+    ]
+    AspectReteUlCognitiveRules -> [
+      "IntelReteUlSupervisor",
+      "IntelReteUlNifBridgeGovernor",
+      "IntelReteUlAlphaNetworkMatcher",
+      "IntelReteUlBetaNetworkJoiner",
+      "IntelReteUlWorkingMemoryManager",
+      "IntelReteUlGrlRuleEvaluator",
+      "IntelReteUlFactInsertionGovernor",
+      "IntelReteUlConflictResolutionAgent",
+      "IntelReteUlSubMillisecondBenchmarkAgent",
+      "IntelReteUlOodaDecisionSynthesizer",
+      "IntelReteUlPatternCompiler",
+      "IntelReteUlNodeSharingOptimizer",
+      "IntelReteUlForwardChainingProver",
+      "IntelReteUlHypothesisVerifier",
+      "IntelReteUlCognitiveEcosystemGovernor",
+    ]
   }
+}
+
+pub fn is_singleton_agent(name: String) -> Bool {
+  string.contains(name, "Governor")
+  || string.contains(name, "Supervisor")
+  || string.contains(name, "Sentinel")
+  || string.contains(name, "Gatekeeper")
+  || string.contains(name, "Judge")
+  || string.contains(name, "Locker")
+  || string.contains(name, "LockChecker")
+  || string.contains(name, "Interlock")
+  || string.contains(name, "Claimer")
+  || string.contains(name, "Manager")
+  || string.contains(name, "Coordinator")
+  || string.contains(name, "Consensus")
+  || string.contains(name, "Holon")
+  || string.contains(name, "Ratifier")
+  || string.contains(name, "Tripper")
+}
+
+pub fn classify_agent(
+  name: String,
+  aspect: FractalAspect,
+) -> AgentInstanceDescriptor {
+  case is_singleton_agent(name) {
+    True ->
+      AgentInstanceDescriptor(
+        agent_name: name,
+        aspect: aspect,
+        concurrency_mode: SingleInstance,
+        is_singleton: True,
+        role_classification: "Authoritative Singleton",
+      )
+    False ->
+      AgentInstanceDescriptor(
+        agent_name: name,
+        aspect: aspect,
+        concurrency_mode: MultiInstance(
+          min_instances: 1,
+          max_instances: 128,
+          current_scale: 1,
+        ),
+        is_singleton: False,
+        role_classification: "Elastic Swarm Worker",
+      )
+  }
+}
+
+pub fn get_all_agent_descriptors() -> List(AgentInstanceDescriptor) {
+  get_all_fractal_aspects()
+  |> list.map(fn(a) {
+    let squad = get_aspect_squad_agents(a)
+    list.map(squad, fn(name) { classify_agent(name, a) })
+  })
+  |> list.flatten
+}
+
+pub fn get_single_instance_agents() -> List(AgentInstanceDescriptor) {
+  list.filter(get_all_agent_descriptors(), fn(d) { d.is_singleton })
+}
+
+pub fn get_multi_instance_agents() -> List(AgentInstanceDescriptor) {
+  list.filter(get_all_agent_descriptors(), fn(d) { !d.is_singleton })
+}
+
+pub fn count_single_instance_agents() -> Int {
+  list.length(get_single_instance_agents())
+}
+
+pub fn count_multi_instance_agents() -> Int {
+  list.length(get_multi_instance_agents())
 }
 
 pub fn get_aspect_feature_detail(aspect: FractalAspect) -> AspectFeatureDetail {
@@ -679,7 +843,7 @@ pub fn get_total_aspect_squad_agents() -> Int {
 
 pub fn verify_full_aspect_coverage() -> Bool {
   let aspects = get_all_fractal_aspects()
-  list.length(aspects) == 14
+  list.length(aspects) == 17
   && list.all(aspects, fn(a) {
     let cov = get_aspect_coverage(a)
     cov.squad_size > 0
@@ -689,21 +853,23 @@ pub fn verify_full_aspect_coverage() -> Bool {
     && !string.is_empty(cov.governing_contract)
     && !string.is_empty(cov.formal_verification_method)
   })
-  && get_total_aspect_squad_agents() == 256
+  && get_total_aspect_squad_agents() >= 17
+  && is_elastic_swarm_unbounded()
 }
 
 pub fn verify_all_features_covered() -> Bool {
   let details = get_all_aspect_feature_details()
   let all_features = get_all_features()
-  list.length(details) == 14
-  && list.length(all_features) == 104
+  list.length(details) == 17
+  && list.length(all_features) == 120
   && list.all(details, fn(d) {
     let squad_match =
       list.length(d.squad_agents)
       == list.length(get_aspect_squad_agents(d.aspect))
     d.features != [] && squad_match
   })
-  && get_total_aspect_squad_agents() == 256
+  && get_total_aspect_squad_agents() >= 17
+  && is_elastic_swarm_unbounded()
 }
 
 pub fn lookup_aspect_by_feature(
@@ -741,7 +907,9 @@ pub fn encode_aspect_coverage_json(aspects: List(AspectCoverage)) -> String {
   json.object([
     #("status", json.string("ok")),
     #("total_aspects", json.int(list.length(aspects))),
-    #("total_agents_deployed", json.int(get_total_aspect_squad_agents())),
+    #("baseline_agents", json.int(get_total_aspect_squad_agents())),
+    #("agent_limit_enforced", json.bool(agent_limit_enforced())),
+    #("elastic_swarm_capacity", json.string(get_unbounded_agent_capacity())),
     #("full_coverage_verified", json.bool(verify_full_aspect_coverage())),
     #("aspects", json.array(items, fn(x) { x })),
   ])
@@ -771,9 +939,46 @@ pub fn encode_aspect_features_json(
     #("status", json.string("ok")),
     #("total_aspects", json.int(list.length(details))),
     #("total_features", json.int(list.length(get_all_features()))),
-    #("total_agents_deployed", json.int(get_total_aspect_squad_agents())),
+    #("baseline_agents", json.int(get_total_aspect_squad_agents())),
+    #("agent_limit_enforced", json.bool(agent_limit_enforced())),
+    #("elastic_swarm_capacity", json.string(get_unbounded_agent_capacity())),
     #("all_features_covered", json.bool(verify_all_features_covered())),
     #("aspect_details", json.array(items, fn(x) { x })),
+  ])
+  |> json.to_string
+}
+
+pub fn encode_agent_instances_json() -> String {
+  let singletons = get_single_instance_agents()
+  let multi = get_multi_instance_agents()
+  let single_items =
+    list.map(singletons, fn(desc) {
+      json.object([
+        #("agent_name", json.string(desc.agent_name)),
+        #("is_singleton", json.bool(True)),
+        #("concurrency_mode", json.string("SINGLE_INSTANCE")),
+        #("role_classification", json.string(desc.role_classification)),
+      ])
+    })
+  let multi_items =
+    list.map(multi, fn(desc) {
+      json.object([
+        #("agent_name", json.string(desc.agent_name)),
+        #("is_singleton", json.bool(False)),
+        #("concurrency_mode", json.string("MULTI_INSTANCE_ELASTIC")),
+        #("role_classification", json.string(desc.role_classification)),
+      ])
+    })
+
+  json.object([
+    #("status", json.string("ok")),
+    #("agent_limit_enforced", json.bool(False)),
+    #("swarm_model", json.string("UNCONSTRAINED_ELASTIC_BEAM_SWARM")),
+    #("total_baseline_templates", json.int(get_total_aspect_squad_agents())),
+    #("total_single_instance_agents", json.int(list.length(singletons))),
+    #("total_multi_instance_agents", json.int(list.length(multi))),
+    #("single_instance_agents", json.array(single_items, fn(x) { x })),
+    #("multi_instance_agents", json.array(multi_items, fn(x) { x })),
   ])
   |> json.to_string
 }

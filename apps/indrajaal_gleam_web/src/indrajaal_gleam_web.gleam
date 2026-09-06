@@ -322,6 +322,13 @@ pub fn main() {
         |> response.prepend_header("content-type", "application/json")
         |> response.prepend_header("access-control-allow-origin", "*")
       }
+      ["api", "fpp", "aspects", "instances"] -> {
+        let json_body = aspect_agent_ecosystem.encode_agent_instances_json()
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
       ["api", "fpp", "aspects", "processing"] -> {
         let agents = aspect_processing_agent.init_all_14_processing_agents()
         let json_body =

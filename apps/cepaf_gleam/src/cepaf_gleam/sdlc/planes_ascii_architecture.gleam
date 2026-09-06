@@ -5,10 +5,11 @@
 //// and Verification Plane in the Unified Operational System (UOS).
 ////
 //// Enforces:
-//// 1. Control Plane: OTP 29 supervisor, 14 active processing agents, 2oo3 consensus,
+//// 1. Control Plane: OTP 29 supervisor, 17 active processing agents, 2oo3 consensus,
 ////    Lyapunov stability observer, and OS NVMe hardware interlock.
-//// 2. Data Plane: Zero-Muda descriptor-relative VFS, Zenoh ZMOF bus, SQLite WAL,
-////    MAX/Mojo isolated daemon, and triple-interface presentation.
+//// 2. Data Plane: Zero-Muda descriptor-relative VFS, Zenoh 1.9.0 NIF ZMOF bus,
+////    RETE-UL 1.20.1 cognitive rule engine, SQLite WAL, MAX/Mojo isolated daemon,
+////    and triple-interface presentation.
 //// 3. Verification Plane: Lean 4, Gospel, 9-dimension testing, 4 mathematical gates,
 ////    capability poset lattice, and production conjunction Phi.
 //// =============================================================================
@@ -61,21 +62,22 @@ pub fn control_plane_ascii() -> String {
   <> "                                                              |\n"
   <> "                                                              v\n"
   <> "========================================================================================================================\n"
-  <> "                      14 FRACTAL ASPECT ACTIVE PROCESSING AGENTS (aspect_processing_agent.gleam)\n"
+  <> "                      17 FRACTAL ASPECT ACTIVE PROCESSING AGENTS (aspect_processing_agent.gleam)\n"
   <> "========================================================================================================================\n"
-  <> "  [L0 Constitutional]      [L1 Atomic Nif]        [L2 Quorum Health]     [L3 Transaction WAL]   [L4 Supervision OTP]\n"
-  <> "  * SemanticStrata (A4)    * CodeSurfaces (A6)    * ComponentPacket (A1) * InteractionPaths(A7) * VerticalLadder (A2)\n"
+  <> "  [L0 Constitutional]      [L1 Atomic Nif]        [L2 Quorum Health]     [L3 Transaction/Mesh]  [L4 Supervision OTP]\n"
+  <> "  * SemanticStrata (A4)    * CodeSurfaces (A6)    * ComponentPacket (A1) * InteractionPaths(A7)* VerticalLadder (A2)\n"
   <> "  * CompletenessCrit (A10)                        (11 Fields, HSM Vector)* SaPlanDurability(A14)* OrthogonalPlanes(A3)\n"
-  <> "  * ProductionConj (A12)                                                  (WAL Lease Manager)   * HorizSubsystems (A5)\n"
+  <> "  * ProductionConj (A12)                                                 * ZenohNativeMesh (A16)* HorizSubsystems (A5)\n"
   <> "         |                       |                       |                       |                      |\n"
   <> "         +-----------------------+-----------------------+-----------------------+----------------------+\n"
   <> "                                                         |\n"
   <> "                                                         v\n"
-  <> "  [L5 Cognitive OODA]      [L6 Ecosystem Mesh]    [L7 Federation SIL-6]  [L8 Meta-Evolution]    [L9/L10 Frontier/Invar]\n"
-  <> "  * OntologyFaculties (A9) * OrthogonalPlanes     * VerticalLadder (A2)  * DesignLattice (A8)   * OntologyFaculties (A9)\n"
-  <> "    (10 OODA Faculties)      (Plane Boundaries)   * SaPlanDurability(A14)  (W0-W9, 4 UCAs)        (Ruliad Frontier)\n"
-  <> "  * WikiPipeline (A11)                                                   * CapabilityPoset (A13)* CompletenessCrit(A10)\n"
-  <> "    (AST/Transclusion)                                                     (Poset Meet Lattice)   (Transcendent Invar)\n"
+  <> "  [L5 Cognitive/Rules]     [L6 Ecosystem/Docs]     [L7 Federation SIL-6]  [L8 Meta-Evolution]    [L9/L10 Frontier/Invar]\n"
+  <> "  * OntologyFaculties (A9) * Documentation (A15)   * VerticalLadder (A2)  * DesignLattice (A8)   * OntologyFaculties (A9)\n"
+  <> "    (10 OODA Faculties)      (Wiki/ZK KB Lattice)  * SaPlanDurability(A14)  (W0-W9, 4 UCAs)        (Ruliad Frontier)\n"
+  <> "  * WikiPipeline (A11)     * OrthogonalPlanes                            * CapabilityPoset (A13)* CompletenessCrit(A10)\n"
+  <> "  * ReteUlCognitive (A17)    (Plane Boundaries)                            (Poset Meet Lattice)   (Transcendent Invar)\n"
+  <> "    (Forward Chaining NIF)\n"
   <> "                                                         |\n"
   <> "                                                         v\n"
   <> "========================================================================================================================\n"
@@ -111,9 +113,11 @@ pub fn data_plane_ascii() -> String {
   <> "                                                   |\n"
   <> "                                                   v\n"
   <> "========================================================================================================================\n"
-  <> "                         DISTRIBUTED MESHTOPOLOGY & TELEMETRY BUS (Zenoh ZMOF)\n"
+  <> "              DISTRIBUTED MESHTOPOLOGY & TELEMETRY BUS (Native NIFs: Zenoh 1.9.0 & RETE-UL 1.20.1)\n"
   <> "========================================================================================================================\n"
+  <> "  * Authentic Native NIFs: c3i_nif.so (Rust Zenoh 1.9.0 multi-thread) & rule_engine_nif.so (Rust RETE-UL 1.20.1)\n"
   <> "  * SOLE transport for internal mesh communication, observability, and AI tool calls (SC-ZMOF-001)\n"
+  <> "  * Sub-millisecond RETE-UL pattern matching and production rule inference directly on BEAM\n"
   <> "  * Fractal Namespace Topics:\n"
   <> "      L0 Constitutional: indrajaal/l0/const/**           L4 System/Podman:  indrajaal/l4/system/**\n"
   <> "      L1 Atomic NIF:     indrajaal/l1/atomic/**          L5 Cognitive/OODA: indrajaal/l5/cog/**\n"
@@ -141,7 +145,7 @@ pub fn data_plane_ascii() -> String {
   <> "   [1. Lustre Web UI]                     [2. Wisp HTTP REST API]                  [3. ANSI Split TUI]\n"
   <> "   Port 4100 (Server-side rendered)       Port 4100 (Typed JSON Endpoints)         CLI Console (Zero Client JS)\n"
   <> "   * /checklist (18/18 checks)            * /api/fpp/aspects                       * Real-time sparklines\n"
-  <> "   * /planning (Cockpit)                  * /api/fpp/aspects/features              * 104-feature status grids\n"
+  <> "   * /planning (Cockpit)                  * /api/fpp/aspects/features              * 120-feature status grids\n"
   <> "   * /wiki, /zk (Knowledge)               * /api/fpp/aspects/processing            * Active agent swarm monitor\n"
   <> "========================================================================================================================\n"
 }
@@ -152,7 +156,7 @@ pub fn verification_plane_ascii() -> String {
   <> "========================================================================================================================\n\n"
   <> "                                     +------------------------------------------+\n"
   <> "                                     |    SOURCE FEATURE TRACEABILITY CATALOG   |\n"
-  <> "                                     | (104 Features, 14 Aspects, 256 Agents)   |\n"
+  <> "                                     | (120 Features, 17 Aspects, 256 Agents)   |\n"
   <> "                                     +--------------------+---------------------+\n"
   <> "                                                          |\n"
   <> "                                                          v\n"
@@ -189,7 +193,7 @@ pub fn verification_plane_ascii() -> String {
   <> "                                             |\n"
   <> "                                             v\n"
   <> "========================================================================================================================\n"
-  <> "                         9-DIMENSION TEST PROTOCOL (10,114 GLEAM TESTS GREEN)\n"
+  <> "                         9-DIMENSION TEST PROTOCOL (10,125+ GLEAM TESTS GREEN)\n"
   <> "========================================================================================================================\n"
   <> "   (1) UNIT TESTS        (2) SYSTEM TESTS      (3) TDD TESTS         (4) BDD TESTS         (5) PERF TESTS\n"
   <> "   Individual module     End-to-end flows      Micro-cycle laws      Behavior scenarios    Throughput & <100us\n"

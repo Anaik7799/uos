@@ -2,10 +2,10 @@
 //// [C3I-SIL6-ASPECT-PROCESSING] FRACTAL ASPECT PROCESSING AGENT ENGINE
 //// =============================================================================
 //// Implements the active fractal processing agents and holonic alignment loops
-//// for all 14 core aspects of UOS.
+//// for all 17 core aspects of UOS.
 ////
 //// Enforces:
-//// 1. Bijective mapping of all 14 aspects to vertical fractal layers (L0-L10)
+//// 1. Bijective mapping of all 17 aspects to vertical fractal layers (L0-L10)
 //// 2. Active processing agents executing autonomous OODA cycles per aspect
 //// 3. Lyapunov negative drift exponents (lambda < 0) guaranteeing asymptotic stability
 //// 4. Shannon entropy bounds (H >= 2.5 bits) for information preservation
@@ -15,9 +15,10 @@
 import cepaf_gleam/sdlc/aspect_agent_ecosystem.{
   type FractalAspect, AspectCapabilityPoset, AspectCodeSurfaces,
   AspectCompletenessCriteria, AspectComponentPacket, AspectDesignLattice,
-  AspectHorizontalSubsystems, AspectInteractionPaths, AspectOntologyFaculties,
-  AspectOrthogonalPlanes, AspectProductionConjunction, AspectSaPlanDurability,
-  AspectSemanticStrata, AspectVerticalLadder, AspectWikiPipeline,
+  AspectDocumentationLattice, AspectHorizontalSubsystems, AspectInteractionPaths,
+  AspectOntologyFaculties, AspectOrthogonalPlanes, AspectProductionConjunction,
+  AspectReteUlCognitiveRules, AspectSaPlanDurability, AspectSemanticStrata,
+  AspectVerticalLadder, AspectWikiPipeline, AspectZenohNativeMesh,
   get_all_fractal_aspects, get_aspect_feature_detail,
 }
 import gleam/float
@@ -111,7 +112,7 @@ pub type AspectProcessingState {
 }
 
 // =============================================================================
-// Initialization of the 14 Aspect Processing Agents
+// Initialization of the 17 Aspect Processing Agents
 // =============================================================================
 
 pub fn init_aspect_processing_agent(
@@ -346,11 +347,63 @@ pub fn init_aspect_processing_agent(
         is_aligned: True,
         status: "ACTIVE_PROCESSING",
       )
+    AspectDocumentationLattice ->
+      AspectProcessingState(
+        aspect: aspect,
+        aspect_name: detail.aspect_name,
+        primary_layer: 6,
+        secondary_layers: [5, 8],
+        fractal_dimension: 1.75,
+        lyapunov_exponent: -0.52,
+        shannon_entropy: 2.9,
+        processor_agent_name: "DocumentationLatticeProcessingAgent",
+        squad_agent_count: squad_len,
+        features_count: features_len,
+        current_cycle: 1,
+        is_aligned: True,
+        status: "ACTIVE_PROCESSING",
+      )
+    AspectZenohNativeMesh ->
+      AspectProcessingState(
+        aspect: aspect,
+        aspect_name: detail.aspect_name,
+        primary_layer: 3,
+        secondary_layers: [1, 6],
+        fractal_dimension: 2.1,
+        lyapunov_exponent: -0.85,
+        shannon_entropy: 3.12,
+        processor_agent_name: "ZenohMeshProcessingAgent",
+        squad_agent_count: squad_len,
+        features_count: features_len,
+        current_cycle: 1,
+        is_aligned: True,
+        status: "ACTIVE_PROCESSING",
+      )
+    AspectReteUlCognitiveRules ->
+      AspectProcessingState(
+        aspect: aspect,
+        aspect_name: detail.aspect_name,
+        primary_layer: 5,
+        secondary_layers: [4, 8],
+        fractal_dimension: 2.3,
+        lyapunov_exponent: -0.76,
+        shannon_entropy: 3.08,
+        processor_agent_name: "ReteUlCognitiveProcessingAgent",
+        squad_agent_count: squad_len,
+        features_count: features_len,
+        current_cycle: 1,
+        is_aligned: True,
+        status: "ACTIVE_PROCESSING",
+      )
   }
 }
 
-pub fn init_all_14_processing_agents() -> List(AspectProcessingState) {
+pub fn init_all_aspect_processing_agents() -> List(AspectProcessingState) {
   list.map(get_all_fractal_aspects(), init_aspect_processing_agent)
+}
+
+pub fn init_all_14_processing_agents() -> List(AspectProcessingState) {
+  init_all_aspect_processing_agents()
 }
 
 // =============================================================================
@@ -388,7 +441,7 @@ pub fn execute_all_aspects_processing_cycle() -> #(
   List(AspectProcessingState),
   List(ProcessingCycleResult),
 ) {
-  let agents = init_all_14_processing_agents()
+  let agents = init_all_aspect_processing_agents()
   let pairs = list.map(agents, execute_fractal_processing_cycle)
   let states = list.map(pairs, fn(p) { p.0 })
   let results = list.map(pairs, fn(p) { p.1 })
@@ -402,7 +455,7 @@ pub fn execute_all_aspects_processing_cycle() -> #(
 pub fn verify_all_aspects_fractally_aligned(
   agents: List(AspectProcessingState),
 ) -> Bool {
-  list.length(agents) == 14
+  list.length(agents) == 17
   && list.all(agents, fn(a) {
     a.is_aligned
     && a.features_count > 0

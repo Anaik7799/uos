@@ -17,7 +17,7 @@ pub fn control_plane_ascii_content_test() {
   string.contains(ascii, "2oo3 CONSTITUTIONAL QUORUM") |> should.be_true
   string.contains(ascii, "HARDWARE STORAGE INTERLOCK") |> should.be_true
   string.contains(ascii, "25503L801736") |> should.be_true
-  string.contains(ascii, "14 FRACTAL ASPECT ACTIVE PROCESSING AGENTS")
+  string.contains(ascii, "17 FRACTAL ASPECT ACTIVE PROCESSING AGENTS")
   |> should.be_true
   string.contains(ascii, "LYAPUNOV WINDOWED DRIFT") |> should.be_true
 }
@@ -29,7 +29,7 @@ pub fn data_plane_ascii_content_test() {
   string.contains(ascii, "ZERO-MUDA DESCRIPTOR-RELATIVE HIGH-THROUGHPUT VFS")
   |> should.be_true
   string.contains(ascii, "ZigVM") |> should.be_true
-  string.contains(ascii, "Zenoh ZMOF") |> should.be_true
+  string.contains(ascii, "Zenoh 1.9.0 & RETE-UL 1.20.1") |> should.be_true
   string.contains(ascii, "SQLITE WAL APPEND-ONLY TRANSACTION LOG")
   |> should.be_true
   string.contains(ascii, "MODULAR MAX / MOJO INFERENCE PIPE") |> should.be_true
@@ -41,6 +41,8 @@ pub fn verification_plane_ascii_content_test() {
   let ascii = verification_plane_ascii()
 
   string.contains(ascii, "VERIFICATION PLANE ARCHITECTURE") |> should.be_true
+  string.contains(ascii, "120 Features, 17 Aspects, 256 Agents")
+  |> should.be_true
   string.contains(ascii, "LEAN 4 THEOREM PROVER") |> should.be_true
   string.contains(ascii, "QUINT FORMAL MODEL") |> should.be_true
   string.contains(ascii, "HERMES GOSPEL & Z3") |> should.be_true
