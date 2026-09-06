@@ -153,6 +153,8 @@ The operational system coordinates across five distinct language tiers:
   - `[[zk:ADR-057]]` Master Session Handover to OpenAI Codex & 69 Cycles Transfer ([ADR-057 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-2000-adr-057-master-session-handover-to-codex-and-69-cycles-transfer.md))
   - `[[wiki:20260906-2100-uos-c3i-vertical-slice-and-wave4-synthesis-wiki]]` ([C3I Vertical Slice & Wave 4 Synthesis Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-2100-uos-c3i-vertical-slice-and-wave4-synthesis-wiki.md))
   - `[[zk:ADR-058]]` C3I Knowledge Runtime Vertical Slice & 15 Wave 4 Evolutionary Cycles Ratification ([ADR-058 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-2100-adr-058-c3i-vertical-slice-and-wave4-evolutionary-cycles.md))
+  - `[[wiki:20260906-2200-uos-codex-session-handover-and-wave4-synthesis-wiki]]` ([Codex Session Handover & Wave 4 Synthesis Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-2200-uos-codex-session-handover-and-wave4-synthesis-wiki.md))
+  - `[[zk:ADR-059]]` Master Session Handover to OpenAI Codex & 84 Cycles Transfer ([ADR-059 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-2200-adr-059-master-session-handover-to-codex-and-84-cycles-transfer.md))
 
 
 

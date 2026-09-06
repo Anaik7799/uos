@@ -1,0 +1,47 @@
+{
+  "handover_id": "RCPT-20260906-2200-CODEX-SESSION-HANDOVER",
+  "timestamp": "2026-09-06T16:20:00Z",
+  "outgoing_sovereign": "AGY (Google DeepMind Antigravity)",
+  "incoming_sovereign": "CODEX (OpenAI Codex Sovereign Auditor & Implementer)",
+  "witnessing_sovereign": "CLAUDE (Anthropic Claude Fable 5.1)",
+  "canonical_workspace": "/home/an/NAS-setup/uos",
+  "vcs_backend": "Standalone Non-Colocated Jujutsu (.jj/)",
+  "current_commit": "svtmsvqs 4305b821",
+  "bookmark": "main",
+  "tag": "tag/20260906-2100-c3i-vertical-slice-and-wave4-ratified",
+  "status": "OPERATIONAL TRANSFER COMPLETE",
+  "verified_baseline": {
+    "total_ev_cycles": 84,
+    "ev_cycle_range": "EV-01..EV-84",
+    "doctor_verdict": "100% GREEN (84/84 PASS)",
+    "gleam_eunit_passed": 10188,
+    "test_failures": 0,
+    "compiler_warnings": 0,
+    "selfchecks_count": 16,
+    "selfchecks_verdict": "16/16 ALL GREEN",
+    "comprehensive_checklist": "18/18 CHECKS PASS",
+    "vertical_slice_status": "OPERATIONAL",
+    "vertical_slice_endpoint": "http://nas-1.tail55d152.ts.net:4100/api/knowledge/vertical-slice",
+    "math_gates": {
+      "shannon_entropy": 2.78,
+      "ccm": 0.94,
+      "divergence": 0.02,
+      "itqs": 0.96
+    }
+  },
+  "invariants_enforced": {
+    "zero_muda": "0 Bevy, 0 Graphite, Pure Erlang graphene_nif.erl (SC-MUDA-001 PASS)",
+    "storage_safety": "HARD_DENIED_SYSTEM_OS_SERIAL = '25503L801736' LOCKED",
+    "ocaml_port_protocol": "Supervised external subprocess over stdio pipes (reductions protected)",
+    "timestamp_mandate": "YYYYMMDD-HHSS- prefix active on all documents",
+    "tailscale_web": "http://nas-1.tail55d152.ts.net:4100/... FQDN active on all views"
+  },
+  "governing_documents": {
+    "master_tome": "docs/design/20260906-2200-uos-tri-sovereign-master-session-handover-to-codex.md",
+    "adr": "docs/zk/20260906-2200-adr-059-master-session-handover-to-codex-and-84-cycles-transfer.md",
+    "wiki": "docs/wiki/20260906-2200-uos-codex-session-handover-and-wave4-synthesis-wiki.md",
+    "journal": "docs/journal/20260906-2200-uos-master-session-handover-to-codex-journal.md",
+    "playbook": "docs/design/20260906-2200-codex-sovereign-operational-runbook-and-playbook.md",
+    "prompt_lineage": "governance/prompts/20260906-1215-uos-master-session-prompt-lineage-archive.md"
+  }
+}
