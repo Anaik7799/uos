@@ -151,8 +151,8 @@ zettelkasten_standards = [
 ]
 
 [journals]
-latest_journal_id = "JRN-20260906-0736-ALL-PROMPTS-AND-ANALYSIS"
-latest_journal_path = "docs/journal/20260906-0736-uos-all-prompt-history-and-comprehensive-analysis-journal.md"
+latest_journal_id = "JRN-20260906-0743-CODEX-MASTER-PROMPT-SYNTHESIS"
+latest_journal_path = "docs/journal/20260906-0743-uos-codex-master-navigational-prompt-synthesis-journal.md"
 master_ledger_id = "LEDGER-20260905-2315-AGY-EV-CYCLES"
 master_ledger_path = "docs/design/20260905-2315-uos-5-evolutionary-cycles-agy-web-verification-ledger.md"
 ratification_certificate_path = "docs/design/20260905-2315-uos-agy-sovereign-review-certificate.md"
