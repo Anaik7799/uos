@@ -174,6 +174,18 @@ Every task completion journal MUST contain the exact 13 required sections:
 
 Scaling boundaries: trivial (1–3 files: 1–2 lines/sec), standard (4–14 files: paragraph detail), major (15+ files: full subsections & diagrams).
 
+### 8.3 Mandatory Diagram Source Rule (`SC-DIAGRAM-001`)
+
+Per operator directive, every newly authored or revised explanatory diagram MUST
+have editable ASCII and Mermaid source. ASCII is the readable fallback and Mermaid
+is the structured rendering source; both MUST describe the same nodes, edges, and
+labels. Do not author diagrams solely as raster images, SVG, Graphviz/DOT, slides,
+or generated artwork. Screenshots, videos, and scientific measurement plots are
+observed test evidence, not explanatory diagrams, and MUST retain provenance.
+Preserve historical and external originals byte-for-byte; record nonconformance
+without rewriting them. Apply this rule to documentation, journals, specifications,
+skills, and UI design artifacts at every fractal layer L0–L9.
+
 ## 9. Status Line
 
 ```text
