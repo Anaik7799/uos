@@ -1,0 +1,305 @@
+{
+  "schema": "uos.full-implementation-plan-receipt.v1",
+  "workspace_root": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main",
+  "clock_utc": "2026-09-06T08:49:32Z",
+  "host_sync": "Reference ID    : B97DBE7B (ntp-nts-3.ps5.canonical.com)\nStratum         : 3\nRef time (UTC)  : Sun Sep 06 08:39:42 2026\nSystem time     : 0.000232366 seconds slow of NTP time\nLast offset     : -0.000162678 seconds\nRMS offset      : 0.000789091 seconds\nFrequency       : 4.024 ppm slow\nResidual freq   : -0.004 ppm\nSkew            : 0.231 ppm\nRoot delay      : 0.030858625 seconds\nRoot dispersion : 0.001823602 seconds\nUpdate interval : 1040.7 seconds\nLeap status     : Normal",
+  "candidate_before_receipt": "vtqzooyxpnxrwwzvsynzlonpmqwwtonw d2dc92fa557bf4b59085a237095386b7d0e9c6d1",
+  "status": "PLAN_METADATA_VALIDATED_IMPLEMENTATION_UNRUN",
+  "tasks": 60,
+  "requirements": 35,
+  "workstreams": 8,
+  "concrete_regression_fixtures": 60,
+  "acyclic_dependencies": true,
+  "all_tasks_reach_final_admission": true,
+  "requirements_covered": true,
+  "fixture_backlog_parity": true,
+  "master_diagram_parity": true,
+  "journal_sections": 13,
+  "checkpoints_per_document": 18,
+  "artifact_links": 118,
+  "existing_file_references": 90,
+  "planned_create_references": 168,
+  "zenoh_families_mapped": 16,
+  "previous_handover_tasks_mapped": 17,
+  "original_ocaml_rechecked": 161,
+  "original_ocaml_changed": 0,
+  "backlog": {
+    "path": "governance/planning/20260906-0817-uos-full-implementation-backlog.json",
+    "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/governance/planning/20260906-0817-uos-full-implementation-backlog.json",
+    "bytes": 196386,
+    "sha256": "3ba4e8951b2bc6c7b3f543588ee7cd8ba0a058e54253538c554af214b7330ac0",
+    "stable_during_metadata_capture": true
+  },
+  "validator": {
+    "path": "tools/validate_implementation_plan.ml",
+    "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/tools/validate_implementation_plan.ml",
+    "bytes": 12563,
+    "sha256": "3c0e90a49be41866da994c4db24fed89b2f209c992a008734633ec327f8396a1",
+    "stable_during_metadata_capture": true
+  },
+  "documents": [
+    {
+      "path": "docs/design/20260906-0817-uos-full-implementation-plan.md",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/docs/design/20260906-0817-uos-full-implementation-plan.md",
+      "bytes": 42527,
+      "sha256": "af4df0941a1913816a996e7e14516878e6d780f647fc9d1e0bce20e0df33a42d",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "docs/journal/20260906-0817-uos-full-implementation-planning-journal.md",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/docs/journal/20260906-0817-uos-full-implementation-planning-journal.md",
+      "bytes": 15870,
+      "sha256": "512f02934582604d103100eb2a09c52896ed6ffe382f18eb5492a3f0d990ea93",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "docs/design/20260906-0817-uos-implementation-01-evidence-and-migration.md",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/docs/design/20260906-0817-uos-implementation-01-evidence-and-migration.md",
+      "bytes": 39324,
+      "sha256": "3085698ff9c0bb70c0f05e5ef58d054d1ef87a75e49882ca1192de602926ca72",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "docs/design/20260906-0817-uos-implementation-02-semantics-and-atlas.md",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/docs/design/20260906-0817-uos-implementation-02-semantics-and-atlas.md",
+      "bytes": 39001,
+      "sha256": "06e0231084a25f864439bff65b8a96edc699453884eec504ea2b86f63755b3c3",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "docs/design/20260906-0817-uos-implementation-03-models-and-actors.md",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/docs/design/20260906-0817-uos-implementation-03-models-and-actors.md",
+      "bytes": 45486,
+      "sha256": "0459460fe1d2dc3b669d3dcaf36c5fca92f5337c2ad21361b0c190117fb386f2",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "docs/design/20260906-0817-uos-implementation-04-zenoh-native-and-ecosystem.md",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/docs/design/20260906-0817-uos-implementation-04-zenoh-native-and-ecosystem.md",
+      "bytes": 54651,
+      "sha256": "5be2c06cb765f04056fab0d4da2db25dd3219406a8ea0fc721ad3501e596f4e7",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "docs/design/20260906-0817-uos-implementation-05-web-and-knowledge.md",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/docs/design/20260906-0817-uos-implementation-05-web-and-knowledge.md",
+      "bytes": 42112,
+      "sha256": "0541582b0b2e21db7f219e44dce9bbcbdc11f025ca7f2c7a7630bb40c5ea471f",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "docs/design/20260906-0817-uos-implementation-06-verification-and-experience.md",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/docs/design/20260906-0817-uos-implementation-06-verification-and-experience.md",
+      "bytes": 34400,
+      "sha256": "2a04b2caed6f3f09ff4d9b4c4dddbadc50b9b633d661c99fd782d4461bc6064d",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "docs/design/20260906-0817-uos-implementation-07-skills-agents-and-dx.md",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/docs/design/20260906-0817-uos-implementation-07-skills-agents-and-dx.md",
+      "bytes": 19406,
+      "sha256": "2687939af4d7347456518998385eb976cac9553787b04c1ef844fac3ca5a2469",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "docs/design/20260906-0817-uos-implementation-08-release-and-admission.md",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/docs/design/20260906-0817-uos-implementation-08-release-and-admission.md",
+      "bytes": 19008,
+      "sha256": "bbcc60a2520f02584728ac717b75ede5b7e3eb8e9aee0243e8a31e8307b42e38",
+      "stable_during_metadata_capture": true
+    }
+  ],
+  "source_inputs": [
+    {
+      "path": "AGENTS.md",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/AGENTS.md",
+      "bytes": 15390,
+      "sha256": "c6b434f3eaf26211c0c046b55eff48f8e41a93a42c7b62b05078d9ba1d15bebf",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": ".codex/skills/writing-plans/SKILL.md",
+      "resolved_path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/6.3.0/skills/writing-plans/SKILL.md",
+      "bytes": 7053,
+      "sha256": "48508f44bbfd7d24b029fbf3a314f3cd14c9615599059366e922f47b8dc08cf2",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "contracts/rules/dmc-tcm-mandate.md",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/contracts/rules/dmc-tcm-mandate.md",
+      "bytes": 1833,
+      "sha256": "f9ca5f514818c2339ef38b58afda2e4bb8bcbc08b83599db5d4158a3b1ba8c2f",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "contracts/rules/timestamp-mandate.md",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/contracts/rules/timestamp-mandate.md",
+      "bytes": 2588,
+      "sha256": "16f6fd7ea07f4f0b0d68a358735d6c7a59effac3b1186b32000d72e12fc52d74",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "contracts/rules/diagram-ascii-mermaid-mandate.md",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/contracts/rules/diagram-ascii-mermaid-mandate.md",
+      "bytes": 1707,
+      "sha256": "d27c5771d695202eb3b653fba54ccaaca63d7f00cb1587b0e0e96c6847c000d4",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "docs/design/20260906-0606-uos-agy-codex-unified-master-prompt.md",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/docs/design/20260906-0606-uos-agy-codex-unified-master-prompt.md",
+      "bytes": 61896,
+      "sha256": "729c6dcbe44e9a60dbf350fac245fb8bfdc62b7cdc0ca46d62846f8bb161465e",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "docs/zk/20260906-0606-agy-handover-understanding-and-actor-ecology-plan.md",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/docs/zk/20260906-0606-agy-handover-understanding-and-actor-ecology-plan.md",
+      "bytes": 35239,
+      "sha256": "e95aeabf1fc67332cc78ce4b33dabcde14be9703357cb42dc702e9eb2a1347f4",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "docs/design/20260906-0631-web-knowledge-verification-review.md",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/docs/design/20260906-0631-web-knowledge-verification-review.md",
+      "bytes": 54390,
+      "sha256": "e8969f4d547f7a8685581dba760d5cad222f1f2fd6d805977cd467512de95570",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "docs/journal/20260906-0428-ocaml-web-tests-gleam-mapping.md",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/docs/journal/20260906-0428-ocaml-web-tests-gleam-mapping.md",
+      "bytes": 90764,
+      "sha256": "3177787c4ddbb63bdc2a26cd53fd84800ba4b0aa20543b0db9856e4e2385ba32",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "tests/web_quality/20260906-0606-handover-source-inputs.json",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/tests/web_quality/20260906-0606-handover-source-inputs.json",
+      "bytes": 31987,
+      "sha256": "9d9e070275051435daa1c57ed702bf693375a36769687e306a05e3e02ced8747",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "governance/sources/20260906-0606-agy-handover-source-receipt.json",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/governance/sources/20260906-0606-agy-handover-source-receipt.json",
+      "bytes": 56202,
+      "sha256": "b5474f4a324133a9ef61c6c8a22d4ca5a4e385ac2dd14308c885509ef59c827a",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "governance/sources/20260906-0631-web-quality-evidence.json",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/governance/sources/20260906-0631-web-quality-evidence.json",
+      "bytes": 455081,
+      "sha256": "888c2a00fe080a41804b8ab4ddc042faf733de669b7e7b4cd59e461a3e277fc3",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "apps/cepaf_gleam/gleam.toml",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/apps/cepaf_gleam/gleam.toml",
+      "bytes": 991,
+      "sha256": "258bba9c5b6c697c29b38ec926700db7ddd12655113ec291775703cbf5bd245f",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "apps/indrajaal_gleam_web/gleam.toml",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/apps/indrajaal_gleam_web/gleam.toml",
+      "bytes": 309,
+      "sha256": "c638d0826265f65f7f662e74ba5f45d7b53f6bfc1ffdd027aab5bcec909ed3eb",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "formal/registry/formal-manifest.toml",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/formal/registry/formal-manifest.toml",
+      "bytes": 541,
+      "sha256": "a839218f268c9e016dc6e53dffc9cd5842895d7e78eae1dd9d9ab844e2d940d1",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/actor.gleam",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/apps/cepaf_gleam/src/cepaf_gleam/fpp/actor.gleam",
+      "bytes": 5039,
+      "sha256": "faf7f1025af1beb7ac35133b211607e3f288080dcc19febdc6bee1caffd7ff7d",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/dmc_tcm.gleam",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/apps/cepaf_gleam/src/cepaf_gleam/fpp/dmc_tcm.gleam",
+      "bytes": 8320,
+      "sha256": "c00d8a58ab9b737a926a49ab8005724e4b0b30979f78bb95ce5bd677d31909aa",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/intent.gleam",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/apps/cepaf_gleam/src/cepaf_gleam/fpp/intent.gleam",
+      "bytes": 5654,
+      "sha256": "f46227435caa75b0a6e79d41344017d2217e0136368a7bc5d4532543bbcab7f7",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/algebraic_atlas.gleam",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/apps/cepaf_gleam/src/cepaf_gleam/fpp/algebraic_atlas.gleam",
+      "bytes": 10634,
+      "sha256": "9871ba21e03fd4a4071e948a73a753b89d309f96f22ad87ed0be51ddc4379e49",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/agent_factory.gleam",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/apps/cepaf_gleam/src/cepaf_gleam/fpp/agent_factory.gleam",
+      "bytes": 6090,
+      "sha256": "49c219fcaef3c0a04e58398952abc85c1f18163f01a426eec47d4bafc76661ad",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/evolutionary_cycles.gleam",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/apps/cepaf_gleam/src/cepaf_gleam/fpp/evolutionary_cycles.gleam",
+      "bytes": 40701,
+      "sha256": "7b933f6940e1f05f7386ee81916dde042f70667438a682689e55a7f719a982bd",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "tools/uos/src/main.gleam",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/tools/uos/src/main.gleam",
+      "bytes": 29008,
+      "sha256": "d9201c3448e1d9a3c1094b6ba2aa96e9fd5f98b546ded474565317f4c7634776",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "tools/uos/src/uos.gleam",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/tools/uos/src/uos.gleam",
+      "bytes": 196,
+      "sha256": "3d26f36b9acbc0708f8757638fd7f48343067fa2f58cb32b7f051d8de0f98750",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "docs/design/20260906-1015-uos-tri-sovereign-15-cycle-ratification-certificate.md",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/docs/design/20260906-1015-uos-tri-sovereign-15-cycle-ratification-certificate.md",
+      "bytes": 8700,
+      "sha256": "fc5b4fee0d830c6f368c506036b406584921553dfbef7edfb18e18854a31c310",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "docs/design/20260906-0955-uos-fprime-agent-architecture-spec.md",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/docs/design/20260906-0955-uos-fprime-agent-architecture-spec.md",
+      "bytes": 10608,
+      "sha256": "b6ef7f1d700cd15f08550fe20ad58a6366a1a0c2fae082a6a7808ce6cada7596",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam",
+      "resolved_path": "/home/an/NAS-setup/uos/.uos-workspaces/full-implementation-plan-main/apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam",
+      "bytes": 133510,
+      "sha256": "bf21eb6ae837345bb2d7eb1181f77eb08a96e6bcc90845a946a69d5f446104a5",
+      "stable_during_metadata_capture": true
+    }
+  ],
+  "implementation_cases_executed": 0,
+  "external_code_ingested": false,
+  "subagents_dispatched": 0,
+  "limitations": [
+    "Metadata validation is not execution of planned acceptance fixtures or proof of implementation correctness.",
+    "Targeted source review only; no complete close reading or fresh system runtime/native/browser/formal certification.",
+    "Shared workspace and external sources can change; source quiescence/admission remain execution gates.",
+    "No full conformance census, native performance winner, browser completion, deployment or independent reviewer signature."
+  ]
+}

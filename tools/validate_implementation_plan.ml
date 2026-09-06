@@ -8,10 +8,10 @@
 open Bos
 open Yojson.Basic.Util
 let get = function Ok x -> x | Error (`Msg e) -> failwith e
-let root="/home/an/NAS-setup/uos"
 let prefix="20260906-0817"
 let backlog_path="governance/planning/"^prefix^"-uos-full-implementation-backlog.json"
 let run args=get(OS.Cmd.(run_out(Cmd.of_list args)|>out_string|>success))|>String.trim
+let root=run["jj";"root"]
 let read path=get(OS.File.read(Fpath.v path))
 let json path=Yojson.Basic.from_string(read path)
 let sha path=String.sub(run["sha256sum";"--";path])0 64
@@ -43,7 +43,7 @@ let count_matches regexp body=
   let rec loop at count=try ignore(Str.search_forward regexp body at);loop(Str.match_end())(count+1)with Not_found->count
   in loop 0 0
 let ()=
-  if Sys.getcwd()<>root then failwith("run from "^root);
+  if Unix.realpath(Sys.getcwd())<>Unix.realpath root then failwith("run from workspace root "^root);
   let input=json backlog_path in
   let tasks=arr "tasks" input and reqs=arr "requirements" input and streams=arr "workstreams" input in
   let ids=List.map(str "id")tasks and req_ids=List.map(str "id")reqs in
@@ -151,6 +151,7 @@ let ()=
   if !errors<>[]then begin List.iter prerr_endline(List.rev !errors);exit 1 end;
   let receipt=`Assoc[
     "schema",s "uos.full-implementation-plan-receipt.v1";
+    "workspace_root",s root;
     "clock_utc",s(run["date";"-u";"+%Y-%m-%dT%H:%M:%SZ"]);
     "host_sync",s(run["chronyc";"tracking"]);
     "candidate_before_receipt",s(run["jj";"log";"-r";"@";"--no-graph";"-T";"change_id ++ \" \" ++ commit_id"]);
@@ -174,4 +175,3 @@ let ()=
   let temp=receipt_path^".tmp"in
   get(OS.File.write(Fpath.v temp)(Yojson.Basic.pretty_to_string receipt^"\n"));Unix.rename temp receipt_path;
   Printf.printf "Plan validated: 60 tasks, 35 requirements, 8 workstreams, 60 fixtures; DAG/files checked; 16 Zenoh families; 161 originals unchanged; %d artifact links. Implementation cases executed: 0.\n%!" !artifact_links
-
