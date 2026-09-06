@@ -211,8 +211,8 @@ pub fn execute(cmd: UosCommand) -> Int {
           }
         }
         _ -> {
-          io.println("Gate Result: PASS (admitted into standalone Jujutsu monorepo)")
-          0
+          io.println("Gate Result: FAIL (unknown gate identifier: " <> name <> ")")
+          1
         }
       }
     }

@@ -3,8 +3,16 @@ import main
 @external(erlang, "uos_ffi", "get_arguments")
 fn get_arguments() -> List(String)
 
+@external(erlang, "uos_ffi", "halt")
+fn halt(code: Int) -> Nil
+
 pub fn main() {
   let args = get_arguments()
   let cmd = main.parse_args(args)
-  main.execute(cmd)
+  let code = main.execute(cmd)
+  case code {
+    0 -> Nil
+    _ -> halt(code)
+  }
 }
+

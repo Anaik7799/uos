@@ -1,5 +1,9 @@
 -module(uos_ffi).
--export([get_arguments/0, file_exists/1, matches_timestamp_format/1, file_contains/2]).
+-export([get_arguments/0, file_exists/1, matches_timestamp_format/1, file_contains/2, halt/1]).
+
+halt(Code) ->
+    erlang:halt(Code).
+
 
 get_arguments() ->
     Args = init:get_plain_arguments(),

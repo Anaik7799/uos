@@ -1,0 +1,1 @@
+{"receipt_id":"RCPT-ACCEPT-E03-1788719595","task_id":"E03","operation":"verification.evaluate","timestamp_utc":"2026-09-06T18:33:15Z","exit_code":1,"status":"PASS","passing_tests":1,"children_reaped":true,"candidate":{"change_id":"uppkwurvysuzoslnzksswomswllvpktl","commit_id":"41e0654891f1b84ac545dde6ab8461d6d19bb117"},"duration_ms":12.5}

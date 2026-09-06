@@ -1,0 +1,298 @@
+#!/usr/bin/env bash
+# =============================================================================
+# tools/tui — Unified Operational System (UOS) Terminal User Interface CLI
+# =============================================================================
+# STAMP: SC-GLM-UI-001, SC-GLM-UI-004, SC-GLM-UI-007, SC-GLM-UI-008
+# =============================================================================
+
+set -euo pipefail
+
+UOS_ROOT="/home/an/NAS-setup/uos"
+CEPAF_GLEAM="${UOS_ROOT}/apps/cepaf_gleam"
+EBIN_PATHS="${CEPAF_GLEAM}/build/dev/erlang/*/ebin"
+
+show_help() {
+  cat <<'EOF'
+Unified Operational System (UOS) — C3I Terminal User Interface (TUI)
+
+Usage:
+  tools/tui [command] [args...]
+
+Commands:
+  auth                 Display AGY Sovereign Authentication Status & L0-L7 Permissions
+  split                Render Split-Screen TUI Dashboard (Swarm TAB + Test KPIs)
+  dashboard | cockpit  Render Biomorphic Cockpit TUI Dashboard (OODA, Genome, Schedulers)
+  stream               Render AG-UI 32-Event Real-Time ANSI Stream
+  page <page_name>     Render canonical frame for any of the 32 UOS pages
+  view <subsystem>     Render specialized subsystem TUI view
+  list-pages           List all 32 canonical pages
+  list-views           List all specialized subsystem views
+  preflight            Execute 10-point Preflight Flight Check
+  help                 Show this help message
+
+Examples:
+  tools/tui auth
+  tools/tui split
+  tools/tui dashboard
+  tools/tui page planning
+  tools/tui view bicameral
+  tools/tui view homeostasis
+  tools/tui view evolution
+EOF
+}
+
+run_erl() {
+  erl -noshell -pa ${EBIN_PATHS} -eval "$1"
+}
+
+CMD="${1:-split}"
+
+case "$CMD" in
+  auth)
+    run_erl '
+      Output = cepaf_gleam@ui@tui@auth_view:render(
+        <<"agy">>,
+        full_access,
+        [<<"sovereign">>, <<"admin">>, <<"operator">>],
+        true,
+        true
+      ),
+      io:put_chars(Output),
+      io:nl(),
+      init:stop().
+    '
+    ;;
+
+  split)
+    run_erl '
+      Dashboard = cepaf_gleam@ui@lustre@planning_dashboard:init(),
+      Td = cepaf_gleam@testing@test_dashboard:init(),
+      Model = cepaf_gleam@ui@tui@split_screen:init_split_screen(Dashboard, Td),
+      Output = cepaf_gleam@ui@tui@split_screen:render_frame(Model),
+      io:put_chars(Output),
+      io:nl(),
+      init:stop().
+    '
+    ;;
+
+  dashboard|cockpit)
+    run_erl '
+      Model = cepaf_gleam@ui@lustre@app:init(),
+      Output = cepaf_gleam@ui@tui@dashboard_view:render(Model),
+      io:put_chars(Output),
+      io:nl(),
+      init:stop().
+    '
+    ;;
+
+  stream)
+    run_erl '
+      Events = cepaf_gleam@agui@event_stream_widget:demo_events(),
+      Output = cepaf_gleam@agui@event_stream_widget:render_ansi(Events, 15),
+      io:put_chars(Output),
+      io:nl(),
+      init:stop().
+    '
+    ;;
+
+  preflight)
+    run_erl '
+      Result = cepaf_gleam@testing@flight_check:run_preflight(),
+      Checks = erlang:element(2, Result),
+      Passed = erlang:element(3, Result),
+      io:format("~n=== PREFLIGHT FLIGHT CHECK (Passed: ~p) ===~n~n", [Passed]),
+      lists:foreach(fun(C) ->
+        Name = erlang:element(2, C),
+        Status = erlang:element(4, C),
+        io:format("  [~s] ~-32s : ~p~n", [case Status of check_passed -> "PASS"; _ -> "SKIP" end, Name, Status])
+      end, Checks),
+      io:nl(),
+      init:stop().
+    '
+    ;;
+
+  list-pages)
+    run_erl '
+      Pages = cepaf_gleam@ui@domain:all_pages(),
+      io:format("~nCanonical 32 Pages in UOS TUI:~n", []),
+      lists:foreach(fun(P) ->
+        Label = cepaf_gleam@ui@domain:page_to_label(P),
+        Path = cepaf_gleam@ui@domain:page_to_path(P),
+        io:format("  - ~-26s (~s)~n", [Label, Path])
+      end, Pages),
+      io:nl(),
+      init:stop().
+    '
+    ;;
+
+  list-views)
+    cat <<'EOF'
+
+Specialized Subsystem Views:
+  - planning             - verification         - immune
+  - zenoh                - podman               - cockpit
+  - prajna               - substrate            - metabolic
+  - telemetry            - kms                  - mcp
+  - federation           - health-grid          - agents
+  - holon                - config               - git
+  - database             - bridge               - smriti
+  - integrity            - evolution            - biomorphic
+  - homeostasis          - bicameral            - singularity
+  - markdown             - hooks                - voice
+  - ruliology            - fmea                 - pipeline-tracer
+
+EOF
+    ;;
+
+  page)
+    PAGE_ARG="${2:-dashboard}"
+    run_erl '
+      PageArg = <<"'${PAGE_ARG}'"/utf8>>,
+      Pages = cepaf_gleam@ui@domain:all_pages(),
+      Match = lists:filter(fun(P) ->
+        Path = cepaf_gleam@ui@domain:page_to_path(P),
+        Label = cepaf_gleam@ui@domain:page_to_label(P),
+        (Path =:= <<"/", PageArg/binary>>) orelse (string:lowercase(binary_to_list(Label)) =:= string:lowercase(binary_to_list(PageArg)))
+      end, Pages),
+      TargetPage = case Match of
+        [P | _] -> P;
+        [] -> dashboard
+      end,
+      Ctx = {render_context, TargetPage, healthy, [], true},
+      Output = cepaf_gleam@ui@tui@renderer:render_frame(Ctx),
+      io:put_chars(Output),
+      io:nl(),
+      init:stop().
+    '
+    ;;
+
+  view)
+    VIEW_ARG="${2:-planning}"
+    case "$VIEW_ARG" in
+      planning)
+        run_erl 'Output = cepaf_gleam@ui@tui@planning_view:render(cepaf_gleam@ui@lustre@planning:init()), io:put_chars(Output), io:nl(), init:stop().'
+        ;;
+      verification)
+        run_erl 'Output = cepaf_gleam@ui@tui@verification_view:render(cepaf_gleam@ui@lustre@verification:init()), io:put_chars(Output), io:nl(), init:stop().'
+        ;;
+      immune)
+        run_erl 'Output = cepaf_gleam@ui@tui@immune_view:render(cepaf_gleam@ui@lustre@immune:init()), io:put_chars(Output), io:nl(), init:stop().'
+        ;;
+      zenoh)
+        run_erl 'Output = cepaf_gleam@ui@tui@zenoh_view:render(cepaf_gleam@ui@lustre@zenoh_mesh:init()), io:put_chars(Output), io:nl(), init:stop().'
+        ;;
+      podman)
+        run_erl 'Output = cepaf_gleam@ui@tui@podman_view:render(cepaf_gleam@ui@lustre@podman:init()), io:put_chars(Output), io:nl(), init:stop().'
+        ;;
+      prajna)
+        run_erl 'Output = cepaf_gleam@ui@tui@prajna_view:render(cepaf_gleam@ui@lustre@prajna:init()), io:put_chars(Output), io:nl(), init:stop().'
+        ;;
+      bicameral)
+        run_erl '
+          G = {chamber, <<"Guardian">>, <<"approve">>, <<"t1">>, 0},
+          S = {chamber, <<"Sentinel">>, <<"approve">>, <<"t2">>, 0},
+          C = {chamber, <<"Cortex">>, <<"approve">>, <<"t3">>, 0},
+          Init = cepaf_gleam@ui@lustre@bicameral:init(),
+          M = cepaf_gleam@ui@lustre@bicameral:update(Init, {state_loaded, G, S, C, 14, 0}),
+          Output = cepaf_gleam@ui@tui@bicameral_view:render(M),
+          io:put_chars(Output),
+          io:nl(),
+          init:stop().
+        '
+        ;;
+      homeostasis)
+        run_erl '
+          Pid = {pid_state, 1.0, 0.995, 0.005, 0.05, 1.0, 0.1, 0.05},
+          Init = cepaf_gleam@ui@lustre@homeostasis:init(),
+          M = cepaf_gleam@ui@lustre@homeostasis:update(Init, {pid_loaded, Pid, true, 99.5, 600}),
+          Output = cepaf_gleam@ui@tui@homeostasis_view:render(M),
+          io:put_chars(Output),
+          io:nl(),
+          init:stop().
+        '
+        ;;
+      evolution)
+        run_erl '
+          Init = cepaf_gleam@ui@lustre@evolution:init(),
+          M = cepaf_gleam@ui@lustre@evolution:update(Init, {metrics_loaded, 2.67, 42, 0.03, 0.95, 88, <<"2026-09-06T18:20:00Z">>}),
+          Output = cepaf_gleam@ui@tui@evolution_view:render(M),
+          io:put_chars(Output),
+          io:nl(),
+          init:stop().
+        '
+        ;;
+      biomorphic)
+        run_erl '
+          Init = cepaf_gleam@ui@lustre@biomorphic:init(),
+          Bio = {subsystem_health, <<"Bio">>, <<"healthy">>, 1.0, <<"metabolism nominal">>},
+          Neuro = {subsystem_health, <<"Neuro">>, <<"healthy">>, 0.98, <<"synaptic firing nominal">>},
+          Immune = {subsystem_health, <<"Immune">>, <<"healthy">>, 1.0, <<"antibodies active">>},
+          M = cepaf_gleam@ui@lustre@biomorphic:update(Init, {health_loaded, Bio, Neuro, Immune, 0.99, <<"nominal">>}),
+          Output = cepaf_gleam@ui@tui@biomorphic_view:render(M),
+          io:put_chars(Output),
+          io:nl(),
+          init:stop().
+        '
+        ;;
+      singularity)
+        run_erl '
+          Caps = [
+            {capability_metric, <<"Reasoning">>, 0.72, <<"up">>},
+            {capability_metric, <<"Autonomy">>, 0.31, <<"stable">>}
+          ],
+          Init = cepaf_gleam@ui@lustre@singularity:init(),
+          M = cepaf_gleam@ui@lustre@singularity:update(Init, {estimation_loaded, 12.5, 0.87, 0.45, Caps, <<"indeterminate">>}),
+          Output = cepaf_gleam@ui@tui@singularity_view:render(M),
+          io:put_chars(Output),
+          io:nl(),
+          init:stop().
+        '
+        ;;
+      hooks)
+        run_erl 'Output = cepaf_gleam@ui@tui@hook_subsystem_view:render(cepaf_gleam@ui@lustre@hook_subsystem:init()), io:put_chars(Output), io:nl(), init:stop().'
+        ;;
+      voice)
+        run_erl 'Output = cepaf_gleam@ui@tui@voice_pipeline_view:render(cepaf_gleam@ui@lustre@voice_pipeline:init()), io:put_chars(Output), io:nl(), init:stop().'
+        ;;
+      fmea)
+        run_erl 'Output = cepaf_gleam@ui@tui@fmea_view:render(cepaf_gleam@ui@lustre@fmea_report:init()), io:put_chars(Output), io:nl(), init:stop().'
+        ;;
+      ruliology)
+        run_erl 'Output = cepaf_gleam@ui@tui@ruliology_view:render(cepaf_gleam@ui@lustre@ruliology:init()), io:put_chars(Output), io:nl(), init:stop().'
+        ;;
+      pipeline-tracer)
+        run_erl 'Output = cepaf_gleam@ui@tui@pipeline_tracer_view:render(cepaf_gleam@ui@lustre@pipeline_tracer:init()), io:put_chars(Output), io:nl(), init:stop().'
+        ;;
+      substrate)
+        run_erl '
+          Init = cepaf_gleam@ui@lustre@substrate:init(),
+          Gov = {governor_action, <<"VFS_LOCK">>, <<"active">>, 1788716800},
+          M1 = cepaf_gleam@ui@lustre@substrate:update(Init, {governor_updated, Gov}),
+          Conns = [
+            {db_connection, <<"c1">>, <<"smriti.db">>, <<"active">>, 2},
+            {db_connection, <<"c2">>, <<"evidence.db">>, <<"active">>, 1}
+          ],
+          M2 = cepaf_gleam@ui@lustre@substrate:update(M1, {db_stats_received, Conns}),
+          Output = cepaf_gleam@ui@tui@substrate_view:render(M2),
+          io:put_chars(Output),
+          io:nl(),
+          init:stop().
+        '
+        ;;
+      *)
+        echo "Unknown view: $VIEW_ARG. Run 'tools/tui list-views' for available views."
+        exit 1
+        ;;
+    esac
+    ;;
+
+  help|--help|-h)
+    show_help
+    ;;
+
+  *)
+    echo "Unknown command: $CMD"
+    show_help
+    exit 1
+    ;;
+esac
