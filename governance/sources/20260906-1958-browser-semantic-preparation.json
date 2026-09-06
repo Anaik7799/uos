@@ -1,0 +1,34 @@
+{
+  "schema":"uos.browser-semantic-preparation.v1",
+  "observed_at_utc":"2026-09-06T19:56:58Z",
+  "support_task":"S18",
+  "worker":"codex-root-browser-prep",
+  "status":"COMPLETED_SCOPED_PREPARATION",
+  "candidate_commit":"05cfb07d3b9d5346c2b61fcbee740b3595cc6c1c",
+  "scope":"Close reading of the two existing UOS OCaml browser controllers. No browser launch or interaction occurred during this preparation.",
+  "source_files":[
+    {"path":"tests/web_quality/20260906-0631-browser-baseline.ml","sha256":"7d2c5a4e14766b1c62b3e74d119e10d9ac1ba9b6566147a8e30b1279c2230c3b"},
+    {"path":"tests/web_quality/20260906-0631-document-candidate-browser.ml","sha256":"fd0a721390476d27f5a6883fd9de71c6a827c61f61552d1650f7e2a382cc629c"}
+  ],
+  "browser_classification":"B3: typed OCaml Playwright browser controllers; runtime UNRUN for this candidate/review",
+  "findings":[
+    {"id":"BR01","locator":"tests/web_quality/20260906-0631-browser-baseline.ml:120","finding":"The generic button policy treats empty onclick or selected substrings as safe. Event listeners, delegated handlers and submit-button defaults are not excluded by this test.","required_change":"Use W01 semantic action manifests and explicit typed effect authorization; do not infer safety from inline-handler text."},
+    {"id":"BR02","locator":"tests/web_quality/20260906-0631-browser-baseline.ml:32","finding":"Missing attributes and empty attributes both become empty strings. The accordion restoration comparison can therefore equate an absent open attribute with open=empty.","required_change":"Preserve option presence or observe the target component's open state directly, assert the exact transition and restoration, and kill an omitted-second-click mutant."},
+    {"id":"BR03","locator":"tests/web_quality/20260906-0631-browser-baseline.ml:64","finding":"The HTTP status is obtained from a second Curl request rather than the Page.goto response. This does not bind status to the rendered navigation or its redirects.","required_change":"Capture the actual browser response, final URL, redirect chain and applicable cache/service-worker context."},
+    {"id":"BR04","locator":"tests/web_quality/20260906-0631-browser-baseline.ml:127","finding":"DOM change is recorded while semantic verdict explicitly remains REQUIRES_SPECIFIC_EXPECTED_RESULT.","required_change":"Add independent expected state and visible outcome for each declared action. Keep unrelated asynchronous DOM changes from conferring pass."},
+    {"id":"BR05","locator":"tests/web_quality/20260906-0631-browser-baseline.ml:161","finding":"Four viewport passes are four observations, not four complete observe/compare/correct/reverify cycles for each page and component.","required_change":"Expand V02 into distinct semantic cycles per W01 page/component/state/profile with linked correction and regression evidence."},
+    {"id":"BR06","locator":"tests/web_quality/20260906-0631-browser-baseline.ml:36","finding":"API/event paths, query-bearing routes and external URLs are filtered, and discovery has a 500-page cap. Only bare local fragments are checked for matching IDs.","required_change":"Keep all excluded, generated, parameterized and capped routes/links in the census denominator; validate redirects, cross-page fragments, external availability and authorized gateways under explicit profiles."},
+    {"id":"BR07","locator":"tests/web_quality/20260906-0631-browser-baseline.ml:69","finding":"The language predicate would also accept an empty node list, and any details element satisfies the checklist-presence test.","required_change":"Assert exactly the required document language and the 5-domain/18-checkpoint component with truthful evidence-backed states."},
+    {"id":"BR08","locator":"tests/web_quality/20260906-0631-browser-baseline.ml:133","finding":"Page errors are observed but this code does not capture a complete browser network/console trace or input/source AST correspondence. Target-size booleans are recorded without constituting an accessibility verdict.","required_change":"V01/V03 capture typed network/console and AST/DOM/accessibility evidence, then test specified focus, keyboard, semantics and target-size requirements."},
+    {"id":"BR09","locator":"tests/web_quality/20260906-0631-document-candidate-browser.ml:37","finding":"check records false booleans but does not fail the process. A zero script exit by itself cannot establish that the browser assertions passed.","required_change":"Aggregate mandatory checks into a typed nonpassing verdict and E02 receipt, including layout failures according to the declared profile."},
+    {"id":"BR10","locator":"tests/web_quality/20260906-0631-document-candidate-browser.ml:39","finding":"The fixture is read from a fixed /tmp HTML path; the controller does not bind the generating Gleam build, exact HTML bytes or compiler/browser identity.","required_change":"Generate isolated fixtures from the candidate renderer, bind input/output/build hashes and runtime versions, and refuse missing/stale fixtures."},
+    {"id":"BR11","locator":"tests/web_quality/20260906-0631-document-candidate-browser.ml:54","finding":"This narrower controller does assert source-toggle visibility, exact source preservation, mobile navigation and checklist open/close states. These useful semantic patterns remain scoped to the fixture.","required_change":"Retain and strengthen these obligations in UOS; add negative controls and candidate binding rather than crediting them as whole-site proof."},
+    {"id":"BR12","locator":"tests/web_quality/20260906-0631-document-candidate-browser.ml:25","finding":"Both controllers select one Chrome executable and create screenshot/DOM/accessibility/video artifacts without a full pinned browser/driver/target matrix or content-addressed final-candidate receipt.","required_change":"V01/V03 pin the runtime and artifact provenance, add required target profiles, and independently inspect visual evidence. Diagrams remain paired ASCII and Mermaid; screenshots/videos are observed evidence."}
+  ],
+  "skill_review_reference":".codex/skills/ocaml-playwright-control/SKILL.md",
+  "skill_scope_note":"The useful typed OCaml boundary is consistent with UOS. ZigVM-only harness paths, ontology commands and source pins in this legacy skill need H01 applicability review; they are not verified UOS tooling here.",
+  "remaining_tasks":["W01","W02","W03","W04","W09","V01","V02","V03","V04","V06","V07","H01"],
+  "browser_cycles_executed":0,
+  "source_files_modified":0,
+  "system_admission_granted":false
+}

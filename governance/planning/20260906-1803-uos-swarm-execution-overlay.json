@@ -36,7 +36,14 @@
     {"id":"S08","worker":"codex-e01-r4","scope":"fresh stronger E01 fourth-round process-group cleanup repair"},
     {"id":"S09","worker":"codex-tracker-r4","scope":"fresh stronger tracker fourth-round descriptor-bound JSON repair"},
     {"id":"S10","worker":"codex-census-prep","scope":"checked-in corpus part hashes/counts and remaining review frontier; coordinator executed after capacity refusal"},
-    {"id":"S11","worker":"codex-e02","scope":"E02 strict acceptance harness implementation and integration"}
+    {"id":"S11","worker":"codex-e02","scope":"E02 strict acceptance harness implementation and integration"},
+    {"id":"S12","worker":"codex-e02-process","scope":"E02 nested bounded process-supervisor implementation and controls"},
+    {"id":"S13","worker":"codex-e02-contract","scope":"E02 contracts/schema; E02 owner executes after additional thread refusal"},
+    {"id":"S14","worker":"codex-root-e03","scope":"read-only E03 actual CLI, API and checklist call-path refinement"},
+    {"id":"S15","worker":"codex-root-peer","scope":"read-only VM-1 HTTP endpoint, listener and service owner preparation"},
+    {"id":"S16","worker":"codex-skills-prep","scope":"read-only installed skill structure and AGY/Codex repair evidence preparation; reused existing agent slot after lower-cost new thread refusal"},
+    {"id":"S17","worker":"codex-root-zenoh","scope":"read-only native Zenoh contract, source and upstream release compatibility preparation"},
+    {"id":"S18","worker":"codex-root-browser-prep","scope":"read-only semantic browser-controller defects and V01/V02 closure preparation"}
   ],
   "serialization_constraints": [
     {"tasks":["M05","A02"],"path":"apps/cepaf_gleam/src/cepaf_gleam/fpp/dmc_tcm.gleam","rule":"M05 integration precedes A02 edits of this path"},
@@ -68,7 +75,9 @@
     {"id":"RUL-006","decision":"Apply shared-file serialization outside the immutable dependency manifest","reason":"Three unordered write-write pairs discovered by the audit","cost_if_wrong":"extra rebases; no dropped requirements"},
     {"id":"RUL-007","decision":"Do not equate old test totals, source lists, or planned schemas with present candidate execution","reason":"Two-key candidate-bound evidence requirement","cost_if_wrong":"extra checks instead of false completion"},
     {"id":"RUL-008","decision":"Assign fresh stronger implementers at repair round four for E01 and tracker","reason":"Independent controls still found a normal-exit child leak and separate hash/parse file opens after three repair rounds; subagent-driven-development requires fresh stronger review judgment","cost_if_wrong":"additional bounded repair effort; no existing source or completion history discarded"},
-    {"id":"RUL-009","decision":"Withdraw the review's 30.1-second timing assertion and retain the independently observed live descendant PID evidence","reason":"The duration measured persistent-shell tool yielding, not actual command duration; the same-shell process observation directly establishes the cleanup defect","cost_if_wrong":"reproduce precise timing only when needed; no unsupported runtime metric retained"}
+    {"id":"RUL-009","decision":"Withdraw the review's 30.1-second timing assertion and retain the independently observed live descendant PID evidence","reason":"The duration measured persistent-shell tool yielding, not actual command duration; the same-shell process observation directly establishes the cleanup defect","cost_if_wrong":"reproduce precise timing only when needed; no unsupported runtime metric retained"},
+    {"id":"RUL-010","decision":"Freeze the integration parent before creating agent branches; continue coordinator work on a new change","reason":"Late documentation finalization rebased E02's working copy; its owner recovered all edits from JJ operation history and updated stale state","cost_if_wrong":"extra recovery and revision review; no source changes may be silently dropped"},
+    {"id":"RUL-011","decision":"Include actual API handler and page checklist in E03's owned refinement","reason":"The existing E03 acceptance clause requires CLI/UI/API agreement, but additional hardcoded-success paths were found outside the original file list","cost_if_wrong":"additional scoped Gleam/test edits and downstream serialized integration"}
   ],
   "system_admission_granted": false
 }

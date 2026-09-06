@@ -1,0 +1,80 @@
+{
+  "schema": "uos.zenoh-source-compatibility-preparation.v1",
+  "observed_at_utc": "2026-09-06T19:48:43Z",
+  "support_task": "S17",
+  "worker": "codex-root-zenoh",
+  "status": "COMPLETED_SCOPED_PREPARATION",
+  "candidate_commit": "05cfb07d3b9d5346c2b61fcbee740b3595cc6c1c",
+  "scope": "Read-only review of seven existing UOS native/facade files, existing candidate-comparison documents, and public versioned upstream metadata. No external source code or binaries were imported.",
+  "source_files": [
+    {"path":"apps/cepaf_gleam/native/c3i_nif/Cargo.toml","sha256":"1876aa4f2fe840726462cd8b2b6ef47f9068b59bb0454baee1030f23129f2a8e"},
+    {"path":"apps/cepaf_gleam/native/c3i_nif/src/zenoh_nif.rs","sha256":"52e9155d544e11a989a5890685ed10058786819010dcac8131c330d8cbefe803"},
+    {"path":"apps/cepaf_gleam/native/c3i_nif/src/lib.rs","sha256":"8d6dd6b3602fa9b69e79c4f6660cd74698d20b08e98078ba6c65224098f60f82"},
+    {"path":"apps/cepaf_gleam/src/c3i_nif.erl","sha256":"c50f2e641b74e181614822f5ef59c45d93c35f70a9afe41d38e76111159693d8"},
+    {"path":"apps/cepaf_gleam/src/indrajaal_native_zenoh.erl","sha256":"5519a07b225cb96d33a3b6c4aa78dfaff48d2ce558eca3165da9e6ab7f29333d"},
+    {"path":"apps/cepaf_gleam/src/cepaf_gleam_ffi.erl","sha256":"885184eebc001436cd86c24170be9c7e61c402d55f48661bc5d3d47c2e7020d9"},
+    {"path":"apps/cepaf_gleam/src/cepaf_gleam/zenoh/client.gleam","sha256":"7c01099bf3fcfb693c5ae5ca7d598d931edd2f349056e0d63dd2da6093a27bce"}
+  ],
+  "as_found": {
+    "cargo_zenoh_requirement": "1.9.0",
+    "cargo_default_features": false,
+    "cargo_features": ["transport_tcp"],
+    "rustler_requirement": "0.37",
+    "zenoh_ext_dependency_declared": false,
+    "adjacent_cargo_lock": "ABSENT at apps/cepaf_gleam/native/c3i_nif/Cargo.lock",
+    "resolved_or_running_zenoh_version": "UNKNOWN",
+    "native_exports": ["zenoh_open/1","zenoh_put/2","zenoh_get/1","zenoh_status/0","zenoh_close/0"],
+    "runtime_tests_executed_by_this_preparation": 0,
+    "performance_winner": "UNKNOWN"
+  },
+  "observed_code_findings": [
+    {"owner":"Z02","locator":"apps/cepaf_gleam/src/indrajaal_native_zenoh.erl:13","finding":"Fallback open returns a fresh reference and put returns ok without a native operation; open also logs the supplied configuration. Replace phantom success and avoid logging possible credentials."},
+    {"owner":"Z02","locator":"apps/cepaf_gleam/src/c3i_nif.erl:70","finding":"Unloaded get returns an empty JSON array and close reports closed; these outputs do not establish native execution."},
+    {"owner":"Z02","locator":"apps/cepaf_gleam/src/cepaf_gleam_ffi.erl:292","finding":"Native loading consults hardcoded external C3I shared-library paths. Admission requires a UOS-owned, exact build and ABI receipt."},
+    {"owner":"Z02","locator":"apps/cepaf_gleam/src/cepaf_gleam/zenoh/client.gleam:22","finding":"Get errors are inferred from the substring error in returned data; legitimate payloads can be rejected. Structured native result decoding is required."},
+    {"owner":"Z03","locator":"apps/cepaf_gleam/native/c3i_nif/src/zenoh_nif.rs:15","finding":"Global OnceCell session set errors are ignored; close clears the inner Option but subsequent open cannot replace the cell. Network work holds a global mutex across awaits, and status may block on that mutex on a normal scheduler."},
+    {"owner":"Z04","locator":"apps/cepaf_gleam/native/c3i_nif/src/zenoh_nif.rs:37","finding":"Invalid JSON becomes a default configuration, only a partial connect configuration is applied, and status reports a fixed endpoint."},
+    {"owner":"Z04","locator":"apps/cepaf_gleam/native/c3i_nif/src/zenoh_nif.rs:90","finding":"Publication accepts String rather than arbitrary bytes; received bytes undergo lossy UTF-8 conversion, and error replies are discarded."},
+    {"owner":"Z01-Z12","locator":"apps/cepaf_gleam/native/c3i_nif/src/zenoh_nif.rs","finding":"Five inspected exports do not implement the required subscription, queryable, liveliness, advanced extension and ecosystem capability families. This preparation does not count every missing upstream API item."}
+  ],
+  "existing_comparison_evidence": {
+    "document":"docs/zk/20260906-0606-agy-handover-understanding-and-actor-ecology-plan.md:95",
+    "state":"REVIEWED_DOCUMENT_CLAIMS; external native candidates were not re-read or executed by S17",
+    "candidates":[
+      {"name":"current_c3i_uos","declared_exports":5,"fresh_local_source_review":true},
+      {"name":"legacy_indrajaal","locator":"/home/an/dev/ver/c3i/sub-projects/c3i/native/zenoh_nif","declared_exports":17,"fresh_local_source_review":false},
+      {"name":"sutra","locator":"/home/an/dev/ver/c3i/sub-projects/sutra/sutra_server/native/zenoh_nif","declared_exports":6,"fresh_local_source_review":false}
+    ],
+    "ranking":"Legacy Indrajaal has the largest export count in the existing three-candidate document. Correctness, exhaustive census and comparable performance remain unverified."
+  },
+  "upstream_metadata": {
+    "release_url":"https://github.com/eclipse-zenoh/zenoh/releases/tag/1.9.0",
+    "release_api":"https://api.github.com/repos/eclipse-zenoh/zenoh/releases/tags/1.9.0",
+    "published_at":"2026-04-10T11:57:54Z",
+    "tag_ref_api":"https://api.github.com/repos/eclipse-zenoh/zenoh/git/ref/tags/1.9.0",
+    "annotated_tag_sha":"ae7f0af966569a25b9ea3a95716bed4b032f87c8",
+    "tag_object_api":"https://api.github.com/repos/eclipse-zenoh/zenoh/git/tags/ae7f0af966569a25b9ea3a95716bed4b032f87c8",
+    "commit_sha":"81c6c933b6e41d72a05f04c4442ef57717ddc72b",
+    "api_signature_verification":{"verified":false,"reason":"unsigned"},
+    "selected_for_uos":false,
+    "compatibility_receipt":"UNRUN",
+    "documentation_source":"https://docs.rs/zenoh/1.9.0/src/zenoh/lib.rs.html",
+    "documentation_observation":"Retrieved lib.rs API documentation describes publication/subscription, query/reply, byte payloads, key expressions, scouting, matching, liveliness, builders and feature-gated internal/unstable/transport/plugin surfaces.",
+    "documentation_date_discrepancy":"The retrieved docs.rs page labels 08 July 2026 while the live GitHub release API reports April 10. Do not equate that rendered document with a verified source tarball/build.",
+    "unretrieved_pages":[
+      {"url":"https://docs.rs/crate/zenoh/1.9.0/features","state":"WEB_TOOL_FETCH_ERROR"},
+      {"url":"https://docs.rs/zenoh-ext/1.9.0/src/zenoh_ext/lib.rs.html","state":"WEB_TOOL_CACHE_MISS"}
+    ]
+  },
+  "remaining_frontier": [
+    "Z01: expand the sixteen canonical families into every pinned API/type/variant/builder/config/feature/platform row, with separate indexed, implemented, executed and admitted denominators.",
+    "E04/E05/Z01: complete source candidate census, quiescence, sanitized revision/dirty-manifest and license review before any adaptation or code import.",
+    "Z01: bind exact Zenoh/zenoh-ext/Rust/Rustler/OTP/Gleam/router/plugin versions, target, lockfile and loaded library identity; reconcile documentation/source provenance.",
+    "Z02-Z10: fix the observed native/facade defects and complete the full admitted capability surface using positive receivers and discriminating negative controls.",
+    "Z11: compare equal-correctness native candidates with independent receivers, matched workloads/profiles and raw timing samples; no performance winner is available now.",
+    "H01: adapt the legacy cepaf-zenoh-expert skill's unconditional zenoh-erl, Indrajaal namespace and payload assumptions to the canonical UOS versioned contract."
+  ],
+  "external_source_bytes_imported":0,
+  "master_tasks_completed_by_preparation":[],
+  "system_admission_granted":false
+}

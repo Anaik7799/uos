@@ -1,0 +1,29 @@
+{
+  "schema": "uos.peer-http-preparation.v1",
+  "observed_at_utc": "2026-09-06T19:36:11Z",
+  "support_task": "S15",
+  "worker": "codex-root-peer",
+  "master_task": "N01",
+  "status": "COMPLETED_SCOPED_PREPARATION",
+  "advertised_endpoint": "http://vm-1.tail55d152.ts.net:8088",
+  "observations": [
+    {"probe":"curl --connect-timeout 2 --max-time 5 http://vm-1.tail55d152.ts.net:8088","exit_code":7,"http_status":0,"result":"Connection refused; no HTTP response."},
+    {"probe":"Authenticated SSH with BatchMode and StrictHostKeyChecking to vm-1.tail55d152.ts.net, then ss -ltnp","exit_code":0,"result":"Host reachable; no8088listener. beam.smp PID999231 listens4100/4101; beam.smp PID5396 listens8080; additional sa-plan4200/8443 and ZigVM8089/8092listeners observed."},
+    {"probe":"curl --connect-timeout 2 --max-time 5 http://vm-1.tail55d152.ts.net:4100/api/health","exit_code":0,"http_status":200,"remote_ip":"100.78.98.18","response":{"status":"ok","interface":"wisp","port":4100,"version":"1.0.0","zenoh_connected":false},"candidate_build_identity":"UNKNOWN","health_claims_admitted":false},
+    {"probe":"Authenticated SSH read-only /proc/999231/cgroup and working-directory link","exit_code":0,"working_directory":"/home/an/dev/ver/c3i/lib/cepaf_gleam","cgroup":"/user.slice/user-1000.slice/user@1000.service/tmux-spawn-77e8afbc-b4d8-425c-88cb-80d3cda97209.scope","result":"C3I listener owner identified; process observed in a tmux scope rather than a named C3I system service."},
+    {"probe":"Authenticated SSH read-only /proc/5396/cgroup and working-directory link","exit_code":0,"working_directory":"/home/an/dev/ver/work/work_ui/build/erlang-shipment","cgroup":"/system.slice/work-ui.service","result":"Port8080 belongs to a different work-plan service; do not substitute it as the C3I peer."},
+    {"probe":"GET http://vm-1.tail55d152.ts.net:8080/health and /cockpit/healthz","exit_code":0,"http_status":404,"result":"Work-plan HTML not-found responses; its own rendered health link also returns404. These are HTTP observations, not browser interaction tests."}
+  ],
+  "interpretation": "Name resolution and authenticated host reachability work. The advertised8088port lacks a listener, while the identified C3I application responds on4100. N01 must verify intended ownership/configuration before restoring8088 or correcting the advertised endpoint, and must obtain actual build identity.",
+  "remaining_tasks": [
+    "N01: verify intended peer endpoint against owned configuration and handover provenance.",
+    "N01: restore through authorized owner controls or correct obsolete URL; retain visible unavailable-state behavior.",
+    "N01: capture actual candidate build identity and test linked navigation after E02 gate.",
+    "Z workstream: zenoh_connected=false is an observed response, not established working actor communication."
+  ],
+  "service_controls_invoked": false,
+  "source_files_modified": 0,
+  "external_source_bytes_imported": 0,
+  "master_task_executed": false,
+  "system_admission_granted": false
+}

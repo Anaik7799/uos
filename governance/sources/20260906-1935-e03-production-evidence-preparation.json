@@ -1,0 +1,47 @@
+{
+  "schema": "uos.execution-support-review.v1",
+  "observed_at_utc": "2026-09-06T19:29:35Z",
+  "support_task": "S14",
+  "worker": "codex-root-e03",
+  "master_task": "E03",
+  "status": "COMPLETED_SCOPED_PREPARATION",
+  "source_candidate": "05cfb07d3b9d5346c2b61fcbee740b3595cc6c1c",
+  "manifest_sha256": "b706f9a99dfaf6018772b2a819084ea3373a3ee720ed774b57e7f92792d8ee02",
+  "specification": "governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json#tasks/E03",
+  "findings": [
+    {"locator":"tools/uos/src/main.gleam:98","fact":"G-ZERO-MUDA returns literal PASS and exit0; several other gates convert file presence into runtime verification."},
+    {"locator":"tools/uos/src/main.gleam:220","fact":"Doctor prints 84 constant EV PASS lines rather than invocation-bound observations."},
+    {"locator":"tools/uos/src/uos_ffi.erl:16","fact":"Missing relative files fall back to the canonical root, allowing an isolated candidate to borrow another workspace's evidence."},
+    {"locator":"apps/cepaf_gleam/src/cepaf_gleam/fpp/evolutionary_cycles.gleam:1160","fact":"verify_cycle dispatches legacy Boolean checks and returns a catalog record as verification; many check functions are constant True."},
+    {"locator":"apps/cepaf_gleam/src/cepaf_gleam/fpp/evolutionary_cycles.gleam:1244","fact":"calculate_metrics fixes entropy2.96, CCM0.98, divergence0.02 and ITQS0.99 regardless of measured observations."},
+    {"locator":"apps/cepaf_gleam/src/cepaf_gleam/verification/master_verification_registry.gleam:35","fact":"Browser rows store literal passing/effectiveness ratings; efficacy aggregators average these claims."},
+    {"locator":"apps/cepaf_gleam/src/cepaf_gleam/verification/master_verification_registry.gleam:1210","fact":"All agent registry entries get passes=True; taxonomy cardinality alone is used to claim an actor ecology."},
+    {"locator":"apps/cepaf_gleam/test/verification_truth_test.gleam:24","fact":"The incoming test defines its own evaluator and admits nonempty receipt-name strings. It never tests production authority."},
+    {"locator":"apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam:249","fact":"The actual /api/verify/checks handler returns literal 18/18 and20/20 success JSON."},
+    {"locator":"apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam:1000","fact":"The page checklist accordion hard-codes18/18 VERIFIED,100%GREEN and passing marks."},
+    {"locator":"apps/cepaf_gleam/src/cepaf_gleam/verification/unified_fractal_web_verifier.gleam:363","fact":"evaluate_comprehensive_checklist returns5passingdomains,18passingchecks andall_greenTrue without inputs."},
+    {"locator":"apps/cepaf_gleam/test/fpp_evolutionary_cycles_test.gleam:16","fact":"Existing new UOS Gleam tests expect universal ratification/fixed metrics; update them to discriminating production-input tests during E03."}
+  ],
+  "implementation_refinement": [
+    "Use one shared Gleam domain module for candidate/input-bound evidence states and metric availability; keep arbitrary strings, document existence and caller Booleans outside authority.",
+    "Opaque checked receipt values require a controlled observer/validator of actual receipt bytes, identity, freshness and source inputs. A smart constructor or matching digest alone is not runtime execution proof.",
+    "Preserve catalog/history claims as explicitly attributed metadata; no-argument verification wrappers lack current evidence and must report UNRUN.",
+    "Expose unavailable metrics and missing denominators as typed absence. Do not invent replacement quality scores; full metric algebra/formal obligations remain M01-M08.",
+    "Wire the CLI, actual Mist API handler, page accordion and shared checklist evaluator to the same decision. Preserve erlang:halt exit propagation already implemented.",
+    "Remove canonical-root fallback from candidate-sensitive FFI; bind the selected workspace explicitly and test a missing-file candidate while the canonical file still exists.",
+    "Extend the E03 owned file set to the actual web/checklist call paths and necessary shared module/tests; this is required by the existing acceptance clause, not permission to rewrite unrelated presentation.",
+    "Mutate actual production inputs: remove runtime/formal bytes, change candidate/source/input digest, use stale receipts, retain files and token/parity claims, alter measured inputs. Each applicable admission must be lost.",
+    "Keep E02 adapter observation separate from expected assertions; verification.evaluate must invoke production Gleam, never reinstate the rejected OCaml test-only evaluator."
+  ],
+  "source_references": [
+    {"url":"https://tour.gleam.run/advanced-features/opaque-types/","read_scope":"Opaque constructor visibility and smart constructors","uos_inference":"Opaque types can restrict construction; actual evidence authentication and provenance still require independent runtime mechanisms."},
+    {"url":"https://gleam-stdlib.hexdocs.pm/gleam/dynamic/decode.html","read_scope":"Decoder API, runtime platform representations and record examples; observed page version1.0.5","uos_inference":"Use typed decoding and explicit validation; ordinary field decoding alone is not a claim of duplicate/extra-key rejection."},
+    {"url":"https://www.erlang.org/doc/apps/erts/erl_nif.html","read_scope":"Official OTP29.0.6 NIF reference located; full capability review remains Z workstream","uos_inference":"Use bounded FFI only within canonical language policy; this reference lookup grants no NIF implementation credit."}
+  ],
+  "skills": [{"path":".codex/skills/gleam-expert/SKILL.md","applied":"Opaque domain types, Result errors, shared domain across interfaces and candidate-specific build/format checks","ruling":"Historical C3I paths/build-order prescriptions do not override UOS ownership or immutable programme dependencies."}],
+  "master_task_executed": false,
+  "source_files_modified": 0,
+  "source_ingestion_count": 0,
+  "implementation_credit": false,
+  "system_admission_granted": false
+}
