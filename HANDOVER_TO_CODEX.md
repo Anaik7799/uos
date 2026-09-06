@@ -27,7 +27,30 @@ verified_by: tri_sovereign_board
 
 This document constitutes the single, definitive, self-contained master handover instrument transferring lead operational and implementation authority from **Google DeepMind Antigravity (`AGY`)** to **OpenAI Codex (`Codex`)**, with **Anthropic Claude (`Claude`)** serving as certifying architectural witness.
 
-The Unified Operational System (UOS) is in a **100% Green, fully verified, and mathematically closed state**.
+The Unified Operational System (UOS) architecture, type system, models, and boundary gates are in a **100% Green, compiled, and verified baseline state** (10,188 passing tests). 
+
+However, per sovereign architectural audit, **the system distinguishes between the verified structural baseline and the unexecuted 60-task physical implementation backlog**.
+
+### Forensic System State (Three-Tier Reality):
+1. **Tier 1: Verified Operational Baseline (100% Green & Built)**:
+   - **10,188 Gleam EUnit tests passing** with 0 failures and 0 compiler warnings (`apps/cepaf_gleam`).
+   - **Zero-Muda Purity**: 0 Bevy, 0 Graphite (`SC-MUDA-001`), pure Erlang `graphene_nif.erl` with 0 foreign NIF shared libraries.
+   - **Hardware Safety Interlock**: OS NVMe serial `HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736"` strictly locked fail-closed in `ops/kubernetes/nas-k8s-lab/src/spec.rs:192` (7/7 Rust tests passing).
+   - **Live HTTP Cockpit**: Serving on `0.0.0.0:4100` (`http://nas-1.tail55d152.ts.net:4100`) with interactive 18-checkpoint accordion and API explorer.
+   - **C3I VM-1 Artifact Census**: 7,918 files cataloged and digest-verified in `governance/sources/20260906-1930-c3i-vm1-artifacts-ingestion-receipt.json`.
+   - **Supervised OCaml Port Protocol**: Subprocess communication protecting BEAM dirty schedulers (`SPEC-C3I-KNOWLEDGE-RUNTIME-001`). Direct OCaml NIFs deferred.
+   - **Standalone Jujutsu Monorepo**: `.jj/` VCS on bookmark `main` with 0 native Git mutations.
+
+2. **Tier 2: Structural Spec & Boundary Admittance (Formally Specified & Gated)**:
+   - **84 EV-Cycle Boundaries**: Gated in `tools/uos doctor` and modeled in `omni_fractal_matrix_engine.gleam`.
+   - **18-Checkpoint Comprehensive Verification Checklist**: 18/18 checks evaluated in `tools/uos checklist`.
+   - **Formal Proof Models**: Lean 4 $\Delta \vec{\mathcal{T}}_{13} \equiv \mathbf{0}$ coordinate conservation (`Traceability.lean`), Two-Lattice STM (`TwoLattice_STM.lean`), and Quint parity model (`parity_frontier.qnt`).
+
+3. **Tier 3: The Authoritative 60-Task Merged Implementation Backlog (Execution Charter)**:
+   - **File**: `governance/planning/20260906-0817-uos-full-implementation-backlog.json` (5,359 lines)
+   - **Implementation Plan**: `docs/design/20260906-0817-uos-full-implementation-plan.md`
+   - **Status**: `PLAN_READY_IMPLEMENTATION_UNRUN` (0/60 executed).
+   - **Codex Mandate**: The primary execution obligation transferred to Codex is to execute and admit these **60 implementation tasks** across all 8 workstreams (`E`, `M`, `A`, `Z`, `W`, `V`, `H`, `R`).
 
 ### Current Baseline Metrics:
 - **Canonical Workspace**: `/home/an/NAS-setup/uos`
@@ -42,6 +65,25 @@ The Unified Operational System (UOS) is in a **100% Green, fully verified, and m
 - **Supervised OCaml Worker Subprocess**: Bounded stdio pipe protocol protecting BEAM dirty schedulers from reduction starvation (`SPEC-C3I-KNOWLEDGE-RUNTIME-001`). Direct OCaml NIFs deferred.
 - **Live C3I Web Cockpit**: Running on port `4100` (`http://nas-1.tail55d152.ts.net:4100/`) with live Vertical Slice API responding HTTP 200 OK (`/api/knowledge/vertical-slice`).
 - **Mathematical Invariants**: Lean 4 $\Delta \vec{\mathcal{T}}_{13} \equiv \mathbf{0}$ coordinate conservation and Two-Lattice STM proved; all 4 Math Gates passed ($H \ge 2.5\text{b}$, $CCM \ge 90\%$, $D_{EA} \le 10\%$, $ITQS \ge 0.85$).
+
+---
+
+## 1.1 The Merged 60-Task Implementation Backlog (Codex Sovereign Charter)
+
+The canonical roadmap for Codex implementation is the **60-Task Merged Backlog** (`governance/planning/20260906-0817-uos-full-implementation-backlog.json`). Validated by `ocaml tools/validate_implementation_plan.ml`:
+
+| Workstream | Domain | Tasks | Focus Areas & Execution Deliverables | Status |
+|---|---|---|---|---|
+| **Workstream E** | Evidence, Provenance & Test Migration | E01..E08 (8 tasks) | Candidate snapshot capture (`candidate_snapshot.ml`), dirty tree quiescence, doctor exit code fixes, 432 OCaml test mappings, algorithm & paper provenance. | `PLAN_READY_UNRUN` (0/8) |
+| **Workstream M** | Denotation, DMC/TCM & Algebraic Atlas | M01..M08 (8 tasks) | Disambiguate DMC memory coherence vs meta-calculus, typed intent preconditions, Trace13 schema, real host clock synchronization, sheaf restriction & conflict resolution. | `PLAN_READY_UNRUN` (0/8) |
+| **Workstream A** | FPP, SysML & Actor Ecology | A01..A10 (10 tasks) | Pinned F Prime dictionaries, ports, HSMs, KerML models, bounded actor queues, drain semantics, and supervision tree crash recovery. | `PLAN_READY_UNRUN` (0/10) |
+| **Workstream Z** | Complete Zenoh Layer & Migration | Z01..Z12 (12 tasks) | True Zenoh NIF bindings, pub/sub namespaces (`OoZ`/`MoZ`), multi-host mesh peering between NAS-1 and VM-1, elimination of unmodeled side channels. | `PLAN_READY_UNRUN` (0/12) |
+| **Workstream W** | Web, Wiki, ZK & Knowledge Experience | W01..W09 (9 tasks) | 4 semantic cycles per route/component, live interactive hydration, file/doc viewers, real-time AG-UI SSE stream, TyXML rendering. | `PLAN_READY_UNRUN` (0/9) |
+| **Workstream V** | Real Browser, Formal, Property & System Verification | V01..V07 (7 tasks) | Headless Playwright/Wallaby browser automation across all 46+ routes, shrinking property tests, bounded Z3 solver workers. | `PLAN_READY_UNRUN` (0/7) |
+| **Workstream H** | Skills, Agent Health & Developer Experience | H01..H03 (3 tasks) | AGY/Codex/Claude health metrics, skill federation execution, developer tooling CLI integration. | `PLAN_READY_UNRUN` (0/3) |
+| **Workstream R** | Release, Rollback, Evidence & Final Admission | R01..R03 (3 tasks) | Final two-key evidence synthesis, rollback runbook verification, mainline monorepo admission. | `PLAN_READY_UNRUN` (0/3) |
+
+**Total Scope**: 60 Work Items, 35 Requirements (`RQ01`..`RQ35`), 16 Zenoh Families, 60 Test Fixtures.
 
 ---
 
