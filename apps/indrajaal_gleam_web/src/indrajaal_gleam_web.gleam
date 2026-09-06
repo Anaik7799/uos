@@ -1,13 +1,18 @@
 import cepaf_gleam/api/denotational_intent_router
+import cepaf_gleam/ui/lustre/biosemiotics_radar
 import cepaf_gleam/ui/lustre/feature_tracker_view
 import cepaf_gleam/ui/lustre/knowledge_explorer
+import cepaf_gleam/ui/lustre/km_sheaf_traversal
+import cepaf_gleam/ui/lustre/navigational_omnisearch
 import cepaf_gleam/ui/lustre/pi_startup_visualizer
+import cepaf_gleam/ui/lustre/recursive_patrol_hud
+import cepaf_gleam/ui/lustre/sovereign_tensor_cockpit
+import cepaf_gleam/ui/lustre/sre_resilience_matrix
+import cepaf_gleam/ui/lustre/tensor_fractal_atlas
+import cepaf_gleam/ui/lustre/ux_dx_cx_auditor
+import cepaf_gleam/ui/lustre/wiki_transclusion_engine
 import cepaf_gleam/ui/lustre/zk_decision_matrix
 import cepaf_gleam/ui/lustre/zk_graph_visualizer
-import cepaf_gleam/ui/lustre/biosemiotics_radar
-import cepaf_gleam/ui/lustre/navigational_omnisearch
-import cepaf_gleam/ui/lustre/recursive_patrol_hud
-import cepaf_gleam/ui/lustre/wiki_transclusion_engine
 import cepaf_gleam/ui/wisp/router as c3i_router
 import cepaf_gleam/verification/browser_emulation_bridge
 import cepaf_gleam/verification/dmc_biosemiotics_interlock
@@ -306,11 +311,21 @@ pub fn main() {
           wiki_transclusion_engine.ZkTag("ADR-001"),
           wiki_transclusion_engine.ZkTag("ADR-016"),
         ]
-        let diff = wiki_transclusion_engine.DiffSummary(additions: 12, deletions: 0, unchanged: 180)
-        let el = wiki_transclusion_engine.render_transclusion_preview_view(tags, diff)
+        let diff =
+          wiki_transclusion_engine.DiffSummary(
+            additions: 12,
+            deletions: 0,
+            unchanged: 180,
+          )
+        let el =
+          wiki_transclusion_engine.render_transclusion_preview_view(tags, diff)
         let content_html = element.to_string(el)
         let page =
-          render_lustre_page("Hermes Wiki Transclusion & Parsoid", "wiki-preview", content_html)
+          render_lustre_page(
+            "Hermes Wiki Transclusion & Parsoid",
+            "wiki-preview",
+            content_html,
+          )
         response.new(200)
         |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
         |> response.prepend_header("content-type", "text/html")
@@ -319,9 +334,17 @@ pub fn main() {
         let radar = biosemiotics_radar.build_canonical_radar()
         let el = biosemiotics_radar.render_biosemiotics_view(radar)
         let radar_svg = biosemiotics_radar.render_svg_radar_html(radar)
-        let content_html = element.to_string(el) <> "<div style='margin-top:1.5rem'>" <> radar_svg <> "</div>"
+        let content_html =
+          element.to_string(el)
+          <> "<div style='margin-top:1.5rem'>"
+          <> radar_svg
+          <> "</div>"
         let page =
-          render_lustre_page("Rocha Biosemiotics Radar", "biosemiotics", content_html)
+          render_lustre_page(
+            "Rocha Biosemiotics Radar",
+            "biosemiotics",
+            content_html,
+          )
         response.new(200)
         |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
         |> response.prepend_header("content-type", "text/html")
@@ -332,7 +355,11 @@ pub fn main() {
         let el = navigational_omnisearch.render_omnisearch_view(results)
         let content_html = element.to_string(el)
         let page =
-          render_lustre_page("Category Route Omnisearch", "omnisearch", content_html)
+          render_lustre_page(
+            "Category Route Omnisearch",
+            "omnisearch",
+            content_html,
+          )
         response.new(200)
         |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
         |> response.prepend_header("content-type", "text/html")
@@ -343,7 +370,11 @@ pub fn main() {
         let el = recursive_patrol_hud.render_patrol_hud_view(completed)
         let content_html = element.to_string(el)
         let page =
-          render_lustre_page("Autonomous 4-Cycle Patrol HUD", "verify-patrol-live", content_html)
+          render_lustre_page(
+            "Autonomous 4-Cycle Patrol HUD",
+            "verify-patrol-live",
+            content_html,
+          )
         response.new(200)
         |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
         |> response.prepend_header("content-type", "text/html")
@@ -355,6 +386,76 @@ pub fn main() {
           render_lustre_page(
             "Pi Startup Visualizer",
             "pi-startup",
+            content_html,
+          )
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["tensor-atlas"] -> {
+        let atlas = tensor_fractal_atlas.build_canonical_atlas()
+        let el = tensor_fractal_atlas.render_tensor_atlas_view(atlas)
+        let content_html = element.to_string(el)
+        let page =
+          render_lustre_page(
+            "Tensor Navigation Atlas",
+            "tensor-atlas",
+            content_html,
+          )
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["sre-matrix"] -> {
+        let sre = sre_resilience_matrix.build_canonical_sre()
+        let el = sre_resilience_matrix.render_sre_matrix_view(sre)
+        let content_html = element.to_string(el)
+        let page =
+          render_lustre_page(
+            "SRE Chaos & Resilience Matrix",
+            "sre-matrix",
+            content_html,
+          )
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["ux-audit"] -> {
+        let audit = ux_dx_cx_auditor.build_canonical_audit()
+        let el = ux_dx_cx_auditor.render_ux_audit_view(audit)
+        let content_html = element.to_string(el)
+        let page =
+          render_lustre_page(
+            "UX / DX / CX Tri-Modal Auditor",
+            "ux-audit",
+            content_html,
+          )
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["km-sheaf"] -> {
+        let framework = km_sheaf_traversal.build_dung_framework()
+        let el = km_sheaf_traversal.render_km_sheaf_view(framework)
+        let content_html = element.to_string(el)
+        let page =
+          render_lustre_page(
+            "KM Sheaf Harmonizer & ZK Traversal",
+            "km-sheaf",
+            content_html,
+          )
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["tensor-cockpit"] -> {
+        let cockpit = sovereign_tensor_cockpit.build_canonical_cockpit()
+        let el = sovereign_tensor_cockpit.render_tensor_cockpit_view(cockpit)
+        let content_html = element.to_string(el)
+        let page =
+          render_lustre_page(
+            "Sovereign Multi-Dimensional Synthesis Cockpit",
+            "tensor-cockpit",
             content_html,
           )
         response.new(200)
@@ -704,6 +805,29 @@ fn render_nav(active: String) -> String {
   } <> " style='color:#ec4899;font-weight:bold'>Autonomous Patrol HUD</a>
 
     <div class='sep'></div>
+    <div class='nav-section-title'>TENSOR EVOLUTION CYCLES</div>
+    <a href='/tensor-atlas' " <> case active == "tensor-atlas" {
+    True -> "class='active'"
+    False -> ""
+  } <> " style='color:#38bdf8;font-weight:bold'>Tensor Navigation Atlas</a>
+    <a href='/sre-matrix' " <> case active == "sre-matrix" {
+    True -> "class='active'"
+    False -> ""
+  } <> " style='color:#ef4444;font-weight:bold'>SRE Resilience Matrix</a>
+    <a href='/ux-audit' " <> case active == "ux-audit" {
+    True -> "class='active'"
+    False -> ""
+  } <> " style='color:#10b981;font-weight:bold'>UX / DX / CX Auditor</a>
+    <a href='/km-sheaf' " <> case active == "km-sheaf" {
+    True -> "class='active'"
+    False -> ""
+  } <> " style='color:#a855f7;font-weight:bold'>KM Sheaf Harmonizer</a>
+    <a href='/tensor-cockpit' " <> case active == "tensor-cockpit" {
+    True -> "class='active'"
+    False -> ""
+  } <> " style='color:#f59e0b;font-weight:bold'>Sovereign Tensor Cockpit</a>
+
+    <div class='sep'></div>
     <div class='nav-section-title'>REPOSITORY &amp; GOV</div>
     <a href='/checklist' " <> case active == "checklist" {
     True -> "class='active'"
@@ -921,6 +1045,19 @@ pub fn render_document_view(
     .wiki-tag { display: inline-block; padding: 0.15rem 0.45rem; background: #1f6feb22; border: 1px solid #1f6feb; border-radius: 4px; color: #58a6ff; font-weight: 600; font-size: 0.82rem; text-decoration: none; margin: 0 0.15rem; }
     .zk-tag { display: inline-block; padding: 0.15rem 0.45rem; background: #23863622; border: 1px solid #238636; border-radius: 4px; color: #3fb950; font-weight: 600; font-size: 0.82rem; text-decoration: none; margin: 0 0.15rem; }
     #raw-content { display: none; margin: 0; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.85rem; line-height: 1.5; white-space: pre-wrap; word-break: break-word; color: #e6edf3; }
+    @media (max-width: 700px) {
+      .shell { display: block; }
+      .nav { width: 100%; border-right: 0; border-bottom: 1px solid #30363d; }
+      .main { min-width: 0; max-width: 100%; padding: 1rem; }
+      .top-bar, .path-bar { flex-direction: column; align-items: stretch; gap: 0.75rem; }
+      .top-bar a, .path-bar, .breadcrumbs, .site-footer { overflow-wrap: anywhere; }
+      .badge { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
+      .content-box { padding: 1rem; min-width: 0; }
+      .markdown-body { overflow-wrap: anywhere; }
+      .checklist-grid { grid-template-columns: minmax(0, 1fr); }
+      .btn-toggle, .nav a { min-height: 44px; }
+      .doc-footer-nav { align-items: stretch; }
+    }
   </style>
 </head>
 <body>

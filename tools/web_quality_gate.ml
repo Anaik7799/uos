@@ -73,10 +73,17 @@ let main output =
     let code,out=run ~cwd:project 30 ["gleam";"check"] in
     let passed=if positive then code=0 else code=1 && contains out diagnostic in
     record ("compiler_"^name) passed out) fixtures;
+  write (project^"/src/fixture.gleam") "import web_quality_contract as q\npub fn check() { q.layer(4) }\n";
+  let js_code,js_out=run ~cwd:project 30 ["gleam";"check";"--target";"javascript"] in
+  record "compiler_javascript_target_positive" (js_code=0) js_out;
   let code,out=run ~cwd:(root^"/apps/cepaf_gleam") 60 ["gleam";"run";"-m";"web_quality_contract_test"] in
   record "actual_uos_gleam_runtime" (code=0 && contains out "10 test functions passed; 1000 generated route seeds; 512 graph oracles") out;
   let observed=String.split_on_char '\n' out |>List.filter(fun line->String.starts_with ~prefix:"MODEL " line) in
-  record "runtime_model_observation_count" (List.length observed=9) (string_of_int(List.length observed));
+  let pairs=List.filter_map(fun line->match String.split_on_char ' ' line with
+    |["MODEL";a;b;_;_]->Some(a^":"^b)|_->None)observed |>List.sort_uniq String.compare in
+  let expected_pairs=List.concat_map(fun a->List.map(fun b->string_of_int a^":"^string_of_int b)[0;1;2])[0;1;2] in
+  record "runtime_model_pair_coverage" (List.length observed=9 && pairs=expected_pairs)
+    ("observations="^string_of_int(List.length observed)^"; unique_pairs="^String.concat "," pairs);
   List.iteri(fun index line->
     match String.split_on_char ' ' line with
     | ["MODEL";a;b;joined;admitted] when List.mem admitted ["true";"false"] ->
