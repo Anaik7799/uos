@@ -26,7 +26,7 @@ pub fn all_18_l1_feature_families_test() {
   // Verify all entries have non-empty source domains
   let all_valid =
     list.all(families, fn(rec) {
-      list.length(rec.source_domains) > 0 && rec.durable_tasks_count > 0
+      rec.source_domains != [] && rec.durable_tasks_count > 0
     })
   all_valid |> should.be_true()
 }
@@ -43,9 +43,7 @@ pub fn canonical_l2_capabilities_test() {
   first.status_policy |> should.equal("FailClosed")
 
   let all_have_anchors =
-    list.all(caps, fn(c) {
-      list.length(c.source_anchors) > 0 && list.length(c.doc_anchors) > 0
-    })
+    list.all(caps, fn(c) { c.source_anchors != [] && c.doc_anchors != [] })
   all_have_anchors |> should.be_true()
 }
 

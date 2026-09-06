@@ -1,0 +1,165 @@
+// ==============================================================================
+// [UOS-OMNI-TEST] Omni-Fractal Matrix & 17-Aspect Generation EUnit Test Suite
+// ==============================================================================
+
+import cepaf_gleam/verification/omni_fractal_matrix_engine.{
+  L0Constitutional, L9BiosemioticRocha, SdlcAddDesign, SdlcAuditLedger,
+  canonical_10_fractal_layers, canonical_10_sdlc_stages,
+  canonical_14_superpowers, canonical_fast_ooda_cycle, canonical_mcp_ecosystem,
+  canonical_skill_inventory, canonical_symbiosis_topology,
+  evaluate_formal_aspects, evaluate_scalability_and_performance,
+  generate_all_17_aspect_processes, generate_all_use_cases, is_fast_ooda_safe,
+  verify_omni_fractal_system_matrix,
+}
+import gleam/list
+import gleeunit/should
+
+pub fn canonical_10_fractal_layers_test() {
+  let layers = canonical_10_fractal_layers()
+  list.length(layers) |> should.equal(10)
+
+  let assert Ok(first) = list.first(layers)
+  first |> should.equal(L0Constitutional)
+
+  let assert Ok(last) = list.last(layers)
+  last |> should.equal(L9BiosemioticRocha)
+}
+
+pub fn fast_ooda_cycle_safety_test() {
+  let ooda = canonical_fast_ooda_cycle()
+  is_fast_ooda_safe(ooda) |> should.be_true()
+
+  // High latency OODA violation (>100ms)
+  let bad_latency =
+    omni_fractal_matrix_engine.FastOodaCycle(
+      observation_latency_ms: 150,
+      sensor_count: ooda.sensor_count,
+      orientation_entropy_bits: ooda.orientation_entropy_bits,
+      orientation_lyapunov: ooda.orientation_lyapunov,
+      decision_consensus_ratio: ooda.decision_consensus_ratio,
+      decision_ratified: ooda.decision_ratified,
+      action_dispatch_status: ooda.action_dispatch_status,
+      action_duration_ms: ooda.action_duration_ms,
+    )
+  is_fast_ooda_safe(bad_latency) |> should.be_false()
+
+  // Unstable positive Lyapunov drift violation
+  let bad_lyapunov =
+    omni_fractal_matrix_engine.FastOodaCycle(
+      observation_latency_ms: ooda.observation_latency_ms,
+      sensor_count: ooda.sensor_count,
+      orientation_entropy_bits: ooda.orientation_entropy_bits,
+      orientation_lyapunov: 0.45,
+      decision_consensus_ratio: ooda.decision_consensus_ratio,
+      decision_ratified: ooda.decision_ratified,
+      action_dispatch_status: ooda.action_dispatch_status,
+      action_duration_ms: ooda.action_duration_ms,
+    )
+  is_fast_ooda_safe(bad_lyapunov) |> should.be_false()
+}
+
+pub fn canonical_10_sdlc_stages_test() {
+  let stages = canonical_10_sdlc_stages()
+  list.length(stages) |> should.equal(10)
+
+  let assert Ok(first) = list.first(stages)
+  first |> should.equal(SdlcAddDesign)
+
+  let assert Ok(last) = list.last(stages)
+  last |> should.equal(SdlcAuditLedger)
+}
+
+pub fn skill_inventory_test() {
+  let skills = canonical_skill_inventory()
+  skills.total_skills |> should.equal(170)
+  skills.active_skills |> should.equal(170)
+  skills.verified_skills |> should.equal(170)
+  list.length(skills.governing_authorities) |> should.equal(3)
+}
+
+pub fn canonical_14_superpowers_test() {
+  let powers = canonical_14_superpowers()
+  list.length(powers) |> should.equal(14)
+
+  let all_active = list.all(powers, fn(p) { p.active })
+  all_active |> should.be_true()
+
+  let assert Ok(first) = list.first(powers)
+  first.id |> should.equal("SP-01")
+  first.formal_gate |> should.equal("G-TDD-EUNIT")
+}
+
+pub fn mcp_tooling_ecosystem_test() {
+  let mcp = canonical_mcp_ecosystem()
+  let has_enough = mcp.total_tools >= 35
+  has_enough |> should.be_true()
+
+  mcp.moz_transport_active |> should.be_true()
+  mcp.zero_trust_interceptor_active |> should.be_true()
+}
+
+pub fn agentic_symbiosis_topology_test() {
+  let sym = canonical_symbiosis_topology()
+  sym.single_instance_singletons |> should.equal(71)
+  sym.multi_instance_elastic_workers |> should.equal(195)
+  sym.total_actors |> should.equal(266)
+  sym.unconstrained_elastic_scaling |> should.be_true()
+  sym.tri_sovereignty_ratified |> should.be_true()
+}
+
+pub fn all_17_aspect_processes_test() {
+  let aspects = generate_all_17_aspect_processes()
+  list.length(aspects) |> should.equal(17)
+
+  let all_verified = list.all(aspects, fn(a) { a.verified })
+  all_verified |> should.be_true()
+
+  let assert Ok(first) = list.first(aspects)
+  first.step_id |> should.equal(1)
+  first.pillar |> should.equal("SRE")
+
+  let assert Ok(last) = list.last(aspects)
+  last.step_id |> should.equal(17)
+  last.pillar |> should.equal("Execution")
+}
+
+pub fn all_use_cases_test() {
+  let ucs = generate_all_use_cases()
+  list.length(ucs) |> should.equal(10)
+
+  let all_operational =
+    list.all(ucs, fn(u) { u.status == "Operational" && u.deterministic })
+  all_operational |> should.be_true()
+}
+
+pub fn scalability_and_performance_test() {
+  let eval = evaluate_scalability_and_performance()
+  eval.all_math_gates_passed |> should.be_true()
+  eval.unconstrained_beam_scaling |> should.be_true()
+
+  let entropy_ok = eval.shannon_entropy_bits >=. 2.5
+  entropy_ok |> should.be_true()
+
+  let ccm_ok = eval.cyclomatic_complexity_ratio >=. 0.90
+  ccm_ok |> should.be_true()
+
+  let div_ok = eval.expected_vs_actual_divergence <=. 0.10
+  div_ok |> should.be_true()
+
+  let itqs_ok = eval.integrated_test_quality_score >=. 0.85
+  itqs_ok |> should.be_true()
+}
+
+pub fn formal_aspects_test() {
+  let formal = evaluate_formal_aspects()
+  formal.lean4_conservation_proved |> should.be_true()
+  formal.lean4_stm_lease_proved |> should.be_true()
+  formal.quint_parity_frontier_proved |> should.be_true()
+  formal.gospel_contracts_verified |> should.be_true()
+  formal.pure_erlang_graphene_verified |> should.be_true()
+  formal.nvme_storage_locked |> should.be_true()
+}
+
+pub fn master_matrix_verification_predicate_test() {
+  verify_omni_fractal_system_matrix() |> should.be_true()
+}
