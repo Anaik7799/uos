@@ -1,0 +1,307 @@
+// ==============================================================================
+// [UOS-SDLC-SRE-ENGINE] Pure BEAM SDLC, SRE & Verification Process Engine
+// ==============================================================================
+// Transmuted from VM-1 SDLC_SRE_PROCESS.md, ALGEBRAIC_FRACTAL_RULES.md,
+// SAFETY_ANALYSIS.md, and docs/TESTING_DISCIPLINES.md into pure Gleam/OTP.
+//
+// Zero-Muda Purity: Pure functional Gleam on BEAM (SC-MUDA-001)
+// Storage Safety: HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736" enforced
+// ==============================================================================
+
+import gleam/int
+import gleam/list
+import gleam/string
+
+// ------------------------------------------------------------------------------
+// 1. 5-Tier Fractal Lifecycle
+// ------------------------------------------------------------------------------
+
+pub type LifecycleTier {
+  TierOperation
+  TierTask
+  TierSlice
+  TierEpoch
+  TierPin
+}
+
+pub fn lifecycle_tier_to_string(tier: LifecycleTier) -> String {
+  case tier {
+    TierOperation -> "Operation"
+    TierTask -> "Task"
+    TierSlice -> "Slice"
+    TierEpoch -> "Epoch"
+    TierPin -> "Pin"
+  }
+}
+
+pub type LifecycleLoopSpec {
+  LifecycleLoopSpec(
+    tier: LifecycleTier,
+    stage_name: String,
+    entry_artifact: String,
+    exit_criterion: String,
+    gate_name: String,
+  )
+}
+
+pub fn canonical_lifecycle_specs() -> List(LifecycleLoopSpec) {
+  [
+    LifecycleLoopSpec(
+      tier: TierOperation,
+      stage_name: "Code (TDD micro-cycle)",
+      entry_artifact: "Failing law test",
+      exit_criterion: "Law green, zero leaks, 0 warnings",
+      gate_name: "G-TDD-EUNIT",
+    ),
+    LifecycleLoopSpec(
+      tier: TierTask,
+      stage_name: "Plan -> Build -> Review -> Integrate",
+      entry_artifact: "Task brief / Spec",
+      exit_criterion: "Two review verdicts clean, gate green, precise-scope commit",
+      gate_name: "G-TWO-KEY-REVIEW",
+    ),
+    LifecycleLoopSpec(
+      tier: TierSlice,
+      stage_name: "Feature Lifecycle",
+      entry_artifact: "Component + Safety packets",
+      exit_criterion: "Named laws + >=2 mutants killed + docs synced + SQLite evidence",
+      gate_name: "G-SLICE-MUTATION",
+    ),
+    LifecycleLoopSpec(
+      tier: TierEpoch,
+      stage_name: "Release Cycle",
+      entry_artifact: "Epoch charter + task plan",
+      exit_criterion: "Exit gate + ratchets + baseline accepted + 13-section journal",
+      gate_name: "G-EPOCH-DOCTOR",
+    ),
+    LifecycleLoopSpec(
+      tier: TierPin,
+      stage_name: "Platform Upgrade Cycle",
+      entry_artifact: "Re-pin ledger entry",
+      exit_criterion: "Differential oracle green + full re-baseline",
+      gate_name: "G-PIN-DIFFERENTIAL",
+    ),
+  ]
+}
+
+// ------------------------------------------------------------------------------
+// 2. 7-Step Mandatory Algebraic Loop
+// ------------------------------------------------------------------------------
+
+pub type AlgebraicStep {
+  StepSemanticDomain
+  StepOperations
+  StepObservations
+  StepOracle
+  StepFinalEncoding
+  StepHomomorphismLaws
+  StepMutants
+  StepDocs
+  StepEvidence
+}
+
+pub fn algebraic_step_name(step: AlgebraicStep) -> String {
+  case step {
+    StepSemanticDomain -> "1. Semantic Domain"
+    StepOperations -> "2. Operations"
+    StepObservations -> "3. Observations"
+    StepOracle -> "4. Reference Oracle"
+    StepFinalEncoding -> "5. Final Encoding"
+    StepHomomorphismLaws -> "6. Homomorphism Laws"
+    StepMutants -> "7. Planted Mutants"
+    StepDocs -> "8. Document Sync"
+    StepEvidence -> "9. Harness Evidence"
+  }
+}
+
+pub fn canonical_algebraic_steps() -> List(AlgebraicStep) {
+  [
+    StepSemanticDomain,
+    StepOperations,
+    StepObservations,
+    StepOracle,
+    StepFinalEncoding,
+    StepHomomorphismLaws,
+    StepMutants,
+    StepDocs,
+    StepEvidence,
+  ]
+}
+
+// ------------------------------------------------------------------------------
+// 3. STPA Safety Analysis & Losses
+// ------------------------------------------------------------------------------
+
+pub type StpaLoss {
+  LossL1FalseConformance
+  LossL2SilentRegression
+  LossL3EvidenceContamination
+  LossL4WastedEffort
+  LossL5BoundaryPurity
+}
+
+pub fn stpa_loss_to_string(loss: StpaLoss) -> String {
+  case loss {
+    LossL1FalseConformance -> "L-1 False Conformance Claim"
+    LossL2SilentRegression -> "L-2 Silent Parity/Coverage Regression"
+    LossL3EvidenceContamination -> "L-3 Evidence Corruption or Out-of-Band Mutation"
+    LossL4WastedEffort -> "L-4 Large-Scale Wasted Effort"
+    LossL5BoundaryPurity -> "L-5 Repository Purity & Boundary Violation"
+  }
+}
+
+pub type StpaHazard {
+  HazardH1GreenWithDefect
+  HazardH2RatchetWeakened
+  HazardH3EvidenceDiverged
+  HazardH4StorageInterlockBypassed
+  HazardH5RunawayReductions
+}
+
+pub fn stpa_hazard_to_string(hazard: StpaHazard) -> String {
+  case hazard {
+    HazardH1GreenWithDefect -> "H-1 Gate reports GREEN while defect exists"
+    HazardH2RatchetWeakened -> "H-2 Ratchet, baseline, or threshold weakened"
+    HazardH3EvidenceDiverged -> "H-3 Telemetry/Evidence store diverges from physical reality"
+    HazardH4StorageInterlockBypassed -> "H-4 Hardware storage interlock bypassed"
+    HazardH5RunawayReductions -> "H-5 Runaway reductions or deadlocks"
+  }
+}
+
+pub fn check_stpa_hazard_safety(
+  hazard: StpaHazard,
+  target_serial: String,
+) -> Bool {
+  case hazard {
+    HazardH4StorageInterlockBypassed -> {
+      // Hardware drive OS NVMe 25503L801736 must NEVER be targeted
+      target_serial != "25503L801736"
+    }
+    _ -> True
+  }
+}
+
+// ------------------------------------------------------------------------------
+// 4. Mutation Testing & Adequacy Scorer
+// ------------------------------------------------------------------------------
+
+pub type MutantVerdict {
+  MutantKilled(killer_test: String)
+  MutantEquivalent(justification: String)
+  MutantSurvived(leak_reason: String)
+}
+
+pub type MutantRecord {
+  MutantRecord(
+    id: String,
+    slice_id: String,
+    target_file: String,
+    mutation_desc: String,
+    expected_failing_law: String,
+    verdict: MutantVerdict,
+  )
+}
+
+pub fn verify_slice_mutation_adequacy(
+  mutants: List(MutantRecord),
+) -> #(Int, Int, Int, Float, Bool) {
+  let total = list.length(mutants)
+  let killed =
+    list.count(mutants, fn(m) {
+      case m.verdict {
+        MutantKilled(_) -> True
+        _ -> False
+      }
+    })
+  let equiv =
+    list.count(mutants, fn(m) {
+      case m.verdict {
+        MutantEquivalent(_) -> True
+        _ -> False
+      }
+    })
+  let survived = total - killed - equiv
+
+  let kill_rate = case total {
+    0 -> 0.0
+    _ -> int.to_float(killed + equiv) /. int.to_float(total)
+  }
+
+  // Pass criteria: total >= 2 mutants planted per slice, 0 survived
+  let passes = total >= 2 && survived == 0 && kill_rate >=. 0.90
+  #(total, killed, equiv, kill_rate, passes)
+}
+
+// ------------------------------------------------------------------------------
+// 5. Equivalence & Divergence Classification
+// ------------------------------------------------------------------------------
+
+pub type EquivVerdict {
+  EquivExactParity
+  EquivJustifiedDivergence(reason: String)
+  EquivUntested(blocker: String)
+}
+
+pub type DivergenceRecord {
+  DivergenceRecord(
+    id: String,
+    opcode_or_function: String,
+    pinned_oracle: String,
+    verdict: EquivVerdict,
+    plan_reference: String,
+  )
+}
+
+pub fn evaluate_divergence_ledger(
+  records: List(DivergenceRecord),
+) -> #(Int, Int, Int, Bool) {
+  let total = list.length(records)
+  let exact =
+    list.count(records, fn(r) {
+      case r.verdict {
+        EquivExactParity -> True
+        _ -> False
+      }
+    })
+  let justified =
+    list.count(records, fn(r) {
+      case r.verdict {
+        EquivJustifiedDivergence(_) -> True
+        _ -> False
+      }
+    })
+  let untested = total - exact - justified
+
+  // Pass criteria: all non-exact entries have explicit justification or planned blocker
+  let passes = total > 0 && untested == 0
+  #(total, exact, justified, passes)
+}
+
+// ------------------------------------------------------------------------------
+// 6. CAST (Causal Analysis based on STPA) Incident Logger
+// ------------------------------------------------------------------------------
+
+pub type CastIncidentRecord {
+  CastIncidentRecord(
+    incident_id: String,
+    timestamp: String,
+    red_gate_name: String,
+    root_cause: String,
+    uca_prevented: String,
+    resolution_status: String,
+  )
+}
+
+pub fn format_cast_incident_entry(incident: CastIncidentRecord) -> String {
+  string.join(
+    [
+      "| " <> incident.incident_id <> " | ",
+      incident.timestamp <> " | ",
+      incident.red_gate_name <> " | ",
+      incident.root_cause <> " | ",
+      incident.uca_prevented <> " | ",
+      incident.resolution_status <> " |",
+    ],
+    "",
+  )
+}
