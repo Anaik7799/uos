@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<graphml xmlns="http://graphml.graphdrawing.org/xmlns"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd">
+  <key id="d0" for="node" attr.name="name" attr.type="string"/>
+  <key id="d1" for="node" attr.name="domain" attr.type="string"/>
+  <key id="d2" for="node" attr.name="fractal_layer" attr.type="int"/>
+  <key id="d3" for="node" attr.name="contract_ref" attr.type="string"/>
+  <key id="d4" for="node" attr.name="tailscale_route" attr.type="string"/>
+  <key id="d5" for="node" attr.name="description" attr.type="string"/>
+  <key id="d6" for="edge" attr.name="relation" attr.type="string"/>
+  <key id="d7" for="edge" attr.name="weight" attr.type="float"/>
+  <graph id="UOS_Master_Ontology" edgedefault="directed">
+    <node id="adk-core-agent">
+      <data key="d0">ADK LlmAgent & BaseAgent Substrate</data>
+      <data key="d1">ADK Framework</data>
+      <data key="d2">5</data>
+      <data key="d3">SC-ADK-001</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/fpp-agents</data>
+      <data key="d5">Model-agnostic agent runtime supporting chat, task, and autonomous execution modes.</data>
+    </node>
+    <node id="adk-workflow-graph">
+      <data key="d0">ADK StateGraph Workflow Runtime</data>
+      <data key="d1">ADK Framework</data>
+      <data key="d2">5</data>
+      <data key="d3">SC-ADK-002</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/fpp-topology</data>
+      <data key="d5">Directed acyclic and cyclic workflow execution engine with conditional branching and HITL.</data>
+    </node>
+    <node id="adk-runner-hooks">
+      <data key="d0">ADK Runner 6-Phase Lifecycle Hooks</data>
+      <data key="d1">ADK Framework</data>
+      <data key="d2">4</data>
+      <data key="d3">SC-ADK-003</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/ag-ui/events</data>
+      <data key="d5">Execution runtime dispatching Before/After Agent, Model, and Tool hooks.</data>
+    </node>
+    <node id="adk-session-deltas">
+      <data key="d0">ADK Stateful Sessions & RFC-6902 Deltas</data>
+      <data key="d1">ADK Framework</data>
+      <data key="d2">4</data>
+      <data key="d3">SC-ADK-004</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/fpp-atlas</data>
+      <data key="d5">Session management with atomic state patches, snapshots, and time-travel rollback.</data>
+    </node>
+    <node id="adk-memory-store">
+      <data key="d0">ADK Episodic & Semantic Memory Store</data>
+      <data key="d1">ADK Framework</data>
+      <data key="d2">4</data>
+      <data key="d3">SC-ADK-005</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/wiki</data>
+      <data key="d5">Working memory and long-term vector/key-value persistence across interaction cycles.</data>
+    </node>
+    <node id="adk-mcp-protocol">
+      <data key="d0">ADK Model Context Protocol (MCP) Federation</data>
+      <data key="d1">ADK Framework</data>
+      <data key="d2">3</data>
+      <data key="d3">SC-ADK-006</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/api/fpp/dictionary</data>
+      <data key="d5">Standardized vertical tool integration for database, SaaS, and system calls.</data>
+    </node>
+    <node id="adk-a2a-protocol">
+      <data key="d0">ADK Agent-to-Agent (A2A) Swarm Protocol</data>
+      <data key="d1">ADK Framework</data>
+      <data key="d2">6</data>
+      <data key="d3">SC-ADK-007</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/mesh</data>
+      <data key="d5">Horizontal inter-agent delegation and remote subagent orchestration.</data>
+    </node>
+    <node id="adk-eval-framework">
+      <data key="d0">ADK Evaluation Benchmark Framework (adk eval)</data>
+      <data key="d1">ADK Framework</data>
+      <data key="d2">5</data>
+      <data key="d3">SC-ADK-008</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/checklist</data>
+      <data key="d5">Automated test trajectory scoring, criteria rubrics, and simulation environments.</data>
+    </node>
+    <node id="adk-plugins-guardrails">
+      <data key="d0">ADK BasePlugin Security Guardrails</data>
+      <data key="d1">ADK Framework</data>
+      <data key="d2">0</data>
+      <data key="d3">SC-ADK-010</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/api/verify/checks</data>
+      <data key="d5">Security policy enforcers, input/output sanitizers, PII scrubbers, and token quotas.</data>
+    </node>
+    <node id="c3i-sdlc-pillar">
+      <data key="d0">C3I SDLC Operational System (32 Agents)</data>
+      <data key="d1">C3I Agentic Ecology</data>
+      <data key="d2">9</data>
+      <data key="d3">SC-SDLC-001</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/planning</data>
+      <data key="d5">Synthesis, code generation, graph orchestration, and hot-reloading pipeline.</data>
+    </node>
+    <node id="c3i-sre-pillar">
+      <data key="d0">C3I SRE Operational System (32 Agents)</data>
+      <data key="d1">C3I Agentic Ecology</data>
+      <data key="d2">4</data>
+      <data key="d3">SC-SRE-001</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/</data>
+      <data key="d5">Lyapunov stability, freshness monitors, Sa-plan durable leasing, and Rete gates.</data>
+    </node>
+    <node id="c3i-verification-pillar">
+      <data key="d0">C3I Verification Operational System (32 Agents)</data>
+      <data key="d1">C3I Agentic Ecology</data>
+      <data key="d2">0</data>
+      <data key="d3">SC-VERI-001</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/testing</data>
+      <data key="d5">Full 9-modality testing, Lean 4 proofs, OTP differential, and 18/18 checklist gates.</data>
+    </node>
+    <node id="zigvm-stg1-ontology">
+      <data key="d0">ZigVM Stage 1: Ontology & Semantics</data>
+      <data key="d1">ZigVM Deterministic Lifecycle</data>
+      <data key="d2">8</data>
+      <data key="d3">SC-ONTO-001</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/wiki</data>
+      <data key="d5">Infranodus semantic networks, Notion ontology, and Gospel/Ortac formal contracts.</data>
+    </node>
+    <node id="zigvm-stg2-design">
+      <data key="d0">ZigVM Stage 2: Mathematical Design & Atlas</data>
+      <data key="d1">ZigVM Deterministic Lifecycle</data>
+      <data key="d2">7</data>
+      <data key="d3">SC-DMC-001</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/fpp-atlas</data>
+      <data key="d5">Denotational Intent Calculus, 12-layer Algebraic Atlas, and 13D TCM coordinates.</data>
+    </node>
+    <node id="zigvm-stg3-code">
+      <data key="d0">ZigVM Stage 3: BEAM Code & FPP Transmutation</data>
+      <data key="d1">ZigVM Deterministic Lifecycle</data>
+      <data key="d2">3</data>
+      <data key="d3">SC-FPP-001</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/fpp-topology</data>
+      <data key="d5">BEAM bytecode synthesis, FPP aerospace component schemas, and zero foreign NIF purity.</data>
+    </node>
+    <node id="zigvm-stg4-verification">
+      <data key="d0">ZigVM Stage 4: Verification & Oracles</data>
+      <data key="d1">ZigVM Deterministic Lifecycle</data>
+      <data key="d2">0</data>
+      <data key="d3">SC-VERI-002</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/testing</data>
+      <data key="d5">Full 9-modality test protocol, Lean 4 coordinate proofs, and pinned OTP 30 differential.</data>
+    </node>
+    <node id="zigvm-stg5-sre">
+      <data key="d0">ZigVM Stage 5: SRE & Cybernetic Resilience</data>
+      <data key="d1">ZigVM Deterministic Lifecycle</data>
+      <data key="d2">4</data>
+      <data key="d3">SC-SRE-002</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/</data>
+      <data key="d5">Lyapunov stability, dead-man's-switch, Sa-plan durable leasing, and Rete rule gates.</data>
+    </node>
+    <node id="zigvm-stg6-km">
+      <data key="d0">ZigVM Stage 6: Knowledge Management & ZK-KM</data>
+      <data key="d1">ZigVM Deterministic Lifecycle</data>
+      <data key="d2">8</data>
+      <data key="d3">SC-KM-001</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/zk</data>
+      <data key="d5">Permanent ZK ADRs (ADR-001..ADR-027), Master MOCs, Hermes wiki engine, and SQLite WAL.</data>
+    </node>
+    <node id="inv-hardware-storage-lock">
+      <data key="d0">Hardware OS Storage Interlock</data>
+      <data key="d1">Formal Verification & Invariants</data>
+      <data key="d2">0</data>
+      <data key="d3">SC-STORAGE-001</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/api/fpp/intent</data>
+      <data key="d5">Strict immutability lock on root NVMe HARD_DENIED_SYSTEM_OS_SERIAL = '25503L801736'.</data>
+    </node>
+    <node id="inv-rocha-semiotic-cut">
+      <data key="d0">Rocha Semiotic Cut Decoupling</data>
+      <data key="d1">Formal Verification & Invariants</data>
+      <data key="d2">0</data>
+      <data key="d3">SC-ROCHA-001</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/fpp-atlas</data>
+      <data key="d5">Biosemiotic principle enforcing strict separation of symbolic code from physical dynamics.</data>
+    </node>
+    <node id="inv-zero-muda-purity">
+      <data key="d0">Zero-Muda Purity Standard</data>
+      <data key="d1">Formal Verification & Invariants</data>
+      <data key="d2">0</data>
+      <data key="d3">SC-MUDA-001</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/checklist</data>
+      <data key="d5">Permanent exclusion of Bevy and Graphite; pure Erlang graphene_nif.erl.</data>
+    </node>
+    <node id="inv-dmc-disjoint-windows">
+      <data key="d0">DMC Base-ID Disjoint Memory Windows</data>
+      <data key="d1">Formal Verification & Invariants</data>
+      <data key="d2">0</data>
+      <data key="d3">SC-DMC-001</data>
+      <data key="d4">http://nas-1.tail55d152.ts.net:4100/api/fpp/agents</data>
+      <data key="d5">Pairwise disjoint memory base-ID intervals across [0x1000, 0x2800) for all 96 agents.</data>
+    </node>
+    <edge id="e0" source="c3i-sdlc-pillar" target="adk-workflow-graph">
+      <data key="d6">implements</data>
+      <data key="d7">1.0</data>
+    </edge>
+    <edge id="e1" source="c3i-sdlc-pillar" target="adk-core-agent">
+      <data key="d6">implements</data>
+      <data key="d7">1.0</data>
+    </edge>
+    <edge id="e2" source="c3i-sdlc-pillar" target="adk-a2a-protocol">
+      <data key="d6">orchestrates</data>
+      <data key="d7">1.0</data>
+    </edge>
+    <edge id="e3" source="c3i-sdlc-pillar" target="adk-mcp-protocol">
+      <data key="d6">orchestrates</data>
+      <data key="d7">1.0</data>
+    </edge>
+    <edge id="e4" source="c3i-sre-pillar" target="adk-runner-hooks">
+      <data key="d6">governs</data>
+      <data key="d7">1.0</data>
+    </edge>
+    <edge id="e5" source="c3i-sre-pillar" target="adk-session-deltas">
+      <data key="d6">governs</data>
+      <data key="d7">1.0</data>
+    </edge>
+    <edge id="e6" source="c3i-sre-pillar" target="adk-plugins-guardrails">
+      <data key="d6">protects</data>
+      <data key="d7">1.0</data>
+    </edge>
+    <edge id="e7" source="c3i-verification-pillar" target="adk-eval-framework">
+      <data key="d6">verifies</data>
+      <data key="d7">1.0</data>
+    </edge>
+    <edge id="e8" source="c3i-verification-pillar" target="inv-hardware-storage-lock">
+      <data key="d6">verifies</data>
+      <data key="d7">1.0</data>
+    </edge>
+    <edge id="e9" source="c3i-verification-pillar" target="inv-rocha-semiotic-cut">
+      <data key="d6">verifies</data>
+      <data key="d7">1.0</data>
+    </edge>
+    <edge id="e10" source="c3i-verification-pillar" target="inv-zero-muda-purity">
+      <data key="d6">verifies</data>
+      <data key="d7">1.0</data>
+    </edge>
+    <edge id="e11" source="c3i-verification-pillar" target="inv-dmc-disjoint-windows">
+      <data key="d6">verifies</data>
+      <data key="d7">1.0</data>
+    </edge>
+    <edge id="e12" source="zigvm-stg1-ontology" target="zigvm-stg2-design">
+      <data key="d6">transmutes</data>
+      <data key="d7">1.0</data>
+    </edge>
+    <edge id="e13" source="zigvm-stg2-design" target="zigvm-stg3-code">
+      <data key="d6">transmutes</data>
+      <data key="d7">1.0</data>
+    </edge>
+    <edge id="e14" source="zigvm-stg3-code" target="zigvm-stg4-verification">
+      <data key="d6">verifies</data>
+      <data key="d7">1.0</data>
+    </edge>
+    <edge id="e15" source="zigvm-stg4-verification" target="zigvm-stg5-sre">
+      <data key="d6">governs</data>
+      <data key="d7">1.0</data>
+    </edge>
+    <edge id="e16" source="zigvm-stg5-sre" target="zigvm-stg6-km">
+      <data key="d6">subsumes</data>
+      <data key="d7">1.0</data>
+    </edge>
+    <edge id="e17" source="inv-hardware-storage-lock" target="c3i-sre-pillar">
+      <data key="d6">protects</data>
+      <data key="d7">1.0</data>
+    </edge>
+    <edge id="e18" source="inv-dmc-disjoint-windows" target="c3i-sdlc-pillar">
+      <data key="d6">protects</data>
+      <data key="d7">1.0</data>
+    </edge>
+    <edge id="e19" source="inv-rocha-semiotic-cut" target="zigvm-stg2-design">
+      <data key="d6">governs</data>
+      <data key="d7">1.0</data>
+    </edge>
+    <edge id="e20" source="inv-zero-muda-purity" target="zigvm-stg3-code">
+      <data key="d6">governs</data>
+      <data key="d7">1.0</data>
+    </edge>
+  </graph>
+</graphml>

@@ -151,14 +151,14 @@ pub fn master_16_render_laws_test() {
 }
 
 // =============================================================================
-// 6. C3I SDLC, SRE & Verification Aerospace Agents Substrate (72 Agents)
+// 6. C3I SDLC, SRE & Verification Aerospace Agents Substrate (96 Agents)
 // =============================================================================
 
-pub fn master_c3i_72_agent_ecology_test() {
+pub fn master_c3i_96_agent_ecology_test() {
   let #(total, sdlc, sre, ver, all_valid) = mvr.verify_c3i_agent_ecology()
-  total |> should.equal(72)
-  sdlc |> should.equal(24)
-  sre |> should.equal(24)
-  ver |> should.equal(24)
+  total |> should.equal(96)
+  sdlc |> should.equal(32)
+  sre |> should.equal(32)
+  ver |> should.equal(32)
   all_valid |> should.be_true
 }

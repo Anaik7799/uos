@@ -1234,6 +1234,6 @@ pub fn verify_c3i_agent_ecology() -> #(Int, Int, Int, Int, Bool) {
   let ver_count =
     list.count(entries, fn(e) { e.c3i_system == "C3I-VERIFICATION" })
   let all_valid =
-    total == 72 && sdlc_count == 24 && sre_count == 24 && ver_count == 24
+    total == 96 && sdlc_count == 32 && sre_count == 32 && ver_count == 32
   #(total, sdlc_count, sre_count, ver_count, all_valid)
 }
