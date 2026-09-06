@@ -1,0 +1,3399 @@
+{
+  "generatedAt": "2026-09-06T03:57:00.810Z",
+  "stamp": "20260906-0300",
+  "scope": "Installed skill discovery, frontmatter, local reference links, and recursive symlink repair",
+  "state": "verified-for-discovery",
+  "capabilityAdmissionChanged": false,
+  "workspaceRevisionBeforeJournal": {
+    "changeId": "xxwnznxw",
+    "commitId": "22008c49",
+    "parentCommitId": "9c2451f6"
+  },
+  "backupManifest": {
+    "path": "/home/an/.local/state/skill-repairs/20260906-0031/20260906-0031-repair-manifest.json",
+    "sha256": "5d5e9de078a639e6e63f4bf8e632798c4d881169f12591f52588c271d469c604",
+    "status": "installed"
+  },
+  "counts": {
+    "metadataRepairs": 47,
+    "invalidYaml": 45,
+    "duplicateHeaders": 5,
+    "additionalTruncatedDescriptions": 2,
+    "localLinkEdits": 9,
+    "recursiveLinksArchived": 6,
+    "aliasesUpdated": 140,
+    "repairedSkills": 62
+  },
+  "nativeBefore": {
+    "receiptPath": "/home/an/.local/state/skill-repairs/20260906-0031/20260906-0031-native-before.json",
+    "receiptSha256": "26a9f8dbd349d87d0786aa708ca56551c1cd84b1b7f28888b71280292d08866b",
+    "data": [
+      {
+        "cwd": "/home/an/NAS-setup/uos",
+        "skillCount": 173,
+        "errorCount": 170,
+        "errors": [
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/abm-campaign/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 75"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/business-analysis/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 68"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/channel-strategy/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 74"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/competitive-intel/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 75"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/crm-hygiene/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 58"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/deal-review/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 65"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/demand-forecast/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 56"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/design-win-tracker/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 70"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/fy-annual-plan/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 64"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-account-sprint/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 60"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-competitive-war-room/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 94"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-csv-export/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 119"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-deal-accelerator/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 48"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-log/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 48"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-zk-brief/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 88"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/gtm-strategy/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 63"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/learn-rule/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 92"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/linkedin-outreach/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 68"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/observe/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 73"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/predict/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 87"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/pricing-strategy/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 59"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/proposal-builder/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 60"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/qbr-template/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 68"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/revenue-ops/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 72"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/sales-call-prep/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 80"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/sales-email/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 52"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/sales-prospecting/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 70"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/semi-market-intel/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 73"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/strategic-account-plan/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 63"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/tam-sizing/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 48"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/territory-plan/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 68"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/win-loss-analysis/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 58"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/zk-learn/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 107"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/zk-recall/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 88"
+          }
+        ]
+      },
+      {
+        "cwd": "/home/an",
+        "skillCount": 144,
+        "errorCount": 68,
+        "errors": [
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/abm-campaign/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 75"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/business-analysis/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 68"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/channel-strategy/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 74"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/competitive-intel/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 75"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/crm-hygiene/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 58"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/deal-review/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 65"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/demand-forecast/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 56"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/design-win-tracker/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 70"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/fy-annual-plan/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 64"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-account-sprint/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 60"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-competitive-war-room/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 94"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-csv-export/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 119"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-deal-accelerator/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 48"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-log/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 48"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-zk-brief/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 88"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/gtm-strategy/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 63"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/learn-rule/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 92"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/linkedin-outreach/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 68"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/observe/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 73"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/predict/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 87"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/pricing-strategy/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 59"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/proposal-builder/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 60"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/qbr-template/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 68"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/revenue-ops/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 72"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/sales-call-prep/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 80"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/sales-email/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 52"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/sales-prospecting/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 70"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/semi-market-intel/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 73"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/strategic-account-plan/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 63"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/tam-sizing/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 48"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/territory-plan/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 68"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/win-loss-analysis/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 58"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/zk-learn/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 107"
+          },
+          {
+            "path": "/home/an/dev/ver/c3i/.claude/skills/zk-recall/SKILL.md",
+            "message": "invalid YAML: mapping values are not allowed in this context at line 2 column 88"
+          }
+        ]
+      }
+    ]
+  },
+  "nativeAfter": {
+    "receiptPath": "/home/an/.local/state/skill-repairs/20260906-0031/20260906-0031-native-after.json",
+    "receiptSha256": "1ccb81c9c955ca4519b84ca67f2a9580b09ecbe1a327e1b43c5f67eb44a9be04",
+    "data": [
+      {
+        "cwd": "/home/an/NAS-setup/uos",
+        "skillCount": 207,
+        "errorCount": 0,
+        "errors": []
+      },
+      {
+        "cwd": "/home/an",
+        "skillCount": 178,
+        "errorCount": 0,
+        "errors": []
+      }
+    ]
+  },
+  "installedAudit": {
+    "observedAt": "2026-09-06T03:51:30.587Z",
+    "uniqueSkills": 349,
+    "rootCounts": {
+      "/home/an/NAS-setup/uos/.codex/skills": 179,
+      "/home/an/NAS-setup/uos/.agents/skills": 179,
+      "/home/an/NAS-setup/uos/.claude/skills": 179,
+      "/home/an/NAS-setup/uos/.gemini/skills": 179,
+      "/home/an/.codex/skills": 141,
+      "/home/an/.agents/skills": 144,
+      "/home/an/.gemini/config/skills": 179,
+      "/home/an/.claude/skills": 144,
+      "/home/an/.gemini/skills": 29,
+      "/home/an/.codex/plugins/cache": 130
+    },
+    "uiFiles": 125,
+    "checkedLocalLinks": 571,
+    "excludedExampleLinks": 4,
+    "errors": [],
+    "cycles": [],
+    "preservedSourceFiles": 56,
+    "matchingInstalledFiles": 65,
+    "snapshots": [
+      {
+        "path": "/home/an/.gemini/config/skills/.pre-sync-20260810T094206+0200/algebra-driven-beam/SKILL.md",
+        "sha256": "a58a828726fc44437382b8d20aee97babc90b17823faca341b3035ada33cbb34"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/.pre-sync-20260810T094206+0200/algebra-driven-zig/SKILL.md",
+        "sha256": "2c94e552685eb15e88aa57ae74b1641102b524770de046cb18dab687823bb54b"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/.pre-sync-20260810T094206+0200/parity-scenario-authoring/SKILL.md",
+        "sha256": "d81a225ec637b68d04f5d67f7176625a21c1d52bf9ccac568d918880a2f5f14d"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/.pre-sync-20260810T094206+0200/resource-preflight/SKILL.md",
+        "sha256": "48e5208b40744cee91238a00921f60c4c4fa94b9a33a94e3cacb256116fee481"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/.pre-sync-20260810T094206+0200/writing-gospel-specifications/SKILL.md",
+        "sha256": "799b3af5664ee31838f6aa40dc992151466461c926b850aedc5fb653d19b7b43"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/.pre-sync-20260810T094206+0200/zigvm-harness-reuse/SKILL.md",
+        "sha256": "f31bd66745a424517b6b07d7823a763e19a054fb7055a902247a7f59caa0fd52"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/abm-campaign/SKILL.md",
+        "sha256": "1572310ecb0c1b337c2eae2286e1b2efa3e3741f8d1086d6044f089114103f6e"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/accidental-data-loss-prevention/SKILL.md",
+        "sha256": "82769e3c99fbbae081420ea62d6e3318eaf80b9c97da12a62c1cf97049826878"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/agentic-ui-evolve/SKILL.md",
+        "sha256": "aec764fc62061b7917d423984c391280bf1078b40aeef0c87b352f7d5f3685c7"
+      },
+      {
+        "path": "/home/an/.claude/skills/algebra-driven-beam/SKILL.md",
+        "sha256": "a58a828726fc44437382b8d20aee97babc90b17823faca341b3035ada33cbb34"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/algebra-driven-ocaml/SKILL.md",
+        "sha256": "32b8138068aee52b65e389e56d39cacee49d8996237aba2efd80268e42e1cb57"
+      },
+      {
+        "path": "/home/an/.claude/skills/algebra-driven-zig/SKILL.md",
+        "sha256": "2c94e552685eb15e88aa57ae74b1641102b524770de046cb18dab687823bb54b"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/algebraic-fractal-structures/SKILL.md",
+        "sha256": "758e9506ec6293a7c4baa0904988788519e4fe287f47fea3ca63e21741b8764b"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.agents/skills/allium/SKILL.md",
+        "sha256": "b3a76b450224edb5ec2861d4e3d44ecf86860dcc8f002fa6648e3c8c09b03b5a"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.agents/skills/allium/skills/distill/SKILL.md",
+        "sha256": "c155e1f2bc3b621541bdbbd4938e7bfac1c602aa591bb95533d004d149d03e67"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.agents/skills/allium/skills/elicit/SKILL.md",
+        "sha256": "8e3c20b55a52af054464a8a214338a77330296228de0575b3c1d58cdfa235513"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.agents/skills/allium/skills/propagate/SKILL.md",
+        "sha256": "c6ab36c2a47d4fc5891654c1da326afbddadda99e5f8f106d7b206fccd04b1d9"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/approach-b-zero-muda-observability/SKILL.md",
+        "sha256": "cee0a117a28dc908c2979e008c4c855dc4b41fcf61d2c06ae10ce845b2144dd7"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/artifact-sync/SKILL.md",
+        "sha256": "4fcfadc59227403c1370a6dd69e799b063626a0979e1724ce078e453e776cf1c"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/bigquery-ai-ml/SKILL.md",
+        "sha256": "a04522dc259281d59ffba134828ab610a05cbdae6898ba7bb02e12692987ddfd"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/bigquery-bigframes/SKILL.md",
+        "sha256": "d2ff0937f7e50d5975623d8995b5e35c5ebba3535582a7e79d321439c55cad28"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/bigquery-data-transfer-service/SKILL.md",
+        "sha256": "8b34bf814948ecbc1bc4fa4cd3aa1da829339efbf95347cbe75985665e78bb27"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/bigquery-graph/SKILL.md",
+        "sha256": "122ecc3a45d8278da0c58704fe4fe9c38515c79929e649a28ebb4faff32c738a"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/bigquery-sql/SKILL.md",
+        "sha256": "c19905ded910223db0716588426254523c1b5b5e3fbfe0656f73510369c0d4c7"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/bonsai-ui-development/SKILL.md",
+        "sha256": "256a6c34fb53b34be65553aead06122416e59287fc731a580f1c9c8b92a07c1e"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/6.3.0/skills/brainstorming/SKILL.md",
+        "sha256": "74edf03ea6d24ef53db48677b93558d14a979bdf052ca3f57ecdca0c66791608"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/building-data-apps/SKILL.md",
+        "sha256": "a9153d270f9d50b3d265be48b778255f9b955fa0f1609c269220038d5880732f"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/business-analysis/SKILL.md",
+        "sha256": "32b1352277577c50f8e292481c1203128c717d542bb4c9c10a660596cdade5b9"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/c3i-page-evolution/SKILL.md",
+        "sha256": "7cbf5ec96a9364f76ec7e2712dc1c62488ed4f2c945175e049f1c8a088c6b9fa"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/c3i-temporal-orchestration/SKILL.md",
+        "sha256": "e55cb869b9cc19eab4e036d61600089adad8ee4c12a44e9c6427caf6977337ed"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/capability-eq-flip/SKILL.md",
+        "sha256": "ad5fccff1d08d6c273aec97b92b4cee93f862b66559f8f00ef490d215b13f7e1"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/cepaf-planning-expert/SKILL.md",
+        "sha256": "de643a268a5b1a40e37446625487f38c5ba60b546e2bc111f6c6dab068432aa7"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/cepaf-podman-expert/SKILL.md",
+        "sha256": "04f912972aeb69a2703652e462b2a9d148122d2f3269f0adf75d50b551190971"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/cepaf-zenoh-expert/SKILL.md",
+        "sha256": "4a275feaa133a9e08f3273b4e93811775786e371efd67a577d5fa8a7c90c4495"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/channel-strategy/SKILL.md",
+        "sha256": "2b63943cc2c9a9835198a422bc63fac14e976ff14bffe4fc227c89e56ca61071"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/codex-symbiosis/SKILL.md",
+        "sha256": "104028580080d9bd515b4759d0912e77ab104262ca56c7856883140297405bd9"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/competitive-intel/SKILL.md",
+        "sha256": "7c8428b17e82438380da10a1b16376a59bc970213d3d02d33163ab9d96d3d328"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/crm-hygiene/SKILL.md",
+        "sha256": "d177b7f5ed57f109154e2bb3d478582ecbb08d7e8e2ef839e0190e9b82ab1762"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/data-autocleaning/SKILL.md",
+        "sha256": "2d4339a699687f70e8ee87420fcb8a892b510aef1f5def97fa3f75dc8a33219e"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/dataform-bigquery/SKILL.md",
+        "sha256": "9e71d551917757cb22ed378dcd23a655bea8d90c2efa7ad10e1e186b59e5dc92"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/dbt-bigquery/SKILL.md",
+        "sha256": "ea301dab1547e603f8219ec3b42de04b3777552122829172d60ce88aa399e9be"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/deal-review/SKILL.md",
+        "sha256": "deb65198ae172ec2b721f1116b16a69822d6e3b05ef2f2cccf3d9962ed822aa7"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/demand-forecast/SKILL.md",
+        "sha256": "58793be6613a347fd28921a61178d006efa47c0707066d621a5b8690d000007a"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/design-win-tracker/SKILL.md",
+        "sha256": "c48d87550e0350a960e7263f3527e15913cf50c660eebcdb20a20a036c5c0c81"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/discovering-gcp-data-assets/SKILL.md",
+        "sha256": "558a0e0738a9d9448463193371400a3a82c6e17d24b6915cd35477f5329d3bd4"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/6.3.0/skills/dispatching-parallel-agents/SKILL.md",
+        "sha256": "1968923066f3b707eb01d1992cdf4c42284c3855f70253b9cd5000ff45fca13c"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/docs-design/SKILL.md",
+        "sha256": "3aa25a40e629a812bcd50e8fd5497e9cfe49df4ff03050af9963b448645d1f36"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/effect-ts-architect/SKILL.md",
+        "sha256": "4f7b867dfbd1dc5ab49c6c6e3792eaa10105d3eb9aaa83674db79b5754cafa14"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/effect-ts-iife-enforcer/SKILL.md",
+        "sha256": "a14a16e23418512bf8f5b806ede85fae9a74be284ce62b70d7fe9832dd88f67c"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/enforcing-resource-attribution/SKILL.md",
+        "sha256": "36dbfb0f7085d16a9ea3854752cb7906b0bbe775ea8d98e00c9bbcb94541f638"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/evolve/SKILL.md",
+        "sha256": "c60899cc7760ded39340dad930023d75d9d84e85fee9e752130072fba6abb24b"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/6.3.0/skills/executing-plans/SKILL.md",
+        "sha256": "c4c3d8b628c51114cd165fb8246fe02744cd8be180032328391252e653028d9b"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/fast-evolve/SKILL.md",
+        "sha256": "4a2f6d620d4fd88fc0651462ceb583bec6163c43c48e67b558fe0085001e786d"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/feature-evolution/SKILL.md",
+        "sha256": "73c90ce959f28649e25b5b28cbad146ca075c27868a4e769667358fbb468be15"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/federate-lakehouse-catalog/SKILL.md",
+        "sha256": "5b3e2480a91c8fe92c92b26c14447d1415cc31794272160e4bcf90882baf58cf"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/6.3.0/skills/finishing-a-development-branch/SKILL.md",
+        "sha256": "8db5a922b242dd4e1bf824cb91c13b3e8d8e8a86d6ceaf7f0774eb9cce909d65"
+      },
+      {
+        "path": "/home/an/.agents/skills/firecrawl/SKILL.md",
+        "sha256": "4d2e8614a69a8fc0de57c408767f2da101b030cf6280b3f625f1118751930dbc"
+      },
+      {
+        "path": "/home/an/.agents/skills/firecrawl-agent/SKILL.md",
+        "sha256": "9a8badff132ebea1b049ebb8404a4bc5f52e4485f9136e27b4a6e92584306324"
+      },
+      {
+        "path": "/home/an/.agents/skills/firecrawl-build-interact/SKILL.md",
+        "sha256": "f79851f64eb6f9a54c2dc3bc6074141d04c019fc02bf1c2bf802208af13d7f78"
+      },
+      {
+        "path": "/home/an/.agents/skills/firecrawl-build-onboarding/SKILL.md",
+        "sha256": "252e7eb581129c8d33e1e77941bf84ce39aed4ac9f988762f3837d48f4e4631b"
+      },
+      {
+        "path": "/home/an/.agents/skills/firecrawl-build-scrape/SKILL.md",
+        "sha256": "902502698be11f1e7b7c131a88893b888cec7a559c7693edcff353df8965bf0b"
+      },
+      {
+        "path": "/home/an/.agents/skills/firecrawl-build-search/SKILL.md",
+        "sha256": "7e5efad1e78c3e3aae7e818ed9dff6038a9aa46f9a6e864454fdfecde829f8a1"
+      },
+      {
+        "path": "/home/an/.agents/skills/firecrawl-crawl/SKILL.md",
+        "sha256": "667c0c2bd834c28f6fa41da0e5926a5d6ed7d278961d9e1b7a3a3854187f3969"
+      },
+      {
+        "path": "/home/an/.agents/skills/firecrawl-download/SKILL.md",
+        "sha256": "8c734be50e335cf8d371a32a691d3bedd09c78b2a9b2698fc5a5a62ae416a867"
+      },
+      {
+        "path": "/home/an/.agents/skills/firecrawl-interact/SKILL.md",
+        "sha256": "4adcb69f9e0c0150f90093b5e654e97a187e4bc34ad3fa99f8c8c5d83f6a47fb"
+      },
+      {
+        "path": "/home/an/.agents/skills/firecrawl-map/SKILL.md",
+        "sha256": "fba70222f88939f3cb00876b70ae280d7326ec7e98384f18ad843665acf20f31"
+      },
+      {
+        "path": "/home/an/.agents/skills/firecrawl-scrape/SKILL.md",
+        "sha256": "d7cf3b8a87c32cf6831378fa82e779780b82b73e60c0d0a69f21856b671e6ca5"
+      },
+      {
+        "path": "/home/an/.agents/skills/firecrawl-search/SKILL.md",
+        "sha256": "e50936d2120bbbc345418231fef014bcad8ea651e01ee41e8a799dbbaeb1afcb"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/formal-technique-selection/SKILL.md",
+        "sha256": "05f40b159c8b47dab38fee326d15c2b2504a5f3f8000f9dc8f2a79024f114725"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/formal-verification-pipeline/SKILL.md",
+        "sha256": "a8ed7169e825069c1ca267bd6872b4c768becc4379e0be1926da9d4aa0b5523c"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/fp-core-rust-architect/SKILL.md",
+        "sha256": "0d5746e064b496daf1584b15f7b1a690432232f1441088928af202f796119421"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/fractal-autopilot/SKILL.md",
+        "sha256": "774b89f7cc927a865cd8d8ddfb3cdfee869d8a17a161c09c007ed9d1f507a85e"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/fractal-decision-calculus/SKILL.md",
+        "sha256": "9d4d96c17f0609b23ba538c0928580880cfebc3ca76e52cb8ff0beb04a9a4b49"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/fractal-workspace-audit/SKILL.md",
+        "sha256": "8bdc239c873cb28b5ba072129b85ecdfd2bfe7bf8f50d2232bdfab136cafbb82"
+      },
+      {
+        "path": "/home/an/.codex/skills/full-symbiosis/SKILL.md",
+        "sha256": "bae65d15734d0157c24f65b0c49f77746031ef8472dac1b403dc3db203abb0e0"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/fy-annual-plan/SKILL.md",
+        "sha256": "afba9285e89d84cff00b3d9c63a38079ee37277b575f684c3671a9c8e6a8dc27"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/fy27-account-sprint/SKILL.md",
+        "sha256": "66120d328b7d196cbc22e0e4d8331ca4d0c0d6913a50213e0dadc543ea5e1a55"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/fy27-competitive-war-room/SKILL.md",
+        "sha256": "6ebb1fbf70411c2d061ddd0474a46911e19a2395e5dd16cc9486f0faca2df505"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/fy27-csv-export/SKILL.md",
+        "sha256": "5583b1f24b9a50defca27b0fd865e8f5668541a868bf90370bb2717640d9de8f"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/fy27-deal-accelerator/SKILL.md",
+        "sha256": "c51e422e5c66d58efacbdd0f82a9edbf146e43614613d4f6ff1408870e021b4b"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-linkedin-ops/SKILL.md",
+        "sha256": "c17cbb08d1ab31c1bb5e68630b35008aef555688df18b8b354898832a38b39f1"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/fy27-log/SKILL.md",
+        "sha256": "2c39a3dd242f53862e874a18ef279c16d44ecfb6c0ac58f5bb3e01516951a01f"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/fy27-obsidian-sync/SKILL.md",
+        "sha256": "4990ded9fe3921ea09f89219be1c5b17b9c41b683fc0b9405e0dbe936e01757c"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/fy27-pipeline-review/SKILL.md",
+        "sha256": "c266eab0327212049e3e0a263e176cad499fd608d25ba544d68239fc41dbb2b7"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/fy27-salesnav-ops/SKILL.md",
+        "sha256": "5c0e7ccdb13bc9380d79d0bf0e38b11f1ec7566b8b579188092784d9a285ac67"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/fy27-status/SKILL.md",
+        "sha256": "d31183c45047e542e6e055b43a48fdee70283e4bd7ad281ee2288cfbd04714b8"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/fy27-weekly-rhythm/SKILL.md",
+        "sha256": "d75c306bf8eb3f6cca21c243857f18143cb4afc390ca960b1d783263a61beb96"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/fy27-zk-brief/SKILL.md",
+        "sha256": "e8660201b46418e2ff0e6811c3dc3e926cb798ad45c0504577815c2b554ce721"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/gcloud-auth-verification/SKILL.md",
+        "sha256": "fcdd8ae4407ebc1cea71d06853decc9cebc356d4498b8b17347ecb6e9cce78b3"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/gcp-composer-troubleshooting/SKILL.md",
+        "sha256": "5d9490d56980b30f29451a0e342b4a52420532c145e67dd1fa5488adf0e7e822"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/gcp-data-pipelines/SKILL.md",
+        "sha256": "9320eb3940628c68265fce533c8cc57a62626595cebf894e5c0855de5248fa9b"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/gcp-dataflow/SKILL.md",
+        "sha256": "9abf6cb8d9aaec574b8576bd41efe27a3c8d3b5079ff3a3328cd65298a1998ff"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/gcp-managed-airflow-dag-authoring/SKILL.md",
+        "sha256": "b4983d1a11b17b6a6ab563bf3bd6a0dbc1d5274f3afc453bc9ad471c62c9e231"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/gcp-managed-airflow-migrations/SKILL.md",
+        "sha256": "f092d155b4de596bd64ab560f97a182476f4f4251f7a7aefd329e7cdff3a691f"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/gcp-managed-airflow-recommendations/SKILL.md",
+        "sha256": "62b82de20b01ee5ac1ecd4288e5bad03f9aab748f48fd6d9d4ac6454eb34ce42"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/gcp-pipeline-orchestration/SKILL.md",
+        "sha256": "197afdeb6d5a0767c44aac04eba6e3eeae15ec3b0b80c42eb9197509a1e87498"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/gcp-pipeline-resource-provisioning/SKILL.md",
+        "sha256": "375d3a13d9fa91ee42b55ea5af7e57569c9ea702d46158573eec8f0055955ac9"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/gcp-spark/SKILL.md",
+        "sha256": "45c6322d60938ed1b2114ddf5a98465ec4d027487c8cf6acb716c6919fcd609a"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/gcs-security-assessment/SKILL.md",
+        "sha256": "589526bdfb9efba2f3d3a35fb25e56fde49abb2381aefa4c52a9a9d999c08d6d"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/gemini-symbiosis/SKILL.md",
+        "sha256": "8f712abe0598b103bb6658c45b466703e55a73af50b81d525382c7ccef6e7d43"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/gleam-expert/SKILL.md",
+        "sha256": "ec49b900574bfdea07c7da82a638731edf6adbce5a4a89fc80095222b1b95227"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/google-cloud-storage-basics/SKILL.md",
+        "sha256": "2f058b6917a7d8eab7fe09f45782bd3d2924c6b1cdb82e17944e9e928c4ffb1b"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/gtm-strategy/SKILL.md",
+        "sha256": "9612b8991bf3403078fb068d98ae9bf88ebe8687028dc12abd2adae9fadbda0d"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/harness-supervisor/SKILL.md",
+        "sha256": "646d9b72dd1a80a40b026036c1922458dbdd694f1b322e2fe7c8599ed18a981a"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/infranodus-design-superset/SKILL.md",
+        "sha256": "b552729974aee3183442dc4ea397e5cb55000f35b6b31f15c63c527f73f9c339"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/journal-artifact-publisher/SKILL.md",
+        "sha256": "ebeefad4953867e37fa88ccae6292c8d56447119879ede1935ada08e6aecb396"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/journal-protocol/SKILL.md",
+        "sha256": "bf293a7662ab605c367c30d97a6d44ac70696f79034735bb483821d7b2973ddd"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/learn-rule/SKILL.md",
+        "sha256": "6ad5775d9eaaedd6296b9f0afe905c0ad15441d13143f00924e29e278cffb8ea"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/linkedin-outreach/SKILL.md",
+        "sha256": "4b47898e5040913db6e6edc6277c3819ab646c3887bc872898834c87f58f751f"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/living-ontology/SKILL.md",
+        "sha256": "dcf2c03f466516ee13284af6d3cec3b732a8d086d409f8b173e8a0a46be59c6d"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/lustre-gleam-ui-expert/SKILL.md",
+        "sha256": "97656bb5f029426a0f848aa739b54b7a419bc5545d2ab0b51a2bb5c3d6557cf9"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/managing-python-dependencies/SKILL.md",
+        "sha256": "7ad459a5a8188fa0f2b8cf3e5e479825e7d7e93e1724750cd1707d896cbd7a05"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/marionette-explore/SKILL.md",
+        "sha256": "88fd387217ca59986b68a9def1e6a886a9add953cf7f1f1a331864373c16086d"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/mesh-resurrection/SKILL.md",
+        "sha256": "0f527a8c8d513bdbb0d5cce8cbcc7d2e2e8f65eb5a85ec6de918969120101f07"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/ml-best-practices/SKILL.md",
+        "sha256": "ae010fd52e6b29f9c18302c4bdb36ce444bfc5581a52a0e036ae1f0b6ab44473"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/mobile-first-adaptive-ui/SKILL.md",
+        "sha256": "436c2f91a43007c1e2bd70f04eef7050d398e8be62c18e12e6954af6d7028139"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/multilayer-swarm/SKILL.md",
+        "sha256": "20fe648d4f1df49ea855fbff3432c9fa33d843840f616381443b112e61362ccb"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/notebook-guidance/SKILL.md",
+        "sha256": "bddf53b2c3ab71eee53e83ef5c357adbe2f216ff324585f719da04e315a9862e"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/observe/SKILL.md",
+        "sha256": "08098e86ced8ce12fec372683cff51f0047c76aaa1170f207535e0407658e027"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/ocaml-figma-control/SKILL.md",
+        "sha256": "9a327402b021d83caa5b41b82cce8a5a44b1b9ec3dd9ba62beaff54af45a541c"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/ocaml-playwright-control/SKILL.md",
+        "sha256": "fe505867e0369a7a148b81975ac759ea0fc2890b563c1ed92ed47aa54f5207f3"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/ocaml-scripting/SKILL.md",
+        "sha256": "f49cb522447460181c4771cd6ba03e5eb5226ba1eea3554fb015492d4dfdd70e"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/otp-conformance-protocol/SKILL.md",
+        "sha256": "607f7f11cf2fa0b832ec003048aae3cc55446784a718d9a77ca8119c727c058a"
+      },
+      {
+        "path": "/home/an/.claude/skills/parity-scenario-authoring/SKILL.md",
+        "sha256": "d81a225ec637b68d04f5d67f7176625a21c1d52bf9ccac568d918880a2f5f14d"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/pass5-auto/SKILL.md",
+        "sha256": "e4d8d77cab62c1b6c97d200142756d1726f92839ac505ef5a9666676c2f39de1"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/patrol-marionette-test/SKILL.md",
+        "sha256": "7d97ae36a2f57d4419e87738628b0533f244455457e473ee4d7bd5830ce2e548"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/pi-prompt/SKILL.md",
+        "sha256": "e80a89c4ad31f9c343a8bb2383ec70a50cebb2e83f4c64d6d56bb78eac7c8d3f"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/pi-symbiosis-evolve/SKILL.md",
+        "sha256": "0b1aad0a208835ff0f373d8a33f0d28841993dc6c5744a217c2b60daff79b03e"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/pi-verify/SKILL.md",
+        "sha256": "7377ac88bae5e508f63834732868beb1100d12f7d1ee503a3ca34248bf9a5920"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/predict/SKILL.md",
+        "sha256": "a922cda044dd1b739e7432869d517296ce725efa6ec58a4256e3d9cc07e940de"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/pricing-strategy/SKILL.md",
+        "sha256": "2ec946fe4add61712576b43e91536b72f4106598acef332d080ae281fc64a883"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/production-readiness/SKILL.md",
+        "sha256": "fb1f0990ffd9f44aa280da10046fb8849930c331337e82966c3dd09d8946d660"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/proposal-builder/SKILL.md",
+        "sha256": "79a50b4420e76b3b271e96dc727143e6c28201ef96120987ef757ba08a3d4062"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/qbr-template/SKILL.md",
+        "sha256": "9bc115d0a82ffa697f0a15e369949774a5f0842226e71b267be82c6100b82bd1"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/raven-ml-substrate/SKILL.md",
+        "sha256": "61dfffab5bc35f427f48433025905c01275687a7e402a52b190cbd67b3ef1f7e"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/6.3.0/skills/receiving-code-review/SKILL.md",
+        "sha256": "091df1629510af1b92fc4abd6f96732ebedb4cb2c0f3457e8f2740b0504a2438"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/6.3.0/skills/requesting-code-review/SKILL.md",
+        "sha256": "d71cc01ba56d2325cf8af5f7c11837819b63ecd57de0bfdb812f7f3ff7751df8"
+      },
+      {
+        "path": "/home/an/.claude/skills/resource-preflight/SKILL.md",
+        "sha256": "e66c9d6f21f80c6d2021070ceda78d86a54325e66bca0d9118c0370598451bf5"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/revenue-ops/SKILL.md",
+        "sha256": "d4aa39a44d572e84b0c2ad38f10ed1796e0e99941ac8abed1179f7b4a8cd3d4f"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/safe-rust-x-safety/SKILL.md",
+        "sha256": "82f3b4767e5c66a7ef4530b61c3f16007b2fb506542db94a596f686ddfac5b01"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/sales/SKILL.md",
+        "sha256": "232830d55dbbd55fddc902abfbe3818be6a39e58a016a8db285e8f17faf7bd11"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/sales-analyze/SKILL.md",
+        "sha256": "0af220e66e84a901556786663eae748251ee1f9dc7cc61217ec64162c9b6d5e6"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/sales-brief/SKILL.md",
+        "sha256": "0a168e883614f8ad3d627ad88f5694a29a0cc6b72a099f19a8b53243aadd8caa"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/sales-call-prep/SKILL.md",
+        "sha256": "f307347144cb0dca7fa20884e73c59758847518ecf8abd74af407c5ca4a661da"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/sales-email/SKILL.md",
+        "sha256": "0baf5ca508d5bdb13fcce78c009144ebd4b8910e7e3228148b28054ea0447059"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/sales-forecast/SKILL.md",
+        "sha256": "a21d45cf45b075a9992bf36cdad8ea3e9b7c69ae2ce08b8e30b13f5a1e32ff90"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/sales-hunt/SKILL.md",
+        "sha256": "f89ed9cc29e8f0e4512e99389f8449acdc04ad65331520032efd3a252bb2e7be"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/sales-prospecting/SKILL.md",
+        "sha256": "43195ce369b99f7862614e418d9b3831816510a0cda735c3efc88a55157db919"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/semi-market-intel/SKILL.md",
+        "sha256": "01c8de9e18040e221cd66b0abc1435bfeec5143835817734226b7b3428d135d7"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/skill-repair/SKILL.md",
+        "sha256": "7ed4b7eb5d82d14686967967159aa472869313bd9804ced44b16eab4884b7f00"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/smp-concurrency-slice/SKILL.md",
+        "sha256": "0c1d556ffe908d5c51e80c412e98bdc36368450b6f53852404674b44322d56c0"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/smtml-solver-substrate/SKILL.md",
+        "sha256": "b8bd9502113cea46be50bc68bc405f479b1eb00f816db6f9fcbc9d93dd727cf4"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/stan-probabilistic-substrate/SKILL.md",
+        "sha256": "7337377e6a7c4bebb38fed541a08f0b51cc782dc031a8f8f9988bd2f14ec2b91"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/stpa-safety-protocol/SKILL.md",
+        "sha256": "282d80278a72c7c1061693b442ba8989f2a93fc52442d4004c2f062f12041c0f"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/strategic-account-plan/SKILL.md",
+        "sha256": "f58a4b0754d9567641549fdae21ad45df585d04007f7258ebdc945329e148e2c"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/6.3.0/skills/subagent-driven-development/SKILL.md",
+        "sha256": "8dd1b8e698edec3700c6d89517dbe96febd3bacd3f6ea21c1a3569c62ea104b5"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/swarm-verification-expert/SKILL.md",
+        "sha256": "9aa1bca11aa2df2cbfd5b470414cfc39fcb4e0d49804cd029592ca389e7d153f"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/system-engineering-sop/SKILL.md",
+        "sha256": "c2441225990fc97bd36fe231c375e4f936cac1612a637f63c1ed30c24f8c0a56"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/6.3.0/skills/systematic-debugging/SKILL.md",
+        "sha256": "808fc5717aa88ad65efff312b11c186294d3e6ee301afb584e2f86599b137787"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/tam-sizing/SKILL.md",
+        "sha256": "3c384d8106bdec61ec7d9828281057e955c1057677cc40cef0dacea4433f86e8"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/territory-plan/SKILL.md",
+        "sha256": "e38a52b0e51f8204760d6fec697cdf07ec4fd8dbabb235122410a8f0d1d78a04"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/6.3.0/skills/test-driven-development/SKILL.md",
+        "sha256": "bf1b8216e523851a411e91d429a7c1c2a173e79d88957bc78e348218d50edd54"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/timestamp-sync/SKILL.md",
+        "sha256": "227785fd74a592783f008fbaeca5a7f746bfb9add58f472de9e81acd2dfdbfc9"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/tyxml-conversion/SKILL.md",
+        "sha256": "103a5e2f1e75717ac1ff72962a752b862365fef87eea23bad2d83b203699a02e"
+      },
+      {
+        "path": "/home/an/dev/ver/c3i/.claude/skills/ui-report-quality/SKILL.md",
+        "sha256": "cbb00f04cdd9449c73d7ad634168e89a34fb4948144a7a38741bde90de6011f8"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/6.3.0/skills/using-git-worktrees/SKILL.md",
+        "sha256": "8cfb86f121269e8f7f12361e6795c4f6738828340e28964c9229d365666c9edd"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/using-jj-workspaces/SKILL.md",
+        "sha256": "9f9f1919059f948b921ee7b069acb3f9809d21c70e1a6c26353c1c3320be5518"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/6.3.0/skills/using-superpowers/SKILL.md",
+        "sha256": "30f2ab78e20ddc27ee7158ae8d4a2abe161c360981c7cc3548070913142d3dc3"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/6.3.0/skills/verification-before-completion/SKILL.md",
+        "sha256": "2befe7fc55bcadaa3d97dd9e8efeb633d2561c0ebe74c5a8b17c4d9e7e4520b3"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/wiki-design/SKILL.md",
+        "sha256": "5d7d8fcf1ff8b0c696c7b53736e34a70ef75189715c25d5dd691e7699d46fb7d"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/win-loss-analysis/SKILL.md",
+        "sha256": "57308619c7f3b67d0c2109c3ace72ec77753cdc91777726e220c2ed68d083e21"
+      },
+      {
+        "path": "/home/an/.claude/skills/writing-gospel-specifications/SKILL.md",
+        "sha256": "799b3af5664ee31838f6aa40dc992151466461c926b850aedc5fb653d19b7b43"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/6.3.0/skills/writing-plans/SKILL.md",
+        "sha256": "48508f44bbfd7d24b029fbf3a314f3cd14c9615599059366e922f47b8dc08cf2"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/superpowers/6.3.0/skills/writing-skills/SKILL.md",
+        "sha256": "d34db5c8aed6a4e0440132bd0613aace70a693ec7819d5637ad77481d8e10d1b"
+      },
+      {
+        "path": "/home/an/.claude/skills/zigvm-harness-reuse/SKILL.md",
+        "sha256": "7197e59168ea8cd79921593fb9b02371831455054bf03c2c7bfb4a3468bdb20b"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/zk-cost/SKILL.md",
+        "sha256": "406497e87937d22c207ca0ea03477bcd379734fb970c51b82b8232749eb10488"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/zk-knowledge-base/SKILL.md",
+        "sha256": "cce17275a93e7726fb3dbee7c301e78b7e0e2536ab32388f097972d51f4c6d89"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/zk-learn/SKILL.md",
+        "sha256": "e9e350d5e8e3d934dba5bb42348c4511c3b1c379ec7127cac6e2dcdb5ce7e78d"
+      },
+      {
+        "path": "/home/an/.gemini/config/skills/zk-recall/SKILL.md",
+        "sha256": "95a963df9539fe57762dcb981037cc175a150697acef5824a7b1e638b8d5586f"
+      },
+      {
+        "path": "/home/an/.codex/skills/.system/imagegen/SKILL.md",
+        "sha256": "681ddb4ad6d06a2acc78a3535b583f8d0c1ea800ecda3d56370d3310fd2cd4ba"
+      },
+      {
+        "path": "/home/an/.codex/skills/.system/openai-docs/SKILL.md",
+        "sha256": "7cb8fa1b2a0c635b5c61ffe1da7b8594a7ea0fce5b71e8d523e2025d88b2a05e"
+      },
+      {
+        "path": "/home/an/.codex/skills/.system/plugin-creator/SKILL.md",
+        "sha256": "71b95b8219644f95d633721e7f7cd3c469edfc8fe50f8415d400dfb2d74bc7b9"
+      },
+      {
+        "path": "/home/an/.codex/skills/.system/review-agent/SKILL.md",
+        "sha256": "07079efd0dc76f05fade424e5dfb048dce1de2df7626e1a4f56292a4f3f92228"
+      },
+      {
+        "path": "/home/an/.codex/skills/.system/skill-creator/SKILL.md",
+        "sha256": "6656e54755638e8efcf275a472b9672eaa8a9a1b9e59dc210e275b03b59e1e66"
+      },
+      {
+        "path": "/home/an/.codex/skills/.system/skill-installer/SKILL.md",
+        "sha256": "d68b77e5bbb34dedab89d134da52855f140fc4b4299b80104f534e3b9e98f8ee"
+      },
+      {
+        "path": "/home/an/.codex/skills/brainstorming/SKILL.md",
+        "sha256": "4a54a4858b99807f3155ed1614b2f116e35ea5c1b788e793f565dd837fd3891f"
+      },
+      {
+        "path": "/home/an/.codex/skills/cli-creator/SKILL.md",
+        "sha256": "24058eabf0aafce6def3fb937ac93cbe3fa341c653c658dc589edb77f73d6152"
+      },
+      {
+        "path": "/home/an/.codex/skills/define-goal/SKILL.md",
+        "sha256": "708df89ff19cbae82a762efae036735d1914b5c7e44df1832e0b723f6cd9ee30"
+      },
+      {
+        "path": "/home/an/.codex/skills/effect-ts-architect/SKILL.md",
+        "sha256": "4b24761401eef1405d457f284f7e74a5352205676b5d24ec450f46e17f424ed7"
+      },
+      {
+        "path": "/home/an/.codex/skills/effect-ts-iife-enforcer/SKILL.md",
+        "sha256": "366e79109b133114dbc9be5dbb045e09b6a92a94401b1bc207fc6d4ba82ceb3d"
+      },
+      {
+        "path": "/home/an/.codex/skills/executing-plans/SKILL.md",
+        "sha256": "c4c3d8b628c51114cd165fb8246fe02744cd8be180032328391252e653028d9b"
+      },
+      {
+        "path": "/home/an/.codex/skills/fp-core-rust-architect/SKILL.md",
+        "sha256": "75c54c35b637b0f8674690e19a2e8f827cc6bb2bcc49f487880ccf2156f5e1fe"
+      },
+      {
+        "path": "/home/an/.codex/skills/functional-runtime-supervisor/SKILL.md",
+        "sha256": "b889db1ad386a7ad220b98990fe3bfa322385852135f867212f4aaaaa8b3a696"
+      },
+      {
+        "path": "/home/an/.codex/skills/journal-artifact-publisher/SKILL.md",
+        "sha256": "178b479b58e9c1eb989935393a6101214b872e50ca18e16091164754c00ac446"
+      },
+      {
+        "path": "/home/an/.codex/skills/playwright/SKILL.md",
+        "sha256": "0ffaabcc8e0990627c4725f18bf1c7955534a796c1c199e872909de2013ce6a8"
+      },
+      {
+        "path": "/home/an/.codex/skills/playwright-interactive/SKILL.md",
+        "sha256": "f6c1155d923e6ae3ccc12abfef2266f119f8e9546df2ddeee1f5eb369845a0a1"
+      },
+      {
+        "path": "/home/an/dev/ver/zigvm/skills/resource-preflight/SKILL.md",
+        "sha256": "b17fad32b1dc0579554948633da1c9a746cfb2b68a67a0ded773893ee2a72f7f"
+      },
+      {
+        "path": "/home/an/.codex/skills/screenshot/SKILL.md",
+        "sha256": "081935a6a163277537d46365f49d6b4a3cb40b4748347e7e88759c5927fa8cf5"
+      },
+      {
+        "path": "/home/an/.codex/skills/security-best-practices/SKILL.md",
+        "sha256": "7b3dae1ffc5434d890f3c65c8f552af52d0307fab3b35dec13013c9ca3844c4f"
+      },
+      {
+        "path": "/home/an/.codex/skills/security-threat-model/SKILL.md",
+        "sha256": "1283c0dd62a8104d9edda4583569b5d8510b4ddaa45120687c999250fd96bad2"
+      },
+      {
+        "path": "/home/an/.codex/skills/systematic-debugging/SKILL.md",
+        "sha256": "808fc5717aa88ad65efff312b11c186294d3e6ee301afb584e2f86599b137787"
+      },
+      {
+        "path": "/home/an/.codex/skills/test-driven-development/SKILL.md",
+        "sha256": "bf1b8216e523851a411e91d429a7c1c2a173e79d88957bc78e348218d50edd54"
+      },
+      {
+        "path": "/home/an/.codex/skills/verification-before-completion/SKILL.md",
+        "sha256": "2befe7fc55bcadaa3d97dd9e8efeb633d2561c0ebe74c5a8b17c4d9e7e4520b3"
+      },
+      {
+        "path": "/home/an/.codex/skills/writing-plans/SKILL.md",
+        "sha256": "72190c88b2b5a67a96b91d66aa72b9161913e10e8769da3f28a226f4cc7b99d0"
+      },
+      {
+        "path": "/home/an/.gemini/skills/accidental-data-loss-prevention/SKILL.md",
+        "sha256": "82769e3c99fbbae081420ea62d6e3318eaf80b9c97da12a62c1cf97049826878"
+      },
+      {
+        "path": "/home/an/.gemini/skills/bigquery-ai-ml/SKILL.md",
+        "sha256": "a04522dc259281d59ffba134828ab610a05cbdae6898ba7bb02e12692987ddfd"
+      },
+      {
+        "path": "/home/an/.gemini/skills/bigquery-bigframes/SKILL.md",
+        "sha256": "d2ff0937f7e50d5975623d8995b5e35c5ebba3535582a7e79d321439c55cad28"
+      },
+      {
+        "path": "/home/an/.gemini/skills/bigquery-data-transfer-service/SKILL.md",
+        "sha256": "8b34bf814948ecbc1bc4fa4cd3aa1da829339efbf95347cbe75985665e78bb27"
+      },
+      {
+        "path": "/home/an/.gemini/skills/bigquery-graph/SKILL.md",
+        "sha256": "122ecc3a45d8278da0c58704fe4fe9c38515c79929e649a28ebb4faff32c738a"
+      },
+      {
+        "path": "/home/an/.gemini/skills/bigquery-sql/SKILL.md",
+        "sha256": "c19905ded910223db0716588426254523c1b5b5e3fbfe0656f73510369c0d4c7"
+      },
+      {
+        "path": "/home/an/.gemini/skills/building-data-apps/SKILL.md",
+        "sha256": "a9153d270f9d50b3d265be48b778255f9b955fa0f1609c269220038d5880732f"
+      },
+      {
+        "path": "/home/an/.gemini/skills/data-autocleaning/SKILL.md",
+        "sha256": "2d4339a699687f70e8ee87420fcb8a892b510aef1f5def97fa3f75dc8a33219e"
+      },
+      {
+        "path": "/home/an/.gemini/skills/dataform-bigquery/SKILL.md",
+        "sha256": "9e71d551917757cb22ed378dcd23a655bea8d90c2efa7ad10e1e186b59e5dc92"
+      },
+      {
+        "path": "/home/an/.gemini/skills/dbt-bigquery/SKILL.md",
+        "sha256": "ea301dab1547e603f8219ec3b42de04b3777552122829172d60ce88aa399e9be"
+      },
+      {
+        "path": "/home/an/.gemini/skills/discovering-gcp-data-assets/SKILL.md",
+        "sha256": "558a0e0738a9d9448463193371400a3a82c6e17d24b6915cd35477f5329d3bd4"
+      },
+      {
+        "path": "/home/an/.gemini/skills/enforcing-resource-attribution/SKILL.md",
+        "sha256": "36dbfb0f7085d16a9ea3854752cb7906b0bbe775ea8d98e00c9bbcb94541f638"
+      },
+      {
+        "path": "/home/an/.gemini/skills/federate-lakehouse-catalog/SKILL.md",
+        "sha256": "5b3e2480a91c8fe92c92b26c14447d1415cc31794272160e4bcf90882baf58cf"
+      },
+      {
+        "path": "/home/an/.gemini/skills/gcloud-auth-verification/SKILL.md",
+        "sha256": "fcdd8ae4407ebc1cea71d06853decc9cebc356d4498b8b17347ecb6e9cce78b3"
+      },
+      {
+        "path": "/home/an/.gemini/skills/gcp-composer-troubleshooting/SKILL.md",
+        "sha256": "5d9490d56980b30f29451a0e342b4a52420532c145e67dd1fa5488adf0e7e822"
+      },
+      {
+        "path": "/home/an/.gemini/skills/gcp-data-pipelines/SKILL.md",
+        "sha256": "9320eb3940628c68265fce533c8cc57a62626595cebf894e5c0855de5248fa9b"
+      },
+      {
+        "path": "/home/an/.gemini/skills/gcp-dataflow/SKILL.md",
+        "sha256": "9abf6cb8d9aaec574b8576bd41efe27a3c8d3b5079ff3a3328cd65298a1998ff"
+      },
+      {
+        "path": "/home/an/.gemini/skills/gcp-managed-airflow-dag-authoring/SKILL.md",
+        "sha256": "b4983d1a11b17b6a6ab563bf3bd6a0dbc1d5274f3afc453bc9ad471c62c9e231"
+      },
+      {
+        "path": "/home/an/.gemini/skills/gcp-managed-airflow-migrations/SKILL.md",
+        "sha256": "f092d155b4de596bd64ab560f97a182476f4f4251f7a7aefd329e7cdff3a691f"
+      },
+      {
+        "path": "/home/an/.gemini/skills/gcp-managed-airflow-recommendations/SKILL.md",
+        "sha256": "62b82de20b01ee5ac1ecd4288e5bad03f9aab748f48fd6d9d4ac6454eb34ce42"
+      },
+      {
+        "path": "/home/an/.gemini/skills/gcp-pipeline-orchestration/SKILL.md",
+        "sha256": "197afdeb6d5a0767c44aac04eba6e3eeae15ec3b0b80c42eb9197509a1e87498"
+      },
+      {
+        "path": "/home/an/.gemini/skills/gcp-pipeline-resource-provisioning/SKILL.md",
+        "sha256": "375d3a13d9fa91ee42b55ea5af7e57569c9ea702d46158573eec8f0055955ac9"
+      },
+      {
+        "path": "/home/an/.gemini/skills/gcp-spark/SKILL.md",
+        "sha256": "45c6322d60938ed1b2114ddf5a98465ec4d027487c8cf6acb716c6919fcd609a"
+      },
+      {
+        "path": "/home/an/.gemini/skills/gcs-security-assessment/SKILL.md",
+        "sha256": "589526bdfb9efba2f3d3a35fb25e56fde49abb2381aefa4c52a9a9d999c08d6d"
+      },
+      {
+        "path": "/home/an/.gemini/skills/google-cloud-storage-basics/SKILL.md",
+        "sha256": "2f058b6917a7d8eab7fe09f45782bd3d2924c6b1cdb82e17944e9e928c4ffb1b"
+      },
+      {
+        "path": "/home/an/.gemini/skills/managing-python-dependencies/SKILL.md",
+        "sha256": "7ad459a5a8188fa0f2b8cf3e5e479825e7d7e93e1724750cd1707d896cbd7a05"
+      },
+      {
+        "path": "/home/an/.gemini/skills/ml-best-practices/SKILL.md",
+        "sha256": "ae010fd52e6b29f9c18302c4bdb36ce444bfc5581a52a0e036ae1f0b6ab44473"
+      },
+      {
+        "path": "/home/an/.gemini/skills/notebook-guidance/SKILL.md",
+        "sha256": "bddf53b2c3ab71eee53e83ef5c357adbe2f216ff324585f719da04e315a9862e"
+      },
+      {
+        "path": "/home/an/.gemini/skills/skill-repair/SKILL.md",
+        "sha256": "7ed4b7eb5d82d14686967967159aa472869313bd9804ced44b16eab4884b7f00"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-bundled/sites/0.1.57/skills/sites-building/SKILL.md",
+        "sha256": "7d69bd668238b0344c5470876ed324b78dfe6ed053487edf4f3233345479842f"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-bundled/sites/0.1.57/skills/sites-hosting/SKILL.md",
+        "sha256": "a94792641384391d45edb3a45e30cd7c3db58d88c63d94e0b2111ffc485aaf72"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-bundled/visualize/1.0.29/skills/visualize/SKILL.md",
+        "sha256": "be82c4e573ffe2fc0921a10f49eb690ce6f7c8a06acffb2789600be677720d05"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/chronos/0.9.2/skills/chronos/SKILL.md",
+        "sha256": "7ede59b7982937a16e7d24c7d3db2967aa4da4e32abc45a43625374b777b2f9f"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/chronos/0.9.2/skills/chronos-governor/SKILL.md",
+        "sha256": "9df296711500f8f35e408f574528dfc60393f0bd1323b1719119c8640c0aee57"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/cloudflare/0.1.2/skills/agents-sdk/SKILL.md",
+        "sha256": "007d6ccf85808a6c779f5b058b1be970d77785000071cb27a55a5f580fbc845b"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/cloudflare/0.1.2/skills/building-ai-agent-on-cloudflare/SKILL.md",
+        "sha256": "31554ff30e2edb8c2dc9bd5fba15438691fb07f3541f0a0cc843b6a13cdaa573"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/cloudflare/0.1.2/skills/building-mcp-server-on-cloudflare/SKILL.md",
+        "sha256": "d76ee46c043d3876d542245e0c26e9d084f4ca8241d811593e93d8d2594118e8"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/cloudflare/0.1.2/skills/cloudflare/SKILL.md",
+        "sha256": "613c4c57c19bd6385a870b4d441e00a0d88cc6c348c447f8a88889d34b17b2d0"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/cloudflare/0.1.2/skills/durable-objects/SKILL.md",
+        "sha256": "cd6797cb18f3ae8f721dfd2e5cb27b73a0aa8636683f1a38163dab2fd51a8dfb"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/cloudflare/0.1.2/skills/sandbox-sdk/SKILL.md",
+        "sha256": "0f3501e6510921401be3f54bcb24d2a432a1b5c63af8f719eded3a087ad88ea9"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/cloudflare/0.1.2/skills/web-perf/SKILL.md",
+        "sha256": "746b3490d401c8020900f0a62ece846c22d3df15782ee843c082acfa89f26703"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/cloudflare/0.1.2/skills/workers-best-practices/SKILL.md",
+        "sha256": "099432ff265ff6080327ef0b392c118b835d2a5bda98a7de07e1afd115ed6458"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/cloudflare/0.1.2/skills/wrangler/SKILL.md",
+        "sha256": "0aa6fbe6932df4392779bfda67b1a0165697369668cb2dbef66d018a34f44c11"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/codex-browser-recorder/0.4.0/skills/record-browser/SKILL.md",
+        "sha256": "6db119e5065bc4da03e88edb5c4e1a7dc4307d7d6108a63f14088350d77e0cba"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/codex-material-themes/1.0.2/skills/choose-codex-theme/SKILL.md",
+        "sha256": "f0b2ea32f299c4869a5b2f0d982f1c9a6eda91374c0a56ea8bb57f27d4ba2abc"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/creative-production/0.1.25/skills/intake/SKILL.md",
+        "sha256": "8b5c1b507e48ef90ed1104eee45d4a3f3c780f37683d487ff16dc635e1fe666e"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/creative-production/0.1.25/skills/produce/SKILL.md",
+        "sha256": "056d2f32c7d27639c3cf861981d7331cab8e7723ded1ae1966de6efd8ce01b7c"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/data-analytics/0.2.10-13ceeea1f599/skills/analyze-data-quality/SKILL.md",
+        "sha256": "9a3c994f87da0c7a8c5ce37bbf08a59fc6f5b4f368475d3d7438f622b753d5f0"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/data-analytics/0.2.10-13ceeea1f599/skills/build-dashboard/SKILL.md",
+        "sha256": "c453ef3e1187477f696aae9a68b116d0e7e0bd6f665ab03a9d1634d13482aaaa"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/data-analytics/0.2.10-13ceeea1f599/skills/build-report/SKILL.md",
+        "sha256": "03db47974dc400b026d9268730de1ef317b5446a7a6bc9906ad471bfb117fd22"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/data-analytics/0.2.10-13ceeea1f599/skills/build-report/report-to-google-doc/SKILL.md",
+        "sha256": "0fac3acf39e180a8ee398c837cd40289c5e0f72473ef3788be623cb68e703a1f"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/data-analytics/0.2.10-13ceeea1f599/skills/build-report/report-to-google-slides/SKILL.md",
+        "sha256": "4dd1c74a3fc5284c3bf69500ff82213c0849663d15b79579e1e950cfa2558d2d"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/data-analytics/0.2.10-13ceeea1f599/skills/build-report/report-to-pdf/SKILL.md",
+        "sha256": "ef65a78de9ca425698b529cbdaea7e6323ec6a704cbc10f070920ee6e8d11d57"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/data-analytics/0.2.10-13ceeea1f599/skills/create-data-context/SKILL.md",
+        "sha256": "b004f792fa63e639dbce197562c97230eb58250e639b6bbe926085e3a44b0c2b"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/data-analytics/0.2.10-13ceeea1f599/skills/design-kpis/SKILL.md",
+        "sha256": "fcefdecacd1d64f847fbb7c45e93a6bd49c679dff66b8966ebc74c4dc39b8f21"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/data-analytics/0.2.10-13ceeea1f599/skills/gather-business-context/SKILL.md",
+        "sha256": "e8a1e917b8c4d03248987f33ca49fb7b1d6ed533328c39a02cafcc5b88b4577c"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/data-analytics/0.2.10-13ceeea1f599/skills/index/SKILL.md",
+        "sha256": "2239188d6ac667a9e4b546ffb441f17ac3cfe90fe7683ac68506789ef8dabeb3"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/data-analytics/0.2.10-13ceeea1f599/skills/jupyter-notebooks/SKILL.md",
+        "sha256": "8303d33041a5d5ccbfbb5addbb60bd8b0559027f01a586f98b7728e58c4127ed"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/data-analytics/0.2.10-13ceeea1f599/skills/kpi-reporting/SKILL.md",
+        "sha256": "a4ee918f3c87af4db8bb007cf8fefec444cd47b96b76de711349f11d7232861a"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/data-analytics/0.2.10-13ceeea1f599/skills/market-sizing/SKILL.md",
+        "sha256": "dd353ab8c7229d3bc831234725db7d02ceeb1a889ee781103f90997879ac1951"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/data-analytics/0.2.10-13ceeea1f599/skills/metric-diagnostics/SKILL.md",
+        "sha256": "c9293227b592328c06cb9f6a2f23c0114ddcd1ca456a42f1ceebfe5981007314"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/data-analytics/0.2.10-13ceeea1f599/skills/product-business-analysis/SKILL.md",
+        "sha256": "3e6b684ace151bbf777afd88fe34758b337ac0d6ff2bf332958d7a495d624a4b"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/data-analytics/0.2.10-13ceeea1f599/skills/publish-artifact-to-sites/SKILL.md",
+        "sha256": "26b3846191d1c5237262a26da61694aa67bef38c4ed03eb3167e39f39c6f07a3"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/data-analytics/0.2.10-13ceeea1f599/skills/validate-data/SKILL.md",
+        "sha256": "7aa5c77b22b9e5bf1b054e4ab6320a12dfd5342aa6cb18f8e497b46c713be20e"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/data-analytics/0.2.10-13ceeea1f599/skills/visualize-data/SKILL.md",
+        "sha256": "ff2601669022a2ef43524e0225eb4833acc03260db90b996a2d6f74fbbce7b12"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/deep-research-work/0.1.14/skills/deep-research/SKILL.md",
+        "sha256": "c7b924a736d715bf90941c5e75460b3387ec90b1fdb3a7c79d3e9bfb10427dc6"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/figma/2.0.21/skills/figma-code-connect/SKILL.md",
+        "sha256": "87af3996edb167d6aa3c044cb1bbb6a0d8e2d631c731bb896b1e1e8669640415"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/figma/2.0.21/skills/figma-create-new-file/SKILL.md",
+        "sha256": "82e0a018692d3d009b5d2c83ecce9203a4ce7dfbdb98b7b13a4f7e5b11832bc2"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/figma/2.0.21/skills/figma-design-to-code/SKILL.md",
+        "sha256": "936bbe68b4731d4a8748db15f85247efde232c8ae0902857c2c79a9ed40649ea"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/figma/2.0.21/skills/figma-generate-design/SKILL.md",
+        "sha256": "4585464c09bed50215151e468ab8476848adcf56da017811ddcbfff199ee0b56"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/figma/2.0.21/skills/figma-generate-diagram/SKILL.md",
+        "sha256": "7297638dbf2130d1b37bfd85df65d290a4dd0b11a11b54abafcf7d07565922b5"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/figma/2.0.21/skills/figma-generate-library/SKILL.md",
+        "sha256": "3c995d483bbf4761392ba0c2e00df2b1b1c632cc05c6e7df57a2e89c311f53b7"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/figma/2.0.21/skills/figma-implement-motion/SKILL.md",
+        "sha256": "2e26e67284d47c6a74aedf9dca7543f4c8817dafc59a11abb156d4f7feedb2c2"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/figma/2.0.21/skills/figma-swiftui/SKILL.md",
+        "sha256": "868c4defe2c0854f5a3e27594d3fa0f20347c86a9b15d103483b7488bfa8affe"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/figma/2.0.21/skills/figma-use/SKILL.md",
+        "sha256": "7de62bb574c7acf3241643e0aafcea13e48ff06a12ef5203447eda3584e6ff4f"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/figma/2.0.21/skills/figma-use-figjam/SKILL.md",
+        "sha256": "16b15da304f777e6bdc79bf425da73fa1ce0ea41af726cab8ddd6f40180acd74"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/figma/2.0.21/skills/figma-use-motion/SKILL.md",
+        "sha256": "d74fa8c9435a5260f8a61e3a8fbf11c068f940ae3423e9be2efde8b5e785d78c"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/figma/2.0.21/skills/figma-use-slides/SKILL.md",
+        "sha256": "0a69a65e686dcc223581afb409a4d31cf318716e2c65cc9c926839a8737e71a4"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/google-drive/0.1.16/skills/google-docs/SKILL.md",
+        "sha256": "8e5c26053d800e2980b74ab82c2ce95db94a17fbb443f8f6e30baeb442f1d464"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/google-drive/0.1.16/skills/google-drive/SKILL.md",
+        "sha256": "dabae8a192c861b76cf7b5742bdf14f8ed35e67d8e6cacfd5f746ffbefd6da5c"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/google-drive/0.1.16/skills/google-drive-comments/SKILL.md",
+        "sha256": "a3077375a8f7558b9e052c98047747b8a4a1a90a9a90b552009c28fcdadfe94a"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/google-drive/0.1.16/skills/google-sheets/SKILL.md",
+        "sha256": "54d160c27532e4ff610e9c5a7870fb80dc496b2d1d3f302996c21c505419c862"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/google-drive/0.1.16/skills/google-slides/SKILL.md",
+        "sha256": "fd14974d7c4ea9ff134bcc21cd32b2b1d61eeaa77c6dc757075b07eef6bedbdb"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-developers/1.2.3/skills/agents-sdk/SKILL.md",
+        "sha256": "61830dccd552307bc714b961acae80b1c9c9c30b5d2faaa9e6043b6fb0414760"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-developers/1.2.3/skills/build-chatgpt-app/SKILL.md",
+        "sha256": "b4ba5e0847e9b56b327da4e7546f5f0bf3325f54d6d21fc119b320bc2c898a53"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-developers/1.2.3/skills/chatgpt-app-submission/SKILL.md",
+        "sha256": "c9b43ca8fe60189e541afa30ea32a86f1bd7ab58a353faac777192a282b796cf"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-developers/1.2.3/skills/openai-api-troubleshooting/SKILL.md",
+        "sha256": "9fb4e152430c2f0475d1d14ce61b413267d322af9c032f2affb64698ca562662"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-developers/1.2.3/skills/openai-platform-api-key/SKILL.md",
+        "sha256": "780670286fb0acf32660abafc1bc34d7a25ff7a74af59e02db8fb62bbdd21ac2"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-analytics-dashboard/SKILL.md",
+        "sha256": "cf5360fd8b197673bb237c52c603c97fa319c875c3dfa2cd8efff52d4422f513"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-business-review/SKILL.md",
+        "sha256": "27721fc1d67d1b41949caa75ac8f94f81952ff124406878af6524047929e60d2"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-design-report/SKILL.md",
+        "sha256": "563722f53854e606f8a9f87e37e72d7ef70a22d46d5836b8e4d6abfb1b79e9e0"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-experiment-analysis/SKILL.md",
+        "sha256": "0b05effc47df0a14f8e0c3e3597e6722224747435546385d38a2cae279bd20b9"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-financial-budget/SKILL.md",
+        "sha256": "c0b6b7a62a15597aaf2b1ec679e21da48f533b756127f0aef957cdfe9f3da738"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-investment-committee-memo/SKILL.md",
+        "sha256": "68abd08cfe5e073e3c446a3f675f44c5bf98f57434dba679e8acd8a763379a8b"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-legal-memorandum/SKILL.md",
+        "sha256": "51fb9d21baf6119c4ccb1903638a6bac0e859210de63460fffa7025d52e997e0"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-market-trends-report/SKILL.md",
+        "sha256": "d58d019b89cb6f292ac3ab991d561489eef477ff53ce05fb024a0c936f5af26a"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-minimal-letterhead/SKILL.md",
+        "sha256": "880ef094d4d0c89a7bde5ce9bbe4086625c186651e9e6efc8ba8bdd7cc77f9d5"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-operating-calendar/SKILL.md",
+        "sha256": "33bb660791a0b9a21628a42c34934932220203b6aabd84e98cb1b45327d0384c"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-operating-review/SKILL.md",
+        "sha256": "6d63c5cd025ffe936e7bab5db3023672bbaec26af55c2bb8b057d38c202c9c32"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-project-kickoff/SKILL.md",
+        "sha256": "aa893ebd89e7c8d1db4261d01cc2b1add35d78d00785871ccaaa5fc8db783ec9"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-project-tracker/SKILL.md",
+        "sha256": "d97d5be20189b7f53dd269b6e1c5f694eaf53e5a72f6559fcb1578911b7cda82"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-sales-pipeline/SKILL.md",
+        "sha256": "15cfeeedf440021f16ed3f3ad8c7c1ef6d48898b9447741e223d2fb41cfc9800"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-simple-dark-mode/SKILL.md",
+        "sha256": "b7c8d0c05f75878b9bc21e56a57c41ec1aa29700aca0a24822be0f9f1bd53207"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-simple-light-mode/SKILL.md",
+        "sha256": "7c68430c6cf57b55b457d4735dbd1a46b889bef135a32222902dd0848b6e1752"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-strategy-memorandum/SKILL.md",
+        "sha256": "51d7882ac94e8e57b323394825728c33925af878806e37277217c2dc12a912e5"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-system-design/SKILL.md",
+        "sha256": "87f7b7ed1b0d8410f5e5971cd7f7db9a4165e2f37069e97e52dbfb469b75a57c"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-team-alignment/SKILL.md",
+        "sha256": "26d7cafdcd1899a937b325c5d02ac57c162d45002153be33a934d35f81eb6110"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/openai-templates/0.1.1/skills/artifact-template-three-statement-forecast/SKILL.md",
+        "sha256": "74f4a5cccec0107b861548b157e04c51d9b58ec13a990c86394b4c529b8ecf41"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/plugin-management/0.1.0/skills/plugin-management/SKILL.md",
+        "sha256": "653841cc21205269f08b0ce135891e1518dac616a766bcfb0b57d788d3f68b10"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/product-design/0.1.53/skills/audit/SKILL.md",
+        "sha256": "616e74f59da25ae72f5c853b7c9cfc4317400d224ff162abd67293b6f3ee1c82"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/product-design/0.1.53/skills/design-qa/SKILL.md",
+        "sha256": "19303684c7c84e279f3582d784493a6f09d207d92a29e9b15b7056020bcf306e"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/product-design/0.1.53/skills/get-context/SKILL.md",
+        "sha256": "151267c873003b7b03715c0842ef798369420464844218492f732edd2f6f7fd1"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/product-design/0.1.53/skills/ideate/SKILL.md",
+        "sha256": "649e8782ca93d5aece712964fae5be2b111cc3143577e1507b98df7f9d8e6bde"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/product-design/0.1.53/skills/image-to-code/SKILL.md",
+        "sha256": "694b4102bc339e3038173f8063d83a19e08d2a2cfab1f2e478d6412870a61ff0"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/product-design/0.1.53/skills/index/SKILL.md",
+        "sha256": "8e9916d9e5dc3b6a394bedcaa38cd9c8833a1f3b0c4538b75647cf9f62f779fc"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/product-design/0.1.53/skills/research/SKILL.md",
+        "sha256": "bf824e72dd93941c8d591e4af13bb7e3a09380cd6ed7dd8c1f61a295648fa023"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/product-design/0.1.53/skills/share/SKILL.md",
+        "sha256": "19327c50a52f3b9e2ebfcef47d394d988bd6f4c64524c98f665d43bdf5f02c45"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/product-design/0.1.53/skills/url-to-code/SKILL.md",
+        "sha256": "2624d0e2ec5f14ba2a4bf74fe05aaa23520b4fb76ca57973c9dadd54fd4b09d2"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/product-design/0.1.53/skills/user-context/SKILL.md",
+        "sha256": "5690a7f99cf896970493f5d0bd7f35f62ab9cbe21744352acf84dc0ceea4194c"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/sales/1.1.0-alpha.2/skills/analyze-account-signals/SKILL.md",
+        "sha256": "0aedda25d7117cede992c51301c03a8b05d74c313ccce538453149d389dfde65"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/sales/1.1.0-alpha.2/skills/build-business-case/SKILL.md",
+        "sha256": "fb801fe8f2784588f21aac0454ebd6bb7df222c1f63364dd71bd11912cd09913"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/sales/1.1.0-alpha.2/skills/build-competitive-brief/SKILL.md",
+        "sha256": "acb019f84f5af6c3563db82d823c9e1d5b2dbf381d3c6e3d1f5cf08240e8c8c9"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/sales/1.1.0-alpha.2/skills/demo-exec-and-seller-dash/SKILL.md",
+        "sha256": "0f0bfa860380c4c4fb19d935813e6c18cc7ac3b08187f769bd14ab93ce602cc5"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/sales/1.1.0-alpha.2/skills/enrich-company-and-contact-data/SKILL.md",
+        "sha256": "bb64962b47c8c9572b8de32350053bac34bd4adcd835d0112da6955ab6b5ff1c"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/sales/1.1.0-alpha.2/skills/find-customer-quotes/SKILL.md",
+        "sha256": "a544077cabb28559411e0e1b1aadfa189a8b9c50b62aa9e3ab1049558dac2475"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/sales/1.1.0-alpha.2/skills/find-key-internal-sources/SKILL.md",
+        "sha256": "e0a35568732d31ad8412dc29040eee8cfd2bdd579cee64db95f99f77d15f8f9b"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/sales/1.1.0-alpha.2/skills/follow-up-after-call/SKILL.md",
+        "sha256": "a8eb5632ad029c169e446a5c03cbf108f3fe7031cc9c3e067a9a1d6dace63bec"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/sales/1.1.0-alpha.2/skills/get-rep-call-feedback/SKILL.md",
+        "sha256": "12eba9f71f2bb66ba7bd35fabbe1767150b21ba746a495b0b94d168e9353cd0f"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/sales/1.1.0-alpha.2/skills/index/SKILL.md",
+        "sha256": "882064098e874579744e98ba5a306c080711fe9042e01aefdfda257c1ae233d1"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/sales/1.1.0-alpha.2/skills/plan-deal-strategy/SKILL.md",
+        "sha256": "fdca13a29c05cbb52bfc1a25c9101922a93987bdbdb666cf37be61944c94a805"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/sales/1.1.0-alpha.2/skills/prepare-for-meeting/SKILL.md",
+        "sha256": "8e081fb6f92e935adf0f54bd5cde44b03f298f93efb1f9d6a81dce5ccfb1ce77"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/sales/1.1.0-alpha.2/skills/review-forecast/SKILL.md",
+        "sha256": "d42de7385c5a8873a7c91532be550bbe6238a2e65085830fa1de4408acb508fd"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/sales/1.1.0-alpha.2/skills/review-rep-call-trends/SKILL.md",
+        "sha256": "5ca6bf7881004a892bd02e1359e31e85f5636f421595a7c901d99f01a0182fe2"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/sales/1.1.0-alpha.2/skills/sales-company-research/SKILL.md",
+        "sha256": "f00a88b8db4a6f08c282b6e3271ba41bd2558b42b4e5c7a8dbea344d1af9ee55"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/sales/1.1.0-alpha.2/skills/sales-leadership-dashboard/SKILL.md",
+        "sha256": "5308dbe9893fc386872148baff65641a83e27702bc32756995b695c925a48448"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/sales/1.1.0-alpha.2/skills/sales-presentations/SKILL.md",
+        "sha256": "3d371bc6004537329c1c1230af8aa891676d72bbd039989358da75e40cc34539"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/sales/1.1.0-alpha.2/skills/seller-account-dashboard/SKILL.md",
+        "sha256": "1d60a57b53ffd76ba8c5c370e8142112b377cd29c3a1156f6b3bfe558bfefdf1"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/superdesign/0.6.0/skills/superdesign/SKILL.md",
+        "sha256": "f782f8776dbf7277cea88d77ea6dfc35bc0437b02a094ef79bbcfc716ef8c567"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-curated-remote/tailscale/1.0.0-alpha-1/skills/tailscale/SKILL.md",
+        "sha256": "36c5469651a22f656778647a691c97ac44c9a117f07fe3a1752332c318bd030a"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-primary-runtime/documents/26.903.11726/skills/documents/SKILL.md",
+        "sha256": "2a55c33624c2b028207c4e239ef2c5bfd15dc6e797ab0341a58f72610172f610"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-primary-runtime/pdf/26.903.11726/skills/pdf/SKILL.md",
+        "sha256": "afc4472ec4d625f703e9f414fe6814ce3cfa0ec51c7a07887fe587264c8b561e"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-primary-runtime/presentations/26.903.11726/skills/presentations/SKILL.md",
+        "sha256": "618127fc3f14b28ac6a2c97703f4536296d3240218f78015e93af49b5768ff9a"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-primary-runtime/spreadsheets/26.903.11726/skills/excel-live-control/SKILL.md",
+        "sha256": "8eaf019809f570fba2592052522251ff2b5c9b0d3ca7eca9bbf1fe5a6f82c84b"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-primary-runtime/spreadsheets/26.903.11726/skills/spreadsheets/SKILL.md",
+        "sha256": "655af692c745b9aab2fb06b8843b27de0099e9acebf28d67f3916d624c4a0f97"
+      },
+      {
+        "path": "/home/an/.codex/plugins/cache/openai-primary-runtime/template-creator/26.903.11726/skills/template-creator/SKILL.md",
+        "sha256": "f1d14fd2847a2e879611a8b8f872f5dc4676a0607958d015274d2dc61e812deb"
+      }
+    ]
+  },
+  "gateReceipts": {
+    "clock": "Reference ID    : B97DBE7B (ntp-nts-3.ps5.canonical.com)\nStratum         : 3\nRef time (UTC)  : Sun Sep 06 03:46:50 2026\nSystem time     : 0.000135697 seconds slow of NTP time\nLast offset     : -0.000062871 seconds\nRMS offset      : 0.000503730 seconds\nFrequency       : 3.285 ppm slow\nResidual freq   : -0.001 ppm\nSkew            : 0.133 ppm\nRoot delay      : 0.031469252 seconds\nRoot dispersion : 0.001759427 seconds\nUpdate interval : 1036.0 seconds\nLeap status     : Normal\n",
+    "timestamp": {
+      "chunk_id": "cda74a",
+      "wall_time_seconds": 0.025693835,
+      "exit_code": 0,
+      "original_token_count": 46,
+      "output": "Evaluating Timestamp Mandate (YYYYMMDD-HHSS- prefix):\n  [PASS] timestamp-mandate.md: Contract active and deployed\n  [PASS] Timestamp regex ^[0-9]{8}-[0-9]{4}- matches YYYYMMDD-HHSS-\n"
+    },
+    "checklist": {
+      "chunk_id": "f8dce1",
+      "wall_time_seconds": 0.03335467,
+      "exit_code": 0,
+      "original_token_count": 377,
+      "output": "Evaluating UOS Comprehensive Verification Checklist (SC-CHECKLIST-001):\nDomain 1: Metadata, Timestamp & Tailscale Navigation\n  [PASS] CHK-01-TIME: Mandatory YYYYMMDD-HHSS- prefix active\n  [PASS] CHK-02-TAIL: Universal Tailscale FQDN web navigation active\n  [PASS] CHK-03-FRACT: Fractal layer tags standard active\n  [PASS] CHK-04-KM: KM transclusions [[wiki:...]] / [[zk:...]] active\nDomain 2: Zero-Muda Purity & Hardware Storage Safety\n  [PASS] CHK-05-MUDA: Zero Bevy & Zero Graphite verified\n  [PASS] CHK-06-GRAPH: Pure Erlang graphene_nif.erl verified (0 foreign NIFs)\n  [PASS] CHK-07-DRIVE: Root OS NVMe 25503L801736 locked in spec.rs\nDomain 3: Testing Gold Standard & Mathematical Gates\n  [PASS] CHK-08-C1C8: C1-C8 Gold Standard verified\n  [PASS] CHK-09-MATH: 4 Math Gates (H>=2.5b, CCM>=90%, D_EA<=10%, ITQS>=0.85)\n  [PASS] CHK-10-9MOD: 9-Modality test suite present\n  [PASS] CHK-11-REGR: 381 UI regression tests present\nDomain 4: Cross-Language Control & Observability\n  [PASS] CHK-12-GLEAM: Gleam/OTP 29 root supervisor uos_sup.gleam active\n  [PASS] CHK-13-HERMES: Hermes OCaml Zero-Trust dispatch hook active\n  [PASS] CHK-14-ZIGVM: ZigVM deterministic engine active\n  [PASS] CHK-15-MAX: Modular MAX inference worker quarantined\n  [PASS] CHK-16-OTEL: Universal C3I Telemetry contract active\nDomain 5: Tri-Sovereign Governance & VCS Purity\n  [PASS] CHK-17-SOV: Tri-sovereign governance superset ratified\n  [PASS] CHK-18-JJ: Standalone Jujutsu monorepo active\n\nSummary: 18/18 Checks Passed (100% Green)\n"
+    }
+  },
+  "sourceSnapshots": [
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/abm-campaign/SKILL.md",
+      "sha256": "a13223fd306566a8577c08d0b3d13b9d2cd5b6437754bb7f2c27d576453bab19"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/business-analysis/SKILL.md",
+      "sha256": "398f31350d648cb8417bafcd056517e7a64448307a2a42072fc350ba8a0fbe0a"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/channel-strategy/SKILL.md",
+      "sha256": "aeff01fd24365accc5aa2f5a58124ce20c5987e3d361a4197343d7f95cc89ff1"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/competitive-intel/SKILL.md",
+      "sha256": "4060692a27d7c2d7bd3e5039bb4e86b6f9a9253f9dd372f446ac9f48003293ea"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/crm-hygiene/SKILL.md",
+      "sha256": "b5a23e294b8d955d26c8754dc464fd84d4e75460d2261796cd2295978d89ed56"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/deal-review/SKILL.md",
+      "sha256": "a2f4051da3ced65975c2562fff0a5f466d8533429ade58a6c0b761ec727bcec7"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/demand-forecast/SKILL.md",
+      "sha256": "a4ad57cfe3342151c3bd63684f83b10c33e0953c8ac74983af11667af1fa71df"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/design-win-tracker/SKILL.md",
+      "sha256": "4dac505980dfc1796ecfb154fe46b90ea42507b34d64b83c2a1ea8d682f7b2bd"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/fy-annual-plan/SKILL.md",
+      "sha256": "6c944bd4c3490b9bd0db6e61fd99c1a386719691d42af3b7fbc570517e79e047"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-account-sprint/SKILL.md",
+      "sha256": "1d38ed4a0154f53e18f138a262654b7051c5f62ee9e1bc82eeb1e216ac6637f0"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-competitive-war-room/SKILL.md",
+      "sha256": "d762b180fc54a148bb9a470954af4661cc94c99b7e965ac28d38d7f4cc225185"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-csv-export/SKILL.md",
+      "sha256": "1e6ee008bde2718f946a6b894f7dc00f7fa36aca358484457c012b8384c444f7"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-deal-accelerator/SKILL.md",
+      "sha256": "f91a8f29a4c15c9d5abbe09590b5f99bd04d769932701516cd367db03140f26d"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-log/SKILL.md",
+      "sha256": "7beb6ff530655017f5e672db14b8e6a4c396597c42f23e00c4cd7b43bd3a0d91"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-obsidian-sync/SKILL.md",
+      "sha256": "d5448ffef0340f1808cda6066959b1493282392824a8b4ede1a0161ff1087a64"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-pipeline-review/SKILL.md",
+      "sha256": "e49f77d334f40dc8934ad905370d9f260b657804a6605408716558c68bb7f559"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-salesnav-ops/SKILL.md",
+      "sha256": "ced9dcb3874b2722787aba2c97907456ec9135478a6cec66f554281e4300f72c"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-status/SKILL.md",
+      "sha256": "aec11b1778cb38b7a83d273a2f33800253dc2a4edccbf2321bd80331cd779477"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-weekly-rhythm/SKILL.md",
+      "sha256": "9398e10900ffdc4d2888bf31cf2bc5a4ba8e85e8c25a77874b7b34958e598b85"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/fy27-zk-brief/SKILL.md",
+      "sha256": "1e86545a75c7992cb5a3a18fcdc2ad601cd01b20aa40d20e2e33f83a1e7aa4af"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/gtm-strategy/SKILL.md",
+      "sha256": "9feb2a962d0cf926d77c9b253dfea41aa11286a7fa5febe7e97d819a21f0f024"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/journal-artifact-publisher/SKILL.md",
+      "sha256": "1b54ec625f51fe5fff45d8834e995a3ffe1c16ba7252d055193a5e01753d8a7e"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/journal-artifact-publisher/references/artifact-contract.md",
+      "sha256": "9755892c20f78da71be4be14d381019da405f634523b04e4338c69c819eed5d6"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/journal-artifact-publisher/references/email-payload.md",
+      "sha256": "745bbca35bebf43667611dc0cb09f7e8c36cea36fba3f3e30c87fa30b53b6213"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/journal-artifact-publisher/references/fractal-closure-checklist.md",
+      "sha256": "7f4f3bd0a2f94c949ba90fdbe11ada3465493ec3d8feb081b7a946ef2b90d2ac"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/journal-artifact-publisher/references/html-report.md",
+      "sha256": "881bac66dc71b326af8bcddad9d63a996cf3f014da4b96eed46b9b83650c348f"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/journal-artifact-publisher/references/journal-template.md",
+      "sha256": "1159832a51b5893317ea6fd783db528e135bf94eb71b53d0b880a0805becfa68"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/journal-artifact-publisher/references/link-validation.md",
+      "sha256": "b7ffef0e1616cc796ceb25fc08f57914ddff4ff7ed16d2667f5a5b88ed09a036"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/journal-artifact-publisher/references/sa-plan-workflow.md",
+      "sha256": "0f28d7801cb7dead5c19fcb9328edeeb44899d05fafa1dd080f48c754f897eb6"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/journal-artifact-publisher/references/slide-deck.md",
+      "sha256": "7911bb085d070839b3255a11b2c0ff654cd4396ac39b44979eb30ed14a936beb"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/journal-artifact-publisher/references/task-management-integration.md",
+      "sha256": "69e10d769265184f025b30175674316817bb7bacb94ad447169dfca63d5ad094"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/learn-rule/SKILL.md",
+      "sha256": "44de8b2ff8490cd16a1c1a7ceca0631b8d6c38250c1a85e93f4147e483c930f5"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/linkedin-outreach/SKILL.md",
+      "sha256": "4d7b57846e5402e88a952a5777ae20a30624d1aab28d1c7658f7ad826a538ff5"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/marionette-explore/SKILL.md",
+      "sha256": "2c287f0cb05a351605faf48438c815cd49306a59c29419b89dcd6625143de7f0"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/observe/SKILL.md",
+      "sha256": "a58dd371939e915b4dd49beee1095fe70d35d9df8a1c69ebe19f04fd3a7a4ad4"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/pass5-auto/SKILL.md",
+      "sha256": "a9279cc3e81f21881ed354506c0831fcf698a4473d6fc0c84c1c5faaace880d8"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/patrol-marionette-test/SKILL.md",
+      "sha256": "079172bd41bf8d8fbb0d90b6d919088ec85878efd61144825a1d5126cc70a39a"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/pi-verify/SKILL.md",
+      "sha256": "21b566375cc6402fad2f57d33609efad5adfdbf502e017cb995dda10159e0a45"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/predict/SKILL.md",
+      "sha256": "d79bc08003f20cbfc8cbb00614bd8b785381e77a1eac58554a43b9923b9a02cd"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/pricing-strategy/SKILL.md",
+      "sha256": "eeb3195f04274984b7931f87cd5d7b9c41d960f0439fa0f159e551aefa630f98"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/proposal-builder/SKILL.md",
+      "sha256": "bfae5fbd1baad13a1ba397d6be21a169c36d20dd6aaa542e0163ea998a7dda36"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/qbr-template/SKILL.md",
+      "sha256": "9e64bd14df1efcfc6a9bb2797baa9b982c1beb2135149f174db7a60be664c5ba"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/revenue-ops/SKILL.md",
+      "sha256": "3e52c6e315ce07d9a700161a1270a3b43cfd69501b0010313c3ea9c907cd173c"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/sales-call-prep/SKILL.md",
+      "sha256": "b2f7064664bd6d51b07d0b376c07fbe6ce3ec6d9d3a7b36a5cd95197e6792cb1"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/sales-email/SKILL.md",
+      "sha256": "d4f52914d9a5b175cde5768b40452c77f2f90d95afa5bae9cdcc605272da11a1"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/sales-prospecting/SKILL.md",
+      "sha256": "aa9dd37a20cc2baf28b18475ad9a3dc5580e77dc61b5d2b073d5a24a11199d6a"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/semi-market-intel/SKILL.md",
+      "sha256": "ed9fc9e344900d518c0517ac8e5e271e65193e8a813641f51da6c717cd253953"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/strategic-account-plan/SKILL.md",
+      "sha256": "68cebfbf9656b879097d750473436d18b95d66f701eb200d6852b2d703c55b59"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/tam-sizing/SKILL.md",
+      "sha256": "2e477600fb3cfea8bb19b137b206a2745048e6a26efe677ce6f748802cd84f77"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/territory-plan/SKILL.md",
+      "sha256": "c9c2f3a824cec95dcb67592d2be8dc5a03d3de0715a246bf125c2c49fe6fe674"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/win-loss-analysis/SKILL.md",
+      "sha256": "debe6db93f91fe6ec68af76d7b3e69e02196d6bf9ae8517b77562017e902b6d8"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/zk-cost/SKILL.md",
+      "sha256": "c0bf9bc286f063afdb1870cd78259bd45737d26563aa78928182cff9c397aae5"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/zk-learn/SKILL.md",
+      "sha256": "776ee98ec256ea679079d1b58ad82205b0c115cdf115c88d633837cd2e00a1b1"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/zk-recall/SKILL.md",
+      "sha256": "222fd9fe02e6e3be6429925660e6550cd6eba0e7a3daf5371ae1aa139ec96a2d"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/agentic-ui-evolve/SKILL.md",
+      "sha256": "89e46a085c723194ed97fbf20ea60b3d63978a96c45a46a2efdcc10ff37ce96f"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/.claude/skills/evolve/SKILL.md",
+      "sha256": "7a82ec3e6f8eb2c99f15b1b0f48dd522afb38e6a84d8ba8cbfc5eeda3dd0e5a3"
+    }
+  ],
+  "repairedPaths": [
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/abm-campaign",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/abm-campaign",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "a13223fd306566a8577c08d0b3d13b9d2cd5b6437754bb7f2c27d576453bab19",
+          "stagedSha256": "1572310ecb0c1b337c2eae2286e1b2efa3e3741f8d1086d6044f089114103f6e"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/abm-campaign",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/abm-campaign"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/abm-campaign",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/abm-campaign"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/abm-campaign",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/abm-campaign"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/business-analysis",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/business-analysis",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "398f31350d648cb8417bafcd056517e7a64448307a2a42072fc350ba8a0fbe0a",
+          "stagedSha256": "32b1352277577c50f8e292481c1203128c717d542bb4c9c10a660596cdade5b9"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/business-analysis",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/business-analysis"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/business-analysis",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/business-analysis"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/business-analysis",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/business-analysis"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/channel-strategy",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/channel-strategy",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "aeff01fd24365accc5aa2f5a58124ce20c5987e3d361a4197343d7f95cc89ff1",
+          "stagedSha256": "2b63943cc2c9a9835198a422bc63fac14e976ff14bffe4fc227c89e56ca61071"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/channel-strategy",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/channel-strategy"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/channel-strategy",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/channel-strategy"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/channel-strategy",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/channel-strategy"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/competitive-intel",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/competitive-intel",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "4060692a27d7c2d7bd3e5039bb4e86b6f9a9253f9dd372f446ac9f48003293ea",
+          "stagedSha256": "7c8428b17e82438380da10a1b16376a59bc970213d3d02d33163ab9d96d3d328"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/competitive-intel",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/competitive-intel"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/competitive-intel",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/competitive-intel"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/competitive-intel",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/competitive-intel"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/crm-hygiene",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/crm-hygiene",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "b5a23e294b8d955d26c8754dc464fd84d4e75460d2261796cd2295978d89ed56",
+          "stagedSha256": "d177b7f5ed57f109154e2bb3d478582ecbb08d7e8e2ef839e0190e9b82ab1762"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/crm-hygiene",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/crm-hygiene"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/crm-hygiene",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/crm-hygiene"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/crm-hygiene",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/crm-hygiene"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/deal-review",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/deal-review",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "a2f4051da3ced65975c2562fff0a5f466d8533429ade58a6c0b761ec727bcec7",
+          "stagedSha256": "deb65198ae172ec2b721f1116b16a69822d6e3b05ef2f2cccf3d9962ed822aa7"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/deal-review",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/deal-review"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/deal-review",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/deal-review"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/deal-review",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/deal-review"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/demand-forecast",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/demand-forecast",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "a4ad57cfe3342151c3bd63684f83b10c33e0953c8ac74983af11667af1fa71df",
+          "stagedSha256": "58793be6613a347fd28921a61178d006efa47c0707066d621a5b8690d000007a"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/demand-forecast",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/demand-forecast"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/demand-forecast",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/demand-forecast"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/demand-forecast",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/demand-forecast"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/design-win-tracker",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/design-win-tracker",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "4dac505980dfc1796ecfb154fe46b90ea42507b34d64b83c2a1ea8d682f7b2bd",
+          "stagedSha256": "c48d87550e0350a960e7263f3527e15913cf50c660eebcdb20a20a036c5c0c81"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/design-win-tracker",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/design-win-tracker"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/design-win-tracker",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/design-win-tracker"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/design-win-tracker",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/design-win-tracker"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/fy-annual-plan",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/fy-annual-plan",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "6c944bd4c3490b9bd0db6e61fd99c1a386719691d42af3b7fbc570517e79e047",
+          "stagedSha256": "afba9285e89d84cff00b3d9c63a38079ee37277b575f684c3671a9c8e6a8dc27"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/fy-annual-plan",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/fy-annual-plan"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/fy-annual-plan",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/fy-annual-plan"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/fy-annual-plan",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/fy-annual-plan"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/fy27-account-sprint",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/fy27-account-sprint",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "1d38ed4a0154f53e18f138a262654b7051c5f62ee9e1bc82eeb1e216ac6637f0",
+          "stagedSha256": "66120d328b7d196cbc22e0e4d8331ca4d0c0d6913a50213e0dadc543ea5e1a55"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/fy27-account-sprint",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/fy27-account-sprint"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/fy27-account-sprint",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/fy27-account-sprint"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/fy27-account-sprint",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/fy27-account-sprint"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/fy27-competitive-war-room",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/fy27-competitive-war-room",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "d762b180fc54a148bb9a470954af4661cc94c99b7e965ac28d38d7f4cc225185",
+          "stagedSha256": "6ebb1fbf70411c2d061ddd0474a46911e19a2395e5dd16cc9486f0faca2df505"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/fy27-competitive-war-room",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/fy27-competitive-war-room"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/fy27-competitive-war-room",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/fy27-competitive-war-room"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/fy27-competitive-war-room",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/fy27-competitive-war-room"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/fy27-csv-export",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/fy27-csv-export",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "1e6ee008bde2718f946a6b894f7dc00f7fa36aca358484457c012b8384c444f7",
+          "stagedSha256": "5583b1f24b9a50defca27b0fd865e8f5668541a868bf90370bb2717640d9de8f"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/fy27-csv-export",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/fy27-csv-export"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/fy27-csv-export",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/fy27-csv-export"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/fy27-csv-export",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/fy27-csv-export"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/fy27-deal-accelerator",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/fy27-deal-accelerator",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "f91a8f29a4c15c9d5abbe09590b5f99bd04d769932701516cd367db03140f26d",
+          "stagedSha256": "c51e422e5c66d58efacbdd0f82a9edbf146e43614613d4f6ff1408870e021b4b"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/fy27-deal-accelerator",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/fy27-deal-accelerator"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/fy27-deal-accelerator",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/fy27-deal-accelerator"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/fy27-deal-accelerator",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/fy27-deal-accelerator"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/fy27-log",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/fy27-log",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "7beb6ff530655017f5e672db14b8e6a4c396597c42f23e00c4cd7b43bd3a0d91",
+          "stagedSha256": "2c39a3dd242f53862e874a18ef279c16d44ecfb6c0ac58f5bb3e01516951a01f"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/fy27-log",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/fy27-log"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/fy27-log",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/fy27-log"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/fy27-log",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/fy27-log"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/fy27-obsidian-sync",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/fy27-obsidian-sync",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "d5448ffef0340f1808cda6066959b1493282392824a8b4ede1a0161ff1087a64",
+          "stagedSha256": "4990ded9fe3921ea09f89219be1c5b17b9c41b683fc0b9405e0dbe936e01757c"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/fy27-obsidian-sync",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/fy27-obsidian-sync"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/fy27-obsidian-sync",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/fy27-obsidian-sync"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/fy27-obsidian-sync",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/fy27-obsidian-sync"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/fy27-pipeline-review",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/fy27-pipeline-review",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "e49f77d334f40dc8934ad905370d9f260b657804a6605408716558c68bb7f559",
+          "stagedSha256": "c266eab0327212049e3e0a263e176cad499fd608d25ba544d68239fc41dbb2b7"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/fy27-pipeline-review",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/fy27-pipeline-review"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/fy27-pipeline-review",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/fy27-pipeline-review"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/fy27-pipeline-review",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/fy27-pipeline-review"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/fy27-salesnav-ops",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/fy27-salesnav-ops",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "ced9dcb3874b2722787aba2c97907456ec9135478a6cec66f554281e4300f72c",
+          "stagedSha256": "5c0e7ccdb13bc9380d79d0bf0e38b11f1ec7566b8b579188092784d9a285ac67"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/fy27-salesnav-ops",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/fy27-salesnav-ops"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/fy27-salesnav-ops",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/fy27-salesnav-ops"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/fy27-salesnav-ops",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/fy27-salesnav-ops"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/fy27-status",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/fy27-status",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "aec11b1778cb38b7a83d273a2f33800253dc2a4edccbf2321bd80331cd779477",
+          "stagedSha256": "d31183c45047e542e6e055b43a48fdee70283e4bd7ad281ee2288cfbd04714b8"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/fy27-status",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/fy27-status"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/fy27-status",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/fy27-status"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/fy27-status",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/fy27-status"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/fy27-weekly-rhythm",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/fy27-weekly-rhythm",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "9398e10900ffdc4d2888bf31cf2bc5a4ba8e85e8c25a77874b7b34958e598b85",
+          "stagedSha256": "d75c306bf8eb3f6cca21c243857f18143cb4afc390ca960b1d783263a61beb96"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/fy27-weekly-rhythm",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/fy27-weekly-rhythm"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/fy27-weekly-rhythm",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/fy27-weekly-rhythm"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/fy27-weekly-rhythm",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/fy27-weekly-rhythm"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/fy27-zk-brief",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/fy27-zk-brief",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "1e86545a75c7992cb5a3a18fcdc2ad601cd01b20aa40d20e2e33f83a1e7aa4af",
+          "stagedSha256": "e8660201b46418e2ff0e6811c3dc3e926cb798ad45c0504577815c2b554ce721"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/fy27-zk-brief",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/fy27-zk-brief"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/fy27-zk-brief",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/fy27-zk-brief"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/fy27-zk-brief",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/fy27-zk-brief"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/gtm-strategy",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/gtm-strategy",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "9feb2a962d0cf926d77c9b253dfea41aa11286a7fa5febe7e97d819a21f0f024",
+          "stagedSha256": "9612b8991bf3403078fb068d98ae9bf88ebe8687028dc12abd2adae9fadbda0d"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/gtm-strategy",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/gtm-strategy"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/gtm-strategy",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/gtm-strategy"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/gtm-strategy",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/gtm-strategy"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/journal-artifact-publisher",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/journal-artifact-publisher",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "1b54ec625f51fe5fff45d8834e995a3ffe1c16ba7252d055193a5e01753d8a7e",
+          "stagedSha256": "ebeefad4953867e37fa88ccae6292c8d56447119879ede1935ada08e6aecb396"
+        },
+        {
+          "relative": "references/artifact-contract.md",
+          "sourceSha256": "9755892c20f78da71be4be14d381019da405f634523b04e4338c69c819eed5d6",
+          "stagedSha256": "9755892c20f78da71be4be14d381019da405f634523b04e4338c69c819eed5d6"
+        },
+        {
+          "relative": "references/email-payload.md",
+          "sourceSha256": "745bbca35bebf43667611dc0cb09f7e8c36cea36fba3f3e30c87fa30b53b6213",
+          "stagedSha256": "745bbca35bebf43667611dc0cb09f7e8c36cea36fba3f3e30c87fa30b53b6213"
+        },
+        {
+          "relative": "references/fractal-closure-checklist.md",
+          "sourceSha256": "7f4f3bd0a2f94c949ba90fdbe11ada3465493ec3d8feb081b7a946ef2b90d2ac",
+          "stagedSha256": "7f4f3bd0a2f94c949ba90fdbe11ada3465493ec3d8feb081b7a946ef2b90d2ac"
+        },
+        {
+          "relative": "references/html-report.md",
+          "sourceSha256": "881bac66dc71b326af8bcddad9d63a996cf3f014da4b96eed46b9b83650c348f",
+          "stagedSha256": "881bac66dc71b326af8bcddad9d63a996cf3f014da4b96eed46b9b83650c348f"
+        },
+        {
+          "relative": "references/journal-template.md",
+          "sourceSha256": "1159832a51b5893317ea6fd783db528e135bf94eb71b53d0b880a0805becfa68",
+          "stagedSha256": "1159832a51b5893317ea6fd783db528e135bf94eb71b53d0b880a0805becfa68"
+        },
+        {
+          "relative": "references/link-validation.md",
+          "sourceSha256": "b7ffef0e1616cc796ceb25fc08f57914ddff4ff7ed16d2667f5a5b88ed09a036",
+          "stagedSha256": "b7ffef0e1616cc796ceb25fc08f57914ddff4ff7ed16d2667f5a5b88ed09a036"
+        },
+        {
+          "relative": "references/sa-plan-workflow.md",
+          "sourceSha256": "0f28d7801cb7dead5c19fcb9328edeeb44899d05fafa1dd080f48c754f897eb6",
+          "stagedSha256": "0f28d7801cb7dead5c19fcb9328edeeb44899d05fafa1dd080f48c754f897eb6"
+        },
+        {
+          "relative": "references/slide-deck.md",
+          "sourceSha256": "7911bb085d070839b3255a11b2c0ff654cd4396ac39b44979eb30ed14a936beb",
+          "stagedSha256": "7911bb085d070839b3255a11b2c0ff654cd4396ac39b44979eb30ed14a936beb"
+        },
+        {
+          "relative": "references/task-management-integration.md",
+          "sourceSha256": "69e10d769265184f025b30175674316817bb7bacb94ad447169dfca63d5ad094",
+          "stagedSha256": "69e10d769265184f025b30175674316817bb7bacb94ad447169dfca63d5ad094"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/journal-artifact-publisher",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/journal-artifact-publisher"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/journal-artifact-publisher",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/journal-artifact-publisher"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/learn-rule",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/learn-rule",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "44de8b2ff8490cd16a1c1a7ceca0631b8d6c38250c1a85e93f4147e483c930f5",
+          "stagedSha256": "6ad5775d9eaaedd6296b9f0afe905c0ad15441d13143f00924e29e278cffb8ea"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/learn-rule",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/learn-rule"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/learn-rule",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/learn-rule"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/learn-rule",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/learn-rule"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/linkedin-outreach",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/linkedin-outreach",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "4d7b57846e5402e88a952a5777ae20a30624d1aab28d1c7658f7ad826a538ff5",
+          "stagedSha256": "4b47898e5040913db6e6edc6277c3819ab646c3887bc872898834c87f58f751f"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/linkedin-outreach",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/linkedin-outreach"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/linkedin-outreach",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/linkedin-outreach"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/linkedin-outreach",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/linkedin-outreach"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/marionette-explore",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/marionette-explore",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "2c287f0cb05a351605faf48438c815cd49306a59c29419b89dcd6625143de7f0",
+          "stagedSha256": "88fd387217ca59986b68a9def1e6a886a9add953cf7f1f1a331864373c16086d"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/marionette-explore",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/marionette-explore"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/marionette-explore",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/marionette-explore"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/marionette-explore",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/marionette-explore"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/observe",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/observe",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "a58dd371939e915b4dd49beee1095fe70d35d9df8a1c69ebe19f04fd3a7a4ad4",
+          "stagedSha256": "08098e86ced8ce12fec372683cff51f0047c76aaa1170f207535e0407658e027"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/observe",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/observe"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/observe",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/observe"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/observe",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/observe"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/pass5-auto",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/pass5-auto",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "a9279cc3e81f21881ed354506c0831fcf698a4473d6fc0c84c1c5faaace880d8",
+          "stagedSha256": "e4d8d77cab62c1b6c97d200142756d1726f92839ac505ef5a9666676c2f39de1"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/pass5-auto",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/pass5-auto"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/pass5-auto",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/pass5-auto"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/pass5-auto",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/pass5-auto"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/patrol-marionette-test",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/patrol-marionette-test",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "079172bd41bf8d8fbb0d90b6d919088ec85878efd61144825a1d5126cc70a39a",
+          "stagedSha256": "7d97ae36a2f57d4419e87738628b0533f244455457e473ee4d7bd5830ce2e548"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/patrol-marionette-test",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/patrol-marionette-test"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/patrol-marionette-test",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/patrol-marionette-test"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/patrol-marionette-test",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/patrol-marionette-test"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/pi-verify",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/pi-verify",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "21b566375cc6402fad2f57d33609efad5adfdbf502e017cb995dda10159e0a45",
+          "stagedSha256": "7377ac88bae5e508f63834732868beb1100d12f7d1ee503a3ca34248bf9a5920"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/pi-verify",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/pi-verify"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/pi-verify",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/pi-verify"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/pi-verify",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/pi-verify"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/predict",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/predict",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "d79bc08003f20cbfc8cbb00614bd8b785381e77a1eac58554a43b9923b9a02cd",
+          "stagedSha256": "a922cda044dd1b739e7432869d517296ce725efa6ec58a4256e3d9cc07e940de"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/predict",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/predict"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/predict",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/predict"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/predict",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/predict"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/pricing-strategy",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/pricing-strategy",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "eeb3195f04274984b7931f87cd5d7b9c41d960f0439fa0f159e551aefa630f98",
+          "stagedSha256": "2ec946fe4add61712576b43e91536b72f4106598acef332d080ae281fc64a883"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/pricing-strategy",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/pricing-strategy"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/pricing-strategy",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/pricing-strategy"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/pricing-strategy",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/pricing-strategy"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/proposal-builder",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/proposal-builder",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "bfae5fbd1baad13a1ba397d6be21a169c36d20dd6aaa542e0163ea998a7dda36",
+          "stagedSha256": "79a50b4420e76b3b271e96dc727143e6c28201ef96120987ef757ba08a3d4062"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/proposal-builder",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/proposal-builder"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/proposal-builder",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/proposal-builder"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/proposal-builder",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/proposal-builder"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/qbr-template",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/qbr-template",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "9e64bd14df1efcfc6a9bb2797baa9b982c1beb2135149f174db7a60be664c5ba",
+          "stagedSha256": "9bc115d0a82ffa697f0a15e369949774a5f0842226e71b267be82c6100b82bd1"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/qbr-template",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/qbr-template"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/qbr-template",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/qbr-template"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/qbr-template",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/qbr-template"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/revenue-ops",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/revenue-ops",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "3e52c6e315ce07d9a700161a1270a3b43cfd69501b0010313c3ea9c907cd173c",
+          "stagedSha256": "d4aa39a44d572e84b0c2ad38f10ed1796e0e99941ac8abed1179f7b4a8cd3d4f"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/revenue-ops",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/revenue-ops"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/revenue-ops",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/revenue-ops"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/revenue-ops",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/revenue-ops"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/sales-call-prep",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/sales-call-prep",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "b2f7064664bd6d51b07d0b376c07fbe6ce3ec6d9d3a7b36a5cd95197e6792cb1",
+          "stagedSha256": "f307347144cb0dca7fa20884e73c59758847518ecf8abd74af407c5ca4a661da"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/sales-call-prep",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/sales-call-prep"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/sales-call-prep",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/sales-call-prep"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/sales-call-prep",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/sales-call-prep"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/sales-email",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/sales-email",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "d4f52914d9a5b175cde5768b40452c77f2f90d95afa5bae9cdcc605272da11a1",
+          "stagedSha256": "0baf5ca508d5bdb13fcce78c009144ebd4b8910e7e3228148b28054ea0447059"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/sales-email",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/sales-email"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/sales-email",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/sales-email"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/sales-email",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/sales-email"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/sales-prospecting",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/sales-prospecting",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "aa9dd37a20cc2baf28b18475ad9a3dc5580e77dc61b5d2b073d5a24a11199d6a",
+          "stagedSha256": "43195ce369b99f7862614e418d9b3831816510a0cda735c3efc88a55157db919"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/sales-prospecting",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/sales-prospecting"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/sales-prospecting",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/sales-prospecting"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/sales-prospecting",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/sales-prospecting"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/semi-market-intel",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/semi-market-intel",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "ed9fc9e344900d518c0517ac8e5e271e65193e8a813641f51da6c717cd253953",
+          "stagedSha256": "01c8de9e18040e221cd66b0abc1435bfeec5143835817734226b7b3428d135d7"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/semi-market-intel",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/semi-market-intel"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/semi-market-intel",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/semi-market-intel"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/semi-market-intel",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/semi-market-intel"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/strategic-account-plan",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/strategic-account-plan",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "68cebfbf9656b879097d750473436d18b95d66f701eb200d6852b2d703c55b59",
+          "stagedSha256": "f58a4b0754d9567641549fdae21ad45df585d04007f7258ebdc945329e148e2c"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/strategic-account-plan",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/strategic-account-plan"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/strategic-account-plan",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/strategic-account-plan"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/strategic-account-plan",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/strategic-account-plan"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/tam-sizing",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/tam-sizing",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "2e477600fb3cfea8bb19b137b206a2745048e6a26efe677ce6f748802cd84f77",
+          "stagedSha256": "3c384d8106bdec61ec7d9828281057e955c1057677cc40cef0dacea4433f86e8"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/tam-sizing",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/tam-sizing"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/tam-sizing",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/tam-sizing"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/tam-sizing",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/tam-sizing"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/territory-plan",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/territory-plan",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "c9c2f3a824cec95dcb67592d2be8dc5a03d3de0715a246bf125c2c49fe6fe674",
+          "stagedSha256": "e38a52b0e51f8204760d6fec697cdf07ec4fd8dbabb235122410a8f0d1d78a04"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/territory-plan",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/territory-plan"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/territory-plan",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/territory-plan"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/territory-plan",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/territory-plan"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/win-loss-analysis",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/win-loss-analysis",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "debe6db93f91fe6ec68af76d7b3e69e02196d6bf9ae8517b77562017e902b6d8",
+          "stagedSha256": "57308619c7f3b67d0c2109c3ace72ec77753cdc91777726e220c2ed68d083e21"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/win-loss-analysis",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/win-loss-analysis"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/win-loss-analysis",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/win-loss-analysis"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/win-loss-analysis",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/win-loss-analysis"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/zk-cost",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/zk-cost",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "c0bf9bc286f063afdb1870cd78259bd45737d26563aa78928182cff9c397aae5",
+          "stagedSha256": "406497e87937d22c207ca0ea03477bcd379734fb970c51b82b8232749eb10488"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/zk-cost",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/zk-cost"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/zk-cost",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/zk-cost"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/zk-cost",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/zk-cost"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/zk-learn",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/zk-learn",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "776ee98ec256ea679079d1b58ad82205b0c115cdf115c88d633837cd2e00a1b1",
+          "stagedSha256": "e9e350d5e8e3d934dba5bb42348c4511c3b1c379ec7127cac6e2dcdb5ce7e78d"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/zk-learn",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/zk-learn"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/zk-learn",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/zk-learn"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/zk-learn",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/zk-learn"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/zk-recall",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/zk-recall",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "222fd9fe02e6e3be6429925660e6550cd6eba0e7a3daf5371ae1aa139ec96a2d",
+          "stagedSha256": "95a963df9539fe57762dcb981037cc175a150697acef5824a7b1e638b8d5586f"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/zk-recall",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/zk-recall"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/zk-recall",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/zk-recall"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/zk-recall",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/zk-recall"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/agentic-ui-evolve",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/agentic-ui-evolve",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "89e46a085c723194ed97fbf20ea60b3d63978a96c45a46a2efdcc10ff37ce96f",
+          "stagedSha256": "aec764fc62061b7917d423984c391280bf1078b40aeef0c87b352f7d5f3685c7"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/agentic-ui-evolve",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/agentic-ui-evolve"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/agentic-ui-evolve",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/agentic-ui-evolve"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/agentic-ui-evolve",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/agentic-ui-evolve"
+    },
+    {
+      "type": "install",
+      "path": "/home/an/.gemini/config/skills/evolve",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.gemini/config/skills/evolve",
+      "files": [
+        {
+          "relative": "SKILL.md",
+          "sourceSha256": "7a82ec3e6f8eb2c99f15b1b0f48dd522afb38e6a84d8ba8cbfc5eeda3dd0e5a3",
+          "stagedSha256": "c60899cc7760ded39340dad930023d75d9d84e85fee9e752130072fba6abb24b"
+        }
+      ]
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.codex/skills/evolve",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.codex/skills/evolve"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.agents/skills/evolve",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/evolve"
+    },
+    {
+      "type": "alias",
+      "path": "/home/an/.claude/skills/evolve",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/evolve"
+    },
+    {
+      "type": "edit",
+      "path": "/home/an/.agents/skills/firecrawl-build-interact/SKILL.md",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/firecrawl-build-interact/SKILL.md"
+    },
+    {
+      "type": "edit",
+      "path": "/home/an/.agents/skills/firecrawl-build-onboarding/SKILL.md",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/firecrawl-build-onboarding/SKILL.md"
+    },
+    {
+      "type": "edit",
+      "path": "/home/an/.agents/skills/firecrawl-build-scrape/SKILL.md",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/firecrawl-build-scrape/SKILL.md"
+    },
+    {
+      "type": "edit",
+      "path": "/home/an/.agents/skills/firecrawl-build-search/SKILL.md",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/firecrawl-build-search/SKILL.md"
+    },
+    {
+      "type": "edit",
+      "path": "/home/an/.agents/skills/firecrawl-crawl/SKILL.md",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/firecrawl-crawl/SKILL.md"
+    },
+    {
+      "type": "edit",
+      "path": "/home/an/.agents/skills/firecrawl-interact/SKILL.md",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/firecrawl-interact/SKILL.md"
+    },
+    {
+      "type": "edit",
+      "path": "/home/an/.agents/skills/firecrawl-map/SKILL.md",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/firecrawl-map/SKILL.md"
+    },
+    {
+      "type": "edit",
+      "path": "/home/an/.agents/skills/firecrawl-scrape/SKILL.md",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/firecrawl-scrape/SKILL.md"
+    },
+    {
+      "type": "edit",
+      "path": "/home/an/.agents/skills/firecrawl-search/SKILL.md",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.agents/skills/firecrawl-search/SKILL.md"
+    },
+    {
+      "type": "archive-cycle",
+      "path": "/home/an/.claude/skills/algebra-driven-beam/algebra-driven-beam",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/algebra-driven-beam/algebra-driven-beam"
+    },
+    {
+      "type": "archive-cycle",
+      "path": "/home/an/.claude/skills/algebra-driven-zig/algebra-driven-zig",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/algebra-driven-zig/algebra-driven-zig"
+    },
+    {
+      "type": "archive-cycle",
+      "path": "/home/an/.claude/skills/parity-scenario-authoring/parity-scenario-authoring",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/parity-scenario-authoring/parity-scenario-authoring"
+    },
+    {
+      "type": "archive-cycle",
+      "path": "/home/an/.claude/skills/resource-preflight/resource-preflight",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/resource-preflight/resource-preflight"
+    },
+    {
+      "type": "archive-cycle",
+      "path": "/home/an/.claude/skills/writing-gospel-specifications/writing-gospel-specifications",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/writing-gospel-specifications/writing-gospel-specifications"
+    },
+    {
+      "type": "archive-cycle",
+      "path": "/home/an/.claude/skills/zigvm-harness-reuse/zigvm-harness-reuse",
+      "backup": "/home/an/.local/state/skill-repairs/20260906-0031/originals/.claude/skills/zigvm-harness-reuse/zigvm-harness-reuse"
+    }
+  ],
+  "limits": [
+    "Skill workflows, network actions, and bundled executables were not invoked.",
+    "The repository checklist checks contract/file presence; it does not rerun nine testing modalities or prove global runtime readiness.",
+    "No external source tree was changed or admitted into UOS.",
+    "Four illustrative output-link placeholders in vendor skills are examples, not packaged resource references.",
+    "Existing sessions may retain cached skill metadata until reloaded."
+  ],
+  "delivery": {
+    "journalUrl": "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260906-0300-installed-skills-repair-journal.md",
+    "httpStatus": 200,
+    "bodyContainsTitleAndChecklist": true
+  }
+}
