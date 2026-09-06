@@ -425,3 +425,261 @@ pub fn evaluate_forecasting_preflight(
     False -> ForecastBudgetExhausted(estimated, quota_limit_fuel)
   }
 }
+
+// ------------------------------------------------------------------------------
+// 12. Codex Reusable Component Packet (FRACTAL_ONTOLOGY.md)
+// ------------------------------------------------------------------------------
+
+pub type ComponentPacket {
+  ComponentPacket(
+    name: String,
+    signature: String,
+    semantic_domain: String,
+    oracle: String,
+    final_encoding: String,
+    homomorphism_law: String,
+    generator: String,
+    mutants: List(String),
+    judge: String,
+    governor: String,
+    documentation: String,
+    durable_evidence: String,
+  )
+}
+
+pub fn validate_component_packet(packet: ComponentPacket) -> Bool {
+  packet.name != ""
+  && packet.signature != ""
+  && packet.semantic_domain != ""
+  && packet.oracle != ""
+  && packet.final_encoding != ""
+  && packet.homomorphism_law != ""
+  && packet.generator != ""
+  && list.length(packet.mutants) >= 2
+  && packet.judge != ""
+  && packet.governor != ""
+  && packet.documentation != ""
+  && packet.durable_evidence != ""
+}
+
+// ------------------------------------------------------------------------------
+// 13. Vertical Refinement Ladder (L0 .. L10)
+// ------------------------------------------------------------------------------
+
+pub type FractalLayerLadder {
+  L0Boundary
+  L1Artifact
+  L2Subsystem
+  L3Module
+  L4Feature
+  L5Representation
+  L6Operation
+  L7Generator
+  L8Mutation
+  L9Verification
+  L10Governance
+}
+
+pub fn fractal_layer_ladder_ordinal(layer: FractalLayerLadder) -> Int {
+  case layer {
+    L0Boundary -> 0
+    L1Artifact -> 1
+    L2Subsystem -> 2
+    L3Module -> 3
+    L4Feature -> 4
+    L5Representation -> 5
+    L6Operation -> 6
+    L7Generator -> 7
+    L8Mutation -> 8
+    L9Verification -> 9
+    L10Governance -> 10
+  }
+}
+
+pub fn fractal_layer_ladder_to_string(layer: FractalLayerLadder) -> String {
+  case layer {
+    L0Boundary -> "L0_Boundary"
+    L1Artifact -> "L1_Artifact"
+    L2Subsystem -> "L2_Subsystem"
+    L3Module -> "L3_Module"
+    L4Feature -> "L4_Feature"
+    L5Representation -> "L5_Representation"
+    L6Operation -> "L6_Operation"
+    L7Generator -> "L7_Generator"
+    L8Mutation -> "L8_Mutation"
+    L9Verification -> "L9_Verification"
+    L10Governance -> "L10_Governance"
+  }
+}
+
+// ------------------------------------------------------------------------------
+// 14. Nine Orthogonal Planes (FRACTAL_ONTOLOGY.md §3)
+// ------------------------------------------------------------------------------
+
+pub type OrthogonalPlane {
+  BoundaryPlane
+  ImplementationPlane
+  RuntimePlane
+  OraclePlane
+  VerificationPlane
+  EvidencePlane
+  GovernancePlane
+  KnowledgePlane
+  OrchestrationPlane
+}
+
+pub fn orthogonal_plane_to_string(plane: OrthogonalPlane) -> String {
+  case plane {
+    BoundaryPlane -> "boundary"
+    ImplementationPlane -> "implementation"
+    RuntimePlane -> "runtime"
+    OraclePlane -> "oracle"
+    VerificationPlane -> "verification"
+    EvidencePlane -> "evidence"
+    GovernancePlane -> "governance"
+    KnowledgePlane -> "knowledge"
+    OrchestrationPlane -> "orchestration"
+  }
+}
+
+// ------------------------------------------------------------------------------
+// 15. Verification Strata (A / B / C)
+// ------------------------------------------------------------------------------
+
+pub type VerificationStratum {
+  StratumAAlgebraicCore
+  StratumBEngine
+  StratumCSubstrateSeam
+}
+
+pub fn verification_stratum_to_string(stratum: VerificationStratum) -> String {
+  case stratum {
+    StratumAAlgebraicCore -> "Stratum-A (Algebraic Core)"
+    StratumBEngine -> "Stratum-B (Effectful Engine)"
+    StratumCSubstrateSeam -> "Stratum-C (Substrate Seam)"
+  }
+}
+
+// ------------------------------------------------------------------------------
+// 16. FCOPSR Production Readiness Conjunction (FRACTAL_ONTOLOGY.md §6)
+// ------------------------------------------------------------------------------
+
+pub type FcopsrStatus {
+  FcopsrStatus(
+    functional_parity: Bool,
+    capability_completeness: Bool,
+    operational_honesty: Bool,
+    performance: Bool,
+    scalability: Bool,
+    realtime_behavior: Bool,
+  )
+}
+
+pub fn evaluate_fcopsr_readiness(status: FcopsrStatus) -> Bool {
+  status.functional_parity
+  && status.capability_completeness
+  && status.operational_honesty
+  && status.performance
+  && status.scalability
+  && status.realtime_behavior
+}
+
+// ------------------------------------------------------------------------------
+// 17. Capability State Poset (ABSENT < UNTESTED < EQUIV < EQ)
+// ------------------------------------------------------------------------------
+
+pub type CapabilityPosetState {
+  PosetAbsent
+  PosetUntested
+  PosetEquiv
+  PosetEq
+}
+
+pub fn capability_poset_ordinal(state: CapabilityPosetState) -> Int {
+  case state {
+    PosetAbsent -> 0
+    PosetUntested -> 1
+    PosetEquiv -> 2
+    PosetEq -> 3
+  }
+}
+
+pub fn is_at_least_capability(
+  current: CapabilityPosetState,
+  required: CapabilityPosetState,
+) -> Bool {
+  capability_poset_ordinal(current) >= capability_poset_ordinal(required)
+}
+
+// ------------------------------------------------------------------------------
+// 18. Forecast Honesty & Confidence (Measured > Estimated > Unknown)
+// ------------------------------------------------------------------------------
+
+pub type ForecastConfidence {
+  ConfidenceMeasured
+  ConfidenceEstimated
+  ConfidenceUnknown
+}
+
+pub type ForecastHonestyReport {
+  ForecastHonestyReport(
+    confidence: ForecastConfidence,
+    cost_sum: Int,
+    is_available: Bool,
+  )
+}
+
+pub fn evaluate_forecast_honesty(report: ForecastHonestyReport) -> Bool {
+  // Unavailable_observed remains non-green
+  report.is_available
+  && case report.confidence {
+    ConfidenceMeasured -> True
+    ConfidenceEstimated -> True
+    ConfidenceUnknown -> False
+  }
+}
+
+// ------------------------------------------------------------------------------
+// 19. 4-Tier Agent Topology (L0 .. L3)
+// ------------------------------------------------------------------------------
+
+pub type AgentTopologyRole {
+  L0ProgrammeIntegration
+  L1SubsystemPlanning
+  L2IsolatedWorker
+  L3IndependentVerifier
+}
+
+pub fn agent_topology_role_to_string(role: AgentTopologyRole) -> String {
+  case role {
+    L0ProgrammeIntegration -> "L0_Programme_Integration"
+    L1SubsystemPlanning -> "L1_Subsystem_Planning"
+    L2IsolatedWorker -> "L2_Isolated_Worker"
+    L3IndependentVerifier -> "L3_Independent_Verifier"
+  }
+}
+
+// ------------------------------------------------------------------------------
+// 20. 6-Stage Bounded OODAVR Control Loop
+// ------------------------------------------------------------------------------
+
+pub type OodavrStage {
+  OodavrObserve
+  OodavrOrient
+  OodavrDecide
+  OodavrAct
+  OodavrVerify
+  OodavrRecord
+}
+
+pub fn oodavr_stage_to_string(stage: OodavrStage) -> String {
+  case stage {
+    OodavrObserve -> "OBSERVE"
+    OodavrOrient -> "ORIENT"
+    OodavrDecide -> "DECIDE"
+    OodavrAct -> "ACT"
+    OodavrVerify -> "VERIFY"
+    OodavrRecord -> "RECORD"
+  }
+}
+

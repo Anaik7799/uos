@@ -1226,14 +1226,20 @@ pub fn all_c3i_agent_registry_entries() -> List(C3iAgentRegistryEntry) {
   })
 }
 
-pub fn verify_c3i_agent_ecology() -> #(Int, Int, Int, Int, Bool) {
+pub fn verify_c3i_agent_ecology() -> #(Int, Int, Int, Int, Int, Bool) {
   let entries = all_c3i_agent_registry_entries()
   let total = list.length(entries)
   let sdlc_count = list.count(entries, fn(e) { e.c3i_system == "C3I-SDLC" })
   let sre_count = list.count(entries, fn(e) { e.c3i_system == "C3I-SRE" })
   let ver_count =
     list.count(entries, fn(e) { e.c3i_system == "C3I-VERIFICATION" })
+  let intel_count =
+    list.count(entries, fn(e) { e.c3i_system == "C3I-INTELLIGENCE" })
   let all_valid =
-    total == 96 && sdlc_count == 32 && sre_count == 32 && ver_count == 32
-  #(total, sdlc_count, sre_count, ver_count, all_valid)
+    total == 256
+    && sdlc_count == 64
+    && sre_count == 64
+    && ver_count == 64
+    && intel_count == 64
+  #(total, sdlc_count, sre_count, ver_count, intel_count, all_valid)
 }

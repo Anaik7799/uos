@@ -252,3 +252,149 @@ pub fn bayesian_forecasting_preflight_test() {
   }
   |> should.equal(True)
 }
+
+pub fn component_packet_validation_test() {
+  let valid_packet =
+    sdlc_sre_process_engine.ComponentPacket(
+      name: "C3I-DeterministicFlightController",
+      signature: "fn update(Telemetry) -> FlightState",
+      semantic_domain: "Closed aerospace manifold state",
+      oracle: "Initial Erlang reference engine",
+      final_encoding: "Gleam BEAM actor with typed message queue",
+      homomorphism_law: "denote(Final) == denote(Oracle)",
+      generator: "Seeded telemetry generator with boundary perturbation",
+      mutants: [
+        "Invert pitch-rate sensor sign",
+        "Drop heartbeat packet at tick 100",
+      ],
+      judge: "Differential oracle + EUnit law assertions",
+      governor: "Fail-closed safety interlock & Prajna circuit breaker",
+      documentation: "docs/design/20260906-1330-uos-256-agent-ecology-specification.md",
+      durable_evidence: "SQLite verification tracking ledger row",
+    )
+
+  sdlc_sre_process_engine.validate_component_packet(valid_packet)
+  |> should.equal(True)
+
+  // Invalid packet with insufficient mutants (< 2)
+  let invalid_packet =
+    sdlc_sre_process_engine.ComponentPacket(
+      ..valid_packet,
+      mutants: ["Single mutant"],
+    )
+  sdlc_sre_process_engine.validate_component_packet(invalid_packet)
+  |> should.equal(False)
+}
+
+pub fn fractal_layer_ladder_and_planes_test() {
+  sdlc_sre_process_engine.fractal_layer_ladder_ordinal(
+    sdlc_sre_process_engine.L0Boundary,
+  )
+  |> should.equal(0)
+  sdlc_sre_process_engine.fractal_layer_ladder_ordinal(
+    sdlc_sre_process_engine.L10Governance,
+  )
+  |> should.equal(10)
+
+  sdlc_sre_process_engine.fractal_layer_ladder_to_string(
+    sdlc_sre_process_engine.L5Representation,
+  )
+  |> should.equal("L5_Representation")
+
+  sdlc_sre_process_engine.orthogonal_plane_to_string(
+    sdlc_sre_process_engine.OrchestrationPlane,
+  )
+  |> should.equal("orchestration")
+
+  sdlc_sre_process_engine.verification_stratum_to_string(
+    sdlc_sre_process_engine.StratumAAlgebraicCore,
+  )
+  |> string.contains("Algebraic Core")
+  |> should.equal(True)
+}
+
+pub fn fcopsr_production_readiness_test() {
+  let all_green =
+    sdlc_sre_process_engine.FcopsrStatus(
+      functional_parity: True,
+      capability_completeness: True,
+      operational_honesty: True,
+      performance: True,
+      scalability: True,
+      realtime_behavior: True,
+    )
+  sdlc_sre_process_engine.evaluate_fcopsr_readiness(all_green)
+  |> should.equal(True)
+
+  // One failing axis fails the whole conjunction
+  let degraded =
+    sdlc_sre_process_engine.FcopsrStatus(..all_green, performance: False)
+  sdlc_sre_process_engine.evaluate_fcopsr_readiness(degraded)
+  |> should.equal(False)
+}
+
+pub fn capability_poset_state_test() {
+  sdlc_sre_process_engine.is_at_least_capability(
+    sdlc_sre_process_engine.PosetEq,
+    sdlc_sre_process_engine.PosetEquiv,
+  )
+  |> should.equal(True)
+
+  sdlc_sre_process_engine.is_at_least_capability(
+    sdlc_sre_process_engine.PosetUntested,
+    sdlc_sre_process_engine.PosetEquiv,
+  )
+  |> should.equal(False)
+}
+
+pub fn forecast_honesty_evaluation_test() {
+  let green_forecast =
+    sdlc_sre_process_engine.ForecastHonestyReport(
+      confidence: sdlc_sre_process_engine.ConfidenceMeasured,
+      cost_sum: 1250,
+      is_available: True,
+    )
+  sdlc_sre_process_engine.evaluate_forecast_honesty(green_forecast)
+  |> should.equal(True)
+
+  // Unavailable_observed remains non-green
+  let unavailable_report =
+    sdlc_sre_process_engine.ForecastHonestyReport(
+      ..green_forecast,
+      is_available: False,
+    )
+  sdlc_sre_process_engine.evaluate_forecast_honesty(unavailable_report)
+  |> should.equal(False)
+
+  // Unknown confidence remains non-green
+  let unknown_report =
+    sdlc_sre_process_engine.ForecastHonestyReport(
+      ..green_forecast,
+      confidence: sdlc_sre_process_engine.ConfidenceUnknown,
+    )
+  sdlc_sre_process_engine.evaluate_forecast_honesty(unknown_report)
+  |> should.equal(False)
+}
+
+pub fn agent_topology_and_oodavr_test() {
+  sdlc_sre_process_engine.agent_topology_role_to_string(
+    sdlc_sre_process_engine.L0ProgrammeIntegration,
+  )
+  |> should.equal("L0_Programme_Integration")
+
+  sdlc_sre_process_engine.agent_topology_role_to_string(
+    sdlc_sre_process_engine.L3IndependentVerifier,
+  )
+  |> should.equal("L3_Independent_Verifier")
+
+  sdlc_sre_process_engine.oodavr_stage_to_string(
+    sdlc_sre_process_engine.OodavrVerify,
+  )
+  |> should.equal("VERIFY")
+
+  sdlc_sre_process_engine.oodavr_stage_to_string(
+    sdlc_sre_process_engine.OodavrRecord,
+  )
+  |> should.equal("RECORD")
+}
+
