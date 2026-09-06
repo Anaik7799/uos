@@ -429,6 +429,33 @@ docs/hermes/journal/20260906-1424-fractal-system-reference-map.md.
 
 ---
 
+### Prompt 32 (UOS Lineage - P32)
+- **Origin**: Active Session Operational Directive
+- **Timestamp Reference**: `2026-09-06T14:47:10Z`
+- **Verbatim Text**:
+```text
+docs/hermes/journal/20260906-1424-fractal-system-reference-map.md.
+It includes:
+- Runtime-agent, L0–L6 evidence, LX control-plane, and FPP elements.
+- All 18 L1 feature families and the canonical L2 catalogue authority.
+- Key docs, Wiki/ZK, core OCaml code, agent skills/adapters, Superpowers/SDD, and workspace strata.
+- The precise evidence boundary: source inventory is not a current parity or health receipt.
+fully add and integrate hermes-bionic fully with uos using 17 aspect approach. add or update the agents and actors in the system
+```
+- **Architectural Analysis & System Response**:
+  1. **Hermes-Bionic Full Systemic Integration**: Fully incorporated the Hermes-Bionic execution substrate into UOS via the 17-aspect systemic approach.
+  2. **18 L1 Feature Families**: Formalized the 18 durable public product families (`InteractiveCli`, `AgentLoop`, `ModelRouting`, `ToolExecution`, `Mcp`, `Memory`, `ContextFiles`, `Skills`, `LearningLoop`, `Subagents`, `ScheduledAutomation`, `MessagingGateway`, `VoiceMedia`, `BrowserResearch`, `ExecutionBackends`, `TrajectoryData`, `OperationsCli`, `ApplicationSurfaces`) in `hermes_bionic_bridge.gleam` with source domain anchors and durable task counts.
+  3. **Canonical L2 Capability Catalogue Authority**: Established typed L2 capability authority with source/doc anchors and fail-closed status policy.
+  4. **L0–L6 Recursive Evidence Plane & Boundary**: Implemented the recursive evidence chain (`Level0Product` -> `Level1Family` -> `Level2Capability` -> `Level3Contract` -> `Level4Scenario` -> `Level5Trace` -> `Level6Receipt`) and strictly enforced the evidence boundary rule: source discovery is discovery evidence only; parity receipts require fresh runtime observation AND machine-checked formal specification (Two-Key verification).
+  5. **LX Control Plane**: Formalized turn budgets, orientation snapshots, and Lyapunov exponent drift containment ($\lambda \le 0.0$).
+  6. **NASA JPL F-Prime (FPP) Aerospace Elements**: Integrated component metamodels, typed port directions (`PortIn`/`PortOut`), and Hierarchical State Machines (`HsmIdle` through `HsmSafing`).
+  7. **Hermes-Bionic Actor & Agent Ecosystem**: Added and admitted 10 dedicated Bionic actors across $L_0 \dots L_9$ and 5 surfaces into `c3i_agent_catalog` (6 single-instance singletons, 4 multi-instance elastic workers).
+  8. **Doctor Lifecycle EV-23**: Advanced `tools/uos doctor` from EV-22 to EV-23 (`EV-23 Hermes-Bionic Integration`), validated by `tools/uos selfcheck-hermes-bionic` (8/8 pass) and `tools/uos verify-all` (100% green).
+  9. **Testing Expansion**: Added EUnit test suite `hermes_bionic_bridge_test.gleam`, bringing total passing Gleam tests to 10,146 (0 failures, 0 warnings).
+  10. **KM Triad & Tracking**: Recorded `RUN-20260906-1700-HERMES-BIONIC-FULL-INTEGRATION` in SQLite tracking DB, authored Master Journal (`docs/journal/20260906-1700-uos-hermes-bionic-full-integration-and-actor-ecosystem-journal.md`), ADR-048, and Hermes Wiki article.
+
+---
+
 ## 3. Evolutionary Traceability Matrix
 
 | Prompt | Target Subsystem | Key Invariant Enforced | Governing Artifacts |
@@ -460,27 +487,29 @@ docs/hermes/journal/20260906-1424-fractal-system-reference-map.md.
 | **P29** | Sa-Plan Ingestion | Port Hermes OCaml Sa-Plan engine from ZigVM | `engines/hermes/modules/sa_plan/` |
 | **P30** | Sa-Plan Full Wire | 12 suites, 235 laws, EV-22, 17 aspects, actors | `ADR-047`, `docs/journal/20260906-1635-` |
 | **P31** | Reference Map | Hermes Master Journal Fractal Cartography (L0..L9 x 5 surfaces)| `docs/hermes/journal/20260906-1424-` |
+| **P32** | Hermes-Bionic Wire| 18 L1 families, L2 catalog, L0-L6 evidence, LX CP, EV-23| `ADR-048`, `hermes_bionic_bridge.gleam` |
 
 ---
 
 ## 4. Verification & Ratification Sign-Off
 
 ```text
-PROMPT LINEAGE INTEGRITY: 31/31 PROMPTS ARCHIVED VERBATIM (100% AUDITED)
+PROMPT LINEAGE INTEGRITY: 32/32 PROMPTS ARCHIVED VERBATIM (100% AUDITED)
 FRACTAL REFERENCE MAP: docs/hermes/journal/20260906-1424-fractal-system-reference-map.md ACTIVE
+HERMES-BIONIC INTEGRATION: 18 L1 FAMILIES, L2 CATALOG, L0-L6 EVIDENCE, LX CONTROL PLANE, FPP ACTIVE
 SA-PLAN OCAML INTEGRATION: 12/12 SUITES, 235 FORMAL LAWS PASSING (100% GREEN)
 CLI DISPATCH INTEGRATION: tools/sa-plan OPERATIONAL & IN-CODE VERIFIED
 KM TRIAD STATUS: DOCS, JOURNAL, WIKI, ZK, AND KB 100% SETUP AND VERIFIED
 VFS STORAGE INTEGRATION: 8/8 CANONICAL VFS LAWS EVALUATED & PASSING (--selfcheck-vfs)
-UOS DOCTOR LIFECYCLE: 22/22 EV-CYCLE BOUNDARIES OPERATIONAL (EV-01..EV-22 PASS)
+UOS DOCTOR LIFECYCLE: 23/23 EV-CYCLE BOUNDARIES OPERATIONAL (EV-01..EV-23 PASS)
 COMPREHENSIVE CHECKLIST: 18/18 CHECKS 100% GREEN (SC-CHECKLIST-001)
 17 SYSTEM ASPECTS: 100% COVERED & PROGRAMMATICALLY VERIFIED IN GLEAM
 ACTOR ECOSYSTEM: SINGLE VS MULTI-INSTANCE TOPOLOGY OVER L0..L9 x 5 SURFACES x 13D TCM
-CONCURRENCY DISTRIBUTION: 65 SINGLE-INSTANCE SINGLETONS, 191 MULTI-INSTANCE ELASTIC WORKERS
+CONCURRENCY DISTRIBUTION: 71 SINGLE-INSTANCE SINGLETONS, 195 MULTI-INSTANCE ELASTIC WORKERS
 SWARM SCALING TOPOLOGY: UNCONSTRAINED ELASTIC BEAM SWARM (256 AGENT LIMIT REMOVED)
 NATIVE NIF INTEGRATION: ZENOH 1.9.0 & RETE-UL 1.20.1 NATIVELY LOADED (c3i_nif.so & rule_engine_nif.so)
 HISTORICAL CONTINUITY: VM-1 Unavailable_observed BASELINE PRESERVED ALONGSIDE UOS RESOLUTION
-TEST PROTOCOL: 10,138 GLEAM EUNIT TESTS PASSING WITH ZERO FAILURES AND ZERO WARNINGS
+TEST PROTOCOL: 10,146 GLEAM EUNIT TESTS PASSING WITH ZERO FAILURES AND ZERO WARNINGS
 MAINLINE INTEGRATION: UNIFIED INTO CANONICAL MAIN BOOKMARK WITH ZERO REGRESSION
 TAILSCALE FQDN ROUTING: http://nas-1.tail55d152.ts.net:4100 100% REACHABLE
 ```

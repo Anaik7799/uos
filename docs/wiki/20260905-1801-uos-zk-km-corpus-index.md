@@ -131,4 +131,6 @@ The operational system coordinates across five distinct language tiers:
   - `[[wiki:dmc-tcm-mandate]]` (`contracts/rules/dmc-tcm-mandate.md`)
   - `[[wiki:timestamp-mandate]]` (`contracts/rules/timestamp-mandate.md`)
   - `[[wiki:20260906-1635-uos-sa-plan-ocaml-engine-and-actor-ecosystem-wiki]]` ([Sa-Plan Engine & Actor Ecosystem Wiki](http://nas-1.tail55d152.ts.net:4100/docs/docs/wiki/20260906-1635-uos-sa-plan-ocaml-engine-and-actor-ecosystem-wiki.md))
+  - `[[wiki:20260906-1700-uos-hermes-bionic-full-integration-wiki]]` ([Hermes-Bionic Full Integration Wiki](http://nas-1.tail55d152.ts.net:4100/docs/docs/wiki/20260906-1700-uos-hermes-bionic-full-integration-wiki.md))
+  - `[[zk:ADR-048]]` Hermes-Bionic Full Integration Ratification ([ADR-048 Live View](http://nas-1.tail55d152.ts.net:4100/docs/docs/zk/20260906-1700-adr-048-hermes-bionic-full-integration-ratification.md))
 
