@@ -7,6 +7,7 @@ import cepaf_gleam/fpp/intent
 import cepaf_gleam/fpp/ontology
 import cepaf_gleam/fpp/topology
 import cepaf_gleam/knowledge/c3i_knowledge_runtime
+import cepaf_gleam/knowledge/c3i_vertical_slice_engine
 import cepaf_gleam/sdlc/aspect_agent_ecosystem
 import cepaf_gleam/sdlc/aspect_processing_agent
 import cepaf_gleam/nif/zenoh_rete_bridge as nif_bridge
@@ -317,6 +318,16 @@ pub fn main() {
             0.5,
           )
         let json_body = c3i_knowledge_runtime.encode_recall_result_json(recall)
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["api", "knowledge", "vertical-slice"] -> {
+        let slice_result =
+          c3i_vertical_slice_engine.run_knowledge_vertical_slice("C3I")
+        let json_body =
+          c3i_vertical_slice_engine.encode_vertical_slice_json(slice_result)
         response.new(200)
         |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
         |> response.prepend_header("content-type", "application/json")

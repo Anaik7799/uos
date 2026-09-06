@@ -151,6 +151,8 @@ The operational system coordinates across five distinct language tiers:
   - `[[zk:ADR-056]]` C3I VM-1 Artifacts Ingestion, Gleam Knowledge Actors & 15 Cycles Ratification ([ADR-056 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-1930-adr-056-c3i-artifacts-ingestion-and-15-cycles-ratification.md))
   - `[[wiki:20260906-2000-uos-codex-session-handover-and-wave3-synthesis-wiki]]` ([Codex Session Handover & Wave 3 Synthesis Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-2000-uos-codex-session-handover-and-wave3-synthesis-wiki.md))
   - `[[zk:ADR-057]]` Master Session Handover to OpenAI Codex & 69 Cycles Transfer ([ADR-057 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-2000-adr-057-master-session-handover-to-codex-and-69-cycles-transfer.md))
+  - `[[wiki:20260906-2100-uos-c3i-vertical-slice-and-wave4-synthesis-wiki]]` ([C3I Vertical Slice & Wave 4 Synthesis Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-2100-uos-c3i-vertical-slice-and-wave4-synthesis-wiki.md))
+  - `[[zk:ADR-058]]` C3I Knowledge Runtime Vertical Slice & 15 Wave 4 Evolutionary Cycles Ratification ([ADR-058 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-2100-adr-058-c3i-vertical-slice-and-wave4-evolutionary-cycles.md))
 
 
 

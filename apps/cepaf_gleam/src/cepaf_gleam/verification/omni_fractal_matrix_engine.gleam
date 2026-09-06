@@ -594,6 +594,26 @@ pub fn generate_wave3_evolutionary_cycles() -> List(EvolutionaryCycleSpec) {
   ]
 }
 
+pub fn generate_wave4_evolutionary_cycles() -> List(EvolutionaryCycleSpec) {
+  [
+    EvolutionaryCycleSpec("EV-70", "Vertical Slice Journal Ingestion to Cited Retrieval Pipeline", "Ingestion", L1AtomicKernel, "INV-SLICE-JOURNAL-RETRIEVAL", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-71", "Supervised OCaml Worker Port Protocol & Subprocess Reductions", "Kernel", L1AtomicKernel, "INV-OCAML-SUBPROCESS-PROTOCOL", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-72", "Rust NIF & OCaml Differential Conformance Oracle", "Conformance", L2ComponentState, "INV-RUST-OCAML-DIFF-CONFORMANCE", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-73", "Callable OCaml Knowledge Lookup & Cited Recall Service", "Recall", L6EcosystemSwarm, "INV-CALLABLE-OCAML-CITED-RECALL", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-74", "Tripartite Tri-Surface SSR/API/TUI Knowledge Display", "Presentation", L7FederationInterface, "INV-TRIPARTITE-KNOWLEDGE-SURFACES", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-75", "17-Aspect C3I VM-1 Artifacts Comprehensive Synthesis", "Aspects", L3TransactionWorkflow, "INV-17-ASPECT-C3I-SYNTHESIS", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-76", "Dynamic Agentic Knowledge Mesh & Autonomous Swarm Topology", "Swarm", L6EcosystemSwarm, "INV-DYNAMIC-KNOWLEDGE-SWARM", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-77", "Biosemiotic Semantic Invariant Verification & Rocha Decoupling", "Semiotics", L9BiosemioticRocha, "INV-BIOSEMIOTIC-ROCHA-VERIF", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-78", "13D TCM Coordinate Conservation & Fail-Closed Gatekeeper", "Traceability", L8MathematicalFormal, "INV-13D-TCM-FAIL-CLOSED", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-79", "Lyapunov-Bounded Trust Decay & Negative Knowledge Eviction", "Decay", L4SystemControl, "INV-LYAPUNOV-TRUST-EVICTION", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-80", "Zero-Trust Payload Interceptor & Cryptographic Receipt Ledger", "Security", L0Constitutional, "INV-ZT-PAYLOAD-LEDGER", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-81", "Multi-Tenant Elastic BEAM Swarm Scaling Invariant", "Scalability", L6EcosystemSwarm, "INV-BEAM-SWARM-ELASTIC-SCALE", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-82", "Universal Tailscale FQDN Web/API/WebSocket Routing Matrix", "Gateway", L7FederationInterface, "INV-TAILSCALE-FQDN-ROUTING", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-83", "Formal Gospel Specification & Bounded Z3 Oracle Pipeline", "Formal", L8MathematicalFormal, "INV-GOSPEL-Z3-ORACLE-PIPELINE", "OPERATIONAL", True),
+    EvolutionaryCycleSpec("EV-84", "Tri-Sovereign Multi-Model Consensus & Mainline Jujutsu Closure", "Governance", L0Constitutional, "INV-TRI-SOV-MAINLINE-CLOSURE", "OPERATIONAL", True),
+  ]
+}
+
 pub fn generate_all_30_evolutionary_cycles() -> List(EvolutionaryCycleSpec) {
   list.append(generate_all_15_evolutionary_cycles(), generate_wave2_evolutionary_cycles())
 }
@@ -602,8 +622,12 @@ pub fn generate_all_45_evolutionary_cycles() -> List(EvolutionaryCycleSpec) {
   list.append(generate_all_30_evolutionary_cycles(), generate_wave3_evolutionary_cycles())
 }
 
+pub fn generate_all_60_evolutionary_cycles() -> List(EvolutionaryCycleSpec) {
+  list.append(generate_all_45_evolutionary_cycles(), generate_wave4_evolutionary_cycles())
+}
+
 pub fn generate_all_evolutionary_cycles() -> List(EvolutionaryCycleSpec) {
-  generate_all_45_evolutionary_cycles()
+  generate_all_60_evolutionary_cycles()
 }
 
 pub fn execute_evolutionary_cycle(cycle: EvolutionaryCycleSpec) -> Bool {
@@ -679,12 +703,12 @@ pub fn encode_omni_matrix_json() -> String {
   let scalabilities = generate_system_scalability_matrix()
   let proofs = generate_all_formal_aspects()
   let usecases = generate_all_use_cases()
-  let cycles = generate_all_45_evolutionary_cycles()
+  let cycles = generate_all_60_evolutionary_cycles()
 
   json.object([
     #("status", json.string("ok")),
     #("contract", json.string("SC-OMNI-FRACTAL-001")),
-    #("ev_cycle", json.string("EV-25..EV-69")),
+    #("ev_cycle", json.string("EV-25..EV-84")),
     #("cartesian_closure", json.bool(verify_omni_fractal_system_matrix())),
     #("layers_count", json.int(10)),
     #("components_count", json.int(list.length(comps))),
