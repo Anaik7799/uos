@@ -26,6 +26,10 @@ S06 reread nine primary references and recorded source-to-UOS technique mappings
 
 S07 completed read-only E02 contract and negative-control preparation. E01 round three passed 13 existing cases but a new closed-output descendant fixture proved that normal exit skipped process-group cleanup. S08 assigns a fresh stronger implementer to that fourth repair round. The tracker passed 19 scratch checks; S09 repairs the remaining separate hash/parse reads and FIFO-open boundedness before any live use. E01 was reclaimed as master attempt three after expiry. These additional repairs do not grant implementation credit.
 
+E01 and tracker repairs were integrated at `88d07b35e80d3e81456cd89f693a39799e6abd6b`. Fresh coordinator verification passed 14 snapshot cases and 44 tracker scratch assertions. The exact E01 CLI fixture also passed its specified observations while the snapshot correctly retained `SNAPSHOT_CAPTURED_NONPASSING`, `STALE` inherited credit, and no signature/system admission. E01 completed in sa-plan from that reviewed receipt; E02 was claimed as attempt one. S11 implements the acceptance harness in an isolated workspace, with bounded module delegation permitted.
+
+S10 verified all 36 checked-in corpus/catalogue part hashes and counts: 8,047 corpus records, 770 selected file records, and 161 OCaml file records. These are existing static inventories, not newly executed source tests. The OCaml JSON contains 1,479 raw site rows while an older narrative reports 1,478; uniqueness and registration reconciliation remains explicit E04 work. Root performed this preparation when additional agent threads were refused by actual tool capacity.
+
 ## 4. Root Cause Analysis
 
 The original reserved queue does not enforce task dependencies, and its claim operation cannot select a task ID. Dispatching it directly would allow jobs before prerequisites. Dedicated support queues therefore track supervised work until P01 proves production scheduling. Source metadata and planning state were also being confused with executed results: the incoming E01 implementation substitutes plausible clock and version strings when probes fail and grants signature credit when candidate strings match.
@@ -47,6 +51,9 @@ Rulings RUL-001 through RUL-007 are recorded in the overlay. In particular, hist
 | Planning graph | Immutable digest b706f9a99dfaf6018772b2a819084ea3373a3ee720ed774b57e7f92792d8ee02 retained | Planning metadata |
 | Initial E01 implementation | Three local cases passed; review identified output quota, snapshot stability and historical-claim binding gaps | Repair required |
 | Initial tracker | Twelve scratch checks passed; review identified lease unit, evidence and test-isolation gaps | Repair required |
+| Integrated E01 | 14 cases and exact manifest fixture pass at 88d07b35; normal-exit descendants covered | E01 VERIFIED_SCOPED and completed in sa-plan |
+| Integrated tracker | 44 scratch assertions pass at 88d07b35, including descriptor races/FIFO/lease ownership | Manual support feature VERIFIED_SCOPED; no automatic-dispatch admission |
+| Source inventory preparation | 36 part digests/counts verified; 161 OCaml records remain UNRUN | Metadata preparation only |
 | Live health | HTTP response reports version 1.0.0 and zenoh_connected=false; no candidate revision field | Reachability only; build identity UNKNOWN |
 | Live verification API | Reports 18 checks and 20 EV cycles without invocation-bound receipts | No admission |
 | Host clock | Chrony reference 2026-09-06 18:59:19 UTC, Normal, system 0.000386633 seconds slow | Scoped synchronized clock observation |
@@ -81,7 +88,7 @@ Rulings RUL-001 through RUL-007 are recorded in the overlay. In particular, hist
 
 ## 8. Files Modified
 
-This integration adds the execution overlay and journal, integrates the two audit artifacts, and corrects the audit's malformed source hash. E01 and tracker implementations remain under review in their own workspaces. Incoming main files remain in ancestry and are reviewed as new UOS code; original external OCaml sources, fixtures and build files remain read-only.
+This integration adds the execution overlay and journal, integrates the two audit artifacts, corrects the audit's malformed source hash, and integrates E01's snapshot/tool tests and the bounded manual tracker/tests. The [E01 acceptance receipt](http://nas-1.tail55d152.ts.net:4100/files/governance/sources/20260906-1929-e01-integrated-acceptance-receipt.json) and [tracker acceptance receipt](http://nas-1.tail55d152.ts.net:4100/files/governance/sources/20260906-1929-manual-tracker-acceptance-receipt.json) bind their source hashes and all 17 scoped aspect records to the tested candidate. Incoming main files remain in ancestry; original external OCaml sources, fixtures and build files remain read-only.
 
 ## 9. Architectural Observations
 
@@ -106,7 +113,7 @@ The two diagrams have identical nodes and edges. Each feature's cycle records ob
 
 ## 10. Remaining Gaps
 
-E01 must pass strengthened boundedness, identity stability and historical evidence tests. The tracker needs reviewed lease/evidence handling. E02/E03 incoming changes require independent review and actual acceptance; their existing receipts are insufficient. Production Resource_envelope sensing is unavailable. P01 must reconcile reserved intents with supervised execution history. All other tasks retain their original acceptance gates and linked dependencies.
+E01 and the manual tracker now passed their scoped gates; E02 is implementing strict contracts, generic assertions, bounded adapter execution and atomic receipts. E02/E03 incoming receipts remain insufficient. Production Resource_envelope sensing is unavailable. P01 must reconcile reserved intents with supervised execution history. All other tasks retain their original acceptance gates and linked dependencies.
 
 E01 review round 1 identified output capture, revision stability, source binding and HTTP/build identity gaps. Scoped re-review found a missing nested JSON-field crash, inaccurate cleanup/metadata fields and a source-side-effect regression; the implementer is fixing these before the acceptance gate. Tracker round 2 addresses evidence-path traversal/symlinks and bounded hashing. The manual tracker must explicitly refuse external-store dependencies until P03 supplies the admitted federation adapter.
 
@@ -122,4 +129,4 @@ The controller cannot use advisory source claims or model outputs to authorize i
 
 ## 13. Conclusion
 
-Execution is active, with E01 and supporting tracking/audit work under review. Incoming main changes are being reconciled through Jujutsu while immutable programme intent and truthful runtime history remain distinct. Implementation tasks close only after their actual acceptance gates and candidate-bound review evidence pass.
+Execution is active. PLAN00 and E01 are complete; E02 is executing, leaving 69 master implementation tasks including E02 unfinished. The linked legacy programme remains open. Jujutsu preserves incoming history and reviewed repairs, while immutable programme intent and truthful runtime history remain distinct. No full-system, browser, actor ecology, DMC/TCM or final admission claim follows from this foundation work.

@@ -34,7 +34,9 @@
     {"id":"S06","worker":"codex-root-research","scope":"primary testing references and source-to-UOS preparation"},
     {"id":"S07","worker":"codex-e02-prep","scope":"read-only E02 contract and adversarial test preparation"},
     {"id":"S08","worker":"codex-e01-r4","scope":"fresh stronger E01 fourth-round process-group cleanup repair"},
-    {"id":"S09","worker":"codex-tracker-r4","scope":"fresh stronger tracker fourth-round descriptor-bound JSON repair"}
+    {"id":"S09","worker":"codex-tracker-r4","scope":"fresh stronger tracker fourth-round descriptor-bound JSON repair"},
+    {"id":"S10","worker":"codex-census-prep","scope":"checked-in corpus part hashes/counts and remaining review frontier; coordinator executed after capacity refusal"},
+    {"id":"S11","worker":"codex-e02","scope":"E02 strict acceptance harness implementation and integration"}
   ],
   "serialization_constraints": [
     {"tasks":["M05","A02"],"path":"apps/cepaf_gleam/src/cepaf_gleam/fpp/dmc_tcm.gleam","rule":"M05 integration precedes A02 edits of this path"},
