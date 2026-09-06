@@ -1,5 +1,17 @@
 -module(indrajaal_web_ffi).
--export([read_repo_file/1, list_repo_dir/1]).
+-export([read_repo_file/1, list_repo_dir/1, listen_port/1]).
+
+listen_port(Default) ->
+    case os:getenv("UOS_WEB_PORT") of
+        false -> Default;
+        Value ->
+            try list_to_integer(Value) of
+                Port when Port >= 1024, Port =< 65535 -> Port;
+                _ -> Default
+            catch
+                _:_ -> Default
+            end
+    end.
 
 read_repo_file(RelativePath) ->
     Root = "/home/an/NAS-setup/uos",
@@ -119,4 +131,3 @@ strip_prefix(Str, Prefix) ->
         nomatch -> Str;
         Rest -> Rest
     end.
-

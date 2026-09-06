@@ -37,6 +37,7 @@ import cepaf_gleam/ui/lustre/zk_graph_visualizer
 import cepaf_gleam/ui/wisp/router as c3i_router
 import cepaf_gleam/verification/browser_emulation_bridge
 import cepaf_gleam/verification/dmc_biosemiotics_interlock
+import cepaf_gleam/verification/evidence_truth
 import cepaf_gleam/verification/omni_fractal_matrix_engine
 import cepaf_gleam/verification/unified_fractal_web_verifier as ufwv
 import cepaf_gleam/verification/unified_verification_supervisor
@@ -58,9 +59,13 @@ import mist.{type Connection, type ResponseData}
 @external(erlang, "indrajaal_web_ffi", "read_repo_file")
 fn erl_read_repo_file(path: String) -> Result(BitArray, String)
 
+@external(erlang, "indrajaal_web_ffi", "listen_port")
+fn listen_port(default: Int) -> Int
+
 pub fn main() {
+  let port = listen_port(4100)
   io.println("=== Indrajaal C3I Web Cockpit ===")
-  io.println("Starting on http://0.0.0.0:4100")
+  io.println("Starting isolated-capable listener on port " <> int.to_string(port))
 
   let router = fn(req: Request(Connection)) -> Response(ResponseData) {
     let path = "/" <> string.join(request.path_segments(req), "/")
@@ -247,9 +252,8 @@ pub fn main() {
         |> response.prepend_header("access-control-allow-origin", "*")
       }
       ["api", "verify", "checks"] -> {
-        let json_body =
-          "{\"status\":\"ok\",\"contract\":\"SC-ROCHA-001\",\"domains_passing\":5,\"checks_total\":18,\"checks_passing\":18,\"ev_cycles_total\":20,\"ev_cycles_passing\":20,\"rocha_tagged_docs\":43,\"tailscale_fqdn\":\"http://nas-1.tail55d152.ts.net:4100\",\"zero_muda\":true,\"storage_safety\":true,\"dal_a\":\"SIL-6\"}"
-        response.new(200)
+        let #(status_code, json_body) = verification_checks_payload()
+        response.new(status_code)
         |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
         |> response.prepend_header("content-type", "application/json")
         |> response.prepend_header("access-control-allow-origin", "*")
@@ -942,11 +946,11 @@ pub fn main() {
 
   let assert Ok(_) =
     mist.new(router)
-    |> mist.port(4100)
+    |> mist.port(port)
     |> mist.bind("0.0.0.0")
     |> mist.start
 
-  io.println("C3I Cockpit running on http://0.0.0.0:4100")
+  io.println("C3I Cockpit listener active on port " <> int.to_string(port))
   io.println("  Tailscale FQDN:  http://nas-1.tail55d152.ts.net:4100")
   io.println("  Tailscale IP:    http://100.87.7.78:4100")
   io.println("  LAN:             http://192.168.1.134:4100")
@@ -997,13 +1001,19 @@ fn render_repo_file_response(
   }
 }
 
-fn render_checklist_accordion() -> String {
+pub fn verification_checks_payload() -> #(Int, String) {
+  let decision = evidence_truth.unrun()
+  #(503, evidence_truth.to_json(decision))
+}
+
+pub fn render_checklist_accordion() -> String {
+  let decision = evidence_truth.unrun()
   "<details class='checklist-card'>
     <summary class='checklist-summary'>
       <div style='display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap'>
-        <span style='color:#3fb950;font-size:1.1rem;font-weight:bold'>&#10003;</span>
+        <span style='color:#d29922;font-size:1.1rem;font-weight:bold'>&#9675;</span>
         <strong style='color:#ffc107;font-size:0.92rem;font-family:monospace'>UOS COMPREHENSIVE VERIFICATION CHECKLIST</strong>
-        <span class='badge badge-fractal'>18/18 VERIFIED &bull; 100% GREEN</span>
+        <span class='badge badge-muda'>" <> decision.status <> " &bull; 0/18 OBSERVED</span>
         <span class='badge badge-tailscale'>SC-CHECKLIST-001</span>
         <span class='badge badge-muda'>SC-MUDA-001</span>
       </div>
@@ -1014,49 +1024,49 @@ fn render_checklist_accordion() -> String {
         <div class='checklist-domain'>
           <h3>Domain 1: Metadata, Timestamp &amp; Tailscale Navigation</h3>
           <ul>
-            <li><span class='chk-pass'>&#10003;</span> <strong>CHK-01-TIME</strong>: Mandatory <code>YYYYMMDD-HHSS-</code> prefix on all generated docs</li>
-            <li><span class='chk-pass'>&#10003;</span> <strong>CHK-02-TAIL</strong>: Clickable Tailscale FQDN URL (<code>http://nas-1.tail55d152.ts.net:4100/...</code>)</li>
-            <li><span class='chk-pass'>&#10003;</span> <strong>CHK-03-FRACT</strong>: Standardized fractal layer tags (<code>#fractal-l0</code> .. <code>#fractal-l9</code>)</li>
-            <li><span class='chk-pass'>&#10003;</span> <strong>CHK-04-KM</strong>: Transclusions active (<code>[[wiki:...]]</code> &amp; <code>[[zk:...]]</code>)</li>
+            <li><span class='chk-unrun'>&#9675;</span> <strong>CHK-01-TIME</strong>: UNRUN — candidate-bound timestamp receipt required</li>
+            <li><span class='chk-unrun'>&#9675;</span> <strong>CHK-02-TAIL</strong>: UNRUN</li>
+            <li><span class='chk-unrun'>&#9675;</span> <strong>CHK-03-FRACT</strong>: UNRUN</li>
+            <li><span class='chk-unrun'>&#9675;</span> <strong>CHK-04-KM</strong>: UNRUN</li>
           </ul>
         </div>
         <div class='checklist-domain'>
           <h3>Domain 2: Zero-Muda Purity &amp; Hardware Safety</h3>
           <ul>
-            <li><span class='chk-pass'>&#10003;</span> <strong>CHK-05-MUDA</strong>: Strict Zero-Muda: 0 Bevy, 0 Graphite across code &amp; deps</li>
-            <li><span class='chk-pass'>&#10003;</span> <strong>CHK-06-GRAPH</strong>: Graphene not required; pure BEAM / Hermes OCaml math</li>
-            <li><span class='chk-pass'>&#10003;</span> <strong>CHK-07-DRIVE</strong>: Host OS NVMe serial <code>25503L801736</code> locked against wipe</li>
+            <li><span class='chk-unrun'>&#9675;</span> <strong>CHK-05-MUDA</strong>: UNRUN</li>
+            <li><span class='chk-unrun'>&#9675;</span> <strong>CHK-06-GRAPH</strong>: UNRUN</li>
+            <li><span class='chk-unrun'>&#9675;</span> <strong>CHK-07-DRIVE</strong>: UNRUN</li>
           </ul>
         </div>
         <div class='checklist-domain'>
           <h3>Domain 3: Testing Gold Standard &amp; Math Gates</h3>
           <ul>
-            <li><span class='chk-pass'>&#10003;</span> <strong>CHK-08-C1C8</strong>: C3I Gold Standard (C1 Structure .. C8 Action Interlock)</li>
-            <li><span class='chk-pass'>&#10003;</span> <strong>CHK-09-MATH</strong>: 4 Math Gates passed (H &ge; 2.50b, CCM &ge; 90%, D_EA &le; 10%, ITQS &ge; 0.85)</li>
-            <li><span class='chk-pass'>&#10003;</span> <strong>CHK-10-9MOD</strong>: Full 9-Modality Test Protocol 100% green (Unit, Sys, TDD, BDD, etc.)</li>
-            <li><span class='chk-pass'>&#10003;</span> <strong>CHK-11-REGR</strong>: 381 Comprehensive UI regression tests passing with 30s monitoring</li>
+            <li><span class='chk-unrun'>&#9675;</span> <strong>CHK-08-C1C8</strong>: UNRUN</li>
+            <li><span class='chk-unrun'>&#9675;</span> <strong>CHK-09-MATH</strong>: UNRUN — metric inputs and denominators missing</li>
+            <li><span class='chk-unrun'>&#9675;</span> <strong>CHK-10-9MOD</strong>: UNRUN</li>
+            <li><span class='chk-unrun'>&#9675;</span> <strong>CHK-11-REGR</strong>: UNRUN</li>
           </ul>
         </div>
         <div class='checklist-domain'>
           <h3>Domain 4: Cross-Language Control &amp; Telemetry</h3>
           <ul>
-            <li><span class='chk-pass'>&#10003;</span> <strong>CHK-12-GLEAM</strong>: Gleam/OTP 29 supervisor (<code>uos_sup.gleam</code>), Prajna breakers, Wisp</li>
-            <li><span class='chk-pass'>&#10003;</span> <strong>CHK-13-HERMES</strong>: Hermes OCaml SQLite WAL ledgers, Gospel contracts, Z3 queries, TyXML</li>
-            <li><span class='chk-pass'>&#10003;</span> <strong>CHK-14-ZIGVM</strong>: Pure Zig kernel with descriptor-relative VFS &amp; ZK store</li>
-            <li><span class='chk-pass'>&#10003;</span> <strong>CHK-15-MAX</strong>: Modular MAX/Mojo isolated AI daemon over stdio pipes</li>
-            <li><span class='chk-pass'>&#10003;</span> <strong>CHK-16-OTEL</strong>: Universal C3I Telemetry: microsecond UTC ISO 8601 (Z), W3C trace</li>
+            <li><span class='chk-unrun'>&#9675;</span> <strong>CHK-12-GLEAM</strong>: UNRUN</li>
+            <li><span class='chk-unrun'>&#9675;</span> <strong>CHK-13-HERMES</strong>: UNRUN</li>
+            <li><span class='chk-unrun'>&#9675;</span> <strong>CHK-14-ZIGVM</strong>: UNRUN</li>
+            <li><span class='chk-unrun'>&#9675;</span> <strong>CHK-15-MAX</strong>: UNRUN</li>
+            <li><span class='chk-unrun'>&#9675;</span> <strong>CHK-16-OTEL</strong>: UNRUN</li>
           </ul>
         </div>
         <div class='checklist-domain'>
           <h3>Domain 5: Tri-Sovereign Governance &amp; VCS</h3>
           <ul>
-            <li><span class='chk-pass'>&#10003;</span> <strong>CHK-17-SOV</strong>: Tri-sovereign multi-agent consensus (AGY, Claude, Codex) ratified</li>
-            <li><span class='chk-pass'>&#10003;</span> <strong>CHK-18-JJ</strong>: Standalone Jujutsu monorepo (<code>.jj/</code>) with 0 native Git mutations</li>
+            <li><span class='chk-unrun'>&#9675;</span> <strong>CHK-17-SOV</strong>: UNRUN</li>
+            <li><span class='chk-unrun'>&#9675;</span> <strong>CHK-18-JJ</strong>: UNRUN</li>
           </ul>
         </div>
       </div>
       <div style='margin-top:0.8rem;display:flex;justify-content:space-between;align-items:center;font-size:0.75rem'>
-        <span style='color:#8b949e'>Enforced by <code>tools/uos gate G-CHECKLIST</code> &bull; All 18 checks validated</span>
+        <span style='color:#8b949e'>Runtime and formal receipts missing; metrics unavailable; historical claims grant no credit.</span>
         <a href='/checklist' style='color:#58a6ff;text-decoration:none;font-weight:600'>&rarr; View Full Specification (SPEC-CHECKLIST-NAV-001)</a>
       </div>
     </div>

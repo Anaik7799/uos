@@ -16,12 +16,12 @@ pub fn get_15_and_30_cycles_count_test() {
   let cycles15 = get_15_evolutionary_cycles()
   list.length(cycles15) |> should.equal(15)
   let #(_, all_pass15, _) = verify_all_15_cycles()
-  all_pass15 |> should.equal(True)
+  all_pass15 |> should.equal(False)
 
   let cycles30 = get_30_evolutionary_cycles()
   list.length(cycles30) |> should.equal(30)
   let #(_, all_pass30, _) = verify_all_30_cycles()
-  all_pass30 |> should.equal(True)
+  all_pass30 |> should.equal(False)
 }
 
 pub fn get_60_cycles_count_test() {
@@ -71,7 +71,7 @@ pub fn aspect_coverage_test() {
   |> should.be_true()
 }
 
-pub fn individual_60_cycles_execution_test() {
+pub fn historical_cycles_have_no_fresh_execution_authority_test() {
   let nums = [
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
     22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
@@ -80,11 +80,8 @@ pub fn individual_60_cycles_execution_test() {
   ]
   list.each(nums, fn(n) {
     case verify_cycle(n) {
-      Ok(record) -> {
-        record.cycle_num |> should.equal(n)
-        record.status |> should.equal(evolutionary_cycles.CycleRatified)
-      }
-      Error(_) -> should.fail()
+      Ok(_) -> should.fail()
+      Error(reason) -> string.contains(reason, "UNRUN") |> should.be_true()
     }
   })
 }
@@ -92,14 +89,10 @@ pub fn individual_60_cycles_execution_test() {
 pub fn verify_all_60_cycles_metrics_test() {
   let #(cycles, all_passed, metrics) = verify_all_60_cycles()
   list.length(cycles) |> should.equal(60)
-  all_passed |> should.be_true()
-
-  // Verify 4 Math Gates
-  { metrics.shannon_entropy >=. 2.5 } |> should.be_true()
-  { metrics.cyclomatic_complexity >=. 0.9 } |> should.be_true()
-  { metrics.divergence_d_ea <=. 0.1 } |> should.be_true()
-  { metrics.itqs >=. 0.85 } |> should.be_true()
-  metrics.all_gates_pass |> should.be_true()
+  all_passed |> should.be_false()
+  metrics.metrics_available |> should.be_false()
+  list.length(metrics.missing_denominators) |> should.equal(4)
+  metrics.all_gates_pass |> should.be_false()
 }
 
 pub fn json_serialization_60_cycles_test() {
@@ -107,7 +100,9 @@ pub fn json_serialization_60_cycles_test() {
   let json_str = encode_cycles_json(cycles, metrics)
 
   string.contains(json_str, "\"cycles_count\":60") |> should.be_true()
-  string.contains(json_str, "\"all_passed\":true") |> should.be_true()
+  string.contains(json_str, "\"status\":\"UNRUN\"") |> should.be_true()
+  string.contains(json_str, "\"all_passed\":false") |> should.be_true()
+  string.contains(json_str, "\"shannon_entropy\":null") |> should.be_true()
   string.contains(json_str, "Codex Astra") |> should.be_true()
   string.contains(json_str, "Claude Fable 5.1") |> should.be_true()
   string.contains(json_str, "Tri-Sovereign Consensus") |> should.be_true()
