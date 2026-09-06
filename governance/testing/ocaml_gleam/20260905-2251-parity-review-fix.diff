@@ -1,0 +1,78 @@
+diff --git a/tests/ocaml_counterparts/fixtures/20260905-2209-parity-case-map.json b/tests/ocaml_counterparts/fixtures/20260905-2209-parity-case-map.json
+index 6e7eb5e06e..3f51cd7134 100644
+--- a/tests/ocaml_counterparts/fixtures/20260905-2209-parity-case-map.json
++++ b/tests/ocaml_counterparts/fixtures/20260905-2209-parity-case-map.json
+@@ -979,7 +979,7 @@
+           "count": 99999
+         }
+       },
+-      "expected": "rolled = blocked",
++      "expected": "report.verdict = blocked; additional rolled = blocked assertion retained",
+       "original_nominal_check_multiplicity": 1,
+       "gleam_module": "hermes_harness/parity_algebra_test",
+       "gleam_function": "chaos_test",
+@@ -1012,7 +1012,7 @@
+         "repeat": "divergent",
+         "count": 10000
+       },
+-      "expected": "rolled = divergent",
++      "expected": "report.verdict = divergent; additional rolled = divergent assertion retained",
+       "original_nominal_check_multiplicity": 1,
+       "gleam_module": "hermes_harness/parity_algebra_test",
+       "gleam_function": "chaos_test",
+diff --git a/tests/ocaml_counterparts/test/hermes_harness/parity_algebra_test.gleam b/tests/ocaml_counterparts/test/hermes_harness/parity_algebra_test.gleam
+index 9673c23651..40f1257acc 100644
+--- a/tests/ocaml_counterparts/test/hermes_harness/parity_algebra_test.gleam
++++ b/tests/ocaml_counterparts/test/hermes_harness/parity_algebra_test.gleam
+@@ -198,11 +198,18 @@
+ }
+ 
+ pub fn chaos_test() {
++  chaos_with_report(report)
++}
++
++// Test-only injection keeps the mutation probe on these exact assertions.
++pub fn chaos_with_report(report: fn(Bool, List(String)) -> Dynamic) {
+   let r = report(True, ["blocked", ..list.repeat("verified", 99_999)])
+   number(r, "total") |> should.equal(100_000)
++  text(r, "verdict") |> should.equal("blocked")
+   rolled(r) |> should.equal("blocked")
+   number(r, "percent") |> should.equal(99)
+   let bad = report(True, list.repeat("divergent", 10_000))
++  text(bad, "verdict") |> should.equal("divergent")
+   rolled(bad) |> should.equal("divergent")
+   number(bad, "percent") |> should.equal(0)
+   rolled(report(False, [])) |> should.equal("verified")
+diff --git a/tests/ocaml_counterparts/test/scale_mutation_probe.gleam b/tests/ocaml_counterparts/test/scale_mutation_probe.gleam
+new file mode 100644
+index 0000000000..885b2995b3
+--- /dev/null
++++ b/tests/ocaml_counterparts/test/scale_mutation_probe.gleam
+@@ -0,0 +1,26 @@
++import gleam/erlang/charlist.{type Charlist}
++import gleam/json
++import gleeunit/should
++import hermes_harness/parity_algebra_test
++import ocaml_counterparts/native
++
++@external(erlang, "init", "get_plain_arguments")
++fn arguments() -> List(Charlist)
++
++// Executes the same scale assertions as chaos_test against an isolated adapter.
++pub fn main() {
++  let assert [path] = arguments()
++  parity_algebra_test.chaos_with_report(fn(required, verdicts) {
++    native.request_with(
++      charlist.to_string(path),
++      [],
++      "report",
++      json.object([
++        #("required", json.bool(required)),
++        #("verdicts", json.array(verdicts, json.string)),
++      ]),
++      30_000,
++    )
++    |> should.be_ok
++  })
++}
+

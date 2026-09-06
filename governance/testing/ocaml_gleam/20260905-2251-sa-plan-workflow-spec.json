@@ -1,0 +1,673 @@
+{
+  "version": 1,
+  "plan_id": "uos/ocaml-gleam-tests/v1",
+  "workflow_id": "uos/ocaml-gleam-tests/v1/workflow",
+  "backend": "Sa_plan.Store/sqlite/local-temporal-style-history",
+  "temporal_service_connected": false,
+  "dispatch_enabled": false,
+  "queue": "uos-ocaml-gleam-v1-reserved",
+  "source_baseline": "governance/testing/ocaml_gleam/20260905-2149-source-candidates.json",
+  "source_baseline_sha256": "fa274d8d918ca0d845f995651a8be508048f28c5d73da7367f2fcdea4a11ea51",
+  "source_revision": "22008c49704ab12e809537d0d7a7c43810158fba",
+  "candidate_files": 318,
+  "case_denominator": null,
+  "originals_policy": "retain-byte-for-byte-permanently",
+  "jobs_enforce_dependencies": false,
+  "required_worker_gate": "authorization + Store.claim_task + fresh source evidence before effects",
+  "unavailable": [
+    "Temporal server/SDK",
+    "signals",
+    "durable timers",
+    "workflow cancellation",
+    "worker dispatcher"
+  ],
+  "tasks": [
+    {
+      "id": "OGL",
+      "title": "Additive Gleam counterparts; retain every OCaml original",
+      "parent_id": null,
+      "dependencies": [
+        "OGL.94"
+      ]
+    },
+    {
+      "id": "OGL.00",
+      "title": "Freeze and validate source inventory; preserve originals and Dune files",
+      "parent_id": "OGL",
+      "dependencies": []
+    },
+    {
+      "id": "OGL.01",
+      "title": "Verify pinned OTP29, Gleam, OCaml and native build readiness",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.00"
+      ]
+    },
+    {
+      "id": "OGL.02",
+      "title": "Implement Gleam preservation gate and expanded Dune classification",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.00"
+      ]
+    },
+    {
+      "id": "OGL.03",
+      "title": "Implement all seven parity-algebra layers and bounded native adapter",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.01"
+      ]
+    },
+    {
+      "id": "OGL.04",
+      "title": "Independently review pilot, case map, transport and mutation evidence",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.02",
+        "OGL.03"
+      ]
+    },
+    {
+      "id": "OGL.05",
+      "title": "Admit pilot pattern only after fresh source-preservation and parity evidence",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.04"
+      ]
+    },
+    {
+      "id": "OGL.M01.D",
+      "title": "hermes_agent_loop: classify 17 candidates; enumerate cases and fixtures",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.00"
+      ]
+    },
+    {
+      "id": "OGL.M01.P",
+      "title": "hermes_agent_loop: implement traced Gleam assertions over original libraries",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M01.D",
+        "OGL.05"
+      ]
+    },
+    {
+      "id": "OGL.M01.V",
+      "title": "hermes_agent_loop: execute both suites, boundaries, properties and mutants",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M01.P",
+        "OGL.02"
+      ]
+    },
+    {
+      "id": "OGL.M01.R",
+      "title": "hermes_agent_loop: independent source-case and safety review",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M01.V"
+      ]
+    },
+    {
+      "id": "OGL.M02.D",
+      "title": "hermes_dependability: classify 23 candidates; enumerate cases and fixtures",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.00"
+      ]
+    },
+    {
+      "id": "OGL.M02.P",
+      "title": "hermes_dependability: implement traced Gleam assertions over original libraries",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M02.D",
+        "OGL.05"
+      ]
+    },
+    {
+      "id": "OGL.M02.V",
+      "title": "hermes_dependability: execute both suites, boundaries, properties and mutants",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M02.P",
+        "OGL.02"
+      ]
+    },
+    {
+      "id": "OGL.M02.R",
+      "title": "hermes_dependability: independent source-case and safety review",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M02.V"
+      ]
+    },
+    {
+      "id": "OGL.M03.D",
+      "title": "hermes_dune_graph: classify 1 candidates; enumerate cases and fixtures",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.00"
+      ]
+    },
+    {
+      "id": "OGL.M03.P",
+      "title": "hermes_dune_graph: implement traced Gleam assertions over original libraries",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M03.D",
+        "OGL.05"
+      ]
+    },
+    {
+      "id": "OGL.M03.V",
+      "title": "hermes_dune_graph: execute both suites, boundaries, properties and mutants",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M03.P",
+        "OGL.02"
+      ]
+    },
+    {
+      "id": "OGL.M03.R",
+      "title": "hermes_dune_graph: independent source-case and safety review",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M03.V"
+      ]
+    },
+    {
+      "id": "OGL.M04.D",
+      "title": "hermes_fpp_authority: classify 1 candidates; enumerate cases and fixtures",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.00"
+      ]
+    },
+    {
+      "id": "OGL.M04.P",
+      "title": "hermes_fpp_authority: implement traced Gleam assertions over original libraries",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M04.D",
+        "OGL.05"
+      ]
+    },
+    {
+      "id": "OGL.M04.V",
+      "title": "hermes_fpp_authority: execute both suites, boundaries, properties and mutants",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M04.P",
+        "OGL.02"
+      ]
+    },
+    {
+      "id": "OGL.M04.R",
+      "title": "hermes_fpp_authority: independent source-case and safety review",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M04.V"
+      ]
+    },
+    {
+      "id": "OGL.M05.D",
+      "title": "hermes_harness: classify 82 candidates; enumerate cases and fixtures",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.00"
+      ]
+    },
+    {
+      "id": "OGL.M05.P",
+      "title": "hermes_harness: implement traced Gleam assertions over original libraries",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M05.D",
+        "OGL.05"
+      ]
+    },
+    {
+      "id": "OGL.M05.V",
+      "title": "hermes_harness: execute both suites, boundaries, properties and mutants",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M05.P",
+        "OGL.02"
+      ]
+    },
+    {
+      "id": "OGL.M05.R",
+      "title": "hermes_harness: independent source-case and safety review",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M05.V"
+      ]
+    },
+    {
+      "id": "OGL.M06.D",
+      "title": "hermes_nix: classify 8 candidates; enumerate cases and fixtures",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.00"
+      ]
+    },
+    {
+      "id": "OGL.M06.P",
+      "title": "hermes_nix: implement traced Gleam assertions over original libraries",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M06.D",
+        "OGL.05"
+      ]
+    },
+    {
+      "id": "OGL.M06.V",
+      "title": "hermes_nix: execute both suites, boundaries, properties and mutants",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M06.P",
+        "OGL.02"
+      ]
+    },
+    {
+      "id": "OGL.M06.R",
+      "title": "hermes_nix: independent source-case and safety review",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M06.V"
+      ]
+    },
+    {
+      "id": "OGL.M07.D",
+      "title": "hermes_ops: classify 35 candidates; enumerate cases and fixtures",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.00"
+      ]
+    },
+    {
+      "id": "OGL.M07.P",
+      "title": "hermes_ops: implement traced Gleam assertions over original libraries",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M07.D",
+        "OGL.05"
+      ]
+    },
+    {
+      "id": "OGL.M07.V",
+      "title": "hermes_ops: execute both suites, boundaries, properties and mutants",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M07.P",
+        "OGL.02"
+      ]
+    },
+    {
+      "id": "OGL.M07.R",
+      "title": "hermes_ops: independent source-case and safety review",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M07.V"
+      ]
+    },
+    {
+      "id": "OGL.M08.D",
+      "title": "hermes_ops_dashboard: classify 23 candidates; enumerate cases and fixtures",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.00"
+      ]
+    },
+    {
+      "id": "OGL.M08.P",
+      "title": "hermes_ops_dashboard: implement traced Gleam assertions over original libraries",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M08.D",
+        "OGL.05"
+      ]
+    },
+    {
+      "id": "OGL.M08.V",
+      "title": "hermes_ops_dashboard: execute both suites, boundaries, properties and mutants",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M08.P",
+        "OGL.02"
+      ]
+    },
+    {
+      "id": "OGL.M08.R",
+      "title": "hermes_ops_dashboard: independent source-case and safety review",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M08.V"
+      ]
+    },
+    {
+      "id": "OGL.M09.D",
+      "title": "hermes_sysml: classify 6 candidates; enumerate cases and fixtures",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.00"
+      ]
+    },
+    {
+      "id": "OGL.M09.P",
+      "title": "hermes_sysml: implement traced Gleam assertions over original libraries",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M09.D",
+        "OGL.05"
+      ]
+    },
+    {
+      "id": "OGL.M09.V",
+      "title": "hermes_sysml: execute both suites, boundaries, properties and mutants",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M09.P",
+        "OGL.02"
+      ]
+    },
+    {
+      "id": "OGL.M09.R",
+      "title": "hermes_sysml: independent source-case and safety review",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M09.V"
+      ]
+    },
+    {
+      "id": "OGL.M10.D",
+      "title": "hermes_toolchain: classify 2 candidates; enumerate cases and fixtures",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.00"
+      ]
+    },
+    {
+      "id": "OGL.M10.P",
+      "title": "hermes_toolchain: implement traced Gleam assertions over original libraries",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M10.D",
+        "OGL.05"
+      ]
+    },
+    {
+      "id": "OGL.M10.V",
+      "title": "hermes_toolchain: execute both suites, boundaries, properties and mutants",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M10.P",
+        "OGL.02"
+      ]
+    },
+    {
+      "id": "OGL.M10.R",
+      "title": "hermes_toolchain: independent source-case and safety review",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M10.V"
+      ]
+    },
+    {
+      "id": "OGL.M11.D",
+      "title": "hermes_vcs: classify 19 candidates; enumerate cases and fixtures",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.00"
+      ]
+    },
+    {
+      "id": "OGL.M11.P",
+      "title": "hermes_vcs: implement traced Gleam assertions over original libraries",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M11.D",
+        "OGL.05"
+      ]
+    },
+    {
+      "id": "OGL.M11.V",
+      "title": "hermes_vcs: execute both suites, boundaries, properties and mutants",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M11.P",
+        "OGL.02"
+      ]
+    },
+    {
+      "id": "OGL.M11.R",
+      "title": "hermes_vcs: independent source-case and safety review",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M11.V"
+      ]
+    },
+    {
+      "id": "OGL.M12.D",
+      "title": "hermes_vision: classify 2 candidates; enumerate cases and fixtures",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.00"
+      ]
+    },
+    {
+      "id": "OGL.M12.P",
+      "title": "hermes_vision: implement traced Gleam assertions over original libraries",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M12.D",
+        "OGL.05"
+      ]
+    },
+    {
+      "id": "OGL.M12.V",
+      "title": "hermes_vision: execute both suites, boundaries, properties and mutants",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M12.P",
+        "OGL.02"
+      ]
+    },
+    {
+      "id": "OGL.M12.R",
+      "title": "hermes_vision: independent source-case and safety review",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M12.V"
+      ]
+    },
+    {
+      "id": "OGL.M13.D",
+      "title": "hermes_wiki: classify 69 candidates; enumerate cases and fixtures",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.00"
+      ]
+    },
+    {
+      "id": "OGL.M13.P",
+      "title": "hermes_wiki: implement traced Gleam assertions over original libraries",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M13.D",
+        "OGL.05"
+      ]
+    },
+    {
+      "id": "OGL.M13.V",
+      "title": "hermes_wiki: execute both suites, boundaries, properties and mutants",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M13.P",
+        "OGL.02"
+      ]
+    },
+    {
+      "id": "OGL.M13.R",
+      "title": "hermes_wiki: independent source-case and safety review",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M13.V"
+      ]
+    },
+    {
+      "id": "OGL.M14.D",
+      "title": "hermes_zellij: classify 3 candidates; enumerate cases and fixtures",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.00"
+      ]
+    },
+    {
+      "id": "OGL.M14.P",
+      "title": "hermes_zellij: implement traced Gleam assertions over original libraries",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M14.D",
+        "OGL.05"
+      ]
+    },
+    {
+      "id": "OGL.M14.V",
+      "title": "hermes_zellij: execute both suites, boundaries, properties and mutants",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M14.P",
+        "OGL.02"
+      ]
+    },
+    {
+      "id": "OGL.M14.R",
+      "title": "hermes_zellij: independent source-case and safety review",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M14.V"
+      ]
+    },
+    {
+      "id": "OGL.M15.D",
+      "title": "swarm: classify 18 candidates; enumerate cases and fixtures",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.00"
+      ]
+    },
+    {
+      "id": "OGL.M15.P",
+      "title": "swarm: implement traced Gleam assertions over original libraries",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M15.D",
+        "OGL.05"
+      ]
+    },
+    {
+      "id": "OGL.M15.V",
+      "title": "swarm: execute both suites, boundaries, properties and mutants",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M15.P",
+        "OGL.02"
+      ]
+    },
+    {
+      "id": "OGL.M15.R",
+      "title": "swarm: independent source-case and safety review",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M15.V"
+      ]
+    },
+    {
+      "id": "OGL.M16.D",
+      "title": "system_engg: classify 9 candidates; enumerate cases and fixtures",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.00"
+      ]
+    },
+    {
+      "id": "OGL.M16.P",
+      "title": "system_engg: implement traced Gleam assertions over original libraries",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M16.D",
+        "OGL.05"
+      ]
+    },
+    {
+      "id": "OGL.M16.V",
+      "title": "system_engg: execute both suites, boundaries, properties and mutants",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M16.P",
+        "OGL.02"
+      ]
+    },
+    {
+      "id": "OGL.M16.R",
+      "title": "system_engg: independent source-case and safety review",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M16.V"
+      ]
+    },
+    {
+      "id": "OGL.91",
+      "title": "Integrate all family evidence; report unknowns and nonstandard tests",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.M01.R",
+        "OGL.M02.R",
+        "OGL.M03.R",
+        "OGL.M04.R",
+        "OGL.M05.R",
+        "OGL.M06.R",
+        "OGL.M07.R",
+        "OGL.M08.R",
+        "OGL.M09.R",
+        "OGL.M10.R",
+        "OGL.M11.R",
+        "OGL.M12.R",
+        "OGL.M13.R",
+        "OGL.M14.R",
+        "OGL.M15.R",
+        "OGL.M16.R"
+      ]
+    },
+    {
+      "id": "OGL.92",
+      "title": "Recheck every original test, fixture, helper and Dune declaration unchanged",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.91"
+      ]
+    },
+    {
+      "id": "OGL.93",
+      "title": "Run final differential, fault, formal and mutation gates; reject vacuity",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.91"
+      ]
+    },
+    {
+      "id": "OGL.94",
+      "title": "Independent final review and explicit operator integration handoff",
+      "parent_id": "OGL",
+      "dependencies": [
+        "OGL.92",
+        "OGL.93"
+      ]
+    }
+  ]
+}

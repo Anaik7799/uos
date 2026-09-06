@@ -1,0 +1,647 @@
+diff --git a/engines/hermes/orchestration/ocaml_gleam_plan/dune b/engines/hermes/orchestration/ocaml_gleam_plan/dune
+new file mode 100644
+index 0000000000..8fdeeb1d92
+--- /dev/null
++++ b/engines/hermes/orchestration/ocaml_gleam_plan/dune
+@@ -0,0 +1,10 @@
++(library
++ (name ocaml_gleam_plan)
++ (wrapped false)
++ (modules migration_plan)
++ (libraries sa_plan yojson))
++
++(executable
++ (name plan_port)
++ (modules plan_port)
++ (libraries ocaml_gleam_plan sa_plan yojson unix))
+diff --git a/engines/hermes/orchestration/ocaml_gleam_plan/migration_plan.ml b/engines/hermes/orchestration/ocaml_gleam_plan/migration_plan.ml
+new file mode 100644
+index 0000000000..c57cd907a7
+--- /dev/null
++++ b/engines/hermes/orchestration/ocaml_gleam_plan/migration_plan.ml
+@@ -0,0 +1,177 @@
++module Management = Sa_plan.Management
++module Store = Sa_plan.Store
++
++let plan_id = "uos/ocaml-gleam-tests/v1"
++let workflow_id = plan_id ^ "/workflow"
++let queue = "uos-ocaml-gleam-v1-reserved"
++let title = "Additive Gleam counterparts; retain every OCaml original"
++let baseline = "governance/testing/ocaml_gleam/20260905-2149-source-candidates.json"
++let baseline_revision = "22008c49704ab12e809537d0d7a7c43810158fba"
++
++let families =
++  [ "hermes_agent_loop", 17; "hermes_dependability", 23;
++    "hermes_dune_graph", 1; "hermes_fpp_authority", 1;
++    "hermes_harness", 82; "hermes_nix", 8; "hermes_ops", 35;
++    "hermes_ops_dashboard", 23; "hermes_sysml", 6;
++    "hermes_toolchain", 2; "hermes_vcs", 19; "hermes_vision", 2;
++    "hermes_wiki", 69; "hermes_zellij", 3; "swarm", 18; "system_engg", 9 ]
++
++let node ?(parent_id = Some "OGL") id title dependencies =
++  Management.{ id; parent_id; task_type = Story; title;
++               estimate_points = None; dependencies }
++
++let family_id i stage = Printf.sprintf "OGL.M%02d.%s" (i + 1) stage
++let family_nodes =
++  List.mapi (fun i (family, candidates) ->
++    let d = family_id i "D" and p = family_id i "P"
++    and v = family_id i "V" and r = family_id i "R" in
++    [ node d (Printf.sprintf "%s: classify %d candidates; enumerate cases and fixtures" family candidates) ["OGL.00"];
++      node p (family ^ ": implement traced Gleam assertions over original libraries") [d; "OGL.05"];
++      node v (family ^ ": execute both suites, boundaries, properties and mutants") [p; "OGL.02"];
++      node r (family ^ ": independent source-case and safety review") [v] ]) families
++  |> List.concat
++
++let nodes =
++  [ node ~parent_id:None "OGL" title ["OGL.94"];
++    node "OGL.00" "Freeze and validate source inventory; preserve originals and Dune files" [];
++    node "OGL.01" "Verify pinned OTP29, Gleam, OCaml and native build readiness" ["OGL.00"];
++    node "OGL.02" "Implement Gleam preservation gate and expanded Dune classification" ["OGL.00"];
++    node "OGL.03" "Implement all seven parity-algebra layers and bounded native adapter" ["OGL.01"];
++    node "OGL.04" "Independently review pilot, case map, transport and mutation evidence" ["OGL.02"; "OGL.03"];
++    node "OGL.05" "Admit pilot pattern only after fresh source-preservation and parity evidence" ["OGL.04"] ]
++  @ family_nodes
++  @ [ node "OGL.91" "Integrate all family evidence; report unknowns and nonstandard tests" (List.mapi (fun i _ -> family_id i "R") families);
++      node "OGL.92" "Recheck every original test, fixture, helper and Dune declaration unchanged" ["OGL.91"];
++      node "OGL.93" "Run final differential, fault, formal and mutation gates; reject vacuity" ["OGL.91"];
++      node "OGL.94" "Independent final review and explicit operator integration handoff" ["OGL.92"; "OGL.93"] ]
++
++let strings values = `List (List.map (fun x -> `String x) values)
++let node_json (n : Management.plan_node) =
++  `Assoc ["id", `String n.id; "title", `String n.title;
++          "parent_id", (match n.parent_id with None -> `Null | Some p -> `String p);
++          "dependencies", strings n.dependencies]
++
++let specification =
++  `Assoc ["version", `Int 1; "plan_id", `String plan_id;
++          "workflow_id", `String workflow_id;
++          "backend", `String "Sa_plan.Store/sqlite/local-temporal-style-history";
++          "temporal_service_connected", `Bool false;
++          "dispatch_enabled", `Bool false; "queue", `String queue;
++          "source_baseline", `String baseline;
++          "source_revision", `String baseline_revision;
++          "candidate_files", `Int 318; "case_denominator", `Null;
++          "originals_policy", `String "retain-byte-for-byte-permanently";
++          "jobs_enforce_dependencies", `Bool false;
++          "required_worker_gate", `String "authorization + Store.claim_task + fresh source evidence before effects";
++          "unavailable", strings ["Temporal server/SDK"; "signals"; "durable timers"; "workflow cancellation"; "worker dispatcher"];
++          "tasks", `List (List.map node_json nodes)]
++
++let ( let* ) = Result.bind
++let workflow_kind = "uos.additive-ocaml-gleam.registration.v1"
++let workflow_input = Yojson.Basic.to_string specification
++let worker = "UosOcamlGleamReservedNoDispatcher"
++let job_nodes = List.filter (fun (n : Management.plan_node) -> n.id <> "OGL") nodes
++let job_id (n : Management.plan_node) = plan_id ^ "/jobs/" ^ n.id
++let job_name n = String.lowercase_ascii (job_id n)
++let job_args (n : Management.plan_node) =
++  `Assoc ["plan_id", `String plan_id; "task_id", `String n.id;
++          "workflow_id", `String workflow_id;
++          "activity_id", `String (n.id ^ "/execute/v1");
++          "idempotency_key", `String (plan_id ^ "/" ^ n.id ^ "/execute/v1");
++          "dependencies", strings n.dependencies;
++          "dispatch_enabled", `Bool false; "requires_task_claim", `Bool true;
++          "source_baseline", `String baseline;
++          "originals_policy", `String "retain-byte-for-byte-permanently";
++          "criticality", `String (if String.starts_with ~prefix:"OGL.M" n.id then "P1" else "P0");
++          "fmea_status", `String "assessment-required-no-invented-scores";
++          "effects", `List []]
++  |> Yojson.Basic.to_string
++
++let same_job (n : Management.plan_node) (j : Store.job_view) =
++  j.id = job_id n && j.name = job_name n && j.queue = queue
++  && j.worker = worker && j.args = job_args n && j.max_attempts = 3
++
++let job_state = function
++  | Store.Job_available -> "available" | Job_executing -> "executing"
++  | Job_retry -> "retry" | Job_completed -> "completed"
++  | Job_discarded -> "discarded" | Job_cancelled -> "cancelled"
++
++let rec all f = function
++  | [] -> Ok ()
++  | x :: xs -> let* () = f x in all f xs
++
++let ensure_workflow store ~now_ns =
++  let* workflows = Store.list_workflows store in
++  match List.find_opt (fun (w : Store.workflow_view) -> w.id = workflow_id) workflows with
++  | None -> Store.start_workflow_with_input store ~id:workflow_id
++              ~name:workflow_id ~kind:workflow_kind ~input:workflow_input ~now_ns
++  | Some w when w.name = workflow_id && w.kind = workflow_kind
++                && w.input = workflow_input && w.state = "running" -> Ok ()
++  | Some _ -> Error "workflow immutable input drift or terminal state; no overwrite"
++
++let ensure_jobs store ~now_ns =
++  let* existing = Store.list_jobs store ~queue:None in
++  all (fun n ->
++    match List.find_opt (fun (j : Store.job_view) -> j.id = job_id n) existing with
++    | Some j when same_job n j -> Ok ()
++    | Some _ -> Error ("job immutable input drift: " ^ n.id)
++    | None ->
++        let* _ = Store.enqueue_job store ~id:(job_id n) ~name:(job_name n)
++          ~queue ~worker ~args:(job_args n) ~max_attempts:3 ~now_ns in
++        Ok ()) job_nodes
++
++let observe store =
++  let* plan = Store.find_plan store ~id_or_name:plan_id in
++  let* () = match plan with
++    | Some p when p.title = title -> Ok ()
++    | _ -> Error "plan absent or title drift" in
++  let* tasks = Store.list_task_observations store ~plan_id in
++  let* jobs = Store.list_jobs store ~queue:(Some queue) in
++  let* workflows = Store.list_workflows store in
++  let* workflow = match List.find_opt
++      (fun (w : Store.workflow_view) -> w.id = workflow_id) workflows with
++    | Some w when w.name = workflow_id && w.kind = workflow_kind && w.input = workflow_input -> Ok w
++    | _ -> Error "workflow absent or immutable input drift" in
++  let* () =
++    if List.length tasks <> List.length nodes || List.length jobs <> List.length job_nodes then
++      Error "persisted task/job set is incomplete or has unexpected members"
++    else all (fun (n : Management.plan_node) ->
++      match List.find_opt (fun (t : Store.task_observation) -> t.task.id = n.id) tasks with
++      | Some t when t.task.title = n.title && t.task.parent_id = n.parent_id
++                    && List.sort String.compare t.dependencies = List.sort String.compare n.dependencies -> Ok ()
++      | _ -> Error ("task definition drift: " ^ n.id)) nodes in
++  let* () = all (fun n ->
++    match List.find_opt (fun (j : Store.job_view) -> j.id = job_id n) jobs with
++    | Some j when same_job n j -> Ok ()
++    | _ -> Error ("job definition drift: " ^ n.id)) job_nodes in
++  let* summary = Store.summary store ~plan_id in
++  let task_json (t : Store.task_observation) =
++    `Assoc ["id", `String t.task.id; "title", `String t.task.title;
++            "state", `String t.task.state; "attempt", `Int t.task.attempt;
++            "dependencies", strings t.dependencies] in
++  let job_json (j : Store.job_view) =
++    `Assoc ["id", `String j.id; "queue", `String j.queue;
++            "state", `String (job_state j.state); "attempt", `Int j.attempt;
++            "max_attempts", `Int j.max_attempts; "args", Yojson.Basic.from_string j.args] in
++  let event_json (e : Store.workflow_event) =
++    `Assoc ["sequence", `Int e.sequence; "kind", `String e.kind;
++            "occurred_at_ns", `String (Int64.to_string e.occurred_at_ns)] in
++  Ok (`Assoc ["plan_id", `String plan_id; "workflow_id", `String workflow_id;
++              "workflow_state", `String workflow.state;
++              "dispatch_enabled", `Bool false; "queue", `String queue;
++              "backend", `String "Sa_plan.Store/sqlite/local-temporal-style-history";
++              "temporal_service_connected", `Bool false;
++              "task_count", `Int (List.length tasks); "job_count", `Int (List.length jobs);
++              "completed", `Int summary.completed; "ready", `Int summary.ready;
++              "executing", `Int summary.executing;
++              "tasks", `List (List.map task_json tasks);
++              "jobs", `List (List.map job_json jobs);
++              "events", `List (List.map event_json workflow.events)])
++
++let materialize store ~now_ns =
++  if now_ns <= 0L then Error "registration requires positive observed UTC nanoseconds"
++  else Store.with_transaction store (fun () ->
++    let* () = Store.register_plan store ~id:plan_id ~title ~nodes in
++    let* () = ensure_workflow store ~now_ns in
++    let* () = ensure_jobs store ~now_ns in
++    observe store)
+diff --git a/engines/hermes/orchestration/ocaml_gleam_plan/migration_plan.mli b/engines/hermes/orchestration/ocaml_gleam_plan/migration_plan.mli
+new file mode 100644
+index 0000000000..7864226809
+--- /dev/null
++++ b/engines/hermes/orchestration/ocaml_gleam_plan/migration_plan.mli
+@@ -0,0 +1,16 @@
++(** Registration only: no worker, shell invocation, task completion, or external
++    effect is dispatched. Existing OCaml sources and tests are never written. *)
++val plan_id : string
++val workflow_id : string
++val queue : string
++val nodes : Sa_plan.Management.plan_node list
++val specification : Yojson.Basic.t
++
++(** Entire plan/workflow/job registration is atomic. Exact replay preserves
++    identities and histories; graph or immutable-input drift is an error. *)
++val materialize :
++  Sa_plan.Store.t -> now_ns:int64 -> (Yojson.Basic.t, string) result
++
++(** Observe persisted task dependencies, jobs and workflow events, without
++    claiming tasks/jobs or completing any work. *)
++val observe : Sa_plan.Store.t -> (Yojson.Basic.t, string) result
+diff --git a/engines/hermes/orchestration/ocaml_gleam_plan/plan_port.ml b/engines/hermes/orchestration/ocaml_gleam_plan/plan_port.ml
+new file mode 100644
+index 0000000000..17e76b873d
+--- /dev/null
++++ b/engines/hermes/orchestration/ocaml_gleam_plan/plan_port.ml
+@@ -0,0 +1,91 @@
++let max_frame = 8 * 1024 * 1024
++
++let read_frame () =
++  let header = really_input_string stdin 4 in
++  let size = ref 0 in
++  String.iter (fun c -> size := (!size lsl 8) lor Char.code c) header;
++  if !size < 1 || !size > max_frame then failwith "frame outside 1..8MiB";
++  really_input_string stdin !size |> Yojson.Basic.from_string
++
++let write_frame json =
++  let payload = Yojson.Basic.to_string json in
++  let n = String.length payload in
++  if n > max_frame then failwith "reply exceeds 8MiB";
++  List.iter (fun shift -> output_byte stdout ((n lsr shift) land 255)) [24;16;8;0];
++  output_string stdout payload;
++  flush stdout
++
++let member name = function
++  | `Assoc fields -> (match List.assoc_opt name fields with Some v -> v | None -> `Null)
++  | _ -> `Null
++
++let allowed_path path =
++  let prefixes =
++    [ "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/state/ocaml_gleam_tests/";
++      "/home/an/NAS-setup/uos/state/ocaml_gleam_tests/";
++      "/tmp/uos-sa-plan-" ] in
++  String.ends_with ~suffix:"/sa_plan.sqlite3" path
++  && List.exists (fun prefix -> String.starts_with ~prefix path) prefixes
++  && not (String.contains path '\000' || String.contains path '\\')
++  && (match String.split_on_char '/' path with
++      | "" :: parts -> List.for_all (fun p -> p <> "" && p <> "." && p <> "..") parts
++      | _ -> false)
++
++let rec ensure_directory ~create path =
++  if path = "/" then ()
++  else begin
++    ensure_directory ~create (Filename.dirname path);
++    match Unix.lstat path with
++    | st when st.Unix.st_kind = Unix.S_DIR -> ()
++    | _ -> failwith "non-directory or symlink in state path"
++    | exception Unix.Unix_error (Unix.ENOENT, _, _) when create -> Unix.mkdir path 0o700
++  end
++
++let with_store path ~create f =
++  if not (allowed_path path) then Error "state path outside declared task scope"
++  else
++    try
++      ensure_directory ~create (Filename.dirname path);
++      (match Unix.lstat path with
++       | st when st.Unix.st_kind = Unix.S_REG -> ()
++       | _ -> failwith "state file is not a regular file"
++       | exception Unix.Unix_error (Unix.ENOENT, _, _) when create -> ());
++      (* Directory permissions and lstat checks are local hygiene, not a
++         descriptor-relative guarantee against hostile concurrent renames. *)
++      let prior_umask = Unix.umask 0o077 in
++      let opened = Fun.protect ~finally:(fun () -> ignore (Unix.umask prior_umask))
++          (fun () -> Sa_plan.Store.open_db path) in
++      match opened with
++      | Error _ as error -> error
++      | Ok store -> Fun.protect ~finally:(fun () -> Sa_plan.Store.close store)
++                      (fun () -> f store)
++    with exn -> Error (Printexc.to_string exn)
++
++let handle path request =
++  let id = member "id" request and operation = member "operation" request in
++  let result =
++    if member "version" request <> `Int 1 then Error "unsupported protocol version"
++    else match id, operation with
++    | `String id, `String op when id <> "" && String.length id <= 128 ->
++        (match op with
++         | "spec" -> Ok Migration_plan.specification
++         | "register" ->
++             with_store path ~create:true (fun store ->
++               Migration_plan.materialize store
++                 ~now_ns:(Int64.of_float (Unix.gettimeofday () *. 1e9)))
++         | "status" -> with_store path ~create:false Migration_plan.observe
++         | _ -> Error "unsupported operation; only spec, register, status")
++    | _ -> Error "id and operation must be bounded nonempty strings"
++  in
++  let body = match result with
++    | Ok value -> "result", value
++    | Error message -> "error", `Assoc ["code", `String "sa_plan_refused"; "message", `String message] in
++  `Assoc ["version", `Int 1; "id", id; "operation", operation; body]
++
++let () =
++  match Array.to_list Sys.argv with
++  | [_; "--spec"] -> Yojson.Basic.pretty_to_channel stdout Migration_plan.specification; print_newline ()
++  | [_; "--db"; path] ->
++      (try let request = read_frame () in write_frame (handle path request)
++       with _ -> prerr_endline "invalid or incomplete SA-Plan request"; exit 2)
++  | _ -> prerr_endline "usage: plan_port.exe --spec | --db ABSOLUTE_TASK_STATE_PATH (framed stdin)"; exit 2
+diff --git a/engines/hermes/orchestration/ocaml_gleam_plan/testing/dune b/engines/hermes/orchestration/ocaml_gleam_plan/testing/dune
+new file mode 100644
+index 0000000000..3328279a84
+--- /dev/null
++++ b/engines/hermes/orchestration/ocaml_gleam_plan/testing/dune
+@@ -0,0 +1,4 @@
++(executable
++ (name plan_fixture)
++ (modules plan_fixture)
++ (libraries ocaml_gleam_plan sa_plan yojson unix))
+diff --git a/engines/hermes/orchestration/ocaml_gleam_plan/testing/plan_fixture.ml b/engines/hermes/orchestration/ocaml_gleam_plan/testing/plan_fixture.ml
+new file mode 100644
+index 0000000000..633d95f6b4
+--- /dev/null
++++ b/engines/hermes/orchestration/ocaml_gleam_plan/testing/plan_fixture.ml
+@@ -0,0 +1,71 @@
++(** Test-only native observations. Assertions and expected outcomes are in
++    Gleam. This executable is not a dispatcher or production fixture loader. *)
++module Store = Sa_plan.Store
++let ( let* ) = Result.bind
++let now_ns = 1_000_000_000L
++
++let observe_counts store rejected =
++  let* plan = Store.find_plan store ~id_or_name:Migration_plan.plan_id in
++  let* jobs = Store.list_jobs store ~queue:None in
++  let* workflows = Store.list_workflows store in
++  Ok (`Assoc ["plan_count", `Int (Option.fold ~none:0 ~some:(fun _ -> 1) plan);
++              "job_count", `Int (List.length jobs);
++              "workflow_count", `Int (List.length workflows);
++              "rejected", `Bool rejected])
++
++let scenario store = function
++  | "rollback" ->
++      let result = Store.with_transaction store (fun () ->
++        let* _ = Migration_plan.materialize store ~now_ns in
++        Error "injected outer transaction failure") in
++      observe_counts store (Result.is_error result)
++  | "workflow-conflict" ->
++      let* () = Store.start_workflow_with_input store ~id:Migration_plan.workflow_id
++        ~name:Migration_plan.workflow_id ~kind:"conflicting-kind" ~input:"unchanged-sentinel" ~now_ns in
++      let result = Migration_plan.materialize store ~now_ns in
++      observe_counts store (Result.is_error result)
++  | "job-conflict" ->
++      let* _ = Store.enqueue_job store ~id:(Migration_plan.plan_id ^ "/jobs/OGL.00")
++        ~name:"tests/conflicting-job" ~queue:Migration_plan.queue
++        ~worker:"UnchangedSentinel" ~args:"unchanged-sentinel" ~max_attempts:1 ~now_ns in
++      let result = Migration_plan.materialize store ~now_ns in
++      observe_counts store (Result.is_error result)
++  | "dependency-claims" ->
++      let* _ = Migration_plan.materialize store ~now_ns in
++      let dependent = Store.claim_task store ~plan_id:Migration_plan.plan_id
++        ~task_id:"OGL.01" ~worker:"gleam-test-observer" ~now_ns ~lease_ns:1_000_000L in
++      let ready = Store.claim_task store ~plan_id:Migration_plan.plan_id
++        ~task_id:"OGL.00" ~worker:"gleam-test-observer" ~now_ns ~lease_ns:1_000_000L in
++      let* jobs = Store.list_jobs store ~queue:None in
++      Ok (`Assoc ["dependent_refused", `Bool (Result.is_error dependent);
++                  "root_claimed", `Bool (Result.is_ok ready);
++                  "job_attempts", `Int (List.fold_left (fun n (j : Store.job_view) -> n + j.attempt) 0 jobs)])
++  | _ -> Error "unknown test observation"
++
++let () =
++  try
++    let database_path = match Array.to_list Sys.argv with
++      | [_; path] when String.starts_with ~prefix:"/tmp/uos-sa-plan-tests." path
++                      && not (List.mem ".." (String.split_on_char '/' path)) -> path
++      | _ -> failwith "test-only temporary database path required" in
++    Unix.mkdir (Filename.dirname database_path) 0o700;
++    let header = really_input_string stdin 4 in
++    let size = ref 0 in
++    String.iter (fun c -> size := (!size lsl 8) lor Char.code c) header;
++    if !size < 1 || !size > 4096 then failwith "invalid test request size";
++    let request = really_input_string stdin !size |> Yojson.Basic.from_string in
++    let open Yojson.Basic.Util in
++    let id = member "id" request and op = member "operation" request in
++    let result =
++      let* store = Store.open_db database_path in
++      Fun.protect ~finally:(fun () -> Store.close store)
++        (fun () -> scenario store (to_string op)) in
++    let body = match result with
++      | Ok value -> "result", value
++      | Error message -> "error", `Assoc ["code", `String "fixture_error"; "message", `String message] in
++    let response = `Assoc ["version", `Int 1; "id", id; "operation", op; body]
++      |> Yojson.Basic.to_string in
++    let n = String.length response in
++    List.iter (fun shift -> output_byte stdout ((n lsr shift) land 255)) [24;16;8;0];
++    output_string stdout response; flush stdout
++  with exn -> prerr_endline (Printexc.to_string exn); exit 2
+diff --git a/state/ocaml_gleam_tests/.gitignore b/state/ocaml_gleam_tests/.gitignore
+new file mode 100644
+index 0000000000..a4012ea47e
+--- /dev/null
++++ b/state/ocaml_gleam_tests/.gitignore
+@@ -0,0 +1,2 @@
++*.sqlite3
++*.sqlite3-*
+diff --git a/tests/ocaml_gleam_orchestration/gleam.toml b/tests/ocaml_gleam_orchestration/gleam.toml
+new file mode 100644
+index 0000000000..08eb051411
+--- /dev/null
++++ b/tests/ocaml_gleam_orchestration/gleam.toml
+@@ -0,0 +1,13 @@
++name = "ocaml_gleam_orchestration"
++version = "0.1.0"
++target = "erlang"
++
++[dependencies]
++gleam_stdlib = "== 0.71.0"
++gleam_json = "== 3.1.0"
++envoy = "== 1.1.0"
++simplifile = "== 2.4.0"
++ocaml_counterparts = { path = "../ocaml_counterparts" }
++
++[dev-dependencies]
++gleeunit = "== 1.9.0"
+diff --git a/tests/ocaml_gleam_orchestration/manifest.toml b/tests/ocaml_gleam_orchestration/manifest.toml
+new file mode 100644
+index 0000000000..3256b3aa3a
+--- /dev/null
++++ b/tests/ocaml_gleam_orchestration/manifest.toml
+@@ -0,0 +1,22 @@
++# This file was generated by Gleam
++# You typically do not need to edit this file
++
++packages = [
++  { name = "envoy", version = "1.1.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "envoy", source = "hex", outer_checksum = "850DA9D29D2E5987735872A2B5C81035146D7FE19EFC486129E44440D03FD832" },
++  { name = "exception", version = "2.1.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "exception", source = "hex", outer_checksum = "329D269D5C2A314F7364BD2711372B6F2C58FA6F39981572E5CA68624D291F8C" },
++  { name = "filepath", version = "1.1.2", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "filepath", source = "hex", outer_checksum = "B06A9AF0BF10E51401D64B98E4B627F1D2E48C154967DA7AF4D0914780A6D40A" },
++  { name = "gleam_erlang", version = "1.3.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_erlang", source = "hex", outer_checksum = "1124AD3AA21143E5AF0FC5CF3D9529F6DB8CA03E43A55711B60B6B7B3874375C" },
++  { name = "gleam_json", version = "3.1.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleam_json", source = "hex", outer_checksum = "44FDAA8847BE8FC48CA7A1C089706BD54BADCC4C45B237A992EDDF9F2CDB2836" },
++  { name = "gleam_stdlib", version = "0.71.0", build_tools = ["gleam"], requirements = [], otp_app = "gleam_stdlib", source = "hex", outer_checksum = "702F3BC2A14793906880B1078B19A6165F87323AEE8D0C4A34085846336FCAAE" },
++  { name = "gleeunit", version = "1.9.0", build_tools = ["gleam"], requirements = ["gleam_stdlib"], otp_app = "gleeunit", source = "hex", outer_checksum = "DA9553CE58B67924B3C631F96FE3370C49EB6D6DC6B384EC4862CC4AAA718F3C" },
++  { name = "ocaml_counterparts", version = "0.1.0", build_tools = ["gleam"], requirements = ["exception", "gleam_erlang", "gleam_json", "gleam_stdlib"], source = "local", path = "../ocaml_counterparts" },
++  { name = "simplifile", version = "2.4.0", build_tools = ["gleam"], requirements = ["filepath", "gleam_stdlib"], otp_app = "simplifile", source = "hex", outer_checksum = "7C18AFA4FED0B4CE1FA5B0B4BAC1FA1744427054EA993565F6F3F82E5453170D" },
++]
++
++[requirements]
++envoy = { version = "== 1.1.0" }
++gleam_json = { version = "== 3.1.0" }
++gleam_stdlib = { version = "== 0.71.0" }
++gleeunit = { version = "== 1.9.0" }
++ocaml_counterparts = { path = "../ocaml_counterparts" }
++simplifile = { version = "== 2.4.0" }
+diff --git a/tests/ocaml_gleam_orchestration/src/ocaml_gleam_orchestration.gleam b/tests/ocaml_gleam_orchestration/src/ocaml_gleam_orchestration.gleam
+new file mode 100644
+index 0000000000..c3906bbc53
+--- /dev/null
++++ b/tests/ocaml_gleam_orchestration/src/ocaml_gleam_orchestration.gleam
+@@ -0,0 +1,42 @@
++import envoy
++import gleam/dynamic.{type Dynamic}
++import gleam/dynamic/decode
++import gleam/io
++import gleam/json
++import ocaml_counterparts/native
++
++pub fn request(operation: String, database: String) -> Result(Dynamic, String) {
++  let assert Ok(executable) = envoy.get("UOS_PLAN_PORT")
++  native.request_with(
++    executable,
++    ["--db", database],
++    operation,
++    json.object([]),
++    30_000,
++  )
++}
++
++pub fn main() {
++  let assert Ok(database) = envoy.get("UOS_PLAN_DB")
++  let assert Ok(operation) = envoy.get("UOS_PLAN_OPERATION")
++  let assert Ok(observation) = request(operation, database)
++  let assert Ok(encoded) = decode.run(observation, json_value_decoder())
++  io.println(json.to_string(encoded))
++}
++
++fn json_value_decoder() -> decode.Decoder(json.Json) {
++  use plan_id <- decode.field("plan_id", decode.string)
++  use task_count <- decode.field("task_count", decode.int)
++  use job_count <- decode.field("job_count", decode.int)
++  use workflow_state <- decode.field("workflow_state", decode.string)
++  use dispatch_enabled <- decode.field("dispatch_enabled", decode.bool)
++  decode.success(
++    json.object([
++      #("plan_id", json.string(plan_id)),
++      #("task_count", json.int(task_count)),
++      #("job_count", json.int(job_count)),
++      #("workflow_state", json.string(workflow_state)),
++      #("dispatch_enabled", json.bool(dispatch_enabled)),
++    ]),
++  )
++}
+diff --git a/tests/ocaml_gleam_orchestration/test/ocaml_gleam_orchestration_test.gleam b/tests/ocaml_gleam_orchestration/test/ocaml_gleam_orchestration_test.gleam
+new file mode 100644
+index 0000000000..c7bdb5aa6d
+--- /dev/null
++++ b/tests/ocaml_gleam_orchestration/test/ocaml_gleam_orchestration_test.gleam
+@@ -0,0 +1,132 @@
++import envoy
++import gleam/dynamic.{type Dynamic}
++import gleam/dynamic/decode
++import gleam/json
++import gleam/list
++import gleeunit
++import gleeunit/should
++import ocaml_counterparts/native
++import ocaml_gleam_orchestration as plan
++import simplifile
++
++pub fn main() {
++  gleeunit.main()
++}
++
++pub fn registers_all_tasks_and_jobs_test() {
++  let assert Ok(root) = envoy.get("UOS_PLAN_TEST_ROOT")
++  let assert Ok(observed) =
++    plan.request("register", root <> "/registration/sa_plan.sqlite3")
++  let assert Ok(task_count) =
++    decode.run(observed, decode.at(["task_count"], decode.int))
++  let assert Ok(job_count) =
++    decode.run(observed, decode.at(["job_count"], decode.int))
++  task_count |> should.equal(75)
++  job_count |> should.equal(74)
++}
++
++fn database(name: String) -> String {
++  let assert Ok(root) = envoy.get("UOS_PLAN_TEST_ROOT")
++  root <> "/" <> name <> "/sa_plan.sqlite3"
++}
++
++fn integer(observed: Dynamic, field: String) -> Int {
++  let assert Ok(value) = decode.run(observed, decode.at([field], decode.int))
++  value
++}
++
++pub fn replay_and_new_process_readback_are_identical_test() {
++  let path = database("replay")
++  let assert Ok(first) = plan.request("register", path)
++  let assert Ok(second) = plan.request("register", path)
++  let assert Ok(reopened) = plan.request("status", path)
++  second |> should.equal(first)
++  reopened |> should.equal(first)
++  integer(first, "completed") |> should.equal(0)
++  integer(first, "executing") |> should.equal(0)
++  integer(first, "ready") |> should.equal(1)
++  let assert Ok(dispatch) =
++    decode.run(first, decode.at(["dispatch_enabled"], decode.bool))
++  dispatch |> should.be_false
++  let assert Ok(events) =
++    decode.run(first, decode.at(["events"], decode.list(decode.dynamic)))
++  list.length(events) |> should.equal(1)
++}
++
++pub fn missing_status_never_creates_database_test() {
++  let path = database("missing")
++  plan.request("status", path) |> should.be_error
++  simplifile.is_file(path) |> should.equal(Ok(False))
++}
++
++pub fn undeclared_paths_are_rejected_before_creation_test() {
++  plan.request("register", "/tmp/not-a-uos-plan/sa_plan.sqlite3")
++  |> should.be_error
++  plan.request("register", database("../escape")) |> should.be_error
++}
++
++pub fn symlink_state_path_is_rejected_test() {
++  let assert Ok(root) = envoy.get("UOS_PLAN_TEST_ROOT")
++  let target = root <> "/symlink-target"
++  let link = root <> "/symlink-alias"
++  let assert Ok(_) = simplifile.create_directory(target)
++  let assert Ok(_) = simplifile.create_symlink(target, link)
++  plan.request("register", link <> "/sa_plan.sqlite3") |> should.be_error
++  simplifile.is_file(target <> "/sa_plan.sqlite3") |> should.equal(Ok(False))
++  let assert Ok(_) = simplifile.delete_file(link)
++  let assert Ok(_) = simplifile.delete(target)
++}
++
++fn fixture(mode: String) -> Dynamic {
++  let assert Ok(executable) = envoy.get("UOS_PLAN_FIXTURE")
++  let assert Ok(response) =
++    native.request_with(
++      executable,
++      [database(mode)],
++      mode,
++      json.object([]),
++      30_000,
++    )
++  response
++}
++
++pub fn transaction_rollback_removes_partial_plan_jobs_workflow_test() {
++  let observed = fixture("rollback")
++  integer(observed, "plan_count") |> should.equal(0)
++  integer(observed, "job_count") |> should.equal(0)
++  integer(observed, "workflow_count") |> should.equal(0)
++  let assert Ok(rejected) =
++    decode.run(observed, decode.at(["rejected"], decode.bool))
++  rejected |> should.be_true
++}
++
++pub fn conflicting_workflow_is_not_overwritten_test() {
++  let observed = fixture("workflow-conflict")
++  integer(observed, "plan_count") |> should.equal(0)
++  integer(observed, "job_count") |> should.equal(0)
++  integer(observed, "workflow_count") |> should.equal(1)
++  let assert Ok(rejected) =
++    decode.run(observed, decode.at(["rejected"], decode.bool))
++  rejected |> should.be_true
++}
++
++pub fn conflicting_job_rolls_back_new_plan_and_workflow_test() {
++  let observed = fixture("job-conflict")
++  integer(observed, "plan_count") |> should.equal(0)
++  integer(observed, "job_count") |> should.equal(1)
++  integer(observed, "workflow_count") |> should.equal(0)
++  let assert Ok(rejected) =
++    decode.run(observed, decode.at(["rejected"], decode.bool))
++  rejected |> should.be_true
++}
++
++pub fn task_claims_enforce_dependencies_and_no_work_is_auto_claimed_test() {
++  let observed = fixture("dependency-claims")
++  let assert Ok(blocked) =
++    decode.run(observed, decode.at(["dependent_refused"], decode.bool))
++  let assert Ok(ready) =
++    decode.run(observed, decode.at(["root_claimed"], decode.bool))
++  blocked |> should.be_true
++  ready |> should.be_true
++  integer(observed, "job_attempts") |> should.equal(0)
++}
+

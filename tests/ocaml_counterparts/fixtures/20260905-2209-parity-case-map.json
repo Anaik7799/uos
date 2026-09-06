@@ -1,0 +1,1148 @@
+{
+  "schema_version": 1,
+  "status": "executed_passed_pending_independent_review",
+  "source_sha256": "13644f83e002d23fc26338ebdd4ca92ccd6a6b6482cf9ab93af9cf0ff9c62644",
+  "source_boundary": "test_parity_algebra.exe -> hermes_harness_parity_algebra + hermes_wiki_diag; original runner unchanged",
+  "counterpart_boundary": "Gleam -> one-shot parity_port.exe -> same native libraries",
+  "source_labels": 42,
+  "original_nominal_checks": 146,
+  "cases": [
+    {
+      "id": "parity-001",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:22",
+      "source_label": "UNIT verdict names are distinct",
+      "fixture": [
+        "unmapped",
+        "blocked",
+        "verified",
+        "divergent"
+      ],
+      "expected": "four distinct native names",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "unit_and_structure_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-002",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:23",
+      "source_label": "UNIT verified grants credit",
+      "fixture": [
+        "verified"
+      ],
+      "expected": "true",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "unit_and_structure_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-003",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:28",
+      "source_label": "UNIT <verdict> withholds credit",
+      "fixture": [
+        "unmapped",
+        "blocked",
+        "divergent"
+      ],
+      "expected": "false for each",
+      "original_nominal_check_multiplicity": 3,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "unit_and_structure_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-004",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:31",
+      "source_label": "UNIT divergent asserts a defect",
+      "fixture": [
+        "divergent"
+      ],
+      "expected": "true",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "unit_and_structure_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-005",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:36",
+      "source_label": "UNIT <verdict> asserts no defect",
+      "fixture": [
+        "unmapped",
+        "blocked",
+        "verified"
+      ],
+      "expected": "false for each",
+      "original_nominal_check_multiplicity": 3,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "unit_and_structure_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-006",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:50",
+      "source_label": "PROPERTY combine is commutative",
+      "fixture": [
+        [
+          "unmapped",
+          "unmapped"
+        ],
+        [
+          "unmapped",
+          "blocked"
+        ],
+        [
+          "unmapped",
+          "verified"
+        ],
+        [
+          "unmapped",
+          "divergent"
+        ],
+        [
+          "blocked",
+          "unmapped"
+        ],
+        [
+          "blocked",
+          "blocked"
+        ],
+        [
+          "blocked",
+          "verified"
+        ],
+        [
+          "blocked",
+          "divergent"
+        ],
+        [
+          "verified",
+          "unmapped"
+        ],
+        [
+          "verified",
+          "blocked"
+        ],
+        [
+          "verified",
+          "verified"
+        ],
+        [
+          "verified",
+          "divergent"
+        ],
+        [
+          "divergent",
+          "unmapped"
+        ],
+        [
+          "divergent",
+          "blocked"
+        ],
+        [
+          "divergent",
+          "verified"
+        ],
+        [
+          "divergent",
+          "divergent"
+        ]
+      ],
+      "expected": "native combine(a,b) = native combine(b,a)",
+      "original_nominal_check_multiplicity": 16,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "property_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-007",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:65",
+      "source_label": "PROPERTY combine is associative",
+      "fixture": [
+        [
+          "unmapped",
+          "unmapped",
+          "unmapped"
+        ],
+        [
+          "unmapped",
+          "unmapped",
+          "blocked"
+        ],
+        [
+          "unmapped",
+          "unmapped",
+          "verified"
+        ],
+        [
+          "unmapped",
+          "unmapped",
+          "divergent"
+        ],
+        [
+          "unmapped",
+          "blocked",
+          "unmapped"
+        ],
+        [
+          "unmapped",
+          "blocked",
+          "blocked"
+        ],
+        [
+          "unmapped",
+          "blocked",
+          "verified"
+        ],
+        [
+          "unmapped",
+          "blocked",
+          "divergent"
+        ],
+        [
+          "unmapped",
+          "verified",
+          "unmapped"
+        ],
+        [
+          "unmapped",
+          "verified",
+          "blocked"
+        ],
+        [
+          "unmapped",
+          "verified",
+          "verified"
+        ],
+        [
+          "unmapped",
+          "verified",
+          "divergent"
+        ],
+        [
+          "unmapped",
+          "divergent",
+          "unmapped"
+        ],
+        [
+          "unmapped",
+          "divergent",
+          "blocked"
+        ],
+        [
+          "unmapped",
+          "divergent",
+          "verified"
+        ],
+        [
+          "unmapped",
+          "divergent",
+          "divergent"
+        ],
+        [
+          "blocked",
+          "unmapped",
+          "unmapped"
+        ],
+        [
+          "blocked",
+          "unmapped",
+          "blocked"
+        ],
+        [
+          "blocked",
+          "unmapped",
+          "verified"
+        ],
+        [
+          "blocked",
+          "unmapped",
+          "divergent"
+        ],
+        [
+          "blocked",
+          "blocked",
+          "unmapped"
+        ],
+        [
+          "blocked",
+          "blocked",
+          "blocked"
+        ],
+        [
+          "blocked",
+          "blocked",
+          "verified"
+        ],
+        [
+          "blocked",
+          "blocked",
+          "divergent"
+        ],
+        [
+          "blocked",
+          "verified",
+          "unmapped"
+        ],
+        [
+          "blocked",
+          "verified",
+          "blocked"
+        ],
+        [
+          "blocked",
+          "verified",
+          "verified"
+        ],
+        [
+          "blocked",
+          "verified",
+          "divergent"
+        ],
+        [
+          "blocked",
+          "divergent",
+          "unmapped"
+        ],
+        [
+          "blocked",
+          "divergent",
+          "blocked"
+        ],
+        [
+          "blocked",
+          "divergent",
+          "verified"
+        ],
+        [
+          "blocked",
+          "divergent",
+          "divergent"
+        ],
+        [
+          "verified",
+          "unmapped",
+          "unmapped"
+        ],
+        [
+          "verified",
+          "unmapped",
+          "blocked"
+        ],
+        [
+          "verified",
+          "unmapped",
+          "verified"
+        ],
+        [
+          "verified",
+          "unmapped",
+          "divergent"
+        ],
+        [
+          "verified",
+          "blocked",
+          "unmapped"
+        ],
+        [
+          "verified",
+          "blocked",
+          "blocked"
+        ],
+        [
+          "verified",
+          "blocked",
+          "verified"
+        ],
+        [
+          "verified",
+          "blocked",
+          "divergent"
+        ],
+        [
+          "verified",
+          "verified",
+          "unmapped"
+        ],
+        [
+          "verified",
+          "verified",
+          "blocked"
+        ],
+        [
+          "verified",
+          "verified",
+          "verified"
+        ],
+        [
+          "verified",
+          "verified",
+          "divergent"
+        ],
+        [
+          "verified",
+          "divergent",
+          "unmapped"
+        ],
+        [
+          "verified",
+          "divergent",
+          "blocked"
+        ],
+        [
+          "verified",
+          "divergent",
+          "verified"
+        ],
+        [
+          "verified",
+          "divergent",
+          "divergent"
+        ],
+        [
+          "divergent",
+          "unmapped",
+          "unmapped"
+        ],
+        [
+          "divergent",
+          "unmapped",
+          "blocked"
+        ],
+        [
+          "divergent",
+          "unmapped",
+          "verified"
+        ],
+        [
+          "divergent",
+          "unmapped",
+          "divergent"
+        ],
+        [
+          "divergent",
+          "blocked",
+          "unmapped"
+        ],
+        [
+          "divergent",
+          "blocked",
+          "blocked"
+        ],
+        [
+          "divergent",
+          "blocked",
+          "verified"
+        ],
+        [
+          "divergent",
+          "blocked",
+          "divergent"
+        ],
+        [
+          "divergent",
+          "verified",
+          "unmapped"
+        ],
+        [
+          "divergent",
+          "verified",
+          "blocked"
+        ],
+        [
+          "divergent",
+          "verified",
+          "verified"
+        ],
+        [
+          "divergent",
+          "verified",
+          "divergent"
+        ],
+        [
+          "divergent",
+          "divergent",
+          "unmapped"
+        ],
+        [
+          "divergent",
+          "divergent",
+          "blocked"
+        ],
+        [
+          "divergent",
+          "divergent",
+          "verified"
+        ],
+        [
+          "divergent",
+          "divergent",
+          "divergent"
+        ]
+      ],
+      "expected": "native combine(combine(a,b),c) = native combine(a,combine(b,c))",
+      "original_nominal_check_multiplicity": 64,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "property_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-008",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:73",
+      "source_label": "PROPERTY combine is idempotent",
+      "fixture": [
+        "unmapped",
+        "blocked",
+        "verified",
+        "divergent"
+      ],
+      "expected": "native combine(a,a) = a",
+      "original_nominal_check_multiplicity": 4,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "property_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-009",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:81",
+      "source_label": "PROPERTY identity is neutral",
+      "fixture": [
+        "unmapped",
+        "blocked",
+        "verified",
+        "divergent"
+      ],
+      "expected": "native combine(native identity,a) = a",
+      "original_nominal_check_multiplicity": 4,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "property_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-010",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:89",
+      "source_label": "PROPERTY divergent absorbs",
+      "fixture": [
+        "unmapped",
+        "blocked",
+        "verified",
+        "divergent"
+      ],
+      "expected": "native combine(divergent,a) = divergent",
+      "original_nominal_check_multiplicity": 4,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "property_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-011",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:102",
+      "source_label": "PROPERTY roll-up grants credit only when every child does",
+      "fixture": [
+        [
+          "unmapped",
+          "unmapped"
+        ],
+        [
+          "unmapped",
+          "blocked"
+        ],
+        [
+          "unmapped",
+          "verified"
+        ],
+        [
+          "unmapped",
+          "divergent"
+        ],
+        [
+          "blocked",
+          "unmapped"
+        ],
+        [
+          "blocked",
+          "blocked"
+        ],
+        [
+          "blocked",
+          "verified"
+        ],
+        [
+          "blocked",
+          "divergent"
+        ],
+        [
+          "verified",
+          "unmapped"
+        ],
+        [
+          "verified",
+          "blocked"
+        ],
+        [
+          "verified",
+          "verified"
+        ],
+        [
+          "verified",
+          "divergent"
+        ],
+        [
+          "divergent",
+          "unmapped"
+        ],
+        [
+          "divergent",
+          "blocked"
+        ],
+        [
+          "divergent",
+          "verified"
+        ],
+        [
+          "divergent",
+          "divergent"
+        ]
+      ],
+      "expected": "after.credit = before.credit AND added is verified; unit layer independently verifies native grants_credit for all added verdicts",
+      "original_nominal_check_multiplicity": 16,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "property_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-012",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:111",
+      "source_label": "PROPERTY roll-up is order independent",
+      "fixture": [
+        [
+          "verified",
+          "blocked",
+          "unmapped"
+        ],
+        [
+          "unmapped",
+          "blocked",
+          "verified"
+        ]
+      ],
+      "expected": "native rollups equal",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "property_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-013",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:123",
+      "source_label": "BDD an empty required node is unmapped, not verified",
+      "fixture": {
+        "required": true,
+        "verdicts": []
+      },
+      "expected": "unmapped; also initial RED in bdd_empty_required_test",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "bdd_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-014",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:126",
+      "source_label": "BDD an empty required node grants no credit",
+      "fixture": {
+        "required": true,
+        "verdicts": []
+      },
+      "expected": "false",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "bdd_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-015",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:134",
+      "source_label": "BDD one blocked child blocks the family",
+      "fixture": [
+        "verified",
+        "verified",
+        "blocked"
+      ],
+      "expected": "blocked",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "bdd_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-016",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:142",
+      "source_label": "BDD divergence outranks blockage",
+      "fixture": [
+        "blocked",
+        "divergent"
+      ],
+      "expected": "divergent",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "bdd_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-017",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:149",
+      "source_label": "BDD all verified children verify the family",
+      "fixture": [
+        "verified",
+        "verified"
+      ],
+      "expected": "verified",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "bdd_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-018",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:156",
+      "source_label": "BDD blocked credit maps to Blocked, not Divergent",
+      "fixture": [
+        "Fractal_diagnostic.Blocks_credit"
+      ],
+      "expected": "blocked",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "bdd_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-019",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:160",
+      "source_label": "BDD denied credit maps to Divergent",
+      "fixture": [
+        "Fractal_diagnostic.Denies_credit"
+      ],
+      "expected": "divergent",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "bdd_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-020",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:170",
+      "source_label": "FEATURE report counts children",
+      "fixture": [
+        "verified",
+        "verified",
+        "blocked",
+        "unmapped"
+      ],
+      "expected": "total = 4",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "feature_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-021",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:171",
+      "source_label": "FEATURE report counts verified",
+      "fixture": [
+        "verified",
+        "verified",
+        "blocked",
+        "unmapped"
+      ],
+      "expected": "verified = 2",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "feature_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-022",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:172",
+      "source_label": "FEATURE report counts blocked",
+      "fixture": [
+        "verified",
+        "verified",
+        "blocked",
+        "unmapped"
+      ],
+      "expected": "blocked = 1",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "feature_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-023",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:173",
+      "source_label": "FEATURE report counts unmapped",
+      "fixture": [
+        "verified",
+        "verified",
+        "blocked",
+        "unmapped"
+      ],
+      "expected": "unmapped = 1",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "feature_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-024",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:174",
+      "source_label": "FEATURE report verdict is the roll-up",
+      "fixture": [
+        "verified",
+        "verified",
+        "blocked",
+        "unmapped"
+      ],
+      "expected": "verdict and rolled = blocked",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "feature_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-025",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:175",
+      "source_label": "FEATURE percent is verified/total",
+      "fixture": [
+        "verified",
+        "verified",
+        "blocked",
+        "unmapped"
+      ],
+      "expected": "percent = 50",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "feature_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-026",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:184",
+      "source_label": "FEATURE nearly-complete percent is high",
+      "fixture": {
+        "head": "blocked",
+        "tail": {
+          "repeat": "verified",
+          "count": 94
+        }
+      },
+      "expected": "percent = 98",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "feature_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-027",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:187",
+      "source_label": "FEATURE nearly-complete is still not verified",
+      "fixture": {
+        "head": "blocked",
+        "tail": {
+          "repeat": "verified",
+          "count": 94
+        }
+      },
+      "expected": "verdict != verified",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "feature_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-028",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:190",
+      "source_label": "FEATURE report renders",
+      "fixture": {
+        "head": "blocked",
+        "tail": {
+          "repeat": "verified",
+          "count": 94
+        }
+      },
+      "expected": "rendered length > 0",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "feature_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-029",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:217",
+      "source_label": "FUZZ algebra invariants hold",
+      "fixture": {
+        "fixture": "fixtures/20260905-2209-parity-random-vectors.json",
+        "count": 2000
+      },
+      "expected": "Each vector: report.verdict=rolled; category sum=total; 0<=percent<=100; credit implies all verified; divergent membership implies divergent rollup. All asserted in Gleam; additional total=input length check.",
+      "original_nominal_check_multiplicity": 0,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "fuzz_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-030",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:218",
+      "source_label": "FUZZ algebra does not raise",
+      "fixture": {
+        "fixture": "fixtures/20260905-2209-parity-random-vectors.json",
+        "count": 2000
+      },
+      "expected": "Any native exception/nonzero exit/timeout fails should.be_ok; no passing skip",
+      "original_nominal_check_multiplicity": 0,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "fuzz_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-031",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:220",
+      "source_label": "FUZZ 2000 random roll-ups hold every invariant",
+      "fixture": {
+        "fixture": "fixtures/20260905-2209-parity-random-vectors.json",
+        "count": 2000
+      },
+      "expected": "2000 records; all source invariants asserted for each; exact ordered inputs and required flags equal pinned fixture",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "fuzz_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-032",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:231",
+      "source_label": "CHAOS 100k children counted",
+      "fixture": {
+        "head": "blocked",
+        "tail": {
+          "repeat": "verified",
+          "count": 99999
+        }
+      },
+      "expected": "total = 100000",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "chaos_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-033",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:232",
+      "source_label": "CHAOS one blocked child still blocks",
+      "fixture": {
+        "head": "blocked",
+        "tail": {
+          "repeat": "verified",
+          "count": 99999
+        }
+      },
+      "expected": "report.verdict = blocked; additional rolled = blocked assertion retained",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "chaos_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-034",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:235",
+      "source_label": "CHAOS percent does not overflow",
+      "fixture": {
+        "head": "blocked",
+        "tail": {
+          "repeat": "verified",
+          "count": 99999
+        }
+      },
+      "expected": "percent = 99",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "chaos_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-035",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:240",
+      "source_label": "CHAOS mass divergence is divergent",
+      "fixture": {
+        "repeat": "divergent",
+        "count": 10000
+      },
+      "expected": "report.verdict = divergent; additional rolled = divergent assertion retained",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "chaos_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-036",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:241",
+      "source_label": "CHAOS mass divergence is 0%",
+      "fixture": {
+        "repeat": "divergent",
+        "count": 10000
+      },
+      "expected": "percent = 0",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "chaos_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-037",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:247",
+      "source_label": "CHAOS empty optional node is verified",
+      "fixture": {
+        "required": false,
+        "verdicts": []
+      },
+      "expected": "verified",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "chaos_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-038",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:250",
+      "source_label": "CHAOS empty required node is unmapped",
+      "fixture": {
+        "required": true,
+        "verdicts": []
+      },
+      "expected": "unmapped",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "chaos_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-039",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:256",
+      "source_label": "STRUCTURE every verdict enumerated",
+      "fixture": [
+        "unmapped",
+        "blocked",
+        "verified",
+        "divergent"
+      ],
+      "expected": "four native verdict records",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "unit_and_structure_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-040",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:261",
+      "source_label": "STRUCTURE exactly one verdict grants credit",
+      "fixture": [
+        "unmapped",
+        "blocked",
+        "verified",
+        "divergent"
+      ],
+      "expected": "one native grants_credit true",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "unit_and_structure_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-041",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:264",
+      "source_label": "STRUCTURE exactly one verdict asserts a defect",
+      "fixture": [
+        "unmapped",
+        "blocked",
+        "verified",
+        "divergent"
+      ],
+      "expected": "one native asserts_defect true",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "unit_and_structure_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    },
+    {
+      "id": "parity-042",
+      "source_locator": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml:272",
+      "source_label": "STRUCTURE two verdicts withhold without accusing",
+      "fixture": [
+        "unmapped",
+        "blocked",
+        "verified",
+        "divergent"
+      ],
+      "expected": "two native records with !credit AND !defect",
+      "original_nominal_check_multiplicity": 1,
+      "gleam_module": "hermes_harness/parity_algebra_test",
+      "gleam_function": "unit_and_structure_test",
+      "counterpart_kind": "Gleam assertions against native OCaml operations",
+      "run_evidence": "governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json#green"
+    }
+  ],
+  "additional_checks": [
+    "Exact rank/name/credit/defect tuples for four verdicts",
+    "No_effect maps to unmapped",
+    "Report divergent count and exact rendered report",
+    "Input count equals report total in 2000 fuzz vectors",
+    "Exact OCaml-generated vector fixture identity",
+    "14 total gleeunit functions including strict transport bounds and fault behavior"
+  ],
+  "limits": [
+    "Mapping and execution do not imply full migration admission or formal prover execution",
+    "Two source FUZZ failure handlers have nominal multiplicity zero; both map to failing counterpart outcomes"
+  ]
+}

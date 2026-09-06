@@ -1,0 +1,33 @@
+{
+  "type": "independent-task-reviews",
+  "claim_scope": "Scoped source-code reviews; no AGY/Claude or tri-sovereign review impersonated.",
+  "parity": {
+    "reviewer": "/root/parity_review",
+    "model": "gpt-6-astra",
+    "initial": "Needs fixes: two large-case assertions inspected roll_up instead of report.verdict",
+    "fix_round": "ADDRESSED; no new breakage",
+    "evidence": [
+      "tests/ocaml_counterparts/test/hermes_harness/parity_algebra_test.gleam:208",
+      "tests/ocaml_counterparts/test/hermes_harness/parity_algebra_test.gleam:212"
+    ],
+    "minor": "Pinned OTP29 dependencies emit deprecated-catch warnings on cold build."
+  },
+  "sa_plan": {
+    "reviewer": "/root/sa_plan_review",
+    "model": "gpt-5.6-sol",
+    "initial": "Needs fixes: missing journal/receipt in review package; conflict tests did not compare preserved sentinel fields",
+    "fix_round": "APPROVED; journal/receipt provided and exact immutable sentinel assertions added. Temp root narrowed; backend/DAG assertions added. No new Important/Critical issue.",
+    "minor": "Handoff scoped-checklist wording clarified after review."
+  },
+  "inventory": {
+    "reviewer": "/root/inventory_review",
+    "model": "gpt-5.6-sol",
+    "scope": "2a only; expanded Dune classification open",
+    "verdict": "APPROVED; no Critical or Important findings",
+    "minor": [
+      "Add targeted parent-directory symlink regression test later; implementation already checks each parent.",
+      "Cold OTP29 dependency warnings remain disclosed."
+    ]
+  },
+  "procedure": "Read-only reviewers received bounded full code diffs, task briefs and run receipts; no reviewer claimed to execute agent implementation or regenerate test evidence. Main ran all focused suites on final code."
+}

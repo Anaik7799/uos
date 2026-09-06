@@ -1,0 +1,13 @@
+name = "ocaml_test_inventory"
+version = "0.1.0"
+target = "erlang"
+
+[dependencies]
+gleam_stdlib = "== 0.71.0"
+gleam_crypto = "== 1.5.2"
+gleam_json = "== 3.1.0"
+simplifile = "== 2.4.0"
+envoy = "== 1.1.0"
+
+[dev-dependencies]
+gleeunit = "== 1.9.0"

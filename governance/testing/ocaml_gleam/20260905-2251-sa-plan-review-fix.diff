@@ -1,0 +1,584 @@
+diff --git a/docs/journal/20260905-2209-additive-test-execution-journal.md b/docs/journal/20260905-2209-additive-test-execution-journal.md
+index b4eaf5c9ac..6b1fd7412c 100644
+--- a/docs/journal/20260905-2209-additive-test-execution-journal.md
++++ b/docs/journal/20260905-2209-additive-test-execution-journal.md
+@@ -15,10 +15,10 @@
+ 
+ ## 3. Execution Detail
+ 
+-Task 1: in progress — complete parity-algebra pilot, delegated implementation with independent review. Subagent reported genuine RED (0 passed, 7 layer failures); final evidence not yet reviewed.
+-Task 2: pending — controller implements Gleam inventory/preservation gate.
+-Task 3: pending — source-case reconciliation, independent review, final evidence and feature handoff.
+-Task 4: in progress — additive operator request "create sa-plan taks, hjobs and workflow with temporal". Controller prepares typed SA-Plan registration, reserved jobs, and local Temporal-style history. No Temporal server or worker execution claimed.
++Task 1: implemented and independently reviewed — 14 Gleam tests pass over real native observations. Reviewer found two omitted large-case report.verdict assertions; both added, both isolated report-only mutants killed, re-review accepted. Untouched source suite: 146 passed, 0 failed.
++Task 2a: implemented and reviewed — 7 Gleam preservation tests pass; real altered-file CLI exits 1. Both canonical and isolated roots match all 318 baseline candidate hashes. Task 2's expanded Dune/nonstandard testcase classification remains OPEN (OGL.02).
++Task 3: scoped evidence/handoff prepared; final JJ binding pending below. No full-migration or full-system completion claim.
++Task 4: MATERIALIZED, dispatch disabled — operator request "create sa-plan taks, hjobs and workflow with temporal". Typed Store contains 75 tasks, 74 reserved jobs, 1 local Temporal-style workflow. Separate-process replay/readback agrees, job attempts 0, completed/executing tasks 0. No Temporal server or worker execution claimed. SA-Plan review fix round recorded in the receipt; governance re-review pending.
+ 
+ Preflight conflict scan:
+ 
+@@ -53,7 +53,11 @@
+ 
+ ## 7. Verification Matrix
+ 
+-Implementation tests pending. Final command receipts, case map, mutations, preservation checks, and review findings will be added as observed.
++Fresh final checks: 14 counterpart test functions passed; 9 orchestration tests passed; 7 inventory tests passed; unchanged original OCaml suite 146/146. Baseline candidate SHA256 verification: isolated 318/318 and canonical 318/318. Source-module JJ diff is empty. These are distinct counting units, not additive source-capability coverage.
++
++TDD evidence: inventory initially returned [] for changed bytes (0 pass/1 failure); orchestration initially returned native_error for missing registration (0 pass/1 failure). Final runs are in [registration receipt](../../governance/testing/ocaml_gleam/20260905-2251-sa-plan-registration-receipt.json). Task 1 has its own [case map](../../tests/ocaml_counterparts/fixtures/20260905-2209-parity-case-map.json) and [implementation/mutation report](../../governance/testing/ocaml_gleam/20260905-2209-parity-implementation-report.json).
++
++SA-Plan review fixes: asserted unchanged workflow kind/input/history and job name/worker/args/attempt limit after conflicts, narrowed temporary path scope to the explicit test root, and asserted queue/backend/DAG dependencies in Gleam. Nine tests pass after fixes. Store workflow 'running' means a durable history record, never worker execution. Cold OTP29 dependency-generated Erlang catch warnings remain third-party noise; no dependency source edits or warning-free cold-build claim.
+ 
+ 
+ ## Task-local verification checklist
+@@ -107,7 +111,7 @@
+ 
+ ## 8. Files Modified
+ 
+-At plan start: approved design status updated; new plan, task brief, and this journal. Implementation paths reserved in the plan.
++Additions: tests/ocaml_counterparts, engines/hermes/test_ports/parity, tools/ocaml_test_inventory, tests/ocaml_gleam_orchestration, engines/hermes/orchestration/ocaml_gleam_plan; timestamped evidence/spec/review files under governance/testing/ocaml_gleam and the [SA-Plan handoff](../plans/20260905-2251-sa-plan-temporal-handoff.md). Existing changes are limited to this task's approved-design status, plan and journal. No original OCaml file edited. Root ignore policy materialized unchanged; generated build files were untracked with JJ, not deleted. Live task-local SQLite is ignored by JJ.
+ 
+ ## 9. Architectural Observations
+ 
+@@ -115,11 +119,11 @@
+ 
+ ## 10. Remaining Gaps
+ 
+-All implementation tasks remain open at initialization. The full migration also requires subsequent suites across 16 modules; this first batch does not claim comprehensive completion.
++Expanded Dune/nonstandard testcase classification remains open; 318 candidates are not all test cases. Remaining suites across all 16 modules, full formal admission and a dependency-gated effect dispatcher are pending. A real Temporal service/SDK, signals, timers and workflow cancellation are not connected. Direct-child cleanup and lstat/read guards do not establish process-tree or hostile-filesystem isolation.
+ 
+ ## 11. Metrics Summary
+ 
+-Initial new counterparts: 0. Source candidate files: 318. Case denominator unknown. Tests and semantic coverage will be measured rather than inferred.
++One source suite has a complete reviewed Gleam counterpart (42 source labels, 146 original check multiplicity, 2000 exact ordered random vectors, 100000/10000-child scale cases). Baseline source candidates: 318, unchanged. Case denominator and whole-system semantic coverage unknown. SA-Plan tasks/jobs/workflows: 75/74/1; completed 0, executing 0, ready 1, job attempts 0. Registrar and preservation evidence do not award migration credit by count.
+ 
+ ## 12. STAMP & Constitutional Alignment
+ 
+@@ -127,6 +131,6 @@
+ 
+ ## 13. Conclusion
+ 
+-The design review gate is satisfied. Implementation is active in the isolated JJ workspace. Do not repeat completed tasks after compaction; use the task completion lines and commit IDs above.
++Approved pilot, preservation gate, and durable scheduling records are available in the isolated JJ workspace. SA-Plan registration does not start jobs or complete tasks. Continue from [the handoff](../plans/20260905-2251-sa-plan-temporal-handoff.md), preserving originals. The full migration remains unfinished; do not repeat verified pilot work after compaction.
+ 
+ Previous: [Plan](../plans/20260905-2209-additive-ocaml-gleam-tests-plan.md). Next: [Source candidate baseline](../../governance/testing/ocaml_gleam/20260905-2149-source-candidates.json).
+diff --git a/docs/plans/20260905-2251-sa-plan-temporal-handoff.md b/docs/plans/20260905-2251-sa-plan-temporal-handoff.md
+new file mode 100644
+index 0000000000..1eda8c3541
+--- /dev/null
++++ b/docs/plans/20260905-2251-sa-plan-temporal-handoff.md
+@@ -0,0 +1,197 @@
++# SA-Plan migration workflow and execution handoff
++
++Observed: 2026-09-05T22:40:42Z. Document prefix: `20260905-2251`.
++Tags: `#fractal-l0` `#fractal-l2` `#fractal-l7` `#zk-adr` `#zero-muda`.
++
++[Home](http://nas-1.tail55d152.ts.net:4100/) / [Planning](http://nas-1.tail55d152.ts.net:4100/planning) / SA-Plan migration.
++These are navigation references; publication of this isolated workspace is not verified.
++
++## Created state
++
++| Item | Observed value |
++|---|---|
++| Plan | `uos/ocaml-gleam-tests/v1` |
++| Workflow | `uos/ocaml-gleam-tests/v1/workflow` |
++| Reserved queue | `uos-ocaml-gleam-v1-reserved` |
++| Tasks / jobs / workflows | 75 / 74 / 1 |
++| Completed / executing tasks | 0 / 0 |
++| Ready tasks / total job attempts | 1 / 0 |
++| Dispatch | Disabled; no worker started |
++| Store workflow state | `running`: history record, NOT an executing Temporal worker |
++
++The exact task roster and dependencies are in the
++[generated specification](../../governance/testing/ocaml_gleam/20260905-2251-sa-plan-workflow-spec.json).
++The [registration receipt](../../governance/testing/ocaml_gleam/20260905-2251-sa-plan-registration-receipt.json)
++contains real commands and readback; the
++[execution journal](../journal/20260905-2209-additive-test-execution-journal.md)
++tracks implementation progress separately.
++
++Persistent state is at
++`/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/state/ocaml_gleam_tests/sa_plan.sqlite3`,
++mode 0600, ignored by JJ. Canonical UOS remains
++`/home/an/NAS-setup/uos`. The feature workspace has not been merged.
++Do not copy the live SQLite/WAL into source control: replay the typed registrar
++in the intended store after integration approval.
++
++## Dependencies and parallel work
++
++```text
++OGL.00  source freeze / preservation
++  +--> OGL.01 toolchain --> OGL.03 parity native + Gleam tests --+
++  +--> OGL.02 inventory + Dune classification ------------------+--> OGL.04 review
++  |                                                                  |
++  |                                                               OGL.05 pilot gate
++  +--> 16 x Mnn.D classify -------------------------------------------+
++                  |                                                  |
++                  +-- [D + pilot gate] --> Mnn.P port --> Mnn.V verify
++                                                          | (+ OGL.02)
++                                                        Mnn.R review
++                                                          |
++                          all 16 reviewed families --> OGL.91 integrate
++                                                       +--> OGL.92 preservation --+
++                                                       +--> OGL.93 final gates ---+--> OGL.94 handoff
++                                                                                         |
++                                                                                       OGL complete
++```
++
++The 16 source families are agent_loop, dependability, dune_graph, fpp_authority,
++harness, nix, ops, ops_dashboard, sysml, toolchain, vcs, vision, wiki, zellij,
++swarm and system_engg. Their candidate counts are retained in the specification
++and baseline; 318 candidate files are not a testcase denominator.
++
++Classification can run in parallel after the source gate. Porting waits for the
++pilot gate; verification precedes independent review. Integration and shared JJ
++mutations are serialized. Each job has a stable activity/idempotency key, its
++task ID and dependencies, a three-attempt limit, and no executable effect list.
++P0/P1 are planning priorities, not measured FMEA scores; FMEA remains explicitly
++assessment-required.
++
++## Actual Temporal boundary
++
++This implementation uses the existing `Sa_plan.Store` SQLite workflow history,
++not Temporal Cloud, a Temporal server, or an SDK worker. Signals, durable timers,
++workflow cancellation and production replay compatibility are unavailable here.
++No exactly-once external-effect guarantee is claimed.
++
++The Store's job claim does not enforce the task DAG. The dedicated reserved
++queue has no worker. Do not dispatch it with a generic queue consumer. A future
++worker must obtain scoped effect authorization and a dependency-gated task
++claim, validate fresh revision-bound evidence, implement idempotent effects and
++fenced/unexpired completion, and pass failure/recovery tests. The current facade
++can only register or observe; it cannot claim, complete, or execute work.
++Formal evidence and review records cannot authorize effects on their own.
++
++## Files and commands
++
++```text
++uos/                                      canonical target; currently isolated JJ feature
+++-- engines/hermes/orchestration/ocaml_gleam_plan/
++|   +-- migration_plan.ml/.mli             typed Store registrar and immutable DAG
++|   +-- plan_port.ml                       bounded local facade
++|   +-- testing/plan_fixture.ml            test-only Store observations, no assertions
+++-- tests/ocaml_gleam_orchestration/        Gleam API/CLI and 9 behavior tests
+++-- tests/ocaml_counterparts/              one source-suite pilot and native client
+++-- engines/hermes/test_ports/parity/      original-library observation adapter
+++-- tools/ocaml_test_inventory/            Gleam SHA256 preservation gate
+++-- state/ocaml_gleam_tests/                ignored task-local SQLite state
+++-- governance/testing/ocaml_gleam/        spec, source map, reviews and run receipts
+++-- docs/plans/                            this handoff and approved batch plan
++```
++
++Build the registrar from the feature workspace's `engines/hermes`:
++
++```sh
++dune build --build-dir /tmp/uos-sa-plan-build orchestration/ocaml_gleam_plan/plan_port.exe
++```
++
++Observe the created records from `tests/ocaml_gleam_orchestration`:
++
++```sh
++PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:$PATH \
++UOS_PLAN_PORT=/tmp/uos-sa-plan-build/default/orchestration/ocaml_gleam_plan/plan_port.exe \
++UOS_PLAN_DB=/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/state/ocaml_gleam_tests/sa_plan.sqlite3 \
++UOS_PLAN_OPERATION=status gleam run
++```
++
++Changing only `UOS_PLAN_OPERATION` to `register` replays registration: exact input
++is idempotent; graph/workflow/job input drift fails without overwrite.
++The public Gleam `request("status", database)` API returns full tasks, jobs and
++history; the CLI prints a compact status summary. No SQL CLI or authored
++shell/Python/Erlang script was introduced.
++
++## Evidence and remaining work
++
++Fresh observed checks: 9 orchestration tests, 7 inventory tests, 14 counterpart
++test functions, and the unchanged OCaml source suite's 146 checks all passed.
++These are different counting units, not 176 independent source capabilities.
++All 318 baseline candidate hashes match in both source roots.
++
++The parity review found and corrected two omitted report-verdict checks; the
++reviewer accepted the fix and both report-only mutants were detected. Original
++OCaml sources, fixtures and Dune declarations remain untouched. No full source
++migration, full mathematical admission, live UI publication, tri-sovereign
++approval, or warning-free cold OTP29 dependency build is claimed.
++
++SA-Plan completion remains zero deliberately: registration is not evidence
++import or execution. Before admitting any task, attach the candidate revision,
++source hashes, actual run output, independent review, and required formal
++evidence using a separately verified completion path. The registrar cannot
++mark a task complete.
++
++The next work is OGL.02's expanded Dune/nonstandard testcase census, remaining
++suite counterparts, and a verified execution dispatcher. Existing OCaml tests
++must remain unchanged permanently.
++
++
++## Task-local verification checklist
++
++Unchecked items are not passing evidence.
++
++<details>
++<summary>1. Metadata and navigation</summary>
++
++- [x] CHK-01-TIME: Timestamp prefix uses observed UTC document identity.
++- [x] CHK-02-TAIL: Full [Tailnet home](http://nas-1.tail55d152.ts.net:4100/) link provided; serving unverified.
++- [x] CHK-03-FRACT: `#fractal-l0` `#fractal-l2` `#fractal-l7` `#zk-adr` `#zero-muda`.
++- [ ] CHK-04-KM: Bidirectional Wiki/ZK publication unverified.
++
++</details>
++<details>
++<summary>2. Purity and storage safety</summary>
++
++- [ ] CHK-05-MUDA: Global history not audited; no excluded framework introduced.
++- [ ] CHK-06-GRAPH: Vector math not in this task.
++- [ ] CHK-07-DRIVE: No drive operations; interlock not tested.
++
++</details>
++<details>
++<summary>3. Test and mathematical gates</summary>
++
++- [ ] CHK-08-C1C8: Web quality gates not run.
++- [ ] CHK-09-MATH: Mathematical metrics not measured.
++- [ ] CHK-10-9MOD: Full migration pending; focused results recorded separately.
++- [ ] CHK-11-REGR: UI regression tests outside this slice.
++
++</details>
++<details>
++<summary>4. Language boundaries and observability</summary>
++
++- [ ] CHK-12-GLEAM: New Gleam execution evidence pending.
++- [ ] CHK-13-HERMES: Native boundary evidence pending.
++- [ ] CHK-14-ZIGVM: Kernel outside this slice.
++- [ ] CHK-15-MAX: Inference outside this slice.
++- [ ] CHK-16-OTEL: Full operational telemetry not admitted by this slice.
++
++</details>
++<details>
++<summary>5. Governance and Jujutsu</summary>
++
++- [ ] CHK-17-SOV: User design approval received; not tri-sovereign signoff.
++- [ ] CHK-18-JJ: Isolated JJ workspace; full-system admission not evaluated.
++
++</details>
++
++
++Previous: [Approved batch plan](20260905-2209-additive-ocaml-gleam-tests-plan.md).
++Next: [Registration receipt](../../governance/testing/ocaml_gleam/20260905-2251-sa-plan-registration-receipt.json).
++
+diff --git a/engines/hermes/orchestration/ocaml_gleam_plan/migration_plan.ml b/engines/hermes/orchestration/ocaml_gleam_plan/migration_plan.ml
+index c57cd907a7..0a36ab5ecd 100644
+--- a/engines/hermes/orchestration/ocaml_gleam_plan/migration_plan.ml
++++ b/engines/hermes/orchestration/ocaml_gleam_plan/migration_plan.ml
+@@ -7,6 +7,7 @@
+ let title = "Additive Gleam counterparts; retain every OCaml original"
+ let baseline = "governance/testing/ocaml_gleam/20260905-2149-source-candidates.json"
+ let baseline_revision = "22008c49704ab12e809537d0d7a7c43810158fba"
++let baseline_sha256 = "fa274d8d918ca0d845f995651a8be508048f28c5d73da7367f2fcdea4a11ea51"
+ 
+ let families =
+   [ "hermes_agent_loop", 17; "hermes_dependability", 23;
+@@ -58,6 +59,7 @@
+           "temporal_service_connected", `Bool false;
+           "dispatch_enabled", `Bool false; "queue", `String queue;
+           "source_baseline", `String baseline;
++          "source_baseline_sha256", `String baseline_sha256;
+           "source_revision", `String baseline_revision;
+           "candidate_files", `Int 318; "case_denominator", `Null;
+           "originals_policy", `String "retain-byte-for-byte-permanently";
+@@ -81,6 +83,7 @@
+           "dependencies", strings n.dependencies;
+           "dispatch_enabled", `Bool false; "requires_task_claim", `Bool true;
+           "source_baseline", `String baseline;
++          "source_baseline_sha256", `String baseline_sha256;
+           "originals_policy", `String "retain-byte-for-byte-permanently";
+           "criticality", `String (if String.starts_with ~prefix:"OGL.M" n.id then "P1" else "P0");
+           "fmea_status", `String "assessment-required-no-invented-scores";
+@@ -164,6 +167,7 @@
+               "task_count", `Int (List.length tasks); "job_count", `Int (List.length jobs);
+               "completed", `Int summary.completed; "ready", `Int summary.ready;
+               "executing", `Int summary.executing;
++              "job_attempts", `Int (List.fold_left (fun n (j : Store.job_view) -> n + j.attempt) 0 jobs);
+               "tasks", `List (List.map task_json tasks);
+               "jobs", `List (List.map job_json jobs);
+               "events", `List (List.map event_json workflow.events)])
+diff --git a/engines/hermes/orchestration/ocaml_gleam_plan/plan_port.ml b/engines/hermes/orchestration/ocaml_gleam_plan/plan_port.ml
+index 17e76b873d..9adca4cb6e 100644
+--- a/engines/hermes/orchestration/ocaml_gleam_plan/plan_port.ml
++++ b/engines/hermes/orchestration/ocaml_gleam_plan/plan_port.ml
+@@ -20,10 +20,13 @@
+   | _ -> `Null
+ 
+ let allowed_path path =
+-  let prefixes =
++  let production_prefixes =
+     [ "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/state/ocaml_gleam_tests/";
+-      "/home/an/NAS-setup/uos/state/ocaml_gleam_tests/";
+-      "/tmp/uos-sa-plan-" ] in
++      "/home/an/NAS-setup/uos/state/ocaml_gleam_tests/" ] in
++  let prefixes = match Sys.getenv_opt "UOS_PLAN_TEST_ROOT" with
++    | Some root when String.starts_with ~prefix:"/tmp/uos-sa-plan-tests." root ->
++        (root ^ "/") :: production_prefixes
++    | _ -> production_prefixes in
+   String.ends_with ~suffix:"/sa_plan.sqlite3" path
+   && List.exists (fun prefix -> String.starts_with ~prefix path) prefixes
+   && not (String.contains path '\000' || String.contains path '\\')
+diff --git a/engines/hermes/orchestration/ocaml_gleam_plan/testing/plan_fixture.ml b/engines/hermes/orchestration/ocaml_gleam_plan/testing/plan_fixture.ml
+index 633d95f6b4..fa6c3d1626 100644
+--- a/engines/hermes/orchestration/ocaml_gleam_plan/testing/plan_fixture.ml
++++ b/engines/hermes/orchestration/ocaml_gleam_plan/testing/plan_fixture.ml
+@@ -8,10 +8,21 @@
+   let* plan = Store.find_plan store ~id_or_name:Migration_plan.plan_id in
+   let* jobs = Store.list_jobs store ~queue:None in
+   let* workflows = Store.list_workflows store in
+-  Ok (`Assoc ["plan_count", `Int (Option.fold ~none:0 ~some:(fun _ -> 1) plan);
++  let workflow_fields = match workflows with
++    | [w] -> ["workflow_kind", `String w.kind; "workflow_input", `String w.input;
++               "workflow_history", `List (List.map (fun (e : Store.workflow_event) ->
++                 `Assoc ["sequence", `Int e.sequence; "kind", `String e.kind;
++                         "payload", `String e.payload;
++                         "occurred_at_ns", `String (Int64.to_string e.occurred_at_ns)]) w.events)]
++    | _ -> [] in
++  let job_fields = match jobs with
++    | [j] -> ["job_name", `String j.name; "job_worker", `String j.worker;
++              "job_args", `String j.args; "job_max_attempts", `Int j.max_attempts]
++    | _ -> [] in
++  Ok (`Assoc (["plan_count", `Int (Option.fold ~none:0 ~some:(fun _ -> 1) plan);
+               "job_count", `Int (List.length jobs);
+               "workflow_count", `Int (List.length workflows);
+-              "rejected", `Bool rejected])
++              "rejected", `Bool rejected] @ workflow_fields @ job_fields))
+ 
+ let scenario store = function
+   | "rollback" ->
+diff --git a/governance/testing/ocaml_gleam/20260905-2251-sa-plan-registration-receipt.json b/governance/testing/ocaml_gleam/20260905-2251-sa-plan-registration-receipt.json
+new file mode 100644
+index 0000000000..29bddd41f4
+--- /dev/null
++++ b/governance/testing/ocaml_gleam/20260905-2251-sa-plan-registration-receipt.json
+@@ -0,0 +1,134 @@
++{
++  "schema_version": 1,
++  "observed_at_utc": "2026-09-05T22:40:42Z",
++  "status": "MATERIALIZED_DISPATCH_DISABLED",
++  "request": "create sa-plan taks, hjobs and workflow with temporal",
++  "workspace": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests",
++  "observed_revision": "886e094d8a8d2a2470e0cac9946daedf33cc87a9",
++  "db_path": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/state/ocaml_gleam_tests/sa_plan.sqlite3",
++  "db_permissions": "0600",
++  "db_policy": "Live SQLite state is ignored by JJ; replay typed registration in the target store, never copy a live DB/WAL into source control.",
++  "plan_id": "uos/ocaml-gleam-tests/v1",
++  "workflow_id": "uos/ocaml-gleam-tests/v1/workflow",
++  "queue": "uos-ocaml-gleam-v1-reserved",
++  "tasks": 75,
++  "jobs": 74,
++  "workflows": 1,
++  "workflow_state": "running",
++  "execution_meaning": "Store lifecycle record only; no Temporal service or worker started.",
++  "dispatch_enabled": false,
++  "completed_tasks": 0,
++  "executing_tasks": 0,
++  "ready_tasks": 1,
++  "job_attempts": 0,
++  "capabilities_unavailable": [
++    "Temporal server/SDK",
++    "signals",
++    "durable timers",
++    "workflow cancellation",
++    "dependency-gated job dispatcher"
++  ],
++  "source_baseline_sha256": "fa274d8d918ca0d845f995651a8be508048f28c5d73da7367f2fcdea4a11ea51",
++  "spec": "governance/testing/ocaml_gleam/20260905-2251-sa-plan-workflow-spec.json",
++  "creation_and_readback": [
++    {
++      "cmd": "PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:$PATH UOS_PLAN_PORT=/tmp/uos-sa-plan-build/default/orchestration/ocaml_gleam_plan/plan_port.exe UOS_PLAN_DB=/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/state/ocaml_gleam_tests/sa_plan.sqlite3 UOS_PLAN_OPERATION=register gleam run",
++      "chunk_id": "257ec7",
++      "wall_time_seconds": 0.107645793,
++      "exit_code": 0,
++      "original_token_count": 83,
++      "output": "   Compiled in 0.02s\n    Running ocaml_gleam_orchestration.main\n{\"plan_id\":\"uos/ocaml-gleam-tests/v1\",\"workflow_id\":\"uos/ocaml-gleam-tests/v1/workflow\",\"queue\":\"uos-ocaml-gleam-v1-reserved\",\"task_count\":75,\"job_count\":74,\"workflow_state\":\"running\",\"dispatch_enabled\":false,\"completed\":0,\"executing\":0,\"ready\":1,\"job_attempts\":0}\n"
++    },
++    {
++      "cmd": "PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:$PATH UOS_PLAN_PORT=/tmp/uos-sa-plan-build/default/orchestration/ocaml_gleam_plan/plan_port.exe UOS_PLAN_DB=/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/state/ocaml_gleam_tests/sa_plan.sqlite3 UOS_PLAN_OPERATION=status gleam run",
++      "chunk_id": "1edac5",
++      "wall_time_seconds": 0.111451511,
++      "exit_code": 0,
++      "original_token_count": 83,
++      "output": "   Compiled in 0.02s\n    Running ocaml_gleam_orchestration.main\n{\"plan_id\":\"uos/ocaml-gleam-tests/v1\",\"workflow_id\":\"uos/ocaml-gleam-tests/v1/workflow\",\"queue\":\"uos-ocaml-gleam-v1-reserved\",\"task_count\":75,\"job_count\":74,\"workflow_state\":\"running\",\"dispatch_enabled\":false,\"completed\":0,\"executing\":0,\"ready\":1,\"job_attempts\":0}\n"
++    }
++  ],
++  "final_tests": [
++    {
++      "label": "orchestration",
++      "cmd": "PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:$PATH UOS_PLAN_PORT=/tmp/uos-sa-plan-build/default/orchestration/ocaml_gleam_plan/plan_port.exe UOS_PLAN_FIXTURE=/tmp/uos-sa-plan-build/default/orchestration/ocaml_gleam_plan/testing/plan_fixture.exe UOS_PLAN_TEST_ROOT=/tmp/uos-sa-plan-tests.EISql5 gleam test",
++      "workdir": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/tests/ocaml_gleam_orchestration",
++      "chunk_id": "c632fd",
++      "wall_time_seconds": 0.664335354,
++      "exit_code": 0,
++      "original_token_count": 60,
++      "output": "  Compiling ocaml_gleam_orchestration\n   Compiled in 0.37s\n    Running ocaml_gleam_orchestration_test.main\n\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m\n9 passed, no failures\u001b[39m\n"
++    },
++    {
++      "label": "inventory",
++      "cmd": "PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:$PATH UOS_INVENTORY_TEST_ROOT=/tmp/uos-inventory-tests.4iB2Fq gleam test",
++      "workdir": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/tools/ocaml_test_inventory",
++      "chunk_id": "b9baa6",
++      "wall_time_seconds": 0.15610417,
++      "exit_code": 0,
++      "original_token_count": 44,
++      "output": "   Compiled in 0.02s\n    Running ocaml_test_inventory_test.main\n\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m\n7 passed, no failures\u001b[39m\n"
++    },
++    {
++      "label": "counterparts",
++      "cmd": "PATH=/nix/store/k7w9agazdjmsm55p0kasv1f2a3ilpvnk-uos-planning-ledger-otp-29.0.6/bin:$PATH gleam test",
++      "workdir": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/tests/ocaml_counterparts",
++      "chunk_id": "96e8bb",
++      "wall_time_seconds": 0.784094332,
++      "exit_code": 0,
++      "original_token_count": 63,
++      "output": "   Compiled in 0.02s\n    Running ocaml_counterparts_test.main\n\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m.\u001b[39m\u001b[32m\n14 passed, no failures\u001b[39m\n"
++    },
++    {
++      "label": "original",
++      "cmd": "dune exec modules/hermes_harness/test_parity_algebra.exe",
++      "workdir": "/home/an/NAS-setup/.uos-workspaces/ocaml-gleam-tests/engines/hermes",
++      "chunk_id": "76a80a",
++      "wall_time_seconds": 0.162636407,
++      "exit_code": 0,
++      "original_token_count": 121,
++      "output": "parity algebra suite\n  unit         done\n  property     done\n  bdd          done\n  feature      done\n  fuzz         done\n  chaos        done\n  structure    done\n\npassed: 146   failed: 0\nAS-IS test_parity_algebra: 146/146 passed, 0 failed, 0 skipped\nPREDICTIVE test_parity_algebra: 17 dependent(s) at risk if this is wrong: hermes_harness_blueprint, hermes_harness_drift_rules, hermes_harness_evidence_rollup, hermes_harness_formal_coverage, hermes_harness_formal_specs … +12 more\n"
++    }
++  ],
++  "review": {
++    "sa_plan": {
++      "initial": "Needs fixes",
++      "addressed": [
++        "assert retained workflow kind/input/full history and job name/worker/args/max_attempts sentinels",
++        "include 13-section execution journal and this receipt",
++        "tighten temp root to explicit UOS_PLAN_TEST_ROOT",
++        "assert reserved queue/backend/no Temporal server/representative DAG dependencies"
++      ],
++      "re_review": "PENDING"
++    },
++    "parity": {
++      "initial": "Missing two report.verdict assertions",
++      "fix": "Added both verdict assertions; two report-only mutants killed",
++      "re_review": "All findings addressed, no new Critical/Important breakage"
++    },
++    "inventory": {
++      "scope": "Task2a only",
++      "verdict": "Approved, no Critical/Important findings",
++      "minor": [
++        "parent-directory symlink regression test not yet added",
++        "third-party OTP29 cold-build warnings"
++      ]
++    }
++  },
++  "remaining": [
++    "Expanded Dune and nonstandard testcase classification (OGL.02)",
++    "Gleam counterparts for remaining suites",
++    "FMEA scoring and execution readiness gates",
++    "Real Temporal integration and gated worker dispatcher require implementation/configuration; not claimed here"
++  ],
++  "skills_applied": [
++    "c3i-temporal-orchestration",
++    "cepaf-planning-expert",
++    "gleam-expert",
++    "test-driven-development",
++    "requesting-code-review",
++    "subagent-driven-development",
++    "using-jj-workspaces",
++    "journal-protocol"
++  ]
++}
+diff --git a/tests/ocaml_gleam_orchestration/src/ocaml_gleam_orchestration.gleam b/tests/ocaml_gleam_orchestration/src/ocaml_gleam_orchestration.gleam
+index c3906bbc53..9cfc89bdb8 100644
+--- a/tests/ocaml_gleam_orchestration/src/ocaml_gleam_orchestration.gleam
++++ b/tests/ocaml_gleam_orchestration/src/ocaml_gleam_orchestration.gleam
+@@ -26,17 +26,29 @@
+ 
+ fn json_value_decoder() -> decode.Decoder(json.Json) {
+   use plan_id <- decode.field("plan_id", decode.string)
++  use workflow_id <- decode.field("workflow_id", decode.string)
++  use queue <- decode.field("queue", decode.string)
+   use task_count <- decode.field("task_count", decode.int)
+   use job_count <- decode.field("job_count", decode.int)
+   use workflow_state <- decode.field("workflow_state", decode.string)
+   use dispatch_enabled <- decode.field("dispatch_enabled", decode.bool)
++  use completed <- decode.field("completed", decode.int)
++  use executing <- decode.field("executing", decode.int)
++  use ready <- decode.field("ready", decode.int)
++  use job_attempts <- decode.field("job_attempts", decode.int)
+   decode.success(
+     json.object([
+       #("plan_id", json.string(plan_id)),
++      #("workflow_id", json.string(workflow_id)),
++      #("queue", json.string(queue)),
+       #("task_count", json.int(task_count)),
+       #("job_count", json.int(job_count)),
+       #("workflow_state", json.string(workflow_state)),
+       #("dispatch_enabled", json.bool(dispatch_enabled)),
++      #("completed", json.int(completed)),
++      #("executing", json.int(executing)),
++      #("ready", json.int(ready)),
++      #("job_attempts", json.int(job_attempts)),
+     ]),
+   )
+ }
+diff --git a/tests/ocaml_gleam_orchestration/test/ocaml_gleam_orchestration_test.gleam b/tests/ocaml_gleam_orchestration/test/ocaml_gleam_orchestration_test.gleam
+index c7bdb5aa6d..bd5e2d074d 100644
+--- a/tests/ocaml_gleam_orchestration/test/ocaml_gleam_orchestration_test.gleam
++++ b/tests/ocaml_gleam_orchestration/test/ocaml_gleam_orchestration_test.gleam
+@@ -23,6 +23,25 @@
+     decode.run(observed, decode.at(["job_count"], decode.int))
+   task_count |> should.equal(75)
+   job_count |> should.equal(74)
++  text_field(observed, "queue") |> should.equal("uos-ocaml-gleam-v1-reserved")
++  text_field(observed, "workflow_state") |> should.equal("running")
++  text_field(observed, "backend")
++  |> should.equal("Sa_plan.Store/sqlite/local-temporal-style-history")
++  let assert Ok(connected) =
++    decode.run(observed, decode.at(["temporal_service_connected"], decode.bool))
++  connected |> should.be_false
++  let assert Ok(tasks) =
++    decode.run(observed, decode.at(["tasks"], decode.list(decode.dynamic)))
++  let assert Ok(pilot) =
++    list.find(tasks, fn(t) { text_field(t, "id") == "OGL.04" })
++  let assert Ok(deps) =
++    decode.run(pilot, decode.at(["dependencies"], decode.list(decode.string)))
++  deps |> should.equal(["OGL.02", "OGL.03"])
++}
++
++fn text_field(observed: Dynamic, field: String) -> String {
++  let assert Ok(value) = decode.run(observed, decode.at([field], decode.string))
++  value
+ }
+ 
+ fn database(name: String) -> String {
+@@ -108,6 +127,16 @@
+   let assert Ok(rejected) =
+     decode.run(observed, decode.at(["rejected"], decode.bool))
+   rejected |> should.be_true
++  text_field(observed, "workflow_kind") |> should.equal("conflicting-kind")
++  text_field(observed, "workflow_input") |> should.equal("unchanged-sentinel")
++  let assert Ok(history) =
++    decode.run(observed, decode.at(["workflow_history"], decode.dynamic))
++  let assert Ok(expected) =
++    json.parse(
++      "[{\"sequence\":0,\"kind\":\"workflow_started\",\"payload\":\"unchanged-sentinel\",\"occurred_at_ns\":\"1000000000\"}]",
++      decode.dynamic,
++    )
++  history |> should.equal(expected)
+ }
+ 
+ pub fn conflicting_job_rolls_back_new_plan_and_workflow_test() {
+@@ -118,6 +147,10 @@
+   let assert Ok(rejected) =
+     decode.run(observed, decode.at(["rejected"], decode.bool))
+   rejected |> should.be_true
++  text_field(observed, "job_name") |> should.equal("tests/conflicting-job")
++  text_field(observed, "job_worker") |> should.equal("UnchangedSentinel")
++  text_field(observed, "job_args") |> should.equal("unchanged-sentinel")
++  integer(observed, "job_max_attempts") |> should.equal(1)
+ }
+ 
+ pub fn task_claims_enforce_dependencies_and_no_work_is_auto_claimed_test() {
+

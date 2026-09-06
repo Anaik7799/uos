@@ -1,0 +1,4 @@
+(executable
+ (name plan_fixture)
+ (modules plan_fixture)
+ (libraries ocaml_gleam_plan sa_plan yojson unix))

@@ -1,0 +1,3250 @@
+{
+  "schema_version": 1,
+  "document_identity_timestamp_utc": "2026-09-05T21:42:49Z",
+  "source_digests_observed_at_utc": "2026-09-05T21:43:48Z",
+  "status": "DISCOVERED_NOT_PORTED",
+  "user_instruction": ", make all of theocaml tests gleam tests, keep the ocaml tests as-is , do not remove them",
+  "source_root": "/home/an/NAS-setup/uos",
+  "observed_jj_commit": "22008c49704ab12e809537d0d7a7c43810158fba",
+  "observed_jj_change": "xxwnznxwmxkmlkwpnkzyoprxplxpxvso",
+  "snapshot_consistency": "Read-only working-tree observation; source bytes are bound individually below. Writers were not quiesced; this is not an atomic snapshot or an admission receipt.",
+  "scope": {
+    "include": "UOS-owned OCaml test suites; candidate inventory below is a first-pass file-name scan, not an exhaustive case inventory.",
+    "ml_files_in_scan": 933,
+    "candidate_files": 318,
+    "module_count": 16,
+    "confirmed_test_cases": null,
+    "excluded_directory_patterns": [
+      "_build",
+      "build",
+      ".jj",
+      "node_modules",
+      "vendor",
+      "third_party",
+      "migration"
+    ],
+    "candidate_pattern": "(^|/)(tests?|test_[^/]*|[^/]*_test)(/|\\.ml$)",
+    "limitations": [
+      "Support modules may match the candidate pattern.",
+      "Inline laws, selftests, benchmarks, and test executables with nonstandard names require Dune/source classification.",
+      "Excluded source copies remain unchanged; exclusions do not imply UOS-owned active tests may be silently dropped."
+    ]
+  },
+  "preservation": {
+    "original_ocaml_tests": "MUST_REMAIN_UNCHANGED_PERMANENTLY",
+    "original_runners_and_fixtures": "MUST_REMAIN_UNCHANGED",
+    "external_source_trees": "READ_ONLY"
+  },
+  "preservation_recheck": {
+    "candidate_files_checked": 318,
+    "candidate_files_unchanged": 318,
+    "changed_candidate_paths": [],
+    "scope": "Source-byte recheck during design preparation; not a test execution or atomic snapshot"
+  },
+  "progress": {
+    "new_gleam_counterparts_implemented": 0,
+    "new_counterparts_executed": 0,
+    "new_counterparts_verified": 0,
+    "semantic_coverage_percent": null
+  },
+  "candidates_by_module": {
+    "hermes_agent_loop": 17,
+    "hermes_dependability": 23,
+    "hermes_dune_graph": 1,
+    "hermes_fpp_authority": 1,
+    "hermes_harness": 82,
+    "hermes_nix": 8,
+    "hermes_ops": 35,
+    "hermes_ops_dashboard": 23,
+    "hermes_sysml": 6,
+    "hermes_toolchain": 2,
+    "hermes_vcs": 19,
+    "hermes_vision": 2,
+    "hermes_wiki": 69,
+    "hermes_zellij": 3,
+    "swarm": 18,
+    "system_engg": 9
+  },
+  "candidates": [
+    {
+      "source_path": "engines/hermes/modules/hermes_agent_loop/test_context_compression.ml",
+      "source_sha256": "437653179484e62f483ee251a233501ec78e9e4d0b19ef88ca6e1b8891f7db60",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_agent_loop/context_compression_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_agent_loop/test_context_engine.ml",
+      "source_sha256": "48cb619d440ffe95917793ce2c1cded39e00ca6b32c519f0a0a867b5ac6e420f",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_agent_loop/context_engine_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_agent_loop/test_context_engine_stress.ml",
+      "source_sha256": "1e6eac9a7fe205d321764317b6960f23f8b6b8e66bca8582975313a4e751af91",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_agent_loop/context_engine_stress_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_agent_loop/test_conversation_loop.ml",
+      "source_sha256": "aecdd2fd29ac46e08926e77515a425356aa78d05287ab4613ddb524ad52da0c3",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_agent_loop/conversation_loop_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_agent_loop/test_files_memory_units.ml",
+      "source_sha256": "772b6235bf3bef800f1513264bcafdce2cb21a15a6c1398cc918eb8c5e5b533d",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_agent_loop/files_memory_units_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_agent_loop/test_hz_nrm_01.ml",
+      "source_sha256": "5c73f314abf9910764e7b5368e04aa9427545201452454bb6898823b909353a1",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_agent_loop/hz_nrm_01_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_agent_loop/test_interactive_cli_units.ml",
+      "source_sha256": "f3cb8843f53322b02a72924281f16925d297d24c7c6dfa434dd9c6473986828f",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_agent_loop/interactive_cli_units_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_agent_loop/test_json_canonical.ml",
+      "source_sha256": "7533b13c959ae1a5684a6d30252e62412e3899da7d18624525f16fce37388808",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_agent_loop/json_canonical_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_agent_loop/test_mcp_units.ml",
+      "source_sha256": "4e9f69e26e01878323ffc428abe52aee375496d44480aa7b538befe1ccacca36",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_agent_loop/mcp_units_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_agent_loop/test_message_repairs.ml",
+      "source_sha256": "12dab3a74e868bbda22d6b70176890bdd7402210fe4f00e31ca005218ef39841",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_agent_loop/message_repairs_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_agent_loop/test_prompt_assembly.ml",
+      "source_sha256": "c8ebe8f221f3be6da23994daea744631d14542516c31b827026f13e57838f51c",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_agent_loop/prompt_assembly_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_agent_loop/test_redact_units.ml",
+      "source_sha256": "f3f384583642df52472eacdfc21046d2fb0d4c143c370037ef027de6696ef4a7",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_agent_loop/redact_units_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_agent_loop/test_skill_units.ml",
+      "source_sha256": "777ebafee558e223174ec2d636149dc23e33bb28a392174e0feb06877eb8f849",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_agent_loop/skill_units_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_agent_loop/test_slice_units.ml",
+      "source_sha256": "d7cea14169e133fa00b5c1351d73695360da93966a8ba516d91938b0fceb89d5",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_agent_loop/slice_units_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_agent_loop/test_subagent_units.ml",
+      "source_sha256": "e4abcb366cc2cfe2776561ef444da3a93f2dc9002ba1aa001fe656c015479cbb",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_agent_loop/subagent_units_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_agent_loop/test_tool_units.ml",
+      "source_sha256": "42524de9402524489ff1f4e2a7f6b60a1c7b8fc62fa4c52b022e302b18ddb1b1",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_agent_loop/tool_units_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_agent_loop/test_turn_finalization.ml",
+      "source_sha256": "7eb12c6b70b7d5554ffd173df92cd2d540b0f463ebc70c63c64c64cdc4e4aa29",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_agent_loop/turn_finalization_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_dependability_abandonment_protocol.ml",
+      "source_sha256": "7afa22ede215922447d4d7b9c05153229e12b41427c61e8461e646f879f185f0",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/dependability_abandonment_protocol_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_dependability_approval.ml",
+      "source_sha256": "6b01db2a08f0b18cf4eafd1c90688ce7193080f9cb89b4471db2696096f382ba",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/dependability_approval_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_dependability_approval_crypto.ml",
+      "source_sha256": "42efcf82ef0ba9f7bde9122fbb96c496c823ef89e154e884059942546de1eb2f",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/dependability_approval_crypto_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_dependability_authority_store.ml",
+      "source_sha256": "abd493624074ff48d695f06b645afe739d2da41cbaf54bd341c73236ac5165ff",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/dependability_authority_store_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_dependability_clock.ml",
+      "source_sha256": "7d324a1afc42317b8555a1b0fe071214e5f157633a84595a2020390361d793d2",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/dependability_clock_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_dependability_completion_store.ml",
+      "source_sha256": "c5ff6e6f9a98b77820d2993cdc78f721eb21acd72dca3d17f081ecf83ef084e4",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/dependability_completion_store_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_dependability_core.ml",
+      "source_sha256": "b628f3c3446e1d1ab808836fcfbb1e6dce5d984e9f244a0d3a8d06877fbeddd4",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/dependability_core_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_dependability_credential.ml",
+      "source_sha256": "6eb4f9345a4d3f80457f1b95794a5edf38db54ef80be033dd29be762d4abf51e",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/dependability_credential_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_dependability_dispatch_store.ml",
+      "source_sha256": "406aafbbbbc106750d1b5808d11f70147ef85e395a5d5e0513c67d07911e3930",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/dependability_dispatch_store_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_dependability_filesystem.ml",
+      "source_sha256": "37001d2f4b53ea79aa7b6ee19d45d2ff6981bee9c64a0592d046bed2a5a6272e",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/dependability_filesystem_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_dependability_graph.ml",
+      "source_sha256": "dad294446e0092b50ba335e270364ee5c6c8d217e9482bfc0b88eb0a0bf1a19c",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/dependability_graph_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_dependability_meta.ml",
+      "source_sha256": "19f471f614186a94d40d5b9c4cb3c65234313d5fd3a9f6e25fcf8b59818e5a6c",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/dependability_meta_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_dependability_network.ml",
+      "source_sha256": "7e8ca39eb85993c6b165ed9f84546a2eb59e8f38692c66890be3c160a2229c08",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/dependability_network_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_dependability_owner_inventory.ml",
+      "source_sha256": "94d5a6e54742be9384a525e7f62aec997d9474da948d6bf1c3d31144f022c80c",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/dependability_owner_inventory_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_dependability_process.ml",
+      "source_sha256": "5403e525c9886313daa5897a7a69ddf48e511647ad4f4f5687ad02c4c76647f0",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/dependability_process_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_dependability_process_protocol.ml",
+      "source_sha256": "0a593d3f64ef75d2843a70fa2cedccc7c8f6aec2a136fb835f5da855549a24da",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/dependability_process_protocol_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_dependability_recovery_vault.ml",
+      "source_sha256": "1ca03196227aee5c033eb79b3a265afe41fe4f753340650ff3c3939a6d4957fa",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/dependability_recovery_vault_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_dependability_sqlite_location.ml",
+      "source_sha256": "26dc39307ae47c29b2b97a81895cbb141f56f724707c9749bc2f1c84a72271f3",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/dependability_sqlite_location_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_dependability_surface.ml",
+      "source_sha256": "b76868eb672a15f920d6ffe7f218a2e6bf7068f3f3f2aa4075de21f8f3cdbde7",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/dependability_surface_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_dependability_topology.ml",
+      "source_sha256": "df2fb122e90ed2664ed8b0be554fb3276a728122607dbe852ab05dc5fcf1c919",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/dependability_topology_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_dependability_writer_lease.ml",
+      "source_sha256": "eabc815f4a4f9284bfe35e66199458fe4e114696c7cd8b6ae797f5cf24c48c91",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/dependability_writer_lease_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_sqlite_lifecycle_model.ml",
+      "source_sha256": "de6055a4e0ca8f43939c487d45b602d9e5ede441ad3c4296a7eaee523176d791",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/sqlite_lifecycle_model_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dependability/test_sqlite_lifecycle_smt.ml",
+      "source_sha256": "2ca46c514d981db8c145dbbc43b85101e33591b0fddc337f9099efc8425737c2",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dependability/sqlite_lifecycle_smt_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_dune_graph/test_dune_graph.ml",
+      "source_sha256": "7b4c11c16d3f026ba3672d075905eb47684ce4b9ceeef69aa01d3da3d19892ea",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_dune_graph/dune_graph_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_fpp_authority/test_fpp_window_authority.ml",
+      "source_sha256": "12424fb30236e45f38b3ac3a22990be08e42ee924b7aab973bbacfa4405b2ec1",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_fpp_authority/fpp_window_authority_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_anthropic_adapter.ml",
+      "source_sha256": "9926a1b37c3e0c2581a8f9b83d8107f95d5f6ab09112d29e45f2a8bdb94a3d27",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/anthropic_adapter_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_bedrock_converse.ml",
+      "source_sha256": "153c2af0cab5caa90944c441a6ae02d55550e1b3a0c67c03aeb0a142aa318c39",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/bedrock_converse_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_blueprint.ml",
+      "source_sha256": "dab68c6d52f37347eeac803e536b826c516891eb0e5d73fbdabdee14e71e0027",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/blueprint_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_capability_catalog.ml",
+      "source_sha256": "c59124922b60ff49baca584ab1dc9fd0a11dfd2628740da747a7d28cd5569bb3",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/capability_catalog_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_challenger_e2e_framework.ml",
+      "source_sha256": "16c5e0854156de477acfbef4dfea8bf6ff2893b1424a589394751c88530b1faf",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/challenger_e2e_framework_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_challenger_m1.ml",
+      "source_sha256": "b4e595162bace0faf664301a03312620e3c223c6f2e2e825ff4e9c04543ec371",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/challenger_m1_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_challenger_m1_2.ml",
+      "source_sha256": "6211cbb961d9aafc08abea48420c625374edf8cb27456250de5db6d2c8391f95",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/challenger_m1_2_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_challenger_m2_1.ml",
+      "source_sha256": "d10de81e13874ef067dc873f65dc56e97c4394d6c431c2023221ccaab72c67ab",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/challenger_m2_1_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_challenger_m3_1.ml",
+      "source_sha256": "b077d3f26255d95a045daa038fc7c743195cadf63b8bcc6101a41c088d943ad5",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/challenger_m3_1_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_cli.ml",
+      "source_sha256": "f414986fe0ff666ca399ae4652f8b435abbf6c19f49b32723fe9c80e57a90890",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/cli_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_codex_message_shapes.ml",
+      "source_sha256": "869f89f27a87d2895f1f006412a04367ee3d136b513001c6e587037876d7538b",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/codex_message_shapes_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_contract_catalog.ml",
+      "source_sha256": "d203369d8136dc3fd14a91298d5309ff756c6009234b74ef97a3cbeee4970750",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/contract_catalog_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_control_plane.ml",
+      "source_sha256": "0b566dc2a8492da0a4747960cbb963b2351ddb2fd33ba36d5375453e4915ef3d",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/control_plane_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_converge.ml",
+      "source_sha256": "79e417c1319f6fbd2e6c437870961abae2691c86b24ae4b2f5071f58deee846d",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/converge_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_converge_formal.ml",
+      "source_sha256": "08e17c370203e2078e24f8181aad1a0bbb7f0e2868bcb6ff005983da573f31d6",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/converge_formal_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_core.ml",
+      "source_sha256": "22a067d655dce43c525531291beb05e27a782fefefd9f7bd704a9f37cee2ccd5",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/core_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_dependency_smt.ml",
+      "source_sha256": "e6fee95000e40dd24a49b480ee34a60ba1392bcaa91dd6a3e2f4023f4f27e8b2",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/dependency_smt_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_determinism_verifier.ml",
+      "source_sha256": "acb4f3f575b4a2f56458dcb21c77ef227190db79d5462a0af4d6e0ef99c42114",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/determinism_verifier_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_diff_triage.ml",
+      "source_sha256": "46bd96d0453294ee2b69471469e24f97bb6d018907e14c2e39172281c88b4578",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/diff_triage_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_drift_rules.ml",
+      "source_sha256": "846a609533ba503ddd641616d7007250542d79b85bd5c7390ba600df258867bc",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/drift_rules_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_evidence_import.ml",
+      "source_sha256": "bd7e4bbca9f774512ee49933e98325e90b7c8f078acd3f107a961bbb998e147d",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/evidence_import_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_evidence_rollup.ml",
+      "source_sha256": "c6c8df60386097cad32076eca803613c63af8b79e977f1eeebde8014e0a512cb",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/evidence_rollup_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_evidence_store.ml",
+      "source_sha256": "5c8c8128cc84447ddcc826c8bff4fafd2d0a06bd8b047369208a2800875e5614",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/evidence_store_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_evolution_model.ml",
+      "source_sha256": "b952871401fc03a43c05a48e390ccda866bf8ff25078914cb01c7d71cb2c35e2",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/evolution_model_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_expect_posterior.ml",
+      "source_sha256": "be5fd5db9efab0439663a52883a22d90207de701420e9cd4fce148966e547613",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/expect_posterior_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_formal_coverage.ml",
+      "source_sha256": "7bca719979066f6cca197a05ad84cadb1c27fa27a30403b97ed41efc8172edd3",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/formal_coverage_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_formal_specs.ml",
+      "source_sha256": "bf1467e6a22c596d352452c11aae8b2d85c0d3cd159e7f88819bcfc6aa105172",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/formal_specs_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_fpp_bdd.ml",
+      "source_sha256": "c08b940f44f7c0e744af34eeba471316820ed1189b9714837d9c93620c2470cd",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/fpp_bdd_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_fpp_fuzz.ml",
+      "source_sha256": "48ef6199ebfc1bed9bd404407449ef256eb8821f5f00afd2272de74dc0ef43f6",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/fpp_fuzz_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_fpp_interp.ml",
+      "source_sha256": "e9bd54d094792cdab379d5dc556fc2af6595b739dc46984c19c8de47d7d046e3",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/fpp_interp_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_fpp_performance.ml",
+      "source_sha256": "6e48c55d5edd4e80dd3fd8a6094c6ebd4eb1b8039915d80c7e9f8be979dc05e3",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/fpp_performance_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_fprime_smt.ml",
+      "source_sha256": "f2a3cbff5c4ab72a4f364295e1b6ed4100cc4f00e6a21f376fc7a8c8dc27727b",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/fprime_smt_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_fractal_catalog.ml",
+      "source_sha256": "3f835e0c1b7fef166ef9c5ca3845d8b6452740847ade66f3cdae3863e2f1a417",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/fractal_catalog_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_fractal_countermeasures.ml",
+      "source_sha256": "ccac55f13b6565f372c8cdfa3ef13314ec4d63008e261556aad9fa0b4ab251d3",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/fractal_countermeasures_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_fractal_diagnostic.ml",
+      "source_sha256": "6464b2b346a9f9b6bd23f3154554a5209a8e4337b42558f02c730e2a56b76845",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/fractal_diagnostic_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_fractal_ontology.ml",
+      "source_sha256": "0694fe7ecb251376f4a5b9eaa437ba79b014d7d49117372bcd0721803ee12840",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/fractal_ontology_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_fractal_parity.ml",
+      "source_sha256": "3b6952b279b1a313a0c000e0d89b2efbe28d2e2dbbe81399b0dc5ccb7f276f05",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/fractal_parity_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_gemini_schema.ml",
+      "source_sha256": "44861ab418966383f44dbab0d2afa2dcfb10a7fa3db88a8ae71ba0c6e6ef9ca5",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/gemini_schema_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_harness_config.ml",
+      "source_sha256": "42a985618bf71c1b51acb06a9478c3505cf04271349e48ca476d3e647938396d",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/harness_config_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_harness_topology.ml",
+      "source_sha256": "39f68fbdad32f97d925fc56b68e64b79d971296680b3dec3d0a7153337b2e6cf",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/harness_topology_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_hermes_analysis.ml",
+      "source_sha256": "e75c42d6e2b19b0976aa8594a233a304a1c16830dc0948200510322a7123e1c4",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/hermes_analysis_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_hermes_imports.ml",
+      "source_sha256": "41e494f40bdd64796354b479b3b489c4219ee2ac4105b24c8a13f1c3d6da3619",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/hermes_imports_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_hermes_plan.ml",
+      "source_sha256": "76c43e6a3c668ebc93da35c5f3313d996da21cba1d29eaba7cd70b73b087b81a",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/hermes_plan_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_hermes_rete.ml",
+      "source_sha256": "3b42e48a9c9cb4235531b32318c430ce989b0ff2621aae49e93cf91ac2f6bd55",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/hermes_rete_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_hermes_zenoh.ml",
+      "source_sha256": "5161ac158602dec45c3e65064695183741144a08593dc934a7390e86730f5ef3",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/hermes_zenoh_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_homeostasis.ml",
+      "source_sha256": "18a3ce0e368b6889ed15b9ae2e2639b76615b4d6b911e7aa88ca087122099af4",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/homeostasis_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_info_math.ml",
+      "source_sha256": "950a68839bfd35107630938f858ab0e57db719679ffc622097fe27061794ae1b",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/info_math_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_inventory.ml",
+      "source_sha256": "e2f41f8f81a26cf41366ce1a40f32acd1cbe70333ab08d9b2fa743bde15d5817",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/inventory_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_message_hygiene.ml",
+      "source_sha256": "250deb8e17345fc97e6b7c48ed28ab75f194bce730a529d74202f2115f28e94a",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/message_hygiene_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_ocaml_only_guard.ml",
+      "source_sha256": "cfc24790163d5b6cd891dada7dd6a05e281af004a46c27fbde271c4dc4e02588",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/ocaml_only_guard_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_openrouter_contract.ml",
+      "source_sha256": "dd6ed0a24449ecd5fcc6ddf083ea051883dfc49600a53d40257390ab688f067e",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/openrouter_contract_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_openrouter_transport.ml",
+      "source_sha256": "296379d080e449338ab91a5db6bf662dfc45654d0cbc80cfe7c30ed5a5b13fea",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/openrouter_transport_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_orientation_history.ml",
+      "source_sha256": "ef37c144856d71cdea9c8dc606566b7fd98fbf92a3673c61eb1043d2108c48eb",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/orientation_history_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml",
+      "source_sha256": "13644f83e002d23fc26338ebdd4ca92ccd6a6b6482cf9ab93af9cf0ff9c62644",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/parity_algebra_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_parity_compare.ml",
+      "source_sha256": "da397a65f3d3753242f27d594a96cac655724e05c72167ab9085fbcbede7105b",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/parity_compare_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_parity_dashboard.ml",
+      "source_sha256": "6f6d2cfe48a1a2fd0a17bb89a0cac80b14262f42198404a85a7822f44436a203",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/parity_dashboard_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_parity_ledger.ml",
+      "source_sha256": "d26201ffc0e0c76f6cb3343188c5b5483b60a0dd7044b756c9ff906cb492bd76",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/parity_ledger_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_parity_normalizer.ml",
+      "source_sha256": "c632e7712a09b5539507cb0c7535770d5c69ab0bd03607ebfaf357fd8a408b91",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/parity_normalizer_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_parity_tracker.ml",
+      "source_sha256": "499d2e2d620573eb20fbdef8e28e106350ef568524e28f9e33931ab3200e6a96",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/parity_tracker_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_path_safety.ml",
+      "source_sha256": "fa75da4d6ce721b876707e247089286f402bc20808af2c0b52f6b01bc1ce8f93",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/path_safety_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_posterior_assessment.ml",
+      "source_sha256": "1a18b996af881f77b321507e45d2b4ac144043333f62ff244919a1431387652a",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/posterior_assessment_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_quint_frontier.ml",
+      "source_sha256": "e039a0bc8bbbd867a54ad8bc6660c3543f8cb07e6ae334d6e27dd683671b45b4",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/quint_frontier_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_r30_adoption.ml",
+      "source_sha256": "2173c0a068695748cd4a57d04234c3c1d724e81c500f88cca711ba59932c2974",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/r30_adoption_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_receipt_reliability.ml",
+      "source_sha256": "fceed7af14a2ee211d96ff5f50f6a9cef0ae36643bdb5dfa9123a7d3fce81fdc",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/receipt_reliability_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_reference_artifacts.ml",
+      "source_sha256": "28d2cd91fe4e6083ad3fef8969faa6128630becc554a517f70b8da1cca120714",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/reference_artifacts_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_reference_capture.ml",
+      "source_sha256": "0bd3708e9fa1ab03e65c3fa9d72bf833abcb59ec23e9b1f3cb82de4c5151216c",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/reference_capture_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_replay_executor.ml",
+      "source_sha256": "79b5014d02a639d9395cb7b4329b445b6c62b9cbb4ce0f431bf6e543eb653e6c",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/replay_executor_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_resource_envelope.ml",
+      "source_sha256": "a49f0f998bd287f6e219a1006936c85c519bab60ea31b79536d68ac71c26035e",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/resource_envelope_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_retry_utils.ml",
+      "source_sha256": "4e020c00ebd82d20b780e3e5531d52f70d25591623d7422f0d81c9be98f62c09",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/retry_utils_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_rocq_lattice.ml",
+      "source_sha256": "5e60a6eb17054f9f21a642ad6410b9569d0b96ec87016730c0c341b9e3fec4ad",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/rocq_lattice_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_route_resolution.ml",
+      "source_sha256": "e3d1df8b91d2cb3082be5389df01821de3711ef220474421ac891aedfa77faad",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/route_resolution_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_ruliad.ml",
+      "source_sha256": "7662439aa02609565ca55ee9967cc26f337cee404ccdec8c45066d9d77932b79",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/ruliad_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_ruliad_rules.ml",
+      "source_sha256": "d09ad6247c627a4254b478b1411ff0b6b3177dd0da74ea43a5a6c74cc4502c1a",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/ruliad_rules_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_runtime_coverage.ml",
+      "source_sha256": "43d1d47e92f9015dc8f6a3579721356603cf7a0c56c35ae109b212dd20f28182",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/runtime_coverage_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_rust_rules.ml",
+      "source_sha256": "3a8296d4a36914edb4f27c28c7c6ca92251b5e560f70af1143a57cf86fa75d5a",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/rust_rules_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_session_fixture.ml",
+      "source_sha256": "501ac6265aed7cd82e82e3a09c2188501c82487224f66e9f5c4191f0e94e7140",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/session_fixture_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_site_build.ml",
+      "source_sha256": "590c8a3418e2f52662ed42f70c0ca3efda1813c98da71d7539856193ec78250c",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/site_build_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_smtml_alerts.ml",
+      "source_sha256": "80bf99cbc58556cfae2c6e206f95715e0f555591a1c98dba6c0692a0ce48fab4",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/smtml_alerts_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_smtml_lattice.ml",
+      "source_sha256": "036b53407d939c33ff0cc07d91bb8b65bc795f215a93f67b2cf7966124de040b",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/smtml_lattice_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_suite_telemetry.ml",
+      "source_sha256": "bdfcdbc9d2f443c5499349024fc684570c4ad991e8de2bf4bb6bc0d0e3470d9d",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/suite_telemetry_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_turn_budget.ml",
+      "source_sha256": "4b7cc01647b0edf074fd5067a0bb1566f2ab37df8598855fa1c34ab311f9dae7",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/turn_budget_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_harness/test_turn_preflight.ml",
+      "source_sha256": "d938276f08a893f448eed74d55af9fd803d6813c925ca48e9870e2e0334cdff1",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_harness/turn_preflight_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_nix/test_nix_algebra.ml",
+      "source_sha256": "5ea4d09d4f4348daa090c1fd5131c17a0af7697400b1646cd0224262dafbb014",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_nix/nix_algebra_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_nix/test_nix_command_contract.ml",
+      "source_sha256": "ad8ffe18a131102b717446194a5b4973fade474c85c9bae26fba907a7fb2e68d",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_nix/nix_command_contract_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_nix/test_nix_intent.ml",
+      "source_sha256": "8fac555254b219025e9cd3dbb74c3a522d7a8f9c927414875aa1484dd2234969",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_nix/nix_intent_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_nix/test_nix_ontology.ml",
+      "source_sha256": "e72e21df6bdaa74ef2aba48fbd2b38efe1f21ad9b748a181047979823115e44c",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_nix/nix_ontology_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_nix/test_nix_operation.ml",
+      "source_sha256": "bc02584c640af268fdac814b3f313235a36d6ad9c33ecebc8cf69f7cf68bc9a4",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_nix/nix_operation_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_nix/test_nix_policy.ml",
+      "source_sha256": "2f9d96b33b7806eef7480757775f4ff30f85d82391a854499b3d41df748fb1ba",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_nix/nix_policy_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_nix/test_nix_receipt.ml",
+      "source_sha256": "edb77a43cdc5dd684f6fbc91077cfe2acaedf3bfe54c989df02897647424d19b",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_nix/nix_receipt_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_nix/test_nix_sysml.ml",
+      "source_sha256": "d080c335442ce17efc36002aa365bc6fc8342b97f0f92477c402d47742ad67b3",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_nix/nix_sysml_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_debug_system.ml",
+      "source_sha256": "1d122a7b573f60386dc3240cdbceedbb3d760abc2ebc80c4d37b8d75fc53dcd5",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/debug_system_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_external_access_census.ml",
+      "source_sha256": "7e5d30b5f6a9fa0a9154c21db195f89a8fd185b8f5c128c5b998109db13e44e1",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/external_access_census_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_external_access_formal.ml",
+      "source_sha256": "e75dbbb570d8b19178844ee46b5752d9077c67af36406012b0878bb01060a473",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/external_access_formal_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_external_access_fractal.ml",
+      "source_sha256": "06ed2e5b4aa5f7e0c9819081641ac8e7f3b6ac0a8bc4d861101ae5624b802ece",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/external_access_fractal_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_external_access_observability.ml",
+      "source_sha256": "ba9b4a41faf1c3bed89f9eac34360bc2d169d68861c3782f2c172d05867b97e7",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/external_access_observability_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_external_access_otp_register.ml",
+      "source_sha256": "bf8853c76cfd313f876415c7a54364ea11f26ad8d2aac2e0d0fd5cd09033b12a",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/external_access_otp_register_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_external_access_rete.ml",
+      "source_sha256": "109a61a7374897d08b9d956ea403ae91383c017d059d20ff01e9036c8f0bd566",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/external_access_rete_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_external_access_runtime.ml",
+      "source_sha256": "d9ebe66676772429fbfdef419cafa9fed4348b13819e11035fd7a92496484b5d",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/external_access_runtime_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_external_access_smt.ml",
+      "source_sha256": "7e7aec4c4b0007e5d5cecc726341489f8cdbc531f73e9aab1e6152040787ae29",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/external_access_smt_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_external_access_stan.ml",
+      "source_sha256": "7f938bbfc6953d2cde6cfe520c0e37a8fc2d03b18e99abcce31570f3dc57e18f",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/external_access_stan_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_jj_recovery_transition_port_vault.ml",
+      "source_sha256": "56335b8045beda48cfa9b569e5b60caf972e520bf7c8caa6a505f5917880ca93",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/jj_recovery_transition_port_vault_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_jj_unavailable_runtime_registrar.ml",
+      "source_sha256": "57c6aa0344ef3510352afeb20162009bb965b9099ac467dd4f2f6a8fe28d13e1",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/jj_unavailable_runtime_registrar_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_module_intent.ml",
+      "source_sha256": "616227fb4e5f258ab4f87d2005bec6241e2f5cdbc0a75b1be9800005cf2de3e7",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/module_intent_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_ops_capability.ml",
+      "source_sha256": "1a25d87c65b682c5e710af551c4ecac82a68cab2e734600f4e3c090f6495474e",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/ops_capability_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_ops_capability_gate.ml",
+      "source_sha256": "8937a44e327c4444cf1b01d97c3d699350697b8cc06f8a0ef2adb8bbc4db45c8",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/ops_capability_gate_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_ops_command.ml",
+      "source_sha256": "bb95167e6e3f0182119b19cfc5eba4b3e7c39c5b9e3978bdc92649f93970812c",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/ops_command_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_ops_command_runtime.ml",
+      "source_sha256": "6b53a224d711ddc738972e79f30f96761b7cb670ca1a0f3f0ffaae9dab3bedab",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/ops_command_runtime_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_ops_command_service.ml",
+      "source_sha256": "3de888ddfef0079bcb88dfa861217ca846bbb0e92678dbc732da3c9c1844ee2c",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/ops_command_service_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_ops_completion_history.ml",
+      "source_sha256": "2730912dc073abf55435201121cb427bc584a98d84c137c73bd0a42a263b561a",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/ops_completion_history_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_ops_completion_receipt_target.ml",
+      "source_sha256": "1837af88168bb36091a51cb9e6defbb3dc81909a4fa822cbb5b20309d9ce13dc",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/ops_completion_receipt_target_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_ops_config.ml",
+      "source_sha256": "a9cdeb21d0025d8c0fa5a2f6c8492bf532b757b66d634d89d070a0ffe278b019",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/ops_config_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_ops_config_fractal.ml",
+      "source_sha256": "3f4643e5f8dff146255117289c158777ffdd4a788bdc8c4e2a9ba42594e1a102",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/ops_config_fractal_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_ops_formal_staging.ml",
+      "source_sha256": "e1c1f96e3c55738004d4cde0fef1860bac7f524d15e22f9e8b9eb407c52ba0c4",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/ops_formal_staging_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_ops_governance.ml",
+      "source_sha256": "c78beb8776ad1dd1cb417882287bfdaec5b50529cc655bb2238096c914b8f683",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/ops_governance_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_ops_governance_formal.ml",
+      "source_sha256": "1dd13cee2f25278fc24b400994e2c4c6cbb7514cbb3ec95ebe1f3767c4283517",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/ops_governance_formal_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_ops_governance_model.ml",
+      "source_sha256": "a9d30c522fa7c50f932cf4b25e339a2b0f3adeecef79504a0eaf728bc111da7f",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/ops_governance_model_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_ops_jj_target.ml",
+      "source_sha256": "42ce1eb1bb75bfc827f1a88e0b9dd00e3dacd51b787e19040ac96e4af28d881f",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/ops_jj_target_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_ops_mbse.ml",
+      "source_sha256": "bca9a66a8999c26f0c88fe7a6bc7673828b1e9a60057b7652b8be9792ebca23d",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/ops_mbse_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_ops_mcp.ml",
+      "source_sha256": "2807bf6f128bfdd91fc0abcaf532ccaa852f944cc612e1e849e071fda87130ad",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/ops_mcp_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_ops_mutate.ml",
+      "source_sha256": "a7f76618f808c802e98c6b74611bc21afd7deb0adf77c711447d36f363db4aca",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/ops_mutate_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_ops_verification_target.ml",
+      "source_sha256": "b36bc308c642f5484247cb2a55384bfd7e845906915719e7db83d7f127f3adc6",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/ops_verification_target_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_ops_verify.ml",
+      "source_sha256": "f3ca47dc569b641b13d373961df2ddf5ab5dbf56c889ffda85e404ede327a7f1",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/ops_verify_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_ops_zenoh.ml",
+      "source_sha256": "f3b27a383a3f09d69e86d3ad65741c77526414721e75b711808c691724a3760d",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/ops_zenoh_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_run_jj_candidate_activation.ml",
+      "source_sha256": "10f3c8e46bbe8414ecaf446b2b27b668878debf171cae421baaace5442c080df",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/run_jj_candidate_activation_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops/test_run_jj_operator_runtime.ml",
+      "source_sha256": "161341d967e7bff08462d036e114ed5012dcea436ad1c1b46936f2ab6b4e5752",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops/run_jj_operator_runtime_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_abandonment_authority.ml",
+      "source_sha256": "2e1f9877351f6d7fc814aad6aee509beacecb0da174bc5b933df45e234f19ae2",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_abandonment_authority_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_analysis.ml",
+      "source_sha256": "1d2b92207d535d821fd66ecb7c064fc11f4555c7449d6e0598c01605a96d5b6a",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_analysis_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_analysis_z3_worker.ml",
+      "source_sha256": "ab3c8440bef26b880c80738ddcdd480e78c0b3cd20a1a4371039762cdc8b89e8",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_analysis_z3_worker_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_analysis_z3_worker_protocol.ml",
+      "source_sha256": "1e3d4699d986fec86380a124e1322e3949193c4d8e0ea874ead4b9b4d1ceffdb",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_analysis_z3_worker_protocol_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_assurance.ml",
+      "source_sha256": "f099f3b38ee68c020319541d30533e0bb891e05ffde47406daa194b0a0fb0414",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_assurance_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_conditional_authority.ml",
+      "source_sha256": "8fe11426ec09ffddbc68296821d48ee461d1ea01be19974fa65ebe487555d721",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_conditional_authority_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_dependency_authority.ml",
+      "source_sha256": "a15c4550823a2fc71f72b56605070ec0b53d3042abfdcbc7370d68ed1215b731",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_dependency_authority_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_effect_authority.ml",
+      "source_sha256": "121e6ac5611e28b7cb8ffb8751217252f9f998697dc313dcf098ae2cfea8dd39",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_effect_authority_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_event_store.ml",
+      "source_sha256": "4a8292cd003fac1ad8636788e113cc2bcb3d326cb042cad065c71e7f3c59eb28",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_event_store_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_formal_relational.ml",
+      "source_sha256": "ad0226c3c59df6ffe1e0fafdca8a69dffd6aa5a846d554467792ae3cc07766fd",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_formal_relational_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_fpp_authority.ml",
+      "source_sha256": "765001ea197cab122daf5783914e47c5723386c06b54f8c107131117202a4212",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_fpp_authority_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_governance.ml",
+      "source_sha256": "9df128049f9ce9047b17190ae2ee8ec75c67d00925533b8296844a0a1a39d100",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_governance_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_intelligence.ml",
+      "source_sha256": "5d6f07db38b60786cefbd1f48356ae58ebd06a712974fcb44f620a8b940ba48b",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_intelligence_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_jj_authority.ml",
+      "source_sha256": "17c6517df47999a1b6128da83e7e07e612a2a81fdbfd78668e193745325eb5a9",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_jj_authority_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_jj_runtime_registry.ml",
+      "source_sha256": "7e2f1b15e51642468700c7cf752c52ba585ded32b9cd5e8a9bdc29135b4107ba",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_jj_runtime_registry_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_model.ml",
+      "source_sha256": "be48635ea70475363182e82f45ba9d8e7d5f9ccd370ee9a91bcc3341e5eb7b52",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_model_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_model_surfaces.ml",
+      "source_sha256": "31505260fcf1f591b6c13450b4719b65d1b4c8271e516f27a4e2c95a6aef021f",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_model_surfaces_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_operator_authority.ml",
+      "source_sha256": "f8c2d592c3f690e3e660600027373055a74a8f8039483d3ab9c96bc06a74f82b",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_operator_authority_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_root_bootstrap.ml",
+      "source_sha256": "c0afe7f0d77ab22dd875bf162a58579c68bd329586c99ac1f7b2decf5019d2f0",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_root_bootstrap_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_safety.ml",
+      "source_sha256": "967f8bc310e6e5df21c665e34bc27034468f32c7e7dc2decb6a87eb6ff57295c",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_safety_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_snapshot.ml",
+      "source_sha256": "ffc757097ef438c02419854fb1cb83fb652e65f6416fbb120f59d75ffc7cbd00",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_snapshot_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_swarm_bridge.ml",
+      "source_sha256": "296221665de871f0dd5a2d8892e4aa5708ae751a71e89c26fc88c4d8b5be2264",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_swarm_bridge_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_ops_dashboard/test_run_swarm_preparation.ml",
+      "source_sha256": "e61aa2d7ec401d5357bd97ede8720f81d764ca730f48d893fe6c2bc254cf61b5",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_ops_dashboard/run_swarm_preparation_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_sysml/test_agent_bdd.ml",
+      "source_sha256": "b2db3fab72bb15d38f7827ff612ef3c7f6d79326543b0d9bc828ba01cc25371d",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_sysml/agent_bdd_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_sysml/test_agent_chaos.ml",
+      "source_sha256": "2d3482270dbe768a4344348335ffbec152176aadffb3cdf517aed12e92691748",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_sysml/agent_chaos_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_sysml/test_agent_fuzz.ml",
+      "source_sha256": "b870b82a5ee37f98d86958111cdb09f312136a6d5653c5f1d1367e77326faf85",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_sysml/agent_fuzz_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_sysml/test_agent_property.ml",
+      "source_sha256": "2d8232da0325c75b761d9ee566ea46f0627a362f3715cd8d778eede4145cacb9",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_sysml/agent_property_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_sysml/test_agent_tdd.ml",
+      "source_sha256": "698a26719d3c1e6d1860ac3267e36a3d648e58501c4304dcff3ad5685083ea63",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_sysml/agent_tdd_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_sysml/test_sysml_algebra.ml",
+      "source_sha256": "28d8a1c1583bd3016a887a3150718b343ebb35441b714e2e03fc2a230c305d82",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_sysml/sysml_algebra_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_toolchain/test_tool_hygiene.ml",
+      "source_sha256": "ec1c326ed7f3510f87a3826086cbd1403726f3329dfd6ab95e32a0061a38d549",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_toolchain/tool_hygiene_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_toolchain/test_toolchain_check.ml",
+      "source_sha256": "bc5e54e0a23c3f32b6374af2f3076bd503d5ce0bb07622886b99f7049fcfd0c3",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_toolchain/toolchain_check_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_vcs/test_jj_action_kind.ml",
+      "source_sha256": "e2dd84b60cc84ba150c60a96a2d202a62c466e3ef380bc142dd7457bcb9aaaf8",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_vcs/jj_action_kind_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_vcs/test_jj_bypass_quarantine.ml",
+      "source_sha256": "e56d1b3456ba88e4d60ee6498b0d5541db357e73d447718ce4575b38e2596654",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_vcs/jj_bypass_quarantine_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_vcs/test_jj_campaign_action.ml",
+      "source_sha256": "8183ca7dcad15a4840b5dfe042f530c98ce32b6dc7b7801c28f57eb766222789",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_vcs/jj_campaign_action_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_vcs/test_jj_command_contract.ml",
+      "source_sha256": "79541f9b43d33ee0c02c2737995cf37ab8926b9d893a850f48cc11df7a2f37a1",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_vcs/jj_command_contract_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_vcs/test_jj_completion_store_protocol.ml",
+      "source_sha256": "5e556328d3c3cc2265b9af095ea390cdd9349f9ba94df368a01e5ccd71c32bb2",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_vcs/jj_completion_store_protocol_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_vcs/test_jj_dependency_schema.ml",
+      "source_sha256": "ecfcd867b4327ac69dd91cbdf06e74eaf21edf240156c140c1f897dd01fd6b16",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_vcs/jj_dependency_schema_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_vcs/test_jj_fractal_authority.ml",
+      "source_sha256": "bb7dee5ee8b95aea97632624b260dad35e78194b81c29c81142e8f387ea436f5",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_vcs/jj_fractal_authority_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_vcs/test_jj_intent.ml",
+      "source_sha256": "75646d6b5ec77d1ec2f420a3ecb0cf79982f0dcfebba706842a1b96713f417d4",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_vcs/jj_intent_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_vcs/test_jj_operation.ml",
+      "source_sha256": "1f8f750f4fcdce55147e2afd905fb14361cd058570c9d1b4f15ebd91b33ecb63",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_vcs/jj_operation_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_vcs/test_jj_partition.ml",
+      "source_sha256": "eb98309abb9175fe3c717fbed2eeccd900310dcadada14170c0000ef29e16ce5",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_vcs/jj_partition_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_vcs/test_jj_policy.ml",
+      "source_sha256": "b2c46b55b1b6007897500cb27a03511bf2f8b84bdfb7f7ce21925f15b51ecd03",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_vcs/jj_policy_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_vcs/test_jj_receipt.ml",
+      "source_sha256": "b4907ba99697e49aed7b8c7c2c442a5318d374813331955b3f45c22e71613c0f",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_vcs/jj_receipt_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_vcs/test_jj_recovery_schema.ml",
+      "source_sha256": "6b4f4ba8156aa720e394a1ba9e8a377aead4717e5ef1323e159469c3a9b615cb",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_vcs/jj_recovery_schema_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_vcs/test_jj_recovery_transition_port_protocol.ml",
+      "source_sha256": "2f4c63e26715e92a2ae7f3c08a3a28a9d236c0d1c26ff518d856b7579b334318",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_vcs/jj_recovery_transition_port_protocol_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_vcs/test_jj_release_protocol.ml",
+      "source_sha256": "272fb157cfe34d6ce1fe61e9523135e3e12f9d5be0cd9f2e4f726cd91f8910e3",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_vcs/jj_release_protocol_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_vcs/test_jj_revset_manifest.ml",
+      "source_sha256": "bf1231edaabd419a623b4495cc30dcff20bed35d06c0c103b6ff1525b38afd37",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_vcs/jj_revset_manifest_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_vcs/test_jj_runtime_current_protocol.ml",
+      "source_sha256": "84ada52f70c194b732828f77489a92cc145cad04903a9d2f33093886f6708484",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_vcs/jj_runtime_current_protocol_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_vcs/test_jj_runtime_manifest.ml",
+      "source_sha256": "ffc4658493d278c8eef23177ec9028c0f79d36aadcdfb9e479f6504d3551b21d",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_vcs/jj_runtime_manifest_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_vcs/test_jj_target_protocol.ml",
+      "source_sha256": "6e2449c515ff9b8dc5a81c8e10768c493153d64405fb0126f89be986dd1471e3",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_vcs/jj_target_protocol_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_vision/test_vision_fuzz.ml",
+      "source_sha256": "d4aa0a772aafe8b7b956d98a009e019e27ecd0081f22f536164bec9fa2101141",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_vision/vision_fuzz_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_vision/test_vision_pipeline.ml",
+      "source_sha256": "9c33275e5f9ffa73979667c43835f7d12052ac07c2cfdd9c78db5ab36882cbeb",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_vision/vision_pipeline_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/core/test_figma_design.ml",
+      "source_sha256": "b9675754e04da3b7c5c75a9b27ecc0601f4737c10fcdef3eab3eac9e4cef29a7",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/core/figma_design_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/core/test_route_algebra.ml",
+      "source_sha256": "15bf7f1ea474c16b42aba7082f298e20c3d89f24cecffe804656a171d15a3cd2",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/core/route_algebra_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/core/test_typed_html.ml",
+      "source_sha256": "90ac37e70f62e6311ec0edc5d08e8152aa60dcbbacbad6430bb0761e5c40f674",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/core/typed_html_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/graph/test_graph_analytics.ml",
+      "source_sha256": "96840a3d1309e840ddeb21f8e85146fcda889c2214dfcd28d0c786b65e2d7d64",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/graph/graph_analytics_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/graph/test_graph_export.ml",
+      "source_sha256": "a6600dc536e918eeabe6cd1931b4d000e093af23c29b34dcef91a696db5c2c89",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/graph/graph_export_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/graph/test_graph_intelligence.ml",
+      "source_sha256": "e22624f33bbbe111a55ab7b21a010c8fa8e63437222fea5aeff8df3f76d732a4",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/graph/graph_intelligence_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/graph/test_graph_intelligence_workspace.ml",
+      "source_sha256": "d07a4e47cd9031d5fb0b7b58ba5af79af9ab790d2d3300e2f486268d511cc2fc",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/graph/graph_intelligence_workspace_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/graph/test_graph_processing.ml",
+      "source_sha256": "f5bd3f724e85a856f7228a23572187cbcd1601491ef900069a361da4b169e930",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/graph/graph_processing_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/graph/test_graph_revision.ml",
+      "source_sha256": "5d1cb32224fa99f746415277dd2b035ee4f56ede721c561b6037b28473da82e1",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/graph/graph_revision_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/infranodus/test_infranodus_acquisition.ml",
+      "source_sha256": "a6667d826f94e0042847647935ef42eff743e260012153561ab99adda9a0ade1",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/infranodus/infranodus_acquisition_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/infranodus/test_infranodus_evidence.ml",
+      "source_sha256": "b1efd8941b2b090271177d5d63cd350fdf460964b5e068926e626e6981f458da",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/infranodus/infranodus_evidence_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/infranodus/test_infranodus_feature.ml",
+      "source_sha256": "51ba232070f6ae3b808fa5970dd1f33e2bea516e1a5d5946f7dc0b5035b63955",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/infranodus/infranodus_feature_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/infranodus/test_infranodus_host_adapter.ml",
+      "source_sha256": "27253dff5a98970f9e437d96775bb72b4a8cd74d825a94a83a1ba1f1eb6f4fac",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/infranodus/infranodus_host_adapter_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/infranodus/test_infranodus_scenario.ml",
+      "source_sha256": "64938f33078da9462cc450a6bd56dd2650c7f9bd9e500dcec9ebce0a64346edb",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/infranodus/infranodus_scenario_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/journal/test_journal_bundle.ml",
+      "source_sha256": "a9d5dccfdc40ffabcca533326c86f9d650e85fe78d0ee4e33bb85f0b4f324337",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/journal/journal_bundle_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/journal/test_journal_bundle_digest.ml",
+      "source_sha256": "d71112bab82d79be4fa47276f14240cb3ce5e73d76b4a56ff8a2fac5f06b6e67",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/journal/journal_bundle_digest_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/journal/test_journal_bundle_io.ml",
+      "source_sha256": "83c9cf5dcb4f904fb3cc30d53b3792160ccc9a0f244fe831fa934f28b5c5d629",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/journal/journal_bundle_io_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/journal/test_journal_bundle_telemetry.ml",
+      "source_sha256": "1143a0c7ab8135582cdfe63c12131789cd7f946b94489855a2cce1f0901b40b2",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/journal/journal_bundle_telemetry_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/journal/test_journal_bundle_transaction.ml",
+      "source_sha256": "4317bd142bac53de653b0a4710b74f61bb3c464e054098c8ec4ffc12d00deb21",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/journal/journal_bundle_transaction_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/journal/test_journal_markdown_html.ml",
+      "source_sha256": "998662099bda0c53abf9db49e72043d0171cbe10b3eaf3d89efa11dceb02c2e1",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/journal/journal_markdown_html_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/journal/test_journal_playwright_contract.ml",
+      "source_sha256": "8fb95b48f9e5a4f5152e4d34bbcb566c5e6df6d9308eaecaf0b8379c15d91288",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/journal/journal_playwright_contract_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/km-profiles/test_logseq_profile.ml",
+      "source_sha256": "92d0bd103f118830f0222dbafb766ba9f02ecc015ec4014161a09b27a2ec285e",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/km-profiles/logseq_profile_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/playwright/test_playwright_controller.ml",
+      "source_sha256": "a4d7d64b04c1d2f499facd3bcd5d79ef9a4ae2b6fc10c73a4d6026c359d06f6c",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/playwright/playwright_controller_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/wiki/test_wiki_selfcheck_parallel.ml",
+      "source_sha256": "a1fbadee5bcc687238e823770831f8322f71db8761f3faa96e12ff88f4f2414f",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/wiki/wiki_selfcheck_parallel_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/wiki/test_wiki_shell.ml",
+      "source_sha256": "25e4232cb3ae0cd81db9401a65bda12bc08573be5efb7122281c909896d3261a",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/import/zigvm/code/wiki/wiki_shell_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/src/tools/test_baseline_triage.ml",
+      "source_sha256": "97e12f981087886a4b74570c03814765878790ec1f8377ec52f084bd93eeafaf",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/src/tools/baseline_triage_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_claude_artifacts.ml",
+      "source_sha256": "a75f219ca733b14c317e6dbfd58d035d710bb5b56cf5f5c8fe91197c43a7f4d5",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/claude_artifacts_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_dep_sheaf.ml",
+      "source_sha256": "423dfd0b1f5769e2d4b8515363f77f16a1441c752284288ab479aa086a3b041b",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/dep_sheaf_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_feature_model.ml",
+      "source_sha256": "e649fb5ed638bf1f7b2e7fbdb604a49e3cff520a86ee67b621717454fb88d456",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/feature_model_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_feature_register.ml",
+      "source_sha256": "fe59bc9b813c551cf311e944eea5b01aada3077111eaa4adca927c976c53b888",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/feature_register_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_fpp_model.ml",
+      "source_sha256": "4beaf4e0d55a6d4e494d12c28b146eb2e0dfc897714fb39023581a6b58564ee6",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/fpp_model_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_hermes_httpd.ml",
+      "source_sha256": "01daee54d58077865cc76a8fe6243ea2ca1584e75025382976fb48d1d59a626b",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/hermes_httpd_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_hermes_wiki.ml",
+      "source_sha256": "e8724b3bf606876bc8e373c175eb90145c7df26f2e07c93e305ac60ec9dc209b",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/hermes_wiki_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_km_journal.ml",
+      "source_sha256": "cc156e2d8750b55964e13d2f70bb42e4fb1c475e1b8f49b06552e59db3992f81",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/km_journal_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_ratchet.ml",
+      "source_sha256": "dc0b464a53803ffc004c6f2a56018785e0dc0f4de6de84e079c7fa4767c4f9dc",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/ratchet_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_reconcile.ml",
+      "source_sha256": "7223d01faefc6515bdb2380a401ae9f0803d9359b0f9c7d8d06aa48762af4201",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/reconcile_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_render_baseline.ml",
+      "source_sha256": "7af63df9da0294673da3b3f78c6ab1f571bdc1e20e7d6aa2f9fc2b02272e494d",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/render_baseline_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_address.ml",
+      "source_sha256": "5dd5835512ebc4729533e7f52aeaf85306669f8db870930b618c9bcf7792a924",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_address_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_ast.ml",
+      "source_sha256": "3603cbc5b957881e8ad5989e14905155df96f35e3647f623e40d571804e7dbb3",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_ast_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_baseline.ml",
+      "source_sha256": "b40f57fed82b35087282a395a47e87204184ccc311d36645e9bd11ddee6c58fb",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_baseline_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_blocks.ml",
+      "source_sha256": "2df26efcc2cfdd04f05f610d3898d1285cade3575770dd2664a932a824a52ea5",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_blocks_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_build.ml",
+      "source_sha256": "120d28a9a9942fa31fd533355f81ec2c5e9668962167112e0f1f4b1e1f5320a4",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_build_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_datastore.ml",
+      "source_sha256": "f580f5c122dd3c3061e10f7f5730a0441230e53022c413b0e2034fac9a860309",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_datastore_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_diagnostics.ml",
+      "source_sha256": "8c36e7de39526ea751209def9592ef911e174ed4db6d474e7eaaa632c783ac59",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_diagnostics_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_directive.ml",
+      "source_sha256": "f76be44e9c920a9c6a8fdc585eb43fae9ff01d53684d8efc42c04fab255e1d37",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_directive_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_doctest.ml",
+      "source_sha256": "bb8b57994eafd08db5c9721bd5d2cd5584d4d7bfcea6f448696fc1fb7ec4c15e",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_doctest_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_export.ml",
+      "source_sha256": "cd07f2f7930bcb39f90582570e080bcfe7c4dde065a0635fd322a942b8797c49",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_export_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_frontend.ml",
+      "source_sha256": "2d51d36faedaebb13a453a88771fbd2ea154c9e804c575b6272a80c8c6093f0c",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_frontend_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_graph.ml",
+      "source_sha256": "c1272ce78ab1e4a69c0f511fef5ddd19916a97e374484c8ffe11df7d056be2eb",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_graph_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_iface.ml",
+      "source_sha256": "7bbf3c90e103486a71671f504f9563d34d3bf47d087589c3ca9da6c1b98039ba",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_iface_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_include.ml",
+      "source_sha256": "b820da8986b0917d27dba2bdd4074e0ea9696688b854d2c8ad2a55f88ef7381a",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_include_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_lifecycle.ml",
+      "source_sha256": "6907657c625d7afee442cc0563f33c8dc1abbabe90332af0d88063c4ce1e8954",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_lifecycle_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_navsearch.ml",
+      "source_sha256": "30de52ecc84ea1521a0ed189125649cda9fddcc101a1503659a20cf57c849512",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_navsearch_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_ordering.ml",
+      "source_sha256": "145465271b86f0189aac323367f0e52adf88447f2fda99be4818023fca1d871f",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_ordering_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_present.ml",
+      "source_sha256": "18eddc6084114c5a12753dbdf09f965c6b97588c67d6c640c5ec95e4db8c251e",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_present_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_query.ml",
+      "source_sha256": "c3923f1d98d8951537e48d52bf1566f570c0fe363e7dcf9658f000c1630c28b8",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_query_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_ref.ml",
+      "source_sha256": "47b5a7ba4d4a178f0649a8241e1e926e81998800e265a8714ccf795b008cd9e1",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_ref_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_routes.ml",
+      "source_sha256": "4f135ebec7f3776bbb9914b44af07f534ef39c76d1dbc7c04742a132019c7303",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_routes_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_search.ml",
+      "source_sha256": "81d6f9e55d1eba2f19953ee85780c004e1ed01cc800615a4b08a7c6110c5d4c2",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_search_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_similarity.ml",
+      "source_sha256": "107eef82c3f1e4ce1d0c26838657575ed891d3d921d25d9e5cf7c447ddb4d83f",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_similarity_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_source_ext.ml",
+      "source_sha256": "ea7f7d80eedf5beb9815273b5d5ac8f0f4075bf822ea62aca4b4f6f0abadc030",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_source_ext_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_theme.ml",
+      "source_sha256": "04bd4b3dc46f12cc289e37ed7fbe17281496511f0e69062e35dadc406d12a520",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_theme_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_toc.ml",
+      "source_sha256": "1847d738fb74ae8b5d86bcc145d9b2305456bdc6f627ef896cf5c845782d1bd5",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_toc_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_topology.ml",
+      "source_sha256": "1c638350e0e78b5ffe0d67c6a13401c174e32ce9d4fc7ea34ee05df8a1e75dda",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_topology_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_transclude.ml",
+      "source_sha256": "0239d0131c8db4d274afb6a95fa375c94bf9f5885f7552647e5da170b98816a8",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_transclude_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_tyxml.ml",
+      "source_sha256": "c724b23a7820397add39ad862c2125e4f88447ece2e4eb76e4f8a6efa760c504",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_tyxml_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_view.ml",
+      "source_sha256": "56654a0a65c6f8e6bf778ac4d16ad43caa1c2a8868dd1df99d77eef1646b6b3f",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_view_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/test_wiki_visibility.ml",
+      "source_sha256": "0a54191baa439b4b7f732adbd63603c0ff5adf01e19718cf880d6c3563b536d5",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_visibility_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_wiki/test/wiki_suite_telemetry.ml",
+      "source_sha256": "c9204d5fbad0bbcc8b6595bd2c23a74fa3e76de6d6e4a0fe5627fb9f952eb7a4",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_wiki/test/wiki_suite_telemetry_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_zellij/test_zellij_live.ml",
+      "source_sha256": "cb807b1cf61c10756abdb622b6ced81f7151e5d617185e4d4d000fa8fa4bfc38",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_zellij/zellij_live_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_zellij/test_zellij_model.ml",
+      "source_sha256": "ead4c42d64c98e4628209f37aad8cb42076bee37f4a20cdeaef3e60cd3b342d6",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_zellij/zellij_model_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/hermes_zellij/test_zellij_projection.ml",
+      "source_sha256": "507c33576c3979d45aa6b6bb1d988284b0023bd608635b5a22187b0be9c286cc",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/hermes_zellij/zellij_projection_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/swarm/test_challenger_m3_2.ml",
+      "source_sha256": "b34956556262584fbc37021bbc4d1b2c7341374c1b8cb95e9c48c1fb799c41b9",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/swarm/challenger_m3_2_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/swarm/test_challenger_m5_2_stress.ml",
+      "source_sha256": "55f6038d665b8efc79b2977945171743a436490b087300d96a65f625dd78c5b8",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/swarm/challenger_m5_2_stress_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/swarm/test_datarhei_vision.ml",
+      "source_sha256": "c68256746e275dd8371622d5e0d4562c5c67e2e5320b2051a07ea0eb114f0b01",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/swarm/datarhei_vision_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/swarm/test_ffmpeg_swarm.ml",
+      "source_sha256": "c7a8f92d89d035394070c8cec22b2b820e1528ede88b15dc9c12baa4076cc54a",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/swarm/ffmpeg_swarm_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/swarm/test_lmstudio_continuous_swarm.ml",
+      "source_sha256": "d3f803fdca2cb7d78efee69170d42e16ab9da169204f03a642fcdfe4732554ee",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/swarm/lmstudio_continuous_swarm_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/swarm/test_lmstudio_dashboard_web.ml",
+      "source_sha256": "194888475c30d57a920148be0bb053243bbe457ce64651ccc53beea938bfccac",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/swarm/lmstudio_dashboard_web_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/swarm/test_lmstudio_expect.ml",
+      "source_sha256": "fd4dbea4cd478df66340d4124c6849b4e0cccb6a9d8dc04c260ac1c623d123ad",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/swarm/lmstudio_expect_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/swarm/test_lmstudio_live.ml",
+      "source_sha256": "ff6efd592c2ba0bca3fb4053149103d505a143975f7c5cb3d0f701fe75fb6c29",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/swarm/lmstudio_live_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/swarm/test_lmstudio_monitor.ml",
+      "source_sha256": "93935b8317243aa45699b9d6583e0996157dfd860b9ce60c36bc069392bb97de",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/swarm/lmstudio_monitor_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/swarm/test_sop_execution.ml",
+      "source_sha256": "130560d058ae9c573bac4520c05f6185816dae65dc7b12d7dbb9182efadb6908",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/swarm/sop_execution_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/swarm/test_sop_execution_containment.ml",
+      "source_sha256": "b63c904eb6c122828f1e2e30a22b51167a080705a8a43215097925e8b100cb6d",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/swarm/sop_execution_containment_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/swarm/test_sop_execution_stress.ml",
+      "source_sha256": "75ba72713c3a84979fad03c81b3b1e8ce6e5f13250dfdb6dfc054122c6d0be26",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/swarm/sop_execution_stress_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/swarm/test_swarm_bridge_reservation.ml",
+      "source_sha256": "998ab98026bcad06c27bec4720d44025cf6dd08f478e2f577550082c5081ac2f",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/swarm/swarm_bridge_reservation_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/swarm/test_swarm_chaos.ml",
+      "source_sha256": "796c8da5df8a6f256f7b298143612990c7acb7a77258fbe2effeba96475b3c80",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/swarm/swarm_chaos_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/swarm/test_swarm_fuzz.ml",
+      "source_sha256": "72de9676ba51e8479dae340b93aacfcebe3dc3dafba26c9f52fc0c761d9bd47d",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/swarm/swarm_fuzz_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/swarm/test_swarm_unit.ml",
+      "source_sha256": "606e53ba13048c5a5518836ff22738c98227de40fba577178f221e5a4974ca06",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/swarm/swarm_unit_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/swarm/test_vision_lifecycle.ml",
+      "source_sha256": "3f2e3ca322ec40c0bd3f6c461a23bd6a6860bb8767651fff30a59fe1d2058454",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/swarm/vision_lifecycle_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/swarm/test_vision_swarm_adapter.ml",
+      "source_sha256": "309e323c69d208f668753bc2b10e5812456a60e8ba81ea09d315a39f678ca307",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/swarm/vision_swarm_adapter_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/system_engg/test_agent_time_hook.ml",
+      "source_sha256": "93e2b097545cd0c505db9de6db3b005e0c251f2c7253869c0c7d1c94213f1c4f",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/system_engg/agent_time_hook_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/system_engg/test_authority_manifest.ml",
+      "source_sha256": "9cb8eb34ca3573cea7d827d75f717e7f42794fd5fd603125ee7fa4f222343827",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/system_engg/authority_manifest_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/system_engg/test_collateral_verifier.ml",
+      "source_sha256": "01a0f3712d99a6784ae09a3867c9dc4c6529ce712b84510bc854effff54a2efd",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/system_engg/collateral_verifier_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/system_engg/test_exact_head_gate.ml",
+      "source_sha256": "495d4fbac734a27d593b89f6cdaf0d77a1278cfade3697b9b7423ba2b3c9702e",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/system_engg/exact_head_gate_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/system_engg/test_license_policy.ml",
+      "source_sha256": "5403e5f79d0bea113aeda00cf74a24735a2acb7d050b89e8b16bcc040f39c1a2",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/system_engg/license_policy_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/system_engg/test_phase0_programme.ml",
+      "source_sha256": "a6df569f3500ae2c5c25fa087dbcf87ea7c199315e445342d84a8f949d2c97d8",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/system_engg/phase0_programme_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/system_engg/test_run_swarm_bridge_programme.ml",
+      "source_sha256": "f799e68f23f4e5f35caf0797c1c87a224df76ccede514ae4713f5cd93b2bf4bc",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/system_engg/run_swarm_bridge_programme_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/system_engg/test_source_artifact.ml",
+      "source_sha256": "68df34da7cf44f4b6fd64e133de9c2ac0ef25ae4dfe2c3fd948664b7fbf0efdd",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/system_engg/source_artifact_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    },
+    {
+      "source_path": "engines/hermes/modules/system_engg/test_system_engg_plan_bridge.ml",
+      "source_sha256": "7a6552e02c166d5651c4df6cc1e51633fdbd62af275fe938fbab8c8c96c59427",
+      "classification": "UNCLASSIFIED_TEST_OR_SUPPORT_CANDIDATE",
+      "must_remain_byte_identical": true,
+      "proposed_counterpart_path": "tests/ocaml_counterparts/test/system_engg/system_engg_plan_bridge_test.gleam",
+      "proposed_path_status": "RESERVED_ONLY_NOT_IMPLEMENTED",
+      "cases": null,
+      "verified_counterparts": 0
+    }
+  ]
+}
