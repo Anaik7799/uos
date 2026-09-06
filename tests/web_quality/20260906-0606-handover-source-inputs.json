@@ -1,0 +1,359 @@
+{
+  "schema": "uos.agy-handover-review-inputs.v1",
+  "scope": "Targeted read-only handover/FPP/Zenoh/NIF review. Source hashes captured at publication; no external execution or code ingestion. Partial reads do not claim complete source-tree review.",
+  "local": [
+    {
+      "id": "H01",
+      "path": "docs/zk/20260906-0836-adr-017-tri-sovereign-10d-tensor-evolution-master-handover-to-codex-session.md",
+      "review": "full root-equivalent handover read; original retained"
+    },
+    {
+      "id": "H02",
+      "path": "HANDOVER_TO_CODEX.md",
+      "review": "full read; appended current operator scope"
+    },
+    {
+      "id": "H03",
+      "path": "docs/design/20260906-0835-uos-tri-sovereign-10d-tensor-evolution-reusable-master-prompt.md",
+      "review": "full prompt and requirements read"
+    },
+    {
+      "id": "H04",
+      "path": "docs/journal/20260906-0830-uos-wave-2-tensor-evolution-stpa-fmea-and-multi-criteria-definitive-journal.md",
+      "review": "sections covering implementation, claims, matrices and explicit browser gap"
+    },
+    {
+      "id": "H05",
+      "path": "docs/design/20260906-0825-uos-claude-fable-wave-2-tensor-evolution-and-fmea-review-certificate.md",
+      "review": "certificate claims and governance review; not independently authenticated"
+    },
+    {
+      "id": "H06",
+      "path": "docs/zk/20260905-1801-moc-uos-unified-master.md",
+      "review": "navigation and reference inventory"
+    },
+    {
+      "id": "H07",
+      "path": "docs/zk/moc-agent-handover.md",
+      "review": "reference/member inventory; appended new scope"
+    },
+    {
+      "id": "U01",
+      "path": "contracts/rules/dmc-tcm-mandate.md",
+      "review": "full rule"
+    },
+    {
+      "id": "U02",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/dmc_tcm_algebraic_atlas.gleam",
+      "review": "DMC, Trace13, layer and morphism definitions"
+    },
+    {
+      "id": "U03",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/api/denotational_intent_router.gleam",
+      "review": "full authorization and response code"
+    },
+    {
+      "id": "U04",
+      "path": "engines/hermes/modules/hermes_sysml/sysml_grammar.ml",
+      "review": "full file"
+    },
+    {
+      "id": "U05",
+      "path": "engines/hermes/modules/hermes_wiki/src/fpp/fpp_model.mli",
+      "review": "scope note, types, ports and dictionary signatures"
+    },
+    {
+      "id": "U06",
+      "path": "apps/cepaf_gleam/src/indrajaal_native_zenoh.erl",
+      "review": "full file"
+    },
+    {
+      "id": "U07",
+      "path": "apps/cepaf_gleam/native/c3i_nif/src/zenoh_nif.rs",
+      "review": "full file"
+    },
+    {
+      "id": "U08",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/client.gleam",
+      "review": "full file"
+    },
+    {
+      "id": "U09",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/moz/client.gleam",
+      "review": "session lifecycle and request/query call sites"
+    },
+    {
+      "id": "U10",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam_ffi.erl",
+      "review": "Zenoh loading, open, put, get and subscribe sections"
+    },
+    {
+      "id": "U11",
+      "path": "apps/cepaf_gleam/src/c3i_nif.erl",
+      "review": "native loading/exports and Zenoh fallbacks"
+    },
+    {
+      "id": "U12",
+      "path": "apps/cepaf_gleam/native/c3i_nif/src/lib.rs",
+      "review": "module registration"
+    },
+    {
+      "id": "U13",
+      "path": "apps/cepaf_gleam/native/c3i_nif/Cargo.toml",
+      "review": "Rustler/Zenoh/Tokio dependency declarations"
+    },
+    {
+      "id": "B01",
+      "path": "/home/an/dev/ver/harness-bionic/docs/hermes/fpp-architecture.md",
+      "review": "full reference document"
+    },
+    {
+      "id": "B02",
+      "path": "/home/an/dev/ver/harness-bionic/docs/hermes/fprime-alignment.md",
+      "review": "mapping, patterns and stated gaps, first 155 lines"
+    },
+    {
+      "id": "B03",
+      "path": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/hermes_zenoh.ml",
+      "review": "full source"
+    },
+    {
+      "id": "B04",
+      "path": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/hz_stubs.c",
+      "review": "publish and beginning of query/callback path, first 145 lines"
+    },
+    {
+      "id": "B05",
+      "path": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/test_hermes_zenoh.ml",
+      "review": "full test source, not executed"
+    },
+    {
+      "id": "B06",
+      "path": "/home/an/dev/ver/harness-bionic/modules/swarm/swarm_fpp.ml",
+      "review": "full source"
+    },
+    {
+      "id": "B07",
+      "path": "engines/hermes/modules/swarm/swarm_zenoh.ml",
+      "review": "UOS copy: inspected mock/printing call sites"
+    },
+    {
+      "id": "B08",
+      "path": "engines/hermes/modules/hermes_sysml/zenoh_mesh.ml",
+      "review": "UOS copy: inspected mock/printing call sites"
+    },
+    {
+      "id": "Z01",
+      "path": "/home/an/dev/ver/zigvm/harness/zenoh.ml",
+      "review": "full source"
+    },
+    {
+      "id": "Z02",
+      "path": "/home/an/dev/ver/zigvm/harness/zenoh_channel.ml",
+      "review": "full source"
+    },
+    {
+      "id": "Z03",
+      "path": "/home/an/dev/ver/zigvm/harness/zenoh_ffi.ml",
+      "review": "full source"
+    },
+    {
+      "id": "Z04",
+      "path": "/home/an/dev/ver/zigvm/harness/sa_plan_outbox_zenoh.ml",
+      "review": "full source"
+    },
+    {
+      "id": "Z05",
+      "path": "/home/an/dev/ver/zigvm/docs/zk/20260904-150151-adr-004-supervised-persistent-zenoh-session-lifecycle-in-moz-client.md",
+      "review": "full ADR; counts are claims"
+    },
+    {
+      "id": "C01",
+      "path": "/home/an/dev/ver/c3i/lib/cepaf_gleam/native/c3i_nif/src/zenoh_nif.rs",
+      "review": "digest comparison to fully read identical UOS file"
+    },
+    {
+      "id": "C02",
+      "path": "/home/an/dev/ver/c3i/lib/cepaf_gleam/src/indrajaal_native_zenoh.erl",
+      "review": "digest comparison to fully read identical UOS file"
+    },
+    {
+      "id": "C03",
+      "path": "/home/an/dev/ver/c3i/lib/cepaf_gleam/native/c3i_nif/src/lib.rs",
+      "review": "module registration"
+    },
+    {
+      "id": "C04",
+      "path": "/home/an/dev/ver/c3i/docs/journal/20260425-zenoh-nif-full-integration-journal.md",
+      "review": "scope and implementation/test claims, first 140 lines"
+    },
+    {
+      "id": "S01",
+      "path": ".codex/skills/algebra-driven-beam/SKILL.md",
+      "review": "used observational laws and reference/efficient/actor interpretations"
+    },
+    {
+      "id": "S02",
+      "path": ".codex/skills/algebra-driven-beam/references/methodology.md",
+      "review": "used signature, semantic-domain and law derivation"
+    },
+    {
+      "id": "S03",
+      "path": ".codex/skills/system-engineering-sop/SKILL.md",
+      "review": "used isolation and bounded safe-state concepts; unrelated hardware/SIL claims excluded"
+    },
+    {
+      "id": "S04",
+      "path": ".codex/skills/cepaf-zenoh-expert/SKILL.md",
+      "review": "used lifecycle/schema guidance; operator-selected C3I NIF overrides legacy binding preference"
+    }
+  ],
+  "web": [
+    {
+      "id": "N01",
+      "title": "NASA FPP language specification",
+      "url": "https://nasa.github.io/fpp/fpp-spec.html",
+      "version": "v3.3.0 title observed; rolling URL; conformance toolchain not pinned",
+      "use": "Feature/clause inventory",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N02",
+      "title": "F Prime core constructs",
+      "url": "https://fprime.jpl.nasa.gov/latest/docs/user-manual/overview/03-port-comp-top/",
+      "version": "latest rolling docs",
+      "use": "Passive/queued/active and typed port semantics",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N03",
+      "title": "F Prime unit testing",
+      "url": "https://fprime.jpl.nasa.gov/devel/docs/user-manual/overview/unit-testing/",
+      "version": "devel rolling docs",
+      "use": "Mirrored ports and observed histories",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N04",
+      "title": "F Prime topology tests",
+      "url": "https://fprime.jpl.nasa.gov/latest/FppTestProject/FppTest/topology/main/",
+      "version": "latest rolling docs",
+      "use": "Typed/serial send-receive roundtrip",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N05",
+      "title": "FPP user guide",
+      "url": "https://nasa.github.io/fpp/fpp-users-guide.html",
+      "version": "v3.3.0 title observed; rolling URL",
+      "use": "Components and generated harness",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N06",
+      "title": "OMG SysML specification",
+      "url": "https://www.omg.org/spec/SysML/2.0",
+      "version": "2.0; language formal/26-03-02",
+      "use": "Normative specification/interchange source; not whole-standard close reading",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N07",
+      "title": "OMG KerML specification",
+      "url": "https://www.omg.org/spec/KerML/1.0",
+      "version": "1.0; formal/26-03-01",
+      "use": "SysML foundation and interchange source",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N08",
+      "title": "SysML pilot implementation",
+      "url": "https://github.com/Systems-Modeling/SysML-v2-Pilot-Implementation",
+      "version": "default branch; unpinned reference",
+      "use": "Reference parser/validator and test discovery",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N09",
+      "title": "SysML verification example",
+      "url": "https://github.com/Systems-Modeling/SysML-v2-Pilot-Implementation/blob/master/sysml/src/validation/09-Verification/9-Verification-simplified.sysml",
+      "version": "master; unpinned reference",
+      "use": "Requirement-to-verification-case correspondence",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N10",
+      "title": "Zenoh abstractions",
+      "url": "https://zenoh.io/docs/manual/abstractions/",
+      "version": "rolling manual",
+      "use": "Keys, selectors and queryables",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N11",
+      "title": "Zenoh configuration",
+      "url": "https://github.com/eclipse-zenoh/zenoh/blob/main/DEFAULT_CONFIG.json5",
+      "version": "main; unpinned reference",
+      "use": "QoS and transport contracts",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N12",
+      "title": "Zenoh upstream test example",
+      "url": "https://github.com/eclipse-zenoh/zenoh/blob/main/zenoh/tests/shm.rs",
+      "version": "main; EPL-2.0 OR Apache-2.0 header observed",
+      "use": "Bounded multi-session test pattern; shared memory not admitted",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N13",
+      "title": "Rustler NIF scheduling",
+      "url": "https://docs.rs/rustler/latest/rustler/attr.nif.html",
+      "version": "0.38.0 docs; UOS manifest requests 0.37, version mismatch retained",
+      "use": "DirtyCpu/DirtyIo distinction; pin matching docs before implementation",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    }
+    ,{
+      "id": "N14",
+      "title": "Erlang NIF API and execution model",
+      "url": "https://www.erlang.org/doc/apps/erts/erl_nif.html",
+      "version": "OTP 29.0.6 (erts 17.0.6) observed; rolling URL",
+      "use": "Native loading/resources, concurrency and scheduler/memory-protection boundaries",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REFERENCE_ONLY"
+    }
+  ],
+  "unsuccessful_fetches": [
+    {
+      "url": "https://docs.rs/rustler/0.37.0/rustler/attr.nif.html",
+      "result": "Web tool Internal Error; rolling 0.38.0 documentation read with explicit version mismatch; verify 0.37 before implementation."
+    }
+  ]
+}

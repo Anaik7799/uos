@@ -16,6 +16,13 @@ Deterministic map of content for the **agent-handover** community (161 notes), d
 
 membership: 1fa80a2cd5cc5783b06cb475241a7a08
 
+## 20260906-0606- Current operator scope integration
+
+- [Unified AGY-to-Codex implementation and verification prompt](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260906-0606-uos-agy-codex-unified-master-prompt.md)
+- [Handover understanding and actor ecology plan](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20260906-0606-agy-handover-understanding-and-actor-ecology-plan.md)
+
+These timestamped additions extend ADR-017 with the operator's web/wiki/ZK/KM testing, DMC/TCM, denotational intent, L0–L9 atlas, F Prime/SysML Gleam and communicating-actor requirements. Historical graph membership/degrees below are preserved, not recomputed by this handover update.
+
 ## Members (by connectedness)
 
 - [[20260906-0836-adr-017-tri-sovereign-10d-tensor-evolution-master-handover-to-codex-session|ADR-017 · Tri-Sovereign 10D Tensor Evolution Master Handover to Codex Session]] · degree 100

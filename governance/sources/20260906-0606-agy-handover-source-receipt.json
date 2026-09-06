@@ -1,0 +1,652 @@
+{
+  "schema": "uos.agy-handover-source-receipt.v1",
+  "clock_utc": "2026-09-06T07:15:43Z",
+  "host_sync": "Reference ID    : B97DBE7B (ntp-nts-3.ps5.canonical.com)\nStratum         : 3\nRef time (UTC)  : Sun Sep 06 06:39:05 2026\nSystem time     : 0.001856710 seconds slow of NTP time\nLast offset     : -0.001074504 seconds\nRMS offset      : 0.000726469 seconds\nFrequency       : 3.482 ppm slow\nResidual freq   : -0.028 ppm\nSkew            : 0.190 ppm\nRoot delay      : 0.031077361 seconds\nRoot dispersion : 0.001620074 seconds\nUpdate interval : 1030.9 seconds\nLeap status     : Normal",
+  "host_sync_receipt_time": "2026-09-06T06:40:33Z",
+  "candidate_before_receipt": "nkotsltuxwyxpqyltqnkxuxyxkowuuxu 9329a0dd52a654795fa5c96b7cf753db2899faf4",
+  "status": "PROMPT_AND_REVIEW_DELIVERED_IMPLEMENTATION_PROGRAMME_OPEN",
+  "source_writers_quiesced": false,
+  "external_code_ingested": false,
+  "original_ocaml_rechecked": 161,
+  "original_ocaml_changed": 0,
+  "local_sources": [
+    {
+      "id": "H01",
+      "review": "full root-equivalent handover read; original retained",
+      "path": "docs/zk/20260906-0836-adr-017-tri-sovereign-10d-tensor-evolution-master-handover-to-codex-session.md",
+      "bytes": 17711,
+      "sha256": "0a4b562acae1d186266ae59842044e97d81530f21b72c0522ab61d8681fdc458",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "H02",
+      "review": "full read; appended current operator scope",
+      "path": "HANDOVER_TO_CODEX.md",
+      "bytes": 19204,
+      "sha256": "6bdfbdc6626f64529fa70d15a719b1bfb889a580ce40cc16ecadfc56b698eb2c",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "H03",
+      "review": "full prompt and requirements read",
+      "path": "docs/design/20260906-0835-uos-tri-sovereign-10d-tensor-evolution-reusable-master-prompt.md",
+      "bytes": 12347,
+      "sha256": "cb1a7ca5c3936e36e75541d1158addc6078ca1f4d1703838d7761deb04ee36fb",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "H04",
+      "review": "sections covering implementation, claims, matrices and explicit browser gap",
+      "path": "docs/journal/20260906-0830-uos-wave-2-tensor-evolution-stpa-fmea-and-multi-criteria-definitive-journal.md",
+      "bytes": 27147,
+      "sha256": "0ea083490da3f879759049ff9061cf3b42ebf2aa49b04c430c324925467ba035",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "H05",
+      "review": "certificate claims and governance review; not independently authenticated",
+      "path": "docs/design/20260906-0825-uos-claude-fable-wave-2-tensor-evolution-and-fmea-review-certificate.md",
+      "bytes": 18394,
+      "sha256": "91ed40815a8c772729a21d0a73d10f529f9697c3f8a4728824571d531abe3798",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "H06",
+      "review": "navigation and reference inventory",
+      "path": "docs/zk/20260905-1801-moc-uos-unified-master.md",
+      "bytes": 13939,
+      "sha256": "91c177a3d3722ac07fd2c9460ab07bfaf8524aae4790bd90a4aac9e60cccc5b9",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "H07",
+      "review": "reference/member inventory; appended new scope",
+      "path": "docs/zk/moc-agent-handover.md",
+      "bytes": 18239,
+      "sha256": "3a8369f15de7fb8617183bfd082b4da054bd5ad48834864081f5d5a1763d8a89",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "U01",
+      "review": "full rule",
+      "path": "contracts/rules/dmc-tcm-mandate.md",
+      "bytes": 1833,
+      "sha256": "f9ca5f514818c2339ef38b58afda2e4bb8bcbc08b83599db5d4158a3b1ba8c2f",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "U02",
+      "review": "DMC, Trace13, layer and morphism definitions",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/dmc_tcm_algebraic_atlas.gleam",
+      "bytes": 15404,
+      "sha256": "a3c7ffecdeba72cd2b24e9499814de38138c1bd55218338ab7cad3657c1b053a",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "U03",
+      "review": "full authorization and response code",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/api/denotational_intent_router.gleam",
+      "bytes": 1816,
+      "sha256": "c2827ed8cff9179b310f686f6abda3534f7a66bf947b54cfa6a1e1b261b0585e",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "U04",
+      "review": "full file",
+      "path": "engines/hermes/modules/hermes_sysml/sysml_grammar.ml",
+      "bytes": 2128,
+      "sha256": "71b91a7bef6ca96e770ce93f8b7a84fcf3131837f048beafcce844fec168dfb8",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "U05",
+      "review": "scope note, types, ports and dictionary signatures",
+      "path": "engines/hermes/modules/hermes_wiki/src/fpp/fpp_model.mli",
+      "bytes": 7948,
+      "sha256": "d6eb6134d81d4b02eff83b30a8a9adb342da4fd5b84955f9b89fbe3f552c9096",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "U06",
+      "review": "full file",
+      "path": "apps/cepaf_gleam/src/indrajaal_native_zenoh.erl",
+      "bytes": 600,
+      "sha256": "5519a07b225cb96d33a3b6c4aa78dfaff48d2ce558eca3165da9e6ab7f29333d",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "U07",
+      "review": "full file",
+      "path": "apps/cepaf_gleam/native/c3i_nif/src/zenoh_nif.rs",
+      "bytes": 6191,
+      "sha256": "52e9155d544e11a989a5890685ed10058786819010dcac8131c330d8cbefe803",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "U08",
+      "review": "full file",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/client.gleam",
+      "bytes": 1764,
+      "sha256": "7c01099bf3fcfb693c5ae5ca7d598d931edd2f349056e0d63dd2da6093a27bce",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "U09",
+      "review": "session lifecycle and request/query call sites",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/moz/client.gleam",
+      "bytes": 13832,
+      "sha256": "8d3696f47b4409ed640f022887ca6e94719e3a17708078bdf0076ae45c9b0fb7",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "U10",
+      "review": "Zenoh loading, open, put, get and subscribe sections",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam_ffi.erl",
+      "bytes": 19454,
+      "sha256": "2ca0dc39b09a5f3373ccd75f3b04be0319e966a15192f583c267489dc5507d5f",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "U11",
+      "review": "native loading/exports and Zenoh fallbacks",
+      "path": "apps/cepaf_gleam/src/c3i_nif.erl",
+      "bytes": 3733,
+      "sha256": "c50f2e641b74e181614822f5ef59c45d93c35f70a9afe41d38e76111159693d8",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "U12",
+      "review": "module registration",
+      "path": "apps/cepaf_gleam/native/c3i_nif/src/lib.rs",
+      "bytes": 759,
+      "sha256": "8d6dd6b3602fa9b69e79c4f6660cd74698d20b08e98078ba6c65224098f60f82",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "U13",
+      "review": "Rustler/Zenoh/Tokio dependency declarations",
+      "path": "apps/cepaf_gleam/native/c3i_nif/Cargo.toml",
+      "bytes": 634,
+      "sha256": "1876aa4f2fe840726462cd8b2b6ef47f9068b59bb0454baee1030f23129f2a8e",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "B01",
+      "review": "full reference document",
+      "path": "/home/an/dev/ver/harness-bionic/docs/hermes/fpp-architecture.md",
+      "bytes": 9840,
+      "sha256": "5291e035f4ab3bd17cfe8132035fc43e70ca27a1a1d3c64708b2597f9aedd4b6",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "B02",
+      "review": "mapping, patterns and stated gaps, first 155 lines",
+      "path": "/home/an/dev/ver/harness-bionic/docs/hermes/fprime-alignment.md",
+      "bytes": 21239,
+      "sha256": "69b80e8cf8fe09bfbbeb4c9acdf412c6eb814e3df77a5eb8352aba06d19f298f",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "B03",
+      "review": "full source",
+      "path": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/hermes_zenoh.ml",
+      "bytes": 2814,
+      "sha256": "9d8f9bd0092f906a9139f9b6f8cfe5ec4558627e3b9e7ef4a14a1ac889e51148",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "B04",
+      "review": "publish and beginning of query/callback path, first 145 lines",
+      "path": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/hz_stubs.c",
+      "bytes": 11997,
+      "sha256": "b04b92fb42481e2c439c7bff6da7164c771a36017d5dd5d3c276d193e52a6611",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "B05",
+      "review": "full test source, not executed",
+      "path": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/test_hermes_zenoh.ml",
+      "bytes": 3402,
+      "sha256": "5161ac158602dec45c3e65064695183741144a08593dc934a7390e86730f5ef3",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "B06",
+      "review": "full source",
+      "path": "/home/an/dev/ver/harness-bionic/modules/swarm/swarm_fpp.ml",
+      "bytes": 2515,
+      "sha256": "353c2d0029e2148359e27f7a9e4b1e242c29934855a1000969f8cde7e6739138",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "B07",
+      "review": "UOS copy: inspected mock/printing call sites",
+      "path": "engines/hermes/modules/swarm/swarm_zenoh.ml",
+      "bytes": 1244,
+      "sha256": "d24920669d3319968421ef6cbc070e90c654b3cd6eac4ebccb4cc94f52a1059c",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "B08",
+      "review": "UOS copy: inspected mock/printing call sites",
+      "path": "engines/hermes/modules/hermes_sysml/zenoh_mesh.ml",
+      "bytes": 2782,
+      "sha256": "5c8cbd507a5d317a9f3f420b174ce85286460a758e6adfeab987544d24343019",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "Z01",
+      "review": "full source",
+      "path": "/home/an/dev/ver/zigvm/harness/zenoh.ml",
+      "bytes": 651,
+      "sha256": "6c4224086aff0a963526aa5e13f567edc090cde7a6b01fef6515d21c650ef38e",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "Z02",
+      "review": "full source",
+      "path": "/home/an/dev/ver/zigvm/harness/zenoh_channel.ml",
+      "bytes": 1023,
+      "sha256": "a4d35a933f2a57f9be02e69a9c81e0283d6706d781002b38d947c7e2b6bddee8",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "Z03",
+      "review": "full source",
+      "path": "/home/an/dev/ver/zigvm/harness/zenoh_ffi.ml",
+      "bytes": 7742,
+      "sha256": "90a77387b85b9d287ed7e91fcfed77e333601863af7b873795f217ccff2b6cc3",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "Z04",
+      "review": "full source",
+      "path": "/home/an/dev/ver/zigvm/harness/sa_plan_outbox_zenoh.ml",
+      "bytes": 2583,
+      "sha256": "1ef3bef78a249f823dbbd0816c826577e6f3655a245165fb61de8bde97724578",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "Z05",
+      "review": "full ADR; counts are claims",
+      "path": "/home/an/dev/ver/zigvm/docs/zk/20260904-150151-adr-004-supervised-persistent-zenoh-session-lifecycle-in-moz-client.md",
+      "bytes": 1264,
+      "sha256": "67caffa9af5ff6a006b1e955a63fbe653876d5e9d18bf95cfdb80c386dbe2e2e",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "C01",
+      "review": "digest comparison to fully read identical UOS file",
+      "path": "/home/an/dev/ver/c3i/lib/cepaf_gleam/native/c3i_nif/src/zenoh_nif.rs",
+      "bytes": 6191,
+      "sha256": "52e9155d544e11a989a5890685ed10058786819010dcac8131c330d8cbefe803",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "C02",
+      "review": "digest comparison to fully read identical UOS file",
+      "path": "/home/an/dev/ver/c3i/lib/cepaf_gleam/src/indrajaal_native_zenoh.erl",
+      "bytes": 600,
+      "sha256": "5519a07b225cb96d33a3b6c4aa78dfaff48d2ce558eca3165da9e6ab7f29333d",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "C03",
+      "review": "module registration",
+      "path": "/home/an/dev/ver/c3i/lib/cepaf_gleam/native/c3i_nif/src/lib.rs",
+      "bytes": 759,
+      "sha256": "8d6dd6b3602fa9b69e79c4f6660cd74698d20b08e98078ba6c65224098f60f82",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "C04",
+      "review": "scope and implementation/test claims, first 140 lines",
+      "path": "/home/an/dev/ver/c3i/docs/journal/20260425-zenoh-nif-full-integration-journal.md",
+      "bytes": 19451,
+      "sha256": "3c58b3bddb9d9bed426399381033d95069d13f911ba07f86972ada4570e4a228",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "S01",
+      "review": "used observational laws and reference/efficient/actor interpretations",
+      "path": ".codex/skills/algebra-driven-beam/SKILL.md",
+      "bytes": 9132,
+      "sha256": "a58a828726fc44437382b8d20aee97babc90b17823faca341b3035ada33cbb34",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "S02",
+      "review": "used signature, semantic-domain and law derivation",
+      "path": ".codex/skills/algebra-driven-beam/references/methodology.md",
+      "bytes": 10219,
+      "sha256": "cde24a3ba85894d56cbb889d2503de42232f2d370fb6f3344cb379082941ce52",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "S03",
+      "review": "used isolation and bounded safe-state concepts; unrelated hardware/SIL claims excluded",
+      "path": ".codex/skills/system-engineering-sop/SKILL.md",
+      "bytes": 4524,
+      "sha256": "c2441225990fc97bd36fe231c375e4f936cac1612a637f63c1ed30c24f8c0a56",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "S04",
+      "review": "used lifecycle/schema guidance; operator-selected C3I NIF overrides legacy binding preference",
+      "path": ".codex/skills/cepaf-zenoh-expert/SKILL.md",
+      "bytes": 2111,
+      "sha256": "4a275feaa133a9e08f3273b4e93811775786e371efd67a577d5fa8a7c90c4495",
+      "stable_during_metadata_capture": true
+    }
+  ],
+  "web_sources": [
+    {
+      "id": "N01",
+      "title": "NASA FPP language specification",
+      "url": "https://nasa.github.io/fpp/fpp-spec.html",
+      "version": "v3.3.0 title observed; rolling URL; conformance toolchain not pinned",
+      "use": "Feature/clause inventory",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N02",
+      "title": "F Prime core constructs",
+      "url": "https://fprime.jpl.nasa.gov/latest/docs/user-manual/overview/03-port-comp-top/",
+      "version": "latest rolling docs",
+      "use": "Passive/queued/active and typed port semantics",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N03",
+      "title": "F Prime unit testing",
+      "url": "https://fprime.jpl.nasa.gov/devel/docs/user-manual/overview/unit-testing/",
+      "version": "devel rolling docs",
+      "use": "Mirrored ports and observed histories",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N04",
+      "title": "F Prime topology tests",
+      "url": "https://fprime.jpl.nasa.gov/latest/FppTestProject/FppTest/topology/main/",
+      "version": "latest rolling docs",
+      "use": "Typed/serial send-receive roundtrip",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N05",
+      "title": "FPP user guide",
+      "url": "https://nasa.github.io/fpp/fpp-users-guide.html",
+      "version": "v3.3.0 title observed; rolling URL",
+      "use": "Components and generated harness",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N06",
+      "title": "OMG SysML specification",
+      "url": "https://www.omg.org/spec/SysML/2.0",
+      "version": "2.0; language formal/26-03-02",
+      "use": "Normative specification/interchange source; not whole-standard close reading",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N07",
+      "title": "OMG KerML specification",
+      "url": "https://www.omg.org/spec/KerML/1.0",
+      "version": "1.0; formal/26-03-01",
+      "use": "SysML foundation and interchange source",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N08",
+      "title": "SysML pilot implementation",
+      "url": "https://github.com/Systems-Modeling/SysML-v2-Pilot-Implementation",
+      "version": "default branch; unpinned reference",
+      "use": "Reference parser/validator and test discovery",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N09",
+      "title": "SysML verification example",
+      "url": "https://github.com/Systems-Modeling/SysML-v2-Pilot-Implementation/blob/master/sysml/src/validation/09-Verification/9-Verification-simplified.sysml",
+      "version": "master; unpinned reference",
+      "use": "Requirement-to-verification-case correspondence",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N10",
+      "title": "Zenoh abstractions",
+      "url": "https://zenoh.io/docs/manual/abstractions/",
+      "version": "rolling manual",
+      "use": "Keys, selectors and queryables",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N11",
+      "title": "Zenoh configuration",
+      "url": "https://github.com/eclipse-zenoh/zenoh/blob/main/DEFAULT_CONFIG.json5",
+      "version": "main; unpinned reference",
+      "use": "QoS and transport contracts",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N12",
+      "title": "Zenoh upstream test example",
+      "url": "https://github.com/eclipse-zenoh/zenoh/blob/main/zenoh/tests/shm.rs",
+      "version": "main; EPL-2.0 OR Apache-2.0 header observed",
+      "use": "Bounded multi-session test pattern; shared memory not admitted",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N13",
+      "title": "Rustler NIF scheduling",
+      "url": "https://docs.rs/rustler/latest/rustler/attr.nif.html",
+      "version": "0.38.0 docs; UOS manifest requests 0.37, version mismatch retained",
+      "use": "DirtyCpu/DirtyIo distinction; pin matching docs before implementation",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N14",
+      "title": "Erlang NIF API and execution model",
+      "url": "https://www.erlang.org/doc/apps/erts/erl_nif.html",
+      "version": "OTP 29.0.6 (erts 17.0.6) observed; rolling URL",
+      "use": "Native loading/resources, concurrency and scheduler/memory-protection boundaries",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REFERENCE_ONLY"
+    }
+  ],
+  "unsuccessful_fetches": [
+    {
+      "url": "https://docs.rs/rustler/0.37.0/rustler/attr.nif.html",
+      "result": "Web tool Internal Error; rolling 0.38.0 documentation read with explicit version mismatch; verify 0.37 before implementation."
+    }
+  ],
+  "source_revisions": [
+    {
+      "path": "/home/an/dev/ver/zigvm",
+      "resolved_path": "/home/an/dev/ver/zigvm",
+      "head_at_capture": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "quiesced": false,
+      "dirty_manifest": "NOT_CAPTURED_FOR_ADMISSION; targeted read-only evidence only"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i",
+      "resolved_path": "/home/an/dev/ver/c3i",
+      "head_at_capture": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "quiesced": false,
+      "dirty_manifest": "NOT_CAPTURED_FOR_ADMISSION; targeted read-only evidence only"
+    },
+    {
+      "path": "/home/an/dev/ver/harness-bionic",
+      "resolved_path": "/home/an/NAS-setup/harness-bionic",
+      "head_at_capture": "8a03c14f47c229db4cb086270b94c618ca8b1e06",
+      "quiesced": false,
+      "dirty_manifest": "NOT_CAPTURED_FOR_ADMISSION; targeted read-only evidence only"
+    }
+  ],
+  "retained_first_party_inputs": [
+    {
+      "path": "tests/web_quality/20260906-0631-inputs/20260906-0631-review-template.md.in",
+      "bytes": 50109,
+      "sha256": "5ecc1d4d8b06535a01904157cdb8d8995464df5149c0b101e93b9aa849af381d",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "tests/web_quality/20260906-0631-inputs/20260906-0631-navigation-template.md.in",
+      "bytes": 913,
+      "sha256": "724d3599f45acd62f2225e28602061dd96a77f260a3e09665add944113039c1b",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "tests/web_quality/20260906-0631-inputs/20260906-0631-checklist-template.md.in",
+      "bytes": 2769,
+      "sha256": "9d56ebf6054c69e6e3359d0113defe240f6c8e8ad2dd62bcce662fb9d25f1688",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "tests/web_quality/20260906-0631-inputs/20260906-0631-browser-template.md.in",
+      "bytes": 5208,
+      "sha256": "1af5ba2d47d91d4d695386aaa7d0bcba704c931af39c4164b242ae5b869eb66f",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "tests/web_quality/20260906-0631-inputs/20260906-0631-sources-template.md.in",
+      "bytes": 2111,
+      "sha256": "61cf2aa872c266ee4986ff8cf06b557f4222f11518595f049139107ac640fb42",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "tests/web_quality/20260906-0631-inputs/20260906-0631-research-register.json",
+      "bytes": 20220,
+      "sha256": "cccdd8ff4a336a5652f699f4266658a358e8531c54b45aafcc26d2b7710dc0be",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "tests/web_quality/20260906-0631-inputs/20260906-0631-local-review-register.json",
+      "bytes": 10279,
+      "sha256": "67f126f2b8c26ad652ab0a7f09fcf69f9c0effbbe738f6243c817563e8c79eee",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "tests/web_quality/20260906-0631-inputs/20260906-0631-gate-receipt.json",
+      "bytes": 7641,
+      "sha256": "3c12ecc55da80b59b0927980c28c237bb999f15cdc22a5ff96dd699230e3c651",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "tests/web_quality/20260906-0631-inputs/20260906-0631-concurrent-gate-failure.json",
+      "bytes": 9941,
+      "sha256": "25d57bf5f24715f433d1563edc332d19e7e91bd629399c504d599379f2bd08b8",
+      "stable_during_metadata_capture": true
+    }
+  ],
+  "datasets": [
+    {
+      "path": "docs/design/20260906-0631-source-corpus-index.json",
+      "records": 8047,
+      "parts": 24,
+      "digest_verified": true
+    },
+    {
+      "path": "docs/design/20260906-0631-cross-project-test-catalogue.json",
+      "records": 770,
+      "parts": 12,
+      "digest_verified": true
+    },
+    { "csv_rows": 23765, "parts": 18, "digest_verified": true }
+  ],
+  "documents": [
+    {
+      "path": "docs/design/20260906-0606-uos-agy-codex-unified-master-prompt.md",
+      "bytes": 49521,
+      "sha256": "23cc129881df480f86f5d4463beff1e570dfb63f1da2c40c190356ab56e40bc3",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "docs/zk/20260906-0606-agy-handover-understanding-and-actor-ecology-plan.md",
+      "bytes": 26776,
+      "sha256": "156551856f8cc1dac516ac3a9adf0f029740963ef0f887771fb50a870503e42e",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "docs/journal/20260906-0631-web-knowledge-verification-journal.md",
+      "bytes": 18056,
+      "sha256": "e056e0e83517d89636131fa8adb8bab565f27871f822869a35b6dd202c8a082c",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "docs/design/20260906-0631-web-knowledge-verification-review.md",
+      "bytes": 54390,
+      "sha256": "e8969f4d547f7a8685581dba760d5cad222f1f2fd6d805977cd467512de95570",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "HANDOVER_TO_CODEX.md",
+      "bytes": 19204,
+      "sha256": "6bdfbdc6626f64529fa70d15a719b1bfb889a580ce40cc16ecadfc56b698eb2c",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "docs/zk/moc-agent-handover.md",
+      "bytes": 18239,
+      "sha256": "3a8369f15de7fb8617183bfd082b4da054bd5ad48834864081f5d5a1763d8a89",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "path": "tests/web_quality/20260906-0606-replay-guide.md",
+      "bytes": 4925,
+      "sha256": "8ee8bd8c8ad4e14171266077d0e332e6c6dc14f51b2d19e300dd4ec34b7b2df0",
+      "stable_during_metadata_capture": true
+    }
+  ],
+  "publisher": {
+    "path": "tests/web_quality/20260906-0606-publish-handover.ml",
+    "bytes": 9154,
+    "sha256": "c5df7a7098d56666032371ecc1de576bea56e7a528d7c4d968c6f159e6d4b1ba",
+    "stable_during_metadata_capture": true
+  },
+  "publisher_input": {
+    "path": "tests/web_quality/20260906-0606-handover-source-inputs.json",
+    "bytes": 13444,
+    "sha256": "4845d11a90273ca482eab8876c34f93880c73646c0986b0eccb174937e1d3317",
+    "stable_during_metadata_capture": true
+  },
+  "local_artifact_links_verified": 60,
+  "journal_13_sections": true,
+  "runtime_receipt": "governance/sources/20260906-0631-web-quality-evidence.json",
+  "runtime_receipt_is_historical_scoped_evidence": true,
+  "limitations": [
+    "No full DMC/TCM, FPP/SysML, actor-ecology or all-site certification.",
+    "C3I NIF source matching is not successful native load or transport execution.",
+    "C3I-derived Zenoh is the operator-selected common UOS messaging layer; migration remains open.",
+    "External source writers not quiesced; no source ingestion/admission.",
+    "Media locally retained, not remotely backed up; browser fixtures not live deployment.",
+    "Historical controller snapshots retain scratch paths; gate is separately runnable."
+  ]
+}

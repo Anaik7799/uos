@@ -1,0 +1,409 @@
+{
+  "schema": "uos.web-quality-research.v1",
+  "sources": [
+    {
+      "id": "W01",
+      "title": "Gleeunit API",
+      "url": "https://hexdocs.pm/gleeunit/gleeunit.html",
+      "type": "Official API",
+      "version_or_revision": "Local 1.9; web API 1.10 observed",
+      "reviewed_on": "2026-09-06",
+      "use": "Run assertions against actual UOS values and collect named failures.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W02",
+      "title": "Lustre element API",
+      "url": "https://lustre.hexdocs.pm/lustre/element.html",
+      "type": "Official API",
+      "version_or_revision": "Local 5.6.0; web 5.7.1 observed",
+      "reviewed_on": "2026-09-06",
+      "use": "Serialize/query real Element values; do not confuse VDOM checks with browser layout.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W03",
+      "title": "Lustre development queries",
+      "url": "https://hexdocs.pm/lustre/lustre/dev/query.html",
+      "type": "Official API",
+      "version_or_revision": "5.6 documentation reviewed",
+      "reviewed_on": "2026-09-06",
+      "use": "Component-role/content/state tests before browser integration.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W04",
+      "title": "Phoenix LiveViewTest",
+      "url": "https://phoenix-live-view.hexdocs.pm/Phoenix.LiveViewTest.html",
+      "type": "Official API",
+      "version_or_revision": "1.2.11 web documentation",
+      "reviewed_on": "2026-09-06",
+      "use": "Server-simulated LiveView event and render tests; browser layer remains separate.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W05",
+      "title": "StreamData",
+      "url": "https://stream-data.hexdocs.pm/StreamData.html",
+      "type": "Official API",
+      "version_or_revision": "1.4 web documentation",
+      "reviewed_on": "2026-09-06",
+      "use": "Generated inputs, shrinking and reproducible property failures; port semantics to Gleam.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W06",
+      "title": "Playwright visual comparisons",
+      "url": "https://playwright.dev/docs/test-snapshots",
+      "type": "Official documentation",
+      "version_or_revision": "Rolling docs; pin runtime before adoption",
+      "reviewed_on": "2026-09-06",
+      "use": "Reviewed baseline, stable OS/fonts/browser, explicit pixel differences; screenshots alone are not quality.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W07",
+      "title": "Playwright Trace Viewer",
+      "url": "https://playwright.dev/docs/trace-viewer",
+      "type": "Official documentation",
+      "version_or_revision": "Rolling docs",
+      "reviewed_on": "2026-09-06",
+      "use": "Action/DOM/network/error timelines for causal debugging; traces proposed, current audit saved DOM/video.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W08",
+      "title": "WCAG 2.2",
+      "url": "https://www.w3.org/TR/WCAG22/",
+      "type": "W3C Recommendation",
+      "version_or_revision": "12 December 2024 publication observed",
+      "reviewed_on": "2026-09-06",
+      "use": "Keyboard, focus, reflow, contrast, consistent navigation; manual criteria remain.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W09",
+      "title": "ARIA-AT",
+      "url": "https://github.com/w3c-cg/aria-at",
+      "type": "Open-source test project",
+      "version_or_revision": "Moving repository, no import pin",
+      "reviewed_on": "2026-09-06",
+      "use": "Assistive-technology interoperability scenarios beyond accessibility-tree presence.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W10",
+      "title": "axe-core",
+      "url": "https://github.com/dequelabs/axe-core",
+      "type": "Open-source test engine",
+      "version_or_revision": "License must be checked per pinned package before ingestion",
+      "reviewed_on": "2026-09-06",
+      "use": "Automated accessibility rules as one modality; no full compliance claim.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W11",
+      "title": "Web Platform Tests authoring",
+      "url": "https://web-platform-tests.org/writing-tests/",
+      "type": "Official test-suite documentation",
+      "version_or_revision": "Rolling docs",
+      "reviewed_on": "2026-09-06",
+      "use": "Use testharness, reftest and webdriver test patterns for browser semantics.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W12",
+      "title": "Core Web Vitals",
+      "url": "https://web.dev/articles/vitals",
+      "type": "Google guidance",
+      "version_or_revision": "Page updated 2024-10-31 observed",
+      "reviewed_on": "2026-09-06",
+      "use": "Field p75 LCP <=2.5s, INP <=200ms, CLS <=0.1; separate mobile/desktop and lab from field.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W13",
+      "title": "Lighthouse",
+      "url": "https://github.com/GoogleChrome/lighthouse",
+      "type": "Google open-source tool",
+      "version_or_revision": "Moving repository; not installed/run for this audit",
+      "reviewed_on": "2026-09-06",
+      "use": "Repeatable lab performance/accessibility diagnostics, never a proxy for actual field INP.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W14",
+      "title": "HEART: measuring user experience",
+      "url": "https://research.google/pubs/measuring-the-user-experience-on-a-large-scale-user-centered-metrics-for-web-applications/",
+      "type": "Google research paper",
+      "version_or_revision": "Rodden, Hutchinson and Fu; CHI 2010",
+      "reviewed_on": "2026-09-06",
+      "use": "Define goals, signals and metrics for happiness, engagement, adoption, retention and task success.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W15",
+      "title": "HaTS: happiness tracking surveys",
+      "url": "https://research.google/pubs/hats-large-scale-in-product-measurement-of-user-attitudes-experiences-with-happiness-tracking-surveys/",
+      "type": "Google research paper",
+      "version_or_revision": "Research publication metadata reviewed",
+      "reviewed_on": "2026-09-06",
+      "use": "Pair behavior/latency data with task-specific user feedback; no surveys sent.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W16",
+      "title": "Parsoid round-trip testing",
+      "url": "https://www.mediawiki.org/wiki/Parsoid/Round-trip_testing",
+      "type": "MediaWiki engineering documentation",
+      "version_or_revision": "Rolling wiki page",
+      "reviewed_on": "2026-09-06",
+      "use": "Test wikitext/HTML round trips using declared semantic equivalence and documented acceptable changes.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W17",
+      "title": "CommonMark specification",
+      "url": "https://spec.commonmark.org/0.31.2/",
+      "type": "Language specification and examples",
+      "version_or_revision": "0.31.2",
+      "reviewed_on": "2026-09-06",
+      "use": "Adopt only examples in UOS's declared Markdown dialect; classify intentional divergences.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W18",
+      "title": "TiddlyWiki test directory",
+      "url": "https://github.com/TiddlyWiki/TiddlyWiki5/tree/master/editions/test/tiddlers/tests",
+      "type": "Open-source test corpus",
+      "version_or_revision": "Moving master; BSD-3-Clause license text separately read",
+      "reviewed_on": "2026-09-06",
+      "use": "Candidate backlink, backtransclusion, filter, parser, serialization and widget tests; fake DOM is not browser.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W19",
+      "title": "TiddlyWiki backlink tests",
+      "url": "https://github.com/TiddlyWiki/TiddlyWiki5/blob/master/editions/test/tiddlers/tests/test-backlinks.js",
+      "type": "Open-source test code",
+      "version_or_revision": "File reviewed through web; no bytes imported",
+      "reviewed_on": "2026-09-06",
+      "use": "Candidate update/delete/rename and inverse-link semantic cases.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W20",
+      "title": "TiddlyWiki license",
+      "url": "https://github.com/TiddlyWiki/TiddlyWiki5/blob/master/license",
+      "type": "License source",
+      "version_or_revision": "BSD-3-Clause text observed",
+      "reviewed_on": "2026-09-06",
+      "use": "Track attribution/notice obligations before any source or fixture admission.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "license text reviewed; pinned-file review still required before copying"
+    },
+    {
+      "id": "W21",
+      "title": "Logseq tests",
+      "url": "https://github.com/logseq/logseq/tree/master/src/test",
+      "type": "Open-source test directory",
+      "version_or_revision": "Directory reviewed, not every test body",
+      "reviewed_on": "2026-09-06",
+      "use": "Candidate outliner/block identity, parser and query scenarios; further file-level review required.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W22",
+      "title": "Logseq license",
+      "url": "https://github.com/logseq/logseq/blob/master/LICENSE.md",
+      "type": "License source",
+      "version_or_revision": "AGPL text and additional permissions observed",
+      "reviewed_on": "2026-09-06",
+      "use": "Per-file and version-specific review required before copying code.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "license text reviewed; pinned-file review still required before copying"
+    },
+    {
+      "id": "W23",
+      "title": "Joplin development guide",
+      "url": "https://joplinapp.org/help/dev/",
+      "type": "Official development documentation",
+      "version_or_revision": "Rolling docs; exact suite files not deeply inspected",
+      "reviewed_on": "2026-09-06",
+      "use": "Candidate sync, note identity, attachment and export workflows.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W24",
+      "title": "Joplin license",
+      "url": "https://github.com/laurent22/joplin/blob/dev/LICENSE",
+      "type": "License source",
+      "version_or_revision": "AGPL-3.0-or-later default; subdirectories may override",
+      "reviewed_on": "2026-09-06",
+      "use": "Do not assume repository-wide uniform licensing or reuse logos.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "license text reviewed; pinned-file review still required before copying"
+    },
+    {
+      "id": "W25",
+      "title": "Docusaurus configuration",
+      "url": "https://docusaurus.io/docs/api/docusaurus-config",
+      "type": "Official documentation",
+      "version_or_revision": "3.10.2 docs observed",
+      "reviewed_on": "2026-09-06",
+      "use": "Build-time broken-link/anchor/duplicate-route gates complement runtime navigation.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W26",
+      "title": "Sphinx builders",
+      "url": "https://www.sphinx-doc.org/en/master/usage/builders/index.html",
+      "type": "Official documentation",
+      "version_or_revision": "Rolling docs",
+      "reviewed_on": "2026-09-06",
+      "use": "Linkcheck architecture; retain redirects, timeouts and exclusions as distinct statuses.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W27",
+      "title": "Google OSS-Fuzz project guide",
+      "url": "https://google.github.io/oss-fuzz/getting-started/new-project-guide/",
+      "type": "Official fuzzing documentation",
+      "version_or_revision": "Rolling docs",
+      "reviewed_on": "2026-09-06",
+      "use": "Coverage-guided parser fuzzing in isolated harnesses; deterministic seeds here are a different modality.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W28",
+      "title": "NIST automated combinatorial testing",
+      "url": "https://csrc.nist.gov/projects/automated-combinatorial-testing-for-software",
+      "type": "NIST research/tool project",
+      "version_or_revision": "Project documentation reviewed",
+      "reviewed_on": "2026-09-06",
+      "use": "Covering arrays over browser, viewport, theme, role, locale and network states with constraints.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W29",
+      "title": "SHACL",
+      "url": "https://www.w3.org/TR/shacl/",
+      "type": "W3C Recommendation",
+      "version_or_revision": "2017 Recommendation; do not conflate newer 1.2 drafts",
+      "reviewed_on": "2026-09-06",
+      "use": "Graph cardinality, class, path and closed-shape contracts for the knowledge graph.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W30",
+      "title": "SHACL test suite",
+      "url": "https://w3c.github.io/data-shapes/data-shapes-test-suite/",
+      "type": "W3C test-suite documentation",
+      "version_or_revision": "Manifest format reviewed",
+      "reviewed_on": "2026-09-06",
+      "use": "Machine-readable expected conform/nonconform results; pin exact test manifests before use.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W31",
+      "title": "PROV-DM",
+      "url": "https://www.w3.org/TR/prov-dm/",
+      "type": "W3C Recommendation",
+      "version_or_revision": "30 April 2013",
+      "reviewed_on": "2026-09-06",
+      "use": "Represent code/docs as entities, runs as activities and responsible agents; retain derivation chains.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W32",
+      "title": "Seven Sketches in Compositionality",
+      "url": "https://arxiv.org/abs/1803.05316v3",
+      "type": "Research textbook",
+      "version_or_revision": "Fong and Spivak; v3, 12 October 2018; abstract/metadata and local concepts reviewed",
+      "reviewed_on": "2026-09-06",
+      "use": "Ground carriers, operations, functors and compositional diagrams; no claim to have proved the full book.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W33",
+      "title": "A faster algorithm for betweenness centrality",
+      "url": "https://www.uni-konstanz.de/algo/publications/b-fabc-01.pdf",
+      "type": "Author paper",
+      "version_or_revision": "Ulrik Brandes, 2001; PDF read",
+      "reviewed_on": "2026-09-06",
+      "use": "Prioritize navigation bottlenecks; derive product-specific budgets, not universal 0.35 thresholds.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    },
+    {
+      "id": "W34",
+      "title": "Stanford PageRank resources",
+      "url": "https://web.stanford.edu/class/cs106m/meetings/03-pagerank/",
+      "type": "Primary university teaching reference",
+      "version_or_revision": "Updated 2025-10-03",
+      "reviewed_on": "2026-09-06",
+      "use": "Links original Google/PageRank papers; use ranking for crawl priority, not proof of usability.",
+      "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+      "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+    }
+  ],
+  "unsuccessful_fetches": [
+    {
+      "url": "https://www.cse.chalmers.se/~rjmh/QuickCheck/manual.html",
+      "result": "Fetch failed; original QuickCheck paper/manual not reviewed in full"
+    },
+    {
+      "url": "https://dl.acm.org/doi/10.1145/351240.351266",
+      "result": "Publisher fetch failed; bibliographic trail only"
+    },
+    {
+      "url": "https://dl.acm.org/doi/10.1145/360825.360855",
+      "result": "Aho-Corasick publisher fetch failed; use local source laws as reviewed evidence"
+    },
+    {
+      "url": "https://www.cs.cmu.edu/~cdm/resources/Tarjan1972-sccs.pdf",
+      "result": "PDF fetch failed; no full-paper reading claim"
+    },
+    {
+      "url": "https://ilpubs.stanford.edu:8090/422/",
+      "result": "Original PageRank endpoint inaccessible through browsing tool"
+    },
+    {
+      "url": "https://www.cse.chalmers.se/~jomoa/papers/VPT21QuickSpec.pdf",
+      "result": "403; no full-paper reading claim"
+    },
+    {
+      "url": "https://tiddlywiki.com/dev/#Testing",
+      "result": "Fetch failed; used official repository test directory instead"
+    }
+  ]
+}

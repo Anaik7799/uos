@@ -1,0 +1,49 @@
+# Browser verification: live failures and document repair feedback
+
+{{navigation}}
+
+The live baseline contains **46 discovered URLs and 184 attempts: 183 FAIL and one ERROR**. Chromium was driven using the installed typed OCaml Playwright binding and system Chrome. Viewports were 1440×900, 390×844, 768×1024 and 1920×1080. These were bounded observational passes, not complete semantic closure of every possible URL/function/state. New pages appeared while other processes changed UOS.
+
+## Four-cycle baseline per route
+
+{{routes}}
+
+The ERROR was a mobile summary interaction timeout on `/verify-patrol`. Exact controls, skipped operations, error messages, local fragments, links and overflow indices are retained in the full manifest. All routes remain rejected by the baseline; this matrix does not substitute a source inspection or later isolated fixture result for a live pass.
+
+## Findings and measurement limits
+
+The generated document JavaScript contained a literal newline inside a quoted split argument, preventing client code from parsing. The raw/rendered toggle was consequently undefined. The checklist dominated the first screen. Planning lacked shared structural elements. Some filters/buttons produced no DOM change. Many pages lacked exactly one H1, and controls overflowed narrow viewports.
+
+HTTP status was an independent Curl GET because the installed binding lacks the Response.status accessor; it is not the exact browser-navigation response. The controller records generic DOM changes as `REQUIRES_SPECIFIC_EXPECTED_RESULT`. Hidden/disabled/effect-boundary controls are UNRUN. The baseline details-restoration helper aliased absent and empty `open` attributes, so that `restored` field is insufficient evidence. Later fixture checks use exact `[open]` counts.
+
+The initial crawl had a 500-page quota and excluded query-bearing URLs, API/event endpoints, other origins and unsafe path shapes. It cannot establish all external links, query states, permission states or dynamically hidden destinations. Four viewport passes alone do not satisfy the complete semantic closed loop requested for every component.
+
+## Feedback on the actual Gleam renderer
+
+{{lanes}}
+
+The first repair restored JavaScript parsing, raw/rendered mode and checklist behavior, but exposed seven mobile control overflows. The second repair corrected sizing/wrapping. Visual inspection still showed excessive vertical navigation, so the third repair added a mobile navigation disclosure with a native button and aria-expanded. Its final four contexts have **58/58 semantic checks passing and zero observed control overflow**. Desktop navigation, mobile expand/restore, source preservation, parsed heading/code/link, checklist expansion/restoration and absence of page errors were observed.
+
+These are isolated fixtures emitted by the real Gleam renderer. They are not evidence that port 4100 was deployed from that candidate, or that Markdown sanitization, every link, screen-reader behavior and the whole site's appearance are correct. The main review retains those gaps.
+
+## Images, DOM, accessibility snapshots and video
+
+Complete evidence is retained at `/home/an/NAS-setup/uos/var/evidence/20260906-0631-web-quality/`, separated into `baseline`, `document-repair`, `mobile-repair` and `navigation-repair`. Each lane has its manifest, DOM HTML, accessibility text, before/after PNGs and WebM recordings. The tracked source receipt lists every file's size and SHA-256.
+
+Useful inspected examples:
+
+- Baseline wiki: `baseline/cycle-1-page-0009.png`.
+- Baseline knowledge explorer: `baseline/cycle-1-page-0005.png`.
+- Intermediate mobile document: `mobile-repair/cycle-2-rendered.png`.
+- Final mobile document: `navigation-repair/cycle-2-rendered.png`.
+- Final mobile recording: `navigation-repair/cycle-2.webm`.
+
+Media is retained locally under ignored `var/`; it is not a Jujutsu-tracked or externally backed-up media archive. The current `/files` viewer does not serve media MIME types, so these are explicit filesystem locations rather than purported working inline web images. Screenshots/videos are observed evidence, not explanatory diagrams.
+
+First-party OCaml controllers are preserved under `tests/web_quality/`. The baseline controller is historical audit code with the documented limitations. The latest candidate controller points to the captured navigation fixture in `/tmp`; its retained fixture is also under `var/evidence` and must be restored to that scratch path for exact replay. Both use typed Playwright APIs; neither injects page-level JavaScript test programs. Original ZigVM OCaml tests were not changed or executed.
+
+## Remaining closure
+
+Freeze the candidate and enumerate every page/component/control/state; execute four semantic cycles with exact postconditions; replay failures after each correction; regress dependents. Add query/permission/error/empty states, history and external/fragment policies, Chromium/Firefox/WebKit, keyboard/screen-reader exercises, measured performance and authorized isolated mutation scenarios. Use traces to correlate DOM/actions/network and video for timing. Image existence or DOM change alone is never a passing semantic oracle.
+
+{{checklist}}

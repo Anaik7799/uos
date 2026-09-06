@@ -1,0 +1,676 @@
+{
+  "web": {
+    "schema": "uos.web-quality-research.v1",
+    "sources": [
+      {
+        "id": "W01",
+        "title": "Gleeunit API",
+        "url": "https://hexdocs.pm/gleeunit/gleeunit.html",
+        "type": "Official API",
+        "version_or_revision": "Local 1.9; web API 1.10 observed",
+        "reviewed_on": "2026-09-06",
+        "use": "Run assertions against actual UOS values and collect named failures.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W02",
+        "title": "Lustre element API",
+        "url": "https://lustre.hexdocs.pm/lustre/element.html",
+        "type": "Official API",
+        "version_or_revision": "Local 5.6.0; web 5.7.1 observed",
+        "reviewed_on": "2026-09-06",
+        "use": "Serialize/query real Element values; do not confuse VDOM checks with browser layout.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W03",
+        "title": "Lustre development queries",
+        "url": "https://hexdocs.pm/lustre/lustre/dev/query.html",
+        "type": "Official API",
+        "version_or_revision": "5.6 documentation reviewed",
+        "reviewed_on": "2026-09-06",
+        "use": "Component-role/content/state tests before browser integration.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W04",
+        "title": "Phoenix LiveViewTest",
+        "url": "https://phoenix-live-view.hexdocs.pm/Phoenix.LiveViewTest.html",
+        "type": "Official API",
+        "version_or_revision": "1.2.11 web documentation",
+        "reviewed_on": "2026-09-06",
+        "use": "Server-simulated LiveView event and render tests; browser layer remains separate.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W05",
+        "title": "StreamData",
+        "url": "https://stream-data.hexdocs.pm/StreamData.html",
+        "type": "Official API",
+        "version_or_revision": "1.4 web documentation",
+        "reviewed_on": "2026-09-06",
+        "use": "Generated inputs, shrinking and reproducible property failures; port semantics to Gleam.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W06",
+        "title": "Playwright visual comparisons",
+        "url": "https://playwright.dev/docs/test-snapshots",
+        "type": "Official documentation",
+        "version_or_revision": "Rolling docs; pin runtime before adoption",
+        "reviewed_on": "2026-09-06",
+        "use": "Reviewed baseline, stable OS/fonts/browser, explicit pixel differences; screenshots alone are not quality.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W07",
+        "title": "Playwright Trace Viewer",
+        "url": "https://playwright.dev/docs/trace-viewer",
+        "type": "Official documentation",
+        "version_or_revision": "Rolling docs",
+        "reviewed_on": "2026-09-06",
+        "use": "Action/DOM/network/error timelines for causal debugging; traces proposed, current audit saved DOM/video.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W08",
+        "title": "WCAG 2.2",
+        "url": "https://www.w3.org/TR/WCAG22/",
+        "type": "W3C Recommendation",
+        "version_or_revision": "12 December 2024 publication observed",
+        "reviewed_on": "2026-09-06",
+        "use": "Keyboard, focus, reflow, contrast, consistent navigation; manual criteria remain.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W09",
+        "title": "ARIA-AT",
+        "url": "https://github.com/w3c-cg/aria-at",
+        "type": "Open-source test project",
+        "version_or_revision": "Moving repository, no import pin",
+        "reviewed_on": "2026-09-06",
+        "use": "Assistive-technology interoperability scenarios beyond accessibility-tree presence.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W10",
+        "title": "axe-core",
+        "url": "https://github.com/dequelabs/axe-core",
+        "type": "Open-source test engine",
+        "version_or_revision": "License must be checked per pinned package before ingestion",
+        "reviewed_on": "2026-09-06",
+        "use": "Automated accessibility rules as one modality; no full compliance claim.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W11",
+        "title": "Web Platform Tests authoring",
+        "url": "https://web-platform-tests.org/writing-tests/",
+        "type": "Official test-suite documentation",
+        "version_or_revision": "Rolling docs",
+        "reviewed_on": "2026-09-06",
+        "use": "Use testharness, reftest and webdriver test patterns for browser semantics.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W12",
+        "title": "Core Web Vitals",
+        "url": "https://web.dev/articles/vitals",
+        "type": "Google guidance",
+        "version_or_revision": "Page updated 2024-10-31 observed",
+        "reviewed_on": "2026-09-06",
+        "use": "Field p75 LCP <=2.5s, INP <=200ms, CLS <=0.1; separate mobile/desktop and lab from field.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W13",
+        "title": "Lighthouse",
+        "url": "https://github.com/GoogleChrome/lighthouse",
+        "type": "Google open-source tool",
+        "version_or_revision": "Moving repository; not installed/run for this audit",
+        "reviewed_on": "2026-09-06",
+        "use": "Repeatable lab performance/accessibility diagnostics, never a proxy for actual field INP.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W14",
+        "title": "HEART: measuring user experience",
+        "url": "https://research.google/pubs/measuring-the-user-experience-on-a-large-scale-user-centered-metrics-for-web-applications/",
+        "type": "Google research paper",
+        "version_or_revision": "Rodden, Hutchinson and Fu; CHI 2010",
+        "reviewed_on": "2026-09-06",
+        "use": "Define goals, signals and metrics for happiness, engagement, adoption, retention and task success.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W15",
+        "title": "HaTS: happiness tracking surveys",
+        "url": "https://research.google/pubs/hats-large-scale-in-product-measurement-of-user-attitudes-experiences-with-happiness-tracking-surveys/",
+        "type": "Google research paper",
+        "version_or_revision": "Research publication metadata reviewed",
+        "reviewed_on": "2026-09-06",
+        "use": "Pair behavior/latency data with task-specific user feedback; no surveys sent.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W16",
+        "title": "Parsoid round-trip testing",
+        "url": "https://www.mediawiki.org/wiki/Parsoid/Round-trip_testing",
+        "type": "MediaWiki engineering documentation",
+        "version_or_revision": "Rolling wiki page",
+        "reviewed_on": "2026-09-06",
+        "use": "Test wikitext/HTML round trips using declared semantic equivalence and documented acceptable changes.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W17",
+        "title": "CommonMark specification",
+        "url": "https://spec.commonmark.org/0.31.2/",
+        "type": "Language specification and examples",
+        "version_or_revision": "0.31.2",
+        "reviewed_on": "2026-09-06",
+        "use": "Adopt only examples in UOS's declared Markdown dialect; classify intentional divergences.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W18",
+        "title": "TiddlyWiki test directory",
+        "url": "https://github.com/TiddlyWiki/TiddlyWiki5/tree/master/editions/test/tiddlers/tests",
+        "type": "Open-source test corpus",
+        "version_or_revision": "Moving master; BSD-3-Clause license text separately read",
+        "reviewed_on": "2026-09-06",
+        "use": "Candidate backlink, backtransclusion, filter, parser, serialization and widget tests; fake DOM is not browser.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W19",
+        "title": "TiddlyWiki backlink tests",
+        "url": "https://github.com/TiddlyWiki/TiddlyWiki5/blob/master/editions/test/tiddlers/tests/test-backlinks.js",
+        "type": "Open-source test code",
+        "version_or_revision": "File reviewed through web; no bytes imported",
+        "reviewed_on": "2026-09-06",
+        "use": "Candidate update/delete/rename and inverse-link semantic cases.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W20",
+        "title": "TiddlyWiki license",
+        "url": "https://github.com/TiddlyWiki/TiddlyWiki5/blob/master/license",
+        "type": "License source",
+        "version_or_revision": "BSD-3-Clause text observed",
+        "reviewed_on": "2026-09-06",
+        "use": "Track attribution/notice obligations before any source or fixture admission.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "license text reviewed; pinned-file review still required before copying"
+      },
+      {
+        "id": "W21",
+        "title": "Logseq tests",
+        "url": "https://github.com/logseq/logseq/tree/master/src/test",
+        "type": "Open-source test directory",
+        "version_or_revision": "Directory reviewed, not every test body",
+        "reviewed_on": "2026-09-06",
+        "use": "Candidate outliner/block identity, parser and query scenarios; further file-level review required.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W22",
+        "title": "Logseq license",
+        "url": "https://github.com/logseq/logseq/blob/master/LICENSE.md",
+        "type": "License source",
+        "version_or_revision": "AGPL text and additional permissions observed",
+        "reviewed_on": "2026-09-06",
+        "use": "Per-file and version-specific review required before copying code.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "license text reviewed; pinned-file review still required before copying"
+      },
+      {
+        "id": "W23",
+        "title": "Joplin development guide",
+        "url": "https://joplinapp.org/help/dev/",
+        "type": "Official development documentation",
+        "version_or_revision": "Rolling docs; exact suite files not deeply inspected",
+        "reviewed_on": "2026-09-06",
+        "use": "Candidate sync, note identity, attachment and export workflows.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W24",
+        "title": "Joplin license",
+        "url": "https://github.com/laurent22/joplin/blob/dev/LICENSE",
+        "type": "License source",
+        "version_or_revision": "AGPL-3.0-or-later default; subdirectories may override",
+        "reviewed_on": "2026-09-06",
+        "use": "Do not assume repository-wide uniform licensing or reuse logos.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "license text reviewed; pinned-file review still required before copying"
+      },
+      {
+        "id": "W25",
+        "title": "Docusaurus configuration",
+        "url": "https://docusaurus.io/docs/api/docusaurus-config",
+        "type": "Official documentation",
+        "version_or_revision": "3.10.2 docs observed",
+        "reviewed_on": "2026-09-06",
+        "use": "Build-time broken-link/anchor/duplicate-route gates complement runtime navigation.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W26",
+        "title": "Sphinx builders",
+        "url": "https://www.sphinx-doc.org/en/master/usage/builders/index.html",
+        "type": "Official documentation",
+        "version_or_revision": "Rolling docs",
+        "reviewed_on": "2026-09-06",
+        "use": "Linkcheck architecture; retain redirects, timeouts and exclusions as distinct statuses.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W27",
+        "title": "Google OSS-Fuzz project guide",
+        "url": "https://google.github.io/oss-fuzz/getting-started/new-project-guide/",
+        "type": "Official fuzzing documentation",
+        "version_or_revision": "Rolling docs",
+        "reviewed_on": "2026-09-06",
+        "use": "Coverage-guided parser fuzzing in isolated harnesses; deterministic seeds here are a different modality.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W28",
+        "title": "NIST automated combinatorial testing",
+        "url": "https://csrc.nist.gov/projects/automated-combinatorial-testing-for-software",
+        "type": "NIST research/tool project",
+        "version_or_revision": "Project documentation reviewed",
+        "reviewed_on": "2026-09-06",
+        "use": "Covering arrays over browser, viewport, theme, role, locale and network states with constraints.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W29",
+        "title": "SHACL",
+        "url": "https://www.w3.org/TR/shacl/",
+        "type": "W3C Recommendation",
+        "version_or_revision": "2017 Recommendation; do not conflate newer 1.2 drafts",
+        "reviewed_on": "2026-09-06",
+        "use": "Graph cardinality, class, path and closed-shape contracts for the knowledge graph.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W30",
+        "title": "SHACL test suite",
+        "url": "https://w3c.github.io/data-shapes/data-shapes-test-suite/",
+        "type": "W3C test-suite documentation",
+        "version_or_revision": "Manifest format reviewed",
+        "reviewed_on": "2026-09-06",
+        "use": "Machine-readable expected conform/nonconform results; pin exact test manifests before use.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W31",
+        "title": "PROV-DM",
+        "url": "https://www.w3.org/TR/prov-dm/",
+        "type": "W3C Recommendation",
+        "version_or_revision": "30 April 2013",
+        "reviewed_on": "2026-09-06",
+        "use": "Represent code/docs as entities, runs as activities and responsible agents; retain derivation chains.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W32",
+        "title": "Seven Sketches in Compositionality",
+        "url": "https://arxiv.org/abs/1803.05316v3",
+        "type": "Research textbook",
+        "version_or_revision": "Fong and Spivak; v3, 12 October 2018; abstract/metadata and local concepts reviewed",
+        "reviewed_on": "2026-09-06",
+        "use": "Ground carriers, operations, functors and compositional diagrams; no claim to have proved the full book.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W33",
+        "title": "A faster algorithm for betweenness centrality",
+        "url": "https://www.uni-konstanz.de/algo/publications/b-fabc-01.pdf",
+        "type": "Author paper",
+        "version_or_revision": "Ulrik Brandes, 2001; PDF read",
+        "reviewed_on": "2026-09-06",
+        "use": "Prioritize navigation bottlenecks; derive product-specific budgets, not universal 0.35 thresholds.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      },
+      {
+        "id": "W34",
+        "title": "Stanford PageRank resources",
+        "url": "https://web.stanford.edu/class/cs106m/meetings/03-pagerank/",
+        "type": "Primary university teaching reference",
+        "version_or_revision": "Updated 2025-10-03",
+        "reviewed_on": "2026-09-06",
+        "use": "Links original Google/PageRank papers; use ranking for crawl priority, not proof of usability.",
+        "admission": "REFERENCE_ONLY_NO_SOURCE_OR_FIXTURE_BYTES_IMPORTED",
+        "license_review": "not a source-code import; pin and inspect applicable terms before ingestion"
+      }
+    ],
+    "unsuccessful_fetches": [
+      {
+        "url": "https://www.cse.chalmers.se/~rjmh/QuickCheck/manual.html",
+        "result": "Fetch failed; original QuickCheck paper/manual not reviewed in full"
+      },
+      {
+        "url": "https://dl.acm.org/doi/10.1145/351240.351266",
+        "result": "Publisher fetch failed; bibliographic trail only"
+      },
+      {
+        "url": "https://dl.acm.org/doi/10.1145/360825.360855",
+        "result": "Aho-Corasick publisher fetch failed; use local source laws as reviewed evidence"
+      },
+      {
+        "url": "https://www.cs.cmu.edu/~cdm/resources/Tarjan1972-sccs.pdf",
+        "result": "PDF fetch failed; no full-paper reading claim"
+      },
+      {
+        "url": "https://ilpubs.stanford.edu:8090/422/",
+        "result": "Original PageRank endpoint inaccessible through browsing tool"
+      },
+      {
+        "url": "https://www.cse.chalmers.se/~jomoa/papers/VPT21QuickSpec.pdf",
+        "result": "403; no full-paper reading claim"
+      },
+      {
+        "url": "https://tiddlywiki.com/dev/#Testing",
+        "result": "Fetch failed; used official repository test directory instead"
+      }
+    ]
+  },
+  "local": {
+    "documents": [
+      {
+        "id": "Z01",
+        "review_depth": "Detailed source review",
+        "finding": "Token span/context/stack laws; tokenizer scope; historical counts not rerun.",
+        "path": "/home/an/dev/ver/zigvm/docs/design/HTML_ALGEBRA.md",
+        "sha256_at_publication": "abeade840edb8981f665ccd43c82b78830f907f1074489add052147d838e1ccb"
+      },
+      {
+        "id": "Z02",
+        "review_depth": "Full document read",
+        "finding": "Typed row/delimiter/arity model, independent oracle, exhaustive/mutation claims and fence preconditions.",
+        "path": "/home/an/dev/ver/zigvm/docs/design/TABLE_ALGEBRA.md",
+        "sha256_at_publication": "3408d0467350191a00c554a878a660ef6f22422cd036e18c182536484f7294e3"
+      },
+      {
+        "id": "Z03",
+        "review_depth": "Detailed source review",
+        "finding": "Typed knowledge graphs, inverse links and embeddings versus isomorphisms.",
+        "path": "/home/an/dev/ver/zigvm/docs/formal/knowledge-systems-algebra.md",
+        "sha256_at_publication": "69df270e266d297ce10e577d2abe43bdf1f63a2da706eb5adef2876de1f852c1"
+      },
+      {
+        "id": "Z04",
+        "review_depth": "Detailed source review",
+        "finding": "Law-first development, mutant controls, nonvacuous generators and paired visibility tests.",
+        "path": "/home/an/dev/ver/zigvm/docs/TESTING_DISCIPLINES.md",
+        "sha256_at_publication": "a7e04436c593cd3d8e127f939e8fde1c607a84f182bb7dbf6fb76201e1562dea"
+      },
+      {
+        "id": "Z05",
+        "review_depth": "Detailed source review",
+        "finding": "Closed Markdown dialect, AST folds/zippers, transclusion and projection programme; distinguish plans from executions.",
+        "path": "/home/an/dev/ver/zigvm/docs/WIKI_RENDER_FEATURE_PROGRAMME.md",
+        "sha256_at_publication": "fad78b952fd597ed90816d920eb4b2e94bf3e81cc42394dde457623441b41d5d"
+      },
+      {
+        "id": "Z06",
+        "review_depth": "Opening 160 lines and relevant authority descriptions read",
+        "finding": "Typed protocol versus external runtime and knowledge-only test corpus.",
+        "path": "/home/an/dev/ver/zigvm/docs/PLAYWRIGHT_OCAML_ONTOLOGY.md",
+        "sha256_at_publication": "46657f82060e5b36517ca42f94313606b7a5dd7b10b32167b4d80460c6eeffa7"
+      },
+      {
+        "id": "Z07",
+        "review_depth": "Opening 150 lines and registry scope read",
+        "finding": "Generated status/evidence distinctions, including unavailable observations.",
+        "path": "/home/an/dev/ver/zigvm/docs/FRACTAL_FP_ATLAS.md",
+        "sha256_at_publication": "55a7e1c1dd5a6ba72be8e7053a315b9b61329052d4da8e04d378c52169a5ccb8"
+      },
+      {
+        "id": "C01",
+        "review_depth": "Opening 170 lines and relevant findings read",
+        "finding": "Historical scoped UI closure, unavailable endpoints and shared projections.",
+        "path": "/home/an/dev/ver/c3i/docs/journal/20260523-c3i-ui-current-100-target-review.md",
+        "sha256_at_publication": "00592492dfbbf19a9e1591865e63521be1973bd5e9045bc445189b439039911e"
+      },
+      {
+        "id": "C02",
+        "review_depth": "Opening 145 lines and framework dimensions read",
+        "finding": "Cognitive/temporal/situation/experience dimensions; proposed budgets are not measurements.",
+        "path": "/home/an/dev/ver/c3i/docs/architecture/indrajaal-ui-evaluation-framework.md",
+        "sha256_at_publication": "1d46fd112ab0db13cfc6597e9e46660536e84df8a7bff3b6658d61005b60f631"
+      },
+      {
+        "id": "C03",
+        "review_depth": "Full document read",
+        "finding": "Conceptual scoring versus missing instrumentation.",
+        "path": "/home/an/dev/ver/c3i/docs/journal/20260410-1030-ui-evaluation-framework-review.md",
+        "sha256_at_publication": "08cd5b1c0ed46492d71775e2863790ccb200b0fe8cf1474826ab4580fa0f3a5f"
+      },
+      {
+        "id": "C04",
+        "review_depth": "Opening 130 lines and mapping read",
+        "finding": "LiveView-to-Lustre mappings; scope/taxonomy and graph proposals.",
+        "path": "/home/an/dev/ver/c3i/docs/journal/20260403-1700-gleam-testing-framework-graph-coverage-hitl.md",
+        "sha256_at_publication": "a2c12490e335a6ba62b4090d3faf3dcc40265ceec2ceb85b65cd98f633ac3ff1"
+      },
+      {
+        "id": "C05",
+        "review_depth": "Opening 130 lines read against test source",
+        "finding": "222 functions do not imply delivered mesh messages or browser execution.",
+        "path": "/home/an/dev/ver/c3i/docs/journal/20260407-1200-fractal-bdd-31x7-verification-suite.md",
+        "sha256_at_publication": "3f3ceb6627ba32802289957138d2ed8704f676488f2b701e775ccf364b8a7eea"
+      },
+      {
+        "id": "C06",
+        "review_depth": "Full document read; referenced E2E path followed",
+        "finding": "A written specification is not itself TLA checker invocation or semantic immutability.",
+        "path": "/home/an/dev/ver/c3i/docs/journal/20260406-2353-ui-playwright-e2e-allium-specifications.md",
+        "sha256_at_publication": "1aa54a6d440de331bc8005acc62ef29f51ab482151af52b3f808adbd46242e2d"
+      },
+      {
+        "id": "C07",
+        "review_depth": "Opening 145 lines and historical result tables read",
+        "finding": "Five-browser historical matrix and remaining race/restart/negative-schema programme.",
+        "path": "/home/an/dev/ver/c3i/docs/journal/20260511-planning-grid-agentic-ui-full-coverage-journal.md",
+        "sha256_at_publication": "17399c852b19185e41e2d3b3f4c16483b6b787e039b52da3d173e9c712888836"
+      },
+      {
+        "id": "I01",
+        "review_depth": "Opening 150 lines and graph model read",
+        "finding": "Partial navigation graph versus actual route reachability.",
+        "path": "/home/an/dev/ver/c3i/sub-projects/c3i/docs/formal_specs/cockpit_navigation_graph.md",
+        "sha256_at_publication": "dc5498214d16aad33db9abb1d3f8ad5bcb11a03528e4f6dbed9a3c61432790f4"
+      },
+      {
+        "id": "I02",
+        "review_depth": "Opening 150 lines and robustness plan read",
+        "finding": "Planned schema/concurrency/dual-write/fault scenarios, not fresh runtime evidence.",
+        "path": "/home/an/dev/ver/c3i/sub-projects/c3i/docs/architecture/ZUIP_V3_TESTING_ROBUSTNESS_PLAN.md",
+        "sha256_at_publication": "b528ce1995633085f29a58378fad55526ec69695c7cd9c5f4e81e91986f56a16"
+      },
+      {
+        "id": "U01",
+        "review_depth": "Rule read",
+        "finding": "Terminology mismatch: Type Class Morphisms versus Traceability Coordinate Matrix.",
+        "path": "/home/an/NAS-setup/uos/contracts/rules/dmc-tcm-mandate.md",
+        "sha256_at_publication": "f9ca5f514818c2339ef38b58afda2e4bb8bcbc08b83599db5d4158a3b1ba8c2f"
+      },
+      {
+        "id": "U02",
+        "review_depth": "Rule read",
+        "finding": "Both editable sources; screenshots/video are provenance-bound evidence.",
+        "path": "/home/an/NAS-setup/uos/contracts/rules/diagram-ascii-mermaid-mandate.md",
+        "sha256_at_publication": "d27c5771d695202eb3b653fba54ccaaca63d7f00cb1587b0e0e96c6847c000d4"
+      },
+      {
+        "id": "U03",
+        "review_depth": "Core implementation read",
+        "finding": "Four of thirteen fields checked; Boolean morphism/sheaf flags; L0-L7 table.",
+        "path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/verification/dmc_tcm_algebraic_atlas.gleam",
+        "sha256_at_publication": "a3c7ffecdeba72cd2b24e9499814de38138c1bd55218338ab7cad3657c1b053a"
+      },
+      {
+        "id": "U04",
+        "review_depth": "Full implementation read",
+        "finding": "Copies declared test count into pass count without invoking a browser.",
+        "path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/verification/browser_emulation_bridge.gleam",
+        "sha256_at_publication": "e73df7869b6c5127454a7453ba3e4848960b593097587a0c4f521333c51b87d0"
+      },
+      {
+        "id": "U05",
+        "review_depth": "Full implementation read",
+        "finding": "Digest equality/Boolean callbacks/file-count comparison; no native oracle invocation.",
+        "path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/verification/ocaml_differential_oracle.gleam",
+        "sha256_at_publication": "c4c65e229831f32f986375d6b5e5d3135b6b172cbdeb138eec6bda1e397ab566"
+      },
+      {
+        "id": "U06",
+        "review_depth": "Full implementation read",
+        "finding": "Whole-state digest agreement is narrower than actual restriction/gluing.",
+        "path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/verification/algebraic_sheaf_harmonizer.gleam",
+        "sha256_at_publication": "d0807158ef23b6759a7ed8493e31fd83b11377d26c7c015ecf02947f5c4d9633"
+      },
+      {
+        "id": "U07",
+        "review_depth": "Opening 160 lines reviewed as source evidence",
+        "finding": "Concurrent prompt contains aspirational counts and arbitrary centrality thresholds; not execution authority or a pass receipt.",
+        "path": "/home/an/NAS-setup/uos/governance/prompts/20260906-0742-codex-navigational-verification-master-prompt.md",
+        "sha256_at_publication": "a8c0880af997daa537b34531c05d6427c031524dfb9cf9a371f65bbaf05c2839"
+      }
+    ],
+    "skills": [
+      {
+        "name": "ocaml-scripting",
+        "status": "Used",
+        "use": "New read-only inventory, verification and evidence helpers; original OCaml preserved.",
+        "path": "/home/an/NAS-setup/uos/.codex/skills/ocaml-scripting/SKILL.md",
+        "sha256_at_publication": "f49cb522447460181c4771cd6ba03e5eb5226ba1eea3554fb015492d4dfdd70e"
+      },
+      {
+        "name": "formal-technique-selection",
+        "status": "Used",
+        "use": "Choose bounded finite models and independent oracles; formal scope explicit.",
+        "path": "/home/an/NAS-setup/uos/.codex/skills/formal-technique-selection/SKILL.md",
+        "sha256_at_publication": "05f40b159c8b47dab38fee326d15c2b2504a5f3f8000f9dc8f2a79024f114725"
+      },
+      {
+        "name": "gleam-expert",
+        "status": "Used",
+        "use": "Typed contracts, compiler checks and Gleeunit.",
+        "path": "/home/an/NAS-setup/uos/.codex/skills/gleam-expert/SKILL.md",
+        "sha256_at_publication": "ec49b900574bfdea07c7da82a638731edf6adbce5a4a89fc80095222b1b95227"
+      },
+      {
+        "name": "algebraic-fractal-structures",
+        "status": "Used as design guidance",
+        "use": "Carrier/operation/denotation/law/oracle/generator/evidence packet.",
+        "path": "/home/an/NAS-setup/uos/.codex/skills/algebraic-fractal-structures/SKILL.md",
+        "sha256_at_publication": "758e9506ec6293a7c4baa0904988788519e4fe287f47fea3ca63e21741b8764b"
+      },
+      {
+        "name": "wiki-design",
+        "status": "Reviewed design reference",
+        "use": "Knowledge navigation, links and source semantics.",
+        "path": "/home/an/NAS-setup/uos/.codex/skills/wiki-design/SKILL.md",
+        "sha256_at_publication": "5d7d8fcf1ff8b0c696c7b53736e34a70ef75189715c25d5dd691e7699d46fb7d"
+      },
+      {
+        "name": "docs-design",
+        "status": "Used for document renderer and navigation review",
+        "use": "Two-way reading/navigation, escaping and source view; remote parser/sanitization gaps remain.",
+        "path": "/home/an/NAS-setup/uos/.codex/skills/docs-design/SKILL.md",
+        "sha256_at_publication": "3aa25a40e629a812bcd50e8fd5497e9cfe49df4ff03050af9963b448645d1f36"
+      },
+      {
+        "name": "lustre-gleam-ui-expert",
+        "status": "Reviewed API/design reference",
+        "use": "MVU/component tests; installed and online versions distinguished.",
+        "path": "/home/an/NAS-setup/uos/.codex/skills/lustre-gleam-ui-expert/SKILL.md",
+        "sha256_at_publication": "97656bb5f029426a0f848aa739b54b7a419bc5545d2ab0b51a2bb5c3d6557cf9"
+      },
+      {
+        "name": "mobile-first-adaptive-ui",
+        "status": "Reviewed design reference",
+        "use": "Responsive behavior and browser geometry, not a score.",
+        "path": "/home/an/NAS-setup/uos/.codex/skills/mobile-first-adaptive-ui/SKILL.md",
+        "sha256_at_publication": "436c2f91a43007c1e2bd70f04eef7050d398e8be62c18e12e6954af6d7028139"
+      },
+      {
+        "name": "ocaml-playwright-control",
+        "status": "Used with UOS path adaptation",
+        "use": "Typed OCaml lifecycle/control over installed external Playwright runtime; no original harness changes.",
+        "path": "/home/an/NAS-setup/uos/.codex/skills/ocaml-playwright-control/SKILL.md",
+        "sha256_at_publication": "fe505867e0369a7a148b81975ac759ea0fc2890b563c1ed92ed47aa54f5207f3"
+      },
+      {
+        "name": "agentic-ui-evolve",
+        "status": "Reviewed workflow reference",
+        "use": "Observe/compare/correct/retest; historical email/Rust instructions do not override UOS.",
+        "path": "/home/an/NAS-setup/uos/.codex/skills/agentic-ui-evolve/SKILL.md",
+        "sha256_at_publication": "aec764fc62061b7917d423984c391280bf1078b40aeef0c87b352f7d5f3685c7"
+      },
+      {
+        "name": "ui-report-quality",
+        "status": "Reviewed and critically assessed",
+        "use": "Artifact metadata/byte thresholds do not prove meaning/readability; no external closure bundle/email sent.",
+        "path": "/home/an/NAS-setup/uos/.codex/skills/ui-report-quality/SKILL.md",
+        "sha256_at_publication": "cbb00f04cdd9449c73d7ad634168e89a34fb4948144a7a38741bde90de6011f8"
+      },
+      {
+        "name": "test-driven-development",
+        "status": "Used where RED receipts exist",
+        "use": "Do not retroactively claim TDD for every new test.",
+        "path": "/home/an/NAS-setup/uos/.codex/skills/test-driven-development/SKILL.md",
+        "sha256_at_publication": "bf1b8216e523851a411e91d429a7c1c2a173e79d88957bc78e348218d50edd54"
+      },
+      {
+        "name": "skill-repair",
+        "status": "Used in earlier skill repair work",
+        "use": "Installed skill parse repairs and explicit manifest/evidence recording.",
+        "path": "/home/an/NAS-setup/uos/.codex/skills/skill-repair/SKILL.md",
+        "sha256_at_publication": "7ed4b7eb5d82d14686967967159aa472869313bd9804ced44b16eab4884b7f00"
+      },
+      {
+        "name": "systematic-debugging",
+        "status": "Used",
+        "use": "Agent health and observed browser regression diagnosis.",
+        "path": "/home/an/NAS-setup/uos/.codex/skills/systematic-debugging/SKILL.md",
+        "sha256_at_publication": "808fc5717aa88ad65efff312b11c186294d3e6ee301afb584e2f86599b137787"
+      }
+    ]
+  }
+}

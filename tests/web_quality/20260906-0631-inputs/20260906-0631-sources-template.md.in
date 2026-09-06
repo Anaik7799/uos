@@ -1,0 +1,31 @@
+# Source register and research trail
+
+{{navigation}}
+
+Local code and documents are tracked by filesystem locator and digest. External private source locators are read-only workspace evidence, not published UOS routes. Primary web references were reviewed on 2026-09-06. A moving branch/page is not a pin. No external source code or test-fixture bytes were imported. The complete machine register is `20260906-0631-source-register.json`.
+
+## Primary web references
+
+{{web}}
+
+TiddlyWiki's three-clause BSD text was read. Logseq's AGPL text and additional permissions were read. Joplin declares AGPL-3.0-or-later by default and allows directory-specific license overrides. Before any copying, pin the exact revision, inspect applicable per-file terms/notices and retain attribution. Neither a repository name nor its top-level license establishes the status of every file. This audit records reference use, not admission of those implementations.
+
+## Detailed local source review
+
+{{local}}
+
+The separate bounded corpus index contains 8,047 records. Full-text indexing and extracted headings do not mean every line was manually analyzed or executed. Publication-time hashes identify current bytes; a moving source must be reviewed again before admission. Historical GREEN/count claims retain their historical scope.
+
+## Skills and industry practices
+
+{{skills}}
+
+Skill syntax/loader health and semantic quality are separate. Historical path/language/email rules do not override canonical UOS authority. The report critically examines quality metrics rather than treating artifact size, presence or supplied Boolean fields as proof. No messages were sent to other people.
+
+## Failed or incomplete retrievals
+
+{{failed}}
+
+These failures are retained rather than replaced with a claim that the original paper was read. Stanford's institutional PageRank resource page supplies the original bibliography. The reviewed local code and independent finite oracles establish the inspected implementation evidence. Further corpus acquisition requires version, license, source-admission and execution receipts.
+
+{{checklist}}

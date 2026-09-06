@@ -225,3 +225,11 @@ OPERATIONAL VERDICT:     HANDOVER COMPLETE — CODEX SESSION FULLY EMPOWERED
 ```
 
 #decision #adr #handover #tri-sovereign
+
+## 20260906-0606- Operator scope integration and verification addendum
+
+Read the [unified AGY-to-Codex master prompt](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260906-0606-uos-agy-codex-unified-master-prompt.md) and [new understanding, source review and actor ecology plan](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20260906-0606-agy-handover-understanding-and-actor-ecology-plan.md) together with this historical handover.
+
+The operator now requires full DMC/TCM, denotational intent, an L0–L9 algebraic atlas, F Prime based Gleam actors, SysML implementation, and an ecology of communicating actors informed by ZigVM and Harness-Bionic's FPP/Zenoh code. The latest directive requires C3I's Zenoh NIF and Zenoh for all UOS application/domain communication; verify and complete the existing binding and actual call paths. Original external OCaml remains unchanged. The added documents retain the complete web/wiki/ZK/KM test inventory, research, compiler/solver and four-cycle browser requirements.
+
+The earlier green and ratification statements above are historical claims. The [observed audit](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260906-0631-web-knowledge-verification-review.md) records a failed live browser baseline and incomplete DMC/TCM/model execution. The new scoped compiler/solver and document-fixture passes do not certify the full site or actor ecosystem. No new independent signature or system admission is asserted by this addendum.

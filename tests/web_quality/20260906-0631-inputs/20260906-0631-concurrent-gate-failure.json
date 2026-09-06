@@ -1,0 +1,111 @@
+{
+  "schema": "uos.web-quality-gate.v1",
+  "passed": false,
+  "scope": "Compiler/runtime checks of the named UOS module; SMT proofs of the stated evidence semilattice model only. No browser execution or proof of arbitrary Gleam programs.",
+  "source": "/home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/verification/web_quality_contract.gleam",
+  "source_sha256": "49135fdfbfac4a5bc33b26a57f0d4b67f59897991ebba6c27d0985ef54f13810",
+  "test_sha256": "06c1f9260d2b22f602375699bbd5f86cca9c5323c2d2a949c0a8c43f6aebdf11",
+  "gate_sha256": "53fd3898b3b81a0a20631842b8fb3e97ef4d643f048f9251ad6287270d338d1d",
+  "candidate": "rklqknnoyprzpykqzmyqywnokszpyypv 95c14dbb8d54259a585d0512af3e3d5e33769359\nWarning: Refused to snapshot some files:\n  docs/design/20260906-0631-cross-project-test-cases.csv: 11.8MiB (12369489 bytes); the maximum size allowed is 1.0MiB (1048576 bytes)\n  docs/design/20260906-0631-cross-project-test-catalogue.json: 11.0MiB (11562741 bytes); the maximum size allowed is 1.0MiB (1048576 bytes)\n  docs/design/20260906-0631-source-corpus-index.json: 24.4MiB (25632801 bytes); the maximum size allowed is 1.0MiB (1048576 bytes)\nHint: This is to prevent large files from being added by accident. To fix this:\n  * Add the file(s) to `.gitignore`\n  * Run `jj config set --repo snapshot.max-new-file-size 25632801`\n    This will increase the maximum file size allowed for new files, in this repository only.\n  * Run `jj --config snapshot.max-new-file-size=25632801 status`\n    This will increase the maximum file size allowed for new files, for this command only.",
+  "clock_utc": "2026-09-06T06:05:36Z",
+  "gleam": "gleam 1.16.0",
+  "z3": "Z3 version 4.16.0 - 64 bit",
+  "scratch_evidence": "/tmp/uos-web-quality-a1583a",
+  "checks": [
+    {
+      "name": "compiler_positive",
+      "passed": true,
+      "detail": "\n  Resolving versions\n   Checking web_quality_fixture\n   Compiled in 0.00s\n"
+    },
+    {
+      "name": "compiler_opaque_constructor",
+      "passed": true,
+      "detail": "\n   Checking web_quality_fixture\nwarning: Unused imported module\n  ┌─ /tmp/uos-web-quality-a1583a/compiler/src/fixture.gleam:1:1\n  │\n1 │ import web_quality_contract as q\n  │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ This imported module is never used\n\nHint: You can safely remove it.\n\nerror: Unknown module value\n  ┌─ /tmp/uos-web-quality-a1583a/compiler/src/fixture.gleam:2:20\n  │\n2 │ pub fn check() { q.Layer(99) }\n  │                    ^^^^^ Did you mean `layer`?\n\nweb_quality_contract.Layer is a type constructor, it cannot be used as a\nvalue\n\n"
+    },
+    {
+      "name": "compiler_wrong_layer_type",
+      "passed": true,
+      "detail": "\n   Checking web_quality_fixture\nerror: Type mismatch\n  ┌─ /tmp/uos-web-quality-a1583a/compiler/src/fixture.gleam:2:26\n  │\n2 │ pub fn check() { q.layer(\"four\") }\n  │                          ^^^^^^\n\nExpected type:\n\n    Int\n\nFound type:\n\n    String\n\n"
+    },
+    {
+      "name": "compiler_nonexhaustive_evidence",
+      "passed": true,
+      "detail": "\n   Checking web_quality_fixture\nerror: Inexhaustive patterns\n  ┌─ /tmp/uos-web-quality-a1583a/compiler/src/fixture.gleam:2:31\n  │\n2 │ pub fn check(e: q.Evidence) { case e { q.Passed -> True q.Unrun -> False } }\n  │                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nThis case expression does not have a pattern for all possible values. If it\nis run on one of the values without a pattern then it will crash.\n\nThe missing patterns are:\n\n    q.Failed\n\n"
+    },
+    {
+      "name": "compiler_opaque_route",
+      "passed": true,
+      "detail": "\n   Checking web_quality_fixture\nwarning: Unused imported module\n  ┌─ /tmp/uos-web-quality-a1583a/compiler/src/fixture.gleam:1:1\n  │\n1 │ import web_quality_contract as q\n  │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ This imported module is never used\n\nHint: You can safely remove it.\n\nerror: Unknown module value\n  ┌─ /tmp/uos-web-quality-a1583a/compiler/src/fixture.gleam:2:20\n  │\n2 │ pub fn check() { q.Route(\"javascript:bad\") }\n  │                    ^^^^^ Did you mean `route`?\n\nweb_quality_contract.Route is a type constructor, it cannot be used as a\nvalue\n\n"
+    },
+    {
+      "name": "compiler_javascript_target_positive",
+      "passed": true,
+      "detail": "\n   Checking web_quality_fixture\n   Compiled in 0.00s\n"
+    },
+    {
+      "name": "actual_uos_gleam_runtime",
+      "passed": false,
+      "detail": "\n  Compiling cepaf_gleam\nwarning: Unused variable\n   ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/test/sovereign_tensor_cockpit_test.gleam:11:7\n   │\n11 │   let cockpit = sovereign_tensor_cockpit.build_canonical_cockpit()\n   │       ^^^^^^^ This variable is never used\n\nHint: You can ignore it with an underscore: `_cockpit`.\n\nerror: Unknown variable\n   ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/sre_resilience_matrix.gleam:54:22\n   │\n54 │     freshness_level: Freshness,\n   │                      ^^^^^^^^^ Did you mean `Fresh`?\n\nThe custom type variant constructor `Freshness` is not in scope here.\n\nerror: Unknown module\n  ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/test/sovereign_tensor_cockpit_test.gleam:1:1\n  │\n1 │ import cepaf_gleam/ui/lustre/sovereign_tensor_cockpit\n  │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nNo module has been found with the name `cepaf_gleam/ui/lustre/sovereign_tensor_cockpit`.\n\nerror: Unknown module\n  ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/test/sovereign_tensor_cockpit_test.gleam:5:17\n  │\n5 │   let cockpit = sovereign_tensor_cockpit.build_canonical_cockpit()\n  │                 ^^^^^^^^^^^^^^^^^^^^^^^^\n\nNo module has been found with the name `sovereign_tensor_cockpit`.\n\nerror: Unknown module\n  ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/test/sovereign_tensor_cockpit_test.gleam:6:3\n  │\n6 │   sovereign_tensor_cockpit.dimension_count(cockpit)\n  │   ^^^^^^^^^^^^^^^^^^^^^^^^\n\nNo module has been found with the name `sovereign_tensor_cockpit`.\n\nerror: Unknown module\n   ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/test/sovereign_tensor_cockpit_test.gleam:11:17\n   │\n11 │   let cockpit = sovereign_tensor_cockpit.build_canonical_cockpit()\n   │                 ^^^^^^^^^^^^^^^^^^^^^^^^\n\nNo module has been found with the name `sovereign_tensor_cockpit`.\n\nerror: Unknown type for record access\n   ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/test/sovereign_tensor_cockpit_test.gleam:12:16\n   │\n12 │   should.equal(cockpit.overall_health, 1.0)\n   │                ^^^^^^^ I don't know what type this is\n\nIn order to access a record field we need to know what type it is, but I\ncan't tell the type here. Try adding type annotations to your function and\ntry again.\n\nerror: Unknown type for record access\n   ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/test/sovereign_tensor_cockpit_test.gleam:13:18\n   │\n13 │   should.be_true(cockpit.all_dimensions_green)\n   │                  ^^^^^^^ I don't know what type this is\n\nIn order to access a record field we need to know what type it is, but I\ncan't tell the type here. Try adding type annotations to your function and\ntry again.\n\nerror: Type mismatch\n   ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/test/ux_dx_cx_auditor_test.gleam:12:31\n   │\n12 │   should.be_true(audit.inp_ms <=. 200)\n   │                               ^^^ Use <= instead\n\nThe <=. operator can only be used on Floats.\n\n"
+    },
+    {
+      "name": "runtime_model_pair_coverage",
+      "passed": false,
+      "detail": "observations=0; unique_pairs="
+    },
+    {
+      "name": "smt_join_associativity",
+      "passed": true,
+      "detail": "expected=unsat; observed=unsat; query_sha256=58fe762fbbd4fcdbe2131737046e2449ad5eb9ecc5be51a7a394f79e475acb7e"
+    },
+    {
+      "name": "smt_join_commutativity",
+      "passed": true,
+      "detail": "expected=unsat; observed=unsat; query_sha256=00fe87fa2bb5c3a8519ac8fa0fd32cb7511e382c1d27400bec7922dc23a77b6e"
+    },
+    {
+      "name": "smt_join_idempotence",
+      "passed": true,
+      "detail": "expected=unsat; observed=unsat; query_sha256=fdbc8c3f65b42f8a788c3cff496b6daeacc39a2b00b1c8985dd85f5fff3a274e"
+    },
+    {
+      "name": "smt_failed_absorbs",
+      "passed": true,
+      "detail": "expected=unsat; observed=unsat; query_sha256=35ae86b8494c5bfcf8589c08b7a891714371ca67ab9800f5fa5ac1a4bb304c67"
+    },
+    {
+      "name": "smt_unrun_cannot_admit",
+      "passed": true,
+      "detail": "expected=unsat; observed=unsat; query_sha256=82749ffb4b56c204a5dd9a98228703f798993993a025689e57e15facece1899e"
+    },
+    {
+      "name": "smt_two_keys_required",
+      "passed": true,
+      "detail": "expected=unsat; observed=unsat; query_sha256=adc471b246453addad90683cdaa5eec6a04051752eb8420175812315a467033d"
+    },
+    {
+      "name": "smt_satisfiable_success_control",
+      "passed": true,
+      "detail": "expected=sat; observed=sat; query_sha256=06ca0babbcadad8c2dcaef3df66e5cd30408be5c736724082a236bcc009fca8f"
+    },
+    {
+      "name": "smt_satisfiable_rejection_control",
+      "passed": true,
+      "detail": "expected=sat; observed=sat; query_sha256=6b6d0ef093da82e9ae0fb31965572c540694f6a12e1e30b5beeb08c722b091ad"
+    },
+    {
+      "name": "smt_mutant_min_join_witness",
+      "passed": true,
+      "detail": "expected=sat; observed=sat; query_sha256=51dc507dfbbb8f764fe6a1efd58f2768c169cc2d5e59bd760b23cad5d17971be"
+    },
+    {
+      "name": "smt_mutant_or_admission_witness",
+      "passed": true,
+      "detail": "expected=sat; observed=sat; query_sha256=3f6e12a981b80097ba5685c12c6d678a1d2ebcbc2ece581bb5c46dcb66ee86c6"
+    },
+    {
+      "name": "source_unchanged_during_gate",
+      "passed": true,
+      "detail": "49135fdfbfac4a5bc33b26a57f0d4b67f59897991ebba6c27d0985ef54f13810"
+    }
+  ]
+}

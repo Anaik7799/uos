@@ -1,0 +1,228 @@
+{
+  "documents": [
+    {
+      "id": "Z01",
+      "path": "/home/an/dev/ver/zigvm/docs/design/HTML_ALGEBRA.md",
+      "review_depth": "Detailed source review",
+      "finding": "Token span/context/stack laws; tokenizer scope; historical counts not rerun."
+    },
+    {
+      "id": "Z02",
+      "path": "/home/an/dev/ver/zigvm/docs/design/TABLE_ALGEBRA.md",
+      "review_depth": "Full document read",
+      "finding": "Typed row/delimiter/arity model, independent oracle, exhaustive/mutation claims and fence preconditions."
+    },
+    {
+      "id": "Z03",
+      "path": "/home/an/dev/ver/zigvm/docs/formal/knowledge-systems-algebra.md",
+      "review_depth": "Detailed source review",
+      "finding": "Typed knowledge graphs, inverse links and embeddings versus isomorphisms."
+    },
+    {
+      "id": "Z04",
+      "path": "/home/an/dev/ver/zigvm/docs/TESTING_DISCIPLINES.md",
+      "review_depth": "Detailed source review",
+      "finding": "Law-first development, mutant controls, nonvacuous generators and paired visibility tests."
+    },
+    {
+      "id": "Z05",
+      "path": "/home/an/dev/ver/zigvm/docs/WIKI_RENDER_FEATURE_PROGRAMME.md",
+      "review_depth": "Detailed source review",
+      "finding": "Closed Markdown dialect, AST folds/zippers, transclusion and projection programme; distinguish plans from executions."
+    },
+    {
+      "id": "Z06",
+      "path": "/home/an/dev/ver/zigvm/docs/PLAYWRIGHT_OCAML_ONTOLOGY.md",
+      "review_depth": "Opening 160 lines and relevant authority descriptions read",
+      "finding": "Typed protocol versus external runtime and knowledge-only test corpus."
+    },
+    {
+      "id": "Z07",
+      "path": "/home/an/dev/ver/zigvm/docs/FRACTAL_FP_ATLAS.md",
+      "review_depth": "Opening 150 lines and registry scope read",
+      "finding": "Generated status/evidence distinctions, including unavailable observations."
+    },
+    {
+      "id": "C01",
+      "path": "/home/an/dev/ver/c3i/docs/journal/20260523-c3i-ui-current-100-target-review.md",
+      "review_depth": "Opening 170 lines and relevant findings read",
+      "finding": "Historical scoped UI closure, unavailable endpoints and shared projections."
+    },
+    {
+      "id": "C02",
+      "path": "/home/an/dev/ver/c3i/docs/architecture/indrajaal-ui-evaluation-framework.md",
+      "review_depth": "Opening 145 lines and framework dimensions read",
+      "finding": "Cognitive/temporal/situation/experience dimensions; proposed budgets are not measurements."
+    },
+    {
+      "id": "C03",
+      "path": "/home/an/dev/ver/c3i/docs/journal/20260410-1030-ui-evaluation-framework-review.md",
+      "review_depth": "Full document read",
+      "finding": "Conceptual scoring versus missing instrumentation."
+    },
+    {
+      "id": "C04",
+      "path": "/home/an/dev/ver/c3i/docs/journal/20260403-1700-gleam-testing-framework-graph-coverage-hitl.md",
+      "review_depth": "Opening 130 lines and mapping read",
+      "finding": "LiveView-to-Lustre mappings; scope/taxonomy and graph proposals."
+    },
+    {
+      "id": "C05",
+      "path": "/home/an/dev/ver/c3i/docs/journal/20260407-1200-fractal-bdd-31x7-verification-suite.md",
+      "review_depth": "Opening 130 lines read against test source",
+      "finding": "222 functions do not imply delivered mesh messages or browser execution."
+    },
+    {
+      "id": "C06",
+      "path": "/home/an/dev/ver/c3i/docs/journal/20260406-2353-ui-playwright-e2e-allium-specifications.md",
+      "review_depth": "Full document read; referenced E2E path followed",
+      "finding": "A written specification is not itself TLA checker invocation or semantic immutability."
+    },
+    {
+      "id": "C07",
+      "path": "/home/an/dev/ver/c3i/docs/journal/20260511-planning-grid-agentic-ui-full-coverage-journal.md",
+      "review_depth": "Opening 145 lines and historical result tables read",
+      "finding": "Five-browser historical matrix and remaining race/restart/negative-schema programme."
+    },
+    {
+      "id": "I01",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/docs/formal_specs/cockpit_navigation_graph.md",
+      "review_depth": "Opening 150 lines and graph model read",
+      "finding": "Partial navigation graph versus actual route reachability."
+    },
+    {
+      "id": "I02",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/docs/architecture/ZUIP_V3_TESTING_ROBUSTNESS_PLAN.md",
+      "review_depth": "Opening 150 lines and robustness plan read",
+      "finding": "Planned schema/concurrency/dual-write/fault scenarios, not fresh runtime evidence."
+    },
+    {
+      "id": "U01",
+      "path": "/home/an/NAS-setup/uos/contracts/rules/dmc-tcm-mandate.md",
+      "review_depth": "Rule read",
+      "finding": "Terminology mismatch: Type Class Morphisms versus Traceability Coordinate Matrix."
+    },
+    {
+      "id": "U02",
+      "path": "/home/an/NAS-setup/uos/contracts/rules/diagram-ascii-mermaid-mandate.md",
+      "review_depth": "Rule read",
+      "finding": "Both editable sources; screenshots/video are provenance-bound evidence."
+    },
+    {
+      "id": "U03",
+      "path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/verification/dmc_tcm_algebraic_atlas.gleam",
+      "review_depth": "Core implementation read",
+      "finding": "Four of thirteen fields checked; Boolean morphism/sheaf flags; L0-L7 table."
+    },
+    {
+      "id": "U04",
+      "path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/verification/browser_emulation_bridge.gleam",
+      "review_depth": "Full implementation read",
+      "finding": "Copies declared test count into pass count without invoking a browser."
+    },
+    {
+      "id": "U05",
+      "path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/verification/ocaml_differential_oracle.gleam",
+      "review_depth": "Full implementation read",
+      "finding": "Digest equality/Boolean callbacks/file-count comparison; no native oracle invocation."
+    },
+    {
+      "id": "U06",
+      "path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/verification/algebraic_sheaf_harmonizer.gleam",
+      "review_depth": "Full implementation read",
+      "finding": "Whole-state digest agreement is narrower than actual restriction/gluing."
+    },
+    {
+      "id": "U07",
+      "path": "/home/an/NAS-setup/uos/governance/prompts/20260906-0742-codex-navigational-verification-master-prompt.md",
+      "review_depth": "Opening 160 lines reviewed as source evidence",
+      "finding": "Concurrent prompt contains aspirational counts and arbitrary centrality thresholds; not execution authority or a pass receipt."
+    }
+  ],
+  "skills": [
+    {
+      "name": "ocaml-scripting",
+      "path": "/home/an/NAS-setup/uos/.codex/skills/ocaml-scripting/SKILL.md",
+      "status": "Used",
+      "use": "New read-only inventory, verification and evidence helpers; original OCaml preserved."
+    },
+    {
+      "name": "formal-technique-selection",
+      "path": "/home/an/NAS-setup/uos/.codex/skills/formal-technique-selection/SKILL.md",
+      "status": "Used",
+      "use": "Choose bounded finite models and independent oracles; formal scope explicit."
+    },
+    {
+      "name": "gleam-expert",
+      "path": "/home/an/NAS-setup/uos/.codex/skills/gleam-expert/SKILL.md",
+      "status": "Used",
+      "use": "Typed contracts, compiler checks and Gleeunit."
+    },
+    {
+      "name": "algebraic-fractal-structures",
+      "path": "/home/an/NAS-setup/uos/.codex/skills/algebraic-fractal-structures/SKILL.md",
+      "status": "Used as design guidance",
+      "use": "Carrier/operation/denotation/law/oracle/generator/evidence packet."
+    },
+    {
+      "name": "wiki-design",
+      "path": "/home/an/NAS-setup/uos/.codex/skills/wiki-design/SKILL.md",
+      "status": "Reviewed design reference",
+      "use": "Knowledge navigation, links and source semantics."
+    },
+    {
+      "name": "docs-design",
+      "path": "/home/an/NAS-setup/uos/.codex/skills/docs-design/SKILL.md",
+      "status": "Used for document renderer and navigation review",
+      "use": "Two-way reading/navigation, escaping and source view; remote parser/sanitization gaps remain."
+    },
+    {
+      "name": "lustre-gleam-ui-expert",
+      "path": "/home/an/NAS-setup/uos/.codex/skills/lustre-gleam-ui-expert/SKILL.md",
+      "status": "Reviewed API/design reference",
+      "use": "MVU/component tests; installed and online versions distinguished."
+    },
+    {
+      "name": "mobile-first-adaptive-ui",
+      "path": "/home/an/NAS-setup/uos/.codex/skills/mobile-first-adaptive-ui/SKILL.md",
+      "status": "Reviewed design reference",
+      "use": "Responsive behavior and browser geometry, not a score."
+    },
+    {
+      "name": "ocaml-playwright-control",
+      "path": "/home/an/NAS-setup/uos/.codex/skills/ocaml-playwright-control/SKILL.md",
+      "status": "Used with UOS path adaptation",
+      "use": "Typed OCaml lifecycle/control over installed external Playwright runtime; no original harness changes."
+    },
+    {
+      "name": "agentic-ui-evolve",
+      "path": "/home/an/NAS-setup/uos/.codex/skills/agentic-ui-evolve/SKILL.md",
+      "status": "Reviewed workflow reference",
+      "use": "Observe/compare/correct/retest; historical email/Rust instructions do not override UOS."
+    },
+    {
+      "name": "ui-report-quality",
+      "path": "/home/an/NAS-setup/uos/.codex/skills/ui-report-quality/SKILL.md",
+      "status": "Reviewed and critically assessed",
+      "use": "Artifact metadata/byte thresholds do not prove meaning/readability; no external closure bundle/email sent."
+    },
+    {
+      "name": "test-driven-development",
+      "path": "/home/an/NAS-setup/uos/.codex/skills/test-driven-development/SKILL.md",
+      "status": "Used where RED receipts exist",
+      "use": "Do not retroactively claim TDD for every new test."
+    },
+    {
+      "name": "skill-repair",
+      "path": "/home/an/NAS-setup/uos/.codex/skills/skill-repair/SKILL.md",
+      "status": "Used in earlier skill repair work",
+      "use": "Installed skill parse repairs and explicit manifest/evidence recording."
+    },
+    {
+      "name": "systematic-debugging",
+      "path": "/home/an/NAS-setup/uos/.codex/skills/systematic-debugging/SKILL.md",
+      "status": "Used",
+      "use": "Agent health and observed browser regression diagnosis."
+    }
+  ]
+}

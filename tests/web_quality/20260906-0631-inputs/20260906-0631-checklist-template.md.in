@@ -1,0 +1,28 @@
+
+<details>
+<summary>Verification checklist: 5 domains, 18 checkpoints — explicit evidence states</summary>
+
+| Domain | Checkpoint | State and evidence boundary |
+|---|---|---|
+| Metadata, time and navigation | 1. Timestamp prefix | Present; synchronized host receipt recorded in review |
+| Metadata, time and navigation | 2. Source provenance | File locators/digests and primary web references recorded |
+| Metadata, time and navigation | 3. Tailnet navigation | Full FQDN links provided; site-wide correctness remains FAIL/UNRUN |
+| Metadata, time and navigation | 4. Uniform document controls | Eight web unit tests pass; isolated browser checks separate from live deployment |
+| Purity and storage safety | 5. Language boundary | New production checks Gleam; bounded verification/controller OCaml |
+| Purity and storage safety | 6. Excluded runtimes | No prohibited runtime or dependency introduced by this work |
+| Purity and storage safety | 7. Storage interlock | No storage administration performed; hardware interlock not reverified |
+| Testing and mathematics | 8. Unit and regression | New scoped tests executed; legacy suites UNRUN |
+| Testing and mathematics | 9. BDD and system | Typed sequence examples executed; complete user journeys remain incomplete |
+| Testing and mathematics | 10. Property and fuzz | Finite graph census and deterministic route generation executed; coverage-guided fuzz UNRUN |
+| Testing and mathematics | 11. Browser/navigation | Four baseline passes per 46 discovered pages; failures and skipped effects retained |
+| Testing and mathematics | 12. Compiler and four math gates | Real compiler negatives and bounded SMT run; DMC/TCM/sheaf/full-site proofs incomplete |
+| Control and observability | 13. Cross-language parity | Port mappings documented; no claim of executing original OCaml oracle |
+| Control and observability | 14. Trace conservation | All 13 transport fields mutation-tested in new scoped module |
+| Control and observability | 15. Runtime evidence | DOM, accessibility snapshots, images, videos and explicit failure ledger retained |
+| Governance and VCS | 16. Jujutsu-only mutation | No native Git mutation; concurrent workspace advancement recorded |
+| Governance and VCS | 17. Two-key admission | No external source-code admission; final site admission withheld |
+| Governance and VCS | 18. Journal and diagrams | 13-section completion journal; new explanatory diagram has ASCII and Mermaid |
+
+</details>
+
+[Previous: review](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260906-0631-web-knowledge-verification-review.md) · [Next: sources](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260906-0631-sources-and-research.md) · [Return to wiki](http://nas-1.tail55d152.ts.net:4100/wiki).

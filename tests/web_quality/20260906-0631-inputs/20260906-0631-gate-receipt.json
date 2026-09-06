@@ -1,0 +1,156 @@
+{
+  "schema": "uos.web-quality-gate.v1",
+  "passed": true,
+  "scope": "Compiler/runtime checks of the named UOS module; SMT proofs of the stated evidence semilattice model only. No browser execution or proof of arbitrary Gleam programs.",
+  "source": "/home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/verification/web_quality_contract.gleam",
+  "source_sha256": "49135fdfbfac4a5bc33b26a57f0d4b67f59897991ebba6c27d0985ef54f13810",
+  "test_sha256": "06c1f9260d2b22f602375699bbd5f86cca9c5323c2d2a949c0a8c43f6aebdf11",
+  "gate_sha256": "53fd3898b3b81a0a20631842b8fb3e97ef4d643f048f9251ad6287270d338d1d",
+  "candidate": "nkwpsyvyxzysplwmmrsulvqtuvpowuul d1f46cb52e528f9eaaeeff02cb12b09d9ff52968",
+  "clock_utc": "2026-09-06T06:11:58Z",
+  "gleam": "gleam 1.16.0",
+  "z3": "Z3 version 4.16.0 - 64 bit",
+  "scratch_evidence": "/tmp/uos-web-quality-630f50",
+  "checks": [
+    {
+      "name": "compiler_positive",
+      "passed": true,
+      "detail": "\n  Resolving versions\n   Checking web_quality_fixture\n   Compiled in 0.00s\n"
+    },
+    {
+      "name": "compiler_opaque_constructor",
+      "passed": true,
+      "detail": "\n   Checking web_quality_fixture\nwarning: Unused imported module\n  ┌─ /tmp/uos-web-quality-630f50/compiler/src/fixture.gleam:1:1\n  │\n1 │ import web_quality_contract as q\n  │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ This imported module is never used\n\nHint: You can safely remove it.\n\nerror: Unknown module value\n  ┌─ /tmp/uos-web-quality-630f50/compiler/src/fixture.gleam:2:20\n  │\n2 │ pub fn check() { q.Layer(99) }\n  │                    ^^^^^ Did you mean `layer`?\n\nweb_quality_contract.Layer is a type constructor, it cannot be used as a\nvalue\n\n"
+    },
+    {
+      "name": "compiler_wrong_layer_type",
+      "passed": true,
+      "detail": "\n   Checking web_quality_fixture\nerror: Type mismatch\n  ┌─ /tmp/uos-web-quality-630f50/compiler/src/fixture.gleam:2:26\n  │\n2 │ pub fn check() { q.layer(\"four\") }\n  │                          ^^^^^^\n\nExpected type:\n\n    Int\n\nFound type:\n\n    String\n\n"
+    },
+    {
+      "name": "compiler_nonexhaustive_evidence",
+      "passed": true,
+      "detail": "\n   Checking web_quality_fixture\nerror: Inexhaustive patterns\n  ┌─ /tmp/uos-web-quality-630f50/compiler/src/fixture.gleam:2:31\n  │\n2 │ pub fn check(e: q.Evidence) { case e { q.Passed -> True q.Unrun -> False } }\n  │                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n\nThis case expression does not have a pattern for all possible values. If it\nis run on one of the values without a pattern then it will crash.\n\nThe missing patterns are:\n\n    q.Failed\n\n"
+    },
+    {
+      "name": "compiler_opaque_route",
+      "passed": true,
+      "detail": "\n   Checking web_quality_fixture\nwarning: Unused imported module\n  ┌─ /tmp/uos-web-quality-630f50/compiler/src/fixture.gleam:1:1\n  │\n1 │ import web_quality_contract as q\n  │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ This imported module is never used\n\nHint: You can safely remove it.\n\nerror: Unknown module value\n  ┌─ /tmp/uos-web-quality-630f50/compiler/src/fixture.gleam:2:20\n  │\n2 │ pub fn check() { q.Route(\"javascript:bad\") }\n  │                    ^^^^^ Did you mean `route`?\n\nweb_quality_contract.Route is a type constructor, it cannot be used as a\nvalue\n\n"
+    },
+    {
+      "name": "compiler_javascript_target_positive",
+      "passed": true,
+      "detail": "\n   Checking web_quality_fixture\n   Compiled in 0.00s\n"
+    },
+    {
+      "name": "actual_uos_gleam_runtime",
+      "passed": true,
+      "detail": "MODEL 0 0 0 true\nMODEL 0 1 1 false\nMODEL 0 2 2 false\nMODEL 1 0 1 false\nMODEL 1 1 1 false\nMODEL 1 2 2 false\nMODEL 2 0 2 false\nMODEL 2 1 2 false\nMODEL 2 2 2 false\nweb_quality_contract: 10 test functions passed; 1000 generated route seeds; 512 graph oracles\n   Compiled in 0.16s\n    Running web_quality_contract_test.main\n"
+    },
+    {
+      "name": "runtime_model_pair_coverage",
+      "passed": true,
+      "detail": "observations=9; unique_pairs=0:0,0:1,0:2,1:0,1:1,1:2,2:0,2:1,2:2"
+    },
+    {
+      "name": "gleam_to_smt_conformance_0_0",
+      "passed": true,
+      "detail": "MODEL 0 0 0 true; negated conformance=unsat"
+    },
+    {
+      "name": "gleam_to_smt_conformance_0_1",
+      "passed": true,
+      "detail": "MODEL 0 1 1 false; negated conformance=unsat"
+    },
+    {
+      "name": "gleam_to_smt_conformance_0_2",
+      "passed": true,
+      "detail": "MODEL 0 2 2 false; negated conformance=unsat"
+    },
+    {
+      "name": "gleam_to_smt_conformance_1_0",
+      "passed": true,
+      "detail": "MODEL 1 0 1 false; negated conformance=unsat"
+    },
+    {
+      "name": "gleam_to_smt_conformance_1_1",
+      "passed": true,
+      "detail": "MODEL 1 1 1 false; negated conformance=unsat"
+    },
+    {
+      "name": "gleam_to_smt_conformance_1_2",
+      "passed": true,
+      "detail": "MODEL 1 2 2 false; negated conformance=unsat"
+    },
+    {
+      "name": "gleam_to_smt_conformance_2_0",
+      "passed": true,
+      "detail": "MODEL 2 0 2 false; negated conformance=unsat"
+    },
+    {
+      "name": "gleam_to_smt_conformance_2_1",
+      "passed": true,
+      "detail": "MODEL 2 1 2 false; negated conformance=unsat"
+    },
+    {
+      "name": "gleam_to_smt_conformance_2_2",
+      "passed": true,
+      "detail": "MODEL 2 2 2 false; negated conformance=unsat"
+    },
+    {
+      "name": "smt_join_associativity",
+      "passed": true,
+      "detail": "expected=unsat; observed=unsat; query_sha256=58fe762fbbd4fcdbe2131737046e2449ad5eb9ecc5be51a7a394f79e475acb7e"
+    },
+    {
+      "name": "smt_join_commutativity",
+      "passed": true,
+      "detail": "expected=unsat; observed=unsat; query_sha256=00fe87fa2bb5c3a8519ac8fa0fd32cb7511e382c1d27400bec7922dc23a77b6e"
+    },
+    {
+      "name": "smt_join_idempotence",
+      "passed": true,
+      "detail": "expected=unsat; observed=unsat; query_sha256=fdbc8c3f65b42f8a788c3cff496b6daeacc39a2b00b1c8985dd85f5fff3a274e"
+    },
+    {
+      "name": "smt_failed_absorbs",
+      "passed": true,
+      "detail": "expected=unsat; observed=unsat; query_sha256=35ae86b8494c5bfcf8589c08b7a891714371ca67ab9800f5fa5ac1a4bb304c67"
+    },
+    {
+      "name": "smt_unrun_cannot_admit",
+      "passed": true,
+      "detail": "expected=unsat; observed=unsat; query_sha256=82749ffb4b56c204a5dd9a98228703f798993993a025689e57e15facece1899e"
+    },
+    {
+      "name": "smt_two_keys_required",
+      "passed": true,
+      "detail": "expected=unsat; observed=unsat; query_sha256=adc471b246453addad90683cdaa5eec6a04051752eb8420175812315a467033d"
+    },
+    {
+      "name": "smt_satisfiable_success_control",
+      "passed": true,
+      "detail": "expected=sat; observed=sat; query_sha256=06ca0babbcadad8c2dcaef3df66e5cd30408be5c736724082a236bcc009fca8f"
+    },
+    {
+      "name": "smt_satisfiable_rejection_control",
+      "passed": true,
+      "detail": "expected=sat; observed=sat; query_sha256=6b6d0ef093da82e9ae0fb31965572c540694f6a12e1e30b5beeb08c722b091ad"
+    },
+    {
+      "name": "smt_mutant_min_join_witness",
+      "passed": true,
+      "detail": "expected=sat; observed=sat; query_sha256=51dc507dfbbb8f764fe6a1efd58f2768c169cc2d5e59bd760b23cad5d17971be"
+    },
+    {
+      "name": "smt_mutant_or_admission_witness",
+      "passed": true,
+      "detail": "expected=sat; observed=sat; query_sha256=3f6e12a981b80097ba5685c12c6d678a1d2ebcbc2ece581bb5c46dcb66ee86c6"
+    },
+    {
+      "name": "source_unchanged_during_gate",
+      "passed": true,
+      "detail": "49135fdfbfac4a5bc33b26a57f0d4b67f59897991ebba6c27d0985ef54f13810"
+    }
+  ]
+}
