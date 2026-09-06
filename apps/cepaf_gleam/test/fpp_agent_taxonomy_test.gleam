@@ -20,11 +20,13 @@ import cepaf_gleam/fpp/agent_taxonomy.{
   DeterministicFlightController, DeterministicReductionScheduler,
   HardwareDriveInterlock, LocklessHamtStorage, MissionPhaseHsm,
   SdlcArchitectureSynthesizer, SdlcContractCodeGenerator,
-  SdlcGraphWorkflowOrchestrator, SreChaosFaultInjector,
-  SreLyapunovTrendDetector, SreRunnerLifecycleHookSupervisor, SreSentinel,
+  SdlcGraphWorkflowOrchestrator, SdlcPromptTemplateInjector,
+  SreChaosFaultInjector, SreLyapunovTrendDetector,
+  SreRunnerLifecycleHookSupervisor, SreSentinel, SreTimeTravelStateRollback,
   SubstrateReactor, VerificationAdkEvalBenchmark, VerificationChecklistAuditor,
-  VerificationZeroMudaPurityEnforcer, all_agent_types, encode_agent_catalog_json,
-  find_agent_type_spec, sdlc_agents, sre_agents, verification_agents,
+  VerificationMasterChecklistGatekeeper, VerificationZeroMudaPurityEnforcer,
+  all_agent_types, encode_agent_catalog_json, find_agent_type_spec,
+  intelligence_agents, sdlc_agents, sre_agents, verification_agents,
   verify_agent_base_id_disjointness,
 }
 import cepaf_gleam/fpp/dmc_tcm.{
@@ -37,22 +39,26 @@ import gleam/list
 import gleam/string
 import gleeunit/should
 
-pub fn all_72_agent_types_exist_test() {
+pub fn all_256_agent_types_exist_test() {
   let specs = all_agent_types()
   list.length(specs)
-  |> should.equal(72)
+  |> should.equal(256)
 
-  // Verify 16 SDLC Agents
+  // Verify 64 SDLC Agents
   list.length(sdlc_agents())
-  |> should.equal(24)
+  |> should.equal(64)
 
-  // Verify 16 SRE Agents
+  // Verify 64 SRE Agents
   list.length(sre_agents())
-  |> should.equal(24)
+  |> should.equal(64)
 
-  // Verify 16 Verification Agents
+  // Verify 64 Verification Agents
   list.length(verification_agents())
-  |> should.equal(24)
+  |> should.equal(64)
+
+  // Verify 64 Intelligence Agents
+  list.length(intelligence_agents())
+  |> should.equal(64)
 
   // Check sample representatives from each pillar
   find_agent_type_spec(ConstitutionalGuardian)
@@ -97,13 +103,22 @@ pub fn all_72_agent_types_exist_test() {
   find_agent_type_spec(VerificationAdkEvalBenchmark)
   |> should.be_ok
 
+  find_agent_type_spec(SdlcPromptTemplateInjector)
+  |> should.be_ok
+
+  find_agent_type_spec(SreTimeTravelStateRollback)
+  |> should.be_ok
+
+  find_agent_type_spec(VerificationMasterChecklistGatekeeper)
+  |> should.be_ok
+
   find_agent_type_spec(VerificationZeroMudaPurityEnforcer)
   |> should.be_ok
 }
 
 pub fn base_id_window_disjointness_dmc_test() {
   let specs = all_agent_types()
-  // Prove that all 72 agent base-ID intervals [B_i, B_i + 64) are pairwise disjoint
+  // Prove that all 96 agent base-ID intervals [B_i, B_i + 64) are pairwise disjoint
   verify_agent_base_id_disjointness(specs)
   |> should.equal(True)
 }
@@ -318,16 +333,19 @@ pub fn agent_json_catalog_serialization_test() {
   let specs = all_agent_types()
   let catalog_json = encode_agent_catalog_json(specs)
 
-  string.contains(catalog_json, "\"total_agent_types\":72")
+  string.contains(catalog_json, "\"total_agent_types\":256")
   |> should.equal(True)
 
-  string.contains(catalog_json, "\"sdlc_agents_count\":24")
+  string.contains(catalog_json, "\"sdlc_agents_count\":64")
   |> should.equal(True)
 
-  string.contains(catalog_json, "\"sre_agents_count\":24")
+  string.contains(catalog_json, "\"sre_agents_count\":64")
   |> should.equal(True)
 
-  string.contains(catalog_json, "\"verification_agents_count\":24")
+  string.contains(catalog_json, "\"verification_agents_count\":64")
+  |> should.equal(True)
+
+  string.contains(catalog_json, "\"intelligence_agents_count\":64")
   |> should.equal(True)
 
   string.contains(catalog_json, "\"SC-FPP-AGENT-TAXONOMY-001\"")

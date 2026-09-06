@@ -6,6 +6,10 @@ import cepaf_gleam/fpp/dmc_tcm
 import cepaf_gleam/fpp/intent
 import cepaf_gleam/fpp/ontology
 import cepaf_gleam/fpp/topology
+import cepaf_gleam/sdlc/aspect_agent_ecosystem
+import cepaf_gleam/sdlc/aspect_processing_agent
+import cepaf_gleam/nif/zenoh_rete_bridge as nif_bridge
+import cepaf_gleam/sdlc/planes_ascii_architecture
 import cepaf_gleam/ui/lustre/biosemiotics_radar
 import cepaf_gleam/ui/lustre/cybernetic_brain_matrix
 import cepaf_gleam/ui/lustre/feature_tracker_view
@@ -291,6 +295,66 @@ pub fn main() {
       ["api", "fpp", "agents"] -> {
         let specs = agent_taxonomy.all_agent_types()
         let json_body = agent_taxonomy.encode_agent_catalog_json(specs)
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["api", "fpp", "aspects"] -> {
+        let aspects =
+          list.map(
+            aspect_agent_ecosystem.get_all_fractal_aspects(),
+            aspect_agent_ecosystem.get_aspect_coverage,
+          )
+        let json_body =
+          aspect_agent_ecosystem.encode_aspect_coverage_json(aspects)
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["api", "fpp", "aspects", "features"] -> {
+        let details = aspect_agent_ecosystem.get_all_aspect_feature_details()
+        let json_body =
+          aspect_agent_ecosystem.encode_aspect_features_json(details)
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["api", "fpp", "aspects", "instances"] -> {
+        let json_body = aspect_agent_ecosystem.encode_agent_instances_json()
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["api", "fpp", "aspects", "processing"] -> {
+        let agents = aspect_processing_agent.init_all_14_processing_agents()
+        let json_body =
+          aspect_processing_agent.encode_processing_agents_json(agents)
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["api", "fpp", "planes", "ascii"] -> {
+        let text_body = planes_ascii_architecture.all_planes_ascii()
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(text_body)))
+        |> response.prepend_header("content-type", "text/plain; charset=utf-8")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["api", "fpp", "planes", "json"] -> {
+        let json_body = planes_ascii_architecture.encode_planes_json()
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["api", "nif", "status"] -> {
+        let report = nif_bridge.evaluate_nif_subsystem()
+        let json_body = nif_bridge.encode_nif_report_json(report)
         response.new(200)
         |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
         |> response.prepend_header("content-type", "application/json")

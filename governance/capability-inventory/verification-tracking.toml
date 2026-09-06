@@ -36,18 +36,22 @@ tables = [
   "journal_catalog",
   "c3i_agent_catalog",
   "adk_capability_catalog",
-  "zigvm_ontology_lifecycle_catalog"
+  "zigvm_ontology_lifecycle_catalog",
+  "master_ontology_entities",
+  "master_ontology_relations"
 ]
 
 [c3i_agents]
-total_sovereign_agents = 72
-c3i_sdlc_agents = 24
-c3i_sre_agents = 24
-c3i_verification_agents = 24
-base_id_range = "0x1000..0x2200"
+total_sovereign_agents = 96
+c3i_sdlc_agents = 32
+c3i_sre_agents = 32
+c3i_verification_agents = 32
+base_id_range = "0x1000..0x2800"
 base_id_window_disjoint = true
 adk_capabilities_integrated = 10
 zigvm_lifecycle_stages_ratified = 6
+master_ontology_entities = 22
+master_ontology_relations = 21
 hsm_semantics = "David Harel LCA transition with bubbling and drop"
 dmc_13d_conserved = true
 

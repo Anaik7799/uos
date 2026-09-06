@@ -10,8 +10,8 @@
 //// =============================================================================
 
 import cepaf_gleam/fpp/agent_taxonomy.{
-  type AgentKind, type AgentTypeSpec, C3iSdlc, C3iSre, C3iVerification,
-  all_agent_types, verify_agent_base_id_disjointness,
+  type AgentKind, type AgentTypeSpec, C3iIntelligence, C3iSdlc, C3iSre,
+  C3iVerification, all_agent_types, verify_agent_base_id_disjointness,
 }
 import cepaf_gleam/fpp/dmc_tcm.{hard_denied_system_os_serial}
 import cepaf_gleam/fpp/domain.{Active, Assert, Block, Drop, Passive, Queued}
@@ -161,7 +161,7 @@ fn render_kpis(specs: List(AgentTypeSpec), dmc_verified: Bool) -> Element(Msg) {
     render_kpi_card(
       "CANONICAL AGENT TYPES",
       int.to_string(total_agents) <> " Types",
-      "24 SDLC | 24 SRE | 24 Verification",
+      "32 SDLC | 32 SRE | 32 Verification",
       "border-amber-500/40 bg-gray-900/80 text-amber-400",
     ),
     render_kpi_card(
@@ -170,7 +170,7 @@ fn render_kpis(specs: List(AgentTypeSpec), dmc_verified: Bool) -> Element(Msg) {
         True -> "100% DISJOINT"
         False -> "COLLISION DETECTED"
       },
-      "[0x1000, 0x2200) Span=64",
+      "[0x1000, 0x2800) Span=64",
       "border-emerald-500/40 bg-gray-900/80 text-emerald-400",
     ),
     render_kpi_card(
@@ -224,7 +224,7 @@ fn render_kpi_card(
 
 fn render_tab_nav(active_tab: String) -> Element(Msg) {
   let tabs = [
-    #("catalog", "C3I Agent Catalog (72 Types)"),
+    #("catalog", "C3I Agent Catalog (96 Types)"),
     #("matrix", "Multi-Dimensional Matrix (6D)"),
     #("simulator", "HSM & Intent Simulator"),
     #("checklist", "18/18 Verification Checklist"),
@@ -265,6 +265,8 @@ fn render_catalog_view(
     "SRE" -> list.filter(specs, fn(s) { s.c3i_system == C3iSre })
     "VERIFICATION" ->
       list.filter(specs, fn(s) { s.c3i_system == C3iVerification })
+    "INTELLIGENCE" ->
+      list.filter(specs, fn(s) { s.c3i_system == C3iIntelligence })
     _ -> specs
   }
 
@@ -288,12 +290,14 @@ fn render_catalog_view(
                 [attribute.class("font-bold text-amber-400 font-mono text-sm")],
                 [
                   html.text(
-                    "C3I SOVEREIGN AEROSPACE AGENT CATALOG (72 CANONICAL TYPES)",
+                    "C3I SOVEREIGN AEROSPACE AGENT CATALOG (256 CANONICAL TYPES)",
                   ),
                 ],
               ),
               html.span([attribute.class("text-xs font-mono text-gray-400")], [
-                html.text("Unified across C3I SDLC, SRE & Verification Systems"),
+                html.text(
+                  "Unified across C3I SDLC, SRE, Verification & Intelligence Systems",
+                ),
               ]),
             ]),
             html.div([attribute.class("flex gap-2 text-xs font-mono")], [
@@ -309,7 +313,7 @@ fn render_catalog_view(
                   ),
                   event.on_click(SetFilterPillar("ALL")),
                 ],
-                [html.text("All (72)")],
+                [html.text("All (256)")],
               ),
               html.button(
                 [
@@ -324,7 +328,7 @@ fn render_catalog_view(
                   ),
                   event.on_click(SetFilterPillar("SDLC")),
                 ],
-                [html.text("C3I-SDLC (24)")],
+                [html.text("C3I-SDLC (64)")],
               ),
               html.button(
                 [
@@ -339,7 +343,7 @@ fn render_catalog_view(
                   ),
                   event.on_click(SetFilterPillar("SRE")),
                 ],
-                [html.text("C3I-SRE (24)")],
+                [html.text("C3I-SRE (64)")],
               ),
               html.button(
                 [
@@ -354,7 +358,22 @@ fn render_catalog_view(
                   ),
                   event.on_click(SetFilterPillar("VERIFICATION")),
                 ],
-                [html.text("C3I-VERIFY (24)")],
+                [html.text("C3I-VERIFY (64)")],
+              ),
+              html.button(
+                [
+                  attribute.class(
+                    "px-3 py-1 rounded border "
+                    <> case model.filter_pillar == "INTELLIGENCE" {
+                      True ->
+                        "bg-purple-950 text-purple-300 border-purple-600 font-bold"
+                      False ->
+                        "bg-gray-800 text-purple-500 border-gray-700 hover:text-purple-300"
+                    },
+                  ),
+                  event.on_click(SetFilterPillar("INTELLIGENCE")),
+                ],
+                [html.text("C3I-INTEL (64)")],
               ),
             ]),
           ],
@@ -459,6 +478,15 @@ fn render_catalog_view(
                               ),
                             ],
                             [html.text("C3I-VERIFY")],
+                          )
+                        C3iIntelligence ->
+                          html.span(
+                            [
+                              attribute.class(
+                                "px-2 py-0.5 rounded text-[10px] font-bold bg-purple-950 text-purple-300 border border-purple-800",
+                              ),
+                            ],
+                            [html.text("C3I-INTEL")],
                           )
                       },
                     ]),

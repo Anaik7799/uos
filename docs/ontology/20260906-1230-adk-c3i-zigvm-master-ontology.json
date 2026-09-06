@@ -1,0 +1,363 @@
+{
+  "metadata": {
+    "title": "UOS C3I, Google ADK & ZigVM Complete Master Ontology Graph",
+    "timestamp": "20260906-1230",
+    "schema": "UOS-MASTER-ONTOLOGY-V1",
+    "contract": "SC-MASTER-ONTOLOGY-001",
+    "total_entities": 22,
+    "total_relations": 21,
+    "total_c3i_agents": 96,
+    "zero_muda": "0 Bevy, 0 Graphite, 0 foreign NIF shared libraries",
+    "storage_safety": "HARD_DENIED_SYSTEM_OS_SERIAL = 25503L801736 enforced"
+  },
+  "entities": [
+    {
+      "id": "adk-core-agent",
+      "name": "ADK LlmAgent & BaseAgent Substrate",
+      "domain": "ADK Framework",
+      "fractal_layer": 5,
+      "description": "Model-agnostic agent runtime supporting chat, task, and autonomous execution modes.",
+      "contract_ref": "SC-ADK-001",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/fpp-agents",
+      "status": "admitted"
+    },
+    {
+      "id": "adk-workflow-graph",
+      "name": "ADK StateGraph Workflow Runtime",
+      "domain": "ADK Framework",
+      "fractal_layer": 5,
+      "description": "Directed acyclic and cyclic workflow execution engine with conditional branching and HITL.",
+      "contract_ref": "SC-ADK-002",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/fpp-topology",
+      "status": "admitted"
+    },
+    {
+      "id": "adk-runner-hooks",
+      "name": "ADK Runner 6-Phase Lifecycle Hooks",
+      "domain": "ADK Framework",
+      "fractal_layer": 4,
+      "description": "Execution runtime dispatching Before/After Agent, Model, and Tool hooks.",
+      "contract_ref": "SC-ADK-003",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/ag-ui/events",
+      "status": "admitted"
+    },
+    {
+      "id": "adk-session-deltas",
+      "name": "ADK Stateful Sessions & RFC-6902 Deltas",
+      "domain": "ADK Framework",
+      "fractal_layer": 4,
+      "description": "Session management with atomic state patches, snapshots, and time-travel rollback.",
+      "contract_ref": "SC-ADK-004",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/fpp-atlas",
+      "status": "admitted"
+    },
+    {
+      "id": "adk-memory-store",
+      "name": "ADK Episodic & Semantic Memory Store",
+      "domain": "ADK Framework",
+      "fractal_layer": 4,
+      "description": "Working memory and long-term vector/key-value persistence across interaction cycles.",
+      "contract_ref": "SC-ADK-005",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/wiki",
+      "status": "admitted"
+    },
+    {
+      "id": "adk-mcp-protocol",
+      "name": "ADK Model Context Protocol (MCP) Federation",
+      "domain": "ADK Framework",
+      "fractal_layer": 3,
+      "description": "Standardized vertical tool integration for database, SaaS, and system calls.",
+      "contract_ref": "SC-ADK-006",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/api/fpp/dictionary",
+      "status": "admitted"
+    },
+    {
+      "id": "adk-a2a-protocol",
+      "name": "ADK Agent-to-Agent (A2A) Swarm Protocol",
+      "domain": "ADK Framework",
+      "fractal_layer": 6,
+      "description": "Horizontal inter-agent delegation and remote subagent orchestration.",
+      "contract_ref": "SC-ADK-007",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/mesh",
+      "status": "admitted"
+    },
+    {
+      "id": "adk-eval-framework",
+      "name": "ADK Evaluation Benchmark Framework (adk eval)",
+      "domain": "ADK Framework",
+      "fractal_layer": 5,
+      "description": "Automated test trajectory scoring, criteria rubrics, and simulation environments.",
+      "contract_ref": "SC-ADK-008",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/checklist",
+      "status": "admitted"
+    },
+    {
+      "id": "adk-plugins-guardrails",
+      "name": "ADK BasePlugin Security Guardrails",
+      "domain": "ADK Framework",
+      "fractal_layer": 0,
+      "description": "Security policy enforcers, input/output sanitizers, PII scrubbers, and token quotas.",
+      "contract_ref": "SC-ADK-010",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/api/verify/checks",
+      "status": "admitted"
+    },
+    {
+      "id": "c3i-sdlc-pillar",
+      "name": "C3I SDLC Operational System (32 Agents)",
+      "domain": "C3I Agentic Ecology",
+      "fractal_layer": 9,
+      "description": "Synthesis, code generation, graph orchestration, and hot-reloading pipeline.",
+      "contract_ref": "SC-SDLC-001",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/planning",
+      "status": "admitted"
+    },
+    {
+      "id": "c3i-sre-pillar",
+      "name": "C3I SRE Operational System (32 Agents)",
+      "domain": "C3I Agentic Ecology",
+      "fractal_layer": 4,
+      "description": "Lyapunov stability, freshness monitors, Sa-plan durable leasing, and Rete gates.",
+      "contract_ref": "SC-SRE-001",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/",
+      "status": "admitted"
+    },
+    {
+      "id": "c3i-verification-pillar",
+      "name": "C3I Verification Operational System (32 Agents)",
+      "domain": "C3I Agentic Ecology",
+      "fractal_layer": 0,
+      "description": "Full 9-modality testing, Lean 4 proofs, OTP differential, and 18/18 checklist gates.",
+      "contract_ref": "SC-VERI-001",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/testing",
+      "status": "admitted"
+    },
+    {
+      "id": "zigvm-stg1-ontology",
+      "name": "ZigVM Stage 1: Ontology & Semantics",
+      "domain": "ZigVM Deterministic Lifecycle",
+      "fractal_layer": 8,
+      "description": "Infranodus semantic networks, Notion ontology, and Gospel/Ortac formal contracts.",
+      "contract_ref": "SC-ONTO-001",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/wiki",
+      "status": "admitted"
+    },
+    {
+      "id": "zigvm-stg2-design",
+      "name": "ZigVM Stage 2: Mathematical Design & Atlas",
+      "domain": "ZigVM Deterministic Lifecycle",
+      "fractal_layer": 7,
+      "description": "Denotational Intent Calculus, 12-layer Algebraic Atlas, and 13D TCM coordinates.",
+      "contract_ref": "SC-DMC-001",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/fpp-atlas",
+      "status": "admitted"
+    },
+    {
+      "id": "zigvm-stg3-code",
+      "name": "ZigVM Stage 3: BEAM Code & FPP Transmutation",
+      "domain": "ZigVM Deterministic Lifecycle",
+      "fractal_layer": 3,
+      "description": "BEAM bytecode synthesis, FPP aerospace component schemas, and zero foreign NIF purity.",
+      "contract_ref": "SC-FPP-001",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/fpp-topology",
+      "status": "admitted"
+    },
+    {
+      "id": "zigvm-stg4-verification",
+      "name": "ZigVM Stage 4: Verification & Oracles",
+      "domain": "ZigVM Deterministic Lifecycle",
+      "fractal_layer": 0,
+      "description": "Full 9-modality test protocol, Lean 4 coordinate proofs, and pinned OTP 30 differential.",
+      "contract_ref": "SC-VERI-002",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/testing",
+      "status": "admitted"
+    },
+    {
+      "id": "zigvm-stg5-sre",
+      "name": "ZigVM Stage 5: SRE & Cybernetic Resilience",
+      "domain": "ZigVM Deterministic Lifecycle",
+      "fractal_layer": 4,
+      "description": "Lyapunov stability, dead-man's-switch, Sa-plan durable leasing, and Rete rule gates.",
+      "contract_ref": "SC-SRE-002",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/",
+      "status": "admitted"
+    },
+    {
+      "id": "zigvm-stg6-km",
+      "name": "ZigVM Stage 6: Knowledge Management & ZK-KM",
+      "domain": "ZigVM Deterministic Lifecycle",
+      "fractal_layer": 8,
+      "description": "Permanent ZK ADRs (ADR-001..ADR-027), Master MOCs, Hermes wiki engine, and SQLite WAL.",
+      "contract_ref": "SC-KM-001",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/zk",
+      "status": "admitted"
+    },
+    {
+      "id": "inv-hardware-storage-lock",
+      "name": "Hardware OS Storage Interlock",
+      "domain": "Formal Verification & Invariants",
+      "fractal_layer": 0,
+      "description": "Strict immutability lock on root NVMe HARD_DENIED_SYSTEM_OS_SERIAL = '25503L801736'.",
+      "contract_ref": "SC-STORAGE-001",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/api/fpp/intent",
+      "status": "admitted"
+    },
+    {
+      "id": "inv-rocha-semiotic-cut",
+      "name": "Rocha Semiotic Cut Decoupling",
+      "domain": "Formal Verification & Invariants",
+      "fractal_layer": 0,
+      "description": "Biosemiotic principle enforcing strict separation of symbolic code from physical dynamics.",
+      "contract_ref": "SC-ROCHA-001",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/fpp-atlas",
+      "status": "admitted"
+    },
+    {
+      "id": "inv-zero-muda-purity",
+      "name": "Zero-Muda Purity Standard",
+      "domain": "Formal Verification & Invariants",
+      "fractal_layer": 0,
+      "description": "Permanent exclusion of Bevy and Graphite; pure Erlang graphene_nif.erl.",
+      "contract_ref": "SC-MUDA-001",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/checklist",
+      "status": "admitted"
+    },
+    {
+      "id": "inv-dmc-disjoint-windows",
+      "name": "DMC Base-ID Disjoint Memory Windows",
+      "domain": "Formal Verification & Invariants",
+      "fractal_layer": 0,
+      "description": "Pairwise disjoint memory base-ID intervals across [0x1000, 0x2800) for all 96 agents.",
+      "contract_ref": "SC-DMC-001",
+      "tailscale_route": "http://nas-1.tail55d152.ts.net:4100/api/fpp/agents",
+      "status": "admitted"
+    }
+  ],
+  "relations": [
+    {
+      "source": "c3i-sdlc-pillar",
+      "relation": "implements",
+      "target": "adk-workflow-graph",
+      "weight": 1.0
+    },
+    {
+      "source": "c3i-sdlc-pillar",
+      "relation": "implements",
+      "target": "adk-core-agent",
+      "weight": 1.0
+    },
+    {
+      "source": "c3i-sdlc-pillar",
+      "relation": "orchestrates",
+      "target": "adk-a2a-protocol",
+      "weight": 1.0
+    },
+    {
+      "source": "c3i-sdlc-pillar",
+      "relation": "orchestrates",
+      "target": "adk-mcp-protocol",
+      "weight": 1.0
+    },
+    {
+      "source": "c3i-sre-pillar",
+      "relation": "governs",
+      "target": "adk-runner-hooks",
+      "weight": 1.0
+    },
+    {
+      "source": "c3i-sre-pillar",
+      "relation": "governs",
+      "target": "adk-session-deltas",
+      "weight": 1.0
+    },
+    {
+      "source": "c3i-sre-pillar",
+      "relation": "protects",
+      "target": "adk-plugins-guardrails",
+      "weight": 1.0
+    },
+    {
+      "source": "c3i-verification-pillar",
+      "relation": "verifies",
+      "target": "adk-eval-framework",
+      "weight": 1.0
+    },
+    {
+      "source": "c3i-verification-pillar",
+      "relation": "verifies",
+      "target": "inv-hardware-storage-lock",
+      "weight": 1.0
+    },
+    {
+      "source": "c3i-verification-pillar",
+      "relation": "verifies",
+      "target": "inv-rocha-semiotic-cut",
+      "weight": 1.0
+    },
+    {
+      "source": "c3i-verification-pillar",
+      "relation": "verifies",
+      "target": "inv-zero-muda-purity",
+      "weight": 1.0
+    },
+    {
+      "source": "c3i-verification-pillar",
+      "relation": "verifies",
+      "target": "inv-dmc-disjoint-windows",
+      "weight": 1.0
+    },
+    {
+      "source": "zigvm-stg1-ontology",
+      "relation": "transmutes",
+      "target": "zigvm-stg2-design",
+      "weight": 1.0
+    },
+    {
+      "source": "zigvm-stg2-design",
+      "relation": "transmutes",
+      "target": "zigvm-stg3-code",
+      "weight": 1.0
+    },
+    {
+      "source": "zigvm-stg3-code",
+      "relation": "verifies",
+      "target": "zigvm-stg4-verification",
+      "weight": 1.0
+    },
+    {
+      "source": "zigvm-stg4-verification",
+      "relation": "governs",
+      "target": "zigvm-stg5-sre",
+      "weight": 1.0
+    },
+    {
+      "source": "zigvm-stg5-sre",
+      "relation": "subsumes",
+      "target": "zigvm-stg6-km",
+      "weight": 1.0
+    },
+    {
+      "source": "inv-hardware-storage-lock",
+      "relation": "protects",
+      "target": "c3i-sre-pillar",
+      "weight": 1.0
+    },
+    {
+      "source": "inv-dmc-disjoint-windows",
+      "relation": "protects",
+      "target": "c3i-sdlc-pillar",
+      "weight": 1.0
+    },
+    {
+      "source": "inv-rocha-semiotic-cut",
+      "relation": "governs",
+      "target": "zigvm-stg2-design",
+      "weight": 1.0
+    },
+    {
+      "source": "inv-zero-muda-purity",
+      "relation": "governs",
+      "target": "zigvm-stg3-code",
+      "weight": 1.0
+    }
+  ]
+}

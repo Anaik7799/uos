@@ -72,7 +72,8 @@ pub fn adk_session_and_memory_test() {
   let assert True = message_role_to_string(RoleSystem) == "system"
   let assert True = memory_type_to_string(EpisodicMemory) == "episodic"
   let assert True = memory_type_to_string(SemanticMemory) == "semantic"
-  let assert True = lifecycle_hook_phase_to_string(BeforeAgent) == "before_agent"
+  let assert True =
+    lifecycle_hook_phase_to_string(BeforeAgent) == "before_agent"
 }
 
 pub fn adk_workflow_graph_test() {

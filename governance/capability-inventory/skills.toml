@@ -800,3 +800,16 @@ source = "c3i"
 reference_only = false
 state = "classified"
 
+[[skill]]
+name = "forecasting-driven-operations"
+source = "codex"
+reference_only = false
+state = "admitted"
+
+[[skill]]
+name = "stage-durability"
+source = "codex"
+reference_only = false
+state = "admitted"
+
+

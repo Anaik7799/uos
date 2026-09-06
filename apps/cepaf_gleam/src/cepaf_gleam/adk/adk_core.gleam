@@ -134,11 +134,7 @@ pub type WorkflowNodeType {
 
 /// Node in a workflow graph
 pub type WorkflowNode {
-  WorkflowNode(
-    id: String,
-    name: String,
-    node_type: WorkflowNodeType,
-  )
+  WorkflowNode(id: String, name: String, node_type: WorkflowNodeType)
 }
 
 /// Routing edge condition
@@ -151,11 +147,7 @@ pub type EdgeCondition {
 
 /// Directed edge in a workflow graph
 pub type WorkflowEdge {
-  WorkflowEdge(
-    from_node: String,
-    to_node: String,
-    condition: EdgeCondition,
-  )
+  WorkflowEdge(from_node: String, to_node: String, condition: EdgeCondition)
 }
 
 /// Multi-agent workflow graph
@@ -252,7 +244,11 @@ pub fn new_agent(
 }
 
 /// Create a standard ADK session
-pub fn new_session(session_id: String, agent_id: String, timestamp: String) -> AdkSession {
+pub fn new_session(
+  session_id: String,
+  agent_id: String,
+  timestamp: String,
+) -> AdkSession {
   AdkSession(
     session_id: session_id,
     agent_id: agent_id,
@@ -273,8 +269,13 @@ pub fn append_message(session: AdkSession, message: AdkMessage) -> AdkSession {
 }
 
 /// Set a state variable in an ADK session
-pub fn set_state_var(session: AdkSession, key: String, value: String) -> AdkSession {
-  let filtered = list.filter(session.state_variables, fn(pair) { pair.0 != key })
+pub fn set_state_var(
+  session: AdkSession,
+  key: String,
+  value: String,
+) -> AdkSession {
+  let filtered =
+    list.filter(session.state_variables, fn(pair) { pair.0 != key })
   AdkSession(..session, state_variables: [#(key, value), ..filtered])
 }
 
@@ -289,7 +290,8 @@ pub fn get_state_var(session: AdkSession, key: String) -> Result(String, Nil) {
 /// Validate workflow graph connectivity
 pub fn validate_workflow_graph(graph: AdkWorkflowGraph) -> Bool {
   let has_nodes = graph.nodes != []
-  let entry_exists = list.any(graph.nodes, fn(n) { n.id == graph.entry_node_id })
+  let entry_exists =
+    list.any(graph.nodes, fn(n) { n.id == graph.entry_node_id })
   has_nodes && entry_exists
 }
 
