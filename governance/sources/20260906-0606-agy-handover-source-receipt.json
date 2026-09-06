@@ -1,9 +1,9 @@
 {
   "schema": "uos.agy-handover-source-receipt.v1",
-  "clock_utc": "2026-09-06T07:15:43Z",
+  "clock_utc": "2026-09-06T07:31:18Z",
   "host_sync": "Reference ID    : B97DBE7B (ntp-nts-3.ps5.canonical.com)\nStratum         : 3\nRef time (UTC)  : Sun Sep 06 06:39:05 2026\nSystem time     : 0.001856710 seconds slow of NTP time\nLast offset     : -0.001074504 seconds\nRMS offset      : 0.000726469 seconds\nFrequency       : 3.482 ppm slow\nResidual freq   : -0.028 ppm\nSkew            : 0.190 ppm\nRoot delay      : 0.031077361 seconds\nRoot dispersion : 0.001620074 seconds\nUpdate interval : 1030.9 seconds\nLeap status     : Normal",
   "host_sync_receipt_time": "2026-09-06T06:40:33Z",
-  "candidate_before_receipt": "nkotsltuxwyxpqyltqnkxuxyxkowuuxu 9329a0dd52a654795fa5c96b7cf753db2899faf4",
+  "candidate_before_receipt": "pqyovlpotsprknmxyonkouymtvzrysux 487b14ea33a102a25b9004ad3253336b8e123b46",
   "status": "PROMPT_AND_REVIEW_DELIVERED_IMPLEMENTATION_PROGRAMME_OPEN",
   "source_writers_quiesced": false,
   "external_code_ingested": false,
@@ -14,6 +14,7 @@
       "id": "H01",
       "review": "full root-equivalent handover read; original retained",
       "path": "docs/zk/20260906-0836-adr-017-tri-sovereign-10d-tensor-evolution-master-handover-to-codex-session.md",
+      "resolved_path": "/home/an/NAS-setup/uos/docs/zk/20260906-0836-adr-017-tri-sovereign-10d-tensor-evolution-master-handover-to-codex-session.md",
       "bytes": 17711,
       "sha256": "0a4b562acae1d186266ae59842044e97d81530f21b72c0522ab61d8681fdc458",
       "stable_during_metadata_capture": true
@@ -22,14 +23,16 @@
       "id": "H02",
       "review": "full read; appended current operator scope",
       "path": "HANDOVER_TO_CODEX.md",
-      "bytes": 19204,
-      "sha256": "6bdfbdc6626f64529fa70d15a719b1bfb889a580ce40cc16ecadfc56b698eb2c",
+      "resolved_path": "/home/an/NAS-setup/uos/HANDOVER_TO_CODEX.md",
+      "bytes": 19463,
+      "sha256": "fb8db252335f0adcc5e718cfd8d89011f5433331525619ecb5951a5e7180a231",
       "stable_during_metadata_capture": true
     },
     {
       "id": "H03",
       "review": "full prompt and requirements read",
       "path": "docs/design/20260906-0835-uos-tri-sovereign-10d-tensor-evolution-reusable-master-prompt.md",
+      "resolved_path": "/home/an/NAS-setup/uos/docs/design/20260906-0835-uos-tri-sovereign-10d-tensor-evolution-reusable-master-prompt.md",
       "bytes": 12347,
       "sha256": "cb1a7ca5c3936e36e75541d1158addc6078ca1f4d1703838d7761deb04ee36fb",
       "stable_during_metadata_capture": true
@@ -38,6 +41,7 @@
       "id": "H04",
       "review": "sections covering implementation, claims, matrices and explicit browser gap",
       "path": "docs/journal/20260906-0830-uos-wave-2-tensor-evolution-stpa-fmea-and-multi-criteria-definitive-journal.md",
+      "resolved_path": "/home/an/NAS-setup/uos/docs/journal/20260906-0830-uos-wave-2-tensor-evolution-stpa-fmea-and-multi-criteria-definitive-journal.md",
       "bytes": 27147,
       "sha256": "0ea083490da3f879759049ff9061cf3b42ebf2aa49b04c430c324925467ba035",
       "stable_during_metadata_capture": true
@@ -46,6 +50,7 @@
       "id": "H05",
       "review": "certificate claims and governance review; not independently authenticated",
       "path": "docs/design/20260906-0825-uos-claude-fable-wave-2-tensor-evolution-and-fmea-review-certificate.md",
+      "resolved_path": "/home/an/NAS-setup/uos/docs/design/20260906-0825-uos-claude-fable-wave-2-tensor-evolution-and-fmea-review-certificate.md",
       "bytes": 18394,
       "sha256": "91ed40815a8c772729a21d0a73d10f529f9697c3f8a4728824571d531abe3798",
       "stable_during_metadata_capture": true
@@ -54,6 +59,7 @@
       "id": "H06",
       "review": "navigation and reference inventory",
       "path": "docs/zk/20260905-1801-moc-uos-unified-master.md",
+      "resolved_path": "/home/an/NAS-setup/uos/docs/zk/20260905-1801-moc-uos-unified-master.md",
       "bytes": 13939,
       "sha256": "91c177a3d3722ac07fd2c9460ab07bfaf8524aae4790bd90a4aac9e60cccc5b9",
       "stable_during_metadata_capture": true
@@ -62,6 +68,7 @@
       "id": "H07",
       "review": "reference/member inventory; appended new scope",
       "path": "docs/zk/moc-agent-handover.md",
+      "resolved_path": "/home/an/NAS-setup/uos/docs/zk/moc-agent-handover.md",
       "bytes": 18239,
       "sha256": "3a8369f15de7fb8617183bfd082b4da054bd5ad48834864081f5d5a1763d8a89",
       "stable_during_metadata_capture": true
@@ -70,6 +77,7 @@
       "id": "U01",
       "review": "full rule",
       "path": "contracts/rules/dmc-tcm-mandate.md",
+      "resolved_path": "/home/an/NAS-setup/uos/contracts/rules/dmc-tcm-mandate.md",
       "bytes": 1833,
       "sha256": "f9ca5f514818c2339ef38b58afda2e4bb8bcbc08b83599db5d4158a3b1ba8c2f",
       "stable_during_metadata_capture": true
@@ -78,6 +86,7 @@
       "id": "U02",
       "review": "DMC, Trace13, layer and morphism definitions",
       "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/dmc_tcm_algebraic_atlas.gleam",
+      "resolved_path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/verification/dmc_tcm_algebraic_atlas.gleam",
       "bytes": 15404,
       "sha256": "a3c7ffecdeba72cd2b24e9499814de38138c1bd55218338ab7cad3657c1b053a",
       "stable_during_metadata_capture": true
@@ -86,6 +95,7 @@
       "id": "U03",
       "review": "full authorization and response code",
       "path": "apps/cepaf_gleam/src/cepaf_gleam/api/denotational_intent_router.gleam",
+      "resolved_path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/api/denotational_intent_router.gleam",
       "bytes": 1816,
       "sha256": "c2827ed8cff9179b310f686f6abda3534f7a66bf947b54cfa6a1e1b261b0585e",
       "stable_during_metadata_capture": true
@@ -94,6 +104,7 @@
       "id": "U04",
       "review": "full file",
       "path": "engines/hermes/modules/hermes_sysml/sysml_grammar.ml",
+      "resolved_path": "/home/an/NAS-setup/uos/engines/hermes/modules/hermes_sysml/sysml_grammar.ml",
       "bytes": 2128,
       "sha256": "71b91a7bef6ca96e770ce93f8b7a84fcf3131837f048beafcce844fec168dfb8",
       "stable_during_metadata_capture": true
@@ -102,6 +113,7 @@
       "id": "U05",
       "review": "scope note, types, ports and dictionary signatures",
       "path": "engines/hermes/modules/hermes_wiki/src/fpp/fpp_model.mli",
+      "resolved_path": "/home/an/NAS-setup/uos/engines/hermes/modules/hermes_wiki/src/fpp/fpp_model.mli",
       "bytes": 7948,
       "sha256": "d6eb6134d81d4b02eff83b30a8a9adb342da4fd5b84955f9b89fbe3f552c9096",
       "stable_during_metadata_capture": true
@@ -110,6 +122,7 @@
       "id": "U06",
       "review": "full file",
       "path": "apps/cepaf_gleam/src/indrajaal_native_zenoh.erl",
+      "resolved_path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/src/indrajaal_native_zenoh.erl",
       "bytes": 600,
       "sha256": "5519a07b225cb96d33a3b6c4aa78dfaff48d2ce558eca3165da9e6ab7f29333d",
       "stable_during_metadata_capture": true
@@ -118,6 +131,7 @@
       "id": "U07",
       "review": "full file",
       "path": "apps/cepaf_gleam/native/c3i_nif/src/zenoh_nif.rs",
+      "resolved_path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/native/c3i_nif/src/zenoh_nif.rs",
       "bytes": 6191,
       "sha256": "52e9155d544e11a989a5890685ed10058786819010dcac8131c330d8cbefe803",
       "stable_during_metadata_capture": true
@@ -126,6 +140,7 @@
       "id": "U08",
       "review": "full file",
       "path": "apps/cepaf_gleam/src/cepaf_gleam/zenoh/client.gleam",
+      "resolved_path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/zenoh/client.gleam",
       "bytes": 1764,
       "sha256": "7c01099bf3fcfb693c5ae5ca7d598d931edd2f349056e0d63dd2da6093a27bce",
       "stable_during_metadata_capture": true
@@ -134,6 +149,7 @@
       "id": "U09",
       "review": "session lifecycle and request/query call sites",
       "path": "apps/cepaf_gleam/src/cepaf_gleam/moz/client.gleam",
+      "resolved_path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/moz/client.gleam",
       "bytes": 13832,
       "sha256": "8d3696f47b4409ed640f022887ca6e94719e3a17708078bdf0076ae45c9b0fb7",
       "stable_during_metadata_capture": true
@@ -142,6 +158,7 @@
       "id": "U10",
       "review": "Zenoh loading, open, put, get and subscribe sections",
       "path": "apps/cepaf_gleam/src/cepaf_gleam_ffi.erl",
+      "resolved_path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam_ffi.erl",
       "bytes": 19454,
       "sha256": "2ca0dc39b09a5f3373ccd75f3b04be0319e966a15192f583c267489dc5507d5f",
       "stable_during_metadata_capture": true
@@ -150,6 +167,7 @@
       "id": "U11",
       "review": "native loading/exports and Zenoh fallbacks",
       "path": "apps/cepaf_gleam/src/c3i_nif.erl",
+      "resolved_path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/src/c3i_nif.erl",
       "bytes": 3733,
       "sha256": "c50f2e641b74e181614822f5ef59c45d93c35f70a9afe41d38e76111159693d8",
       "stable_during_metadata_capture": true
@@ -158,6 +176,7 @@
       "id": "U12",
       "review": "module registration",
       "path": "apps/cepaf_gleam/native/c3i_nif/src/lib.rs",
+      "resolved_path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/native/c3i_nif/src/lib.rs",
       "bytes": 759,
       "sha256": "8d6dd6b3602fa9b69e79c4f6660cd74698d20b08e98078ba6c65224098f60f82",
       "stable_during_metadata_capture": true
@@ -166,6 +185,7 @@
       "id": "U13",
       "review": "Rustler/Zenoh/Tokio dependency declarations",
       "path": "apps/cepaf_gleam/native/c3i_nif/Cargo.toml",
+      "resolved_path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/native/c3i_nif/Cargo.toml",
       "bytes": 634,
       "sha256": "1876aa4f2fe840726462cd8b2b6ef47f9068b59bb0454baee1030f23129f2a8e",
       "stable_during_metadata_capture": true
@@ -174,6 +194,7 @@
       "id": "B01",
       "review": "full reference document",
       "path": "/home/an/dev/ver/harness-bionic/docs/hermes/fpp-architecture.md",
+      "resolved_path": "/home/an/NAS-setup/harness-bionic/docs/hermes/fpp-architecture.md",
       "bytes": 9840,
       "sha256": "5291e035f4ab3bd17cfe8132035fc43e70ca27a1a1d3c64708b2597f9aedd4b6",
       "stable_during_metadata_capture": true
@@ -182,6 +203,7 @@
       "id": "B02",
       "review": "mapping, patterns and stated gaps, first 155 lines",
       "path": "/home/an/dev/ver/harness-bionic/docs/hermes/fprime-alignment.md",
+      "resolved_path": "/home/an/NAS-setup/harness-bionic/docs/hermes/fprime-alignment.md",
       "bytes": 21239,
       "sha256": "69b80e8cf8fe09bfbbeb4c9acdf412c6eb814e3df77a5eb8352aba06d19f298f",
       "stable_during_metadata_capture": true
@@ -190,6 +212,7 @@
       "id": "B03",
       "review": "full source",
       "path": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/hermes_zenoh.ml",
+      "resolved_path": "/home/an/NAS-setup/harness-bionic/modules/hermes_harness/hermes_zenoh.ml",
       "bytes": 2814,
       "sha256": "9d8f9bd0092f906a9139f9b6f8cfe5ec4558627e3b9e7ef4a14a1ac889e51148",
       "stable_during_metadata_capture": true
@@ -198,6 +221,7 @@
       "id": "B04",
       "review": "publish and beginning of query/callback path, first 145 lines",
       "path": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/hz_stubs.c",
+      "resolved_path": "/home/an/NAS-setup/harness-bionic/modules/hermes_harness/hz_stubs.c",
       "bytes": 11997,
       "sha256": "b04b92fb42481e2c439c7bff6da7164c771a36017d5dd5d3c276d193e52a6611",
       "stable_during_metadata_capture": true
@@ -206,6 +230,7 @@
       "id": "B05",
       "review": "full test source, not executed",
       "path": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/test_hermes_zenoh.ml",
+      "resolved_path": "/home/an/NAS-setup/harness-bionic/modules/hermes_harness/test_hermes_zenoh.ml",
       "bytes": 3402,
       "sha256": "5161ac158602dec45c3e65064695183741144a08593dc934a7390e86730f5ef3",
       "stable_during_metadata_capture": true
@@ -214,6 +239,7 @@
       "id": "B06",
       "review": "full source",
       "path": "/home/an/dev/ver/harness-bionic/modules/swarm/swarm_fpp.ml",
+      "resolved_path": "/home/an/NAS-setup/harness-bionic/modules/swarm/swarm_fpp.ml",
       "bytes": 2515,
       "sha256": "353c2d0029e2148359e27f7a9e4b1e242c29934855a1000969f8cde7e6739138",
       "stable_during_metadata_capture": true
@@ -222,6 +248,7 @@
       "id": "B07",
       "review": "UOS copy: inspected mock/printing call sites",
       "path": "engines/hermes/modules/swarm/swarm_zenoh.ml",
+      "resolved_path": "/home/an/NAS-setup/uos/engines/hermes/modules/swarm/swarm_zenoh.ml",
       "bytes": 1244,
       "sha256": "d24920669d3319968421ef6cbc070e90c654b3cd6eac4ebccb4cc94f52a1059c",
       "stable_during_metadata_capture": true
@@ -230,6 +257,7 @@
       "id": "B08",
       "review": "UOS copy: inspected mock/printing call sites",
       "path": "engines/hermes/modules/hermes_sysml/zenoh_mesh.ml",
+      "resolved_path": "/home/an/NAS-setup/uos/engines/hermes/modules/hermes_sysml/zenoh_mesh.ml",
       "bytes": 2782,
       "sha256": "5c8cbd507a5d317a9f3f420b174ce85286460a758e6adfeab987544d24343019",
       "stable_during_metadata_capture": true
@@ -238,6 +266,7 @@
       "id": "Z01",
       "review": "full source",
       "path": "/home/an/dev/ver/zigvm/harness/zenoh.ml",
+      "resolved_path": "/home/an/dev/ver/zigvm/harness/zenoh.ml",
       "bytes": 651,
       "sha256": "6c4224086aff0a963526aa5e13f567edc090cde7a6b01fef6515d21c650ef38e",
       "stable_during_metadata_capture": true
@@ -246,6 +275,7 @@
       "id": "Z02",
       "review": "full source",
       "path": "/home/an/dev/ver/zigvm/harness/zenoh_channel.ml",
+      "resolved_path": "/home/an/dev/ver/zigvm/harness/zenoh_channel.ml",
       "bytes": 1023,
       "sha256": "a4d35a933f2a57f9be02e69a9c81e0283d6706d781002b38d947c7e2b6bddee8",
       "stable_during_metadata_capture": true
@@ -254,6 +284,7 @@
       "id": "Z03",
       "review": "full source",
       "path": "/home/an/dev/ver/zigvm/harness/zenoh_ffi.ml",
+      "resolved_path": "/home/an/dev/ver/zigvm/harness/zenoh_ffi.ml",
       "bytes": 7742,
       "sha256": "90a77387b85b9d287ed7e91fcfed77e333601863af7b873795f217ccff2b6cc3",
       "stable_during_metadata_capture": true
@@ -262,6 +293,7 @@
       "id": "Z04",
       "review": "full source",
       "path": "/home/an/dev/ver/zigvm/harness/sa_plan_outbox_zenoh.ml",
+      "resolved_path": "/home/an/dev/ver/zigvm/harness/sa_plan_outbox_zenoh.ml",
       "bytes": 2583,
       "sha256": "1ef3bef78a249f823dbbd0816c826577e6f3655a245165fb61de8bde97724578",
       "stable_during_metadata_capture": true
@@ -270,6 +302,7 @@
       "id": "Z05",
       "review": "full ADR; counts are claims",
       "path": "/home/an/dev/ver/zigvm/docs/zk/20260904-150151-adr-004-supervised-persistent-zenoh-session-lifecycle-in-moz-client.md",
+      "resolved_path": "/home/an/dev/ver/zigvm/docs/zk/20260904-150151-adr-004-supervised-persistent-zenoh-session-lifecycle-in-moz-client.md",
       "bytes": 1264,
       "sha256": "67caffa9af5ff6a006b1e955a63fbe653876d5e9d18bf95cfdb80c386dbe2e2e",
       "stable_during_metadata_capture": true
@@ -278,6 +311,7 @@
       "id": "C01",
       "review": "digest comparison to fully read identical UOS file",
       "path": "/home/an/dev/ver/c3i/lib/cepaf_gleam/native/c3i_nif/src/zenoh_nif.rs",
+      "resolved_path": "/home/an/dev/ver/c3i/lib/cepaf_gleam/native/c3i_nif/src/zenoh_nif.rs",
       "bytes": 6191,
       "sha256": "52e9155d544e11a989a5890685ed10058786819010dcac8131c330d8cbefe803",
       "stable_during_metadata_capture": true
@@ -286,6 +320,7 @@
       "id": "C02",
       "review": "digest comparison to fully read identical UOS file",
       "path": "/home/an/dev/ver/c3i/lib/cepaf_gleam/src/indrajaal_native_zenoh.erl",
+      "resolved_path": "/home/an/dev/ver/c3i/lib/cepaf_gleam/src/indrajaal_native_zenoh.erl",
       "bytes": 600,
       "sha256": "5519a07b225cb96d33a3b6c4aa78dfaff48d2ce558eca3165da9e6ab7f29333d",
       "stable_during_metadata_capture": true
@@ -294,6 +329,7 @@
       "id": "C03",
       "review": "module registration",
       "path": "/home/an/dev/ver/c3i/lib/cepaf_gleam/native/c3i_nif/src/lib.rs",
+      "resolved_path": "/home/an/dev/ver/c3i/lib/cepaf_gleam/native/c3i_nif/src/lib.rs",
       "bytes": 759,
       "sha256": "8d6dd6b3602fa9b69e79c4f6660cd74698d20b08e98078ba6c65224098f60f82",
       "stable_during_metadata_capture": true
@@ -302,6 +338,7 @@
       "id": "C04",
       "review": "scope and implementation/test claims, first 140 lines",
       "path": "/home/an/dev/ver/c3i/docs/journal/20260425-zenoh-nif-full-integration-journal.md",
+      "resolved_path": "/home/an/dev/ver/c3i/docs/journal/20260425-zenoh-nif-full-integration-journal.md",
       "bytes": 19451,
       "sha256": "3c58b3bddb9d9bed426399381033d95069d13f911ba07f86972ada4570e4a228",
       "stable_during_metadata_capture": true
@@ -310,6 +347,7 @@
       "id": "S01",
       "review": "used observational laws and reference/efficient/actor interpretations",
       "path": ".codex/skills/algebra-driven-beam/SKILL.md",
+      "resolved_path": "/home/an/.claude/skills/algebra-driven-beam/SKILL.md",
       "bytes": 9132,
       "sha256": "a58a828726fc44437382b8d20aee97babc90b17823faca341b3035ada33cbb34",
       "stable_during_metadata_capture": true
@@ -318,6 +356,7 @@
       "id": "S02",
       "review": "used signature, semantic-domain and law derivation",
       "path": ".codex/skills/algebra-driven-beam/references/methodology.md",
+      "resolved_path": "/home/an/.claude/skills/algebra-driven-beam/references/methodology.md",
       "bytes": 10219,
       "sha256": "cde24a3ba85894d56cbb889d2503de42232f2d370fb6f3344cb379082941ce52",
       "stable_during_metadata_capture": true
@@ -326,6 +365,7 @@
       "id": "S03",
       "review": "used isolation and bounded safe-state concepts; unrelated hardware/SIL claims excluded",
       "path": ".codex/skills/system-engineering-sop/SKILL.md",
+      "resolved_path": "/home/an/dev/ver/c3i/.claude/skills/system-engineering-sop/SKILL.md",
       "bytes": 4524,
       "sha256": "c2441225990fc97bd36fe231c375e4f936cac1612a637f63c1ed30c24f8c0a56",
       "stable_during_metadata_capture": true
@@ -334,8 +374,144 @@
       "id": "S04",
       "review": "used lifecycle/schema guidance; operator-selected C3I NIF overrides legacy binding preference",
       "path": ".codex/skills/cepaf-zenoh-expert/SKILL.md",
+      "resolved_path": "/home/an/dev/ver/c3i/.claude/skills/cepaf-zenoh-expert/SKILL.md",
       "bytes": 2111,
       "sha256": "4a275feaa133a9e08f3273b4e93811775786e371efd67a577d5fa8a7c90c4495",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "C05",
+      "review": "Native export/scheduler/registration scan; session/publisher/policy/subscriber export sections read; 17 NIF attributes counted; not executed",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/native/zenoh_nif/src/lib.rs",
+      "resolved_path": "/home/an/dev/ver/c3i/sub-projects/c3i/native/zenoh_nif/src/lib.rs",
+      "bytes": 12386,
+      "sha256": "cbb9f4732e68cd52d2df5c8e8a1cf43f78e702abbcf9e3fd6e19f26f6d319f8a",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "C06",
+      "review": "Lifecycle, configuration, publish/query collection, status and close sections lines 80-205 plus API scan; not executed",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/native/zenoh_nif/src/session.rs",
+      "resolved_path": "/home/an/dev/ver/c3i/sub-projects/c3i/native/zenoh_nif/src/session.rs",
+      "bytes": 8029,
+      "sha256": "f56e77c0e7524d6c8a8b22d1d09661d4069b2e356f0b7a35a938ae79db1fa302",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "C07",
+      "review": "Publication, authorization, delete and batch paths through line 175; not executed",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/native/zenoh_nif/src/publisher.rs",
+      "resolved_path": "/home/an/dev/ver/c3i/sub-projects/c3i/native/zenoh_nif/src/publisher.rs",
+      "bytes": 6434,
+      "sha256": "8d80b5fa7cf93094bf41254f30bacd27e83cd87b3c80576943088ecbb45691ec",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "C08",
+      "review": "Resource/polling, async subscriber task, bounded channel, ignored callback PID, unsubscribe and stats source read; not executed",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/native/zenoh_nif/src/subscriber.rs",
+      "resolved_path": "/home/an/dev/ver/c3i/sub-projects/c3i/native/zenoh_nif/src/subscriber.rs",
+      "bytes": 9692,
+      "sha256": "1aa717a7de3d862d61b1f7391b1d94d98037d51e00261f8c6d822e299609c54d",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "C09",
+      "review": "Complete manifest read; declared dependency versions/features, license and benchmark target; lock/resolved runtime not verified",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/native/zenoh_nif/Cargo.toml",
+      "resolved_path": "/home/an/dev/ver/c3i/sub-projects/c3i/native/zenoh_nif/Cargo.toml",
+      "bytes": 2004,
+      "sha256": "a212598829655f18ac45d26e09e9b7f2ebf9ad40f1f2136f52be5e3bb5006dd5",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "C10",
+      "review": "Wrapper/documentation lines 1-200 and function/stub signatures; automatic native replacement must be checked by loading tests",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/lib/indrajaal/native/zenoh.ex",
+      "resolved_path": "/home/an/dev/ver/c3i/sub-projects/c3i/lib/indrajaal/native/zenoh.ex",
+      "bytes": 20273,
+      "sha256": "172adbcbd03c326df79f4350cded1638907a639766684599ae04ddd1b4bb3335",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "C11",
+      "review": "Benchmark setup and measurement path first 150 lines: Phoenix.PubSub simulation; not executed",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/test/indrajaal/zenoh/nif_latency_benchmark_test.exs",
+      "resolved_path": "/home/an/dev/ver/c3i/sub-projects/c3i/test/indrajaal/zenoh/nif_latency_benchmark_test.exs",
+      "bytes": 10328,
+      "sha256": "ec86fcde5991d4b35c43370221e76b079897bf0ab546521e71909c7a7e1dc4e8",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "C12",
+      "review": "First 130 lines: explicit mocks and performance targets; not executed",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/test/indrajaal/performance/zenoh_performance_test.exs",
+      "resolved_path": "/home/an/dev/ver/c3i/sub-projects/c3i/test/indrajaal/performance/zenoh_performance_test.exs",
+      "bytes": 29737,
+      "sha256": "8f4774301ce3b4494eaf97c224973e8aa94eddacb398fe6b0b1c29a9443943a6",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "C13",
+      "review": "First 190 lines: serialization, in-process queue and payload budget tests; not executed",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/test/indrajaal/core/zenoh_throughput_benchmark_test.exs",
+      "resolved_path": "/home/an/dev/ver/c3i/sub-projects/c3i/test/indrajaal/core/zenoh_throughput_benchmark_test.exs",
+      "bytes": 17993,
+      "sha256": "9b63618469fe3da48c6a6e66dd61ad1323098b11fb3e085a39c938c23b973e30",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "C14",
+      "review": "First 160 lines: batch construction and simulated publication timing; not executed",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/test/indrajaal/cluster/zenoh_data_path_throughput_test.exs",
+      "resolved_path": "/home/an/dev/ver/c3i/sub-projects/c3i/test/indrajaal/cluster/zenoh_data_path_throughput_test.exs",
+      "bytes": 14827,
+      "sha256": "9376645a3ac0d087fa9ffbc7955e462a06dff14848b2f5323abe05b66aaa79e9",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "SU01",
+      "review": "Complete native source read, six NIF attributes counted; source only, binary not copied/hashed/executed",
+      "path": "/home/an/dev/ver/c3i/sub-projects/sutra/sutra_server/native/zenoh_nif/src/lib.rs",
+      "resolved_path": "/home/an/dev/ver/c3i/sub-projects/sutra/sutra_server/native/zenoh_nif/src/lib.rs",
+      "bytes": 4454,
+      "sha256": "edf97ef59385e05e903c86ea4cc0096c04190a731fef43c33ab19d6045fbd84a",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "SU02",
+      "review": "Complete manifest read; declared Rustler/Zenoh/TCP features",
+      "path": "/home/an/dev/ver/c3i/sub-projects/sutra/sutra_server/native/zenoh_nif/Cargo.toml",
+      "resolved_path": "/home/an/dev/ver/c3i/sub-projects/sutra/sutra_server/native/zenoh_nif/Cargo.toml",
+      "bytes": 412,
+      "sha256": "ef341f5c4c66c0ff53713c6a572e8b0d29a288ca8a29b14f11d772a13a652f4b",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "SU03",
+      "review": "Complete native-loading/export/fallback wrapper read",
+      "path": "/home/an/dev/ver/c3i/sub-projects/sutra/sutra_server/src/zenoh_ffi.erl",
+      "resolved_path": "/home/an/dev/ver/c3i/sub-projects/sutra/sutra_server/src/zenoh_ffi.erl",
+      "bytes": 782,
+      "sha256": "b1e33030e7d055c00ef9cca03d66220cab620cec1388e90a52ef75e862037d03",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "SU04",
+      "review": "Native declarations, initialization and selected topic helpers; output partial; no claim of complete close reading",
+      "path": "/home/an/dev/ver/c3i/sub-projects/sutra/sutra_server/src/sutra_server/zenoh.gleam",
+      "resolved_path": "/home/an/dev/ver/c3i/sub-projects/sutra/sutra_server/src/sutra_server/zenoh.gleam",
+      "bytes": 21946,
+      "sha256": "6daddba10f19e2d9794f993f30e10c029ce2db61f7aaca739ffbdb86868847e8",
+      "stable_during_metadata_capture": true
+    },
+    {
+      "id": "SU05",
+      "review": "Selected test examples through line 260 inspected; Error/no_session acceptance identified; not executed",
+      "path": "/home/an/dev/ver/c3i/sub-projects/sutra/sutra_server/test/sutra_zenoh_nif_test.gleam",
+      "resolved_path": "/home/an/dev/ver/c3i/sub-projects/sutra/sutra_server/test/sutra_zenoh_nif_test.gleam",
+      "bytes": 28411,
+      "sha256": "905e506f91e0ad75b29648a7d74e6b72698b8ef0bd730bac68945e0b54c072d6",
       "stable_during_metadata_capture": true
     }
   ],
@@ -479,12 +655,117 @@
       "access_date": "2026-09-06",
       "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
       "license_admission": "REFERENCE_ONLY"
+    },
+    {
+      "id": "N15",
+      "title": "Zenoh Rust API overview",
+      "url": "https://docs.rs/zenoh/1.8.0/zenoh/",
+      "version": "1.8.0 explicit URL",
+      "use": "Session/data/pubsub/query/keys/liveliness/matching/scouting and feature categories",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N16",
+      "title": "Zenoh Cargo feature inventory",
+      "url": "https://docs.rs/crate/zenoh/1.8.0/features",
+      "version": "1.8.0 explicit URL; 24 flags reported",
+      "use": "Feature-profile census including transports, auth, shared memory, plugins and internal flags",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N17",
+      "title": "Zenoh Cargo feature inventory, rolling page",
+      "url": "https://docs.rs/crate/zenoh/latest/features",
+      "version": "1.9.0 observed in search result; rolling URL, not a pin; 25 flags reported",
+      "use": "Compare flag frontier including test flag; exact selected version still pending",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N18",
+      "title": "Zenoh query/reply API, rolling page",
+      "url": "https://docs.rs/zenoh/latest/zenoh/query/index.html",
+      "version": "1.10.0 observed when opened; rolling URL, not a pin",
+      "use": "Querier/queryable lifecycle, sample/error/delete replies and selector/parameter distinctions",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N19",
+      "title": "Zenoh extension API inventory",
+      "url": "https://docs.rs/zenoh-ext/latest/zenoh_ext/all.html",
+      "version": "1.9.0 observed; rolling URL, not a pin",
+      "use": "Advanced publisher/subscriber, history/recovery, groups and serialization census",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N20",
+      "title": "Zenoh extension source and feature gates",
+      "url": "https://docs.rs/zenoh-ext/latest/src/zenoh_ext/lib.rs.html",
+      "version": "1.9.0 rolling source search excerpt; implementation pin pending",
+      "use": "Explicit unstable/internal extension gates and advanced-pubsub module declarations",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N21",
+      "title": "Zenoh QoS API",
+      "url": "https://docs.rs/zenoh/1.8.0/zenoh/qos/index.html",
+      "version": "1.8.0 explicit URL",
+      "use": "Priority/congestion/reliability options and unstable reliability designation",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
     }
   ],
   "unsuccessful_fetches": [
     {
       "url": "https://docs.rs/rustler/0.37.0/rustler/attr.nif.html",
       "result": "Web tool Internal Error; rolling 0.38.0 documentation read with explicit version mismatch; verify 0.37 before implementation."
+    },
+    {
+      "url": "https://docs.rs/zenoh/1.9.0/zenoh/",
+      "status": "WEB_FETCH_FAILED",
+      "reason": "Tool returned internal error/cache miss. No inference that the release/API is absent. Successful alternative URLs are recorded separately."
+    },
+    {
+      "url": "https://docs.rs/zenoh/1.9.0/features",
+      "status": "WEB_FETCH_FAILED",
+      "reason": "Tool returned internal error/cache miss. No inference that the release/API is absent. Successful alternative URLs are recorded separately."
+    },
+    {
+      "url": "https://docs.rs/zenoh-ext/1.9.0/zenoh_ext/",
+      "status": "WEB_FETCH_FAILED",
+      "reason": "Tool returned internal error/cache miss. No inference that the release/API is absent. Successful alternative URLs are recorded separately."
+    },
+    {
+      "url": "https://docs.rs/zenoh/1.8.0/features",
+      "status": "WEB_FETCH_FAILED",
+      "reason": "Tool returned internal error/cache miss. No inference that the release/API is absent. Successful alternative URLs are recorded separately."
+    },
+    {
+      "url": "https://docs.rs/zenoh-ext/1.8.0/zenoh_ext/",
+      "status": "WEB_FETCH_FAILED",
+      "reason": "Tool returned internal error/cache miss. No inference that the release/API is absent. Successful alternative URLs are recorded separately."
+    },
+    {
+      "url": "https://docs.rs/zenoh/1.8.0/zenoh/query/index.html",
+      "status": "WEB_FETCH_FAILED",
+      "reason": "Tool returned internal error/cache miss. No inference that the release/API is absent. Successful alternative URLs are recorded separately."
+    },
+    {
+      "url": "https://docs.rs/crate/zenoh/1.9.0/features",
+      "status": "WEB_FETCH_FAILED",
+      "reason": "Tool returned internal error/cache miss. No inference that the release/API is absent. Successful alternative URLs are recorded separately."
     }
   ],
   "source_revisions": [
@@ -508,59 +789,302 @@
       "head_at_capture": "8a03c14f47c229db4cb086270b94c618ca8b1e06",
       "quiesced": false,
       "dirty_manifest": "NOT_CAPTURED_FOR_ADMISSION; targeted read-only evidence only"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i",
+      "resolved_path": "/home/an/dev/ver/c3i/sub-projects/c3i",
+      "head_at_capture": "4dc3d65c80cf4ddc957158f2f726aef7562a4084",
+      "quiesced": false,
+      "dirty_manifest": "NOT_CAPTURED_FOR_ADMISSION; targeted read-only evidence only"
+    },
+    {
+      "path": "/home/an/dev/ver/c3i/sub-projects/sutra",
+      "resolved_path": "/home/an/dev/ver/c3i/sub-projects/sutra",
+      "head_at_capture": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "quiesced": false,
+      "dirty_manifest": "NOT_CAPTURED_FOR_ADMISSION; targeted read-only evidence only"
     }
   ],
+  "zenoh_feature_programme": {
+    "status": "PLANNED_VERSIONED_CONFORMANCE_PROGRAMME",
+    "exact_target_version": "UNSELECTED_PENDING_COMPATIBILITY_AND_CENSUS",
+    "richest_inspected_source": "legacy_indrajaal_native_zenoh_nif",
+    "most_performant": "UNKNOWN_NO_COMPARABLE_NATIVE_MEASUREMENTS",
+    "full_upstream_api_census_complete": false,
+    "full_implementation_complete": false,
+    "native_benchmarks_executed": false,
+    "candidate_sources": [
+      {
+        "id": "current_c3i_uos",
+        "source_ids": [
+          "U06", "U07", "U08", "U09", "U10", "U11", "U12", "U13", "C01",
+          "C02", "C03"
+        ],
+        "native_export_count": 5,
+        "declared_zenoh": "^1.9.0",
+        "declared_rustler": "0.37",
+        "declared_transports": [ "tcp" ],
+        "status": "SOURCE_REVIEWED_RUNTIME_UNVERIFIED"
+      },
+      {
+        "id": "legacy_indrajaal_native_zenoh_nif",
+        "source_ids": [ "C05", "C06", "C07", "C08", "C09", "C10" ],
+        "native_export_count": 17,
+        "policy_helper_count": 3,
+        "declared_zenoh": "=1.8.0",
+        "declared_rustler": "0.37",
+        "declared_transports": [ "tcp", "udp" ],
+        "status": "SOURCE_REVIEWED_RUNTIME_UNVERIFIED"
+      },
+      {
+        "id": "sutra_gleam",
+        "source_ids": [ "SU01", "SU02", "SU03", "SU04", "SU05" ],
+        "native_export_count": 6,
+        "declared_zenoh": "^1.9.0",
+        "declared_rustler": "0.36",
+        "declared_transports": [ "tcp" ],
+        "status": "SOURCE_REVIEWED_RUNTIME_UNVERIFIED"
+      }
+    ],
+    "families": [
+      {
+        "id": "ZF01",
+        "family": "Configuration and session lifecycle",
+        "acceptance": "Configuration errors, multi-session identity, open/close/reopen, death, drain and reconnect",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF02",
+        "family": "Keys and selectors",
+        "acceptance": "Concrete keys versus expressions, canonicalization, matching/intersection/inclusion, parameters and time selectors",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF03",
+        "family": "Samples and serialization",
+        "acceptance": "Exact binary bytes, NUL/Unicode, encoding, attachments, timestamps, source metadata and Put/Delete/error distinctions",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF04",
+        "family": "Publication",
+        "acceptance": "Direct and declared publication, real Delete, all builder options, undeclare and per-item bounded batch outcomes",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF05",
+        "family": "Subscription",
+        "acceptance": "Readiness, owner-bound callbacks, bounded count/bytes, FIFO/ring/poll/background semantics, errors and teardown",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF06",
+        "family": "Query and reply",
+        "acceptance": "Get/querier/queryable, completeness, targets/consolidation/selectors, all reply kinds, deadlines/cancellation and bounded streams",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF07",
+        "family": "Discovery and matching",
+        "acceptance": "Scouting lifecycle, peers/routers, matching listeners and real presence/absence",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF08",
+        "family": "Liveliness",
+        "acceptance": "Token/get/subscriber/history lifecycle, late join, loss/rejoin and separation from write authority",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF09",
+        "family": "QoS and locality",
+        "acceptance": "All priority/congestion/reliability/express/origin/destination options and actual documented delivery scope",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF10",
+        "family": "Advanced extensions",
+        "acceptance": "Serialization, cache/history/miss detection/recovery/listeners/groups and deprecated API mappings",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF11",
+        "family": "Shared memory",
+        "acceptance": "All pinned buffer/provider/client operations, lifetime/quotas/reclamation, fallback, sanitizer and copy measurements",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF12",
+        "family": "Transports",
+        "acceptance": "Every pinned transport/target profile, compression, multilink and unavailable-hardware accounting",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF13",
+        "family": "Authentication and access control",
+        "acceptance": "Transport identity, TLS, router ACLs, UOS typed authorization and denied-operation tests",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF14",
+        "family": "Router storage and plugins",
+        "acceptance": "Typed management and integration contracts for routing, admin, storage/replication and required bridge/plugin services",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF15",
+        "family": "Observability and diagnostics",
+        "acceptance": "Version/features, real state/metrics/tracing, full trace preservation and separate accepted/received/committed states",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF16",
+        "family": "Packaging and compatibility",
+        "acceptance": "Symbols/arities/result-shapes, locked versions/features/target, loading, upgrade/drain and old/new peer compatibility",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      }
+    ],
+    "feature_flags_observed_1_9": [
+      "default", "auth_pubkey", "auth_usrpwd", "transport_compression",
+      "transport_multilink", "transport_quic", "transport_quic_datagram",
+      "transport_tcp", "transport_tls", "transport_udp",
+      "transport_unixsock-stream", "transport_ws", "internal",
+      "internal_config", "plugins", "runtime_plugins", "shared-memory",
+      "stats", "test", "tracing-instrument", "transport_serial",
+      "transport_unixpipe", "transport_vsock", "unstable", "zenoh-shm",
+      "zenoh-stats"
+    ],
+    "feature_flag_note": "The upstream page reports 25 feature flags, excluding the default aggregate. These are discovery names, not proof of enabled/resolved features. Regenerate against the exact admitted pin.",
+    "source_ids": [
+      "N10", "N11", "N12", "N13", "N14", "N15", "N16", "N17", "N18", "N19",
+      "N20", "N21"
+    ],
+    "benchmark_source_ids": [ "C11", "C12", "C13", "C14", "SU05" ],
+    "benchmark_plan": [
+      "Same hardware/build/schedulers/topology/QoS/auth/payloads; separate as-found from common-version comparison",
+      "Raw pinned Rust control versus native boundary, independently observed delivery, query round trip and durable acknowledgment",
+      "Repeated warm runs, monotonic clocks, raw samples, confidence intervals, justified tail quantiles and open-loop load",
+      "Throughput/goodput, loss/duplicates/order, CPU/RSS/copies, BEAM scheduler delay/reductions/mailbox pressure",
+      "Concurrency/fan-out/key counts/payload sizes/batching/shared-memory/overload/reconnect and denied-command cases",
+      "Correctness and safety gates before selecting a measured coverage/performance Pareto frontier"
+    ]
+  },
+  "zenoh_matrix_validation": {
+    "family_count": 16,
+    "candidate_count": 3,
+    "identifiers_unique": true,
+    "source_references_resolve": true,
+    "planned_states_preserved": true,
+    "validation_scope": "Metadata consistency only; not native feature execution, exhaustive API enumeration or performance evidence"
+  },
   "retained_first_party_inputs": [
     {
       "path": "tests/web_quality/20260906-0631-inputs/20260906-0631-review-template.md.in",
+      "resolved_path": "/home/an/NAS-setup/uos/tests/web_quality/20260906-0631-inputs/20260906-0631-review-template.md.in",
       "bytes": 50109,
       "sha256": "5ecc1d4d8b06535a01904157cdb8d8995464df5149c0b101e93b9aa849af381d",
       "stable_during_metadata_capture": true
     },
     {
       "path": "tests/web_quality/20260906-0631-inputs/20260906-0631-navigation-template.md.in",
+      "resolved_path": "/home/an/NAS-setup/uos/tests/web_quality/20260906-0631-inputs/20260906-0631-navigation-template.md.in",
       "bytes": 913,
       "sha256": "724d3599f45acd62f2225e28602061dd96a77f260a3e09665add944113039c1b",
       "stable_during_metadata_capture": true
     },
     {
       "path": "tests/web_quality/20260906-0631-inputs/20260906-0631-checklist-template.md.in",
+      "resolved_path": "/home/an/NAS-setup/uos/tests/web_quality/20260906-0631-inputs/20260906-0631-checklist-template.md.in",
       "bytes": 2769,
       "sha256": "9d56ebf6054c69e6e3359d0113defe240f6c8e8ad2dd62bcce662fb9d25f1688",
       "stable_during_metadata_capture": true
     },
     {
       "path": "tests/web_quality/20260906-0631-inputs/20260906-0631-browser-template.md.in",
+      "resolved_path": "/home/an/NAS-setup/uos/tests/web_quality/20260906-0631-inputs/20260906-0631-browser-template.md.in",
       "bytes": 5208,
       "sha256": "1af5ba2d47d91d4d695386aaa7d0bcba704c931af39c4164b242ae5b869eb66f",
       "stable_during_metadata_capture": true
     },
     {
       "path": "tests/web_quality/20260906-0631-inputs/20260906-0631-sources-template.md.in",
+      "resolved_path": "/home/an/NAS-setup/uos/tests/web_quality/20260906-0631-inputs/20260906-0631-sources-template.md.in",
       "bytes": 2111,
       "sha256": "61cf2aa872c266ee4986ff8cf06b557f4222f11518595f049139107ac640fb42",
       "stable_during_metadata_capture": true
     },
     {
       "path": "tests/web_quality/20260906-0631-inputs/20260906-0631-research-register.json",
+      "resolved_path": "/home/an/NAS-setup/uos/tests/web_quality/20260906-0631-inputs/20260906-0631-research-register.json",
       "bytes": 20220,
       "sha256": "cccdd8ff4a336a5652f699f4266658a358e8531c54b45aafcc26d2b7710dc0be",
       "stable_during_metadata_capture": true
     },
     {
       "path": "tests/web_quality/20260906-0631-inputs/20260906-0631-local-review-register.json",
+      "resolved_path": "/home/an/NAS-setup/uos/tests/web_quality/20260906-0631-inputs/20260906-0631-local-review-register.json",
       "bytes": 10279,
       "sha256": "67f126f2b8c26ad652ab0a7f09fcf69f9c0effbbe738f6243c817563e8c79eee",
       "stable_during_metadata_capture": true
     },
     {
       "path": "tests/web_quality/20260906-0631-inputs/20260906-0631-gate-receipt.json",
+      "resolved_path": "/home/an/NAS-setup/uos/tests/web_quality/20260906-0631-inputs/20260906-0631-gate-receipt.json",
       "bytes": 7641,
       "sha256": "3c12ecc55da80b59b0927980c28c237bb999f15cdc22a5ff96dd699230e3c651",
       "stable_during_metadata_capture": true
     },
     {
       "path": "tests/web_quality/20260906-0631-inputs/20260906-0631-concurrent-gate-failure.json",
+      "resolved_path": "/home/an/NAS-setup/uos/tests/web_quality/20260906-0631-inputs/20260906-0631-concurrent-gate-failure.json",
       "bytes": 9941,
       "sha256": "25d57bf5f24715f433d1563edc332d19e7e91bd629399c504d599379f2bd08b8",
       "stable_during_metadata_capture": true
@@ -584,42 +1108,49 @@
   "documents": [
     {
       "path": "docs/design/20260906-0606-uos-agy-codex-unified-master-prompt.md",
-      "bytes": 49521,
-      "sha256": "23cc129881df480f86f5d4463beff1e570dfb63f1da2c40c190356ab56e40bc3",
+      "resolved_path": "/home/an/NAS-setup/uos/docs/design/20260906-0606-uos-agy-codex-unified-master-prompt.md",
+      "bytes": 61896,
+      "sha256": "729c6dcbe44e9a60dbf350fac245fb8bfdc62b7cdc0ca46d62846f8bb161465e",
       "stable_during_metadata_capture": true
     },
     {
       "path": "docs/zk/20260906-0606-agy-handover-understanding-and-actor-ecology-plan.md",
-      "bytes": 26776,
-      "sha256": "156551856f8cc1dac516ac3a9adf0f029740963ef0f887771fb50a870503e42e",
+      "resolved_path": "/home/an/NAS-setup/uos/docs/zk/20260906-0606-agy-handover-understanding-and-actor-ecology-plan.md",
+      "bytes": 35183,
+      "sha256": "a282a46b2d015b84a006419faf85bf29ff57d2c61e15a236587449b838f63d3a",
       "stable_during_metadata_capture": true
     },
     {
       "path": "docs/journal/20260906-0631-web-knowledge-verification-journal.md",
-      "bytes": 18056,
-      "sha256": "e056e0e83517d89636131fa8adb8bab565f27871f822869a35b6dd202c8a082c",
+      "resolved_path": "/home/an/NAS-setup/uos/docs/journal/20260906-0631-web-knowledge-verification-journal.md",
+      "bytes": 19404,
+      "sha256": "b58ea1afb8bc1acf31bff7b0dcb81f1b772e33de95d8e9c3bc226a21dd468685",
       "stable_during_metadata_capture": true
     },
     {
       "path": "docs/design/20260906-0631-web-knowledge-verification-review.md",
+      "resolved_path": "/home/an/NAS-setup/uos/docs/design/20260906-0631-web-knowledge-verification-review.md",
       "bytes": 54390,
       "sha256": "e8969f4d547f7a8685581dba760d5cad222f1f2fd6d805977cd467512de95570",
       "stable_during_metadata_capture": true
     },
     {
       "path": "HANDOVER_TO_CODEX.md",
-      "bytes": 19204,
-      "sha256": "6bdfbdc6626f64529fa70d15a719b1bfb889a580ce40cc16ecadfc56b698eb2c",
+      "resolved_path": "/home/an/NAS-setup/uos/HANDOVER_TO_CODEX.md",
+      "bytes": 19463,
+      "sha256": "fb8db252335f0adcc5e718cfd8d89011f5433331525619ecb5951a5e7180a231",
       "stable_during_metadata_capture": true
     },
     {
       "path": "docs/zk/moc-agent-handover.md",
+      "resolved_path": "/home/an/NAS-setup/uos/docs/zk/moc-agent-handover.md",
       "bytes": 18239,
       "sha256": "3a8369f15de7fb8617183bfd082b4da054bd5ad48834864081f5d5a1763d8a89",
       "stable_during_metadata_capture": true
     },
     {
       "path": "tests/web_quality/20260906-0606-replay-guide.md",
+      "resolved_path": "/home/an/NAS-setup/uos/tests/web_quality/20260906-0606-replay-guide.md",
       "bytes": 4925,
       "sha256": "8ee8bd8c8ad4e14171266077d0e332e6c6dc14f51b2d19e300dd4ec34b7b2df0",
       "stable_during_metadata_capture": true
@@ -627,14 +1158,16 @@
   ],
   "publisher": {
     "path": "tests/web_quality/20260906-0606-publish-handover.ml",
-    "bytes": 9154,
-    "sha256": "c5df7a7098d56666032371ecc1de576bea56e7a528d7c4d968c6f159e6d4b1ba",
+    "resolved_path": "/home/an/NAS-setup/uos/tests/web_quality/20260906-0606-publish-handover.ml",
+    "bytes": 11565,
+    "sha256": "b141f19adea02b3a95466f3965f130cc8508847ada65d2b7c097d4b36cb2f3fd",
     "stable_during_metadata_capture": true
   },
   "publisher_input": {
     "path": "tests/web_quality/20260906-0606-handover-source-inputs.json",
-    "bytes": 13444,
-    "sha256": "4845d11a90273ca482eab8876c34f93880c73646c0986b0eccb174937e1d3317",
+    "resolved_path": "/home/an/NAS-setup/uos/tests/web_quality/20260906-0606-handover-source-inputs.json",
+    "bytes": 31987,
+    "sha256": "9d9e070275051435daa1c57ed702bf693375a36769687e306a05e3e02ced8747",
     "stable_during_metadata_capture": true
   },
   "local_artifact_links_verified": 60,
@@ -645,6 +1178,8 @@
     "No full DMC/TCM, FPP/SysML, actor-ecology or all-site certification.",
     "C3I NIF source matching is not successful native load or transport execution.",
     "C3I-derived Zenoh is the operator-selected common UOS messaging layer; migration remains open.",
+    "Three inspected native candidates are compared; legacy Indrajaal has the broadest inspected exports, but no native performance winner is established.",
+    "Zenoh feature families and flags are a planned census; every selected-version API and target still needs implementation and execution evidence.",
     "External source writers not quiesced; no source ingestion/admission.",
     "Media locally retained, not remotely backed up; browser fixtures not live deployment.",
     "Historical controller snapshots retain scratch paths; gate is separately runnable."

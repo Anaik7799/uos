@@ -1,9 +1,14 @@
 import cepaf_gleam/api/denotational_intent_router
+import cepaf_gleam/fpp/algebraic_atlas
 import cepaf_gleam/fpp/dictionary
+import cepaf_gleam/fpp/dmc_tcm
+import cepaf_gleam/fpp/intent
+import cepaf_gleam/fpp/ontology
 import cepaf_gleam/fpp/topology
 import cepaf_gleam/ui/lustre/biosemiotics_radar
 import cepaf_gleam/ui/lustre/cybernetic_brain_matrix
 import cepaf_gleam/ui/lustre/feature_tracker_view
+import cepaf_gleam/ui/lustre/fpp_atlas_view
 import cepaf_gleam/ui/lustre/fpp_topology_view
 import cepaf_gleam/ui/lustre/gospel_z3_parity_explorer
 import cepaf_gleam/ui/lustre/hyperdimensional_zk_hologram
@@ -263,6 +268,59 @@ pub fn main() {
         |> response.prepend_header("content-type", "application/json")
         |> response.prepend_header("access-control-allow-origin", "*")
       }
+      ["api", "fpp", "ontology"] -> {
+        let fpp_model = topology.canonical_harness_model()
+        let graph = ontology.derive_fpp_ontology(fpp_model)
+        let json_body = ontology.ontology_to_json(graph)
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["api", "fpp", "atlas"] -> {
+        let fpp_model = topology.canonical_harness_model()
+        let report = algebraic_atlas.build_fpp_algebraic_atlas(fpp_model)
+        let json_body = algebraic_atlas.atlas_to_json(report)
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["api", "fpp", "intent"] -> {
+        let serial = case req.query {
+          Some(q) ->
+            case
+              string.contains(
+                q,
+                "serial=" <> dmc_tcm.hard_denied_system_os_serial,
+              )
+            {
+              True -> dmc_tcm.hard_denied_system_os_serial
+              False -> "SAFE_STORAGE_NVME_01"
+            }
+          None -> "SAFE_STORAGE_NVME_01"
+        }
+        let fl_intent =
+          intent.FlightIntent(
+            intent_id: "INT-LIVE-WEB-001",
+            actor: "operator",
+            verb: intent.DispatchFlightCommand(opcode: 0x701, args: []),
+            target_instance: "harness_config",
+            target_device_serial: serial,
+            precondition_guard: True,
+            formal_proof_ref: "PROOF-LIVE-001",
+          )
+        let verdict = intent.evaluate_flight_intent(fl_intent)
+        let status_code = case verdict {
+          intent.IntentAuthorized(_, _, _, _) -> 200
+          intent.IntentRejected(_, c, _) -> c
+        }
+        let json_body = intent.encode_intent_verdict_json(verdict)
+        response.new(status_code)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
       ["api", ..] -> {
         let json_body = c3i_router.route(path)
         response.new(200)
@@ -284,6 +342,19 @@ pub fn main() {
           render_lustre_page(
             "NASA JPL F Prime / FPP Flight Topology",
             "fpp-topology",
+            content_html,
+          )
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["fpp-atlas"] -> {
+        let el = fpp_atlas_view.view(fpp_atlas_view.init())
+        let content_html = element.to_string(el)
+        let page =
+          render_lustre_page(
+            "NASA JPL F Prime 5-Tier Algebraic Atlas & Living Ontology",
+            "fpp-atlas",
             content_html,
           )
         response.new(200)
@@ -856,6 +927,10 @@ fn render_nav(active: String) -> String {
     True -> "class='active'"
     False -> ""
   } <> " style='color:#38bdf8;font-weight:bold'>🚀 F Prime Flight Topology</a>
+    <a href='/fpp-atlas' " <> case active == "fpp-atlas" {
+    True -> "class='active'"
+    False -> ""
+  } <> " style='color:#f59e0b;font-weight:bold'>🌌 F Prime Algebraic Atlas</a>
 
     <div class='sep'></div>
     <div class='nav-section-title'>KNOWLEDGE BASE</div>

@@ -26,7 +26,7 @@ let metadata p=
   if st.Unix.st_kind<>Unix.S_REG || st.Unix.st_size>4_000_000 then failwith("metadata quota/type: "^p);
   let before=sha full in ignore(read full);
   let after=sha full in if before<>after then failwith("source changed while recording "^p);
-  ["path",s p;"bytes",`Int st.Unix.st_size;"sha256",s before;"stable_during_metadata_capture",`Bool true]
+  ["path",s p;"resolved_path",s(Unix.realpath full);"bytes",`Int st.Unix.st_size;"sha256",s before;"stable_during_metadata_capture",`Bool true]
 let count_csv text=
   let quoted=ref false and lines=ref 0 in
   String.iter(fun c->if c='"' then quoted:=not !quoted else if c='\n' && not !quoted then incr lines)text;
@@ -71,6 +71,27 @@ let copies=[
 ]
 let ()=
   let input=json("tests/web_quality/"^prefix^"-handover-source-inputs.json") in
+  let assert_unique label values=
+    if List.length values<>List.length(List.sort_uniq String.compare values) then failwith("duplicate "^label) in
+  let source_ids=List.map(str "id")(list "local" input@list "web" input) in
+  assert_unique "source identifier" source_ids;
+  let programme=member "zenoh_feature_programme" input in
+  let families=list "families" programme in
+  let candidates=list "candidate_sources" programme in
+  if families=[] || candidates=[] then failwith "missing Zenoh feature/candidate matrix";
+  assert_unique "Zenoh feature family"(List.map(str "id")families);
+  assert_unique "Zenoh candidate"(List.map(str "id")candidates);
+  assert_unique "Zenoh flag"(List.map to_string(list "feature_flags_observed_1_9" programme));
+  let check_refs rows=List.iter(fun r->List.iter(fun id->
+    if not(List.mem(to_string id)source_ids)then failwith("unresolved Zenoh source: "^to_string id))rows) in
+  List.iter(fun r->check_refs(list "source_ids" r)[r])candidates;
+  check_refs(list "source_ids" programme)[programme];
+  check_refs(list "benchmark_source_ids" programme)[programme];
+  List.iter(fun field->if member field programme<>`Bool false then failwith("review cannot certify "^field))
+    ["full_upstream_api_census_complete";"full_implementation_complete";"native_benchmarks_executed"];
+  List.iter(fun row->
+    if str "status" row<>"PLANNED" || member "runtime_executed" row<>`Bool false || member "implementation_verified" row<>`Bool false then
+      failwith "feature family must retain planned/unexecuted evidence state")families;
   let local=List.map(fun r->`Assoc(List.filter(fun(k,_)->k<>"path")(to_assoc r)@metadata(str "path" r)))(list "local" input) in
   let retained=List.map(fun(src,name)->
     let dst="tests/web_quality/20260906-0631-inputs/20260906-0631-"^name in
@@ -104,7 +125,8 @@ let ()=
   List.iteri(fun i title->let line=Printf.sprintf "## %d. %s" (i+1) title in
     if not(List.mem line(String.split_on_char '\n' journal)) then failwith("journal section "^line))expected_sections;
   let artifact_link_count=List.fold_left(fun n path->n+List.length(artifact_links path))0 docs in
-  let source_roots=["/home/an/dev/ver/zigvm";"/home/an/dev/ver/c3i";"/home/an/dev/ver/harness-bionic"] in
+  let source_roots=["/home/an/dev/ver/zigvm";"/home/an/dev/ver/c3i";"/home/an/dev/ver/harness-bionic";
+    "/home/an/dev/ver/c3i/sub-projects/c3i";"/home/an/dev/ver/c3i/sub-projects/sutra"] in
   let source_revisions=List.map(fun path->
     `Assoc["path",s path;"resolved_path",s(Unix.realpath path);
       "head_at_capture",s(run["git";"--no-optional-locks";"-C";path;"rev-parse";"HEAD"]);
@@ -119,6 +141,10 @@ let ()=
    "source_writers_quiesced",`Bool false;"external_code_ingested",`Bool false;
    "original_ocaml_rechecked",`Int 161;"original_ocaml_changed",`Int 0;
    "local_sources",`List local;"web_sources",member "web" input;"unsuccessful_fetches",member "unsuccessful_fetches" input;"source_revisions",`List source_revisions;
+   "zenoh_feature_programme",programme;
+   "zenoh_matrix_validation",`Assoc["family_count",`Int(List.length families);"candidate_count",`Int(List.length candidates);
+     "identifiers_unique",`Bool true;"source_references_resolve",`Bool true;"planned_states_preserved",`Bool true;
+     "validation_scope",s "Metadata consistency only; not native feature execution, exhaustive API enumeration or performance evidence"];
    "retained_first_party_inputs",`List retained;
    "datasets",`List(dataset_checks@[`Assoc["csv_rows",`Int csv_total;"parts",`Int(List.length csv_parts);"digest_verified",`Bool true]]);
    "documents",`List(List.map(fun path->`Assoc(metadata path))docs);
@@ -132,6 +158,8 @@ let ()=
     "No full DMC/TCM, FPP/SysML, actor-ecology or all-site certification.";
     "C3I NIF source matching is not successful native load or transport execution.";
     "C3I-derived Zenoh is the operator-selected common UOS messaging layer; migration remains open.";
+    "Three inspected native candidates are compared; legacy Indrajaal has the broadest inspected exports, but no native performance winner is established.";
+    "Zenoh feature families and flags are a planned census; every selected-version API and target still needs implementation and execution evidence.";
     "External source writers not quiesced; no source ingestion/admission.";
     "Media locally retained, not remotely backed up; browser fixtures not live deployment.";
     "Historical controller snapshots retain scratch paths; gate is separately runnable."])

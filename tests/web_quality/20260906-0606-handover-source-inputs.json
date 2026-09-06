@@ -206,6 +206,81 @@
       "id": "S04",
       "path": ".codex/skills/cepaf-zenoh-expert/SKILL.md",
       "review": "used lifecycle/schema guidance; operator-selected C3I NIF overrides legacy binding preference"
+    },
+    {
+      "id": "C05",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/native/zenoh_nif/src/lib.rs",
+      "review": "Native export/scheduler/registration scan; session/publisher/policy/subscriber export sections read; 17 NIF attributes counted; not executed"
+    },
+    {
+      "id": "C06",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/native/zenoh_nif/src/session.rs",
+      "review": "Lifecycle, configuration, publish/query collection, status and close sections lines 80-205 plus API scan; not executed"
+    },
+    {
+      "id": "C07",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/native/zenoh_nif/src/publisher.rs",
+      "review": "Publication, authorization, delete and batch paths through line 175; not executed"
+    },
+    {
+      "id": "C08",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/native/zenoh_nif/src/subscriber.rs",
+      "review": "Resource/polling, async subscriber task, bounded channel, ignored callback PID, unsubscribe and stats source read; not executed"
+    },
+    {
+      "id": "C09",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/native/zenoh_nif/Cargo.toml",
+      "review": "Complete manifest read; declared dependency versions/features, license and benchmark target; lock/resolved runtime not verified"
+    },
+    {
+      "id": "C10",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/lib/indrajaal/native/zenoh.ex",
+      "review": "Wrapper/documentation lines 1-200 and function/stub signatures; automatic native replacement must be checked by loading tests"
+    },
+    {
+      "id": "C11",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/test/indrajaal/zenoh/nif_latency_benchmark_test.exs",
+      "review": "Benchmark setup and measurement path first 150 lines: Phoenix.PubSub simulation; not executed"
+    },
+    {
+      "id": "C12",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/test/indrajaal/performance/zenoh_performance_test.exs",
+      "review": "First 130 lines: explicit mocks and performance targets; not executed"
+    },
+    {
+      "id": "C13",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/test/indrajaal/core/zenoh_throughput_benchmark_test.exs",
+      "review": "First 190 lines: serialization, in-process queue and payload budget tests; not executed"
+    },
+    {
+      "id": "C14",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/test/indrajaal/cluster/zenoh_data_path_throughput_test.exs",
+      "review": "First 160 lines: batch construction and simulated publication timing; not executed"
+    },
+    {
+      "id": "SU01",
+      "path": "/home/an/dev/ver/c3i/sub-projects/sutra/sutra_server/native/zenoh_nif/src/lib.rs",
+      "review": "Complete native source read, six NIF attributes counted; source only, binary not copied/hashed/executed"
+    },
+    {
+      "id": "SU02",
+      "path": "/home/an/dev/ver/c3i/sub-projects/sutra/sutra_server/native/zenoh_nif/Cargo.toml",
+      "review": "Complete manifest read; declared Rustler/Zenoh/TCP features"
+    },
+    {
+      "id": "SU03",
+      "path": "/home/an/dev/ver/c3i/sub-projects/sutra/sutra_server/src/zenoh_ffi.erl",
+      "review": "Complete native-loading/export/fallback wrapper read"
+    },
+    {
+      "id": "SU04",
+      "path": "/home/an/dev/ver/c3i/sub-projects/sutra/sutra_server/src/sutra_server/zenoh.gleam",
+      "review": "Native declarations, initialization and selected topic helpers; output partial; no claim of complete close reading"
+    },
+    {
+      "id": "SU05",
+      "path": "/home/an/dev/ver/c3i/sub-projects/sutra/sutra_server/test/sutra_zenoh_nif_test.gleam",
+      "review": "Selected test examples through line 260 inspected; Error/no_session acceptance identified; not executed"
     }
   ],
   "web": [
@@ -338,8 +413,8 @@
       "access_date": "2026-09-06",
       "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
       "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
-    }
-    ,{
+    },
+    {
       "id": "N14",
       "title": "Erlang NIF API and execution model",
       "url": "https://www.erlang.org/doc/apps/erts/erl_nif.html",
@@ -348,12 +423,392 @@
       "access_date": "2026-09-06",
       "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
       "license_admission": "REFERENCE_ONLY"
+    },
+    {
+      "id": "N15",
+      "title": "Zenoh Rust API overview",
+      "url": "https://docs.rs/zenoh/1.8.0/zenoh/",
+      "version": "1.8.0 explicit URL",
+      "use": "Session/data/pubsub/query/keys/liveliness/matching/scouting and feature categories",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N16",
+      "title": "Zenoh Cargo feature inventory",
+      "url": "https://docs.rs/crate/zenoh/1.8.0/features",
+      "version": "1.8.0 explicit URL; 24 flags reported",
+      "use": "Feature-profile census including transports, auth, shared memory, plugins and internal flags",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N17",
+      "title": "Zenoh Cargo feature inventory, rolling page",
+      "url": "https://docs.rs/crate/zenoh/latest/features",
+      "version": "1.9.0 observed in search result; rolling URL, not a pin; 25 flags reported",
+      "use": "Compare flag frontier including test flag; exact selected version still pending",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N18",
+      "title": "Zenoh query/reply API, rolling page",
+      "url": "https://docs.rs/zenoh/latest/zenoh/query/index.html",
+      "version": "1.10.0 observed when opened; rolling URL, not a pin",
+      "use": "Querier/queryable lifecycle, sample/error/delete replies and selector/parameter distinctions",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N19",
+      "title": "Zenoh extension API inventory",
+      "url": "https://docs.rs/zenoh-ext/latest/zenoh_ext/all.html",
+      "version": "1.9.0 observed; rolling URL, not a pin",
+      "use": "Advanced publisher/subscriber, history/recovery, groups and serialization census",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N20",
+      "title": "Zenoh extension source and feature gates",
+      "url": "https://docs.rs/zenoh-ext/latest/src/zenoh_ext/lib.rs.html",
+      "version": "1.9.0 rolling source search excerpt; implementation pin pending",
+      "use": "Explicit unstable/internal extension gates and advanced-pubsub module declarations",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
+    },
+    {
+      "id": "N21",
+      "title": "Zenoh QoS API",
+      "url": "https://docs.rs/zenoh/1.8.0/zenoh/qos/index.html",
+      "version": "1.8.0 explicit URL",
+      "use": "Priority/congestion/reliability options and unstable reliability designation",
+      "access_date": "2026-09-06",
+      "status": "READ_REFERENCE_NOT_EXECUTED_OR_INGESTED",
+      "license_admission": "REVIEW_REQUIRED_BEFORE_COPYING_CODE_OR_FIXTURES"
     }
   ],
   "unsuccessful_fetches": [
     {
       "url": "https://docs.rs/rustler/0.37.0/rustler/attr.nif.html",
       "result": "Web tool Internal Error; rolling 0.38.0 documentation read with explicit version mismatch; verify 0.37 before implementation."
+    },
+    {
+      "url": "https://docs.rs/zenoh/1.9.0/zenoh/",
+      "status": "WEB_FETCH_FAILED",
+      "reason": "Tool returned internal error/cache miss. No inference that the release/API is absent. Successful alternative URLs are recorded separately."
+    },
+    {
+      "url": "https://docs.rs/zenoh/1.9.0/features",
+      "status": "WEB_FETCH_FAILED",
+      "reason": "Tool returned internal error/cache miss. No inference that the release/API is absent. Successful alternative URLs are recorded separately."
+    },
+    {
+      "url": "https://docs.rs/zenoh-ext/1.9.0/zenoh_ext/",
+      "status": "WEB_FETCH_FAILED",
+      "reason": "Tool returned internal error/cache miss. No inference that the release/API is absent. Successful alternative URLs are recorded separately."
+    },
+    {
+      "url": "https://docs.rs/zenoh/1.8.0/features",
+      "status": "WEB_FETCH_FAILED",
+      "reason": "Tool returned internal error/cache miss. No inference that the release/API is absent. Successful alternative URLs are recorded separately."
+    },
+    {
+      "url": "https://docs.rs/zenoh-ext/1.8.0/zenoh_ext/",
+      "status": "WEB_FETCH_FAILED",
+      "reason": "Tool returned internal error/cache miss. No inference that the release/API is absent. Successful alternative URLs are recorded separately."
+    },
+    {
+      "url": "https://docs.rs/zenoh/1.8.0/zenoh/query/index.html",
+      "status": "WEB_FETCH_FAILED",
+      "reason": "Tool returned internal error/cache miss. No inference that the release/API is absent. Successful alternative URLs are recorded separately."
+    },
+    {
+      "url": "https://docs.rs/crate/zenoh/1.9.0/features",
+      "status": "WEB_FETCH_FAILED",
+      "reason": "Tool returned internal error/cache miss. No inference that the release/API is absent. Successful alternative URLs are recorded separately."
     }
-  ]
+  ],
+  "zenoh_feature_programme": {
+    "status": "PLANNED_VERSIONED_CONFORMANCE_PROGRAMME",
+    "exact_target_version": "UNSELECTED_PENDING_COMPATIBILITY_AND_CENSUS",
+    "richest_inspected_source": "legacy_indrajaal_native_zenoh_nif",
+    "most_performant": "UNKNOWN_NO_COMPARABLE_NATIVE_MEASUREMENTS",
+    "full_upstream_api_census_complete": false,
+    "full_implementation_complete": false,
+    "native_benchmarks_executed": false,
+    "candidate_sources": [
+      {
+        "id": "current_c3i_uos",
+        "source_ids": [
+          "U06",
+          "U07",
+          "U08",
+          "U09",
+          "U10",
+          "U11",
+          "U12",
+          "U13",
+          "C01",
+          "C02",
+          "C03"
+        ],
+        "native_export_count": 5,
+        "declared_zenoh": "^1.9.0",
+        "declared_rustler": "0.37",
+        "declared_transports": [
+          "tcp"
+        ],
+        "status": "SOURCE_REVIEWED_RUNTIME_UNVERIFIED"
+      },
+      {
+        "id": "legacy_indrajaal_native_zenoh_nif",
+        "source_ids": [
+          "C05",
+          "C06",
+          "C07",
+          "C08",
+          "C09",
+          "C10"
+        ],
+        "native_export_count": 17,
+        "policy_helper_count": 3,
+        "declared_zenoh": "=1.8.0",
+        "declared_rustler": "0.37",
+        "declared_transports": [
+          "tcp",
+          "udp"
+        ],
+        "status": "SOURCE_REVIEWED_RUNTIME_UNVERIFIED"
+      },
+      {
+        "id": "sutra_gleam",
+        "source_ids": [
+          "SU01",
+          "SU02",
+          "SU03",
+          "SU04",
+          "SU05"
+        ],
+        "native_export_count": 6,
+        "declared_zenoh": "^1.9.0",
+        "declared_rustler": "0.36",
+        "declared_transports": [
+          "tcp"
+        ],
+        "status": "SOURCE_REVIEWED_RUNTIME_UNVERIFIED"
+      }
+    ],
+    "families": [
+      {
+        "id": "ZF01",
+        "family": "Configuration and session lifecycle",
+        "acceptance": "Configuration errors, multi-session identity, open/close/reopen, death, drain and reconnect",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF02",
+        "family": "Keys and selectors",
+        "acceptance": "Concrete keys versus expressions, canonicalization, matching/intersection/inclusion, parameters and time selectors",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF03",
+        "family": "Samples and serialization",
+        "acceptance": "Exact binary bytes, NUL/Unicode, encoding, attachments, timestamps, source metadata and Put/Delete/error distinctions",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF04",
+        "family": "Publication",
+        "acceptance": "Direct and declared publication, real Delete, all builder options, undeclare and per-item bounded batch outcomes",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF05",
+        "family": "Subscription",
+        "acceptance": "Readiness, owner-bound callbacks, bounded count/bytes, FIFO/ring/poll/background semantics, errors and teardown",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF06",
+        "family": "Query and reply",
+        "acceptance": "Get/querier/queryable, completeness, targets/consolidation/selectors, all reply kinds, deadlines/cancellation and bounded streams",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF07",
+        "family": "Discovery and matching",
+        "acceptance": "Scouting lifecycle, peers/routers, matching listeners and real presence/absence",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF08",
+        "family": "Liveliness",
+        "acceptance": "Token/get/subscriber/history lifecycle, late join, loss/rejoin and separation from write authority",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF09",
+        "family": "QoS and locality",
+        "acceptance": "All priority/congestion/reliability/express/origin/destination options and actual documented delivery scope",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF10",
+        "family": "Advanced extensions",
+        "acceptance": "Serialization, cache/history/miss detection/recovery/listeners/groups and deprecated API mappings",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF11",
+        "family": "Shared memory",
+        "acceptance": "All pinned buffer/provider/client operations, lifetime/quotas/reclamation, fallback, sanitizer and copy measurements",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF12",
+        "family": "Transports",
+        "acceptance": "Every pinned transport/target profile, compression, multilink and unavailable-hardware accounting",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF13",
+        "family": "Authentication and access control",
+        "acceptance": "Transport identity, TLS, router ACLs, UOS typed authorization and denied-operation tests",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF14",
+        "family": "Router storage and plugins",
+        "acceptance": "Typed management and integration contracts for routing, admin, storage/replication and required bridge/plugin services",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF15",
+        "family": "Observability and diagnostics",
+        "acceptance": "Version/features, real state/metrics/tracing, full trace preservation and separate accepted/received/committed states",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      },
+      {
+        "id": "ZF16",
+        "family": "Packaging and compatibility",
+        "acceptance": "Symbols/arities/result-shapes, locked versions/features/target, loading, upgrade/drain and old/new peer compatibility",
+        "status": "PLANNED",
+        "expanded_api_inventory_complete": false,
+        "implementation_verified": false,
+        "runtime_executed": false
+      }
+    ],
+    "feature_flags_observed_1_9": [
+      "default",
+      "auth_pubkey",
+      "auth_usrpwd",
+      "transport_compression",
+      "transport_multilink",
+      "transport_quic",
+      "transport_quic_datagram",
+      "transport_tcp",
+      "transport_tls",
+      "transport_udp",
+      "transport_unixsock-stream",
+      "transport_ws",
+      "internal",
+      "internal_config",
+      "plugins",
+      "runtime_plugins",
+      "shared-memory",
+      "stats",
+      "test",
+      "tracing-instrument",
+      "transport_serial",
+      "transport_unixpipe",
+      "transport_vsock",
+      "unstable",
+      "zenoh-shm",
+      "zenoh-stats"
+    ],
+    "feature_flag_note": "The upstream page reports 25 feature flags, excluding the default aggregate. These are discovery names, not proof of enabled/resolved features. Regenerate against the exact admitted pin.",
+    "source_ids": [
+      "N10",
+      "N11",
+      "N12",
+      "N13",
+      "N14",
+      "N15",
+      "N16",
+      "N17",
+      "N18",
+      "N19",
+      "N20",
+      "N21"
+    ],
+    "benchmark_source_ids": [
+      "C11",
+      "C12",
+      "C13",
+      "C14",
+      "SU05"
+    ],
+    "benchmark_plan": [
+      "Same hardware/build/schedulers/topology/QoS/auth/payloads; separate as-found from common-version comparison",
+      "Raw pinned Rust control versus native boundary, independently observed delivery, query round trip and durable acknowledgment",
+      "Repeated warm runs, monotonic clocks, raw samples, confidence intervals, justified tail quantiles and open-loop load",
+      "Throughput/goodput, loss/duplicates/order, CPU/RSS/copies, BEAM scheduler delay/reductions/mailbox pressure",
+      "Concurrency/fan-out/key counts/payload sizes/batching/shared-memory/overload/reconnect and denied-command cases",
+      "Correctness and safety gates before selecting a measured coverage/performance Pareto frontier"
+    ]
+  }
 }
