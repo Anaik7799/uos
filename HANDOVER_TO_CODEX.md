@@ -89,60 +89,61 @@ All 84 cycles are verified operational by `tools/uos doctor`:
 33. **EV-33 170 Skills Inventory Federation**: Dynamic capability dispatch across agents (`INV-SKILL-FEDERATION`).
 34. **EV-34 Policy Standards & AGENTS.md Governance**: Sovereign rule enforcement (`INV-ZERO-MUDA-STORAGE-LOCK`).
 35. **EV-35 14 SDD Superpowers Formal Gates**: Specification-driven development gates (`INV-SUPERPOWERS-GATED`).
-36. **EV-37 266-Actor Elastic Symbiosis Swarm**: Unconstrained BEAM actor scaling (`INV-UNCONSTRAINED-BEAM-SCALE`).
-37. **EV-38 17-Aspect Process Receipts**: Cryptographic SHA-256 process lineage receipts (`INV-17-ASPECT-RECEIPTS`).
-38. **EV-39 Omni-Cartesian Tensor Closure**: Full Cartesian tensor space closure ($10 \times 14 \times 17$) (`INV-CARTESIAN-TENSOR-CLOSED`).
+36. **EV-36 Unified MCP Tooling & Zero-Trust Interceptor**: 35+ tools in `contracts/mcp`, embedded NUL bytes (code `-2`) and SQL injections (code `-3`) trapped before execution (`INV-ZERO-TRUST-PAYLOAD`).
+37. **EV-37 266-Actor Elastic Symbiosis Swarm**: Unconstrained BEAM actor scaling (`INV-UNCONSTRAINED-BEAM-SCALE`).
+38. **EV-38 17-Aspect Process Receipts**: Cryptographic SHA-256 process lineage receipts (`INV-17-ASPECT-RECEIPTS`).
+39. **EV-39 Omni-Cartesian Tensor Closure**: Full Cartesian tensor space closure ($10 \times 14 \times 17$) (`INV-CARTESIAN-TENSOR-CLOSED`).
 
 ### Phase IV: C3I Knowledge Architecture (EV-40..EV-54)
-39. **EV-40 C3I Knowledge Authority Partitioning**: Separation of Gleam orchestration from OCaml verification (`INV-KNOW-AUTHORITY-PARTITION`).
-40. **EV-41 Supervised OCaml Worker Port**: External subprocess communication protecting BEAM dirty schedulers (`INV-OCAML-PORT-REDUCTIONS`).
-41. **EV-42 Typed Cross-Language Protocol**: Strict JSON envelopes and idempotency receipts (`INV-CROSS-LANG-ENVELOPE`).
-42. **EV-43 Zero-Trust Security Traps**: Trapping NUL bytes (code `-2`) and SQL injections (code `-3`) (`INV-ZERO-TRUST-INGRESS-TRAP`).
-43. **EV-44 Exponential Trust Decay**: Bayesian trust decay $\tau(t) = \tau_0 e^{-\lambda \Delta t}$ (`INV-EXPONENTIAL-TRUST-DECAY`).
-44. **EV-45 Negative Knowledge & Anti-Pattern Detection**: Automated detection of barred practices (`INV-ANTI-PATTERN-DETECTION`).
-45. **EV-46 Multi-Corpus Cited Recall**: Source grounding across Wiki, ZK, and Journals (`INV-CITED-RECALL-GROUNDING`).
-46. **EV-47 7,918-File C3I Ingestion**: Zero-error cataloging and sanitization (`INV-7918-FILE-ZERO-ERROR`).
-47. **EV-48 Biosemiotic Knowledge Morphisms**: Formal decoupling of symbolic and physical states (`INV-BIOSEMIOTIC-KNOWLEDGE-CUT`).
-48. **EV-49 Wisp/Mist REST API Knowledge Routes**: Typed HTTP endpoints for knowledge query and recall (`INV-WISP-KNOWLEDGE-API`).
-49. **EV-50 ZK ADR-055 & KM Triad Integration**: Permanent decision record and index cross-linking (`INV-ZK-ADR-055-KM-TRIAD`).
-50. **EV-51 Scalability & Elastic Actor Knowledge Mesh**: Multi-actor query execution (`INV-ELASTIC-KNOWLEDGE-MESH`).
-51. **EV-52 Formal Verification & Gospel Parity**: Gospel contract compliance via OCaml oracle (`INV-FORMAL-GOSPEL-PARITY`).
-52. **EV-53 SRE Resilience & Circuit-Breaker Tolerance**: Automatic degradation under subsystem latency (`INV-SRE-KNOWLEDGE-FRESHNESS`).
-53. **EV-54 Tri-Sovereign Knowledge Mainline Closure**: AGY, Claude, Codex tri-sovereign ratification (`INV-TRI-SOV-KNOWLEDGE-CLOSURE`).
+40. **EV-40 C3I Knowledge Authority Partitioning**: Separation of Gleam orchestration from OCaml verification (`INV-KNOW-AUTHORITY-PARTITION`).
+41. **EV-41 Supervised OCaml Worker Port**: External subprocess communication protecting BEAM dirty schedulers (`INV-OCAML-PORT-REDUCTIONS`).
+42. **EV-42 Typed Cross-Language Protocol**: Strict JSON envelopes and idempotency receipts (`INV-CROSS-LANG-ENVELOPE`).
+43. **EV-43 Zero-Trust Security Traps**: Trapping NUL bytes (code `-2`) and SQL injections (code `-3`) (`INV-ZERO-TRUST-INGRESS-TRAP`).
+44. **EV-44 Exponential Trust Decay**: Bayesian trust decay $\tau(t) = \tau_0 e^{-\lambda \Delta t}$ (`INV-EXPONENTIAL-TRUST-DECAY`).
+45. **EV-45 Negative Knowledge & Anti-Pattern Detection**: Automated detection of barred practices (`INV-ANTI-PATTERN-DETECTION`).
+46. **EV-46 Multi-Corpus Cited Recall**: Source grounding across Wiki, ZK, and Journals (`INV-CITED-RECALL-GROUNDING`).
+47. **EV-47 7,918-File C3I Ingestion**: Zero-error cataloging and sanitization (`INV-7918-FILE-ZERO-ERROR`).
+48. **EV-48 Biosemiotic Knowledge Morphisms**: Formal decoupling of symbolic and physical states (`INV-BIOSEMIOTIC-KNOWLEDGE-CUT`).
+49. **EV-49 Wisp/Mist REST API Knowledge Routes**: Typed HTTP endpoints for knowledge query and recall (`INV-WISP-KNOWLEDGE-API`).
+50. **EV-50 ZK ADR-055 & KM Triad Integration**: Permanent decision record and index cross-linking (`INV-ZK-ADR-055-KM-TRIAD`).
+51. **EV-51 Scalability & Elastic Actor Knowledge Mesh**: Multi-actor query execution (`INV-ELASTIC-KNOWLEDGE-MESH`).
+52. **EV-52 Formal Verification & Gospel Parity**: Gospel contract compliance via OCaml oracle (`INV-FORMAL-GOSPEL-PARITY`).
+53. **EV-53 SRE Resilience & Circuit-Breaker Tolerance**: Automatic degradation under subsystem latency (`INV-SRE-KNOWLEDGE-FRESHNESS`).
+54. **EV-54 Tri-Sovereign Knowledge Mainline Closure**: AGY, Claude, Codex tri-sovereign ratification (`INV-TRI-SOV-KNOWLEDGE-CLOSURE`).
 
 ### Phase V: Wave 3 Evolutionary Cycles (EV-55..EV-69)
-54. **EV-55 C3I Agentic Ingestion & Sanitization Engine**: In-depth streaming parser (`INV-AGENTIC-INGESTION-SANITIZED`).
-55. **EV-56 Supervised OCaml Port Pool**: Dynamic worker pool scaling under load (`INV-SUPERVISED-OCAML-PORT-POOL`).
-56. **EV-57 Dynamic Trust Decay Swarm**: Asynchronous worker swarm evaluating decay curves (`INV-DYNAMIC-DECAY-ACTOR-SWARM`).
-57. **EV-58 Real-Time Tripartite Knowledge Presentation**: Server-Sent Events (SSE) streaming updates (`INV-TRIPARTITE-SSE-KNOWLEDGE-MESH`).
-58. **EV-59 Tri-Sovereign Autonomic Governance**: Closed-loop self-healing policies (`INV-TRI-SOVEREIGN-AUTONOMIC-CLOSURE`).
-59. **EV-60 Distributed Knowledge Cache**: In-memory sheaf harmonizer across workspaces (`INV-DISTRIBUTED-KNOWLEDGE-CACHE`).
-60. **EV-61 Zero-Trust Cryptographic Signatures**: ED25519 trace lineage signatures (`INV-ZT-CRYPTO-SIGNATURE-TRACE`).
-61. **EV-62 Automated Anti-Pattern Interceptor**: Pre-commit lint and verification gates (`INV-AUTO-ANTI-PATTERN-INTERCEPTOR`).
-62. **EV-63 Bounded Gospel Oracle & Z3 Tree**: Process-tree watchdog terminating queries at $2000\text{ms}$ (`INV-GOSPEL-Z3-PROCESS-TREE`).
-63. **EV-64 Descriptor-Relative VFS Journal Sync**: Atomic journal updates with WAL persistence (`INV-VFS-JOURNAL-SYNC-DURABILITY`).
-64. **EV-65 Lyapunov-Windowed Telemetry Freshness**: Dead-man monitor alerting on silent publishers (`INV-LYAPUNOV-FRESHNESS-SWARM`).
-65. **EV-66 17-Aspect Cross-Language Homomorphism**: Binary ABI contracts between Gleam, Rust, and OCaml (`INV-17-ASPECT-ABI-HOMOMORPHISM`).
-66. **EV-67 Elastic Agent Swarm Concurrency**: Automatic dynamic worker provisioning up to $10,000$ holons (`INV-ELASTIC-SWARM-SCALING`).
-67. **EV-68 Universal Tailscale Tripartite Navigation**: Synchronized state across Web, API, and TUI (`INV-TAILSCALE-TRIPARTITE-NAV`).
-68. **EV-69 Sovereign Synthesis Mainline Closure**: Wave 3 formal closure and ADR-057 ratification (`INV-SOVEREIGN-SYNTHESIS-CLOSURE`).
+55. **EV-55 C3I Agentic Ingestion & Sanitization Engine**: In-depth streaming parser (`INV-AGENTIC-INGESTION-SANITIZED`).
+56. **EV-56 Supervised OCaml Port Pool**: Dynamic worker pool scaling under load (`INV-SUPERVISED-OCAML-PORT-POOL`).
+57. **EV-57 Dynamic Trust Decay Swarm**: Asynchronous worker swarm evaluating decay curves (`INV-DYNAMIC-DECAY-ACTOR-SWARM`).
+58. **EV-58 Real-Time Tripartite Knowledge Presentation**: Server-Sent Events (SSE) streaming updates (`INV-TRIPARTITE-SSE-KNOWLEDGE-MESH`).
+59. **EV-59 Tri-Sovereign Autonomic Governance**: Closed-loop self-healing policies (`INV-TRI-SOVEREIGN-AUTONOMIC-CLOSURE`).
+60. **EV-60 Distributed Knowledge Cache**: In-memory sheaf harmonizer across workspaces (`INV-DISTRIBUTED-KNOWLEDGE-CACHE`).
+61. **EV-61 Zero-Trust Cryptographic Signatures**: ED25519 trace lineage signatures (`INV-ZT-CRYPTO-SIGNATURE-TRACE`).
+62. **EV-62 Automated Anti-Pattern Interceptor**: Pre-commit lint and verification gates (`INV-AUTO-ANTI-PATTERN-INTERCEPTOR`).
+63. **EV-63 Bounded Gospel Oracle & Z3 Tree**: Process-tree watchdog terminating queries at $2000\text{ms}$ (`INV-GOSPEL-Z3-PROCESS-TREE`).
+64. **EV-64 Descriptor-Relative VFS Journal Sync**: Atomic journal updates with WAL persistence (`INV-VFS-JOURNAL-SYNC-DURABILITY`).
+65. **EV-65 Lyapunov-Windowed Telemetry Freshness**: Dead-man monitor alerting on silent publishers (`INV-LYAPUNOV-FRESHNESS-SWARM`).
+66. **EV-66 17-Aspect Cross-Language Homomorphism**: Binary ABI contracts between Gleam, Rust, and OCaml (`INV-17-ASPECT-ABI-HOMOMORPHISM`).
+67. **EV-67 Elastic Agent Swarm Concurrency**: Automatic dynamic worker provisioning up to $10,000$ holons (`INV-ELASTIC-SWARM-SCALING`).
+68. **EV-68 Universal Tailscale Tripartite Navigation**: Synchronized state across Web, API, and TUI (`INV-TAILSCALE-TRIPARTITE-NAV`).
+69. **EV-69 Sovereign Synthesis Mainline Closure**: Wave 3 formal closure and ADR-057 ratification (`INV-SOVEREIGN-SYNTHESIS-CLOSURE`).
 
 ### Phase VI: Wave 4 Evolutionary Cycles & Vertical Slice (EV-70..EV-84)
-69. **EV-70 Vertical Slice Journal Ingestion Pipeline**: Ingestion of 13-section journals with SHA-256 digests (`INV-SLICE-JOURNAL-RETRIEVAL`).
-70. **EV-71 Supervised OCaml Worker Port Protocol**: Subprocess protocol protecting BEAM reductions (`INV-OCAML-SUBPROCESS-PROTOCOL`).
-71. **EV-72 Rust NIF & OCaml Differential Conformance**: Parity comparison engine verifying algebra (`INV-RUST-OCAML-DIFF-CONFORMANCE`).
-72. **EV-73 Callable OCaml Knowledge Lookup & Recall**: Bounded query interface returning verified citations (`INV-CALLABLE-OCAML-CITED-RECALL`).
-73. **EV-74 Tripartite Tri-Surface Knowledge Display**: Isomorphic HTML, JSON, and ANSI presentation (`INV-TRIPARTITE-KNOWLEDGE-SURFACES`).
-74. **EV-75 17-Aspect C3I VM-1 Comprehensive Synthesis**: Complete multi-dimensional trace matrix (`INV-17-ASPECT-C3I-SYNTHESIS`).
-75. **EV-76 Dynamic Agentic Knowledge Mesh**: Autonomous actor swarm self-organizing on telemetry (`INV-DYNAMIC-KNOWLEDGE-SWARM`).
-76. **EV-77 Biosemiotic Semantic Invariant Verification**: Decoupled state mappings preventing semantic drift (`INV-BIOSEMIOTIC-ROCHA-VERIF`).
-77. **EV-78 13D TCM Coordinate Conservation**: Fail-closed gatekeeper $\Delta \vec{\mathcal{T}}_{13} \equiv \mathbf{0}$ (`INV-13D-TCM-FAIL-CLOSED`).
-78. **EV-79 Lyapunov-Bounded Trust Decay & Eviction**: Purging stale or refuted knowledge nodes (`INV-LYAPUNOV-TRUST-EVICTION`).
-79. **EV-80 Zero-Trust Payload Interceptor Ledger**: Cryptographic audit ledger for every tool call (`INV-ZT-PAYLOAD-LEDGER`).
-80. **EV-81 Multi-Tenant Elastic BEAM Swarm Scaling**: Workload-driven actor elasticity (`INV-BEAM-SWARM-ELASTIC-SCALE`).
-81. **EV-82 Universal Tailscale Web/API/WebSocket Routing**: Seamless Tailnet routing matrix (`INV-TAILSCALE-FQDN-ROUTING`).
-82. **EV-83 Formal Gospel & Bounded Z3 Oracle Pipeline**: Verified pre/post-conditions on formal models (`INV-GOSPEL-Z3-ORACLE-PIPELINE`).
-83. **EV-84 Tri-Sovereign Consensus & Mainline Closure**: Wave 4 formal closure and ADR-059 ratification (`INV-TRI-SOV-MAINLINE-CLOSURE`).
+70. **EV-70 Vertical Slice Journal Ingestion Pipeline**: Ingestion of 13-section journals with SHA-256 digests (`INV-SLICE-JOURNAL-RETRIEVAL`).
+71. **EV-71 Supervised OCaml Worker Port Protocol**: Subprocess protocol protecting BEAM reductions (`INV-OCAML-SUBPROCESS-PROTOCOL`).
+72. **EV-72 Rust NIF & OCaml Differential Conformance**: Parity comparison engine verifying algebra (`INV-RUST-OCAML-DIFF-CONFORMANCE`).
+73. **EV-73 Callable OCaml Knowledge Lookup & Recall**: Bounded query interface returning verified citations (`INV-CALLABLE-OCAML-CITED-RECALL`).
+74. **EV-74 Tripartite Tri-Surface Knowledge Display**: Isomorphic HTML, JSON, and ANSI presentation (`INV-TRIPARTITE-KNOWLEDGE-SURFACES`).
+75. **EV-75 17-Aspect C3I VM-1 Comprehensive Synthesis**: Complete multi-dimensional trace matrix (`INV-17-ASPECT-C3I-SYNTHESIS`).
+76. **EV-76 Dynamic Agentic Knowledge Mesh**: Autonomous actor swarm self-organizing on telemetry (`INV-DYNAMIC-KNOWLEDGE-SWARM`).
+77. **EV-77 Biosemiotic Semantic Invariant Verification**: Decoupled state mappings preventing semantic drift (`INV-BIOSEMIOTIC-ROCHA-VERIF`).
+78. **EV-78 13D TCM Coordinate Conservation**: Fail-closed gatekeeper $\Delta \vec{\mathcal{T}}_{13} \equiv \mathbf{0}$ (`INV-13D-TCM-FAIL-CLOSED`).
+79. **EV-79 Lyapunov-Bounded Trust Decay & Eviction**: Purging stale or refuted knowledge nodes (`INV-LYAPUNOV-TRUST-EVICTION`).
+80. **EV-80 Zero-Trust Payload Interceptor Ledger**: Cryptographic audit ledger for every tool call (`INV-ZT-PAYLOAD-LEDGER`).
+81. **EV-81 Multi-Tenant Elastic BEAM Swarm Scaling**: Workload-driven actor elasticity (`INV-BEAM-SWARM-ELASTIC-SCALE`).
+82. **EV-82 Universal Tailscale Web/API/WebSocket Routing**: Seamless Tailnet routing matrix (`INV-TAILSCALE-FQDN-ROUTING`).
+83. **EV-83 Formal Gospel & Bounded Z3 Oracle Pipeline**: Verified pre/post-conditions on formal models (`INV-GOSPEL-Z3-ORACLE-PIPELINE`).
+84. **EV-84 Tri-Sovereign Consensus & Mainline Closure**: Wave 4 formal closure and ADR-059 ratification (`INV-TRI-SOV-MAINLINE-CLOSURE`).
 
 ---
 
