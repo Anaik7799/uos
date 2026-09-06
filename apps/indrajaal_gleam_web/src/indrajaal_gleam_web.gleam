@@ -493,7 +493,7 @@ fn render_repo_file_response(
 }
 
 fn render_checklist_accordion() -> String {
-  "<details class='checklist-card' open>
+  "<details class='checklist-card'>
     <summary class='checklist-summary'>
       <div style='display:flex;align-items:center;gap:0.6rem;flex-wrap:wrap'>
         <span style='color:#3fb950;font-size:1.1rem;font-weight:bold'>&#10003;</span>
@@ -747,7 +747,7 @@ fn render_lustre_page(
       </div>" <> render_checklist_accordion() <> "<div class='my-4'>" <> content_html <> "</div>" <> render_footer() <> "</main></div></body></html>"
 }
 
-fn render_document_view(
+pub fn render_document_view(
   title: String,
   file_path: String,
   content: String,
@@ -921,7 +921,7 @@ fn render_document_view(
         container.innerHTML = window.marked.parse(processed);
       } else {
         // Fallback: simple line parser
-        var lines = processed.split('\n');
+        var lines = processed.split('\\n');
         var html = '';
         lines.forEach(function(l) {
           if (l.startsWith('# ')) html += '<h1>' + l.slice(2) + '</h1>';

@@ -71,6 +71,71 @@ pub fn graph_return_paths_test() {
   q.strongly_connected(3, [#(0, 3)]) |> should.be_false
 }
 
+fn edges_from_mask(mask: Int, index: Int) -> List(#(Int, Int)) {
+  case index == 9 {
+    True -> []
+    False -> {
+      let tail = edges_from_mask(mask / 2, index + 1)
+      case mask % 2 == 1 {
+        True -> [#(index / 3, index % 3), ..tail]
+        False -> tail
+      }
+    }
+  }
+}
+
+pub fn exhaustive_three_node_graph_oracle_test() {
+  let pairs =
+    list.flat_map([0, 1, 2], fn(a) { list.map([0, 1, 2], fn(b) { #(a, b) }) })
+  int.range(from: 0, to: 512, with: Nil, run: fn(_, mask) {
+    let edges = edges_from_mask(mask, 0)
+    // Independent Floyd-Warshall closure; production uses frontier traversal.
+    let initial =
+      list.filter(pairs, fn(p) { p.0 == p.1 || list.contains(edges, p) })
+    let closure =
+      list.fold([0, 1, 2], initial, fn(known, pivot) {
+        list.filter(pairs, fn(p) {
+          list.contains(known, p)
+          || {
+            list.contains(known, #(p.0, pivot))
+            && list.contains(known, #(pivot, p.1))
+          }
+        })
+      })
+    q.strongly_connected(3, edges) |> should.equal(list.length(closure) == 9)
+  })
+}
+
+fn evidence_code(value: q.Evidence) -> Int {
+  case value {
+    q.Passed -> 0
+    q.Unrun -> 1
+    q.Failed -> 2
+  }
+}
+
+fn emit_solver_observations() {
+  let states = [q.Passed, q.Unrun, q.Failed]
+  list.each(states, fn(a) {
+    list.each(states, fn(b) {
+      let admitted = case q.admit(a, b) {
+        True -> "true"
+        False -> "false"
+      }
+      io.println(
+        "MODEL "
+        <> int.to_string(evidence_code(a))
+        <> " "
+        <> int.to_string(evidence_code(b))
+        <> " "
+        <> int.to_string(evidence_code(q.join(a, b)))
+        <> " "
+        <> admitted,
+      )
+    })
+  })
+}
+
 pub fn denotation_composition_test() {
   let a = [q.Open(1), q.Open(2)]
   let b = [q.Back, q.Open(3)]
@@ -134,10 +199,12 @@ pub fn main() {
   route_boundary_fuzz_test()
   four_cycle_evidence_test()
   graph_return_paths_test()
+  exhaustive_three_node_graph_oracle_test()
   denotation_composition_test()
   given_wiki_link_when_opened_then_back_returns_test()
   all_thirteen_coordinates_conserved_test()
+  emit_solver_observations()
   io.println(
-    "web_quality_contract: 9 test functions passed; 1000 generated route seeds",
+    "web_quality_contract: 10 test functions passed; 1000 generated route seeds; 512 graph oracles",
   )
 }

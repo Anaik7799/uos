@@ -1,0 +1,981 @@
+[
+  {
+    "path": "harness/test_typed_html.ml",
+    "category": "HTML markup, Markdown and safety",
+    "port": "G1",
+    "coverage": "Route-derived hrefs, hostile text/attribute escaping, nonempty route index, same-host assets, doctype, report-only markup boundary."
+  },
+  {
+    "path": "harness/test_journal_markdown_html.ml",
+    "category": "HTML markup, Markdown and safety",
+    "port": "G1",
+    "coverage": "Deterministic HTML, exact prompt preservation, escaped code, provenance, embedded image/video/download evidence."
+  },
+  {
+    "path": "harness/wiki_render_laws.ml",
+    "category": "HTML markup, Markdown and safety",
+    "port": "G1",
+    "coverage": "46 named shell/page laws: navigation, query errors, graphs, memory, edit forms, tags, note cards, timelines and inert JSON islands."
+  },
+  {
+    "path": "harness/markdown_ast_laws.ml",
+    "category": "HTML markup, Markdown and safety",
+    "port": "G1",
+    "coverage": "Markdown blocks/inlines, normalizer controls, 300 seeded fuzz documents, corpus baseline, token preservation, slug locality and amendments."
+  },
+  {
+    "path": "harness/json_embed_laws.ml",
+    "category": "HTML markup, Markdown and safety",
+    "port": "G1",
+    "coverage": "JSON round-trip, numeric fidelity, control characters, script-closing payloads, seeded fuzzing and fail-closed re-encoding."
+  },
+  {
+    "path": "harness/self_render_laws.ml",
+    "category": "HTML markup, Markdown and safety",
+    "port": "G1",
+    "coverage": "Living-ontology HTML escaping, required sections, empty evidence, row arity, CSS fidelity and remote resources."
+  },
+  {
+    "path": "harness/slo_render_laws.ml",
+    "category": "HTML markup, Markdown and safety",
+    "port": "G1",
+    "coverage": "Dashboard CSS fidelity, escaping, doctype, sections and asset isolation."
+  },
+  {
+    "path": "harness/slugger_laws.ml",
+    "category": "HTML markup, Markdown and safety",
+    "port": "G1",
+    "coverage": "Five laws over seeded heading sequences: uniqueness, validity, justified suffixes, determinism and coherent counts."
+  },
+  {
+    "path": "harness/docs_wiki_laws.ml",
+    "category": "Wiki and ZK corpus semantics",
+    "port": "G2",
+    "coverage": "91 named check sites over synthetic and live corpora: blocks, links/backlinks, tags, search, graphs, MoCs and navigation."
+  },
+  {
+    "path": "harness/test_wiki_shell.ml",
+    "category": "Wiki and ZK corpus semantics",
+    "port": "G1",
+    "coverage": "Driver for wiki_render_laws.run and markdown_ast_laws.run; shared definitions, not additional independent cases."
+  },
+  {
+    "path": "harness/test_zk_page_visibility.ml",
+    "category": "Wiki and ZK corpus semantics",
+    "port": "G1",
+    "coverage": "Public/internal/private classifications, explicit metadata and private tags; six fixture rows plus an internal law check."
+  },
+  {
+    "path": "harness/test_wiki_dep_sheaf.ml",
+    "category": "Wiki and ZK corpus semantics",
+    "port": "G1",
+    "coverage": "Dependency closure, isolation between components and bounded traversal depth."
+  },
+  {
+    "path": "harness/test_zk_doctest_runner.ml",
+    "category": "Wiki and ZK corpus semantics",
+    "port": "G1",
+    "coverage": "Code-fence extraction and delimiter/quote balance checks; does not compile or execute OCaml examples."
+  },
+  {
+    "path": "harness/test_zk_mbse_projection.ml",
+    "category": "Wiki and ZK corpus semantics",
+    "port": "G1",
+    "coverage": "MBSE ledger serialization and round-trip of capability coordinates and evidence fields."
+  },
+  {
+    "path": "harness/test_logseq_profile.ml",
+    "category": "Wiki and ZK corpus semantics",
+    "port": "G2",
+    "coverage": "Lossless file/profile interpretation, page/block references, properties/tasks, catalog partition and missing/duplicate-row mutants."
+  },
+  {
+    "path": "harness/route_laws.ml",
+    "category": "Web routes, components and state",
+    "port": "G2",
+    "coverage": "Route parse/print round trips, hostile identifiers, HTTP methods and source-route consistency."
+  },
+  {
+    "path": "harness/web_laws.ml",
+    "category": "Web routes, components and state",
+    "port": "G2",
+    "coverage": "Request/response algebra, dispatch and route-policy invariants; adapt to the UOS request boundary."
+  },
+  {
+    "path": "harness/test_route_algebra.ml",
+    "category": "Web routes, components and state",
+    "port": "G2",
+    "coverage": "Standalone driver for Route_laws.run; avoid counting the same law twice."
+  },
+  {
+    "path": "harness/test_web_algebra.ml",
+    "category": "Web routes, components and state",
+    "port": "G2",
+    "coverage": "Standalone driver for Web_laws.run; avoid counting the same law twice."
+  },
+  {
+    "path": "harness/test_ui_route.ml",
+    "category": "Web routes, components and state",
+    "port": "G2",
+    "coverage": "Typed UI route encoding, decoding and invalid-route handling."
+  },
+  {
+    "path": "harness/test_ui_page_registry.ml",
+    "category": "Web routes, components and state",
+    "port": "G2",
+    "coverage": "Page registry uniqueness, route coverage and contract metadata."
+  },
+  {
+    "path": "harness/test_ui_component_contract.ml",
+    "category": "Web routes, components and state",
+    "port": "G2",
+    "coverage": "Component contracts and registry coverage; adapt component identities to Lustre."
+  },
+  {
+    "path": "harness/test_ui_traceability.ml",
+    "category": "Web routes, components and state",
+    "port": "G2",
+    "coverage": "Page/component/design traceability and evidence associations."
+  },
+  {
+    "path": "harness/test_ui_pages.ml",
+    "category": "Web routes, components and state",
+    "port": "G2",
+    "coverage": "Virtual-DOM selectors, labels, disabled controls, graph state and note-editor affordances; compiled JavaScript bundle, not a browser execution receipt."
+  },
+  {
+    "path": "harness/test_ui_state.ml",
+    "category": "Web routes, components and state",
+    "port": "G2",
+    "coverage": "UI update/state-machine transitions and selected view state."
+  },
+  {
+    "path": "harness/test_workspace_ui_state.ml",
+    "category": "Web routes, components and state",
+    "port": "G2",
+    "coverage": "Workspace search, filters, selections and project/graph edit state."
+  },
+  {
+    "path": "harness/test_slo_render.ml",
+    "category": "Web routes, components and state",
+    "port": "G2",
+    "coverage": "Standalone driver for Slo_render_laws.run."
+  },
+  {
+    "path": "harness/test_dream_backend.ml",
+    "category": "Web routes, components and state",
+    "port": "G2",
+    "coverage": "Dream application request/response, permissions and workspace endpoints; rewrite against actual Mist/Wisp handlers."
+  },
+  {
+    "path": "harness/test_graph_processing.ml",
+    "category": "Knowledge graphs and visualization",
+    "port": "G1",
+    "coverage": "Language, synonyms, protected terms, stop-word filtering, inspectable aliases and deterministic graph construction."
+  },
+  {
+    "path": "harness/test_graph_analytics.ml",
+    "category": "Knowledge graphs and visualization",
+    "port": "G1",
+    "coverage": "Topic/excerpt retention, weighted relations, structure and ordered trends."
+  },
+  {
+    "path": "harness/test_graph_intelligence.ml",
+    "category": "Knowledge graphs and visualization",
+    "port": "G2",
+    "coverage": "Normalization, PageRank, community partition, graph exports and SQLite graph persistence."
+  },
+  {
+    "path": "harness/test_graph_intelligence_workspace.ml",
+    "category": "Knowledge graphs and visualization",
+    "port": "G1",
+    "coverage": "Revision-bound retrieval, evidence-grounded summaries, ontology review and generated-note content."
+  },
+  {
+    "path": "harness/test_graph_export.ml",
+    "category": "Knowledge graphs and visualization",
+    "port": "G1",
+    "coverage": "Source JSON and graph exports with retained statements, graph identity and reproducible output."
+  },
+  {
+    "path": "harness/test_graph_revision.ml",
+    "category": "Knowledge graphs and visualization",
+    "port": "G1",
+    "coverage": "Revision increments, node editing/merging, visibility projection, undo/history and playback frames."
+  },
+  {
+    "path": "harness/test_workspace_graph_geometry.ml",
+    "category": "Knowledge graphs and visualization",
+    "port": "G1",
+    "coverage": "Graph canvas geometry, coordinates and view transformations."
+  },
+  {
+    "path": "harness/test_viz.ml",
+    "category": "Knowledge graphs and visualization",
+    "port": "G1",
+    "coverage": "Visualization algebra, dataset/encoding construction and specification checks; not proof that browser pixels are correct."
+  },
+  {
+    "path": "harness/viz_algebra_laws.ml",
+    "category": "Knowledge graphs and visualization",
+    "port": "G1",
+    "coverage": "Typed visualization specification/render laws and escaping."
+  },
+  {
+    "path": "harness/test_journal_bundle.ml",
+    "category": "Publication and evidence integrity",
+    "port": "G2",
+    "coverage": "Content identity, artifact ordering and bundle invariants."
+  },
+  {
+    "path": "harness/test_journal_bundle_digest.ml",
+    "category": "Publication and evidence integrity",
+    "port": "G2",
+    "coverage": "Content fingerprints and digest sensitivity/determinism."
+  },
+  {
+    "path": "harness/test_journal_bundle_io.ml",
+    "category": "Publication and evidence integrity",
+    "port": "G2",
+    "coverage": "Bounded artifact/file handling and content preservation."
+  },
+  {
+    "path": "harness/test_journal_bundle_transaction.ml",
+    "category": "Publication and evidence integrity",
+    "port": "G2",
+    "coverage": "Prepare/commit/recovery of publication targets and transaction error paths."
+  },
+  {
+    "path": "harness/test_journal_bundle_telemetry.ml",
+    "category": "Publication and evidence integrity",
+    "port": "G2",
+    "coverage": "Publication telemetry shape, counters and observations."
+  },
+  {
+    "path": "harness/publication_chaos_laws.ml",
+    "category": "Publication and evidence integrity",
+    "port": "G2",
+    "coverage": "Ten crash/error laws: rollback before/mid/after rename, no orphan files or residue, idempotent recovery and a real successful-commit control."
+  },
+  {
+    "path": "harness/test_web_pipeline_telemetry.ml",
+    "category": "Publication and evidence integrity",
+    "port": "G2",
+    "coverage": "Web publication/pipeline telemetry contracts."
+  },
+  {
+    "path": "harness/test_journal_playwright_contract.ml",
+    "category": "Browser automation",
+    "port": "G1",
+    "coverage": "Ten pure observation/decision tests, including wrong page/title/digest, overflow, remote assets, missing prompts and page-error mutants."
+  },
+  {
+    "path": "harness/test_playwright_controller.ml",
+    "category": "Browser automation",
+    "port": "G2",
+    "coverage": "35 controller checks for breakpoints, touch targets, selectors, artifacts and protocol/source authority; mixed unit and file-integration coverage."
+  },
+  {
+    "path": "harness/journal_html_playwright.ml",
+    "category": "Browser automation",
+    "port": "G3",
+    "coverage": "Real browser observations of title/body identity, journal evidence, resource requests, overflow and screenshots at configured viewports."
+  },
+  {
+    "path": "harness/journal_bundle_dashboard_playwright.ml",
+    "category": "Browser automation",
+    "port": "G3",
+    "coverage": "Real dashboard browser/layout observations, console/page errors and screenshot evidence."
+  },
+  {
+    "path": "harness/bonsai_ui_playwright.ml",
+    "category": "Browser automation",
+    "port": "G3",
+    "coverage": "Real browser observations of the Bonsai UI, loading, layout, errors and external resource requests."
+  },
+  {
+    "path": "harness/test_wiki_selfcheck_parallel.ml",
+    "category": "Concurrency and scale",
+    "port": "G2",
+    "coverage": "Ordered results, exactly-once visits, worker bounds, accounting and duplicate/missing-visit negative controls."
+  },
+  {
+    "path": "harness/wiki_pipeline_scale.ml",
+    "category": "Concurrency and scale",
+    "port": "G2",
+    "coverage": "Corpus build/render scaling measurements; performance observations require fresh thresholds and hardware context."
+  },
+  {
+    "path": "harness/wiki_gate_coupling_prover.ml",
+    "category": "Formal and gate isolation",
+    "port": "G4",
+    "coverage": "Rete fact-space separation so documentation diagnostics cannot mint a gate-admission verdict."
+  },
+  {
+    "path": "harness/zk_tag_laundering_preventer.ml",
+    "category": "Formal and gate isolation",
+    "port": "G4",
+    "coverage": "Seven tagged laws for normalization/idempotence and honest feature-status classification."
+  },
+  {
+    "path": "harness/zk_query_dsl_fuzzer.ml",
+    "category": "Formal and gate isolation",
+    "port": "G4",
+    "coverage": "Seeded query fuzzing plus seven bounded SMT satisfiability/witness/mutation laws."
+  },
+  {
+    "path": "harness/docs_wiki.ml",
+    "category": "Wiki and ZK corpus semantics",
+    "port": "G1",
+    "scopes": [ "selftest" ],
+    "coverage": "selftest: 386 assertion sites across wiki rendering, ZK authoring, search, backlinks, graph science, query DSL, transclusion and KM lifecycle."
+  },
+  {
+    "path": "harness/notion.ml",
+    "category": "Knowledge database views",
+    "port": "G1",
+    "scopes": [ "selftest" ],
+    "coverage": "selftest: 48 assertion sites for rich blocks, table/board/gallery/list/calendar/timeline views, typed properties and safe editor seed JSON."
+  },
+  {
+    "path": "harness/vec.ml",
+    "category": "Knowledge graphs and visualization",
+    "port": "G1",
+    "scopes": [ "selftest" ],
+    "coverage": "selftest: 16 assertion sites for vector encoding, metrics, quantization and nearest-neighbor behavior."
+  },
+  {
+    "path": "harness/zigvm_harness.ml",
+    "category": "Live corpus, lints and integrated gates",
+    "port": "G2",
+    "scopes": [
+      "doc_lint_laws", "lint_report_laws", "typed_html_laws",
+      "selfcheck_wiki"
+    ],
+    "coverage": "Scoped functions only: doc_lint_laws, lint_report_laws, typed_html_laws and selfcheck_wiki; includes live corpus, source guards, scratch writes and bounded formal checks."
+  },
+  {
+    "path": "harness/test_properties.ml",
+    "category": "Knowledge graph randomized properties",
+    "port": "G1",
+    "scopes": [
+      "test_pagerank_stochastic", "test_ppr_stochastic",
+      "test_ppr_degeneration", "test_cosine_self", "test_cosine_sym",
+      "test_vec_blob_roundtrip", "test_vec_cosine_self", "test_vec_quantize",
+      "test_reach_transitive"
+    ],
+    "coverage": "Nine selected QCheck declarations: PageRank/PPR distributions and degeneration, cosine laws, vector codec/quantization and reachability."
+  },
+  {
+    "path": "scripts/wiki_sidebar_scroll_sync_generator.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki sidebar scroll sync generator; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_todo_checkbox_sweeper.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki todo checkbox sweeper; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_arch_decision_tree_builder.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki arch decision tree builder; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_temporal_snapshot_differ.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk temporal snapshot differ; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_tag_taxonomy_exporter.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk tag taxonomy exporter; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_abandoned_draft_pruner.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk abandoned draft pruner; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_lfs_asset_manager.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki lfs asset manager; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_telemetry_alert_mapper.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk telemetry alert mapper; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_type_definition_linker.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk type definition linker; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_graph_force_directed_layout.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk graph force directed layout; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_inline_comment_extractor.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki inline comment extractor; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_changelog_to_zk_sync.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki changelog to zk sync; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_mcp_tool_schema_documenter.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk mcp tool schema documenter; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_dark_mode_contrast_checker.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki dark mode contrast checker; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_subsystem_boundary_visualizer.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk subsystem boundary visualizer; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_adr_decision_log_generator.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk adr decision log generator; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_agent_prompt_effectiveness_scorer.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk agent prompt effectiveness scorer; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_fixture_to_markdown_converter.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki fixture to markdown converter; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_feature_flag_doc_sync.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk feature flag doc sync; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_dummy_vault_for_benchmarking.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk dummy vault for benchmarking; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_symlink_detector.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki symlink detector; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_editor_config_generator.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk editor config generator; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_onboarding_guide_generator.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki onboarding guide generator; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_shell_alias_installer.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk shell alias installer; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_template_variable_substitutor.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk template variable substitutor; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_accessibility_auditor.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki accessibility auditor; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_data_flow_diagram_generator.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk data flow diagram generator; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_incident_postmortem_linker.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk incident postmortem linker; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_error_code_cataloger.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk error code cataloger; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_tech_debt_aggregator.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk tech debt aggregator; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_component_maturity_scorer.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki component maturity scorer; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_adr_status_tracker.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk adr status tracker; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_search_index_size_monitor.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki search index size monitor; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_release_notes_assembler.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki release notes assembler; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_security_threat_modeler.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk security threat modeler; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_deprecated_usage_warner.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki deprecated usage warner; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_typography_scale_enforcer.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki typography scale enforcer; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_note_length_histogram_generator.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk note length histogram generator; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_deployment_env_validator.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki deployment env validator; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_bottleneck_predictor.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk bottleneck predictor; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_sprint_goal_extractor.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk sprint goal extractor; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_user_journey_pathfinder.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk user journey pathfinder; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_allocator_pattern_cataloger.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk allocator pattern cataloger; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_link_density_evaluator.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk link density evaluator; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_frontmatter_json_schema_exporter.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk frontmatter json schema exporter; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_opam_deps_checker.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk opam deps checker; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_gitignore_auditor.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk gitignore auditor; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_conflict_resolution_helper.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk conflict resolution helper; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_epic_to_slice_validator.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk epic to slice validator; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_rss_feed_generator.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki rss feed generator; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_semantic_similarity_clusterer.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk semantic similarity clusterer; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_orphaned_block_anchor_sweeper.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk orphaned block anchor sweeper; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_markdown_table_formatter.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk markdown table formatter; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_ci_artifact_sweeper.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki ci artifact sweeper; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_cross_cutting_concern_tracker.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk cross cutting concern tracker; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_responsive_css_validator.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki responsive css validator; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_slo_sli_dashboarder.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki slo sli dashboarder; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_mutant_code_context_fetcher.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk mutant code context fetcher; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_system_context_mapper.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki system context mapper; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/wiki_performance_benchmark_plotter.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki performance benchmark plotter; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_meeting_notes_action_itemizer.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk meeting notes action itemizer; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_vault_permissions_guard.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk vault permissions guard; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_flaky_test_runbook_generator.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk flaky test runbook generator; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_query_performance_profiler.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk query performance profiler; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "scripts/zk_backlog_aging_report.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk backlog aging report; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_query_performance_profiler.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk query performance profiler; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_agent_write_quota_enforcer.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk agent write quota enforcer; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_graph_isomorphism_checker.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk graph isomorphism checker; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_discourse_edge_inverter.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk discourse edge inverter; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_sqlite_db_encryption_wrapper.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk sqlite db encryption wrapper; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_block_anchor_uniqueness.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk block anchor uniqueness; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_page_rank_calculator.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk page rank calculator; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_mcp_auth_token_validator.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk mcp auth token validator; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_moc_freeze_enforcer.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk moc freeze enforcer; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_graph_betweenness_calculator.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk graph betweenness calculator; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_transclusion_depth_limiter.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk transclusion depth limiter; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_query_ast_mutator.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk query ast mutator; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_comptime_logic_documenter.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk comptime logic documenter; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_law_to_test_traceability_matrix.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk law to test traceability matrix; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/wiki_theme_token_injector.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki theme token injector; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_gate_isolation_prover.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk gate isolation prover; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_transclusion_loop_injector.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk transclusion loop injector; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_doc_to_code_coverage_runner.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk doc to code coverage runner; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/wiki_content_security_policy_generator.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki content security policy generator; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/wiki_cache_poisoning_detector.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki cache poisoning detector; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_markdown_to_html_compiler.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk markdown to html compiler; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_formal_spec_to_doc_prover.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk formal spec to doc prover; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_query_live_executor.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk query live executor; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_typed_edge_extractor.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk typed edge extractor; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/wiki_snippet_executor_validator.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki snippet executor validator; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_api_contract_doc_verifier.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk api contract doc verifier; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/wiki_sidebar_tree_generator.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary wiki sidebar tree generator; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_frontmatter_schema_enforcer.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk frontmatter schema enforcer; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_contradiction_prover.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk contradiction prover; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_compliance_audit_trail_exporter.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk compliance audit trail exporter; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_discourse_logic_checker.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk discourse logic checker; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zk_cryptographic_note_signer.ml",
+    "category": "Supporting diagnostics and tools (not assumed tests)",
+    "port": "S",
+    "coverage": "Auxiliary zk cryptographic note signer; inventory records source and implementation signals, without assuming an executable test suite."
+  },
+  {
+    "path": "harness/zigvm_playwright.ml",
+    "category": "Browser automation",
+    "port": "G3",
+    "coverage": "Real full-UI browser controller, viewports and project/graph/note user journeys; scope selectors and write fixtures to UOS."
+  },
+  {
+    "path": "harness/infranodus_full_ui_playwright.ml",
+    "category": "Browser automation",
+    "port": "G3",
+    "coverage": "Full InfraNodus UI browser orchestration; map relevant knowledge/workspace journeys to UOS routes."
+  },
+  {
+    "path": "harness/test_fractal_fp_atlas_render.ml",
+    "category": "Knowledge graphs and visualization",
+    "port": "G2",
+    "coverage": "Driver for the atlas renderer's law results; renderer definitions live in fractal_fp_atlas_render.ml."
+  },
+  {
+    "path": "harness/test_fractal_diagram_atlas.ml",
+    "category": "Knowledge graphs and visualization",
+    "port": "G1",
+    "coverage": "Fractal diagram/SVG rendering, content completeness and deterministic output."
+  },
+  {
+    "path": "harness/fractal_fp_atlas_laws.ml",
+    "category": "Knowledge graphs and visualization",
+    "port": "G2",
+    "coverage": "Thirty named tuple laws for atlas core, registry, rendered views and symmetric source markers."
+  }
+]

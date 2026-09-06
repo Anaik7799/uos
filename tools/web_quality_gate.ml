@@ -74,7 +74,20 @@ let main output =
     let passed=if positive then code=0 else code=1 && contains out diagnostic in
     record ("compiler_"^name) passed out) fixtures;
   let code,out=run ~cwd:(root^"/apps/cepaf_gleam") 60 ["gleam";"run";"-m";"web_quality_contract_test"] in
-  record "actual_uos_gleam_runtime" (code=0 && contains out "9 test functions passed; 1000 generated route seeds") out;
+  record "actual_uos_gleam_runtime" (code=0 && contains out "10 test functions passed; 1000 generated route seeds; 512 graph oracles") out;
+  let observed=String.split_on_char '\n' out |>List.filter(fun line->String.starts_with ~prefix:"MODEL " line) in
+  record "runtime_model_observation_count" (List.length observed=9) (string_of_int(List.length observed));
+  List.iteri(fun index line->
+    match String.split_on_char ' ' line with
+    | ["MODEL";a;b;joined;admitted] when List.mem admitted ["true";"false"] ->
+      let a=int_of_string a and b=int_of_string b and joined=int_of_string joined in
+      if a<0 || a>2 || b<0 || b>2 || joined<0 || joined>2 then failwith "Invalid runtime evidence encoding";
+      let query=model^Printf.sprintf "\n(assert (and (= a %d) (= b %d)))\n(assert (or (not (= (join a b) %d)) (not (= (admit a b) %s))))\n(check-sat)\n(exit)\n" a b joined admitted in
+      let path=scratch^"/runtime-"^string_of_int index^".smt2" in write path query;
+      let code,out=run 8 ["z3";"-smt2";path] in
+      record ("gleam_to_smt_conformance_"^string_of_int a^"_"^string_of_int b)
+        (code=0 && String.trim out="unsat") (line^"; negated conformance="^String.trim out)
+    | _ ->failwith "Malformed runtime evidence observation") observed;
   List.iter(fun (name,assertion,expected)->
     let query=model^"\n(assert "^assertion^")\n(check-sat)\n(exit)\n" in
     let path=scratch^"/"^name^".smt2" in write path query;
