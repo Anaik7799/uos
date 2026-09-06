@@ -135,4 +135,8 @@ The operational system coordinates across five distinct language tiers:
   - `[[zk:ADR-048]]` Hermes-Bionic Full Integration Ratification ([ADR-048 Live View](http://nas-1.tail55d152.ts.net:4100/docs/docs/zk/20260906-1700-adr-048-hermes-bionic-full-integration-ratification.md))
   - `[[wiki:20260906-1730-uos-omni-fractal-matrix-and-17-aspect-wiki]]` ([Omni-Fractal Matrix & 17-Aspect Wiki](http://nas-1.tail55d152.ts.net:4100/docs/docs/wiki/20260906-1730-uos-omni-fractal-matrix-and-17-aspect-wiki.md))
   - `[[zk:ADR-049]]` Omni-Fractal Systemic Symbiosis Ratification ([ADR-049 Live View](http://nas-1.tail55d152.ts.net:4100/docs/docs/zk/20260906-1730-adr-049-omni-fractal-systemic-symbiosis-ratification.md))
+  - `[[wiki:20260906-1745-uos-omni-fractal-mainline-merge-and-sovereign-closure-wiki]]` ([Omni-Fractal Mainline Merge & Sovereign Closure Wiki](http://nas-1.tail55d152.ts.net:4100/docs/docs/wiki/20260906-1745-uos-omni-fractal-mainline-merge-and-sovereign-closure-wiki.md))
+  - `[[zk:ADR-050]]` Omni-Fractal Mainline Merge & Sovereign Closure ([ADR-050 Live View](http://nas-1.tail55d152.ts.net:4100/docs/docs/zk/20260906-1745-adr-050-omni-fractal-mainline-merge-and-sovereign-closure.md))
+
+
 
