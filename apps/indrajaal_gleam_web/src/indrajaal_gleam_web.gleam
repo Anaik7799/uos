@@ -37,6 +37,7 @@ import cepaf_gleam/verification/browser_emulation_bridge
 import cepaf_gleam/verification/dmc_biosemiotics_interlock
 import cepaf_gleam/verification/unified_fractal_web_verifier as ufwv
 import cepaf_gleam/verification/unified_verification_supervisor
+import cepaf_gleam/verification/vfs_selfcheck
 import gleam/bit_array
 import gleam/bytes_tree
 import gleam/erlang/process
@@ -358,6 +359,21 @@ pub fn main() {
         response.new(200)
         |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
         |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["api", "vfs", "status"] | ["api", "vfs", "selfcheck"] -> {
+        let report = vfs_selfcheck.run_selfcheck_vfs()
+        let json_body = vfs_selfcheck.encode_selfcheck_report_json(report)
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["api", "vfs", "ascii"] -> {
+        let text_body = vfs_selfcheck.vfs_ascii_diagram()
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(text_body)))
+        |> response.prepend_header("content-type", "text/plain; charset=utf-8")
         |> response.prepend_header("access-control-allow-origin", "*")
       }
       ["api", "fpp", "intent"] -> {
