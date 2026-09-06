@@ -1,0 +1,65 @@
+{
+  "schema": "uos.swarm-execution-overlay.v1",
+  "generated_at_utc": "2026-09-06T18:38:03Z",
+  "master_plan": "uos/full-implementation/20260906-1655",
+  "manifest_sha256": "b706f9a99dfaf6018772b2a819084ea3373a3ee720ed774b57e7f92792d8ee02",
+  "support_plan": "uos/execution-support/20260906-1747",
+  "state_authority": "Sa_plan.Store in /home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3; this overlay does not assert live task state",
+  "authorization": "Operator explicitly authorized full autonomous execution, maximum available parallel swarm, cheaper agents for routine work, token cost optimization and standalone Jujutsu",
+  "max_active_agents_including_coordinator": 4,
+  "execution_mode": "manual-supervised until P01 admission",
+  "reserved_jobs": "Original dispatch-disabled jobs and manifest remain immutable. Dedicated support jobs record actual execution; P01 must reconcile execution receipts before releasing original intents.",
+  "per_command_timeout_seconds": 1200,
+  "initial_lease_seconds": 1320,
+  "poll_ceiling_seconds": 60,
+  "integration": {
+    "vcs": "standalone-jj",
+    "workspace": ".uos-workspaces/execution-control",
+    "strategy": "isolated feature changes; merge reviewed changes serially; re-read main before bookmark movement; preserve incoming ancestry and all historical receipts",
+    "source_originals": "Original ZigVM/C3I/Harness/Hermes evidence stays byte-for-byte unchanged. New UOS implementation may be corrected under its task."
+  },
+  "model_routing": {
+    "routine_metadata_and_low_priority_processing": "gpt-5.6-luna",
+    "implementation_and_routine_reviews": "gpt-5.6-sol or gpt-5.6-terra",
+    "architecture_and_final_admission": "root or gpt-6-astra",
+    "policy": "Bounded fresh briefs, concise receipts, escalate on material review failures; no fabricated token-price or speed claims"
+  },
+  "support_leaves": [
+    {"id":"S00","worker":"codex-root","scope":"coordination, runtime observation, integration, evidence and rulings"},
+    {"id":"S01","worker":"codex-tracker","scope":"bounded manual task/job/workflow ownership helper"},
+    {"id":"S02","worker":"codex-audit","scope":"71-task consistency and shared-file audit; canonical 17-aspect mapping"},
+    {"id":"S03","worker":"codex-e01","scope":"E01 snapshot implementation, controls and review fixes"},
+    {"id":"S04","worker":"codex-incoming-review","scope":"independent review of concurrent main E01-E03 changes"}
+  ],
+  "serialization_constraints": [
+    {"tasks":["M05","A02"],"path":"apps/cepaf_gleam/src/cepaf_gleam/fpp/dmc_tcm.gleam","rule":"M05 integration precedes A02 edits of this path"},
+    {"tasks":["A02","A04"],"path":"apps/cepaf_gleam/src/cepaf_gleam/fpp/domain.gleam","rule":"A04 integrates before A02; rebase and review the shared interface"},
+    {"tasks":["K02","K03"],"path":"apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_vertical_slice_engine.gleam","rule":"K03 integrates before K02; rebase and run production oracle regression"}
+  ],
+  "interface_refinements": {
+    "tasks":["PLAN00","P01","P02","P03","P04","K01","K02","K03","Q01","Q02","N01"],
+    "operation_source":"Each immutable task acceptance_case.when[].op",
+    "input_source":"Each immutable task acceptance_case.given; adapters never receive expect",
+    "output_source":"Each immutable task acceptance_case.expect interpreted independently by E02 assertions",
+    "rule":"Add explicit typed adapter schemas as execution artifacts when implementing the task; PLAN00 already completed registration only"
+  },
+  "cycle_17": {
+    "source":"apps/cepaf_gleam/src/cepaf_gleam/verification/omni_fractal_matrix_engine.gleam:375",
+    "applies_to":"Every implementation feature and dynamically expanded feature leaf in the master plan",
+    "required_aspect_ids":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17],
+    "per_aspect_record":["aspect_id","observe","orient","decision","action","verification","source_locators","candidate","scope","remaining_obligations"],
+    "states":["UNRUN","UNKNOWN","STALE","CONTRADICTED","VERIFIED_SCOPED","NOT_APPLICABLE_WITH_REASON"],
+    "rule":"Record all 17 aspects for every feature. A justified unaffected scope is not a global pass; unsupported or unexecuted obligations retain their own follow-up task and no admission credit. Source hardcoded True fields never constitute process evidence.",
+    "browser_rule":"At least four distinct observe/compare/correct/reverify cycles per page and component from the finite W01 census. Record AST/DOM/accessibility, links, screenshots, relevant video, network/console and timing."
+  },
+  "rulings": [
+    {"id":"RUL-001","decision":"Explicit swarm authorization supersedes the plan's inline default","reason":"Latest operator instruction","cost_if_wrong":"reversible scheduling changes"},
+    {"id":"RUL-002","decision":"Use four actual agent slots and canonical Store/Gleam ownership","reason":"Legacy skills prescribe 15 C3I containers and Rust dispatch, conflicting with current capacity and UOS language authority","cost_if_wrong":"additional integration work; no unvetted containers started"},
+    {"id":"RUL-003","decision":"Keep original reserved queue inert until P01 and use dedicated manually supervised support jobs","reason":"Native claim_job has neither task-ID selection nor dependency enforcement","cost_if_wrong":"P01 must reconcile additional support history"},
+    {"id":"RUL-004","decision":"Resource_envelope operational sensing remains unavailable and nonpassing; record bootstrap observations separately","reason":"Existing module exports no operational observation receipt constructor","cost_if_wrong":"E02 requires a reviewed observation owner before claiming resource-admitted runtime behavior"},
+    {"id":"RUL-005","decision":"Review concurrent main 6eadde49 as incoming code without transferring its PASS receipts","reason":"Fabricated fallback clock/tool metadata and equality-based signature credit found in E01; E02/E03 independent review requested","cost_if_wrong":"reverification and repair work; incoming history preserved"},
+    {"id":"RUL-006","decision":"Apply shared-file serialization outside the immutable dependency manifest","reason":"Three unordered write-write pairs discovered by the audit","cost_if_wrong":"extra rebases; no dropped requirements"},
+    {"id":"RUL-007","decision":"Do not equate old test totals, source lists, or planned schemas with present candidate execution","reason":"Two-key candidate-bound evidence requirement","cost_if_wrong":"extra checks instead of false completion"}
+  ],
+  "system_admission_granted": false
+}
