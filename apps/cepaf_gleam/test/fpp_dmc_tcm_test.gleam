@@ -38,7 +38,15 @@ pub fn fpp_dmc_memory_window_collision_detection_test() {
   let model = canonical_harness_model()
   // Add overlapping instance at 0x602 (collides with evidence_store at 0x600 span 10)
   let colliding_inst =
-    Instance("evidence_store_dup", "evidence_store", 0x602, None, None, None, None)
+    Instance(
+      "evidence_store_dup",
+      "evidence_store",
+      0x602,
+      None,
+      None,
+      None,
+      None,
+    )
   let bad_model =
     domain.Model(..model, instances: [colliding_inst, ..model.instances])
 

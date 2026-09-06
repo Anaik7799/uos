@@ -190,7 +190,10 @@ fn record_all_failures(grid: guard_grid.GuardGrid) -> guard_grid.GuardGrid {
 
 /// Record failures into the first N cells (layers L0..Lk, all 3 modules).
 /// Each full layer = 3 cells.  `n` is number of failure cells (multiple of 3).
-fn record_n_failures(grid: guard_grid.GuardGrid, n: Int) -> guard_grid.GuardGrid {
+fn record_n_failures(
+  grid: guard_grid.GuardGrid,
+  n: Int,
+) -> guard_grid.GuardGrid {
   let layer_modules = [
     #("L0", ["guardian", "psi_invariants", "emergency_stop"]),
     #("L1", ["nif_bridge", "otel_trace", "debug_probes"]),

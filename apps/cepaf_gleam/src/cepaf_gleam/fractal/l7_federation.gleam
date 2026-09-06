@@ -41,7 +41,10 @@ pub fn initial_federation(local_id: String) -> FederationState {
   FederationState(local_id: local_id, peers: [], local_version: [#(local_id, 0)])
 }
 
-pub fn add_peer(state: FederationState, peer: FederationPeer) -> FederationState {
+pub fn add_peer(
+  state: FederationState,
+  peer: FederationPeer,
+) -> FederationState {
   let existing = list.filter(state.peers, fn(p) { p.peer_id != peer.peer_id })
   FederationState(..state, peers: [peer, ..existing] |> list.take(max_peers))
 }

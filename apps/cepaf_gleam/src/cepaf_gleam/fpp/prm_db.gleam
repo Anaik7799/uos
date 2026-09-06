@@ -25,10 +25,7 @@ pub type PrmDbMessage {
 // ------------------------------------------------------------- Actor State
 
 pub type PrmDbState {
-  PrmDbState(
-    params: Dict(Int, String),
-    save_count: Int,
-  )
+  PrmDbState(params: Dict(Int, String), save_count: Int)
 }
 
 // --------------------------------------------------------- Lifecycle & Init

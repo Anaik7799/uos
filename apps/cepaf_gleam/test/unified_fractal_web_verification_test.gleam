@@ -174,8 +174,7 @@ pub fn l3_triple_interface_parity_test() {
 // -----------------------------------------------------------------------------
 
 pub fn l4_navigation_graph_topology_test() {
-  let pages =
-    list.repeat("page", 31)
+  let pages = list.repeat("page", 31)
   let graph = ufwv.verify_nav_graph(pages)
   graph.vertex_count |> should.equal(31)
   graph.edge_count |> should.equal(930)
@@ -421,7 +420,7 @@ pub fn pagerank_graph_science_verification_test() {
   let ok_ppr = ufwv.verify_pagerank_graph_science(0.85, 0.00001)
   ok_ppr.status |> should.equal(ufwv.Pass)
 
-  let bad_ppr = ufwv.verify_pagerank_graph_science(0.50, 0.00001)
+  let bad_ppr = ufwv.verify_pagerank_graph_science(0.5, 0.00001)
   case bad_ppr.status {
     ufwv.Fail(_) -> Nil
     ufwv.Pass -> should.fail()
@@ -604,9 +603,7 @@ pub fn ocaml_parity_algebra_lattice_laws_test() {
   })
 
   // Idempotence: combine(a, a) == a
-  list.each(all_verdicts, fn(a) {
-    opv.combine(a, a) |> should.equal(a)
-  })
+  list.each(all_verdicts, fn(a) { opv.combine(a, a) |> should.equal(a) })
 
   // Divergent Dominance: combine(Divergent, a) == Divergent
   list.each(all_verdicts, fn(a) {
@@ -634,8 +631,10 @@ pub fn ocaml_parity_algebra_rollup_vacuous_truth_law_test() {
 }
 
 pub fn ocaml_differential_trace_normalization_and_comparison_test() {
-  let ref_trace = "[timestamp=2026-09-05T20:00:00Z] PID=1234\nState: Nominal\nScore: 1.0"
-  let cand_trace = "[timestamp=2026-09-05T22:30:15Z] PID=9876\nState: Nominal\nScore: 1.0"
+  let ref_trace =
+    "[timestamp=2026-09-05T20:00:00Z] PID=1234\nState: Nominal\nScore: 1.0"
+  let cand_trace =
+    "[timestamp=2026-09-05T22:30:15Z] PID=9876\nState: Nominal\nScore: 1.0"
 
   // Compare should normalize ephemeral timestamps/PIDs and yield Verified
   let res_match = opv.compare_traces(ref_trace, cand_trace)
@@ -645,7 +644,8 @@ pub fn ocaml_differential_trace_normalization_and_comparison_test() {
   }
 
   // Different payload yields Divergent
-  let diff_trace = "[timestamp=2026-09-05T22:30:15Z] PID=9876\nState: Degraded\nScore: 0.5"
+  let diff_trace =
+    "[timestamp=2026-09-05T22:30:15Z] PID=9876\nState: Degraded\nScore: 0.5"
   let res_diff = opv.compare_traces(ref_trace, diff_trace)
   case res_diff {
     Ok(v) -> v |> should.equal(opv.Divergent)
@@ -707,7 +707,9 @@ pub fn ocaml_zero_trust_security_interceptor_test() {
   let safe_payload = "{\"action\":\"query\",\"topic\":\"c3i/test\"}"
   let res_safe = opv.verify_zero_trust_payload(safe_payload)
   case res_safe {
-    Ok(hash) -> { string.length(hash) |> should.equal(64) }
+    Ok(hash) -> {
+      string.length(hash) |> should.equal(64)
+    }
     Error(_) -> should.fail()
   }
 

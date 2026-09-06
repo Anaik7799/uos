@@ -1,8 +1,8 @@
-import gleeunit/should
 import cepaf_gleam/verification/fractal_web_check_engine.{
-  CheckFail, CheckPass, Critical, LustreWeb, WebCheckSpec,
-  check_suite_passed, evaluate_check_suite, evaluate_single_check,
+  CheckFail, CheckPass, Critical, LustreWeb, WebCheckSpec, check_suite_passed,
+  evaluate_check_suite, evaluate_single_check,
 }
+import gleeunit/should
 
 pub fn evaluate_passing_check_test() {
   let spec =

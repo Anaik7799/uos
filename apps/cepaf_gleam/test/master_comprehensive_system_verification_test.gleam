@@ -23,7 +23,7 @@ pub fn browser_suite_full_completeness_test() {
   let #(total, passing, mean_eff) = mvr.verify_browser_suite_efficacy()
   total |> should.equal(64)
   passing |> should.equal(64)
-  { mean_eff >=. 0.90 } |> should.be_true
+  { mean_eff >=. 0.9 } |> should.be_true
 }
 
 pub fn browser_suite_engine_breakdown_test() {
@@ -40,9 +40,9 @@ pub fn browser_suite_engine_breakdown_test() {
 pub fn browser_test_efficacy_ratings_bound_test() {
   let tests = mvr.all_browser_tests()
   list.each(tests, fn(t) {
-    { t.efficacy_rating >=. 0.80 && t.efficacy_rating <=. 1.0 }
+    { t.efficacy_rating >=. 0.8 && t.efficacy_rating <=. 1.0 }
     |> should.be_true
-    { t.effectiveness_rating >=. 0.80 && t.effectiveness_rating <=. 1.0 }
+    { t.effectiveness_rating >=. 0.8 && t.effectiveness_rating <=. 1.0 }
     |> should.be_true
     t.passes |> should.be_true
   })
@@ -61,7 +61,7 @@ pub fn skills_and_superpowers_completeness_test() {
 pub fn skills_superpowers_ratings_bound_test() {
   let skills = mvr.all_skills_and_superpowers()
   list.each(skills, fn(s) {
-    { s.effectiveness_score >=. 0.90 && s.effectiveness_score <=. 1.0 }
+    { s.effectiveness_score >=. 0.9 && s.effectiveness_score <=. 1.0 }
     |> should.be_true
   })
 }
@@ -91,7 +91,7 @@ pub fn standards_and_algorithms_domain_distribution_test() {
 pub fn standards_and_algorithms_efficacy_scores_test() {
   let algs = mvr.all_standards_and_algorithms()
   list.each(algs, fn(a) {
-    { a.efficacy_score >=. 0.90 && a.efficacy_score <=. 1.0 }
+    { a.efficacy_score >=. 0.9 && a.efficacy_score <=. 1.0 }
     |> should.be_true
     a.verified |> should.be_true
   })

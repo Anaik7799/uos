@@ -1057,7 +1057,9 @@ fn decode_user_update(s: String) -> Result(UserGetResponse, IamError) {
   }
 }
 
-fn decode_password_verify(s: String) -> Result(PasswordVerifyResponse, IamError) {
+fn decode_password_verify(
+  s: String,
+) -> Result(PasswordVerifyResponse, IamError) {
   let decoder = {
     use ok <- decode.field("ok", decode.bool)
     use mfa_required <- decode.field("mfa_required", decode.bool)

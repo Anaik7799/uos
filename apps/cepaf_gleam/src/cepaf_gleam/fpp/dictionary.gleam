@@ -10,14 +10,14 @@
 //// - Telemetry Packet Sets: packet definitions and constituent channels
 //// =============================================================================
 
-import gleam/json
-import gleam/list
-import gleam/option.{None, Some}
 import cepaf_gleam/fpp/domain.{
   type Command, type Event, type Instance, type Model, type Parameter,
   ActivityHi, ActivityLo, Always, CommandSev, Diagnostic, Fatal, OnChange,
   WarningHi, WarningLo,
 }
+import gleam/json
+import gleam/list
+import gleam/option.{None, Some}
 
 pub fn generate_ground_dictionary_json(
   model: Model,
@@ -25,44 +25,43 @@ pub fn generate_ground_dictionary_json(
 ) -> String {
   let commands_json =
     list.flat_map(model.instances, fn(inst) {
-      case list.find(model.components, fn(c) { c.comp_name == inst.of_component }) {
+      case
+        list.find(model.components, fn(c) { c.comp_name == inst.of_component })
+      {
         Ok(comp) ->
-          list.map(comp.commands, fn(cmd) {
-            command_to_json(inst, cmd)
-          })
+          list.map(comp.commands, fn(cmd) { command_to_json(inst, cmd) })
         Error(_) -> []
       }
     })
 
   let events_json =
     list.flat_map(model.instances, fn(inst) {
-      case list.find(model.components, fn(c) { c.comp_name == inst.of_component }) {
-        Ok(comp) ->
-          list.map(comp.events, fn(evt) {
-            event_to_json(inst, evt)
-          })
+      case
+        list.find(model.components, fn(c) { c.comp_name == inst.of_component })
+      {
+        Ok(comp) -> list.map(comp.events, fn(evt) { event_to_json(inst, evt) })
         Error(_) -> []
       }
     })
 
   let channels_json =
     list.flat_map(model.instances, fn(inst) {
-      case list.find(model.components, fn(c) { c.comp_name == inst.of_component }) {
+      case
+        list.find(model.components, fn(c) { c.comp_name == inst.of_component })
+      {
         Ok(comp) ->
-          list.map(comp.channels, fn(chn) {
-            channel_to_json(inst, chn)
-          })
+          list.map(comp.channels, fn(chn) { channel_to_json(inst, chn) })
         Error(_) -> []
       }
     })
 
   let parameters_json =
     list.flat_map(model.instances, fn(inst) {
-      case list.find(model.components, fn(c) { c.comp_name == inst.of_component }) {
+      case
+        list.find(model.components, fn(c) { c.comp_name == inst.of_component })
+      {
         Ok(comp) ->
-          list.map(comp.parameters, fn(prm) {
-            parameter_to_json(inst, prm)
-          })
+          list.map(comp.parameters, fn(prm) { parameter_to_json(inst, prm) })
         Error(_) -> []
       }
     })

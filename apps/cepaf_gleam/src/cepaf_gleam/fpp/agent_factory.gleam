@@ -71,8 +71,7 @@ pub fn instantiate_agent(
   instance_id: String,
 ) -> Result(AgentInstance, String) {
   case find_agent_type_spec(kind) {
-    Error(_) ->
-      Error("Unknown agent kind: " <> agent_kind_to_string(kind))
+    Error(_) -> Error("Unknown agent kind: " <> agent_kind_to_string(kind))
     Ok(spec) -> {
       case init_hsm(spec.hsm_machine) {
         Error(err) ->
@@ -106,13 +105,8 @@ pub fn dispatch_signal(
     Error(err) -> Error(err)
     Ok(new_hsm) -> {
       let new_step = agent.tcm_vector.c_causality + 1
-      let updated_tcm =
-        canonical_fpp_tcm_vector(agent.id, new_step)
-      Ok(AgentInstance(
-        ..agent,
-        hsm_state: new_hsm,
-        tcm_vector: updated_tcm,
-      ))
+      let updated_tcm = canonical_fpp_tcm_vector(agent.id, new_step)
+      Ok(AgentInstance(..agent, hsm_state: new_hsm, tcm_vector: updated_tcm))
     }
   }
 }
@@ -122,8 +116,7 @@ pub fn emit_telemetry(
   channel_name: String,
   value: Float,
 ) -> AgentInstance {
-  let sample_id =
-    agent.spec.base_id + list.length(agent.telemetry_samples)
+  let sample_id = agent.spec.base_id + list.length(agent.telemetry_samples)
   let sample =
     AgentTelemetrySample(
       channel_id: sample_id,
@@ -142,7 +135,10 @@ pub fn execute_agent_intent(
 ) -> IntentVerdict {
   let fl_intent =
     FlightIntent(
-      intent_id: "INT-" <> agent.id <> "-" <> int.to_string(agent.heartbeat_count),
+      intent_id: "INT-"
+        <> agent.id
+        <> "-"
+        <> int.to_string(agent.heartbeat_count),
       actor: agent.spec.name,
       verb: verb,
       target_instance: agent.id,
@@ -158,11 +154,7 @@ pub fn heartbeat(agent: AgentInstance) -> AgentInstance {
   let next_count = agent.heartbeat_count + 1
   let next_causality = agent.tcm_vector.c_causality + 1
   let updated_tcm = canonical_fpp_tcm_vector(agent.id, next_causality)
-  AgentInstance(
-    ..agent,
-    heartbeat_count: next_count,
-    tcm_vector: updated_tcm,
-  )
+  AgentInstance(..agent, heartbeat_count: next_count, tcm_vector: updated_tcm)
 }
 
 // =============================================================================

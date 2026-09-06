@@ -60,8 +60,12 @@ pub fn fpp_ontology_json_serialization_test() {
   let graph = derive_fpp_ontology(model)
   let json_str = ontology_to_json(graph)
 
-  json_str |> string.contains("\"schema_version\":\"2026.09.06-SIL6\"") |> should.be_true
-  json_str |> string.contains("\"topology_name\":\"HermesHarness\"") |> should.be_true
+  json_str
+  |> string.contains("\"schema_version\":\"2026.09.06-SIL6\"")
+  |> should.be_true
+  json_str
+  |> string.contains("\"topology_name\":\"HermesHarness\"")
+  |> should.be_true
   json_str |> string.contains("\"node_count\":") |> should.be_true
   json_str |> string.contains("\"edge_count\":") |> should.be_true
   json_str |> string.contains("comp:evidence_store") |> should.be_true

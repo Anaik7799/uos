@@ -194,7 +194,9 @@ fn update_topic_stats(
 // ---------------------------------------------------------------------------
 
 /// Verify that expected topics received at least one message.
-pub fn verify_topics_received(state: ObserverState) -> List(VerificationResult) {
+pub fn verify_topics_received(
+  state: ObserverState,
+) -> List(VerificationResult) {
   list.map(state.expected_topics, fn(topic) {
     let has_messages = list.any(state.messages, fn(m) { m.topic == topic })
     VerificationResult(
@@ -315,7 +317,11 @@ fn build_phase_summary(
   }
 }
 
-fn prepend_if(acc: List(String), condition: Bool, value: String) -> List(String) {
+fn prepend_if(
+  acc: List(String),
+  condition: Bool,
+  value: String,
+) -> List(String) {
   case condition {
     True -> [value, ..acc]
     False -> acc

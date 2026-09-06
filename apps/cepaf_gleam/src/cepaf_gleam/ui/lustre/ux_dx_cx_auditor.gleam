@@ -39,10 +39,14 @@ pub type UxDxCxAuditModel {
 
 pub fn build_canonical_audit() -> UxDxCxAuditModel {
   UxDxCxAuditModel(
-    contrast_ratio: 8.4, // AAA standard
-    lcp_seconds: 0.85,   // < 2.5s
-    inp_ms: 45,          // < 200ms
-    cls_score: 0.01,     // < 0.1
+    contrast_ratio: 8.4,
+    // AAA standard
+    lcp_seconds: 0.85,
+    // < 2.5s
+    inp_ms: 45,
+    // < 200ms
+    cls_score: 0.01,
+    // < 0.1
     compiler_warnings: 0,
     compile_time_seconds: 1.45,
     mesh_latency_ms: 11.2,
@@ -51,7 +55,9 @@ pub fn build_canonical_audit() -> UxDxCxAuditModel {
 
 pub fn render_ux_audit_view(model: UxDxCxAuditModel) -> Element(msg) {
   html.div([attribute.class("ux-audit-container")], [
-    html.h3([], [element.text("Tri-Modal UX / DX / CX Quality & Performance Dashboard")]),
+    html.h3([], [
+      element.text("Tri-Modal UX / DX / CX Quality & Performance Dashboard"),
+    ]),
     html.div([attribute.class("audit-grid")], [
       html.div([attribute.class("metric-box")], [
         html.strong([], [element.text("WCAG Contrast: ")]),

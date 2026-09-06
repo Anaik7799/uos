@@ -457,7 +457,10 @@ pub fn derive_fpp_ontology(model: Model) -> OntoGraph {
         present: True,
         metadata: [
           #("instances_count", int.to_string(list.length(sub.instances))),
-          #("exported_ports_count", int.to_string(list.length(sub.exported_ports))),
+          #(
+            "exported_ports_count",
+            int.to_string(list.length(sub.exported_ports)),
+          ),
         ],
       )
     })

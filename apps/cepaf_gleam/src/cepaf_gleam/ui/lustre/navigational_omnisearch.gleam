@@ -87,7 +87,7 @@ pub fn canonical_search_corpus() -> List(SearchDocument) {
       "Hardware Storage Safety & NVMe Lock",
       "OS NVMe serial 25503L801736 hard locked against mutation",
       "/verify-patrol",
-      0.90,
+      0.9,
       0.26,
     ),
     SearchDocument(
@@ -112,16 +112,24 @@ pub fn canonical_search_corpus() -> List(SearchDocument) {
       "Interactive SVG knowledge graph with Louvain modularity clustering",
       "/zk-graph",
       0.87,
-      0.20,
+      0.2,
     ),
   ]
 }
 
-pub fn execute_omnisearch(query: String, corpus: List(SearchDocument)) -> List(SearchResult) {
+pub fn execute_omnisearch(
+  query: String,
+  corpus: List(SearchDocument),
+) -> List(SearchResult) {
   list.filter_map(corpus, fn(doc) {
     let score = compute_bm25_score(query, doc)
     case score >. 0.0 {
-      True -> Ok(SearchResult(document: doc, score: score, reachable: verify_route_reachability(doc)))
+      True ->
+        Ok(SearchResult(
+          document: doc,
+          score: score,
+          reachable: verify_route_reachability(doc),
+        ))
       False -> Error(Nil)
     }
   })
@@ -130,11 +138,18 @@ pub fn execute_omnisearch(query: String, corpus: List(SearchDocument)) -> List(S
 pub fn render_omnisearch_view(results: List(SearchResult)) -> Element(msg) {
   html.div([attribute.class("omnisearch-container")], [
     html.h3([], [element.text("Category Route Omnisearch")]),
-    html.ul([attribute.class("omnisearch-results-list")], list.map(results, fn(r) {
-      html.li([attribute.class("search-result-item")], [
-        html.a([attribute.href(r.document.route)], [element.text(r.document.title)]),
-        html.span([attribute.class("badge badge-tailscale")], [element.text("PR: " <> r.document.route)]),
-      ])
-    })),
+    html.ul(
+      [attribute.class("omnisearch-results-list")],
+      list.map(results, fn(r) {
+        html.li([attribute.class("search-result-item")], [
+          html.a([attribute.href(r.document.route)], [
+            element.text(r.document.title),
+          ]),
+          html.span([attribute.class("badge badge-tailscale")], [
+            element.text("PR: " <> r.document.route),
+          ]),
+        ])
+      }),
+    ),
   ])
 }

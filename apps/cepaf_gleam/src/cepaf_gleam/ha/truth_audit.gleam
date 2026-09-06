@@ -128,7 +128,10 @@ pub fn init() -> AuditTrailState {
 ///         entries prepended (most-recent-first); most_failing_invariant reflects argmax </Q>
 ///   </formal-proof>
 /// </c3i-atomic>
-pub fn record(state: AuditTrailState, entry: TruthAuditEntry) -> AuditTrailState {
+pub fn record(
+  state: AuditTrailState,
+  entry: TruthAuditEntry,
+) -> AuditTrailState {
   let new_total = state.total_checks + 1
   let new_truthful = case entry.all_truthful {
     True -> state.truthful_checks + 1

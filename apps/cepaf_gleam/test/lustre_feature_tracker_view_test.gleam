@@ -3,15 +3,16 @@
 //// Subject: Lustre MVU 145-Feature Living Tracker Component Tests
 //// =============================================================================
 
-import gleeunit/should
+import cepaf_gleam/knowledge/zigvm_feature_tracker.{
+  PermanentAdrRecord, WikiCoreEngine,
+}
+import cepaf_gleam/ui/lustre/feature_tracker_view.{
+  ClearFilter, SelectFeature, SetCategoryFilter, SetSearch, init, update, view,
+}
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
-import cepaf_gleam/knowledge/zigvm_feature_tracker.{PermanentAdrRecord, WikiCoreEngine}
-import cepaf_gleam/ui/lustre/feature_tracker_view.{
-  init, update, view,
-  SetSearch, SetCategoryFilter, SelectFeature, ClearFilter,
-}
+import gleeunit/should
 
 pub fn init_model_test() {
   let model = init()
@@ -46,5 +47,6 @@ pub fn view_render_test() {
   let elem = view(model)
   let elem_str = string.inspect(elem)
   string.contains(elem_str, "feature-tracker-view") |> should.equal(True)
-  string.contains(elem_str, "145 FEATURES 100% OPERATIONAL") |> should.equal(True)
+  string.contains(elem_str, "145 FEATURES 100% OPERATIONAL")
+  |> should.equal(True)
 }

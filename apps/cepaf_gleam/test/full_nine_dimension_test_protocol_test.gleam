@@ -15,7 +15,9 @@
 //// Invariants: SC-TEST-9D-001, SC-ZERO-MUDA-001, SC-SATYA-001, SC-TRUTH-001
 //// Layer: L0_CONSTITUTIONAL through L9_AUTONOMOUS_FEDERATION
 
-import cepaf_gleam/graphene.{Point2, kurbo_vec2_distance, kurbo_vec2_dot, kurbo_vec2_lerp}
+import cepaf_gleam/graphene.{
+  Point2, kurbo_vec2_distance, kurbo_vec2_dot, kurbo_vec2_lerp,
+}
 import cepaf_gleam/ha/correlated_log.{
   Critical, Debug, Error as LogError, Info, Warn, level_to_otel_severity,
 }
@@ -77,7 +79,13 @@ pub fn unit_trace_context_w3c_generation_test() {
 
 pub fn unit_stamp_proof_token_valid_test() {
   let token = "STAMP-deploy-operator"
-  validate_proof_token(token, "deploy", "operator", "2026-09-05T18:00:00Z", 5000)
+  validate_proof_token(
+    token,
+    "deploy",
+    "operator",
+    "2026-09-05T18:00:00Z",
+    5000,
+  )
   |> should.be_ok()
 }
 

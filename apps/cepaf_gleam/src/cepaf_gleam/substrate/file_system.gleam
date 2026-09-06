@@ -65,5 +65,7 @@ pub fn vcs_sync(message: String) -> Result(String, String) {
 }
 
 pub fn git_sync(_path: String, _message: String) -> Result(String, String) {
-  Error("UOS_VCS_MANDATE: Native git mutation is barred in UOS. Use Jujutsu (jj).")
+  Error(
+    "UOS_VCS_MANDATE: Native git mutation is barred in UOS. Use Jujutsu (jj).",
+  )
 }

@@ -121,7 +121,11 @@ pub fn normalize_trace(raw: String) -> String {
   |> strip_ephemeral_patterns()
 }
 
-fn replace_all_substrings(str: String, target: String, replacement: String) -> String {
+fn replace_all_substrings(
+  str: String,
+  target: String,
+  replacement: String,
+) -> String {
   string.replace(str, target, replacement)
 }
 
@@ -165,7 +169,10 @@ pub fn detect_stub_trace(trace: String) -> Bool {
 }
 
 /// Compares a reference trace against a candidate trace
-pub fn compare_traces(reference: String, candidate: String) -> Result(Verdict, DivergenceKind) {
+pub fn compare_traces(
+  reference: String,
+  candidate: String,
+) -> Result(Verdict, DivergenceKind) {
   case detect_stub_trace(candidate) {
     True -> Error(StubDetected("Candidate trace contains mock/stub indicator"))
     False -> {
@@ -208,14 +215,10 @@ pub fn verify_block_law(
 ) -> LawResult {
   let rendered = mock_ast_render_block(markdown_input)
   let passed = string.contains(rendered, expected_snippet)
-  LawResult(
-    name: name,
-    passed: passed,
-    detail: case passed {
-      True -> "Matched expected snippet: " <> expected_snippet
-      False -> "Expected snippet not found in: " <> rendered
-    },
-  )
+  LawResult(name: name, passed: passed, detail: case passed {
+    True -> "Matched expected snippet: " <> expected_snippet
+    False -> "Expected snippet not found in: " <> rendered
+  })
 }
 
 /// Pure AST renderer mimicking docs_wiki.ml typed rendering
@@ -224,17 +227,24 @@ pub fn mock_ast_render_block(md: String) -> String {
   case trimmed {
     "# " <> title -> "<h1 id=\"" <> slugify(title) <> "\">" <> title <> "</h1>"
     "## " <> title -> "<h2 id=\"" <> slugify(title) <> "\">" <> title <> "</h2>"
-    "### " <> title -> "<h3 id=\"" <> slugify(title) <> "\">" <> title <> "</h3>"
-    "#### " <> title -> "<h4 id=\"" <> slugify(title) <> "\">" <> title <> "</h4>"
+    "### " <> title ->
+      "<h3 id=\"" <> slugify(title) <> "\">" <> title <> "</h3>"
+    "#### " <> title ->
+      "<h4 id=\"" <> slugify(title) <> "\">" <> title <> "</h4>"
     "- " <> item -> "<ul><li>" <> item <> "</li></ul>"
     "1. " <> item -> "<ol><li>" <> item <> "</li></ol>"
     "> " <> quote -> "<blockquote>" <> quote <> "</blockquote>"
     "---" -> "<hr/>"
     _ -> {
-      case string.starts_with(trimmed, "```") && string.ends_with(trimmed, "```") {
+      case
+        string.starts_with(trimmed, "```") && string.ends_with(trimmed, "```")
+      {
         True -> "<pre><code>" <> trimmed <> "</code></pre>"
         False -> {
-          case string.starts_with(trimmed, "|") && string.contains(trimmed, "|---|") {
+          case
+            string.starts_with(trimmed, "|")
+            && string.contains(trimmed, "|---|")
+          {
             True -> "<table><th>" <> trimmed <> "</th></table>"
             False -> "<p>" <> trimmed <> "</p>"
           }
@@ -268,14 +278,10 @@ pub fn verify_inline_law(
 ) -> LawResult {
   let rendered = mock_ast_render_inline(inline_input)
   let passed = string.contains(rendered, expected_snippet)
-  LawResult(
-    name: name,
-    passed: passed,
-    detail: case passed {
-      True -> "Matched inline: " <> expected_snippet
-      False -> "Expected inline not found in: " <> rendered
-    },
-  )
+  LawResult(name: name, passed: passed, detail: case passed {
+    True -> "Matched inline: " <> expected_snippet
+    False -> "Expected inline not found in: " <> rendered
+  })
 }
 
 pub fn mock_ast_render_inline(text: String) -> String {
@@ -303,7 +309,11 @@ pub fn mock_ast_render_inline(text: String) -> String {
   let s4 = case string.starts_with(s3, "[[") && string.ends_with(s3, "]]") {
     True -> {
       let target = string.slice(s3, 2, string.length(s3) - 4)
-      "<a class=\"wikilink\" href=\"/wiki/" <> target <> "\">" <> target <> "</a>"
+      "<a class=\"wikilink\" href=\"/wiki/"
+      <> target
+      <> "\">"
+      <> target
+      <> "</a>"
     }
     False -> s3
   }
@@ -330,9 +340,21 @@ pub fn run_all_inline_render_laws() -> List(LawResult) {
     verify_inline_law("bold", "**bold text**", "<strong>bold text</strong>"),
     verify_inline_law("italic", "*italic text*", "<em>italic text</em>"),
     verify_inline_law("code", "`code text`", "<code>code text</code>"),
-    verify_inline_law("wikilink", "[[my-target]]", "<a class=\"wikilink\" href=\"/wiki/my-target\">"),
-    verify_inline_law("transclusion", "![[trans-doc]]", "<div class=\"transclusion\" data-target=\"trans-doc\">"),
-    verify_inline_law("block-anchor", "^block-123", "<a id=\"block-123\" class=\"block-anchor\">"),
+    verify_inline_law(
+      "wikilink",
+      "[[my-target]]",
+      "<a class=\"wikilink\" href=\"/wiki/my-target\">",
+    ),
+    verify_inline_law(
+      "transclusion",
+      "![[trans-doc]]",
+      "<div class=\"transclusion\" data-target=\"trans-doc\">",
+    ),
+    verify_inline_law(
+      "block-anchor",
+      "^block-123",
+      "<a id=\"block-123\" class=\"block-anchor\">",
+    ),
   ]
 }
 
@@ -382,7 +404,9 @@ pub fn compute_graph_density(node_count: Int, edge_count: Int) -> Float {
     False -> {
       let max_edges = node_count * { node_count - 1 }
       case max_edges > 0 {
-        True -> { int.to_float(edge_count * 2) /. int.to_float(max_edges) }
+        True -> {
+          int.to_float(edge_count * 2) /. int.to_float(max_edges)
+        }
         False -> 0.0
       }
     }
@@ -394,6 +418,7 @@ pub fn compute_graph_density(node_count: Int, edge_count: Int) -> Float {
 // =============================================================================
 
 pub const err_nul_byte_detected = -2
+
 pub const err_sql_injection_detected = -3
 
 /// Validates an incoming agent dispatch payload, trapping embedded NUL bytes
@@ -439,16 +464,13 @@ pub fn verify_writer_lease_freshness(
 // =============================================================================
 
 pub type SelfcheckSummary {
-  SelfcheckSummary(
-    total: Int,
-    passed: Int,
-    failed: Int,
-    failures: List(String),
-  )
+  SelfcheckSummary(total: Int, passed: Int, failed: Int, failures: List(String))
 }
 
 /// Runs a list of named boolean checks, collecting all failures without aborting
-pub fn run_selfcheck_suite(checks: List(#(String, fn() -> Bool))) -> SelfcheckSummary {
+pub fn run_selfcheck_suite(
+  checks: List(#(String, fn() -> Bool)),
+) -> SelfcheckSummary {
   let results =
     list.map(checks, fn(c) {
       let #(name, f) = c

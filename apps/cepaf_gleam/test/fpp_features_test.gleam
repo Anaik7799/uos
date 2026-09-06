@@ -123,9 +123,15 @@ pub fn ground_dictionary_json_test() {
   let dict_json = generate_ground_dictionary_json(model, "HermesHarness")
 
   // Check required NASA JPL Ground Dictionary top-level sections
-  dict_json |> string.contains("\"framework_version\":\"3.4.0-UOS\"") |> should.be_true
-  dict_json |> string.contains("\"project_version\":\"2026.09-SIL6\"") |> should.be_true
-  dict_json |> string.contains("\"topology\":\"HermesHarness\"") |> should.be_true
+  dict_json
+  |> string.contains("\"framework_version\":\"3.4.0-UOS\"")
+  |> should.be_true
+  dict_json
+  |> string.contains("\"project_version\":\"2026.09-SIL6\"")
+  |> should.be_true
+  dict_json
+  |> string.contains("\"topology\":\"HermesHarness\"")
+  |> should.be_true
   dict_json |> string.contains("\"commands\":[") |> should.be_true
   dict_json |> string.contains("\"events\":[") |> should.be_true
   dict_json |> string.contains("\"telemetryChannels\":[") |> should.be_true

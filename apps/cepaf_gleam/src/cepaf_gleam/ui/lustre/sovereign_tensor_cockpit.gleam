@@ -165,7 +165,13 @@ pub fn render_tensor_cockpit_view(cockpit: TensorCockpitState) -> Element(msg) {
         ]),
         html.p([], [element.text(dim.description)]),
         html.div([attribute.class("score-bar")], [
-          element.text("Weight: " <> float.to_string(dim.weight) <> " | Integrity: " <> float.to_string(dim.score *. 100.0) <> "%"),
+          element.text(
+            "Weight: "
+            <> float.to_string(dim.weight)
+            <> " | Integrity: "
+            <> float.to_string(dim.score *. 100.0)
+            <> "%",
+          ),
         ]),
       ])
     }),

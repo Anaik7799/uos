@@ -506,7 +506,9 @@ fn recompute_overall_kpi(tabs: List(TabSummary)) -> ElementKpi {
 // Corrective action generation
 // =============================================================================
 
-fn generate_corrective_actions(tabs: List(TabSummary)) -> List(CorrectiveAction) {
+fn generate_corrective_actions(
+  tabs: List(TabSummary),
+) -> List(CorrectiveAction) {
   list.flat_map(tabs, fn(tab: TabSummary) {
     let actions = case tab.tests_failed > 0 {
       True -> [

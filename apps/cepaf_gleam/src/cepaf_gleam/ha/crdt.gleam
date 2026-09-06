@@ -189,7 +189,11 @@ pub type LWWRegister {
 }
 
 /// Create a new LWW-Register with an initial value, timestamp, and node_id.
-pub fn lww_new(value: String, timestamp_ms: Int, node_id: String) -> LWWRegister {
+pub fn lww_new(
+  value: String,
+  timestamp_ms: Int,
+  node_id: String,
+) -> LWWRegister {
   LWWRegister(value: value, timestamp_ms: timestamp_ms, node_id: node_id)
 }
 

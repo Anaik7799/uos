@@ -391,7 +391,9 @@ pub fn highest_risk(entries: List(FmeaEntry)) -> Result(FmeaEntry, Nil) {
 
 /// Count entries per priority tier.
 /// Returns #(p0_count, p1_count, p2_count, p3_count).
-pub fn priority_distribution(entries: List(FmeaEntry)) -> #(Int, Int, Int, Int) {
+pub fn priority_distribution(
+  entries: List(FmeaEntry),
+) -> #(Int, Int, Int, Int) {
   let p0 = list.count(entries, fn(e) { e.rpn >= 200 })
   let p1 = list.count(entries, fn(e) { e.rpn >= 100 && e.rpn < 200 })
   let p2 = list.count(entries, fn(e) { e.rpn >= 50 && e.rpn < 100 })

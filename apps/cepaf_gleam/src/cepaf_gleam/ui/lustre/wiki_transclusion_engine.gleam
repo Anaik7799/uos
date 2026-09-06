@@ -56,7 +56,10 @@ pub fn extract_transclusion_tags(doc: String) -> List(TransclusionTag) {
   extract_tags_recursive(doc, [])
 }
 
-fn extract_tags_recursive(remaining: String, acc: List(TransclusionTag)) -> List(TransclusionTag) {
+fn extract_tags_recursive(
+  remaining: String,
+  acc: List(TransclusionTag),
+) -> List(TransclusionTag) {
   case string.split_once(remaining, "[[") {
     Ok(#(_before, rest)) -> {
       case string.split_once(rest, "]]") {
@@ -90,7 +93,10 @@ pub fn serialize_ast(nodes: List(AstNode)) -> String {
   |> string.join("")
 }
 
-pub fn compute_simple_diff(old_lines: List(String), new_lines: List(String)) -> DiffSummary {
+pub fn compute_simple_diff(
+  old_lines: List(String),
+  new_lines: List(String),
+) -> DiffSummary {
   let old_len = list.length(old_lines)
   let new_len = list.length(new_lines)
   let additions = case new_len > old_len {
@@ -105,7 +111,10 @@ pub fn compute_simple_diff(old_lines: List(String), new_lines: List(String)) -> 
   DiffSummary(additions: additions, deletions: deletions, unchanged: unchanged)
 }
 
-pub fn render_transclusion_preview_view(tags: List(TransclusionTag), diff: DiffSummary) -> Element(msg) {
+pub fn render_transclusion_preview_view(
+  tags: List(TransclusionTag),
+  diff: DiffSummary,
+) -> Element(msg) {
   html.div([attribute.class("wiki-transclusion-container")], [
     html.div([attribute.class("transclusion-header")], [
       html.h3([], [element.text("Hermes Wiki Transclusion & Parsoid Engine")]),

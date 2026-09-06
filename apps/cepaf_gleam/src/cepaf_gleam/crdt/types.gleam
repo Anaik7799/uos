@@ -195,7 +195,10 @@ pub fn orset_merge(a: ORSet, b: ORSet) -> ORSet {
 // Helpers
 // =============================================================================
 
-fn merge_dicts(a: Dict(String, Int), b: Dict(String, Int)) -> Dict(String, Int) {
+fn merge_dicts(
+  a: Dict(String, Int),
+  b: Dict(String, Int),
+) -> Dict(String, Int) {
   let all_keys = list.append(dict.keys(a), dict.keys(b)) |> list.unique
   list.fold(all_keys, dict.new(), fn(acc, key) {
     let va = dict.get(a, key) |> result.unwrap(0)

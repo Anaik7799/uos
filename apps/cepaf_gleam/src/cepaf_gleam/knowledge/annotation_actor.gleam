@@ -5,10 +5,10 @@
 //// Contract: SC-ROCHA-001, SC-KM-001, SC-CHECKLIST-001
 //// =============================================================================
 
+import gleam/erlang/process.{type Subject}
 import gleam/int
 import gleam/list
 import gleam/otp/actor
-import gleam/erlang/process.{type Subject}
 import gleam/string
 
 /// Lifecycle status of the Knowledge Annotation Actor
@@ -67,7 +67,11 @@ pub type State {
 /// Messages accepted by the Knowledge Annotation Actor
 pub type Message {
   TriggerAnnotationRun(reply_to: Subject(KnowledgeMetrics))
-  ScanDocument(path: String, content: String, reply_to: Subject(DocAnnotationResult))
+  ScanDocument(
+    path: String,
+    content: String,
+    reply_to: Subject(DocAnnotationResult),
+  )
   RecordDocResult(result: DocAnnotationResult)
   GetMetrics(reply_to: Subject(KnowledgeMetrics))
   Reset
@@ -95,7 +99,10 @@ pub fn start() -> Result(actor.Started(Subject(Message)), actor.StartError) {
 }
 
 /// Message handler for the actor
-pub fn handle_message(state: State, msg: Message) -> actor.Next(State, Message) {
+pub fn handle_message(
+  state: State,
+  msg: Message,
+) -> actor.Next(State, Message) {
   case msg {
     ScanDocument(path, content, reply_to) -> {
       let result = inspect_document(path, content)
@@ -111,7 +118,8 @@ pub fn handle_message(state: State, msg: Message) -> actor.Next(State, Message) 
 
     TriggerAnnotationRun(reply_to) -> {
       let updated_runs = state.total_runs + 1
-      let new_state = State(..state, total_runs: updated_runs, status: Completed)
+      let new_state =
+        State(..state, total_runs: updated_runs, status: Completed)
       let metrics = state_to_metrics(new_state)
       process.send(reply_to, metrics)
       actor.continue(new_state)
@@ -150,7 +158,9 @@ pub fn inspect_document(path: String, content: String) -> DocAnnotationResult {
     { has_rocha || has_cybernetics }
     && has_tail
     && has_muda
-    && { wiki_transclusions > 0 || zk_transclusions > 0 || fractal != "unknown" }
+    && {
+      wiki_transclusions > 0 || zk_transclusions > 0 || fractal != "unknown"
+    }
 
   DocAnnotationResult(
     path: path,
@@ -167,7 +177,10 @@ pub fn inspect_document(path: String, content: String) -> DocAnnotationResult {
 }
 
 /// Update state counter with single document result
-fn update_state_with_result(state: State, result: DocAnnotationResult) -> State {
+fn update_state_with_result(
+  state: State,
+  result: DocAnnotationResult,
+) -> State {
   State(
     ..state,
     documents_scanned: state.documents_scanned + 1,
@@ -220,9 +233,12 @@ pub fn calculate_sheaf_coherence(state: State) -> Float {
   case state.documents_scanned {
     0 -> 1.0
     total -> {
-      let rocha_ratio = int.to_float(state.rocha_tagged_count) /. int.to_float(total)
-      let tail_ratio = int.to_float(state.tailscale_linked_count) /. int.to_float(total)
-      let muda_ratio = int.to_float(state.zero_muda_tagged_count) /. int.to_float(total)
+      let rocha_ratio =
+        int.to_float(state.rocha_tagged_count) /. int.to_float(total)
+      let tail_ratio =
+        int.to_float(state.tailscale_linked_count) /. int.to_float(total)
+      let muda_ratio =
+        int.to_float(state.zero_muda_tagged_count) /. int.to_float(total)
 
       // Harmonic mean of the 3 primary sheaf sections
       { rocha_ratio +. tail_ratio +. muda_ratio } /. 3.0

@@ -557,7 +557,10 @@ fn count_map(items: List(String)) -> List(#(String, Int)) {
   list.fold(items, [], fn(acc, item) { inc_count(acc, item) })
 }
 
-fn inc_count(counts: List(#(String, Int)), key: String) -> List(#(String, Int)) {
+fn inc_count(
+  counts: List(#(String, Int)),
+  key: String,
+) -> List(#(String, Int)) {
   case list.find(counts, fn(p) { p.0 == key }) {
     Ok(_) ->
       list.map(counts, fn(p) {

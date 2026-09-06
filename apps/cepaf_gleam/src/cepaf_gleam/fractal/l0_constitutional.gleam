@@ -81,7 +81,10 @@ pub fn initial_approval_state() -> ApprovalState {
   ApprovalState(pending_requests: [], history: [])
 }
 
-pub fn add_request(state: ApprovalState, req: ApprovalRequest) -> ApprovalState {
+pub fn add_request(
+  state: ApprovalState,
+  req: ApprovalRequest,
+) -> ApprovalState {
   ApprovalState(..state, pending_requests: [req, ..state.pending_requests])
 }
 

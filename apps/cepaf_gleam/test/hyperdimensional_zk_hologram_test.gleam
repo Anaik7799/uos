@@ -3,7 +3,7 @@ import gleeunit/should
 
 pub fn zk_hologram_cluster_modularity_test() {
   let hologram = hyperdimensional_zk_hologram.build_canonical_hologram()
-  should.be_true(hologram.modularity_q >=. 0.70)
+  should.be_true(hologram.modularity_q >=. 0.7)
   should.equal(hologram.active_clusters_count, 4)
 }
 

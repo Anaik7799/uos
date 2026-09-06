@@ -8,7 +8,7 @@ import gleeunit/should
 pub fn uos_root_spec_valid_test() {
   let spec = uos_sup.uos_root_spec()
   spec.name |> should.equal("UOSRootSupervisor")
-  
+
   case uos_sup.validate_spec(spec) {
     Ok(child_count) -> {
       { child_count >= 8 } |> should.be_true()

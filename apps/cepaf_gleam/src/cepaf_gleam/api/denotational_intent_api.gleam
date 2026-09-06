@@ -7,15 +7,14 @@
 //// 3. Full System Test Inventory & Efficacy Serialization
 //// =============================================================================
 
-import gleam/json
-import gleam/list
 import cepaf_gleam/verification/dmc_tcm_algebraic_atlas.{
-  type ConstitutionalGateCheck, type IntentSpec,
-  type MasterTestCategory, type Tcm13D,
-  all_master_test_categories, check_intent_constitutional_gates,
+  type ConstitutionalGateCheck, type IntentSpec, type MasterTestCategory,
+  type Tcm13D, all_master_test_categories, check_intent_constitutional_gates,
   compute_master_system_effectiveness, compute_master_system_efficacy,
   evaluate_denotational_intent, total_itemized_tests_count,
 }
+import gleam/json
+import gleam/list
 
 pub fn format_gate_check_json(gate: ConstitutionalGateCheck) -> json.Json {
   json.object([
@@ -77,7 +76,10 @@ pub fn handle_intent_submission_json(
     #("action", json.string(intent.action)),
     #("target_resource", json.string(intent.target_resource)),
     #("is_authorized", json.bool(denotation.is_authorized)),
-    #("semantic_transformation", json.string(denotation.semantic_transformation)),
+    #(
+      "semantic_transformation",
+      json.string(denotation.semantic_transformation),
+    ),
     #("rejection_reason", json.string(denotation.rejection_reason)),
     #("constitutional_gates", json.array(gates, format_gate_check_json)),
     #("tcm_coordinates", format_tcm_coordinates_json(coords)),

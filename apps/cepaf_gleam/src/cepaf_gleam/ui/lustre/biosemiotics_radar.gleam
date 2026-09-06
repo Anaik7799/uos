@@ -69,18 +69,32 @@ pub fn render_svg_radar_html(model: BiosemioticsRadarModel) -> String {
     <> model.os_nvme_serial
     <> "</text>"
   let footer = "</svg>"
-  header <> "\n" <> circles <> "\n" <> axes <> "\n" <> polygon <> "\n" <> lock_badge <> "\n" <> footer
+  header
+  <> "\n"
+  <> circles
+  <> "\n"
+  <> axes
+  <> "\n"
+  <> polygon
+  <> "\n"
+  <> lock_badge
+  <> "\n"
+  <> footer
 }
 
 pub fn render_biosemiotics_view(model: BiosemioticsRadarModel) -> Element(msg) {
   html.div([attribute.class("biosemiotics-radar-card")], [
-    html.h3([], [element.text("Rocha Biosemiotics & Hardware Storage Safety Radar")]),
+    html.h3([], [
+      element.text("Rocha Biosemiotics & Hardware Storage Safety Radar"),
+    ]),
     html.div([attribute.class("badges-row")], [
       html.span([attribute.class("badge badge-fractal")], [
         element.text("Rocha Symbol-Matter Cut: DECOUPLED"),
       ]),
       html.span([attribute.class("badge badge-tailscale")], [
-        element.text("Lyapunov Lambda: " <> float.to_string(model.lyapunov_lambda)),
+        element.text(
+          "Lyapunov Lambda: " <> float.to_string(model.lyapunov_lambda),
+        ),
       ]),
       html.span([attribute.class("badge badge-muda")], [
         element.text("Hardware Serial: " <> model.os_nvme_serial <> " (LOCKED)"),

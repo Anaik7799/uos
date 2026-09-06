@@ -74,7 +74,10 @@ pub fn match_all() -> AuditFilter {
 }
 
 /// Apply a filter to the audit log; returns matching entries in original order.
-pub fn query(entries: List(AuditEntry), filter: AuditFilter) -> List(AuditEntry) {
+pub fn query(
+  entries: List(AuditEntry),
+  filter: AuditFilter,
+) -> List(AuditEntry) {
   list.filter(entries, fn(e) { matches(e, filter) })
 }
 

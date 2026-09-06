@@ -55,7 +55,8 @@ pub fn build_canonical_sre() -> SreMetricsModel {
     lyapunov_lambda: -0.082,
     restart_count: 0,
     restart_budget: 5,
-    availability_nine_count: 6, // 99.9999% SIL-6
+    availability_nine_count: 6,
+    // 99.9999% SIL-6
   )
 }
 
@@ -85,7 +86,11 @@ pub fn render_sre_matrix_view(model: SreMetricsModel) -> Element(msg) {
       ]),
       html.div([attribute.class("metric-card")], [
         html.strong([], [element.text("Restart Budget: ")]),
-        element.text(int.to_string(model.restart_count) <> "/" <> int.to_string(model.restart_budget)),
+        element.text(
+          int.to_string(model.restart_count)
+          <> "/"
+          <> int.to_string(model.restart_budget),
+        ),
       ]),
     ]),
   ])

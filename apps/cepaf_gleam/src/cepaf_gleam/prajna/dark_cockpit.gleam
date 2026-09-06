@@ -63,7 +63,10 @@ pub fn add_alert(state: CockpitState, alert: Alert) -> CockpitState {
   CockpitState(..state, alerts: new_alerts, mode: new_mode)
 }
 
-pub fn acknowledge_alert(state: CockpitState, alert_id: String) -> CockpitState {
+pub fn acknowledge_alert(
+  state: CockpitState,
+  alert_id: String,
+) -> CockpitState {
   let new_alerts =
     list.map(state.alerts, fn(a) {
       case a.id == alert_id {

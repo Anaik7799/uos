@@ -34,7 +34,10 @@ pub fn generate_embedding(text: String) -> Result(Embedding, String) {
   panic as "NYI: requires LLM API (SC-SMRITI-002)"
 }
 
-pub fn store_embedding(id: String, embedding: Embedding) -> Result(Nil, String) {
+pub fn store_embedding(
+  id: String,
+  embedding: Embedding,
+) -> Result(Nil, String) {
   let _ = id
   let _ = embedding
   panic as "NYI: requires vector DB (SC-SMRITI-002)"

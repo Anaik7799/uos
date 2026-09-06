@@ -104,7 +104,9 @@ pub fn render_patrol_hud_view(state: HudState) -> Element(msg) {
     ]),
     html.div([attribute.class("badges-row")], [
       html.span([attribute.class("badge badge-fractal")], [
-        element.text("Checklist: " <> int.to_string(state.checklist_points_passed) <> "/18"),
+        element.text(
+          "Checklist: " <> int.to_string(state.checklist_points_passed) <> "/18",
+        ),
       ]),
       html.span([attribute.class("badge badge-tailscale")], [
         element.text("OTel Transport: Zenoh Active"),

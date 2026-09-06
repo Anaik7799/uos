@@ -66,10 +66,7 @@ pub type CategoryMorphism {
 // =============================================================================
 
 pub type TelemetrySection {
-  TelemetrySection(
-    subtopology_name: String,
-    channels: List(#(Int, String)),
-  )
+  TelemetrySection(subtopology_name: String, channels: List(#(Int, String)))
 }
 
 pub type SheafGluingVerdict {
@@ -86,7 +83,10 @@ pub fn verify_sheaf_restriction(
     list.filter(parent.channels, fn(c) {
       list.contains(restricted_to_channels, c.0)
     })
-  TelemetrySection(subtopology_name: parent.subtopology_name, channels: filtered)
+  TelemetrySection(
+    subtopology_name: parent.subtopology_name,
+    channels: filtered,
+  )
 }
 
 /// Verifies sheaf gluing axiom:
@@ -100,7 +100,10 @@ pub fn verify_sheaf_gluing(
   // Check agreement on mutual boundary
   let conflicts =
     list.filter_map(mutual_channel_ids, fn(cid) {
-      case list.key_find(sec1.channels, cid), list.key_find(sec2.channels, cid) {
+      case
+        list.key_find(sec1.channels, cid),
+        list.key_find(sec2.channels, cid)
+      {
         Ok(v1), Ok(v2) if v1 == v2 -> Error(Nil)
         Ok(v1), Ok(v2) ->
           Ok(
@@ -113,9 +116,13 @@ pub fn verify_sheaf_gluing(
             <> "'",
           )
         Error(_), _ ->
-          Ok("Mutual channel " <> int.to_string(cid) <> " missing from section 1")
+          Ok(
+            "Mutual channel " <> int.to_string(cid) <> " missing from section 1",
+          )
         _, Error(_) ->
-          Ok("Mutual channel " <> int.to_string(cid) <> " missing from section 2")
+          Ok(
+            "Mutual channel " <> int.to_string(cid) <> " missing from section 2",
+          )
       }
     })
 
@@ -129,12 +136,10 @@ pub fn verify_sheaf_gluing(
             Error(_) -> list.append(acc, [c2])
           }
         })
-      GluingSuccess(
-        TelemetrySection(
-          subtopology_name: sec1.subtopology_name <> "+" <> sec2.subtopology_name,
-          channels: glued_channels,
-        ),
-      )
+      GluingSuccess(TelemetrySection(
+        subtopology_name: sec1.subtopology_name <> "+" <> sec2.subtopology_name,
+        channels: glued_channels,
+      ))
     }
     [first, ..] -> GluingConflict(first)
   }
@@ -164,7 +169,9 @@ pub fn build_fpp_algebraic_atlas(model: Model) -> AtlasReport {
       name: model.model_name <> "_AST",
       tier: Tier0Ast,
       dimension: 0,
-      properties: [#("components", int.to_string(list.length(model.components)))],
+      properties: [
+        #("components", int.to_string(list.length(model.components))),
+      ],
     ),
   ]
 
@@ -191,7 +198,10 @@ pub fn build_fpp_algebraic_atlas(model: Model) -> AtlasReport {
         name: "Actor(" <> inst.inst_name <> ")",
         tier: Tier2BeamActors,
         dimension: 2,
-        properties: [#("scheduler", "BEAM_OTP_29"), #("isolation", "MemoryIsolated")],
+        properties: [
+          #("scheduler", "BEAM_OTP_29"),
+          #("isolation", "MemoryIsolated"),
+        ],
       )
     })
 
@@ -322,7 +332,9 @@ pub fn atlas_to_json(report: AtlasReport) -> String {
         #("dimension", json.int(o.dimension)),
         #(
           "properties",
-          json.object(list.map(o.properties, fn(p) { #(p.0, json.string(p.1)) })),
+          json.object(
+            list.map(o.properties, fn(p) { #(p.0, json.string(p.1)) }),
+          ),
         ),
       ])
     })

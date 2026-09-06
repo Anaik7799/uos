@@ -207,7 +207,10 @@ fn make_proof_token(
   )
 }
 
-fn make_graph_check(name: String, passed: Bool) -> graph_verification.GraphCheck {
+fn make_graph_check(
+  name: String,
+  passed: Bool,
+) -> graph_verification.GraphCheck {
   graph_verification.GraphCheck(name: name, passed: passed, details: "")
 }
 
@@ -760,7 +763,10 @@ pub fn immune_c4_long_duration_simulation_test() {
   result |> should.equal(model)
 }
 
-fn do_immune_tick_loop(model: immune.ImmuneModel, n: Int) -> immune.ImmuneModel {
+fn do_immune_tick_loop(
+  model: immune.ImmuneModel,
+  n: Int,
+) -> immune.ImmuneModel {
   case n {
     0 -> model
     _ -> do_immune_tick_loop(immune.update(model, immune.RefreshImmune), n - 1)
@@ -2257,7 +2263,10 @@ pub fn podman_c4_long_duration_simulation_test() {
   result |> should.equal(model)
 }
 
-fn do_podman_tick_loop(model: podman.PodmanModel, n: Int) -> podman.PodmanModel {
+fn do_podman_tick_loop(
+  model: podman.PodmanModel,
+  n: Int,
+) -> podman.PodmanModel {
   case n {
     0 -> model
     _ -> do_podman_tick_loop(podman.update(model, podman.RefreshPodman), n - 1)

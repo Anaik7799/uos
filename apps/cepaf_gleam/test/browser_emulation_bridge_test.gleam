@@ -1,9 +1,9 @@
-import gleam/list
-import gleeunit/should
 import cepaf_gleam/verification/browser_emulation_bridge.{
   BrowserSuiteSpec, C3IPlaywright, C3IWallaby, IndrajaalCdp, ZigvmTyxml,
   aggregate_browser_metrics, execute_browser_suite,
 }
+import gleam/list
+import gleeunit/should
 
 pub fn execute_single_suite_test() {
   let suite =
@@ -51,7 +51,7 @@ pub fn aggregate_multiple_suites_metrics_test() {
       C3IWallaby,
       "/dashboard",
       4,
-      0.90,
+      0.9,
       0.92,
     ),
     BrowserSuiteSpec(

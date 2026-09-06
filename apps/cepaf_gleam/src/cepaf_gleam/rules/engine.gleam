@@ -773,7 +773,10 @@ pub fn hook_control_rules() -> String {
 /// Evaluate data-plane snapshot routing (D-1..D-3).
 /// age_ms:          milliseconds since last snapshot write
 /// daemon_prob_high: true when Bayesian posterior > 0.5
-pub fn evaluate_hook_snapshot(age_ms: Int, daemon_prob_high: Bool) -> RuleResult {
+pub fn evaluate_hook_snapshot(
+  age_ms: Int,
+  daemon_prob_high: Bool,
+) -> RuleResult {
   evaluate("Hook", hook_snapshot_rules(), [
     Fact("Hook.AgeMs", int_to_str(age_ms)),
     Fact("Hook.DaemonProbHigh", bool_str(daemon_prob_high)),

@@ -3,14 +3,14 @@
 //// Subject: Lustre MVU ZK Decision Matrix & ADR Explorer Component Tests
 //// =============================================================================
 
-import gleeunit/should
+import cepaf_gleam/ui/lustre/zk_decision_matrix.{
+  ClearFilter, SelectAdr, SetLayerFilter, SetSearch, all_adrs, init, update,
+  view,
+}
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
-import cepaf_gleam/ui/lustre/zk_decision_matrix.{
-  init, update, view, all_adrs,
-  SetSearch, SetLayerFilter, SelectAdr, ClearFilter,
-}
+import gleeunit/should
 
 pub fn all_adrs_count_test() {
   let adrs = all_adrs()

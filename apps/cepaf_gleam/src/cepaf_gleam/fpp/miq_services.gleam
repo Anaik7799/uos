@@ -16,9 +16,9 @@
 
 import cepaf_gleam/fpp/agent_taxonomy.{
   type AgentKind, AvionicsTelemetry, CognitiveOodaIntent, ConstitutionalGuardian,
-  DeterministicFlightController, FormalOracle, GroundGateway,
+  CyberneticImmune, DeterministicFlightController, FormalOracle, GroundGateway,
   LivingMetaEvolution, MissionPhaseHsm, ParameterDatabase, PayloadScience,
-  SreSentinel, StorageCustodian, SwarmMesh, CyberneticImmune,
+  SreSentinel, StorageCustodian, SwarmMesh,
 }
 import cepaf_gleam/fpp/dmc_tcm.{
   HardDeniedSerialBlocked, SafeOperationApproved,
@@ -122,7 +122,9 @@ pub type MiqService {
 }
 
 /// FPP_STPA: System-Theoretic Process Analysis validator
-pub fn fpp_stpa_validate(port: FppPort(FlightIntent)) -> FppPort(Result(List(String), String)) {
+pub fn fpp_stpa_validate(
+  port: FppPort(FlightIntent),
+) -> FppPort(Result(List(String), String)) {
   let intent = case port {
     SyncInput(i) -> i
     AsyncInput(i) -> i
@@ -134,12 +136,14 @@ pub fn fpp_stpa_validate(port: FppPort(FlightIntent)) -> FppPort(Result(List(Str
     SafeOperationApproved -> {
       case evaluate_flight_intent(intent) {
         IntentAuthorized(_, _, _, _) ->
-          Output(Ok([
-            "SC-1: Hardware storage interlock satisfied",
-            "SC-2: Rocha biosemiotic symbol-matter cut preserved",
-            "SC-3: TCM 13D coordinate conservation verified",
-            "SC-4: Precondition guard validated",
-          ]))
+          Output(
+            Ok([
+              "SC-1: Hardware storage interlock satisfied",
+              "SC-2: Rocha biosemiotic symbol-matter cut preserved",
+              "SC-3: TCM 13D coordinate conservation verified",
+              "SC-4: Precondition guard validated",
+            ]),
+          )
         IntentRejected(_, _, reason) ->
           Output(Error("STPA_BLOCKED: " <> reason))
       }
@@ -163,7 +167,9 @@ pub fn fpp_fast_ooda_cycle(
 
 /// FPP_Raven: Abstract Reasoning Matrix Synthesizer
 pub fn fpp_raven_synthesize(problem_space: String) -> String {
-  "RAVEN_RESOLVED: " <> string.uppercase(problem_space) <> " via non-linear topological matrix"
+  "RAVEN_RESOLVED: "
+  <> string.uppercase(problem_space)
+  <> " via non-linear topological matrix"
 }
 
 /// FPP_Ruliad: Computational Rule-Space Search
@@ -187,8 +193,7 @@ pub fn auto_allocate_miq(
                 list.Continue(Ok(list.append(logs, constraints)))
               Output(Error(reason)) ->
                 list.Stop(Error("MIQ_STPA_FAILED: " <> reason))
-              _ ->
-                list.Stop(Error("MIQ_STPA_FAILED: Unexpected port state"))
+              _ -> list.Stop(Error("MIQ_STPA_FAILED: Unexpected port state"))
             }
           }
           FastOodaService -> {
@@ -204,7 +209,9 @@ pub fn auto_allocate_miq(
             list.Continue(Ok(list.append(logs, [res])))
           }
           SopContainmentService -> {
-            list.Continue(Ok(list.append(logs, ["SOP: Containment preflight passed"])))
+            list.Continue(
+              Ok(list.append(logs, ["SOP: Containment preflight passed"])),
+            )
           }
         }
       }

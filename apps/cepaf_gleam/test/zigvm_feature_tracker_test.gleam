@@ -3,14 +3,14 @@
 //// Subject: ZigVM Wiki, ZK & KM In-Code Feature Tracking & Verification
 //// =============================================================================
 
-import gleeunit/should
+import cepaf_gleam/knowledge/zigvm_feature_tracker.{
+  PermanentAdrRecord, RatifiedActive, Tier3FormalProof, ZkMcpTool, all_features,
+  count_features, get_feature, get_summary, render_ascii_table,
+  render_markdown_table, verify_feature_registry,
+}
 import gleam/list
 import gleam/string
-import cepaf_gleam/knowledge/zigvm_feature_tracker.{
-  all_features, count_features, get_feature, get_summary,
-  verify_feature_registry, render_ascii_table, render_markdown_table,
-  ZkMcpTool, PermanentAdrRecord, Tier3FormalProof, RatifiedActive,
-}
+import gleeunit/should
 
 pub fn total_features_count_test() {
   let count = count_features()

@@ -45,6 +45,22 @@ pub type AgentKind {
   PayloadScience
   StorageCustodian
   KmSync
+  HardwareDriveInterlock
+  RochaSemioticCutGuard
+  DeterministicReductionScheduler
+  SubstrateReactor
+  LinearArenaReclaimer
+  LocklessHamtStorage
+  TaggedPointerGuard
+  HierarchicalTimerWheel
+  McdcAvionicsTap
+  CrashWalReplay
+  DifferentialBisimulation
+  AppupHotReloadCoordinator
+  SlmBifInference
+  FastPatternFilter
+  EpidemicGossip
+  DynamicAgentBytecodeSynthesizer
 }
 
 pub fn agent_kind_to_string(kind: AgentKind) -> String {
@@ -65,6 +81,22 @@ pub fn agent_kind_to_string(kind: AgentKind) -> String {
     PayloadScience -> "PayloadScience"
     StorageCustodian -> "StorageCustodian"
     KmSync -> "KmSync"
+    HardwareDriveInterlock -> "HardwareDriveInterlock"
+    RochaSemioticCutGuard -> "RochaSemioticCutGuard"
+    DeterministicReductionScheduler -> "DeterministicReductionScheduler"
+    SubstrateReactor -> "SubstrateReactor"
+    LinearArenaReclaimer -> "LinearArenaReclaimer"
+    LocklessHamtStorage -> "LocklessHamtStorage"
+    TaggedPointerGuard -> "TaggedPointerGuard"
+    HierarchicalTimerWheel -> "HierarchicalTimerWheel"
+    McdcAvionicsTap -> "McdcAvionicsTap"
+    CrashWalReplay -> "CrashWalReplay"
+    DifferentialBisimulation -> "DifferentialBisimulation"
+    AppupHotReloadCoordinator -> "AppupHotReloadCoordinator"
+    SlmBifInference -> "SlmBifInference"
+    FastPatternFilter -> "FastPatternFilter"
+    EpidemicGossip -> "EpidemicGossip"
+    DynamicAgentBytecodeSynthesizer -> "DynamicAgentBytecodeSynthesizer"
   }
 }
 
@@ -86,6 +118,22 @@ pub fn string_to_agent_kind(s: String) -> Result(AgentKind, Nil) {
     "PayloadScience" -> Ok(PayloadScience)
     "StorageCustodian" -> Ok(StorageCustodian)
     "KmSync" -> Ok(KmSync)
+    "HardwareDriveInterlock" -> Ok(HardwareDriveInterlock)
+    "RochaSemioticCutGuard" -> Ok(RochaSemioticCutGuard)
+    "DeterministicReductionScheduler" -> Ok(DeterministicReductionScheduler)
+    "SubstrateReactor" -> Ok(SubstrateReactor)
+    "LinearArenaReclaimer" -> Ok(LinearArenaReclaimer)
+    "LocklessHamtStorage" -> Ok(LocklessHamtStorage)
+    "TaggedPointerGuard" -> Ok(TaggedPointerGuard)
+    "HierarchicalTimerWheel" -> Ok(HierarchicalTimerWheel)
+    "McdcAvionicsTap" -> Ok(McdcAvionicsTap)
+    "CrashWalReplay" -> Ok(CrashWalReplay)
+    "DifferentialBisimulation" -> Ok(DifferentialBisimulation)
+    "AppupHotReloadCoordinator" -> Ok(AppupHotReloadCoordinator)
+    "SlmBifInference" -> Ok(SlmBifInference)
+    "FastPatternFilter" -> Ok(FastPatternFilter)
+    "EpidemicGossip" -> Ok(EpidemicGossip)
+    "DynamicAgentBytecodeSynthesizer" -> Ok(DynamicAgentBytecodeSynthesizer)
     _ -> Error(Nil)
   }
 }
@@ -1218,6 +1266,972 @@ fn build_km_sync_spec() -> AgentTypeSpec {
 // Catalog API
 // =============================================================================
 
+fn build_hardware_drive_interlock_spec() -> AgentTypeSpec {
+  let active_guard =
+    HierarchicalState(
+      name: "Guarding",
+      parent: None,
+      entry: ["drive_guard_armed"],
+      exit: ["drive_guard_standdown"],
+      transitions: [
+        Transition(
+          on_signal: "probe_target",
+          guard: None,
+          do_actions: ["verify_nvme_serial"],
+          target: ToState("Guarding"),
+        ),
+        Transition(
+          on_signal: "denied_serial_detected",
+          guard: None,
+          do_actions: ["trip_hardware_fault_lock"],
+          target: ToState("LockedOut"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let locked_out =
+    HierarchicalState(
+      name: "LockedOut",
+      parent: None,
+      entry: ["halt_controller_io"],
+      exit: ["cold_reboot_required"],
+      transitions: [],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "HardwareDriveInterlockHSM",
+      signals: make_signals([
+        "probe_target",
+        "denied_serial_detected",
+        "system_reboot",
+      ]),
+      guards: ["is_hard_denied_serial"],
+      actions: [
+        "verify_nvme_serial",
+        "trip_hardware_fault_lock",
+        "halt_controller_io",
+      ],
+      root_states: [active_guard, locked_out],
+      choices: [],
+      initial: #([], "Guarding"),
+    )
+
+  AgentTypeSpec(
+    kind: HardwareDriveInterlock,
+    name: "Hardware Drive Interlock Agent",
+    fractal_layer: 0,
+    fractal_tag: "#fractal-l0",
+    fpp_component_kind: Active,
+    base_id: 0x1400,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Guarantees block-driver level isolation and permanent denial of root OS NVMe serial 25503L801736.",
+    operational_domain: "Hardware Storage Protection",
+    sdlc_phase: "Runtime Safety Kernel",
+    sre_resilience_tier: "SIL-6 / Fail-Closed",
+    evidence_contracts: ["SC-STORAGE-001", "SC-FPP-INTENT-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_rocha_cut_guard_spec() -> AgentTypeSpec {
+  let decoupled =
+    HierarchicalState(
+      name: "Decoupled",
+      parent: None,
+      entry: ["semiotic_boundary_verified"],
+      exit: ["semiotic_boundary_breached"],
+      transitions: [
+        Transition(
+          on_signal: "inspect_coupling",
+          guard: None,
+          do_actions: ["verify_rocha_cut"],
+          target: ToState("Decoupled"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "RochaCutGuardHSM",
+      signals: make_signals(["inspect_coupling", "realign_cut"]),
+      guards: ["is_semiotically_decoupled"],
+      actions: ["verify_rocha_cut", "force_semiotic_isolation"],
+      root_states: [decoupled],
+      choices: [],
+      initial: #([], "Decoupled"),
+    )
+
+  AgentTypeSpec(
+    kind: RochaSemioticCutGuard,
+    name: "Rocha Semiotic Cut Guard Agent",
+    fractal_layer: 0,
+    fractal_tag: "#fractal-l0",
+    fpp_component_kind: Queued,
+    base_id: 0x1440,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Maintains biosemiotic decoupling between informational signs (code) and dynamic material laws (physics).",
+    operational_domain: "Biosemiotic Cybernetics",
+    sdlc_phase: "Formal Semantic Architecture",
+    sre_resilience_tier: "SIL-5 / Informational Closure",
+    evidence_contracts: ["SC-ROCHA-001", "SC-DMC-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_reduction_scheduler_spec() -> AgentTypeSpec {
+  let running =
+    HierarchicalState(
+      name: "Executing",
+      parent: None,
+      entry: ["reset_reduction_counter"],
+      exit: ["yield_cpu_slice"],
+      transitions: [
+        Transition(
+          on_signal: "reduction_exhausted",
+          guard: None,
+          do_actions: ["suspend_and_enqueue"],
+          target: ToState("Yielded"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let yielded =
+    HierarchicalState(
+      name: "Yielded",
+      parent: None,
+      entry: ["schedule_next_process"],
+      exit: ["resume_process_context"],
+      transitions: [
+        Transition(
+          on_signal: "timeslice_granted",
+          guard: None,
+          do_actions: ["load_registers"],
+          target: ToState("Executing"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "ReductionSchedulerHSM",
+      signals: make_signals([
+        "reduction_exhausted",
+        "timeslice_granted",
+        "priority_bump",
+      ]),
+      guards: ["is_budget_exceeded"],
+      actions: [
+        "reset_reduction_counter",
+        "suspend_and_enqueue",
+        "schedule_next_process",
+        "load_registers",
+      ],
+      root_states: [running, yielded],
+      choices: [],
+      initial: #([], "Executing"),
+    )
+
+  AgentTypeSpec(
+    kind: DeterministicReductionScheduler,
+    name: "Deterministic Reduction Scheduler Agent",
+    fractal_layer: 1,
+    fractal_tag: "#fractal-l1",
+    fpp_component_kind: Active,
+    base_id: 0x1480,
+    id_span: 64,
+    queue_policy: Block,
+    description: "Enforces 4,000-reduction budget yield points (proc.zig), preventing starvation and priority inversion.",
+    operational_domain: "Deterministic Runtime Engine",
+    sdlc_phase: "Microsecond Actuator Execution",
+    sre_resilience_tier: "SIL-6 / Real-Time Bounded",
+    evidence_contracts: ["SC-ZIGVM-REDUCTIONS-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_substrate_reactor_spec() -> AgentTypeSpec {
+  let polling =
+    HierarchicalState(
+      name: "Polling",
+      parent: None,
+      entry: ["arm_epoll_wait"],
+      exit: ["disarm_epoll_wait"],
+      transitions: [
+        Transition(
+          on_signal: "io_event_ready",
+          guard: None,
+          do_actions: ["dispatch_row_event"],
+          target: ToState("Dispatching"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let dispatching =
+    HierarchicalState(
+      name: "Dispatching",
+      parent: None,
+      entry: ["propagate_actor_effect"],
+      exit: ["complete_dispatch"],
+      transitions: [
+        Transition(
+          on_signal: "dispatch_complete",
+          guard: None,
+          do_actions: ["rearm_interest"],
+          target: ToState("Polling"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SubstrateReactorHSM",
+      signals: make_signals([
+        "io_event_ready",
+        "dispatch_complete",
+        "timeout_tick",
+      ]),
+      guards: ["has_ready_events"],
+      actions: [
+        "arm_epoll_wait",
+        "dispatch_row_event",
+        "propagate_actor_effect",
+        "rearm_interest",
+      ],
+      root_states: [polling, dispatching],
+      choices: [],
+      initial: #([], "Polling"),
+    )
+
+  AgentTypeSpec(
+    kind: SubstrateReactor,
+    name: "Substrate Reactor Agent",
+    fractal_layer: 1,
+    fractal_tag: "#fractal-l1",
+    fpp_component_kind: Active,
+    base_id: 0x14C0,
+    id_span: 64,
+    queue_policy: Block,
+    description: "Drives non-blocking epoll/kqueue event demuxing and row-polymorphic struct event propagation.",
+    operational_domain: "Non-Blocking Async I/O",
+    sdlc_phase: "I/O Multiplexing & Kernel Events",
+    sre_resilience_tier: "SIL-5 / High-Throughput",
+    evidence_contracts: ["SC-ZIGVM-REACTOR-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_linear_arena_reclaimer_spec() -> AgentTypeSpec {
+  let active =
+    HierarchicalState(
+      name: "ActiveAllocation",
+      parent: None,
+      entry: ["mark_arena_watermark"],
+      exit: ["lock_arena_for_reset"],
+      transitions: [
+        Transition(
+          on_signal: "trigger_apoptosis",
+          guard: None,
+          do_actions: ["execute_linear_reset"],
+          target: ToState("Reclaiming"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let reclaiming =
+    HierarchicalState(
+      name: "Reclaiming",
+      parent: None,
+      entry: ["zero_arena_header"],
+      exit: ["unlock_arena"],
+      transitions: [
+        Transition(
+          on_signal: "reset_complete",
+          guard: None,
+          do_actions: ["restore_nominal_capacity"],
+          target: ToState("ActiveAllocation"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "LinearArenaReclaimerHSM",
+      signals: make_signals([
+        "trigger_apoptosis",
+        "reset_complete",
+        "overflow_warning",
+      ]),
+      guards: ["is_arena_dirty"],
+      actions: [
+        "mark_arena_watermark",
+        "execute_linear_reset",
+        "zero_arena_header",
+        "restore_nominal_capacity",
+      ],
+      root_states: [active, reclaiming],
+      choices: [],
+      initial: #([], "ActiveAllocation"),
+    )
+
+  AgentTypeSpec(
+    kind: LinearArenaReclaimer,
+    name: "Linear Arena Reclaimer Agent",
+    fractal_layer: 1,
+    fractal_tag: "#fractal-l1",
+    fpp_component_kind: Active,
+    base_id: 0x1500,
+    id_span: 64,
+    queue_policy: Drop,
+    description: "Executes process apoptosis and reclaims linear execution frames in O(1) time without GC pauses.",
+    operational_domain: "Zero-Muda Memory Management",
+    sdlc_phase: "Process Apoptosis & Lifecycle",
+    sre_resilience_tier: "SIL-6 / O(1) Reset",
+    evidence_contracts: ["SC-MUDA-001", "SC-ZIGVM-ARENA-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_lockless_hamt_spec() -> AgentTypeSpec {
+  let serving =
+    HierarchicalState(
+      name: "Serving",
+      parent: None,
+      entry: ["init_root_trie"],
+      exit: ["quiesce_trie"],
+      transitions: [
+        Transition(
+          on_signal: "atomic_cas_update",
+          guard: None,
+          do_actions: ["commit_hamt_node"],
+          target: ToState("Serving"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "LocklessHamtStorageHSM",
+      signals: make_signals(["atomic_cas_update", "compact_tree"]),
+      guards: ["cas_matches_current"],
+      actions: ["init_root_trie", "commit_hamt_node", "quiesce_trie"],
+      root_states: [serving],
+      choices: [],
+      initial: #([], "Serving"),
+    )
+
+  AgentTypeSpec(
+    kind: LocklessHamtStorage,
+    name: "Lockless HAMT Storage Agent",
+    fractal_layer: 2,
+    fractal_tag: "#fractal-l2",
+    fpp_component_kind: Active,
+    base_id: 0x1540,
+    id_span: 64,
+    queue_policy: Block,
+    description: "Provides sub-microsecond atomic state exchange and parameter storage using lockless HAMT ETS.",
+    operational_domain: "Concurrent In-Memory Storage",
+    sdlc_phase: "High-Frequency Telemetry Cache",
+    sre_resilience_tier: "SIL-5 / Non-Blocking CAS",
+    evidence_contracts: ["SC-ZIGVM-HAMT-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_tagged_pointer_guard_spec() -> AgentTypeSpec {
+  let verifying =
+    HierarchicalState(
+      name: "Verifying",
+      parent: None,
+      entry: ["enable_nan_box_check"],
+      exit: ["disable_nan_box_check"],
+      transitions: [
+        Transition(
+          on_signal: "inspect_term",
+          guard: None,
+          do_actions: ["validate_tag_bits"],
+          target: ToState("Verifying"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "TaggedPointerGuardHSM",
+      signals: make_signals(["inspect_term", "trap_escaped_pointer"]),
+      guards: ["is_valid_nan_tagged"],
+      actions: [
+        "enable_nan_box_check",
+        "validate_tag_bits",
+        "trap_escaped_pointer",
+      ],
+      root_states: [verifying],
+      choices: [],
+      initial: #([], "Verifying"),
+    )
+
+  AgentTypeSpec(
+    kind: TaggedPointerGuard,
+    name: "Tagged Pointer Guard Agent",
+    fractal_layer: 2,
+    fractal_tag: "#fractal-l2",
+    fpp_component_kind: Queued,
+    base_id: 0x1580,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Validates 64-bit NaN-boxed tagged pointer representation and prevents pointer escaping.",
+    operational_domain: "Memory Coherence & Term Safety",
+    sdlc_phase: "64-bit NaN-Box Pointer Invariant",
+    sre_resilience_tier: "SIL-6 / Zero Memory Corruption",
+    evidence_contracts: ["SC-DMC-001", "SC-ZIGVM-TERM-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_hierarchical_timer_wheel_spec() -> AgentTypeSpec {
+  let ticking =
+    HierarchicalState(
+      name: "Ticking",
+      parent: None,
+      entry: ["start_hardware_timer_channel"],
+      exit: ["stop_timer_channel"],
+      transitions: [
+        Transition(
+          on_signal: "wheel_tick",
+          guard: None,
+          do_actions: ["cascade_buckets"],
+          target: ToState("Ticking"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "HierarchicalTimerWheelHSM",
+      signals: make_signals(["wheel_tick", "insert_timer", "cancel_timer"]),
+      guards: ["is_within_jitter_bound"],
+      actions: [
+        "start_hardware_timer_channel",
+        "cascade_buckets",
+        "fire_expired_timers",
+      ],
+      root_states: [ticking],
+      choices: [],
+      initial: #([], "Ticking"),
+    )
+
+  AgentTypeSpec(
+    kind: HierarchicalTimerWheel,
+    name: "Hierarchical Timer Wheel Agent",
+    fractal_layer: 2,
+    fractal_tag: "#fractal-l2",
+    fpp_component_kind: Active,
+    base_id: 0x15C0,
+    id_span: 64,
+    queue_policy: Drop,
+    description: "Manages 4-level timing bucket wheels with < 2us jitter for precision flight command dispatch.",
+    operational_domain: "Timing & Actuation Sequencing",
+    sdlc_phase: "Real-Time Clock & Jitter Control",
+    sre_resilience_tier: "SIL-5 / Sub-2us Drift",
+    evidence_contracts: ["SC-TIME-001", "SC-ZIGVM-TIMER-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_mcdc_tap_spec() -> AgentTypeSpec {
+  let logging =
+    HierarchicalState(
+      name: "Recording",
+      parent: None,
+      entry: ["bind_decision_probes"],
+      exit: ["flush_decision_vectors"],
+      transitions: [
+        Transition(
+          on_signal: "branch_evaluated",
+          guard: None,
+          do_actions: ["record_truth_table_entry"],
+          target: ToState("Recording"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "McdcAvionicsTapHSM",
+      signals: make_signals(["branch_evaluated", "dump_coverage_matrix"]),
+      guards: ["is_mcdc_complete"],
+      actions: [
+        "bind_decision_probes",
+        "record_truth_table_entry",
+        "flush_decision_vectors",
+      ],
+      root_states: [logging],
+      choices: [],
+      initial: #([], "Recording"),
+    )
+
+  AgentTypeSpec(
+    kind: McdcAvionicsTap,
+    name: "MC/DC Avionics TAP Agent",
+    fractal_layer: 3,
+    fractal_tag: "#fractal-l3",
+    fpp_component_kind: Queued,
+    base_id: 0x1600,
+    id_span: 64,
+    queue_policy: Block,
+    description: "Records in-flight truth tables for branch conditions to achieve 100% DO-178C Level-A coverage.",
+    operational_domain: "Avionics Verification & Certification",
+    sdlc_phase: "DO-178C Level-A MC/DC Compliance",
+    sre_resilience_tier: "SIL-6 / Auditable Trail",
+    evidence_contracts: ["SC-DO178C-001", "SC-MCDC-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_crash_wal_spec() -> AgentTypeSpec {
+  let appending =
+    HierarchicalState(
+      name: "Appending",
+      parent: None,
+      entry: ["open_wal_file_descriptor"],
+      exit: ["sync_and_close_fd"],
+      transitions: [
+        Transition(
+          on_signal: "log_event_entry",
+          guard: None,
+          do_actions: ["append_with_crc32"],
+          target: ToState("Appending"),
+        ),
+        Transition(
+          on_signal: "reboot_recovery_requested",
+          guard: None,
+          do_actions: ["scan_and_replay_log"],
+          target: ToState("Replaying"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let replaying =
+    HierarchicalState(
+      name: "Replaying",
+      parent: None,
+      entry: ["verify_log_crc32"],
+      exit: ["mark_replay_complete"],
+      transitions: [
+        Transition(
+          on_signal: "replay_done",
+          guard: None,
+          do_actions: ["resume_append_mode"],
+          target: ToState("Appending"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "CrashWalReplayHSM",
+      signals: make_signals([
+        "log_event_entry",
+        "reboot_recovery_requested",
+        "replay_done",
+      ]),
+      guards: ["is_wal_crc_valid"],
+      actions: [
+        "open_wal_file_descriptor",
+        "append_with_crc32",
+        "scan_and_replay_log",
+        "verify_log_crc32",
+        "resume_append_mode",
+      ],
+      root_states: [appending, replaying],
+      choices: [],
+      initial: #([], "Appending"),
+    )
+
+  AgentTypeSpec(
+    kind: CrashWalReplay,
+    name: "Crash WAL Replay Agent",
+    fractal_layer: 3,
+    fractal_tag: "#fractal-l3",
+    fpp_component_kind: Active,
+    base_id: 0x1640,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Appends transaction logs with CRC32 checksums and provides deterministic state reconstitution.",
+    operational_domain: "Crash Resilience & State Recovery",
+    sdlc_phase: "Write-Ahead Log & Deterministic Replay",
+    sre_resilience_tier: "SIL-6 / Zero Data Loss",
+    evidence_contracts: ["SC-ZIGVM-WAL-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_differential_bisim_spec() -> AgentTypeSpec {
+  let checking =
+    HierarchicalState(
+      name: "Proving",
+      parent: None,
+      entry: ["init_bisimulation_oracle"],
+      exit: ["emit_parity_certificate"],
+      transitions: [
+        Transition(
+          on_signal: "compare_step_traces",
+          guard: None,
+          do_actions: ["assert_trace_isomorphism"],
+          target: ToState("Proving"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "DifferentialBisimulationHSM",
+      signals: make_signals(["compare_step_traces", "flag_divergence"]),
+      guards: ["is_step_identical"],
+      actions: [
+        "init_bisimulation_oracle",
+        "assert_trace_isomorphism",
+        "emit_parity_certificate",
+      ],
+      root_states: [checking],
+      choices: [],
+      initial: #([], "Proving"),
+    )
+
+  AgentTypeSpec(
+    kind: DifferentialBisimulation,
+    name: "Differential Bisimulation Agent",
+    fractal_layer: 3,
+    fractal_tag: "#fractal-l3",
+    fpp_component_kind: Queued,
+    base_id: 0x1680,
+    id_span: 64,
+    queue_policy: Drop,
+    description: "Continuously proves trace equivalence between Gleam HSM specifications and ZigVM bytecode slices.",
+    operational_domain: "Formal Parity & Coherence",
+    sdlc_phase: "Cross-Runtime Bisimulation",
+    sre_resilience_tier: "SIL-5 / Mathematical Closure",
+    evidence_contracts: ["SC-BISIM-001", "SC-PARITY-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_appup_coordinator_spec() -> AgentTypeSpec {
+  let stable =
+    HierarchicalState(
+      name: "Stable",
+      parent: None,
+      entry: ["track_active_vsn"],
+      exit: ["begin_prepare_upgrade"],
+      transitions: [
+        Transition(
+          on_signal: "start_upgrade",
+          guard: None,
+          do_actions: ["quiesce_processes"],
+          target: ToState("Migrating"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let migrating =
+    HierarchicalState(
+      name: "Migrating",
+      parent: None,
+      entry: ["execute_state_transform"],
+      exit: ["commit_new_vsn"],
+      transitions: [
+        Transition(
+          on_signal: "transform_success",
+          guard: None,
+          do_actions: ["switch_code_pointers"],
+          target: ToState("Stable"),
+        ),
+        Transition(
+          on_signal: "transform_failed",
+          guard: None,
+          do_actions: ["rollback_to_old_vsn"],
+          target: ToState("Stable"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "AppupHotReloadHSM",
+      signals: make_signals([
+        "start_upgrade",
+        "transform_success",
+        "transform_failed",
+      ]),
+      guards: ["is_state_valid_for_vsn"],
+      actions: [
+        "track_active_vsn",
+        "quiesce_processes",
+        "execute_state_transform",
+        "switch_code_pointers",
+        "rollback_to_old_vsn",
+      ],
+      root_states: [stable, migrating],
+      choices: [],
+      initial: #([], "Stable"),
+    )
+
+  AgentTypeSpec(
+    kind: AppupHotReloadCoordinator,
+    name: "Appup Hot Reload Coordinator Agent",
+    fractal_layer: 4,
+    fractal_tag: "#fractal-l4",
+    fpp_component_kind: Active,
+    base_id: 0x16C0,
+    id_span: 64,
+    queue_policy: Assert,
+    description: "Coordinates atomic two-phase commit state migration and release upgrades without process restarts.",
+    operational_domain: "Zero-Downtime System Upgrade",
+    sdlc_phase: "Two-Phase Appup Release Upgrades",
+    sre_resilience_tier: "SIL-5 / Atomic Cutover",
+    evidence_contracts: ["SC-APPUP-001", "SC-RELEASE-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_slm_bif_spec() -> AgentTypeSpec {
+  let ready =
+    HierarchicalState(
+      name: "Ready",
+      parent: None,
+      entry: ["warm_slm_weights"],
+      exit: ["cool_slm_cache"],
+      transitions: [
+        Transition(
+          on_signal: "score_tokens",
+          guard: None,
+          do_actions: ["invoke_slm_bif"],
+          target: ToState("Ready"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "SlmBifInferenceHSM",
+      signals: make_signals(["score_tokens", "reload_model"]),
+      guards: ["is_latency_sub_5ms"],
+      actions: ["warm_slm_weights", "invoke_slm_bif", "cool_slm_cache"],
+      root_states: [ready],
+      choices: [],
+      initial: #([], "Ready"),
+    )
+
+  AgentTypeSpec(
+    kind: SlmBifInference,
+    name: "SLM BIF Inference Agent",
+    fractal_layer: 5,
+    fractal_tag: "#fractal-l5",
+    fpp_component_kind: Active,
+    base_id: 0x1700,
+    id_span: 64,
+    queue_policy: Drop,
+    description: "Executes low-latency neural token scoring and cognitive intention parsing in < 5ms via SLM BIFs.",
+    operational_domain: "Edge Neural Intelligence",
+    sdlc_phase: "Sub-5ms Token Scoring & Extraction",
+    sre_resilience_tier: "SIL-4 / Real-Time Bounded",
+    evidence_contracts: ["SC-SLM-BIF-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_fast_pattern_filter_spec() -> AgentTypeSpec {
+  let filtering =
+    HierarchicalState(
+      name: "Filtering",
+      parent: None,
+      entry: ["compile_matchspec_bytecode"],
+      exit: ["clear_filter_slots"],
+      transitions: [
+        Transition(
+          on_signal: "filter_tuple",
+          guard: None,
+          do_actions: ["run_matchspec_eval"],
+          target: ToState("Filtering"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "FastPatternFilterHSM",
+      signals: make_signals(["filter_tuple", "update_patterns"]),
+      guards: ["is_pattern_compiled"],
+      actions: [
+        "compile_matchspec_bytecode",
+        "run_matchspec_eval",
+        "clear_filter_slots",
+      ],
+      root_states: [filtering],
+      choices: [],
+      initial: #([], "Filtering"),
+    )
+
+  AgentTypeSpec(
+    kind: FastPatternFilter,
+    name: "Fast Pattern Filter Agent",
+    fractal_layer: 5,
+    fractal_tag: "#fractal-l5",
+    fpp_component_kind: Queued,
+    base_id: 0x1740,
+    id_span: 64,
+    queue_policy: Drop,
+    description: "Compiles match specifications into bytecode for wire-speed filtering of telemetry tuples.",
+    operational_domain: "High-Throughput Telemetry Filtering",
+    sdlc_phase: "Match Specification Compilation",
+    sre_resilience_tier: "SIL-5 / Constant-Time",
+    evidence_contracts: ["SC-MATCHSPEC-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_epidemic_gossip_spec() -> AgentTypeSpec {
+  let gossiping =
+    HierarchicalState(
+      name: "Disseminating",
+      parent: None,
+      entry: ["broadcast_swarm_ping"],
+      exit: ["aggregate_vector_clocks"],
+      transitions: [
+        Transition(
+          on_signal: "gossip_tick",
+          guard: None,
+          do_actions: ["send_random_peer_digest"],
+          target: ToState("Disseminating"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "EpidemicGossipHSM",
+      signals: make_signals(["gossip_tick", "peer_timeout", "merge_crdt_state"]),
+      guards: ["is_gossip_converged"],
+      actions: [
+        "broadcast_swarm_ping",
+        "send_random_peer_digest",
+        "aggregate_vector_clocks",
+      ],
+      root_states: [gossiping],
+      choices: [],
+      initial: #([], "Disseminating"),
+    )
+
+  AgentTypeSpec(
+    kind: EpidemicGossip,
+    name: "Epidemic Gossip Agent",
+    fractal_layer: 6,
+    fractal_tag: "#fractal-l6",
+    fpp_component_kind: Active,
+    base_id: 0x1780,
+    id_span: 64,
+    queue_policy: Drop,
+    description: "Disseminates swarm node heartbeats, CRDT state updates, and failure alerts in < 50ms.",
+    operational_domain: "Distributed Swarm Health",
+    sdlc_phase: "Decentralized Failure Detection",
+    sre_resilience_tier: "SIL-5 / Epidemic Convergence",
+    evidence_contracts: ["SC-GOSSIP-001", "SC-CRDT-001"],
+    hsm_machine: hsm,
+  )
+}
+
+fn build_bytecode_synthesizer_spec() -> AgentTypeSpec {
+  let synthesizing =
+    HierarchicalState(
+      name: "Compiling",
+      parent: None,
+      entry: ["parse_fpp_hsm_ir"],
+      exit: ["emit_beam_chunk"],
+      transitions: [
+        Transition(
+          on_signal: "compile_agent_spec",
+          guard: None,
+          do_actions: ["generate_zigvm_opcodes"],
+          target: ToState("Compiling"),
+        ),
+      ],
+      sub_states: [],
+      initial_sub_state: None,
+    )
+
+  let hsm =
+    HierarchicalMachine(
+      machine_name: "BytecodeSynthesizerHSM",
+      signals: make_signals(["compile_agent_spec", "validate_bytecode"]),
+      guards: ["is_bytecode_verifiable"],
+      actions: ["parse_fpp_hsm_ir", "generate_zigvm_opcodes", "emit_beam_chunk"],
+      root_states: [synthesizing],
+      choices: [],
+      initial: #([], "Compiling"),
+    )
+
+  AgentTypeSpec(
+    kind: DynamicAgentBytecodeSynthesizer,
+    name: "Dynamic Agent Bytecode Synthesizer Agent",
+    fractal_layer: 9,
+    fractal_tag: "#fractal-l9",
+    fpp_component_kind: Active,
+    base_id: 0x17C0,
+    id_span: 64,
+    queue_policy: Block,
+    description: "Compiles high-level FPP state machine specifications into native ZigVM bytecode during runtime reconfiguration.",
+    operational_domain: "Metamorphic Self-Synthesis",
+    sdlc_phase: "Runtime Bytecode Compilation",
+    sre_resilience_tier: "SIL-5 / Hot Deployable",
+    evidence_contracts: ["SC-AGENT-CODEGEN-001"],
+    hsm_machine: hsm,
+  )
+}
+
 pub fn all_agent_types() -> List(AgentTypeSpec) {
   [
     build_guardian_spec(),
@@ -1236,6 +2250,22 @@ pub fn all_agent_types() -> List(AgentTypeSpec) {
     build_payload_science_spec(),
     build_storage_custodian_spec(),
     build_km_sync_spec(),
+    build_hardware_drive_interlock_spec(),
+    build_rocha_cut_guard_spec(),
+    build_reduction_scheduler_spec(),
+    build_substrate_reactor_spec(),
+    build_linear_arena_reclaimer_spec(),
+    build_lockless_hamt_spec(),
+    build_tagged_pointer_guard_spec(),
+    build_hierarchical_timer_wheel_spec(),
+    build_mcdc_tap_spec(),
+    build_crash_wal_spec(),
+    build_differential_bisim_spec(),
+    build_appup_coordinator_spec(),
+    build_slm_bif_spec(),
+    build_fast_pattern_filter_spec(),
+    build_epidemic_gossip_spec(),
+    build_bytecode_synthesizer_spec(),
   ]
 }
 
@@ -1253,9 +2283,7 @@ pub fn verify_agent_base_id_disjointness(specs: List(AgentTypeSpec)) -> Bool {
   check_pairwise_intervals(intervals)
 }
 
-fn check_pairwise_intervals(
-  intervals: List(#(String, Int, Int)),
-) -> Bool {
+fn check_pairwise_intervals(intervals: List(#(String, Int, Int))) -> Bool {
   case intervals {
     [] -> True
     [_] -> True

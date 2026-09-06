@@ -80,7 +80,10 @@ pub fn start(
 ///     <requirement>MUST emit metrics via Zenoh upon state transition (AOR-MESH-004).</requirement>
 ///   </telemetry>
 /// </c3i-atomic>
-fn handle_message(state: State, message: Message) -> actor.Next(State, Message) {
+fn handle_message(
+  state: State,
+  message: Message,
+) -> actor.Next(State, Message) {
   case message {
     Initialize -> {
       // In a real implementation, we'd do this async or with a timeout

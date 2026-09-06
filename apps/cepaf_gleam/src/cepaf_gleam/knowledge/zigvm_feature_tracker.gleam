@@ -1712,7 +1712,9 @@ pub fn get_summary() -> FeatureSummary {
     render_suite_count: list.length(features_by_category(RenderSuite)),
     adr_count: list.length(features_by_category(PermanentAdrRecord)),
     moc_count: list.length(features_by_category(MapOfContent)),
-    episodic_cluster_count: list.length(features_by_category(EpisodicResearchCluster)),
+    episodic_cluster_count: list.length(features_by_category(
+      EpisodicResearchCluster,
+    )),
     service_topology_count: list.length(features_by_category(ServiceTopology)),
   )
 }
@@ -1746,10 +1748,22 @@ pub fn render_ascii_table() -> String {
     list.map(all_features(), fn(f) {
       let id_pad = pad_right(f.id, 13)
       let name_pad = pad_right(string.slice(f.name, 0, 52), 52)
-      let cat_pad = pad_right(string.slice(category_to_string(f.category), 0, 23), 23)
+      let cat_pad =
+        pad_right(string.slice(category_to_string(f.category), 0, 23), 23)
       let tier_pad = pad_right(string.slice(tier_to_string(f.tier), 0, 22), 22)
-      let stat_pad = pad_right(string.slice(status_to_string(f.status), 0, 18), 18)
-      "| " <> id_pad <> " | " <> name_pad <> " | " <> cat_pad <> " | " <> tier_pad <> " | " <> stat_pad <> " |\n"
+      let stat_pad =
+        pad_right(string.slice(status_to_string(f.status), 0, 18), 18)
+      "| "
+      <> id_pad
+      <> " | "
+      <> name_pad
+      <> " | "
+      <> cat_pad
+      <> " | "
+      <> tier_pad
+      <> " | "
+      <> stat_pad
+      <> " |\n"
     })
 
   let footer =

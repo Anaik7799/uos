@@ -269,7 +269,11 @@ pub fn get_state(counter: Int) -> RpcCommand {
 }
 
 /// Create a set_model command
-pub fn set_model(counter: Int, provider: String, model_id: String) -> RpcCommand {
+pub fn set_model(
+  counter: Int,
+  provider: String,
+  model_id: String,
+) -> RpcCommand {
   SetModel(make_id(counter), provider, model_id)
 }
 

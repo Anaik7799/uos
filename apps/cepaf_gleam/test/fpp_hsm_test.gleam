@@ -141,7 +141,12 @@ pub fn hsm_initial_hierarchical_entry_test() {
   |> should.equal(["Operational", "Flight", "Cruise"])
 
   s0.log
-  |> should.equal(["power_on", "enter_operational", "enter_flight", "enter_cruise"])
+  |> should.equal([
+    "power_on",
+    "enter_operational",
+    "enter_flight",
+    "enter_cruise",
+  ])
 }
 
 // ----------------------------------------------------- 2. Peer LCA Transition

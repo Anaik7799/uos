@@ -311,7 +311,11 @@ pub fn pipeline_summary(pipeline: PerceptionPipeline) -> String {
 // ---------------------------------------------------------------------------
 
 /// Create an empty spatial map with given dimensions and resolution.
-pub fn spatial_map_new(width: Int, height: Int, resolution: Float) -> SpatialMap {
+pub fn spatial_map_new(
+  width: Int,
+  height: Int,
+  resolution: Float,
+) -> SpatialMap {
   SpatialMap(cells: [], resolution: resolution, width: width, height: height)
 }
 
@@ -350,7 +354,12 @@ pub fn map_update(
 }
 
 /// Return all cells within Manhattan distance `radius` of (x, y).
-pub fn map_query(map: SpatialMap, x: Int, y: Int, radius: Int) -> List(MapCell) {
+pub fn map_query(
+  map: SpatialMap,
+  x: Int,
+  y: Int,
+  radius: Int,
+) -> List(MapCell) {
   list.filter(map.cells, fn(c) {
     int.absolute_value(c.x - x) + int.absolute_value(c.y - y) <= radius
   })
@@ -415,7 +424,11 @@ pub fn is_path_clear(
 
 /// Manhattan distance from (x, y) to the nearest obstacle in the field.
 /// Returns a large sentinel (1_000_000.0) when the field has no obstacles.
-pub fn nearest_obstacle_distance(field: ObstacleField, x: Int, y: Int) -> Float {
+pub fn nearest_obstacle_distance(
+  field: ObstacleField,
+  x: Int,
+  y: Int,
+) -> Float {
   case field.obstacles {
     [] -> 1_000_000.0
     _ -> {

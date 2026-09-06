@@ -4,23 +4,20 @@
 
 import cepaf_gleam/fpp/agent_taxonomy.{
   AvionicsTelemetry, CognitiveOodaIntent, ConstitutionalGuardian,
-  DeterministicFlightController, FormalOracle, GroundGateway,
+  CyberneticImmune, DeterministicFlightController, FormalOracle, GroundGateway,
   LivingMetaEvolution, MissionPhaseHsm, ParameterDatabase, PayloadScience,
-  SreSentinel, StorageCustodian, SwarmMesh, CyberneticImmune,
+  SreSentinel, StorageCustodian, SwarmMesh,
 }
-import cepaf_gleam/fpp/intent.{
-  DispatchFlightCommand, FlightIntent,
-}
+import cepaf_gleam/fpp/intent.{DispatchFlightCommand, FlightIntent}
 import cepaf_gleam/fpp/miq_services.{
-  FastOodaService, Output, RavenService, RuliadService,
-  SopContainmentService, StpaService, SyncInput, auto_allocate_miq,
+  BayesianCriticRole, ByzantineSentinelRole, ChronoArbiterRole, ConductorRole,
+  CryptographicSentinelRole, CyberneticNavigatorRole, FastOodaService,
+  FluidicControllerRole, KinematicWeaverRole, KnowledgeConservatorRole,
+  NeuralWeaverRole, Output, QuantumArbiterRole, RavenService, RuliadService,
+  SensoriumRole, SopContainmentService, StpaService, SwarmHiveMindRole,
+  SyncInput, SynthesizerRole, TopologistRole, auto_allocate_miq,
   fpp_fast_ooda_cycle, fpp_raven_synthesize, fpp_ruliad_search_rule_space,
   fpp_stpa_validate, harness_role_to_string, map_harness_role_to_agent_kind,
-  BayesianCriticRole, ByzantineSentinelRole, ChronoArbiterRole, ConductorRole,
-  CryptographicSentinelRole, CyberneticNavigatorRole, FluidicControllerRole,
-  KinematicWeaverRole, KnowledgeConservatorRole, NeuralWeaverRole,
-  QuantumArbiterRole, SensoriumRole, SwarmHiveMindRole, SynthesizerRole,
-  TopologistRole,
 }
 import gleam/list
 import gleeunit/should
@@ -77,15 +74,16 @@ pub fn harness_role_homomorphism_test() {
 }
 
 pub fn fpp_stpa_validate_nominal_test() {
-  let valid_intent = FlightIntent(
-    intent_id: "INT-001",
-    actor: "CyberneticNavigator",
-    verb: DispatchFlightCommand(opcode: 0x100, args: ["nominal"]),
-    target_instance: "cmdDisp",
-    target_device_serial: "STORAGE_NVME_BACKUP_001",
-    precondition_guard: True,
-    formal_proof_ref: "formal/lean/Traceability.lean",
-  )
+  let valid_intent =
+    FlightIntent(
+      intent_id: "INT-001",
+      actor: "CyberneticNavigator",
+      verb: DispatchFlightCommand(opcode: 0x100, args: ["nominal"]),
+      target_instance: "cmdDisp",
+      target_device_serial: "STORAGE_NVME_BACKUP_001",
+      precondition_guard: True,
+      formal_proof_ref: "formal/lean/Traceability.lean",
+    )
 
   case fpp_stpa_validate(SyncInput(valid_intent)) {
     Output(Ok(constraints)) -> {
@@ -97,15 +95,16 @@ pub fn fpp_stpa_validate_nominal_test() {
 }
 
 pub fn fpp_stpa_validate_blocked_locked_nvme_test() {
-  let hostile_intent = FlightIntent(
-    intent_id: "INT-002-HOSTILE",
-    actor: "UnverifiedAgent",
-    verb: DispatchFlightCommand(opcode: 0x666, args: ["format"]),
-    target_instance: "storageCust",
-    target_device_serial: "25503L801736",
-    precondition_guard: True,
-    formal_proof_ref: "unverified",
-  )
+  let hostile_intent =
+    FlightIntent(
+      intent_id: "INT-002-HOSTILE",
+      actor: "UnverifiedAgent",
+      verb: DispatchFlightCommand(opcode: 0x666, args: ["format"]),
+      target_instance: "storageCust",
+      target_device_serial: "25503L801736",
+      precondition_guard: True,
+      formal_proof_ref: "unverified",
+    )
 
   case fpp_stpa_validate(SyncInput(hostile_intent)) {
     Output(Error(reason)) -> {
@@ -119,17 +118,19 @@ pub fn fpp_stpa_validate_blocked_locked_nvme_test() {
 }
 
 pub fn fpp_fast_ooda_cycle_test() {
-  let intent = FlightIntent(
-    intent_id: "INT-003",
-    actor: "CognitiveAgent",
-    verb: DispatchFlightCommand(opcode: 0x200, args: []),
-    target_instance: "telemetryCollector",
-    target_device_serial: "DEV-OK",
-    precondition_guard: True,
-    formal_proof_ref: "ref-003",
-  )
+  let intent =
+    FlightIntent(
+      intent_id: "INT-003",
+      actor: "CognitiveAgent",
+      verb: DispatchFlightCommand(opcode: 0x200, args: []),
+      target_instance: "telemetryCollector",
+      target_device_serial: "DEV-OK",
+      precondition_guard: True,
+      formal_proof_ref: "ref-003",
+    )
 
-  let port_out = fpp_fast_ooda_cycle(SyncInput("telemetry_stream_nominal"), intent)
+  let port_out =
+    fpp_fast_ooda_cycle(SyncInput("telemetry_stream_nominal"), intent)
   case port_out {
     Output(res_intent) -> res_intent.intent_id |> should.equal("INT-003")
     _ -> should.fail()
@@ -147,15 +148,16 @@ pub fn fpp_raven_and_ruliad_test() {
 }
 
 pub fn auto_allocate_miq_nominal_pipeline_test() {
-  let valid_intent = FlightIntent(
-    intent_id: "INT-004",
-    actor: "SwarmCoordinator",
-    verb: DispatchFlightCommand(opcode: 0x300, args: ["coord"]),
-    target_instance: "swarmMesh",
-    target_device_serial: "SAFE_STORAGE_01",
-    precondition_guard: True,
-    formal_proof_ref: "formal/lean/Traceability.lean",
-  )
+  let valid_intent =
+    FlightIntent(
+      intent_id: "INT-004",
+      actor: "SwarmCoordinator",
+      verb: DispatchFlightCommand(opcode: 0x300, args: ["coord"]),
+      target_instance: "swarmMesh",
+      target_device_serial: "SAFE_STORAGE_01",
+      precondition_guard: True,
+      formal_proof_ref: "formal/lean/Traceability.lean",
+    )
 
   let services = [
     StpaService,
@@ -175,15 +177,16 @@ pub fn auto_allocate_miq_nominal_pipeline_test() {
 }
 
 pub fn auto_allocate_miq_blocked_locked_nvme_test() {
-  let locked_intent = FlightIntent(
-    intent_id: "INT-005-BLOCKED",
-    actor: "MaliciousAgent",
-    verb: DispatchFlightCommand(opcode: 0x999, args: ["wipe"]),
-    target_instance: "rootDisk",
-    target_device_serial: "25503L801736",
-    precondition_guard: True,
-    formal_proof_ref: "none",
-  )
+  let locked_intent =
+    FlightIntent(
+      intent_id: "INT-005-BLOCKED",
+      actor: "MaliciousAgent",
+      verb: DispatchFlightCommand(opcode: 0x999, args: ["wipe"]),
+      target_instance: "rootDisk",
+      target_device_serial: "25503L801736",
+      precondition_guard: True,
+      formal_proof_ref: "none",
+    )
 
   case auto_allocate_miq(locked_intent, [StpaService, FastOodaService]) {
     Ok(_) -> should.fail()

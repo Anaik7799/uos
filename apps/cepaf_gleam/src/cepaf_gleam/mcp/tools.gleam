@@ -532,7 +532,10 @@ pub fn get_tool_definitions() -> List(ToolDefinition) {
               "name",
               json.object([
                 #("type", json.string("string")),
-                #("description", json.string("Gate name (e.g., GATE-DETERMINACY)")),
+                #(
+                  "description",
+                  json.string("Gate name (e.g., GATE-DETERMINACY)"),
+                ),
               ]),
             ),
           ]),

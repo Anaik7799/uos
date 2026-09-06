@@ -238,7 +238,10 @@ fn classify_verdict(combined: Float) -> ShieldVerdict {
 }
 
 /// Increment the appropriate counter for the given verdict.
-fn increment_counter(state: ShieldState, verdict: ShieldVerdict) -> ShieldState {
+fn increment_counter(
+  state: ShieldState,
+  verdict: ShieldVerdict,
+) -> ShieldState {
   let new_checked = state.decisions_checked + 1
   case verdict {
     Safe ->

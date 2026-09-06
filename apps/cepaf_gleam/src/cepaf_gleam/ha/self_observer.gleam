@@ -494,7 +494,10 @@ fn check_i11(
 }
 
 /// I-12: plan_status JSON contains "total" → NIF pipeline live
-fn check_i12(plan_raw: String, acc: List(TruthMismatch)) -> List(TruthMismatch) {
+fn check_i12(
+  plan_raw: String,
+  acc: List(TruthMismatch),
+) -> List(TruthMismatch) {
   case string.contains(plan_raw, "total") {
     True -> acc
     False -> [
@@ -581,7 +584,9 @@ pub fn derive_antibody_count(threat: ThreatLevel) -> Int {
 // ---------------------------------------------------------------------------
 
 /// Run one self-observation cycle; returns updated state + result.
-pub fn check(state: SelfObserverState) -> #(SelfObserverState, TruthCheckResult) {
+pub fn check(
+  state: SelfObserverState,
+) -> #(SelfObserverState, TruthCheckResult) {
   let result = check_page_truth("planning")
   let new_count = state.check_count + 1
   let new_ts = new_count

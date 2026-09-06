@@ -61,7 +61,10 @@ pub fn init() -> HomeostasisModel {
   )
 }
 
-pub fn update(model: HomeostasisModel, msg: HomeostasisMsg) -> HomeostasisModel {
+pub fn update(
+  model: HomeostasisModel,
+  msg: HomeostasisMsg,
+) -> HomeostasisModel {
   case msg {
     PidLoaded(p, s, c, n) ->
       HomeostasisModel(

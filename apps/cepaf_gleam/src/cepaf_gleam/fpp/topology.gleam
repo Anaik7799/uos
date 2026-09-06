@@ -399,8 +399,24 @@ pub fn canonical_subtopologies() -> List(domain.Subtopology) {
     domain.Subtopology(
       name: "EvidencePipelineSubtopo",
       instances: [
-        Instance("parity_compare", "parity_compare", 0x800, None, None, None, None),
-        Instance("evidence_store", "evidence_store", 0x600, None, None, None, None),
+        Instance(
+          "parity_compare",
+          "parity_compare",
+          0x800,
+          None,
+          None,
+          None,
+          None,
+        ),
+        Instance(
+          "evidence_store",
+          "evidence_store",
+          0x600,
+          None,
+          None,
+          None,
+          None,
+        ),
       ],
       connections: [
         Connection(

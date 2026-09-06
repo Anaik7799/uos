@@ -29,10 +29,11 @@ pub fn fpp_algebraic_atlas_construction_test() {
 
 pub fn fpp_sheaf_restriction_test() {
   let parent =
-    TelemetrySection(
-      subtopology_name: "RootSubtopo",
-      channels: [#(10, "3.14"), #(20, "100.0"), #(30, "nominal")],
-    )
+    TelemetrySection(subtopology_name: "RootSubtopo", channels: [
+      #(10, "3.14"),
+      #(20, "100.0"),
+      #(30, "nominal"),
+    ])
 
   let restricted = verify_sheaf_restriction(parent, [10, 30])
   restricted.channels |> should.equal([#(10, "3.14"), #(30, "nominal")])
@@ -41,15 +42,15 @@ pub fn fpp_sheaf_restriction_test() {
 pub fn fpp_sheaf_gluing_consistency_test() {
   // Two sections agreeing on mutual channel 20
   let sec1 =
-    TelemetrySection(
-      subtopology_name: "Subtopo1",
-      channels: [#(10, "3.14"), #(20, "agree")],
-    )
+    TelemetrySection(subtopology_name: "Subtopo1", channels: [
+      #(10, "3.14"),
+      #(20, "agree"),
+    ])
   let sec2 =
-    TelemetrySection(
-      subtopology_name: "Subtopo2",
-      channels: [#(20, "agree"), #(30, "99.9")],
-    )
+    TelemetrySection(subtopology_name: "Subtopo2", channels: [
+      #(20, "agree"),
+      #(30, "99.9"),
+    ])
 
   let res = verify_sheaf_gluing(sec1, sec2, [20])
   case res {
@@ -64,21 +65,14 @@ pub fn fpp_sheaf_gluing_consistency_test() {
 pub fn fpp_sheaf_gluing_conflict_test() {
   // Two sections disagreeing on mutual channel 20
   let sec1 =
-    TelemetrySection(
-      subtopology_name: "Subtopo1",
-      channels: [#(20, "value_a")],
-    )
+    TelemetrySection(subtopology_name: "Subtopo1", channels: [#(20, "value_a")])
   let sec2 =
-    TelemetrySection(
-      subtopology_name: "Subtopo2",
-      channels: [#(20, "value_b")],
-    )
+    TelemetrySection(subtopology_name: "Subtopo2", channels: [#(20, "value_b")])
 
   let res = verify_sheaf_gluing(sec1, sec2, [20])
   case res {
     GluingSuccess(_) -> False |> should.be_true
-    GluingConflict(err) ->
-      err |> string.contains("disagrees") |> should.be_true
+    GluingConflict(err) -> err |> string.contains("disagrees") |> should.be_true
   }
 }
 
@@ -87,7 +81,9 @@ pub fn fpp_algebraic_atlas_json_test() {
   let report = build_fpp_algebraic_atlas(model)
   let json_str = atlas_to_json(report)
 
-  json_str |> string.contains("\"contract\":\"SC-FPP-ATLAS-001\"") |> should.be_true
+  json_str
+  |> string.contains("\"contract\":\"SC-FPP-ATLAS-001\"")
+  |> should.be_true
   json_str |> string.contains("\"tiers_count\":5") |> should.be_true
   json_str |> string.contains("Tier0:FppAST") |> should.be_true
   json_str |> string.contains("Tier1:FppTopo") |> should.be_true

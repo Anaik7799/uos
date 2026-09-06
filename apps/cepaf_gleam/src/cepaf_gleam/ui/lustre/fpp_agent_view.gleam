@@ -94,41 +94,58 @@ fn render_header() -> Element(Msg) {
       ),
     ],
     [
-      html.div([attribute.class("flex justify-between items-start flex-wrap gap-4")], [
-        html.div([], [
-          html.div([attribute.class("flex items-center gap-3")], [
-            html.span([attribute.class("text-2xl font-bold text-amber-400 font-mono")], [
-              html.text("NASA JPL F Prime / FPP Aerospace Agent Cockpit"),
+      html.div(
+        [attribute.class("flex justify-between items-start flex-wrap gap-4")],
+        [
+          html.div([], [
+            html.div([attribute.class("flex items-center gap-3")], [
+              html.span(
+                [attribute.class("text-2xl font-bold text-amber-400 font-mono")],
+                [
+                  html.text("NASA JPL F Prime / FPP Aerospace Agent Cockpit"),
+                ],
+              ),
+              html.span(
+                [
+                  attribute.class(
+                    "px-2.5 py-0.5 rounded text-xs font-mono bg-amber-500/20 text-amber-300 border border-amber-500/40",
+                  ),
+                ],
+                [html.text("BEAM / OTP 29 Pure Substrate")],
+              ),
             ]),
-            html.span(
-              [
-                attribute.class(
-                  "px-2.5 py-0.5 rounded text-xs font-mono bg-amber-500/20 text-amber-300 border border-amber-500/40",
+            html.p([attribute.class("text-sm text-gray-400 mt-1")], [
+              html.text(
+                "Aerospace-grade autonomous agents with Hierarchical State Machines (HSM), DMC memory disjointness, 13D TCM conservation, and DAL-A hardware safety.",
+              ),
+            ]),
+          ]),
+          html.div(
+            [
+              attribute.class(
+                "flex flex-col items-end text-xs font-mono text-gray-400",
+              ),
+            ],
+            [
+              html.span([], [
+                html.text("Tailnet: "),
+                html.a(
+                  [
+                    attribute.href(
+                      "http://nas-1.tail55d152.ts.net:4100/fpp-agents",
+                    ),
+                    attribute.class("text-blue-400 hover:underline"),
+                  ],
+                  [html.text("http://nas-1.tail55d152.ts.net:4100/fpp-agents")],
                 ),
-              ],
-              [html.text("BEAM / OTP 29 Pure Substrate")],
-            ),
-          ]),
-          html.p([attribute.class("text-sm text-gray-400 mt-1")], [
-            html.text(
-              "Aerospace-grade autonomous agents with Hierarchical State Machines (HSM), DMC memory disjointness, 13D TCM conservation, and DAL-A hardware safety.",
-            ),
-          ]),
-        ]),
-        html.div([attribute.class("flex flex-col items-end text-xs font-mono text-gray-400")], [
-          html.span([], [
-            html.text("Tailnet: "),
-            html.a(
-              [
-                attribute.href("http://nas-1.tail55d152.ts.net:4100/fpp-agents"),
-                attribute.class("text-blue-400 hover:underline"),
-              ],
-              [html.text("http://nas-1.tail55d152.ts.net:4100/fpp-agents")],
-            ),
-          ]),
-          html.span([], [html.text("Authority: A0_ratified | SC-FPP-AGENT-TAXONOMY-001")]),
-        ]),
-      ]),
+              ]),
+              html.span([], [
+                html.text("Authority: A0_ratified | SC-FPP-AGENT-TAXONOMY-001"),
+              ]),
+            ],
+          ),
+        ],
+      ),
     ],
   )
 }
@@ -181,9 +198,16 @@ fn render_kpi_card(
       ),
     ],
     [
-      html.div([attribute.class("text-xs font-mono font-bold tracking-wider text-gray-400")], [
-        html.text(title),
-      ]),
+      html.div(
+        [
+          attribute.class(
+            "text-xs font-mono font-bold tracking-wider text-gray-400",
+          ),
+        ],
+        [
+          html.text(title),
+        ],
+      ),
       html.div([attribute.class("text-xl font-bold font-mono my-1")], [
         html.text(value),
       ]),
@@ -240,28 +264,53 @@ fn render_catalog_view(
         ),
       ],
       [
-        html.div([attribute.class("p-4 border-b border-gray-800 flex justify-between items-center")], [
-          html.h3([attribute.class("font-bold text-amber-400 font-mono text-sm")], [
-            html.text("FPP AEROSPACE AGENT SPECIFICATIONS (16 TYPES)"),
-          ]),
-          html.span([attribute.class("text-xs font-mono text-gray-400")], [
-            html.text("Sorted by Fractal Layer (L0 -> L9)"),
-          ]),
-        ]),
+        html.div(
+          [
+            attribute.class(
+              "p-4 border-b border-gray-800 flex justify-between items-center",
+            ),
+          ],
+          [
+            html.h3(
+              [attribute.class("font-bold text-amber-400 font-mono text-sm")],
+              [
+                html.text("FPP AEROSPACE AGENT SPECIFICATIONS (16 TYPES)"),
+              ],
+            ),
+            html.span([attribute.class("text-xs font-mono text-gray-400")], [
+              html.text("Sorted by Fractal Layer (L0 -> L9)"),
+            ]),
+          ],
+        ),
         html.div([attribute.class("overflow-x-auto")], [
           html.table([attribute.class("w-full text-left text-xs font-mono")], [
-            html.thead([attribute.class("bg-gray-950 text-gray-400 border-b border-gray-800")], [
-              html.tr([], [
-                html.th([attribute.class("p-3")], [html.text("Agent Type & Name")]),
-                html.th([attribute.class("p-3")], [html.text("Layer")]),
-                html.th([attribute.class("p-3")], [html.text("Component")]),
-                html.th([attribute.class("p-3")], [html.text("Base ID Window")]),
-                html.th([attribute.class("p-3")], [html.text("Policy")]),
-                html.th([attribute.class("p-3")], [html.text("HSM Machine")]),
-                html.th([attribute.class("p-3")], [html.text("Resilience Tier")]),
-                html.th([attribute.class("p-3")], [html.text("Operational Domain")]),
-              ]),
-            ]),
+            html.thead(
+              [
+                attribute.class(
+                  "bg-gray-950 text-gray-400 border-b border-gray-800",
+                ),
+              ],
+              [
+                html.tr([], [
+                  html.th([attribute.class("p-3")], [
+                    html.text("Agent Type & Name"),
+                  ]),
+                  html.th([attribute.class("p-3")], [html.text("Layer")]),
+                  html.th([attribute.class("p-3")], [html.text("Component")]),
+                  html.th([attribute.class("p-3")], [
+                    html.text("Base ID Window"),
+                  ]),
+                  html.th([attribute.class("p-3")], [html.text("Policy")]),
+                  html.th([attribute.class("p-3")], [html.text("HSM Machine")]),
+                  html.th([attribute.class("p-3")], [
+                    html.text("Resilience Tier"),
+                  ]),
+                  html.th([attribute.class("p-3")], [
+                    html.text("Operational Domain"),
+                  ]),
+                ]),
+              ],
+            ),
             html.tbody([attribute.class("divide-y divide-gray-800/60")], {
               list.map(specs, fn(spec) {
                 let comp_str = case spec.fpp_component_kind {
@@ -293,9 +342,16 @@ fn render_catalog_view(
                       html.div([attribute.class("font-bold text-gray-200")], [
                         html.text(spec.name),
                       ]),
-                      html.div([attribute.class("text-[10px] text-gray-400 truncate max-w-xs")], [
-                        html.text(spec.description),
-                      ]),
+                      html.div(
+                        [
+                          attribute.class(
+                            "text-[10px] text-gray-400 truncate max-w-xs",
+                          ),
+                        ],
+                        [
+                          html.text(spec.description),
+                        ],
+                      ),
                     ]),
                     html.td([attribute.class("p-3")], [
                       html.span(
@@ -326,9 +382,12 @@ fn render_catalog_view(
                     html.td([attribute.class("p-3 text-cyan-300")], [
                       html.text(spec.name <> "HSM"),
                     ]),
-                    html.td([attribute.class("p-3 text-rose-300 font-semibold")], [
-                      html.text(spec.sre_resilience_tier),
-                    ]),
+                    html.td(
+                      [attribute.class("p-3 text-rose-300 font-semibold")],
+                      [
+                        html.text(spec.sre_resilience_tier),
+                      ],
+                    ),
                     html.td([attribute.class("p-3 text-gray-400")], [
                       html.text(spec.operational_domain),
                     ]),
@@ -439,57 +498,85 @@ fn render_multi_dimensional_matrix() -> Element(Msg) {
       ),
     ],
     [
-      html.div([attribute.class("border-b border-gray-800 pb-3 flex justify-between items-center")], [
-        html.h3([attribute.class("font-bold text-amber-400 font-mono text-sm")], [
-          html.text(
-            "FPP AGENT SYSTEMIC INTEGRATION MATRIX (6 DIMENSIONS)",
+      html.div(
+        [
+          attribute.class(
+            "border-b border-gray-800 pb-3 flex justify-between items-center",
           ),
-        ]),
-        html.span([attribute.class("text-xs font-mono text-gray-400")], [
-          html.text(
-            "Fractal Layers x Components x Features x SDLC x SRE x Evidence",
+        ],
+        [
+          html.h3(
+            [attribute.class("font-bold text-amber-400 font-mono text-sm")],
+            [
+              html.text("FPP AGENT SYSTEMIC INTEGRATION MATRIX (6 DIMENSIONS)"),
+            ],
           ),
-        ]),
-      ]),
+          html.span([attribute.class("text-xs font-mono text-gray-400")], [
+            html.text(
+              "Fractal Layers x Components x Features x SDLC x SRE x Evidence",
+            ),
+          ]),
+        ],
+      ),
       html.div([attribute.class("overflow-x-auto")], [
         html.table([attribute.class("w-full text-left text-xs font-mono")], [
-          html.thead([attribute.class("bg-gray-950 text-gray-400 border-b border-gray-800")], [
-            html.tr([], [
-              html.th([attribute.class("p-3 w-40")], [html.text("1. Fractal Layer")]),
-              html.th([attribute.class("p-3 w-48")], [html.text("2. Agent Types")]),
-              html.th([attribute.class("p-3 w-40")], [html.text("3. FPP Component")]),
-              html.th([attribute.class("p-3")], [html.text("4. FPP Features")]),
-              html.th([attribute.class("p-3")], [html.text("5. SDLC Phase")]),
-              html.th([attribute.class("p-3 w-36")], [html.text("6. SRE Tier")]),
-              html.th([attribute.class("p-3")], [html.text("7. Evidence Contracts")]),
-            ]),
-          ]),
+          html.thead(
+            [
+              attribute.class(
+                "bg-gray-950 text-gray-400 border-b border-gray-800",
+              ),
+            ],
+            [
+              html.tr([], [
+                html.th([attribute.class("p-3 w-40")], [
+                  html.text("1. Fractal Layer"),
+                ]),
+                html.th([attribute.class("p-3 w-48")], [
+                  html.text("2. Agent Types"),
+                ]),
+                html.th([attribute.class("p-3 w-40")], [
+                  html.text("3. FPP Component"),
+                ]),
+                html.th([attribute.class("p-3")], [html.text("4. FPP Features")]),
+                html.th([attribute.class("p-3")], [html.text("5. SDLC Phase")]),
+                html.th([attribute.class("p-3 w-36")], [
+                  html.text("6. SRE Tier"),
+                ]),
+                html.th([attribute.class("p-3")], [
+                  html.text("7. Evidence Contracts"),
+                ]),
+              ]),
+            ],
+          ),
           html.tbody([attribute.class("divide-y divide-gray-800/60")], {
             list.map(matrix_rows, fn(row) {
               let #(layer, agents, comp, feat, sdlc, sre, evid) = row
-              html.tr([attribute.class("hover:bg-gray-800/30 transition-colors")], [
-                html.td([attribute.class("p-3 font-bold text-amber-400")], [
-                  html.text(layer),
-                ]),
-                html.td([attribute.class("p-3 text-cyan-300")], [
-                  html.text(agents),
-                ]),
-                html.td([attribute.class("p-3 text-purple-300")], [
-                  html.text(comp),
-                ]),
-                html.td([attribute.class("p-3 text-gray-300")], [
-                  html.text(feat),
-                ]),
-                html.td([attribute.class("p-3 text-emerald-300")], [
-                  html.text(sdlc),
-                ]),
-                html.td([attribute.class("p-3 text-rose-300 font-semibold")], [
-                  html.text(sre),
-                ]),
-                html.td([attribute.class("p-3 text-blue-400")], [
-                  html.text(evid),
-                ]),
-              ])
+              html.tr(
+                [attribute.class("hover:bg-gray-800/30 transition-colors")],
+                [
+                  html.td([attribute.class("p-3 font-bold text-amber-400")], [
+                    html.text(layer),
+                  ]),
+                  html.td([attribute.class("p-3 text-cyan-300")], [
+                    html.text(agents),
+                  ]),
+                  html.td([attribute.class("p-3 text-purple-300")], [
+                    html.text(comp),
+                  ]),
+                  html.td([attribute.class("p-3 text-gray-300")], [
+                    html.text(feat),
+                  ]),
+                  html.td([attribute.class("p-3 text-emerald-300")], [
+                    html.text(sdlc),
+                  ]),
+                  html.td([attribute.class("p-3 text-rose-300 font-semibold")], [
+                    html.text(sre),
+                  ]),
+                  html.td([attribute.class("p-3 text-blue-400")], [
+                    html.text(evid),
+                  ]),
+                ],
+              )
             })
           }),
         ]),
@@ -514,9 +601,16 @@ fn render_agent_simulator(model: Model) -> Element(Msg) {
         ),
       ],
       [
-        html.h3([attribute.class("font-bold text-amber-400 font-mono text-sm border-b border-gray-800 pb-2")], [
-          html.text("AGENT HSM & INTENT CONTROLLER"),
-        ]),
+        html.h3(
+          [
+            attribute.class(
+              "font-bold text-amber-400 font-mono text-sm border-b border-gray-800 pb-2",
+            ),
+          ],
+          [
+            html.text("AGENT HSM & INTENT CONTROLLER"),
+          ],
+        ),
         html.div([attribute.class("space-y-3 font-mono text-xs")], [
           html.div([], [
             html.label([attribute.class("text-gray-400 block mb-1")], [
@@ -588,16 +682,29 @@ fn render_agent_simulator(model: Model) -> Element(Msg) {
         ),
       ],
       [
-        html.h3([attribute.class("font-bold text-amber-400 text-sm border-b border-gray-800 pb-2")], [
-          html.text("DENOTATIONAL INTENT GATEKEEPER VERDICT"),
-        ]),
+        html.h3(
+          [
+            attribute.class(
+              "font-bold text-amber-400 text-sm border-b border-gray-800 pb-2",
+            ),
+          ],
+          [
+            html.text("DENOTATIONAL INTENT GATEKEEPER VERDICT"),
+          ],
+        ),
         html.div([attribute.class("space-y-2")], [
           html.div([attribute.class("flex justify-between")], [
-            html.span([attribute.class("text-gray-400")], [html.text("Current Target:")]),
-            html.span([attribute.class("text-cyan-300")], [html.text(model.simulated_target)]),
+            html.span([attribute.class("text-gray-400")], [
+              html.text("Current Target:"),
+            ]),
+            html.span([attribute.class("text-cyan-300")], [
+              html.text(model.simulated_target),
+            ]),
           ]),
           html.div([attribute.class("flex justify-between")], [
-            html.span([attribute.class("text-gray-400")], [html.text("Target Status:")]),
+            html.span([attribute.class("text-gray-400")], [
+              html.text("Target Status:"),
+            ]),
             case is_denied_target {
               True ->
                 html.span([attribute.class("text-rose-400 font-bold")], [
@@ -610,37 +717,68 @@ fn render_agent_simulator(model: Model) -> Element(Msg) {
             },
           ]),
           html.div([attribute.class("flex justify-between")], [
-            html.span([attribute.class("text-gray-400")], [html.text("Gatekeeper Verdict:")]),
+            html.span([attribute.class("text-gray-400")], [
+              html.text("Gatekeeper Verdict:"),
+            ]),
             case is_denied_target {
               True ->
-                html.span([attribute.class("text-rose-400 font-bold bg-rose-950/60 px-2 py-0.5 rounded border border-rose-800")], [
-                  html.text("HTTP 403 FORBIDDEN - INTENT REJECTED"),
-                ])
+                html.span(
+                  [
+                    attribute.class(
+                      "text-rose-400 font-bold bg-rose-950/60 px-2 py-0.5 rounded border border-rose-800",
+                    ),
+                  ],
+                  [
+                    html.text("HTTP 403 FORBIDDEN - INTENT REJECTED"),
+                  ],
+                )
               False ->
-                html.span([attribute.class("text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800")], [
-                  html.text("HTTP 200 OK - INTENT AUTHORIZED"),
-                ])
+                html.span(
+                  [
+                    attribute.class(
+                      "text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800",
+                    ),
+                  ],
+                  [
+                    html.text("HTTP 200 OK - INTENT AUTHORIZED"),
+                  ],
+                )
             },
           ]),
-          html.div([attribute.class("p-3 rounded bg-black/50 border border-gray-800 mt-3")], [
-            html.span([attribute.class("text-gray-400 block mb-1")], [html.text("Safety Policy Trace:")]),
-            case is_denied_target {
-              True ->
-                html.p([attribute.class("text-rose-300 font-mono text-[11px]")], [
-                  html.text(
-                    "CRITICAL: System OS NVMe "
-                    <> hard_denied_system_os_serial
-                    <> " is hardware-locked against all mutations (DAL-A Safety Contract SC-FPP-INTENT-001). Fail-closed drop executed.",
-                  ),
-                ])
-              False ->
-                html.p([attribute.class("text-emerald-300 font-mono text-[11px]")], [
-                  html.text(
-                    "OK: Target verified on non-root secondary media. Rocha biosemiotics cut preserved. 13D TCM vector conserved Delta T_13 = 0.",
-                  ),
-                ])
-            },
-          ]),
+          html.div(
+            [
+              attribute.class(
+                "p-3 rounded bg-black/50 border border-gray-800 mt-3",
+              ),
+            ],
+            [
+              html.span([attribute.class("text-gray-400 block mb-1")], [
+                html.text("Safety Policy Trace:"),
+              ]),
+              case is_denied_target {
+                True ->
+                  html.p(
+                    [attribute.class("text-rose-300 font-mono text-[11px]")],
+                    [
+                      html.text(
+                        "CRITICAL: System OS NVMe "
+                        <> hard_denied_system_os_serial
+                        <> " is hardware-locked against all mutations (DAL-A Safety Contract SC-FPP-INTENT-001). Fail-closed drop executed.",
+                      ),
+                    ],
+                  )
+                False ->
+                  html.p(
+                    [attribute.class("text-emerald-300 font-mono text-[11px]")],
+                    [
+                      html.text(
+                        "OK: Target verified on non-root secondary media. Rocha biosemiotics cut preserved. 13D TCM vector conserved Delta T_13 = 0.",
+                      ),
+                    ],
+                  )
+              },
+            ],
+          ),
         ]),
       ],
     ),
@@ -653,24 +791,132 @@ fn render_agent_simulator(model: Model) -> Element(Msg) {
 
 fn render_verification_checklist() -> Element(Msg) {
   let checks = [
-    #("CHK-01-TIME", "Domain 1", "Mandatory YYYYMMDD-HHSS- prefix active", "tools/uos timestamp-check", "PASS"),
-    #("CHK-02-TAIL", "Domain 1", "Universal Tailscale FQDN web navigation active", "HTTP 200 on nas-1.tail55d152.ts.net:4100", "PASS"),
-    #("CHK-03-FRACT", "Domain 1", "Fractal layer tags standard active (#fractal-l0..l9)", "Static AST audit", "PASS"),
-    #("CHK-04-KM", "Domain 1", "KM transclusions [[wiki:...]] / [[zk:...]] active", "Wiki parser check", "PASS"),
-    #("CHK-05-MUDA", "Domain 2", "Zero Bevy & Zero Graphite verified (SC-MUDA-001)", "Ripgrep monorepo search", "PASS"),
-    #("CHK-06-GRAPH", "Domain 2", "Pure Erlang graphene_nif.erl verified (0 foreign NIFs)", "Source inspection", "PASS"),
-    #("CHK-07-DRIVE", "Domain 2", "Root OS NVMe 25503L801736 locked in spec.rs & Gleam", "7/7 Rust tests + 403 intent", "PASS"),
-    #("CHK-08-C1C8", "Domain 3", "C1-C8 Gold Standard verified", "EUnit test framework", "PASS"),
-    #("CHK-09-MATH", "Domain 3", "4 Math Gates (H>=2.5b, CCM>=90%, D_EA<=10%, ITQS>=0.85)", "Mathematical verification suite", "PASS"),
-    #("CHK-10-9MOD", "Domain 3", "9-Modality test suite present (>10,000 tests)", "Protocol suite execution", "PASS"),
-    #("CHK-11-REGR", "Domain 3", "381 UI regression tests present", "EUnit regression run", "PASS"),
-    #("CHK-12-GLEAM", "Domain 4", "Gleam/OTP 29 root supervisor uos_sup.gleam active", "BEAM process tree", "PASS"),
-    #("CHK-13-HERMES", "Domain 4", "Hermes OCaml Zero-Trust dispatch hook active", "Bounded test execution", "PASS"),
-    #("CHK-14-ZIGVM", "Domain 4", "ZigVM deterministic engine active", "Standalone runtime check", "PASS"),
-    #("CHK-15-MAX", "Domain 4", "Modular MAX inference worker quarantined", "Supervised worker check", "PASS"),
-    #("CHK-16-OTEL", "Domain 4", "Universal C3I Telemetry contract active (microsecond ISO 8601 UTC)", "Structured log validation", "PASS"),
-    #("CHK-17-SOV", "Domain 5", "Tri-sovereign governance superset ratified (AGY, Claude, Codex)", "Architecture Board review", "PASS"),
-    #("CHK-18-JJ", "Domain 5", "Standalone Jujutsu monorepo active (0 native Git mutations)", ".jj repository audit", "PASS"),
+    #(
+      "CHK-01-TIME",
+      "Domain 1",
+      "Mandatory YYYYMMDD-HHSS- prefix active",
+      "tools/uos timestamp-check",
+      "PASS",
+    ),
+    #(
+      "CHK-02-TAIL",
+      "Domain 1",
+      "Universal Tailscale FQDN web navigation active",
+      "HTTP 200 on nas-1.tail55d152.ts.net:4100",
+      "PASS",
+    ),
+    #(
+      "CHK-03-FRACT",
+      "Domain 1",
+      "Fractal layer tags standard active (#fractal-l0..l9)",
+      "Static AST audit",
+      "PASS",
+    ),
+    #(
+      "CHK-04-KM",
+      "Domain 1",
+      "KM transclusions [[wiki:...]] / [[zk:...]] active",
+      "Wiki parser check",
+      "PASS",
+    ),
+    #(
+      "CHK-05-MUDA",
+      "Domain 2",
+      "Zero Bevy & Zero Graphite verified (SC-MUDA-001)",
+      "Ripgrep monorepo search",
+      "PASS",
+    ),
+    #(
+      "CHK-06-GRAPH",
+      "Domain 2",
+      "Pure Erlang graphene_nif.erl verified (0 foreign NIFs)",
+      "Source inspection",
+      "PASS",
+    ),
+    #(
+      "CHK-07-DRIVE",
+      "Domain 2",
+      "Root OS NVMe 25503L801736 locked in spec.rs & Gleam",
+      "7/7 Rust tests + 403 intent",
+      "PASS",
+    ),
+    #(
+      "CHK-08-C1C8",
+      "Domain 3",
+      "C1-C8 Gold Standard verified",
+      "EUnit test framework",
+      "PASS",
+    ),
+    #(
+      "CHK-09-MATH",
+      "Domain 3",
+      "4 Math Gates (H>=2.5b, CCM>=90%, D_EA<=10%, ITQS>=0.85)",
+      "Mathematical verification suite",
+      "PASS",
+    ),
+    #(
+      "CHK-10-9MOD",
+      "Domain 3",
+      "9-Modality test suite present (>10,000 tests)",
+      "Protocol suite execution",
+      "PASS",
+    ),
+    #(
+      "CHK-11-REGR",
+      "Domain 3",
+      "381 UI regression tests present",
+      "EUnit regression run",
+      "PASS",
+    ),
+    #(
+      "CHK-12-GLEAM",
+      "Domain 4",
+      "Gleam/OTP 29 root supervisor uos_sup.gleam active",
+      "BEAM process tree",
+      "PASS",
+    ),
+    #(
+      "CHK-13-HERMES",
+      "Domain 4",
+      "Hermes OCaml Zero-Trust dispatch hook active",
+      "Bounded test execution",
+      "PASS",
+    ),
+    #(
+      "CHK-14-ZIGVM",
+      "Domain 4",
+      "ZigVM deterministic engine active",
+      "Standalone runtime check",
+      "PASS",
+    ),
+    #(
+      "CHK-15-MAX",
+      "Domain 4",
+      "Modular MAX inference worker quarantined",
+      "Supervised worker check",
+      "PASS",
+    ),
+    #(
+      "CHK-16-OTEL",
+      "Domain 4",
+      "Universal C3I Telemetry contract active (microsecond ISO 8601 UTC)",
+      "Structured log validation",
+      "PASS",
+    ),
+    #(
+      "CHK-17-SOV",
+      "Domain 5",
+      "Tri-sovereign governance superset ratified (AGY, Claude, Codex)",
+      "Architecture Board review",
+      "PASS",
+    ),
+    #(
+      "CHK-18-JJ",
+      "Domain 5",
+      "Standalone Jujutsu monorepo active (0 native Git mutations)",
+      ".jj repository audit",
+      "PASS",
+    ),
   ]
 
   html.div(
@@ -680,57 +926,81 @@ fn render_verification_checklist() -> Element(Msg) {
       ),
     ],
     [
-      html.div([attribute.class("flex justify-between items-center border-b border-gray-800 pb-3")], [
-        html.h3([attribute.class("font-bold text-amber-400 font-mono text-sm")], [
-          html.text("UOS COMPREHENSIVE VERIFICATION CHECKLIST (18/18 GREEN)"),
-        ]),
-        html.span(
-          [
-            attribute.class(
-              "px-2 py-0.5 rounded text-xs font-mono bg-emerald-950 text-emerald-300 border border-emerald-800",
-            ),
-          ],
-          [html.text("18 / 18 CHECKS 100% PASS")],
-        ),
-      ]),
+      html.div(
+        [
+          attribute.class(
+            "flex justify-between items-center border-b border-gray-800 pb-3",
+          ),
+        ],
+        [
+          html.h3(
+            [attribute.class("font-bold text-amber-400 font-mono text-sm")],
+            [
+              html.text(
+                "UOS COMPREHENSIVE VERIFICATION CHECKLIST (18/18 GREEN)",
+              ),
+            ],
+          ),
+          html.span(
+            [
+              attribute.class(
+                "px-2 py-0.5 rounded text-xs font-mono bg-emerald-950 text-emerald-300 border border-emerald-800",
+              ),
+            ],
+            [html.text("18 / 18 CHECKS 100% PASS")],
+          ),
+        ],
+      ),
       html.div([attribute.class("overflow-x-auto")], [
         html.table([attribute.class("w-full text-left text-xs font-mono")], [
-          html.thead([attribute.class("bg-gray-950 text-gray-400 border-b border-gray-800")], [
-            html.tr([], [
-              html.th([attribute.class("p-3 w-32")], [html.text("Check ID")]),
-              html.th([attribute.class("p-3 w-28")], [html.text("Domain")]),
-              html.th([attribute.class("p-3")], [html.text("Description")]),
-              html.th([attribute.class("p-3")], [html.text("Verification Method")]),
-              html.th([attribute.class("p-3 w-20")], [html.text("Status")]),
-            ]),
-          ]),
+          html.thead(
+            [
+              attribute.class(
+                "bg-gray-950 text-gray-400 border-b border-gray-800",
+              ),
+            ],
+            [
+              html.tr([], [
+                html.th([attribute.class("p-3 w-32")], [html.text("Check ID")]),
+                html.th([attribute.class("p-3 w-28")], [html.text("Domain")]),
+                html.th([attribute.class("p-3")], [html.text("Description")]),
+                html.th([attribute.class("p-3")], [
+                  html.text("Verification Method"),
+                ]),
+                html.th([attribute.class("p-3 w-20")], [html.text("Status")]),
+              ]),
+            ],
+          ),
           html.tbody([attribute.class("divide-y divide-gray-800/60")], {
             list.map(checks, fn(item) {
               let #(id, domain_str, desc, method, status) = item
-              html.tr([attribute.class("hover:bg-gray-800/30 transition-colors")], [
-                html.td([attribute.class("p-3 font-bold text-cyan-300")], [
-                  html.text(id),
-                ]),
-                html.td([attribute.class("p-3 text-gray-400")], [
-                  html.text(domain_str),
-                ]),
-                html.td([attribute.class("p-3 text-gray-200")], [
-                  html.text(desc),
-                ]),
-                html.td([attribute.class("p-3 text-gray-400")], [
-                  html.text(method),
-                ]),
-                html.td([attribute.class("p-3")], [
-                  html.span(
-                    [
-                      attribute.class(
-                        "px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-800",
-                      ),
-                    ],
-                    [html.text(status)],
-                  ),
-                ]),
-              ])
+              html.tr(
+                [attribute.class("hover:bg-gray-800/30 transition-colors")],
+                [
+                  html.td([attribute.class("p-3 font-bold text-cyan-300")], [
+                    html.text(id),
+                  ]),
+                  html.td([attribute.class("p-3 text-gray-400")], [
+                    html.text(domain_str),
+                  ]),
+                  html.td([attribute.class("p-3 text-gray-200")], [
+                    html.text(desc),
+                  ]),
+                  html.td([attribute.class("p-3 text-gray-400")], [
+                    html.text(method),
+                  ]),
+                  html.td([attribute.class("p-3")], [
+                    html.span(
+                      [
+                        attribute.class(
+                          "px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-950 text-emerald-300 border border-emerald-800",
+                        ),
+                      ],
+                      [html.text(status)],
+                    ),
+                  ]),
+                ],
+              )
             })
           }),
         ]),

@@ -65,7 +65,9 @@ pub fn start() -> Result(PiSupervisor, String) {
 }
 
 /// Start the Pi supervisor with a custom RuntimeConfig.
-pub fn start_with_config(config: RuntimeConfig) -> Result(PiSupervisor, String) {
+pub fn start_with_config(
+  config: RuntimeConfig,
+) -> Result(PiSupervisor, String) {
   zenoh_otel.emit(Bridge, "pi_supervisor_start", Observe)
 
   let child_spec = supervision.worker(fn() { daemon_start_child(config) })

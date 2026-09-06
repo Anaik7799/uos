@@ -56,7 +56,10 @@ pub fn evaluate_gate(facts: String) -> GateResult {
 
 /// Verify a payload against a named Gospel contract.
 /// `Ok(raw)` when the substrate reports `"valid":true`, `Error(raw)` otherwise.
-pub fn verify_contract(spec: String, payload: String) -> Result(String, String) {
+pub fn verify_contract(
+  spec: String,
+  payload: String,
+) -> Result(String, String) {
   let raw = nif_gospel_verify(spec, payload)
   case string.contains(raw, "\"valid\":true") {
     True -> Ok(raw)

@@ -201,7 +201,11 @@ pub fn summary(tracker: LatencyTracker) -> String {
 /// Convenience constructor: build a `HookTiming` from a name, start, and end.
 ///
 /// `timed_out` is set automatically when `duration_ms >= timeout_ms`.
-pub fn make_timing(hook_name: String, start_ms: Int, end_ms: Int) -> HookTiming {
+pub fn make_timing(
+  hook_name: String,
+  start_ms: Int,
+  end_ms: Int,
+) -> HookTiming {
   let duration = end_ms - start_ms
   HookTiming(
     hook_name: hook_name,

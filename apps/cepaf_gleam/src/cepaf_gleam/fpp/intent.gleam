@@ -32,10 +32,13 @@ pub type FlightVerb {
 
 pub fn verb_to_string(verb: FlightVerb) -> String {
   case verb {
-    DispatchFlightCommand(op, _) -> "DispatchFlightCommand(0x" <> int.to_base16(op) <> ")"
-    UpdateFlightParameter(pid, _) -> "UpdateFlightParameter(" <> int.to_string(pid) <> ")"
+    DispatchFlightCommand(op, _) ->
+      "DispatchFlightCommand(0x" <> int.to_base16(op) <> ")"
+    UpdateFlightParameter(pid, _) ->
+      "UpdateFlightParameter(" <> int.to_string(pid) <> ")"
     TriggerHsmTransition(sig) -> "TriggerHsmTransition(" <> sig <> ")"
-    PackDownlinkTelemetry(pkt) -> "PackDownlinkTelemetry(" <> int.to_string(pkt) <> ")"
+    PackDownlinkTelemetry(pkt) ->
+      "PackDownlinkTelemetry(" <> int.to_string(pkt) <> ")"
     QuarantineSubsystem(inst, _) -> "QuarantineSubsystem(" <> inst <> ")"
   }
 }
@@ -59,11 +62,7 @@ pub type IntentVerdict {
     action_summary: String,
     tcm_conserved: Bool,
   )
-  IntentRejected(
-    intent_id: String,
-    status_code: Int,
-    reason: String,
-  )
+  IntentRejected(intent_id: String, status_code: Int, reason: String)
 }
 
 // =============================================================================
@@ -103,8 +102,7 @@ pub fn evaluate_flight_intent(intent: FlightIntent) -> IntentVerdict {
                     "TCM 13D coordinate conservation violated",
                   )
                 True -> {
-                  let trace_id =
-                    "4bf92f3577b34da6a3ce929d0e0e4736"
+                  let trace_id = "4bf92f3577b34da6a3ce929d0e0e4736"
                   IntentAuthorized(
                     trace_id: trace_id,
                     intent_id: intent.intent_id,

@@ -434,7 +434,11 @@ pub fn results_to_json(results: List(AnomalyResult)) -> String {
 // Private helpers
 // ---------------------------------------------------------------------------
 
-fn list_map_join(items: List(a), mapper: fn(a) -> String, sep: String) -> String {
+fn list_map_join(
+  items: List(a),
+  mapper: fn(a) -> String,
+  sep: String,
+) -> String {
   do_map_join(items, mapper, sep, "")
 }
 

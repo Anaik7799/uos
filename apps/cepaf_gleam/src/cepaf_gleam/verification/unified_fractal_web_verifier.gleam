@@ -11,11 +11,11 @@
 //// Covers Fractal Layers L0 through L7.
 //// =============================================================================
 
+import cepaf_gleam/knowledge/zigvm_feature_tracker as zft
 import gleam/dict.{type Dict}
 import gleam/int
 import gleam/list
 import gleam/string
-import cepaf_gleam/knowledge/zigvm_feature_tracker as zft
 
 // -----------------------------------------------------------------------------
 // Fractal Layer Taxonomy (L0..L7)
@@ -196,9 +196,7 @@ pub type TagRewriteState {
 
 pub fn evaluate_ruliology_tag_laws(tags: List(String)) -> TagRewriteState {
   let all_valid =
-    list.all(tags, fn(t) {
-      string.starts_with(t, "#") && string.length(t) >= 2
-    })
+    list.all(tags, fn(t) { string.starts_with(t, "#") && string.length(t) >= 2 })
   TagRewriteState(
     l1_fidelity: all_valid,
     l2_normal_form: True,
@@ -397,8 +395,8 @@ pub fn evaluate_math_gates(
   itqs: Float,
 ) -> MathGatesResult {
   let h_pass = h >=. 2.5
-  let ccm_pass = ccm >=. 0.90
-  let dea_pass = dea <=. 0.10
+  let ccm_pass = ccm >=. 0.9
+  let dea_pass = dea <=. 0.1
   let itqs_pass = itqs >=. 0.85
   MathGatesResult(
     entropy_h: h,
@@ -439,7 +437,11 @@ pub fn calculate_simple_pagerank(
     True -> {
       let initial_score = 1.0 /. n
       list.fold(nodes, dict.new(), fn(acc, node) {
-        dict.insert(acc, node, initial_score *. damping +. { 1.0 -. damping } /. n)
+        dict.insert(
+          acc,
+          node,
+          initial_score *. damping +. { 1.0 -. damping } /. n,
+        )
       })
     }
     False -> dict.new()
@@ -451,6 +453,7 @@ pub fn calculate_simple_pagerank(
 // -----------------------------------------------------------------------------
 
 pub const tailnet_base_fqdn = "http://nas-1.tail55d152.ts.net:4100"
+
 pub const peer_runtime_host = "http://vm-1.tail55d152.ts.net:8088"
 
 pub type SystemVerificationTelemetry {
@@ -1138,7 +1141,10 @@ pub fn features_to_json_telemetry() -> String {
 // =============================================================================
 
 /// Verifies Wiki AST parsing correctness and roundtrip fidelity
-pub fn verify_wiki_ast_parsing(has_typed_ast: Bool, has_roundtrip: Bool) -> CheckResult {
+pub fn verify_wiki_ast_parsing(
+  has_typed_ast: Bool,
+  has_roundtrip: Bool,
+) -> CheckResult {
   case has_typed_ast && has_roundtrip {
     True ->
       CheckResult(
@@ -1162,7 +1168,10 @@ pub fn verify_wiki_ast_parsing(has_typed_ast: Bool, has_roundtrip: Bool) -> Chec
 }
 
 /// Verifies Gospel formal contracts and Z3 query invariants
-pub fn verify_gospel_specification(has_gospel: Bool, has_z3: Bool) -> CheckResult {
+pub fn verify_gospel_specification(
+  has_gospel: Bool,
+  has_z3: Bool,
+) -> CheckResult {
   case has_gospel && has_z3 {
     True ->
       CheckResult(
@@ -1179,14 +1188,19 @@ pub fn verify_gospel_specification(has_gospel: Bool, has_z3: Bool) -> CheckResul
         name: "Gospel Contract Specification & Bounded Z3 Invariants",
         layer: L0Constitutional,
         engine: "Hermes/OCaml",
-        status: Fail("Missing Gospel specification or unbounded Z3 solver query"),
+        status: Fail(
+          "Missing Gospel specification or unbounded Z3 solver query",
+        ),
         score: 0.0,
       )
   }
 }
 
 /// Verifies Transclusion [[wiki:...]] resolution and cycle prevention
-pub fn verify_transclusion_engine(max_recursion_depth: Int, cycles_detected: Int) -> CheckResult {
+pub fn verify_transclusion_engine(
+  max_recursion_depth: Int,
+  cycles_detected: Int,
+) -> CheckResult {
   case max_recursion_depth <= 8 && cycles_detected == 0 {
     True ->
       CheckResult(
@@ -1210,7 +1224,10 @@ pub fn verify_transclusion_engine(max_recursion_depth: Int, cycles_detected: Int
 }
 
 /// Verifies Personalized PageRank (PPR) graph science metrics
-pub fn verify_pagerank_graph_science(damping: Float, convergence_eps: Float) -> CheckResult {
+pub fn verify_pagerank_graph_science(
+  damping: Float,
+  convergence_eps: Float,
+) -> CheckResult {
   case damping >=. 0.84 && damping <=. 0.86 && convergence_eps <=. 0.0001 {
     True ->
       CheckResult(
@@ -1227,14 +1244,19 @@ pub fn verify_pagerank_graph_science(damping: Float, convergence_eps: Float) -> 
         name: "Personalized PageRank (PPR) Hypergraph Centrality",
         layer: L5Cognitive,
         engine: "ZigVM/OCaml",
-        status: Fail("PPR damping factor or convergence epsilon out of specification"),
+        status: Fail(
+          "PPR damping factor or convergence epsilon out of specification",
+        ),
         score: 0.0,
       )
   }
 }
 
 /// Verifies ZK Note Struct and Architectural Decision Record integrity
-pub fn verify_zk_decision_matrix(adr_count: Int, moc_count: Int) -> CheckResult {
+pub fn verify_zk_decision_matrix(
+  adr_count: Int,
+  moc_count: Int,
+) -> CheckResult {
   case adr_count >= 16 && moc_count >= 12 {
     True ->
       CheckResult(
@@ -1251,14 +1273,19 @@ pub fn verify_zk_decision_matrix(adr_count: Int, moc_count: Int) -> CheckResult 
         name: "Permanent ADR (16) & Map of Content (12) Matrix Completeness",
         layer: L6Ecosystem,
         engine: "ZigVM/Zettelkasten",
-        status: Fail("Missing permanent ADRs or Maps of Content below canonical quota"),
+        status: Fail(
+          "Missing permanent ADRs or Maps of Content below canonical quota",
+        ),
         score: 0.0,
       )
   }
 }
 
 /// Verifies Rocha Biosemiotic matter-symbol cut and semiotic loop indexing
-pub fn verify_rocha_biosemiotic_indexing(matter_symbol_cut: Bool, tagged_docs_count: Int) -> CheckResult {
+pub fn verify_rocha_biosemiotic_indexing(
+  matter_symbol_cut: Bool,
+  tagged_docs_count: Int,
+) -> CheckResult {
   case matter_symbol_cut && tagged_docs_count >= 40 {
     True ->
       CheckResult(
@@ -1275,7 +1302,9 @@ pub fn verify_rocha_biosemiotic_indexing(matter_symbol_cut: Bool, tagged_docs_co
         name: "Rocha Biosemiotics & Code-Matter Boundary Indexing",
         layer: L5Cognitive,
         engine: "C3I/Gleam",
-        status: Fail("Symbol-matter cut violation or insufficient biosemiotic tagging"),
+        status: Fail(
+          "Symbol-matter cut violation or insufficient biosemiotic tagging",
+        ),
         score: 0.0,
       )
   }
@@ -1364,11 +1393,15 @@ pub fn unified_features_by_layer(layer: FractalLayer) -> List(WebFeature) {
   list.filter(all_unified_system_features(), fn(f) { f.layer == layer })
 }
 
-pub fn unified_features_by_vector(vector: FractalFeatureVector) -> List(WebFeature) {
+pub fn unified_features_by_vector(
+  vector: FractalFeatureVector,
+) -> List(WebFeature) {
   list.filter(all_unified_system_features(), fn(f) { f.vector == vector })
 }
 
-pub fn unified_features_by_surface(surface: VerificationSurface) -> List(WebFeature) {
+pub fn unified_features_by_surface(
+  surface: VerificationSurface,
+) -> List(WebFeature) {
   list.filter(all_unified_system_features(), fn(f) { f.surface == surface })
 }
 
@@ -1437,4 +1470,3 @@ pub fn unified_system_to_json_telemetry() -> String {
   <> tailnet_base_fqdn
   <> "\"}"
 }
-

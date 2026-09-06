@@ -56,7 +56,9 @@ pub fn parse_row(row: #(String, Int, Int, String)) -> ActualPolicy {
 }
 
 /// Map `parse_row` over a list of rows.
-pub fn parse_rows(rows: List(#(String, Int, Int, String))) -> List(ActualPolicy) {
+pub fn parse_rows(
+  rows: List(#(String, Int, Int, String)),
+) -> List(ActualPolicy) {
   list.map(rows, parse_row)
 }
 

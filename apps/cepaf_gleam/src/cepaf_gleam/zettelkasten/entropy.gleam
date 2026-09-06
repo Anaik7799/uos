@@ -78,7 +78,11 @@ pub fn entropy_label(entropy: Float) -> String {
 }
 
 /// Days until a holon reaches a given entropy threshold.
-pub fn days_until_entropy(current: Float, rate: DecayRate, target: Float) -> Int {
+pub fn days_until_entropy(
+  current: Float,
+  rate: DecayRate,
+  target: Float,
+) -> Int {
   case current >=. target {
     True -> 0
     False -> {

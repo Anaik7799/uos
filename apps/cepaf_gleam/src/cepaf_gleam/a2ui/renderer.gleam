@@ -38,7 +38,10 @@ pub type RenderOutput {
 }
 
 /// Isomorphic render: one spec → three targets (SC-ULTRA-001 #4).
-pub fn render(proposal: ComponentProposal, target: RenderTarget) -> RenderOutput {
+pub fn render(
+  proposal: ComponentProposal,
+  target: RenderTarget,
+) -> RenderOutput {
   case target {
     HtmlTarget -> HtmlOutput(render_html(proposal))
     JsonTarget -> JsonOutput(render_json(proposal))

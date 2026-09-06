@@ -204,7 +204,10 @@ fn append_opt(
   }
 }
 
-fn extract_json_string(json_str: String, key: String) -> Result(String, String) {
+fn extract_json_string(
+  json_str: String,
+  key: String,
+) -> Result(String, String) {
   let search = "\"" <> key <> "\":\""
   case string.split(json_str, search) {
     [_, rest, ..] ->

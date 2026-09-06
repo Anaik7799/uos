@@ -91,7 +91,10 @@ pub fn guard_json(
 }
 
 /// Guard a JSON response — only check non-empty (for endpoints with variable structure)
-pub fn guard_json_nonempty(output: String, endpoint_name: String) -> GuardResult {
+pub fn guard_json_nonempty(
+  output: String,
+  endpoint_name: String,
+) -> GuardResult {
   case string.length(output) < 3 {
     True ->
       GuardFailed(

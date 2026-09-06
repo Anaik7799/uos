@@ -246,7 +246,10 @@ pub fn new_text_message_start(message_id: String, role: String) -> AgUiEvent {
 }
 
 /// Create a TEXT_MESSAGE_CONTENT event with a text delta.
-pub fn new_text_message_content(message_id: String, delta: String) -> AgUiEvent {
+pub fn new_text_message_content(
+  message_id: String,
+  delta: String,
+) -> AgUiEvent {
   let id = generate_id()
   AgUiEvent(
     event_type: TextMessageContent,
@@ -275,7 +278,10 @@ pub fn new_text_message_end(message_id: String) -> AgUiEvent {
 }
 
 /// Create a TOOL_CALL_START event.
-pub fn new_tool_call_start(tool_call_id: String, tool_name: String) -> AgUiEvent {
+pub fn new_tool_call_start(
+  tool_call_id: String,
+  tool_name: String,
+) -> AgUiEvent {
   let id = generate_id()
   AgUiEvent(
     event_type: ToolCallStart,

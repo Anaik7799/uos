@@ -3842,7 +3842,10 @@ fn html_response(body: String) -> HttpResponse(String) {
 }
 
 /// Serve a static file from the priv directory.
-fn serve_static_file(path: String, content_type: String) -> HttpResponse(String) {
+fn serve_static_file(
+  path: String,
+  content_type: String,
+) -> HttpResponse(String) {
   case read_file(path) {
     Ok(content) -> {
       // SC-HTTP-STATIC-ETAG (Pass-85) — compute SHA-256 over body and

@@ -106,7 +106,10 @@ pub type TransitionResult {
 // ---------------------------------------------------------------------------
 
 /// Append a phase to the history list, capping at 10 entries (MUDA: no unbounded growth).
-fn append_history(history: List(OodaPhase), phase: OodaPhase) -> List(OodaPhase) {
+fn append_history(
+  history: List(OodaPhase),
+  phase: OodaPhase,
+) -> List(OodaPhase) {
   let extended = list.append(history, [phase])
   case list.length(extended) > 10 {
     True -> list.drop(extended, 1)

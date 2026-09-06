@@ -3,15 +3,14 @@
 //// Subject: Lustre MVU Knowledge & Wiki Explorer Component Tests
 //// =============================================================================
 
-import gleeunit/should
+import cepaf_gleam/ui/lustre/knowledge_explorer.{
+  ClearSelection, FilterByTag, SelectItem, SelectTab, SetSearch, TabWikiCorpus,
+  TabZkInvariants, default_items, init, update, view,
+}
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
-import cepaf_gleam/ui/lustre/knowledge_explorer.{
-  init, update, view, default_items,
-  SetSearch, SelectTab, SelectItem, FilterByTag, ClearSelection,
-  TabWikiCorpus, TabZkInvariants,
-}
+import gleeunit/should
 
 pub fn init_model_test() {
   let model = init()

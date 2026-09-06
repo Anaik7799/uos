@@ -1623,7 +1623,9 @@ pub fn evaluate_all(
 
 /// Get the highest-priority triggered action from a list of evaluations.
 /// Returns NoAction when no rule fired.
-pub fn highest_priority_action(evaluations: List(RuleEvaluation)) -> RuleAction {
+pub fn highest_priority_action(
+  evaluations: List(RuleEvaluation),
+) -> RuleAction {
   evaluations
   |> list.filter(fn(e) { e.condition_met })
   |> list.sort(fn(a, b) { int.compare(b.salience, a.salience) })

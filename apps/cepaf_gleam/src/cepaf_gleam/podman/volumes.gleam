@@ -42,7 +42,10 @@ pub fn inspect(client: PodmanClient, name: String) -> Result(Volume, String) {
   }
 }
 
-pub fn create(client: PodmanClient, spec: VolumeSpec) -> Result(Volume, String) {
+pub fn create(
+  client: PodmanClient,
+  spec: VolumeSpec,
+) -> Result(Volume, String) {
   let body = encode_volume_spec(spec)
   case
     http_client.post(

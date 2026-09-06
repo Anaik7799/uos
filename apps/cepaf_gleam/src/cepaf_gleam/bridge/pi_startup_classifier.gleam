@@ -156,7 +156,11 @@ pub fn stage_metadata(
         progress_pct: 30,
         icon: "🔑",
         title: "Provider Authentication",
-        detail: "Negotiating credentials and verifying token quota with " <> provider <> " for model " <> model <> ".",
+        detail: "Negotiating credentials and verifying token quota with "
+          <> provider
+          <> " for model "
+          <> model
+          <> ".",
         troubleshooting_hint: "Verify API key in environment and ensure network connectivity to upstream endpoint.",
         elapsed_ms: elapsed_ms,
         estimated_remaining_ms: 650,
@@ -316,7 +320,11 @@ pub fn format_intelligent_message(meta: StageMetadata) -> String {
 // =============================================================================
 
 /// Converts stage metadata into a structured AG-UI JSON payload.
-pub fn stage_to_json(meta: StageMetadata, provider: String, model: String) -> json.Json {
+pub fn stage_to_json(
+  meta: StageMetadata,
+  provider: String,
+  model: String,
+) -> json.Json {
   json.object([
     #("subsystem", json.string("pi_runtime")),
     #("stage_id", json.string(meta.stage_id)),
@@ -357,7 +365,11 @@ pub fn to_agui_event(
 // =============================================================================
 
 /// Initializes a new startup state.
-pub fn init_startup(provider: String, model: String, start_ms: Int) -> StartupState {
+pub fn init_startup(
+  provider: String,
+  model: String,
+  start_ms: Int,
+) -> StartupState {
   StartupState(
     current_stage: StagePreflight,
     provider: provider,
@@ -442,23 +454,29 @@ pub fn render_html_startup_card(state: StartupState) -> Element(msg) {
             ],
             [html.text(int.to_string(meta.progress_pct) <> "% COMPLETE")],
           ),
-          html.span(
-            [attribute.class("text-xs text-slate-400 font-mono")],
-            [html.text(int.to_string(meta.elapsed_ms) <> " ms")],
-          ),
+          html.span([attribute.class("text-xs text-slate-400 font-mono")], [
+            html.text(int.to_string(meta.elapsed_ms) <> " ms"),
+          ]),
         ]),
       ]),
 
       // Progress Bar
       html.div(
-        [attribute.class("w-full bg-slate-800 rounded-full h-2.5 mb-5 overflow-hidden border border-slate-700")],
+        [
+          attribute.class(
+            "w-full bg-slate-800 rounded-full h-2.5 mb-5 overflow-hidden border border-slate-700",
+          ),
+        ],
         [
           html.div(
             [
               attribute.class(
                 "bg-gradient-to-r from-blue-500 via-indigo-500 to-cyan-400 h-2.5 rounded-full transition-all duration-500 ease-out",
               ),
-              attribute.attribute("style", "width: " <> int.to_string(meta.progress_pct) <> "%;"),
+              attribute.attribute(
+                "style",
+                "width: " <> int.to_string(meta.progress_pct) <> "%;",
+              ),
             ],
             [],
           ),
@@ -467,29 +485,63 @@ pub fn render_html_startup_card(state: StartupState) -> Element(msg) {
 
       // Active Stage Detail Box
       html.div(
-        [attribute.class("bg-slate-950/70 border border-slate-800 rounded-lg p-4 mb-4")],
+        [
+          attribute.class(
+            "bg-slate-950/70 border border-slate-800 rounded-lg p-4 mb-4",
+          ),
+        ],
         [
           html.div([attribute.class("flex items-center justify-between mb-1")], [
-            html.span([attribute.class("text-sm font-semibold text-cyan-300 flex items-center gap-2")], [
-              html.span([attribute.class("inline-block w-2 h-2 rounded-full bg-cyan-400 animate-ping")], []),
-              html.text(meta.title),
-            ]),
+            html.span(
+              [
+                attribute.class(
+                  "text-sm font-semibold text-cyan-300 flex items-center gap-2",
+                ),
+              ],
+              [
+                html.span(
+                  [
+                    attribute.class(
+                      "inline-block w-2 h-2 rounded-full bg-cyan-400 animate-ping",
+                    ),
+                  ],
+                  [],
+                ),
+                html.text(meta.title),
+              ],
+            ),
             html.span([attribute.class("text-xs text-slate-500")], [
-              html.text("Step " <> int.to_string(meta.step_number) <> " of " <> int.to_string(meta.total_steps)),
+              html.text(
+                "Step "
+                <> int.to_string(meta.step_number)
+                <> " of "
+                <> int.to_string(meta.total_steps),
+              ),
             ]),
           ]),
           html.p([attribute.class("text-xs text-slate-300 leading-relaxed")], [
             html.text(meta.detail),
           ]),
-          html.p([attribute.class("text-[11px] text-amber-400/80 mt-2 font-mono flex items-center gap-1")], [
-            html.text("💡 " <> meta.troubleshooting_hint),
-          ]),
+          html.p(
+            [
+              attribute.class(
+                "text-[11px] text-amber-400/80 mt-2 font-mono flex items-center gap-1",
+              ),
+            ],
+            [
+              html.text("💡 " <> meta.troubleshooting_hint),
+            ],
+          ),
         ],
       ),
 
       // 6-Step Stepper Icons Row
       html.div(
-        [attribute.class("grid grid-cols-6 gap-2 text-center text-xs pt-2 border-t border-slate-800/80")],
+        [
+          attribute.class(
+            "grid grid-cols-6 gap-2 text-center text-xs pt-2 border-t border-slate-800/80",
+          ),
+        ],
         list.map(
           [
             #(1, "🔍", "Preflight", StagePreflight),
@@ -505,15 +557,18 @@ pub fn render_html_startup_card(state: StartupState) -> Element(msg) {
             let is_curr = state.current_stage == stage_variant
 
             let badge_class = case is_curr, is_past {
-              True, _ -> "border-cyan-500 bg-cyan-500/20 text-cyan-200 font-bold scale-105"
-              False, True -> "border-emerald-500/60 bg-emerald-500/10 text-emerald-400"
+              True, _ ->
+                "border-cyan-500 bg-cyan-500/20 text-cyan-200 font-bold scale-105"
+              False, True ->
+                "border-emerald-500/60 bg-emerald-500/10 text-emerald-400"
               False, False -> "border-slate-800 bg-slate-900/50 text-slate-600"
             }
 
             html.div(
               [
                 attribute.class(
-                  "p-2 rounded-lg border transition-all duration-300 " <> badge_class,
+                  "p-2 rounded-lg border transition-all duration-300 "
+                  <> badge_class,
                 ),
               ],
               [

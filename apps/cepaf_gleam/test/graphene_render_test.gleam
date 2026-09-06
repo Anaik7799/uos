@@ -481,6 +481,7 @@ pub fn vec2_angle_test() {
   graphene.kurbo_vec2_math("angle", "{\"a\":[1,0],\"b\":[0,1]}")
   |> should.be_ok()
 }
+
 // [ZERO-MUDA] Bevy tests purged.
 
 // Mermaid tests

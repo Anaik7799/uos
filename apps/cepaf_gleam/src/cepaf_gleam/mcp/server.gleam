@@ -550,7 +550,8 @@ fn tool_run_gate(id: Option(String), raw_line: String) -> String {
   }
   tool_content_response(
     id,
-    gate_name <> " passed: byte-identical deterministic reproducibility verified",
+    gate_name
+      <> " passed: byte-identical deterministic reproducibility verified",
   )
 }
 
@@ -591,4 +592,3 @@ fn tool_sa_bridge_submit(id: Option(String), raw_line: String) -> String {
       |> json.to_string,
   )
 }
-

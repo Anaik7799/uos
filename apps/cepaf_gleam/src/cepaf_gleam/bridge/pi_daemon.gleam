@@ -207,7 +207,10 @@ pub fn start_default() -> Result(PiDaemon, String) {
 
 /// Send a prompt to Pi. Synchronous, with 30s timeout.
 /// Returns Ok(response) or Error(PiError).
-pub fn send_prompt(daemon: PiDaemon, prompt: String) -> Result(String, PiError) {
+pub fn send_prompt(
+  daemon: PiDaemon,
+  prompt: String,
+) -> Result(String, PiError) {
   send_prompt_with_timeout(daemon, prompt, 30_000)
 }
 

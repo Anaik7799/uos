@@ -64,7 +64,10 @@ pub fn initial_ooda() -> OodaCycleState {
   )
 }
 
-pub fn set_ooda_phase(state: OodaCycleState, phase: OodaPhase) -> OodaCycleState {
+pub fn set_ooda_phase(
+  state: OodaCycleState,
+  phase: OodaPhase,
+) -> OodaCycleState {
   OodaCycleState(..state, current_phase: phase)
 }
 
@@ -113,7 +116,10 @@ pub fn start_reasoning(
   )
 }
 
-pub fn append_reasoning(state: ReasoningState, delta: String) -> ReasoningState {
+pub fn append_reasoning(
+  state: ReasoningState,
+  delta: String,
+) -> ReasoningState {
   ReasoningState(
     ..state,
     content_buffer: state.content_buffer <> delta,

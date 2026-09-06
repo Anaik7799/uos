@@ -415,7 +415,10 @@ pub fn get_circuit_open_agents(
 /// Check if a given path matches any of the forbidden patterns.
 /// SC-ENFORCE-010: File path validation MUST be case-insensitive.
 /// AOR-ENFORCE-007: VALIDATE all file paths against forbidden list.
-pub fn is_forbidden_path(path: String, forbidden_patterns: List(String)) -> Bool {
+pub fn is_forbidden_path(
+  path: String,
+  forbidden_patterns: List(String),
+) -> Bool {
   let lower_path = string.lowercase(path)
   list.any(forbidden_patterns, fn(pattern) {
     let lower_pattern = string.lowercase(pattern)

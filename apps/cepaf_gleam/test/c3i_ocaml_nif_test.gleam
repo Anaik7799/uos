@@ -2,9 +2,9 @@
 //// [C3I-SIL6-MSTS] OCaml NIF Integration & Parity Test Suite
 //// =============================================================================
 
-import gleeunit/should
-import gleam/string
 import cepaf_gleam/c3i/ocaml_nif
+import gleam/string
+import gleeunit/should
 
 pub fn ocaml_nif_version_test() {
   let v = ocaml_nif.version()
@@ -104,9 +104,14 @@ pub fn ocaml_nif_rete_buffer_overflow_fail_closed_test() {
 }
 
 pub fn ocaml_nif_rete_unknown_key_fail_closed_test() {
-  case ocaml_nif.evaluate_gate("mesh_running=true,watchdog=true,unknown_key=true") {
+  case
+    ocaml_nif.evaluate_gate("mesh_running=true,watchdog=true,unknown_key=true")
+  {
     ocaml_nif.GateRejected(reason, _) -> {
-      string.contains(reason, "FAIL_CLOSED: unknown_key 'unknown_key' not in closed RETE fact schema")
+      string.contains(
+        reason,
+        "FAIL_CLOSED: unknown_key 'unknown_key' not in closed RETE fact schema",
+      )
       |> should.be_true()
     }
     ocaml_nif.GatePassed(_, _) -> {
@@ -116,7 +121,9 @@ pub fn ocaml_nif_rete_unknown_key_fail_closed_test() {
 }
 
 pub fn ocaml_nif_rete_invalid_boolean_fail_closed_test() {
-  case ocaml_nif.evaluate_gate("mesh_running=true,watchdog=true,e_stop=INVALID") {
+  case
+    ocaml_nif.evaluate_gate("mesh_running=true,watchdog=true,e_stop=INVALID")
+  {
     ocaml_nif.GateRejected(reason, _) -> {
       string.contains(reason, "FAIL_CLOSED: invalid_value for 'e_stop'")
       |> should.be_true()
@@ -128,7 +135,9 @@ pub fn ocaml_nif_rete_invalid_boolean_fail_closed_test() {
 }
 
 pub fn ocaml_nif_rete_duplicate_key_fail_closed_test() {
-  case ocaml_nif.evaluate_gate("mesh_running=true,watchdog=true,watchdog=false") {
+  case
+    ocaml_nif.evaluate_gate("mesh_running=true,watchdog=true,watchdog=false")
+  {
     ocaml_nif.GateRejected(reason, _) -> {
       string.contains(reason, "FAIL_CLOSED: duplicate_key: watchdog")
       |> should.be_true()
@@ -138,4 +147,3 @@ pub fn ocaml_nif_rete_duplicate_key_fail_closed_test() {
     }
   }
 }
-

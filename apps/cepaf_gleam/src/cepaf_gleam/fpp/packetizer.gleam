@@ -6,10 +6,10 @@
 //// - Encodes packed telemetry buffers to structured JSON for ground processing
 //// =============================================================================
 
+import cepaf_gleam/fpp/domain.{type TlmPacket}
 import gleam/int
 import gleam/json
 import gleam/list
-import cepaf_gleam/fpp/domain.{type TlmPacket}
 
 pub type PackedTelemetryPacket {
   PackedTelemetryPacket(

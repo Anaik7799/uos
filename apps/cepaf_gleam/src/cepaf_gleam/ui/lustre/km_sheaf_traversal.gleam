@@ -46,7 +46,10 @@ pub fn extract_block_anchors(text: String) -> List(String) {
   extract_anchors_recursive(text, [])
 }
 
-fn extract_anchors_recursive(remaining: String, acc: List(String)) -> List(String) {
+fn extract_anchors_recursive(
+  remaining: String,
+  acc: List(String),
+) -> List(String) {
   case string.split_once(remaining, "^") {
     Ok(#(_before, rest)) -> {
       let anchor = case string.split_once(rest, "\n") {
@@ -70,21 +73,28 @@ pub fn build_dung_framework() -> DungFramework {
   DungFramework(
     total_arguments: 18,
     attacks_count: 0,
-    unattacked_invariants: 18, // All 18 checklist invariants unconditionally defended
+    unattacked_invariants: 18,
+    // All 18 checklist invariants unconditionally defended
   )
 }
 
 pub fn render_km_sheaf_view(framework: DungFramework) -> Element(msg) {
   html.div([attribute.class("km-sheaf-container")], [
-    html.h3([], [element.text("Trans-Fractal KM Sheaf Harmonizer & ZK Block Traversal")]),
+    html.h3([], [
+      element.text("Trans-Fractal KM Sheaf Harmonizer & ZK Block Traversal"),
+    ]),
     html.div([attribute.class("sheaf-summary-grid")], [
       html.div([attribute.class("sheaf-card")], [
         html.strong([], [element.text("Dung Invariants: ")]),
-        element.text(int.to_string(framework.unattacked_invariants) <> " Defended"),
+        element.text(
+          int.to_string(framework.unattacked_invariants) <> " Defended",
+        ),
       ]),
       html.div([attribute.class("sheaf-card")], [
         html.strong([], [element.text("Attacks/Defeats: ")]),
-        element.text(int.to_string(framework.attacks_count) <> " (Zero Vulnerability)"),
+        element.text(
+          int.to_string(framework.attacks_count) <> " (Zero Vulnerability)",
+        ),
       ]),
       html.div([attribute.class("sheaf-card")], [
         html.strong([], [element.text("Sheaf Gluing: ")]),

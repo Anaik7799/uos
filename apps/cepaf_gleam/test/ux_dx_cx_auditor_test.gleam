@@ -3,7 +3,8 @@ import gleeunit/should
 
 pub fn wcag_contrast_threshold_test() {
   let audit = ux_dx_cx_auditor.build_canonical_audit()
-  should.be_true(audit.contrast_ratio >=. 7.0) // Level AAA
+  should.be_true(audit.contrast_ratio >=. 7.0)
+  // Level AAA
 }
 
 pub fn core_web_vitals_threshold_test() {

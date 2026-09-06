@@ -157,8 +157,7 @@ pub fn dispatch_hsm_signal(
     ) -> {
       // Find the first state in active_path (from leaf up to root) that handles the signal
       let reversed_path = list.reverse(state.active_path)
-      let handler =
-        find_handling_hstate(roots, reversed_path, signal, guards)
+      let handler = find_handling_hstate(roots, reversed_path, signal, guards)
 
       case handler {
         Error(_) -> {
@@ -167,13 +166,10 @@ pub fn dispatch_hsm_signal(
         }
         Ok(#(_handling_st, transition)) -> {
           // Resolve transition target
-          case
-            resolve_hsm_target(transition.target, roots, choices, guards)
-          {
+          case resolve_hsm_target(transition.target, roots, choices, guards) {
             Error(e) -> Error(e)
             Ok(#(target_st, target_path)) -> {
-              let lca =
-                common_ancestor_path(state.active_path, target_path, [])
+              let lca = common_ancestor_path(state.active_path, target_path, [])
               let lca_depth = list.length(lca)
 
               // States to exit: below LCA in active path, exited in reverse order (leaf first)
@@ -181,8 +177,7 @@ pub fn dispatch_hsm_signal(
                 list.drop(state.active_path, lca_depth)
                 |> list.reverse
 
-              let exit_actions =
-                collect_exit_actions(roots, states_to_exit, [])
+              let exit_actions = collect_exit_actions(roots, states_to_exit, [])
 
               // Transition do_actions
               let log_after_exit =
@@ -194,12 +189,15 @@ pub fn dispatch_hsm_signal(
               let entry_actions =
                 collect_entry_actions(roots, states_to_enter, [])
 
-              let log_after_entry =
-                list.append(log_after_exit, entry_actions)
+              let log_after_entry = list.append(log_after_exit, entry_actions)
 
               // Recursively enter initial sub_states of target if any
               let #(final_path, final_log) =
-                enter_initial_sub_states(target_st, target_path, log_after_entry)
+                enter_initial_sub_states(
+                  target_st,
+                  target_path,
+                  log_after_entry,
+                )
 
               Ok(HierarchicalMachineState(
                 active_path: final_path,

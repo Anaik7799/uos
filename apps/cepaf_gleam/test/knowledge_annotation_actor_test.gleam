@@ -4,12 +4,12 @@
 //// Contract: SC-ROCHA-001, SC-KM-001, SC-CHECKLIST-001
 //// =============================================================================
 
-import gleeunit/should
-import gleam/erlang/process
 import cepaf_gleam/knowledge/annotation_actor.{
   Completed, GetMetrics, ScanDocument, TriggerAnnotationRun,
-  calculate_sheaf_coherence, inspect_document, initial_state, start,
+  calculate_sheaf_coherence, initial_state, inspect_document, start,
 }
+import gleam/erlang/process
+import gleeunit/should
 
 pub fn inspect_document_rocha_closure_test() {
   let valid_doc =

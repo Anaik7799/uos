@@ -22,8 +22,8 @@
 import cepaf_gleam/bridge/pi_startup_classifier.{
   type StartupStage, type StartupState, StageFailed, StageMeshSync,
   StageOperationalReady, StagePreflight, StageProcessSpawn,
-  StageProtocolHandshake, StageProviderAuth, StageToolFederation,
-  advance_stage, fail_startup, format_intelligent_message, init_startup,
+  StageProtocolHandshake, StageProviderAuth, StageToolFederation, advance_stage,
+  fail_startup, format_intelligent_message, init_startup,
   render_html_startup_card, stage_metadata,
 }
 import gleam/int
@@ -61,7 +61,13 @@ pub type Msg {
 
 pub fn init() -> Model {
   let initial_state = init_startup("anthropic", "claude-3-7-sonnet", 0)
-  let initial_meta = stage_metadata(initial_state.current_stage, 0, "anthropic", "claude-3-7-sonnet")
+  let initial_meta =
+    stage_metadata(
+      initial_state.current_stage,
+      0,
+      "anthropic",
+      "claude-3-7-sonnet",
+    )
   let initial_msg = format_intelligent_message(initial_meta)
 
   Model(
@@ -88,42 +94,54 @@ pub fn update(model: Model, msg: Msg) -> Model {
 
       let now = model.simulated_now_ms + 140
       let new_state = advance_stage(model.state, next_stage, now)
-      let meta = stage_metadata(new_state.current_stage, new_state.current_elapsed_ms, new_state.provider, new_state.model)
+      let meta =
+        stage_metadata(
+          new_state.current_stage,
+          new_state.current_elapsed_ms,
+          new_state.provider,
+          new_state.model,
+        )
       let msg_str = format_intelligent_message(meta)
 
-      Model(
-        ..model,
-        state: new_state,
-        simulated_now_ms: now,
-        log_messages: [msg_str, ..model.log_messages],
-      )
+      Model(..model, state: new_state, simulated_now_ms: now, log_messages: [
+        msg_str,
+        ..model.log_messages
+      ])
     }
 
     FailStage(reason) -> {
       let now = model.simulated_now_ms + 50
       let new_state = fail_startup(model.state, reason, now)
-      let meta = stage_metadata(new_state.current_stage, new_state.current_elapsed_ms, new_state.provider, new_state.model)
+      let meta =
+        stage_metadata(
+          new_state.current_stage,
+          new_state.current_elapsed_ms,
+          new_state.provider,
+          new_state.model,
+        )
       let msg_str = format_intelligent_message(meta)
 
-      Model(
-        ..model,
-        state: new_state,
-        simulated_now_ms: now,
-        log_messages: [msg_str, ..model.log_messages],
-      )
+      Model(..model, state: new_state, simulated_now_ms: now, log_messages: [
+        msg_str,
+        ..model.log_messages
+      ])
     }
 
     ResetStartup -> {
       let fresh_state = init_startup("anthropic", "claude-3-7-sonnet", 0)
-      let meta = stage_metadata(fresh_state.current_stage, 0, "anthropic", "claude-3-7-sonnet")
+      let meta =
+        stage_metadata(
+          fresh_state.current_stage,
+          0,
+          "anthropic",
+          "claude-3-7-sonnet",
+        )
       let msg_str = format_intelligent_message(meta)
 
-      Model(
-        ..model,
-        state: fresh_state,
-        simulated_now_ms: 0,
-        log_messages: [msg_str, ..model.log_messages],
-      )
+      Model(..model, state: fresh_state, simulated_now_ms: 0, log_messages: [
+        msg_str,
+        ..model.log_messages
+      ])
     }
 
     SetStepDetail(step) -> Model(..model, selected_step_info: Some(step))
@@ -138,7 +156,11 @@ pub fn update(model: Model, msg: Msg) -> Model {
 
 pub fn view(model: Model) -> Element(Msg) {
   html.div(
-    [attribute.class("pi-startup-visualizer bg-slate-900 border border-slate-700 rounded-xl p-6 text-white shadow-2xl")],
+    [
+      attribute.class(
+        "pi-startup-visualizer bg-slate-900 border border-slate-700 rounded-xl p-6 text-white shadow-2xl",
+      ),
+    ],
     [
       render_header(),
       // Render the rich startup card
@@ -156,7 +178,7 @@ pub fn view(model: Model) -> Element(Msg) {
 
 fn render_ascii_pipeline(current: StartupStage) -> Element(Msg) {
   let ascii_art =
-"  +-----------------------------------------------------------------------------------------------------------------------------+
+    "  +-----------------------------------------------------------------------------------------------------------------------------+
   |                                        PI RUNTIME 7-STAGE LIFECYCLE PIPELINE                                                 |
   +----------------+----------------+----------------+----------------+----------------+----------------+-----------------------+
   | 1. PREFLIGHT   | 2. AUTH        | 3. SPAWN       | 4. HANDSHAKE   | 5. TOOLS       | 6. MESH SYNC   | 7. OPERATIONAL READY  |
@@ -165,162 +187,341 @@ fn render_ascii_pipeline(current: StartupStage) -> Element(Msg) {
   +----------------+----------------+----------------+----------------+----------------+----------------+-----------------------+"
 
   let current_stage_str = case current {
-    StagePreflight -> ">> CURRENTLY EXECUTING: STEP 1 (PREFLIGHT - Node & Binary Sanity Check) <<"
-    StageProviderAuth -> ">> CURRENTLY EXECUTING: STEP 2 (AUTH - Negotiating Model Quota) <<"
-    StageProcessSpawn -> ">> CURRENTLY EXECUTING: STEP 3 (SPAWN - Allocating OS Subprocess) <<"
-    StageProtocolHandshake -> ">> CURRENTLY EXECUTING: STEP 4 (HANDSHAKE - Validating JSONL Framing) <<"
-    StageToolFederation -> ">> CURRENTLY EXECUTING: STEP 5 (TOOLS - Federating 26 C3I Schemas) <<"
-    StageMeshSync -> ">> CURRENTLY EXECUTING: STEP 6 (MESH SYNC - Subscribing to Zenoh & OTel) <<"
-    StageOperationalReady -> ">> PIPELINE COMPLETE: PI RUNTIME IS OPERATIONAL & READY <<"
-    StageFailed(stage, reason) -> ">> PIPELINE HALTED AT " <> stage <> ": " <> reason <> " <<"
+    StagePreflight ->
+      ">> CURRENTLY EXECUTING: STEP 1 (PREFLIGHT - Node & Binary Sanity Check) <<"
+    StageProviderAuth ->
+      ">> CURRENTLY EXECUTING: STEP 2 (AUTH - Negotiating Model Quota) <<"
+    StageProcessSpawn ->
+      ">> CURRENTLY EXECUTING: STEP 3 (SPAWN - Allocating OS Subprocess) <<"
+    StageProtocolHandshake ->
+      ">> CURRENTLY EXECUTING: STEP 4 (HANDSHAKE - Validating JSONL Framing) <<"
+    StageToolFederation ->
+      ">> CURRENTLY EXECUTING: STEP 5 (TOOLS - Federating 26 C3I Schemas) <<"
+    StageMeshSync ->
+      ">> CURRENTLY EXECUTING: STEP 6 (MESH SYNC - Subscribing to Zenoh & OTel) <<"
+    StageOperationalReady ->
+      ">> PIPELINE COMPLETE: PI RUNTIME IS OPERATIONAL & READY <<"
+    StageFailed(stage, reason) ->
+      ">> PIPELINE HALTED AT " <> stage <> ": " <> reason <> " <<"
   }
 
-  html.div([attribute.class("my-4 bg-slate-950 border border-slate-800 rounded-lg p-4 font-mono text-[11px] overflow-x-auto")], [
-    html.div([attribute.class("text-amber-400 font-bold mb-2 tracking-wider")], [html.text(current_stage_str)]),
-    html.pre([attribute.class("text-cyan-400 leading-tight select-all")], [html.text(ascii_art)]),
-  ])
+  html.div(
+    [
+      attribute.class(
+        "my-4 bg-slate-950 border border-slate-800 rounded-lg p-4 font-mono text-[11px] overflow-x-auto",
+      ),
+    ],
+    [
+      html.div(
+        [attribute.class("text-amber-400 font-bold mb-2 tracking-wider")],
+        [html.text(current_stage_str)],
+      ),
+      html.pre([attribute.class("text-cyan-400 leading-tight select-all")], [
+        html.text(ascii_art),
+      ]),
+    ],
+  )
 }
 
 fn render_header() -> Element(Msg) {
-  html.div([attribute.class("flex justify-between items-center mb-5 pb-3 border-b border-slate-800")], [
-    html.div([], [
-      html.h2([attribute.class("text-xl font-bold text-amber-400 flex items-center gap-2")], [
-        html.span([], [html.text("🚀")]),
-        html.text("Pi Runtime Lifecycle & Startup Visualizer"),
+  html.div(
+    [
+      attribute.class(
+        "flex justify-between items-center mb-5 pb-3 border-b border-slate-800",
+      ),
+    ],
+    [
+      html.div([], [
+        html.h2(
+          [
+            attribute.class(
+              "text-xl font-bold text-amber-400 flex items-center gap-2",
+            ),
+          ],
+          [
+            html.span([], [html.text("🚀")]),
+            html.text("Pi Runtime Lifecycle & Startup Visualizer"),
+          ],
+        ),
+        html.p([attribute.class("text-xs text-slate-400 mt-1")], [
+          html.text(
+            "7-Stage Decomposition with Intelligent Contextual Messaging & Real-Time AG-UI Event Streaming",
+          ),
+        ]),
       ]),
-      html.p([attribute.class("text-xs text-slate-400 mt-1")], [
-        html.text("7-Stage Decomposition with Intelligent Contextual Messaging & Real-Time AG-UI Event Streaming"),
+      html.div([attribute.class("flex items-center gap-2")], [
+        html.span(
+          [
+            attribute.class(
+              "px-2.5 py-1 text-xs font-mono rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40",
+            ),
+          ],
+          [
+            html.text("SC-PI-STARTUP-001"),
+          ],
+        ),
       ]),
-    ]),
-    html.div([attribute.class("flex items-center gap-2")], [
-      html.span([attribute.class("px-2.5 py-1 text-xs font-mono rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/40")], [
-        html.text("SC-PI-STARTUP-001"),
-      ]),
-    ]),
-  ])
+    ],
+  )
 }
 
 fn render_interactive_controls(current: StartupStage) -> Element(Msg) {
   let is_done = current == StageOperationalReady
 
-  html.div([attribute.class("flex items-center gap-3 p-4 bg-slate-950 border border-slate-800 rounded-lg flex-wrap")], [
-    html.button(
-      [
-        attribute.class("px-4 py-2 rounded bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs flex items-center gap-2 transition-all shadow-lg " <> case is_done {
-          True -> "opacity-50 cursor-not-allowed"
-          False -> ""
-        }),
-        event.on_click(NextStage),
-      ],
-      [
-        html.span([], [html.text("⏩")]),
-        html.text(case is_done {
-          True -> "Operational (Completed)"
-          False -> "Advance Next Stage"
-        }),
-      ],
-    ),
-    html.button(
-      [
-        attribute.class("px-4 py-2 rounded bg-rose-900/60 hover:bg-rose-800 text-rose-200 border border-rose-700/60 text-xs font-semibold flex items-center gap-2 transition-all"),
-        event.on_click(FailStage("Mock quota exhaustion")),
-      ],
-      [
-        html.span([], [html.text("⚠️")]),
-        html.text("Simulate Error Intercept"),
-      ],
-    ),
-    html.button(
-      [
-        attribute.class("px-4 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center gap-2 transition-all"),
-        event.on_click(ResetStartup),
-      ],
-      [
-        html.span([], [html.text("🔄")]),
-        html.text("Reset State Machine"),
-      ],
-    ),
-  ])
+  html.div(
+    [
+      attribute.class(
+        "flex items-center gap-3 p-4 bg-slate-950 border border-slate-800 rounded-lg flex-wrap",
+      ),
+    ],
+    [
+      html.button(
+        [
+          attribute.class(
+            "px-4 py-2 rounded bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs flex items-center gap-2 transition-all shadow-lg "
+            <> case is_done {
+              True -> "opacity-50 cursor-not-allowed"
+              False -> ""
+            },
+          ),
+          event.on_click(NextStage),
+        ],
+        [
+          html.span([], [html.text("⏩")]),
+          html.text(case is_done {
+            True -> "Operational (Completed)"
+            False -> "Advance Next Stage"
+          }),
+        ],
+      ),
+      html.button(
+        [
+          attribute.class(
+            "px-4 py-2 rounded bg-rose-900/60 hover:bg-rose-800 text-rose-200 border border-rose-700/60 text-xs font-semibold flex items-center gap-2 transition-all",
+          ),
+          event.on_click(FailStage("Mock quota exhaustion")),
+        ],
+        [
+          html.span([], [html.text("⚠️")]),
+          html.text("Simulate Error Intercept"),
+        ],
+      ),
+      html.button(
+        [
+          attribute.class(
+            "px-4 py-2 rounded bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold flex items-center gap-2 transition-all",
+          ),
+          event.on_click(ResetStartup),
+        ],
+        [
+          html.span([], [html.text("🔄")]),
+          html.text("Reset State Machine"),
+        ],
+      ),
+    ],
+  )
 }
 
 fn render_stage_timeline(state: StartupState) -> Element(Msg) {
   let stages = [
-    #(1, "Environment Preflight", "Verifies Node runtime, binary path & permissions.", StagePreflight),
-    #(2, "Provider Authentication", "Verifies API tokens and upstream quota limits.", StageProviderAuth),
-    #(3, "Subprocess Allocation", "Spawns OS child process via BEAM port driver.", StageProcessSpawn),
-    #(4, "Protocol Handshake", "Synchronizes JSONL framing over stdio pipes.", StageProtocolHandshake),
-    #(5, "Tool Federation", "Federates 26 C3I domain tools & MCP tool schemas.", StageToolFederation),
-    #(6, "Mesh Synchronization", "Subscribes to Zenoh topics & binds OTel tracing.", StageMeshSync),
-    #(7, "Operational & Ready", "Warmup ping completed; ready for agent prompts.", StageOperationalReady),
+    #(
+      1,
+      "Environment Preflight",
+      "Verifies Node runtime, binary path & permissions.",
+      StagePreflight,
+    ),
+    #(
+      2,
+      "Provider Authentication",
+      "Verifies API tokens and upstream quota limits.",
+      StageProviderAuth,
+    ),
+    #(
+      3,
+      "Subprocess Allocation",
+      "Spawns OS child process via BEAM port driver.",
+      StageProcessSpawn,
+    ),
+    #(
+      4,
+      "Protocol Handshake",
+      "Synchronizes JSONL framing over stdio pipes.",
+      StageProtocolHandshake,
+    ),
+    #(
+      5,
+      "Tool Federation",
+      "Federates 26 C3I domain tools & MCP tool schemas.",
+      StageToolFederation,
+    ),
+    #(
+      6,
+      "Mesh Synchronization",
+      "Subscribes to Zenoh topics & binds OTel tracing.",
+      StageMeshSync,
+    ),
+    #(
+      7,
+      "Operational & Ready",
+      "Warmup ping completed; ready for agent prompts.",
+      StageOperationalReady,
+    ),
   ]
 
-  html.div([attribute.class("bg-slate-950/70 border border-slate-800 rounded-lg p-4")], [
-    html.h3([attribute.class("text-xs font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center justify-between")], [
-      html.span([], [html.text("Lifecycle Stage Timeline")]),
-      html.span([attribute.class("font-mono text-cyan-400 text-[11px]")], [
-        html.text("Elapsed: " <> int.to_string(state.current_elapsed_ms) <> "ms"),
-      ]),
-    ]),
-    html.div([attribute.class("space-y-2")], 
-      list.map(stages, fn(s) {
-        let #(num, title, desc, stage_val) = s
-        let is_completed = list.contains(state.completed_stages, stage_val)
-        let is_active = state.current_stage == stage_val
+  html.div(
+    [attribute.class("bg-slate-950/70 border border-slate-800 rounded-lg p-4")],
+    [
+      html.h3(
+        [
+          attribute.class(
+            "text-xs font-bold text-slate-300 uppercase tracking-wider mb-3 flex items-center justify-between",
+          ),
+        ],
+        [
+          html.span([], [html.text("Lifecycle Stage Timeline")]),
+          html.span([attribute.class("font-mono text-cyan-400 text-[11px]")], [
+            html.text(
+              "Elapsed: " <> int.to_string(state.current_elapsed_ms) <> "ms",
+            ),
+          ]),
+        ],
+      ),
+      html.div(
+        [attribute.class("space-y-2")],
+        list.map(stages, fn(s) {
+          let #(num, title, desc, stage_val) = s
+          let is_completed = list.contains(state.completed_stages, stage_val)
+          let is_active = state.current_stage == stage_val
 
-        let #(badge_bg, text_col, icon) = case is_active, is_completed {
-          True, _ -> #("bg-cyan-500/20 border-cyan-400 text-cyan-300 font-bold", "text-cyan-200", "⚡")
-          False, True -> #("bg-emerald-500/15 border-emerald-500/40 text-emerald-400", "text-slate-300", "✓")
-          False, False -> #("bg-slate-900/60 border-slate-800 text-slate-600", "text-slate-500", "○")
-        }
+          let #(badge_bg, text_col, icon) = case is_active, is_completed {
+            True, _ -> #(
+              "bg-cyan-500/20 border-cyan-400 text-cyan-300 font-bold",
+              "text-cyan-200",
+              "⚡",
+            )
+            False, True -> #(
+              "bg-emerald-500/15 border-emerald-500/40 text-emerald-400",
+              "text-slate-300",
+              "✓",
+            )
+            False, False -> #(
+              "bg-slate-900/60 border-slate-800 text-slate-600",
+              "text-slate-500",
+              "○",
+            )
+          }
 
-        html.div([attribute.class("p-2.5 rounded border flex items-center justify-between transition-all " <> badge_bg)], [
-          html.div([attribute.class("flex items-center gap-3")], [
-            html.span([attribute.class("font-mono text-xs w-4 text-center")], [html.text(icon)]),
-            html.div([], [
-              html.div([attribute.class("text-xs font-semibold " <> text_col)], [
-                html.text(int.to_string(num) <> ". " <> title),
+          html.div(
+            [
+              attribute.class(
+                "p-2.5 rounded border flex items-center justify-between transition-all "
+                <> badge_bg,
+              ),
+            ],
+            [
+              html.div([attribute.class("flex items-center gap-3")], [
+                html.span(
+                  [attribute.class("font-mono text-xs w-4 text-center")],
+                  [html.text(icon)],
+                ),
+                html.div([], [
+                  html.div(
+                    [attribute.class("text-xs font-semibold " <> text_col)],
+                    [
+                      html.text(int.to_string(num) <> ". " <> title),
+                    ],
+                  ),
+                  html.div([attribute.class("text-[10px] text-slate-400")], [
+                    html.text(desc),
+                  ]),
+                ]),
               ]),
-              html.div([attribute.class("text-[10px] text-slate-400")], [html.text(desc)]),
-            ]),
-          ]),
-          html.span([attribute.class("font-mono text-[10px] text-slate-500")], [
-            html.text(case is_active {
-              True -> "ACTIVE"
-              False -> case is_completed {
-                True -> "DONE"
-                False -> "QUEUED"
-              }
-            }),
-          ]),
-        ])
-      })
-    ),
-  ])
+              html.span(
+                [attribute.class("font-mono text-[10px] text-slate-500")],
+                [
+                  html.text(case is_active {
+                    True -> "ACTIVE"
+                    False ->
+                      case is_completed {
+                        True -> "DONE"
+                        False -> "QUEUED"
+                      }
+                  }),
+                ],
+              ),
+            ],
+          )
+        }),
+      ),
+    ],
+  )
 }
 
 fn render_console_telemetry(logs: List(String)) -> Element(Msg) {
-  html.div([attribute.class("bg-slate-950/90 border border-slate-800 rounded-lg p-4 flex flex-col h-[380px]")], [
-    html.div([attribute.class("flex justify-between items-center mb-2 pb-2 border-b border-slate-800/80")], [
-      html.h3([attribute.class("text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2")], [
-        html.span([attribute.class("inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse")], []),
-        html.text("Intelligent Messaging Stream"),
-      ]),
-      html.button(
-        [
-          attribute.class("text-[10px] text-slate-500 hover:text-slate-300 font-mono"),
-          event.on_click(ClearLogs),
-        ],
-        [html.text("Clear")],
+  html.div(
+    [
+      attribute.class(
+        "bg-slate-950/90 border border-slate-800 rounded-lg p-4 flex flex-col h-[380px]",
       ),
-    ]),
-    html.div([attribute.class("flex-1 overflow-y-auto space-y-1.5 font-mono text-[11px] p-2 bg-black/50 rounded border border-slate-900")], 
-      list.map(logs, fn(log_line) {
-        html.div([attribute.class("text-slate-300 leading-relaxed break-words hover:bg-slate-900/50 p-1 rounded")], [
-          html.text(log_line),
-        ])
-      })
-    ),
-  ])
+    ],
+    [
+      html.div(
+        [
+          attribute.class(
+            "flex justify-between items-center mb-2 pb-2 border-b border-slate-800/80",
+          ),
+        ],
+        [
+          html.h3(
+            [
+              attribute.class(
+                "text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2",
+              ),
+            ],
+            [
+              html.span(
+                [
+                  attribute.class(
+                    "inline-block w-2 h-2 rounded-full bg-emerald-400 animate-pulse",
+                  ),
+                ],
+                [],
+              ),
+              html.text("Intelligent Messaging Stream"),
+            ],
+          ),
+          html.button(
+            [
+              attribute.class(
+                "text-[10px] text-slate-500 hover:text-slate-300 font-mono",
+              ),
+              event.on_click(ClearLogs),
+            ],
+            [html.text("Clear")],
+          ),
+        ],
+      ),
+      html.div(
+        [
+          attribute.class(
+            "flex-1 overflow-y-auto space-y-1.5 font-mono text-[11px] p-2 bg-black/50 rounded border border-slate-900",
+          ),
+        ],
+        list.map(logs, fn(log_line) {
+          html.div(
+            [
+              attribute.class(
+                "text-slate-300 leading-relaxed break-words hover:bg-slate-900/50 p-1 rounded",
+              ),
+            ],
+            [
+              html.text(log_line),
+            ],
+          )
+        }),
+      ),
+    ],
+  )
 }
 
 fn render_stage_ascii_art(current: StartupStage) -> Element(Msg) {
@@ -328,7 +529,7 @@ fn render_stage_ascii_art(current: StartupStage) -> Element(Msg) {
     StagePreflight -> #(
       "STAGE 1: PREFLIGHT RUNTIME PROBE",
       "text-cyan-400",
-"         /\\
+      "         /\\
         /  \\
        | == |      +-------------------------------------------+
        | == |      | NODE & VFS RUNTIME PROBE ACTIVE           |
@@ -345,7 +546,7 @@ fn render_stage_ascii_art(current: StartupStage) -> Element(Msg) {
     StageProviderAuth -> #(
       "STAGE 2: MODEL PROVIDER AUTHENTICATION & QUOTA",
       "text-amber-400",
-"     .-----------------------.
+      "     .-----------------------.
     /   PROVIDER AUTH SHIELD  \\
    |   [ ANTHROPIC CLAUDE ]    |     +-------------------------------------------+
    |        .--------.         |     | CRYPTOGRAPHIC TOKEN VERIFICATION          |
@@ -361,7 +562,7 @@ fn render_stage_ascii_art(current: StartupStage) -> Element(Msg) {
     StageProcessSpawn -> #(
       "STAGE 3: BEAM OS SUBPROCESS FORK & PIPES",
       "text-blue-400",
-"+=============================================================================+
+      "+=============================================================================+
 |                      BEAM OS SUBPROCESS SPAWN & IPC                         |
 |   +-----------------------+                 +-----------------------+       |
 |   | BEAM OTP 29 SUPERVISOR|                 | PI RUNTIME SUBPROCESS |       |
@@ -377,7 +578,7 @@ fn render_stage_ascii_art(current: StartupStage) -> Element(Msg) {
     StageProtocolHandshake -> #(
       "STAGE 4: JSONL PROTOCOL HANDSHAKE & FRAMING",
       "text-purple-400",
-"     CLIENT GATEWAY (BEAM)                     PI DAEMON (SUBPROCESS)
+      "     CLIENT GATEWAY (BEAM)                     PI DAEMON (SUBPROCESS)
            |                                             |
            |========== 1. SYN: PROTOCOL_VERSION =========>|
            |                                             |
@@ -392,7 +593,7 @@ fn render_stage_ascii_art(current: StartupStage) -> Element(Msg) {
     StageToolFederation -> #(
       "STAGE 5: MCP FEDERATED TOOL SCHEMA REGISTRATION",
       "text-emerald-400",
-"+=============================================================================+
+      "+=============================================================================+
 |                       C3I MCP 26-TOOL FEDERATION ARRAY                      |
 +-----------------------------------------------------------------------------+
 | [PLAN] plan_status         | [SYS] system_health       | [DOM] ooda_decide  |
@@ -408,7 +609,7 @@ fn render_stage_ascii_art(current: StartupStage) -> Element(Msg) {
     StageMeshSync -> #(
       "STAGE 6: ZENOH PUB/SUB MESH & OTEL TELEMETRY SYNC",
       "text-teal-400",
-"                  .-''''-.
+      "                  .-''''-.
                 .'        '.        ((( ZENOH DISTRIBUTED MESH WAVE )))
                /   (o)  (o) \\      .- - - - - - - - - - - - - - - - - - .
               :     __  __   :    (  TOPIC: indrajaal/otel/span/pi/**    )
@@ -424,7 +625,7 @@ fn render_stage_ascii_art(current: StartupStage) -> Element(Msg) {
     StageOperationalReady -> #(
       "STAGE 7: OPERATIONAL DARK COCKPIT READY",
       "text-green-400",
-"+=============================================================================+
+      "+=============================================================================+
 |             *** CYBERNETIC COMMAND & CONTROL COCKPIT ACTIVE ***             |
 +=============================================================================+
 |   [BOOT LATENCY] 140ms  |  [RSS MEMORY] 42.8 MB  |  [HEALTH] 100% OPERATIONAL|
@@ -442,11 +643,15 @@ fn render_stage_ascii_art(current: StartupStage) -> Element(Msg) {
     StageFailed(stage, reason) -> #(
       "STARTUP INTERCEPT / CIRCUIT BREAKER TRIPPED",
       "text-rose-400",
-"+=============================================================================+
+      "+=============================================================================+
 |                      !!! PRAJNA CIRCUIT BREAKER TRIPPED !!!                 |
 +=============================================================================+
-|                 /\\                  FAILED AT STAGE: " <> stage <> "
-|                /  \\                 REASON: " <> reason <> "
+|                 /\\                  FAILED AT STAGE: "
+        <> stage
+        <> "
+|                /  \\                 REASON: "
+        <> reason
+        <> "
 |               / !! \\                ACTION: Fail-Closed Interlock Active
 |              /______\\               RECOVERY: Click 'Reset State Machine'
 |                                                                             |
@@ -455,9 +660,20 @@ fn render_stage_ascii_art(current: StartupStage) -> Element(Msg) {
     )
   }
 
-  html.div([attribute.class("my-4 bg-slate-950 border border-slate-800 rounded-lg p-4 font-mono text-[11px] overflow-x-auto shadow-inner")], [
-    html.div([attribute.class("font-bold mb-2 tracking-wider " <> color_class)], [html.text(title)]),
-    html.pre([attribute.class("leading-tight select-all " <> color_class)], [html.text(art)]),
-  ])
+  html.div(
+    [
+      attribute.class(
+        "my-4 bg-slate-950 border border-slate-800 rounded-lg p-4 font-mono text-[11px] overflow-x-auto shadow-inner",
+      ),
+    ],
+    [
+      html.div(
+        [attribute.class("font-bold mb-2 tracking-wider " <> color_class)],
+        [html.text(title)],
+      ),
+      html.pre([attribute.class("leading-tight select-all " <> color_class)], [
+        html.text(art),
+      ]),
+    ],
+  )
 }
-

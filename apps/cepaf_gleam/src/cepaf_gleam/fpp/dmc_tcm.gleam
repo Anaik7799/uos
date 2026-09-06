@@ -140,12 +140,7 @@ pub fn verify_rocha_biosemiotic_cut(
 // -------------------------------------- Single-Writer Exclusive Lease (DMC)
 
 pub type WriterLease {
-  WriterLease(
-    resource_id: String,
-    holder: String,
-    epoch: Int,
-    active: Bool,
-  )
+  WriterLease(resource_id: String, holder: String, epoch: Int, active: Bool)
 }
 
 pub fn acquire_writer_lease(
@@ -233,10 +228,7 @@ pub fn canonical_fpp_tcm_vector(
 
 /// Proves conservation of the 13-Dimensional Traceability Coordinates:
 /// Delta T_13 = 0 (Conservation Law). Trust must remain strictly positive (1).
-pub fn verify_tcm_13d_conservation(
-  t0: Tcm13DVector,
-  t1: Tcm13DVector,
-) -> Bool {
+pub fn verify_tcm_13d_conservation(t0: Tcm13DVector, t1: Tcm13DVector) -> Bool {
   t0.trust_indicator == 1
   && t1.trust_indicator == 1
   && t0.topology_rank == t1.topology_rank

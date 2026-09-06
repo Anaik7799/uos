@@ -122,7 +122,10 @@ pub type SplitScreenMsg {
 // Update function (wires live data into the split-screen model)
 // =============================================================================
 
-pub fn update(model: SplitScreenModel, msg: SplitScreenMsg) -> SplitScreenModel {
+pub fn update(
+  model: SplitScreenModel,
+  msg: SplitScreenMsg,
+) -> SplitScreenModel {
   case msg {
     DashboardUpdate(dashboard) ->
       SplitScreenModel(..model, dashboard: dashboard)

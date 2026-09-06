@@ -65,11 +65,16 @@ pub fn verify_graph_strongly_connected(graph: ZkGraphTopology) -> Bool {
 
 pub fn calculate_cluster_color(cluster: Int) -> String {
   case cluster {
-    0 -> "#58a6ff" // Architecture / Blue
-    1 -> "#3fb950" // Formal & Oracle / Green
-    2 -> "#bc8cff" // Storage & Safety / Purple
-    3 -> "#f0883e" // Navigation & Mesh / Amber
-    _ -> "#8b949e" // Neutral Gray
+    0 -> "#58a6ff"
+    // Architecture / Blue
+    1 -> "#3fb950"
+    // Formal & Oracle / Green
+    2 -> "#bc8cff"
+    // Storage & Safety / Purple
+    3 -> "#f0883e"
+    // Navigation & Mesh / Amber
+    _ -> "#8b949e"
+    // Neutral Gray
   }
 }
 
@@ -91,7 +96,7 @@ pub fn build_canonical_zk_graph() -> ZkGraphTopology {
     GraphNode("ADR-009", "ADR-009 Quint Parity", 1, 180.0, 350.0, 0.16),
     GraphNode("ADR-010", "ADR-010 Tailscale FQDN", 3, 200.0, 240.0, 0.27),
     GraphNode("ADR-011", "ADR-011 Universal Check", 3, 280.0, 160.0, 0.29),
-    GraphNode("ADR-012", "ADR-012 Rocha Semiotics", 2, 300.0, 240.0, 0.20),
+    GraphNode("ADR-012", "ADR-012 Rocha Semiotics", 2, 300.0, 240.0, 0.2),
     GraphNode("ADR-013", "ADR-013 ZMOF Backplane", 3, 500.0, 240.0, 0.23),
     GraphNode("ADR-014", "ADR-014 Tri-Sovereignty", 0, 500.0, 370.0, 0.22),
     GraphNode("ADR-015", "ADR-015 Unified Patrol", 3, 300.0, 370.0, 0.26),
@@ -188,7 +193,15 @@ pub fn render_svg_graph_html(graph: ZkGraphTopology) -> String {
     |> string.join("\n")
 
   let svg_footer = "</svg>"
-  svg_header <> "\n" <> svg_defs <> "\n" <> edges_svg <> "\n" <> nodes_svg <> "\n" <> svg_footer
+  svg_header
+  <> "\n"
+  <> svg_defs
+  <> "\n"
+  <> edges_svg
+  <> "\n"
+  <> nodes_svg
+  <> "\n"
+  <> svg_footer
 }
 
 pub fn render_zk_graph_view(graph: ZkGraphTopology) -> Element(msg) {
@@ -210,7 +223,10 @@ pub fn render_zk_graph_view(graph: ZkGraphTopology) -> Element(msg) {
     html.div(
       [
         attribute.class("zk-svg-wrapper"),
-        attribute.attribute("dangerously_set_inner_html", render_svg_graph_html(graph)),
+        attribute.attribute(
+          "dangerously_set_inner_html",
+          render_svg_graph_html(graph),
+        ),
       ],
       [],
     ),

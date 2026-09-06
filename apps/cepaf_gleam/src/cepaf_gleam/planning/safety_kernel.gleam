@@ -203,7 +203,10 @@ pub fn execute_with_rollback(
 ///     ensuring exhaustive pattern matching for Pass, Fail, and Warning states.
 ///   </semantic-note>
 /// </c3i-atomic>
-fn handle_request(state: State, request: Request) -> actor.Next(State, Request) {
+fn handle_request(
+  state: State,
+  request: Request,
+) -> actor.Next(State, Request) {
   case request {
     ValidateOperation(proposal, reply_to) -> {
       let response =

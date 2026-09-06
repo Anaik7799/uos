@@ -68,7 +68,11 @@ pub fn uos_root_spec() -> RootSupervisorSpec {
         name: "AppsSupervisor",
         description: "Control plane UI, Wisp REST API, and Indrajaal actor cluster",
         strategy: OneForOne,
-        children: ["cepaf_gleam_wisp", "indrajaal_holon_runtime", "indrajaal_web"],
+        children: [
+          "cepaf_gleam_wisp",
+          "indrajaal_holon_runtime",
+          "indrajaal_web",
+        ],
       ),
       DomainSpec(
         domain: EnginesDomain,
@@ -82,14 +86,22 @@ pub fn uos_root_spec() -> RootSupervisorSpec {
         name: "ServicesSupervisor",
         description: "Modular MAX isolated inference, unified MCP gateway, and planning worker",
         strategy: OneForOne,
-        children: ["max_isolated_worker", "mcp_unified_gateway", "planning_worker"],
+        children: [
+          "max_isolated_worker",
+          "mcp_unified_gateway",
+          "planning_worker",
+        ],
       ),
       DomainSpec(
         domain: IntelligenceDomain,
         name: "IntelligenceSupervisor",
         description: "Swarming holon actor mesh, lease generation fencing, and Rete-UL rules",
         strategy: OneForAll,
-        children: ["holon_swarm_mesh", "lease_fencing_monitor", "rete_ul_engine"],
+        children: [
+          "holon_swarm_mesh",
+          "lease_fencing_monitor",
+          "rete_ul_engine",
+        ],
       ),
     ],
   )
@@ -116,7 +128,10 @@ pub fn validate_spec(spec: RootSupervisorSpec) -> Result(Int, String) {
 }
 
 /// Start declarative static supervisor for the root tree.
-pub fn start_root_supervisor() -> Result(actor.Started(sup.Supervisor), actor.StartError) {
+pub fn start_root_supervisor() -> Result(
+  actor.Started(sup.Supervisor),
+  actor.StartError,
+) {
   sup.new(sup.RestForOne)
   |> sup.restart_tolerance(intensity: 5, period: 60)
   |> sup.start

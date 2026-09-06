@@ -135,7 +135,10 @@ pub fn edge_count(topo: DynamicTopology) -> Int {
 }
 
 /// Find node by ID.
-pub fn find_node(topo: DynamicTopology, id: String) -> Result(TopologyNode, Nil) {
+pub fn find_node(
+  topo: DynamicTopology,
+  id: String,
+) -> Result(TopologyNode, Nil) {
   list.find(topo.nodes, fn(n) { n.id == id })
 }
 

@@ -58,7 +58,9 @@ pub fn evaluate_single_check(spec: WebCheckSpec) -> CheckEvaluation {
   )
 }
 
-pub fn evaluate_check_suite(specs: List(WebCheckSpec)) -> List(CheckEvaluation) {
+pub fn evaluate_check_suite(
+  specs: List(WebCheckSpec),
+) -> List(CheckEvaluation) {
   list.map(specs, evaluate_single_check)
 }
 

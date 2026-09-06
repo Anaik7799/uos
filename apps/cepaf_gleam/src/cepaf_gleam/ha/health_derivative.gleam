@@ -169,7 +169,10 @@ pub fn init(initial_health: Float) -> HealthDerivative {
 ///         Alert classified from derivatives and predictions. </Q>
 ///   </formal-proof>
 /// </c3i-atomic>
-pub fn update(state: HealthDerivative, sample: HealthSample) -> HealthDerivative {
+pub fn update(
+  state: HealthDerivative,
+  sample: HealthSample,
+) -> HealthDerivative {
   // Prepend newest sample, cap ring-buffer
   let new_samples =
     [sample, ..state.samples]

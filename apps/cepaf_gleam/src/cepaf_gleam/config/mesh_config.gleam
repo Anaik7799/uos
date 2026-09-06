@@ -288,7 +288,10 @@ pub fn get_stage_info(stage: Int) -> String {
 }
 
 /// Add a container to the mesh config.
-pub fn add_container(config: MeshConfig, container: ContainerSpec) -> MeshConfig {
+pub fn add_container(
+  config: MeshConfig,
+  container: ContainerSpec,
+) -> MeshConfig {
   MeshConfig(..config, containers: list.append(config.containers, [container]))
 }
 

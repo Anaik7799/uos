@@ -582,7 +582,11 @@ pub fn rhetorical_to_string_evidence_test() {
 // knowledge/anomaly tests
 // =============================================================================
 
-fn make_node(id: String, entropy: Float, drift: Float) -> kdomain.KnowledgeNode {
+fn make_node(
+  id: String,
+  entropy: Float,
+  drift: Float,
+) -> kdomain.KnowledgeNode {
   kdomain.KnowledgeNode(
     id: id,
     title: "Node " <> id,

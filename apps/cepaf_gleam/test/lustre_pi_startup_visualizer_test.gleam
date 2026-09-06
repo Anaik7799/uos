@@ -3,10 +3,6 @@
 //// Subject: Lustre MVU Pi Startup Visualizer Component Tests
 //// =============================================================================
 
-import gleeunit/should
-import gleam/list
-import gleam/option.{Some}
-import gleam/string
 import cepaf_gleam/bridge/pi_startup_classifier.{
   StageOperationalReady, StagePreflight, StageProviderAuth,
 }
@@ -14,6 +10,10 @@ import cepaf_gleam/ui/lustre/pi_startup_visualizer.{
   ClearLogs, FailStage, NextStage, ResetStartup, SetStepDetail, init, update,
   view,
 }
+import gleam/list
+import gleam/option.{Some}
+import gleam/string
+import gleeunit/should
 
 pub fn init_model_test() {
   let model = init()

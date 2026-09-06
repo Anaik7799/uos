@@ -123,7 +123,10 @@ pub fn publish_sync_started() -> Result(Nil, String) {
 /// Publish a sync-completed event to Zenoh.
 ///
 /// Topic: `c3i/planning/sync/completed`
-pub fn publish_sync_completed(success: Bool, errors: Int) -> Result(Nil, String) {
+pub fn publish_sync_completed(
+  success: Bool,
+  errors: Int,
+) -> Result(Nil, String) {
   let topic = string.concat([sync_prefix, "completed"])
   let payload =
     json.object([

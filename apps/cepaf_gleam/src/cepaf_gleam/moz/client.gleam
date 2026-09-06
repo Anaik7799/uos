@@ -215,7 +215,10 @@ pub fn build_request_json(
 ///   </formal-proof>
 /// </c3i-atomic>
 /// Attaches an existing persistent Zenoh session to the client state (SC-ZMOF-001).
-pub fn with_session(state: MoZClientState, session: zenoh.Session) -> MoZClientState {
+pub fn with_session(
+  state: MoZClientState,
+  session: zenoh.Session,
+) -> MoZClientState {
   MoZClientState(..state, session: Some(session))
 }
 

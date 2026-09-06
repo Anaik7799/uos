@@ -101,7 +101,10 @@ const default_cockpit_mode: String = "dark"
 ///
 /// `health_score_millis` is initialised to 1000 (= 1.0, fully healthy) so
 /// that the first checkpoint reflects "assumed healthy until measured".
-pub fn from_app_state(session_id: String, timestamp_ms: Int) -> SerializedState {
+pub fn from_app_state(
+  session_id: String,
+  timestamp_ms: Int,
+) -> SerializedState {
   SerializedState(
     session_id: session_id,
     timestamp_ms: timestamp_ms,

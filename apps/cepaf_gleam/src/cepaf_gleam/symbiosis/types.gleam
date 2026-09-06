@@ -133,7 +133,10 @@ pub fn record(
 }
 
 /// Get all relations of a specific type.
-pub fn by_type(index: SymbiosisIndex, rel_type: RelationType) -> List(Relation) {
+pub fn by_type(
+  index: SymbiosisIndex,
+  rel_type: RelationType,
+) -> List(Relation) {
   list.filter(index.relations, fn(r) { r.relation_type == rel_type })
 }
 

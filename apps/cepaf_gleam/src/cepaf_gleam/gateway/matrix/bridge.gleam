@@ -109,7 +109,10 @@ pub fn zenoh_topic_for_room(room_id: String) -> String {
   "indrajaal/l7/matrix/events/" <> safe_id
 }
 
-pub fn room_for_zenoh_topic(state: BridgeState, topic: String) -> Option(String) {
+pub fn room_for_zenoh_topic(
+  state: BridgeState,
+  topic: String,
+) -> Option(String) {
   case string.starts_with(topic, "indrajaal/otel/span/critical") {
     True -> rooms.find_room(state.room_registry, "alert")
     False ->

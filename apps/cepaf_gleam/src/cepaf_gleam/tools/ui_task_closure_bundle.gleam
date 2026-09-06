@@ -136,7 +136,12 @@ fn png_path(name: String) -> String {
   diagram_dir <> "/" <> name <> ".png"
 }
 
-fn diagram(name: String, heading: String, caption: String, items: List(String)) {
+fn diagram(
+  name: String,
+  heading: String,
+  caption: String,
+  items: List(String),
+) {
   Diagram(name, heading, caption, items, svg_path(name), png_path(name))
 }
 
@@ -2439,7 +2444,11 @@ fn source_excerpt(
   }
 }
 
-fn find_line_index(lines_list: List(String), needle: String, index: Int) -> Int {
+fn find_line_index(
+  lines_list: List(String),
+  needle: String,
+  index: Int,
+) -> Int {
   case lines_list {
     [] -> 0
     [line, ..rest] ->

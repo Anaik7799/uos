@@ -104,6 +104,8 @@ pub fn fpp_intent_json_serialization_test() {
 
   json_str |> string.contains("\"status\":\"authorized\"") |> should.be_true
   json_str |> string.contains("\"status_code\":200") |> should.be_true
-  json_str |> string.contains("\"contract\":\"SC-FPP-INTENT-001\"") |> should.be_true
+  json_str
+  |> string.contains("\"contract\":\"SC-FPP-INTENT-001\"")
+  |> should.be_true
   json_str |> string.contains("INT-JSON-004") |> should.be_true
 }

@@ -19,14 +19,18 @@ pub fn graph_strongly_connected_test() {
 pub fn graph_modularity_threshold_test() {
   let graph = zk_graph_visualizer.build_canonical_zk_graph()
   // Louvain modularity Q must exceed 0.40 for structured communities
-  should.be_true(graph.modularity_q >=. 0.40)
+  should.be_true(graph.modularity_q >=. 0.4)
 }
 
 pub fn cluster_color_mapping_test() {
-  zk_graph_visualizer.calculate_cluster_color(0) |> should.equal("#58a6ff") // Blue
-  zk_graph_visualizer.calculate_cluster_color(1) |> should.equal("#3fb950") // Green
-  zk_graph_visualizer.calculate_cluster_color(2) |> should.equal("#bc8cff") // Purple
-  zk_graph_visualizer.calculate_cluster_color(3) |> should.equal("#f0883e") // Amber
+  zk_graph_visualizer.calculate_cluster_color(0) |> should.equal("#58a6ff")
+  // Blue
+  zk_graph_visualizer.calculate_cluster_color(1) |> should.equal("#3fb950")
+  // Green
+  zk_graph_visualizer.calculate_cluster_color(2) |> should.equal("#bc8cff")
+  // Purple
+  zk_graph_visualizer.calculate_cluster_color(3) |> should.equal("#f0883e")
+  // Amber
 }
 
 pub fn render_svg_graph_html_test() {

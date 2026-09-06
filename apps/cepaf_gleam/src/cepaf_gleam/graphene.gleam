@@ -447,7 +447,11 @@ pub fn kurbo_vec2_distance(a: Point2, b: Point2) -> Result(String, String) {
 }
 
 /// Linear interpolation between two 2D points.
-pub fn kurbo_vec2_lerp(a: Point2, b: Point2, t: Float) -> Result(String, String) {
+pub fn kurbo_vec2_lerp(
+  a: Point2,
+  b: Point2,
+  t: Float,
+) -> Result(String, String) {
   let p =
     json.object([#("a", p2j(a)), #("b", p2j(b)), #("t", json.float(t))])
     |> json.to_string()

@@ -55,9 +55,7 @@ pub fn moz_client_invalidate_session_test() {
 pub fn moz_build_request_topic_format_test() {
   let topic = moz.build_request_topic("planning", "plan_status", "req-001")
   topic
-  |> should.equal(
-    "indrajaal/l5/cog/mcp/req/planning/plan_status/req-001",
-  )
+  |> should.equal("indrajaal/l5/cog/mcp/req/planning/plan_status/req-001")
 }
 
 pub fn moz_build_request_topic_has_prefix_test() {
@@ -115,14 +113,12 @@ pub fn moz_query_prefix_is_correct_test() {
 // =============================================================================
 
 pub fn moz_build_request_json_has_jsonrpc_field_test() {
-  let payload =
-    moz.build_request_json("plan_status", json.object([]), "req-1")
+  let payload = moz.build_request_json("plan_status", json.object([]), "req-1")
   payload |> string.contains("jsonrpc") |> should.be_true()
 }
 
 pub fn moz_build_request_json_jsonrpc_version_is_20_test() {
-  let payload =
-    moz.build_request_json("plan_status", json.object([]), "req-1")
+  let payload = moz.build_request_json("plan_status", json.object([]), "req-1")
   payload |> string.contains("2.0") |> should.be_true()
 }
 
@@ -133,8 +129,7 @@ pub fn moz_build_request_json_has_method_field_test() {
 }
 
 pub fn moz_build_request_json_method_value_correct_test() {
-  let payload =
-    moz.build_request_json("plan_add", json.object([]), "req-3")
+  let payload = moz.build_request_json("plan_add", json.object([]), "req-3")
   payload |> string.contains("plan_add") |> should.be_true()
 }
 
@@ -263,14 +258,12 @@ pub fn planning_dispatch_unknown_tool_returns_error_json_test() {
 }
 
 pub fn planning_build_request_json_has_jsonrpc_test() {
-  let req =
-    planning.build_request("plan_status", json.object([]), "req-plan-1")
+  let req = planning.build_request("plan_status", json.object([]), "req-plan-1")
   req |> string.contains("2.0") |> should.be_true()
 }
 
 pub fn planning_build_request_json_has_method_test() {
-  let req =
-    planning.build_request("plan_search", json.object([]), "req-plan-2")
+  let req = planning.build_request("plan_search", json.object([]), "req-plan-2")
   req |> string.contains("planning/plan_search") |> should.be_true()
 }
 
@@ -346,7 +339,11 @@ pub fn system_dispatch_unknown_tool_returns_error_json_test() {
 
 pub fn moz_request_fields_are_accessible_test() {
   let req =
-    moz.MoZRequest(method: "plan_status", params: json.object([]), request_id: "r-1")
+    moz.MoZRequest(
+      method: "plan_status",
+      params: json.object([]),
+      request_id: "r-1",
+    )
   req.method |> should.equal("plan_status")
   req.request_id |> should.equal("r-1")
 }

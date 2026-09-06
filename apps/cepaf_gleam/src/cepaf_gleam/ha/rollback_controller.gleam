@@ -122,7 +122,10 @@ pub type RollbackUrgency {
 ///         error_budget_threshold = 0.10, last_rollback_reason = "" </Q>
 ///   </formal-proof>
 /// </c3i-atomic>
-pub fn init(current_version: String, previous_version: String) -> RollbackState {
+pub fn init(
+  current_version: String,
+  previous_version: String,
+) -> RollbackState {
   RollbackState(
     current_version: current_version,
     previous_version: previous_version,

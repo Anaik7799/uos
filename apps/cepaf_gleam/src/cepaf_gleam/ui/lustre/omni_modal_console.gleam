@@ -26,11 +26,7 @@ import lustre/element.{type Element}
 import lustre/element/html
 
 pub type KeyboardShortcut {
-  KeyboardShortcut(
-    key_combo: String,
-    action_name: String,
-    category: String,
-  )
+  KeyboardShortcut(key_combo: String, action_name: String, category: String)
 }
 
 pub type TailnetNodeStatus {
@@ -106,34 +102,149 @@ pub fn render_omni_console_view(c: OmniConsoleState) -> Element(msg) {
         element.text(float.to_string(c.mean_tailnet_latency_ms) <> " ms"),
       ]),
     ]),
-    html.div([attribute.class("console-two-col"), attribute.attribute("style", "display: flex; gap: 1.5rem; margin-top: 1rem;")], [
-      html.div([attribute.class("col-shortcuts"), attribute.attribute("style", "flex: 1; background: #161b22; padding: 1rem; border-radius: 6px; border: 1px solid #30363d;")], [
-        html.h4([attribute.attribute("style", "margin-top: 0; color: #58a6ff;")], [element.text("Command Palette Shortcuts (Cmd+K)")]),
-        html.table([attribute.attribute("style", "width: 100%; border-collapse: collapse;")], [
-          html.tbody([], {
-            use sc <- list.map(c.shortcuts)
-            html.tr([attribute.attribute("style", "border-top: 1px solid #222;")], [
-              html.td([attribute.attribute("style", "padding: 6px; font-family: monospace; color: #ffc107; font-weight: bold;")], [element.text(sc.key_combo)]),
-              html.td([attribute.attribute("style", "padding: 6px;")], [element.text(sc.action_name)]),
-              html.td([attribute.attribute("style", "padding: 6px; color: #888;")], [element.text(sc.category)]),
-            ])
-          }),
-        ]),
-      ]),
-      html.div([attribute.class("col-nodes"), attribute.attribute("style", "flex: 1; background: #161b22; padding: 1rem; border-radius: 6px; border: 1px solid #30363d;")], [
-        html.h4([attribute.attribute("style", "margin-top: 0; color: #3fb950;")], [element.text("Tailnet Mesh Peer Latency")]),
-        html.table([attribute.attribute("style", "width: 100%; border-collapse: collapse;")], [
-          html.tbody([], {
-            use nd <- list.map(c.nodes)
-            html.tr([attribute.attribute("style", "border-top: 1px solid #222;")], [
-              html.td([attribute.attribute("style", "padding: 6px; font-weight: bold;")], [element.text(nd.hostname)]),
-              html.td([attribute.attribute("style", "padding: 6px; font-family: monospace;")], [element.text(nd.ip_tailscale)]),
-              html.td([attribute.attribute("style", "padding: 6px; color: #38bdf8;")], [element.text(float.to_string(nd.latency_ms) <> " ms")]),
-              html.td([attribute.attribute("style", "padding: 6px; color: #10b981;")], [element.text(nd.status)]),
-            ])
-          }),
-        ]),
-      ]),
-    ]),
+    html.div(
+      [
+        attribute.class("console-two-col"),
+        attribute.attribute(
+          "style",
+          "display: flex; gap: 1.5rem; margin-top: 1rem;",
+        ),
+      ],
+      [
+        html.div(
+          [
+            attribute.class("col-shortcuts"),
+            attribute.attribute(
+              "style",
+              "flex: 1; background: #161b22; padding: 1rem; border-radius: 6px; border: 1px solid #30363d;",
+            ),
+          ],
+          [
+            html.h4(
+              [attribute.attribute("style", "margin-top: 0; color: #58a6ff;")],
+              [element.text("Command Palette Shortcuts (Cmd+K)")],
+            ),
+            html.table(
+              [
+                attribute.attribute(
+                  "style",
+                  "width: 100%; border-collapse: collapse;",
+                ),
+              ],
+              [
+                html.tbody([], {
+                  use sc <- list.map(c.shortcuts)
+                  html.tr(
+                    [
+                      attribute.attribute(
+                        "style",
+                        "border-top: 1px solid #222;",
+                      ),
+                    ],
+                    [
+                      html.td(
+                        [
+                          attribute.attribute(
+                            "style",
+                            "padding: 6px; font-family: monospace; color: #ffc107; font-weight: bold;",
+                          ),
+                        ],
+                        [element.text(sc.key_combo)],
+                      ),
+                      html.td([attribute.attribute("style", "padding: 6px;")], [
+                        element.text(sc.action_name),
+                      ]),
+                      html.td(
+                        [
+                          attribute.attribute(
+                            "style",
+                            "padding: 6px; color: #888;",
+                          ),
+                        ],
+                        [element.text(sc.category)],
+                      ),
+                    ],
+                  )
+                }),
+              ],
+            ),
+          ],
+        ),
+        html.div(
+          [
+            attribute.class("col-nodes"),
+            attribute.attribute(
+              "style",
+              "flex: 1; background: #161b22; padding: 1rem; border-radius: 6px; border: 1px solid #30363d;",
+            ),
+          ],
+          [
+            html.h4(
+              [attribute.attribute("style", "margin-top: 0; color: #3fb950;")],
+              [element.text("Tailnet Mesh Peer Latency")],
+            ),
+            html.table(
+              [
+                attribute.attribute(
+                  "style",
+                  "width: 100%; border-collapse: collapse;",
+                ),
+              ],
+              [
+                html.tbody([], {
+                  use nd <- list.map(c.nodes)
+                  html.tr(
+                    [
+                      attribute.attribute(
+                        "style",
+                        "border-top: 1px solid #222;",
+                      ),
+                    ],
+                    [
+                      html.td(
+                        [
+                          attribute.attribute(
+                            "style",
+                            "padding: 6px; font-weight: bold;",
+                          ),
+                        ],
+                        [element.text(nd.hostname)],
+                      ),
+                      html.td(
+                        [
+                          attribute.attribute(
+                            "style",
+                            "padding: 6px; font-family: monospace;",
+                          ),
+                        ],
+                        [element.text(nd.ip_tailscale)],
+                      ),
+                      html.td(
+                        [
+                          attribute.attribute(
+                            "style",
+                            "padding: 6px; color: #38bdf8;",
+                          ),
+                        ],
+                        [element.text(float.to_string(nd.latency_ms) <> " ms")],
+                      ),
+                      html.td(
+                        [
+                          attribute.attribute(
+                            "style",
+                            "padding: 6px; color: #10b981;",
+                          ),
+                        ],
+                        [element.text(nd.status)],
+                      ),
+                    ],
+                  )
+                }),
+              ],
+            ),
+          ],
+        ),
+      ],
+    ),
   ])
 }

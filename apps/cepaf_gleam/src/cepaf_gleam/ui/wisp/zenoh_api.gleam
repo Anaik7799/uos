@@ -132,7 +132,10 @@ pub fn otel_spans_by_page_json(page: String, spans: List(OtelSpan)) -> String {
 }
 
 /// JSON response for OTel span query by OODA phase.
-pub fn otel_spans_by_phase_json(phase: String, spans: List(OtelSpan)) -> String {
+pub fn otel_spans_by_phase_json(
+  phase: String,
+  spans: List(OtelSpan),
+) -> String {
   let span_entries = list.map(spans, otel_span_to_json)
 
   json.object([

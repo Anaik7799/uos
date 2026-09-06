@@ -14,7 +14,8 @@ pub fn immune_engine_phase_space_stability_test() {
 }
 
 pub fn immune_engine_antibody_synthesis_test() {
-  let ab = sre_cybernetic_immune_engine.synthesize_antibody("ANOM_CLOCK_DRIFT_01")
+  let ab =
+    sre_cybernetic_immune_engine.synthesize_antibody("ANOM_CLOCK_DRIFT_01")
   should.equal(ab.target_anomaly, "ANOM_CLOCK_DRIFT_01")
   should.be_true(ab.neutralization_potency >=. 0.99)
 }

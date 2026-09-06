@@ -513,8 +513,9 @@ pub fn publish_inference_tier(
 /// topic without calling publish_pi_event directly.
 pub fn topic_for_event(event: PiEvent) -> String {
   case event {
-    PiToolCallStart(_, _, _) | PiToolCallEnd(_, _, _) | PiToolCallError(_, _, _) ->
-      pi_tools_topic
+    PiToolCallStart(_, _, _)
+    | PiToolCallEnd(_, _, _)
+    | PiToolCallError(_, _, _) -> pi_tools_topic
     PiInferenceTier(_, _, _, _) -> pi_inference_topic
     _ -> pi_events_topic
   }

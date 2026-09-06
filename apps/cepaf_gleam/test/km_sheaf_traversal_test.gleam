@@ -2,7 +2,8 @@ import cepaf_gleam/ui/lustre/km_sheaf_traversal
 import gleeunit/should
 
 pub fn block_anchor_extraction_test() {
-  let text = "Here is a decision rule ^adr-rule-01\nAnother statement ^adr-rule-02"
+  let text =
+    "Here is a decision rule ^adr-rule-01\nAnother statement ^adr-rule-02"
   let anchors = km_sheaf_traversal.extract_block_anchors(text)
   should.equal(anchors, ["adr-rule-01", "adr-rule-02"])
 }
