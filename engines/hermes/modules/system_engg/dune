@@ -102,3 +102,14 @@
  (name verify_source_authorities)
  (modules source_artifact license_policy authority_manifest authority_catalog authority_lock collateral_verifier verify_source_authorities)
  (libraries digestif uri yojson core unix))
+
+(library
+ (name gospel_dispatch_contracts)
+ (wrapped false)
+ (modules gospel_dispatch_contracts)
+ (libraries unix str cryptokit))
+
+(executable
+ (name test_gospel_dispatch_contracts)
+ (modules test_gospel_dispatch_contracts)
+ (libraries gospel_dispatch_contracts unix str cryptokit))
