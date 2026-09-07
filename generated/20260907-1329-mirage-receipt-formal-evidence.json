@@ -1,0 +1,311 @@
+{
+  "schema": "uos-mirage-receipt-formal-evidence/v1",
+  "recorded_utc": "2026-09-07T13:34:29Z",
+  "clock": {
+    "ntp_synchronized": true,
+    "basis": "host date -u and timedatectl NTPSynchronized=yes; model clock is a separate symbolic natural number",
+    "model_context_delta_seconds": null
+  },
+  "task": "uos/mirage-security/20260907-1310:MIRAGE-VERIFY",
+  "implementation_correspondence_candidate": "2ce5e7b51daf6f3e834a8907a9e3f58688c20819",
+  "runtime_control_candidate": "a1e700517dbff56f05a88baad9ebce89c1d6f4a2",
+  "implementation_admission": "NOT_APPROVED",
+  "formal_scope": "Executable reference for receipt identity, freshness, bounded observation facts, outcome profiles, complete three-target conjunction, separate formal receipt, and invalidation transitions. No implementation refinement theorem.",
+  "sources": [
+    {
+      "path": "formal/lean/MirageReceiptAdmission.lean",
+      "sha256": "a6ed1b1adb82ea863d53b86182c391da37db826069a17cc3b1e3cc629b91953f"
+    },
+    {
+      "path": "formal/quint/mirage_receipt_admission.qnt",
+      "sha256": "487b8f095028fab70b0f93031e9e9f1d548f2762cb142a5d30caa534a9de0ebc"
+    },
+    {
+      "path": "tools/verification/mirage/admission_reference_check.ml",
+      "sha256": "7dc1ab867d95b45e6faefa7a7032539a365f92b3afe8f12fb1fa9804aff0d207"
+    }
+  ],
+  "implementation_sources": [
+    {
+      "path": "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml",
+      "sha256": "94974f1809b6a6e51ea6a31023aadc8da1b9d3a9e3de57af1d833dbe5f6323f1"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_mirage/kvm_ioctl_stub.c",
+      "sha256": "9c27f7da46daab6fbe68bf433f8d51b6b92bced91f8c857617c152e4cb0173a1"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/services/mirage_hypervisor.gleam",
+      "sha256": "581ea7f79a0545c20f37a70f854fd616b954396a9a7bbab70dc6d5e5534512ba"
+    },
+    {
+      "path": "tools/uos/src/main.gleam",
+      "sha256": "e1ab7fc8fe565bb09b2a40ac5156fe9b93a9321c3af9cde50050ee3355b5377f"
+    }
+  ],
+  "lean": {
+    "path": "/tmp/uos-lean-4.33.0.VwrqbM/lean-4.33.0-linux/bin/lean",
+    "version": "4.33.0",
+    "commit": "d8b18978322de05a8f3dba51ef03cf5461676c17",
+    "executable_sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+    "argv": [
+      "timeout",
+      "--kill-after=2s",
+      "30s",
+      "/tmp/uos-lean-4.33.0.VwrqbM/lean-4.33.0-linux/bin/lean",
+      "--run",
+      "formal/lean/MirageReceiptAdmission.lean"
+    ],
+    "exit_code": 0,
+    "theorem_names": [
+      "admit_preserves",
+      "record_preserves",
+      "replace_context_preserves",
+      "tick_preserves",
+      "formal_record_preserves",
+      "event_preserves",
+      "trace_preserves",
+      "valid_binds_candidate",
+      "wrong_candidate_rejected",
+      "valid_binds_boot",
+      "valid_is_fresh",
+      "missing_virtio_rejected",
+      "missing_formal_rejected"
+    ],
+    "printed_axioms": {
+      "admit_preserves": [
+        "propext"
+      ],
+      "wrong_candidate_rejected": [
+        "propext"
+      ],
+      "missing_virtio_rejected": [
+        "propext"
+      ],
+      "trace_preserves": [
+        "propext"
+      ]
+    },
+    "ad_hoc_axioms_or_sorry": false
+  },
+  "finite_oracle": {
+    "ocaml_version": "5.5.0",
+    "argv": [
+      "var/mirage-verification/probe-build/admission-reference-check",
+      "var/mirage-verification/lean-admission.csv"
+    ],
+    "exit_code": 0,
+    "cases": 31104,
+    "accepted": 18,
+    "rejected": 31086,
+    "disagreements": 0,
+    "universe": {
+      "target": [
+        "hvt",
+        "spt",
+        "virtio"
+      ],
+      "profile": [
+        "hello",
+        "expected_ssp_abort"
+      ],
+      "candidate": [
+        0,
+        1,
+        2
+      ],
+      "boot": [
+        0,
+        1,
+        2
+      ],
+      "finished": [
+        7,
+        8,
+        10,
+        11
+      ],
+      "host_exit": [
+        0,
+        83,
+        255
+      ],
+      "guest_exit": [
+        null,
+        0,
+        1
+      ],
+      "success_marker": [
+        false,
+        true
+      ],
+      "abort_marker": [
+        false,
+        true
+      ],
+      "authentic": [
+        false,
+        true
+      ],
+      "complete_output": [
+        false,
+        true
+      ]
+    },
+    "fixed_context": {
+      "candidate": 1,
+      "host": 1,
+      "boot": 1,
+      "run": 1,
+      "provenance": 1,
+      "guest_digest": 1,
+      "tender_digest": 1,
+      "now": 10,
+      "max_age": 2,
+      "max_duration": 2,
+      "max_bytes": 4096
+    },
+    "coverage_contract": "Every row must lie in the declared Cartesian universe; duplicate keys and a count other than 31104 reject. Separate rejecting-reason oracle checks the model verdict.",
+    "csv": {
+      "path": "var/mirage-verification/lean-admission.csv",
+      "sha256": "356d0ee333034e2b23ec059338c2622ec3b8290d24b6102a26a214dfafb3189e",
+      "bytes": 1363687
+    }
+  },
+  "quint": {
+    "version": "0.32.0",
+    "node_version": "22.22.1",
+    "cli_sha256": "ac12595b1cb7253feec93c79417615c6eb20fc3b6a3df35c5e3530b24e90a501",
+    "backend": "typescript",
+    "seed": "20260907",
+    "per_invocation_timeout_seconds": 30,
+    "typecheck_exit_code": 0,
+    "lifecycle_test": {
+      "argv": [
+        "quint",
+        "test",
+        "formal/quint/mirage_receipt_admission.qnt",
+        "--backend",
+        "typescript",
+        "--seed",
+        "20260907",
+        "--max-samples",
+        "1"
+      ],
+      "exit_code": 0,
+      "tests": 7,
+      "names": [
+        "goodLifecycleTest",
+        "delayedCandidateTest",
+        "delayedRebootTest",
+        "delayedRunTest",
+        "staleObservationTest",
+        "missingVirtioTest",
+        "failedTargetTest"
+      ]
+    },
+    "runs": [
+      {
+        "name": "normal_temporal_simulation",
+        "expected_exit": 0,
+        "args": "--init init --step step --max-samples 1000 --max-steps 25 --witnesses witness_verified",
+        "status": "fulfilled",
+        "value": {
+          "chunk_id": "bd80cc",
+          "wall_time_seconds": 0.000002345,
+          "session_id": 26551,
+          "original_token_count": 49,
+          "output": "[ok] No violation found (881ms at 1135 traces/second).\nWitnesses:\nwitness_verified was witnessed in 0 trace(s) out of 1000 explored (0.00%)\nUse --seed=0x135282b --backend=typescript to reproduce.\n",
+          "exit_code": 0
+        }
+      },
+      {
+        "name": "initially_valid_temporal_simulation",
+        "expected_exit": 0,
+        "args": "--init validInit --step step --max-samples 1000 --max-steps 25 --witnesses witness_verified",
+        "status": "fulfilled",
+        "value": {
+          "chunk_id": "5b2729",
+          "wall_time_seconds": 5.71e-7,
+          "session_id": 81486,
+          "original_token_count": 50,
+          "output": "[ok] No violation found (786ms at 1272 traces/second).\nWitnesses:\nwitness_verified was witnessed in 517 trace(s) out of 1000 explored (51.70%)\nUse --seed=0x135282b --backend=typescript to reproduce.\n",
+          "exit_code": 0
+        }
+      },
+      {
+        "name": "sticky_freshness_mutant",
+        "expected_exit": 1,
+        "args": "--init validInit --step stickyTickMutant --max-samples 1 --max-steps 1 --out-itf var/mirage-verification/sticky-mutant.itf.json",
+        "status": "fulfilled",
+        "value": {
+          "chunk_id": "cf739d",
+          "wall_time_seconds": 0.712459495,
+          "exit_code": 1,
+          "original_token_count": 21,
+          "output": "[violation] Found an issue (18ms at 56 traces/second).\nerror: Invariant violated\n"
+        }
+      },
+      {
+        "name": "omitted_virtio_mutant",
+        "expected_exit": 1,
+        "args": "--init validInit --step omittedTargetMutant --max-samples 1 --max-steps 1 --out-itf var/mirage-verification/omitted-target-mutant.itf.json",
+        "status": "fulfilled",
+        "value": {
+          "chunk_id": "d3ed3d",
+          "wall_time_seconds": 0.757080142,
+          "exit_code": 1,
+          "original_token_count": 21,
+          "output": "[violation] Found an issue (17ms at 59 traces/second).\nerror: Invariant violated\n"
+        }
+      }
+    ],
+    "mutant_traces": [
+      {
+        "path": "var/mirage-verification/sticky-mutant.itf.json",
+        "sha256": "10b55bc0910055750abbf75372bd1a5b3b9eb0ea4389b1e647c767081f0f1aa2",
+        "states": [
+          {
+            "admitted": true,
+            "clock": 0,
+            "virtio_present": true
+          },
+          {
+            "admitted": true,
+            "clock": 2,
+            "virtio_present": true
+          }
+        ]
+      },
+      {
+        "path": "var/mirage-verification/omitted-target-mutant.itf.json",
+        "sha256": "9edcbc123994d95f74922572f20ebff94b4c6cd5e2e16d594bcf39b0eff99fde",
+        "states": [
+          {
+            "admitted": true,
+            "clock": 0,
+            "virtio_present": true
+          },
+          {
+            "admitted": true,
+            "clock": 0,
+            "virtio_present": false
+          }
+        ]
+      }
+    ],
+    "limitations": "The two normal 1000-trace simulations are bounded seeded sampling, not exhaustive state exploration or liveness proofs. Normal initializer yielded 0 tool-reported verified witnesses; deterministic goodLifecycleTest establishes a reachable accepted state. Valid initializer yielded 517 tool-reported witnesses."
+  },
+  "runtime_evidence": "generated/20260907-1304-mirage-independent-adversarial-evidence.json",
+  "unrun_controls": [
+    "tools/verification/mirage/probe_v2_adversarial.ml",
+    "tools/verification/mirage/probe_v2_fixture.ml"
+  ],
+  "limitations": [
+    "No cryptographic identity or provenance is proved; digest and identity values are opaque positive identifiers.",
+    "No actual process lifetime, memory bound, ELF parser, host ioctl correctness, or descendant cleanup is proved by Boolean observation fields.",
+    "Trusted expected-context construction, boot/run uniqueness, monotonic clock reliability, storage atomicity, input parser behavior, and receipt authenticity require actual implementation evidence.",
+    "Model formal receipt fields assume a separate checked proof artifact; these checks cannot attest their own producing implementation.",
+    "No deployment, integration, runtime restart, Sa-plan task completion, or full 17-aspect admission was performed by this lane."
+  ]
+}
