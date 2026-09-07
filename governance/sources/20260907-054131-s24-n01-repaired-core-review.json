@@ -1,0 +1,86 @@
+{
+  "schema": "uos.s24.n01.repaired-core-independent-review.v1",
+  "observed_at_utc": "2026-09-07T05:41:31Z",
+  "timestamp_observation": {
+    "source": "date -u on the review host",
+    "raw": "20260907-054131 2026-09-07T05:41:31Z",
+    "chrony": "unavailable: Could not open connection to daemon",
+    "admission_credit": false
+  },
+  "scope": "Frozen N01 repaired core only; no N01 UI, acceptance adapter, master task, or system admission claim.",
+  "candidate": {
+    "change_id": "kyvonmvsmnlyvtmouttxxwmwyunmmyoq",
+    "commit_id": "ebc8694cb13a7df9e0e01eae925e1a2300193186",
+    "workspace_read_only": "/home/an/NAS-setup/uos/.uos-workspaces/n01-peer",
+    "review_workspace": "/home/an/NAS-setup/uos/.uos-workspaces/q01-warnings"
+  },
+  "reviewed_sources": [
+    {"path":"apps/cepaf_gleam/src/cepaf_gleam/verification/peer_health.gleam","sha256":"7ba2070c15bb6ebbbcc9c4212f37fe171548071258b39e32ae94e8277593d7ca"},
+    {"path":"apps/cepaf_gleam/src/cepaf_gleam/verification/peer_health_cli.gleam","sha256":"107cf63d2ccd040809d18ea3d26963e94ca1e99c97d5cc16ca39c71108555b20"},
+    {"path":"apps/cepaf_gleam/src/uos_peer_http_ffi.erl","sha256":"3a3e9e3085d7da9620786d574a537d63ea6f3365d8aad118ec4e346c7e4c92cd"},
+    {"path":"apps/cepaf_gleam/src/uos_peer_json_ffi.erl","sha256":"794a56cc2c6e53416f922936342272abaa59df00f6239e37e9b59e29e042e857"},
+    {"path":"apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/peer_health_view.gleam","sha256":"3dd62262b1eb4cd1e5659af47491c6d0ee97cb702de50daefd148742ecfa8004"},
+    {"path":"apps/cepaf_gleam/test/peer_health_test.gleam","sha256":"83179b223763ffb0cc3eb33fc1af01366cb64ecd475f38376b7ec282efe2fc70"}
+  ],
+  "controls": [
+    {
+      "name":"six focused production Gleam test functions",
+      "command":"timeout 120s erl -noshell -pa apps/cepaf_gleam/build/dev/erlang/*/ebin -eval 'peer_health_test:refused_observation_remains_unavailable_test(), peer_health_test:http_success_cannot_create_system_health_test(), peer_health_test:malformed_and_foreign_identity_fail_closed_test(), peer_health_test:failing_http_and_probe_quota_are_nonpassing_test(), peer_health_test:unavailable_ui_and_json_share_the_actual_state_test(), peer_health_test:duplicate_identity_and_trailing_documents_are_rejected_test(), halt(0).'",
+      "functions":["refused_observation_remains_unavailable_test/0","http_success_cannot_create_system_health_test/0","malformed_and_foreign_identity_fail_closed_test/0","failing_http_and_probe_quota_are_nonpassing_test/0","unavailable_ui_and_json_share_the_actual_state_test/0","duplicate_identity_and_trailing_documents_are_rejected_test/0"],
+      "exit_code":0,
+      "result":"PASS: unavailable, HTTP failure, foreign/malformed identity, duplicate keys including nested keys, trailing document, and depth rejection remain nonpassing."
+    },
+    {
+      "name":"poisoned PATH live fixed-endpoint probe",
+      "command":"timeout 30s erl -noshell -pa apps/cepaf_gleam/build/dev/erlang/*/ebin -eval 'os:putenv(\"PATH\", \"/definitely/empty\"), Result = uos_peer_http_ffi:probe(<<\"http://vm-1.tail55d152.ts.net:4100/api/health\">>), io:format(\"~p~n\", [Result]), case Result of {ok,{0,200,_,_}} -> halt(0); _ -> halt(1) end.'",
+      "execution_environment":"unsandboxed after the sandbox denied socket access",
+      "exit_code":0,
+      "result":"PASS: absolute /usr/bin/curl with --resolve returned exit 0, HTTP 200, and the live Wisp JSON body despite PATH=/definitely/empty."
+    },
+    {
+      "name":"live compiled CLI",
+      "command":"timeout 30s erl -noshell -pa apps/cepaf_gleam/build/dev/erlang/*/ebin -s cepaf_gleam@verification@peer_health_cli main -extra current",
+      "execution_environment":"unsandboxed fixed-endpoint probe",
+      "exit_code":1,
+      "result":"PASS: JSON reported status REACHABLE_UNVERIFIED, endpoint port 4100, HTTP 200, service_version 1.0.0, build_identity UNKNOWN, and system_green false. Exit 1 is the required nonverified result."
+    },
+    {
+      "name":"caller cancellation / orphan cleanup",
+      "command":"timeout 30s erl -noshell -pa apps/cepaf_gleam/build/dev/erlang/*/ebin -eval 'Caller = spawn(fun() -> receive go -> uos_peer_http_ffi:probe(<<\"http://vm-1.tail55d152.ts.net:4100/api/health\">>) end end), 1 = erlang:trace(Caller, true, [procs,set_on_spawn]), Caller ! go, Worker = receive {trace, Caller, spawn, W, _} -> W after 3000 -> erlang:halt(2) end, exit(Caller, kill), timer:sleep(250), io:format(\"caller=~p worker=~p worker_alive=~p~n\", [Caller, Worker, is_process_alive(Worker)]), erlang:halt(case is_process_alive(Worker) of false -> 0; true -> 1 end).'",
+      "execution_environment":"unsandboxed fixed-endpoint probe",
+      "exit_code":0,
+      "result":"PASS: traced caller <0.83.0>, worker <0.84.0>, worker_alive=false after caller kill."
+    },
+    {
+      "name":"endpoint allowlist negative control",
+      "command":"timeout 30s erl -noshell -pa apps/cepaf_gleam/build/dev/erlang/*/ebin -eval 'uos_peer_http_ffi:probe(example.invalid)'.",
+      "exit_code":0,
+      "result":"PASS: returned {error, endpoint is not allowlisted}."
+    }
+  ],
+  "findings": [
+    {
+      "severity":"INFO",
+      "id":"S24-N01-001",
+      "finding":"No blocking defect observed in the frozen repaired core.",
+      "evidence":"The focused functions passed; absolute executable, explicit Tailnet resolution, duplicate/depth JSON rejection, caller-death monitoring, and nonzero unverified CLI behavior are present in the reviewed source and exercised as above.",
+      "scope":"This does not assess the unfrozen tools/verification/peer_http_service.ml or tests/acceptance/peer_http_service_test.ml added on the N01 child."
+    },
+    {
+      "severity":"LIMITATION",
+      "id":"S24-N01-002",
+      "finding":"No clean rebuild was performed in the N01 workspace.",
+      "evidence":"The workspace was explicitly read-only for this review; controls used its existing compiled Erlang artifacts. The source candidate was inspected by Jujutsu and the unfrozen child changes were separated by path, but this is not a fresh compiler receipt.",
+      "scope":"No N01 task completion or system admission follows."
+    },
+    {
+      "severity":"LIMITATION",
+      "id":"S24-N01-003",
+      "finding":"Clock observations remain non-aliasing and are not credited.",
+      "evidence":"This receipt uses only the observed date -u value above; chrony was unavailable. Sandbox socket denial and the separately authorized unsandboxed live observation are recorded as distinct environments.",
+      "scope":"No synchronized-time or deployment identity conclusion follows."
+    }
+  ],
+  "review_status":"VERIFIED_SCOPED_REPAIRED_CORE_ONLY",
+  "system_admission_granted":false
+}
