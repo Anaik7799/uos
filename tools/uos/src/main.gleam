@@ -85,6 +85,16 @@ pub fn parse_args(args: List(String)) -> UosCommand {
   }
 }
 
+fn mirage_not_verified(scope: String, inventory_complete: Bool) -> Int {
+  case inventory_complete {
+    True -> io.println("  [INVENTORY] " <> scope <> " source, test, and document artifacts are present")
+    False -> io.println("  [INVENTORY_MISSING] " <> scope <> " source, test, or document artifacts are incomplete")
+  }
+  io.println("  [NOT_VERIFIED] Behavioral evidence is unavailable: tools/uos has no candidate-bound Mirage/Solo5 execution receipt")
+  io.println("  [NOT_VERIFIED] Formal evidence is unavailable: tools/uos has no Mirage-specific Gospel, Lean, or Quint result")
+  io.println("  [FAIL_CLOSED] " <> scope <> " remains unverified and unadmitted")
+  1
+}
 
 pub fn execute(cmd: UosCommand) -> Int {
   case cmd {
@@ -296,16 +306,10 @@ pub fn execute(cmd: UosCommand) -> Int {
             file_exists("apps/cepaf_gleam/src/cepaf_gleam/services/mirage_unikernel_daemon.gleam")
           let mirage_test =
             file_exists("apps/cepaf_gleam/test/mirage_unikernel_daemon_test.gleam")
-          case mirage_sig && mirage_block && mirage_kv && mirage_solo5 && mirage_inter && mirage_gleam && mirage_test {
-            True -> {
-              io.println("  [PASS] MirageOS Library OS & Solo5 Unikernel Engine (G-MIRAGE) verified")
-              0
-            }
-            False -> {
-              io.println("  [FAIL] MirageOS unikernel signatures, modules, or tests missing")
-              1
-            }
-          }
+          mirage_not_verified(
+            "G-MIRAGE",
+            mirage_sig && mirage_block && mirage_kv && mirage_solo5 && mirage_inter && mirage_gleam && mirage_test,
+          )
         }
         "G-MIRAGE-MIGRATE" | "mirage-migration" -> {
           let cat_ml = file_exists("engines/hermes/modules/hermes_mirage/mirage_migration_catalog.ml")
@@ -316,16 +320,10 @@ pub fn execute(cmd: UosCommand) -> Int {
           let gleam_tst = file_exists("apps/cepaf_gleam/test/mirage_migration_engine_test.gleam")
           let policy_md = file_exists("contracts/rules/mirage-migration-policy.md")
           let spec_md = file_exists("docs/design/20260907-1120-mirageos-comprehensive-migration-and-subsystem-spec.md")
-          case cat_ml && dns_ml && tls_ml && test_ml && gleam_eng && gleam_tst && policy_md && spec_md {
-            True -> {
-              io.println("  [PASS] MirageOS Subsystem Migration Engine (G-MIRAGE-MIGRATE) verified")
-              0
-            }
-            False -> {
-              io.println("  [FAIL] MirageOS migration modules, specs, or tests missing")
-              1
-            }
-          }
+          mirage_not_verified(
+            "G-MIRAGE-MIGRATE",
+            cat_ml && dns_ml && tls_ml && test_ml && gleam_eng && gleam_tst && policy_md && spec_md,
+          )
         }
         "G-MIRAGE-PROD" | "mirage-prod" -> {
           let runner_ml = file_exists("engines/hermes/modules/hermes_mirage/hermes_mirage_runner.ml")
@@ -336,16 +334,10 @@ pub fn execute(cmd: UosCommand) -> Int {
           let contract_md = file_exists("contracts/rules/mirage-production-integration-contract.md")
           let spec_md = file_exists("docs/design/20260907-1215-mirageos-triple-surface-cockpit-and-solo5-cutover-spec.md")
           let journal_md = file_exists("docs/journal/20260907-1215-mirageos-triple-surface-cockpit-and-solo5-cutover-journal.md")
-          case runner_ml && ui_gleam && api_gleam && tui_gleam && test_gleam && contract_md && spec_md && journal_md {
-            True -> {
-              io.println("  [PASS] MirageOS Triple-Surface Cockpit & Cutover (G-MIRAGE-PROD) verified")
-              0
-            }
-            False -> {
-              io.println("  [FAIL] MirageOS production modules, triple-surface UI, or specs missing")
-              1
-            }
-          }
+          mirage_not_verified(
+            "G-MIRAGE-PROD",
+            runner_ml && ui_gleam && api_gleam && tui_gleam && test_gleam && contract_md && spec_md && journal_md,
+          )
         }
         _ -> {
           io.println("Gate Result: FAIL (unknown gate identifier: " <> name <> ")")
@@ -354,97 +346,99 @@ pub fn execute(cmd: UosCommand) -> Int {
       }
     }
     Doctor -> {
-      io.println("UOS Doctor: All 89 EV-cycle boundaries operational (EV-01..EV-89 100% Green).")
-      io.println("  [PASS] EV-01 Bootstrap (Jujutsu non-colocated)")
-      io.println("  [PASS] EV-02 Governance & Directive Superset (38 families)")
-      io.println("  [PASS] EV-03 Source Freeze & Sanitized Ancestry")
-      io.println("  [PASS] EV-04 Gleam Control Plane & Holon Actor Runtime")
-      io.println("  [PASS] EV-05 Hermes Oracle & Evidence Store")
-      io.println("  [PASS] EV-06 ZigVM Runtime & Bytecode Engine")
-      io.println("  [PASS] EV-07 Kubernetes & Secondary Drive Allocation")
-      io.println("  [PASS] EV-08 Zero-Muda Audit (0 Bevy, 0 Graphite)")
-      io.println("  [PASS] EV-09 Consolidations (NIFs, Services, Formal, Contracts)")
-      io.println("  [PASS] EV-10 Symbiosis (170 Skills, 14 Superpowers, AGY/Codex/Claude)")
-      io.println("  [PASS] EV-11 Unified MCP Control Loop (35+ tools in contracts/mcp)")
-      io.println("  [PASS] EV-12 Modular MAX Worker (Services inference isolated)")
-      io.println("  [PASS] EV-13 Multi-Layer OTP 29 Root Supervisor (uos_sup.gleam)")
-      io.println("  [PASS] EV-14 Hermes Parity Suites (409/409 differential tests)")
-      io.println("  [PASS] EV-15 System Admission & Storage Cutover Runbook")
-      io.println("  [PASS] EV-16 Cross-Language C3I Control Plane Integration (Gleam, OCaml, Zig, Rust, MAX)")
-      io.println("  [PASS] EV-17 Knowledge Management, Wiki & ZK Triad Integration (Hermes Wiki, ZigVM ZK, C3I Ontology)")
-      io.println("  [PASS] EV-18 Tailscale FQDN Web Integration (Dashboards, Wiki, ZK, APIs on http://nas-1.tail55d152.ts.net:4100)")
-      io.println("  [PASS] EV-19 Comprehensive Verification Checklist & Uniform Site Navigation (5 Domains, 18 Checks)")
-      io.println("  [PASS] EV-20 Rocha Cybernetic & Semiotic Knowledge Closure (43/43 docs tagged, SC-ROCHA-001)")
-      io.println("  [PASS] EV-21 Descriptor-Relative VFS & 8 Laws Integration (--selfcheck-vfs 8/8 pass)")
-      io.println("  [PASS] EV-22 Sa-Plan OCaml Integration (12/12 suites, 235 laws, sa-plan CLI)")
-      io.println("  [PASS] EV-23 Hermes-Bionic Integration (18 L1 families, L2 catalog, L0-L6 evidence, LX control plane, FPP elements)")
-      io.println("  [PASS] EV-24 Omni-Fractal Systemic Symbiosis & 17-Aspect Generation Closure (14 vectors, 17 aspects, 10 use cases)")
-      io.println("  [PASS] EV-25 Fractal Layers & Presentation Surfaces Synthesis (INV-SURFACE-HOMOMORPHISM)")
-      io.println("  [PASS] EV-26 Multi-Layer System Components Homeostasis (INV-COMPONENT-P99-BOUNDED)")
-      io.println("  [PASS] EV-27 Control Flows & Circuit Breaker Matrix (INV-PRAJNA-TRIP-BOUND)")
-      io.println("  [PASS] EV-28 Data Flows & VFS/WAL/Zenoh Mesh (INV-VFS-WAL-DURABILITY)")
-      io.println("  [PASS] EV-29 L0-L6 Recursive Evidence Plane (INV-TWO-KEY-EVIDENCE)")
-      io.println("  [PASS] EV-30 Fast OODA Adaptive Regulator (INV-FAST-OODA-SUBSECOND)")
-      io.println("  [PASS] EV-31 Fractal SDLC 10-Stage Verification (INV-SDLC-GATE-CLOSURE)")
-      io.println("  [PASS] EV-32 Fractal SRE Resilience & SIL-6 Safety (INV-SRE-LYAPUNOV-STABLE)")
-      io.println("  [PASS] EV-33 170 Skills Inventory Federation (INV-SKILL-FEDERATION)")
-      io.println("  [PASS] EV-34 Policy Standards & AGENTS.md Governance (INV-ZERO-MUDA-STORAGE-LOCK)")
-      io.println("  [PASS] EV-35 14 SDD Superpowers Formal Gates (INV-SUPERPOWERS-GATED)")
-      io.println("  [PASS] EV-36 Unified MCP Tooling & Zero-Trust Interceptor (INV-ZERO-TRUST-PAYLOAD)")
-      io.println("  [PASS] EV-37 266-Actor Elastic Symbiosis Swarm (INV-UNCONSTRAINED-BEAM-SCALE)")
-      io.println("  [PASS] EV-38 17-Aspect Process Cryptographic Receipts (INV-17-ASPECT-RECEIPTS)")
-      io.println("  [PASS] EV-39 Omni-Cartesian Tensor Closure (INV-CARTESIAN-TENSOR-CLOSED)")
-      io.println("  [PASS] EV-40 C3I Knowledge Authority & Subsystem Partitioning (INV-KNOW-AUTHORITY-PARTITION)")
-      io.println("  [PASS] EV-41 Supervised OCaml Worker Port & Reductions Protection (INV-OCAML-PORT-REDUCTIONS)")
-      io.println("  [PASS] EV-42 Typed Cross-Language Protocol & Envelopes (INV-CROSS-LANG-ENVELOPE)")
-      io.println("  [PASS] EV-43 Zero-Trust Security & Ingress Traps (NUL -2, SQL -3) (INV-ZERO-TRUST-INGRESS-TRAP)")
-      io.println("  [PASS] EV-44 Exponential Trust Decay & Freshness Dynamics (INV-EXPONENTIAL-TRUST-DECAY)")
-      io.println("  [PASS] EV-45 Negative Knowledge & Anti-Pattern Detection Matrix (INV-ANTI-PATTERN-DETECTION)")
-      io.println("  [PASS] EV-46 Multi-Corpus Cited Recall & Source Grounding (INV-CITED-RECALL-GROUNDING)")
-      io.println("  [PASS] EV-47 7,918-File Zero-Error C3I Knowledge Ingestion (INV-7918-FILE-ZERO-ERROR)")
-      io.println("  [PASS] EV-48 Biosemiotic Knowledge Morphisms & Rocha Cut (INV-BIOSEMIOTIC-KNOWLEDGE-CUT)")
-      io.println("  [PASS] EV-49 Wisp/Mist REST API Knowledge Routes & Endpoints (INV-WISP-KNOWLEDGE-API)")
-      io.println("  [PASS] EV-50 ZK ADR-055 & Knowledge Management Triad Integration (INV-ZK-ADR-055-KM-TRIAD)")
-      io.println("  [PASS] EV-51 Scalability, Concurrency & Elastic Actor Knowledge Mesh (INV-ELASTIC-KNOWLEDGE-MESH)")
-      io.println("  [PASS] EV-52 Formal Verification, Gospel Contracts & Parity Verification (INV-FORMAL-GOSPEL-PARITY)")
-      io.println("  [PASS] EV-53 SRE Resilience, Freshness & Circuit-Breaker Fault Tolerance (INV-SRE-KNOWLEDGE-FRESHNESS)")
-      io.println("  [PASS] EV-54 Tri-Sovereign Knowledge Symbiosis & Mainline Closure (INV-TRI-SOV-KNOWLEDGE-CLOSURE)")
-      io.println("  [PASS] EV-55 C3I Agentic Ingestion & Sanitization Engine (INV-AGENTIC-INGESTION-SANITIZED)")
-      io.println("  [PASS] EV-56 Supervised OCaml Port Pool & Reductions Protection (INV-SUPERVISED-OCAML-PORT-POOL)")
-      io.println("  [PASS] EV-57 Dynamic Trust Decay & Negative Knowledge Actor Swarm (INV-DYNAMIC-DECAY-ACTOR-SWARM)")
-      io.println("  [PASS] EV-58 Real-Time Tripartite Knowledge Presentation & SSE Mesh (INV-TRIPARTITE-SSE-KNOWLEDGE-MESH)")
-      io.println("  [PASS] EV-59 Tri-Sovereign Autonomic Governance & Self-Healing Closure (INV-TRI-SOVEREIGN-AUTONOMIC-CLOSURE)")
-      io.println("  [PASS] EV-60 Distributed Knowledge Cache & In-Memory Sheaf Harmonizer (INV-DISTRIBUTED-KNOWLEDGE-CACHE)")
-      io.println("  [PASS] EV-61 Zero-Trust Cryptographic Signature Verification & Trace Lineage (INV-ZT-CRYPTO-SIGNATURE-TRACE)")
-      io.println("  [PASS] EV-62 Automated Anti-Pattern Mitigation & Regression Interceptor (INV-AUTO-ANTI-PATTERN-INTERCEPTOR)")
-      io.println("  [PASS] EV-63 Bounded Gospel Verification Oracle & Z3 Solver Process Tree (INV-GOSPEL-Z3-PROCESS-TREE)")
-      io.println("  [PASS] EV-64 Descriptor-Relative VFS Journal Sync & WAL Durability (INV-VFS-JOURNAL-SYNC-DURABILITY)")
-      io.println("  [PASS] EV-65 Lyapunov-Windowed Telemetry Freshness & Dead-Man Swarm (INV-LYAPUNOV-FRESHNESS-SWARM)")
-      io.println("  [PASS] EV-66 17-Aspect Cross-Language Homomorphism & ABI Invariants (INV-17-ASPECT-ABI-HOMOMORPHISM)")
-      io.println("  [PASS] EV-67 Elastic Multi-Tenant Agent Swarm Concurrency Scaling (INV-ELASTIC-SWARM-SCALING)")
-      io.println("  [PASS] EV-68 Universal Tailscale FQDN Tripartite Presentation & Nav Graph (INV-TAILSCALE-TRIPARTITE-NAV)")
-      io.println("  [PASS] EV-69 Sovereign Synthesis Ratification & Mainline Monorepo Closure (INV-SOVEREIGN-SYNTHESIS-CLOSURE)")
-      io.println("  [PASS] EV-70 Vertical Slice Journal Ingestion to Cited Retrieval Pipeline (INV-SLICE-JOURNAL-RETRIEVAL)")
-      io.println("  [PASS] EV-71 Supervised OCaml Worker Port Protocol & Subprocess Reductions (INV-OCAML-SUBPROCESS-PROTOCOL)")
-      io.println("  [PASS] EV-72 Rust NIF & OCaml Differential Conformance Oracle (INV-RUST-OCAML-DIFF-CONFORMANCE)")
-      io.println("  [PASS] EV-73 Callable OCaml Knowledge Lookup & Cited Recall Service (INV-CALLABLE-OCAML-CITED-RECALL)")
-      io.println("  [PASS] EV-74 Tripartite Tri-Surface SSR/API/TUI Knowledge Display (INV-TRIPARTITE-KNOWLEDGE-SURFACES)")
-      io.println("  [PASS] EV-75 17-Aspect C3I VM-1 Artifacts Comprehensive Synthesis (INV-17-ASPECT-C3I-SYNTHESIS)")
-      io.println("  [PASS] EV-76 Dynamic Agentic Knowledge Mesh & Autonomous Swarm Topology (INV-DYNAMIC-KNOWLEDGE-SWARM)")
-      io.println("  [PASS] EV-77 Biosemiotic Semantic Invariant Verification & Rocha Decoupling (INV-BIOSEMIOTIC-ROCHA-VERIF)")
-      io.println("  [PASS] EV-78 13D TCM Coordinate Conservation & Fail-Closed Gatekeeper (INV-13D-TCM-FAIL-CLOSED)")
-      io.println("  [PASS] EV-79 Lyapunov-Bounded Trust Decay & Negative Knowledge Eviction (INV-LYAPUNOV-TRUST-EVICTION)")
-      io.println("  [PASS] EV-80 Zero-Trust Payload Interceptor & Cryptographic Receipt Ledger (INV-ZT-PAYLOAD-LEDGER)")
-      io.println("  [PASS] EV-81 Multi-Tenant Elastic BEAM Swarm Scaling Invariant (INV-BEAM-SWARM-ELASTIC-SCALE)")
-      io.println("  [PASS] EV-82 Universal Tailscale FQDN Web/API/WebSocket Routing Matrix (INV-TAILSCALE-FQDN-ROUTING)")
-      io.println("  [PASS] EV-83 Formal Gospel Specification & Bounded Z3 Oracle Pipeline (INV-GOSPEL-Z3-ORACLE-PIPELINE)")
-      io.println("  [PASS] EV-84 Tri-Sovereign Multi-Model Consensus & Mainline Jujutsu Closure (INV-TRI-SOV-MAINLINE-CLOSURE)")
-      io.println("  [PASS] EV-85: ZigVM ADD Fractal Mapping & Agentic Sublimation Engine (INV-ZIGVM-ADD-SUBLIMATION)")
-      io.println("  [PASS] EV-86: Cybernetic Raga & 22-Shruti Microtonal Synthesis Engine (INV-RAGA-SHRUTI-HARMONY)")
-      io.println("  [PASS] EV-87: MirageOS Library OS & Solo5 SIL-6 Unikernel Engine (INV-MIRAGE-UNIKERNEL-001)")
-      io.println("  [PASS] EV-88: MirageOS Comprehensive Subsystem Migration Engine (INV-MIRAGE-MIGRATE-001)")
-      io.println("  [PASS] EV-89: MirageOS Triple-Surface Cockpit & End-to-End Solo5 Subsystem Cutover (INV-MIRAGE-PROD-001)")
-      0
+      io.println("UOS Doctor inventory: 89 EV-cycle entries are registered.")
+      io.println("UOS Doctor execution: generic EV-01..EV-86 gates are not re-run here; their rows are inventory metadata, not fresh admission evidence.")
+      io.println("  [INVENTORY] EV-01 Bootstrap (Jujutsu non-colocated)")
+      io.println("  [INVENTORY] EV-02 Governance & Directive Superset (38 families)")
+      io.println("  [INVENTORY] EV-03 Source Freeze & Sanitized Ancestry")
+      io.println("  [INVENTORY] EV-04 Gleam Control Plane & Holon Actor Runtime")
+      io.println("  [INVENTORY] EV-05 Hermes Oracle & Evidence Store")
+      io.println("  [INVENTORY] EV-06 ZigVM Runtime & Bytecode Engine")
+      io.println("  [INVENTORY] EV-07 Kubernetes & Secondary Drive Allocation")
+      io.println("  [INVENTORY] EV-08 Zero-Muda Audit (0 Bevy, 0 Graphite)")
+      io.println("  [INVENTORY] EV-09 Consolidations (NIFs, Services, Formal, Contracts)")
+      io.println("  [INVENTORY] EV-10 Symbiosis (170 Skills, 14 Superpowers, AGY/Codex/Claude)")
+      io.println("  [INVENTORY] EV-11 Unified MCP Control Loop (35+ tools in contracts/mcp)")
+      io.println("  [INVENTORY] EV-12 Modular MAX Worker (Services inference isolated)")
+      io.println("  [INVENTORY] EV-13 Multi-Layer OTP 29 Root Supervisor (uos_sup.gleam)")
+      io.println("  [INVENTORY] EV-14 Hermes Parity Suites (409/409 differential tests)")
+      io.println("  [INVENTORY] EV-15 System Admission & Storage Cutover Runbook")
+      io.println("  [INVENTORY] EV-16 Cross-Language C3I Control Plane Integration (Gleam, OCaml, Zig, Rust, MAX)")
+      io.println("  [INVENTORY] EV-17 Knowledge Management, Wiki & ZK Triad Integration (Hermes Wiki, ZigVM ZK, C3I Ontology)")
+      io.println("  [INVENTORY] EV-18 Tailscale FQDN Web Integration (Dashboards, Wiki, ZK, APIs on http://nas-1.tail55d152.ts.net:4100)")
+      io.println("  [INVENTORY] EV-19 Comprehensive Verification Checklist & Uniform Site Navigation (5 Domains, 18 Checks)")
+      io.println("  [INVENTORY] EV-20 Rocha Cybernetic & Semiotic Knowledge Closure (43/43 docs tagged, SC-ROCHA-001)")
+      io.println("  [INVENTORY] EV-21 Descriptor-Relative VFS & 8 Laws Integration (--selfcheck-vfs 8/8 pass)")
+      io.println("  [INVENTORY] EV-22 Sa-Plan OCaml Integration (12/12 suites, 235 laws, sa-plan CLI)")
+      io.println("  [INVENTORY] EV-23 Hermes-Bionic Integration (18 L1 families, L2 catalog, L0-L6 evidence, LX control plane, FPP elements)")
+      io.println("  [INVENTORY] EV-24 Omni-Fractal Systemic Symbiosis & 17-Aspect Generation Closure (14 vectors, 17 aspects, 10 use cases)")
+      io.println("  [INVENTORY] EV-25 Fractal Layers & Presentation Surfaces Synthesis (INV-SURFACE-HOMOMORPHISM)")
+      io.println("  [INVENTORY] EV-26 Multi-Layer System Components Homeostasis (INV-COMPONENT-P99-BOUNDED)")
+      io.println("  [INVENTORY] EV-27 Control Flows & Circuit Breaker Matrix (INV-PRAJNA-TRIP-BOUND)")
+      io.println("  [INVENTORY] EV-28 Data Flows & VFS/WAL/Zenoh Mesh (INV-VFS-WAL-DURABILITY)")
+      io.println("  [INVENTORY] EV-29 L0-L6 Recursive Evidence Plane (INV-TWO-KEY-EVIDENCE)")
+      io.println("  [INVENTORY] EV-30 Fast OODA Adaptive Regulator (INV-FAST-OODA-SUBSECOND)")
+      io.println("  [INVENTORY] EV-31 Fractal SDLC 10-Stage Verification (INV-SDLC-GATE-CLOSURE)")
+      io.println("  [INVENTORY] EV-32 Fractal SRE Resilience & SIL-6 Safety (INV-SRE-LYAPUNOV-STABLE)")
+      io.println("  [INVENTORY] EV-33 170 Skills Inventory Federation (INV-SKILL-FEDERATION)")
+      io.println("  [INVENTORY] EV-34 Policy Standards & AGENTS.md Governance (INV-ZERO-MUDA-STORAGE-LOCK)")
+      io.println("  [INVENTORY] EV-35 14 SDD Superpowers Formal Gates (INV-SUPERPOWERS-GATED)")
+      io.println("  [INVENTORY] EV-36 Unified MCP Tooling & Zero-Trust Interceptor (INV-ZERO-TRUST-PAYLOAD)")
+      io.println("  [INVENTORY] EV-37 266-Actor Elastic Symbiosis Swarm (INV-UNCONSTRAINED-BEAM-SCALE)")
+      io.println("  [INVENTORY] EV-38 17-Aspect Process Cryptographic Receipts (INV-17-ASPECT-RECEIPTS)")
+      io.println("  [INVENTORY] EV-39 Omni-Cartesian Tensor Closure (INV-CARTESIAN-TENSOR-CLOSED)")
+      io.println("  [INVENTORY] EV-40 C3I Knowledge Authority & Subsystem Partitioning (INV-KNOW-AUTHORITY-PARTITION)")
+      io.println("  [INVENTORY] EV-41 Supervised OCaml Worker Port & Reductions Protection (INV-OCAML-PORT-REDUCTIONS)")
+      io.println("  [INVENTORY] EV-42 Typed Cross-Language Protocol & Envelopes (INV-CROSS-LANG-ENVELOPE)")
+      io.println("  [INVENTORY] EV-43 Zero-Trust Security & Ingress Traps (NUL -2, SQL -3) (INV-ZERO-TRUST-INGRESS-TRAP)")
+      io.println("  [INVENTORY] EV-44 Exponential Trust Decay & Freshness Dynamics (INV-EXPONENTIAL-TRUST-DECAY)")
+      io.println("  [INVENTORY] EV-45 Negative Knowledge & Anti-Pattern Detection Matrix (INV-ANTI-PATTERN-DETECTION)")
+      io.println("  [INVENTORY] EV-46 Multi-Corpus Cited Recall & Source Grounding (INV-CITED-RECALL-GROUNDING)")
+      io.println("  [INVENTORY] EV-47 7,918-File Zero-Error C3I Knowledge Ingestion (INV-7918-FILE-ZERO-ERROR)")
+      io.println("  [INVENTORY] EV-48 Biosemiotic Knowledge Morphisms & Rocha Cut (INV-BIOSEMIOTIC-KNOWLEDGE-CUT)")
+      io.println("  [INVENTORY] EV-49 Wisp/Mist REST API Knowledge Routes & Endpoints (INV-WISP-KNOWLEDGE-API)")
+      io.println("  [INVENTORY] EV-50 ZK ADR-055 & Knowledge Management Triad Integration (INV-ZK-ADR-055-KM-TRIAD)")
+      io.println("  [INVENTORY] EV-51 Scalability, Concurrency & Elastic Actor Knowledge Mesh (INV-ELASTIC-KNOWLEDGE-MESH)")
+      io.println("  [INVENTORY] EV-52 Formal Verification, Gospel Contracts & Parity Verification (INV-FORMAL-GOSPEL-PARITY)")
+      io.println("  [INVENTORY] EV-53 SRE Resilience, Freshness & Circuit-Breaker Fault Tolerance (INV-SRE-KNOWLEDGE-FRESHNESS)")
+      io.println("  [INVENTORY] EV-54 Tri-Sovereign Knowledge Symbiosis & Mainline Closure (INV-TRI-SOV-KNOWLEDGE-CLOSURE)")
+      io.println("  [INVENTORY] EV-55 C3I Agentic Ingestion & Sanitization Engine (INV-AGENTIC-INGESTION-SANITIZED)")
+      io.println("  [INVENTORY] EV-56 Supervised OCaml Port Pool & Reductions Protection (INV-SUPERVISED-OCAML-PORT-POOL)")
+      io.println("  [INVENTORY] EV-57 Dynamic Trust Decay & Negative Knowledge Actor Swarm (INV-DYNAMIC-DECAY-ACTOR-SWARM)")
+      io.println("  [INVENTORY] EV-58 Real-Time Tripartite Knowledge Presentation & SSE Mesh (INV-TRIPARTITE-SSE-KNOWLEDGE-MESH)")
+      io.println("  [INVENTORY] EV-59 Tri-Sovereign Autonomic Governance & Self-Healing Closure (INV-TRI-SOVEREIGN-AUTONOMIC-CLOSURE)")
+      io.println("  [INVENTORY] EV-60 Distributed Knowledge Cache & In-Memory Sheaf Harmonizer (INV-DISTRIBUTED-KNOWLEDGE-CACHE)")
+      io.println("  [INVENTORY] EV-61 Zero-Trust Cryptographic Signature Verification & Trace Lineage (INV-ZT-CRYPTO-SIGNATURE-TRACE)")
+      io.println("  [INVENTORY] EV-62 Automated Anti-Pattern Mitigation & Regression Interceptor (INV-AUTO-ANTI-PATTERN-INTERCEPTOR)")
+      io.println("  [INVENTORY] EV-63 Bounded Gospel Verification Oracle & Z3 Solver Process Tree (INV-GOSPEL-Z3-PROCESS-TREE)")
+      io.println("  [INVENTORY] EV-64 Descriptor-Relative VFS Journal Sync & WAL Durability (INV-VFS-JOURNAL-SYNC-DURABILITY)")
+      io.println("  [INVENTORY] EV-65 Lyapunov-Windowed Telemetry Freshness & Dead-Man Swarm (INV-LYAPUNOV-FRESHNESS-SWARM)")
+      io.println("  [INVENTORY] EV-66 17-Aspect Cross-Language Homomorphism & ABI Invariants (INV-17-ASPECT-ABI-HOMOMORPHISM)")
+      io.println("  [INVENTORY] EV-67 Elastic Multi-Tenant Agent Swarm Concurrency Scaling (INV-ELASTIC-SWARM-SCALING)")
+      io.println("  [INVENTORY] EV-68 Universal Tailscale FQDN Tripartite Presentation & Nav Graph (INV-TAILSCALE-TRIPARTITE-NAV)")
+      io.println("  [INVENTORY] EV-69 Sovereign Synthesis Ratification & Mainline Monorepo Closure (INV-SOVEREIGN-SYNTHESIS-CLOSURE)")
+      io.println("  [INVENTORY] EV-70 Vertical Slice Journal Ingestion to Cited Retrieval Pipeline (INV-SLICE-JOURNAL-RETRIEVAL)")
+      io.println("  [INVENTORY] EV-71 Supervised OCaml Worker Port Protocol & Subprocess Reductions (INV-OCAML-SUBPROCESS-PROTOCOL)")
+      io.println("  [INVENTORY] EV-72 Rust NIF & OCaml Differential Conformance Oracle (INV-RUST-OCAML-DIFF-CONFORMANCE)")
+      io.println("  [INVENTORY] EV-73 Callable OCaml Knowledge Lookup & Cited Recall Service (INV-CALLABLE-OCAML-CITED-RECALL)")
+      io.println("  [INVENTORY] EV-74 Tripartite Tri-Surface SSR/API/TUI Knowledge Display (INV-TRIPARTITE-KNOWLEDGE-SURFACES)")
+      io.println("  [INVENTORY] EV-75 17-Aspect C3I VM-1 Artifacts Comprehensive Synthesis (INV-17-ASPECT-C3I-SYNTHESIS)")
+      io.println("  [INVENTORY] EV-76 Dynamic Agentic Knowledge Mesh & Autonomous Swarm Topology (INV-DYNAMIC-KNOWLEDGE-SWARM)")
+      io.println("  [INVENTORY] EV-77 Biosemiotic Semantic Invariant Verification & Rocha Decoupling (INV-BIOSEMIOTIC-ROCHA-VERIF)")
+      io.println("  [INVENTORY] EV-78 13D TCM Coordinate Conservation & Fail-Closed Gatekeeper (INV-13D-TCM-FAIL-CLOSED)")
+      io.println("  [INVENTORY] EV-79 Lyapunov-Bounded Trust Decay & Negative Knowledge Eviction (INV-LYAPUNOV-TRUST-EVICTION)")
+      io.println("  [INVENTORY] EV-80 Zero-Trust Payload Interceptor & Cryptographic Receipt Ledger (INV-ZT-PAYLOAD-LEDGER)")
+      io.println("  [INVENTORY] EV-81 Multi-Tenant Elastic BEAM Swarm Scaling Invariant (INV-BEAM-SWARM-ELASTIC-SCALE)")
+      io.println("  [INVENTORY] EV-82 Universal Tailscale FQDN Web/API/WebSocket Routing Matrix (INV-TAILSCALE-FQDN-ROUTING)")
+      io.println("  [INVENTORY] EV-83 Formal Gospel Specification & Bounded Z3 Oracle Pipeline (INV-GOSPEL-Z3-ORACLE-PIPELINE)")
+      io.println("  [INVENTORY] EV-84 Tri-Sovereign Multi-Model Consensus & Mainline Jujutsu Closure (INV-TRI-SOV-MAINLINE-CLOSURE)")
+      io.println("  [INVENTORY] EV-85: ZigVM ADD Fractal Mapping & Agentic Sublimation Engine (INV-ZIGVM-ADD-SUBLIMATION)")
+      io.println("  [INVENTORY] EV-86: Cybernetic Raga & 22-Shruti Microtonal Synthesis Engine (INV-RAGA-SHRUTI-HARMONY)")
+      io.println("  [NOT_VERIFIED] EV-87: MirageOS behavioral and formal evidence unavailable")
+      io.println("  [NOT_VERIFIED] EV-88: MirageOS migration behavioral and formal evidence unavailable")
+      io.println("  [NOT_VERIFIED] EV-89: MirageOS production behavioral and formal evidence unavailable")
+      io.println("UOS Doctor result: FAIL_CLOSED — EV-87..EV-89 remain unverified; inventory presence does not establish execution or admission.")
+      1
     }
     DmcCheck -> {
       io.println("Evaluating DMC (Deterministic Memory Coherence & Mathematical Core):")
@@ -643,17 +637,6 @@ pub fn execute(cmd: UosCommand) -> Int {
       )
       io.println(
         "  - Comprehensive Checklist: http://nas-1.tail55d152.ts.net:4100/checklist",
-      )
-      io.println("")
-      io.println("MirageOS SIL-6 Solo5 Unikernel Ingress & Endpoints:")
-      io.println(
-        "  - MirageOS Web Cockpit:    http://nas-1.tail55d152.ts.net:4100/mirage",
-      )
-      io.println(
-        "  - Migration Candidates API: http://nas-1.tail55d152.ts.net:4100/api/v1/mirage/candidates",
-      )
-      io.println(
-        "  - Unikernel Status API:    http://nas-1.tail55d152.ts.net:4100/api/v1/mirage/status",
       )
       0
     }
@@ -1517,7 +1500,8 @@ pub fn execute(cmd: UosCommand) -> Int {
         file_exists("contracts/rules/mirage-unikernel-contract.md")
       let mirage_spec =
         file_exists("docs/design/20260907-1150-mirageos-unikernel-architecture-and-uos-integration-spec.md")
-      case
+      mirage_not_verified(
+        "selfcheck-mirage",
         mirage_sig
         && mirage_block
         && mirage_kv
@@ -1526,24 +1510,8 @@ pub fn execute(cmd: UosCommand) -> Int {
         && mirage_gleam
         && mirage_test
         && mirage_contract
-        && mirage_spec
-      {
-        True -> {
-          io.println("  [PASS] MIRAGE-01: MirageOS Core Signatures & Module Types Defined (BLOCK, KV, FLOW, CLOCK)")
-          io.println("  [PASS] MIRAGE-02: In-Memory Sector-Level Block Device Satisfying MIRAGE_BLOCK Verified")
-          io.println("  [PASS] MIRAGE-03: Irmin-Style Merkle DAG KV Store with 3-Way Merge Algebra Verified")
-          io.println("  [PASS] MIRAGE-04: Solo5 Tender Sandboxing & Sub-20ms Cold-Start Verified (cold_start: 10.90 ms)")
-          io.println("  [PASS] MIRAGE-05: Zero-Trust Payload Interceptor with mirage-crypto-ec Ed25519 Receipts Verified")
-          io.println("  [PASS] MIRAGE-06: Gleam/OTP 29 Supervised Unikernel Daemon & Memory Ceiling (<=64MB) Verified")
-          io.println("")
-          io.println("Summary: 6/6 MirageOS Unikernel Checks Passed (100% Green)")
-          0
-        }
-        False -> {
-          io.println("  [FAIL] Missing MirageOS unikernel signatures, modules, tests, or specifications")
-          1
-        }
-      }
+        && mirage_spec,
+      )
     }
     SelfcheckMirageMigration -> {
       io.println(
@@ -1567,7 +1535,8 @@ pub fn execute(cmd: UosCommand) -> Int {
         file_exists("docs/design/20260907-1120-mirageos-comprehensive-migration-and-subsystem-spec.md")
       let journal_md =
         file_exists("docs/journal/20260907-1120-mirageos-comprehensive-migration-and-subsystem-journal.md")
-      case
+      mirage_not_verified(
+        "selfcheck-mirage-migration",
         cat_ml
         && dns_ml
         && tls_ml
@@ -1576,24 +1545,8 @@ pub fn execute(cmd: UosCommand) -> Int {
         && gleam_tst
         && policy_md
         && spec_md
-        && journal_md
-      {
-        True -> {
-          io.println("  [PASS] MIG-01: 7 Subsystem Migration Candidates Mapped & Benchmarked (RAM Saved: 1092 MB)")
-          io.println("  [PASS] MIG-02: Pure OCaml DNS Recursive Resolver with Tailscale Mesh Fast-Path (1us)")
-          io.println("  [PASS] MIG-03: Pure OCaml Strict TLS 1.3 Ingress Proxy (paf + ocaml-tls) Verified")
-          io.println("  [PASS] MIG-04: Non-Negotiable Safety Boundaries (BEAM Supervisor, MAX AI, NVMe) Fail-Closed")
-          io.println("  [PASS] MIG-05: Gleam / BEAM OTP 29 Supervised Migration Tracking Engine Verified")
-          io.println("  [PASS] MIG-06: Policy SC-MIRAGE-MIGRATE-001 & Architecture Specification Ratified")
-          io.println("")
-          io.println("Summary: 6/6 MirageOS Migration Checks Passed (100% Green)")
-          0
-        }
-        False -> {
-          io.println("  [FAIL] Missing MirageOS migration modules, tests, or policy documents")
-          1
-        }
-      }
+        && journal_md,
+      )
     }
     SelfcheckMirageProd -> {
       io.println(
@@ -1615,7 +1568,8 @@ pub fn execute(cmd: UosCommand) -> Int {
         file_exists("docs/design/20260907-1215-mirageos-triple-surface-cockpit-and-solo5-cutover-spec.md")
       let journal_md =
         file_exists("docs/journal/20260907-1215-mirageos-triple-surface-cockpit-and-solo5-cutover-journal.md")
-      case
+      mirage_not_verified(
+        "selfcheck-mirage-prod",
         runner_ml
         && ui_gleam
         && api_gleam
@@ -1623,24 +1577,8 @@ pub fn execute(cmd: UosCommand) -> Int {
         && test_gleam
         && contract_md
         && spec_md
-        && journal_md
-      {
-        True -> {
-          io.println("  [PASS] PROD-01: Hermes Mirage CLI Runner Executable (hermes_mirage_runner.exe) Operational")
-          io.println("  [PASS] PROD-02: Lustre Web UI Mirage Cockpit with 18/18 Checklist & Rocha Badges Active")
-          io.println("  [PASS] PROD-03: Wisp REST API /api/v1/mirage/candidates & status Endpoints Live")
-          io.println("  [PASS] PROD-04: TUI Terminal ANSI Mirage Dashboard Rendered with Status Markers")
-          io.println("  [PASS] PROD-05: Non-Negotiable Safety Boundaries Locked & Intercept Verified")
-          io.println("  [PASS] PROD-06: Contract SC-MIRAGE-PROD-001 & Cutover Specification Ratified")
-          io.println("")
-          io.println("Summary: 6/6 MirageOS Production Cutover Checks Passed (100% Green)")
-          0
-        }
-        False -> {
-          io.println("  [FAIL] Missing MirageOS production modules, UI, or contracts")
-          1
-        }
-      }
+        && journal_md,
+      )
     }
     Help -> {
       io.println(

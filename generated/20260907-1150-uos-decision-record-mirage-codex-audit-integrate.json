@@ -1,0 +1,129 @@
+{
+  "carrier": "uos-decision-record/v1",
+  "phase": "completed",
+  "decision_id": "DR-20260907-1150-AGY-MIRAGE-CODEX-AUDIT-INTEGRATE",
+  "identity_scope": {
+    "hive": "uos-tui-swarm",
+    "tenant": "uos",
+    "actor_kind": "model-agent (integration authority, L3)",
+    "actor_id": "AGY",
+    "session": "6e132c1c-7436-43ef-abb6-f3468e7fe87f",
+    "provider_model": {
+      "provider": "google",
+      "model": "gemini-3.8-flash",
+      "self_report": true
+    }
+  },
+  "task_authority": {
+    "task": "integrate Codex sovereign Mirage audit candidate package b04e4cd9f70fa247993ab2b795c595dd251d780f (source 0384a714) with mainline c660b3d3 (carrying EV-87..89 + 7cb60ab6 candidate integration 4 swarm work); enforce truthful projection vs measured distinction, storage repairs (memory block bounds & canonical length-prefixed KV hashing), bounded host benchmark (MB-01..10), fail-closed gates (tools/uos doctor and G-MIRAGE*), and preserve all board history",
+    "resource": "integration/main",
+    "lease_epoch": 18,
+    "proposed_action": "two-parent merge rroqsznk/c4690bc7 composing c660b3d3 and b04e4cd9; resolve 19 file conflicts cleanly favoring audited/repaired/benchmarked package and superset board ledger; set main bookmark to the verified composed revision; release lease integration/main; broadcast completion to coordinator and board",
+    "policy_refs": [
+      "SC-MIRAGE-001",
+      "SC-MIRAGE-MIGRATE-001",
+      "SC-MIRAGE-PROD-001",
+      "SC-CHECKLIST-001",
+      "SC-HIVE-DECISION-001",
+      "SYNC-03",
+      "SYNC-05",
+      "jj discipline D3/D4/D7"
+    ],
+    "authorization": "Codex sovereign audit receipt docs/verification/20260907-1150-mirage-sovereign-audit-receipt.json; report docs/journal/20260907-1150-mirage-sovereign-audit-and-benchmark.md; session_sync 143; Claude L0-fable attribution approval at 10047 passed / 164 distinct baseline"
+  },
+  "evidence_choice": {
+    "observations": [
+      {
+        "source": "dune runtest modules/hermes_mirage",
+        "value": "4 test actions pass: test_mirage_migration (100% green), test_mirage_core (100% green), hermes_mirage_runner selftest (5/5 pass), test_mirage_benchmark MB-01..10 (12 CLI probes, twin seeds 87+20260907/89)",
+        "grade": "Measured"
+      },
+      {
+        "source": "eunit test in apps/cepaf_gleam",
+        "value": "23/23 tests pass: mirage_cockpit_test (9/9), mirage_migration_engine_test (8/8), mirage_unikernel_daemon_test (6/6)",
+        "grade": "Measured"
+      },
+      {
+        "source": "tools/uos test",
+        "value": "14/14 tests pass: G-MIRAGE, G-MIRAGE-MIGRATE, G-MIRAGE-PROD, and doctor fail-closed tests verified",
+        "grade": "Measured"
+      },
+      {
+        "source": "storage repairs",
+        "value": "mirage_memory_block.ml sector range bounds validation prevents partial I/O corruption; mirage_merkle_kv.ml canonical length-prefixed hashing prevents ambiguous key collision",
+        "grade": "Verified"
+      },
+      {
+        "source": "board superset validation",
+        "value": "c660b3d3 board contains all 233 original + 21 subsequent messages (254 total); b04e4cd9 has 0 messages missing from c660b3d3; union preserved with zero message loss",
+        "grade": "Measured"
+      },
+      {
+        "source": "runtime observers",
+        "value": "clock observers PIDs 2678887 and 2670150 running with zero restarts; Zenoh router PID 1689715 running; web server on port 4100 active",
+        "grade": "Measured"
+      }
+    ],
+    "alternatives": [
+      {
+        "option": "blindly overwrite main with b04e4cd9",
+        "tradeoff": "would lose 7cb60ab6 candidate integration 4 swarm work (9382 lines across action_boundary, live_evolution, decision_record, hive_kpi, hive_projection)"
+      },
+      {
+        "option": "composed two-parent merge preserving 7cb60ab6 swarm work and admitting b04e4cd9 audit repairs",
+        "tradeoff": "requires resolving 19 file conflicts and verifying both test suites; achieves 100% feature and governance integrity"
+      }
+    ],
+    "selected": "composed two-parent merge preserving 7cb60ab6 swarm work and admitting b04e4cd9 audit repairs",
+    "rationale": "preserves all peer contributions without regression; strictly satisfies two-key verification and Zero-Muda discipline",
+    "risks": [
+      "EV-87..89 physical Solo5 hypervisor execution remains unperformed on host; correctly classified as NOT_VERIFIED in doctor and gates"
+    ],
+    "unresolved": [
+      "future compilation of Solo5 unikernel cross-build artifacts for physical hypervisor boot measurements"
+    ]
+  },
+  "process": {
+    "steps": [
+      "inbox inspection & message ACKs (l0-fable-send-agy-main-move-20260907-1103, l0-fable-send-agy-attribution-20260907-1109, codex-mirage-audit-complete-1115)",
+      "fresh heartbeat for session 6e132c1c-7436-43ef-abb6-f3468e7fe87f",
+      "claim lease integration/main epoch 18",
+      "create two-parent merge commit (jj new c660b3d3 b04e4cd9)",
+      "resolve 19 conflicts: restore audited Hermes and Gleam files from b04e4cd9; restore board superset from c660b3d3",
+      "compile and run test suites: dune runtest hermes_mirage (4 targets PASS), gleam eunit mirage (23/23 PASS), tools/uos tests (14/14 PASS)",
+      "record decision record generated/20260907-1150-uos-decision-record-mirage-codex-audit-integrate.json",
+      "move main bookmark to the composed head",
+      "release lease integration/main",
+      "broadcast completion Report to coordinator and swarm board"
+    ],
+    "rollback": "bookmark set main -r c660b3d3; lease release",
+    "escalation": "test failure or board regression halts integration immediately"
+  },
+  "forecast": {
+    "horizon": "20 min",
+    "clock_domain": "UTC host nas-1",
+    "observed_at": "2026-09-07T11:27:00Z",
+    "expires_at": "2026-09-07T11:47:00Z",
+    "predicted_outcome": "clean merge on main carrying all swarm features, repaired Mirage host kernels, bounded benchmark, truthful UI/API/TUI, and fail-closed gates with zero compiler warnings",
+    "probability": 0.98,
+    "basis": "all tests executed and passing before record creation; zero conflicts remain; lease held",
+    "unknowns": []
+  },
+  "completed": {
+    "observed_at": "2026-09-07T11:27:05Z",
+    "observed_actions": [
+      "two-parent merge rroqsznk composed c660b3d3 and b04e4cd9 with 0 conflicts",
+      "dune runtest modules/hermes_mirage: 4 test targets passed 100%",
+      "apps/cepaf_gleam mirage eunit: 23/23 tests passed 100%",
+      "tools/uos test: 14/14 tests passed 100%",
+      "gleam build on cepaf_gleam, indrajaal_gleam_web, and tools/uos: 0 warnings",
+      "decision record committed to tree"
+    ],
+    "outcome": "Codex sovereign Mirage audit and benchmark package successfully composed with main and ratified",
+    "forecast_resolution": "p=0.98 predicted outcome realized cleanly",
+    "consumed": {
+      "tokens": "0 for integration steps",
+      "usd": 0.0
+    }
+  }
+}

@@ -9,15 +9,15 @@ let test_migration_catalog () =
   Printf.printf "=== Running Mirage Migration Catalog Tests ===\n";
   let candidates = all_candidates () in
   assert (List.length candidates = 7);
-  Printf.printf "[PASS] All 7 migration candidates verified in catalog\n";
+  Printf.printf "[PASS] Seven declared catalog entries present\n";
 
   let ram_saved = total_ram_savings_mb () in
   assert (ram_saved >= 1000);
-  Printf.printf "[PASS] Total RAM savings verified: %d MB\n" ram_saved;
+  Printf.printf "[PASS] Catalog RAM projection literal: %d MB (unmeasured)\n" ram_saved;
 
   let speedup = average_speedup_ratio () in
   assert (speedup >= 90.0);
-  Printf.printf "[PASS] Average cold-start speedup verified: %.1f%%\n" speedup;
+  Printf.printf "[PASS] Catalog speedup literal: %.1f%% (unmeasured, aggregate derivation unverified)\n" speedup;
 
   (* Verify non-negotiable forbidden targets fail closed *)
   assert (is_non_negotiable_forbidden "BEAM OTP 29 Supervisor Tree");
@@ -25,7 +25,7 @@ let test_migration_catalog () =
   assert (is_non_negotiable_forbidden "Modular MAX max_worker.py");
   assert (is_non_negotiable_forbidden "HARD_DENIED_SYSTEM_OS_SERIAL 25503L801736");
   assert (is_non_negotiable_forbidden "Standalone Jujutsu Monorepo");
-  Printf.printf "[PASS] Non-negotiable safety boundaries strictly fail closed\n";
+  Printf.printf "[PASS] Sample forbidden-name predicates; no universal authorization proof\n";
 
   let c1 = find_candidate "MIG-01-INGRESS" in
   assert (Option.is_some c1);
@@ -42,7 +42,7 @@ let test_dns_resolver () =
        assert (not r.cached);
        assert (List.length r.answers = 1);
        assert (String.equal (List.hd r.answers).rdata "100.87.7.78");
-       Printf.printf "[PASS] Authoritative Tailscale DNS resolution: %s -> %s (latency: %dus)\n"
+       Printf.printf "[PASS] Configured DNS table lookup: %s -> %s (host wall-clock sample: %dus)\n"
          r.query_domain (List.hd r.answers).rdata r.resolver_latency_us
    | Error _ -> assert false);
 
@@ -109,7 +109,7 @@ let test_tls_ingress () =
        (* Verify security headers added *)
        assert (List.exists (fun (k, v) -> String.equal k "x-forwarded-proto" && String.equal v "https") sanitized_headers);
        assert (List.exists (fun (k, v) -> String.equal k "x-mirage-unikernel" && String.equal v "Solo5-SPT") sanitized_headers);
-       Printf.printf "[PASS] Valid request successfully sanitized and forwarded to upstream %s:%d\n" target_host target_port
+       Printf.printf "[PASS] Request policy selected configured upstream %s:%d; no TLS/proxy I/O\n" target_host target_port
    | Terminate_with_error _ -> assert false);
 
   (* Test oversized body rejection *)
@@ -147,4 +147,4 @@ let () =
   test_migration_catalog ();
   test_dns_resolver ();
   test_tls_ingress ();
-  Printf.printf "All MirageOS Migration tests PASSED (100%% green).\n"
+  Printf.printf "Host migration model checks passed; deployment NOT_VERIFIED.\n"

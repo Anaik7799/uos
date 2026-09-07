@@ -5,15 +5,29 @@ let print_json json =
   Yojson.Safe.pretty_to_channel stdout json;
   print_newline ()
 
+let model_json scope = function
+  | `Assoc fields -> `Assoc (("evidence_scope", `String scope)
+      :: ("deployment_admission", `String "NOT_VERIFIED") :: fields)
+  | _ -> failwith "model result must be a JSON object"
+
 let run_catalog () =
   let json = Mirage_migration_catalog.catalog_to_json () in
   print_json json
+
+let run_benchmark args =
+  match Mirage_benchmark.parse_config_args args with
+  | Error message -> print_json (`Assoc ["error", `String message]); exit 2
+  | Ok config ->
+      (match Mirage_benchmark.run_suite config with
+       | Ok json -> print_json json
+       | Error message -> print_json (`Assoc ["error", `String message]); exit 3)
 
 let run_dns domain =
   let state = Mirage_dns_resolver.create_resolver () in
   match Mirage_dns_resolver.resolve_query state domain Mirage_dns_resolver.A with
   | Ok resp ->
-      print_json (Mirage_dns_resolver.response_to_json resp)
+      print_json (model_json "host_static_and_synthetic_dns_model"
+        (Mirage_dns_resolver.response_to_json resp))
   | Error `Blocked_domain ->
       let json = `Assoc [("error", `String "BLOCKED_DOMAIN"); ("domain", `String domain)] in
       print_json json;
@@ -47,20 +61,21 @@ let run_ingress sni path =
         ("target_port", `Int target_port);
         ("sanitized_headers", headers_json);
       ] in
-      print_json json
+      print_json (model_json "host_ingress_policy_model_no_tls_handshake" json)
   | Mirage_tls_ingress.Terminate_with_error { status_code; message } ->
       let json = `Assoc [
         ("decision", `String "TERMINATE");
         ("status_code", `Int status_code);
         ("message", `String message);
       ] in
-      print_json json;
+      print_json (model_json "host_ingress_policy_model_no_tls_handshake" json);
       exit 3
 
 let run_tender id =
   let tender = Mirage_solo5_tender.default_tender_config id in
   let manifest_str = Mirage_solo5_tender.generate_manifest_json tender in
-  print_endline manifest_str
+  print_json (model_json "tender_configuration_proposal_no_boot"
+    (Yojson.Safe.from_string manifest_str))
 
 let run_selftest () =
   Printf.printf "=== HERMES MIRAGE RUNNER SELF-TEST ===\n";
@@ -70,7 +85,7 @@ let run_selftest () =
   assert (count = 7);
   let ram_sav = Mirage_migration_catalog.total_ram_savings_mb () in
   assert (ram_sav = 1092);
-  Printf.printf "  [PASS] Migration Catalog: %d candidates, %d MB RAM savings\n" count ram_sav;
+  Printf.printf "  [PASS] Static catalog arithmetic: %d candidates, %d MB projected savings (not measured)\n" count ram_sav;
 
   (* 2. DNS resolver *)
   let dns_state = Mirage_dns_resolver.create_resolver () in
@@ -78,7 +93,7 @@ let run_selftest () =
    | Ok r ->
        assert (r.authoritative);
        assert ((List.hd r.answers).rdata = "100.87.7.78");
-       Printf.printf "  [PASS] Pure OCaml DNS Resolver: %s -> %s (authoritative=%b, %dus)\n"
+       Printf.printf "  [PASS] Host DNS table model: %s -> %s (configured authoritative=%b, host sample=%dus)\n"
          r.query_domain (List.hd r.answers).rdata r.authoritative r.resolver_latency_us
    | Error _ -> failwith "DNS resolution failed for nas-1");
 
@@ -96,7 +111,7 @@ let run_selftest () =
   (match Mirage_tls_ingress.evaluate_request ingress_cfg good_req with
    | Mirage_tls_ingress.Forward_to_upstream { target_port; _ } ->
        assert (target_port = 4100);
-       Printf.printf "  [PASS] TLS 1.3 Ingress Proxy: forwarded valid SNI to upstream port %d\n" target_port
+       Printf.printf "  [PASS] Ingress policy model: selected upstream port %d (no TLS handshake)\n" target_port
    | Mirage_tls_ingress.Terminate_with_error _ -> failwith "Valid ingress request rejected");
 
   (* 4. Ingress NUL attack trap *)
@@ -104,7 +119,7 @@ let run_selftest () =
   (match Mirage_tls_ingress.evaluate_request ingress_cfg attack_req with
    | Mirage_tls_ingress.Terminate_with_error { status_code; _ } ->
        assert (status_code = 400);
-       Printf.printf "  [PASS] TLS 1.3 Ingress Trapper: intercepted NUL byte attack (HTTP 400)\n"
+       Printf.printf "  [PASS] Ingress policy model: rejected NUL byte (decision HTTP 400)\n"
    | Mirage_tls_ingress.Forward_to_upstream _ -> failwith "NUL attack leaked through");
 
   (* 5. Solo5 tender profile *)
@@ -112,24 +127,26 @@ let run_selftest () =
   assert (Mirage_solo5_tender.verify_sandbox_safety tender = Ok ());
   let est_ms = Mirage_solo5_tender.cold_start_estimate_ms tender in
   assert (est_ms < 20.0);
-  Printf.printf "  [PASS] Solo5 Tender Manifest: sandbox verified (cold-start estimate: %.2fms)\n" est_ms;
+  Printf.printf "  [PASS] Tender configuration predicates: cold-start formula %.2fms (no sandbox launched)\n" est_ms;
 
-  Printf.printf "=== ALL 5 MIRAGE SUBSYSTEM TESTS PASSED (100%% GREEN) ===\n"
+  Printf.printf "=== 5 HOST MODEL CHECKS PASSED; UNIKERNEL DEPLOYMENT NOT VERIFIED ===\n"
 
 let () =
   let args = Array.to_list Sys.argv in
   match args with
-  | _ :: "catalog" :: _ -> run_catalog ()
-  | _ :: "dns" :: domain :: _ -> run_dns domain
-  | _ :: "ingress" :: sni :: path :: _ -> run_ingress sni path
-  | _ :: "tender" :: id :: _ -> run_tender id
-  | _ :: "selftest" :: _ -> run_selftest ()
+  | [_; "catalog"] -> run_catalog ()
+  | [_; "dns"; domain] -> run_dns domain
+  | [_; "ingress"; sni; path] -> run_ingress sni path
+  | [_; "tender"; id] -> run_tender id
+  | [_; "selftest"] -> run_selftest ()
+  | _ :: "benchmark" :: args -> run_benchmark args
   | _ ->
       Printf.eprintf "Usage: hermes_mirage_runner <command> [args...]\n";
       Printf.eprintf "Commands:\n";
       Printf.eprintf "  catalog                - Dump 7 migration candidate subsystems in JSON\n";
-      Printf.eprintf "  dns <domain>           - Pure OCaml DNS lookup with sub-microsecond latency\n";
-      Printf.eprintf "  ingress <sni> <path>   - Evaluate TLS 1.3 ingress routing and security policies\n";
-      Printf.eprintf "  tender <id>            - Dump Solo5 tender sandbox manifest\n";
-      Printf.eprintf "  selftest               - Run internal battery of all Mirage components\n";
+      Printf.eprintf "  dns <domain>           - Query the host-side DNS table model\n";
+      Printf.eprintf "  ingress <sni> <path>   - Evaluate ingress policy (no TLS handshake)\n";
+      Printf.eprintf "  tender <id>            - Dump proposed Solo5 configuration (no boot)\n";
+      Printf.eprintf "  selftest               - Run five host model checks\n";
+      Printf.eprintf "  benchmark [1..10000]    - Measure verified host block/KV operations, default 256\n";
       exit 1
