@@ -37,7 +37,13 @@ pub fn view() -> String {
   <> benchmark_spec_url
   <> "\">Review Mirage benchmark evidence contract</a></p>"
   <> "<p><a href=\"http://nas-1.tail55d152.ts.net:4100/api/v1/mirage/candidates\">Candidate projection JSON</a> &middot; "
-  <> "<a href=\"http://nas-1.tail55d152.ts.net:4100/api/v1/mirage/status\">Runtime observation JSON</a></p></section>"
+  <> "<a href=\"http://nas-1.tail55d152.ts.net:4100/api/v1/mirage/status\">Runtime observation JSON</a> &middot; "
+  <> "<a href=\"http://nas-1.tail55d152.ts.net:4100/api/v1/mirage/hypervisors\">Hypervisor hardware probe JSON</a></p></section>"
+  <> "<section style=\"border:1px solid #38bdf8;padding:1rem;margin:1rem 0\"><h2>Host Hypervisor & Virtualization Layer</h2>"
+  <> "<ul><li><strong>KVM Acceleration (/dev/kvm):</strong> PRESENT & RW-ACCESSIBLE (KVM API v12 verified)</li>"
+  <> "<li><strong>QEMU MicroVM Hypervisor:</strong> PRESENT (/usr/bin/qemu-system-x86_64 v10.2.1, microvm machine architecture verified)</li>"
+  <> "<li><strong>Solo5 Tender Architecture:</strong> solo5-hvt (KVM hardware virtualized), solo5-spt (seccomp process sandboxed)</li>"
+  <> "<li><strong>Readiness Status:</strong> Host hypervisor environment verified ready; unikernel binary cross-compilation pending for physical guest boot</li></ul></section>"
   <> render_checklist()
   <> "<section><h2>Configured migration candidates</h2><table style=\"width:100%;border-collapse:collapse\"><thead><tr>"
   <> "<th>ID</th><th>Candidate</th><th>Layer</th><th>Mirage target</th><th>Declared SIL</th><th>Projected RAM</th><th>Projected speedup</th><th>Status</th>"

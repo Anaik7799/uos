@@ -493,6 +493,18 @@ pub fn main() {
         )
         |> response.prepend_header("content-type", "text/html")
       }
+      ["mirage"] -> {
+        let content_html = mirage_cockpit.view()
+        let page =
+          render_lustre_page(
+            "MirageOS Solo5 Unikernel Migration Cockpit",
+            "mirage",
+            content_html,
+          )
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
       ["fpp-topology"] -> {
         let el = fpp_topology_view.view(fpp_topology_view.init())
         let content_html = element.to_string(el)
@@ -1944,6 +1956,7 @@ fn render_shell() -> String {
           <button class='endpoint-btn' onclick='connectAgui()' style='color:#00e5ff;border-color:#00e5ff'>AG-UI SSE Stream</button>
           <button class='endpoint-btn' onclick='fetchApi(\"/api/v1/mirage/status\")' style='color:#00d4aa;border-color:#00d4aa'>/api/v1/mirage/status</button>
           <button class='endpoint-btn' onclick='fetchApi(\"/api/v1/mirage/candidates\")' style='color:#00d4aa;border-color:#00d4aa'>/api/v1/mirage/candidates</button>
+          <button class='endpoint-btn' onclick='fetchApi(\"/api/v1/mirage/hypervisors\")' style='color:#00d4aa;border-color:#00d4aa'>/api/v1/mirage/hypervisors</button>
         </div>
         <pre id='api-result'>Click an endpoint above to see the real-time response from the BEAM OTP runtime.</pre>
       </div>" <> render_footer() <> "</main>

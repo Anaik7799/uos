@@ -77,6 +77,10 @@ let run_tender id =
   print_json (model_json "tender_configuration_proposal_no_boot"
     (Yojson.Safe.from_string manifest_str))
 
+let run_hypervisor_probe () =
+  let probe = Mirage_hypervisor_probe.probe_hypervisors () in
+  print_json (Mirage_hypervisor_probe.probe_to_json probe)
+
 let run_selftest () =
   Printf.printf "=== HERMES MIRAGE RUNNER SELF-TEST ===\n";
   (* 1. Migration catalog *)
@@ -129,7 +133,13 @@ let run_selftest () =
   assert (est_ms < 20.0);
   Printf.printf "  [PASS] Tender configuration predicates: cold-start formula %.2fms (no sandbox launched)\n" est_ms;
 
-  Printf.printf "=== 5 HOST MODEL CHECKS PASSED; UNIKERNEL DEPLOYMENT NOT VERIFIED ===\n"
+  (* 6. Hypervisor capability probe *)
+  let hp = Mirage_hypervisor_probe.probe_hypervisors () in
+  assert (hp.schema = "uos-mirage-hypervisor-probe/v1");
+  Printf.printf "  [PASS] Hypervisor probe: KVM present=%b, rw=%b, readiness=%s\n"
+    hp.kvm.dev_kvm_present hp.kvm.dev_kvm_rw_accessible hp.overall_readiness;
+
+  Printf.printf "=== 6 HOST MODEL CHECKS PASSED; UNIKERNEL DEPLOYMENT NOT VERIFIED ===\n"
 
 let () =
   let args = Array.to_list Sys.argv in
@@ -138,6 +148,7 @@ let () =
   | [_; "dns"; domain] -> run_dns domain
   | [_; "ingress"; sni; path] -> run_ingress sni path
   | [_; "tender"; id] -> run_tender id
+  | [_; "hypervisor-probe"] -> run_hypervisor_probe ()
   | [_; "selftest"] -> run_selftest ()
   | _ :: "benchmark" :: args -> run_benchmark args
   | _ ->
@@ -147,6 +158,7 @@ let () =
       Printf.eprintf "  dns <domain>           - Query the host-side DNS table model\n";
       Printf.eprintf "  ingress <sni> <path>   - Evaluate ingress policy (no TLS handshake)\n";
       Printf.eprintf "  tender <id>            - Dump proposed Solo5 configuration (no boot)\n";
-      Printf.eprintf "  selftest               - Run five host model checks\n";
+      Printf.eprintf "  hypervisor-probe       - Probe KVM, QEMU microvm and Solo5 readiness\n";
+      Printf.eprintf "  selftest               - Run six host model checks\n";
       Printf.eprintf "  benchmark [1..10000]    - Measure verified host block/KV operations, default 256\n";
       exit 1

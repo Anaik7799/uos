@@ -15,6 +15,7 @@ import gleam/json
 import gleam/list
 import gleam/result
 import gleam/string
+import cepaf_gleam/ha/fractal_forecast.{type LayerForecast}
 
 // =============================================================================
 // Type Definitions — OODA Cybernetic Control Loop
@@ -88,6 +89,49 @@ pub type OodaCycle {
     assessment: Assessment,
     decision: Decision,
     cycle_time_ms: Int,
+  )
+}
+
+/// Complete Predictive OODA cycle (POODAVR).
+pub type PredictiveCycle {
+  PredictiveCycle(
+    observations: List(Observation),
+    assessment: Assessment,
+    forecast: LayerForecast,
+    decision: Decision,
+    cycle_time_ms: Int,
+  )
+}
+
+/// Run a predictive OODA cycle conditioning action selection on layer forecasting.
+pub fn run_predictive_cycle(
+  observations: List(Observation),
+  forecast: LayerForecast,
+) -> PredictiveCycle {
+  let assessment = orient(observations)
+  let base_decision = decide(assessment)
+  let adjusted_score = base_decision.score *. { 1.0 -. forecast.risk_score }
+  let adjusted_decision = case forecast.risk_score >. 0.30 {
+    True ->
+      Decision(
+        action: Alert("Predictive mitigation: " <> forecast.recommendation),
+        score: adjusted_score,
+        reason: "Adjusted by predictive horizon: " <> forecast.recommendation,
+      )
+    False ->
+      Decision(
+        action: base_decision.action,
+        score: adjusted_score,
+        reason: base_decision.reason <> " [Forecast: " <> forecast.nato_term <> "]",
+      )
+  }
+  let _ = act(adjusted_decision)
+  PredictiveCycle(
+    observations: observations,
+    assessment: assessment,
+    forecast: forecast,
+    decision: adjusted_decision,
+    cycle_time_ms: 10,
   )
 }
 
