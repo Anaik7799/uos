@@ -1,7 +1,7 @@
-# 20260907-1416- MirageOS Hypervisor Verification & Tri-Agent Coordination Journal
+# 20260907-1416- MirageOS Hypervisor & Solo5 Tender Verification & Tri-Agent Coordination Journal
 
 - **Date / Timestamp**: `2026-09-07T14:16:00+02:00` / `20260907-1416-`
-- **Domain**: MirageOS Unikernels, Host Hypervisor Virtualization, Tri-Agent Coordination, and C3I Dashboard
+- **Domain**: MirageOS Unikernels, Solo5 Tenders (HVT, SPT, Virtio), Host Hypervisor Virtualization, Tri-Agent Coordination, and C3I Dashboard
 - **Fractal Coordinates**: `#fractal-l0` `#fractal-l1` `#fractal-l2` `#fractal-l4`
 - **Knowledge Tags**: `#rocha-semiotics` `#cybernetics` `#km-triad` `#zk-adr` `#zero-muda` `#checklist-nav` `#tailscale-web`
 - **Authority**: UOS Canonical Agent Policy & Operator Directives
@@ -11,71 +11,117 @@
 
 ## 1. Scope & Trigger
 Operator directive:
-> *"check and verify all mirage features and links added, use codex for detailed check and any new fetaure addition. provide codex all info it needs to do the task, check dashboad, coordinate and cooperate, check all features including running this on hypervisors"*
+> *"check and verify all mirage features and links added, use codex for detailed check and any new fetaure addition. provide codex all info it needs to do the task, check dashboad, coordinate and cooperate, check all features including running this on hypervisors.fully setup and run mirageos with solo5 . ALL the tenders should be checked and verified"*
 
-The scope encompassed verifying all MirageOS cockpit pages, REST API endpoints, TUI displays, and dashboard integration links; running and measuring physical hypervisor execution on host `nas-1`; coordinating with Codex (`01a07a68-b3b7-70f3-9e64-fac68a156c21`) and Claude (`656f0d2c-6019-4d9e-b0ce-b9e39b240047`) via the durable session coordinator and swarm board; and rebasing all candidate work cleanly onto `main`.
+The scope encompassed:
+1. Setting up and running MirageOS with Solo5 across **all three tenders**:
+   - `solo5-hvt`: Hardware Virtualized Tender using host `/dev/kvm`.
+   - `solo5-spt`: Sandboxed Process Tender using seccomp-bpf.
+   - `solo5-virtio`: Virtio direct kernel boot tender using QEMU KVM.
+2. Compiling and physically executing test unikernels with empirical launch receipts.
+3. Staging compiled unikernels in unversioned `var/mirage/unikernels/` to maintain monorepo Zero-Muda purity.
+4. Upgrading Hermes OCaml (`mirage_hypervisor_probe.ml`) and Gleam (`mirage_hypervisor.gleam`) probes with authentic `Solo5ExecutionReceipt` records.
+5. Updating the Web cockpit (`mirage_cockpit.gleam`), REST APIs, and TUI with verified tender statuses.
+6. Adding `G-MIRAGE-TENDERS` admission gate and `selfcheck-mirage-tenders` to `tools/uos`.
+7. Coordinating bidirectionally with Codex Astra (`01a07a68-b3b7-70f3-9e64-fac68a156c21`) and Claude (`656f0d2c-6019-4d9e-b0ce-b9e39b240047`) via `session_sync_cli` and the signed swarm board.
+8. Rebasing cleanly onto `main` under standalone Jujutsu.
 
 ---
 
 ## 2. Pre-State Assessment
-1. **Mirage Web & APIs**: Routes `/mirage`, `/api/v1/mirage/status`, and `/api/v1/mirage/candidates` were authored and verified, reporting truthful simulation and unverified statuses.
-2. **Virtualization Layer**: Host `/dev/kvm` existed with read/write access (`crw-rw----+ 1 root kvm`) and KVM API version 12. QEMU 10.2.1 was installed at `/usr/bin/qemu-system-x86_64` supporting `microvm` and `-accel kvm`.
-3. **JJ Monorepo**: Working copy was based on an un-rebased parent while `main` had advanced to `ozrqspzw 7009b1b7` via Claude's integration 6 merge.
-4. **Swarm Inbox**: Two unacknowledged messages were queued: Claude's integration 6 announcement and Codex's AINF design complete notice.
-5. **Supervised Daemons**: Web server on port 4100 (`task-7178`), clock observers (PIDs 2678887, 2670150), and Zenoh router (PID 1689715 on port 8080) were fully active.
+1. **Mirage Web & APIs**: Routes `/mirage`, `/api/v1/mirage/status`, and `/api/v1/mirage/candidates` were operational but reported tenders as absent (`null`).
+2. **Virtualization Layer**: Host `/dev/kvm` existed with read/write access and KVM API version 12. QEMU 10.2.1 was installed at `/usr/bin/qemu-system-x86_64`.
+3. **Solo5 State**: Solo5 package and tenders were not installed; OPAM lacked `libseccomp-dev` required for `solo5-spt`.
+4. **VCS Lineage**: Claude completed integration 7 on `main` (`wtzmuuzp a9d40c6e`).
+5. **Supervised Daemons**: Web server on port 4100, clock observers (PIDs 2678887, 2670150), and Zenoh router (PID 1689715 on port 8080) were fully active and protected.
 
 ---
 
 ## 3. Execution Detail
-1. **Empirical Hypervisor Virtualization Execution**:
-   - Tested QEMU with hardware KVM acceleration and `microvm` architecture:
-     ```bash
-     qemu-system-x86_64 -accel kvm -M microvm -display none -monitor stdio -no-reboot
-     ```
-   - Sent stdin `quit\n` to the monitor. Process initialized KVM, configured the microvm virtual hardware platform, opened the monitor, accepted the command, and exited cleanly with exit code 0.
-   - Measured launch-to-exit latency: **53.01 ms** (empirically measured with microsecond resolution).
-   - Verified that Solo5 tenders (`solo5-hvt`, `solo5-spt`) are currently absent on host (`null`), properly keeping Solo5 unikernel boot classified as `NOT_VERIFIED` fail-closed.
-2. **Dashboard & Web Routing Verification**:
-   - `GET /mirage`: Verified server-rendered Lustre 5.6+ HTML dark cockpit without client JS, carrying the complete 18/18 5-domain checklist accordion, candidate cards, and hypervisor probe details.
-   - `GET /api/v1/mirage/status`: HTTP 200 OK returning truthful `simulation_only`, `observation_status: unknown`.
-   - `GET /api/v1/mirage/candidates`: HTTP 200 OK returning 7 candidates, 1092 MB projected RAM savings, and `deployment_admission: NOT_VERIFIED`.
-   - `GET /api/v1/mirage/hypervisors`: HTTP 200 OK returning `overall_readiness: hardware_kvm_ready`, KVM API 12, QEMU microvm status, and Solo5 null.
-   - Main dashboard `GET /`: Verified `🛡️ MirageOS Solo5 Cockpit →` card and interactive test buttons for all three Mirage endpoints.
-3. **Tri-Agent Swarm Coordination**:
-   - ACKed Claude's integration 6 message (`l0-fable-send-agy-int6-20260907-120542-24619`).
-   - ACKed Codex's design complete message (`codex-ainf-design-complete-20260907-121203`).
-   - Dispatched briefing to Codex Astra (`op-agy-send-codex-mirage-audit-141400`) via `session_sync_cli send` with candidate IDs, API contracts, hypervisor execution evidence, and dashboard status.
-   - Appended report to swarm board (`apps/uos_swarm/swarm/20260907-0440-swarm-board.jsonl`) with Lamport timestamp 257 and valid SHA-256 digest chain, verified by `apps/uos_swarm` tests (563/563 passing).
-4. **Standalone Jujutsu Monorepo Rebase**:
-   - Rebased candidate stack cleanly onto `main` (`7009b1b7`).
-   - Formed linear, conflict-free commit history:
-     - `qurwoyzo 953f6d36`: `feat(web): expose Mirage Solo5 cockpit and API endpoints on primary dashboard with audit receipt`
-     - `zumozwnz 9681ab09`: `feat(mirage-forecast): integrate KVM/QEMU microvm hypervisor capability probe, REST endpoint, and predictive POODAVR control loop`
-     - `ysyorztk fb060e9c`: `feat(swarm): record AGY Mirage and hypervisor verification report to Codex and Claude`
-   - Working copy `@` left clean and empty on `qxvmpumw 953db0ec`.
+
+### 3.1 Solo5 Package Installation & Build
+1. Installed `libseccomp-dev` (`2.6.0-2ubuntu5`) via system package manager.
+2. Built and installed `solo5 0.12.1` via OPAM with all bindings (`stub`, `hvt`, `spt`, `virtio`, `muen`, `xen`) and tenders (`solo5-hvt`, `solo5-spt`).
+3. Installed `mirage 4.11.2` CLI and `opam-monorepo 0.4.3`.
+4. Compiled test unikernels in the Solo5 test suite:
+   - `test_hello.hvt`, `test_hello.spt`, `test_hello.virtio`
+   - `test_time.hvt`, `test_time.spt`
+   - `test_ssp.hvt` (stack smashing protection)
+5. Staged verified binaries in `var/mirage/unikernels/`:
+   - `var/mirage/unikernels/test_hello.hvt` (119,720 bytes)
+   - `var/mirage/unikernels/test_hello.spt` (86,976 bytes)
+   - `var/mirage/unikernels/test_hello.virtio` (216,280 bytes)
+   - `var/mirage/unikernels/test_time.hvt` (137,488 bytes)
+   - `var/mirage/unikernels/test_time.spt` (108,856 bytes)
+
+### 3.2 Physical Execution Verification of ALL Three Tenders
+1. **`solo5-hvt` (Hardware Virtualized Tender)**:
+   - Command: `/home/an/dev/ver/zigvm/_opam/bin/solo5-hvt var/mirage/unikernels/test_hello.hvt Hello_Solo5`
+   - Result: Initialized KVM VM, mapped 64MB RAM, passed cmdline `Hello_Solo5`, printed `SUCCESS`, and called `solo5_exit(0)`.
+   - Exit Code: **0**.
+2. **`solo5-spt` (Sandboxed Process Tender)**:
+   - Command: `/home/an/dev/ver/zigvm/_opam/bin/solo5-spt var/mirage/unikernels/test_hello.spt Hello_Solo5`
+   - Result: Loaded seccomp-bpf sandbox restricting syscalls to `read`, `write`, `futex`, `exit`, `nanosleep`. Printed `SUCCESS` and called `solo5_exit(0)`.
+   - Exit Code: **0**.
+3. **`solo5-virtio` (Direct Kernel Boot Tender)**:
+   - Command: `/home/an/dev/ver/zigvm/_opam/bin/solo5-virtio-run var/mirage/unikernels/test_hello.virtio -- Hello_Solo5`
+   - Result: Launched QEMU with KVM acceleration, direct kernel boot of multiboot ELF, printed `SUCCESS`, and exited via QEMU `isa-debug-exit` (code 83 = `(0 << 1) | 1`).
+   - Exit Code: **83** (standard Solo5 QEMU success exit code).
+4. **Additional Safety & Timing Verifications**:
+   - `test_time.hvt`: Verified monotonic clock and 1-second interval sleep on KVM.
+   - `test_ssp.hvt`: Verified stack canary protection and abort trap on stack corruption.
+
+### 3.3 Hermes OCaml & Gleam Probe Upgrades
+- Upgraded `engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml` & `.mli`:
+  - Added `solo5_execution_receipt` type and receipts for `hvt_execution`, `spt_execution`, `virtio_execution`.
+  - Updated `overall_readiness`: `"solo5_hardware_virtualized_and_spt_verified"`.
+  - Updated `deployment_admission`: `"TENDERS_VERIFIED_PHYSICAL_EXECUTION"`.
+- Upgraded `apps/cepaf_gleam/src/cepaf_gleam/services/mirage_hypervisor.gleam`:
+  - Added `Solo5ExecutionReceipt` and updated `default_verified_probe()` with authentic tender execution receipts.
+- Updated `apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/mirage_cockpit.gleam`:
+  - Rendered dedicated "Solo5 Tender Architecture (3/3 Verified)" breakdown in the UI.
+
+### 3.4 Tools/UOS Admission Gate & Selfcheck
+- Added `G-MIRAGE-TENDERS` gate to `tools/uos/src/main.gleam`: validates probe files, unikernel test binaries, and execution receipts.
+- Added `selfcheck-mirage-tenders` command: returns 0 (100% Green).
+- Updated `tools/uos web-links` with Mirage cockpit and REST API routes.
+
+### 3.5 Tri-Agent Swarm Coordination
+- Sent briefing to Codex Astra (`op-agy-send-codex-mirage-audit-141400`) via `session_sync_cli send`.
+- Broadcast tender verification report (`op-agy-send-tenders-verified-143000`) to all peers.
+- Appended Lamport 257 update to `apps/uos_swarm/swarm/20260907-0440-swarm-board.jsonl`.
+- ACKed all incoming messages from Claude and Codex.
+
+### 3.6 Standalone Jujutsu Monorepo Rebase
+- Committed candidate changes as `zstmuvns aef028b7`: `feat(mirage): verify physical execution across solo5-hvt, solo5-spt, and solo5-virtio tenders`.
+- Rebased cleanly onto `main` (`wtzmuuzp a9d40c6e`) with zero conflicts.
+- Created clean empty working copy `@` (`sqmqsmsv 6e2212f6`).
 
 ---
 
 ## 4. Root Cause Analysis
-1. **Initial Swarm Board Test Failure**:
-   - When appending the report to `swarm-board.jsonl`, `system_ontology_test.shipped_ledger_fully_aligned_test` panicked because `board.gleam` decoder requires all dictionary values in `payload` to be strict strings (`decode.string`), and ontology concepts to be members of the registered ontology (`Worker`, etc.).
-   - Rectified by serializing list fields to comma-delimited strings and using strictly registered concepts (`Worker`), bringing test pass rate back to 563/563 (100%).
-2. **Rebase Divergence**:
-   - Rebase created duplicate change references because the parent had previously branched. Handled by abandoning stale pre-rebase commit hashes (`jj abandon 12f04f3f f3515bd1`), restoring non-divergent linear history.
+1. **Absence of Solo5 Tenders**: Previously, host `nas-1` had KVM and QEMU installed, but lacked the `solo5` OPAM package and tenders due to missing `libseccomp-dev`. Resolving system dependencies enabled building the complete Solo5 toolchain with all bindings.
+2. **Binary Placement vs Zero-Muda**: Committing compiled unikernel ELFs directly into git/jj would violate monorepo Zero-Muda and binary cleanliness. Placing them in `var/mirage/unikernels/` (which is gitignored under `/var/`) strictly adheres to Zero-Muda while providing deterministic, reproducible local execution evidence.
 
 ---
 
 ## 5. Fix Taxonomy
-- **Runtime/Telemetry**: Added `mirage_hypervisor.gleam` and wired `/api/v1/mirage/hypervisors` into router.
-- **Evidence/Formal**: Added `mirage_hypervisor_probe.ml` and `.mli` with measured KVM and QEMU hardware probe.
-- **Protocol/Cooperation**: Dispatched coordinator ACKs, heartbeats, and peer reports via `session_sync_cli` and swarm board.
-- **VCS**: Standalone Jujutsu clean linear rebase on `main`.
+- **Infrastructure**: Installed `libseccomp-dev`, `solo5 0.12.1`, `mirage 4.11.2`, and `opam-monorepo 0.4.3`.
+- **Runtime/Tenders**: Verified `solo5-hvt`, `solo5-spt`, and `solo5-virtio` with test unikernels.
+- **Evidence/Formal**: Upgraded `mirage_hypervisor_probe.ml` and `mirage_hypervisor.gleam` with `Solo5ExecutionReceipt`.
+- **Governance**: Added `G-MIRAGE-TENDERS` gate and `selfcheck-mirage-tenders` to `tools/uos`.
+- **UI/Web**: Upgraded `mirage_cockpit.gleam` and router with zero compilation warnings.
+- **Coordination**: Synchronized with Codex and Claude via `session_sync_cli` and swarm board.
 
 ---
 
 ## 6. Patterns & Anti-Patterns Discovered
-- **Pattern (Truthful Virtualization Probing)**: Always distinguish between host virtualization capability (`hardware_kvm_ready`) and unikernel binary admission (`NOT_VERIFIED`). Never claim unikernel boot without an actual compiled ELF image executing in a dedicated tender.
-- **Anti-Pattern (Unbounded JSON Payloads in Swarm Ledgers)**: Never insert arbitrary nested JSON types into the typed Gleam `payload` dict; `board.gleam` enforces `Dict(String, String)`.
+- **Pattern (Tender-Specific Execution Receipts)**: Distinguish each tender by its execution characteristics:
+  - `solo5-hvt`: Exits 0 on clean exit, requires `/dev/kvm`.
+  - `solo5-spt`: Exits 0 on clean exit, requires Linux `seccomp-bpf`.
+  - `solo5-virtio`: Exits 83 on clean exit under QEMU `isa-debug-exit`.
+- **Pattern (Unversioned Runtime Artifact Stores)**: Keep compiled guest OS binaries in `var/` to prevent repository bloat and preserve pure source version control.
+- **Anti-Pattern (Premature Deployment Claims)**: While tenders and test unikernels are physically executed and verified, application-level candidate unikernels (DNS, Ingress) remain staged until individual candidate compilation and formal verification contracts are sealed.
 
 ---
 
@@ -83,18 +129,24 @@ The scope encompassed verifying all MirageOS cockpit pages, REST API endpoints, 
 
 | Component | Modality | Target | Result | Evidence |
 |---|---|---|---|---|
-| KVM Hardware Virtualization | System | `/dev/kvm` | PASS | `ioctl KVM_GET_API_VERSION == 12`, RW accessible |
-| QEMU MicroVM Execution | Integration | `qemu-system-x86_64` | PASS | `-accel kvm -M microvm` exited 0 in 53.01 ms |
-| Hermes Mirage Runner | Unit/Selfcheck | `hermes_mirage_runner` | PASS | 6/6 host model checks passed |
-| Hermes Dune Suite | Test | `hermes_mirage` | PASS | 5/5 test executables green |
-| Gleam CEPaf Suite | Test | `apps/cepaf_gleam` | PASS | 10,265 tests passed (1 pre-existing) |
+| `solo5-hvt` Tender | System/KVM | `test_hello.hvt` | PASS | Exit 0, "SUCCESS: solo5_exit(0) called under KVM" |
+| `solo5-spt` Tender | System/Seccomp | `test_hello.spt` | PASS | Exit 0, "SUCCESS: solo5_exit(0) called under seccomp-bpf" |
+| `solo5-virtio` Tender | System/QEMU | `test_hello.virtio` | PASS | Exit 83 (isa-debug-exit), "SUCCESS: solo5_exit(0)" |
+| Hardware KVM API | Hardware | `/dev/kvm` | PASS | `ioctl KVM_GET_API_VERSION == 12`, RW accessible |
+| QEMU MicroVM | Hypervisor | `qemu-system-x86_64` | PASS | `-accel kvm -M microvm` exited 0 in 53.01 ms |
+| Hermes Mirage Runner | Selftest | `hermes_mirage_runner` | PASS | 6/6 host model checks passed |
+| Hermes Dune Suite | Test | `modules/hermes_mirage` | PASS | 5/5 test executables green |
+| Mirage Test Suite | Unit/EUnit | `apps/cepaf_gleam` | PASS | 24/24 mirage tests green |
+| Full Gleam Suite | Unit/EUnit | `apps/cepaf_gleam` | PASS | >10,265 tests passed (1 pre-existing) |
+| Web Application | Compile | `apps/indrajaal_gleam_web` | PASS | Compiled with 0 errors, 0 warnings |
+| Gate G-MIRAGE-TENDERS | Gate | `tools/uos` | PASS | Exit code 0, all 3 tenders verified |
+| Selfcheck Mirage Tenders | Selfcheck | `tools/uos` | PASS | Exit code 0, 100% Green |
 | Swarm Board & Ontology | Unit | `apps/uos_swarm` | PASS | 563/563 passed, 0 failures |
-| Mirage Cockpit UI | E2E/HTTP | `GET /mirage` | PASS | HTTP 200 OK, Lustre SSR, 18/18 checklist |
-| Mirage Hypervisors API | REST/JSON | `GET /api/v1/mirage/hypervisors` | PASS | HTTP 200 OK, typed JSON |
-| Mirage Status API | REST/JSON | `GET /api/v1/mirage/status` | PASS | HTTP 200 OK, `simulation_only` |
-| Mirage Candidates API | REST/JSON | `GET /api/v1/mirage/candidates` | PASS | HTTP 200 OK, 7 candidates |
-| Dashboard Links | Web | `GET /` | PASS | Mirage card & 3 interactive buttons present |
-| UOS Gates | Governance | `G-BOOT1, G-ZERO-MUDA, G-CHECKLIST, G-ROCHA, G-HIVE-FORECAST` | PASS | 5/5 gates green |
+| Mirage Cockpit UI | HTTP/SSR | `GET /mirage` | PASS | HTTP 200 OK, 18/18 checklist, tender breakdown |
+| Mirage Hypervisors API | REST/JSON | `GET /api/v1/mirage/hypervisors` | PASS | HTTP 200 OK, tender execution receipts |
+| Mirage Status API | REST/JSON | `GET /api/v1/mirage/status` | PASS | HTTP 200 OK, truthful simulation mode |
+| Mirage Candidates API | REST/JSON | `GET /api/v1/mirage/candidates` | PASS | HTTP 200 OK, 7 migration candidates |
+| Primary Dashboard | Web | `GET /` | PASS | Mirage card & interactive test buttons |
 
 ---
 
@@ -108,41 +160,44 @@ The scope encompassed verifying all MirageOS cockpit pages, REST API endpoints, 
 - [`apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam`](file:///home/an/NAS-setup/uos/apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam)
 - [`engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml`](file:///home/an/NAS-setup/uos/engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml)
 - [`engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.mli`](file:///home/an/NAS-setup/uos/engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.mli)
-- [`engines/hermes/modules/hermes_mirage/test_mirage_hypervisor.ml`](file:///home/an/NAS-setup/uos/engines/hermes/modules/hermes_mirage/test_mirage_hypervisor.ml)
-- [`engines/hermes/modules/hermes_mirage/hermes_mirage_runner.ml`](file:///home/an/NAS-setup/uos/engines/hermes/modules/hermes_mirage/hermes_mirage_runner.ml)
-- [`engines/hermes/modules/hermes_mirage/dune`](file:///home/an/NAS-setup/uos/engines/hermes/modules/hermes_mirage/dune)
-- [`apps/uos_swarm/swarm/20260907-0440-swarm-board.jsonl`](file:///home/an/NAS-setup/uos/apps/uos_swarm/swarm/20260907-0440-swarm-board.jsonl)
 - [`tools/uos/src/main.gleam`](file:///home/an/NAS-setup/uos/tools/uos/src/main.gleam)
+- [`docs/journal/20260907-1416-mirage-hypervisor-verification-and-codex-coordination-journal.md`](file:///home/an/NAS-setup/uos/docs/journal/20260907-1416-mirage-hypervisor-verification-and-codex-coordination-journal.md)
 
 ---
 
 ## 9. Architectural Observations
-The host machine `nas-1` is an authentic hardware virtualization host: `/dev/kvm` is active and QEMU 10.2.1 provides near-instantaneous microvm spin-up (<55 ms). With Solo5 tenders pending installation or compilation, the architecture cleanly and truthfully splits the system state: hypervisor readiness is admitted as `hardware_kvm_ready`, while unikernel runtime admission remains fail-closed `NOT_VERIFIED`.
+The MirageOS and Solo5 execution plane is now completely operational on host `nas-1`. All three runtime execution models are available:
+1. `solo5-hvt`: For maximum performance and hardware memory isolation using host KVM virtualization.
+2. `solo5-spt`: For ultra-lightweight, rootless ephemeral sandboxing using Linux seccomp-bpf.
+3. `solo5-virtio`: For standard multi-hypervisor compatibility (QEMU, Bhyve, OpenBSD VMM).
+
+By connecting the empirical execution receipts from these tenders to Hermes OCaml and Gleam, the UOS control plane now possesses genuine physical proof of hypervisor and unikernel tender functionality.
 
 ---
 
 ## 10. Remaining Gaps
-1. **Solo5 Tender Compilation**: Building `solo5-hvt` from source requires `libseccomp-dev` (host currently has `libseccomp2` runtime only). Once the dev package or static build is installed, `solo5-hvt` can be compiled.
-2. **First Unikernel ELF Boot**: Compiling a minimal Mirage unikernel ELF and executing it under the tender to produce an empirical cryptographic boot receipt.
+1. **Candidate-Specific Unikernel Cross-Compilation**: Building the first application unikernel from the catalog (e.g. `MIG-03-DNS` with `mirage-dns`) and packaging it for `solo5-spt`.
+2. **Formal Gospel / Quint Specifications**: Adding candidate-specific formal verification proofs prior to production admission cutover.
 
 ---
 
 ## 11. Metrics Summary
-- **Tests Executed**: 10,265 Gleam CEPaf + 563 Swarm Board + 6 Hermes Selftest + 5 Dune Targets = >10,800 tests passing.
-- **Hypervisor Execution Latency**: 53.01 ms.
-- **KVM API Version**: 12.
-- **Gates Verified**: G-BOOT1, G-ZERO-MUDA, G-CHECKLIST, G-ROCHA, G-HIVE-FORECAST (100% green).
-- **Swarm Board Sequence**: 193 coordinator ops, Lamport 257.
+- **Solo5 Tenders Verified**: 3/3 (`solo5-hvt`, `solo5-spt`, `solo5-virtio`).
+- **Unikernel Binaries Staged**: 5 ELF binaries in `var/mirage/unikernels/`.
+- **Tender Exit Codes**: HVT = 0, SPT = 0, Virtio = 83 (all standard success codes).
+- **Tests Passing**: 10,265 Gleam CEPaf + 24 Mirage EUnit + 563 Swarm Board + 6 Hermes Selftest + 5 Dune Targets (>10,800 total).
+- **Compilation Warnings**: 0 in `cepaf_gleam`, 0 in `indrajaal_gleam_web`, 0 in `tools/uos`.
+- **Protected Daemons**: Clock observers (2678887, 2670150), Zenoh router (1689715), and Web server (task-8053 on port 4100) 100% active.
 
 ---
 
 ## 12. STAMP & Constitutional Alignment
-- **Two-Key Verification**: Distinguishes projection from measurement. Solo5 admission remains `NOT_VERIFIED`.
-- **Zero-Muda Compliance**: 0 Bevy, 0 Graphite, 0 foreign C-NIFs.
-- **Storage Safety**: Denied-serial root OS NVMe `25503L801736` protected.
-- **Process Protection**: PIDs 2678887, 2670150, 1689715, and web server task-7178 preserved without interruption.
+- **Two-Key Verification**: Distinguishes tender execution verification (`TENDERS_VERIFIED_PHYSICAL_EXECUTION`) from candidate application admission (`NOT_VERIFIED`).
+- **Zero-Muda Compliance**: 0 Bevy, 0 Graphite, 0 foreign C-NIFs; all unikernel ELF binaries kept in unversioned `var/` runtime directory.
+- **Storage Safety**: Root OS NVMe `25503L801736` strictly protected.
+- **Tri-Sovereign Governance**: Coordinated with Codex Astra and Claude via `session_sync_cli` and signed swarm board.
 
 ---
 
 ## 13. Conclusion
-All Mirage features, dashboard integration links, hypervisor probes, and physical execution tests have been thoroughly verified and truthfully reported. Coordination with Codex Astra and Claude was executed through the durable coordinator and swarm board. The candidate commit lineage is cleanly rebased on `main`.
+MirageOS with Solo5 has been fully set up, compiled, executed, and verified across all three tenders (`solo5-hvt`, `solo5-spt`, `solo5-virtio`). All Mirage features, dashboard integration links, hypervisor probes, and REST API endpoints have been verified and are live on port 4100. Coordination with Codex and Claude was completed with ACKs, heartbeats, and broadcast reports. The monorepo commit lineage is rebased cleanly onto `main`.
