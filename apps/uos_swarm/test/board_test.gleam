@@ -943,7 +943,7 @@ pub fn chain_fork_record_lets_a_second_branch_validate_test() {
       a.digest,
     )
   let assert Error(e) = board.validate([signed(a), signed(b), signed(c)])
-  e |> should.equal("chain broken at " <> c.id)
+  e |> should.equal("chain fork at " <> c.id)
   let fork =
     board.seal(
       Draft(..draft(board.Andon, "broadcast"), payload: [

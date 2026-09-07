@@ -1244,13 +1244,38 @@ fn chain_ok(
   prev: String,
   forks: List(String),
 ) -> Result(Nil, String) {
+  // Per-sender chains are validated as a DAG in id (timestamp) order: every message
+  // must extend a known predecessor (the genesis digest or the digest of an earlier
+  // message of the same sender). A second child of an already-extended digest is a fork,
+  // and a message whose predecessor is unknown is a gap; both are accepted only when an
+  // explicit `chain_fork` record names the message. Nothing is ever rewritten.
+  chain_walk(messages, [prev], [], forks)
+}
+
+fn chain_walk(
+  messages: List(Message),
+  known: List(String),
+  extended: List(String),
+  forks: List(String),
+) -> Result(Nil, String) {
   case messages {
     [] -> Ok(Nil)
-    [m, ..rest] ->
-      case m.prev_digest == prev || list.contains(forks, m.id) {
-        True -> chain_ok(rest, m.digest, forks)
-        False -> Error("chain broken at " <> m.id)
+    [m, ..rest] -> {
+      let documented = list.contains(forks, m.id)
+      let prev_known = list.contains(known, m.prev_digest)
+      let prev_extended = list.contains(extended, m.prev_digest)
+      case prev_known, prev_extended, documented {
+        True, False, _ | _, _, True ->
+          chain_walk(
+            rest,
+            [m.digest, ..known],
+            [m.prev_digest, ..extended],
+            forks,
+          )
+        True, True, False -> Error("chain fork at " <> m.id)
+        False, _, False -> Error("chain broken at " <> m.id)
       }
+    }
   }
 }
 
