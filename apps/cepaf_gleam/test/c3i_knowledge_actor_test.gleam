@@ -5,7 +5,7 @@ import cepaf_gleam/knowledge/c3i_knowledge_actor.{
   ApplyDecay, CitedRecall, IngestItem, QueryKnowledge,
 }
 import cepaf_gleam/knowledge/c3i_knowledge_runtime.{
-  type CitedKnowledgeItem, CitedKnowledgeItem, JournalEntry,
+  CitedKnowledgeItem, JournalEntry,
 }
 import gleam/list
 import gleam/otp/actor

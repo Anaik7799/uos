@@ -13,7 +13,8 @@ type process_result = {
   stdout_truncated : bool; stderr_truncated : bool; children_reaped : bool; pid : int;
 }
 
-let max_timeout_ms = 600_000
+(* Operator task budget is 20 minutes. Callers reserve cleanup time from it. *)
+let max_timeout_ms = 1_200_000
 let max_stream_bytes = 16 * 1024 * 1024
 let max_term_grace_ms = 60_000
 let monotonic_now () = Int64.to_float (Mtime_clock.elapsed_ns ()) /. 1_000_000_000.

@@ -97,4 +97,17 @@ let () =
   check "receipt has distinct states"
     (Yojson.Basic.Util.member "states" json
      |> Yojson.Basic.Util.member "passed" |> Yojson.Basic.Util.to_bool = false);
+  List.iter (fun state ->
+    check "nonpassing domain status roundtrip"
+      (status_of_string (string_of_status state) = Ok state))
+    [Status_unrun; Status_unavailable; Status_reachable_unverified;
+     Status_http_failure; Status_identity_mismatch];
+  check "unknown domain status is rejected" (Result.is_error (status_of_string "TRUST_ME"));
+  let unrun = { observation with status=Status_unrun; exit_code=1; adapter_registered=true } in
+  check "UNRUN projects without duplicate status or passing credit"
+    (assert_expected (`Assoc ["status",`String "UNRUN";"exit_code",`Int 1;"passed",`Bool false])
+       (observation_projection unrun) = []);
+  check "data cannot overwrite observed process status"
+    (assert_expected (`Assoc ["status",`String "UNRUN"])
+       (observation_projection { unrun with data=Some (`Assoc ["status",`String "PASS"]) }) <> []);
   Printf.printf "contract_test: %d checks passed\n" !checks

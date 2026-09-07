@@ -1,0 +1,13 @@
+{
+  "schema": "uos.q01.full-suite-diagnostic.v1",
+  "observed_at_utc": "2026-09-07T04:30:00Z",
+  "candidate": "978531c9d066a2c5f9a4145389f0e834606a2063",
+  "command": "timeout 1200s gleam test",
+  "exit_code": 1,
+  "passed": 9988,
+  "failures": 202,
+  "rerun_for_receipt": false,
+  "failure_scope": "outside Q01; missing c3i/rule_engine/zenoh NIFs and unrelated rule/UI assertions",
+  "examples": ["rule_engine_nif_test", "rules_coverage_test", "wisp_api_comprehensive_test", "zenoh_rete_bridge_test"],
+  "q01_interpretation": "This is retained as a nonpassing whole-suite observation and does not override the isolated post-diagnostics stages."
+}

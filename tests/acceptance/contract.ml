@@ -5,17 +5,30 @@
     Public entry points: [parse_json_strict], [decode_acceptance_case],
     [decode_runner_fixture], [assert_expected], and [receipt_to_yojson]. *)
 
-type status = Status_pass | Status_fail | Status_error
+type status =
+  | Status_pass | Status_fail | Status_error
+  | Status_unrun | Status_unavailable | Status_reachable_unverified
+  | Status_http_failure | Status_identity_mismatch
 
 let string_of_status = function
   | Status_pass -> "PASS"
   | Status_fail -> "FAIL"
   | Status_error -> "ERROR"
+  | Status_unrun -> "UNRUN"
+  | Status_unavailable -> "UNAVAILABLE"
+  | Status_reachable_unverified -> "REACHABLE_UNVERIFIED"
+  | Status_http_failure -> "HTTP_FAILURE"
+  | Status_identity_mismatch -> "IDENTITY_MISMATCH"
 
 let status_of_string = function
   | "PASS" -> Ok Status_pass
   | "FAIL" -> Ok Status_fail
   | "ERROR" -> Ok Status_error
+  | "UNRUN" -> Ok Status_unrun
+  | "UNAVAILABLE" -> Ok Status_unavailable
+  | "REACHABLE_UNVERIFIED" -> Ok Status_reachable_unverified
+  | "HTTP_FAILURE" -> Ok Status_http_failure
+  | "IDENTITY_MISMATCH" -> Ok Status_identity_mismatch
   | value -> Error ("unknown status " ^ value)
 
 let sha256_string value =
@@ -472,7 +485,7 @@ let receipt_to_yojson receipt =
              ("sha256", `String binding.binding_sha256) ]
   in
   `Assoc
-    [ ("schema", `String "uos.acceptance-receipt.v2");
+    [ ("schema", `String "uos.acceptance-receipt.v3");
       ("receipt_id", `String receipt.receipt_id);
       ("task_id", `String receipt.task_id); ("case_id", `String receipt.case_id);
       ("operation", `String receipt.operation);

@@ -1,0 +1,510 @@
+{
+  "schema": "uos.q01.compiler-diagnostics-receipt.v1",
+  "observed_at_utc": "2026-09-07T04:36:43Z",
+  "task": "Q01",
+  "operation": "compiler.check_affected_tests",
+  "candidate": {
+    "frozen_source_change_id": "ksooumsrtxnrsmkkpnxnrquusqwrytql",
+    "frozen_source_commit_id": "978531c9d066a2c5f9a4145389f0e834606a2063",
+    "frozen_parent_commit_id": "28ca65100c93cf736a15f86c56f38ba4c6e24e56",
+    "workspace": ".uos-workspaces/q01-warnings"
+  },
+  "source_diff_reason": {
+    "actor_test": "Removed only the unused type import CitedKnowledgeItem; the CitedKnowledgeItem constructor import remains.",
+    "runtime_test": "Reused the existing inventory binding in its existing non-empty assertion; the assertion remains present.",
+    "assertions_removed": 0,
+    "reviewed_byte_preservation_basis": "The operation binds the two reviewed post-fix source files to their exact SHA-256 bytes. This is not a general AST proof."
+  },
+  "source_bindings": [
+    {
+      "path": "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+      "pre_sha256": "92c0361d94f56615f1b5d8a8e6868498e914b0dfa41db1a8df4f8d1f2736bea6",
+      "post_sha256": "75ed46fd40733b2b0ce71078e02b938f0cc373551d9d49797c26f7ba502cbaf0"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+      "pre_sha256": "95c96218131837f9f4776962e5a392ba008894d56a132ca5a48e3f74d989fb8f",
+      "post_sha256": "2f92ffbc11929d78b59b85ce61124942f8e453b44a3e0a55322decb23b8e8670"
+    }
+  ],
+  "adapter": {
+    "path": "tests/acceptance/compiler_diagnostics.ml",
+    "sha256": "f67f30f1480189b0ff3e9b4e6946154ee71d313afbf00e674b6113013bc57b17",
+    "invocation": "timeout 1200s opam exec -- ocaml tests/acceptance/compiler_diagnostics.ml --output governance/testing/ocaml_gleam/20260907-0436-q01-post-diagnostics.json",
+    "cwd_handling": "The typed OCaml driver uses Sys.chdir under Fun.protect to apps/cepaf_gleam, invokes only enum argv through E02 run_bounded, then restores its original cwd. It does not use a shell cd adapter.",
+    "budget": "A single monotonic 1200000 ms deadline is shared by build, check, and affected-test stages; each receives at most its remaining budget and its own E02 bounded subprocess limit.",
+    "integration_seam": "Root may register compiler_diagnostics.ml as Q01's adapter in tests/acceptance/registry.ml and invoke it from tests/acceptance/run.ml. Those root-owned files were not changed here."
+  },
+  "exact_affected_erlang_command": {
+    "resolved_argv_shape": [
+      "erl",
+      "-noshell",
+      "-pa",
+      "build/dev/erlang/<sorted-package>/ebin",
+      "-eval",
+      "<all eleven calls>; halt(0)."
+    ],
+    "functions": [
+      "c3i_knowledge_actor_test:start_and_query_knowledge_actor_test/0",
+      "c3i_knowledge_actor_test:ingest_new_item_actor_test/0",
+      "c3i_knowledge_actor_test:cited_recall_actor_test/0",
+      "c3i_knowledge_actor_test:apply_decay_actor_test/0",
+      "c3i_knowledge_actor_test:ingestion_actor_zero_trust_filter_test/0",
+      "c3i_knowledge_runtime_test:compute_decayed_trust_nominal_test/0",
+      "c3i_knowledge_runtime_test:create_envelope_and_port_call_ok_test/0",
+      "c3i_knowledge_runtime_test:create_envelope_and_port_call_traps_test/0",
+      "c3i_knowledge_runtime_test:ingest_c3i_inventory_and_query_recall_test/0",
+      "c3i_knowledge_runtime_test:detect_anti_patterns_test/0",
+      "c3i_knowledge_runtime_test:get_c3i_knowledge_runtime_status_test/0"
+    ]
+  },
+  "result": {
+    "passed": true,
+    "prior_targeted_unused_warnings": 2,
+    "targeted_unused_warnings": 0,
+    "assertions_removed": 0,
+    "stage_results": [
+      {
+        "name": "gleam_build",
+        "termination": "exited:0",
+        "duration_ms": 199.362156,
+        "children_reaped": true,
+        "output_truncated": false
+      },
+      {
+        "name": "gleam_check",
+        "termination": "exited:0",
+        "duration_ms": 211.28271,
+        "children_reaped": true,
+        "output_truncated": false
+      },
+      {
+        "name": "affected_11_erlang_functions",
+        "termination": "exited:0",
+        "duration_ms": 164.550362,
+        "children_reaped": true,
+        "output_truncated": false
+      }
+    ]
+  },
+  "provenance": {
+    "manifest": {
+      "path": "governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json",
+      "sha256": "b706f9a99dfaf6018772b2a819084ea3373a3ee720ed774b57e7f92792d8ee02"
+    },
+    "aspect_metadata": {
+      "path": "governance/planning/20260906-1957-execution-audit-task-metadata.json",
+      "sha256": "d47e2977f7fa9a3ad7c363c62fbf43035509b4c06da85ebee458bcfd851fe647"
+    },
+    "baseline_log": {
+      "path": "governance/testing/ocaml_gleam/20260907-0436-q01-baseline-diagnostic.json",
+      "sha256": "c1aba055f41b898fd3e8be231e11d0f3c7dd6b3f496ad9f6dc21b70bef6751a7"
+    },
+    "post_log": {
+      "path": "governance/testing/ocaml_gleam/20260907-0436-q01-post-diagnostics.json",
+      "sha256": "e680d10040c46dd1c4cf04aace48318d84f861e21696633b1539810efa83901c"
+    },
+    "full_suite_log": {
+      "path": "governance/testing/ocaml_gleam/20260907-0436-q01-full-suite-diagnostic.json",
+      "sha256": "e69251a1d60b5e6a10b35ae47352399df0025592aace72dec8e50a7e7052e9d0"
+    }
+  },
+  "limitations": [
+    "The whole Gleam suite was previously observed once as 9988 passed and 202 failed; it was not rerun for this receipt because those known failures are outside Q01. Its captured locator is retained above.",
+    "gleam format --check reports existing formatting drift, including the two Q01 files; formatting was not changed because Q01 is a warning-only cleanup.",
+    "The adapter's success depends on the exact reviewed source hashes, Gleam, Erlang, and the E02 bounded supervisor; any binding mismatch, stage failure, truncation, unreaped child, or exhausted shared budget is non-passing."
+  ],
+  "cycle_17": [
+    {
+      "aspect_id": 1,
+      "name": "Substrate & Hardware Storage Interlock",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "No substrate or storage file changed; this adapter does not establish a storage-interlock result.",
+      "orient": "Scope to Q01 and its actual changed files; do not use source hardcoded values as evidence.",
+      "decision": "Apply only the Q01 compiler-diagnostics contract; retain global obligations.",
+      "action": "Record this scoped result without assigning a global pass.",
+      "verification": "No substrate or storage file changed; this adapter does not establish a storage-interlock result.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "tests/acceptance/compiler_diagnostics.ml"
+      ],
+      "candidate": {
+        "frozen_source_change_id": "ksooumsrtxnrsmkkpnxnrquusqwrytql",
+        "frozen_source_commit_id": "978531c9d066a2c5f9a4145389f0e834606a2063",
+        "frozen_parent_commit_id": "28ca65100c93cf736a15f86c56f38ba4c6e24e56",
+        "workspace": ".uos-workspaces/q01-warnings"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "Outside Q01 scope; no system-admission credit."
+    },
+    {
+      "aspect_id": 2,
+      "name": "Standalone Jujutsu Monorepo Discipline",
+      "state": "VERIFIED_SCOPED",
+      "observe": "The reviewed source is frozen at 978531; adapter and receipt are prepared on a separate child. No Git mutation was used.",
+      "orient": "Scope to Q01 and its actual changed files; do not use source hardcoded values as evidence.",
+      "decision": "Apply only the Q01 compiler-diagnostics contract; retain global obligations.",
+      "action": "Record this scoped result without assigning a global pass.",
+      "verification": "The reviewed source is frozen at 978531; adapter and receipt are prepared on a separate child. No Git mutation was used.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "tests/acceptance/compiler_diagnostics.ml"
+      ],
+      "candidate": {
+        "frozen_source_change_id": "ksooumsrtxnrsmkkpnxnrquusqwrytql",
+        "frozen_source_commit_id": "978531c9d066a2c5f9a4145389f0e834606a2063",
+        "frozen_parent_commit_id": "28ca65100c93cf736a15f86c56f38ba4c6e24e56",
+        "workspace": ".uos-workspaces/q01-warnings"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "Outside Q01 scope; no system-admission credit."
+    },
+    {
+      "aspect_id": 3,
+      "name": "Zero-Muda Purity & Waste Elimination",
+      "state": "VERIFIED_SCOPED",
+      "observe": "The source diff removes two compiler warnings and adds no production dependency. This is not a repository-wide purity census.",
+      "orient": "Scope to Q01 and its actual changed files; do not use source hardcoded values as evidence.",
+      "decision": "Apply only the Q01 compiler-diagnostics contract; retain global obligations.",
+      "action": "Record this scoped result without assigning a global pass.",
+      "verification": "The source diff removes two compiler warnings and adds no production dependency. This is not a repository-wide purity census.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "tests/acceptance/compiler_diagnostics.ml"
+      ],
+      "candidate": {
+        "frozen_source_change_id": "ksooumsrtxnrsmkkpnxnrquusqwrytql",
+        "frozen_source_commit_id": "978531c9d066a2c5f9a4145389f0e834606a2063",
+        "frozen_parent_commit_id": "28ca65100c93cf736a15f86c56f38ba4c6e24e56",
+        "workspace": ".uos-workspaces/q01-warnings"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "Outside Q01 scope; no system-admission credit."
+    },
+    {
+      "aspect_id": 4,
+      "name": "Gleam/OTP 29 4-Domain Root Supervisor",
+      "state": "VERIFIED_SCOPED",
+      "observe": "Actual Gleam build/check and the eleven named compiled Erlang test functions exited zero; no root-supervisor claim is made.",
+      "orient": "Scope to Q01 and its actual changed files; do not use source hardcoded values as evidence.",
+      "decision": "Apply only the Q01 compiler-diagnostics contract; retain global obligations.",
+      "action": "Record this scoped result without assigning a global pass.",
+      "verification": "Actual Gleam build/check and the eleven named compiled Erlang test functions exited zero; no root-supervisor claim is made.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "tests/acceptance/compiler_diagnostics.ml"
+      ],
+      "candidate": {
+        "frozen_source_change_id": "ksooumsrtxnrsmkkpnxnrquusqwrytql",
+        "frozen_source_commit_id": "978531c9d066a2c5f9a4145389f0e834606a2063",
+        "frozen_parent_commit_id": "28ca65100c93cf736a15f86c56f38ba4c6e24e56",
+        "workspace": ".uos-workspaces/q01-warnings"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "Outside Q01 scope; no system-admission credit."
+    },
+    {
+      "aspect_id": 5,
+      "name": "ZigVM Deterministic Engine & 8 VFS Laws",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "No ZigVM source or VFS law is exercised.",
+      "orient": "Scope to Q01 and its actual changed files; do not use source hardcoded values as evidence.",
+      "decision": "Apply only the Q01 compiler-diagnostics contract; retain global obligations.",
+      "action": "Record this scoped result without assigning a global pass.",
+      "verification": "No ZigVM source or VFS law is exercised.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "tests/acceptance/compiler_diagnostics.ml"
+      ],
+      "candidate": {
+        "frozen_source_change_id": "ksooumsrtxnrsmkkpnxnrquusqwrytql",
+        "frozen_source_commit_id": "978531c9d066a2c5f9a4145389f0e834606a2063",
+        "frozen_parent_commit_id": "28ca65100c93cf736a15f86c56f38ba4c6e24e56",
+        "workspace": ".uos-workspaces/q01-warnings"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "Outside Q01 scope; no system-admission credit."
+    },
+    {
+      "aspect_id": 6,
+      "name": "Hermes Formal Evidence, Gospel & Z3",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "No Hermes source, formal contract, or solver query is changed or proved.",
+      "orient": "Scope to Q01 and its actual changed files; do not use source hardcoded values as evidence.",
+      "decision": "Apply only the Q01 compiler-diagnostics contract; retain global obligations.",
+      "action": "Record this scoped result without assigning a global pass.",
+      "verification": "No Hermes source, formal contract, or solver query is changed or proved.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "tests/acceptance/compiler_diagnostics.ml"
+      ],
+      "candidate": {
+        "frozen_source_change_id": "ksooumsrtxnrsmkkpnxnrquusqwrytql",
+        "frozen_source_commit_id": "978531c9d066a2c5f9a4145389f0e834606a2063",
+        "frozen_parent_commit_id": "28ca65100c93cf736a15f86c56f38ba4c6e24e56",
+        "workspace": ".uos-workspaces/q01-warnings"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "Outside Q01 scope; no system-admission credit."
+    },
+    {
+      "aspect_id": 7,
+      "name": "Mathematical Authority & Conservation",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "No mathematical-authority artifact is in the changed scope.",
+      "orient": "Scope to Q01 and its actual changed files; do not use source hardcoded values as evidence.",
+      "decision": "Apply only the Q01 compiler-diagnostics contract; retain global obligations.",
+      "action": "Record this scoped result without assigning a global pass.",
+      "verification": "No mathematical-authority artifact is in the changed scope.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "tests/acceptance/compiler_diagnostics.ml"
+      ],
+      "candidate": {
+        "frozen_source_change_id": "ksooumsrtxnrsmkkpnxnrquusqwrytql",
+        "frozen_source_commit_id": "978531c9d066a2c5f9a4145389f0e834606a2063",
+        "frozen_parent_commit_id": "28ca65100c93cf736a15f86c56f38ba4c6e24e56",
+        "workspace": ".uos-workspaces/q01-warnings"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "Outside Q01 scope; no system-admission credit."
+    },
+    {
+      "aspect_id": 8,
+      "name": "Biosemiotic Cybernetics & Rocha Cut",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "No related runtime behavior is changed or measured.",
+      "orient": "Scope to Q01 and its actual changed files; do not use source hardcoded values as evidence.",
+      "decision": "Apply only the Q01 compiler-diagnostics contract; retain global obligations.",
+      "action": "Record this scoped result without assigning a global pass.",
+      "verification": "No related runtime behavior is changed or measured.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "tests/acceptance/compiler_diagnostics.ml"
+      ],
+      "candidate": {
+        "frozen_source_change_id": "ksooumsrtxnrsmkkpnxnrquusqwrytql",
+        "frozen_source_commit_id": "978531c9d066a2c5f9a4145389f0e834606a2063",
+        "frozen_parent_commit_id": "28ca65100c93cf736a15f86c56f38ba4c6e24e56",
+        "workspace": ".uos-workspaces/q01-warnings"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "Outside Q01 scope; no system-admission credit."
+    },
+    {
+      "aspect_id": 9,
+      "name": "Quarantined Modular MAX/Mojo Inference",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "No inference service or Python/Mojo source is touched.",
+      "orient": "Scope to Q01 and its actual changed files; do not use source hardcoded values as evidence.",
+      "decision": "Apply only the Q01 compiler-diagnostics contract; retain global obligations.",
+      "action": "Record this scoped result without assigning a global pass.",
+      "verification": "No inference service or Python/Mojo source is touched.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "tests/acceptance/compiler_diagnostics.ml"
+      ],
+      "candidate": {
+        "frozen_source_change_id": "ksooumsrtxnrsmkkpnxnrquusqwrytql",
+        "frozen_source_commit_id": "978531c9d066a2c5f9a4145389f0e834606a2063",
+        "frozen_parent_commit_id": "28ca65100c93cf736a15f86c56f38ba4c6e24e56",
+        "workspace": ".uos-workspaces/q01-warnings"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "Outside Q01 scope; no system-admission credit."
+    },
+    {
+      "aspect_id": 10,
+      "name": "Zenoh OoZ & MoZ Mesh Telemetry Backplane",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "No Zenoh backplane behavior is exercised by this warning cleanup.",
+      "orient": "Scope to Q01 and its actual changed files; do not use source hardcoded values as evidence.",
+      "decision": "Apply only the Q01 compiler-diagnostics contract; retain global obligations.",
+      "action": "Record this scoped result without assigning a global pass.",
+      "verification": "No Zenoh backplane behavior is exercised by this warning cleanup.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "tests/acceptance/compiler_diagnostics.ml"
+      ],
+      "candidate": {
+        "frozen_source_change_id": "ksooumsrtxnrsmkkpnxnrquusqwrytql",
+        "frozen_source_commit_id": "978531c9d066a2c5f9a4145389f0e834606a2063",
+        "frozen_parent_commit_id": "28ca65100c93cf736a15f86c56f38ba4c6e24e56",
+        "workspace": ".uos-workspaces/q01-warnings"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "Outside Q01 scope; no system-admission credit."
+    },
+    {
+      "aspect_id": 11,
+      "name": "AG-UI 32-Event SSE Stream Protocol",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "No SSE protocol surface is changed or tested.",
+      "orient": "Scope to Q01 and its actual changed files; do not use source hardcoded values as evidence.",
+      "decision": "Apply only the Q01 compiler-diagnostics contract; retain global obligations.",
+      "action": "Record this scoped result without assigning a global pass.",
+      "verification": "No SSE protocol surface is changed or tested.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "tests/acceptance/compiler_diagnostics.ml"
+      ],
+      "candidate": {
+        "frozen_source_change_id": "ksooumsrtxnrsmkkpnxnrquusqwrytql",
+        "frozen_source_commit_id": "978531c9d066a2c5f9a4145389f0e834606a2063",
+        "frozen_parent_commit_id": "28ca65100c93cf736a15f86c56f38ba4c6e24e56",
+        "workspace": ".uos-workspaces/q01-warnings"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "Outside Q01 scope; no system-admission credit."
+    },
+    {
+      "aspect_id": 12,
+      "name": "A2UI 233-Component Declarative Catalog",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "No A2UI catalog artifact is changed or tested.",
+      "orient": "Scope to Q01 and its actual changed files; do not use source hardcoded values as evidence.",
+      "decision": "Apply only the Q01 compiler-diagnostics contract; retain global obligations.",
+      "action": "Record this scoped result without assigning a global pass.",
+      "verification": "No A2UI catalog artifact is changed or tested.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "tests/acceptance/compiler_diagnostics.ml"
+      ],
+      "candidate": {
+        "frozen_source_change_id": "ksooumsrtxnrsmkkpnxnrquusqwrytql",
+        "frozen_source_commit_id": "978531c9d066a2c5f9a4145389f0e834606a2063",
+        "frozen_parent_commit_id": "28ca65100c93cf736a15f86c56f38ba4c6e24e56",
+        "workspace": ".uos-workspaces/q01-warnings"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "Outside Q01 scope; no system-admission credit."
+    },
+    {
+      "aspect_id": 13,
+      "name": "Penta-Stack Multi-Interface Accessibility",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "No interface or accessibility behavior is changed or tested.",
+      "orient": "Scope to Q01 and its actual changed files; do not use source hardcoded values as evidence.",
+      "decision": "Apply only the Q01 compiler-diagnostics contract; retain global obligations.",
+      "action": "Record this scoped result without assigning a global pass.",
+      "verification": "No interface or accessibility behavior is changed or tested.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "tests/acceptance/compiler_diagnostics.ml"
+      ],
+      "candidate": {
+        "frozen_source_change_id": "ksooumsrtxnrsmkkpnxnrquusqwrytql",
+        "frozen_source_commit_id": "978531c9d066a2c5f9a4145389f0e834606a2063",
+        "frozen_parent_commit_id": "28ca65100c93cf736a15f86c56f38ba4c6e24e56",
+        "workspace": ".uos-workspaces/q01-warnings"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "Outside Q01 scope; no system-admission credit."
+    },
+    {
+      "aspect_id": 14,
+      "name": "Universal Tailscale FQDN Web Navigation",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "No web navigation artifact is changed.",
+      "orient": "Scope to Q01 and its actual changed files; do not use source hardcoded values as evidence.",
+      "decision": "Apply only the Q01 compiler-diagnostics contract; retain global obligations.",
+      "action": "Record this scoped result without assigning a global pass.",
+      "verification": "No web navigation artifact is changed.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "tests/acceptance/compiler_diagnostics.ml"
+      ],
+      "candidate": {
+        "frozen_source_change_id": "ksooumsrtxnrsmkkpnxnrquusqwrytql",
+        "frozen_source_commit_id": "978531c9d066a2c5f9a4145389f0e834606a2063",
+        "frozen_parent_commit_id": "28ca65100c93cf736a15f86c56f38ba4c6e24e56",
+        "workspace": ".uos-workspaces/q01-warnings"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "Outside Q01 scope; no system-admission credit."
+    },
+    {
+      "aspect_id": 15,
+      "name": "Comprehensive Verification Checklist",
+      "state": "VERIFIED_SCOPED",
+      "observe": "The adapter records the required compiler.check_affected_tests values. It does not establish the global checklist state.",
+      "orient": "Scope to Q01 and its actual changed files; do not use source hardcoded values as evidence.",
+      "decision": "Apply only the Q01 compiler-diagnostics contract; retain global obligations.",
+      "action": "Record this scoped result without assigning a global pass.",
+      "verification": "The adapter records the required compiler.check_affected_tests values. It does not establish the global checklist state.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "tests/acceptance/compiler_diagnostics.ml"
+      ],
+      "candidate": {
+        "frozen_source_change_id": "ksooumsrtxnrsmkkpnxnrquusqwrytql",
+        "frozen_source_commit_id": "978531c9d066a2c5f9a4145389f0e834606a2063",
+        "frozen_parent_commit_id": "28ca65100c93cf736a15f86c56f38ba4c6e24e56",
+        "workspace": ".uos-workspaces/q01-warnings"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "Outside Q01 scope; no system-admission credit."
+    },
+    {
+      "aspect_id": 16,
+      "name": "Knowledge Management Triad (Wiki/ZK/Ont)",
+      "state": "VERIFIED_SCOPED",
+      "observe": "The eleven executed functions cover the named C3I knowledge actor/runtime test modules only; no corpus-wide knowledge claim follows.",
+      "orient": "Scope to Q01 and its actual changed files; do not use source hardcoded values as evidence.",
+      "decision": "Apply only the Q01 compiler-diagnostics contract; retain global obligations.",
+      "action": "Record this scoped result without assigning a global pass.",
+      "verification": "The eleven executed functions cover the named C3I knowledge actor/runtime test modules only; no corpus-wide knowledge claim follows.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "tests/acceptance/compiler_diagnostics.ml"
+      ],
+      "candidate": {
+        "frozen_source_change_id": "ksooumsrtxnrsmkkpnxnrquusqwrytql",
+        "frozen_source_commit_id": "978531c9d066a2c5f9a4145389f0e834606a2063",
+        "frozen_parent_commit_id": "28ca65100c93cf736a15f86c56f38ba4c6e24e56",
+        "workspace": ".uos-workspaces/q01-warnings"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "Outside Q01 scope; no system-admission credit."
+    },
+    {
+      "aspect_id": 17,
+      "name": "Sa-Plan & Bionic Durable Workflows",
+      "state": "VERIFIED_SCOPED",
+      "observe": "The receipt binds the manifest acceptance case and exposes the root-owned acceptance-runner seam; no workflow engine behavior is changed.",
+      "orient": "Scope to Q01 and its actual changed files; do not use source hardcoded values as evidence.",
+      "decision": "Apply only the Q01 compiler-diagnostics contract; retain global obligations.",
+      "action": "Record this scoped result without assigning a global pass.",
+      "verification": "The receipt binds the manifest acceptance case and exposes the root-owned acceptance-runner seam; no workflow engine behavior is changed.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "tests/acceptance/compiler_diagnostics.ml"
+      ],
+      "candidate": {
+        "frozen_source_change_id": "ksooumsrtxnrsmkkpnxnrquusqwrytql",
+        "frozen_source_commit_id": "978531c9d066a2c5f9a4145389f0e834606a2063",
+        "frozen_parent_commit_id": "28ca65100c93cf736a15f86c56f38ba4c6e24e56",
+        "workspace": ".uos-workspaces/q01-warnings"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "Outside Q01 scope; no system-admission credit."
+    }
+  ]
+}

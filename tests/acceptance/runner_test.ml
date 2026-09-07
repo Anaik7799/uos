@@ -295,7 +295,7 @@ let test_atomic_receipt () =
               | Ok json ->
                   check "receipt schema version"
                     (Yojson.Basic.Util.member "schema" json |> Yojson.Basic.Util.to_string
-                     = "uos.acceptance-receipt.v2");
+                     = "uos.acceptance-receipt.v3");
                   let states = Yojson.Basic.Util.member "states" json in
                   check "underlying pass remains false"
                     (not (Yojson.Basic.Util.member "passed" states |> Yojson.Basic.Util.to_bool));

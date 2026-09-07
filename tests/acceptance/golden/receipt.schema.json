@@ -6,7 +6,7 @@
   "additionalProperties": false,
   "required": ["schema", "receipt_id", "task_id", "case_id", "operation", "observed_at_utc", "manifest", "candidate", "sources", "limits", "states", "observation", "assertion", "timings", "system_admission_granted"],
   "properties": {
-    "schema": {"const": "uos.acceptance-receipt.v2"},
+    "schema": {"const": "uos.acceptance-receipt.v3"},
     "receipt_id": {"type": "string", "minLength": 1, "maxLength": 256},
     "task_id": {"type": "string", "minLength": 1, "maxLength": 96},
     "case_id": {"type": "string", "minLength": 1, "maxLength": 128},
@@ -45,7 +45,7 @@
       "required": ["operation_supported", "adapter_registered", "status", "exit_code", "passing_tests", "children_reaped", "timed_out", "stdout_overflow", "stderr_overflow", "stdout", "stderr", "stdout_sha256", "stderr_sha256", "raw_json", "raw_json_sha256", "duration_ms"],
       "properties": {
         "operation_supported": {"type": "boolean"}, "adapter_registered": {"type": "boolean"},
-        "status": {"enum": ["PASS", "FAIL", "ERROR"]}, "exit_code": {"type": "integer"},
+        "status": {"enum": ["PASS", "FAIL", "ERROR", "UNRUN", "UNAVAILABLE", "REACHABLE_UNVERIFIED", "HTTP_FAILURE", "IDENTITY_MISMATCH"]}, "exit_code": {"type": "integer"},
         "passing_tests": {"type": "integer", "minimum": 0}, "children_reaped": {"type": "boolean"},
         "timed_out": {"type": "boolean"}, "stdout_overflow": {"type": "boolean"}, "stderr_overflow": {"type": "boolean"},
         "stdout": {"type": "string", "maxLength": 131072}, "stderr": {"type": "string", "maxLength": 65536},

@@ -99,6 +99,7 @@ let command_observation ~limits ~expected_exit result =
 
 type command_id =
   | Candidate_snapshot_command
+  | Compiler_diagnostics_command
   | Missing_executable_control
   | Timeout_control
   | Stdout_overflow_control
@@ -108,6 +109,7 @@ type command_id =
 
 let command_argv = function
   | Candidate_snapshot_command -> [ "opam" ]
+  | Compiler_diagnostics_command -> [ "ocaml"; "tests/acceptance/compiler_diagnostics.ml" ]
   | Missing_executable_control -> [ "/definitely/missing/uos-acceptance-command" ]
   | Timeout_control -> [ "/bin/sh"; "-c"; "sleep 30" ]
   | Stdout_overflow_control -> [ "/bin/sh"; "-c"; "head -c 4096 /dev/zero" ]
@@ -118,19 +120,20 @@ let command_argv = function
 
 let command_dependencies = function
   | Candidate_snapshot_command -> [ "opam"; "ocaml"; "jj"; "chronyc"; "curl" ]
+  | Compiler_diagnostics_command -> [ "ocaml"; "gleam"; "erl" ]
   | Missing_executable_control -> []
   | Timeout_control | Closed_descendant_control -> [ "/bin/sh"; "sleep" ]
   | Signal_term_control -> [ "/bin/sh" ]
   | Stdout_overflow_control | Stderr_overflow_control -> [ "/bin/sh"; "head" ]
 
 let allowed_dependencies =
-  [ "opam"; "ocaml"; "jj"; "chronyc"; "curl"; "/bin/sh"; "sleep"; "head" ]
+  [ "opam"; "ocaml"; "jj"; "chronyc"; "curl"; "/bin/sh"; "sleep"; "head"; "gleam"; "erl" ]
 
 let command_allowed id =
   let argv = command_argv id in
   let executable_allowed =
     match argv with
-    | "opam" :: _ | "/bin/sh" :: _ | "/definitely/missing/uos-acceptance-command" :: _ -> true
+    | "opam" :: _ | "ocaml" :: _ | "/bin/sh" :: _ | "/definitely/missing/uos-acceptance-command" :: _ -> true
     | _ -> false
   in
   executable_allowed
@@ -279,9 +282,46 @@ let candidate_snapshot given =
                                        passing_tests = 0; stderr = message; data = None }
         | Ok projection -> { base with data = Some projection }
 
+let compiler_check_affected_tests given =
+  match first_duplicate_or_nested "$.given" given with
+  | Error e -> error_observation ~executed:false (string_of_contract_error e)
+  | Ok () ->
+      match assoc_at "$.given" given with
+      | Error e -> error_observation ~executed:false (string_of_contract_error e)
+      | Ok fields ->
+          match exact_fields "$.given" ["prior_warning_count"] fields,
+                required_field "$.given" "prior_warning_count" fields int_at with
+          | Error e, _ | _, Error e ->
+              error_observation ~executed:false (string_of_contract_error e)
+          | Ok (), Ok prior when prior < 0 ->
+              error_observation ~executed:false "prior_warning_count must be nonnegative"
+          | Ok (), Ok _ ->
+              let limits = { default_process_limits with timeout_ms = 1_190_000;
+                stdout_limit = 4 * 1024 * 1024; stderr_limit = 131_072 } in
+              let observed = run_command ~limits ~expected_exit:0 Compiler_diagnostics_command in
+              if not observed.passed then observed
+              else match parse_json_strict observed.stdout with
+              | Error e -> { observed with passed=false; passing_tests=0; status=Status_error;
+                                           stderr=string_of_contract_error e }
+              | Ok (`Assoc result) ->
+                  (match List.assoc_opt "passed" result,
+                         List.assoc_opt "targeted_unused_warnings" result,
+                         List.assoc_opt "assertions_removed" result with
+                   | Some (`Bool true), Some (`Int warnings), Some (`Int removed)
+                     when warnings >= 0 && removed >= 0 ->
+                       { observed with data=Some (`Assoc [
+                           "targeted_unused_warnings", `Int warnings;
+                           "assertions_removed", `Int removed;
+                           "compiler_diagnostics", `Assoc result ]) }
+                   | _ -> { observed with passed=false; passing_tests=0; status=Status_error;
+                             stderr="compiler driver lacks passing observed diagnostic fields" })
+              | Ok _ -> { observed with passed=false; passing_tests=0; status=Status_error;
+                                       stderr="compiler driver output must be an object" }
+
 let supported_operations =
   [ ("runner.verify", runner_verify);
-    ("candidate.snapshot", candidate_snapshot) ]
+    ("candidate.snapshot", candidate_snapshot);
+    ("compiler.check_affected_tests", compiler_check_affected_tests) ]
 
 let dispatch_operation operation given =
   match List.assoc_opt operation supported_operations with

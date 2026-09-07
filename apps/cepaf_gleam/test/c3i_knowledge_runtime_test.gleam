@@ -58,7 +58,7 @@ pub fn create_envelope_and_port_call_traps_test() {
 
 pub fn ingest_c3i_inventory_and_query_recall_test() {
   let inventory = c3i_knowledge_runtime.ingest_c3i_knowledge_inventory()
-  should.equal(c3i_knowledge_runtime.ingest_c3i_knowledge_inventory() != [], True)
+  should.equal(inventory != [], True)
 
   let recall_all = c3i_knowledge_runtime.query_cited_recall("", 0.5)
   should.equal(recall_all.total_items, 5)

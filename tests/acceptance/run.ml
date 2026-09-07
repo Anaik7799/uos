@@ -18,7 +18,15 @@ let bound_source_paths =
     "tests/acceptance/process_supervisor.ml";
     "tests/acceptance/registry.ml";
     "tests/acceptance/run.ml";
-    "tests/acceptance/golden/receipt.schema.json" ]
+    "tests/acceptance/golden/receipt.schema.json";
+    "tests/acceptance/compiler_diagnostics.ml";
+    "apps/cepaf_gleam/gleam.toml";
+    "apps/cepaf_gleam/manifest.toml";
+    "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam";
+    "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam";
+    "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam";
+    "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_actor.gleam";
+    "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_ingestion_actor.gleam" ]
 
 type case_execution = {
   case : acceptance_case;
