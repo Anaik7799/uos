@@ -9,17 +9,16 @@ fn halt(code: Int) -> Nil
 
 pub fn main() {
   case arguments() {
-    ["current"] ->
-      peer_health.observe(peer_health.CurrentPeer)
-      |> peer_health.to_json()
-      |> io.println()
-    ["obsolete"] ->
-      peer_health.observe(peer_health.ObsoletePeer)
-      |> peer_health.to_json()
-      |> io.println()
+    ["current"] -> print_report(peer_health.observe(peer_health.CurrentPeer))
+    ["obsolete"] -> print_report(peer_health.observe(peer_health.ObsoletePeer))
     _ -> {
       io.println("Expected current or obsolete")
       halt(2)
     }
   }
+}
+
+fn print_report(report: peer_health.Report) {
+  report |> peer_health.to_json() |> io.println()
+  halt(peer_health.exit_code(report))
 }

@@ -5,6 +5,7 @@
 import gleam/dynamic/decode
 import gleam/int
 import gleam/json
+import gleam/result
 import gleam/string
 
 pub type Endpoint {
@@ -34,7 +35,7 @@ pub const current_url = "http://vm-1.tail55d152.ts.net:4100"
 
 pub const obsolete_url = "http://vm-1.tail55d152.ts.net:8088"
 
-pub const probe_timeout_ms = 7000
+pub const probe_timeout_ms = 7600
 
 pub const task_timeout_seconds = 1200
 
@@ -47,6 +48,9 @@ pub fn url(endpoint: Endpoint) -> String {
 
 @external(erlang, "uos_peer_http_ffi", "probe")
 fn probe(url: String) -> Result(#(Int, Int, String, Int), String)
+
+@external(erlang, "uos_peer_json_ffi", "valid_object")
+fn strict_object(body: String) -> Bool
 
 /// The I/O boundary has a closed URL allowlist, response quota and deadline.
 pub fn observe(endpoint: Endpoint) -> Report {
@@ -61,7 +65,14 @@ pub fn from_observation(
   case observation {
     Error(_) -> Report(endpoint, Unavailable, 0, 0, "", "probe unavailable")
     Ok(#(exit_code, status, _, time)) if exit_code != 0 ->
-      Report(endpoint, Unavailable, status, time, "", "transport failed")
+      Report(
+        endpoint,
+        Unavailable,
+        status,
+        time,
+        "",
+        transport_failure(exit_code),
+      )
     Ok(#(_, status, _, time)) if status != 200 ->
       Report(
         endpoint,
@@ -78,7 +89,11 @@ pub fn from_observation(
         use version <- decode.field("version", decode.string)
         decode.success(#(interface, port, version))
       }
-      case json.parse(body, decoder) {
+      let decoded = case strict_object(body) {
+        True -> json.parse(body, decoder) |> result.map_error(fn(_) { Nil })
+        False -> Error(Nil)
+      }
+      case decoded {
         Ok(#("wisp", 4100, version)) if version != "" ->
           Report(
             endpoint,
@@ -86,7 +101,7 @@ pub fn from_observation(
             status,
             time,
             version,
-            "C3I service reports its interface and version; deployed build identity is not supplied",
+            "Endpoint reports Wisp interface and version; service ownership requires separate evidence and deployed build identity is not supplied",
           )
         _ ->
           Report(
@@ -95,10 +110,20 @@ pub fn from_observation(
             status,
             time,
             "",
-            "expected C3I identity is absent or mismatched",
+            "expected endpoint interface metadata is absent or mismatched",
           )
       }
     }
+  }
+}
+
+fn transport_failure(exit_code: Int) -> String {
+  case exit_code {
+    5 | 6 -> "name resolution failed"
+    7 -> "connection failed"
+    28 -> "transport deadline expired"
+    63 -> "response quota exceeded"
+    _ -> "transport failed with exit " <> int.to_string(exit_code)
   }
 }
 
@@ -114,6 +139,15 @@ pub fn state_name(report: Report) -> String {
 pub fn system_green(_report: Report) -> Bool {
   // A diagnostic observation has no formal or deployed-candidate authority.
   False
+}
+
+/// Diagnostic CLI exit is deliberately nonzero while health is unverified.
+/// Consumers inspect the JSON for reachability; exit zero cannot grant health.
+pub fn exit_code(report: Report) -> Int {
+  case system_green(report) {
+    True -> 0
+    False -> 1
+  }
 }
 
 pub fn to_json(report: Report) -> String {
