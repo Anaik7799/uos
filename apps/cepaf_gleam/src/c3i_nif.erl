@@ -16,22 +16,33 @@
     ruliology_automaton/1, ruliology_multiway/0, ruliology_causal/0,
     ooda_phase/0,
     %% Zenoh Native (5) — SC-ZENOH-001
-    zenoh_open/1, zenoh_put/2, zenoh_get/1, zenoh_status/0, zenoh_close/0
+    zenoh_open/1, zenoh_put/2, zenoh_get/1, zenoh_status/0, zenoh_close/0,
+    %% Runtime availability receipt (not replaced by the NIF)
+    runtime_loaded/0
 ]).
 -on_load(init/0).
+
+-define(RUNTIME_LOADED_KEY, {?MODULE, runtime_loaded}).
 
 init() ->
     SoPath = case code:priv_dir(cepaf_gleam) of
         {error, _} -> "priv/c3i_nif";
         PrivDir -> filename:join(PrivDir, "c3i_nif")
     end,
-    case erlang:load_nif(SoPath, 0) of
-        ok -> ok;
-        {error, {reload, _}} -> ok;
+    Loaded = case erlang:load_nif(SoPath, 0) of
+        ok -> true;
+        {error, {reload, _}} -> true;
         {error, Reason} ->
             io:format("[c3i_nif] NIF load failed: ~p (path: ~s)~n", [Reason, SoPath]),
-            ok
-    end.
+            false
+    end,
+    persistent_term:put(?RUNTIME_LOADED_KEY, Loaded),
+    ok.
+
+%% Actual result of this module's most recent NIF load attempt. Unlike the
+%% payload-returning stubs below, this cannot confuse valid empty data with an
+%% unavailable native runtime.
+runtime_loaded() -> persistent_term:get(?RUNTIME_LOADED_KEY, false).
 
 %% NIF stubs — replaced by Rust at load time.
 %% Planning
