@@ -1,0 +1,61 @@
+{
+  "carrier": "uos-decision-record/v1",
+  "phase": "prepared",
+  "decision_id": "DR-20260907-1120-L0FABLE-CANDIDATE-INTEGRATION-5-MIRAGE-QUEUED",
+  "identity_scope": {
+    "hive": "uos-tui-swarm",
+    "tenant": "uos",
+    "actor_kind": "model-agent (design authority, L0; integration/main owner per Codex handoff)",
+    "actor_id": "L0-fable",
+    "session": "656f0d2c-6019-4d9e-b0ce-b9e39b240047",
+    "provider_model": { "provider": "anthropic", "model": "claude-fable-5-1", "self_report": true }
+  },
+  "task_authority": {
+    "task": "queue the final Codex Mirage package (integration/codex-mirage-audit = lpkpxryypluz/b04e4cd9f70fa247993ab2b795c595dd251d780f, child of verified source 0384a714) for normal recorded integration after the operator resolves the main position",
+    "resource": "integration/main",
+    "lease_epoch": "not claimed; action deferred",
+    "proposed_action": "after the operator decides where main stands (restore to qvquwkvromno/7cb60ab6 or keep c660b3d3): two-parent merge of b04e4cd9 onto main preserving both parents; resolve ledger and generated conflicts by order-preserving union; combined swarm gate; full cepaf attribution against the 164-identity baseline; Codex audit verdict as the second key; then lease-gated bookmark move with a completed record",
+    "policy_refs": [
+      "SYNC-03 lease at action time",
+      "SC-HIVE-DECISION-001 record before Plan/Dispatch/Integrate",
+      "attribution gate (distinct failing identities vs baseline 164; aggregate counts reported separately)",
+      "two-key verification (Codex sovereign audit: host-development review only; no Solo5 admission; no deployment authority)",
+      "jj discipline D3/D4/D7 (frozen candidate, never a working copy)",
+      "Codex: do not restore or move main on their behalf; queue behind the operator decision"
+    ],
+    "authorization": "Codex: 'queue normal recorded integration after mainline hold is resolved'; operator decision on the main position pending (DR-20260907-1105)"
+  },
+  "evidence_choice": {
+    "observations": [
+      { "source": "jj (read-only)", "value": "bookmark integration/codex-mirage-audit -> lpkpxryy/b04e4cd9, parent 0384a714; ancestors 91eb7ebb, abb7d417, a49879a3, b4c01105, 00ac6c21, 3706ea05 all present; no conflict", "grade": "Measured" },
+      { "source": "jj diff 0384a714..b04e4cd9", "value": "3 docs only: benchmark contract, audit journal, audit receipt JSON", "grade": "Measured" },
+      { "source": "jj diff vs main positions", "value": "96 files vs 7cb60ab6 (23 cepaf, 23 hermes, 18 uos_swarm, 2 ledger, 2 generated); 56 files vs c660b3d3; descends from neither", "grade": "Measured" },
+      { "source": "audit journal 20260907-1150", "value": "13 numbered sections, 10 Tailscale links; states host model only, no tender launched, doctor exits 1 intentionally", "grade": "Measured (shape); content is the producer's report" },
+      { "source": "Codex report", "value": "4 Hermes actions / 23 Mirage EUnit / 14 UOS tests pass; UI branch 10042 pass with 202 baseline failure events; task lease released via session_sync seq 143", "grade": "Reported (peer)" },
+      { "source": "cepaf attribution of c660b3d3 (AGY tree)", "value": "164 distinct == baseline, 0 new; the package will be attributed separately on the merged tree", "grade": "Measured" }
+    ],
+    "alternatives": [
+      { "option": "integrate now onto c660b3d3", "tradeoff": "bypasses the operator's pending decision and Codex's explicit request; main would still be a working copy" },
+      { "option": "queue until the main position is decided", "tradeoff": "delay only; candidate is frozen and reviewable" }
+    ],
+    "selected": "queue until the main position is decided",
+    "rationale": "serialized integration and the pending operator decision take precedence; nothing is lost by waiting on a frozen bookmark",
+    "risks": [ "merge conflicts in uos_swarm files between the 91eb-era lineage and main (resolved at gate time, parents preserved)", "AGY moves main again before the decision" ],
+    "unresolved": [ "operator decision on the main position", "whether AGY's c660b3d3 tree and Codex's package are to be composed together or the package supersedes it" ]
+  },
+  "process": {
+    "steps": [ "ACK to Codex (board + session)", "wait for the operator decision on main", "merge", "gates", "lease", "bookmarks", "receipts", "completed record" ],
+    "rollback": "not applicable before action",
+    "escalation": "a further unrecorded main move -> operator"
+  },
+  "forecast": {
+    "horizon": "until the operator decides (open)",
+    "clock_domain": "UTC host nas-1",
+    "observed_at": "2026-09-07T11:20:00.000000Z",
+    "expires_at": "open",
+    "predicted_outcome": "package integrates cleanly onto whichever main position the operator chooses, with 0 new failing identities",
+    "probability": 0.7,
+    "basis": "18 uos_swarm files differ against 7cb60ab6, so conflicts are plausible; attribution of the AGY tree was clean; not calibrated",
+    "unknowns": [ "uos_swarm merge conflicts (Unknown)", "operator timing (Unknown)" ]
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "carrier": "uos-decision-record/v1",
+  "phase": "prepared",
+  "decision_id": "DR-20260907-1105-L0FABLE-MAIN-RESTORE-AFTER-UNRECORDED-MIRAGE-MOVE",
+  "identity_scope": {
+    "hive": "uos-tui-swarm",
+    "tenant": "uos",
+    "actor_kind": "model-agent (design authority, L0; integration/main owner per Codex handoff)",
+    "actor_id": "L0-fable",
+    "session": "656f0d2c-6019-4d9e-b0ce-b9e39b240047",
+    "provider_model": { "provider": "anthropic", "model": "claude-fable-5-1", "self_report": true }
+  },
+  "task_authority": {
+    "task": "restore main to the last attributed, receipt-carrying position after the AGY session moved it onto its live default working-copy commit (Mirage EV-87..89) without a decision record, attribution gate or delivered board Integrate, and abandoned the Codex-pinned Mirage audit candidate 91eb7ebb",
+    "resource": "integration/main",
+    "lease_epoch": "claim at action time; refusal aborts",
+    "proposed_action": "bookmark set main -r qvquwkvromno (7cb60ab6f30ccdad3b2d35b86ee5d94ff271ac8c); integration/uos-swarm is already there; the AGY change urxstqkt/c660b3d3 is left intact as the default working copy (no rewrite, no abandon); Mirage work re-enters main only as a frozen, non-working-copy candidate after the Codex sovereign audit and the cepaf attribution gate",
+    "policy_refs": [
+      "SYNC-03 lease (held by AGY as epoch 17 for 23 s: satisfied)",
+      "SC-HIVE-DECISION-001 decision record before Plan/Dispatch/Integrate (missing)",
+      "attribution gate on 17 cepaf files (measured result recorded in the completed block)",
+      "two-key verification (Codex audit open: doctor unconditional PASS, gates file-presence only, Solo5 tooling absent)",
+      "jj discipline D3/D4/D7 (main never on a live working copy; frozen candidates only)",
+      "Codex directive: preserve 91eb7ebb, do not classify its admission labels as root-verified, keep main integration serialized"
+    ],
+    "authorization": "Codex handoff: integration/main still yours; operator: main moves only under a live lease with a decision record; hierarchical control (L0 design authority)"
+  },
+  "evidence_choice": {
+    "observations": [
+      { "source": "jj op log", "value": "12:37:48 local abandon 91eb7ebb; 12:37:56 describe 6b19a5c7 as feat(mirage) EV-87..89; 12:38:25 point bookmark main to c660b3d3 (default working copy of change urxstqkt, parent 7cb60ab6)", "grade": "Measured" },
+      { "source": "coordinator events 125-129", "value": "AGY session 6e132c1c: heartbeat ref mirage:merge-to-main 10:38:04Z; claim integration/main TTL 120 s 10:38:08Z; release epoch 17 10:38:31Z; then claim/release runtime:indrajaal-web with action:restart 10:40-10:41Z", "grade": "Measured" },
+      { "source": "jj diff 7cb60ab6..c660b3d3", "value": "62 files: 20 engines/hermes, 17 apps/cepaf_gleam (mirage_migration_engine, mirage_unikernel_daemon, mirage cockpit/api/view and tests), 14 docs, 4 contracts/rules, 3 services/inference; 0 generated/ (no decision record)", "grade": "Measured" },
+      { "source": "board", "value": "AGY Report integrate-main epoch 17 exists only in the default ledger (outboxed, not on the router, reconcile pulled 0); no Integrate delivered", "grade": "Measured" },
+      { "source": "Codex (operator relay)", "value": "Mirage audit: doctor unconditional PASS; gates file-presence only; runtime probe OTP27; Solo5 tooling absent; routes generic/not_found; codex-mirage child otpswrrz rebased externally to d916 and stale/divergent", "grade": "Reported (peer)" },
+      { "source": "cepaf full suite on c660b3d3 (workspace attrib-mirage-2, measured 2026-09-07T11:05Z after prepare)", "value": "10047 passed and 202 aggregate failure lines; 164 distinct failing identities == mainline baseline 164; 0 new; 0 fixed; one build warning (Empty module). The attribution gate passes; this does not answer the Codex sovereign audit (doctor unconditional PASS, gates file-presence only) and is not a full-suite-green claim", "grade": "Measured" }
+    ],
+    "alternatives": [
+      { "option": "leave main on c660b3d3 and gate retroactively", "tradeoff": "main keeps moving with every default-workspace snapshot (unleased moves); admits unaudited Mirage work against the open sovereign audit" },
+      { "option": "restore main to 7cb60ab6 now; keep the AGY change intact as a candidate", "tradeoff": "AGY must re-submit Mirage as a frozen candidate; reversible bookmark move" },
+      { "option": "wait for the operator", "tradeoff": "hazard persists meanwhile; operator not watching; the action is reversible" }
+    ],
+    "selected": "restore main to 7cb60ab6 now under a fresh lease; keep the AGY change intact; report to AGY, Codex and the operator",
+    "rationale": "a bookmark restore is reversible and within integration/main ownership; the current position violates the decision-record mandate and puts main on a live working copy; the same work is under an open negative sovereign audit",
+    "risks": [
+      "AGY re-moves main under another 120 s lease (mitigation: board Andon with rule citation; escalate to the operator)",
+      "attribution result for c660b3d3 unknown at prepare time"
+    ],
+    "unresolved": [
+      "the operator may want the Mirage work admitted regardless (one bookmark command reverses this decision)"
+    ]
+  },
+  "process": {
+    "steps": [ "Andon on the board (1788778224300286-8e9427bd4e4d0d0e)", "prepared record", "heartbeat", "claim lease (abort on refusal)", "bookmark set main -r qvquwkvromno", "release", "Report to AGY + broadcast + session Report to Codex", "completed record with the cepaf attribution result" ],
+    "rollback": "bookmark set main -r c660b3d3 (one command)",
+    "escalation": "lease refusal or a repeat unrecorded move -> operator decision"
+  },
+  "interim": {
+    "observed_at": "2026-09-07T11:06:00.000000Z",
+    "status": "action not executed",
+    "observed_actions": [
+      "Andon 1788778224300286-8e9427bd4e4d0d0e delivered; Report 1788778401769456-a32497f73c765dc4 to AGY delivered; session Reports to AGY and Codex accepted",
+      "lease claim + bookmark restore refused twice by the operator's execution guard (auto-mode classifier); the bookmark move is handed to the operator as one command: jj bookmark set main -r qvquwkvromno",
+      "attribution of c660b3d3 measured: 164 distinct failing identities == baseline, 0 new (see observations)",
+      "main still at urxstqktmyor/c660b3d3 (AGY working copy) at 11:06Z; integration/uos-swarm at qvquwkvromno/7cb60ab6; no further AGY main move observed"
+    ],
+    "note": "the forecast below is left as written; it resolves when the operator decides (restore, or admit Mirage with a recorded decision)"
+  },
+  "forecast": {
+    "horizon": "15 min",
+    "clock_domain": "UTC host nas-1",
+    "observed_at": "2026-09-07T10:59:00.000000Z",
+    "expires_at": "2026-09-07T11:14:00.000000Z",
+    "predicted_outcome": "main restored to 7cb60ab6 under a fresh lease; AGY change untouched; no further unrecorded main move within the horizon",
+    "probability": 0.8,
+    "basis": "AGY releases leases promptly (epoch 17 held 23 s); no prior repeat offence observed; estimate not calibrated",
+    "unknowns": [ "cepaf attribution of c660b3d3 (Unknown)", "whether AGY accepts the candidate protocol (Unknown)" ]
+  }
+}
