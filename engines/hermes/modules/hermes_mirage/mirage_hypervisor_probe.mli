@@ -14,9 +14,21 @@ type qemu_status = {
   kvm_accel_supported : bool;
 }
 
+type solo5_execution_receipt = {
+  tender : string;
+  unikernel : string;
+  exit_code : int;
+  output_snippet : string;
+  passed : bool;
+}
+
 type solo5_status = {
   solo5_hvt_path : string option;
   solo5_spt_path : string option;
+  solo5_virtio_path : string option;
+  hvt_execution : solo5_execution_receipt option;
+  spt_execution : solo5_execution_receipt option;
+  virtio_execution : solo5_execution_receipt option;
 }
 
 type hypervisor_probe_result = {
@@ -28,6 +40,7 @@ type hypervisor_probe_result = {
   solo5 : solo5_status;
   overall_readiness : string;
   execution_policy : string;
+  deployment_admission : string;
 }
 
 val probe_hypervisors : unit -> hypervisor_probe_result

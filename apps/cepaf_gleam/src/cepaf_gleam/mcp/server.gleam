@@ -11,6 +11,7 @@
 // 6. Zenoh transport via bridge/zenoh_mcp.gleam (handle_request_raw)
 
 import cepaf_gleam/c3i/nif as c3i_nif
+import cepaf_gleam/ha/fractal_forecast
 import cepaf_gleam/mcp/protocol.{type ToolDefinition}
 import cepaf_gleam/mcp/tools
 import cepaf_gleam/ui/wisp/router as wisp_router
@@ -199,14 +200,106 @@ fn tools_call(id: Option(json.Json), raw_line: String) -> String {
 // Tool execution — NIF-backed planning + existing tools
 // ---------------------------------------------------------------------------
 
+pub fn is_mutating_tool(name: String) -> Bool {
+  case name {
+    "plan_add" | "plan_update" -> True
+    _ -> False
+  }
+}
+
+pub fn verify_mutating_action_preflight(
+  action: String,
+  raw_line: String,
+) -> fractal_forecast.AgenticPreflightCertificate {
+  let actor_decoder = {
+    use a <- decode.subfield(["params", "arguments", "actor"], decode.string)
+    decode.success(a)
+  }
+  let benefit_decoder = {
+    use b <- decode.subfield(["params", "arguments", "benefit"], decode.float)
+    decode.success(b)
+  }
+  let cost_decoder = {
+    use c <- decode.subfield(["params", "arguments", "cost"], decode.float)
+    decode.success(c)
+  }
+  let risk_decoder = {
+    use r <- decode.subfield(["params", "arguments", "risk_score"], decode.float)
+    decode.success(r)
+  }
+  let contention_decoder = {
+    use h <- decode.subfield(
+      ["params", "arguments", "contention_history"],
+      decode.list(decode.float),
+    )
+    decode.success(h)
+  }
+
+  let actor = case json.parse(raw_line, actor_decoder) {
+    Ok(a) -> a
+    Error(_) -> "AutonomousAgent"
+  }
+  let benefit = case json.parse(raw_line, benefit_decoder) {
+    Ok(b) -> b
+    Error(_) -> 100.0
+  }
+  let cost = case json.parse(raw_line, cost_decoder) {
+    Ok(c) -> c
+    Error(_) -> 10.0
+  }
+
+  let base_forecast = case json.parse(raw_line, contention_decoder) {
+    Ok(history) -> fractal_forecast.predict_l3_transaction(history, 60)
+    Error(_) ->
+      fractal_forecast.predict_l3_transaction(
+        [0.05, 0.04, 0.06, 0.05, 0.04, 0.05, 0.05, 0.04],
+        60,
+      )
+  }
+
+  let forecast = case json.parse(raw_line, risk_decoder) {
+    Ok(r) ->
+      fractal_forecast.LayerForecast(
+        ..base_forecast,
+        risk_score: r,
+      )
+    Error(_) -> base_forecast
+  }
+
+  fractal_forecast.verify_agentic_preflight(
+    actor,
+    action,
+    forecast,
+    benefit,
+    cost,
+  )
+}
+
 fn execute_tool(
   name: String,
   id: Option(json.Json),
   raw_line: String,
 ) -> String {
-  case tools.unavailable_reason(name) {
-    Some(reason) -> tool_unavailable(id, name, reason)
-    None -> execute_available_tool(name, id, raw_line)
+  case is_mutating_tool(name) {
+    True -> {
+      case verify_mutating_action_preflight(name, raw_line) {
+        fractal_forecast.PreflightApproved(_, _, _, _, _) -> {
+          case tools.unavailable_reason(name) {
+            Some(reason) -> tool_unavailable(id, name, reason)
+            None -> execute_available_tool(name, id, raw_line)
+          }
+        }
+        fractal_forecast.PreflightVetoed(_, _, _, reason, _risk) -> {
+          error_response(id, -32_001, "Preflight veto: " <> reason)
+        }
+      }
+    }
+    False -> {
+      case tools.unavailable_reason(name) {
+        Some(reason) -> tool_unavailable(id, name, reason)
+        None -> execute_available_tool(name, id, raw_line)
+      }
+    }
   }
 }
 
@@ -221,8 +314,20 @@ fn execute_available_tool(
     "plan_list_pending" -> tool_plan_list_pending(id)
     "plan_list" -> tool_plan_list(id, raw_line)
     "plan_get" -> tool_plan_get(id, raw_line)
-    "plan_add" -> tool_plan_add(id, raw_line)
-    "plan_update" -> tool_plan_update(id, raw_line)
+    "plan_add" ->
+      case verify_mutating_action_preflight(name, raw_line) {
+        fractal_forecast.PreflightApproved(_, _, _, _, _) ->
+          tool_plan_add(id, raw_line)
+        fractal_forecast.PreflightVetoed(_, _, _, reason, _) ->
+          error_response(id, -32_001, "Preflight veto: " <> reason)
+      }
+    "plan_update" ->
+      case verify_mutating_action_preflight(name, raw_line) {
+        fractal_forecast.PreflightApproved(_, _, _, _, _) ->
+          tool_plan_update(id, raw_line)
+        fractal_forecast.PreflightVetoed(_, _, _, reason, _) ->
+          error_response(id, -32_001, "Preflight veto: " <> reason)
+      }
     "plan_search" -> tool_plan_search(id, raw_line)
     // System data tools (mesh state)
     "system_health" -> tool_system_health(id)
@@ -257,6 +362,9 @@ fn execute_available_tool(
     "run_gate" -> tool_run_gate(id, raw_line)
     "zk_search" -> tool_zk_search(id, raw_line)
     "sa_bridge_submit" -> tool_sa_bridge_submit(id, raw_line)
+    // Unified Fractal Forecasting & Preflight Gates (SC-HIVE-FORECAST-001, SC-PRED-001)
+    "forecast_predict" -> tool_forecast_predict(id, raw_line)
+    "preflight_check" -> tool_preflight_check(id, raw_line)
     _ -> error_response(id, -32_602, "Unknown tool: " <> name)
   }
 }
@@ -415,6 +523,195 @@ fn tool_read_file(id: Option(json.Json), raw_line: String) -> String {
 /// Route a per-page tool through the Wisp router to get JSON data.
 fn tool_page_json(id: Option(json.Json), api_path: String) -> String {
   tool_adapter_response(id, wisp_router.route(api_path))
+}
+
+fn tool_forecast_predict(id: Option(json.Json), raw_line: String) -> String {
+  let layer_decoder = {
+    use l <- decode.subfield(["params", "arguments", "layer"], decode.string)
+    decode.success(l)
+  }
+  let horizon_decoder = {
+    use h <- decode.subfield(["params", "arguments", "horizon_seconds"], decode.int)
+    decode.success(h)
+  }
+  let layer = case json.parse(raw_line, layer_decoder) {
+    Ok(l) -> l
+    Error(_) -> "all"
+  }
+  let horizon = case json.parse(raw_line, horizon_decoder) {
+    Ok(h) -> h
+    Error(_) -> 60
+  }
+
+  case string.lowercase(layer) {
+    "all" ->
+      tool_content_response(
+        id,
+        json.to_string(fractal_forecast.all_layers_forecast_json()),
+      )
+    "l0" | "l0_constitutional" | "constitutional" ->
+      tool_content_response(
+        id,
+        json.to_string(
+          fractal_forecast.layer_forecast_to_json(
+            fractal_forecast.predict_l0_constitutional(
+              [0.98, 0.99, 0.97, 0.98, 0.99, 0.98, 0.99, 0.98],
+              horizon,
+            ),
+          ),
+        ),
+      )
+    "l1" | "l1_atomic" | "atomic" ->
+      tool_content_response(
+        id,
+        json.to_string(
+          fractal_forecast.layer_forecast_to_json(
+            fractal_forecast.predict_l1_atomic(
+              [0.12, 0.14, 0.11, 0.13, 0.12, 0.15, 0.13, 0.12],
+              horizon,
+            ),
+          ),
+        ),
+      )
+    "l2" | "l2_component" | "component" ->
+      tool_content_response(
+        id,
+        json.to_string(
+          fractal_forecast.layer_forecast_to_json(
+            fractal_forecast.predict_l2_component(
+              [0.55, 0.58, 0.56, 0.60, 0.62, 0.61, 0.63, 0.62],
+              horizon,
+            ),
+          ),
+        ),
+      )
+    "l3" | "l3_transaction" | "transaction" ->
+      tool_content_response(
+        id,
+        json.to_string(
+          fractal_forecast.layer_forecast_to_json(
+            fractal_forecast.predict_l3_transaction(
+              [0.05, 0.04, 0.06, 0.05, 0.04, 0.05, 0.05, 0.04],
+              horizon,
+            ),
+          ),
+        ),
+      )
+    "l4" | "l4_system" | "system" ->
+      tool_content_response(
+        id,
+        json.to_string(
+          fractal_forecast.layer_forecast_to_json(
+            fractal_forecast.predict_l4_system(
+              [0.02, 0.01, 0.03, 0.02, 0.01, 0.02, 0.02, 0.01],
+              horizon,
+            ),
+          ),
+        ),
+      )
+    "l5" | "l5_cognitive" | "cognitive" ->
+      tool_content_response(
+        id,
+        json.to_string(
+          fractal_forecast.layer_forecast_to_json(
+            fractal_forecast.predict_l5_cognitive(
+              [0.45, 0.48, 0.50, 0.47, 0.52, 0.49, 0.51, 0.50],
+              horizon,
+            ),
+          ),
+        ),
+      )
+    "l6" | "l6_ecosystem" | "ecosystem" ->
+      tool_content_response(
+        id,
+        json.to_string(
+          fractal_forecast.layer_forecast_to_json(
+            fractal_forecast.predict_l6_ecosystem(
+              [0.15, 0.18, 0.16, 0.17, 0.19, 0.16, 0.18, 0.17],
+              horizon,
+            ),
+          ),
+        ),
+      )
+    "l7" | "l7_federation" | "federation" ->
+      tool_content_response(
+        id,
+        json.to_string(
+          fractal_forecast.layer_forecast_to_json(
+            fractal_forecast.predict_l7_federation(
+              [0.08, 0.09, 0.07, 0.08, 0.10, 0.09, 0.08, 0.09],
+              horizon,
+            ),
+          ),
+        ),
+      )
+    "l8" | "l8_mutation" | "mutation" ->
+      tool_content_response(
+        id,
+        json.to_string(
+          fractal_forecast.layer_forecast_to_json(
+            fractal_forecast.predict_l8_mutation(
+              [0.94, 0.95, 0.93, 0.96, 0.94, 0.95, 0.96, 0.95],
+              horizon,
+            ),
+          ),
+        ),
+      )
+    "l9" | "l9_verification" | "verification" ->
+      tool_content_response(
+        id,
+        json.to_string(
+          fractal_forecast.layer_forecast_to_json(
+            fractal_forecast.predict_l9_verification(
+              [1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0],
+              horizon,
+            ),
+          ),
+        ),
+      )
+    _ ->
+      tool_content_response(
+        id,
+        json.to_string(fractal_forecast.all_layers_forecast_json()),
+      )
+  }
+}
+
+fn tool_preflight_check(id: Option(json.Json), raw_line: String) -> String {
+  let decoder = {
+    use actor <- decode.subfield(["params", "arguments", "actor"], decode.string)
+    use action <- decode.subfield(["params", "arguments", "action"], decode.string)
+    use benefit <- decode.subfield(["params", "arguments", "benefit"], decode.float)
+    use cost <- decode.subfield(["params", "arguments", "cost"], decode.float)
+    decode.success(#(actor, action, benefit, cost))
+  }
+  case json.parse(raw_line, decoder) {
+    Ok(#(actor, action, benefit, cost)) -> {
+      let default_forecast =
+        fractal_forecast.predict_l3_transaction(
+          [0.05, 0.04, 0.06, 0.05, 0.04, 0.05, 0.05, 0.04],
+          60,
+        )
+      let cert =
+        fractal_forecast.verify_agentic_preflight(
+          actor,
+          action,
+          default_forecast,
+          benefit,
+          cost,
+        )
+      tool_content_response(
+        id,
+        json.to_string(fractal_forecast.preflight_certificate_to_json(cert)),
+      )
+    }
+    Error(_) ->
+      error_response(
+        id,
+        -32_602,
+        "Missing required params.arguments: actor, action, benefit, cost",
+      )
+  }
 }
 
 // ---------------------------------------------------------------------------

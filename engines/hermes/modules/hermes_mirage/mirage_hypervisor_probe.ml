@@ -13,9 +13,21 @@ type qemu_status = {
   kvm_accel_supported : bool;
 }
 
+type solo5_execution_receipt = {
+  tender : string;
+  unikernel : string;
+  exit_code : int;
+  output_snippet : string;
+  passed : bool;
+}
+
 type solo5_status = {
   solo5_hvt_path : string option;
   solo5_spt_path : string option;
+  solo5_virtio_path : string option;
+  hvt_execution : solo5_execution_receipt option;
+  spt_execution : solo5_execution_receipt option;
+  virtio_execution : solo5_execution_receipt option;
 }
 
 type hypervisor_probe_result = {
@@ -27,6 +39,7 @@ type hypervisor_probe_result = {
   solo5 : solo5_status;
   overall_readiness : string;
   execution_policy : string;
+  deployment_admission : string;
 }
 
 let find_binary name =
@@ -71,10 +84,57 @@ let probe_qemu () =
   in
   { binary_path; microvm_supported; kvm_accel_supported }
 
+let run_tender_test bin_opt unikernel_rel expected_codes args =
+  match bin_opt with
+  | None -> None
+  | Some bin ->
+      let uos_root = try Sys.getenv "PWD" with _ -> "." in
+      let path1 = Filename.concat uos_root ("var/mirage/unikernels/" ^ unikernel_rel) in
+      let unikernel_path =
+        if Sys.file_exists path1 then path1
+        else
+          let path2 = "/home/an/NAS-setup/uos/var/mirage/unikernels/" ^ unikernel_rel in
+          if Sys.file_exists path2 then path2 else ""
+      in
+      if unikernel_path = "" || not (Sys.file_exists unikernel_path) then None
+      else
+        let cmd = Printf.sprintf "%s %s %s 2>&1" bin unikernel_path args in
+        try
+          let ic = Unix.open_process_in cmd in
+          let rec read_lines count acc =
+            if count >= 20 then acc
+            else
+              try
+                let line = input_line ic in
+                read_lines (count + 1) (line :: acc)
+              with End_of_file -> acc
+          in
+          let lines = List.rev (read_lines 0 []) in
+          let st = Unix.close_process_in ic in
+          let exit_code = match st with Unix.WEXITED c -> c | _ -> -1 in
+          let passed = List.mem exit_code expected_codes in
+          let output_snippet =
+            let all = String.concat " " lines in
+            if String.length all > 200 then String.sub all 0 200 else all
+          in
+          Some { tender = bin; unikernel = unikernel_path; exit_code; output_snippet; passed }
+        with _ -> None
+
 let probe_solo5 () =
   let solo5_hvt_path = find_binary "solo5-hvt" in
   let solo5_spt_path = find_binary "solo5-spt" in
-  { solo5_hvt_path; solo5_spt_path }
+  let solo5_virtio_path = find_binary "solo5-virtio-run" in
+  let hvt_execution = run_tender_test solo5_hvt_path "test_hello.hvt" [0] "Hello_Solo5" in
+  let spt_execution = run_tender_test solo5_spt_path "test_hello.spt" [0] "Hello_Solo5" in
+  let virtio_execution = run_tender_test solo5_virtio_path "test_hello.virtio" [0; 83] "-- Hello_Solo5" in
+  {
+    solo5_hvt_path;
+    solo5_spt_path;
+    solo5_virtio_path;
+    hvt_execution;
+    spt_execution;
+    virtio_execution;
+  }
 
 let probe_hypervisors () =
   let host = try Unix.gethostname () with _ -> "nas-1" in
@@ -85,10 +145,17 @@ let probe_hypervisors () =
   let kvm = probe_kvm () in
   let qemu = probe_qemu () in
   let solo5 = probe_solo5 () in
-  let overall_readiness =
-    if kvm.dev_kvm_rw_accessible && qemu.kvm_accel_supported then "hardware_kvm_ready"
-    else if qemu.binary_path <> None then "tcg_emulated_only"
-    else "hypervisor_unavailable"
+  let (overall_readiness, deployment_admission) =
+    match solo5.hvt_execution, solo5.spt_execution with
+    | Some hvt, Some spt when hvt.passed && spt.passed ->
+        ("solo5_hardware_virtualized_and_spt_verified", "TENDERS_VERIFIED_PHYSICAL_EXECUTION")
+    | _ ->
+        if kvm.dev_kvm_rw_accessible && qemu.kvm_accel_supported then
+          ("hardware_kvm_ready", "NOT_VERIFIED")
+        else if qemu.binary_path <> None then
+          ("tcg_emulated_only", "NOT_VERIFIED")
+        else
+          ("hypervisor_unavailable", "NOT_VERIFIED")
   in
   let execution_policy = "two_key_receipt_required_before_admission" in
   {
@@ -100,6 +167,7 @@ let probe_hypervisors () =
     solo5;
     overall_readiness;
     execution_policy;
+    deployment_admission;
   }
 
 let opt_str = function
@@ -110,6 +178,17 @@ let opt_int = function
   | Some i -> `Int i
   | None -> `Null
 
+let receipt_to_json = function
+  | Some r ->
+      `Assoc [
+        ("tender", `String r.tender);
+        ("unikernel", `String r.unikernel);
+        ("exit_code", `Int r.exit_code);
+        ("output_snippet", `String r.output_snippet);
+        ("passed", `Bool r.passed);
+      ]
+  | None -> `Null
+
 let probe_to_json p =
   `Assoc [
     ("schema", `String p.schema);
@@ -118,7 +197,7 @@ let probe_to_json p =
     ("overall_readiness", `String p.overall_readiness);
     ("execution_policy", `String p.execution_policy);
     ("evidence_scope", `String "host_hypervisor_hardware_probe");
-    ("deployment_admission", `String "NOT_VERIFIED");
+    ("deployment_admission", `String p.deployment_admission);
     ("kvm", `Assoc [
       ("dev_kvm_present", `Bool p.kvm.dev_kvm_present);
       ("dev_kvm_rw_accessible", `Bool p.kvm.dev_kvm_rw_accessible);
@@ -132,5 +211,9 @@ let probe_to_json p =
     ("solo5", `Assoc [
       ("solo5_hvt_path", opt_str p.solo5.solo5_hvt_path);
       ("solo5_spt_path", opt_str p.solo5.solo5_spt_path);
+      ("solo5_virtio_path", opt_str p.solo5.solo5_virtio_path);
+      ("hvt_execution", receipt_to_json p.solo5.hvt_execution);
+      ("spt_execution", receipt_to_json p.solo5.spt_execution);
+      ("virtio_execution", receipt_to_json p.solo5.virtio_execution);
     ]);
   ]

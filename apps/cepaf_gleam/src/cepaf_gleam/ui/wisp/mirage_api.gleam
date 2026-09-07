@@ -146,6 +146,6 @@ pub fn instance_json(inst: UnikernelInstance) -> json.Json {
 }
 
 pub fn hypervisors_json() -> json.Json {
-  mirage_hypervisor.probe_report_to_json(mirage_hypervisor.default_verified_probe())
+  mirage_hypervisor.probe_report_to_json(mirage_hypervisor.read_probe_receipt())
 }
 

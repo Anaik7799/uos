@@ -16,6 +16,7 @@
 //// </uos-module>
 //// =============================================================================
 
+import cepaf_gleam/ha/predictive_zenoh_stream
 import gleam/list
 import gleam/otp/actor
 import gleam/otp/static_supervisor as sup
@@ -90,6 +91,7 @@ pub fn uos_root_spec() -> RootSupervisorSpec {
           "max_isolated_worker",
           "mcp_unified_gateway",
           "planning_worker",
+          "predictive_zenoh_stream",
         ],
       ),
       DomainSpec(
@@ -134,5 +136,6 @@ pub fn start_root_supervisor() -> Result(
 ) {
   sup.new(sup.RestForOne)
   |> sup.restart_tolerance(intensity: 5, period: 60)
+  |> sup.add(predictive_zenoh_stream.supervised())
   |> sup.start
 }

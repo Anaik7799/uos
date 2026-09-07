@@ -189,9 +189,18 @@ pub fn cepaf_router_exposes_truthful_mirage_json_test() {
   string.contains(status, "\"runtime_mode\":\"simulation_only\"")
   |> should.be_true()
   let hyp = router.route("/api/v1/mirage/hypervisors")
-  string.contains(hyp, "\"overall_readiness\":\"hardware_kvm_ready\"")
+  string.contains(
+    hyp,
+    "\"overall_readiness\":\"solo5_hardware_virtualized_and_spt_verified\"",
+  )
   |> should.be_true()
   string.contains(hyp, "\"dev_kvm_present\":true")
+  |> should.be_true()
+  string.contains(hyp, "solo5-hvt")
+  |> should.be_true()
+  string.contains(hyp, "solo5-spt")
+  |> should.be_true()
+  string.contains(hyp, "\"passed\":true")
   |> should.be_true()
 }
 
