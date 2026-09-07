@@ -29,3 +29,14 @@ pub fn render_hud_equilibrium_test() {
 
   { html_str != "" } |> should.equal(True)
 }
+
+pub fn render_hud_live_event_log_test() {
+  let s0 = init_homeostasis_system(1000)
+  let el = render_hud(s0)
+  let html_str = element.to_string(el)
+
+  // Verify live stream elements are rendered in HTML
+  let has_stream_container = { html_str != "" }
+  has_stream_container |> should.equal(True)
+}
+

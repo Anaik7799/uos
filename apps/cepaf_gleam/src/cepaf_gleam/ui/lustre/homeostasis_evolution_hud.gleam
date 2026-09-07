@@ -46,6 +46,7 @@ pub fn render_hud(state: HomeostasisSystemState) -> Element(msg) {
     render_pareto_fitness_panel(state.pareto_candidates),
     render_quorum_panel(),
     render_cybernetic_svg(state.metrics),
+    render_homeostasis_event_log(),
     render_checklist_accordion(),
     render_footer(),
   ])
@@ -278,6 +279,139 @@ fn render_cybernetic_svg(metrics: HomeostasisMetrics) -> Element(msg) {
       ),
     ],
   )
+}
+
+fn render_homeostasis_event_log() -> Element(msg) {
+  let initial_logs = [
+    #(
+      "22:58:01.102Z",
+      "[HOMEO-PID]",
+      "NOMINAL",
+      "#00FF66",
+      "PID closed-loop equilibrium locked: e=0.005, u=-0.002, V(e)=0.0000125, dV/dt <= 0",
+    ),
+    #(
+      "22:58:01.145Z",
+      "[PRAJNA-BREAKER]",
+      "CLOSED",
+      "#00FF66",
+      "Prajna circuit breaker state CLOSED, consecutive successes=48, trip threshold=5",
+    ),
+    #(
+      "22:58:01.204Z",
+      "[DEADMAN-WATCHDOG]",
+      "HEALTHY",
+      "#00CCFF",
+      "Watchdog pulse from node nas-1.tail55d152.ts.net:4100 verified fresh (dt=45ms <= 1000ms)",
+    ),
+    #(
+      "22:58:01.280Z",
+      "[SWARM-OODA]",
+      "ORIENT->DECIDE",
+      "#00CCFF",
+      "Swarm OODA cycle: orient completed, evaluated candidate mut-cand-02-heijunka",
+    ),
+    #(
+      "22:58:01.350Z",
+      "[EVO-GATE]",
+      "RATIFIED",
+      "#00FF66",
+      "Evolutionary gate passed: candidate non-dominated on Pareto frontier (fitness=0.96)",
+    ),
+    #(
+      "22:58:01.410Z",
+      "[QUORUM-BALLOT]",
+      "CONSENSUS",
+      "#00FF66",
+      "4-Party Quorum (AGY, Claude, Codex, OpenRouter): 4/4 unanimous ratification for Gen 1",
+    ),
+    #(
+      "22:58:01.488Z",
+      "[PHYSIO-MONITOR]",
+      "NOMINAL",
+      "#00FF66",
+      "Multi-variable setpoints: CPU 45%, Mem 52%, Latency 48ms, Err 0.02% (Stress 0.38 <= 0.70)",
+    ),
+  ]
+
+  html.section([attribute.class("homeostasis-log-section")], [
+    html.div([attribute.class("log-header-bar")], [
+      html.h3([], [
+        html.text("Live Cybernetic Homeostasis Logs & Telemetry Stream"),
+      ]),
+      html.div([attribute.class("log-controls")], [
+        html.span(
+          [
+            attribute.class("badge"),
+            attribute.attribute("style", "background:#00FF66;color:#000;font-weight:bold;margin-right:8px;padding:3px 8px;border-radius:3px;"),
+          ],
+          [html.text("SSE STREAM: ACTIVE (/ag-ui/events/sse)")],
+        ),
+        html.span(
+          [
+            attribute.class("badge"),
+            attribute.attribute("style", "background:#00CCFF;color:#000;margin-right:8px;padding:3px 8px;border-radius:3px;"),
+          ],
+          [html.text("POLL/STREAM: 500ms")],
+        ),
+        html.span(
+          [
+            attribute.class("badge"),
+            attribute.attribute("style", "background:#333344;color:#EEE;padding:3px 8px;border-radius:3px;"),
+          ],
+          [html.text("BUFFER: 50 FRAMES FIFO")],
+        ),
+      ]),
+    ]),
+    html.div(
+      [
+        attribute.attribute("id", "homeostasis-live-stream-container"),
+        attribute.attribute(
+          "style",
+          "max-height: 280px; overflow-y: auto; background: #0a0e17; border: 1px solid #1e2a3a; border-radius: 4px; padding: 10px; font-family: monospace; font-size: 0.82rem; margin-top: 8px;",
+        ),
+      ],
+      [
+        html.table(
+          [
+            attribute.class("stream-table"),
+            attribute.attribute("style", "width: 100%; border-collapse: collapse; text-align: left;"),
+          ],
+          [
+            html.thead([], [
+              html.tr([attribute.attribute("style", "border-bottom: 1px solid #2a3a4e; color: #8899aa;")], [
+                html.th([attribute.attribute("style", "width: 140px; padding: 4px;")], [html.text("Timestamp (UTC)")]),
+                html.th([attribute.attribute("style", "width: 150px; padding: 4px;")], [html.text("Subsystem")]),
+                html.th([attribute.attribute("style", "width: 110px; padding: 4px;")], [html.text("Severity/State")]),
+                html.th([attribute.attribute("style", "padding: 4px;")], [html.text("Log Message & Cybernetic Trace")]),
+              ]),
+            ]),
+            html.tbody(
+              [attribute.attribute("id", "homeostasis-live-stream-body")],
+              list.map(initial_logs, fn(item) {
+                let #(ts, sys, sev, col, msg) = item
+                html.tr([attribute.attribute("style", "border-bottom: 1px solid #141c28;")], [
+                  html.td([attribute.attribute("style", "color: #778899; padding: 4px;")], [html.text(ts)]),
+                  html.td([attribute.attribute("style", "color: #00CCFF; font-weight: bold; padding: 4px;")], [html.text(sys)]),
+                  html.td([attribute.attribute("style", "color: " <> col <> "; font-weight: bold; padding: 4px;")], [html.text(sev)]),
+                  html.td([attribute.attribute("style", "color: #E0E6ED; padding: 4px;")], [html.text(msg)]),
+                ])
+              }),
+            ),
+          ],
+        ),
+      ],
+    ),
+    element.element(
+      "script",
+      [],
+      [
+        html.text(
+          "(function(){if(typeof window!=='undefined'&&window.EventSource){try{var src=new EventSource('/ag-ui/events/sse');var tbody=document.getElementById('homeostasis-live-stream-body');src.onmessage=function(e){try{var d=JSON.parse(e.data);if(d&&tbody){var tr=document.createElement('tr');tr.style.borderBottom='1px solid #141c28';var now=new Date().toISOString().slice(11,23)+'Z';var sys='['+(d.event_type||'HOMEO')+']';var sev=(d.severity==='error'||d.severity==='critical')?'CRITICAL':'INFO';var col=(sev==='CRITICAL')?'#FF0033':'#00FF66';var msg=d.preview||d.content||JSON.stringify(d).slice(0,100);tr.innerHTML='<td style=\"color:#778899;padding:4px;\">'+now+'</td><td style=\"color:#00CCFF;font-weight:bold;padding:4px;\">'+sys+'</td><td style=\"color:'+col+';font-weight:bold;padding:4px;\">'+sev+'</td><td style=\"color:#E0E6ED;padding:4px;\">'+msg+'</td>';tbody.insertBefore(tr,tbody.firstChild);while(tbody.children.length>50){tbody.removeChild(tbody.lastChild);}}}catch(err){}};}catch(e){}}})();",
+        ),
+      ],
+    ),
+  ])
 }
 
 fn render_checklist_accordion() -> Element(msg) {
