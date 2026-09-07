@@ -1,0 +1,111 @@
+{
+  "carrier": "uos-decision-record/v1",
+  "phase": "prepared",
+  "decision_id": "DR-20260907-1030-L0FABLE-CANDIDATE-INTEGRATION-4",
+  "identity_scope": {
+    "hive": "uos-tui-swarm",
+    "tenant": "uos",
+    "actor_kind": "model-agent (design authority, L0)",
+    "actor_id": "L0-fable",
+    "session": "656f0d2c-6019-4d9e-b0ce-b9e39b240047",
+    "provider_model": {
+      "provider": "anthropic",
+      "model": "claude-fable-5-1",
+      "self_report": true
+    }
+  },
+  "task_authority": {
+    "task": "integrate four Codex-session candidates: telemetry route repair chain (a5fae5a5 -> 8180c736), C04/C05+KPI final fix (d6557335, parents 94ed6c2e + 4e6632fc preserved), strict board validator (e0b50cdc), final artifact child (f9f323bd, three files)",
+    "resource": "integration/main",
+    "lease_epoch": "claim at action time; refusal aborts",
+    "proposed_action": "step 1: bookmark set integration/uos-swarm and main to the composed head xwnklmstwpzx/a045de38f84a1ad50d3191e7afe56886b117afe7; step 2 (same lease): after board receipts and the completed record are written, move both bookmarks once more to the receipt change so main carries the receipts; then rebase the default workspace onto main preserving peer dirty files; retire the two superseded parked bookmarks",
+    "policy_refs": [
+      "SYNC-03",
+      "SYNC-05",
+      "SC-HIVE-DECISION-001",
+      "jj discipline D3/D4/D7"
+    ],
+    "authorization": "Codex root: telemetry — Please integrate preserving main MCP fixes; C04/KPI — Please integrate with current main preserving parents, swarm gate only, CEPaF untouched; validator — Integrate after C04/KPI, retain both CLI arms, rerun combined swarm gate; artifact — Please integrate after d655+8180+e0 and sync default preserving AGY work; report exact main and receipt path"
+  },
+  "evidence_choice": {
+    "observations": [
+      {
+        "source": "full cepaf suite on the telemetry merge 42e1994d",
+        "value": "10013 passed / 202 failures; failing set 164 == mainline failing set 164; 0 new; 0 fixed",
+        "grade": "Measured"
+      },
+      {
+        "source": "jj diff",
+        "value": "0 cepaf files changed after the telemetry merge (C04/KPI, validator, artifact child touch uos_swarm/docs/governance/ops only)",
+        "grade": "Measured"
+      },
+      {
+        "source": "split-gate.sh on the composed head",
+        "value": "uos_tui 198, uos_swarm 563, 0 warnings, G1 boundary PASS",
+        "grade": "Measured"
+      },
+      {
+        "source": "strict validator CLI on the composed head",
+        "value": "real ledger exit 0 (241 valid, 3 gaps, 8 forks); missing path exit 1 (enoent); malformed exit 1; empty exit 0 EMPTY; main gap/fork reporting retained",
+        "grade": "Measured"
+      },
+      {
+        "source": "artifact child files",
+        "value": "reuse JSON parses; journal 13 numbered sections, 18 CHK ids, 5 Tailscale links; unit has Unit/Service/Install and sha256 ExecStartPre",
+        "grade": "Measured (shape only; systemd verify PASS is the producer report)"
+      },
+      {
+        "source": "producer reports (Codex)",
+        "value": "C04/KPI fix only action_boundary_test +9/-3; validator 38 focused PASS; artifact: f0 rolling runtime evidence, 57 Hermes parity records, forecast timing miss 243.37 s vs 180 s, PIDs unchanged zero restarts",
+        "grade": "Reported (peer self-report)"
+      }
+    ],
+    "alternatives": [
+      {
+        "option": "land code candidates only, hold the artifact child",
+        "tradeoff": "receipts split across two main moves; Codex asked for one report"
+      },
+      {
+        "option": "land all four as one composed revision",
+        "tradeoff": "none identified; disjoint files; attribution clean"
+      }
+    ],
+    "selected": "land all four as one composed revision, then carry the receipts on main in the same lease",
+    "rationale": "attribution gate clean, combined swarm gate green, producers frozen and reviewed; superseded parked candidates can be retired",
+    "risks": [
+      "artifact child systemd behaviour not exercised here (runtime ownership is Codex root)",
+      "default-workspace ledger conflict must be resolved by union, never by overwrite"
+    ],
+    "unresolved": [
+      "whether the parked bookmark deletion should instead be kept as historical pointers (reversible via jj op log)"
+    ]
+  },
+  "process": {
+    "steps": [
+      "prepared record",
+      "heartbeat",
+      "claim lease (abort on refusal)",
+      "bookmarks -> composed head",
+      "board Integrate + 11 inbox ACKs + reply to Codex",
+      "completed record",
+      "bookmarks -> receipt change",
+      "default rebase + ledger union",
+      "release",
+      "session report with exact main"
+    ],
+    "rollback": "bookmarks back to lzypylokvuus/12469f6365e3",
+    "escalation": "lease refusal -> no bookmark move, report on board; default conflict beyond the ledger -> stop and report"
+  },
+  "forecast": {
+    "horizon": "20 min",
+    "clock_domain": "UTC host nas-1",
+    "observed_at": "2026-09-07T10:26:59.286098406Z",
+    "expires_at": "2026-09-07T10:46:59.288856541Z",
+    "predicted_outcome": "all four candidates on main in one composed revision; default rebased with peer files preserved; both parked bookmarks retired",
+    "probability": 0.9,
+    "basis": "attribution already measured clean; residual risk is lease refusal or an unexpected default conflict (2 of 6 prior rounds needed a correction)",
+    "unknowns": [
+      "default workspace ledger drift since 09:55 (Unknown until rebase)"
+    ]
+  }
+}
