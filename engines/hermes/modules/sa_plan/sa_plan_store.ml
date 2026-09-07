@@ -179,6 +179,58 @@ type workflow_view = {
   events : workflow_event list;
 }
 
+type session_observation_row = {
+  hermes_sequence : int64;
+  source_journal_ref : string;
+  host_boot_id : string;
+  event_id : string;
+  payload_hash : string;
+  local_sequence : int64;
+  session_ref : string;
+  resource_ref : string;
+  epoch : int64;
+  candidate_ref : string;
+}
+
+type session_observation_write = {
+  source_journal_ref : string;
+  host_boot_id : string;
+  event_id : string;
+  declared_payload_hash : string;
+  computed_payload_hash : string;
+  local_sequence : int64;
+  session_ref : string;
+  resource_ref : string;
+  epoch : int64;
+  candidate_ref : string;
+}
+
+type session_reconciliation_kind =
+  | Payload_hash_mismatch
+  | Body_conflict
+  | Sequence_conflict
+  | Sequence_gap
+  | Out_of_order
+
+type session_reconciliation = {
+  reconciliation_sequence : int64;
+  kind : session_reconciliation_kind;
+  source_journal_ref : string;
+  host_boot_id : string;
+  event_id : string;
+  declared_payload_hash : string;
+  computed_payload_hash : string;
+  local_sequence : int64;
+  expected_sequence : int64 option;
+}
+
+type session_observation_store_outcome =
+  | Observation_stored of {
+      observation : session_observation_row;
+      replayed : bool;
+    }
+  | Observation_reconciliation of session_reconciliation
+
 let rc_error context rc =
   Error (Printf.sprintf "%s: SQLite %s" context (Sqlite3.Rc.to_string rc))
 
@@ -399,6 +451,45 @@ CREATE TABLE IF NOT EXISTS sa_plan_bridge_lease (
 );
 |}
 
+let schema_v6 =
+  {|
+CREATE TABLE IF NOT EXISTS sa_plan_session_observation_inbox (
+  hermes_sequence INTEGER PRIMARY KEY AUTOINCREMENT,
+  source_journal_ref TEXT NOT NULL,
+  host_boot_id TEXT NOT NULL,
+  event_id TEXT NOT NULL UNIQUE,
+  payload_hash TEXT NOT NULL,
+  local_sequence INTEGER NOT NULL CHECK(local_sequence > 0),
+  session_ref TEXT NOT NULL,
+  resource_ref TEXT NOT NULL,
+  epoch INTEGER NOT NULL CHECK(epoch >= 0),
+  candidate_ref TEXT NOT NULL,
+  UNIQUE(source_journal_ref, local_sequence)
+);
+CREATE INDEX IF NOT EXISTS sa_plan_session_observation_journal_order
+  ON sa_plan_session_observation_inbox(
+    source_journal_ref, local_sequence
+  );
+CREATE TABLE IF NOT EXISTS sa_plan_session_observation_reconciliation (
+  reconciliation_sequence INTEGER PRIMARY KEY AUTOINCREMENT,
+  kind TEXT NOT NULL CHECK(kind IN (
+    'payload_hash_mismatch','body_conflict','sequence_conflict',
+    'sequence_gap','out_of_order'
+  )),
+  source_journal_ref TEXT NOT NULL,
+  host_boot_id TEXT NOT NULL,
+  event_id TEXT NOT NULL,
+  declared_payload_hash TEXT NOT NULL,
+  computed_payload_hash TEXT NOT NULL,
+  local_sequence INTEGER NOT NULL,
+  expected_sequence INTEGER
+);
+CREATE INDEX IF NOT EXISTS sa_plan_session_reconciliation_journal_order
+  ON sa_plan_session_observation_reconciliation(
+    source_journal_ref, reconciliation_sequence
+  );
+|}
+
 let column_exists db table column =
   with_stmt db
     ("PRAGMA table_info(" ^ table ^ ")")
@@ -597,6 +688,32 @@ let audit_v5_shape db =
           | Sqlite3.Rc.ROW | Sqlite3.Rc.DONE -> Ok ()
           | rc -> rc_error "audit Sa-plan v5 fenced lease shape" rc))
 
+let migrate_v6 db =
+  raw_transaction db "Sa-plan v6 session observation migration" (fun () ->
+      Result.bind
+        (exec db "create Sa-plan v6 session observation schema" schema_v6)
+        ~f:(fun () ->
+          exec db "record Sa-plan schema version 6"
+            "INSERT INTO sa_plan_schema_meta(singleton, version) VALUES (1, 6) \
+             ON CONFLICT(singleton) DO UPDATE SET version = excluded.version"))
+
+let audit_v6_shape db =
+  Result.bind (audit_v5_shape db) ~f:(fun () ->
+      let queries =
+        [ "SELECT hermes_sequence,source_journal_ref,host_boot_id,event_id,\
+           payload_hash,local_sequence,session_ref,resource_ref,epoch,\
+           candidate_ref FROM sa_plan_session_observation_inbox";
+          "SELECT reconciliation_sequence,kind,source_journal_ref,host_boot_id,\
+           event_id,declared_payload_hash,computed_payload_hash,local_sequence,\
+           expected_sequence FROM sa_plan_session_observation_reconciliation" ]
+      in
+      List.fold queries ~init:(Ok ()) ~f:(fun result sql ->
+          Result.bind result ~f:(fun () ->
+              with_stmt db sql (fun stmt ->
+                  match Sqlite3.step stmt with
+                  | Sqlite3.Rc.ROW | Sqlite3.Rc.DONE -> Ok ()
+                  | rc -> rc_error "audit Sa-plan v6 observation shape" rc))))
+
 let open_db path =
   try
     let db = Sqlite3.db_open path in
@@ -604,7 +721,7 @@ let open_db path =
     match exec db "initialize Sa-plan schema" schema with
     | Ok () -> (
         match read_schema_version db with
-        | Ok version when version > 5 ->
+        | Ok version when version > 6 ->
             ignore (Sqlite3.db_close db : bool);
             Error "unsupported future Sa-plan schema"
         | Ok version -> (
@@ -629,18 +746,26 @@ let open_db path =
                     | Error _ as error ->
                         ignore (Sqlite3.db_close db : bool);
                         error
-                    | Ok () -> (match audit_v5_shape db with
                     | Ok () ->
-                        Ok
-                          {
-                            db;
-                            closed = false;
-                            transaction_active = false;
-                            schema_version = 5;
-                          }
-                    | Error _ as error ->
-                        ignore (Sqlite3.db_close db : bool);
-                        error))
+                        let migrate_observations =
+                          if version < 6 then migrate_v6 db else Ok ()
+                        in
+                        (match migrate_observations with
+                        | Error _ as error ->
+                            ignore (Sqlite3.db_close db : bool);
+                            error
+                        | Ok () -> (match audit_v6_shape db with
+                          | Ok () ->
+                              Ok
+                                {
+                                  db;
+                                  closed = false;
+                                  transaction_active = false;
+                                  schema_version = 6;
+                                }
+                          | Error _ as error ->
+                              ignore (Sqlite3.db_close db : bool);
+                              error)))
                 | Error _ as error ->
                     ignore (Sqlite3.db_close db : bool);
                     error))
@@ -687,6 +812,233 @@ let transaction store f =
                   Error message)))
 
 let with_transaction = transaction
+
+let session_reconciliation_kind_text = function
+  | Payload_hash_mismatch -> "payload_hash_mismatch"
+  | Body_conflict -> "body_conflict"
+  | Sequence_conflict -> "sequence_conflict"
+  | Sequence_gap -> "sequence_gap"
+  | Out_of_order -> "out_of_order"
+
+let session_reconciliation_kind_of_text = function
+  | "payload_hash_mismatch" -> Ok Payload_hash_mismatch
+  | "body_conflict" -> Ok Body_conflict
+  | "sequence_conflict" -> Ok Sequence_conflict
+  | "sequence_gap" -> Ok Sequence_gap
+  | "out_of_order" -> Ok Out_of_order
+  | value -> Error ("unknown session reconciliation kind: " ^ value)
+
+let optional_int64 stmt column =
+  match Sqlite3.column stmt column with
+  | Sqlite3.Data.INT value -> Some value
+  | _ -> None
+
+let session_observation_of_row stmt =
+  { hermes_sequence = Sqlite3.column_int64 stmt 0;
+    source_journal_ref = Sqlite3.column_text stmt 1;
+    host_boot_id = Sqlite3.column_text stmt 2;
+    event_id = Sqlite3.column_text stmt 3;
+    payload_hash = Sqlite3.column_text stmt 4;
+    local_sequence = Sqlite3.column_int64 stmt 5;
+    session_ref = Sqlite3.column_text stmt 6;
+    resource_ref = Sqlite3.column_text stmt 7;
+    epoch = Sqlite3.column_int64 stmt 8;
+    candidate_ref = Sqlite3.column_text stmt 9 }
+
+let session_observation_select =
+  "SELECT hermes_sequence,source_journal_ref,host_boot_id,event_id,\
+   payload_hash,local_sequence,session_ref,resource_ref,epoch,candidate_ref \
+   FROM sa_plan_session_observation_inbox"
+
+let find_session_observation_by_event_db db event_id =
+  with_stmt db (session_observation_select ^ " WHERE event_id = ?") (fun stmt ->
+      Result.bind (bind stmt 1 (Sqlite3.Data.TEXT event_id)) ~f:(fun () ->
+          match Sqlite3.step stmt with
+          | Sqlite3.Rc.ROW -> Ok (Some (session_observation_of_row stmt))
+          | Sqlite3.Rc.DONE -> Ok None
+          | rc -> rc_error "read session observation by event" rc))
+
+let find_session_observation_by_local_sequence_db db ~source_journal_ref
+    ~local_sequence =
+  with_stmt db
+    (session_observation_select
+     ^ " WHERE source_journal_ref = ? AND local_sequence = ?")
+    (fun stmt ->
+      Result.bind
+        (bind_values_result "bind session observation sequence" stmt
+           [ Sqlite3.Data.TEXT source_journal_ref; INT local_sequence ])
+        ~f:(fun () ->
+          match Sqlite3.step stmt with
+          | Sqlite3.Rc.ROW -> Ok (Some (session_observation_of_row stmt))
+          | Sqlite3.Rc.DONE -> Ok None
+          | rc -> rc_error "read session observation by sequence" rc))
+
+let next_local_sequence_db db source_journal_ref =
+  with_stmt db
+    "SELECT MAX(local_sequence) FROM sa_plan_session_observation_inbox \
+     WHERE source_journal_ref = ?" (fun stmt ->
+      Result.bind (bind stmt 1 (Sqlite3.Data.TEXT source_journal_ref))
+        ~f:(fun () ->
+          match Sqlite3.step stmt with
+          | Sqlite3.Rc.ROW ->
+              (match Sqlite3.column stmt 0 with
+              | Sqlite3.Data.NULL -> Ok 1L
+              | Sqlite3.Data.INT value when Int64.(value < max_value) ->
+                  Ok Int64.(value + 1L)
+              | Sqlite3.Data.INT _ ->
+                  Error "session journal local sequence exhausted"
+              | _ -> Error "invalid session journal sequence aggregate")
+          | rc -> rc_error "read next session observation sequence" rc))
+
+let session_reconciliation_of_row stmt =
+  Result.map
+    (session_reconciliation_kind_of_text (Sqlite3.column_text stmt 1))
+    ~f:(fun kind ->
+      { reconciliation_sequence = Sqlite3.column_int64 stmt 0;
+        kind;
+        source_journal_ref = Sqlite3.column_text stmt 2;
+        host_boot_id = Sqlite3.column_text stmt 3;
+        event_id = Sqlite3.column_text stmt 4;
+        declared_payload_hash = Sqlite3.column_text stmt 5;
+        computed_payload_hash = Sqlite3.column_text stmt 6;
+        local_sequence = Sqlite3.column_int64 stmt 7;
+        expected_sequence = optional_int64 stmt 8 })
+
+let record_session_reconciliation_db db (write : session_observation_write)
+    ~kind ~expected_sequence =
+  with_stmt db
+    "INSERT INTO sa_plan_session_observation_reconciliation(\
+       kind,source_journal_ref,host_boot_id,event_id,declared_payload_hash,\
+       computed_payload_hash,local_sequence,expected_sequence\
+     ) VALUES(?,?,?,?,?,?,?,?)" (fun stmt ->
+      let expected =
+        Option.value_map expected_sequence ~default:Sqlite3.Data.NULL
+          ~f:(fun value -> Sqlite3.Data.INT value)
+      in
+      Result.bind
+        (bind_values_result "bind session observation reconciliation" stmt
+           [ TEXT (session_reconciliation_kind_text kind);
+             TEXT write.source_journal_ref;
+             TEXT write.host_boot_id;
+             TEXT write.event_id;
+             TEXT write.declared_payload_hash;
+             TEXT write.computed_payload_hash;
+             INT write.local_sequence;
+             expected ])
+        ~f:(fun () ->
+          Result.bind
+            (step_done "record session observation reconciliation" stmt)
+            ~f:(fun () ->
+              let sequence = Sqlite3.last_insert_rowid db in
+              Ok
+                (Observation_reconciliation
+                   { reconciliation_sequence = sequence;
+                     kind;
+                     source_journal_ref = write.source_journal_ref;
+                     host_boot_id = write.host_boot_id;
+                     event_id = write.event_id;
+                     declared_payload_hash = write.declared_payload_hash;
+                     computed_payload_hash = write.computed_payload_hash;
+                     local_sequence = write.local_sequence;
+                     expected_sequence }))))
+
+let existing_observation_matches (write : session_observation_write)
+    (row : session_observation_row) =
+  String.equal write.source_journal_ref row.source_journal_ref
+  && String.equal write.host_boot_id row.host_boot_id
+  && String.equal write.event_id row.event_id
+  && String.equal write.computed_payload_hash row.payload_hash
+  && Int64.equal write.local_sequence row.local_sequence
+  && String.equal write.session_ref row.session_ref
+  && String.equal write.resource_ref row.resource_ref
+  && Int64.equal write.epoch row.epoch
+  && String.equal write.candidate_ref row.candidate_ref
+
+let insert_session_observation_db db (write : session_observation_write) =
+  with_stmt db
+    "INSERT INTO sa_plan_session_observation_inbox(\
+       source_journal_ref,host_boot_id,event_id,payload_hash,local_sequence,\
+       session_ref,resource_ref,epoch,candidate_ref\
+     ) VALUES(?,?,?,?,?,?,?,?,?)" (fun stmt ->
+      Result.bind
+        (bind_values_result "bind session observation inbox" stmt
+           [ TEXT write.source_journal_ref;
+             TEXT write.host_boot_id;
+             TEXT write.event_id;
+             TEXT write.computed_payload_hash;
+             INT write.local_sequence;
+             TEXT write.session_ref;
+             TEXT write.resource_ref;
+             INT write.epoch;
+             TEXT write.candidate_ref ])
+        ~f:(fun () ->
+          Result.bind (step_done "insert session observation inbox" stmt)
+            ~f:(fun () ->
+              Result.map
+                (find_session_observation_by_event_db db write.event_id)
+                ~f:(function
+                  | Some observation ->
+                      Observation_stored { observation; replayed = false }
+                  | None ->
+                      failwith "inserted session observation is unreadable"))))
+
+let ingest_session_observation store (write : session_observation_write) =
+  transaction store (fun () ->
+      if not
+           (String.equal write.declared_payload_hash write.computed_payload_hash)
+      then
+        record_session_reconciliation_db store.db write
+          ~kind:Payload_hash_mismatch ~expected_sequence:None
+      else
+        Result.bind
+          (find_session_observation_by_event_db store.db write.event_id)
+          ~f:(function
+            | Some observation when existing_observation_matches write observation ->
+                Ok (Observation_stored { observation; replayed = true })
+            | Some _ ->
+                record_session_reconciliation_db store.db write
+                  ~kind:Body_conflict ~expected_sequence:None
+            | None ->
+                Result.bind
+                  (next_local_sequence_db store.db write.source_journal_ref)
+                  ~f:(fun expected_sequence ->
+                    if Int64.(write.local_sequence > expected_sequence) then
+                      record_session_reconciliation_db store.db write
+                        ~kind:Sequence_gap
+                        ~expected_sequence:(Some expected_sequence)
+                    else if Int64.(write.local_sequence < expected_sequence) then
+                      Result.bind
+                        (find_session_observation_by_local_sequence_db store.db
+                           ~source_journal_ref:write.source_journal_ref
+                           ~local_sequence:write.local_sequence)
+                        ~f:(fun occupied ->
+                          let kind =
+                            if Option.is_some occupied then Out_of_order
+                            else Sequence_conflict
+                          in
+                          record_session_reconciliation_db store.db write ~kind
+                            ~expected_sequence:(Some expected_sequence))
+                    else insert_session_observation_db store.db write)))
+
+let list_session_reconciliations store ~source_journal_ref =
+  Result.bind (ensure_open store) ~f:(fun () ->
+      with_stmt store.db
+        "SELECT reconciliation_sequence,kind,source_journal_ref,host_boot_id,\
+         event_id,declared_payload_hash,computed_payload_hash,local_sequence,\
+         expected_sequence FROM sa_plan_session_observation_reconciliation \
+         WHERE source_journal_ref = ? ORDER BY reconciliation_sequence"
+        (fun stmt ->
+          Result.bind (bind stmt 1 (Sqlite3.Data.TEXT source_journal_ref))
+            ~f:(fun () ->
+              let rec rows acc =
+                match Sqlite3.step stmt with
+                | Sqlite3.Rc.ROW ->
+                    Result.bind (session_reconciliation_of_row stmt)
+                      ~f:(fun row -> rows (row :: acc))
+                | Sqlite3.Rc.DONE -> Ok (List.rev acc)
+                | rc -> rc_error "list session observation reconciliations" rc
+              in
+              rows [])))
 
 let bridge_domain_text = function
   | Otp_parity -> "otp"

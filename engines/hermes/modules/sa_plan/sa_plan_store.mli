@@ -183,6 +183,59 @@ type workflow_view = {
   events : workflow_event list;
 }
 
+(** Persistent interpretation of one normalized session observation. *)
+type session_observation_row = {
+  hermes_sequence : int64;
+  source_journal_ref : string;
+  host_boot_id : string;
+  event_id : string;
+  payload_hash : string;
+  local_sequence : int64;
+  session_ref : string;
+  resource_ref : string;
+  epoch : int64;
+  candidate_ref : string;
+}
+
+type session_observation_write = {
+  source_journal_ref : string;
+  host_boot_id : string;
+  event_id : string;
+  declared_payload_hash : string;
+  computed_payload_hash : string;
+  local_sequence : int64;
+  session_ref : string;
+  resource_ref : string;
+  epoch : int64;
+  candidate_ref : string;
+}
+
+type session_reconciliation_kind =
+  | Payload_hash_mismatch
+  | Body_conflict
+  | Sequence_conflict
+  | Sequence_gap
+  | Out_of_order
+
+type session_reconciliation = {
+  reconciliation_sequence : int64;
+  kind : session_reconciliation_kind;
+  source_journal_ref : string;
+  host_boot_id : string;
+  event_id : string;
+  declared_payload_hash : string;
+  computed_payload_hash : string;
+  local_sequence : int64;
+  expected_sequence : int64 option;
+}
+
+type session_observation_store_outcome =
+  | Observation_stored of {
+      observation : session_observation_row;
+      replayed : bool;
+    }
+  | Observation_reconciliation of session_reconciliation
+
 val open_db : string -> (t, string) Result.t
 val close : t -> unit
 val schema_version : t -> int
@@ -194,6 +247,22 @@ val schema_version : t -> int
     One store connection remains single-owner while the callback is active. *)
 val with_transaction :
   t -> (unit -> ('a, string) Result.t) -> ('a, string) Result.t
+
+(** Atomically validates the declared/computed hash pair, global event
+    idempotency and contiguous order in the stable journal namespace.
+    A matching retry returns the original row. A refusal appends a durable
+    reconciliation record and inserts no inbox row. This operation has no SQL
+    path to plans, tasks, leases, workflows, dispatch, approval, or budgets. *)
+val ingest_session_observation :
+  t ->
+  session_observation_write ->
+  (session_observation_store_outcome, string) Result.t
+
+(** Read-only, ordered reconciliation observation used by recovery tooling. *)
+val list_session_reconciliations :
+  t ->
+  source_journal_ref:string ->
+  (session_reconciliation list, string) Result.t
 
 val ensure_bridge_mapping :
   t -> bridge_mapping_request -> (bridge_mapping, string) Result.t
