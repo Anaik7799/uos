@@ -14,7 +14,6 @@ import cepaf_gleam/c3i/nif as c3i_nif
 import cepaf_gleam/mcp/protocol.{type ToolDefinition}
 import cepaf_gleam/mcp/tools
 import cepaf_gleam/ui/wisp/router as wisp_router
-import gleam/dynamic
 import gleam/dynamic/decode
 import gleam/io
 import gleam/json
@@ -26,14 +25,14 @@ import gleam/string
 // Erlang FFI bindings
 // ---------------------------------------------------------------------------
 
-@external(erlang, "io", "get_line")
-fn erl_get_line(prompt: String) -> dynamic.Dynamic
+type StdioLine {
+  Line(String)
+  EndOfFile
+  ReadError(String)
+}
 
-@external(erlang, "erlang", "is_binary")
-fn is_binary(val: dynamic.Dynamic) -> Bool
-
-@external(erlang, "gleam_stdlib", "identity")
-fn coerce_to_string(val: dynamic.Dynamic) -> String
+@external(erlang, "mcp_stdio_ffi", "read_line")
+fn read_stdio_line() -> StdioLine
 
 @external(erlang, "cepaf_gleam_ffi", "file_read")
 fn erl_file_read(path: String) -> Result(BitArray, String)
@@ -58,11 +57,9 @@ pub fn start() {
 // ---------------------------------------------------------------------------
 
 fn loop() {
-  let line = erl_get_line("")
-  case is_binary(line) {
-    True -> {
-      let line_str: String = coerce_to_string(line)
-      let trimmed = string.trim(line_str)
+  case read_stdio_line() {
+    Line(line) -> {
+      let trimmed = string.trim(line)
       case trimmed {
         "" -> loop()
         _ -> {
@@ -78,9 +75,9 @@ fn loop() {
         }
       }
     }
-    False -> {
-      io.println_error("[mcp-server] stdin closed, shutting down")
-    }
+    EndOfFile -> io.println_error("[mcp-server] stdin closed, shutting down")
+    ReadError(reason) ->
+      io.println_error("[mcp-server] stdin error, shutting down: " <> reason)
   }
 }
 

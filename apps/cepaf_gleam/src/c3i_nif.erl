@@ -33,7 +33,7 @@ init() ->
         ok -> true;
         {error, {reload, _}} -> true;
         {error, Reason} ->
-            io:format("[c3i_nif] NIF load failed: ~p (path: ~s)~n", [Reason, SoPath]),
+            io:format(standard_error, "[c3i_nif] NIF load failed: ~p (path: ~s)~n", [Reason, SoPath]),
             false
     end,
     persistent_term:put(?RUNTIME_LOADED_KEY, Loaded),
