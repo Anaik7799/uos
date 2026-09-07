@@ -24,6 +24,7 @@ import cepaf_gleam/ui/lustre/km_sheaf_traversal
 import cepaf_gleam/ui/lustre/knowledge_explorer
 import cepaf_gleam/ui/lustre/navigational_omnisearch
 import cepaf_gleam/ui/lustre/omni_modal_console
+import cepaf_gleam/ui/lustre/peer_health_view
 import cepaf_gleam/ui/lustre/pi_startup_visualizer
 import cepaf_gleam/ui/lustre/recursive_patrol_hud
 import cepaf_gleam/ui/lustre/sovereign_tensor_cockpit
@@ -38,6 +39,7 @@ import cepaf_gleam/ui/wisp/router as c3i_router
 import cepaf_gleam/verification/browser_emulation_bridge
 import cepaf_gleam/verification/dmc_biosemiotics_interlock
 import cepaf_gleam/verification/omni_fractal_matrix_engine
+import cepaf_gleam/verification/peer_health
 import cepaf_gleam/verification/unified_fractal_web_verifier as ufwv
 import cepaf_gleam/verification/unified_verification_supervisor
 import cepaf_gleam/verification/vfs_selfcheck
@@ -478,12 +480,25 @@ pub fn main() {
         |> response.prepend_header("content-type", "application/json")
         |> response.prepend_header("access-control-allow-origin", "*")
       }
+      ["api", "peer", "health"] -> {
+        peer_health.observe(peer_health.CurrentPeer)
+        |> peer_health_response()
+      }
       ["api", ..] -> {
         let json_body = c3i_router.route(path)
         response.new(200)
         |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
         |> response.prepend_header("content-type", "application/json")
         |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["peer"] -> {
+        let page =
+          peer_health.observe(peer_health.CurrentPeer)
+          |> render_peer_document()
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html; charset=utf-8")
+        |> response.prepend_header("cache-control", "no-store")
       }
       ["planning"] -> {
         response.new(200)
@@ -1219,6 +1234,10 @@ fn render_nav(active: String) -> String {
     False -> ""
   } <> ">File Explorer</a>
     <a href='/api/health' target='_blank'>System Health API</a>
+    <a href='http://nas-1.tail55d152.ts.net:4100/peer' " <> case active == "peer" {
+    True -> "class='active' aria-current='page'"
+    False -> ""
+  } <> ">VM-1 Peer Diagnostic</a>
   </nav>"
 }
 
@@ -1227,7 +1246,8 @@ fn render_footer() -> String {
     <div class='footer-inner'>
       <div>
         <strong>Tailscale Mesh Base:</strong> <a href='http://nas-1.tail55d152.ts.net:4100' target='_blank' style='color:#58a6ff'>http://nas-1.tail55d152.ts.net:4100</a>
-        &bull; <strong>Peer Host:</strong> <a href='http://vm-1.tail55d152.ts.net:8088' target='_blank' style='color:#58a6ff'>http://vm-1.tail55d152.ts.net:8088</a>
+        &bull; <strong>Peer Host:</strong> <a href='http://vm-1.tail55d152.ts.net:4100' target='_blank' style='color:#58a6ff'>http://vm-1.tail55d152.ts.net:4100</a>
+        &bull; <a href='http://nas-1.tail55d152.ts.net:4100/peer'>Peer diagnostic and identity status</a>
       </div>
       <div style='margin-top:0.4rem'>
         <span class='badge badge-fractal'>SIL-6 DAL-A</span>
@@ -1274,6 +1294,25 @@ fn render_breadcrumbs_loop(
       render_breadcrumbs_loop(rest, cur_path, link)
     }
   }
+}
+
+// HTTP reachability does not grant runtime admission. A diagnostic API response
+// is intentionally non-2xx while its report remains unavailable or unverified.
+pub fn peer_health_response(report: peer_health.Report) -> Response(ResponseData) {
+  response.new(503)
+  |> response.set_body(
+    mist.Bytes(bytes_tree.from_string(peer_health.to_json(report))),
+  )
+  |> response.prepend_header("content-type", "application/json")
+  |> response.prepend_header("cache-control", "no-store")
+}
+
+pub fn render_peer_document(report: peer_health.Report) -> String {
+  render_lustre_page(
+    "VM-1 peer diagnostic",
+    "peer",
+    element.to_string(peer_health_view.view(report)),
+  )
 }
 
 fn render_lustre_page(
