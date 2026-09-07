@@ -681,6 +681,18 @@ let partition_ledger_rows ~scope ~index_path ~index_sha256 ~part_path ~part_sha2
         let value = optional_string "gleam_use" fields in
         if value = "" then "UNDECIDED_RETAIN_AS_EVIDENCE" else value
       in
+      let* dependencies =
+        match List.assoc_opt "imports" fields with
+        | None -> Ok []
+        | Some (`List values) ->
+            let rec strings result = function
+              | [] -> Ok (List.rev result)
+              | `String value :: rest -> strings (value :: result) rest
+              | _ -> Error (Invalid_index (part_path ^ ": import candidate must be string"))
+            in
+            strings [] values
+        | Some _ -> Error (Invalid_index (part_path ^ ": imports must be an array"))
+      in
       let source_row =
         `Assoc
           [ ("source_id", `String source_id); ("scope", `String scope);
@@ -691,9 +703,13 @@ let partition_ledger_rows ~scope ~index_path ~index_sha256 ~part_path ~part_sha2
             ("bound_part", `String part_path); ("bound_part_sha256", `String part_sha256);
             ("review_state", `String (if review = "" then "UNKNOWN" else review));
             ("close_read", `Bool false); ("excluded", `Bool excluded);
-            ("frontier", if excluded then `Null else `String "close_read_and_runtime_confirmation_open");
+            ("frontier", `String
+              (if excluded then "EXCLUDED_NO_REVIEW_FRONTIER"
+               else "close_read_and_runtime_confirmation_open"));
             ("registration_state", `String "STATIC_LEXICAL_INDEX_NOT_RUNNER_CONFIRMED");
             ("browser_class", `String browser); ("transfer_decision", `String transfer);
+            ("dependencies", `List (List.map (fun value -> `String value) dependencies));
+            ("dependency_state", `String "RECORD_LEVEL_LEXICAL_IMPORTS_NOT_RESOLVED_CALL_EDGES");
             ("runner", `String (runner_of_language language));
             ("execution_state", `String (if execution = "" then "UNKNOWN" else execution));
             ("coverage_scope", `String coverage) ]
@@ -731,6 +747,9 @@ let partition_ledger_rows ~scope ~index_path ~index_sha256 ~part_path ~part_sha2
                     ("oracle_line_count", `Int assertions);
                     ("coverage_scope", `String coverage); ("browser_class", `String browser);
                     ("transfer_decision", `String transfer);
+                    ("dependencies_ref", `String source_id);
+                    ("dependency_state", `String
+                      "RECORD_LEVEL_LEXICAL_IMPORTS_NOT_RESOLVED_CALL_EDGES");
                     ("runner", `String (runner_of_language language));
                     ("execution_state", `String (if execution = "" then "UNKNOWN" else execution));
                     ("review_state", `String "LEXICAL_CANDIDATE_NOT_AST_OR_RUNNER_CONFIRMED");
@@ -909,6 +928,8 @@ let verify_ocaml_inventory ?expected_sha256 path =
                   ("registration_state", `String "DUNE_REGISTRATION_UNVERIFIED");
                   ("browser_class", `String "BX_REVIEW_REQUIRED");
                   ("transfer_decision", `String (if transfer = "" then "UNDECIDED" else transfer));
+                  ("dependencies", `List []);
+                  ("dependency_state", `String "NOT_PRESENT_IN_PINNED_OCAML_INDEX");
                   ("runner", `String "dune_candidate");
                   ("execution_state", `String (if execution = "" then "UNKNOWN" else execution));
                   ("coverage_scope", `String
@@ -939,7 +960,10 @@ let verify_ocaml_inventory ?expected_sha256 path =
                           ("oracle_state", `String "STATIC_SITE_LABEL_ONLY_ORACLE_UNCONFIRMED");
                           ("oracle_label", `String label); ("coverage_scope", `String coverage);
                           ("browser_class", `String "BX_REVIEW_REQUIRED");
-                          ("transfer_decision", `String transfer); ("runner", `String "dune_candidate");
+                          ("transfer_decision", `String transfer);
+                          ("dependencies_ref", `String source_id);
+                          ("dependency_state", `String "NOT_PRESENT_IN_PINNED_OCAML_INDEX");
+                          ("runner", `String "dune_candidate");
                           ("execution_state", `String (if execution = "" then "UNKNOWN" else execution));
                           ("review_state", `String "STATIC_SITE_NOT_REGISTERED_OR_EXECUTED_CASE");
                           ("frontier", `String "Dune_registration_oracle_and_execution_confirmation_open");
@@ -1113,6 +1137,100 @@ let repository_ledger () =
   then Error (Invalid_index "census ledger contains empty or duplicate stable identities")
   else Ok ledger
 
+let census_generator_path = "tools/source_review/census.ml"
+
+let required_list name = function
+  | `Assoc fields ->
+      (match List.assoc_opt name fields with
+       | Some (`List values) -> Ok values
+       | _ -> Error (Invalid_index ("ledger lacks array " ^ name)))
+  | _ -> Error (Invalid_index "ledger must be an object")
+
+let required_string name = function
+  | `Assoc fields ->
+      (match List.assoc_opt name fields with
+       | Some (`String value) -> Ok value
+       | _ -> Error (Invalid_index ("ledger row lacks string " ^ name)))
+  | _ -> Error (Invalid_index "ledger row must be an object")
+
+let compact_manifest_from_ledger ~generator_sha256 ledger =
+  let* bindings = required_list "bindings" ledger in
+  let* accounting = required_list "scope_accounting" ledger in
+  let* source_records = required_list "source_records" ledger in
+  let* case_records = required_list "case_records" ledger in
+  let rec source_frontiers rows = function
+    | [] -> Ok (List.rev rows)
+    | row :: rest ->
+        let* source_id = required_string "source_id" row in
+        let* frontier = required_string "frontier" row in
+        source_frontiers (`List [ `String source_id; `String frontier ] :: rows) rest
+  in
+  let rec case_identities rows = function
+    | [] -> Ok (List.rev rows)
+    | row :: rest ->
+        let* case_id = required_string "case_id" row in
+        let* source_id = required_string "source_id" row in
+        case_identities (`List [ `String case_id; `String source_id ] :: rows) rest
+  in
+  let* source_frontiers = source_frontiers [] source_records in
+  let* case_identities = case_identities [] case_records in
+  let ledger_text = Yojson.Basic.to_string ledger ^ "\n" in
+  let source_identity_text = Yojson.Basic.to_string (`List source_frontiers) in
+  let case_identity_text = Yojson.Basic.to_string (`List case_identities) in
+  Ok
+    (`Assoc
+      [ ("schema", `String "uos.source-census-reproducibility-index.v1");
+        ("index_created_at_utc", `String "2026-09-07T05:05:13Z");
+        ("canonical_path", `String
+          "governance/sources/20260907-0513-e04-census-reproducibility-index.json");
+        ("authority", `String
+          "deterministic projection of pinned UOS indexes; no external source traversal");
+        ("external_source_traversal", `Bool false);
+        ("complete_review", `Bool false); ("executed_tests", `Int 0);
+        ("generator", `Assoc
+          [ ("path", `String census_generator_path);
+            ("sha256", `String generator_sha256);
+            ("language", `String "OCaml");
+            ("network_access", `Bool false) ]);
+        ("input_bindings", `List bindings);
+        ("scope_accounting", `List accounting);
+        ("ledger", `Assoc
+          [ ("schema", `String "uos.source-census-ledger.v1");
+            ("sha256", `String (sha256 ledger_text));
+            ("bytes", `Int (String.length ledger_text));
+            ("source_rows", `Int (List.length source_records));
+            ("case_rows", `Int (List.length case_records));
+            ("materialize_command", `String
+              "ocaml tools/source_review/census.ml --write-ledger /tmp/uos-e04-census-ledger.json") ]);
+        ("source_frontiers", `List source_frontiers);
+        ("source_frontiers_sha256", `String (sha256 source_identity_text));
+        ("case_identities", `List case_identities);
+        ("case_identities_sha256", `String (sha256 case_identity_text));
+        ("recovery", `Assoc
+          [ ("verify_command", `String
+              "ocaml tools/source_review/census.ml --verify-manifest governance/sources/20260907-0513-e04-census-reproducibility-index.json");
+            ("full_case_fields", `List (List.map (fun value -> `String value)
+              [ "case_id"; "source_id"; "locator"; "span"; "oracle_state";
+                "coverage_scope"; "browser_class"; "transfer_decision";
+                "dependencies_ref"; "dependency_state"; "runner"; "execution_state";
+                "review_state"; "frontier" ]));
+            ("dependency_resolution", `String
+              "Resolve each case dependencies_ref to source_records.source_id and read that source row's dependencies and dependency_state fields.");
+            ("recovery_rule", `String
+              "Regenerate the canonical full ledger from input_bindings with the bound generator, then require the recorded ledger SHA256 and byte count.") ]) ])
+
+let repository_manifest () =
+  let* ledger = repository_ledger () in
+  let* generator = read_regular_bounded ~limit:max_index_bytes census_generator_path in
+  compact_manifest_from_ledger ~generator_sha256:(sha256 generator) ledger
+
+let verify_repository_manifest path =
+  let* expected = repository_manifest () in
+  let* observed_text = read_regular_bounded ~limit:(16 * 1024 * 1024) path in
+  let* observed = parse_json path observed_text in
+  if observed = expected then Ok ()
+  else Error (Invalid_index (path ^ ": reproducibility index differs from regenerated evidence"))
+
 let repository_report () =
   let* ocaml, corpus, catalogue = repository_evidence () in
   let ledger = repository_ledger_from ocaml corpus catalogue in
@@ -1238,9 +1356,26 @@ let census_main () =
                             ("ledger_sha256", `String (sha256 value));
                             ("ledger_bytes", `Int (String.length value)) ]));
                 0))
+  | [ _; "--write-manifest"; path ] ->
+      (match repository_manifest () with
+       | Error error -> prerr_endline (string_of_error error); 1
+       | Ok manifest ->
+           let value = Yojson.Basic.to_string manifest ^ "\n" in
+           (match write_ledger_atomic path value with
+            | Error error -> prerr_endline (string_of_error error); 1
+            | Ok () ->
+                print_endline (Yojson.Basic.to_string
+                  (`Assoc [ ("manifest_path", `String path);
+                            ("manifest_sha256", `String (sha256 value));
+                            ("manifest_bytes", `Int (String.length value)) ]));
+                0))
+  | [ _; "--verify-manifest"; path ] ->
+      (match verify_repository_manifest path with
+       | Error error -> prerr_endline (string_of_error error); 1
+       | Ok () -> print_endline "census reproducibility index verified"; 0)
   | _ ->
       prerr_endline
-        "usage: ocaml tools/source_review/census.ml (--verify-indexes | --write-ledger /tmp/PATH)";
+        "usage: ocaml tools/source_review/census.ml (--verify-indexes | --write-ledger /tmp/PATH | --write-manifest /tmp/PATH | --verify-manifest PATH)";
       2
 
 let () = if census_direct_invocation () then exit (census_main ())

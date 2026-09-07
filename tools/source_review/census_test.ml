@@ -247,12 +247,52 @@ let () =
     "every source record must expose identity, frontier and execution state";
   check
     (List.for_all (function
-       | `Assoc fields -> List.mem_assoc "case_id" fields && List.mem_assoc "span" fields
+       | `Assoc fields -> List.mem_assoc "case_id" fields && List.mem_assoc "locator" fields
+                          && List.mem_assoc "span" fields
                           && List.mem_assoc "oracle_state" fields
+                          && List.mem_assoc "coverage_scope" fields
                           && List.mem_assoc "browser_class" fields
                           && List.mem_assoc "runner" fields
+                          && List.mem_assoc "transfer_decision" fields
+                          && List.mem_assoc "dependencies_ref" fields
+                          && List.mem_assoc "dependency_state" fields
+                          && List.mem_assoc "execution_state" fields
        | _ -> false) (rows "case_records"))
-    "every case candidate must expose ID, span, oracle, browser and runner state";
+    "every case candidate must expose recoverable locator, oracle, dependency and state fields";
+  let sources_by_id = Hashtbl.create 10_000 in
+  List.iter (function
+    | `Assoc fields ->
+        (match List.assoc_opt "source_id" fields, List.assoc_opt "dependencies" fields with
+         | Some (`String source_id), Some (`List _) -> Hashtbl.replace sources_by_id source_id ()
+         | _ -> ())
+    | _ -> ()) (rows "source_records");
+  check
+    (List.for_all (function
+       | `Assoc fields ->
+           (match List.assoc_opt "dependencies_ref" fields with
+            | Some (`String source_id) -> Hashtbl.mem sources_by_id source_id
+            | _ -> false)
+       | _ -> false) (rows "case_records"))
+    "every case dependency reference must resolve to its bound source dependency row";
+
+  let generator_text =
+    expect_ok (read_regular_bounded ~limit:max_index_bytes census_generator_path) in
+  let manifest =
+    expect_ok (compact_manifest_from_ledger ~generator_sha256:(sha256 generator_text) ledger) in
+  let manifest_fields = match manifest with `Assoc fields -> fields | _ -> failwith "manifest object" in
+  let manifest_rows name = match List.assoc name manifest_fields with
+    | `List values -> values | _ -> failwith (name ^ " list") in
+  check (List.length (manifest_rows "input_bindings") = 39)
+    "reproducibility index must retain every pinned input binding";
+  check (List.length (manifest_rows "source_frontiers") = 8978)
+    "reproducibility index must expose a frontier for every stable source ID";
+  check (List.length (manifest_rows "case_identities") = 25244)
+    "reproducibility index must retain every stable case ID and source link";
+  check
+    (List.for_all (function
+       | `List [ `String source_id; `String frontier ] -> source_id <> "" && frontier <> ""
+       | _ -> false) (manifest_rows "source_frontiers"))
+    "every compact source identity must have an explicit machine-visible frontier";
   let ledger_path = Filename.temp_file "uos-e04-ledger-" ".json" in
   Fun.protect
     ~finally:(fun () -> try Unix.unlink ledger_path with Unix.Unix_error _ -> ())
@@ -264,5 +304,28 @@ let () =
        | Ok () -> ());
       let observed = expect_ok (read_regular_bounded ~limit:max_ledger_bytes ledger_path) in
       check (sha256 observed = sha256 ledger_text) "atomic ledger bytes must match the reviewed ledger");
+
+  let manifest_path = Filename.temp_file "uos-e04-manifest-" ".json" in
+  Fun.protect
+    ~finally:(fun () -> try Unix.unlink manifest_path with Unix.Unix_error _ -> ())
+    (fun () ->
+      let write value =
+        let descriptor = Unix.openfile manifest_path [ Unix.O_WRONLY; Unix.O_TRUNC ] 0o600 in
+        Fun.protect ~finally:(fun () -> Unix.close descriptor)
+          (fun () -> write_all descriptor value)
+      in
+      write (Yojson.Basic.to_string manifest ^ "\n");
+      check (verify_repository_manifest manifest_path = Ok ())
+        "tracked reproducibility index must equal deterministic regeneration";
+      let tampered = match manifest with
+        | `Assoc fields -> `Assoc (("complete_review", `Bool true)
+            :: List.remove_assoc "complete_review" fields)
+        | _ -> failwith "manifest object"
+      in
+      write (Yojson.Basic.to_string tampered ^ "\n");
+      check
+        (match verify_repository_manifest manifest_path with
+         | Error (Invalid_index _) -> true | _ -> false)
+        "tampered reproducibility index must fail closed");
 
   Printf.printf "census_test: %d checks passed\n" !checks
