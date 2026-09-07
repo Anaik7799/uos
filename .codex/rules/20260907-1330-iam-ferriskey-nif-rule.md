@@ -5,7 +5,7 @@
 - **Tailscale FQDN Link**: [http://nas-1.tail55d152.ts.net:4100/docs/.codex/rules/20260907-1330-iam-ferriskey-nif-rule.md](http://nas-1.tail55d152.ts.net:4100/docs/.codex/rules/20260907-1330-iam-ferriskey-nif-rule.md)
 - **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
 - **Canonical copy**: `.claude/rules/20260907-1330-iam-ferriskey-nif-rule.md` (this file is the durable Codex summary per the full-symbiosis rule; keep both identical in substance).
-- **Source**: `/home/an/dev/ver/c3i/.claude/rules/iam-ferriskey-nif.md` (VM-1 C3I evidence). UOS paths: `native/nifs/rust/ferriskey_nif/` (sources, ingestion pending operator permission), `apps/cepaf_gleam/src/ferriskey_nif.erl` (loader), `apps/cepaf_gleam/priv/ferriskey_nif.so` (host-provisioned, pinned by `priv/ferriskey_nif.sha256`, never committed). Provenance: `governance/sources/20260907-1330-ferriskey-nif-source-ingestion.json`. Codex R5 security review required before any admission claim.
+- **Source**: `/home/an/dev/ver/c3i/.claude/rules/iam-ferriskey-nif.md` (VM-1 C3I evidence). UOS paths: `native/nifs/rust/ferriskey_nif/` (sources imported under operator permission, manifest-verified), `apps/cepaf_gleam/src/ferriskey_nif.erl` (loader), `apps/cepaf_gleam/priv/ferriskey_nif.so` (host-provisioned, pinned by `priv/ferriskey_nif.sha256`, never committed). Provenance: `governance/sources/20260907-1330-ferriskey-nif-source-ingestion.json`. Codex R5 security review required before any admission claim.
 
 ---
 

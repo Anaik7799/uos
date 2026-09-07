@@ -86,7 +86,7 @@ Deterministic log classification; digest-verified artifact provisioning as ignor
 The census confirms what the burndown showed: UOS carries the code of C3I and Indrajaal but not their process fabric. The root supervisor is a declaration, the live services start by hand or by two systemd units, and forty-nine daemons have no UOS counterpart. Bringing the process fabric under one supervised tree is the next structural task, and it must go through sa-plan.
 
 ## 10. Remaining Gaps
-- P1: FerrisKey crate sources not yet in `native/nifs/rust/ferriskey_nif/` (guard); Codex R5 review pending; no positive-path load test yet.
+- P1 (closed 13:42Z): FerrisKey crate sources imported into `native/nifs/rust/ferriskey_nif/` under explicit operator permission; manifest verified file by file; the in-repo build reproduces the pinned artifact byte-for-byte; build recipe in `native/nifs/rust/README.md`; TLA evidence in `formal/tla/`. Still open: Codex R5 review; the load-evidence test (worker W-G) is being integrated under `DR-20260907-134x-…FERRISKEY-SOURCE-IMPORT-AND-LOAD-EVIDENCE`.
 - P1: `mcp_runtime_truth_test` asserts host absence; Codex to decide the fix.
 - P1: 49 absent and 22 unwired daemons (census); `uos_sup.gleam` starts nothing.
 - P1: AGY main moves without lease; a rejected Mirage remediation is an ancestor of `main`; operator may revert.

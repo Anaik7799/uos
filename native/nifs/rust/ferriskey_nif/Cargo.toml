@@ -1,0 +1,60 @@
+[package]
+name = "ferriskey_nif"
+version = "0.1.0"
+edition = "2021"
+authors = ["C3I Team <abhijit.naik@bountytek.com>"]
+description = "FerrisKey IAM NIF for cepaf_gleam — local-first IdP with Google Cloud IAM federation"
+license = "Apache-2.0"
+
+[lib]
+name = "ferriskey_nif"
+crate-type = ["cdylib"]
+
+[dependencies]
+# NIF runtime
+rustler = "0.37"
+once_cell = "1.19"
+
+# Async + HTTP (GCP STS, SCIM outbound, Admin SDK)
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time", "sync"] }
+reqwest = { version = "0.12", features = ["json", "rustls-tls"], default-features = false }
+
+# Crypto + JWT
+jsonwebtoken = "9"
+ring = "0.17"
+ed25519-dalek = { version = "2", features = ["rand_core", "pkcs8"] }
+bcrypt = "0.15"
+base64 = "0.22"
+rand = "0.8"
+sha2 = "0.10"
+urlencoding = "2"
+
+# Storage
+rusqlite = { version = "0.31", features = ["bundled"] }
+r2d2 = "0.8"
+r2d2_sqlite = "0.24"
+
+# Serde + util
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1", features = ["v4", "v7", "serde"] }
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Audit + telemetry (OTel spans → Zenoh via existing zenoh_nif)
+# tracing chosen over opentelemetry direct to keep dep graph small.
+tracing = "0.1"
+
+# Phase 2+ — link the vendored FerrisKey domain crate as path dep.
+# The crate exists, license is Apache-2.0, exposes auth/authentication/client/
+# common/maintenance/realm/role/token_lifetime/user modules. Disabled in Phase 1
+# (skeleton compile only) — re-enable in Phase 2 when realm/user/group/role NIFs land.
+# ferriskey-domain = { path = "../../../../sub-projects/ferriskey-vendored/libs/ferriskey-domain" }
+
+[dev-dependencies]
+tempfile = "3"
+
+# SC-VAULT-CRYPTO-001 defense-in-depth: forbid Tongsuo / SM2/SM3/SM4 anywhere in tree.
+[patch.crates-io]
+# (intentionally empty; pinned to crates.io upstream)

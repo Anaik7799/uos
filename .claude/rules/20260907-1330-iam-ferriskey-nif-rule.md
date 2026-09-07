@@ -5,7 +5,7 @@
 - **Tailscale FQDN Link**: [http://nas-1.tail55d152.ts.net:4100/docs/.claude/rules/20260907-1330-iam-ferriskey-nif-rule.md](http://nas-1.tail55d152.ts.net:4100/docs/.claude/rules/20260907-1330-iam-ferriskey-nif-rule.md)
 - **Transclusions**: `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
 - **Source of this mirror**: `/home/an/dev/ver/c3i/.claude/rules/iam-ferriskey-nif.md` (VM-1 C3I evidence, read-only). UOS path substitutions: `lib/cepaf_gleam/native/ferriskey_nif/` becomes `native/nifs/rust/ferriskey_nif/`; `lib/cepaf_gleam/` becomes `apps/cepaf_gleam/`. The built cdylib is a host-provisioned artifact at `apps/cepaf_gleam/priv/ferriskey_nif.so`, pinned by `apps/cepaf_gleam/priv/ferriskey_nif.sha256`, never committed.
-- **UOS status (2026-09-07)**: NIF crate built from the C3I sources with provenance (`governance/sources/20260907-1330-ferriskey-nif-source-ingestion.json`); source copy into `native/nifs/rust/ferriskey_nif/` pending operator permission; Codex R5 sovereign security review required before any admission claim (IAM, tokens, JWKS, GCP STS, SCIM). Mirrors: `.claude/rules`, `.gemini/rules`, `.agents/rules`, `.codex/rules` (full-symbiosis rule parity).
+- **UOS status (2026-09-07)**: NIF crate sources imported into `native/nifs/rust/ferriskey_nif/` under explicit operator permission, manifest-verified against `governance/sources/20260907-1330-ferriskey-nif-source-ingestion.json`; artifact built and pinned; build recipe in `native/nifs/rust/README.md`; Codex R5 sovereign security review required before any admission claim (IAM, tokens, JWKS, GCP STS, SCIM). Mirrors: `.claude/rules`, `.gemini/rules`, `.agents/rules`, `.codex/rules` (full-symbiosis rule parity).
 
 ---
 
