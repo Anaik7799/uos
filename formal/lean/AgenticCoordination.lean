@@ -186,6 +186,16 @@ theorem release_retains_epoch (s : State) (a : Agent) (e : Nat) :
   · split <;> rfl
   · rfl
 
+theorem live_owner_blocks_acquire (s : State) (a : Agent) (d : Nat)
+    (l : Lease) (held : s.lease = some l) (live : s.clock < l.expires) :
+    acquire s a d = s := by
+  unfold acquire
+  apply if_neg
+  rintro ⟨_, empty | expired⟩
+  · simp [held] at empty
+  · have he := expired l held
+    omega
+
 theorem single_owner (s : State) (l₁ l₂ : Lease)
     (h₁ : s.lease = some l₁) (h₂ : s.lease = some l₂) : l₁.owner = l₂.owner := by
   have h := h₁.symm.trans h₂
@@ -236,6 +246,19 @@ theorem advice_ack_prompt_non_authority (s : State) :
     (observe s).effects = s.effects := by
   exact ⟨rfl, rfl, rfl, rfl, rfl, rfl⟩
 
+theorem unprivileged_cannot_apply (s : State) (r : Resource) (a : Agent) (e c : Nat)
+    (denied : s.authority a = false) : applyAction s r a e c = s := by
+  apply if_neg
+  intro h
+  have hyes := h.2.1
+  rw [denied] at hyes
+  contradiction
+
+theorem apply_requires_distinct_keys (s : State) (h : Inv s) (r : Resource)
+    (a : Agent) (e c : Nat) (enabled : CanApply s r a e c) :
+    ∀ i j : Aspect, (s.packets i).runtimeKey ≠ (s.packets j).formalKey := by
+  exact (h.2.1 enabled.2.2.1).2.2.2
+
 inductive Event where
   | packet (a : Aspect) (p : Packet)
   | candidate (revision : Nat)
@@ -270,6 +293,19 @@ theorem step_preserves (s : State) (h : Inv s) (event : Event) : Inv (step s eve
   | settle n => exact settle_preserves s h n
   | apply r a e c => exact apply_preserves s h r a e c
   | advice | ack | prompt | modelOutput | tick => exact h
+
+theorem step_epoch_monotone (s : State) (event : Event) : s.epoch ≤ (step s event).epoch := by
+  cases event <;>
+    simp [step, recordPacket, nominate, admitCandidate, acquire, release,
+      reserve, settle, applyAction, observe, tick]
+  all_goals split <;> (try split) <;> simp_all
+
+theorem step_authority_unchanged (s : State) (event : Event) :
+    (step s event).authority = s.authority := by
+  cases event <;>
+    simp [step, recordPacket, nominate, admitCandidate, acquire, release,
+      reserve, settle, applyAction, observe, tick]
+  all_goals split <;> (try split) <;> simp_all
 
 def run (s : State) (events : List Event) : State := events.foldl step s
 
@@ -319,5 +355,7 @@ theorem fixture_safe : Inv fixture := by
 #print axioms run_preserves
 #print axioms apply_requires_all_17
 #print axioms valid_packets_ready
+#print axioms step_epoch_monotone
+#print axioms step_authority_unchanged
 
 end UOS.AgenticCoordination

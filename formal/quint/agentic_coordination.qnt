@@ -88,6 +88,7 @@ module agentic_coordination {
 
   action step = any {
     freshEvidence, admit, clockTick, observation,
+    apply(Resource, s.owner, s.epoch, s.candidate),
     nondet a = oneOf(Aspects); nondet c = oneOf(Revisions); submit(a, packet(a, c)),
     nondet a = oneOf(Aspects); submit(a, packet(a, s.candidate).with("runtimeKey", 2)),
     nondet c = oneOf(Revisions); nominate(c),
@@ -146,6 +147,11 @@ module agentic_coordination {
     .then(reserve(1)).expect(s.settled == Budget and s.reserved == 0 and inv_all)
 
   // Two controlled mutants, intentionally NOT reachable from normal step.
+  action mutantFenceInit = {
+    val authorized = initial.with("packets", Aspects.mapBy(a => packet(a, 1)))
+      .with("admitted", true).with("owner", 2).with("epoch", 1).with("expires", 2)
+    all { s' = authorized, previous' = authorized }
+  }
   action mutantUnfencedApply = move(s.with("effects", s.effects + 1)
     .with("lastActor", 2).with("lastEpoch", 0).with("lastRevision", 1).with("lastResource", Resource))
   action mutantOverspend = move(s.with("reserved", Budget + 1))

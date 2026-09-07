@@ -206,7 +206,7 @@ start_ticks(Pid) ->
         {ok, Stat} ->
             %% comm may contain ')' and spaces; the final ') ' precedes field 3.
             Parts = binary:split(Stat, <<") ">>, [global]),
-            Fields = string:lexemes(lists:last(Parts), <<" ">>),
+            Fields = [F || F <- binary:split(lists:last(Parts), <<" ">>, [global]), F =/= <<>>],
             case length(Fields) >= 20 of
                 true -> {ok, lists:nth(20, Fields)};
                 false -> {error, invalid_stat}
