@@ -3,7 +3,23 @@
 %% The deadline kills only the invoked Herdr CLI client, never its server/agents.
 %% This is a transport adapter; CLI observation is not atomic session authority.
 -module(uos_herdr_ffi).
--export([run/1]).
+-export([run/1, current_pane/0]).
+
+%% Read only the caller's Herdr transport coordinates. This is same-UID
+%% metadata, never a cryptographic principal or privileged action grant.
+current_pane() ->
+    case {os:getenv("HERDR_ENV"), os:getenv("HERDR_PANE_ID")} of
+        {"1", Pane} when is_list(Pane) ->
+            case unicode:characters_to_binary(Pane) of
+                Bin when is_binary(Bin) ->
+                    case identifier(Bin) of
+                        true -> {ok, Bin};
+                        false -> {error, <<"invalid_caller_pane">>}
+                    end;
+                _ -> {error, <<"invalid_caller_pane">>}
+            end;
+        _ -> {error, <<"not_in_herdr">>}
+    end.
 
 -define(TIMEOUT_MS, 12000).
 -define(OUTPUT_BYTES, 65536).
