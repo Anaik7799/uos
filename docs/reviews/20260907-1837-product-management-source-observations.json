@@ -1,0 +1,1536 @@
+{
+  "schema": "uos.product-source-review/v1",
+  "observed_at": "2026-09-07T19:06:51Z",
+  "scope": "Product/specification/feature/oracle management source and metadata; no external source execution or admission.",
+  "sources": [
+    {
+      "root": "/home/an/dev/ver/zigvm",
+      "head": "3cf87fedbc51e37c64eee057c30a553f9d346170",
+      "tracked_dirty_path_count": 44,
+      "writers_quiesced": false,
+      "admission": "READ_ONLY_NOT_INGESTED",
+      "files": [
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/infranodus_feature.ml",
+          "relative_path": "harness/infranodus_feature.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "d62456acb405559ce4e41e46d39531d5139e538756dc1f2135d93d2b9bef1f8d",
+          "bytes": 19077,
+          "lines": 337,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/infranodus/infranodus_feature.ml",
+            "sha256": "d62456acb405559ce4e41e46d39531d5139e538756dc1f2135d93d2b9bef1f8d",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/infranodus_feature.mli",
+          "relative_path": "harness/infranodus_feature.mli",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "b0036c7caefb53598f0bd5b29240b1b6ddfd4d0a04cacc41c7b61f5b01a6bb8e",
+          "bytes": 956,
+          "lines": 38,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/infranodus/infranodus_feature.mli",
+            "sha256": "b0036c7caefb53598f0bd5b29240b1b6ddfd4d0a04cacc41c7b61f5b01a6bb8e",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/test_infranodus_feature.ml",
+          "relative_path": "harness/test_infranodus_feature.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "51ba232070f6ae3b808fa5970dd1f33e2bea516e1a5d5946f7dc0b5035b63955",
+          "bytes": 2856,
+          "lines": 80,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/infranodus/test_infranodus_feature.ml",
+            "sha256": "51ba232070f6ae3b808fa5970dd1f33e2bea516e1a5d5946f7dc0b5035b63955",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/infranodus_scenario.ml",
+          "relative_path": "harness/infranodus_scenario.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "3926f000eff29ad06499b8430b430f9bdf9f355dfb9f5aaa4b198fe0712fb2f4",
+          "bytes": 11804,
+          "lines": 274,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/infranodus/infranodus_scenario.ml",
+            "sha256": "3926f000eff29ad06499b8430b430f9bdf9f355dfb9f5aaa4b198fe0712fb2f4",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/infranodus_artifacts.ml",
+          "relative_path": "harness/infranodus_artifacts.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "33ff8d3189f893ec43ce3105be56a820f150ec9c230f42fa34e2f905c336fbf0",
+          "bytes": 9661,
+          "lines": 231,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/infranodus/infranodus_artifacts.ml",
+            "sha256": "33ff8d3189f893ec43ce3105be56a820f150ec9c230f42fa34e2f905c336fbf0",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/docs_wiki.ml",
+          "relative_path": "harness/docs_wiki.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "57376bf8649a1a0b5b0498d387aa7405a7081cf7d6fb42d0e1b459d98091af0a",
+          "bytes": 297669,
+          "lines": 5446,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/otp_oracle.ml",
+          "relative_path": "harness/otp_oracle.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "8894990e53b0df09a26be2965687fd1bccf3fe2dac13b2a69bbbdc8559f6a888",
+          "bytes": 3328,
+          "lines": 97,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/oracle_vectors.ml",
+          "relative_path": "harness/oracle_vectors.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "13c0106a2deb89cd8d3cb817aaa170d9b8d4b86d6f7785713b0d3e4227e02056",
+          "bytes": 8479,
+          "lines": 182,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/oracle_vectors_laws.ml",
+          "relative_path": "harness/oracle_vectors_laws.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "17ee1592eea263217eec76e3f17565dd63a1d7f926a96d4e802bfd73679b4348",
+          "bytes": 5712,
+          "lines": 126,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/erl_tests.ml",
+          "relative_path": "harness/erl_tests.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "8c2ab480dc5c3da34bf06f51a5c4a015f75e9dc3df412fe48ea0b220f404fa7a",
+          "bytes": 43953,
+          "lines": 731,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/evidence_census.ml",
+          "relative_path": "harness/evidence_census.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "ceae904b875079a3b184d46a7dbea28a266b5ff7949c89c84ab1efb1e594f20b",
+          "bytes": 10372,
+          "lines": 202,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/graph_revision.ml",
+          "relative_path": "harness/graph_revision.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "73603a135ebf6339bbfd12bb912bbcd6f6f98a96b4c9b5450dbb5b1cbee7fc9a",
+          "bytes": 9954,
+          "lines": 261,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/gospel_contract_registry.ml",
+          "relative_path": "harness/gospel_contract_registry.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "4b66943750f9eaf77057de3bfc4c07d53e3b5bd218d4913bca457f849a114ea8",
+          "bytes": 6458,
+          "lines": 140,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/gospel_contract_registry.mli",
+          "relative_path": "harness/gospel_contract_registry.mli",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "82cb28919553c711a72f5c0efcb32e84f119a50c0a59a0a83c35f23d25c38514",
+          "bytes": 842,
+          "lines": 30,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/gospel_contract_runner.ml",
+          "relative_path": "harness/gospel_contract_runner.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "14f76a8b5808039023c073e218a6a66f2f0cf0b9b7fb366c46976a8c399a882b",
+          "bytes": 2370,
+          "lines": 59,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/db.ml",
+          "relative_path": "harness/db.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "07644bed0cc31757086ec06fa3f7e1e6da6744c593bea44971a8f4d0c6c77cff",
+          "bytes": 7189,
+          "lines": 207,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/db.mli",
+          "relative_path": "harness/db.mli",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "736de7ea22e68c1319f49ceefd13c603ae0a52bd91035a4f87bc842a347c65c3",
+          "bytes": 4169,
+          "lines": 78,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/sa_plan_preflight.ml",
+          "relative_path": "harness/sa_plan_preflight.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "ed6122631cbe11c44e2c8a3af535d99946d3847c0fc8f7e6d40086607bdf2866",
+          "bytes": 5180,
+          "lines": 118,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/sa_plan_preflight.mli",
+          "relative_path": "harness/sa_plan_preflight.mli",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "4bafc7d252293f4a87ba620f43aed7309d4653ade7825cb9058ce2deb53e6fef",
+          "bytes": 1215,
+          "lines": 53,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/sa_plan/sa_plan_store.ml",
+          "relative_path": "harness/sa_plan/sa_plan_store.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "f333df8ededb6c52d7dda7323d0baa4ca9a9692eea584058294610a79ae2ef0b",
+          "bytes": 105657,
+          "lines": 2632,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/sa_plan/sa_plan_control_plane.ml",
+          "relative_path": "harness/sa_plan/sa_plan_control_plane.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "beff2c5ac054d83c85c63ca4ac32d07e0e7ce8ef1ea1878c8a15367a72f5f675",
+          "bytes": 7290,
+          "lines": 95,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/sa_plan/sa_plan_control_plane_oracle.ml",
+          "relative_path": "harness/sa_plan/sa_plan_control_plane_oracle.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "03aba947a14f2b9d48c9646df3367c9002d067859e47e7fb0dc65778d9a62d8e",
+          "bytes": 3208,
+          "lines": 37,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/zigvm_harness.ml",
+          "relative_path": "harness/zigvm_harness.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "ac812727e34d690ce6227679475144be3e47ec2ae2567f1089c708bbc1e996d1",
+          "bytes": 1479177,
+          "lines": 28261,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/playwright_authority.ml",
+          "relative_path": "harness/playwright_authority.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "72ef05d4cb25f963d792add16692be2387984fe006f8fb87e24d67bfa5d55e27",
+          "bytes": 23108,
+          "lines": 501,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/playwright_source_ontology.ml",
+          "relative_path": "harness/playwright_source_ontology.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "5814f59a96b6ebf20bca576c6d9fd3301718acc2ca4578afddeebe7e7ae027aa",
+          "bytes": 15542,
+          "lines": 309,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/fractal_closure.ml",
+          "relative_path": "harness/fractal_closure.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "d3ec98d797c066172937c6a186f815b1aec311ab8e324b2defac5dcbe8969a09",
+          "bytes": 8176,
+          "lines": 228,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/fractal_closure_registry.ml",
+          "relative_path": "harness/fractal_closure_registry.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "d291c00c4472a7fb6ba4097fba4f68e5eab76e639502c7f2a90ec46feadc2fa8",
+          "bytes": 16849,
+          "lines": 283,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/journal_bundle.ml",
+          "relative_path": "harness/journal_bundle.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "549b2023a9997689ff5622d4744e13aeab1d412f559932d9c25e5378c09db9a7",
+          "bytes": 22691,
+          "lines": 581,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/journal_bundle_transaction.ml",
+          "relative_path": "harness/journal_bundle_transaction.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "f5f1be71499f367cea3adb9e28ef7b992f6cac05aaa15619759acddeab48d42a",
+          "bytes": 9779,
+          "lines": 229,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/replay_control.ml",
+          "relative_path": "harness/replay_control.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "a3fcaf1e0e4d045279d6ac5014bacb43861522ac76ac0adc687ebfa4a7d02b31",
+          "bytes": 15634,
+          "lines": 327,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/harness/solver_sandbox.ml",
+          "relative_path": "harness/solver_sandbox.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "d2455f511af22647874a3d0fe1c5f0e72f5dc4cfa6e0117c81b49c3c6d0b2329",
+          "bytes": 3161,
+          "lines": 101,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/docs/zk/episodic/zk-feature-db.md",
+          "relative_path": "docs/zk/episodic/zk-feature-db.md",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "15ecfed5ae029db28548422fe8903484202f050de24350be9e54165193d1acdf",
+          "bytes": 1009,
+          "lines": 15,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/zigvm/docs/zk/episodic/zk-feature-algebra.md",
+          "relative_path": "docs/zk/episodic/zk-feature-algebra.md",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "d853008242d15362f714a2cf4c41e288a2a9fa7487255ca53dcb3f4688ecebf2",
+          "bytes": 3003,
+          "lines": 24,
+          "uos_counterpart": null
+        }
+      ]
+    },
+    {
+      "root": "/home/an/dev/ver/harness-bionic",
+      "head": "8a03c14f47c229db4cb086270b94c618ca8b1e06",
+      "tracked_dirty_path_count": 331,
+      "writers_quiesced": false,
+      "admission": "READ_ONLY_NOT_INGESTED",
+      "files": [
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/feature_catalog.ml",
+          "relative_path": "modules/hermes_harness/feature_catalog.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "b14a5b98d230f75d55d21f368de45b1a660563a48aa49c909d424305b03cc969",
+          "bytes": 2060,
+          "lines": 22,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/feature_catalog.ml",
+            "sha256": "b14a5b98d230f75d55d21f368de45b1a660563a48aa49c909d424305b03cc969",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/capability_catalog.ml",
+          "relative_path": "modules/hermes_harness/capability_catalog.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "c76a2c1a39d907f21491dbe3948eae1e97f321e9785aeaad5fbec63d4bae6a5f",
+          "bytes": 35695,
+          "lines": 623,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/capability_catalog.ml",
+            "sha256": "c76a2c1a39d907f21491dbe3948eae1e97f321e9785aeaad5fbec63d4bae6a5f",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/contract_catalog.ml",
+          "relative_path": "modules/hermes_harness/contract_catalog.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "5b04bfd4a90859e0f9a9f1471a3482f4d15889d674ccb4377c489e46290e1f77",
+          "bytes": 3721,
+          "lines": 76,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/contract_catalog.ml",
+            "sha256": "5b04bfd4a90859e0f9a9f1471a3482f4d15889d674ccb4377c489e46290e1f77",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/fractal_catalog.ml",
+          "relative_path": "modules/hermes_harness/fractal_catalog.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "77d9a583712234b5cc7ae4dc0c8178cc71b112366de1600d8410b45c1c7f04e7",
+          "bytes": 1266,
+          "lines": 27,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/fractal_catalog.ml",
+            "sha256": "77d9a583712234b5cc7ae4dc0c8178cc71b112366de1600d8410b45c1c7f04e7",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/fractal_parity.ml",
+          "relative_path": "modules/hermes_harness/fractal_parity.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "652c92122f1c8e624adde19e62bc73eb8b7775ca13ff915a92f1e786cc816594",
+          "bytes": 1898,
+          "lines": 34,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/fractal_parity.ml",
+            "sha256": "652c92122f1c8e624adde19e62bc73eb8b7775ca13ff915a92f1e786cc816594",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/fractal_ontology.ml",
+          "relative_path": "modules/hermes_harness/fractal_ontology.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "06664ab5ba7d521806772ceff12e0e5c01b23ce752f86274f11462d2fe3a3f43",
+          "bytes": 121545,
+          "lines": 1529,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/fractal_ontology.ml",
+            "sha256": "abaab15b30b7f9391ba957a0faed87b0ddbcc3c826988af413399709e988a50e",
+            "relation": "ADAPTED_OR_DIVERGED"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/evidence_store.ml",
+          "relative_path": "modules/hermes_harness/evidence_store.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "3df638c16000dbab0a4fe947edb0dd616063569e8a5159792f601cfff75fed64",
+          "bytes": 53054,
+          "lines": 1139,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/evidence_store.ml",
+            "sha256": "3df638c16000dbab0a4fe947edb0dd616063569e8a5159792f601cfff75fed64",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/evidence_rollup.ml",
+          "relative_path": "modules/hermes_harness/evidence_rollup.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "f49fb80cd66f840a8edaab211c169d00a2735bc2d81fe0b0c745b34ee9b603c8",
+          "bytes": 2332,
+          "lines": 60,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/evidence_rollup.ml",
+            "sha256": "f49fb80cd66f840a8edaab211c169d00a2735bc2d81fe0b0c745b34ee9b603c8",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/evidence_import.ml",
+          "relative_path": "modules/hermes_harness/evidence_import.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "36ae135842fb6e356298cfa8295b2f3aefc2a96a94f5f9f635d2adb1a993cb65",
+          "bytes": 12447,
+          "lines": 293,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/evidence_import.ml",
+            "sha256": "36ae135842fb6e356298cfa8295b2f3aefc2a96a94f5f9f635d2adb1a993cb65",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/parity_tracker.ml",
+          "relative_path": "modules/hermes_harness/parity_tracker.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "680ab4d0b8933c2da3eac350b220a98f5f9f9ba57f4bd7a870831d23df673864",
+          "bytes": 3784,
+          "lines": 81,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/parity_tracker.ml",
+            "sha256": "680ab4d0b8933c2da3eac350b220a98f5f9f9ba57f4bd7a870831d23df673864",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/parity_algebra.ml",
+          "relative_path": "modules/hermes_harness/parity_algebra.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "06a742ba3696d477d39c698054e1eaf9c22d0449adddee0fa721bfdcb0f4d379",
+          "bytes": 4782,
+          "lines": 111,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/parity_algebra.ml",
+            "sha256": "06a742ba3696d477d39c698054e1eaf9c22d0449adddee0fa721bfdcb0f4d379",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/parity_normalizer.ml",
+          "relative_path": "modules/hermes_harness/parity_normalizer.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "1ca5daad5b6af2b26f4c31009a0278809db1002e260fb88241a755b12ee99fed",
+          "bytes": 4581,
+          "lines": 103,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/parity_normalizer.ml",
+            "sha256": "1ca5daad5b6af2b26f4c31009a0278809db1002e260fb88241a755b12ee99fed",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/parity_compare.ml",
+          "relative_path": "modules/hermes_harness/parity_compare.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "e7c3fa75be8ee27e707f2d967d4c7e18386294d03c2654a19ca6e81c66d6870c",
+          "bytes": 227254,
+          "lines": 3991,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/parity_compare.ml",
+            "sha256": "e7c3fa75be8ee27e707f2d967d4c7e18386294d03c2654a19ca6e81c66d6870c",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/reference_capture.ml",
+          "relative_path": "modules/hermes_harness/reference_capture.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "7d6decf481e8a95a92f9de3332c3a74fae4b8dae8107b0dd835f9e370cd663db",
+          "bytes": 13619,
+          "lines": 317,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/reference_capture.ml",
+            "sha256": "7d6decf481e8a95a92f9de3332c3a74fae4b8dae8107b0dd835f9e370cd663db",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/reference_artifacts.ml",
+          "relative_path": "modules/hermes_harness/reference_artifacts.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "40ffd66da216bcca634e30d7548d6cd3c5a2c2bf19815f72a0d1de623fa4afdf",
+          "bytes": 3598,
+          "lines": 95,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/reference_artifacts.ml",
+            "sha256": "40ffd66da216bcca634e30d7548d6cd3c5a2c2bf19815f72a0d1de623fa4afdf",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/inventory.ml",
+          "relative_path": "modules/hermes_harness/inventory.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "fa57639337a36a7d6b2d4f9437c8adc8e41d9c4eefe7e1b3cdac63a8c6301aa3",
+          "bytes": 3695,
+          "lines": 104,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/inventory.ml",
+            "sha256": "fa57639337a36a7d6b2d4f9437c8adc8e41d9c4eefe7e1b3cdac63a8c6301aa3",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/bootstrap.ml",
+          "relative_path": "modules/hermes_harness/bootstrap.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "a346f803cbec4b0bed58a6de8bf8611422be072a597ae22769fd8405e32552f8",
+          "bytes": 1490,
+          "lines": 40,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/bootstrap.ml",
+            "sha256": "a346f803cbec4b0bed58a6de8bf8611422be072a597ae22769fd8405e32552f8",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/blueprint.ml",
+          "relative_path": "modules/hermes_harness/blueprint.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "a67065de6fec2d71b9255bad65598e254fe3fa87520e3828c0601279496f8206",
+          "bytes": 6373,
+          "lines": 160,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/blueprint.ml",
+            "sha256": "a67065de6fec2d71b9255bad65598e254fe3fa87520e3828c0601279496f8206",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/blueprint.mli",
+          "relative_path": "modules/hermes_harness/blueprint.mli",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "6e36c27f0839e03eab0a6d4f41ca8ea20498a44469d27305c30dd33caabc60a9",
+          "bytes": 3937,
+          "lines": 85,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/blueprint.mli",
+            "sha256": "6e36c27f0839e03eab0a6d4f41ca8ea20498a44469d27305c30dd33caabc60a9",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/harness_config.ml",
+          "relative_path": "modules/hermes_harness/harness_config.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "aefe0c17b5e60857698270148dad4600c0f0eaa8544c45b9a018c56be96f030b",
+          "bytes": 7843,
+          "lines": 177,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/harness_config.ml",
+            "sha256": "aefe0c17b5e60857698270148dad4600c0f0eaa8544c45b9a018c56be96f030b",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/gap_plan.ml",
+          "relative_path": "modules/hermes_harness/gap_plan.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "45eba34864c386b7f51b20331024b748ca03a5f0d3c5009b9c98b14cbcf96174",
+          "bytes": 12419,
+          "lines": 243,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/gap_plan.ml",
+            "sha256": "45eba34864c386b7f51b20331024b748ca03a5f0d3c5009b9c98b14cbcf96174",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/converge.ml",
+          "relative_path": "modules/hermes_harness/converge.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "e198bf345ca7c5f1429fd174be61d04894eb6f2186d8e0f611d200a19ce36df2",
+          "bytes": 2739,
+          "lines": 58,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/converge.ml",
+            "sha256": "e198bf345ca7c5f1429fd174be61d04894eb6f2186d8e0f611d200a19ce36df2",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/formal_coverage.ml",
+          "relative_path": "modules/hermes_harness/formal_coverage.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "d3ea1f84da9041ab4c3e199d8aedf76e492f287d881bcbd7804dab0de0ed52d0",
+          "bytes": 54241,
+          "lines": 1038,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/formal_coverage.ml",
+            "sha256": "d3ea1f84da9041ab4c3e199d8aedf76e492f287d881bcbd7804dab0de0ed52d0",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/runtime_coverage.ml",
+          "relative_path": "modules/hermes_harness/runtime_coverage.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "34372dd8ea326454c686c20fa9ae8f73dc6d2a9d909acc46a1bbfba138434c68",
+          "bytes": 1055,
+          "lines": 25,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/runtime_coverage.ml",
+            "sha256": "34372dd8ea326454c686c20fa9ae8f73dc6d2a9d909acc46a1bbfba138434c68",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/receipt_reliability.ml",
+          "relative_path": "modules/hermes_harness/receipt_reliability.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "0d1ced6693a3aefe1eeff7233b2a49dbefccfb05d79ed3bd035890a7c17c0169",
+          "bytes": 2181,
+          "lines": 59,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/receipt_reliability.ml",
+            "sha256": "0d1ced6693a3aefe1eeff7233b2a49dbefccfb05d79ed3bd035890a7c17c0169",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/parity_ledger.ml",
+          "relative_path": "modules/hermes_harness/parity_ledger.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "2753cc4d9153b8bba96f954d5291b60b791cfa4081b70168c20308ef7adce2a3",
+          "bytes": 5781,
+          "lines": 131,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/parity_ledger.ml",
+            "sha256": "2753cc4d9153b8bba96f954d5291b60b791cfa4081b70168c20308ef7adce2a3",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/orientation_history.ml",
+          "relative_path": "modules/hermes_harness/orientation_history.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "dd87f3c34d6bdf7607b254a71f1b9a6f23096a4d5e3e1583f99fe333e198423a",
+          "bytes": 10439,
+          "lines": 262,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/orientation_history.ml",
+            "sha256": "dd87f3c34d6bdf7607b254a71f1b9a6f23096a4d5e3e1583f99fe333e198423a",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/resource_envelope.ml",
+          "relative_path": "modules/hermes_harness/resource_envelope.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "af32e74cab06c7bda78c104d35e40c9c02d99381f5574b8a833380848bda4385",
+          "bytes": 13418,
+          "lines": 272,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/resource_envelope.ml",
+            "sha256": "af32e74cab06c7bda78c104d35e40c9c02d99381f5574b8a833380848bda4385",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/test_evidence_store.ml",
+          "relative_path": "modules/hermes_harness/test_evidence_store.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "5c8c8128cc84447ddcc826c8bff4fafd2d0a06bd8b047369208a2800875e5614",
+          "bytes": 12651,
+          "lines": 162,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/test_evidence_store.ml",
+            "sha256": "5c8c8128cc84447ddcc826c8bff4fafd2d0a06bd8b047369208a2800875e5614",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/test_fractal_catalog.ml",
+          "relative_path": "modules/hermes_harness/test_fractal_catalog.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "3f835e0c1b7fef166ef9c5ca3845d8b6452740847ade66f3cdae3863e2f1a417",
+          "bytes": 2046,
+          "lines": 39,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/test_fractal_catalog.ml",
+            "sha256": "3f835e0c1b7fef166ef9c5ca3845d8b6452740847ade66f3cdae3863e2f1a417",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/test_fractal_parity.ml",
+          "relative_path": "modules/hermes_harness/test_fractal_parity.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "3b6952b279b1a313a0c000e0d89b2efbe28d2e2dbbe81399b0dc5ccb7f276f05",
+          "bytes": 838,
+          "lines": 20,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/test_fractal_parity.ml",
+            "sha256": "3b6952b279b1a313a0c000e0d89b2efbe28d2e2dbbe81399b0dc5ccb7f276f05",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/test_reference_capture.ml",
+          "relative_path": "modules/hermes_harness/test_reference_capture.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "0bd3708e9fa1ab03e65c3fa9d72bf833abcb59ec23e9b1f3cb82de4c5151216c",
+          "bytes": 31969,
+          "lines": 757,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/test_reference_capture.ml",
+            "sha256": "0bd3708e9fa1ab03e65c3fa9d72bf833abcb59ec23e9b1f3cb82de4c5151216c",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/test_parity_compare.ml",
+          "relative_path": "modules/hermes_harness/test_parity_compare.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "da397a65f3d3753242f27d594a96cac655724e05c72167ab9085fbcbede7105b",
+          "bytes": 47263,
+          "lines": 975,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/test_parity_compare.ml",
+            "sha256": "da397a65f3d3753242f27d594a96cac655724e05c72167ab9085fbcbede7105b",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_harness/test_evidence_rollup.ml",
+          "relative_path": "modules/hermes_harness/test_evidence_rollup.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "c6c8df60386097cad32076eca803613c63af8b79e977f1eeebde8014e0a512cb",
+          "bytes": 9820,
+          "lines": 203,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_harness/test_evidence_rollup.ml",
+            "sha256": "c6c8df60386097cad32076eca803613c63af8b79e977f1eeebde8014e0a512cb",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_wiki/src/register/feature_register.ml",
+          "relative_path": "modules/hermes_wiki/src/register/feature_register.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "20d27dbd11d865658d6e9b5c96a7a8df8f4a70b785d7c43ad0cfa8ec944da2d6",
+          "bytes": 174672,
+          "lines": 3248,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_wiki/src/register/feature_register.ml",
+            "sha256": "20d27dbd11d865658d6e9b5c96a7a8df8f4a70b785d7c43ad0cfa8ec944da2d6",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_wiki/src/register/feature_register.mli",
+          "relative_path": "modules/hermes_wiki/src/register/feature_register.mli",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "d02f043c246eaa323d9584337c2240b679bf49b2009c58f6d85ae7b9854fc431",
+          "bytes": 3583,
+          "lines": 84,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_wiki/src/register/feature_register.mli",
+            "sha256": "d02f043c246eaa323d9584337c2240b679bf49b2009c58f6d85ae7b9854fc431",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_wiki/src/register/feature_register.gospel",
+          "relative_path": "modules/hermes_wiki/src/register/feature_register.gospel",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "b72d3c40de9ef491e35d12d042e54eda03c5e72e18d51980cf79c7d210c28c8f",
+          "bytes": 271799,
+          "lines": 1212,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_wiki/src/register/feature_register.gospel",
+            "sha256": "b72d3c40de9ef491e35d12d042e54eda03c5e72e18d51980cf79c7d210c28c8f",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_wiki/src/mbse/feature_model.ml",
+          "relative_path": "modules/hermes_wiki/src/mbse/feature_model.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "b39ff3c01381e8745b01a99793af340cbc4d1218c5e69d6564c0fe53617b4420",
+          "bytes": 10020,
+          "lines": 272,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_wiki/src/mbse/feature_model.ml",
+            "sha256": "b39ff3c01381e8745b01a99793af340cbc4d1218c5e69d6564c0fe53617b4420",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_wiki/src/mbse/feature_model.mli",
+          "relative_path": "modules/hermes_wiki/src/mbse/feature_model.mli",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "e2c440320f0d1b1a540cbdf309dfbd76909742cb55cb604f3071b256e88324c9",
+          "bytes": 5645,
+          "lines": 113,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_wiki/src/mbse/feature_model.mli",
+            "sha256": "e2c440320f0d1b1a540cbdf309dfbd76909742cb55cb604f3071b256e88324c9",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_wiki/src/tools/gen_feature_model.ml",
+          "relative_path": "modules/hermes_wiki/src/tools/gen_feature_model.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "b38045430387388e17ce66ed2cccd686f5c30d710b002354f415fba76176dbab",
+          "bytes": 4194,
+          "lines": 108,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_wiki/src/tools/gen_feature_model.ml",
+            "sha256": "b38045430387388e17ce66ed2cccd686f5c30d710b002354f415fba76176dbab",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_wiki/test/test_feature_model.ml",
+          "relative_path": "modules/hermes_wiki/test/test_feature_model.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "e649fb5ed638bf1f7b2e7fbdb604a49e3cff520a86ee67b621717454fb88d456",
+          "bytes": 9676,
+          "lines": 186,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_wiki/test/test_feature_model.ml",
+            "sha256": "e649fb5ed638bf1f7b2e7fbdb604a49e3cff520a86ee67b621717454fb88d456",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_wiki/src/engine/wiki_datastore.ml",
+          "relative_path": "modules/hermes_wiki/src/engine/wiki_datastore.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "b34cabf072192b87dcaf5613c1a3164d2b5d36cc1e6cdf6693e24f5ee3c01621",
+          "bytes": 22987,
+          "lines": 640,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_wiki/src/engine/wiki_datastore.ml",
+            "sha256": "b34cabf072192b87dcaf5613c1a3164d2b5d36cc1e6cdf6693e24f5ee3c01621",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/sa_plan/sa_plan_store.ml",
+          "relative_path": "modules/sa_plan/sa_plan_store.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "39dcb1dbd0cdc2e2e569b3c080e5592aa36b57382efcd9d33b998f815396803e",
+          "bytes": 107883,
+          "lines": 2686,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/sa_plan/sa_plan_store.ml",
+            "sha256": "4260251e3b2f5ef184475f6fc649cb2f61e2a2e343ff8e00a63167640a2b7482",
+            "relation": "ADAPTED_OR_DIVERGED"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/sa_plan/sa_plan_management.ml",
+          "relative_path": "modules/sa_plan/sa_plan_management.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "49f03d48997a3430e94e62aa2d17cd88c49af67c6036d58f69fb462ab3a44539",
+          "bytes": 1839,
+          "lines": 58,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/sa_plan/sa_plan_management.ml",
+            "sha256": "49f03d48997a3430e94e62aa2d17cd88c49af67c6036d58f69fb462ab3a44539",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/sa_plan/sa_plan_temporal.ml",
+          "relative_path": "modules/sa_plan/sa_plan_temporal.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "082f8e36a6f7cb7a079634967b8bb1e64de507e03531c939d1adf7b684112ad0",
+          "bytes": 2159,
+          "lines": 61,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/sa_plan/sa_plan_temporal.ml",
+            "sha256": "082f8e36a6f7cb7a079634967b8bb1e64de507e03531c939d1adf7b684112ad0",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/sa_plan/sa_plan_oban.ml",
+          "relative_path": "modules/sa_plan/sa_plan_oban.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "0cc5c4248de058da7b5fc3e82d39a2ff5c0d72823bf8fbfe1edc573d210dd4f5",
+          "bytes": 2322,
+          "lines": 76,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/sa_plan/sa_plan_oban.ml",
+            "sha256": "0cc5c4248de058da7b5fc3e82d39a2ff5c0d72823bf8fbfe1edc573d210dd4f5",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_ops_dashboard/run_model.ml",
+          "relative_path": "modules/hermes_ops_dashboard/run_model.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "6a5a7a5ad15375dba22f876118e75531653c86bd627911fa85ba4d52f159f0b6",
+          "bytes": 20565,
+          "lines": 448,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_ops_dashboard/run_model.ml",
+            "sha256": "6a5a7a5ad15375dba22f876118e75531653c86bd627911fa85ba4d52f159f0b6",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/modules/hermes_ops_dashboard/run_assurance.ml",
+          "relative_path": "modules/hermes_ops_dashboard/run_assurance.ml",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "a640b54c4ba1cf01d9d7c6de3d54bf5e59e643aa2803c4ad10478daeaaefb98a",
+          "bytes": 14808,
+          "lines": 372,
+          "uos_counterpart": {
+            "path": "engines/hermes/modules/hermes_ops_dashboard/run_assurance.ml",
+            "sha256": "a640b54c4ba1cf01d9d7c6de3d54bf5e59e643aa2803c4ad10478daeaaefb98a",
+            "relation": "BYTE_IDENTICAL"
+          }
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/docs/hermes/product-feature-tracking.md",
+          "relative_path": "docs/hermes/product-feature-tracking.md",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "b1f0d1f83e2da1f8b934c24576e22a3abd46d83facf8330bc1a40ae8e87f30db",
+          "bytes": 6512,
+          "lines": 162,
+          "uos_counterpart": null
+        },
+        {
+          "locator": "/home/an/dev/ver/harness-bionic/docs/hermes/feature-ontology.md",
+          "relative_path": "docs/hermes/feature-ontology.md",
+          "status": "SOURCE_OBSERVED",
+          "sha256": "4cda471b08424db5271b459193a86497b04950f4a6f673a9adcebbe4c5e4ad34",
+          "bytes": 6710,
+          "lines": 119,
+          "uos_counterpart": null
+        }
+      ]
+    }
+  ],
+  "oracles": [
+    {
+      "id": "go-spiffe",
+      "observed_head": "e9973f6314a3fa0e36eb1f00fbfe37bdc1554b96",
+      "observed_license_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "go-spiffe",
+      "url": "https://github.com/spiffe/go-spiffe",
+      "role": "workload-identity-jwt-x509-svid",
+      "status": "cloned",
+      "head": "e9973f6314a3fa0e36eb1f00fbfe37bdc1554b96",
+      "branch": "main",
+      "commit_date": "2026-06-19T13:39:21Z",
+      "license_file": "LICENSE",
+      "license_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "tracked_files": 192,
+      "size_mb": 2,
+      "locator": "/home/an/NAS-setup/oracles/go-spiffe"
+    },
+    {
+      "id": "spiffe",
+      "observed_head": "99470b9abc825f14aa364dfa2c3b53b02ba5db5b",
+      "observed_license_sha256": "39ce806fa2687a8d8d6a8a8d57bfec8b2fc29fe2a9ae2023020390aabb2de82d",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "spiffe",
+      "url": "https://github.com/spiffe/spiffe",
+      "role": "spiffe-standards-spec",
+      "status": "cloned",
+      "head": "99470b9abc825f14aa364dfa2c3b53b02ba5db5b",
+      "branch": "main",
+      "commit_date": "2026-09-02T13:14:17+01:00",
+      "license_file": "LICENSE",
+      "license_sha256": "39ce806fa2687a8d8d6a8a8d57bfec8b2fc29fe2a9ae2023020390aabb2de82d",
+      "tracked_files": 109,
+      "size_mb": 3,
+      "locator": "/home/an/NAS-setup/oracles/spiffe"
+    },
+    {
+      "id": "opa",
+      "observed_head": "f2246f414a903a57cfbd5f99cedf468cbadd8307",
+      "observed_license_sha256": "c6596eb7be8581c18be736c846fb9173b69eccf6ef94c5135893ec56bd92ba08",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "opa",
+      "url": "https://github.com/open-policy-agent/opa",
+      "role": "policy-as-code-abac",
+      "status": "cloned",
+      "head": "f2246f414a903a57cfbd5f99cedf468cbadd8307",
+      "branch": "main",
+      "commit_date": "2026-09-07T11:23:39+01:00",
+      "license_file": "LICENSE",
+      "license_sha256": "c6596eb7be8581c18be736c846fb9173b69eccf6ef94c5135893ec56bd92ba08",
+      "tracked_files": 7987,
+      "size_mb": 137,
+      "locator": "/home/an/NAS-setup/oracles/opa"
+    },
+    {
+      "id": "cedar",
+      "observed_head": "144048d44d9450106690a37b6a22203be2936d8c",
+      "observed_license_sha256": "09e8a9bcec8067104652c168685ab0931e7868f9c8284b66f5ae6edae5f1130b",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "cedar",
+      "url": "https://github.com/cedar-policy/cedar",
+      "role": "policy-language-authorization",
+      "status": "cloned",
+      "head": "144048d44d9450106690a37b6a22203be2936d8c",
+      "branch": "main",
+      "commit_date": "2026-09-03T15:04:50-04:00",
+      "license_file": "LICENSE",
+      "license_sha256": "09e8a9bcec8067104652c168685ab0931e7868f9c8284b66f5ae6edae5f1130b",
+      "tracked_files": 966,
+      "size_mb": 14,
+      "locator": "/home/an/NAS-setup/oracles/cedar"
+    },
+    {
+      "id": "openbao",
+      "observed_head": "1d9ba975e84dcb848df123e13b10df06130ce97f",
+      "observed_license_sha256": "d6b1a865f1c8c697d343bd4e0ce61025f91898486a1f00d727f32e8644af77d3",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "openbao",
+      "url": "https://github.com/openbao/openbao",
+      "role": "secret-management-dynamic-credentials",
+      "status": "cloned",
+      "head": "1d9ba975e84dcb848df123e13b10df06130ce97f",
+      "branch": "main",
+      "commit_date": "2026-09-07T10:29:10+02:00",
+      "license_file": "LICENSE",
+      "license_sha256": "d6b1a865f1c8c697d343bd4e0ce61025f91898486a1f00d727f32e8644af77d3",
+      "tracked_files": 5358,
+      "size_mb": 126,
+      "locator": "/home/an/NAS-setup/oracles/openbao"
+    },
+    {
+      "id": "nemo-guardrails",
+      "observed_head": "39b9c5b09e41a4ee71156effdd7ca6f02e98ead4",
+      "observed_license_sha256": "20c77c71c35608683e7176aa5f093a00fdf3112848cebcd06c04e84dc852d939",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "nemo-guardrails",
+      "url": "https://github.com/NVIDIA/NeMo-Guardrails",
+      "role": "io-guardrails-prompt-injection",
+      "status": "cloned",
+      "head": "39b9c5b09e41a4ee71156effdd7ca6f02e98ead4",
+      "branch": "develop",
+      "commit_date": "2026-09-02T08:32:43-07:00",
+      "license_file": "LICENCES-3rd-party",
+      "license_sha256": "20c77c71c35608683e7176aa5f093a00fdf3112848cebcd06c04e84dc852d939",
+      "tracked_files": 2070,
+      "size_mb": 34,
+      "locator": "/home/an/NAS-setup/oracles/nemo-guardrails"
+    },
+    {
+      "id": "modelcontextprotocol",
+      "observed_head": "e76e9c572c6f2bfcb730357101acc90f2f802e02",
+      "observed_license_sha256": "0382b0057770ca05e9c350a50aa3b1c1fea84da0bc81d723bf00b9aa841be58a",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "modelcontextprotocol",
+      "url": "https://github.com/modelcontextprotocol/modelcontextprotocol",
+      "role": "mcp-spec-and-json-schema",
+      "status": "cloned",
+      "head": "e76e9c572c6f2bfcb730357101acc90f2f802e02",
+      "branch": "main",
+      "commit_date": "2026-09-04T00:39:11Z",
+      "license_file": "LICENSE",
+      "license_sha256": "0382b0057770ca05e9c350a50aa3b1c1fea84da0bc81d723bf00b9aa841be58a",
+      "tracked_files": 950,
+      "size_mb": 99,
+      "locator": "/home/an/NAS-setup/oracles/modelcontextprotocol"
+    },
+    {
+      "id": "nats-server",
+      "observed_head": "622457b6dfd5649fdc882cacb287528424762948",
+      "observed_license_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "nats-server",
+      "url": "https://github.com/nats-io/nats-server",
+      "role": "async-message-broker-request-reply",
+      "status": "cloned",
+      "head": "622457b6dfd5649fdc882cacb287528424762948",
+      "branch": "main",
+      "commit_date": "2026-09-07T16:42:31+01:00",
+      "license_file": "LICENSE",
+      "license_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "tracked_files": 598,
+      "size_mb": 19,
+      "locator": "/home/an/NAS-setup/oracles/nats-server"
+    },
+    {
+      "id": "dragonfly",
+      "observed_head": "cdba4d1ab2d8c94d89b29c5160177b5b4c1fef46",
+      "observed_license_sha256": "6bc246b6ec377f6db8eea1bc4f9701faad37d3a54e2b914241a258cc3cd2f369",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "dragonfly",
+      "url": "https://github.com/dragonflydb/dragonfly",
+      "role": "session-scratchpad-cache",
+      "status": "cloned",
+      "head": "cdba4d1ab2d8c94d89b29c5160177b5b4c1fef46",
+      "branch": "main",
+      "commit_date": "2026-09-07T14:07:41Z",
+      "license_file": "LICENSE.md",
+      "license_sha256": "6bc246b6ec377f6db8eea1bc4f9701faad37d3a54e2b914241a258cc3cd2f369",
+      "tracked_files": 1215,
+      "size_mb": 22,
+      "locator": "/home/an/NAS-setup/oracles/dragonfly"
+    },
+    {
+      "id": "valkey",
+      "observed_head": "bcc60f7132f7ac1118b2487dd680f52c7e34af36",
+      "observed_license_sha256": "9a67d40ae9076cd60b9d228135a9c0ce5d60f84f0c54c472965d4e03fdeb8f8f",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "valkey",
+      "url": "https://github.com/valkey-io/valkey",
+      "role": "redis-protocol-command-semantics-tests",
+      "status": "cloned",
+      "head": "bcc60f7132f7ac1118b2487dd680f52c7e34af36",
+      "branch": "unstable",
+      "commit_date": "2026-09-07T17:27:28+08:00",
+      "license_file": "COPYING",
+      "license_sha256": "9a67d40ae9076cd60b9d228135a9c0ce5d60f84f0c54c472965d4e03fdeb8f8f",
+      "tracked_files": 2002,
+      "size_mb": 32,
+      "locator": "/home/an/NAS-setup/oracles/valkey"
+    },
+    {
+      "id": "qdrant",
+      "observed_head": "6ab21cac18ebb6f4ae29102c7f8f5cc11affd5de",
+      "observed_license_sha256": "210b508429e913d9de5301f90508bc2cbf5b2281de5b45e607c04d58f0f3bd8f",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "qdrant",
+      "url": "https://github.com/qdrant/qdrant",
+      "role": "vector-retrieval-filtering",
+      "status": "cloned",
+      "head": "6ab21cac18ebb6f4ae29102c7f8f5cc11affd5de",
+      "branch": "master",
+      "commit_date": "2026-09-03T14:36:18+02:00",
+      "license_file": "LICENSE",
+      "license_sha256": "210b508429e913d9de5301f90508bc2cbf5b2281de5b45e607c04d58f0f3bd8f",
+      "tracked_files": 2358,
+      "size_mb": 48,
+      "locator": "/home/an/NAS-setup/oracles/qdrant"
+    },
+    {
+      "id": "openCypher",
+      "observed_head": "677cbafabb8c3c5eed458fd3b1ec0daec8d67d23",
+      "observed_license_sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "openCypher",
+      "url": "https://github.com/opencypher/openCypher",
+      "role": "graph-query-tck",
+      "status": "cloned",
+      "head": "677cbafabb8c3c5eed458fd3b1ec0daec8d67d23",
+      "branch": "main",
+      "commit_date": "2026-03-20T11:18:52+01:00",
+      "license_file": "LICENSE",
+      "license_sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+      "tracked_files": 262,
+      "size_mb": 7,
+      "locator": "/home/an/NAS-setup/oracles/openCypher"
+    },
+    {
+      "id": "letta",
+      "observed_head": "4511fa0bc91f68fbab32b91f694617271ea9012b",
+      "observed_license_sha256": "984c6db99fc6609803108dfc196762118662cd94b82a456dd9217583f18f3612",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "letta",
+      "url": "https://github.com/letta-ai/letta",
+      "role": "context-compaction-memory-os",
+      "status": "cloned",
+      "head": "4511fa0bc91f68fbab32b91f694617271ea9012b",
+      "branch": "main",
+      "commit_date": "2026-08-23T12:00:36-07:00",
+      "license_file": "LICENSE",
+      "license_sha256": "984c6db99fc6609803108dfc196762118662cd94b82a456dd9217583f18f3612",
+      "tracked_files": 12,
+      "size_mb": 1,
+      "locator": "/home/an/NAS-setup/oracles/letta"
+    },
+    {
+      "id": "E2B",
+      "observed_head": "e2612237c1e0f638943fa30a94317de1180423a0",
+      "observed_license_sha256": "b4ef1bf811cb4095229fb86b574199e467c78f0ac4078cf8be62189e1fbd0818",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "E2B",
+      "url": "https://github.com/e2b-dev/E2B",
+      "role": "isolated-sandbox-sdk",
+      "status": "cloned",
+      "head": "e2612237c1e0f638943fa30a94317de1180423a0",
+      "branch": "main",
+      "commit_date": "2026-09-07T13:17:26Z",
+      "license_file": "LICENSE",
+      "license_sha256": "b4ef1bf811cb4095229fb86b574199e467c78f0ac4078cf8be62189e1fbd0818",
+      "tracked_files": 1025,
+      "size_mb": 13,
+      "locator": "/home/an/NAS-setup/oracles/E2B"
+    },
+    {
+      "id": "temporal",
+      "observed_head": "891d1b648b7252925142cc36f13e40a0e2ed4244",
+      "observed_license_sha256": "6aab9afd99ceb1dcaf6a0d91386b46baef9bce17ae4006044e0f231e31430b69",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "temporal",
+      "url": "https://github.com/temporalio/temporal",
+      "role": "durable-workflow-replay",
+      "status": "cloned",
+      "head": "891d1b648b7252925142cc36f13e40a0e2ed4244",
+      "branch": "main",
+      "commit_date": "2026-09-04T22:19:39-07:00",
+      "license_file": "LICENSE",
+      "license_sha256": "6aab9afd99ceb1dcaf6a0d91386b46baef9bce17ae4006044e0f231e31430b69",
+      "tracked_files": 3897,
+      "size_mb": 59,
+      "locator": "/home/an/NAS-setup/oracles/temporal"
+    },
+    {
+      "id": "langgraph",
+      "observed_head": "81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1",
+      "observed_license_sha256": "d9bb52f2e3540d60ff50d8f0f5b6ba649b7fd346948c4c3d086c8afb120763c7",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "langgraph",
+      "url": "https://github.com/langchain-ai/langgraph",
+      "role": "checkpointer-recursion-limit",
+      "status": "cloned",
+      "head": "81bf17b23123e4ef8b9d5f49fa09a0122fc2edd1",
+      "branch": "main",
+      "commit_date": "2026-09-03T11:23:25-04:00",
+      "license_file": "LICENSE",
+      "license_sha256": "d9bb52f2e3540d60ff50d8f0f5b6ba649b7fd346948c4c3d086c8afb120763c7",
+      "tracked_files": 673,
+      "size_mb": 20,
+      "locator": "/home/an/NAS-setup/oracles/langgraph"
+    },
+    {
+      "id": "arcade-ai",
+      "observed_head": "f360a9654e9abf7ee062c1aa22c82180a6f17df7",
+      "observed_license_sha256": "7f84345d4649d8ca9904ed57b2aa8786e65f4acd9aaf5719109e39d79d33111a",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "arcade-ai",
+      "url": "https://github.com/ArcadeAI/arcade-ai",
+      "role": "hitl-delegated-auth-tools",
+      "status": "cloned",
+      "head": "f360a9654e9abf7ee062c1aa22c82180a6f17df7",
+      "branch": "main",
+      "commit_date": "2026-09-02T16:24:09-07:00",
+      "license_file": "LICENSE",
+      "license_sha256": "7f84345d4649d8ca9904ed57b2aa8786e65f4acd9aaf5719109e39d79d33111a",
+      "tracked_files": 536,
+      "size_mb": 8,
+      "locator": "/home/an/NAS-setup/oracles/arcade-ai"
+    },
+    {
+      "id": "litellm",
+      "observed_head": "a2b7868a5bdb45030d4b224189eb1b1010ad1c4f",
+      "observed_license_sha256": "b170d6bf8e8835dd357e011681db028f4d51e2fb0ea892058f56e01fb39b8273",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "litellm",
+      "url": "https://github.com/BerriAI/litellm",
+      "role": "model-gateway-fallbacks-budgets",
+      "status": "cloned",
+      "head": "a2b7868a5bdb45030d4b224189eb1b1010ad1c4f",
+      "branch": "litellm_internal_staging",
+      "commit_date": "2026-09-07T09:53:18-07:00",
+      "license_file": "LICENSE",
+      "license_sha256": "b170d6bf8e8835dd357e011681db028f4d51e2fb0ea892058f56e01fb39b8273",
+      "tracked_files": 10596,
+      "size_mb": 258,
+      "locator": "/home/an/NAS-setup/oracles/litellm"
+    },
+    {
+      "id": "langfuse",
+      "observed_head": "b2ed6435e263caa7a9836303befe0b355e6c0a3b",
+      "observed_license_sha256": "fd09d42b5b16606ad2042cc1edf3a82da1c47743709f170c959c74758af229d6",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "langfuse",
+      "url": "https://github.com/langfuse/langfuse",
+      "role": "step-level-llm-tracing",
+      "status": "cloned",
+      "head": "b2ed6435e263caa7a9836303befe0b355e6c0a3b",
+      "branch": "main",
+      "commit_date": "2026-09-07T15:13:09Z",
+      "license_file": "LICENSE",
+      "license_sha256": "fd09d42b5b16606ad2042cc1edf3a82da1c47743709f170c959c74758af229d6",
+      "tracked_files": 5700,
+      "size_mb": 75,
+      "locator": "/home/an/NAS-setup/oracles/langfuse"
+    },
+    {
+      "id": "opentelemetry-specification",
+      "observed_head": "444dfa1241076bea29e925aeb58ce6e0b0decd33",
+      "observed_license_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "opentelemetry-specification",
+      "url": "https://github.com/open-telemetry/opentelemetry-specification",
+      "role": "otel-span-semantics",
+      "status": "cloned",
+      "head": "444dfa1241076bea29e925aeb58ce6e0b0decd33",
+      "branch": "main",
+      "commit_date": "2026-09-07T13:11:00Z",
+      "license_file": "LICENSE",
+      "license_sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "tracked_files": 349,
+      "size_mb": 35,
+      "locator": "/home/an/NAS-setup/oracles/opentelemetry-specification"
+    },
+    {
+      "id": "trace-context",
+      "observed_head": "acab820be9db7b3433668baa5cdd43f57f4c4be0",
+      "observed_license_sha256": "cb5eac8f5673953863dc4ae54cfc8cb37712a50690e8af90c550850d6d4a6d8f",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "trace-context",
+      "url": "https://github.com/w3c/trace-context",
+      "role": "w3c-traceparent-test-suite",
+      "status": "cloned",
+      "head": "acab820be9db7b3433668baa5cdd43f57f4c4be0",
+      "branch": "main",
+      "commit_date": "2026-06-29T15:37:05-07:00",
+      "license_file": "LICENSE.md",
+      "license_sha256": "cb5eac8f5673953863dc4ae54cfc8cb37712a50690e8af90c550850d6d4a6d8f",
+      "tracked_files": 37,
+      "size_mb": 1,
+      "locator": "/home/an/NAS-setup/oracles/trace-context"
+    },
+    {
+      "id": "immudb",
+      "observed_head": "bfdce03649f52d575be46f74425fd18eaf4fa69c",
+      "observed_license_sha256": "0997cd51dbe76ba1a56c9d0863d90a28551d2302290b6db7a281d2d1db6542ed",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "immudb",
+      "url": "https://github.com/codenotary/immudb",
+      "role": "immutable-merkle-audit-ledger",
+      "status": "cloned",
+      "head": "bfdce03649f52d575be46f74425fd18eaf4fa69c",
+      "branch": "master",
+      "commit_date": "2026-09-02T22:19:32+02:00",
+      "license_file": "LICENSE",
+      "license_sha256": "0997cd51dbe76ba1a56c9d0863d90a28551d2302290b6db7a281d2d1db6542ed",
+      "tracked_files": 1203,
+      "size_mb": 18,
+      "locator": "/home/an/NAS-setup/oracles/immudb"
+    },
+    {
+      "id": "promptfoo",
+      "observed_head": "eb18c53d1b74783069fa765a889a104fc67367c4",
+      "observed_license_sha256": "bf813686553f451e1b833fbd827488aee49b60b189626915bf3108d10b754e44",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "promptfoo",
+      "url": "https://github.com/promptfoo/promptfoo",
+      "role": "continuous-eval-red-team",
+      "status": "cloned",
+      "head": "eb18c53d1b74783069fa765a889a104fc67367c4",
+      "branch": "main",
+      "commit_date": "2026-09-07T08:21:10-07:00",
+      "license_file": "LICENSE",
+      "license_sha256": "bf813686553f451e1b833fbd827488aee49b60b189626915bf3108d10b754e44",
+      "tracked_files": 5549,
+      "size_mb": 420,
+      "locator": "/home/an/NAS-setup/oracles/promptfoo"
+    },
+    {
+      "id": "deepeval",
+      "observed_head": "f94d940c1e5afc4b280420fe73fe17d146274018",
+      "observed_license_sha256": "d004e4b8bbfa420b094c13835070b945a93f3c0ac0ea0bf6b7b8a72733533f7f",
+      "working_tree_clean": true,
+      "pin_status": "PIN_METADATA_MATCH",
+      "execution_status": "UNRUN",
+      "name": "deepeval",
+      "url": "https://github.com/confident-ai/deepeval",
+      "role": "trajectory-eval-metrics",
+      "status": "cloned",
+      "head": "f94d940c1e5afc4b280420fe73fe17d146274018",
+      "branch": "main",
+      "commit_date": "2026-09-06T22:41:48+08:00",
+      "license_file": "LICENSE.md",
+      "license_sha256": "d004e4b8bbfa420b094c13835070b945a93f3c0ac0ea0bf6b7b8a72733533f7f",
+      "tracked_files": 2772,
+      "size_mb": 71,
+      "locator": "/home/an/NAS-setup/oracles/deepeval"
+    }
+  ],
+  "databases": [
+    {
+      "path": "/home/an/dev/ver/zigvm/harness/state/zigvm_harness.sqlite3",
+      "mode": "READONLY",
+      "table_count": 67,
+      "tables": [
+        "agent_codegen_units", "agent_contract_history", "agent_rejections",
+        "baselines", "beamasm_band", "bench_results", "capability_ledger",
+        "coverage_file_history", "coverage_history", "coverage_scorecard",
+        "cycle_outcome", "e9_parity_audit", "erlang_cover", "fdc_workflow",
+        "graph_contexts", "graph_insights", "graph_jobs", "graph_snapshots",
+        "graph_sources", "graph_statements", "harness_artifacts",
+        "harness_events", "harness_runs", "kpi_snapshots", "latency_oracle",
+        "ledger_units", "note_vectors", "onto_algebra", "onto_edge",
+        "onto_ml", "onto_node", "onto_refresh", "onto_task", "oodalog",
+        "oracles", "otp_pins", "perf_thresholds", "program_journal",
+        "reduction_oracle", "run_env", "safety_constraints",
+        "safety_control_actions", "safety_controllers", "safety_losses",
+        "safety_ucas", "scale_band", "scale_oracle", "scale_points",
+        "slice_backlog", "smt_obligations", "stan_predictions",
+        "stpa_envelope_runs", "tia_cost", "tia_map", "tia_meta",
+        "unit_costs", "unit_fingerprints", "verdicts", "workspace_events",
+        "workspace_notes", "workspace_projects", "workspace_shares",
+        "workspace_sources", "workspace_statements", "workspace_views",
+        "z3_solver_calls", "zk_edge_history"
+      ],
+      "selected_row_counts": { "otp_pins": 1, "harness_runs": 9471 },
+      "scope": "Schema names and aggregate counts only; no DB bytes copied or hashed; counts confer no verification."
+    },
+    {
+      "path": "/home/an/dev/ver/zigvm/harness/state/sa_plan.sqlite3",
+      "status": "UNAVAILABLE",
+      "error": "Failure(\"unable to open database file\")"
+    },
+    {
+      "path": "/home/an/dev/ver/harness-bionic/state/evidence_store.sqlite",
+      "status": "UNAVAILABLE",
+      "error": "Failure(\"unable to open database file\")"
+    },
+    {
+      "path": "/home/an/dev/ver/harness-bionic/state/hermes_harness.sqlite3",
+      "status": "UNAVAILABLE",
+      "error": "Failure(\"unable to open database file\")"
+    },
+    {
+      "path": "/home/an/dev/ver/harness-bionic/state/evidence.sqlite",
+      "mode": "READONLY",
+      "table_count": 0,
+      "tables": [],
+      "selected_row_counts": {},
+      "scope": "Schema names and aggregate counts only; no DB bytes copied or hashed; counts confer no verification."
+    },
+    {
+      "path": "/home/an/dev/ver/harness-bionic/state/sa_plan.sqlite3",
+      "mode": "READONLY",
+      "table_count": 18,
+      "tables": [
+        "sa_plan_activity", "sa_plan_bridge_command", "sa_plan_bridge_event",
+        "sa_plan_bridge_lease", "sa_plan_bridge_mapping",
+        "sa_plan_dependency", "sa_plan_job", "sa_plan_plan",
+        "sa_plan_preflight", "sa_plan_reconciliation", "sa_plan_schema_meta",
+        "sa_plan_selection_evidence", "sa_plan_task",
+        "sa_plan_webhook_inbox", "sa_plan_webhook_outbox",
+        "sa_plan_workflow", "sa_plan_workflow_activity",
+        "sa_plan_workflow_event"
+      ],
+      "selected_row_counts": { "sa_plan_task": 102, "sa_plan_plan": 10 },
+      "scope": "Schema names and aggregate counts only; no DB bytes copied or hashed; counts confer no verification."
+    }
+  ]
+}
