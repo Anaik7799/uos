@@ -6,6 +6,15 @@ import prng
 import uos_swarm/acl.{Atom, Clause, VIdent, VNum}
 import uos_swarm/board
 
+const sutra_gita_sample = "@perf PROPOSE  ; test frame for sutra/gita headers
+@from W03/L2 @to L0-fable
+I(W03): integrate(x) ⇐ verdict(V1)=PASS
+#aspects 3
+#ca CA-integrate_slice
+#onto Compositor
+@sūtra S5.1,S1.2
+@gītā 2.47"
+
 const sample = "@perf PROPOSE  ; W03 proposes integration
 @from W03/L2 @to L0-fable
 @ooda decide
@@ -273,4 +282,60 @@ pub fn lexicon_is_complete_and_bijective_test() {
   })
   string.contains(acl.lexicon_markdown(), "| perf | INFORM | sūcanā | सूचना |")
   |> should.be_true
+}
+
+pub fn sutra_and_gita_headers_parse_test() {
+  let u = case acl.parse(sutra_gita_sample) {
+    Ok(u) -> u
+    Error(_) -> acl.empty(acl.Andon, "x", "L3", "y")
+  }
+  u.sutras |> should.equal(["S5.1", "S1.2"])
+  u.gita |> should.equal(["2.47"])
+}
+
+pub fn sutra_and_gita_rendering_carries_gloss_test() {
+  let u = case acl.parse(sutra_gita_sample) {
+    Ok(u) -> u
+    Error(_) -> acl.empty(acl.Andon, "x", "L3", "y")
+  }
+  let txt = acl.to_text(u)
+  string.contains(txt, "@sūtra S5.1  ; en: sutra S5.1") |> should.be_true
+  string.contains(txt, "@sūtra S1.2  ; en: sutra S1.2") |> should.be_true
+  string.contains(txt, "@gītā 2.47  ; en: BG 2.47") |> should.be_true
+}
+
+pub fn sutra_and_gita_headers_roundtrip_preserves_ids_test() {
+  let u = case acl.parse(sutra_gita_sample) {
+    Ok(u) -> u
+    Error(_) -> acl.empty(acl.Andon, "x", "L3", "y")
+  }
+  let u2 = case acl.parse(acl.to_text(u)) {
+    Ok(x) -> x
+    Error(_) -> acl.empty(acl.Andon, "x", "L3", "y")
+  }
+  u2.sutras |> should.equal(u.sutras)
+  u2.gita |> should.equal(u.gita)
+  acl.parse(acl.to_text(u)) |> should.equal(Ok(u))
+}
+
+pub fn sutra_and_gita_validation_test() {
+  let u = case acl.parse(sample) {
+    Ok(u) -> u
+    Error(_) -> acl.empty(acl.Andon, "x", "L3", "y")
+  }
+  // unknown sutra id
+  acl.validate(acl.Utterance(..u, sutras: ["S99.99"]))
+  |> should.equal(Error("unknown sutra: S99.99"))
+  // a sutra that exists but does not govern this utterance's kind (Plan)
+  acl.validate(acl.Utterance(..u, sutras: ["S5.4"]))
+  |> should.equal(Error("sutra S5.4 does not govern kind Plan"))
+  // a sutra that does govern this kind is accepted
+  acl.validate(acl.Utterance(..u, sutras: ["S2.1"]))
+  |> should.equal(Ok(Nil))
+  // unknown gita citation
+  acl.validate(acl.Utterance(..u, gita: ["99.99"]))
+  |> should.equal(Error("unknown gita citation: 99.99"))
+  // a real gita citation is accepted
+  acl.validate(acl.Utterance(..u, gita: ["2.47"]))
+  |> should.equal(Ok(Nil))
 }

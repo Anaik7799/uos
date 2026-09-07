@@ -28,6 +28,8 @@ import gleam/option.{type Option, None, Some}
 import gleam/result
 import gleam/string
 import uos_swarm/board.{type Draft, Agent, Causality, Draft, Semantics}
+import uos_swarm/gita
+import uos_swarm/sutra
 
 // ---------------------------------------------------------------------------
 // Performatives with formal semantics
@@ -201,6 +203,8 @@ pub const lexicon = [
   Lexeme("dir", "conf", "niścaya", "निश्चय", "certainty"),
   Lexeme("dir", "cost", "mūlya", "मूल्य", "cost"),
   Lexeme("dir", "by", "samaya", "समय", "deadline"),
+  Lexeme("dir", "sutra", "sūtra", "सूत्र", "cited system-law reference(s)"),
+  Lexeme("dir", "gita", "gītā", "गीता", "cited Bhagavad Gītā verse(s)"),
   // tags
   Lexeme("tag", "aspects", "pakṣa", "पक्ष", "aspects"),
   Lexeme("tag", "ca", "niyantraṇa", "नियन्त्रण", "control actions"),
@@ -213,6 +217,28 @@ pub const lexicon = [
   Lexeme("ooda", "orient", "vicāra", "विचार", "consider, orient"),
   Lexeme("ooda", "decide", "nirṇaya", "निर्णय", "decide"),
   Lexeme("ooda", "act", "kriyā", "क्रिया", "act"),
+  // general Sanskrit vocabulary terms (operator directive: maximize sūtra/gītā use)
+  Lexeme("term", "sutra", "sūtra", "सूत्र", "terse rule, aphorism"),
+  Lexeme("term", "chapter", "pāda", "पाद", "chapter, foot, quarter"),
+  Lexeme("term", "gita", "gītā", "गीता", "song; the Bhagavad Gītā"),
+  Lexeme("term", "verse", "śloka", "श्लोक", "verse, stanza"),
+  Lexeme("term", "dream", "svapna", "स्वप्न", "dream, sleep-state"),
+  Lexeme(
+    "term",
+    "hypothesis",
+    "vikalpa",
+    "विकल्प",
+    "option, conceptual construct, hypothesis",
+  ),
+  Lexeme("term", "memory", "smṛti", "स्मृति", "memory, recollection"),
+  Lexeme(
+    "term",
+    "evidence",
+    "pramāṇa",
+    "प्रमाण",
+    "valid means of knowledge, proof",
+  ),
+  Lexeme("term", "quality", "guṇa", "गुण", "quality, strand, attribute"),
 ]
 
 /// Resolve any surface form (English, IAST, Devanagari) of a role to its English key.
@@ -300,6 +326,12 @@ pub type Utterance {
     control_actions: List(String),
     concepts: List(String),
     muda: List(String),
+    /// `@sūtra <id>[,<id>...]` (also `@sutra`): sūtra ids from `uos_swarm/sutra.register()`
+    /// this utterance cites as the rule(s) it acts under.
+    sutras: List(String),
+    /// `@gītā <ch>.<v>[,...]` (also `@gita`): Bhagavad Gītā citations from
+    /// `uos_swarm/gita.register()` this utterance grounds its higher-order thinking in.
+    gita: List(String),
   )
 }
 
@@ -319,6 +351,8 @@ pub fn empty(
     None,
     None,
     None,
+    [],
+    [],
     [],
     [],
     [],
@@ -442,6 +476,8 @@ pub fn to_text(u: Utterance) -> String {
       opt("@niścaya", option.map(u.conf, float.to_string)),
       opt("@mūlya", option.map(u.cost, int.to_string)),
       opt("@samaya", u.by),
+      list.map(u.sutras, sutra_line),
+      list.map(u.gita, gita_line),
     ])
   let tags =
     list.flatten([
@@ -472,6 +508,53 @@ pub fn to_text(u: Utterance) -> String {
     list.flatten([header, list.map(u.clauses, clause_text), tags]),
     "\n",
   )
+}
+
+/// One canonical `@sūtra <id>  ; en: sutra <id> <gloss>` line.
+fn sutra_line(id: String) -> String {
+  case sutra.find(id) {
+    Ok(s) -> "@sūtra " <> id <> "  ; en: sutra " <> id <> " " <> s.english
+    Error(_) -> "@sūtra " <> id <> "  ; en: sutra " <> id <> " unknown"
+  }
+}
+
+/// One canonical `@gītā <ch.v>  ; en: BG <ch.v> <head>` line.
+fn gita_line(citation: String) -> String {
+  let en = "BG " <> citation
+  case parse_citation(citation) {
+    Ok(#(ch, v)) ->
+      case gita.find(ch, v) {
+        Ok(verse) ->
+          "@gītā "
+          <> citation
+          <> "  ; en: "
+          <> en
+          <> " "
+          <> english_head(verse.english)
+        Error(_) -> "@gītā " <> citation <> "  ; en: " <> en <> " unknown"
+      }
+    Error(_) -> "@gītā " <> citation <> "  ; en: " <> en <> " unknown"
+  }
+}
+
+fn english_head(english: String) -> String {
+  english
+  |> string.split(".")
+  |> list.first
+  |> result.unwrap(english)
+  |> string.trim
+}
+
+/// Parse a `<chapter>.<verse>` citation, e.g. "2.47".
+fn parse_citation(c: String) -> Result(#(Int, Int), Nil) {
+  case string.split_once(c, ".") {
+    Ok(#(a, b)) ->
+      case int.parse(a), int.parse(b) {
+        Ok(ch), Ok(v) -> Ok(#(ch, v))
+        _, _ -> Error(Nil)
+      }
+    Error(_) -> Error(Nil)
+  }
 }
 
 fn strip_comment(line: String) -> String {
@@ -575,6 +658,10 @@ pub fn parse(text: String) -> Result(Utterance, String) {
         |> result.map(fn(i) { Utterance(..u, cost: Some(i)) })
         |> result.replace_error("bad @cost " <> v)
       "@by " <> v -> Ok(Utterance(..u, by: Some(string.trim(v))))
+      "@sutra " <> v ->
+        Ok(Utterance(..u, sutras: list.append(u.sutras, split_list(v, ","))))
+      "@gita " <> v ->
+        Ok(Utterance(..u, gita: list.append(u.gita, split_list(v, ","))))
       "#aspects " <> v ->
         Ok(
           Utterance(
@@ -810,6 +897,8 @@ pub fn validate(u: Utterance) -> Result(Nil, String) {
       layer_int(u.from_layer),
     )),
   )
+  use _ <- result.try(validate_sutras(u))
+  use _ <- result.try(validate_gita(u))
   let has = fn(pred: fn(Modal) -> Bool) {
     list.any(u.clauses, fn(c) { pred(c.modal) })
   }
@@ -854,6 +943,50 @@ pub fn validate(u: Utterance) -> Result(Nil, String) {
         _ -> Ok(Nil)
       }
     _ -> Ok(Nil)
+  }
+}
+
+/// A cited sūtra must exist and must either govern this utterance's board kind, or be
+/// general (pāda 7, or `kinds == []`).
+fn validate_sutras(u: Utterance) -> Result(Nil, String) {
+  let kind_str = board.kind_label(kind_for(u.perf))
+  case
+    list.find(u.sutras, fn(id) {
+      case sutra.find(id) {
+        Error(_) -> True
+        Ok(s) -> {
+          let general = s.pada == 7 || s.kinds == []
+          !general && !list.contains(s.kinds, kind_str)
+        }
+      }
+    })
+  {
+    Error(_) -> Ok(Nil)
+    Ok(bad_id) ->
+      case sutra.find(bad_id) {
+        Error(_) -> Error("unknown sutra: " <> bad_id)
+        Ok(_) ->
+          Error("sutra " <> bad_id <> " does not govern kind " <> kind_str)
+      }
+  }
+}
+
+/// A cited Gītā verse must exist in `uos_swarm/gita.register()`.
+fn validate_gita(u: Utterance) -> Result(Nil, String) {
+  case
+    list.find(u.gita, fn(c) {
+      case parse_citation(c) {
+        Error(_) -> True
+        Ok(#(ch, v)) ->
+          case gita.find(ch, v) {
+            Ok(_) -> False
+            Error(_) -> True
+          }
+      }
+    })
+  {
+    Error(_) -> Ok(Nil)
+    Ok(bad) -> Error("unknown gita citation: " <> bad)
   }
 }
 
@@ -958,6 +1091,24 @@ pub fn introspect(u: Utterance) -> List(String) {
         r -> ", provided " <> string.join(list.map(r, atom_text), " and ")
       }
     })
+  let sutra_lines =
+    list.map(u.sutras, fn(id) {
+      case sutra.find(id) {
+        Ok(s) -> "sutra " <> id <> ": " <> s.english
+        Error(_) -> "sutra " <> id <> ": unknown"
+      }
+    })
+  let gita_lines =
+    list.map(u.gita, fn(c) {
+      case parse_citation(c) {
+        Ok(#(ch, v)) ->
+          case gita.find(ch, v) {
+            Ok(verse) -> "gita " <> c <> ": " <> verse.principle
+            Error(_) -> "gita " <> c <> ": unknown"
+          }
+        Error(_) -> "gita " <> c <> ": unknown"
+      }
+    })
   list.flatten([
     [head, "precondition: " <> pre, "postcondition: " <> post],
     modal_lines,
@@ -974,6 +1125,8 @@ pub fn introspect(u: Utterance) -> List(String) {
         <> float.to_string(float_round2(entropy_bits(u)))
         <> " bits/token",
     ],
+    sutra_lines,
+    gita_lines,
   ])
 }
 
@@ -1014,6 +1167,14 @@ pub fn to_draft(u: Utterance, model: String) -> Draft {
         Some(c) -> [#("cost", int.to_string(c))]
         None -> []
       },
+      case u.sutras {
+        [] -> []
+        s -> [#("sutras", string.join(s, ","))]
+      },
+      case u.gita {
+        [] -> []
+        g -> [#("gita", string.join(g, ","))]
+      },
       [
         #("density", float.to_string(float_round2(density(u)))),
         #("entropy_bits", float.to_string(float_round2(entropy_bits(u)))),
@@ -1052,6 +1213,8 @@ pub fn to_json(u: Utterance) -> Json {
     #("control_actions", json.array(u.control_actions, json.string)),
     #("concepts", json.array(u.concepts, json.string)),
     #("muda", json.array(u.muda, json.string)),
+    #("sutras", json.array(u.sutras, json.string)),
+    #("gita", json.array(u.gita, json.string)),
     #("density", json.float(float_round2(density(u)))),
     #("entropy_bits", json.float(float_round2(entropy_bits(u)))),
     #("introspection", json.array(introspect(u), json.string)),
@@ -1060,7 +1223,8 @@ pub fn to_json(u: Utterance) -> Json {
 
 /// Grammar summary for humans and other agents (served as shared state).
 pub const grammar = "utterance  := header+ clause* tag*
-header     := '@perf' PERF | '@from' AGENT '/' LAYER '@to' AGENT | '@re' ID | '@ooda' PHASE | '@conf' FLOAT | '@cost' INT | '@by' ISO8601
+header     := '@perf' PERF | '@from' AGENT '/' LAYER '@to' AGENT | '@re' ID | '@ooda' PHASE | '@conf' FLOAT | '@cost' INT | '@by' ISO8601 | '@sūtra' ID (',' ID)* | '@gītā' CHV (',' CHV)*
+'@sūtra' (also '@sutra') cites id(s) from uos_swarm/sutra.register(); '@gītā' (also '@gita') cites CHV = CHAPTER '.' VERSE from uos_swarm/gita.register(); both print one canonical line per reference with its English gloss.
 clause     := modal atoms ('⇐' atoms)?
 modal      := 'K(' AGENT '):' | 'B(' AGENT '):' | 'I(' AGENT '):' | 'O(' AGENT '):' | 'G:' | '∴'
 atoms      := atom ('∧' atom)*
