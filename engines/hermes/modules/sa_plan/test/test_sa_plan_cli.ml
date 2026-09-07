@@ -25,6 +25,16 @@ let () =
              "zigvm/docs/manual/write"; "Write" |])
        [| "sa-plan"; "--task-create"; "p1"; "t1";
           "zigvm/docs/manual/write"; "Write" |]);
+  require "LAW CLI-TASK-CLAIM-BY-ID"
+    (array_equal
+       (Sa_plan_cli.normalize
+          [| "sa-plan"; "task"; "claim"; "worker-1"; "p1"; "t1" |])
+       [| "sa-plan"; "--claim"; "worker-1"; "p1"; "t1" |]);
+  require "LAW CLI-TASK-RELEASE"
+    (array_equal
+       (Sa_plan_cli.normalize
+          [| "sa-plan"; "task"; "release"; "p1"; "t1"; "worker-1" |])
+       [| "sa-plan"; "--task-release"; "p1"; "t1"; "worker-1" |]);
   require "LAW CLI-TASK-SELECTION-EVIDENCE"
     (array_equal
        (Sa_plan_cli.normalize

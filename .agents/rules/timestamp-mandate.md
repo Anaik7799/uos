@@ -1,7 +1,3 @@
----
-trigger: always_on
----
-
 # Mandatory YYYYMMDD-HHSS- Timestamp Rule Mandate
 
 - **Authority:** Operator Explicit Directive & UOS Canonical Policy (`SC-TIME-001`, `DIR-TIME-001`, `INV-TIMESTAMP-001`)

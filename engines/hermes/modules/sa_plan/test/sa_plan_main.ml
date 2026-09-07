@@ -256,34 +256,46 @@ let dispatch store format argv =
                     "name", argv.(4) ]
   | "--claim" ->
       let worker = argv.(2) in
-      let selected_plan, lease_ns =
-        if Array.length argv <= 3 then program_plan_id, 3_600_000_000_000L
+      let selected_plan, lease_ns, task_id_opt =
+        if Array.length argv <= 3 then
+          program_plan_id, 3_600_000_000_000L, None
         else
           match Int64.of_string_opt argv.(3) with
-          | Some lease -> program_plan_id, lease
+          | Some lease ->
+              let task_opt = if Array.length argv > 4 then Some argv.(4) else None in
+              program_plan_id, lease, task_opt
           | None ->
-              argv.(3),
-              (if Array.length argv > 4 then Int64.of_string argv.(4)
-               else 3_600_000_000_000L)
+              let plan = argv.(3) in
+              if Array.length argv <= 4 then
+                plan, 3_600_000_000_000L, None
+              else
+                match Int64.of_string_opt argv.(4) with
+                | Some lease ->
+                    let task_opt = if Array.length argv > 5 then Some argv.(5) else None in
+                    plan, lease, task_opt
+                | None ->
+                    (* argv.(4) is TASK_ID with default lease *)
+                    plan, 3_600_000_000_000L, Some argv.(4)
       in
-      if Array.length argv > 5 then
-        let claim =
-          or_fail
-            (Store.claim_task store ~plan_id:selected_plan ~task_id:argv.(5)
-               ~worker ~now_ns:(now_ns ()) ~lease_ns)
-        in
-        emit format [ "claimed", "true"; "task", claim.task_id;
-                      "attempt", int claim.attempt;
-                      "lease_until_ns", int64 claim.lease_until_ns ]
-      else
-        (match or_fail
-                 (Store.claim_next store ~plan_id:selected_plan ~worker
-                    ~now_ns:(now_ns ()) ~lease_ns) with
-         | None -> emit format [ "claim", "none"; "plan_id", selected_plan ]
-         | Some claim ->
-             emit format [ "claimed", "true"; "task", claim.task_id;
-                           "attempt", int claim.attempt;
-                           "lease_until_ns", int64 claim.lease_until_ns ])
+      (match task_id_opt with
+       | Some target_task_id ->
+           let claim =
+             or_fail
+               (Store.claim_task store ~plan_id:selected_plan ~task_id:target_task_id
+                  ~worker ~now_ns:(now_ns ()) ~lease_ns)
+           in
+           emit format [ "claimed", "true"; "task", claim.task_id;
+                         "attempt", int claim.attempt;
+                         "lease_until_ns", int64 claim.lease_until_ns ]
+       | None ->
+           (match or_fail
+                    (Store.claim_next store ~plan_id:selected_plan ~worker
+                       ~now_ns:(now_ns ()) ~lease_ns) with
+            | None -> emit format [ "claim", "none"; "plan_id", selected_plan ]
+            | Some claim ->
+                emit format [ "claimed", "true"; "task", claim.task_id;
+                              "attempt", int claim.attempt;
+                              "lease_until_ns", int64 claim.lease_until_ns ]))
   | "--task-release" ->
       or_fail
         (Store.release_task store ~plan_id:argv.(2) ~task_id:argv.(3)
@@ -302,18 +314,25 @@ let dispatch store format argv =
   | "--task-select" ->
       let plan_id = argv.(2) and task_id = argv.(3) and actor = argv.(4) in
       let task =
-        or_fail (Store.find_task store ~plan_id ~id_or_name:task_id)
-        |> Option.value_exn
+        match or_fail (Store.find_task store ~plan_id ~id_or_name:task_id) with
+        | Some t -> t
+        | None -> fail (Printf.sprintf "Task '%s' not found in plan '%s'" task_id plan_id)
       in
+      let parse_int field_name str =
+        match Int.of_string_opt str with
+        | Some v -> v
+        | None -> fail (Printf.sprintf "Invalid integer for factor '%s': '%s'" field_name str)
+      in
+      let new_priority = parse_int "priority" argv.(5) in
       let factors =
         Store.
-          { stpa = Int.of_string argv.(6); fema = Int.of_string argv.(7);
-            criticality = Int.of_string argv.(8);
-            dependency = Int.of_string argv.(9);
-            standards = Int.of_string argv.(10);
-            agent_fit = Int.of_string argv.(11) }
+          { stpa = parse_int "stpa" argv.(6);
+            fema = parse_int "fema" argv.(7);
+            criticality = parse_int "criticality" argv.(8);
+            dependency = parse_int "dependency" argv.(9);
+            standards = parse_int "standards" argv.(10);
+            agent_fit = parse_int "agent_fit" argv.(11) }
       in
-      let new_priority = Int.of_string argv.(5) in
       or_fail
         (Store.record_selection store ~plan_id ~task_id:task.id ~actor
            ~old_priority:(Some task.priority) ~new_priority ~factors

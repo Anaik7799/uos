@@ -2200,12 +2200,12 @@ let claim_next store ~plan_id ~worker ~now_ns ~lease_ns =
               claim_update store ~plan_id ~task_id ~worker ~now_ns
                 ~lease_until_ns ~previous_attempt))
 
-let select_specific_claimable db ~plan_id ~task_id ~now_ns =
+let select_specific_claimable db ~plan_id ~id_or_name ~now_ns =
   with_stmt db
     {|
-SELECT task.attempt
+SELECT task.attempt, task.id
 FROM sa_plan_task AS task
-WHERE task.plan_id = ? AND task.id = ?
+WHERE task.plan_id = ? AND (task.id = ? OR task.name = ?)
   AND (task.state = 'available'
        OR (task.state = 'executing' AND task.lease_until_ns < ?))
   AND NOT EXISTS (
@@ -2220,10 +2220,13 @@ WHERE task.plan_id = ? AND task.id = ?
     (fun stmt ->
       Result.bind
         (bind_values_result "bind specific task claim" stmt
-           [ Sqlite3.Data.TEXT plan_id; TEXT task_id; INT now_ns ])
+           [ Sqlite3.Data.TEXT plan_id; TEXT id_or_name; TEXT id_or_name; INT now_ns ])
         ~f:(fun () ->
           match Sqlite3.step stmt with
-          | Sqlite3.Rc.ROW -> Ok (Some (Sqlite3.column_int stmt 0))
+          | Sqlite3.Rc.ROW ->
+              let attempt = Sqlite3.column_int stmt 0 in
+              let actual_id = Sqlite3.column_text stmt 1 in
+              Ok (Some (attempt, actual_id))
           | Sqlite3.Rc.DONE -> Ok None
           | rc -> rc_error "select specific claimable Sa-plan task" rc))
 
@@ -2233,13 +2236,13 @@ let claim_task store ~plan_id ~task_id ~worker ~now_ns ~lease_ns =
   else
     transaction store (fun () ->
         Result.bind
-          (select_specific_claimable store.db ~plan_id ~task_id ~now_ns)
+          (select_specific_claimable store.db ~plan_id ~id_or_name:task_id ~now_ns)
           ~f:(function
           | None -> Error ("Sa-plan task is not claimable: " ^ task_id)
-          | Some previous_attempt ->
+          | Some (previous_attempt, actual_id) ->
               let lease_until_ns = Int64.(now_ns + lease_ns) in
               Result.bind
-                (claim_update store ~plan_id ~task_id ~worker ~now_ns
+                (claim_update store ~plan_id ~task_id:actual_id ~worker ~now_ns
                    ~lease_until_ns ~previous_attempt) ~f:(function
                 | Some claim -> Ok claim
                 | None -> Error "specific Sa-plan task claim disappeared")))
@@ -2250,12 +2253,12 @@ let release_task store ~plan_id ~task_id ~worker ~now_ns:_ =
         {|
 UPDATE sa_plan_task
 SET state = 'available', worker = NULL, lease_until_ns = NULL
-WHERE plan_id = ? AND id = ? AND state = 'executing' AND worker = ?
+WHERE plan_id = ? AND (id = ? OR name = ?) AND state = 'executing' AND worker = ?
 |}
         (fun stmt ->
           Result.bind
             (bind_values_result "bind Sa-plan task release" stmt
-               [ Sqlite3.Data.TEXT plan_id; TEXT task_id; TEXT worker ])
+               [ Sqlite3.Data.TEXT plan_id; TEXT task_id; TEXT task_id; TEXT worker ])
             ~f:(fun () ->
               Result.bind (step_done "release Sa-plan task" stmt) ~f:(fun () ->
                   if Sqlite3.changes store.db = 1 then Ok ()
@@ -2273,7 +2276,7 @@ let complete_task store ~plan_id ~task_id ~worker ~result ~now_ns =
 UPDATE sa_plan_task
 SET state = 'completed', result = ?, completed_at_ns = ?,
     lease_until_ns = NULL
-WHERE plan_id = ? AND id = ? AND state = 'executing' AND worker = ?
+WHERE plan_id = ? AND (id = ? OR name = ?) AND state = 'executing' AND worker = ?
 |}
         (fun stmt ->
           Result.bind
@@ -2282,6 +2285,7 @@ WHERE plan_id = ? AND id = ? AND state = 'executing' AND worker = ?
                  Sqlite3.Data.TEXT result;
                  INT now_ns;
                  TEXT plan_id;
+                 TEXT task_id;
                  TEXT task_id;
                  TEXT worker;
                ])

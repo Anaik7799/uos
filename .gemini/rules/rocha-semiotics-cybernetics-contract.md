@@ -1,7 +1,3 @@
----
-trigger: always_on
----
-
 # Rocha Cybernetic & Semiotic Knowledge Contract
 
 - **Contract ID**: `SC-ROCHA-001`
