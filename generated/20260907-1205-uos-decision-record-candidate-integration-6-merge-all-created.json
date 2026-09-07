@@ -42,6 +42,20 @@
     "rollback": "bookmark set main -r muutttsqxlrv (7cb60ab6 lineage + Codex package) with --allow-backwards under lease",
     "escalation": "any gate failure on B or D -> park that merge by abandoning my merge change (candidate commits untouched)"
   },
+  "completed": {
+    "observed_at": "2026-09-07T12:06:00.000000Z",
+    "observed_actions": [
+      "lease integration/main epoch 19 verified before the move by reading coordinator event 165 (claim from this session, unique op id); no later claim on the resource",
+      "main and integration/uos-swarm -> rlqvzqokqltz/302e34b3fe89d98209a1ab57b4f4e5e5dbddfc6f (composed head carrying this record); receipts on ozrqspzwtmqw; bookmarks moved there next under the same lease",
+      "merged: A lpqmymyuprmu (AGY composition 7b9c0518, ledger union 267), D xloxmnqovmmq (E03/E04/N01 lineage e17fd93b, 11 files), B rlqvzqokqltz (tailscale_monitor 59da60fb, 2 files); parked: C a28bd944 (superseded, 5-file conflict), E 42568ef7 (tools/uos regression, 2-file conflict); superseded and skipped: 986ec4b7, tkmtuvmq, pnpktttv, qtvsuzxu",
+      "gates: uos_swarm 563 / 0 warnings; uos_tui 198; G1 PASS; indrajaal_gleam_web builds, 8 tests; board valid 267; tailscale_monitor dune build exit 0 (25,281,792-byte exe; vendored libzenohc.a copied as an untracked artifact from the default workspace); e04_adapter_test 8 checks, runner_test 72 checks, census_test 66 checks; ocaml_test_inventory 11/11 with UOS_INVENTORY_TEST_ROOT (main baseline 5 passed / 2 failures without it; the one new test also needs it: environment, not regression); 0 cepaf files changed vs main",
+      "board: Integrate with decision_record; AGY inbox row acknowledged; Reports to AGY and Codex-Astra; session Reports to both",
+      "scratch directories left on disk (workspaces forgotten; deletion blocked by the guard): .uos-workspaces/attrib-mirage, attrib-mirage-2, gate-main"
+    ],
+    "outcome": "selected alternative realized — A, B, D on main; C and E parked with exact reasons — Measured",
+    "forecast_resolution": "p=0.7 for 'A, B, D on main; C, E parked; tailscale builds; E04 tests pass' -> realized in full (Brier 0.09); the vendored-artifact unknown resolved by copying the ignored file from the default workspace",
+    "consumed": { "tokens": "0 for integration steps (deterministic R0); Fable for design and receipts", "usd": 0.0 }
+  },
   "forecast": {
     "horizon": "30 min",
     "clock_domain": "UTC host nas-1",
