@@ -20,6 +20,7 @@ import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/result
 import gleam/string
+import uos_swarm/decision_record as decision
 import uos_swarm/session_sync as sync
 
 pub type IntegrationOperation {
@@ -60,9 +61,15 @@ pub type ActionCommand {
 pub type Request {
   Request(
     operation_id: String,
+    hive_id: String,
+    tenant_id: String,
+    actor_identity: String,
+    actor_kind: decision.ActorKind,
     session: String,
+    task_id: String,
     epoch: Int,
     command: ActionCommand,
+    decision: Option(decision.ValidatedDecision),
   )
 }
 
@@ -158,6 +165,20 @@ pub fn candidate_revision(command: ActionCommand) -> String {
   case command {
     Integration(IntegrationCommand(candidate, ..)) -> candidate
     Runtime(RuntimeAction(_, candidate, ..)) -> candidate
+  }
+}
+
+/// Stable action name bound into the public decision record.
+pub fn selected_action(command: ActionCommand) -> String {
+  case command {
+    Integration(IntegrationCommand(_, InspectIntegration, _)) ->
+      "integration.inspect"
+    Integration(IntegrationCommand(_, ApplyPreservingMerge, _)) ->
+      "integration.apply_preserving_merge"
+    Runtime(RuntimeAction(_, _, ObserveRuntime, _, _)) -> "runtime.observe"
+    Runtime(RuntimeAction(_, _, DiagnoseRuntime, _, _)) -> "runtime.diagnose"
+    Runtime(RuntimeAction(_, _, MitigateRuntime, _, _)) -> "runtime.mitigate"
+    Runtime(RuntimeAction(_, _, RollbackRuntime, _, _)) -> "runtime.rollback"
   }
 }
 
@@ -287,14 +308,41 @@ pub fn authorize(
 ) -> Result(Permit, String) {
   let resource = scope(request.command)
   let candidate = candidate_revision(request.command)
+  let expected_decision =
+    decision.ExpectedDecision(
+      request.hive_id,
+      request.tenant_id,
+      decision.ClockDomain(state.host_id, boot),
+      request.actor_identity,
+      request.actor_kind,
+      request.session,
+      request.task_id,
+      candidate,
+      resource,
+      request.epoch,
+      selected_action(request.command),
+    )
   use _ <- result.try(require(
-    identifier(request.operation_id) && identifier(request.session),
-    "invalid operation or session ID",
+    identifier(request.operation_id)
+      && identifier(request.hive_id)
+      && identifier(request.tenant_id)
+      && identifier(request.actor_identity)
+      && identifier(request.session)
+      && identifier(request.task_id),
+    "invalid action identity",
   ))
   use _ <- result.try(require(request.epoch > 0, "lease epoch must be positive"))
   use _ <- result.try(require(
     command_valid(request.command),
     "invalid or incomplete typed action",
+  ))
+  use validated_decision <- result.try(
+    request.decision
+    |> option.to_result("a validated prepared decision record is required"),
+  )
+  use _ <- result.try(require(
+    decision.matches(validated_decision, expected_decision, now),
+    "prepared decision does not match the current hive action",
   ))
   use _ <- result.try(require(
     !privileged(request.command),

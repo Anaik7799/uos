@@ -9,10 +9,11 @@ import argv
 import gleam/int
 import gleam/io
 import gleam/json
-import gleam/option.{None}
+import gleam/option.{None, Some}
 import gleam/result
 import gleam/string
 import uos_swarm/action_boundary as action
+import uos_swarm/decision_record as decision
 
 @external(erlang, "erlang", "halt")
 fn halt(code: Int) -> Nil
@@ -67,12 +68,36 @@ fn candidate_receipt(
   }
 }
 
+fn actor_kind(value: String) -> Result(decision.ActorKind, String) {
+  case value {
+    "model" -> Ok(decision.ModelActor)
+    "deterministic" -> Ok(decision.DeterministicActor)
+    _ -> Error("actor kind must be model or deterministic")
+  }
+}
+
+fn prepared_decision(
+  payload: String,
+) -> Result(decision.PreparedDecision, String) {
+  use record <- result.try(decision.decode(payload))
+  case record {
+    decision.PreparedRecord(prepared) -> Ok(prepared)
+    decision.CompletedRecord(_) ->
+      Error("completed decision reports cannot authorize an action")
+  }
+}
+
 pub fn run(arguments: List(String)) -> Result(String, String) {
   case arguments {
     [
       root,
       "integration-dry-run",
+      hive_id,
+      tenant_id,
+      actor_kind_text,
+      actor_identity,
       session,
+      task_id,
       epoch_text,
       candidate,
       "inspect",
@@ -82,7 +107,9 @@ pub fn run(arguments: List(String)) -> Result(String, String) {
       authorization_expiry_text,
       authority_ref,
       operation_id,
+      decision_json,
     ] -> {
+      use actor_kind <- result.try(actor_kind(actor_kind_text))
       use epoch <- result.try(number(epoch_text))
       use policy_expiry <- result.try(number(policy_expiry_text))
       use authorization_expiry <- result.try(number(authorization_expiry_text))
@@ -99,7 +126,39 @@ pub fn run(arguments: List(String)) -> Result(String, String) {
           operation,
           evidence,
         ))
-      let request = action.Request(operation_id, session, epoch, command)
+      use prepared <- result.try(prepared_decision(decision_json))
+      let expected =
+        decision.ExpectedDecision(
+          hive_id,
+          tenant_id,
+          prepared.state.clock,
+          actor_identity,
+          actor_kind,
+          session,
+          task_id,
+          candidate,
+          action.scope(command),
+          epoch,
+          action.selected_action(command),
+        )
+      use validated <- result.try(decision.validate_prepared(
+        prepared,
+        expected,
+        prepared.forecast.as_of_boot_us,
+      ))
+      let request =
+        action.Request(
+          operation_id,
+          hive_id,
+          tenant_id,
+          actor_identity,
+          actor_kind,
+          session,
+          task_id,
+          epoch,
+          command,
+          Some(validated),
+        )
       let policy =
         action.PolicySnapshot(
           policy_version,
@@ -122,7 +181,12 @@ pub fn run(arguments: List(String)) -> Result(String, String) {
     [
       root,
       "runtime-dry-run",
+      hive_id,
+      tenant_id,
+      actor_kind_text,
+      actor_identity,
       session,
+      task_id,
       epoch_text,
       service,
       candidate,
@@ -136,7 +200,9 @@ pub fn run(arguments: List(String)) -> Result(String, String) {
       authorization_expiry_text,
       authority_ref,
       operation_id,
+      decision_json,
     ] -> {
+      use actor_kind <- result.try(actor_kind(actor_kind_text))
       use epoch <- result.try(number(epoch_text))
       use policy_expiry <- result.try(number(policy_expiry_text))
       use authorization_expiry <- result.try(number(authorization_expiry_text))
@@ -158,7 +224,39 @@ pub fn run(arguments: List(String)) -> Result(String, String) {
           None,
           postcheck_ref,
         ))
-      let request = action.Request(operation_id, session, epoch, command)
+      use prepared <- result.try(prepared_decision(decision_json))
+      let expected =
+        decision.ExpectedDecision(
+          hive_id,
+          tenant_id,
+          prepared.state.clock,
+          actor_identity,
+          actor_kind,
+          session,
+          task_id,
+          candidate,
+          action.scope(command),
+          epoch,
+          action.selected_action(command),
+        )
+      use validated <- result.try(decision.validate_prepared(
+        prepared,
+        expected,
+        prepared.forecast.as_of_boot_us,
+      ))
+      let request =
+        action.Request(
+          operation_id,
+          hive_id,
+          tenant_id,
+          actor_identity,
+          actor_kind,
+          session,
+          task_id,
+          epoch,
+          command,
+          Some(validated),
+        )
       let policy =
         action.PolicySnapshot(
           policy_version,
@@ -190,13 +288,15 @@ pub fn run(arguments: List(String)) -> Result(String, String) {
 
 pub fn usage() -> String {
   "gleam run -m action_boundary_cli -- <state_root> integration-dry-run "
-  <> "<session> <epoch> <candidate> inspect <evidence_csv> <policy_version> "
-  <> "<policy_expires_us> <authorization_expires_us> <authority_ref> <operation_id>\n"
+  <> "<hive> <tenant> <model|deterministic> <actor> <session> <task> "
+  <> "<epoch> <candidate> inspect <evidence_csv> <policy_version> "
+  <> "<policy_expires_us> <authorization_expires_us> <authority_ref> <operation_id> <decision_json>\n"
   <> "gleam run -m action_boundary_cli -- <state_root> runtime-dry-run "
-  <> "<session> <epoch> <service> <deployed_revision> <observe|diagnose> - "
+  <> "<hive> <tenant> <model|deterministic> <actor> <session> <task> "
+  <> "<epoch> <service> <deployed_revision> <observe|diagnose> - "
   <> "<postcheck_ref> <runtime_evidence_ref> <formal_evidence_ref> "
   <> "<policy_version> <policy_expires_us> "
-  <> "<authorization_expires_us> <authority_ref> <operation_id>\n"
+  <> "<authorization_expires_us> <authority_ref> <operation_id> <decision_json>\n"
   <> "Dry-run only. Caller-supplied references are not authenticated authority."
 }
 
