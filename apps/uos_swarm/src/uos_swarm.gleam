@@ -674,7 +674,9 @@ fn reconcile(path: String, base: String) -> Nil {
             <> " | conflicts "
             <> int.to_string(r.conflicts)
             <> " | chain_rejected "
-            <> int.to_string(r.chain_rejected),
+            <> int.to_string(r.chain_rejected)
+            <> " | push_rejected "
+            <> int.to_string(r.push_rejected),
           )
         Error(e) -> io.println("reconcile error: " <> e)
       }

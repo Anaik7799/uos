@@ -74,9 +74,13 @@ pub fn source_namespaces_and_payload_hashes_are_bound_test() {
   let assert Ok([first, ..]) = observation.project(history(), "journal-1")
   let assert Ok([other, ..]) = observation.project(history(), "journal-2")
   should.be_false(first.event_id == other.event_id)
-  should.be_false(observation.payload_hash(first) == observation.payload_hash(other))
-  should.be_false(observation.payload_hash(first)
-    == observation.payload_hash(observation.Observation(..first, epoch: 9)))
+  should.be_false(
+    observation.payload_hash(first) == observation.payload_hash(other),
+  )
+  should.be_false(
+    observation.payload_hash(first)
+    == observation.payload_hash(observation.Observation(..first, epoch: 9)),
+  )
   string.length(observation.payload_hash(first)) |> should.equal(64)
 }
 
