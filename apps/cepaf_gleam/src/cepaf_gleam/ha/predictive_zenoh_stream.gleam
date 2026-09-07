@@ -23,6 +23,7 @@ import gleam/int
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/otp/actor
+import gleam/otp/supervision
 import gleam/string
 
 pub type StreamMessage {
@@ -67,6 +68,11 @@ pub fn start() -> Result(actor.Started(Subject(StreamMessage)), actor.StartError
   actor.new(initial_state())
   |> actor.on_message(handle_message)
   |> actor.start()
+}
+
+pub fn supervised() -> supervision.ChildSpecification(Subject(StreamMessage)) {
+  supervision.worker(start)
+  |> supervision.restart(supervision.Permanent)
 }
 
 pub fn update_state(state: StreamState, msg: StreamMessage) -> StreamState {

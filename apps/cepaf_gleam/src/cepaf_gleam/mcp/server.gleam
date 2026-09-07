@@ -200,14 +200,106 @@ fn tools_call(id: Option(json.Json), raw_line: String) -> String {
 // Tool execution — NIF-backed planning + existing tools
 // ---------------------------------------------------------------------------
 
+pub fn is_mutating_tool(name: String) -> Bool {
+  case name {
+    "plan_add" | "plan_update" -> True
+    _ -> False
+  }
+}
+
+pub fn verify_mutating_action_preflight(
+  action: String,
+  raw_line: String,
+) -> fractal_forecast.AgenticPreflightCertificate {
+  let actor_decoder = {
+    use a <- decode.subfield(["params", "arguments", "actor"], decode.string)
+    decode.success(a)
+  }
+  let benefit_decoder = {
+    use b <- decode.subfield(["params", "arguments", "benefit"], decode.float)
+    decode.success(b)
+  }
+  let cost_decoder = {
+    use c <- decode.subfield(["params", "arguments", "cost"], decode.float)
+    decode.success(c)
+  }
+  let risk_decoder = {
+    use r <- decode.subfield(["params", "arguments", "risk_score"], decode.float)
+    decode.success(r)
+  }
+  let contention_decoder = {
+    use h <- decode.subfield(
+      ["params", "arguments", "contention_history"],
+      decode.list(decode.float),
+    )
+    decode.success(h)
+  }
+
+  let actor = case json.parse(raw_line, actor_decoder) {
+    Ok(a) -> a
+    Error(_) -> "AutonomousAgent"
+  }
+  let benefit = case json.parse(raw_line, benefit_decoder) {
+    Ok(b) -> b
+    Error(_) -> 100.0
+  }
+  let cost = case json.parse(raw_line, cost_decoder) {
+    Ok(c) -> c
+    Error(_) -> 10.0
+  }
+
+  let base_forecast = case json.parse(raw_line, contention_decoder) {
+    Ok(history) -> fractal_forecast.predict_l3_transaction(history, 60)
+    Error(_) ->
+      fractal_forecast.predict_l3_transaction(
+        [0.05, 0.04, 0.06, 0.05, 0.04, 0.05, 0.05, 0.04],
+        60,
+      )
+  }
+
+  let forecast = case json.parse(raw_line, risk_decoder) {
+    Ok(r) ->
+      fractal_forecast.LayerForecast(
+        ..base_forecast,
+        risk_score: r,
+      )
+    Error(_) -> base_forecast
+  }
+
+  fractal_forecast.verify_agentic_preflight(
+    actor,
+    action,
+    forecast,
+    benefit,
+    cost,
+  )
+}
+
 fn execute_tool(
   name: String,
   id: Option(json.Json),
   raw_line: String,
 ) -> String {
-  case tools.unavailable_reason(name) {
-    Some(reason) -> tool_unavailable(id, name, reason)
-    None -> execute_available_tool(name, id, raw_line)
+  case is_mutating_tool(name) {
+    True -> {
+      case verify_mutating_action_preflight(name, raw_line) {
+        fractal_forecast.PreflightApproved(_, _, _, _, _) -> {
+          case tools.unavailable_reason(name) {
+            Some(reason) -> tool_unavailable(id, name, reason)
+            None -> execute_available_tool(name, id, raw_line)
+          }
+        }
+        fractal_forecast.PreflightVetoed(_, _, _, reason, _risk) -> {
+          error_response(id, -32_001, "Preflight veto: " <> reason)
+        }
+      }
+    }
+    False -> {
+      case tools.unavailable_reason(name) {
+        Some(reason) -> tool_unavailable(id, name, reason)
+        None -> execute_available_tool(name, id, raw_line)
+      }
+    }
   }
 }
 
@@ -222,8 +314,20 @@ fn execute_available_tool(
     "plan_list_pending" -> tool_plan_list_pending(id)
     "plan_list" -> tool_plan_list(id, raw_line)
     "plan_get" -> tool_plan_get(id, raw_line)
-    "plan_add" -> tool_plan_add(id, raw_line)
-    "plan_update" -> tool_plan_update(id, raw_line)
+    "plan_add" ->
+      case verify_mutating_action_preflight(name, raw_line) {
+        fractal_forecast.PreflightApproved(_, _, _, _, _) ->
+          tool_plan_add(id, raw_line)
+        fractal_forecast.PreflightVetoed(_, _, _, reason, _) ->
+          error_response(id, -32_001, "Preflight veto: " <> reason)
+      }
+    "plan_update" ->
+      case verify_mutating_action_preflight(name, raw_line) {
+        fractal_forecast.PreflightApproved(_, _, _, _, _) ->
+          tool_plan_update(id, raw_line)
+        fractal_forecast.PreflightVetoed(_, _, _, reason, _) ->
+          error_response(id, -32_001, "Preflight veto: " <> reason)
+      }
     "plan_search" -> tool_plan_search(id, raw_line)
     // System data tools (mesh state)
     "system_health" -> tool_system_health(id)

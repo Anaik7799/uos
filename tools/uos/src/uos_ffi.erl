@@ -1,5 +1,6 @@
 -module(uos_ffi).
--export([get_arguments/0, file_exists/1, matches_timestamp_format/1, file_contains/2, halt/1]).
+-export([get_arguments/0, file_exists/1, file_size/1, matches_timestamp_format/1, file_contains/2, halt/1]).
+-include_lib("kernel/include/file.hrl").
 
 halt(Code) ->
     erlang:halt(Code).
@@ -21,6 +22,18 @@ file_exists(Path) ->
                 {ok, _} -> true;
                 _ -> false
             end
+    end.
+
+file_size(Path) ->
+    Info = case file:read_file_info(Path) of
+        {ok, I} -> {ok, I};
+        _ ->
+            RootPath = filename:join(["/home/an/NAS-setup/uos", Path]),
+            file:read_file_info(RootPath)
+    end,
+    case Info of
+        {ok, #file_info{size = Size}} -> Size;
+        _ -> -1
     end.
 
 matches_timestamp_format(Filename) ->

@@ -95,7 +95,30 @@ The scope encompassed:
 ### 3.6 Standalone Jujutsu Monorepo Rebase
 - Committed candidate changes as `zstmuvns aef028b7`: `feat(mirage): verify physical execution across solo5-hvt, solo5-spt, and solo5-virtio tenders`.
 - Rebased cleanly onto `main` (`wtzmuuzp a9d40c6e`) with zero conflicts.
-- Created clean empty working copy `@` (`sqmqsmsv 6e2212f6`).
+- Created clean working copy `@`.
+
+### 3.7 Codex Sovereign Review Findings & 4-Defect Remediation Cycle
+Codex Astra conducted an independent sovereign review of candidate `b64532f3` (via inbox messages `codex-mirage-review-block-20260907-1240`, `codex-mirage-review-agy-findings-20260907-1245`, and `codex-mirage-ssp-findings-20260907-1248`). Four blocking defects were identified and systematically remediated:
+
+1. **Gate Presence-Only Checks (Remediated)**:
+   - *Finding*: `tools/uos` used simple `file_exists` checks which would pass on 0-byte touch stubs without actual ELF binaries or runtime execution receipts.
+   - *Fix*: Implemented `uos_ffi:file_size/1` in Erlang/Gleam. `G-MIRAGE-TENDERS` and `selfcheck-mirage-tenders` now strictly verify that all unikernel test binaries (`test_hello.{hvt,spt,virtio}`, `test_time.hvt`, `test_ssp.{hvt,spt,virtio}`) have size $\ge 10,000$ bytes, that the execution receipt exists ($\ge 500$ bytes), and that the receipt JSON contains authentic readiness tokens (`"solo5_hardware_virtualized_and_spt_verified"`, `"TENDERS_VERIFIED_PHYSICAL_EXECUTION"`, `"exit_code": 0`, `"exit_code": 83`, `"passed": true`, and guest console banner `"Solo5: Bindings version"`).
+
+2. **Static API Default vs Dynamic Observation (Remediated)**:
+   - *Finding*: `apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mirage_api.gleam` emitted static model defaults rather than reading the live hypervisor execution receipt.
+   - *Fix*: Added `read_probe_receipt()` with JSON decoders in `mirage_hypervisor.gleam` that dynamically loads `var/mirage/receipts/hypervisors_probe.json` (falling back to committed `docs/reviews/20260907-1510-mirage-hypervisors-probe-receipt.json`). `mirage_api.gleam` now serves the authentic dynamic probe data.
+
+3. **Subprocess Security, Whitelisting & Bounded Timeouts (Remediated)**:
+   - *Finding*: `mirage_hypervisor_probe.ml` used shell string interpolation (`Filename.quote` with `Sys.command`) which posed process tree risks, lacked tender allowlisting, had no execution timeout, and lacked negative control tests.
+   - *Fix*: Replaced shell invocation with safe argv vectorization via `Unix.create_process`. Added `is_allowed_tender` restricting execution strictly to approved binaries (`solo5-hvt`, `solo5-spt`, `solo5-virtio-run`). Added mandatory unikernel file size verification ($\ge 10,000$ bytes). Implemented bounded 5.0-second execution timeout via `Unix.select` with `SIGKILL` reaping. Added 3 negative control unit tests in `test_mirage_hypervisor.ml` verifying immediate rejection of unapproved binaries (`/usr/bin/true`, `/bin/sh`) and nonexistent unikernels.
+
+4. **Solo5 Virtio Exit 83 Semantics & Mandatory Console Output Inspection (Remediated)**:
+   - *Finding*: In Solo5 virtio under QEMU, `platform_exit()` outputs value 41 to `isa-debug-exit` port `0x501`, which QEMU maps to `(41 << 1) | 1 = 83`. This occurs on BOTH normal exit (`solo5_exit(0)`) AND fatal aborts (`Solo5: ABORT: Stack corruption detected`). Exit code 83 alone is NOT proof of guest success.
+   - *Fix*: Upgraded `is_successful_execution` in `mirage_hypervisor_probe.ml` and the Gleam gates to mandate guest console inspection. Success requires both the exit code AND the presence of `"Solo5: solo5_exit(0) called"` (or `"SUCCESS"`), while trapping any `"ABORT"` pattern.
+
+5. **Stack Smashing Protection (SSP) Artifact Provenance**:
+   - Built and staged `test_ssp.hvt`, `test_ssp.spt`, `test_ssp.virtio` from `solo5.0.12.1/tests/test_ssp/test_ssp.c`.
+   - Verified that all three tenders trap stack corruption properly: HVT and SPT exit 255 with `"Solo5: ABORT: Stack corruption detected"`, and Virtio exits 83 with the same abort banner.
 
 ---
 
@@ -158,9 +181,13 @@ The scope encompassed:
 - [`apps/cepaf_gleam/test/mirage_hypervisor_test.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/test/mirage_hypervisor_test.gleam)
 - [`apps/cepaf_gleam/test/mirage_cockpit_test.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/test/mirage_cockpit_test.gleam)
 - [`apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam`](file:///home/an/NAS-setup/uos/apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam)
+- [`docs/reviews/20260907-1510-mirage-hypervisors-probe-receipt.json`](file:///home/an/NAS-setup/uos/docs/reviews/20260907-1510-mirage-hypervisors-probe-receipt.json)
 - [`engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml`](file:///home/an/NAS-setup/uos/engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml)
 - [`engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.mli`](file:///home/an/NAS-setup/uos/engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.mli)
+- [`engines/hermes/modules/hermes_mirage/test_mirage_hypervisor.ml`](file:///home/an/NAS-setup/uos/engines/hermes/modules/hermes_mirage/test_mirage_hypervisor.ml)
 - [`tools/uos/src/main.gleam`](file:///home/an/NAS-setup/uos/tools/uos/src/main.gleam)
+- [`tools/uos/src/uos_ffi.erl`](file:///home/an/NAS-setup/uos/tools/uos/src/uos_ffi.erl)
+- [`tools/uos/test/exit_status_test.gleam`](file:///home/an/NAS-setup/uos/tools/uos/test/exit_status_test.gleam)
 - [`docs/journal/20260907-1416-mirage-hypervisor-verification-and-codex-coordination-journal.md`](file:///home/an/NAS-setup/uos/docs/journal/20260907-1416-mirage-hypervisor-verification-and-codex-coordination-journal.md)
 
 ---
