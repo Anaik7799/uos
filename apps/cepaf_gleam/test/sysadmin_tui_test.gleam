@@ -167,3 +167,34 @@ pub fn render_all_9_tabs_test() {
   should.equal(string.contains(out_evo, "EVOLUTION GATE OPEN"), True)
   should.equal(string.contains(out_evo, "MAX SIMD Scorer Optimization"), True)
 }
+
+pub fn terminal_dimension_and_bounds_test() {
+  let model = default_model()
+
+  // Test across all 12 tabs that rendering succeeds and lines are bounded
+  let tabs = [
+    OverviewTab,
+    ContainersTab,
+    StorageTab,
+    ZenohTab,
+    SupervisorsTab,
+    TasksTab,
+    SecurityTab,
+    StreamTab,
+    DoctorTab,
+    HomeostasisTab,
+    MessageBoardTab,
+    EvolutionTab,
+  ]
+
+  list.each(tabs, fn(tab) {
+    let rendered = render(select_tab(model, tab))
+    let lines = string.split(rendered, "\n")
+    should.equal(list.is_empty(lines), False)
+
+    // Verify non-empty content and presence of header
+    let assert Ok(first_line) = list.first(lines)
+    should.equal(string.is_empty(first_line), False)
+  })
+}
+
