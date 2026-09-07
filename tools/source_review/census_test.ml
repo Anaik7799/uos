@@ -82,6 +82,23 @@ let () =
   check
     (List.exists (fun case -> List.mem "should.equal" case.calls) cases)
     "call edges must be enumerated independently from declarations";
+  check
+    (enumerate_syntax_cases ~path:"dune"
+       ~text:"(executable\n (name production_server))" = [])
+    "production executable stanzas must not be counted as test cases";
+  check
+    (enumerate_syntax_cases ~path:"disabled.gleam"
+       ~text:"/*\npub fn disabled_test() {\n  should.fail()\n}\n*/" = [])
+    "block-commented declarations must not be counted";
+  check
+    (enumerate_syntax_cases ~path:"literal.gleam"
+       ~text:"const example = \"pub fn disabled_test() {\"" = [])
+    "declaration-shaped string literals must not be counted";
+  check
+    (List.for_all
+       (fun case -> case.confidence = "LEXICAL_CANDIDATE_NOT_AST_OR_RUNNER_CONFIRMED")
+       cases)
+    "lexical candidates must not claim registration or AST certainty";
 
   check
     (match validate_json_tree "duplicate-control"
@@ -97,6 +114,15 @@ let () =
     (match validate_json_tree "depth-control" (nested 65 `Null) with
      | Error (Invalid_index _) -> true | _ -> false)
     "excessively nested JSON must fail closed";
+  check
+    (match parse_json "preparse-depth-control"
+       (String.make 65 '[' ^ "null" ^ String.make 65 ']') with
+     | Error (Invalid_index _) -> true | _ -> false)
+    "excessive raw JSON depth must be rejected before the parser";
+  check
+    (match parse_json "preparse-nonfinite-control" "{\"x\":NaN}" with
+     | Error (Invalid_index _) -> true | _ -> false)
+    "raw nonfinite JSON tokens must be rejected before the parser";
 
   let regular = Filename.temp_file "uos-e04-regular-" ".json" in
   let link = regular ^ ".link" in
@@ -127,8 +153,37 @@ let () =
          | Error (Io_error _) -> true | _ -> false)
         "bounded reads must reject symlink leaves");
 
+  let replacement = Filename.temp_file "uos-e04-bound-index-" ".json" in
+  Fun.protect
+    ~finally:(fun () -> try Unix.unlink replacement with Unix.Unix_error _ -> ())
+    (fun () ->
+      let write value =
+        let channel = open_out_bin replacement in
+        Fun.protect ~finally:(fun () -> close_out_noerr channel)
+          (fun () -> output_string channel value)
+      in
+      let second =
+        "{\"source_root\":\"/tmp\",\"records\":[{\"path\":\"a\",\"sites\":[],\"parse_status\":\"parsed\",\"execution_status\":\"UNRUN\"}]}"
+      in
+      let first_prefix = "{\"source_root\":\"/tmp\",\"records\":[]" in
+      let first = first_prefix ^ String.make (String.length second - String.length first_prefix - 1) ' ' ^ "}" in
+      check (String.length first = String.length second) "replacement control must preserve byte length";
+      write first;
+      check
+        (match verify_ocaml_inventory replacement with
+         | Error (Invalid_index _) -> true | _ -> false)
+        "inventory parsing without an explicit bound digest must fail closed";
+      let report = expect_ok (verify_ocaml_inventory ~expected_sha256:(sha256 first) replacement) in
+      check (report.inventory_records = 0) "bound parser must accept its exact descriptor bytes";
+      write second;
+      check
+        (match verify_ocaml_inventory ~expected_sha256:(sha256 first) replacement with
+         | Error (Invalid_index _) -> true | _ -> false)
+        "a post-binding replacement must fail before parsing different bytes");
+
   let inventory =
     expect_ok (verify_ocaml_inventory
+      ~expected_sha256:"d9b9a71e32de595ff2d04f1dd027ba05ebd743b7c92dc9313bcf155a0f9eb5ee"
       "docs/journal/20260906-0428-ocaml-web-tests-inventory.json")
   in
   check (inventory.inventory_records = 161) "OCaml inventory must retain 161 source records";
@@ -141,6 +196,7 @@ let () =
   let corpus =
     expect_ok (verify_partitioned_index
       ~index_path:"docs/design/20260906-0631-source-corpus-index.json"
+      ~expected_sha256:"7f2b1f93824211ebd8fe6e37756adc299760952fd7fe879bded1eb5b85cae1c7"
       ~expected_parts:24 ~expected_records:8047)
   in
   check (corpus.verified_parts = 24 && corpus.verified_records = 8047)
@@ -153,6 +209,7 @@ let () =
   let catalogue =
     expect_ok (verify_partitioned_index
       ~index_path:"docs/design/20260906-0631-cross-project-test-catalogue.json"
+      ~expected_sha256:"475739f4b9485b01fee471fd130bb7adc7d2c95351178458f070cc29ccced603"
       ~expected_parts:12 ~expected_records:770)
   in
   check (catalogue.verified_parts = 12 && catalogue.verified_records = 770)
@@ -161,5 +218,51 @@ let () =
     "catalogue records must have unique project/root/path identities";
   check (catalogue.execution_unrun = 770 && catalogue.execution_unknown = 0)
     "catalogue execution state must remain UNRUN";
+
+  let ledger = expect_ok (repository_ledger ()) in
+  let ledger_fields = match ledger with `Assoc fields -> fields | _ -> failwith "ledger object" in
+  let rows name = match List.assoc name ledger_fields with
+    | `List values -> values | _ -> failwith (name ^ " list") in
+  let identity = match List.assoc "identity_checks" ledger_fields with
+    | `Assoc fields -> fields | _ -> failwith "identity checks" in
+  let int name = match List.assoc name identity with `Int value -> value | _ -> -1 in
+  let bool name = match List.assoc name identity with `Bool value -> value | _ -> false in
+  check (List.length (rows "bindings") = 39)
+    "ledger must bind three top indexes and all 36 partitions";
+  check (int "source_rows" = 8978 && bool "source_ids_unique")
+    "every record in all three scopes must have a unique stable source identity";
+  check (int "case_rows" = 25244 && bool "case_ids_unique")
+    "all old static case/site rows must have unique stable case identities";
+  let accounting = rows "scope_accounting" in
+  check
+    (List.for_all (function
+       | `Assoc fields -> List.assoc_opt "accounting_closed" fields = Some (`Bool true)
+       | _ -> false) accounting)
+    "every scope must close reviewed plus excluded plus explicit frontier accounting";
+  check
+    (List.for_all (function
+       | `Assoc fields -> List.mem_assoc "source_id" fields && List.mem_assoc "frontier" fields
+                          && List.mem_assoc "execution_state" fields
+       | _ -> false) (rows "source_records"))
+    "every source record must expose identity, frontier and execution state";
+  check
+    (List.for_all (function
+       | `Assoc fields -> List.mem_assoc "case_id" fields && List.mem_assoc "span" fields
+                          && List.mem_assoc "oracle_state" fields
+                          && List.mem_assoc "browser_class" fields
+                          && List.mem_assoc "runner" fields
+       | _ -> false) (rows "case_records"))
+    "every case candidate must expose ID, span, oracle, browser and runner state";
+  let ledger_path = Filename.temp_file "uos-e04-ledger-" ".json" in
+  Fun.protect
+    ~finally:(fun () -> try Unix.unlink ledger_path with Unix.Unix_error _ -> ())
+    (fun () ->
+      let ledger_text = Yojson.Basic.to_string ledger ^ "\n" in
+      check (String.length ledger_text < max_ledger_bytes) "ledger must fit its publication bound";
+      (match write_ledger_atomic ledger_path ledger_text with
+       | Error error -> failwith (string_of_error error)
+       | Ok () -> ());
+      let observed = expect_ok (read_regular_bounded ~limit:max_ledger_bytes ledger_path) in
+      check (sha256 observed = sha256 ledger_text) "atomic ledger bytes must match the reviewed ledger");
 
   Printf.printf "census_test: %d checks passed\n" !checks
