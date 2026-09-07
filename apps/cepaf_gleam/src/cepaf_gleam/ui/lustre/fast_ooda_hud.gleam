@@ -5,6 +5,7 @@
 //// MAX SIMD tensor scoring, and Heijunka pull queue throughput.
 
 import gleam/float
+import lustre/attribute
 import lustre/element.{type Element}
 import lustre/element/html
 
@@ -45,7 +46,7 @@ pub fn render_fast_ooda_hud(metrics: FastOodaMetrics) -> Element(msg) {
       html.h1([], [html.text("UOS Fast OODA Cybernetic Convergence Cockpit")]),
       html.p([], [
         html.text("Tailscale FQDN: "),
-        html.a([element.attribute("href", "http://nas-1.tail55d152.ts.net:4100/ooda")], [
+        html.a([attribute.href("http://nas-1.tail55d152.ts.net:4100/ooda")], [
           html.text("http://nas-1.tail55d152.ts.net:4100/ooda"),
         ]),
         html.span([], [html.text(" | OS NVMe Lock: 25503L801736 | Zero-Muda: Pure BEAM")]),
@@ -97,42 +98,42 @@ fn render_ooda_svg(metrics: FastOodaMetrics) -> Element(msg) {
   element.element(
     "svg",
     [
-      element.attribute("width", "400"),
-      element.attribute("height", "200"),
-      element.attribute("viewBox", "0 0 400 200"),
+      attribute.attribute("width", "400"),
+      attribute.attribute("height", "200"),
+      attribute.attribute("viewBox", "0 0 400 200"),
     ],
     [
       element.element(
         "circle",
         [
-          element.attribute("cx", "200"),
-          element.attribute("cy", "100"),
-          element.attribute("r", "70"),
-          element.attribute("stroke", ring_color),
-          element.attribute("stroke-width", "6"),
-          element.attribute("fill", "none"),
+          attribute.attribute("cx", "200"),
+          attribute.attribute("cy", "100"),
+          attribute.attribute("r", "70"),
+          attribute.attribute("stroke", ring_color),
+          attribute.attribute("stroke-width", "6"),
+          attribute.attribute("fill", "none"),
         ],
         [],
       ),
       element.element(
         "text",
         [
-          element.attribute("x", "200"),
-          element.attribute("y", "95"),
-          element.attribute("text-anchor", "middle"),
-          element.attribute("fill", "#FFFFFF"),
-          element.attribute("font-size", "14"),
+          attribute.attribute("x", "200"),
+          attribute.attribute("y", "95"),
+          attribute.attribute("text-anchor", "middle"),
+          attribute.attribute("fill", "#FFFFFF"),
+          attribute.attribute("font-size", "14"),
         ],
         [html.text("OODA " <> float.to_string(metrics.total_loop_ms) <> "ms")],
       ),
       element.element(
         "text",
         [
-          element.attribute("x", "200"),
-          element.attribute("y", "120"),
-          element.attribute("text-anchor", "middle"),
-          element.attribute("fill", "#00FF66"),
-          element.attribute("font-size", "11"),
+          attribute.attribute("x", "200"),
+          attribute.attribute("y", "120"),
+          attribute.attribute("text-anchor", "middle"),
+          attribute.attribute("fill", "#00FF66"),
+          attribute.attribute("font-size", "11"),
         ],
         [html.text("Lyapunov Stable | dQ/dt < 0")],
       ),

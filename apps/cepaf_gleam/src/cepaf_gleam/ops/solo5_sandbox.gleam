@@ -4,7 +4,6 @@
 //// Enforces hardware-level microVM page-table isolation (Solo5 HVT/SPT tender),
 //// memory ceilings (<= 64MB), read-only immutability, and sub-15ms cold start.
 
-import gleam/float
 import gleam/int
 
 pub type Solo5Platform {

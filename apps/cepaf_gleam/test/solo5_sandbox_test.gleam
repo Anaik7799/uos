@@ -1,5 +1,5 @@
 import cepaf_gleam/ops/solo5_sandbox.{
-  SandboxVerified, SandboxViolation, Solo5Config, TargetHvt, TargetSpt,
+  SandboxVerified, SandboxViolation, Solo5Config, TargetSpt,
   cold_start_estimate_ms, default_config, platform_to_string, verify_sandbox,
 }
 import gleeunit
