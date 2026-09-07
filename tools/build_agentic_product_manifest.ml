@@ -7,7 +7,7 @@
    no external executable source, credentials, model weights or DB bytes. *)
 let stamp = "20260907-1837"
 let plan = "uos/agentic-product/" ^ stamp
-let get_json p = Yojson.Basic.from_string (read p)
+let get_json p = Yojson.Basic.from_string (read_document p)
 let strs xs = `List (List.map (fun s -> `String s) xs)
 let source_spec = "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json"
 let review_path = "docs/reviews/" ^ stamp ^ "-zigvm-harness-product-feature-oracle-review.md"

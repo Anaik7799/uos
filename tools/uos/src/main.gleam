@@ -1436,31 +1436,31 @@ pub fn execute(cmd: UosCommand) -> Int {
       {
         True -> {
           io.println(
-            "  [PASS] BIONIC-01: 18 L1 Feature Families (InteractiveCli, AgentLoop, Mcp, Skills, Subagents...)",
+            "  [INVENTORY] BIONIC-01: 18 L1 Feature Families (InteractiveCli, AgentLoop, Mcp, Skills, Subagents...)",
           )
           io.println(
-            "  [PASS] BIONIC-02: Canonical L2 Capability Catalogue Authority (FailClosed status policy, source anchors)",
+            "  [INVENTORY] BIONIC-02: Canonical L2 Capability Catalogue Authority (FailClosed status policy, source anchors)",
           )
           io.println(
-            "  [PASS] BIONIC-03: L0-L6 Recursive Evidence Plane (Product -> Family -> Capability -> Contract -> Scenario -> Trace -> Receipt)",
+            "  [INVENTORY] BIONIC-03: L0-L6 Recursive Evidence Plane (Product -> Family -> Capability -> Contract -> Scenario -> Trace -> Receipt)",
           )
           io.println(
-            "  [PASS] BIONIC-04: Precise Evidence Boundary Contract (Source presence is discovery-only; Two-Key rule enforced)",
+            "  [INVENTORY] BIONIC-04: Precise Evidence Boundary Contract (Source presence is discovery-only; Two-Key rule enforced)",
           )
           io.println(
-            "  [PASS] BIONIC-05: LX Control Plane (Homeostasis, Turn Budgets, Orientation Snapshots, Lyapunov Stability <=. 0.0)",
+            "  [INVENTORY] BIONIC-05: LX Control Plane (Homeostasis, Turn Budgets, Orientation Snapshots, Lyapunov Stability <=. 0.0)",
           )
           io.println(
-            "  [PASS] BIONIC-06: NASA JPL F-Prime (FPP) Elements (Component Packets, HSM States, Active Topologies)",
+            "  [INVENTORY] BIONIC-06: NASA JPL F-Prime (FPP) Elements (Component Packets, HSM States, Active Topologies)",
           )
           io.println(
-            "  [PASS] BIONIC-07: 17-Aspect Hermes-Bionic Alignment (Aspects 1..17 bound and active)",
+            "  [INVENTORY] BIONIC-07: 17-Aspect Hermes-Bionic Alignment (Aspects 1..17 bound and active)",
           )
           io.println(
-            "  [PASS] BIONIC-08: Actor & Agent Ecosystem Topology (10 Bionic Actors across L0..L9 and 5 Surfaces)",
+            "  [INVENTORY] BIONIC-08: Actor & Agent Ecosystem Topology (10 Bionic Actors across L0..L9 and 5 Surfaces)",
           )
           io.println("")
-          io.println("Summary: 8/8 Hermes-Bionic Verification Checks Passed (100% Green)")
+          io.println("Summary: 8/8 Hermes-Bionic Verification Sources Present (INVENTORY) (presence only; this gate does not execute the Gleam suites it names — run `gleam test` in apps/cepaf_gleam)")
           0
         }
         False -> {
@@ -1503,50 +1503,50 @@ pub fn execute(cmd: UosCommand) -> Int {
       {
         True -> {
           io.println(
-            "  [PASS] OMNI-01: 14 Multidimensional Vectors Bound & Verified (Fractal Layers, Components, Control Flows, Data Flows, Evidence Flows...)",
+            "  [INVENTORY] OMNI-01: 14 Multidimensional Vectors Bound & Verified (Fractal Layers, Components, Control Flows, Data Flows, Evidence Flows...)",
           )
           io.println(
-            "  [PASS] OMNI-02: Fast OODA Loop (Sub-second Sensory Ingestion <= 100ms, Lyapunov Drift <=. 0.0, Consensus Ratified)",
+            "  [INVENTORY] OMNI-02: Fast OODA Loop (Sub-second Sensory Ingestion <= 100ms, Lyapunov Drift <=. 0.0, Consensus Ratified)",
           )
           io.println(
-            "  [PASS] OMNI-03: Fractal SDLC & SRE (10 SDLC Stages, 5-Tier Lifecycle Loops, SIL-4..SIL-6 Resilience Tiers)",
+            "  [INVENTORY] OMNI-03: Fractal SDLC & SRE (10 SDLC Stages, 5-Tier Lifecycle Loops, SIL-4..SIL-6 Resilience Tiers)",
           )
           io.println(
-            "  [PASS] OMNI-04: Skill Inventory & Superpowers (170 Active Skills across AGY/Claude/Codex, 14 Verified Superpowers)",
+            "  [INVENTORY] OMNI-04: Skill Inventory & Superpowers (170 Active Skills across AGY/Claude/Codex, 14 Verified Superpowers)",
           )
           io.println(
-            "  [PASS] OMNI-05: MCP Tooling & AGENTS.md Policy (35+ Unified Tools, MoZ Transport, Zero-Trust Interceptor)",
+            "  [INVENTORY] OMNI-05: MCP Tooling & AGENTS.md Policy (35+ Unified Tools, MoZ Transport, Zero-Trust Interceptor)",
           )
           io.println(
-            "  [PASS] OMNI-06: Agentic Symbiosis & Unconstrained Scaling (71 Singletons, 195 Elastic Workers, Total 266 Actors)",
+            "  [INVENTORY] OMNI-06: Agentic Symbiosis & Unconstrained Scaling (71 Singletons, 195 Elastic Workers, Total 266 Actors)",
           )
           io.println(
-            "  [PASS] OMNI-07: All 17 Aspect Processes Bound & Verified (Pillars, Governing Contracts, Formal Gates)",
+            "  [INVENTORY] OMNI-07: All 17 Aspect Processes Bound & Verified (Pillars, Governing Contracts, Formal Gates)",
           )
           io.println(
-            "  [PASS] OMNI-08: All 10 Core Use Cases & 4 Math Gates (H >= 2.5b, CCM >= 90%, D_EA <= 10%, ITQS >= 0.85, 100% Operational)",
+            "  [INVENTORY] OMNI-08: All 10 Core Use Cases & 4 Math Gates (H >= 2.5b, CCM >= 90%, D_EA <= 10%, ITQS >= 0.85, 100% Operational)",
           )
           io.println(
-            "  [PASS] OMNI-09: All 5 System Components Generated & Certified (Apps, Engines, Services, Intelligence, Native with P99 <= 15ms)",
+            "  [INVENTORY] OMNI-09: All 5 System Components Generated & Certified (Apps, Engines, Services, Intelligence, Native with P99 <= 15ms)",
           )
           io.println(
-            "  [PASS] OMNI-10: Complete Formal Proofs & Scalability Profiles Generated (Lean 4, Gospel, Z3, Quint, STPA, 100% Verified)",
+            "  [INVENTORY] OMNI-10: Complete Formal Proofs & Scalability Profiles Generated (Lean 4, Gospel, Z3, Quint, STPA, 100% Verified)",
           )
           io.println(
-            "  [PASS] OMNI-11: 15 Evolutionary & Functional Cycles Executed (EV-25..EV-39 100% Operational & Verified)",
+            "  [INVENTORY] OMNI-11: 15 Evolutionary & Functional Cycles Executed (EV-25..EV-39 100% Operational & Verified)",
           )
           io.println(
-            "  [PASS] OMNI-12: C3I Integrated Knowledge Runtime & Wave 2 Cycles Formally Executed (EV-40..EV-54 100% Operational & Verified)",
+            "  [INVENTORY] OMNI-12: C3I Integrated Knowledge Runtime & Wave 2 Cycles Formally Executed (EV-40..EV-54 100% Operational & Verified)",
           )
           io.println(
-            "  [PASS] OMNI-13: 15 Wave 3 Evolutionary Cycles Formally Executed (EV-55..EV-69 100% Operational & Verified)",
+            "  [INVENTORY] OMNI-13: 15 Wave 3 Evolutionary Cycles Formally Executed (EV-55..EV-69 100% Operational & Verified)",
           )
           io.println(
-            "  [PASS] OMNI-14: 15 Wave 4 Evolutionary Cycles Formally Executed (EV-70..EV-84 100% Operational & Verified)",
+            "  [INVENTORY] OMNI-14: 15 Wave 4 Evolutionary Cycles Formally Executed (EV-70..EV-84 100% Operational & Verified)",
           )
           io.println("")
           io.println(
-            "Summary: 14/14 Omni-Fractal Systemic Checks Passed (100% Green)",
+            "Summary: 14/14 Omni-Fractal Systemic Sources Present (INVENTORY) (presence only; this gate does not execute the Gleam suites it names — run `gleam test` in apps/cepaf_gleam)",
           )
           0
 
@@ -1590,18 +1590,18 @@ pub fn execute(cmd: UosCommand) -> Int {
 
       case know_src && know_test && know_spec {
         True -> {
-          io.println("  [PASS] C3I-01: C3I Knowledge Authority & Subsystem Partitioning (SPEC-C3I-KNOWLEDGE-RUNTIME-001)")
-          io.println("  [PASS] C3I-02: Supervised OCaml Worker Port & BEAM Reductions Protection (External port stdio)")
-          io.println("  [PASS] C3I-03: Typed Cross-Language Protocol & Envelopes (Category, Payload, Epoch, Context)")
-          io.println("  [PASS] C3I-04: Zero-Trust Security Traps (NUL byte -2, SQL injection -3 fail-closed)")
-          io.println("  [PASS] C3I-05: Exponential Trust Decay & Freshness Dynamics (Half-life = 86400s)")
-          io.println("  [PASS] C3I-06: Negative Knowledge & Anti-Pattern Detection Matrix (Pattern matching & trap)")
-          io.println("  [PASS] C3I-07: Multi-Corpus Cited Recall & Source Grounding (Trust threshold filter)")
-          io.println("  [PASS] C3I-08: 7,918-File Zero-Error C3I Knowledge Ingestion (All 5 categories ingested)")
-          io.println("  [PASS] C3I-09: Biosemiotic Knowledge Morphisms & Rocha Cut (Symbolic/physical decoupled)")
-          io.println("  [PASS] C3I-10: 15 Evolutionary Cycles Operational (EV-40..EV-54 100% Green & Verified)")
+          io.println("  [INVENTORY] C3I-01: C3I Knowledge Authority & Subsystem Partitioning (SPEC-C3I-KNOWLEDGE-RUNTIME-001)")
+          io.println("  [INVENTORY] C3I-02: Supervised OCaml Worker Port & BEAM Reductions Protection (External port stdio)")
+          io.println("  [INVENTORY] C3I-03: Typed Cross-Language Protocol & Envelopes (Category, Payload, Epoch, Context)")
+          io.println("  [INVENTORY] C3I-04: Zero-Trust Security Traps (NUL byte -2, SQL injection -3 fail-closed)")
+          io.println("  [INVENTORY] C3I-05: Exponential Trust Decay & Freshness Dynamics (Half-life = 86400s)")
+          io.println("  [INVENTORY] C3I-06: Negative Knowledge & Anti-Pattern Detection Matrix (Pattern matching & trap)")
+          io.println("  [INVENTORY] C3I-07: Multi-Corpus Cited Recall & Source Grounding (Trust threshold filter)")
+          io.println("  [INVENTORY] C3I-08: 7,918-File Zero-Error C3I Knowledge Ingestion (All 5 categories ingested)")
+          io.println("  [INVENTORY] C3I-09: Biosemiotic Knowledge Morphisms & Rocha Cut (Symbolic/physical decoupled)")
+          io.println("  [INVENTORY] C3I-10: 15 Evolutionary Cycles Operational (EV-40..EV-54 100% Green & Verified)")
           io.println("")
-          io.println("Summary: 10/10 C3I Knowledge Runtime Checks Passed (100% Green)")
+          io.println("Summary: 10/10 C3I Knowledge Runtime Sources Present (INVENTORY) (presence only; this gate does not execute the Gleam suites it names — run `gleam test` in apps/cepaf_gleam)")
           0
         }
         False -> {
@@ -1658,14 +1658,14 @@ pub fn execute(cmd: UosCommand) -> Int {
         file_exists("apps/cepaf_gleam/test/c3i_vertical_slice_engine_test.gleam")
       case slice_src && slice_test {
         True -> {
-          io.println("  [PASS] SLICE-01: Journal Ingestion (13-section structure & SHA-256 digest)")
-          io.println("  [PASS] SLICE-02: Cited Retrieval (ZK/Wiki/Smriti multi-corpus query & trust decay)")
-          io.println("  [PASS] SLICE-03: Rust/OCaml Conformance (Gospel contract parity & ABI safety)")
-          io.println("  [PASS] SLICE-04: Callable OCaml Lookup (Supervised stdio port worker & reduction budget)")
-          io.println("  [PASS] SLICE-05: Tripartite Display (Lustre SSR HTML, Wisp REST JSON, ANSI TUI)")
-          io.println("  [PASS] SLICE-06: End-to-End Vertical Slice Execution (100% Green Operational)")
+          io.println("  [INVENTORY] SLICE-01: Journal Ingestion (13-section structure & SHA-256 digest)")
+          io.println("  [INVENTORY] SLICE-02: Cited Retrieval (ZK/Wiki/Smriti multi-corpus query & trust decay)")
+          io.println("  [INVENTORY] SLICE-03: Rust/OCaml Conformance (Gospel contract parity & ABI safety)")
+          io.println("  [INVENTORY] SLICE-04: Callable OCaml Lookup (Supervised stdio port worker & reduction budget)")
+          io.println("  [INVENTORY] SLICE-05: Tripartite Display (Lustre SSR HTML, Wisp REST JSON, ANSI TUI)")
+          io.println("  [INVENTORY] SLICE-06: End-to-End Vertical Slice Execution (100% Green Operational)")
           io.println("")
-          io.println("Summary: 6/6 Vertical Slice Verification Checks Passed (100% Green)")
+          io.println("Summary: 6/6 Vertical Slice Verification Sources Present (INVENTORY) (presence only; this gate does not execute the Gleam suites it names — run `gleam test` in apps/cepaf_gleam)")
           0
         }
         False -> {
@@ -1686,14 +1686,14 @@ pub fn execute(cmd: UosCommand) -> Int {
         file_exists("docs/design/20260907-1130-zigvm-add-fractal-mapping-and-sublimation-spec.md")
       case add_src && add_test && add_spec {
         True -> {
-          io.println("  [PASS] ADD-01: 10 Fractal Layers Mapped (L0..L9 Topology & Invariants)")
-          io.println("  [PASS] ADD-02: 3 Strata Decomposition (Stratum A Core, B Engines, C Substrate)")
-          io.println("  [PASS] ADD-03: 14-Element Component Packet Standard (S1 Term, S7 VFS, S9 MAX)")
-          io.println("  [PASS] ADD-04: S1..S33 Subsystems Mapped & Homomorphic Equivalence Proved")
-          io.println("  [PASS] ADD-05: 6-Stage Sublimation Lifecycle (Spawn -> Observe -> Deliberate -> Act -> Verify -> Sublime)")
-          io.println("  [PASS] ADD-06: SRE Resilience & Memory Trapping (Poison 0xDE, Reductions, NVMe Lock)")
+          io.println("  [INVENTORY] ADD-01: 10 Fractal Layers Mapped (L0..L9 Topology & Invariants)")
+          io.println("  [INVENTORY] ADD-02: 3 Strata Decomposition (Stratum A Core, B Engines, C Substrate)")
+          io.println("  [INVENTORY] ADD-03: 14-Element Component Packet Standard (S1 Term, S7 VFS, S9 MAX)")
+          io.println("  [INVENTORY] ADD-04: S1..S33 Subsystems Mapped & Homomorphic Equivalence Proved")
+          io.println("  [INVENTORY] ADD-05: 6-Stage Sublimation Lifecycle (Spawn -> Observe -> Deliberate -> Act -> Verify -> Sublime)")
+          io.println("  [INVENTORY] ADD-06: SRE Resilience & Memory Trapping (Poison 0xDE, Reductions, NVMe Lock)")
           io.println("")
-          io.println("Summary: 6/6 ZigVM ADD Fractal Checks Passed (100% Green)")
+          io.println("Summary: 6/6 ZigVM ADD Fractal Sources Present (INVENTORY) (presence only; this gate does not execute the Gleam suites it names — run `gleam test` in apps/cepaf_gleam)")
           0
         }
         False -> {
@@ -1714,14 +1714,14 @@ pub fn execute(cmd: UosCommand) -> Int {
         file_exists("docs/music/20260907-1052-swarm-durga-player.md")
       case raga_src && raga_test && raga_doc {
         True -> {
-          io.println("  [PASS] RAGA-01: 22 Shrutis Mathematical Ratio Topology (Sa=261.63Hz, Cents, Just Intonation)")
-          io.println("  [PASS] RAGA-02: Rāga Durgā Pentatonic Architecture (Arohana/Avarohana, Vadi Dha, Samvadi Re)")
-          io.println("  [PASS] RAGA-03: Teentaal 16-Beat Rhythmic Matrix (4 Vibhags, Sam/Khali, Bayan Modulation)")
-          io.println("  [PASS] RAGA-04: Lyapunov Stability Invariant (lambda = -3.732, Non-Chaotic Resonance)")
-          io.println("  [PASS] RAGA-05: Shannon Information Entropy (H = 2.67 >= 2.50 bits)")
-          io.println("  [PASS] RAGA-06: Interactive Web Audio Player & Continuous Meend Glissando Verified")
+          io.println("  [INVENTORY] RAGA-01: 22 Shrutis Mathematical Ratio Topology (Sa=261.63Hz, Cents, Just Intonation)")
+          io.println("  [INVENTORY] RAGA-02: Rāga Durgā Pentatonic Architecture (Arohana/Avarohana, Vadi Dha, Samvadi Re)")
+          io.println("  [INVENTORY] RAGA-03: Teentaal 16-Beat Rhythmic Matrix (4 Vibhags, Sam/Khali, Bayan Modulation)")
+          io.println("  [INVENTORY] RAGA-04: Lyapunov Stability Invariant (lambda = -3.732, Non-Chaotic Resonance)")
+          io.println("  [INVENTORY] RAGA-05: Shannon Information Entropy (H = 2.67 >= 2.50 bits)")
+          io.println("  [INVENTORY] RAGA-06: Interactive Web Audio Player & Continuous Meend Glissando Verified")
           io.println("")
-          io.println("Summary: 6/6 Cybernetic Raga Harmony Checks Passed (100% Green)")
+          io.println("Summary: 6/6 Cybernetic Raga Harmony Sources Present (INVENTORY) (presence only; this gate does not execute the Gleam suites it names — run `gleam test` in apps/cepaf_gleam)")
           0
         }
         False -> {
@@ -1846,21 +1846,21 @@ pub fn execute(cmd: UosCommand) -> Int {
       let journal_md = file_exists("docs/journal/20260907-1420-uos-fractal-forecasting-and-predictive-ooda-journal.md")
       case engine_gleam && test_gleam && sdlc_gleam && ooda_gleam && mcp_tools_gleam && mcp_server_gleam && router_gleam && stream_gleam && cockpit_gleam && contract_md && spec_md && journal_md {
         True -> {
-          io.println("  [PASS] PRED-01: Multi-Method Ensemble (Kalman 1D, Bayesian EMA, Lyapunov Energy Drift)")
-          io.println("  [PASS] PRED-02: UK PHIA / NATO Estimative Probability Yardstick & Monotone Rank")
-          io.println("  [PASS] PRED-03: Subjective Expected Utility (SEU) & Break-Even Probability Analysis")
-          io.println("  [PASS] PRED-04: Full 10-Layer Fractal Coverage (L0..L9 Dedicated Prediction Models)")
-          io.println("  [PASS] PRED-05: 7-Stage Predictive OODA Loop (POODAVR: Observe->Orient->Predict->Decide->Act->Verify->Record)")
-          io.println("  [PASS] PRED-06: SRE Predictive SOPs (SOP-SRE-01 Preemption, SOP-SRE-02 Lyapunov Trip)")
-          io.println("  [PASS] PRED-07: SDLC Mutation Gate (SOP-SDLC-01 G-MUTATION-PREDICT >= 90% Kill Rate)")
-          io.println("  [PASS] PRED-08: Agentic Preflight Decision Certificate (SC-PRED-001 Approval / Veto)")
-          io.println("  [PASS] PRED-09: Brier Calibration Ledger & Quadratic Scoring (B <= 0.25 Calibrated)")
-          io.println("  [PASS] PRED-10: MCP Tooling Integration (forecast_predict, preflight_check active)")
-          io.println("  [PASS] PRED-11: Wisp REST Endpoints (/api/v1/forecast/layers, /api/v1/forecast/health active)")
-          io.println("  [PASS] PRED-12: Real-Time Predictive Zenoh Telemetry Streaming Actor (predictive_zenoh_stream.gleam)")
-          io.println("  [PASS] PRED-13: Lustre WebUI Live Forecasting Cockpit (/forecast, forecast_cockpit.gleam)")
+          io.println("  [INVENTORY] PRED-01: Multi-Method Ensemble (Kalman 1D, Bayesian EMA, Lyapunov Energy Drift)")
+          io.println("  [INVENTORY] PRED-02: UK PHIA / NATO Estimative Probability Yardstick & Monotone Rank")
+          io.println("  [INVENTORY] PRED-03: Subjective Expected Utility (SEU) & Break-Even Probability Analysis")
+          io.println("  [INVENTORY] PRED-04: Full 10-Layer Fractal Coverage (L0..L9 Dedicated Prediction Models)")
+          io.println("  [INVENTORY] PRED-05: 7-Stage Predictive OODA Loop (POODAVR: Observe->Orient->Predict->Decide->Act->Verify->Record)")
+          io.println("  [INVENTORY] PRED-06: SRE Predictive SOPs (SOP-SRE-01 Preemption, SOP-SRE-02 Lyapunov Trip)")
+          io.println("  [INVENTORY] PRED-07: SDLC Mutation Gate (SOP-SDLC-01 G-MUTATION-PREDICT >= 90% Kill Rate)")
+          io.println("  [INVENTORY] PRED-08: Agentic Preflight Decision Certificate (SC-PRED-001 Approval / Veto)")
+          io.println("  [INVENTORY] PRED-09: Brier Calibration Ledger & Quadratic Scoring (B <= 0.25 Calibrated)")
+          io.println("  [INVENTORY] PRED-10: MCP Tooling Integration (forecast_predict, preflight_check active)")
+          io.println("  [INVENTORY] PRED-11: Wisp REST Endpoints (/api/v1/forecast/layers, /api/v1/forecast/health active)")
+          io.println("  [INVENTORY] PRED-12: Real-Time Predictive Zenoh Telemetry Streaming Actor (predictive_zenoh_stream.gleam)")
+          io.println("  [INVENTORY] PRED-13: Lustre WebUI Live Forecasting Cockpit (/forecast, forecast_cockpit.gleam)")
           io.println("")
-          io.println("Summary: 13/13 Unified Fractal Forecasting Checks Passed (100% Green)")
+          io.println("Summary: 13/13 Unified Fractal Forecasting Sources Present (INVENTORY) (presence only; this gate does not execute the Gleam suites it names — run `gleam test` in apps/cepaf_gleam)")
           0
         }
         False -> {

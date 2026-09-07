@@ -46,6 +46,52 @@ let with_db ~readonly path f =
     if readonly then exec db "PRAGMA query_only=ON";
     f db)
 
+(* Database-authoritative JSON documents. Existing tool/file consumers can be
+   migrated independently; an export is never the authoritative version. *)
+let document_schema = {|
+CREATE TABLE IF NOT EXISTS product_json_versions(
+ path TEXT NOT NULL, revision TEXT NOT NULL, content TEXT NOT NULL CHECK(json_valid(content)),
+ sha256 TEXT NOT NULL, created_at REAL NOT NULL, PRIMARY KEY(path,revision));
+CREATE TABLE IF NOT EXISTS product_json_events(
+ sequence INTEGER PRIMARY KEY AUTOINCREMENT, path TEXT NOT NULL, revision TEXT NOT NULL,
+ previous_revision TEXT, actor TEXT NOT NULL, created_at REAL NOT NULL,
+ FOREIGN KEY(path,revision) REFERENCES product_json_versions(path,revision));
+CREATE VIEW IF NOT EXISTS product_json_heads AS
+ SELECT v.path,v.revision,v.content,v.sha256,e.sequence FROM product_json_versions v
+ JOIN product_json_events e ON e.path=v.path AND e.revision=v.revision
+ WHERE e.sequence=(SELECT max(e2.sequence) FROM product_json_events e2 WHERE e2.path=e.path);
+CREATE TRIGGER IF NOT EXISTS product_json_versions_no_update BEFORE UPDATE ON product_json_versions BEGIN SELECT RAISE(ABORT,'immutable JSON version'); END;
+CREATE TRIGGER IF NOT EXISTS product_json_versions_no_delete BEFORE DELETE ON product_json_versions BEGIN SELECT RAISE(ABORT,'immutable JSON version'); END;
+CREATE TRIGGER IF NOT EXISTS product_json_events_no_update BEFORE UPDATE ON product_json_events BEGIN SELECT RAISE(ABORT,'immutable JSON event'); END;
+CREATE TRIGGER IF NOT EXISTS product_json_events_no_delete BEFORE DELETE ON product_json_events BEGIN SELECT RAISE(ABORT,'immutable JSON event'); END;
+|}
+let document_head db path =
+  if query db "SELECT name FROM sqlite_master WHERE name='product_json_heads'" [] = [] then None
+  else match query db "SELECT revision,content,sha256 FROM product_json_heads WHERE path=?" [s path] with
+  | [] -> None
+  | [[Sqlite3.Data.TEXT revision;Sqlite3.Data.TEXT body;Sqlite3.Data.TEXT digest]] ->
+      require (sha body = digest && revision = digest) "stored JSON document digest mismatch";
+      ignore (canonical (Yojson.Basic.from_string body)); Some (revision,body)
+  | _ -> fail "invalid document head"
+let read_document path =
+  let db_path = "data/sqlite/uos_verification_tracking.sqlite3" in
+  let stored = if Sys.file_exists db_path then with_db ~readonly:true db_path (fun db -> document_head db path) else None in
+  match stored with Some (_,body) -> body | None -> read path
+let store_document db ~path ~body ~expected ~actor =
+  require (String.length body <= 8*1024*1024) "document exceeds 8 MiB";
+  require (Filename.is_relative path && not (List.mem ".." (String.split_on_char '/' path)) && Filename.check_suffix path ".json") "invalid document path";
+  ignore (canonical (Yojson.Basic.from_string body));
+  exec db document_schema;
+  let current = document_head db path |> Option.map fst and revision = sha body in
+  if current <> Some revision then begin
+    require (current = expected) "document changed; compare-and-swap failed";
+    ignore (query db "INSERT INTO product_json_versions VALUES(?,?,?,?,?) ON CONFLICT DO NOTHING"
+      [s path;s revision;s body;s revision;Sqlite3.Data.FLOAT (Unix.gettimeofday ())]);
+    ignore (query db "INSERT INTO product_json_events(path,revision,previous_revision,actor,created_at) VALUES(?,?,?,?,?)"
+      [s path;s revision;(match current with Some v -> s v | None -> Sqlite3.Data.NULL);s actor;Sqlite3.Data.FLOAT (Unix.gettimeofday ())])
+  end;
+  revision
+
 let schema = {|
 CREATE TABLE IF NOT EXISTS product_catalog_schema(version INTEGER PRIMARY KEY CHECK(version=1));
 INSERT INTO product_catalog_schema VALUES(1) ON CONFLICT DO NOTHING;
@@ -255,15 +301,24 @@ let summary db =
   print_endline "integrity=ok; catalog_only=true; production_admission=NOT_ADMITTED"
 
 let run () = match Array.to_list Sys.argv with
-  | [_;"check";manifest] -> validate (Yojson.Basic.from_string (read manifest)); print_endline "catalog manifest valid"
+  | [_;"document";path] -> print_string (read_document path)
+  | [_;"store-document";path] ->
+      let body = read path in
+      with_db ~readonly:false "data/sqlite/uos_verification_tracking.sqlite3" (fun db ->
+        transaction db (fun () -> authorize ();
+          let expected = document_head db path |> Option.map fst in
+          let revision = store_document db ~path ~body ~expected ~actor:(Sys.getenv "UOS_PRODUCT_WORKER") in
+          require (read path = body) "source JSON changed during import";
+          authorize (); print_endline revision))
+  | [_;"check";manifest] -> validate (Yojson.Basic.from_string (read_document manifest)); print_endline "catalog manifest valid"
   | [_;"import";manifest] ->
-      let j = Yojson.Basic.from_string (read manifest) in
+      let j = Yojson.Basic.from_string (read_document manifest) in
       require (text "sa_plan_plan" (member "specification" j) = Option.value (Sys.getenv_opt "UOS_PRODUCT_PLAN") ~default:"")
         "bundle plan differs from current authority";
       with_db ~readonly:false "data/sqlite/uos_verification_tracking.sqlite3" (fun db -> import db j ~authorize; summary db)
   | [_;"summary"] -> with_db ~readonly:true "data/sqlite/uos_verification_tracking.sqlite3" summary
   | [_;"append-artifacts";path] ->
-      let packet = Yojson.Basic.from_string (read path) in
+      let packet = Yojson.Basic.from_string (read_document path) in
       require (text "sa_plan_plan" packet = Option.value (Sys.getenv_opt "UOS_PRODUCT_PLAN") ~default:"")
         "artifact plan differs from current authority";
       with_db ~readonly:false "data/sqlite/uos_verification_tracking.sqlite3"
@@ -282,6 +337,6 @@ let run () = match Array.to_list Sys.argv with
         require (sha body = digest) "stored artifact digest mismatch"; print_string body
         | [Sqlite3.Data.NULL;_] -> fail "external artifact is a reference only"
         | _ -> fail "invalid artifact") rows)
-  | _ -> fail "usage: ocaml tools/product_catalog.ml {check MANIFEST|import MANIFEST|append-artifacts PACKET|summary|features|artifact ID [REVISION]}"
+  | _ -> fail "usage: ocaml tools/product_catalog.ml {check MANIFEST|import MANIFEST|append-artifacts PACKET|summary|features|artifact ID [REVISION]|document PATH|store-document PATH}"
 let () = if not !Sys.interactive && Filename.basename Sys.argv.(0) = "product_catalog.ml" then
   try run () with exn -> prerr_endline ("product-catalog: " ^ Printexc.to_string exn); exit 1
