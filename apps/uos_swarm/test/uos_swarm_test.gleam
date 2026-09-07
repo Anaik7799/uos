@@ -34,7 +34,11 @@ fn draft(from: board.Agent, to: String, kind: board.Kind) -> board.Draft {
     from,
     to,
     kind,
-    [],
+    [
+      #("decision_record", "generated/dr-test.json"),
+      #("route_class", "R4"),
+      #("route_tier", "claude/sonnet"),
+    ],
     board.no_semantics,
     board.Causality(option.None, []),
     option.None,

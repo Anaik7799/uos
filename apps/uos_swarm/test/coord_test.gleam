@@ -26,7 +26,11 @@ fn d(from: board.Agent, to: String, kind: board.Kind) -> board.Draft {
     from,
     to,
     kind,
-    [],
+    [
+      #("decision_record", "generated/dr-test.json"),
+      #("route_class", "R4"),
+      #("route_tier", "claude/sonnet"),
+    ],
     Semantics([], [], [], [], 2),
     Causality(None, []),
     None,
@@ -184,7 +188,7 @@ pub fn lamport_merge_test() {
   one |> should.equal(1)
   let c = coord.merge_clock(c, 10)
   let #(_, next) = coord.tick(c)
-  next |> should.equal(11)
+  next |> should.equal(12)
 }
 
 pub fn usage_accumulates_and_costs_test() {
@@ -729,4 +733,31 @@ pub fn recipient_self_ack_rule_test() {
   |> should.equal(Ok(Nil))
   coord.authorize(p, board.ack_draft(Agent("V1", "L3", "haiku"), to_w03.id))
   |> should.equal(Ok(Nil))
+}
+
+pub fn dispatch_needs_decision_and_route_records_test() {
+  let p = policy()
+  let base = mk(board.Dispatch, "broadcast")
+  coord.authorize(p, base)
+  |> should.equal(Error(coord.DecisionRecordRequired(board.Dispatch)))
+  let with_decision =
+    Draft(..base, payload: [#("decision_record", "generated/dr.json")])
+  coord.authorize(p, with_decision)
+  |> should.equal(Error(coord.RouteRecordRequired(board.Dispatch)))
+  let full =
+    Draft(..base, payload: [
+      #("decision_record", "generated/dr.json"),
+      #("route_class", "R4"),
+      #("route_tier", "claude/sonnet"),
+    ])
+  coord.authorize(p, full) |> should.equal(Ok(Nil))
+  coord.authorize(p, mk(board.Progress, "broadcast")) |> should.equal(Ok(Nil))
+}
+
+pub fn receiving_a_message_ticks_the_lamport_clock_test() {
+  let c = coord.new(policy())
+  let c2 = coord.merge_clock(c, 41)
+  c2.lamport |> should.equal(42)
+  let c3 = coord.merge_clock(c2, 10)
+  c3.lamport |> should.equal(43)
 }

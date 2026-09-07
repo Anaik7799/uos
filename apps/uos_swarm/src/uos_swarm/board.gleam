@@ -735,7 +735,8 @@ pub fn absorb(board: Board, m: Message) -> Board {
       Board(
         ..board,
         heads: heads,
-        lamport: int.max(board.lamport, m.lamport),
+        // Receive event: max(local, received) + 1 (causal order, never wall time).
+          lamport: int.max(board.lamport, m.lamport) + 1,
         count: board.count + 1,
       )
     }

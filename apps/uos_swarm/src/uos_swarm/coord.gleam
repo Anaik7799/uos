@@ -75,10 +75,20 @@ pub type Violation {
   LeaseExpired(resource: String, expired_us: Int)
   WipLimitReached(limit: Int)
   AckNotRecipient(from: String, target: String)
+  DecisionRecordRequired(kind: Kind)
+  RouteRecordRequired(kind: Kind)
 }
 
 pub fn violation_label(v: Violation) -> String {
   case v {
+    DecisionRecordRequired(k) ->
+      "kind "
+      <> board.kind_label(k)
+      <> " needs payload decision_record (uos-decision-record/v1 path)"
+    RouteRecordRequired(k) ->
+      "kind "
+      <> board.kind_label(k)
+      <> " needs payload route_class and route_tier (SC-INTEL-ROUTING-001)"
     AckNotRecipient(from, target) ->
       "ack by " <> from <> " on a message not addressed to it: " <> target
     UnknownAgent(id) -> "unknown agent " <> id
@@ -257,6 +267,31 @@ pub fn authorize(policy: Policy, draft: Draft) -> Result(Nil, Violation) {
       _, _ -> Ok(Nil)
     },
   )
+  // Decision gate (SC-HIVE-DECISION-001): a Plan, Dispatch or Integrate must reference its
+  // prepared decision record; a Dispatch must also carry its routing record
+  // (SC-INTEL-ROUTING-001). Missing records refuse the action before any effect.
+  let has = fn(key: String) {
+    case list.key_find(draft.payload, key) {
+      Ok(v) -> v != ""
+      Error(_) -> False
+    }
+  }
+  use _ <- result.try(case draft.kind {
+    board.Plan | board.Dispatch | board.Integrate ->
+      case has("decision_record") {
+        True -> Ok(Nil)
+        False -> Error(DecisionRecordRequired(draft.kind))
+      }
+    _ -> Ok(Nil)
+  })
+  use _ <- result.try(case draft.kind {
+    board.Dispatch ->
+      case has("route_class") && has("route_tier") {
+        True -> Ok(Nil)
+        False -> Error(RouteRecordRequired(draft.kind))
+      }
+    _ -> Ok(Nil)
+  })
   // Design decisions come only from the design authority (Fable); runtime intelligence is the cheapest tier.
   case
     list.contains(design_kinds, draft.kind)
@@ -480,8 +515,10 @@ pub fn tick(c: Coord) -> #(Coord, Int) {
   #(Coord(..c, lamport: l), l)
 }
 
+/// Receiving a message is a Lamport event: the clock becomes max(local, received) + 1.
+/// Lamport order is causal and is never equated with wall time (`ts_us` is separate).
 pub fn merge_clock(c: Coord, remote: Int) -> Coord {
-  Coord(..c, lamport: int.max(c.lamport, remote))
+  Coord(..c, lamport: int.max(c.lamport, remote) + 1)
 }
 
 pub fn record_usage(c: Coord, u: Usage) -> Coord {
