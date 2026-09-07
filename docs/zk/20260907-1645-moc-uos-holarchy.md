@@ -1,6 +1,6 @@
 # UOS Holarchy Map of Content
 
-#fractal-l0 #fractal-l1 #fractal-l2 #fractal-l3 #fractal-l4 #fractal-l5 #fractal-l6 #fractal-l7 #fractal-l8 #fractal-l9 #km-triad #rocha-semiotics #cybernetics #zero-muda #zk-adr #zk-moc
+#fractal-l0 #fractal-l1 #fractal-l2 #fractal-l3 #fractal-l4 #fractal-l5 #fractal-l6 #fractal-l7 #km-triad #rocha-semiotics #cybernetics #zero-muda #zk-adr #zk-moc
 
 [docs/zk/20260907-1645-moc-uos-holarchy.md](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20260907-1645-moc-uos-holarchy.md)
 
@@ -292,8 +292,8 @@ from `holon.holarchy()`, not from an observed runtime receipt.
 <details>
 <summary>Domain 1 — Metadata, timestamp and Tailscale navigation</summary>
 
-- [x] **CHK-01-TIME** — Host-clock timestamp prefix and chrony receipt recorded.
-- [x] **CHK-02-TAIL** — Full clickable Tailscale FQDN references provided; serving status is reported in the journal.
+- [x] **CHK-01-TIME** — Timestamp prefix 20260907-1645 from the generator stamp; host clock not consulted by the generator.
+- [x] **CHK-02-TAIL** — Full Tailscale FQDN self-link present; live serving unverified.
 - [x] **CHK-03-FRACT** — Canonical L0–L9 fractal tags assigned.
 - [x] **CHK-04-KM** — Specification, wiki, ADR, source review and journal cross-linked.
 

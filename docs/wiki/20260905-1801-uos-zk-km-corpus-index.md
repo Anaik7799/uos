@@ -101,6 +101,7 @@ The operational system coordinates across five distinct language tiers:
 ## §4.0 Bi-Directional Transclusion Registry
 
 - Permanent MOC: `[[zk:20260905-1801-moc-uos-unified-master]]`
+- Holarchy MOC (158 holons, sa-plan uos/holonic-mapping/20260907-1505): `[[zk:20260907-1645-moc-uos-holarchy]]` ([Holarchy MOC Live View](http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20260907-1645-moc-uos-holarchy.md))
 - ADR Directory:
   - `[[zk:ADR-001]]` Closed Rete Fact Schema
   - `[[zk:ADR-002]]` Embedded NUL Byte Trap
