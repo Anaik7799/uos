@@ -44,6 +44,14 @@
     "corrections_to_the_classification": "cluster A splits by artifact: c3i_ocaml_nif (12 tests), rule_engine_nif (125 tests across rule_engine/vault_rete_ul/dag_coverage/hook_rules/data_quality/zenoh_rete_bridge/ooda_test_monitor), c3i_nif (cluster B, 14 + c3i_nif_mcp 5); rusty_vault_nif provisioned alongside; residue D was NIF-bound too",
     "provisioning_record": "governance/sources/20260907-1305-c3i-ocaml-nif-artifact-provisioning.json"
   },
+  "closure_14_50Z": {
+    "status": "CLOSED by operator instruction ('continue, delete the scratch directories and close baseline')",
+    "final_attribution": "main pmxlsrutovkl/d1aa12ce: cepaf 10312 passed, 0 aggregate failures, 0 distinct failing identities on nas-1 with the five host-provisioned, digest-pinned NIF artifacts (c3i_ocaml_nif, rule_engine_nif, c3i_nif, rusty_vault_nif, ferriskey_nif) and the ephemeral TLS fixtures; uos_swarm 577; uos_tui 198; indrajaal_gleam_web 17/17 under OTP 29 (16/17 under host OTP 27: environment-conditional literal in runtime_identity_test, reported to Codex)",
+    "new_baseline": "0 distinct failing identities on hosts with the provisioned artifacts; a host without them fails closed by design (NIF tests) and is not green",
+    "not_admission": "this closure is a test-truth milestone, not an admission claim; Codex R5 (FerrisKey) and MIRAGE-VERIFY remain open",
+    "records": [ "generated/20260907-1300-uos-decision-record-cepaf-baseline-burndown-1.json (completed)", "generated/20260907-1341-uos-decision-record-ferriskey-source-import-and-load-evidence.json (completed)", "governance/sources/20260907-1305-c3i-ocaml-nif-artifact-provisioning.json", "governance/sources/20260907-1330-ferriskey-nif-source-ingestion.json", "docs/journal/20260907-1335-uos-cepaf-baseline-burndown-and-ferriskey-journal.md" ],
+    "sa_plan": "uos/claude-integration/20260907-1355 BASELINE-CLOSE completed by worker claude"
+  },
   "plan": [
     "C first (independent, small): Sonnet worker in .uos-workspaces/w-tls",
     "A: locate the frozen NIF sources and pinned artifact in the C3I evidence trees; build in isolation with the pinned OCaml toolchain; verify sha256 against priv/c3i_ocaml_nif.sha256; place the artifact under priv as a host-provisioned build product (ignored by jj) with a governance/sources record of revision, digest and locator; re-run the full suite; attribute",

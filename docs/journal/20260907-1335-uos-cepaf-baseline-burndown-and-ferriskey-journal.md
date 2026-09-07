@@ -110,6 +110,9 @@ The census confirms what the burndown showed: UOS carries the code of C3I and In
 ## 12. STAMP & Constitutional Alignment
 Control actions: artifact provisioning (CA-provision), bookmark set main (CA-integrate). UCAs: provided unsafely (unvetted binary) prevented by digest pins and provenance records; not provided (barred graphene) enforced; wrong timing (peer moves during gates) observed twice and reported; stopped too soon (partial ferriskey) recorded honestly with the guard-blocked steps listed. SYNC-03 verified, SYNC-05 honored, D3/D4/D7 honored, language boundary honored (Gleam, Erlang, Rust NIF, jq, awk).
 
+## 12a. Closure (14:50 UTC, operator instruction)
+The baseline burndown is closed. Final attribution on `main` pmxlsrutovkl/d1aa12ce: cepaf 10312 passed, 0 failures on this host with the five provisioned artifacts and the ephemeral TLS fixtures; the new baseline is 0 distinct failing identities on artifact-provisioned hosts. Hosts without the artifacts fail closed by design and are not green. This is a test-truth milestone, not an admission claim: the FerrisKey security review and the Mirage verification remain open. The ten scratch and worker directories under `.uos-workspaces` were deleted with operator permission. sa-plan task BASELINE-CLOSE is completed with this note.
+
 ## 13. Conclusion
 On this host the cepaf suite went from 164 failing identities to one, without weakening a test, because the missing native artifacts were found with matching digests or rebuilt from frozen sources with provenance. FerrisKey now has a source-built, pinned artifact and a mirrored governing rule, and waits on two things outside my authority: the guarded source copy and Codex's security review. The census gives the operator the first complete picture of which C3I and Indrajaal processes UOS actually runs.
 
