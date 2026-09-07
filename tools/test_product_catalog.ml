@@ -62,5 +62,27 @@ let () =
       check "relational projections and integrity" (fun () ->
         require (query db "SELECT requirement FROM product_requirement_list" [] = [[s "Shall preserve history"]]) "bad requirement";
         require (query db "PRAGMA integrity_check" [] = [[s "ok"]]) "integrity";
-        require (query db "PRAGMA foreign_key_check" [] = []) "foreign keys")));
+        require (query db "PRAGMA foreign_key_check" [] = []) "foreign keys");
+      let updated = List.hd (items "artifacts" j) |> set "revision" (`String "2")
+        |> set "content" (`String "new version") |> set "sha256" (`String (sha "new version")) in
+      let packet = `Assoc ["schema",`String "uos.product-artifact-append/v1";
+        "spec_id",`String "test";"revision",`String "v1";"sa_plan_plan",`String "isolated";
+        "artifacts",`List [updated]] in
+      check "external source bytes cannot enter reference artifacts" (fun () ->
+        require (rejects (fun () -> validate_artifact (set "kind" (`String "external-source-reference") updated)))
+          "external source body accepted");
+      check "artifact append preserves both versions and replays once" (fun () ->
+        append_artifacts db packet ~authorize:(fun () -> ());
+        append_artifacts db packet ~authorize:(fun () -> ());
+        require (query db "SELECT revision,content FROM product_artifacts ORDER BY revision" [] =
+          [[s "1";s "O'Brien\nsource"];[s "2";s "new version"]]) "artifact history lost");
+      check "artifact cannot cross plan authority" (fun () ->
+        require (rejects (fun () -> append_artifacts db (set "sa_plan_plan" (`String "wrong") packet)
+          ~authorize:(fun () -> ()))) "wrong plan accepted");
+      check "artifact append rolls back after ownership loss" (fun () ->
+        let calls = ref 0 in
+        let packet = set "artifacts" (`List [set "revision" (`String "3") updated]) packet in
+        let authorize () = incr calls; if !calls = 2 then fail "lease lost" in
+        require (rejects (fun () -> append_artifacts db packet ~authorize)) "late append failure ignored";
+        require (query db "SELECT count(*) FROM product_artifacts" [] = [[Sqlite3.Data.INT 2L]]) "append partially committed")));
   Printf.printf "product-catalog tests: %d passed\n" !count

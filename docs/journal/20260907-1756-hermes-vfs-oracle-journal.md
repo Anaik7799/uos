@@ -36,7 +36,7 @@ Pattern: an oracle that implements the law the implementation lacks makes the di
 | `dune build modules/hermes_vfs_oracle` | clean, first attempt |
 | `dune build @modules/hermes_vfs_oracle/runtest` | 12 laws ok, 0 failed, 1 skipped with reason; jail strategy `openat2 RESOLVE_BENEATH` |
 | Mutant: `resolve_beneath = 0x00` | killed: VFS-02 and VFS-08 report `not ok` (escape via symlink and via `..` both succeed), 10 ok, 2 failed |
-| Mutant: read cap multiplied by 1000 | see appended line |
+| Mutant: read cap multiplied by 1000 | killed: VFS-07 reports `not ok` (the over-cap read returns content instead of `Too_large`), 11 ok, 1 failed |
 | Restore | file byte-identical to the original; rebuilt; 12 ok |
 | `tools/uos` tests | 31 passed, 0 failed |
 | `tools/uos selfcheck-vfs` | 8/9 (FAIL by design): ORACLE-SPEC PASS with exit 0 and 12 ok lines; LAW-VFS-08 still `[UNRUN]` for ZigVM |

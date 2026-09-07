@@ -117,6 +117,16 @@ let protect_history db =
 
 let unique label xs = require (List.length xs = List.length (List.sort_uniq String.compare xs))
   ("duplicate " ^ label)
+let validate_artifact a =
+  ignore (canonical a);
+  List.iter (fun k -> ignore (nonempty k a)) ["id";"revision";"kind";"locator"];
+  require (check_hex (text "sha256" a)) "invalid artifact hash";
+  if text "kind" a = "external-source-reference" then
+    require (member "content" a = `Null) "external source must remain reference-only";
+  match member "content" a with
+  | `String body -> require (String.length body <= 8 * 1024 * 1024) "artifact exceeds 8 MiB";
+      require (sha body = text "sha256" a) "artifact body hash mismatch"
+  | `Null -> () | _ -> fail "invalid artifact content"
 let validate j =
   ignore (canonical j);
   require (text "schema" j = "uos.product-catalog/v1") "unsupported bundle schema";
@@ -147,12 +157,7 @@ let validate j =
     ) features;
   unique "requirement" (List.concat_map (fun f -> List.map (text "id") (items "requirements" f)) features);
   unique "acceptance" (List.concat_map (fun f -> List.map (text "id") (items "acceptance" f)) features);
-  List.iter (fun a ->
-    List.iter (fun k -> ignore (nonempty k a)) ["id";"revision";"kind";"locator"];
-    require (check_hex (text "sha256" a)) "invalid artifact hash";
-    match member "content" a with
-    | `String body -> require (sha body = text "sha256" a) "artifact body hash mismatch"
-    | `Null -> () | _ -> fail "invalid artifact content") artifacts;
+  List.iter validate_artifact artifacts;
   let artifact_keys = List.map (fun a -> text "id" a,text "revision" a) artifacts in
   List.iter (fun l -> require (List.mem (text "artifact_id" l,text "artifact_revision" l) artifact_keys)
     "dangling artifact link") (items "artifact_links" j)
@@ -170,6 +175,32 @@ let insert_once db ~table ~columns ~values ~keys ~key_values ~payload =
       ") VALUES(" ^ String.concat "," (List.map (fun _ -> "?") columns) ^ ")") values)
   | _ -> fail "invalid stored product row"
 
+let store_artifact db a =
+  insert_once db ~table:"product_artifacts"
+    ~columns:["id";"revision";"kind";"locator";"sha256";"content";"payload"]
+    ~values:[s (text "id" a);s (text "revision" a);s (text "kind" a);s (text "locator" a);s (text "sha256" a);
+      (match member "content" a with `Null -> Sqlite3.Data.NULL | v -> s (to_string v));s (encoded a)]
+    ~keys:["id";"revision"] ~key_values:[s (text "id" a);s (text "revision" a)] ~payload:(encoded a)
+
+let append_artifacts db packet ~authorize =
+  ignore (canonical packet);
+  require (text "schema" packet = "uos.product-artifact-append/v1") "unsupported artifact packet";
+  let id = nonempty "spec_id" packet and rev = nonempty "revision" packet in
+  let plan = nonempty "sa_plan_plan" packet and artifacts = items "artifacts" packet in
+  require (artifacts <> [] && List.length artifacts <= 1000) "artifact count outside bounds";
+  unique "artifact" (List.map (text "id") artifacts);
+  List.iter validate_artifact artifacts;
+  transaction db (fun () ->
+    authorize ();
+    require (query db "SELECT json_extract(payload,'$.sa_plan_plan') FROM product_specifications WHERE id=? AND revision=?"
+      [s id;s rev] = [[s plan]]) "artifact target or plan mismatch";
+    List.iter (fun a ->
+      store_artifact db a;
+      ignore (query db "INSERT INTO product_artifact_links VALUES(?,?,?,?,?) ON CONFLICT DO NOTHING"
+        [s id;s rev;s (text "id" a);s (text "revision" a);s (text "kind" a)])) artifacts;
+    require (query db "PRAGMA foreign_key_check" [] = []) "foreign-key violation";
+    authorize ())
+
 let import db j ~authorize =
   validate j;
   let payload = encoded j and spec = member "specification" j in
@@ -182,10 +213,7 @@ let import db j ~authorize =
     if prior <> [] then require (prior = [[s (sha payload)]]) "manifest revision already exists with different content";
     let put table cols values keys key_values row = insert_once db ~table ~columns:(cols@["payload"])
       ~values:(values@[s (encoded row)]) ~keys ~key_values ~payload:(encoded row) in
-    List.iter (fun a -> put "product_artifacts" ["id";"revision";"kind";"locator";"sha256";"content"]
-      [s (text "id" a);s (text "revision" a);s (text "kind" a);s (text "locator" a);s (text "sha256" a);
-       (match member "content" a with `Null -> Sqlite3.Data.NULL | v -> s (to_string v))]
-      ["id";"revision"] [s (text "id" a);s (text "revision" a)] a) (items "artifacts" j);
+    List.iter (store_artifact db) (items "artifacts" j);
     put "product_specifications" ["id";"revision";"title";"created_at"]
       [s id;s rev;s (text "title" spec);s (text "created_at" spec)] ["id";"revision"] [s id;s rev] spec;
     List.iter (fun f -> put "product_features" ["spec_id";"revision";"id";"name";"category";"status"]
@@ -234,16 +262,26 @@ let run () = match Array.to_list Sys.argv with
         "bundle plan differs from current authority";
       with_db ~readonly:false "data/sqlite/uos_verification_tracking.sqlite3" (fun db -> import db j ~authorize; summary db)
   | [_;"summary"] -> with_db ~readonly:true "data/sqlite/uos_verification_tracking.sqlite3" summary
+  | [_;"append-artifacts";path] ->
+      let packet = Yojson.Basic.from_string (read path) in
+      require (text "sa_plan_plan" packet = Option.value (Sys.getenv_opt "UOS_PRODUCT_PLAN") ~default:"")
+        "artifact plan differs from current authority";
+      with_db ~readonly:false "data/sqlite/uos_verification_tracking.sqlite3"
+        (fun db -> append_artifacts db packet ~authorize; summary db)
   | [_;"features"] -> with_db ~readonly:true "data/sqlite/uos_verification_tracking.sqlite3" (fun db ->
       query db "SELECT payload FROM product_features ORDER BY spec_id,revision,id" []
       |> List.iter (function [Sqlite3.Data.TEXT body] -> print_endline body | _ -> fail "bad feature"))
-  | [_;"artifact";id] -> with_db ~readonly:true "data/sqlite/uos_verification_tracking.sqlite3" (fun db ->
-      let rows = query db "SELECT content,sha256 FROM product_artifacts WHERE id=? ORDER BY revision" [s id] in
+  | ([_;"artifact";id] | [_;"artifact";id;_]) as args ->
+    with_db ~readonly:true "data/sqlite/uos_verification_tracking.sqlite3" (fun db ->
+      let rows = match args with
+        | [_;_;_;rev] -> query db "SELECT content,sha256 FROM product_artifacts WHERE id=? AND revision=?" [s id;s rev]
+        | _ -> query db "SELECT content,sha256 FROM product_artifacts WHERE id=?" [s id] in
       require (rows <> []) "artifact not found";
+      require (List.length rows = 1) "multiple artifact revisions; specify a revision";
       List.iter (function [Sqlite3.Data.TEXT body;Sqlite3.Data.TEXT digest] ->
-        require (sha body = digest) "stored artifact digest mismatch"; print_endline body
+        require (sha body = digest) "stored artifact digest mismatch"; print_string body
         | [Sqlite3.Data.NULL;_] -> fail "external artifact is a reference only"
         | _ -> fail "invalid artifact") rows)
-  | _ -> fail "usage: ocaml tools/product_catalog.ml {check MANIFEST|import MANIFEST|summary|features|artifact ID}"
+  | _ -> fail "usage: ocaml tools/product_catalog.ml {check MANIFEST|import MANIFEST|append-artifacts PACKET|summary|features|artifact ID [REVISION]}"
 let () = if not !Sys.interactive && Filename.basename Sys.argv.(0) = "product_catalog.ml" then
   try run () with exn -> prerr_endline ("product-catalog: " ^ Printexc.to_string exn); exit 1

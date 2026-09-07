@@ -132,11 +132,11 @@ pub fn select_phase_shruti(phase: OodaPhase) -> Shruti {
 pub fn compute_shruti_consonance(shruti: Shruti, lyapunov: Float) -> Float {
   let ratio_score =
     1.0 /. { int.to_float(shruti.ratio_num) +. int.to_float(shruti.ratio_den) }
-  let base_harmony = 0.5 +. { ratio_score *. 5.0 }
+  let base_harmony = 0.4 +. { ratio_score *. 0.5 }
 
   let lyap_factor = case lyapunov <. 0.0 {
     True -> 0.2
-    False -> -0.3
+    False -> -0.2
   }
 
   let total = base_harmony +. lyap_factor

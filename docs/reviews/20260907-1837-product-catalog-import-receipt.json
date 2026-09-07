@@ -1,0 +1,177 @@
+{
+  "schema": "uos.product-catalog-import-receipt/v1",
+  "observed_at": "2026-09-07T19:29:22Z",
+  "database": "data/sqlite/uos_verification_tracking.sqlite3",
+  "backup": "/tmp/20260907-1837-uos-product-preimport-c7249d.sqlite3",
+  "manifest_sha256": "d25beb29d29a3ab7ee57447cab56025eef2363d62019fac78cfc2ff0b869927c",
+  "counts": {
+    "product_specifications": 1,
+    "product_features": 46,
+    "product_requirement_list": 46,
+    "product_acceptance_list": 138,
+    "product_oracles": 27,
+    "product_artifacts": 89,
+    "product_findings": 11,
+    "product_implementation_map": 78,
+    "product_artifact_links": 89,
+    "product_imports": 1
+  },
+  "legacy_tables": [
+    {
+      "table": "adk_capability_catalog",
+      "rows": 10,
+      "schema_sha256": "bbc991997ecef3c153e935abed199e99ba2f8d39666ca456f581209578f73ace",
+      "rows_sha256": "01d3f3e6511e283c21dad5dd3cbd8449c2b8d3a48216f11040fd74a866d767f8"
+    },
+    {
+      "table": "algebraic_atlas_catalog",
+      "rows": 13,
+      "schema_sha256": "1157004bde90ecd1899b71f6c2e80a333ce28715115296870e7c9e2933be94c6",
+      "rows_sha256": "37dd29f0b4f888ffcc1e15e0ba5030df1e1519c904ac40768847376f6e5c44a4"
+    },
+    {
+      "table": "browser_test_catalog",
+      "rows": 64,
+      "schema_sha256": "e835c55f96e7aecaf67f200ae3c3fdd61d757db2df07aa142a03ec326bf561cd",
+      "rows_sha256": "18b5814bb91bf4663981bed22b26a23800d0752b883ea7ee821d49de2e61e2e7"
+    },
+    {
+      "table": "c3i_agent_catalog",
+      "rows": 266,
+      "schema_sha256": "d2f9cc6f783b5c12e58a70f08ac5c5c066e697d4bc92bf09a59d4243b3a0288c",
+      "rows_sha256": "2f413b8db471d1ef7c4f0b69f9c78bb43afd24d80fea4bd5a329256364d56c78"
+    },
+    {
+      "table": "cast_incident_catalog",
+      "rows": 3,
+      "schema_sha256": "2bf56af3a249d5c86c5cf6b99d99d65fc9b041d5a2dca0d35ffbde0b51460cc5",
+      "rows_sha256": "76577deb3909bf50a9d8237739ed8447f00a16e1e8bd887831838a2919edbac7"
+    },
+    {
+      "table": "denotational_intent_catalog",
+      "rows": 10,
+      "schema_sha256": "9721b72a9740499e3f5e16c2f965c0c0260354ca5ac5e28aa54034da958585be",
+      "rows_sha256": "e6bf4b95b2aacb0b9b05842d4ff3961c1ae4e34b71439b9eb9f2e90df26a2aeb"
+    },
+    {
+      "table": "divergence_ledger_catalog",
+      "rows": 8,
+      "schema_sha256": "1655f662537672253be699f454f770a2e4fe1e130d99ae0fa5a3fff5d23e528b",
+      "rows_sha256": "6b47ef4c3e2278df405d810c79d0fc35b705dfb6a0ac67424230972c3b710756"
+    },
+    {
+      "table": "dmc_tcm_catalog",
+      "rows": 13,
+      "schema_sha256": "f192f30077dbea6d966ca1ea425cc613311610ba5c04b53b27ba36bbf1d8bb1c",
+      "rows_sha256": "598f5efe99ab7bcd6cb241f8069539a5e84a495a21e652fbc2956d6d420aab2a"
+    },
+    {
+      "table": "feature_catalog",
+      "rows": 221,
+      "schema_sha256": "bb200ea9204ab580cfb5636c5693f0fb675e7d96f4ea7d8d444b9d0c7a693fcd",
+      "rows_sha256": "5fde0406c3261481d5030cabab658f03d5a2be2ac3bfbb2df11e2639e53fa367"
+    },
+    {
+      "table": "journal_catalog",
+      "rows": 29,
+      "schema_sha256": "9e84b73627799269f74bc20086cd165677c8228de12ddfa7ed0afa4507539cc1",
+      "rows_sha256": "b1890ca14af805c9803dca334a8d3e71396994fd70c2dbfae7d91ad409ab9d8f"
+    },
+    {
+      "table": "master_ontology_entities",
+      "rows": 22,
+      "schema_sha256": "2be69b76921568ddbf2dd2304cf22be7dddb0602f2382131d7d6ed2a68f0d20e",
+      "rows_sha256": "f4f40969bd124ec6aae18ea1c310786ed8294879b1ae2bb0e865730d3cda5b2f"
+    },
+    {
+      "table": "master_ontology_relations",
+      "rows": 21,
+      "schema_sha256": "5cfea1410610e03ffd8fd5bab5bc5af6368f70b08e024979f7ba011198c64de6",
+      "rows_sha256": "e0a39cb39149e53136218871c67cd16d2f30151779105325a5fabb1a96e6befb"
+    },
+    {
+      "table": "master_test_inventory",
+      "rows": 10,
+      "schema_sha256": "e83e4f9fde291b2f13e277af4044c35dbca29667c0838d01647d2ae23713f858",
+      "rows_sha256": "d3474c0965aa8975172092efa62937d1528c1156007c881b2cb58a9d952bbe9b"
+    },
+    {
+      "table": "mutation_ledger_catalog",
+      "rows": 12,
+      "schema_sha256": "9fb6041343418c7b3abf7c0cb938d59aa82699f77eac64881a7ac4da25d45c5b",
+      "rows_sha256": "0df28d06f2e89c6f26f209d5e45cb419ef1cab21d853aad55224eb1e625fa9a8"
+    },
+    {
+      "table": "ocaml_test_catalog",
+      "rows": 444,
+      "schema_sha256": "4a71c47fc32b5b2b3edbe1c33f106c1c0adf965ce0b18045b928b4dbf645fb33",
+      "rows_sha256": "cf73822b8f9e52aa3322dbd12d9e2ba4dd2f1acdce34ba16a366954b00c2347d"
+    },
+    {
+      "table": "schema_version",
+      "rows": 2,
+      "schema_sha256": "f2e874f554dc6b7d90eca2ea1b836503799053eec4a9a7ef8a474eb302b9396d",
+      "rows_sha256": "e12f3980d2c81b23ba9e7bbd0d5f90a7233188f04320d57f18a27599d0bdcbfa"
+    },
+    {
+      "table": "skills_superpowers_catalog",
+      "rows": 16,
+      "schema_sha256": "85a10ecfcc9c1b1a1e0c90e3f67efdd1ef26bacb282ce8f0239bb910581a4284",
+      "rows_sha256": "2e421e5d0c750d2c9213489007299c81894135664b210eb1ef52122d5b69fcac"
+    },
+    {
+      "table": "standards_and_algorithms_catalog",
+      "rows": 19,
+      "schema_sha256": "b5f45661b02df3af873c90d62d335ee44ce242220a602d2f006446dbd6b339fe",
+      "rows_sha256": "3b67c72c10774bc9c033f1af435b31cb25474a96a99721e0366b67a9ed8c2c59"
+    },
+    {
+      "table": "verification_check_catalog",
+      "rows": 18,
+      "schema_sha256": "6ea1fe97b5c8311cae5413f9af53b36401507fae1ccf6309e9b12a8c41deefc3",
+      "rows_sha256": "8f1291bd67004ca222a4b7bf09ba0c11ec765f0bcb8c9aa5fd4006e99003cfba"
+    },
+    {
+      "table": "verification_runs",
+      "rows": 38,
+      "schema_sha256": "648651b0292a0e09f23d86f5f879c2f8dc14fb195e08a864851ba7a4558e8a1d",
+      "rows_sha256": "0447c6a79d514f4a16491be05cdeea5090b3c81d633b1e99d824668b67a55d2d"
+    },
+    {
+      "table": "zigvm_ontology_lifecycle_catalog",
+      "rows": 6,
+      "schema_sha256": "7e13004313407383c21389ec1b8c2a29cb3bf0b9a2787d605a01128cf41a45ec",
+      "rows_sha256": "aa2e56b59e64e7b734d04b1d8076ee8605ee696beffc6c7f4928cc6c35021cc2"
+    }
+  ],
+  "legacy_data_preserved": true,
+  "identical_reimport_noop": true,
+  "all_import_artifacts_roundtrip": true,
+  "sqlite_integrity": "ok",
+  "foreign_key_violations": 0,
+  "acceptance_status": "UNRUN",
+  "production_admission": "NOT_ADMITTED",
+  "catalog_tests": {
+    "command": "ocaml tools/test_product_catalog.ml",
+    "result": "17 passed",
+    "execution_observation": "Observed separately in this task's terminal output before import; not a service acceptance receipt."
+  },
+  "tool_digests": [
+    {
+      "path": "tools/product_catalog.ml",
+      "sha256": "e985244a4d4e2839e1c04f44306c597563c62153e8e9e5f2e0e22546de0c61e3"
+    },
+    {
+      "path": "tools/test_product_catalog.ml",
+      "sha256": "68edaf4ddd77c49799b5db781a6640ccd80416f30f04b3432f4bfa3daa7477e5"
+    },
+    {
+      "path": "tools/build_agentic_product_manifest.ml",
+      "sha256": "fd6f80f08bcae4d401635d96293afef2e39bd186a4c3fc7238a8aa9eee61b472"
+    },
+    {
+      "path": "tools/review_product_sources.ml",
+      "sha256": "1a030124d388b97afc645af50b8545e693ec95f2a8513c06e55c989527d2ef52"
+    }
+  ]
+}

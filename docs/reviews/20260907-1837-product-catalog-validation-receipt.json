@@ -1,0 +1,57 @@
+{
+  "schema": "uos.product-catalog-validation/v1",
+  "observed_at": "2026-09-07T19:37:48Z",
+  "scope": "Catalog/document verification before supplemental artifact append; final persistence is read back after the transaction.",
+  "documents": [
+    {
+      "path": "docs/reviews/20260907-1837-zigvm-harness-product-feature-oracle-review.md",
+      "sha256": "f5f0a3b1757857e6f538c14c510a48ea2837740b89ec5e4c87d635eb5f38edc9",
+      "checkpoints": 18,
+      "domains": 5,
+      "structure_status": "PASS"
+    },
+    {
+      "path": "docs/design/20260907-1837-agentic-product-detailed-specification.md",
+      "sha256": "2e36b4cd2773e27a2553f445c8eceef858a380fabbd87a7e960f268b6e870374",
+      "checkpoints": 18,
+      "domains": 5,
+      "structure_status": "PASS"
+    },
+    {
+      "path": "docs/journal/20260907-1837-agentic-product-management-review-journal.md",
+      "sha256": "b4f0dbf1cab13f00244b5bee33afee8c7b71e9e65d472e94f1d4cd54cc94db92",
+      "checkpoints": 18,
+      "domains": 5,
+      "structure_status": "PASS"
+    }
+  ],
+  "journal_sections": 13,
+  "product_checks": {
+    "infrastructure_features": 21,
+    "management_features": 25,
+    "oracle_joins": "PASS",
+    "finding_titles": "PASS"
+  },
+  "manifest_current_mapping_digests": "PASS",
+  "artifact_cli_exact_bytes": "PASS",
+  "review_delivery": {
+    "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20260907-1837-zigvm-harness-product-feature-oracle-review.md",
+    "http_status": 200,
+    "response_sha256": "2047aa77f779f9dcdbaf88a1d7291a89e33211b3fc0f7a0485389685f19083d2",
+    "expected_content": true,
+    "interactive_browser_test": "UNRUN"
+  },
+  "risk_all_observed": {
+    "status": "PASS",
+    "baseline_checks": 375,
+    "adversarial_checks": 32843,
+    "independent_dag_scenarios": 32768,
+    "authority": "REPORT_ONLY"
+  },
+  "repository_timestamp_and_checklist_commands": {
+    "exit_code": 0,
+    "scope": "Presence/format observations only; not production or proof execution."
+  },
+  "production_admission": "NOT_ADMITTED",
+  "acceptance_cases": "138 UNRUN"
+}

@@ -23,6 +23,7 @@ import cepaf_gleam/ui/state.{ooda_phase_to_string}
 import gleam/float
 import gleam/int
 import gleam/list
+import gleam/string
 
 const tailscale_base_url = "http://nas-1.tail55d152.ts.net:4100"
 const peer_base_url = "http://vm-1.tail55d152.ts.net:8088"
@@ -110,7 +111,7 @@ pub fn update_from_copilot(
 ) -> OodaShrutiHudState {
   OodaShrutiHudState(
     ..state,
-    current_phase_name: ooda_phase_to_string(copilot.current_phase),
+    current_phase_name: string.uppercase(ooda_phase_to_string(copilot.current_phase)),
     cycle_count: copilot.cycle_count,
     active_swara: copilot.active_shruti.swara,
     active_shruti_name: copilot.active_shruti.name,

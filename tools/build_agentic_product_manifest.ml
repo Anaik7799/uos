@@ -16,8 +16,15 @@ let detail_path = "docs/design/" ^ stamp ^ "-agentic-product-detailed-specificat
 let definitions_path = "governance/capability-inventory/" ^ stamp ^ "-product-management-definitions.json"
 let source_path = "docs/design/" ^ stamp ^ "-operator-agentic-infrastructure-source.txt"
 let mapping path =
+  let baseline_path = path in
+  let path = match path with
+    | "apps/uos_tui/src/uos_tui/swarm.gleam" -> "apps/uos_swarm/src/uos_swarm/swarm.gleam"
+    | "apps/uos_tui/src/uos_tui/board.gleam" -> "apps/uos_swarm/src/uos_swarm/board.gleam"
+    | "apps/uos_tui/src/uos_tui/coord.gleam" -> "apps/uos_swarm/src/uos_swarm/coord.gleam"
+    | path -> path in
   let present = Sys.file_exists path in
   `Assoc ["path",`String path;"status",`String (if present then "SOURCE_PRESENT" else "ABSENT");
+    "baseline_path",`String baseline_path;
     "sha256",(if present then `String (sha (read path)) else `Null);
     "runtime_status",`String "UNRUN"]
 let service_details = [
@@ -137,7 +144,9 @@ let () =
     List.iter (fun a -> Printf.bprintf b "- [ ] %s — %s\n" (text "id" a) (text "assertion" a)) (items "acceptance" f)) features;
   let review = read review_path in
   let pos = Str.search_forward (Str.regexp_string "## Comprehensive verification checklist") review 0 in
-  Buffer.add_string b ("\n" ^ String.sub review pos (String.length review-pos));
+  let footer = Str.search_forward (Str.regexp_string "**Previous:**") review pos in
+  Buffer.add_string b ("\n" ^ String.sub review pos (footer-pos));
+  Printf.bprintf b "**Previous:** [Management review](http://nas-1.tail55d152.ts.net:4100/files/%s) · **Next:** [Completion journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/%s-agentic-product-management-review-journal.md)\n\n**UOS footer:** versioned product and artifact catalog; Sa-plan owns execution; acceptance definitions remain UNRUN.\n" review_path stamp;
   (match Bos.OS.File.write (Fpath.v detail_path) (Buffer.contents b) with Ok () -> () | Error (`Msg e) -> fail e);
   let artifacts = [file_artifact ~id:"operator-architecture" ~kind:"user-source" source_path;
     file_artifact ~id:"management-review" ~kind:"review" review_path;

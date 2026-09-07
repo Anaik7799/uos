@@ -164,7 +164,7 @@ Status: requirements and source mapping; production NOT_ADMITTED. 46 features: 2
 **AINF-R06:** Register versioned capability descriptors with tenant visibility, schema and implementation digests, endpoint identity, supported protocols, lease expiry, health evidence and capacity. Discovery returns authorized, compatible and freshly leased candidates; discovery never grants execution authority.
 
 - [apps/cepaf_gleam/src/cepaf_gleam/ontology/adk_c3i_master_ontology.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ontology/adk_c3i_master_ontology.gleam) — SOURCE_PRESENT; runtime UNRUN.
-- [apps/uos_tui/src/uos_tui/swarm.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/uos_tui/src/uos_tui/swarm.gleam) — ABSENT; runtime UNRUN.
+- [apps/uos_swarm/src/uos_swarm/swarm.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/uos_swarm/src/uos_swarm/swarm.gleam) — SOURCE_PRESENT; runtime UNRUN.
 
 **Acceptance:**
 
@@ -203,7 +203,7 @@ Status: requirements and source mapping; production NOT_ADMITTED. 46 features: 2
 **AINF-R08:** Use Zenoh as the UOS backplane with explicit per-tenant namespace ACLs, persistent transactional outbox/inbox, deduplication keys, bounded mailbox depth, acknowledgements, retry policy and dead letters. Define ordering per workflow, not globally. Internal messages are not claims of external A2A protocol conformance.
 
 - [apps/cepaf_gleam/src/cepaf_gleam/bridge/zenoh_mcp.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/bridge/zenoh_mcp.gleam) — SOURCE_PRESENT; runtime UNRUN.
-- [apps/uos_tui/src/uos_tui/board.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/uos_tui/src/uos_tui/board.gleam) — ABSENT; runtime UNRUN.
+- [apps/uos_swarm/src/uos_swarm/board.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/uos_swarm/src/uos_swarm/board.gleam) — SOURCE_PRESENT; runtime UNRUN.
 
 **Acceptance:**
 
@@ -419,7 +419,7 @@ Status: requirements and source mapping; production NOT_ADMITTED. 46 features: 2
 **AINF-R19:** Maintain integer micro-unit monetary and token/resource budgets with durable compare-and-swap reservation, settlement and refund records. Scope global, tenant, principal and workflow limits and enforce all simultaneously. Concurrent attempts reserve before dispatch; cancellation retains uncertain liability until reconciliation. Unknown pricing or usage fails closed for additional spend.
 
 - [apps/cepaf_gleam/src/cepaf_gleam/ha/token_budget.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/cepaf_gleam/src/cepaf_gleam/ha/token_budget.gleam) — SOURCE_PRESENT; runtime UNRUN.
-- [apps/uos_tui/src/uos_tui/coord.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/uos_tui/src/uos_tui/coord.gleam) — ABSENT; runtime UNRUN.
+- [apps/uos_swarm/src/uos_swarm/coord.gleam](http://nas-1.tail55d152.ts.net:4100/files/apps/uos_swarm/src/uos_swarm/coord.gleam) — SOURCE_PRESENT; runtime UNRUN.
 - [engines/hermes/modules/sa_plan/sa_plan_store.ml](http://nas-1.tail55d152.ts.net:4100/files/engines/hermes/modules/sa_plan/sa_plan_store.ml) — SOURCE_PRESENT; runtime UNRUN.
 
 **Acceptance:**
@@ -958,6 +958,6 @@ Status: requirements and source mapping; production NOT_ADMITTED. 46 features: 2
 
 </details>
 
-**Previous:** [Source blueprint](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260907-1837-operator-agentic-infrastructure-source.txt) · **Next:** [Detailed product specification](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260907-1837-agentic-product-detailed-specification.md)
+**Previous:** [Management review](http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20260907-1837-zigvm-harness-product-feature-oracle-review.md) · **Next:** [Completion journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260907-1837-agentic-product-management-review-journal.md)
 
-**UOS footer:** versioned product and artifact catalog; Sa-plan owns execution; review is evidence, not admission.
+**UOS footer:** versioned product and artifact catalog; Sa-plan owns execution; acceptance definitions remain UNRUN.
