@@ -7,8 +7,8 @@ StartLimitBurst=3
 
 [Service]
 Type=simple
-WorkingDirectory=%h/NAS-setup/uos/var/releases/clock-guard-98936f9e961e5b909c0e8445123b705aedb669a5
-Environment="UOS_CLOCK_RELEASE=%h/NAS-setup/uos/var/releases/clock-guard-98936f9e961e5b909c0e8445123b705aedb669a5"
+WorkingDirectory=%h/NAS-setup/uos/var/releases/clock-guard-f0a9d7e6732c6b8a3722f75797a35e5dc1a4efd8
+Environment="UOS_CLOCK_RELEASE=%h/NAS-setup/uos/var/releases/clock-guard-f0a9d7e6732c6b8a3722f75797a35e5dc1a4efd8"
 ExecStartPre=/usr/bin/sha256sum --check --quiet --strict artifacts.sha256
 ExecStart=/usr/bin/erl +S 2:2 +A 2 -noshell -eval "code:add_paths(filelib:wildcard(os:getenv(\"UOS_CLOCK_RELEASE\") ++ \"/*/ebin\")), 'uos_swarm@@main':run(clock_guard_cli)." -extra serve 30000 http://127.0.0.1:8080/c3i/a2a/** %h/NAS-setup/uos/var/coordination/tri-agent/clock-guard-%i.floor %h/NAS-setup/uos/var/coordination/tri-agent
 Restart=on-failure
@@ -27,4 +27,3 @@ SyslogIdentifier=uos-clock-guard-%i
 
 [Install]
 WantedBy=default.target
-

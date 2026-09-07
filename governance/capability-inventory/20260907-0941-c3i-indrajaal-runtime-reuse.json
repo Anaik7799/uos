@@ -2,7 +2,7 @@
   "schema": "uos-c3i-indrajaal-reuse/v1",
   "generated_at": "2026-09-07T09:26:41Z",
   "canonical_workspace": "/home/an/NAS-setup/uos",
-  "observed_main": "a55c81fc62201184761a7ee3776c7bafa9c4331a",
+  "observed_main": "12469f6365e3d73394c140be68bae6c7a2d1b7b4",
   "scope": "Development reuse and runtime observation; no system admission",
   "precedence": [
     "Existing UOS C3I/Indrajaal carriers",
@@ -87,7 +87,7 @@
         "apps/cepaf_gleam/src/cepaf_gleam/bridge/zenoh_mcp.gleam"
       ],
       "status": "executed",
-      "candidate": "4eabfc34fea9d0a96317fff4c759d8b3141a2c73",
+      "candidate": "88fe4fa8edd8b8c4dbc893e6c3fa8498b79f919f",
       "remaining": "Missing-native and real stdio error paths verified; loaded-NIF path UNRUN; ten remaining page/file adapters runtime-unprobed; no session connector installation asserted"
     },
     {
@@ -185,8 +185,8 @@
         "apps/uos_swarm/src/uos_swarm/clock_contract.gleam"
       ],
       "status": "executed",
-      "candidate": "98936f9e961e5b909c0e8445123b705aedb669a5",
-      "remaining": "Two continuous observer instances active; board clock metadata adapter awaits new main schema; no automatic promotion or release authority"
+      "candidate": "f0a9d7e6732c6b8a3722f75797a35e5dc1a4efd8",
+      "remaining": "Two enabled observers execute strict local host/boot provenance checks; old or foreign clock evidence and unbound actor identities stay UNKNOWN. No authenticated remote clock evidence or full-system HA assertion."
     },
     {
       "id": "AINF-S17",
@@ -211,7 +211,7 @@
         "apps/uos_swarm/src/uos_swarm/board_insights.gleam"
       ],
       "status": "executed",
-      "candidate": "a5fae5a56069d891c9dfeeef457132c6abff499c",
+      "candidate": "8180c73608373b00b46f7836af71f50ce6f40de7",
       "remaining": "No OTLP collector listening; real log correlation observed, collector/backend acceptance unproved"
     },
     {
@@ -255,8 +255,8 @@
         "apps/cepaf_gleam/src/hot_reload_ffi.erl",
         "apps/cepaf_gleam/src/cepaf_gleam/ha/otp_release.gleam"
       ],
-      "candidate": "cfc4029bca016631082f0b2a65bd6921e5aab3cf",
-      "remaining": "Correct FFI shape; digest-bound allowlist; no hard purge; state/epoch preservation; real handoff still requires authorized runtime binding"
+      "candidate": "78d8fef66199f1c5c82a7013efd43099d04437be",
+      "remaining": "Typed bounded development adapter tested; no hard purge. Production traffic routing, lease renewal and live whole-system handoff remain unbound. Clock observers were rolled independently with at least one continuously active."
     },
     {
       "purpose": "Root supervision",
@@ -331,66 +331,289 @@
       "No global spend optimum proved"
     ],
     "runtime_observers": {
-      "candidate": "98936f9e961e5b909c0e8445123b705aedb669a5",
-      "manifest_sha256": "83e9915a41781efd1d1b4890b1869833d337827286a1357e9c198e0b45f57f99",
+      "candidate": "f0a9d7e6732c6b8a3722f75797a35e5dc1a4efd8",
+      "manifest_sha256": "0b14fb665dfc5e7360f216c19908864be104b5ea914ed4b53607816c8cbe9359",
+      "observed_at": "2026-09-07T10:06:04Z",
       "primary": {
         "unit": "uos-clock-guard@primary.service",
-        "pid": 2600550,
+        "pid": 2678887,
         "restarts": 0,
         "floor_mode": "0600",
         "report": {
           "schema": "uos-clock-guard/v1",
-          "sequence": 4,
+          "sequence": 1,
           "healthy": false,
           "source": "chronyc:-c-tracking:reference-utc",
           "host_id": "nas-1",
           "boot_id": "1d08ac42-93f9-4839-951f-f7745671cca3",
-          "observed_utc_us": 1788774262274003,
-          "observed_boot_us": 226790290000,
-          "offset_us": 1225,
-          "uncertainty_us": 20174,
-          "reference_age_us": 49005650,
-          "lamport_floor": 215,
-          "fault_count": 447,
+          "observed_utc_us": 1788775503374565,
+          "observed_boot_us": 228031390000,
+          "offset_us": 1465,
+          "uncertainty_us": 20330,
+          "reference_age_us": 256851746,
+          "lamport_floor": 221,
+          "fault_count": 217,
           "faults_returned": 64,
-          "faults_omitted": 383,
+          "faults_omitted": 153,
           "fault_codes": [
-            "event_clock_domain_unknown",
-            "event_domain_mismatch"
+            "event_clock_domain_unknown"
           ]
         }
       },
       "backup": {
         "unit": "uos-clock-guard@backup.service",
-        "pid": 2600547,
+        "pid": 2670150,
         "restarts": 0,
         "floor_mode": "0600",
         "report": {
           "schema": "uos-clock-guard/v1",
-          "sequence": 4,
+          "sequence": 5,
           "healthy": false,
           "source": "chronyc:-c-tracking:reference-utc",
           "host_id": "nas-1",
           "boot_id": "1d08ac42-93f9-4839-951f-f7745671cca3",
-          "observed_utc_us": 1788774262241240,
-          "observed_boot_us": 226790250000,
-          "offset_us": 1225,
-          "uncertainty_us": 20174,
-          "reference_age_us": 48972887,
-          "lamport_floor": 215,
-          "fault_count": 447,
+          "observed_utc_us": 1788775493360358,
+          "observed_boot_us": 228021370000,
+          "offset_us": 1478,
+          "uncertainty_us": 20315,
+          "reference_age_us": 246837539,
+          "lamport_floor": 221,
+          "fault_count": 217,
           "faults_returned": 64,
-          "faults_omitted": 383,
+          "faults_omitted": 153,
           "fault_codes": [
-            "event_clock_domain_unknown",
-            "event_domain_mismatch"
+            "event_clock_domain_unknown"
           ]
         }
       },
       "old_cockpit_pid": 4060345,
       "old_zenoh_pid": 1689715,
-      "authority": "operator-authorized read-only observer rollout; no system admission"
+      "rollout": "Backup updated and observed first, then primary; existing cockpit/router PIDs unchanged.",
+      "authority": "operator-authorized read-only observer rollout; checked cooperative epoch2; no system admission",
+      "operation_ref": "var/operations/20260907-1000-clock-provenance-rollout.json",
+      "code_verification": {
+        "swarm_tests_passed": 505,
+        "build": "PASS"
+      },
+      "status": "RUNNING_DEGRADED",
+      "last_check": {
+        "observed_at": "2026-09-07T10:20:27Z",
+        "primary_report": {
+          "schema": "uos-clock-guard/v1",
+          "sequence": 31,
+          "healthy": false,
+          "source": "chronyc:-c-tracking:reference-utc",
+          "host_id": "nas-1",
+          "boot_id": "1d08ac42-93f9-4839-951f-f7745671cca3",
+          "observed_utc_us": 1788776405398255,
+          "observed_boot_us": 228933410000,
+          "offset_us": 1991,
+          "uncertainty_us": 18605,
+          "reference_age_us": 126664537,
+          "lamport_floor": 226,
+          "fault_count": 221,
+          "faults_returned": 64,
+          "faults_omitted": 157,
+          "fault_codes": [
+            "event_clock_domain_unknown"
+          ]
+        },
+        "backup_report": {
+          "schema": "uos-clock-guard/v1",
+          "sequence": 36,
+          "healthy": false,
+          "source": "chronyc:-c-tracking:reference-utc",
+          "host_id": "nas-1",
+          "boot_id": "1d08ac42-93f9-4839-951f-f7745671cca3",
+          "observed_utc_us": 1788776425088100,
+          "observed_boot_us": 228953100000,
+          "offset_us": 1950,
+          "uncertainty_us": 18648,
+          "reference_age_us": 146354382,
+          "lamport_floor": 226,
+          "fault_count": 221,
+          "faults_returned": 64,
+          "faults_omitted": 157,
+          "fault_codes": [
+            "event_clock_domain_unknown"
+          ]
+        },
+        "primary_pid": 2678887,
+        "backup_pid": 2670150,
+        "restarts": 0
+      },
+      "forecast_evaluation": {
+        "observed_fulfilment_seconds": 243.374565,
+        "horizon_seconds": 180,
+        "horizon_met": false,
+        "expected_behavior_observed": true,
+        "probability_score": null,
+        "note": "Behavior matched; the 180-second forecast horizon was missed. Staged observation, coordination checks and heartbeat renewal preceded the second update. No calibrated probability had been claimed."
+      }
+    },
+    "runtime_observers_history": [
+      {
+        "candidate": "98936f9e961e5b909c0e8445123b705aedb669a5",
+        "manifest_sha256": "83e9915a41781efd1d1b4890b1869833d337827286a1357e9c198e0b45f57f99",
+        "primary": {
+          "unit": "uos-clock-guard@primary.service",
+          "pid": 2600550,
+          "restarts": 0,
+          "floor_mode": "0600",
+          "report": {
+            "schema": "uos-clock-guard/v1",
+            "sequence": 4,
+            "healthy": false,
+            "source": "chronyc:-c-tracking:reference-utc",
+            "host_id": "nas-1",
+            "boot_id": "1d08ac42-93f9-4839-951f-f7745671cca3",
+            "observed_utc_us": 1788774262274003,
+            "observed_boot_us": 226790290000,
+            "offset_us": 1225,
+            "uncertainty_us": 20174,
+            "reference_age_us": 49005650,
+            "lamport_floor": 215,
+            "fault_count": 447,
+            "faults_returned": 64,
+            "faults_omitted": 383,
+            "fault_codes": [
+              "event_clock_domain_unknown",
+              "event_domain_mismatch"
+            ]
+          }
+        },
+        "backup": {
+          "unit": "uos-clock-guard@backup.service",
+          "pid": 2600547,
+          "restarts": 0,
+          "floor_mode": "0600",
+          "report": {
+            "schema": "uos-clock-guard/v1",
+            "sequence": 4,
+            "healthy": false,
+            "source": "chronyc:-c-tracking:reference-utc",
+            "host_id": "nas-1",
+            "boot_id": "1d08ac42-93f9-4839-951f-f7745671cca3",
+            "observed_utc_us": 1788774262241240,
+            "observed_boot_us": 226790250000,
+            "offset_us": 1225,
+            "uncertainty_us": 20174,
+            "reference_age_us": 48972887,
+            "lamport_floor": 215,
+            "fault_count": 447,
+            "faults_returned": 64,
+            "faults_omitted": 383,
+            "fault_codes": [
+              "event_clock_domain_unknown",
+              "event_domain_mismatch"
+            ]
+          }
+        },
+        "old_cockpit_pid": 4060345,
+        "old_zenoh_pid": 1689715,
+        "authority": "operator-authorized read-only observer rollout; no system admission"
+      }
+    ],
+    "mcp_integration": {
+      "main": "be5c2c70cf82b905f3f4e8674ac683b0d666d9d4",
+      "candidate": "88fe4fa8edd8b8c4dbc893e6c3fa8498b79f919f",
+      "integrator": "Claude / L0-fable",
+      "lease_epoch": 14,
+      "library_passed": 198,
+      "swarm_passed": 502,
+      "focused_passed": 29,
+      "cepaf_passed": 10003,
+      "cepaf_baseline_failures": 164,
+      "new_failures": 0,
+      "source": "Observed Herdr integration receipt and main ancestry",
+      "native_positive_path": "UNRUN",
+      "live_adapters": "UNRUN",
+      "production_admission": false
+    },
+    "document_serving": {
+      "initial_http_status": 200,
+      "initial_content_match": true,
+      "observed_initial_main": "643c1344aefd6e57f459a53e808f41b69fa4dcf2",
+      "note": "Final content check is recorded by the integration handoff and private runtime receipt after this artifact is served."
+    },
+    "runtime_operation_lease": {
+      "resource": "runtime:uos-clock-observers",
+      "epoch": 2,
+      "status": "released",
+      "operation_id": "codex-release-clock-provenance-f0a9",
+      "journal_sequence": 108
+    },
+    "peer_acknowledgements": {
+      "peer": "Claude / 656f0d2c-6019-4d9e-b0ce-b9e39b240047",
+      "received": [
+        "l0-fable-send-main-report-20260907-1005",
+        "l0-fable-send-main-report-20260907-1012",
+        "l0-fable-send-c0405-diagnosis-20260907-1020",
+        "l0-fable-send-main-report-20260907-1040",
+        "l0-fable-send-ack-rollout-final-20260907-1048"
+      ],
+      "acknowledgements_recorded_sequences": [
+        117,
+        118,
+        119,
+        120,
+        121
+      ],
+      "boundary": "Peer acknowledgements and candidate evidence are observations, not deployment authority."
+    },
+    "board_conflict": {
+      "original_sha256": "4b1cad0acfa5902958024e69262dfa857934bf7d7a3ae4cb1aa9cb7f23397a43",
+      "evidence_ref": "var/operations/20260907-1010-board-conflict",
+      "original_message_ids": 233,
+      "original_rows": 249,
+      "conflicting_digests": 0,
+      "original_id_digest_pairs_preserved": true,
+      "older_delivery_row_versions_preserved_in_private_original": 2,
+      "root_shared_board_writes": 0,
+      "union_main": "12469f6365e3d73394c140be68bae6c7a2d1b7b4",
+      "union_messages": 240,
+      "explicit_causal_gaps": 3,
+      "explicit_fork_records": 8,
+      "default_conflicts_after_union": 0
+    },
+    "action_kpi_candidate": {
+      "candidate": "d65573354bb619e8c94a63b28c45efcd4e5c1a3e",
+      "parents": [
+        "94ed6c2e0056b0c0dccb35e2b1f77226887217bb",
+        "4e6632fcad35cd664899efb798cb33748424f2e8"
+      ],
+      "root_cause": "Three fixtures registered nonexistent /uos before durable journal initialization.",
+      "correction": "Use existing canonical workspace fixture; production code and fences unchanged.",
+      "tests_passed": 557,
+      "failures": 0,
+      "code_check": "PASS"
+    },
+    "telemetry_route_candidate": {
+      "candidate": "8180c73608373b00b46f7836af71f50ce6f40de7",
+      "parent": "a5fae5a56069d891c9dfeeef457132c6abff499c",
+      "focused_tests_passed": 3,
+      "build": "PASS",
+      "collector_delivery": "UNKNOWN"
+    },
+    "board_validator_candidate": {
+      "candidate": "e0b50cdce6fdb08e945984a119f4214c25893a5e",
+      "focused_tests_passed": 38,
+      "build": "PASS",
+      "missing_file_exit": 1,
+      "malformed_file_exit": 1,
+      "empty_file_status": "EMPTY; no hive health inferred",
+      "empty_file_exit": 0
+    },
+    "final_handoff": {
+      "source_candidates": [
+        "d65573354bb619e8c94a63b28c45efcd4e5c1a3e",
+        "8180c73608373b00b46f7836af71f50ce6f40de7",
+        "e0b50cdce6fdb08e945984a119f4214c25893a5e"
+      ],
+      "integrator": "Claude session656f0d2c-6019-4d9e-b0ce-b9e39b240047",
+      "state": "Candidate checks complete; composed revision gate and main move belong to the integration receipt",
+      "production_admission": false
     }
   },
-  "updated_at": "2026-09-07T09:44:18Z"
+  "updated_at": "2026-09-07T10:22:02Z"
 }
