@@ -21,8 +21,10 @@ import cepaf_gleam/ha/fractal_forecast.{
   predict_l9_verification, run_predictive_ooda_evaluation, to_nato_band,
   verify_agentic_preflight,
 }
+import cepaf_gleam/ha/predictive_zenoh_stream
 import cepaf_gleam/mcp/server as mcp_server
 import cepaf_gleam/planning/ooda.{observe_from_health, run_predictive_cycle}
+import cepaf_gleam/ui/lustre/forecast_cockpit
 import cepaf_gleam/ui/wisp/router as wisp_router
 import gleam/option.{Some}
 
@@ -285,5 +287,48 @@ pub fn wisp_forecast_router_endpoints_test() {
   let health_resp = wisp_router.route("/api/v1/forecast/health")
   string.contains(health_resp, "nominal") |> should.equal(True)
   string.contains(health_resp, "10/10 layers") |> should.equal(True)
+}
+
+pub fn forecast_cockpit_html_page_test() {
+  let html = forecast_cockpit.view()
+  string.contains(html, "Unified Fractal Forecasting &amp; Predictive POODAVR Cockpit") |> should.equal(True)
+  string.contains(html, "POODAVR ACTIVE") |> should.equal(True)
+  string.contains(html, "KALMAN FILTER 1D") |> should.equal(True)
+  string.contains(html, "LYAPUNOV STABILITY") |> should.equal(True)
+  string.contains(html, "SC-CHECKLIST-001") |> should.equal(True)
+}
+
+pub fn predictive_zenoh_stream_test() {
+  // Topic mapping to fractal layers
+  predictive_zenoh_stream.map_topic_to_layer("indrajaal/l0/const/quorum")
+  |> should.equal(Some(LayerL0Constitutional))
+
+  predictive_zenoh_stream.map_topic_to_layer("indrajaal/l1/atomic/nif")
+  |> should.equal(Some(LayerL1Atomic))
+
+  predictive_zenoh_stream.map_topic_to_layer("indrajaal/l2/health/pod")
+  |> should.equal(Some(LayerL2Component))
+
+  predictive_zenoh_stream.map_topic_to_layer("indrajaal/l4/system/mem")
+  |> should.equal(Some(LayerL4System))
+
+  // State ingestion
+  let state = predictive_zenoh_stream.initial_state()
+  let msg =
+    predictive_zenoh_stream.IngestTelemetry(
+      "indrajaal/l2/health/pod",
+      "0.85",
+    )
+  let next_state = predictive_zenoh_stream.update_state(state, msg)
+
+  next_state.total_messages |> should.equal(1)
+  let f =
+    predictive_zenoh_stream.compute_forecast_for_layer(
+      next_state,
+      LayerL2Component,
+      60,
+    )
+  f.layer |> should.equal(LayerL2Component)
+  { f.confidence >. 0.0 } |> should.equal(True)
 }
 

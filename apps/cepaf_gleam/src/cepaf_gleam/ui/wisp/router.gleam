@@ -52,6 +52,7 @@ import cepaf_gleam/ui/domain.{
 }
 import cepaf_gleam/services/mirage_migration_engine
 import cepaf_gleam/services/mirage_unikernel_daemon
+import cepaf_gleam/ui/lustre/forecast_cockpit
 import cepaf_gleam/ui/lustre/hook_subsystem as hook_subsystem_view
 import cepaf_gleam/ui/lustre/mirage_cockpit
 import cepaf_gleam/ui/state as mesh_state
@@ -4075,6 +4076,17 @@ fn route_html(path: String) -> String {
           "div",
           [],
           mirage_cockpit.view(),
+        ),
+      )
+    "/forecast" | "/forecast/cockpit" ->
+      shell.render_page(
+        "Fractal Forecasting & POODAVR Cockpit",
+        "forecast",
+        element.unsafe_raw_html(
+          "",
+          "div",
+          [],
+          forecast_cockpit.view(),
         ),
       )
     "/planning" ->

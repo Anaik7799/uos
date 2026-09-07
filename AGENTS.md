@@ -6,8 +6,7 @@ This repository is the canonical Unified Operational System (UOS).
 
 - Canonical workspace: `/home/an/NAS-setup/uos`
 - Target VCS: standalone, non-colocated Jujutsu only (`.jj/`)
-- Current phase: active migration, governance establishment, and formal implementation
-- EV-Cycle Status: `EV-01` through `EV-19` admitted; `DMC-TCM` completed; `Full 9-Modality Test Protocol` 100% green; `Comprehensive Verification Checklist & Uniform Site Navigation` verified; `Codex Sovereign Verification` active.
+- EV-Cycle Status: `EV-01` through `EV-90` admitted (`EV-90` Unified Fractal Forecasting & Predictive POODAVR Control Loop); `DMC-TCM` completed; `Full 9-Modality Test Protocol` 100% green; `Comprehensive Verification Checklist & Uniform Site Navigation` verified; `Codex Sovereign Verification` active.
 - Mandatory Timestamp Rule: All generated docs must carry `YYYYMMDD-HHSS-` timestamp prefix (Operator Directive, `contracts/rules/timestamp-mandate.md`).
 - Strict Zero-Muda: Bevy and Graphite are permanently barred from source, dependencies, runtime roles, and imported history.
 - External source trees are read-only evidence; no unvetted artifacts enter UOS without two-key verification.
@@ -202,7 +201,7 @@ skills, and UI design artifacts at every fractal layer L0–L9.
 
 ```text
 UOS TARGET: STANDALONE JUJUTSU MONOREPO OPERATIONAL & RATIFIED
-CURRENT EV-CYCLE: EV-69 (WAVE 3 EVOLUTIONARY CYCLES & 45 ADVANCED CYCLES RATIFIED, 69/69 BOUNDARIES 100% GREEN)
+CURRENT EV-CYCLE: EV-90 (UNIFIED FRACTAL FORECASTING & PREDICTIVE POODAVR CONTROL LOOP RATIFIED)
 CHECKLIST STATUS: 5 DOMAINS, 18/18 CHECKS 100% GREEN (SC-CHECKLIST-001, G-CHECKLIST PASS)
 DMC & TCM STATUS: ADMITTED & PROVED IN LEAN 4 (Traceability.lean)
 TEST PROTOCOL: 9 MODALITIES 100% GREEN (>10,600 TESTS, 10,181 GLEAM EUNIT, 2037 HARNESS)

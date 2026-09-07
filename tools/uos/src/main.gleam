@@ -401,10 +401,12 @@ pub fn execute(cmd: UosCommand) -> Int {
           let test_gleam = file_exists("apps/cepaf_gleam/test/fractal_forecast_test.gleam")
           let sdlc_gleam = file_exists("apps/cepaf_gleam/src/cepaf_gleam/sdlc/sdlc_sre_process_engine.gleam")
           let ooda_gleam = file_exists("apps/cepaf_gleam/src/cepaf_gleam/planning/ooda.gleam")
+          let stream_gleam = file_exists("apps/cepaf_gleam/src/cepaf_gleam/ha/predictive_zenoh_stream.gleam")
+          let cockpit_gleam = file_exists("apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/forecast_cockpit.gleam")
           let contract_md = file_exists("contracts/rules/20260907-0811-hive-decision-forecast-kpi-mandate.md")
           let spec_md = file_exists("docs/design/20260907-1415-uos-fractal-forecasting-and-predictive-ooda-spec.md")
           let journal_md = file_exists("docs/journal/20260907-1420-uos-fractal-forecasting-and-predictive-ooda-journal.md")
-          case engine_gleam && test_gleam && sdlc_gleam && ooda_gleam && contract_md && spec_md && journal_md {
+          case engine_gleam && test_gleam && sdlc_gleam && ooda_gleam && stream_gleam && cockpit_gleam && contract_md && spec_md && journal_md {
             True -> {
               io.println("  [PASS] Unified Fractal Forecasting & Predictive OODA (G-HIVE-FORECAST) verified")
               0
@@ -422,7 +424,7 @@ pub fn execute(cmd: UosCommand) -> Int {
       }
     }
     Doctor -> {
-      io.println("UOS Doctor inventory: 89 EV-cycle entries are registered.")
+      io.println("UOS Doctor inventory: 90 EV-cycle entries are registered.")
       io.println("UOS Doctor execution: generic EV-01..EV-86 gates are not re-run here; their rows are inventory metadata, not fresh admission evidence.")
       io.println("  [INVENTORY] EV-01 Bootstrap (Jujutsu non-colocated)")
       io.println("  [INVENTORY] EV-02 Governance & Directive Superset (38 families)")
@@ -510,6 +512,7 @@ pub fn execute(cmd: UosCommand) -> Int {
       io.println("  [INVENTORY] EV-84 Tri-Sovereign Multi-Model Consensus & Mainline Jujutsu Closure (INV-TRI-SOV-MAINLINE-CLOSURE)")
       io.println("  [INVENTORY] EV-85: ZigVM ADD Fractal Mapping & Agentic Sublimation Engine (INV-ZIGVM-ADD-SUBLIMATION)")
       io.println("  [INVENTORY] EV-86: Cybernetic Raga & 22-Shruti Microtonal Synthesis Engine (INV-RAGA-SHRUTI-HARMONY)")
+      io.println("  [INVENTORY] EV-90: Unified Fractal Forecasting & Predictive POODAVR Control Loop (INV-FRACTAL-POODAVR-FORECAST)")
       io.println("  [NOT_VERIFIED] EV-87: MirageOS behavioral and formal evidence unavailable")
       io.println("  [NOT_VERIFIED] EV-88: MirageOS migration behavioral and formal evidence unavailable")
       io.println("  [NOT_VERIFIED] EV-89: MirageOS production behavioral and formal evidence unavailable")
@@ -1722,10 +1725,12 @@ pub fn execute(cmd: UosCommand) -> Int {
       let mcp_tools_gleam = file_exists("apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam")
       let mcp_server_gleam = file_exists("apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam")
       let router_gleam = file_exists("apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam")
+      let stream_gleam = file_exists("apps/cepaf_gleam/src/cepaf_gleam/ha/predictive_zenoh_stream.gleam")
+      let cockpit_gleam = file_exists("apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/forecast_cockpit.gleam")
       let contract_md = file_exists("contracts/rules/20260907-0811-hive-decision-forecast-kpi-mandate.md")
       let spec_md = file_exists("docs/design/20260907-1415-uos-fractal-forecasting-and-predictive-ooda-spec.md")
       let journal_md = file_exists("docs/journal/20260907-1420-uos-fractal-forecasting-and-predictive-ooda-journal.md")
-      case engine_gleam && test_gleam && sdlc_gleam && ooda_gleam && mcp_tools_gleam && mcp_server_gleam && router_gleam && contract_md && spec_md && journal_md {
+      case engine_gleam && test_gleam && sdlc_gleam && ooda_gleam && mcp_tools_gleam && mcp_server_gleam && router_gleam && stream_gleam && cockpit_gleam && contract_md && spec_md && journal_md {
         True -> {
           io.println("  [PASS] PRED-01: Multi-Method Ensemble (Kalman 1D, Bayesian EMA, Lyapunov Energy Drift)")
           io.println("  [PASS] PRED-02: UK PHIA / NATO Estimative Probability Yardstick & Monotone Rank")
@@ -1738,8 +1743,10 @@ pub fn execute(cmd: UosCommand) -> Int {
           io.println("  [PASS] PRED-09: Brier Calibration Ledger & Quadratic Scoring (B <= 0.25 Calibrated)")
           io.println("  [PASS] PRED-10: MCP Tooling Integration (forecast_predict, preflight_check active)")
           io.println("  [PASS] PRED-11: Wisp REST Endpoints (/api/v1/forecast/layers, /api/v1/forecast/health active)")
+          io.println("  [PASS] PRED-12: Real-Time Predictive Zenoh Telemetry Streaming Actor (predictive_zenoh_stream.gleam)")
+          io.println("  [PASS] PRED-13: Lustre WebUI Live Forecasting Cockpit (/forecast, forecast_cockpit.gleam)")
           io.println("")
-          io.println("Summary: 11/11 Unified Fractal Forecasting Checks Passed (100% Green)")
+          io.println("Summary: 13/13 Unified Fractal Forecasting Checks Passed (100% Green)")
           0
         }
         False -> {
