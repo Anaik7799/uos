@@ -2,8 +2,8 @@ import gleam/list
 import gleam/result
 import gleam/string
 import ocaml_test_inventory/inventory.{
-  type Entry, type Finding, type ReadError, CannotRead, InvalidInventory,
-  NotFound,
+  type Entry, type Finding, type ReadDepth, type ReadError, CannotRead, Indexed,
+  InvalidInventory, NotFound, UnreadableDepth,
 }
 import simplifile
 
@@ -37,6 +37,15 @@ pub fn read_checked(absolute_path: String) -> Result(BitArray, ReadError) {
       ))
       simplifile.read_bits(absolute_path) |> result.map_error(read_error)
     }
+  }
+}
+
+/// Observes only whether a scoped file was readable. Reading is distinct from
+/// hashing and close review, so a successful bounded read yields [Indexed].
+pub fn observe_read(root: String, path: String) -> ReadDepth {
+  case read_checked(root <> "/" <> path) {
+    Ok(_) -> Indexed
+    Error(_) -> UnreadableDepth
   }
 }
 

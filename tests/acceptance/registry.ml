@@ -316,12 +316,16 @@ let compiler_check_affected_tests given =
                    | _ -> { observed with passed=false; passing_tests=0; status=Status_error;
                              stderr="compiler driver lacks passing observed diagnostic fields" })
               | Ok _ -> { observed with passed=false; passing_tests=0; status=Status_error;
-                                       stderr="compiler driver output must be an object" }
+                                       stderr="compiler driver output must be an object" };;
+
+#use "./tools/source_review/census.ml";;
+#use "./tests/acceptance/e04_adapter.ml";;
 
 let supported_operations =
   [ ("runner.verify", runner_verify);
     ("candidate.snapshot", candidate_snapshot);
-    ("compiler.check_affected_tests", compiler_check_affected_tests) ]
+    ("compiler.check_affected_tests", compiler_check_affected_tests);
+    e04_supported_operation ]
 
 let dispatch_operation operation given =
   match List.assoc_opt operation supported_operations with
