@@ -97,5 +97,26 @@
     "unknowns": [
       "flaky NIF-family tests may differ run to run (Unknown)"
     ]
+  },
+  "completed": {
+    "observed_at": "2026-09-07T09:28:15.287443+00:00",
+    "observed_actions": [
+      "final cepaf suite on the chain: 9998 passed / 202 failures, failing set identical to baseline (164, 0 new)",
+      "lease integration/main epoch 9 claimed -> bookmarks integration/uos-swarm and main = kqxqlyrztkrk/657ef0f8f73f6da359e42a120e6ec86ef2c015dd -> released"
+    ],
+    "integrated_exact_pins": [
+      "b99598309dc0eaa8925862aca7c305201f1b51d1 (MCP availability repair; no claim that all runtime tools fail closed; live MCP exposure withheld)",
+      "f9dfd98b59f08cd12e7b1402746088526edab419 (session observation + mandate rule)"
+    ],
+    "parked": [
+      "a5fae5a56069d891c9dfeeef457132c6abff499c telemetry -> integration/candidates-telemetry-pending (route_telemetry_contains_otel_test regression)",
+      "ae5fea50 -> 1353e658 -> 4e6632fc decision/KPI -> integration/candidates-c04-c05-pending (action_boundary x3 enoent with C01)"
+    ],
+    "outcome": "predicted outcome realized — Measured",
+    "consumed": {
+      "tokens": "0 for the integration steps (deterministic); background suites ~3 x 9 min wall",
+      "usd": 0.0
+    },
+    "calibration_ref": "p=0.85 -> pass (Brier 0.0225)"
   }
 }
