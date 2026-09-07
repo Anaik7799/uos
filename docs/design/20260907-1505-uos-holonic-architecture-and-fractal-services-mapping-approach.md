@@ -173,6 +173,35 @@ Every task is a frozen candidate integrated through the serialized `integration/
 - UCAs considered: not provided (generator silently skips a holon → B10 census parity catches it); provided unsafely (a `barred` or `absent` holon generated as a child → status gate in the generator, tested); wrong timing (units generated before the candidate is integrated → generation reads only `main`); stopped too soon (partial holarchy published → publish only after B1–B12 pass).
 - Constraints: SC-HOLON-NAME-001 (address rule), SC-HOLON-GEN-001 (generator reads the validated holarchy only; enforcement: test), SC-HOLON-ALIAS-001 (alias retirement by decision record; enforcement: process rule, listed as a gap until mechanized).
 
+## Appendix B. Universe census (generated, B13 oracle)
+Source: `docs/design/20260907-1525-uos-holon-universe-census.md` and `generated/20260907-1525-uos-holon-universe-census.json` (worker W-I, Sonnet, read-only, evidence per row; generator pipeline embedded in the JSON).
+
+| Kind | Count on main at generation time |
+|---|---|
+| subsystem | 19 |
+| component (source files) | 4,640 |
+| artifact | 5 digest pins; 0 `.so` in a fresh checkout (host-provisioned only); 377 static bundle files; 3,278 files under `var/releases` |
+| record | 36 generated JSON, of which 19 decision records |
+| document | 607 files, 420 Markdown, across 8 directories |
+| rule | 20 distinct names across `contracts/rules` and the four agent surfaces |
+| skill / agent | 1 repo-tracked skill on 3 of 4 surfaces; 0 agent role files |
+| test | 545 test-directory files |
+| spec | 8 formal (Lean, Quint, TLA); 73 Gospel contracts |
+| plan / task / job / workflow | 3 / 113 / 113 / 15 in sa-plan |
+| resource | 55 jj workspaces; 81 bookmarks; 28 listening ports |
+| agent-session | 5 sessions; 346 coordinator events |
+
+B13 gaps found by the census, in priority order:
+1. 11 sa-plan tasks stuck `executing` past their lease in the two oldest plans, with no live worker.
+2. 8 of 19 decision records still `prepared` more than two hours after preparation; 1 record lacks a `completed` key.
+3. 10 of 20 governance rules missing from at least one agent surface; `contracts/rules` and the four `rules/` directories disagree in both directions.
+4. All 5 artifact pins name targets outside the checkout (4 point into the C3I tree, 1 into the crate); pins must name `apps/cepaf_gleam/priv/<name>.so` and carry provenance text (follow-up R1 fix).
+5. 7 tracked top-level directories fit no declared kind (`data/`, `state/`, `legacy/`, `migration/`, `intelligence/`, `third_party/`, top-level `tests/`) plus 8 loose files under `tools/`; the kind taxonomy in 3.5 gains `legacy` and `dataset` kinds and the holarchy must give them wholes.
+
+Tooling gap found while executing this plan: `tools/sa-plan task claim WORKER PLAN` hands out the next task by ordinal only and `task complete` requires a lease, so a worker that finishes a later task cannot mark it complete without first claiming every earlier task; `task select` takes eleven positional fields whose types are undocumented. Result on 2026-09-07: FRACTAL-MATRIX, HOLARCHY-CENSUS, HOLON-LIFECYCLE and SUP-GENERATOR show `executing` under worker claude ahead of their work, and UNIVERSE-CENSUS (done) shows `available`. Proposed fix, owner of the OCaml engine: `task claim WORKER PLAN [TASK_ID]` and a documented `task select` synopsis. Until then, task states in this plan are corrected in the closing journal, not in the database.
+
+Undetermined, as reported: Zenoh prefixes are a lower bound (only literal keys); `var/` is ignored by the repository and was read from the canonical checkout; a clock-skew oddity between file timestamps and `date -u` was observed and not verified against a chrony receipt.
+
 ## 7. Implications
 - **Truthfulness**: the architecture stops describing processes that do not run; B10 makes the census the oracle.
 - **Autonomy**: agents discover their whole, parts, svadharma and board address from one published structure.
