@@ -1,0 +1,108 @@
+{
+  "carrier": "uos-decision-record/v1",
+  "phase": "prepared",
+  "decision_id": "DR-20260907-1340-L0FABLE-SRE-STALE-ZENOH-UNIT",
+  "identity_scope": {
+    "hive": "uos-tui-swarm",
+    "tenant": "uos",
+    "actor_kind": "model-agent (L0) acting as SRE under runtime lease",
+    "actor_id": "L0-fable",
+    "session": "656f0d2c-6019-4d9e-b0ce-b9e39b240047",
+    "provider_model": {
+      "provider": "anthropic",
+      "model": "claude-fable-5-1",
+      "self_report": true
+    }
+  },
+  "task_authority": {
+    "task": "stop the stale user unit c3i-zenoh-router.service restart loop",
+    "goal": "end a 42,926-restart loop (ExecStartPre podman stop exit 125, ExecStart exit 126) without touching the live transport container c3i-zenoh-router-1",
+    "resource": "runtime:c3i-zenoh-router",
+    "lease_epoch": "claim before action; refusal aborts",
+    "proposed_action": "systemctl --user stop c3i-zenoh-router.service (unit is disabled, user scope, mine to stop); leave the unit file in place; no mask",
+    "policy_refs": [
+      "tri-agent-coordination SYNC-04 runtime ownership",
+      "SC-HIVE-DECISION-001"
+    ],
+    "authorization": "Codex session flagged it for bounded SRE remediation under runtime lease; unit is in my own user scope"
+  },
+  "evidence_choice": {
+    "observations": [
+      {
+        "source": "systemctl --user show",
+        "value": "ActiveState=activating NRestarts=42926 ExecMainStatus=126 UnitFileState=disabled",
+        "grade": "Measured",
+        "observed_at": "2026-09-07T09:22:57.368649+00:00"
+      },
+      {
+        "source": "podman ps",
+        "value": "c3i-zenoh-router-1 Up 5 hours (separate container, host network, REST 8080)",
+        "grade": "Measured"
+      }
+    ],
+    "constraints": [
+      "do not stop the live router",
+      "user scope only, no sudo"
+    ],
+    "alternatives": [
+      {
+        "option": "mask the unit",
+        "tradeoff": "prevents accidental restart but hides the unit; needs operator consent"
+      },
+      {
+        "option": "leave the loop",
+        "tradeoff": "CPU churn and log noise every 244 ms"
+      }
+    ],
+    "selected": "stop only",
+    "rationale": "reversible, bounded, no effect on the live container",
+    "risks": [
+      "none expected for the live transport; verified by post-checks"
+    ],
+    "unresolved": [
+      "whether the operator wants the stale unit removed"
+    ]
+  },
+  "process": {
+    "steps": [
+      "claim runtime:c3i-zenoh-router",
+      "stop the unit",
+      "verify ActiveState=inactive and NRestarts frozen",
+      "verify live container Up and REST 200",
+      "release lease",
+      "completed record + Andon"
+    ],
+    "rollback": "systemctl --user start c3i-zenoh-router.service (restores the previous state, i.e. the loop)",
+    "escalation": "if the live container is affected: start it again with the recorded compose args and andon red"
+  },
+  "forecast": {
+    "horizon": "5 min",
+    "clock_domain": "UTC host nas-1 (chrony Normal per Codex root receipt 09:21Z, offset 805 us)",
+    "observed_at": "2026-09-07T09:22:57.368649+00:00",
+    "expires_at": "2026-09-07T09:27:57.368649+00:00",
+    "predicted_outcome": "loop stops; live router unaffected",
+    "probability": 0.95,
+    "basis": "Estimated: independent unit and container names; not calibrated",
+    "unknowns": [
+      "why the unit was left in this state (owner unknown)"
+    ]
+  },
+  "completed": {
+    "observed_at": "2026-09-07T09:24:38.407435+00:00",
+    "first_attempt": "aborted: runtime lease refused (stale heartbeat) — no action taken",
+    "observed_actions": [
+      "heartbeat",
+      "runtime:c3i-zenoh-router lease epoch 1 claimed",
+      "systemctl --user stop c3i-zenoh-router.service",
+      "post-checks",
+      "lease released"
+    ],
+    "outcome": "ActiveState=inactive UnitFileState=disabled NRestarts=42954",
+    "live_transport": "c3i-zenoh-router-1 Up 5 hours | REST 200 — Measured",
+    "consumed": {
+      "tokens": "0 (deterministic actor steps)",
+      "usd": 0.0
+    },
+    "rule_citation": "SYNC-04 runtime lease; input NRestarts loop, ExecMainStatus=126; condition: unit disabled and distinct from the live container; transition activating->inactive"
+  }
+}

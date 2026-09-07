@@ -1,0 +1,101 @@
+{
+  "carrier": "uos-decision-record/v1",
+  "phase": "prepared",
+  "decision_id": "DR-20260907-1400-L0FABLE-CANDIDATE-INTEGRATION-2",
+  "timing_note": "prepared while the merges were already in my workspace (not yet on main); the main move waits for the final cepaf suite — the record precedes the effect (bookmark move)",
+  "identity_scope": {
+    "hive": "uos-tui-swarm",
+    "tenant": "uos",
+    "actor_kind": "model-agent (design authority, L0)",
+    "actor_id": "L0-fable",
+    "session": "656f0d2c-6019-4d9e-b0ce-b9e39b240047",
+    "provider_model": {
+      "provider": "anthropic",
+      "model": "claude-fable-5-1",
+      "self_report": true
+    }
+  },
+  "task_authority": {
+    "task": "integrate Codex candidates MCP availability repair (b9959830), telemetry repair (a5fae5a5), session observation + mandate rule (f9dfd98b), decision/KPI stack retry (4e6632fc); plus my provenance change and round-J docs",
+    "resource": "integration/main",
+    "lease_epoch": "claim at action time; refusal aborts",
+    "proposed_action": "bookmark set integration/uos-swarm and main to the green chain head",
+    "policy_refs": [
+      "SYNC-03",
+      "SC-HIVE-DECISION-001",
+      "jj discipline D3/D4"
+    ],
+    "authorization": "Codex handoff messages (root does not move main); operator directive to integrate into SDLC/SRE operations"
+  },
+  "evidence_choice": {
+    "observations": [
+      {
+        "source": "split-gate.sh",
+        "value": "uos_tui 198, uos_swarm 491, 0 warnings",
+        "grade": "Measured"
+      },
+      {
+        "source": "cepaf full suite baseline a55c81fc",
+        "value": "9994 passed / 202 failures (164 distinct)",
+        "grade": "Measured"
+      },
+      {
+        "source": "cepaf full suite merged (MCP+telemetry)",
+        "value": "10007 / 203; 1 new failure webui_full_coverage_test.route_telemetry_contains_otel_test",
+        "grade": "Measured"
+      },
+      {
+        "source": "focused modules",
+        "value": "mcp_catalog_truth_test 4/4, telemetry_repair_test 10/10",
+        "grade": "Measured"
+      },
+      {
+        "source": "Codex independent MCP review",
+        "value": "b995 still has legacy gaps (fabricated zero plan_status on NIF absence, read_file errors lack isError, fractional ids -> null)",
+        "grade": "Reported (peer)"
+      }
+    ],
+    "alternatives": [
+      {
+        "option": "land everything",
+        "tradeoff": "one attributable regression on main"
+      },
+      {
+        "option": "land green prefix, park telemetry and C04/05",
+        "tradeoff": "two lineages wait on their owners"
+      }
+    ],
+    "selected": "green prefix only",
+    "rationale": "jidoka: no attributable red on main; parked lineages keep their refs",
+    "risks": [
+      "MCP repair on main while known gaps exist — no live exposure claimed"
+    ],
+    "unresolved": [
+      "telemetry test expectation may itself assert fabricated content (owner to decide)"
+    ]
+  },
+  "process": {
+    "steps": [
+      "final cepaf suite on the chain",
+      "compare failure set with baseline (must be identical)",
+      "claim lease (abort on refusal)",
+      "bookmarks",
+      "release",
+      "board Integrate + session report"
+    ],
+    "rollback": "bookmarks back to a55c81fc; parked bookmarks unchanged",
+    "escalation": "any new failure vs baseline -> no move"
+  },
+  "forecast": {
+    "horizon": "30 min",
+    "clock_domain": "UTC host nas-1",
+    "observed_at": "2026-09-07T09:27:32.975374+00:00",
+    "expires_at": "2026-09-07T09:57:32.975374+00:00",
+    "predicted_outcome": "final cepaf failure set equals the baseline; main moves to the chain head",
+    "probability": 0.85,
+    "basis": "Estimated: the only new failure was attributable to the excluded candidate; not calibrated",
+    "unknowns": [
+      "flaky NIF-family tests may differ run to run (Unknown)"
+    ]
+  }
+}
