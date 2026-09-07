@@ -7,6 +7,7 @@
   mirage_merkle_kv
   mirage_solo5_tender
   mirage_interceptor
+  mirage_benchmark
   mirage_migration_catalog
   mirage_dns_resolver
   mirage_tls_ingress)
@@ -21,6 +22,15 @@
  (name test_mirage_migration)
  (modules test_mirage_migration)
  (libraries hermes_mirage))
+
+(executable
+ (name test_mirage_benchmark)
+ (modules test_mirage_benchmark)
+ (libraries hermes_mirage unix yojson))
+
+(rule
+ (alias runtest)
+ (action (run ./test_mirage_benchmark.exe %{exe:hermes_mirage_runner.exe})))
 
 (executable
  (name hermes_mirage_runner)

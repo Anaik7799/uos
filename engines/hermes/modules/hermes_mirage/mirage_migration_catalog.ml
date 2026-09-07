@@ -163,19 +163,36 @@ let candidate_to_json (c : migration_candidate) : Yojson.Safe.t =
     ("fractal_layer", `String c.fractal_layer);
     ("current_technology", `String c.current_technology);
     ("mirage_unikernel_target", `String c.mirage_unikernel_target);
-    ("sil_safety_level", `Int c.sil_safety_level);
+    ("declared_sil_level", `Int c.sil_safety_level);
+    ("safety_certification", `String "NOT_VERIFIED; declared level has no defined certification scale");
     ("cold_start_comparison", `String c.cold_start_comparison);
     ("ram_usage_comparison", `String c.ram_usage_comparison);
     ("attack_surface_comparison", `String c.attack_surface_comparison);
     ("readiness_score", `Float c.readiness_score);
-    ("status", `String (status_to_string c.status));
-    ("proof_reference", `String c.proof_reference);
+    ("status", `String "NOT_VERIFIED");
+    ("declared_stage", `String (status_to_string c.status));
+    ("evidence_scope", `String "static_migration_projection");
+    ("declared_proof_reference", `String c.proof_reference);
   ]
 
 let catalog_to_json () : Yojson.Safe.t =
   `Assoc [
+    ("schema", `String "uos-mirage-catalog/v2");
     ("total_candidates", `Int (List.length candidates_store));
-    ("total_ram_savings_mb", `Int (total_ram_savings_mb ()));
-    ("average_speedup_ratio", `Float (average_speedup_ratio ()));
+    ("evidence_scope", `String "static_migration_projection");
+    ("deployment_admission", `String "NOT_VERIFIED");
+    ("measured_ram_savings_mb", `Null);
+    ("projected_ram_savings_mb", `Int (total_ram_savings_mb ()));
+    ("measured_average_speedup_percent", `Null);
+    ("declared_average_speedup_percent", `Float (average_speedup_ratio ()));
+    ("estimate_note", `String "RAM and speedup fields are unmeasured catalog literals; the speedup aggregate has no validated derivation; declared_stage and declared_proof_reference are claims, not admission receipts");
+    ("host_benchmark", `Assoc [
+       ("command", `String "hermes_mirage_runner benchmark [roundtrips]");
+       ("scope", `String "host_ocaml_library");
+       ("feature_id", `String "HOST-KERNEL-BENCH-001");
+       ("max_roundtrips", `Int Mirage_benchmark.max_roundtrips);
+       ("default_roundtrips", `Int Mirage_benchmark.default_roundtrips);
+       ("solo5_boot_measured", `Bool false);
+    ]);
     ("candidates", `List (List.map candidate_to_json candidates_store));
   ]
