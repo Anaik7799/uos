@@ -1,0 +1,396 @@
+{
+  "schema": "uos-c3i-indrajaal-reuse/v1",
+  "generated_at": "2026-09-07T09:26:41Z",
+  "canonical_workspace": "/home/an/NAS-setup/uos",
+  "observed_main": "a55c81fc62201184761a7ee3776c7bafa9c4331a",
+  "scope": "Development reuse and runtime observation; no system admission",
+  "precedence": [
+    "Existing UOS C3I/Indrajaal carriers",
+    "Verified existing runtime services",
+    "Adapted external evidence after canonical source admission"
+  ],
+  "source_admission": {
+    "receipt": "governance/sources/20260907-0604-vm1-c3i-indrajaal-sanitized-snapshot-receipt.json",
+    "writers_quiesced": false,
+    "content_digest_verified": false,
+    "admitted": false,
+    "note": "Existing receipt hashes a path/size manifest, not a sanitized content snapshot. No external files imported by this change."
+  },
+  "bindings": [
+    {
+      "id": "AINF-S01",
+      "purpose": "Workload identity",
+      "reuse": [
+        "apps/cepaf_gleam/src/cepaf_gleam/iam/supervisor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/iam/jwks_cache_actor.gleam"
+      ],
+      "status": "mapped",
+      "remaining": "Fresh cryptographic workload identity and mTLS invocation evidence"
+    },
+    {
+      "id": "AINF-S02",
+      "purpose": "Fine-grained policy",
+      "reuse": [
+        "apps/cepaf_gleam/src/cepaf_gleam/auth/rbac.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/rules/engine.gleam"
+      ],
+      "status": "mapped",
+      "remaining": "Mandatory tenant/resource authorization at every effect adapter"
+    },
+    {
+      "id": "AINF-S03",
+      "purpose": "Delegation",
+      "reuse": [
+        "apps/cepaf_gleam/src/cepaf_gleam/auth/token_exchange.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/iam/sts_token_cache_actor.gleam"
+      ],
+      "status": "mapped",
+      "remaining": "Provider-scoped exchange, revocation and credential-exposure tests"
+    },
+    {
+      "id": "AINF-S04",
+      "purpose": "Credentials",
+      "reuse": [
+        "apps/cepaf_gleam/src/cepaf_gleam/vault.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/vault_supervisor.gleam"
+      ],
+      "status": "mapped",
+      "remaining": "Actual broker binding; unbound MCP vault tools must return errors"
+    },
+    {
+      "id": "AINF-S05",
+      "purpose": "Guardrails",
+      "reuse": [
+        "apps/cepaf_gleam/src/cepaf_gleam/vault_pii_scrub.gleam",
+        "engines/hermes/modules/system_engg/agent_dispatch_hook.ml"
+      ],
+      "status": "mapped",
+      "remaining": "End-to-end tool/payload gate and adversarial runtime evidence"
+    },
+    {
+      "id": "AINF-S06",
+      "purpose": "Session and capability discovery",
+      "reuse": [
+        "apps/uos_swarm/src/uos_swarm/herdr.gleam",
+        "apps/uos_swarm/src/uos_swarm/session_binding.gleam",
+        "apps/uos_swarm/src/uos_swarm/board_insights.gleam"
+      ],
+      "status": "executed",
+      "remaining": "Continuous fresh identity-bound heartbeats; declared roles are not proved capabilities"
+    },
+    {
+      "id": "AINF-S07",
+      "purpose": "MCP gateway",
+      "reuse": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/bridge/zenoh_mcp.gleam"
+      ],
+      "status": "executed",
+      "candidate": "4eabfc34fea9d0a96317fff4c759d8b3141a2c73",
+      "remaining": "Missing-native and real stdio error paths verified; loaded-NIF path UNRUN; ten remaining page/file adapters runtime-unprobed; no session connector installation asserted"
+    },
+    {
+      "id": "AINF-S08",
+      "purpose": "Message board and event bus",
+      "reuse": [
+        "apps/uos_swarm/src/uos_swarm/board.gleam",
+        "apps/uos_swarm/src/uos_swarm/board_reader.gleam",
+        "ops/zenoh/20260907-0450-uos-zenoh-router-1.json5"
+      ],
+      "status": "executed",
+      "remaining": "Tenant ACL and authenticated transport enforcement; preserve missing-parent diagnostics"
+    },
+    {
+      "id": "AINF-S09",
+      "purpose": "Session state",
+      "reuse": [
+        "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/substrate/beam_cache.gleam"
+      ],
+      "status": "executed",
+      "candidate": "1c69804b45f13af549f0070a711ed089cee8a418",
+      "remaining": "Cooperative same-user leases do not fence arbitrary external commands"
+    },
+    {
+      "id": "AINF-S10",
+      "purpose": "Retrieval",
+      "reuse": [
+        "engines/hermes/modules/hermes_wiki/src/graph/wiki_similarity.ml",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam"
+      ],
+      "status": "mapped",
+      "remaining": "Tenant-filtered recall, provenance and stale-memory evaluation"
+    },
+    {
+      "id": "AINF-S11",
+      "purpose": "Ontology and holons",
+      "reuse": [
+        "engines/hermes/modules/hermes_wiki/src/graph/wiki_graph.ml",
+        "apps/cepaf_gleam/src/cepaf_gleam/ontology/adk_c3i_master_ontology.gleam",
+        "apps/indrajaal_gleam/src/indrajaal/holon.gleam"
+      ],
+      "status": "mapped",
+      "remaining": "Knowledge claims must retain source/candidate and never grant action authority"
+    },
+    {
+      "id": "AINF-S12",
+      "purpose": "Context and compaction",
+      "reuse": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/context_manager.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/token_budget.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/workflow_compactor.gleam"
+      ],
+      "status": "mapped",
+      "remaining": "Pinned constraints survive compaction; enforce model-specific token bounds before dispatch"
+    },
+    {
+      "id": "AINF-S13",
+      "purpose": "Bounded execution",
+      "reuse": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/hermes_bionic_bridge.gleam",
+        "engines/hermes/modules/hermes_dependability/dependability_process.mli",
+        "engines/zigvm/build.zig"
+      ],
+      "status": "mapped",
+      "remaining": "Real isolation, resource ceilings and descriptor-relative VFS verification"
+    },
+    {
+      "id": "AINF-S14",
+      "purpose": "Durable work and evidence",
+      "reuse": [
+        "engines/hermes/modules/sa_plan/sa_plan_store.ml",
+        "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+      ],
+      "status": "executed",
+      "candidate": "e95cdf75fa43627d24969d13bbd08d2a915c8120",
+      "remaining": "Observation ingestion must remain separate from task completion and deployment authorization"
+    },
+    {
+      "id": "AINF-S15",
+      "purpose": "Approval and escalation",
+      "reuse": [
+        "apps/cepaf_gleam/src/cepaf_gleam/fractal/l0_constitutional.gleam",
+        "engines/hermes/modules/sa_plan/guardian.ml"
+      ],
+      "status": "mapped",
+      "remaining": "Candidate/action-bound approval verifier and current fencing on production executors"
+    },
+    {
+      "id": "AINF-S16",
+      "purpose": "Circuit breakers and clock checks",
+      "reuse": [
+        "apps/cepaf_gleam/src/cepaf_gleam/prajna/circuit_breaker.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/freshness_monitor.gleam",
+        "apps/uos_swarm/src/uos_swarm/clock_contract.gleam"
+      ],
+      "status": "executed",
+      "candidate": "98936f9e961e5b909c0e8445123b705aedb669a5",
+      "remaining": "Two continuous observer instances active; board clock metadata adapter awaits new main schema; no automatic promotion or release authority"
+    },
+    {
+      "id": "AINF-S17",
+      "purpose": "Inference routing",
+      "reuse": [
+        "apps/uos_swarm/src/uos_swarm/openrouter_worker.gleam",
+        "apps/uos_swarm/src/uos_swarm/route.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/bridge/pi_provider.gleam",
+        "services/inference/max/max_worker.py"
+      ],
+      "status": "mapped",
+      "remaining": "Use current provider/price receipts and aggregate reservations; local deterministic work needs no model call"
+    },
+    {
+      "id": "AINF-S18",
+      "purpose": "Tracing and reporting",
+      "reuse": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/trace_context.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/correlated_log.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/telemetry/exporter.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/zenoh_otel.gleam",
+        "apps/uos_swarm/src/uos_swarm/board_insights.gleam"
+      ],
+      "status": "executed",
+      "candidate": "a5fae5a56069d891c9dfeeef457132c6abff499c",
+      "remaining": "No OTLP collector listening; real log correlation observed, collector/backend acceptance unproved"
+    },
+    {
+      "id": "AINF-S19",
+      "purpose": "Cost and quota",
+      "reuse": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/token_budget.gleam",
+        "apps/uos_swarm/src/uos_swarm/coord.gleam",
+        "apps/uos_swarm/src/uos_swarm/route.gleam"
+      ],
+      "status": "mapped",
+      "remaining": "Fleet-wide accounting is not established by free-only or per-request ceilings"
+    },
+    {
+      "id": "AINF-S20",
+      "purpose": "Audit",
+      "reuse": [
+        "engines/hermes/modules/hermes_harness/evidence_store.ml",
+        "engines/hermes/modules/sa_plan/sa_plan_store.ml"
+      ],
+      "status": "executed",
+      "remaining": "Record reviewable summaries and effect evidence; raw private reasoning and secrets stay out of audit records"
+    },
+    {
+      "id": "AINF-S21",
+      "purpose": "Evaluation",
+      "reuse": [
+        "engines/hermes/modules/hermes_harness/test_parity_algebra.ml",
+        "engines/hermes/modules/hermes_harness/test_parity_compare.ml",
+        "apps/cepaf_gleam/src/cepaf_gleam/testing/coverage_math.gleam"
+      ],
+      "status": "mapped",
+      "remaining": "Fresh scenario-specific runtime and formal receipts at the composed candidate"
+    }
+  ],
+  "cross_cutting": [
+    {
+      "purpose": "Continuous evolution",
+      "reuse": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/hot_reload.gleam",
+        "apps/cepaf_gleam/src/hot_reload_ffi.erl",
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/otp_release.gleam"
+      ],
+      "candidate": "cfc4029bca016631082f0b2a65bd6921e5aab3cf",
+      "remaining": "Correct FFI shape; digest-bound allowlist; no hard purge; state/epoch preservation; real handoff still requires authorized runtime binding"
+    },
+    {
+      "purpose": "Root supervision",
+      "reuse": [
+        "apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam"
+      ],
+      "remaining": "start_root_supervisor currently starts an empty supervisor; declared children are not live children"
+    },
+    {
+      "purpose": "Existing cockpit",
+      "reuse": [
+        "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam"
+      ],
+      "remaining": "Preserve active4100 process; integrate sanitized read-only projections through existing UI/API"
+    },
+    {
+      "purpose": "Forecasting",
+      "reuse": [
+        "apps/cepaf_gleam/src/cepaf_gleam/sdlc/forecasting_engine.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/capacity_forecast.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/math/bayesian.gleam"
+      ],
+      "remaining": "These existing helpers do not constitute full ZigVM prediction-system integration; services/stan_worker currently has only a descriptive README in this audit"
+    }
+  ],
+  "evidence": {
+    "c02_cross_language": {
+      "export_candidate": "f9dfd98b59f08cd12e7b1402746088526edab419",
+      "ingest_candidate": "e95cdf75fa43627d24969d13bbd08d2a915c8120",
+      "rows": 57,
+      "hash_parity": true,
+      "accepted_rows": 57,
+      "replay_same_sequence": true,
+      "sequence_gap_exit": 2,
+      "authority": "observation only",
+      "ephemeral_ref": "/tmp/uos-observation-e2e.l95CFw"
+    },
+    "board_telemetry": {
+      "report_candidate": "ada45ee774d2d58d8dca39c8934faa270daacf3a",
+      "producer_candidate": "a5fae5a56069d891c9dfeeef457132c6abff499c",
+      "message_id": "1788772514555609-5ec49e2541504f39",
+      "trace_id": "d47e9aa1b2be007c78ad11a1e509f46e",
+      "sample_id": "telemetry-canary-57896b188e9bbe51",
+      "match_kind": "explicit_message_and_trace",
+      "malformed_board": 0,
+      "malformed_telemetry": 0,
+      "duplicate_rows": 205,
+      "collector_accepted": null,
+      "backend_visible": null,
+      "ephemeral_ref": "/tmp/uos-board-telemetry-correlated-report.json"
+    },
+    "clock": {
+      "observed_at": "2026-09-07T09:21:33Z",
+      "leap": "Normal",
+      "system_offset_us": 805,
+      "source": "chronyc -c tracking",
+      "lamport_equals_wall_clock": false
+    },
+    "live_services": {
+      "cockpit": "nas-1.tail55d152.ts.net:4100 beam PID4060345",
+      "zenoh": "nas-1.tail55d152.ts.net:8080 PID1689715 container c3i-zenoh-router-1",
+      "collector_listener": false,
+      "obsolete_router_unit": "c3i-zenoh-router.service",
+      "obsolete_router_restarts_observed": 42897,
+      "obsolete_router_unit_after": "inactive; observed after Claude's scoped SRE action; NRestarts42954"
+    },
+    "excluded_claims": [
+      "No production admission",
+      "No 17-aspect all-green assertion",
+      "No consciousness measurement",
+      "No global spend optimum proved"
+    ],
+    "runtime_observers": {
+      "candidate": "98936f9e961e5b909c0e8445123b705aedb669a5",
+      "manifest_sha256": "83e9915a41781efd1d1b4890b1869833d337827286a1357e9c198e0b45f57f99",
+      "primary": {
+        "unit": "uos-clock-guard@primary.service",
+        "pid": 2600550,
+        "restarts": 0,
+        "floor_mode": "0600",
+        "report": {
+          "schema": "uos-clock-guard/v1",
+          "sequence": 4,
+          "healthy": false,
+          "source": "chronyc:-c-tracking:reference-utc",
+          "host_id": "nas-1",
+          "boot_id": "1d08ac42-93f9-4839-951f-f7745671cca3",
+          "observed_utc_us": 1788774262274003,
+          "observed_boot_us": 226790290000,
+          "offset_us": 1225,
+          "uncertainty_us": 20174,
+          "reference_age_us": 49005650,
+          "lamport_floor": 215,
+          "fault_count": 447,
+          "faults_returned": 64,
+          "faults_omitted": 383,
+          "fault_codes": [
+            "event_clock_domain_unknown",
+            "event_domain_mismatch"
+          ]
+        }
+      },
+      "backup": {
+        "unit": "uos-clock-guard@backup.service",
+        "pid": 2600547,
+        "restarts": 0,
+        "floor_mode": "0600",
+        "report": {
+          "schema": "uos-clock-guard/v1",
+          "sequence": 4,
+          "healthy": false,
+          "source": "chronyc:-c-tracking:reference-utc",
+          "host_id": "nas-1",
+          "boot_id": "1d08ac42-93f9-4839-951f-f7745671cca3",
+          "observed_utc_us": 1788774262241240,
+          "observed_boot_us": 226790250000,
+          "offset_us": 1225,
+          "uncertainty_us": 20174,
+          "reference_age_us": 48972887,
+          "lamport_floor": 215,
+          "fault_count": 447,
+          "faults_returned": 64,
+          "faults_omitted": 383,
+          "fault_codes": [
+            "event_clock_domain_unknown",
+            "event_domain_mismatch"
+          ]
+        }
+      },
+      "old_cockpit_pid": 4060345,
+      "old_zenoh_pid": 1689715,
+      "authority": "operator-authorized read-only observer rollout; no system admission"
+    }
+  },
+  "updated_at": "2026-09-07T09:44:18Z"
+}
