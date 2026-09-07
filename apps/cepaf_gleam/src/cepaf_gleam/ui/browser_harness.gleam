@@ -312,3 +312,97 @@ pub fn summary_to_json(s: CrawlSummary) -> json.Json {
 pub fn summary_to_json_string(s: CrawlSummary) -> String {
   summary_to_json(s) |> json.to_string
 }
+
+// -----------------------------------------------------------------------------
+// 5. Multi-Step Autonomous E2E Scenario Verification (V02)
+// -----------------------------------------------------------------------------
+
+pub type E2EScenarioStep {
+  E2EScenarioStep(
+    step_index: Int,
+    name: String,
+    target_route: String,
+    expected_substrings: List(String),
+  )
+}
+
+pub type E2EScenarioReceipt {
+  E2EScenarioReceipt(
+    scenario_id: String,
+    scenario_name: String,
+    total_steps: Int,
+    passed_steps: Int,
+    step_receipts: List(#(String, Bool)),
+    all_passed: Bool,
+  )
+}
+
+pub fn standard_operator_journey_steps() -> List(E2EScenarioStep) {
+  [
+    E2EScenarioStep(
+      1,
+      "Cockpit Inspection",
+      "/",
+      ["Cockpit", "nas-1.tail55d152.ts.net:4100"],
+    ),
+    E2EScenarioStep(
+      2,
+      "AG-UI Real-Time Cockpit",
+      "/ag-ui/cockpit",
+      ["AG-UI 32-Event Real-Time Cockpit", "SIL-6 FRACTAL", "LOCK: 25503L801736"],
+    ),
+    E2EScenarioStep(
+      3,
+      "AG-UI Protocol Manifest",
+      "/ag-ui/manifest",
+      ["AG-UI-v1", "compliant"],
+    ),
+    E2EScenarioStep(
+      4,
+      "Universal Verification Checklist",
+      "/checklist",
+      ["Universal Comprehensive Verification Checklist", "CHK-01-TIME"],
+    ),
+    E2EScenarioStep(
+      5,
+      "Sa-Plan Execution Authority",
+      "/planning",
+      ["Planning", "nas-1.tail55d152.ts.net:4100"],
+    ),
+    E2EScenarioStep(
+      6,
+      "MirageOS Unikernel Hub",
+      "/mirage",
+      ["MirageOS", "25503L801736"],
+    ),
+  ]
+}
+
+pub fn execute_operator_journey_scenario(
+  router_fn: fn(String) -> String,
+) -> E2EScenarioReceipt {
+  let steps = standard_operator_journey_steps()
+  let step_results =
+    list.map(steps, fn(step) {
+      let content = router_fn(step.target_route)
+      let matches_all =
+        list.all(step.expected_substrings, fn(sub) {
+          string.contains(content, sub)
+        })
+      #(step.name, matches_all)
+    })
+
+  let total = list.length(step_results)
+  let passed = list.count(step_results, fn(r) { r.1 })
+  let all_ok = passed == total
+
+  E2EScenarioReceipt(
+    scenario_id: "scen-operator-journey-001",
+    scenario_name: "Canonical Operator E2E Navigation & Control Verification",
+    total_steps: total,
+    passed_steps: passed,
+    step_receipts: step_results,
+    all_passed: all_ok,
+  )
+}
+

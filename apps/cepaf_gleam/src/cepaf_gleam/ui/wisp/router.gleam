@@ -53,6 +53,7 @@ import cepaf_gleam/ui/domain.{
 import cepaf_gleam/services/max_inference_daemon as max_daemon
 import cepaf_gleam/services/mirage_migration_engine
 import cepaf_gleam/services/mirage_unikernel_daemon
+import cepaf_gleam/ui/lustre/agui_cockpit
 import cepaf_gleam/ui/lustre/forecast_cockpit
 import cepaf_gleam/ui/lustre/hook_subsystem as hook_subsystem_view
 import cepaf_gleam/ui/lustre/inference_tier
@@ -736,6 +737,7 @@ fn route_internal(path: String) -> String {
     "/api/v1/page-spec/all" -> page_spec_all_check()
     "/api/v1/page-spec" -> page_spec_index()
     // AG-UI protocol routes (SSE event streams)
+    "/ag-ui" | "/ag-ui/cockpit" -> agui_cockpit.view()
     "/ag-ui/run" | "/ag-ui/events" -> agui_run_json(path)
     "/ag-ui/events/sse" | "/api/v1/ag-ui/stream" ->
       agui_sse_api.sse_32_event_manifest_stream(agui_sse_api.default_config())
@@ -4211,6 +4213,17 @@ fn route_html(path: String) -> String {
           "div",
           [],
           forecast_cockpit.view(),
+        ),
+      )
+    "/ag-ui" | "/ag-ui/cockpit" ->
+      shell.render_page(
+        "AG-UI Real-Time Cockpit",
+        "ag-ui",
+        element.unsafe_raw_html(
+          "",
+          "div",
+          [],
+          agui_cockpit.view(),
         ),
       )
     "/planning" ->

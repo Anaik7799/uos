@@ -48,6 +48,8 @@ type ranked = {
 }
 let rank ~now nodes =
   require (List.length nodes <= 1000) "portfolio exceeds 1000 records";
+  require (List.fold_left (fun count n->count+List.length n.dependencies) 0 nodes<=10000)
+    "portfolio exceeds 10000 dependency edges";
   let table = Hashtbl.create (List.length nodes) in
   List.iter (fun n ->
     require (n.id <> "" && not (Hashtbl.mem table n.id)) "duplicate/empty task ID";

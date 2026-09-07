@@ -9,8 +9,8 @@ ocamlfind query yojson cryptokit sqlite3 mtime.clock.os >/dev/null || { echo "Mi
 risk_build="$(mktemp -d "${TMPDIR:-/tmp}/uos-risk-priority.XXXXXX")"
 trap 'rm -rf -- "$risk_build"' EXIT
 cd "$risk_repo"
-DUNE_CACHE=disabled timeout 90s dune build -j 1 \
+DUNE_CACHE=disabled timeout --kill-after=2s 90s dune build -j 1 \
   --root "$risk_repo/plugins/uos-risk-prioritization/validation" \
   --build-dir "$risk_build" ./validate.exe
-if (( $# == 0 )); then set -- --package; fi
-timeout 30s "$risk_build/default/validate.exe" "$@"
+if (( $# == 0 )); then set -- --all; fi
+timeout --kill-after=2s 30s "$risk_build/default/validate.exe" "$@"

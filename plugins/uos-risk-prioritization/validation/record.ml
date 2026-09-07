@@ -61,7 +61,7 @@ let schema_preflight schema =
       | "minLength"|"minItems"|"maxItems" -> require (int v>=0) "negative schema bound"
       | "required" ->
           let xs=List.map str (arr v) in
-          require (xs=List.sort_uniq String.compare xs || List.length xs=List.length (List.sort_uniq String.compare xs))
+          require (List.length xs=List.length (List.sort_uniq String.compare xs))
             "duplicate required key"
       | "enum" ->
           let xs=arr v in require (xs<>[] && List.length xs=List.length (List.sort_uniq compare xs)) "empty/duplicate enum"
@@ -205,6 +205,9 @@ let now_utc () =
     (1900+t.Unix.tm_year) (1+t.Unix.tm_mon) t.Unix.tm_mday
     t.Unix.tm_hour t.Unix.tm_min t.Unix.tm_sec
 let print_json j = print_endline (Yojson.Basic.to_string j)
-let schema () = json (planning ^ "-record.schema.json")
+let schema () =
+  let path=planning ^ "-record.schema.json" in
+  require (Bounded.sha256 (read path)="ce13ab02d802472e4966c97f58503ec0353ba2b31fd76e179843dceb70f7186c") "canonical record schema drift";
+  json path
 let sample () = json (planning ^ "-example.json")
 let change k v j = `Assoc ((k,v)::List.remove_assoc k (obj j))

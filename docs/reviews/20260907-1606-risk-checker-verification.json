@@ -1,0 +1,699 @@
+{
+  "schema_version": 1,
+  "kind": "bounded_checker_validation",
+  "contract": "SC-RISK-CHECK-001",
+  "policy": "SC-RISK-PRIORITY-001",
+  "checker_version": "1.1.0",
+  "packet_prefix_observed_at": "2026-09-07T16:58:06Z",
+  "observed_at": "2026-09-07T17:29:38Z",
+  "plan_id": "uos/risk-checkers/20260907-1631",
+  "task_id": "CHECKERS",
+  "actor": "codex-side-risk-checkers",
+  "attempt": 1,
+  "status": "LOCAL_CHECKS_PASSED",
+  "authority": "NONE",
+  "runtime_admission": "NOT_GRANTED",
+  "toolchain": {
+    "ocaml": "5.5.0",
+    "dune": "3.23.1",
+    "yojson": "3.0.0",
+    "sqlite3": "5.4.1",
+    "mtime": "2.1.0",
+    "cryptokit": "installed; package version unspecified",
+    "dependencies": "plugins/uos-risk-prioritization/validation/uos-risk-priority-validation.opam"
+  },
+  "checks": [
+    {
+      "command": "bash tools/risk-priority-check --all",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "result": {
+        "status": "PASS",
+        "authority": "NONE",
+        "baseline_checks": 375,
+        "adversarial_checks": 32843,
+        "independent_dag_scenarios": 32768,
+        "package": {
+          "status": "PASS",
+          "local_paths_checked": 39,
+          "authority": "REPORT_ONLY",
+          "runtime_enforcement": "NOT_ASSERTED",
+          "global_skill_dependency": false
+        },
+        "runtime_admission": "NOT_GRANTED",
+        "live_agent_tests": "UNRUN"
+      }
+    },
+    {
+      "command": "bash tools/risk-priority-check --active-check governance/planning/20260907-1606-risk-checker-portfolio-v2.json CHECKERS codex-side-risk-checkers 1",
+      "exit_code": 0,
+      "expected_exit_code": 0,
+      "result": {
+        "status": "ACTIVE_OBSERVATION_PASS",
+        "authority": "NONE",
+        "runtime_admission": "NOT_GRANTED",
+        "observed_at": "2026-09-07T17:26:52Z",
+        "completed_at": "2026-09-07T17:26:53Z",
+        "elapsed_monotonic_seconds": 0.220405608,
+        "clock_start": {
+          "source": "chronyc tracking",
+          "abs_ntp_offset_seconds": 0.001171284,
+          "uncertainty_seconds": 0.0171339495,
+          "reference_age_seconds": 145.94629979133606,
+          "stratum": 3
+        },
+        "clock_end": {
+          "source": "chronyc tracking",
+          "abs_ntp_offset_seconds": 0.001171232,
+          "uncertainty_seconds": 0.0171340915,
+          "reference_age_seconds": 146.0603928565979,
+          "stratum": 3
+        },
+        "assessment_sha256": "0c7f99d07961bcdd379999edc4ddfd1f107a258596c799473212b48fabb90e77",
+        "evidence_files_checked": 10,
+        "sa_plan": {
+          "plan_id": "uos/risk-checkers/20260907-1631",
+          "snapshot_sha256": "3e9c2dee78b064adcb06eb4c0eef7876ff990d2c37b8c791da02c83363f57fff",
+          "tasks": [
+            {
+              "task_id": "CHECKERS",
+              "state": "executing",
+              "worker": "codex-side-risk-checkers",
+              "lease_until_ns": "1788807487277752822",
+              "attempt": 1,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": []
+            }
+          ],
+          "mode": "READONLY",
+          "lease_fencing_authority": "NOT_GRANTED"
+        },
+        "order": [],
+        "findings": [],
+        "limits": [
+          "Listed byte equality does not prove source completeness, runtime behavior or signed provenance.",
+          "Analysis prose, class judgments, cost ties and control effectiveness require qualified review.",
+          "Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.",
+          "Snapshot is confined to one complete plan; no global optimum is asserted."
+        ]
+      }
+    },
+    {
+      "command": "bash tools/risk-priority-check --active-check governance/planning/20260907-1606-risk-checker-portfolio-v2.json CHECKERS codex-side-risk-checkers 2",
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "result": {
+        "status": "HOLD",
+        "authority": "NONE",
+        "runtime_admission": "NOT_GRANTED",
+        "observed_at": "2026-09-07T17:26:54Z",
+        "completed_at": "2026-09-07T17:26:54Z",
+        "elapsed_monotonic_seconds": 0.212436119,
+        "clock_start": {
+          "source": "chronyc tracking",
+          "abs_ntp_offset_seconds": 0.001170615,
+          "uncertainty_seconds": 0.0171358005,
+          "reference_age_seconds": 147.4488649368286,
+          "stratum": 3
+        },
+        "clock_end": {
+          "source": "chronyc tracking",
+          "abs_ntp_offset_seconds": 0.001170566,
+          "uncertainty_seconds": 0.017135934499999998,
+          "reference_age_seconds": 147.55654883384705,
+          "stratum": 3
+        },
+        "assessment_sha256": "0c7f99d07961bcdd379999edc4ddfd1f107a258596c799473212b48fabb90e77",
+        "evidence_files_checked": 10,
+        "sa_plan": {
+          "plan_id": "uos/risk-checkers/20260907-1631",
+          "snapshot_sha256": "3e9c2dee78b064adcb06eb4c0eef7876ff990d2c37b8c791da02c83363f57fff",
+          "tasks": [
+            {
+              "task_id": "CHECKERS",
+              "state": "executing",
+              "worker": "codex-side-risk-checkers",
+              "lease_until_ns": "1788807487277752822",
+              "attempt": 1,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": []
+            }
+          ],
+          "mode": "READONLY",
+          "lease_fencing_authority": "NOT_GRANTED"
+        },
+        "order": [],
+        "findings": [
+          {
+            "rule": "RP-ACTIVE-OWNER",
+            "task_id": "CHECKERS",
+            "severity": "HOLD",
+            "detail": "Active worker/attempt does not match the current executing task.",
+            "next_check": "Stop this attempt's effects; re-observe ownership through Sa-plan."
+          }
+        ],
+        "limits": [
+          "Listed byte equality does not prove source completeness, runtime behavior or signed provenance.",
+          "Analysis prose, class judgments, cost ties and control effectiveness require qualified review.",
+          "Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.",
+          "Snapshot is confined to one complete plan; no global optimum is asserted."
+        ]
+      }
+    },
+    {
+      "command": "bash tools/risk-priority-check --preflight governance/planning/20260907-1606-risk-checker-portfolio-v2.json CHECKERS",
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "result": {
+        "status": "HOLD",
+        "authority": "NONE",
+        "runtime_admission": "NOT_GRANTED",
+        "observed_at": "2026-09-07T17:26:55Z",
+        "completed_at": "2026-09-07T17:26:56Z",
+        "elapsed_monotonic_seconds": 0.211908205,
+        "clock_start": {
+          "source": "chronyc tracking",
+          "abs_ntp_offset_seconds": 0.001169945,
+          "uncertainty_seconds": 0.0171376535,
+          "reference_age_seconds": 148.9529218673706,
+          "stratum": 3
+        },
+        "clock_end": {
+          "source": "chronyc tracking",
+          "abs_ntp_offset_seconds": 0.001169897,
+          "uncertainty_seconds": 0.0171377855,
+          "reference_age_seconds": 149.0601568222046,
+          "stratum": 3
+        },
+        "assessment_sha256": "0c7f99d07961bcdd379999edc4ddfd1f107a258596c799473212b48fabb90e77",
+        "evidence_files_checked": 10,
+        "sa_plan": {
+          "plan_id": "uos/risk-checkers/20260907-1631",
+          "snapshot_sha256": "3e9c2dee78b064adcb06eb4c0eef7876ff990d2c37b8c791da02c83363f57fff",
+          "tasks": [
+            {
+              "task_id": "CHECKERS",
+              "state": "executing",
+              "worker": "codex-side-risk-checkers",
+              "lease_until_ns": "1788807487277752822",
+              "attempt": 1,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": []
+            }
+          ],
+          "mode": "READONLY",
+          "lease_fencing_authority": "NOT_GRANTED"
+        },
+        "order": [],
+        "findings": [
+          {
+            "rule": "RP-SELECTION",
+            "task_id": "CHECKERS",
+            "severity": "HOLD",
+            "detail": "Requested task is not the first eligible candidate.",
+            "next_check": "Refresh the complete plan and investigate blocked or higher-priority work."
+          }
+        ],
+        "limits": [
+          "Listed byte equality does not prove source completeness, runtime behavior or signed provenance.",
+          "Analysis prose, class judgments, cost ties and control effectiveness require qualified review.",
+          "Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.",
+          "Snapshot is confined to one complete plan; no global optimum is asserted."
+        ]
+      }
+    },
+    {
+      "command": "bash tools/risk-priority-check --active-check governance/planning/20260907-1606-risk-checker-portfolio.json CHECKERS codex-side-risk-checkers 1",
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "result": {
+        "status": "HOLD",
+        "authority": "NONE",
+        "runtime_admission": "NOT_GRANTED",
+        "observed_at": "2026-09-07T17:26:57Z",
+        "completed_at": "2026-09-07T17:26:57Z",
+        "elapsed_monotonic_seconds": 0.212647547,
+        "clock_start": {
+          "source": "chronyc tracking",
+          "abs_ntp_offset_seconds": 0.001169275,
+          "uncertainty_seconds": 0.0171395075,
+          "reference_age_seconds": 150.45856189727783,
+          "stratum": 3
+        },
+        "clock_end": {
+          "source": "chronyc tracking",
+          "abs_ntp_offset_seconds": 0.001169227,
+          "uncertainty_seconds": 0.0171396405,
+          "reference_age_seconds": 150.56673383712769,
+          "stratum": 3
+        },
+        "assessment_sha256": "2ed2a74a4546537b221dc8c6cd6b16409e9769c48609bf311fd69112d2777543",
+        "evidence_files_checked": 10,
+        "sa_plan": {
+          "plan_id": "uos/risk-checkers/20260907-1631",
+          "snapshot_sha256": "3e9c2dee78b064adcb06eb4c0eef7876ff990d2c37b8c791da02c83363f57fff",
+          "tasks": [
+            {
+              "task_id": "CHECKERS",
+              "state": "executing",
+              "worker": "codex-side-risk-checkers",
+              "lease_until_ns": "1788807487277752822",
+              "attempt": 1,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": []
+            }
+          ],
+          "mode": "READONLY",
+          "lease_fencing_authority": "NOT_GRANTED"
+        },
+        "order": [],
+        "findings": [
+          {
+            "rule": "RP-EVIDENCE",
+            "task_id": "CHECKERS",
+            "severity": "HOLD",
+            "detail": "SHA-256 mismatch: plugins/uos-risk-prioritization/validation/adversarial.ml",
+            "next_check": "Re-observe sanitized source bytes and bind their current SHA-256 digest."
+          },
+          {
+            "rule": "RP-EVIDENCE",
+            "task_id": "CHECKERS",
+            "severity": "HOLD",
+            "detail": "SHA-256 mismatch: plugins/uos-risk-prioritization/validation/checker.ml",
+            "next_check": "Re-observe sanitized source bytes and bind their current SHA-256 digest."
+          },
+          {
+            "rule": "RP-EVIDENCE",
+            "task_id": "CHECKERS",
+            "severity": "HOLD",
+            "detail": "SHA-256 mismatch: plugins/uos-risk-prioritization/validation/validate.ml",
+            "next_check": "Re-observe sanitized source bytes and bind their current SHA-256 digest."
+          }
+        ],
+        "limits": [
+          "Listed byte equality does not prove source completeness, runtime behavior or signed provenance.",
+          "Analysis prose, class judgments, cost ties and control effectiveness require qualified review.",
+          "Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.",
+          "Snapshot is confined to one complete plan; no global optimum is asserted."
+        ]
+      }
+    },
+    {
+      "command": "bash tools/risk-priority-check --receipt docs/reviews/20260907-1559-risk-prioritization-checks.json",
+      "exit_code": 1,
+      "expected_exit_code": 1,
+      "result": {
+        "status": "STALE_OR_CHANGED_ARTIFACTS",
+        "authority": "NONE",
+        "observed_at": "2026-09-07T17:26:58Z",
+        "receipt_sha256": "2554df1b82316caa82825e5bd4a8b40aa3171759658fa4ea445f497f46e09a7b",
+        "artifacts_checked": 39,
+        "mismatches": [
+          "AGENTS.md",
+          ".codex/AGENTS.md",
+          ".claude/AGENTS.md",
+          ".gemini/AGENTS.md",
+          ".agents/AGENTS.md",
+          "governance/capability-inventory/skills.toml",
+          "governance/capability-inventory/plugins.toml",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "plugins/uos-risk-prioritization/skills/uos-risk-prioritization/SKILL.md",
+          "plugins/uos-risk-prioritization/skills/uos-risk-prioritization/references/20260907-1559-superpowers-bindings.md",
+          "docs/wiki/20260907-1559-risk-prioritization-guide.md",
+          "plugins/uos-risk-prioritization/validation/priority.ml",
+          "plugins/uos-risk-prioritization/validation/dune",
+          "plugins/uos-risk-prioritization/validation/validate.ml",
+          "tools/risk-priority-check",
+          "plugins/uos-risk-prioritization/.codex-plugin/plugin.json",
+          ".codex/skills/uos-risk-prioritization",
+          ".codex/rules/20260907-1559-risk-prioritization-sop.md",
+          ".claude/skills/uos-risk-prioritization",
+          ".claude/rules/20260907-1559-risk-prioritization-sop.md",
+          ".gemini/skills/uos-risk-prioritization",
+          ".gemini/rules/20260907-1559-risk-prioritization-sop.md",
+          ".agents/skills/uos-risk-prioritization",
+          ".agents/rules/20260907-1559-risk-prioritization-sop.md",
+          "plugins/uos-risk-prioritization/validation/uos-risk-priority-validation.opam"
+        ],
+        "test_results_and_signer": "NOT_AUTHENTICATED",
+        "fresh_runtime_evidence": "NOT_ASSERTED"
+      }
+    },
+    {
+      "command": "bash tools/risk-priority-check --package",
+      "exit_code": 0,
+      "result": {
+        "status": "PASS",
+        "local_paths_checked": 39,
+        "authority": "REPORT_ONLY",
+        "runtime_enforcement": "NOT_ASSERTED",
+        "global_skill_dependency": false
+      }
+    },
+    {
+      "command": "bash -n tools/risk-priority-check",
+      "exit_code": 0
+    },
+    {
+      "kind": "narrow_binding_preservation",
+      "result": "PASS",
+      "paths_checked": 10
+    },
+    {
+      "kind": "journal_structure",
+      "result": "PASS",
+      "sections": [
+        "1. Scope & Trigger",
+        "2. Pre-State Assessment",
+        "3. Execution Detail",
+        "4. Root Cause Analysis",
+        "5. Fix Taxonomy",
+        "6. Patterns & Anti-Patterns Discovered",
+        "7. Verification Matrix",
+        "8. Files Modified",
+        "9. Architectural Observations",
+        "10. Remaining Gaps",
+        "11. Metrics Summary",
+        "12. STAMP & Constitutional Alignment",
+        "13. Conclusion"
+      ]
+    }
+  ],
+  "observed_regressions": [
+    {
+      "case": "unvisited optional-schema assertion",
+      "before": "unexpectedly accepted by v1; regression assertion failed",
+      "after": "HOLD; complete schema preflight checks all branches"
+    },
+    {
+      "case": "packet expiry lacked terminal Z",
+      "result": "HOLD before any positive live check; author corrected canonical UTC formatting"
+    },
+    {
+      "case": "freshness after final clock observation",
+      "result": "moved final assessment/evidence/lease expiry checks; two additional regression cases pass"
+    },
+    {
+      "case": "preserved v1 live packet after source changes",
+      "result": "HOLD with three actual SHA-256 mismatches; new v2 packet references superseded assessment"
+    }
+  ],
+  "verification_scope": {
+    "baseline_checks": 375,
+    "adversarial_checks": 32843,
+    "independent_three_node_dag_scenarios": 32768,
+    "total_assertion_scenarios": 33218,
+    "package_paths": 39,
+    "artifact_paths": 51,
+    "actual_active_task_checks": "PASS for correct worker/attempt; expected HOLD for incorrect attempt and repeated claim",
+    "additional_model_provider_requests": 0,
+    "primary_session_cost": "UNKNOWN",
+    "subagent_interactions": 0,
+    "board_posts": 0,
+    "production_service_mutations": 0,
+    "vcs_mutations": 0,
+    "sa_plan_writes": "Own bounded plan/task, selection, claim and completion only"
+  },
+  "known_limits": [
+    "These checks are opt-in CLI and mandatory local guidance, not native atomic Store enforcement.",
+    "Snapshot/lease observation cannot authorize or fence later effects; recheck at the actual boundary.",
+    "Listed working-tree evidence does not authenticate runtime behavior, signatures or source completeness.",
+    "Prose, safety classifications, STPA control effectiveness and cost ties need qualified review.",
+    "Finite three-node exhaustive tests are not a proof over arbitrary graphs; Lean/Quint and independent live-agent tests UNRUN.",
+    "Host/filesystem assumed trusted; path/stat checks do not defeat hostile same-UID races or establish secret absence.",
+    "Active task portfolios are historical after task completion; do not restamp them as current."
+  ],
+  "historical_receipt": {
+    "path": "docs/reviews/20260907-1559-risk-prioritization-checks.json",
+    "sha256": "2554df1b82316caa82825e5bd4a8b40aa3171759658fa4ea445f497f46e09a7b",
+    "unchanged": true
+  },
+  "artifacts": [
+    {
+      "path": "AGENTS.md",
+      "hash_target": "AGENTS.md",
+      "sha256": "b008362eba12c03a71aafafa616552919f8ca779cf90778d1a789ddd94d2b159"
+    },
+    {
+      "path": ".codex/AGENTS.md",
+      "hash_target": ".codex/AGENTS.md",
+      "sha256": "805ed89d0f7af9dd9115ec36795f6e20a6881ac04ab32aac865971f33bc23ad2"
+    },
+    {
+      "path": ".claude/AGENTS.md",
+      "hash_target": ".claude/AGENTS.md",
+      "sha256": "cbd2b6fae44bcfacf2901b723e1613c1312c298eeca42bb7e3ef2df2daf27607"
+    },
+    {
+      "path": ".gemini/AGENTS.md",
+      "hash_target": ".gemini/AGENTS.md",
+      "sha256": "805ed89d0f7af9dd9115ec36795f6e20a6881ac04ab32aac865971f33bc23ad2"
+    },
+    {
+      "path": ".agents/AGENTS.md",
+      "hash_target": ".agents/AGENTS.md",
+      "sha256": "b008362eba12c03a71aafafa616552919f8ca779cf90778d1a789ddd94d2b159"
+    },
+    {
+      "path": "contracts/rules/sdlc-sre-verification-process-contract.md",
+      "hash_target": "contracts/rules/sdlc-sre-verification-process-contract.md",
+      "sha256": "11a7d4ca1330a19b1409919fd0b99dc4d48ca578ea6c3e610f5f11cfd4856446"
+    },
+    {
+      "path": ".agents/rules/sdlc-sre-verification-process-contract.md",
+      "hash_target": ".agents/rules/sdlc-sre-verification-process-contract.md",
+      "sha256": "11a7d4ca1330a19b1409919fd0b99dc4d48ca578ea6c3e610f5f11cfd4856446"
+    },
+    {
+      "path": ".claude/rules/sdlc-sre-verification-process-contract.md",
+      "hash_target": ".claude/rules/sdlc-sre-verification-process-contract.md",
+      "sha256": "11a7d4ca1330a19b1409919fd0b99dc4d48ca578ea6c3e610f5f11cfd4856446"
+    },
+    {
+      "path": ".gemini/rules/sdlc-sre-verification-process-contract.md",
+      "hash_target": ".gemini/rules/sdlc-sre-verification-process-contract.md",
+      "sha256": "11a7d4ca1330a19b1409919fd0b99dc4d48ca578ea6c3e610f5f11cfd4856446"
+    },
+    {
+      "path": "docs/design/20260906-1300-uos-sdlc-sre-verification-process-specification.md",
+      "hash_target": "docs/design/20260906-1300-uos-sdlc-sre-verification-process-specification.md",
+      "sha256": "044ebd6d83cc3072f87723d540b80ce798b4c9ad109e99f1cfc92eb697ad3612"
+    },
+    {
+      "path": "docs/wiki/20260906-1300-uos-sdlc-sre-verification-process-guide.md",
+      "hash_target": "docs/wiki/20260906-1300-uos-sdlc-sre-verification-process-guide.md",
+      "sha256": "4858d78d795329c9cf4a5f1dd6e714865cd2fc88e66ccb76e1aaf009033407f7"
+    },
+    {
+      "path": "docs/wiki/20260907-0653-uos-tri-agent-swarm-operations.md",
+      "hash_target": "docs/wiki/20260907-0653-uos-tri-agent-swarm-operations.md",
+      "sha256": "bf876bd796909ca92cabf79250bcedff1d03e19bf581dfc6de44ca4d5bc48ebf"
+    },
+    {
+      "path": "governance/capability-inventory/skills.toml",
+      "hash_target": "governance/capability-inventory/skills.toml",
+      "sha256": "8c5e8fc10dd67d3b51309a8d9922f9437adff58d8e1d645f6099e0d838341a75"
+    },
+    {
+      "path": "governance/capability-inventory/plugins.toml",
+      "hash_target": "governance/capability-inventory/plugins.toml",
+      "sha256": "48497cd3ce3364fbda98f8e5c32358a5a0498714f73ddf75ac44b784561b8fab"
+    },
+    {
+      "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+      "hash_target": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+      "sha256": "598653f5a9df9179b5527920f030878894787fa81d791b5ac742b0a53d60a613"
+    },
+    {
+      "path": "governance/planning/20260907-1559-risk-priority-policy.json",
+      "hash_target": "governance/planning/20260907-1559-risk-priority-policy.json",
+      "sha256": "8b3764ea10dff7b9c93232b3938e4dd660f835ba600a4a148fc5458e05283af2"
+    },
+    {
+      "path": "governance/planning/20260907-1559-risk-priority-record.schema.json",
+      "hash_target": "governance/planning/20260907-1559-risk-priority-record.schema.json",
+      "sha256": "ce13ab02d802472e4966c97f58503ec0353ba2b31fd76e179843dceb70f7186c"
+    },
+    {
+      "path": "governance/planning/20260907-1559-risk-priority-example.json",
+      "hash_target": "governance/planning/20260907-1559-risk-priority-example.json",
+      "sha256": "4bfa721ed7bf4e9f9cd8478eff625359dccdcd7d069c7b52cbbe01ff6d6c411c"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/skills/uos-risk-prioritization/SKILL.md",
+      "hash_target": "plugins/uos-risk-prioritization/skills/uos-risk-prioritization/SKILL.md",
+      "sha256": "fc1c411ccfb54190a8085b9e4693647d51d38fac0de0c11b700e880eed2b3e88"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/skills/uos-risk-prioritization/references/20260907-1559-superpowers-bindings.md",
+      "hash_target": "plugins/uos-risk-prioritization/skills/uos-risk-prioritization/references/20260907-1559-superpowers-bindings.md",
+      "sha256": "f8de0d1c4a990c84abf7079e61e6f285e736b29a30c25f718b8a5a64beb8aa37"
+    },
+    {
+      "path": "docs/wiki/20260907-1559-risk-prioritization-guide.md",
+      "hash_target": "docs/wiki/20260907-1559-risk-prioritization-guide.md",
+      "sha256": "92c5ab6340db7ef6aec84cd43c0715d4bbba279bd4a1256938e803f274425b88"
+    },
+    {
+      "path": "docs/zk/20260907-1559-adr-risk-prioritization.md",
+      "hash_target": "docs/zk/20260907-1559-adr-risk-prioritization.md",
+      "sha256": "2b292fa31b056dd726669213c1741b001d6ec4ce479f16c84049bcfb03afb84c"
+    },
+    {
+      "path": "governance/agents/policy/20260907-1559-risk-priority-bindings.toml",
+      "hash_target": "governance/agents/policy/20260907-1559-risk-priority-bindings.toml",
+      "sha256": "c1334db3a29a0bfc9bec3b961aa561729b29dfcb7c54f0dc55c4f5d2ca8f88c0"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/priority.ml",
+      "hash_target": "plugins/uos-risk-prioritization/validation/priority.ml",
+      "sha256": "86c2138c2a149908b05466f2c9befcafe13e414a8ab4405229ac152655b3b724"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/dune-project",
+      "hash_target": "plugins/uos-risk-prioritization/validation/dune-project",
+      "sha256": "476c2f0f0403984f06e7a43a49b9fb2ec40971076437e685b6c78490dd526ca1"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/dune",
+      "hash_target": "plugins/uos-risk-prioritization/validation/dune",
+      "sha256": "a8bb7636e9701bfe57ca999feeaf3a70f34ad40cb1504bdbfea52f5503f402c9"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/validate.ml",
+      "hash_target": "plugins/uos-risk-prioritization/validation/validate.ml",
+      "sha256": "6a058bd9ca14ba5e0b789de1ed84434d77780a72520f4fa864fb16dc76652078"
+    },
+    {
+      "path": "tools/risk-priority-check",
+      "hash_target": "tools/risk-priority-check",
+      "sha256": "1d600c4704dc977f3208000bfbabd3edf1e3979aa0f5c56ad5e131b793d0177d"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/.codex-plugin/plugin.json",
+      "hash_target": "plugins/uos-risk-prioritization/.codex-plugin/plugin.json",
+      "sha256": "b2549ef785967e622da74439deb489ce060c25924ec024bdbe7bfa53343fc81a"
+    },
+    {
+      "path": ".codex/skills/uos-risk-prioritization",
+      "hash_target": ".codex/skills/uos-risk-prioritization/SKILL.md",
+      "sha256": "fc1c411ccfb54190a8085b9e4693647d51d38fac0de0c11b700e880eed2b3e88",
+      "link_target": "../../plugins/uos-risk-prioritization/skills/uos-risk-prioritization"
+    },
+    {
+      "path": ".codex/rules/20260907-1559-risk-prioritization-sop.md",
+      "hash_target": ".codex/rules/20260907-1559-risk-prioritization-sop.md",
+      "sha256": "598653f5a9df9179b5527920f030878894787fa81d791b5ac742b0a53d60a613"
+    },
+    {
+      "path": ".claude/skills/uos-risk-prioritization",
+      "hash_target": ".claude/skills/uos-risk-prioritization/SKILL.md",
+      "sha256": "fc1c411ccfb54190a8085b9e4693647d51d38fac0de0c11b700e880eed2b3e88",
+      "link_target": "../../plugins/uos-risk-prioritization/skills/uos-risk-prioritization"
+    },
+    {
+      "path": ".claude/rules/20260907-1559-risk-prioritization-sop.md",
+      "hash_target": ".claude/rules/20260907-1559-risk-prioritization-sop.md",
+      "sha256": "598653f5a9df9179b5527920f030878894787fa81d791b5ac742b0a53d60a613",
+      "link_target": "../../contracts/rules/20260907-1559-risk-prioritization-sop.md"
+    },
+    {
+      "path": ".gemini/skills/uos-risk-prioritization",
+      "hash_target": ".gemini/skills/uos-risk-prioritization/SKILL.md",
+      "sha256": "fc1c411ccfb54190a8085b9e4693647d51d38fac0de0c11b700e880eed2b3e88",
+      "link_target": "../../plugins/uos-risk-prioritization/skills/uos-risk-prioritization"
+    },
+    {
+      "path": ".gemini/rules/20260907-1559-risk-prioritization-sop.md",
+      "hash_target": ".gemini/rules/20260907-1559-risk-prioritization-sop.md",
+      "sha256": "598653f5a9df9179b5527920f030878894787fa81d791b5ac742b0a53d60a613",
+      "link_target": "../../contracts/rules/20260907-1559-risk-prioritization-sop.md"
+    },
+    {
+      "path": ".agents/skills/uos-risk-prioritization",
+      "hash_target": ".agents/skills/uos-risk-prioritization/SKILL.md",
+      "sha256": "fc1c411ccfb54190a8085b9e4693647d51d38fac0de0c11b700e880eed2b3e88",
+      "link_target": "../../plugins/uos-risk-prioritization/skills/uos-risk-prioritization"
+    },
+    {
+      "path": ".agents/rules/20260907-1559-risk-prioritization-sop.md",
+      "hash_target": ".agents/rules/20260907-1559-risk-prioritization-sop.md",
+      "sha256": "598653f5a9df9179b5527920f030878894787fa81d791b5ac742b0a53d60a613",
+      "link_target": "../../contracts/rules/20260907-1559-risk-prioritization-sop.md"
+    },
+    {
+      "path": "docs/journal/20260907-1559-risk-prioritization-journal.md",
+      "hash_target": "docs/journal/20260907-1559-risk-prioritization-journal.md",
+      "sha256": "df6847c1f28c55a613482017f139c5f5c5ab19946fe9ecdbd7f5af6d7da0b21d"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/uos-risk-priority-validation.opam",
+      "hash_target": "plugins/uos-risk-prioritization/validation/uos-risk-priority-validation.opam",
+      "sha256": "dfeed28f5faaf315dbbd8b3d53fbdd13445d7c04b33ba76f3cea36408b8a0b19"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/record.ml",
+      "hash_target": "plugins/uos-risk-prioritization/validation/record.ml",
+      "sha256": "2a66578ee158bfbe1f06d135be0ac003bfdbf4f6d61d1d2376925742d554cd60"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/bounded.ml",
+      "hash_target": "plugins/uos-risk-prioritization/validation/bounded.ml",
+      "sha256": "fd78167db257d863415ea9ceb6399662e2ce24b46cc15a7b0cc04ea57e23b13f"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+      "hash_target": "plugins/uos-risk-prioritization/validation/checker.ml",
+      "sha256": "1a56d5a01fca8945f301d0dfae99b5134ac593912c1b4a866d4a6b40a47820d7"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/live_plan.ml",
+      "hash_target": "plugins/uos-risk-prioritization/validation/live_plan.ml",
+      "sha256": "7f83f174d6b384f42d1983ed0e21b63f15fad4bbaed72938186b98da4644a3f6"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/host_clock.ml",
+      "hash_target": "plugins/uos-risk-prioritization/validation/host_clock.ml",
+      "sha256": "fd481302dc5b4bbad04f12b2eb7130a02b4cb22fd8586ebcee769808e115b073"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/adversarial.ml",
+      "hash_target": "plugins/uos-risk-prioritization/validation/adversarial.ml",
+      "sha256": "2863259d66527bd440477960e6e5ffdfbef40f8feaab5cabd02e260a95c4c27b"
+    },
+    {
+      "path": "contracts/rules/20260907-1606-risk-checker-contract.md",
+      "hash_target": "contracts/rules/20260907-1606-risk-checker-contract.md",
+      "sha256": "b756c4b33bd840370f0f64a8da460ba741d8548dab296fdf9ef9c3c8bfe67908"
+    },
+    {
+      "path": "docs/wiki/20260907-1606-risk-checkers-guide.md",
+      "hash_target": "docs/wiki/20260907-1606-risk-checkers-guide.md",
+      "sha256": "2ccbe3f910c85acea9a33ad93fc5da46cebdf4d6a6b1fd8884a2358802e042d1"
+    },
+    {
+      "path": "docs/journal/20260907-1606-risk-checkers-journal.md",
+      "hash_target": "docs/journal/20260907-1606-risk-checkers-journal.md",
+      "sha256": "0ec373a6ff681af63025ffc23c92a4dc9bd8f12d70f8a223bb0124ae6a9e92d9"
+    },
+    {
+      "path": "governance/planning/20260907-1606-risk-checker-portfolio.json",
+      "hash_target": "governance/planning/20260907-1606-risk-checker-portfolio.json",
+      "sha256": "2ed2a74a4546537b221dc8c6cd6b16409e9769c48609bf311fd69112d2777543"
+    },
+    {
+      "path": "governance/planning/20260907-1606-risk-checker-portfolio-v2.json",
+      "hash_target": "governance/planning/20260907-1606-risk-checker-portfolio-v2.json",
+      "sha256": "0c7f99d07961bcdd379999edc4ddfd1f107a258596c799473212b48fabb90e77"
+    },
+    {
+      "path": "docs/reviews/20260907-1559-risk-prioritization-checks.json",
+      "hash_target": "docs/reviews/20260907-1559-risk-prioritization-checks.json",
+      "sha256": "2554df1b82316caa82825e5bd4a8b40aa3171759658fa4ea445f497f46e09a7b"
+    }
+  ]
+}

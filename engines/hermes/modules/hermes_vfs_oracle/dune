@@ -1,0 +1,17 @@
+; Hermes reference oracle for the ZigVM file primitive seam
+; (engines/zigvm/src/prim_file.zig). Evidence and differential-testing only:
+; it is never linked into a runtime path. Libraries: unix and ctypes only.
+(library
+ (name hermes_vfs_oracle)
+ (wrapped false)
+ (modules vfs_oracle)
+ (libraries unix ctypes ctypes.foreign))
+
+(executable
+ (name test_vfs_oracle)
+ (modules test_vfs_oracle)
+ (libraries hermes_vfs_oracle unix))
+
+(rule
+ (alias runtest)
+ (action (run ./test_vfs_oracle.exe)))

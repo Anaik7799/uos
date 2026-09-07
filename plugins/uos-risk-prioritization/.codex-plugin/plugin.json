@@ -1,7 +1,7 @@
 {
   "name": "uos-risk-prioritization",
-  "version": "1.0.0",
-  "description": "UOS risk prioritization SOP, lifecycle skill bindings and local OCaml report-only validation.",
+  "version": "1.1.0",
+  "description": "UOS risk SOP, bounded evidence and Sa-plan preflight checks, and independent priority oracles.",
   "author": {
     "name": "UOS contributors"
   },

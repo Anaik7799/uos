@@ -1,4 +1,7 @@
+import gleam/int
 import gleam/io
+import gleam/list
+import gleam/string
 
 @external(erlang, "uos_ffi", "file_exists")
 pub fn file_exists(path: String) -> Bool
@@ -20,6 +23,11 @@ pub fn matches_timestamp_format(filename: String) -> Bool
 
 @external(erlang, "uos_ffi", "get_arguments")
 pub fn get_arguments() -> List(String)
+
+/// Run a local executable with arguments from the repository root, bounded by
+/// a timeout in milliseconds. Returns #(exit_code, merged stdout+stderr).
+@external(erlang, "uos_ffi", "run_command")
+pub fn run_command(exe: String, args: List(String), timeout_ms: Int) -> #(Int, String)
 
 pub type UosCommand {
   Status
@@ -1041,9 +1049,16 @@ pub fn execute(cmd: UosCommand) -> Int {
         False -> io.println("  [FAIL] CHK-18-JJ missing")
       }
 
+      let checks = [
+        time_ok, tail_ok, spec_ok, km_ok,
+        muda_ok, graph_ok, drive_ok,
+        test_spec_ok, test_spec_ok, nine_mod_ok, regr_ok,
+        gleam_sup_ok, hermes_ok, zigvm_ok, max_ok, otel_ok,
+        sov_ok, jj_ok,
+      ]
       io.println("")
-      io.println("Summary: 18/18 Checks Passed (100% Green)")
-      0
+      io.println(summary_line("Checks Passed", checks))
+      exit_for(checks)
     }
     RochaCheck -> {
       io.println("Evaluating Rocha Semiotics, Cybernetics & Web Reachability (SC-ROCHA-001):")
@@ -1265,149 +1280,131 @@ pub fn execute(cmd: UosCommand) -> Int {
       }
     }
     SelfcheckVfs -> {
-      io.println("Evaluating VFS Selfcheck (--selfcheck-vfs, 8 Laws):")
-      io.println("  [PASS] LAW-VFS-01: Descriptor-Relative Resolution (openat, race-free)")
-      io.println("  [PASS] LAW-VFS-02: Symlink-Traversal Defense (O_NOFOLLOW verified)")
-      io.println("  [PASS] LAW-VFS-03: Atomic Sibling Rename (renameat, no partial reads)")
-      io.println("  [PASS] LAW-VFS-04: Zero-Muda Purity (0 Bevy, 0 Graphite, pure BEAM/Zig)")
-      io.println("  [PASS] LAW-VFS-05: Immutable Snapshot Reads (isolated term decodings)")
-      io.println("  [PASS] LAW-VFS-06: Exclusive Lease Mutex (single-writer WAL lease)")
-      io.println("  [PASS] LAW-VFS-07: Fail-Closed Error Handling (typed VfsError on failure)")
-      io.println("  [PASS] LAW-VFS-08: Path Canonicalization & Boundary Cage (sandbox jail)")
+      io.println("Evaluating VFS Selfcheck (--selfcheck-vfs, 8 Laws; each row states what was observed):")
+      let prim = "engines/zigvm/src/prim_file.zig"
+      let laws = vfs_laws()
+      list.each(laws, fn(law) {
+        let #(id, label, observed) = law
+        io.println("  " <> status_tag(observed) <> " " <> id <> ": " <> label)
+      })
+      // Executable specification: the Hermes OCaml reference oracle runs the
+      // same laws (jail included) and must stay green; ZigVM parity for
+      // LAW-VFS-08 is the differential that remains open above.
+      let oracle_exe = "engines/hermes/_build/default/modules/hermes_vfs_oracle/test_vfs_oracle.exe"
+      let #(oracle_code, oracle_out) = case file_exists(oracle_exe) {
+        True -> run_command(oracle_exe, [], 60_000)
+        False -> #(127, "oracle executable missing: " <> oracle_exe)
+      }
+      let oracle_ok = suite_ok(oracle_code, oracle_out, 12, "")
+      io.println(
+        "  "
+        <> fail_tag(oracle_ok)
+        <> " ORACLE-SPEC: hermes_vfs_oracle law suite executed [exit "
+        <> int.to_string(oracle_code)
+        <> ", ok-lines "
+        <> int.to_string(count_ok_lines(oracle_out))
+        <> "; jail law green in the oracle, open in ZigVM]",
+      )
+      let checks = list.append(list.map(laws, fn(law) { law.2 }), [oracle_ok])
       io.println("")
-      io.println("Summary: 8/8 VFS Laws Passed (100% Green)")
-      0
+      io.println(
+        summary_line("VFS Laws Observed (8 ZigVM predicates + oracle suite)", checks)
+        <> " (source: " <> prim <> "; an [UNRUN] row has no passing evidence: the predicate is absent or the mechanism is not implemented)",
+      )
+      exit_for(checks)
     }
     SelfcheckSaPlan -> {
       io.println(
-        "Evaluating Sa-Plan OCaml Engine Selfcheck (--selfcheck-sa-plan, 12 Suites, 235 Laws):",
+        "Evaluating Sa-Plan OCaml Engine Selfcheck (--selfcheck-sa-plan): executes every test executable with a bounded timeout; rows bind to exit code and observed ok-lines",
       )
-      let plan_exe =
-        file_exists("engines/hermes/_build/default/modules/sa_plan/test/sa_plan_main.exe")
-      let test_exe =
-        file_exists("engines/hermes/_build/default/modules/sa_plan/test/sa_plan_test.exe")
-      let cp_exe =
-        file_exists(
-          "engines/hermes/_build/default/modules/sa_plan/test/test_sa_plan_control_plane.exe",
-        )
-      let dur_exe =
-        file_exists(
-          "engines/hermes/_build/default/modules/sa_plan/test/test_sa_plan_durable.exe",
-        )
-      let obs_exe =
-        file_exists(
-          "engines/hermes/_build/default/modules/sa_plan/test/test_sa_plan_observability.exe",
-        )
-      let c3i_exe =
-        file_exists(
-          "engines/hermes/_build/default/modules/sa_plan/test/test_sa_plan_c3i_reference.exe",
-        )
-      let lse_exe =
-        file_exists(
-          "engines/hermes/_build/default/modules/sa_plan/test/test_sa_plan_leases.exe",
-        )
-      let cli_exe =
-        file_exists("engines/hermes/_build/default/modules/sa_plan/test/test_sa_plan_cli.exe")
-      let sft_exe =
-        file_exists(
-          "engines/hermes/_build/default/modules/sa_plan/test/test_sa_plan_safety.exe",
-        )
-      let pre_exe =
-        file_exists(
-          "engines/hermes/_build/default/modules/sa_plan/test/test_sa_plan_preflight.exe",
-        )
-      let mat_exe =
-        file_exists(
-          "engines/hermes/_build/default/modules/sa_plan/test/test_sa_plan_materialize.exe",
-        )
-      let rec_exe =
-        file_exists(
-          "engines/hermes/_build/default/modules/sa_plan/test/test_sa_plan_reconcile.exe",
-        )
-      let kpi_exe =
-        file_exists(
-          "engines/hermes/_build/default/modules/sa_plan/test/test_sa_plan_observability_kpi.exe",
-        )
-
-      case
-        plan_exe
-        && test_exe
-        && cp_exe
-        && dur_exe
-        && obs_exe
-        && c3i_exe
-        && lse_exe
-        && cli_exe
-        && sft_exe
-        && pre_exe
-        && mat_exe
-        && rec_exe
-        && kpi_exe
-      {
-        True -> {
-          io.println(
-            "  [PASS] SUITE-01: sa_plan_test (Task DAG, Oban Queue, Temporal Recovery)",
+      let suite_rows =
+        list.map(sa_plan_suites(), fn(suite) {
+          let #(id, exe, label, min_ok, phrase) = suite
+          let path = "engines/hermes/_build/default/modules/sa_plan/test/" <> exe <> ".exe"
+          let #(code, output) = case file_exists(path) {
+            True -> run_command(path, [], 60_000)
+            False -> #(127, "executable missing: " <> path)
+          }
+          let ok = suite_ok(code, output, min_ok, phrase)
+          #(
+            id,
+            label
+              <> " [exit "
+              <> int.to_string(code)
+              <> ", ok-lines "
+              <> int.to_string(count_ok_lines(output))
+              <> "]",
+            ok,
           )
-          io.println(
-            "  [PASS] SUITE-02: test_sa_plan_control_plane (32 Seeded Oracles & Quint Invariants)",
-          )
-          io.println(
-            "  [PASS] SUITE-03: test_sa_plan_durable (50 Durable Execution & Migration Laws)",
-          )
-          io.println(
-            "  [PASS] SUITE-04: test_sa_plan_observability (7 Pipeline & Observation Laws)",
-          )
-          io.println(
-            "  [PASS] SUITE-05: test_sa_plan_c3i_reference (10 C3I Parity & Normalization Laws)",
-          )
-          io.println(
-            "  [PASS] SUITE-06: test_sa_plan_leases (8 Fenced Claims & Single-Writer Laws)",
-          )
-          io.println(
-            "  [PASS] SUITE-07: test_sa_plan_cli (19 Flag Normalization & Validation Laws)",
-          )
-          io.println(
-            "  [PASS] SUITE-08: test_sa_plan_safety (7 STPA Safety Packet Algebra Laws)",
-          )
-          io.println(
-            "  [PASS] SUITE-09: test_sa_plan_preflight (12 Multi-Coordinate Provenance Laws)",
-          )
-          io.println(
-            "  [PASS] SUITE-10: test_sa_plan_materialize (3 Plan/Task Receipt Materialization Laws)",
-          )
-          io.println(
-            "  [PASS] SUITE-11: test_sa_plan_reconcile (5 Close-Loop Reconciliation Laws)",
-          )
-          io.println(
-            "  [PASS] SUITE-12: test_sa_plan_observability_kpi (6 Read-Only Projection Laws)",
-          )
-          io.println(
-            "  [PASS] CLI-TOOL: sa-plan (Mainline CLI Pipeline Dispatcher, selftest=green)",
-          )
-          io.println(
-            "  [PASS] FRACTAL-JIDOKA: SC-JIDOKA-001 Fail-Closed Andon Stop Line Active (Error -32002)",
-          )
-          io.println(
-            "  [PASS] FRACTAL-TPS: SC-SA-PLAN-001 5-Pillar Toyota Production System Active",
-          )
-          io.println(
-            "  [PASS] ADR-066: ZK Decision Record Ratified (ADR-066 Universal Authority)",
-          )
-          io.println(
-            "  [PASS] WIKI-GUIDE: Hermes Wiki Sa-Plan Operational Guide Active",
-          )
-          io.println(
-            "  [PASS] SDLC-SRE: Integrated into SC-SDLC-SRE-001 & SYNC-11",
-          )
-          io.println("")
-          io.println("Summary: 12/12 Sa-Plan Suites, 235 Laws, Fractal Jidoka & TPS Passed (100% Green)")
-          0
-        }
-        False -> {
-          io.println("  [FAIL] Missing compiled Sa-Plan binaries in Hermes engine")
-          1
-        }
+        })
+      let #(cli_code, _cli_out) = case file_exists("tools/sa-plan") {
+        True -> run_command("bash", ["tools/sa-plan", "status"], 30_000)
+        False -> #(127, "")
       }
+      let bridge = "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam"
+      let server = "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam"
+      let control_rows = [
+        #(
+          "CLI-TOOL",
+          "tools/sa-plan status executed against var/sa-plan/uos.sqlite3 [exit "
+            <> int.to_string(cli_code)
+            <> "]",
+          cli_code == 0,
+        ),
+        #(
+          "FRACTAL-JIDOKA",
+          "SC-JIDOKA-001 stop line: enforce_fractal_jidoka in sa_plan_bridge.gleam and error -32002 in mcp/server.gleam",
+          file_contains(bridge, "enforce_fractal_jidoka")
+            && file_contains(server, "-32_002"),
+        ),
+      ]
+      let record_rows = [
+        #(
+          "FRACTAL-TPS",
+          "SC-SA-PLAN-001 mandate record present",
+          file_exists("contracts/rules/20260907-1515-sa-plan-fractal-jidoka-tps-mandate.md"),
+        ),
+        #(
+          "ADR-066",
+          "ZK decision record present",
+          file_exists(
+            "docs/zk/20260907-1530-adr-066-sa-plan-fractal-jidoka-tps-and-universal-execution-authority.md",
+          ),
+        ),
+        #(
+          "WIKI-GUIDE",
+          "Hermes wiki operational guide present",
+          file_exists("docs/wiki/20260907-1530-uos-sa-plan-fractal-jidoka-tps-guide.md"),
+        ),
+        #(
+          "SDLC-SRE",
+          "SC-SDLC-SRE-001 contract present",
+          file_exists("contracts/rules/sdlc-sre-verification-process-contract.md"),
+        ),
+      ]
+      list.each(list.append(suite_rows, control_rows), fn(row) {
+        let #(id, label, ok) = row
+        io.println("  " <> fail_tag(ok) <> " " <> id <> ": " <> label)
+      })
+      list.each(record_rows, fn(row) {
+        let #(id, label, present) = row
+        io.println("  " <> inventory_tag(present) <> " " <> id <> ": " <> label)
+      })
+      let checks =
+        list.map(
+          list.append(list.append(suite_rows, control_rows), record_rows),
+          fn(row) { row.2 },
+        )
+      let laws =
+        list.fold(sa_plan_suites(), 0, fn(acc, suite) { acc + suite.3 })
+      io.println("")
+      io.println(
+        summary_line("Sa-Plan Suites Executed, Controls Observed and Records Present", checks)
+        <> " (minimum law floor across suites: "
+        <> int.to_string(laws)
+        <> ")",
+      )
+      exit_for(checks)
     }
     SelfcheckHermesBionic -> {
       io.println(
@@ -1562,26 +1559,23 @@ pub fn execute(cmd: UosCommand) -> Int {
     }
     Selfcheck15Cycles -> {
       io.println(
-        "Evaluating 15 Evolutionary & Functional Cycles (--selfcheck-15-cycles, EV-25..EV-39):",
+        "Evaluating 15 Evolutionary Cycles EV-25..EV-39 (--selfcheck-15-cycles): INVENTORY of ratification records only; runtime evidence is not re-run here",
       )
-      io.println("  [PASS] EV-25: Fractal Layers & Surfaces (L0..L9 across 5 Presentation Surfaces, INV-SURFACE-HOMOMORPHISM)")
-      io.println("  [PASS] EV-26: System Components (5 Core Domains, P99 <= 15ms, INV-COMPONENT-P99-BOUNDED)")
-      io.println("  [PASS] EV-27: Control Flows (Prajna Breakers, Sub-50ms Recovery, INV-PRAJNA-TRIP-BOUND)")
-      io.println("  [PASS] EV-28: Data Flows (VFS openat & WAL Append Durability, INV-VFS-WAL-DURABILITY)")
-      io.println("  [PASS] EV-29: Evidence Flows (L0-L6 Recursive Receipts & Two-Key Rule, INV-TWO-KEY-EVIDENCE)")
-      io.println("  [PASS] EV-30: Fast OODA Loop (Sub-100ms Sensory Ingestion, Lyapunov V_dot <= 0, INV-FAST-OODA-SUBSECOND)")
-      io.println("  [PASS] EV-31: Fractal SDLC (10 Gates Formally Closed & Audited, INV-SDLC-GATE-CLOSURE)")
-      io.println("  [PASS] EV-32: Fractal SRE (SIL-4..SIL-6 Fault Invariant, INV-SRE-LYAPUNOV-STABLE)")
-      io.println("  [PASS] EV-33: Skills Inventory (170 Skills Federated across AGY/Claude/Codex, INV-SKILL-FEDERATION)")
-      io.println("  [PASS] EV-34: Policy & AGENTS.md Governance (INV-ZERO-MUDA-STORAGE-LOCK)")
-      io.println("  [PASS] EV-35: Superpowers SDD (14 Gates Programmatically Evaluated, INV-SUPERPOWERS-GATED)")
-      io.println("  [PASS] EV-36: MCP Tooling (35+ Tools & Zero-Trust Interceptor Guard, INV-ZERO-TRUST-PAYLOAD)")
-      io.println("  [PASS] EV-37: Agentic Symbiosis (71 Singletons, 195 Elastic Workers, Total 266 Actors, INV-UNCONSTRAINED-BEAM-SCALE)")
-      io.println("  [PASS] EV-38: 17 Aspect Processes (SHA-256 Receipts & Pre/Post Invariants, INV-17-ASPECT-RECEIPTS)")
-      io.println("  [PASS] EV-39: Cartesian Tensor Closure (Full Systemic Tensor Unification, INV-CARTESIAN-TENSOR-CLOSED)")
+      let records = ev_cycle_records()
+      list.each(records, fn(rec) {
+        let #(ev, title, path) = rec
+        let present = file_exists(path)
+        io.println(
+          "  " <> inventory_tag(present) <> " " <> ev <> ": " <> title <> " (record: " <> path <> ")",
+        )
+      })
+      let checks = list.map(records, fn(rec) { file_exists(rec.2) })
       io.println("")
-      io.println("Summary: 15/15 Evolutionary Cycles Operational & Formally Ratified (100% Green)")
-      0
+      io.println(
+        summary_line("Ratification Records Present", checks)
+        <> " (inventory; not fresh admission evidence)",
+      )
+      exit_for(checks)
     }
     SelfcheckC3iKnowledge -> {
       io.println(
@@ -1981,75 +1975,69 @@ pub fn execute(cmd: UosCommand) -> Int {
       }
     }
     SelfcheckInference -> {
-      io.println("Evaluating High-Utility Modular MAX / Mojo AI Models (--selfcheck-inference):")
-      let simd_mojo = file_exists("services/inference/max/max_kernel.mojo")
-      let worker_py = file_exists("services/inference/max/max_worker.py")
-      let daemon_gleam =
-        file_exists(
-          "apps/cepaf_gleam/src/cepaf_gleam/services/max_inference_daemon.gleam",
-        )
-      let api_gleam =
-        file_exists(
-          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/inference_api.gleam",
-        )
-      let server_gleam =
-        file_exists("apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam")
-      let tools_gleam =
-        file_exists("apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam")
-      let test_gleam =
-        file_exists("apps/cepaf_gleam/test/mcp_inference_models_test.gleam")
-      let contract_md =
-        file_exists(
-          "contracts/rules/20260907-1830-modular-max-high-utility-models-mandate.md",
-        )
-      let spec_md =
-        file_exists(
-          "docs/design/20260907-1830-modular-max-high-utility-models-specification.md",
-        )
-      let adr_md =
-        file_exists(
-          "docs/zk/20260907-1830-adr-069-modular-max-mojo-high-utility-models-and-fail-closed-preflight-ratification.md",
-        )
-      let wiki_md =
-        file_exists(
-          "docs/wiki/20260907-1830-uos-modular-max-high-utility-models-guide.md",
-        )
-      case
-        simd_mojo
-        && worker_py
-        && daemon_gleam
-        && api_gleam
-        && server_gleam
-        && tools_gleam
-        && test_gleam
-        && contract_md
-        && spec_md
-        && adr_md
-        && wiki_md
-      {
-        True -> {
-          io.println("  [PASS] MAX-01: Mojo AVX-512 / NEON SIMD Kernels (simd_kernels.mojo active)")
-          io.println("  [PASS] MAX-02: Isolated Supervised Python Worker Daemon (max_worker.py 15/15 selfchecks passing)")
-          io.println("  [PASS] MAX-03: Model 1 AST Anomaly Detection & Ingress Jidoka Halt (SC-JIDOKA-001)")
-          io.println("  [PASS] MAX-04: Model 2 ZK Semantic Cosine Proximity & Transclusion Retrieval (ADR-001..069)")
-          io.println("  [PASS] MAX-05: Model 3 Anticipatory Lyapunov Trend Predictor (Phase Portrait & Cascade Time)")
-          io.println("  [PASS] MAX-06: Model 4 STPA-UCA Causal Hazards & FMEA RPN Preflight Veto (SC-SIL6-001)")
-          io.println("  [PASS] MAX-07: Model 5 Rete-UL Forward Chaining Constitutional Priority Arbiter")
-          io.println("  [PASS] MAX-08: Model 6 Ruliad Multiway Causal Graph & Entanglement Entropy Evaluator")
-          io.println("  [PASS] MAX-09: Model 7 Cybernetic Raga & 22-Shruti Consonance Synthesizer")
-          io.println("  [PASS] MAX-10: First-Class MCP Tooling (7/7 operational tool definitions active)")
-          io.println("  [PASS] MAX-11: Mutating Preflight Interlock (verify_mutating_action_preflight active)")
-          io.println("  [PASS] MAX-12: Zero-Muda Purity (0 Bevy, 0 Graphite, 0 foreign NIFs)")
-          io.println("  [PASS] MAX-13: Storage Safety (HARD_DENIED_SYSTEM_OS_SERIAL = \"25503L801736\" locked)")
-          io.println("")
-          io.println("Summary: 13/13 Modular MAX / Mojo High-Utility AI Model Checks Passed (100% Green)")
-          0
-        }
-        False -> {
-          io.println("  [FAIL] Missing required Modular MAX / Mojo inference components.")
-          1
-        }
+      io.println(
+        "Evaluating Modular MAX / Mojo inference tier (--selfcheck-inference): executes the worker selfcheck, then binds each row to an observation",
+      )
+      let worker = "services/inference/max/max_worker.py"
+      let #(code, output) = case file_exists(worker) {
+        True -> run_command("python3", [worker, "--selfcheck"], 60_000)
+        False -> #(127, "worker file missing")
       }
+      let selfcheck_ok = inference_selfcheck_ok(code, output)
+      let rows = [
+        #(
+          "MAX-01",
+          "Mojo kernel source present (services/inference/max/max_kernel.mojo); compilation not re-run",
+          file_exists("services/inference/max/max_kernel.mojo"),
+        ),
+        #(
+          "MAX-02",
+          "Worker selfcheck executed: exit "
+            <> int.to_string(code)
+            <> ", 15 inference methods reported green (supervision by uos_sup is not claimed here)",
+          selfcheck_ok,
+        ),
+        #("MAX-03", "Model 1 ast_anomaly reported [PASS] by the worker", selfcheck_ok && string.contains(output, "[PASS] ast_anomaly")),
+        #("MAX-04", "Model 2 zk_transclude reported [PASS] by the worker", selfcheck_ok && string.contains(output, "[PASS] zk_transclude")),
+        #("MAX-05", "Model 3 lyapunov_trend reported [PASS] by the worker", selfcheck_ok && string.contains(output, "[PASS] lyapunov_trend")),
+        #("MAX-06", "Model 4 stpa_hazard reported [PASS] by the worker", selfcheck_ok && string.contains(output, "[PASS] stpa_hazard")),
+        #("MAX-07", "Model 5 rete_conflict reported [PASS] by the worker", selfcheck_ok && string.contains(output, "[PASS] rete_conflict")),
+        #("MAX-08", "Model 6 ruliad_branch reported [PASS] by the worker", selfcheck_ok && string.contains(output, "[PASS] ruliad_branch")),
+        #("MAX-09", "Model 7 shruti_harmonics reported [PASS] by the worker", selfcheck_ok && string.contains(output, "[PASS] shruti_harmonics")),
+        #(
+          "MAX-10",
+          "MCP tool definitions for all 7 models present in mcp/tools.gleam",
+          list.all(
+            ["ast_anomaly_detect", "zk_transclude", "lyapunov_trend_predict", "stpa_fmea_hazard", "rete_rule_conflict", "ruliad_branch_eval", "shruti_harmonics"],
+            fn(name) { file_contains("apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam", "name: \"" <> name <> "\"") },
+          ),
+        ),
+        #(
+          "MAX-11",
+          "Mutating preflight interlock present: verify_mutating_action_preflight in mcp/server.gleam",
+          file_contains("apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam", "verify_mutating_action_preflight"),
+        ),
+        #(
+          "MAX-12",
+          "Zero-Muda: apps/cepaf_gleam/manifest.toml free of bevy/graphite",
+          file_exists("apps/cepaf_gleam/manifest.toml")
+            && !file_contains("apps/cepaf_gleam/manifest.toml", "bevy")
+            && !file_contains("apps/cepaf_gleam/manifest.toml", "graphite"),
+        ),
+        #(
+          "MAX-13",
+          "Storage safety serial 25503L801736 present in ops/kubernetes/nas-k8s-lab/src/spec.rs",
+          file_contains("ops/kubernetes/nas-k8s-lab/src/spec.rs", "25503L801736"),
+        ),
+      ]
+      list.each(rows, fn(row) {
+        let #(id, label, observed) = row
+        io.println("  " <> fail_tag(observed) <> " " <> id <> ": " <> label)
+      })
+      let checks = list.map(rows, fn(row) { row.2 })
+      io.println("")
+      io.println(summary_line("Modular MAX / Mojo Inference Checks", checks))
+      exit_for(checks)
     }
     Help -> {
       io.println(
@@ -2067,4 +2055,197 @@ pub fn main() {
     a -> parse_args(a)
   }
   execute(cmd)
+}
+
+
+// ---------------------------------------------------------------------------
+// Gate verdict helpers (SC-RISK-PRIORITY-001 H-1: a gate must be able to fail)
+// ---------------------------------------------------------------------------
+
+/// Number of checks that observed true.
+pub fn count_passed(checks: List(Bool)) -> Int {
+  list.fold(checks, 0, fn(acc, ok) {
+    case ok {
+      True -> acc + 1
+      False -> acc
+    }
+  })
+}
+
+/// Exit code bound to the conjunction of all checks: 0 only when every check
+/// observed true, 1 otherwise. An empty check list is UNRUN and fails closed.
+pub fn exit_for(checks: List(Bool)) -> Int {
+  case checks {
+    [] -> 1
+    _ ->
+      case count_passed(checks) == list.length(checks) {
+        True -> 0
+        False -> 1
+      }
+  }
+}
+
+/// "Summary: N/M <label>" with an explicit verdict word derived from the checks.
+pub fn summary_line(label: String, checks: List(Bool)) -> String {
+  let passed = count_passed(checks)
+  let total = list.length(checks)
+  let verdict = case exit_for(checks) {
+    0 -> "PASS"
+    _ -> "FAIL"
+  }
+  "Summary: "
+  <> int.to_string(passed)
+  <> "/"
+  <> int.to_string(total)
+  <> " "
+  <> label
+  <> " ("
+  <> verdict
+  <> ")"
+}
+
+pub fn status_tag(observed: Bool) -> String {
+  case observed {
+    True -> "[PASS]"
+    False -> "[UNRUN]"
+  }
+}
+
+pub fn inventory_tag(present: Bool) -> String {
+  case present {
+    True -> "[INVENTORY]"
+    False -> "[MISSING]"
+  }
+}
+
+/// The eight VFS laws with the predicate actually observed for each.
+/// Rows whose predicate is `False` by construction have no in-repo evidence yet.
+pub fn vfs_laws() -> List(#(String, String, Bool)) {
+  let prim = "engines/zigvm/src/prim_file.zig"
+  let build = "engines/zigvm/build.zig"
+  let store = "engines/hermes/modules/sa_plan/sa_plan_store.ml"
+  [
+    #(
+      "LAW-VFS-01",
+      "Descriptor-relative resolution: prim_file.zig takes `root: Dir` handles",
+      file_contains(prim, "root: Dir"),
+    ),
+    #(
+      "LAW-VFS-02",
+      "Symlink-traversal defense: AT_SYMLINK_NOFOLLOW present in prim_file.zig",
+      file_contains(prim, "AT_SYMLINK_NOFOLLOW"),
+    ),
+    #(
+      "LAW-VFS-03",
+      "Rename primitive present in prim_file.zig (atomicity law itself not re-run)",
+      file_contains(prim, "rename"),
+    ),
+    #(
+      "LAW-VFS-04",
+      "Zero-Muda purity: build.zig present and free of bevy/graphite",
+      file_exists(build)
+        && !file_contains(build, "bevy")
+        && !file_contains(build, "graphite"),
+    ),
+    #(
+      "LAW-VFS-05",
+      "Reads return caller-owned bounded copies (readFileAlloc with .limited) and positional preads (readPositionalAll) independent of the shared offset; concurrent-writer isolation itself is not re-run",
+      file_contains(prim, "readFileAlloc") && file_contains(prim, "readPositionalAll"),
+    ),
+    #(
+      "LAW-VFS-06",
+      "Exclusive lease mutex: fencing_token lease column in sa_plan_store.ml",
+      file_contains(store, "fencing_token"),
+    ),
+    #(
+      "LAW-VFS-07",
+      "Fail-closed typed errors: PrimError present in prim_file.zig",
+      file_contains(prim, "PrimError"),
+    ),
+    #(
+      "LAW-VFS-08",
+      "NOT IMPLEMENTED: operations are dirfd-relative (root: Dir) but no path jail exists; no RESOLVE_BENEATH or openat2 and no `..` or absolute-path rejection in prim_file.zig or bifs/file.zig (the VFS wiki and ADR-046 mark this law PASS; that record is nonconformant)",
+      file_contains(prim, "root: Dir")
+        && { file_contains(prim, "RESOLVE_BENEATH") || file_contains(prim, "openat2") },
+    ),
+  ]
+}
+
+/// EV-25..EV-39 with the ratification record each row points at.
+pub fn ev_cycle_records() -> List(#(String, String, String)) {
+  let cycles_journal =
+    "docs/journal/20260906-1830-uos-master-prompt-history-and-15-evolutionary-cycles-journal.md"
+  let codex_handover = "docs/design/20260906-1649-codex-master-session-handover.md"
+  [
+    #("EV-25", "Fractal Layers & Surfaces", "docs/journal/20260906-1930-uos-c3i-artifacts-ingestion-and-15-cycles-journal.md"),
+    #("EV-26", "System Components", cycles_journal),
+    #("EV-27", "Control Flows (Prajna Breakers)", codex_handover),
+    #("EV-28", "Data Flows (VFS openat & WAL)", codex_handover),
+    #("EV-29", "Evidence Flows (Two-Key Rule)", cycles_journal),
+    #("EV-30", "Fast OODA Loop", cycles_journal),
+    #("EV-31", "Fractal SDLC", cycles_journal),
+    #("EV-32", "Fractal SRE", cycles_journal),
+    #("EV-33", "Skills Inventory", codex_handover),
+    #("EV-34", "Policy & AGENTS.md Governance", codex_handover),
+    #("EV-35", "Superpowers SDD", codex_handover),
+    #("EV-36", "MCP Tooling", codex_handover),
+    #("EV-37", "Agentic Symbiosis", codex_handover),
+    #("EV-38", "17 Aspect Processes", codex_handover),
+    #("EV-39", "Cartesian Tensor Closure", "docs/journal/20260906-1900-uos-c3i-integrated-knowledge-runtime-and-15-cycles-journal.md"),
+  ]
+}
+
+pub fn fail_tag(observed: Bool) -> String {
+  case observed {
+    True -> "[PASS]"
+    False -> "[FAIL]"
+  }
+}
+
+/// The inference worker selfcheck is green only when it exited 0, printed its
+/// final all-methods line, and reported at least 15 [PASS] rows.
+pub fn inference_selfcheck_ok(exit_code: Int, output: String) -> Bool {
+  let pass_rows = list.length(string.split(output, "[PASS] ")) - 1
+  exit_code == 0
+  && string.contains(output, "ALL 15 MODULAR MAX / MOJO INFERENCE METHODS VERIFIED")
+  && pass_rows >= 15
+}
+
+/// The sa-plan OCaml suites: id, executable stem, label, minimum `ok` lines
+/// required (the law count the suite has always reported), and a success
+/// phrase for suites that report prose instead of `ok` lines.
+pub fn sa_plan_suites() -> List(#(String, String, String, Int, String)) {
+  [
+    #("SUITE-01", "sa_plan_test", "sa_plan_test (Task DAG, Oban queue, Temporal recovery)", 0, "Completed Successfully"),
+    #("SUITE-02", "test_sa_plan_control_plane", "test_sa_plan_control_plane (seeded oracles and Quint invariants)", 32, ""),
+    #("SUITE-03", "test_sa_plan_durable", "test_sa_plan_durable (durable execution and migration laws)", 50, ""),
+    #("SUITE-04", "test_sa_plan_observability", "test_sa_plan_observability (pipeline and observation laws)", 7, ""),
+    #("SUITE-05", "test_sa_plan_c3i_reference", "test_sa_plan_c3i_reference (C3I parity and normalization laws)", 10, ""),
+    #("SUITE-06", "test_sa_plan_leases", "test_sa_plan_leases (fenced claims and single-writer laws)", 8, ""),
+    #("SUITE-07", "test_sa_plan_cli", "test_sa_plan_cli (flag normalization and validation laws)", 19, ""),
+    #("SUITE-08", "test_sa_plan_safety", "test_sa_plan_safety (STPA safety packet algebra laws)", 7, ""),
+    #("SUITE-09", "test_sa_plan_preflight", "test_sa_plan_preflight (multi-coordinate provenance laws)", 12, ""),
+    #("SUITE-10", "test_sa_plan_materialize", "test_sa_plan_materialize (receipt materialization laws)", 3, ""),
+    #("SUITE-11", "test_sa_plan_reconcile", "test_sa_plan_reconcile (close-loop reconciliation laws)", 5, ""),
+    #("SUITE-12", "test_sa_plan_observability_kpi", "test_sa_plan_observability_kpi (read-only projection laws)", 6, ""),
+    #("SUITE-13", "test_sa_plan_observation", "test_sa_plan_observation (idempotent replay reconciliation laws)", 17, ""),
+  ]
+}
+
+/// Number of lines that start with `ok ` in a suite's output.
+pub fn count_ok_lines(output: String) -> Int {
+  output
+  |> string.split("\n")
+  |> list.filter(fn(line) { string.starts_with(line, "ok ") })
+  |> list.length
+}
+
+/// A suite passed when it exited 0 and either reported at least `min_ok`
+/// `ok` lines or, for prose-reporting suites (`min_ok` = 0), printed `phrase`.
+pub fn suite_ok(exit_code: Int, output: String, min_ok: Int, phrase: String) -> Bool {
+  exit_code == 0
+  && case min_ok {
+    0 -> string.contains(output, phrase)
+    n -> count_ok_lines(output) >= n
+  }
 }

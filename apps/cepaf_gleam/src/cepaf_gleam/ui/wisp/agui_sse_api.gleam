@@ -50,7 +50,7 @@ pub fn default_config() -> AGUIStreamConfig {
   )
 }
 
-/// Encodes an AG-UI event into an SSE wire-format frame string.
+/// Encodes an AG-UI event into an AG-UI data frame: `data: {json}\n\n`
 pub fn event_to_sse_frame(event: AgUiEvent) -> String {
   events.to_sse_frame(event)
 }

@@ -12,6 +12,7 @@
 
 import cepaf_gleam/c3i/nif as c3i_nif
 import cepaf_gleam/ha/fractal_forecast
+import cepaf_gleam/mcp/authz
 import cepaf_gleam/mcp/protocol.{type ToolDefinition}
 import cepaf_gleam/mcp/tools
 import cepaf_gleam/planning/sa_plan_bridge
@@ -370,29 +371,40 @@ fn execute_tool(
 ) -> String {
   case check_fractal_jidoka_violation(name, raw_line) {
     Error(reason) -> error_response(id, -32_002, reason)
-    Ok(Nil) -> {
-      case is_mutating_tool(name) {
-        True -> {
-          case verify_mutating_action_preflight(name, raw_line) {
-            fractal_forecast.PreflightApproved(_, _, _, _, _) -> {
+    Ok(Nil) ->
+      // Authorization at the effect boundary (mcp/authz.gleam): rate limit,
+      // path controls and the guardian gate, all before any preflight or
+      // execution. A denial is a typed JSON-RPC error and nothing runs.
+      case authz.authorize_and_persist(name, is_mutating_tool(name), raw_line) {
+        Error(denial) ->
+          error_response(
+            id,
+            authz.denial_code(denial),
+            authz.denial_message(denial),
+          )
+        Ok(_) ->
+          case is_mutating_tool(name) {
+            True -> {
+              case verify_mutating_action_preflight(name, raw_line) {
+                fractal_forecast.PreflightApproved(_, _, _, _, _) -> {
+                  case tools.unavailable_reason(name) {
+                    Some(reason) -> tool_unavailable(id, name, reason)
+                    None -> execute_available_tool(name, id, raw_line)
+                  }
+                }
+                fractal_forecast.PreflightVetoed(_, _, _, reason, _risk) -> {
+                  error_response(id, -32_001, "Preflight veto: " <> reason)
+                }
+              }
+            }
+            False -> {
               case tools.unavailable_reason(name) {
                 Some(reason) -> tool_unavailable(id, name, reason)
                 None -> execute_available_tool(name, id, raw_line)
               }
             }
-            fractal_forecast.PreflightVetoed(_, _, _, reason, _risk) -> {
-              error_response(id, -32_001, "Preflight veto: " <> reason)
-            }
           }
-        }
-        False -> {
-          case tools.unavailable_reason(name) {
-            Some(reason) -> tool_unavailable(id, name, reason)
-            None -> execute_available_tool(name, id, raw_line)
-          }
-        }
       }
-    }
   }
 }
 

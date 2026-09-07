@@ -143,7 +143,11 @@ Keep plans/tasks/jobs/workflows in Sa-plan; a score or board ACK grants no effec
 The SOP's Superpowers and plugin bindings are mandatory at lifecycle entry/exit.
 All necessary policy, examples and OCaml validation sources are repository-local;
 global/imported skills are optional context. Validate with
-**bash tools/risk-priority-check --selftest** and **bash tools/risk-priority-check --package**.
+**bash tools/risk-priority-check --all**. Follow
+[SC-RISK-CHECK-001](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260907-1606-risk-checker-contract.md):
+use --preflight before a task claim and --active-check with the current worker/attempt
+during execution. HOLD/unknown/stale results require evidence repair; no force-pass.
+A passing observation never replaces Sa-plan authority or effect-time fencing.
 Process guidance and report-only validation do not establish runtime scheduler enforcement.
 Respect the active session's scope, permission and delegation restrictions.
 

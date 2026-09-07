@@ -12,7 +12,7 @@ authority = "A0_reference"
 name = "uos-risk-prioritization"
 source = "uos"
 reference_only = false
-state = "implemented_local_policy"
+state = "implemented_local_policy_and_bounded_checkers"
 path = "plugins/uos-risk-prioritization/skills/uos-risk-prioritization/SKILL.md"
 authority = "SC-RISK-PRIORITY-001 process rule; no runtime admission"
 
@@ -819,5 +819,4 @@ name = "stage-durability"
 source = "codex"
 reference_only = false
 state = "admitted"
-
 

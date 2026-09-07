@@ -1,4 +1,4 @@
 (executable
  (name validate)
- (modules priority bounded record live_plan host_clock validate adversarial)
+ (modules priority bounded record live_plan host_clock checker validate adversarial)
  (libraries yojson unix cryptokit sqlite3 mtime.clock.os))

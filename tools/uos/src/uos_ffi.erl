@@ -1,5 +1,5 @@
 -module(uos_ffi).
--export([get_arguments/0, file_exists/1, file_size/1, matches_timestamp_format/1, file_contains/2, is_elf_binary/1, validate_mirage_probe_receipt/1, halt/1]).
+-export([get_arguments/0, file_exists/1, file_size/1, matches_timestamp_format/1, file_contains/2, is_elf_binary/1, validate_mirage_probe_receipt/1, halt/1, run_command/3]).
 -include_lib("kernel/include/file.hrl").
 
 halt(Code) ->
@@ -138,3 +138,42 @@ validate_mirage_probe_receipt(Path) ->
     end.
 
 
+
+
+%% Bounded local command runner for gates that must observe execution, not file
+%% presence. Runs Exe with Args from the repository root, merges stderr into
+%% stdout, and returns {ExitCode, Output}. On TimeoutMs the port is closed and
+%% exit code 124 is returned. No shell is involved.
+run_command(Exe, Args, TimeoutMs) ->
+    Root = "/home/an/NAS-setup/uos",
+    ExeStr = binary_to_list(Exe),
+    ArgStrs = [binary_to_list(A) || A <- Args],
+    Resolved = case lists:member($/, ExeStr) of
+        true ->
+            Candidate = case ExeStr of
+                [$/ | _] -> ExeStr;
+                _ -> filename:join(Root, ExeStr)
+            end,
+            case filelib:is_regular(Candidate) of
+                true -> Candidate;
+                false -> false
+            end;
+        false -> os:find_executable(ExeStr)
+    end,
+    case Resolved of
+        false -> {127, <<"executable not found">>};
+        Path ->
+            Port = erlang:open_port({spawn_executable, Path},
+                                    [{args, ArgStrs}, {cd, Root}, exit_status,
+                                     stderr_to_stdout, binary, use_stdio, hide]),
+            collect(Port, <<>>, TimeoutMs)
+    end.
+
+collect(Port, Acc, TimeoutMs) ->
+    receive
+        {Port, {data, Bin}} -> collect(Port, <<Acc/binary, Bin/binary>>, TimeoutMs);
+        {Port, {exit_status, Code}} -> {Code, Acc}
+    after TimeoutMs ->
+        catch erlang:port_close(Port),
+        {124, <<Acc/binary, "\n[uos_ffi] timeout after ", (integer_to_binary(TimeoutMs))/binary, " ms\n">>}
+    end.

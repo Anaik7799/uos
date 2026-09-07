@@ -1,0 +1,235 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "risk-checkers-local-verification-v2",
+    "plan_id": "uos/risk-checkers/20260907-1631",
+    "task_id": "CHECKERS",
+    "actor": "codex-side-risk-checkers",
+    "scope": "Local OCaml risk checker/plugin, process bindings and verification artifacts. No runtime deployment or mainline effects.",
+    "phase": "review",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-07T17:26:49Z",
+    "valid_until": "2026-09-07T18:26:49Z",
+    "task_state": "executing",
+    "ready_since": "2026-09-07T17:26:49Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Listed checker implementation and contract bytes only; not whole-monorepo revision or authenticated runtime evidence.",
+      "evidence": [
+        {
+          "path": "plugins/uos-risk-prioritization/validation/priority.ml",
+          "sha256": "86c2138c2a149908b05466f2c9befcafe13e414a8ab4405229ac152655b3b724",
+          "observed_at": "2026-09-07T17:26:49Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/record.ml",
+          "sha256": "2a66578ee158bfbe1f06d135be0ac003bfdbf4f6d61d1d2376925742d554cd60",
+          "observed_at": "2026-09-07T17:26:49Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/bounded.ml",
+          "sha256": "fd78167db257d863415ea9ceb6399662e2ce24b46cc15a7b0cc04ea57e23b13f",
+          "observed_at": "2026-09-07T17:26:49Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/checker.ml",
+          "sha256": "1a56d5a01fca8945f301d0dfae99b5134ac593912c1b4a866d4a6b40a47820d7",
+          "observed_at": "2026-09-07T17:26:49Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/live_plan.ml",
+          "sha256": "7f83f174d6b384f42d1983ed0e21b63f15fad4bbaed72938186b98da4644a3f6",
+          "observed_at": "2026-09-07T17:26:49Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/host_clock.ml",
+          "sha256": "fd481302dc5b4bbad04f12b2eb7130a02b4cb22fd8586ebcee769808e115b073",
+          "observed_at": "2026-09-07T17:26:49Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/adversarial.ml",
+          "sha256": "2863259d66527bd440477960e6e5ffdfbef40f8feaab5cabd02e260a95c4c27b",
+          "observed_at": "2026-09-07T17:26:49Z"
+        },
+        {
+          "path": "plugins/uos-risk-prioritization/validation/validate.ml",
+          "sha256": "6a058bd9ca14ba5e0b789de1ed84434d77780a72520f4fa864fb16dc76652078",
+          "observed_at": "2026-09-07T17:26:49Z"
+        },
+        {
+          "path": "tools/risk-priority-check",
+          "sha256": "1d600c4704dc977f3208000bfbabd3edf1e3979aa0f5c56ad5e131b793d0177d",
+          "observed_at": "2026-09-07T17:26:49Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1606-risk-checker-contract.md",
+          "sha256": "b756c4b33bd840370f0f64a8da460ba741d8548dab296fdf9ef9c3c8bfe67908",
+          "observed_at": "2026-09-07T17:26:49Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Bounded requested verification tooling; no active production incident in this task.",
+        "evidence_refs": [
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "plugins/uos-risk-prioritization/validation/live_plan.ml",
+          "plugins/uos-risk-prioritization/validation/adversarial.ml"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "False clearance is a credible control hazard; static and live-observation checks do not make effect authority atomic.",
+        "evidence_refs": [
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "plugins/uos-risk-prioritization/validation/live_plan.ml",
+          "plugins/uos-risk-prioritization/validation/adversarial.ml"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Planning estimate S4 O3 Det3, RPN36/F4; targeted counterexamples establish detector behavior, not residual field failure rates.",
+        "evidence_refs": [
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "plugins/uos-risk-prioritization/validation/live_plan.ml",
+          "plugins/uos-risk-prioritization/validation/adversarial.ml"
+        ]
+      },
+      "dependency": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Shared checker is consumed by local skill and lifecycle entry points; native Store enforcement remains separate.",
+        "evidence_refs": [
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "plugins/uos-risk-prioritization/validation/live_plan.ml",
+          "plugins/uos-risk-prioritization/validation/adversarial.ml"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Improves several local planning, review and SRE evidence workflows; fleet adoption is unmeasured.",
+        "evidence_refs": [
+          "plugins/uos-risk-prioritization/validation/checker.ml",
+          "plugins/uos-risk-prioritization/validation/live_plan.ml",
+          "plugins/uos-risk-prioritization/validation/adversarial.ml"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-CHECKER-FALSE-CLEARANCE",
+        "cause": "Schema assertions, source hashes or live plan facts are trusted without independent checks.",
+        "effect": "Stale or unauthorized work could appear cleared.",
+        "controls": "Strict bounded validation, SHA-256 rechecks, read-only planning observation, attempt comparison, and separate effect authority.",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "UOS planning/review actor",
+      "control_action": "Continue the authorized local checker task",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "A necessary hazard repair is never selected.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Check safety class and inherited prerequisite urgency before score."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "A high score is mistaken for release authorization.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Authorization and effect constraints precede ranking."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Selection relies on a stale candidate or unfinished dependency.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Re-observe and reject affected stale/blocked selection."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "An old worker keeps acting beyond its lease or budget.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Recheck current owner, fencing, expiry and budget before effects."
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 960,
+    "score_interval": [
+      960,
+      960
+    ],
+    "decision": {
+      "summary": "Verify the final checker including end-of-check evidence and lease freshness. Supersedes v1 after the targeted timing correction; original packet preserved.",
+      "alternatives": [
+        "Retain structure-only checks",
+        "Install production admission hooks without separate runtime verification"
+      ],
+      "counterevidence": [
+        "Deterministic checks do not establish semantic correctness, source completeness or atomic effect authority."
+      ],
+      "assumptions": [
+        "The explicit side-conversation mutation request authorizes the checker package and its own Sa-plan records only."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Known malformed evidence, stale ownership and ranking ambiguity should fail closed in these bounded checks.",
+      "falsifier": "An adversarial packet with mismatched hashes, hidden schema rules, stale attempt or unsafe order receives a passing applicable check.",
+      "acceptance": [
+        "All baseline/oracle/adversarial checks pass",
+        "Own live task comparison passes with correct worker/attempt",
+        "Wrong attempt and re-claim checks fail",
+        "Receipt matches completed scoped artifacts"
+      ],
+      "rollback": "Remove or revert only this scoped checker patch using reviewed JJ changes; do not alter other writers or historical receipts.",
+      "reviewer": "Author verification in this side session; independent live-agent review UNRUN.",
+      "budget": "One owned task with a 2-hour lease; one Dune job, 90s build and 30s checker limits; zero additional model-provider calls; primary session cost UNKNOWN.",
+      "residuals": [
+        "Observation-to-effect race and semantic review remain open.",
+        "No runtime deployment, mandatory Store hook or admission is claimed."
+      ],
+      "supersedes": "risk-checkers-local-verification-v1"
+    }
+  }
+]
