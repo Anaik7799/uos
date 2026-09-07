@@ -41,12 +41,29 @@
     "selected": "queue until the main position is decided",
     "rationale": "serialized integration and the pending operator decision take precedence; nothing is lost by waiting on a frozen bookmark",
     "risks": [ "merge conflicts in uos_swarm files between the 91eb-era lineage and main (resolved at gate time, parents preserved)", "AGY moves main again before the decision" ],
-    "unresolved": [ "operator decision on the main position", "whether AGY's c660b3d3 tree and Codex's package are to be composed together or the package supersedes it" ]
+    "unresolved": [ "operator decision on the main position", "whether AGY's c660b3d3 tree and Codex's package are to be composed together or the package supersedes it" ],
+    "resolution_of_unresolved": "operator 11:2x UTC: 'restore main and integrate the codex mirage package' -> restore first (DR-20260907-1105 completed), then the package alone; AGY's later merge 7b9c0518 (c660b3d3 + package) stays visible as a candidate; measured difference between that merge and this one: 7 files (AGY's +17-line post-audit edit to apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam, the ledger, and each side's records/journals); all 14 Codex fix files identical in both"
   },
   "process": {
     "steps": [ "ACK to Codex (board + session)", "wait for the operator decision on main", "merge", "gates", "lease", "bookmarks", "receipts", "completed record" ],
     "rollback": "not applicable before action",
     "escalation": "a further unrecorded main move -> operator"
+  },
+  "completed": {
+    "observed_at": "2026-09-07T11:36:00.000000Z",
+    "observed_actions": [
+      "operator decision: 'restore main and integrate the codex mirage package'; main restored to qvquwkvromno/7cb60ab6 under lease (DR-20260907-1105 completed)",
+      "merge oomwkxvtzkmk/88571d8379f5f9c75a8123f7f0bf68bd1c8b06fe: parents xunxrrszqxlt (receipt lineage + candidate-integration-4 journal) and lpkpxryypluz/b04e4cd9 (package); one conflict (ledger) resolved by append-order union keeping all 261 ids; no other conflicts",
+      "gates: uos_swarm 563 passed / 0 warnings; uos_tui 198; split gate G1 PASS; board valid 261 (3 gaps, 8 forks explicit)",
+      "attribution: full cepaf suite on the merge = 10052 passed, 202 aggregate failure lines, 164 distinct failing identities == mainline baseline 164, 0 new, 0 fixed; not a full-suite-green claim",
+      "second key: Codex sovereign audit journal 20260907-1150 and receipt JSON present on the merge; scope host-development review only",
+      "lease integration/main (coordinator epoch 4, claimed ~11:29Z, TTL 900 s): main and integration/uos-swarm -> oomwkxvtzkmk/88571d83; receipts on change muutttsqxlrv then bookmarks -> receipt change; release",
+      "AGY merge rroqsznkssot/7b9c0518 left visible as a candidate; default workspace deliberately not rebased (AGY's live Mirage tree would conflict with the audited package); AGY asked to rebase and to submit its +17-line web edit as a frozen candidate",
+      "board: Integrate broadcast with decision_record; Reports to AGY and Codex-Astra; session Reports to both"
+    ],
+    "outcome": "selected alternative realized — package integrated on the restored lineage — Measured",
+    "forecast_resolution": "p=0.7 for 'integrates cleanly with 0 new failing identities' -> realized (Brier 0.09); the anticipated uos_swarm conflicts did not occur because the package lineage already contained main's swarm state via 0384a714",
+    "consumed": { "tokens": "0 for integration steps (deterministic R0); Fable for design and receipts", "usd": 0.0 }
   },
   "forecast": {
     "horizon": "until the operator decides (open)",
