@@ -78,6 +78,8 @@ flowchart TD
 
 This is the target control flow. An implementation receipt must say which edges were exercised; a diagram does not establish that an automatic daemon connects every edge.
 
+The local session journal owns only cooperative session metadata, path/resource claims, heartbeats and receipt ACKs. It is not a second workflow, quota, approval or effect-commit store. Hermes/Sa-plan retains those authorities as specified in the parent specification. The initial deployment uses one local coordinator per canonical repository; federation requires an admitted shared lease authority rather than merging local locks.
+
 | Plane | Canonical implementation/reuse | Authority |
 |---|---|---|
 | Work and workflow | Hermes `sa_plan`, `tools/sa-plan` | Task identities, dependencies and recorded outcomes |
@@ -87,6 +89,8 @@ This is the target control flow. An implementation receipt must say which edges 
 | Remote advisory inference | `uos_tui/openrouter_worker.gleam` | Bounded model output; no filesystem, deployment or task-completion rights |
 | Formal evidence | `formal/lean/AgenticCoordination.lean`, `formal/quint/agentic_coordination.qnt` | Defined model properties and explicit invocation result |
 | Deterministic effects | Existing ZigVM, typed Gleam actors, policy and runtime adapters | Separately authorized bounded execution |
+
+The typed SessionHub-to-Sa-plan bridge is `SessionObservation(event_id, payload_hash, local_sequence, session_ref, resource_ref, epoch, candidate_ref)` with an idempotent Hermes inbox and `ObservationAccepted(event_id, payload_hash, hermes_sequence)` reply. Replaying the same event/body repeats that receipt; a changed body or sequence gap fails closed for reconciliation. Task completion, budget reservation and effect dispatch use separate authorized Hermes commands. A local ACK of bridge ingestion cannot complete them, and no cross-store dual write is treated as atomic. The implementation plan specifies the bridge and recovery protocol.
 
 ## 4. Typed contracts
 
@@ -115,7 +119,7 @@ Acceptance cases include two real OS processes racing one claim; process death d
 
 ## 6. Formal methods and independent checks
 
-Lean is used for inductive properties of the explicit state model: candidate-bound17-aspect admission, lease/authority constraints and budgets. Quint explores bounded interleavings and failure/recovery transitions under named finite domains, steps, samples and seed. SMT is used only for a decidable arithmetic or Boolean subproblem with positive satisfiable controls. Tests exercise the actual Gleam/OTP implementation, including independent OS processes and persistence.
+Lean is used for inductive properties of the explicit state model: candidate-bound17-aspect admission, lease/authority constraints and budgets. Quint explores bounded lease, evidence, observation, budget and effect transitions under named finite domains, steps, samples and seed. The present models cover one protected resource per instance and three abstract agents. They do not model concrete session generations, disk crashes, duplicate-operation persistence, replay recovery or per-attempt budget-to-dispatch linkage; those remain implementation/refinement obligations. SMT is reserved for a decidable arithmetic or Boolean subproblem with positive satisfiable controls; no SMT result is claimed in this package. Actual implementation tests and independent-process/crash tests are separate evidence, not implied by these models.
 
 Every formal result must record its source digest, exact tool version, command, bound, exit code, timestamp and model scope. Missing tools, parser errors, timeout, undeclared assumptions and incomplete proofs are nonpassing. A sampled Quint run is bounded simulation. Lean proof compilation does not establish that the entire deployed service refines the model; that correspondence remains an independently reviewed obligation.
 
@@ -131,7 +135,7 @@ All17 canonical aspects are retained. The rightmost column states the evidence n
 | AINF-A04 | Gleam/OTP 29 4-Domain Root Supervisor | Supervise coordination under OTP and bound recovery/restart. | Gleam coordinator tests and local concurrent-process checks; deployed root supervisor still needs evidence. |
 | AINF-A05 | ZigVM Deterministic Engine & 8 VFS Laws | Contain execution and maintain deterministic VFS laws. | Native Zig tests and actual VFS probes are independent of coordination proofs. |
 | AINF-A06 | Hermes Formal Evidence, Gospel & Z3 | Retain invocation-specific evidence and durable event provenance. | Hermes test executions, source hashes, drift records and isolated bounded SMT. |
-| AINF-A07 | Mathematical Authority & Conservation | Model all17 revision-bound keys plus stale lease denial and authority non-escalation. | Lean kernel results; Quint seeded simulation; explicit model/implementation refinement gap. |
+| AINF-A07 | Mathematical Authority & Conservation | Model all 17 revision-bound keys plus stale lease denial and authority non-escalation. | Lean kernel results; Quint seeded simulation; explicit model/implementation refinement gap. |
 | AINF-A08 | Biosemiotic Cybernetics & Rocha Cut | Observation and model advice cannot issue an effect. | Typed report/control separation; negative authority and ACK tests. |
 | AINF-A09 | Quarantined Modular MAX/Mojo Inference | Inference stays out of the supervision control kernel. | MAX remains isolated; remote OpenRouter adapter exposes only bounded advisory HTTPS calls. |
 | AINF-A10 | Zenoh OoZ & MoZ Mesh Telemetry Backplane | Board delivery is retryable, sender-scoped and non-destructive. | Zenoh publish/read receipts; durable local authority survives projection loss; no shared DELETE. |
@@ -155,7 +159,7 @@ For SRE: observe health → open incident → claim runtime target → diagnose 
 
 Reuse existing native modules and exact source references. Default to local deterministic checks, one owner per implementation slice and one independent reviewer for critical code. Send deltas and hashes instead of whole repositories or conversation transcripts. Keep working context compact with links back to preserved evidence.
 
-OpenRouter uses a small explicit allowlist, current price/capability observations, free-first mode, bounded completion, timeout and call count. Paid work requires explicit selection and a USD0.02 per-request ceiling. Failed/ambiguous requests are not blindly duplicated across providers. Quality evaluation controls promotion: a cheap response that fails acceptance remains a failed advisory. Record prompt/completion usage and actual selected model, and do not invent costs when the provider omits them.
+OpenRouter uses a small explicit allowlist, current price/capability observations, free-first mode, bounded completion, timeout and call count. Paid work requires explicit selection and a USD 0.02 per-request ceiling. Failed/ambiguous requests are not blindly duplicated across providers. Quality evaluation controls promotion: a cheap response that fails acceptance remains a failed advisory. Record prompt/completion usage and actual selected model, and do not invent costs when the provider omits them.
 
 The full production budget broker from the parent specification remains necessary for atomic tenant/run reservations across concurrent paid workers. Until that is enforced, the bounded demo defaults free-only. Provider routing and capabilities must be verified against [OpenRouter routing documentation](https://openrouter.ai/docs/guides/routing/routers/auto-router) and [free-model documentation](https://openrouter.ai/docs/guides/routing/model-variants/free); dynamic router popularity does not establish task quality.
 
@@ -221,6 +225,5 @@ formal-proof and sovereign-admission obligations remain **UNRUN**.
 </details>
 
 
-**Previous:** [Coordination contract](http://nas-1.tail55d152.ts.net:4100/docs/contracts/rules/20260907-0653-tri-agent-coordination.md) · **Next:** [Operational runbook](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-0653-uos-tri-agent-swarm-operations.md)  
+**Previous:** [Coordination contract](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260907-0653-tri-agent-coordination.md) · **Next:** [Operational runbook](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-0653-uos-tri-agent-swarm-operations.md)  
 **UOS footer:** SPECIFIED; see invocation receipt for executed results and limits.
-

@@ -3,7 +3,7 @@
 #fractal-l0 #fractal-l3 #fractal-l4 #zk-adr #zero-muda #tailscale-web
 
 **UOS / Coordination / Contract** · [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [ZK](http://nas-1.tail55d152.ts.net:4100/zk) · [Checklist](http://nas-1.tail55d152.ts.net:4100/checklist)  
-**Live document:** [http://nas-1.tail55d152.ts.net:4100/docs/contracts/rules/20260907-0653-tri-agent-coordination.md](http://nas-1.tail55d152.ts.net:4100/docs/contracts/rules/20260907-0653-tri-agent-coordination.md) · [Source](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260907-0653-tri-agent-coordination.md)
+**Live document:** [http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260907-0653-tri-agent-coordination.md](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260907-0653-tri-agent-coordination.md) · [Source](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260907-0653-tri-agent-coordination.md)
 
 Created: 2026-09-07T06:38:53Z. Operator authority: parallel Claude, Codex, AGY and OpenRouter agent swarms for UOS SDLC and SRE. This contract adds a coordination protocol; it does not grant system admission or credentials. Canonical repository: `/home/an/NAS-setup/uos`.
 
@@ -86,4 +86,3 @@ formal-proof and sovereign-admission obligations remain **UNRUN**.
 
 **Previous:** [Infrastructure specification](http://nas-1.tail55d152.ts.net:4100/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md) · **Next:** [Swarm operations](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-0653-uos-tri-agent-swarm-operations.md)  
 **UOS footer:** Local coordination contract; production admission remains evidence-bound.
-

@@ -479,10 +479,11 @@ differs. No unproved numeric identity or dimensional equivalence is assumed.
 | Operation | Preconditions | Postconditions / error behavior |
 |---|---|---|
 | `authorize(envelope, identities, policy, now)` | Typed request, verified identity facts, fresh policy snapshot | Returns Deny/AwaitApproval/Allow; does not reserve money or invoke tools |
-| `reserve(scope_set, attempt_key, upper_bound, epoch)` | Current writer fence; every scope has sufficient available budget | Atomic durable reservation across global, tenant, principal and workflow limits, or no change |
+| `reserve(scope_set, attempt_key, upper_bound, epoch)` | Internal helper in the enclosing dispatch transaction; current fence and sufficient budget in every scope | Stage all scope reservations without an independent commit |
 | `assemble_context(request, authorized_sources, model)` | Current visibility policy; compatible pinned model/tokenizer | Ordered provenance-bearing context within input/output budget, or ProtectedContextOverflow |
 | `compact(context, protected_set, target_budget)` | Valid sizes and typed tool pairs; provenance accessible | Protected entries preserved, discarded entries referenced, summary labeled derivative; no authority expansion |
-| `prepare_dispatch(permit, reservation, approval, intent)` | Current authority and action binding; non-expired leases | Atomically persist intent and outbox; return a single-use dispatch identity |
+| `prepare_dispatch(permit, reservation, approval, intent)` | Internal helper in the same transaction as reserve; current authority and non-expired leases | Stage intent, transition and outbox without an independent commit |
+| `reserve_and_prepare_dispatch(scope_set, attempt_key, upper_bound, permit, approval, intent, epoch)` | Current policy, identity, approval binding, epoch and all budget limits | One Hermes WAL transaction commits reservation, intent, transition and outbox, or changes nothing; only its commit receipt exposes a dispatch identity |
 | `dispatch(prepared, current_policy, adapter)` | Durable commit receipt plus fresh final checks; isolation profile verified | At most one admitted live attempt for that dispatch identity; typed outcome or explicit ambiguity |
 | `settle(attempt_key, observed_usage)` | Matching reservation and current fence | Idempotent settlement/refund within every limit; unknown liability retained |
 | `apply_event(state, committed_event)` | Matching workflow/schema/epoch and next sequence | Pure deterministic transition; cannot call a model, tool, clock or random source |
@@ -532,7 +533,9 @@ ASCII source:
 [AwaitingApproval] --current bound approval and reservation--> [Reserved]
 [AwaitingApproval] --denied or expired--> [Failed]
 [Reserved] --current permit and committed outbox--> [Dispatching]
+[Reserved] --final check denied expired or fenced out; no effect--> [Failed]
 [Dispatching] --adapter acknowledgement--> [Running]
+[Dispatching] --adapter proves no effect; known failure--> [Failed]
 [Dispatching] --ambiguous effect--> [Reconciling]
 [Running] --verified result and settled cost--> [Succeeded]
 [Running] --known failure and settled cost--> [Failed]
@@ -571,7 +574,9 @@ flowchart TD
     A -->|"current bound approval and reservation"| Q
     A -->|"denied or expired"| F
     Q -->|"current permit and committed outbox"| D
+    Q -->|"final check denied expired or fenced out; no effect"| F
     D -->|"adapter acknowledgement"| W
+    D -->|"adapter proves no effect; known failure"| F
     D -->|"ambiguous effect"| N
     W -->|"verified result and settled cost"| S
     W -->|"known failure and settled cost"| F
@@ -625,6 +630,24 @@ The lifecycle has the following additional rules:
     transaction domain for the initial deployment. Cross-shard budgets require
     preallocated durable credits whose sum never exceeds the global cap; a
     distributed boolean availability check is insufficient.
+11. Final denial, expiry or a stale fence before any effect terminates the
+    attempt as `Failed` with a typed reason. The current authorized writer
+    atomically tombstones the pending outbox and releases only proven-unused
+    reservation amounts. A fenced-out old writer cannot commit this cleanup;
+    the current recovery writer performs it. If delivery may have started,
+    use `Reconciling` and retain liability instead.
+12. An adapter-proven known-not-executed dispatch failure enters `Failed`
+    through the same tombstone/settlement transaction. Any permitted retry is
+    a new bounded attempt with fresh authorization and a linked prior attempt;
+    it is never an implicit edge from an ambiguous outcome.
+13. Authorization linearizes at the serialized `authorize_and_claim_dispatch`
+    transaction: compare current policy/revocation epoch, cancellation state,
+    authority expiry and writer fence before recording dispatch start. A
+    revocation/cancellation committed first prevents start; one committed after
+    start requests containment and reconciliation if an effect may have begun.
+    Adapters recheck bound validity before emission and rely on destination
+    enforcement where required. No atomicity with an unrelated remote system
+    is claimed, and a local transaction cannot retroactively revoke an effect.
 
 ## 6. Formal invariants and proof obligations
 

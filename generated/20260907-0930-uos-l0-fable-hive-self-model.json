@@ -1,0 +1,103 @@
+{
+  "agent": {
+    "id": "L0-fable",
+    "layer": "L0",
+    "model": "fable",
+    "role": "design authority and L1 integrator",
+    "holon": "supervisor · adhiṣṭhātṛ (अधिष्ठातृ) · control plane niyantraṇa",
+    "human_operator": "UOS operator (nas-1)"
+  },
+  "registration": {
+    "roster": "apps/uos_tui/swarm/20260907-0440-swarm-ledger.json (supervisor: Claude Fable 5.1 (L0))",
+    "cli_constant": "supervisor = Agent(\"L0-fable\",\"L0\",\"fable\")",
+    "policy": "coord.default_policy: design kinds Plan/Dispatch/Integrate require model fable; L0 may post all kinds; Intent only strictly upward",
+    "signing": "HMAC per-sender key derived from the master key held outside the repo; canonical form uos-board-canon/2"
+  },
+  "resources": {
+    "intelligence": {
+      "self": "Claude Fable 5.1 (relative cost weight 5.0)",
+      "delegates": [
+        "Sonnet 1.0",
+        "Haiku 0.27",
+        "OpenRouter nano ~USD 1e-4 per call",
+        "Codex gpt-6-astra (unmetered CLI)",
+        "Antigravity Gemini 3.8 Flash (unmetered CLI)",
+        "F´ manager 0 tokens"
+      ]
+    },
+    "infra": [
+      "zenoh router c3i-zenoh-router-1 (REST :8080, storages c3i/a2a/**, uos/tui/**)",
+      "signed JSONL ledger + protected ETS",
+      "per-agent ETS memory (grant-gated)",
+      "cockpit :4100",
+      "vm-1 sanitized C3I/Indrajaal snapshot (read-only)"
+    ],
+    "credentials": {
+      "board_key": "present outside repo",
+      "openrouter": "present in env, never printed"
+    },
+    "limits": {
+      "openrouter": "<= USD 0.02, <= 512 tokens, 30 s, allowlist",
+      "vcs": "quiescent (no jj mutation) until Codex-Astra posts mainline final",
+      "implementation": "paused by operator steering; design/plan/analysis only"
+    }
+  },
+  "goals": {
+    "standing": "operator directive (journal §1.1): gleam TUI + hive mind on Zenoh, honest 17-aspect admission, formal controls, cheapest execution, Sanskrit-English ACL, holonic structure",
+    "current": [
+      "honest admission: PASS 56 · DECLARED 78 · FAIL 2, admissible=false by design",
+      "global intelligence routing: cheapest adequate tier for every operation (DES-UOS-INTEL-ROUTING-001)",
+      "separate TUI and swarm work streams (PLAN-UOS-TUI-SWARM-SPLIT-001) after mainline final",
+      "keep the board valid: Codex-Astra to re-post the message my regeneration dropped"
+    ]
+  },
+  "actions_today": {
+    "board_messages": 37,
+    "kinds": {
+      "Dispatch": 17,
+      "Report": 7,
+      "Plan": 4,
+      "Andon": 3,
+      "Integrate": 2,
+      "Ack": 70,
+      "Heartbeat": 1,
+      "Claim": 1,
+      "Question": 1
+    },
+    "inbox": "69 acknowledged, 0 open",
+    "swarm_rounds": [
+      {
+        "round": 1,
+        "agents": 15,
+        "slices": "11/11"
+      },
+      {
+        "round": "H2",
+        "agents": 5,
+        "p1_closed": "8/8"
+      }
+    ],
+    "reviews": [
+      "AGY HOLD -> fixed",
+      "Codex Astra HOLD -> 8/8 P1 closed"
+    ],
+    "artifacts": [
+      "ADR-062",
+      "hive-mind wiki",
+      "13-section journal",
+      "split plan",
+      "routing design",
+      "OpenRouter advisory record",
+      "vm-1 snapshot receipt"
+    ]
+  },
+  "routing_rule": "route(o)=argmin cost over tiers with P(adequate)>=theta, cost<=budget, authorized; escalation once then jidoka; posteriors per (tier,class) from verified outcomes only",
+  "state": "paused-at-checkpoint; vcs quiescent; awaiting mainline final",
+  "generated_at": "2026-09-07T07:17:11Z",
+  "links": {
+    "self": "http://nas-1.tail55d152.ts.net:4100/docs/generated/20260907-0930-uos-l0-fable-hive-self-model.md",
+    "routing": "http://nas-1.tail55d152.ts.net:4100/docs/docs/design/20260907-0925-uos-global-intelligence-routing-design.md",
+    "board": "http://nas-1.tail55d152.ts.net:8080/c3i/a2a/**",
+    "state": "http://nas-1.tail55d152.ts.net:8080/uos/tui/state/**"
+  }
+}

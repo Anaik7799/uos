@@ -2638,9 +2638,19 @@
           "D"
         ],
         [
+          "Q",
+          "final check denied expired or fenced out; no effect",
+          "F"
+        ],
+        [
           "D",
           "adapter acknowledgement",
           "W"
+        ],
+        [
+          "D",
+          "adapter proves no effect; known failure",
+          "F"
         ],
         [
           "D",
@@ -2773,9 +2783,19 @@
         "to": "Dispatching"
       },
       {
+        "from": "Reserved",
+        "guard": "final check denied expired or fenced out; no effect",
+        "to": "Failed"
+      },
+      {
         "from": "Dispatching",
         "guard": "adapter acknowledgement",
         "to": "Running"
+      },
+      {
+        "from": "Dispatching",
+        "guard": "adapter proves no effect; known failure",
+        "to": "Failed"
       },
       {
         "from": "Dispatching",

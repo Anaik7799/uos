@@ -1,0 +1,367 @@
+{
+  "schema": "uos.tri-agent-design-verification.v1",
+  "created_at": "2026-09-07T07:08:31Z",
+  "stage": "ANALYSIS_PLAN_DESIGN_COMPLETE",
+  "implementation_stage": "PAUSED_BY_OPERATOR",
+  "system_admission": "NOT_ADMITTED",
+  "review": {
+    "model_requested": "gpt-6-astra",
+    "reasoning_effort_requested": "max",
+    "routing_evidence": "collaboration.spawn_agent astra_max_design_review",
+    "verdict": "DESIGN_COMPLETE_WITH_CLARIFICATIONS",
+    "clarifications_applied": 3,
+    "report_path": "docs/reviews/20260907-0653-astra-max-agentic-system-design-review.md"
+  },
+  "scope": {
+    "services": 21,
+    "aspects": 17,
+    "obligations": 357,
+    "invariants": 18,
+    "acceptance_cases": 63,
+    "parent_work_packages": 8,
+    "enterprise_acceptance_status": "UNRUN"
+  },
+  "source_bindings": {
+    "review_manifest": "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json",
+    "review_sources": 80,
+    "current_match_count": 72,
+    "drift": [
+      {
+        "path": "AGENTS.md",
+        "review_time_sha256": "b48dfb1b1a40c8f8672a7bcd9ce1092bdc8a979267be8efa3517b73814537a46",
+        "observed_sha256": "532ef4ddbef06c290fb7adad829ef7fd9a6b8f895fb58e28d28305cec6d23210",
+        "status": "STALE_FOR_CURRENT_SOURCE",
+        "action": "Preserve original binding; re-review changed implementation before admission."
+      },
+      {
+        "path": "apps/uos_tui/src/uos_tui/aspects.gleam",
+        "review_time_sha256": "c4959f5b8a9f1fe3f6d80ea0e0846ddd3f8b8bea605a41c6c15aab6997827c0a",
+        "observed_sha256": "1f17fd2077b508e6c009cc8bd921831353dabba9af828652437c59a752ccaa0d",
+        "status": "STALE_FOR_CURRENT_SOURCE",
+        "action": "Preserve original binding; re-review changed implementation before admission."
+      },
+      {
+        "path": "apps/uos_tui/src/uos_tui/board.gleam",
+        "review_time_sha256": "5022516473d3e10d93b9773353af8aca21d562a720feaf0be305cd264900a9bf",
+        "observed_sha256": "0b43dc42b7fa6e29e6c8f50660277b5c7b777f1d89099bf8fb089aae06eeb81c",
+        "status": "STALE_FOR_CURRENT_SOURCE",
+        "action": "Preserve original binding; re-review changed implementation before admission."
+      },
+      {
+        "path": "apps/uos_tui/src/uos_tui/cockpit.gleam",
+        "review_time_sha256": "c7b73f16870419a4e867272ae8a8d3ccec5cf28bd62299280df96a594836ba04",
+        "observed_sha256": "230ea389fa78308ac6f802862a36d5a97ee032454c0b3fc9d781daf9e6192f4e",
+        "status": "STALE_FOR_CURRENT_SOURCE",
+        "action": "Preserve original binding; re-review changed implementation before admission."
+      },
+      {
+        "path": "apps/uos_tui/src/uos_tui/coord.gleam",
+        "review_time_sha256": "07c53872c3bc61d7f07283450dbb7a34e6c59ec140ebda2ac6f635842ce7636b",
+        "observed_sha256": "15aa0c45e9db7cdc38d68d6b04c3cda6eafa339153c9e62706a06b911159e2be",
+        "status": "STALE_FOR_CURRENT_SOURCE",
+        "action": "Preserve original binding; re-review changed implementation before admission."
+      },
+      {
+        "path": "apps/uos_tui/src/uos_tui/system_audit.gleam",
+        "review_time_sha256": "21b14a348f79ddf20093fdee55b039fb06bd8e8c97d2dba92cb59f9df0fe9bcb",
+        "observed_sha256": "169fca864586adb9d384086aae52b2d7eef3489d6bcb1a0c563e751ad331e979",
+        "status": "STALE_FOR_CURRENT_SOURCE",
+        "action": "Preserve original binding; re-review changed implementation before admission."
+      },
+      {
+        "path": "docs/wiki/20260907-0537-uos-hive-mind-architecture-wiki.md",
+        "review_time_sha256": "7ae2c8a4909daa16eaf0a663ff06c9b134df21196ef24cd50e6041c3aeb9f5bc",
+        "observed_sha256": "e1152b43f38648e177fb4a1b35744e3d949d84d867efd75a17b4ec47640cc7dd",
+        "status": "STALE_FOR_CURRENT_SOURCE",
+        "action": "Preserve original binding; re-review changed implementation before admission."
+      },
+      {
+        "path": "docs/zk/20260907-0537-adr-062-uos-tui-swarm-hive-mind-message-board-coordination-acl-and-zenoh-infra.md",
+        "review_time_sha256": "1f4b9b9b4be05a7234465461a26a76d465a489ab6387dc44a9205d528703f4c0",
+        "observed_sha256": "399f1cd9f7b8f7b994553a182862458f854d47cd322bce93cee2b9140184b06b",
+        "status": "STALE_FOR_CURRENT_SOURCE",
+        "action": "Preserve original binding; re-review changed implementation before admission."
+      }
+    ]
+  },
+  "formal_receipt": "docs/design/20260907-0620-uos-tri-agent-formal-verification.json",
+  "formal_scope": "Gate rules and bounded abstract coordination; not all17 operational semantics; implementation refinement UNKNOWN.",
+  "test_receipts": [
+    {
+      "suite": "uos_tui",
+      "result": "PASSED",
+      "passed": 448,
+      "failed": 0,
+      "exit_code": 0,
+      "log": "/tmp/uos-tri-agent-design-checkpoint-tests.log",
+      "binding": "Source checkpoint main bc9c663d26e99ca39af9ac6f6a3bf7741e4aa6cb; board payloads may change independently."
+    },
+    {
+      "suite": "cepaf_gleam_host",
+      "result": "PASSED",
+      "passed": 10196,
+      "failed": 0,
+      "exit_code": 0,
+      "log": "/tmp/uos-tri-agent-integration-host-tests.log"
+    },
+    {
+      "suite": "cepaf_gleam_sandbox",
+      "result": "ENVIRONMENT_RESTRICTED",
+      "passed": 10017,
+      "failed": 179,
+      "exit_code": 1,
+      "log": "/tmp/uos-tri-agent-integration-baseline.log"
+    },
+    {
+      "suite": "hardware_identity_test",
+      "result": "PASSED",
+      "passed": 3,
+      "failed": 0,
+      "exit_code": 0,
+      "log": "/tmp/uos-tri-agent-storage-tests.log"
+    },
+    {
+      "suite": "Hermes wiki and Sa-plan dune runtest",
+      "result": "EXIT_ZERO_CACHE_POSSIBLE",
+      "exit_code": 0,
+      "log": "/tmp/uos-tri-agent-hermes-tests.log",
+      "fresh_execution_count": null
+    }
+  ],
+  "coordination": {
+    "actual_peers_discovered": [
+      "claude",
+      "codex",
+      "agy"
+    ],
+    "claude_ack": "1788763217480347-0928a58d9424af40",
+    "claude_report": "1788763218753823-24ac49e143e3eef1",
+    "agy_report": "1788763112309738-f515a2ef8f30cd15",
+    "original_message_lost": "1788762988041329-0613c673114ddcf5",
+    "incident": "Board regeneration erased a shared message; no forged restoration.",
+    "durable_production_sessions_registered_by_root": false,
+    "end_to_end_durable_swarm": "UNVERIFIED",
+    "mandatory_executor_fencing": "NOT_IMPLEMENTED",
+    "herdr_atomic_session_fence": false
+  },
+  "openrouter": {
+    "peer_receipt": "generated/20260907-0900-uos-openrouter-advisory-lease-invariant-review.json",
+    "model": "openai/gpt-4.1-nano",
+    "provider": "Azure",
+    "prompt_tokens": 125,
+    "completion_tokens": 234,
+    "reported_cost_usd": 0.0001061,
+    "authority": "ADVISORY_ONLY",
+    "free_account_route": "DENIED_BY_PROVIDER_DATA_POLICY",
+    "aggregate_paid_budget_enforcement": "NOT_IMPLEMENTED",
+    "new_calls_after_pause": 0
+  },
+  "storage_hygiene": {
+    "path": "state/sa_plan.sqlite3",
+    "incident": "LIVE_DB_WAS_TRACKED",
+    "current_action": "Ignored and untracked without deleting the local file; existing history preserved.",
+    "secret_or_database_digest_collected": false
+  },
+  "aspect_verification": [
+    {
+      "id": "AINF-A01",
+      "name": "Substrate & Hardware Storage Interlock",
+      "gate": "G-DRIVE-NVME",
+      "evidence_class": "PARTIAL",
+      "observation": "Three actual Rust hardware identity tests passed; no destructive storage probes.",
+      "operational_semantics_proved": false
+    },
+    {
+      "id": "AINF-A02",
+      "name": "Standalone Jujutsu Monorepo Discipline",
+      "gate": "G-BOOT1-JJ",
+      "evidence_class": "OBSERVED",
+      "observation": "Both local histories preserved and main already contains peer integration; final docs snapshot pending serialized closure.",
+      "operational_semantics_proved": false
+    },
+    {
+      "id": "AINF-A03",
+      "name": "Zero-Muda Purity & Waste Elimination",
+      "gate": "G-ZERO-MUDA",
+      "evidence_class": "SCOPED_REVIEW",
+      "observation": "Native additions reuse Gleam/OTP and Erlang boundaries; whole history/dependency purity not re-proved.",
+      "operational_semantics_proved": false
+    },
+    {
+      "id": "AINF-A04",
+      "name": "Gleam/OTP 29 4-Domain Root Supervisor",
+      "gate": "G-OTP29-SUPER",
+      "evidence_class": "GAP",
+      "observation": "448 TUI and10196 cepaf tests pass; empty declared root-supervisor startup remains a source finding.",
+      "operational_semantics_proved": false
+    },
+    {
+      "id": "AINF-A05",
+      "name": "ZigVM Deterministic Engine & 8 VFS Laws",
+      "gate": "G-VFS-8LAWS",
+      "evidence_class": "UNRUN",
+      "observation": "Native Zig CLI absent from parent PATH; deterministic/VFS production semantics not established.",
+      "operational_semantics_proved": false
+    },
+    {
+      "id": "AINF-A06",
+      "name": "Hermes Formal Evidence, Gospel & Z3",
+      "gate": "G-HERMES-EVID",
+      "evidence_class": "PARTIAL",
+      "observation": "Hermes wiki/Sa-plan dune runtest exit0, possibly cached; formal invocation receipt hashes bound.",
+      "operational_semantics_proved": false
+    },
+    {
+      "id": "AINF-A07",
+      "name": "Mathematical Authority & Conservation",
+      "gate": "G-LEAN4-MATH",
+      "evidence_class": "MODEL_ONLY",
+      "observation": "26 Lean theorems;9Quint scenarios;400seeded traces;2negative controls; operational semantics not proved.",
+      "operational_semantics_proved": false
+    },
+    {
+      "id": "AINF-A08",
+      "name": "Biosemiotic Cybernetics & Rocha Cut",
+      "gate": "G-ROCHA-SEMIOT",
+      "evidence_class": "PARTIAL",
+      "observation": "Typed observation/effect separation modeled; mandatory production dispatch refinement outstanding.",
+      "operational_semantics_proved": false
+    },
+    {
+      "id": "AINF-A09",
+      "name": "Quarantined Modular MAX/Mojo Inference",
+      "gate": "G-MAX-INFER",
+      "evidence_class": "GAP",
+      "observation": "MAX placeholder remains; one bounded external advisory request completed, noMAXdeployment.",
+      "operational_semantics_proved": false
+    },
+    {
+      "id": "AINF-A10",
+      "name": "Zenoh OoZ & MoZ Mesh Telemetry Backplane",
+      "gate": "G-ZENOH-MESH",
+      "evidence_class": "PARTIAL",
+      "observation": "Actual Claude/AGY board reports and Zenoh delivery observed; erased causal message and volatile storage remain.",
+      "operational_semantics_proved": false
+    },
+    {
+      "id": "AINF-A11",
+      "name": "AG-UI 32-Event SSE Stream Protocol",
+      "gate": "G-AGUI-32EVENT",
+      "evidence_class": "UNRUN",
+      "observation": "Source/catalog review only; new continuous session SSE consumer not exercised.",
+      "operational_semantics_proved": false
+    },
+    {
+      "id": "AINF-A12",
+      "name": "A2UI 233-Component Declarative Catalog",
+      "gate": "G-A2UI-CATALOG",
+      "evidence_class": "PARTIAL",
+      "observation": "Existing catalog covered by package tests; end-to-end new coordination view not verified.",
+      "operational_semantics_proved": false
+    },
+    {
+      "id": "AINF-A13",
+      "name": "Penta-Stack Multi-Interface Accessibility",
+      "gate": "G-PENTA-STACK",
+      "evidence_class": "PARTIAL",
+      "observation": "TUI baseline passes andHerdr discovery exercised; full accessibility/visual review not run.",
+      "operational_semantics_proved": false
+    },
+    {
+      "id": "AINF-A14",
+      "name": "Universal Tailscale FQDN Web Navigation",
+      "gate": "G-TAILSCALE-WEB",
+      "evidence_class": "OBSERVED",
+      "observation": "Correct /docs/design route returnsHTTP200; doubled /docs/docs route rejected404 and repaired.",
+      "operational_semantics_proved": false
+    },
+    {
+      "id": "AINF-A15",
+      "name": "Comprehensive Verification Checklist",
+      "gate": "G-CHECKLIST",
+      "evidence_class": "DOCUMENT_ONLY",
+      "observation": "New document18-check/5-domain structures validated; no claim of18runtimegatespassed.",
+      "operational_semantics_proved": false
+    },
+    {
+      "id": "AINF-A16",
+      "name": "Knowledge Management Triad (Wiki/ZK/Ont)",
+      "gate": "G-KM-TRIAD",
+      "evidence_class": "DOCUMENT_ONLY",
+      "observation": "Specification/wiki/ADR/journal/MOC linked;8review-time source bindings drift and remainSTALE.",
+      "operational_semantics_proved": false
+    },
+    {
+      "id": "AINF-A17",
+      "name": "Sa-Plan & Bionic Durable Workflows",
+      "gate": "G-SAPLAN-BIONIC",
+      "evidence_class": "PARTIAL",
+      "observation": "Real Sa-plan planning records and existing tests; new SessionObservation bridge specified, not wired.",
+      "operational_semantics_proved": false
+    }
+  ],
+  "remaining": [
+    "Close parent63acceptancecases with real implementation evidence.",
+    "Mandatory identity/session/resource fencing and canonical workspacepaths.",
+    "Repair causal boardgap without forging original senderhistory.",
+    "Durable cross-process/crash/refinement and multi-resource tests.",
+    "Hermes SessionObservation bridge and atomic dispatch/budget integration.",
+    "Production MAX, tenant isolation, sandboxescape, UIaccessibility, recovery and full17aspect admission."
+  ],
+  "design_artifacts": [
+    "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md",
+    "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json",
+    "docs/design/20260907-0653-uos-tri-agent-sdlc-sre-herdr-spec.md",
+    "docs/plans/20260907-0653-uos-tri-agent-cheaper-mode-implementation-plan.md",
+    "docs/wiki/20260907-0653-uos-tri-agent-swarm-operations.md",
+    "contracts/rules/20260907-0653-tri-agent-coordination.md",
+    "docs/reviews/20260907-0653-astra-max-agentic-system-design-review.md",
+    "docs/reviews/20260907-0550-uos-c3i-indrajaal-17-aspect-infrastructure-source-review.md",
+    "docs/wiki/20260907-0550-uos-agentic-infrastructure-building-blocks.md",
+    "docs/zk/20260907-0550-adr-uos-agentic-infrastructure-native-building-blocks.md",
+    "docs/journal/20260907-0550-uos-agentic-infrastructure-formal-spec-journal.md"
+  ],
+  "document_validation": {
+    "validator": "OCaml read-only structural validation",
+    "checks": 692,
+    "failures": [],
+    "warnings": [
+      "Legacy MOC has a pre-existing Mermaid-only diagram, preserved unchanged; record its nonconformance."
+    ],
+    "link_targets_checked": 292,
+    "http_or_anchor_links_not_probed": 93,
+    "scope": "Document consistency only; no runtime or formal admission."
+  },
+  "peer_proposals": [
+    {
+      "path": "docs/design/20260907-0925-uos-global-intelligence-routing-design.md",
+      "status": "PRESERVED_PROPOSAL_NOT_ADOPTED",
+      "notes": "Do not treat1/1adequacy, unknown CLI costs, current TUI Fable-only model policy, or automatic paid fallthrough as system-wide proven authority/routing policy."
+    }
+  ],
+  "task_plan": {
+    "id": "tri-agent-sync-20260907",
+    "completed_design_tasks": [
+      "SPEC",
+      "FORMAL"
+    ],
+    "implementation_tasks": "PENDING_PER_OPERATOR_STAGE_CHANGE"
+  },
+  "link_probes": {
+    "date": "2026-09-07",
+    "status": "HTTP200",
+    "paths": [
+      "docs/design/20260907-0653-uos-tri-agent-sdlc-sre-herdr-spec.md",
+      "docs/plans/20260907-0653-uos-tri-agent-cheaper-mode-implementation-plan.md",
+      "docs/wiki/20260907-0653-uos-tri-agent-swarm-operations.md",
+      "contracts/rules/20260907-0653-tri-agent-coordination.md",
+      "docs/reviews/20260907-0653-astra-max-agentic-system-design-review.md"
+    ]
+  },
+  "final_sync": {
+    "target": "local main",
+    "remote_configured": false,
+    "method": "Preserving JJ descendants and artifact checkpoint; existing historical database commits retained.",
+    "implementation_admission": false
+  }
+}

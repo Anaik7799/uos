@@ -1,0 +1,648 @@
+{
+  "schema": "uos.tri-agent.formal-design-verification.v1",
+  "title": "UOS tri-agent coordination: executed Lean proofs and bounded Quint design verification",
+  "created_at_utc": "2026-09-07T06:58:20Z",
+  "document_path": "docs/design/20260907-0620-uos-tri-agent-formal-verification.json",
+  "scope": "DESIGN_MODEL_ONLY",
+  "status": "MODEL_CHECKS_PASSED",
+  "system_admission": "NOT_ADMITTED",
+  "model_to_implementation_refinement": "UNKNOWN",
+  "timestamp_evidence": {
+    "provider": "host date -u",
+    "clock_sync_context": "Parent session observed chronyc tracking: 2026-09-07T05:42:10Z reference; 0.001250984 seconds slow; leap Normal. Not a new synchronization measurement.",
+    "model_clock_delta_seconds": null
+  },
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l2",
+    "#fractal-l3",
+    "#fractal-l4",
+    "#fractal-l5",
+    "#fractal-l8",
+    "#zk-adr",
+    "#zero-muda"
+  ],
+  "navigation": {
+    "live": "http://nas-1.tail55d152.ts.net:4100/docs/design/20260907-0620-uos-tri-agent-formal-verification.json",
+    "formal_spec": "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json"
+  },
+  "models": [
+    {
+      "path": "formal/lean/AgenticCoordination.lean",
+      "sha256": "7ab1e32798b593e5e5f0b18b15a27002a913df00655393427705059d34542316",
+      "kind": "inductive transition invariants plus executable reference transitions",
+      "index_domain": "Fin 17",
+      "theorems": [
+        "admit_preserves",
+        "record_preserves",
+        "nominate_preserves",
+        "reserve_preserves",
+        "settle_preserves",
+        "acquire_preserves",
+        "release_preserves",
+        "apply_preserves",
+        "lease_epoch_monotone",
+        "release_retains_epoch",
+        "live_owner_blocks_acquire",
+        "single_owner",
+        "stale_epoch_cannot_apply",
+        "wrong_revision_cannot_apply",
+        "expired_lease_cannot_apply",
+        "apply_requires_all_17",
+        "duplicate_key_cannot_admit",
+        "advice_ack_prompt_non_authority",
+        "unprivileged_cannot_apply",
+        "apply_requires_distinct_keys",
+        "step_preserves",
+        "step_epoch_monotone",
+        "step_authority_unchanged",
+        "run_preserves",
+        "valid_packets_ready",
+        "fixture_safe"
+      ]
+    },
+    {
+      "path": "formal/quint/agentic_coordination.qnt",
+      "sha256": "9bb51b8b153339f951b2b2892ac92a3ae4186c6c8fe67792d1ec192bc2798b06",
+      "kind": "finite instantiated transition model; TypeScript seeded simulator",
+      "constants": {
+        "aspects": 17,
+        "agents": 3,
+        "candidate_revisions": [
+          1,
+          2,
+          3
+        ],
+        "budget": 6,
+        "max_epoch": 4,
+        "max_clock": 8,
+        "max_effects": 4
+      },
+      "instances": [
+        "integration/main",
+        "runtime/service"
+      ]
+    }
+  ],
+  "tools": {
+    "lean": {
+      "path": "/tmp/uos-lean-4.33.0.VwrqbM/lean-4.33.0-linux/bin/lean",
+      "version": "4.33.0",
+      "commit": "d8b18978322de05a8f3dba51ef03cf5461676c17",
+      "binary_sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "provenance": "Existing cached toolchain; no download or installation performed."
+    },
+    "quint": {
+      "path": "/home/an/.npm/_npx/fb57b81753a2bc55/node_modules/@informalsystems/quint/dist/src/cli.js",
+      "version": "0.32.0",
+      "cli_sha256": "ac12595b1cb7253feec93c79417615c6eb20fc3b6a3df35c5e3530b24e90a501",
+      "backend": "typescript",
+      "provenance": "Existing npm cache; direct Node invocation without npm/npx download."
+    }
+  },
+  "invocations": [
+    {
+      "id": "LEAN-CHECK",
+      "argv": [
+        "/tmp/uos-lean-4.33.0.VwrqbM/lean-4.33.0-linux/bin/lean",
+        "formal/lean/AgenticCoordination.lean"
+      ],
+      "exit_code": 0,
+      "status": "PASSED",
+      "log": "/tmp/uos-agentic-coordination-lean.log",
+      "log_sha256": "b3f0d5fa222373bf0f7a21d8b1cc1dd41bb5c5ae2670f701be2317fb5e8b5997",
+      "observed_examples": [
+        {
+          "scenario": "authorized lifecycle effects",
+          "value": 1
+        },
+        {
+          "scenario": "stale epoch effects",
+          "value": 0
+        },
+        {
+          "scenario": "advice/ACK/prompt/model output effects",
+          "value": 0
+        }
+      ],
+      "named_theorems": 26
+    },
+    {
+      "id": "QUINT-TYPECHECK",
+      "argv": [
+        "node",
+        "/home/an/.npm/_npx/fb57b81753a2bc55/node_modules/@informalsystems/quint/dist/src/cli.js",
+        "typecheck",
+        "formal/quint/agentic_coordination.qnt"
+      ],
+      "exit_code": 0,
+      "status": "PASSED",
+      "log": "/tmp/uos-agentic-coordination-quint-typecheck.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "QUINT-TARGETED-SCENARIOS",
+      "argv": [
+        "node",
+        "/home/an/.npm/_npx/fb57b81753a2bc55/node_modules/@informalsystems/quint/dist/src/cli.js",
+        "test",
+        "formal/quint/agentic_coordination.qnt",
+        "--main",
+        "agentic_coordination_test",
+        "--backend",
+        "typescript",
+        "--seed",
+        "0x20260907",
+        "--max-samples",
+        "1",
+        "--verbosity",
+        "1"
+      ],
+      "exit_code": 0,
+      "status": "PASSED",
+      "tests": [
+        "validLifecycleTest",
+        "staleFenceTest",
+        "expiredFenceTest",
+        "wrongResourceTest",
+        "staleRevisionTest",
+        "missingAspectTest",
+        "duplicateKeyTest",
+        "observationOnlyTest",
+        "overspendTest"
+      ],
+      "passed": 9,
+      "failed": 0,
+      "log": "/tmp/uos-agentic-coordination-quint-tests.log",
+      "log_sha256": "2dbcf81043031c21fb77a0bab9b46836feeb7e7d98117b6ed6655144c99dfa71"
+    },
+    {
+      "id": "QUINT-INTEGRATION-SIMULATION",
+      "argv": [
+        "node",
+        "/home/an/.npm/_npx/fb57b81753a2bc55/node_modules/@informalsystems/quint/dist/src/cli.js",
+        "run",
+        "formal/quint/agentic_coordination.qnt",
+        "--main",
+        "agentic_coordination_test",
+        "--backend",
+        "typescript",
+        "--invariant",
+        "inv_all",
+        "--witnesses",
+        "witness_admitted",
+        "witness_effect",
+        "witness_reacquired",
+        "witness_spent",
+        "--max-steps",
+        "60",
+        "--max-samples",
+        "200",
+        "--seed",
+        "0x20260907",
+        "--verbosity",
+        "1"
+      ],
+      "exit_code": 0,
+      "status": "NO_VIOLATION_FOUND_WITHIN_BOUND",
+      "samples": 200,
+      "max_steps_per_sample": 60,
+      "witness_trace_counts": {
+        "admitted": 126,
+        "effect": 13,
+        "reacquired": 141,
+        "spent": 144
+      },
+      "log": "/tmp/uos-agentic-coordination-quint-simulation.log",
+      "log_sha256": "f969565e6b4c0abba6a1081c845971e6a0536b3d38d215e9ee422e89fe8645d6"
+    },
+    {
+      "id": "QUINT-RUNTIME-SIMULATION",
+      "argv": [
+        "node",
+        "/home/an/.npm/_npx/fb57b81753a2bc55/node_modules/@informalsystems/quint/dist/src/cli.js",
+        "run",
+        "formal/quint/agentic_coordination.qnt",
+        "--main",
+        "agentic_coordination_runtime_test",
+        "--backend",
+        "typescript",
+        "--invariant",
+        "inv_all",
+        "--witnesses",
+        "witness_admitted",
+        "witness_effect",
+        "witness_reacquired",
+        "witness_spent",
+        "--max-steps",
+        "60",
+        "--max-samples",
+        "200",
+        "--seed",
+        "0x20260908",
+        "--verbosity",
+        "1"
+      ],
+      "exit_code": 0,
+      "status": "NO_VIOLATION_FOUND_WITHIN_BOUND",
+      "samples": 200,
+      "max_steps_per_sample": 60,
+      "witness_trace_counts": {
+        "admitted": 126,
+        "effect": 13,
+        "reacquired": 143,
+        "spent": 145
+      },
+      "log": "/tmp/uos-agentic-coordination-quint-runtime-simulation.log",
+      "log_sha256": "9b4347474493cc0786f245da4d31bdc9e3510b75fab3cd4eca9ba68ae79620a2"
+    },
+    {
+      "id": "QUINT-STALE-FENCE-MUTANT",
+      "argv": [
+        "node",
+        "/home/an/.npm/_npx/fb57b81753a2bc55/node_modules/@informalsystems/quint/dist/src/cli.js",
+        "run",
+        "formal/quint/agentic_coordination.qnt",
+        "--main",
+        "agentic_coordination_test",
+        "--backend",
+        "typescript",
+        "--init",
+        "mutantFenceInit",
+        "--step",
+        "mutantFenceStep",
+        "--invariant",
+        "inv_effect_gate",
+        "--max-steps",
+        "2",
+        "--max-samples",
+        "1",
+        "--seed",
+        "0x1",
+        "--verbosity",
+        "1",
+        "--out-itf",
+        "/tmp/uos-agentic-coordination-mutant-fence.itf.json"
+      ],
+      "exit_code": 1,
+      "status": "EXPECTED_COUNTEREXAMPLE_OBSERVED",
+      "counterexample": {
+        "states": 2,
+        "current_epoch": 1,
+        "submitted_epoch": 0,
+        "effects_before": 0,
+        "effects_after": 1,
+        "all_17_candidate_bound": true,
+        "all_34_keys_distinct": true,
+        "all_other_apply_preconditions_true": true
+      },
+      "independent_oracle": "jq independently decoded ITF bigint/map/set tags and checked all 17 packet bindings, 34 distinct keys, current policy/owner/resource/revision/expiry, mismatching fence, and increased effect count.",
+      "oracle_exit_code": 0,
+      "log": "/tmp/uos-agentic-coordination-quint-mutant-fence.log",
+      "log_sha256": "082a830ac6af52f094c6b41624cb43637c860d3e0c93a37438517cf81a64edfb"
+    },
+    {
+      "id": "QUINT-BUDGET-MUTANT",
+      "argv": [
+        "node",
+        "/home/an/.npm/_npx/fb57b81753a2bc55/node_modules/@informalsystems/quint/dist/src/cli.js",
+        "run",
+        "formal/quint/agentic_coordination.qnt",
+        "--main",
+        "agentic_coordination_test",
+        "--backend",
+        "typescript",
+        "--step",
+        "mutantBudgetStep",
+        "--invariant",
+        "inv_budget",
+        "--max-steps",
+        "2",
+        "--max-samples",
+        "1",
+        "--seed",
+        "0x1",
+        "--verbosity",
+        "1",
+        "--out-itf",
+        "/tmp/uos-agentic-coordination-mutant-budget.itf.json"
+      ],
+      "exit_code": 1,
+      "status": "EXPECTED_COUNTEREXAMPLE_OBSERVED",
+      "counterexample": {
+        "states": 2,
+        "reserved": 7,
+        "settled": 0,
+        "cap": 6
+      },
+      "independent_oracle": "jq independently decoded the ITF witness and evaluated 7 + 0 > 6.",
+      "oracle_exit_code": 0,
+      "log": "/tmp/uos-agentic-coordination-quint-mutant-budget.log",
+      "log_sha256": "61c888fc86f9ac0b897460a2a2f2cc14e9c92d78bdf582de3f3c393367dfe127"
+    }
+  ],
+  "lean_trust_basis": {
+    "custom_axiom_declarations": 0,
+    "sorry_occurrences": 0,
+    "printed_core_logical_dependencies": [
+      "propext",
+      "Quot.sound"
+    ],
+    "dependency_outputs": {
+      "run_preserves": [
+        "propext",
+        "Quot.sound"
+      ],
+      "apply_requires_all_17": [],
+      "valid_packets_ready": [
+        "propext",
+        "Quot.sound"
+      ],
+      "step_epoch_monotone": [
+        "propext",
+        "Quot.sound"
+      ],
+      "step_authority_unchanged": [
+        "propext",
+        "Quot.sound"
+      ]
+    },
+    "explanation": "These are declared standard Lean logical foundations, not user-defined assumptions or bypasses. No Classical.choice or sorryAx appeared in the printed transitive dependency lists. The file is checked with the standard Lean kernel; no generated native extraction is used as a production guard."
+  },
+  "properties": [
+    {
+      "id": "COORD-F01",
+      "claim": "Admission needs evidence for every distinct aspect, each source/runtime/formal revision equal to the candidate; all 34 runtime/formal evidence keys are positive and globally distinct.",
+      "lean": [
+        "Ready",
+        "apply_requires_all_17",
+        "apply_requires_distinct_keys",
+        "duplicate_key_cannot_admit",
+        "valid_packets_ready"
+      ],
+      "quint": [
+        "inv_all17_candidate_keys",
+        "missingAspectTest",
+        "duplicateKeyTest",
+        "staleRevisionTest"
+      ]
+    },
+    {
+      "id": "COORD-F02",
+      "claim": "One lease owner per resource, active ownership cannot be replaced, epochs never decrease and survive release.",
+      "lean": [
+        "single_owner",
+        "live_owner_blocks_acquire",
+        "step_epoch_monotone",
+        "release_retains_epoch"
+      ],
+      "quint": [
+        "inv_single_owner",
+        "inv_epoch_monotone",
+        "staleFenceTest"
+      ]
+    },
+    {
+      "id": "COORD-F03",
+      "claim": "Effects need current owner, unexpired lease, matching resource/revision/fence, explicit policy authority and candidate admission.",
+      "lean": [
+        "CanApply",
+        "stale_epoch_cannot_apply",
+        "wrong_revision_cannot_apply",
+        "expired_lease_cannot_apply",
+        "unprivileged_cannot_apply"
+      ],
+      "quint": [
+        "inv_effect_gate",
+        "staleFenceTest",
+        "expiredFenceTest",
+        "wrongResourceTest",
+        "staleRevisionTest"
+      ]
+    },
+    {
+      "id": "COORD-F04",
+      "claim": "Advice, message ACK, prompt and model output cannot change policy, lease, evidence admission or effect count.",
+      "lean": [
+        "advice_ack_prompt_non_authority",
+        "step_authority_unchanged"
+      ],
+      "quint": [
+        "inv_authority",
+        "inv_observations_do_not_authorize",
+        "observationOnlyTest"
+      ]
+    },
+    {
+      "id": "COORD-F05",
+      "claim": "Reserve and settle transitions preserve nonnegative liabilities and reserved plus settled at or below the cap.",
+      "lean": [
+        "reserve_preserves",
+        "settle_preserves",
+        "run_preserves"
+      ],
+      "quint": [
+        "inv_budget",
+        "overspendTest"
+      ]
+    },
+    {
+      "id": "COORD-F06",
+      "claim": "Valid traces can admit a full evidence table, acquire a lease, reserve cost, perform an action and settle cost.",
+      "lean": [
+        "valid_packets_ready",
+        "fixture_safe",
+        "#eval run fixture"
+      ],
+      "quint": [
+        "validLifecycleTest",
+        "witness_admitted",
+        "witness_effect",
+        "witness_reacquired",
+        "witness_spent"
+      ]
+    }
+  ],
+  "aspect_coverage": [
+    {
+      "id": "AINF-A01",
+      "name": "Substrate & Hardware Storage Interlock",
+      "existing_gate": "G-DRIVE-NVME",
+      "modeled_property": "Unique slot and candidate-bound two-key evidence required by COORD-F01",
+      "formal_model_status": "GATE_RULE_PROVED_AND_SIMULATED",
+      "operational_semantics_status": "NOT_PROVED",
+      "runtime_status": "UNKNOWN"
+    },
+    {
+      "id": "AINF-A02",
+      "name": "Standalone Jujutsu Monorepo Discipline",
+      "existing_gate": "G-BOOT1-JJ",
+      "modeled_property": "Unique slot and candidate-bound two-key evidence required by COORD-F01",
+      "formal_model_status": "GATE_RULE_PROVED_AND_SIMULATED",
+      "operational_semantics_status": "NOT_PROVED",
+      "runtime_status": "UNKNOWN"
+    },
+    {
+      "id": "AINF-A03",
+      "name": "Zero-Muda Purity & Waste Elimination",
+      "existing_gate": "G-ZERO-MUDA",
+      "modeled_property": "Unique slot and candidate-bound two-key evidence required by COORD-F01",
+      "formal_model_status": "GATE_RULE_PROVED_AND_SIMULATED",
+      "operational_semantics_status": "NOT_PROVED",
+      "runtime_status": "UNKNOWN"
+    },
+    {
+      "id": "AINF-A04",
+      "name": "Gleam/OTP 29 4-Domain Root Supervisor",
+      "existing_gate": "G-OTP29-SUPER",
+      "modeled_property": "Unique slot and candidate-bound two-key evidence required by COORD-F01",
+      "formal_model_status": "GATE_RULE_PROVED_AND_SIMULATED",
+      "operational_semantics_status": "NOT_PROVED",
+      "runtime_status": "UNKNOWN"
+    },
+    {
+      "id": "AINF-A05",
+      "name": "ZigVM Deterministic Engine & 8 VFS Laws",
+      "existing_gate": "G-VFS-8LAWS",
+      "modeled_property": "Unique slot and candidate-bound two-key evidence required by COORD-F01",
+      "formal_model_status": "GATE_RULE_PROVED_AND_SIMULATED",
+      "operational_semantics_status": "NOT_PROVED",
+      "runtime_status": "UNKNOWN"
+    },
+    {
+      "id": "AINF-A06",
+      "name": "Hermes Formal Evidence, Gospel & Z3",
+      "existing_gate": "G-HERMES-EVID",
+      "modeled_property": "Unique slot and candidate-bound two-key evidence required by COORD-F01",
+      "formal_model_status": "GATE_RULE_PROVED_AND_SIMULATED",
+      "operational_semantics_status": "NOT_PROVED",
+      "runtime_status": "UNKNOWN"
+    },
+    {
+      "id": "AINF-A07",
+      "name": "Mathematical Authority & Conservation",
+      "existing_gate": "G-LEAN4-MATH",
+      "modeled_property": "Unique slot and candidate-bound two-key evidence required by COORD-F01",
+      "formal_model_status": "GATE_RULE_PROVED_AND_SIMULATED",
+      "operational_semantics_status": "NOT_PROVED",
+      "runtime_status": "UNKNOWN"
+    },
+    {
+      "id": "AINF-A08",
+      "name": "Biosemiotic Cybernetics & Rocha Cut",
+      "existing_gate": "G-ROCHA-SEMIOT",
+      "modeled_property": "Unique slot and candidate-bound two-key evidence required by COORD-F01",
+      "formal_model_status": "GATE_RULE_PROVED_AND_SIMULATED",
+      "operational_semantics_status": "NOT_PROVED",
+      "runtime_status": "UNKNOWN"
+    },
+    {
+      "id": "AINF-A09",
+      "name": "Quarantined Modular MAX/Mojo Inference",
+      "existing_gate": "G-MAX-INFER",
+      "modeled_property": "Unique slot and candidate-bound two-key evidence required by COORD-F01",
+      "formal_model_status": "GATE_RULE_PROVED_AND_SIMULATED",
+      "operational_semantics_status": "NOT_PROVED",
+      "runtime_status": "UNKNOWN"
+    },
+    {
+      "id": "AINF-A10",
+      "name": "Zenoh OoZ & MoZ Mesh Telemetry Backplane",
+      "existing_gate": "G-ZENOH-MESH",
+      "modeled_property": "Unique slot and candidate-bound two-key evidence required by COORD-F01",
+      "formal_model_status": "GATE_RULE_PROVED_AND_SIMULATED",
+      "operational_semantics_status": "NOT_PROVED",
+      "runtime_status": "UNKNOWN"
+    },
+    {
+      "id": "AINF-A11",
+      "name": "AG-UI 32-Event SSE Stream Protocol",
+      "existing_gate": "G-AGUI-32EVENT",
+      "modeled_property": "Unique slot and candidate-bound two-key evidence required by COORD-F01",
+      "formal_model_status": "GATE_RULE_PROVED_AND_SIMULATED",
+      "operational_semantics_status": "NOT_PROVED",
+      "runtime_status": "UNKNOWN"
+    },
+    {
+      "id": "AINF-A12",
+      "name": "A2UI 233-Component Declarative Catalog",
+      "existing_gate": "G-A2UI-CATALOG",
+      "modeled_property": "Unique slot and candidate-bound two-key evidence required by COORD-F01",
+      "formal_model_status": "GATE_RULE_PROVED_AND_SIMULATED",
+      "operational_semantics_status": "NOT_PROVED",
+      "runtime_status": "UNKNOWN"
+    },
+    {
+      "id": "AINF-A13",
+      "name": "Penta-Stack Multi-Interface Accessibility",
+      "existing_gate": "G-PENTA-STACK",
+      "modeled_property": "Unique slot and candidate-bound two-key evidence required by COORD-F01",
+      "formal_model_status": "GATE_RULE_PROVED_AND_SIMULATED",
+      "operational_semantics_status": "NOT_PROVED",
+      "runtime_status": "UNKNOWN"
+    },
+    {
+      "id": "AINF-A14",
+      "name": "Universal Tailscale FQDN Web Navigation",
+      "existing_gate": "G-TAILSCALE-WEB",
+      "modeled_property": "Unique slot and candidate-bound two-key evidence required by COORD-F01",
+      "formal_model_status": "GATE_RULE_PROVED_AND_SIMULATED",
+      "operational_semantics_status": "NOT_PROVED",
+      "runtime_status": "UNKNOWN"
+    },
+    {
+      "id": "AINF-A15",
+      "name": "Comprehensive Verification Checklist",
+      "existing_gate": "G-CHECKLIST",
+      "modeled_property": "Unique slot and candidate-bound two-key evidence required by COORD-F01",
+      "formal_model_status": "GATE_RULE_PROVED_AND_SIMULATED",
+      "operational_semantics_status": "NOT_PROVED",
+      "runtime_status": "UNKNOWN"
+    },
+    {
+      "id": "AINF-A16",
+      "name": "Knowledge Management Triad (Wiki/ZK/Ont)",
+      "existing_gate": "G-KM-TRIAD",
+      "modeled_property": "Unique slot and candidate-bound two-key evidence required by COORD-F01",
+      "formal_model_status": "GATE_RULE_PROVED_AND_SIMULATED",
+      "operational_semantics_status": "NOT_PROVED",
+      "runtime_status": "UNKNOWN"
+    },
+    {
+      "id": "AINF-A17",
+      "name": "Sa-Plan & Bionic Durable Workflows",
+      "existing_gate": "G-SAPLAN-BIONIC",
+      "modeled_property": "Unique slot and candidate-bound two-key evidence required by COORD-F01",
+      "formal_model_status": "GATE_RULE_PROVED_AND_SIMULATED",
+      "operational_semantics_status": "NOT_PROVED",
+      "runtime_status": "UNKNOWN"
+    }
+  ],
+  "refinement": {
+    "status": "UNKNOWN",
+    "proposed_targets": [
+      "apps/uos_tui/src/uos_tui/coord.gleam",
+      "apps/uos_tui/src/uos_tui/session_sync.gleam"
+    ],
+    "collaborator_design_report": "session_coordination described registered active sessions, typed durable event replay, resource namespaces, bounded TTL, reboot/host binding and idempotency. The model abstracts these storage and identity mechanisms.",
+    "reported_test_state": "Collaborator reported 15 pure draft tests passing and 3 storage tests failing before exercising durable properties. This receipt did not independently execute those implementation tests.",
+    "required_before_runtime_admission": [
+      "Bind the candidate and concrete source digest to a refinement mapping.",
+      "Execute independent cross-process claims and persistence/restart/crash tests.",
+      "Demonstrate executor-side checks immediately before integration or runtime apply.",
+      "Authenticate evidence producers and trusted policy without model-controlled identity.",
+      "Run platform/security/storage/network checks for each of all 17 aspects."
+    ]
+  },
+  "limitations": [
+    "The 17 aspects are distinct typed evidence slots; their hardware, runtime, network, UI, knowledge and operational behaviors are not proved by these models.",
+    "Single-owner safety assumes atomic, serialized transitions for one resource. Distributed lock implementation, durability, journal corruption recovery, host boot binding, renewal, ACL authentication and concurrent independent VM execution remain outside the proof.",
+    "The two Quint resource instances are checked separately; this is not a proof of multi-resource transactions or deadlock freedom.",
+    "Policy is trusted immutable input during a trace. Actual credential delegation, policy revocation delivery and privilege-granting workflows are not implemented or proved.",
+    "Revision and evidence key identifiers are opaque natural/integer abstractions. No digest collision resistance, signature verification, attestation freshness mechanism or key-producer independence is established.",
+    "Lean proves all finite transition traces from its stated invariant. Quint explores 400 seeded traces of at most 60 steps each; no exhaustive state-space, temporal fairness or liveness claim is made.",
+    "Lean and Quint are complementary reference encodings; a machine-checked equivalence or refinement between them has not been established.",
+    "No SMT solver was needed for this slice. No solver installation, dependency download, runtime deployment, production adapter call or model inference was performed.",
+    "Local /tmp logs are replay aids; the canonical receipt retains source/tool digests, exact argv, exit codes, bound/seed, witness counts and independent counterexample summaries."
+  ]
+}

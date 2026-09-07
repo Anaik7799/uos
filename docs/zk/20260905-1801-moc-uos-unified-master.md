@@ -5,6 +5,16 @@ Tags: `#rocha-semiotics`, `#cybernetics`, `#fractal-l0`, `#fractal-l1`, `#fracta
 
 ## §1.0 Executive Architecture & Corpus Triad
 
+### Shared agent design checkpoint — 20260907-0653
+
+Analysis, plan and design complete; implementation deferred by the operator.
+[System design](http://nas-1.tail55d152.ts.net:4100/docs/design/20260907-0653-uos-tri-agent-sdlc-sre-herdr-spec.md) ·
+[Cheaper implementation plan](http://nas-1.tail55d152.ts.net:4100/docs/plans/20260907-0653-uos-tri-agent-cheaper-mode-implementation-plan.md) ·
+[Herdr and swarm runbook](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-0653-uos-tri-agent-swarm-operations.md) ·
+[Astra/max review](http://nas-1.tail55d152.ts.net:4100/docs/reviews/20260907-0653-astra-max-agentic-system-design-review.md).
+The Lean/Quint model evidence is scoped; all 17 operational semantics remain
+NOT_PROVED and production remains NOT_ADMITTED.
+
 ### Agentic infrastructure specification — 20260907-0550
 
 **Status: SPECIFIED / implementation UNRUN / NOT ADMITTED.** Native UOS building
@@ -100,6 +110,11 @@ graph TD
 ---
 
 ## §4.0 Bi-Directional Transclusion & Cross-Links
+ 
+The updated design links above are specification evidence. Historical admission
+labels in this MOC are not fresh runtime receipts. The historical Mermaid-only
+diagram is preserved; new diagrams in the linked design package include ASCII
+and Mermaid sources.
 
 - Master Wiki: `[[wiki:20260905-1721-uos-master-knowledge-graph-and-living-ontology]]`
 - Corpus Index: `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
@@ -108,3 +123,57 @@ graph TD
 - Zero-Trust Hook: `[[zk:agent_dispatch_hook]]` (`engines/hermes/modules/hermes_harness/agent_dispatch_hook.ml`)
 - Storage Safety Interlock: `[[zk:hardware_serial_interlock]]` (`HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736"`)
 - Zero-Muda Graphene Exclusion: `[[zk:pure_erlang_math]]` (`apps/cepaf_gleam/src/graphene_nif.erl`)
+
+## Comprehensive verification checklist
+
+Document checks and production gates have different evidence scopes. Checked
+items below refer only to this document package. All infrastructure runtime,
+formal-proof and sovereign-admission obligations remain **UNRUN**.
+
+<details>
+<summary>Domain 1 — Metadata, timestamp and Tailscale navigation</summary>
+
+- [x] **CHK-01-TIME** — Host-clock timestamp prefix and chrony receipt recorded.
+- [x] **CHK-02-TAIL** — Full clickable Tailscale FQDN references provided; serving status is reported in the journal.
+- [x] **CHK-03-FRACT** — Canonical L0–L9 fractal tags assigned.
+- [x] **CHK-04-KM** — Specification, wiki, ADR, source review and journal cross-linked.
+
+</details>
+
+<details>
+<summary>Domain 2 — Zero-Muda purity and storage safety</summary>
+
+- [ ] **CHK-05-MUDA** — Production dependency/exclusion scan required.
+- [ ] **CHK-06-GRAPH** — Pure BEAM/Hermes graph boundary must pass runtime checks.
+- [ ] **CHK-07-DRIVE** — Denied OS serial `25503L801736` must pass real interlock tests.
+
+</details>
+
+<details>
+<summary>Domain 3 — Testing Gold Standard and mathematical gates</summary>
+
+- [ ] **CHK-08-C1C8** — Structure, health badges, data grids, timeline, interactions, dark cockpit, advisory and action interlock.
+- [ ] **CHK-09-MATH** — H ≥ 2.50 bits, CCM ≥ 90.0%, D_EA ≤ 10.0%, ITQS ≥ 0.85 require declared metrics and fresh measurements.
+- [ ] **CHK-10-9MOD** — Unit, system, TDD, BDD, performance, scalability, property, fuzz and chaos.
+- [ ] **CHK-11-REGR** — Relevant UI regression suite and 30-second monitoring require execution.
+
+</details>
+
+<details>
+<summary>Domain 4 — Cross-language control and observability</summary>
+
+- [ ] **CHK-12-GLEAM** — Real OTP domain/actor supervision and restart evidence.
+- [ ] **CHK-13-HERMES** — Authoritative WAL, bounded formal checks and evidence receipts.
+- [ ] **CHK-14-ZIGVM** — Deterministic execution and descriptor-relative VFS evidence.
+- [ ] **CHK-15-MAX** — Real inference through the isolated MAX boundary.
+- [ ] **CHK-16-OTEL** — UTC microsecond timestamps and nonzero W3C trace/span IDs.
+
+</details>
+
+<details>
+<summary>Domain 5 — Sovereign governance and standalone Jujutsu</summary>
+
+- [ ] **CHK-17-SOV** — Tri-sovereign candidate review and authorized admission are outstanding.
+- [x] **CHK-18-JJ** — Documentation authored in UOS using its standalone JJ discipline; no native Git mutations in UOS.
+
+</details>

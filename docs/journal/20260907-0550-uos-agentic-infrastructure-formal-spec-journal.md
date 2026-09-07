@@ -1,144 +1,138 @@
-# UOS agentic infrastructure specification and mainline sync journal
+# 20260907-0550 — UOS agentic infrastructure, coordination and design checkpoint journal
 
+#fractal-l0 #fractal-l1 #fractal-l2 #fractal-l3 #fractal-l4 #fractal-l5 #fractal-l6 #fractal-l7 #fractal-l8 #fractal-l9 #zk-adr #zero-muda #km-triad
 
-[UOS Cockpit](http://nas-1.tail55d152.ts.net:4100/) / [Knowledge](http://nas-1.tail55d152.ts.net:4100/wiki) / [Agentic infrastructure](http://nas-1.tail55d152.ts.net:4100/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md)
+**Live:** [Journal](http://nas-1.tail55d152.ts.net:4100/docs/journal/20260907-0550-uos-agentic-infrastructure-formal-spec-journal.md) · [Source](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260907-0550-uos-agentic-infrastructure-formal-spec-journal.md) · [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [ZK](http://nas-1.tail55d152.ts.net:4100/zk) · [Checklist](http://nas-1.tail55d152.ts.net:4100/checklist)
 
-**Command & Control:** [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Events](http://nas-1.tail55d152.ts.net:4100/ag-ui/events)  
-**Knowledge Base:** [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [ZK](http://nas-1.tail55d152.ts.net:4100/zk) · [Master MOC](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260905-1801-moc-uos-unified-master.md)  
-**Repository & Governance:** [Files](http://nas-1.tail55d152.ts.net:4100/files/) · [Checklist](http://nas-1.tail55d152.ts.net:4100/checklist) · [AGENTS.md](http://nas-1.tail55d152.ts.net:4100/files/AGENTS.md)  
-**View:** [Rendered document](http://nas-1.tail55d152.ts.net:4100/docs/journal/20260907-0550-uos-agentic-infrastructure-formal-spec-journal.md) · [docs/journal/20260907-0550-uos-agentic-infrastructure-formal-spec-journal.md](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260907-0550-uos-agentic-infrastructure-formal-spec-journal.md)
-
-- **Package timestamp:** `2026-09-07T05:54:50Z`.
-- **Status:** Documentation authored; final structural verification and local mainline sync in progress.
-- **Specification:** [SPEC-UOS-AINF-001](http://nas-1.tail55d152.ts.net:4100/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md).
-- **Knowledge:** [[wiki:20260907-0550-uos-agentic-infrastructure-building-blocks]] · [[zk:20260907-0550-adr-uos-agentic-infrastructure-native-building-blocks]].
-
-Tags: #fractal-l0 #fractal-l2 #fractal-l3 #fractal-l4 #fractal-l5 #fractal-l8 #zk-adr #zero-muda #km-triad
+Package timestamp:2026-09-07T05:54:50Z. Stage:**ANALYSIS / PLAN / DESIGN COMPLETE; IMPLEMENTATION PAUSED BY OPERATOR**.
+[Infrastructure specification](http://nas-1.tail55d152.ts.net:4100/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md) · [Implementation handoff](http://nas-1.tail55d152.ts.net:4100/docs/plans/20260907-0653-uos-tri-agent-cheaper-mode-implementation-plan.md) · [17-aspect verification receipt](http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20260907-0653-uos-tri-agent-17-aspect-verification.json).
 
 ## 1. Scope & Trigger
 
-The operator requested an enterprise agent-infrastructure formal specification
-using UOS building blocks and all 17 canonical aspects, with C3I/Indrajaal code,
-docs, wiki and ZK review. The final steering requested a fast OODA state check
-and synchronization of current code and artifacts with mainline.
+The operator requested an enterprise agent-infrastructure specification using UOS native building blocks and the canonical17 aspects, with C3I/Indrajaal code/docs/wiki/ZK review. Subsequent steering requested local mainline synchronization, real Claude/Codex/AGY coordination through a message board, SDLC/SRE swarms, Herdr integration, executable Lean/Quint models, and economical OpenRouter workers.
+
+The final instruction was to finish analysis, planning and design using Astra at max reasoning, then defer implementation to a cheaper phase. Active workers and peers received that pause. Prototype work begun under the earlier instruction was preserved.
 
 ## 2. Pre-State Assessment
 
-UOS was on integration/uos-tui-swarm with existing TUI, board, coordination,
-documentation and source-receipt work. Main had diverged: the integration branch
-contained eight commits absent from main, while main contained the reviewed
-execution/acceptance wave absent from the branch. The common ancestor observed
-was `6eadde491681265dde692054d81118594a0b5443`.
-Existing changes were preserved; no source tree or data was deleted.
+The original TUI integration and main histories diverged from common ancestor `6eadde491681265dde692054d81118594a0b5443`. The TUI branch had8commits not in main; main had the reviewed execution/acceptance wave absent from that branch. Local main was `ca3c0503834ed625b417ee85329ab8fb962850ce`.
+
+Existing TUI, board, source receipts and other sessions' work were already present. Local C3I revision `47f9322329fcda2fdbd7061988f586c65db00d17` differed from observed VM-1 `0683c0f8c5fe4bcbd65011662596638855147729`; external sources remained read-only.
 
 ## 3. Execution Detail
 
-Mapped 21 services to UOS owners, 18 invariants, 63 required acceptance cases,
-357 service/aspect obligations and eight implementation packages. Authored the
-formal abstract schema, durable transition semantics, proposed operating limits,
-two paired ASCII/Mermaid diagrams and machine-readable traceability companion.
-Added a source review, wiki and proposed ADR, and linked the master MOC.
+### Specification and formal design
 
-Inspected selected canonical sources, local external C3I reference documents,
-and live VM-1 interfaces/document outlines. Local and remote C3I revisions differ;
-both remain read-only references for this work. This task performed no external
-source ingestion or runtime deployment.
+Authored21 service contracts,18 invariants,63 required service cases,357 service/aspect pairs,8 parent work packages, typed request/authority/context/budget/effect contracts, and paired ASCII/Mermaid architecture/lifecycle sources. Added source review, wiki, ADR and MOC links.
 
-Fast OODA: observe JJ divergence and active artifacts; orient around preserving
-both histories and truthful verification states; decide on a local JJ merge;
-act by validating the artifact package and reconciling both parents.
+A bounded formal worker produced a26 theorem Lean model and a Quint model with9 scenarios,400 seeded traces and2 unsafe-mutant controls. An explicitly routed `gpt-6-astra` / `max` reviewer independently checked the design. Its three clarifications were incorporated: one Hermes dispatch transaction and explicit rejection ordering; local session metadata separated from workflow authority; narrower formal-model claims.
+
+### Live cooperation and preserved prototypes
+
+Discovered actual Claude, Codex and AGY Herdr sessions and sent bounded work handoffs. Claude emitted a real ACK; AGY emitted a review report. New native session, Herdr and OpenRouter prototypes were authored before the pause. A peer fixed a storage parsing failure and integrated the preserved candidates. Root subsequently observed448 TUI tests passing. The source snapshot at `bc9c663d26e99ca39af9ac6f6a3bf7741e4aa6cb` is the code checkpoint; document edits are a later checkpoint.
+
+One sanitized OpenRouter advisory invocation reported125 prompt and234 completion tokens,USD 0.0001061, model `openai/gpt-4.1-nano`, provider Azure. Free routes were denied under account data policies. No remote request was initiated by root after the implementation pause.
+
+### VCS and artifact synchronization
+
+A peer created preserving merge `wozwmxyy/bdeacf06` during observation. Root preserved it with `integration/pre-tri-agent-sync-20260907` and created a further preserving integration change. Later peer operations advanced main to the code checkpoint above. This exposed that single-writer coordination was still cooperative, not mechanically enforced. No history was force-rewritten or remotely pushed.
+
+A live `state/sa_plan.sqlite3` had been tracked. It was ignored and untracked without deleting the local file; history was preserved and no database digest or contents were copied into these artifacts. Sa-plan plan `tri-agent-sync-20260907` records the work. Final design documents and receipts are synchronized separately with local mainline.
 
 ## 4. Root Cause Analysis
 
-The supplied capability list needed conversion into UOS ownership and executable
-contracts. Source review also found declaration/execution gaps: empty root
-supervisor startup, synthetic MAX output, literal aspect/VFS pass flags,
-in-memory temporal effect history, weak sample identity handling and incomplete
-tenant/file boundaries. Mainline drift arose from separate integration and
-execution branches; it is distinct from capability verification.
+The original vendor list lacked UOS ownership and testable contracts. Selected sources contained declaration/execution gaps: empty root startup, synthetic MAX output, literal matrix/VFS passes, in-memory temporal history and incomplete identity/tenant boundaries.
+
+A second operational issue was demonstrated: legacy board regeneration erased a peer message in both the ledger projection and shared Zenoh namespace. Claude recorded the loss and an Andon. Repair must preserve causality and cannot fabricate the lost sender event. Concurrent bookmark mutation despite a handoff showed why action consumers need fencing beyond conversational agreement.
+
+The initial179 cepaf failures were environment-sensitive: sandbox restrictions prevented local sockets/database operations. A host-access rerun passed all10,196 tests. This supersedes that broad baseline failure for the tested code; it does not establish the production obligations.
 
 ## 5. Fix Taxonomy
 
-Architecture/specification: native service contracts and proof obligations.
-Traceability: requirement/test/aspect mappings and selected source digests.
-Knowledge: bidirectional spec/wiki/ADR/journal/MOC navigation.
-VCS integration: preserve and merge code/artifact histories with Jujutsu.
-No production implementation fix is claimed by this documentation package.
+Specification: native contracts, transaction boundaries and complete17 aspect obligations.
+Formal design: executable bounded models with positive/negative controls.
+Coordination: actual peer handoff plus preserved native prototypes.
+Planning: ordered cheaper-mode slices and enterprise WP dependencies.
+Artifact hygiene: correct live doc URLs, source drift receipt, and preserved/untracked live DB.
+VCS: preserving local integration, without deployment or history deletion.
 
 ## 6. Patterns & Anti-Patterns Discovered
 
-Reuse actual bounded UOS carriers, with typed interfaces and explicit ownership.
-Distinguish source presence, structural validation, runtime observation and formal
-proof. Reject static “verified” flags as receipts, static lease strings as
-cryptographic identity, in-memory replay as durable exactly-once execution,
-and placeholder text as model inference.
+Distinguish delivered messages, peer ACKs, review agreement, task completion and effect authorization. Keep workflow money/approval/outcome authority in one Hermes transaction domain. A local session log is a cooperative coordination aid, not another workflow engine.
+
+Use local deterministic tools first; send compact source/evidence references to remote workers. Preserve original source hashes and mark later changes STALE. Static green flags, a model's opinion, passing file-presence checks and sampled traces are not production proof.
+
+ASCII/Mermaid sources for the design flow:
+
+```text
+SourceReview --contracts--> Specification
+Specification --model checks--> Evidence
+Evidence --independent review--> Handoff
+Handoff --operator stage change--> PausedImplementation
+```
+
+```mermaid
+flowchart LR
+  SourceReview["SourceReview"] -->|"contracts"| Specification["Specification"]
+  Specification -->|"model checks"| Evidence["Evidence"]
+  Evidence -->|"independent review"| Handoff["Handoff"]
+  Handoff -->|"operator stage change"| PausedImplementation["PausedImplementation"]
+```
 
 ## 7. Verification Matrix
 
-| Check | Scope | Result |
+| Check | Observed scope | Result |
 |---|---|---|
-| Host clock | chrony reference 2026-09-07T05:42:10Z, system 0.001250984 s slow, leap Normal | OBSERVED; model/context delta UNKNOWN |
-| Artifact structure | JSON IDs/counts, 357 coverage pairs, source existence, links, paired diagrams and checklists | Pending final validation |
-| TUI code | Fresh Gleam test run for current integration work | Pending result capture |
-| Broad cepaf baseline | Initial pre-implementation exploration | 10,017 passed / 179 failures, exit 1; causes not triaged here |
-| Proposed agent infrastructure | Runtime, model, isolation, load, formal and sovereign-admission tests | UNRUN |
-| Mainline synchronization | JJ parents, conflict state and retained artifacts | Pending final verification |
-| Tailnet document serving | Full FQDN URL and content checks | Pending probe |
+| Clock | chrony reference2026-09-07T05:42:10Z; system0.001250984s slow; leapNormal | OBSERVED; model/context deltaUNKNOWN |
+| Structural analysis |21 services,17 aspects,357pairs,63cases,18 invariants,8WPs; paired diagrams | Independent count checkPASS; final document validator receipt retained |
+| Native TUI checkpoint | Actual package suite |448 passed,0 failures,exit0 |
+| cepaf host checkpoint | Actual package suite with required host access |10,196passed,0 failures,exit0 |
+| cepaf sandbox control | Same broad suite in restricted sandbox |10,017passed,179 failures; environment restricted |
+| Hardware interlock | Rust hardware_identity_test |3 passed,0 failed |
+| Hermes wiki/Sa-plan | dune runtest scoped directories |exit0; cached execution possible; no fresh count claimed |
+| Lean | Abstract coordination model |26 named theorems compile; no custom axioms or incomplete proofs |
+| Quint |9 scenarios and400 traces, maximum60 steps |PASS within declared bounds;2 unsafe mutants detected |
+| Herdr and peers | Actual discovery and peer-created board messages |OBSERVED; atomic session fence absent |
+| OpenRouter | One sanitized advisory request |OBSERVED;359 tokens;reportedUSD 0.0001061; no execution authority |
+| Enterprise services |63 planned acceptance cases and17 operational semantics |UNRUN / NOT_PROVED / NOT_ADMITTED |
+| Source drift |80 selected review-time hashes |72 match;8 STALE after concurrent changes; original hashes retained |
+| Tailnet | Correct /docs/design URL returned200; doubled /docs/docs returned404 |Corrected links; final bundle probes recorded separately |
 
-The broad baseline is not infrastructure acceptance evidence. Historical green
-claims were not substituted for fresh tests.
+Source/test observations have explicit limits. The full [verification receipt](http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20260907-0653-uos-tri-agent-17-aspect-verification.json) and [formal receipt](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260907-0620-uos-tri-agent-formal-verification.json) contain the evidence classes.
 
 ## 8. Files Modified
 
-- [spec](http://nas-1.tail55d152.ts.net:4100/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md)
-- [manifest](http://nas-1.tail55d152.ts.net:4100/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json)
-- [review](http://nas-1.tail55d152.ts.net:4100/docs/reviews/20260907-0550-uos-c3i-indrajaal-17-aspect-infrastructure-source-review.md)
-- [wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-0550-uos-agentic-infrastructure-building-blocks.md)
-- [adr](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-0550-adr-uos-agentic-infrastructure-native-building-blocks.md)
-- [journal](http://nas-1.tail55d152.ts.net:4100/docs/journal/20260907-0550-uos-agentic-infrastructure-formal-spec-journal.md)
-- [moc](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260905-1801-moc-uos-unified-master.md)
+Design package: [Markdown specification](http://nas-1.tail55d152.ts.net:4100/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md), [JSON companion](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json), [source review](http://nas-1.tail55d152.ts.net:4100/docs/reviews/20260907-0550-uos-c3i-indrajaal-17-aspect-infrastructure-source-review.md), [wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-0550-uos-agentic-infrastructure-building-blocks.md), [ADR](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-0550-adr-uos-agentic-infrastructure-native-building-blocks.md), this journal and the [master MOC](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260905-1801-moc-uos-unified-master.md).
 
-The mainline synchronization also preserves the pre-existing code, generated
-artifacts, reviews and source receipts already present in the integration branch,
-and brings in main's execution/acceptance changes. Their ownership is unchanged.
+Coordination handoff: [system design](http://nas-1.tail55d152.ts.net:4100/docs/design/20260907-0653-uos-tri-agent-sdlc-sre-herdr-spec.md), [contract](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260907-0653-tri-agent-coordination.md), [implementation plan](http://nas-1.tail55d152.ts.net:4100/docs/plans/20260907-0653-uos-tri-agent-cheaper-mode-implementation-plan.md), [runbook](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-0653-uos-tri-agent-swarm-operations.md), [Astra review](http://nas-1.tail55d152.ts.net:4100/docs/reviews/20260907-0653-astra-max-agentic-system-design-review.md) and [17-aspect receipt](http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20260907-0653-uos-tri-agent-17-aspect-verification.json). Canonical AGENTS.md points to the new contract; .gitignore excludes the live Sa-plan database.
+
+Formal sources: `formal/lean/AgenticCoordination.lean`, `formal/quint/agentic_coordination.qnt` and timestamped formal receipt.
+
+Preserved prototype groups under apps/uos_tui: `session_sync*`, `herdr*`/`uos_herdr_ffi.erl`, `openrouter_worker*`/`uos_openrouter_ffi.erl` and corresponding tests. Existing peer-owned board/coord/TUI/generated/source artifacts were preserved; the mainline merge did not transfer their authorship.
 
 ## 9. Architectural Observations
 
-Indrajaal's existing dependency on cepaf is the primary UI integration shortcut.
-IAM supervisor wiring, Sa-Plan/Hermes persistence, Zenoh routing, wiki graph/TF-IDF
-kernels and AG-UI/A2UI/TUI types provide reusable boundaries. Source-level
-discoverability does not establish tenant safety or production readiness.
-The main specification contains matched ASCII and Mermaid sources for both diagrams.
+Reuse actual Gleam/OTP actors and algebra, Sa-plan/Hermes persistence, Zenoh routing, wiki graph/TF-IDF, ZigVM boundaries and AG-UI/A2UI/TUI contracts. Herdr is the session/tool integration surface. OpenRouter supplies limited advisory computation. Neither supplies the production authorization authority.
+
+The formal models prove gate structure and selected abstract invariants. They have one resource per instance and three abstract agent kinds; concrete sessions, persistence, multiple resources and reservation-per-dispatch correspondence require refinement.
 
 ## 10. Remaining Gaps
 
-All proposed infrastructure runtime and formal obligations are UNRUN. Close the
-documented implementation gaps and establish a triaged candidate baseline before
-admission. New external code ingestion still requires fresh source quiescence,
-sanitization and two-key verification. No remote push or deployment is included
-in the local mainline synchronization.
+Implementation is deferred. Close63 enterprise cases, mandatory effect fencing, session identity binding, canonical workspace exclusion, board causal repair, cross-process/crash tests, the typed Hermes observation bridge and atomic paid fleet budgeting. MAX, tenant isolation, sandbox containment, UI accessibility, live root supervision and complete operational recovery require fresh evidence.
+
+The legacy MOC's historical Mermaid-only diagram remains unchanged; its nonconformance is recorded rather than rewriting history. New/revised explanatory diagrams have both sources. No production deployment or system admission was performed.
 
 ## 11. Metrics Summary
 
-21 services; 17 aspects; 357 base service/aspect obligations; 18 invariants;
-63 service acceptance cases; eight work packages; 80 selected canonical
-source/reference bindings; two diagrams, each with ASCII and Mermaid source.
-Counts are specification coverage, not test-pass or admission metrics.
+21 services;17 aspects;357 base obligations;18 invariants;63 acceptance cases;8 enterprise WPs;9 ordered coordination implementation slices;80 review source bindings with8 stale;26 Lean theorems;9 Quint scenarios;400 bounded traces;2 negative controls. Test baseline448 TUI+10,196 cepaf+3 hardware cases passed. One remote advisory costUSD 0.0001061; total session/model cost is not inferred from that one call.
 
 ## 12. STAMP & Constitutional Alignment
 
-Preserves Gleam/OTP control, Hermes evidence/analysis, ZigVM deterministic runtime,
-MAX Python isolation, Zero-Muda exclusions and the unconditional OS serial lock
-`25503L801736`. Authority attenuation, finite budgets, fenced writes, typed
-approvals and observation/effect separation are explicit formal obligations.
-Native Git mutations inside UOS, source deletion and unvetted runtime adoption
-were not used.
+Preserved native language ownership, source quarantine, Zero-Muda exclusions, OS serial interlock and standalone JJ. Approval, money and side effects remain typed policy obligations. Formal tools and model advice cannot grant authority. Every prototype and receipt is distinguished from production admission.
 
 ## 13. Conclusion
 
-The specification defines a native UOS implementation path and exposes the work
-required for admission. Final artifact validation and mainline integration results
-will be recorded below; the proposed infrastructure remains UNRUN/NOT_ADMITTED.
+The analysis, plan and design are complete, including all 17 aspects, executable formal models, Herdr/three-agent coordination, OpenRouter economy and the cheaper-mode implementation sequence. Astra/max review clarifications are incorporated. Prototype code and private state are preserved; further implementation is paused for the operator's mode change.
 
 
 ## Comprehensive verification checklist
@@ -196,5 +190,5 @@ formal-proof and sovereign-admission obligations remain **UNRUN**.
 </details>
 
 
-**Previous:** [Decision record](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-0550-adr-uos-agentic-infrastructure-native-building-blocks.md) · **Next:** [Master MOC](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260905-1801-moc-uos-unified-master.md)  
-**UOS footer:** [nas-1 cockpit](http://nas-1.tail55d152.ts.net:4100/) · [vm-1 peer](http://vm-1.tail55d152.ts.net:8088) · SPECIFIED / runtime UNRUN.
+**Previous:** [Astra/max review](http://nas-1.tail55d152.ts.net:4100/docs/reviews/20260907-0653-astra-max-agentic-system-design-review.md) · **Next:** [Implementation handoff](http://nas-1.tail55d152.ts.net:4100/docs/plans/20260907-0653-uos-tri-agent-cheaper-mode-implementation-plan.md)  
+**UOS footer:** Design complete; implementation deferred; production NOT_ADMITTED.
