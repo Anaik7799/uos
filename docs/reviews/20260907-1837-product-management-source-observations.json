@@ -1,6 +1,6 @@
 {
   "schema": "uos.product-source-review/v1",
-  "observed_at": "2026-09-07T19:06:51Z",
+  "observed_at": "2026-09-07T19:08:07Z",
   "scope": "Product/specification/feature/oracle management source and metadata; no external source execution or admission.",
   "sources": [
     {
@@ -1494,18 +1494,72 @@
     },
     {
       "path": "/home/an/dev/ver/zigvm/harness/state/sa_plan.sqlite3",
-      "status": "UNAVAILABLE",
-      "error": "Failure(\"unable to open database file\")"
+      "mode": "READONLY",
+      "table_count": 18,
+      "tables": [
+        "sa_plan_activity", "sa_plan_bridge_command", "sa_plan_bridge_event",
+        "sa_plan_bridge_lease", "sa_plan_bridge_mapping",
+        "sa_plan_dependency", "sa_plan_job", "sa_plan_plan",
+        "sa_plan_preflight", "sa_plan_reconciliation", "sa_plan_schema_meta",
+        "sa_plan_selection_evidence", "sa_plan_task",
+        "sa_plan_webhook_inbox", "sa_plan_webhook_outbox",
+        "sa_plan_workflow", "sa_plan_workflow_activity",
+        "sa_plan_workflow_event"
+      ],
+      "selected_row_counts": { "sa_plan_task": 104, "sa_plan_plan": 10 },
+      "scope": "Schema names and aggregate counts only; no DB bytes copied or hashed; counts confer no verification."
     },
     {
       "path": "/home/an/dev/ver/harness-bionic/state/evidence_store.sqlite",
-      "status": "UNAVAILABLE",
-      "error": "Failure(\"unable to open database file\")"
+      "mode": "READONLY",
+      "table_count": 18,
+      "tables": [
+        "artifact_catalog", "capability_cell", "capability_contract",
+        "capability_contract_receipt", "check_evidence", "feature_catalog",
+        "feature_history", "fractal_node", "git_commit", "knowledge_link",
+        "node_artifact", "node_revision", "parity_scenario",
+        "parity_trace_pair", "parity_verification", "ruliad_evolution",
+        "schema_version", "source_snapshot"
+      ],
+      "selected_row_counts": {
+        "source_snapshot": 0,
+        "parity_verification": 1,
+        "parity_trace_pair": 1,
+        "parity_scenario": 1,
+        "fractal_node": 0,
+        "feature_history": 0,
+        "feature_catalog": 0,
+        "capability_contract_receipt": 0,
+        "capability_contract": 0,
+        "artifact_catalog": 0
+      },
+      "scope": "Schema names and aggregate counts only; no DB bytes copied or hashed; counts confer no verification."
     },
     {
       "path": "/home/an/dev/ver/harness-bionic/state/hermes_harness.sqlite3",
-      "status": "UNAVAILABLE",
-      "error": "Failure(\"unable to open database file\")"
+      "mode": "READONLY",
+      "table_count": 18,
+      "tables": [
+        "artifact_catalog", "capability_cell", "capability_contract",
+        "capability_contract_receipt", "check_evidence", "feature_catalog",
+        "feature_history", "fractal_node", "git_commit", "knowledge_link",
+        "node_artifact", "node_revision", "parity_scenario",
+        "parity_trace_pair", "parity_verification", "ruliad_evolution",
+        "schema_version", "source_snapshot"
+      ],
+      "selected_row_counts": {
+        "source_snapshot": 0,
+        "parity_verification": 212,
+        "parity_trace_pair": 212,
+        "parity_scenario": 40,
+        "fractal_node": 0,
+        "feature_history": 0,
+        "feature_catalog": 0,
+        "capability_contract_receipt": 0,
+        "capability_contract": 0,
+        "artifact_catalog": 0
+      },
+      "scope": "Schema names and aggregate counts only; no DB bytes copied or hashed; counts confer no verification."
     },
     {
       "path": "/home/an/dev/ver/harness-bionic/state/evidence.sqlite",

@@ -84,16 +84,16 @@ CREATE TABLE IF NOT EXISTS product_imports(
   PRIMARY KEY(spec_id,revision),
   FOREIGN KEY(spec_id,revision) REFERENCES product_specifications(id,revision));
 CREATE VIEW IF NOT EXISTS product_requirement_list AS
- SELECT f.spec_id,f.revision,f.id AS feature_id,json_extract(r.value,'id') AS requirement_id,
- json_extract(r.value,'shall') AS requirement
+ SELECT f.spec_id,f.revision,f.id AS feature_id,json_extract(r.value,'$.id') AS requirement_id,
+ json_extract(r.value,'$.shall') AS requirement
  FROM product_features f,json_each(f.payload,'$.requirements') r;
 CREATE VIEW IF NOT EXISTS product_acceptance_list AS
- SELECT f.spec_id,f.revision,f.id AS feature_id,json_extract(a.value,'id') AS case_id,
- json_extract(a.value,'assertion') AS assertion,json_extract(a.value,'status') AS status
+ SELECT f.spec_id,f.revision,f.id AS feature_id,json_extract(a.value,'$.id') AS case_id,
+ json_extract(a.value,'$.assertion') AS assertion,json_extract(a.value,'$.status') AS status
  FROM product_features f,json_each(f.payload,'$.acceptance') a;
 CREATE VIEW IF NOT EXISTS product_implementation_map AS
- SELECT f.spec_id,f.revision,f.id AS feature_id,json_extract(m.value,'path') AS path,
- json_extract(m.value,'sha256') AS sha256,json_extract(m.value,'status') AS status
+ SELECT f.spec_id,f.revision,f.id AS feature_id,json_extract(m.value,'$.path') AS path,
+ json_extract(m.value,'$.sha256') AS sha256,json_extract(m.value,'$.status') AS status
  FROM product_features f,json_each(f.payload,'$.mappings') m;
 CREATE VIEW IF NOT EXISTS product_feature_oracles AS
  SELECT f.spec_id,f.revision,f.id AS feature_id,o.value AS oracle_id
@@ -106,6 +106,14 @@ CREATE VIEW IF NOT EXISTS product_detail_list AS
  json_extract(f.payload,'$.sa_plan_task') AS sa_plan_task
  FROM product_features f;
 |}
+
+let protect_history db =
+  List.iter (fun table -> List.iter (fun action ->
+    exec db ("CREATE TRIGGER IF NOT EXISTS " ^ table ^ "_no_" ^ String.lowercase_ascii action ^
+      " BEFORE " ^ action ^ " ON " ^ table ^
+      " BEGIN SELECT RAISE(ABORT,'product catalog history is append-only'); END")) ["UPDATE";"DELETE"])
+    ["product_artifacts";"product_specifications";"product_features";"product_oracles";
+     "product_findings";"product_artifact_links";"product_imports"]
 
 let unique label xs = require (List.length xs = List.length (List.sort_uniq String.compare xs))
   ("duplicate " ^ label)
@@ -169,6 +177,7 @@ let import db j ~authorize =
   transaction db (fun () ->
     authorize ();
     exec db schema;
+    protect_history db;
     let prior = query db "SELECT manifest_sha256 FROM product_imports WHERE spec_id=? AND revision=?" [s id;s rev] in
     if prior <> [] then require (prior = [[s (sha payload)]]) "manifest revision already exists with different content";
     let put table cols values keys key_values row = insert_once db ~table ~columns:(cols@["payload"])
@@ -236,5 +245,5 @@ let run () = match Array.to_list Sys.argv with
         | [Sqlite3.Data.NULL;_] -> fail "external artifact is a reference only"
         | _ -> fail "invalid artifact") rows)
   | _ -> fail "usage: ocaml tools/product_catalog.ml {check MANIFEST|import MANIFEST|summary|features|artifact ID}"
-let () = if not !Sys.interactive then
+let () = if not !Sys.interactive && Filename.basename Sys.argv.(0) = "product_catalog.ml" then
   try run () with exn -> prerr_endline ("product-catalog: " ^ Printexc.to_string exn); exit 1
