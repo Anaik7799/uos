@@ -22,6 +22,7 @@ import cepaf_gleam/ui/lustre/gospel_z3_parity_explorer
 import cepaf_gleam/ui/lustre/hyperdimensional_zk_hologram
 import cepaf_gleam/ui/lustre/km_sheaf_traversal
 import cepaf_gleam/ui/lustre/knowledge_explorer
+import cepaf_gleam/ui/lustre/mirage_cockpit
 import cepaf_gleam/ui/lustre/navigational_omnisearch
 import cepaf_gleam/ui/lustre/omni_modal_console
 import cepaf_gleam/ui/lustre/pi_startup_visualizer
@@ -525,6 +526,18 @@ pub fn main() {
           render_lustre_page(
             "NASA JPL F Prime Aerospace Agent Cockpit",
             "fpp-agents",
+            content_html,
+          )
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html")
+      }
+      ["mirage"] | ["mirage", "cockpit"] -> {
+        let content_html = mirage_cockpit.view()
+        let page =
+          render_lustre_page(
+            "MirageOS Unikernel Migration Cockpit",
+            "mirage",
             content_html,
           )
         response.new(200)
@@ -1105,6 +1118,10 @@ fn render_nav(active: String) -> String {
     True -> "class='active'"
     False -> ""
   } <> " style='color:#a855f7;font-weight:bold'>🤖 F Prime Aerospace Agents</a>
+    <a href='/mirage' " <> case active == "mirage" {
+    True -> "class='active'"
+    False -> ""
+  } <> " style='color:#00d4aa;font-weight:bold'>🛡️ MirageOS Solo5 Cockpit</a>
 
     <div class='sep'></div>
     <div class='nav-section-title'>KNOWLEDGE BASE</div>
