@@ -1,5 +1,5 @@
 import cepaf_gleam/services/mirage_hypervisor as hyp
-import gleam/option.{None, Some}
+import gleam/option.{None}
 import gleeunit/should
 
 pub fn default_verified_probe_invariants_test() {

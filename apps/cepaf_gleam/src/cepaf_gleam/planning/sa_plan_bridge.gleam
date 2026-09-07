@@ -1009,3 +1009,34 @@ pub fn start_sa_workflow(
   run_sa_plan_cli(["workflow", "start", id, name, kind, input])
 }
 
+/// Formats a structured Zenoh telemetry payload for a Fractal Jidoka Andon Stop Line event.
+pub fn format_jidoka_andon_event(
+  source: String,
+  action: String,
+  reason: String,
+  timestamp_utc: String,
+) -> String {
+  json.object([
+    #("event_type", json.string("FRACTAL_JIDOKA_ANDON_HALT")),
+    #("error_code", json.int(-32_002)),
+    #("source", json.string(source)),
+    #("action", json.string(action)),
+    #("reason", json.string(reason)),
+    #("timestamp", json.string(timestamp_utc)),
+    #("status", json.string("HALTED_FAIL_CLOSED")),
+    #("rule", json.string("SC-JIDOKA-001")),
+  ])
+  |> json.to_string
+}
+
+/// Returns the canonical Zenoh topic for Jidoka Andon events.
+pub fn jidoka_andon_topic() -> String {
+  "indrajaal/l0/const/jidoka/andon"
+}
+
+/// Returns the canonical Zenoh topic for Sa-Plan task events.
+pub fn sa_plan_task_topic(task_id: String, operation: String) -> String {
+  "indrajaal/planning/task/" <> task_id <> "/" <> operation
+}
+
+

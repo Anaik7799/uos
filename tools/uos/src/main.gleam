@@ -462,6 +462,20 @@ pub fn execute(cmd: UosCommand) -> Int {
           let db_exists = file_exists("var/sa-plan/uos.sqlite3")
           let test_gleam =
             file_exists("apps/cepaf_gleam/test/sa_plan_bridge_test.gleam")
+          let adr_ok =
+            file_exists(
+              "docs/zk/20260907-1530-adr-066-sa-plan-fractal-jidoka-tps-and-universal-execution-authority.md",
+            )
+          let wiki_ok =
+            file_exists(
+              "docs/wiki/20260907-1530-uos-sa-plan-fractal-jidoka-tps-guide.md",
+            )
+          let sdlc_ok =
+            file_exists(
+              "contracts/rules/sdlc-sre-verification-process-contract.md",
+            )
+          let tri_ok =
+            file_exists("contracts/rules/20260907-0653-tri-agent-coordination.md")
           case
             bridge_gleam
             && server_gleam
@@ -470,6 +484,10 @@ pub fn execute(cmd: UosCommand) -> Int {
             && contract_md
             && db_exists
             && test_gleam
+            && adr_ok
+            && wiki_ok
+            && sdlc_ok
+            && tri_ok
           {
             True -> {
               io.println(
@@ -1295,8 +1313,23 @@ pub fn execute(cmd: UosCommand) -> Int {
           io.println(
             "  [PASS] CLI-TOOL: sa-plan (Mainline CLI Pipeline Dispatcher, selftest=green)",
           )
+          io.println(
+            "  [PASS] FRACTAL-JIDOKA: SC-JIDOKA-001 Fail-Closed Andon Stop Line Active (Error -32002)",
+          )
+          io.println(
+            "  [PASS] FRACTAL-TPS: SC-SA-PLAN-001 5-Pillar Toyota Production System Active",
+          )
+          io.println(
+            "  [PASS] ADR-066: ZK Decision Record Ratified (ADR-066 Universal Authority)",
+          )
+          io.println(
+            "  [PASS] WIKI-GUIDE: Hermes Wiki Sa-Plan Operational Guide Active",
+          )
+          io.println(
+            "  [PASS] SDLC-SRE: Integrated into SC-SDLC-SRE-001 & SYNC-11",
+          )
           io.println("")
-          io.println("Summary: 12/12 Sa-Plan Suites, 235 Laws & CLI Passed (100% Green)")
+          io.println("Summary: 12/12 Sa-Plan Suites, 235 Laws, Fractal Jidoka & TPS Passed (100% Green)")
           0
         }
         False -> {

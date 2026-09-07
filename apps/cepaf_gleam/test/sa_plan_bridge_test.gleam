@@ -213,3 +213,23 @@ pub fn sa_plan_cli_status_query_test() {
   }
 }
 
+pub fn zenoh_jidoka_and_topic_test() {
+  let topic = sa_plan_bridge.jidoka_andon_topic()
+  topic |> should.equal("indrajaal/l0/const/jidoka/andon")
+
+  let task_topic = sa_plan_bridge.sa_plan_task_topic("TASK-001", "claim")
+  task_topic |> should.equal("indrajaal/planning/task/TASK-001/claim")
+
+  let event =
+    sa_plan_bridge.format_jidoka_andon_event(
+      "agent-test",
+      "shadow_task",
+      "Unledgered execution detected",
+      "2026-09-07T15:30:00.000000Z",
+    )
+  should.be_true(string.contains(event, "FRACTAL_JIDOKA_ANDON_HALT"))
+  should.be_true(string.contains(event, "-32002"))
+  should.be_true(string.contains(event, "SC-JIDOKA-001"))
+}
+
+
