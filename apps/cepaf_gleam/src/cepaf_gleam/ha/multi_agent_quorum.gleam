@@ -26,6 +26,7 @@ pub type SovereignAgent {
   AgySovereign
   ClaudeSovereign
   CodexSovereign
+  OpenRouterSovereign
   PeerSovereign(name: String)
 }
 
@@ -35,6 +36,7 @@ pub fn sovereign_to_string(agent: SovereignAgent) -> String {
     AgySovereign -> "AGY"
     ClaudeSovereign -> "CLAUDE"
     CodexSovereign -> "CODEX"
+    OpenRouterSovereign -> "OPENROUTER"
     PeerSovereign(name) -> name
   }
 }
@@ -49,6 +51,7 @@ pub type QuorumVote {
 /// Quorum policy rule.
 pub type QuorumPolicy {
   TwoOfThreeSovereign
+  ThreeOfFourSovereign
   ByzantineFaultTolerant(faults_tolerated: Int)
   UnanimousSovereign
 }
@@ -119,6 +122,7 @@ pub fn create_ballot(
 ) -> QuorumBallot {
   let #(total_eligible, required_approvals) = case policy {
     TwoOfThreeSovereign -> #(3, 2)
+    ThreeOfFourSovereign -> #(4, 3)
     ByzantineFaultTolerant(f) -> {
       let n = 3 * f + 1
       let req = 2 * f + 1

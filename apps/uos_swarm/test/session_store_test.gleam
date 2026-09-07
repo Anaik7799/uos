@@ -16,13 +16,41 @@ fn raw_exec(path: String, sql: String) -> Result(Nil, String)
 @external(erlang, "session_store_test_ffi", "copy_file")
 fn copy_file(from: String, to: String) -> Result(Nil, String)
 
-/// Per-instructions scratch root for this task's tests: a temp db path
-/// under this exact scratchpad directory, created per test.
-const scratch_root = "/tmp/claude-1000/-home-an-NAS-setup/656f0d2c-6019-4d9e-b0ce-b9e39b240047/scratchpad/store-tests"
+/// Scratch root for these tests. Session-independent on purpose: the original
+/// value pointed at one authoring session's private scratchpad, which does not
+/// exist for any other session or on CI. Every path under it is suffixed with
+/// `unique_id()`, so concurrent runs do not collide.
+const scratch_root = "/tmp/uos-session-store-tests"
 
-/// Read-only migration source: 415 canonical event files, the coordinator's
-/// resigned copy after the 2026-09-07T17:12:46Z foreign re-signing incident.
-const events_ro_dir = "/tmp/claude-1000/-home-an-NAS-setup/656f0d2c-6019-4d9e-b0ce-b9e39b240047/scratchpad/coord-resigned-ro/events"
+/// Migration source for the migration tests. The original was a frozen
+/// 415-event copy in one session's private scratchpad, which no other session
+/// can read. Instead the fixture is generated here through the store's own API
+/// and exported, so the migration tests assert the export-to-migrate round trip
+/// rather than a fixed historical count.
+fn fixture_sessions() -> List(String) {
+  ["alpha", "beta", "gamma", "delta", "epsilon"]
+}
+
+/// Build a journal directory by appending known events to a fresh store and
+/// exporting it. Returns the events directory, the event count and the head
+/// digest that a faithful migration must reproduce.
+fn fixture_events_dir() -> #(String, Int, String) {
+  let db = db_path()
+  let assert Ok(source) = store.open(db)
+  list.each(fixture_sessions(), fn(name) {
+    let assert Ok(#(_, False)) =
+      store.append(
+        source,
+        sync.Register(name, "codex", workspace_dir(), "rev-" <> name, []),
+        "fixture-register-" <> name,
+      )
+  })
+  let assert Ok(head) = store.head(source)
+  let out_root = out_root_dir()
+  let assert Ok(exported) = store.export(source, out_root)
+  let assert Ok(Nil) = store.close(source)
+  #(out_root <> "/events", exported, head.1)
+}
 
 fn ensure_scratch_root() -> Nil {
   let _ = simplifile.create_directory_all(scratch_root)
@@ -392,36 +420,42 @@ pub fn verify_reports_the_exact_failure_on_a_tampered_copy_test() {
 // Migration from the read-only 415-event copy, and export parity
 // ---------------------------------------------------------------------
 
-pub fn migrate_from_journal_415_events_replay_verify_and_export_parity_test() {
+pub fn migrate_from_journal_replay_verify_and_export_parity_test() {
+  let #(events_dir, source_count, source_digest) = fixture_events_dir()
+  let expected = list.length(fixture_sessions())
+  source_count |> should.equal(expected)
+
   let db = db_path()
   let assert Ok(opened) = store.open(db)
-  let assert Ok(count) = store.migrate_from_journal(events_ro_dir, opened)
-  count |> should.equal(415)
+  let assert Ok(count) = store.migrate_from_journal(events_dir, opened)
+  count |> should.equal(expected)
 
   let assert Ok(state) = store.replay(opened)
-  state.sequence |> should.equal(415)
-  dict.size(state.sessions) |> should.equal(5)
+  state.sequence |> should.equal(expected)
+  dict.size(state.sessions) |> should.equal(expected)
 
   let assert Ok(head) = store.head(opened)
-  head.0 |> should.equal(415)
+  head.0 |> should.equal(expected)
+  // A faithful migration reproduces the source chain exactly.
+  head.1 |> should.equal(source_digest)
 
   let assert Ok(report) = store.verify(opened)
   report.ok |> should.be_true
-  report.checked |> should.equal(415)
+  report.checked |> should.equal(expected)
 
   let out_root = out_root_dir()
   let assert Ok(exported) = store.export(opened, out_root)
-  exported |> should.equal(415)
+  exported |> should.equal(expected)
 
   let assert Ok(names) = simplifile.read_directory(out_root <> "/events")
-  list.length(names) |> should.equal(415)
+  list.length(names) |> should.equal(expected)
   let assert Ok(lines) =
     names
     |> list.sort(string.compare)
     |> list.try_map(fn(name) { simplifile.read(out_root <> "/events/" <> name) })
   let assert Ok(exported_state) = sync.replay(string.join(lines, "\n"))
   exported_state.digest |> should.equal(head.1)
-  exported_state.sequence |> should.equal(415)
+  exported_state.sequence |> should.equal(expected)
 
   let assert Ok(Nil) = store.close(opened)
 }
@@ -436,8 +470,9 @@ pub fn migration_refuses_a_non_empty_store_test() {
       sync.Register("codex", "codex", workspace, "revision-a", []),
       "register",
     )
+  let #(events_dir, _, _) = fixture_events_dir()
   let assert Error(store.RefusedError(reason)) =
-    store.migrate_from_journal(events_ro_dir, opened)
+    store.migrate_from_journal(events_dir, opened)
   string.contains(reason, "non-empty store") |> should.be_true
   let assert Ok(Nil) = store.close(opened)
 }

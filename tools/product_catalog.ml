@@ -43,8 +43,20 @@ let with_db ~readonly path f =
   Fun.protect ~finally:(fun () -> ignore (Sqlite3.db_close db)) (fun () ->
     Sqlite3.busy_timeout db 3000;
     exec db "PRAGMA foreign_keys=ON";
-    if readonly then exec db "PRAGMA query_only=ON";
+    if readonly then exec db "PRAGMA query_only=ON"
+    else (exec db "PRAGMA journal_mode=WAL"; exec db "PRAGMA synchronous=FULL");
     f db)
+
+let insert_absent db ~table ~columns ~values ~keys ~key_values =
+  let where = String.concat " AND " (List.map (fun key -> key^"=?") keys) in
+  if query db ("SELECT 1 FROM "^table^" WHERE "^where) key_values = [] then
+    ignore (query db ("INSERT INTO "^table^"("^String.concat "," columns^") VALUES("^
+      String.concat "," (List.map (fun _ -> "?") values)^")") values)
+
+let reject_replace db table keys =
+  let predicate = String.concat " AND " (List.map (fun k -> k^"=NEW."^k) keys) in
+  exec db ("CREATE TRIGGER IF NOT EXISTS "^table^"_no_replace BEFORE INSERT ON "^table^
+    " WHEN EXISTS(SELECT 1 FROM "^table^" WHERE "^predicate^") BEGIN SELECT RAISE(ABORT,'immutable key already exists'); END")
 
 (* Database-authoritative JSON documents. Existing tool/file consumers can be
    migrated independently; an export is never the authoritative version. *)
@@ -64,6 +76,9 @@ CREATE TRIGGER IF NOT EXISTS product_json_versions_no_update BEFORE UPDATE ON pr
 CREATE TRIGGER IF NOT EXISTS product_json_versions_no_delete BEFORE DELETE ON product_json_versions BEGIN SELECT RAISE(ABORT,'immutable JSON version'); END;
 CREATE TRIGGER IF NOT EXISTS product_json_events_no_update BEFORE UPDATE ON product_json_events BEGIN SELECT RAISE(ABORT,'immutable JSON event'); END;
 CREATE TRIGGER IF NOT EXISTS product_json_events_no_delete BEFORE DELETE ON product_json_events BEGIN SELECT RAISE(ABORT,'immutable JSON event'); END;
+CREATE TRIGGER IF NOT EXISTS product_json_events_chain BEFORE INSERT ON product_json_events
+ WHEN NEW.previous_revision IS NOT (SELECT revision FROM product_json_events WHERE path=NEW.path ORDER BY sequence DESC LIMIT 1)
+ BEGIN SELECT RAISE(ABORT,'stale JSON predecessor'); END;
 |}
 let document_head db path =
   if query db "SELECT name FROM sqlite_master WHERE name='product_json_heads'" [] = [] then None
@@ -79,17 +94,24 @@ let read_document path =
   match stored with Some (_,body) -> body | None -> read path
 let store_document db ~path ~body ~expected ~actor =
   require (String.length body <= 8*1024*1024) "document exceeds 8 MiB";
-  require (Filename.is_relative path && not (List.mem ".." (String.split_on_char '/' path)) && Filename.check_suffix path ".json") "invalid document path";
+  require (Filename.is_relative path && String.for_all (fun c -> Char.code c >= 32 && c <> '\\') path &&
+    List.for_all (fun part -> part<>"" && part<>"." && part<>"..") (String.split_on_char '/' path) &&
+    Filename.check_suffix path ".json") "invalid document path";
+  require (String.trim actor <> "") "document actor required";
   ignore (canonical (Yojson.Basic.from_string body));
   exec db document_schema;
+  reject_replace db "product_json_versions" ["path";"revision"];
+  reject_replace db "product_json_events" ["sequence"];
   let current = document_head db path |> Option.map fst and revision = sha body in
   if current <> Some revision then begin
     require (current = expected) "document changed; compare-and-swap failed";
-    ignore (query db "INSERT INTO product_json_versions VALUES(?,?,?,?,?) ON CONFLICT DO NOTHING"
-      [s path;s revision;s body;s revision;Sqlite3.Data.FLOAT (Unix.gettimeofday ())]);
+    insert_absent db ~table:"product_json_versions" ~columns:["path";"revision";"content";"sha256";"created_at"]
+      ~values:[s path;s revision;s body;s revision;Sqlite3.Data.FLOAT (Unix.gettimeofday ())]
+      ~keys:["path";"revision"] ~key_values:[s path;s revision];
     ignore (query db "INSERT INTO product_json_events(path,revision,previous_revision,actor,created_at) VALUES(?,?,?,?,?)"
       [s path;s revision;(match current with Some v -> s v | None -> Sqlite3.Data.NULL);s actor;Sqlite3.Data.FLOAT (Unix.gettimeofday ())])
   end;
+  require (document_head db path = Some (revision,body)) "stored document readback mismatch";
   revision
 
 let schema = {|
@@ -159,7 +181,15 @@ let protect_history db =
       " BEFORE " ^ action ^ " ON " ^ table ^
       " BEGIN SELECT RAISE(ABORT,'product catalog history is append-only'); END")) ["UPDATE";"DELETE"])
     ["product_artifacts";"product_specifications";"product_features";"product_oracles";
-     "product_findings";"product_artifact_links";"product_imports"]
+     "product_findings";"product_artifact_links";"product_imports"];
+  List.iter (fun (table,keys) -> reject_replace db table keys)
+    ["product_artifacts",["id";"revision"];
+     "product_specifications",["id";"revision"];
+     "product_features",["spec_id";"revision";"id"];
+     "product_oracles",["spec_id";"revision";"id"];
+     "product_findings",["spec_id";"revision";"id"];
+     "product_artifact_links",["spec_id";"revision";"artifact_id";"artifact_revision";"role"];
+     "product_imports",["spec_id";"revision"]]
 
 let unique label xs = require (List.length xs = List.length (List.sort_uniq String.compare xs))
   ("duplicate " ^ label)
@@ -242,8 +272,9 @@ let append_artifacts db packet ~authorize =
       [s id;s rev] = [[s plan]]) "artifact target or plan mismatch";
     List.iter (fun a ->
       store_artifact db a;
-      ignore (query db "INSERT INTO product_artifact_links VALUES(?,?,?,?,?) ON CONFLICT DO NOTHING"
-        [s id;s rev;s (text "id" a);s (text "revision" a);s (text "kind" a)])) artifacts;
+      let columns = ["spec_id";"revision";"artifact_id";"artifact_revision";"role"] in
+      let values = [s id;s rev;s (text "id" a);s (text "revision" a);s (text "kind" a)] in
+      insert_absent db ~table:"product_artifact_links" ~columns ~values ~keys:columns ~key_values:values) artifacts;
     require (query db "PRAGMA foreign_key_check" [] = []) "foreign-key violation";
     authorize ())
 
@@ -271,10 +302,12 @@ let import db j ~authorize =
     List.iter (fun f -> put "product_findings" ["spec_id";"revision";"id";"severity";"title"]
       [s id;s rev;s (text "id" f);s (text "severity" f);s (text "title" f)]
       ["spec_id";"revision";"id"] [s id;s rev;s (text "id" f)] f) (items "findings" j);
-    List.iter (fun l -> ignore (query db
-      "INSERT INTO product_artifact_links VALUES(?,?,?,?,?) ON CONFLICT DO NOTHING"
-      [s id;s rev;s (text "artifact_id" l);s (text "artifact_revision" l);s (text "role" l)])) (items "artifact_links" j);
-    ignore (query db "INSERT INTO product_imports VALUES(?,?,?,?) ON CONFLICT DO NOTHING" [s id;s rev;s (sha payload);s payload]);
+    List.iter (fun l ->
+      let columns = ["spec_id";"revision";"artifact_id";"artifact_revision";"role"] in
+      let values = [s id;s rev;s (text "artifact_id" l);s (text "artifact_revision" l);s (text "role" l)] in
+      insert_absent db ~table:"product_artifact_links" ~columns ~values ~keys:columns ~key_values:values) (items "artifact_links" j);
+    insert_absent db ~table:"product_imports" ~columns:["spec_id";"revision";"manifest_sha256";"manifest"]
+      ~values:[s id;s rev;s (sha payload);s payload] ~keys:["spec_id";"revision"] ~key_values:[s id;s rev];
     require (query db "PRAGMA foreign_key_check" [] = []) "foreign-key violation";
     (* Covers cooperative in-flight ownership changes. Separate databases cannot
        supply an atomic scheduler/effect fence; no such claim is made here. *)
@@ -302,11 +335,13 @@ let summary db =
 
 let run () = match Array.to_list Sys.argv with
   | [_;"document";path] -> print_string (read_document path)
-  | [_;"store-document";path] ->
+  | [_;"store-document";path;expected_revision] ->
       let body = read path in
+      let expected = if expected_revision="new" then None else
+        (require (check_hex expected_revision) "expected revision must be SHA-256 or new"; Some expected_revision) in
       with_db ~readonly:false "data/sqlite/uos_verification_tracking.sqlite3" (fun db ->
         transaction db (fun () -> authorize ();
-          let expected = document_head db path |> Option.map fst in
+          protect_history db;
           let revision = store_document db ~path ~body ~expected ~actor:(Sys.getenv "UOS_PRODUCT_WORKER") in
           require (read path = body) "source JSON changed during import";
           authorize (); print_endline revision))
@@ -337,6 +372,6 @@ let run () = match Array.to_list Sys.argv with
         require (sha body = digest) "stored artifact digest mismatch"; print_string body
         | [Sqlite3.Data.NULL;_] -> fail "external artifact is a reference only"
         | _ -> fail "invalid artifact") rows)
-  | _ -> fail "usage: ocaml tools/product_catalog.ml {check MANIFEST|import MANIFEST|append-artifacts PACKET|summary|features|artifact ID [REVISION]|document PATH|store-document PATH}"
+  | _ -> fail "usage: ocaml tools/product_catalog.ml {check MANIFEST|import MANIFEST|append-artifacts PACKET|summary|features|artifact ID [REVISION]|document PATH|store-document PATH EXPECTED_SHA256_OR_new}"
 let () = if not !Sys.interactive && Filename.basename Sys.argv.(0) = "product_catalog.ml" then
   try run () with exn -> prerr_endline ("product-catalog: " ^ Printexc.to_string exn); exit 1

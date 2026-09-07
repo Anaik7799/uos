@@ -1,0 +1,584 @@
+[
+  {
+    "valid_until": "2026-09-07T23:11:26Z",
+    "observed_at": "2026-09-07T21:11:26Z",
+    "snapshot": {
+      "evidence": [
+        {
+          "observed_at": "2026-09-07T21:11:26Z",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "path": "tools/sa-plan"
+        },
+        {
+          "observed_at": "2026-09-07T21:11:26Z",
+          "sha256": "598653f5a9df9179b5527920f030878894787fa81d791b5ac742b0a53d60a613",
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md"
+        },
+        {
+          "observed_at": "2026-09-07T21:11:26Z",
+          "sha256": "c49af0363f1afb3a5e1fe0e37a5aea8de6ac9cc08414c540c6dac668945322d2",
+          "path": "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json"
+        },
+        {
+          "observed_at": "2026-09-07T21:11:26Z",
+          "sha256": "f5f0a3b1757857e6f538c14c510a48ea2837740b89ec5e4c87d635eb5f38edc9",
+          "path": "docs/reviews/20260907-1837-zigvm-harness-product-feature-oracle-review.md"
+        },
+        {
+          "observed_at": "2026-09-07T21:11:26Z",
+          "sha256": "f47d913218577601e64465ad9ac3f3d5f8d8a199d17b8a68508052dab7c729c3",
+          "path": "governance/sources/20260907-1756-agentic-infra-third-party-oracle-registry.json"
+        }
+      ],
+      "kind": "working_tree",
+      "reference": "Stable reviewed specification and policy; implementation candidates bound by their own exact source manifests."
+    },
+    "task_state": "completed",
+    "phase": "review",
+    "assessment_id": "catalog-completed-20260907-1915",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "plan_id": "uos/agentic-product/20260907-1837",
+    "task_id": "CATALOG",
+    "actor": "codex-agentic-product-1837",
+    "scope": "Add timestamped source archive, SQLite product requirements/features/oracles and bounded OCaml catalog tooling using existing UOS elements; targeted local implementation/verification only; no production cutover or imported executable source.",
+    "fractal_layer": 4,
+    "ready_since": "2026-09-07T18:56:42Z",
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Explicit user request for complete product requirement coverage and usable catalog.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json",
+          "governance/sources/20260907-1756-agentic-infra-third-party-oracle-registry.json"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Catalog truth can influence later actions; production effects remain gated.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json",
+          "governance/sources/20260907-1756-agentic-infra-third-party-oracle-registry.json"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O3 Det3 RPN36: credible false coverage or destructive data import; transaction and honest evidence status prevent propagation.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json",
+          "governance/sources/20260907-1756-agentic-infra-third-party-oracle-registry.json"
+        ]
+      },
+      "dependency": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Requirement and oracle register feeds native implementation and acceptance.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json",
+          "governance/sources/20260907-1756-agentic-infra-third-party-oracle-registry.json"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "All 21 requested service categories benefit from traceable specification.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json",
+          "governance/sources/20260907-1756-agentic-infra-third-party-oracle-registry.json"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-CATALOG-FALSE-COVERAGE",
+        "cause": "Unverified mappings or stale claims promoted to complete; nontransactional import.",
+        "effect": "Incorrect production admission decisions or damaged specification rows.",
+        "controls": "Namespaced additive schema, parameterized transaction, readback, input hashes, explicit UNRUN and NOT_ADMITTED states.",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "UOS product catalog maintainer",
+      "control_action": "Import blueprint and bind native service implementation evidence",
+      "losses": [ "L-EVIDENCE-INTEGRITY" ],
+      "hazards": [ "H-FALSE-COMPLETION", "H-CATALOG-CORRUPTION" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Required service or security constraint omitted from specification.",
+          "hazard_ids": [ "H-FALSE-COMPLETION" ],
+          "constraint": "Verify all 21 taxonomy services, six readiness criteria and detailed acceptance coverage."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Source presence reported as verified behavior or arbitrary SQL overwrites existing catalog.",
+          "hazard_ids": [ "H-FALSE-COMPLETION", "H-CATALOG-CORRUPTION" ],
+          "constraint": "Use conservative states and additive transaction with bound parameters."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Evidence belongs to an old candidate or import runs without current claim.",
+          "hazard_ids": [ "H-FALSE-COMPLETION" ],
+          "constraint": "Recheck hashes, preflight and active ownership before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Catalog process exceeds lease or imports incomplete state after cancellation.",
+          "hazard_ids": [ "H-CATALOG-CORRUPTION" ],
+          "constraint": "Bound process and transactions; rollback failures and stop on lease expiry."
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 432,
+    "score_interval": [ 432, 432 ],
+    "decision": {
+      "summary": "Complete the authorized native product catalog, revalidate available oracles, and implement/test bounded native functionality based on observed gaps.",
+      "alternatives": [
+        "Leave architecture solely in Markdown",
+        "Install all named third-party services"
+      ],
+      "counterevidence": [
+        "The prior map records incomplete production controls; source presence cannot establish parity."
+      ],
+      "assumptions": [
+        "User requests native UOS reuse; third-party sources are read-only behavior references."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "All original service requirements become queryable with explicit gaps and reproducible acceptance links.",
+      "falsifier": "A missing service, duplicated row, changed source digest or unexecuted test appears as verified.",
+      "acceptance": [
+        "21 taxonomy services represented", "Original blueprint retained",
+        "Oracle pin/license checks recorded",
+        "SQLite integrity, idempotence and non-destructive additive import verified",
+        "Native targeted tests produce actual scoped results"
+      ],
+      "rollback": "Rollback failed SQLite transactions; retain pre-import local backup; revert only this task's JJ file changes after review.",
+      "reviewer": "Author tests and source review; independent admission NOT_ADMITTED.",
+      "budget": "Single agent, sequential native writes, one compilation job, bounded local tests, zero paid oracle/model requests; no production deployment.",
+      "residuals": [
+        "Full production service admission requires actual security, isolation and runtime evidence for each gap."
+      ],
+      "supersedes": "none"
+    }
+  },
+  {
+    "valid_until": "2026-09-07T23:11:26Z",
+    "observed_at": "2026-09-07T21:11:26Z",
+    "snapshot": {
+      "evidence": [
+        {
+          "observed_at": "2026-09-07T21:11:26Z",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "path": "tools/sa-plan"
+        },
+        {
+          "observed_at": "2026-09-07T21:11:26Z",
+          "sha256": "598653f5a9df9179b5527920f030878894787fa81d791b5ac742b0a53d60a613",
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md"
+        },
+        {
+          "observed_at": "2026-09-07T21:11:26Z",
+          "sha256": "c49af0363f1afb3a5e1fe0e37a5aea8de6ac9cc08414c540c6dac668945322d2",
+          "path": "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json"
+        },
+        {
+          "observed_at": "2026-09-07T21:11:26Z",
+          "sha256": "f5f0a3b1757857e6f538c14c510a48ea2837740b89ec5e4c87d635eb5f38edc9",
+          "path": "docs/reviews/20260907-1837-zigvm-harness-product-feature-oracle-review.md"
+        },
+        {
+          "observed_at": "2026-09-07T21:11:26Z",
+          "sha256": "f47d913218577601e64465ad9ac3f3d5f8d8a199d17b8a68508052dab7c729c3",
+          "path": "governance/sources/20260907-1756-agentic-infra-third-party-oracle-registry.json"
+        }
+      ],
+      "kind": "working_tree",
+      "reference": "Stable reviewed specification and policy; implementation candidates bound by their own exact source manifests."
+    },
+    "decision": {
+      "supersedes": "Catalog review findings PM-F02, PM-F03, PM-F04, PM-F05, PM-F07 and PM-F09; original review retained.",
+      "residuals": [
+        "Generic hostile-code sandbox and production admission remain separate.",
+        "Shared cockpit cutover requires runtime ownership and a concrete revision/rollback receipt; prepare and test first."
+      ],
+      "budget": "Single agent; one build worker; <=2 GiB build memory; <=256 MiB bounded oracle; 4h task lease; local free tools; no arbitrary user commands or paid model calls.",
+      "acceptance": [
+        "Complete feature/requirement/case hierarchy and Sa-plan references",
+        "Missing/stale/mismatched/empty evidence withholds verification",
+        "One real bounded executable oracle comparison with recorded identity",
+        "Existing cockpit exposes features, findings, dependencies, oracle readiness and receipt history",
+        "Negative tests and exact database readback pass; no automatic production admission"
+      ],
+      "summary": "Implement the authorized product workflow using SQLite and existing native components; keep external source trees read-only.",
+      "alternatives": [
+        "Leave architecture solely in Markdown",
+        "Install all named third-party services"
+      ],
+      "counterevidence": [
+        "The prior map records incomplete production controls; source presence cannot establish parity."
+      ],
+      "assumptions": [
+        "User requests native UOS reuse; third-party sources are read-only behavior references."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "All original service requirements become queryable with explicit gaps and reproducible acceptance links.",
+      "falsifier": "A missing service, duplicated row, changed source digest or unexecuted test appears as verified.",
+      "rollback": "Rollback failed SQLite transactions; retain pre-import local backup; revert only this task's JJ file changes after review.",
+      "reviewer": "Author tests and source review; independent admission NOT_ADMITTED."
+    },
+    "dependencies": [ "CATALOG" ],
+    "score_interval": [ 720, 720 ],
+    "score": 720,
+    "fmea_modes": [
+      {
+        "controls": "Non-vacuous required-child fold; exact candidate/reference/normalizer bindings; append-only recorded invocations; fixed bounded oracle; read-only cockpit; no automatic admission.",
+        "cause": "Missing child, stale candidate, forged fixture identity, unbounded oracle or stale UI projection.",
+        "band": 5,
+        "rpn": 45,
+        "det": 3,
+        "o": 3,
+        "s": 5,
+        "id": "FM-FALSE-PRODUCT-VERIFICATION",
+        "effect": "Incorrect production admission decisions or damaged specification rows."
+      }
+    ],
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Required next product milestone requested by the operator.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json",
+          "docs/reviews/20260907-1837-zigvm-harness-product-feature-oracle-review.md",
+          "governance/sources/20260907-1756-agentic-infra-third-party-oracle-registry.json"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Credible false completion when feedback and evidence binding are incomplete; no release authority added.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json",
+          "docs/reviews/20260907-1837-zigvm-harness-product-feature-oracle-review.md",
+          "governance/sources/20260907-1756-agentic-infra-third-party-oracle-registry.json"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "S5 O3 Det3 RPN45; severity floor 5 for downstream false safety admission. Ordinal judgment, not measured frequency.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json",
+          "docs/reviews/20260907-1837-zigvm-harness-product-feature-oracle-review.md",
+          "governance/sources/20260907-1756-agentic-infra-third-party-oracle-registry.json"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Required predecessor for product completion and executable oracle evidence.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json",
+          "docs/reviews/20260907-1837-zigvm-harness-product-feature-oracle-review.md",
+          "governance/sources/20260907-1756-agentic-infra-third-party-oracle-registry.json"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Shared feature/requirement evidence across several service categories.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json",
+          "docs/reviews/20260907-1837-zigvm-harness-product-feature-oracle-review.md",
+          "governance/sources/20260907-1756-agentic-infra-third-party-oracle-registry.json"
+        ]
+      }
+    },
+    "ready_since": "2026-09-07T20:01:16Z",
+    "task_state": "executing",
+    "phase": "implementation",
+    "scope": "Implement and test namespaced product hierarchy, revision-bound receipts, fixed bounded local oracle, database-authoritative product JSON artifacts and read-only Indrajaal cockpit views. File retirement requires exact readback and migrated consumers. Preserve external source trees. No production admission.",
+    "actor": "codex-product-workflow-1915",
+    "task_id": "PRODUCT-WORKFLOW",
+    "assessment_id": "product-workflow-implementation-20260907-1915",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "plan_id": "uos/agentic-product/20260907-1837",
+    "fractal_layer": 4,
+    "stpa_analysis": {
+      "controller": "UOS product catalog maintainer",
+      "control_action": "Import blueprint and bind native service implementation evidence",
+      "losses": [ "L-EVIDENCE-INTEGRITY" ],
+      "hazards": [ "H-FALSE-COMPLETION", "H-CATALOG-CORRUPTION" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Required service or security constraint omitted from specification.",
+          "hazard_ids": [ "H-FALSE-COMPLETION" ],
+          "constraint": "Verify all 21 taxonomy services, six readiness criteria and detailed acceptance coverage."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Source presence reported as verified behavior or arbitrary SQL overwrites existing catalog.",
+          "hazard_ids": [ "H-FALSE-COMPLETION", "H-CATALOG-CORRUPTION" ],
+          "constraint": "Use conservative states and additive transaction with bound parameters."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Evidence belongs to an old candidate or import runs without current claim.",
+          "hazard_ids": [ "H-FALSE-COMPLETION" ],
+          "constraint": "Recheck hashes, preflight and active ownership before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Catalog process exceeds lease or imports incomplete state after cancellation.",
+          "hazard_ids": [ "H-CATALOG-CORRUPTION" ],
+          "constraint": "Bound process and transactions; rollback failures and stop on lease expiry."
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": []
+  },
+  {
+    "decision": {
+      "budget": "One Luna reviewer, read-only, ten-minute first packet, no network or paid external API calls, no runtime effects; short actionable findings.",
+      "acceptance": [
+        "Reviewed source hashes and scope recorded",
+        "Concrete blockers or explicit no-blocker finding returned",
+        "No source or live database writes by reviewer"
+      ],
+      "summary": "Bounded read-only independent code review using gpt-5.6-luna; identify concrete correctness/integrity/resource-bound bugs, not system admission.",
+      "alternatives": [
+        "Leave architecture solely in Markdown",
+        "Install all named third-party services"
+      ],
+      "counterevidence": [
+        "The prior map records incomplete production controls; source presence cannot establish parity."
+      ],
+      "assumptions": [
+        "User requests native UOS reuse; third-party sources are read-only behavior references."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "All original service requirements become queryable with explicit gaps and reproducible acceptance links.",
+      "falsifier": "A missing service, duplicated row, changed source digest or unexecuted test appears as verified.",
+      "rollback": "Rollback failed SQLite transactions; retain pre-import local backup; revert only this task's JJ file changes after review.",
+      "reviewer": "Author tests and source review; independent admission NOT_ADMITTED.",
+      "residuals": [
+        "Full production service admission requires actual security, isolation and runtime evidence for each gap."
+      ],
+      "supersedes": "none"
+    },
+    "scope": "Read only tools/product_catalog.ml, product_workflow.ml, product_workflow_core.ml and product_oracle.ml plus their tests. Review append-only SQL, semantic receipt validation, identity binding and bounded execution. No file, database, coordination, VCS or runtime mutation by reviewer.",
+    "ready_since": "2026-09-07T21:11:26Z",
+    "dependencies": [ "CATALOG" ],
+    "actor": "codex-product-review-luna-2110",
+    "phase": "review",
+    "task_state": "executing",
+    "assessment_id": "product-peer-review-20260907-2110",
+    "task_id": "PEER-REVIEW",
+    "valid_until": "2026-09-07T23:11:26Z",
+    "observed_at": "2026-09-07T21:11:26Z",
+    "snapshot": {
+      "evidence": [
+        {
+          "observed_at": "2026-09-07T21:11:26Z",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "path": "tools/sa-plan"
+        },
+        {
+          "observed_at": "2026-09-07T21:11:26Z",
+          "sha256": "598653f5a9df9179b5527920f030878894787fa81d791b5ac742b0a53d60a613",
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md"
+        },
+        {
+          "observed_at": "2026-09-07T21:11:26Z",
+          "sha256": "c49af0363f1afb3a5e1fe0e37a5aea8de6ac9cc08414c540c6dac668945322d2",
+          "path": "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json"
+        },
+        {
+          "observed_at": "2026-09-07T21:11:26Z",
+          "sha256": "f5f0a3b1757857e6f538c14c510a48ea2837740b89ec5e4c87d635eb5f38edc9",
+          "path": "docs/reviews/20260907-1837-zigvm-harness-product-feature-oracle-review.md"
+        },
+        {
+          "observed_at": "2026-09-07T21:11:26Z",
+          "sha256": "f47d913218577601e64465ad9ac3f3d5f8d8a199d17b8a68508052dab7c729c3",
+          "path": "governance/sources/20260907-1756-agentic-infra-third-party-oracle-registry.json"
+        }
+      ],
+      "kind": "working_tree",
+      "reference": "Stable reviewed specification and policy; implementation candidates bound by their own exact source manifests."
+    },
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "plan_id": "uos/agentic-product/20260907-1837",
+    "fractal_layer": 4,
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Explicit user request for complete product requirement coverage and usable catalog.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json",
+          "governance/sources/20260907-1756-agentic-infra-third-party-oracle-registry.json"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Catalog truth can influence later actions; production effects remain gated.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json",
+          "governance/sources/20260907-1756-agentic-infra-third-party-oracle-registry.json"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O3 Det3 RPN36: credible false coverage or destructive data import; transaction and honest evidence status prevent propagation.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json",
+          "governance/sources/20260907-1756-agentic-infra-third-party-oracle-registry.json"
+        ]
+      },
+      "dependency": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Requirement and oracle register feeds native implementation and acceptance.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json",
+          "governance/sources/20260907-1756-agentic-infra-third-party-oracle-registry.json"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "All 21 requested service categories benefit from traceable specification.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json",
+          "governance/sources/20260907-1756-agentic-infra-third-party-oracle-registry.json"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-CATALOG-FALSE-COVERAGE",
+        "cause": "Unverified mappings or stale claims promoted to complete; nontransactional import.",
+        "effect": "Incorrect production admission decisions or damaged specification rows.",
+        "controls": "Namespaced additive schema, parameterized transaction, readback, input hashes, explicit UNRUN and NOT_ADMITTED states.",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "UOS product catalog maintainer",
+      "control_action": "Import blueprint and bind native service implementation evidence",
+      "losses": [ "L-EVIDENCE-INTEGRITY" ],
+      "hazards": [ "H-FALSE-COMPLETION", "H-CATALOG-CORRUPTION" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Required service or security constraint omitted from specification.",
+          "hazard_ids": [ "H-FALSE-COMPLETION" ],
+          "constraint": "Verify all 21 taxonomy services, six readiness criteria and detailed acceptance coverage."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Source presence reported as verified behavior or arbitrary SQL overwrites existing catalog.",
+          "hazard_ids": [ "H-FALSE-COMPLETION", "H-CATALOG-CORRUPTION" ],
+          "constraint": "Use conservative states and additive transaction with bound parameters."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Evidence belongs to an old candidate or import runs without current claim.",
+          "hazard_ids": [ "H-FALSE-COMPLETION" ],
+          "constraint": "Recheck hashes, preflight and active ownership before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Catalog process exceeds lease or imports incomplete state after cancellation.",
+          "hazard_ids": [ "H-CATALOG-CORRUPTION" ],
+          "constraint": "Bound process and transactions; rollback failures and stop on lease expiry."
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "score": 432,
+    "score_interval": [ 432, 432 ]
+  }
+]

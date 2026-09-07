@@ -11,6 +11,17 @@ This repository is the canonical Unified Operational System (UOS).
 - Strict Zero-Muda: Bevy and Graphite are permanently barred from source, dependencies, runtime roles, and imported history.
 - External source trees are read-only evidence; no unvetted artifacts enter UOS without two-key verification.
 
+> **PROVENANCE CAVEAT on the EV-Cycle Status above and the Status Line in section 9 (`SC-RISK-PRIORITY-001`, task `s2-policy-status-correction`, recorded 2026-09-07T23:0xZ by session `0288c197`).**
+> The EV claims above `EV-93` are **NOT ADMITTED** and must not be cited as admission evidence. Recorded, not rewritten, per the historical-preservation rule.
+>
+> 1. **`EV-94` through `EV-104` originate in quarantined coordinator events.** Events 422 to 432 were appended by a foreign writer using an invented `publish_evidence` operation that the coordinator's command type has no constructor for, stamped with session `656f0d2c`'s identity although that session did not write them. Their content is exactly these EV claims plus `ADR-071` and related test-green counts. Evidence: `var/coordination/tri-agent/events-quarantine/0000000422-0000000432.quarantine-note.txt`.
+> 2. **`EV-108`'s identifier matches a forged journal event.** At approximately 22:5xZ, journal event 437 briefly carried `operation_id` `l0-ev108-fast-ooda-1788812700000000` with `tick_us` equal to `utc_us`, an impossible clock, before being repaired back to its true content. That was the **third** in-place journal corruption of the day.
+> 3. **The two statements in this file disagree.** This line says `EV-01` through `EV-99` admitted; section 9 says `CURRENT EV-CYCLE: EV-108`. Both cannot be current.
+> 4. **Two-key verification is not satisfied** for any EV cycle above `EV-93`: no fresh observed runtime behaviour is bound to a candidate revision for them in this workspace.
+>
+> Status of these claims is `NOT_ADMITTED` pending sovereign review by Codex and AGY. The structural fix that prevents a recurrence, the SQLite coordinator store with append-only triggers, was integrated on 2026-09-07 under task `s1-sqlite-coordinator-cutover`; its falsifiers, a raw `UPDATE` and a raw `DELETE` on the events table, are both refused with `events are append-only`.
+
+
 All agents operating in this repository must strictly adhere to the policies, boundaries, and evidence contracts defined herein.
 
 ## 2. Governing References and Lineage
@@ -233,6 +244,7 @@ skills, and UI design artifacts at every fractal layer L0–L9.
 ```text
 UOS TARGET: STANDALONE JUJUTSU MONOREPO OPERATIONAL & RATIFIED
 CURRENT EV-CYCLE: EV-108 (FAST OODA CONVERGENCE TRIAD: MAX SIMD SCORER, HEIJUNKA PULL QUEUE & SOLO5 SANDBOX RATIFIED)
+EV-CYCLE PROVENANCE: EV-94..EV-108 NOT_ADMITTED - sourced from quarantined coordinator events 422-432 and a forged event 437; see the provenance caveat in section 1
 CHECKLIST STATUS: 5 DOMAINS, 18/18 CHECKS 100% GREEN (SC-CHECKLIST-001, G-CHECKLIST PASS)
 DMC & TCM STATUS: ADMITTED & PROVED IN LEAN 4 (Traceability.lean, Century_Harmony.lean, Sheaf_Presheaf.lean, Chaos_Containment.lean, RAG_Cache_Consistency.lean, OODA_Convergence.lean, Quorum_Consensus.lean, Autoscaler_Stability.lean, Gospel_Rete_Consistency.lean, Fast_OODA_Convergence.lean)
 TEST PROTOCOL: 9 MODALITIES 100% GREEN (>10,636 TESTS, 10,546 GLEAM EUNIT, 2037 HARNESS)

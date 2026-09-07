@@ -49,6 +49,10 @@ let evaluate_case ~now ~source_current ~expected ~case_id receipts =
       match matching with
       | [] -> verdict Unrun (if kind = Runtime then "Runtime receipt missing." else "Formal receipt missing.")
       | r :: rest ->
+        let admissible = eligible_bits [r.binding = expected;
+          not (List.exists (fun x -> x.sequence = r.sequence) rest);
+          Float.is_finite now && Float.is_finite r.observed && Float.is_finite r.expires && r.observed <= now && r.expires > r.observed;
+          r.expires > now; r.artifact_valid; r.invocation_valid; r.sequence > 0; r.passed; source_current] in
         if List.exists (fun x -> x.sequence = r.sequence) rest then verdict Blocked "Ambiguous receipt sequence."
         else if r.binding <> expected then verdict Stale "Candidate, specification, oracle, executable, normalizer or checker mismatch."
         else if not (Float.is_finite now && Float.is_finite r.observed && Float.is_finite r.expires)
@@ -57,5 +61,6 @@ let evaluate_case ~now ~source_current ~expected ~case_id receipts =
         else if r.expires <= now then verdict Stale "Receipt expired."
         else if not (r.artifact_valid && r.invocation_valid) then verdict Blocked "Artifact or invocation integrity failed."
         else if not r.passed then verdict Failed "Latest matching execution failed."
-        else { state = Passed; reasons = [] }
+        else if admissible then { state = Passed; reasons = [] }
+        else verdict Blocked "Eligibility predicate withheld evidence."
     in roll_up [one Runtime;one Formal]

@@ -51,6 +51,31 @@ let () =
         require (rejects (fun () -> exec db "UPDATE product_artifacts SET content='corrupt'")) "update accepted");
       check "direct history deletion rejected" (fun () ->
         require (rejects (fun () -> exec db "DELETE FROM product_features")) "delete accepted");
+      check "replace cannot bypass append-only protection" (fun () ->
+        exec db "PRAGMA recursive_triggers=OFF";
+        require (rejects (fun () -> exec db "INSERT OR REPLACE INTO product_artifacts SELECT id,revision,kind,locator,sha256,'replaced',payload FROM product_artifacts")) "replace destroyed history");
+      check "JSON immutable round trip and identical replay" (fun () ->
+        transaction db (fun () ->
+          let revision = store_document db ~path:"test/spec.json" ~body:"{\"text\":\"O'Brien\"}\n" ~expected:None ~actor:"test" in
+          ignore (store_document db ~path:"test/spec.json" ~body:"{\"text\":\"O'Brien\"}\n" ~expected:None ~actor:"test");
+          require (document_head db "test/spec.json" = Some (revision,"{\"text\":\"O'Brien\"}\n")) "JSON bytes changed");
+        require (query db "SELECT count(*) FROM product_json_events" [] = [[Sqlite3.Data.INT 1L]]) "duplicate event");
+      check "stale JSON writer is rejected and history preserved" (fun () ->
+        require (rejects (fun () -> transaction db (fun () -> ignore (store_document db ~path:"test/spec.json" ~body:"{}" ~expected:None ~actor:"test")))) "lost update allowed";
+        require (query db "SELECT count(*) FROM product_json_versions" [] = [[Sqlite3.Data.INT 1L]]) "failed CAS left a version");
+      check "JSON update and rollback preserve original version" (fun () ->
+        let first = document_head db "test/spec.json" |> Option.get |> fst in
+        transaction db (fun () -> ignore (store_document db ~path:"test/spec.json" ~body:"{\"v\":2}" ~expected:(Some first) ~actor:"test"));
+        let second = document_head db "test/spec.json" |> Option.get |> fst in
+        require (rejects (fun () -> transaction db (fun () ->
+          ignore (store_document db ~path:"test/spec.json" ~body:"{\"v\":3}" ~expected:(Some second) ~actor:"test"); fail "ownership lost"))) "rollback ignored";
+        require (document_head db "test/spec.json" = Some (second,"{\"v\":2}")) "rollback changed head";
+        require (query db "SELECT count(*) FROM product_json_versions" [] = [[Sqlite3.Data.INT 2L]]) "old JSON missing");
+      check "JSON replacement rejected with recursive triggers disabled" (fun () ->
+        require (rejects (fun () -> exec db "INSERT OR REPLACE INTO product_json_versions SELECT path,revision,'{}',sha256,created_at FROM product_json_versions")) "JSON replacement accepted");
+      check "JSON path aliases and duplicate keys rejected" (fun () ->
+        List.iter (fun path -> require (rejects (fun () -> ignore (store_document db ~path ~body:"{}" ~expected:None ~actor:"test"))) ("alias accepted: "^path)) ["../escape.json";"/absolute.json";"./same.json";"a//b.json";"a/./b.json"];
+        require (rejects (fun () -> ignore (store_document db ~path:"test/dup.json" ~body:"{\"x\":1,\"x\":2}" ~expected:None ~actor:"test"))) "duplicate key accepted");
       check "lease loss rolls back entire import" (fun () ->
         let calls = ref 0 in
         let changed = set "specification" (set "revision" (`String "v2") (member "specification" j)) j in
