@@ -1179,3 +1179,156 @@ pub fn bindings_present(root: String) -> List(#(Capability, Bool)) {
 pub fn some_string(s: String) -> option.Option(String) {
   Some(s)
 }
+
+// ---------------------------------------------------------------------------
+// Hindu thinking-and-memory mirror (Yoga Sūtra 1.6 vṛtti, antaḥkaraṇa, guṇa,
+// Nyāya pramāṇa). Additive classification only: it labels the existing
+// grant-gated memory namespaces (`working/`, `episodic/`, `belief/`, `goal/`,
+// plus `hypothesis/`/`dream/` from `dream.gleam`), the existing lifecycle
+// `State`, and the OODA/lifecycle step names already used across the swarm.
+// It never reads or writes memory itself and does not change `remember`,
+// `recall`, `slots`, `grant` or `allowed` above.
+// ---------------------------------------------------------------------------
+
+/// Yoga Sūtra 1.6, pañca vṛttayaḥ — the five citta-vṛtti (fluctuations of
+/// mind): pramāṇa (valid cognition), viparyaya (misapprehension/error),
+/// vikalpa (imagination, conception without a real referent — svapna's
+/// hypotheses live here), nidrā (sleep, the vṛtti of absence-cognition; used
+/// here for idle/empty slots), smṛti (memory, not-losing an experienced
+/// object — the episodic log).
+pub type Vritti {
+  Pramana
+  Viparyaya
+  Vikalpa
+  Nidra
+  Smriti
+}
+
+pub fn vritti_label(v: Vritti) -> String {
+  case v {
+    Pramana -> "Pramana · pramāṇa (प्रमाण) · valid cognition"
+    Viparyaya -> "Viparyaya · viparyaya (विपर्यय) · error"
+    Vikalpa -> "Vikalpa · vikalpa (विकल्प) · imagination / hypothesis"
+    Nidra -> "Nidra · nidrā (निद्रा) · sleep / idle"
+    Smriti -> "Smriti · smṛti (स्मृति) · memory"
+  }
+}
+
+/// Classify a memory slot by its `remember`/`slots` namespace and value.
+/// Rule (checked below, not merely declared):
+/// 1. an empty value, or a value literally "idle"/"none" -> `Nidra` (nothing
+///    is being cognized; the fastest check, and it wins over namespace).
+/// 2. `hypothesis/` or `dream/` (svapna's own output, `dream.gleam`) ->
+///    `Vikalpa`: conception without a verified referent, never a fact.
+/// 3. `belief/` whose value names "verified"/"confirmed"/"pass" -> `Pramana`;
+///    whose value names "contradicted"/"refuted"/"fail" -> `Viparyaya`;
+///    any other `belief/` value defaults to `Pramana` (a belief slot holds an
+///    asserted, not yet contradicted, cognition).
+/// 4. `episodic/` (written by `remember_episode`) -> `Smriti`.
+/// 5. anything else -> `Smriti` (the general case: a retained prior
+///    cognition, i.e. plain recollection).
+pub fn classify_slot(key: String, value: String) -> Vritti {
+  let v = string.trim(string.lowercase(value))
+  let is_idle = v == "" || v == "idle" || v == "none"
+  let is_dreamt =
+    string.starts_with(key, "hypothesis/") || string.starts_with(key, "dream/")
+  let is_belief = string.starts_with(key, "belief/")
+  case is_idle, is_dreamt, is_belief {
+    True, _, _ -> Nidra
+    False, True, _ -> Vikalpa
+    False, False, True -> {
+      let contradicted =
+        string.contains(v, "contradicted")
+        || string.contains(v, "refuted")
+        || string.contains(v, "fail")
+      case contradicted {
+        True -> Viparyaya
+        False -> Pramana
+      }
+    }
+    False, False, False -> Smriti
+  }
+}
+
+/// Sāṅkhya/Vedānta antaḥkaraṇa (अन्तःकरण), the fourfold "inner instrument":
+/// manas (मनस्, sensory/motor mind — observing and orienting), buddhi (बुद्धि,
+/// the discriminating intellect — deciding and acting), ahaṃkāra (अहंकार,
+/// the ego / self-model faculty), citta (चित्त, the memory-substrate itself).
+pub type Antahkarana {
+  Manas
+  Buddhi
+  Ahamkara
+  Citta
+}
+
+pub fn antahkarana_label(a: Antahkarana) -> String {
+  case a {
+    Manas -> "Manas · manas (मनस्) · sensory/motor mind"
+    Buddhi -> "Buddhi · buddhi (बुद्धि) · discriminating intellect"
+    Ahamkara -> "Ahamkara · ahaṃkāra (अहंकार) · ego / self-model"
+    Citta -> "Citta · citta (चित्त) · memory-substrate"
+  }
+}
+
+/// Map an OODA/lifecycle step name to the antaḥkaraṇa faculty that performs
+/// it: observe/orient -> manas (taking in and weighing sense-data); decide/act
+/// -> buddhi (discriminating judgement and its execution); identity/self-model
+/// -> ahaṃkāra; memory -> citta. An unrecognised step defaults to manas (the
+/// faculty every OODA cycle starts from).
+pub fn faculty_of(step: String) -> Antahkarana {
+  case string.trim(string.lowercase(step)) {
+    "observe" -> Manas
+    "orient" -> Manas
+    "decide" -> Buddhi
+    "act" -> Buddhi
+    "identity" -> Ahamkara
+    "self-model" -> Ahamkara
+    "ahamkara" -> Ahamkara
+    "memory" -> Citta
+    "citta" -> Citta
+    _ -> Manas
+  }
+}
+
+/// Sāṅkhya triguṇa: sattva (सत्त्व, clarity/harmony — a settled, verified
+/// line), rajas (रजस्, activity/passion — work in motion), tamas (तमस्,
+/// inertia/dullness — nothing moving, whether idle or stalled in failure).
+pub type Guna {
+  Sattva
+  Rajas
+  Tamas
+}
+
+pub fn guna_label(g: Guna) -> String {
+  case g {
+    Sattva -> "Sattva · sattva (सत्त्व) · clarity / harmony"
+    Rajas -> "Rajas · rajas (रजस्) · activity / passion"
+    Tamas -> "Tamas · tamas (तमस्) · inertia / dullness"
+  }
+}
+
+/// Map the F´ lifecycle `State` to its guṇa: Done/Verifying (settled,
+/// under scrutiny or accepted) -> Sattva; Working/Claimed (in motion) ->
+/// Rajas; Idle/Failed (nothing productive moving) -> Tamas.
+pub fn guna_of_state(s: State) -> Guna {
+  case s {
+    Done | Verifying -> Sattva
+    Working | Claimed -> Rajas
+    Idle | Failed -> Tamas
+  }
+}
+
+/// Nyāya pramāṇa (valid means of knowledge) named by an evidence `kind`:
+/// "observed" -> pratyakṣa (direct perception), "inferred" -> anumāna
+/// (inference), "reported" -> śabda (testimony), "compared" -> upamāna
+/// (comparison/analogy). An unrecognised kind falls back to śabda — a claim
+/// taken on report is the weakest-grounded default, never silently upgraded.
+pub fn pramana_of_evidence(kind: String) -> String {
+  case string.trim(string.lowercase(kind)) {
+    "observed" -> "pratyakṣa (प्रत्यक्ष)"
+    "inferred" -> "anumāna (अनुमान)"
+    "reported" -> "śabda (शब्द)"
+    "compared" -> "upamāna (उपमान)"
+    _ -> "śabda (शब्द)"
+  }
+}

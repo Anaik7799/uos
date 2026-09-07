@@ -420,3 +420,98 @@ pub fn beta_sampler_is_a_real_variate_test() {
   rt.sample(hi, 42) |> should.equal(rt.sample(hi, 42))
   list.all(draws_hi, fn(x) { x >=. 0.0 && x <=. 1.0 }) |> should.be_true
 }
+
+// ---------------------------------------------------------------------------
+// Hindu thinking-and-memory mirror: Vritti, Antahkarana, Guna, pramāṇa.
+// ---------------------------------------------------------------------------
+
+pub fn classify_slot_belief_verified_is_pramana_test() {
+  rt.classify_slot("belief/x", "verified pass") |> should.equal(rt.Pramana)
+  rt.classify_slot("belief/x", "confirmed") |> should.equal(rt.Pramana)
+  // A belief slot with no matching keyword defaults to Pramana (an
+  // asserted, not yet contradicted, cognition).
+  rt.classify_slot("belief/x", "seen twice") |> should.equal(rt.Pramana)
+}
+
+pub fn classify_slot_belief_contradicted_is_viparyaya_test() {
+  rt.classify_slot("belief/x", "contradicted by V2")
+  |> should.equal(rt.Viparyaya)
+  rt.classify_slot("belief/x", "refuted") |> should.equal(rt.Viparyaya)
+  rt.classify_slot("belief/x", "FAIL") |> should.equal(rt.Viparyaya)
+}
+
+pub fn classify_slot_hypothesis_and_dream_are_vikalpa_test() {
+  rt.classify_slot("hypothesis/h1", "aspect 15 failed")
+  |> should.equal(rt.Vikalpa)
+  rt.classify_slot("dream/d1", "consolidated 12") |> should.equal(rt.Vikalpa)
+}
+
+pub fn classify_slot_episodic_is_smriti_test() {
+  rt.classify_slot("episodic/msg-1", "posted Progress")
+  |> should.equal(rt.Smriti)
+}
+
+pub fn classify_slot_other_namespace_defaults_to_smriti_test() {
+  rt.classify_slot("goal/x", "ship it") |> should.equal(rt.Smriti)
+}
+
+pub fn classify_slot_empty_or_idle_value_is_nidra_test() {
+  rt.classify_slot("working/x", "") |> should.equal(rt.Nidra)
+  rt.classify_slot("goal/x", "idle") |> should.equal(rt.Nidra)
+  rt.classify_slot("belief/x", "none") |> should.equal(rt.Nidra)
+  // Idle wins over namespace even for hypothesis/dream slots.
+  rt.classify_slot("hypothesis/h1", "") |> should.equal(rt.Nidra)
+}
+
+pub fn guna_of_state_mapping_test() {
+  rt.guna_of_state(rt.Done) |> should.equal(rt.Sattva)
+  rt.guna_of_state(rt.Verifying) |> should.equal(rt.Sattva)
+  rt.guna_of_state(rt.Working) |> should.equal(rt.Rajas)
+  rt.guna_of_state(rt.Claimed) |> should.equal(rt.Rajas)
+  rt.guna_of_state(rt.Idle) |> should.equal(rt.Tamas)
+  rt.guna_of_state(rt.Failed) |> should.equal(rt.Tamas)
+}
+
+pub fn faculty_of_mapping_test() {
+  rt.faculty_of("observe") |> should.equal(rt.Manas)
+  rt.faculty_of("orient") |> should.equal(rt.Manas)
+  rt.faculty_of("decide") |> should.equal(rt.Buddhi)
+  rt.faculty_of("act") |> should.equal(rt.Buddhi)
+  rt.faculty_of("identity") |> should.equal(rt.Ahamkara)
+  rt.faculty_of("self-model") |> should.equal(rt.Ahamkara)
+  rt.faculty_of("memory") |> should.equal(rt.Citta)
+  rt.faculty_of("something-unrecognised") |> should.equal(rt.Manas)
+}
+
+pub fn pramana_of_evidence_mapping_test() {
+  rt.pramana_of_evidence("observed") |> should.equal("pratyakṣa (प्रत्यक्ष)")
+  rt.pramana_of_evidence("inferred") |> should.equal("anumāna (अनुमान)")
+  rt.pramana_of_evidence("reported") |> should.equal("śabda (शब्द)")
+  rt.pramana_of_evidence("compared") |> should.equal("upamāna (उपमान)")
+  rt.pramana_of_evidence("unknown-kind") |> should.equal("śabda (शब्द)")
+}
+
+pub fn vritti_labels_carry_devanagari_test() {
+  rt.vritti_label(rt.Pramana) |> string.contains("प्रमाण") |> should.be_true
+  rt.vritti_label(rt.Viparyaya)
+  |> string.contains("विपर्यय")
+  |> should.be_true
+  rt.vritti_label(rt.Vikalpa) |> string.contains("विकल्प") |> should.be_true
+  rt.vritti_label(rt.Nidra) |> string.contains("निद्रा") |> should.be_true
+  rt.vritti_label(rt.Smriti) |> string.contains("स्मृति") |> should.be_true
+}
+
+pub fn antahkarana_labels_carry_devanagari_test() {
+  rt.antahkarana_label(rt.Manas) |> string.contains("मनस्") |> should.be_true
+  rt.antahkarana_label(rt.Buddhi) |> string.contains("बुद्धि") |> should.be_true
+  rt.antahkarana_label(rt.Ahamkara)
+  |> string.contains("अहंकार")
+  |> should.be_true
+  rt.antahkarana_label(rt.Citta) |> string.contains("चित्त") |> should.be_true
+}
+
+pub fn guna_labels_carry_devanagari_test() {
+  rt.guna_label(rt.Sattva) |> string.contains("सत्त्व") |> should.be_true
+  rt.guna_label(rt.Rajas) |> string.contains("रजस्") |> should.be_true
+  rt.guna_label(rt.Tamas) |> string.contains("तमस्") |> should.be_true
+}
