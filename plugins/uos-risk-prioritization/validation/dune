@@ -1,0 +1,5 @@
+(executable
+ (name validate)
+ (modules priority validate)
+ (libraries yojson unix))
+
