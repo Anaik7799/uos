@@ -34,6 +34,58 @@ const zk_moc_transclusion = "[[zk:20260905-1801-moc-uos-unified-master]]"
 
 const wiki_index_transclusion = "[[wiki:20260905-1801-uos-zk-km-corpus-index]]"
 
+/// sha256(data), lowercase hex, via the same direct FFI call `uos_swarm/holon.gleam` uses
+/// (`uos_swarm_ffi:sha256_hex/1`) -- declared locally rather than imported so this module stays
+/// independent of `holon.gleam`'s (unexported) private binding.
+@external(erlang, "uos_swarm_ffi", "sha256_hex")
+fn sha256_hex(data: String) -> String
+
+fn is_ascii_digit(g: String) -> Bool {
+  case g {
+    "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" -> True
+    _ -> False
+  }
+}
+
+/// Validates that `stamp` is exactly the 13-character `YYYYMMDD-HHMM` shape: 8 ASCII digits, a
+/// literal `-`, then 4 ASCII digits -- nothing else (no path separators, no shorter/longer runs).
+/// Rejects e.g. `""`, `"../../zz"` (path traversal), `"2026-09-07"` (wrong shape), and
+/// `"20260907-16455"` (14 chars); accepts `"20260907-1645"`. Called by the `holon-km` CLI arm
+/// before any filesystem write so a malformed stamp can never become part of a written path.
+pub fn validate_stamp(stamp: String) -> Result(Nil, String) {
+  case string.to_graphemes(stamp) {
+    [a, b, c, d, e, f, g, h, "-", i, j, k, l] ->
+      case
+        is_ascii_digit(a)
+        && is_ascii_digit(b)
+        && is_ascii_digit(c)
+        && is_ascii_digit(d)
+        && is_ascii_digit(e)
+        && is_ascii_digit(f)
+        && is_ascii_digit(g)
+        && is_ascii_digit(h)
+        && is_ascii_digit(i)
+        && is_ascii_digit(j)
+        && is_ascii_digit(k)
+        && is_ascii_digit(l)
+      {
+        True -> Ok(Nil)
+        False ->
+          Error(
+            "stamp must be 8 digits, '-', 4 digits (YYYYMMDD-HHMM); got: "
+            <> stamp,
+          )
+      }
+    graphemes ->
+      Error(
+        "stamp must be exactly 13 characters: 8 digits, '-', 4 digits (YYYYMMDD-HHMM); got "
+        <> int.to_string(list.length(graphemes))
+        <> " character(s): "
+        <> stamp,
+      )
+  }
+}
+
 /// Relative repository path of one holon's generated wiki page.
 pub fn holon_page_path(stamp: String, id: String) -> String {
   "docs/wiki/holons/" <> stamp <> "-holon-" <> id <> ".md"
@@ -64,12 +116,15 @@ fn nav_line(stamp: String) -> String {
   <> ")"
 }
 
-/// The 5-domain, 18-item comprehensive verification checklist (`SC-CHECKLIST-001`), copied
-/// verbatim (domain headings and item text) from `docs/zk/20260905-1801-moc-uos-unified-master.md`
-/// §"Comprehensive verification checklist": document-level items CHK-01..CHK-04 and CHK-18 are
-/// checked, every runtime/formal/admission item (CHK-05..CHK-17) is left unchecked because this
-/// is a deterministically generated page, not an observed runtime receipt.
-pub fn checklist_markdown() -> String {
+/// The 5-domain, 18-item comprehensive verification checklist (`SC-CHECKLIST-001`), adapted from
+/// `docs/zk/20260905-1801-moc-uos-unified-master.md` §"Comprehensive verification checklist":
+/// document-level items CHK-01..CHK-04 and CHK-18 are checked, every runtime/formal/admission item
+/// (CHK-05..CHK-17) is left unchecked because this is a deterministically generated page, not an
+/// observed runtime receipt. CHK-01-TIME and CHK-02-TAIL state only what this generator actually
+/// does (stamp the filename from its `stamp` argument; embed a self Tailscale link) rather than
+/// claiming a chrony receipt or live journal-serving status neither of which this pure module
+/// observes.
+pub fn checklist_markdown(stamp: String) -> String {
   "## Comprehensive verification checklist
 
 Document checks and production gates have different evidence scopes. Checked
@@ -81,8 +136,8 @@ from `holon.holarchy()`, not from an observed runtime receipt.
 <details>
 <summary>Domain 1 — Metadata, timestamp and Tailscale navigation</summary>
 
-- [x] **CHK-01-TIME** — Host-clock timestamp prefix and chrony receipt recorded.
-- [x] **CHK-02-TAIL** — Full clickable Tailscale FQDN references provided; serving status is reported in the journal.
+- [x] **CHK-01-TIME** — Timestamp prefix " <> stamp <> " from the generator stamp; host clock not consulted by the generator.
+- [x] **CHK-02-TAIL** — Full Tailscale FQDN self-link present; live serving unverified.
 - [x] **CHK-03-FRACT** — Canonical L0–L9 fractal tags assigned.
 - [x] **CHK-04-KM** — Specification, wiki, ADR, source review and journal cross-linked.
 
@@ -254,7 +309,7 @@ fn holon_page(stamp: String, hs: List(Holon), h: Holon) -> #(String, String) {
     <> " |\n"
     <> "\n"
     <> "Generated from holarchy() by `uos_swarm` `holon-km`; regenerate, do not hand-edit.\n\n"
-    <> checklist_markdown()
+    <> checklist_markdown(stamp)
     <> "\n\n---\n\n"
     <> nav_line(stamp)
     <> "\n"
@@ -307,14 +362,20 @@ fn level_section(stamp: String, hs: List(Holon), level: Int) -> String {
 }
 
 /// The Map of Content page: every holon of `hs`, grouped by level then plane, plus the level
-/// distribution table. Every holon id appears exactly once, as a link to its own page.
+/// distribution table. Every holon id appears exactly once, as a link to its own page. The
+/// `#fractal-l<n>` tag line names only the levels that actually hold >=1 holon (`populated_levels`)
+/// so the tag line never asserts a layer with zero members; the level-distribution table below it
+/// still lists all ten levels (`levels`), including any at count 0, so the shape of the fractal
+/// space stays visible.
 fn moc_page(stamp: String, hs: List(Holon)) -> #(String, String) {
   let path = moc_path(stamp)
   let levels = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+  let populated_levels =
+    list.filter(levels, fn(l) { list.any(hs, fn(h) { h.level == l }) })
   let total = list.length(hs)
   let md =
     "# UOS Holarchy Map of Content\n\n"
-    <> tag_line(["#zk-moc"], levels)
+    <> tag_line(["#zk-moc"], populated_levels)
     <> "\n\n"
     <> "["
     <> path
@@ -334,7 +395,7 @@ fn moc_page(stamp: String, hs: List(Holon)) -> #(String, String) {
     <> "** |\n\n"
     <> "## Holons by level and plane\n\n"
     <> string.join(list.map(levels, fn(l) { level_section(stamp, hs, l) }), "")
-    <> checklist_markdown()
+    <> checklist_markdown(stamp)
     <> "\n\n---\n\n"
     <> nav_line(stamp)
     <> "\n"
@@ -346,4 +407,15 @@ fn moc_page(stamp: String, hs: List(Holon)) -> #(String, String) {
 pub fn pages(stamp: String) -> List(#(String, String)) {
   let hs = holon.holarchy()
   [moc_page(stamp, hs), ..list.map(hs, fn(h) { holon_page(stamp, hs, h) })]
+}
+
+/// sha256, lowercase hex, of every page's Markdown contents from `pages(stamp)` concatenated in
+/// that list's order (MOC first, then one page per holon in `holon.holarchy()` order). A single
+/// golden digest over the whole generated corpus, so a test can pin the exact byte-for-byte output
+/// of a `stamp` without embedding 159 page bodies in the test source.
+pub fn pages_digest(stamp: String) -> String {
+  pages(stamp)
+  |> list.map(fn(pair) { pair.1 })
+  |> string.concat
+  |> sha256_hex
 }

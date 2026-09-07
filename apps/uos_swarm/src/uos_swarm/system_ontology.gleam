@@ -2271,7 +2271,7 @@ fn holon_meta_concepts() -> List(Concept) {
       Governance,
       0,
       "control-plane",
-      "The L0 constitutional-whole pattern: an `Subsystem`-kind holon (e.g. the `constitution` holon itself) grouping IAM, secrets, clock-guard and governance rows so their L0 level never pulls an unrelated subsystem down (HOLON-LIFECYCLE).",
+      "The L0 constitutional-whole pattern: a `Subsystem`-kind holon (e.g. the `constitution` holon itself) grouping IAM, secrets, clock-guard and governance rows so their L0 level never pulls an unrelated subsystem down (HOLON-LIFECYCLE).",
       ["constitution", "holon-meta:holon", "holon-meta:level"],
     ),
     holon_meta(

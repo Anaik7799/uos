@@ -39,8 +39,8 @@ from `holon.holarchy()`, not from an observed runtime receipt.
 <details>
 <summary>Domain 1 — Metadata, timestamp and Tailscale navigation</summary>
 
-- [x] **CHK-01-TIME** — Host-clock timestamp prefix and chrony receipt recorded.
-- [x] **CHK-02-TAIL** — Full clickable Tailscale FQDN references provided; serving status is reported in the journal.
+- [x] **CHK-01-TIME** — Timestamp prefix 20260907-1645 from the generator stamp; host clock not consulted by the generator.
+- [x] **CHK-02-TAIL** — Full Tailscale FQDN self-link present; live serving unverified.
 - [x] **CHK-03-FRACT** — Canonical L0–L9 fractal tags assigned.
 - [x] **CHK-04-KM** — Specification, wiki, ADR, source review and journal cross-linked.
 

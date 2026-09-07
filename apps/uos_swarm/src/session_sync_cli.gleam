@@ -7,8 +7,10 @@ import argv
 import gleam/int
 import gleam/io
 import gleam/json
+import gleam/list
 import gleam/result
 import gleam/string
+import simplifile
 import uos_swarm/board
 import uos_swarm/session_sync as sync
 
@@ -104,6 +106,7 @@ pub fn run(args: List(String)) -> Result(String, String) {
       })
     }
     [root, "journal"] -> sync.read_journal(root)
+    [root, "resign", out_root] -> resign_into(root, out_root)
     [root, "recover-lock"] -> {
       use message <- result.try(sync.recover_lock(root))
       Ok(
@@ -117,6 +120,53 @@ pub fn run(args: List(String)) -> Result(String, String) {
     }
     _ -> Error(usage())
   }
+}
+
+/// `resign <root> <out_root>`: rebuild the journal under `root` with this
+/// module's canonical byte form and digests (see `session_sync.resign`) and
+/// write it as a fresh `events/` directory under `out_root`, which must not
+/// already contain an `events/` directory. The source journal is never
+/// modified; swapping directories is a separate, recorded operator step.
+fn resign_into(root: String, out_root: String) -> Result(String, String) {
+  use journal <- result.try(sync.read_journal(root))
+  use events <- result.try(sync.resign(journal))
+  let dir = out_root <> "/events"
+  use _ <- result.try(case simplifile.is_directory(dir) {
+    Ok(True) -> Error("refusing to write: " <> dir <> " already exists")
+    _ -> Ok(Nil)
+  })
+  use _ <- result.try(
+    simplifile.create_directory_all(dir)
+    |> result.map_error(fn(e) {
+      "cannot create " <> dir <> ": " <> string.inspect(e)
+    }),
+  )
+  let _ = simplifile.set_permissions_octal(out_root, 0o700)
+  let _ = simplifile.set_permissions_octal(dir, 0o700)
+  use last <- result.try(
+    list.try_fold(events, "", fn(_, event) {
+      let name = string.pad_start(int.to_string(event.sequence), 10, "0")
+      let path = dir <> "/" <> name <> ".json"
+      use _ <- result.try(
+        simplifile.write(path, sync.event_string(event))
+        |> result.map_error(fn(e) {
+          "cannot write " <> path <> ": " <> string.inspect(e)
+        }),
+      )
+      let _ = simplifile.set_permissions_octal(path, 0o600)
+      Ok(event.digest)
+    }),
+  )
+  Ok(
+    json.to_string(
+      json.object([
+        #("ok", json.bool(True)),
+        #("resigned_events", json.int(list.length(events))),
+        #("out_root", json.string(out_root)),
+        #("last_digest", json.string(last)),
+      ]),
+    ),
+  )
 }
 
 pub fn usage() -> String {

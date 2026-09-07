@@ -26,6 +26,11 @@ pub fn every_page_path_has_stamp_prefix_and_md_suffix_test() {
     }
     string.starts_with(basename, stamp) |> should.be_true
     string.ends_with(path, ".md") |> should.be_true
+    {
+      string.starts_with(path, "docs/wiki/holons/")
+      || path == holon_km.moc_path(stamp)
+    }
+    |> should.be_true
   })
 }
 
@@ -74,8 +79,30 @@ fn count_occurrences(haystack: String, needle: String) -> Int {
   }
 }
 
-pub fn generation_is_deterministic_test() {
-  holon_km.pages(stamp) |> should.equal(holon_km.pages(stamp))
+/// Golden digest: sha256 (via the same `uos_swarm_ffi:sha256_hex/1` primitive `holon.gleam` uses)
+/// of every page's Markdown body for `stamp`, concatenated in `pages(stamp)` list order, pinned to
+/// a committed constant. Stronger than comparing two in-process calls (which could both read a
+/// value memoized wrong the same way): a fixed hash catches drift against what was actually
+/// generated and committed at `stamp = "20260907-1645"`. Recomputed via
+/// `erl -pa build/dev/erlang/*/ebin -noshell -eval 'io:format("~s~n",
+/// [uos_swarm@holon_km:pages_digest(<<"20260907-1645">>)]), init:stop().'`.
+pub fn pages_digest_matches_golden_sha256_test() {
+  holon_km.pages_digest(stamp)
+  |> should.equal(
+    "7bb9e38bad6076f1e516c24650152fa383adb08994f9731b874ed61b28ab3385",
+  )
+}
+
+pub fn validate_stamp_rejects_malformed_and_accepts_well_formed_test() {
+  holon_km.validate_stamp("") |> should.be_error
+  holon_km.validate_stamp("../../zz") |> should.be_error
+  holon_km.validate_stamp("2026-09-07") |> should.be_error
+  holon_km.validate_stamp("20260907-16455") |> should.be_error
+  // 13 characters with the right shape but a non-digit: the branch the reviewers
+  // found untested.
+  holon_km.validate_stamp("2026090a-1645") |> should.be_error
+  holon_km.validate_stamp("20260907_1645") |> should.be_error
+  holon_km.validate_stamp("20260907-1645") |> should.equal(Ok(Nil))
 }
 
 pub fn ontology_contains_the_10_new_concepts_test() {

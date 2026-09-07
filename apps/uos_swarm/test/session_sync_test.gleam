@@ -61,6 +61,99 @@ fn state_dir() -> String {
   "/tmp/uos-session-sync-test-" <> unique_id()
 }
 
+/// Build a small canonical journal (register, heartbeat, claim) the way the
+/// storage layer does: `make_event` from the live state, then `apply`.
+fn canonical_journal() -> #(List(sync.Event), String) {
+  let commands = [
+    #(
+      sync.Register("codex", "codex", "/uos", "revision-a", ["herdr:pane=1"]),
+      "register-codex",
+    ),
+    #(sync.Heartbeat("codex", "revision-b", ["x — y"]), "heartbeat-codex"),
+    #(sync.Claim("codex", "integration/main", 60_000_000), "claim-codex"),
+  ]
+  let #(_, events) =
+    list.index_fold(commands, #(sync.empty(), []), fn(acc, pair, index) {
+      let #(state, out) = acc
+      let tick = now + index * 1000
+      let event =
+        sync.make_event(
+          state,
+          pair.0,
+          pair.1,
+          host,
+          boot,
+          tick,
+          tick + 1_000_000_000,
+        )
+      let assert Ok(#(next, _, False)) =
+        sync.apply(
+          state,
+          pair.0,
+          pair.1,
+          host,
+          boot,
+          tick,
+          tick + 1_000_000_000,
+        )
+      #(sync.State(..next, digest: event.digest), [event, ..out])
+    })
+  let events = list.reverse(events)
+  #(events, string.join(list.map(events, sync.event_string), "\n"))
+}
+
+/// Incident 2026-09-07 17:12:46Z: a foreign tool re-serialized and re-signed
+/// the shared journal (genesis link emptied, digests recomputed elsewhere).
+/// `resign` must rebuild exactly the canonical chain from the command content,
+/// refuse gaps and refuse commands the coordinator would not accept.
+pub fn resign_rebuilds_canonical_chain_from_foreign_form_test() {
+  let #(events, journal) = canonical_journal()
+  sync.replay(journal) |> should.be_ok
+  // Foreign form: empty genesis link and foreign digests, content intact.
+  let foreign =
+    events
+    |> list.index_map(fn(event, index) {
+      let previous = case index {
+        0 -> ""
+        _ -> "foreign-" <> int.to_string(index)
+      }
+      sync.event_string(
+        sync.Event(
+          ..event,
+          previous_digest: previous,
+          digest: "foreign-" <> int.to_string(index + 1),
+        ),
+      )
+    })
+    |> string.join("\n")
+  sync.replay(foreign) |> should.be_error
+  let assert Ok(rebuilt) = sync.resign(foreign)
+  rebuilt |> should.equal(events)
+  let assert Ok(state) =
+    sync.replay(string.join(list.map(rebuilt, sync.event_string), "\n"))
+  state.sequence |> should.equal(3)
+  let assert Ok(last) = list.last(events)
+  state.digest |> should.equal(last.digest)
+  // A gap is refused with the offending sequence.
+  let assert [first, _, third] = events
+  let gapped =
+    string.join([sync.event_string(first), sync.event_string(third)], "\n")
+  let assert Error(reason) = sync.resign(gapped)
+  string.contains(reason, "sequence gap") |> should.equal(True)
+  // A command the coordinator would refuse (claim by an unregistered session)
+  // is refused, so re-signing cannot launder content.
+  let rogue =
+    sync.event_string(
+      sync.Event(
+        ..first,
+        command: sync.Claim("nobody", "integration/main", 60_000_000),
+        operation_id: "rogue-claim",
+      ),
+    )
+  let assert Error(refused) = sync.resign(rogue)
+  string.contains(refused, "refused by apply") |> should.equal(True)
+}
+
 pub fn registration_is_idempotent_only_for_exact_command_test() {
   let command = sync.Register("codex", "codex", "/uos", "revision-a", [])
   let assert Ok(#(state, receipt, False)) =

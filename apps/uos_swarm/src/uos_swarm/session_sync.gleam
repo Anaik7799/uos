@@ -768,6 +768,79 @@ pub fn replay(journal: String) -> Result(State, String) {
   })
 }
 
+/// Re-sign a journal whose byte form and digests were produced by a foreign
+/// writer (incident 2026-09-07 17:12:46Z: every event file was re-serialized
+/// and re-signed outside this module, so `replay` refuses the chain from
+/// event 1). The command content of every event is kept exactly; only the
+/// canonical byte form, the digest and the `previous_digest` link are
+/// recomputed from genesis with the same `make_event` this module uses to
+/// append. Sequence numbers must still be contiguous and every command must
+/// still be accepted by `apply`; anything else is refused with the offending
+/// sequence, so a content change cannot hide behind a re-signing. The caller
+/// writes the returned events to a NEW directory and keeps the foreign form
+/// as evidence; this function never touches storage.
+pub fn resign(journal: String) -> Result(List(Event), String) {
+  let lines =
+    string.split(journal, "\n")
+    |> list.filter(fn(line) { string.trim(line) != "" })
+  use #(_, rebuilt) <- result.try(
+    list.try_fold(lines, #(empty(), []), fn(acc, line) {
+      let #(state, out) = acc
+      use stored <- result.try(
+        json.parse(line, event_decoder())
+        |> result.replace_error(
+          "malformed journal event at sequence "
+          <> int.to_string(state.sequence + 1)
+          <> "; resign refused",
+        ),
+      )
+      use _ <- result.try(require(
+        stored.sequence == state.sequence + 1,
+        "sequence gap at stored event "
+          <> int.to_string(stored.sequence)
+          <> " (expected "
+          <> int.to_string(state.sequence + 1)
+          <> "); resign refused",
+      ))
+      let event =
+        make_event(
+          state,
+          stored.command,
+          stored.operation_id,
+          stored.host_id,
+          stored.boot_id,
+          stored.tick_us,
+          stored.utc_us,
+        )
+      use #(next, _, duplicate) <- result.try(
+        apply(
+          state,
+          stored.command,
+          stored.operation_id,
+          stored.host_id,
+          stored.boot_id,
+          stored.tick_us,
+          stored.utc_us,
+        )
+        |> result.map_error(fn(e) {
+          "event "
+          <> int.to_string(stored.sequence)
+          <> " refused by apply: "
+          <> e
+        }),
+      )
+      use _ <- result.try(require(
+        !duplicate,
+        "duplicate operation at event "
+          <> int.to_string(stored.sequence)
+          <> "; resign refused",
+      ))
+      Ok(#(State(..next, digest: event.digest), [event, ..out]))
+    }),
+  )
+  Ok(list.reverse(rebuilt))
+}
+
 pub fn receipt_json(receipt: Receipt, duplicate: Bool) -> Json {
   json.object([
     #("ok", json.bool(True)),
