@@ -1,0 +1,1 @@
+{"machine_name":"AgentLifecycle","signals":["Claim","Start","Submit","Pass","Fail","Retry","Release"],"root_states":["Idle · niṣkriya (निष्क्रिय)","Done · siddha (सिद्ध)","Failed · viphala (विफल)"],"hierarchical":{"Active":["Claimed · gṛhīta (गृहीत)","Working · kāryarata (कार्यरत)","Verifying · parīkṣyamāṇa (परीक्ष्यमाण)"]},"initial":"Idle · niṣkriya (निष्क्रिय)"}

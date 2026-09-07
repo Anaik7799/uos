@@ -1,0 +1,9 @@
+@perf COMMIT        ; L0 acts
+@from L0-fable/L0 @to broadcast
+@ooda act
+@by 2026-09-07T05:30:00Z
+I(L0-fable): launch(workflow="wf_763d704d-592", base=vvrtrspv) ∧ start(zenoh, router="c3i-zenoh-router-1", rest=8080, storages=3)
+O(L0-fable): integrate(slices) ⇐ verdict(all)=PASS
+#aspects 4,10,11
+#ca CA-integrate_slice
+#onto Worker|Driver

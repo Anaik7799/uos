@@ -1,0 +1,8 @@
+L0-fable (L0) proposes broadcast
+precondition: B(s, feasible(a))
+postcondition: O(r, reply ∈ {ACCEPT, REJECT}) ∧ B(r, I(s, a))
+L0-fable intends to dispatch(agents=15) and pipeline(groups=4) and retries=0 and jidoka(on=red)
+L0-fable intends to supervise(runtime, uos-manager), provided tokens(uos-manager)=0 and authority(design)=fable
+therefore: propose(swarm, workers=10, doc_workers=1, verifiers=4, models="sonnet x10 haiku x5")
+references: aspects 15,17; control actions CA-integrate_slice; concepts Pilot / run_test|17 Aspect audit
+density 0.3 refs/token; entropy 5.23 bits/token

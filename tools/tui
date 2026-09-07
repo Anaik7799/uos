@@ -19,6 +19,7 @@ Usage:
   tools/tui [command] [args...]
 
 Commands:
+  start | live         Start interactive live TUI Cockpit monitor (hotkey navigation)
   auth                 Display AGY Sovereign Authentication Status & L0-L7 Permissions
   split                Render Split-Screen TUI Dashboard (Swarm TAB + Test KPIs)
   dashboard | cockpit  Render Biomorphic Cockpit TUI Dashboard (OODA, Genome, Schedulers)
@@ -31,6 +32,7 @@ Commands:
   help                 Show this help message
 
 Examples:
+  tools/tui start
   tools/tui auth
   tools/tui split
   tools/tui dashboard
@@ -45,9 +47,149 @@ run_erl() {
   erl -noshell -pa ${EBIN_PATHS} -eval "$1"
 }
 
-CMD="${1:-split}"
+CMD="${1:-start}"
 
 case "$CMD" in
+  start|live|interactive)
+    ACTIVE_TAB="overview_tab"
+    COCKPIT_MODE="dark"
+    SEL_CONTAINER=0
+    ACTION="none"
+    INTERVAL="${INTERVAL:-2}"
+    ONCE=0
+    for arg in "${@:2}"; do
+      case "$arg" in
+        --once) ONCE=1 ;;
+        --interval=*) INTERVAL="${arg#*=}" ;;
+        -*) ;;
+        overview) ACTIVE_TAB="overview_tab" ;;
+        podman|containers) ACTIVE_TAB="containers_tab" ;;
+        storage) ACTIVE_TAB="storage_tab" ;;
+        zenoh|mesh) ACTIVE_TAB="zenoh_tab" ;;
+        supervisors|sup) ACTIVE_TAB="supervisors_tab" ;;
+        tasks|planning) ACTIVE_TAB="tasks_tab" ;;
+        security|iam) ACTIVE_TAB="security_tab" ;;
+        stream|events) ACTIVE_TAB="stream_tab" ;;
+        doctor|preflight) ACTIVE_TAB="doctor_tab" ;;
+        *) ;;
+      esac
+    done
+    if [ ! -t 0 ]; then
+      ONCE=1
+    fi
+
+    cleanup() {
+      printf "\033[?25h" 2>/dev/null || true
+      stty echo 2>/dev/null || true
+    }
+    trap cleanup EXIT INT TERM
+
+    printf "\033[?25l" 2>/dev/null || true
+    stty -echo 2>/dev/null || true
+
+    while true; do
+      printf "\033[2J\033[H"
+
+      run_erl '
+        M0 = cepaf_gleam@ui@tui@sysadmin_cockpit:default_model(),
+        M1 = cepaf_gleam@ui@tui@sysadmin_cockpit:select_tab(M0, '"${ACTIVE_TAB}"'),
+        M2 = case "'"${COCKPIT_MODE}"'" of
+          "dim" -> cepaf_gleam@ui@tui@sysadmin_cockpit:toggle_mode(M1);
+          "normal" -> cepaf_gleam@ui@tui@sysadmin_cockpit:toggle_mode(cepaf_gleam@ui@tui@sysadmin_cockpit:toggle_mode(M1));
+          "bright" -> cepaf_gleam@ui@tui@sysadmin_cockpit:toggle_mode(cepaf_gleam@ui@tui@sysadmin_cockpit:toggle_mode(cepaf_gleam@ui@tui@sysadmin_cockpit:toggle_mode(M1)));
+          "emergency" -> cepaf_gleam@ui@tui@sysadmin_cockpit:toggle_mode(cepaf_gleam@ui@tui@sysadmin_cockpit:toggle_mode(cepaf_gleam@ui@tui@sysadmin_cockpit:toggle_mode(cepaf_gleam@ui@tui@sysadmin_cockpit:toggle_mode(M1))));
+          _ -> M1
+        end,
+        M3 = lists:foldl(fun(_, Acc) -> cepaf_gleam@ui@tui@sysadmin_cockpit:next_container(Acc) end, M2, case '"${SEL_CONTAINER}"' of 0 -> []; N -> lists:seq(1, N) end),
+        M4 = case "'"${ACTION}"'" of
+          "restart" -> cepaf_gleam@ui@tui@sysadmin_cockpit:restart_selected_container(M3);
+          "stop" -> cepaf_gleam@ui@tui@sysadmin_cockpit:stop_selected_container(M3);
+          "start" -> cepaf_gleam@ui@tui@sysadmin_cockpit:start_selected_container(M3);
+          "gc" -> cepaf_gleam@ui@tui@sysadmin_cockpit:trigger_garbage_collection(M3);
+          _ -> M3
+        end,
+        Output = cepaf_gleam@ui@tui@sysadmin_cockpit:render(M4),
+        io:put_chars(Output),
+        io:nl(),
+        init:stop().
+      '
+
+      ACTION="none"
+
+      if [ "$ONCE" -eq 1 ]; then
+        break
+      fi
+
+      read -t "$INTERVAL" -n 1 KEY || true
+      case "${KEY:-}" in
+        1) ACTIVE_TAB="overview_tab" ;;
+        2) ACTIVE_TAB="containers_tab" ;;
+        3) ACTIVE_TAB="storage_tab" ;;
+        4) ACTIVE_TAB="zenoh_tab" ;;
+        5) ACTIVE_TAB="supervisors_tab" ;;
+        6) ACTIVE_TAB="tasks_tab" ;;
+        7) ACTIVE_TAB="security_tab" ;;
+        8) ACTIVE_TAB="stream_tab" ;;
+        9) ACTIVE_TAB="doctor_tab" ;;
+        j|J) SEL_CONTAINER=$(( (SEL_CONTAINER + 1) % 16 )) ;;
+        k|K) SEL_CONTAINER=$(( (SEL_CONTAINER + 15) % 16 )) ;;
+        r|R)
+          if [ "$ACTIVE_TAB" = "containers_tab" ]; then
+            ACTION="restart"
+          fi
+          ;;
+        s|S)
+          if [ "$ACTIVE_TAB" = "containers_tab" ]; then
+            ACTION="start"
+          fi
+          ;;
+        x|X)
+          if [ "$ACTIVE_TAB" = "containers_tab" ]; then
+            ACTION="stop"
+          fi
+          ;;
+        t|T)
+          case "$COCKPIT_MODE" in
+            dark) COCKPIT_MODE="dim" ;;
+            dim) COCKPIT_MODE="normal" ;;
+            normal) COCKPIT_MODE="bright" ;;
+            bright) COCKPIT_MODE="emergency" ;;
+            emergency) COCKPIT_MODE="dark" ;;
+          esac
+          ;;
+        g|G) ACTION="gc" ;;
+        n|N)
+          case "$ACTIVE_TAB" in
+            overview_tab) ACTIVE_TAB="containers_tab" ;;
+            containers_tab) ACTIVE_TAB="storage_tab" ;;
+            storage_tab) ACTIVE_TAB="zenoh_tab" ;;
+            zenoh_tab) ACTIVE_TAB="supervisors_tab" ;;
+            supervisors_tab) ACTIVE_TAB="tasks_tab" ;;
+            tasks_tab) ACTIVE_TAB="security_tab" ;;
+            security_tab) ACTIVE_TAB="stream_tab" ;;
+            stream_tab) ACTIVE_TAB="doctor_tab" ;;
+            doctor_tab) ACTIVE_TAB="overview_tab" ;;
+          esac
+          ;;
+        p|P)
+          case "$ACTIVE_TAB" in
+            overview_tab) ACTIVE_TAB="doctor_tab" ;;
+            containers_tab) ACTIVE_TAB="overview_tab" ;;
+            storage_tab) ACTIVE_TAB="containers_tab" ;;
+            zenoh_tab) ACTIVE_TAB="storage_tab" ;;
+            supervisors_tab) ACTIVE_TAB="zenoh_tab" ;;
+            tasks_tab) ACTIVE_TAB="supervisors_tab" ;;
+            security_tab) ACTIVE_TAB="tasks_tab" ;;
+            stream_tab) ACTIVE_TAB="security_tab" ;;
+            doctor_tab) ACTIVE_TAB="stream_tab" ;;
+          esac
+          ;;
+        q|Q) break ;;
+        *) ;;
+      esac
+    done
+    ;;
+
   auth)
     run_erl '
       Output = cepaf_gleam@ui@tui@auth_view:render(

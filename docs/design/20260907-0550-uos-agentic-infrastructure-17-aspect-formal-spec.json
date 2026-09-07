@@ -1,0 +1,2858 @@
+{
+  "schema": "uos.agentic-infrastructure.formal-spec.v1",
+  "spec_id": "SPEC-UOS-AINF-001",
+  "title": "UOS agentic infrastructure using native building blocks and all 17 aspects",
+  "created_at_utc": "2026-09-07T05:54:50Z",
+  "document_path": "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md",
+  "source_review_path": "docs/reviews/20260907-0550-uos-c3i-indrajaal-17-aspect-infrastructure-source-review.md",
+  "knowledge_links": {
+    "wiki": "docs/wiki/20260907-0550-uos-agentic-infrastructure-building-blocks.md",
+    "adr": "docs/zk/20260907-0550-adr-uos-agentic-infrastructure-native-building-blocks.md",
+    "moc": "docs/zk/20260905-1801-moc-uos-unified-master.md",
+    "journal": "docs/journal/20260907-0550-uos-agentic-infrastructure-formal-spec-journal.md"
+  },
+  "specification_status": "SPECIFIED",
+  "lifecycle_status": "mapped",
+  "implementation_status": "UNRUN",
+  "admission_status": "NOT_ADMITTED",
+  "authority": "Operator-requested specification; canonical AGENTS.md remains governing authority",
+  "evidence_semantics": "This manifest declares requirements and proof obligations. Structural validation is not a runtime test or a formal proof.",
+  "source_basis": {
+    "workspace": "/home/an/NAS-setup/uos",
+    "vcs": "standalone-jujutsu",
+    "observed_change_id": "uxwmloqmzronsqxryuqmwmvnrsvykvzr",
+    "observed_commit_id": "2c05b003b57763acd354f9d361a8959436a00de1",
+    "working_copy_dirty": true,
+    "selected_source_binding": "Per-file SHA-256 values below bind selected existing canonical source bytes; they do not ratify the full working copy.",
+    "clock_receipt": {
+      "provider": "chronyc tracking",
+      "reference_time_utc": "2026-09-07T05:42:10Z",
+      "system_seconds_slow_of_ntp": 0.001250984,
+      "leap_status": "Normal",
+      "model_delta_seconds": null
+    },
+    "external_review": {
+      "root": "/home/an/dev/ver/c3i",
+      "revision": "47f9322329fcda2fdbd7061988f586c65db00d17",
+      "tracked_dirty": true,
+      "writers_quiesced": false,
+      "source_imported": false,
+      "admission_status": "READ_ONLY_REFERENCE",
+      "reviewed_paths": [
+        "docs/architecture/indrajaal-agentic-ui-vision.md",
+        "docs/architecture/indrajaal-ui-evaluation-framework.md"
+      ],
+      "remote_vm1_reviewed": true,
+      "remote_vm1": {
+        "host": "vm-1.tail55d152.ts.net",
+        "root": "/home/an/dev/ver/c3i",
+        "revision": "0683c0f8c5fe4bcbd65011662596638855147729",
+        "review_scope": "Read-only selected MCP, context, RBAC, IAM-supervision interfaces and Indrajaal architecture/evaluation outlines.",
+        "selected_tracked_paths_clean": true,
+        "whole_tree_clean": "UNKNOWN",
+        "writers_quiesced": false,
+        "sanitized_snapshot_digest": null,
+        "admission_status": "READ_ONLY_REFERENCE",
+        "reviewed_paths": [
+          "lib/cepaf_gleam/src/cepaf_gleam/ha/context_manager.gleam",
+          "lib/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+          "lib/cepaf_gleam/src/cepaf_gleam/auth/rbac.gleam",
+          "lib/cepaf_gleam/src/cepaf_gleam/iam/supervisor.gleam",
+          "docs/architecture/indrajaal-agentic-ui-vision.md",
+          "docs/architecture/indrajaal-ui-evaluation-framework.md"
+        ]
+      }
+    },
+    "limitations": [
+      "Selected source and architecture review across all 17 aspects, not a line-by-line audit of every repository file.",
+      "No new runtime implementation, dependency installation, source ingestion, live service restart, model call or formal proof is claimed.",
+      "The local external C3I checkout and live VM-1 have different observed revisions. Selected read-only review was performed on both; no whole-tree equality, quiescence or new source admission is asserted."
+    ]
+  },
+  "constraints": {
+    "control_plane": "Pure Gleam/OTP 29",
+    "evidence_plane": "Hermes OCaml/Dune",
+    "deterministic_kernel": "ZigVM",
+    "python_allowed_path": "services/inference/max/max_worker.py",
+    "new_external_runtime_services": [],
+    "barred_runtime_dependencies": [
+      "Bevy",
+      "Graphite",
+      "Graphene NIF"
+    ],
+    "denied_os_nvme_serial": "25503L801736",
+    "diagram_sources": [
+      "ASCII",
+      "Mermaid"
+    ],
+    "tailnet_base_fqdn": "http://nas-1.tail55d152.ts.net:4100",
+    "layers": [
+      "L0",
+      "L1",
+      "L2",
+      "L3",
+      "L4",
+      "L5",
+      "L6",
+      "L7",
+      "L8",
+      "L9"
+    ],
+    "surfaces": [
+      "LustreWeb",
+      "WispApi",
+      "AnsiTui",
+      "AgUiSse",
+      "MozZenoh"
+    ],
+    "evidence_plane_hierarchy": [
+      "Product",
+      "Family",
+      "Capability",
+      "Contract",
+      "Scenario",
+      "Trace",
+      "Receipt"
+    ],
+    "trace_coordinate_fields": [
+      "layer",
+      "component",
+      "feature",
+      "surface",
+      "modal",
+      "plane",
+      "carrier",
+      "profile",
+      "semantics",
+      "operations",
+      "telemetry",
+      "invariants",
+      "authority"
+    ],
+    "trace_status_is_separate": true
+  },
+  "services": [
+    {
+      "id": "AINF-S01",
+      "layer": "Identity & Security",
+      "name": "Cryptographic workload IAM",
+      "actor": "WorkloadIdentityActor",
+      "fractal_layer": "L0",
+      "reuse_paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/iam/supervisor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/iam/jwks_cache_actor.gleam"
+      ],
+      "requirement_id": "AINF-R01",
+      "shall": "Validate workload certificate/JWT signature, issuer, audience, tenant binding, not-before, expiry, revocation epoch and proof of possession at every ingress. Rotate short-lived identities; fail closed on unknown trust roots. A SPIFFE-shaped identifier alone SHALL NOT authenticate a caller.",
+      "acceptance": [
+        {
+          "id": "AINF-T01-1",
+          "assertion": "Accept an enrolled workload using the admitted trust bundle.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T01-2",
+          "assertion": "Reject forged, expired, wrong-audience and cross-tenant identities.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T01-3",
+          "assertion": "Rotate roots with a bounded overlap; reject a revoked identity before its former expiry.",
+          "status": "UNRUN"
+        }
+      ],
+      "implementation_status": "UNRUN",
+      "reuse_status": "SOURCE_PRESENT_ONLY",
+      "reference_examples": "SPIFFE / SPIRE"
+    },
+    {
+      "id": "AINF-S02",
+      "layer": "Identity & Security",
+      "name": "RBAC / ABAC / PBAC",
+      "actor": "PolicyDecisionActor",
+      "fractal_layer": "L0",
+      "reuse_paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/auth/rbac.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/rules/engine.gleam"
+      ],
+      "requirement_id": "AINF-R02",
+      "shall": "Compute effective permission as the intersection of initiating principal, workload, delegation chain, tenant policy, resource ACL and environmental restrictions. Explicit deny dominates; missing attributes, stale policies, evaluator errors and timeouts deny. Rete recommendations cannot grant authority.",
+      "acceptance": [
+        {
+          "id": "AINF-T02-1",
+          "assertion": "Permit a registered read tool for an authorized tenant principal.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T02-2",
+          "assertion": "Deny when any grant is absent even if the workload has administrative privileges.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T02-3",
+          "assertion": "Revoke a policy while a request is queued; reject its stale authorization at dispatch.",
+          "status": "UNRUN"
+        }
+      ],
+      "implementation_status": "UNRUN",
+      "reuse_status": "SOURCE_PRESENT_ONLY",
+      "reference_examples": "OPA / Cedar / Styra"
+    },
+    {
+      "id": "AINF-S03",
+      "layer": "Identity & Security",
+      "name": "Principal propagation and delegated authorization",
+      "actor": "DelegationBrokerActor",
+      "fractal_layer": "L0",
+      "reuse_paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/auth/token_exchange.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/iam/sts_token_cache_actor.gleam"
+      ],
+      "requirement_id": "AINF-R03",
+      "shall": "Carry the initiating principal and ordered actor chain through every handoff. Issue audience-specific, short-lived down-scoped credentials through the existing IAM boundary; enforce maximum depth, expiry and revocation. Exchange source and upstream tokens remain opaque to models and ordinary logs.",
+      "acceptance": [
+        {
+          "id": "AINF-T03-1",
+          "assertion": "Exchange to a narrower audience and scope for the same principal and tenant.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T03-2",
+          "assertion": "Reject cyclic chains, depth overflow, scope escalation and confused-deputy token reuse.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T03-3",
+          "assertion": "Revoke the root delegation and demonstrate invalidation of cached descendants.",
+          "status": "UNRUN"
+        }
+      ],
+      "implementation_status": "UNRUN",
+      "reuse_status": "SOURCE_PRESENT_ONLY",
+      "reference_examples": "Arcade AI / OAuth OBO"
+    },
+    {
+      "id": "AINF-S04",
+      "layer": "Identity & Security",
+      "name": "Ephemeral secret and credential broker",
+      "actor": "CredentialLeaseActor",
+      "fractal_layer": "L0",
+      "reuse_paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/vault.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/vault_supervisor.gleam",
+        "engines/hermes/modules/hermes_dependability/dependability_credential.mli"
+      ],
+      "requirement_id": "AINF-R04",
+      "shall": "Issue opaque credential lease references bound to tenant, subject, tool, endpoint, request digest, epoch and expiry. Inject secret bytes only at the isolated adapter boundary, scrub inheritance and perform verified cleanup. No secret bytes, secret hashes, refresh tokens or private keys enter prompts, retained audit payloads or specification artifacts.",
+      "acceptance": [
+        {
+          "id": "AINF-T04-1",
+          "assertion": "Obtain a lease and use it only for the bound tool and endpoint.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T04-2",
+          "assertion": "Reject lease replay after expiry, tenant mismatch, cancellation or revocation.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T04-3",
+          "assertion": "Scan model inputs, telemetry and replay records to prove fixture secrets are absent.",
+          "status": "UNRUN"
+        }
+      ],
+      "implementation_status": "UNRUN",
+      "reuse_status": "SOURCE_PRESENT_ONLY",
+      "reference_examples": "HashiCorp Vault / Secrets Manager"
+    },
+    {
+      "id": "AINF-S05",
+      "layer": "Identity & Security",
+      "name": "Input, output and tool guardrails",
+      "actor": "GuardrailActor",
+      "fractal_layer": "L0",
+      "reuse_paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/vault_pii_scrub.gleam",
+        "engines/hermes/modules/system_engg/agent_dispatch_hook.ml"
+      ],
+      "requirement_id": "AINF-R05",
+      "shall": "Separate trusted policy from untrusted retrieved/tool content, enforce typed schemas and size limits, and redact classified fields before export. Combine deterministic controls with separately evaluated advisory classifiers. Prompt text, classifier approval or SQL substring filtering alone SHALL NOT authorize effects or replace parameterized SQL.",
+      "acceptance": [
+        {
+          "id": "AINF-T05-1",
+          "assertion": "Retain an adversarial retrieved document as untrusted data while rejecting its requested privileged action.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T05-2",
+          "assertion": "Reject NUL, malformed JSON and oversized arguments before adapter invocation.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T05-3",
+          "assertion": "Redact seeded PII/credentials and quarantine a schema-invalid model result even after HTTP 200.",
+          "status": "UNRUN"
+        }
+      ],
+      "implementation_status": "UNRUN",
+      "reuse_status": "SOURCE_PRESENT_ONLY",
+      "reference_examples": "NeMo Guardrails / Llama Guard"
+    },
+    {
+      "id": "AINF-S06",
+      "layer": "Discovery & Tooling",
+      "name": "Agent naming, registry and discovery",
+      "actor": "CapabilityRegistryActor",
+      "fractal_layer": "L2",
+      "reuse_paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ontology/adk_c3i_master_ontology.gleam",
+        "apps/uos_tui/src/uos_tui/swarm.gleam"
+      ],
+      "requirement_id": "AINF-R06",
+      "shall": "Register versioned capability descriptors with tenant visibility, schema and implementation digests, endpoint identity, supported protocols, lease expiry, health evidence and capacity. Discovery returns authorized, compatible and freshly leased candidates; discovery never grants execution authority.",
+      "acceptance": [
+        {
+          "id": "AINF-T06-1",
+          "assertion": "Discover two compatible authorized workers and select one with available capacity.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T06-2",
+          "assertion": "Exclude expired, incompatible, unhealthy and other-tenant descriptors.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T06-3",
+          "assertion": "Change a tool/schema digest after planning and require re-resolution and authorization.",
+          "status": "UNRUN"
+        }
+      ],
+      "implementation_status": "UNRUN",
+      "reuse_status": "SOURCE_PRESENT_ONLY",
+      "reference_examples": "Consul / Kubernetes discovery"
+    },
+    {
+      "id": "AINF-S07",
+      "layer": "Discovery & Tooling",
+      "name": "MCP and dynamic tool gateway",
+      "actor": "ToolGatewayActor",
+      "fractal_layer": "L2",
+      "reuse_paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/protocol.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/bridge/zenoh_mcp.gleam"
+      ],
+      "requirement_id": "AINF-R07",
+      "shall": "Normalize admitted MCP, OpenAPI and internal MoZ calls into one typed invocation envelope. Negotiate pinned protocol versions; validate argument/result schemas, identity, deadline, payload bound, egress target and idempotency at the same boundary. HTTP auth, stdio framing and Zenoh ACLs remain distinct transport contracts; unknown protocol versions fail closed.",
+      "acceptance": [
+        {
+          "id": "AINF-T07-1",
+          "assertion": "Invoke an admitted read tool through two transports and compare normalized outcomes and trace bindings.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T07-2",
+          "assertion": "Reject unsupported versions, schema drift, unauthorized redirects and wrong token audiences.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T07-3",
+          "assertion": "Cancel or time out a real worker and reap its process tree; never retry a non-idempotent ambiguous call.",
+          "status": "UNRUN"
+        }
+      ],
+      "implementation_status": "UNRUN",
+      "reuse_status": "SOURCE_PRESENT_ONLY",
+      "reference_examples": "MCP / OpenAPI / Stargate / Nango / Composio"
+    },
+    {
+      "id": "AINF-S08",
+      "layer": "Discovery & Tooling",
+      "name": "Asynchronous agent messaging and event bus",
+      "actor": "TenantMailboxActor",
+      "fractal_layer": "L3",
+      "reuse_paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/bridge/zenoh_mcp.gleam",
+        "apps/uos_tui/src/uos_tui/board.gleam"
+      ],
+      "requirement_id": "AINF-R08",
+      "shall": "Use Zenoh as the UOS backplane with explicit per-tenant namespace ACLs, persistent transactional outbox/inbox, deduplication keys, bounded mailbox depth, acknowledgements, retry policy and dead letters. Define ordering per workflow, not globally. Internal messages are not claims of external A2A protocol conformance.",
+      "acceptance": [
+        {
+          "id": "AINF-T08-1",
+          "assertion": "Deliver a durable message after a broker disconnect and restart.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T08-2",
+          "assertion": "Redeliver duplicates without duplicating an admitted effect; reject cross-tenant subscription.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T08-3",
+          "assertion": "Saturate one mailbox and observe backpressure/dead letters without starving a second tenant.",
+          "status": "UNRUN"
+        }
+      ],
+      "implementation_status": "UNRUN",
+      "reuse_status": "SOURCE_PRESENT_ONLY",
+      "reference_examples": "NATS / Kafka / RabbitMQ"
+    },
+    {
+      "id": "AINF-S09",
+      "layer": "State & Memory",
+      "name": "Session state and scratchpads",
+      "actor": "SessionContextActor",
+      "fractal_layer": "L3",
+      "reuse_paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/substrate/beam_cache.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/context_cache.gleam"
+      ],
+      "requirement_id": "AINF-R09",
+      "shall": "Keep volatile working state in protected OTP/ETS partitions keyed by tenant, principal, session and authorization epoch, with item and byte quotas and TTLs. Durable checkpoints are referenced through Hermes. Cache contents cannot be authoritative for quota, approval, lease or completed-effect recovery.",
+      "acceptance": [
+        {
+          "id": "AINF-T09-1",
+          "assertion": "Read and update an owned session within byte and item bounds.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T09-2",
+          "assertion": "Reject guessed identifiers, expired sessions and a cache entry after policy-epoch change.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T09-3",
+          "assertion": "Restart a session actor and recover only authorized checkpoint data; never reset durable spend.",
+          "status": "UNRUN"
+        }
+      ],
+      "implementation_status": "UNRUN",
+      "reuse_status": "SOURCE_PRESENT_ONLY",
+      "reference_examples": "Redis / Dragonfly"
+    },
+    {
+      "id": "AINF-S10",
+      "layer": "State & Memory",
+      "name": "Vector retrieval and long-term memory",
+      "actor": "RetrievalActor",
+      "fractal_layer": "L5",
+      "reuse_paths": [
+        "engines/hermes/modules/hermes_wiki/src/graph/wiki_similarity.ml",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam"
+      ],
+      "requirement_id": "AINF-R10",
+      "shall": "Extend the Hermes retrieval substrate with versioned embeddings produced only by admitted MAX inference. Authorize tenant, principal ACL, time bounds, retention and residency before scoring and again before release. Bind model, dimension, tokenizer, corpus and index revisions to every result; treat indexes as rebuildable projections.",
+      "acceptance": [
+        {
+          "id": "AINF-T10-1",
+          "assertion": "Retrieve authorized evidence with source citations and model/index revision bindings.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T10-2",
+          "assertion": "Exclude other-tenant and revoked documents before top-k selection and on final return.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T10-3",
+          "assertion": "Rebuild an index and verify recall against a pinned labeled corpus; do not label TF-IDF as neural embeddings.",
+          "status": "UNRUN"
+        }
+      ],
+      "implementation_status": "UNRUN",
+      "reuse_status": "SOURCE_PRESENT_ONLY",
+      "reference_examples": "Qdrant / Pinecone / Milvus"
+    },
+    {
+      "id": "AINF-S11",
+      "layer": "State & Memory",
+      "name": "Knowledge graph and ontology",
+      "actor": "KnowledgeGraphActor",
+      "fractal_layer": "L5",
+      "reuse_paths": [
+        "engines/hermes/modules/hermes_wiki/src/graph/wiki_graph.ml",
+        "apps/cepaf_gleam/src/cepaf_gleam/ontology/adk_c3i_master_ontology.gleam"
+      ],
+      "requirement_id": "AINF-R11",
+      "shall": "Use the existing KM triad and typed Hermes/BEAM graph operations. Enforce authorization on every vertex, edge and derived fact, track provenance and cap traversal depth/result size. Inference may propose relationships; only validated evidence can become authoritative facts or permission inputs.",
+      "acceptance": [
+        {
+          "id": "AINF-T11-1",
+          "assertion": "Resolve an authorized multi-hop relation with complete provenance.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T11-2",
+          "assertion": "Reject a traversal through a hidden intermediary and prevent inferred permission escalation.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T11-3",
+          "assertion": "Withdraw source evidence and invalidate dependent graph facts and caches.",
+          "status": "UNRUN"
+        }
+      ],
+      "implementation_status": "UNRUN",
+      "reuse_status": "SOURCE_PRESENT_ONLY",
+      "reference_examples": "Neo4j / Neptune"
+    },
+    {
+      "id": "AINF-S12",
+      "layer": "State & Memory",
+      "name": "Context routing, compaction and memory budget",
+      "actor": "ContextBudgetActor",
+      "fractal_layer": "L5",
+      "reuse_paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/context_manager.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/token_budget.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/workflow_compactor.gleam"
+      ],
+      "requirement_id": "AINF-R12",
+      "shall": "Assemble context using the selected model's admitted tokenizer and explicit input/output reservations. Preserve immutable policy, task constraints, delegation/approval references, unresolved tool pairs and evidence identifiers. Summaries remain versioned, untrusted derivatives with source references; fail if protected context cannot fit instead of dropping constraints.",
+      "acceptance": [
+        {
+          "id": "AINF-T12-1",
+          "assertion": "Compact an over-budget session while preserving protected entries and tool-call/result pairing.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T12-2",
+          "assertion": "Reject negative token counts, model/tokenizer mismatch and protected content exceeding capacity.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T12-3",
+          "assertion": "Compare pre/post-compaction task answers on a pinned corpus and reject lost safety constraints.",
+          "status": "UNRUN"
+        }
+      ],
+      "implementation_status": "UNRUN",
+      "reuse_status": "SOURCE_PRESENT_ONLY",
+      "reference_examples": "Letta / MemGPT"
+    },
+    {
+      "id": "AINF-S13",
+      "layer": "Execution & Compute",
+      "name": "Isolated sandbox and bounded execution",
+      "actor": "SandboxLeaseActor",
+      "fractal_layer": "L4",
+      "reuse_paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/hermes_bionic_bridge.gleam",
+        "engines/hermes/modules/hermes_dependability/dependability_process.mli",
+        "engines/zigvm/build.zig"
+      ],
+      "requirement_id": "AINF-R13",
+      "shall": "Route admitted deterministic programs to ZigVM and hostile host-tool execution to an independently isolated Hermes-Bionic process/container profile. Verify filesystem, privilege, network, CPU, memory, PID, output and wall-time limits before dispatch; cancel and reap descendants. Neither an OTP actor nor descriptor-relative VFS alone is a host-code security sandbox. Preserve the host OS storage interlock.",
+      "acceptance": [
+        {
+          "id": "AINF-T13-1",
+          "assertion": "Run a bounded admitted task and retain a sanitized result with the sandbox profile digest.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T13-2",
+          "assertion": "Attempt path escape, symlink race, credential mount access, forbidden egress and resource exhaustion; require containment.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T13-3",
+          "assertion": "Deny execution when isolation attestation is absent and verify descendant cleanup after timeout.",
+          "status": "UNRUN"
+        }
+      ],
+      "implementation_status": "UNRUN",
+      "reuse_status": "SOURCE_PRESENT_ONLY",
+      "reference_examples": "E2B / Daytona / Firecracker / gVisor / Modal"
+    },
+    {
+      "id": "AINF-S14",
+      "layer": "Execution & Compute",
+      "name": "Durable workflow and transaction orchestration",
+      "actor": "WorkflowLeaseActor",
+      "fractal_layer": "L3",
+      "reuse_paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/sdlc/sa_plan_engine.gleam",
+        "engines/hermes/modules/sa_plan/sa_plan_store.ml",
+        "engines/hermes/modules/sa_plan/sa_plan_temporal.ml"
+      ],
+      "requirement_id": "AINF-R14",
+      "shall": "Use Sa-Plan leases and Hermes WAL transactions to persist workflow events, step intent, budget reservation and outbox atomically. Keep nondeterministic model/tool outcomes in versioned history and replay the pure transition function. Use idempotency keys for retryable effects and an explicit reconciliation state for ambiguous non-idempotent outcomes; compensation is an authorized action, not automatic reversal.",
+      "acceptance": [
+        {
+          "id": "AINF-T14-1",
+          "assertion": "Kill the worker at every intent/effect/receipt boundary and recover committed workflow state.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T14-2",
+          "assertion": "Replay completed model/tool steps from recorded outcomes without calling providers again.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T14-3",
+          "assertion": "Fence a stale writer and reconcile an effect whose remote success was not durably acknowledged.",
+          "status": "UNRUN"
+        }
+      ],
+      "implementation_status": "UNRUN",
+      "reuse_status": "SOURCE_PRESENT_ONLY",
+      "reference_examples": "Temporal / Inngest / Cadence"
+    },
+    {
+      "id": "AINF-S15",
+      "layer": "Execution & Compute",
+      "name": "Human approval and escalation gateway",
+      "actor": "ApprovalQueueActor",
+      "fractal_layer": "L0",
+      "reuse_paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/fractal/l0_constitutional.gleam",
+        "engines/hermes/modules/sa_plan/guardian.ml",
+        "engines/hermes/modules/hermes_dependability/dependability_approval_crypto.ml"
+      ],
+      "requirement_id": "AINF-R15",
+      "shall": "Persist approvals bound to tenant, initiating principal, approver authority, exact canonical action digest, policy version, cost ceiling, expiry, lease epoch and a single-use nonce. Resume with current authorization and budget checks. Approval cannot override constitutional storage or scope denials; stale, altered or replayed approvals fail closed.",
+      "acceptance": [
+        {
+          "id": "AINF-T15-1",
+          "assertion": "Pause a policy-designated high-impact action and resume exactly the approved request.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T15-2",
+          "assertion": "Reject altered payloads, cross-tenant approvers, expired approval and nonce replay.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T15-3",
+          "assertion": "Cancel a waiting workflow, then prove a delayed approval cannot dispatch it.",
+          "status": "UNRUN"
+        }
+      ],
+      "implementation_status": "UNRUN",
+      "reuse_status": "SOURCE_PRESENT_ONLY",
+      "reference_examples": "Approval queues / webhooks"
+    },
+    {
+      "id": "AINF-S16",
+      "layer": "Execution & Compute",
+      "name": "Circuit breakers, anti-loop controls and dead letters",
+      "actor": "LoopGuardActor",
+      "fractal_layer": "L4",
+      "reuse_paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/prajna/circuit_breaker.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/freshness_monitor.gleam"
+      ],
+      "requirement_id": "AINF-R16",
+      "shall": "Enforce maximum steps, delegation depth, repeated semantic tool signatures, no-progress window, absolute deadline and aggregate retry allowance. Apply tenant/provider circuit breakers with bounded half-open probes. On exhaustion, revoke pending dispatch permits and store a redacted, quota-bounded dead letter; stochastic hallucination detection remains an evaluated signal.",
+      "acceptance": [
+        {
+          "id": "AINF-T16-1",
+          "assertion": "Terminate a repeated tool loop within the configured count without another effect.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T16-2",
+          "assertion": "Open a failing provider breaker, permit one half-open probe and avoid a retry storm.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T16-3",
+          "assertion": "Show malformed or negative limits are rejected and one tenant's failures do not open another tenant's local breaker.",
+          "status": "UNRUN"
+        }
+      ],
+      "implementation_status": "UNRUN",
+      "reuse_status": "SOURCE_PRESENT_ONLY",
+      "reference_examples": "LangGraph checkpointers / interceptors"
+    },
+    {
+      "id": "AINF-S17",
+      "layer": "Inference & Routing",
+      "name": "Model gateway, routing, failover and cache",
+      "actor": "ModelRouterActor",
+      "fractal_layer": "L5",
+      "reuse_paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/bridge/pi_provider.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/inference_api.gleam",
+        "services/inference/max/max_worker.py"
+      ],
+      "requirement_id": "AINF-R17",
+      "shall": "Route through UOS Gleam policy to admitted MAX or already admitted provider adapters whose manifest satisfies tenant policy, model capabilities, residency, context and cost limits. Reserve worst-case spend per attempt including hedges before dispatch. Cache only eligible sanitized results with complete tenant/principal/policy/model/context bindings; default semantic cache off. Static acknowledgements cannot count as successful inference.",
+      "acceptance": [
+        {
+          "id": "AINF-T17-1",
+          "assertion": "Invoke a real pinned inference backend and verify tokenizer usage and structured result against evidence.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T17-2",
+          "assertion": "Fail over only to an authorized compatible provider with a fresh reservation; reject forbidden residency.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T17-3",
+          "assertion": "Demonstrate no cache reuse across tenants, ACL epochs, tool schemas, corpus versions or model changes.",
+          "status": "UNRUN"
+        }
+      ],
+      "implementation_status": "UNRUN",
+      "reuse_status": "SOURCE_PRESENT_ONLY",
+      "reference_examples": "LiteLLM / Portkey"
+    },
+    {
+      "id": "AINF-S18",
+      "layer": "Observability, Governance & Testing",
+      "name": "Step-level tracing and semantic telemetry",
+      "actor": "TrajectoryTelemetryActor",
+      "fractal_layer": "L4",
+      "reuse_paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/trace_context.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/agui/sse.gleam",
+        "contracts/evidence/c3i_fractal_observability_spec.json"
+      ],
+      "requirement_id": "AINF-R18",
+      "shall": "Emit correlated W3C spans and C3I coordinates for authorized decisions, routing, retrieval, compaction, approvals, attempts, results, usage and eval verdicts. Record observable actions and concise redacted rationale/evidence references; exclude hidden chain-of-thought, secrets and unrestricted raw context. Distinguish transport success, task success and admission. Telemetry loss cannot rewrite authoritative evidence.",
+      "acceptance": [
+        {
+          "id": "AINF-T18-1",
+          "assertion": "Reconstruct a multi-step trajectory across transports using valid nonzero trace/span IDs.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T18-2",
+          "assertion": "Return HTTP 200 with a semantically wrong answer and record task failure independently.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T18-3",
+          "assertion": "Drop telemetry under load while preserving the durable audit chain and admitting no unaudited effect.",
+          "status": "UNRUN"
+        }
+      ],
+      "implementation_status": "UNRUN",
+      "reuse_status": "SOURCE_PRESENT_ONLY",
+      "reference_examples": "Langfuse / Phoenix / LangSmith / OpenTelemetry"
+    },
+    {
+      "id": "AINF-S19",
+      "layer": "Observability, Governance & Testing",
+      "name": "Cost, quota and budget enforcement",
+      "actor": "TenantQuotaActor",
+      "fractal_layer": "L3",
+      "reuse_paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/token_budget.gleam",
+        "apps/uos_tui/src/uos_tui/coord.gleam",
+        "engines/hermes/modules/sa_plan/sa_plan_store.ml"
+      ],
+      "requirement_id": "AINF-R19",
+      "shall": "Maintain integer micro-unit monetary and token/resource budgets with durable compare-and-swap reservation, settlement and refund records. Scope global, tenant, principal and workflow limits and enforce all simultaneously. Concurrent attempts reserve before dispatch; cancellation retains uncertain liability until reconciliation. Unknown pricing or usage fails closed for additional spend.",
+      "acceptance": [
+        {
+          "id": "AINF-T19-1",
+          "assertion": "Race concurrent requests at an exact tenant/global budget boundary and prevent oversubscription.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T19-2",
+          "assertion": "Charge hedges/retries and settle duplicate usage receipts once.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T19-3",
+          "assertion": "Restart/fail over the quota owner without resetting balances or releasing an ambiguous in-flight reservation.",
+          "status": "UNRUN"
+        }
+      ],
+      "implementation_status": "UNRUN",
+      "reuse_status": "SOURCE_PRESENT_ONLY",
+      "reference_examples": "Rate / spend / token metering"
+    },
+    {
+      "id": "AINF-S20",
+      "layer": "Observability, Governance & Testing",
+      "name": "Immutable audit and compliance evidence",
+      "actor": "EvidenceAppendActor",
+      "fractal_layer": "L3",
+      "reuse_paths": [
+        "engines/hermes/modules/hermes_harness/evidence_store.ml",
+        "engines/hermes/modules/hermes_dependability/dependability_writer_lease.ml"
+      ],
+      "requirement_id": "AINF-R20",
+      "shall": "Use the existing authoritative Hermes SQLite WAL evidence plane with a fenced single writer, append-only API and cryptographic chaining of canonical redacted records. Anchor chain heads outside the writer's trust domain; verify backup restoration and retention. Describe guarantees as tamper evidence with a stated threat model, not absolute tamper proofing. Persistence failure blocks new effects.",
+      "acceptance": [
+        {
+          "id": "AINF-T20-1",
+          "assertion": "Detect modification, omission, reordering and a truncated tail against an independently stored checkpoint.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T20-2",
+          "assertion": "Refuse a dispatch when the ledger is unwritable, full or its writer lease is stale.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T20-3",
+          "assertion": "Restore an encrypted backup, verify chain/sequence/tenant isolation and execute a documented retention procedure.",
+          "status": "UNRUN"
+        }
+      ],
+      "implementation_status": "UNRUN",
+      "reuse_status": "SOURCE_PRESENT_ONLY",
+      "reference_examples": "ImmuDB / append-only audit ledger"
+    },
+    {
+      "id": "AINF-S21",
+      "layer": "Observability, Governance & Testing",
+      "name": "Continuous evaluation, regression and red teaming",
+      "actor": "EvaluationGateActor",
+      "fractal_layer": "L8",
+      "reuse_paths": [
+        "engines/hermes/modules/hermes_harness/test_parity_algebra.ml",
+        "engines/hermes/modules/hermes_harness/test_parity_compare.ml",
+        "apps/cepaf_gleam/src/cepaf_gleam/testing/coverage_math.gleam"
+      ],
+      "requirement_id": "AINF-R21",
+      "shall": "Extend Hermes differential evaluation with pinned datasets, prompts, model/tokenizer versions, policy snapshots and deterministic control oracles. Score task success, groundedness, tool/approval correctness, injection resistance, isolation, context preservation, latency and spend. Separate deterministic contract checks from stochastic model measurements; require regression thresholds and confidence intervals before a controlled rollout.",
+      "acceptance": [
+        {
+          "id": "AINF-T21-1",
+          "assertion": "Run held-out normal and adversarial trajectories and reject a deliberately wrong but syntactically valid response.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T21-2",
+          "assertion": "Introduce policy, cache-isolation, compaction and quota mutants and observe failing gates.",
+          "status": "UNRUN"
+        },
+        {
+          "id": "AINF-T21-3",
+          "assertion": "Mark missing judge/backend, empty datasets, stale receipts and unavailable formal tools UNRUN or UNKNOWN, never PASS.",
+          "status": "UNRUN"
+        }
+      ],
+      "implementation_status": "UNRUN",
+      "reuse_status": "SOURCE_PRESENT_ONLY",
+      "reference_examples": "Promptfoo / DeepEval / Ragas"
+    }
+  ],
+  "aspects": [
+    {
+      "id": "AINF-A01",
+      "ordinal": 1,
+      "name": "Substrate & Hardware Storage Interlock",
+      "existing_gate": "G-DRIVE-NVME",
+      "obligation": "Reject the denied OS serial and prove filesystem/resource isolation at the service's execution and storage dependencies.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A02",
+      "ordinal": 2,
+      "name": "Standalone Jujutsu Monorepo Discipline",
+      "existing_gate": "G-BOOT1-JJ",
+      "obligation": "Bind code, schemas, policy, model and fixtures to a standalone JJ candidate plus source digests; serialize integration.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A03",
+      "ordinal": 3,
+      "name": "Zero-Muda Purity & Waste Elimination",
+      "existing_gate": "G-ZERO-MUDA",
+      "obligation": "Reuse admitted UOS carriers; scan dependencies and dispatch plans for barred engines and forbidden language placement.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A04",
+      "ordinal": 4,
+      "name": "Gleam/OTP 29 4-Domain Root Supervisor",
+      "existing_gate": "G-OTP29-SUPER",
+      "obligation": "Show the real service actor in a live domain tree; exercise restart tolerance, fencing, bounded queues and shutdown.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A05",
+      "ordinal": 5,
+      "name": "ZigVM Deterministic Engine & 8 VFS Laws",
+      "existing_gate": "G-VFS-8LAWS",
+      "obligation": "Trace deterministic work and file access to an admitted ZigVM/VFS boundary; demonstrate confinement or the explicit delegated boundary.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A06",
+      "ordinal": 6,
+      "name": "Hermes Formal Evidence, Gospel & Z3",
+      "existing_gate": "G-HERMES-EVID",
+      "obligation": "Provide a typed contract, independent oracle and fresh bounded verifier receipt for the service revision.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A07",
+      "ordinal": 7,
+      "name": "Mathematical Authority & Conservation",
+      "existing_gate": "G-LEAN4-MATH",
+      "obligation": "Prove relevant authorization, budget, trace-coordinate and lease laws; establish projection equivalence without undeclared axioms.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A08",
+      "ordinal": 8,
+      "name": "Biosemiotic Cybernetics & Rocha Cut",
+      "existing_gate": "G-ROCHA-SEMIOT",
+      "obligation": "Show that proposals, retrieved text, model outputs and Rete facts cannot directly create dispatch authority.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A09",
+      "ordinal": 9,
+      "name": "Quarantined Modular MAX/Mojo Inference",
+      "existing_gate": "G-MAX-INFER",
+      "obligation": "Route any inference through an admitted isolated boundary; non-inference services prove no hidden inference or Python dispatch.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A10",
+      "ordinal": 10,
+      "name": "Zenoh OoZ & MoZ Mesh Telemetry Backplane",
+      "existing_gate": "G-ZENOH-MESH",
+      "obligation": "Test tenant namespace ACLs, authenticated routing, loss/retry/duplicate handling and observation/control separation.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A11",
+      "ordinal": 11,
+      "name": "AG-UI 32-Event SSE Stream Protocol",
+      "existing_gate": "G-AGUI-32EVENT",
+      "obligation": "Expose sanitized typed service events with authenticated subscription, bounded buffering and sequence-aware reconnection.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A12",
+      "ordinal": 12,
+      "name": "A2UI 233-Component Declarative Catalog",
+      "existing_gate": "G-A2UI-CATALOG",
+      "obligation": "Render typed catalog projections of capability, health, approval and evidence; no arbitrary model HTML or executable markup.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A13",
+      "ordinal": 13,
+      "name": "Penta-Stack Multi-Interface Accessibility",
+      "existing_gate": "G-PENTA-STACK",
+      "obligation": "Prove consistent authorized meaning across Lustre Web, Wisp API, ANSI TUI, AG-UI SSE and MoZ/Zenoh surfaces.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A14",
+      "ordinal": 14,
+      "name": "Universal Tailscale FQDN Web Navigation",
+      "existing_gate": "G-TAILSCALE-WEB",
+      "obligation": "Verify full FQDN discovery/docs/evidence links and authenticated navigation; Tailnet location alone is not authorization.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A15",
+      "ordinal": 15,
+      "name": "Comprehensive Verification Checklist",
+      "existing_gate": "G-CHECKLIST",
+      "obligation": "Render the 5-domain/18-checkpoint structure with current scoped receipts, truthful UNRUN states and uniform navigation.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A16",
+      "ordinal": 16,
+      "name": "Knowledge Management Triad (Wiki/ZK/Ont)",
+      "existing_gate": "G-KM-TRIAD",
+      "obligation": "Link the requirement, implementation, formal contract, scenario, evidence, wiki, ADR and ontology without dropping tenant ACLs.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    },
+    {
+      "id": "AINF-A17",
+      "ordinal": 17,
+      "name": "Sa-Plan & Bionic Durable Workflows",
+      "existing_gate": "G-SAPLAN-BIONIC",
+      "obligation": "Track work and runtime steps through persistent leases, idempotency, cancellation, compensation and tested crash recovery.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN"
+    }
+  ],
+  "invariants": [
+    {
+      "id": "AINF-I01",
+      "name": "Tenant non-interference",
+      "predicate": "For t != u, projecting a transition authorized only for t onto u's private state is unchanged, except explicitly budgeted shared-resource metrics with no tenant payload.",
+      "verification": "Hermes paired-world oracle + Quint interleavings",
+      "requirements": [
+        "AINF-R01",
+        "AINF-R02",
+        "AINF-R06",
+        "AINF-R08",
+        "AINF-R09",
+        "AINF-R10",
+        "AINF-R11",
+        "AINF-R17",
+        "AINF-R19",
+        "AINF-R20"
+      ],
+      "proof_status": "UNRUN"
+    },
+    {
+      "id": "AINF-I02",
+      "name": "Authority attenuation",
+      "predicate": "Allow(q) implies q.scope is a subset of principal_grants intersect workload_grants intersect every delegation_grant intersect tenant_policy intersect resource_acl intersect environmental_allow; any explicit deny wins.",
+      "verification": "Gospel pre/postconditions + Lean subset proof",
+      "requirements": [
+        "AINF-R01",
+        "AINF-R02",
+        "AINF-R03",
+        "AINF-R04",
+        "AINF-R07",
+        "AINF-R15"
+      ],
+      "proof_status": "UNRUN"
+    },
+    {
+      "id": "AINF-I03",
+      "name": "Authorization freshness",
+      "predicate": "Dispatch(q,t) implies verified identity and current policy/ACL/revocation epoch at t, t strictly before every identity/delegation/approval/lease expiry, and depth(q) <= configured maximum.",
+      "verification": "Quint revocation/expiry races + runtime gateway tests",
+      "requirements": [
+        "AINF-R01",
+        "AINF-R02",
+        "AINF-R03",
+        "AINF-R04",
+        "AINF-R07",
+        "AINF-R15"
+      ],
+      "proof_status": "UNRUN"
+    },
+    {
+      "id": "AINF-I04",
+      "name": "Credential non-disclosure",
+      "predicate": "Model inputs, application logs, telemetry, audit rows and stored replay events contain no credential bytes or reversible secret representation; they reference opaque revocable leases.",
+      "verification": "Canary-secret integration tests + classified-field schema oracle",
+      "requirements": [
+        "AINF-R03",
+        "AINF-R04",
+        "AINF-R05",
+        "AINF-R18",
+        "AINF-R20"
+      ],
+      "proof_status": "UNRUN"
+    },
+    {
+      "id": "AINF-I05",
+      "name": "Budget conservation",
+      "predicate": "For each budget scope b, available_b = limit_b - settled_b - outstanding_reserved_b >= 0; each live attempt has a unique pre-dispatch reservation; all quantities are nonnegative bounded integers.",
+      "verification": "Lean arithmetic proof + Hermes transactional oracle + concurrent races",
+      "requirements": [
+        "AINF-R12",
+        "AINF-R14",
+        "AINF-R17",
+        "AINF-R19"
+      ],
+      "proof_status": "UNRUN"
+    },
+    {
+      "id": "AINF-I06",
+      "name": "Idempotency and ambiguous outcomes",
+      "predicate": "A logical effect has one durable (tenant, workflow, step, action_digest) identity. Replayed completed steps issue zero external calls. Unknown remote outcomes retain reservations and enter reconciliation; exactly-once external effects require the target's idempotency contract.",
+      "verification": "Quint crash-window model + fault-injected adapter oracle",
+      "requirements": [
+        "AINF-R07",
+        "AINF-R08",
+        "AINF-R14",
+        "AINF-R19"
+      ],
+      "proof_status": "UNRUN"
+    },
+    {
+      "id": "AINF-I07",
+      "name": "Protected context preservation",
+      "predicate": "For successful compact(C,B), protected(C) is preserved byte-for-byte or by validated lossless reference; semantic permission and pending action bindings are unchanged; tokenize_model(output)+reserved_output <= B.",
+      "verification": "Gospel compact contract + property/differential corpus tests",
+      "requirements": [
+        "AINF-R09",
+        "AINF-R10",
+        "AINF-R11",
+        "AINF-R12"
+      ],
+      "proof_status": "UNRUN"
+    },
+    {
+      "id": "AINF-I08",
+      "name": "Cache authorization binding",
+      "predicate": "Reuse(entry,q) implies equality of tenant, authorized visibility fingerprint, principal boundary, policy/ACL epoch, model/tokenizer, tool schema, corpus revision and relevant context/prompt configuration, plus valid TTL and retention.",
+      "verification": "Hermes cache-key collision/isolation oracle",
+      "requirements": [
+        "AINF-R09",
+        "AINF-R10",
+        "AINF-R11",
+        "AINF-R12",
+        "AINF-R17"
+      ],
+      "proof_status": "UNRUN"
+    },
+    {
+      "id": "AINF-I09",
+      "name": "Bounded execution",
+      "predicate": "Every invocation and retry tree has finite positive CPU/memory/PID/output/deadline bounds and a cumulative attempt budget; timeout/cancellation eventually reaps all descendants within the configured grace under available OS supervision.",
+      "verification": "Process containment tests + Quint bounded retry invariants",
+      "requirements": [
+        "AINF-R07",
+        "AINF-R08",
+        "AINF-R13",
+        "AINF-R14",
+        "AINF-R16",
+        "AINF-R17"
+      ],
+      "proof_status": "UNRUN"
+    },
+    {
+      "id": "AINF-I10",
+      "name": "Single writer and fencing",
+      "predicate": "At most one valid writer per authority partition; every mutation carries a monotonically increasing epoch checked by the durable store; process restart cannot reset the epoch or spend.",
+      "verification": "TwoLattice_STM refinement + store race/crash tests",
+      "requirements": [
+        "AINF-R08",
+        "AINF-R14",
+        "AINF-R19",
+        "AINF-R20"
+      ],
+      "proof_status": "UNRUN"
+    },
+    {
+      "id": "AINF-I11",
+      "name": "Approval integrity",
+      "predicate": "Approved(q) binds the exact canonical secret-free action digest, tenant, principal, authorized approver, policy/lease epoch, cost ceiling, expiry and nonce. A nonce is consumed at most once; modification or revocation forces re-authorization.",
+      "verification": "Gospel approval contract + crypto replay tests + Quint cancellation race",
+      "requirements": [
+        "AINF-R04",
+        "AINF-R07",
+        "AINF-R14",
+        "AINF-R15"
+      ],
+      "proof_status": "UNRUN"
+    },
+    {
+      "id": "AINF-I12",
+      "name": "Observation non-interference",
+      "predicate": "Telemetry transitions cannot mutate authoritative policy, budget, leases, workflow outcomes or evidence. Lossy telemetry may drop; durable pre-dispatch evidence may not be bypassed.",
+      "verification": "TwoLattice_STM refinement + channel-loss integration tests",
+      "requirements": [
+        "AINF-R08",
+        "AINF-R18",
+        "AINF-R20"
+      ],
+      "proof_status": "UNRUN"
+    },
+    {
+      "id": "AINF-I13",
+      "name": "Evidence integrity and admission",
+      "predicate": "Admit(c) implies runtime_pass(c) AND formal_pass(c) AND all required service/aspect receipts fresh at the same candidate/configuration/toolchain tuple AND authorized admission. Missing, stale, mock, declared or unrun evidence yields no credit.",
+      "verification": "Hermes receipt checker + Lean fail-closed indicator refinement",
+      "requirements": [
+        "AINF-R18",
+        "AINF-R20",
+        "AINF-R21"
+      ],
+      "proof_status": "UNRUN"
+    },
+    {
+      "id": "AINF-I14",
+      "name": "No symbol-to-effect shortcut",
+      "predicate": "Model text, guardrail classification, Rete facts, graph inference, UI state and evaluation scores may propose or veto only; each effect must pass the current typed policy gate.",
+      "verification": "Rocha-cut oracle + hostile tool-output and UI-forgery tests",
+      "requirements": [
+        "AINF-R02",
+        "AINF-R05",
+        "AINF-R07",
+        "AINF-R11",
+        "AINF-R15",
+        "AINF-R21"
+      ],
+      "proof_status": "UNRUN"
+    },
+    {
+      "id": "AINF-I15",
+      "name": "Storage and source safety",
+      "predicate": "The denied OS serial 25503L801736 is never allocated, formatted or wiped; all external trees stay read-only and imports remain inert until sanitized two-key admission.",
+      "verification": "Storage interlock negative controls + source-manifest verification",
+      "requirements": [
+        "AINF-R04",
+        "AINF-R13",
+        "AINF-R14",
+        "AINF-R20"
+      ],
+      "proof_status": "UNRUN"
+    },
+    {
+      "id": "AINF-I16",
+      "name": "Protocol and projection fidelity",
+      "predicate": "An admitted adapter preserves principal, tenant, trace coordinates, action digest, deadline, cancellation and result semantics across transport conversion; unsupported versions or unverifiable transformations reject.",
+      "verification": "Hermes differential transport oracle + canonical fixtures",
+      "requirements": [
+        "AINF-R06",
+        "AINF-R07",
+        "AINF-R08",
+        "AINF-R18"
+      ],
+      "proof_status": "UNRUN"
+    },
+    {
+      "id": "AINF-I17",
+      "name": "Semantic success is independent",
+      "predicate": "TransportSuccess does not imply TaskSuccess, and TaskSuccess does not imply Admission. TaskSuccess requires explicit verified postconditions; stochastic quality results include sample counts and uncertainty.",
+      "verification": "Incorrect-200 controls + held-out eval corpus + receipt checks",
+      "requirements": [
+        "AINF-R05",
+        "AINF-R17",
+        "AINF-R18",
+        "AINF-R21"
+      ],
+      "proof_status": "UNRUN"
+    },
+    {
+      "id": "AINF-I18",
+      "name": "Retention and residency closure",
+      "predicate": "Every context, embedding, graph derivative, cache, dead letter, telemetry export, model route and backup observes its tenant's classification/residency/retention policy; withdrawal invalidates accessible derived projections.",
+      "verification": "End-to-end erasure/rebuild, routing and ACL revocation scenarios",
+      "requirements": [
+        "AINF-R04",
+        "AINF-R08",
+        "AINF-R09",
+        "AINF-R10",
+        "AINF-R11",
+        "AINF-R12",
+        "AINF-R17",
+        "AINF-R18",
+        "AINF-R20"
+      ],
+      "proof_status": "UNRUN"
+    }
+  ],
+  "work_packages": [
+    {
+      "id": "AINF-WP00",
+      "title": "Bind the candidate and execution contracts",
+      "depends_on": [],
+      "primary_services": [],
+      "exit_criterion": "Source receipt, component packets, schemas, bounds, threat model and a failing test plan for every required obligation.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "AINF-WP01",
+      "title": "Identity, policy and tenant authority",
+      "depends_on": [
+        "AINF-WP00"
+      ],
+      "primary_services": [
+        "AINF-S01",
+        "AINF-S02",
+        "AINF-S03",
+        "AINF-S04",
+        "AINF-S05"
+      ],
+      "exit_criterion": "No dispatch path can bypass identity, tenant policy, delegated authority, secret leases or guardrails.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "AINF-WP02",
+      "title": "Durable state, budgets, messaging and approvals",
+      "depends_on": [
+        "AINF-WP01"
+      ],
+      "primary_services": [
+        "AINF-S08",
+        "AINF-S09",
+        "AINF-S14",
+        "AINF-S15",
+        "AINF-S19",
+        "AINF-S20"
+      ],
+      "exit_criterion": "Commit intent/reservation/outbox atomically, recover through crashes and deny stale writers and replayed approvals.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "AINF-WP03",
+      "title": "Discovery and isolated tool execution",
+      "depends_on": [
+        "AINF-WP02"
+      ],
+      "primary_services": [
+        "AINF-S06",
+        "AINF-S07",
+        "AINF-S13",
+        "AINF-S16"
+      ],
+      "exit_criterion": "A real admitted read tool works end to end; adversarial tool and sandbox cases fail closed.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "AINF-WP04",
+      "title": "Knowledge, context and inference routing",
+      "depends_on": [
+        "AINF-WP03"
+      ],
+      "primary_services": [
+        "AINF-S10",
+        "AINF-S11",
+        "AINF-S12",
+        "AINF-S17"
+      ],
+      "exit_criterion": "Real pinned inference and authorized retrieval work with measured tokenizer bounds and budgeted policy-compatible failover.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "AINF-WP05",
+      "title": "Semantic telemetry and continuous evaluation",
+      "depends_on": [
+        "AINF-WP03",
+        "AINF-WP04"
+      ],
+      "primary_services": [
+        "AINF-S18",
+        "AINF-S21"
+      ],
+      "exit_criterion": "Held-out eval, red-team controls, complete sanitized trajectories and regression receipts gate model and policy changes.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "AINF-WP06",
+      "title": "Five-surface integration and 17-aspect closure",
+      "depends_on": [
+        "AINF-WP05"
+      ],
+      "primary_services": [],
+      "exit_criterion": "Lustre/Wisp/TUI/AG-UI/MoZ projections agree; all 357 base service/aspect obligations have fresh runtime and formal evidence.",
+      "status": "PLANNED"
+    },
+    {
+      "id": "AINF-WP07",
+      "title": "Canary, recovery rehearsal and admission",
+      "depends_on": [
+        "AINF-WP06"
+      ],
+      "primary_services": [],
+      "exit_criterion": "Runbook, backup/restore, rollback, tenancy load tests and authorized two-key admission complete for the exact candidate.",
+      "status": "PLANNED"
+    }
+  ],
+  "service_aspect_coverage": [
+    {
+      "service_id": "AINF-S01",
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "application": "Direct implementation evidence or explicit dependency composition receipt; no implicit exemptions",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "receipt_refs": []
+    },
+    {
+      "service_id": "AINF-S02",
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "application": "Direct implementation evidence or explicit dependency composition receipt; no implicit exemptions",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "receipt_refs": []
+    },
+    {
+      "service_id": "AINF-S03",
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "application": "Direct implementation evidence or explicit dependency composition receipt; no implicit exemptions",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "receipt_refs": []
+    },
+    {
+      "service_id": "AINF-S04",
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "application": "Direct implementation evidence or explicit dependency composition receipt; no implicit exemptions",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "receipt_refs": []
+    },
+    {
+      "service_id": "AINF-S05",
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "application": "Direct implementation evidence or explicit dependency composition receipt; no implicit exemptions",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "receipt_refs": []
+    },
+    {
+      "service_id": "AINF-S06",
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "application": "Direct implementation evidence or explicit dependency composition receipt; no implicit exemptions",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "receipt_refs": []
+    },
+    {
+      "service_id": "AINF-S07",
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "application": "Direct implementation evidence or explicit dependency composition receipt; no implicit exemptions",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "receipt_refs": []
+    },
+    {
+      "service_id": "AINF-S08",
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "application": "Direct implementation evidence or explicit dependency composition receipt; no implicit exemptions",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "receipt_refs": []
+    },
+    {
+      "service_id": "AINF-S09",
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "application": "Direct implementation evidence or explicit dependency composition receipt; no implicit exemptions",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "receipt_refs": []
+    },
+    {
+      "service_id": "AINF-S10",
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "application": "Direct implementation evidence or explicit dependency composition receipt; no implicit exemptions",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "receipt_refs": []
+    },
+    {
+      "service_id": "AINF-S11",
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "application": "Direct implementation evidence or explicit dependency composition receipt; no implicit exemptions",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "receipt_refs": []
+    },
+    {
+      "service_id": "AINF-S12",
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "application": "Direct implementation evidence or explicit dependency composition receipt; no implicit exemptions",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "receipt_refs": []
+    },
+    {
+      "service_id": "AINF-S13",
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "application": "Direct implementation evidence or explicit dependency composition receipt; no implicit exemptions",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "receipt_refs": []
+    },
+    {
+      "service_id": "AINF-S14",
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "application": "Direct implementation evidence or explicit dependency composition receipt; no implicit exemptions",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "receipt_refs": []
+    },
+    {
+      "service_id": "AINF-S15",
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "application": "Direct implementation evidence or explicit dependency composition receipt; no implicit exemptions",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "receipt_refs": []
+    },
+    {
+      "service_id": "AINF-S16",
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "application": "Direct implementation evidence or explicit dependency composition receipt; no implicit exemptions",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "receipt_refs": []
+    },
+    {
+      "service_id": "AINF-S17",
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "application": "Direct implementation evidence or explicit dependency composition receipt; no implicit exemptions",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "receipt_refs": []
+    },
+    {
+      "service_id": "AINF-S18",
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "application": "Direct implementation evidence or explicit dependency composition receipt; no implicit exemptions",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "receipt_refs": []
+    },
+    {
+      "service_id": "AINF-S19",
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "application": "Direct implementation evidence or explicit dependency composition receipt; no implicit exemptions",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "receipt_refs": []
+    },
+    {
+      "service_id": "AINF-S20",
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "application": "Direct implementation evidence or explicit dependency composition receipt; no implicit exemptions",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "receipt_refs": []
+    },
+    {
+      "service_id": "AINF-S21",
+      "aspect_ids": [
+        "AINF-A01",
+        "AINF-A02",
+        "AINF-A03",
+        "AINF-A04",
+        "AINF-A05",
+        "AINF-A06",
+        "AINF-A07",
+        "AINF-A08",
+        "AINF-A09",
+        "AINF-A10",
+        "AINF-A11",
+        "AINF-A12",
+        "AINF-A13",
+        "AINF-A14",
+        "AINF-A15",
+        "AINF-A16",
+        "AINF-A17"
+      ],
+      "application": "Direct implementation evidence or explicit dependency composition receipt; no implicit exemptions",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "receipt_refs": []
+    }
+  ],
+  "source_review": [
+    {
+      "aspect_id": "AINF-A01",
+      "paths": [
+        "ops/kubernetes/nas-k8s-lab/src/spec.rs",
+        "apps/cepaf_gleam/src/cepaf_gleam/verification/dmc_biosemiotics_interlock.gleam"
+      ],
+      "finding": "Reuse the existing hard-denial constant and intent interlock. Test the actual storage and sandbox adapters; a UI badge or a sample safe serial is not a hardware observation.",
+      "work_package": "AINF-WP03",
+      "status": "SOURCE_REVIEW_ONLY"
+    },
+    {
+      "aspect_id": "AINF-A02",
+      "paths": [
+        "AGENTS.md",
+        "governance/agents/policy/superset.toml"
+      ],
+      "finding": "Keep the existing standalone JJ workspace and feature/integration flow. The working copy already contains unrelated TUI changes; isolate candidate evidence and preserve those edits.",
+      "work_package": "AINF-WP00",
+      "status": "SOURCE_REVIEW_ONLY"
+    },
+    {
+      "aspect_id": "AINF-A03",
+      "paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/hermes_bionic_bridge.gleam",
+        "apps/indrajaal_gleam_web/gleam.toml"
+      ],
+      "finding": "Reuse the Indrajaal path dependency on cepaf and the 18-family Bionic vocabulary. Bionic source-domain strings name historical Python paths; those strings are inventory evidence, not permission to import a Python control plane.",
+      "work_package": "AINF-WP00",
+      "status": "SOURCE_REVIEW_ONLY"
+    },
+    {
+      "aspect_id": "AINF-A04",
+      "paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/iam/supervisor.gleam",
+        "apps/indrajaal_gleam/src/indrajaal/holon.gleam"
+      ],
+      "finding": "Reuse IAM's real static-supervisor wiring and Indrajaal's generation-checked pure holon model. Root startup currently adds no children; the holon executable prints an initialized value rather than supervising actors. Bind real actors, durable epochs and authenticated leases.",
+      "work_package": "AINF-WP01",
+      "status": "SOURCE_REVIEW_ONLY"
+    },
+    {
+      "aspect_id": "AINF-A05",
+      "paths": [
+        "engines/zigvm/build.zig",
+        "apps/cepaf_gleam/src/cepaf_gleam/verification/vfs_selfcheck.gleam"
+      ],
+      "finding": "Reuse the ZigVM deterministic boundary and VFS law enumeration. The inspected evaluate_law returns literal VfsLawPass variants, so it is not an executed VFS oracle. Require actual descriptor-level and sandbox tests before closing A05.",
+      "work_package": "AINF-WP03",
+      "status": "SOURCE_REVIEW_ONLY"
+    },
+    {
+      "aspect_id": "AINF-A06",
+      "paths": [
+        "engines/hermes/modules/system_engg/agent_dispatch_hook.ml",
+        "engines/hermes/modules/hermes_harness/evidence_store.ml"
+      ],
+      "finding": "Reuse SHA-256, typed rejection and the authoritative evidence substrate. NUL/SQL-pattern interception does not cover semantic prompt injection or arbitrary tool authorization; extend contracts at the existing boundary.",
+      "work_package": "AINF-WP01",
+      "status": "SOURCE_REVIEW_ONLY"
+    },
+    {
+      "aspect_id": "AINF-A07",
+      "paths": [
+        "formal/lean/Traceability.lean",
+        "formal/lean/TwoLattice_STM.lean",
+        "apps/cepaf_gleam/src/cepaf_gleam/verification/omni_fractal_matrix_engine.gleam"
+      ],
+      "finding": "Reuse trace and lease theorem vocabulary, then prove infrastructure refinements. The aspect registry returns literal True flags; bind it to candidate-specific receipts. Preserve the 13 trace coordinates; do not equate their dimension with the 14 system vectors.",
+      "work_package": "AINF-WP06",
+      "status": "SOURCE_REVIEW_ONLY"
+    },
+    {
+      "aspect_id": "AINF-A08",
+      "paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/api/denotational_intent_router.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/fractal/l0_constitutional.gleam"
+      ],
+      "finding": "Reuse typed intent and approval result vocabulary. The inspected intent API authorizes from the storage-serial check alone and emits constant trace IDs; Indrajaal's verification route supplies actor=operator. New operational requests need authenticated identity, full policy evaluation and real trace context.",
+      "work_package": "AINF-WP01",
+      "status": "SOURCE_REVIEW_ONLY"
+    },
+    {
+      "aspect_id": "AINF-A09",
+      "paths": [
+        "services/inference/max/max_worker.py",
+        "apps/cepaf_gleam/src/cepaf_gleam/bridge/pi_provider.gleam"
+      ],
+      "finding": "Reuse the 4-byte framed stdio boundary and provider/breaker types. MAX currently formats synthetic text; real inference, tokenizer accounting and capability-compatible routing are blocking work.",
+      "work_package": "AINF-WP04",
+      "status": "SOURCE_REVIEW_ONLY"
+    },
+    {
+      "aspect_id": "AINF-A10",
+      "paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/bridge/zenoh_mcp.gleam",
+        "apps/uos_tui/src/uos_tui/board.gleam",
+        "apps/uos_tui/src/uos_tui/coord.gleam"
+      ],
+      "finding": "Reuse the canonical MoZ bridge and board acknowledgement/retry vocabulary. Promote tenant ACLs, atomic outbox/inbox, durable deduplication and fenced ownership; a JSONL board alone is not a distributed transaction store.",
+      "work_package": "AINF-WP02",
+      "status": "SOURCE_REVIEW_ONLY"
+    },
+    {
+      "aspect_id": "AINF-A11",
+      "paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/agui/events.gleam",
+        "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam"
+      ],
+      "finding": "Reuse AG-UI event types. The reviewed Indrajaal branch calls path-only c3i_router.route and emits permissive CORS; new tenant event streams require authenticated request handling, cursor ownership and field redaction.",
+      "work_package": "AINF-WP06",
+      "status": "SOURCE_REVIEW_ONLY"
+    },
+    {
+      "aspect_id": "AINF-A12",
+      "paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/a2ui/catalog.gleam",
+        "apps/uos_tui/src/uos_tui/widget.gleam"
+      ],
+      "finding": "Reuse registered UI component and terminal widget models. Bind service health/approval views to the same typed state; generated UI cannot authorize operations or execute raw model markup.",
+      "work_package": "AINF-WP06",
+      "status": "SOURCE_REVIEW_ONLY"
+    },
+    {
+      "aspect_id": "AINF-A13",
+      "paths": [
+        "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+        "apps/uos_tui/src/uos_tui/cockpit.gleam"
+      ],
+      "finding": "Retain Indrajaal as HTTP/document edge, cepaf as domain core and uos_tui as terminal surface. Centralize authorization in a shared handler used by all ingress paths; test semantic parity instead of cloning business logic.",
+      "work_package": "AINF-WP06",
+      "status": "SOURCE_REVIEW_ONLY"
+    },
+    {
+      "aspect_id": "AINF-A14",
+      "paths": [
+        "apps/indrajaal_gleam_web/src/indrajaal_web_ffi.erl",
+        "apps/indrajaal_gleam_web/test/document_render_contract_test.gleam"
+      ],
+      "finding": "Reuse document rendering/source-toggle fixtures. The inspected normalize_repo_path strips prefixes but does not itself reject parent traversal or establish descriptor containment. Require tenant allowlists, descriptor-relative resolution and negative traversal/escaping tests before private artifact exposure.",
+      "work_package": "AINF-WP06",
+      "status": "SOURCE_REVIEW_ONLY"
+    },
+    {
+      "aspect_id": "AINF-A15",
+      "paths": [
+        "contracts/rules/comprehensive-checklist-contract.md",
+        "apps/uos_tui/src/uos_tui/aspects.gleam",
+        "apps/uos_tui/src/uos_tui/system_audit.gleam"
+      ],
+      "finding": "Reuse 17 named aspects and the 18-checkpoint display. Preserve Declared/UNRUN/Fail as nonpassing; replace inherited availability and static booleans with scoped probes and formal evidence.",
+      "work_package": "AINF-WP06",
+      "status": "SOURCE_REVIEW_ONLY"
+    },
+    {
+      "aspect_id": "AINF-A16",
+      "paths": [
+        "engines/hermes/modules/hermes_wiki/src/graph/wiki_similarity.mli",
+        "engines/hermes/modules/hermes_wiki/src/graph/wiki_graph.ml",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+        "engines/hermes/modules/hermes_wiki/import/c3i/MANIFEST.md"
+      ],
+      "finding": "Reuse graph/TF-IDF kernels, citations, and KM triad links. The import manifest explicitly keeps source artifacts outside build/corpus authority. Add authorized retrieval, model/index revisions and evaluation; source inventory cannot become a runtime health receipt.",
+      "work_package": "AINF-WP04",
+      "status": "SOURCE_REVIEW_ONLY"
+    },
+    {
+      "aspect_id": "AINF-A17",
+      "paths": [
+        "engines/hermes/modules/sa_plan/sa_plan_temporal.ml",
+        "engines/hermes/modules/sa_plan/sa_plan_store.ml",
+        "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam"
+      ],
+      "finding": "Reuse Sa-Plan store/bridge and event vocabulary. The reviewed temporal helper keeps in-memory history and calls effects between scheduled/completed events; close the crash gap with transactional history, idempotency and reconciliation.",
+      "work_package": "AINF-WP02",
+      "status": "SOURCE_REVIEW_ONLY"
+    }
+  ],
+  "sources": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "b48dfb1b1a40c8f8672a7bcd9ce1092bdc8a979267be8efa3517b73814537a46",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/a2ui/catalog.gleam",
+      "sha256": "5533dfea2c892d3941a84ebe8e9ee630889e4ffaba5c3c2ba32c72403b2a39a9",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/agui/events.gleam",
+      "sha256": "dda2370ca785c4830a045a2301ab795bea724c5a31f3462d490e4c46080af176",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/agui/sse.gleam",
+      "sha256": "d040976db6e2ba33daf2c136f70129280e9438f8d86b5e407de5e4281218f3cd",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/api/denotational_intent_router.gleam",
+      "sha256": "c2827ed8cff9179b310f686f6abda3534f7a66bf947b54cfa6a1e1b261b0585e",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/auth/rbac.gleam",
+      "sha256": "112cb69e8e028d4861a05eb15e869efac08165dcea0bd73e0acc2c887522154d",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/auth/token_exchange.gleam",
+      "sha256": "c62dba64b1084ae5101f27564ae4fbd5be082f886fe3ace6d5ae1a1eb1a22077",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/bridge/pi_provider.gleam",
+      "sha256": "a39e6fb33a909299724529b751c830ecbe4878c0ccfc2595e40d3d531bd83d93",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/bridge/zenoh_mcp.gleam",
+      "sha256": "153309ffd84820812b2a30e118597236475778e729c6235dd5fe3a320b6fc493",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fractal/l0_constitutional.gleam",
+      "sha256": "81342bb2129e09e342a79cccc3ff92deebbfc1b7abdbf471f4fa6896ad004e85",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/context_cache.gleam",
+      "sha256": "481ab301756380ff19543690770b3fad5877de182cfcb0e0a7c177672cc80099",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/context_manager.gleam",
+      "sha256": "65adf430a0f15519d1176c59c15221efeb3d4f72597e61690b00f3fccb01a746",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/freshness_monitor.gleam",
+      "sha256": "0f02648ee112bdf21d0fe6559469d3144de55791ac59d97dcb8636f26a19a71e",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/token_budget.gleam",
+      "sha256": "50df4444ee361251bf1d22c90da892480d4c4f61011d9af846d92c39e49c812c",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/trace_context.gleam",
+      "sha256": "334b34f3949fe460aae95c0e65a899681f02de93828b697ec98b96894e703cb0",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/workflow_compactor.gleam",
+      "sha256": "315cf61cf8b0325967467473e37b00e7e2042f002bff89e9df26eb597ed3fb8e",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/hermes_bionic_bridge.gleam",
+      "sha256": "24e954765a80ec416fc67841c066bd65bcdac3added8991bf3928df3450260b1",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/jwks_cache_actor.gleam",
+      "sha256": "8e6b3f33cfa36281316bbfecb1edeccf4bd9c7e84005b0faeb43081b9ba24a21",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/sts_token_cache_actor.gleam",
+      "sha256": "c20c4b670a3edc75beba2529595f3867a44179b0059946cc4d16a7aa5194fea6",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/supervisor.gleam",
+      "sha256": "73ea76686cf291adcb8718d6174535d8a9935e8e7ceadac0d3fbb782342c12cf",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+      "sha256": "67fc1a6dfef7f7a22d873d5ea48876b82ec49a2b791bead5e3e47bbf3d5d46a4",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/protocol.gleam",
+      "sha256": "7415b762c8bfafae63ea5d949f5cdf94b5638dacbc8094261d6864edbb8c4405",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+      "sha256": "05ebbed6e0aed63175af0de39815c8f1332095977c3585af05dc07777d160a1a",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ontology/adk_c3i_master_ontology.gleam",
+      "sha256": "3816ae25b558c0a3b44f8628fe439b66601ba7e460a2e3d1ed67718e7da34c91",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam",
+      "sha256": "39c59ad4fd245f97c2de8f4413ef63ee3704d8d286f1e62a32c7513b029a5cae",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/prajna/circuit_breaker.gleam",
+      "sha256": "753742688ef7ffd63cb3e4ca821288fe8ca7af4ea2607d253157709d9f69530d",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/rules/engine.gleam",
+      "sha256": "ce89f9811b8b1a98f912eaf379169bc06a76c2853ae9435f6188d81be747bff4",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/sdlc/sa_plan_engine.gleam",
+      "sha256": "194f1184b008685a96026f883e97495b811564c716ecb622abf555413b5dd46e",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/substrate/beam_cache.gleam",
+      "sha256": "900e462249d33de83c10a6460ddfa2e4bc57db7f28a0e0d02f78ffae30225747",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/testing/coverage_math.gleam",
+      "sha256": "917c6f49c6b1700a3c4258a2072de7179eba3138174964fa1d13d6020c628c7a",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/inference_api.gleam",
+      "sha256": "d182f9a1906299b95b27e5570a796f47f379e61c97e68cb0441e9c49504dfecf",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam",
+      "sha256": "7a7048df00dc9a69f6f9a3ea1aebadd70d0ea0cf93c1e7d792d6bcb8e75de911",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam",
+      "sha256": "d8c39b4161d82da5cc1b973bb8fc094c5e78421c6b3ea1d1118dbf1a95ebde11",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/vault.gleam",
+      "sha256": "def3944a9fe307454942a0699bbf7c0b79232f66c881938d3966e3c80276f9d5",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/vault_pii_scrub.gleam",
+      "sha256": "3c159ee1aa8046152e7d34fd43eaf425326a9210872681106071905ad38a8de8",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/vault_supervisor.gleam",
+      "sha256": "71d436f4fe209817c60c2e4550dcee0cc01b4f104afeb1e2722a6c75ddea0dd2",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/dmc_biosemiotics_interlock.gleam",
+      "sha256": "1e7272ab001007b1e8864c1cb2f10349e6a37a3b8acd4e15263cd91678261219",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/omni_fractal_matrix_engine.gleam",
+      "sha256": "491421351691f4a934da9323de49d834ce1dc1f933409bbfc0296e8a77cd3df1",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/verification/vfs_selfcheck.gleam",
+      "sha256": "6e2dc45dc9fdc361923f57ee6bd0b0fa017fcf6218b3db2838b627c240a62d80",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/indrajaal_gleam/src/indrajaal/holon.gleam",
+      "sha256": "bb9ccbedb9c568fadf105ce6e95d9d3bc52c82ce02c66348f38c53e17867dcbd",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/indrajaal_gleam_web/gleam.toml",
+      "sha256": "c638d0826265f65f7f662e74ba5f45d7b53f6bfc1ffdd027aab5bcec909ed3eb",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam",
+      "sha256": "e2c42e0b5b12b9618046311df1b408fc021cbcb63bb1964a6be6df9a9302f0ca",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/indrajaal_gleam_web/src/indrajaal_web_ffi.erl",
+      "sha256": "e84c7df0f82926cefa02e04e5e3b211791d215c9ae85ee5190678a82383b6c0e",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/indrajaal_gleam_web/test/document_render_contract_test.gleam",
+      "sha256": "c262f5d40830d29b172fb8da1a68956b9e1d0243bac6d9b5f3f9d4d7662ea6e4",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/uos_tui/src/uos_tui/aspects.gleam",
+      "sha256": "c4959f5b8a9f1fe3f6d80ea0e0846ddd3f8b8bea605a41c6c15aab6997827c0a",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/uos_tui/src/uos_tui/board.gleam",
+      "sha256": "5022516473d3e10d93b9773353af8aca21d562a720feaf0be305cd264900a9bf",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/uos_tui/src/uos_tui/cockpit.gleam",
+      "sha256": "c7b73f16870419a4e867272ae8a8d3ccec5cf28bd62299280df96a594836ba04",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/uos_tui/src/uos_tui/coord.gleam",
+      "sha256": "07c53872c3bc61d7f07283450dbb7a34e6c59ec140ebda2ac6f635842ce7636b",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/uos_tui/src/uos_tui/swarm.gleam",
+      "sha256": "d7b9fe1d920a200313dda44362f6a0089ce13c8bac84d5d8fc8fb48bbb067d9a",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/uos_tui/src/uos_tui/system_audit.gleam",
+      "sha256": "21b14a348f79ddf20093fdee55b039fb06bd8e8c97d2dba92cb59f9df0fe9bcb",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "apps/uos_tui/src/uos_tui/widget.gleam",
+      "sha256": "337b5a6d9e1e8799ad742bb51b618da8c08972593171d9b5a1f9583980c5182e",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "contracts/evidence/c3i_fractal_observability_spec.json",
+      "sha256": "384cfd0a9980fcd29cd5fd0d6cf16cd6bd60f62641ac74cb2993a6cf1a020c37",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "contracts/rules/comprehensive-checklist-contract.md",
+      "sha256": "6ecab3b60b4d0f09595ebc91479fc0b78b0318687c9cf10c2a65c745678f7279",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "docs/design/20260905-2130-uos-cepaf-gleam-vs-indrajaal-gleam-web-feature-comparison-tome.md",
+      "sha256": "090c6c33bba8b870b242e66c3d042d3b606f1a7f522e9d3d484a76224fc6404b",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "docs/design/20260906-1300-uos-sdlc-sre-verification-process-specification.md",
+      "sha256": "78664eaca3488ac4276be23e2cc2d7353a8feaec7520480fca0dfe6536d9c62f",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "docs/wiki/20260906-1730-uos-omni-fractal-matrix-and-17-aspect-wiki.md",
+      "sha256": "6f567a75d0a79810481a5dda9fcffaf9a6bdbc4a41a54711cedaf3963cc71266",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "docs/wiki/20260907-0537-uos-hive-mind-architecture-wiki.md",
+      "sha256": "7ae2c8a4909daa16eaf0a663ff06c9b134df21196ef24cd50e6041c3aeb9f5bc",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "docs/zk/20260906-1730-adr-049-omni-fractal-systemic-symbiosis-ratification.md",
+      "sha256": "fca4a50a3dd328e25ebdfb3c0e58317d23793fdedfb3d23e10e2eb992e632fc8",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "docs/zk/20260907-0537-adr-062-uos-tui-swarm-hive-mind-message-board-coordination-acl-and-zenoh-infra.md",
+      "sha256": "1f4b9b9b4be05a7234465461a26a76d465a489ab6387dc44a9205d528703f4c0",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_dependability/dependability_approval_crypto.ml",
+      "sha256": "882e0d4147ce6761eaad75c5905aa97f700a31a5fabf53fab33e49496b5868d2",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_dependability/dependability_credential.mli",
+      "sha256": "b397f6dfa90b9267ea073a6586762ca1502f9e1c006742eeb8d01a043bffd55e",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_dependability/dependability_process.mli",
+      "sha256": "0d222de5ca1c48b2c42212a9aeceb67796c2a8b822303049de556fbd29f1b279",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_dependability/dependability_writer_lease.ml",
+      "sha256": "4ad4c67fafa97d7b7a4a7df69e22c6a01f217eab0db2273e14cec47bb920f055",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_harness/evidence_store.ml",
+      "sha256": "3df638c16000dbab0a4fe947edb0dd616063569e8a5159792f601cfff75fed64",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_harness/test_parity_algebra.ml",
+      "sha256": "13644f83e002d23fc26338ebdd4ca92ccd6a6b6482cf9ab93af9cf0ff9c62644",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_harness/test_parity_compare.ml",
+      "sha256": "da397a65f3d3753242f27d594a96cac655724e05c72167ab9085fbcbede7105b",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_wiki/import/c3i/MANIFEST.md",
+      "sha256": "26495d74f09faf13c081ebacbc87ea9902419eaf496e72da93762997d143398a",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_wiki/src/graph/wiki_graph.ml",
+      "sha256": "79efd7da9097582dfe32cb63229c45563389be9096b8d165fddcca517cf52e6c",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_wiki/src/graph/wiki_similarity.ml",
+      "sha256": "a209575cd87af39bb1b218aa1be2ce36b38fa7571ee9e1802bb61a1b1a76e1e4",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "engines/hermes/modules/hermes_wiki/src/graph/wiki_similarity.mli",
+      "sha256": "b3738213dc96a21df657f5ebf24ab9916409b2a1a9e9aa2ec52fa3d15ab5f65c",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/guardian.ml",
+      "sha256": "b6858dd7c78ba93a2f4930c21f871b0ce3abd9d316231c4f9e48457c845311c9",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_store.ml",
+      "sha256": "39dcb1dbd0cdc2e2e569b3c080e5592aa36b57382efcd9d33b998f815396803e",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "engines/hermes/modules/sa_plan/sa_plan_temporal.ml",
+      "sha256": "082f8e36a6f7cb7a079634967b8bb1e64de507e03531c939d1adf7b684112ad0",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "engines/hermes/modules/system_engg/agent_dispatch_hook.ml",
+      "sha256": "f55670cb342f6e04591a73289697f741f27446fc3fa90f56c0616215af44ea37",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "engines/zigvm/build.zig",
+      "sha256": "71bd9ea0ce2c39f09a16467ac222cf8382f69ec53c4d36430e9e91745325a96c",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "formal/lean/Traceability.lean",
+      "sha256": "c81143d6023d3a5ab56333781e0136050f7163f7eb3155b0846760b62db1598c",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "formal/lean/TwoLattice_STM.lean",
+      "sha256": "bc0a280b22516a5b0b3cd57c3572f10db484564f74bd74fc8cf97be7ce64b9ef",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "governance/agents/policy/superset.toml",
+      "sha256": "274f07ff118547535713f3da74246a653b5a3a460f77dd00a71fe7711ae1f158",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "ops/kubernetes/nas-k8s-lab/src/spec.rs",
+      "sha256": "6b63d440c8108902969f3a53219ab5e895481b83efa79d2739b412d58b90d752",
+      "status": "SOURCE_PRESENT_ONLY"
+    },
+    {
+      "path": "services/inference/max/max_worker.py",
+      "sha256": "5bfa9a7628e81af7dce83c250a6b186f2245b9a05b95352ce62b268be1af51ea",
+      "status": "SOURCE_PRESENT_ONLY"
+    }
+  ],
+  "diagrams": [
+    {
+      "id": "AINF-DIAGRAM-01",
+      "name": "Request, control and evidence flow",
+      "nodes": {
+        "O": "Operator / Agent",
+        "E": "Indrajaal Ingress",
+        "P": "Gleam Policy and Tenant Gate",
+        "W": "Sa-Plan Workflow and Quota",
+        "D": "Typed Dispatch",
+        "K": "Hermes Knowledge and Context",
+        "Z": "ZigVM / Isolated Bionic Tool",
+        "M": "Isolated MAX / Admitted Provider",
+        "H": "Hermes Authoritative WAL",
+        "V": "Hermes / Lean / Quint Verifiers",
+        "T": "Zenoh Telemetry",
+        "U": "Lustre / TUI / AG-UI Views"
+      },
+      "edges": [
+        [
+          "O",
+          "request",
+          "E"
+        ],
+        [
+          "E",
+          "authenticated envelope",
+          "P"
+        ],
+        [
+          "P",
+          "authorized intent",
+          "W"
+        ],
+        [
+          "W",
+          "commit intent and reserve",
+          "H"
+        ],
+        [
+          "H",
+          "commit receipt",
+          "D"
+        ],
+        [
+          "D",
+          "authorized retrieval",
+          "K"
+        ],
+        [
+          "D",
+          "bounded tool request",
+          "Z"
+        ],
+        [
+          "D",
+          "budgeted model request",
+          "M"
+        ],
+        [
+          "K",
+          "cited result",
+          "H"
+        ],
+        [
+          "Z",
+          "tool outcome",
+          "H"
+        ],
+        [
+          "M",
+          "model outcome",
+          "H"
+        ],
+        [
+          "H",
+          "candidate evidence",
+          "V"
+        ],
+        [
+          "V",
+          "advice or veto only",
+          "P"
+        ],
+        [
+          "H",
+          "redacted projection",
+          "T"
+        ],
+        [
+          "T",
+          "scoped updates",
+          "U"
+        ]
+      ]
+    },
+    {
+      "id": "AINF-DIAGRAM-02",
+      "name": "Durable invocation state machine",
+      "nodes": {
+        "R": "Received",
+        "V": "Validated",
+        "A": "AwaitingApproval",
+        "Q": "Reserved",
+        "D": "Dispatching",
+        "W": "Running",
+        "N": "Reconciling",
+        "S": "Succeeded",
+        "F": "Failed",
+        "C": "Cancelled",
+        "L": "DeadLetter"
+      },
+      "edges": [
+        [
+          "R",
+          "valid schema and authenticated identity",
+          "V"
+        ],
+        [
+          "R",
+          "invalid request",
+          "F"
+        ],
+        [
+          "V",
+          "approval required",
+          "A"
+        ],
+        [
+          "V",
+          "authorized and reserved atomically",
+          "Q"
+        ],
+        [
+          "V",
+          "denied",
+          "F"
+        ],
+        [
+          "A",
+          "current bound approval and reservation",
+          "Q"
+        ],
+        [
+          "A",
+          "denied or expired",
+          "F"
+        ],
+        [
+          "Q",
+          "current permit and committed outbox",
+          "D"
+        ],
+        [
+          "D",
+          "adapter acknowledgement",
+          "W"
+        ],
+        [
+          "D",
+          "ambiguous effect",
+          "N"
+        ],
+        [
+          "W",
+          "verified result and settled cost",
+          "S"
+        ],
+        [
+          "W",
+          "known failure and settled cost",
+          "F"
+        ],
+        [
+          "W",
+          "ambiguous effect",
+          "N"
+        ],
+        [
+          "N",
+          "reconciled success",
+          "S"
+        ],
+        [
+          "N",
+          "reconciled failure",
+          "F"
+        ],
+        [
+          "V",
+          "cancel before dispatch",
+          "C"
+        ],
+        [
+          "A",
+          "cancel before dispatch",
+          "C"
+        ],
+        [
+          "Q",
+          "cancel before dispatch and release known reservation",
+          "C"
+        ],
+        [
+          "D",
+          "cancel uncertain effect",
+          "N"
+        ],
+        [
+          "W",
+          "cancel uncertain effect",
+          "N"
+        ],
+        [
+          "N",
+          "absence of effect proven and reservation settled",
+          "C"
+        ],
+        [
+          "N",
+          "reconciliation exhausted; liability retained",
+          "L"
+        ]
+      ]
+    }
+  ],
+  "workflow_model": {
+    "initial_state": "Received",
+    "terminal_states": [
+      "Succeeded",
+      "Failed",
+      "Cancelled",
+      "DeadLetter"
+    ],
+    "states": [
+      "Received",
+      "Validated",
+      "AwaitingApproval",
+      "Reserved",
+      "Dispatching",
+      "Running",
+      "Reconciling",
+      "Succeeded",
+      "Failed",
+      "Cancelled",
+      "DeadLetter"
+    ],
+    "transitions": [
+      {
+        "from": "Received",
+        "guard": "valid schema and authenticated identity",
+        "to": "Validated"
+      },
+      {
+        "from": "Received",
+        "guard": "invalid request",
+        "to": "Failed"
+      },
+      {
+        "from": "Validated",
+        "guard": "approval required",
+        "to": "AwaitingApproval"
+      },
+      {
+        "from": "Validated",
+        "guard": "authorized and reserved atomically",
+        "to": "Reserved"
+      },
+      {
+        "from": "Validated",
+        "guard": "denied",
+        "to": "Failed"
+      },
+      {
+        "from": "AwaitingApproval",
+        "guard": "current bound approval and reservation",
+        "to": "Reserved"
+      },
+      {
+        "from": "AwaitingApproval",
+        "guard": "denied or expired",
+        "to": "Failed"
+      },
+      {
+        "from": "Reserved",
+        "guard": "current permit and committed outbox",
+        "to": "Dispatching"
+      },
+      {
+        "from": "Dispatching",
+        "guard": "adapter acknowledgement",
+        "to": "Running"
+      },
+      {
+        "from": "Dispatching",
+        "guard": "ambiguous effect",
+        "to": "Reconciling"
+      },
+      {
+        "from": "Running",
+        "guard": "verified result and settled cost",
+        "to": "Succeeded"
+      },
+      {
+        "from": "Running",
+        "guard": "known failure and settled cost",
+        "to": "Failed"
+      },
+      {
+        "from": "Running",
+        "guard": "ambiguous effect",
+        "to": "Reconciling"
+      },
+      {
+        "from": "Reconciling",
+        "guard": "reconciled success",
+        "to": "Succeeded"
+      },
+      {
+        "from": "Reconciling",
+        "guard": "reconciled failure",
+        "to": "Failed"
+      },
+      {
+        "from": "Validated",
+        "guard": "cancel before dispatch",
+        "to": "Cancelled"
+      },
+      {
+        "from": "AwaitingApproval",
+        "guard": "cancel before dispatch",
+        "to": "Cancelled"
+      },
+      {
+        "from": "Reserved",
+        "guard": "cancel before dispatch and release known reservation",
+        "to": "Cancelled"
+      },
+      {
+        "from": "Dispatching",
+        "guard": "cancel uncertain effect",
+        "to": "Reconciling"
+      },
+      {
+        "from": "Running",
+        "guard": "cancel uncertain effect",
+        "to": "Reconciling"
+      },
+      {
+        "from": "Reconciling",
+        "guard": "absence of effect proven and reservation settled",
+        "to": "Cancelled"
+      },
+      {
+        "from": "Reconciling",
+        "guard": "reconciliation exhausted; liability retained",
+        "to": "DeadLetter"
+      }
+    ],
+    "status": "SPECIFIED_NOT_MODEL_CHECKED",
+    "transition_semantics_reference": "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md#5-durable-lifecycle-and-effect-semantics"
+  },
+  "totals": {
+    "services": 21,
+    "aspects": 17,
+    "service_aspect_obligations": 357,
+    "invariants": 18,
+    "acceptance_cases": 63,
+    "work_packages": 8,
+    "source_files": 80
+  }
+}

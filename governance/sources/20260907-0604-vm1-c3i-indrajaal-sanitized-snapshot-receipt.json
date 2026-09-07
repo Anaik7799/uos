@@ -1,0 +1,97 @@
+{
+  "receipt_id": "20260907-0604-vm1-c3i-indrajaal-sanitized-snapshot-receipt",
+  "kind": "external-source-sanitized-snapshot",
+  "generated_at": "2026-09-07T06:04:34Z",
+  "source": {
+    "host": "vm-1.tail55d152.ts.net",
+    "ip": "100.78.98.18",
+    "path": "/home/an/dev/ver/c3i",
+    "user": "an",
+    "git_revision": "0683c0f8c5fe4bcbd65011662596638855147729",
+    "git_head_commit": "0683c0f8 2026-09-04 16:34:03 +0200 chore: update sub-projects/c3i pointer after control surface sync",
+    "dirty_manifest": [
+      " M sub-projects/c3i",
+      "?? docs/journal/task-117224184306869250/",
+      "?? docs/superpowers/"
+    ],
+    "writers_quiesced": false,
+    "writers_observed": [
+      "beam.smp :4100 (C3I cockpit)",
+      "beam.smp :8080",
+      "c3i-mcp-server",
+      "rclone gdrive mount at sub-projects/work/gdrive"
+    ],
+    "indrajaal_paths": [
+      "lib/indrajaal",
+      "lib/indrajaal_gleam_web",
+      "sub-projects/c3i/indrajaal_ark"
+    ]
+  },
+  "snapshot": {
+    "path": "/home/an/dev/ver/c3i-vm1-20260907-0559",
+    "read_only": true,
+    "file_count": 216057,
+    "manifest_sha256": "aa4cd0c044a0696d915260d9d0b417294b63ac7f820948e1497c422fda6f97ef",
+    "manifest_form": "sorted 'relative-path size' lines",
+    "size_bytes_reported_by_rsync": 12324600951
+  },
+  "sanitization": {
+    "excluded_patterns": [
+      ".git/",
+      "_build/",
+      "target/",
+      "node_modules/",
+      ".cache/",
+      "deps/",
+      "build/",
+      "sub-projects/work/gdrive/",
+      "**/gdrive/",
+      ".env",
+      ".env.*",
+      ".envrc",
+      ".envrc.*",
+      "*.pem",
+      "*.key",
+      "auth.json",
+      "*.token",
+      "*.db-wal",
+      "*.db-shm",
+      "*-wal",
+      "*-shm",
+      "*.gguf",
+      "*.safetensors",
+      "data/tls/",
+      "*.log",
+      "*.db",
+      "*.sqlite",
+      "*.sqlite3",
+      "*.db-journal",
+      ".fastembed_cache/",
+      "models--*/",
+      "sub-projects/work/debug/",
+      "states/",
+      "data/tmp/",
+      "*.tgz",
+      "*.tar",
+      "*.tar.gz",
+      "*.zip",
+      "*.bin",
+      "*.onnx"
+    ],
+    "barred_classes_verified_absent": [
+      "secret bytes (.env, keys, pem, tokens)",
+      "live DB/WAL/SHM (*.db, *-wal, *-shm)",
+      "compiler caches (_build, target, node_modules, deps)",
+      "model weights (gguf, safetensors, bin, fastembed cache)",
+      "gdrive mount",
+      "git objects (13 GB .git excluded; revision recorded instead)"
+    ],
+    "post_copy_check": "find for barred names returned 0"
+  },
+  "status": "read-only evidence; dirty and moving (writers not quiesced); NOT admitted into UOS; two-key verification required before any file or logic enters apps/ or engines/",
+  "purpose": "operator directive 2026-09-07: local copy of C3I and Indrajaal running on vm-1 for work",
+  "related": [
+    "docs/zk/20260907-0537-adr-062-uos-tui-swarm-hive-mind-message-board-coordination-acl-and-zenoh-infra.md",
+    "governance/sources/20260906-1930-c3i-vm1-artifacts-ingestion-receipt.json"
+  ]
+}
