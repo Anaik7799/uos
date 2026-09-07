@@ -26,6 +26,10 @@ import cepaf_gleam/ha/homeostasis_evolution_engine.{
   AutonomousEvolutionActive, Converging, HomeostaticEquilibrium,
   InstabilityIntervention,
 }
+import cepaf_gleam/ha/pareto_fitness_evaluator.{type CandidateEvaluation}
+import cepaf_gleam/ha/physiological_homeostasis.{
+  type PhysiologicalState, stress_to_string, trend_to_string, variable_to_string,
+}
 import gleam/float
 import gleam/int
 import gleam/list
@@ -38,6 +42,8 @@ pub fn render_hud(state: HomeostasisSystemState) -> Element(msg) {
     render_header(),
     render_telemetry_grid(state.metrics),
     render_phase_badge(state.phase, state.generation),
+    render_physiological_panel(state.physiological),
+    render_pareto_fitness_panel(state.pareto_candidates),
     render_quorum_panel(),
     render_cybernetic_svg(state.metrics),
     render_checklist_accordion(),
@@ -109,6 +115,95 @@ fn render_phase_badge(phase: HomeostasisPhase, generation: Int) -> Element(msg) 
       [html.text(badge_text)],
     ),
     html.p([], [html.text("Autonomous Evolutionary Generation: " <> int.to_string(generation))]),
+  ])
+}
+
+fn render_physiological_panel(phys: PhysiologicalState) -> Element(msg) {
+  html.section([attribute.class("physiological-panel")], [
+    html.h3([], [html.text("C3I Physiological Homeostasis (4 Multi-Variable Setpoints)")]),
+    html.p([], [
+      html.text("Composite Stress: " <> float.to_string(phys.composite_stress)),
+      html.text(" | Trend: " <> trend_to_string(phys.stress_trend)),
+      html.text(" | Equilibrium: "),
+      case phys.is_homeostatic {
+        True ->
+          html.span(
+            [attribute.attribute("style", "color: #00FF66; font-weight: bold;")],
+            [html.text("NOMINAL (<=0.70)")],
+          )
+        False ->
+          html.span(
+            [attribute.attribute("style", "color: #FF0033; font-weight: bold;")],
+            [html.text("CRITICAL DEGRADATION")],
+          )
+      },
+    ]),
+    html.div(
+      [attribute.class("telemetry-grid")],
+      list.map(phys.variables, fn(v) {
+        html.div([attribute.class("card")], [
+          html.h4([], [html.text(variable_to_string(v.variable))]),
+          html.p([], [
+            html.text(
+              "Setpoint: "
+              <> float.to_string(v.setpoint)
+              <> " | Actual: "
+              <> float.to_string(v.measurement),
+            ),
+          ]),
+          html.p([], [html.text("Control u(t): " <> float.to_string(v.control_signal))]),
+          html.span([attribute.class("badge")], [
+            html.text("Stress: " <> stress_to_string(v.stress)),
+          ]),
+        ])
+      }),
+    ),
+  ])
+}
+
+fn render_pareto_fitness_panel(
+  candidates: List(CandidateEvaluation),
+) -> Element(msg) {
+  html.section([attribute.class("pareto-panel")], [
+    html.h3([], [html.text("Indrajaal Multi-Objective Evolutionary Pareto Landscape")]),
+    html.table([attribute.class("data-table")], [
+      html.thead([], [
+        html.tr([], [
+          html.th([], [html.text("Candidate Mutation")]),
+          html.th([], [html.text("Latency (ms)")]),
+          html.th([], [html.text("Throughput (ops/s)")]),
+          html.th([], [html.text("Error (%)")]),
+          html.th([], [html.text("CPU (%)")]),
+          html.th([], [html.text("Composite Fitness")]),
+          html.th([], [html.text("Pareto Frontier")]),
+        ]),
+      ]),
+      html.tbody(
+        [],
+        list.map(candidates, fn(c) {
+          let frontier_badge = case c.is_pareto_optimal {
+            True ->
+              html.span(
+                [attribute.attribute("style", "color: #00FF66; font-weight: bold;")],
+                [html.text("NON-DOMINATED")],
+              )
+            False ->
+              html.span([attribute.attribute("style", "color: #888888;")], [
+                html.text("Dominated"),
+              ])
+          }
+          html.tr([], [
+            html.td([], [html.text(c.name)]),
+            html.td([], [html.text(float.to_string(c.raw_latency_ms))]),
+            html.td([], [html.text(float.to_string(c.raw_throughput_ops))]),
+            html.td([], [html.text(float.to_string(c.raw_error_pct))]),
+            html.td([], [html.text(float.to_string(c.raw_cpu_pct))]),
+            html.td([], [html.text(float.to_string(c.composite_fitness))]),
+            html.td([], [frontier_badge]),
+          ])
+        }),
+      ),
+    ]),
   ])
 }
 

@@ -32,10 +32,12 @@ import cepaf_gleam/ha/fitness_gate
 import cepaf_gleam/ha/fractal_forecast
 import cepaf_gleam/ha/guard_grid
 import cepaf_gleam/ha/health_cascade
+import cepaf_gleam/ha/homeostasis_evolution_engine
 import cepaf_gleam/ha/hot_reload
 import cepaf_gleam/mcp/tools as mcp_tools
 import cepaf_gleam/ha/invariant_gate
 import cepaf_gleam/ha/module_guard
+import cepaf_gleam/ui/lustre/homeostasis_evolution_hud
 import cepaf_gleam/ha/request_guard
 import cepaf_gleam/ha/slo_tracker
 import cepaf_gleam/moz/client as moz_client
@@ -447,6 +449,12 @@ fn route_internal(path: String) -> String {
     "/api/v1/homeostasis" ->
       module_guard.unwrap(module_guard.guard_json(
         homeostasis_json(),
+        "homeostasis",
+        "page",
+      ))
+    "/api/v1/homeostasis/evolution" ->
+      module_guard.unwrap(module_guard.guard_json(
+        homeostasis_evolution_json(),
         "homeostasis",
         "page",
       ))
@@ -2382,6 +2390,130 @@ fn homeostasis_json() -> String {
         #("kp", json.float(1.0)),
         #("ki", json.float(0.1)),
         #("kd", json.float(0.05)),
+      ]),
+    ),
+  ])
+  |> json.to_string()
+}
+
+fn homeostasis_evolution_json() -> String {
+  json.object([
+    #("page", json.string("HomeostasisEvolution")),
+    #("layer", json.string("L0_CONSTITUTIONAL")),
+    #("homeostasis_stable", json.bool(True)),
+    #("phase", json.string("HomeostaticEquilibrium")),
+    #("composite_stress", json.float(0.38)),
+    #("stress_trend", json.string("STABLE")),
+    #(
+      "pid_convergence",
+      json.object([
+        #("setpoint", json.float(1.0)),
+        #("actual", json.float(0.995)),
+        #("error", json.float(0.005)),
+        #("lyapunov_v", json.float(0.0000125)),
+      ]),
+    ),
+    #(
+      "physiological_variables",
+      json.array(
+        [
+          json.object([
+            #("variable", json.string("cpu_pct")),
+            #("setpoint", json.float(60.0)),
+            #("actual", json.float(45.0)),
+            #("stress", json.string("OPTIMAL")),
+            #("control_signal", json.float(0.0)),
+          ]),
+          json.object([
+            #("variable", json.string("memory_pct")),
+            #("setpoint", json.float(70.0)),
+            #("actual", json.float(52.0)),
+            #("stress", json.string("OPTIMAL")),
+            #("control_signal", json.float(0.0)),
+          ]),
+          json.object([
+            #("variable", json.string("latency_ms")),
+            #("setpoint", json.float(100.0)),
+            #("actual", json.float(48.0)),
+            #("stress", json.string("OPTIMAL")),
+            #("control_signal", json.float(0.0)),
+          ]),
+          json.object([
+            #("variable", json.string("error_rate_pct")),
+            #("setpoint", json.float(0.5)),
+            #("actual", json.float(0.02)),
+            #("stress", json.string("LOW")),
+            #("control_signal", json.float(0.0)),
+          ]),
+        ],
+        fn(x) { x },
+      ),
+    ),
+    #(
+      "pareto_landscape",
+      json.array(
+        [
+          json.object([
+            #("candidate_id", json.string("cand-01-simd")),
+            #("name", json.string("MAX SIMD Scorer Optimization")),
+            #("latency_ms", json.float(25.0)),
+            #("throughput_ops", json.float(8500.0)),
+            #("error_pct", json.float(0.02)),
+            #("cpu_pct", json.float(48.0)),
+            #("composite_fitness", json.float(0.94)),
+            #("pareto_optimal", json.bool(True)),
+          ]),
+          json.object([
+            #("candidate_id", json.string("cand-02-heijunka")),
+            #("name", json.string("Heijunka Leveled Pull Queue")),
+            #("latency_ms", json.float(40.0)),
+            #("throughput_ops", json.float(9200.0)),
+            #("error_pct", json.float(0.01)),
+            #("cpu_pct", json.float(42.0)),
+            #("composite_fitness", json.float(0.96)),
+            #("pareto_optimal", json.bool(True)),
+          ]),
+          json.object([
+            #("candidate_id", json.string("cand-03-solo5")),
+            #("name", json.string("Solo5 Sandboxed Isolation")),
+            #("latency_ms", json.float(65.0)),
+            #("throughput_ops", json.float(4500.0)),
+            #("error_pct", json.float(0.005)),
+            #("cpu_pct", json.float(35.0)),
+            #("composite_fitness", json.float(0.91)),
+            #("pareto_optimal", json.bool(True)),
+          ]),
+          json.object([
+            #("candidate_id", json.string("cand-04-suboptimal")),
+            #("name", json.string("Unbounded Thread Allocator")),
+            #("latency_ms", json.float(320.0)),
+            #("throughput_ops", json.float(1200.0)),
+            #("error_pct", json.float(2.5)),
+            #("cpu_pct", json.float(92.0)),
+            #("composite_fitness", json.float(0.24)),
+            #("pareto_optimal", json.bool(False)),
+          ]),
+        ],
+        fn(x) { x },
+      ),
+    ),
+    #(
+      "quorum_consensus",
+      json.object([
+        #("policy", json.string("ThreeOfFourSovereign")),
+        #("status", json.string("RATIFIED")),
+        #(
+          "members",
+          json.array(
+            [
+              "AGY Sovereign: ONLINE",
+              "Claude Sovereign: ONLINE",
+              "Codex Sovereign: ONLINE",
+              "OpenRouter Sovereign: ONLINE",
+            ],
+            json.string,
+          ),
+        ),
       ]),
     ),
   ])
@@ -4379,6 +4511,16 @@ fn route_html(path: String) -> String {
         "Homeostasis Controls",
         "homeostasis",
         guard("homeostasis", page_views.homeostasis_view),
+      )
+    "/homeostasis/evolution" | "/homeostasis-evolution" ->
+      shell.render_page(
+        "Cybernetic Homeostasis & Quorum Evolution HUD",
+        "homeostasis",
+        guard("homeostasis", fn(_state) {
+          homeostasis_evolution_hud.render_hud(
+            homeostasis_evolution_engine.init_homeostasis_system(0),
+          )
+        }),
       )
     "/bicameral" ->
       shell.render_page(

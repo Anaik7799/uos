@@ -10,6 +10,7 @@ import cepaf_gleam/ha/multi_agent_quorum.{
   QuorumApprove, QuorumReject, VerdictPending, VerdictRatified,
   sovereign_to_string,
 }
+import cepaf_gleam/ha/physiological_homeostasis.{CpuUtilization}
 import gleam/list
 import gleam/otp/actor
 import gleeunit
@@ -287,6 +288,44 @@ pub fn homeostasis_actor_lifecycle_test() {
       gen |> should.equal(1)
     }
     _ -> panic as "Expected AutonomousEvolutionActive after applying mutation"
+  }
+}
+
+pub fn physiological_homeostasis_gating_test() {
+  let s0 = init_homeostasis_system(1000)
+  // Bring PID to equilibrium
+  let s1 = ingest_telemetry(s0, 1.0, 1.0, 2000)
+  let s2 = ingest_telemetry(s1, 1.0, 1.0, 3000)
+  let s3 = ingest_telemetry(s2, 1.0, 1.0, 4000)
+
+  // Ingest critical physiological stress (CPU at 98%)
+  let s4 =
+    homeostasis_evolution_engine.ingest_physiological_telemetry(
+      s3,
+      [#(CpuUtilization, 98.0)],
+      1.0,
+      5000,
+    )
+
+  // System should fail closed into InstabilityIntervention Andon stop
+  case s4.phase {
+    InstabilityIntervention(_) -> True |> should.equal(True)
+    _ -> panic as "Expected InstabilityIntervention on critical physiological stress"
+  }
+
+  // Evolutionary proposal must be blocked
+  let mut =
+    EvolutionaryMutation(
+      mutation_id: "mut-blocked-by-phys",
+      target_capability: "Speculative Engine",
+      description: "Should fail closed",
+      expected_gain_pct: 10.0,
+      risk_score: 0.1,
+    )
+
+  case propose_evolution(s4, mut, 5100) {
+    Error(_) -> True |> should.equal(True)
+    Ok(_) -> panic as "Expected propose_evolution to fail closed under critical stress"
   }
 }
 

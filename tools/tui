@@ -40,6 +40,7 @@ Examples:
   tools/tui view bicameral
   tools/tui view homeostasis
   tools/tui view evolution
+  tools/tui view homeostasis-evolution
 EOF
 }
 
@@ -282,6 +283,7 @@ Specialized Subsystem Views:
   - homeostasis          - bicameral            - singularity
   - markdown             - hooks                - voice
   - ruliology            - fmea                 - pipeline-tracer
+  - homeostasis-evolution
 
 EOF
     ;;
@@ -358,6 +360,18 @@ EOF
           Init = cepaf_gleam@ui@lustre@evolution:init(),
           M = cepaf_gleam@ui@lustre@evolution:update(Init, {metrics_loaded, 2.67, 42, 0.03, 0.95, 88, <<"2026-09-06T18:20:00Z">>}),
           Output = cepaf_gleam@ui@tui@evolution_view:render(M),
+          io:put_chars(Output),
+          io:nl(),
+          init:stop().
+        '
+        ;;
+      homeostasis-evolution|bio-evolution)
+        run_erl '
+          S0 = cepaf_gleam@ha@homeostasis_evolution_engine:init_homeostasis_system(0),
+          S1 = cepaf_gleam@ha@homeostasis_evolution_engine:ingest_telemetry(S0, 1.0, 1.0, 1000),
+          S2 = cepaf_gleam@ha@homeostasis_evolution_engine:ingest_telemetry(S1, 1.0, 1.0, 2000),
+          S3 = cepaf_gleam@ha@homeostasis_evolution_engine:ingest_telemetry(S2, 1.0, 1.0, 3000),
+          Output = cepaf_gleam@ui@tui@homeostasis_evolution_view:render(S3),
           io:put_chars(Output),
           io:nl(),
           init:stop().

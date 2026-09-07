@@ -32,6 +32,12 @@ import cepaf_gleam/ha/multi_agent_quorum.{
   ThreeOfFourSovereign, VerdictPending,
   VerdictRatified, VerdictRejected, cast_ballot_vote, create_ballot,
 }
+import cepaf_gleam/ha/pareto_fitness_evaluator.{
+  type CandidateEvaluation,
+}
+import cepaf_gleam/ha/physiological_homeostasis.{
+  type PhysiologicalState, type PhysiologicalVariable,
+}
 import gleam/erlang/process.{type Subject}
 import gleam/float
 import gleam/int
@@ -174,6 +180,8 @@ pub type HomeostasisSystemState {
   HomeostasisSystemState(
     pid_config: HomeostasisPidConfig,
     metrics: HomeostasisMetrics,
+    physiological: PhysiologicalState,
+    pareto_candidates: List(CandidateEvaluation),
     phase: HomeostasisPhase,
     consecutive_stable_ticks: Int,
     generation: Int,
@@ -185,6 +193,8 @@ pub fn init_homeostasis_system(now_us: Int) -> HomeostasisSystemState {
   HomeostasisSystemState(
     pid_config: default_pid_config(),
     metrics: initial_metrics(now_us),
+    physiological: physiological_homeostasis.initial_physiological_state(now_us),
+    pareto_candidates: pareto_fitness_evaluator.default_evolution_candidates(),
     phase: Converging(0.15, 0.01125),
     consecutive_stable_ticks: 0,
     generation: 0,
@@ -212,8 +222,8 @@ pub fn ingest_telemetry(
 
   // Phase transition logic
   let new_phase = case True {
-    _ if abs_err >. 0.20 ->
-      InstabilityIntervention("Critical divergence from homeostasis (error > 0.20)")
+    _ if abs_err >. 0.20 || !state.physiological.is_homeostatic ->
+      InstabilityIntervention("Critical divergence from homeostasis (error > 0.20 or physiological stress)")
     _ if new_ticks >= 3 ->
       case state.phase {
         AutonomousEvolutionActive(cycle, gen) ->
@@ -233,12 +243,49 @@ pub fn ingest_telemetry(
   )
 }
 
+/// Ingest multi-variable physiological telemetry (CPU, memory, latency, error rate).
+pub fn ingest_physiological_telemetry(
+  state: HomeostasisSystemState,
+  measurements: List(#(PhysiologicalVariable, Float)),
+  dt_seconds: Float,
+  now_us: Int,
+) -> HomeostasisSystemState {
+  let updated_phys =
+    physiological_homeostasis.update_physiological_telemetry(
+      state.physiological,
+      measurements,
+      dt_seconds,
+      now_us,
+    )
+  let next_state = HomeostasisSystemState(..state, physiological: updated_phys)
+  case updated_phys.is_homeostatic {
+    False ->
+      HomeostasisSystemState(
+        ..next_state,
+        phase: InstabilityIntervention(
+          "Physiological stress exceeded safe boundary: "
+          <> float.to_string(updated_phys.composite_stress),
+        ),
+      )
+    True -> next_state
+  }
+}
+
+/// Update the evolutionary Pareto fitness candidate landscape.
+pub fn update_pareto_candidates(
+  state: HomeostasisSystemState,
+  candidates: List(CandidateEvaluation),
+) -> HomeostasisSystemState {
+  let frontier = pareto_fitness_evaluator.compute_pareto_frontier(candidates)
+  HomeostasisSystemState(..state, pareto_candidates: frontier)
+}
+
 // ---------------------------------------------------------------------------
 // 3. 4-Party Sovereign Quorum Evolution Dispatch
 // ---------------------------------------------------------------------------
 
 /// Create an Evolution Proposal evaluated by the 4-Party Sovereign Quorum.
-/// Fails closed if the system has not yet reached Homeostatic Equilibrium.
+/// Fails closed if the system has not yet reached Homeostatic Equilibrium or if physiological stress is high.
 pub fn propose_evolution(
   state: HomeostasisSystemState,
   mutation: EvolutionaryMutation,
@@ -246,22 +293,32 @@ pub fn propose_evolution(
 ) -> Result(EvolutionProposal, String) {
   case state.phase {
     HomeostaticEquilibrium(..) | AutonomousEvolutionActive(..) -> {
-      // 4-Party Quorum: AGY, Claude, Codex, OpenRouter
-      let ballot =
-        create_ballot(
-          mutation.mutation_id,
-          "Autonomous Evolution: " <> mutation.target_capability,
-          ThreeOfFourSovereign,
-          now_us,
-        )
+      case state.physiological.is_homeostatic {
+        False ->
+          Error(
+            "Cannot initiate self-evolution: physiological stress ("
+            <> float.to_string(state.physiological.composite_stress)
+            <> ") is critical",
+          )
+        True -> {
+          // 4-Party Quorum: AGY, Claude, Codex, OpenRouter
+          let ballot =
+            create_ballot(
+              mutation.mutation_id,
+              "Autonomous Evolution: " <> mutation.target_capability,
+              ThreeOfFourSovereign,
+              now_us,
+            )
 
-      Ok(EvolutionProposal(
-        proposal_id: mutation.mutation_id,
-        mutation: mutation,
-        ballot: ballot,
-        generation: state.generation + 1,
-        created_at_us: now_us,
-      ))
+          Ok(EvolutionProposal(
+            proposal_id: mutation.mutation_id,
+            mutation: mutation,
+            ballot: ballot,
+            generation: state.generation + 1,
+            created_at_us: now_us,
+          ))
+        }
+      }
     }
     Converging(err, _) ->
       Error("Cannot initiate self-evolution: system converging toward homeostasis (error=" <> float.to_string(err) <> ")")
@@ -347,6 +404,12 @@ pub type HomeostasisActorMsg {
     proposal: EvolutionProposal,
     reply_to: Subject(Result(HomeostasisSystemState, String)),
   )
+  IngestPhysiological(
+    measurements: List(#(PhysiologicalVariable, Float)),
+    dt_seconds: Float,
+    now_us: Int,
+  )
+  UpdateCandidates(candidates: List(CandidateEvaluation))
   GetHomeostasisState(reply_to: Subject(HomeostasisSystemState))
 }
 
@@ -357,6 +420,17 @@ pub fn handle_actor_message(
   case msg {
     IngestHealthObservation(measured, dt_seconds, now_us) -> {
       let next_state = ingest_telemetry(state, measured, dt_seconds, now_us)
+      actor.continue(next_state)
+    }
+
+    IngestPhysiological(measurements, dt_seconds, now_us) -> {
+      let next_state =
+        ingest_physiological_telemetry(state, measurements, dt_seconds, now_us)
+      actor.continue(next_state)
+    }
+
+    UpdateCandidates(candidates) -> {
+      let next_state = update_pareto_candidates(state, candidates)
       actor.continue(next_state)
     }
 

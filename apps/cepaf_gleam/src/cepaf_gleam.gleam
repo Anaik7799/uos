@@ -30,6 +30,7 @@ import cepaf_gleam/podman/containers
 import cepaf_gleam/podman/domain.{PodmanClientConfig, Rootless}
 import cepaf_gleam/podman/http_client
 import cepaf_gleam/telemetry/exporter
+import cepaf_gleam/uos_sup
 import cepaf_gleam/verification/swarm
 import cepaf_gleam/web/server as web_server
 import cepaf_gleam/zenoh/client as zenoh
@@ -65,6 +66,8 @@ pub fn main() {
     True -> {
       io.println("  [agents] Starting 3-layer autonomous hierarchy...")
       let _ = cybernetic.start_executive_supervisor()
+      io.println("  [sup] Starting root OTP supervisor with homeostasis engine...")
+      let _ = uos_sup.start_root_supervisor()
       Nil
     }
     False -> Nil
