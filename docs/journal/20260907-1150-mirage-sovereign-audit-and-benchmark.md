@@ -126,8 +126,8 @@ Forecast: with both kernels functioning, every valid invocation should return tw
 | Mutation controls | Call-count and checksum mutants exit 2 on distinct laws; corrupted read payload rejected | Mutants restored; final source tested again |
 | Negative conformance | Valid config client compiles; forged private summary fails compilation with exit 2 | Confirms interface privacy under actual compiler |
 | Ed25519 | Valid signature accepted; changed message, short signature, malformed public key and short seed rejected | Fixture keys only; no authorization/replay authority |
-| UI candidate | 22 focused Mirage tests; Indrajaal 8 tests; both builds pass | Later checklist/escaping child has a separate focused receipt |
-| Full CEPAF comparison | UI worker: 10041 pass, 202 failure events versus pinned baseline 10037/202 | Suite is not green. Claude independently reports 164 distinct baseline failing identities on c660; do not equate events and identities |
+| Final UI composition | 23 focused Mirage tests; Indrajaal 8 tests on UI parent; both builds pass | Five named checklist domains and malicious HTML escaping covered |
+| Full CEPAF comparison | Final UI worker: 10042 pass, 202 failure events versus pinned baseline 10037/202 | Suite is not green. Claude independently reports 164 distinct baseline failing identities on c660; do not equate events and identities |
 | tools/uos | 14 tests pass; Doctor and Mirage gates/selfchecks deliberately exit 1 | Other EV rows are inventory metadata, not rerun gates |
 | Zero-Muda | Existing current-tree gate exit 0 | Does not verify all imported history |
 | Jujutsu | `.jj/repo/store/git_target` is internal `git`; no native Git command used | Root `.git` is an empty placeholder, so a simple directory-absence check fails; it contains no Git repository metadata |
@@ -239,7 +239,7 @@ Model evaluation, signature validation, board acknowledgement, runtime ownership
 
 ## 13. Conclusion
 
-The audit and new bounded host benchmark are implemented as a reviewable source candidate. Storage correctness, test coverage and evidence reporting improved. MirageOS/Solo5 production capability, OTP29 compliance and EV87–89 admission remain **NOT_VERIFIED**. Final candidate and coordinator handoff identifiers belong to the companion receipt; integration/deployment requires the normal recorded gate.
+The audit and new bounded host benchmark are implemented at source candidate `0384a714bf5fe469b9c37accc58a11e98ba016a6`. Storage correctness, test coverage and evidence reporting improved. MirageOS/Solo5 production capability, OTP29 compliance and EV87–89 admission remain **NOT_VERIFIED**. Completion was broadcast through session_sync as `codex-mirage-audit-complete-1115`, sequence143. Peer completion ACK and main integration remain pending; integration/deployment requires the normal recorded gate. The coordinator accepted the task claim but rejected the unsupported workspace resource namespace; the separate JJ workspace retained filesystem isolation.
 
 Previous: [Benchmark contract](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260907-1037-mirage-benchmark-contract.md) · Next: [Audit receipt](http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20260907-1150-mirage-sovereign-audit-receipt.json)
 

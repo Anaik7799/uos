@@ -1,0 +1,284 @@
+{
+  "schema": "uos-mirage-sovereign-audit/v1",
+  "created_at": "2026-09-07T11:03:50Z",
+  "audit_source_candidate": "91eb7ebba529f7506369dc5d82738722579deac4",
+  "verified_source_candidate": "0384a714bf5fe469b9c37accc58a11e98ba016a6",
+  "source_change_id": "uxpqowvkqyuynpwxyyrzyvrrxrosoxwk",
+  "verdict": "HOST_IMPLEMENTATION_TESTED_PRODUCTION_NOT_VERIFIED",
+  "production_admission": false,
+  "artifacts": {
+    "journal": "docs/journal/20260907-1150-mirage-sovereign-audit-and-benchmark.md",
+    "contract": "docs/design/20260907-1037-mirage-benchmark-contract.md",
+    "publication_status": "PENDING_RECORDED_MAINLINE_INTEGRATION"
+  },
+  "contributors": [
+    {
+      "identity": "Codex-Astra",
+      "session": "01a07a68-b3b7-70f3-9e64-fac68a156c21",
+      "role": "root implementation, composition, verification and handoff"
+    },
+    {
+      "identity": "hermes_observation_impl",
+      "role": "independent native audit, storage repair and benchmark reviews",
+      "candidate": "00ac6c2158750a1196820bb8e656ba671b09cf7d"
+    },
+    {
+      "identity": "coordination_formal_refinement",
+      "role": "independent governance audit and fail-closed gates",
+      "candidate": "3706ea05f7f7d97d963a33be037b2a845c9e412a"
+    },
+    {
+      "identity": "action_boundaries_impl",
+      "role": "independent actor and presentation audit, truthful UI/API/TUI, grouped checklist and escaping",
+      "candidate": "a49879a3ba0b8d857efb78652e72f98451d9ec65"
+    }
+  ],
+  "feature": {
+    "id": "HOST-KERNEL-BENCH-001",
+    "command": "dune exec --root engines/hermes modules/hermes_mirage/hermes_mirage_runner.exe -- benchmark 10000",
+    "workloads": [
+      "block_roundtrip",
+      "kv_roundtrip"
+    ],
+    "min_roundtrips": 1,
+    "max_roundtrips": 10000,
+    "default_roundtrips": 256,
+    "payload_bytes": 512,
+    "retained_slots_per_workload": 16,
+    "clock": "process_cpu_seconds:Sys.time",
+    "laws": "MB-01..MB-10",
+    "formal_scope": "executable algebraic specification with private types, independent oracle and bounded seeded laws; not a Lean/Quint/Gospel production proof",
+    "no_new_daemon": true,
+    "no_new_dependencies": true,
+    "no_solo5_boot_measurement": true
+  },
+  "verification": [
+    {
+      "check": "final native Dune runtest --force",
+      "candidate": "0384a714bf5fe469b9c37accc58a11e98ba016a6",
+      "status": "PASS",
+      "exit_code": 0,
+      "actions": 4
+    },
+    {
+      "check": "final Mirage EUnit",
+      "candidate": "0384a714bf5fe469b9c37accc58a11e98ba016a6",
+      "status": "PASS",
+      "exit_code": 0,
+      "passed": 23,
+      "failed": 0
+    },
+    {
+      "check": "tools/uos tests",
+      "candidate": "3706ea05f7f7d97d963a33be037b2a845c9e412a",
+      "status": "PASS",
+      "passed": 14,
+      "failed": 0
+    },
+    {
+      "check": "final Doctor",
+      "candidate": "0384a714bf5fe469b9c37accc58a11e98ba016a6",
+      "status": "EXPECTED_FAIL_CLOSED",
+      "exit_code": 1
+    },
+    {
+      "check": "Mirage gates and selfchecks",
+      "candidate": "3706ea05f7f7d97d963a33be037b2a845c9e412a",
+      "status": "EXPECTED_FAIL_CLOSED",
+      "exit_code": 1,
+      "reason": "missing candidate-bound Solo5 behavior and Mirage-specific formal evidence"
+    },
+    {
+      "check": "Indrajaal tests",
+      "candidate": "042e569e56686bccade23187c0a6333d86ad2bd9",
+      "status": "PASS",
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "check": "Indrajaal dependent check",
+      "candidate": "a49879a3ba0b8d857efb78652e72f98451d9ec65",
+      "status": "PASS"
+    },
+    {
+      "check": "full CEPAF UI branch",
+      "candidate": "a49879a3ba0b8d857efb78652e72f98451d9ec65",
+      "status": "BASELINE_FAILURES_REMAIN",
+      "passed": 10042,
+      "aggregate_failure_events": 202,
+      "baseline_aggregate_failure_events": 202,
+      "scope": "worker count comparison, not full final mainline attribution"
+    },
+    {
+      "check": "zero-muda current tree",
+      "status": "PASS",
+      "exit_code": 0,
+      "scope": "existing script, not all history"
+    },
+    {
+      "check": "private-type negative compilation",
+      "status": "PASS",
+      "positive_exit": 0,
+      "negative_exit": 2,
+      "negative_reason": "Cannot create values of the private type Mirage_benchmark.summary"
+    },
+    {
+      "check": "instrumented call-count mutant",
+      "status": "KILLED",
+      "exit_code": 2,
+      "law": "MB-02"
+    },
+    {
+      "check": "checksum mutant",
+      "status": "KILLED",
+      "exit_code": 2,
+      "law": "MB-04/06"
+    },
+    {
+      "check": "corrupt read payload mutant",
+      "status": "KILLED",
+      "exit_code": 2,
+      "law": "MB-03"
+    }
+  ],
+  "seeds": {
+    "shared": [
+      87,
+      89,
+      20260907
+    ],
+    "twin": [
+      [
+        87,
+        89
+      ],
+      [
+        20260907,
+        89
+      ]
+    ],
+    "random_cases_per_twin": 32,
+    "max_iterations": 10000,
+    "cli_probes": 12
+  },
+  "benchmark_sample": {
+    "candidate": "abb7d4178bfa44c2a99a0f144c058d221f9535eb",
+    "host": "nas-1",
+    "observed_complete_at": "2026-09-07T11:05:05Z",
+    "runner_sha256": "08e912bef580b9e614d6e3405a9acfa787227baf5e2f7113c4394d937046728b",
+    "output_sha256": "eb5d7da279c952c7ad0cc19daca06ecaadc198e401b06fa7a43ef92f5a213c71",
+    "roundtrips_per_workload": 10000,
+    "io_calls_per_workload": 20000,
+    "additive_checksum_per_workload": 637839360,
+    "block_process_cpu_seconds": 0.019494,
+    "kv_process_cpu_seconds": 0.018394,
+    "scope": "one observed host sample from named native parent; not a distribution or a Solo5 performance receipt"
+  },
+  "toolchain": {
+    "ocaml": "5.5.0",
+    "dune": "3.23.1",
+    "digestif": "1.3.1",
+    "yojson": "3.0.0",
+    "mirage_crypto": "2.2.0",
+    "mirage_crypto_ec": "2.2.0",
+    "otp_observed": "27",
+    "erts": "15.2.7.4",
+    "otp_required": "29",
+    "otp_compliance": "FAIL"
+  },
+  "time": {
+    "observed_at": "2026-09-07T10:54:05Z",
+    "chrony_leap_status": "Normal",
+    "system_time_slow_of_ntp_seconds": 0.000016487,
+    "scope": "local host only",
+    "system_to_model_delta": null,
+    "lamport_to_wall_numeric_equivalence": false
+  },
+  "links": [
+    {
+      "url": "http://nas-1.tail55d152.ts.net:4100/mirage",
+      "http": 200,
+      "bytes": 31365,
+      "sha256": "af912d6ba298675df09ce148b9a5788159e2f13d69335a1305551eaf4a8db513",
+      "semantic_status": "Mirage content served; older unverified claims still displayed"
+    },
+    {
+      "url": "http://nas-1.tail55d152.ts.net:4100/api/v1/mirage/candidates",
+      "http": 200,
+      "bytes": 1979,
+      "sha256": "491da3cb0d42535a49c273a2dce1694ba5e37bf5a653df6867e41834aa874423",
+      "semantic_status": "legacy projection fields; static admitted count is not evidence"
+    },
+    {
+      "url": "http://nas-1.tail55d152.ts.net:4100/api/v1/mirage/status",
+      "http": 200,
+      "bytes": 96,
+      "sha256": "e974b14f9f12e82f9cb41f17e57508d9c176318544af4de709e683b651fb458c",
+      "semantic_status": "fresh model zeros; not observed process state"
+    },
+    {
+      "url": "http://vm-1.tail55d152.ts.net:8088/",
+      "http": null,
+      "curl_exit": 7,
+      "semantic_status": "CONNECTION_REFUSED"
+    }
+  ],
+  "link_observed_at": "2026-09-07T10:54:05Z",
+  "link_candidate_binding": "UNKNOWN",
+  "vcs": {
+    "store_target": ".jj/repo/store/git",
+    "native_git_commands_used": 0,
+    "root_dot_git": "empty placeholder directory, no Git metadata",
+    "main_mutated_by_root": false
+  },
+  "runtime": {
+    "mutated_by_root": false,
+    "clock_primary_pid": 2678887,
+    "clock_backup_pid": 2670150,
+    "clock_automatic_restarts": 0,
+    "live_4100_pid_observed": 2802968,
+    "zenoh_8080_pid_observed": 1689715
+  },
+  "coordination": {
+    "coordinator": "var/coordination/tri-agent",
+    "peer_session": "656f0d2c-6019-4d9e-b0ce-b9e39b240047",
+    "acknowledgement_sequences": [
+      138,
+      139,
+      140
+    ],
+    "mainline_status": "HELD_FOR_RECORDED_INTEGRATION_GATE",
+    "completion_operation_id": "codex-mirage-audit-complete-1115",
+    "completion_dispatch": "SENT",
+    "completion_sequence": 143,
+    "task_claim_sequence": 142,
+    "task_claim_epoch": 1,
+    "workspace_claim": "unsupported resource namespace; isolated JJ workspace and task lease used",
+    "peer_completion_ack": "PENDING"
+  },
+  "open_findings": [
+    "Mirage/Solo5 configured build artifact and tender execution absent",
+    "no Mirage-specific Lean/Quint/Gospel proof or admission receipt",
+    "TLS and DNS modules are host policy/table models; header/ALPN/cache/clock gaps remain",
+    "tender negative memory and incomplete manifest validation remain",
+    "payload filter is not tool/principal authorization or replay protection",
+    "OTP29 requirement not met",
+    "legacy contract timestamps and remaining generic static gates nonconformant",
+    "VM-1 peer link refused",
+    "full CEPAF suite retains baseline failures",
+    "corrected live UI and artifact publication pending recorded mainline integration"
+  ],
+  "decision_summary": "Reuse existing UOS kernels and interfaces; verify bounded host behavior; prevent model and inventory assertions from granting operational admission.",
+  "forecast": {
+    "expected": "valid bounded invocations return two oracle-consistent result objects; invalid arguments or broken kernels fail explicitly",
+    "observed": "supported by recorded bounded and negative checks",
+    "probability": null,
+    "performance_slo": null
+  },
+  "cost": {
+    "paid_openrouter_requests": 0,
+    "new_inference_services": 0,
+    "aggregate_model_cost": null,
+    "global_cheapest_model_optimum": "NOT_MEASURED"
+  }
+}

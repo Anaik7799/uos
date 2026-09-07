@@ -2,7 +2,7 @@
 
 #fractal-l3 #fractal-l4 #zk-adr #zero-muda #tailscale-web
 
-Created: 2026-09-07T10:40:37Z. Candidate under audit: 91eb7ebba529f7506369dc5d82738722579deac4. State: specified; implementation and verification receipts follow in the audit journal.
+Created: 2026-09-07T10:40:37Z. Candidate under audit: 91eb7ebba529f7506369dc5d82738722579deac4. State: implemented and tested at source composition 0384a714bf5fe469b9c37accc58a11e98ba016a6. Deployment remains NOT_VERIFIED. [Audit and verification](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260907-1150-mirage-sovereign-audit-and-benchmark.md).
 
 [UOS](http://nas-1.tail55d152.ts.net:4100/) · [Mirage](http://nas-1.tail55d152.ts.net:4100/mirage) · [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [ZK](http://nas-1.tail55d152.ts.net:4100/zk) · [Checklist](http://nas-1.tail55d152.ts.net:4100/checklist) · [Source](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260907-1037-mirage-benchmark-contract.md)
 
@@ -67,7 +67,7 @@ Expected behavior: supported workloads return bounded JSON with verified summari
 <details><summary>Domain 2 — Purity and storage safety</summary>
 
 - [x] CHK-05-MUDA — Existing OCaml carriers selected; no new runtime dependency planned.
-- [ ] CHK-06-GRAPH — Implementation dependency check pending.
+- [x] CHK-06-GRAPH — Dependency set unchanged; current-tree Zero-Muda gate passed.
 - [x] CHK-07-DRIVE — Benchmark uses memory only; no disk allocation or OS storage mutation.
 
 </details>
@@ -75,14 +75,14 @@ Expected behavior: supported workloads return bounded JSON with verified summari
 
 - [ ] CHK-08-C1C8 — Feature presentation checks pending.
 - [ ] CHK-09-MATH — Global quality metrics are not measured by this benchmark.
-- [ ] CHK-10-9MOD — Law, negative and mutation checks pending; no nine-modality claim.
-- [ ] CHK-11-REGR — Relevant existing regression checks pending.
+- [ ] CHK-10-9MOD — Law, negative and mutation checks passed; no nine-modality claim.
+- [ ] CHK-11-REGR — Relevant Mirage regressions passed; full CEPAF baseline failures remain.
 
 </details>
 <details><summary>Domain 4 — Control and observability</summary>
 
 - [ ] CHK-12-GLEAM — Existing actors are audited separately.
-- [ ] CHK-13-HERMES — Implementation and native evidence pending.
+- [x] CHK-13-HERMES — Four native test actions and independent benchmark reviews passed.
 - [ ] CHK-14-ZIGVM — No ZigVM admission change.
 - [ ] CHK-15-MAX — No inference needed or measured.
 - [ ] CHK-16-OTEL — Benchmark JSON does not imply collector delivery.
