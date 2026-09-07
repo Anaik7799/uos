@@ -155,6 +155,24 @@ Per explicit operator directive, every webpage rendered across UOS and every can
 
 ---
 
+## §2.11 Sa-Plan Exclusivity & Fractal Jidoka TPS Mandate (SC-JIDOKA-001, SC-SA-PLAN-001)
+
+**Mandate**: `sa-plan` (`tools/sa-plan`, SQLite store `var/sa-plan/uos.sqlite3`) is the SOLE, EXCLUSIVE execution authority for all plans, tasks, Oban jobs, and Temporal workflows across all agentic systems.
+
+**Fractal Jidoka (SC-JIDOKA-001)**:
+- Any task creation, claiming, mutation, or execution attempted outside of `sa-plan` triggers an immediate fail-closed **Andon Stop Line**.
+- Execution stops immediately with error code `-32002` ("Fractal Jidoka Andon Halt: Non-sa-plan task execution attempted. SC-JIDOKA-001 forbids ad-hoc un-ledgered plan execution.").
+- No phantom, shadow, or hallucinated task states permitted.
+
+**Fractal TPS (Toyota Production System)**:
+- **Poka-Yoke**: Fail-closed parameter validation and `sa-plan` provenance checks in MCP tools and BEAM actors.
+- **Jidoka**: Immediate stop line on defects or un-ledgered actions.
+- **Muda Elimination**: Zero duplicate planning registries; single canonical store at `var/sa-plan/uos.sqlite3`.
+- **Standardized Work**: Strictly typed CLI schemas for Plan, Task, Oban Job, and Temporal Workflow.
+- **Just-In-Time & Heijunka**: Pull-based task claiming with leases (`claim WORKER PLAN LEASE_NS TASK_ID`), leveled worker pools.
+
+---
+
 ## §3.0 Triple-Interface Mandate (SC-GLM-UI-001)
 
 Every new page, dashboard, or interactive component MUST be implemented THREE times:

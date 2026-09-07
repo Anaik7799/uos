@@ -1,11 +1,15 @@
 //// MirageOS migration projection cockpit.
 //// STAMP: SC-GLM-UI-001, SC-CHECKLIST-001, SC-MIRAGE-MIGRATE-001
 
+import cepaf_gleam/services/mirage_hypervisor.{
+  type HypervisorProbeReport, type Solo5ExecutionReceipt,
+}
 import cepaf_gleam/services/mirage_migration_engine.{type MigrationCandidate}
 import cepaf_gleam/services/mirage_unikernel_daemon
 import gleam/float
 import gleam/int
 import gleam/list
+import gleam/option.{type Option, None, Some}
 import gleam/string
 
 const benchmark_spec_url = "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260907-1037-mirage-benchmark-contract.md"
@@ -17,6 +21,8 @@ pub fn view() -> String {
   let verified_admitted =
     mirage_migration_engine.verified_admitted_count(candidates)
   let state = mirage_unikernel_daemon.new_daemon_state()
+
+  let probe = mirage_hypervisor.read_probe_receipt()
 
   "<div class=\"uos-mirage-cockpit\" style=\"padding:1.5rem;background:#0a0e17;color:#e0e6ed\">"
   <> "<header><h1 style=\"color:#00d4aa\">MirageOS Migration Projection Cockpit</h1>"
@@ -39,14 +45,7 @@ pub fn view() -> String {
   <> "<p><a href=\"http://nas-1.tail55d152.ts.net:4100/api/v1/mirage/candidates\">Candidate projection JSON</a> &middot; "
   <> "<a href=\"http://nas-1.tail55d152.ts.net:4100/api/v1/mirage/status\">Runtime observation JSON</a> &middot; "
   <> "<a href=\"http://nas-1.tail55d152.ts.net:4100/api/v1/mirage/hypervisors\">Hypervisor hardware probe JSON</a></p></section>"
-  <> "<section style=\"border:1px solid #38bdf8;padding:1rem;margin:1rem 0\"><h2>Host Hypervisor & Virtualization Layer</h2>"
-  <> "<ul><li><strong>KVM Acceleration (/dev/kvm):</strong> PRESENT & RW-ACCESSIBLE (KVM API v12 verified)</li>"
-  <> "<li><strong>QEMU MicroVM Hypervisor:</strong> PRESENT (/usr/bin/qemu-system-x86_64 v10.2.1, microvm machine architecture verified)</li>"
-  <> "<li><strong>Solo5 Tender Architecture (3/3 Verified):</strong>"
-  <> "<ul><li><code>solo5-hvt</code>: Hardware Virtualized Tender (KVM) &mdash; <strong>VERIFIED &amp; EXECUTED</strong> (exit 0, 'SUCCESS')</li>"
-  <> "<li><code>solo5-spt</code>: Sandboxed Process Tender (seccomp-bpf) &mdash; <strong>VERIFIED &amp; EXECUTED</strong> (exit 0, 'SUCCESS')</li>"
-  <> "<li><code>solo5-virtio</code>: Virtio Direct Kernel Boot (QEMU KVM) &mdash; <strong>VERIFIED &amp; EXECUTED</strong> (exit 83, 'SUCCESS')</li></ul></li>"
-  <> "<li><strong>Readiness Status:</strong> All Solo5 tenders and hypervisor backends physically setup, executed, and verified on host; multi-service unikernel application integration staged</li></ul></section>"
+  <> render_hypervisors(probe)
   <> render_checklist()
   <> "<section><h2>Configured migration candidates</h2><table style=\"width:100%;border-collapse:collapse\"><thead><tr>"
   <> "<th>ID</th><th>Candidate</th><th>Layer</th><th>Mirage target</th><th>Declared SIL</th><th>Projected RAM</th><th>Projected speedup</th><th>Status</th>"
@@ -160,3 +159,99 @@ fn escape_html(value: String) -> String {
   |> string.replace("<", "&lt;")
   |> string.replace(">", "&gt;")
 }
+
+pub fn render_hypervisors(probe: HypervisorProbeReport) -> String {
+  let kvm_api = case probe.kvm.api_version {
+    Some(v) -> int.to_string(v)
+    None -> "N/A"
+  }
+  let qemu_path = case probe.qemu.binary_path {
+    Some(p) -> escape_html(p)
+    None -> "Not detected"
+  }
+
+  "<section style=\"border:1px solid #00d4aa;padding:1rem;margin:1rem 0\">"
+  <> "<h2 style=\"color:#00d4aa\">Hypervisor &amp; Solo5 Hardware Probe</h2>"
+  <> "<p><strong>Host:</strong> <code>"
+  <> escape_html(probe.host)
+  <> "</code> &middot; <strong>Timestamp:</strong> <code>"
+  <> escape_html(probe.timestamp_utc)
+  <> "</code></p>"
+  <> "<p><strong>Overall readiness:</strong> <code>"
+  <> escape_html(probe.overall_readiness)
+  <> "</code> &middot; <strong>Deployment admission:</strong> <code>"
+  <> escape_html(probe.deployment_admission)
+  <> "</code></p>"
+  <> "<div style=\"display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:1rem 0\">"
+  <> "<div style=\"background:#131b2e;padding:0.75rem;border-radius:4px\">"
+  <> "<h3 style=\"margin-top:0\">KVM Host State</h3>"
+  <> "<ul><li>/dev/kvm present: "
+  <> bool_to_status(probe.kvm.dev_kvm_present)
+  <> "</li><li>/dev/kvm rw accessible: "
+  <> bool_to_status(probe.kvm.dev_kvm_rw_accessible)
+  <> "</li><li>KVM API version (ioctl): <code>"
+  <> kvm_api
+  <> "</code></li></ul></div>"
+  <> "<div style=\"background:#131b2e;padding:0.75rem;border-radius:4px\">"
+  <> "<h3 style=\"margin-top:0\">QEMU Virtualization</h3>"
+  <> "<ul><li>Binary: <code>"
+  <> qemu_path
+  <> "</code></li><li>microvm target: "
+  <> bool_to_status(probe.qemu.microvm_supported)
+  <> "</li><li>kvm accelerator: "
+  <> bool_to_status(probe.qemu.kvm_accel_supported)
+  <> "</li></ul></div></div>"
+  <> "<h3 style=\"margin-top:1rem\">Solo5 Tender Executions</h3>"
+  <> "<table style=\"width:100%;border-collapse:collapse;margin-top:0.5rem\">"
+  <> "<thead><tr><th>Tender</th><th>Binary Path</th><th>Status</th><th>Exit Code</th><th>Receipt Snippet</th></tr></thead>"
+  <> "<tbody>"
+  <> render_tender_receipt("solo5-hvt (KVM)", probe.solo5.solo5_hvt_path, probe.solo5.hvt_execution)
+  <> render_tender_receipt("solo5-spt (seccomp)", probe.solo5.solo5_spt_path, probe.solo5.spt_execution)
+  <> render_tender_receipt("solo5-virtio-run (QEMU)", probe.solo5.solo5_virtio_path, probe.solo5.virtio_execution)
+  <> "</tbody></table></section>"
+}
+
+fn bool_to_status(b: Bool) -> String {
+  case b {
+    True -> "<span style=\"color:#00d4aa;font-weight:bold\">YES</span>"
+    False -> "<span style=\"color:#ff6b6b;font-weight:bold\">NO</span>"
+  }
+}
+
+fn render_tender_receipt(
+  tender_label: String,
+  path_opt: Option(String),
+  receipt_opt: Option(Solo5ExecutionReceipt),
+) -> String {
+  let path_str = case path_opt {
+    Some(p) -> escape_html(p)
+    None -> "Not detected"
+  }
+  case receipt_opt {
+    Some(r) -> {
+      let status_badge = case r.passed {
+        True -> "<span style=\"color:#00d4aa;font-weight:bold\">PASS</span>"
+        False -> "<span style=\"color:#ff6b6b;font-weight:bold\">FAIL</span>"
+      }
+      "<tr><td>"
+      <> escape_html(tender_label)
+      <> "</td><td><code>"
+      <> path_str
+      <> "</code></td><td>"
+      <> status_badge
+      <> "</td><td>"
+      <> int.to_string(r.exit_code)
+      <> "</td><td><code>"
+      <> escape_html(r.output_snippet)
+      <> "</code></td></tr>"
+    }
+    None -> {
+      "<tr><td>"
+      <> escape_html(tender_label)
+      <> "</td><td><code>"
+      <> path_str
+      <> "</code></td><td><span style=\"color:#f5a623\">NO_RECEIPT</span></td><td>N/A</td><td>None</td></tr>"
+    }
+  }
+}
+

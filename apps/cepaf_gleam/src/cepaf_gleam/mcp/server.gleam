@@ -14,6 +14,7 @@ import cepaf_gleam/c3i/nif as c3i_nif
 import cepaf_gleam/ha/fractal_forecast
 import cepaf_gleam/mcp/protocol.{type ToolDefinition}
 import cepaf_gleam/mcp/tools
+import cepaf_gleam/planning/sa_plan_bridge
 import cepaf_gleam/ui/wisp/router as wisp_router
 import gleam/dynamic/decode
 import gleam/io
@@ -202,8 +203,54 @@ fn tools_call(id: Option(json.Json), raw_line: String) -> String {
 
 pub fn is_mutating_tool(name: String) -> Bool {
   case name {
-    "plan_add" | "plan_update" -> True
+    "plan_add"
+    | "plan_update"
+    | "sa_task_claim"
+    | "sa_task_complete"
+    | "sa_job_enqueue"
+    | "sa_workflow_start" -> True
     _ -> False
+  }
+}
+
+pub fn check_fractal_jidoka_violation(
+  name: String,
+  raw_line: String,
+) -> Result(Nil, String) {
+  let bypass_decoder = {
+    use b <- decode.subfield(["params", "arguments", "bypass_sa_plan"], decode.bool)
+    decode.success(b)
+  }
+  let unledgered_decoder = {
+    use u <- decode.subfield(["params", "arguments", "unledgered"], decode.bool)
+    decode.success(u)
+  }
+  let shadow_decoder = {
+    use s <- decode.subfield(["params", "arguments", "shadow_plan"], decode.bool)
+    decode.success(s)
+  }
+
+  let is_bypass = case json.parse(raw_line, bypass_decoder) {
+    Ok(True) -> True
+    _ -> False
+  }
+  let is_unledgered = case json.parse(raw_line, unledgered_decoder) {
+    Ok(True) -> True
+    _ -> False
+  }
+  let is_shadow = case json.parse(raw_line, shadow_decoder) {
+    Ok(True) -> True
+    _ -> False
+  }
+
+  case is_bypass || is_unledgered || is_shadow {
+    True ->
+      sa_plan_bridge.enforce_fractal_jidoka(
+        "AutonomousAgent",
+        name,
+        False,
+      )
+    False -> Ok(Nil)
   }
 }
 
@@ -280,24 +327,29 @@ fn execute_tool(
   id: Option(json.Json),
   raw_line: String,
 ) -> String {
-  case is_mutating_tool(name) {
-    True -> {
-      case verify_mutating_action_preflight(name, raw_line) {
-        fractal_forecast.PreflightApproved(_, _, _, _, _) -> {
+  case check_fractal_jidoka_violation(name, raw_line) {
+    Error(reason) -> error_response(id, -32_002, reason)
+    Ok(Nil) -> {
+      case is_mutating_tool(name) {
+        True -> {
+          case verify_mutating_action_preflight(name, raw_line) {
+            fractal_forecast.PreflightApproved(_, _, _, _, _) -> {
+              case tools.unavailable_reason(name) {
+                Some(reason) -> tool_unavailable(id, name, reason)
+                None -> execute_available_tool(name, id, raw_line)
+              }
+            }
+            fractal_forecast.PreflightVetoed(_, _, _, reason, _risk) -> {
+              error_response(id, -32_001, "Preflight veto: " <> reason)
+            }
+          }
+        }
+        False -> {
           case tools.unavailable_reason(name) {
             Some(reason) -> tool_unavailable(id, name, reason)
             None -> execute_available_tool(name, id, raw_line)
           }
         }
-        fractal_forecast.PreflightVetoed(_, _, _, reason, _risk) -> {
-          error_response(id, -32_001, "Preflight veto: " <> reason)
-        }
-      }
-    }
-    False -> {
-      case tools.unavailable_reason(name) {
-        Some(reason) -> tool_unavailable(id, name, reason)
-        None -> execute_available_tool(name, id, raw_line)
       }
     }
   }
@@ -365,6 +417,13 @@ fn execute_available_tool(
     // Unified Fractal Forecasting & Preflight Gates (SC-HIVE-FORECAST-001, SC-PRED-001)
     "forecast_predict" -> tool_forecast_predict(id, raw_line)
     "preflight_check" -> tool_preflight_check(id, raw_line)
+    // Sa-Plan Durable Execution Tools (SC-JIDOKA-001, SC-SA-PLAN-001)
+    "sa_plan_status" -> tool_sa_plan_status(id)
+    "sa_plan_list" -> tool_sa_plan_list(id)
+    "sa_task_claim" -> tool_sa_task_claim(id, raw_line)
+    "sa_task_complete" -> tool_sa_task_complete(id, raw_line)
+    "sa_job_enqueue" -> tool_sa_job_enqueue(id, raw_line)
+    "sa_workflow_start" -> tool_sa_workflow_start(id, raw_line)
     _ -> error_response(id, -32_602, "Unknown tool: " <> name)
   }
 }
@@ -713,6 +772,191 @@ fn tool_preflight_check(id: Option(json.Json), raw_line: String) -> String {
       )
   }
 }
+
+// ---------------------------------------------------------------------------
+// Sa-Plan Durable Tool Handlers (SC-JIDOKA-001, SC-SA-PLAN-001)
+// ---------------------------------------------------------------------------
+
+fn tool_sa_plan_status(id: Option(json.Json)) -> String {
+  case sa_plan_bridge.query_sa_plan_status() {
+    Ok(out) -> tool_content_response(id, out)
+    Error(err) -> tool_error_response(id, err)
+  }
+}
+
+fn tool_sa_plan_list(id: Option(json.Json)) -> String {
+  case sa_plan_bridge.query_sa_plan_list() {
+    Ok(out) -> tool_content_response(id, out)
+    Error(err) -> tool_error_response(id, err)
+  }
+}
+
+fn tool_sa_task_claim(id: Option(json.Json), raw_line: String) -> String {
+  let worker_decoder = {
+    use w <- decode.subfield(["params", "arguments", "worker"], decode.string)
+    decode.success(w)
+  }
+  let plan_decoder = {
+    use p <- decode.subfield(["params", "arguments", "plan"], decode.string)
+    decode.success(p)
+  }
+  let task_id_decoder = {
+    use t <- decode.subfield(["params", "arguments", "task_id"], decode.string)
+    decode.success(t)
+  }
+
+  case
+    json.parse(raw_line, worker_decoder),
+    json.parse(raw_line, plan_decoder),
+    json.parse(raw_line, task_id_decoder)
+  {
+    Ok(worker), Ok(plan), Ok(task_id) -> {
+      case sa_plan_bridge.claim_sa_task(worker, plan, task_id) {
+        Ok(out) -> tool_content_response(id, out)
+        Error(err) -> tool_error_response(id, err)
+      }
+    }
+    _, _, _ ->
+      error_response(
+        id,
+        -32_602,
+        "Missing required parameters: worker, plan, task_id",
+      )
+  }
+}
+
+fn tool_sa_task_complete(id: Option(json.Json), raw_line: String) -> String {
+  let plan_decoder = {
+    use p <- decode.subfield(["params", "arguments", "plan"], decode.string)
+    decode.success(p)
+  }
+  let task_id_decoder = {
+    use t <- decode.subfield(["params", "arguments", "task_id"], decode.string)
+    decode.success(t)
+  }
+  let worker_decoder = {
+    use w <- decode.subfield(["params", "arguments", "worker"], decode.string)
+    decode.success(w)
+  }
+  let result_decoder = {
+    use r <- decode.subfield(["params", "arguments", "result"], decode.string)
+    decode.success(r)
+  }
+
+  case
+    json.parse(raw_line, plan_decoder),
+    json.parse(raw_line, task_id_decoder),
+    json.parse(raw_line, worker_decoder),
+    json.parse(raw_line, result_decoder)
+  {
+    Ok(plan), Ok(task_id), Ok(worker), Ok(result) -> {
+      case sa_plan_bridge.complete_sa_task(plan, task_id, worker, result) {
+        Ok(out) -> tool_content_response(id, out)
+        Error(err) -> tool_error_response(id, err)
+      }
+    }
+    _, _, _, _ ->
+      error_response(
+        id,
+        -32_602,
+        "Missing required parameters: plan, task_id, worker, result",
+      )
+  }
+}
+
+fn tool_sa_job_enqueue(id: Option(json.Json), raw_line: String) -> String {
+  let id_decoder = {
+    use job_id <- decode.subfield(["params", "arguments", "id"], decode.string)
+    decode.success(job_id)
+  }
+  let name_decoder = {
+    use n <- decode.subfield(["params", "arguments", "name"], decode.string)
+    decode.success(n)
+  }
+  let queue_decoder = {
+    use q <- decode.subfield(["params", "arguments", "queue"], decode.string)
+    decode.success(q)
+  }
+  let worker_decoder = {
+    use w <- decode.subfield(["params", "arguments", "worker"], decode.string)
+    decode.success(w)
+  }
+  let args_decoder = {
+    use a <- decode.subfield(["params", "arguments", "args"], decode.string)
+    decode.success(a)
+  }
+
+  case
+    json.parse(raw_line, id_decoder),
+    json.parse(raw_line, name_decoder),
+    json.parse(raw_line, queue_decoder),
+    json.parse(raw_line, worker_decoder),
+    json.parse(raw_line, args_decoder)
+  {
+    Ok(job_id), Ok(name), Ok(queue), Ok(worker), Ok(args) -> {
+      case sa_plan_bridge.poka_yoke_validate_job(queue, worker, args) {
+        Ok(Nil) -> {
+          case sa_plan_bridge.enqueue_sa_job(job_id, name, queue, worker, args) {
+            Ok(out) -> tool_content_response(id, out)
+            Error(err) -> tool_error_response(id, err)
+          }
+        }
+        Error(poka_err) -> error_response(id, -32_602, poka_err)
+      }
+    }
+    _, _, _, _, _ ->
+      error_response(
+        id,
+        -32_602,
+        "Missing required parameters: id, name, queue, worker, args",
+      )
+  }
+}
+
+fn tool_sa_workflow_start(id: Option(json.Json), raw_line: String) -> String {
+  let wf_id_decoder = {
+    use wid <- decode.subfield(["params", "arguments", "id"], decode.string)
+    decode.success(wid)
+  }
+  let name_decoder = {
+    use n <- decode.subfield(["params", "arguments", "name"], decode.string)
+    decode.success(n)
+  }
+  let kind_decoder = {
+    use k <- decode.subfield(["params", "arguments", "kind"], decode.string)
+    decode.success(k)
+  }
+  let input_decoder = {
+    use inp <- decode.subfield(["params", "arguments", "input"], decode.string)
+    decode.success(inp)
+  }
+
+  case
+    json.parse(raw_line, wf_id_decoder),
+    json.parse(raw_line, name_decoder),
+    json.parse(raw_line, kind_decoder),
+    json.parse(raw_line, input_decoder)
+  {
+    Ok(wf_id), Ok(name), Ok(kind), Ok(input) -> {
+      case sa_plan_bridge.poka_yoke_validate_workflow(wf_id, kind) {
+        Ok(Nil) -> {
+          case sa_plan_bridge.start_sa_workflow(wf_id, name, kind, input) {
+            Ok(out) -> tool_content_response(id, out)
+            Error(err) -> tool_error_response(id, err)
+          }
+        }
+        Error(poka_err) -> error_response(id, -32_602, poka_err)
+      }
+    }
+    _, _, _, _ ->
+      error_response(
+        id,
+        -32_602,
+        "Missing required parameters: id, name, kind, input",
+      )
+  }
+}
+
 
 // ---------------------------------------------------------------------------
 // Helpers

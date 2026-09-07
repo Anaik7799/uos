@@ -748,5 +748,198 @@ pub fn get_tool_definitions() -> List(ToolDefinition) {
         ),
       ]),
     ),
+    // -- Sa-Plan Fractal Jidoka & TPS Durable Tools (SC-JIDOKA-001, SC-SA-PLAN-001) --
+    ToolDefinition(
+      name: "sa_plan_status",
+      description: "Get canonical pipeline and plan status from Hermes sa-plan durable execution engine (SC-SA-PLAN-001)",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #("properties", json.object([])),
+      ]),
+    ),
+    ToolDefinition(
+      name: "sa_plan_list",
+      description: "List all plans and DAG tasks registered in Hermes sa-plan durable execution engine (SC-SA-PLAN-001)",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #("properties", json.object([])),
+      ]),
+    ),
+    ToolDefinition(
+      name: "sa_task_claim",
+      description: "Claim a task with worker lease in Hermes sa-plan engine (SC-SA-PLAN-001)",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "worker",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Worker identity claiming task")),
+              ]),
+            ),
+            #(
+              "plan",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Plan identifier")),
+              ]),
+            ),
+            #(
+              "task_id",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Task identifier to claim")),
+              ]),
+            ),
+          ]),
+        ),
+        #(
+          "required",
+          json.array(["worker", "plan", "task_id"], json.string),
+        ),
+      ]),
+    ),
+    ToolDefinition(
+      name: "sa_task_complete",
+      description: "Complete a task with execution receipt in Hermes sa-plan engine (SC-SA-PLAN-001)",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "plan",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Plan identifier")),
+              ]),
+            ),
+            #(
+              "task_id",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Task identifier completed")),
+              ]),
+            ),
+            #(
+              "worker",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Worker identity")),
+              ]),
+            ),
+            #(
+              "result",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Task execution outcome or receipt")),
+              ]),
+            ),
+          ]),
+        ),
+        #(
+          "required",
+          json.array(["plan", "task_id", "worker", "result"], json.string),
+        ),
+      ]),
+    ),
+    ToolDefinition(
+      name: "sa_job_enqueue",
+      description: "Enqueue an Oban-compatible background job into Hermes sa-plan engine (SC-SA-PLAN-001)",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "id",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Unique job ID")),
+              ]),
+            ),
+            #(
+              "name",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Descriptive job name")),
+              ]),
+            ),
+            #(
+              "queue",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Oban queue name")),
+              ]),
+            ),
+            #(
+              "worker",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Worker module or identity")),
+              ]),
+            ),
+            #(
+              "args",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("JSON serialized arguments")),
+              ]),
+            ),
+          ]),
+        ),
+        #(
+          "required",
+          json.array(["id", "name", "queue", "worker", "args"], json.string),
+        ),
+      ]),
+    ),
+    ToolDefinition(
+      name: "sa_workflow_start",
+      description: "Start a Temporal-compatible durable workflow in Hermes sa-plan engine (SC-SA-PLAN-001)",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "id",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Workflow instance ID")),
+              ]),
+            ),
+            #(
+              "name",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Workflow name")),
+              ]),
+            ),
+            #(
+              "kind",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Workflow kind")),
+              ]),
+            ),
+            #(
+              "input",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Input JSON payload")),
+              ]),
+            ),
+          ]),
+        ),
+        #(
+          "required",
+          json.array(["id", "name", "kind", "input"], json.string),
+        ),
+      ]),
+    ),
   ]
 }

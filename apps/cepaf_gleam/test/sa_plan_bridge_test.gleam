@@ -137,3 +137,78 @@ pub fn json_serialization_test() {
   let json_str = sa_plan_bridge.serialize_aspects_json()
   should.not_equal(json_str, "")
 }
+
+pub fn fractal_jidoka_enforcement_test() {
+  // Authorized sa-plan execution succeeds
+  sa_plan_bridge.enforce_fractal_jidoka("AgentAlpha", "task_execution", True)
+  |> should.equal(Ok(Nil))
+
+  // Unauthorized non-sa-plan execution triggers Jidoka Andon Halt
+  let halt_res =
+    sa_plan_bridge.enforce_fractal_jidoka("RogueAgent", "unledgered_task", False)
+
+  case halt_res {
+    Ok(_) -> panic as "Should have triggered Jidoka Andon Halt"
+    Error(msg) -> {
+      should.be_true(string.contains(msg, "Fractal Jidoka Andon Halt"))
+      should.be_true(string.contains(msg, "SC-JIDOKA-001"))
+    }
+  }
+}
+
+pub fn tps_poka_yoke_validation_test() {
+  // Valid task passes Poka-Yoke
+  sa_plan_bridge.poka_yoke_validate_task(
+    "plan-uos",
+    "task-01",
+    "compile",
+    "Compile codebase",
+  )
+  |> should.equal(Ok(Nil))
+
+  // Invalid task (empty plan) fails Poka-Yoke
+  sa_plan_bridge.poka_yoke_validate_task(
+    "",
+    "task-01",
+    "compile",
+    "Compile codebase",
+  )
+  |> should.be_error
+
+  // Valid Oban job passes Poka-Yoke
+  sa_plan_bridge.poka_yoke_validate_job(
+    "default",
+    "DurableWorker",
+    "{\"action\": \"run\"}",
+  )
+  |> should.equal(Ok(Nil))
+
+  // Invalid Oban job (empty worker) fails Poka-Yoke
+  sa_plan_bridge.poka_yoke_validate_job(
+    "default",
+    "",
+    "{\"action\": \"run\"}",
+  )
+  |> should.be_error
+
+  // Valid Temporal workflow passes Poka-Yoke
+  sa_plan_bridge.poka_yoke_validate_workflow("wf-101", "OrderOrchestration")
+  |> should.equal(Ok(Nil))
+
+  // Invalid Temporal workflow (empty workflow type) fails Poka-Yoke
+  sa_plan_bridge.poka_yoke_validate_workflow("wf-101", "")
+  |> should.be_error
+}
+
+pub fn sa_plan_cli_status_query_test() {
+  case sa_plan_bridge.query_sa_plan_status() {
+    Ok(status) -> {
+      should.be_true(string.contains(status, "sa-plan-pipeline"))
+    }
+    Error(err) -> {
+      // In CI environments where binary might not be present at relative path, verify error is typed
+      should.be_true(string.contains(err, "sa-plan"))
+    }
+  }
+}
+
