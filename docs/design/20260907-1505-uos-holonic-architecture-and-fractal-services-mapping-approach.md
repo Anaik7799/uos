@@ -173,6 +173,13 @@ Every task is a frozen candidate integrated through the serialized `integration/
 - UCAs considered: not provided (generator silently skips a holon → B10 census parity catches it); provided unsafely (a `barred` or `absent` holon generated as a child → status gate in the generator, tested); wrong timing (units generated before the candidate is integrated → generation reads only `main`); stopped too soon (partial holarchy published → publish only after B1–B12 pass).
 - Constraints: SC-HOLON-NAME-001 (address rule), SC-HOLON-GEN-001 (generator reads the validated holarchy only; enforcement: test), SC-HOLON-ALIAS-001 (alias retirement by decision record; enforcement: process rule, listed as a gap until mechanized).
 
+## Appendix C. HOLARCHY-CENSUS result (2026-09-07 15:5x UTC)
+Delivered by worker W-J (Sonnet) as `usnrkwzn@11d8fa5c`: the `Holon` record now carries `kind`, `domain`, `process_class`, `status`, `uid` (first 13 hex of sha256(id)) and `lifecycle`; addresses follow SC-HOLON-NAME-001 (`uos/holon/L<layer>/<plane>/<id>`); `holarchy()` grew from 34 to 157 entries (10 subsystem holons + 113 process holons, one per census row); B1–B9 pass over all 157; B10 census parity is a test against the census fixture; B13 is a placeholder pointing at Appendix B. Layer rule, first match wins: container → L6; constitutional/IAM/secret/clock-guard/governance by name, path or start mechanism → L0; NIF and native kernels → L1; federation/peer/tailnet → L7; inference/cognitive workers → L5; remaining systemd, OTP and listener rows → L4; fallback L4 with `domain = unassigned` (6 rows: five ad-hoc Python dev scripts and the superseded Elixir web app).
+
+Two modelling consequences to refine in HOLON-LIFECYCLE, not silently accepted:
+1. The level-monotonic rule cascaded: L0 process rows placed under their subsystem pulled `cepaf-gleam`, `uos-swarm`, `tools`, `native-nifs`, then `control-plane`, `runtime-plane`, `messaging-plane` and `planes` down to L0. The better model gives L0 constitutional processes an L0 whole (a `constitution` holon under `uos`) instead of the subsystem, restoring the plane grouping to L1. Distribution after this slice: L0 18, L1 19, L2 22, L3 7, L4 58, L5 26, L6 6, L7 1.
+2. Census-derived process holons carry a uniform Sanskrit gloss `prakriyā (प्रक्रिया)` because `system_ontology.validate_registry` requires a parseable gloss; per-holon glosses are a KM task, and the placeholder is honest about being one.
+
 ## Appendix A. Fractal matrix (generated)
 Source: `docs/design/20260907-1520-uos-fractal-matrix.md` and `generated/20260907-1520-uos-fractal-matrix.json` (worker W-H, Sonnet, read-only; the find/grep/jq/awk generator is embedded verbatim in the JSON so the matrix is regenerable).
 
