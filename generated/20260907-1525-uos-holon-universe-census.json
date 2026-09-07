@@ -1,0 +1,2507 @@
+{
+  "carrier": "uos-holon-universe-census/v1",
+  "generated_at": "2026-09-07T15:19:00Z",
+  "generator": "find/grep/jq/sqlite3(readonly)/ss -ltn/tailscale status/systemctl --user list-unit-files over apps/,engines/,services/,tools/,native/,docs/,contracts/,governance/,formal/,generated/,apps/uos_swarm/swarm/*.jsonl, /home/an/NAS-setup/uos/var/{sa-plan/uos.sqlite3,coordination/tri-agent,releases} (read-only, no writes); jj workspace list; jj bookmark list",
+  "kinds": {
+    "subsystem": [
+      {
+        "base": "apps",
+        "name": "cepaf_gleam",
+        "lang": {
+          "gleam": 952,
+          "erl": 26,
+          "ml": 1,
+          "mli": 0,
+          "zig": 0,
+          "rs": 29,
+          "c": 1,
+          "py": 0,
+          "ts": 22
+        },
+        "test_dirs": 4,
+        "test_files": 389
+      },
+      {
+        "base": "apps",
+        "name": "indrajaal_gleam",
+        "lang": {
+          "gleam": 3,
+          "erl": 0,
+          "ml": 0,
+          "mli": 0,
+          "zig": 0,
+          "rs": 0,
+          "c": 0,
+          "py": 0,
+          "ts": 0
+        },
+        "test_dirs": 1,
+        "test_files": 1
+      },
+      {
+        "base": "apps",
+        "name": "indrajaal_gleam_web",
+        "lang": {
+          "gleam": 9,
+          "erl": 2,
+          "ml": 0,
+          "mli": 0,
+          "zig": 0,
+          "rs": 0,
+          "c": 0,
+          "py": 0,
+          "ts": 0
+        },
+        "test_dirs": 1,
+        "test_files": 6
+      },
+      {
+        "base": "apps",
+        "name": "uos_swarm",
+        "lang": {
+          "gleam": 94,
+          "erl": 9,
+          "ml": 0,
+          "mli": 0,
+          "zig": 0,
+          "rs": 0,
+          "c": 0,
+          "py": 0,
+          "ts": 0
+        },
+        "test_dirs": 1,
+        "test_files": 43
+      },
+      {
+        "base": "apps",
+        "name": "uos_tui",
+        "lang": {
+          "gleam": 42,
+          "erl": 1,
+          "ml": 0,
+          "mli": 0,
+          "zig": 0,
+          "rs": 0,
+          "c": 0,
+          "py": 0,
+          "ts": 0
+        },
+        "test_dirs": 1,
+        "test_files": 20
+      },
+      {
+        "base": "engines",
+        "name": "hermes",
+        "lang": {
+          "gleam": 0,
+          "erl": 0,
+          "ml": 980,
+          "mli": 361,
+          "zig": 0,
+          "rs": 1739,
+          "c": 5,
+          "py": 18,
+          "ts": 0
+        },
+        "test_dirs": 4,
+        "test_files": 76,
+        "note": "rust count includes vendored crates under rust/drift_engine/vendor; test_dirs/test_files exclude vendor/"
+      },
+      {
+        "base": "engines",
+        "name": "zigvm",
+        "lang": {
+          "gleam": 0,
+          "erl": 194,
+          "ml": 0,
+          "mli": 0,
+          "zig": 106,
+          "rs": 0,
+          "c": 1,
+          "py": 0,
+          "ts": 0
+        },
+        "test_dirs": 0,
+        "test_files": 0,
+        "note": "erl=194 are all under fixtures/ (differential-oracle test fixtures), not zigvm source"
+      },
+      {
+        "base": "services",
+        "name": "inference",
+        "lang": {
+          "gleam": 0,
+          "erl": 0,
+          "ml": 0,
+          "mli": 0,
+          "zig": 0,
+          "rs": 0,
+          "c": 0,
+          "py": 1,
+          "ts": 0
+        },
+        "test_dirs": 0,
+        "test_files": 0
+      },
+      {
+        "base": "services",
+        "name": "mcp",
+        "lang": {
+          "gleam": 0,
+          "erl": 0,
+          "ml": 0,
+          "mli": 0,
+          "zig": 0,
+          "rs": 0,
+          "c": 0,
+          "py": 0,
+          "ts": 0
+        },
+        "test_dirs": 0,
+        "test_files": 0
+      },
+      {
+        "base": "services",
+        "name": "planning_worker",
+        "lang": {
+          "gleam": 0,
+          "erl": 0,
+          "ml": 0,
+          "mli": 0,
+          "zig": 0,
+          "rs": 0,
+          "c": 0,
+          "py": 0,
+          "ts": 0
+        },
+        "test_dirs": 0,
+        "test_files": 0
+      },
+      {
+        "base": "services",
+        "name": "rule_engine_worker",
+        "lang": {
+          "gleam": 0,
+          "erl": 0,
+          "ml": 0,
+          "mli": 0,
+          "zig": 0,
+          "rs": 0,
+          "c": 0,
+          "py": 0,
+          "ts": 0
+        },
+        "test_dirs": 0,
+        "test_files": 0
+      },
+      {
+        "base": "services",
+        "name": "solver_worker",
+        "lang": {
+          "gleam": 0,
+          "erl": 0,
+          "ml": 0,
+          "mli": 0,
+          "zig": 0,
+          "rs": 0,
+          "c": 0,
+          "py": 0,
+          "ts": 0
+        },
+        "test_dirs": 0,
+        "test_files": 0
+      },
+      {
+        "base": "services",
+        "name": "stan_worker",
+        "lang": {
+          "gleam": 0,
+          "erl": 0,
+          "ml": 0,
+          "mli": 0,
+          "zig": 0,
+          "rs": 0,
+          "c": 0,
+          "py": 0,
+          "ts": 0
+        },
+        "test_dirs": 0,
+        "test_files": 0
+      },
+      {
+        "base": "tools",
+        "name": "ocaml_test_inventory",
+        "lang": {
+          "gleam": 5,
+          "erl": 0,
+          "ml": 0,
+          "mli": 0,
+          "zig": 0,
+          "rs": 0,
+          "c": 0,
+          "py": 0,
+          "ts": 0
+        },
+        "test_dirs": 1,
+        "test_files": 2
+      },
+      {
+        "base": "tools",
+        "name": "planning_ledger",
+        "lang": {
+          "gleam": 16,
+          "erl": 0,
+          "ml": 0,
+          "mli": 0,
+          "zig": 0,
+          "rs": 0,
+          "c": 0,
+          "py": 0,
+          "ts": 0
+        },
+        "test_dirs": 1,
+        "test_files": 9
+      },
+      {
+        "base": "tools",
+        "name": "source_review",
+        "lang": {
+          "gleam": 0,
+          "erl": 0,
+          "ml": 2,
+          "mli": 0,
+          "zig": 0,
+          "rs": 0,
+          "c": 0,
+          "py": 0,
+          "ts": 0
+        },
+        "test_dirs": 0,
+        "test_files": 0
+      },
+      {
+        "base": "tools",
+        "name": "uos",
+        "lang": {
+          "gleam": 4,
+          "erl": 1,
+          "ml": 0,
+          "mli": 0,
+          "zig": 0,
+          "rs": 0,
+          "c": 0,
+          "py": 0,
+          "ts": 0
+        },
+        "test_dirs": 1,
+        "test_files": 3
+      },
+      {
+        "base": "tools",
+        "name": "verification",
+        "lang": {
+          "gleam": 0,
+          "erl": 1,
+          "ml": 2,
+          "mli": 0,
+          "zig": 0,
+          "rs": 0,
+          "c": 0,
+          "py": 0,
+          "ts": 0
+        },
+        "test_dirs": 0,
+        "test_files": 0
+      },
+      {
+        "base": "native",
+        "name": "nifs",
+        "lang": {
+          "gleam": 0,
+          "erl": 0,
+          "ml": 0,
+          "mli": 0,
+          "zig": 0,
+          "rs": 13,
+          "c": 0,
+          "py": 0,
+          "ts": 0
+        },
+        "test_dirs": 0,
+        "test_files": 0
+      }
+    ],
+    "component": {
+      "total_subsystems": 19,
+      "loose_tools_root_files_no_subsystem_dir": 8,
+      "note": "component = per-file language count inside each subsystem row above (kind is generated from subsystem+file, >200 total members repo-wide so directory-level counts stand per instructions; see 'subsystem' array for per-language breakdown)."
+    },
+    "artifact": {
+      "sha256_pins": [
+        {
+          "pin_file": "apps/cepaf_gleam/priv/c3i_nif.sha256",
+          "digest": "f4f6885a8af6ca02d97484e67f849caf22aa1087f603b5ea0229515fa7fe1270",
+          "provenance_or_target_path": "/home/an/NAS-setup/c3i/lib/cepaf_gleam/priv/c3i_nif.so"
+        },
+        {
+          "pin_file": "apps/cepaf_gleam/priv/c3i_ocaml_nif.sha256",
+          "digest": "cfa6ab0be38bc23dc288e8a017d66ffa767bf1fa18ccfb2d9e374a071072df30",
+          "provenance_or_target_path": "/home/an/NAS-setup/c3i/lib/cepaf_gleam/priv/c3i_ocaml_nif.so"
+        },
+        {
+          "pin_file": "apps/cepaf_gleam/priv/ferriskey_nif.sha256",
+          "digest": "16969091909227c73ee24ddbe9fca3dd7495779c75fab025188fed54af617ed4",
+          "provenance_or_target_path": "apps/cepaf_gleam/priv/ferriskey_nif.so  built-from-source 2026-09-07: crate ferriskey_nif 0.1.0 (C3I lib/cepaf_gleam/native/ferriskey_nif; source snapshot digest a2eb0cdaf78dbbba09fe61182006c58dc8f300d9af834fdec97efc946f376223 over 15 files) with rustc 1.95.0, cargo build --release, cdylib; provenance record governance/sources/20260907-1330-ferriskey-nif-source-ingestion.json"
+        },
+        {
+          "pin_file": "apps/cepaf_gleam/priv/rule_engine_nif.sha256",
+          "digest": "ffd159d7d864ea4a10d69bd8eaa5315ab4b0cea868bead36ea6f73917a8511fc",
+          "provenance_or_target_path": "/home/an/NAS-setup/c3i/lib/cepaf_gleam/priv/rule_engine_nif.so"
+        },
+        {
+          "pin_file": "apps/cepaf_gleam/priv/rusty_vault_nif.sha256",
+          "digest": "c00d91574f351ff0712ad396b928c84b957145fbcf739e115085ad6a8a80c777",
+          "provenance_or_target_path": "/home/an/NAS-setup/c3i/lib/cepaf_gleam/priv/rusty_vault_nif.so"
+        }
+      ],
+      "so_files_present_on_disk": [],
+      "so_files_present_count": 0,
+      "priv_static_bundle_file_count": 377,
+      "priv_static_bundle_dir": "apps/cepaf_gleam/priv/static",
+      "build_dir_present": false,
+      "target_dir_present": false,
+      "var_releases": {
+        "path": "/home/an/NAS-setup/uos/var/releases",
+        "note": "outside workspace; var/ is .gitignore'd and absent from the w-universe working copy itself, so read from the canonical shared uos/var tree under the same read-only allowance as the sa-plan sqlite3 db",
+        "top_level_dirs": [
+          {
+            "name": "clock-guard-98936f9e961e5b909c0e8445123b705aedb669a5",
+            "file_count": 328
+          },
+          {
+            "name": "clock-guard-f0a9d7e6732c6b8a3722f75797a35e5dc1a4efd8",
+            "file_count": 382
+          },
+          {
+            "name": "indrajaal-web",
+            "file_count": 2568
+          }
+        ],
+        "total_files": 3278
+      }
+    },
+    "record": {
+      "generated_json_total": 36,
+      "carrier_group_counts": {
+        "untyped": 14,
+        "uos-decision-record/v1": 19,
+        "uos-failure-classification/v1": 1,
+        "uos.runtime-component-staging.v1": 1,
+        "uos-oidc-independent-review-evidence/v1": 1
+      },
+      "carrier_groups": {
+        "untyped": [
+          "20260906-2123-uos-tui-fprime-ground-dictionary.json",
+          "20260907-0500-uos-agent-lifecycle-fprime-machine.json",
+          "20260907-0500-uos-hive-mind-snapshot.json",
+          "20260907-0500-uos-manager-fprime-ground-dictionary.json",
+          "20260907-0500-uos-tui-feature-sheet.json",
+          "20260907-0900-uos-openrouter-advisory-lease-invariant-review.json",
+          "20260907-0930-uos-l0-fable-hive-self-model.json",
+          "20260907-1030-uos-gita-register.json",
+          "20260907-1030-uos-sutra-register.json",
+          "20260907-1030-uos-system-ontology.json",
+          "20260907-1300-uos-jujutsu-discipline.json",
+          "20260907-1300-uos-sutra-register.json",
+          "20260907-1300-uos-system-ontology.json",
+          "20260907-1320-uos-daemon-process-census-c3i-indrajaal-vs-uos.json"
+        ],
+        "uos-decision-record/v1": [
+          "20260907-0955-uos-decision-record-mcp-chain-integrate.json",
+          "20260907-1010-uos-decision-record-clock-provenance-integrate.json",
+          "20260907-1025-uos-decision-record-queued-chains-integrate.json",
+          "20260907-1030-uos-decision-record-candidate-integration-4.json",
+          "20260907-1055-uos-decision-record-o-round-integrate.json",
+          "20260907-1105-uos-decision-record-main-restore-after-unrecorded-mirage-move.json",
+          "20260907-1120-uos-decision-record-candidate-integration-5-mirage-queued.json",
+          "20260907-1150-uos-decision-record-mirage-codex-audit-integrate.json",
+          "20260907-1200-uos-decision-record-round-j-and-sangita-integrate.json",
+          "20260907-1205-uos-decision-record-candidate-integration-6-merge-all-created.json",
+          "20260907-1215-uos-decision-record-candidate-integration-7-merge-all-created-reaffirmed.json",
+          "20260907-1230-uos-decision-record-r4-dispatch-push-check-and-decision-record-cli.json",
+          "20260907-1300-uos-decision-record-cepaf-baseline-burndown-1.json",
+          "20260907-1340-uos-decision-record-sre-stale-zenoh-unit.json",
+          "20260907-1341-uos-decision-record-ferriskey-source-import-and-load-evidence.json",
+          "20260907-1400-uos-decision-record-candidate-integration-2.json",
+          "20260907-1441-uos-decision-record-runtime-prep-and-auth-oidc-integration.json",
+          "20260907-1455-uos-decision-record-cepaf-baseline-close.json",
+          "20260907-1505-uos-decision-record-candidate-integration-3.json"
+        ],
+        "uos-failure-classification/v1": [
+          "20260907-1300-uos-cepaf-baseline-failure-classification.json"
+        ],
+        "uos.runtime-component-staging.v1": [
+          "20260907-1420-web-runtime-component-staging.json"
+        ],
+        "uos-oidc-independent-review-evidence/v1": [
+          "20260907-1450-oidc-independent-review-evidence.json"
+        ]
+      },
+      "decision_records_v1": [
+        {
+          "file": "20260907-0955-uos-decision-record-mcp-chain-integrate.json",
+          "decision_id": "DR-20260907-0955-L0FABLE-MCP-CHAIN-INTEGRATE",
+          "phase": "prepared",
+          "has_completed_field": true
+        },
+        {
+          "file": "20260907-1010-uos-decision-record-clock-provenance-integrate.json",
+          "decision_id": "DR-20260907-1010-L0FABLE-CLOCK-PROVENANCE-INTEGRATE",
+          "phase": "prepared",
+          "has_completed_field": false
+        },
+        {
+          "file": "20260907-1025-uos-decision-record-queued-chains-integrate.json",
+          "decision_id": "DR-20260907-1025-L0FABLE-QUEUED-CHAINS-INTEGRATE",
+          "phase": "prepared",
+          "has_completed_field": true
+        },
+        {
+          "file": "20260907-1030-uos-decision-record-candidate-integration-4.json",
+          "decision_id": "DR-20260907-1030-L0FABLE-CANDIDATE-INTEGRATION-4",
+          "phase": "completed",
+          "has_completed_field": true
+        },
+        {
+          "file": "20260907-1055-uos-decision-record-o-round-integrate.json",
+          "decision_id": "DR-20260907-1055-L0FABLE-O-ROUND-INTEGRATE",
+          "phase": "prepared",
+          "has_completed_field": true
+        },
+        {
+          "file": "20260907-1105-uos-decision-record-main-restore-after-unrecorded-mirage-move.json",
+          "decision_id": "DR-20260907-1105-L0FABLE-MAIN-RESTORE-AFTER-UNRECORDED-MIRAGE-MOVE",
+          "phase": "prepared",
+          "has_completed_field": true
+        },
+        {
+          "file": "20260907-1120-uos-decision-record-candidate-integration-5-mirage-queued.json",
+          "decision_id": "DR-20260907-1120-L0FABLE-CANDIDATE-INTEGRATION-5-MIRAGE-QUEUED",
+          "phase": "prepared",
+          "has_completed_field": true
+        },
+        {
+          "file": "20260907-1150-uos-decision-record-mirage-codex-audit-integrate.json",
+          "decision_id": "DR-20260907-1150-AGY-MIRAGE-CODEX-AUDIT-INTEGRATE",
+          "phase": "completed",
+          "has_completed_field": true
+        },
+        {
+          "file": "20260907-1200-uos-decision-record-round-j-and-sangita-integrate.json",
+          "decision_id": "DR-20260907-1200-L0FABLE-ROUND-J-AND-SANGITA-INTEGRATE",
+          "phase": "completed",
+          "has_completed_field": true
+        },
+        {
+          "file": "20260907-1205-uos-decision-record-candidate-integration-6-merge-all-created.json",
+          "decision_id": "DR-20260907-1205-L0FABLE-CANDIDATE-INTEGRATION-6-MERGE-ALL-CREATED",
+          "phase": "prepared",
+          "has_completed_field": true
+        },
+        {
+          "file": "20260907-1215-uos-decision-record-candidate-integration-7-merge-all-created-reaffirmed.json",
+          "decision_id": "DR-20260907-1215-L0FABLE-CANDIDATE-INTEGRATION-7-MERGE-ALL-CREATED-REAFFIRMED",
+          "phase": "prepared",
+          "has_completed_field": true
+        },
+        {
+          "file": "20260907-1230-uos-decision-record-r4-dispatch-push-check-and-decision-record-cli.json",
+          "decision_id": "DR-20260907-1230-L0FABLE-R4-DISPATCH-PUSH-CHECK-AND-DECISION-RECORD-CLI",
+          "phase": "completed",
+          "has_completed_field": true
+        },
+        {
+          "file": "20260907-1300-uos-decision-record-cepaf-baseline-burndown-1.json",
+          "decision_id": "DR-20260907-1300-L0FABLE-CEPAF-BASELINE-BURNDOWN-1",
+          "phase": "completed",
+          "has_completed_field": true
+        },
+        {
+          "file": "20260907-1340-uos-decision-record-sre-stale-zenoh-unit.json",
+          "decision_id": "DR-20260907-1340-L0FABLE-SRE-STALE-ZENOH-UNIT",
+          "phase": "prepared",
+          "has_completed_field": true
+        },
+        {
+          "file": "20260907-1341-uos-decision-record-ferriskey-source-import-and-load-evidence.json",
+          "decision_id": "DR-20260907-1341-L0FABLE-FERRISKEY-SOURCE-IMPORT-AND-LOAD-EVIDENCE",
+          "phase": "completed",
+          "has_completed_field": true
+        },
+        {
+          "file": "20260907-1400-uos-decision-record-candidate-integration-2.json",
+          "decision_id": "DR-20260907-1400-L0FABLE-CANDIDATE-INTEGRATION-2",
+          "phase": "prepared",
+          "has_completed_field": true
+        },
+        {
+          "file": "20260907-1441-uos-decision-record-runtime-prep-and-auth-oidc-integration.json",
+          "decision_id": "DR-20260907-1441-L0FABLE-RUNTIME-PREP-AND-AUTH-OIDC-INTEGRATION",
+          "phase": "completed",
+          "has_completed_field": true
+        },
+        {
+          "file": "20260907-1455-uos-decision-record-cepaf-baseline-close.json",
+          "decision_id": "DR-20260907-1455-L0FABLE-CEPAF-BASELINE-CLOSE",
+          "phase": "completed",
+          "has_completed_field": true
+        },
+        {
+          "file": "20260907-1505-uos-decision-record-candidate-integration-3.json",
+          "decision_id": "DR-20260907-1505-L0FABLE-CANDIDATE-INTEGRATION-3",
+          "phase": "prepared",
+          "has_completed_field": true
+        }
+      ]
+    },
+    "document": {
+      "per_directory": {
+        "docs/journal": {
+          "total_files": 135,
+          "md_files": 130,
+          "timestamp_pass": 128,
+          "timestamp_fail": 2,
+          "timestamp_fail_files": [
+            "docs/journal/20260906-112237-codex-fractal-understanding.md",
+            "docs/journal/task-117224184306869250/prompt-history-and-analysis.md"
+          ]
+        },
+        "docs/design": {
+          "total_files": 163,
+          "md_files": 102,
+          "timestamp_pass": 102,
+          "timestamp_fail": 0,
+          "timestamp_fail_files": []
+        },
+        "docs/zk": {
+          "total_files": 103,
+          "md_files": 103,
+          "timestamp_pass": 53,
+          "timestamp_fail": 50,
+          "timestamp_fail_files": [
+            "docs/zk/2026-08-04-0859-oais-package-algebra.md",
+            "docs/zk/20260725-zk-wiki-system-architecture.md",
+            "docs/zk/20260729-fractal-atlas.md",
+            "docs/zk/20260729-zk-bridge-and-orphan-index.md",
+            "docs/zk/20260731-instr-loader-coupling-inherent.md",
+            "docs/zk/20260804-094248-sa-plan-c3i-parity-fractal-audit.md",
+            "docs/zk/20260804-121012-sa-plan-remaining-impact.md",
+            "docs/zk/20260804-125557-sa-plan-pipeline-observability.md",
+            "docs/zk/20260804-131604-sa-plan-c3i-admission.md",
+            "docs/zk/20260804-155119-codex-harness-mcp-zenoh-bridge.md",
+            "docs/zk/20260804-215818-s7-stitch-generation-operator-unavailable-observed-ach-verdict-sc-f38-39.md",
+            "docs/zk/20260804-222210-integrated-w0-w8-design-workflow-lattice-p0-p9-walk-sc-f40-wiki-projection-advisory.md",
+            "docs/zk/20260804-ooda-sa-plan-control-plane.md",
+            "docs/zk/20260804-wiki-zk-parallel-pipeline.md",
+            "docs/zk/20260805-010325-design-governance-mechanized-check-design-armed-sc-design-rules.md",
+            "docs/zk/20260805-061231-phase-activity-runbook-and-activity-fractal-layer-sc-f42.md",
+            "docs/zk/20260805-065319-design-onboarding-and-functional-domain-artifacts.md",
+            "docs/zk/20260805-091406-doc-lint-programme-handover.md",
+            "docs/zk/20260814-support-infrastructure-unification-atlas.md",
+            "docs/zk/20260904-150139-adr-001-closed-rete-fact-schema-and-strict-typing-invariant.md",
+            "docs/zk/20260904-150142-adr-002-embedded-nul-ingress-trap-and-memory-allocation-containment.md",
+            "docs/zk/20260904-150145-adr-003-pure-100-byte-binary-sqlite-header-verification-rule-r31.md",
+            "docs/zk/20260904-150151-adr-004-supervised-persistent-zenoh-session-lifecycle-in-moz-client.md",
+            "docs/zk/20260904-150155-two-lattice-software-transactional-memory-and-mathematical-non-interference.md",
+            "docs/zk/20260904-150201-sil-6-zero-trust-rete-gate-salience-hierarchy-and-fail-closed-emergency-precedence.md",
+            "docs/zk/20260904-150206-source-backed-operational-catalogue-and-living-ontology-traceability.md",
+            "docs/zk/20260904-150844-zigvm-functional-sdlc-sre-and-verification-catalogue.md",
+            "docs/zk/20260904-151412-adr-005-dual-host-unified-operational-system-topology-and-live-tailnet-wiki-integration.md",
+            "docs/zk/20260904-153122-adr-006-twelve-pillar-fractal-architecture-composability-and-multi-paradigm-integration.md",
+            "docs/zk/20260904-153128-twelve-pillar-fractal-architecture-and-multi-paradigm-operational-integration.md",
+            "docs/zk/20260904-153714-adr-007-tripartite-cross-agent-multi-cycle-review-and-full-twelve-pillar-system-acceptance.md",
+            "docs/zk/20260904-154335-adr-008-nas-1-codebase-unification-rust-ocaml-nif-conversion-and-gleam-migration-strategy.md",
+            "docs/zk/20260904-154524-adr-009-distinct-functional-relocation-from-ocaml-and-rust-into-native-gleam.md",
+            "docs/zk/20260904-155000-adr-010-seven-level-fractal-granularity-taxonomy-and-100-functional-mapping-kpis.md",
+            "docs/zk/20260904-155139-adr-011-tripartite-surface-system-architecture-and-inter-fractal-traceability-closure.md",
+            "docs/zk/20260904-155425-adr-012-four-cycle-deep-tripartite-audit-and-sovereign-system-attestation.md",
+            "docs/zk/20260904-155835-adr-013-sovereign-tripartite-review-cycle-continuation-and-multi-domain-deep-verification.md",
+            "docs/zk/20260904-160005-adr-014-quad-cycle-iii-sovereign-tripartite-audit-and-comprehensive-kpi-integration-closure.md",
+            "docs/zk/20260904-160159-adr-015-master-codex-session-handover-full-trajectory-archive-and-sovereign-operational-transfer.md",
+            "docs/zk/20260904-164632-adr-016-master-fractal-system-integration-7-level-granularity-closure-and-tripartite-ratification.md",
+            "docs/zk/20260904-zigvm-functional-sre-catalog.md",
+            "docs/zk/moc-20260729-051217-s-epoch-smp-coordinator-lock-fractal.md",
+            "docs/zk/moc-agent-handover.md",
+            "docs/zk/moc-agents-codex-symbiosis-supervisor.md",
+            "docs/zk/moc-algebra-driven-ocaml-doctrine.md",
+            "docs/zk/moc-features-notion-agent-audit.md",
+            "docs/zk/moc-features-notion-ontology.md",
+            "docs/zk/moc-handoff.md",
+            "docs/zk/moc-journal-20260718-zigvm-otp-parity-full-plan-journal.md",
+            "docs/zk/moc-journal-20260731-full-system-audit-and-fractal-execution-plan.md"
+          ]
+        },
+        "docs/wiki": {
+          "total_files": 41,
+          "md_files": 41,
+          "timestamp_pass": 41,
+          "timestamp_fail": 0,
+          "timestamp_fail_files": []
+        },
+        "docs/plans": {
+          "total_files": 7,
+          "md_files": 7,
+          "timestamp_pass": 7,
+          "timestamp_fail": 0,
+          "timestamp_fail_files": []
+        },
+        "docs/reviews": {
+          "total_files": 8,
+          "md_files": 4,
+          "timestamp_pass": 4,
+          "timestamp_fail": 0,
+          "timestamp_fail_files": []
+        },
+        "contracts": {
+          "total_files": 34,
+          "md_files": 29,
+          "timestamp_pass": 3,
+          "timestamp_fail": 26,
+          "timestamp_fail_files": [
+            "contracts/README.md",
+            "contracts/api/README.md",
+            "contracts/evidence/README.md",
+            "contracts/inference/README.md",
+            "contracts/mcp/README.md",
+            "contracts/nif/README.md",
+            "contracts/openclaw/README.md",
+            "contracts/rules/README.md",
+            "contracts/rules/c3i-cross-language-control-contract.md",
+            "contracts/rules/comprehensive-checklist-contract.md",
+            "contracts/rules/diagram-ascii-mermaid-mandate.md",
+            "contracts/rules/dmc-tcm-mandate.md",
+            "contracts/rules/km-wiki-zk-contract.md",
+            "contracts/rules/mirage-migration-policy.md",
+            "contracts/rules/mirage-production-integration-contract.md",
+            "contracts/rules/mirage-unikernel-contract.md",
+            "contracts/rules/rocha-semiotics-cybernetics-contract.md",
+            "contracts/rules/sdlc-sre-verification-process-contract.md",
+            "contracts/rules/tailscale-web-fqdn-mandate.md",
+            "contracts/rules/timestamp-mandate.md",
+            "contracts/rules/zigvm-add-fractal-contract.md",
+            "contracts/safety/README.md",
+            "contracts/schemas/README.md",
+            "contracts/spatiotemporal/README.md",
+            "contracts/vfs/README.md",
+            "contracts/zenoh/README.md"
+          ]
+        },
+        "governance": {
+          "total_files": 116,
+          "md_files": 4,
+          "timestamp_pass": 2,
+          "timestamp_fail": 2,
+          "timestamp_fail_files": [
+            "governance/README.md",
+            "governance/vcs/JUJUTSU.md"
+          ]
+        }
+      },
+      "docs_journal_created_today": [
+        {
+          "file": "20260907-0542-uos-tui-swarm-hive-mind-coordination-acl-holon-agent-kernel-and-zenoh-infra-journal.md",
+          "first_heading": "20260907-0542- Swarm, Hive Mind, Message Board, Coordination, ACL, Holarchy, Agent Kernel & C3I Zenoh Infra Journal"
+        },
+        {
+          "file": "20260907-0550-uos-agentic-infrastructure-formal-spec-journal.md",
+          "first_heading": "20260907-0550 \u2014 UOS agentic infrastructure, coordination and design checkpoint journal"
+        },
+        {
+          "file": "20260907-0941-c3i-indrajaal-reuse-implementation-journal.md",
+          "first_heading": "C3I and Indrajaal reuse \u2014 implementation and evidence journal"
+        },
+        {
+          "file": "20260907-0950-uos-tui-swarm-work-stream-split-journal.md",
+          "first_heading": "20260907-0950- UOS TUI and Swarm Work-Stream Split Journal"
+        },
+        {
+          "file": "20260907-1028-deployment-inventory-and-web-music-player-journal.md",
+          "first_heading": "20260907-1028- UOS Deployment Inventory & Web Music Player Journal"
+        },
+        {
+          "file": "20260907-1050-uos-candidate-integration-4-composed-revision-journal.md",
+          "first_heading": "20260907-1050- Candidate integration 4: composed revision of four Codex-session candidates"
+        },
+        {
+          "file": "20260907-1105-uos-ontology-sutra-sangita-hive-cognition-round-journal.md",
+          "first_heading": "Round O: System Ontology, S\u016btra, Sa\u1e45g\u012bta & Hive Cognition \u2014 Task Completion Journal"
+        },
+        {
+          "file": "20260907-1110-modular-mojo-max-ai-ml-integration-journal.md",
+          "first_heading": "Modular MAX & Mojo AI/ML Operations Integration Journal"
+        },
+        {
+          "file": "20260907-1113-agentic-infrastructure-reuse-review.md",
+          "first_heading": "20260907-1113 \u2014 Agentic infrastructure reuse review journal"
+        },
+        {
+          "file": "20260907-1120-mirageos-comprehensive-migration-and-subsystem-journal.md",
+          "first_heading": "20260907-1120- MirageOS Comprehensive Subsystem Migration & Unikernel Journal"
+        },
+        {
+          "file": "20260907-1130-zigvm-add-fractal-mapping-and-sublimation-journal.md",
+          "first_heading": "20260907-1130- ZigVM ADD Fractal Mapping & Agentic Sublimation Completion Journal"
+        },
+        {
+          "file": "20260907-1140-uos-candidate-integration-5-mirage-package-and-main-restore-journal.md",
+          "first_heading": "20260907-1140- Candidate integration 5: main restore and the Codex Mirage sovereign-audit package"
+        },
+        {
+          "file": "20260907-1145-cybernetic-raga-durga-and-22-shruti-synthesis-journal.md",
+          "first_heading": "20260907-1145- Cybernetic R\u0101ga Durg\u0101 & 22-Shruti Microtonal Synthesis Journal"
+        },
+        {
+          "file": "20260907-1150-mirage-sovereign-audit-and-benchmark.md",
+          "first_heading": "Mirage sovereign audit and bounded host benchmark"
+        },
+        {
+          "file": "20260907-1150-mirageos-unikernel-architecture-and-uos-integration-journal.md",
+          "first_heading": "20260907-1150- MirageOS Unikernel Architecture & UOS SIL-6 Solo5 Engine Integration Journal"
+        },
+        {
+          "file": "20260907-1210-uos-candidate-integration-6-merge-all-created-functionality-journal.md",
+          "first_heading": "20260907-1210- Candidate integration 6: merge all created functionality"
+        },
+        {
+          "file": "20260907-1215-mirageos-triple-surface-cockpit-and-solo5-cutover-journal.md",
+          "first_heading": "20260907-1215- MirageOS Triple-Surface Cockpit & Solo5 Subsystem Cutover Journal"
+        },
+        {
+          "file": "20260907-1225-uos-candidate-integration-7-merge-all-created-reaffirmed-journal.md",
+          "first_heading": "20260907-1225- Candidate integration 7: merge all created functionality, reaffirmed"
+        },
+        {
+          "file": "20260907-1250-uos-r4-slices-push-path-validation-and-decision-record-cli-journal.md",
+          "first_heading": "20260907-1250- R4 slices: reconcile push-path validation and the decision-record CLI"
+        },
+        {
+          "file": "20260907-1310-uos-jujutsu-ontology-library-and-candidate-integration-journal.md",
+          "first_heading": "fractal-l0 #fractal-l2 #fractal-l4 #zero-muda #tailscale-web #km-triad #rocha-semiotics #cybernetics #jujutsu #uos-tui #swarm"
+        },
+        {
+          "file": "20260907-1330-mirage-codex-audit-and-benchmark-mainline-integration-journal.md",
+          "first_heading": "20260907-1330- MirageOS Codex Sovereign Audit & Benchmark Mainline Integration Journal"
+        },
+        {
+          "file": "20260907-1335-uos-cepaf-baseline-burndown-and-ferriskey-journal.md",
+          "first_heading": "20260907-1335- cepaf baseline burndown, NIF artifact provisioning, and FerrisKey integration"
+        },
+        {
+          "file": "20260907-1351-tri-sovereign-forecast-integration-and-preflight-interlock-journal.md",
+          "first_heading": "Tri-Sovereign Forecast Integration & Autonomous Agent Preflight Interlocking Journal"
+        },
+        {
+          "file": "20260907-1416-mirage-hypervisor-verification-and-codex-coordination-journal.md",
+          "first_heading": "20260907-1416- MirageOS Hypervisor & Solo5 Tender Verification & Tri-Agent Coordination Journal"
+        },
+        {
+          "file": "20260907-1420-uos-fractal-forecasting-and-predictive-ooda-journal.md",
+          "first_heading": "20260907-1420- UOS Fractal Forecasting & Predictive OODA Journal"
+        },
+        {
+          "file": "20260907-1420-web-runtime-component-staging.md",
+          "first_heading": "20260907-1420 \u2014 OTP 29 web runtime component staging"
+        },
+        {
+          "file": "20260907-1442-ev-90-fractal-forecasting-cockpit-and-zenoh-stream-journal.md",
+          "first_heading": "20260907-1442- EV-90 Fractal Forecasting Cockpit & Zenoh Streaming Journal"
+        },
+        {
+          "file": "20260907-1450-oidc-independent-review.md",
+          "first_heading": "20260907-1450 \u2014 Independent bounded OIDC verifier review"
+        },
+        {
+          "file": "20260907-1527-mainline-merge-and-swarm-symbiosis-journal.md",
+          "first_heading": "20260907-1527- Mainline Merge, MirageOS Hardening, and Swarm Symbiosis Journal"
+        },
+        {
+          "file": "20260907-1528-sa-plan-fractal-jidoka-and-tps-mandate-journal.md",
+          "first_heading": "20260907-1528- Sa-Plan Exclusivity, Fractal Jidoka & TPS Mandate Execution Journal"
+        },
+        {
+          "file": "20260907-1533-bounded-oidc-ed25519-verifier-journal.md",
+          "first_heading": "Bounded FerrisKey OIDC Ed25519 verifier journal"
+        }
+      ],
+      "docs_design_created_today": [
+        {
+          "file": "20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md",
+          "first_heading": "UOS agentic infrastructure \u2014 formal implementation specification"
+        },
+        {
+          "file": "20260907-0653-uos-tri-agent-sdlc-sre-herdr-spec.md",
+          "first_heading": "20260907-0653 \u2014 UOS shared SDLC, SRE and agent swarm specification"
+        },
+        {
+          "file": "20260907-0925-uos-global-intelligence-routing-design.md",
+          "first_heading": "20260907-0925- Global intelligence routing: cheapest adequate tier for every operation"
+        },
+        {
+          "file": "20260907-1037-mirage-benchmark-contract.md",
+          "first_heading": "Mirage library benchmark contract"
+        },
+        {
+          "file": "20260907-1110-modular-mojo-max-ai-ml-architecture-and-synthesis.md",
+          "first_heading": "Modular MAX & Mojo AI/ML Architecture and Synthesis Specification"
+        },
+        {
+          "file": "20260907-1113-uos-agentic-infrastructure-reuse-and-placement.md",
+          "first_heading": "20260907-1113-uos-agentic-infrastructure-reuse-and-placement \u2014 Agentic infrastructure reuse, placement and validation design"
+        },
+        {
+          "file": "20260907-1120-mirageos-comprehensive-migration-and-subsystem-spec.md",
+          "first_heading": "20260907-1120- MirageOS Comprehensive Subsystem Migration & Unikernel Architecture Specification"
+        },
+        {
+          "file": "20260907-1130-zigvm-add-fractal-mapping-and-sublimation-spec.md",
+          "first_heading": "20260907-1130- UOS ZigVM Algebra-Driven Development (ADD) Fractal Mapping & Sublimation Specification"
+        },
+        {
+          "file": "20260907-1150-mirageos-unikernel-architecture-and-uos-integration-spec.md",
+          "first_heading": "MirageOS Unikernel Architecture & UOS Integration Specification"
+        },
+        {
+          "file": "20260907-1215-mirageos-triple-surface-cockpit-and-solo5-cutover-spec.md",
+          "first_heading": "20260907-1215- MirageOS Triple-Surface Cockpit & Solo5 Subsystem Cutover Specification"
+        },
+        {
+          "file": "20260907-1320-uos-daemon-process-census-c3i-indrajaal-vs-uos.md",
+          "first_heading": "20260907-1520-daemon-process-census-c3i-indrajaal-uos.md"
+        },
+        {
+          "file": "20260907-1415-uos-fractal-forecasting-and-predictive-ooda-spec.md",
+          "first_heading": "20260907-1415- UOS Unified Fractal Forecasting & Predictive OODA Specification"
+        },
+        {
+          "file": "20260907-1533-bounded-oidc-ed25519-verifier-scope.md",
+          "first_heading": "Bounded FerrisKey OIDC Ed25519 verifier scope"
+        }
+      ],
+      "top_20_most_recent_by_timestamp_prefix": [
+        {
+          "prefix": "20260907-1533",
+          "file": "docs/journal/20260907-1533-bounded-oidc-ed25519-verifier-journal.md"
+        },
+        {
+          "prefix": "20260907-1533",
+          "file": "docs/design/20260907-1533-bounded-oidc-ed25519-verifier-scope.md"
+        },
+        {
+          "prefix": "20260907-1530",
+          "file": "docs/zk/20260907-1530-adr-066-sa-plan-fractal-jidoka-tps-and-universal-execution-authority.md"
+        },
+        {
+          "prefix": "20260907-1530",
+          "file": "docs/wiki/20260907-1530-uos-sa-plan-fractal-jidoka-tps-guide.md"
+        },
+        {
+          "prefix": "20260907-1528",
+          "file": "docs/journal/20260907-1528-sa-plan-fractal-jidoka-and-tps-mandate-journal.md"
+        },
+        {
+          "prefix": "20260907-1527",
+          "file": "docs/journal/20260907-1527-mainline-merge-and-swarm-symbiosis-journal.md"
+        },
+        {
+          "prefix": "20260907-1450",
+          "file": "docs/journal/20260907-1450-oidc-independent-review.md"
+        },
+        {
+          "prefix": "20260907-1442",
+          "file": "docs/journal/20260907-1442-ev-90-fractal-forecasting-cockpit-and-zenoh-stream-journal.md"
+        },
+        {
+          "prefix": "20260907-1420",
+          "file": "docs/journal/20260907-1420-web-runtime-component-staging.md"
+        },
+        {
+          "prefix": "20260907-1420",
+          "file": "docs/journal/20260907-1420-uos-fractal-forecasting-and-predictive-ooda-journal.md"
+        },
+        {
+          "prefix": "20260907-1416",
+          "file": "docs/journal/20260907-1416-mirage-hypervisor-verification-and-codex-coordination-journal.md"
+        },
+        {
+          "prefix": "20260907-1415",
+          "file": "docs/design/20260907-1415-uos-fractal-forecasting-and-predictive-ooda-spec.md"
+        },
+        {
+          "prefix": "20260907-1351",
+          "file": "docs/journal/20260907-1351-tri-sovereign-forecast-integration-and-preflight-interlock-journal.md"
+        },
+        {
+          "prefix": "20260907-1335",
+          "file": "docs/journal/20260907-1335-uos-cepaf-baseline-burndown-and-ferriskey-journal.md"
+        },
+        {
+          "prefix": "20260907-1330",
+          "file": "docs/journal/20260907-1330-mirage-codex-audit-and-benchmark-mainline-integration-journal.md"
+        },
+        {
+          "prefix": "20260907-1320",
+          "file": "docs/design/20260907-1320-uos-daemon-process-census-c3i-indrajaal-vs-uos.md"
+        },
+        {
+          "prefix": "20260907-1310",
+          "file": "docs/zk/20260907-1310-adr-065-uos-jujutsu-ontology-and-library.md"
+        },
+        {
+          "prefix": "20260907-1310",
+          "file": "docs/wiki/20260907-1310-uos-jujutsu-ontology-and-library-wiki.md"
+        },
+        {
+          "prefix": "20260907-1310",
+          "file": "docs/journal/20260907-1310-uos-jujutsu-ontology-library-and-candidate-integration-journal.md"
+        },
+        {
+          "prefix": "20260907-1250",
+          "file": "docs/journal/20260907-1250-uos-r4-slices-push-path-validation-and-decision-record-cli-journal.md"
+        }
+      ]
+    },
+    "rule": {
+      "surface_counts": {
+        "contracts/rules": 16,
+        ".claude/rules": 10,
+        ".gemini/rules": 10,
+        ".agents/rules": 13,
+        ".codex/rules": 10
+      },
+      "parity_table": [
+        {
+          "rule": "20260907-0653-tri-agent-coordination.md",
+          "contracts/rules": true,
+          ".claude/rules": false,
+          ".gemini/rules": false,
+          ".agents/rules": true,
+          ".codex/rules": false
+        },
+        {
+          "rule": "20260907-0811-hive-decision-forecast-kpi-mandate.md",
+          "contracts/rules": true,
+          ".claude/rules": false,
+          ".gemini/rules": false,
+          ".agents/rules": false,
+          ".codex/rules": false
+        },
+        {
+          "rule": "20260907-1330-iam-ferriskey-nif-rule.md",
+          "contracts/rules": false,
+          ".claude/rules": true,
+          ".gemini/rules": true,
+          ".agents/rules": true,
+          ".codex/rules": true
+        },
+        {
+          "rule": "20260907-1515-sa-plan-fractal-jidoka-tps-mandate.md",
+          "contracts/rules": true,
+          ".claude/rules": false,
+          ".gemini/rules": false,
+          ".agents/rules": true,
+          ".codex/rules": false
+        },
+        {
+          "rule": "c3i-cross-language-control-contract.md",
+          "contracts/rules": true,
+          ".claude/rules": false,
+          ".gemini/rules": false,
+          ".agents/rules": false,
+          ".codex/rules": false
+        },
+        {
+          "rule": "comprehensive-checklist-contract.md",
+          "contracts/rules": true,
+          ".claude/rules": true,
+          ".gemini/rules": true,
+          ".agents/rules": true,
+          ".codex/rules": true
+        },
+        {
+          "rule": "diagram-ascii-mermaid-mandate.md",
+          "contracts/rules": true,
+          ".claude/rules": false,
+          ".gemini/rules": false,
+          ".agents/rules": false,
+          ".codex/rules": false
+        },
+        {
+          "rule": "dmc-tcm-mandate.md",
+          "contracts/rules": true,
+          ".claude/rules": true,
+          ".gemini/rules": true,
+          ".agents/rules": true,
+          ".codex/rules": true
+        },
+        {
+          "rule": "full-symbiosis.md",
+          "contracts/rules": false,
+          ".claude/rules": true,
+          ".gemini/rules": true,
+          ".agents/rules": true,
+          ".codex/rules": true
+        },
+        {
+          "rule": "intelligence-routing-rule.md",
+          "contracts/rules": false,
+          ".claude/rules": true,
+          ".gemini/rules": true,
+          ".agents/rules": true,
+          ".codex/rules": true
+        },
+        {
+          "rule": "km-wiki-zk-contract.md",
+          "contracts/rules": true,
+          ".claude/rules": true,
+          ".gemini/rules": true,
+          ".agents/rules": true,
+          ".codex/rules": true
+        },
+        {
+          "rule": "mirage-migration-policy.md",
+          "contracts/rules": true,
+          ".claude/rules": false,
+          ".gemini/rules": false,
+          ".agents/rules": false,
+          ".codex/rules": false
+        },
+        {
+          "rule": "mirage-production-integration-contract.md",
+          "contracts/rules": true,
+          ".claude/rules": false,
+          ".gemini/rules": false,
+          ".agents/rules": false,
+          ".codex/rules": false
+        },
+        {
+          "rule": "mirage-unikernel-contract.md",
+          "contracts/rules": true,
+          ".claude/rules": false,
+          ".gemini/rules": false,
+          ".agents/rules": false,
+          ".codex/rules": false
+        },
+        {
+          "rule": "rocha-semiotics-cybernetics-contract.md",
+          "contracts/rules": true,
+          ".claude/rules": true,
+          ".gemini/rules": true,
+          ".agents/rules": true,
+          ".codex/rules": true
+        },
+        {
+          "rule": "sdlc-sre-verification-process-contract.md",
+          "contracts/rules": true,
+          ".claude/rules": false,
+          ".gemini/rules": false,
+          ".agents/rules": true,
+          ".codex/rules": false
+        },
+        {
+          "rule": "tailscale-web-fqdn-mandate.md",
+          "contracts/rules": true,
+          ".claude/rules": true,
+          ".gemini/rules": true,
+          ".agents/rules": true,
+          ".codex/rules": true
+        },
+        {
+          "rule": "timestamp-mandate.md",
+          "contracts/rules": true,
+          ".claude/rules": true,
+          ".gemini/rules": true,
+          ".agents/rules": true,
+          ".codex/rules": true
+        },
+        {
+          "rule": "uos-governance.md",
+          "contracts/rules": false,
+          ".claude/rules": true,
+          ".gemini/rules": true,
+          ".agents/rules": true,
+          ".codex/rules": true
+        },
+        {
+          "rule": "zigvm-add-fractal-contract.md",
+          "contracts/rules": true,
+          ".claude/rules": false,
+          ".gemini/rules": false,
+          ".agents/rules": false,
+          ".codex/rules": false
+        }
+      ]
+    },
+    "skill": {
+      "repo_tracked_skill_dirs": {
+        ".claude/skills": [
+          "tensor-space-evolution"
+        ],
+        ".gemini/skills": [
+          "tensor-space-evolution"
+        ],
+        ".agents/skills": [
+          "tensor-space-evolution"
+        ],
+        ".codex/skills": []
+      },
+      "note": ".codex/skills contains ~194 symlinks to the user-global ~/.gemini/config/skills catalog (not repo-tracked custom skills); repo-tracked custom skill in this workspace is 'tensor-space-evolution', mirrored on .claude/.gemini/.agents but absent as a real (non-symlink) directory under .codex/skills"
+    },
+    "agent": {
+      "agent_role_directories_present": {
+        ".claude/agents": false,
+        ".gemini/agents": false,
+        ".agents/agents": false,
+        ".codex/agents": false
+      },
+      "note": "No dedicated per-agent role-definition directory exists on any surface; supervisory role text is embedded inline in root AGENTS.md/CLAUDE.md/GEMINI.md/HANDOVER_TO_CODEX.md instead of discrete per-agent files."
+    },
+    "test": {
+      "per_subsystem": {
+        "apps/cepaf_gleam/test": 389,
+        "apps/indrajaal_gleam/test": 1,
+        "apps/indrajaal_gleam_web/test": 6,
+        "apps/uos_swarm/test": 43,
+        "apps/uos_tui/test": 20,
+        "engines/hermes/test_ports": 2,
+        "engines/hermes/orchestration/ocaml_gleam_plan/testing": 1,
+        "engines/hermes/modules/hermes_wiki/test": 43,
+        "engines/hermes/modules/sa_plan/test": 26,
+        "engines/zigvm": 0,
+        "tools/ocaml_test_inventory/test": 2,
+        "tools/planning_ledger/test": 9,
+        "tools/uos/test": 3
+      },
+      "law_and_selfcheck_batteries": [
+        "engines/hermes/modules/hermes_wiki/import/zigvm/code/wiki/wiki_render_laws.ml",
+        "engines/hermes/modules/hermes_wiki/import/zigvm/code/core/docs_wiki_laws.ml",
+        "engines/hermes/modules/hermes_wiki/import/zigvm/code/core/json_embed_laws.ml",
+        "engines/hermes/modules/hermes_wiki/import/zigvm/code/core/route_laws.ml",
+        "engines/hermes/modules/hermes_wiki/import/zigvm/code/core/markdown_ast_laws.ml",
+        "engines/hermes/modules/hermes_wiki/import/zigvm/code/zk/zk_law_to_test_traceability_matrix.ml",
+        "apps/cepaf_gleam/test/vfs_selfcheck_test.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/verification/vfs_selfcheck.gleam",
+        "engines/hermes/modules/hermes_wiki/import/zigvm/code/wiki/wiki_selfcheck_parallel.ml",
+        "engines/hermes/modules/hermes_wiki/import/zigvm/code/wiki/wiki_selfcheck_parallel.mli",
+        "engines/hermes/modules/hermes_wiki/import/zigvm/code/wiki/test_wiki_selfcheck_parallel.ml",
+        "engines/hermes/modules/hermes_wiki/import/zigvm/code/wiki/wiki_selfcheck_parallel.gospel"
+      ],
+      "note": "law/selfcheck batteries under hermes_wiki/import/zigvm/ are imported ZigVM evidence, not yet re-admitted as UOS-native tests (per contracts/sources ingestion discipline)."
+    },
+    "spec": {
+      "formal_lean_quint_tla": [
+        {
+          "path": "formal/lean/AgenticCoordination.lean",
+          "size": 12647
+        },
+        {
+          "path": "formal/lean/AgenticJournal.lean",
+          "size": 11642
+        },
+        {
+          "path": "formal/lean/Traceability.lean",
+          "size": 5154
+        },
+        {
+          "path": "formal/lean/TwoLattice_STM.lean",
+          "size": 7948
+        },
+        {
+          "path": "formal/quint/agentic_coordination.qnt",
+          "size": 8645
+        },
+        {
+          "path": "formal/quint/agentic_journal.qnt",
+          "size": 14335
+        },
+        {
+          "path": "formal/quint/parity_frontier.qnt",
+          "size": 2011
+        },
+        {
+          "path": "formal/tla/20260907-1340-ferriskey-iam-c3i-evidence.tla",
+          "size": 4316
+        }
+      ],
+      "gospel_contracts": [
+        {
+          "path": "engines/hermes/modules/hermes_agent_loop/context_compression.gospel",
+          "size": 269514,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_agent_loop/context_engine.gospel",
+          "size": 272108,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_agent_loop/conversation_loop.gospel",
+          "size": 281760,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_agent_loop/interrupt_control.gospel",
+          "size": 283542,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_agent_loop/message_hygiene.gospel",
+          "size": 271005,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_agent_loop/prompt_assembly.gospel",
+          "size": 268417,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_agent_loop/turn_finalization.gospel",
+          "size": 272650,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_harness/control_plane.gospel",
+          "size": 283912,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_harness/converge.gospel",
+          "size": 269910,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_harness/e2e_framework.gospel",
+          "size": 270424,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_harness/e2e_tier1_tests.gospel",
+          "size": 265218,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_harness/e2e_tier2_tests.gospel",
+          "size": 265324,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_harness/formal_coverage.gospel",
+          "size": 275152,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_harness/gap_plan.gospel",
+          "size": 267464,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_harness/generated_rocq/parity_lattice_extracted.gospel",
+          "size": 266298,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_harness/gospel_stubs/turn_budget.gospel",
+          "size": 265159,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_harness/gospel_stubs/yojson.gospel",
+          "size": 264734,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_harness/hermes_analysis.gospel",
+          "size": 267437,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_harness/hermes_imports.gospel",
+          "size": 269555,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_harness/hermes_rete.gospel",
+          "size": 271759,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_harness/hermes_zenoh.gospel",
+          "size": 268201,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_harness/homeostasis.gospel",
+          "size": 275551,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_harness/message_hygiene.gospel",
+          "size": 270972,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_harness/path_safety.gospel",
+          "size": 265877,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_harness/receipt_reliability.gospel",
+          "size": 271087,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_harness/ruliad.gospel",
+          "size": 270301,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_harness/runtime_coverage.gospel",
+          "size": 267558,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_harness/turn_budget.gospel",
+          "size": 273133,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_ops/ops_formal.gospel",
+          "size": 268361,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_ops/ops_mutate.gospel",
+          "size": 268000,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_ops/ops_verify.gospel",
+          "size": 268191,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_sysml/sysml_algebra.gospel",
+          "size": 269505,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/core/markdown_ast.gospel",
+          "size": 280982,
+          "vendored_import": true
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/journal/journal_bundle_digest.gospel",
+          "size": 266837,
+          "vendored_import": true
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/journal/journal_bundle_transaction.gospel",
+          "size": 269490,
+          "vendored_import": true
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/journal/journal_markdown_html.gospel",
+          "size": 269798,
+          "vendored_import": true
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/journal/journal_playwright_contract.gospel",
+          "size": 267395,
+          "vendored_import": true
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/wiki/wiki_selfcheck_parallel.gospel",
+          "size": 266795,
+          "vendored_import": true
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/control/backfill.gospel",
+          "size": 267112,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/control/ratchet.gospel",
+          "size": 269050,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/control/suppression.gospel",
+          "size": 267900,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/control/wiki_otel.gospel",
+          "size": 272802,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/core/wiki_baseline.gospel",
+          "size": 269172,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/engine/dep_sheaf.gospel",
+          "size": 294753,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/engine/hermes_httpd.gospel",
+          "size": 268182,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/engine/hermes_wiki.gospel",
+          "size": 283870,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/engine/wiki_address.gospel",
+          "size": 297014,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/engine/wiki_ast.gospel",
+          "size": 279815,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/engine/wiki_blocks.gospel",
+          "size": 293694,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/engine/wiki_callout.gospel",
+          "size": 267989,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/engine/wiki_datastore.gospel",
+          "size": 313602,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/engine/wiki_directive.gospel",
+          "size": 275140,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/engine/wiki_include.gospel",
+          "size": 267874,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/engine/wiki_ordering.gospel",
+          "size": 287596,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/engine/wiki_query.gospel",
+          "size": 287693,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/engine/wiki_ref.gospel",
+          "size": 267634,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/engine/wiki_toc.gospel",
+          "size": 290735,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/engine/wiki_transclude.gospel",
+          "size": 266909,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/engine/wiki_view.gospel",
+          "size": 294429,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/engine/wiki_visibility.gospel",
+          "size": 286172,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/km/journal.gospel",
+          "size": 266246,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/present/wiki_present.gospel",
+          "size": 286835,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/present/wiki_theme.gospel",
+          "size": 267840,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/reconcile/reconcile.gospel",
+          "size": 270740,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/register/feature_register.gospel",
+          "size": 271799,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/register/import_coverage.gospel",
+          "size": 267613,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/server/wiki_routes.gospel",
+          "size": 267009,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/source/wiki_iface.gospel",
+          "size": 266325,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/hermes_wiki/src/source/wiki_source_ext.gospel",
+          "size": 279444,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/sa_plan/sa_plan_control_plane.gospel",
+          "size": 276394,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/sa_plan/sa_plan_control_plane_oracle.gospel",
+          "size": 277440,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/sa_plan/sa_plan_name.gospel",
+          "size": 267318,
+          "vendored_import": false
+        },
+        {
+          "path": "engines/hermes/modules/system_engg/exact_head_gate.gospel",
+          "size": 266252,
+          "vendored_import": false
+        }
+      ],
+      "gospel_total": 73,
+      "gospel_excluding_vendored_import": 67,
+      "specs_dir_present": false
+    },
+    "plan": {
+      "plans": [
+        {
+          "id": "uos/full-implementation/20260906-1655",
+          "title": "UOS complete implementation and review-gap execution",
+          "created": "2026-09-06 17:17:31"
+        },
+        {
+          "id": "uos/execution-support/20260906-1747",
+          "title": "Execution support leaves linked to the immutable UOS programme",
+          "created": "2026-09-06 17:46:07"
+        },
+        {
+          "id": "uos/mirage-security/20260907-1310",
+          "title": "Mirage tender repair OIDC hardening OTP29 rollout and MIG-08 measured metrics",
+          "created": "2026-09-07 13:11:58"
+        }
+      ],
+      "tasks_per_plan": {
+        "uos/execution-support/20260906-1747": 27,
+        "uos/full-implementation/20260906-1655": 71,
+        "uos/mirage-security/20260907-1310": 15
+      },
+      "task_state_counts": {
+        "available": 70,
+        "completed": 29,
+        "executing": 14
+      },
+      "distinct_workers_with_task": 37,
+      "jobs_total": 113,
+      "jobs_per_queue_state": {
+        "mirage-security-auth-ingress": {
+          "completed": 1
+        },
+        "mirage-security-auth-oidc": {
+          "completed": 1
+        },
+        "mirage-security-auth-verify": {
+          "completed": 1
+        },
+        "mirage-security-close": {
+          "available": 1
+        },
+        "mirage-security-integrate": {
+          "available": 1
+        },
+        "mirage-security-metrics-build": {
+          "available": 1
+        },
+        "mirage-security-metrics-prep": {
+          "executing": 1
+        },
+        "mirage-security-metrics-verify": {
+          "available": 1
+        },
+        "mirage-security-mirage-repair": {
+          "completed": 1
+        },
+        "mirage-security-mirage-verify": {
+          "executing": 1
+        },
+        "mirage-security-otp29-cutover": {
+          "available": 1
+        },
+        "mirage-security-otp29-stage": {
+          "available": 1
+        },
+        "mirage-security-plan": {
+          "completed": 1
+        },
+        "mirage-security-runtime-prep": {
+          "completed": 1
+        },
+        "mirage-security-solo5-update": {
+          "executing": 1
+        },
+        "uos-execution-support-s00": {
+          "executing": 1
+        },
+        "uos-execution-support-s01": {
+          "completed": 1
+        },
+        "uos-execution-support-s02": {
+          "completed": 1
+        },
+        "uos-execution-support-s03": {
+          "completed": 1
+        },
+        "uos-execution-support-s04": {
+          "completed": 1
+        },
+        "uos-execution-support-s05": {
+          "completed": 1
+        },
+        "uos-execution-support-s06": {
+          "completed": 1
+        },
+        "uos-execution-support-s07": {
+          "completed": 1
+        },
+        "uos-execution-support-s08": {
+          "completed": 1
+        },
+        "uos-execution-support-s09": {
+          "completed": 1
+        },
+        "uos-execution-support-s10": {
+          "completed": 1
+        },
+        "uos-execution-support-s11": {
+          "completed": 1
+        },
+        "uos-execution-support-s12": {
+          "completed": 1
+        },
+        "uos-execution-support-s13": {
+          "completed": 1
+        },
+        "uos-execution-support-s14": {
+          "completed": 1
+        },
+        "uos-execution-support-s15": {
+          "completed": 1
+        },
+        "uos-execution-support-s16": {
+          "completed": 1
+        },
+        "uos-execution-support-s17": {
+          "completed": 1
+        },
+        "uos-execution-support-s18": {
+          "completed": 1
+        },
+        "uos-execution-support-s19": {
+          "executing": 1
+        },
+        "uos-execution-support-s20": {
+          "executing": 1
+        },
+        "uos-execution-support-s21": {
+          "completed": 1
+        },
+        "uos-execution-support-s22": {
+          "executing": 1
+        },
+        "uos-execution-support-s23": {
+          "executing": 1
+        },
+        "uos-execution-support-s24": {
+          "executing": 1
+        },
+        "uos-execution-support-s25": {
+          "executing": 1
+        },
+        "uos-execution-support-s26": {
+          "executing": 1
+        },
+        "uos-full-implementation-20260906-1655-reserved": {
+          "available": 70
+        },
+        "uos-full-implementation-20260906-1655-reserved-planning": {
+          "completed": 1
+        }
+      },
+      "workflows_total": 15,
+      "workflow_state_counts": {
+        "running": 15
+      },
+      "tasks_stuck_executing_past_lease": [
+        {
+          "plan_id": "uos/full-implementation/20260906-1655",
+          "task_id": "E03",
+          "worker": "codex-root",
+          "lease_until_ns": 1788757067552219207,
+          "lease_until": "2026-09-07 04:57:47"
+        },
+        {
+          "plan_id": "uos/full-implementation/20260906-1655",
+          "task_id": "E04",
+          "worker": "codex-root",
+          "lease_until_ns": 1788757067744451678,
+          "lease_until": "2026-09-07 04:57:47"
+        },
+        {
+          "plan_id": "uos/full-implementation/20260906-1655",
+          "task_id": "N01",
+          "worker": "codex-root",
+          "lease_until_ns": 1788757068128716894,
+          "lease_until": "2026-09-07 04:57:48"
+        },
+        {
+          "plan_id": "uos/execution-support/20260906-1747",
+          "task_id": "S00",
+          "worker": "codex-root",
+          "lease_until_ns": 1788758722304448505,
+          "lease_until": "2026-09-07 05:25:22"
+        },
+        {
+          "plan_id": "uos/execution-support/20260906-1747",
+          "task_id": "S19",
+          "worker": "codex-e03",
+          "lease_until_ns": 1788757063247787769,
+          "lease_until": "2026-09-07 04:57:43"
+        },
+        {
+          "plan_id": "uos/execution-support/20260906-1747",
+          "task_id": "S20",
+          "worker": "codex-e04",
+          "lease_until_ns": 1788757064617186360,
+          "lease_until": "2026-09-07 04:57:44"
+        },
+        {
+          "plan_id": "uos/execution-support/20260906-1747",
+          "task_id": "S22",
+          "worker": "codex-root-n01",
+          "lease_until_ns": 1788758725081649830,
+          "lease_until": "2026-09-07 05:25:25"
+        },
+        {
+          "plan_id": "uos/execution-support/20260906-1747",
+          "task_id": "S23",
+          "worker": "codex-n01-review",
+          "lease_until_ns": 1788758726450315912,
+          "lease_until": "2026-09-07 05:25:26"
+        },
+        {
+          "plan_id": "uos/execution-support/20260906-1747",
+          "task_id": "S24",
+          "worker": "codex-n01-r2",
+          "lease_until_ns": 1788757934831899471,
+          "lease_until": "2026-09-07 05:12:14"
+        },
+        {
+          "plan_id": "uos/execution-support/20260906-1747",
+          "task_id": "S25",
+          "worker": "codex-e05-prep",
+          "lease_until_ns": 1788760923717418376,
+          "lease_until": "2026-09-07 06:02:03"
+        },
+        {
+          "plan_id": "uos/execution-support/20260906-1747",
+          "task_id": "S26",
+          "worker": "codex-n01-adapter-review",
+          "lease_until_ns": 1788761235453456731,
+          "lease_until": "2026-09-07 06:07:15"
+        }
+      ],
+      "tasks_stuck_executing_count": 11,
+      "db_path": "/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3"
+    },
+    "resource": {
+      "host": {
+        "hostname": "nas-1",
+        "tailscale_self_status_line": "100.87.7.78     nas-1                               abhijitnaik7799@  linux    -"
+      },
+      "listening_ports": [
+        "*:3389",
+        "*:3390",
+        "*:8080",
+        "0.0.0.0:22",
+        "0.0.0.0:4100",
+        "0.0.0.0:443",
+        "0.0.0.0:7447",
+        "0.0.0.0:8000",
+        "0.0.0.0:8001",
+        "100.87.7.78:39799",
+        "127.0.0.1:35895",
+        "127.0.0.1:36757",
+        "127.0.0.1:37193",
+        "127.0.0.1:37807",
+        "127.0.0.1:41021",
+        "127.0.0.1:42445",
+        "127.0.0.1:42765",
+        "127.0.0.1:43639",
+        "127.0.0.1:46449",
+        "127.0.0.1:631",
+        "127.0.0.53%lo:53",
+        "127.0.0.54:53",
+        "192.168.122.1:53",
+        "[::1]:631",
+        "[::]:22",
+        "[::]:8000",
+        "[::]:8001",
+        "[fd7a:115c:a1e0::9d37:74e]:53335"
+      ],
+      "zenoh_key_space_prefixes": {
+        "indrajaal": [
+          "indrajaal/c3i",
+          "indrajaal/cepaf",
+          "indrajaal/control",
+          "indrajaal/gleam",
+          "indrajaal/health",
+          "indrajaal/kms",
+          "indrajaal/l0",
+          "indrajaal/l1",
+          "indrajaal/l2",
+          "indrajaal/l3",
+          "indrajaal/l4",
+          "indrajaal/l5",
+          "indrajaal/l6",
+          "indrajaal/l7",
+          "indrajaal/l8",
+          "indrajaal/l9",
+          "indrajaal/mcp",
+          "indrajaal/metabolism",
+          "indrajaal/moz",
+          "indrajaal/otel",
+          "indrajaal/pi",
+          "indrajaal/plan",
+          "indrajaal/planning",
+          "indrajaal/safety",
+          "indrajaal/tailscale",
+          "indrajaal/test"
+        ],
+        "c3i": [
+          "c3i/a2a",
+          "c3i/agui",
+          "c3i/docs",
+          "c3i/enforcer",
+          "c3i/ooda",
+          "c3i/planning",
+          "c3i/reference",
+          "c3i/safety"
+        ],
+        "uos": [
+          "uos/claude-integration",
+          "uos/holon",
+          "uos/mirage-security",
+          "uos/ocaml-gleam-tests",
+          "uos/sdlc",
+          "uos/tui"
+        ]
+      },
+      "zenoh_extraction_note": "extracted via grep of double-quoted string literals under apps/engines/tools/services; single-quoted, interpolated, or dynamically-built Zenoh keys are not captured (undetermined; see gaps)",
+      "ledgers": {
+        "jsonl_row_counts": {
+          "apps/uos_swarm/swarm/20260907-0440-swarm-board.jsonl": 312,
+          "apps/uos_swarm/swarm/20260907-0440-swarm-board.jsonl.chain-forks.jsonl": 3,
+          "apps/uos_swarm/swarm/20260907-0440-swarm-board.jsonl.digest-rejected.jsonl": 1
+        },
+        "sidecar_files": [
+          "apps/uos_swarm/swarm/20260907-0440-swarm-ledger.json"
+        ]
+      },
+      "databases_outside_build_target": [
+        {
+          "path": "data/sqlite/uos_verification_tracking.sqlite3",
+          "size": 462848
+        }
+      ],
+      "ops_units": [
+        "ops/observability/20260907-0941-uos-clock-guard@.service",
+        "ops/web/20260907-1309-uos-indrajaal-web@.service",
+        "ops/zenoh/20260907-0450-c3i-zenoh-router-1.service"
+      ],
+      "jj_workspaces": {
+        "count": 55,
+        "names": [
+          "codex-action-boundaries",
+          "codex-action-kpi-integration",
+          "codex-ainf-design",
+          "codex-auth-framing-review",
+          "codex-auth-ingress",
+          "codex-auth-ingress-review",
+          "codex-board-insights",
+          "codex-board-strict-validate",
+          "codex-clock-guard",
+          "codex-clock-provenance",
+          "codex-coordination-formal",
+          "codex-coordination-impl",
+          "codex-hive-projection",
+          "codex-live-evolution",
+          "codex-mcp-catalog",
+          "codex-mcp-runtime-check",
+          "codex-mcp-stdio-runtime",
+          "codex-mcp-wave34-tests",
+          "codex-mirage-audit",
+          "codex-mirage-audit-action-boundary",
+          "codex-mirage-benchmark-review",
+          "codex-mirage-evidence-audit",
+          "codex-mirage-feature",
+          "codex-mirage-governance-failclosed",
+          "codex-mirage-metrics",
+          "codex-mirage-tenders-audit",
+          "codex-mirage-verification",
+          "codex-mirage-workorder",
+          "codex-observation-bridge",
+          "codex-oidc-auth-review",
+          "codex-oidc-verifier",
+          "codex-reuse-ops",
+          "codex-session-durability",
+          "codex-solo5-source-review",
+          "codex-solo5-toolchain",
+          "codex-telemetry-repair",
+          "default",
+          "e01-candidate",
+          "e01-review",
+          "e02-acceptance",
+          "e03-evidence",
+          "e04-census",
+          "execution-audit",
+          "execution-control",
+          "execution-tracker",
+          "full-implementation-plan-main",
+          "incoming-review",
+          "n01-peer",
+          "ocaml-gleam-tests",
+          "q01-warnings",
+          "sa-plan-execution",
+          "skills-preparation",
+          "split-int",
+          "w-matrix",
+          "w-universe"
+        ]
+      },
+      "jj_bookmarks": {
+        "count": 81,
+        "names": [
+          "candidate/auth-ingress",
+          "candidate/auth-ingress-framing",
+          "candidate/auth-ingress-framing-v2",
+          "candidate/auth-oidc-ed25519",
+          "candidate/mirage-metrics-prep",
+          "candidate/runtime-loopback",
+          "candidate/runtime-staging-evidence",
+          "candidate/solo5-0.13.0",
+          "docs/final-audit-closure",
+          "docs/km-triad-journal",
+          "feature/ocaml-gleam-tests",
+          "integration/autonomous-execution-20260906-1803",
+          "integration/bootstrap",
+          "integration/c3i-cross-language-control",
+          "integration/codex-ainf-reuse-design",
+          "integration/codex-mirage-audit",
+          "integration/codex-mirage-tenders-review",
+          "integration/codex-session-handover-adr-017",
+          "integration/codex-verified-timestamp-mandate",
+          "integration/codex-web-runtime-identity",
+          "integration/comprehensive-testing-protocol",
+          "integration/consolidation",
+          "integration/core-orchestrator",
+          "integration/dmc-tcm-completion",
+          "integration/fprime-fpp-beam-transmutation",
+          "integration/fractal-observability-dependability",
+          "integration/full-implementation-plan",
+          "integration/full-protocol-admitted",
+          "integration/governance",
+          "integration/hermes-oracle",
+          "integration/hermes-parity",
+          "integration/km-corpus-9d-tests",
+          "integration/km-wiki-zk-hardening",
+          "integration/kubernetes",
+          "integration/pre-tri-agent-sync-20260907",
+          "integration/sa-plan-execution-20260906-1655",
+          "integration/source-freeze",
+          "integration/symbiosis-orchestrator",
+          "integration/system-admission",
+          "integration/tailscale-web-fqdn",
+          "integration/tensor-space-evolution-wave-2",
+          "integration/uos-agent-design-20260907",
+          "integration/uos-swarm",
+          "integration/uos-tui",
+          "integration/uos-tui-swarm",
+          "integration/wiki-zk-km-synthesis-and-comprehensive-checklist",
+          "integration/zero-muda",
+          "integration/zigvm-runtime",
+          "main",
+          "tag/20260906-0836-tensor-evolution-wave-2-ratified",
+          "tag/20260906-0925-fprime-fpp-beam-transmutation",
+          "tag/20260906-0935-fprime-fpp-full-features-beam-ratified",
+          "tag/20260906-0945-fprime-ontology-atlas-ratified",
+          "tag/20260906-0950-all-prompt-history-and-analysis-ratified",
+          "tag/20260906-0955-fprime-agents-taxonomy-ratified",
+          "tag/20260906-0955-harness-bionic-agentic-mapping-ratified",
+          "tag/20260906-1015-15-cycles-codex-claude-ratified",
+          "tag/20260906-1034-30-cycles-codex-claude-zigvm-ratified",
+          "tag/20260906-1045-60-cycles-codex-claude-full-zigvm-ratified",
+          "tag/20260906-1055-mainline-merge-32-agent-ecology-ratified",
+          "tag/20260906-1139-c3i-48-agent-ecology-ratified",
+          "tag/20260906-1215-c3i-72-agent-ecology-adk-ratified",
+          "tag/20260906-1424-fractal-system-reference-map-ratified",
+          "tag/20260906-1545-mainline-merge-25-prompts-ratified",
+          "tag/20260906-1605-vfs-single-journal-expansion-ratified",
+          "tag/20260906-1615-vfs-continuity-and-diagrams-ratified",
+          "tag/20260906-1620-master-prompts-history-and-vfs-journal-ratified",
+          "tag/20260906-1635-sa-plan-ocaml-engine-and-actor-ecosystem-ratified",
+          "tag/20260906-1649-single-file-session-handover-to-codex-ratified",
+          "tag/20260906-1700-hermes-bionic-full-integration-ratified",
+          "tag/20260906-1730-omni-fractal-symbiosis-ratified",
+          "tag/20260906-1745-mainline-merge-omni-fractal-ratified",
+          "tag/20260906-1755-omni-fractal-full-generation-ratified",
+          "tag/20260906-1800-omni-fractal-tensor-closure-ratified",
+          "tag/20260906-1800-session-handover-to-codex-ratified",
+          "tag/20260906-1830-15-evolutionary-cycles-ratified",
+          "tag/20260906-1900-c3i-knowledge-runtime-15-cycles-ratified",
+          "tag/20260906-1930-c3i-artifacts-ingestion-15-cycles-ratified",
+          "tag/20260906-2000-session-handover-to-codex-ratified",
+          "tag/20260906-2100-c3i-vertical-slice-and-wave4-ratified",
+          "tag/20260906-2200-session-handover-to-codex-ratified"
+        ]
+      },
+      "coordinator_dir_tri_agent": {
+        "path": "/home/an/NAS-setup/uos/var/coordination/tri-agent",
+        "events_file_count": 346,
+        "floor_files": [
+          "clock-guard-backup.floor",
+          "clock-guard-backup.floor.board.json",
+          "clock-guard-primary.floor",
+          "clock-guard-primary.floor.board.json"
+        ],
+        "note": "no separate 'status' file found; session/event counts derived by parsing events/*.json directly (see agent_session kind)"
+      },
+      "var_releases_top_level": {
+        "clock-guard-98936f9e961e5b909c0e8445123b705aedb669a5": 328,
+        "clock-guard-f0a9d7e6732c6b8a3722f75797a35e5dc1a4efd8": 382,
+        "indrajaal-web": 2568
+      },
+      "secrets_paths": [
+        {
+          "path": "~/.config/uos/board.key",
+          "exists": true,
+          "size": 44
+        }
+      ]
+    },
+    "agent_session": {
+      "distinct_sessions": 5,
+      "total_events_parsed": 346,
+      "sessions": [
+        {
+          "session": "656f0d2c-6019-4d9e-b0ce-b9e39b240047",
+          "event_count": 138,
+          "provider_from_register": "claude",
+          "latest_event_operation": "release",
+          "latest_event_a_field": "integration/main",
+          "register_refs": [
+            "board:L0-fable",
+            "herdr:claude-code-session",
+            "role:design-authority",
+            "goal:C06-openrouter-cost-routing",
+            "streams:integration/uos-tui+integration/uos-swarm"
+          ]
+        },
+        {
+          "session": "01a07a68-b3b7-70f3-9e64-fac68a156c21",
+          "event_count": 91,
+          "provider_from_register": "codex",
+          "latest_event_operation": "claim",
+          "latest_event_a_field": "task:SOLO5-UPDATE",
+          "register_refs": [
+            "board:Codex-Astra",
+            "herdr:pane=w2:p4",
+            "role:coordination-implementer",
+            "goal:C01-C07",
+            "cost:deterministic-first"
+          ]
+        },
+        {
+          "session": "6e132c1c-7436-43ef-abb6-f3468e7fe87f",
+          "event_count": 78,
+          "provider_from_register": "agy",
+          "latest_event_operation": "send",
+          "latest_event_a_field": "broadcast",
+          "register_refs": [
+            "board:AGY",
+            "herdr:pane=w2:p1",
+            "role:independent-verifier",
+            "mode:gemini-3.8-flash"
+          ]
+        },
+        {
+          "session": "e7bd3330-0401-4845-8510-78beeaca7b0d",
+          "event_count": 34,
+          "provider_from_register": "agy",
+          "latest_event_operation": "heartbeat",
+          "latest_event_a_field": "1964bc3f",
+          "register_refs": [
+            "herdr:pane=w2:p5",
+            "binding:observed-herdr-metadata",
+            "task:AINF-REUSE-DESIGN-20260907"
+          ]
+        },
+        {
+          "session": "L0-fable",
+          "event_count": 5,
+          "provider_from_register": "claude",
+          "latest_event_operation": "retire",
+          "latest_event_a_field": "",
+          "register_refs": [
+            "board:c3i/a2a",
+            "plan:docs/plans/20260907-0910-uos-tui-and-swarm-work-stream-split-plan.md"
+          ]
+        }
+      ],
+      "provider_derivation_note": "provider_from_register is taken from the 'a' field of each session's own register-operation event (most reliable provider signal); latest_event_a_field is literally the newest event's 'a' field as the task specifies, but that field is operation-overloaded (task ref, broadcast marker, heartbeat nonce, bookmark name) for non-register ops, so both are reported."
+    }
+  },
+  "gaps": {
+    "items_fitting_no_declared_kind": {
+      "top_level_dirs_outside_the_10_governing_paths_in_the_task_spec": {
+        "data": 2,
+        "state": 1,
+        "legacy": 6,
+        "migration": 25,
+        "intelligence": 6,
+        "third_party": 1,
+        "tests": 50
+      },
+      "note": "data/, state/, legacy/, migration/, intelligence/, third_party/, and the top-level tests/ dir (distinct from apps/*/test) hold tracked files that are not reachable from any of the 10 governing kind paths named in the task (apps/engines/services/tools/native for subsystem; docs/contracts/governance for document; generated/ for record; formal/+hermes-gospel for spec; .claude/.gemini/.agents/.codex for rule/skill/agent). Under the 3.5 kind table these should mostly be 'component' (intelligence/, legacy/) or 'record'/'document' (migration/ evidence, state/) whole-of a not-yet-declared subsystem, but no subsystem row currently claims them.",
+      "tools_root_loose_component_files_no_subsystem_container": 8
+    },
+    "timestamp_noncompliant_documents": {
+      "docs/journal": 2,
+      "docs/design": 0,
+      "docs/zk": 50,
+      "docs/wiki": 0,
+      "docs/plans": 0,
+      "docs/reviews": 0,
+      "contracts": 26,
+      "governance": 2
+    },
+    "timestamp_noncompliant_detail_note": "docs/zk failures (50) are almost all pre-mandate historical ADR/MOC filenames (YYYYMMDD-HHMMSS 6-digit seconds format or undated slugs) preserved byte-for-byte per the timestamp-mandate historical-preservation clause, not new violations; contracts/ failures (26) are mostly README.md index files and un-prefixed rule/contract text files (governance surface, not 'generated docs'); docs/journal failures (2) and governance failures (2) are genuine outliers worth operator review.",
+    "rules_missing_on_a_surface": [
+      {
+        "rule": "20260907-0653-tri-agent-coordination.md",
+        "contracts/rules": true,
+        ".claude/rules": false,
+        ".gemini/rules": false,
+        ".agents/rules": true,
+        ".codex/rules": false
+      },
+      {
+        "rule": "20260907-0811-hive-decision-forecast-kpi-mandate.md",
+        "contracts/rules": true,
+        ".claude/rules": false,
+        ".gemini/rules": false,
+        ".agents/rules": false,
+        ".codex/rules": false
+      },
+      {
+        "rule": "20260907-1515-sa-plan-fractal-jidoka-tps-mandate.md",
+        "contracts/rules": true,
+        ".claude/rules": false,
+        ".gemini/rules": false,
+        ".agents/rules": true,
+        ".codex/rules": false
+      },
+      {
+        "rule": "c3i-cross-language-control-contract.md",
+        "contracts/rules": true,
+        ".claude/rules": false,
+        ".gemini/rules": false,
+        ".agents/rules": false,
+        ".codex/rules": false
+      },
+      {
+        "rule": "diagram-ascii-mermaid-mandate.md",
+        "contracts/rules": true,
+        ".claude/rules": false,
+        ".gemini/rules": false,
+        ".agents/rules": false,
+        ".codex/rules": false
+      },
+      {
+        "rule": "mirage-migration-policy.md",
+        "contracts/rules": true,
+        ".claude/rules": false,
+        ".gemini/rules": false,
+        ".agents/rules": false,
+        ".codex/rules": false
+      },
+      {
+        "rule": "mirage-production-integration-contract.md",
+        "contracts/rules": true,
+        ".claude/rules": false,
+        ".gemini/rules": false,
+        ".agents/rules": false,
+        ".codex/rules": false
+      },
+      {
+        "rule": "mirage-unikernel-contract.md",
+        "contracts/rules": true,
+        ".claude/rules": false,
+        ".gemini/rules": false,
+        ".agents/rules": false,
+        ".codex/rules": false
+      },
+      {
+        "rule": "sdlc-sre-verification-process-contract.md",
+        "contracts/rules": true,
+        ".claude/rules": false,
+        ".gemini/rules": false,
+        ".agents/rules": true,
+        ".codex/rules": false
+      },
+      {
+        "rule": "zigvm-add-fractal-contract.md",
+        "contracts/rules": true,
+        ".claude/rules": false,
+        ".gemini/rules": false,
+        ".agents/rules": false,
+        ".codex/rules": false
+      }
+    ],
+    "pins_without_artifact_present_in_workspace": [
+      "apps/cepaf_gleam/priv/c3i_nif.sha256",
+      "apps/cepaf_gleam/priv/c3i_ocaml_nif.sha256",
+      "apps/cepaf_gleam/priv/ferriskey_nif.sha256",
+      "apps/cepaf_gleam/priv/rule_engine_nif.sha256",
+      "apps/cepaf_gleam/priv/rusty_vault_nif.sha256"
+    ],
+    "artifacts_without_a_pin": [],
+    "artifacts_without_pin_note": "no .so files are present on disk anywhere under this workspace's priv/ trees, so there are zero 'artifact present but unpinned' cases; all 5 pins instead reference targets absent from the workspace (2 external C3I source paths not yet migrated, 2 more external C3I paths, 1 built-from-source pin whose crate build has not been run in this checkout).",
+    "records_without_completed_phase_older_than_2h": [
+      {
+        "file": "20260907-0955-uos-decision-record-mcp-chain-integrate.json",
+        "decision_id": "DR-20260907-0955-L0FABLE-MCP-CHAIN-INTEGRATE",
+        "phase": "prepared",
+        "has_completed_field": true,
+        "approx_age_minutes": 324
+      },
+      {
+        "file": "20260907-1010-uos-decision-record-clock-provenance-integrate.json",
+        "decision_id": "DR-20260907-1010-L0FABLE-CLOCK-PROVENANCE-INTEGRATE",
+        "phase": "prepared",
+        "has_completed_field": false,
+        "approx_age_minutes": 309
+      },
+      {
+        "file": "20260907-1025-uos-decision-record-queued-chains-integrate.json",
+        "decision_id": "DR-20260907-1025-L0FABLE-QUEUED-CHAINS-INTEGRATE",
+        "phase": "prepared",
+        "has_completed_field": true,
+        "approx_age_minutes": 294
+      },
+      {
+        "file": "20260907-1055-uos-decision-record-o-round-integrate.json",
+        "decision_id": "DR-20260907-1055-L0FABLE-O-ROUND-INTEGRATE",
+        "phase": "prepared",
+        "has_completed_field": true,
+        "approx_age_minutes": 264
+      },
+      {
+        "file": "20260907-1105-uos-decision-record-main-restore-after-unrecorded-mirage-move.json",
+        "decision_id": "DR-20260907-1105-L0FABLE-MAIN-RESTORE-AFTER-UNRECORDED-MIRAGE-MOVE",
+        "phase": "prepared",
+        "has_completed_field": true,
+        "approx_age_minutes": 254
+      },
+      {
+        "file": "20260907-1120-uos-decision-record-candidate-integration-5-mirage-queued.json",
+        "decision_id": "DR-20260907-1120-L0FABLE-CANDIDATE-INTEGRATION-5-MIRAGE-QUEUED",
+        "phase": "prepared",
+        "has_completed_field": true,
+        "approx_age_minutes": 239
+      },
+      {
+        "file": "20260907-1205-uos-decision-record-candidate-integration-6-merge-all-created.json",
+        "decision_id": "DR-20260907-1205-L0FABLE-CANDIDATE-INTEGRATION-6-MERGE-ALL-CREATED",
+        "phase": "prepared",
+        "has_completed_field": true,
+        "approx_age_minutes": 194
+      },
+      {
+        "file": "20260907-1215-uos-decision-record-candidate-integration-7-merge-all-created-reaffirmed.json",
+        "decision_id": "DR-20260907-1215-L0FABLE-CANDIDATE-INTEGRATION-7-MERGE-ALL-CREATED-REAFFIRMED",
+        "phase": "prepared",
+        "has_completed_field": true,
+        "approx_age_minutes": 184
+      }
+    ],
+    "records_missing_completed_key_literal": [
+      {
+        "file": "20260907-1010-uos-decision-record-clock-provenance-integrate.json",
+        "decision_id": "DR-20260907-1010-L0FABLE-CLOCK-PROVENANCE-INTEGRATE",
+        "phase": "prepared",
+        "has_completed_field": false
+      }
+    ],
+    "plans_with_tasks_stuck_executing_past_lease": [
+      {
+        "plan_id": "uos/full-implementation/20260906-1655",
+        "task_id": "E03",
+        "worker": "codex-root",
+        "lease_until_ns": 1788757067552219207,
+        "lease_until": "2026-09-07 04:57:47"
+      },
+      {
+        "plan_id": "uos/full-implementation/20260906-1655",
+        "task_id": "E04",
+        "worker": "codex-root",
+        "lease_until_ns": 1788757067744451678,
+        "lease_until": "2026-09-07 04:57:47"
+      },
+      {
+        "plan_id": "uos/full-implementation/20260906-1655",
+        "task_id": "N01",
+        "worker": "codex-root",
+        "lease_until_ns": 1788757068128716894,
+        "lease_until": "2026-09-07 04:57:48"
+      },
+      {
+        "plan_id": "uos/execution-support/20260906-1747",
+        "task_id": "S00",
+        "worker": "codex-root",
+        "lease_until_ns": 1788758722304448505,
+        "lease_until": "2026-09-07 05:25:22"
+      },
+      {
+        "plan_id": "uos/execution-support/20260906-1747",
+        "task_id": "S19",
+        "worker": "codex-e03",
+        "lease_until_ns": 1788757063247787769,
+        "lease_until": "2026-09-07 04:57:43"
+      },
+      {
+        "plan_id": "uos/execution-support/20260906-1747",
+        "task_id": "S20",
+        "worker": "codex-e04",
+        "lease_until_ns": 1788757064617186360,
+        "lease_until": "2026-09-07 04:57:44"
+      },
+      {
+        "plan_id": "uos/execution-support/20260906-1747",
+        "task_id": "S22",
+        "worker": "codex-root-n01",
+        "lease_until_ns": 1788758725081649830,
+        "lease_until": "2026-09-07 05:25:25"
+      },
+      {
+        "plan_id": "uos/execution-support/20260906-1747",
+        "task_id": "S23",
+        "worker": "codex-n01-review",
+        "lease_until_ns": 1788758726450315912,
+        "lease_until": "2026-09-07 05:25:26"
+      },
+      {
+        "plan_id": "uos/execution-support/20260906-1747",
+        "task_id": "S24",
+        "worker": "codex-n01-r2",
+        "lease_until_ns": 1788757934831899471,
+        "lease_until": "2026-09-07 05:12:14"
+      },
+      {
+        "plan_id": "uos/execution-support/20260906-1747",
+        "task_id": "S25",
+        "worker": "codex-e05-prep",
+        "lease_until_ns": 1788760923717418376,
+        "lease_until": "2026-09-07 06:02:03"
+      },
+      {
+        "plan_id": "uos/execution-support/20260906-1747",
+        "task_id": "S26",
+        "worker": "codex-n01-adapter-review",
+        "lease_until_ns": 1788761235453456731,
+        "lease_until": "2026-09-07 06:07:15"
+      }
+    ],
+    "plans_with_tasks_stuck_executing_count": 11,
+    "agent_kind_has_no_role_definition_files": {
+      ".claude/agents": false,
+      ".gemini/agents": false,
+      ".agents/agents": false,
+      ".codex/agents": false
+    }
+  },
+  "undetermined": [
+    "The governing design doc docs/design/20260907-1505-uos-holonic-architecture-and-fractal-services-mapping-approach.md has not propagated into this workspace's (w-universe) jj working copy yet (it exists in the sibling split-int workspace, both children of the same store); sections 3.2/3.5 were read from that sibling workspace read-only per the hard rule allowing read-only shell access, and this census file itself will only resolve into w-universe's own history once the two lineages are merged/rebased by an authorized operation (never by this worker, per the no-jj-rebase hard rule).",
+    "var/ is .gitignore'd and does not exist in the w-universe working copy; var/sa-plan/uos.sqlite3, var/coordination/tri-agent, and var/releases were read from the single canonical shared path /home/an/NAS-setup/uos/var/... under the explicit sa-plan-db read exception generalized to the whole var/ tree, since the task's items 8-10 have no other way to be satisfied; this is a judgment call, not a literal reading of 'the one path'.",
+    "Zenoh key-space prefixes were extracted with a single grep pattern for double-quoted 'root/seg1/seg2' literals; single-quoted keys, string-concatenated keys (e.g. Gleam <> or OCaml ^ built subjects), and keys built at runtime from variables are not captured, so the indrajaal/c3i/uos prefix lists are a lower bound, not exhaustive.",
+    "The coordination events schema (uos-session-sync/v1) overloads the 'a' field per-operation (provider at register, task ref at claim, 'broadcast' at send, a nonce at heartbeat, a bookmark name at release); 'provider from the newest event per session' was resolved two ways (register-derived and literal-newest) because the literal reading is not always a real provider name.",
+    "Clock-skew observation (not a B13 gap per se): host `date -u` reported 2026-09-07T15:19Z while some already-written document filenames in this same workspace carry later prefixes (e.g. 20260907-1533-...) written by concurrent swarm workers; this looks like ordinary multi-agent write-ahead-of-read timing during a live swarm run rather than a clock fault, but was not independently verified against chrony/timesync receipts as SC-TIME would require.",
+    "'20 most recent by timestamp prefix' could not be computed meaningfully for the 'component' or 'artifact' kinds because component source files carry no timestamp prefix and this jj workspace checkout stamps every file with an identical mtime at workspace creation, so a genuine last-touched ordering is not recoverable from the filesystem alone; the document kind's 20-most-recent list (which does have timestamp-prefixed filenames) was computed instead and stands in for that requirement.",
+    "governance/ contains 116 files but only 4 are .md (the rest are .toml/.json under governance/agents, governance/capability-inventory, governance/sources, governance/vcs etc.); those non-md governance files were counted but not individually classified into a sub-kind here."
+  ],
+  "totals": {
+    "subsystem": 19,
+    "component_files": 4640,
+    "artifact_sha256_pins": 5,
+    "artifact_so_present": 0,
+    "artifact_static_bundle_files": 377,
+    "artifact_var_releases_files": 3278,
+    "record_generated_json": 36,
+    "record_decision_records_v1": 19,
+    "document_files_all_dirs": 607,
+    "document_md_files_all_dirs": 420,
+    "rule_union_names": 20,
+    "skill_repo_tracked": 1,
+    "agent_role_files": 0,
+    "test_files_total": 545,
+    "spec_formal_files": 8,
+    "spec_gospel_files": 73,
+    "plan_count": 3,
+    "task_count": 113,
+    "job_count": 113,
+    "workflow_count": 15,
+    "resource_jj_workspaces": 55,
+    "resource_jj_bookmarks": 81,
+    "resource_listening_ports": 28,
+    "agent_session_distinct": 5,
+    "agent_session_events": 346
+  }
+}
