@@ -173,6 +173,28 @@ Every task is a frozen candidate integrated through the serialized `integration/
 - UCAs considered: not provided (generator silently skips a holon → B10 census parity catches it); provided unsafely (a `barred` or `absent` holon generated as a child → status gate in the generator, tested); wrong timing (units generated before the candidate is integrated → generation reads only `main`); stopped too soon (partial holarchy published → publish only after B1–B12 pass).
 - Constraints: SC-HOLON-NAME-001 (address rule), SC-HOLON-GEN-001 (generator reads the validated holarchy only; enforcement: test), SC-HOLON-ALIAS-001 (alias retirement by decision record; enforcement: process rule, listed as a gap until mechanized).
 
+## Appendix A. Fractal matrix (generated)
+Source: `docs/design/20260907-1520-uos-fractal-matrix.md` and `generated/20260907-1520-uos-fractal-matrix.json` (worker W-H, Sonnet, read-only; the find/grep/jq/awk generator is embedded verbatim in the JSON so the matrix is regenerable).
+
+| Dimension | Count |
+|---|---|
+| fractal layers | 11 (L0–L9 plus the flat namespace) |
+| architectural planes | 7 |
+| subsystems scanned | 94 (54 cepaf, 26 Hermes modules, 3 ZigVM, 2 Indrajaal web, uos_swarm, uos_tui, MAX, tools, 4 native NIF trees) |
+| components | 671 per-file rows plus 30 aggregated rows standing for 1,449 files in Hermes, ZigVM and tools |
+| holons matched | 34 in `holarchy()` (the design said 35; the generator counts 34; to be reconciled in HOLARCHY-CENSUS) |
+| interactions | 483: 159 Zenoh keys, 212 routes, 23 supervisor children, 60 sa-plan (of 496 sampled), 15 FFI (of 366), 6 NIF, 8 board |
+| cross-cutting services | 11 families: logging, observability, security, safety, clock, persistence, messaging, planning, formal, knowledge, testing |
+
+Largest gaps the matrix exposes, in priority order:
+1. 83 of 94 subsystems have no mechanical layer assignment: no Zenoh-key evidence and no directory-name match. The HOLARCHY-CENSUS task assigns layers by rule, not by guess, and records the rule per subsystem.
+2. 276 of 671 components show no interaction evidence at all; either they are pure library code or they interact through an idiom the generator does not see (both cases are recorded per component once classified).
+3. `cepaf.db` and `cepaf.eventsource` show zero evidence for logging, observability, security and testing.
+4. 17 of 34 holons match no component: the abstract plane holons and the root, by design, but this must be stated in the holon record (`kind: plane`).
+5. 14 census rows with status `absent` match no subsystem: candidates for `superseded` or `retire` decisions.
+
+Undetermined, as reported: whether five `*_supervisor.gleam` files register children through an idiom the regex misses; the true file extent of the C, C++ and OCaml NIF trees; and that the proposed `uos/l<n>/<domain>` prefix has zero literal occurrences today (expected before KEY-ALIGN).
+
 ## Appendix B. Universe census (generated, B13 oracle)
 Source: `docs/design/20260907-1525-uos-holon-universe-census.md` and `generated/20260907-1525-uos-holon-universe-census.json` (worker W-I, Sonnet, read-only, evidence per row; generator pipeline embedded in the JSON).
 

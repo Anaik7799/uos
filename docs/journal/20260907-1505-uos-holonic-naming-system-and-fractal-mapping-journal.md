@@ -62,7 +62,9 @@ Single canonical record; generation of derived surfaces; census as oracle (B10);
 | layer modules in cepaf | l0–l7 present in `fractal/` and `iam/fractal/` (measured) |
 | Zenoh key layers in C3I code | l0, l1, l4, l5, l6, l7 with 14 domain planes (measured) |
 | census | 113 rows; 33 / 22 / 49 / 8 / 1 by status (measured by W-F) |
-| sa-plan | plan `uos/holonic-mapping/20260907-1505` registered; HOLON-SPEC completed |
+| sa-plan | plan `uos/holonic-mapping/20260907-1505` registered; HOLON-SPEC completed; UNIVERSE-CENSUS and FRACTAL-MATRIX delivered (their sa-plan states could not all be recorded: the CLI claims tasks in creation order only, see the design's Appendix B note) |
+| fractal matrix (W-H, roqrpqvv@1a43438b) | 94 subsystems; 671 + 30 component rows; 483 interactions; 11 service families; 5 gaps in Appendix A (measured) |
+| universe census (W-I, lukuvlkl@de0e8f2c) | 19 subsystems; 4,640 components; 5 pins; 36 records; 607 documents; 20 rules; 545 tests; 8 + 73 specs; 3/113/113/15 sa-plan units; 55 workspaces, 81 bookmarks, 28 ports; 5 sessions; 5 B13 gaps in Appendix B (measured) |
 
 ## 8. Files Modified
 | File | Change |
