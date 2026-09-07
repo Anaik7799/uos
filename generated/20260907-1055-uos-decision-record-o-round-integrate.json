@@ -176,5 +176,42 @@
   "labels": {
     "private_chain_of_thought": "not collected",
     "model_self_report": "yes, marked per field"
+  },
+  "completed": {
+    "phase": "completed",
+    "links_prepared": "DR-20260907-1055-L0FABLE-O-ROUND-INTEGRATE",
+    "observed_at": "2026-09-07T08:36:43.581203+00:00",
+    "observed_actions": [
+      "rebased six worker changes as a linear chain (no conflicts)",
+      "wired evolve.record_in_harmony",
+      "gate PASS: uos_tui 198, uos_swarm 421, 0 warnings; ledger aligned 261/261; board valid (3 explicit gaps)",
+      "heartbeat + claim integration/main ok epoch 3 -> bookmarks integration/uos-swarm and main set to nwymyoytwnmn/69b7c709917c -> release"
+    ],
+    "outcome": "predicted_outcome realized (six changes on main) — Measured",
+    "evidence": [
+      "split-gate.sh output",
+      "gleam test 421 passed",
+      "session_sync ops l0-fable-claim-integration-main-20260907-1110 / release"
+    ],
+    "consumed": {
+      "subagent_tokens": {
+        "O-1": 355971,
+        "O-2": 371741,
+        "O-3": 353808,
+        "O-4": 390150,
+        "O-5": 327452,
+        "O-6": 388945,
+        "docs_haiku": "Unknown (running)"
+      },
+      "usd_paid": 0.0,
+      "wall_minutes_since_prepared": "Estimated ~20"
+    },
+    "errors": [
+      "my test used a non-existent Proposal.trials field and an empty-dream proposal list; fixed before integration"
+    ],
+    "revised_assumptions": [
+      "O-6 finished in ~20 min (forecast said within 20: Measured borderline)"
+    ],
+    "calibration_ref": "forecast probability_gate_pass 0.85 -> outcome pass (Brier contribution 0.0225)"
   }
 }

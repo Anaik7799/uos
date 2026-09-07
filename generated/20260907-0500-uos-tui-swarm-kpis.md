@@ -2,12 +2,12 @@
 |---|---|
 | Completion | 100% |
 | Pass rate | 100% |
-| First-pass yield | 90% |
+| First-pass yield | 92% |
 | WIP | 0 |
-| Tokens out | 1825864 |
-| Tests added | 206 |
+| Tokens out | 4013931 |
+| Tests added | 354 |
 | LOC | 3959 |
-| Avg cycle (min) | 6 |
+| Avg cycle (min) | 9 |
 | Jidoka stops | 0 |
 | Andon | GREEN |
 
@@ -35,3 +35,9 @@
 | H2-C | L2 | sonnet | manager: fail-closed zenoh health, unknown health andon, faults, share_state, real actor pid, progress dedup | integrated | 12 | 0 | 364706 |
 | H2-D | L2 | sonnet | agent_runtime: opaque scoped expiring grants, grant-gated memory, SEC-12..16 executed controls | integrated | 6 | 0 | 327226 |
 | H2-E | L2 | sonnet | surface: strict admissible, nvme interlock probe, evaluated checklist, observed supervised/lease, CLI authorization | integrated | 3 | 0 | 388328 |
+| O-1 | L2 | sonnet | sutra + gita registers, ACL @sūtra/@gītā | integrated | 20 | 0 | 355971 |
+| O-2 | L2 | sonnet | system_ontology (226 concepts), board alignment, ontology CLI | integrated | 13 | 0 | 371741 |
+| O-3 | L2 | sonnet | raga/tala register, holon base rules B1-B9, manager Teentaal | integrated | 30 | 0 | 353808 |
+| O-4 | L2 | sonnet | dream (svapna), evolve, citta-vritti/antahkarana/guna, uos_hive_cli | integrated | 36 | 0 | 390150 |
+| O-5 | L2 | sonnet | C06 cost router, budget ledger, uos_route_cli, run_routed | integrated | 20 | 0 | 327452 |
+| O-6 | L2 | sonnet | sangita: the hive sings (bandish, sargam, WAV), harmony index, growth gate | integrated | 29 | 0 | 388945 |

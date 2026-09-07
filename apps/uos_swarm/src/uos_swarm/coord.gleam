@@ -33,6 +33,9 @@ import uos_swarm/board.{
 // Hierarchical control
 // ---------------------------------------------------------------------------
 
+@external(erlang, "uos_swarm_ffi", "file_append")
+fn file_append(path: String, line: String) -> Result(Nil, String)
+
 pub type Layer {
   L0
   L1
@@ -667,6 +670,7 @@ pub type SyncReport {
     policy_rejected: Int,
     signature_rejected: Int,
     conflicts: Int,
+    chain_rejected: Int,
   )
 }
 
@@ -781,7 +785,30 @@ pub fn reconcile(
       |> fn(p) { #(p.0, list.length(p.1)) }
     None -> #(pull, 0)
   }
-  let b = list.fold(pull, b, board.absorb)
+  // Absorb one by one so a message whose per-sender predecessor is not our head
+  // (a forked or gapped chain, e.g. one sender writing from two ledger copies) is
+  // counted and quarantined instead of vanishing silently. The quarantine file sits
+  // beside the ledger; the message is never rewritten and never treated as absorbed.
+  let #(b, chain_rejected) =
+    list.fold(pull, #(b, 0), fn(acc, m) {
+      let #(b, n) = acc
+      let before = b.count
+      let b2 = board.absorb(b, m)
+      case b2.count == before {
+        True -> {
+          let _ = case b.ledger_path {
+            Some(path) ->
+              file_append(
+                path <> ".chain-forks.jsonl",
+                board.to_string(m) <> "\n",
+              )
+            None -> Ok(Nil)
+          }
+          #(b, n + 1)
+        }
+        False -> #(b2, n)
+      }
+    })
   let c = list.fold(pull, c, fn(c, m) { merge_clock(c, m.lamport) })
   // Never hand out a stale epoch: raise `c.epochs` to whatever the board already shows.
   let c = seed_epochs(c, pull)
@@ -801,6 +828,7 @@ pub fn reconcile(
       policy_rejected,
       signature_rejected,
       conflicts,
+      chain_rejected,
     ),
   ))
 }

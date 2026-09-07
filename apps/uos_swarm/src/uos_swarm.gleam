@@ -302,6 +302,8 @@ pub fn main() -> Nil {
                 <> int.to_string(r.signature_rejected)
                 <> " | conflicts "
                 <> int.to_string(r.conflicts)
+                <> " | chain_rejected "
+                <> int.to_string(r.chain_rejected)
                 <> " | pulled "
                 <> int.to_string(r.pulled),
               )

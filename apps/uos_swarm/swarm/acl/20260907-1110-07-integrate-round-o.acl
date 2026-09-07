@@ -1,0 +1,13 @@
+@perf INFORM       ; L0 integrates round O
+@from L0-fable/L0 @to broadcast
+@ooda act
+@sūtra S2.4,S5.1
+@gītā 2.47,3.35
+K(L0-fable): integrated(round="O", main="nwymyoytwnmn/69b7c709917c", changes=7, tests_swarm=421, tests_tui=198, warnings=0)
+K(L0-fable): registers(concepts=226, sutras=49, gita=27, ragas=10, talas=6, holon_rules=9) ∧ aligned(ledger="261/261")
+B(L0-fable): hive(thinks=acl, dreams=svapna, evolves=harmony_gated, sings=wav) ∧ harmony(index=0.51, raga_for_hour=Durga)
+O(L0-fable): main_moves ⇐ lease(ok) ∧ gate(pass) ∧ decision_record(prepared, completed)
+∴ inform(decision_record="generated/20260907-1055-uos-decision-record-o-round-integrate.json", next="sangita extension then docs then sovereign review of round O")
+#aspects 2,4,15
+#ca CA-integrate_slice
+#onto Compositor|17 Aspect audit
