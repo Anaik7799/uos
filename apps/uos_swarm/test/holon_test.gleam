@@ -1,4 +1,6 @@
 import gleam/dynamic/decode
+import gleam/int
+import gleam/io
 import gleam/json
 import gleam/list
 import gleam/option
@@ -67,10 +69,11 @@ pub fn validation_detects_breaks_test() {
 pub fn tree_and_mermaid_render_test() {
   let t = holon.to_tree(holon.holarchy())
   string.contains(t, "L0 uos") |> should.be_true
-  // "planes" is pulled down from its original L1 to L0 by the level-monotonic cascade
-  // (HOLARCHY-CENSUS: see the comment above `holarchy()`) once L0 census rows (IAM/vault/
-  // clock-guard/constitutional) nest under `control-plane`/`messaging-plane` several hops below.
-  string.contains(t, "  L0 planes") |> should.be_true
+  // HOLON-LIFECYCLE fix: "planes" is back at its natural L1 (not pulled down to L0 by the
+  // level-monotonic cascade any more) now that the 9 L0 census rows (IAM/vault/clock-guard/
+  // constitutional) nest under the new `constitution` holon instead of under
+  // `cepaf-gleam`/`uos-swarm`/`native-nifs` several hops below `control-plane`/`messaging-plane`.
+  string.contains(t, "  L1 planes") |> should.be_true
   string.contains(holon.to_mermaid(holon.holarchy()), "graph TD")
   |> should.be_true
   string.contains(holon.to_markdown(holon.holarchy()), "```mermaid")
@@ -134,7 +137,9 @@ pub fn to_markdown_carries_a_svara_column_test() {
 /// listed in `structure-plane.parts` (B2).
 pub fn holon_count_is_34_including_jujutsu_test() {
   let hs = holon.holarchy()
-  list.length(hs) |> should.equal(34 + 10 + 113)
+  // HOLON-LIFECYCLE adds one more Subsystem-kind holon ("constitution") on top of the
+  // HOLARCHY-CENSUS total (34 + 10 + 113 = 157), for 158 total.
+  list.length(hs) |> should.equal(34 + 11 + 113)
   let assert Ok(jj) = holon.find(hs, "jujutsu")
   jj.level |> should.equal(2)
   jj.plane |> should.equal(holon.Structure)
@@ -145,13 +150,14 @@ pub fn holon_count_is_34_including_jujutsu_test() {
 }
 
 // ---------------------------------------------------------------------------
-// HOLARCHY-CENSUS: 10 Subsystem holons + 113 census-derived Process holons.
+// HOLARCHY-CENSUS + HOLON-LIFECYCLE: 11 Subsystem holons (the original 10 plus the new
+// `constitution` L0-constitutional whole) + 113 census-derived Process holons.
 // ---------------------------------------------------------------------------
 
-pub fn holarchy_carries_10_subsystems_and_113_process_holons_test() {
+pub fn holarchy_carries_11_subsystems_and_113_process_holons_test() {
   let hs = holon.holarchy()
   list.length(list.filter(hs, fn(h) { h.kind == holon.Subsystem }))
-  |> should.equal(10)
+  |> should.equal(11)
   list.length(list.filter(hs, fn(h) { h.kind == holon.Process }))
   |> should.equal(113)
   // Every Process holon carries a 13-hex uid and a non-empty process_class.
@@ -276,4 +282,201 @@ pub fn b13_is_a_placeholder_that_passes_test() {
   id |> should.equal("B13")
   ok |> should.be_true
   string.contains(detail, "placeholder") |> should.be_true
+}
+
+// ---------------------------------------------------------------------------
+// HOLON-LIFECYCLE: `LifecycleEvent`/`transition` state machine.
+// ---------------------------------------------------------------------------
+
+/// (1) Every legal transition edge: the five forward edges plus the five "Die from a
+/// non-terminal state" edges.
+pub fn transition_legal_edges_test() {
+  holon.transition(holon.Dormant, holon.Wake)
+  |> should.equal(Ok(holon.Awakening))
+  holon.transition(holon.Awakening, holon.Ready)
+  |> should.equal(Ok(holon.Active))
+  holon.transition(holon.Active, holon.Stress)
+  |> should.equal(Ok(holon.Stressed))
+  holon.transition(holon.Stressed, holon.Heal)
+  |> should.equal(Ok(holon.Healing))
+  holon.transition(holon.Healing, holon.Recover)
+  |> should.equal(Ok(holon.Active))
+  holon.transition(holon.Dormant, holon.Die)
+  |> should.equal(Ok(holon.Apoptotic))
+  holon.transition(holon.Awakening, holon.Die)
+  |> should.equal(Ok(holon.Apoptotic))
+  holon.transition(holon.Active, holon.Die) |> should.equal(Ok(holon.Apoptotic))
+  holon.transition(holon.Stressed, holon.Die)
+  |> should.equal(Ok(holon.Apoptotic))
+  holon.transition(holon.Healing, holon.Die)
+  |> should.equal(Ok(holon.Apoptotic))
+}
+
+/// (2) At least four illegal edges return `Error`.
+pub fn transition_illegal_edges_are_errors_test() {
+  case holon.transition(holon.Dormant, holon.Ready) {
+    Error(_) -> Nil
+    Ok(_) -> should.fail()
+  }
+  case holon.transition(holon.Dormant, holon.Stress) {
+    Error(_) -> Nil
+    Ok(_) -> should.fail()
+  }
+  case holon.transition(holon.Active, holon.Wake) {
+    Error(_) -> Nil
+    Ok(_) -> should.fail()
+  }
+  case holon.transition(holon.Healing, holon.Stress) {
+    Error(_) -> Nil
+    Ok(_) -> should.fail()
+  }
+  case holon.transition(holon.Stressed, holon.Recover) {
+    Error(_) -> Nil
+    Ok(_) -> should.fail()
+  }
+}
+
+/// (3) `Apoptotic` is terminal: every one of the 6 events from it is an `Error`.
+pub fn transition_apoptotic_is_terminal_for_every_event_test() {
+  list.each(
+    [
+      holon.Wake,
+      holon.Ready,
+      holon.Stress,
+      holon.Heal,
+      holon.Recover,
+      holon.Die,
+    ],
+    fn(event) {
+      case holon.transition(holon.Apoptotic, event) {
+        Error(_) -> Nil
+        Ok(_) -> should.fail()
+      }
+    },
+  )
+}
+
+// ---------------------------------------------------------------------------
+// HOLON-LIFECYCLE: `lifecycle_from_status` and `with_process`-derived lifecycle.
+// ---------------------------------------------------------------------------
+
+/// (4) `lifecycle_from_status` for all five named census statuses and one unknown status.
+pub fn lifecycle_from_status_maps_all_named_statuses_test() {
+  holon.lifecycle_from_status("running") |> should.equal(holon.Active)
+  holon.lifecycle_from_status("stopped") |> should.equal(holon.Dormant)
+  holon.lifecycle_from_status("absent") |> should.equal(holon.Dormant)
+  holon.lifecycle_from_status("failed") |> should.equal(holon.Stressed)
+  holon.lifecycle_from_status("superseded") |> should.equal(holon.Apoptotic)
+  // Unknown/blank statuses (the census itself never uses "running"/"stopped"/"failed" -- see
+  // (5) below -- and instead uses "integrated"/"imported-not-wired"/"barred"/"") default safely
+  // to Dormant, same as an unrecognized status would.
+  holon.lifecycle_from_status("not-a-real-status")
+  |> should.equal(holon.Dormant)
+  holon.lifecycle_from_status("") |> should.equal(holon.Dormant)
+}
+
+/// (5) A holon built with `with_process(_, _, "running")` is Active (the daemon census fixture
+/// itself never uses the literal string "running" -- its vocabulary is
+/// integrated/imported-not-wired/absent/superseded/barred -- so this exercises the mapping
+/// directly via `with_process` rather than searching for a census row that cannot exist); and a
+/// real census-derived holon whose status is "superseded" is Apoptotic.
+pub fn census_holon_lifecycle_running_is_active_and_superseded_is_apoptotic_test() {
+  let running =
+    holon.holon("x", "x", "x", 4, holon.Runtime, option.None, [], "m")
+    |> holon.with_process("systemd", "running")
+  running.lifecycle |> should.equal(holon.Active)
+
+  let assert Ok(superseded) =
+    holon.find(holon.holarchy(), "c3i-sa-plan-cortex-service")
+  superseded.status |> should.equal("superseded")
+  superseded.lifecycle |> should.equal(holon.Apoptotic)
+}
+
+// ---------------------------------------------------------------------------
+// HOLON-LIFECYCLE: the level-cascade fix (`constitution`, restored subsystem/plane levels).
+// ---------------------------------------------------------------------------
+
+/// (6) `constitution` exists at L0 with whole "uos", and every L0 `Process` holon names
+/// `constitution` as its whole.
+pub fn constitution_holds_every_l0_process_holon_test() {
+  let hs = holon.holarchy()
+  let assert Ok(constitution) = holon.find(hs, "constitution")
+  constitution.level |> should.equal(0)
+  constitution.whole |> should.equal(option.Some("uos"))
+  constitution.kind |> should.equal(holon.Subsystem)
+  list.each(hs, fn(h) {
+    case h.kind == holon.Process && h.level == 0 {
+      True -> h.whole |> should.equal(option.Some("constitution"))
+      False -> Nil
+    }
+  })
+}
+
+/// (7) All seven plane holons and `planes` itself are at L1 (the level-monotonic cascade no
+/// longer pulls them down to L0 now that the L0 census rows sit under `constitution`).
+pub fn all_planes_and_planes_grouping_are_at_l1_test() {
+  let hs = holon.holarchy()
+  list.each(
+    [
+      "control-plane", "structure-plane", "runtime-plane", "data-plane",
+      "messaging-plane", "intelligence-plane", "language-plane", "planes",
+    ],
+    fn(id) {
+      let assert Ok(h) = holon.find(hs, id)
+      h.level |> should.equal(1)
+    },
+  )
+}
+
+/// (8) No `Subsystem`-kind holon sits at L0 any more (all 11, including `constitution` itself
+/// once it is excluded as the new L0-constitutional whole -- `constitution` is intentionally L0,
+/// every OTHER Subsystem is not).
+pub fn no_non_constitution_subsystem_holon_is_at_l0_test() {
+  let hs = holon.holarchy()
+  list.each(hs, fn(h) {
+    case h.kind == holon.Subsystem && h.id != "constitution" {
+      True -> { h.level != 0 } |> should.be_true
+      False -> Nil
+    }
+  })
+}
+
+/// (9) Total holon count is 158, and the level distribution matches the design's post-fix
+/// count exactly: L0 12, L1 24, L2 24, L3 7, L4 58, L5 26, L6 6, L7 1.
+pub fn total_count_and_level_distribution_test() {
+  let hs = holon.holarchy()
+  list.length(hs) |> should.equal(158)
+  let count_at = fn(level: Int) {
+    list.length(list.filter(hs, fn(h) { h.level == level }))
+  }
+  let dist = [
+    #(0, count_at(0)),
+    #(1, count_at(1)),
+    #(2, count_at(2)),
+    #(3, count_at(3)),
+    #(4, count_at(4)),
+    #(5, count_at(5)),
+    #(6, count_at(6)),
+    #(7, count_at(7)),
+  ]
+  io.println(
+    "level distribution: "
+    <> string.join(
+      list.map(dist, fn(d) {
+        "L" <> int.to_string(d.0) <> "=" <> int.to_string(d.1)
+      }),
+      " ",
+    ),
+  )
+  dist
+  |> should.equal([
+    #(0, 12),
+    #(1, 24),
+    #(2, 24),
+    #(3, 7),
+    #(4, 58),
+    #(5, 26),
+    #(6, 6),
+    #(7, 1),
+  ])
 }

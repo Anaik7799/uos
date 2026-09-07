@@ -85,6 +85,8 @@ The holon record is the natural join between the control plane (supervision), th
 | integration | two-parent merge rnqvrplsnlwq/73808b50c4f4 on main under lease epoch 27 (coordinator events 369/373); receipt tyzwypwovvqs/61f2ddc6; DR-20260907-1539 completed; sa-plan HOLARCHY-CENSUS completed (measured) |
 | modelling consequence | B5 level-monotonic rule cascaded `cepaf-gleam`, `uos-swarm`, `tools`, `native-nifs` and three planes to L0 because L0 process rows sit under their subsystem; refinement recorded in the design's Appendix C for HOLON-LIFECYCLE (an L0 constitution holon as the whole) |
 | ontology vocabulary | the signed board's concept registry (`system_ontology`) has no holon, holarchy or census concept; Integrate posts for this slice had to cite `Compositor` and `17 Aspect audit`; registering holonic concepts is a KM task |
+| HOLON-LIFECYCLE (W-K, okyntnlylzzn@01138cca) | L0 `constitution` holon as the whole of 9 L0 process holons; planes and `planes` back at L1; cepaf-gleam/uos-swarm L2, native-nifs L1; 158 holons, L0 12 / L1 24 / L2 24 / L3 7 / L4 58 / L5 26 / L6 6 / L7 1; lifecycle state machine with 6 legal edges and derived initial state; optional Vitals; 591 tests; B1–B10 PASS (measured) |
+| sa-plan store split (found 16:3x) | `tools/sa-plan` on main defaults to `state/sa_plan.sqlite3`; the canonical working copy's wrapper exports `var/sa-plan/uos.sqlite3` (the mandate's path); my plans lived in state/, peers' in var/; append-only replay into var under DR-20260907-1635 after a peer objection window; nothing deleted |
 
 ## 10. Remaining Gaps
 - P1: SUP-GENERATOR, KEY-ALIGN, PROJECTIONS not started (sa-plan tasks available); HOLARCHY-CENSUS completed 16:1x UTC (see 7a); HOLON-LIFECYCLE must first fix the level cascade.
