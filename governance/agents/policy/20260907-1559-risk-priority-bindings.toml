@@ -1,0 +1,31 @@
+[policy]
+id = "SC-RISK-PRIORITY-001"
+version = "1.0.0"
+sop = "contracts/rules/20260907-1559-risk-prioritization-sop.md"
+skill = "plugins/uos-risk-prioritization/skills/uos-risk-prioritization/SKILL.md"
+superpowers = "plugins/uos-risk-prioritization/skills/uos-risk-prioritization/references/20260907-1559-superpowers-bindings.md"
+validator = "tools/risk-priority-check"
+enforcement = "process_rule"
+runtime_enforcement = "NOT_IMPLEMENTED_BY_THIS_PACKAGE"
+plugin_installation = "NOT_ASSERTED"
+external_skill_dependencies = []
+
+[agents]
+entry_points = ["AGENTS.md", ".codex/AGENTS.md", ".claude/AGENTS.md", ".gemini/AGENTS.md", ".agents/AGENTS.md"]
+skill_roots = [".codex/skills", ".claude/skills", ".gemini/skills", ".agents/skills"]
+roles = ["planner", "implementer", "reviewer", "sre", "operator", "advisory_model", "plugin_adapter"]
+
+[workflows]
+phases = ["intake", "plan", "claim", "implement", "review", "integrate", "release", "operate", "incident", "recover", "journal"]
+mandatory_skills = ["system-engineering-sop", "stpa-safety-protocol", "fractal-decision-calculus", "production-readiness", "journal-protocol"]
+superpowers = ["brainstorming", "writing-plans", "executing-plans", "test-driven-development", "systematic-debugging", "dispatching-parallel-agents", "subagent-driven-development", "requesting-code-review", "receiving-code-review", "verification-before-completion", "finishing-a-development-branch", "writing-skills"]
+delegation = "subject_to_active_session_permissions"
+authority = "sa-plan"
+
+[plugin]
+name = "uos-risk-prioritization"
+path = "plugins/uos-risk-prioritization"
+hooks = false
+network = false
+runtime_mutations = false
+
