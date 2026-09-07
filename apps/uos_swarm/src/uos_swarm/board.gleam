@@ -18,9 +18,9 @@ import gleam/option.{type Option, None, Some}
 import gleam/result
 import gleam/string
 import uos_swarm/stpa
+import uos_swarm/system_ontology
 import uos_tui/aspects
 import uos_tui/layout.{Cells, Fraction, Vertical}
-import uos_tui/ontology
 import uos_tui/telemetry
 import uos_tui/widget.{type Widget, Column}
 
@@ -1114,10 +1114,14 @@ pub const muda_labels = [
 ]
 
 pub fn validate_semantics(s: Semantics) -> Result(Nil, String) {
-  let concepts = list.map(ontology.concepts(), fn(c) { c.textual_name })
   let cas = list.map(stpa.model().control_actions, fn(c) { c.id })
   let bad_concept =
-    list.find(s.ontology_concepts, fn(c) { !list.contains(concepts, c) })
+    list.find(s.ontology_concepts, fn(c) {
+      case system_ontology.resolve(c) {
+        Ok(_) -> False
+        Error(_) -> True
+      }
+    })
   let bad_aspect = list.find(s.aspects, fn(a) { a < 1 || a > 17 })
   let bad_ca = list.find(s.control_actions, fn(c) { !list.contains(cas, c) })
   let bad_muda = list.find(s.muda, fn(m) { !list.contains(muda_labels, m) })

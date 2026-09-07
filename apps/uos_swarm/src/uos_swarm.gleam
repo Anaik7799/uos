@@ -20,6 +20,8 @@
 ////   audit-system <ledger.json> <board.jsonl> <zenoh_base|->
 ////   manager-dictionary
 ////   manager-run <ledger.json> <board.jsonl> <zenoh_base|-> <cycles>
+////   ontology dictionary | ontology glossary | ontology wiki | ontology json
+////   ontology check <ledger.jsonl> | ontology resolve <name>
 ////   (anything else)             prints this usage
 
 import argv
@@ -44,6 +46,7 @@ import uos_swarm/ooda
 import uos_swarm/stpa
 import uos_swarm/swarm
 import uos_swarm/system_audit
+import uos_swarm/system_ontology
 import uos_swarm/tps
 import uos_tui/aspects
 import uos_tui/fprime
@@ -77,7 +80,9 @@ const usage = "Package entry. `gleam run -- <command>`:
   lifecycle-machine
   audit-system <ledger.json> <board.jsonl> <zenoh_base|->
   manager-dictionary
-  manager-run <ledger.json> <board.jsonl> <zenoh_base|-> <cycles>"
+  manager-run <ledger.json> <board.jsonl> <zenoh_base|-> <cycles>
+  ontology dictionary | ontology glossary | ontology wiki | ontology json
+  ontology check <ledger.jsonl> | ontology resolve <name>"
 
 pub fn main() -> Nil {
   case argv.load().arguments {
@@ -306,7 +311,52 @@ pub fn main() -> Nil {
       )
     ["manager-run", ledger_path, board_path, zenoh_base, cycles] ->
       manager_run(ledger_path, board_path, zenoh_base, cycles)
+    ["ontology", "dictionary"] ->
+      io.println(system_ontology.dictionary_markdown())
+    ["ontology", "glossary"] -> io.println(system_ontology.glossary_markdown())
+    ["ontology", "wiki"] -> io.println(system_ontology.wiki_markdown())
+    ["ontology", "json"] ->
+      io.println(json.to_string(system_ontology.to_json()))
+    ["ontology", "check", path] -> ontology_check(path)
+    ["ontology", "resolve", name] -> ontology_resolve(name)
     _ -> io.println(usage)
+  }
+}
+
+/// Load every message on a ledger and check `semantics.ontology_concepts` against the
+/// unified system ontology registry: `aligned N/M` always, plus the bare word `aligned` when
+/// every reference resolves, otherwise one `unresolved: <name>` line per unknown concept.
+fn ontology_check(path: String) -> Nil {
+  let ms = load_board_messages(path)
+  let names = list.flat_map(ms, fn(m) { m.semantics.ontology_concepts })
+  let total = list.length(names)
+  let #(ok, unresolved) = system_ontology.alignment_report(names)
+  io.println("aligned " <> int.to_string(ok) <> "/" <> int.to_string(total))
+  case unresolved {
+    [] -> io.println("aligned")
+    xs -> list.each(xs, fn(n) { io.println("unresolved: " <> n) })
+  }
+}
+
+fn ontology_resolve(name: String) -> Nil {
+  case system_ontology.resolve(name) {
+    Ok(c) ->
+      io.println(
+        c.id
+        <> " · "
+        <> c.devanagari
+        <> " · "
+        <> c.iast
+        <> " · "
+        <> c.english
+        <> " · "
+        <> system_ontology.domain_label(c.domain)
+        <> " · L"
+        <> int.to_string(c.layer)
+        <> " · "
+        <> c.definition,
+      )
+    Error(_) -> io.println("unresolved: " <> name)
   }
 }
 
