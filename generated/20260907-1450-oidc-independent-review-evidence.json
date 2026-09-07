@@ -1,0 +1,446 @@
+{
+  "schema": "uos-oidc-independent-review-evidence/v1",
+  "generated_at_utc": "2026-09-07T14:08:50Z",
+  "clock": {
+    "source": "observed host UTC",
+    "synchronization_observed_at_utc": "2026-09-07T14:05:39Z",
+    "ntp_synchronized": true
+  },
+  "task": {
+    "plan": "uos/mirage-security/20260907-1310",
+    "id": "AUTH-VERIFY",
+    "reviewer": "codex-auth-review",
+    "coordinator": "parent /root",
+    "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/codex-oidc-auth-review"
+  },
+  "candidate": {
+    "commit_id": "9193385706282ea61300e77cbcc6f4664273a57d",
+    "change_id": "kozsqvqtssvpvupqpnstxuxrkvlwuoyl",
+    "description": "feat(auth): verify bounded FerrisKey Ed25519 JWTs without fallback"
+  },
+  "verdict": {
+    "bounded_jwt_verifier": "APPROVED_WITH_STATED_SCOPE",
+    "configured_wrapper_no_static_downgrade": "PASS",
+    "real_router_post_boundary": "PASS_FOR_16_REJECTED_CREDENTIAL_CASES",
+    "whole_web_ingress": "NOT_APPROVED_SOURCE_GAPS",
+    "live_service": "UNRUN",
+    "system_admission": "NOT_GRANTED"
+  },
+  "tools": {
+    "gleam": "1.16.0",
+    "otp_release": "29",
+    "erts": "17.0.6",
+    "otp_installation": "/nix/store/qq9f90d5giydnhpdxlqq83n21c22jq0b-erlang-29.0.6/lib/erlang/bin",
+    "erl_flags": "+S 4:4 +A 4"
+  },
+  "build": {
+    "source": "fresh generated Erlang from candidate Gleam sources, then erlc selected actual source and test modules",
+    "compile_package_exit": 0,
+    "erlc_exit": 0,
+    "package_path": "apps/cepaf_gleam",
+    "local_dependency_beam_cache": "/home/an/NAS-setup/uos/.uos-workspaces/codex-oidc-verifier/apps/cepaf_gleam/build/dev/erlang",
+    "own_generated_output": "var/oidc-review/compiled/cepaf_gleam",
+    "own_beam_output": "var/oidc-review/ebin",
+    "verified_code_paths": [
+      {
+        "module": "cepaf_gleam@auth@oidc",
+        "path": "var/oidc-review/ebin/cepaf_gleam@auth@oidc.beam"
+      },
+      {
+        "module": "cepaf_gleam@ui@wisp@auth",
+        "path": "var/oidc-review/ebin/cepaf_gleam@ui@wisp@auth.beam"
+      },
+      {
+        "module": "oidc_jwt_ffi",
+        "path": "var/oidc-review/ebin/oidc_jwt_ffi.beam"
+      },
+      {
+        "module": "auth_oidc_test",
+        "path": "var/oidc-review/ebin/auth_oidc_test.beam"
+      },
+      {
+        "module": "cepaf_gleam@ui@wisp@router",
+        "path": "var/oidc-review/ebin/cepaf_gleam@ui@wisp@router.beam"
+      }
+    ],
+    "deadline_seconds": {
+      "compile_package": 90,
+      "each_test_vm": 30
+    },
+    "termination_grace_seconds": 2,
+    "warning": "Existing http_uri:encode deprecation in cepaf_gleam_ffi; compilation succeeded.",
+    "limitation": "Dependencies use an existing local build cache. This is not a complete dependency rebuild or a production deployment attestation."
+  },
+  "supplied_tests": {
+    "framework": "EUnit",
+    "module": "auth_oidc_test",
+    "total": 24,
+    "passed": 24,
+    "failed": 0,
+    "exit_code": 0,
+    "output": "OTP 29\n======================== EUnit ========================\nmodule 'auth_oidc_test'\n  auth_oidc_test: valid_signed_token_test...[0.011 s] ok\n  auth_oidc_test: string_audience_is_accepted_test...ok\n  auth_oidc_test: tampered_signature_is_rejected_test...ok\n  auth_oidc_test: wrong_key_is_rejected_test...ok\n  auth_oidc_test: none_algorithm_is_rejected_test...ok\n  auth_oidc_test: duplicate_header_is_rejected_test...ok\n  auth_oidc_test: duplicate_claim_is_rejected_test...ok\n  auth_oidc_test: token_directed_jku_is_rejected_test...ok\n  auth_oidc_test: wrong_issuer_is_rejected_test...ok\n  auth_oidc_test: wrong_audience_is_rejected_test...ok\n  auth_oidc_test: expired_token_is_rejected_test...ok\n  auth_oidc_test: future_nbf_is_rejected_test...ok\n  auth_oidc_test: future_iat_is_rejected_test...[0.001 s] ok\n  auth_oidc_test: empty_subject_is_rejected_test...[0.001 s] ok\n  auth_oidc_test: padded_base64url_segment_is_rejected_test...[0.008 s] ok\n  auth_oidc_test: absent_snapshot_fails_closed_test...ok\n  auth_oidc_test: stale_snapshot_fails_closed_test...ok\n  auth_oidc_test: oversized_token_is_rejected_test...ok\n  auth_oidc_test: invalid_jwk_profile_is_rejected_at_load_test...ok\n  auth_oidc_test: duplicate_jwks_member_is_rejected_at_load_test...ok\n  auth_oidc_test: more_than_sixteen_keys_is_rejected_at_load_test...ok\n  auth_oidc_test: oidc_mode_never_downgrades_to_static_admin_test...ok\n  auth_oidc_test: static_mode_remains_available_when_explicitly_selected_test...ok\n  auth_oidc_test: token_claim_helpers_test...ok\n  [done in 0.096 s]\n=======================================================\n  All 24 tests passed.\n"
+  },
+  "independent_tests": {
+    "total": 59,
+    "otp_release": "29",
+    "failed": 0,
+    "external_traffic": false,
+    "passed": 59,
+    "production_secret_access": false,
+    "results": [
+      {
+        "name": "ephemeral_signed_positive",
+        "passed": true
+      },
+      {
+        "name": "issuer_exact_suffix_rejected",
+        "passed": true
+      },
+      {
+        "name": "audience_empty_rejected",
+        "passed": true
+      },
+      {
+        "name": "audience_empty_array_rejected",
+        "passed": true
+      },
+      {
+        "name": "audience_mixed_type_rejected",
+        "passed": true
+      },
+      {
+        "name": "audience_seventeen_rejected",
+        "passed": true
+      },
+      {
+        "name": "expiry_exact_now_rejected",
+        "passed": true
+      },
+      {
+        "name": "nbf_skew_boundary_accepted",
+        "passed": true
+      },
+      {
+        "name": "nbf_past_skew_rejected",
+        "passed": true
+      },
+      {
+        "name": "iat_skew_boundary_accepted",
+        "passed": true
+      },
+      {
+        "name": "iat_past_skew_rejected",
+        "passed": true
+      },
+      {
+        "name": "nbf_at_expiry_rejected",
+        "passed": true
+      },
+      {
+        "name": "iat_negative_rejected",
+        "passed": true
+      },
+      {
+        "name": "subject_whitespace_rejected",
+        "passed": true
+      },
+      {
+        "name": "subject_over_limit_rejected",
+        "passed": true
+      },
+      {
+        "name": "unknown_kid_rejected",
+        "passed": true
+      },
+      {
+        "name": "inline_jwk_rejected",
+        "passed": true
+      },
+      {
+        "name": "critical_header_rejected",
+        "passed": true
+      },
+      {
+        "name": "wrong_typ_rejected",
+        "passed": true
+      },
+      {
+        "name": "signature_tamper_rejected",
+        "passed": true
+      },
+      {
+        "name": "nested_duplicate_rejected",
+        "passed": true
+      },
+      {
+        "name": "escaped_duplicate_rejected",
+        "passed": true
+      },
+      {
+        "name": "trailing_payload_rejected",
+        "passed": true
+      },
+      {
+        "name": "snapshot_future_rejected",
+        "passed": true
+      },
+      {
+        "name": "snapshot_age_boundary_accepted",
+        "passed": true
+      },
+      {
+        "name": "snapshot_age_expired_rejected",
+        "passed": true
+      },
+      {
+        "name": "snapshot_zero_age_rejected",
+        "passed": true
+      },
+      {
+        "name": "snapshot_over_max_age_rejected",
+        "passed": true
+      },
+      {
+        "name": "snapshot_duplicate_kid_rejected",
+        "passed": true
+      },
+      {
+        "name": "snapshot_sign_only_key_rejected",
+        "passed": true
+      },
+      {
+        "name": "snapshot_too_large_rejected",
+        "passed": true
+      },
+      {
+        "name": "real_wrapper_oidc_positive",
+        "passed": true
+      },
+      {
+        "name": "real_wrapper_no_static_signature_downgrade",
+        "passed": true
+      },
+      {
+        "name": "real_wrapper_no_admin_user_downgrade",
+        "passed": true
+      },
+      {
+        "name": "real_router_valid_unknown_post_is_404",
+        "passed": true
+      },
+      {
+        "name": "real_router_bad_post_is_401",
+        "passed": true
+      },
+      {
+        "name": "real_wrapper_missing_header",
+        "passed": true
+      },
+      {
+        "name": "post_boundary:/api/v1/podman/action",
+        "passed": true
+      },
+      {
+        "name": "post_boundary:/api/v1/podman/restart",
+        "passed": true
+      },
+      {
+        "name": "post_boundary:/api/v1/podman/stop",
+        "passed": true
+      },
+      {
+        "name": "post_boundary:/api/v1/emergency/trigger",
+        "passed": true
+      },
+      {
+        "name": "post_boundary:/api/v1/guardian/respond",
+        "passed": true
+      },
+      {
+        "name": "post_boundary:/api/v1/ooda/trigger",
+        "passed": true
+      },
+      {
+        "name": "post_boundary:/api/v1/system/ooda-trigger",
+        "passed": true
+      },
+      {
+        "name": "post_boundary:/api/v1/plan/update",
+        "passed": true
+      },
+      {
+        "name": "post_boundary:/api/v1/planning/add",
+        "passed": true
+      },
+      {
+        "name": "post_boundary:/api/v1/reload",
+        "passed": true
+      },
+      {
+        "name": "post_boundary:/api/v1/zenoh/publish",
+        "passed": true
+      },
+      {
+        "name": "post_boundary:/api/v1/cockpit/mode",
+        "passed": true
+      },
+      {
+        "name": "post_boundary:/api/v1/pi/prompt",
+        "passed": true
+      },
+      {
+        "name": "post_boundary:/ag-ui/run",
+        "passed": true
+      },
+      {
+        "name": "post_boundary:/ag-ui/hitl/respond",
+        "passed": true
+      },
+      {
+        "name": "post_boundary:/ag-ui/tools/result",
+        "passed": true
+      },
+      {
+        "name": "put_rejects_unsupported_method",
+        "passed": true
+      },
+      {
+        "name": "delete_rejects_unsupported_method",
+        "passed": true
+      },
+      {
+        "name": "patch_rejects_unsupported_method",
+        "passed": true
+      },
+      {
+        "name": "real_wrapper_missing_snapshot_no_downgrade",
+        "passed": true
+      },
+      {
+        "name": "real_wrapper_stale_snapshot_no_downgrade",
+        "passed": true
+      },
+      {
+        "name": "real_wrapper_explicit_static_mode",
+        "passed": true
+      }
+    ],
+    "schema": "uos-oidc-independent-review/v1"
+  },
+  "test_safety_and_scope": {
+    "fixtures": "Ephemeral Ed25519 key pair generated in memory; synthetic review.example issuer and local claims.",
+    "environment": "env -i test VMs; only test-process environment changed. No production secret read or live configuration edit.",
+    "network": "No listener, package download or network operation in the test harness. No packet-capture or namespace-isolation claim; unshare -Urn was unavailable.",
+    "mutation_paths": "Known POST paths were called only after actual wrapper plus harmless unknown-route rejection checks passed, using a rejected credential; all returned 401 before their mutation handlers.",
+    "excluded": [
+      "live reload invocation",
+      "live ingress traffic",
+      "full 10000+ test suite",
+      "production IdP configuration or JWKS fetch",
+      "service restart",
+      "integration",
+      "deployment"
+    ],
+    "scope_flags_basis": "external_traffic and production_secret_access booleans are harness-design assertions, not separate measured monitors."
+  },
+  "correspondence": [
+    {
+      "requirement": "Only the fixed EdDSA/Ed25519 profile verifies signatures against operator-supplied public keys.",
+      "source": "apps/cepaf_gleam/src/oidc_jwt_ffi.erl:18",
+      "review": "PASS",
+      "evidence": "Real crypto positive/wrong-key/tamper controls; header allowlist, strict canonical base64url, duplicate JSON rejection, bounded JWT/JWKS."
+    },
+    {
+      "requirement": "Subject, issuer, audience and time predicates all follow verified signature.",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/auth/oidc.gleam:176",
+      "review": "PASS",
+      "evidence": "Exact issuer, audience shape/membership, exp strict boundary, nbf/iat skew and ordering, subject shape controls."
+    },
+    {
+      "requirement": "Snapshot absence, future timestamp and expiry reject.",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/auth/oidc.gleam:176",
+      "review": "PASS",
+      "evidence": "Missing/future/age boundary/expiry/maximum age controls."
+    },
+    {
+      "requirement": "Selected OIDC mode never falls back to legacy static admin.",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/auth.gleam:95",
+      "review": "PASS",
+      "evidence": "Tampered JWT set equal to synthetic C3I_API_TOKEN still rejected in OIDC mode; missing/stale snapshots also rejected; get_authenticated_user rejects."
+    },
+    {
+      "requirement": "The real request router rejects bad credentials before intended POST handlers.",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam:4320",
+      "review": "PASS_BOUNDED",
+      "evidence": "16 known POST paths returned 401. Valid unknown POST returned 404; unsupported PUT/DELETE/PATCH returned 405."
+    },
+    {
+      "requirement": "The actual web entrypoint routes request metadata through authentication and method handling.",
+      "source": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam:79",
+      "review": "FAIL_SOURCE_ONLY",
+      "evidence": "AG-UI and API fallback call path-only route; no handle_request boundary."
+    }
+  ],
+  "findings": [
+    {
+      "id": "AUTH-INGRESS-001",
+      "severity": "HIGH",
+      "introduced_by_candidate": false,
+      "observation": "SOURCE_ONLY",
+      "source_locations": [
+        "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam:79",
+        "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam:493"
+      ],
+      "problem": "AG-UI and API fallback pass only path to c3i_router.route, discarding request method, headers and body; responses are rebuilt with status 200. This bypasses handle_request and authenticated handle_post.",
+      "concrete_effect": "/api/v1/reload reaches the path router's side-effecting reload function when the request health guard permits. Other POST-only handlers are not automatically reachable through this path; many instead yield unknown-route output.",
+      "requested_fix": "Adapt the actual Mist request into the authenticated request router, preserving method/headers/body and response status/headers. Test through the exported adapter boundary; keep mutation rejection ahead of handlers."
+    },
+    {
+      "id": "AUTH-INGRESS-002",
+      "severity": "HIGH",
+      "introduced_by_candidate": false,
+      "observation": "SOURCE_ONLY",
+      "source_locations": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam:141",
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam:1642",
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam:3716"
+      ],
+      "problem": "The path route maps /api/v1/reload to hot_reload.reload_changed; is_post_only_path omits it. GET/HEAD handling can therefore invoke reload without the POST auth boundary.",
+      "requested_fix": "Make GET/HEAD metadata-only or 405 and keep the reload effect exclusively behind authenticated POST. Update the POST-only registry and route-level negative tests.",
+      "runtime_reproduction": "NOT_EXECUTED; no reload invoked by this lane."
+    }
+  ],
+  "operational_limits": [
+    "FERRISKEY_ENABLED must explicitly equal true or 1; absent or other values select the legacy static mode. Missing C3I_API_TOKEN in static mode retains the existing c3i-dev-token fallback.",
+    "Operator must provision the intended issuer, audience and client values; development defaults remain.",
+    "Operator must provide trustworthy public JWKS plus loaded-at and maximum-age metadata and refresh them externally. Request handling performs no discovery or refresh.",
+    "Snapshot age defaults to 300 seconds with an implementation maximum of 3600 seconds; future or expired snapshots reject.",
+    "Only the strict EdDSA/Ed25519 JWT profile is reviewed. This is not general JOSE/OIDC compatibility, deployment validation or a formal proof of the implementation.",
+    "Authentication of a request is not per-route authorization: this candidate does not add a complete RBAC/MFA endpoint policy.",
+    "Live indrajaal ingress was reviewed from frozen source only; no listener or operational authentication configuration was interrogated."
+  ],
+  "source_sha256": {
+    "apps/cepaf_gleam/src/cepaf_gleam/auth/oidc.gleam": "c83d26628e912765751f2ece759c9826d498079ac143e0cd7ef9ef81d6f85dc6",
+    "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/auth.gleam": "6b42dd7284e3946f6027a2d19c0968249452c81dfee8c77fe886cf0d60045868",
+    "apps/cepaf_gleam/src/oidc_jwt_ffi.erl": "efbac5db17aba6c3af824ac5a1e3382b94634a02cd17f2b49a88c7a78dba2cc1",
+    "apps/cepaf_gleam/test/auth_oidc_test.gleam": "5ee9d002dd9f0e4d935032b2ca86af097ab874bfaab4b691f9307158c664df09",
+    "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam": "4a69024e412c3eae80d7a2ac687334cd66d9f6f55b7a971e9b26bebf64d713f6",
+    "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam": "c03b2b421e8d4ba5c7068fe3bea9b105ce452005e96f55297ce1f95b99ec1543",
+    "tools/verification/oidc/oidc_independent_review.erl": "0db412d9c0576784c4d8433e2518f2de7ffbf0b0f95ff964cbbd48f1107ed12e"
+  },
+  "preexisting_findings_evidence": "Both router.gleam and indrajaal_gleam_web.gleam have identical SHA-256 in the candidate and its immediate parent, verified with jj file show.",
+  "artifacts": {
+    "test": "tools/verification/oidc/oidc_independent_review.erl",
+    "journal": "docs/journal/20260907-1450-oidc-independent-review.md",
+    "evidence": "generated/20260907-1450-oidc-independent-review-evidence.json"
+  },
+  "reproduction": {
+    "dependency_path_variable": "Use a local compatible Gleam dependency cache; the reviewed run used build.local_dependency_beam_cache.",
+    "commands": [
+      "env -i PATH=<OTP29>:/home/an/.nix-profile/bin:/usr/bin:/bin ERL_FLAGS='+S 4:4 +A 4' LANG=C.UTF-8 timeout --kill-after=2s 90s gleam compile-package --target erlang --package apps/cepaf_gleam --out var/oidc-review/compiled/cepaf_gleam --lib <LOCAL_DEPENDENCY_CACHE> --no-beam",
+      "env -i PATH=<OTP29>:/usr/bin:/bin ERL_FLAGS='+S 4:4 +A 4' LANG=C.UTF-8 erlc -I var/oidc-review/compiled/cepaf_gleam/_gleam_artefacts -o var/oidc-review/ebin var/oidc-review/compiled/cepaf_gleam/_gleam_artefacts/cepaf_gleam@auth@oidc.erl var/oidc-review/compiled/cepaf_gleam/_gleam_artefacts/cepaf_gleam@ui@wisp@auth.erl var/oidc-review/compiled/cepaf_gleam/_gleam_artefacts/cepaf_gleam@auth@rbac.erl var/oidc-review/compiled/cepaf_gleam/_gleam_artefacts/oidc_jwt_ffi.erl var/oidc-review/compiled/cepaf_gleam/_gleam_artefacts/cepaf_gleam_ffi.erl var/oidc-review/compiled/cepaf_gleam/_gleam_artefacts/auth_oidc_test.erl var/oidc-review/compiled/cepaf_gleam/_gleam_artefacts/cepaf_gleam@ui@wisp@router.erl tools/verification/oidc/oidc_independent_review.erl",
+      "env -i PATH=<OTP29>:/usr/bin:/bin ERL_FLAGS='+S 4:4 +A 4' LANG=C.UTF-8 timeout --kill-after=2s 30s erl -noshell -pa <LOCAL_DEPENDENCY_CACHE>/*/ebin -pa var/oidc-review/ebin -eval 'case eunit:test(auth_oidc_test,[verbose]) of ok -> erlang:halt(0); _ -> erlang:halt(1) end.'",
+      "env -i PATH=<OTP29>:/usr/bin:/bin ERL_FLAGS='+S 4:4 +A 4' LANG=C.UTF-8 timeout --kill-after=2s 30s erl -noshell -pa <LOCAL_DEPENDENCY_CACHE>/*/ebin -pa var/oidc-review/ebin -eval 'erlang:halt(oidc_independent_review:run()).'"
+    ]
+  }
+}

@@ -14,9 +14,8 @@
 ////   </compliance>
 ////   <transformations>
 ////     <morphism type="injective">
-////       Static bearer token validation ↪ future JWT/Ed25519 upgrade path.
-////       Mitigation: Token read from env var C3I_API_TOKEN at call-site;
-////       no global mutable state; Result(T, E) used exclusively.
+////       Explicit static or OIDC authentication mode ↪ one fail-closed
+////       result. OIDC rejection cannot downgrade to static administrator.
 ////     </morphism>
 ////   </transformations>
 //// </c3i-module>
@@ -27,9 +26,8 @@
 //// Design (CPS 8.60):
 ////   - GET endpoints are open — operators can monitor without a token.
 ////   - POST/PUT/DELETE/PATCH require a valid Bearer token.
-////   - Token source: env var C3I_API_TOKEN (default: "c3i-dev-token").
-////   - Future upgrade: swap validate_token/1 for JWT/Ed25519 without
-////     changing the handle_request call-site.
+////   - Static mode token source: C3I_API_TOKEN (default: "c3i-dev-token").
+////   - OIDC mode uses only a fresh preloaded FERRISKEY_JWKS_SNAPSHOT.
 ////
 //// STAMP: SC-SEC-001, SC-GLM-UI-003
 
@@ -55,6 +53,12 @@ pub type AuthResult {
   Unauthenticated
   /// Header was present but malformed or the token did not match.
   InvalidToken(reason: String)
+}
+
+/// Authentication authority selected before inspecting attacker input.
+pub opaque type AuthMode {
+  StaticMode(expected_token: String)
+  OidcMode(config: oidc.OidcConfig)
 }
 
 // ---------------------------------------------------------------------------
@@ -91,7 +95,39 @@ const bearer_prefix = "Bearer "
 pub fn validate_request(request: HttpRequest(String)) -> AuthResult {
   case request.get_header(request, "authorization") {
     Error(Nil) -> Unauthenticated
-    Ok(header_value) -> validate_header(header_value)
+    Ok(header_value) -> validate_header(header_value, system_time_seconds())
+  }
+}
+
+/// Construct legacy static-token mode. This is used only when OIDC is
+/// disabled before request authentication begins.
+pub fn static_mode(expected_token: String) -> AuthMode {
+  StaticMode(expected_token)
+}
+
+/// Construct FerrisKey OIDC mode with issuer-bound key authority.
+pub fn oidc_mode(config: oidc.OidcConfig) -> AuthMode {
+  OidcMode(config)
+}
+
+/// Pure authentication-policy observation used by the Wisp adapter and tests.
+/// There is no transition from `OidcMode` to `StaticMode` on failure.
+pub fn validate_authorization(
+  header_value: String,
+  mode: AuthMode,
+  current_time: Int,
+) -> AuthResult {
+  case string.starts_with(header_value, bearer_prefix) {
+    False -> InvalidToken("authorization header must use Bearer scheme")
+    True -> {
+      let submitted_token = string.drop_start(header_value, 7)
+      case mode {
+        StaticMode(expected_token) ->
+          validate_static_token(submitted_token, expected_token)
+        OidcMode(config) ->
+          validate_oidc_token(submitted_token, config, current_time)
+      }
+    }
   }
 }
 
@@ -175,42 +211,41 @@ pub fn auth_error_json(reason: String) -> String {
 
 /// Validate a raw Authorization header value against the configured token.
 ///
-/// When FERRISKEY_ENABLED=true, attempts OIDC JWT validation first.
-/// Falls back to static token for backward compatibility (dev mode).
-fn validate_header(header_value: String) -> AuthResult {
-  case string.starts_with(header_value, bearer_prefix) {
-    False -> InvalidToken("authorization header must use Bearer scheme")
-    True -> {
-      let submitted_token = string.drop_start(header_value, 7)
-
-      // Try FerrisKey OIDC validation first when enabled
-      case ferriskey_enabled() {
-        True -> validate_oidc_token(submitted_token)
-        False -> validate_static_token(submitted_token)
+/// Select authority from trusted process configuration before validation.
+fn validate_header(header_value: String, current_time: Int) -> AuthResult {
+  case ferriskey_enabled() {
+    False ->
+      validate_authorization(
+        header_value,
+        static_mode(configured_token()),
+        current_time,
+      )
+    True ->
+      case oidc.config_from_env() {
+        Ok(config) ->
+          validate_authorization(header_value, oidc_mode(config), current_time)
+        Error(error) -> InvalidToken(oidc.error_to_string(error))
       }
-    }
   }
 }
 
 /// Validate JWT token against FerrisKey OIDC.
-fn validate_oidc_token(token: String) -> AuthResult {
-  let config = oidc.default_config()
-  let current_time = system_time_seconds()
+fn validate_oidc_token(
+  token: String,
+  config: oidc.OidcConfig,
+  current_time: Int,
+) -> AuthResult {
   case oidc.validate_token(token, config, current_time) {
     Ok(claims) -> AuthenticatedOidc(claims)
-    Error(err) -> {
-      // Fall back to static token check (SC-AUTH-006: disable in prod)
-      case validate_static_token(token) {
-        Authenticated(p) -> Authenticated(p)
-        _ -> InvalidToken(oidc.error_to_string(err))
-      }
-    }
+    Error(error) -> InvalidToken(oidc.error_to_string(error))
   }
 }
 
 /// Validate against the static bearer token (original behavior).
-fn validate_static_token(submitted_token: String) -> AuthResult {
-  let expected_token = configured_token()
+fn validate_static_token(
+  submitted_token: String,
+  expected_token: String,
+) -> AuthResult {
   case submitted_token == expected_token {
     True -> Authenticated(api_principal)
     False -> InvalidToken("token_mismatch")
