@@ -61,11 +61,27 @@ import mist.{type Connection, type ResponseData}
 
 const maximum_request_body_bytes = 65_536
 
+const request_body_read_timeout_milliseconds = 5000
+
+pub type FixedBodyReadError {
+  FixedBodyMalformed
+  FixedBodyReadTimeout
+  FixedBodyUnsupported
+}
+
 @external(erlang, "indrajaal_web_ffi", "read_repo_file")
 fn erl_read_repo_file(path: String) -> Result(BitArray, String)
 
 @external(erlang, "indrajaal_web_ffi", "listen_port")
 fn listen_port(default: Int) -> Int
+
+@external(erlang, "indrajaal_web_ffi", "read_fixed_request_body")
+fn read_fixed_request_body(
+  req: Request(Connection),
+  content_length: Int,
+  maximum_bytes: Int,
+  timeout_milliseconds: Int,
+) -> Result(Request(BitArray), FixedBodyReadError)
 
 pub fn main() {
   let port = listen_port(4100)
@@ -947,13 +963,7 @@ pub fn main() {
   }
 
   let router = fn(req: Request(Connection)) -> Response(ResponseData) {
-    case mist.read_body(req, max_body_limit: maximum_request_body_bytes) {
-      Ok(req) -> bounded_router(req)
-      Error(mist.ExcessBody) ->
-        request_body_error_response(413, "request_body_too_large")
-      Error(mist.MalformedBody) ->
-        request_body_error_response(400, "request_body_malformed")
-    }
+    handle_bounded_connection_request(req, bounded_router)
   }
 
   let assert Ok(_) =
@@ -981,6 +991,100 @@ pub fn main() {
   process.sleep_forever()
 }
 
+pub type RequestBodyFraming {
+  EmptyRequestBody
+  FixedRequestBody(Int)
+}
+
+pub type RequestBodyFramingError {
+  AmbiguousContentLength
+  InvalidContentLength
+  RequestBodyTooLarge
+  UnsupportedTransferEncoding
+}
+
+/// Classify request framing before Mist reads from the socket. Only an absent
+/// body or one exact decimal Content-Length up to 64 KiB is admitted. This
+/// prevents Mist 6.0.2's unbounded chunk accumulator from being reached.
+pub fn classify_request_body(
+  req: Request(body),
+) -> Result(RequestBodyFraming, RequestBodyFramingError) {
+  let transfer_encodings =
+    list.filter(req.headers, fn(header) {
+      string.lowercase(header.0) == "transfer-encoding"
+    })
+  let content_lengths =
+    list.filter(req.headers, fn(header) {
+      string.lowercase(header.0) == "content-length"
+    })
+
+  case transfer_encodings, content_lengths {
+    [_, ..], _ -> Error(UnsupportedTransferEncoding)
+    [], [] -> Ok(EmptyRequestBody)
+    [], [#(_, value)] -> classify_content_length(value)
+    [], [_, _, ..] -> Error(AmbiguousContentLength)
+  }
+}
+
+fn classify_content_length(
+  value: String,
+) -> Result(RequestBodyFraming, RequestBodyFramingError) {
+  let decimal_digits = string.to_utf_codepoints(value)
+  case
+    decimal_digits != []
+    && list.all(decimal_digits, fn(codepoint) {
+      let ordinal = string.utf_codepoint_to_int(codepoint)
+      ordinal >= 48 && ordinal <= 57
+    })
+  {
+    False -> Error(InvalidContentLength)
+    True ->
+      case int.parse(value) {
+        Error(_) -> Error(InvalidContentLength)
+        Ok(length) if length > maximum_request_body_bytes ->
+          Error(RequestBodyTooLarge)
+        Ok(length) -> Ok(FixedRequestBody(length))
+      }
+  }
+}
+
+/// Validate framing before reading, then use the fixed-length reader. It checks
+/// already-buffered bytes, caps reads to the declared remainder, and applies
+/// one deadline to the complete read. No chunked request reaches the reader.
+pub fn handle_bounded_connection_request(
+  req: Request(Connection),
+  next: fn(Request(BitArray)) -> Response(ResponseData),
+) -> Response(ResponseData) {
+  case classify_request_body(req) {
+    Error(RequestBodyTooLarge) ->
+      request_body_error_response(413, "request_body_too_large")
+    Error(UnsupportedTransferEncoding) ->
+      request_body_error_response(400, "request_transfer_encoding_unsupported")
+    Error(AmbiguousContentLength) ->
+      request_body_error_response(400, "request_content_length_ambiguous")
+    Error(InvalidContentLength) ->
+      request_body_error_response(400, "request_content_length_invalid")
+    Ok(EmptyRequestBody) -> next(request.set_body(req, <<>>))
+    Ok(FixedRequestBody(content_length)) ->
+      case
+        read_fixed_request_body(
+          req,
+          content_length,
+          maximum_request_body_bytes,
+          request_body_read_timeout_milliseconds,
+        )
+      {
+        Ok(req) -> next(req)
+        Error(FixedBodyMalformed) ->
+          request_body_error_response(400, "request_body_malformed")
+        Error(FixedBodyReadTimeout) ->
+          request_body_error_response(408, "request_body_read_timeout")
+        Error(FixedBodyUnsupported) ->
+          request_body_error_response(400, "request_body_transport_unsupported")
+      }
+  }
+}
+
 /// Adapt a body-bounded Mist request to the canonical method-aware Wisp
 /// router. Request metadata is retained by `request.set_body`; the response
 /// adapter preserves the canonical status, headers, and body.
@@ -994,14 +1098,8 @@ pub fn handle_c3i_http_request(
         Error(_) -> request_body_error_response(400, "request_body_not_utf8")
         Ok(body) -> {
           let routed = c3i_router.handle_request(request.set_body(req, body))
-          let adapted =
-            response.new(routed.status)
-            |> response.set_body(
-              mist.Bytes(bytes_tree.from_string(routed.body)),
-            )
-          list.fold(routed.headers, adapted, fn(response, header) {
-            response.set_header(response, header.0, header.1)
-          })
+          routed
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(routed.body)))
         }
       }
   }

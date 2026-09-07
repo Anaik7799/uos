@@ -1,5 +1,74 @@
 -module(indrajaal_web_ffi).
--export([read_repo_file/1, list_repo_dir/1, listen_port/1]).
+-export([read_repo_file/1, list_repo_dir/1, listen_port/1, read_fixed_request_body/4]).
+
+%% Read exactly one already-validated fixed-length request body. The caller
+%% rejects transfer encodings and duplicate/invalid Content-Length fields.
+%% A single monotonic deadline bounds the entire socket read.
+read_fixed_request_body(Req, ContentLength, MaximumBytes, TimeoutMilliseconds)
+  when is_integer(ContentLength), is_integer(MaximumBytes),
+       is_integer(TimeoutMilliseconds), ContentLength >= 0,
+       ContentLength =< MaximumBytes, MaximumBytes >= 0,
+       TimeoutMilliseconds > 0 ->
+    case Req of
+        {request, _Method, _Headers,
+         {connection, {initial, Initial}, Socket, Transport, _Factory},
+         _Scheme, _Host, _Port, _Path, _Query}
+          when is_bitstring(Initial), bit_size(Initial) rem 8 =:= 0 ->
+            InitialSize = byte_size(Initial),
+            case InitialSize of
+                ContentLength ->
+                    {ok, setelement(4, Req, Initial)};
+                Size when Size < ContentLength ->
+                    Deadline = erlang:monotonic_time(millisecond)
+                               + TimeoutMilliseconds,
+                    case receive_fixed_body(
+                           Transport, Socket, ContentLength - Size,
+                           Deadline, [Initial]) of
+                        {ok, Body} -> {ok, setelement(4, Req, Body)};
+                        Error -> Error
+                    end;
+                _ ->
+                    {error, fixed_body_malformed}
+            end;
+        {request, _Method, _Headers,
+         {connection, {stream, _, _, _, _}, _, _, _},
+         _Scheme, _Host, _Port, _Path, _Query} ->
+            {error, fixed_body_unsupported};
+        _ ->
+            {error, fixed_body_malformed}
+    end;
+read_fixed_request_body(_Req, _ContentLength, _MaximumBytes, _TimeoutMilliseconds) ->
+    {error, fixed_body_malformed}.
+
+receive_fixed_body(_Transport, _Socket, 0, _Deadline, Chunks) ->
+    {ok, iolist_to_binary(lists:reverse(Chunks))};
+receive_fixed_body(Transport, Socket, Remaining, Deadline, Chunks) ->
+    TimeLeft = Deadline - erlang:monotonic_time(millisecond),
+    case TimeLeft =< 0 of
+        true ->
+            {error, fixed_body_read_timeout};
+        false ->
+            case receive_with_timeout(Transport, Socket, Remaining, TimeLeft) of
+                {ok, Data} when is_binary(Data), byte_size(Data) > 0,
+                                byte_size(Data) =< Remaining ->
+                    receive_fixed_body(
+                      Transport, Socket, Remaining - byte_size(Data),
+                      Deadline, [Data | Chunks]);
+                {error, timeout} ->
+                    {error, fixed_body_read_timeout};
+                {error, unsupported} ->
+                    {error, fixed_body_unsupported};
+                _ ->
+                    {error, fixed_body_malformed}
+            end
+    end.
+
+receive_with_timeout(tcp, Socket, Amount, Timeout) ->
+    gen_tcp:recv(Socket, Amount, Timeout);
+receive_with_timeout(ssl, Socket, Amount, Timeout) ->
+    ssl:recv(Socket, Amount, Timeout);
+receive_with_timeout(_, _Socket, _Amount, _Timeout) ->
+    {error, unsupported}.
 
 listen_port(Default) ->
     case os:getenv("UOS_WEB_PORT") of

@@ -1,5 +1,28 @@
 -module(auth_ingress_test_ffi).
--export([with_oidc_env/1]).
+-export([with_oidc_env/1, connection_request/2, with_stalled_connection/1]).
+
+connection_request(Headers, InitialBody) ->
+    Connection = {connection, {initial, InitialBody}, unused_socket, tcp, unused_factory},
+    {request, post, Headers, Connection, http, <<"review.invalid">>, none,
+     <<"/api/review/nonexistent">>, none}.
+
+with_stalled_connection(Fun) ->
+    {ok, Listener} = gen_tcp:listen(
+        0, [binary, {active, false}, {ip, {127, 0, 0, 1}}]),
+    {ok, {{127, 0, 0, 1}, Port}} = inet:sockname(Listener),
+    {ok, Client} = gen_tcp:connect(
+        {127, 0, 0, 1}, Port, [binary, {active, false}], 1000),
+    {ok, Server} = gen_tcp:accept(Listener, 1000),
+    ok = gen_tcp:close(Listener),
+    Request =
+        {request, post, [{<<"content-length">>, <<"1">>}],
+         {connection, {initial, <<>>}, Server, tcp, unused_factory},
+         http, <<"review.invalid">>, none, <<"/api/review/nonexistent">>, none},
+    try Fun(Request)
+    after
+        ok = gen_tcp:close(Server),
+        ok = gen_tcp:close(Client)
+    end.
 
 with_oidc_env(Fun) ->
     Names = [

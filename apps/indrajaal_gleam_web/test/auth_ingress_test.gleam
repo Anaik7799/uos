@@ -7,12 +7,23 @@ import gleam/list
 import gleam/string
 import gleeunit/should
 import indrajaal_gleam_web
-import mist.{type ResponseData, Bytes}
+import mist.{type Connection, type ResponseData, Bytes}
 
 const signed_oidc_token = "eyJhbGciOiJFZERTQSIsImtpZCI6InJmYzgwMzctdGVzdCIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1c2VyLTEyMyIsImV4cCI6MjAwMDAwMDMwMCwiaXNzIjoiaHR0cHM6Ly9pc3N1ZXIuZXhhbXBsZS9yZWFsbXMvYzNpIiwiYXVkIjoiYzNpLXdpc3AtYXBpIn0.mfaSQdB3lV47YleIzp9Kr3dFpBgZ87aiQBr3F_BMWdOUjAGJwoiRifw8ZtZcazFPL1gxFfgSQSz04xDhCVtuAg"
 
 @external(erlang, "auth_ingress_test_ffi", "with_oidc_env")
 fn with_oidc_env(run: fn() -> Nil) -> Nil
+
+@external(erlang, "auth_ingress_test_ffi", "connection_request")
+fn connection_request(
+  headers: List(#(String, String)),
+  initial_body: BitArray,
+) -> request.Request(Connection)
+
+@external(erlang, "auth_ingress_test_ffi", "with_stalled_connection")
+fn with_stalled_connection(
+  run: fn(request.Request(Connection)) -> Response(ResponseData),
+) -> Response(ResponseData)
 
 pub fn method_auth_body_and_response_are_preserved_test() {
   with_oidc_env(fn() {
@@ -75,6 +86,97 @@ pub fn body_conversion_is_bounded_and_utf8_checked_test() {
   response_body(invalid_utf8)
   |> string.contains("request_body_not_utf8")
   |> should.be_true()
+}
+
+pub fn actual_mist_adapter_rejects_unsafe_framing_before_read_test() {
+  let payload = bit_array.from_string(string.repeat("x", 65_537))
+  let chunked_wire =
+    bit_array.append(
+      bit_array.from_string("10001\r\n"),
+      bit_array.append(payload, bit_array.from_string("\r\n0\r\n\r\n")),
+    )
+
+  let chunked =
+    connection_request([#("transfer-encoding", "chunked")], chunked_wire)
+    |> dispatch_connection()
+  chunked.status |> should.equal(400)
+  response_body(chunked)
+  |> string.contains("request_transfer_encoding_unsupported")
+  |> should.be_true()
+
+  let ambiguous =
+    connection_request([#("content-length", "1"), #("content-length", "1")], <<
+      "x":utf8,
+    >>)
+    |> dispatch_connection()
+  ambiguous.status |> should.equal(400)
+
+  let combined =
+    connection_request([#("content-length", "1, 1")], <<"x":utf8>>)
+    |> dispatch_connection()
+  combined.status |> should.equal(400)
+
+  let invalid =
+    connection_request([#("content-length", "+1")], <<"x":utf8>>)
+    |> dispatch_connection()
+  invalid.status |> should.equal(400)
+
+  let oversized =
+    connection_request([#("content-length", "65537")], payload)
+    |> dispatch_connection()
+  oversized.status |> should.equal(413)
+
+  let declared_shorter_than_buffer =
+    connection_request([#("content-length", "1")], <<"xx":utf8>>)
+    |> dispatch_connection()
+  declared_shorter_than_buffer.status |> should.equal(400)
+
+  let declared_empty_with_buffer =
+    connection_request([#("content-length", "0")], <<"x":utf8>>)
+    |> dispatch_connection()
+  declared_empty_with_buffer.status |> should.equal(400)
+
+  let conflicting =
+    connection_request(
+      [#("transfer-encoding", "chunked"), #("content-length", "1")],
+      chunked_wire,
+    )
+    |> dispatch_connection()
+  conflicting.status |> should.equal(400)
+}
+
+pub fn actual_mist_adapter_admits_bounded_fixed_length_test() {
+  let fixed =
+    connection_request(
+      [#("content-length", "5")],
+      bit_array.from_string("hello"),
+    )
+    |> dispatch_connection()
+  fixed.status |> should.equal(299)
+  response_body(fixed) |> should.equal("hello")
+
+  let bodyless =
+    connection_request([], bit_array.from_string("unframed-must-not-pass"))
+    |> dispatch_connection()
+  bodyless.status |> should.equal(299)
+  response_body(bodyless) |> should.equal("")
+}
+
+pub fn actual_mist_adapter_enforces_total_read_deadline_test() {
+  let timed_out = with_stalled_connection(dispatch_connection)
+  timed_out.status |> should.equal(408)
+  response_body(timed_out)
+  |> string.contains("request_body_read_timeout")
+  |> should.be_true()
+}
+
+fn dispatch_connection(
+  req: request.Request(Connection),
+) -> Response(ResponseData) {
+  indrajaal_gleam_web.handle_bounded_connection_request(req, fn(bounded) {
+    response.new(299)
+    |> response.set_body(mist.Bytes(bytes_tree.from_bit_array(bounded.body)))
+  })
 }
 
 type MaybeToken {
