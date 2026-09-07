@@ -37,7 +37,7 @@ The operator's directive — *"ignore digest, do the migration, replace with cor
 
 ## 3. Schema
 
-One SQLite file per coordination root, `journal_mode=WAL`, `synchronous=NORMAL`, `busy_timeout=30000`, `foreign_keys=ON` (all four PRAGMAs applied by `session_store_ffi:open/1` on every connection).
+One SQLite file per coordination root, `journal_mode=WAL`, `synchronous=NORMAL`, `busy_timeout=30000`, `foreign_keys=ON` (all four PRAGMAs applied by `session_store_ffi:open/1` on every connection). `journal_mode` and `foreign_keys` are additionally read back and the open is refused unless the effective value is the demanded one: `PRAGMA journal_mode=WAL` does not fail when WAL cannot be enabled (read-only file, some network filesystems), it returns the mode actually in force, so an unchecked `exec` would run the append-only store in rollback-journal mode (review `wf_5f54e14c-28b`).
 
 ### 3.1 `meta`
 
@@ -66,10 +66,11 @@ One SQLite file per coordination root, `journal_mode=WAL`, `synchronous=NORMAL`,
 | `digest` | `TEXT NOT NULL UNIQUE` | `sha256_hex(body_json)`. |
 | `inserted_utc_us` | `INTEGER NOT NULL` | Wall-clock UTC microseconds when the row was inserted (equal to `utc_us` for events written by `append`; equal to the *original* event's `utc_us` for events written by `migrate_from_journal`, since migration preserves each event's own recorded clock rather than stamping a new one). |
 
-Three triggers make `events` append-only and self-chaining at the SQL layer, not merely by Gleam-side discipline:
+Four triggers make `events` append-only and self-chaining at the SQL layer, not merely by Gleam-side discipline:
 
 - `events_no_update` — `BEFORE UPDATE ON events` unconditionally `RAISE(ABORT, ...)`.
 - `events_no_delete` — `BEFORE DELETE ON events` unconditionally `RAISE(ABORT, ...)`.
+- `events_no_replace` — `BEFORE INSERT ON events`, aborts when the inserted row reuses a stored `sequence`, `operation_id` or `digest`. This closes a hole measured by review `wf_5f54e14c-28b`: SQLite fires DELETE triggers for the implicit delete of `INSERT OR REPLACE` only when `PRAGMA recursive_triggers` is ON, and its default is OFF, so before this trigger a raw `INSERT OR REPLACE` that reused a stored `operation_id` or `digest` deleted the historical row while `events_no_delete` stayed silent. Regression test: `insert_or_replace_cannot_delete_history_test`.
 - `events_chain` — `BEFORE INSERT ON events`, fires (aborts) unless both hold: `NEW.sequence` equals `(SELECT COALESCE(MAX(sequence), 0) + 1 FROM events)`, and `NEW.previous_digest` equals `COALESCE((SELECT digest FROM events WHERE sequence = NEW.sequence - 1), 'uos-session-sync/v1')`.
 
 ### 3.3 `quarantine`

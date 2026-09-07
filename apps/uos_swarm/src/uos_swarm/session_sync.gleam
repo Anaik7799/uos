@@ -800,6 +800,76 @@ pub fn replay(journal: String) -> Result(State, String) {
   })
 }
 
+/// Compact a journal after invalid events have been removed from it.
+///
+/// Incident 2026-09-07 20:00–21:21Z: a foreign writer OVERWROTE events 417–419
+/// in place with commands this module has no constructor for, destroying a
+/// lease claim and two reports and leaving the survivors unlinked. Removing the
+/// invalid files leaves sequence gaps, which `resign` refuses by design, so a
+/// separate mode is needed: `compact` rebuilds the SURVIVING events in file
+/// order, assigning contiguous sequences and canonical digests from genesis.
+///
+/// Content is never invented and never edited. An event whose command the
+/// coordinator would refuse in its new context — typically a `Release` whose
+/// `Claim` was destroyed — is not forced through: it is dropped from the chain
+/// and returned in the second element as `#(original_sequence, reason)` so the
+/// caller can quarantine it as evidence. A journal with nothing to compact
+/// returns the same events `resign` would.
+pub fn compact(
+  journal: String,
+) -> Result(#(List(Event), List(#(Int, String))), String) {
+  let lines =
+    string.split(journal, "\n")
+    |> list.filter(fn(line) { string.trim(line) != "" })
+  use #(_, rebuilt, orphaned) <- result.try(
+    list.try_fold(lines, #(empty(), [], []), fn(acc, line) {
+      let #(state, out, orphans) = acc
+      use stored <- result.try(
+        json.parse(line, event_decoder())
+        |> result.replace_error(
+          "malformed journal event after stored sequence "
+          <> int.to_string(state.sequence)
+          <> "; compact refused",
+        ),
+      )
+      let event =
+        make_event(
+          state,
+          stored.command,
+          stored.operation_id,
+          stored.host_id,
+          stored.boot_id,
+          stored.tick_us,
+          stored.utc_us,
+        )
+      case
+        apply(
+          state,
+          stored.command,
+          stored.operation_id,
+          stored.host_id,
+          stored.boot_id,
+          stored.tick_us,
+          stored.utc_us,
+        )
+      {
+        Ok(#(next, _, False)) ->
+          Ok(#(State(..next, digest: event.digest), [event, ..out], orphans))
+        Ok(#(_, _, True)) ->
+          Ok(
+            #(state, out, [
+              #(stored.sequence, "duplicate operation after compaction"),
+              ..orphans
+            ]),
+          )
+        Error(reason) ->
+          Ok(#(state, out, [#(stored.sequence, reason), ..orphans]))
+      }
+    }),
+  )
+  Ok(#(list.reverse(rebuilt), list.reverse(orphaned)))
+}
+
 /// Re-sign a journal whose byte form and digests were produced by a foreign
 /// writer (incident 2026-09-07 17:12:46Z: every event file was re-serialized
 /// and re-signed outside this module, so `replay` refuses the chain from

@@ -21,10 +21,18 @@ open(PathBinary) -> guarded(fun() ->
     Path = unicode:characters_to_list(PathBinary),
     case esqlite3:open(Path) of
         {ok, Conn} ->
-            ok = pragma(Conn, "PRAGMA journal_mode=WAL;"),
+            %% `PRAGMA journal_mode=WAL` does not fail when WAL cannot be
+            %% enabled (read-only file, some network filesystems): it returns
+            %% the effective mode as a row. Read it back and refuse the open
+            %% rather than run the append-only store in rollback-journal mode
+            %% (review wf_5f54e14c-28b).
+            ok = require_pragma(Conn, "PRAGMA journal_mode=WAL;", <<"wal">>,
+                                <<"journal_mode">>),
             ok = pragma(Conn, "PRAGMA synchronous=NORMAL;"),
             ok = pragma(Conn, "PRAGMA busy_timeout=30000;"),
             ok = pragma(Conn, "PRAGMA foreign_keys=ON;"),
+            ok = require_pragma(Conn, "PRAGMA foreign_keys;", <<"1">>,
+                                <<"foreign_keys">>),
             {ok, Conn};
         {error, Reason} -> fail(fmt(Reason))
     end
@@ -36,6 +44,32 @@ pragma(Conn, Sql) ->
         {ok, _} -> ok;
         {error, Reason} -> fail(fmt(Reason))
     end.
+
+%% Run a PRAGMA through the query path and demand the effective value, so a
+%% setting that SQLite silently declines cannot be mistaken for one it applied.
+require_pragma(Conn, Sql, Expected, Name) ->
+    case esqlite3:q(Conn, Sql, []) of
+        Rows when is_list(Rows) ->
+            Value = pragma_value(Rows),
+            case Value =:= Expected of
+                true -> ok;
+                false ->
+                    fail(iolist_to_binary(
+                        io_lib:format("~ts not applied: expected ~ts, got ~ts",
+                                      [Name, Expected, Value])))
+            end;
+        {error, Reason} -> fail(fmt(Reason))
+    end.
+
+pragma_value([Row | _]) when is_tuple(Row), tuple_size(Row) >= 1 ->
+    pragma_scalar(element(1, Row));
+pragma_value([[Value | _] | _]) -> pragma_scalar(Value);
+pragma_value(_) -> <<"(no row)">>.
+
+pragma_scalar(Value) when is_binary(Value) -> Value;
+pragma_scalar(Value) when is_integer(Value) -> integer_to_binary(Value);
+pragma_scalar(Value) when is_list(Value) -> unicode:characters_to_binary(Value);
+pragma_scalar(Value) -> fmt(Value).
 
 -spec close(term()) -> {ok, nil} | {error, binary()}.
 close(Conn) -> guarded(fun() ->

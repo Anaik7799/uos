@@ -206,6 +206,73 @@ pub fn raw_update_and_delete_are_rejected_by_triggers_test() {
   let assert Ok(Nil) = store.close(reopened)
 }
 
+/// Review wf_5f54e14c-28b measured that `events_no_delete` alone does not make
+/// the table append-only: SQLite fires DELETE triggers for the implicit delete
+/// of `INSERT OR REPLACE` only when `PRAGMA recursive_triggers` is ON, and its
+/// default is OFF, so a raw `INSERT OR REPLACE` reusing a stored `operation_id`
+/// or `digest` dropped the historical row silently. `events_no_replace` refuses
+/// the insert before the replace can delete anything.
+pub fn insert_or_replace_cannot_delete_history_test() {
+  let db = db_path()
+  let workspace = workspace_dir()
+  let assert Ok(opened) = store.open(db)
+  let assert Ok(#(_, False)) =
+    store.append(
+      opened,
+      sync.Register("codex", "codex", workspace, "revision-a", []),
+      "register",
+    )
+  let assert Ok(#(_, False)) =
+    store.append(opened, sync.Heartbeat("codex", "revision-b", []), "heartbeat")
+  let assert Ok(#(2, head_digest)) = store.head(opened)
+  let assert Ok(Nil) = store.close(opened)
+
+  let row = fn(sequence: String, operation_id: String, digest: String) {
+    "INSERT OR REPLACE INTO events (sequence, operation_id, host_id, boot_id, tick_us, utc_us, operation, actor, command_json, body_json, previous_digest, digest, inserted_utc_us) VALUES ("
+    <> sequence
+    <> ", "
+    <> operation_id
+    <> ", 'h', 'b', 1, 1, 'heartbeat', 'codex', '{}', '{}', '"
+    <> head_digest
+    <> "', "
+    <> digest
+    <> ", 1);"
+  }
+  // Chain-valid (sequence 3, correct previous_digest) but reusing the stored
+  // operation_id of sequence 1: without the guard this REPLACE deletes row 1.
+  let assert Error(_) =
+    raw_exec(
+      db,
+      row(
+        "3",
+        "(SELECT operation_id FROM events WHERE sequence = 1)",
+        "'fresh-digest-a'",
+      ),
+    )
+  // Same, reusing the stored digest of sequence 1.
+  let assert Error(_) =
+    raw_exec(
+      db,
+      row(
+        "3",
+        "'fresh-operation-id'",
+        "(SELECT digest FROM events WHERE sequence = 1)",
+      ),
+    )
+  // Reusing an existing sequence outright.
+  let assert Error(_) =
+    raw_exec(db, row("1", "'another-operation-id'", "'fresh-digest-b'"))
+
+  let assert Ok(reopened) = store.open(db)
+  // Nothing was deleted, nothing was added, and the head is unchanged.
+  store.head(reopened) |> should.equal(Ok(#(2, head_digest)))
+  let assert Ok(report) = store.verify(reopened)
+  report.ok |> should.equal(True)
+  report.checked |> should.equal(2)
+  report.triggers_present |> should.equal(True)
+  let assert Ok(Nil) = store.close(reopened)
+}
+
 fn store_digest(opened: store.Store) -> String {
   let assert Ok(#(_, digest)) = store.head(opened)
   digest

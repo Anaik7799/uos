@@ -221,6 +221,25 @@ BEGIN
   SELECT RAISE(ABORT, 'events chain violated: sequence or previous_digest does not extend the current head');
 END;
 
+-- `events_no_delete` alone does NOT make the table append-only: SQLite fires
+-- DELETE triggers for the implicit delete of `INSERT OR REPLACE` only when
+-- `PRAGMA recursive_triggers` is ON, and its default is OFF. A raw
+-- `INSERT OR REPLACE` reusing an existing `operation_id` or `digest` would
+-- therefore drop the historical row silently (measured on a scratch copy,
+-- review wf_5f54e14c-28b). This BEFORE INSERT guard refuses any insert that
+-- collides with a stored row, so the REPLACE never reaches its delete.
+CREATE TRIGGER IF NOT EXISTS events_no_replace
+BEFORE INSERT ON events
+WHEN EXISTS (
+  SELECT 1 FROM events
+  WHERE sequence = NEW.sequence
+     OR operation_id = NEW.operation_id
+     OR digest = NEW.digest
+)
+BEGIN
+  SELECT RAISE(ABORT, 'events are append-only: an insert may not reuse a stored sequence, operation_id or digest');
+END;
+
 CREATE TABLE IF NOT EXISTS quarantine (
   id INTEGER PRIMARY KEY,
   raw TEXT NOT NULL,
@@ -506,9 +525,19 @@ fn insert_event(
 // Verify
 // ---------------------------------------------------------------------
 
-fn add_if(failures: List(String), condition: Bool, message: String) {
+/// Every failure row carries a typed check name beside its message, so the
+/// report's per-check booleans are derived from the check name and never from
+/// parsing text that embeds caller-supplied values such as an `operation_id`
+/// (review wf_5f54e14c-28b: an id containing "sha256 mismatch" would otherwise
+/// flip `digest_ok`).
+fn add_if(
+  failures: List(#(String, String)),
+  condition: Bool,
+  check: String,
+  message: String,
+) -> List(#(String, String)) {
   case condition {
-    True -> [message, ..failures]
+    True -> [#(check, message), ..failures]
     False -> failures
   }
 }
@@ -529,11 +558,11 @@ pub fn verify(store: Store) -> Result(VerifyReport, StoreError) {
   use trigger_rows <- result.try(
     run(
       store,
-      "SELECT name FROM sqlite_master WHERE type = 'trigger' AND name IN ('events_no_update', 'events_no_delete', 'events_chain')",
+      "SELECT name FROM sqlite_master WHERE type = 'trigger' AND name IN ('events_no_update', 'events_no_delete', 'events_chain', 'events_no_replace')",
       [],
     ),
   )
-  let triggers_present = list.length(trigger_rows) == 3
+  let triggers_present = list.length(trigger_rows) == 4
   let #(_, _, failures, _) =
     list.fold(rows, #(0, sync.genesis, [], set.new()), fn(acc, row) {
       let #(expected_sequence, expected_previous, fails, seen_ops) = acc
@@ -555,6 +584,7 @@ pub fn verify(store: Store) -> Result(VerifyReport, StoreError) {
             fails
             |> add_if(
               !sequence_ok,
+              "sequence",
               label
                 <> ": expected sequence "
                 <> int.to_string(expected_sequence + 1)
@@ -563,15 +593,18 @@ pub fn verify(store: Store) -> Result(VerifyReport, StoreError) {
             )
             |> add_if(
               !chain_ok,
+              "chain",
               label <> ": previous_digest does not match the prior row's digest",
             )
             |> add_if(
               !digest_ok,
+              "digest",
               label
                 <> ": stored digest does not recompute from body_json (sha256 mismatch)",
             )
             |> add_if(
               duplicate_op,
+              "duplicate",
               label <> ": duplicate operation_id " <> operation_id,
             )
           #(sequence, digest, fails, set.insert(seen_ops, operation_id))
@@ -579,7 +612,7 @@ pub fn verify(store: Store) -> Result(VerifyReport, StoreError) {
         _ -> #(
           expected_sequence,
           expected_previous,
-          ["malformed events row", ..fails],
+          [#("malformed", "malformed events row"), ..fails],
           seen_ops,
         )
       }
@@ -587,26 +620,26 @@ pub fn verify(store: Store) -> Result(VerifyReport, StoreError) {
   let failures = case triggers_present {
     True -> failures
     False -> [
-      "append-only triggers are missing (events_no_update, events_no_delete, events_chain)",
+      #(
+        "triggers",
+        "append-only triggers are missing (events_no_update, events_no_delete, events_chain, events_no_replace)",
+      ),
       ..failures
     ]
   }
   let failures = list.reverse(failures)
+  let failed = fn(check: String) {
+    list.any(failures, fn(entry) { entry.0 == check })
+  }
   Ok(VerifyReport(
     ok: list.is_empty(failures),
     checked: list.length(rows),
-    sequence_ok: !list.any(failures, string.contains(_, "expected sequence")),
-    chain_ok: !list.any(failures, string.contains(
-      _,
-      "previous_digest does not match",
-    )),
-    digest_ok: !list.any(failures, string.contains(_, "sha256 mismatch")),
+    sequence_ok: !failed("sequence") && !failed("malformed"),
+    chain_ok: !failed("chain") && !failed("malformed"),
+    digest_ok: !failed("digest") && !failed("malformed"),
     triggers_present: triggers_present,
-    unique_operations: !list.any(failures, string.contains(
-      _,
-      "duplicate operation_id",
-    )),
-    failures: failures,
+    unique_operations: !failed("duplicate"),
+    failures: list.map(failures, fn(entry) { entry.1 }),
   ))
 }
 
