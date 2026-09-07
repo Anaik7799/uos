@@ -97,8 +97,14 @@ val default_margin : float
 
 (** Pure verdict for a resource given an already-gathered fact. Total: every
     (resource, observation) pairing returns a check and never raises. A space
-    resource is met only when [available >= needed *. (1. +. margin)] AND
-    [available - needed >= floor_bytes]; a presence resource is met only on
+    resource rejects negative required/available bytes and negative or
+    non-finite margins before arithmetic. For valid inputs, its threshold is
+    [needed * exact(1. +. margin)]: the finite binary64 multiplier is interpreted
+    as an exact rational, without rounding either byte count to float.
+    A space resource is met only when available meets that threshold AND
+    [available >= needed] AND [available - needed >= floor_bytes]. The guarded
+    subtraction cannot overflow. These laws hold across the entire OCaml int
+    range; a presence resource is met only on
     [Presence true]; every [Unknown] and every mismatched observation kind is
     unmet. *)
 val evaluate : resource -> reported_fact -> check

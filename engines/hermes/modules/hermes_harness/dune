@@ -590,13 +590,13 @@
  (name hermes_harness_resource_envelope)
  (wrapped false)
  (modules resource_envelope)
- (libraries hermes_wiki_diag unix))
+ (libraries hermes_wiki_diag zarith))
 
 (executable
  (name test_resource_envelope)
  (modules test_resource_envelope)
  (libraries hermes_harness_suite_telemetry hermes_harness_resource_envelope hermes_wiki_diag
-   yojson unix))
+   yojson unix zarith))
 
 (library
  (name hermes_harness_fractal_countermeasures)

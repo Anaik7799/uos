@@ -32,18 +32,16 @@ let preflight_state_path path =
   if not (String.equal path state_path) then
     Error ("state path must be exactly " ^ state_path)
   else
-    let directory = Filename.dirname path in
-    if not (Sys.file_exists directory && Sys.is_directory directory) then
-      Error ("state directory is unavailable: " ^ directory)
+    (* Resource identity and observation belong to the controlled owner.
+       Do not perform a shadow filesystem probe ahead of its receipt gate. *)
+    let checks = Resource_envelope.preflight (state_resources path) in
+    if Resource_envelope.satisfied checks then Ok ()
     else
-      let checks = Resource_envelope.preflight (state_resources path) in
-      if Resource_envelope.satisfied checks then Ok ()
-      else
-        Error
-          ("state resource envelope refused: "
-           ^ String.concat "; "
-               (List.map Resource_envelope.render_check
-                  (Resource_envelope.unmet_checks checks)))
+      Error
+        ("state resource envelope refused: "
+         ^ String.concat "; "
+             (List.map Resource_envelope.render_check
+                (Resource_envelope.unmet_checks checks)))
 
 let task_specs =
   [

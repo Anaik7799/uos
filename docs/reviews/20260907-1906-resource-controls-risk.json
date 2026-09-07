@@ -1,0 +1,209 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "resource-controls-candidate-validation",
+    "plan_id": "uos/resource-controls/20260907-1906",
+    "task_id": "RESOURCE-CONTROLS",
+    "actor": "codex-side-resource-controls",
+    "scope": "Isolated source repair of resource numeric validation, truthful preflight tests, observation-owner prerequisites, and inherited attempt-fencing regression. No runtime cutover, root bootstrap takeover or independent admission claim.",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-07T20:14:27Z",
+    "valid_until": "2026-09-07T21:14:27Z",
+    "task_state": "executing",
+    "ready_since": "2026-09-07T19:49:56Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Isolated source candidate lyytwturtnwqrvmnlwkyvvvqvymzrysm on preserved base 311d2b12368d65c9b0f27f3d6adca315b94bbc62; source hashes bind the assessed files.",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/hermes_harness/resource_envelope.ml",
+          "sha256": "03d0f15872c78ea27e8cc72fc9ebee9ba0c6ffc357fec0a9c50296e4c58ce7da",
+          "observed_at": "2026-09-07T20:14:27Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/hermes_ops/ops_external_resource_target.ml",
+          "sha256": "35575c5bc91ed78e0a104589f38aa6b2a1eb2957e964f69bf148122c06dd7f7f",
+          "observed_at": "2026-09-07T20:14:27Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/hermes_ops_dashboard/run_root_bootstrap.mli",
+          "sha256": "0b898ced2ae39012ddbc2d291a41c992d7de01a5fcfa358bc7e54aba54e627bf",
+          "observed_at": "2026-09-07T20:14:27Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/system_engg/test_run_swarm_bridge_programme.ml",
+          "sha256": "8e41cc432d47560b082c4df3f07ee1f47396f235fb85432e6ef7ddd803894e66",
+          "observed_at": "2026-09-07T20:14:27Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Necessary prerequisite before enabling observed execution.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/hermes_harness/resource_envelope.ml",
+          ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/hermes_ops/ops_external_resource_target.ml",
+          ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/hermes_ops_dashboard/run_root_bootstrap.mli",
+          ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/system_engg/test_run_swarm_bridge_programme.ml"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Invalid inputs are accepted by the pure algebra; operational receipts currently prevent effect authority.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/hermes_harness/resource_envelope.ml",
+          ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/hermes_ops/ops_external_resource_target.ml",
+          ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/hermes_ops_dashboard/run_root_bootstrap.mli",
+          ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/system_engg/test_run_swarm_bridge_programme.ml"
+        ]
+      },
+      "fmea": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "S3 O5 Det1 in the deliberately malformed-input reproduction population: RPN15, severity floor F3.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/hermes_harness/resource_envelope.ml",
+          ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/hermes_ops/ops_external_resource_target.ml",
+          ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/hermes_ops_dashboard/run_root_bootstrap.mli",
+          ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/system_engg/test_run_swarm_bridge_programme.ml"
+        ]
+      },
+      "dependency": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Required for resource-aware swarm materialization and admission tests.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/hermes_harness/resource_envelope.ml",
+          ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/hermes_ops/ops_external_resource_target.ml",
+          ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/hermes_ops_dashboard/run_root_bootstrap.mli",
+          ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/system_engg/test_run_swarm_bridge_programme.ml"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Protect resource and state-preflight decisions reused by several services.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/hermes_harness/resource_envelope.ml",
+          ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/hermes_ops/ops_external_resource_target.ml",
+          ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/hermes_ops_dashboard/run_root_bootstrap.mli",
+          ".uos-workspaces/codex-side-resource-controls/engines/hermes/modules/system_engg/test_run_swarm_bridge_programme.ml"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-RESOURCE-INVALID",
+        "cause": "No numeric-domain validation before capacity arithmetic.",
+        "effect": "Malformed requirements can be reported met; observation admission must not inherit this.",
+        "controls": "Operational receipt gate remains closed, source isolated, deterministic oracle and regression tests.",
+        "s": 3,
+        "o": 5,
+        "det": 1,
+        "rpn": 15,
+        "band": 3
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Resource preflight and operational observation owner",
+      "control_action": "Approve a declared resource requirement for a scoped operation",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing owner prevents a valid resource request receiving controlled observations.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Check safety class and inherited prerequisite urgency before score."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Invalid quantities or a caller-provided fact are promoted to an operational pass.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Authorization and effect constraints precede ranking."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "An observation from the wrong resource or an expired epoch is reused.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Re-observe and reject affected stale/blocked selection."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "A resource observation outlives its authority or its finite measurement budget.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Recheck current owner, fencing, expiry and budget before effects."
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 243,
+    "score_interval": [
+      243,
+      243
+    ],
+    "decision": {
+      "summary": "Repair numeric domain and testing defects before enabling observations; trace and preserve unavailable upstream authority.",
+      "alternatives": [
+        "Bypass receipt gating (rejected)",
+        "Fix arithmetic and bound owner integration to actual available capabilities"
+      ],
+      "counterevidence": [
+        "Operational preflight currently denies every nonempty envelope, so these probes do not demonstrate an execution bypass."
+      ],
+      "assumptions": [
+        "User explicitly authorized fixing the reported issues; shared main runtime and peer review remain outside this isolated side-session mutation."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Malformed resource values are refused and tests distinguish unavailable observations from verified success.",
+      "falsifier": "Any malformed value passes, unavailable authority becomes a pass, or a stale task completion succeeds.",
+      "acceptance": [
+        "Adversarial numeric oracle and mutation checks pass",
+        "Unavailable owner has explicit prerequisite evidence and no forged receipts",
+        "Swarm tests distinguish refused operations and pure successful fixtures",
+        "Inherited fencing recovery tests pass"
+      ],
+      "rollback": "Keep isolated candidate for review; canonical source and runtime are not replaced.",
+      "reviewer": "Author validation; independent review requires a separate reviewer and is not available in this side session.",
+      "budget": "One own task; two-hour lease; one build job; bounded deterministic tests; no extra models.",
+      "residuals": [
+        "Upper root and event/effect current-carrier prerequisites may prevent safe operational owner activation."
+      ],
+      "supersedes": "resource-controls-claimed"
+    }
+  }
+]
