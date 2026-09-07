@@ -22,6 +22,7 @@
 ////   manager-run <ledger.json> <board.jsonl> <zenoh_base|-> <cycles>
 ////   ontology dictionary | ontology glossary | ontology wiki | ontology json
 ////   ontology check <ledger.jsonl> | ontology resolve <name>
+////   holon-km <stamp> <repo_root>   write one wiki page per holon + the holarchy ZK MOC
 ////   decision-record prepare <out_dir> <slug> <spec.json>
 ////   decision-record complete <record.json> <completion.json>
 ////   (anything else)             prints this usage
@@ -36,6 +37,7 @@ import gleam/list
 import gleam/option.{None, Some}
 import gleam/result
 import gleam/string
+import simplifile
 import uos_swarm/acl
 import uos_swarm/agent_runtime
 import uos_swarm/board.{Agent, Causality, Draft, Semantics}
@@ -46,6 +48,7 @@ import uos_swarm/decision_record_cli
 import uos_swarm/fmea
 import uos_swarm/gita
 import uos_swarm/holon
+import uos_swarm/holon_km
 import uos_swarm/manager
 import uos_swarm/ooda
 import uos_swarm/raga
@@ -93,6 +96,7 @@ const usage = "Package entry. `gleam run -- <command>`:
   manager-run <ledger.json> <board.jsonl> <zenoh_base|-> <cycles>
   ontology dictionary | ontology glossary | ontology wiki | ontology json
   ontology check <ledger.jsonl> | ontology resolve <name>
+  holon-km <stamp> <repo_root>   write one wiki page per holon + the holarchy ZK MOC
   decision-record prepare <out_dir> <slug> <spec.json>
   decision-record complete <record.json> <completion.json>"
 
@@ -334,6 +338,7 @@ pub fn main() -> Nil {
       io.println(json.to_string(system_ontology.to_json()))
     ["ontology", "check", path] -> ontology_check(path)
     ["ontology", "resolve", name] -> ontology_resolve(name)
+    ["holon-km", stamp, repo_root] -> holon_km_write(stamp, repo_root)
     ["decision-record", "prepare", out_dir, slug, spec_path] ->
       case decision_record_cli.write_prepared(out_dir, slug, spec_path) {
         Ok(path) -> io.println(path)
@@ -388,6 +393,38 @@ fn ontology_resolve(name: String) -> Nil {
         <> c.definition,
       )
     Error(_) -> io.println("unresolved: " <> name)
+  }
+}
+
+/// `holon-km <stamp> <repo_root>`: writes every page of `holon_km.pages(stamp)` under
+/// `repo_root`, creating `docs/wiki/holons/` and `docs/zk/` first if either is missing, then
+/// prints the count of pages successfully written (halts non-zero if any write failed).
+fn holon_km_write(stamp: String, repo_root: String) -> Nil {
+  let _ = simplifile.create_directory_all(repo_root <> "/docs/wiki/holons")
+  let _ = simplifile.create_directory_all(repo_root <> "/docs/zk")
+  let pages = holon_km.pages(stamp)
+  let results =
+    list.map(pages, fn(pair) {
+      let #(rel_path, contents) = pair
+      simplifile.write(to: repo_root <> "/" <> rel_path, contents: contents)
+    })
+  let written =
+    list.length(
+      list.filter(results, fn(r) {
+        case r {
+          Ok(_) -> True
+          Error(_) -> False
+        }
+      }),
+    )
+  let failed = list.length(pages) - written
+  io.println("wrote " <> int.to_string(written) <> " holon-km pages")
+  case failed {
+    0 -> Nil
+    _ -> {
+      io.println(int.to_string(failed) <> " holon-km page write(s) failed")
+      halt(1)
+    }
   }
 }
 
