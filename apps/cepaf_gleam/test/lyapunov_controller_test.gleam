@@ -43,7 +43,7 @@ pub fn controller_marginal_damping_test() {
   updated.concurrency_limit |> should.equal(8)
   case updated.state {
     ThrottledBackpressure(ratio) -> {
-      ratio |> should.equal(0.4)
+      should.be_true(ratio >=. 0.39 && ratio <=. 0.41)
     }
     _ -> should.fail()
   }

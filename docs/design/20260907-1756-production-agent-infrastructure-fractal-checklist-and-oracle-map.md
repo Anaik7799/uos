@@ -289,8 +289,9 @@ Ordered by the risk-prioritization SOP's follow-up order (evidence integrity, au
 11. **`hermes_oracle_trace`** — W3C trace-context test suite, OTel span semantics, Langfuse trace schema; rows `AIC-OG-01`, `AIC-OG-03`.
 12. **`hermes_oracle_ledger`** — immudb inclusion and consistency proofs versus the UOS ledger; row `AIC-OG-02`.
 13. **`hermes_oracle_eval`** — promptfoo assertion semantics and deepeval trajectory metrics versus the UOS test protocol and adversarial checker; row `AIC-OG-04`.
+14. **`hermes_vfs_oracle`** (built 2026-09-07, task `t6-vfs-ocaml-oracle`) — OCaml reference implementation of the ZigVM `prim_file.zig` algebra with the eight VFS laws executed, including the path jail (`openat2` with `RESOLVE_BENEATH`) that ZigVM lacks; oracle suite green (12 ok), two mutants killed, executed by `tools/uos selfcheck-vfs`; the differential run against ZigVM itself remains `UNRUN` until a Zig toolchain or built VM is available on the host; rows `AIC-EC-01`, LAW-VFS-08.
 
-Harness constraints: OCaml under `engines/hermes`, bounded worker processes, oracle bytes read from the evidence root only, every run writes a sa-plan job receipt. No harness exists yet; the plan is `mapped`.
+Harness constraints: OCaml under `engines/hermes`, bounded worker processes, oracle bytes read from the evidence root only, every run writes a sa-plan job receipt. Harness 14 exists and runs; harnesses 1 to 13 are `mapped`.
 
 ---
 
