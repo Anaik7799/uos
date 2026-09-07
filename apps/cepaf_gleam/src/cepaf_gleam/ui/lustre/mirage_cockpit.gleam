@@ -22,14 +22,7 @@ pub fn view() -> String {
   <> "<header><h1 style=\"color:#00d4aa\">MirageOS Migration Projection Cockpit</h1>"
   <> "<p>Configured candidate model. Runtime health, deployment, SIL certification, and admission are unverified.</p>"
   <> "<p><strong>Evidence scope:</strong> static_migration_projection &middot; <strong>Deployment admission:</strong> NOT_VERIFIED</p></header>"
-  <> "<section style=\"border:1px solid #f5a623;padding:1rem;margin:1rem 0\"><h2>Runtime observation</h2>"
-  <> "<p>Mode: <code>"
-  <> mirage_unikernel_daemon.runtime_mode_label(state.mode)
-  <> "</code> &middot; Health: <code>unknown</code> &middot; Observation: <code>"
-  <> mirage_unikernel_daemon.observation_status(state.observation)
-  <> "</code></p><p>"
-  <> mirage_unikernel_daemon.observation_reason(state.observation)
-  <> "</p></section>"
+  <> render_observation(state)
   <> "<section><h2>Projection summary</h2><ul>"
   <> "<li>Candidate count: "
   <> int.to_string(list.length(candidates))
@@ -58,43 +51,81 @@ pub fn view() -> String {
 
 fn render_checklist() -> String {
   "<details style=\"border:1px solid #f5a623;padding:1rem;margin:1rem 0\"><summary>Comprehensive verification requirements — evidence pending</summary>"
-  <> "<p>No all-green claim is made by this projection surface.</p><ul>"
-  <> checklist_item("CHK-01-TIME")
-  <> checklist_item("CHK-02-TAIL")
-  <> checklist_item("CHK-03-FRACT")
-  <> checklist_item("CHK-04-KM")
-  <> checklist_item("CHK-05-MUDA")
-  <> checklist_item("CHK-06-GRAPH")
-  <> checklist_item("CHK-07-DRIVE")
-  <> checklist_item("CHK-08-C1C8")
-  <> checklist_item("CHK-09-MATH")
-  <> checklist_item("CHK-10-9MOD")
-  <> checklist_item("CHK-11-REGR")
-  <> checklist_item("CHK-12-GLEAM")
-  <> checklist_item("CHK-13-HERMES")
-  <> checklist_item("CHK-14-ZIGVM")
-  <> checklist_item("CHK-15-MAX")
-  <> checklist_item("CHK-16-OTEL")
-  <> checklist_item("CHK-17-SOV")
-  <> checklist_item("CHK-18-JJ")
+  <> "<p>No all-green claim is made by this projection surface.</p>"
+  <> checklist_domain(
+    "Domain 1: Metadata, Timestamp, and Tailscale Navigation",
+    [
+      "CHK-01-TIME",
+      "CHK-02-TAIL",
+      "CHK-03-FRACT",
+      "CHK-04-KM",
+    ],
+  )
+  <> checklist_domain("Domain 2: Zero-Muda Purity and Storage Safety", [
+    "CHK-05-MUDA",
+    "CHK-06-GRAPH",
+    "CHK-07-DRIVE",
+  ])
+  <> checklist_domain("Domain 3: Testing Gold Standard and Math Gates", [
+    "CHK-08-C1C8",
+    "CHK-09-MATH",
+    "CHK-10-9MOD",
+    "CHK-11-REGR",
+  ])
+  <> checklist_domain("Domain 4: Cross-Language Control and Observability", [
+    "CHK-12-GLEAM",
+    "CHK-13-HERMES",
+    "CHK-14-ZIGVM",
+    "CHK-15-MAX",
+    "CHK-16-OTEL",
+  ])
+  <> checklist_domain(
+    "Domain 5: Tri-Sovereign Governance and Jujutsu Monorepo",
+    [
+      "CHK-17-SOV",
+      "CHK-18-JJ",
+    ],
+  )
+  <> "</details>"
+}
+
+fn checklist_domain(name: String, checks: List(String)) -> String {
+  let items = checks |> list.map(checklist_item) |> string.join("")
+  "<details class=\"verification-domain\"><summary>"
+  <> escape_html(name)
+  <> "</summary><ul>"
+  <> items
   <> "</ul></details>"
 }
 
 fn checklist_item(code: String) -> String {
-  "<li><strong>UNVERIFIED</strong> " <> code <> "</li>"
+  "<li><strong>UNVERIFIED</strong> " <> escape_html(code) <> "</li>"
 }
 
-fn render_candidate_rows(candidates: List(MigrationCandidate)) -> String {
+pub fn render_observation(
+  state: mirage_unikernel_daemon.MirageDaemonState,
+) -> String {
+  "<section style=\"border:1px solid #f5a623;padding:1rem;margin:1rem 0\"><h2>Runtime observation</h2>"
+  <> "<p>Mode: <code>"
+  <> escape_html(mirage_unikernel_daemon.runtime_mode_label(state.mode))
+  <> "</code> &middot; Health: <code>unknown</code> &middot; Observation: <code>"
+  <> escape_html(mirage_unikernel_daemon.observation_status(state.observation))
+  <> "</code></p><p>"
+  <> escape_html(mirage_unikernel_daemon.observation_reason(state.observation))
+  <> "</p></section>"
+}
+
+pub fn render_candidate_rows(candidates: List(MigrationCandidate)) -> String {
   candidates
   |> list.map(fn(candidate) {
     "<tr><td>"
-    <> candidate.id
+    <> escape_html(candidate.id)
     <> "</td><td>"
-    <> candidate.name
+    <> escape_html(candidate.name)
     <> "</td><td>"
-    <> candidate.layer
+    <> escape_html(candidate.layer)
     <> "</td><td>"
-    <> candidate.mirage_target
+    <> escape_html(candidate.mirage_target)
     <> "</td><td>Declared SIL-"
     <> int.to_string(candidate.target_sil_level)
     <> " (not certified)</td><td>"
@@ -108,4 +139,15 @@ fn render_candidate_rows(candidates: List(MigrationCandidate)) -> String {
     <> "</td></tr>"
   })
   |> string.join("")
+}
+
+// Keep the same escaping order and entities as the established UOS HTML
+// renderers. Ampersand must be escaped first to avoid double-escaping entities.
+fn escape_html(value: String) -> String {
+  value
+  |> string.replace("&", "&amp;")
+  |> string.replace("\"", "&quot;")
+  |> string.replace("'", "&#39;")
+  |> string.replace("<", "&lt;")
+  |> string.replace(">", "&gt;")
 }

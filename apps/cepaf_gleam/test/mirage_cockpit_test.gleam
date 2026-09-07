@@ -31,6 +31,14 @@ pub fn lustre_cockpit_labels_projection_and_unknown_runtime_test() {
 pub fn lustre_cockpit_keeps_all_checklist_requirements_unverified_test() {
   let html = mirage_cockpit.view()
   [
+    "Domain 1: Metadata, Timestamp, and Tailscale Navigation",
+    "Domain 2: Zero-Muda Purity and Storage Safety",
+    "Domain 3: Testing Gold Standard and Math Gates",
+    "Domain 4: Cross-Language Control and Observability",
+    "Domain 5: Tri-Sovereign Governance and Jujutsu Monorepo",
+  ]
+  |> list.each(fn(domain) { string.contains(html, domain) |> should.be_true() })
+  [
     "CHK-01",
     "CHK-02",
     "CHK-03",
@@ -52,6 +60,42 @@ pub fn lustre_cockpit_keeps_all_checklist_requirements_unverified_test() {
   ]
   |> list.each(fn(code) { string.contains(html, code) |> should.be_true() })
   string.contains(html, "No all-green claim is made") |> should.be_true()
+}
+
+pub fn cockpit_escapes_public_candidate_and_observation_fields_test() {
+  let malicious = "<script>alert(\"x\")</script> & 'tail'"
+  let candidate =
+    mirage_migration_engine.MigrationCandidate(
+      id: malicious,
+      name: malicious,
+      layer: malicious,
+      current_tech: malicious,
+      mirage_target: malicious,
+      target_sil_level: 6,
+      projected_ram_saving_mb: 1,
+      projected_speedup_pct: 1.0,
+      status: mirage_migration_engine.Mapped,
+      estimate_basis: mirage_migration_engine.ConfiguredProjection(malicious),
+      admission: mirage_migration_engine.AdmissionUnverified(malicious),
+    )
+  let rows = mirage_cockpit.render_candidate_rows([candidate])
+  string.contains(rows, malicious) |> should.be_false()
+  string.contains(
+    rows,
+    "&lt;script&gt;alert(&quot;x&quot;)&lt;/script&gt; &amp; &#39;tail&#39;",
+  )
+  |> should.be_true()
+
+  let state =
+    mirage_unikernel_daemon.MirageDaemonState(
+      ..mirage_unikernel_daemon.new_daemon_state(),
+      observation: mirage_unikernel_daemon.RuntimeUnobserved(malicious),
+    )
+  let observation = mirage_cockpit.render_observation(state)
+  string.contains(observation, malicious) |> should.be_false()
+  string.contains(observation, "&lt;script&gt;") |> should.be_true()
+  string.contains(observation, "&quot;x&quot;") |> should.be_true()
+  string.contains(observation, "&amp; &#39;tail&#39;") |> should.be_true()
 }
 
 pub fn candidates_api_separates_projection_from_measurement_test() {
