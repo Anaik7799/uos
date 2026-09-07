@@ -8,6 +8,7 @@ import gleam/list
 import gleam/result
 import uos_swarm/board_reader
 import uos_swarm/clock_guard as guard
+import uos_swarm/clock_guard_fetch
 import uos_swarm/session_sync
 
 fn expected_active(root: String) -> Result(List(String), String) {
@@ -22,10 +23,12 @@ fn expected_active(root: String) -> Result(List(String), String) {
 }
 
 fn board(
-  path: String,
-  expected: List(String),
+  url: String,
+  projection: String,
+  session_root: String,
 ) -> Result(guard.BoardSnapshot, String) {
-  use body <- result.try(board_reader.read_file(path, board_reader.max_bytes))
+  use expected <- result.try(expected_active(session_root))
+  use body <- result.try(clock_guard_fetch.fetch(url, projection))
   use input <- result.try(board_reader.from_zenoh(body))
   case input.malformed_count {
     0 -> Ok(guard.from_board_input(input, expected))
@@ -33,9 +36,13 @@ fn board(
   }
 }
 
-fn once(state, board_path, expected, floor_path) {
+fn once(state, board_url, floor_path, session_root) {
   let next =
-    guard.audit(state, guard.live_sample(), board(board_path, expected))
+    guard.audit(
+      state,
+      guard.live_sample(),
+      board(board_url, floor_path <> ".board.json", session_root),
+    )
   let _ = guard.store_floor(floor_path, next.lamport_floor)
   case next.reports {
     [report, ..] -> io.println(json.to_string(guard.report_json(report)))
@@ -66,7 +73,7 @@ fn observe_actor(subject, remaining, interval) {
   }
 }
 
-fn watch(floor, remaining, interval, board_path, expected, floor_path) {
+fn watch(floor, remaining, interval, board_url, floor_path, session_root) {
   let guard.Config(version, _, ttl, retention, policy) = guard.strict_config()
   let config = guard.Config(version, interval, ttl, retention, policy)
   case
@@ -74,7 +81,7 @@ fn watch(floor, remaining, interval, board_path, expected, floor_path) {
       config,
       floor,
       guard.live_sample,
-      fn() { board(board_path, expected) },
+      fn() { board(board_url, floor_path <> ".board.json", session_root) },
       fn(value) { guard.store_floor(floor_path, value) },
     )
   {
@@ -87,37 +94,36 @@ fn watch(floor, remaining, interval, board_path, expected, floor_path) {
 pub fn main() -> Nil {
   let config = guard.strict_config()
   case argv.load().arguments {
-    ["once", board_path, floor_path, session_root] ->
-      case guard.load_floor(floor_path), expected_active(session_root) {
-        Ok(floor), Ok(expected) -> {
+    ["once", board_url, floor_path, session_root] ->
+      case guard.load_floor(floor_path) {
+        Ok(floor) -> {
           let _ =
-            once(guard.new(config, floor), board_path, expected, floor_path)
+            once(guard.new(config, floor), board_url, floor_path, session_root)
           Nil
         }
-        _, _ ->
+        _ ->
           io.println("{\"ok\":false,\"error\":\"durable floor unavailable\"}")
       }
-    ["watch", count_text, interval_text, board_path, floor_path, session_root] ->
+    ["watch", count_text, interval_text, board_url, floor_path, session_root] ->
       case
         int.parse(count_text),
         int.parse(interval_text),
-        guard.load_floor(floor_path),
-        expected_active(session_root)
+        guard.load_floor(floor_path)
       {
-        Ok(count), Ok(interval), Ok(floor), Ok(expected)
+        Ok(count), Ok(interval), Ok(floor)
           if count > 0
           && count <= 100
           && interval >= 50
           && interval <= 3_600_000
-        -> watch(floor, count, interval, board_path, expected, floor_path)
-        _, _, _, _ ->
+        -> watch(floor, count, interval, board_url, floor_path, session_root)
+        _, _, _ ->
           io.println(
             "{\"ok\":false,\"error\":\"invalid bounded watch or durable floor\"}",
           )
       }
     _ ->
       io.println(
-        "usage: clock_guard_cli once <board_json> <floor_file> <session_root> | watch <count:1..100> <interval_ms> <board_json> <floor_file> <session_root>",
+        "usage: clock_guard_cli once <zenoh_http_url> <floor_file> <session_root> | watch <count:1..100> <interval_ms> <zenoh_http_url> <floor_file> <session_root>",
       )
   }
 }
