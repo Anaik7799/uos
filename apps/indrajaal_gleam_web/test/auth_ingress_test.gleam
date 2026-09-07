@@ -162,6 +162,19 @@ pub fn actual_mist_adapter_admits_bounded_fixed_length_test() {
   response_body(bodyless) |> should.equal("")
 }
 
+pub fn actual_mist_adapter_rejects_expectation_before_read_test() {
+  let expectation =
+    connection_request(
+      [#("expect", "100-continue"), #("content-length", "1")],
+      <<>>,
+    )
+    |> dispatch_connection()
+  expectation.status |> should.equal(417)
+  response_body(expectation)
+  |> string.contains("request_expectation_unsupported")
+  |> should.be_true()
+}
+
 pub fn actual_mist_adapter_enforces_total_read_deadline_test() {
   let timed_out = with_stalled_connection(dispatch_connection)
   timed_out.status |> should.equal(408)

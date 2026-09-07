@@ -1000,6 +1000,7 @@ pub type RequestBodyFramingError {
   AmbiguousContentLength
   InvalidContentLength
   RequestBodyTooLarge
+  UnsupportedExpectation
   UnsupportedTransferEncoding
 }
 
@@ -1017,12 +1018,17 @@ pub fn classify_request_body(
     list.filter(req.headers, fn(header) {
       string.lowercase(header.0) == "content-length"
     })
+  let expectations =
+    list.filter(req.headers, fn(header) {
+      string.lowercase(header.0) == "expect"
+    })
 
-  case transfer_encodings, content_lengths {
-    [_, ..], _ -> Error(UnsupportedTransferEncoding)
-    [], [] -> Ok(EmptyRequestBody)
-    [], [#(_, value)] -> classify_content_length(value)
-    [], [_, _, ..] -> Error(AmbiguousContentLength)
+  case transfer_encodings, expectations, content_lengths {
+    [_, ..], _, _ -> Error(UnsupportedTransferEncoding)
+    [], [_, ..], _ -> Error(UnsupportedExpectation)
+    [], [], [] -> Ok(EmptyRequestBody)
+    [], [], [#(_, value)] -> classify_content_length(value)
+    [], [], [_, _, ..] -> Error(AmbiguousContentLength)
   }
 }
 
@@ -1060,6 +1066,8 @@ pub fn handle_bounded_connection_request(
       request_body_error_response(413, "request_body_too_large")
     Error(UnsupportedTransferEncoding) ->
       request_body_error_response(400, "request_transfer_encoding_unsupported")
+    Error(UnsupportedExpectation) ->
+      request_body_error_response(417, "request_expectation_unsupported")
     Error(AmbiguousContentLength) ->
       request_body_error_response(400, "request_content_length_ambiguous")
     Error(InvalidContentLength) ->
