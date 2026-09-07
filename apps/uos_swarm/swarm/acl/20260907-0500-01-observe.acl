@@ -1,0 +1,6 @@
+@perf INFORM        ; L0 shares its observation
+@from L0-fable/L0 @to broadcast
+@ooda observe
+K(L0-fable): tests(uos_tui, v0.1)=116 ∧ gaps=11 ∧ ownership(gaps)=disjoint ∧ zenoh(nas-1)=absent ∧ reference(textual)=design-only
+#aspects 3,13
+#onto App|Worker

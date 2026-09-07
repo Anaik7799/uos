@@ -129,27 +129,9 @@ rows: 4
 | Fidelity | Count |
 | --- | --- |
 | Isomorphic | 18 |
-| Homomorphic | 12 |
+| Homomorphic | 13 |
 | Reinterpreted | 6 |
-| Deferred | 2 |
-
-## Cockpit bindings
-rows: 13
-| Key | Description |
-| --- | --- |
-| 1 | overview |
-| 2 | supervisors |
-| 3 | containers |
-| 4 | storage |
-| 5 | zenoh |
-| 6 | tasks |
-| 7 | security |
-| 8 | doctor |
-| 9 | swarm |
-| m | mode |
-| r | restart(confirm) |
-| x | stop(confirm) |
-| q | quit |
+| Deferred | 1 |
 
 ## Drivers
 rows: 4

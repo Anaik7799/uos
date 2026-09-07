@@ -12,10 +12,15 @@
 | security | SEC-5 | Memory isolation per agent | `agent_runtime.remember/recall` | ENFORCED |
 | security | SEC-6 | Per-sender SHA-256 chains | `board.validate` | ENFORCED |
 | security | SEC-7 | Fenced single-writer leases | `coord.acquire/renew (epochs)` | ENFORCED |
-| security | SEC-8 | Zero-trust dispatch interceptor (Hermes) | `engines/hermes/_build/default/modules/system_engg/run_agent_dispatch_hook.exe` | BINARY PRESENT |
+| security | SEC-8 | Zero-trust dispatch interceptor (Hermes) | `engines/hermes/_build/default/modules/system_engg/run_agent_dispatch_hook.exe` | SOURCE ONLY (binary not built) |
 | security | SEC-9 | Signed envelopes (HMAC-SHA256, key outside repo) | `board.sign / board.signature_ok` | ENFORCED |
 | security | SEC-10 | Policy on absorbed messages | `coord.reconcile authorize_message` | ENFORCED |
-| security | SEC-11 | ETS tables protected (owner-write) | `uos_tui_ffi.erl ets_open` | ENFORCED |
+| security | SEC-11 | ETS tables protected (owner-write) | `uos_swarm_ffi.erl ets_open` | ENFORCED |
+| security | SEC-12 | Memory write without grant refused | `agent_runtime.remember (no grant)` | ENFORCED |
+| security | SEC-13 | Memory read by non-owner L2 refused | `agent_runtime.recall (non-owner L2)` | ENFORCED |
+| security | SEC-14 | Expired grant refused | `agent_runtime.grant ttl + remember (post-expiry)` | ENFORCED |
+| security | SEC-15 | Grant scope enforced | `agent_runtime.grant scope + remember (in/out of scope)` | ENFORCED |
+| security | SEC-16 | Grant from L2 refused | `agent_runtime.grant (L2 grantor)` | ENFORCED |
 | observability | OBS-1 | W3C trace/span on every message | `telemetry + board.seal` | ENFORCED |
 | observability | OBS-2 | Delivery record per transport | `board.deliver` | ENFORCED |
 | observability | OBS-3 | Shared state on Zenoh | `coord.share_state uos/tui/state/*` | LIVE |

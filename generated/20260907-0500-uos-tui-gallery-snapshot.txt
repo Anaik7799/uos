@@ -1,0 +1,40 @@
+ http://nas-1.tail55d152.ts.net:4100 │ 2026-09-07T07:38:11Z │ JJ working-copy                                           
+▸ D1 Metadata & Tailscale 0/4                                                                                           
+▸ D2 Zero-Muda & Storage 0/3                                                                                            
+▸ D3 Testing Gold Std 0/4                                                                                               
+▸ D4 Cross-Language 0/5                                                                                                 
+▸ D5 Governance & VCS 0/2                                                                                               
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+                                                                                                                        
+widget                                                      family                                                      
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+Static                                                      core                                                        
+Header                                                      core                                                        
+Button                                                      core                                                        
+                                                                                                                        
+                                                                                                                        
+• Header / StatusBar                                                                                                    
+• Checklist                                                                                                             
+• DataTable                                                                                                             
+• Log                                                                                                                   
+                                                                                                                        
+┌ Command palette ─────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│  type to search                                                                                                      │
+│                                                                                                                      │
+│                                                                                                                      │
+│  Quit  (quit)                                                                                                        │
+│  Toggle checklist domain 1  (toggle-d1)                                                                              │
+│                                                                                                                      │
+│                                                                                                                      │
+│                                                                                                                      │
+│                                                                                                                      │
+│                                                                                                                      │
+│                                                                                                                      │
+│                                                                                                                      │
+│                                                                                                                      │
+│                                                                                                                      │
+│                                                                                                                      │
+└──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+diff: 1/3 rows changed                                                                                                  

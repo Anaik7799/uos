@@ -1,0 +1,9 @@
+@perf HYPOTHESIZE   ; L0 orients
+@from L0-fable/L0 @to broadcast
+@ooda orient
+@conf 0.9
+B(L0-fable): conflicts(parallel-slices)=0 ⇐ ownership(slices)=disjoint
+B(L0-fable): fit(sonnet, gleam)=adequate ∧ fit(haiku, verify)=adequate ∧ fit(haiku, docs)=adequate
+G: minimize(tokens) ∧ maximize(first_pass_yield) ∧ isolate(workspace, per-worker)
+#aspects 2,4
+#onto Worker|Driver
