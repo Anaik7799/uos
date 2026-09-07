@@ -1,8 +1,6 @@
 import gleam/dict
-import gleam/erlang/process
 import gleam/int
 import gleam/list
-import gleam/result
 import gleam/string
 import gleeunit/should
 import uos_swarm/board
@@ -11,6 +9,19 @@ import uos_swarm/session_sync as sync
 
 @external(erlang, "session_sync_ffi", "unique_id")
 fn unique_id() -> String
+
+@external(erlang, "session_sync_test_ffi", "workspace_alias")
+fn workspace_alias() -> #(String, String)
+
+@external(erlang, "session_sync_test_ffi", "run_cli")
+fn run_cli(args: List(String), fault: String) -> #(Int, String)
+
+@external(erlang, "session_sync_test_ffi", "run_cli_pair")
+fn run_cli_pair(
+  a: List(String),
+  b: List(String),
+  fault: String,
+) -> #(Int, String, Int, String)
 
 const host = "host-a"
 
@@ -380,8 +391,9 @@ pub fn malformed_or_digest_changed_journal_is_not_silently_dropped_test() {
 }
 
 pub fn durable_restart_replay_and_duplicate_append_suppression_test() {
+  let #(workspace, _) = workspace_alias()
   let root = state_dir()
-  let command = sync.Register("codex", "codex", "/uos", "r", [])
+  let command = sync.Register("codex", "codex", workspace, "r", [])
   sync.execute(root, command, "registration") |> should.be_ok
   sync.execute(root, command, "registration") |> should.be_ok
   sync.execute(
@@ -408,32 +420,31 @@ pub fn durable_restart_replay_and_duplicate_append_suppression_test() {
 }
 
 pub fn actual_concurrent_process_claims_have_single_winner_test() {
+  let #(workspace, _) = workspace_alias()
   let root = state_dir()
   [#("codex", "codex"), #("claude", "claude")]
   |> list.each(fn(pair) {
     sync.execute(
       root,
-      sync.Register(pair.0, pair.1, "/uos", "r", []),
+      sync.Register(pair.0, pair.1, workspace, "r", []),
       "register-" <> pair.0,
     )
     |> should.be_ok
   })
-  let replies = process.new_subject()
-  ["codex", "claude"]
-  |> list.each(fn(id) {
-    process.spawn(fn() {
-      let result =
-        sync.execute(
-          root,
-          sync.Claim(id, "integration/main", 60_000_000),
-          "claim-" <> id,
-        )
-      process.send(replies, result.is_ok(result))
-    })
-  })
-  let assert Ok(first) = process.receive(replies, 3000)
-  let assert Ok(second) = process.receive(replies, 3000)
-  [first, second] |> list.filter(fn(x) { x }) |> list.length |> should.equal(1)
+  let codex = [root, "claim", "codex", "integration/main", "60", "claim-codex"]
+  let claude = [
+    root,
+    "claim",
+    "claude",
+    "integration/main",
+    "60",
+    "claim-claude",
+  ]
+  let #(codex_status, _, claude_status, _) = run_cli_pair(codex, claude, "")
+  [codex_status, claude_status]
+  |> list.filter(fn(status) { status == 0 })
+  |> list.length
+  |> should.equal(1)
   let assert Ok(journal) = sync.read_journal(root)
   let assert Ok(state) = sync.replay(journal)
   dict.size(state.coordinator.leases) |> should.equal(1)
@@ -441,10 +452,11 @@ pub fn actual_concurrent_process_claims_have_single_winner_test() {
 }
 
 pub fn modified_event_fails_closed_without_regenerating_authority_test() {
+  let #(workspace, _) = workspace_alias()
   let root = state_dir()
   sync.execute(
     root,
-    sync.Register("codex", "codex", "/uos", "r", []),
+    sync.Register("codex", "codex", workspace, "r", []),
     "registration",
   )
   |> should.be_ok
@@ -453,4 +465,199 @@ pub fn modified_event_fails_closed_without_regenerating_authority_test() {
   |> should.be_error
   board.file_read(root <> "/events/0000000001.json")
   |> should.equal(Ok("invalid"))
+}
+
+pub fn workspace_alias_and_missing_path_fail_closed_test() {
+  let #(real, alias) = workspace_alias()
+  let root = state_dir()
+  sync.execute(root, sync.Register("codex", "codex", real, "r", []), "register")
+  |> should.be_ok
+  sync.execute(
+    root,
+    sync.Claim("codex", "workspace:" <> real, 60_000_000),
+    "real-claim",
+  )
+  |> should.be_ok
+  sync.execute(
+    root,
+    sync.Claim("codex", "workspace:" <> alias, 60_000_000),
+    "alias-claim",
+  )
+  |> should.be_error
+
+  sync.execute(
+    state_dir(),
+    sync.Register("codex", "codex", alias, "r", []),
+    "alias-register",
+  )
+  |> should.be_error
+  sync.execute(
+    state_dir(),
+    sync.Register("codex", "codex", real <> "/missing", "r", []),
+    "missing-register",
+  )
+  |> should.be_error
+}
+
+pub fn pending_event_evidence_is_preserved_and_blocks_replay_test() {
+  let #(workspace, _) = workspace_alias()
+  let root = state_dir()
+  sync.execute(
+    root,
+    sync.Register("codex", "codex", workspace, "r", []),
+    "register",
+  )
+  |> should.be_ok
+  let pending = root <> "/events/.pending-interrupted"
+  board.file_write(pending, "partial-event") |> should.be_ok
+  sync.read_journal(root) |> should.be_error
+  sync.execute(root, sync.Heartbeat("codex", "r2", []), "heartbeat")
+  |> should.be_error
+  board.file_read(pending) |> should.equal(Ok("partial-event"))
+}
+
+pub fn independent_processes_serialize_duplicate_and_conflicting_operations_test() {
+  let #(workspace, _) = workspace_alias()
+  let root = state_dir()
+  sync.execute(
+    root,
+    sync.Register("codex", "codex", workspace, "r", []),
+    "register",
+  )
+  |> should.be_ok
+  let claim = [root, "claim", "codex", "integration/main", "60", "same-op"]
+  let #(status_a, output_a, status_b, output_b) = run_cli_pair(claim, claim, "")
+  status_a |> should.equal(0)
+  status_b |> should.equal(0)
+  string.contains(output_a <> output_b, "\"duplicate\":true") |> should.be_true
+  string.contains(output_a <> output_b, "\"duplicate\":false") |> should.be_true
+
+  let conflict_a = [root, "claim", "codex", "task:a", "60", "conflict-op"]
+  let conflict_b = [root, "claim", "codex", "task:b", "60", "conflict-op"]
+  let #(conflict_status_a, _, conflict_status_b, _) =
+    run_cli_pair(conflict_a, conflict_b, "")
+  [conflict_status_a, conflict_status_b]
+  |> list.filter(fn(status) { status == 0 })
+  |> list.length
+  |> should.equal(1)
+
+  let assert Ok(journal) = sync.read_journal(root)
+  let assert Ok(state) = sync.replay(journal)
+  state.sequence |> should.equal(3)
+}
+
+pub fn process_death_at_lock_persistence_points_leaves_recoverable_or_fail_closed_evidence_test() {
+  let #(workspace, _) = workspace_alias()
+  ["lock_open", "lock_write", "lock_sync", "lock_dir_sync"]
+  |> list.each(fn(point) {
+    let root = state_dir()
+    let args = [
+      root,
+      "register",
+      "codex",
+      "codex",
+      workspace,
+      "r",
+      "-",
+      "register",
+    ]
+    let #(status, _) = run_cli(args, point)
+    status |> should.equal(97)
+    sync.execute(
+      root,
+      sync.Register("codex", "codex", workspace, "r", []),
+      "register",
+    )
+    |> should.be_error
+    case point {
+      "lock_open" -> sync.recover_lock(root) |> should.be_error
+      _ -> {
+        sync.recover_lock(root) |> should.be_ok
+        sync.execute(
+          root,
+          sync.Register("codex", "codex", workspace, "r", []),
+          "register",
+        )
+        |> should.be_ok
+      }
+    }
+  })
+}
+
+pub fn process_death_at_event_persistence_points_preserves_durable_boundary_test() {
+  let #(workspace, _) = workspace_alias()
+  ["event_open", "event_write", "event_sync", "event_rename", "event_dir_sync"]
+  |> list.each(fn(point) {
+    let root = state_dir()
+    let args = [
+      root,
+      "register",
+      "codex",
+      "codex",
+      workspace,
+      "r",
+      "-",
+      "register",
+    ]
+    let #(status, _) = run_cli(args, point)
+    status |> should.equal(97)
+    sync.recover_lock(root) |> should.be_ok
+    case point {
+      "event_open" | "event_write" | "event_sync" -> {
+        sync.read_journal(root) |> should.be_error
+        sync.execute(
+          root,
+          sync.Register("codex", "codex", workspace, "r", []),
+          "register",
+        )
+        |> should.be_error
+        Nil
+      }
+      _ -> {
+        sync.execute(
+          root,
+          sync.Register("codex", "codex", workspace, "r", []),
+          "register",
+        )
+        |> should.be_ok
+        let assert Ok(journal) = sync.read_journal(root)
+        let assert Ok(state) = sync.replay(journal)
+        state.sequence |> should.equal(1)
+        Nil
+      }
+    }
+  })
+}
+
+pub fn process_death_at_unlock_persistence_points_keeps_committed_event_replayable_test() {
+  let #(workspace, _) = workspace_alias()
+  ["unlock_before_delete", "unlock_after_delete", "unlock_dir_sync"]
+  |> list.each(fn(point) {
+    let root = state_dir()
+    let args = [
+      root,
+      "register",
+      "codex",
+      "codex",
+      workspace,
+      "r",
+      "-",
+      "register",
+    ]
+    let #(status, _) = run_cli(args, point)
+    status |> should.equal(97)
+    case point {
+      "unlock_before_delete" -> {
+        sync.recover_lock(root) |> should.be_ok
+        Nil
+      }
+      _ -> Nil
+    }
+    let #(retry_status, retry_output) = run_cli(args, "")
+    retry_status |> should.equal(0)
+    string.contains(retry_output, "\"duplicate\":true") |> should.be_true
+    let assert Ok(journal) = sync.read_journal(root)
+    let assert Ok(state) = sync.replay(journal)
+    state.sequence |> should.equal(1)
+  })
 }

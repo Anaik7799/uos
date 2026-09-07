@@ -4,7 +4,8 @@
 %% Authority is the owning Unix account, not an unauthenticated remote board.
 -module(session_sync_ffi).
 -include_lib("kernel/include/file.hrl").
--export([transact/2, read/1, recover_lock/1, halt/1, unique_id/0]).
+-export([transact/2, read/1, recover_lock/1, canonical_workspace/1,
+         halt/1, unique_id/0]).
 
 -define(MAX_EVENTS, 65536).
 -define(MAX_BYTES, 67108864).
@@ -15,6 +16,19 @@ halt(Code) -> erlang:halt(Code).
 
 -spec unique_id() -> binary().
 unique_id() -> binary:encode_hex(crypto:strong_rand_bytes(16), lowercase).
+
+%% Workspace reservations use one real, existing directory spelling. Rejecting
+%% aliases keeps a symlink or lexical variant from becoming a second resource.
+-spec canonical_workspace(binary()) -> {ok, binary()} | {error, binary()}.
+canonical_workspace(Path) -> guarded(fun() ->
+    check_path(Path),
+    Canonical = resolve_path(filename:split(Path), [], 40),
+    case file:read_link_info(Canonical) of
+        {ok, #file_info{type = directory}} -> {ok, Canonical};
+        {ok, _} -> fail(<<"workspace path must identify an existing directory">>);
+        {error, Why} -> fail(Why)
+    end
+end).
 
 -spec read(binary()) -> {ok, binary()} | {error, binary()}.
 read(Root) -> guarded(fun() ->
@@ -125,13 +139,17 @@ ensure_root(Root) ->
 acquire(Path, Owner, Attempts) ->
     case file:open(Path, [write, exclusive, raw, binary]) of
         {ok, Fd} ->
+            maybe_fault(<<"lock_open">>),
             try
                 ok = file:change_mode(Path, 8#600),
                 ok = file:write(Fd, Owner),
-                ok = file:sync(Fd)
+                maybe_fault(<<"lock_write">>),
+                ok = file:sync(Fd),
+                maybe_fault(<<"lock_sync">>)
             after file:close(Fd)
             end,
-            sync_dir(filename:dirname(Path));
+            sync_dir(filename:dirname(Path)),
+            maybe_fault(<<"lock_dir_sync">>);
         {error, eexist} when Attempts > 0 ->
             timer:sleep(50),
             acquire(Path, Owner, Attempts - 1);
@@ -142,8 +160,11 @@ acquire(Path, Owner, Attempts) ->
 release_lock(Path, Owner) ->
     case file:read_file(Path) of
         {ok, Owner} ->
+            maybe_fault(<<"unlock_before_delete">>),
             ok = file:delete(Path),
-            sync_dir(filename:dirname(Path));
+            maybe_fault(<<"unlock_after_delete">>),
+            sync_dir(filename:dirname(Path)),
+            maybe_fault(<<"unlock_dir_sync">>);
         _ -> fail(<<"lock ownership changed; refusing to unlink another owner">>)
     end.
 
@@ -153,8 +174,9 @@ read_events(Root) ->
     Dir = filename:join(Root, <<"events">>),
     {ok, Names} = file:list_dir(Dir),
     demand(length(Names) =< ?MAX_EVENTS + 128, <<"journal directory capacity reached">>),
-    Files = lists:sort([unicode:characters_to_binary(N) || N <- Names,
-        not lists:prefix(".pending-", N)]),
+    %% A pending file is retained crash evidence. It is never treated as an
+    %% absent event: operators must inspect it before coordination can resume.
+    Files = lists:sort([unicode:characters_to_binary(N) || N <- Names]),
     demand(length(Files) =< ?MAX_EVENTS, <<"journal event capacity reached">>),
     {Next, Bytes, Rev} = lists:foldl(fun(Name, {Index, Size, Acc}) ->
         demand(Name =:= event_name(Index), <<"journal gap or unexpected file; replay refused">>),
@@ -175,14 +197,19 @@ commit(Root, N, Line) ->
     demand(file:read_link_info(Target) =:= {error, enoent}, <<"immutable event already exists">>),
     Temp = filename:join(Dir, <<".pending-", (unique_id())/binary>>),
     {ok, Fd} = file:open(Temp, [write, exclusive, raw, binary]),
+    maybe_fault(<<"event_open">>),
     try
         ok = file:change_mode(Temp, 8#600),
         ok = file:write(Fd, Line),
-        ok = file:sync(Fd)
+        maybe_fault(<<"event_write">>),
+        ok = file:sync(Fd),
+        maybe_fault(<<"event_sync">>)
     after file:close(Fd)
     end,
     ok = file:rename(Temp, Target),
-    sync_dir(Dir).
+    maybe_fault(<<"event_rename">>),
+    sync_dir(Dir),
+    maybe_fault(<<"event_dir_sync">>).
 
 sync_dir(Path) ->
     {ok, Fd} = file:open(Path, [read, raw, directory]),
@@ -238,3 +265,46 @@ dead_owner(Old) ->
             end;
         _ -> false
     end.
+
+maybe_fault(Point) ->
+    %% The fault driver exists only in Gleam's test build; release builds cannot
+    %% arm these process-local crash points.
+    case code:is_loaded(session_sync_test_ffi) of
+        false -> ok;
+        _ ->
+            case get('$session_sync_test_fault') of
+                Point -> erlang:halt(97);
+                _ -> ok
+            end
+    end.
+
+resolve_path([], Stack, _Hops) -> absolute_path(Stack);
+resolve_path([<<"/">> | Rest], _Stack, Hops) -> resolve_path(Rest, [], Hops);
+resolve_path([<<>> | Rest], Stack, Hops) -> resolve_path(Rest, Stack, Hops);
+resolve_path([<<".">> | Rest], Stack, Hops) -> resolve_path(Rest, Stack, Hops);
+resolve_path([<<"..">> | _], [], _Hops) ->
+    fail(<<"workspace path escapes filesystem root">>);
+resolve_path([<<"..">> | Rest], Stack, Hops) ->
+    [_ | ReverseParent] = lists:reverse(Stack),
+    resolve_path(Rest, lists:reverse(ReverseParent), Hops);
+resolve_path([Part | Rest], Stack, Hops) ->
+    Candidate = absolute_path(lists:reverse([Part | lists:reverse(Stack)])),
+    case file:read_link_info(Candidate) of
+        {ok, #file_info{type = symlink}} ->
+            demand(Hops > 0, <<"workspace symlink resolution limit reached">>),
+            {ok, Target0} = file:read_link(Candidate),
+            Target = unicode:characters_to_binary(Target0),
+            demand(binary:match(Target, <<0>>) =:= nomatch,
+                   <<"NUL in workspace symlink target">>),
+            case filename:pathtype(Target) of
+                absolute -> resolve_path(filename:split(Target) ++ Rest, [], Hops - 1);
+                relative -> resolve_path(filename:split(Target) ++ Rest, Stack, Hops - 1)
+            end;
+        {ok, #file_info{type = directory}} ->
+            resolve_path(Rest, Stack ++ [Part], Hops);
+        {ok, _} -> fail(<<"workspace path must identify an existing directory">>);
+        {error, Why} -> fail(Why)
+    end.
+
+absolute_path([]) -> <<"/">>;
+absolute_path(Stack) -> filename:join([<<"/">> | Stack]).
