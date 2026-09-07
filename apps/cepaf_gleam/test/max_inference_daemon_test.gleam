@@ -266,7 +266,7 @@ pub fn max_stpa_fmea_request_and_decode_test() {
   req |> string.contains("sa_plan_execution_bypass") |> should.be_true
 
   let raw =
-    "{\"id\":\"stpa-1\",\"status\":\"ok\",\"action\":\"sa_plan_execution_bypass\",\"component\":\"actuator\",\"uca_count\":1,\"ucas\":[{\"uca_type\":\"UCA-2\",\"name\":\"providing_causes_hazard\",\"hazard\":\"Direct bypass\"}],\"severity\":10,\"occurrence\":3,\"detection\":2,\"rpn\":60,\"rpn_band\":4,\"fmea_factor\":10,\"composite_score\":1500,\"gate_decision\":\"ANDON_STOP_BLOCKED\",\"sil_rating\":\"SIL-6\",\"latency_us\":18}"
+    "{\"id\":\"stpa-1\",\"status\":\"ok\",\"action\":\"sa_plan_execution_bypass\",\"component\":\"actuator\",\"uca_count\":1,\"ucas\":[{\"type\":\"UCA-2\",\"name\":\"providing_causes_hazard\",\"hazard\":\"Direct bypass\"}],\"severity\":10,\"occurrence\":3,\"detection\":2,\"rpn\":60,\"rpn_band\":4,\"fmea_factor\":10,\"composite_score\":1500,\"gate_decision\":\"ANDON_STOP_BLOCKED\",\"sil_rating\":\"SIL-6\",\"latency_us\":18}"
   let res = max.decode_infer_stpa_fmea_response(raw)
   res |> should.be_ok
   let assert Ok(rep) = res

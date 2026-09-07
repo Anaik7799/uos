@@ -97,8 +97,9 @@ or converting board ACKs, syntax-valid digests and passing tests into blanket ap
 | Dependency/ranking | Class before score, inherited urgency, blocked/unknown/expired exclusion, exact expiry, future ready time, stable ties, cycle/missing/duplicate rejection |
 | Record negatives | Forged product, zero factor, missing UCA, placeholder digest, duplicate JSON field, false-ready blocker, unknown-ready and understated FMEA interval rejected |
 | Shell parsing | PASS: bash -n tools/risk-priority-check |
-| Local package and manifest checks | Final results recorded in docs/reviews/20260907-1559-risk-prioritization-checks.json |
-| Full JSON Schema oracle | Separate validation result in the final receipt; the local OCaml checker deliberately implements only this schema's bounded subset |
+| Local package and manifest checks | PASS: 30 repository-local paths; plugin and skill format checks passed |
+| Full JSON Schema oracle | PASS: Draft 2020-12 schema/example and 3 TOML files; the local OCaml checker deliberately implements this schema's bounded subset |
+| Preservation audit | PASS: removing only the new binding blocks reproduces all 14 original file hashes |
 | Active-agent pressure tests | UNRUN; sub-agents are prohibited in this side conversation |
 | Lean/Quint/runtime two-key checks | UNRUN; no formal theorem or production admission claimed |
 | Live page delivery / plugin reload | UNRUN; references/discovery files are not evidence of current serving or agent adoption |
@@ -156,6 +157,7 @@ Generated document names have the required timestamp prefix.
 SKILL.md, plugin.json, AGENTS.md, Dune and code filenames retain their protocol-required names;
 the new skill title and companion documents carry the timestamp.
 The final check receipt binds hashes of the actual scoped artifacts. No JJ integration or native Git command was performed.
+The receipt itself is docs/reviews/20260907-1559-risk-prioritization-checks.json and is excluded from its own hash list.
 
 ## 9. Architectural Observations
 
