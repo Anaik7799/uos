@@ -6,6 +6,15 @@ authority = "A0_reference"
 status = "EXTERNAL_PIN_REQUIRED"
 
 [[superpower]]
+name = "uos-ui-superpowers"
+source = "uos_local_adapter"
+version = "1.0.0"
+state = "local_candidate_packaging_checked_behavior_unrun"
+path = "plugins/uos-interface-quality/skills/uos-ui-superpowers/SKILL.md"
+upstream_reference = "https://github.com/obra/superpowers/tree/b36e0829c6d0140e93cfef2ca599b1b07d4a7797"
+authority = "Scoped design/debug/review guidance; no global installation or runtime admission"
+
+[[superpower]]
 name = "brainstorming"
 source = "external_superpowers"
 version = "6.3.0"
@@ -95,5 +104,4 @@ source = "uos_canonical_tensor_superpower"
 version = "1.0.0"
 state = "classified"
 description = "10-dimensional tensor evolutionary synthesis: V_13 x S x L0..L9 x SDL x SRE x CX x DX x UX x Nav x Utility with tri-sovereign ratification"
-
 

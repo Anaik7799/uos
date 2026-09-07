@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "observed_at": "2026-09-07T23:30:00Z",
+  "policy": "Reference metadata only. No upstream source, skill installer, runtime dependency or license grant is imported. Guidance in this package is an original UOS adaptation.",
+  "sources": [
+    {
+      "id": "superpowers",
+      "url": "https://github.com/obra/superpowers",
+      "revision": "b36e0829c6d0140e93cfef2ca599b1b07d4a7797",
+      "pinned_url": "https://github.com/obra/superpowers/tree/b36e0829c6d0140e93cfef2ca599b1b07d4a7797",
+      "use": "Design, systematic diagnosis, regression checks and fresh verification. No automatic agents, Git workflow, global installation or unconditional heavyweight process."
+    },
+    {
+      "id": "lustre",
+      "url": "https://lustre.hexdocs.pm/index.html",
+      "revision": "ff866bb0b456866f7452bc27d74564eed34afdba",
+      "pinned_url": "https://github.com/lustre-labs/lustre/tree/ff866bb0b456866f7452bc27d74564eed34afdba",
+      "use": "Primary Gleam web UI reference; existing UOS dependency, no version change."
+    },
+    {
+      "id": "shore",
+      "url": "https://github.com/bgwdotdev/shore",
+      "revision": "dad07012647886d855179205f1e49d445a9a0b08",
+      "pinned_url": "https://github.com/bgwdotdev/shore/tree/dad07012647886d855179205f1e49d445a9a0b08",
+      "use": "TEA/Erlang TUI comparison only; not installed or endorsed as a production replacement."
+    },
+    {
+      "id": "wcag22",
+      "url": "https://www.w3.org/TR/2024/REC-WCAG22-20241212/",
+      "revision": "W3C Recommendation 2024-12-12",
+      "use": "Web accessibility acceptance criteria; no certification claim."
+    },
+    {
+      "id": "aria_apg",
+      "url": "https://www.w3.org/WAI/ARIA/apg/",
+      "revision": "moving_reference_observed_2026-09-07",
+      "use": "Semantic widget keyboard and focus behavior."
+    },
+    {
+      "id": "whatwg_sse",
+      "url": "https://html.spec.whatwg.org/multipage/server-sent-events.html",
+      "revision": "moving_reference_observed_2026-09-07",
+      "use": "Named-event dispatch, MIME type, UTF-8, reconnect and Last-Event-ID."
+    },
+    {
+      "id": "xterm",
+      "url": "https://invisible-island.net/xterm/ctlseqs/ctlseqs.html",
+      "revision": "moving_reference_observed_2026-09-07",
+      "use": "Terminal mode and control-sequence reference; no dependency."
+    },
+    {
+      "id": "kitty_keyboard",
+      "url": "https://sw.kovidgoyal.net/kitty/keyboard-protocol/",
+      "revision": "moving_reference_observed_2026-09-07",
+      "use": "Optional keyboard capability negotiation with legacy fallback."
+    },
+    {
+      "id": "unicode29",
+      "url": "https://unicode.org/reports/tr29/",
+      "revision": "moving_reference_observed_2026-09-07",
+      "use": "Text segmentation; distinct from terminal-cell width."
+    },
+    {
+      "id": "no_color",
+      "url": "https://no-color.org/",
+      "revision": "moving_reference_observed_2026-09-07",
+      "use": "Conventional color opt-out and explicit overrides."
+    }
+  ]
+}
