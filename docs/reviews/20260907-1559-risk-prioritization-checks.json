@@ -1,0 +1,321 @@
+{
+  "schema_version": 1,
+  "kind": "scoped_policy_validation",
+  "policy": "SC-RISK-PRIORITY-001",
+  "observed_at": "2026-09-07T16:41:06Z",
+  "plan_id": "uos/risk-sop/20260907-1559",
+  "task_id": "SOP-POLICY",
+  "actor": "codex-side-risk-sop",
+  "status": "LOCAL_CHECKS_PASSED",
+  "authority": "REPORT_ONLY",
+  "evidence_state": {
+    "authored": true,
+    "built": true,
+    "executed": true,
+    "independent_agent_review": "UNRUN",
+    "runtime_enforcement": "NOT_IMPLEMENTED_BY_THIS_PACKAGE",
+    "live_agent_adoption": "UNKNOWN",
+    "admission": "NOT_ADMITTED"
+  },
+  "toolchain": {
+    "ocaml": "5.5.0",
+    "dune": "3.23.1",
+    "yojson": "3.0.0",
+    "dependencies": "plugins/uos-risk-prioritization/validation/uos-risk-priority-validation.opam"
+  },
+  "checks": [
+    {
+      "command": "bash tools/risk-priority-check --selftest",
+      "exit_code": 0,
+      "result": {
+        "status": "PASS",
+        "checks": 375,
+        "authority": "REPORT_ONLY",
+        "behavioral_agent_tests": "UNRUN"
+      }
+    },
+    {
+      "command": "bash tools/risk-priority-check --package",
+      "exit_code": 0,
+      "result": {
+        "status": "PASS",
+        "local_paths_checked": 30,
+        "global_skill_dependency": false
+      }
+    },
+    {
+      "command": "bash tools/risk-priority-check --record governance/planning/20260907-1559-risk-priority-example.json",
+      "exit_code": 0,
+      "result": {
+        "status": "STRUCTURE_AND_ARITHMETIC_VALID",
+        "live_source_digest_match": "NOT_CHECKED"
+      }
+    },
+    {
+      "command": "bash -n tools/risk-priority-check",
+      "exit_code": 0
+    },
+    {
+      "kind": "supplemental_external_format_oracles",
+      "required_by_package": false,
+      "result": "Plugin validation and skill validation passed; Draft 2020-12 schema/example plus three TOML files passed."
+    },
+    {
+      "kind": "preexisting_content_preservation",
+      "result": {
+        "status": "PASS",
+        "preexisting_contents_preserved": 14,
+        "paths": [
+          "AGENTS.md",
+          ".codex/AGENTS.md",
+          ".claude/AGENTS.md",
+          ".gemini/AGENTS.md",
+          ".agents/AGENTS.md",
+          "contracts/rules/sdlc-sre-verification-process-contract.md",
+          ".agents/rules/sdlc-sre-verification-process-contract.md",
+          ".claude/rules/sdlc-sre-verification-process-contract.md",
+          ".gemini/rules/sdlc-sre-verification-process-contract.md",
+          "docs/design/20260906-1300-uos-sdlc-sre-verification-process-specification.md",
+          "docs/wiki/20260906-1300-uos-sdlc-sre-verification-process-guide.md",
+          "docs/wiki/20260907-0653-uos-tri-agent-swarm-operations.md",
+          "governance/capability-inventory/skills.toml",
+          "governance/capability-inventory/plugins.toml"
+        ]
+      }
+    }
+  ],
+  "scope": {
+    "preexisting_files_with_narrow_bindings": 14,
+    "artifact_paths": 39,
+    "additional_model_provider_requests": 0,
+    "primary_assistant_session_cost": "UNKNOWN",
+    "runtime_mutations": 0,
+    "mainline_mutations": 0,
+    "subagent_interactions": 0,
+    "board_posts": 0
+  },
+  "known_limits": [
+    "Ranking output is advisory, not authenticated live state or authority.",
+    "Cost tie review, sensitivity judgments and real control evidence remain mandatory procedural checks.",
+    "Sa-plan select appends evidence and has no dedicated impact field or automatic queue reorder.",
+    "Existing unrelated external skill links have not been migrated; this package does not require them.",
+    "Formal proofs, independent pressure tests, live plugin reload/adoption and page serving were not verified."
+  ],
+  "artifacts": [
+    {
+      "path": "AGENTS.md",
+      "hash_target": "AGENTS.md",
+      "sha256": "57bbe807b951e0961cf85aa9a2f0541b30e80c9f8943e72178037f5d33a69feb"
+    },
+    {
+      "path": ".codex/AGENTS.md",
+      "hash_target": ".codex/AGENTS.md",
+      "sha256": "b6ad25bab24c7b3645af83201cf7b1183653a0e327e2d4000fa36f2e0daec973"
+    },
+    {
+      "path": ".claude/AGENTS.md",
+      "hash_target": ".claude/AGENTS.md",
+      "sha256": "b1af9105170417a29fbd411308de7b761862edb3da2162200d45aac42ec81931"
+    },
+    {
+      "path": ".gemini/AGENTS.md",
+      "hash_target": ".gemini/AGENTS.md",
+      "sha256": "b6ad25bab24c7b3645af83201cf7b1183653a0e327e2d4000fa36f2e0daec973"
+    },
+    {
+      "path": ".agents/AGENTS.md",
+      "hash_target": ".agents/AGENTS.md",
+      "sha256": "57bbe807b951e0961cf85aa9a2f0541b30e80c9f8943e72178037f5d33a69feb"
+    },
+    {
+      "path": "contracts/rules/sdlc-sre-verification-process-contract.md",
+      "hash_target": "contracts/rules/sdlc-sre-verification-process-contract.md",
+      "sha256": "11a7d4ca1330a19b1409919fd0b99dc4d48ca578ea6c3e610f5f11cfd4856446"
+    },
+    {
+      "path": ".agents/rules/sdlc-sre-verification-process-contract.md",
+      "hash_target": ".agents/rules/sdlc-sre-verification-process-contract.md",
+      "sha256": "11a7d4ca1330a19b1409919fd0b99dc4d48ca578ea6c3e610f5f11cfd4856446"
+    },
+    {
+      "path": ".claude/rules/sdlc-sre-verification-process-contract.md",
+      "hash_target": ".claude/rules/sdlc-sre-verification-process-contract.md",
+      "sha256": "11a7d4ca1330a19b1409919fd0b99dc4d48ca578ea6c3e610f5f11cfd4856446"
+    },
+    {
+      "path": ".gemini/rules/sdlc-sre-verification-process-contract.md",
+      "hash_target": ".gemini/rules/sdlc-sre-verification-process-contract.md",
+      "sha256": "11a7d4ca1330a19b1409919fd0b99dc4d48ca578ea6c3e610f5f11cfd4856446"
+    },
+    {
+      "path": "docs/design/20260906-1300-uos-sdlc-sre-verification-process-specification.md",
+      "hash_target": "docs/design/20260906-1300-uos-sdlc-sre-verification-process-specification.md",
+      "sha256": "044ebd6d83cc3072f87723d540b80ce798b4c9ad109e99f1cfc92eb697ad3612"
+    },
+    {
+      "path": "docs/wiki/20260906-1300-uos-sdlc-sre-verification-process-guide.md",
+      "hash_target": "docs/wiki/20260906-1300-uos-sdlc-sre-verification-process-guide.md",
+      "sha256": "4858d78d795329c9cf4a5f1dd6e714865cd2fc88e66ccb76e1aaf009033407f7"
+    },
+    {
+      "path": "docs/wiki/20260907-0653-uos-tri-agent-swarm-operations.md",
+      "hash_target": "docs/wiki/20260907-0653-uos-tri-agent-swarm-operations.md",
+      "sha256": "bf876bd796909ca92cabf79250bcedff1d03e19bf581dfc6de44ca4d5bc48ebf"
+    },
+    {
+      "path": "governance/capability-inventory/skills.toml",
+      "hash_target": "governance/capability-inventory/skills.toml",
+      "sha256": "64282417a64dd2c2cbed2106a8521f5b13372ead2c3af43362a164b72dbd6fc0"
+    },
+    {
+      "path": "governance/capability-inventory/plugins.toml",
+      "hash_target": "governance/capability-inventory/plugins.toml",
+      "sha256": "e116b40b249f76c34f646097f7a3353c90053cd15fc2e19d7c2d8fa271fd89b9"
+    },
+    {
+      "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+      "hash_target": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+      "sha256": "e7851be7c82390f5ba2df4628955d924c68f1a7ec3f4df5357b8f6374d8f782d"
+    },
+    {
+      "path": "governance/planning/20260907-1559-risk-priority-policy.json",
+      "hash_target": "governance/planning/20260907-1559-risk-priority-policy.json",
+      "sha256": "8b3764ea10dff7b9c93232b3938e4dd660f835ba600a4a148fc5458e05283af2"
+    },
+    {
+      "path": "governance/planning/20260907-1559-risk-priority-record.schema.json",
+      "hash_target": "governance/planning/20260907-1559-risk-priority-record.schema.json",
+      "sha256": "ce13ab02d802472e4966c97f58503ec0353ba2b31fd76e179843dceb70f7186c"
+    },
+    {
+      "path": "governance/planning/20260907-1559-risk-priority-example.json",
+      "hash_target": "governance/planning/20260907-1559-risk-priority-example.json",
+      "sha256": "4bfa721ed7bf4e9f9cd8478eff625359dccdcd7d069c7b52cbbe01ff6d6c411c"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/skills/uos-risk-prioritization/SKILL.md",
+      "hash_target": "plugins/uos-risk-prioritization/skills/uos-risk-prioritization/SKILL.md",
+      "sha256": "bf8f48022d25797337980670195bc4f53719407f211196d8843a5f59a8be2817"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/skills/uos-risk-prioritization/references/20260907-1559-superpowers-bindings.md",
+      "hash_target": "plugins/uos-risk-prioritization/skills/uos-risk-prioritization/references/20260907-1559-superpowers-bindings.md",
+      "sha256": "33b7ff016ce7dea21f7068687fa5014a054d481d652a36137e44fb9d149530db"
+    },
+    {
+      "path": "docs/wiki/20260907-1559-risk-prioritization-guide.md",
+      "hash_target": "docs/wiki/20260907-1559-risk-prioritization-guide.md",
+      "sha256": "89aea25baaa1c67e4a866f3b4b990f464868df30780cd9fcba8900c61cc593af"
+    },
+    {
+      "path": "docs/zk/20260907-1559-adr-risk-prioritization.md",
+      "hash_target": "docs/zk/20260907-1559-adr-risk-prioritization.md",
+      "sha256": "2b292fa31b056dd726669213c1741b001d6ec4ce479f16c84049bcfb03afb84c"
+    },
+    {
+      "path": "governance/agents/policy/20260907-1559-risk-priority-bindings.toml",
+      "hash_target": "governance/agents/policy/20260907-1559-risk-priority-bindings.toml",
+      "sha256": "c1334db3a29a0bfc9bec3b961aa561729b29dfcb7c54f0dc55c4f5d2ca8f88c0"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/priority.ml",
+      "hash_target": "plugins/uos-risk-prioritization/validation/priority.ml",
+      "sha256": "9d9229334a298411da6ec46cc513c3cf2a2c9c54e521574b7cae3b62d6e995b4"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/dune-project",
+      "hash_target": "plugins/uos-risk-prioritization/validation/dune-project",
+      "sha256": "476c2f0f0403984f06e7a43a49b9fb2ec40971076437e685b6c78490dd526ca1"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/dune",
+      "hash_target": "plugins/uos-risk-prioritization/validation/dune",
+      "sha256": "2f2046016b4320e5f8593ed7509bd45ea4ea5b1f932b8d9aa491ff975c1a8b1a"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/validate.ml",
+      "hash_target": "plugins/uos-risk-prioritization/validation/validate.ml",
+      "sha256": "d5d0c54c28541d081ce60d8e8eaa30cb72f3cb204886a2a7f29b113e7db47c62"
+    },
+    {
+      "path": "tools/risk-priority-check",
+      "hash_target": "tools/risk-priority-check",
+      "sha256": "cb333b4470d9b2fdacd92426f38d3db22618283d57f1e7b811481707a7fdc959"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/.codex-plugin/plugin.json",
+      "hash_target": "plugins/uos-risk-prioritization/.codex-plugin/plugin.json",
+      "sha256": "8e33457de21a793434fbfd4b2d6cc2c05e05502d7f30e4d0aa0304490152976a"
+    },
+    {
+      "path": ".codex/skills/uos-risk-prioritization",
+      "hash_target": ".codex/skills/uos-risk-prioritization/SKILL.md",
+      "sha256": "bf8f48022d25797337980670195bc4f53719407f211196d8843a5f59a8be2817",
+      "link_target": "../../plugins/uos-risk-prioritization/skills/uos-risk-prioritization"
+    },
+    {
+      "path": ".codex/rules/20260907-1559-risk-prioritization-sop.md",
+      "hash_target": ".codex/rules/20260907-1559-risk-prioritization-sop.md",
+      "sha256": "e7851be7c82390f5ba2df4628955d924c68f1a7ec3f4df5357b8f6374d8f782d"
+    },
+    {
+      "path": ".claude/skills/uos-risk-prioritization",
+      "hash_target": ".claude/skills/uos-risk-prioritization/SKILL.md",
+      "sha256": "bf8f48022d25797337980670195bc4f53719407f211196d8843a5f59a8be2817",
+      "link_target": "../../plugins/uos-risk-prioritization/skills/uos-risk-prioritization"
+    },
+    {
+      "path": ".claude/rules/20260907-1559-risk-prioritization-sop.md",
+      "hash_target": ".claude/rules/20260907-1559-risk-prioritization-sop.md",
+      "sha256": "e7851be7c82390f5ba2df4628955d924c68f1a7ec3f4df5357b8f6374d8f782d",
+      "link_target": "../../contracts/rules/20260907-1559-risk-prioritization-sop.md"
+    },
+    {
+      "path": ".gemini/skills/uos-risk-prioritization",
+      "hash_target": ".gemini/skills/uos-risk-prioritization/SKILL.md",
+      "sha256": "bf8f48022d25797337980670195bc4f53719407f211196d8843a5f59a8be2817",
+      "link_target": "../../plugins/uos-risk-prioritization/skills/uos-risk-prioritization"
+    },
+    {
+      "path": ".gemini/rules/20260907-1559-risk-prioritization-sop.md",
+      "hash_target": ".gemini/rules/20260907-1559-risk-prioritization-sop.md",
+      "sha256": "e7851be7c82390f5ba2df4628955d924c68f1a7ec3f4df5357b8f6374d8f782d",
+      "link_target": "../../contracts/rules/20260907-1559-risk-prioritization-sop.md"
+    },
+    {
+      "path": ".agents/skills/uos-risk-prioritization",
+      "hash_target": ".agents/skills/uos-risk-prioritization/SKILL.md",
+      "sha256": "bf8f48022d25797337980670195bc4f53719407f211196d8843a5f59a8be2817",
+      "link_target": "../../plugins/uos-risk-prioritization/skills/uos-risk-prioritization"
+    },
+    {
+      "path": ".agents/rules/20260907-1559-risk-prioritization-sop.md",
+      "hash_target": ".agents/rules/20260907-1559-risk-prioritization-sop.md",
+      "sha256": "e7851be7c82390f5ba2df4628955d924c68f1a7ec3f4df5357b8f6374d8f782d",
+      "link_target": "../../contracts/rules/20260907-1559-risk-prioritization-sop.md"
+    },
+    {
+      "path": "docs/journal/20260907-1559-risk-prioritization-journal.md",
+      "hash_target": "docs/journal/20260907-1559-risk-prioritization-journal.md",
+      "sha256": "df6847c1f28c55a613482017f139c5f5c5ab19946fe9ecdbd7f5af6d7da0b21d"
+    },
+    {
+      "path": "plugins/uos-risk-prioritization/validation/uos-risk-priority-validation.opam",
+      "hash_target": "plugins/uos-risk-prioritization/validation/uos-risk-priority-validation.opam",
+      "sha256": "813aa0c5bc67e546acd5071765a1ba06d63b6b0ab29dd5c2d5fddd66749da81c"
+    }
+  ],
+  "supporting_source_observation": {
+    "path": "engines/hermes/modules/sa_plan/sa_plan_store.ml",
+    "sha256": "4260251e3b2f5ef184475f6fc649cb2f61e2a2e343ff8e00a63167640a2b7482",
+    "modified_by_this_task": false
+  },
+  "selection": {
+    "command": "tools/sa-plan task select",
+    "recorded": true,
+    "priority": 960,
+    "queue_reordered": false
+  },
+  "self_hash_omitted": true
+}
+
