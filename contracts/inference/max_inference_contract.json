@@ -1,93 +1,169 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "UOS Modular MAX/Mojo Isolated Inference Contract",
-  "version": "1.0.0",
-  "timestamp": "2026-09-05T16:51:50+02:00",
+  "version": "2.0.0",
+  "timestamp": "2026-09-07T11:07:45+02:00",
   "governance": {
     "authority": "UOS-CANONICAL-AGENT-POLICY",
     "boundary": "services/inference/max",
-    "execution_model": "SUPERVISED_EXTERNAL_PORT_LENGTH_DELIMITED"
+    "execution_model": "SUPERVISED_EXTERNAL_PORT_LENGTH_DELIMITED",
+    "zero_muda": "0_BEVY_0_GRAPHITE_PURE_ISOLATION",
+    "simd_acceleration": "MODULAR_MOJO_SIMD_KERNEL"
   },
   "protocol": {
     "framing": "4_BYTE_BE_LENGTH_DELIMITED_JSON",
     "transport": "STDIO_OR_UNIX_SOCKET",
-    "encoding": "UTF-8"
+    "encoding": "UTF-8",
+    "packet_option": "erlang_packet_4"
   },
+  "methods": [
+    "health",
+    "metrics",
+    "modalities",
+    "infer_text",
+    "infer_image",
+    "infer_audio",
+    "infer_video",
+    "embed"
+  ],
   "requests": {
-    "infer": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "model": {
-          "type": "string"
-        },
-        "prompt": {
-          "type": "string"
-        },
-        "max_tokens": {
-          "type": "integer",
-          "default": 512
-        },
-        "temperature": {
-          "type": "number",
-          "default": 0.2
-        },
-        "timeout_ms": {
-          "type": "integer",
-          "default": 5000
-        }
-      },
-      "required": [
-        "id",
-        "prompt"
-      ]
-    },
     "health": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string"
-        }
+        "id": { "type": "string" },
+        "method": { "type": "string", "const": "health" }
       },
-      "required": [
-        "id"
-      ]
+      "required": ["id"]
+    },
+    "metrics": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "method": { "type": "string", "const": "metrics" }
+      },
+      "required": ["id"]
+    },
+    "modalities": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "method": { "type": "string", "const": "modalities" }
+      },
+      "required": ["id"]
+    },
+    "infer_text": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "method": { "type": "string", "enum": ["infer_text", "infer"] },
+        "prompt": { "type": "string" },
+        "model": { "type": "string", "default": "modular-max-v26.5.0-mojo" },
+        "max_tokens": { "type": "integer", "default": 512 },
+        "temperature": { "type": "number", "default": 0.2 },
+        "timeout_ms": { "type": "integer", "default": 5000 },
+        "system_instruction": { "type": "string" }
+      },
+      "required": ["id", "prompt"]
+    },
+    "infer_audio": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "method": { "type": "string", "const": "infer_audio" },
+        "prompt": { "type": "string" },
+        "raga": { "type": "string", "default": "Durga" },
+        "duration_s": { "type": "number", "default": 4.0 },
+        "meend_contour": { "type": "boolean", "default": true },
+        "tabla_taal": { "type": "string", "default": "Teentaal" },
+        "sample_rate": { "type": "integer", "default": 24000 }
+      },
+      "required": ["id"]
+    },
+    "infer_image": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "method": { "type": "string", "const": "infer_image" },
+        "prompt": { "type": "string" },
+        "image_b64": { "type": "string" },
+        "mode": { "type": "string", "enum": ["classify", "detect", "embed"], "default": "classify" }
+      },
+      "required": ["id", "prompt"]
+    },
+    "infer_video": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "method": { "type": "string", "const": "infer_video" },
+        "prompt": { "type": "string" },
+        "frames_b64": { "type": "array", "items": { "type": "string" } },
+        "fps": { "type": "integer", "default": 4 }
+      },
+      "required": ["id"]
+    },
+    "embed": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "method": { "type": "string", "const": "embed" },
+        "texts": { "type": "array", "items": { "type": "string" } },
+        "dimension": { "type": "integer", "default": 384 },
+        "normalize": { "type": "boolean", "default": true }
+      },
+      "required": ["id", "texts"]
     }
   },
   "responses": {
-    "infer_result": {
+    "health_result": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string"
-        },
-        "status": {
-          "type": "string",
-          "enum": [
-            "ok",
-            "error",
-            "timeout"
-          ]
-        },
-        "text": {
-          "type": "string"
-        },
-        "prompt_tokens": {
-          "type": "integer"
-        },
-        "completion_tokens": {
-          "type": "integer"
-        },
-        "latency_us": {
-          "type": "integer"
-        }
+        "id": { "type": "string" },
+        "status": { "type": "string", "enum": ["ok", "error"] },
+        "engine": { "type": "string" },
+        "version": { "type": "string" },
+        "mojo_kernel": { "type": "string" },
+        "device": { "type": "string" },
+        "ready": { "type": "boolean" },
+        "modalities": { "type": "array", "items": { "type": "string" } }
       },
-      "required": [
-        "id",
-        "status"
-      ]
+      "required": ["id", "status", "ready"]
+    },
+    "infer_text_result": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "status": { "type": "string", "enum": ["ok", "error", "timeout"] },
+        "text": { "type": "string" },
+        "prompt_tokens": { "type": "integer" },
+        "completion_tokens": { "type": "integer" },
+        "latency_us": { "type": "integer" }
+      },
+      "required": ["id", "status"]
+    },
+    "infer_audio_result": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "status": { "type": "string", "enum": ["ok", "error"] },
+        "raga": { "type": "string" },
+        "harmony_index": { "type": "number" },
+        "shannon_entropy": { "type": "number" },
+        "swara_sequence": { "type": "array", "items": { "type": "string" } },
+        "meend_glissando_points": { "type": "integer" },
+        "latency_us": { "type": "integer" }
+      },
+      "required": ["id", "status"]
+    },
+    "embed_result": {
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "status": { "type": "string", "enum": ["ok", "error"] },
+        "embeddings": { "type": "array", "items": { "type": "array", "items": { "type": "number" } } },
+        "dimension": { "type": "integer" },
+        "latency_us": { "type": "integer" }
+      },
+      "required": ["id", "status", "embeddings"]
     }
   }
 }

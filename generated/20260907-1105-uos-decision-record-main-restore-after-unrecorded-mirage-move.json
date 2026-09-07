@@ -65,6 +65,18 @@
     ],
     "note": "the forecast below is left as written; it resolves when the operator decides (restore, or admit Mirage with a recorded decision)"
   },
+  "completed": {
+    "observed_at": "2026-09-07T11:31:00.000000Z",
+    "observed_actions": [
+      "operator decision 11:2x UTC: 'restore main and integrate the codex mirage package'",
+      "before execution the AGY session moved main a second time (claim integration/main epoch 18, TTL 1800 s, 11:25:07Z; release 11:28:48Z): merge rroqsznkssot/7b9c0518 = c660b3d3 + Codex package b04e4cd9, 19 conflicts resolved by jj restore, decision record generated/20260907-1150-...-mirage-codex-audit-integrate.json and journal 20260907-1330 on that lineage, session broadcast seq 153; all 14 Codex fix files kept at the package version; no attribution reported; Integrate row not on the router",
+      "L0-fable claim integration/main epoch 4 (coordinator numbering) at ~11:29Z; bookmark set main -r qvquwkvromno --allow-backwards (jj refused the plain backwards move); main = qvquwkvromno/7cb60ab6f30ccdad3b2d35b86ee5d94ff271ac8c; AGY merge 7b9c0518 left visible as a candidate; nothing rewritten or abandoned",
+      "Codex package then merged onto the restored lineage as oomwkxvtzkmk (parents xunxrrsz + lpkpxryy); only the ledger conflicted and was unioned in append order; gates and attribution recorded in DR-20260907-1120"
+    ],
+    "outcome": "selected alternative realized after the operator decision — main restored — Measured; the interim block records the 20-minute period in which the guard held the action",
+    "forecast_resolution": "p=0.8 for 'restored within 15 min and no further unrecorded move' -> the restore happened outside the horizon and a second AGY move occurred inside it (Brier 0.64); the escalation path (operator decision) was the one taken",
+    "consumed": { "tokens": "0 for the restore itself (deterministic R0)", "usd": 0.0 }
+  },
   "forecast": {
     "horizon": "15 min",
     "clock_domain": "UTC host nas-1",

@@ -1,0 +1,50 @@
+(library
+ (name hermes_mirage)
+ (wrapped false)
+ (modules
+  mirage_signatures
+  mirage_memory_block
+  mirage_merkle_kv
+  mirage_solo5_tender
+  mirage_interceptor
+  mirage_benchmark
+  mirage_migration_catalog
+  mirage_dns_resolver
+  mirage_tls_ingress)
+ (libraries digestif yojson mirage-crypto mirage-crypto-ec unix))
+
+(executable
+ (name test_mirage_core)
+ (modules test_mirage_core)
+ (libraries hermes_mirage))
+
+(executable
+ (name test_mirage_migration)
+ (modules test_mirage_migration)
+ (libraries hermes_mirage))
+
+(executable
+ (name test_mirage_benchmark)
+ (modules test_mirage_benchmark)
+ (libraries hermes_mirage unix yojson))
+
+(rule
+ (alias runtest)
+ (action (run ./test_mirage_benchmark.exe %{exe:hermes_mirage_runner.exe})))
+
+(executable
+ (name hermes_mirage_runner)
+ (modules hermes_mirage_runner)
+ (libraries hermes_mirage unix yojson))
+
+(rule
+ (alias runtest)
+ (action (run ./test_mirage_core.exe)))
+
+(rule
+ (alias runtest)
+ (action (run ./test_mirage_migration.exe)))
+
+(rule
+ (alias runtest)
+ (action (run ./hermes_mirage_runner.exe selftest)))
