@@ -1,3 +1,4 @@
+import gleam/int
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
@@ -959,4 +960,37 @@ pub fn chain_fork_record_lets_a_second_branch_validate_test() {
   board.chain_forks([fork]) |> should.equal([c.id])
   board.validate([signed(a), signed(b), signed(c), signed(fork)])
   |> should.equal(Ok(Nil))
+}
+
+pub fn provenance_is_stamped_and_receive_events_are_recorded_test() {
+  let prov = board.provenance_payload()
+  list.key_find(prov, "host") |> should.be_ok
+  let assert Ok(boot) = list.key_find(prov, "boot_id")
+  { string.length(boot) > 8 } |> should.be_true
+  let assert Ok(t) = board.open("sw-prov", "uos_tui_board_prov", None, None)
+  let #(t, m) = board.post(t, draft(board.Report, "broadcast"))
+  list.key_find(m.payload, "boot_id") |> should.equal(Ok(boot))
+  list.key_find(m.payload, "boot_us") |> should.be_ok
+  let other =
+    board.seal(
+      Draft(
+        ..draft(board.Report, "broadcast"),
+        from: Agent("W03", "L2", "sonnet"),
+      ),
+      "sw-prov",
+      5,
+      40,
+      "eeeeeeeeeeeeeeee",
+      board.genesis_digest,
+    )
+  let t2 = board.absorb(t, signed(other))
+  t2.lamport |> should.equal(int.max(t.lamport, 40) + 1)
+  let assert Ok(stored) =
+    list.find(board.timeline(t2), fn(x) { x.id == other.id })
+  let assert [first, ..] = stored.deliveries
+  string.starts_with(
+    first.transport,
+    "receive lamport=" <> int.to_string(t2.lamport),
+  )
+  |> should.be_true
 }

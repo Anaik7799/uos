@@ -3,7 +3,7 @@
 %% Every function is total: failures come back as {error, Reason}.
 -module(uos_swarm_ffi).
 -export([ets_open/1, ets_insert/3, ets_lookup/2, ets_all/1, ets_count/1, ets_clear/1,
-         http_put/2, http_get/1, file_append/2, file_read/1, file_write/2, sha256_hex/1, hmac_hex/2, board_key/0, system_time_us/0,
+         http_put/2, http_get/1, file_append/2, file_read/1, file_write/2, sha256_hex/1, hmac_hex/2, board_key/0, system_time_us/0, host_boot/0,
          list_dir/1]).
 
 %% ---- board / coordination shim (pure OTP: ets, inets/httpc, file, crypto) ----
@@ -93,3 +93,20 @@ list_dir(Path) ->
         {ok, Names} -> {ok, [unicode:characters_to_binary(N) || N <- Names]};
         {error, R} -> {error, atom_to_binary(R, utf8)}
     end.
+
+%% Actual host and boot provenance: hostname, kernel boot id, and boot-relative
+%% monotonic microseconds from /proc/uptime. Never a wall-clock value.
+host_boot() ->
+    Host = case inet:gethostname() of {ok, H} -> list_to_binary(H); _ -> <<"unknown-host">> end,
+    Boot = case file:read_file("/proc/sys/kernel/random/boot_id") of
+        {ok, B} -> string:trim(B); _ -> <<"unknown-boot">> end,
+    Up = case file:read_file("/proc/uptime") of
+        {ok, U} -> case string:split(U, " ") of
+                       [S | _] -> case string:to_float(binary_to_list(S)) of
+                                      {F, _} when is_float(F) -> trunc(F * 1000000);
+                                      _ -> 0
+                                  end;
+                       _ -> 0
+                   end;
+        _ -> 0 end,
+    {Host, Boot, Up}.

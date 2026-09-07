@@ -56,6 +56,17 @@ pub fn file_read(path: String) -> Result(String, String)
 @external(erlang, "uos_swarm_ffi", "file_write")
 pub fn file_write(path: String, content: String) -> Result(Nil, String)
 
+@external(erlang, "uos_swarm_ffi", "host_boot")
+fn host_boot() -> #(String, String, Int)
+
+/// Provenance keys stamped into every new message (part of the digest): the actual
+/// host, its kernel boot id and boot-relative monotonic microseconds. Lamport (`lamport`)
+/// is the causal clock; `ts_us` is wall time; `boot_us` is monotonic — never equated.
+pub fn provenance_payload() -> List(#(String, String)) {
+  let #(host, boot, up) = host_boot()
+  [#("host", host), #("boot_id", boot), #("boot_us", int.to_string(up))]
+}
+
 @external(erlang, "uos_swarm_ffi", "sha256_hex")
 pub fn sha256_hex(data: String) -> String
 
@@ -689,6 +700,12 @@ pub fn open(
 pub fn post(board: Board, draft: Draft) -> #(Board, Message) {
   let ts = system_time_us()
   let lamport = board.lamport + 1
+  // Stamp host/boot provenance unless the draft already carries it (replays keep theirs).
+  let draft = case list.key_find(draft.payload, "boot_id") {
+    Ok(_) -> draft
+    Error(_) ->
+      Draft(..draft, payload: list.append(draft.payload, provenance_payload()))
+  }
   let m =
     seal(
       draft,
@@ -715,6 +732,26 @@ pub fn post(board: Board, draft: Draft) -> #(Board, Message) {
 /// Merge a message that originated elsewhere (Lamport merge). The remote sender's chain head
 /// advances only when the message extends our current head for that sender.
 pub fn absorb(board: Board, m: Message) -> Board {
+  // Receive-event provenance (local delivery record, not part of the digest): the
+  // absorbing host/boot and the Lamport value after this receive event.
+  let received_lamport = int.max(board.lamport, m.lamport) + 1
+  let #(host, boot, up) = host_boot()
+  let m =
+    Message(..m, deliveries: [
+      Delivery(
+        "receive lamport="
+          <> int.to_string(received_lamport)
+          <> " host="
+          <> host
+          <> " boot="
+          <> string.slice(boot, 0, 8)
+          <> " boot_us="
+          <> int.to_string(up),
+        Delivered,
+        1,
+      ),
+      ..m.deliveries
+    ])
   let authentic = case board.key {
     Some(_) -> signature_ok(m, board.key)
     None -> True
