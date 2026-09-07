@@ -1743,6 +1743,10 @@ fn render_shell() -> String {
             <h3 style='color:#34d399'>Zettelkasten Decision Matrix &rarr;</h3>
             <p>Visual decision matrix of all 16 permanent ADRs (ADR-001..ADR-016) with formal oracle indicators and upstream/downstream contract lineage.</p>
           </a>
+          <a href='/mirage' class='hub-btn' style='border-color:#00d4aa'>
+            <h3 style='color:#00d4aa'>🛡️ MirageOS Solo5 Cockpit &rarr;</h3>
+            <p>Type-safe unikernel library OS & Solo5 tender cockpit: 7 subsystem candidates (1092MB projected RAM savings), bounded host benchmark, and fail-closed gates.</p>
+          </a>
         </div>
       </div>
 
@@ -1938,6 +1942,8 @@ fn render_shell() -> String {
           <button class='endpoint-btn' onclick='fetchApi(\"/api/agents/hierarchy\")'>/api/agents/hierarchy</button>
           <button class='endpoint-btn' onclick='fetchApi(\"/api/v1/pages\")'>/api/v1/pages</button>
           <button class='endpoint-btn' onclick='connectAgui()' style='color:#00e5ff;border-color:#00e5ff'>AG-UI SSE Stream</button>
+          <button class='endpoint-btn' onclick='fetchApi(\"/api/v1/mirage/status\")' style='color:#00d4aa;border-color:#00d4aa'>/api/v1/mirage/status</button>
+          <button class='endpoint-btn' onclick='fetchApi(\"/api/v1/mirage/candidates\")' style='color:#00d4aa;border-color:#00d4aa'>/api/v1/mirage/candidates</button>
         </div>
         <pre id='api-result'>Click an endpoint above to see the real-time response from the BEAM OTP runtime.</pre>
       </div>" <> render_footer() <> "</main>
