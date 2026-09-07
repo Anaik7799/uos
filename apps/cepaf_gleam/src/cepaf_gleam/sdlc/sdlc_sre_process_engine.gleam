@@ -11,6 +11,9 @@
 import gleam/int
 import gleam/list
 import gleam/string
+import cepaf_gleam/ha/fractal_forecast.{
+  type LayerForecast, type SdlcPreflightVerdict, type SreSopVerdict,
+}
 
 // ------------------------------------------------------------------------------
 // 1. 5-Tier Fractal Lifecycle
@@ -660,12 +663,13 @@ pub fn agent_topology_role_to_string(role: AgentTopologyRole) -> String {
 }
 
 // ------------------------------------------------------------------------------
-// 20. 6-Stage Bounded OODAVR Control Loop
+// 20. 7-Stage Bounded Predictive POODAVR Control Loop (SC-HIVE-DECISION-001)
 // ------------------------------------------------------------------------------
 
 pub type OodavrStage {
   OodavrObserve
   OodavrOrient
+  OodavrPredict
   OodavrDecide
   OodavrAct
   OodavrVerify
@@ -676,9 +680,22 @@ pub fn oodavr_stage_to_string(stage: OodavrStage) -> String {
   case stage {
     OodavrObserve -> "OBSERVE"
     OodavrOrient -> "ORIENT"
+    OodavrPredict -> "PREDICT"
     OodavrDecide -> "DECIDE"
     OodavrAct -> "ACT"
     OodavrVerify -> "VERIFY"
     OodavrRecord -> "RECORD"
   }
+}
+
+// ------------------------------------------------------------------------------
+// 21. Unified SRE & SDLC Predictive SOP Dispatchers
+// ------------------------------------------------------------------------------
+
+pub fn run_sre_predictive_sop(forecast: LayerForecast) -> SreSopVerdict {
+  fractal_forecast.evaluate_sre_capacity_sop(forecast)
+}
+
+pub fn run_sdlc_predictive_sop(forecast: LayerForecast) -> SdlcPreflightVerdict {
+  fractal_forecast.evaluate_sdlc_mutation_sop(forecast)
 }

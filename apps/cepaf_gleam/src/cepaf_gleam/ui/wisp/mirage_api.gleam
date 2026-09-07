@@ -1,6 +1,7 @@
 // STAMP: SC-GLM-UI-001, SC-MIRAGE-001, SC-MIRAGE-MIGRATE-001
 // Wisp REST API endpoints for MirageOS Unikernel & Subsystem Migration.
 
+import cepaf_gleam/services/mirage_hypervisor
 import cepaf_gleam/services/mirage_migration_engine.{type MigrationCandidate}
 import cepaf_gleam/services/mirage_unikernel_daemon.{
   type MirageDaemonState, type UnikernelInstance,
@@ -143,3 +144,8 @@ pub fn instance_json(inst: UnikernelInstance) -> json.Json {
     #("simulated_trapped_threats", json.int(inst.simulated_trapped_threats)),
   ])
 }
+
+pub fn hypervisors_json() -> json.Json {
+  mirage_hypervisor.probe_report_to_json(mirage_hypervisor.default_verified_probe())
+}
+

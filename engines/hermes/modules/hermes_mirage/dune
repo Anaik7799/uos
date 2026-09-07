@@ -10,7 +10,8 @@
   mirage_benchmark
   mirage_migration_catalog
   mirage_dns_resolver
-  mirage_tls_ingress)
+  mirage_tls_ingress
+  mirage_hypervisor_probe)
  (libraries digestif yojson mirage-crypto mirage-crypto-ec unix))
 
 (executable
@@ -48,3 +49,12 @@
 (rule
  (alias runtest)
  (action (run ./hermes_mirage_runner.exe selftest)))
+
+(executable
+ (name test_mirage_hypervisor)
+ (modules test_mirage_hypervisor)
+ (libraries hermes_mirage unix yojson))
+
+(rule
+ (alias runtest)
+ (action (run ./test_mirage_hypervisor.exe)))

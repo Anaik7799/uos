@@ -188,6 +188,11 @@ pub fn cepaf_router_exposes_truthful_mirage_json_test() {
   let status = router.route("/api/v1/mirage/status")
   string.contains(status, "\"runtime_mode\":\"simulation_only\"")
   |> should.be_true()
+  let hyp = router.route("/api/v1/mirage/hypervisors")
+  string.contains(hyp, "\"overall_readiness\":\"hardware_kvm_ready\"")
+  |> should.be_true()
+  string.contains(hyp, "\"dev_kvm_present\":true")
+  |> should.be_true()
 }
 
 pub fn cepaf_router_exposes_projection_html_test() {

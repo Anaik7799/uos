@@ -40,6 +40,20 @@
     "rollback": "bookmark set main -r ozrqspzwtmqw --allow-backwards under lease",
     "escalation": "gate failure -> abandon the responsible merge change (candidate commits untouched), re-gate, report"
   },
+  "completed": {
+    "observed_at": "2026-09-07T12:32:00.000000Z",
+    "observed_actions": [
+      "AGY's 12:15Z squash rewrote the parents of my two AGY merges; jj replaced them with the fork point, the split-int working copy went stale, my composed change diverged into two commits and this record file was lost once; resolved by keeping the working-copy commit, abandoning my own stray copy 524bcf49, and re-creating the record",
+      "AGY's current frozen head qxvmpumw/699979bc (chain 953f6d36 web -> 9681ab09 hypervisor probe + forecast -> fb060e9c verification report -> 699979bc journal) merged as pxvuyxwwvrkr; only the ledger conflicted (union)",
+      "e03-evidence remnants tools/uos/gleam.toml, manifest.toml and src/uos_ffi.erl restored from main after they made exit_status_test.known_gate_returns_exit_code_0_test fail (main baseline 14/14); the e03 fixture file stays",
+      "ledger: AGY-only row 1788782676792782-8f9a2e3b4c5d6e7f (hand-shaped id and timestamp, lamport 256 colliding with an L0-fable row) fails the strict digest check; quarantined verbatim into 20260907-0440-swarm-board.jsonl.digest-rejected.jsonl and removed from the validated ledger (273 valid); my earlier reconcile had already pushed it to the router before the validator caught it — the push path lacks the digest check the pull path has (defect for the board owners); the router key is left in place per SYNC-05",
+      "gates on the final head: cepaf build 0 errors / 0 warnings, 10074 passed, 202 aggregate failure lines, 164 distinct failing identities == baseline, 0 new, 0 fixed; Hermes hermes_mirage dune build exit 0 (hypervisor probe + test); indrajaal_gleam_web 12 tests; tools/uos 14 tests; uos_swarm 563 / 0 warnings; uos_tui 198; split gate PASS; board valid 273 (3 gaps, 8 forks explicit); N01 peer_http_service_test passed",
+      "lease epoch 20 (event 184) held throughout; bookmarks -> composed head then receipt change; release recorded in the follow-up Report"
+    ],
+    "outcome": "selected alternative realized — everything with functionality merged (N01, S24, AGY web + hypervisor/forecast + verification report + journal, Codex ainf docs, e03-evidence with its stale tools/uos parts toward main, acceptance orphan and Codex 91eb child as lineage joins); pnpktttv and qtvsuzxu left as lineage-only historical merges — Measured",
+    "forecast_resolution": "p=0.6 for 'head on main with 0 new failing identities; at most one merge dropped' -> realized with 0 merges dropped (Brier 0.16); the compile risk did not materialize; the unforeseen event was a concurrent rewrite by the candidate's owner",
+    "consumed": { "tokens": "0 for integration steps (deterministic R0); Fable for design and receipts", "usd": 0.0 }
+  },
   "forecast": {
     "horizon": "45 min",
     "clock_domain": "UTC host nas-1",

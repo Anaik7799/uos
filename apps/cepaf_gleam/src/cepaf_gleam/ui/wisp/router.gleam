@@ -149,6 +149,9 @@ fn route_internal(path: String) -> String {
     "/api/v1/mirage/status" | "/api/mirage/status" ->
       mirage_api.unikernel_status_json(mirage_unikernel_daemon.new_daemon_state())
       |> json.to_string()
+    "/api/v1/mirage/hypervisors" | "/api/mirage/hypervisors" ->
+      mirage_api.hypervisors_json()
+      |> json.to_string()
     // SC-VAULT-009 + SC-VAULT-025: secrets vault API for .pi/ + dashboard tile.
     // Pass-6 wiring (skeleton response — Slice E continuation wires real vault.get).
     // Per docs/journal/task-116494073339521648/slice-plans/slice-e-continuation.md
