@@ -16,6 +16,7 @@
     "observed_at",
     "valid_until",
     "task_state",
+    "ready_since",
     "snapshot",
     "factors",
     "fmea_modes",
@@ -75,6 +76,10 @@
       "format": "date-time"
     },
     "valid_until": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ready_since": {
       "type": "string",
       "format": "date-time"
     },
@@ -723,4 +728,3 @@
   },
   "$comment": "Structural schema only. The local OCaml validator checks arithmetic, factor bounds, UCA coverage, freshness and DAG/ranking; neither schema nor validator authorizes an effect."
 }
-
