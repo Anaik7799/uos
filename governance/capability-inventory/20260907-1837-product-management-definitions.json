@@ -1,0 +1,255 @@
+{
+  "schema": "uos.product-management-review-definitions/v1",
+  "management_features": [
+    {
+      "id": "PM-01",
+      "name": "Product definition and outcomes",
+      "use_case": "Define who a product serves, the problem, measurable outcome hypotheses and scope before classifying engineering work.",
+      "shall": "Product specifications SHALL preserve a stable identity, purpose, stakeholder/source, outcome hypothesis, metric definition, scope and explicit unknowns.",
+      "negative": "Reject a product with missing purpose or fabricated measured outcome.",
+      "canonical_path": "engines/hermes/modules/hermes_harness/feature_catalog.ml",
+      "implementation": "Product specification metadata plus existing typed catalogs; outcomes remain unmeasured.",
+      "gap": "Business outcome and customer-feedback lifecycle is not fully represented by the engineering catalogs."
+    },
+    {
+      "id": "PM-02",
+      "name": "Feature hierarchy and ownership",
+      "use_case": "Navigate product, family, capability, contract, scenario, trace and receipt without losing the denominator.",
+      "shall": "Every required feature SHALL have one containment parent and stable semantic identity; cross-relations SHALL NOT create extra parents or cycles.",
+      "negative": "Reject duplicate IDs, missing parents, skipped required levels and empty completion trees.",
+      "canonical_path": "engines/hermes/modules/hermes_harness/fractal_catalog.ml",
+      "implementation": "Adapt the current Hermes fractal catalog and SQLite foreign-key graph.",
+      "gap": "The inspected external product hierarchy tables are empty; candidate-bound graph completion needs a collector."
+    },
+    {
+      "id": "PM-03",
+      "name": "Typed feature definition and use cases",
+      "use_case": "Inspect each capability's behavior, use case, UI controls and scenario references.",
+      "shall": "A feature SHALL preserve ID, category, behavior, use case, control references, scenario references, declared state and observed evidence separately.",
+      "negative": "Reject implementation claims backed only by a label or empty evidence list.",
+      "canonical_path": "engines/hermes/modules/hermes_wiki/import/zigvm/code/infranodus/infranodus_feature.ml",
+      "implementation": "Use the existing InfraNodus typed registry shape and versioned product rows.",
+      "gap": "InfraNodus metadata tests do not execute every referenced scenario."
+    },
+    {
+      "id": "PM-04",
+      "name": "Requirements and contract ownership",
+      "use_case": "Trace each requested behavior to a falsifiable law and responsible component.",
+      "shall": "Each requirement SHALL have a stable ID, shall statement, owner, contract/formal method, runtime acceptance and source reference.",
+      "negative": "Reject a verified requirement with missing or stale contract/runtime receipt.",
+      "canonical_path": "engines/hermes/modules/hermes_harness/contract_catalog.ml",
+      "implementation": "Existing Hermes contracts, Gospel methods and the new requirements projection.",
+      "gap": "Formal ownership/registration must be distinguished from checked proof."
+    },
+    {
+      "id": "PM-05",
+      "name": "Specification and model projections",
+      "use_case": "Produce consistent SysML, ontology and product views from one versioned specification.",
+      "shall": "All derived model surfaces SHALL retain the same IDs, requirements and dependency edges and identify their source version.",
+      "negative": "Detect a missing feature or changed dependency in a generated model; preserve toolchain validation as UNRUN.",
+      "canonical_path": "engines/hermes/modules/hermes_wiki/src/mbse/feature_model.ml",
+      "implementation": "Reuse Feature_model projections; new catalog exposes canonical source records.",
+      "gap": "Projection generation alone does not validate an official SysML/OML toolchain."
+    },
+    {
+      "id": "PM-06",
+      "name": "Traceability across engineering artifacts",
+      "use_case": "Find the code, test, document, UI and design behind a requirement.",
+      "shall": "Typed artifact links SHALL preserve role, origin, digest and revision and resolve to an artifact version.",
+      "negative": "Reject dangling artifact links and mismatched digest or semantic owner.",
+      "canonical_path": "engines/hermes/modules/hermes_harness/reference_artifacts.ml",
+      "implementation": "Hermes artifact/node/knowledge-link concepts with additive SQLite artifact links.",
+      "gap": "Graph completeness and semantic validity require more than foreign keys."
+    },
+    {
+      "id": "PM-07",
+      "name": "Sa-plan execution linkage",
+      "use_case": "Execute product work with durable task dependencies and recoverable ownership.",
+      "shall": "Plans, tasks, jobs and workflows SHALL remain in canonical Sa-plan; catalog rows SHALL carry references only.",
+      "negative": "Reject expired worker/attempt and never execute from an advisory product priority.",
+      "canonical_path": "engines/hermes/modules/sa_plan/sa_plan_store.ml",
+      "implementation": "Existing Sa-plan CLI and preflight; catalog verifies current task ownership.",
+      "gap": "Two-database observation is not atomic effect-time fencing."
+    },
+    {
+      "id": "PM-08",
+      "name": "Truthful feature state",
+      "use_case": "Compare declaration, available source, observed runtime and admitted behavior.",
+      "shall": "Declared, mapped, implemented, tested, verified and admitted observations SHALL remain distinguishable; missing evidence SHALL NOT imply completion.",
+      "negative": "A declaration of Built without executed matching evidence must not increase strict coverage.",
+      "canonical_path": "engines/hermes/modules/hermes_wiki/src/register/feature_register.ml",
+      "implementation": "Reuse stale-declaration diagnostics; preserve a separate conservative catalog status.",
+      "gap": "Legacy register can return Built when no probe exists."
+    },
+    {
+      "id": "PM-09",
+      "name": "Versioned change history",
+      "use_case": "Review changes without destroying prior evidence.",
+      "shall": "An identical object/version replay SHALL be idempotent and a changed payload at that identity SHALL be rejected; new versions retain prior history.",
+      "negative": "Change a stored requirement under the same version and confirm rejection and unchanged history.",
+      "canonical_path": "engines/hermes/modules/hermes_harness/evidence_store.ml",
+      "implementation": "Existing immutable-key pattern adapted into product import records and SQL protection triggers.",
+      "gap": "Administrative replacement of a SQLite file remains outside ordinary API protection."
+    },
+    {
+      "id": "PM-10",
+      "name": "SQLite artifact body storage",
+      "use_case": "Recover the original architecture and authored reviews without depending on a filesystem copy.",
+      "shall": "Generated/user artifact bodies SHALL be stored with media kind, SHA-256, source locator and immutable revision; source-code oracles remain reference-only.",
+      "negative": "Tamper with an artifact body or supply a mismatched hash and reject import; byte-identical readback succeeds.",
+      "canonical_path": "engines/hermes/modules/hermes_harness/evidence_store.ml",
+      "implementation": "New native OCaml product_catalog import/artifact commands in existing tracking database.",
+      "gap": "External sources must not be copied before quiescence, sanitization and two-key admission."
+    },
+    {
+      "id": "PM-11",
+      "name": "Knowledge and document linkage",
+      "use_case": "Navigate between source architecture, wiki, decision records and detailed features.",
+      "shall": "Knowledge pointers SHALL preserve locator, source revision, digest and relationship; rendered views SHALL remain projections.",
+      "negative": "Detect an unresolved or stale knowledge reference without manufacturing runtime failure.",
+      "canonical_path": "engines/hermes/modules/hermes_wiki/src/engine/wiki_datastore.ml",
+      "implementation": "Current Hermes Wiki datastore/graph and Tailscale document serving.",
+      "gap": "All rendered graph links require separate navigation validation."
+    },
+    {
+      "id": "PM-12",
+      "name": "Evidence retention at claim granularity",
+      "use_case": "Ask which specific scenario passed at a particular candidate.",
+      "shall": "Per-case assertions SHALL retain per-case evidence; aggregate logs SHALL remain labeled aggregate; absence SHALL remain unknown.",
+      "negative": "Reject converting a suite count into fabricated per-case pass rows.",
+      "canonical_path": "engines/hermes/modules/hermes_harness/parity_ledger.ml",
+      "implementation": "Hermes trace/receipt tables and ZigVM evidence-census retention semantics.",
+      "gap": "The new manifest defines acceptance cases; it does not synthesize their execution receipts."
+    },
+    {
+      "id": "PM-13",
+      "name": "Strict product completion",
+      "use_case": "Prevent partial or stale child evidence from admitting an entire product.",
+      "shall": "Completion SHALL require every required child and matching candidate, reference, scenario, normalizer, runtime and formal receipt; empty sets SHALL NOT pass.",
+      "negative": "A single missing child, stale candidate or mismatched trace pair must block strict completion.",
+      "canonical_path": "engines/hermes/modules/hermes_harness/evidence_rollup.ml",
+      "implementation": "Reuse the required-child fold behind a stronger evidence-binding collector.",
+      "gap": "Existing low-level Boolean readers are insufficient alone."
+    },
+    {
+      "id": "PM-14",
+      "name": "Oracle inventory and provenance",
+      "use_case": "Locate each behavioral reference and know what authority it can provide.",
+      "shall": "Oracles SHALL distinguish specification, source, executable, recorded fixture and advisory model roles and preserve origin, owner and revision.",
+      "negative": "A cloned repository alone must not be classified as an executed differential oracle.",
+      "canonical_path": "engines/hermes/modules/hermes_harness/inventory.ml",
+      "implementation": "Existing source registry and generated pin-observation artifact.",
+      "gap": "Generic recursive inventory is not a sanitized UOS ingestion policy."
+    },
+    {
+      "id": "PM-15",
+      "name": "Oracle pin, license and executable identity",
+      "use_case": "Reproduce a comparison against the intended reference build.",
+      "shall": "An oracle execution SHALL bind full source revision, dirty-state receipt, license, build/toolchain, executable identity and observation time.",
+      "negative": "Wrong major, modified source, mismatched license or unknown executable identity must withhold exact-pin credit.",
+      "canonical_path": "engines/hermes/modules/hermes_harness/reference_capture.ml",
+      "implementation": "Use UOS source authorities; adopt ZigVM source/runtime checks as separate observations.",
+      "gap": "OTP-major equality plus Git HEAD is not exact executable provenance."
+    },
+    {
+      "id": "PM-16",
+      "name": "Oracle recipe discovery and coverage",
+      "use_case": "Account for every fixture including ones not yet runnable.",
+      "shall": "Each discovered vector SHALL have a typed bounded execution recipe or explicit nonpassing reason; no fixture may disappear from the denominator.",
+      "negative": "Introduce an undiscovered recipe or compare two empty outputs; registry must report missing coverage or vacuity.",
+      "canonical_path": "engines/hermes/modules/hermes_harness/capability_catalog.ml",
+      "implementation": "ZigVM vector discovery-totality and Hermes capability/scenario catalog patterns.",
+      "gap": "Current service oracle registrations need executable differential adapters."
+    },
+    {
+      "id": "PM-17",
+      "name": "Bounded oracle execution",
+      "use_case": "Run behavioral probes without letting the reference control the host.",
+      "shall": "Execution SHALL enforce deadline, memory/output/process limits, sanitized environment and egress policy and reap the full process tree.",
+      "negative": "Hanging, forking, noisy and network-denied fixtures must terminate within the declared budget and remain nonpassing.",
+      "canonical_path": "engines/hermes/modules/hermes_dependability/dependability_process.mli",
+      "implementation": "Existing supervised bounded process boundary; use OTP for lifecycle control.",
+      "gap": "Legacy Reference_capture only kills the direct child and does not establish these limits."
+    },
+    {
+      "id": "PM-18",
+      "name": "Normalization and fixture identity",
+      "use_case": "Compare outputs fairly without erasing meaningful differences.",
+      "shall": "Normalizer identity and rules SHALL be versioned with the fixture; load SHALL verify full scenario, snapshot and content identity.",
+      "negative": "A forged scenario ID or altered normalizer must be rejected even when the trace's self-digest matches.",
+      "canonical_path": "engines/hermes/modules/hermes_harness/parity_normalizer.ml",
+      "implementation": "Existing Hermes versioned JSON normalizer with stronger surrounding identity checks.",
+      "gap": "Reference_capture.load presently does not compare all requested identity fields."
+    },
+    {
+      "id": "PM-19",
+      "name": "Differential verdict and divergence handling",
+      "use_case": "Explain exactly where native behavior differs from a reference.",
+      "shall": "Comparison SHALL retain both normalized observations, comparator version and locality; unavailable or vacuous results SHALL never become equivalent.",
+      "negative": "Known mismatches and empty outputs must be detected; a failed reference is blocked evidence rather than candidate success.",
+      "canonical_path": "engines/hermes/modules/hermes_harness/parity_compare.ml",
+      "implementation": "Current Hermes comparators, initial/final oracles and parity algebra.",
+      "gap": "Service-level differential runs remain UNRUN in this review."
+    },
+    {
+      "id": "PM-20",
+      "name": "Regression, mutation and adversarial evidence",
+      "use_case": "Prove a checker can detect the defects it claims to prevent.",
+      "shall": "Regression and mutation records SHALL retain candidate, inputs, expected law, observed result and killed/surviving/unrun status.",
+      "negative": "A deliberately corrupted candidate must fail the relevant acceptance; a survivor must remain a finding.",
+      "canonical_path": "engines/hermes/modules/hermes_harness/test_parity_compare.ml",
+      "implementation": "Existing Hermes negative-case and mutation mechanisms; focused catalog transaction tests.",
+      "gap": "Full imported suites and production chaos were not executed."
+    },
+    {
+      "id": "PM-21",
+      "name": "Risk and dependency prioritization",
+      "use_case": "Choose safe, ready work based on explicit impact and hazards.",
+      "shall": "Selection SHALL apply safety class and readiness before C×T×F×Dep×I and record all four UCAs, raw FMEA and current evidence.",
+      "negative": "An unready high-score task must not displace its prerequisite or grant execution authority.",
+      "canonical_path": "engines/hermes/modules/sa_plan/sa_plan_management.ml",
+      "implementation": "Canonical UOS risk checker and Sa-plan selection evidence.",
+      "gap": "Legacy wiki numeric priorities and onto_task repair records remain advisory."
+    },
+    {
+      "id": "PM-22",
+      "name": "Desired-state reconciliation",
+      "use_case": "Compare a desired product state with observed evidence and expose drift.",
+      "shall": "Reconciliation SHALL preserve explicit desired/actual states, unknown targets, dependency cycles and non-vacuous convergence.",
+      "negative": "Reject unresolved dependencies and empty success; changed evidence must invalidate the affected observation.",
+      "canonical_path": "engines/hermes/modules/hermes_harness/blueprint.ml",
+      "implementation": "Existing Blueprint validation, drift diagnostics and convergence logic.",
+      "gap": "Never route a converged advisory model directly to deployment."
+    },
+    {
+      "id": "PM-23",
+      "name": "Operational analytics and cost evidence",
+      "use_case": "Measure reliability and regressions without inflated sample counts.",
+      "shall": "Reliability, cost and coverage summaries SHALL state population, retention, candidate and uncertainty; repeated samples SHALL NOT fabricate independent evidence.",
+      "negative": "No sample or unknown provider cost must yield UNKNOWN or refusal rather than a favorable default.",
+      "canonical_path": "engines/hermes/modules/hermes_harness/receipt_reliability.ml",
+      "implementation": "Hermes receipt reliability, surprisal ledger and UOS quota accounting boundaries.",
+      "gap": "Analytics are advisory and do not establish budget enforcement."
+    },
+    {
+      "id": "PM-24",
+      "name": "Release baseline and change control",
+      "use_case": "Admit an exact product version and retain recovery evidence.",
+      "shall": "A release baseline SHALL bind requirements, dependency snapshot, JJ candidate, approvals, runtime/formal receipts and rollback; no status label alone admits release.",
+      "negative": "A changed candidate, revoked approval or stale evidence must withhold release authorization.",
+      "canonical_path": "engines/hermes/modules/hermes_ops_dashboard/run_assurance.ml",
+      "implementation": "Existing run assurance, Sa-plan leases and UOS two-key admission rules.",
+      "gap": "An integrated product release-baseline collector remains a gap."
+    },
+    {
+      "id": "PM-25",
+      "name": "Feedback and outcome learning",
+      "use_case": "Connect observed user feedback to requirements and measured product benefit.",
+      "shall": "Feedback SHALL retain its source, consent/scope, linked feature, hypothesis and measured outcome separately from proposed changes.",
+      "negative": "Unmeasured outcomes must stay unknown and feedback must not silently rewrite a historical requirement.",
+      "canonical_path": "engines/hermes/modules/hermes_harness/orientation_history.ml",
+      "implementation": "Current journals/knowledge history plus explicit product metadata fields.",
+      "gap": "A complete customer research and business-outcome workflow was not found in the inspected management models."
+    }
+  ]
+}
