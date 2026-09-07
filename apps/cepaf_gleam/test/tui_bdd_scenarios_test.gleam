@@ -104,8 +104,8 @@ pub fn given_homeostasis_tab_when_rendered_then_displays_equilibrium_and_factors
 
   // AND: Physiological telemetry factors are present
   should.equal(string.contains(clean_text, "cpu_pct"), True)
-  should.equal(string.contains(clean_text, "memory_free_pct"), True)
-  should.equal(string.contains(clean_text, "lyapunov_lambda"), True)
+  should.equal(string.contains(clean_text, "memory_pct"), True)
+  should.equal(string.contains(clean_text, "Lyapunov V"), True)
 
   // AND: Zero unhandled or invalid tokens exist
   should.equal(string.contains(clean_text, "NaN"), False)
@@ -129,13 +129,13 @@ pub fn given_message_board_tab_when_rendered_then_displays_active_agents_and_bus
   should.equal(string.contains(clean_text, "SWARM MESSAGE DASHBOARD"), True)
 
   // AND: Key sovereign workers and roles are rendered
-  should.equal(string.contains(clean_text, "AGY (L3)"), True)
-  should.equal(string.contains(clean_text, "Codex-Astra (L3)"), True)
-  should.equal(string.contains(clean_text, "Claude-Sovereign (L3)"), True)
+  should.equal(string.contains(clean_text, "EXEC-001 (Orchestrator)"), True)
+  should.equal(string.contains(clean_text, "Cortex Engine"), True)
+  should.equal(string.contains(clean_text, "Prajna Breaker"), True)
 
   // AND: Active OODA cycles and sub-goals are reported
   should.equal(string.contains(clean_text, "OODA"), True)
-  should.equal(string.contains(clean_text, "A2A SIGNED MESSAGE BUS"), True)
+  should.equal(string.contains(clean_text, "A2A INTER-AGENT BUS"), True)
 }
 
 // =============================================================================
@@ -161,11 +161,11 @@ pub fn given_evolution_tab_when_rendered_then_displays_pareto_and_4party_quorum_
   should.equal(string.contains(clean_text, "MAX SIMD Scorer Optimization"), True)
 
   // AND: Constitutional 4-party quorum consensus is displayed
-  should.equal(string.contains(clean_text, "RATIFICATION QUORUM: 4/4 RATIFIED"), True)
-  should.equal(string.contains(clean_text, "Codex"), True)
-  should.equal(string.contains(clean_text, "AGY"), True)
-  should.equal(string.contains(clean_text, "Claude"), True)
-  should.equal(string.contains(clean_text, "Operator"), True)
+  should.equal(string.contains(clean_text, "4-Party Quorum   : 3-of-4 Supermajority Ratification Required"), True)
+  should.equal(string.contains(clean_text, "Codex Sovereign"), True)
+  should.equal(string.contains(clean_text, "AGY Sovereign"), True)
+  should.equal(string.contains(clean_text, "Claude Sovereign"), True)
+  should.equal(string.contains(clean_text, "OpenRouter Advisory"), True)
 }
 
 // =============================================================================
