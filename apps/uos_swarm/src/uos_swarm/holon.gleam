@@ -4,6 +4,14 @@
 //// intelligence/language plane assignment. The holarchy is validated (acyclic, level-monotonic)
 //// and published on Zenoh under `uos/holon/**` so agents discover the structure they live in.
 //// Sanskrit mirror: holon = aṃśa-pūrṇa (अंश-पूर्ण, "part-whole"); whole = pūrṇa (पूर्ण); part = aṃśa (अंश).
+////
+//// Each holon also carries a svadharma (स्वधर्म, "own duty") derived from its plane and level
+//// (`dharma_of`), and each plane maps onto one of the seven Hindustani svara-s (`swara_of_plane`,
+//// `swara_of`) — this module owns that plane<->svara pairing (rather than `uos_swarm/raga`)
+//// because `raga.gleam` cannot import `holon` without forming a module import cycle that Gleam's
+//// compiler rejects; `raga.gleam` mirrors the same pairing as plain strings for its own display
+//// only. `base_rules` evaluates nine core base-layer invariants (B1..B9) over the holarchy,
+//// including reciprocal parts<->whole membership (B2) that `validate` alone did not check.
 //// STAMP: SC-TUI-HOLON-001, #fractal-l0..l9.
 
 import gleam/int
@@ -12,6 +20,7 @@ import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/result
 import gleam/string
+import uos_swarm/raga
 
 pub type Plane {
   Control
@@ -33,6 +42,52 @@ pub fn plane_label(p: Plane) -> String {
     Intelligence -> "intelligence · buddhi (बुद्धि)"
     Language -> "language · bhāṣā (भाषा)"
   }
+}
+
+/// The seven planes, in the same declaration order as `Plane` and as the seven svara-s.
+pub const planes = [
+  Control,
+  Structure,
+  Runtime,
+  DataPlane,
+  Messaging,
+  Intelligence,
+  Language,
+]
+
+/// Plane <-> svara pairing, in holon-plane order: Control=Sa, Structure=Re, Runtime=Ga,
+/// DataPlane=Ma, Messaging=Pa, Intelligence=Dha, Language=Ni.
+pub fn swara_of_plane(p: Plane) -> raga.Swara {
+  case p {
+    Control -> raga.Sa
+    Structure -> raga.Re
+    Runtime -> raga.Ga
+    DataPlane -> raga.Ma
+    Messaging -> raga.Pa
+    Intelligence -> raga.Dha
+    Language -> raga.Ni
+  }
+}
+
+/// The svara sounded by this holon's plane.
+pub fn swara_of(h: Holon) -> raga.Swara {
+  swara_of_plane(h.plane)
+}
+
+/// This holon's svadharma (स्वधर्म, "own duty") in one sentence, derived from its plane and
+/// level: what it must uphold, for whom, and through which svara it is heard.
+pub fn dharma_of(h: Holon) -> String {
+  "svadharma (स्वधर्म) of "
+  <> h.id
+  <> " at L"
+  <> int.to_string(h.level)
+  <> ": uphold "
+  <> plane_label(h.plane)
+  <> " for "
+  <> option.unwrap(h.whole, "no whole — it is a root")
+  <> ", sounding "
+  <> raga.swara_label(swara_of(h))
+  <> "."
 }
 
 pub type Holon {
@@ -531,6 +586,272 @@ pub fn by_plane(hs: List(Holon), p: Plane) -> List(Holon) {
   list.filter(hs, fn(h) { h.plane == p })
 }
 
+// ---------------------------------------------------------------------------
+// Base-layer rules (B1..B9): the invariants every holon in the holarchy must satisfy, evaluated
+// as `#(rule id, ok, detail)` so a caller can render or audit them individually. `validate`
+// above is the structural gate (unique ids, parts<->whole on the parent side, no cycles) used by
+// every caller that just needs `Result(Nil, String)`; `base_rules` is the full base-layer audit,
+// always returning all nine results (never short-circuiting on the first failure) so a broken
+// holarchy is fully diagnosed in one pass.
+// ---------------------------------------------------------------------------
+
+fn rule_b1(hs: List(Holon)) -> #(String, Bool, String) {
+  case
+    list.find(hs, fn(h) {
+      case h.whole {
+        Some(w) -> w == "" || w == h.id
+        None -> False
+      }
+    })
+  {
+    Ok(h) -> #("B1", False, h.id <> " has a malformed whole (empty or self)")
+    Error(_) -> #(
+      "B1",
+      True,
+      int.to_string(list.length(hs))
+        <> " holons each have exactly one whole or are a root ("
+        <> int.to_string(list.length(roots(hs)))
+        <> " root(s))",
+    )
+  }
+}
+
+/// Reciprocal membership: every part names this holon as its whole (already checked by
+/// `validate`), *and* every holon whose whole is `w` is reciprocally listed in `w.parts` — the
+/// direction `validate` did not check (Codex found this missing).
+fn reciprocal_ok(hs: List(Holon), h: Holon) -> Bool {
+  case h.whole {
+    None -> True
+    Some(w) ->
+      case find(hs, w) {
+        Error(_) -> False
+        Ok(parent) -> list.contains(parent.parts, h.id)
+      }
+  }
+}
+
+fn rule_b2(hs: List(Holon)) -> #(String, Bool, String) {
+  case list.find(hs, fn(h) { !reciprocal_ok(hs, h) }) {
+    Error(_) -> #(
+      "B2",
+      True,
+      "every child is reciprocally listed in its whole's parts ("
+        <> int.to_string(list.length(hs))
+        <> " holons)",
+    )
+    Ok(h) -> #(
+      "B2",
+      False,
+      h.id
+        <> " names "
+        <> option.unwrap(h.whole, "?")
+        <> " as whole but is missing from its parts list",
+    )
+  }
+}
+
+fn rule_b3(hs: List(Holon)) -> #(String, Bool, String) {
+  case list.try_each(hs, fn(h) { acyclic(hs, h.id, 0) }) {
+    Ok(_) -> #("B3", True, "holarchy is acyclic (bounded 16-hop walk)")
+    Error(e) -> #("B3", False, e)
+  }
+}
+
+/// Level never decreases from whole to part. Kept non-strict (`>=`, matching `validate`'s own
+/// established invariant) rather than a strict `>`: `level` encodes the fractal layer (L0..L9),
+/// and a few holons are deliberately peer-level with their whole because they share that layer
+/// by design — `supervisor` is itself "L0 design authority" (same layer as `uos`), and `planes`
+/// is the L1 grouping node whose seven plane-holons collectively *are* L1. A strict increase
+/// would misreport these as broken data rather than intentional fractal-layer sharing.
+fn rule_b4(hs: List(Holon)) -> #(String, Bool, String) {
+  case
+    list.find(hs, fn(h) {
+      case h.whole {
+        None -> False
+        Some(w) ->
+          case find(hs, w) {
+            Ok(parent) -> h.level < parent.level
+            Error(_) -> False
+          }
+      }
+    })
+  {
+    Ok(h) -> #("B4", False, h.id <> " has a lower level than its whole")
+    Error(_) -> #(
+      "B4",
+      True,
+      "level never decreases from whole to part (peer-level organizational holons — "
+        <> "uos/supervisor, planes/plane-instances — intentionally share a fractal layer)",
+    )
+  }
+}
+
+fn rule_b5(hs: List(Holon)) -> #(String, Bool, String) {
+  case list.find(hs, fn(h) { h.sanskrit == "" }) {
+    Error(_) -> #(
+      "B5",
+      True,
+      "all "
+        <> int.to_string(list.length(hs))
+        <> " holons carry a Sanskrit name",
+    )
+    Ok(h) -> #("B5", False, h.id <> " has no Sanskrit name")
+  }
+}
+
+fn reaches_root(
+  hs: List(Holon),
+  id: String,
+  root_ids: List(String),
+  depth: Int,
+) -> Bool {
+  case depth > 16 {
+    True -> False
+    False ->
+      case list.contains(root_ids, id) {
+        True -> True
+        False ->
+          case find(hs, id) {
+            Ok(Holon(whole: Some(w), ..)) ->
+              reaches_root(hs, w, root_ids, depth + 1)
+            _ -> False
+          }
+      }
+  }
+}
+
+fn rule_b6(hs: List(Holon)) -> #(String, Bool, String) {
+  let root_ids = list.map(roots(hs), fn(h) { h.id })
+  let missing_plane = list.find(planes, fn(p) { by_plane(hs, p) == [] })
+  let unreachable =
+    list.find(hs, fn(h) { !reaches_root(hs, h.id, root_ids, 0) })
+  case missing_plane, unreachable {
+    Ok(p), _ -> #("B6", False, plane_label(p) <> " has no holon")
+    _, Ok(h) -> #(
+      "B6",
+      False,
+      h.id <> " has no root path to " <> string.join(root_ids, ","),
+    )
+    Error(_), Error(_) -> #(
+      "B6",
+      True,
+      "all 7 planes are populated and every holon has a root path to "
+        <> string.join(root_ids, ","),
+    )
+  }
+}
+
+fn rule_b7(hs: List(Holon)) -> #(String, Bool, String) {
+  let bad_agent =
+    list.find(hs, fn(h) {
+      case h.board_agent {
+        Some(a) -> a == ""
+        None -> False
+      }
+    })
+  let bad_audit =
+    list.find(hs, fn(h) {
+      case h.audit_subject {
+        Some(_) -> h.module == ""
+        None -> False
+      }
+    })
+  case bad_agent, bad_audit {
+    Ok(h), _ -> #("B7", False, h.id <> " has an empty board_agent id")
+    _, Ok(h) -> #("B7", False, h.id <> " has an audit_subject but no module")
+    Error(_), Error(_) -> #(
+      "B7",
+      True,
+      "every board_agent id is non-empty and every audit_subject has a module",
+    )
+  }
+}
+
+fn rule_b8() -> #(String, Bool, String) {
+  let mapped = list.map(planes, swara_of_plane)
+  case
+    list.length(planes) == 7,
+    list.length(list.unique(mapped)) == 7,
+    list.length(raga.all_swaras()) == 7
+  {
+    True, True, True -> #(
+      "B8",
+      True,
+      "7 planes map bijectively onto the 7 svara-s",
+    )
+    _, _, _ -> #(
+      "B8",
+      False,
+      "plane -> svara mapping is not a 7-to-7 bijection",
+    )
+  }
+}
+
+const kebab_chars = [
+  "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p",
+  "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", "2", "3", "4", "5",
+  "6", "7", "8", "9", "-",
+]
+
+fn is_kebab(id: String) -> Bool {
+  case id {
+    "" -> False
+    _ ->
+      string.to_graphemes(id)
+      |> list.all(fn(c) { list.contains(kebab_chars, c) })
+  }
+}
+
+fn rule_b9(hs: List(Holon)) -> #(String, Bool, String) {
+  let ids = list.map(hs, fn(h) { h.id })
+  let dup = list.length(list.unique(ids)) != list.length(ids)
+  case dup, list.find(hs, fn(h) { !is_kebab(h.id) }) {
+    True, _ -> #("B9", False, "duplicate holon id")
+    _, Ok(h) -> #("B9", False, h.id <> " is not lower-kebab-case")
+    False, Error(_) -> #(
+      "B9",
+      True,
+      "all "
+        <> int.to_string(list.length(hs))
+        <> " holon ids are unique and lower-kebab-case",
+    )
+  }
+}
+
+/// The nine core base-layer rules (B1..B9), each as `#(rule id, ok, detail)`. Always evaluates
+/// all nine (never short-circuits) so a broken holarchy is fully diagnosed in one pass.
+pub fn base_rules(hs: List(Holon)) -> List(#(String, Bool, String)) {
+  [
+    rule_b1(hs),
+    rule_b2(hs),
+    rule_b3(hs),
+    rule_b4(hs),
+    rule_b5(hs),
+    rule_b6(hs),
+    rule_b7(hs),
+    rule_b8(),
+    rule_b9(hs),
+  ]
+}
+
+pub fn base_rules_markdown() -> String {
+  let header = "| rule | ok | detail |\n|---|---|---|"
+  let rows =
+    list.map(base_rules(holarchy()), fn(r) {
+      "| "
+      <> r.0
+      <> " | "
+      <> case r.1 {
+        True -> "PASS"
+        False -> "FAIL"
+      }
+      <> " | "
+      <> r.2
+      <> " |"
+    })
+  string.join([header, ..rows], "\n")
+}
+
 /// ASCII tree (SC-DIAGRAM-001 fallback form).
 pub fn to_tree(hs: List(Holon)) -> String {
   roots(hs)
@@ -603,7 +924,7 @@ pub fn to_json(hs: List(Holon)) -> Json {
 
 pub fn to_markdown(hs: List(Holon)) -> String {
   let header =
-    "| L | id | name | Sanskrit | plane | whole | parts | module | audit subject |\n|---|---|---|---|---|---|---|---|---|"
+    "| L | id | name | Sanskrit | plane | svara | whole | parts | module | audit subject |\n|---|---|---|---|---|---|---|---|---|---|"
   let rows =
     list.map(hs, fn(h) {
       "| "
@@ -616,6 +937,8 @@ pub fn to_markdown(hs: List(Holon)) -> String {
       <> h.sanskrit
       <> " | "
       <> plane_label(h.plane)
+      <> " | "
+      <> raga.swara_label(swara_of(h))
       <> " | "
       <> option.unwrap(h.whole, "—")
       <> " | "

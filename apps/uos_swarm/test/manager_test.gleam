@@ -9,6 +9,7 @@ import uos_swarm/cockpit
 import uos_swarm/coord
 import uos_swarm/manager.{Observation}
 import uos_swarm/ooda
+import uos_swarm/raga
 import uos_swarm/swarm
 import uos_swarm/system_audit
 import uos_tui/aspects
@@ -26,15 +27,20 @@ pub fn dictionary_valid_and_disjoint_from_tui_test() {
   |> should.be_true
 }
 
-pub fn healthy_cycle_is_dark_with_progress_only_test() {
+// Cycle 1 is Teentaal's Sam beat (matra 1 of 16), so a healthy first cycle now carries both the
+// Sam-triggered checkpoint audit and its Progress announcement.
+pub fn healthy_cycle_is_dark_with_progress_and_sam_audit_test() {
   let #(m, mode, acts) = manager.step(manager.new(), obs(0, [], True))
   mode |> should.equal(ooda.Dark)
   m.cycles |> should.equal(1)
-  list.length(acts) |> should.equal(1)
-  case acts {
-    [manager.PostProgress(_)] -> True
-    _ -> False
-  }
+  list.length(acts) |> should.equal(2)
+  list.contains(acts, manager.RequestAudit) |> should.be_true
+  list.any(acts, fn(a) {
+    case a {
+      manager.PostProgress(_) -> True
+      _ -> False
+    }
+  })
   |> should.be_true
 }
 
@@ -76,6 +82,7 @@ pub fn every_act_drafts_a_valid_semantic_message_test() {
     manager.PostAndon("x"),
     manager.PostJidoka("y"),
     manager.PostProgress("z"),
+    manager.PostHeartbeat("beat 5/16 tali"),
     manager.ExpireLeases,
     manager.RequestAudit,
     manager.RequestReconcile,
@@ -100,6 +107,7 @@ pub fn manager_acts_are_authorized_as_l1_test() {
       manager.PostAndon("x"),
       manager.PostJidoka("y"),
       manager.PostProgress("z"),
+      manager.PostHeartbeat("beat 5/16 tali"),
       manager.ExpireLeases,
     ],
     fn(a) {
@@ -333,4 +341,93 @@ pub fn killing_actor_pid_stops_further_cycles_test() {
   let assert Ok(later) = board.open("manager-test-kill", table, None, None)
   later.count |> should.equal(count_at_kill)
   process.is_alive(pid) |> should.be_false
+}
+
+// ---------------------------------------------------------------------------
+// Tāla awareness: the manager labels every cycle with its Teentaal beat and makes the rhythm
+// meaningful (sam always checkpoints, khali is quiet, tali heartbeats).
+// ---------------------------------------------------------------------------
+
+/// A healthy observation whose `board_count` is different on every cycle `i`, so `repeats`
+/// never suppresses Progress on its own — any suppression seen at cycle 9 below must be the
+/// khali beat, not an unchanged observation.
+fn varying_obs(i: Int) -> manager.Observation {
+  Observation(1_000_000, 10 + i, [], 1, 17, 0, 5, True, 1000)
+}
+
+fn has_progress(acts: List(manager.Act)) -> Bool {
+  list.any(acts, fn(a) {
+    case a {
+      manager.PostProgress(_) -> True
+      _ -> False
+    }
+  })
+}
+
+fn has_heartbeat(acts: List(manager.Act)) -> Bool {
+  list.any(acts, fn(a) {
+    case a {
+      manager.PostHeartbeat(_) -> True
+      _ -> False
+    }
+  })
+}
+
+pub fn tala_beats_drive_manager_rhythm_test() {
+  let #(_, log) =
+    list.fold(prng.range(1, 17), #(manager.new(), []), fn(acc, i) {
+      let #(m, log) = acc
+      let #(m2, _, acts) = manager.step(m, varying_obs(i))
+      #(m2, [#(i, acts), ..log])
+    })
+  let by_cycle = list.reverse(log)
+  list.each(by_cycle, fn(entry) {
+    let #(cycle, acts) = entry
+    case cycle {
+      1 | 17 -> {
+        // Sam: always a checkpoint audit; sam takes priority over tali, so no heartbeat here.
+        list.contains(acts, manager.RequestAudit) |> should.be_true
+        has_heartbeat(acts) |> should.be_false
+      }
+      9 -> {
+        // Khali: a quiet beat — no Progress even though the observation changed every cycle,
+        // and no checkpoint audit (khali is not sam).
+        has_progress(acts) |> should.be_false
+        list.contains(acts, manager.RequestAudit) |> should.be_false
+      }
+      5 -> {
+        // Tali: a clap — the manager emits a heartbeat.
+        has_heartbeat(acts) |> should.be_true
+      }
+      _ -> Nil
+    }
+  })
+}
+
+pub fn beat_of_cycle_classifies_teentaal_correctly_test() {
+  let t = raga.teentaal()
+  raga.beat_of_cycle(t, 1).kind |> should.equal(raga.Sam)
+  raga.beat_of_cycle(t, 5).kind |> should.equal(raga.Tali)
+  raga.beat_of_cycle(t, 9).kind |> should.equal(raga.Khali)
+  raga.beat_of_cycle(t, 13).kind |> should.equal(raga.Tali)
+  raga.beat_of_cycle(t, 17).kind |> should.equal(raga.Sam)
+  raga.beat_of_cycle(t, 2).kind |> should.equal(raga.Ordinary)
+}
+
+pub fn channels_contain_beat_and_raga_test() {
+  let m = manager.new()
+  let names = list.map(manager.channels(m, obs(0, [], True)), fn(c) { c.0 })
+  list.contains(names, "Beat") |> should.be_true
+  list.contains(names, "Raga") |> should.be_true
+  // "Beat" for a never-stepped manager (cycles = 0) still renders as "<matra>/<matras> <kind>".
+  let assert Ok(#(_, beat_value)) =
+    list.find(manager.channels(m, obs(0, [], True)), fn(c) { c.0 == "Beat" })
+  string.contains(beat_value, "/16 ") |> should.be_true
+}
+
+pub fn current_raga_follows_mode_and_hour_test() {
+  let m = manager.new()
+  // A never-stepped manager decides `ooda.Dark` by default -> Malkauns.
+  manager.current_raga(m, obs(0, [], True)).name
+  |> should.equal(raga.malkauns().name)
 }

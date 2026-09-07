@@ -7,6 +7,12 @@
 //// `health_status`); Zenoh reconcile/share-state/authorization failures hit in `live_cycle` are
 //// recorded on `Manager.faults` and fail closed — posting stops at the first authorization
 //// refusal, and a failed reconcile drives an Andon on the following cycle.
+////
+//// Every cycle also carries a tāla beat (`uos_swarm/raga`, Teentaal by default): the sam beat
+//// (matra 1 of 16) always requests a checkpoint audit, khali (matra 9) is a quiet beat that
+//// never posts Progress, and the tali beats (1, 5, 13) emit a `PostHeartbeat`. The cycle's rāga
+//// is chosen from the current mode and the UTC hour; both the beat and the rāga are exposed as
+//// F´ telemetry channels ("Beat", "Raga") and therefore also in `to_json`.
 //// STAMP: SC-TUI-MANAGER-001, SC-FPP-INTENT-001.
 
 import gleam/erlang/process.{type Subject}
@@ -23,6 +29,7 @@ import uos_swarm/board.{
 }
 import uos_swarm/coord.{type Coord}
 import uos_swarm/ooda
+import uos_swarm/raga
 import uos_swarm/system_audit.{type Subject as AuditSubject}
 import uos_tui/fprime
 
@@ -119,6 +126,8 @@ pub fn component() -> fprime.Component {
       fprime.Channel("StaleAgents", 0x05, fprime.U8, fprime.OnChange),
       fprime.Channel("LiveLeases", 0x06, fprime.U8, fprime.OnChange),
       fprime.Channel("Mode", 0x07, fprime.U8, fprime.OnChange),
+      fprime.Channel("Beat", 0x08, fprime.StringType(Some(24)), fprime.OnChange),
+      fprime.Channel("Raga", 0x09, fprime.StringType(Some(32)), fprime.OnChange),
     ],
     parameters: [
       fprime.Parameter("TickMs", 0x01, fprime.U16, Some("250"), 0x10, 0x11),
@@ -156,6 +165,7 @@ pub type Act {
   PostAndon(String)
   PostJidoka(String)
   PostProgress(String)
+  PostHeartbeat(String)
   ExpireLeases
   RequestAudit
   RequestReconcile
@@ -224,6 +234,13 @@ fn repeats(prev: option.Option(Observation), o: Observation) -> Bool {
 /// proceeds as though everything is green just because nothing has failed yet. A `PostProgress`
 /// is suppressed when the observation is materially unchanged from the previous cycle, to avoid
 /// unnecessary board traffic at the fast tick.
+///
+/// The cycle is also labelled with its Teentaal beat (`raga.beat_of_cycle`, `cycle = m.cycles +
+/// 1`, 1-based): a `Sam` beat (the tāla's downbeat, matra 1) always requests a checkpoint audit;
+/// a `Khali` beat (the quiet/wave beat, matra 9) never posts Progress even if the observation
+/// changed, since the whole point of a khali beat is that nothing is announced; a `Tali` beat (a
+/// clap, matras 1/5/13) emits a `PostHeartbeat` — matra 1 is skipped here because it is
+/// classified `Sam`, not `Tali` (see `raga.beat_of_cycle`'s doc on the sam/tali overlap).
 pub fn step(m: Manager, o: Observation) -> #(Manager, ooda.Mode, List(Act)) {
   let obs =
     ooda.Observation(
@@ -235,6 +252,8 @@ pub fn step(m: Manager, o: Observation) -> #(Manager, ooda.Mode, List(Act)) {
     )
   let #(loop, mode, actions, within) = ooda.step(m.loop, obs)
   let unchanged = repeats(m.last_observation, o)
+  let cycle = m.cycles + 1
+  let beat = raga.beat_of_cycle(raga.teentaal(), cycle)
   let acts =
     list.flatten([
       list.flat_map(actions, fn(a) {
@@ -284,12 +303,28 @@ pub fn step(m: Manager, o: Observation) -> #(Manager, ooda.Mode, List(Act)) {
         ]
         Known(_) -> []
       },
-      case unchanged {
+      case beat.kind {
+        raga.Sam -> [RequestAudit]
+        _ -> []
+      },
+      case beat.kind {
+        raga.Tali -> [
+          PostHeartbeat(
+            "beat "
+            <> int.to_string(beat.matra)
+            <> "/"
+            <> int.to_string(raga.teentaal().matras)
+            <> " tali",
+          ),
+        ]
+        _ -> []
+      },
+      case unchanged || beat.kind == raga.Khali {
         True -> []
         False -> [
           PostProgress(
             "cycle "
-            <> int.to_string(m.cycles + 1)
+            <> int.to_string(cycle)
             <> " mode "
             <> ooda.mode_label(mode)
             <> " health "
@@ -301,9 +336,9 @@ pub fn step(m: Manager, o: Observation) -> #(Manager, ooda.Mode, List(Act)) {
   #(
     Manager(
       loop,
-      m.cycles + 1,
+      cycle,
       mode,
-      list.take([#(m.cycles + 1, mode, acts), ..m.history], 64),
+      list.take([#(cycle, mode, acts), ..m.history], 64),
       Some(o),
       m.faults,
     ),
@@ -344,6 +379,8 @@ pub fn draft_for(act: Act, cycle: Int) -> option.Option(board.Draft) {
       base(board.Jidoka, [#("reason", reason)], ["CA-integrate_slice"], [15, 17])
     PostProgress(text) ->
       base(board.Progress, [#("text", text)], ["CA-paint_frame"], [4, 13])
+    PostHeartbeat(text) ->
+      base(board.Heartbeat, [#("text", text)], ["CA-paint_frame"], [4])
     ExpireLeases ->
       base(board.LeaseRelease, [#("action", "expire")], ["CA-integrate_slice"], [
         17,
@@ -361,7 +398,32 @@ pub fn draft_for(act: Act, cycle: Int) -> option.Option(board.Draft) {
   }
 }
 
-/// Telemetry channel values for one cycle (F´ channel names from `component()`).
+/// The UTC hour (0..23) of an epoch-microseconds timestamp.
+fn utc_hour(now_us: Int) -> Int {
+  { { now_us / 1_000_000 } % 86_400 } / 3600
+}
+
+/// This cycle's Teentaal beat (`m.cycles` is the cycle just completed; a fresh, never-stepped
+/// manager reads as cycle 0, which folds onto the tāla's last beat rather than crashing).
+pub fn current_beat(m: Manager) -> raga.Beat {
+  raga.beat_of_cycle(raga.teentaal(), m.cycles)
+}
+
+/// This cycle's rāga, chosen from the last decided mode and `o`'s UTC hour.
+pub fn current_raga(m: Manager, o: Observation) -> raga.Raga {
+  raga.raga_of_mode(m.last_mode, utc_hour(o.now_us))
+}
+
+fn beat_channel_value(beat: raga.Beat) -> String {
+  int.to_string(beat.matra)
+  <> "/"
+  <> int.to_string(raga.teentaal().matras)
+  <> " "
+  <> raga.beat_kind_label(beat.kind)
+}
+
+/// Telemetry channel values for one cycle (F´ channel names from `component()`), including the
+/// cycle's tāla beat ("Beat", e.g. `"1/16 sam"`) and rāga ("Raga", e.g. `"Yaman · यमन"`).
 pub fn channels(m: Manager, o: Observation) -> List(#(String, String)) {
   [
     #("Cycles", int.to_string(m.cycles)),
@@ -371,6 +433,8 @@ pub fn channels(m: Manager, o: Observation) -> List(#(String, String)) {
     #("StaleAgents", int.to_string(list.length(o.stale_agents))),
     #("LiveLeases", int.to_string(o.live_leases)),
     #("Mode", ooda.mode_label(m.last_mode)),
+    #("Beat", beat_channel_value(current_beat(m))),
+    #("Raga", current_raga(m, o).name),
   ]
 }
 
@@ -471,7 +535,11 @@ fn perform(
       let #(_shared, fails) = share(zenoh_base, [#("manager", to_json(m, o))])
       #(b, c, fails)
     }
-    PostAndon(_) | PostJidoka(_) | PostProgress(_) | RequestAudit -> #(b, c, [])
+    PostAndon(_)
+    | PostJidoka(_)
+    | PostProgress(_)
+    | PostHeartbeat(_)
+    | RequestAudit -> #(b, c, [])
   }
 }
 
