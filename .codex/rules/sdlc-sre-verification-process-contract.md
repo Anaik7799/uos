@@ -19,7 +19,7 @@ reassess changed evidence, and journal results and residual risk. See the SOP's 
 Superpowers, agent and plugin bindings. Existing completion/admission controls still apply.
 The current selection API stores advisory evidence; it does not implement this scheduling policy.
 
-## 1. The 5-Tier Fractal Lifecycle
++## 1. The 5-Tier Fractal Lifecycle
 
 Every software evolution and operational cycle within UOS must execute within one of the 5 fractal OODA loops:
 

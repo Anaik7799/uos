@@ -7,6 +7,15 @@
 
 Created:2026-09-07T06:38:53Z. This is the **implementation-phase runbook**. Further implementation and automated swarm activation are paused by the operator. See [plan](http://nas-1.tail55d152.ts.net:4100/docs/plans/20260907-0653-uos-tri-agent-cheaper-mode-implementation-plan.md) and [formal system design](http://nas-1.tail55d152.ts.net:4100/docs/design/20260907-0653-uos-tri-agent-sdlc-sre-herdr-spec.md).
 
+## Systematic prioritization update — 20260907-1559
+
+SC-RISK-PRIORITY-001 now governs work selection and lifecycle reassessment.
+Use [the self-contained UOS SOP](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260907-1559-risk-prioritization-sop.md)
+and its local skill/Superpowers bindings before selecting or dispatching work.
+Apply safety class and dependency readiness before the five-factor product.
+Record through Sa-plan, claim the exact eligible task, and keep actual runtime enforcement
+distinct from procedural compliance. Existing historical status statements are not fresh evidence.
+
 ## Observe and orient
 
 Use read-only observations first:
@@ -134,4 +143,3 @@ formal-proof and sovereign-admission obligations remain **UNRUN**.
 
 **Previous:** [Implementation handoff](http://nas-1.tail55d152.ts.net:4100/docs/plans/20260907-0653-uos-tri-agent-cheaper-mode-implementation-plan.md) · **Next:** [Master MOC](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260905-1801-moc-uos-unified-master.md)  
 **UOS footer:** Cooperative local coordination; implementation-phase instructions; no deployment authority granted.
-

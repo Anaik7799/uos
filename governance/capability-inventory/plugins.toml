@@ -9,3 +9,11 @@ version = "3.1.0"
 source = "c3i"
 status = "REFERENCE_OR_PORT"
 
+[[plugin]]
+name = "uos-risk-prioritization"
+version = "1.0.0"
+source = "uos"
+status = "LOCAL_POLICY_BUNDLE"
+path = "plugins/uos-risk-prioritization"
+installation = "NOT_ASSERTED"
+runtime_authority = "NONE"

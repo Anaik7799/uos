@@ -8,6 +8,14 @@ canonical_core_union = 129
 all_project_roots_union = 219
 authority = "A0_reference"
 
+[[skill]]
+name = "uos-risk-prioritization"
+source = "uos"
+reference_only = false
+state = "implemented_local_policy"
+path = "plugins/uos-risk-prioritization/skills/uos-risk-prioritization/SKILL.md"
+authority = "SC-RISK-PRIORITY-001 process rule; no runtime admission"
+
 [zigvm]
 root = "/home/an/dev/ver/zigvm/skills"
 logical_count = 31
@@ -811,5 +819,4 @@ name = "stage-durability"
 source = "codex"
 reference_only = false
 state = "admitted"
-
 

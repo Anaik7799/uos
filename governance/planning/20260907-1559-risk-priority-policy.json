@@ -83,7 +83,7 @@
     "P2",
     "P3"
   ],
-  "inherited_urgency": "maximum urgency over unfinished consumers; retain origin and own score; never bypass dependency",
+  "inherited_urgency": "most urgent class over unfinished consumers; maximum score within that class; retain origin and own score; never bypass dependency",
   "freshness_seconds": {
     "incident": 900,
     "release": 3600,
@@ -114,4 +114,3 @@
   "sop": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
   "schema": "governance/planning/20260907-1559-risk-priority-record.schema.json"
 }
-

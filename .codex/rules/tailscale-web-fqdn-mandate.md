@@ -5,7 +5,8 @@
 - **Authority**: UOS Operational Policy / Operator Directive
 - **Tailnet Base FQDN**: `nas-1.tail55d152.ts.net` (Tailscale IP: `100.87.7.78`)
 - **Primary Web Port**: `4100` (Gleam Lustre WebUI / Wisp REST API / Mist HTTP)
-- **Peer Runtime Host**: `vm-1.tail55d152.ts.net` (Tailscale IP: `100.78.98.18`, Port `8088`)
+- **Peer Runtime Host**: [http://vm-1.tail55d152.ts.net:4100](http://vm-1.tail55d152.ts.net:4100) (Tailscale IP: `100.78.98.18`). N01 corrects the obsolete `8088` advertisement: authenticated listener ownership and C3I's configured default agree on `4100`; its health response reports interface/version but omits deployed build identity. Reachability remains unverified system health.
+- **Peer Diagnostic**: [http://nas-1.tail55d152.ts.net:4100/peer](http://nas-1.tail55d152.ts.net:4100/peer), with the same typed observation at [http://nas-1.tail55d152.ts.net:4100/api/peer/health](http://nas-1.tail55d152.ts.net:4100/api/peer/health). Historical handover links retain their original bytes as evidence.
 
 ## 1. Universal Tailscale FQDN Link Rule
 All generated dashboards, web pages, wiki articles, Zettelkasten decision records, journals, and reports MUST provide full, clickable Tailscale FQDN links using the format:

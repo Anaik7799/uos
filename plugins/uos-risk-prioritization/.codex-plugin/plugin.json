@@ -1,18 +1,18 @@
 {
   "name": "uos-risk-prioritization",
-  "version": "0.1.0",
-  "description": "Uos Risk Prioritization plugin",
+  "version": "1.0.0",
+  "description": "UOS risk prioritization SOP, lifecycle skill bindings and local OCaml report-only validation.",
   "author": {
-    "name": "Local developer"
+    "name": "UOS contributors"
   },
   "skills": "./skills/",
   "interface": {
-    "displayName": "Uos Risk Prioritization",
-    "shortDescription": "Use Uos Risk Prioritization in Codex.",
-    "longDescription": "Uos Risk Prioritization adds a local Codex plugin scaffold.",
-    "developerName": "Local developer",
+    "displayName": "UOS Risk Prioritization",
+    "shortDescription": "Prioritize UOS work with safety and dependency constraints.",
+    "longDescription": "Repository-owned SOP and SDLC, SRE, Superpowers and agent guidance. Report-only validation does not grant runtime authority.",
+    "developerName": "UOS contributors",
     "category": "Productivity",
     "capabilities": [],
-    "defaultPrompt": "Help me use Uos Risk Prioritization."
+    "defaultPrompt": ["Prioritize current UOS work using SC-RISK-PRIORITY-001."]
   }
 }

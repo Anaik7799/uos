@@ -119,8 +119,7 @@ At a safety-critical effect boundary, recheck the actual required controls even 
 1. Re-observe changed evidence and identify hard constraints and P0/P1 holds.
 2. Validate the dependency DAG; unresolved references or cycles block affected tasks and create a bounded repair/probe.
 3. Propagate urgency to genuine unfinished prerequisites: effective class is the most urgent class among the task and its blocked consumers.
-   Effective score is the maximum score among those in the most urgent inherited class,
-   with origin IDs retained. Preserve the prerequisite's own score.
+   Effective score is the maximum of their scores, with origin IDs retained. Preserve the prerequisite's own score.
    Never propagate through cycles or make the blocked consumer eligible.
 4. Among authorized, evidence-sufficient, dependency-ready tasks, choose effective class P0 before P1 before P2 before P3,
    then descending effective score.

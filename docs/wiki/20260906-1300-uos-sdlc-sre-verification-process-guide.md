@@ -12,6 +12,15 @@
 
 ---
 
+## Systematic prioritization update — 20260907-1559
+
+SC-RISK-PRIORITY-001 now governs work selection and lifecycle reassessment.
+Use [the self-contained UOS SOP](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260907-1559-risk-prioritization-sop.md)
+and its local skill/Superpowers bindings before selecting or dispatching work.
+Apply safety class and dependency readiness before the five-factor product.
+Record through Sa-plan, claim the exact eligible task, and keep actual runtime enforcement
+distinct from procedural compliance. Existing historical status statements are not fresh evidence.
+
 ## 1. Executive Summary & Purpose
 
 This operational guide details the unified lifecycle, reliability engineering, and verification disciplines governing the Unified Operational System (UOS). Drawing from the rigorous foundation established in VM-1's `zigvm` and `harness-bionic` repositories, this guide establishes the standards for all 96 autonomous agents and human operators developing software in pure Erlang/Gleam and Hermes OCaml.

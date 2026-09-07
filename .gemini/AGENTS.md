@@ -123,6 +123,22 @@ Per explicit operator mandate and contract `contracts/rules/tailscale-web-fqdn-m
 - **Live File & Doc Viewer**: `http://nas-1.tail55d152.ts.net:4100/files/<path>` and `http://nas-1.tail55d152.ts.net:4100/docs/<path>`
 - **Peer Runtime Host**: `http://vm-1.tail55d152.ts.net:8088` (Tailscale IP: `100.78.98.18`)
 
+### 5.6 Systematic Risk Prioritization (SC-RISK-PRIORITY-001)
+
+For intake, planning, dispatch, review, release and incidents, follow
+[the repository-owned SOP](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260907-1559-risk-prioritization-sop.md)
+at contracts/rules/20260907-1559-risk-prioritization-sop.md, using the local uos-risk-prioritization skill.
+Apply authority/safety constraints and dependency readiness before
+**criticality × STPA × FMEA × dependency × impact**. Record raw FMEA, all four
+UCA types, evidence age, uncertainty, acceptance tests and residual risks.
+Keep plans/tasks/jobs/workflows in Sa-plan; a score or board ACK grants no effect authority.
+The SOP's Superpowers and plugin bindings are mandatory at lifecycle entry/exit.
+All necessary policy, examples and OCaml validation sources are repository-local;
+global/imported skills are optional context. Validate with
+**bash tools/risk-priority-check --selftest** and **bash tools/risk-priority-check --package**.
+Process guidance and report-only validation do not establish runtime scheduler enforcement.
+Respect the active session's scope, permission and delegation restrictions.
+
 ## 6. Evidence, Gates, and Completion Semantics
 
 State transitions must advance strictly through:
