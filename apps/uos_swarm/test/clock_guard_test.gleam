@@ -1,3 +1,4 @@
+import gleam/int
 import gleam/list
 import gleam/option.{None, Some}
 import gleeunit/should
@@ -128,6 +129,55 @@ pub fn unchanged_faults_are_coalesced_and_ring_is_bounded_test() {
   let twice =
     guard.audit(once, Error("missing"), Ok(guard.BoardSnapshot([], [])))
   twice.reports |> list.length |> should.equal(1)
+  let assert [current] = twice.reports
+  current.sequence |> should.equal(2)
+  current.fault_count |> should.equal(1)
+}
+
+pub fn first_healthy_report_exists_and_unchanged_health_stays_fresh_test() {
+  let first =
+    guard.audit(
+      guard.new(guard.strict_config(), 0),
+      Ok(sample(1_000_000, 1_000_000)),
+      Ok(guard.BoardSnapshot([], [])),
+    )
+  let assert [initial] = first.reports
+  initial.sequence |> should.equal(1)
+  initial.fault_count |> should.equal(0)
+
+  let second =
+    guard.audit(
+      first,
+      Ok(sample(2_000_000, 2_000_000)),
+      Ok(guard.BoardSnapshot([], [])),
+    )
+  let assert [current] = second.reports
+  current.sequence |> should.equal(2)
+  let assert Some(reading) = current.observed
+  reading.utc_us |> should.equal(2_000_000)
+}
+
+fn stale_actors(remaining: Int) -> List(#(String, Int)) {
+  case remaining <= 0 {
+    True -> []
+    False -> [
+      #("actor-" <> int.to_string(remaining), 0),
+      ..stale_actors(remaining - 1)
+    ]
+  }
+}
+
+pub fn current_health_reports_total_and_omitted_fault_counts_test() {
+  let state =
+    guard.audit(
+      guard.new(guard.strict_config(), 0),
+      Ok(sample(200_000_000, 200_000_000)),
+      Ok(guard.BoardSnapshot([], stale_actors(70))),
+    )
+  let assert [current] = state.reports
+  current.fault_count |> should.equal(70)
+  current.faults |> list.length |> should.equal(64)
+  current.faults_omitted |> should.equal(6)
 }
 
 pub fn bounded_reader_drives_nonempty_snapshot_and_floor_is_durable_test() {

@@ -97,6 +97,8 @@ pub type Report {
     uncertainty_us: Option(Int),
     evidence_age_us: Option(Int),
     lamport_floor: Int,
+    fault_count: Int,
+    faults_omitted: Int,
     faults: List(Fault),
   )
 }
@@ -276,6 +278,7 @@ fn add_report(
   age,
   faults,
 ) -> State {
+  let fault_count = list.length(faults)
   let faults = cap(faults, 64)
   let report =
     Report(
@@ -286,11 +289,14 @@ fn add_report(
       uncertainty,
       age,
       state.lamport_floor,
+      fault_count,
+      int.max(0, fault_count - list.length(faults)),
       faults,
     )
-  let reports = case faults == state.last_faults {
-    True -> state.reports
-    False -> cap([report, ..state.reports], state.config.retention)
+  let reports = case state.reports, faults == state.last_faults {
+    [], _ -> [report]
+    [_, ..history], True -> [report, ..history]
+    _, False -> cap([report, ..state.reports], state.config.retention)
   }
   State(
     ..state,
@@ -440,6 +446,9 @@ pub fn report_json(report: Report) -> Json {
     #("uncertainty_us", optional_int(report.uncertainty_us)),
     #("reference_age_us", optional_int(report.evidence_age_us)),
     #("lamport_floor", json.int(report.lamport_floor)),
+    #("fault_count", json.int(report.fault_count)),
+    #("faults_returned", json.int(list.length(report.faults))),
+    #("faults_omitted", json.int(report.faults_omitted)),
     #(
       "faults",
       json.array(report.faults, fn(f) {

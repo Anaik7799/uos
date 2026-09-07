@@ -73,43 +73,65 @@ fn once(state, board_url, floor_path, session_root) {
   }
 }
 
-fn print_actor_snapshot(subject, last_sequence) -> Int {
+type OutputCursor {
+  OutputCursor(sequence: Int, faults: List(guard.Fault), timed_out: Bool)
+}
+
+fn print_actor_snapshot(
+  subject,
+  cursor: OutputCursor,
+  heartbeat_ticks: Int,
+) -> OutputCursor {
   let reply = process.new_subject()
   process.send(subject, guard.Snapshot(reply))
   case process.receive(reply, 1000) {
     Ok(state) ->
       case state.reports {
-        [report, ..] if report.sequence != last_sequence -> {
-          io.println(json.to_string(guard.report_json(report)))
-          report.sequence
+        [report, ..] -> {
+          let emit =
+            cursor.sequence < 0
+            || cursor.timed_out
+            || state.last_faults != cursor.faults
+            || report.sequence - cursor.sequence >= heartbeat_ticks
+          case emit {
+            True -> {
+              io.println(json.to_string(guard.report_json(report)))
+              OutputCursor(report.sequence, state.last_faults, False)
+            }
+            False -> cursor
+          }
         }
-        _ -> last_sequence
+        _ -> cursor
       }
     Error(_) -> {
-      case last_sequence != -2 {
+      case !cursor.timed_out {
         True -> print_error("guard snapshot timeout", "actor did not reply")
         False -> Nil
       }
-      -2
+      OutputCursor(..cursor, timed_out: True)
     }
   }
 }
 
-fn observe_actor(subject, remaining, interval, last_sequence) {
+fn observe_actor(subject, remaining, interval, cursor, heartbeat_ticks) {
   case remaining <= 0 {
     True -> process.send(subject, guard.Stop)
     False -> {
       process.sleep(interval + 10)
-      let sequence = print_actor_snapshot(subject, last_sequence)
-      observe_actor(subject, remaining - 1, interval, sequence)
+      let cursor = print_actor_snapshot(subject, cursor, heartbeat_ticks)
+      observe_actor(subject, remaining - 1, interval, cursor, heartbeat_ticks)
     }
   }
 }
 
-fn observe_forever(subject, interval, last_sequence) {
+fn observe_forever(subject, interval, cursor, heartbeat_ticks) {
   process.sleep(interval + 10)
-  let sequence = print_actor_snapshot(subject, last_sequence)
-  observe_forever(subject, interval, sequence)
+  let cursor = print_actor_snapshot(subject, cursor, heartbeat_ticks)
+  observe_forever(subject, interval, cursor, heartbeat_ticks)
+}
+
+fn heartbeat_ticks(interval: Int) -> Int {
+  int.max(1, { 60_000 + interval - 1 } / interval)
 }
 
 fn watch(floor, remaining, interval, board_url, floor_path, session_root) {
@@ -124,7 +146,14 @@ fn watch(floor, remaining, interval, board_url, floor_path, session_root) {
       fn(value) { guard.store_floor(floor_path, value) },
     )
   {
-    Ok(started) -> observe_actor(started.data, remaining, interval, -1)
+    Ok(started) ->
+      observe_actor(
+        started.data,
+        remaining,
+        interval,
+        OutputCursor(-1, [], False),
+        heartbeat_ticks(interval),
+      )
     Error(_) -> {
       print_error("guard actor failed to start", "OTP start failed")
       halt_failure()
@@ -144,7 +173,13 @@ fn serve(floor, interval, board_url, floor_path, session_root) {
       fn(value) { guard.store_floor(floor_path, value) },
     )
   {
-    Ok(started) -> observe_forever(started.data, interval, -1)
+    Ok(started) ->
+      observe_forever(
+        started.data,
+        interval,
+        OutputCursor(-1, [], False),
+        heartbeat_ticks(interval),
+      )
     Error(_) -> {
       print_error("guard actor failed to start", "OTP start failed")
       halt_failure()
