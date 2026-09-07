@@ -1,4 +1,4 @@
-(** Irmin-Style Merkle DAG Key-Value Store satisfying MIRAGE_KV (EV-87) *)
+(** Immutable key-value map with deterministic content hashing. *)
 
 module PathMap = Map.Make(struct
   type t = string list
@@ -17,6 +17,18 @@ let key_to_string key = String.concat "/" key
 
 let sha256_hex s =
   Digestif.SHA256.(to_hex (digest_string s))
+
+let add_length_prefixed buffer value =
+  Buffer.add_string buffer (string_of_int (String.length value));
+  Buffer.add_char buffer ':';
+  Buffer.add_string buffer value
+
+let canonical_key key =
+  let buffer = Buffer.create 64 in
+  Buffer.add_string buffer (string_of_int (List.length key));
+  Buffer.add_char buffer ':';
+  List.iter (add_length_prefixed buffer) key;
+  Buffer.contents buffer
 
 let get t key =
   match PathMap.find_opt key t.tree with
@@ -49,13 +61,12 @@ let digest t key =
   | Error e -> Error e
 
 let root_hash t =
-  let sorted_entries =
-    PathMap.fold (fun k v acc ->
-      (key_to_string k ^ ":" ^ sha256_hex v) :: acc
-    ) t.tree []
-    |> List.sort String.compare
-  in
-  sha256_hex (String.concat "|" sorted_entries)
+  let buffer = Buffer.create 256 in
+  PathMap.iter (fun key value ->
+    add_length_prefixed buffer (canonical_key key);
+    add_length_prefixed buffer (sha256_hex value)
+  ) t.tree;
+  sha256_hex (Buffer.contents buffer)
 
 let branch t =
   { tree = t.tree }
