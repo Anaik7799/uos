@@ -1,0 +1,18 @@
+{
+  "name": "uos-risk-prioritization",
+  "version": "0.1.0",
+  "description": "Uos Risk Prioritization plugin",
+  "author": {
+    "name": "Local developer"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Uos Risk Prioritization",
+    "shortDescription": "Use Uos Risk Prioritization in Codex.",
+    "longDescription": "Uos Risk Prioritization adds a local Codex plugin scaffold.",
+    "developerName": "Local developer",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": "Help me use Uos Risk Prioritization."
+  }
+}

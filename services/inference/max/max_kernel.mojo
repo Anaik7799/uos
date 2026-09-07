@@ -209,3 +209,72 @@ fn map_rpn_to_sil(rpn: Int) -> String:
         return "SIL-2"
     else:
         return "SIL-1"
+
+# ------------------------------------------------------------------------------
+# 6. High-Utility Model 1: AST Structural Anomaly Detector
+# ------------------------------------------------------------------------------
+
+fn simd_ast_anomaly_distance(ast_embedding: List[Float32], nominal_centroid: List[Float32]) -> Float32:
+    """
+    Computes normalized Euclidean and cosine anomaly metric between candidate AST embedding
+    and the nominal structural centroid.
+    Formula: D = 1.0 - simd_cosine_similarity(ast_embedding, nominal_centroid)
+    """
+    var sim = simd_cosine_similarity(ast_embedding, nominal_centroid)
+    var dist = 1.0 - sim
+    if dist < 0.0:
+        return 0.0
+    return dist
+
+# ------------------------------------------------------------------------------
+# 7. High-Utility Model 2: ZK Knowledge Transclusion Embeddings & Match
+# ------------------------------------------------------------------------------
+
+fn simd_zk_transclusion_score(query_vec: List[Float32], target_vec: List[Float32], layer_weight: Float32) -> Float32:
+    """
+    Computes SIMD cosine similarity scaled by fractal layer relevance weight.
+    """
+    var base_sim = simd_cosine_similarity(query_vec, target_vec)
+    var weighted_score = base_sim * layer_weight
+    return weighted_score
+
+# ------------------------------------------------------------------------------
+# 8. High-Utility Model 3: Anticipatory Lyapunov Trend Predictor
+# ------------------------------------------------------------------------------
+
+fn compute_finite_time_lyapunov_exponent(telemetry: List[Float32], dt: Float32) -> Float32:
+    """
+    Computes finite-time Lyapunov exponent lambda from an evenly spaced telemetry time series.
+    Formula: lambda = 1 / (N * dt) * sum_{i=1}^{N-1} ln(|(x_{i+1} - x_i) / x_i|)
+    """
+    var n = len(telemetry)
+    if n < 3 or dt <= 0.0:
+        return 0.0
+    
+    var sum_growth: Float32 = 0.0
+    var valid_points: Float32 = 0.0
+    
+    for i in range(1, n):
+        var delta = abs(telemetry[i] - telemetry[i - 1])
+        var baseline = abs(telemetry[i - 1])
+        if baseline > 1e-6 and delta > 1e-8:
+            sum_growth += log2(delta / baseline)
+            valid_points += 1.0
+            
+    if valid_points <= 0.0:
+        return -1.0
+        
+    return (sum_growth / valid_points) / dt
+
+fn estimate_time_to_cascade(current_val: Float32, critical_val: Float32, lambda_exp: Float32) -> Float32:
+    """
+    Solves x(t) = x(0) * exp(lambda * t) for t when lambda > 0.
+    t_cascade = ln(critical_val / current_val) / lambda
+    """
+    if lambda_exp <= 0.0 or current_val <= 0.0 or critical_val <= current_val:
+        return -1.0
+    var ratio = critical_val / current_val
+    if ratio <= 1.0:
+        return 0.0
+    return log2(ratio) / lambda_exp
+

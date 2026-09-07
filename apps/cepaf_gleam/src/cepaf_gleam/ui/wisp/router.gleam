@@ -50,16 +50,19 @@ import cepaf_gleam/ui/domain.{
   layer_to_string, page_control_plane, page_data_plane, page_fractal_layer,
   page_primary_clients, page_to_label, page_to_path,
 }
+import cepaf_gleam/services/max_inference_daemon as max_daemon
 import cepaf_gleam/services/mirage_migration_engine
 import cepaf_gleam/services/mirage_unikernel_daemon
 import cepaf_gleam/ui/lustre/forecast_cockpit
 import cepaf_gleam/ui/lustre/hook_subsystem as hook_subsystem_view
+import cepaf_gleam/ui/lustre/inference_tier
 import cepaf_gleam/ui/lustre/mirage_cockpit
 import cepaf_gleam/ui/state as mesh_state
 import cepaf_gleam/ui/web/page_views
 import cepaf_gleam/ui/web/shell
 import cepaf_gleam/ui/wisp/auth
 import cepaf_gleam/ui/wisp/iam_api
+import cepaf_gleam/ui/wisp/inference_api
 import cepaf_gleam/ui/wisp/mini_app_routes
 import cepaf_gleam/ui/wisp/mirage_api
 import cepaf_gleam/ui/wisp/podman_api
@@ -161,6 +164,34 @@ fn route_internal(path: String) -> String {
     "/api/v1/forecast/health" | "/api/forecast/health" ->
       fractal_forecast.forecast_health_json()
       |> json.to_string()
+    // Modular MAX / Mojo Supervised Inference Tier (SC-INF-001)
+    "/api/v1/inference/status" | "/api/inference/status" ->
+      inference_tier.init()
+      |> inference_api.status_json()
+      |> json.to_string()
+    "/api/v1/inference/modalities" | "/api/inference/modalities" ->
+      inference_api.modalities_json()
+    "/api/v1/inference/ast-anomaly" | "/api/inference/ast-anomaly" ->
+      inference_api.evaluate_ast_anomaly(
+        "pub fn verify() -> Bool { True }",
+        "gleam",
+        True,
+      )
+      |> max_daemon.ast_report_to_json()
+    "/api/v1/inference/zk-transclude" | "/api/inference/zk-transclude" ->
+      inference_api.evaluate_zk_transclusion(
+        "sa-plan jidoka tps execution authority",
+        3,
+      )
+      |> max_daemon.zk_result_to_json()
+    "/api/v1/inference/lyapunov-trend" | "/api/inference/lyapunov-trend" ->
+      inference_api.evaluate_lyapunov_trend(
+        [1.0, 1.02, 1.01, 1.03, 1.02],
+        1.0,
+        60.0,
+        50.0,
+      )
+      |> max_daemon.lyapunov_result_to_json()
     // SC-VAULT-009 + SC-VAULT-025: secrets vault API for .pi/ + dashboard tile.
     // Pass-6 wiring (skeleton response — Slice E continuation wires real vault.get).
     // Per docs/journal/task-116494073339521648/slice-plans/slice-e-continuation.md
@@ -4401,7 +4432,59 @@ fn post_route(path: String, body: String) -> HttpResponse(String) {
     "/api/v1/cockpit/mode" -> json_response(cockpit_mode_json(), 200)
     // SC-PI-RUNTIME-001: Pi-mono RPC prompt endpoint.
     "/api/v1/pi/prompt" -> pi_prompt_response(body)
+    // Modular MAX / Mojo Supervised Inference Models (SC-INF-001)
+    "/api/v1/inference/ast-anomaly" -> inference_ast_anomaly_post_response(body)
+    "/api/v1/inference/zk-transclude" ->
+      inference_zk_transclude_post_response(body)
+    "/api/v1/inference/lyapunov-trend" ->
+      inference_lyapunov_trend_post_response(body)
     _ -> json_response(not_found_json(path), 404)
+  }
+}
+
+fn inference_ast_anomaly_post_response(body: String) -> HttpResponse(String) {
+  case inference_api.parse_ast_anomaly_body(body) {
+    Ok(#(code, lang, strict)) -> {
+      let report = inference_api.evaluate_ast_anomaly(code, lang, strict)
+      json_response(max_daemon.ast_report_to_json(report), 200)
+    }
+    Error(_) -> {
+      json_response(
+        "{\"status\":\"error\",\"error\":\"invalid_request_body\"}",
+        400,
+      )
+    }
+  }
+}
+
+fn inference_zk_transclude_post_response(body: String) -> HttpResponse(String) {
+  case inference_api.parse_zk_transclude_body(body) {
+    Ok(#(query, limit)) -> {
+      let result = inference_api.evaluate_zk_transclusion(query, limit)
+      json_response(max_daemon.zk_result_to_json(result), 200)
+    }
+    Error(_) -> {
+      json_response(
+        "{\"status\":\"error\",\"error\":\"invalid_request_body\"}",
+        400,
+      )
+    }
+  }
+}
+
+fn inference_lyapunov_trend_post_response(body: String) -> HttpResponse(String) {
+  case inference_api.parse_lyapunov_trend_body(body) {
+    Ok(#(telemetry, dt, horizon_s, crit)) -> {
+      let result =
+        inference_api.evaluate_lyapunov_trend(telemetry, dt, horizon_s, crit)
+      json_response(max_daemon.lyapunov_result_to_json(result), 200)
+    }
+    Error(_) -> {
+      json_response(
+        "{\"status\":\"error\",\"error\":\"invalid_request_body\"}",
+        400,
+      )
+    }
   }
 }
 

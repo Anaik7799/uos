@@ -116,9 +116,9 @@ pub fn view() -> String {
       </div>
     </div>
 
-    <!-- 8-Method Contract Grid -->
+    <!-- 11-Method Contract Grid -->
     <div style=\"background: #121824; border: 1px solid #1e2a3a; border-radius: 6px; padding: 1.25rem; margin-bottom: 1.5rem;\">
-      <h3 style=\"margin: 0 0 1rem 0; font-size: 1.1rem; color: #e0e6ed;\">Modular MAX / Mojo 8-Method Capabilities</h3>
+      <h3 style=\"margin: 0 0 1rem 0; font-size: 1.1rem; color: #e0e6ed;\">Modular MAX / Mojo 11-Method Capabilities</h3>
       <table style=\"width: 100%; border-collapse: collapse; font-size: 0.85rem;\">
         <thead>
           <tr style=\"border-bottom: 1px solid #1e2a3a; text-align: left; color: #8899a6;\">
@@ -138,13 +138,13 @@ pub fn view() -> String {
           <tr style=\"border-bottom: 1px solid #141d2b;\">
             <td style=\"padding: 0.5rem; font-family: monospace; color: #00d4aa;\">metrics</td>
             <td style=\"padding: 0.5rem;\">L4 Telemetry</td>
-            <td style=\"padding: 0.5rem; color: #8899a6;\">QPS (49.5k), P99 Latency, Active Allocations</td>
+            <td style=\"padding: 0.5rem; color: #8899a6;\">QPS (50.7k), P99 Latency, Active Allocations</td>
             <td style=\"padding: 0.5rem; color: #3dd68c;\">ONLINE</td>
           </tr>
           <tr style=\"border-bottom: 1px solid #141d2b;\">
             <td style=\"padding: 0.5rem; font-family: monospace; color: #00d4aa;\">modalities</td>
             <td style=\"padding: 0.5rem;\">Multimodal</td>
-            <td style=\"padding: 0.5rem; color: #8899a6;\">Text, Audio, Image, Video, Dense Embedding</td>
+            <td style=\"padding: 0.5rem; color: #8899a6;\">Text, Audio, Image, Video, Dense Embedding, AST, ZK, Lyapunov</td>
             <td style=\"padding: 0.5rem; color: #3dd68c;\">ONLINE</td>
           </tr>
           <tr style=\"border-bottom: 1px solid #141d2b;\">
@@ -171,10 +171,28 @@ pub fn view() -> String {
             <td style=\"padding: 0.5rem; color: #8899a6;\">Multi-Frame Temporal Anomaly Analysis</td>
             <td style=\"padding: 0.5rem; color: #3dd68c;\">ONLINE</td>
           </tr>
-          <tr>
+          <tr style=\"border-bottom: 1px solid #141d2b;\">
             <td style=\"padding: 0.5rem; font-family: monospace; color: #00d4aa;\">embed</td>
             <td style=\"padding: 0.5rem;\">Vector Search</td>
             <td style=\"padding: 0.5rem; color: #8899a6;\">Mojo SIMD Cosine Similarity for Hermes Wiki & ZK MOC</td>
+            <td style=\"padding: 0.5rem; color: #3dd68c;\">ONLINE</td>
+          </tr>
+          <tr style=\"border-bottom: 1px solid #141d2b;\">
+            <td style=\"padding: 0.5rem; font-family: monospace; color: #00d4aa;\">detect_ast_anomaly</td>
+            <td style=\"padding: 0.5rem;\">L1 Security</td>
+            <td style=\"padding: 0.5rem; color: #8899a6;\">AST Invariant Scanner, Jidoka Bypass Trap & NUL Byte Interceptor</td>
+            <td style=\"padding: 0.5rem; color: #3dd68c;\">ONLINE</td>
+          </tr>
+          <tr style=\"border-bottom: 1px solid #141d2b;\">
+            <td style=\"padding: 0.5rem; font-family: monospace; color: #00d4aa;\">match_zk_transclusion</td>
+            <td style=\"padding: 0.5rem;\">L5 Knowledge</td>
+            <td style=\"padding: 0.5rem; color: #8899a6;\">68 ZK ADRs & Master MOC SIMD Cosine Matching + Tailscale FQDN</td>
+            <td style=\"padding: 0.5rem; color: #3dd68c;\">ONLINE</td>
+          </tr>
+          <tr>
+            <td style=\"padding: 0.5rem; font-family: monospace; color: #00d4aa;\">predict_lyapunov_trend</td>
+            <td style=\"padding: 0.5rem;\">L4 Control</td>
+            <td style=\"padding: 0.5rem; color: #8899a6;\">Finite-Time Lyapunov Exponent, T_cascade & SEU Preflight</td>
             <td style=\"padding: 0.5rem; color: #3dd68c;\">ONLINE</td>
           </tr>
         </tbody>

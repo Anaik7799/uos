@@ -30,6 +30,7 @@ import gleam/dynamic/decode
 import gleam/float
 import gleam/json
 import gleam/list
+import gleam/option.{type Option, None, Some}
 import gleam/result
 
 // -----------------------------------------------------------------------------
@@ -96,6 +97,69 @@ pub type MaxEmbedResult {
     dimension: Int,
     count: Int,
     embeddings: List(List(Float)),
+    latency_us: Int,
+  )
+}
+
+pub type AstAnomalyReport {
+  AstAnomalyReport(
+    id: String,
+    status: String,
+    language: String,
+    code_length: Int,
+    lines: Int,
+    anomaly_score: Float,
+    risk_level: String,
+    violations: List(String),
+    passed: Bool,
+    structural_similarity: Float,
+    recommendations: List(String),
+    centroid_dimension: Int,
+    latency_us: Int,
+  )
+}
+
+pub type ZkMatch {
+  ZkMatch(
+    id: String,
+    title: String,
+    layer: String,
+    score: Float,
+    relevance: String,
+    transclusion: String,
+    tailscale_url: String,
+    summary: String,
+  )
+}
+
+pub type ZkTransclusionResult {
+  ZkTransclusionResult(
+    id: String,
+    status: String,
+    query: String,
+    total_corpus_notes: Int,
+    match_count: Int,
+    matches: List(ZkMatch),
+    latency_us: Int,
+  )
+}
+
+pub type LyapunovTrendResult {
+  LyapunovTrendResult(
+    id: String,
+    status: String,
+    samples_count: Int,
+    dt_seconds: Float,
+    horizon_seconds: Float,
+    current_value: Float,
+    critical_threshold: Float,
+    lyapunov_exponent: Float,
+    stability_state: String,
+    time_to_cascade_s: Option(Float),
+    forecast_trajectory: List(Float),
+    seu_preflight_passed: Bool,
+    preflight_status: String,
+    recommended_poodavr_phase: String,
     latency_us: Int,
   )
 }
@@ -176,6 +240,72 @@ pub fn build_embed_request(
         #("texts", json.array(texts, json.string)),
         #("dimension", json.int(dimension)),
         #("normalize", json.bool(True)),
+      ]),
+    ),
+  ])
+  |> json.to_string
+}
+
+pub fn build_detect_ast_anomaly_request(
+  id: String,
+  code: String,
+  language: String,
+  strict_mode: Bool,
+) -> String {
+  json.object([
+    #("id", json.string(id)),
+    #("method", json.string("detect_ast_anomaly")),
+    #(
+      "params",
+      json.object([
+        #("code", json.string(code)),
+        #("language", json.string(language)),
+        #("strict_mode", json.bool(strict_mode)),
+      ]),
+    ),
+  ])
+  |> json.to_string
+}
+
+pub fn build_match_zk_transclusion_request(
+  id: String,
+  query: String,
+  limit: Int,
+  layer_filter: Option(String),
+) -> String {
+  let params_fields = [
+    #("query", json.string(query)),
+    #("limit", json.int(limit)),
+  ]
+  let params = case layer_filter {
+    Some(l) -> list.append(params_fields, [#("layer_filter", json.string(l))])
+    None -> params_fields
+  }
+  json.object([
+    #("id", json.string(id)),
+    #("method", json.string("match_zk_transclusion")),
+    #("params", json.object(params)),
+  ])
+  |> json.to_string
+}
+
+pub fn build_predict_lyapunov_trend_request(
+  id: String,
+  telemetry: List(Float),
+  dt: Float,
+  horizon_s: Float,
+  critical_threshold: Float,
+) -> String {
+  json.object([
+    #("id", json.string(id)),
+    #("method", json.string("predict_lyapunov_trend")),
+    #(
+      "params",
+      json.object([
+        #("telemetry", json.array(telemetry, json.float)),
+        #("dt", json.float(dt)),
+        #("horizon_s", json.float(horizon_s)),
+        #("critical_threshold", json.float(critical_threshold)),
       ]),
     ),
   ])
@@ -319,6 +449,233 @@ pub fn decode_embed_response(raw_json: String) -> Result(MaxEmbedResult, String)
   |> result.map_error(fn(_) { "failed_to_decode_embed_response" })
 }
 
+pub fn decode_detect_ast_anomaly_response(
+  raw_json: String,
+) -> Result(AstAnomalyReport, String) {
+  let decoder = {
+    use id <- decode.field("id", decode.string)
+    use status <- decode.field("status", decode.string)
+    use language <- decode.field("language", decode.string)
+    use code_length <- decode.field("code_length", decode.int)
+    use lines <- decode.field("lines", decode.int)
+    use anomaly_score <- decode.field("anomaly_score", decode.float)
+    use risk_level <- decode.field("risk_level", decode.string)
+    use violations <- decode.field("violations", decode.list(decode.string))
+    use passed <- decode.field("passed", decode.bool)
+    use structural_similarity <- decode.field(
+      "structural_similarity",
+      decode.float,
+    )
+    use recommendations <- decode.field(
+      "recommendations",
+      decode.list(decode.string),
+    )
+    use centroid_dimension <- decode.field("centroid_dimension", decode.int)
+    use latency_us <- decode.field("latency_us", decode.int)
+    decode.success(AstAnomalyReport(
+      id: id,
+      status: status,
+      language: language,
+      code_length: code_length,
+      lines: lines,
+      anomaly_score: anomaly_score,
+      risk_level: risk_level,
+      violations: violations,
+      passed: passed,
+      structural_similarity: structural_similarity,
+      recommendations: recommendations,
+      centroid_dimension: centroid_dimension,
+      latency_us: latency_us,
+    ))
+  }
+  json.parse(raw_json, decoder)
+  |> result.map_error(fn(_) { "failed_to_decode_detect_ast_anomaly_response" })
+}
+
+pub fn decode_match_zk_transclusion_response(
+  raw_json: String,
+) -> Result(ZkTransclusionResult, String) {
+  let match_decoder = {
+    use id <- decode.field("id", decode.string)
+    use title <- decode.field("title", decode.string)
+    use layer <- decode.field("layer", decode.string)
+    use score <- decode.field("score", decode.float)
+    use relevance <- decode.field("relevance", decode.string)
+    use transclusion <- decode.field("transclusion", decode.string)
+    use tailscale_url <- decode.field("tailscale_url", decode.string)
+    use summary <- decode.field("summary", decode.string)
+    decode.success(ZkMatch(
+      id: id,
+      title: title,
+      layer: layer,
+      score: score,
+      relevance: relevance,
+      transclusion: transclusion,
+      tailscale_url: tailscale_url,
+      summary: summary,
+    ))
+  }
+
+  let decoder = {
+    use id <- decode.field("id", decode.string)
+    use status <- decode.field("status", decode.string)
+    use query <- decode.field("query", decode.string)
+    use total_corpus_notes <- decode.field("total_corpus_notes", decode.int)
+    use match_count <- decode.field("match_count", decode.int)
+    use matches <- decode.field("matches", decode.list(match_decoder))
+    use latency_us <- decode.field("latency_us", decode.int)
+    decode.success(ZkTransclusionResult(
+      id: id,
+      status: status,
+      query: query,
+      total_corpus_notes: total_corpus_notes,
+      match_count: match_count,
+      matches: matches,
+      latency_us: latency_us,
+    ))
+  }
+  json.parse(raw_json, decoder)
+  |> result.map_error(fn(_) {
+    "failed_to_decode_match_zk_transclusion_response"
+  })
+}
+
+pub fn decode_predict_lyapunov_trend_response(
+  raw_json: String,
+) -> Result(LyapunovTrendResult, String) {
+  let decoder = {
+    use id <- decode.field("id", decode.string)
+    use status <- decode.field("status", decode.string)
+    use samples_count <- decode.field("samples_count", decode.int)
+    use dt_seconds <- decode.field("dt_seconds", decode.float)
+    use horizon_seconds <- decode.field("horizon_seconds", decode.float)
+    use current_value <- decode.field("current_value", decode.float)
+    use critical_threshold <- decode.field("critical_threshold", decode.float)
+    use lyapunov_exponent <- decode.field("lyapunov_exponent", decode.float)
+    use stability_state <- decode.field("stability_state", decode.string)
+    use time_to_cascade_s <- decode.field(
+      "time_to_cascade_s",
+      decode.optional(decode.float),
+    )
+    use forecast_trajectory <- decode.field(
+      "forecast_trajectory",
+      decode.list(decode.float),
+    )
+    use seu_preflight_passed <- decode.field(
+      "seu_preflight_passed",
+      decode.bool,
+    )
+    use preflight_status <- decode.field("preflight_status", decode.string)
+    use recommended_poodavr_phase <- decode.field(
+      "recommended_poodavr_phase",
+      decode.string,
+    )
+    use latency_us <- decode.field("latency_us", decode.int)
+    decode.success(LyapunovTrendResult(
+      id: id,
+      status: status,
+      samples_count: samples_count,
+      dt_seconds: dt_seconds,
+      horizon_seconds: horizon_seconds,
+      current_value: current_value,
+      critical_threshold: critical_threshold,
+      lyapunov_exponent: lyapunov_exponent,
+      stability_state: stability_state,
+      time_to_cascade_s: time_to_cascade_s,
+      forecast_trajectory: forecast_trajectory,
+      seu_preflight_passed: seu_preflight_passed,
+      preflight_status: preflight_status,
+      recommended_poodavr_phase: recommended_poodavr_phase,
+      latency_us: latency_us,
+    ))
+  }
+  json.parse(raw_json, decoder)
+  |> result.map_error(fn(_) {
+    "failed_to_decode_predict_lyapunov_trend_response"
+  })
+}
+
+// -----------------------------------------------------------------------------
+// JSON Serializers for Wisp Endpoints
+// -----------------------------------------------------------------------------
+
+pub fn ast_report_to_json(report: AstAnomalyReport) -> String {
+  json.object([
+    #("id", json.string(report.id)),
+    #("status", json.string(report.status)),
+    #("language", json.string(report.language)),
+    #("code_length", json.int(report.code_length)),
+    #("lines", json.int(report.lines)),
+    #("anomaly_score", json.float(report.anomaly_score)),
+    #("risk_level", json.string(report.risk_level)),
+    #("violations", json.array(report.violations, json.string)),
+    #("passed", json.bool(report.passed)),
+    #("structural_similarity", json.float(report.structural_similarity)),
+    #("recommendations", json.array(report.recommendations, json.string)),
+    #("centroid_dimension", json.int(report.centroid_dimension)),
+    #("latency_us", json.int(report.latency_us)),
+  ])
+  |> json.to_string
+}
+
+pub fn zk_result_to_json(result: ZkTransclusionResult) -> String {
+  json.object([
+    #("id", json.string(result.id)),
+    #("status", json.string(result.status)),
+    #("query", json.string(result.query)),
+    #("total_corpus_notes", json.int(result.total_corpus_notes)),
+    #("match_count", json.int(result.match_count)),
+    #(
+      "matches",
+      json.array(result.matches, fn(m) {
+        json.object([
+          #("id", json.string(m.id)),
+          #("title", json.string(m.title)),
+          #("layer", json.string(m.layer)),
+          #("score", json.float(m.score)),
+          #("relevance", json.string(m.relevance)),
+          #("transclusion", json.string(m.transclusion)),
+          #("tailscale_url", json.string(m.tailscale_url)),
+          #("summary", json.string(m.summary)),
+        ])
+      }),
+    ),
+    #("latency_us", json.int(result.latency_us)),
+  ])
+  |> json.to_string
+}
+
+pub fn lyapunov_result_to_json(result: LyapunovTrendResult) -> String {
+  let cascade_json = case result.time_to_cascade_s {
+    Some(s) -> json.float(s)
+    None -> json.null()
+  }
+  json.object([
+    #("id", json.string(result.id)),
+    #("status", json.string(result.status)),
+    #("samples_count", json.int(result.samples_count)),
+    #("dt_seconds", json.float(result.dt_seconds)),
+    #("horizon_seconds", json.float(result.horizon_seconds)),
+    #("current_value", json.float(result.current_value)),
+    #("critical_threshold", json.float(result.critical_threshold)),
+    #("lyapunov_exponent", json.float(result.lyapunov_exponent)),
+    #("stability_state", json.string(result.stability_state)),
+    #("time_to_cascade_s", cascade_json),
+    #(
+      "forecast_trajectory",
+      json.array(result.forecast_trajectory, json.float),
+    ),
+    #("seu_preflight_passed", json.bool(result.seu_preflight_passed)),
+    #("preflight_status", json.string(result.preflight_status)),
+    #(
+      "recommended_poodavr_phase",
+      json.string(result.recommended_poodavr_phase),
+    ),
+    #("latency_us", json.int(result.latency_us)),
+  ])
+  |> json.to_string
+}
+
 // -----------------------------------------------------------------------------
 // Mathematical Validation Functions
 // -----------------------------------------------------------------------------
@@ -351,4 +708,19 @@ pub fn is_harmony_pass(result: MaxAudioResult) -> Bool {
 
 pub fn is_entropy_rich(result: MaxAudioResult) -> Bool {
   result.shannon_entropy >=. 2.50
+}
+
+pub fn is_ast_safe(report: AstAnomalyReport) -> Bool {
+  report.passed && report.risk_level == "NOMINAL"
+}
+
+pub fn is_seu_certified(trend: LyapunovTrendResult) -> Bool {
+  trend.seu_preflight_passed
+}
+
+pub fn top_zk_transclusion(result: ZkTransclusionResult) -> Option(String) {
+  case result.matches {
+    [first, ..] -> Some(first.transclusion)
+    [] -> None
+  }
 }
