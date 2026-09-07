@@ -112,3 +112,4 @@ The 5 pillars of TPS govern all software engineering and operational loops acros
 3. **Muda Elimination (Waste Reduction)**: Zero duplicate planning registries, shadow task queues, or dead code across the repository (`SC-MUDA-001`).
 4. **Standardized Work**: Typed CLI and API schemas for Plan, Task, Oban Job, and Temporal Workflow guaranteeing deterministic reproducibility.
 5. **Heijunka (Production Leveling)**: Leveled pull queues with monotonic leases (`claim WORKER PLAN LEASE_NS TASK_ID`), preventing task starvation, thundering herds, and resource contention.
+

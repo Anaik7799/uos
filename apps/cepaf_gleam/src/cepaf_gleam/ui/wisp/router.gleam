@@ -208,6 +208,31 @@ fn route_internal(path: String) -> String {
         50.0,
       )
       |> max_daemon.lyapunov_result_to_json()
+    "/api/v1/inference/stpa-fmea" | "/api/inference/stpa-fmea" ->
+      inference_api.evaluate_stpa_fmea(
+        "verify_state",
+        "telemetry",
+        "nominal",
+        1,
+        "ready",
+        1,
+      )
+      |> max_daemon.stpa_fmea_report_to_json()
+    "/api/v1/inference/ruliad-branch" | "/api/inference/ruliad-branch" ->
+      inference_api.evaluate_ruliad_branch(
+        "integration/feature",
+        "main",
+        ["clean candidate"],
+        ["agy", "claude", "codex"],
+      )
+      |> max_daemon.ruliad_branch_report_to_json()
+    "/api/v1/inference/shruti-harmonics" | "/api/inference/shruti-harmonics" ->
+      inference_api.evaluate_shruti_harmonics(
+        [1.0, 1.2, 0.9, 1.1],
+        "durga",
+        146.83,
+      )
+      |> max_daemon.shruti_harmonic_report_to_json()
     // SC-VAULT-009 + SC-VAULT-025: secrets vault API for .pi/ + dashboard tile.
     // Pass-6 wiring (skeleton response — Slice E continuation wires real vault.get).
     // Per docs/journal/task-116494073339521648/slice-plans/slice-e-continuation.md
@@ -4454,6 +4479,11 @@ fn post_route(path: String, body: String) -> HttpResponse(String) {
       inference_zk_transclude_post_response(body)
     "/api/v1/inference/lyapunov-trend" ->
       inference_lyapunov_trend_post_response(body)
+    "/api/v1/inference/stpa-fmea" -> inference_stpa_fmea_post_response(body)
+    "/api/v1/inference/ruliad-branch" ->
+      inference_ruliad_branch_post_response(body)
+    "/api/v1/inference/shruti-harmonics" ->
+      inference_shruti_harmonics_post_response(body)
     _ -> json_response(not_found_json(path), 404)
   }
 }
@@ -4494,6 +4524,53 @@ fn inference_lyapunov_trend_post_response(body: String) -> HttpResponse(String) 
       let result =
         inference_api.evaluate_lyapunov_trend(telemetry, dt, horizon_s, crit)
       json_response(max_daemon.lyapunov_result_to_json(result), 200)
+    }
+    Error(_) -> {
+      json_response(
+        "{\"status\":\"error\",\"error\":\"invalid_request_body\"}",
+        400,
+      )
+    }
+  }
+}
+
+fn inference_stpa_fmea_post_response(body: String) -> HttpResponse(String) {
+  case inference_api.parse_stpa_fmea_body(body) {
+    Ok(#(action, comp, ctx, crit, dep, impact)) -> {
+      let report =
+        inference_api.evaluate_stpa_fmea(action, comp, ctx, crit, dep, impact)
+      json_response(max_daemon.stpa_fmea_report_to_json(report), 200)
+    }
+    Error(_) -> {
+      json_response(
+        "{\"status\":\"error\",\"error\":\"invalid_request_body\"}",
+        400,
+      )
+    }
+  }
+}
+
+fn inference_ruliad_branch_post_response(body: String) -> HttpResponse(String) {
+  case inference_api.parse_ruliad_branch_body(body) {
+    Ok(#(src, tgt, changes, agents)) -> {
+      let report = inference_api.evaluate_ruliad_branch(src, tgt, changes, agents)
+      json_response(max_daemon.ruliad_branch_report_to_json(report), 200)
+    }
+    Error(_) -> {
+      json_response(
+        "{\"status\":\"error\",\"error\":\"invalid_request_body\"}",
+        400,
+      )
+    }
+  }
+}
+
+fn inference_shruti_harmonics_post_response(body: String) -> HttpResponse(String) {
+  case inference_api.parse_shruti_harmonics_body(body) {
+    Ok(#(telemetry, raga, fundamental_hz)) -> {
+      let report =
+        inference_api.evaluate_shruti_harmonics(telemetry, raga, fundamental_hz)
+      json_response(max_daemon.shruti_harmonic_report_to_json(report), 200)
     }
     Error(_) -> {
       json_response(

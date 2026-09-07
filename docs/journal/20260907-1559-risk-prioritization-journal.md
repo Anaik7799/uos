@@ -92,7 +92,7 @@ or converting board ACKs, syntax-valid digests and passing tests into blanket ap
 
 | Check | Result / evidence scope |
 |---|---|
-| OCaml local selftests | PASS: 375 assertions at the recorded pre-final-validation run; final receipt records any later count |
+| OCaml local selftests | PASS: 375 assertions; bounded tests, not a formal proof |
 | Arithmetic/FMEA | Product bounds, band boundaries, severity floor, occurrence/detection monotonicity |
 | Dependency/ranking | Class before score, inherited urgency, blocked/unknown/expired exclusion, exact expiry, future ready time, stable ties, cycle/missing/duplicate rejection |
 | Record negatives | Forged product, zero factor, missing UCA, placeholder digest, duplicate JSON field, false-ready blocker, unknown-ready and understated FMEA interval rejected |
@@ -205,7 +205,8 @@ One shared policy and formula; five bounded factors; four mandatory UCA categori
 five FMEA bands with a severity floor; four safety classes; three default freshness ceilings.
 Five agent entry points and four runtime skill/rule discovery paths use the same policy.
 Actual final validator results and artifact hashes are recorded in the companion receipt.
-Remote model calls: 0. Paid model spend by this operation: 0. Production restarts/cutovers: 0.
+Additional model-provider requests dispatched through tools: 0. Primary assistant session cost: UNKNOWN.
+Production restarts/cutovers: 0.
 These are operation counts, not claimed improvements in production reliability or intelligence.
 
 ## 12. STAMP & Constitutional Alignment
@@ -278,4 +279,3 @@ UNRUN and NOT_ADMITTED remain nonpassing; N/A must be justified for each actual 
 [SOP](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260907-1559-risk-prioritization-sop.md) · [Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-1559-risk-prioritization-guide.md) · [ADR](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-1559-adr-risk-prioritization.md) · [Journal](http://nas-1.tail55d152.ts.net:4100/docs/journal/20260907-1559-risk-prioritization-journal.md)
 
 **UOS footer:** local policy and evidence package; production admission remains NOT_ADMITTED.
-

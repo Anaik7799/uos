@@ -249,3 +249,140 @@ pub fn max_inference_router_endpoints_test() {
   let lyap_body = router.route("/api/v1/inference/lyapunov-trend")
   lyap_body |> string.contains("strongly_stable") |> should.be_true
 }
+
+pub fn max_stpa_fmea_request_and_decode_test() {
+  let req =
+    max.build_infer_stpa_fmea_request(
+      "stpa-1",
+      "sa_plan_execution_bypass",
+      "actuator",
+      10,
+      10,
+      8,
+    )
+  req |> string.contains("\"method\":\"infer_stpa_fmea_hazard\"") |> should.be_true
+  req |> string.contains("sa_plan_execution_bypass") |> should.be_true
+
+  let raw =
+    "{\"id\":\"stpa-1\",\"status\":\"ok\",\"action\":\"sa_plan_execution_bypass\",\"target\":\"actuator\",\"hazard_level\":\"CRITICAL\",\"rpn\":800,\"psi_interlock_passed\":false,\"residual_risk\":0.95,\"mitigations\":[\"Enforce Sa-Plan\"],\"uca_catalog\":[{\"id\":\"UCA-01\",\"type\":\"providing_causes_hazard\",\"severity\":10,\"description\":\"Direct bypass\"}],\"latency_us\":18}"
+  let res = max.decode_infer_stpa_fmea_response(raw)
+  res |> should.be_ok
+  let assert Ok(rep) = res
+  rep.hazard_level |> should.equal("CRITICAL")
+  rep.rpn |> should.equal(800)
+  rep.psi_interlock_passed |> should.be_false
+  max.is_stpa_safe(rep) |> should.be_false
+
+  let json = max.stpa_fmea_report_to_json(rep)
+  json |> string.contains("CRITICAL") |> should.be_true
+}
+
+pub fn max_rete_conflict_request_and_decode_test() {
+  let req =
+    max.build_eval_rete_rule_conflict_request("rete-1", ["rule_a", "rule_b"], 1)
+  req |> string.contains("\"method\":\"eval_rete_rule_conflict\"") |> should.be_true
+
+  let raw =
+    "{\"id\":\"rete-1\",\"status\":\"ok\",\"total_rules\":2,\"winning_rule\":\"rule_a\",\"strategy\":\"lexicographic_l0_first\",\"is_deterministic\":true,\"explanation\":\"Rule A has higher priority\",\"winning_layer\":\"L0\",\"conflict_detected\":true,\"ranked_rules\":[{\"rule_id\":\"rule_a\",\"score\":150.0,\"layer\":\"L0\",\"priority\":100,\"specificity\":5,\"recency_ns\":1000}],\"latency_us\":16}"
+  let res = max.decode_eval_rete_conflict_response(raw)
+  res |> should.be_ok
+  let assert Ok(rep) = res
+  rep.winning_rule |> should.equal("rule_a")
+  rep.winning_layer |> should.equal("L0")
+  rep.is_deterministic |> should.be_true
+  max.is_rete_l0_winner(rep) |> should.be_true
+
+  let json = max.rete_conflict_report_to_json(rep)
+  json |> string.contains("rule_a") |> should.be_true
+}
+
+pub fn max_ruliad_branch_request_and_decode_test() {
+  let req =
+    max.build_evaluate_ruliad_branch_request(
+      "rul-1",
+      [1, 0, 1],
+      [1, 0, 1],
+      3,
+      0.2,
+    )
+  req |> string.contains("\"method\":\"evaluate_ruliad_branch\"") |> should.be_true
+
+  let raw =
+    "{\"id\":\"rul-1\",\"status\":\"ok\",\"depth\":3,\"branches_evaluated\":8,\"branchial_distance\":0.0,\"causal_invariance\":1.0,\"mergeable\":true,\"entanglement_entropy\":0.05,\"entanglement_entropy_shannon\":0.072,\"selected_path\":[\"b0\",\"b1\"],\"foliation_status\":\"SYNCHRONIZED\",\"latency_us\":685}"
+  let res = max.decode_evaluate_ruliad_branch_response(raw)
+  res |> should.be_ok
+  let assert Ok(rep) = res
+  rep.mergeable |> should.be_true
+  rep.foliation_status |> should.equal("SYNCHRONIZED")
+  max.is_ruliad_mergeable(rep) |> should.be_true
+
+  let json = max.ruliad_branch_report_to_json(rep)
+  json |> string.contains("SYNCHRONIZED") |> should.be_true
+}
+
+pub fn max_shruti_harmonics_request_and_decode_test() {
+  let req =
+    max.build_synthesize_shruti_harmonics_request(
+      "shr-1",
+      "Durga",
+      [1.0, 1.25, 1.5],
+      0.9,
+      0.5,
+    )
+  req |> string.contains("\"method\":\"synthesize_biomorphic_harmonics\"") |> should.be_true
+
+  let raw =
+    "{\"id\":\"shr-1\",\"status\":\"ok\",\"raga\":\"Durga\",\"fundamental_hz\":136.1,\"coherence_ratio\":0.92,\"acoustic_health\":\"CONSONANT\",\"harmonics_count\":3,\"harmonics\":[{\"ratio\":1.0,\"frequency_hz\":136.1,\"shruti_name\":\"Sadja (Sa)\",\"cent_offset\":0.0}],\"shannon_entropy\":2.55,\"jawari_factor\":0.92,\"biomorphic_resonance\":true,\"latency_us\":55}"
+  let res = max.decode_synthesize_shruti_harmonics_response(raw)
+  res |> should.be_ok
+  let assert Ok(rep) = res
+  rep.raga |> should.equal("Durga")
+  rep.acoustic_health |> should.equal("CONSONANT")
+  rep.biomorphic_resonance |> should.be_true
+  max.is_acoustic_healthy(rep) |> should.be_true
+
+  let json = max.shruti_harmonic_report_to_json(rep)
+  json |> string.contains("Sadja (Sa)") |> should.be_true
+}
+
+pub fn max_models_4_to_7_api_and_router_test() {
+  // STPA-FMEA evaluation
+  let safe_rep =
+    inference_api.evaluate_stpa_fmea("safe_query", "sensor", 2, 2, 2)
+  safe_rep.hazard_level |> should.equal("LOW")
+  safe_rep.psi_interlock_passed |> should.be_true
+
+  let danger_rep =
+    inference_api.evaluate_stpa_fmea("bypass_sa_plan", "core", 10, 10, 8)
+  danger_rep.hazard_level |> should.equal("CRITICAL")
+  danger_rep.psi_interlock_passed |> should.be_false
+
+  // Rete conflict evaluation
+  let rete_rep =
+    inference_api.evaluate_rete_conflict(["rule_safety", "rule_speed"], 1)
+  rete_rep.winning_rule |> should.equal("rule_safety")
+  rete_rep.winning_layer |> should.equal("L0")
+
+  // Ruliad branch evaluation
+  let rul_rep =
+    inference_api.evaluate_ruliad_branch([1, 0, 1], [1, 0, 1], 3, 0.2)
+  rul_rep.mergeable |> should.be_true
+  rul_rep.foliation_status |> should.equal("SYNCHRONIZED")
+
+  // Shruti harmonics evaluation
+  let shr_rep =
+    inference_api.evaluate_shruti_harmonics("Durga", [1.0, 1.25, 1.5], 0.9, 0.5)
+  shr_rep.acoustic_health |> should.equal("CONSONANT")
+  shr_rep.biomorphic_resonance |> should.be_true
+
+  // Router endpoints
+  let stpa_route = router.route("/api/v1/inference/stpa-fmea")
+  stpa_route |> string.contains("psi_interlock_passed") |> should.be_true
+
+  let rul_route = router.route("/api/v1/inference/ruliad-branch")
+  rul_route |> string.contains("foliation_status") |> should.be_true
+
+  let shr_route = router.route("/api/v1/inference/shruti-harmonics")
+  shr_route |> string.contains("acoustic_health") |> should.be_true
+}
+

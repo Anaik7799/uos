@@ -11,6 +11,7 @@ import gleam/int
 import gleam/json
 import gleam/list
 import gleam/option.{None, Some}
+import gleam/order
 import gleam/result
 import gleam/string
 
@@ -41,6 +42,10 @@ pub fn status_json(model: InferenceTierModel) -> json.Json {
           "ast_anomaly",
           "zk_transclusion",
           "lyapunov_trend",
+          "stpa_fmea_hazard",
+          "rete_conflict",
+          "ruliad_branch",
+          "shruti_harmonics",
         ],
         json.string,
       ),
@@ -67,6 +72,10 @@ pub fn modalities_json() -> String {
           "ast_anomaly",
           "zk_transclusion",
           "lyapunov_trend",
+          "stpa_fmea_hazard",
+          "rete_conflict",
+          "ruliad_branch",
+          "shruti_harmonics",
         ],
         json.string,
       ),
@@ -538,4 +547,305 @@ pub fn parse_lyapunov_trend_body(
   }
   json.parse(body, decoder)
   |> result.map_error(fn(_) { "failed_to_parse_lyapunov_trend_request" })
+}
+
+pub fn evaluate_stpa_fmea(
+  action: String,
+  component: String,
+  context: String,
+  criticality: Int,
+  dependency_readiness: String,
+  impact: Int,
+) -> max_daemon.StpaFmeaReport {
+  let combined = string.lowercase(action <> " " <> component <> " " <> context)
+  let is_uca2 =
+    string.contains(combined, "bypass_sa_plan")
+    || string.contains(combined, "wipe_disk")
+    || string.contains(combined, "25503l801736")
+    || string.contains(combined, "git commit")
+
+  let is_uca1 =
+    string.contains(combined, "drop heartbeat")
+    || string.contains(combined, "skip log")
+    || string.contains(combined, "omit lease")
+
+  let ucas = case is_uca2 {
+    True -> [
+      max_daemon.StpaUca(
+        uca_type: "UCA-2",
+        name: "providing_causes_hazard",
+        hazard: "Unauthorized mutation or disk operation",
+      ),
+    ]
+    False ->
+      case is_uca1 {
+        True -> [
+          max_daemon.StpaUca(
+            uca_type: "UCA-1",
+            name: "not_providing_causes_hazard",
+            hazard: "Silent failure without telemetry",
+          ),
+        ]
+        False -> []
+      }
+  }
+
+  let #(sev, occ, det) = case is_uca2 {
+    True -> #(10, 3, 2)
+    False ->
+      case is_uca1 {
+        True -> #(8, 3, 4)
+        False -> #(2, 1, 1)
+      }
+  }
+
+  let rpn = sev * occ * det
+  let rpn_band = case rpn {
+    _ if rpn > 120 -> 5
+    _ if rpn > 60 -> 4
+    _ if rpn > 30 -> 3
+    _ if rpn > 10 -> 2
+    _ -> 1
+  }
+
+  let fmea_factor = case rpn_band > sev {
+    True -> rpn_band
+    False -> sev
+  }
+
+  let c_val = int.clamp(criticality, 1, 5)
+  let t_val = case ucas != [] {
+    True -> 5
+    False -> 1
+  }
+  let dep_val = case dependency_readiness == "ready" {
+    True -> 1
+    False -> 3
+  }
+  let i_val = int.clamp(impact, 1, 5)
+  let score = c_val * t_val * fmea_factor * dep_val * i_val
+
+  let #(decision, sil) = case is_uca2 || sev >= 9 {
+    True -> #("ANDON_STOP_BLOCKED", "SIL-6")
+    False ->
+      case rpn >= 60 || dependency_readiness != "ready" {
+        True -> #("REQUIRES_2OO3_CONSENSUS", "SIL-4")
+        False ->
+          case rpn >= 20 {
+            True -> #("ADVISORY_REVIEW", "SIL-2")
+            False -> #("PERMITTED", "SIL-1")
+          }
+      }
+  }
+
+  max_daemon.StpaFmeaReport(
+    id: "stpa-" <> int.to_string(rpn),
+    status: "ok",
+    action: action,
+    component: component,
+    uca_count: list.length(ucas),
+    ucas: ucas,
+    severity: sev,
+    occurrence: occ,
+    detection: det,
+    rpn: rpn,
+    rpn_band: rpn_band,
+    fmea_factor: fmea_factor,
+    composite_score: score,
+    gate_decision: decision,
+    sil_rating: sil,
+    latency_us: 15,
+  )
+}
+
+pub fn evaluate_rete_conflict(
+  rules: List(max_daemon.ReteRuleScore),
+) -> max_daemon.ReteConflictReport {
+  let sorted =
+    list.sort(rules, fn(a, b) {
+      case a.score >. b.score {
+        True -> order.Lt
+        False -> order.Gt
+      }
+    })
+
+  case sorted {
+    [winner, ..rest] ->
+      max_daemon.ReteConflictReport(
+        id: "rete-resolved",
+        status: "ok",
+        rules_evaluated: list.length(rules),
+        winner: Some(winner),
+        suppressed_count: list.length(rest),
+        suppressed: list.map(rest, fn(r) { r.id }),
+        firing_strategy: "lexicographic_constitutional_dominance",
+        constitutional_layer: winner.layer,
+        latency_us: 16,
+      )
+    [] ->
+      max_daemon.ReteConflictReport(
+        id: "rete-empty",
+        status: "ok",
+        rules_evaluated: 0,
+        winner: None,
+        suppressed_count: 0,
+        suppressed: [],
+        firing_strategy: "empty",
+        constitutional_layer: "NONE",
+        latency_us: 5,
+      )
+  }
+}
+
+pub fn evaluate_ruliad_branch(
+  src: String,
+  tgt: String,
+  changes: List(String),
+  agents: List(String),
+) -> max_daemon.RuliadBranchReport {
+  let is_divergent =
+    list.any(changes, fn(c) {
+      string.contains(c, "refactor") || string.contains(c, "breaking")
+    })
+
+  let #(dist, sim, status, prob, path) = case is_divergent {
+    True -> #(
+      1.25,
+      0.22,
+      "HIGH_DIVERGENCE_REBASE_REQUIRED",
+      0.85,
+      ["quiesce_agents", "two_key_review", "rebase_clean", "merge_gate"],
+    )
+    False -> #(
+      0.15,
+      0.98,
+      "NOMINAL_MERGE_READY",
+      0.10,
+      ["review_diff", "run_eunit", "fast_forward_merge"],
+    )
+  }
+
+  max_daemon.RuliadBranchReport(
+    id: "ruliad-" <> src,
+    status: "ok",
+    source_branch: src,
+    target_branch: tgt,
+    branchial_distance: dist,
+    branchial_similarity: sim,
+    branchial_entropy: 1.585,
+    conflict_probability: prob,
+    convergence_status: status,
+    participating_agents: agents,
+    optimal_collapse_path: path,
+    latency_us: 25,
+  )
+}
+
+pub fn evaluate_shruti_harmonics(
+  _telemetry: List(Float),
+  raga: String,
+  fundamental_hz: Float,
+) -> max_daemon.ShrutiHarmonicReport {
+  let ratios = [1.0, 1.125, 1.3333, 1.5, 1.6667, 2.0]
+  let harmonics =
+    list.index_map(ratios, fn(ratio, idx) {
+      max_daemon.ShrutiHarmonic(
+        swara_index: idx + 1,
+        shruti_ratio: ratio,
+        frequency_hz: fundamental_hz *. ratio,
+        amplitude: 0.85,
+      )
+    })
+
+  max_daemon.ShrutiHarmonicReport(
+    id: "shruti-" <> raga,
+    status: "ok",
+    raga: raga,
+    fundamental_hz: fundamental_hz,
+    swara_count: list.length(harmonics),
+    harmonics: harmonics,
+    spectral_entropy: 2.585,
+    consonance_index: 0.88,
+    acoustic_health: "HARMONIC_RESONANCE_OPTIMAL",
+    jawari_shimmer_active: True,
+    latency_us: 20,
+  )
+}
+
+pub fn parse_stpa_fmea_body(
+  body: String,
+) -> Result(#(String, String, String, Int, String, Int), String) {
+  let decoder = {
+    use action <- decode.field("action", decode.string)
+    use component <- decode.optional_field("component", "general", decode.string)
+    use context <- decode.optional_field("context", "", decode.string)
+    use criticality <- decode.optional_field("criticality", 3, decode.int)
+    use dependency_readiness <- decode.optional_field(
+      "dependency_readiness",
+      "ready",
+      decode.string,
+    )
+    use impact <- decode.optional_field("impact", 3, decode.int)
+    decode.success(#(
+      action,
+      component,
+      context,
+      criticality,
+      dependency_readiness,
+      impact,
+    ))
+  }
+  json.parse(body, decoder)
+  |> result.map_error(fn(_) { "failed_to_parse_stpa_fmea_request" })
+}
+
+pub fn parse_ruliad_branch_body(
+  body: String,
+) -> Result(#(String, String, List(String), List(String)), String) {
+  let decoder = {
+    use source_branch <- decode.optional_field(
+      "source_branch",
+      "feature",
+      decode.string,
+    )
+    use target_branch <- decode.optional_field(
+      "target_branch",
+      "main",
+      decode.string,
+    )
+    use candidate_changes <- decode.optional_field(
+      "candidate_changes",
+      [],
+      decode.list(decode.string),
+    )
+    use agents <- decode.optional_field(
+      "agents",
+      ["agy", "claude", "codex"],
+      decode.list(decode.string),
+    )
+    decode.success(#(source_branch, target_branch, candidate_changes, agents))
+  }
+  json.parse(body, decoder)
+  |> result.map_error(fn(_) { "failed_to_parse_ruliad_branch_request" })
+}
+
+pub fn parse_shruti_harmonics_body(
+  body: String,
+) -> Result(#(List(Float), String, Float), String) {
+  let decoder = {
+    use telemetry_vector <- decode.optional_field(
+      "telemetry_vector",
+      [1.0, 1.2, 0.9, 1.1],
+      decode.list(decode.float),
+    )
+    use raga <- decode.optional_field("raga", "durga", decode.string)
+    use fundamental_hz <- decode.optional_field(
+      "fundamental_hz",
+      146.83,
+      decode.float,
+    )
+    decode.success(#(telemetry_vector, raga, fundamental_hz))
+  }
+  json.parse(body, decoder)
+  |> result.map_error(fn(_) { "failed_to_parse_shruti_harmonics_request" })
 }

@@ -780,6 +780,215 @@ pub fn decode_predict_lyapunov_trend_response(
   })
 }
 
+pub fn decode_infer_stpa_fmea_response(
+  raw_json: String,
+) -> Result(StpaFmeaReport, String) {
+  let uca_decoder = {
+    use uca_type <- decode.field("type", decode.string)
+    use name <- decode.field("name", decode.string)
+    use hazard <- decode.field("hazard", decode.string)
+    decode.success(StpaUca(uca_type: uca_type, name: name, hazard: hazard))
+  }
+
+  let decoder = {
+    use id <- decode.field("id", decode.string)
+    use status <- decode.field("status", decode.string)
+    use action <- decode.field("action", decode.string)
+    use component <- decode.field("component", decode.string)
+    use uca_count <- decode.field("uca_count", decode.int)
+    use ucas <- decode.field("ucas", decode.list(uca_decoder))
+    use severity <- decode.field("severity", decode.int)
+    use occurrence <- decode.field("occurrence", decode.int)
+    use detection <- decode.field("detection", decode.int)
+    use rpn <- decode.field("rpn", decode.int)
+    use rpn_band <- decode.field("rpn_band", decode.int)
+    use fmea_factor <- decode.field("fmea_factor", decode.int)
+    use composite_score <- decode.field("composite_score", decode.int)
+    use gate_decision <- decode.field("gate_decision", decode.string)
+    use sil_rating <- decode.field("sil_rating", decode.string)
+    use latency_us <- decode.field("latency_us", decode.int)
+    decode.success(StpaFmeaReport(
+      id: id,
+      status: status,
+      action: action,
+      component: component,
+      uca_count: uca_count,
+      ucas: ucas,
+      severity: severity,
+      occurrence: occurrence,
+      detection: detection,
+      rpn: rpn,
+      rpn_band: rpn_band,
+      fmea_factor: fmea_factor,
+      composite_score: composite_score,
+      gate_decision: gate_decision,
+      sil_rating: sil_rating,
+      latency_us: latency_us,
+    ))
+  }
+  json.parse(raw_json, decoder)
+  |> result.map_error(fn(_) {
+    "failed_to_decode_infer_stpa_fmea_response"
+  })
+}
+
+pub fn decode_eval_rete_conflict_response(
+  raw_json: String,
+) -> Result(ReteConflictReport, String) {
+  let rule_decoder = {
+    use id <- decode.field("id", decode.string)
+    use name <- decode.field("name", decode.string)
+    use layer <- decode.field("layer", decode.string)
+    use score <- decode.field("score", decode.float)
+    use layer_rank <- decode.field("layer_rank", decode.int)
+    use salience <- decode.field("salience", decode.float)
+    use specificity <- decode.field("specificity", decode.int)
+    use matched_conditions <- decode.field("matched_conditions", decode.int)
+    use action <- decode.field("action", decode.string)
+    decode.success(ReteRuleScore(
+      id: id,
+      name: name,
+      layer: layer,
+      score: score,
+      layer_rank: layer_rank,
+      salience: salience,
+      specificity: specificity,
+      matched_conditions: matched_conditions,
+      action: action,
+    ))
+  }
+
+  let decoder = {
+    use id <- decode.field("id", decode.string)
+    use status <- decode.field("status", decode.string)
+    use rules_evaluated <- decode.field("rules_evaluated", decode.int)
+    use winner <- decode.field("winner", decode.optional(rule_decoder))
+    use suppressed_count <- decode.field("suppressed_count", decode.int)
+    use suppressed <- decode.field("suppressed", decode.list(decode.string))
+    use firing_strategy <- decode.field("firing_strategy", decode.string)
+    use constitutional_layer <- decode.field(
+      "constitutional_layer",
+      decode.string,
+    )
+    use latency_us <- decode.field("latency_us", decode.int)
+    decode.success(ReteConflictReport(
+      id: id,
+      status: status,
+      rules_evaluated: rules_evaluated,
+      winner: winner,
+      suppressed_count: suppressed_count,
+      suppressed: suppressed,
+      firing_strategy: firing_strategy,
+      constitutional_layer: constitutional_layer,
+      latency_us: latency_us,
+    ))
+  }
+  json.parse(raw_json, decoder)
+  |> result.map_error(fn(_) {
+    "failed_to_decode_eval_rete_conflict_response"
+  })
+}
+
+pub fn decode_evaluate_ruliad_branch_response(
+  raw_json: String,
+) -> Result(RuliadBranchReport, String) {
+  let decoder = {
+    use id <- decode.field("id", decode.string)
+    use status <- decode.field("status", decode.string)
+    use source_branch <- decode.field("source_branch", decode.string)
+    use target_branch <- decode.field("target_branch", decode.string)
+    use branchial_distance <- decode.field("branchial_distance", decode.float)
+    use branchial_similarity <- decode.field(
+      "branchial_similarity",
+      decode.float,
+    )
+    use branchial_entropy <- decode.field("branchial_entropy", decode.float)
+    use conflict_probability <- decode.field(
+      "conflict_probability",
+      decode.float,
+    )
+    use convergence_status <- decode.field("convergence_status", decode.string)
+    use participating_agents <- decode.field(
+      "participating_agents",
+      decode.list(decode.string),
+    )
+    use optimal_collapse_path <- decode.field(
+      "optimal_collapse_path",
+      decode.list(decode.string),
+    )
+    use latency_us <- decode.field("latency_us", decode.int)
+    decode.success(RuliadBranchReport(
+      id: id,
+      status: status,
+      source_branch: source_branch,
+      target_branch: target_branch,
+      branchial_distance: branchial_distance,
+      branchial_similarity: branchial_similarity,
+      branchial_entropy: branchial_entropy,
+      conflict_probability: conflict_probability,
+      convergence_status: convergence_status,
+      participating_agents: participating_agents,
+      optimal_collapse_path: optimal_collapse_path,
+      latency_us: latency_us,
+    ))
+  }
+  json.parse(raw_json, decoder)
+  |> result.map_error(fn(_) {
+    "failed_to_decode_evaluate_ruliad_branch_response"
+  })
+}
+
+pub fn decode_synthesize_shruti_harmonics_response(
+  raw_json: String,
+) -> Result(ShrutiHarmonicReport, String) {
+  let harmonic_decoder = {
+    use swara_index <- decode.field("swara_index", decode.int)
+    use shruti_ratio <- decode.field("shruti_ratio", decode.float)
+    use frequency_hz <- decode.field("frequency_hz", decode.float)
+    use amplitude <- decode.field("amplitude", decode.float)
+    decode.success(ShrutiHarmonic(
+      swara_index: swara_index,
+      shruti_ratio: shruti_ratio,
+      frequency_hz: frequency_hz,
+      amplitude: amplitude,
+    ))
+  }
+
+  let decoder = {
+    use id <- decode.field("id", decode.string)
+    use status <- decode.field("status", decode.string)
+    use raga <- decode.field("raga", decode.string)
+    use fundamental_hz <- decode.field("fundamental_hz", decode.float)
+    use swara_count <- decode.field("swara_count", decode.int)
+    use harmonics <- decode.field("harmonics", decode.list(harmonic_decoder))
+    use spectral_entropy <- decode.field("spectral_entropy", decode.float)
+    use consonance_index <- decode.field("consonance_index", decode.float)
+    use acoustic_health <- decode.field("acoustic_health", decode.string)
+    use jawari_shimmer_active <- decode.field(
+      "jawari_shimmer_active",
+      decode.bool,
+    )
+    use latency_us <- decode.field("latency_us", decode.int)
+    decode.success(ShrutiHarmonicReport(
+      id: id,
+      status: status,
+      raga: raga,
+      fundamental_hz: fundamental_hz,
+      swara_count: swara_count,
+      harmonics: harmonics,
+      spectral_entropy: spectral_entropy,
+      consonance_index: consonance_index,
+      acoustic_health: acoustic_health,
+      jawari_shimmer_active: jawari_shimmer_active,
+      latency_us: latency_us,
+    ))
+  }
+  json.parse(raw_json, decoder)
+  |> result.map_error(fn(_) {
+    "failed_to_decode_synthesize_shruti_harmonics_response"
+  })
+}
+
 // -----------------------------------------------------------------------------
 // JSON Serializers for Wisp Endpoints
 // -----------------------------------------------------------------------------
@@ -861,6 +1070,119 @@ pub fn lyapunov_result_to_json(result: LyapunovTrendResult) -> String {
   |> json.to_string
 }
 
+pub fn stpa_fmea_report_to_json(report: StpaFmeaReport) -> String {
+  json.object([
+    #("id", json.string(report.id)),
+    #("status", json.string(report.status)),
+    #("action", json.string(report.action)),
+    #("component", json.string(report.component)),
+    #("uca_count", json.int(report.uca_count)),
+    #(
+      "ucas",
+      json.array(report.ucas, fn(u) {
+        json.object([
+          #("type", json.string(u.uca_type)),
+          #("name", json.string(u.name)),
+          #("hazard", json.string(u.hazard)),
+        ])
+      }),
+    ),
+    #("severity", json.int(report.severity)),
+    #("occurrence", json.int(report.occurrence)),
+    #("detection", json.int(report.detection)),
+    #("rpn", json.int(report.rpn)),
+    #("rpn_band", json.int(report.rpn_band)),
+    #("fmea_factor", json.int(report.fmea_factor)),
+    #("composite_score", json.int(report.composite_score)),
+    #("gate_decision", json.string(report.gate_decision)),
+    #("sil_rating", json.string(report.sil_rating)),
+    #("latency_us", json.int(report.latency_us)),
+  ])
+  |> json.to_string
+}
+
+pub fn rete_conflict_report_to_json(report: ReteConflictReport) -> String {
+  let winner_json = case report.winner {
+    Some(w) ->
+      json.object([
+        #("id", json.string(w.id)),
+        #("name", json.string(w.name)),
+        #("layer", json.string(w.layer)),
+        #("score", json.float(w.score)),
+        #("layer_rank", json.int(w.layer_rank)),
+        #("salience", json.float(w.salience)),
+        #("specificity", json.int(w.specificity)),
+        #("matched_conditions", json.int(w.matched_conditions)),
+        #("action", json.string(w.action)),
+      ])
+    None -> json.null()
+  }
+
+  json.object([
+    #("id", json.string(report.id)),
+    #("status", json.string(report.status)),
+    #("rules_evaluated", json.int(report.rules_evaluated)),
+    #("winner", winner_json),
+    #("suppressed_count", json.int(report.suppressed_count)),
+    #("suppressed", json.array(report.suppressed, json.string)),
+    #("firing_strategy", json.string(report.firing_strategy)),
+    #("constitutional_layer", json.string(report.constitutional_layer)),
+    #("latency_us", json.int(report.latency_us)),
+  ])
+  |> json.to_string
+}
+
+pub fn ruliad_branch_report_to_json(report: RuliadBranchReport) -> String {
+  json.object([
+    #("id", json.string(report.id)),
+    #("status", json.string(report.status)),
+    #("source_branch", json.string(report.source_branch)),
+    #("target_branch", json.string(report.target_branch)),
+    #("branchial_distance", json.float(report.branchial_distance)),
+    #("branchial_similarity", json.float(report.branchial_similarity)),
+    #("branchial_entropy", json.float(report.branchial_entropy)),
+    #("conflict_probability", json.float(report.conflict_probability)),
+    #("convergence_status", json.string(report.convergence_status)),
+    #(
+      "participating_agents",
+      json.array(report.participating_agents, json.string),
+    ),
+    #(
+      "optimal_collapse_path",
+      json.array(report.optimal_collapse_path, json.string),
+    ),
+    #("latency_us", json.int(report.latency_us)),
+  ])
+  |> json.to_string
+}
+
+pub fn shruti_harmonic_report_to_json(report: ShrutiHarmonicReport) -> String {
+  json.object([
+    #("id", json.string(report.id)),
+    #("status", json.string(report.status)),
+    #("raga", json.string(report.raga)),
+    #("fundamental_hz", json.float(report.fundamental_hz)),
+    #("swara_count", json.int(report.swara_count)),
+    #(
+      "harmonics",
+      json.array(report.harmonics, fn(h) {
+        json.object([
+          #("swara_index", json.int(h.swara_index)),
+          #("shruti_ratio", json.float(h.shruti_ratio)),
+          #("frequency_hz", json.float(h.frequency_hz)),
+          #("amplitude", json.float(h.amplitude)),
+        ])
+      }),
+    ),
+    #("spectral_entropy", json.float(report.spectral_entropy)),
+    #("consonance_index", json.float(report.consonance_index)),
+    #("acoustic_health", json.string(report.acoustic_health)),
+    #("jawari_shimmer_active", json.bool(report.jawari_shimmer_active)),
+    #("latency_us", json.int(report.latency_us)),
+  ])
+  |> json.to_string
+}
+
 // -----------------------------------------------------------------------------
 // Mathematical Validation Functions
 // -----------------------------------------------------------------------------
@@ -908,4 +1230,23 @@ pub fn top_zk_transclusion(result: ZkTransclusionResult) -> Option(String) {
     [first, ..] -> Some(first.transclusion)
     [] -> None
   }
+}
+
+pub fn is_stpa_safe(report: StpaFmeaReport) -> Bool {
+  report.gate_decision == "PERMITTED" && report.severity < 9
+}
+
+pub fn is_rete_l0_winner(report: ReteConflictReport) -> Bool {
+  case report.winner {
+    Some(w) -> w.layer == "L0"
+    None -> False
+  }
+}
+
+pub fn is_ruliad_mergeable(report: RuliadBranchReport) -> Bool {
+  report.conflict_probability <. 0.50
+}
+
+pub fn is_acoustic_healthy(report: ShrutiHarmonicReport) -> Bool {
+  report.acoustic_health == "HARMONIC_RESONANCE_OPTIMAL"
 }

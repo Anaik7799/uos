@@ -143,3 +143,4 @@ formal-proof and sovereign-admission obligations remain **UNRUN**.
 
 **Previous:** [Implementation handoff](http://nas-1.tail55d152.ts.net:4100/docs/plans/20260907-0653-uos-tri-agent-cheaper-mode-implementation-plan.md) · **Next:** [Master MOC](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260905-1801-moc-uos-unified-master.md)  
 **UOS footer:** Cooperative local coordination; implementation-phase instructions; no deployment authority granted.
+

@@ -216,18 +216,20 @@ let dispatch store format argv =
            ~nodes:(nodes ()));
       emit format [ "registered", "true"; "plan_id", program_plan_id ]
   | "--status" ->
-      let summary = or_fail (Store.summary store ~plan_id:program_plan_id) in
+      let plan_id = if Array.length argv > 2 then argv.(2) else program_plan_id in
+      let summary = or_fail (Store.summary store ~plan_id) in
       emit format
-        [ "plan", program_plan_id; "total", int summary.total;
+        [ "plan", plan_id; "total", int summary.total;
           "completed", int summary.completed; "ready", int summary.ready;
           "executing", int summary.executing ]
   | "--plan" -> print_plan ()
   | "--tree" -> print_tree ()
   | "--watch" ->
-      let seconds = if Array.length argv > 2 then Int.of_string argv.(2) else 2 in
-      let summary = or_fail (Store.summary store ~plan_id:program_plan_id) in
+      let plan_id = if Array.length argv > 3 then argv.(3) else if Array.length argv > 2 && not (String.for_all argv.(2) ~f:Char.is_digit) then argv.(2) else program_plan_id in
+      let seconds = if Array.length argv > 2 && String.for_all argv.(2) ~f:Char.is_digit then Int.of_string argv.(2) else 2 in
+      let summary = or_fail (Store.summary store ~plan_id) in
       emit format
-        [ "interval_seconds", int (Int.max 1 seconds);
+        [ "plan", plan_id; "interval_seconds", int (Int.max 1 seconds);
           "completed", int summary.completed; "total", int summary.total;
           "ready", int summary.ready; "executing", int summary.executing ]
   | "--task-create" ->

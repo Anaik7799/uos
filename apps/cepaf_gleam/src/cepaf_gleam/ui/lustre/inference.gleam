@@ -19,7 +19,11 @@
 //// </c3i-module>
 //// =============================================================================
 
+import cepaf_gleam/ai/intelligence_router.{
+  type ModelSpec, default_catalog, tier_to_string,
+}
 import cepaf_gleam/ui/lustre/inference_tier
+import gleam/float
 import gleam/int
 import gleam/list
 import gleam/string
@@ -116,9 +120,9 @@ pub fn view() -> String {
       </div>
     </div>
 
-    <!-- 11-Method Contract Grid -->
+    <!-- 15-Method Contract Grid -->
     <div style=\"background: #121824; border: 1px solid #1e2a3a; border-radius: 6px; padding: 1.25rem; margin-bottom: 1.5rem;\">
-      <h3 style=\"margin: 0 0 1rem 0; font-size: 1.1rem; color: #e0e6ed;\">Modular MAX / Mojo 11-Method Capabilities</h3>
+      <h3 style=\"margin: 0 0 1rem 0; font-size: 1.1rem; color: #e0e6ed;\">Modular MAX / Mojo 15-Method Capabilities</h3>
       <table style=\"width: 100%; border-collapse: collapse; font-size: 0.85rem;\">
         <thead>
           <tr style=\"border-bottom: 1px solid #1e2a3a; text-align: left; color: #8899a6;\">
@@ -144,7 +148,7 @@ pub fn view() -> String {
           <tr style=\"border-bottom: 1px solid #141d2b;\">
             <td style=\"padding: 0.5rem; font-family: monospace; color: #00d4aa;\">modalities</td>
             <td style=\"padding: 0.5rem;\">Multimodal</td>
-            <td style=\"padding: 0.5rem; color: #8899a6;\">Text, Audio, Image, Video, Dense Embedding, AST, ZK, Lyapunov</td>
+            <td style=\"padding: 0.5rem; color: #8899a6;\">Text, Audio, Image, Video, Dense Embedding, AST, ZK, Lyapunov, STPA-FMEA, Rete-UL, Ruliad, Shruti</td>
             <td style=\"padding: 0.5rem; color: #3dd68c;\">ONLINE</td>
           </tr>
           <tr style=\"border-bottom: 1px solid #141d2b;\">
@@ -189,10 +193,34 @@ pub fn view() -> String {
             <td style=\"padding: 0.5rem; color: #8899a6;\">68 ZK ADRs & Master MOC SIMD Cosine Matching + Tailscale FQDN</td>
             <td style=\"padding: 0.5rem; color: #3dd68c;\">ONLINE</td>
           </tr>
-          <tr>
+          <tr style=\"border-bottom: 1px solid #141d2b;\">
             <td style=\"padding: 0.5rem; font-family: monospace; color: #00d4aa;\">predict_lyapunov_trend</td>
             <td style=\"padding: 0.5rem;\">L4 Control</td>
             <td style=\"padding: 0.5rem; color: #8899a6;\">Finite-Time Lyapunov Exponent, T_cascade & SEU Preflight</td>
+            <td style=\"padding: 0.5rem; color: #3dd68c;\">ONLINE</td>
+          </tr>
+          <tr style=\"border-bottom: 1px solid #141d2b;\">
+            <td style=\"padding: 0.5rem; font-family: monospace; color: #00d4aa;\">infer_stpa_fmea_hazard</td>
+            <td style=\"padding: 0.5rem;\">L0 Safety</td>
+            <td style=\"padding: 0.5rem; color: #8899a6;\">SIMD STPA-UCA & FMEA Causal Hazard Scorer, RPN & Psi Interlock</td>
+            <td style=\"padding: 0.5rem; color: #3dd68c;\">ONLINE</td>
+          </tr>
+          <tr style=\"border-bottom: 1px solid #141d2b;\">
+            <td style=\"padding: 0.5rem; font-family: monospace; color: #00d4aa;\">eval_rete_rule_conflict</td>
+            <td style=\"padding: 0.5rem;\">L5 Cognitive</td>
+            <td style=\"padding: 0.5rem; color: #8899a6;\">Rete-UL Discrimination & Conflict Resolver, Specificity & L0 Priority</td>
+            <td style=\"padding: 0.5rem; color: #3dd68c;\">ONLINE</td>
+          </tr>
+          <tr style=\"border-bottom: 1px solid #141d2b;\">
+            <td style=\"padding: 0.5rem; font-family: monospace; color: #00d4aa;\">evaluate_ruliad_branch</td>
+            <td style=\"padding: 0.5rem;\">L6 Multiway</td>
+            <td style=\"padding: 0.5rem; color: #8899a6;\">Ruliad Multiway Branch Evaluator, Branchial Distance & Causal Invariance</td>
+            <td style=\"padding: 0.5rem; color: #3dd68c;\">ONLINE</td>
+          </tr>
+          <tr>
+            <td style=\"padding: 0.5rem; font-family: monospace; color: #00d4aa;\">synthesize_biomorphic_harmonics</td>
+            <td style=\"padding: 0.5rem;\">L1 Acoustic</td>
+            <td style=\"padding: 0.5rem; color: #8899a6;\">Biomorphic Shruti Acoustic Telemetry Inverter, Microtonal Cent Offset & Coherence</td>
             <td style=\"padding: 0.5rem; color: #3dd68c;\">ONLINE</td>
           </tr>
         </tbody>
@@ -230,6 +258,58 @@ pub fn view() -> String {
     }),
     "",
   ) <> "</div>
+    <!-- OpenRouter Cost-Aware Intelligence Cascade (contracts/rules/intelligence-routing-rule.md) -->
+    <div style=\"background: #121824; border: 1px solid #1e2a3a; border-radius: 6px; padding: 1.25rem; margin-bottom: 1.5rem;\">
+      <div style=\"display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;\">
+        <div>
+          <h3 style=\"margin: 0; font-size: 1.1rem; color: #64b5f6;\">OpenRouter Cost-Optimized Intelligence Cascade</h3>
+          <p style=\"margin: 0.25rem 0 0 0; color: #8899a6; font-size: 0.8rem;\">
+            Hierarchical Fallback: LocalRuleOracle (0.00$) &rarr; FreeOpenRouter (0.00$) &rarr; PaidOpenRouter (&le; 0.02$) &rarr; SovereignMax
+          </p>
+        </div>
+        <a href=\"http://nas-1.tail55d152.ts.net:4100/api/v1/intelligence/catalog\" target=\"_blank\" style=\"color: #00d4aa; font-size: 0.8rem; text-decoration: none; font-family: monospace;\">
+          /api/v1/intelligence/catalog
+        </a>
+      </div>
+      <table style=\"width: 100%; border-collapse: collapse; font-size: 0.85rem;\">
+        <thead>
+          <tr style=\"border-bottom: 1px solid #1e2a3a; text-align: left; color: #8899a6;\">
+            <th style=\"padding: 0.5rem;\">Model ID</th>
+            <th style=\"padding: 0.5rem;\">Tier</th>
+            <th style=\"padding: 0.5rem;\">Max Tokens Ceiling</th>
+            <th style=\"padding: 0.5rem;\">Cost / Token (In)</th>
+            <th style=\"padding: 0.5rem;\">Cost / Token (Out)</th>
+            <th style=\"padding: 0.5rem;\">Description</th>
+          </tr>
+        </thead>
+        <tbody>" <> string.join(
+    list.map(default_catalog(), fn(m: ModelSpec) {
+      "<tr style=\"border-bottom: 1px solid #141d2b;\">
+        <td style=\"padding: 0.5rem; font-family: monospace; color: #00d4aa;\">" <> m.id <> "</td>
+        <td style=\"padding: 0.5rem;\"><span style=\"background: #182030; color: #64b5f6; padding: 0.2rem 0.5rem; border-radius: 3px; font-size: 0.75rem;\">" <> tier_to_string(
+        m.tier,
+      ) <> "</span></td>
+        <td style=\"padding: 0.5rem; font-family: monospace; color: #8899a6;\">" <> int.to_string(
+        m.max_tokens_ceiling,
+      ) <> " tokens</td>
+        <td style=\"padding: 0.5rem; font-family: monospace; color: " <> case
+        m.prompt_usd_per_token == 0.0
+      {
+        True -> "#3dd68c"
+        False -> "#ffb74d"
+      } <> ";\">$" <> float.to_string(m.prompt_usd_per_token) <> "</td>
+        <td style=\"padding: 0.5rem; font-family: monospace; color: " <> case
+        m.completion_usd_per_token == 0.0
+      {
+        True -> "#3dd68c"
+        False -> "#ffb74d"
+      } <> ";\">$" <> float.to_string(m.completion_usd_per_token) <> "</td>
+        <td style=\"padding: 0.5rem; color: #8899a6; font-size: 0.8rem;\">" <> m.description <> "</td>
+      </tr>"
+    }),
+    "",
+  ) <> "</tbody>
+      </table>
     </div>
 
     <!-- Persistent System Footer -->

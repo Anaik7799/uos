@@ -1,0 +1,19 @@
+[Unit]
+Description=c3i-zenoh-router-1.service (prakriya (प्रक्रिया))
+Documentation=http://nas-1.tail55d152.ts.net:4100/zk
+PartOf=c3i.target
+After=network.target c3i-zenoh-router-1.service
+
+[Service]
+Type=simple
+Environment=UOS_ROOT=/home/an/NAS-setup/uos
+Environment=UOS_SA_PLAN_DB=/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3
+WorkingDirectory=/home/an/NAS-setup/uos
+ExecStart=/home/an/NAS-setup/uos/bin/c3i-zenoh-router-1-service
+Restart=on-failure
+RestartSec=2s
+LimitNOFILE=65535
+# Zero-Muda: zero Bevy, zero Graphite, host NVMe 25503L801736 interlock
+
+[Install]
+WantedBy=c3i.target
