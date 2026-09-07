@@ -12,19 +12,28 @@ fn section_named(sections: List(features.Section), title: String) {
 }
 
 pub fn sections_count_and_titles_test() {
-  let sheet = features.sheet()
-  list.length(sheet.sections) |> should.equal(12)
+  let sheet = features.sheet([])
+  list.length(sheet.sections) |> should.equal(11)
   let titles = list.map(sheet.sections, fn(s) { s.title })
   titles
   |> should.equal([
     "Widgets", "Keys", "Effects", "Aspects", "F\u{00b4} commands",
     "F\u{00b4} channels", "F\u{00b4} events", "F\u{00b4} parameters",
-    "Ontology fidelity", "Cockpit bindings", "Drivers", "Test modalities",
+    "Ontology fidelity", "Drivers", "Test modalities",
   ])
 }
 
+pub fn bindings_section_present_when_nonempty_test() {
+  let sheet = features.sheet([#("q", "quit"), #("m", "mode")])
+  list.length(sheet.sections) |> should.equal(12)
+  case section_named(sheet.sections, "Cockpit bindings") {
+    Ok(section) -> section.rows |> should.equal([["q", "quit"], ["m", "mode"]])
+    Error(_) -> should.fail()
+  }
+}
+
 pub fn widget_rows_match_catalog_test() {
-  let sheet = features.sheet()
+  let sheet = features.sheet([])
   case section_named(sheet.sections, "Widgets") {
     Ok(section) ->
       list.length(section.rows) |> should.equal(list.length(widget.catalog))
@@ -33,7 +42,7 @@ pub fn widget_rows_match_catalog_test() {
 }
 
 pub fn aspects_rows_test() {
-  let sheet = features.sheet()
+  let sheet = features.sheet([])
   case section_named(sheet.sections, "Aspects") {
     Ok(section) -> list.length(section.rows) |> should.equal(17)
     Error(_) -> should.fail()
@@ -41,7 +50,7 @@ pub fn aspects_rows_test() {
 }
 
 pub fn fprime_command_rows_test() {
-  let sheet = features.sheet()
+  let sheet = features.sheet([])
   let commands = fprime.component().commands
   case section_named(sheet.sections, "F\u{00b4} commands") {
     Ok(section) ->
@@ -51,7 +60,7 @@ pub fn fprime_command_rows_test() {
 }
 
 pub fn markdown_contains_widgets_and_header_test() {
-  let md = features.to_markdown(features.sheet())
+  let md = features.to_markdown(features.sheet([]))
   should.be_true(string.contains(md, "# uos_tui Feature Sheet"))
   list.each(widget.catalog, fn(name) {
     should.be_true(string.contains(md, name))
@@ -59,19 +68,19 @@ pub fn markdown_contains_widgets_and_header_test() {
 }
 
 pub fn json_contains_widgets_test() {
-  let text = json.to_string(features.to_json(features.sheet()))
+  let text = json.to_string(features.to_json(features.sheet([])))
   should.be_true(string.contains(text, "Widgets"))
 }
 
 pub fn total_rows_equals_sum_test() {
-  let sheet = features.sheet()
+  let sheet = features.sheet([])
   let expected =
     list.fold(sheet.sections, 0, fn(acc, s) { acc + list.length(s.rows) })
   features.total_rows(sheet) |> should.equal(expected)
 }
 
 pub fn subset_total_rows_property_test() {
-  let sheet = features.sheet()
+  let sheet = features.sheet([])
   let seeds = prng.seeds(6)
   list.each(seeds, fn(seed) {
     let #(n, _) = prng.int_between(seed, 0, list.length(sheet.sections))

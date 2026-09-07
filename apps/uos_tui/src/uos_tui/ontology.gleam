@@ -245,11 +245,11 @@ pub fn concepts() -> List(Concept) {
     Concept(
       "Command palette",
       "textual.command",
-      "uos_tui/cockpit",
-      "Input#command",
+      "uos_tui/gallery",
+      "view/search/score",
       L5Cognitive,
-      Deferred,
-      "fuzzy palette not implemented; command input only",
+      Homomorphic,
+      "fuzzy subsequence scoring; caller supplies the registry (uos_tui/gallery demos it)",
     ),
     Concept(
       "Themes",

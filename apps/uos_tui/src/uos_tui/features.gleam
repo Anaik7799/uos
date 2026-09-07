@@ -9,7 +9,6 @@ import gleam/list
 import gleam/option.{None}
 import gleam/string
 import uos_tui/aspects
-import uos_tui/cockpit
 import uos_tui/event
 import uos_tui/fprime.{
   ActivityHi, ActivityLo, AsyncCmd, BoolType, CommandSev, Diagnostic, F64, Fatal,
@@ -217,11 +216,12 @@ fn ontology_section() -> Section {
   )
 }
 
-fn cockpit_bindings_section() -> Section {
-  let model = cockpit.init_model("2026-09-07T00:00:00Z", "x")
-  let app = cockpit.app(model)
-  let rows =
-    list.map(app.bindings, fn(b) { [event.key_label(b.key), b.description] })
+/// The "Cockpit bindings" section rendered from key/description pairs supplied by the
+/// caller (e.g. an application's own `App.bindings`), never by importing any particular
+/// application module. Empty `bindings` renders no rows; `sheet` omits the section entirely
+/// in that case.
+fn cockpit_bindings_section(bindings: List(#(String, String))) -> Section {
+  let rows = list.map(bindings, fn(b) { [b.0, b.1] })
   Section("Cockpit bindings", rows, ["Key", "Description"])
 }
 
@@ -270,23 +270,31 @@ fn test_modalities_section() -> Section {
 
 /// Assemble the full feature sheet. Every section's rows are derived from a
 /// live code source (catalog, constant list, or constructed sample) rather
-/// than hand-typed.
-pub fn sheet() -> FeatureSheet {
+/// than hand-typed. `bindings` (key label, description) is supplied by the caller -- the
+/// library itself binds no keys -- and renders an extra "Cockpit bindings" section only
+/// when non-empty; the TUI CLI passes `[]`.
+pub fn sheet(bindings: List(#(String, String))) -> FeatureSheet {
   let component = fprime.component()
-  FeatureSheet("uos_tui/features.sheet", [
-    widgets_section(),
-    keys_section(),
-    effects_section(),
-    aspects_section(),
-    fprime_commands_section(component.commands),
-    fprime_channels_section(component.channels),
-    fprime_events_section(component.events),
-    fprime_parameters_section(component.parameters),
-    ontology_section(),
-    cockpit_bindings_section(),
-    drivers_section(),
-    test_modalities_section(),
-  ])
+  let bindings_sections = case bindings {
+    [] -> []
+    _ -> [cockpit_bindings_section(bindings)]
+  }
+  FeatureSheet(
+    "uos_tui/features.sheet",
+    [
+      widgets_section(),
+      keys_section(),
+      effects_section(),
+      aspects_section(),
+      fprime_commands_section(component.commands),
+      fprime_channels_section(component.channels),
+      fprime_events_section(component.events),
+      fprime_parameters_section(component.parameters),
+      ontology_section(),
+    ]
+      |> list.append(bindings_sections)
+      |> list.append([drivers_section(), test_modalities_section()]),
+  )
 }
 
 fn section_to_markdown(section: Section) -> String {

@@ -1,7 +1,7 @@
 name = "uos_tui"
 version = "0.1.0"
 target = "erlang"
-description = "UOS pure-Gleam terminal UI library (Textual-referenced, F´-bound, 17-aspect audited)"
+description = "UOS pure-Gleam terminal UI library (Textual-referenced, F´-bound, 17-aspect audited). Swarm/hive-mind orchestration lives in apps/uos_swarm; this package is the TUI library only."
 licences = ["Apache-2.0"]
 
 [dependencies]

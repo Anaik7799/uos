@@ -1,86 +1,43 @@
-import gleam/list
-import gleam/option
+import gleam/json
+import gleam/string
 import gleeunit
 import gleeunit/should
-import uos_tui/board
-import uos_tui/coord
-import uos_tui/swarm
+import uos_tui/aspects
+import uos_tui/features
+import uos_tui/fprime
+import uos_tui/gallery
+import uos_tui/geometry.{Size}
+import uos_tui/live
 
 pub fn main() -> Nil {
   gleeunit.main()
 }
 
-/// The same swarm ledger `uos_tui.gleam`'s `policy_and_roster` loads by default for
-/// `board post` / `board post-acl` / `board ingest` authorization.
-const default_swarm_ledger = "swarm/20260907-0440-swarm-ledger.json"
-
-fn ledger() -> swarm.Ledger {
-  let assert Ok(text) = board.file_read(default_swarm_ledger)
-  let assert Ok(l) = swarm.decode(text)
-  l
+// Regression: the `dictionary` CLI command must always produce non-empty F´ ground
+// dictionary JSON carrying a "commands" section.
+pub fn dictionary_command_produces_json_test() {
+  let text = fprime.dictionary_string()
+  should.be_true(string.length(text) > 0)
+  should.be_true(string.contains(text, "\"commands\""))
 }
 
-fn roster(l: swarm.Ledger) -> List(board.Agent) {
-  let supervisor = board.Agent("L0-fable", "L0", "fable")
-  [
-    supervisor,
-    coord.system_agent,
-    ..list.map(l.agents, fn(a) { board.Agent(a.id, a.layer, a.model) })
-  ]
+// Regression: the `features` CLI command renders a non-empty Markdown feature sheet using
+// the TUI CLI's own bindings argument (`[]`, per uos_tui.gleam main/0).
+pub fn features_command_renders_markdown_test() {
+  let md = features.to_markdown(features.sheet([]))
+  should.be_true(string.contains(md, "# uos_tui Feature Sheet"))
 }
 
-fn draft(from: board.Agent, to: String, kind: board.Kind) -> board.Draft {
-  board.Draft(
-    from,
-    to,
-    kind,
-    [],
-    board.no_semantics,
-    board.Causality(option.None, []),
-    option.None,
-    option.None,
-  )
+// Regression: the `features-json` CLI command renders valid JSON.
+pub fn features_json_command_renders_json_test() {
+  let text = json.to_string(features.to_json(features.sheet([])))
+  should.be_true(string.starts_with(text, "{"))
 }
 
-// Regression: the default authorization policy built from the live swarm ledger must never
-// refuse the pipeline's own L0-fable posts (Dispatch/Integrate/Andon/Plan broadcasts) — the
-// same policy `board post` / `board post-acl` / `board ingest` now authorize against before
-// posting (Defect 5: CLI posting previously bypassed the authorization boundary entirely).
-pub fn default_policy_authorizes_l0_fable_pipeline_kinds_test() {
-  let l = ledger()
-  let policy = coord.default_policy(roster(l), l.wip_limit)
-  let supervisor = board.Agent("L0-fable", "L0", "fable")
-  [board.Dispatch, board.Integrate, board.Andon, board.Plan]
-  |> list.each(fn(k) {
-    coord.authorize(policy, draft(supervisor, "broadcast", k))
-    |> should.equal(Ok(Nil))
-  })
-}
-
-// Regression: worker Report and verifier Verdict messages ingested from the workflow journal
-// (`board.drafts_from_journal_labelled`) must authorize against the same ledger-derived
-// policy: L2 workers may Report, L3 verifiers may Verdict, both toward the L0 supervisor.
-pub fn default_policy_authorizes_ingested_worker_and_verifier_kinds_test() {
-  let l = ledger()
-  let policy = coord.default_policy(roster(l), l.wip_limit)
-  let assert Ok(worker) = list.find(l.agents, fn(a) { a.role == "worker" })
-  let assert Ok(verifier) = list.find(l.agents, fn(a) { a.role != "worker" })
-  coord.authorize(
-    policy,
-    draft(
-      board.Agent(worker.id, worker.layer, worker.model),
-      "L0-fable",
-      board.Report,
-    ),
-  )
-  |> should.equal(Ok(Nil))
-  coord.authorize(
-    policy,
-    draft(
-      board.Agent(verifier.id, verifier.layer, verifier.model),
-      "L0-fable",
-      board.Verdict,
-    ),
-  )
-  |> should.equal(Ok(Nil))
+// Regression: the `snapshot` command (and the default live driver) render the gallery app
+// at 120x40 without panicking, and the frame carries the mandatory Tailscale FQDN.
+pub fn snapshot_command_renders_gallery_test() {
+  let model = gallery.init_model("2026-09-07T00:00:00Z", "test-change")
+  let text = live.snapshot_text(gallery.app(model), Size(120, 40))
+  should.be_true(string.contains(text, aspects.tailnet_fqdn))
 }
