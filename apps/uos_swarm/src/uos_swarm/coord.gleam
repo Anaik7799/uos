@@ -701,6 +701,7 @@ pub type SyncReport {
   SyncReport(
     pulled: Int,
     pushed: Int,
+    push_rejected: Int,
     digest_rejected: Int,
     remote_total: Int,
     local_total: Int,
@@ -795,6 +796,28 @@ pub fn count_conflicts(local: List(Message), remote: List(Message)) -> Int {
   })
 }
 
+/// Among local-only messages destined for the shared Zenoh store, keep only those that
+/// would themselves survive the pull-side gates this same board enforces on every other
+/// peer: a self-consistent digest, policy authorization, and (when the board is keyed) a
+/// valid signature. A hand-shaped or tampered local row must never reach the shared store —
+/// pushing it would hand every other peer evidence this board itself would refuse to absorb
+/// on the way back in.
+pub fn filter_pushable(
+  policy: Policy,
+  key: Option(String),
+  push: List(Message),
+) -> #(List(Message), Int) {
+  list.partition(push, fn(m) {
+    board.digest_ok(m)
+    && authorize_message(policy, m) == Ok(Nil)
+    && case key {
+      Some(_) -> board.signature_ok(m, key)
+      None -> True
+    }
+  })
+  |> fn(p) { #(p.0, list.length(p.1)) }
+}
+
 /// Reconcile the local board with the Zenoh storage: pull missing (verified) messages, push local-only ones.
 pub fn reconcile(
   b: Board,
@@ -850,8 +873,12 @@ pub fn reconcile(
   let c = list.fold(pull, c, fn(c, m) { merge_clock(c, m.lamport) })
   // Never hand out a stale epoch: raise `c.epochs` to whatever the board already shows.
   let c = seed_epochs(c, pull)
+  // Never push a local-only row the pull path would itself refuse: the same digest,
+  // policy and (when keyed) signature gates apply symmetrically before anything leaves
+  // this board for the shared store.
+  let #(pushable, push_rejected) = filter_pushable(c.policy, b.key, push)
   let pushed =
-    list.count(push, fn(m) {
+    list.count(pushable, fn(m) {
       board.zenoh_put(base, m.key_expr, board.to_string(m)) == Ok(Nil)
     })
   Ok(#(
@@ -860,6 +887,7 @@ pub fn reconcile(
     SyncReport(
       list.length(pull),
       pushed,
+      push_rejected,
       list.length(rejected),
       list.length(remote),
       list.length(local),

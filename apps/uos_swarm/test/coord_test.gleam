@@ -562,6 +562,48 @@ pub fn count_conflicts_detects_tampered_existing_id_test() {
   coord.count_conflicts(local, [m3]) |> should.equal(0)
 }
 
+// Reconcile's push side must apply the same digest/policy/signature gates the pull side
+// already enforces, so a hand-shaped local row can never reach the shared Zenoh store
+// unverified. `filter_pushable` is the pure function `reconcile` calls before any
+// `zenoh_put`; exercising it directly (as `diff_sets_test` and `count_conflicts_*_test`
+// already do for their own pure pieces) proves the refusal without any network I/O.
+pub fn filter_pushable_refuses_tampered_digest_test() {
+  let m =
+    board.seal(
+      d(a("L0-fable"), "broadcast", board.Progress),
+      "s",
+      1,
+      1,
+      "0123456789abcdef",
+      board.genesis_digest,
+    )
+  // A hand-shaped local row: the digest was tampered after sealing, so recomputing the
+  // canonical encoding no longer matches — the exact defect class that reached the shared
+  // router because the push path used to skip verification entirely.
+  let tampered = board.Message(..m, digest: m.digest <> "-tampered")
+  let #(pushable, push_rejected) =
+    coord.filter_pushable(policy(), None, [tampered])
+  pushable |> should.equal([])
+  push_rejected |> should.equal(1)
+}
+
+pub fn filter_pushable_pushes_valid_local_row_test() {
+  let m =
+    board.seal(
+      d(a("L0-fable"), "broadcast", board.Progress),
+      "s",
+      1,
+      1,
+      "0123456789abcdef",
+      board.genesis_digest,
+    )
+  // A genuine local-only row (digest self-consistent, policy-authorized) survives the
+  // filter unchanged: it is the one message reconcile would go on to `zenoh_put`.
+  let #(pushable, push_rejected) = coord.filter_pushable(policy(), None, [m])
+  pushable |> should.equal([m])
+  push_rejected |> should.equal(0)
+}
+
 pub fn seed_epochs_recovers_after_restart_test() {
   let path =
     "/tmp/claude-1000/-home-an-NAS-setup/656f0d2c-6019-4d9e-b0ce-b9e39b240047/scratchpad/coord_test_seed_epochs_"
