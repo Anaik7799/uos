@@ -278,3 +278,106 @@ fn estimate_time_to_cascade(current_val: Float32, critical_val: Float32, lambda_
         return 0.0
     return log2(ratio) / lambda_exp
 
+# ------------------------------------------------------------------------------
+# 9. High-Utility Model 4: STPA-UCA & FMEA Causal Hazard Scorer
+# ------------------------------------------------------------------------------
+
+fn simd_stpa_fmea_hazard_eval(
+    severity: Float32,
+    occurrence: Float32,
+    detection: Float32,
+    criticality: Float32,
+    impact: Float32
+) -> Float32:
+    """
+    Computes continuous multi-factor risk priority score:
+    Score = Criticality * STPA_factor * FMEA_factor * Impact
+    where FMEA_factor = max(Severity, RPN_band).
+    """
+    var rpn = severity * occurrence * detection
+    var rpn_band: Float32 = 1.0
+    if rpn > 120.0:
+        rpn_band = 5.0
+    elif rpn > 60.0:
+        rpn_band = 4.0
+    elif rpn > 30.0:
+        rpn_band = 3.0
+    elif rpn > 10.0:
+        rpn_band = 2.0
+    else:
+        rpn_band = 1.0
+
+    var fmea_factor = severity
+    if rpn_band > fmea_factor:
+        fmea_factor = rpn_band
+
+    return criticality * fmea_factor * impact
+
+# ------------------------------------------------------------------------------
+# 10. High-Utility Model 5: Rete-UL Discrimination Accelerator
+# ------------------------------------------------------------------------------
+
+fn simd_rete_conflict_resolution(
+    saliences: List[Float32],
+    specificities: List[Float32],
+    layer_ranks: List[Float32]
+) -> Int:
+    """
+    Resolves production rule conflict using lexicographic constitutional ranking:
+    Priority = (LayerRank * 1000.0) + (Salience * 50.0) + (Specificity * 5.0)
+    Returns the index of the highest priority rule to fire.
+    """
+    var n = len(saliences)
+    if n == 0:
+        return -1
+    
+    var best_idx = 0
+    var best_score: Float32 = -1.0e9
+    
+    for i in range(n):
+        var score = (layer_ranks[i] * 1000.0) + (saliences[i] * 50.0) + (specificities[i] * 5.0)
+        if score > best_score:
+            best_score = score
+            best_idx = i
+            
+    return best_idx
+
+# ------------------------------------------------------------------------------
+# 11. High-Utility Model 6: Ruliad Multiway Branch Evaluator
+# ------------------------------------------------------------------------------
+
+fn simd_ruliad_branchial_distance(vec_a: List[Float32], vec_b: List[Float32]) -> Float32:
+    """
+    Computes geodesic distance in multiway branchial space between two branch states:
+    D = sqrt(2.0 * (1.0 - simd_cosine_similarity(vec_a, vec_b)))
+    """
+    var sim = simd_cosine_similarity(vec_a, vec_b)
+    if sim >= 1.0:
+        return 0.0
+    if sim <= -1.0:
+        return 2.0
+    return sqrt(2.0 * (1.0 - sim))
+
+# ------------------------------------------------------------------------------
+# 12. High-Utility Model 7: Biomorphic Shruti Acoustic Telemetry Inverter
+# ------------------------------------------------------------------------------
+
+fn simd_shruti_harmonic_synthesis(
+    base_freq: Float32,
+    shruti_ratios: List[Float32],
+    amplitudes: List[Float32]
+) -> Float32:
+    """
+    Computes weighted spectral power of 22-shruti microtonal chord synthesis.
+    """
+    var total_energy: Float32 = 0.0
+    var n = len(shruti_ratios)
+    if len(amplitudes) < n:
+        n = len(amplitudes)
+        
+    for i in range(n):
+        var freq = base_freq * shruti_ratios[i]
+        total_energy += freq * amplitudes[i] * amplitudes[i]
+        
+    return total_energy
+

@@ -99,7 +99,7 @@ let rank ~now nodes =
   let is_fresh n = fresh ~now ~observed:n.observed ~expires:n.expires in
   let eligible n =
     n.state = "available" && n.readiness = "ready" && n.own_score <> None &&
-    is_fresh n && List.for_all (fun id ->
+    is_fresh n && n.ready_since <= now && List.for_all (fun id ->
       let d = get id in d.state = "completed" && is_fresh d) n.dependencies
   in
   nodes |> List.filter eligible |> List.map urgency |> List.sort (fun a b ->
@@ -153,9 +153,13 @@ let selftest () =
     (ids [n ~state:"completed" "dep";n ~deps:["dep"] "consumer"] = ["consumer"]);
   check "executing not reselected" (ids [n ~state:"executing" "busy"] = []);
   check "expired at exact boundary" (ids [n ~expires:now "stale"] = []);
+  check "future ready time excluded"
+    (ids [{(n "future") with ready_since="2026-09-08T00:00:00Z"}] = []);
   check "unknown blocks clearance" (ids [{(n "unknown") with own_score=None}] = []);
   check "blocked score is ineligible" (ids [n ~readiness:"blocked" ~s:3125 "blocked"] = []);
   check "stable ID tie" (ids [n "b";n "a"] = ["a";"b"]);
+  check "oldest ready breaks tie"
+    (ids [n "a";{(n "z") with ready_since="2026-09-07T14:00:00Z"}] = ["z";"a"]);
   rejects "missing dependency" (fun () -> ignore (rank ~now [n ~deps:["missing"] "a"]));
   rejects "cycle" (fun () -> ignore (rank ~now [n ~deps:["b"] "a";n ~deps:["a"] "b"]));
   rejects "duplicate task" (fun () -> ignore (rank ~now [n "a";n "a"]));
@@ -164,4 +168,3 @@ let selftest () =
     ids [n ~class_:"P1" "repair";n ~class_:"P3" ~s:3125 "feature"] <> ["feature";"repair"]);
   check "severity-free mutant killed" (band (rpn 5 1 1) <> fmea 5 1 1);
   !count
-

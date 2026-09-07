@@ -164,6 +164,101 @@ pub type LyapunovTrendResult {
   )
 }
 
+pub type StpaUca {
+  StpaUca(uca_type: String, name: String, hazard: String)
+}
+
+pub type StpaFmeaReport {
+  StpaFmeaReport(
+    id: String,
+    status: String,
+    action: String,
+    component: String,
+    uca_count: Int,
+    ucas: List(StpaUca),
+    severity: Int,
+    occurrence: Int,
+    detection: Int,
+    rpn: Int,
+    rpn_band: Int,
+    fmea_factor: Int,
+    composite_score: Int,
+    gate_decision: String,
+    sil_rating: String,
+    latency_us: Int,
+  )
+}
+
+pub type ReteRuleScore {
+  ReteRuleScore(
+    id: String,
+    name: String,
+    layer: String,
+    score: Float,
+    layer_rank: Int,
+    salience: Float,
+    specificity: Int,
+    matched_conditions: Int,
+    action: String,
+  )
+}
+
+pub type ReteConflictReport {
+  ReteConflictReport(
+    id: String,
+    status: String,
+    rules_evaluated: Int,
+    winner: Option(ReteRuleScore),
+    suppressed_count: Int,
+    suppressed: List(String),
+    firing_strategy: String,
+    constitutional_layer: String,
+    latency_us: Int,
+  )
+}
+
+pub type RuliadBranchReport {
+  RuliadBranchReport(
+    id: String,
+    status: String,
+    source_branch: String,
+    target_branch: String,
+    branchial_distance: Float,
+    branchial_similarity: Float,
+    branchial_entropy: Float,
+    conflict_probability: Float,
+    convergence_status: String,
+    participating_agents: List(String),
+    optimal_collapse_path: List(String),
+    latency_us: Int,
+  )
+}
+
+pub type ShrutiHarmonic {
+  ShrutiHarmonic(
+    swara_index: Int,
+    shruti_ratio: Float,
+    frequency_hz: Float,
+    amplitude: Float,
+  )
+}
+
+pub type ShrutiHarmonicReport {
+  ShrutiHarmonicReport(
+    id: String,
+    status: String,
+    raga: String,
+    fundamental_hz: Float,
+    swara_count: Int,
+    harmonics: List(ShrutiHarmonic),
+    spectral_entropy: Float,
+    consonance_index: Float,
+    acoustic_health: String,
+    jawari_shimmer_active: Bool,
+    latency_us: Int,
+  )
+}
+
 // -----------------------------------------------------------------------------
 // Request Encoders (Conforming to contracts/inference/max_inference_contract.json)
 // -----------------------------------------------------------------------------
@@ -306,6 +401,96 @@ pub fn build_predict_lyapunov_trend_request(
         #("dt", json.float(dt)),
         #("horizon_s", json.float(horizon_s)),
         #("critical_threshold", json.float(critical_threshold)),
+      ]),
+    ),
+  ])
+  |> json.to_string
+}
+
+pub fn build_infer_stpa_fmea_request(
+  id: String,
+  action: String,
+  component: String,
+  context: String,
+  criticality: Int,
+  dependency_readiness: String,
+  impact: Int,
+) -> String {
+  json.object([
+    #("id", json.string(id)),
+    #("method", json.string("infer_stpa_fmea_hazard")),
+    #(
+      "params",
+      json.object([
+        #("action", json.string(action)),
+        #("component", json.string(component)),
+        #("context", json.string(context)),
+        #("criticality", json.int(criticality)),
+        #("dependency_readiness", json.string(dependency_readiness)),
+        #("impact", json.int(impact)),
+      ]),
+    ),
+  ])
+  |> json.to_string
+}
+
+pub fn build_eval_rete_rule_conflict_request(
+  id: String,
+  active_rules: List(json.Json),
+  facts: List(String),
+) -> String {
+  json.object([
+    #("id", json.string(id)),
+    #("method", json.string("eval_rete_rule_conflict")),
+    #(
+      "params",
+      json.object([
+        #("active_rules", json.array(active_rules, fn(x) { x })),
+        #("facts", json.array(facts, json.string)),
+      ]),
+    ),
+  ])
+  |> json.to_string
+}
+
+pub fn build_evaluate_ruliad_branch_request(
+  id: String,
+  source_branch: String,
+  target_branch: String,
+  candidate_changes: List(String),
+  agents: List(String),
+) -> String {
+  json.object([
+    #("id", json.string(id)),
+    #("method", json.string("evaluate_ruliad_branch")),
+    #(
+      "params",
+      json.object([
+        #("source_branch", json.string(source_branch)),
+        #("target_branch", json.string(target_branch)),
+        #("candidate_changes", json.array(candidate_changes, json.string)),
+        #("agents", json.array(agents, json.string)),
+      ]),
+    ),
+  ])
+  |> json.to_string
+}
+
+pub fn build_synthesize_shruti_harmonics_request(
+  id: String,
+  telemetry_vector: List(Float),
+  raga: String,
+  fundamental_hz: Float,
+) -> String {
+  json.object([
+    #("id", json.string(id)),
+    #("method", json.string("synthesize_biomorphic_harmonics")),
+    #(
+      "params",
+      json.object([
+        #("telemetry_vector", json.array(telemetry_vector, json.float)),
+        #("raga", json.string(raga)),
+        #("fundamental_hz", json.float(fundamental_hz)),
       ]),
     ),
   ])

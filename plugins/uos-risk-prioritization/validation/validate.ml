@@ -132,6 +132,13 @@ let check_record schema j =
     else Some (List.fold_left max 1 (List.map Option.get modes)) in
   require (nullable_int (field "value" (field "fmea" factors)) = aggregate)
     "FMEA factor must be maximum mode band";
+  let fmea_bound fallback =
+    arr (field "fmea_modes" j) |> List.fold_left (fun acc mode ->
+      let value key = Option.value (nullable_int (field key mode)) ~default:fallback in
+      max acc (fmea (value "s") (value "o") (value "det"))) 1 in
+  let ff = field "fmea" factors in
+  require (int (field "low" ff) = fmea_bound 1 && int (field "high" ff) = fmea_bound 5)
+    "FMEA interval must retain known severity and unknown occurrence/detection bounds";
   let stpa=field "stpa_analysis" j in
   let uc=arr (field "ucas" stpa) in
   let types=List.map (text "type") uc |> List.sort_uniq String.compare in
@@ -190,6 +197,15 @@ let selftest () =
   reject "missing UCA type" (change "stpa_analysis"
     (change "ucas" (`List (List.tl (arr (field "ucas" stpa)))) stpa) ex);
   reject "duplicate JSON field" (`Assoc (("score",`Int 960)::obj ex));
+  let unknown_impact=change "value" `Null (change "low" (`Int 1) (change "high" (`Int 5) impact)) in
+  let unknown=change "factors" (change "impact" unknown_impact f) ex
+    |> change "score" `Null |> change "score_interval" (`List [`Int 240;`Int 1200]) in
+  reject "unknown cannot be ready" unknown;
+  ignore (check_record s (change "readiness" (`String "needs_evidence") unknown));
+  incr count;
+  reject "FMEA severity interval cannot be understated"
+    (change "factors" (change "fmea" (change "low" (`Int 1) (field "fmea" f)) f)
+      (change "score_interval" (`List [`Int 240;`Int 960]) ex));
   print_json (`Assoc ["status",`String "PASS";"checks",`Int !count;
     "authority",`String "REPORT_ONLY";"behavioral_agent_tests",`String "UNRUN"])
 let check_package () =
@@ -269,4 +285,3 @@ let () =
   with
   | Invalid message -> prerr_endline ("INVALID: "^message);exit 1
   | exn -> prerr_endline ("ERROR: "^Printexc.to_string exn);exit 1
-
