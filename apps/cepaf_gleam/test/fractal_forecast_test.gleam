@@ -21,7 +21,12 @@ import cepaf_gleam/ha/fractal_forecast.{
   predict_l9_verification, run_predictive_ooda_evaluation, to_nato_band,
   verify_agentic_preflight,
 }
+import cepaf_gleam/ha/predictive_zenoh_stream
+import cepaf_gleam/mcp/server as mcp_server
 import cepaf_gleam/planning/ooda.{observe_from_health, run_predictive_cycle}
+import cepaf_gleam/ui/lustre/forecast_cockpit
+import cepaf_gleam/ui/wisp/router as wisp_router
+import gleam/option.{Some}
 
 pub fn nato_phia_classification_test() {
   classify_probability(0.02) |> should.equal("Remote chance (0-5%)")
@@ -246,3 +251,84 @@ pub fn planning_ooda_predictive_cycle_test() {
   cycle.forecast.layer |> should.equal(LayerL2Component)
   { cycle.decision.score >. 0.0 } |> should.equal(True)
 }
+
+pub fn mcp_forecast_predict_tool_test() {
+  let req =
+    "{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"tools/call\",\"params\":{\"name\":\"forecast_predict\",\"arguments\":{\"layer\":\"all\",\"horizon_seconds\":60}}}"
+  let resp = mcp_server.handle_request_raw(req)
+  case resp {
+    Some(s) -> {
+      string.contains(s, "UOS-FRACTAL-FORECAST") |> should.equal(True)
+      string.contains(s, "L0_Constitutional") |> should.equal(True)
+    }
+    _ -> panic as "Expected MCP forecast_predict tool response"
+  }
+}
+
+pub fn mcp_preflight_check_tool_test() {
+  let req =
+    "{\"jsonrpc\":\"2.0\",\"id\":2,\"method\":\"tools/call\",\"params\":{\"name\":\"preflight_check\",\"arguments\":{\"actor\":\"AGY\",\"action\":\"MigrateTable\",\"benefit\":100.0,\"cost\":10.0}}}"
+  let resp = mcp_server.handle_request_raw(req)
+  case resp {
+    Some(s) -> {
+      string.contains(s, "approved") |> should.equal(True)
+      string.contains(s, "CERT-PRED-") |> should.equal(True)
+    }
+    _ -> panic as "Expected MCP preflight_check tool response"
+  }
+}
+
+pub fn wisp_forecast_router_endpoints_test() {
+  let layers_resp = wisp_router.route("/api/v1/forecast/layers")
+  string.contains(layers_resp, "UOS-FRACTAL-FORECAST") |> should.equal(True)
+  string.contains(layers_resp, "L0_Constitutional") |> should.equal(True)
+  string.contains(layers_resp, "L9_Verification") |> should.equal(True)
+
+  let health_resp = wisp_router.route("/api/v1/forecast/health")
+  string.contains(health_resp, "nominal") |> should.equal(True)
+  string.contains(health_resp, "10/10 layers") |> should.equal(True)
+}
+
+pub fn forecast_cockpit_html_page_test() {
+  let html = forecast_cockpit.view()
+  string.contains(html, "Unified Fractal Forecasting &amp; Predictive POODAVR Cockpit") |> should.equal(True)
+  string.contains(html, "POODAVR ACTIVE") |> should.equal(True)
+  string.contains(html, "KALMAN FILTER 1D") |> should.equal(True)
+  string.contains(html, "LYAPUNOV STABILITY") |> should.equal(True)
+  string.contains(html, "SC-CHECKLIST-001") |> should.equal(True)
+}
+
+pub fn predictive_zenoh_stream_test() {
+  // Topic mapping to fractal layers
+  predictive_zenoh_stream.map_topic_to_layer("indrajaal/l0/const/quorum")
+  |> should.equal(Some(LayerL0Constitutional))
+
+  predictive_zenoh_stream.map_topic_to_layer("indrajaal/l1/atomic/nif")
+  |> should.equal(Some(LayerL1Atomic))
+
+  predictive_zenoh_stream.map_topic_to_layer("indrajaal/l2/health/pod")
+  |> should.equal(Some(LayerL2Component))
+
+  predictive_zenoh_stream.map_topic_to_layer("indrajaal/l4/system/mem")
+  |> should.equal(Some(LayerL4System))
+
+  // State ingestion
+  let state = predictive_zenoh_stream.initial_state()
+  let msg =
+    predictive_zenoh_stream.IngestTelemetry(
+      "indrajaal/l2/health/pod",
+      "0.85",
+    )
+  let next_state = predictive_zenoh_stream.update_state(state, msg)
+
+  next_state.total_messages |> should.equal(1)
+  let f =
+    predictive_zenoh_stream.compute_forecast_for_layer(
+      next_state,
+      LayerL2Component,
+      60,
+    )
+  f.layer |> should.equal(LayerL2Component)
+  { f.confidence >. 0.0 } |> should.equal(True)
+}
+

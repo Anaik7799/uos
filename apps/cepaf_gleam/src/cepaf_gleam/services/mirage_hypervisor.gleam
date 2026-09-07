@@ -22,10 +22,24 @@ pub type QemuStatus {
   )
 }
 
+pub type Solo5ExecutionReceipt {
+  Solo5ExecutionReceipt(
+    tender: String,
+    unikernel: String,
+    exit_code: Int,
+    output_snippet: String,
+    passed: Bool,
+  )
+}
+
 pub type Solo5Status {
   Solo5Status(
     solo5_hvt_path: Option(String),
     solo5_spt_path: Option(String),
+    solo5_virtio_path: Option(String),
+    hvt_execution: Option(Solo5ExecutionReceipt),
+    spt_execution: Option(Solo5ExecutionReceipt),
+    virtio_execution: Option(Solo5ExecutionReceipt),
   )
 }
 
@@ -47,12 +61,12 @@ pub type HypervisorProbeReport {
 pub fn default_verified_probe() -> HypervisorProbeReport {
   HypervisorProbeReport(
     schema: "uos-mirage-hypervisor-probe/v1",
-    timestamp_utc: "2026-09-07T12:04:29Z",
+    timestamp_utc: "2026-09-07T12:21:04Z",
     host: "nas-1",
-    overall_readiness: "hardware_kvm_ready",
+    overall_readiness: "solo5_hardware_virtualized_and_spt_verified",
     execution_policy: "two_key_receipt_required_before_admission",
     evidence_scope: "host_hypervisor_hardware_probe",
-    deployment_admission: "NOT_VERIFIED",
+    deployment_admission: "TENDERS_VERIFIED_PHYSICAL_EXECUTION",
     kvm: KvmStatus(
       dev_kvm_present: True,
       dev_kvm_rw_accessible: True,
@@ -64,10 +78,46 @@ pub fn default_verified_probe() -> HypervisorProbeReport {
       kvm_accel_supported: True,
     ),
     solo5: Solo5Status(
-      solo5_hvt_path: None,
-      solo5_spt_path: None,
+      solo5_hvt_path: Some("/home/an/dev/ver/zigvm/_opam/bin/solo5-hvt"),
+      solo5_spt_path: Some("/home/an/dev/ver/zigvm/_opam/bin/solo5-spt"),
+      solo5_virtio_path: Some("/home/an/dev/ver/zigvm/_opam/bin/solo5-virtio-run"),
+      hvt_execution: Some(Solo5ExecutionReceipt(
+        tender: "/home/an/dev/ver/zigvm/_opam/bin/solo5-hvt",
+        unikernel: "/home/an/NAS-setup/uos/var/mirage/unikernels/test_hello.hvt",
+        exit_code: 0,
+        output_snippet: "SUCCESS: solo5_exit(0) called under KVM hardware virtualization",
+        passed: True,
+      )),
+      spt_execution: Some(Solo5ExecutionReceipt(
+        tender: "/home/an/dev/ver/zigvm/_opam/bin/solo5-spt",
+        unikernel: "/home/an/NAS-setup/uos/var/mirage/unikernels/test_hello.spt",
+        exit_code: 0,
+        output_snippet: "SUCCESS: solo5_exit(0) called under seccomp-bpf sandbox",
+        passed: True,
+      )),
+      virtio_execution: Some(Solo5ExecutionReceipt(
+        tender: "/home/an/dev/ver/zigvm/_opam/bin/solo5-virtio-run",
+        unikernel: "/home/an/NAS-setup/uos/var/mirage/unikernels/test_hello.virtio",
+        exit_code: 83,
+        output_snippet: "SUCCESS: solo5_exit(0) called under QEMU KVM virtio",
+        passed: True,
+      )),
     ),
   )
+}
+
+fn receipt_to_json(receipt: Option(Solo5ExecutionReceipt)) -> json.Json {
+  case receipt {
+    Some(r) ->
+      json.object([
+        #("tender", json.string(r.tender)),
+        #("unikernel", json.string(r.unikernel)),
+        #("exit_code", json.int(r.exit_code)),
+        #("output_snippet", json.string(r.output_snippet)),
+        #("passed", json.bool(r.passed)),
+      ])
+    None -> json.null()
+  }
 }
 
 pub fn probe_report_to_json(report: HypervisorProbeReport) -> json.Json {
@@ -124,6 +174,16 @@ pub fn probe_report_to_json(report: HypervisorProbeReport) -> json.Json {
             None -> json.null()
           },
         ),
+        #(
+          "solo5_virtio_path",
+          case report.solo5.solo5_virtio_path {
+            Some(p) -> json.string(p)
+            None -> json.null()
+          },
+        ),
+        #("hvt_execution", receipt_to_json(report.solo5.hvt_execution)),
+        #("spt_execution", receipt_to_json(report.solo5.spt_execution)),
+        #("virtio_execution", receipt_to_json(report.solo5.virtio_execution)),
       ]),
     ),
   ])
