@@ -38,6 +38,12 @@ S16 reuses an existing agent slot for read-only H01/H02 preparation after the ru
 
 S18 completed the [semantic browser-controller review](http://nas-1.tail55d152.ts.net:4100/files/governance/sources/20260906-1958-browser-semantic-preparation.json). Twelve findings distinguish useful fixture assertions from broad-click safety assumptions, non-discriminating accordion state, separate HTTP requests, zero exit despite false recorded checks, stale fixture paths and unclosed page/component/cycle denominators. No browser was launched by this read-only preparation, and no four-cycle or whole-site credit was assigned.
 
+Q01 completed after root's exact integrated acceptance run at `2424be30a94a38d13c7b19e559e96d436bf4dd72`, observed at 2026-09-07T04:57:04Z. Actual `gleam build`, `gleam check`, and all 11 affected compiled test functions exited zero; neither targeted warning appeared and the reviewed two-file diff preserved every assertion. The [Q01 receipt](http://nas-1.tail55d152.ts.net:4100/files/governance/sources/20260907-0531-q01-integrated-acceptance-receipt.json) embeds the raw run, source digests, closed-schema validation and all 17 aspects. Sa-plan completed Q01 and S21 only after this review. A worker's broader suite reported 9,988 passing and 202 failing tests; Q01 does not supersede those failures.
+
+The current wave also exposed substantive E04 and N01 defects. E04 initially counted production executables and comment-like declarations as tests and allowed changed inventory bytes between digest verification and parsing; its first repair is under independent review, with per-record close-reading frontiers retained. N01's initial curl lookup trusted PATH, unavailable CLI results exited zero, and cleanup/JSON identity handling needed stronger bounds. The repaired implementation uses an absolute curl path, a fixed Tailnet destination, bounded worker cleanup, duplicate-key rejection and explicit nonpassing exit/state. S23 and S24 record separate reviews; N01 remains incomplete until actual UI/API integration and endpoint provenance are verified.
+
+An enforced approval wait for the Tailnet command spanned several hours; no execution or lease freshness is inferred during that interval. Root reacquired expired ownership afterward. Chrony at 2026-09-07T04:34:53Z reported Normal, system 0.000240170 seconds fast, reference 04:33:02Z. A worker Q01 receipt claimed 05:22:00Z while root observed 04:57:01Z; that worker timestamp is unvalidated and is not freshness authority. The default runtime actually observed is OTP27; historical OTP29 claims remain unverified for H03 and release work.
+
 ## 4. Root Cause Analysis
 
 At integrated candidate `bc63b84725cd37a38d4f3e25742bb71f80c73e53`, E02 passed independent contract (20 assertions), process (9 real cases), runner (72 assertions), snapshot (14 cases), and closed-schema checks. A separate SIGTERM probe first rejected predecessor `5d17c9c0d93632339377f87ccc40b938f21e768a` because OCaml's portable negative signal value produced exit 117. The repaired Linux mapping now observes exit 143 and complete scoped cleanup. These heterogeneous counts are kept separate. The [reviewed E02 receipt](http://nas-1.tail55d152.ts.net:4100/files/governance/sources/20260906-2025-e02-integrated-acceptance-receipt.json) includes exact input/source digests, raw CLI receipts, limits, failures and all 17 aspects. Native Store completed E02 and S11-S13 after that review. S16 completed preparation only; its malformed skill YAML, missing reference, inventory drift and legacy policy conflicts remain H01/H02 obligations.
@@ -68,10 +74,12 @@ Later rulings record stronger fourth-round implementers, withdrawal of an incorr
 | Integrated E01 | 14 cases and exact manifest fixture pass at 88d07b35; normal-exit descendants covered | E01 VERIFIED_SCOPED and completed in sa-plan |
 | Integrated tracker | 44 scratch assertions pass at 88d07b35, including descriptor races/FIFO/lease ownership | Manual support feature VERIFIED_SCOPED; no automatic-dispatch admission |
 | Integrated E02 | 20 contract assertions, 9 process cases, 72 runner assertions, 14 snapshot cases; SIGTERM exit 143; three closed-schema receipts at bc63b847 | E02 VERIFIED_SCOPED and completed in sa-plan; negative assertion success grants no adapter implementation credit |
+| Integrated Q01 | Build/check and 11 affected functions pass at 2424be30; zero targeted warnings, zero assertions removed | Q01 VERIFIED_SCOPED and completed; no full-suite credit |
+| Acceptance receipt v3 | 28 contract checks, 9 process cases and 72 runner checks pass; closed typed nonpassing states | Shared observation semantics; E03/N01 still require their own acceptance |
 | Source inventory preparation | 36 part digests/counts verified; 161 OCaml records remain UNRUN | Metadata preparation only |
 | Live health | HTTP response reports version 1.0.0 and zenoh_connected=false; no candidate revision field | Reachability only; build identity UNKNOWN |
 | Live verification API | Reports 18 checks and 20 EV cycles without invocation-bound receipts | No admission |
-| Host clock | Chrony reference 2026-09-06 18:59:19 UTC, Normal, system 0.000386633 seconds slow | Scoped synchronized clock observation |
+| Host clock | Chrony observed 2026-09-07 04:34:53 UTC, reference 04:33:02, Normal, system 0.000240170 seconds fast | Scoped synchronized clock observation; future worker timestamp not credited |
 | Concurrent main | 6eadde49 introduced 16 files and three source modifications while branches remained isolated | Incoming review required |
 | Source preservation | Feature changes occur in isolated UOS workspaces; no source ingestion or live DB copying | Scoped operational discipline |
 
@@ -105,6 +113,8 @@ Later rulings record stronger fourth-round implementers, withdrawal of an incorr
 
 This integration adds the execution overlay and journal, integrates the two audit artifacts, corrects the audit's malformed source hash, and integrates E01's snapshot/tool tests and the bounded manual tracker/tests. The [E01 acceptance receipt](http://nas-1.tail55d152.ts.net:4100/files/governance/sources/20260906-1929-e01-integrated-acceptance-receipt.json) and [tracker acceptance receipt](http://nas-1.tail55d152.ts.net:4100/files/governance/sources/20260906-1929-manual-tracker-acceptance-receipt.json) bind their source hashes and all 17 scoped aspect records to the tested candidate. Incoming main files remain in ancestry; original external OCaml sources, fixtures and build files remain read-only.
 
+Q01 additionally changes the two named knowledge test files and adds the bounded compiler diagnostics driver and its failure controls. The shared acceptance contract/schema/runner now support typed nonpassing domain states and the requested 20-minute task ceiling. The Q01 receipt lists the exact reviewed source paths and hashes; no original external OCaml test or fixture was changed.
+
 ## 9. Architectural Observations
 
 ```text
@@ -128,7 +138,7 @@ The two diagrams have identical nodes and edges. Each feature's cycle records ob
 
 ## 10. Remaining Gaps
 
-E01, E02 and the manual tracker passed their scoped gates. E03, E04, Q01 and N01 are the next dependency-ready implementation wave. Historical incoming E02/E03 receipts remain insufficient and are superseded only by specifically reviewed new evidence. Production Resource_envelope sensing is unavailable. P01 must reconcile reserved intents with supervised execution history. All other tasks retain their original acceptance gates and linked dependencies.
+E01, E02, Q01 and the manual tracker passed their scoped gates. E03, E04 and N01 are actively being implemented and reviewed. Historical incoming E02/E03 receipts remain insufficient and are superseded only by specifically reviewed new evidence. Production Resource_envelope sensing is unavailable. P01 must reconcile reserved intents with supervised execution history. All other tasks retain their original acceptance gates and linked dependencies.
 
 E01 review round 1 identified output capture, revision stability, source binding and HTTP/build identity gaps. Scoped re-review found a missing nested JSON-field crash, inaccurate cleanup/metadata fields and a source-side-effect regression; the implementer is fixing these before the acceptance gate. Tracker round 2 addresses evidence-path traversal/symlinks and bounded hashing. The manual tracker must explicitly refuse external-store dependencies until P03 supplies the admitted federation adapter.
 
@@ -144,4 +154,4 @@ The controller cannot use advisory source claims or model outputs to authorize i
 
 ## 13. Conclusion
 
-Execution is active. PLAN00, E01 and E02 are complete, leaving 68 master tasks unfinished. The linked legacy programme remains open. Jujutsu preserves incoming history and reviewed repairs, while immutable programme intent and truthful runtime history remain distinct. No full-system, browser, actor ecology, DMC/TCM or final admission claim follows from this foundation work.
+Execution is active. PLAN00, E01, E02 and Q01 are complete, leaving 67 master tasks unfinished. The linked legacy programme remains open. Jujutsu preserves incoming history and reviewed repairs, while immutable programme intent and truthful runtime history remain distinct. No full-system, browser, actor ecology, DMC/TCM or final admission claim follows from this foundation work.

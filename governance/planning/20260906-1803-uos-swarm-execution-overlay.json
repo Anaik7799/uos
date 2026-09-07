@@ -25,64 +25,267 @@
     "policy": "Bounded fresh briefs, concise receipts, escalate on material review failures; no fabricated token-price or speed claims"
   },
   "support_leaves": [
-    {"id":"S00","worker":"codex-root","scope":"coordination, runtime observation, integration, evidence and rulings"},
-    {"id":"S01","worker":"codex-tracker","scope":"bounded manual task/job/workflow ownership helper"},
-    {"id":"S02","worker":"codex-audit","scope":"71-task consistency and shared-file audit; canonical 17-aspect mapping"},
-    {"id":"S03","worker":"codex-e01","scope":"E01 snapshot implementation, controls and review fixes"},
-    {"id":"S04","worker":"codex-incoming-review","scope":"independent review of concurrent main E01-E03 changes"},
-    {"id":"S05","worker":"codex-e01-review","scope":"independent E01 acceptance and adversarial process review"},
-    {"id":"S06","worker":"codex-root-research","scope":"primary testing references and source-to-UOS preparation"},
-    {"id":"S07","worker":"codex-e02-prep","scope":"read-only E02 contract and adversarial test preparation"},
-    {"id":"S08","worker":"codex-e01-r4","scope":"fresh stronger E01 fourth-round process-group cleanup repair"},
-    {"id":"S09","worker":"codex-tracker-r4","scope":"fresh stronger tracker fourth-round descriptor-bound JSON repair"},
-    {"id":"S10","worker":"codex-census-prep","scope":"checked-in corpus part hashes/counts and remaining review frontier; coordinator executed after capacity refusal"},
-    {"id":"S11","worker":"codex-e02","scope":"E02 strict acceptance harness implementation and integration"},
-    {"id":"S12","worker":"codex-e02-process","scope":"E02 nested bounded process-supervisor implementation and controls"},
-    {"id":"S13","worker":"codex-e02-contract","scope":"E02 contracts/schema; E02 owner executes after additional thread refusal"},
-    {"id":"S14","worker":"codex-root-e03","scope":"read-only E03 actual CLI, API and checklist call-path refinement"},
-    {"id":"S15","worker":"codex-root-peer","scope":"read-only VM-1 HTTP endpoint, listener and service owner preparation"},
-    {"id":"S16","worker":"codex-skills-prep","scope":"read-only installed skill structure and AGY/Codex repair evidence preparation; reused existing agent slot after lower-cost new thread refusal"},
-    {"id":"S17","worker":"codex-root-zenoh","scope":"read-only native Zenoh contract, source and upstream release compatibility preparation"},
-    {"id":"S18","worker":"codex-root-browser-prep","scope":"read-only semantic browser-controller defects and V01/V02 closure preparation"},
-    {"id":"S19","worker":"codex-e03","scope":"E03 shared production evidence evaluation and CLI/API/UI truthfulness"},
-    {"id":"S20","worker":"codex-e04","scope":"E04 source/document/test census and explicit close-reading frontier"},
-    {"id":"S21","worker":"codex-q01","scope":"Q01 two targeted compiler warning repairs with assertions preserved"},
-    {"id":"S22","worker":"codex-root-n01","scope":"N01 peer endpoint provenance, identity, navigation and unavailable-state reporting"}
+    {
+      "id": "S00",
+      "worker": "codex-root",
+      "scope": "coordination, runtime observation, integration, evidence and rulings"
+    },
+    {
+      "id": "S01",
+      "worker": "codex-tracker",
+      "scope": "bounded manual task/job/workflow ownership helper"
+    },
+    {
+      "id": "S02",
+      "worker": "codex-audit",
+      "scope": "71-task consistency and shared-file audit; canonical 17-aspect mapping"
+    },
+    {
+      "id": "S03",
+      "worker": "codex-e01",
+      "scope": "E01 snapshot implementation, controls and review fixes"
+    },
+    {
+      "id": "S04",
+      "worker": "codex-incoming-review",
+      "scope": "independent review of concurrent main E01-E03 changes"
+    },
+    {
+      "id": "S05",
+      "worker": "codex-e01-review",
+      "scope": "independent E01 acceptance and adversarial process review"
+    },
+    {
+      "id": "S06",
+      "worker": "codex-root-research",
+      "scope": "primary testing references and source-to-UOS preparation"
+    },
+    {
+      "id": "S07",
+      "worker": "codex-e02-prep",
+      "scope": "read-only E02 contract and adversarial test preparation"
+    },
+    {
+      "id": "S08",
+      "worker": "codex-e01-r4",
+      "scope": "fresh stronger E01 fourth-round process-group cleanup repair"
+    },
+    {
+      "id": "S09",
+      "worker": "codex-tracker-r4",
+      "scope": "fresh stronger tracker fourth-round descriptor-bound JSON repair"
+    },
+    {
+      "id": "S10",
+      "worker": "codex-census-prep",
+      "scope": "checked-in corpus part hashes/counts and remaining review frontier; coordinator executed after capacity refusal"
+    },
+    {
+      "id": "S11",
+      "worker": "codex-e02",
+      "scope": "E02 strict acceptance harness implementation and integration"
+    },
+    {
+      "id": "S12",
+      "worker": "codex-e02-process",
+      "scope": "E02 nested bounded process-supervisor implementation and controls"
+    },
+    {
+      "id": "S13",
+      "worker": "codex-e02-contract",
+      "scope": "E02 contracts/schema; E02 owner executes after additional thread refusal"
+    },
+    {
+      "id": "S14",
+      "worker": "codex-root-e03",
+      "scope": "read-only E03 actual CLI, API and checklist call-path refinement"
+    },
+    {
+      "id": "S15",
+      "worker": "codex-root-peer",
+      "scope": "read-only VM-1 HTTP endpoint, listener and service owner preparation"
+    },
+    {
+      "id": "S16",
+      "worker": "codex-skills-prep",
+      "scope": "read-only installed skill structure and AGY/Codex repair evidence preparation; reused existing agent slot after lower-cost new thread refusal"
+    },
+    {
+      "id": "S17",
+      "worker": "codex-root-zenoh",
+      "scope": "read-only native Zenoh contract, source and upstream release compatibility preparation"
+    },
+    {
+      "id": "S18",
+      "worker": "codex-root-browser-prep",
+      "scope": "read-only semantic browser-controller defects and V01/V02 closure preparation"
+    },
+    {
+      "id": "S19",
+      "worker": "codex-e03",
+      "scope": "E03 shared production evidence evaluation and CLI/API/UI truthfulness"
+    },
+    {
+      "id": "S20",
+      "worker": "codex-e04",
+      "scope": "E04 source/document/test census and explicit close-reading frontier"
+    },
+    {
+      "id": "S21",
+      "worker": "codex-q01",
+      "scope": "Q01 two targeted compiler warning repairs with assertions preserved"
+    },
+    {
+      "id": "S22",
+      "worker": "codex-root-n01",
+      "scope": "N01 peer endpoint provenance, identity, navigation and unavailable-state reporting"
+    },
+    {
+      "id": "S23",
+      "worker": "codex-n01-review",
+      "scope": "Independent initial N01 PATH, cleanup, identity and CLI review"
+    },
+    {
+      "id": "S24",
+      "worker": "codex-n01-r2",
+      "scope": "Independent review of repaired N01 runtime and nonpassing presentation"
+    }
   ],
   "serialization_constraints": [
-    {"tasks":["M05","A02"],"path":"apps/cepaf_gleam/src/cepaf_gleam/fpp/dmc_tcm.gleam","rule":"M05 integration precedes A02 edits of this path"},
-    {"tasks":["A02","A04"],"path":"apps/cepaf_gleam/src/cepaf_gleam/fpp/domain.gleam","rule":"A04 integrates before A02; rebase and review the shared interface"},
-    {"tasks":["K02","K03"],"path":"apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_vertical_slice_engine.gleam","rule":"K03 integrates before K02; rebase and run production oracle regression"}
+    {
+      "tasks": [ "M05", "A02" ],
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/dmc_tcm.gleam",
+      "rule": "M05 integration precedes A02 edits of this path"
+    },
+    {
+      "tasks": [ "A02", "A04" ],
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/domain.gleam",
+      "rule": "A04 integrates before A02; rebase and review the shared interface"
+    },
+    {
+      "tasks": [ "K02", "K03" ],
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_vertical_slice_engine.gleam",
+      "rule": "K03 integrates before K02; rebase and run production oracle regression"
+    }
   ],
   "interface_refinements": {
-    "tasks":["PLAN00","P01","P02","P03","P04","K01","K02","K03","Q01","Q02","N01"],
-    "operation_source":"Each immutable task acceptance_case.when[].op",
-    "input_source":"Each immutable task acceptance_case.given; adapters never receive expect",
-    "output_source":"Each immutable task acceptance_case.expect interpreted independently by E02 assertions",
-    "rule":"Add explicit typed adapter schemas as execution artifacts when implementing the task; PLAN00 already completed registration only"
+    "tasks": [
+      "PLAN00", "P01", "P02", "P03", "P04", "K01", "K02", "K03", "Q01",
+      "Q02", "N01"
+    ],
+    "operation_source": "Each immutable task acceptance_case.when[].op",
+    "input_source": "Each immutable task acceptance_case.given; adapters never receive expect",
+    "output_source": "Each immutable task acceptance_case.expect interpreted independently by E02 assertions",
+    "rule": "Add explicit typed adapter schemas as execution artifacts when implementing the task; PLAN00 already completed registration only"
   },
   "cycle_17": {
-    "source":"apps/cepaf_gleam/src/cepaf_gleam/verification/omni_fractal_matrix_engine.gleam:375",
-    "applies_to":"Every implementation feature and dynamically expanded feature leaf in the master plan",
-    "required_aspect_ids":[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17],
-    "per_aspect_record":["aspect_id","observe","orient","decision","action","verification","source_locators","candidate","scope","remaining_obligations"],
-    "states":["UNRUN","UNKNOWN","STALE","CONTRADICTED","VERIFIED_SCOPED","NOT_APPLICABLE_WITH_REASON"],
-    "rule":"Record all 17 aspects for every feature. A justified unaffected scope is not a global pass; unsupported or unexecuted obligations retain their own follow-up task and no admission credit. Source hardcoded True fields never constitute process evidence.",
-    "browser_rule":"At least four distinct observe/compare/correct/reverify cycles per page and component from the finite W01 census. Record AST/DOM/accessibility, links, screenshots, relevant video, network/console and timing."
+    "source": "apps/cepaf_gleam/src/cepaf_gleam/verification/omni_fractal_matrix_engine.gleam:375",
+    "applies_to": "Every implementation feature and dynamically expanded feature leaf in the master plan",
+    "required_aspect_ids": [
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17
+    ],
+    "per_aspect_record": [
+      "aspect_id", "observe", "orient", "decision", "action", "verification",
+      "source_locators", "candidate", "scope", "remaining_obligations"
+    ],
+    "states": [
+      "UNRUN", "UNKNOWN", "STALE", "CONTRADICTED", "VERIFIED_SCOPED",
+      "NOT_APPLICABLE_WITH_REASON"
+    ],
+    "rule": "Record all 17 aspects for every feature. A justified unaffected scope is not a global pass; unsupported or unexecuted obligations retain their own follow-up task and no admission credit. Source hardcoded True fields never constitute process evidence.",
+    "browser_rule": "At least four distinct observe/compare/correct/reverify cycles per page and component from the finite W01 census. Record AST/DOM/accessibility, links, screenshots, relevant video, network/console and timing."
   },
   "rulings": [
-    {"id":"RUL-001","decision":"Explicit swarm authorization supersedes the plan's inline default","reason":"Latest operator instruction","cost_if_wrong":"reversible scheduling changes"},
-    {"id":"RUL-002","decision":"Use four actual agent slots and canonical Store/Gleam ownership","reason":"Legacy skills prescribe 15 C3I containers and Rust dispatch, conflicting with current capacity and UOS language authority","cost_if_wrong":"additional integration work; no unvetted containers started"},
-    {"id":"RUL-003","decision":"Keep original reserved queue inert until P01 and use dedicated manually supervised support jobs","reason":"Native claim_job has neither task-ID selection nor dependency enforcement","cost_if_wrong":"P01 must reconcile additional support history"},
-    {"id":"RUL-004","decision":"Resource_envelope operational sensing remains unavailable and nonpassing; record bootstrap observations separately","reason":"Existing module exports no operational observation receipt constructor","cost_if_wrong":"E02 requires a reviewed observation owner before claiming resource-admitted runtime behavior"},
-    {"id":"RUL-005","decision":"Review concurrent main 6eadde49 as incoming code without transferring its PASS receipts","reason":"Fabricated fallback clock/tool metadata and equality-based signature credit found in E01; E02/E03 independent review requested","cost_if_wrong":"reverification and repair work; incoming history preserved"},
-    {"id":"RUL-006","decision":"Apply shared-file serialization outside the immutable dependency manifest","reason":"Three unordered write-write pairs discovered by the audit","cost_if_wrong":"extra rebases; no dropped requirements"},
-    {"id":"RUL-007","decision":"Do not equate old test totals, source lists, or planned schemas with present candidate execution","reason":"Two-key candidate-bound evidence requirement","cost_if_wrong":"extra checks instead of false completion"},
-    {"id":"RUL-008","decision":"Assign fresh stronger implementers at repair round four for E01 and tracker","reason":"Independent controls still found a normal-exit child leak and separate hash/parse file opens after three repair rounds; subagent-driven-development requires fresh stronger review judgment","cost_if_wrong":"additional bounded repair effort; no existing source or completion history discarded"},
-    {"id":"RUL-009","decision":"Withdraw the review's 30.1-second timing assertion and retain the independently observed live descendant PID evidence","reason":"The duration measured persistent-shell tool yielding, not actual command duration; the same-shell process observation directly establishes the cleanup defect","cost_if_wrong":"reproduce precise timing only when needed; no unsupported runtime metric retained"},
-    {"id":"RUL-010","decision":"Freeze the integration parent before creating agent branches; continue coordinator work on a new change","reason":"Late documentation finalization rebased E02's working copy; its owner recovered all edits from JJ operation history and updated stale state","cost_if_wrong":"extra recovery and revision review; no source changes may be silently dropped"},
-    {"id":"RUL-011","decision":"Include actual API handler and page checklist in E03's owned refinement","reason":"The existing E03 acceptance clause requires CLI/UI/API agreement, but additional hardcoded-success paths were found outside the original file list","cost_if_wrong":"additional scoped Gleam/test edits and downstream serialized integration"},
-    {"id":"RUL-012","decision":"Workers implement disjoint production and adapter modules; root serializes central acceptance registry and bound-source integration","reason":"E03, E04, Q01 and N01 all need E02 adapters but otherwise have independent production ownership","cost_if_wrong":"additional integrated adapter review; no shared-file edits silently lost"}
+    {
+      "id": "RUL-001",
+      "decision": "Explicit swarm authorization supersedes the plan's inline default",
+      "reason": "Latest operator instruction",
+      "cost_if_wrong": "reversible scheduling changes"
+    },
+    {
+      "id": "RUL-002",
+      "decision": "Use four actual agent slots and canonical Store/Gleam ownership",
+      "reason": "Legacy skills prescribe 15 C3I containers and Rust dispatch, conflicting with current capacity and UOS language authority",
+      "cost_if_wrong": "additional integration work; no unvetted containers started"
+    },
+    {
+      "id": "RUL-003",
+      "decision": "Keep original reserved queue inert until P01 and use dedicated manually supervised support jobs",
+      "reason": "Native claim_job has neither task-ID selection nor dependency enforcement",
+      "cost_if_wrong": "P01 must reconcile additional support history"
+    },
+    {
+      "id": "RUL-004",
+      "decision": "Resource_envelope operational sensing remains unavailable and nonpassing; record bootstrap observations separately",
+      "reason": "Existing module exports no operational observation receipt constructor",
+      "cost_if_wrong": "E02 requires a reviewed observation owner before claiming resource-admitted runtime behavior"
+    },
+    {
+      "id": "RUL-005",
+      "decision": "Review concurrent main 6eadde49 as incoming code without transferring its PASS receipts",
+      "reason": "Fabricated fallback clock/tool metadata and equality-based signature credit found in E01; E02/E03 independent review requested",
+      "cost_if_wrong": "reverification and repair work; incoming history preserved"
+    },
+    {
+      "id": "RUL-006",
+      "decision": "Apply shared-file serialization outside the immutable dependency manifest",
+      "reason": "Three unordered write-write pairs discovered by the audit",
+      "cost_if_wrong": "extra rebases; no dropped requirements"
+    },
+    {
+      "id": "RUL-007",
+      "decision": "Do not equate old test totals, source lists, or planned schemas with present candidate execution",
+      "reason": "Two-key candidate-bound evidence requirement",
+      "cost_if_wrong": "extra checks instead of false completion"
+    },
+    {
+      "id": "RUL-008",
+      "decision": "Assign fresh stronger implementers at repair round four for E01 and tracker",
+      "reason": "Independent controls still found a normal-exit child leak and separate hash/parse file opens after three repair rounds; subagent-driven-development requires fresh stronger review judgment",
+      "cost_if_wrong": "additional bounded repair effort; no existing source or completion history discarded"
+    },
+    {
+      "id": "RUL-009",
+      "decision": "Withdraw the review's 30.1-second timing assertion and retain the independently observed live descendant PID evidence",
+      "reason": "The duration measured persistent-shell tool yielding, not actual command duration; the same-shell process observation directly establishes the cleanup defect",
+      "cost_if_wrong": "reproduce precise timing only when needed; no unsupported runtime metric retained"
+    },
+    {
+      "id": "RUL-010",
+      "decision": "Freeze the integration parent before creating agent branches; continue coordinator work on a new change",
+      "reason": "Late documentation finalization rebased E02's working copy; its owner recovered all edits from JJ operation history and updated stale state",
+      "cost_if_wrong": "extra recovery and revision review; no source changes may be silently dropped"
+    },
+    {
+      "id": "RUL-011",
+      "decision": "Include actual API handler and page checklist in E03's owned refinement",
+      "reason": "The existing E03 acceptance clause requires CLI/UI/API agreement, but additional hardcoded-success paths were found outside the original file list",
+      "cost_if_wrong": "additional scoped Gleam/test edits and downstream serialized integration"
+    },
+    {
+      "id": "RUL-012",
+      "decision": "Workers implement disjoint production and adapter modules; root serializes central acceptance registry and bound-source integration",
+      "reason": "E03, E04, Q01 and N01 all need E02 adapters but otherwise have independent production ownership",
+      "cost_if_wrong": "additional integrated adapter review; no shared-file edits silently lost"
+    },
+    {
+      "id": "RUL-013",
+      "decision": "Receipt v3 has a closed enum for nonpassing domain states; process exit and assertion success remain separate",
+      "reason": "E03 UNRUN and N01 UNAVAILABLE must be expressible without conflicting reserved status keys",
+      "cost_if_wrong": "Reject ambiguous observations and re-run affected adapters"
+    },
+    {
+      "id": "RUL-014",
+      "decision": "Worker timestamps cannot establish freshness when they are ahead of independently observed host time",
+      "reason": "Q01 worker claimed 05:22:00Z while root observed 04:57:01Z; the actual root run and checked hashes are the reviewed evidence",
+      "cost_if_wrong": "Retain historical artifact but withhold its timing authority"
+    },
+    {
+      "id": "RUL-015",
+      "decision": "Read-only N01 HTTP diagnostics remain explicitly non-admitting until service and build identity have independent evidence",
+      "reason": "C3I responds on4100 while8088 is obsolete; generic reported JSON is not authenticated deployed-build identity",
+      "cost_if_wrong": "Keep failures visible and full Zenoh/release obligations open"
+    }
   ],
   "system_admission_granted": false
 }

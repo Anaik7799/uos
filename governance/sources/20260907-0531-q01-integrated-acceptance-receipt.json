@@ -1,0 +1,769 @@
+{
+  "schema": "uos.feature-acceptance-review.v1",
+  "feature": "Q01",
+  "status": "VERIFIED_SCOPED",
+  "master_plan": "uos/full-implementation/20260906-1655",
+  "manifest_sha256": "b706f9a99dfaf6018772b2a819084ea3373a3ee720ed774b57e7f92792d8ee02",
+  "observed_at_utc": "2026-09-07T05:05:31Z",
+  "candidate": {
+    "change_id": "ospyvtnpkxoznsqpoyptqwpnrkypyxyx",
+    "commit_id": "2424be30a94a38d13c7b19e559e96d436bf4dd72",
+    "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+  },
+  "reviewer": "codex-root",
+  "review_method": "Independent source review, exact integrated runtime acceptance, negative driver/contract tests, closed-schema validation and source hash verification.",
+  "source_files": [
+    {
+      "path": "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+      "sha256": "75ed46fd40733b2b0ce71078e02b938f0cc373551d9d49797c26f7ba502cbaf0"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+      "sha256": "2f92ffbc11929d78b59b85ce61124942f8e453b44a3e0a55322decb23b8e8670"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_actor.gleam",
+      "sha256": "71769af413f6020be2f9e237a003063499096c0961c38008335c274486a0a430"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+      "sha256": "67fc1a6dfef7f7a22d873d5ea48876b82ec49a2b791bead5e3e47bbf3d5d46a4"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_ingestion_actor.gleam",
+      "sha256": "fc487f53e61062871435aef13a4da57a9ade20df321af0da3ddca326895aaf48"
+    },
+    {
+      "path": "apps/cepaf_gleam/gleam.toml",
+      "sha256": "258bba9c5b6c697c29b38ec926700db7ddd12655113ec291775703cbf5bd245f"
+    },
+    {
+      "path": "apps/cepaf_gleam/manifest.toml",
+      "sha256": "47d99e2365ea7041812f2abc5f7ac82dded5d1a9fe8a0db9520af5a49e1ff95f"
+    },
+    {
+      "path": "tests/acceptance/compiler_diagnostics.ml",
+      "sha256": "345e03b094216e60ee49a991fefdd8db446ab56bf7926694792f8b207b33bd2c"
+    },
+    {
+      "path": "tests/acceptance/compiler_diagnostics_test.ml",
+      "sha256": "91b6bd21e7237fe7930701c43f714e4e313fcd4bf1e1b0e4c838a8abf625f748"
+    },
+    {
+      "path": "tests/acceptance/contract.ml",
+      "sha256": "c1dd12597ff7a1c5413d350d0888cf407fd0d9ac5b9b7e15db60c149d5b1366e"
+    },
+    {
+      "path": "tests/acceptance/contract_test.ml",
+      "sha256": "6e27ffee36875a23ba477abd9a7cfa0ec649eac259b1e44c5414784042526de1"
+    },
+    {
+      "path": "tests/acceptance/registry.ml",
+      "sha256": "7d1b20358dd51edd7b1cd7e816dd57d0dab0b4b8021d38692a24b2ac4e9a5cce"
+    },
+    {
+      "path": "tests/acceptance/run.ml",
+      "sha256": "0f14c33e6fcf7851968d1f9a14b04b2605b9f829aea7004efe3e53c2fdc37fe5"
+    },
+    {
+      "path": "tests/acceptance/process_supervisor.ml",
+      "sha256": "923fae561572ab20540af783e73731175e9df6d1604d3d1cfa4acfb023d9c789"
+    },
+    {
+      "path": "tests/acceptance/runner_test.ml",
+      "sha256": "73d35cb5bc801ca98c7783531eea12557b715305628f7d58ba9386010ab292b4"
+    },
+    {
+      "path": "tests/acceptance/golden/receipt.schema.json",
+      "sha256": "5278047367e3dfdd20da5b727d0ac0190556e8d7d6b2d5fce3e4ac6e12d44e7b"
+    }
+  ],
+  "runtime_key": {
+    "receipt_path": "/tmp/uos-acceptance-receipts/20260907-0404-2657052463-293b919a-task-q01-acceptance-receipt.json",
+    "receipt_sha256": "e485fe3798f9707e35a74b5fa4e5327722e77f35155f45a5927c1daf48cab9d5",
+    "receipt": {
+      "schema": "uos.acceptance-receipt.v3",
+      "receipt_id": "RCPT-ACCEPT-Q01-20260907-0404-2657052463-293b919a",
+      "task_id": "Q01",
+      "case_id": "Q01-compiler-diagnostics",
+      "operation": "compiler.check_affected_tests",
+      "observed_at_utc": "2026-09-07T04:57:04Z",
+      "manifest": {
+        "path": "governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json",
+        "sha256": "b706f9a99dfaf6018772b2a819084ea3373a3ee720ed774b57e7f92792d8ee02"
+      },
+      "candidate": {
+        "change_id": "ospyvtnpkxoznsqpoyptqwpnrkypyxyx",
+        "commit_id": "2424be30a94a38d13c7b19e559e96d436bf4dd72",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "sources": [
+        {
+          "path": "tools/verification/candidate_snapshot.ml",
+          "sha256": "d133755696100822b355d1f1164ac1ecdd064142338efe2d2a0f41092954e507"
+        },
+        {
+          "path": "tests/acceptance/contract.ml",
+          "sha256": "c1dd12597ff7a1c5413d350d0888cf407fd0d9ac5b9b7e15db60c149d5b1366e"
+        },
+        {
+          "path": "tests/acceptance/process_supervisor.ml",
+          "sha256": "923fae561572ab20540af783e73731175e9df6d1604d3d1cfa4acfb023d9c789"
+        },
+        {
+          "path": "tests/acceptance/registry.ml",
+          "sha256": "7d1b20358dd51edd7b1cd7e816dd57d0dab0b4b8021d38692a24b2ac4e9a5cce"
+        },
+        {
+          "path": "tests/acceptance/run.ml",
+          "sha256": "0f14c33e6fcf7851968d1f9a14b04b2605b9f829aea7004efe3e53c2fdc37fe5"
+        },
+        {
+          "path": "tests/acceptance/golden/receipt.schema.json",
+          "sha256": "5278047367e3dfdd20da5b727d0ac0190556e8d7d6b2d5fce3e4ac6e12d44e7b"
+        },
+        {
+          "path": "tests/acceptance/compiler_diagnostics.ml",
+          "sha256": "345e03b094216e60ee49a991fefdd8db446ab56bf7926694792f8b207b33bd2c"
+        },
+        {
+          "path": "apps/cepaf_gleam/gleam.toml",
+          "sha256": "258bba9c5b6c697c29b38ec926700db7ddd12655113ec291775703cbf5bd245f"
+        },
+        {
+          "path": "apps/cepaf_gleam/manifest.toml",
+          "sha256": "47d99e2365ea7041812f2abc5f7ac82dded5d1a9fe8a0db9520af5a49e1ff95f"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+          "sha256": "75ed46fd40733b2b0ce71078e02b938f0cc373551d9d49797c26f7ba502cbaf0"
+        },
+        {
+          "path": "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+          "sha256": "2f92ffbc11929d78b59b85ce61124942f8e453b44a3e0a55322decb23b8e8670"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+          "sha256": "67fc1a6dfef7f7a22d873d5ea48876b82ec49a2b791bead5e3e47bbf3d5d46a4"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_actor.gleam",
+          "sha256": "71769af413f6020be2f9e237a003063499096c0961c38008335c274486a0a430"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_ingestion_actor.gleam",
+          "sha256": "fc487f53e61062871435aef13a4da57a9ade20df321af0da3ddca326895aaf48"
+        }
+      ],
+      "limits": {
+        "timeout_ms": 1190000,
+        "stdout_bytes": 4194304,
+        "stderr_bytes": 131072,
+        "term_grace_ms": 100
+      },
+      "states": { "built": true, "executed": true, "passed": true },
+      "observation": {
+        "operation_supported": true,
+        "adapter_registered": true,
+        "status": "PASS",
+        "exit_code": 0,
+        "passing_tests": 1,
+        "children_reaped": true,
+        "timed_out": false,
+        "stdout_overflow": false,
+        "stderr_overflow": false,
+        "stdout": "{\n  \"operation\": \"compiler.check_affected_tests\",\n  \"passed\": true,\n  \"assertions_removed\": 0,\n  \"assertions_removed_basis\": \"exact reviewed post-fix source SHA-256 bindings before and after execution only; not an AST proof\",\n  \"targeted_unused_warnings\": 0,\n  \"total_budget_ms\": 1200000,\n  \"cleanup_reserve_ms\": 6000,\n  \"source_bindings\": [\n    {\n      \"path\": \"apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam\",\n      \"expected_sha256\": \"75ed46fd40733b2b0ce71078e02b938f0cc373551d9d49797c26f7ba502cbaf0\",\n      \"before_sha256\": \"75ed46fd40733b2b0ce71078e02b938f0cc373551d9d49797c26f7ba502cbaf0\",\n      \"after_sha256\": \"75ed46fd40733b2b0ce71078e02b938f0cc373551d9d49797c26f7ba502cbaf0\",\n      \"before_error\": null,\n      \"after_error\": null,\n      \"matched_before\": true,\n      \"matched_after\": true,\n      \"stable\": true\n    },\n    {\n      \"path\": \"apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam\",\n      \"expected_sha256\": \"2f92ffbc11929d78b59b85ce61124942f8e453b44a3e0a55322decb23b8e8670\",\n      \"before_sha256\": \"2f92ffbc11929d78b59b85ce61124942f8e453b44a3e0a55322decb23b8e8670\",\n      \"after_sha256\": \"2f92ffbc11929d78b59b85ce61124942f8e453b44a3e0a55322decb23b8e8670\",\n      \"before_error\": null,\n      \"after_error\": null,\n      \"matched_before\": true,\n      \"matched_after\": true,\n      \"stable\": true\n    }\n  ],\n  \"dependencies\": [ \"gleam\", \"erl\", \"E02 run_bounded\" ],\n  \"stages\": [\n    {\n      \"name\": \"gleam_build\",\n      \"argv\": [ \"gleam\", \"build\" ],\n      \"termination\": { \"kind\": \"exited\", \"code\": 0 },\n      \"stdout\": \"\",\n      \"stderr\": \"   Compiled in 0.14s\\n\",\n      \"duration_ms\": 169.73290000000003,\n      \"stdout_truncated\": false,\n      \"stderr_truncated\": false,\n      \"children_reaped\": true\n    },\n    {\n      \"name\": \"gleam_check\",\n      \"argv\": [ \"gleam\", \"check\" ],\n      \"termination\": { \"kind\": \"exited\", \"code\": 0 },\n      \"stdout\": \"\",\n      \"stderr\": \"   Compiled in 0.15s\\n\",\n      \"duration_ms\": 182.377677,\n      \"stdout_truncated\": false,\n      \"stderr_truncated\": false,\n      \"children_reaped\": true\n    },\n    {\n      \"name\": \"affected_11_erlang_functions\",\n      \"argv\": [\n        \"erl\", \"-noshell\", \"-pa\", \"./build/dev/erlang/cepaf_gleam/ebin\",\n        \"-pa\", \"./build/dev/erlang/certifi/ebin\", \"-pa\",\n        \"./build/dev/erlang/directories/ebin\", \"-pa\",\n        \"./build/dev/erlang/envoy/ebin\", \"-pa\",\n        \"./build/dev/erlang/esqlite/ebin\", \"-pa\",\n        \"./build/dev/erlang/exception/ebin\", \"-pa\",\n        \"./build/dev/erlang/filepath/ebin\", \"-pa\",\n        \"./build/dev/erlang/gleam_crypto/ebin\", \"-pa\",\n        \"./build/dev/erlang/gleam_erlang/ebin\", \"-pa\",\n        \"./build/dev/erlang/gleam_http/ebin\", \"-pa\",\n        \"./build/dev/erlang/gleam_json/ebin\", \"-pa\",\n        \"./build/dev/erlang/gleam_otp/ebin\", \"-pa\",\n        \"./build/dev/erlang/gleam_regexp/ebin\", \"-pa\",\n        \"./build/dev/erlang/gleam_stdlib/ebin\", \"-pa\",\n        \"./build/dev/erlang/gleeunit/ebin\", \"-pa\",\n        \"./build/dev/erlang/glisten/ebin\", \"-pa\",\n        \"./build/dev/erlang/gramps/ebin\", \"-pa\",\n        \"./build/dev/erlang/hackney/ebin\", \"-pa\",\n        \"./build/dev/erlang/houdini/ebin\", \"-pa\",\n        \"./build/dev/erlang/hpack/ebin\", \"-pa\",\n        \"./build/dev/erlang/idna/ebin\", \"-pa\",\n        \"./build/dev/erlang/logging/ebin\", \"-pa\",\n        \"./build/dev/erlang/lustre/ebin\", \"-pa\",\n        \"./build/dev/erlang/marceau/ebin\", \"-pa\",\n        \"./build/dev/erlang/mimerl/ebin\", \"-pa\",\n        \"./build/dev/erlang/mist/ebin\", \"-pa\",\n        \"./build/dev/erlang/parse_trans/ebin\", \"-pa\",\n        \"./build/dev/erlang/platform/ebin\", \"-pa\",\n        \"./build/dev/erlang/quic/ebin\", \"-pa\",\n        \"./build/dev/erlang/simplifile/ebin\", \"-pa\",\n        \"./build/dev/erlang/ssl_verify_fun/ebin\", \"-pa\",\n        \"./build/dev/erlang/wisp/ebin\", \"-eval\",\n        \"c3i_knowledge_actor_test:start_and_query_knowledge_actor_test(), c3i_knowledge_actor_test:ingest_new_item_actor_test(), c3i_knowledge_actor_test:cited_recall_actor_test(), c3i_knowledge_actor_test:apply_decay_actor_test(), c3i_knowledge_actor_test:ingestion_actor_zero_trust_filter_test(), c3i_knowledge_runtime_test:compute_decayed_trust_nominal_test(), c3i_knowledge_runtime_test:create_envelope_and_port_call_ok_test(), c3i_knowledge_runtime_test:create_envelope_and_port_call_traps_test(), c3i_knowledge_runtime_test:ingest_c3i_inventory_and_query_recall_test(), c3i_knowledge_runtime_test:detect_anti_patterns_test(), c3i_knowledge_runtime_test:get_c3i_knowledge_runtime_status_test(), halt(0).\"\n      ],\n      \"termination\": { \"kind\": \"exited\", \"code\": 0 },\n      \"stdout\": \"\",\n      \"stderr\": \"\",\n      \"duration_ms\": 167.86254300000002,\n      \"stdout_truncated\": false,\n      \"stderr_truncated\": false,\n      \"children_reaped\": true\n    }\n  ]\n}\n",
+        "stderr": "",
+        "stdout_sha256": "d116113de429f167e7c6c11e1ca521ba2ef23477503295a8f76aba79c4a1ff25",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "raw_json": "{\"targeted_unused_warnings\":0,\"assertions_removed\":0,\"compiler_diagnostics\":{\"operation\":\"compiler.check_affected_tests\",\"passed\":true,\"assertions_removed\":0,\"assertions_removed_basis\":\"exact reviewed post-fix source SHA-256 bindings before and after execution only; not an AST proof\",\"targeted_unused_warnings\":0,\"total_budget_ms\":1200000,\"cleanup_reserve_ms\":6000,\"source_bindings\":[{\"path\":\"apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam\",\"expected_sha256\":\"75ed46fd40733b2b0ce71078e02b938f0cc373551d9d49797c26f7ba502cbaf0\",\"before_sha256\":\"75ed46fd40733b2b0ce71078e02b938f0cc373551d9d49797c26f7ba502cbaf0\",\"after_sha256\":\"75ed46fd40733b2b0ce71078e02b938f0cc373551d9d49797c26f7ba502cbaf0\",\"before_error\":null,\"after_error\":null,\"matched_before\":true,\"matched_after\":true,\"stable\":true},{\"path\":\"apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam\",\"expected_sha256\":\"2f92ffbc11929d78b59b85ce61124942f8e453b44a3e0a55322decb23b8e8670\",\"before_sha256\":\"2f92ffbc11929d78b59b85ce61124942f8e453b44a3e0a55322decb23b8e8670\",\"after_sha256\":\"2f92ffbc11929d78b59b85ce61124942f8e453b44a3e0a55322decb23b8e8670\",\"before_error\":null,\"after_error\":null,\"matched_before\":true,\"matched_after\":true,\"stable\":true}],\"dependencies\":[\"gleam\",\"erl\",\"E02 run_bounded\"],\"stages\":[{\"name\":\"gleam_build\",\"argv\":[\"gleam\",\"build\"],\"termination\":{\"kind\":\"exited\",\"code\":0},\"stdout\":\"\",\"stderr\":\"   Compiled in 0.14s\\n\",\"duration_ms\":169.73290000000003,\"stdout_truncated\":false,\"stderr_truncated\":false,\"children_reaped\":true},{\"name\":\"gleam_check\",\"argv\":[\"gleam\",\"check\"],\"termination\":{\"kind\":\"exited\",\"code\":0},\"stdout\":\"\",\"stderr\":\"   Compiled in 0.15s\\n\",\"duration_ms\":182.377677,\"stdout_truncated\":false,\"stderr_truncated\":false,\"children_reaped\":true},{\"name\":\"affected_11_erlang_functions\",\"argv\":[\"erl\",\"-noshell\",\"-pa\",\"./build/dev/erlang/cepaf_gleam/ebin\",\"-pa\",\"./build/dev/erlang/certifi/ebin\",\"-pa\",\"./build/dev/erlang/directories/ebin\",\"-pa\",\"./build/dev/erlang/envoy/ebin\",\"-pa\",\"./build/dev/erlang/esqlite/ebin\",\"-pa\",\"./build/dev/erlang/exception/ebin\",\"-pa\",\"./build/dev/erlang/filepath/ebin\",\"-pa\",\"./build/dev/erlang/gleam_crypto/ebin\",\"-pa\",\"./build/dev/erlang/gleam_erlang/ebin\",\"-pa\",\"./build/dev/erlang/gleam_http/ebin\",\"-pa\",\"./build/dev/erlang/gleam_json/ebin\",\"-pa\",\"./build/dev/erlang/gleam_otp/ebin\",\"-pa\",\"./build/dev/erlang/gleam_regexp/ebin\",\"-pa\",\"./build/dev/erlang/gleam_stdlib/ebin\",\"-pa\",\"./build/dev/erlang/gleeunit/ebin\",\"-pa\",\"./build/dev/erlang/glisten/ebin\",\"-pa\",\"./build/dev/erlang/gramps/ebin\",\"-pa\",\"./build/dev/erlang/hackney/ebin\",\"-pa\",\"./build/dev/erlang/houdini/ebin\",\"-pa\",\"./build/dev/erlang/hpack/ebin\",\"-pa\",\"./build/dev/erlang/idna/ebin\",\"-pa\",\"./build/dev/erlang/logging/ebin\",\"-pa\",\"./build/dev/erlang/lustre/ebin\",\"-pa\",\"./build/dev/erlang/marceau/ebin\",\"-pa\",\"./build/dev/erlang/mimerl/ebin\",\"-pa\",\"./build/dev/erlang/mist/ebin\",\"-pa\",\"./build/dev/erlang/parse_trans/ebin\",\"-pa\",\"./build/dev/erlang/platform/ebin\",\"-pa\",\"./build/dev/erlang/quic/ebin\",\"-pa\",\"./build/dev/erlang/simplifile/ebin\",\"-pa\",\"./build/dev/erlang/ssl_verify_fun/ebin\",\"-pa\",\"./build/dev/erlang/wisp/ebin\",\"-eval\",\"c3i_knowledge_actor_test:start_and_query_knowledge_actor_test(), c3i_knowledge_actor_test:ingest_new_item_actor_test(), c3i_knowledge_actor_test:cited_recall_actor_test(), c3i_knowledge_actor_test:apply_decay_actor_test(), c3i_knowledge_actor_test:ingestion_actor_zero_trust_filter_test(), c3i_knowledge_runtime_test:compute_decayed_trust_nominal_test(), c3i_knowledge_runtime_test:create_envelope_and_port_call_ok_test(), c3i_knowledge_runtime_test:create_envelope_and_port_call_traps_test(), c3i_knowledge_runtime_test:ingest_c3i_inventory_and_query_recall_test(), c3i_knowledge_runtime_test:detect_anti_patterns_test(), c3i_knowledge_runtime_test:get_c3i_knowledge_runtime_status_test(), halt(0).\"],\"termination\":{\"kind\":\"exited\",\"code\":0},\"stdout\":\"\",\"stderr\":\"\",\"duration_ms\":167.86254300000002,\"stdout_truncated\":false,\"stderr_truncated\":false,\"children_reaped\":true}]}}",
+        "raw_json_sha256": "88477929fdf2c61f50245725d25991288f184eaf9597916b1d70a888c49b346a",
+        "duration_ms": 1247.0480080000002
+      },
+      "assertion": { "passed": true, "mismatches": [] },
+      "timings": {
+        "operation_ms": 1247.0480080000002,
+        "assertion_ms": 0.19379400000030245,
+        "receipt_atomic_write_calibration_ms": 6.798042999999865
+      },
+      "system_admission_granted": false
+    },
+    "affected_functions_passed": 11,
+    "targeted_unused_warnings": 0,
+    "assertions_removed": 0
+  },
+  "specification_key": {
+    "manifest": "governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json",
+    "acceptance": "Q01.acceptance_case and implementation_steps/acceptance_gate",
+    "schema": "tests/acceptance/golden/receipt.schema.json",
+    "validator": "/usr/bin/jsonschema (Draft2020-12)",
+    "validation_exit": 0
+  },
+  "additional_checks": [
+    { "suite": "contract", "passed_count": 28, "exit_code": 0 },
+    { "suite": "process supervisor", "passed_count": 9, "exit_code": 0 },
+    { "suite": "runner", "passed_count": 72, "exit_code": 0 }
+  ],
+  "driver_negative_controls": "source mismatch, source drift after stages, build-only warning, malformed CLI exit2, mismatched-source CLI exit1, output-write failure exit2 all passed",
+  "worker_timestamp_ruling": {
+    "path": "governance/sources/20260907-0522-q01-driver-repair-receipt.json",
+    "state": "UNVALIDATED_FUTURE_TIMESTAMP",
+    "root_time_observed_during_review": "2026-09-07T04:57:01Z",
+    "worker_claim": "2026-09-07T05:22:00Z",
+    "freshness_authority": false
+  },
+  "cycle_17": [
+    {
+      "aspect_id": 1,
+      "name": "Substrate & Hardware Storage Interlock",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "This narrow compiler warning repair does not modify this subsystem.",
+      "orient": "Apply the exact Q01 requirement to observed production code and commands.",
+      "decision": "Complete Q01 only; remaining owner Q02",
+      "action": "Retain the owning workstream and its acceptance gates.",
+      "verification": "Scope review only; no unrelated implementation or runtime credit.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_actor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_ingestion_actor.gleam",
+        "apps/cepaf_gleam/gleam.toml", "apps/cepaf_gleam/manifest.toml",
+        "tests/acceptance/compiler_diagnostics.ml",
+        "tests/acceptance/compiler_diagnostics_test.ml",
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "ospyvtnpkxoznsqpoyptqwpnrkypyxyx",
+        "commit_id": "2424be30a94a38d13c7b19e559e96d436bf4dd72",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "Q02"
+    },
+    {
+      "aspect_id": 2,
+      "name": "Standalone Jujutsu Monorepo Discipline",
+      "state": "VERIFIED_SCOPED",
+      "observe": "Two harmless warning fixes and their acceptance driver were reviewed in isolated Jujutsu history.",
+      "orient": "Apply the exact Q01 requirement to observed production code and commands.",
+      "decision": "Complete Q01 only; remaining owner R01-R03",
+      "action": "Freeze tested candidate before writing this attestation.",
+      "verification": "The exact acceptance receipt binds 2424be30; original source and rejected driver history remain available.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_actor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_ingestion_actor.gleam",
+        "apps/cepaf_gleam/gleam.toml", "apps/cepaf_gleam/manifest.toml",
+        "tests/acceptance/compiler_diagnostics.ml",
+        "tests/acceptance/compiler_diagnostics_test.ml",
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "ospyvtnpkxoznsqpoyptqwpnrkypyxyx",
+        "commit_id": "2424be30a94a38d13c7b19e559e96d436bf4dd72",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "R01-R03"
+    },
+    {
+      "aspect_id": 3,
+      "name": "Zero-Muda Purity & Waste Elimination",
+      "state": "VERIFIED_SCOPED",
+      "observe": "Original external OCaml must remain unchanged.",
+      "orient": "Apply the exact Q01 requirement to observed production code and commands.",
+      "decision": "Complete Q01 only; remaining owner E04-E08/H03",
+      "action": "Repair only the two named UOS Gleam test files and new UOS acceptance tooling.",
+      "verification": "The fixes remove an unused type import and reuse the existing inventory binding without deleting assertions; no external source bytes were imported or edited.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_actor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_ingestion_actor.gleam",
+        "apps/cepaf_gleam/gleam.toml", "apps/cepaf_gleam/manifest.toml",
+        "tests/acceptance/compiler_diagnostics.ml",
+        "tests/acceptance/compiler_diagnostics_test.ml",
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "ospyvtnpkxoznsqpoyptqwpnrkypyxyx",
+        "commit_id": "2424be30a94a38d13c7b19e559e96d436bf4dd72",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "E04-E08/H03"
+    },
+    {
+      "aspect_id": 4,
+      "name": "Gleam/OTP 29 4-Domain Root Supervisor",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "This narrow compiler warning repair does not modify this subsystem.",
+      "orient": "Apply the exact Q01 requirement to observed production code and commands.",
+      "decision": "Complete Q01 only; remaining owner A01-A10",
+      "action": "Retain the owning workstream and its acceptance gates.",
+      "verification": "Scope review only; no unrelated implementation or runtime credit.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_actor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_ingestion_actor.gleam",
+        "apps/cepaf_gleam/gleam.toml", "apps/cepaf_gleam/manifest.toml",
+        "tests/acceptance/compiler_diagnostics.ml",
+        "tests/acceptance/compiler_diagnostics_test.ml",
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "ospyvtnpkxoznsqpoyptqwpnrkypyxyx",
+        "commit_id": "2424be30a94a38d13c7b19e559e96d436bf4dd72",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "A01-A10"
+    },
+    {
+      "aspect_id": 5,
+      "name": "ZigVM Deterministic Engine & 8 VFS Laws",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "This narrow compiler warning repair does not modify this subsystem.",
+      "orient": "Apply the exact Q01 requirement to observed production code and commands.",
+      "decision": "Complete Q01 only; remaining owner H01-H03",
+      "action": "Retain the owning workstream and its acceptance gates.",
+      "verification": "Scope review only; no unrelated implementation or runtime credit.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_actor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_ingestion_actor.gleam",
+        "apps/cepaf_gleam/gleam.toml", "apps/cepaf_gleam/manifest.toml",
+        "tests/acceptance/compiler_diagnostics.ml",
+        "tests/acceptance/compiler_diagnostics_test.ml",
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "ospyvtnpkxoznsqpoyptqwpnrkypyxyx",
+        "commit_id": "2424be30a94a38d13c7b19e559e96d436bf4dd72",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "H01-H03"
+    },
+    {
+      "aspect_id": 6,
+      "name": "Hermes Formal Evidence, Gospel & Z3",
+      "state": "VERIFIED_SCOPED",
+      "observe": "Compiler outcomes and test execution require real commands with bounded cleanup.",
+      "orient": "Apply the exact Q01 requirement to observed production code and commands.",
+      "decision": "Complete Q01 only; remaining owner M08",
+      "action": "Run build, check and eleven affected compiled Erlang test functions; bind source bytes before and after.",
+      "verification": "All three real stages exited zero, no output truncation, children reaped. The driver negative controls cover malformed arguments, source mismatch, post-run drift, build-only warning and failed receipt write.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_actor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_ingestion_actor.gleam",
+        "apps/cepaf_gleam/gleam.toml", "apps/cepaf_gleam/manifest.toml",
+        "tests/acceptance/compiler_diagnostics.ml",
+        "tests/acceptance/compiler_diagnostics_test.ml",
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "ospyvtnpkxoznsqpoyptqwpnrkypyxyx",
+        "commit_id": "2424be30a94a38d13c7b19e559e96d436bf4dd72",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "M08"
+    },
+    {
+      "aspect_id": 7,
+      "name": "Mathematical Authority & Conservation",
+      "state": "VERIFIED_SCOPED",
+      "observe": "The prior warning count and expected output cannot be implementation evidence.",
+      "orient": "Apply the exact Q01 requirement to observed production code and commands.",
+      "decision": "Complete Q01 only; remaining owner M01-M08",
+      "action": "Derive warning count from captured build/check diagnostics and assertion preservation from exact independently reviewed source hashes.",
+      "verification": "Both observed warning counts are zero and assertions_removed is zero. This is a narrow review result, not an AST proof or full formal-system admission.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_actor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_ingestion_actor.gleam",
+        "apps/cepaf_gleam/gleam.toml", "apps/cepaf_gleam/manifest.toml",
+        "tests/acceptance/compiler_diagnostics.ml",
+        "tests/acceptance/compiler_diagnostics_test.ml",
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "ospyvtnpkxoznsqpoyptqwpnrkypyxyx",
+        "commit_id": "2424be30a94a38d13c7b19e559e96d436bf4dd72",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "M01-M08"
+    },
+    {
+      "aspect_id": 8,
+      "name": "Biosemiotic Cybernetics & Rocha Cut",
+      "state": "VERIFIED_SCOPED",
+      "observe": "E03/N01 need explicit nonpassing domain states in the shared acceptance contract.",
+      "orient": "Apply the exact Q01 requirement to observed production code and commands.",
+      "decision": "Complete Q01 only; remaining owner E03/P01",
+      "action": "Version the closed receipt schema to v3 with typed UNRUN, UNAVAILABLE, REACHABLE_UNVERIFIED, HTTP_FAILURE and IDENTITY_MISMATCH; reject unknown states and conflicting reserved keys.",
+      "verification": "28 contract checks, 9 process cases and 72 runner checks passed. The runner schema expectation was corrected before the final candidate-bound acceptance run.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_actor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_ingestion_actor.gleam",
+        "apps/cepaf_gleam/gleam.toml", "apps/cepaf_gleam/manifest.toml",
+        "tests/acceptance/compiler_diagnostics.ml",
+        "tests/acceptance/compiler_diagnostics_test.ml",
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "ospyvtnpkxoznsqpoyptqwpnrkypyxyx",
+        "commit_id": "2424be30a94a38d13c7b19e559e96d436bf4dd72",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "E03/P01"
+    },
+    {
+      "aspect_id": 9,
+      "name": "Quarantined Modular MAX/Mojo Inference",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "This narrow compiler warning repair does not modify this subsystem.",
+      "orient": "Apply the exact Q01 requirement to observed production code and commands.",
+      "decision": "Complete Q01 only; remaining owner H03",
+      "action": "Retain the owning workstream and its acceptance gates.",
+      "verification": "Scope review only; no unrelated implementation or runtime credit.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_actor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_ingestion_actor.gleam",
+        "apps/cepaf_gleam/gleam.toml", "apps/cepaf_gleam/manifest.toml",
+        "tests/acceptance/compiler_diagnostics.ml",
+        "tests/acceptance/compiler_diagnostics_test.ml",
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "ospyvtnpkxoznsqpoyptqwpnrkypyxyx",
+        "commit_id": "2424be30a94a38d13c7b19e559e96d436bf4dd72",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "H03"
+    },
+    {
+      "aspect_id": 10,
+      "name": "Zenoh OoZ & MoZ Mesh Telemetry Backplane",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "This narrow compiler warning repair does not modify this subsystem.",
+      "orient": "Apply the exact Q01 requirement to observed production code and commands.",
+      "decision": "Complete Q01 only; remaining owner Z01-Z12",
+      "action": "Retain the owning workstream and its acceptance gates.",
+      "verification": "Scope review only; no unrelated implementation or runtime credit.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_actor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_ingestion_actor.gleam",
+        "apps/cepaf_gleam/gleam.toml", "apps/cepaf_gleam/manifest.toml",
+        "tests/acceptance/compiler_diagnostics.ml",
+        "tests/acceptance/compiler_diagnostics_test.ml",
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "ospyvtnpkxoznsqpoyptqwpnrkypyxyx",
+        "commit_id": "2424be30a94a38d13c7b19e559e96d436bf4dd72",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "Z01-Z12"
+    },
+    {
+      "aspect_id": 11,
+      "name": "AG-UI 32-Event SSE Stream Protocol",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "This narrow compiler warning repair does not modify this subsystem.",
+      "orient": "Apply the exact Q01 requirement to observed production code and commands.",
+      "decision": "Complete Q01 only; remaining owner A08/A09/Z12",
+      "action": "Retain the owning workstream and its acceptance gates.",
+      "verification": "Scope review only; no unrelated implementation or runtime credit.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_actor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_ingestion_actor.gleam",
+        "apps/cepaf_gleam/gleam.toml", "apps/cepaf_gleam/manifest.toml",
+        "tests/acceptance/compiler_diagnostics.ml",
+        "tests/acceptance/compiler_diagnostics_test.ml",
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "ospyvtnpkxoznsqpoyptqwpnrkypyxyx",
+        "commit_id": "2424be30a94a38d13c7b19e559e96d436bf4dd72",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "A08/A09/Z12"
+    },
+    {
+      "aspect_id": 12,
+      "name": "A2UI 233-Component Declarative Catalog",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "This narrow compiler warning repair does not modify this subsystem.",
+      "orient": "Apply the exact Q01 requirement to observed production code and commands.",
+      "decision": "Complete Q01 only; remaining owner W01-W09",
+      "action": "Retain the owning workstream and its acceptance gates.",
+      "verification": "Scope review only; no unrelated implementation or runtime credit.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_actor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_ingestion_actor.gleam",
+        "apps/cepaf_gleam/gleam.toml", "apps/cepaf_gleam/manifest.toml",
+        "tests/acceptance/compiler_diagnostics.ml",
+        "tests/acceptance/compiler_diagnostics_test.ml",
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "ospyvtnpkxoznsqpoyptqwpnrkypyxyx",
+        "commit_id": "2424be30a94a38d13c7b19e559e96d436bf4dd72",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "W01-W09"
+    },
+    {
+      "aspect_id": 13,
+      "name": "Penta-Stack Multi-Interface Accessibility",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "This narrow compiler warning repair does not modify this subsystem.",
+      "orient": "Apply the exact Q01 requirement to observed production code and commands.",
+      "decision": "Complete Q01 only; remaining owner V01-V07",
+      "action": "Retain the owning workstream and its acceptance gates.",
+      "verification": "Scope review only; no unrelated implementation or runtime credit.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_actor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_ingestion_actor.gleam",
+        "apps/cepaf_gleam/gleam.toml", "apps/cepaf_gleam/manifest.toml",
+        "tests/acceptance/compiler_diagnostics.ml",
+        "tests/acceptance/compiler_diagnostics_test.ml",
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "ospyvtnpkxoznsqpoyptqwpnrkypyxyx",
+        "commit_id": "2424be30a94a38d13c7b19e559e96d436bf4dd72",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "V01-V07"
+    },
+    {
+      "aspect_id": 14,
+      "name": "Universal Tailscale FQDN Web Navigation",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "This narrow compiler warning repair does not modify this subsystem.",
+      "orient": "Apply the exact Q01 requirement to observed production code and commands.",
+      "decision": "Complete Q01 only; remaining owner N01/W01/W04",
+      "action": "Retain the owning workstream and its acceptance gates.",
+      "verification": "Scope review only; no unrelated implementation or runtime credit.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_actor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_ingestion_actor.gleam",
+        "apps/cepaf_gleam/gleam.toml", "apps/cepaf_gleam/manifest.toml",
+        "tests/acceptance/compiler_diagnostics.ml",
+        "tests/acceptance/compiler_diagnostics_test.ml",
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "ospyvtnpkxoznsqpoyptqwpnrkypyxyx",
+        "commit_id": "2424be30a94a38d13c7b19e559e96d436bf4dd72",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "N01/W01/W04"
+    },
+    {
+      "aspect_id": 15,
+      "name": "Comprehensive Verification Checklist",
+      "state": "NOT_APPLICABLE_WITH_REASON",
+      "observe": "This narrow compiler warning repair does not modify this subsystem.",
+      "orient": "Apply the exact Q01 requirement to observed production code and commands.",
+      "decision": "Complete Q01 only; remaining owner E03/W04",
+      "action": "Retain the owning workstream and its acceptance gates.",
+      "verification": "Scope review only; no unrelated implementation or runtime credit.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_actor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_ingestion_actor.gleam",
+        "apps/cepaf_gleam/gleam.toml", "apps/cepaf_gleam/manifest.toml",
+        "tests/acceptance/compiler_diagnostics.ml",
+        "tests/acceptance/compiler_diagnostics_test.ml",
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "ospyvtnpkxoznsqpoyptqwpnrkypyxyx",
+        "commit_id": "2424be30a94a38d13c7b19e559e96d436bf4dd72",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "E03/W04"
+    },
+    {
+      "aspect_id": 16,
+      "name": "Knowledge Management Triad (Wiki/ZK/Ont)",
+      "state": "VERIFIED_SCOPED",
+      "observe": "A worker receipt contains a future observed_at_utc claim relative to the root clock.",
+      "orient": "Apply the exact Q01 requirement to observed production code and commands.",
+      "decision": "Complete Q01 only; remaining owner E04-E08/H01-H02",
+      "action": "Retain the worker artifact as unvalidated timing evidence; use the root actual 04:57:04Z run and the independently observed receipt-generation time below.",
+      "verification": "Closed-schema validation passed. Source and output digests are checked here; the future worker timestamp is not used to establish freshness.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_actor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_ingestion_actor.gleam",
+        "apps/cepaf_gleam/gleam.toml", "apps/cepaf_gleam/manifest.toml",
+        "tests/acceptance/compiler_diagnostics.ml",
+        "tests/acceptance/compiler_diagnostics_test.ml",
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "ospyvtnpkxoznsqpoyptqwpnrkypyxyx",
+        "commit_id": "2424be30a94a38d13c7b19e559e96d436bf4dd72",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "E04-E08/H01-H02"
+    },
+    {
+      "aspect_id": 17,
+      "name": "Sa-Plan & Bionic Durable Workflows",
+      "state": "VERIFIED_SCOPED",
+      "observe": "Q01 and support S21 require actual scoped completion evidence.",
+      "orient": "Apply the exact Q01 requirement to observed production code and commands.",
+      "decision": "Complete Q01 only; remaining owner P01-P04",
+      "action": "Use native Sa_plan.Store completion after independent review; keep reserved jobs inert pending P01.",
+      "verification": "This receipt grants only Q01 scoped verification. Subsequent task/job/workflow completion is separate from final system admission.",
+      "source_locators": [
+        "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam",
+        "apps/cepaf_gleam/test/c3i_knowledge_runtime_test.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_actor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_ingestion_actor.gleam",
+        "apps/cepaf_gleam/gleam.toml", "apps/cepaf_gleam/manifest.toml",
+        "tests/acceptance/compiler_diagnostics.ml",
+        "tests/acceptance/compiler_diagnostics_test.ml",
+        "tests/acceptance/contract.ml", "tests/acceptance/contract_test.ml",
+        "tests/acceptance/registry.ml", "tests/acceptance/run.ml",
+        "tests/acceptance/process_supervisor.ml",
+        "tests/acceptance/runner_test.ml",
+        "tests/acceptance/golden/receipt.schema.json"
+      ],
+      "candidate": {
+        "change_id": "ospyvtnpkxoznsqpoyptqwpnrkypyxyx",
+        "commit_id": "2424be30a94a38d13c7b19e559e96d436bf4dd72",
+        "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/execution-control"
+      },
+      "scope": "Q01",
+      "remaining_obligations": "P01-P04"
+    }
+  ],
+  "limitations": [
+    "Q01 does not grant full-suite success: the worker broader run reported 9,988 passing and 202 failing tests; those failures remain open in their owning tasks.",
+    "Warning count covers the two specified diagnostics. Assertion preservation is bound to the exact reviewed two-file diff, not a generalized AST proof.",
+    "The installed schema validator emits a deprecation warning; H03 owns toolchain maintenance.",
+    "The observed default Erlang runtime is OTP27, despite historical OTP29 assertions. Final toolchain and deployed-build identity remain unverified.",
+    "No service deployment, browser cycle, native Zenoh transport, DMC/TCM proof or final admission is granted by this receipt."
+  ],
+  "system_admission_granted": false
+}
