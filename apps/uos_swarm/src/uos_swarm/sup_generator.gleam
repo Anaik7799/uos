@@ -30,7 +30,7 @@
 import gleam/int
 import gleam/list
 import gleam/string
-import uos_swarm/holon.{type Holon, Control, DataPlane, Intelligence, Language, Messaging, Runtime, Structure}
+import uos_swarm/holon.{type Holon, Control, DataPlane, Messaging, Structure}
 
 pub type Domain {
   AppsDomain
@@ -84,18 +84,49 @@ pub type GeneratedPlan {
 }
 
 /// Classifies a process holon into one of the four UOS Root Supervisor Domains
-/// based on its plane, domain word, and fractal level.
+/// based on its plane, whole, domain, and id.
 pub fn classify_domain(h: Holon) -> Domain {
-  case h.plane {
-    Control -> AppsDomain
-    Structure -> AppsDomain
-    Runtime -> EnginesDomain
-    DataPlane -> ServicesDomain
-    Messaging -> ServicesDomain
-    Intelligence -> IntelligenceDomain
-    Language -> IntelligenceDomain
+  let is_app =
+    h.plane == Control
+    || h.plane == Structure
+    || h.whole == option.Some("indrajaal-gleam-web")
+    || string.contains(h.id, "web")
+    || string.contains(h.id, "wisp")
+    || string.contains(h.id, "ui")
+    || string.contains(h.id, "iam")
+    || string.contains(h.id, "vault")
+    || string.contains(h.id, "prajna")
+
+  let is_engine =
+    h.whole == option.Some("hermes")
+    || h.whole == option.Some("zigvm")
+    || string.contains(h.id, "zigvm")
+    || string.contains(h.id, "hermes")
+    || string.contains(h.id, "oracle")
+    || string.contains(h.id, "kernel")
+    || string.contains(h.id, "rete")
+
+  let is_service =
+    h.plane == DataPlane
+    || h.plane == Messaging
+    || string.contains(h.id, "max")
+    || string.contains(h.id, "inference")
+    || string.contains(h.id, "stream")
+    || string.contains(h.id, "zenoh")
+    || string.contains(h.id, "telemetry")
+    || string.contains(h.id, "planning")
+    || string.contains(h.id, "freshness")
+    || string.contains(h.id, "metrics")
+
+  case is_app, is_engine, is_service {
+    True, _, _ -> AppsDomain
+    _, True, _ -> EnginesDomain
+    _, _, True -> ServicesDomain
+    False, False, False -> IntelligenceDomain
   }
 }
+
+import gleam/option
 
 /// Verifies whether a holon is claimable and eligible for active supervision.
 /// Rejects barred, absent, and deferred holons fail-closed.
@@ -166,9 +197,13 @@ pub fn generate(holarchy: List(Holon)) -> Result(GeneratedPlan, String) {
 
 /// Renders a single Systemd service unit from a systemd process holon.
 pub fn render_systemd_unit(h: Holon) -> SystemdUnit {
-  let file_name = case string.ends_with(h.id, ".service") || string.ends_with(h.id, ".target") {
-    True -> h.id
-    False -> h.id <> ".service"
+  let file_name = case string.ends_with(h.name, ".service") || string.ends_with(h.name, ".target") {
+    True -> h.name
+    False ->
+      case string.ends_with(h.id, ".service") || string.ends_with(h.id, ".target") {
+        True -> h.id
+        False -> h.id <> ".service"
+      }
   }
 
   let unit_type = case string.ends_with(file_name, ".target") {
@@ -273,7 +308,7 @@ pub fn validate_plan(plan: GeneratedPlan) -> Result(Int, String) {
     True -> {
       // Ensure each of the 4 domains has at least one child
       let empty_domains =
-        list.filter(grouped, fn(pair) { list.is_empty(pair.1) })
+        list.filter(grouped, fn(pair) { pair.1 == [] })
       case empty_domains {
         [] -> Ok(total_children)
         [first, ..] ->

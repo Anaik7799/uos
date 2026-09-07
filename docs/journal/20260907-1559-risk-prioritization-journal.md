@@ -140,6 +140,7 @@ The historical example is not refreshed into a live admission receipt.
 | plugins/uos-risk-prioritization/validation/dune | Repository-owned policy, code, metadata or local discovery alias |
 | plugins/uos-risk-prioritization/validation/validate.ml | Repository-owned policy, code, metadata or local discovery alias |
 | tools/risk-priority-check | Repository-owned policy, code, metadata or local discovery alias |
+| plugins/uos-risk-prioritization/validation/uos-risk-priority-validation.opam | Declared normal toolchain dependencies; no private source path |
 | plugins/uos-risk-prioritization/.codex-plugin/plugin.json | Repository-owned policy, code, metadata or local discovery alias |
 | .codex/skills/uos-risk-prioritization | Repository-owned policy, code, metadata or local discovery alias |
 | .codex/rules/20260907-1559-risk-prioritization-sop.md | Repository-owned policy, code, metadata or local discovery alias |

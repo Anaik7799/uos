@@ -41,7 +41,7 @@ pub fn four_domains_populated_test() {
 
   list.each(grouped, fn(pair) {
     let #(_domain, children) = pair
-    { list.length(children) > 0 } |> should.be_true
+    { children != [] } |> should.be_true
   })
 }
 
@@ -56,6 +56,7 @@ pub fn systemd_units_syntax_test() {
     list.find(plan.systemd_units, fn(u) { u.unit_type == "target" })
   case target_opt {
     Ok(t) -> {
+      t.file_name |> should.equal("c3i.target")
       string.contains(t.content, "[Unit]") |> should.be_true
       string.contains(t.content, "[Install]") |> should.be_true
       string.contains(t.content, "WantedBy=default.target") |> should.be_true

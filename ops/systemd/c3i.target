@@ -1,0 +1,7 @@
+[Unit]
+Description=c3i.target (prakriya (प्रक्रिया))
+Documentation=http://nas-1.tail55d152.ts.net:4100/zk
+After=network.target
+
+[Install]
+WantedBy=default.target

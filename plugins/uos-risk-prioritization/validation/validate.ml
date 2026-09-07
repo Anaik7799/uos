@@ -246,7 +246,8 @@ let check_package () =
   require (not (has "mcpServers" m || has "apps" m || has "hooks" m)) "unexpected active plugin capability";
   List.iter local [planning^"-policy.json";planning^"-record.schema.json";planning^"-example.json";
     "governance/agents/policy/"^stamp^"-risk-priority-bindings.toml";"tools/risk-priority-check";
-    plugin^"/validation/priority.ml";plugin^"/validation/validate.ml";plugin^"/validation/dune";plugin^"/validation/dune-project"];
+    plugin^"/validation/priority.ml";plugin^"/validation/validate.ml";plugin^"/validation/dune";plugin^"/validation/dune-project";
+    plugin^"/validation/uos-risk-priority-validation.opam"];
   let profile=json (planning^"-policy.json") in
   require (field "factors" profile=`List (List.map (fun s->`String s)
     ["criticality";"stpa";"fmea";"dependency";"impact"])) "factor profile drift";

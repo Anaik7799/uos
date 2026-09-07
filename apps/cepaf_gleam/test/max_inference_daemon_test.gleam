@@ -9,6 +9,7 @@ import cepaf_gleam/services/max_inference_daemon as max
 import cepaf_gleam/ui/lustre/inference_tier
 import cepaf_gleam/ui/wisp/inference_api
 import cepaf_gleam/ui/wisp/router
+import gleam/json
 import gleam/list
 import gleam/option.{Some}
 import gleam/string
@@ -256,40 +257,42 @@ pub fn max_stpa_fmea_request_and_decode_test() {
       "stpa-1",
       "sa_plan_execution_bypass",
       "actuator",
-      10,
-      10,
-      8,
+      "execution_context",
+      5,
+      "ready",
+      5,
     )
   req |> string.contains("\"method\":\"infer_stpa_fmea_hazard\"") |> should.be_true
   req |> string.contains("sa_plan_execution_bypass") |> should.be_true
 
   let raw =
-    "{\"id\":\"stpa-1\",\"status\":\"ok\",\"action\":\"sa_plan_execution_bypass\",\"target\":\"actuator\",\"hazard_level\":\"CRITICAL\",\"rpn\":800,\"psi_interlock_passed\":false,\"residual_risk\":0.95,\"mitigations\":[\"Enforce Sa-Plan\"],\"uca_catalog\":[{\"id\":\"UCA-01\",\"type\":\"providing_causes_hazard\",\"severity\":10,\"description\":\"Direct bypass\"}],\"latency_us\":18}"
+    "{\"id\":\"stpa-1\",\"status\":\"ok\",\"action\":\"sa_plan_execution_bypass\",\"component\":\"actuator\",\"uca_count\":1,\"ucas\":[{\"uca_type\":\"UCA-2\",\"name\":\"providing_causes_hazard\",\"hazard\":\"Direct bypass\"}],\"severity\":10,\"occurrence\":3,\"detection\":2,\"rpn\":60,\"rpn_band\":4,\"fmea_factor\":10,\"composite_score\":1500,\"gate_decision\":\"ANDON_STOP_BLOCKED\",\"sil_rating\":\"SIL-6\",\"latency_us\":18}"
   let res = max.decode_infer_stpa_fmea_response(raw)
   res |> should.be_ok
   let assert Ok(rep) = res
-  rep.hazard_level |> should.equal("CRITICAL")
-  rep.rpn |> should.equal(800)
-  rep.psi_interlock_passed |> should.be_false
+  rep.gate_decision |> should.equal("ANDON_STOP_BLOCKED")
+  rep.rpn |> should.equal(60)
+  rep.sil_rating |> should.equal("SIL-6")
   max.is_stpa_safe(rep) |> should.be_false
 
   let json = max.stpa_fmea_report_to_json(rep)
-  json |> string.contains("CRITICAL") |> should.be_true
+  json |> string.contains("ANDON_STOP_BLOCKED") |> should.be_true
 }
 
 pub fn max_rete_conflict_request_and_decode_test() {
+  let rule_json = json.object([#("id", json.string("rule_a"))])
   let req =
-    max.build_eval_rete_rule_conflict_request("rete-1", ["rule_a", "rule_b"], 1)
+    max.build_eval_rete_rule_conflict_request("rete-1", [rule_json], ["fact1"])
   req |> string.contains("\"method\":\"eval_rete_rule_conflict\"") |> should.be_true
 
   let raw =
-    "{\"id\":\"rete-1\",\"status\":\"ok\",\"total_rules\":2,\"winning_rule\":\"rule_a\",\"strategy\":\"lexicographic_l0_first\",\"is_deterministic\":true,\"explanation\":\"Rule A has higher priority\",\"winning_layer\":\"L0\",\"conflict_detected\":true,\"ranked_rules\":[{\"rule_id\":\"rule_a\",\"score\":150.0,\"layer\":\"L0\",\"priority\":100,\"specificity\":5,\"recency_ns\":1000}],\"latency_us\":16}"
+    "{\"id\":\"rete-1\",\"status\":\"ok\",\"rules_evaluated\":2,\"winner\":{\"id\":\"rule_a\",\"name\":\"Safety Rule\",\"layer\":\"L0\",\"score\":150.0,\"layer_rank\":10,\"salience\":100.0,\"specificity\":5,\"matched_conditions\":3,\"action\":\"halt\"},\"suppressed_count\":1,\"suppressed\":[\"rule_b\"],\"firing_strategy\":\"lexicographic_constitutional_dominance\",\"constitutional_layer\":\"L0\",\"latency_us\":16}"
   let res = max.decode_eval_rete_conflict_response(raw)
   res |> should.be_ok
   let assert Ok(rep) = res
-  rep.winning_rule |> should.equal("rule_a")
-  rep.winning_layer |> should.equal("L0")
-  rep.is_deterministic |> should.be_true
+  let assert Some(w) = rep.winner
+  w.id |> should.equal("rule_a")
+  rep.constitutional_layer |> should.equal("L0")
   max.is_rete_l0_winner(rep) |> should.be_true
 
   let json = max.rete_conflict_report_to_json(rep)
@@ -300,89 +303,92 @@ pub fn max_ruliad_branch_request_and_decode_test() {
   let req =
     max.build_evaluate_ruliad_branch_request(
       "rul-1",
-      [1, 0, 1],
-      [1, 0, 1],
-      3,
-      0.2,
+      "integration/main",
+      "feature/max-expansion",
+      ["review_diff"],
+      ["AGY"],
     )
   req |> string.contains("\"method\":\"evaluate_ruliad_branch\"") |> should.be_true
 
   let raw =
-    "{\"id\":\"rul-1\",\"status\":\"ok\",\"depth\":3,\"branches_evaluated\":8,\"branchial_distance\":0.0,\"causal_invariance\":1.0,\"mergeable\":true,\"entanglement_entropy\":0.05,\"entanglement_entropy_shannon\":0.072,\"selected_path\":[\"b0\",\"b1\"],\"foliation_status\":\"SYNCHRONIZED\",\"latency_us\":685}"
+    "{\"id\":\"rul-1\",\"status\":\"ok\",\"source_branch\":\"integration/main\",\"target_branch\":\"feature/max-expansion\",\"branchial_distance\":0.15,\"branchial_similarity\":0.98,\"branchial_entropy\":1.585,\"conflict_probability\":0.10,\"convergence_status\":\"NOMINAL_MERGE_READY\",\"participating_agents\":[\"AGY\",\"Claude\",\"Codex\"],\"optimal_collapse_path\":[\"review_diff\",\"run_eunit\",\"fast_forward_merge\"],\"latency_us\":685}"
   let res = max.decode_evaluate_ruliad_branch_response(raw)
   res |> should.be_ok
   let assert Ok(rep) = res
-  rep.mergeable |> should.be_true
-  rep.foliation_status |> should.equal("SYNCHRONIZED")
+  rep.convergence_status |> should.equal("NOMINAL_MERGE_READY")
+  rep.branchial_distance |> should.equal(0.15)
   max.is_ruliad_mergeable(rep) |> should.be_true
 
   let json = max.ruliad_branch_report_to_json(rep)
-  json |> string.contains("SYNCHRONIZED") |> should.be_true
+  json |> string.contains("NOMINAL_MERGE_READY") |> should.be_true
 }
 
 pub fn max_shruti_harmonics_request_and_decode_test() {
   let req =
     max.build_synthesize_shruti_harmonics_request(
       "shr-1",
-      "Durga",
       [1.0, 1.25, 1.5],
-      0.9,
-      0.5,
+      "Durga",
+      136.1,
     )
   req |> string.contains("\"method\":\"synthesize_biomorphic_harmonics\"") |> should.be_true
 
   let raw =
-    "{\"id\":\"shr-1\",\"status\":\"ok\",\"raga\":\"Durga\",\"fundamental_hz\":136.1,\"coherence_ratio\":0.92,\"acoustic_health\":\"CONSONANT\",\"harmonics_count\":3,\"harmonics\":[{\"ratio\":1.0,\"frequency_hz\":136.1,\"shruti_name\":\"Sadja (Sa)\",\"cent_offset\":0.0}],\"shannon_entropy\":2.55,\"jawari_factor\":0.92,\"biomorphic_resonance\":true,\"latency_us\":55}"
+    "{\"id\":\"shr-1\",\"status\":\"ok\",\"raga\":\"Durga\",\"fundamental_hz\":136.1,\"swara_count\":1,\"harmonics\":[{\"swara_index\":1,\"shruti_ratio\":1.0,\"frequency_hz\":136.1,\"amplitude\":0.85}],\"spectral_entropy\":2.585,\"consonance_index\":0.88,\"acoustic_health\":\"HARMONIC_RESONANCE_OPTIMAL\",\"jawari_shimmer_active\":true,\"latency_us\":55}"
   let res = max.decode_synthesize_shruti_harmonics_response(raw)
   res |> should.be_ok
   let assert Ok(rep) = res
   rep.raga |> should.equal("Durga")
-  rep.acoustic_health |> should.equal("CONSONANT")
-  rep.biomorphic_resonance |> should.be_true
+  rep.acoustic_health |> should.equal("HARMONIC_RESONANCE_OPTIMAL")
+  rep.jawari_shimmer_active |> should.be_true
   max.is_acoustic_healthy(rep) |> should.be_true
 
   let json = max.shruti_harmonic_report_to_json(rep)
-  json |> string.contains("Sadja (Sa)") |> should.be_true
+  json |> string.contains("Durga") |> should.be_true
 }
 
 pub fn max_models_4_to_7_api_and_router_test() {
   // STPA-FMEA evaluation
   let safe_rep =
-    inference_api.evaluate_stpa_fmea("safe_query", "sensor", 2, 2, 2)
-  safe_rep.hazard_level |> should.equal("LOW")
-  safe_rep.psi_interlock_passed |> should.be_true
+    inference_api.evaluate_stpa_fmea("read_status", "sensor", "nominal", 1, "ready", 1)
+  safe_rep.gate_decision |> should.equal("PERMITTED")
+  max.is_stpa_safe(safe_rep) |> should.be_true
 
   let danger_rep =
-    inference_api.evaluate_stpa_fmea("bypass_sa_plan", "core", 10, 10, 8)
-  danger_rep.hazard_level |> should.equal("CRITICAL")
-  danger_rep.psi_interlock_passed |> should.be_false
+    inference_api.evaluate_stpa_fmea("bypass_sa_plan", "core", "test", 5, "blocked", 5)
+  danger_rep.gate_decision |> should.equal("ANDON_STOP_BLOCKED")
+  max.is_stpa_safe(danger_rep) |> should.be_false
 
   // Rete conflict evaluation
-  let rete_rep =
-    inference_api.evaluate_rete_conflict(["rule_safety", "rule_speed"], 1)
-  rete_rep.winning_rule |> should.equal("rule_safety")
-  rete_rep.winning_layer |> should.equal("L0")
+  let r1 = max.ReteRuleScore("r1", "rule1", "L0", 150.0, 10, 100.0, 5, 2, "halt")
+  let r2 = max.ReteRuleScore("r2", "rule2", "L5", 50.0, 5, 30.0, 2, 1, "log")
+  let rete_rep = inference_api.evaluate_rete_conflict([r1, r2])
+  let assert Some(w) = rete_rep.winner
+  w.id |> should.equal("r1")
+  rete_rep.constitutional_layer |> should.equal("L0")
 
   // Ruliad branch evaluation
   let rul_rep =
-    inference_api.evaluate_ruliad_branch([1, 0, 1], [1, 0, 1], 3, 0.2)
-  rul_rep.mergeable |> should.be_true
-  rul_rep.foliation_status |> should.equal("SYNCHRONIZED")
+    inference_api.evaluate_ruliad_branch("b1", "b2", ["minor_edit"], ["AGY"])
+  rul_rep.convergence_status |> should.equal("NOMINAL_MERGE_READY")
+  max.is_ruliad_mergeable(rul_rep) |> should.be_true
 
   // Shruti harmonics evaluation
   let shr_rep =
-    inference_api.evaluate_shruti_harmonics("Durga", [1.0, 1.25, 1.5], 0.9, 0.5)
-  shr_rep.acoustic_health |> should.equal("CONSONANT")
-  shr_rep.biomorphic_resonance |> should.be_true
+    inference_api.evaluate_shruti_harmonics([0.1, 0.2], "Durga", 136.1)
+  shr_rep.acoustic_health |> should.equal("HARMONIC_RESONANCE_OPTIMAL")
+  shr_rep.jawari_shimmer_active |> should.be_true
+  max.is_acoustic_healthy(shr_rep) |> should.be_true
 
   // Router endpoints
   let stpa_route = router.route("/api/v1/inference/stpa-fmea")
-  stpa_route |> string.contains("psi_interlock_passed") |> should.be_true
+  stpa_route |> string.contains("gate_decision") |> should.be_true
 
   let rul_route = router.route("/api/v1/inference/ruliad-branch")
-  rul_route |> string.contains("foliation_status") |> should.be_true
+  rul_route |> string.contains("convergence_status") |> should.be_true
 
   let shr_route = router.route("/api/v1/inference/shruti-harmonics")
   shr_route |> string.contains("acoustic_health") |> should.be_true
 }
+
 
