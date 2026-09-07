@@ -21,4 +21,58 @@ let () =
   let json_str = Yojson.Safe.to_string json in
   assert (String.length json_str > 50);
   Printf.printf "  [PASS] JSON serialization verified (%d bytes)\n" (String.length json_str);
-  Printf.printf "=== ALL HYPERVISOR PROBE CHECKS PASSED ===\n"
+
+  Printf.printf "=== NEGATIVE CONTROLS (Codex review finding MR-07) ===\n";
+  (* Negative Control 1: Unauthorized tender binaries must be rejected *)
+  assert (not (Mirage_hypervisor_probe.is_allowed_tender "/bin/sh"));
+  assert (not (Mirage_hypervisor_probe.is_allowed_tender "/usr/bin/python3"));
+  assert (not (Mirage_hypervisor_probe.is_allowed_tender "/usr/bin/solo5-malicious"));
+  assert (not (Mirage_hypervisor_probe.is_allowed_tender "/tmp/solo5-hvt"));
+  assert (not (Mirage_hypervisor_probe.is_allowed_tender "/var/tmp/solo5-spt"));
+  assert (Mirage_hypervisor_probe.is_allowed_tender "/usr/bin/solo5-hvt");
+  assert (Mirage_hypervisor_probe.is_allowed_tender "/usr/bin/solo5-spt");
+  assert (Mirage_hypervisor_probe.is_allowed_tender "/home/an/dev/ver/zigvm/_opam/bin/solo5-hvt");
+  assert (Mirage_hypervisor_probe.is_allowed_tender "/home/an/dev/ver/zigvm/_opam/bin/solo5-virtio-run");
+  let rejected_exec = Mirage_hypervisor_probe.run_tender_test (Some "/bin/sh") "test_hello.hvt" [0] [] in
+  assert (rejected_exec = None);
+  let rejected_tmp = Mirage_hypervisor_probe.run_tender_test (Some "/tmp/solo5-hvt") "test_hello.hvt" [0] [] in
+  assert (rejected_tmp = None);
+  Printf.printf "  [PASS] Negative Control 1: Unauthorized and /tmp tenders rejected fail-closed\n";
+
+  (* Negative Control 2: Non-existent, truncated, or non-ELF unikernels must be rejected *)
+  let non_existent_exec = Mirage_hypervisor_probe.run_tender_test (Some "/usr/bin/solo5-hvt") "non_existent.hvt" [0] [] in
+  assert (non_existent_exec = None);
+  Printf.printf "  [PASS] Negative Control 2: Missing/invalid unikernels rejected fail-closed\n";
+
+  (* Negative Control 3: Corrupted output or abnormal exit codes must fail is_successful_execution *)
+  assert (not (Mirage_hypervisor_probe.is_successful_execution
+    ~tender:"solo5-virtio-run"
+    ~exit_code:83
+    ~output:"Solo5: ABORT: Stack corruption detected"));
+  assert (not (Mirage_hypervisor_probe.is_successful_execution
+    ~tender:"solo5-virtio-run"
+    ~exit_code:0
+    ~output:"Solo5: Bindings version v0.12.1\nSolo5: solo5_exit(0) called"));
+  assert (not (Mirage_hypervisor_probe.is_successful_execution
+    ~tender:"solo5-hvt"
+    ~exit_code:1
+    ~output:"Solo5: Bindings version v0.12.1\nSolo5: solo5_exit(0) called"));
+  assert (not (Mirage_hypervisor_probe.is_successful_execution
+    ~tender:"solo5-spt"
+    ~exit_code:0
+    ~output:"Random crash without success marker"));
+  assert (not (Mirage_hypervisor_probe.is_successful_execution
+    ~tender:"solo5-hvt"
+    ~exit_code:0
+    ~output:"SUCCESS"));
+  assert (Mirage_hypervisor_probe.is_successful_execution
+    ~tender:"solo5-hvt"
+    ~exit_code:0
+    ~output:"Solo5: Bindings version v0.12.1\nSolo5: solo5_exit(0) called");
+  assert (Mirage_hypervisor_probe.is_successful_execution
+    ~tender:"solo5-virtio-run"
+    ~exit_code:83
+    ~output:"Solo5: Bindings version v0.12.1\nSolo5: solo5_exit(0) called");
+  Printf.printf "  [PASS] Negative Control 3: Stack corruption aborts, fake SUCCESS, and invalid exits rejected fail-closed\n";
+
+  Printf.printf "=== ALL HYPERVISOR PROBE CHECKS & NEGATIVE CONTROLS PASSED ===\n"

@@ -12,7 +12,8 @@
 *.pid
 
 # SQLite live journals & locks (never commit live DB states)
-/state/sa_plan.sqlite3
+sa_plan.sqlite3
+**/state/*.sqlite3
 *.sqlite3-wal
 *.sqlite3-shm
 *.sqlite3-journal
@@ -85,3 +86,6 @@ Thumbs.db
 # Large vendor binaries
 *.so
 *.a
+
+# ferriskey_nif is a cdylib NIF: its lockfile is part of the reproducible build (governance/sources/20260907-1330-ferriskey-nif-source-ingestion.json)
+!native/nifs/rust/ferriskey_nif/Cargo.lock

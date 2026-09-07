@@ -1,4 +1,5 @@
 import cepaf_gleam/services/mirage_hypervisor as hyp
+import gleam/option.{None}
 import gleeunit/should
 
 pub fn default_verified_probe_invariants_test() {
@@ -30,3 +31,46 @@ pub fn default_verified_probe_invariants_test() {
   let json = hyp.probe_report_to_json(probe)
   should.be_ok(Ok(json))
 }
+
+pub fn validate_probe_report_positive_test() {
+  let probe = hyp.default_verified_probe()
+  should.be_ok(hyp.validate_probe_report(probe))
+}
+
+pub fn validate_probe_report_stale_timestamp_negative_test() {
+  let probe =
+    hyp.HypervisorProbeReport(..hyp.default_verified_probe(), timestamp_utc: "2000-01-01T00:00:00Z")
+  should.be_error(hyp.validate_probe_report(probe))
+}
+
+pub fn validate_probe_report_wrong_host_negative_test() {
+  let probe =
+    hyp.HypervisorProbeReport(..hyp.default_verified_probe(), host: "untrusted-external-host")
+  should.be_error(hyp.validate_probe_report(probe))
+}
+
+pub fn validate_probe_report_kvm_false_negative_test() {
+  let probe =
+    hyp.HypervisorProbeReport(
+      ..hyp.default_verified_probe(),
+      kvm: hyp.KvmStatus(..hyp.default_verified_probe().kvm, dev_kvm_present: False),
+    )
+  should.be_error(hyp.validate_probe_report(probe))
+}
+
+pub fn validate_probe_report_failed_tender_negative_test() {
+  let probe =
+    hyp.HypervisorProbeReport(
+      ..hyp.default_verified_probe(),
+      solo5: hyp.Solo5Status(..hyp.default_verified_probe().solo5, hvt_execution: None),
+    )
+  should.be_error(hyp.validate_probe_report(probe))
+}
+
+pub fn unverified_probe_invariants_test() {
+  let unverified = hyp.unverified_probe()
+  should.equal(unverified.deployment_admission, "NOT_VERIFIED")
+  should.equal(unverified.overall_readiness, "unverified")
+  should.be_error(hyp.validate_probe_report(unverified))
+}
+

@@ -90,6 +90,13 @@ fn assert_present_branch(so_path: String) -> Nil {
   let root = scratch_root()
   let assert Ok(_) = simplifile.create_directory_all(root)
   let db_path = root <> "/ferriskey-load-evidence.db"
+  // Idempotent across runs: the round trip below creates a realm by name,
+  // and a database left over from a previous run would make realm_create
+  // report a duplicate. Start from a fresh file every time (SQLite sidecars
+  // included); a missing file is not an error.
+  let _ = simplifile.delete(db_path)
+  let _ = simplifile.delete(db_path <> "-wal")
+  let _ = simplifile.delete(db_path <> "-shm")
 
   case fk.db_init(db_path) {
     Ok(fk.DbInitResponse(..)) -> Nil

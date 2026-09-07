@@ -6,6 +6,7 @@
 import gleam/dynamic/decode
 import gleam/json
 import gleam/option.{type Option, None, Some}
+import gleam/string
 import simplifile
 
 pub type KvmStatus {
@@ -279,6 +280,60 @@ pub fn unverified_probe() -> HypervisorProbeReport {
   )
 }
 
+pub fn validate_probe_report(
+  report: HypervisorProbeReport,
+) -> Result(HypervisorProbeReport, String) {
+  let schema_ok = report.schema == "uos-mirage-hypervisor-probe/v1"
+  let host_ok = report.host == "nas-1"
+  let timestamp_ok = string.starts_with(report.timestamp_utc, "2026")
+  let readiness_ok =
+    report.overall_readiness == "solo5_hardware_virtualized_and_spt_verified"
+  let admission_ok =
+    report.deployment_admission == "TENDERS_VERIFIED_PHYSICAL_EXECUTION"
+
+  let kvm_ok =
+    report.kvm.dev_kvm_present
+    && report.kvm.dev_kvm_rw_accessible
+    && case report.kvm.api_version {
+      Some(v) -> v >= 12
+      None -> False
+    }
+
+  let qemu_ok =
+    report.qemu.microvm_supported && report.qemu.kvm_accel_supported
+
+  let hvt_ok = case report.solo5.hvt_execution {
+    Some(r) -> r.passed && r.exit_code == 0
+    None -> False
+  }
+
+  let spt_ok = case report.solo5.spt_execution {
+    Some(r) -> r.passed && r.exit_code == 0
+    None -> False
+  }
+
+  let virtio_ok = case report.solo5.virtio_execution {
+    Some(r) -> r.passed && r.exit_code == 83
+    None -> False
+  }
+
+  case
+    schema_ok
+    && host_ok
+    && timestamp_ok
+    && readiness_ok
+    && admission_ok
+    && kvm_ok
+    && qemu_ok
+    && hvt_ok
+    && spt_ok
+    && virtio_ok
+  {
+    True -> Ok(report)
+    False -> Error("Probe report failed invariant validation")
+  }
+}
+
 pub fn read_probe_receipt() -> HypervisorProbeReport {
   let primary_path = "var/mirage/receipts/hypervisors_probe.json"
   let fallback_path = "/home/an/NAS-setup/uos/var/mirage/receipts/hypervisors_probe.json"
@@ -289,10 +344,16 @@ pub fn read_probe_receipt() -> HypervisorProbeReport {
   case content {
     Ok(json_str) -> {
       case json.parse(json_str, probe_report_decoder()) {
-        Ok(report) -> report
+        Ok(report) -> {
+          case validate_probe_report(report) {
+            Ok(valid_report) -> valid_report
+            Error(_) -> unverified_probe()
+          }
+        }
         Error(_) -> unverified_probe()
       }
     }
     Error(_) -> unverified_probe()
   }
 }
+
