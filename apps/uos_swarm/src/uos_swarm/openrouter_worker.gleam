@@ -19,6 +19,7 @@ import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/result
 import gleam/string
+import uos_swarm/route
 
 pub const chat_url = "https://openrouter.ai/api/v1/chat/completions"
 
@@ -100,6 +101,7 @@ pub type Refusal {
   Transport(reason: String)
   HttpStatus(code: Int, body_head: String)
   BadResponse(reason: String)
+  RouteRefused(reason: String)
 }
 
 pub fn refusal_label(r: Refusal) -> String {
@@ -127,6 +129,7 @@ pub fn refusal_label(r: Refusal) -> String {
     Transport(why) -> "transport: " <> why
     HttpStatus(code, head) -> "http " <> int.to_string(code) <> ": " <> head
     BadResponse(why) -> "bad response: " <> why
+    RouteRefused(why) -> "route refused: " <> why
   }
 }
 
@@ -401,6 +404,48 @@ pub fn run(policy: Policy, io: Io, req: Request) -> Result(Outcome, Refusal) {
   })
   use reply <- result.try(decode_reply(body))
   Ok(Outcome(admitted, reply, actual_cost(reply, admitted.price), elapsed))
+}
+
+/// `run` gated by the global intelligence router (`uos_swarm/route`): first asks
+/// `route.route` for class `R3Advisory` with the tier universe built from the same live
+/// prices this call will use, so a route-level refusal (unproven tier, paid without a
+/// budget, etc.) is caught before any network round trip; a `Refuse` becomes
+/// `Error(RouteRefused(reason))`. When `route.route` admits a tier, this falls through to
+/// the unchanged `run`, whose own `admit` remains the authoritative allowlist/price/budget
+/// check for the actual dispatch. A paid decision out of `route.route` is only possible
+/// when the caller's `route_policy`/`budget` satisfy rule (d) in `uos_swarm/route`.
+pub fn run_routed(
+  policy: Policy,
+  route_policy: route.Policy,
+  io: Io,
+  req: Request,
+  posteriors: List(route.Posterior),
+  budget: Option(route.Budget),
+) -> Result(Outcome, Refusal) {
+  let t = int.min(policy.timeout_ms, timeout_ms)
+  use prices <- result.try(case io.fetch_prices(t) {
+    Ok(#(200, body)) -> decode_prices(body)
+    Ok(#(code, body)) -> Error(HttpStatus(code, string.slice(body, 0, 120)))
+    Error(e) -> Error(Transport(e))
+  })
+  let live_prices = list.map(prices, fn(p) { #(p.id, p.prompt, p.completion) })
+  let tiers = route.default_tiers(live_prices)
+  let est_out = req.max_tokens
+  let est_in = estimate_prompt_tokens(req.system, req.user)
+  case
+    route.route(
+      route_policy,
+      route.R3Advisory,
+      tiers,
+      posteriors,
+      budget,
+      est_in,
+      est_out,
+    )
+  {
+    route.Refuse(reason) -> Error(RouteRefused(reason))
+    route.Route(_, _, _) -> run(policy, io, req)
+  }
 }
 
 /// The one sanitized review this slice runs: a fencing-token lease invariant, stated

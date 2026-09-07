@@ -3,6 +3,7 @@ import gleam/option.{None, Some}
 import gleam/string
 import gleeunit/should
 import uos_swarm/openrouter_worker as w
+import uos_swarm/route
 
 fn prices() -> List(w.Price) {
   [
@@ -189,4 +190,25 @@ pub fn non_200_status_is_a_refusal_test() {
   let assert Error(w.HttpStatus(402, head)) =
     w.run(w.default_policy(), io, req("google/gemma-4-31b-it:free"))
   string.contains(head, "insufficient") |> should.be_true
+}
+
+pub fn run_routed_refuses_when_route_refuses_test() {
+  // No proven tiers and no live free/paid prices: the router has nothing eligible for
+  // R3Advisory, so `run_routed` must refuse before ever reaching `run`'s own `post`.
+  let io = io_with(Some("k"), fn() { panic as "post must not be called" })
+  let result =
+    w.run_routed(
+      w.default_policy(),
+      route.default_policy(),
+      io,
+      req("google/gemma-4-31b-it:free"),
+      [],
+      None,
+    )
+  case result {
+    Error(w.RouteRefused(reason)) ->
+      string.contains(reason, "no proven tier") |> should.be_true
+    other ->
+      panic as { "expected RouteRefused, got: " <> string.inspect(other) }
+  }
 }
