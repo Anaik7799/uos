@@ -1,82 +1,84 @@
 // STAMP: SC-GLM-UI-001, SC-MIRAGE-001, SC-MIRAGE-MIGRATE-001
-// TUI ANSI view for MirageOS Unikernel & Subsystem Migration.
+// TUI view for MirageOS migration projections and simulation state.
 
-import cepaf_gleam/services/mirage_migration_engine.{
-  type MigrationCandidate, Admitted, Implemented, Mapped, Verified,
-}
+import cepaf_gleam/services/mirage_migration_engine.{type MigrationCandidate}
+import cepaf_gleam/services/mirage_unikernel_daemon.{type MirageDaemonState}
 import gleam/float
 import gleam/int
 import gleam/list
 import gleam/string
 
-pub fn render(candidates: List(MigrationCandidate)) -> String {
-  let total_savings = mirage_migration_engine.total_ram_savings(candidates)
-  let admitted = mirage_migration_engine.admitted_count(candidates)
+pub fn render(
+  candidates: List(MigrationCandidate),
+  state: MirageDaemonState,
+) -> String {
+  let projected_savings =
+    mirage_migration_engine.total_projected_ram_savings(candidates)
+  let verified_admitted =
+    mirage_migration_engine.verified_admitted_count(candidates)
 
   let header =
-    "\u{001b}[1;36m▌ MirageOS Unikernel & Subsystem Migration Dashboard\u{001b}[0m"
-    <> "  Admitted: \u{001b}[1;32m"
-    <> int.to_string(admitted)
-    <> "/7\u{001b}[0m"
-    <> " | RAM Saved: \u{001b}[1;32m"
-    <> int.to_string(total_savings)
-    <> " MB\u{001b}[0m"
-    <> " [SOLO5-SPT 6-SYSCALL]"
+    "\u{001b}[1;36m▌ MirageOS Migration Projection Dashboard\u{001b}[0m"
+    <> "  Verified admitted: \u{001b}[1;33m"
+    <> int.to_string(verified_admitted)
+    <> "/"
+    <> int.to_string(list.length(candidates))
+    <> "\u{001b}[0m"
+    <> " | Projected RAM delta: \u{001b}[1;33m"
+    <> int.to_string(projected_savings)
+    <> " MB (unmeasured)\u{001b}[0m"
+
+  let runtime =
+    "  Runtime: "
+    <> mirage_unikernel_daemon.runtime_mode_label(state.mode)
+    <> " | health=unknown | observation="
+    <> mirage_unikernel_daemon.observation_status(state.observation)
+    <> " ("
+    <> mirage_unikernel_daemon.observation_reason(state.observation)
+    <> ")"
 
   let table_header =
-    "\u{001b}[90m  ID             Lyr  Subsystem                      SIL  RAM Saved  Speedup  Status\u{001b}[0m"
+    "\u{001b}[90m  ID             Lyr  Candidate                      Target  Projected RAM  Projected speedup  State\u{001b}[0m"
 
   let rows =
     list.map(candidates, render_candidate_row)
     |> string.join("\n")
 
+  let evidence =
+    "\u{001b}[33m  Evidence: configured projections only; empirical benchmark and formal admission receipts are required.\u{001b}[0m"
+
   let safety_block =
     "\u{001b}[90m  Non-Negotiable Boundaries: BEAM OTP 29 Supervisor, MAX Inference Tier, NVMe 25503L801736, Jujutsu .jj/\u{001b}[0m"
 
-  string.join([header, "", table_header, rows, "", safety_block], "\n")
+  string.join(
+    [header, runtime, "", table_header, rows, "", evidence, safety_block],
+    "\n",
+  )
 }
 
-fn render_candidate_row(c: MigrationCandidate) -> String {
-  let marker = case c.status {
-    Admitted -> "\u{001b}[1;32m✔\u{001b}[0m"
-    Implemented -> "\u{001b}[1;34m→\u{001b}[0m"
-    Verified -> "\u{001b}[1;33m●\u{001b}[0m"
-    Mapped -> "\u{001b}[1;35m○\u{001b}[0m"
-    _ -> " "
-  }
-
-  let status_color = case c.status {
-    Admitted -> "\u{001b}[32m"
-    Implemented -> "\u{001b}[34m"
-    Verified -> "\u{001b}[33m"
-    Mapped -> "\u{001b}[35m"
-    _ -> "\u{001b}[90m"
-  }
-
-  marker
+fn render_candidate_row(candidate: MigrationCandidate) -> String {
+  "○ "
+  <> pad_right(candidate.id, 14)
   <> " "
-  <> pad_right(c.id, 14)
+  <> pad_right(candidate.layer, 4)
   <> " "
-  <> pad_right(c.layer, 4)
-  <> " "
-  <> pad_right(c.name, 30)
+  <> pad_right(candidate.name, 30)
   <> " "
   <> "SIL-"
-  <> int.to_string(c.sil_level)
+  <> int.to_string(candidate.target_sil_level)
   <> "  "
-  <> pad_right(int.to_string(c.ram_saving_mb) <> " MB", 10)
+  <> pad_right(int.to_string(candidate.projected_ram_saving_mb) <> " MB", 13)
   <> " "
-  <> pad_right(float.to_string(c.speedup_pct) <> "%", 8)
+  <> pad_right(float.to_string(candidate.projected_speedup_pct) <> "%", 18)
   <> " "
-  <> status_color
-  <> mirage_migration_engine.stage_to_string(c.status)
-  <> "\u{001b}[0m"
+  <> mirage_migration_engine.stage_to_string(candidate.status)
+  <> "/projection-only"
 }
 
-fn pad_right(s: String, width: Int) -> String {
-  let len = string.length(s)
-  case len >= width {
-    True -> s
-    False -> s <> string.repeat(" ", width - len)
+fn pad_right(value: String, width: Int) -> String {
+  let length = string.length(value)
+  case length >= width {
+    True -> value
+    False -> value <> string.repeat(" ", width - length)
   }
 }

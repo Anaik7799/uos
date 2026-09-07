@@ -1,102 +1,82 @@
-// Unified Operational System (UOS) - MirageOS Subsystem Migration Engine Tests
-// Authority: contracts/rules/mirage-migration-policy.md - SC-MIRAGE-MIGRATE-001
-
 import cepaf_gleam/services/mirage_migration_engine.{
-  Admitted, Classified, Discovered, Implemented, Mapped, Verified,
-  advance_candidate, advance_stage, admitted_count,
-  evaluate_non_negotiable_safety, find_candidate, get_migration_candidates,
-  stage_to_string, total_ram_savings,
+  Classified, Discovered, Mapped, admission_status_to_string, advance_candidate,
+  advance_stage, estimate_basis_to_string, evaluate_non_negotiable_safety,
+  find_candidate, get_migration_candidates, stage_to_string,
+  total_projected_ram_savings, verified_admitted_count,
 }
+import gleam/list
 import gleeunit/should
 
 pub fn migration_candidates_count_test() {
-  let candidates = get_migration_candidates()
-  list_length(candidates) |> should.equal(7)
+  get_migration_candidates()
+  |> list.length
+  |> should.equal(7)
 }
 
-pub fn total_ram_savings_test() {
-  let candidates = get_migration_candidates()
-  let savings = total_ram_savings(candidates)
-  // 168 + 234 + 56 + 28 + 96 + 74 + 436 = 1092 MB
-  savings |> should.equal(1092)
+pub fn total_ram_value_is_explicitly_projected_test() {
+  get_migration_candidates()
+  |> total_projected_ram_savings
+  |> should.equal(1092)
 }
 
-pub fn candidate_lookup_test() {
-  let candidates = get_migration_candidates()
-  case find_candidate(candidates, "MIG-01-INGRESS") {
-    Ok(c) -> {
-      c.name |> should.equal("Edge HTTP/TLS Ingress Proxy")
-      c.sil_level |> should.equal(5)
-      c.ram_saving_mb |> should.equal(168)
-    }
-    Error(_) -> should.fail()
-  }
+pub fn candidate_fields_are_declared_projections_test() {
+  let assert Ok(candidate) =
+    get_migration_candidates()
+    |> find_candidate("MIG-01-INGRESS")
 
-  case find_candidate(candidates, "MIG-NONEXISTENT") {
-    Ok(_) -> should.fail()
-    Error(_) -> Nil
-  }
+  candidate.name |> should.equal("Edge HTTP/TLS Ingress Proxy")
+  candidate.target_sil_level |> should.equal(5)
+  candidate.projected_ram_saving_mb |> should.equal(168)
+  candidate.estimate_basis
+  |> estimate_basis_to_string
+  |> should.equal("configured_projection")
+  candidate.admission
+  |> admission_status_to_string
+  |> should.equal("unverified")
 }
 
-pub fn stage_progression_test() {
+pub fn candidate_lookup_rejects_unknown_id_test() {
+  get_migration_candidates()
+  |> find_candidate("MIG-NONEXISTENT")
+  |> should.be_error()
+}
+
+pub fn stage_progression_fails_closed_at_mapping_test() {
   advance_stage(Discovered) |> should.equal(Classified)
   advance_stage(Classified) |> should.equal(Mapped)
-  advance_stage(Mapped) |> should.equal(Implemented)
-  advance_stage(Implemented) |> should.equal(Verified)
-  advance_stage(Verified) |> should.equal(Admitted)
-  advance_stage(Admitted) |> should.equal(Admitted)
-
-  stage_to_string(Discovered) |> should.equal("Discovered")
-  stage_to_string(Admitted) |> should.equal("Admitted")
+  advance_stage(Mapped) |> should.equal(Mapped)
+  stage_to_string(Mapped) |> should.equal("Mapped")
 }
 
-pub fn advance_candidate_test() {
-  let candidates = get_migration_candidates()
-  case find_candidate(candidates, "MIG-06-FORWARD") {
-    Ok(c) -> {
-      c.status |> should.equal(Mapped)
-      let advanced = advance_candidate(c)
-      advanced.status |> should.equal(Implemented)
-    }
-    Error(_) -> should.fail()
-  }
+pub fn configured_candidate_cannot_self_admit_test() {
+  let assert Ok(candidate) =
+    get_migration_candidates()
+    |> find_candidate("MIG-06-FORWARD")
+  candidate.status |> should.equal(Mapped)
+  advance_candidate(candidate).status |> should.equal(Mapped)
 }
 
 pub fn non_negotiable_safety_test() {
-  // Forbidden targets must return Error
-  evaluate_non_negotiable_safety("BEAM OTP Supervisor")
-  |> should.be_error()
+  [
+    "BEAM OTP Supervisor",
+    "uos_sup.gleam root",
+    "Modular MAX inference",
+    "Root NVMe 25503L801736",
+    "Standalone Jujutsu (.jj/)",
+  ]
+  |> list.each(fn(target) {
+    target
+    |> evaluate_non_negotiable_safety
+    |> should.be_error()
+  })
 
-  evaluate_non_negotiable_safety("uos_sup.gleam root")
-  |> should.be_error()
-
-  evaluate_non_negotiable_safety("Modular MAX inference")
-  |> should.be_error()
-
-  evaluate_non_negotiable_safety("Root NVMe 25503L801736")
-  |> should.be_error()
-
-  evaluate_non_negotiable_safety("Standalone Jujutsu (.jj/)")
-  |> should.be_error()
-
-  // Allowed candidate targets must return Ok
-  evaluate_non_negotiable_safety("Solo5-SPT Ingress Proxy")
-  |> should.be_ok()
-
-  evaluate_non_negotiable_safety("Mirage-DNS Recursive Resolver")
+  "Mirage-DNS Recursive Resolver"
+  |> evaluate_non_negotiable_safety
   |> should.be_ok()
 }
 
-pub fn admitted_count_test() {
-  let candidates = get_migration_candidates()
-  let admitted = admitted_count(candidates)
-  // MIG-02-SANDBOX and MIG-04-CRYPTO are already Admitted
-  admitted |> should.equal(2)
-}
-
-fn list_length(l: List(a)) -> Int {
-  case l {
-    [] -> 0
-    [_, ..rest] -> 1 + list_length(rest)
-  }
+pub fn configured_catalog_has_zero_verified_admissions_test() {
+  get_migration_candidates()
+  |> verified_admitted_count
+  |> should.equal(0)
 }
