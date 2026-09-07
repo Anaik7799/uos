@@ -63,7 +63,10 @@ pub fn register() -> List(Verse) {
       "Better one's own duty, imperfectly done, than another's duty well performed; better death in one's own duty — another's duty is fraught with fear.",
       "svadharma",
       "Disjoint ownership: each agent stays in its own declared scope, even imperfectly, rather than reaching into another's.",
-      ["coord.authorize", "session_sync.claim", "agent_runtime.grant"],
+      [
+        "coord.authorize", "session_sync.claim", "agent_runtime.grant",
+        "jj.workspace",
+      ],
     ),
     Verse(
       4,
@@ -113,7 +116,7 @@ pub fn register() -> List(Verse) {
       "Thus this knowledge, more secret than all secrets, has been declared to you by Me; reflect on it fully, then act as you choose.",
       "vimarśa-svātantrya",
       "The operator's final authority: full analysis is offered, the choice to act remains the human's alone.",
-      ["coord.authorize", "manager.step"],
+      ["coord.authorize", "manager.step", "jj.move_main"],
     ),
     Verse(
       2,
@@ -213,7 +216,7 @@ pub fn register() -> List(Verse) {
       "Here no effort is lost, nor is there any adverse result; even a little of this discipline protects one from great fear.",
       "abhikrama-anāśa",
       "The append-only ledger: no message, no attempt, is ever discarded — even a small record protects against a great loss.",
-      ["board.append", "board.causal_gaps"],
+      ["board.append", "board.causal_gaps", "jj.op_restore"],
     ),
     Verse(
       15,

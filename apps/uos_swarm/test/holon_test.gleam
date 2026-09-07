@@ -123,8 +123,22 @@ pub fn to_markdown_carries_a_svara_column_test() {
 }
 
 // ---------------------------------------------------------------------------
-// Base-layer rules B1..B9: all pass on the shipped 33 holons.
+// Base-layer rules B1..B9: all pass on the shipped 34 holons.
 // ---------------------------------------------------------------------------
+
+/// The Jujutsu holon adds one more holon to the structure plane (33 -> 34), reciprocally
+/// listed in `structure-plane.parts` (B2).
+pub fn holon_count_is_34_including_jujutsu_test() {
+  let hs = holon.holarchy()
+  list.length(hs) |> should.equal(34)
+  let assert Ok(jj) = holon.find(hs, "jujutsu")
+  jj.level |> should.equal(2)
+  jj.plane |> should.equal(holon.Structure)
+  jj.whole |> should.equal(option.Some("structure-plane"))
+  jj.parts |> should.equal([])
+  let assert Ok(structure_plane) = holon.find(hs, "structure-plane")
+  list.contains(structure_plane.parts, "jujutsu") |> should.be_true
+}
 
 pub fn base_rules_all_pass_on_shipped_holarchy_test() {
   let rules = holon.base_rules(holon.holarchy())

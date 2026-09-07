@@ -16,6 +16,17 @@ pub fn registry_has_at_least_160_concepts_test() {
   { list.length(system_ontology.concepts()) >= 160 } |> should.be_true
 }
 
+/// The Jujutsu ontology adds 28 `jj:`-prefixed concepts to the shipped 226, so the registry
+/// now carries at least 252 concepts (operator directive: "create jujutsu ontology").
+pub fn registry_has_at_least_252_concepts_after_jujutsu_ontology_test() {
+  { list.length(system_ontology.concepts()) >= 252 } |> should.be_true
+}
+
+pub fn jujutsu_domain_has_at_least_26_concepts_test() {
+  { list.length(system_ontology.by_domain(system_ontology.Vcs)) >= 26 }
+  |> should.be_true
+}
+
 /// Every ontology concept named on the shipped board ledger must resolve through the
 /// unified registry (the operator's "all messages on the boards must be aligned" mandate).
 pub fn shipped_ledger_fully_aligned_test() {
@@ -133,4 +144,24 @@ pub fn drafted_message_semantics_validate_against_registry_test() {
   board.validate_semantics(semantics) |> should.equal(Ok(Nil))
   agent.id |> should.equal("W-ont-2")
   Causality(None, []) |> should.equal(Causality(None, []))
+}
+
+// ---------------------------------------------------------------------------
+// Jujutsu ontology (operator directive: "create jujutsu ontology"): id, IAST, and
+// case-insensitive-English surface forms of a `jj:` concept all resolve to the same concept.
+// ---------------------------------------------------------------------------
+
+pub fn jujutsu_change_id_resolves_by_id_iast_and_english_test() {
+  let assert Ok(by_id) = system_ontology.resolve("jj:change-id")
+  by_id.id |> should.equal("jj:change-id")
+  by_id.domain |> should.equal(system_ontology.Vcs)
+  let assert Ok(by_iast) = system_ontology.resolve("parivartana-nāma")
+  by_iast.id |> should.equal("jj:change-id")
+  let assert Ok(by_english) = system_ontology.resolve("change id")
+  by_english.id |> should.equal("jj:change-id")
+}
+
+pub fn jujutsu_concepts_carry_the_standalone_jujutsu_aspect_test() {
+  let vcs = system_ontology.by_domain(system_ontology.Vcs)
+  list.each(vcs, fn(c) { list.contains(c.aspects, 2) |> should.be_true })
 }

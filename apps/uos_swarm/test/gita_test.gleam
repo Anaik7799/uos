@@ -29,6 +29,24 @@ pub fn for_module_aspects_admissible_is_nonempty_test() {
   { gita.for_module("aspects.admissible") != [] } |> should.be_true
 }
 
+/// Jujutsu applies_to entries (operator directive: "create jujutsu ontology"): BG 18.63
+/// (operator authority) now names `jj.move_main`, BG 2.40 (append-only log) names
+/// `jj.op_restore`, and BG 3.35 (svadharma / disjoint ownership) names `jj.workspace`.
+pub fn for_module_jj_move_main_is_nonempty_test() {
+  { gita.for_module("jj.move_main") != [] } |> should.be_true
+  let assert Ok(v) = gita.find(18, 63)
+  list.contains(v.applies_to, "jj.move_main") |> should.be_true
+}
+
+pub fn jujutsu_applies_to_reach_op_restore_and_workspace_test() {
+  { gita.for_module("jj.op_restore") != [] } |> should.be_true
+  { gita.for_module("jj.workspace") != [] } |> should.be_true
+  let assert Ok(v240) = gita.find(2, 40)
+  list.contains(v240.applies_to, "jj.op_restore") |> should.be_true
+  let assert Ok(v335) = gita.find(3, 35)
+  list.contains(v335.applies_to, "jj.workspace") |> should.be_true
+}
+
 pub fn cite_formats_bg_reference_test() {
   let text = gita.cite(2, 47)
   string.starts_with(text, "BG 2.47 · karmaṇy evādhikāras te")

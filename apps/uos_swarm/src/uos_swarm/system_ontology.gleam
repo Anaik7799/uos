@@ -54,6 +54,7 @@ pub type Domain {
   Coordination
   Safety
   Economy
+  Vcs
 }
 
 pub const all_domains = [
@@ -72,6 +73,7 @@ pub const all_domains = [
   Coordination,
   Safety,
   Economy,
+  Vcs,
 ]
 
 pub fn domain_label(d: Domain) -> String {
@@ -91,6 +93,7 @@ pub fn domain_label(d: Domain) -> String {
     Coordination -> "Coordination"
     Safety -> "Safety"
     Economy -> "Economy"
+    Vcs -> "Version control (Jujutsu)"
   }
 }
 
@@ -111,6 +114,7 @@ fn domain_node(d: Domain) -> String {
     Coordination -> "Coordination"
     Safety -> "Safety"
     Economy -> "Economy"
+    Vcs -> "Vcs"
   }
 }
 
@@ -1881,6 +1885,328 @@ fn music_concepts() -> List(Concept) {
 }
 
 // ---------------------------------------------------------------------------
+// 19. Jujutsu (VCS) ontology: the standalone, non-colocated Jujutsu discipline (CLAUDE.md §4
+//     Version Control Discipline) — identity/content, working copy/operations, bookmarks and
+//     workspaces, editing verbs, and the integration/main-move rules this repo enforces.
+//     Operator directive (verbatim): "create jujutsu ontology".
+// ---------------------------------------------------------------------------
+
+const jj_source = "contracts: CLAUDE.md §4 Version Control Discipline; apps/README.md work streams; ADR-063"
+
+fn jj(
+  id: String,
+  english: String,
+  iast: String,
+  devanagari: String,
+  layer: Int,
+  aspects: List(Int),
+  definition: String,
+  relates: List(String),
+) -> Concept {
+  mk(
+    "jj:" <> id,
+    english,
+    iast,
+    devanagari,
+    Vcs,
+    layer,
+    aspects,
+    "structure-plane",
+    definition,
+    relates,
+    jj_source,
+  )
+}
+
+fn jj_concepts() -> List(Concept) {
+  [
+    jj(
+      "change-id",
+      "Change id",
+      "parivartana-nāma",
+      "परिवर्तन-नाम",
+      2,
+      [2],
+      "The stable identity of an edit across rewrites (rebase/squash/split change its content but never its change id) — the primary handle a worker or reviewer names.",
+      ["jj:commit-id", "jj:change-vs-commit", "jj:rebase"],
+    ),
+    jj(
+      "commit-id",
+      "Commit id",
+      "sthāpita-sāra",
+      "स्थापित-सार",
+      2,
+      [2],
+      "The content hash of one specific snapshot of a change; every rewrite (rebase, squash, describe) produces a new commit id even though the change id is unchanged.",
+      ["jj:change-id", "jj:change-vs-commit", "jj:immutable-commit"],
+    ),
+    jj(
+      "working-copy",
+      "Working copy",
+      "kārya-pratilipi",
+      "कार्य-प्रतिलिपि",
+      2,
+      [2],
+      "The live checked-out files of a workspace, itself tracked as an ordinary (mutable) commit that jj auto-snapshots before every command.",
+      ["jj:snapshot", "jj:workspace", "jj:stale-working-copy"],
+    ),
+    jj(
+      "operation-log",
+      "Operation log",
+      "kriyā-lekha",
+      "क्रिया-लेख",
+      2,
+      [2, 17],
+      "The append-only ledger of every repository-mutating operation; the sole audit trail from which any prior state can be restored (BG 2.40: no effort is lost).",
+      ["jj:op-restore", "jj:undo"],
+    ),
+    jj(
+      "op-restore",
+      "Operation restore",
+      "kriyā-punaḥsthāpana",
+      "क्रिया-पुनःस्थापना",
+      2,
+      [2, 17],
+      "Restoring the repository to an exact prior operation-log entry (`jj op restore`) — whole-repository time-travel, distinct from undoing a single change.",
+      ["jj:operation-log", "jj:undo"],
+    ),
+    jj(
+      "undo",
+      "Undo",
+      "pratyāvartana",
+      "प्रत्यावर्तन",
+      2,
+      [2, 17],
+      "Reversing the most recent operation-log entry (`jj undo`); operations are always restored or undone, never hand-edited in place.",
+      ["jj:operation-log", "jj:op-restore"],
+    ),
+    jj(
+      "bookmark",
+      "Bookmark",
+      "saṅketa",
+      "सङ्केत",
+      2,
+      [2],
+      "A named, movable pointer to a change (Jujutsu's analogue of a Git branch); moved explicitly, never implicitly by commit.",
+      ["jj:main-bookmark", "jj:integration-bookmark", "jj:revset"],
+    ),
+    jj(
+      "main-bookmark",
+      "Main bookmark",
+      "mukhya-saṅketa",
+      "मुख्य-सङ्केत",
+      0,
+      [2],
+      "The `main` bookmark, left uncreated until final system admission (EV-15); until then work proceeds only on feature and `integration/*` bookmarks.",
+      ["jj:bookmark", "jj:lease-gated-main-move"],
+    ),
+    jj(
+      "integration-bookmark",
+      "Integration bookmark",
+      "saṃyojana-saṅketa",
+      "संयोजन-सङ्केत",
+      4,
+      [2],
+      "An `integration/*` bookmark (e.g. `integration/main`) where verified sibling-workspace slices are rebased in and serialized under a live lease.",
+      ["jj:bookmark", "jj:linear-chain-integration", "jj:lease-gated-main-move"],
+    ),
+    jj(
+      "workspace",
+      "Workspace",
+      "kārya-kṣetra",
+      "कार्य-क्षेत्र",
+      2,
+      [2],
+      "A checkout of the repository with its own working copy, sharing the same underlying `.jj/` operation log and store as its siblings.",
+      ["jj:sibling-workspace", "jj:working-copy"],
+    ),
+    jj(
+      "sibling-workspace",
+      "Sibling workspace",
+      "sahodara-kārya-kṣetra",
+      "सहोदर-कार्य-क्षेत्र",
+      2,
+      [2],
+      "One of the `.uos-workspaces/*` peer workspaces used for parallel work streams (e.g. this worker's `jj-2`); each owns a disjoint file scope (BG 3.35, svadharma).",
+      ["jj:workspace"],
+    ),
+    jj(
+      "stale-working-copy",
+      "Stale working copy",
+      "jīrṇa-kārya-pratilipi",
+      "जीर्ण-कार्य-प्रतिलिपि",
+      2,
+      [2],
+      "A workspace's working copy that no longer matches its recorded commit because another process wrote to the shared repository; readers avoid provoking it against a workspace they do not own (`--ignore-working-copy`).",
+      ["jj:working-copy", "jj:sibling-workspace"],
+    ),
+    jj(
+      "revset",
+      "Revset",
+      "parivartana-cayana",
+      "परिवर्तन-चयन",
+      2,
+      [2],
+      "A revset-language expression that selects a set of changes (by id, bookmark, ancestry, or predicate) for a command to act on.",
+      ["jj:change-id", "jj:bookmark"],
+    ),
+    jj(
+      "rebase",
+      "Rebase",
+      "punar-ādhāra",
+      "पुनराधार",
+      2,
+      [2],
+      "Replaying a change (and its descendants) onto a new parent, producing new commit ids while preserving change ids; the mechanism by which integration serializes worker changes in order.",
+      ["jj:linear-chain-integration", "jj:conflict", "jj:change-id"],
+    ),
+    jj(
+      "squash",
+      "Squash",
+      "saṅkoca",
+      "सङ्कोच",
+      2,
+      [2],
+      "Folding a change's content into its parent, contracting two commits into one while the parent's change id survives.",
+      ["jj:change-id"],
+    ),
+    jj(
+      "split",
+      "Split",
+      "vibhajana",
+      "विभजन",
+      2,
+      [2],
+      "Dividing one change into two or more successive changes, each with its own new change id.",
+      ["jj:change-id"],
+    ),
+    jj(
+      "abandon",
+      "Abandon",
+      "parityāga",
+      "परित्याग",
+      2,
+      [2],
+      "Discarding a change (and rebasing its descendants onto its parent); recorded in the operation log and reversible by undo, never a silent deletion.",
+      ["jj:change-id", "jj:operation-log"],
+    ),
+    jj(
+      "describe",
+      "Describe",
+      "varṇana",
+      "वर्णन",
+      2,
+      [2],
+      "Setting or editing a change's commit message without altering its file content; produces a new commit id under the same change id.",
+      ["jj:change-id", "jj:commit-id"],
+    ),
+    jj(
+      "new",
+      "New",
+      "navīna",
+      "नवीन",
+      2,
+      [2],
+      "Creating a new, empty working-copy change on top of one or more parents (`jj new`), the usual way work begins.",
+      ["jj:change-id", "jj:working-copy"],
+    ),
+    jj(
+      "conflict",
+      "Conflict",
+      "virodha",
+      "विरोध",
+      2,
+      [2],
+      "A first-class conflict state stored directly in the commit itself (never a special repository mode); a conflicted change can be rebased, described, and inspected like any other, and is resolved by editing the working copy.",
+      ["jj:rebase", "jj:commit-id", "jj:linear-chain-integration"],
+    ),
+    jj(
+      "immutable-commit",
+      "Immutable commit",
+      "acala-sthāpana",
+      "अचल-स्थापन",
+      2,
+      [2, 17],
+      "A commit past the configured immutable boundary (e.g. already integrated); jj refuses to rewrite it, protecting shared history from silent mutation.",
+      ["jj:commit-id", "jj:standalone-repo"],
+    ),
+    jj(
+      "snapshot",
+      "Snapshot",
+      "kṣaṇa-citra",
+      "क्षण-चित्र",
+      2,
+      [2],
+      "The automatic recording of the working copy's current file state into the working-copy commit before every command runs, so nothing typed is ever silently lost.",
+      ["jj:working-copy"],
+    ),
+    jj(
+      "standalone-repo",
+      "Standalone repository",
+      "svatantra-nikṣepa",
+      "स्वतन्त्र-निक्षेप",
+      0,
+      [2],
+      "A non-colocated `.jj/` repository with no backing `.git/` directory — the sole VCS mode admitted for UOS (CLAUDE.md §4).",
+      ["jj:colocated-repo", "jj:native-git-mutation"],
+    ),
+    jj(
+      "colocated-repo",
+      "Colocated repository",
+      "sahasthita-nikṣepa",
+      "सहस्थित-निक्षेप",
+      0,
+      [2],
+      "A `.jj/` repository backed by a sibling `.git/` directory; permitted by upstream Jujutsu but strictly barred inside `/home/an/NAS-setup/uos`.",
+      ["jj:standalone-repo"],
+    ),
+    jj(
+      "native-git-mutation",
+      "Native git mutation",
+      "prākṛta-git-vikāra",
+      "प्राकृत-गिट्-विकार",
+      0,
+      [2],
+      "Any direct Git-mutating command (`git commit`, `git push`, `git checkout`, etc.); strictly prohibited inside the standalone UOS repository regardless of tooling convenience.",
+      ["jj:standalone-repo"],
+    ),
+    jj(
+      "linear-chain-integration",
+      "Linear-chain integration",
+      "rekhā-śṛṅkhala-saṃyojana",
+      "रेखा-शृङ्खला-संयोजन",
+      4,
+      [2],
+      "The integration pattern by which verified worker changes are rebased onto the integration bookmark one after another, in order, rather than merged concurrently; a conflict stops the chain.",
+      ["jj:rebase", "jj:integration-bookmark", "jj:conflict"],
+    ),
+    jj(
+      "lease-gated-main-move",
+      "Lease-gated main move",
+      "paṭṭa-niyantrita-mukhya-gamana",
+      "पट्ट-नियन्त्रित-मुख्य-गमन",
+      0,
+      [2],
+      "The rule that the `main` bookmark (once created) may move only under a live `integration/main` lease together with a recorded decision — never by an unaudited direct move (BG 18.63: full analysis offered, the choice remains the authority's).",
+      [
+        "jj:main-bookmark", "jj:linear-chain-integration", "lease",
+        "design-authority",
+      ],
+    ),
+    jj(
+      "change-vs-commit",
+      "Change vs. commit",
+      "parivartana-sthāpana-bheda",
+      "परिवर्तन-स्थापन-भेद",
+      0,
+      [2],
+      "The fundamental Jujutsu distinction: change id is stable identity, commit id is a content hash of one revision of that identity — a worker must never equate the two.",
+      ["jj:change-id", "jj:commit-id"],
+    ),
+  ]
+}
+
+// ---------------------------------------------------------------------------
 // Registry
 // ---------------------------------------------------------------------------
 
@@ -1904,6 +2230,7 @@ pub fn concepts() -> List(Concept) {
     citta_vrtti_concepts(),
     kosha_concepts(),
     music_concepts(),
+    jj_concepts(),
   ])
 }
 

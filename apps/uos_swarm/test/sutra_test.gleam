@@ -19,6 +19,29 @@ pub fn every_pada_has_at_least_6_entries_test() {
   })
 }
 
+/// The Jujutsu discipline (S2.8..S2.14) extends pāda 2 to at least 14 sūtras, so the register
+/// now carries at least 56 (operator directive: "create jujutsu ontology").
+pub fn pada2_carries_the_jujutsu_sutras_test() {
+  { list.length(sutra.by_pada(2)) >= 14 } |> should.be_true
+  { list.length(sutra.register()) >= 56 } |> should.be_true
+  list.each(
+    ["S2.8", "S2.9", "S2.10", "S2.11", "S2.12", "S2.13", "S2.14"],
+    fn(id) {
+      case sutra.find(id) {
+        Ok(s) -> {
+          s.pada |> should.equal(2)
+          list.contains(s.aspects, 2) |> should.be_true
+        }
+        Error(_) -> should.fail()
+      }
+    },
+  )
+  let assert Ok(s2_12) = sutra.find("S2.12")
+  s2_12.kinds |> should.equal(["Integrate", "Plan"])
+  let assert Ok(s2_13) = sutra.find("S2.13")
+  s2_13.kinds |> should.equal(["Integrate"])
+}
+
 pub fn find_locates_a_known_sutra_test() {
   case sutra.find("S5.1") {
     Ok(s) -> {
