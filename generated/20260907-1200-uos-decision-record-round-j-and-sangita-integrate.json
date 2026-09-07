@@ -1,0 +1,74 @@
+{
+  "carrier": "uos-decision-record/v1",
+  "phase": "completed",
+  "decision_id": "DR-20260907-1200-L0FABLE-ROUND-J-AND-SANGITA-INTEGRATE",
+  "note": "prepared record written 12:00Z was lost in a stale-workspace recovery (unsnapshotted new file); this file re-states the prepared content from the session log and adds the completed phase; forecast values are the original ones, not rewritten",
+  "identity_scope": {
+    "hive": "uos-tui-swarm",
+    "tenant": "uos",
+    "actor_kind": "model-agent (design authority, L0)",
+    "actor_id": "L0-fable",
+    "session": "656f0d2c-6019-4d9e-b0ce-b9e39b240047",
+    "provider_model": {
+      "provider": "anthropic",
+      "model": "claude-fable-5-1",
+      "self_report": true
+    }
+  },
+  "task_authority": {
+    "task": "round J (jujutsu ontology + library), saṅgīta extension, Codex candidate handoff integration",
+    "goal": "land on integration/uos-swarm and main with gates green",
+    "resource": "integration/main",
+    "lease_epoch": "7 (claimed op l0-fable-claim-integration-main-20260907-1245, released)",
+    "proposed_action": "two-parent merges of preserved candidates in dependency order; stack own rounds; bookmark set",
+    "policy_refs": [
+      "CLAUDE.md §4",
+      "tri-agent-coordination SYNC-03/05/06",
+      "SC-HIVE-DECISION-001",
+      "DES-UOS-INTEL-ROUTING-001"
+    ],
+    "authorization": "operator directives 'create jujutsu ontology, create jujutsu library, use full capabilities of the system'; Codex handoff request; operator 'commit round O and sync to mainline, full system sync'"
+  },
+  "prepared_forecast_as_stated": {
+    "horizon": "60 min from 12:00Z",
+    "predicted_outcome": "all three changes (J-1, J-2, O-6b) on main with gates green; audio and MIDI delivered",
+    "probability_all_three_land_in_horizon": 0.7,
+    "basis": "Estimated from six prior worker rounds; not calibrated",
+    "unknowns": [
+      "O-6b wall time",
+      "J-1 template parsing"
+    ]
+  },
+  "completed": {
+    "observed_at": "2026-09-07T09:10:15.556967+00:00",
+    "observed_actions": [
+      "two-parent merges C01, C02, C03, C07, strict-clock->board-insights (no conflicts)",
+      "C04/C05+KPI parked on integration/candidates-c04-c05-pending: action_boundary_test x3 Error(enoent) combined with C01's crash-safe journal",
+      "sangita-2 (O-6b) landed by rewriting the original sangita change because its workspace @ was an ancestor of main (process defect, recorded)",
+      "jujutsu ontology (J-2) stacked after a three-way divergence was resolved (worker workspace forgotten, one copy kept)",
+      "gate PASS: uos_tui 198, uos_swarm 478, 0 warnings; ledger aligned; board valid (3 causal gaps, 2 chain forks, explicit)",
+      "main = ukoqlvlnuutl/071b2d0326d6749d400c7874d21871fd8eb1d1da under lease epoch 7",
+      "default workspace rebased onto main; its 11 dirty files preserved; its working change now carries a conflict on the old-path ledger files (modified there, moved on main) — reported to Codex",
+      "full-mix WAV and MIDI delivered to the operator"
+    ],
+    "outcome": "partially realized within horizon: J-2 and O-6b on main; J-1 still running; C04/05 pending Codex rebase — Measured",
+    "formal_gates": "UNRUN on nas-1 (lake/lean/quint absent); C07 evidence is the Codex receipt, self-reported",
+    "consumed": {
+      "subagent_tokens": {
+        "J-2": 360286,
+        "O-6b": 652954,
+        "J-1": "Unknown (running)"
+      },
+      "usd_paid": 0.0
+    },
+    "errors": [
+      "workspace @ on an integrated change (sangita) -> main ancestry rewritten",
+      "divergent change from concurrent workspace snapshots",
+      "prepared record file lost during recovery"
+    ],
+    "revised_assumptions": [
+      "worker workspaces start on a fresh child change; forget before rebasing; write records into a tracked path and snapshot immediately"
+    ],
+    "calibration_ref": "p=0.7 for all three within 60 min -> outcome: 2 of 3 (J-1 unresolved at horizon) — counts against the forecast"
+  }
+}
