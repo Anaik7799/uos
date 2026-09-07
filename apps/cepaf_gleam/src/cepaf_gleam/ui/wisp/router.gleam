@@ -749,6 +749,8 @@ fn route_internal(path: String) -> String {
     "/ag-ui/run" | "/ag-ui/events" -> agui_run_json(path)
     "/ag-ui/events/sse" | "/api/v1/ag-ui/stream" ->
       agui_sse_api.sse_32_event_manifest_stream(agui_sse_api.default_config())
+    "/api/v1/homeostasis/stream" | "/homeostasis/stream" ->
+      agui_sse_api.homeostasis_telemetry_sse_stream()
     "/ag-ui/manifest" | "/api/v1/ag-ui/manifest" ->
       agui_sse_api.agui_manifest_summary_json()
     "/ag-ui/health" -> agui_sse.health_json()

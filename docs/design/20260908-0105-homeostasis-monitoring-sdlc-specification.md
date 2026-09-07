@@ -550,6 +550,61 @@ Every dynamic log message carries a typed subsystem identifier and severity leve
 6. `[QUORUM-BALLOT]`: 4-party sovereign consensus votes, supermajority tallies, ratification notices.
 7. `[PHYSIO-MONITOR]`: Multi-variable setpoint measurements (CPU, memory, network, error rates).
 
+### 5.3 Dedicated W3C SSE Endpoint: `/api/v1/homeostasis/stream`
+
+To deliver high-precision, low-latency telemetry streaming specifically for cybernetic homeostasis, UOS provides the dedicated endpoint:
+- **URL**: [http://nas-1.tail55d152.ts.net:4100/api/v1/homeostasis/stream](http://nas-1.tail55d152.ts.net:4100/api/v1/homeostasis/stream)
+- **Alternative Path**: [http://nas-1.tail55d152.ts.net:4100/homeostasis/stream](http://nas-1.tail55d152.ts.net:4100/homeostasis/stream)
+- **Transport**: W3C Server-Sent Events (`text/event-stream; charset=utf-8`)
+- **Heartbeat & Retry**: Automatic client reconnection with `retry: 3000ms`
+
+#### Canonical W3C SSE Wire Frame Format
+Each telemetry emission consists of typed event blocks containing structured JSON payloads:
+```text
+id: homeo-001
+event: homeostasis_pid
+data: {"subsystem":"HOMEO-PID","level":"NOMINAL","error":0.005,"lyapunov_v":0.0000125,"control_u":-0.002,"msg":"PID closed-loop equilibrium locked: e=0.005, u=-0.002, V(e)=0.0000125, dV/dt<=0"}
+retry: 3000
+
+id: homeo-002
+event: prajna_breaker
+data: {"subsystem":"PRAJNA-BREAKER","level":"CLOSED","consecutive_successes":48,"trip_threshold":5,"msg":"Prajna circuit breaker state CLOSED, consecutive successes=48, trip threshold=5"}
+retry: 3000
+```
+
+#### Client-Side Dynamic DOM Hook
+The embedded IIFE in `homeostasis_evolution_hud.gleam` listens on this endpoint and prepends rows into `#homeostasis-live-stream-body`:
+```javascript
+(function() {
+  if (typeof window !== 'undefined' && window.EventSource) {
+    try {
+      var src = new EventSource('/api/v1/homeostasis/stream');
+      var tbody = document.getElementById('homeostasis-live-stream-body');
+      src.onmessage = function(e) {
+        try {
+          var d = JSON.parse(e.data);
+          if (d && tbody) {
+            var tr = document.createElement('tr');
+            tr.style.borderBottom = '1px solid #141c28';
+            var now = new Date().toISOString().slice(11, 23) + 'Z';
+            var sys = '[' + (d.event_type || d.subsystem || 'HOMEO') + ']';
+            var sev = (d.severity === 'error' || d.severity === 'critical') ? 'CRITICAL' : (d.level || 'INFO');
+            var col = (sev === 'CRITICAL') ? '#FF0033' : '#00FF66';
+            var msg = d.preview || d.msg || d.content || JSON.stringify(d).slice(0, 100);
+            tr.innerHTML = '<td style="color:#778899;padding:4px;">' + now + '</td>' +
+                           '<td style="color:#00CCFF;font-weight:bold;padding:4px;">' + sys + '</td>' +
+                           '<td style="color:' + col + ';font-weight:bold;padding:4px;">' + sev + '</td>' +
+                           '<td style="color:#E0E6ED;padding:4px;">' + msg + '</td>';
+            tbody.insertBefore(tr, tbody.firstChild);
+            while (tbody.children.length > 50) { tbody.removeChild(tbody.lastChild); }
+          }
+        } catch (err) {}
+      };
+    } catch (e) {}
+  }
+})();
+```
+
 ---
 
 ## 6. Comprehensive Verification Checklist (18/18 Checks)

@@ -116,6 +116,8 @@ Authored [`docs/design/20260908-0105-homeostasis-monitoring-sdlc-specification.m
 Executed `gleam check` and the full Gleam EUnit test suite in `apps/cepaf_gleam`:
 - Total tests: **10,607 passed / 0 failures / 100% green**.
 - Added `render_hud_live_event_log_test()` in [`apps/cepaf_gleam/test/homeostasis_evolution_hud_test.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/test/homeostasis_evolution_hud_test.gleam).
+- Added `homeostasis_telemetry_sse_stream()` in [`apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam) and routed `/api/v1/homeostasis/stream` in `router.gleam`.
+- Added `homeostasis_telemetry_sse_stream_test()` in [`apps/cepaf_gleam/test/agui_sse_api_test.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/test/agui_sse_api_test.gleam) verifying W3C SSE frame generation and router dispatch.
 
 ---
 

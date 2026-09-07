@@ -345,7 +345,7 @@ fn render_homeostasis_event_log() -> Element(msg) {
             attribute.class("badge"),
             attribute.attribute("style", "background:#00FF66;color:#000;font-weight:bold;margin-right:8px;padding:3px 8px;border-radius:3px;"),
           ],
-          [html.text("SSE STREAM: ACTIVE (/ag-ui/events/sse)")],
+          [html.text("SSE STREAM: ACTIVE (/api/v1/homeostasis/stream)")],
         ),
         html.span(
           [
@@ -407,7 +407,7 @@ fn render_homeostasis_event_log() -> Element(msg) {
       [],
       [
         html.text(
-          "(function(){if(typeof window!=='undefined'&&window.EventSource){try{var src=new EventSource('/ag-ui/events/sse');var tbody=document.getElementById('homeostasis-live-stream-body');src.onmessage=function(e){try{var d=JSON.parse(e.data);if(d&&tbody){var tr=document.createElement('tr');tr.style.borderBottom='1px solid #141c28';var now=new Date().toISOString().slice(11,23)+'Z';var sys='['+(d.event_type||'HOMEO')+']';var sev=(d.severity==='error'||d.severity==='critical')?'CRITICAL':'INFO';var col=(sev==='CRITICAL')?'#FF0033':'#00FF66';var msg=d.preview||d.content||JSON.stringify(d).slice(0,100);tr.innerHTML='<td style=\"color:#778899;padding:4px;\">'+now+'</td><td style=\"color:#00CCFF;font-weight:bold;padding:4px;\">'+sys+'</td><td style=\"color:'+col+';font-weight:bold;padding:4px;\">'+sev+'</td><td style=\"color:#E0E6ED;padding:4px;\">'+msg+'</td>';tbody.insertBefore(tr,tbody.firstChild);while(tbody.children.length>50){tbody.removeChild(tbody.lastChild);}}}catch(err){}};}catch(e){}}})();",
+          "(function(){if(typeof window!=='undefined'&&window.EventSource){try{var src=new EventSource('/api/v1/homeostasis/stream');var tbody=document.getElementById('homeostasis-live-stream-body');src.onmessage=function(e){try{var d=JSON.parse(e.data);if(d&&tbody){var tr=document.createElement('tr');tr.style.borderBottom='1px solid #141c28';var now=new Date().toISOString().slice(11,23)+'Z';var sys='['+(d.event_type||d.subsystem||'HOMEO')+']';var sev=(d.severity==='error'||d.severity==='critical')?'CRITICAL':(d.level||'INFO');var col=(sev==='CRITICAL')?'#FF0033':'#00FF66';var msg=d.preview||d.msg||d.content||JSON.stringify(d).slice(0,100);tr.innerHTML='<td style=\"color:#778899;padding:4px;\">'+now+'</td><td style=\"color:#00CCFF;font-weight:bold;padding:4px;\">'+sys+'</td><td style=\"color:'+col+';font-weight:bold;padding:4px;\">'+sev+'</td><td style=\"color:#E0E6ED;padding:4px;\">'+msg+'</td>';tbody.insertBefore(tr,tbody.firstChild);while(tbody.children.length>50){tbody.removeChild(tbody.lastChild);}}}catch(err){}};}catch(e){}}})();",
         ),
       ],
     ),

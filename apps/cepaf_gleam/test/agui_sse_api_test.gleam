@@ -4,7 +4,8 @@
 
 import cepaf_gleam/ui/wisp/agui_sse_api.{
   AGUIStreamConfig, agui_manifest_summary_json, default_config,
-  sse_32_event_manifest_stream, sse_cockpit_push_frame,
+  homeostasis_telemetry_sse_stream, sse_32_event_manifest_stream,
+  sse_cockpit_push_frame,
 }
 import cepaf_gleam/ui/wisp/router
 import gleam/string
@@ -100,4 +101,18 @@ pub fn router_agui_routes_test() {
 
   let manifest_out = router.route("/ag-ui/manifest")
   string.contains(manifest_out, "\"protocol\":\"AG-UI-v1\"") |> should.be_true()
+}
+
+pub fn homeostasis_telemetry_sse_stream_test() {
+  let stream = homeostasis_telemetry_sse_stream()
+  string.contains(stream, "event: homeostasis_pid\n") |> should.be_true()
+  string.contains(stream, "event: prajna_breaker\n") |> should.be_true()
+  string.contains(stream, "event: deadman_watchdog\n") |> should.be_true()
+  string.contains(stream, "event: swarm_ooda\n") |> should.be_true()
+  string.contains(stream, "event: evolution_gate\n") |> should.be_true()
+  string.contains(stream, "event: quorum_ballot\n") |> should.be_true()
+  string.contains(stream, "event: physiological_monitor\n") |> should.be_true()
+
+  let router_stream = router.route("/api/v1/homeostasis/stream")
+  string.contains(router_stream, "event: homeostasis_pid\n") |> should.be_true()
 }
