@@ -1,0 +1,726 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "UOS risk priority assessment record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "policy",
+    "assessment_id",
+    "plan_id",
+    "task_id",
+    "actor",
+    "scope",
+    "phase",
+    "fractal_layer",
+    "observed_at",
+    "valid_until",
+    "task_state",
+    "snapshot",
+    "factors",
+    "fmea_modes",
+    "stpa_analysis",
+    "class",
+    "readiness",
+    "blockers",
+    "dependencies",
+    "score",
+    "score_interval",
+    "decision"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "policy": {
+      "const": "SC-RISK-PRIORITY-001"
+    },
+    "assessment_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "plan_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actor": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "type": "string",
+      "minLength": 1
+    },
+    "phase": {
+      "enum": [
+        "planning",
+        "implementation",
+        "review",
+        "release",
+        "incident",
+        "recovery"
+      ]
+    },
+    "fractal_layer": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "valid_until": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "task_state": {
+      "enum": [
+        "available",
+        "executing",
+        "completed"
+      ]
+    },
+    "snapshot": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "reference",
+        "evidence"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "revision",
+            "working_tree",
+            "runtime"
+          ]
+        },
+        "reference": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "path",
+              "sha256",
+              "observed_at"
+            ],
+            "properties": {
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "observed_at": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      }
+    },
+    "factors": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "criticality",
+        "stpa",
+        "fmea",
+        "dependency",
+        "impact"
+      ],
+      "properties": {
+        "criticality": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "low",
+            "high",
+            "rationale",
+            "evidence_refs"
+          ],
+          "properties": {
+            "value": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "low": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "high": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 1
+            },
+            "evidence_refs": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1
+            }
+          }
+        },
+        "stpa": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "low",
+            "high",
+            "rationale",
+            "evidence_refs"
+          ],
+          "properties": {
+            "value": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "low": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "high": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 1
+            },
+            "evidence_refs": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1
+            }
+          }
+        },
+        "fmea": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "low",
+            "high",
+            "rationale",
+            "evidence_refs"
+          ],
+          "properties": {
+            "value": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "low": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "high": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 1
+            },
+            "evidence_refs": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1
+            }
+          }
+        },
+        "dependency": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "low",
+            "high",
+            "rationale",
+            "evidence_refs"
+          ],
+          "properties": {
+            "value": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "low": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "high": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 1
+            },
+            "evidence_refs": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1
+            }
+          }
+        },
+        "impact": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "value",
+            "low",
+            "high",
+            "rationale",
+            "evidence_refs"
+          ],
+          "properties": {
+            "value": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "low": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "high": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 5
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 1
+            },
+            "evidence_refs": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1
+            }
+          }
+        }
+      }
+    },
+    "fmea_modes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "cause",
+          "effect",
+          "controls",
+          "s",
+          "o",
+          "det",
+          "rpn",
+          "band"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cause": {
+            "type": "string",
+            "minLength": 1
+          },
+          "effect": {
+            "type": "string",
+            "minLength": 1
+          },
+          "controls": {
+            "type": "string",
+            "minLength": 1
+          },
+          "s": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "o": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "det": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "rpn": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 125
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "band": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "stpa_analysis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "controller",
+        "control_action",
+        "losses",
+        "hazards",
+        "ucas"
+      ],
+      "properties": {
+        "controller": {
+          "type": "string",
+          "minLength": 1
+        },
+        "control_action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "losses": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "hazards": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "ucas": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "applicability",
+              "context",
+              "hazard_ids",
+              "constraint"
+            ],
+            "properties": {
+              "type": {
+                "enum": [
+                  "not_provided",
+                  "provided_unsafe",
+                  "wrong_timing",
+                  "duration"
+                ]
+              },
+              "applicability": {
+                "enum": [
+                  "applicable",
+                  "not_applicable"
+                ]
+              },
+              "context": {
+                "type": "string",
+                "minLength": 1
+              },
+              "hazard_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "constraint": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "class": {
+      "enum": [
+        "P0",
+        "P1",
+        "P2",
+        "P3"
+      ]
+    },
+    "readiness": {
+      "enum": [
+        "ready",
+        "blocked",
+        "needs_evidence"
+      ]
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "score": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3125
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "score_interval": {
+      "type": "array",
+      "prefixItems": [
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3125
+        },
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3125
+        }
+      ],
+      "minItems": 2,
+      "maxItems": 2
+    },
+    "decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summary",
+        "alternatives",
+        "counterevidence",
+        "assumptions",
+        "confidence",
+        "forecast",
+        "falsifier",
+        "acceptance",
+        "rollback",
+        "reviewer",
+        "budget",
+        "residuals",
+        "supersedes"
+      ],
+      "properties": {
+        "summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "counterevidence": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "assumptions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "confidence": {
+          "enum": [
+            "observed",
+            "analyst_estimate",
+            "unknown"
+          ]
+        },
+        "forecast": {
+          "type": "string",
+          "minLength": 1
+        },
+        "falsifier": {
+          "type": "string",
+          "minLength": 1
+        },
+        "acceptance": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "rollback": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "budget": {
+          "type": "string",
+          "minLength": 1
+        },
+        "residuals": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "supersedes": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "$comment": "Structural schema only. The local OCaml validator checks arithmetic, factor bounds, UCA coverage, freshness and DAG/ranking; neither schema nor validator authorizes an effect."
+}
+

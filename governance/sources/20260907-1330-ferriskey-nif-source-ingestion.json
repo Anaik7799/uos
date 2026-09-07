@@ -25,6 +25,10 @@
     "snapshot_digest": "a2eb0cdaf78dbbba09fe61182006c58dc8f300d9af834fdec97efc946f376223 (sha256 of the sorted manifest)",
     "per_file_prefixes": { "Cargo.lock": "2ab5a05c89f9", "Cargo.toml": "2865cec138da", "src/audit.rs": "20cf51d7f469", "src/db.rs": "2a45b34d2e1e", "src/gcp_iam.rs": "aef3d39d6907", "src/gcp_sts.rs": "9f3d58d9298e", "src/group.rs": "e7748e124a8d", "src/jwks.rs": "4c15e2b71c22", "src/lib.rs": "839211d50842", "src/realm.rs": "486c45990643", "src/role.rs": "5314dd69d91e", "src/runtime.rs": "c30d5645ab8d", "src/scim.rs": "6fe5ada579cf", "src/token.rs": "1e9d2dafcdbb", "src/user.rs": "02306aae491d" }
   },
+  "reproducibility": {
+    "in_repo_build": "2026-09-07 ~13:42Z: cargo build --release from native/nifs/rust/ferriskey_nif (scratch target dir) produced libferriskey_nif.so 8,332,240 bytes, sha256 16969091909227c73ee24ddbe9fca3dd7495779c75fab025188fed54af617ed4 — byte-identical to the pinned artifact built earlier from the scratch copy of the same sources",
+    "meaning": "the pin can be regenerated from the repository alone with the recorded toolchain; key 1 (digest) is now source-anchored"
+  },
   "build": {
     "toolchain": "rustc 1.95.0 (59807616e 2026-04-14), cargo release profile, host x86-64 Linux, OTP 27 (erts 15.2.7)",
     "result": "target/release/libferriskey_nif.so, 8,332,240 bytes, sha256 16969091909227c73ee24ddbe9fca3dd7495779c75fab025188fed54af617ed4, build time 1m03s",
@@ -33,8 +37,10 @@
   "uos_placement": {
     "artifact": "apps/cepaf_gleam/priv/ferriskey_nif.so (host-provisioned, matched by the *.so ignore rule, never committed)",
     "pin": "apps/cepaf_gleam/priv/ferriskey_nif.sha256 (committed; provenance line)",
-    "sources_target": "native/nifs/rust/ferriskey_nif/ (Cargo.toml, Cargo.lock, src/) — PENDING: the copy into the repository was refused by the operator's execution guard; requires operator permission",
-    "rule_mirrors_target": ".claude/rules, .gemini/rules, .agents/rules, .codex/rules — PENDING: same guard",
+    "sources_target": "native/nifs/rust/ferriskey_nif/ (Cargo.toml, Cargo.lock, 13 src/*.rs) — IMPORTED 2026-09-07 ~13:40Z under explicit operator permission ('i am giving permission to import ferris key source and use it for the system'); the in-repo manifest digest equals the recorded snapshot digest a2eb0cdaf78dbbba09fe61182006c58dc8f300d9af834fdec97efc946f376223 (every file matched)",
+    "rule_mirrors_target": ".claude/rules, .gemini/rules, .agents/rules, .codex/rules — written 2026-09-07 with the file tool (20260907-1330-iam-ferriskey-nif-rule.md on all four surfaces)",
+    "formal_evidence_copy": "formal/tla/20260907-1340-ferriskey-iam-c3i-evidence.tla (97 lines, sha256 65aa32db…; evidence only)",
+    "build_recipe": "native/nifs/rust/README.md section 'ferriskey_nif'",
     "loader_and_bindings_already_in_uos": "apps/cepaf_gleam/src/ferriskey_nif.erl (46 NIF stubs), src/cepaf_gleam/auth/ferriskey_nif.gleam (31 externals), iam/* supervisor, nif_manager, jwks_cache_actor, scim_outbound_actor, ui/wisp/auth_api.gleam; tests ferriskey_nif_wiring_test (33) and ferriskey_rbac_wiring_test (6)"
   },
   "verification": {

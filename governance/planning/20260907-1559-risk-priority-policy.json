@@ -1,0 +1,117 @@
+{
+  "contract": "SC-RISK-PRIORITY-001",
+  "version": "1.0.0",
+  "status": "PROCESS_RULE",
+  "scope": [
+    "sdlc",
+    "sre",
+    "sop",
+    "agentic",
+    "jobs",
+    "workflows",
+    "skills",
+    "superpowers",
+    "agents",
+    "plugins"
+  ],
+  "layers": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9
+  ],
+  "factors": [
+    "criticality",
+    "stpa",
+    "fmea",
+    "dependency",
+    "impact"
+  ],
+  "scale": {
+    "minimum": 1,
+    "maximum": 5,
+    "unknown": null
+  },
+  "formula": "criticality * stpa * fmea * dependency * impact",
+  "score_range": [
+    1,
+    3125
+  ],
+  "fmea": {
+    "subfactors": [
+      "s",
+      "o",
+      "det"
+    ],
+    "rpn": "s * o * det",
+    "rpn_maxima": [
+      5,
+      15,
+      35,
+      70,
+      125
+    ],
+    "bands": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "mode_band": "max(s, rpn_band(rpn))",
+    "aggregation": "maximum mode band",
+    "unknown": "null; require bounded evidence collection"
+  },
+  "precedence": [
+    "authority_and_safety_constraints",
+    "dependency_readiness",
+    "effective_class",
+    "effective_score_descending",
+    "bounded_value_per_cost",
+    "oldest_ready_time",
+    "stable_task_id"
+  ],
+  "classes": [
+    "P0",
+    "P1",
+    "P2",
+    "P3"
+  ],
+  "inherited_urgency": "maximum urgency over unfinished consumers; retain origin and own score; never bypass dependency",
+  "freshness_seconds": {
+    "incident": 900,
+    "release": 3600,
+    "planning": 86400
+  },
+  "invalidate_on": [
+    "candidate_change",
+    "evidence_change",
+    "hazard_context_change",
+    "authority_change",
+    "dependency_change",
+    "new_outcome"
+  ],
+  "legacy_adapter": {
+    "database": "var/sa-plan/uos.sqlite3",
+    "command": "task select",
+    "impact": "JSON rationale only",
+    "queue_priority_updated": false,
+    "standards": "separate; 0 = not assessed",
+    "agent_fit": "separate; 0 = not assessed"
+  },
+  "enforcement": {
+    "process": "mandatory local instruction",
+    "validator": "report-only; no task or runtime mutations",
+    "scheduler": "NOT_IMPLEMENTED_BY_THIS_PACKAGE",
+    "admission": "NOT_ADMITTED"
+  },
+  "sop": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+  "schema": "governance/planning/20260907-1559-risk-priority-record.schema.json"
+}
+
