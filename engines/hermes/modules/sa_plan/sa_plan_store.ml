@@ -93,6 +93,7 @@ type bridge_lease = {
   lease_id : string;
   fencing_token : int64;
   expires_at_ns : int64;
+  task_attempt : int option;
 }
 
 type summary = { total : int; completed : int; ready : int; executing : int }
@@ -714,6 +715,23 @@ let audit_v6_shape db =
                   | Sqlite3.Rc.ROW | Sqlite3.Rc.DONE -> Ok ()
                   | rc -> rc_error "audit Sa-plan v6 observation shape" rc))))
 
+let migrate_v7 db =
+  raw_transaction db "Sa-plan v7 task attempt binding" (fun () ->
+      Result.bind
+        (ensure_column db ~table:"sa_plan_bridge_lease" ~column:"task_attempt"
+           ~definition:"task_attempt INTEGER CHECK(task_attempt IS NULL OR (typeof(task_attempt) = 'integer' AND task_attempt > 0))")
+        ~f:(fun () ->
+          (* NULL is deliberate: never infer authority for a pre-upgrade lease. *)
+          exec db "record Sa-plan schema version 7"
+            "UPDATE sa_plan_schema_meta SET version = 7 WHERE singleton = 1"))
+
+let audit_v7_shape db =
+  Result.bind (audit_v6_shape db) ~f:(fun () ->
+      with_stmt db "SELECT task_attempt FROM sa_plan_bridge_lease" (fun stmt ->
+          match Sqlite3.step stmt with
+          | Sqlite3.Rc.ROW | Sqlite3.Rc.DONE -> Ok ()
+          | rc -> rc_error "audit Sa-plan v7 attempt binding" rc))
+
 let open_db path =
   try
     let db = Sqlite3.db_open path in
@@ -721,7 +739,7 @@ let open_db path =
     match exec db "initialize Sa-plan schema" schema with
     | Ok () -> (
         match read_schema_version db with
-        | Ok version when version > 6 ->
+        | Ok version when version > 7 ->
             ignore (Sqlite3.db_close db : bool);
             Error "unsupported future Sa-plan schema"
         | Ok version -> (
@@ -754,14 +772,18 @@ let open_db path =
                         | Error _ as error ->
                             ignore (Sqlite3.db_close db : bool);
                             error
-                        | Ok () -> (match audit_v6_shape db with
+                        | Ok () -> (match
+                          Result.bind
+                            (if version < 7 then migrate_v7 db else Ok ())
+                            ~f:(fun () -> audit_v7_shape db)
+                          with
                           | Ok () ->
                               Ok
                                 {
                                   db;
                                   closed = false;
                                   transaction_active = false;
-                                  schema_version = 6;
+                                  schema_version = 7;
                                 }
                           | Error _ as error ->
                               ignore (Sqlite3.db_close db : bool);
@@ -1099,6 +1121,20 @@ let find_mapping_db db id =
 let find_bridge_mapping store ~id =
   Result.bind (ensure_open store) ~f:(fun () -> find_mapping_db store.db id)
 
+(* Clock input is supplied by the supervised adapter; arithmetic never wraps. *)
+let lease_deadline ~worker ~now_ns ~lease_ns =
+  if String.is_empty (String.strip worker) then Error "lease worker must be non-empty"
+  else if Int64.(now_ns < 0L) then Error "lease time must be non-negative"
+  else if Int64.(lease_ns <= 0L) then Error "lease duration must be positive"
+  else if Int64.(now_ns > max_value - lease_ns) then Error "lease deadline overflow"
+  else Ok Int64.(now_ns + lease_ns)
+
+let validate_completion ~worker ~expected_attempt ~now_ns =
+  if String.is_empty (String.strip worker) then Error "completion worker must be non-empty"
+  else if expected_attempt <= 0 then Error "completion requires a positive original claim attempt"
+  else if Int64.(now_ns < 0L) then Error "completion time must be non-negative"
+  else Ok ()
+
 let bridge_lease_of_row stmt =
   {
     mapping_id = Sqlite3.column_text stmt 0;
@@ -1106,11 +1142,16 @@ let bridge_lease_of_row stmt =
     lease_id = Sqlite3.column_text stmt 2;
     fencing_token = Sqlite3.column_int64 stmt 3;
     expires_at_ns = Sqlite3.column_int64 stmt 4;
+    task_attempt =
+      (match Sqlite3.column stmt 5 with
+       | INT n when Int64.(n > 0L && n <= of_int Stdlib.max_int) ->
+           Some (Int64.to_int_exn n)
+       | _ -> None);
   }
 
 let find_bridge_lease_db db ~mapping_id =
   with_stmt db
-    "SELECT mapping_id,owner,lease_id,fencing_token,expires_at_ns \
+    "SELECT mapping_id,owner,lease_id,fencing_token,expires_at_ns,task_attempt \
      FROM sa_plan_bridge_lease WHERE mapping_id = ?" (fun stmt ->
       Result.bind (bind stmt 1 (Sqlite3.Data.TEXT mapping_id)) ~f:(fun () ->
           match Sqlite3.step stmt with
@@ -1128,119 +1169,112 @@ let mapped_task mapping =
   | None, None -> Error "bridge lease requires a materialized Sa-plan task"
   | _ -> Error "bridge mapping has unpaired Sa-plan identity"
 
-let task_claim_for_bridge db ~plan_id ~task_id ~owner ~expires_at_ns ~now_ns
-    ~reclaim =
-  let state_clause =
-    if reclaim then "state = 'executing' AND lease_until_ns < ?"
-    else "state = 'available'"
+let task_claim_for_bridge db ~plan_id ~task_id ~owner ~expires_at_ns ~now_ns =
+  let open Result.Let_syntax in
+  let%bind () =
+    with_stmt db
+      {|UPDATE sa_plan_task SET state = 'executing', worker = ?,
+          lease_until_ns = ?, attempt = attempt + 1
+        WHERE plan_id = ? AND id = ? AND attempt >= 0 AND attempt < ?
+          AND (state = 'available' OR (state = 'executing' AND lease_until_ns <= ?))
+          AND NOT EXISTS (
+            SELECT 1 FROM sa_plan_dependency AS edge
+            JOIN sa_plan_task AS dependency
+              ON dependency.plan_id = edge.plan_id AND dependency.id = edge.dependency_id
+            WHERE edge.plan_id = sa_plan_task.plan_id AND edge.task_id = sa_plan_task.id
+              AND dependency.state <> 'completed')
+      |} (fun stmt ->
+        let%bind () = bind_values_result "bind fenced bridge task claim" stmt
+          [ TEXT owner; INT expires_at_ns; TEXT plan_id; TEXT task_id;
+            INT (Int64.of_int Stdlib.max_int); INT now_ns ] in
+        let%bind () = step_done "claim fenced bridge task" stmt in
+        if Sqlite3.changes db = 1 then Ok ()
+        else Error "bridge task is blocked, leased, terminal or attempt-exhausted")
   in
-  with_stmt db
-    ("UPDATE sa_plan_task SET state = 'executing', worker = ?, \
-      lease_until_ns = ?, attempt = attempt + 1 WHERE plan_id = ? AND id = ? AND "
-    ^ state_clause)
-    (fun stmt ->
-      let values =
-        if reclaim then
-          [ Sqlite3.Data.TEXT owner; INT expires_at_ns; Sqlite3.Data.TEXT plan_id; Sqlite3.Data.TEXT task_id; INT now_ns ]
-        else [ Sqlite3.Data.TEXT owner; INT expires_at_ns; Sqlite3.Data.TEXT plan_id; Sqlite3.Data.TEXT task_id ]
-      in
-      Result.bind (bind_values_result "bind fenced bridge task claim" stmt values)
-        ~f:(fun () ->
-          Result.bind (step_done "claim fenced bridge task" stmt) ~f:(fun () ->
-              if Sqlite3.changes db = 1 then Ok ()
-              else Error "bridge lease claim lost task compare-and-set")))
+  with_stmt db "SELECT attempt FROM sa_plan_task WHERE plan_id=? AND id=?" (fun stmt ->
+      let%bind () = bind_values_result "read bridge task attempt" stmt
+        [ TEXT plan_id; TEXT task_id ] in
+      match Sqlite3.step stmt with
+      | Sqlite3.Rc.ROW -> Ok (Sqlite3.column_int stmt 0)
+      | rc -> rc_error "read bridge claimed attempt" rc)
 
 let claim_bridge_lease store ~mapping_id ~owner ~lease_id ~now_ns ~lease_ns =
-  if String.is_empty mapping_id then Error "bridge lease mapping id must be non-empty"
-  else if String.is_empty owner then Error "bridge lease owner must be non-empty"
-  else if String.is_empty lease_id then Error "bridge lease id must be non-empty"
-  else if Int64.(lease_ns <= 0L) then Error "bridge lease duration must be positive"
+  let open Result.Let_syntax in
+  let%bind expires_at_ns = lease_deadline ~worker:owner ~now_ns ~lease_ns in
+  if String.is_empty (String.strip mapping_id) || String.is_empty (String.strip lease_id) then
+    Error "bridge claim requires non-empty mapping and lease id"
   else
     transaction store (fun () ->
-        Result.bind (find_mapping_db store.db mapping_id) ~f:(function
-          | None -> Error "bridge lease mapping does not exist"
-          | Some mapping ->
-              Result.bind (mapped_task mapping) ~f:(fun (plan_id, task_id) ->
-                  let expires_at_ns = Int64.(now_ns + lease_ns) in
-                  Result.bind
-                    (find_bridge_lease_db store.db ~mapping_id)
-                    ~f:(function
-                      | Some lease when Int64.(lease.expires_at_ns >= now_ns) ->
-                          Error "bridge lease is still live"
-                      | None ->
-                          Result.bind
-                            (task_claim_for_bridge store.db ~plan_id ~task_id ~owner
-                               ~expires_at_ns ~now_ns ~reclaim:false)
-                            ~f:(fun () ->
-                              with_stmt store.db
-                                "INSERT INTO sa_plan_bridge_lease(mapping_id,owner,lease_id,fencing_token,expires_at_ns) \
-                                 VALUES(?,?,?,?,?)" (fun stmt ->
-                                  Result.bind
-                                    (bind_values_result "insert bridge lease" stmt
-                                       [ Sqlite3.Data.TEXT mapping_id; Sqlite3.Data.TEXT owner; Sqlite3.Data.TEXT lease_id;
-                                         INT 1L; INT expires_at_ns ])
-                                    ~f:(fun () ->
-                                      Result.map (step_done "insert bridge lease" stmt)
-                                        ~f:(fun () ->
-                                          { mapping_id; owner; lease_id;
-                                            fencing_token = 1L; expires_at_ns }))))
-                      | Some prior ->
-                          let next_fence = Int64.(prior.fencing_token + 1L) in
-                          Result.bind
-                            (task_claim_for_bridge store.db ~plan_id ~task_id ~owner
-                               ~expires_at_ns ~now_ns ~reclaim:true)
-                            ~f:(fun () ->
-                              with_stmt store.db
-                                "UPDATE sa_plan_bridge_lease SET owner=?,lease_id=?,fencing_token=?,expires_at_ns=? \
-                                 WHERE mapping_id=? AND fencing_token=? AND expires_at_ns < ?" (fun stmt ->
-                                  Result.bind
-                                    (bind_values_result "reclaim bridge lease" stmt
-                                       [ Sqlite3.Data.TEXT owner; Sqlite3.Data.TEXT lease_id; INT next_fence;
-                                         INT expires_at_ns; Sqlite3.Data.TEXT mapping_id;
-                                         INT prior.fencing_token; INT now_ns ])
-                                    ~f:(fun () ->
-                                      Result.bind (step_done "reclaim bridge lease" stmt)
-                                        ~f:(fun () ->
-                                          if Sqlite3.changes store.db = 1 then
-                                            Ok { mapping_id; owner; lease_id;
-                                                 fencing_token = next_fence; expires_at_ns }
-                                          else Error "bridge lease reclaim lost compare-and-set"))))))))
+        let%bind mapping = find_mapping_db store.db mapping_id in
+        let%bind mapping = match mapping with
+          | Some mapping -> Ok mapping
+          | None -> Error "bridge lease mapping does not exist" in
+        let%bind plan_id, task_id = mapped_task mapping in
+        let%bind prior = find_bridge_lease_db store.db ~mapping_id in
+        let%bind fencing_token = match prior with
+          | Some lease when Int64.(lease.expires_at_ns > now_ns) ->
+              Error "bridge lease is still live"
+          | Some lease when Int64.(lease.fencing_token <= 0L || lease.fencing_token = max_value) ->
+              Error "bridge fencing token is invalid or exhausted"
+          | Some lease -> Ok Int64.(lease.fencing_token + 1L)
+          | None -> Ok 1L in
+        let%bind attempt = task_claim_for_bridge store.db ~plan_id ~task_id
+          ~owner ~expires_at_ns ~now_ns in
+        (* BEGIN IMMEDIATE protects the lease read, task claim and binding write. *)
+        let%bind () =
+          with_stmt store.db
+            {|INSERT INTO sa_plan_bridge_lease
+                (mapping_id,owner,lease_id,fencing_token,expires_at_ns,task_attempt)
+              VALUES(?,?,?,?,?,?)
+              ON CONFLICT(mapping_id) DO UPDATE SET owner=excluded.owner,
+                lease_id=excluded.lease_id, fencing_token=excluded.fencing_token,
+                expires_at_ns=excluded.expires_at_ns, task_attempt=excluded.task_attempt|}
+            (fun stmt ->
+              let%bind () = bind_values_result "write bound bridge lease" stmt
+                [ TEXT mapping_id; TEXT owner; TEXT lease_id; INT fencing_token;
+                  INT expires_at_ns; INT (Int64.of_int attempt) ] in
+              step_done "write bound bridge lease" stmt)
+        in
+        Ok { mapping_id; owner; lease_id; fencing_token; expires_at_ns;
+             task_attempt = Some attempt })
 
 let complete_bridge_task store ~mapping_id ~owner ~lease_id ~fencing_token
     ~result ~now_ns =
-  if String.is_empty owner || String.is_empty lease_id then
-    Error "bridge completion requires non-empty lease owner and id"
-  else if Int64.(fencing_token <= 0L) then
-    Error "bridge completion requires a positive fencing token"
+  let open Result.Let_syntax in
+  if String.is_empty (String.strip owner) || String.is_empty (String.strip lease_id)
+     || Int64.(fencing_token <= 0L || now_ns < 0L) then
+    Error "bridge completion requires owner, lease id, positive fence and non-negative time"
   else
     transaction store (fun () ->
-        Result.bind (find_mapping_db store.db mapping_id) ~f:(function
-          | None -> Error "bridge completion mapping does not exist"
-          | Some mapping ->
-              Result.bind (mapped_task mapping) ~f:(fun (plan_id, task_id) ->
-                  Result.bind (find_bridge_lease_db store.db ~mapping_id)
-                    ~f:(function
-                      | None -> Error "bridge completion lease is missing"
-                      | Some lease
-                        when not (String.equal lease.owner owner
-                                  && String.equal lease.lease_id lease_id
-                                  && Int64.equal lease.fencing_token fencing_token) ->
-                          Error "bridge completion rejected by stale lease fence"
-                      | Some lease when Int64.(lease.expires_at_ns < now_ns) ->
-                          Error "bridge completion rejected by expired lease"
-                      | Some _ ->
-                          with_stmt store.db
-                            "UPDATE sa_plan_task SET state='completed',result=?,completed_at_ns=?,lease_until_ns=NULL \
-                             WHERE plan_id=? AND id=? AND state='executing' AND worker=?" (fun stmt ->
-                              Result.bind
-                                (bind_values_result "complete fenced bridge task" stmt
-                                   [ Sqlite3.Data.TEXT result; INT now_ns; Sqlite3.Data.TEXT plan_id; Sqlite3.Data.TEXT task_id;
-                                     Sqlite3.Data.TEXT owner ])
-                                ~f:(fun () ->
-                                  Result.bind (step_done "complete fenced bridge task" stmt)
-                                    ~f:(fun () ->
-                                      if Sqlite3.changes store.db = 1 then Ok ()
-                                      else Error "bridge completion lost task authority")))))))
+        let%bind mapping = find_mapping_db store.db mapping_id in
+        let%bind mapping = match mapping with
+          | Some mapping -> Ok mapping
+          | None -> Error "bridge completion mapping does not exist" in
+        let%bind plan_id, task_id = mapped_task mapping in
+        let%bind lease = find_bridge_lease_db store.db ~mapping_id in
+        let%bind lease = match lease with
+          | None -> Error "bridge completion lease is missing"
+          | Some lease when not (String.equal lease.owner owner
+                 && String.equal lease.lease_id lease_id
+                 && Int64.equal lease.fencing_token fencing_token) ->
+              Error "bridge completion rejected by stale lease fence"
+          | Some lease when Int64.(lease.expires_at_ns <= now_ns) ->
+              Error "bridge completion rejected by expired lease"
+          | Some lease -> Ok lease in
+        let%bind attempt = match lease.task_attempt with
+          | Some attempt when attempt > 0 -> Ok attempt
+          | _ -> Error "bridge completion lacks an original task attempt binding" in
+        with_stmt store.db
+          {|UPDATE sa_plan_task SET state='completed',result=?,completed_at_ns=?,lease_until_ns=NULL
+            WHERE plan_id=? AND id=? AND state='executing' AND worker=?
+              AND attempt=? AND lease_until_ns > ?|}
+          (fun stmt ->
+            let%bind () = bind_values_result "complete bound bridge task" stmt
+              [ TEXT result; INT now_ns; TEXT plan_id; TEXT task_id; TEXT owner;
+                INT (Int64.of_int attempt); INT now_ns ] in
+            let%bind () = step_done "complete bound bridge task" stmt in
+            if Sqlite3.changes store.db = 1 then Ok ()
+            else Error "bridge completion lost task attempt or lease authority"))
 
 let ensure_bridge_mapping store request =
   let id = bridge_id request in
@@ -2137,7 +2171,7 @@ SELECT task.id, task.attempt
 FROM sa_plan_task AS task
 WHERE task.plan_id = ?
   AND (task.state = 'available'
-       OR (task.state = 'executing' AND task.lease_until_ns < ?))
+       OR (task.state = 'executing' AND task.lease_until_ns <= ?))
   AND NOT EXISTS (
     SELECT 1 FROM sa_plan_dependency AS edge
     JOIN sa_plan_task AS dependency
@@ -2163,12 +2197,14 @@ LIMIT 1
 
 let claim_update store ~plan_id ~task_id ~worker ~now_ns ~lease_until_ns
     ~previous_attempt =
-  with_stmt store.db
+  if previous_attempt < 0 || previous_attempt = Stdlib.max_int then
+    Error "Sa-plan task attempt is invalid or exhausted"
+  else with_stmt store.db
     {|
 UPDATE sa_plan_task
 SET state = 'executing', worker = ?, lease_until_ns = ?, attempt = attempt + 1
-WHERE plan_id = ? AND id = ?
-  AND (state = 'available' OR (state = 'executing' AND lease_until_ns < ?))
+WHERE plan_id = ? AND id = ? AND attempt = ?
+  AND (state = 'available' OR (state = 'executing' AND lease_until_ns <= ?))
 |}
     (fun stmt ->
       let values =
@@ -2177,6 +2213,7 @@ WHERE plan_id = ? AND id = ?
           INT lease_until_ns;
           TEXT plan_id;
           TEXT task_id;
+          INT (Int64.of_int previous_attempt);
           INT now_ns;
         ]
       in
@@ -2190,15 +2227,13 @@ WHERE plan_id = ? AND id = ?
               else Error "Sa-plan task claim lost compare-and-set")))
 
 let claim_next store ~plan_id ~worker ~now_ns ~lease_ns =
-  if Int64.(lease_ns <= 0L) then Error "Sa-plan lease must be positive"
-  else
+  Result.bind (lease_deadline ~worker ~now_ns ~lease_ns) ~f:(fun lease_until_ns ->
     transaction store (fun () ->
         Result.bind (select_claimable store.db ~plan_id ~now_ns) ~f:(function
           | None -> Ok None
           | Some (task_id, previous_attempt) ->
-              let lease_until_ns = Int64.(now_ns + lease_ns) in
               claim_update store ~plan_id ~task_id ~worker ~now_ns
-                ~lease_until_ns ~previous_attempt))
+                ~lease_until_ns ~previous_attempt)))
 
 let select_specific_claimable db ~plan_id ~id_or_name ~now_ns =
   with_stmt db
@@ -2207,7 +2242,7 @@ SELECT task.attempt, task.id
 FROM sa_plan_task AS task
 WHERE task.plan_id = ? AND (task.id = ? OR task.name = ?)
   AND (task.state = 'available'
-       OR (task.state = 'executing' AND task.lease_until_ns < ?))
+       OR (task.state = 'executing' AND task.lease_until_ns <= ?))
   AND NOT EXISTS (
     SELECT 1 FROM sa_plan_dependency AS edge
     JOIN sa_plan_task AS dependency
@@ -2231,74 +2266,51 @@ WHERE task.plan_id = ? AND (task.id = ? OR task.name = ?)
           | rc -> rc_error "select specific claimable Sa-plan task" rc))
 
 let claim_task store ~plan_id ~task_id ~worker ~now_ns ~lease_ns =
-  if String.is_empty worker then Error "Sa-plan worker must be non-empty"
-  else if Int64.(lease_ns <= 0L) then Error "Sa-plan lease must be positive"
-  else
+  Result.bind (lease_deadline ~worker ~now_ns ~lease_ns) ~f:(fun lease_until_ns ->
     transaction store (fun () ->
         Result.bind
           (select_specific_claimable store.db ~plan_id ~id_or_name:task_id ~now_ns)
           ~f:(function
           | None -> Error ("Sa-plan task is not claimable: " ^ task_id)
           | Some (previous_attempt, actual_id) ->
-              let lease_until_ns = Int64.(now_ns + lease_ns) in
               Result.bind
                 (claim_update store ~plan_id ~task_id:actual_id ~worker ~now_ns
                    ~lease_until_ns ~previous_attempt) ~f:(function
                 | Some claim -> Ok claim
-                | None -> Error "specific Sa-plan task claim disappeared")))
+                | None -> Error "specific Sa-plan task claim disappeared"))))
 
-let release_task store ~plan_id ~task_id ~worker ~now_ns:_ =
+let release_task store ~plan_id ~task_id ~worker ~expected_attempt ~now_ns =
+  let open Result.Let_syntax in
+  let%bind () = validate_completion ~worker ~expected_attempt ~now_ns in
   transaction store (fun () ->
       with_stmt store.db
-        {|
-UPDATE sa_plan_task
-SET state = 'available', worker = NULL, lease_until_ns = NULL
-WHERE plan_id = ? AND (id = ? OR name = ?) AND state = 'executing' AND worker = ?
-|}
+        {|UPDATE sa_plan_task SET state = 'available', worker = NULL, lease_until_ns = NULL
+          WHERE plan_id = ? AND (id = ? OR name = ?) AND state = 'executing'
+            AND worker = ? AND attempt = ? AND lease_until_ns > ?|}
         (fun stmt ->
-          Result.bind
-            (bind_values_result "bind Sa-plan task release" stmt
-               [ Sqlite3.Data.TEXT plan_id; TEXT task_id; TEXT task_id; TEXT worker ])
-            ~f:(fun () ->
-              Result.bind (step_done "release Sa-plan task" stmt) ~f:(fun () ->
-                  if Sqlite3.changes store.db = 1 then Ok ()
-                  else
-                    Error
-                      (Printf.sprintf
-                         "Sa-plan release rejected for %s: task is not leased \
-                          by %s"
-                         task_id worker)))))
+          let%bind () = bind_values_result "bind Sa-plan task release" stmt
+            [ TEXT plan_id; TEXT task_id; TEXT task_id; TEXT worker;
+              INT (Int64.of_int expected_attempt); INT now_ns ] in
+          let%bind () = step_done "release Sa-plan task" stmt in
+          if Sqlite3.changes store.db = 1 then Ok ()
+          else Error "Sa-plan release rejected: current unexpired claim attempt required"))
 
-let complete_task store ~plan_id ~task_id ~worker ~result ~now_ns =
+let complete_task store ~plan_id ~task_id ~worker ~expected_attempt ~result ~now_ns =
+  let open Result.Let_syntax in
+  let%bind () = validate_completion ~worker ~expected_attempt ~now_ns in
   transaction store (fun () ->
       with_stmt store.db
-        {|
-UPDATE sa_plan_task
-SET state = 'completed', result = ?, completed_at_ns = ?,
-    lease_until_ns = NULL
-WHERE plan_id = ? AND (id = ? OR name = ?) AND state = 'executing' AND worker = ?
-|}
+        {|UPDATE sa_plan_task SET state = 'completed', result = ?, completed_at_ns = ?,
+            lease_until_ns = NULL
+          WHERE plan_id = ? AND (id = ? OR name = ?) AND state = 'executing'
+            AND worker = ? AND attempt = ? AND lease_until_ns > ?|}
         (fun stmt ->
-          Result.bind
-            (bind_values_result "bind task completion" stmt
-               [
-                 Sqlite3.Data.TEXT result;
-                 INT now_ns;
-                 TEXT plan_id;
-                 TEXT task_id;
-                 TEXT task_id;
-                 TEXT worker;
-               ])
-            ~f:(fun () ->
-              match step_done "complete Sa-plan task" stmt with
-              | Error _ as error -> error
-              | Ok () when Sqlite3.changes store.db = 1 -> Ok ()
-              | Ok () ->
-                  Error
-                    (Printf.sprintf
-                       "Sa-plan completion rejected for %s: task is not leased \
-                        by %s"
-                       task_id worker))))
+          let%bind () = bind_values_result "bind task completion" stmt
+            [ TEXT result; INT now_ns; TEXT plan_id; TEXT task_id; TEXT task_id;
+              TEXT worker; INT (Int64.of_int expected_attempt); INT now_ns ] in
+          let%bind () = step_done "complete Sa-plan task" stmt in
+          if Sqlite3.changes store.db = 1 then Ok ()
+          else Error "Sa-plan completion rejected: current unexpired claim attempt required"))
 
 let select_activity db ~workflow_id ~activity_id =
   with_stmt db
@@ -2612,7 +2624,7 @@ let select_claimable_job db ~queue ~now_ns =
  FROM sa_plan_job
  WHERE queue = ? AND available_at_ns <= ?
    AND (state IN ('available','retry')
-        OR (state = 'executing' AND lease_until_ns < ?))
+        OR (state = 'executing' AND lease_until_ns <= ?))
  ORDER BY available_at_ns, inserted_at_ns, id
  LIMIT 1
 |}
@@ -2628,98 +2640,79 @@ let select_claimable_job db ~queue ~now_ns =
           | rc -> rc_error "select claimable Sa-plan job" rc))
 
 let claim_job store ~queue ~worker ~now_ns ~lease_ns =
-  if String.is_empty worker then
-    Error "Sa-plan job lease owner must be non-empty"
-  else if Int64.(lease_ns <= 0L) then Error "Sa-plan job lease must be positive"
-  else
-    transaction store (fun () ->
-        Result.bind (select_claimable_job store.db ~queue ~now_ns) ~f:(function
-          | None -> Ok None
-          | Some job ->
-              let lease_until_ns = Int64.(now_ns + lease_ns) in
-              with_stmt store.db
-                {|
-UPDATE sa_plan_job
-SET state = 'executing', lease_owner = ?, lease_until_ns = ?,
-    attempt = attempt + 1
-WHERE id = ? AND
-  (state IN ('available','retry')
-   OR (state = 'executing' AND lease_until_ns < ?))
-|}
-                (fun stmt ->
-                  Result.bind
-                    (bind_values_result "bind Sa-plan job claim" stmt
-                       [
-                         Sqlite3.Data.TEXT worker;
-                         INT lease_until_ns;
-                         TEXT job.id;
-                         INT now_ns;
-                       ])
-                    ~f:(fun () ->
-                      Result.bind (step_done "claim Sa-plan job" stmt)
-                        ~f:(fun () ->
-                          if Sqlite3.changes store.db <> 1 then
-                            Error "Sa-plan job claim lost compare-and-set"
-                          else
-                            Result.bind (find_job_db store.db job.id)
-                              ~f:(function
-                              | Some claimed -> Ok (Some claimed)
-                              | None -> Error "claimed Sa-plan job disappeared"))))))
+  let open Result.Let_syntax in
+  let%bind lease_until_ns = lease_deadline ~worker ~now_ns ~lease_ns in
+  transaction store (fun () ->
+      let%bind job = select_claimable_job store.db ~queue ~now_ns in
+      match job with
+      | None -> Ok None
+      | Some job when job.attempt < 0 || job.attempt = Stdlib.max_int ->
+          Error "Sa-plan job attempt is invalid or exhausted"
+      | Some job ->
+          with_stmt store.db
+            {|UPDATE sa_plan_job SET state = 'executing', lease_owner = ?,
+                lease_until_ns = ?, attempt = attempt + 1
+              WHERE id = ? AND attempt = ? AND
+                (state IN ('available','retry')
+                 OR (state = 'executing' AND lease_until_ns <= ?))|}
+            (fun stmt ->
+              let%bind () = bind_values_result "bind Sa-plan job claim" stmt
+                [ TEXT worker; INT lease_until_ns; TEXT job.id;
+                  INT (Int64.of_int job.attempt); INT now_ns ] in
+              let%bind () = step_done "claim Sa-plan job" stmt in
+              if Sqlite3.changes store.db <> 1 then
+                Error "Sa-plan job claim lost compare-and-set"
+              else
+                Result.bind (find_job_db store.db job.id) ~f:(function
+                  | Some claimed -> Ok (Some claimed)
+                  | None -> Error "claimed Sa-plan job disappeared")))
 
 let retry_delay_ns ~attempt =
   let shift = Int.min 20 (Int.max 0 attempt) in
   let seconds = Int64.shift_left 15L shift |> Int64.min 3_600L in
   Int64.(seconds * 1_000_000_000L)
 
-let complete_job store ~id_or_name ~worker ~outcome ~now_ns =
+let complete_job store ~id_or_name ~worker ~expected_attempt ~outcome ~now_ns =
+  let open Result.Let_syntax in
+  let%bind () = validate_completion ~worker ~expected_attempt ~now_ns in
   transaction store (fun () ->
-      Result.bind (find_job_db store.db id_or_name) ~f:(function
-        | None -> Error ("Unknown Sa-plan job: " ^ id_or_name)
-        | Some job ->
-            if
-              (not (Poly.equal job.state Job_executing))
-              || not (Option.equal String.equal job.lease_owner (Some worker))
-            then
-              Error "Sa-plan job completion rejected: live lease owner mismatch"
-            else
-              let state, result, available_at_ns =
-                match outcome with
-                | `Ok result -> (Job_completed, result, job.available_at_ns)
-                | `Error error when job.attempt >= job.max_attempts ->
-                    (Job_discarded, error, job.available_at_ns)
-                | `Error error ->
-                    ( Job_retry,
-                      error,
-                      Int64.(now_ns + retry_delay_ns ~attempt:job.attempt) )
-              in
-              with_stmt store.db
-                {|
-UPDATE sa_plan_job
-SET state = ?, result = ?, available_at_ns = ?,
-    lease_owner = NULL, lease_until_ns = NULL
-WHERE id = ? AND state = 'executing' AND lease_owner = ?
-|}
-                (fun stmt ->
-                  Result.bind
-                    (bind_values_result "bind Sa-plan job completion" stmt
-                       [
-                         Sqlite3.Data.TEXT (job_state_to_text state);
-                         TEXT result;
-                         INT available_at_ns;
-                         TEXT job.id;
-                         TEXT worker;
-                       ])
-                    ~f:(fun () ->
-                      Result.bind (step_done "complete Sa-plan job" stmt)
-                        ~f:(fun () ->
-                          if Sqlite3.changes store.db <> 1 then
-                            Error "Sa-plan job completion lost compare-and-set"
-                          else
-                            Result.bind (find_job_db store.db job.id)
-                              ~f:(function
-                              | Some completed -> Ok completed
-                              | None ->
-                                  Error "completed Sa-plan job disappeared"))))))
+      let%bind job = find_job_db store.db id_or_name in
+      match job with
+      | None -> Error ("Unknown Sa-plan job: " ^ id_or_name)
+      | Some job ->
+          if not (Poly.equal job.state Job_executing)
+             || not (Option.equal String.equal job.lease_owner (Some worker))
+             || job.attempt <> expected_attempt
+             || not (Option.value_map job.lease_until_ns ~default:false
+                       ~f:(fun deadline -> Int64.(deadline > now_ns)))
+          then Error "Sa-plan job completion rejected: current unexpired claim attempt required"
+          else
+            let%bind state, result, available_at_ns =
+              match outcome with
+              | `Ok result -> Ok (Job_completed, result, job.available_at_ns)
+              | `Error error when job.attempt >= job.max_attempts ->
+                  Ok (Job_discarded, error, job.available_at_ns)
+              | `Error error ->
+                  Result.map
+                    (lease_deadline ~worker ~now_ns ~lease_ns:(retry_delay_ns ~attempt:job.attempt))
+                    ~f:(fun deadline -> Job_retry, error, deadline)
+            in
+            with_stmt store.db
+              {|UPDATE sa_plan_job SET state = ?, result = ?, available_at_ns = ?,
+                  lease_owner = NULL, lease_until_ns = NULL
+                WHERE id = ? AND state = 'executing' AND lease_owner = ?
+                  AND attempt = ? AND lease_until_ns > ?|}
+              (fun stmt ->
+                let%bind () = bind_values_result "bind Sa-plan job completion" stmt
+                  [ TEXT (job_state_to_text state); TEXT result; INT available_at_ns;
+                    TEXT job.id; TEXT worker; INT (Int64.of_int expected_attempt); INT now_ns ] in
+                let%bind () = step_done "complete Sa-plan job" stmt in
+                if Sqlite3.changes store.db <> 1 then
+                  Error "Sa-plan job completion lost compare-and-set"
+                else
+                  Result.bind (find_job_db store.db job.id) ~f:(function
+                    | Some completed -> Ok completed
+                    | None -> Error "completed Sa-plan job disappeared")))
 
 let cancel_job store ~id_or_name ~reason ~now_ns:_ =
   if String.is_empty reason then Error "Sa-plan job cancellation reason must be non-empty"

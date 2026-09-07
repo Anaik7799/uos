@@ -1,0 +1,220 @@
+{
+  "schema": "uos.sa-plan-attempt-fencing-review.v1",
+  "status": "LOCALLY_TESTED_CANDIDATE_NOT_ADMITTED",
+  "observed_host_utc": "2026-09-07T19:22:45Z",
+  "base_commit": "3c05ee107bdfb2a5f4cab16b1c04377c55e909d7",
+  "change_id": "pnmksopxqrzrroxsqwoqsywsknzolpqk",
+  "workspace": ".uos-workspaces/codex-side-hive-fencing",
+  "source_binding": "SHA-256 of the listed candidate files; unsigned author record, not full-tree attestation",
+  "sa_plan": {
+    "plan_id": "uos/hive-fencing/20260907-1854",
+    "task_id": "FENCE-CANDIDATE",
+    "worker": "codex-side-hive-fencing",
+    "attempt": 1
+  },
+  "toolchain": {
+    "ocaml": "5.5.0",
+    "dune": "3.23.1",
+    "build_jobs": 1
+  },
+  "clock": {
+    "source": "chronyc tracking",
+    "stratum": 3,
+    "leap": "Normal",
+    "system_offset_seconds_fast": 0.000083021
+  },
+  "sources": [
+    {
+      "sha256": "9f3c5548d7d2ff6514df605ce61c66272a33ed2bfd27fca33a45ac7f46e617cb",
+      "path": "engines/hermes/modules/sa_plan/sa_plan_c3i_reference.ml"
+    },
+    {
+      "sha256": "311084cf758cb74dd8e12db6d228ae234c5a00c09ea8bf2bb86f0006d09c702b",
+      "path": "engines/hermes/modules/sa_plan/sa_plan_store.ml"
+    },
+    {
+      "sha256": "9e0f305a6895db16190dca80ff826009ea135916d29f31876881bf1dd73462f7",
+      "path": "engines/hermes/modules/sa_plan/sa_plan_store.mli"
+    },
+    {
+      "sha256": "d26873a63774f397f3831fd371da724dbb93d8e40316b3f3b5e5f4149cbf5a1e",
+      "path": "engines/hermes/modules/sa_plan/test/dune"
+    },
+    {
+      "sha256": "f9114de058f91ef3c58f93eb8b534e9f40943e70b79274ab09bc5c4b78783335",
+      "path": "engines/hermes/modules/sa_plan/test/sa_plan_cli.ml"
+    },
+    {
+      "sha256": "b8e471721038ce4abc2e8dfa7f8f9e19e435296444955d653987e2ba640c8b8e",
+      "path": "engines/hermes/modules/sa_plan/test/sa_plan_main.ml"
+    },
+    {
+      "sha256": "592b9d4e520c18dda99da9932184fa9466fe29a00d656f349ab64c8ec5799319",
+      "path": "engines/hermes/modules/sa_plan/test/test_sa_plan_cli.ml"
+    },
+    {
+      "sha256": "d1c8fefa461bddb628be596b30872769b2fcd79b34220c33fdd1d5d73ea5681f",
+      "path": "engines/hermes/modules/sa_plan/test/test_sa_plan_durable.ml"
+    },
+    {
+      "sha256": "997fb9a1702ab6cc63576f10529c70ecbe2d17ee1a752a0b1a49fcefeae4d361",
+      "path": "engines/hermes/modules/sa_plan/test/test_sa_plan_leases.ml"
+    },
+    {
+      "sha256": "1f4c506f82ca4926cb12671b11d9bfdcfd85721061ca0a4568f95bd516ca5433",
+      "path": "engines/hermes/modules/sa_plan/test/test_sa_plan_observability.ml"
+    },
+    {
+      "sha256": "b70061afe9718bf1128f8f12e810817341011927448b378f5923d3ccb5975c4e",
+      "path": "engines/hermes/modules/sa_plan/test/test_sa_plan_observability_kpi.ml"
+    },
+    {
+      "sha256": "b4d31a5c789d87efacfa1538fb1088bcb071f9bbb3ccdd76d378eb1c3594924e",
+      "path": "engines/hermes/modules/sa_plan/test/test_sa_plan_observation.ml"
+    },
+    {
+      "sha256": "f606c8d1dc9a5158fc0f1b81d8fd05af3bbc3183feb9b3d28b03afcbaa75dd8d",
+      "path": "engines/hermes/modules/system_engg/test_run_swarm_bridge_programme.ml"
+    },
+    {
+      "sha256": "a6adae1fbc355aee62ac9ebb59d4f0d2dcd8a411ca1eb6670ba8d8ebe5f670f8",
+      "path": "tools/20260907-1854-sa-plan-fencing-mutations.ml"
+    },
+    {
+      "sha256": "61425f74e728ca0e1f20913816ef8cc7e92027d79c94e5945b6885b98ece6874",
+      "path": "tools/sa_plan_execution.ml"
+    },
+    {
+      "sha256": "490c96f8c17711635f3885bea8fcfab513e0e96f3454b41919679133c652a473",
+      "path": "tools/sa_plan_swarm.ml"
+    },
+    {
+      "sha256": "cc1f3200a7c1f851f881b325a51dc2b43808aa5634262ec442d1d38b5430445a",
+      "path": "tools/test_sa_plan_swarm.ml"
+    }
+  ],
+  "results": [
+    {
+      "id": "targeted_build",
+      "status": "PASSED",
+      "exit_code": 0
+    },
+    {
+      "id": "ops_full_verifier",
+      "status": "FAILED_WITH_SKIPS",
+      "exit_code": 1,
+      "passed_suites": 12,
+      "failed_suites": 1,
+      "skipped_suites": 296,
+      "discovered_suites": 309,
+      "failure": "test_run_swarm_bridge_programme: operator state path passes resource preflight",
+      "reason": "The unchanged resource-envelopes operational observer is deliberately unavailable until a receipt-bound owner exists.",
+      "runner_sha256_observed_after_run": "4557a5252e9ca0cbf116abd6277583ac12e9feef41d4a8648ad6488058ea92ac",
+      "runner_binding_limit": "The existing canonical offload binary was invoked against the isolated source tree; its later hash is not an atomic executable-at-invocation attestation."
+    },
+    {
+      "id": "fencing",
+      "status": "PASSED",
+      "exit_code": 0,
+      "new_assertions": 2955,
+      "retained_assertions": 8,
+      "total_assertions": 2963,
+      "bounded_oracle_traces": 729,
+      "trace_suffix_alphabet": 9,
+      "trace_suffix_depth": 3
+    },
+    {
+      "id": "mutations",
+      "status": "PASSED",
+      "exit_code": 0,
+      "killed": 6,
+      "survived": 0,
+      "void": 0,
+      "mutants": [
+        "release ignores attempt",
+        "task completion ignores attempt",
+        "task completion accepts exact expiry",
+        "job ignores attempt in both checks",
+        "bridge ignores bound task attempt",
+        "lease deadline wraps"
+      ],
+      "source_restored": true,
+      "post_mutation_rebuilt": true
+    },
+    {
+      "id": "real_cli",
+      "status": "PASSED",
+      "exit_code": 0,
+      "expected_rejections": 5,
+      "task_attempts": [
+        1,
+        2
+      ],
+      "job_attempts": [
+        1,
+        2
+      ],
+      "usage_rejection_exit": 2,
+      "stale_rejection_exit": 1
+    },
+    {
+      "id": "manual_swarm_adapter",
+      "status": "PASSED",
+      "exit_code": 0,
+      "checks": 45
+    },
+    {
+      "id": "planning_adapter",
+      "status": "PASSED",
+      "exit_code": 0,
+      "checks": 10,
+      "scope": "scratch registration and planning only"
+    },
+    {
+      "id": "sa_plan_test",
+      "status": "PASSED",
+      "exit_code": 0
+    },
+    {
+      "id": "active_risk_observation",
+      "status": "ACTIVE_OBSERVATION_PASS",
+      "exit_code": 0,
+      "observed_at": "2026-09-07T19:09:16Z",
+      "evidence_files_checked": 4,
+      "assessment_sha256": "408772569af0c3083d3c93aa3abe1e81d3d866a22e71815a9802b937b55e78c8",
+      "authority": "NONE"
+    },
+    {
+      "id": "independent_review",
+      "status": "UNRUN"
+    },
+    {
+      "id": "unbounded_formal_proofs",
+      "status": "UNRUN"
+    },
+    {
+      "id": "runtime_cutover",
+      "status": "NOT_ADMITTED"
+    }
+  ],
+  "reproduction": {
+    "specification": "docs/design/20260907-1854-sa-plan-attempt-fencing-spec.md",
+    "journal": "docs/journal/20260907-1854-sa-plan-attempt-fencing-journal.md",
+    "mutations": "tools/20260907-1854-sa-plan-fencing-mutations.ml",
+    "real_cli_command": "set -eu\nfence_cli=\"$PWD/engines/hermes/_build/default/modules/sa_plan/test/sa_plan_main.exe\"\nfence_tmp=$(mktemp -d /tmp/uos-fence-cli.XXXXXX)\nexport UOS_SA_PLAN_DB=\"$fence_tmp/store.sqlite3\"\nfence_log=\"$fence_tmp/checks.txt\"\nrun() { \"$fence_cli\" \"$@\" >> \"$fence_log\" 2>&1; }\nreject() {\n  fence_expected=$1\n  shift\n  if \"$fence_cli\" \"$@\" >> \"$fence_log\" 2>&1; then\n    printf 'UNSAFE acceptance: %s\\n' \"$*\" >&2\n    exit 1\n  else\n    fence_exit=$?\n    [ \"$fence_exit\" -eq \"$fence_expected\" ] || exit \"$fence_exit\"\n  fi\n}\nattempt() { sed -n 's/.*attempt=\\([0-9][0-9]*\\).*/\\1/p'; }\nrun plan create p fence/cli \"CLI fencing\"\nrun task create p t fence/cli/task \"Task\"\nfence_first=$(\"$fence_cli\" task claim same p 30000000000 t 2>> \"$fence_log\" | attempt)\n[ \"$fence_first\" = 1 ]\nreject 2 task complete p t same done\nrun task release p t same \"$fence_first\"\nfence_second=$(\"$fence_cli\" task claim same p 30000000000 t 2>> \"$fence_log\" | attempt)\n[ \"$fence_second\" = 2 ]\nreject 1 task complete p t same \"$fence_first\" stale\nreject 1 task release p t same \"$fence_first\"\nrun task complete p t same \"$fence_second\" done\n\"$fence_cli\" task show p t 2>> \"$fence_log\" | rg 'state=completed' >> \"$fence_log\"\nrun job enqueue j fence/cli/job q fixture '{}' 3\nfence_job_first=$(\"$fence_cli\" job claim q same 1 2>> \"$fence_log\" | attempt)\n[ \"$fence_job_first\" = 1 ]\nreject 1 job complete j same \"$fence_job_first\" OK expired\nfence_job_second=$(\"$fence_cli\" job claim q same 30000000000 2>> \"$fence_log\" | attempt)\n[ \"$fence_job_second\" = 2 ]\nreject 1 job complete j same \"$fence_job_first\" OK stale\nrun job complete j same \"$fence_job_second\" OK done\n\"$fence_cli\" job list q 2>> \"$fence_log\" | rg 'state=completed' >> \"$fence_log\"\nprintf 'CLI_FENCING_PASS task_attempts=%s,%s job_attempts=%s,%s rejected=5 log=%s\\n' \"$fence_first\" \"$fence_second\" \"$fence_job_first\" \"$fence_job_second\" \"$fence_log\"\n",
+    "build_command": "dune build -j 1 @modules/sa_plan/test/all modules/system_engg/test_run_swarm_bridge_programme.exe modules/sa_plan/sa_plan.cma",
+    "mutation_command": "ocaml -I modules/hermes_ops ../../tools/20260907-1854-sa-plan-fencing-mutations.ml --dune /absolute/path/to/dune",
+    "mandatory_after_mutation": "Rebuild original sources before reusing or testing any executable.",
+    "swarm_test_command": "ocaml -I tools tools/test_sa_plan_swarm.ml",
+    "planning_test_command": "ocaml tools/sa_plan_execution.ml selftest governance/planning/20260906-1655-uos-sa-plan-execution-manifest.json"
+  },
+  "limits": [
+    "Candidate only; canonical runtime and schema were not migrated by this session.",
+    "Store time and worker identity are trusted adapter inputs; attempts are not cryptographic capabilities.",
+    "Remote recipients require their own fencing/idempotency; local SQLite completion is not an atomic remote effect.",
+    "Workflow/activity/cancellation and other effect paths remain outside this bounded candidate.",
+    "Old writers must drain for v7 migration; do not infer original attempts from current rows.",
+    "Full verifier failed and skipped 296 suites; no whole-system pass, independent approval or admission.",
+    "Verification is bounded, unsigned and author-recorded; exact source equality does not prove runtime admission."
+  ]
+}

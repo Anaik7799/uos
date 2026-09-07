@@ -32,7 +32,7 @@
 (executable
  (name test_sa_plan_leases)
  (modules test_sa_plan_leases)
- (libraries core core_unix sa_plan))
+ (libraries core core_unix sa_plan sqlite3))
 
 (executable
  (name test_sa_plan_cli)

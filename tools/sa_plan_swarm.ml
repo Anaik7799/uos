@@ -1,10 +1,11 @@
 #use "topfind";;
 #require "core,core_unix,digestif.ocaml,sqlite3,yojson,bos.setup";;
-#directory "/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/sa_plan/.sa_plan.objs/byte";;
-#directory "/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/sa_plan";;
+#directory "engines/hermes/_build/default/modules/sa_plan/.sa_plan.objs/byte";;
+#directory "engines/hermes/_build/default/modules/sa_plan";;
 #load "sa_plan.cma";;
 
-(* Bounded manual tracking. Reserved programme rows are only inspected. *)
+(* Run from the selected repository root with its library already built.
+   Bounded manual tracking. Reserved programme rows are only inspected. *)
 module S = Sa_plan.Store
 open Core
 open Yojson.Basic.Util
@@ -330,7 +331,7 @@ let master_task_lease store attempt ~now_ns =
         when String.equal observation.task.state "executing"
              && Option.equal String.equal observation.task.worker (Some attempt.owner)
              && Option.value_map observation.lease_until_ns ~default:false
-                  ~f:(fun expires_at_ns -> Int64.(expires_at_ns >= now_ns)) ->
+                  ~f:(fun expires_at_ns -> Int64.(expires_at_ns > now_ns)) ->
           Ok ()
       | Some _ ->
           fail
@@ -400,9 +401,22 @@ let register_attempt store m ~task_id ~attempt ~owner ~preflight ~now_ns =
                 Result.map (S.ensure_bridge_mapping store (bridge a now_ns)) ~f:(fun _ -> a))))))))))))
 
 let job store a = Result.bind(S.list_jobs store ~queue:(Some a.queue))~f:(fun js -> match List.find js ~f:(fun j->String.equal j.id a.job_id) with Some j->Ok j|None->fail "manual support job missing")
-let current_lease store a ~owner ~lease_id ~now_ns = Result.bind(S.find_bridge_lease store ~mapping_id:a.mapping_id)~f:(function
-  |Some l when String.equal l.owner owner&&String.equal l.lease_id lease_id&&Int64.(l.expires_at_ns>=now_ns)->Ok l
-  |Some l when Int64.(l.expires_at_ns<now_ns)->fail "manual bridge lease expired"|Some _->fail "manual bridge lease owner or id stale"|None->fail "manual bridge lease missing")
+let current_lease store a ~owner ~lease_id ~now_ns =
+  Result.bind (S.find_bridge_lease store ~mapping_id:a.mapping_id) ~f:(function
+    | Some lease when String.equal lease.owner owner
+        && String.equal lease.lease_id lease_id && Int64.(now_ns >= 0L && lease.expires_at_ns > now_ns) ->
+        Result.bind (S.list_task_observations store ~plan_id:a.plan_id) ~f:(fun tasks ->
+          match List.find tasks ~f:(fun observation -> String.equal observation.task.id a.task_id) with
+          | Some observation when String.equal observation.task.state "executing"
+              && Option.equal String.equal observation.task.worker (Some owner)
+              && observation.task.attempt > 0
+              && Option.equal Int.equal lease.task_attempt (Some observation.task.attempt)
+              && Option.value_map observation.lease_until_ns ~default:false
+                   ~f:(fun deadline -> Int64.(deadline > now_ns)) -> Ok lease
+          | _ -> fail "manual bridge task binding is missing, stale or expired")
+    | Some lease when Int64.(lease.expires_at_ns <= now_ns) -> fail "manual bridge lease expired"
+    | Some _ -> fail "manual bridge lease owner or id stale"
+    | None -> fail "manual bridge lease missing")
 
 let minimum_lease_ns = 1_320_000_000_000L
 
@@ -413,13 +427,13 @@ let start_attempt store a ~now_ns ~lease_ns =
   S.with_transaction store (fun () ->
   Result.bind (recheck_start store a ~now_ns) ~f:(fun () ->
   Result.bind(S.find_bridge_lease store ~mapping_id:a.mapping_id)~f:(fun prior ->
-    let lease=match prior with Some l when Int64.(l.expires_at_ns>=now_ns)->if String.equal l.owner a.owner then Ok l else fail "live attempt belongs to another owner"|_->S.claim_bridge_lease store ~mapping_id:a.mapping_id ~owner:a.owner ~lease_id:(a.plan_id^":lease:"^Int64.to_string now_ns) ~now_ns ~lease_ns in
+    let lease=match prior with Some l when Int64.(l.expires_at_ns>now_ns)->if String.equal l.owner a.owner then current_lease store a ~owner:a.owner ~lease_id:l.lease_id ~now_ns else fail "live attempt belongs to another owner"|_->S.claim_bridge_lease store ~mapping_id:a.mapping_id ~owner:a.owner ~lease_id:(a.plan_id^":lease:"^Int64.to_string now_ns) ~now_ns ~lease_ns in
   Result.bind lease~f:(fun lease -> Result.bind(job store a)~f:(fun old ->
-    let claimed=match old.state,old.lease_owner,old.lease_until_ns with S.Job_executing,Some o,Some e when String.equal o a.owner&&Int64.(e>=now_ns)->Ok old|_->Result.bind(S.claim_job store ~queue:a.queue ~worker:a.owner ~now_ns ~lease_ns)~f:(function Some j when String.equal j.id a.job_id->Ok j|Some _->fail "unexpected job in unique queue"|None->fail "manual job not claimable") in
+    let claimed=match old.state,old.lease_owner,old.lease_until_ns with S.Job_executing,Some o,Some e when String.equal o a.owner&&Int64.(e>now_ns)->Ok old|_->Result.bind(S.claim_job store ~queue:a.queue ~worker:a.owner ~now_ns ~lease_ns)~f:(function Some j when String.equal j.id a.job_id->Ok j|Some _->fail "unexpected job in unique queue"|None->fail "manual job not claimable") in
   Result.bind claimed~f:(fun j -> if not(j.attempt > 0
     && Int64.equal (Int64.of_int j.attempt) lease.fencing_token
     && Option.equal String.equal j.lease_owner(Some a.owner)
-    && Option.value_map j.lease_until_ns ~default:false ~f:(fun e->Int64.(e>=now_ns)))
+    && Option.value_map j.lease_until_ns ~default:false ~f:(fun e->Int64.(e>now_ns)))
     then fail "manual job owner, attempt, fence, or expiry check failed" else
   Result.bind(S.record_bridge_command store ~mapping_id:a.mapping_id ~command_id:"start" ~request_hash:(a.preflight^":start") ~result:(activity a "start"(Yojson.Basic.from_string a.preflight)) ~recorded_at_ns:now_ns)~f:(fun _ ->
   Result.bind(complete_activity store a.workflow_id a "start"(Yojson.Basic.from_string a.preflight) now_ns)~f:(fun _ ->
@@ -454,7 +468,7 @@ let current_job store attempt ~owner ~fence ~now_ns =
        && Poly.equal job.state S.Job_executing
        && Option.equal String.equal job.lease_owner (Some owner)
        && Option.value_map job.lease_until_ns ~default:false
-            ~f:(fun expires_at_ns -> Int64.(expires_at_ns >= now_ns))
+            ~f:(fun expires_at_ns -> Int64.(expires_at_ns > now_ns))
     then Ok job
     else fail "manual job owner, attempt, fence, or expiry check failed")
 
@@ -500,13 +514,13 @@ let finish_attempt store a ~owner ~lease_id ~receipt ~now_ns =
           S.with_transaction store (fun () ->
               Result.bind (current_lease store a ~owner ~lease_id ~now_ns) ~f:(fun lease ->
                 Result.bind (current_job store a ~owner ~fence:lease.fencing_token ~now_ns)
-                  ~f:(fun _ ->
+                  ~f:(fun job_claim ->
                   Result.bind (required_stage_records store a) ~f:(fun () ->
                   Result.bind (S.record_bridge_command store ~mapping_id:a.mapping_id ~command_id:"finish"
                     ~request_hash:receipt ~result:(activity a "finish" r) ~recorded_at_ns:now_ns) ~f:(fun _ ->
                     Result.bind (S.complete_bridge_task store ~mapping_id:a.mapping_id ~owner ~lease_id
                       ~fencing_token:lease.fencing_token ~result:receipt ~now_ns) ~f:(fun () ->
-                    Result.bind (S.complete_job store ~id_or_name:a.job_id ~worker:owner ~outcome:(`Ok receipt) ~now_ns) ~f:(fun done_job ->
+                    Result.bind (S.complete_job store ~id_or_name:a.job_id ~worker:owner ~expected_attempt:job_claim.attempt ~outcome:(`Ok receipt) ~now_ns) ~f:(fun done_job ->
                     Result.bind (complete_activity store a.workflow_id a "finish" r now_ns) ~f:(fun _ ->
                     Result.bind (master_activities store a "finish" r now_ns) ~f:(fun () ->
                     Result.map (S.complete_workflow store ~id_or_name:a.workflow_id
@@ -572,10 +586,10 @@ let register_master_for_test store (m:manifest) ~now_ns =
     match ok (S.find_task store ~plan_id:m.plan_id ~id_or_name:id) with
     | Some { state = "completed"; _ } -> ()
     | Some _ ->
-        ignore (ok (S.claim_task store ~plan_id:m.plan_id ~task_id:id ~worker:"scratch"
-          ~now_ns:time ~lease_ns:1000L));
+        let task_claim = ok (S.claim_task store ~plan_id:m.plan_id ~task_id:id ~worker:"scratch"
+          ~now_ns:time ~lease_ns:1000L) in
         ok (S.complete_task store ~plan_id:m.plan_id ~task_id:id ~worker:"scratch"
-          ~result:"scratch dependency receipt" ~now_ns:Int64.(time + 1L))
+          ~expected_attempt:task_claim.attempt ~result:"scratch dependency receipt" ~now_ns:Int64.(time + 1L))
     | None -> failwith "missing scratch task"
   in
   complete "PLAN00" Int64.(now_ns + 10L)
@@ -587,7 +601,7 @@ let lease_ns_of_seconds seconds =
 
 let usage () =
   print_endline
-    "register M DB TASK ATTEMPT OWNER PREFLIGHT; start M DB TASK ATTEMPT OWNER LEASE_SECONDS; record M DB TASK ATTEMPT OWNER LEASE_ID STAGE RECEIPT; finish M DB TASK ATTEMPT OWNER LEASE_ID RECEIPT; inspect M DB TASK ATTEMPT. Lease seconds are converted to ns and must be at least 1320. No active renewal exists: resume only after expiry with a new fence. At expires_at_ns equality the lease remains live; reclamation starts only after expiry."
+    "register M DB TASK ATTEMPT OWNER PREFLIGHT; start M DB TASK ATTEMPT OWNER LEASE_SECONDS; record M DB TASK ATTEMPT OWNER LEASE_ID STAGE RECEIPT; finish M DB TASK ATTEMPT OWNER LEASE_ID RECEIPT; inspect M DB TASK ATTEMPT. Lease seconds are converted to ns and must be at least 1320. No active renewal exists: resume at or after expiry with a new fence. At expires_at_ns equality the lease is expired. Run from the selected repository root with its library built."
 let read path =
   if not (allowed_extension "receipt" path) then fail "receipt input extension must be .json"
   else Result.bind (descriptor_bytes ~validate:validate_evidence_path path) ~f:(fun (bytes, _) ->

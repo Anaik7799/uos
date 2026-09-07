@@ -55,14 +55,14 @@ let () =
            (Store.enqueue_job store ~id:"job-1"
               ~name:"zigvm/sa-plan/observability/project" ~queue:"ui"
               ~worker:"projector" ~args:"{}" ~max_attempts:2 ~now_ns:1_000L));
-      ignore
-        (or_fail
+      let job_claim =
+        Option.value_exn (or_fail
            (Store.claim_job store ~queue:"ui" ~worker:"worker-a"
-              ~now_ns:1_010L ~lease_ns:100L));
+              ~now_ns:1_010L ~lease_ns:100L)) in
       ignore
         (or_fail
            (Store.complete_job store ~id_or_name:"job-1" ~worker:"worker-a"
-              ~outcome:(`Error "transient") ~now_ns:1_020L));
+              ~expected_attempt:job_claim.attempt ~outcome:(`Error "transient") ~now_ns:1_020L));
       or_fail
         (Store.start_workflow_with_input store ~id:"workflow-1"
            ~name:"zigvm/sa-plan/observability/workflow" ~kind:"projection"

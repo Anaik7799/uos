@@ -87,8 +87,8 @@ work/plans/zigvm/documentation/sa-plan-unified-manual/manual.md|}
 
 let contextual_help = function
   | "plan" -> print_endline "plan create ID NAME TITLE | show ID_OR_NAME | rename ID_OR_NAME NEW_NAME | register | status | list | tree | watch [SECONDS]"
-  | "task" -> print_endline "task create PLAN ID NAME TITLE [PARENT|-] [DEPS] [PRIORITY] | show PLAN ID_OR_NAME | list PLAN | rename PLAN ID_OR_NAME NEW_NAME | claim WORKER [PLAN] [LEASE_NS] [TASK_ID] | release PLAN TASK WORKER | complete PLAN TASK WORKER RESULT | select PLAN TASK ACTOR PRIORITY STPA FMEA CRITICALITY DEPENDENCY STANDARDS AGENT_FIT RATIONALE"
-  | "job" | "oban" -> print_endline "job|oban enqueue ID NAME QUEUE WORKER ARGS [MAX_ATTEMPTS] | claim QUEUE WORKER [LEASE_NS] | complete ID_OR_NAME WORKER OK|ERROR RESULT | list [QUEUE]"
+  | "task" -> print_endline "task create PLAN ID NAME TITLE [PARENT|-] [DEPS] [PRIORITY] | show PLAN ID_OR_NAME | list PLAN | rename PLAN ID_OR_NAME NEW_NAME | claim WORKER [PLAN] [LEASE_NS] [TASK_ID] | release PLAN TASK WORKER ATTEMPT | complete PLAN TASK WORKER ATTEMPT RESULT | select PLAN TASK ACTOR PRIORITY STPA FMEA CRITICALITY DEPENDENCY STANDARDS AGENT_FIT RATIONALE"
+  | "job" | "oban" -> print_endline "job|oban enqueue ID NAME QUEUE WORKER ARGS [MAX_ATTEMPTS] | claim QUEUE WORKER [LEASE_NS] | complete ID_OR_NAME WORKER ATTEMPT OK|ERROR RESULT | list [QUEUE]"
   | "workflow" | "temporal" -> print_endline "workflow|temporal start ID NAME KIND INPUT | activity WORKFLOW ACTIVITY NAME KEY RESULT | complete WORKFLOW RESULT | fail WORKFLOW ERROR | history WORKFLOW"
   | "work" -> print_endline "work path KIND NAME | materialize KIND ID NAME TITLE CONTENT_FILE"
   | "docs" -> print_endline "docs validate MARKDOWN | render MARKDOWN HTML | publish HTML DASHBOARD_PATH | verify URL"
@@ -138,6 +138,7 @@ let emit_job format (job : Store.job_view) =
       "attempt", int job.attempt; "max_attempts", int job.max_attempts;
       "available_at_ns", int64 job.available_at_ns;
       "lease_owner", optional job.lease_owner;
+      "lease_until_ns", Option.value_map job.lease_until_ns ~default:"-" ~f:int64;
       "result", optional job.result ]
 
 let program_name node =
@@ -192,7 +193,7 @@ let dispatch store format argv =
   | "--help" -> usage ()
   | "--version" ->
       emit format
-        [ "version", "0.3.0"; "contract", "20260804";
+        [ "version", "0.4.0"; "contract", "20260804";
           "store", "sqlite"; "semantics", "at-least-once" ]
   | "--plan-create" ->
       or_fail
@@ -301,18 +302,16 @@ let dispatch store format argv =
   | "--task-release" ->
       or_fail
         (Store.release_task store ~plan_id:argv.(2) ~task_id:argv.(3)
-           ~worker:argv.(4) ~now_ns:(now_ns ()));
-      emit format [ "released", "true"; "plan_id", argv.(2);
-                    "task", argv.(3) ]
+           ~worker:argv.(4) ~expected_attempt:(Int.of_string argv.(5)) ~now_ns:(now_ns ()));
+      emit format [ "released", "true"; "plan_id", argv.(2); "task", argv.(3);
+                    "attempt", argv.(5) ]
   | "--complete" ->
-      let selected_plan, task, worker, result =
-        if Array.length argv > 5 then argv.(2), argv.(3), argv.(4), argv.(5)
-        else program_plan_id, argv.(2), argv.(3), argv.(4)
-      in
       or_fail
-        (Store.complete_task store ~plan_id:selected_plan ~task_id:task ~worker
-           ~result ~now_ns:(now_ns ()));
-      emit format [ "completed", "true"; "plan_id", selected_plan; "task", task ]
+        (Store.complete_task store ~plan_id:argv.(2) ~task_id:argv.(3)
+           ~worker:argv.(4) ~expected_attempt:(Int.of_string argv.(5))
+           ~result:argv.(6) ~now_ns:(now_ns ()));
+      emit format [ "completed", "true"; "plan_id", argv.(2); "task", argv.(3);
+                    "attempt", argv.(5) ]
   | "--task-select" ->
       let plan_id = argv.(2) and task_id = argv.(3) and actor = argv.(4) in
       let task =
@@ -366,12 +365,12 @@ let dispatch store format argv =
        | Some job -> emit_job format job)
   | "--job-complete" ->
       let outcome =
-        if String.Caseless.equal argv.(4) "OK" then `Ok argv.(5)
-        else if String.Caseless.equal argv.(4) "ERROR" then `Error argv.(5)
+        if String.Caseless.equal argv.(5) "OK" then `Ok argv.(6)
+        else if String.Caseless.equal argv.(5) "ERROR" then `Error argv.(6)
         else fail "job completion status must be OK or ERROR"
       in
       Store.complete_job store ~id_or_name:argv.(2) ~worker:argv.(3)
-        ~outcome ~now_ns:(now_ns ()) |> or_fail |> emit_job format
+        ~expected_attempt:(Int.of_string argv.(4)) ~outcome ~now_ns:(now_ns ()) |> or_fail |> emit_job format
   | "--job-list" ->
       let queue = if Array.length argv > 2 then Some argv.(2) else None in
       or_fail (Store.list_jobs store ~queue) |> List.iter ~f:(emit_job format)

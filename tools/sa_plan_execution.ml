@@ -1,12 +1,14 @@
 #use "topfind";;
-#require "core,sqlite3,yojson,bos.setup";;
-#directory "/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/sa_plan/.sa_plan.objs/byte";;
-#directory "/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/sa_plan";;
+#require "core,digestif.ocaml,sqlite3,yojson,bos.setup";;
+#directory "engines/hermes/_build/default/modules/sa_plan/.sa_plan.objs/byte";;
+#directory "engines/hermes/_build/default/modules/sa_plan";;
 #load "sa_plan.cma";;
 
 (* Bounded administration through the existing Sa_plan.Store API.
    No SQL writes, worker dispatch, source ingestion or implementation admission. *)
 module S = Sa_plan.Store
+(* Run from the selected repository root; receipt provenance follows that build. *)
+let runtime_library = Unix.realpath "engines/hermes/_build/default/modules/sa_plan/sa_plan.cma"
 open Yojson.Basic.Util
 let fail = failwith
 let must b m = if not b then fail m
@@ -143,13 +145,13 @@ let complete_planning store m digest =
     let meta=List.find(fun(t:S.task_observation)->t.task.id="PLAN00")tasks in
     if meta.task.state<>"completed" then begin
       let result=compact(a["scope",s "planning-and-registration-only";"manifest_sha256",s digest;"registration_readback_verified",`Bool true;"implementation_cases_executed",i 0]) in
-      ignore(ok(S.claim_task store ~plan_id:pid ~task_id:"PLAN00" ~worker ~now_ns:(now()) ~lease_ns:1320000000000L));
+      let task_claim=ok(S.claim_task store ~plan_id:pid ~task_id:"PLAN00" ~worker ~now_ns:(now()) ~lease_ns:1320000000000L) in
       let job=List.find(fun(j:S.job_view)->j.id=pid^"/job/PLAN00")jobs in
       let claimed=ok(S.claim_job store ~queue:job.queue ~worker ~now_ns:(now()) ~lease_ns:1320000000000L) in
       must(Option.map(fun(j:S.job_view)->j.id)claimed=Some job.id)"unexpected planning job claim";
-      ignore(ok(S.complete_job store ~id_or_name:job.id ~worker ~outcome:(`Ok result) ~now_ns:(now())));
+      ignore(ok(S.complete_job store ~id_or_name:job.id ~worker ~expected_attempt:(Option.get claimed).attempt ~outcome:(`Ok result) ~now_ns:(now())));
       ignore(ok(S.complete_workflow_activity store ~workflow_id_or_name:(pid^"/workflow") ~id:"PLAN00-registration" ~name:(pid^"/activity/plan00-registration") ~idempotency_key:(digest^":PLAN00:registration") ~result ~now_ns:(now())));
-      ok(S.complete_task store ~plan_id:pid ~task_id:"PLAN00" ~worker ~result ~now_ns:(now()))
+      ok(S.complete_task store ~plan_id:pid ~task_id:"PLAN00" ~worker ~expected_attempt:task_claim.attempt ~result ~now_ns:(now()))
     end;
     Ok()))
 let selftest m digest =
@@ -196,8 +198,8 @@ let () = try
       let view=observe store m digest in
       a["schema",s "uos.sa-plan-registration-receipt.v1";"status",s(if op="complete-planning"then "PLAN_REGISTERED_VERIFIED_IMPLEMENTATION_UNRUN" else "SA_PLAN_OBSERVED");
         "clock_utc",s(run["date";"-u";"+%Y-%m-%dT%H:%M:%SZ"]);"database",s db;"manifest",s path;"manifest_sha256",s digest;
-        "adapter_sha256",s(sha Sys.argv.(0));"runtime_library",s "/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/sa_plan/sa_plan.cma";
-        "runtime_library_sha256",s(sha "/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/sa_plan/sa_plan.cma");
+        "adapter_sha256",s(sha Sys.argv.(0));"runtime_library",s runtime_library;
+        "runtime_library_sha256",s(sha runtime_library);
         "jj_candidate",s(run["jj";"log";"-r";"@";"--no-graph";"-T";"change_id ++ \" \" ++ commit_id"]);
         "selftest",proof;"observed",view;"legacy_plan",member "legacy_plan" m;
         "dispatch_enabled",`Bool false;"temporal_service_connected",`Bool false;"system_admission_granted",`Bool false])

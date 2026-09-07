@@ -31,13 +31,13 @@ let () =
   require "LAW CP02-V3-FIXTURE-SETUP" (Poly.equal (Sqlite3.exec legacy "CREATE TABLE sa_plan_plan(id TEXT PRIMARY KEY,name TEXT,title TEXT NOT NULL,graph_fingerprint TEXT NOT NULL,created_at_ns INTEGER NOT NULL); CREATE TABLE sa_plan_task(plan_id TEXT NOT NULL,id TEXT NOT NULL,name TEXT,ordinal INTEGER NOT NULL,parent_id TEXT,task_type TEXT NOT NULL,title TEXT NOT NULL,estimate_points INTEGER,priority INTEGER NOT NULL,state TEXT NOT NULL,worker TEXT,lease_until_ns INTEGER,attempt INTEGER NOT NULL,result TEXT,completed_at_ns INTEGER,PRIMARY KEY(plan_id,id)); CREATE TABLE sa_plan_schema_meta(singleton INTEGER PRIMARY KEY,version INTEGER NOT NULL); INSERT INTO sa_plan_plan VALUES('v3-plan','legacy/plans/v3','v3','graph',0); INSERT INTO sa_plan_task VALUES('v3-plan','v3-task','legacy/tasks/v3',0,NULL,'story','v3 task',NULL,0,'available',NULL,NULL,0,NULL,NULL); INSERT INTO sa_plan_schema_meta VALUES(1,3)") Sqlite3.Rc.OK);
   require "LAW CP02-V3-FIXTURE-CLOSE" (Sqlite3.db_close legacy);
   let upgraded = or_fail (Store.open_db v3_path) in
-  require "LAW C02-CANONICAL-V3-UPGRADE-TO-V6"
-    (Store.schema_version upgraded = 6
+  require "LAW C02-CANONICAL-V3-UPGRADE-TO-V7"
+    (Store.schema_version upgraded = 7
      && Option.is_some (or_fail (Store.find_plan upgraded ~id_or_name:"v3-plan"))
      && Option.is_some (or_fail (Store.find_task upgraded ~plan_id:"v3-plan" ~id_or_name:"v3-task")));
   Store.close upgraded;
   let reopened_v3 = or_fail (Store.open_db v3_path) in
-  require "LAW C02-V6-REOPEN-DOES-NOT-REGRESS" (Store.schema_version reopened_v3 = 6);
+  require "LAW C02-V7-REOPEN-DOES-NOT-REGRESS" (Store.schema_version reopened_v3 = 7);
   Store.close reopened_v3;
   Stdlib.Sys.remove v3_path;
   let malformed_path = (Stdlib.Filename.concat (Stdlib.Filename.get_temp_dir_name ()) "zigvm-sa-plan-malformed-v4.sqlite3") in
@@ -85,7 +85,7 @@ let () =
         (after_restart.total = 3 && after_restart.executing = 1);
       or_fail
         (Store.complete_task reopened ~plan_id:"closure" ~task_id:"t1"
-           ~worker:"worker-a" ~result:"green" ~now_ns:1_060L);
+           ~worker:"worker-a" ~expected_attempt:(Option.value_exn first).attempt ~result:"green" ~now_ns:1_060L);
       let second =
         or_fail
           (Store.claim_next reopened ~plan_id:"closure" ~worker:"worker-b"
@@ -212,11 +212,11 @@ let () =
         (String.equal direct_claim.task_id "write" && direct_claim.attempt = 1);
       or_fail
         (Store.release_task store ~plan_id:"manual-plan" ~task_id:"write"
-           ~worker:"manual-worker" ~now_ns:4_026L);
+           ~worker:"manual-worker" ~expected_attempt:direct_claim.attempt ~now_ns:4_026L);
       require "LAW SA-PLAN-OWNER-ONLY-RELEASE"
         (Result.is_error
            (Store.release_task store ~plan_id:"manual-plan" ~task_id:"write"
-              ~worker:"wrong-worker" ~now_ns:4_027L));
+              ~worker:"wrong-worker" ~expected_attempt:direct_claim.attempt ~now_ns:4_027L));
       require "LAW SA-PLAN-NAME-REQUIRED"
         (Result.is_error
            (Store.create_task store ~plan_id:"manual-plan" ~id:"bad"
@@ -287,6 +287,7 @@ let () =
       let retry =
         or_fail
           (Store.complete_job store ~id_or_name:"job-1" ~worker:"worker-a"
+             ~expected_attempt:(Option.value_exn claimed).attempt
              ~outcome:(`Error "transient") ~now_ns:5_030L)
       in
       require "LAW SA-PLAN-JOB-BOUNDED-RETRY"
@@ -300,7 +301,7 @@ let () =
       let discarded =
         or_fail
           (Store.complete_job store ~id_or_name:reclaimed.id
-             ~worker:"worker-b" ~outcome:(`Error "terminal")
+             ~worker:"worker-b" ~expected_attempt:reclaimed.attempt ~outcome:(`Error "terminal")
              ~now_ns:Int64.(retry.available_at_ns + 10L))
       in
       require "LAW SA-PLAN-JOB-ATTEMPT-BOUND"

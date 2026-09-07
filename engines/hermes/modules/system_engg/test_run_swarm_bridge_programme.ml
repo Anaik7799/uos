@@ -102,11 +102,11 @@ let discard_recovery_job store =
          with
          | Error diagnostic -> Error diagnostic
          | Ok None -> Error "discard fixture could not claim recovery job"
-         | Ok (Some _) ->
+         | Ok (Some claimed) ->
              match
                Sa_plan.Store.complete_job store
                  ~id_or_name:Run_swarm_bridge_programme.recovery_projection_id
-                 ~worker:"discard-test" ~outcome:(`Error "injected failure")
+                 ~worker:"discard-test" ~expected_attempt:claimed.attempt ~outcome:(`Error "injected failure")
                  ~now_ns:(Int64.add now_ns 1L)
              with
              | Error diagnostic -> Error diagnostic
@@ -196,10 +196,10 @@ let () =
                              ~queue:"run-swarm-bridge" ~worker:"terminal-test"
                              ~now_ns:21L ~lease_ns:100L with
                      | Error _ | Ok None -> false
-                     | Ok (Some _) ->
+                     | Ok (Some claimed) ->
                          (match Sa_plan.Store.complete_job store
                                   ~id_or_name:Run_swarm_bridge_programme.recovery_projection_id
-                                  ~worker:"terminal-test" ~outcome:(`Ok "terminal")
+                                  ~worker:"terminal-test" ~expected_attempt:claimed.attempt ~outcome:(`Ok "terminal")
                                   ~now_ns:22L with
                           | Error _ -> false
                           | Ok _ ->

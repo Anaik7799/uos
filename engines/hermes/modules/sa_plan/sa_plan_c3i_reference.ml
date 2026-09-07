@@ -145,6 +145,7 @@ let evaluate_store store ~now_ns =
   let failure_ns = Int64.(now_ns + 2L) in
   let%bind retry_job =
     Store.complete_job store ~id_or_name:claimed_job.id ~worker:"reference-worker"
+      ~expected_attempt:claimed_job.attempt
       ~outcome:(`Error "retry") ~now_ns:failure_ns
   in
   let retry_ok =
@@ -173,6 +174,7 @@ let evaluate_store store ~now_ns =
   in
   let%bind discarded =
     Store.complete_job store ~id_or_name:claimed_again.id ~worker:"reference-worker"
+      ~expected_attempt:claimed_again.attempt
       ~outcome:(`Error "terminal") ~now_ns:Int64.(retry_job.available_at_ns + 1L)
   in
   let terminal_ok = Poly.equal discarded.state Job_discarded in

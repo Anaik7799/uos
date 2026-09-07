@@ -93,13 +93,13 @@ let required_arguments = function
   | "--task-create" -> Some 4
   | "--task-rename" -> Some 3
   | "--claim" -> Some 1
-  | "--task-release" -> Some 3
-  | "--complete" -> Some 3
+  | "--task-release" -> Some 4
+  | "--complete" -> Some 5
   | "--task-select" -> Some 11
   | "--activity" -> Some 3
   | "--job-enqueue" -> Some 5
   | "--job-claim" -> Some 2
-  | "--job-complete" -> Some 4
+  | "--job-complete" -> Some 5
   | "--job-list" -> Some 0
   | "--workflow-start" -> Some 4
   | "--workflow-activity" -> Some 5
@@ -123,4 +123,22 @@ let validate argv =
           Error
             (Printf.sprintf "%s requires at least %d argument(s)" argv.(1)
                required)
-        else Ok ()
+        else
+          let attempt_index =
+            match argv.(1) with
+            | "--task-release" | "--complete" -> Some 5
+            | "--job-complete" -> Some 4
+            | _ -> None
+          in
+          match attempt_index with
+          | None -> Ok ()
+          | Some index ->
+              if supplied <> required then
+                Error "fenced completion/release requires exact arguments including original ATTEMPT"
+              else
+                let text = argv.(index) in
+                let decimal = String.length text > 0
+                  && String.for_all (fun c -> c >= '0' && c <= '9') text in
+                match int_of_string_opt text with
+                | Some attempt when decimal && attempt > 0 -> Ok ()
+                | _ -> Error "ATTEMPT must be the positive decimal attempt from the original claim"
