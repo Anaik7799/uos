@@ -37,6 +37,7 @@ import gleam/string
 import uos_swarm/acl
 import uos_swarm/agent_runtime
 import uos_swarm/board.{Agent, Causality, Draft, Semantics}
+import uos_swarm/board_reader
 import uos_swarm/cockpit
 import uos_swarm/coord
 import uos_swarm/fmea
@@ -59,6 +60,9 @@ import uos_tui/html
 import uos_tui/live
 import uos_tui/ontology
 import uos_tui/render
+
+@external(erlang, "erlang", "halt")
+fn halt(code: Int) -> Nil
 
 const supervisor = Agent("L0-fable", "L0", "fable")
 
@@ -106,22 +110,12 @@ pub fn main() -> Nil {
     ["board", "timeline", path] ->
       io.println(board.to_markdown(load_board_messages(path)))
     ["board", "validate", path] ->
-      case board.validate(load_board_messages(path)) {
-        Ok(_) ->
-          io.println(
-            "board valid: "
-            <> int.to_string(list.length(load_board_messages(path)))
-            <> " messages, chain intact, semantics resolved, causal gaps "
-            <> int.to_string(
-              list.length(board.causal_gaps(load_board_messages(path))),
-            )
-            <> ", chain forks "
-            <> int.to_string(
-              list.length(board.chain_forks(load_board_messages(path))),
-            )
-            <> " (explicit records; lost history is not restored)",
-          )
-        Error(e) -> io.println("board INVALID: " <> e)
+      case validate_board_file(path) {
+        Ok(summary) -> io.println(summary)
+        Error(error) -> {
+          io.println("board INVALID: " <> error)
+          halt(1)
+        }
       }
     ["board", "ingest", journal, path, base] -> ingest(journal, path, base)
     ["board", "ingest", journal, path, base, ledger_path] ->
@@ -392,6 +386,54 @@ fn opt_base(base: String) -> option.Option(String) {
 
 fn open_board(path: String, base: String) -> Result(board.Board, String) {
   board.open("uos-tui-swarm", "uos_tui_board", Some(path), opt_base(base))
+}
+
+/// Strict, bounded validation for the CLI. Exact duplicate ledger updates retain
+/// legacy latest-record semantics; the same id with a different digest is refused.
+pub fn validate_board_file(path: String) -> Result(String, String) {
+  use text <- result.try(board_reader.read_file(path, board_reader.max_bytes))
+  use input <- result.try(board_reader.from_jsonl(text))
+  use _ <- result.try(case input.malformed_count {
+    0 -> Ok(Nil)
+    count -> Error(int.to_string(count) <> " malformed row(s)")
+  })
+  use _ <- result.try(reject_conflicting_digests(input.events, dict.new()))
+  let messages = board.from_jsonl(text).0
+  case messages {
+    [] -> Ok("board EMPTY: 0 messages; no hive health inferred")
+    _ -> {
+      use _ <- result.try(board.validate(messages))
+      Ok(
+        "board valid: "
+        <> int.to_string(list.length(messages))
+        <> " messages, chain intact, semantics resolved, causal gaps "
+        <> int.to_string(list.length(board.causal_gaps(messages)))
+        <> ", chain forks "
+        <> int.to_string(list.length(board.chain_forks(messages)))
+        <> " (explicit records; lost history is not restored)",
+      )
+    }
+  }
+}
+
+fn reject_conflicting_digests(
+  messages: List(board.Message),
+  seen: dict.Dict(String, String),
+) -> Result(Nil, String) {
+  case messages {
+    [] -> Ok(Nil)
+    [message, ..rest] ->
+      case dict.get(seen, message.id) {
+        Ok(digest) if digest != message.digest ->
+          Error("conflicting duplicate digests for " <> message.id)
+        Ok(_) -> reject_conflicting_digests(rest, seen)
+        Error(_) ->
+          reject_conflicting_digests(
+            rest,
+            dict.insert(seen, message.id, message.digest),
+          )
+      }
+  }
 }
 
 fn load_board_messages(path: String) -> List(board.Message) {
