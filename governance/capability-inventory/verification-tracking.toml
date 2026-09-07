@@ -87,7 +87,9 @@ checklist = "http://nas-1.tail55d152.ts.net:4100/checklist"
 api_checks = "http://nas-1.tail55d152.ts.net:4100/api/verify/checks"
 api_features = "http://nas-1.tail55d152.ts.net:4100/api/verify/features"
 api_ocaml_parity = "http://nas-1.tail55d152.ts.net:4100/api/verify/ocaml-parity"
-peer_runtime = "http://vm-1.tail55d152.ts.net:8088"
+peer_runtime = "http://vm-1.tail55d152.ts.net:4100"
+# N01: corrected from obsolete8088 using authenticated listener ownership,
+# configured C3I default_port and an observed HTTP identity. Build remains UNKNOWN.
 
 [ocaml_subsystem_breakdown]
 harness = 106
@@ -235,6 +237,5 @@ total_fpp_tests = 34
 fpp_failures = 0
 zero_muda = "0 Bevy, 0 Graphite, 0 foreign C++ F Prime libraries"
 ratified_by = "Tri-Sovereign Architecture Board (AGY, Claude, Codex)"
-
 
 
