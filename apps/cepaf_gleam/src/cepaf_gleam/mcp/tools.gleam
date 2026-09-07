@@ -7,6 +7,50 @@
 
 import cepaf_gleam/mcp/protocol.{type ToolDefinition, ToolDefinition}
 import gleam/json
+import gleam/list
+
+/// Historical declarations with no executable runtime binding are retained in
+/// the catalog as unavailable, and excluded from operational tools/list.
+pub const unavailable_tools = [
+  "control_loop", "safety_status", "registry_status", "run_selfcheck",
+  "run_gate", "zk_search", "sa_bridge_submit", "vault_status",
+  "vault_list_secrets", "vault_policy_get", "vault_audit_tail", "vault_health",
+]
+
+pub fn operational_tool_definitions() -> List(ToolDefinition) {
+  get_tool_definitions()
+  |> list.filter(fn(tool) { !list.contains(unavailable_tools, tool.name) })
+}
+
+pub fn catalog_json() -> json.Json {
+  json.object([
+    #("page", json.string("MCP Server")),
+    #("status", json.string("runtime_not_probed")),
+    #("active_sessions", json.null()),
+    #("declared_tool_count", json.int(list.length(get_tool_definitions()))),
+    #(
+      "advertised_tool_count",
+      json.int(list.length(operational_tool_definitions())),
+    ),
+    #(
+      "tools",
+      json.array(get_tool_definitions(), fn(tool) {
+        json.object([
+          #("name", json.string(tool.name)),
+          #("description", json.string(tool.description)),
+          #(
+            "status",
+            json.string(case list.contains(unavailable_tools, tool.name) {
+              True -> "UNAVAILABLE: no runtime binding"
+              False ->
+                "ADAPTER_PRESENT: live execution not verified by this catalog"
+            }),
+          ),
+        ])
+      }),
+    ),
+  ])
+}
 
 pub fn get_tool_definitions() -> List(ToolDefinition) {
   [

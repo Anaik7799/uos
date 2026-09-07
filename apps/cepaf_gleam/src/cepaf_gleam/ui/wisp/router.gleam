@@ -32,6 +32,7 @@ import cepaf_gleam/ha/fitness_gate
 import cepaf_gleam/ha/guard_grid
 import cepaf_gleam/ha/health_cascade
 import cepaf_gleam/ha/hot_reload
+import cepaf_gleam/mcp/tools as mcp_tools
 import cepaf_gleam/ha/invariant_gate
 import cepaf_gleam/ha/module_guard
 import cepaf_gleam/ha/request_guard
@@ -2070,13 +2071,7 @@ fn podman_json() -> String {
 
 /// MCP server status endpoint
 fn mcp_json() -> String {
-  json.object([
-    #("page", json.string("MCP Server")),
-    #("status", json.string("running")),
-    #("tools", json.array([], fn(x) { x })),
-    #("active_sessions", json.int(0)),
-  ])
-  |> json.to_string()
+  mcp_tools.catalog_json() |> json.to_string()
 }
 
 /// KMS catalog endpoint

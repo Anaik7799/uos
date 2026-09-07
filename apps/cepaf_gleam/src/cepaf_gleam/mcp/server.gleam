@@ -66,10 +66,10 @@ fn loop() {
       case trimmed {
         "" -> loop()
         _ -> {
-          io.println_error("[mcp-server] << " <> trimmed)
+          io.println_error("[mcp-server] request received")
           case process_line(trimmed) {
             Some(resp) -> {
-              io.println_error("[mcp-server] >> " <> resp)
+              io.println_error("[mcp-server] response emitted")
               io.println(resp)
             }
             None -> Nil
@@ -94,7 +94,12 @@ fn process_line(line: String) -> Option(String) {
     decode.success(m)
   }
   let id_decoder = {
-    use i <- decode.field("id", decode.string)
+    use i <- decode.field(
+      "id",
+      decode.one_of(decode.map(decode.string, json.string), [
+        decode.map(decode.int, json.int),
+      ]),
+    )
     decode.success(i)
   }
 
@@ -118,7 +123,7 @@ fn process_line(line: String) -> Option(String) {
 
 fn dispatch(
   method: String,
-  id: Option(String),
+  id: Option(json.Json),
   raw_line: String,
 ) -> Option(String) {
   case method {
@@ -135,7 +140,7 @@ fn dispatch(
 // initialize
 // ---------------------------------------------------------------------------
 
-fn initialize_response(id: Option(String)) -> String {
+fn initialize_response(id: Option(json.Json)) -> String {
   success_response(
     id,
     json.object([
@@ -156,8 +161,8 @@ fn initialize_response(id: Option(String)) -> String {
 // tools/list
 // ---------------------------------------------------------------------------
 
-fn tools_list_response(id: Option(String)) -> String {
-  let defs: List(ToolDefinition) = tools.get_tool_definitions()
+fn tools_list_response(id: Option(json.Json)) -> String {
+  let defs: List(ToolDefinition) = tools.operational_tool_definitions()
   let tools_json =
     json.array(
       list.map(defs, fn(t) {
@@ -176,7 +181,7 @@ fn tools_list_response(id: Option(String)) -> String {
 // tools/call
 // ---------------------------------------------------------------------------
 
-fn tools_call(id: Option(String), raw_line: String) -> String {
+fn tools_call(id: Option(json.Json), raw_line: String) -> String {
   let name_decoder = {
     use n <- decode.subfield(["params", "name"], decode.string)
     decode.success(n)
@@ -191,7 +196,11 @@ fn tools_call(id: Option(String), raw_line: String) -> String {
 // Tool execution — NIF-backed planning + existing tools
 // ---------------------------------------------------------------------------
 
-fn execute_tool(name: String, id: Option(String), raw_line: String) -> String {
+fn execute_tool(
+  name: String,
+  id: Option(json.Json),
+  raw_line: String,
+) -> String {
   case name {
     // Planning tools (Rust NIF -> Smriti.db)
     "plan_status" -> tool_plan_status(id)
@@ -234,6 +243,11 @@ fn execute_tool(name: String, id: Option(String), raw_line: String) -> String {
     "run_gate" -> tool_run_gate(id, raw_line)
     "zk_search" -> tool_zk_search(id, raw_line)
     "sa_bridge_submit" -> tool_sa_bridge_submit(id, raw_line)
+    "vault_status"
+    | "vault_list_secrets"
+    | "vault_policy_get"
+    | "vault_audit_tail"
+    | "vault_health" -> tool_unavailable(id, name)
     _ -> error_response(id, -32_602, "Unknown tool: " <> name)
   }
 }
@@ -242,15 +256,15 @@ fn execute_tool(name: String, id: Option(String), raw_line: String) -> String {
 // Planning tool handlers (NIF-backed)
 // ---------------------------------------------------------------------------
 
-fn tool_plan_status(id: Option(String)) -> String {
+fn tool_plan_status(id: Option(json.Json)) -> String {
   tool_content_response(id, c3i_nif.plan_status())
 }
 
-fn tool_plan_list_pending(id: Option(String)) -> String {
+fn tool_plan_list_pending(id: Option(json.Json)) -> String {
   tool_content_response(id, c3i_nif.plan_list_pending())
 }
 
-fn tool_plan_list(id: Option(String), raw_line: String) -> String {
+fn tool_plan_list(id: Option(json.Json), raw_line: String) -> String {
   let status_decoder = {
     use s <- decode.subfield(["params", "arguments", "status"], decode.string)
     decode.success(s)
@@ -262,7 +276,7 @@ fn tool_plan_list(id: Option(String), raw_line: String) -> String {
   tool_content_response(id, c3i_nif.plan_list_by_status(status))
 }
 
-fn tool_plan_get(id: Option(String), raw_line: String) -> String {
+fn tool_plan_get(id: Option(json.Json), raw_line: String) -> String {
   let id_decoder = {
     use i <- decode.subfield(["params", "arguments", "id"], decode.string)
     decode.success(i)
@@ -273,7 +287,7 @@ fn tool_plan_get(id: Option(String), raw_line: String) -> String {
   }
 }
 
-fn tool_plan_add(id: Option(String), raw_line: String) -> String {
+fn tool_plan_add(id: Option(json.Json), raw_line: String) -> String {
   let decoder = {
     use title <- decode.subfield(
       ["params", "arguments", "title"],
@@ -297,7 +311,7 @@ fn tool_plan_add(id: Option(String), raw_line: String) -> String {
   }
 }
 
-fn tool_plan_update(id: Option(String), raw_line: String) -> String {
+fn tool_plan_update(id: Option(json.Json), raw_line: String) -> String {
   let decoder = {
     use task_id <- decode.subfield(["params", "arguments", "id"], decode.string)
     use status <- decode.subfield(
@@ -318,7 +332,7 @@ fn tool_plan_update(id: Option(String), raw_line: String) -> String {
   }
 }
 
-fn tool_plan_search(id: Option(String), raw_line: String) -> String {
+fn tool_plan_search(id: Option(json.Json), raw_line: String) -> String {
   let query_decoder = {
     use q <- decode.subfield(["params", "arguments", "query"], decode.string)
     decode.success(q)
@@ -333,23 +347,23 @@ fn tool_plan_search(id: Option(String), raw_line: String) -> String {
 // System data tool handlers (mesh state)
 // ---------------------------------------------------------------------------
 
-fn tool_system_health(id: Option(String)) -> String {
+fn tool_system_health(id: Option(json.Json)) -> String {
   tool_content_response(id, c3i_nif.system_health())
 }
 
-fn tool_system_dashboard(id: Option(String)) -> String {
+fn tool_system_dashboard(id: Option(json.Json)) -> String {
   tool_content_response(id, c3i_nif.system_dashboard())
 }
 
-fn tool_system_immune(id: Option(String)) -> String {
+fn tool_system_immune(id: Option(json.Json)) -> String {
   tool_content_response(id, c3i_nif.system_immune())
 }
 
-fn tool_system_zenoh(id: Option(String)) -> String {
+fn tool_system_zenoh(id: Option(json.Json)) -> String {
   tool_content_response(id, c3i_nif.system_zenoh())
 }
 
-fn tool_system_verification(id: Option(String)) -> String {
+fn tool_system_verification(id: Option(json.Json)) -> String {
   tool_content_response(id, c3i_nif.system_verification())
 }
 
@@ -357,7 +371,7 @@ fn tool_system_verification(id: Option(String)) -> String {
 // Other tool handlers (kept from original)
 // ---------------------------------------------------------------------------
 
-fn tool_knowledge_search(id: Option(String), raw_line: String) -> String {
+fn tool_knowledge_search(id: Option(json.Json), raw_line: String) -> String {
   let query_decoder = {
     use q <- decode.subfield(["params", "arguments", "query"], decode.string)
     decode.success(q)
@@ -369,11 +383,11 @@ fn tool_knowledge_search(id: Option(String), raw_line: String) -> String {
   tool_content_response(id, c3i_nif.knowledge_search(query))
 }
 
-fn tool_verification_run(id: Option(String)) -> String {
+fn tool_verification_run(id: Option(json.Json)) -> String {
   tool_content_response(id, c3i_nif.verification_run())
 }
 
-fn tool_read_file(id: Option(String), raw_line: String) -> String {
+fn tool_read_file(id: Option(json.Json), raw_line: String) -> String {
   let path_decoder = {
     use p <- decode.subfield(["params", "arguments", "path"], decode.string)
     decode.success(p)
@@ -390,7 +404,7 @@ fn tool_read_file(id: Option(String), raw_line: String) -> String {
 }
 
 /// Route a per-page tool through the Wisp router to get JSON data.
-fn tool_page_json(id: Option(String), api_path: String) -> String {
+fn tool_page_json(id: Option(json.Json), api_path: String) -> String {
   tool_content_response(id, wisp_router.route(api_path))
 }
 
@@ -413,7 +427,7 @@ fn read_file_as_string(path: String) -> Result(String, String) {
 @external(erlang, "gleam_stdlib", "identity")
 fn bit_array_to_string(bits: BitArray) -> Result(String, Nil)
 
-fn tool_content_response(id: Option(String), text: String) -> String {
+fn tool_content_response(id: Option(json.Json), text: String) -> String {
   success_response(
     id,
     json.object([
@@ -430,7 +444,7 @@ fn tool_content_response(id: Option(String), text: String) -> String {
   )
 }
 
-fn success_response(id: Option(String), result: json.Json) -> String {
+fn success_response(id: Option(json.Json), result: json.Json) -> String {
   json.to_string(
     json.object([
       #("jsonrpc", json.string("2.0")),
@@ -440,7 +454,7 @@ fn success_response(id: Option(String), result: json.Json) -> String {
   )
 }
 
-fn error_response(id: Option(String), code: Int, message: String) -> String {
+fn error_response(id: Option(json.Json), code: Int, message: String) -> String {
   json.to_string(
     json.object([
       #("jsonrpc", json.string("2.0")),
@@ -456,9 +470,9 @@ fn error_response(id: Option(String), code: Int, message: String) -> String {
   )
 }
 
-fn encode_id(id: Option(String)) -> json.Json {
+fn encode_id(id: Option(json.Json)) -> json.Json {
   case id {
-    Some(i) -> json.string(i)
+    Some(i) -> i
     None -> json.null()
   }
 }
@@ -472,7 +486,7 @@ pub fn handle_request(
   id: Option(String),
   raw_line: String,
 ) -> Option(String) {
-  dispatch(method, id, raw_line)
+  dispatch(method, option.map(id, json.string), raw_line)
 }
 
 pub fn handle_request_raw(line: String) -> Option(String) {
@@ -483,112 +497,59 @@ pub fn handle_request_raw(line: String) -> Option(String) {
 // ZigVM & Hermes Harness MCP tool handlers
 // ---------------------------------------------------------------------------
 
-fn tool_control_loop(id: Option(String), _raw_line: String) -> String {
-  let content =
+/// Missing runtime bindings are tool errors, never synthesized success receipts.
+fn tool_unavailable(id: Option(json.Json), name: String) -> String {
+  success_response(
+    id,
     json.object([
-      #("phase", json.string("observe")),
-      #("status", json.string("ok")),
-      #("formal_proven", json.int(8)),
-      #("safety_ucas", json.int(54)),
+      #("isError", json.bool(True)),
       #(
-        "discriminator",
-        json.string(
-          "run=ok formal=8/8 safety_ucas=54 next=gap-jit-tier-call-ext",
+        "content",
+        json.array(
+          [
+            json.object([
+              #("type", json.string("text")),
+              #(
+                "text",
+                json.string(
+                  "UNAVAILABLE: "
+                  <> name
+                  <> " has no verified runtime binding; no action or verification was performed.",
+                ),
+              ),
+            ]),
+          ],
+          fn(x) { x },
         ),
       ),
-    ])
-    |> json.to_string
-  tool_content_response(id, content)
-}
-
-fn tool_safety_status(id: Option(String)) -> String {
-  let content =
-    json.object([
-      #("total_ucas", json.int(54)),
-      #("p1_ucas", json.int(29)),
-      #("fmea_sif_max", json.int(56)),
-      #("verdict", json.string("ok")),
-    ])
-    |> json.to_string
-  tool_content_response(id, content)
-}
-
-fn tool_registry_status(id: Option(String)) -> String {
-  let content =
-    json.object([
-      #("status", json.string("ok")),
-      #("modules_total", json.int(24)),
-      #("formal_complete", json.bool(True)),
-    ])
-    |> json.to_string
-  tool_content_response(id, content)
-}
-
-fn tool_run_selfcheck(id: Option(String), raw_line: String) -> String {
-  let name_decoder = {
-    use n <- decode.subfield(["params", "arguments", "name"], decode.string)
-    decode.success(n)
-  }
-  let mode = case json.parse(raw_line, name_decoder) {
-    Ok(m) -> m
-    Error(_) -> "db"
-  }
-  tool_content_response(
-    id,
-    mode <> " selfcheck: green (14 laws passed in isolated profile)",
+    ]),
   )
 }
 
-fn tool_run_gate(id: Option(String), raw_line: String) -> String {
-  let name_decoder = {
-    use n <- decode.subfield(["params", "arguments", "name"], decode.string)
-    decode.success(n)
-  }
-  let gate_name = case json.parse(raw_line, name_decoder) {
-    Ok(g) -> g
-    Error(_) -> "GATE-DETERMINACY"
-  }
-  tool_content_response(
-    id,
-    gate_name
-      <> " passed: byte-identical deterministic reproducibility verified",
-  )
+fn tool_control_loop(id: Option(json.Json), _raw_line: String) -> String {
+  tool_unavailable(id, "control_loop")
 }
 
-fn tool_zk_search(id: Option(String), raw_line: String) -> String {
-  let q_decoder = {
-    use q <- decode.subfield(["params", "arguments", "query"], decode.string)
-    decode.success(q)
-  }
-  let query = case json.parse(raw_line, q_decoder) {
-    Ok(q) -> q
-    Error(_) -> ""
-  }
-  tool_content_response(
-    id,
-    json.object([
-      #("query", json.string(query)),
-      #("notes", json.array([], of: fn(x) { x })),
-    ])
-      |> json.to_string,
-  )
+fn tool_safety_status(id: Option(json.Json)) -> String {
+  tool_unavailable(id, "safety_status")
 }
 
-fn tool_sa_bridge_submit(id: Option(String), raw_line: String) -> String {
-  let task_decoder = {
-    use t <- decode.subfield(["params", "arguments", "task"], decode.string)
-    decode.success(t)
-  }
-  let task = case json.parse(raw_line, task_decoder) {
-    Ok(t) -> t
-    Error(_) -> "default"
-  }
-  tool_content_response(
-    id,
-    json.object([
-      #("ok", json.bool(True)),
-      #("task_id", json.string("sa-" <> task)),
-    ])
-      |> json.to_string,
-  )
+fn tool_registry_status(id: Option(json.Json)) -> String {
+  tool_unavailable(id, "registry_status")
+}
+
+fn tool_run_selfcheck(id: Option(json.Json), _raw_line: String) -> String {
+  tool_unavailable(id, "run_selfcheck")
+}
+
+fn tool_run_gate(id: Option(json.Json), _raw_line: String) -> String {
+  tool_unavailable(id, "run_gate")
+}
+
+fn tool_zk_search(id: Option(json.Json), _raw_line: String) -> String {
+  tool_unavailable(id, "zk_search")
+}
+
+fn tool_sa_bridge_submit(id: Option(json.Json), _raw_line: String) -> String {
+  tool_unavailable(id, "sa_bridge_submit")
 }
