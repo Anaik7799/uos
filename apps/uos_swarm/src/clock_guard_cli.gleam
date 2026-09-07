@@ -73,34 +73,43 @@ fn once(state, board_url, floor_path, session_root) {
   }
 }
 
-fn print_actor_snapshot(subject) {
+fn print_actor_snapshot(subject, last_sequence) -> Int {
   let reply = process.new_subject()
   process.send(subject, guard.Snapshot(reply))
   case process.receive(reply, 1000) {
     Ok(state) ->
       case state.reports {
-        [report, ..] -> io.println(json.to_string(guard.report_json(report)))
-        [] -> Nil
+        [report, ..] if report.sequence != last_sequence -> {
+          io.println(json.to_string(guard.report_json(report)))
+          report.sequence
+        }
+        _ -> last_sequence
       }
-    Error(_) -> print_error("guard snapshot timeout", "actor did not reply")
-  }
-}
-
-fn observe_actor(subject, remaining, interval) {
-  case remaining <= 0 {
-    True -> process.send(subject, guard.Stop)
-    False -> {
-      process.sleep(interval + 10)
-      print_actor_snapshot(subject)
-      observe_actor(subject, remaining - 1, interval)
+    Error(_) -> {
+      case last_sequence != -2 {
+        True -> print_error("guard snapshot timeout", "actor did not reply")
+        False -> Nil
+      }
+      -2
     }
   }
 }
 
-fn observe_forever(subject, interval) {
+fn observe_actor(subject, remaining, interval, last_sequence) {
+  case remaining <= 0 {
+    True -> process.send(subject, guard.Stop)
+    False -> {
+      process.sleep(interval + 10)
+      let sequence = print_actor_snapshot(subject, last_sequence)
+      observe_actor(subject, remaining - 1, interval, sequence)
+    }
+  }
+}
+
+fn observe_forever(subject, interval, last_sequence) {
   process.sleep(interval + 10)
-  print_actor_snapshot(subject)
-  observe_forever(subject, interval)
+  let sequence = print_actor_snapshot(subject, last_sequence)
+  observe_forever(subject, interval, sequence)
 }
 
 fn watch(floor, remaining, interval, board_url, floor_path, session_root) {
@@ -115,7 +124,7 @@ fn watch(floor, remaining, interval, board_url, floor_path, session_root) {
       fn(value) { guard.store_floor(floor_path, value) },
     )
   {
-    Ok(started) -> observe_actor(started.data, remaining, interval)
+    Ok(started) -> observe_actor(started.data, remaining, interval, -1)
     Error(_) -> {
       print_error("guard actor failed to start", "OTP start failed")
       halt_failure()
@@ -135,7 +144,7 @@ fn serve(floor, interval, board_url, floor_path, session_root) {
       fn(value) { guard.store_floor(floor_path, value) },
     )
   {
-    Ok(started) -> observe_forever(started.data, interval)
+    Ok(started) -> observe_forever(started.data, interval, -1)
     Error(_) -> {
       print_error("guard actor failed to start", "OTP start failed")
       halt_failure()
