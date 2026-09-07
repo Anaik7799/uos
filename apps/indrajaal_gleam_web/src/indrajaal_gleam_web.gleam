@@ -8,9 +8,9 @@ import cepaf_gleam/fpp/ontology
 import cepaf_gleam/fpp/topology
 import cepaf_gleam/knowledge/c3i_knowledge_runtime
 import cepaf_gleam/knowledge/c3i_vertical_slice_engine
+import cepaf_gleam/nif/zenoh_rete_bridge as nif_bridge
 import cepaf_gleam/sdlc/aspect_agent_ecosystem
 import cepaf_gleam/sdlc/aspect_processing_agent
-import cepaf_gleam/nif/zenoh_rete_bridge as nif_bridge
 import cepaf_gleam/sdlc/planes_ascii_architecture
 import cepaf_gleam/ui/lustre/biosemiotics_radar
 import cepaf_gleam/ui/lustre/cybernetic_brain_matrix
@@ -59,6 +59,8 @@ import gleam/string
 import lustre/element
 import mist.{type Connection, type ResponseData}
 
+const maximum_request_body_bytes = 65_536
+
 @external(erlang, "indrajaal_web_ffi", "read_repo_file")
 fn erl_read_repo_file(path: String) -> Result(BitArray, String)
 
@@ -68,32 +70,14 @@ fn listen_port(default: Int) -> Int
 pub fn main() {
   let port = listen_port(4100)
   io.println("=== Indrajaal C3I Web Cockpit ===")
-  io.println("Starting isolated-capable listener on port " <> int.to_string(port))
+  io.println(
+    "Starting isolated-capable listener on port " <> int.to_string(port),
+  )
 
-  let router = fn(req: Request(Connection)) -> Response(ResponseData) {
-    let path = "/" <> string.join(request.path_segments(req), "/")
-
+  let bounded_router = fn(req: Request(BitArray)) -> Response(ResponseData) {
     case request.path_segments(req) {
       // AG-UI protocol routes (SSE event streams + health)
-      ["ag-ui", ..] -> {
-        let json_body = c3i_router.route(path)
-        case string.contains(path, "events") || string.contains(path, "run") {
-          True -> {
-            response.new(200)
-            |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-            |> response.prepend_header("content-type", "text/event-stream")
-            |> response.prepend_header("cache-control", "no-cache")
-            |> response.prepend_header("connection", "keep-alive")
-            |> response.prepend_header("access-control-allow-origin", "*")
-          }
-          False -> {
-            response.new(200)
-            |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-            |> response.prepend_header("content-type", "application/json")
-            |> response.prepend_header("access-control-allow-origin", "*")
-          }
-        }
-      }
+      ["ag-ui", ..] -> handle_c3i_http_request(req)
       ["api", "verify", "patrol"] -> {
         let report = unified_verification_supervisor.run_verification_patrol()
         let is_healthy = unified_verification_supervisor.patrol_healthy(report)
@@ -319,11 +303,7 @@ pub fn main() {
         |> response.prepend_header("access-control-allow-origin", "*")
       }
       ["api", "knowledge", "cited-recall"] -> {
-        let recall =
-          c3i_knowledge_runtime.query_cited_recall(
-            "C3I",
-            0.5,
-          )
+        let recall = c3i_knowledge_runtime.query_cited_recall("C3I", 0.5)
         let json_body = c3i_knowledge_runtime.encode_recall_result_json(recall)
         response.new(200)
         |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
@@ -489,13 +469,7 @@ pub fn main() {
         peer_health.observe(peer_health.CurrentPeer)
         |> peer_health_response()
       }
-      ["api", ..] -> {
-        let json_body = c3i_router.route(path)
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
+      ["api", ..] -> handle_c3i_http_request(req)
       ["peer"] -> {
         let page =
           peer_health.observe(peer_health.CurrentPeer)
@@ -972,6 +946,16 @@ pub fn main() {
     }
   }
 
+  let router = fn(req: Request(Connection)) -> Response(ResponseData) {
+    case mist.read_body(req, max_body_limit: maximum_request_body_bytes) {
+      Ok(req) -> bounded_router(req)
+      Error(mist.ExcessBody) ->
+        request_body_error_response(413, "request_body_too_large")
+      Error(mist.MalformedBody) ->
+        request_body_error_response(400, "request_body_malformed")
+    }
+  }
+
   let assert Ok(_) =
     mist.new(router)
     |> mist.port(port)
@@ -995,6 +979,48 @@ pub fn main() {
     "  AG-UI SSE:       http://nas-1.tail55d152.ts.net:4100/ag-ui/events",
   )
   process.sleep_forever()
+}
+
+/// Adapt a body-bounded Mist request to the canonical method-aware Wisp
+/// router. Request metadata is retained by `request.set_body`; the response
+/// adapter preserves the canonical status, headers, and body.
+pub fn handle_c3i_http_request(
+  req: Request(BitArray),
+) -> Response(ResponseData) {
+  case bit_array.byte_size(req.body) > maximum_request_body_bytes {
+    True -> request_body_error_response(413, "request_body_too_large")
+    False ->
+      case bit_array.to_string(req.body) {
+        Error(_) -> request_body_error_response(400, "request_body_not_utf8")
+        Ok(body) -> {
+          let routed = c3i_router.handle_request(request.set_body(req, body))
+          let adapted =
+            response.new(routed.status)
+            |> response.set_body(
+              mist.Bytes(bytes_tree.from_string(routed.body)),
+            )
+          list.fold(routed.headers, adapted, fn(response, header) {
+            response.set_header(response, header.0, header.1)
+          })
+        }
+      }
+  }
+}
+
+fn request_body_error_response(
+  status: Int,
+  reason: String,
+) -> Response(ResponseData) {
+  response.new(status)
+  |> response.set_body(
+    mist.Bytes(bytes_tree.from_string(
+      json.object([#("error", json.string(reason))])
+      |> json.to_string(),
+    )),
+  )
+  |> response.set_header("content-type", "application/json; charset=utf-8")
+  |> response.set_header("cache-control", "no-store")
+  |> response.set_header("x-content-type-options", "nosniff")
 }
 
 fn render_repo_file_response(
@@ -1261,7 +1287,9 @@ fn render_nav(active: String) -> String {
     False -> ""
   } <> ">File Explorer</a>
     <a href='/api/health' target='_blank'>System Health API</a>
-    <a href='http://nas-1.tail55d152.ts.net:4100/peer' " <> case active == "peer" {
+    <a href='http://nas-1.tail55d152.ts.net:4100/peer' " <> case
+    active == "peer"
+  {
     True -> "class='active' aria-current='page'"
     False -> ""
   } <> ">VM-1 Peer Diagnostic</a>
@@ -1325,7 +1353,9 @@ fn render_breadcrumbs_loop(
 
 // HTTP reachability does not grant runtime admission. A diagnostic API response
 // is intentionally non-2xx while its report remains unavailable or unverified.
-pub fn peer_health_response(report: peer_health.Report) -> Response(ResponseData) {
+pub fn peer_health_response(
+  report: peer_health.Report,
+) -> Response(ResponseData) {
   response.new(503)
   |> response.set_body(
     mist.Bytes(bytes_tree.from_string(peer_health.to_json(report))),

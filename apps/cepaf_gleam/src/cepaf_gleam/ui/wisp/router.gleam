@@ -33,14 +33,16 @@ import cepaf_gleam/ha/fractal_forecast
 import cepaf_gleam/ha/guard_grid
 import cepaf_gleam/ha/health_cascade
 import cepaf_gleam/ha/hot_reload
-import cepaf_gleam/mcp/tools as mcp_tools
 import cepaf_gleam/ha/invariant_gate
 import cepaf_gleam/ha/module_guard
 import cepaf_gleam/ha/request_guard
 import cepaf_gleam/ha/slo_tracker
+import cepaf_gleam/mcp/tools as mcp_tools
 import cepaf_gleam/moz/client as moz_client
 import cepaf_gleam/rules/dispatcher as rule_dispatcher
 import cepaf_gleam/rules/engine as rule_engine
+import cepaf_gleam/services/mirage_migration_engine
+import cepaf_gleam/services/mirage_unikernel_daemon
 import cepaf_gleam/substrate/beam_cache
 import cepaf_gleam/symbiosis/tensor as symbiosis_tensor
 import cepaf_gleam/symbiosis/types as symbiosis_types
@@ -50,8 +52,6 @@ import cepaf_gleam/ui/domain.{
   layer_to_string, page_control_plane, page_data_plane, page_fractal_layer,
   page_primary_clients, page_to_label, page_to_path,
 }
-import cepaf_gleam/services/mirage_migration_engine
-import cepaf_gleam/services/mirage_unikernel_daemon
 import cepaf_gleam/ui/lustre/forecast_cockpit
 import cepaf_gleam/ui/lustre/hook_subsystem as hook_subsystem_view
 import cepaf_gleam/ui/lustre/mirage_cockpit
@@ -146,10 +146,14 @@ fn route_internal(path: String) -> String {
       ))
     // MirageOS Unikernel & Migration routes (SC-MIRAGE-001, SC-MIRAGE-MIGRATE-001)
     "/api/v1/mirage/candidates" | "/api/mirage/candidates" ->
-      mirage_api.candidates_json(mirage_migration_engine.get_migration_candidates())
+      mirage_api.candidates_json(
+        mirage_migration_engine.get_migration_candidates(),
+      )
       |> json.to_string()
     "/api/v1/mirage/status" | "/api/mirage/status" ->
-      mirage_api.unikernel_status_json(mirage_unikernel_daemon.new_daemon_state())
+      mirage_api.unikernel_status_json(
+        mirage_unikernel_daemon.new_daemon_state(),
+      )
       |> json.to_string()
     "/api/v1/mirage/hypervisors" | "/api/mirage/hypervisors" ->
       mirage_api.hypervisors_json()
@@ -3724,6 +3728,7 @@ fn is_post_only_path(path: String) -> Bool {
     | "/api/v1/system/ooda-trigger"
     | "/api/v1/plan/update"
     | "/api/v1/planning/add"
+    | "/api/v1/reload"
     | "/api/v1/zenoh/publish"
     | "/api/v1/pi/prompt" -> True
     _ -> False
@@ -4071,23 +4076,13 @@ fn route_html(path: String) -> String {
       shell.render_page(
         "MirageOS Unikernel Cockpit",
         "mirage",
-        element.unsafe_raw_html(
-          "",
-          "div",
-          [],
-          mirage_cockpit.view(),
-        ),
+        element.unsafe_raw_html("", "div", [], mirage_cockpit.view()),
       )
     "/forecast" | "/forecast/cockpit" ->
       shell.render_page(
         "Fractal Forecasting & POODAVR Cockpit",
         "forecast",
-        element.unsafe_raw_html(
-          "",
-          "div",
-          [],
-          forecast_cockpit.view(),
-        ),
+        element.unsafe_raw_html("", "div", [], forecast_cockpit.view()),
       )
     "/planning" ->
       shell.render_page(
