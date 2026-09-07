@@ -22,6 +22,8 @@
 ////   manager-run <ledger.json> <board.jsonl> <zenoh_base|-> <cycles>
 ////   ontology dictionary | ontology glossary | ontology wiki | ontology json
 ////   ontology check <ledger.jsonl> | ontology resolve <name>
+////   decision-record prepare <out_dir> <slug> <spec.json>
+////   decision-record complete <record.json> <completion.json>
 ////   (anything else)             prints this usage
 
 import argv
@@ -40,6 +42,7 @@ import uos_swarm/board.{Agent, Causality, Draft, Semantics}
 import uos_swarm/board_reader
 import uos_swarm/cockpit
 import uos_swarm/coord
+import uos_swarm/decision_record_cli
 import uos_swarm/fmea
 import uos_swarm/gita
 import uos_swarm/holon
@@ -89,7 +92,9 @@ const usage = "Package entry. `gleam run -- <command>`:
   manager-dictionary
   manager-run <ledger.json> <board.jsonl> <zenoh_base|-> <cycles>
   ontology dictionary | ontology glossary | ontology wiki | ontology json
-  ontology check <ledger.jsonl> | ontology resolve <name>"
+  ontology check <ledger.jsonl> | ontology resolve <name>
+  decision-record prepare <out_dir> <slug> <spec.json>
+  decision-record complete <record.json> <completion.json>"
 
 pub fn main() -> Nil {
   case argv.load().arguments {
@@ -329,6 +334,22 @@ pub fn main() -> Nil {
       io.println(json.to_string(system_ontology.to_json()))
     ["ontology", "check", path] -> ontology_check(path)
     ["ontology", "resolve", name] -> ontology_resolve(name)
+    ["decision-record", "prepare", out_dir, slug, spec_path] ->
+      case decision_record_cli.write_prepared(out_dir, slug, spec_path) {
+        Ok(path) -> io.println(path)
+        Error(e) -> {
+          io.println(e)
+          halt(1)
+        }
+      }
+    ["decision-record", "complete", record_path, completion_path] ->
+      case decision_record_cli.complete_record(record_path, completion_path) {
+        Ok(id) -> io.println("completed " <> id)
+        Error(e) -> {
+          io.println(e)
+          halt(1)
+        }
+      }
     _ -> io.println(usage)
   }
 }
