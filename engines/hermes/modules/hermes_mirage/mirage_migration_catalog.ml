@@ -44,7 +44,7 @@ let candidates_store : migration_candidate list = [
     ram_usage_comparison = "180MB -> 12MB (93.3% memory reduction)";
     attack_surface_comparison = "350+ syscalls -> 6 syscalls, zero OpenSSL C bugs";
     readiness_score = 0.95;
-    status = Implemented;
+    status = Mapped;
     proof_reference = "SPEC-MIRAGE-MIGRATE-001#ing";
   };
   {
@@ -58,7 +58,7 @@ let candidates_store : migration_candidate list = [
     ram_usage_comparison = "250MB -> 16MB (93.6% memory reduction)";
     attack_surface_comparison = "Full Linux ABI + /bin/sh -> 0 shell, 6 syscalls";
     readiness_score = 0.98;
-    status = Admitted;
+    status = Mapped;
     proof_reference = "SC-MIRAGE-001";
   };
   {
@@ -72,7 +72,7 @@ let candidates_store : migration_candidate list = [
     ram_usage_comparison = "64MB -> 8MB (87.5% memory reduction)";
     attack_surface_comparison = "Glibc getaddrinfo poisoning -> Pure OCaml DNS stack";
     readiness_score = 0.92;
-    status = Implemented;
+    status = Mapped;
     proof_reference = "SPEC-MIRAGE-MIGRATE-001#dns";
   };
   {
@@ -86,7 +86,7 @@ let candidates_store : migration_candidate list = [
     ram_usage_comparison = "32MB -> 4MB (87.5% memory reduction)";
     attack_surface_comparison = "C-ABI memory vulnerabilities -> Type-safe constant-time OCaml";
     readiness_score = 1.0;
-    status = Admitted;
+    status = Mapped;
     proof_reference = "INV-17-ASPECT-RECEIPTS";
   };
   {
@@ -100,7 +100,7 @@ let candidates_store : migration_candidate list = [
     ram_usage_comparison = "120MB -> 24MB (80.0% memory reduction)";
     attack_surface_comparison = "Raw disk file I/O -> Cryptographic Merkle root hash verification";
     readiness_score = 0.90;
-    status = Implemented;
+    status = Mapped;
     proof_reference = "SPEC-MIRAGE-MIGRATE-001#irmin";
   };
   {
@@ -128,7 +128,7 @@ let candidates_store : migration_candidate list = [
     ram_usage_comparison = "500MB -> 64MB hard-capped (87.2% memory reduction)";
     attack_surface_comparison = "Unbounded host process tree -> Strict 64MB physical RAM cap";
     readiness_score = 0.88;
-    status = Implemented;
+    status = Mapped;
     proof_reference = "INV-GOSPEL-Z3-ORACLE-PIPELINE";
   };
 ]

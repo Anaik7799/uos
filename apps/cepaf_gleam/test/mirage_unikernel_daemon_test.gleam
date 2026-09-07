@@ -1,15 +1,21 @@
-//// MirageOS Unikernel Daemon Unit Tests (EV-87)
-////
-//// Tests boot lifecycle, cold-start latency, memory boundaries,
-//// zero-trust payload trapping, and termination semantics.
-
 import cepaf_gleam/services/mirage_unikernel_daemon as mirage
 import gleeunit/should
 
-pub fn boot_and_status_test() {
+pub fn initial_state_is_explicitly_unobserved_simulation_test() {
   let state = mirage.new_daemon_state()
-  let assert Ok(#(state, inst)) =
-    mirage.boot_unikernel(
+  state.mode
+  |> mirage.runtime_mode_label
+  |> should.equal("simulation_only")
+  state.observation
+  |> mirage.observation_status
+  |> should.equal("unknown")
+  mirage.simulated_running_count(state) |> should.equal(0)
+}
+
+pub fn simulated_boot_has_projected_metrics_test() {
+  let state = mirage.new_daemon_state()
+  let assert Ok(#(state, instance)) =
+    mirage.simulate_boot_unikernel(
       state,
       "uni-interceptor-01",
       "hermes-interceptor",
@@ -17,92 +23,112 @@ pub fn boot_and_status_test() {
       16,
     )
 
-  inst.id |> should.equal("uni-interceptor-01")
-  inst.name |> should.equal("hermes-interceptor")
-  inst.memory_mb |> should.equal(16)
-  { inst.cold_start_ms <. 20.0 } |> should.be_true
-  inst.status |> should.equal(mirage.StatusRunning)
-  state.total_boots |> should.equal(1)
+  instance.id |> should.equal("uni-interceptor-01")
+  instance.configured_memory_mb |> should.equal(16)
+  { instance.projected_cold_start_ms <. 20.0 } |> should.be_true()
+  instance.status |> should.equal(mirage.StatusSimulatedRunning)
+  state.simulated_boots |> should.equal(1)
+  mirage.simulated_running_count(state) |> should.equal(1)
 }
 
-pub fn memory_limit_enforced_test() {
+pub fn simulated_boot_validates_memory_and_identity_test() {
   let state = mirage.new_daemon_state()
-  // Request 128 MB when max is 64 MB
-  let result =
-    mirage.boot_unikernel(
-      state,
-      "uni-heavy-01",
-      "heavy-worker",
-      mirage.TargetSolo5Hvt,
-      128,
-    )
-  result |> should.be_error
+  mirage.simulate_boot_unikernel(
+    state,
+    "uni-heavy-01",
+    "heavy-worker",
+    mirage.TargetSolo5Hvt,
+    128,
+  )
+  |> should.be_error()
+  mirage.simulate_boot_unikernel(
+    state,
+    "uni-zero-01",
+    "zero-worker",
+    mirage.TargetSolo5Hvt,
+    0,
+  )
+  |> should.be_error()
+  mirage.simulate_boot_unikernel(state, "", "worker", mirage.TargetSolo5Hvt, 16)
+  |> should.be_error()
 }
 
-pub fn tool_dispatch_and_null_trap_test() {
+pub fn duplicate_simulation_identity_is_rejected_test() {
   let state = mirage.new_daemon_state()
   let assert Ok(#(state, _)) =
-    mirage.boot_unikernel(
+    mirage.simulate_boot_unikernel(
+      state,
+      "uni-duplicate",
+      "worker",
+      mirage.TargetSolo5Hvt,
+      16,
+    )
+  mirage.simulate_boot_unikernel(
+    state,
+    "uni-duplicate",
+    "worker",
+    mirage.TargetSolo5Hvt,
+    16,
+  )
+  |> should.be_error()
+}
+
+pub fn simulated_dispatch_never_mints_admission_receipt_test() {
+  let state = mirage.new_daemon_state()
+  let assert Ok(#(state, _)) =
+    mirage.simulate_boot_unikernel(
       state,
       "uni-interceptor-02",
       "hermes-interceptor",
       mirage.TargetSolo5Hvt,
       16,
     )
-
-  // Dispatch safe payload
-  let assert Ok(#(state, verdict1)) =
-    mirage.dispatch_tool_call(
+  let assert Ok(#(state, verdict)) =
+    mirage.simulate_dispatch_tool_call(
       state,
       "uni-interceptor-02",
       "{\"tool\":\"system_health\",\"params\":{}}",
     )
-  case verdict1 {
-    mirage.VerdictAdmitted(_) -> Nil
-    _ -> panic as "Expected Admitted verdict"
-  }
+  verdict |> should.equal(mirage.VerdictSimulationAllowed)
 
-  // Dispatch payload with embedded NUL byte
-  let assert Ok(#(state, verdict2)) =
-    mirage.dispatch_tool_call(
+  let assert Ok(#(state, null_verdict)) =
+    mirage.simulate_dispatch_tool_call(
       state,
       "uni-interceptor-02",
       "safe_prefix\u{0000}malicious_suffix",
     )
-  verdict2 |> should.equal(mirage.VerdictTrappedNullByte)
-  state.total_trapped |> should.equal(1)
+  null_verdict |> should.equal(mirage.VerdictTrappedNullByte)
 
-  // Dispatch payload with raw SQL injection
-  let assert Ok(#(state, verdict3)) =
-    mirage.dispatch_tool_call(
+  let assert Ok(#(state, sql_verdict)) =
+    mirage.simulate_dispatch_tool_call(
       state,
       "uni-interceptor-02",
-      "SELECT * FROM users; DROP TABLE accounts;--",
+      "select * from users; drop table accounts;--",
     )
-  case verdict3 {
-    mirage.VerdictTrappedSqlInjection("DROP TABLE") -> Nil
-    _ -> panic as "Expected TrappedSqlInjection verdict"
-  }
-  state.total_trapped |> should.equal(2)
+  sql_verdict
+  |> should.equal(mirage.VerdictTrappedSqlInjection("DROP TABLE"))
+  state.simulated_trapped |> should.equal(2)
 }
 
-pub fn termination_lifecycle_test() {
+pub fn terminated_simulation_is_not_counted_as_running_test() {
   let state = mirage.new_daemon_state()
   let assert Ok(#(state, _)) =
-    mirage.boot_unikernel(
+    mirage.simulate_boot_unikernel(
       state,
       "uni-interceptor-03",
       "hermes-interceptor",
       mirage.TargetSolo5Hvt,
       16,
     )
+  let assert Ok(state) =
+    mirage.simulate_terminate_unikernel(state, "uni-interceptor-03")
 
-  let assert Ok(state) = mirage.terminate_unikernel(state, "uni-interceptor-03")
-  let result =
-    mirage.dispatch_tool_call(
-      state,
-      "uni-interceptor-03",
-      "{\"tool\":\"ping\"}",
-    )
-  result |> should.be_error
+  mirage.simulated_running_count(state) |> should.equal(0)
+  mirage.simulated_terminated_count(state) |> should.equal(1)
+  mirage.simulate_dispatch_tool_call(
+    state,
+    "uni-interceptor-03",
+    "{\"tool\":\"ping\"}",
+  )
+  |> should.be_error()
 }

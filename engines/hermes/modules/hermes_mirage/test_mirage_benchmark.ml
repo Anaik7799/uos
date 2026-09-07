@@ -117,6 +117,11 @@ let () =
   let status, output = run_cli runner ["catalog"] in
   require "MB-10 actual catalog CLI succeeds" (status = Unix.WEXITED 0);
   let json = Yojson.Safe.from_string output in
+  require "MB-10 internal catalog cannot imply completed migration"
+    (List.for_all (fun candidate -> match candidate.Mirage_migration_catalog.status with
+      | Mirage_migration_catalog.Mapped -> true
+      | Discovered | Classified | Implemented | Verified | Admitted -> false)
+       (Mirage_migration_catalog.all_candidates ()));
   require "MB-10 candidate count unchanged" (Json.(json |> member "total_candidates" |> to_int) = 7);
   require "MB-10 catalog benchmark bounds"
     (Json.(json |> member "host_benchmark" |> member "max_roundtrips" |> to_int) = 10000);

@@ -1,16 +1,25 @@
-// Unified Operational System (UOS) - MirageOS Subsystem Migration Engine
+// Unified Operational System (UOS) - MirageOS Subsystem Migration Projections
 // Authority: contracts/rules/mirage-migration-policy.md - SC-MIRAGE-MIGRATE-001
 
 import gleam/list
 import gleam/string
 
+/// Catalog progress stops at Mapped until an external evidence authority exists.
+/// This module does not mint verification or admission authority.
 pub type MigrationStage {
   Discovered
   Classified
   Mapped
-  Implemented
-  Verified
-  Admitted
+}
+
+/// Every value in the built-in catalog is a planning projection. It is not a
+/// runtime measurement or an admission receipt.
+pub type EstimateBasis {
+  ConfiguredProjection(reason: String)
+}
+
+pub type AdmissionStatus {
+  AdmissionUnverified(reason: String)
 }
 
 pub type MigrationCandidate {
@@ -20,115 +29,165 @@ pub type MigrationCandidate {
     layer: String,
     current_tech: String,
     mirage_target: String,
-    sil_level: Int,
-    ram_saving_mb: Int,
-    speedup_pct: Float,
+    target_sil_level: Int,
+    projected_ram_saving_mb: Int,
+    projected_speedup_pct: Float,
     status: MigrationStage,
+    estimate_basis: EstimateBasis,
+    admission: AdmissionStatus,
   )
 }
+
+const projection_reason = "Configured planning estimate; no runtime benchmark receipt is attached"
+
+const admission_reason = "No empirical benchmark and formal conformance receipts are attached"
 
 pub fn stage_to_string(stage: MigrationStage) -> String {
   case stage {
     Discovered -> "Discovered"
     Classified -> "Classified"
     Mapped -> "Mapped"
-    Implemented -> "Implemented"
-    Verified -> "Verified"
-    Admitted -> "Admitted"
+  }
+}
+
+pub fn estimate_basis_to_string(basis: EstimateBasis) -> String {
+  case basis {
+    ConfiguredProjection(_) -> "configured_projection"
+  }
+}
+
+pub fn estimate_basis_reason(basis: EstimateBasis) -> String {
+  case basis {
+    ConfiguredProjection(reason) -> reason
+  }
+}
+
+pub fn admission_status_to_string(status: AdmissionStatus) -> String {
+  case status {
+    AdmissionUnverified(_) -> "unverified"
+  }
+}
+
+pub fn admission_status_reason(status: AdmissionStatus) -> String {
+  case status {
+    AdmissionUnverified(reason) -> reason
   }
 }
 
 pub fn get_migration_candidates() -> List(MigrationCandidate) {
   [
-    MigrationCandidate(
-      id: "MIG-01-INGRESS",
-      name: "Edge HTTP/TLS Ingress Proxy",
-      layer: "L4",
-      current_tech: "Mist HTTP / External Nginx Reverse Proxy",
-      mirage_target: "Solo5-SPT + paf / ocaml-tls / mirage-crypto-rng",
-      sil_level: 5,
-      ram_saving_mb: 168,
-      speedup_pct: 99.4,
-      status: Implemented,
+    projection(
+      "MIG-01-INGRESS",
+      "Edge HTTP/TLS Ingress Proxy",
+      "L4",
+      "Mist HTTP / External Nginx Reverse Proxy",
+      "Solo5-SPT + paf / ocaml-tls / mirage-crypto-rng",
+      5,
+      168,
+      99.4,
     ),
-    MigrationCandidate(
-      id: "MIG-02-SANDBOX",
-      name: "Isolated Ephemeral Tool Sandbox",
-      layer: "L3",
-      current_tech: "Podman Rootless OCI Container",
-      mirage_target: "Solo5-SPT Ephemeral Unikernel (Micro-Sandbox)",
-      sil_level: 6,
-      ram_saving_mb: 234,
-      speedup_pct: 99.1,
-      status: Admitted,
+    projection(
+      "MIG-02-SANDBOX",
+      "Isolated Ephemeral Tool Sandbox",
+      "L3",
+      "Podman Rootless OCI Container",
+      "Solo5-SPT Ephemeral Unikernel (Micro-Sandbox)",
+      6,
+      234,
+      99.1,
     ),
-    MigrationCandidate(
-      id: "MIG-03-DNS",
-      name: "Deterministic DNS Recursive Resolver",
-      layer: "L2",
-      current_tech: "Host Glibc getaddrinfo / /etc/resolv.conf",
-      mirage_target: "Solo5-SPT + mirage-dns / DNS-over-TLS (DoT)",
-      sil_level: 5,
-      ram_saving_mb: 56,
-      speedup_pct: 98.3,
-      status: Implemented,
+    projection(
+      "MIG-03-DNS",
+      "Deterministic DNS Recursive Resolver",
+      "L2",
+      "Host Glibc getaddrinfo / /etc/resolv.conf",
+      "Solo5-SPT + mirage-dns / DNS-over-TLS (DoT)",
+      5,
+      56,
+      98.3,
     ),
-    MigrationCandidate(
-      id: "MIG-04-CRYPTO",
-      name: "Cryptographic Token & Receipt Authority",
-      layer: "L1",
-      current_tech: "C-NIF / Rust OpenSSL Bindings",
-      mirage_target: "Hermes mirage-crypto / mirage-crypto-ec (Pure OCaml)",
-      sil_level: 6,
-      ram_saving_mb: 28,
-      speedup_pct: 100.0,
-      status: Admitted,
+    projection(
+      "MIG-04-CRYPTO",
+      "Cryptographic Token & Receipt Authority",
+      "L1",
+      "C-NIF / Rust OpenSSL Bindings",
+      "Hermes mirage-crypto / mirage-crypto-ec (Pure OCaml)",
+      6,
+      28,
+      100.0,
     ),
-    MigrationCandidate(
-      id: "MIG-05-LEDGER",
-      name: "Immutable Merkle DAG Evidence Store",
-      layer: "L5",
-      current_tech: "SQLite WAL Files + Raw JSONL Ledgers",
-      mirage_target: "Irmin Merkle DAG / Wodan Block Engine",
-      sil_level: 6,
-      ram_saving_mb: 96,
-      speedup_pct: 88.0,
-      status: Implemented,
+    projection(
+      "MIG-05-LEDGER",
+      "Immutable Merkle DAG Evidence Store",
+      "L5",
+      "SQLite WAL Files + Raw JSONL Ledgers",
+      "Irmin Merkle DAG / Wodan Block Engine",
+      6,
+      96,
+      88.0,
     ),
-    MigrationCandidate(
-      id: "MIG-06-FORWARD",
-      name: "Zenoh Micro-Packet Forwarder",
-      layer: "L6",
-      current_tech: "Zenoh Rust Daemon (Port 7447)",
-      mirage_target: "Solo5-SPT Flow-Forwarder Enclave (Pure OCaml)",
-      sil_level: 4,
-      ram_saving_mb: 74,
-      speedup_pct: 98.2,
-      status: Mapped,
+    projection(
+      "MIG-06-FORWARD",
+      "Zenoh Micro-Packet Forwarder",
+      "L6",
+      "Zenoh Rust Daemon (Port 7447)",
+      "Solo5-SPT Flow-Forwarder Enclave (Pure OCaml)",
+      4,
+      74,
+      98.2,
     ),
-    MigrationCandidate(
-      id: "MIG-07-SOLVER",
-      name: "Bounded Z3 Gospel Verification Sandbox",
-      layer: "L0",
-      current_tech: "Host OS Subprocess Fork with Timeout",
-      mirage_target: "Solo5-SPT Memory-Capped Micro-Sandbox (64MB Hard Cap)",
-      sil_level: 5,
-      ram_saving_mb: 436,
-      speedup_pct: 95.7,
-      status: Implemented,
+    projection(
+      "MIG-07-SOLVER",
+      "Bounded Z3 Gospel Verification Sandbox",
+      "L0",
+      "Host OS Subprocess Fork with Timeout",
+      "Solo5-SPT Memory-Capped Micro-Sandbox (64MB Hard Cap)",
+      5,
+      436,
+      95.7,
     ),
   ]
 }
 
-pub fn total_ram_savings(candidates: List(MigrationCandidate)) -> Int {
-  list.fold(candidates, 0, fn(acc, c) { acc + c.ram_saving_mb })
+fn projection(
+  id: String,
+  name: String,
+  layer: String,
+  current_tech: String,
+  mirage_target: String,
+  target_sil_level: Int,
+  projected_ram_saving_mb: Int,
+  projected_speedup_pct: Float,
+) -> MigrationCandidate {
+  MigrationCandidate(
+    id: id,
+    name: name,
+    layer: layer,
+    current_tech: current_tech,
+    mirage_target: mirage_target,
+    target_sil_level: target_sil_level,
+    projected_ram_saving_mb: projected_ram_saving_mb,
+    projected_speedup_pct: projected_speedup_pct,
+    status: Mapped,
+    estimate_basis: ConfiguredProjection(projection_reason),
+    admission: AdmissionUnverified(admission_reason),
+  )
 }
 
-pub fn admitted_count(candidates: List(MigrationCandidate)) -> Int {
-  list.count(candidates, fn(c) {
-    case c.status {
-      Admitted -> True
-      _ -> False
+pub fn total_projected_ram_savings(
+  candidates: List(MigrationCandidate),
+) -> Int {
+  list.fold(candidates, 0, fn(acc, candidate) {
+    acc + candidate.projected_ram_saving_mb
+  })
+}
+
+/// The configured catalog contains no admission receipts, so it cannot report
+/// any verified admissions.
+pub fn verified_admitted_count(candidates: List(MigrationCandidate)) -> Int {
+  list.count(candidates, fn(candidate) {
+    case candidate.admission {
+      AdmissionUnverified(_) -> False
     }
   })
 }
@@ -137,17 +196,16 @@ pub fn find_candidate(
   candidates: List(MigrationCandidate),
   id: String,
 ) -> Result(MigrationCandidate, Nil) {
-  list.find(candidates, fn(c) { c.id == id })
+  list.find(candidates, fn(candidate) { candidate.id == id })
 }
 
+/// Discovery and classification may advance to a mapping. Evidence-dependent
+/// implementation, verification, and admission are deliberately unavailable.
 pub fn advance_stage(stage: MigrationStage) -> MigrationStage {
   case stage {
     Discovered -> Classified
     Classified -> Mapped
-    Mapped -> Implemented
-    Implemented -> Verified
-    Verified -> Admitted
-    Admitted -> Admitted
+    Mapped -> Mapped
   }
 }
 
@@ -155,7 +213,9 @@ pub fn advance_candidate(candidate: MigrationCandidate) -> MigrationCandidate {
   MigrationCandidate(..candidate, status: advance_stage(candidate.status))
 }
 
-pub fn evaluate_non_negotiable_safety(target: String) -> Result(String, String) {
+pub fn evaluate_non_negotiable_safety(
+  target: String,
+) -> Result(String, String) {
   let lower = string.lowercase(target)
   case
     string.contains(lower, "beam")
@@ -165,7 +225,13 @@ pub fn evaluate_non_negotiable_safety(target: String) -> Result(String, String) 
     || string.contains(lower, "25503l801736")
     || string.contains(lower, "jujutsu")
   {
-    True -> Error("CONSTITUTIONAL VIOLATION: Target subsystem is permanently non-negotiable")
-    False -> Ok("Safety check passed: Subsystem is eligible for MirageOS unikernel migration")
+    True ->
+      Error(
+        "CONSTITUTIONAL VIOLATION: Target subsystem is permanently non-negotiable",
+      )
+    False ->
+      Ok(
+        "Boundary screen passed; migration still requires empirical and formal evidence",
+      )
   }
 }
