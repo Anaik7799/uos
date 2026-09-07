@@ -410,6 +410,7 @@ pub fn verify_auth_wiring() -> Bool {
       jwks_url: "http://localhost:8080/realms/c3i-dev/protocol/openid-connect/certs",
       client_id: "c3i-wisp-api",
       required_audience: "c3i-wisp-api",
+      jwks_snapshot: None,
     )
 
   // TokenClaims constructor
@@ -423,6 +424,8 @@ pub fn verify_auth_wiring() -> Bool {
       iss: "http://localhost:8080/realms/c3i-dev",
       aud: ["c3i-wisp-api"],
       acr: "urn:ferriskey:mfa:totp",
+      nbf: None,
+      iat: None,
     )
 
   // AuthenticatedUser constructor
