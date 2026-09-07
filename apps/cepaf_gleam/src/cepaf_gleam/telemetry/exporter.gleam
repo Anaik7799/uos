@@ -311,11 +311,15 @@ pub fn export_span(
 pub fn status_json(config: Config) -> String {
   json.object([
     #("page", json.string("Telemetry")),
+    #("standard", json.string("OpenTelemetry")),
+    #("transport", json.string("OTLP/HTTP")),
+    #("signal", json.string("traces")),
     #("configuration_status", json.string("valid")),
     #("endpoint_source", json.string(config.endpoint_source)),
     #("exporter_status", json.string("configured_unprobed")),
     #("collector_status", json.string("unknown")),
     #("backend_status", json.string("unknown")),
+    #("log_level", json.null()),
     #("active_spans", json.null()),
     #("total_traces", json.null()),
   ])
@@ -325,11 +329,15 @@ pub fn status_json(config: Config) -> String {
 pub fn configuration_error_json(reason: String) -> String {
   json.object([
     #("page", json.string("Telemetry")),
+    #("standard", json.string("OpenTelemetry")),
+    #("transport", json.string("OTLP/HTTP")),
+    #("signal", json.string("traces")),
     #("configuration_status", json.string("invalid")),
     #("reason", json.string(reason)),
     #("exporter_status", json.string("unavailable")),
     #("collector_status", json.string("unknown")),
     #("backend_status", json.string("unknown")),
+    #("log_level", json.null()),
     #("active_spans", json.null()),
     #("total_traces", json.null()),
   ])

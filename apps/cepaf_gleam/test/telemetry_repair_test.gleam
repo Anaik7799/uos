@@ -132,6 +132,9 @@ pub fn telemetry_status_is_truthful_when_unprobed_test() {
   |> string.contains("\"collector_status\":\"unknown\"")
   |> should.be_true
   status |> string.contains("\"backend_status\":\"unknown\"") |> should.be_true
+  status |> string.contains("\"standard\":\"OpenTelemetry\"") |> should.be_true
+  status |> string.contains("\"transport\":\"OTLP/HTTP\"") |> should.be_true
+  status |> string.contains("\"log_level\":null") |> should.be_true
   status |> string.contains("\"active_spans\":null") |> should.be_true
   status |> string.contains("\"total_traces\":null") |> should.be_true
   status |> string.contains("1247") |> should.be_false
@@ -142,6 +145,8 @@ pub fn telemetry_route_does_not_invent_counts_test() {
   status
   |> string.contains("\"collector_status\":\"unknown\"")
   |> should.be_true
+  status |> string.contains("\"standard\":\"OpenTelemetry\"") |> should.be_true
+  status |> string.contains("\"log_level\":null") |> should.be_true
   status |> string.contains("\"active_spans\":null") |> should.be_true
   status |> string.contains("1247") |> should.be_false
 }
