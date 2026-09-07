@@ -1,6 +1,6 @@
 {
   "schema": "uos-mirage-hypervisor-probe/v1",
-  "timestamp_utc": "2026-09-07T13:20:20Z",
+  "timestamp_utc": "2026-09-07T13:28:09Z",
   "host": "nas-1",
   "overall_readiness": "solo5_hardware_virtualized_and_spt_verified",
   "execution_policy": "two_key_receipt_required_before_admission",

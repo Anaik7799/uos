@@ -1,6 +1,7 @@
 import cepaf_gleam/planning/sa_plan_bridge
 import gleam/list
 import gleam/option.{Some}
+import gleam/string
 import gleeunit/should
 
 pub fn all_17_aspects_coverage_test() {

@@ -131,21 +131,38 @@ let probe_qemu () =
   in
   { binary_path; microvm_supported; kvm_accel_supported }
 
-let is_allowed_tender bin =
-  let base = Filename.basename bin in
-  base = "solo5-hvt" || base = "solo5-spt" || base = "solo5-virtio-run"
+let allowed_prefixes = [
+  "/home/an/dev/ver/zigvm/_opam/bin/";
+  "/usr/bin/";
+  "/usr/local/bin/";
+]
 
-let guest_output_indicates_success output =
-  contains_substring output "Solo5: solo5_exit(0) called" ||
-  contains_substring output "SUCCESS"
+let is_allowed_tender bin =
+  if String.length bin = 0 || bin.[0] <> '/' then false
+  else if String.starts_with ~prefix:"/tmp" bin || String.starts_with ~prefix:"/var/tmp" bin then false
+  else
+    let base = Filename.basename bin in
+    (base = "solo5-hvt" || base = "solo5-spt" || base = "solo5-virtio-run") &&
+    List.exists (fun prefix -> String.starts_with ~prefix bin) allowed_prefixes
+
+let is_valid_elf_file path =
+  try
+    let ic = open_in_bin path in
+    let magic = really_input_string ic 4 in
+    close_in ic;
+    magic = "\x7fELF"
+  with _ -> false
 
 let is_successful_execution ~tender ~exit_code ~output =
   let base = Filename.basename tender in
   if contains_substring output "ABORT" then false
-  else if base = "solo5-virtio-run" then
-    exit_code = 83 && guest_output_indicates_success output
   else
-    exit_code = 0 && guest_output_indicates_success output
+    let has_bindings = contains_substring output "Solo5: Bindings version" in
+    let has_exit0 = contains_substring output "Solo5: solo5_exit(0) called" in
+    if base = "solo5-virtio-run" then
+      exit_code = 83 && has_bindings && has_exit0
+    else
+      exit_code = 0 && has_bindings && has_exit0
 
 let run_tender_test bin_opt unikernel_rel _expected_codes args_list =
   match bin_opt with
@@ -153,54 +170,98 @@ let run_tender_test bin_opt unikernel_rel _expected_codes args_list =
   | Some bin ->
       if not (is_allowed_tender bin) then None
       else
-        let uos_root = try Sys.getenv "PWD" with _ -> "." in
-        let path1 = Filename.concat uos_root ("var/mirage/unikernels/" ^ unikernel_rel) in
-        let unikernel_path =
-          if Sys.file_exists path1 then path1
-          else
-            let path2 = "/home/an/NAS-setup/uos/var/mirage/unikernels/" ^ unikernel_rel in
-            if Sys.file_exists path2 then path2 else ""
-        in
-        if unikernel_path = "" || not (Sys.file_exists unikernel_path) then None
+        let uos_root = "/home/an/NAS-setup/uos" in
+        let unikernel_path = Filename.concat uos_root ("var/mirage/unikernels/" ^ unikernel_rel) in
+        if not (Sys.file_exists unikernel_path) then None
         else
           let st = try Unix.stat unikernel_path with _ -> { Unix.st_dev = 0; st_ino = 0; st_kind = Unix.S_REG; st_perm = 0; st_nlink = 0; st_uid = 0; st_gid = 0; st_rdev = 0; st_size = 0; st_atime = 0.; st_mtime = 0.; st_ctime = 0. } in
-          if st.Unix.st_size < 10000 then None
+          if st.Unix.st_size < 10000 || not (is_valid_elf_file unikernel_path) then None
           else
+            let deadline = Unix.gettimeofday () +. 5.0 in
             try
               let null_in = Unix.openfile "/dev/null" [Unix.O_RDONLY] 0o600 in
               let r_pipe, w_pipe = Unix.pipe () in
+              Unix.set_nonblock r_pipe;
               let argv = Array.of_list (bin :: unikernel_path :: args_list) in
-              let pid = Unix.create_process bin argv null_in w_pipe w_pipe in
+              let pid = Unix.fork () in
+              if pid = 0 then begin
+                Unix.close r_pipe;
+                ignore (Unix.setsid ());
+                Unix.dup2 null_in Unix.stdin;
+                Unix.close null_in;
+                Unix.dup2 w_pipe Unix.stdout;
+                Unix.dup2 w_pipe Unix.stderr;
+                Unix.close w_pipe;
+                Unix.execv bin argv
+              end;
               Unix.close null_in;
               Unix.close w_pipe;
-              let readable, _, _ = Unix.select [r_pipe] [] [] 5.0 in
-              if readable = [] then begin
-                (try Unix.kill pid Sys.sigkill with _ -> ());
-                Unix.close r_pipe;
-                ignore (Unix.waitpid [] pid);
-                None
-              end else begin
-                let ic = Unix.in_channel_of_descr r_pipe in
-                let rec read_lines count acc total_bytes =
-                  if count >= 20 || total_bytes >= 4096 then acc
-                  else
+
+              let buf = Bytes.create 1024 in
+              let output_chunks = ref [] in
+              let total_bytes = ref 0 in
+              let max_bytes = 65536 in
+              let eof = ref false in
+
+              while not !eof do
+                let now = Unix.gettimeofday () in
+                let remaining = deadline -. now in
+                if remaining <= 0.0 then begin
+                  eof := true;
+                  (try Unix.kill (-pid) Sys.sigkill with _ -> ());
+                  (try Unix.kill pid Sys.sigkill with _ -> ());
+                end else begin
+                  let readable, _, _ = Unix.select [r_pipe] [] [] remaining in
+                  if readable = [] then begin
+                    eof := true;
+                    (try Unix.kill (-pid) Sys.sigkill with _ -> ());
+                    (try Unix.kill pid Sys.sigkill with _ -> ());
+                  end else begin
                     try
-                      let line = input_line ic in
-                      let line_bounded = if String.length line > 512 then String.sub line 0 512 else line in
-                      read_lines (count + 1) (line_bounded :: acc) (total_bytes + String.length line_bounded)
-                    with End_of_file -> acc
-                in
-                let lines = List.rev (read_lines 0 [] 0) in
-                close_in ic;
-                let _, st = Unix.waitpid [] pid in
-                let exit_code = match st with Unix.WEXITED c -> c | _ -> -1 in
-                let all_output = String.concat "\n" lines in
-                let passed = is_successful_execution ~tender:bin ~exit_code ~output:all_output in
-                let output_snippet =
-                  if String.length all_output > 200 then String.sub all_output 0 200 else all_output
-                in
-                Some { tender = bin; unikernel = unikernel_path; exit_code; output_snippet; passed }
-              end
+                      let space = max_bytes - !total_bytes in
+                      if space <= 0 then eof := true
+                      else
+                        let to_read = min 1024 space in
+                        let n = Unix.read r_pipe buf 0 to_read in
+                        if n = 0 then eof := true
+                        else begin
+                          output_chunks := (Bytes.sub_string buf 0 n) :: !output_chunks;
+                          total_bytes := !total_bytes + n;
+                          if !total_bytes >= max_bytes then eof := true
+                        end
+                    with
+                    | Unix.Unix_error ((Unix.EAGAIN | Unix.EWOULDBLOCK), _, _) -> ()
+                    | _ -> eof := true
+                  end
+                end
+              done;
+              Unix.close r_pipe;
+
+              let rec wait_loop () =
+                let now = Unix.gettimeofday () in
+                let remaining = deadline -. now in
+                if remaining <= 0.0 then begin
+                  (try Unix.kill (-pid) Sys.sigkill with _ -> ());
+                  (try Unix.kill pid Sys.sigkill with _ -> ());
+                  ignore (Unix.waitpid [] pid);
+                  -1
+                end else begin
+                  match Unix.waitpid [Unix.WNOHANG] pid with
+                  | 0, _ ->
+                      ignore (Unix.select [] [] [] 0.01);
+                      wait_loop ()
+                  | _, Unix.WEXITED c -> c
+                  | _, Unix.WSIGNALED s -> 128 + s
+                  | _, _ -> -1
+                end
+              in
+              let exit_code = wait_loop () in
+              let all_output = String.concat "" (List.rev !output_chunks) in
+              let passed = is_successful_execution ~tender:bin ~exit_code ~output:all_output in
+              let output_snippet =
+                if String.length all_output > 200 then String.sub all_output 0 200 else all_output
+              in
+              Some { tender = bin; unikernel = unikernel_path; exit_code; output_snippet; passed }
             with _ -> None
 
 let probe_solo5 () =

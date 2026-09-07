@@ -177,3 +177,71 @@ pub fn mutating_tool_negative_seu_is_preflight_vetoed_test() {
   msg |> string.contains("Subjective Expected Utility") |> should.be_true
 }
 
+pub fn fractal_jidoka_andon_halt_on_bypass_attempt_test() {
+  // Test SC-JIDOKA-001: Immediate fail-closed Andon Halt on non-sa-plan bypass attempt
+  let response =
+    tool_call(
+      "jidoka-halt-bypass",
+      "plan_add",
+      json.object([
+        #("title", json.string("Shadow Plan Task")),
+        #("priority", json.string("high")),
+        #("bypass_sa_plan", json.bool(True)),
+      ]),
+    )
+  let code_decoder = {
+    use code <- decode.subfield(["error", "code"], decode.int)
+    decode.success(code)
+  }
+  let message_decoder = {
+    use msg <- decode.subfield(["error", "message"], decode.string)
+    decode.success(msg)
+  }
+
+  json.parse(response, code_decoder) |> should.equal(Ok(-32_002))
+  let assert Ok(msg) = json.parse(response, message_decoder)
+  msg |> string.contains("Fractal Jidoka Andon Halt") |> should.be_true
+  msg |> string.contains("SC-JIDOKA-001") |> should.be_true
+}
+
+pub fn fractal_jidoka_andon_halt_on_unledgered_execution_test() {
+  // Test SC-JIDOKA-001: Immediate fail-closed Andon Halt on unledgered task execution
+  let response =
+    tool_call(
+      "jidoka-halt-unledgered",
+      "plan_update",
+      json.object([
+        #("id", json.string("task-phantom")),
+        #("status", json.string("completed")),
+        #("unledgered", json.bool(True)),
+      ]),
+    )
+  let code_decoder = {
+    use code <- decode.subfield(["error", "code"], decode.int)
+    decode.success(code)
+  }
+  let message_decoder = {
+    use msg <- decode.subfield(["error", "message"], decode.string)
+    decode.success(msg)
+  }
+
+  json.parse(response, code_decoder) |> should.equal(Ok(-32_002))
+  let assert Ok(msg) = json.parse(response, message_decoder)
+  msg |> string.contains("Fractal Jidoka Andon Halt") |> should.be_true
+}
+
+pub fn sa_plan_durable_tools_advertised_test() {
+  // Verify sa-plan tools are part of the operational tool catalog
+  let names =
+    tools.operational_tool_definitions()
+    |> list.map(fn(t) { t.name })
+
+  names |> list.contains("sa_plan_status") |> should.be_true
+  names |> list.contains("sa_plan_list") |> should.be_true
+  names |> list.contains("sa_task_claim") |> should.be_true
+  names |> list.contains("sa_task_complete") |> should.be_true
+  names |> list.contains("sa_job_enqueue") |> should.be_true
+  names |> list.contains("sa_workflow_start") |> should.be_true
+}
+
+

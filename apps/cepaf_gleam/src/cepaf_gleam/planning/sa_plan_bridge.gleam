@@ -928,10 +928,26 @@ pub fn poka_yoke_validate_workflow(
 @external(erlang, "cepaf_gleam_ffi", "os_cmd")
 fn erl_os_cmd(cmd: String) -> Result(BitArray, String)
 
+@external(erlang, "cepaf_gleam_ffi", "file_read")
+fn erl_file_read(path: String) -> Result(BitArray, String)
+
+/// Resolves the absolute or relative path to the tools/sa-plan binary.
+pub fn resolve_sa_plan_binary() -> String {
+  case erl_file_read("tools/sa-plan") {
+    Ok(_) -> "tools/sa-plan"
+    Error(_) ->
+      case erl_file_read("../../tools/sa-plan") {
+        Ok(_) -> "../../tools/sa-plan"
+        Error(_) -> "/home/an/NAS-setup/uos/tools/sa-plan"
+      }
+  }
+}
+
 /// Executes tools/sa-plan with the specified argument list and returns standard output.
 pub fn run_sa_plan_cli(args: List(String)) -> Result(String, String) {
+  let bin = resolve_sa_plan_binary()
   let joined_args = string.join(args, " ")
-  let cmd = "tools/sa-plan " <> joined_args
+  let cmd = bin <> " " <> joined_args
   case erl_os_cmd(cmd) {
     Ok(output_binary) -> {
       case bit_array.to_string(output_binary) {
