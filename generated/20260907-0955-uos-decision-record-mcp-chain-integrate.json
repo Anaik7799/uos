@@ -86,5 +86,28 @@
     "unknowns": [
       "NIF-family flakiness (Unknown)"
     ]
+  },
+  "completed": {
+    "observed_at": "2026-09-07T09:56:35.842614+00:00",
+    "observed_actions": [
+      "full cepaf suite: 10003 passed / 202 failures; failing set identical to the mainline set (164, 0 new, 0 fixed)",
+      "lease integration/main epoch 14 -> main = vyuvlqrpuzsu/be5c2c70cf82b905f3f4e8674ac683b0d666d9d4 -> released",
+      "integration/candidates-mcp-chain-pending retired (superseded by the landed chain)"
+    ],
+    "integrated_exact_pins": [
+      "cb625f48c9e3b7ab70fa6c1b8797f400302ad599",
+      "4eabfc34fea9d0a96317fff4c759d8b3141a2c73",
+      "88fe4fa8edd8b8c4dbc893e6c3fa8498b79f919f"
+    ],
+    "outcome": "predicted outcome realized — Measured",
+    "still_unrun": [
+      "positive NIF path (no .so on nas-1)",
+      "page adapters live-unprobed"
+    ],
+    "consumed": {
+      "tokens": "0 for integration steps",
+      "usd": 0.0
+    },
+    "calibration_ref": "p=0.9 -> pass (Brier 0.01)"
   }
 }
