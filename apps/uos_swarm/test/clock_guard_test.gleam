@@ -155,3 +155,9 @@ pub fn captured_chrony_fourteen_field_fixture_has_correct_units_test() {
   uncertainty_us |> should.equal(16_142)
   guard.parse_tracking(fixture <> ",extra") |> should.be_error
 }
+
+pub fn durable_directory_probe_reports_missing_directory_test() {
+  guard.verify_durable_directory("/tmp/uos-clock-guard-missing-directory")
+  |> should.be_error
+  guard.verify_durable_directory("/tmp") |> should.be_ok
+}

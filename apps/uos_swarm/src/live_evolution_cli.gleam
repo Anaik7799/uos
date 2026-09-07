@@ -17,6 +17,7 @@ import gleam/string
 import uos_swarm/board_reader
 import uos_swarm/clock_contract as clock
 import uos_swarm/clock_guard as guard
+import uos_swarm/clock_guard_fetch
 import uos_swarm/coord
 import uos_swarm/live_evolution as evolution
 import uos_swarm/session_sync
@@ -64,10 +65,16 @@ fn expected_active(root: String) -> Result(List(String), String) {
 }
 
 fn board_snapshot(
-  path: String,
-  expected: List(String),
+  url: String,
+  projection_path: String,
+  session_root: String,
 ) -> Result(guard.BoardSnapshot, String) {
-  use body <- result.try(board_reader.read_file(path, board_reader.max_bytes))
+  use expected <- result.try(expected_active(session_root))
+  use _ <- result.try(case list.is_empty(expected) {
+    True -> Error("no verified active session snapshot")
+    False -> Ok(Nil)
+  })
+  use body <- result.try(clock_guard_fetch.fetch(url, projection_path))
   use input <- result.try(board_reader.from_zenoh(body))
   case input.malformed_count {
     0 -> Ok(guard.from_board_input(input, expected))
@@ -239,9 +246,11 @@ fn run_instance(
   session_root: String,
   floor_path: String,
 ) -> Result(String, String) {
+  use _ <- result.try(guard.verify_durable_directory(floor_path))
   use floor <- result.try(guard.load_floor(floor_path))
-  use expected <- result.try(expected_active(session_root))
-  let board = fn() { board_snapshot(board_path, expected) }
+  let board = fn() {
+    board_snapshot(board_path, floor_path <> ".board.json", session_root)
+  }
   let guard.Config(version, _, actor_ttl, retention, policy) =
     guard.strict_config()
   let config = guard.Config(version, interval_ms, actor_ttl, retention, policy)
@@ -391,8 +400,8 @@ pub fn usage() -> String {
   <> "inspect-loaded <allowlisted_module>\n"
   <> "verify <absolute_artifact_root> <allowlisted_module> <sha256>\n"
   <> "load <absolute_artifact_root> <allowlisted_module> <sha256>\n"
-  <> "instance-once <primary|backup> <instance_id> <runtime:resource> <candidate> <sha256> <board_json> <session_root> <primary_floor_file|backup_floor_file>\n"
-  <> "instance-watch <primary|backup> <count:1..100> <interval_ms:50..3600000> <instance_id> <runtime:resource> <candidate> <sha256> <board_json> <session_root> <primary_floor_file|backup_floor_file>\n"
+  <> "instance-once <primary|backup> <instance_id> <runtime:resource> <candidate> <sha256> <zenoh_http_url> <session_root> <primary_floor_file|backup_floor_file>\n"
+  <> "instance-watch <primary|backup> <count:1..100> <interval_ms:50..3600000> <instance_id> <runtime:resource> <candidate> <sha256> <zenoh_http_url> <session_root> <primary_floor_file|backup_floor_file>\n"
   <> "Each instance runs a distinct clock guard. The backup remains observer-only; the primary advertises a writer only from a current durable session lease. No command routes traffic or grants authority.\n"
 }
 
