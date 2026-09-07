@@ -16,6 +16,7 @@
 //// </uos-module>
 //// =============================================================================
 
+import cepaf_gleam/ha/homeostasis_evolution_engine
 import cepaf_gleam/ha/predictive_zenoh_stream
 import gleam/list
 import gleam/otp/actor
@@ -117,6 +118,7 @@ pub fn uos_root_spec() -> RootSupervisorSpec {
           "cpig_supervisor",
           "fractal_l0_constitutional",
           "ha_lyapunov_proof",
+          "homeostasis_evolution_engine",
         ],
       ),
     ],
@@ -151,5 +153,6 @@ pub fn start_root_supervisor() -> Result(
   sup.new(sup.RestForOne)
   |> sup.restart_tolerance(intensity: 5, period: 60)
   |> sup.add(predictive_zenoh_stream.supervised())
+  |> sup.add(homeostasis_evolution_engine.supervised(0))
   |> sup.start
 }

@@ -11,6 +11,7 @@ import cepaf_gleam/ha/multi_agent_quorum.{
   sovereign_to_string,
 }
 import gleam/list
+import gleam/otp/actor
 import gleeunit
 import gleeunit/should
 
@@ -185,3 +186,107 @@ pub fn three_of_four_evolution_rejection_test() {
     Ok(_) -> panic as "Rejected evolution must not be applied"
   }
 }
+
+pub fn homeostasis_actor_lifecycle_test() {
+  let assert Ok(started) = homeostasis_evolution_engine.start_actor(1000)
+  let subj = started.data
+
+  // Send 3 observations of health 1.0 (driving towards homeostasis)
+  actor.send(subj, homeostasis_evolution_engine.IngestHealthObservation(1.0, 1.0, 2000))
+  actor.send(subj, homeostasis_evolution_engine.IngestHealthObservation(1.0, 1.0, 3000))
+  actor.send(subj, homeostasis_evolution_engine.IngestHealthObservation(1.0, 1.0, 4000))
+
+  // Query state
+  let s3 = actor.call(subj, 1000, homeostasis_evolution_engine.GetHomeostasisState)
+  case s3.phase {
+    HomeostaticEquilibrium(cycles, _) -> cycles |> should.equal(3)
+    _ -> panic as "Expected HomeostaticEquilibrium in actor"
+  }
+
+  // Submit mutation proposal
+  let mut =
+    EvolutionaryMutation(
+      mutation_id: "mut-actor-01",
+      target_capability: "Dynamic Swarm Router",
+      description: "Auto-tune buffer sizes based on Lyapunov trends",
+      expected_gain_pct: 15.0,
+      risk_score: 0.01,
+    )
+
+  let assert Ok(prop0) =
+    actor.call(
+      subj,
+      1000,
+      fn(reply) { homeostasis_evolution_engine.SubmitMutationProposal(mut, 4100, reply) },
+    )
+
+  // Cast 3 approvals (AGY, Claude, OpenRouter)
+  let prop1 =
+    actor.call(
+      subj,
+      1000,
+      fn(reply) {
+        homeostasis_evolution_engine.CastQuorumVote(
+          prop0,
+          AgySovereign,
+          QuorumApprove,
+          "Energy verified",
+          "sha-a",
+          4200,
+          reply,
+        )
+      },
+    )
+
+  let prop2 =
+    actor.call(
+      subj,
+      1000,
+      fn(reply) {
+        homeostasis_evolution_engine.CastQuorumVote(
+          prop1,
+          ClaudeSovereign,
+          QuorumApprove,
+          "Zero-Muda verified",
+          "sha-c",
+          4300,
+          reply,
+        )
+      },
+    )
+
+  let prop3 =
+    actor.call(
+      subj,
+      1000,
+      fn(reply) {
+        homeostasis_evolution_engine.CastQuorumVote(
+          prop2,
+          OpenRouterSovereign,
+          QuorumApprove,
+          "Consensus complete",
+          "sha-or",
+          4400,
+          reply,
+        )
+      },
+    )
+
+  // Apply ratified mutation
+  let assert Ok(evolved) =
+    actor.call(
+      subj,
+      1000,
+      fn(reply) { homeostasis_evolution_engine.ApplyMutationEvolution(prop3, reply) },
+    )
+
+  evolved.generation |> should.equal(1)
+  case evolved.phase {
+    AutonomousEvolutionActive(id, gen) -> {
+      id |> should.equal("mut-actor-01")
+      gen |> should.equal(1)
+    }
+    _ -> panic as "Expected AutonomousEvolutionActive after applying mutation"
+  }
+}
+

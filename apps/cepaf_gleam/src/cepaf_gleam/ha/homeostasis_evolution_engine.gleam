@@ -32,8 +32,11 @@ import cepaf_gleam/ha/multi_agent_quorum.{
   ThreeOfFourSovereign, VerdictPending,
   VerdictRatified, VerdictRejected, cast_ballot_vote, create_ballot,
 }
+import gleam/erlang/process.{type Subject}
 import gleam/float
 import gleam/int
+import gleam/otp/actor
+import gleam/otp/supervision
 
 // ---------------------------------------------------------------------------
 // 1. Cybernetic PID & Lyapunov Homeostasis State
@@ -318,4 +321,90 @@ pub fn apply_ratified_evolution(
 /// Return all 4 sovereign agent members of the Homeostasis Evolution Quorum.
 pub fn get_quorum_members() -> List(SovereignAgent) {
   [AgySovereign, ClaudeSovereign, CodexSovereign, OpenRouterSovereign]
+}
+
+// ---------------------------------------------------------------------------
+// 4. OTP Actor & Supervision Interface
+// ---------------------------------------------------------------------------
+
+pub type HomeostasisActorMsg {
+  IngestHealthObservation(measured: Float, dt_seconds: Float, now_us: Int)
+  SubmitMutationProposal(
+    mutation: EvolutionaryMutation,
+    now_us: Int,
+    reply_to: Subject(Result(EvolutionProposal, String)),
+  )
+  CastQuorumVote(
+    proposal: EvolutionProposal,
+    agent: SovereignAgent,
+    vote: multi_agent_quorum.QuorumVote,
+    rationale: String,
+    digest: String,
+    now_us: Int,
+    reply_to: Subject(EvolutionProposal),
+  )
+  ApplyMutationEvolution(
+    proposal: EvolutionProposal,
+    reply_to: Subject(Result(HomeostasisSystemState, String)),
+  )
+  GetHomeostasisState(reply_to: Subject(HomeostasisSystemState))
+}
+
+pub fn handle_actor_message(
+  state: HomeostasisSystemState,
+  msg: HomeostasisActorMsg,
+) -> actor.Next(HomeostasisSystemState, HomeostasisActorMsg) {
+  case msg {
+    IngestHealthObservation(measured, dt_seconds, now_us) -> {
+      let next_state = ingest_telemetry(state, measured, dt_seconds, now_us)
+      actor.continue(next_state)
+    }
+
+    SubmitMutationProposal(mutation, now_us, reply_to) -> {
+      let result = propose_evolution(state, mutation, now_us)
+      process.send(reply_to, result)
+      actor.continue(state)
+    }
+
+    CastQuorumVote(proposal, agent, vote, rationale, digest, now_us, reply_to) -> {
+      let updated = vote_on_evolution(proposal, agent, vote, rationale, digest, now_us)
+      process.send(reply_to, updated)
+      actor.continue(state)
+    }
+
+    ApplyMutationEvolution(proposal, reply_to) -> {
+      case apply_ratified_evolution(state, proposal) {
+        Ok(next_state) -> {
+          process.send(reply_to, Ok(next_state))
+          actor.continue(next_state)
+        }
+        Error(err) -> {
+          process.send(reply_to, Error(err))
+          actor.continue(state)
+        }
+      }
+    }
+
+    GetHomeostasisState(reply_to) -> {
+      process.send(reply_to, state)
+      actor.continue(state)
+    }
+  }
+}
+
+/// Start an active BEAM actor running the Homeostasis Evolution Engine.
+pub fn start_actor(
+  now_us: Int,
+) -> Result(actor.Started(Subject(HomeostasisActorMsg)), actor.StartError) {
+  actor.new(init_homeostasis_system(now_us))
+  |> actor.on_message(handle_actor_message)
+  |> actor.start()
+}
+
+/// Supervised child specification for the OTP supervision tree.
+pub fn supervised(
+  now_us: Int,
+) -> supervision.ChildSpecification(Subject(HomeostasisActorMsg)) {
+  supervision.worker(fn() { start_actor(now_us) })
+  |> supervision.restart(supervision.Permanent)
 }
