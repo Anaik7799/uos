@@ -1,0 +1,4 @@
+(executable
+ (name tailscale_monitor)
+ (modules tailscale_monitor)
+ (libraries unix hermes_harness_hermes_zenoh yojson))

@@ -1,0 +1,55 @@
+{
+  "carrier": "uos-decision-record/v1",
+  "phase": "prepared",
+  "decision_id": "DR-20260907-1205-L0FABLE-CANDIDATE-INTEGRATION-6-MERGE-ALL-CREATED",
+  "identity_scope": {
+    "hive": "uos-tui-swarm",
+    "tenant": "uos",
+    "actor_kind": "model-agent (design authority, L0; integration/main owner)",
+    "actor_id": "L0-fable",
+    "session": "656f0d2c-6019-4d9e-b0ce-b9e39b240047",
+    "provider_model": { "provider": "anthropic", "model": "claude-fable-5-1", "self_report": true }
+  },
+  "task_authority": {
+    "task": "operator directive 'continue, merge all functionality created': integrate every visible head off main that carries created functionality, one two-parent merge each, park what conflicts non-mechanically or regresses main",
+    "resource": "integration/main",
+    "lease_epoch": "19 (claimed 11:54:30Z with op id l0-fable-claim-integration-main-20260907-115430-12019, verified as coordinator event 165; TTL 3600 s)",
+    "proposed_action": "bookmark set integration/uos-swarm and main to the composed head (change rlqvzqokqltz) after gates; receipts on a following change; bookmarks to the receipt change; release",
+    "policy_refs": [ "SYNC-03 lease (verified this time by reading the newest coordinator event)", "SC-HIVE-DECISION-001", "attribution gate where cepaf is touched (0 cepaf files in this composition)", "jj discipline D3/D4/D7", "language boundary (Gleam/Erlang/OCaml/jq only)" ],
+    "authorization": "operator: 'continue, merge all functionality created' (2026-09-07 ~11:45 UTC)"
+  },
+  "evidence_choice": {
+    "observations": [
+      { "source": "jj heads(all()) ~ ::main", "value": "34 heads off main: 24 empty working copies or empty superseded merges; 3 superseded non-empty merges (tkmtuvmq, pnpktttv, qtvsuzxu: both parents already on main); 986ec4b7 (Codex restored 91eb child: its benchmark contract doc is superseded by the package); 6 candidates with content", "grade": "Measured" },
+      { "source": "merge A rroqsznkssot/7b9c0518 (AGY Mirage composition)", "value": "merged as lpqmymyuprmu: +17-line indrajaal_gleam_web edit, AGY decision record 20260907-1150 and journal 20260907-1330, ledger union 267 ids (266 + 1 AGY row); web app builds, 8 tests pass", "grade": "Measured" },
+      { "source": "merge D yzuvuytq/e17fd93b (E03/E04/N01 execution lineage, 5 commits, 11 files since fork ca3c0503)", "value": "merged as xloxmnqovmmq without conflict: e04_adapter + test, registry/run/receipt schema, ocaml_test_inventory Gleam tool, source_review census + test, E04 reproducibility index; test results recorded in the completed block", "grade": "Measured (merge) / pending (tests)" },
+      { "source": "merge B zkmtpxrw/59da60fb (Hermes tailscale_monitor executable, AGY, undescribed)", "value": "merged as rlqvzqokqltz without conflict; dune build blocked in the integration workspace by the untracked vendored libzenohc.a; retry with the vendored artifact recorded in the completed block", "grade": "Measured (merge) / pending (build)" },
+      { "source": "candidate C lqxzsoyy/a28bd944 (acceptance harness orphan, 2026-09-06 21:30)", "value": "PARKED: conflicts in all 5 tests/acceptance files against the reviewed E04 lineage (2026-09-07 07:41), which is 2058 lines ahead of it; superseded", "grade": "Measured" },
+      { "source": "candidate E rokqroml/42568ef7 (e03-evidence working copy, dormant since 2026-09-06 22:39)", "value": "PARKED: conflicts in tools/uos/src/main.gleam and exit_status_test.gleam; its main.gleam change deletes 1210 lines that main has since extended by 480; merging would regress the uos tool; its 21 cepaf evidence_truth files are worth a fresh candidate rebased by their author", "grade": "Measured" },
+      { "source": "gates on the composed head", "value": "uos_swarm 563 passed / 0 warnings; uos_tui 198; split gate G1 PASS; board valid 267 (3 gaps, 8 forks explicit); 0 cepaf files changed vs main so the cepaf attribution of integration 5 stands", "grade": "Measured" }
+    ],
+    "alternatives": [
+      { "option": "merge everything including C and E by hand-resolving conflicts", "tradeoff": "E would delete 1210 lines of tools/uos; C is an older copy of E04's files; both would regress main" },
+      { "option": "merge A, B, D; park C and E with exact reasons", "tradeoff": "two items stay off main until their authors rebase" }
+    ],
+    "selected": "merge A, B, D; park C and E with exact reasons",
+    "rationale": "everything that adds functionality without regressing main is in; the two parked items are superseded or destructive as they stand",
+    "risks": [ "tailscale_monitor and E04 OCaml scripts are producer-untested here until the build/test retry completes", "AGY's default workspace still sits on its own merge and must be rebased by AGY" ],
+    "unresolved": [ "whether the vendored zenoh-c artifact can be provided to the integration workspace for a real dune build" ]
+  },
+  "process": {
+    "steps": [ "enumerate heads", "merge A", "merge D", "park C", "merge B", "park E", "gates", "OCaml build/test retries", "prepared record", "bookmarks -> composed head", "receipts", "bookmarks -> receipt change", "release", "reports" ],
+    "rollback": "bookmark set main -r muutttsqxlrv (7cb60ab6 lineage + Codex package) with --allow-backwards under lease",
+    "escalation": "any gate failure on B or D -> park that merge by abandoning my merge change (candidate commits untouched)"
+  },
+  "forecast": {
+    "horizon": "30 min",
+    "clock_domain": "UTC host nas-1",
+    "observed_at": "2026-09-07T12:05:00.000000Z",
+    "expires_at": "2026-09-07T12:35:00.000000Z",
+    "predicted_outcome": "A, B, D on main; C and E parked; tailscale_monitor builds once the vendored library is present; E04 tests pass",
+    "probability": 0.7,
+    "basis": "merges are conflict-free and the swarm gates are green; OCaml results are the open variable; not calibrated",
+    "unknowns": [ "hermes vendored artifact availability (Unknown)", "E04 script results on this host (Unknown)" ]
+  }
+}
