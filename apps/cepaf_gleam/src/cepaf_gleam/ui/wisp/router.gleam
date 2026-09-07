@@ -49,13 +49,17 @@ import cepaf_gleam/ui/domain.{
   layer_to_string, page_control_plane, page_data_plane, page_fractal_layer,
   page_primary_clients, page_to_label, page_to_path,
 }
+import cepaf_gleam/services/mirage_migration_engine
+import cepaf_gleam/services/mirage_unikernel_daemon
 import cepaf_gleam/ui/lustre/hook_subsystem as hook_subsystem_view
+import cepaf_gleam/ui/lustre/mirage_cockpit
 import cepaf_gleam/ui/state as mesh_state
 import cepaf_gleam/ui/web/page_views
 import cepaf_gleam/ui/web/shell
 import cepaf_gleam/ui/wisp/auth
 import cepaf_gleam/ui/wisp/iam_api
 import cepaf_gleam/ui/wisp/mini_app_routes
+import cepaf_gleam/ui/wisp/mirage_api
 import cepaf_gleam/ui/wisp/podman_api
 import cepaf_gleam/ui/wisp/secret_api as vault_secret_api
 import cepaf_gleam/vault_audit_reconcile
@@ -138,6 +142,13 @@ fn route_internal(path: String) -> String {
         "reload",
         "status",
       ))
+    // MirageOS Unikernel & Migration routes (SC-MIRAGE-001, SC-MIRAGE-MIGRATE-001)
+    "/api/v1/mirage/candidates" | "/api/mirage/candidates" ->
+      mirage_api.candidates_json(mirage_migration_engine.get_migration_candidates())
+      |> json.to_string()
+    "/api/v1/mirage/status" | "/api/mirage/status" ->
+      mirage_api.unikernel_status_json(mirage_unikernel_daemon.new_daemon_state())
+      |> json.to_string()
     // SC-VAULT-009 + SC-VAULT-025: secrets vault API for .pi/ + dashboard tile.
     // Pass-6 wiring (skeleton response — Slice E continuation wires real vault.get).
     // Per docs/journal/task-116494073339521648/slice-plans/slice-e-continuation.md
@@ -4042,6 +4053,17 @@ fn route_html(path: String) -> String {
           "div",
           [],
           hook_subsystem_view.view(hook_subsystem_view.init()),
+        ),
+      )
+    "/mirage" | "/mirage/cockpit" ->
+      shell.render_page(
+        "MirageOS Unikernel Cockpit",
+        "mirage",
+        element.unsafe_raw_html(
+          "",
+          "div",
+          [],
+          mirage_cockpit.view(),
         ),
       )
     "/planning" ->

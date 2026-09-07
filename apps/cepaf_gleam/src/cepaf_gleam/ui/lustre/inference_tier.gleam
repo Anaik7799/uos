@@ -105,6 +105,16 @@ fn default_tiers() -> List(TierStatus) {
   [
     TierStatus(
       1,
+      "Modular MAX / Mojo",
+      "modular-max-v26.5.0-mojo",
+      25,
+      True,
+      CircuitClosed,
+      0,
+      0,
+    ),
+    TierStatus(
+      2,
       "Gemini Direct",
       "gemini-3.1-flash-lite-preview",
       900,
@@ -114,7 +124,7 @@ fn default_tiers() -> List(TierStatus) {
       0,
     ),
     TierStatus(
-      2,
+      3,
       "OpenRouter",
       "gemini-3-flash-preview",
       1100,
@@ -123,8 +133,7 @@ fn default_tiers() -> List(TierStatus) {
       0,
       0,
     ),
-    TierStatus(3, "Ollama gemma4", "gemma4", 4000, False, CircuitClosed, 0, 0),
-    TierStatus(4, "Ollama gemma3", "gemma3", 10_000, False, CircuitClosed, 0, 0),
+    TierStatus(4, "Ollama gemma4", "gemma4", 4000, False, CircuitClosed, 0, 0),
     TierStatus(5, "RETE-UL Rules", "rule-engine", 1, False, CircuitClosed, 0, 0),
     TierStatus(6, "Static Ack", "static", 0, False, CircuitClosed, 0, 0),
   ]
