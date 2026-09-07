@@ -8,9 +8,9 @@ import cepaf_gleam/fpp/ontology
 import cepaf_gleam/fpp/topology
 import cepaf_gleam/knowledge/c3i_knowledge_runtime
 import cepaf_gleam/knowledge/c3i_vertical_slice_engine
+import cepaf_gleam/nif/zenoh_rete_bridge as nif_bridge
 import cepaf_gleam/sdlc/aspect_agent_ecosystem
 import cepaf_gleam/sdlc/aspect_processing_agent
-import cepaf_gleam/nif/zenoh_rete_bridge as nif_bridge
 import cepaf_gleam/sdlc/planes_ascii_architecture
 import cepaf_gleam/ui/lustre/biosemiotics_radar
 import cepaf_gleam/ui/lustre/cybernetic_brain_matrix
@@ -56,6 +56,7 @@ import gleam/json
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
+import indrajaal/runtime_identity
 import lustre/element
 import mist.{type Connection, type ResponseData}
 
@@ -66,9 +67,24 @@ fn erl_read_repo_file(path: String) -> Result(BitArray, String)
 fn listen_port(default: Int) -> Int
 
 pub fn main() {
+  case runtime_identity.startup_check(runtime_identity.observe()) {
+    Ok(Nil) -> serve()
+    Error(reason) -> {
+      io.println(reason)
+      halt(78)
+    }
+  }
+}
+
+@external(erlang, "erlang", "halt")
+fn halt(code: Int) -> Nil
+
+fn serve() {
   let port = listen_port(4100)
   io.println("=== Indrajaal C3I Web Cockpit ===")
-  io.println("Starting isolated-capable listener on port " <> int.to_string(port))
+  io.println(
+    "Starting isolated-capable listener on port " <> int.to_string(port),
+  )
 
   let router = fn(req: Request(Connection)) -> Response(ResponseData) {
     let path = "/" <> string.join(request.path_segments(req), "/")
@@ -319,11 +335,7 @@ pub fn main() {
         |> response.prepend_header("access-control-allow-origin", "*")
       }
       ["api", "knowledge", "cited-recall"] -> {
-        let recall =
-          c3i_knowledge_runtime.query_cited_recall(
-            "C3I",
-            0.5,
-          )
+        let recall = c3i_knowledge_runtime.query_cited_recall("C3I", 0.5)
         let json_body = c3i_knowledge_runtime.encode_recall_result_json(recall)
         response.new(200)
         |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
@@ -484,6 +496,31 @@ pub fn main() {
         |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
         |> response.prepend_header("content-type", "application/json")
         |> response.prepend_header("access-control-allow-origin", "*")
+      }
+      ["api", "v1", "runtime", "identity"] -> {
+        let report = runtime_identity.observe()
+        response.new(case report.runtime_ready {
+          True -> 200
+          False -> 503
+        })
+        |> response.set_body(
+          mist.Bytes(bytes_tree.from_string(runtime_identity.to_json(report))),
+        )
+        |> response.prepend_header("content-type", "application/json")
+        |> response.prepend_header("cache-control", "no-store")
+      }
+      ["runtime"] -> {
+        let report = runtime_identity.observe()
+        let page =
+          render_lustre_page(
+            "Runtime identity",
+            "runtime",
+            element.to_string(runtime_identity.view(report)),
+          )
+        response.new(200)
+        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+        |> response.prepend_header("content-type", "text/html; charset=utf-8")
+        |> response.prepend_header("cache-control", "no-store")
       }
       ["api", "peer", "health"] -> {
         peer_health.observe(peer_health.CurrentPeer)
@@ -1260,8 +1297,12 @@ fn render_nav(active: String) -> String {
     True -> "class='active'"
     False -> ""
   } <> ">File Explorer</a>
+    <a href='http://nas-1.tail55d152.ts.net:4100/runtime'>Running VM identity</a>
+    <a href='http://nas-1.tail55d152.ts.net:4100/api/v1/runtime/identity'>Runtime identity API</a>
     <a href='/api/health' target='_blank'>System Health API</a>
-    <a href='http://nas-1.tail55d152.ts.net:4100/peer' " <> case active == "peer" {
+    <a href='http://nas-1.tail55d152.ts.net:4100/peer' " <> case
+    active == "peer"
+  {
     True -> "class='active' aria-current='page'"
     False -> ""
   } <> ">VM-1 Peer Diagnostic</a>
@@ -1325,7 +1366,9 @@ fn render_breadcrumbs_loop(
 
 // HTTP reachability does not grant runtime admission. A diagnostic API response
 // is intentionally non-2xx while its report remains unavailable or unverified.
-pub fn peer_health_response(report: peer_health.Report) -> Response(ResponseData) {
+pub fn peer_health_response(
+  report: peer_health.Report,
+) -> Response(ResponseData) {
   response.new(503)
   |> response.set_body(
     mist.Bytes(bytes_tree.from_string(peer_health.to_json(report))),
