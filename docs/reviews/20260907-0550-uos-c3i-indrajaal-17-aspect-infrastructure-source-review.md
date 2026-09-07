@@ -1,16 +1,16 @@
 # C3I and Indrajaal — 17-aspect infrastructure source review
 
 
-[UOS Cockpit](http://nas-1.tail55d152.ts.net:4100/) / [Knowledge](http://nas-1.tail55d152.ts.net:4100/wiki) / [Agentic infrastructure](http://nas-1.tail55d152.ts.net:4100/docs/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md)
+[UOS Cockpit](http://nas-1.tail55d152.ts.net:4100/) / [Knowledge](http://nas-1.tail55d152.ts.net:4100/wiki) / [Agentic infrastructure](http://nas-1.tail55d152.ts.net:4100/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md)
 
 **Command & Control:** [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Events](http://nas-1.tail55d152.ts.net:4100/ag-ui/events)  
-**Knowledge Base:** [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [ZK](http://nas-1.tail55d152.ts.net:4100/zk) · [Master MOC](http://nas-1.tail55d152.ts.net:4100/docs/docs/zk/20260905-1801-moc-uos-unified-master.md)  
+**Knowledge Base:** [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [ZK](http://nas-1.tail55d152.ts.net:4100/zk) · [Master MOC](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260905-1801-moc-uos-unified-master.md)  
 **Repository & Governance:** [Files](http://nas-1.tail55d152.ts.net:4100/files/) · [Checklist](http://nas-1.tail55d152.ts.net:4100/checklist) · [AGENTS.md](http://nas-1.tail55d152.ts.net:4100/files/AGENTS.md)  
-**View:** [Rendered document](http://nas-1.tail55d152.ts.net:4100/docs/docs/reviews/20260907-0550-uos-c3i-indrajaal-17-aspect-infrastructure-source-review.md) · [docs/reviews/20260907-0550-uos-c3i-indrajaal-17-aspect-infrastructure-source-review.md](http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20260907-0550-uos-c3i-indrajaal-17-aspect-infrastructure-source-review.md)
+**View:** [Rendered document](http://nas-1.tail55d152.ts.net:4100/docs/reviews/20260907-0550-uos-c3i-indrajaal-17-aspect-infrastructure-source-review.md) · [docs/reviews/20260907-0550-uos-c3i-indrajaal-17-aspect-infrastructure-source-review.md](http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20260907-0550-uos-c3i-indrajaal-17-aspect-infrastructure-source-review.md)
 
 - **Review:** `REVIEW-UOS-AINF-001`, created `2026-09-07T05:54:50Z`.
 - **Status:** SOURCE REVIEW / REUSE MAPPED; runtime and formal verification UNRUN.
-- **Specification:** [SPEC-UOS-AINF-001](http://nas-1.tail55d152.ts.net:4100/docs/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md).
+- **Specification:** [SPEC-UOS-AINF-001](http://nas-1.tail55d152.ts.net:4100/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md).
 - **Source index:** [docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json) — 80 selected canonical source/reference files.
 - **Knowledge:** [[wiki:20260907-0550-uos-agentic-infrastructure-building-blocks]] · [[zk:20260907-0550-adr-uos-agentic-infrastructure-native-building-blocks]].
 
@@ -291,5 +291,5 @@ formal-proof and sovereign-admission obligations remain **UNRUN**.
 </details>
 
 
-**Previous:** [Master MOC](http://nas-1.tail55d152.ts.net:4100/docs/docs/zk/20260905-1801-moc-uos-unified-master.md) · **Next:** [Formal specification](http://nas-1.tail55d152.ts.net:4100/docs/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md)  
+**Previous:** [Master MOC](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260905-1801-moc-uos-unified-master.md) · **Next:** [Formal specification](http://nas-1.tail55d152.ts.net:4100/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md)  
 **UOS footer:** [nas-1 cockpit](http://nas-1.tail55d152.ts.net:4100/) · [vm-1 peer](http://vm-1.tail55d152.ts.net:8088) · SOURCE REVIEW / runtime UNRUN.

@@ -11,11 +11,11 @@ Tags: `#rocha-semiotics`, `#cybernetics`, `#fractal-l0`, `#fractal-l1`, `#fracta
 blocks, 21 services, 17 canonical aspects, 357 service/aspect obligations,
 18 invariants, 63 acceptance cases and an eight-package implementation sequence.
 
-- [Formal specification](http://nas-1.tail55d152.ts.net:4100/docs/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md)
-- [C3I and Indrajaal source review across all 17 aspects](http://nas-1.tail55d152.ts.net:4100/docs/docs/reviews/20260907-0550-uos-c3i-indrajaal-17-aspect-infrastructure-source-review.md)
-- [Infrastructure wiki](http://nas-1.tail55d152.ts.net:4100/docs/docs/wiki/20260907-0550-uos-agentic-infrastructure-building-blocks.md) — `[[wiki:20260907-0550-uos-agentic-infrastructure-building-blocks]]`
-- [ADR-UOS-AINF-001](http://nas-1.tail55d152.ts.net:4100/docs/docs/zk/20260907-0550-adr-uos-agentic-infrastructure-native-building-blocks.md) — `[[zk:20260907-0550-adr-uos-agentic-infrastructure-native-building-blocks]]`
-- [Specification completion journal](http://nas-1.tail55d152.ts.net:4100/docs/docs/journal/20260907-0550-uos-agentic-infrastructure-formal-spec-journal.md)
+- [Formal specification](http://nas-1.tail55d152.ts.net:4100/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md)
+- [C3I and Indrajaal source review across all 17 aspects](http://nas-1.tail55d152.ts.net:4100/docs/reviews/20260907-0550-uos-c3i-indrajaal-17-aspect-infrastructure-source-review.md)
+- [Infrastructure wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-0550-uos-agentic-infrastructure-building-blocks.md) — `[[wiki:20260907-0550-uos-agentic-infrastructure-building-blocks]]`
+- [ADR-UOS-AINF-001](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-0550-adr-uos-agentic-infrastructure-native-building-blocks.md) — `[[zk:20260907-0550-adr-uos-agentic-infrastructure-native-building-blocks]]`
+- [Specification completion journal](http://nas-1.tail55d152.ts.net:4100/docs/journal/20260907-0550-uos-agentic-infrastructure-formal-spec-journal.md)
 
 
 The Unified Operational System (UOS) integrates three foundational corpora into an interconnected, bidirectional living knowledge graph:

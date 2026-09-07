@@ -131,6 +131,18 @@ Per operator mandate (`contracts/rules/comprehensive-checklist-contract.md` `SC-
 3. **Uniform Cohesive Navigation**: Grouped Sidebar (Command & Control, Knowledge Base, Repository & Gov), Top Status Bar with clickable Tailscale FQDN URL and click-to-copy, Breadcrumb hierarchy, Dual View Mode (Rendered Markdown vs Raw Source toggle), Bottom linear Prev/Next navigation, and Persistent System Footer.
 4. **Machine Verification**: Validated by `tools/uos checklist`, gate `G-CHECKLIST`, and `tools/uos doctor` EV-19.
 
+### 5.4 Shared Claude, Codex, AGY and OpenRouter Coordination
+
+For parallel SDLC/SRE and swarm work, read and follow
+`contracts/rules/20260907-0653-tri-agent-coordination.md`.
+Use the durable session coordinator for task/workspace claims and separate
+`integration/main` and `runtime:<service>` ownership. Discover actual Herdr
+sessions, exchange compact work/evidence references on the message board, and
+record explicit peer acknowledgements. Never regenerate a shared live journal or
+delete shared Zenoh keys. A model result, board ACK or lease does not independently
+grant deployment authority or system admission. Default remote advisory work to
+free-only bounded OpenRouter requests; paid and aggregate budgets are explicit.
+
 ## 6. Evidence, Gates, and Completion Semantics
 
 State transitions must advance strictly through:

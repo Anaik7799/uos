@@ -1,20 +1,20 @@
 # UOS agentic infrastructure — formal implementation specification
 
 
-[UOS Cockpit](http://nas-1.tail55d152.ts.net:4100/) / [Knowledge](http://nas-1.tail55d152.ts.net:4100/wiki) / [Agentic infrastructure](http://nas-1.tail55d152.ts.net:4100/docs/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md)
+[UOS Cockpit](http://nas-1.tail55d152.ts.net:4100/) / [Knowledge](http://nas-1.tail55d152.ts.net:4100/wiki) / [Agentic infrastructure](http://nas-1.tail55d152.ts.net:4100/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md)
 
 **Command & Control:** [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Events](http://nas-1.tail55d152.ts.net:4100/ag-ui/events)  
-**Knowledge Base:** [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [ZK](http://nas-1.tail55d152.ts.net:4100/zk) · [Master MOC](http://nas-1.tail55d152.ts.net:4100/docs/docs/zk/20260905-1801-moc-uos-unified-master.md)  
+**Knowledge Base:** [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [ZK](http://nas-1.tail55d152.ts.net:4100/zk) · [Master MOC](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260905-1801-moc-uos-unified-master.md)  
 **Repository & Governance:** [Files](http://nas-1.tail55d152.ts.net:4100/files/) · [Checklist](http://nas-1.tail55d152.ts.net:4100/checklist) · [AGENTS.md](http://nas-1.tail55d152.ts.net:4100/files/AGENTS.md)  
-**View:** [Rendered document](http://nas-1.tail55d152.ts.net:4100/docs/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md) · [docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md)
+**View:** [Rendered document](http://nas-1.tail55d152.ts.net:4100/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md) · [docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md)
 
 - **Specification:** `SPEC-UOS-AINF-001`, version 1.0.
 - **Created:** `2026-09-07T05:54:50Z`; filename prefix `20260907-0550-` (UTC host clock).
 - **Status:** **SPECIFIED / MAPPED; implementation UNRUN; NOT ADMITTED.**
 - **Authority:** Operator request and canonical UOS `AGENTS.md`. This specification proposes implementation obligations; it does not ratify a runtime.
 - **Machine-readable companion:** [docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json).
-- **Source review:** [C3I and Indrajaal review across all 17 aspects](http://nas-1.tail55d152.ts.net:4100/docs/docs/reviews/20260907-0550-uos-c3i-indrajaal-17-aspect-infrastructure-source-review.md).
-- **Knowledge links:** [Wiki](http://nas-1.tail55d152.ts.net:4100/docs/docs/wiki/20260907-0550-uos-agentic-infrastructure-building-blocks.md) · [Decision record](http://nas-1.tail55d152.ts.net:4100/docs/docs/zk/20260907-0550-adr-uos-agentic-infrastructure-native-building-blocks.md) · [Journal](http://nas-1.tail55d152.ts.net:4100/docs/docs/journal/20260907-0550-uos-agentic-infrastructure-formal-spec-journal.md).
+- **Source review:** [C3I and Indrajaal review across all 17 aspects](http://nas-1.tail55d152.ts.net:4100/docs/reviews/20260907-0550-uos-c3i-indrajaal-17-aspect-infrastructure-source-review.md).
+- **Knowledge links:** [Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-0550-uos-agentic-infrastructure-building-blocks.md) · [Decision record](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-0550-adr-uos-agentic-infrastructure-native-building-blocks.md) · [Journal](http://nas-1.tail55d152.ts.net:4100/docs/journal/20260907-0550-uos-agentic-infrastructure-formal-spec-journal.md).
 - **Transclusions:** [[wiki:20260907-0550-uos-agentic-infrastructure-building-blocks]] · [[zk:20260907-0550-adr-uos-agentic-infrastructure-native-building-blocks]].
 
 Tags: #fractal-l0 #fractal-l1 #fractal-l2 #fractal-l3 #fractal-l4 #fractal-l5 #fractal-l6 #fractal-l7 #fractal-l8 #fractal-l9 #zk-adr #zero-muda #km-triad #agentic-infrastructure #checklist-nav
@@ -1172,5 +1172,5 @@ formal-proof and sovereign-admission obligations remain **UNRUN**.
 </details>
 
 
-**Previous:** [Source review](http://nas-1.tail55d152.ts.net:4100/docs/docs/reviews/20260907-0550-uos-c3i-indrajaal-17-aspect-infrastructure-source-review.md) · **Next:** [Infrastructure wiki](http://nas-1.tail55d152.ts.net:4100/docs/docs/wiki/20260907-0550-uos-agentic-infrastructure-building-blocks.md) · [Decision record](http://nas-1.tail55d152.ts.net:4100/docs/docs/zk/20260907-0550-adr-uos-agentic-infrastructure-native-building-blocks.md)  
+**Previous:** [Source review](http://nas-1.tail55d152.ts.net:4100/docs/reviews/20260907-0550-uos-c3i-indrajaal-17-aspect-infrastructure-source-review.md) · **Next:** [Infrastructure wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-0550-uos-agentic-infrastructure-building-blocks.md) · [Decision record](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-0550-adr-uos-agentic-infrastructure-native-building-blocks.md)  
 **UOS footer:** [nas-1 Tailnet cockpit](http://nas-1.tail55d152.ts.net:4100/) · [vm-1 peer](http://vm-1.tail55d152.ts.net:8088) · SPECIFIED / runtime UNRUN.

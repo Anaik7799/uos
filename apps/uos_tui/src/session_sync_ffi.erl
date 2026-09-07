@@ -164,7 +164,7 @@ read_events(Root) ->
         demand(Size + FileSize =< ?MAX_BYTES, <<"journal byte capacity reached">>),
         {ok, Bin} = file:read_file(Path),
         demand(byte_size(Bin) =:= FileSize, <<"event changed during read">>),
-        {Index + 1, Size + FileSize, [Bin, <<"\n">> | Acc]}
+        {Index + 1, Size + FileSize, [<<"\n">>, Bin | Acc]}
     end, {1, 0, []}, Files),
     _ = Bytes,
     {Next - 1, iolist_to_binary(lists:reverse(Rev))}.

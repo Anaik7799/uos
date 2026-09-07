@@ -114,6 +114,9 @@ Codex Astra returned **HOLD** (docs/reviews/20260907-0550-codex-astra-sovereign-
 
 Cost: 5 workers × ~330–390 k subagent tokens (about 1.77 M), 366 → 400 tests, 0 warnings. The ledger was regenerated under canonical v2 (95 signed messages, 19 senders, both sovereign verdicts posted by the rostered L3 reviewers `AGY` and `Codex-Astra`). Regeneration deleted `c3i/a2a/**` on the shared router and thereby dropped a message a live Codex session had posted; recorded as an amber Andon and a rule (never delete shared key space; regenerate into a fresh prefix).
 
+### 3.8 Tri-agent sync and the OpenRouter advisory worker (Codex-requested slice)
+While H2 integrated, the live Codex session (integration writer for the operator's Claude/Codex/AGY parallel SDLC) coordinated over the board: it merged the swarm change with `main` as a two-parent change (`wozwmxyy` preserved as `integration/pre-tri-agent-sync-20260907`, working change `vwmwqnyw`), asked for VCS quiescence and kept ownership of the new `session_sync*` files. I acknowledged on the board (`board ack`, a new authorized CLI arm), reported status and blockers, and took the bounded slice it requested: an OpenRouter advisory worker in pure Gleam with Erlang HTTPS I/O (`openrouter_worker`, `openrouter_worker_cli`, `uos_openrouter_ffi`, 18 tests). Policy: exact-model allowlist with per-token price ceilings verified against the live public price list, `max_tokens` ≤ 512, budget ≤ USD 0.02, timeout 30 s, no tools, no side effects, free-only default, fail closed without `OPENROUTER_API_KEY`, prompt hygiene that refuses paths, source, fences and secrets. Live: the four free models were refused by the account's data policy (404) or harness restriction (403), all fail-closed; the paid opt-in `openai/gpt-4.1-nano` completed the sanitized lease-invariant review for a provider-reported USD 0.0001061 (record: generated/20260907-0900-uos-openrouter-advisory-lease-invariant-review.md). Its second point, "a restarted coordinator must seed epochs from the durable log", is the Codex P1 that H2 closed with `seed_epochs`.
+
 ## 4. Root Cause Analysis (5-why groups)
 - **Ledger showed every message undelivered** → the ledger line was appended before delivery records were attached → the ledger write lived inside the delivery function → because durability was designed before transports → fixed by settling Zenoh first and writing the full record; the system audit found it.
 - **Recipient's Ack broke the chain** → one linear hash chain across writers → because the first design assumed a single writer → distributed acknowledgement is a second writer → fixed with per-sender chains and id-ordered absorption; the live proof found it.
@@ -142,7 +145,7 @@ Settle-then-record for durable writes; per-author hash chains; audit-as-gate (ev
 | System audit | round 1: PASS 62 · DECLARED 74 · FAIL 0; after H2 with strict admission: PASS 56 · DECLARED 78 · FAIL 2 · admissible=false (declared evidence is no longer admissible; the 2 FAILs are evaluated checklists) |
 | Forgery probe (after hardening) | forged L0 envelope via REST: refused, signature_rejected 1, nothing absorbed |
 | Sovereign review | Antigravity (Gemini 3.8 Flash): HOLD, 10 risks, P0 fixed same session; Codex Astra (gpt-6-astra): HOLD, 8 P1 closed in round H2 (§3.7), 2 P2 open |
-| Suite after hardening | 366 passed, 0 warnings; after round H2: 400 passed, 0 warnings |
+| Suite after hardening | 366 passed, 0 warnings; after round H2: 400 passed, 0 warnings; with the OpenRouter advisory slice and the Codex-owned session_sync modules in the same tree: 430 passed (one transient failure on the first run while the Codex session was active in the same checkout, green on rerun; warnings only in the Codex-owned session_sync/herdr modules) |
 | Controls report | generated/20260907-0500-uos-controls-report.md (see status column; zenoh UP at generation time) |
 | Zenoh | router UP, 3 storages, 73 a2a samples, 15 state keys |
 | Swarm | 11/11 PASS, first-pass yield 100 %, jidoka stops 0, andon green |
@@ -157,6 +160,7 @@ Settle-then-record for durable writes; per-author hash chains; audit-as-gate (ev
 | `ops/zenoh/` | router config, systemd unit, runbook |
 | `generated/` | feature sheet (md/json), STPA, FMEA, TPS board, KPIs, system audit, holarchy, lexicon, grammar, ACL examples, hive snapshot, controls, lifecycle machine, dictionaries, dashboard snapshot, board timeline |
 | `governance/sources/` | `20260907-0604-vm1-c3i-indrajaal-sanitized-snapshot-receipt.json` + 216,057-line manifest for the read-only vm-1 copy at `/home/an/dev/ver/c3i-vm1-20260907-0559` (13 GB; live DBs, model blobs, `.git`, `states/`, secrets excluded; 0 barred files after copy) |
+| `apps/uos_tui/src/uos_tui/openrouter_worker.gleam`, `src/openrouter_worker_cli.gleam`, `src/uos_openrouter_ffi.erl`, `test/openrouter_worker_test.gleam` | OpenRouter advisory worker (Codex-requested slice): policy, CLI, bounded TLS I/O, 18 tests; record `generated/20260907-0900-uos-openrouter-advisory-lease-invariant-review.{md,json}` |
 | `docs/` | plan (20260907-0440), ADR-062, hive-mind wiki, widget-gallery parity wiki (W11), this journal; MOC + apps README |
 
 ## 9. Architectural Observations
