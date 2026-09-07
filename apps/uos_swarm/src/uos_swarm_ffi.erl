@@ -4,7 +4,7 @@
 -module(uos_swarm_ffi).
 -export([ets_open/1, ets_insert/3, ets_lookup/2, ets_all/1, ets_count/1, ets_clear/1,
          http_put/2, http_get/1, file_append/2, file_read/1, file_write/2, sha256_hex/1, hmac_hex/2, board_key/0, system_time_us/0, host_boot/0,
-         list_dir/1]).
+         list_dir/1, getenv/2, ensure_dir/1]).
 
 %% ---- board / coordination shim (pure OTP: ets, inets/httpc, file, crypto) ----
 ets_open(Name) ->
@@ -85,6 +85,22 @@ board_key() ->
 sha256_hex(Bin) -> string:lowercase(binary:encode_hex(crypto:hash(sha256, Bin))).
 
 system_time_us() -> erlang:system_time(microsecond).
+
+%% Total: the named env var as a binary, or Default (also a binary) when unset.
+getenv(Name, Default) ->
+    case os:getenv(binary_to_list(Name)) of
+        false -> Default;
+        V -> unicode:characters_to_binary(V)
+    end.
+
+%% Idempotent single-level directory creation (parent must already exist), used
+%% by tests to stand up a scratch output directory. Not a recursive mkdir -p.
+ensure_dir(Path) ->
+    case file:make_dir(Path) of
+        ok -> {ok, nil};
+        {error, eexist} -> {ok, nil};
+        {error, R} -> {error, atom_to_binary(R, utf8)}
+    end.
 
 %% List a directory's entries as binaries; used to probe hardware interlocks under sysfs
 %% without ever shelling out or touching a NIF (Zero-Muda: pure Erlang/OTP file:list_dir/1).
