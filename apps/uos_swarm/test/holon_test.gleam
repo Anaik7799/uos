@@ -1,8 +1,11 @@
+import gleam/dynamic/decode
+import gleam/json
 import gleam/list
 import gleam/option
 import gleam/string
 import gleeunit/should
 import prng
+import uos_swarm/board
 import uos_swarm/holon
 import uos_swarm/raga
 
@@ -11,7 +14,9 @@ pub fn holarchy_validates_test() {
   holon.roots(holon.holarchy())
   |> list.map(fn(h) { h.id })
   |> should.equal(["uos"])
-  holon.depth(holon.holarchy()) |> should.equal(3)
+  // Census-derived Process holons reach as deep as L7 (federation/peer/tailnet rows, e.g. the
+  // Matrix chat federation server) -- deeper than the 34 original architectural holons (L0..L3).
+  holon.depth(holon.holarchy()) |> should.equal(7)
 }
 
 pub fn every_plane_populated_and_same_interface_test() {
@@ -31,7 +36,14 @@ pub fn every_plane_populated_and_same_interface_test() {
   list.each(hs, fn(h) {
     string.starts_with(holon.address(h), "uos/holon/L") |> should.be_true
   })
-  list.each(hs, fn(h) { { h.sanskrit != "" } |> should.be_true })
+  // Census-derived Process holons may carry a blank sanskrit (design doc 3.2); every other
+  // kind still must not.
+  list.each(hs, fn(h) {
+    case h.kind {
+      holon.Process -> Nil
+      _ -> { h.sanskrit != "" } |> should.be_true
+    }
+  })
 }
 
 pub fn validation_detects_breaks_test() {
@@ -46,18 +58,7 @@ pub fn validation_detects_breaks_test() {
   holon.validate(orphan)
   |> should.equal(Error("coord does not name control-plane as its whole"))
   let dup = [
-    holon.Holon(
-      "uos",
-      "dup",
-      "x",
-      0,
-      holon.Control,
-      option.None,
-      [],
-      "m",
-      option.None,
-      option.None,
-    ),
+    holon.holon("uos", "dup", "x", 0, holon.Control, option.None, [], "m"),
     ..hs
   ]
   holon.validate(dup) |> should.equal(Error("duplicate holon id"))
@@ -66,7 +67,10 @@ pub fn validation_detects_breaks_test() {
 pub fn tree_and_mermaid_render_test() {
   let t = holon.to_tree(holon.holarchy())
   string.contains(t, "L0 uos") |> should.be_true
-  string.contains(t, "  L1 planes") |> should.be_true
+  // "planes" is pulled down from its original L1 to L0 by the level-monotonic cascade
+  // (HOLARCHY-CENSUS: see the comment above `holarchy()`) once L0 census rows (IAM/vault/
+  // clock-guard/constitutional) nest under `control-plane`/`messaging-plane` several hops below.
+  string.contains(t, "  L0 planes") |> should.be_true
   string.contains(holon.to_mermaid(holon.holarchy()), "graph TD")
   |> should.be_true
   string.contains(holon.to_markdown(holon.holarchy()), "```mermaid")
@@ -130,7 +134,7 @@ pub fn to_markdown_carries_a_svara_column_test() {
 /// listed in `structure-plane.parts` (B2).
 pub fn holon_count_is_34_including_jujutsu_test() {
   let hs = holon.holarchy()
-  list.length(hs) |> should.equal(34)
+  list.length(hs) |> should.equal(34 + 10 + 113)
   let assert Ok(jj) = holon.find(hs, "jujutsu")
   jj.level |> should.equal(2)
   jj.plane |> should.equal(holon.Structure)
@@ -138,6 +142,33 @@ pub fn holon_count_is_34_including_jujutsu_test() {
   jj.parts |> should.equal([])
   let assert Ok(structure_plane) = holon.find(hs, "structure-plane")
   list.contains(structure_plane.parts, "jujutsu") |> should.be_true
+}
+
+// ---------------------------------------------------------------------------
+// HOLARCHY-CENSUS: 10 Subsystem holons + 113 census-derived Process holons.
+// ---------------------------------------------------------------------------
+
+pub fn holarchy_carries_10_subsystems_and_113_process_holons_test() {
+  let hs = holon.holarchy()
+  list.length(list.filter(hs, fn(h) { h.kind == holon.Subsystem }))
+  |> should.equal(10)
+  list.length(list.filter(hs, fn(h) { h.kind == holon.Process }))
+  |> should.equal(113)
+  // Every Process holon carries a 13-hex uid and a non-empty process_class.
+  list.each(hs, fn(h) {
+    case h.kind {
+      holon.Process -> {
+        string.length(h.uid) |> should.equal(13)
+        { h.process_class != "" } |> should.be_true
+      }
+      _ -> Nil
+    }
+  })
+}
+
+pub fn address_carries_plane_slug_test() {
+  let assert Ok(uos) = holon.find(holon.holarchy(), "uos")
+  holon.address(uos) |> should.equal("uos/holon/L0/control/uos")
 }
 
 pub fn base_rules_all_pass_on_shipped_holarchy_test() {
@@ -213,4 +244,36 @@ pub fn b5_catches_missing_sanskrit_name_test() {
   let #(ok, detail) = rule(holon.base_rules(hs), "B5")
   ok |> should.be_false
   string.contains(detail, "acl") |> should.be_true
+}
+
+// ---------------------------------------------------------------------------
+// B10: census parity. Loads the daemon-census fixture (a copy of
+// generated/20260907-1320-uos-daemon-process-census-c3i-indrajaal-vs-uos.json), extracts every
+// row's `name`, and asserts every one matches a Process holon in `holarchy()`.
+// ---------------------------------------------------------------------------
+
+fn census_name_decoder() -> decode.Decoder(String) {
+  use name <- decode.field("name", decode.string)
+  decode.success(name)
+}
+
+pub fn b10_census_parity_test() {
+  let assert Ok(content) =
+    board.file_read("test/fixtures/20260907-1320-daemon-census.json")
+  let assert Ok(names) = json.parse(content, decode.list(census_name_decoder()))
+  list.length(names) |> should.equal(113)
+  let missing = holon.b10_missing(holon.holarchy(), names)
+  missing |> should.equal([])
+  let #(rule_id, ok, detail) = holon.rule_b10(holon.holarchy(), names)
+  rule_id |> should.equal("B10")
+  ok |> should.be_true
+  string.contains(detail, "113") |> should.be_true
+}
+
+// B13 is a documented placeholder: always passes, never claims implementation.
+pub fn b13_is_a_placeholder_that_passes_test() {
+  let #(id, ok, detail) = holon.rule_b13()
+  id |> should.equal("B13")
+  ok |> should.be_true
+  string.contains(detail, "placeholder") |> should.be_true
 }
