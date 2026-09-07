@@ -85,6 +85,7 @@ pub fn run(args: List(String)) -> Result(String, String) {
       sync.observe(root, fn(state, _, _) { Ok(sync.inbox_json(state, s)) })
     [root, "check", s, resource, epoch] -> {
       use epoch <- result.try(number(epoch))
+      use resource <- result.try(sync.canonical_resource(resource))
       sync.observe(root, fn(state, boot, now) {
         use _ <- result.try(sync.check(state, s, resource, epoch, boot, now))
         Ok(

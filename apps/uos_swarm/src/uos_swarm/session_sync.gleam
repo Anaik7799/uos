@@ -190,6 +190,50 @@ pub fn valid_resource(resource: String) -> Bool {
   }
 }
 
+@external(erlang, "session_sync_ffi", "canonical_workspace")
+fn storage_canonical_workspace(path: String) -> Result(String, String)
+
+fn require_canonical_workspace(path: String) -> Result(String, String) {
+  use canonical <- result.try(storage_canonical_workspace(path))
+  use _ <- result.try(require(
+    canonical == path,
+    "workspace path must use its canonical real directory spelling",
+  ))
+  Ok(path)
+}
+
+/// Validate resource syntax and require workspace resources to name an existing
+/// real directory without symlink or lexical aliases.
+pub fn canonical_resource(resource: String) -> Result(String, String) {
+  use _ <- result.try(require(
+    valid_resource(resource),
+    "unsupported resource namespace",
+  ))
+  case resource {
+    "workspace:" <> path -> {
+      use _ <- result.try(require_canonical_workspace(path))
+      Ok(resource)
+    }
+    _ -> Ok(resource)
+  }
+}
+
+fn canonical_command(command: Command) -> Result(Command, String) {
+  case command {
+    Register(_, _, workspace, _, _) -> {
+      use _ <- result.try(require_canonical_workspace(workspace))
+      Ok(command)
+    }
+    Claim(_, resource, _)
+    | Renew(_, resource, _, _)
+    | Release(_, resource, _) -> {
+      use _ <- result.try(canonical_resource(resource))
+      Ok(command)
+    }
+    _ -> Ok(command)
+  }
+}
+
 fn active(state: State, session: String) -> Result(Session, String) {
   use current <- result.try(
     dict.get(state.sessions, session)
@@ -762,6 +806,7 @@ pub fn execute(
   command: Command,
   operation_id: String,
 ) -> Result(String, String) {
+  use command <- result.try(canonical_command(command))
   storage_transaction(root, fn(journal, host, boot, now, utc) {
     use state <- result.try(replay(journal))
     use #(_, receipt, duplicate) <- result.try(apply(
