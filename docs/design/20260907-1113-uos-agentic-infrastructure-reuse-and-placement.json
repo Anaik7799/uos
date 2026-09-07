@@ -1,0 +1,3305 @@
+{
+  "schema": "uos-agentic-reuse-placement-review/v1",
+  "spec_id": "SPEC-UOS-AINF-REUSE-002",
+  "created_at_utc": "2026-09-07T11:53:13Z",
+  "observed_main": "f01d2531279ce078c5a28ea55550a3399af5ae0a",
+  "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ainf-design",
+  "baseline_spec": "docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.json",
+  "implementation_boundary": {
+    "new_control_and_services": [
+      "Gleam/OTP",
+      "OCaml"
+    ],
+    "retained_existing_ecosystem": [
+      "ZigVM deterministic kernel",
+      "Hermes SQLite/WAL evidence store",
+      "Zenoh transport",
+      "existing bounded native crypto/storage libraries",
+      "isolated MAX/Mojo boundary once real inference is verified"
+    ],
+    "mirage": "OCaml deployment target for separately admitted small leaf services; no current production credit",
+    "external_vendors": "Read-only reference/oracle systems, not production runtime additions; pin license/revision/config/fixtures before oracle use"
+  },
+  "source_admission": {
+    "external_imports_performed": false,
+    "writers_quiesced": false,
+    "content_digest_verified": false,
+    "status": "NOT_ADMITTED",
+    "source_receipt": "governance/sources/20260907-0604-vm1-c3i-indrajaal-sanitized-snapshot-receipt.json"
+  },
+  "review": {
+    "codex_session": "01a07a68-b3b7-70f3-9e64-fac68a156c21",
+    "agy_session": "e7bd3330-0401-4845-8510-78beeaca7b0d",
+    "agy_pane": "w2:p5",
+    "first_response_id": "op-agy-send-ainf-1788781977",
+    "status": "DESIGN_REVIEW_RECEIVED",
+    "open_refinements": [],
+    "admission_granted": false,
+    "response_ids": [
+      "op-agy-send-ainf-1788781977",
+      "op-agy-ack-c660-1788782177",
+      "op-agy-ack-draft-1788782587",
+      "op-agy-ack-corrections-1788782792"
+    ],
+    "acceptance_artifact_locator": "/home/an/.gemini/antigravity-cli/brain/e7bd3330-0401-4845-8510-78beeaca7b0d/20260907-1355-uos-ainf-21-service-acceptance-suite.md",
+    "acceptance_artifact_status": "READ_ONLY_EVIDENCE_NOT_ADMITTED",
+    "rejected_peer_claims": [
+      "Unbound all-green checklist and tri-sovereign consensus without Claude review",
+      "Static music/topology data credited as retrieval or live stability",
+      "Mirage doctor gates credited as durable workflow",
+      "Tests attributed to wrong source revision or stale counts",
+      "Passive checkpoint alone credited as durable commit"
+    ],
+    "accepted_refinements": [
+      "Hermes owns durable ledger; ZigVM bounded observation only",
+      "OTP lifecycle/effect ownership; OCaml bounded computation/evidence",
+      "Real MAX and Solo5 execution remain unverified",
+      "Transactional budget and VFS confinement required"
+    ]
+  },
+  "evidence": {
+    "fresh_checks": [
+      "main/workspace source comparison",
+      "Herdr actual peer discovery and response",
+      "primary and backup service active with zero restarts",
+      "BEAM 4100 and Zenoh 8080 listeners",
+      "no local listener on 4317/4318",
+      "three Tailscale document/status endpoints returned HTTP 200",
+      "chrony observed +0.345050ms system offset, leap Normal"
+    ],
+    "scope": "Source review plus bounded runtime inventory; prior candidate tests retained as prior receipts; no full production or formal suite rerun",
+    "prior_receipts": [
+      "docs/journal/20260907-0941-c3i-indrajaal-reuse-implementation-journal.md",
+      "docs/reviews/20260907-1150-mirage-sovereign-audit-receipt.json"
+    ],
+    "production_mutations_performed": false,
+    "openrouter_requests_made": 0,
+    "agy_session_used": true,
+    "agy_token_cost": "UNMEASURED",
+    "runtime_inventory": [
+      {
+        "observed_at_utc": "2026-09-07T11:46:02Z",
+        "web_4100_pid": 2925584,
+        "zenoh_8080_pid": 1689715
+      },
+      {
+        "observed_at_utc": "2026-09-07T12:07:04Z",
+        "web_4100_pid": 2959677,
+        "zenoh_8080_pid": 1689715,
+        "clock_primary_pid": 2678887,
+        "clock_backup_pid": 2670150,
+        "clock_restarts": [
+          0,
+          0
+        ],
+        "otlp_local_listeners": []
+      }
+    ]
+  },
+  "services": [
+    {
+      "id": "AINF-S01",
+      "name": "Workload identity",
+      "observed_lifecycle": "mapped",
+      "production_status": "NOT_VERIFIED",
+      "owner": "Gleam/OTP",
+      "support": "OCaml crypto verification service",
+      "source_observation": "IAM supervisor exists; several child actors are counters/shells. OIDC decodes payload without signature/audience checks; live SVID/mTLS unverified.",
+      "paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/iam/supervisor.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/iam/jwks_cache_actor.gleam"
+      ],
+      "prior_receipt_status": "mapped",
+      "acceptance": "Reject forged signatures, wrong audience/issuer, expired or revoked identity and cross-workload credential reuse; exercise rotation under load.",
+      "acceptance_status": "UNRUN",
+      "baseline_requirement_ref": "AINF-R01",
+      "baseline_test_refs": [
+        "AINF-T01-1",
+        "AINF-T01-2",
+        "AINF-T01-3"
+      ]
+    },
+    {
+      "id": "AINF-S02",
+      "name": "Dynamic authorization",
+      "observed_lifecycle": "implemented",
+      "production_status": "NOT_VERIFIED",
+      "owner": "Gleam/OTP",
+      "support": "Hermes OCaml policy oracle",
+      "source_observation": "Pure role/layer rules exist; resource/action/tenant/context policy and mandatory effect-adapter binding are incomplete.",
+      "paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/auth/rbac.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/rules/engine.gleam"
+      ],
+      "prior_receipt_status": "mapped",
+      "acceptance": "Deny by default; prove effective rights are the intersection of user, agent, tenant and tool constraints; test policy changes during a queued action.",
+      "acceptance_status": "UNRUN",
+      "baseline_requirement_ref": "AINF-R02",
+      "baseline_test_refs": [
+        "AINF-T02-1",
+        "AINF-T02-2",
+        "AINF-T02-3"
+      ]
+    },
+    {
+      "id": "AINF-S03",
+      "name": "Delegated authentication",
+      "observed_lifecycle": "mapped",
+      "production_status": "NOT_VERIFIED",
+      "owner": "Gleam/OTP",
+      "support": "Existing isolated credential service",
+      "source_observation": "Token-exchange codec and STS surfaces exist; complete authenticated OBO exchange, scoped custody and revocation are unverified.",
+      "paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/auth/token_exchange.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/iam/sts_token_cache_actor.gleam"
+      ],
+      "prior_receipt_status": "mapped",
+      "acceptance": "Exchange only for an authenticated principal and specific audience; reject confused-deputy, stale consent, scope escalation and token passthrough.",
+      "acceptance_status": "UNRUN",
+      "baseline_requirement_ref": "AINF-R03",
+      "baseline_test_refs": [
+        "AINF-T03-1",
+        "AINF-T03-2",
+        "AINF-T03-3"
+      ]
+    },
+    {
+      "id": "AINF-S04",
+      "name": "Secrets and credential leases",
+      "observed_lifecycle": "mapped",
+      "production_status": "NOT_VERIFIED",
+      "owner": "Gleam/OTP",
+      "support": "Existing supervised crypto/storage boundary",
+      "source_observation": "vault.init/unseal/get/destroy/lease_renew are stubbed or return errors. Existing Ferriskey/vault native surfaces are acquisition candidates, not verified brokers.",
+      "paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/vault.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/vault_supervisor.gleam"
+      ],
+      "prior_receipt_status": "mapped",
+      "acceptance": "Verify issue/use/rotate/revoke/expire with real broker; search controlled outputs for canary secrets; deny use after lease expiry and on missing binding.",
+      "acceptance_status": "UNRUN",
+      "baseline_requirement_ref": "AINF-R04",
+      "baseline_test_refs": [
+        "AINF-T04-1",
+        "AINF-T04-2",
+        "AINF-T04-3"
+      ]
+    },
+    {
+      "id": "AINF-S05",
+      "name": "Guardrails and tool validation",
+      "observed_lifecycle": "implemented",
+      "production_status": "NOT_VERIFIED",
+      "owner": "Gleam/OTP",
+      "support": "Hermes OCaml validation/oracles",
+      "source_observation": "Secret-shape scrubber and Hermes NUL/SQL-pattern checks exist. request_guard.check constructs an all-passed grid; this is not observed safety.",
+      "paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/vault_pii_scrub.gleam",
+        "engines/hermes/modules/system_engg/agent_dispatch_hook.ml"
+      ],
+      "prior_receipt_status": "mapped",
+      "acceptance": "Use real schema/size/path/tenant checks and parameterized storage; test indirect injection, malformed payloads, missing evidence and redaction failures.",
+      "acceptance_status": "UNRUN",
+      "baseline_requirement_ref": "AINF-R05",
+      "baseline_test_refs": [
+        "AINF-T05-1",
+        "AINF-T05-2",
+        "AINF-T05-3"
+      ]
+    },
+    {
+      "id": "AINF-S06",
+      "name": "Agent discovery and registry",
+      "observed_lifecycle": "executed",
+      "production_status": "NOT_VERIFIED",
+      "owner": "Gleam/OTP",
+      "support": "Hermes OCaml history",
+      "source_observation": "Actual Herdr discovery and session binding have execution receipts; static capabilities and observed pane identity do not establish authority or continuous health.",
+      "paths": [
+        "apps/uos_swarm/src/uos_swarm/herdr.gleam",
+        "apps/uos_swarm/src/uos_swarm/session_binding.gleam",
+        "apps/uos_swarm/src/uos_swarm/board_insights.gleam"
+      ],
+      "prior_receipt_status": "executed",
+      "acceptance": "Replace/expire/restart peers; reject stale identity or capability receipts; prove discovery cannot grant a lease or authorize an effect.",
+      "acceptance_status": "UNRUN",
+      "baseline_requirement_ref": "AINF-R06",
+      "baseline_test_refs": [
+        "AINF-T06-1",
+        "AINF-T06-2",
+        "AINF-T06-3"
+      ]
+    },
+    {
+      "id": "AINF-S07",
+      "name": "MCP gateway",
+      "observed_lifecycle": "executed",
+      "production_status": "NOT_VERIFIED",
+      "owner": "Gleam/OTP",
+      "support": "Hermes OCaml evidence tools",
+      "source_observation": "JSON-RPC and stdio/error paths exercised; tool/path authorization, loaded native adapters and Zenoh transport security remain incomplete.",
+      "paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/bridge/zenoh_mcp.gleam"
+      ],
+      "prior_receipt_status": "executed",
+      "acceptance": "Exercise actual clients, notifications, request IDs, bounded frames, tenant auth, replay, deadlines and unavailable adapters; refuse arbitrary path or unauthorized plan mutation.",
+      "acceptance_status": "UNRUN",
+      "baseline_requirement_ref": "AINF-R07",
+      "baseline_test_refs": [
+        "AINF-T07-1",
+        "AINF-T07-2",
+        "AINF-T07-3"
+      ]
+    },
+    {
+      "id": "AINF-S08",
+      "name": "Message board and event bus",
+      "observed_lifecycle": "executed",
+      "production_status": "NOT_VERIFIED",
+      "owner": "Gleam/OTP plus existing Zenoh",
+      "support": "Hermes OCaml durable inbox/outbox",
+      "source_observation": "Existing Zenoh listener and durable board/session observations work; authenticated tenant transport and delivery semantics still need complete evidence.",
+      "paths": [
+        "apps/uos_swarm/src/uos_swarm/board.gleam",
+        "apps/uos_swarm/src/uos_swarm/board_reader.gleam",
+        "ops/zenoh/20260907-0450-uos-zenoh-router-1.json5"
+      ],
+      "prior_receipt_status": "executed",
+      "acceptance": "Inject duplicates, reorder, loss, missing parents and reconnects; enforce tenant ACLs; prove idempotent consumption and bounded retry/dead-letter behavior.",
+      "acceptance_status": "UNRUN",
+      "baseline_requirement_ref": "AINF-R08",
+      "baseline_test_refs": [
+        "AINF-T08-1",
+        "AINF-T08-2",
+        "AINF-T08-3"
+      ]
+    },
+    {
+      "id": "AINF-S09",
+      "name": "Session scratchpad and cache",
+      "observed_lifecycle": "executed",
+      "production_status": "NOT_VERIFIED",
+      "owner": "Gleam/OTP",
+      "support": "Hermes OCaml durable checkpoints",
+      "source_observation": "Session journal/leases are exercised; context caches are partial, and cooperative leases do not fence arbitrary same-user commands.",
+      "paths": [
+        "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/substrate/beam_cache.gleam"
+      ],
+      "prior_receipt_status": "executed",
+      "acceptance": "Concurrent tenant isolation, bounded bytes/items/TTL and restart tests; keep approvals, quotas and effect completion outside volatile cache authority.",
+      "acceptance_status": "UNRUN",
+      "baseline_requirement_ref": "AINF-R09",
+      "baseline_test_refs": [
+        "AINF-T09-1",
+        "AINF-T09-2",
+        "AINF-T09-3"
+      ]
+    },
+    {
+      "id": "AINF-S10",
+      "name": "Semantic retrieval and vector memory",
+      "observed_lifecycle": "implemented",
+      "production_status": "NOT_VERIFIED",
+      "owner": "Hermes OCaml",
+      "support": "Gleam/OTP query budgets; admitted inference boundary",
+      "source_observation": "Wiki TF-IDF/cosine and storage/query seams exist. MAX vectors are SHA-256 pseudo-embeddings; semantic ANN and tenant-aware retrieval are unverified.",
+      "paths": [
+        "engines/hermes/modules/hermes_wiki/src/graph/wiki_similarity.ml",
+        "apps/cepaf_gleam/src/cepaf_gleam/knowledge/c3i_knowledge_runtime.gleam"
+      ],
+      "prior_receipt_status": "mapped",
+      "acceptance": "Compare ranking/filtering to independent golden fixtures; enforce ACLs before retrieval/reranking; test stale/deleted records, embedding/model version and recall/latency bounds.",
+      "acceptance_status": "UNRUN",
+      "baseline_requirement_ref": "AINF-R10",
+      "baseline_test_refs": [
+        "AINF-T10-1",
+        "AINF-T10-2",
+        "AINF-T10-3"
+      ]
+    },
+    {
+      "id": "AINF-S11",
+      "name": "Knowledge graphs and ontologies",
+      "observed_lifecycle": "implemented",
+      "production_status": "NOT_VERIFIED",
+      "owner": "Hermes OCaml",
+      "support": "Gleam/OTP holon lifecycle",
+      "source_observation": "Wiki graph and pure ontology/holon structures exist; many catalogs are literal seeds and knowledge actors lose/reset state.",
+      "paths": [
+        "engines/hermes/modules/hermes_wiki/src/graph/wiki_graph.ml",
+        "apps/cepaf_gleam/src/cepaf_gleam/ontology/adk_c3i_master_ontology.gleam",
+        "apps/indrajaal_gleam/src/indrajaal/holon.gleam"
+      ],
+      "prior_receipt_status": "mapped",
+      "acceptance": "Verify bounded closure, provenance, incremental updates, conflicting claims, tenant filtering and that graph conclusions never authorize effects.",
+      "acceptance_status": "UNRUN",
+      "baseline_requirement_ref": "AINF-R11",
+      "baseline_test_refs": [
+        "AINF-T11-1",
+        "AINF-T11-2",
+        "AINF-T11-3"
+      ]
+    },
+    {
+      "id": "AINF-S12",
+      "name": "Context routing and compaction",
+      "observed_lifecycle": "implemented",
+      "production_status": "NOT_VERIFIED",
+      "owner": "Gleam/OTP",
+      "support": "Hermes OCaml selection/compaction oracle",
+      "source_observation": "Tier and budget functions exist; L1-to-L2 demotion can overflow L2 and cache reads do not implement true LRU. End-to-end tokenizer bounds missing.",
+      "paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/context_manager.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/token_budget.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/workflow_compactor.gleam"
+      ],
+      "prior_receipt_status": "mapped",
+      "acceptance": "Preserve pinned policy/constraints, unresolved tool pairs and provenance; enforce actual selected-model token budget after every demotion and compaction; fail if protected context cannot fit.",
+      "acceptance_status": "UNRUN",
+      "baseline_requirement_ref": "AINF-R12",
+      "baseline_test_refs": [
+        "AINF-T12-1",
+        "AINF-T12-2",
+        "AINF-T12-3"
+      ]
+    },
+    {
+      "id": "AINF-S13",
+      "name": "Untrusted execution and sandbox",
+      "observed_lifecycle": "mapped",
+      "production_status": "NOT_VERIFIED",
+      "owner": "Gleam/OTP controller plus existing ZigVM",
+      "support": "Hermes OCaml verifier; optional admitted Mirage leaf",
+      "source_observation": "Bounded execution/VFS primitives and host Mirage library tests exist. Process owner prepare is intentionally unavailable; no admitted generic microVM sandbox.",
+      "paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/hermes_bionic_bridge.gleam",
+        "engines/hermes/modules/hermes_dependability/dependability_process.mli",
+        "engines/zigvm/build.zig"
+      ],
+      "prior_receipt_status": "mapped",
+      "acceptance": "Adversarial traversal/symlink/network/CPU/RAM/output/fork tests, cancellation and uncertain-outcome recovery on real target; prove denied storage serial cannot be touched.",
+      "acceptance_status": "UNRUN",
+      "baseline_requirement_ref": "AINF-R13",
+      "baseline_test_refs": [
+        "AINF-T13-1",
+        "AINF-T13-2",
+        "AINF-T13-3"
+      ]
+    },
+    {
+      "id": "AINF-S14",
+      "name": "Durable workflows",
+      "observed_lifecycle": "executed",
+      "production_status": "NOT_VERIFIED",
+      "owner": "Gleam/OTP",
+      "support": "Hermes OCaml transactional store",
+      "source_observation": "Sa-plan WAL/inbox/outbox/fencing and session replay are exercised. sa_plan_temporal holds history in memory and cannot guarantee crash-safe external exactly-once effects.",
+      "paths": [
+        "engines/hermes/modules/sa_plan/sa_plan_store.ml",
+        "apps/uos_swarm/src/uos_swarm/session_sync.gleam"
+      ],
+      "prior_receipt_status": "executed",
+      "acceptance": "Crash before/after dispatch and receipt commit; recover durable intent; reuse idempotency keys or reconcile unknown effects; exercise timers, cancellation and explicit compensation.",
+      "acceptance_status": "UNRUN",
+      "baseline_requirement_ref": "AINF-R14",
+      "baseline_test_refs": [
+        "AINF-T14-1",
+        "AINF-T14-2",
+        "AINF-T14-3"
+      ]
+    },
+    {
+      "id": "AINF-S15",
+      "name": "Human approval",
+      "observed_lifecycle": "implemented",
+      "production_status": "NOT_VERIFIED",
+      "owner": "Gleam/OTP",
+      "support": "Hermes OCaml approval receipts",
+      "source_observation": "Approval FSM/UI and action-boundary kernels exist; some public approval functions accept untrusted caller IDs. Production executor binding missing.",
+      "paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/fractal/l0_constitutional.gleam",
+        "engines/hermes/modules/sa_plan/guardian.ml"
+      ],
+      "prior_receipt_status": "mapped",
+      "acceptance": "Bind approver/tenant/action digest/candidate/policy/budget/expiry/nonce; reject tampering, replay, delayed approval after cancellation and unauthorized approvers.",
+      "acceptance_status": "UNRUN",
+      "baseline_requirement_ref": "AINF-R15",
+      "baseline_test_refs": [
+        "AINF-T15-1",
+        "AINF-T15-2",
+        "AINF-T15-3"
+      ]
+    },
+    {
+      "id": "AINF-S16",
+      "name": "Circuit breakers, loops and clocks",
+      "observed_lifecycle": "executed",
+      "production_status": "NOT_VERIFIED",
+      "owner": "Gleam/OTP",
+      "support": "Hermes OCaml trend analysis; ZigVM virtual timers",
+      "source_observation": "Pure breaker/freshness kernels and primary/backup clock observers exist and run. Per-trajectory enforcement and fleet clock provenance are incomplete.",
+      "paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/prajna/circuit_breaker.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/freshness_monitor.gleam",
+        "apps/uos_swarm/src/uos_swarm/clock_contract.gleam"
+      ],
+      "prior_receipt_status": "executed",
+      "acceptance": "Trip on budgets, repeated no-progress and deadlines; limit half-open probes; test wall jumps, reboot epochs, stale peers and Lamport receive=max(local,remote)+1.",
+      "acceptance_status": "UNRUN",
+      "baseline_requirement_ref": "AINF-R16",
+      "baseline_test_refs": [
+        "AINF-T16-1",
+        "AINF-T16-2",
+        "AINF-T16-3"
+      ]
+    },
+    {
+      "id": "AINF-S17",
+      "name": "Model gateway and cost-aware routing",
+      "observed_lifecycle": "implemented",
+      "production_status": "NOT_VERIFIED",
+      "owner": "Gleam/OTP",
+      "support": "Existing isolated inference/provider boundary; Hermes quality oracle",
+      "source_observation": "Bounded OpenRouter advisory path and routing policy exist; run_routed discards selected tier. MAX inference is synthetic; complete provider failover/cache path unverified.",
+      "paths": [
+        "apps/uos_swarm/src/uos_swarm/openrouter_worker.gleam",
+        "apps/uos_swarm/src/uos_swarm/route.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/bridge/pi_provider.gleam",
+        "services/inference/max/max_worker.py"
+      ],
+      "prior_receipt_status": "mapped",
+      "acceptance": "Bind selected provider/model to dispatch; reserve before request, reconcile ambiguous result, test fallback/cancellation/cache ACL keys; verify real inference and measured model quality.",
+      "acceptance_status": "UNRUN",
+      "baseline_requirement_ref": "AINF-R17",
+      "baseline_test_refs": [
+        "AINF-T17-1",
+        "AINF-T17-2",
+        "AINF-T17-3"
+      ]
+    },
+    {
+      "id": "AINF-S18",
+      "name": "Tracing and observability",
+      "observed_lifecycle": "executed",
+      "production_status": "NOT_VERIFIED",
+      "owner": "Gleam/OTP",
+      "support": "Hermes OCaml causal analysis; existing telemetry backend when verified",
+      "source_observation": "Structured trace/log and board correlation exercised; exporter seam exists. No local OTLP 4317/4318 listener or backend acceptance established; some ingestion status is literal.",
+      "paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/trace_context.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/correlated_log.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/telemetry/exporter.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/zenoh_otel.gleam",
+        "apps/uos_swarm/src/uos_swarm/board_insights.gleam"
+      ],
+      "prior_receipt_status": "executed",
+      "acceptance": "Send a known span through the real collector to queryable backend; prove context propagation, redaction, bounded buffering/drop counters and no control authority from logs.",
+      "acceptance_status": "UNRUN",
+      "baseline_requirement_ref": "AINF-R18",
+      "baseline_test_refs": [
+        "AINF-T18-1",
+        "AINF-T18-2",
+        "AINF-T18-3"
+      ]
+    },
+    {
+      "id": "AINF-S19",
+      "name": "Atomic budgets and quotas",
+      "observed_lifecycle": "implemented",
+      "production_status": "NOT_VERIFIED",
+      "owner": "Gleam/OTP",
+      "support": "Hermes OCaml transactional reservations",
+      "source_observation": "Per-request/free-only checks exist; route JSONL read-then-append is not atomic, and does not establish fleet spend control.",
+      "paths": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/token_budget.gleam",
+        "apps/uos_swarm/src/uos_swarm/coord.gleam",
+        "apps/uos_swarm/src/uos_swarm/route.gleam"
+      ],
+      "prior_receipt_status": "mapped",
+      "acceptance": "Concurrent reservation/settlement/release must preserve spent+reserved<=cap; retain liability after timeout, reject negative charges and persist across crash/failover.",
+      "acceptance_status": "UNRUN",
+      "baseline_requirement_ref": "AINF-R19",
+      "baseline_test_refs": [
+        "AINF-T19-1",
+        "AINF-T19-2",
+        "AINF-T19-3"
+      ]
+    },
+    {
+      "id": "AINF-S20",
+      "name": "Audit and evidence ledger",
+      "observed_lifecycle": "executed",
+      "production_status": "NOT_VERIFIED",
+      "owner": "Hermes OCaml",
+      "support": "Gleam/OTP admitted event producer",
+      "source_observation": "SQLite/WAL evidence ingestion and idempotent replay exercised. Zig event_wal.flushLog is a no-op; hash chains alone do not prove tamper immunity.",
+      "paths": [
+        "engines/hermes/modules/hermes_harness/evidence_store.ml",
+        "engines/hermes/modules/sa_plan/sa_plan_store.ml"
+      ],
+      "prior_receipt_status": "executed",
+      "acceptance": "Commit canonical events durably; verify continuity, deletion/reordering/corruption, crash recovery, retention and independently anchored checkpoints; record summaries, not private reasoning/secrets.",
+      "acceptance_status": "UNRUN",
+      "baseline_requirement_ref": "AINF-R20",
+      "baseline_test_refs": [
+        "AINF-T20-1",
+        "AINF-T20-2",
+        "AINF-T20-3"
+      ]
+    },
+    {
+      "id": "AINF-S21",
+      "name": "Continuous evaluation and red teaming",
+      "observed_lifecycle": "implemented",
+      "production_status": "NOT_VERIFIED",
+      "owner": "Hermes OCaml",
+      "support": "Gleam/OTP CI orchestration; existing ZigVM harness",
+      "source_observation": "Parity/property/formal infrastructure exists; complete workload-specific trajectory and adversarial acceptance is not demonstrated.",
+      "paths": [
+        "engines/hermes/modules/hermes_harness/test_parity_algebra.ml",
+        "engines/hermes/modules/hermes_harness/test_parity_compare.ml",
+        "apps/cepaf_gleam/src/cepaf_gleam/testing/coverage_math.gleam"
+      ],
+      "prior_receipt_status": "mapped",
+      "acceptance": "Use held-out tasks, negative controls, semantic mutants, tool-side-effect checks and calibrated judges; bind all results to candidate, fixtures, models, seed and toolchain.",
+      "acceptance_status": "UNRUN",
+      "baseline_requirement_ref": "AINF-R21",
+      "baseline_test_refs": [
+        "AINF-T21-1",
+        "AINF-T21-2",
+        "AINF-T21-3"
+      ]
+    }
+  ],
+  "aspects": [
+    {
+      "id": "AINF-A01",
+      "ordinal": 1,
+      "name": "Substrate & Hardware Storage Interlock",
+      "existing_gate": "G-DRIVE-NVME",
+      "obligation": "Reject the denied OS serial and prove filesystem/resource isolation at the service's execution and storage dependencies.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "review_status": "AGY_REVIEW_RECEIVED"
+    },
+    {
+      "id": "AINF-A02",
+      "ordinal": 2,
+      "name": "Standalone Jujutsu Monorepo Discipline",
+      "existing_gate": "G-BOOT1-JJ",
+      "obligation": "Bind code, schemas, policy, model and fixtures to a standalone JJ candidate plus source digests; serialize integration.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "review_status": "AGY_REVIEW_RECEIVED"
+    },
+    {
+      "id": "AINF-A03",
+      "ordinal": 3,
+      "name": "Zero-Muda Purity & Waste Elimination",
+      "existing_gate": "G-ZERO-MUDA",
+      "obligation": "Reuse admitted UOS carriers; scan dependencies and dispatch plans for barred engines and forbidden language placement.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "review_status": "AGY_REVIEW_RECEIVED"
+    },
+    {
+      "id": "AINF-A04",
+      "ordinal": 4,
+      "name": "Gleam/OTP 29 4-Domain Root Supervisor",
+      "existing_gate": "G-OTP29-SUPER",
+      "obligation": "Show the real service actor in a live domain tree; exercise restart tolerance, fencing, bounded queues and shutdown.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "review_status": "AGY_REVIEW_RECEIVED"
+    },
+    {
+      "id": "AINF-A05",
+      "ordinal": 5,
+      "name": "ZigVM Deterministic Engine & 8 VFS Laws",
+      "existing_gate": "G-VFS-8LAWS",
+      "obligation": "Trace deterministic work and file access to an admitted ZigVM/VFS boundary; demonstrate confinement or the explicit delegated boundary.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "review_status": "AGY_REVIEW_RECEIVED"
+    },
+    {
+      "id": "AINF-A06",
+      "ordinal": 6,
+      "name": "Hermes Formal Evidence, Gospel & Z3",
+      "existing_gate": "G-HERMES-EVID",
+      "obligation": "Provide a typed contract, independent oracle and fresh bounded verifier receipt for the service revision.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "review_status": "AGY_REVIEW_RECEIVED"
+    },
+    {
+      "id": "AINF-A07",
+      "ordinal": 7,
+      "name": "Mathematical Authority & Conservation",
+      "existing_gate": "G-LEAN4-MATH",
+      "obligation": "Prove relevant authorization, budget, trace-coordinate and lease laws; establish projection equivalence without undeclared axioms.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "review_status": "AGY_REVIEW_RECEIVED"
+    },
+    {
+      "id": "AINF-A08",
+      "ordinal": 8,
+      "name": "Biosemiotic Cybernetics & Rocha Cut",
+      "existing_gate": "G-ROCHA-SEMIOT",
+      "obligation": "Show that proposals, retrieved text, model outputs and Rete facts cannot directly create dispatch authority.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "review_status": "AGY_REVIEW_RECEIVED"
+    },
+    {
+      "id": "AINF-A09",
+      "ordinal": 9,
+      "name": "Quarantined Modular MAX/Mojo Inference",
+      "existing_gate": "G-MAX-INFER",
+      "obligation": "Route any inference through an admitted isolated boundary; non-inference services prove no hidden inference or Python dispatch.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "review_status": "AGY_REVIEW_RECEIVED"
+    },
+    {
+      "id": "AINF-A10",
+      "ordinal": 10,
+      "name": "Zenoh OoZ & MoZ Mesh Telemetry Backplane",
+      "existing_gate": "G-ZENOH-MESH",
+      "obligation": "Test tenant namespace ACLs, authenticated routing, loss/retry/duplicate handling and observation/control separation.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "review_status": "AGY_REVIEW_RECEIVED"
+    },
+    {
+      "id": "AINF-A11",
+      "ordinal": 11,
+      "name": "AG-UI 32-Event SSE Stream Protocol",
+      "existing_gate": "G-AGUI-32EVENT",
+      "obligation": "Expose sanitized typed service events with authenticated subscription, bounded buffering and sequence-aware reconnection.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "review_status": "AGY_REVIEW_RECEIVED"
+    },
+    {
+      "id": "AINF-A12",
+      "ordinal": 12,
+      "name": "A2UI 233-Component Declarative Catalog",
+      "existing_gate": "G-A2UI-CATALOG",
+      "obligation": "Render typed catalog projections of capability, health, approval and evidence; no arbitrary model HTML or executable markup.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "review_status": "AGY_REVIEW_RECEIVED"
+    },
+    {
+      "id": "AINF-A13",
+      "ordinal": 13,
+      "name": "Penta-Stack Multi-Interface Accessibility",
+      "existing_gate": "G-PENTA-STACK",
+      "obligation": "Prove consistent authorized meaning across Lustre Web, Wisp API, ANSI TUI, AG-UI SSE and MoZ/Zenoh surfaces.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "review_status": "AGY_REVIEW_RECEIVED"
+    },
+    {
+      "id": "AINF-A14",
+      "ordinal": 14,
+      "name": "Universal Tailscale FQDN Web Navigation",
+      "existing_gate": "G-TAILSCALE-WEB",
+      "obligation": "Verify full FQDN discovery/docs/evidence links and authenticated navigation; Tailnet location alone is not authorization.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "review_status": "AGY_REVIEW_RECEIVED"
+    },
+    {
+      "id": "AINF-A15",
+      "ordinal": 15,
+      "name": "Comprehensive Verification Checklist",
+      "existing_gate": "G-CHECKLIST",
+      "obligation": "Render the 5-domain/18-checkpoint structure with current scoped receipts, truthful UNRUN states and uniform navigation.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "review_status": "AGY_REVIEW_RECEIVED"
+    },
+    {
+      "id": "AINF-A16",
+      "ordinal": 16,
+      "name": "Knowledge Management Triad (Wiki/ZK/Ont)",
+      "existing_gate": "G-KM-TRIAD",
+      "obligation": "Link the requirement, implementation, formal contract, scenario, evidence, wiki, ADR and ontology without dropping tenant ACLs.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "review_status": "AGY_REVIEW_RECEIVED"
+    },
+    {
+      "id": "AINF-A17",
+      "ordinal": 17,
+      "name": "Sa-Plan & Bionic Durable Workflows",
+      "existing_gate": "G-SAPLAN-BIONIC",
+      "obligation": "Track work and runtime steps through persistent leases, idempotency, cancellation, compensation and tested crash recovery.",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "review_status": "AGY_REVIEW_RECEIVED"
+    }
+  ],
+  "service_aspect_coverage": [
+    {
+      "service": "AINF-S01",
+      "aspect": "AINF-A01",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S01",
+      "aspect": "AINF-A02",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S01",
+      "aspect": "AINF-A03",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S01",
+      "aspect": "AINF-A04",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S01",
+      "aspect": "AINF-A05",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S01",
+      "aspect": "AINF-A06",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S01",
+      "aspect": "AINF-A07",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S01",
+      "aspect": "AINF-A08",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S01",
+      "aspect": "AINF-A09",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S01",
+      "aspect": "AINF-A10",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S01",
+      "aspect": "AINF-A11",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S01",
+      "aspect": "AINF-A12",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S01",
+      "aspect": "AINF-A13",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S01",
+      "aspect": "AINF-A14",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S01",
+      "aspect": "AINF-A15",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S01",
+      "aspect": "AINF-A16",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S01",
+      "aspect": "AINF-A17",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S02",
+      "aspect": "AINF-A01",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S02",
+      "aspect": "AINF-A02",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S02",
+      "aspect": "AINF-A03",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S02",
+      "aspect": "AINF-A04",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S02",
+      "aspect": "AINF-A05",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S02",
+      "aspect": "AINF-A06",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S02",
+      "aspect": "AINF-A07",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S02",
+      "aspect": "AINF-A08",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S02",
+      "aspect": "AINF-A09",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S02",
+      "aspect": "AINF-A10",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S02",
+      "aspect": "AINF-A11",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S02",
+      "aspect": "AINF-A12",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S02",
+      "aspect": "AINF-A13",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S02",
+      "aspect": "AINF-A14",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S02",
+      "aspect": "AINF-A15",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S02",
+      "aspect": "AINF-A16",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S02",
+      "aspect": "AINF-A17",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S03",
+      "aspect": "AINF-A01",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S03",
+      "aspect": "AINF-A02",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S03",
+      "aspect": "AINF-A03",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S03",
+      "aspect": "AINF-A04",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S03",
+      "aspect": "AINF-A05",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S03",
+      "aspect": "AINF-A06",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S03",
+      "aspect": "AINF-A07",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S03",
+      "aspect": "AINF-A08",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S03",
+      "aspect": "AINF-A09",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S03",
+      "aspect": "AINF-A10",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S03",
+      "aspect": "AINF-A11",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S03",
+      "aspect": "AINF-A12",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S03",
+      "aspect": "AINF-A13",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S03",
+      "aspect": "AINF-A14",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S03",
+      "aspect": "AINF-A15",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S03",
+      "aspect": "AINF-A16",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S03",
+      "aspect": "AINF-A17",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S04",
+      "aspect": "AINF-A01",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S04",
+      "aspect": "AINF-A02",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S04",
+      "aspect": "AINF-A03",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S04",
+      "aspect": "AINF-A04",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S04",
+      "aspect": "AINF-A05",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S04",
+      "aspect": "AINF-A06",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S04",
+      "aspect": "AINF-A07",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S04",
+      "aspect": "AINF-A08",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S04",
+      "aspect": "AINF-A09",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S04",
+      "aspect": "AINF-A10",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S04",
+      "aspect": "AINF-A11",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S04",
+      "aspect": "AINF-A12",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S04",
+      "aspect": "AINF-A13",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S04",
+      "aspect": "AINF-A14",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S04",
+      "aspect": "AINF-A15",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S04",
+      "aspect": "AINF-A16",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S04",
+      "aspect": "AINF-A17",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S05",
+      "aspect": "AINF-A01",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S05",
+      "aspect": "AINF-A02",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S05",
+      "aspect": "AINF-A03",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S05",
+      "aspect": "AINF-A04",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S05",
+      "aspect": "AINF-A05",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S05",
+      "aspect": "AINF-A06",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S05",
+      "aspect": "AINF-A07",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S05",
+      "aspect": "AINF-A08",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S05",
+      "aspect": "AINF-A09",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S05",
+      "aspect": "AINF-A10",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S05",
+      "aspect": "AINF-A11",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S05",
+      "aspect": "AINF-A12",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S05",
+      "aspect": "AINF-A13",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S05",
+      "aspect": "AINF-A14",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S05",
+      "aspect": "AINF-A15",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S05",
+      "aspect": "AINF-A16",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S05",
+      "aspect": "AINF-A17",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S06",
+      "aspect": "AINF-A01",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S06",
+      "aspect": "AINF-A02",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S06",
+      "aspect": "AINF-A03",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S06",
+      "aspect": "AINF-A04",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S06",
+      "aspect": "AINF-A05",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S06",
+      "aspect": "AINF-A06",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S06",
+      "aspect": "AINF-A07",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S06",
+      "aspect": "AINF-A08",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S06",
+      "aspect": "AINF-A09",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S06",
+      "aspect": "AINF-A10",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S06",
+      "aspect": "AINF-A11",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S06",
+      "aspect": "AINF-A12",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S06",
+      "aspect": "AINF-A13",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S06",
+      "aspect": "AINF-A14",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S06",
+      "aspect": "AINF-A15",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S06",
+      "aspect": "AINF-A16",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S06",
+      "aspect": "AINF-A17",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S07",
+      "aspect": "AINF-A01",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S07",
+      "aspect": "AINF-A02",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S07",
+      "aspect": "AINF-A03",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S07",
+      "aspect": "AINF-A04",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S07",
+      "aspect": "AINF-A05",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S07",
+      "aspect": "AINF-A06",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S07",
+      "aspect": "AINF-A07",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S07",
+      "aspect": "AINF-A08",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S07",
+      "aspect": "AINF-A09",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S07",
+      "aspect": "AINF-A10",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S07",
+      "aspect": "AINF-A11",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S07",
+      "aspect": "AINF-A12",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S07",
+      "aspect": "AINF-A13",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S07",
+      "aspect": "AINF-A14",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S07",
+      "aspect": "AINF-A15",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S07",
+      "aspect": "AINF-A16",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S07",
+      "aspect": "AINF-A17",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S08",
+      "aspect": "AINF-A01",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S08",
+      "aspect": "AINF-A02",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S08",
+      "aspect": "AINF-A03",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S08",
+      "aspect": "AINF-A04",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S08",
+      "aspect": "AINF-A05",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S08",
+      "aspect": "AINF-A06",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S08",
+      "aspect": "AINF-A07",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S08",
+      "aspect": "AINF-A08",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S08",
+      "aspect": "AINF-A09",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S08",
+      "aspect": "AINF-A10",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S08",
+      "aspect": "AINF-A11",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S08",
+      "aspect": "AINF-A12",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S08",
+      "aspect": "AINF-A13",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S08",
+      "aspect": "AINF-A14",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S08",
+      "aspect": "AINF-A15",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S08",
+      "aspect": "AINF-A16",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S08",
+      "aspect": "AINF-A17",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S09",
+      "aspect": "AINF-A01",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S09",
+      "aspect": "AINF-A02",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S09",
+      "aspect": "AINF-A03",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S09",
+      "aspect": "AINF-A04",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S09",
+      "aspect": "AINF-A05",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S09",
+      "aspect": "AINF-A06",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S09",
+      "aspect": "AINF-A07",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S09",
+      "aspect": "AINF-A08",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S09",
+      "aspect": "AINF-A09",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S09",
+      "aspect": "AINF-A10",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S09",
+      "aspect": "AINF-A11",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S09",
+      "aspect": "AINF-A12",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S09",
+      "aspect": "AINF-A13",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S09",
+      "aspect": "AINF-A14",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S09",
+      "aspect": "AINF-A15",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S09",
+      "aspect": "AINF-A16",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S09",
+      "aspect": "AINF-A17",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S10",
+      "aspect": "AINF-A01",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S10",
+      "aspect": "AINF-A02",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S10",
+      "aspect": "AINF-A03",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S10",
+      "aspect": "AINF-A04",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S10",
+      "aspect": "AINF-A05",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S10",
+      "aspect": "AINF-A06",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S10",
+      "aspect": "AINF-A07",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S10",
+      "aspect": "AINF-A08",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S10",
+      "aspect": "AINF-A09",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S10",
+      "aspect": "AINF-A10",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S10",
+      "aspect": "AINF-A11",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S10",
+      "aspect": "AINF-A12",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S10",
+      "aspect": "AINF-A13",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S10",
+      "aspect": "AINF-A14",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S10",
+      "aspect": "AINF-A15",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S10",
+      "aspect": "AINF-A16",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S10",
+      "aspect": "AINF-A17",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S11",
+      "aspect": "AINF-A01",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S11",
+      "aspect": "AINF-A02",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S11",
+      "aspect": "AINF-A03",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S11",
+      "aspect": "AINF-A04",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S11",
+      "aspect": "AINF-A05",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S11",
+      "aspect": "AINF-A06",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S11",
+      "aspect": "AINF-A07",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S11",
+      "aspect": "AINF-A08",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S11",
+      "aspect": "AINF-A09",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S11",
+      "aspect": "AINF-A10",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S11",
+      "aspect": "AINF-A11",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S11",
+      "aspect": "AINF-A12",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S11",
+      "aspect": "AINF-A13",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S11",
+      "aspect": "AINF-A14",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S11",
+      "aspect": "AINF-A15",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S11",
+      "aspect": "AINF-A16",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S11",
+      "aspect": "AINF-A17",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S12",
+      "aspect": "AINF-A01",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S12",
+      "aspect": "AINF-A02",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S12",
+      "aspect": "AINF-A03",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S12",
+      "aspect": "AINF-A04",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S12",
+      "aspect": "AINF-A05",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S12",
+      "aspect": "AINF-A06",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S12",
+      "aspect": "AINF-A07",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S12",
+      "aspect": "AINF-A08",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S12",
+      "aspect": "AINF-A09",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S12",
+      "aspect": "AINF-A10",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S12",
+      "aspect": "AINF-A11",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S12",
+      "aspect": "AINF-A12",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S12",
+      "aspect": "AINF-A13",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S12",
+      "aspect": "AINF-A14",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S12",
+      "aspect": "AINF-A15",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S12",
+      "aspect": "AINF-A16",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S12",
+      "aspect": "AINF-A17",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S13",
+      "aspect": "AINF-A01",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S13",
+      "aspect": "AINF-A02",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S13",
+      "aspect": "AINF-A03",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S13",
+      "aspect": "AINF-A04",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S13",
+      "aspect": "AINF-A05",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S13",
+      "aspect": "AINF-A06",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S13",
+      "aspect": "AINF-A07",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S13",
+      "aspect": "AINF-A08",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S13",
+      "aspect": "AINF-A09",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S13",
+      "aspect": "AINF-A10",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S13",
+      "aspect": "AINF-A11",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S13",
+      "aspect": "AINF-A12",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S13",
+      "aspect": "AINF-A13",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S13",
+      "aspect": "AINF-A14",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S13",
+      "aspect": "AINF-A15",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S13",
+      "aspect": "AINF-A16",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S13",
+      "aspect": "AINF-A17",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S14",
+      "aspect": "AINF-A01",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S14",
+      "aspect": "AINF-A02",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S14",
+      "aspect": "AINF-A03",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S14",
+      "aspect": "AINF-A04",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S14",
+      "aspect": "AINF-A05",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S14",
+      "aspect": "AINF-A06",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S14",
+      "aspect": "AINF-A07",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S14",
+      "aspect": "AINF-A08",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S14",
+      "aspect": "AINF-A09",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S14",
+      "aspect": "AINF-A10",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S14",
+      "aspect": "AINF-A11",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S14",
+      "aspect": "AINF-A12",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S14",
+      "aspect": "AINF-A13",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S14",
+      "aspect": "AINF-A14",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S14",
+      "aspect": "AINF-A15",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S14",
+      "aspect": "AINF-A16",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S14",
+      "aspect": "AINF-A17",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S15",
+      "aspect": "AINF-A01",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S15",
+      "aspect": "AINF-A02",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S15",
+      "aspect": "AINF-A03",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S15",
+      "aspect": "AINF-A04",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S15",
+      "aspect": "AINF-A05",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S15",
+      "aspect": "AINF-A06",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S15",
+      "aspect": "AINF-A07",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S15",
+      "aspect": "AINF-A08",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S15",
+      "aspect": "AINF-A09",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S15",
+      "aspect": "AINF-A10",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S15",
+      "aspect": "AINF-A11",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S15",
+      "aspect": "AINF-A12",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S15",
+      "aspect": "AINF-A13",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S15",
+      "aspect": "AINF-A14",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S15",
+      "aspect": "AINF-A15",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S15",
+      "aspect": "AINF-A16",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S15",
+      "aspect": "AINF-A17",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S16",
+      "aspect": "AINF-A01",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S16",
+      "aspect": "AINF-A02",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S16",
+      "aspect": "AINF-A03",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S16",
+      "aspect": "AINF-A04",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S16",
+      "aspect": "AINF-A05",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S16",
+      "aspect": "AINF-A06",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S16",
+      "aspect": "AINF-A07",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S16",
+      "aspect": "AINF-A08",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S16",
+      "aspect": "AINF-A09",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S16",
+      "aspect": "AINF-A10",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S16",
+      "aspect": "AINF-A11",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S16",
+      "aspect": "AINF-A12",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S16",
+      "aspect": "AINF-A13",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S16",
+      "aspect": "AINF-A14",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S16",
+      "aspect": "AINF-A15",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S16",
+      "aspect": "AINF-A16",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S16",
+      "aspect": "AINF-A17",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S17",
+      "aspect": "AINF-A01",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S17",
+      "aspect": "AINF-A02",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S17",
+      "aspect": "AINF-A03",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S17",
+      "aspect": "AINF-A04",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S17",
+      "aspect": "AINF-A05",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S17",
+      "aspect": "AINF-A06",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S17",
+      "aspect": "AINF-A07",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S17",
+      "aspect": "AINF-A08",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S17",
+      "aspect": "AINF-A09",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S17",
+      "aspect": "AINF-A10",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S17",
+      "aspect": "AINF-A11",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S17",
+      "aspect": "AINF-A12",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S17",
+      "aspect": "AINF-A13",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S17",
+      "aspect": "AINF-A14",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S17",
+      "aspect": "AINF-A15",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S17",
+      "aspect": "AINF-A16",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S17",
+      "aspect": "AINF-A17",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S18",
+      "aspect": "AINF-A01",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S18",
+      "aspect": "AINF-A02",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S18",
+      "aspect": "AINF-A03",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S18",
+      "aspect": "AINF-A04",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S18",
+      "aspect": "AINF-A05",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S18",
+      "aspect": "AINF-A06",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S18",
+      "aspect": "AINF-A07",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S18",
+      "aspect": "AINF-A08",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S18",
+      "aspect": "AINF-A09",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S18",
+      "aspect": "AINF-A10",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S18",
+      "aspect": "AINF-A11",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S18",
+      "aspect": "AINF-A12",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S18",
+      "aspect": "AINF-A13",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S18",
+      "aspect": "AINF-A14",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S18",
+      "aspect": "AINF-A15",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S18",
+      "aspect": "AINF-A16",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S18",
+      "aspect": "AINF-A17",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S19",
+      "aspect": "AINF-A01",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S19",
+      "aspect": "AINF-A02",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S19",
+      "aspect": "AINF-A03",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S19",
+      "aspect": "AINF-A04",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S19",
+      "aspect": "AINF-A05",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S19",
+      "aspect": "AINF-A06",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S19",
+      "aspect": "AINF-A07",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S19",
+      "aspect": "AINF-A08",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S19",
+      "aspect": "AINF-A09",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S19",
+      "aspect": "AINF-A10",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S19",
+      "aspect": "AINF-A11",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S19",
+      "aspect": "AINF-A12",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S19",
+      "aspect": "AINF-A13",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S19",
+      "aspect": "AINF-A14",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S19",
+      "aspect": "AINF-A15",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S19",
+      "aspect": "AINF-A16",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S19",
+      "aspect": "AINF-A17",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S20",
+      "aspect": "AINF-A01",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S20",
+      "aspect": "AINF-A02",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S20",
+      "aspect": "AINF-A03",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S20",
+      "aspect": "AINF-A04",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S20",
+      "aspect": "AINF-A05",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S20",
+      "aspect": "AINF-A06",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S20",
+      "aspect": "AINF-A07",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S20",
+      "aspect": "AINF-A08",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S20",
+      "aspect": "AINF-A09",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S20",
+      "aspect": "AINF-A10",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S20",
+      "aspect": "AINF-A11",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S20",
+      "aspect": "AINF-A12",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S20",
+      "aspect": "AINF-A13",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S20",
+      "aspect": "AINF-A14",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S20",
+      "aspect": "AINF-A15",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S20",
+      "aspect": "AINF-A16",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S20",
+      "aspect": "AINF-A17",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S21",
+      "aspect": "AINF-A01",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S21",
+      "aspect": "AINF-A02",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S21",
+      "aspect": "AINF-A03",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S21",
+      "aspect": "AINF-A04",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S21",
+      "aspect": "AINF-A05",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S21",
+      "aspect": "AINF-A06",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S21",
+      "aspect": "AINF-A07",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S21",
+      "aspect": "AINF-A08",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S21",
+      "aspect": "AINF-A09",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S21",
+      "aspect": "AINF-A10",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S21",
+      "aspect": "AINF-A11",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S21",
+      "aspect": "AINF-A12",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S21",
+      "aspect": "AINF-A13",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S21",
+      "aspect": "AINF-A14",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S21",
+      "aspect": "AINF-A15",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S21",
+      "aspect": "AINF-A16",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    },
+    {
+      "service": "AINF-S21",
+      "aspect": "AINF-A17",
+      "runtime": "UNRUN",
+      "formal": "UNRUN",
+      "receipt": null
+    }
+  ],
+  "totals": {
+    "services": 21,
+    "aspects": 17,
+    "obligations": 357,
+    "production_verified_services": 0,
+    "note": "0 fully verified against this composed target design; this does not erase prior slice-level passing evidence."
+  },
+  "formal": {
+    "existing_carriers": [
+      "formal/lean/AgenticCoordination.lean",
+      "formal/lean/AgenticJournal.lean",
+      "formal/lean/TwoLattice_STM.lean",
+      "formal/lean/Traceability.lean",
+      "formal/quint/agentic_coordination.qnt",
+      "formal/quint/agentic_journal.qnt"
+    ],
+    "status": "UNRUN_FOR_THIS_DESIGN",
+    "required": [
+      "authorization intersection/non-escalation",
+      "single active effect owner with persistent fence",
+      "atomic spent+reserved budget conservation",
+      "approval nonce and digest binding",
+      "tenant non-interference across storage/cache/telemetry",
+      "crash-safe intent/outbox/inbox/reconciliation",
+      "context pinned-constraint conservation",
+      "typed wall/monotonic/Lamport time domains"
+    ],
+    "limitation": "Model/proof obligations must be refined to production dispatch/storage paths; a checker pass or AGY review is not system admission."
+  },
+  "acquisition_review": {
+    "agy_candidate": "c660b3d35d5e688c8a987135e3f181acb2adc561",
+    "conclusion": "Older related source already represented in current main; no new verified full-service implementation established.",
+    "paths": [
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/zigvm_add_fractal_engine.gleam",
+        "scope": "Static architecture/topology catalog; not semantic retrieval"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/knowledge/raga_cybernetic_synthesis.gleam",
+        "scope": "Music data/math; literal stability score is not runtime measurement"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/services/max_inference_daemon.gleam",
+        "scope": "JSON-RPC codec/math seam, not proven process supervision or inference"
+      },
+      {
+        "path": "engines/hermes/modules/hermes_mirage/hermes_mirage_runner.ml",
+        "scope": "Host library CLI/benchmark; actual Solo5 execution unverified"
+      },
+      {
+        "path": "tools/uos/src/main.gleam",
+        "scope": "Mirage inventory/fail-closed gates, not durable workflow execution"
+      }
+    ]
+  }
+}
