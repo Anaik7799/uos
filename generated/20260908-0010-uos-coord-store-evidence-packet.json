@@ -1,0 +1,118 @@
+{
+  "carrier": "uos-evidence-packet/v1",
+  "id": "EP-20260908-0010-COORD-STORE",
+  "task": "uos/stabilization/20260907-2013 COORD-STORE",
+  "claim": {
+    "plan": "uos/stabilization/20260907-2013",
+    "task": "COORD-STORE",
+    "worker": "claude",
+    "state": "executing",
+    "attempt": 1,
+    "lease_until_ns": 1788825420672199010,
+    "claimed_at": "2026-09-08T00:0xZ",
+    "note": "Claimed by id in the canonical plan on request. My own plans uos/claude-integration/20260907-1355 and uos/holonic-mapping/20260907-1505 remain separate; no duplicate COORD-STORE work exists there."
+  },
+  "actor": "L0-fable (claude-opus-5), session 656f0d2c-6019-4d9e-b0ce-b9e39b240047",
+  "scope": "Bounded reconciliation and evidence only. No new features, no runtime change, no cutover executed.",
+  "authority_boundaries": {
+    "quorum": "NOT claimed. This packet asserts no Codex quorum and no sovereign review verdict.",
+    "runtime": "NOT claimed. No runtime approval, no deploy, no service start/stop, no port bound.",
+    "cutover": "NOT executed. The file journal remains authoritative."
+  },
+
+  "1_candidate_reconciliation": {
+    "candidate_on_main": "qtlmstnplwln/a208546c667e34e9891107dcaf3e23de0cc7f746",
+    "store_introduced_by": "6c94240cc38f",
+    "worker_candidate": "lzsymnzqrnyt/381c400d4ae7 (W-M, Sonnet)",
+    "files_on_main": [
+      "apps/uos_swarm/src/uos_swarm/session_store.gleam",
+      "apps/uos_swarm/src/session_store_cli.gleam",
+      "apps/uos_swarm/src/session_store_ffi.erl",
+      "apps/uos_swarm/test/session_store_test.gleam",
+      "apps/uos_swarm/test/session_store_test_ffi.erl",
+      "docs/design/20260907-1750-uos-coordinator-sqlite-store-protocol.md"
+    ],
+    "backend": "esqlite 0.9.0 (hex, already pinned in cepaf_gleam), WAL, synchronous=NORMAL, busy_timeout 30000, foreign_keys ON, every write in one BEGIN IMMEDIATE transaction, bound parameters only",
+    "divergence_resolved": "W-M's change went divergent when my integration head moved under it; the orphaned copy 51d2a4203f63 was abandoned and the final commit 381c400d was merged by id. Only one lineage remains."
+  },
+
+  "2_overwrite_and_replace_negative_tests": {
+    "grade": "Measured",
+    "suite_result": "611 passed, no failures (apps/uos_swarm, run 2026-09-08T00:0xZ on the main tree)",
+    "tests": [
+      { "name": "raw_update_and_delete_are_rejected_by_triggers_test", "asserts": "raw UPDATE and raw DELETE on events are refused by events_no_update / events_no_delete; head unchanged after both" },
+      { "name": "insert_or_replace_cannot_delete_history_test", "asserts": "chain-valid INSERT OR REPLACE reusing a stored operation_id, a stored digest, or a stored sequence is refused; row count, head and verify unchanged" },
+      { "name": "raw_insert_with_wrong_sequence_or_wrong_previous_digest_is_rejected_test", "asserts": "an INSERT skipping ahead of the next sequence, and one with a previous_digest that does not match the head, are both refused" },
+      { "name": "duplicate_operation_id_returns_duplicate_true_and_no_new_row_test", "asserts": "replayed operation id returns the original receipt with duplicate=true and inserts nothing" },
+      { "name": "verify_reports_the_exact_failure_on_a_tampered_copy_test", "asserts": "a row tampered on a scratch copy is reported by exact sequence and failed check, not a generic refusal" },
+      { "name": "migration_refuses_a_non_empty_store_test", "asserts": "migrate into a populated store is refused" },
+      { "name": "open_refuses_incompatible_schema_marker_test", "asserts": "a store whose meta.schema is not the genesis constant is refused at open" }
+    ],
+    "defect_found_and_fixed_before_integration": {
+      "finding": "SQLite fires DELETE triggers for the implicit delete of INSERT OR REPLACE only when PRAGMA recursive_triggers is ON, and its default is OFF. A raw INSERT OR REPLACE reusing a stored operation_id or digest therefore deleted a historical row while events_no_delete stayed silent.",
+      "source": "adversarial review workflow wf_5f54e14c-28b, schema lens, confirmed by its refutation agent",
+      "fix": "new trigger events_no_replace: BEFORE INSERT, aborts when the row reuses a stored sequence, operation_id or digest",
+      "proof": "both attacks refused on a migrated 415-event copy with the table unchanged at 415 rows; regression test insert_or_replace_cannot_delete_history_test",
+      "secondary_fixes": [
+        "journal_mode and foreign_keys are read back and the open is refused unless effective (an unchecked PRAGMA can silently leave rollback-journal mode)",
+        "verify's per-check booleans are typed counters instead of substring matches over text that embeds caller-supplied operation_ids"
+      ]
+    },
+    "residual_gap": {
+      "finding": "A raw SQL INSERT that extends the chain correctly but stores a digest not equal to sha256(body_json) is accepted by the triggers. It is caught by verify (digest_ok false, exact sequence named) and by replay, which fails closed, but the triggers alone do not stop it.",
+      "status": "recorded, not fixed; a trigger cannot compute sha256",
+      "review_status": "the api and migration lenses of wf_5f54e14c-28b lost 19 of 22 agents to a session limit, so their findings are unverified and carried as follow-ups, not claimed as clean"
+    }
+  },
+
+  "3_replay_backup_and_rollback": {
+    "grade": "Measured",
+    "rehearsal_against_the_live_journal": {
+      "source": "var/coordination/tri-agent/events (533 events, live, untouched)",
+      "migrate": { "ok": true, "migrated_events": 533 },
+      "verify": { "ok": true, "checked": 533, "sequence_ok": true, "chain_ok": true, "digest_ok": true, "triggers_present": true, "unique_operations": true, "failures": [] },
+      "store_head_digest": "f7b71a90a63660c0",
+      "file_journal_head_digest": "f7b71a90a63660c0",
+      "parity": "identical"
+    },
+    "rollback_path": {
+      "export": { "ok": true, "exported_events": 533 },
+      "file_coordinator_replays_the_export": { "ok": true, "healthy_events": 533, "head_digest": "f7b71a90a63660c0" },
+      "byte_parity": "diff -rq against the live journal: IDENTICAL byte-for-byte across all 533 files"
+    },
+    "preserved_corruption_evidence": {
+      "events_quarantine": "24 files",
+      "events_damaged_20260907T2008Z": "418 files",
+      "events_damaged_20260907T2130Z": "455 files",
+      "events_damaged_20260907T2224Z": "460 files",
+      "notes": "5 quarantine/README notes naming what each event destroyed or claimed",
+      "deleted": "nothing"
+    }
+  },
+
+  "4_cli_cutover_readiness": {
+    "verbs_available": ["migrate <events_dir> <db>", "verify <db>", "export <db> <out_root>", "schema", "and every session_sync verb: register, heartbeat, claim, renew, release, send, ack, retire, status, inbox, check, journal"],
+    "rehearsed": ["migrate", "verify", "status", "export", "replay of the export by the file coordinator"],
+    "not_rehearsed": ["a live cutover with peers writing", "concurrent multi-writer contention under BEGIN IMMEDIATE beyond the single lock test in the review"],
+    "preconditions_i_do_not_control": [
+      "Codex R5 verdict on session_store, on events_no_replace and on session_sync.compact",
+      "explicit acknowledgement from all live sessions that they will stop writing the file journal for the window",
+      "a quiescence window with no in-flight lease"
+    ],
+    "procedure_when_authorized": [
+      "announce and confirm quiescence",
+      "migrate the live events dir into var/coordination/tri-agent/journal.sqlite3",
+      "verify all-true and compare the store head digest with the file head digest",
+      "peers re-register against the store CLI",
+      "retain the file journal as legacy, never delete",
+      "rollback is export plus the existing file coordinator, proven byte-identical above"
+    ],
+    "status": "READY TO REHEARSE; NOT AUTHORIZED TO EXECUTE"
+  },
+
+  "5_related_open_items_not_claimed_here": {
+    "TRUTH": "The fabricated forecast health is already corrected on main: calibration carries its denominator, risk bands are separated from NATO probability bands, the Lyapunov verdict is scale-invariant, absent data returns Undetermined; 10,335 cepaf tests pass. AGY p6 a8a9b9e8 reproducing the literal forecast and fake healthy inference independently is consistent with my ETC-1 and ETC-2 findings of 2026-09-07T16:50Z. TRUTH itself remains unclaimed by me.",
+    "INFERENCE": "MAX 26.5.0 and Mojo 1.0.0 are now installed and execution-verified on nas-1 (governance/sources/20260907-2300-...json). max_kernel.mojo does not compile under Mojo 1.0; MAX-KERNEL-PORT is open.",
+    "JSON-PRODUCT": "Codex p5 owns PRODUCT-WORKFLOW with candidate d83057593ffc, 76 targeted tests and 138 UNRUN system cases. I make no claim on it."
+  }
+}
