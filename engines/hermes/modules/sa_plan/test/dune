@@ -61,3 +61,14 @@
  (name test_sa_plan_observability_kpi)
  (modules test_sa_plan_observability_kpi sa_plan_observability_kpi)
  (libraries sa_plan))
+
+(executable
+ (name sa_plan_observation_main)
+ (public_name sa-plan-observation)
+ (modules sa_plan_observation_main)
+ (libraries core core_unix sa_plan yojson))
+
+(executable
+ (name test_sa_plan_observation)
+ (modules test_sa_plan_observation)
+ (libraries core core_unix sa_plan))

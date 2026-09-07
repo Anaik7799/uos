@@ -9,6 +9,7 @@ module Management = Sa_plan_management
 module Store = Sa_plan_store
 module Name = Sa_plan_name
 module Observability = Sa_plan_observability
+module Observation = Sa_plan_observation
 module Pipeline_telemetry = Sa_plan_pipeline_telemetry
 module C3i_reference = Sa_plan_c3i_reference
 module Guardian = Guardian
