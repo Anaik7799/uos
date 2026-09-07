@@ -1,0 +1,1248 @@
+[
+  {
+    "valid_until": "2026-09-07T22:23:31Z",
+    "observed_at": "2026-09-07T20:23:31Z",
+    "ready_since": "2026-09-07T20:23:31Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Live observations recorded separately; stable authority boundaries bound here. No revision or runtime admission inferred.",
+      "evidence": [
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-09-07T20:23:31Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "598653f5a9df9179b5527920f030878894787fa81d791b5ac742b0a53d60a613",
+          "observed_at": "2026-09-07T20:23:31Z"
+        },
+        {
+          "path": "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "sha256": "d016cbdb2cca8454252d13bbf71d58a3f3bb8c88eff4896972ee28e6d83b6152",
+          "observed_at": "2026-09-07T20:23:31Z"
+        }
+      ]
+    },
+    "score_interval": [ 2500, 2500 ],
+    "score": 2500,
+    "decision": {
+      "rollback": "Preserve historical stores; rollback failed transactions; release only own leases; no shared journal rewrite or namespace deletion",
+      "residuals": [
+        "Board signatures currently share local-account trust",
+        "Historical corpus and static endpoints cannot establish production admission",
+        "Runtime changes require a separate owned target and rollback receipt"
+      ],
+      "falsifier": "Repeated corruption, stale nominal status, missing ACK, duplicate writer or unsupported PASS persists after the proposed fix",
+      "forecast": "Bounded observations and disjoint fixes should reduce new P1 faults; this is an uncalibrated working hypothesis",
+      "budget": "One owner per scope; 10 minute initial work packet; 5 minute observations; at most 4 active peers plus coordinator; deterministic local checks first; no paid model calls; 512-token free advisory ceiling if needed; no automatic release",
+      "acceptance": [
+        "Actual session registered with durable message and peer ACK status",
+        "Board last ten and fresh runtime baseline retained",
+        "Every live Herdr agent receives bounded scope packet; delivery and ACK distinguished"
+      ],
+      "summary": "Stabilization task OODA; proposed owner Codex w2:p5. ACK and exact task claim required before assigned implementation.",
+      "alternatives": [
+        "Leave architecture solely in Markdown",
+        "Install all named third-party services"
+      ],
+      "counterevidence": [
+        "The prior map records incomplete production controls; source presence cannot establish parity."
+      ],
+      "assumptions": [
+        "User requests native UOS reuse; third-party sources are read-only behavior references."
+      ],
+      "confidence": "analyst_estimate",
+      "reviewer": "Author tests and source review; independent admission NOT_ADMITTED.",
+      "supersedes": "none"
+    },
+    "stpa_analysis": {
+      "control_action": "Coordinate OODA scope under existing effect authority",
+      "controller": "UOS stabilization OODA coordinator",
+      "losses": [ "L-EVIDENCE-INTEGRITY" ],
+      "hazards": [ "H-FALSE-COMPLETION", "H-CATALOG-CORRUPTION" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Required service or security constraint omitted from specification.",
+          "hazard_ids": [ "H-FALSE-COMPLETION" ],
+          "constraint": "Verify all 21 taxonomy services, six readiness criteria and detailed acceptance coverage."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Source presence reported as verified behavior or arbitrary SQL overwrites existing catalog.",
+          "hazard_ids": [ "H-FALSE-COMPLETION", "H-CATALOG-CORRUPTION" ],
+          "constraint": "Use conservative states and additive transaction with bound parameters."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Evidence belongs to an old candidate or import runs without current claim.",
+          "hazard_ids": [ "H-FALSE-COMPLETION" ],
+          "constraint": "Recheck hashes, preflight and active ownership before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Catalog process exceeds lease or imports incomplete state after cancellation.",
+          "hazard_ids": [ "H-CATALOG-CORRUPTION" ],
+          "constraint": "Bound process and transactions; rollback failures and stop on lease expiry."
+        }
+      ]
+    },
+    "fmea_modes": [
+      {
+        "controls": "Sa-plan exact claims; bounded owner packets; immutable SQLite evidence; candidate-specific tests; separate effect-time runtime fence; hold unknown states",
+        "effect": "Corrupted coordination or unsafe false completion propagates to production decisions",
+        "cause": "Stale or fabricated evidence, conflicting writers, misleading runtime identity, or unbounded duplicate work",
+        "band": 5,
+        "rpn": 45,
+        "det": 3,
+        "o": 3,
+        "s": 5,
+        "id": "FM-STABILIZE-OODA"
+      }
+    ],
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Analyst ordinal stabilization judgment for OODA; owner Codex w2:p5; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Analyst ordinal stabilization judgment for OODA; owner Codex w2:p5; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Analyst ordinal stabilization judgment for OODA; owner Codex w2:p5; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Analyst ordinal stabilization judgment for OODA; owner Codex w2:p5; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Analyst ordinal stabilization judgment for OODA; owner Codex w2:p5; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      }
+    },
+    "blockers": [],
+    "dependencies": [],
+    "class": "P1",
+    "readiness": "ready",
+    "task_state": "available",
+    "phase": "intake",
+    "scope": "Observe and coordinate stabilization of OODA using existing native components; proposed owner Codex w2:p5. No runtime cutover or admission from this assessment.",
+    "actor": "codex-stabilization-2013",
+    "task_id": "OODA",
+    "plan_id": "uos/stabilization/20260907-2013",
+    "assessment_id": "stabilization-20260907-2013-OODA",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 4
+  },
+  {
+    "valid_until": "2026-09-07T22:23:31Z",
+    "observed_at": "2026-09-07T20:23:31Z",
+    "ready_since": "2026-09-07T20:23:31Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Live observations recorded separately; stable authority boundaries bound here. No revision or runtime admission inferred.",
+      "evidence": [
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-09-07T20:23:31Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "598653f5a9df9179b5527920f030878894787fa81d791b5ac742b0a53d60a613",
+          "observed_at": "2026-09-07T20:23:31Z"
+        },
+        {
+          "path": "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "sha256": "d016cbdb2cca8454252d13bbf71d58a3f3bb8c88eff4896972ee28e6d83b6152",
+          "observed_at": "2026-09-07T20:23:31Z"
+        }
+      ]
+    },
+    "score_interval": [ 2500, 2500 ],
+    "score": 2500,
+    "decision": {
+      "rollback": "Preserve historical stores; rollback failed transactions; release only own leases; no shared journal rewrite or namespace deletion",
+      "residuals": [
+        "Board signatures currently share local-account trust",
+        "Historical corpus and static endpoints cannot establish production admission",
+        "Runtime changes require a separate owned target and rollback receipt"
+      ],
+      "falsifier": "Repeated corruption, stale nominal status, missing ACK, duplicate writer or unsupported PASS persists after the proposed fix",
+      "forecast": "Bounded observations and disjoint fixes should reduce new P1 faults; this is an uncalibrated working hypothesis",
+      "budget": "One owner per scope; 10 minute initial work packet; 5 minute observations; at most 4 active peers plus coordinator; deterministic local checks first; no paid model calls; 512-token free advisory ceiling if needed; no automatic release",
+      "acceptance": [
+        "Reuse existing migration candidate and Sa-plan task; no duplicate writer",
+        "Append-only SQLite replay with rollback and backup receipts",
+        "Overwrite and malformed-opcode rejection tested; no history deleted"
+      ],
+      "summary": "Stabilization task COORD-STORE; proposed owner Claude w2:p2. ACK and exact task claim required before assigned implementation.",
+      "alternatives": [
+        "Leave architecture solely in Markdown",
+        "Install all named third-party services"
+      ],
+      "counterevidence": [
+        "The prior map records incomplete production controls; source presence cannot establish parity."
+      ],
+      "assumptions": [
+        "User requests native UOS reuse; third-party sources are read-only behavior references."
+      ],
+      "confidence": "analyst_estimate",
+      "reviewer": "Author tests and source review; independent admission NOT_ADMITTED.",
+      "supersedes": "none"
+    },
+    "stpa_analysis": {
+      "control_action": "Coordinate COORD-STORE scope under existing effect authority",
+      "controller": "UOS stabilization OODA coordinator",
+      "losses": [ "L-EVIDENCE-INTEGRITY" ],
+      "hazards": [ "H-FALSE-COMPLETION", "H-CATALOG-CORRUPTION" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Required service or security constraint omitted from specification.",
+          "hazard_ids": [ "H-FALSE-COMPLETION" ],
+          "constraint": "Verify all 21 taxonomy services, six readiness criteria and detailed acceptance coverage."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Source presence reported as verified behavior or arbitrary SQL overwrites existing catalog.",
+          "hazard_ids": [ "H-FALSE-COMPLETION", "H-CATALOG-CORRUPTION" ],
+          "constraint": "Use conservative states and additive transaction with bound parameters."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Evidence belongs to an old candidate or import runs without current claim.",
+          "hazard_ids": [ "H-FALSE-COMPLETION" ],
+          "constraint": "Recheck hashes, preflight and active ownership before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Catalog process exceeds lease or imports incomplete state after cancellation.",
+          "hazard_ids": [ "H-CATALOG-CORRUPTION" ],
+          "constraint": "Bound process and transactions; rollback failures and stop on lease expiry."
+        }
+      ]
+    },
+    "fmea_modes": [
+      {
+        "controls": "Sa-plan exact claims; bounded owner packets; immutable SQLite evidence; candidate-specific tests; separate effect-time runtime fence; hold unknown states",
+        "effect": "Corrupted coordination or unsafe false completion propagates to production decisions",
+        "cause": "Stale or fabricated evidence, conflicting writers, misleading runtime identity, or unbounded duplicate work",
+        "band": 5,
+        "rpn": 45,
+        "det": 3,
+        "o": 3,
+        "s": 5,
+        "id": "FM-STABILIZE-COORD-STORE"
+      }
+    ],
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Analyst ordinal stabilization judgment for COORD-STORE; owner Claude w2:p2; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Analyst ordinal stabilization judgment for COORD-STORE; owner Claude w2:p2; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Analyst ordinal stabilization judgment for COORD-STORE; owner Claude w2:p2; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Analyst ordinal stabilization judgment for COORD-STORE; owner Claude w2:p2; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Analyst ordinal stabilization judgment for COORD-STORE; owner Claude w2:p2; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      }
+    },
+    "blockers": [ "OODA" ],
+    "dependencies": [ "OODA" ],
+    "class": "P1",
+    "readiness": "blocked",
+    "task_state": "available",
+    "phase": "intake",
+    "scope": "Observe and coordinate stabilization of COORD-STORE using existing native components; proposed owner Claude w2:p2. No runtime cutover or admission from this assessment.",
+    "actor": "codex-stabilization-2013",
+    "task_id": "COORD-STORE",
+    "plan_id": "uos/stabilization/20260907-2013",
+    "assessment_id": "stabilization-20260907-2013-COORD-STORE",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 4
+  },
+  {
+    "valid_until": "2026-09-07T22:23:31Z",
+    "observed_at": "2026-09-07T20:23:31Z",
+    "ready_since": "2026-09-07T20:23:31Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Live observations recorded separately; stable authority boundaries bound here. No revision or runtime admission inferred.",
+      "evidence": [
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-09-07T20:23:31Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "598653f5a9df9179b5527920f030878894787fa81d791b5ac742b0a53d60a613",
+          "observed_at": "2026-09-07T20:23:31Z"
+        },
+        {
+          "path": "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "sha256": "d016cbdb2cca8454252d13bbf71d58a3f3bb8c88eff4896972ee28e6d83b6152",
+          "observed_at": "2026-09-07T20:23:31Z"
+        }
+      ]
+    },
+    "score_interval": [ 2000, 2000 ],
+    "score": 2000,
+    "decision": {
+      "rollback": "Preserve historical stores; rollback failed transactions; release only own leases; no shared journal rewrite or namespace deletion",
+      "residuals": [
+        "Board signatures currently share local-account trust",
+        "Historical corpus and static endpoints cannot establish production admission",
+        "Runtime changes require a separate owned target and rollback receipt"
+      ],
+      "falsifier": "Repeated corruption, stale nominal status, missing ACK, duplicate writer or unsupported PASS persists after the proposed fix",
+      "forecast": "Bounded observations and disjoint fixes should reduce new P1 faults; this is an uncalibrated working hypothesis",
+      "budget": "One owner per scope; 10 minute initial work packet; 5 minute observations; at most 4 active peers plus coordinator; deterministic local checks first; no paid model calls; 512-token free advisory ceiling if needed; no automatic release",
+      "acceptance": [
+        "Unknown or stale telemetry cannot report nominal",
+        "Forecast history carries source samples and freshness or explicitly missing",
+        "Demo endpoints and inference identity are honest; negative tests pass"
+      ],
+      "summary": "Stabilization task TRUTH; proposed owner Claude w2:p6. ACK and exact task claim required before assigned implementation.",
+      "alternatives": [
+        "Leave architecture solely in Markdown",
+        "Install all named third-party services"
+      ],
+      "counterevidence": [
+        "The prior map records incomplete production controls; source presence cannot establish parity."
+      ],
+      "assumptions": [
+        "User requests native UOS reuse; third-party sources are read-only behavior references."
+      ],
+      "confidence": "analyst_estimate",
+      "reviewer": "Author tests and source review; independent admission NOT_ADMITTED.",
+      "supersedes": "none"
+    },
+    "stpa_analysis": {
+      "control_action": "Coordinate TRUTH scope under existing effect authority",
+      "controller": "UOS stabilization OODA coordinator",
+      "losses": [ "L-EVIDENCE-INTEGRITY" ],
+      "hazards": [ "H-FALSE-COMPLETION", "H-CATALOG-CORRUPTION" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Required service or security constraint omitted from specification.",
+          "hazard_ids": [ "H-FALSE-COMPLETION" ],
+          "constraint": "Verify all 21 taxonomy services, six readiness criteria and detailed acceptance coverage."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Source presence reported as verified behavior or arbitrary SQL overwrites existing catalog.",
+          "hazard_ids": [ "H-FALSE-COMPLETION", "H-CATALOG-CORRUPTION" ],
+          "constraint": "Use conservative states and additive transaction with bound parameters."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Evidence belongs to an old candidate or import runs without current claim.",
+          "hazard_ids": [ "H-FALSE-COMPLETION" ],
+          "constraint": "Recheck hashes, preflight and active ownership before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Catalog process exceeds lease or imports incomplete state after cancellation.",
+          "hazard_ids": [ "H-CATALOG-CORRUPTION" ],
+          "constraint": "Bound process and transactions; rollback failures and stop on lease expiry."
+        }
+      ]
+    },
+    "fmea_modes": [
+      {
+        "controls": "Sa-plan exact claims; bounded owner packets; immutable SQLite evidence; candidate-specific tests; separate effect-time runtime fence; hold unknown states",
+        "effect": "Corrupted coordination or unsafe false completion propagates to production decisions",
+        "cause": "Stale or fabricated evidence, conflicting writers, misleading runtime identity, or unbounded duplicate work",
+        "band": 5,
+        "rpn": 45,
+        "det": 3,
+        "o": 3,
+        "s": 5,
+        "id": "FM-STABILIZE-TRUTH"
+      }
+    ],
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Analyst ordinal stabilization judgment for TRUTH; owner Claude w2:p6; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Analyst ordinal stabilization judgment for TRUTH; owner Claude w2:p6; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Analyst ordinal stabilization judgment for TRUTH; owner Claude w2:p6; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Analyst ordinal stabilization judgment for TRUTH; owner Claude w2:p6; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Analyst ordinal stabilization judgment for TRUTH; owner Claude w2:p6; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      }
+    },
+    "blockers": [ "OODA" ],
+    "dependencies": [ "OODA" ],
+    "class": "P1",
+    "readiness": "blocked",
+    "task_state": "available",
+    "phase": "intake",
+    "scope": "Observe and coordinate stabilization of TRUTH using existing native components; proposed owner Claude w2:p6. No runtime cutover or admission from this assessment.",
+    "actor": "codex-stabilization-2013",
+    "task_id": "TRUTH",
+    "plan_id": "uos/stabilization/20260907-2013",
+    "assessment_id": "stabilization-20260907-2013-TRUTH",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 4
+  },
+  {
+    "valid_until": "2026-09-07T22:23:31Z",
+    "observed_at": "2026-09-07T20:23:31Z",
+    "ready_since": "2026-09-07T20:23:31Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Live observations recorded separately; stable authority boundaries bound here. No revision or runtime admission inferred.",
+      "evidence": [
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-09-07T20:23:31Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "598653f5a9df9179b5527920f030878894787fa81d791b5ac742b0a53d60a613",
+          "observed_at": "2026-09-07T20:23:31Z"
+        },
+        {
+          "path": "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "sha256": "d016cbdb2cca8454252d13bbf71d58a3f3bb8c88eff4896972ee28e6d83b6152",
+          "observed_at": "2026-09-07T20:23:31Z"
+        }
+      ]
+    },
+    "score_interval": [ 1200, 1200 ],
+    "score": 1200,
+    "decision": {
+      "rollback": "Preserve historical stores; rollback failed transactions; release only own leases; no shared journal rewrite or namespace deletion",
+      "residuals": [
+        "Board signatures currently share local-account trust",
+        "Historical corpus and static endpoints cannot establish production admission",
+        "Runtime changes require a separate owned target and rollback receipt"
+      ],
+      "falsifier": "Repeated corruption, stale nominal status, missing ACK, duplicate writer or unsupported PASS persists after the proposed fix",
+      "forecast": "Bounded observations and disjoint fixes should reduce new P1 faults; this is an uncalibrated working hypothesis",
+      "budget": "One owner per scope; 10 minute initial work packet; 5 minute observations; at most 4 active peers plus coordinator; deterministic local checks first; no paid model calls; 512-token free advisory ceiling if needed; no automatic release",
+      "acceptance": [
+        "Actual processes and backend/model invocation identified or unavailable",
+        "No weights or MAX execution inferred from arithmetic or names",
+        "Useful-model proposal includes real data needs baseline evaluation resource bounds and no paid deployment"
+      ],
+      "summary": "Stabilization task INFERENCE; proposed owner AGY w2:p1. ACK and exact task claim required before assigned implementation.",
+      "alternatives": [
+        "Leave architecture solely in Markdown",
+        "Install all named third-party services"
+      ],
+      "counterevidence": [
+        "The prior map records incomplete production controls; source presence cannot establish parity."
+      ],
+      "assumptions": [
+        "User requests native UOS reuse; third-party sources are read-only behavior references."
+      ],
+      "confidence": "analyst_estimate",
+      "reviewer": "Author tests and source review; independent admission NOT_ADMITTED.",
+      "supersedes": "none"
+    },
+    "stpa_analysis": {
+      "control_action": "Coordinate INFERENCE scope under existing effect authority",
+      "controller": "UOS stabilization OODA coordinator",
+      "losses": [ "L-EVIDENCE-INTEGRITY" ],
+      "hazards": [ "H-FALSE-COMPLETION", "H-CATALOG-CORRUPTION" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Required service or security constraint omitted from specification.",
+          "hazard_ids": [ "H-FALSE-COMPLETION" ],
+          "constraint": "Verify all 21 taxonomy services, six readiness criteria and detailed acceptance coverage."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Source presence reported as verified behavior or arbitrary SQL overwrites existing catalog.",
+          "hazard_ids": [ "H-FALSE-COMPLETION", "H-CATALOG-CORRUPTION" ],
+          "constraint": "Use conservative states and additive transaction with bound parameters."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Evidence belongs to an old candidate or import runs without current claim.",
+          "hazard_ids": [ "H-FALSE-COMPLETION" ],
+          "constraint": "Recheck hashes, preflight and active ownership before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Catalog process exceeds lease or imports incomplete state after cancellation.",
+          "hazard_ids": [ "H-CATALOG-CORRUPTION" ],
+          "constraint": "Bound process and transactions; rollback failures and stop on lease expiry."
+        }
+      ]
+    },
+    "fmea_modes": [
+      {
+        "controls": "Sa-plan exact claims; bounded owner packets; immutable SQLite evidence; candidate-specific tests; separate effect-time runtime fence; hold unknown states",
+        "effect": "Corrupted coordination or unsafe false completion propagates to production decisions",
+        "cause": "Stale or fabricated evidence, conflicting writers, misleading runtime identity, or unbounded duplicate work",
+        "band": 5,
+        "rpn": 45,
+        "det": 3,
+        "o": 3,
+        "s": 5,
+        "id": "FM-STABILIZE-INFERENCE"
+      }
+    ],
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Analyst ordinal stabilization judgment for INFERENCE; owner AGY w2:p1; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Analyst ordinal stabilization judgment for INFERENCE; owner AGY w2:p1; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Analyst ordinal stabilization judgment for INFERENCE; owner AGY w2:p1; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Analyst ordinal stabilization judgment for INFERENCE; owner AGY w2:p1; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Analyst ordinal stabilization judgment for INFERENCE; owner AGY w2:p1; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      }
+    },
+    "blockers": [ "OODA" ],
+    "dependencies": [ "OODA" ],
+    "class": "P1",
+    "readiness": "blocked",
+    "task_state": "available",
+    "phase": "intake",
+    "scope": "Observe and coordinate stabilization of INFERENCE using existing native components; proposed owner AGY w2:p1. No runtime cutover or admission from this assessment.",
+    "actor": "codex-stabilization-2013",
+    "task_id": "INFERENCE",
+    "plan_id": "uos/stabilization/20260907-2013",
+    "assessment_id": "stabilization-20260907-2013-INFERENCE",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 4
+  },
+  {
+    "valid_until": "2026-09-07T22:23:31Z",
+    "observed_at": "2026-09-07T20:23:31Z",
+    "ready_since": "2026-09-07T20:23:31Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Live observations recorded separately; stable authority boundaries bound here. No revision or runtime admission inferred.",
+      "evidence": [
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-09-07T20:23:31Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "598653f5a9df9179b5527920f030878894787fa81d791b5ac742b0a53d60a613",
+          "observed_at": "2026-09-07T20:23:31Z"
+        },
+        {
+          "path": "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "sha256": "d016cbdb2cca8454252d13bbf71d58a3f3bb8c88eff4896972ee28e6d83b6152",
+          "observed_at": "2026-09-07T20:23:31Z"
+        }
+      ]
+    },
+    "score_interval": [ 720, 720 ],
+    "score": 720,
+    "decision": {
+      "rollback": "Preserve historical stores; rollback failed transactions; release only own leases; no shared journal rewrite or namespace deletion",
+      "residuals": [
+        "Board signatures currently share local-account trust",
+        "Historical corpus and static endpoints cannot establish production admission",
+        "Runtime changes require a separate owned target and rollback receipt"
+      ],
+      "falsifier": "Repeated corruption, stale nominal status, missing ACK, duplicate writer or unsupported PASS persists after the proposed fix",
+      "forecast": "Bounded observations and disjoint fixes should reduce new P1 faults; this is an uncalibrated working hypothesis",
+      "budget": "One owner per scope; 10 minute initial work packet; 5 minute observations; at most 4 active peers plus coordinator; deterministic local checks first; no paid model calls; 512-token free advisory ceiling if needed; no automatic release",
+      "acceptance": [
+        "Reuse uos/agentic-product/20260907-1837 PRODUCT-WORKFLOW execution claim",
+        "CAS append-only JSON documents and hierarchy receipts tested",
+        "Export-dependent and active shared files preserved until consumer migration"
+      ],
+      "summary": "Stabilization task JSON-PRODUCT; proposed owner Codex w2:p5. ACK and exact task claim required before assigned implementation.",
+      "alternatives": [
+        "Leave architecture solely in Markdown",
+        "Install all named third-party services"
+      ],
+      "counterevidence": [
+        "The prior map records incomplete production controls; source presence cannot establish parity."
+      ],
+      "assumptions": [
+        "User requests native UOS reuse; third-party sources are read-only behavior references."
+      ],
+      "confidence": "analyst_estimate",
+      "reviewer": "Author tests and source review; independent admission NOT_ADMITTED.",
+      "supersedes": "none"
+    },
+    "stpa_analysis": {
+      "control_action": "Coordinate JSON-PRODUCT scope under existing effect authority",
+      "controller": "UOS stabilization OODA coordinator",
+      "losses": [ "L-EVIDENCE-INTEGRITY" ],
+      "hazards": [ "H-FALSE-COMPLETION", "H-CATALOG-CORRUPTION" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Required service or security constraint omitted from specification.",
+          "hazard_ids": [ "H-FALSE-COMPLETION" ],
+          "constraint": "Verify all 21 taxonomy services, six readiness criteria and detailed acceptance coverage."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Source presence reported as verified behavior or arbitrary SQL overwrites existing catalog.",
+          "hazard_ids": [ "H-FALSE-COMPLETION", "H-CATALOG-CORRUPTION" ],
+          "constraint": "Use conservative states and additive transaction with bound parameters."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Evidence belongs to an old candidate or import runs without current claim.",
+          "hazard_ids": [ "H-FALSE-COMPLETION" ],
+          "constraint": "Recheck hashes, preflight and active ownership before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Catalog process exceeds lease or imports incomplete state after cancellation.",
+          "hazard_ids": [ "H-CATALOG-CORRUPTION" ],
+          "constraint": "Bound process and transactions; rollback failures and stop on lease expiry."
+        }
+      ]
+    },
+    "fmea_modes": [
+      {
+        "controls": "Sa-plan exact claims; bounded owner packets; immutable SQLite evidence; candidate-specific tests; separate effect-time runtime fence; hold unknown states",
+        "effect": "Corrupted coordination or unsafe false completion propagates to production decisions",
+        "cause": "Stale or fabricated evidence, conflicting writers, misleading runtime identity, or unbounded duplicate work",
+        "band": 5,
+        "rpn": 45,
+        "det": 3,
+        "o": 3,
+        "s": 5,
+        "id": "FM-STABILIZE-JSON-PRODUCT"
+      }
+    ],
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Analyst ordinal stabilization judgment for JSON-PRODUCT; owner Codex w2:p5; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Analyst ordinal stabilization judgment for JSON-PRODUCT; owner Codex w2:p5; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Analyst ordinal stabilization judgment for JSON-PRODUCT; owner Codex w2:p5; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Analyst ordinal stabilization judgment for JSON-PRODUCT; owner Codex w2:p5; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Analyst ordinal stabilization judgment for JSON-PRODUCT; owner Codex w2:p5; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      }
+    },
+    "blockers": [ "OODA" ],
+    "dependencies": [ "OODA" ],
+    "class": "P2",
+    "readiness": "blocked",
+    "task_state": "available",
+    "phase": "intake",
+    "scope": "Observe and coordinate stabilization of JSON-PRODUCT using existing native components; proposed owner Codex w2:p5. No runtime cutover or admission from this assessment.",
+    "actor": "codex-stabilization-2013",
+    "task_id": "JSON-PRODUCT",
+    "plan_id": "uos/stabilization/20260907-2013",
+    "assessment_id": "stabilization-20260907-2013-JSON-PRODUCT",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 4
+  },
+  {
+    "valid_until": "2026-09-07T22:23:31Z",
+    "observed_at": "2026-09-07T20:23:31Z",
+    "ready_since": "2026-09-07T20:23:31Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Live observations recorded separately; stable authority boundaries bound here. No revision or runtime admission inferred.",
+      "evidence": [
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-09-07T20:23:31Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "598653f5a9df9179b5527920f030878894787fa81d791b5ac742b0a53d60a613",
+          "observed_at": "2026-09-07T20:23:31Z"
+        },
+        {
+          "path": "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "sha256": "d016cbdb2cca8454252d13bbf71d58a3f3bb8c88eff4896972ee28e6d83b6152",
+          "observed_at": "2026-09-07T20:23:31Z"
+        }
+      ]
+    },
+    "score_interval": [ 1000, 1000 ],
+    "score": 1000,
+    "decision": {
+      "rollback": "Preserve historical stores; rollback failed transactions; release only own leases; no shared journal rewrite or namespace deletion",
+      "residuals": [
+        "Board signatures currently share local-account trust",
+        "Historical corpus and static endpoints cannot establish production admission",
+        "Runtime changes require a separate owned target and rollback receipt"
+      ],
+      "falsifier": "Repeated corruption, stale nominal status, missing ACK, duplicate writer or unsupported PASS persists after the proposed fix",
+      "forecast": "Bounded observations and disjoint fixes should reduce new P1 faults; this is an uncalibrated working hypothesis",
+      "budget": "One owner per scope; 10 minute initial work packet; 5 minute observations; at most 4 active peers plus coordinator; deterministic local checks first; no paid model calls; 512-token free advisory ceiling if needed; no automatic release",
+      "acceptance": [
+        "Independent candidate-specific negative checks and source/runtime comparison",
+        "Managed runtime ownership and rollback prepared before cutover",
+        "P1 counterevidence remains a hold; no blanket green or fabricated admission"
+      ],
+      "summary": "Stabilization task VERIFY; proposed owner Codex w2:p4. ACK and exact task claim required before assigned implementation.",
+      "alternatives": [
+        "Leave architecture solely in Markdown",
+        "Install all named third-party services"
+      ],
+      "counterevidence": [
+        "The prior map records incomplete production controls; source presence cannot establish parity."
+      ],
+      "assumptions": [
+        "User requests native UOS reuse; third-party sources are read-only behavior references."
+      ],
+      "confidence": "analyst_estimate",
+      "reviewer": "Author tests and source review; independent admission NOT_ADMITTED.",
+      "supersedes": "none"
+    },
+    "stpa_analysis": {
+      "control_action": "Coordinate VERIFY scope under existing effect authority",
+      "controller": "UOS stabilization OODA coordinator",
+      "losses": [ "L-EVIDENCE-INTEGRITY" ],
+      "hazards": [ "H-FALSE-COMPLETION", "H-CATALOG-CORRUPTION" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Required service or security constraint omitted from specification.",
+          "hazard_ids": [ "H-FALSE-COMPLETION" ],
+          "constraint": "Verify all 21 taxonomy services, six readiness criteria and detailed acceptance coverage."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Source presence reported as verified behavior or arbitrary SQL overwrites existing catalog.",
+          "hazard_ids": [ "H-FALSE-COMPLETION", "H-CATALOG-CORRUPTION" ],
+          "constraint": "Use conservative states and additive transaction with bound parameters."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Evidence belongs to an old candidate or import runs without current claim.",
+          "hazard_ids": [ "H-FALSE-COMPLETION" ],
+          "constraint": "Recheck hashes, preflight and active ownership before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Catalog process exceeds lease or imports incomplete state after cancellation.",
+          "hazard_ids": [ "H-CATALOG-CORRUPTION" ],
+          "constraint": "Bound process and transactions; rollback failures and stop on lease expiry."
+        }
+      ]
+    },
+    "fmea_modes": [
+      {
+        "controls": "Sa-plan exact claims; bounded owner packets; immutable SQLite evidence; candidate-specific tests; separate effect-time runtime fence; hold unknown states",
+        "effect": "Corrupted coordination or unsafe false completion propagates to production decisions",
+        "cause": "Stale or fabricated evidence, conflicting writers, misleading runtime identity, or unbounded duplicate work",
+        "band": 5,
+        "rpn": 45,
+        "det": 3,
+        "o": 3,
+        "s": 5,
+        "id": "FM-STABILIZE-VERIFY"
+      }
+    ],
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Analyst ordinal stabilization judgment for VERIFY; owner Codex w2:p4; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Analyst ordinal stabilization judgment for VERIFY; owner Codex w2:p4; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Analyst ordinal stabilization judgment for VERIFY; owner Codex w2:p4; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "dependency": {
+        "value": 2,
+        "low": 2,
+        "high": 2,
+        "rationale": "Analyst ordinal stabilization judgment for VERIFY; owner Codex w2:p4; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Analyst ordinal stabilization judgment for VERIFY; owner Codex w2:p4; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      }
+    },
+    "blockers": [ "COORD-STORE", "TRUTH", "INFERENCE" ],
+    "dependencies": [ "COORD-STORE", "TRUTH", "INFERENCE" ],
+    "class": "P1",
+    "readiness": "blocked",
+    "task_state": "available",
+    "phase": "intake",
+    "scope": "Observe and coordinate stabilization of VERIFY using existing native components; proposed owner Codex w2:p4. No runtime cutover or admission from this assessment.",
+    "actor": "codex-stabilization-2013",
+    "task_id": "VERIFY",
+    "plan_id": "uos/stabilization/20260907-2013",
+    "assessment_id": "stabilization-20260907-2013-VERIFY",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 4
+  },
+  {
+    "valid_until": "2026-09-07T22:23:31Z",
+    "observed_at": "2026-09-07T20:23:31Z",
+    "ready_since": "2026-09-07T20:23:31Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Live observations recorded separately; stable authority boundaries bound here. No revision or runtime admission inferred.",
+      "evidence": [
+        {
+          "path": "tools/sa-plan",
+          "sha256": "325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4",
+          "observed_at": "2026-09-07T20:23:31Z"
+        },
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "598653f5a9df9179b5527920f030878894787fa81d791b5ac742b0a53d60a613",
+          "observed_at": "2026-09-07T20:23:31Z"
+        },
+        {
+          "path": "contracts/rules/20260907-0653-tri-agent-coordination.md",
+          "sha256": "d016cbdb2cca8454252d13bbf71d58a3f3bb8c88eff4896972ee28e6d83b6152",
+          "observed_at": "2026-09-07T20:23:31Z"
+        }
+      ]
+    },
+    "score_interval": [ 500, 500 ],
+    "score": 500,
+    "decision": {
+      "rollback": "Preserve historical stores; rollback failed transactions; release only own leases; no shared journal rewrite or namespace deletion",
+      "residuals": [
+        "Board signatures currently share local-account trust",
+        "Historical corpus and static endpoints cannot establish production admission",
+        "Runtime changes require a separate owned target and rollback receipt"
+      ],
+      "falsifier": "Repeated corruption, stale nominal status, missing ACK, duplicate writer or unsupported PASS persists after the proposed fix",
+      "forecast": "Bounded observations and disjoint fixes should reduce new P1 faults; this is an uncalibrated working hypothesis",
+      "budget": "One owner per scope; 10 minute initial work packet; 5 minute observations; at most 4 active peers plus coordinator; deterministic local checks first; no paid model calls; 512-token free advisory ceiling if needed; no automatic release",
+      "acceptance": [
+        "Three fresh observations five minutes apart with no new P1 faults",
+        "Evidence age ACK latency duplicate writers WIP and residual faults visible",
+        "Operator receives actual achieved state and outstanding gates"
+      ],
+      "summary": "Stabilization task CONVERGE; proposed owner Codex w2:p5. ACK and exact task claim required before assigned implementation.",
+      "alternatives": [
+        "Leave architecture solely in Markdown",
+        "Install all named third-party services"
+      ],
+      "counterevidence": [
+        "The prior map records incomplete production controls; source presence cannot establish parity."
+      ],
+      "assumptions": [
+        "User requests native UOS reuse; third-party sources are read-only behavior references."
+      ],
+      "confidence": "analyst_estimate",
+      "reviewer": "Author tests and source review; independent admission NOT_ADMITTED.",
+      "supersedes": "none"
+    },
+    "stpa_analysis": {
+      "control_action": "Coordinate CONVERGE scope under existing effect authority",
+      "controller": "UOS stabilization OODA coordinator",
+      "losses": [ "L-EVIDENCE-INTEGRITY" ],
+      "hazards": [ "H-FALSE-COMPLETION", "H-CATALOG-CORRUPTION" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Required service or security constraint omitted from specification.",
+          "hazard_ids": [ "H-FALSE-COMPLETION" ],
+          "constraint": "Verify all 21 taxonomy services, six readiness criteria and detailed acceptance coverage."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Source presence reported as verified behavior or arbitrary SQL overwrites existing catalog.",
+          "hazard_ids": [ "H-FALSE-COMPLETION", "H-CATALOG-CORRUPTION" ],
+          "constraint": "Use conservative states and additive transaction with bound parameters."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Evidence belongs to an old candidate or import runs without current claim.",
+          "hazard_ids": [ "H-FALSE-COMPLETION" ],
+          "constraint": "Recheck hashes, preflight and active ownership before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Catalog process exceeds lease or imports incomplete state after cancellation.",
+          "hazard_ids": [ "H-CATALOG-CORRUPTION" ],
+          "constraint": "Bound process and transactions; rollback failures and stop on lease expiry."
+        }
+      ]
+    },
+    "fmea_modes": [
+      {
+        "controls": "Sa-plan exact claims; bounded owner packets; immutable SQLite evidence; candidate-specific tests; separate effect-time runtime fence; hold unknown states",
+        "effect": "Corrupted coordination or unsafe false completion propagates to production decisions",
+        "cause": "Stale or fabricated evidence, conflicting writers, misleading runtime identity, or unbounded duplicate work",
+        "band": 5,
+        "rpn": 45,
+        "det": 3,
+        "o": 3,
+        "s": 5,
+        "id": "FM-STABILIZE-CONVERGE"
+      }
+    ],
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Analyst ordinal stabilization judgment for CONVERGE; owner Codex w2:p5; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Analyst ordinal stabilization judgment for CONVERGE; owner Codex w2:p5; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Analyst ordinal stabilization judgment for CONVERGE; owner Codex w2:p5; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "dependency": {
+        "value": 1,
+        "low": 1,
+        "high": 1,
+        "rationale": "Analyst ordinal stabilization judgment for CONVERGE; owner Codex w2:p5; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      },
+      "impact": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Analyst ordinal stabilization judgment for CONVERGE; owner Codex w2:p5; not a measured incident probability.",
+        "evidence_refs": [
+          "tools/sa-plan",
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "contracts/rules/20260907-0653-tri-agent-coordination.md"
+        ]
+      }
+    },
+    "blockers": [ "VERIFY", "JSON-PRODUCT" ],
+    "dependencies": [ "VERIFY", "JSON-PRODUCT" ],
+    "class": "P1",
+    "readiness": "blocked",
+    "task_state": "available",
+    "phase": "intake",
+    "scope": "Observe and coordinate stabilization of CONVERGE using existing native components; proposed owner Codex w2:p5. No runtime cutover or admission from this assessment.",
+    "actor": "codex-stabilization-2013",
+    "task_id": "CONVERGE",
+    "plan_id": "uos/stabilization/20260907-2013",
+    "assessment_id": "stabilization-20260907-2013-CONVERGE",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 4
+  }
+]

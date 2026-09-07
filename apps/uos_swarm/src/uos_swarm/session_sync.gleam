@@ -218,7 +218,10 @@ pub fn canonical_resource(resource: String) -> Result(String, String) {
   }
 }
 
-fn canonical_command(command: Command) -> Result(Command, String) {
+/// Public so `session_store` can apply the same workspace/resource
+/// canonicalization before entering its own SQLite transaction, exactly as
+/// `execute` does for the file journal.
+pub fn canonical_command(command: Command) -> Result(Command, String) {
   case command {
     Register(_, _, workspace, _, _) -> {
       use _ <- result.try(require_canonical_workspace(workspace))
@@ -262,7 +265,10 @@ fn fresh(
   Ok(current)
 }
 
-fn rebase_clock(
+/// Public so `session_store`'s read-only `observe` can normalize replayed
+/// state against the current host/boot/tick exactly like the file
+/// coordinator's `observe` does before running a status/inbox/check query.
+pub fn rebase_clock(
   state: State,
   host: String,
   boot: String,
@@ -691,6 +697,32 @@ pub fn event_string(event: Event) -> String {
   )
 }
 
+/// The exact bytes `make_event`'s digest is computed over: the canonical
+/// `body` sub-object, serialized. `session_store` persists this string
+/// verbatim as `events.body_json` so a stored row can recompute and verify
+/// its own digest, and so `session_store.replay` can rebuild a canonical
+/// journal line as `{"body":<body_json>,"digest":"<digest>"}` without
+/// re-encoding (and thereby risking byte drift from) the stored JSON.
+pub fn body_json_string(event: Event) -> String {
+  json.to_string(event_body(event))
+}
+
+/// The command sub-object exactly as embedded in `event_body`. Exposed so
+/// `session_store` can persist `events.command_json` as the same bytes,
+/// independent of the digest-bearing `body_json` column.
+pub fn command_to_json(command: Command) -> Json {
+  command_json(command)
+}
+
+/// Public wrapper over the private `event_decoder`, for callers (such as
+/// `session_store`) that reconstruct a single canonical journal line from
+/// stored columns and need to decode it back into an `Event` without
+/// duplicating the schema-version and field-shape checks below.
+pub fn decode_event(line: String) -> Result(Event, String) {
+  json.parse(line, event_decoder())
+  |> result.replace_error("malformed journal event; decode refused")
+}
+
 fn event_decoder() -> decode.Decoder(Event) {
   use schema <- decode.subfield(["body", "schema"], decode.string)
   use seq <- decode.subfield(["body", "sequence"], decode.int)
@@ -766,6 +798,149 @@ pub fn replay(journal: String) -> Result(State, String) {
     ))
     Ok(State(..next, digest: event.digest))
   })
+}
+
+/// Compact a journal after invalid events have been removed from it.
+///
+/// Incident 2026-09-07 20:00–21:21Z: a foreign writer OVERWROTE events 417–419
+/// in place with commands this module has no constructor for, destroying a
+/// lease claim and two reports and leaving the survivors unlinked. Removing the
+/// invalid files leaves sequence gaps, which `resign` refuses by design, so a
+/// separate mode is needed: `compact` rebuilds the SURVIVING events in file
+/// order, assigning contiguous sequences and canonical digests from genesis.
+///
+/// Content is never invented and never edited. An event whose command the
+/// coordinator would refuse in its new context — typically a `Release` whose
+/// `Claim` was destroyed — is not forced through: it is dropped from the chain
+/// and returned in the second element as `#(original_sequence, reason)` so the
+/// caller can quarantine it as evidence. A journal with nothing to compact
+/// returns the same events `resign` would.
+pub fn compact(
+  journal: String,
+) -> Result(#(List(Event), List(#(Int, String))), String) {
+  let lines =
+    string.split(journal, "\n")
+    |> list.filter(fn(line) { string.trim(line) != "" })
+  use #(_, rebuilt, orphaned) <- result.try(
+    list.try_fold(lines, #(empty(), [], []), fn(acc, line) {
+      let #(state, out, orphans) = acc
+      use stored <- result.try(
+        json.parse(line, event_decoder())
+        |> result.replace_error(
+          "malformed journal event after stored sequence "
+          <> int.to_string(state.sequence)
+          <> "; compact refused",
+        ),
+      )
+      let event =
+        make_event(
+          state,
+          stored.command,
+          stored.operation_id,
+          stored.host_id,
+          stored.boot_id,
+          stored.tick_us,
+          stored.utc_us,
+        )
+      case
+        apply(
+          state,
+          stored.command,
+          stored.operation_id,
+          stored.host_id,
+          stored.boot_id,
+          stored.tick_us,
+          stored.utc_us,
+        )
+      {
+        Ok(#(next, _, False)) ->
+          Ok(#(State(..next, digest: event.digest), [event, ..out], orphans))
+        Ok(#(_, _, True)) ->
+          Ok(
+            #(state, out, [
+              #(stored.sequence, "duplicate operation after compaction"),
+              ..orphans
+            ]),
+          )
+        Error(reason) ->
+          Ok(#(state, out, [#(stored.sequence, reason), ..orphans]))
+      }
+    }),
+  )
+  Ok(#(list.reverse(rebuilt), list.reverse(orphaned)))
+}
+
+/// Re-sign a journal whose byte form and digests were produced by a foreign
+/// writer (incident 2026-09-07 17:12:46Z: every event file was re-serialized
+/// and re-signed outside this module, so `replay` refuses the chain from
+/// event 1). The command content of every event is kept exactly; only the
+/// canonical byte form, the digest and the `previous_digest` link are
+/// recomputed from genesis with the same `make_event` this module uses to
+/// append. Sequence numbers must still be contiguous and every command must
+/// still be accepted by `apply`; anything else is refused with the offending
+/// sequence, so a content change cannot hide behind a re-signing. The caller
+/// writes the returned events to a NEW directory and keeps the foreign form
+/// as evidence; this function never touches storage.
+pub fn resign(journal: String) -> Result(List(Event), String) {
+  let lines =
+    string.split(journal, "\n")
+    |> list.filter(fn(line) { string.trim(line) != "" })
+  use #(_, rebuilt) <- result.try(
+    list.try_fold(lines, #(empty(), []), fn(acc, line) {
+      let #(state, out) = acc
+      use stored <- result.try(
+        json.parse(line, event_decoder())
+        |> result.replace_error(
+          "malformed journal event at sequence "
+          <> int.to_string(state.sequence + 1)
+          <> "; resign refused",
+        ),
+      )
+      use _ <- result.try(require(
+        stored.sequence == state.sequence + 1,
+        "sequence gap at stored event "
+          <> int.to_string(stored.sequence)
+          <> " (expected "
+          <> int.to_string(state.sequence + 1)
+          <> "); resign refused",
+      ))
+      let event =
+        make_event(
+          state,
+          stored.command,
+          stored.operation_id,
+          stored.host_id,
+          stored.boot_id,
+          stored.tick_us,
+          stored.utc_us,
+        )
+      use #(next, _, duplicate) <- result.try(
+        apply(
+          state,
+          stored.command,
+          stored.operation_id,
+          stored.host_id,
+          stored.boot_id,
+          stored.tick_us,
+          stored.utc_us,
+        )
+        |> result.map_error(fn(e) {
+          "event "
+          <> int.to_string(stored.sequence)
+          <> " refused by apply: "
+          <> e
+        }),
+      )
+      use _ <- result.try(require(
+        !duplicate,
+        "duplicate operation at event "
+          <> int.to_string(stored.sequence)
+          <> "; resign refused",
+      ))
+      Ok(#(State(..next, digest: event.digest), [event, ..out]))
+    }),
+  )
+  Ok(list.reverse(rebuilt))
 }
 
 pub fn receipt_json(receipt: Receipt, duplicate: Bool) -> Json {
