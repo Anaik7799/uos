@@ -3,10 +3,13 @@
 
 import cepaf_gleam/cockpit/visuals
 import cepaf_gleam/mcp/server as mcp_server
+import cepaf_gleam/mcp/tools as mcp_tools
 import cepaf_gleam/ui/domain.{Critical, Degraded, Healthy, Unknown}
 import cepaf_gleam/ui/state as mesh_state
 import cepaf_gleam/ui/tui/renderer.{Bright, Dark, Dim, Emergency, Normal}
 import cepaf_gleam/ui/zenoh_otel
+import gleam/dynamic/decode
+import gleam/json
 import gleam/option.{Some}
 import gleam/string
 import gleeunit/should
@@ -94,42 +97,107 @@ pub fn with_color_bold_test() {
 // System MCP tools (mesh state)
 // =============================================================================
 
-pub fn system_health_tool_returns_json_test() {
-  let result =
+fn system_tool_response(name: String, id: String) -> String {
+  let assert Some(response) =
     mcp_server.handle_request(
       "tools/call",
-      Some("1"),
-      "{\"jsonrpc\":\"2.0\",\"method\":\"tools/call\",\"params\":{\"name\":\"system_health\",\"arguments\":{}},\"id\":\"1\"}",
+      Some(id),
+      "{\"jsonrpc\":\"2.0\",\"method\":\"tools/call\",\"params\":{\"name\":\""
+        <> name
+        <> "\",\"arguments\":{}},\"id\":\""
+        <> id
+        <> "\"}",
     )
-  case result {
-    Some(r) -> string.contains(r, "container_count") |> should.be_true()
-    _ -> should.fail()
+  response
+}
+
+fn response_content(
+  response: String,
+) -> Result(List(String), json.DecodeError) {
+  let item_decoder = {
+    use text <- decode.field("text", decode.string)
+    decode.success(text)
+  }
+  let decoder = {
+    use content <- decode.subfield(
+      ["result", "content"],
+      decode.list(item_decoder),
+    )
+    decode.success(content)
+  }
+  json.parse(response, decoder)
+}
+
+fn assert_nif_unavailable(response: String, fabricated_field: String) {
+  let error_decoder = {
+    use is_error <- decode.subfield(["result", "isError"], decode.bool)
+    decode.success(is_error)
+  }
+  json.parse(response, error_decoder) |> should.equal(Ok(True))
+  response |> string.contains("UNAVAILABLE") |> should.be_true
+  response |> string.contains(fabricated_field) |> should.be_false
+}
+
+pub fn system_health_tool_returns_json_test() {
+  let response = system_tool_response("system_health", "1")
+  case mcp_tools.nif_runtime_available() {
+    False -> assert_nif_unavailable(response, "container_count")
+    True -> {
+      let assert Ok([content, ..]) = response_content(response)
+      let schema = {
+        use _ <- decode.field("status", decode.string)
+        use _ <- decode.field("interface", decode.string)
+        use _ <- decode.field("port", decode.int)
+        use _ <- decode.field("container_count", decode.int)
+        use _ <- decode.field("healthy_count", decode.int)
+        use _ <- decode.field("threat_level", decode.string)
+        use _ <- decode.field("zenoh_connected", decode.bool)
+        decode.success(Nil)
+      }
+      json.parse(content, schema) |> should.equal(Ok(Nil))
+    }
   }
 }
 
 pub fn system_dashboard_tool_returns_json_test() {
-  let result =
-    mcp_server.handle_request(
-      "tools/call",
-      Some("2"),
-      "{\"jsonrpc\":\"2.0\",\"method\":\"tools/call\",\"params\":{\"name\":\"system_dashboard\",\"arguments\":{}},\"id\":\"2\"}",
-    )
-  case result {
-    Some(r) -> string.contains(r, "Dashboard") |> should.be_true()
-    _ -> should.fail()
+  let response = system_tool_response("system_dashboard", "2")
+  case mcp_tools.nif_runtime_available() {
+    False -> assert_nif_unavailable(response, "container_count")
+    True -> {
+      let assert Ok([content, ..]) = response_content(response)
+      let schema = {
+        use _ <- decode.field("page", decode.string)
+        use _ <- decode.field("path", decode.string)
+        use _ <- decode.field("status", decode.string)
+        use _ <- decode.field("container_count", decode.int)
+        use _ <- decode.field("healthy_count", decode.int)
+        use _ <- decode.field("health_pct", decode.float)
+        use _ <- decode.field("zenoh_connected", decode.bool)
+        decode.success(Nil)
+      }
+      json.parse(content, schema) |> should.equal(Ok(Nil))
+    }
   }
 }
 
 pub fn system_verification_tool_returns_json_test() {
-  let result =
-    mcp_server.handle_request(
-      "tools/call",
-      Some("3"),
-      "{\"jsonrpc\":\"2.0\",\"method\":\"tools/call\",\"params\":{\"name\":\"system_verification\",\"arguments\":{}},\"id\":\"3\"}",
-    )
-  case result {
-    Some(r) -> string.contains(r, "Verification") |> should.be_true()
-    _ -> should.fail()
+  let response = system_tool_response("system_verification", "3")
+  case mcp_tools.nif_runtime_available() {
+    False -> assert_nif_unavailable(response, "tests_total")
+    True -> {
+      let assert Ok([content, ..]) = response_content(response)
+      let schema = {
+        use _ <- decode.field("page", decode.string)
+        use _ <- decode.field("status", decode.string)
+        use _ <- decode.field("sil_level", decode.string)
+        use _ <- decode.field("tests_total", decode.int)
+        use _ <- decode.field("tests_passed", decode.int)
+        use _ <- decode.field("tests_failed", decode.int)
+        use _ <- decode.field("compliance_percent", decode.float)
+        decode.success(Nil)
+      }
+      json.parse(content, schema) |> should.equal(Ok(Nil))
+    }
   }
 }
 

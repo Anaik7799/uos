@@ -11,9 +11,14 @@ import gleeunit/should
 
 pub fn declared_stubs_are_not_operational_tools_test() {
   let names = tools.operational_tool_definitions() |> list.map(fn(t) { t.name })
-  names |> list.length |> should.equal(26)
   tools.unavailable_tools
   |> list.each(fn(name) { names |> list.contains(name) |> should.be_false })
+  case tools.nif_runtime_available() {
+    True -> Nil
+    False ->
+      tools.nif_tools
+      |> list.each(fn(name) { names |> list.contains(name) |> should.be_false })
+  }
 }
 
 pub fn gates_and_bridge_never_manufacture_success_test() {

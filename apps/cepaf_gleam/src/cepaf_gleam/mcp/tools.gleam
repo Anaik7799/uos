@@ -8,6 +8,10 @@
 import cepaf_gleam/mcp/protocol.{type ToolDefinition, ToolDefinition}
 import gleam/json
 import gleam/list
+import gleam/option.{type Option, None, Some}
+
+@external(erlang, "c3i_nif", "runtime_loaded")
+pub fn nif_runtime_available() -> Bool
 
 /// Historical declarations with no executable runtime binding are retained in
 /// the catalog as unavailable, and excluded from operational tools/list.
@@ -17,15 +21,43 @@ pub const unavailable_tools = [
   "vault_list_secrets", "vault_policy_get", "vault_audit_tail", "vault_health",
 ]
 
+/// Tools whose adapters call the c3i_nif module. Compatibility aliases are
+/// included even though they are not advertised in tools/list.
+pub const nif_tools = [
+  "plan_status", "plan_list_pending", "plan_list", "plan_get", "plan_add",
+  "plan_update", "plan_search", "system_health", "system_dashboard",
+  "system_immune", "system_zenoh", "system_verification", "planning_query",
+  "todo_status", "knowledge_search", "verification_run", "dark_cockpit_mode",
+  "mesh_topology",
+]
+
+pub fn unavailable_reason(name: String) -> Option(String) {
+  case list.contains(unavailable_tools, name) {
+    True -> Some("no runtime binding")
+    False ->
+      case list.contains(nif_tools, name) && !nif_runtime_available() {
+        True -> Some("C3I NIF runtime is not loaded")
+        False -> None
+      }
+  }
+}
+
 pub fn operational_tool_definitions() -> List(ToolDefinition) {
   get_tool_definitions()
-  |> list.filter(fn(tool) { !list.contains(unavailable_tools, tool.name) })
+  |> list.filter(fn(tool) { unavailable_reason(tool.name) == None })
 }
 
 pub fn catalog_json() -> json.Json {
   json.object([
     #("page", json.string("MCP Server")),
     #("status", json.string("runtime_not_probed")),
+    #(
+      "nif_runtime_status",
+      json.string(case nif_runtime_available() {
+        True -> "available"
+        False -> "unavailable"
+      }),
+    ),
     #("active_sessions", json.null()),
     #("declared_tool_count", json.int(list.length(get_tool_definitions()))),
     #(
@@ -40,9 +72,9 @@ pub fn catalog_json() -> json.Json {
           #("description", json.string(tool.description)),
           #(
             "status",
-            json.string(case list.contains(unavailable_tools, tool.name) {
-              True -> "UNAVAILABLE: no runtime binding"
-              False ->
+            json.string(case unavailable_reason(tool.name) {
+              Some(reason) -> "UNAVAILABLE: " <> reason
+              None ->
                 "ADAPTER_PRESENT: live execution not verified by this catalog"
             }),
           ),

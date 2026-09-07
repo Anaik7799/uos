@@ -14,7 +14,6 @@ import cepaf_gleam/c3i/nif as c3i_nif
 import cepaf_gleam/mcp/protocol.{type ToolDefinition}
 import cepaf_gleam/mcp/tools
 import cepaf_gleam/ui/wisp/router as wisp_router
-import gleam/dynamic
 import gleam/dynamic/decode
 import gleam/io
 import gleam/json
@@ -26,14 +25,14 @@ import gleam/string
 // Erlang FFI bindings
 // ---------------------------------------------------------------------------
 
-@external(erlang, "io", "get_line")
-fn erl_get_line(prompt: String) -> dynamic.Dynamic
+type StdioLine {
+  Line(String)
+  EndOfFile
+  ReadError(String)
+}
 
-@external(erlang, "erlang", "is_binary")
-fn is_binary(val: dynamic.Dynamic) -> Bool
-
-@external(erlang, "gleam_stdlib", "identity")
-fn coerce_to_string(val: dynamic.Dynamic) -> String
+@external(erlang, "mcp_stdio_ffi", "read_line")
+fn read_stdio_line() -> StdioLine
 
 @external(erlang, "cepaf_gleam_ffi", "file_read")
 fn erl_file_read(path: String) -> Result(BitArray, String)
@@ -58,11 +57,9 @@ pub fn start() {
 // ---------------------------------------------------------------------------
 
 fn loop() {
-  let line = erl_get_line("")
-  case is_binary(line) {
-    True -> {
-      let line_str: String = coerce_to_string(line)
-      let trimmed = string.trim(line_str)
+  case read_stdio_line() {
+    Line(line) -> {
+      let trimmed = string.trim(line)
       case trimmed {
         "" -> loop()
         _ -> {
@@ -78,9 +75,9 @@ fn loop() {
         }
       }
     }
-    False -> {
-      io.println_error("[mcp-server] stdin closed, shutting down")
-    }
+    EndOfFile -> io.println_error("[mcp-server] stdin closed, shutting down")
+    ReadError(reason) ->
+      io.println_error("[mcp-server] stdin error, shutting down: " <> reason)
   }
 }
 
@@ -88,32 +85,38 @@ fn loop() {
 // JSON-RPC parsing
 // ---------------------------------------------------------------------------
 
+type RequestId {
+  Notification
+  PresentId(json.Json)
+}
+
 fn process_line(line: String) -> Option(String) {
-  let method_decoder = {
-    use m <- decode.field("method", decode.string)
-    decode.success(m)
-  }
-  let id_decoder = {
-    use i <- decode.field(
-      "id",
-      decode.one_of(decode.map(decode.string, json.string), [
-        decode.map(decode.int, json.int),
-      ]),
+  let id_decoder =
+    decode.one_of(
+      decode.map(decode.string, fn(value) { PresentId(json.string(value)) }),
+      [
+        decode.map(decode.int, fn(value) { PresentId(json.int(value)) }),
+        decode.map(decode.float, fn(value) { PresentId(json.float(value)) }),
+      ],
     )
-    decode.success(i)
+  let request_decoder = {
+    use m <- decode.field("method", decode.string)
+    use i <- decode.optional_field("id", Notification, id_decoder)
+    decode.success(#(m, i))
   }
 
-  case json.parse(line, method_decoder) {
-    Ok(method) -> {
-      let id_opt = case json.parse(line, id_decoder) {
-        Ok(i) -> Some(i)
-        Error(_) -> None
+  case json.parse(line, decode.dynamic) {
+    Error(_) -> Some(error_response(None, -32_700, "Parse error"))
+    Ok(document) ->
+      case decode.run(document, request_decoder) {
+        Error(_) -> Some(error_response(None, -32_600, "Invalid Request"))
+        Ok(#(method, PresentId(id))) -> dispatch(method, Some(id), line)
+        Ok(#(method, Notification)) -> {
+          // JSON-RPC notifications execute but never receive a response.
+          let _ = dispatch(method, None, line)
+          None
+        }
       }
-      dispatch(method, id_opt, line)
-    }
-    Error(_) -> {
-      Some(error_response(None, -32_700, "Parse error"))
-    }
   }
 }
 
@@ -201,6 +204,17 @@ fn execute_tool(
   id: Option(json.Json),
   raw_line: String,
 ) -> String {
+  case tools.unavailable_reason(name) {
+    Some(reason) -> tool_unavailable(id, name, reason)
+    None -> execute_available_tool(name, id, raw_line)
+  }
+}
+
+fn execute_available_tool(
+  name: String,
+  id: Option(json.Json),
+  raw_line: String,
+) -> String {
   case name {
     // Planning tools (Rust NIF -> Smriti.db)
     "plan_status" -> tool_plan_status(id)
@@ -229,10 +243,10 @@ fn execute_tool(
     "ooda_phase" -> tool_page_json(id, "/api/v1/ooda")
     "fractal_status" -> tool_page_json(id, "/api/v1/verification")
     "prajna_health" -> tool_page_json(id, "/api/v1/prajna")
-    "dark_cockpit_mode" -> tool_content_response(id, c3i_nif.system_dashboard())
+    "dark_cockpit_mode" -> tool_adapter_response(id, c3i_nif.system_dashboard())
     "integrity_check" -> tool_page_json(id, "/api/v1/integrity")
     "evolution_metrics" -> tool_page_json(id, "/api/v1/evolution")
-    "mesh_topology" -> tool_content_response(id, c3i_nif.system_zenoh())
+    "mesh_topology" -> tool_adapter_response(id, c3i_nif.system_zenoh())
     "ooda_decide" -> tool_page_json(id, "/api/v1/ooda/decide")
     "kms_catalog" -> tool_page_json(id, "/api/v1/kms")
     // ZigVM / Hermes Harness tools
@@ -243,11 +257,6 @@ fn execute_tool(
     "run_gate" -> tool_run_gate(id, raw_line)
     "zk_search" -> tool_zk_search(id, raw_line)
     "sa_bridge_submit" -> tool_sa_bridge_submit(id, raw_line)
-    "vault_status"
-    | "vault_list_secrets"
-    | "vault_policy_get"
-    | "vault_audit_tail"
-    | "vault_health" -> tool_unavailable(id, name)
     _ -> error_response(id, -32_602, "Unknown tool: " <> name)
   }
 }
@@ -257,11 +266,11 @@ fn execute_tool(
 // ---------------------------------------------------------------------------
 
 fn tool_plan_status(id: Option(json.Json)) -> String {
-  tool_content_response(id, c3i_nif.plan_status())
+  tool_adapter_response(id, c3i_nif.plan_status())
 }
 
 fn tool_plan_list_pending(id: Option(json.Json)) -> String {
-  tool_content_response(id, c3i_nif.plan_list_pending())
+  tool_adapter_response(id, c3i_nif.plan_list_pending())
 }
 
 fn tool_plan_list(id: Option(json.Json), raw_line: String) -> String {
@@ -273,7 +282,7 @@ fn tool_plan_list(id: Option(json.Json), raw_line: String) -> String {
     Ok(s) -> s
     Error(_) -> "all"
   }
-  tool_content_response(id, c3i_nif.plan_list_by_status(status))
+  tool_adapter_response(id, c3i_nif.plan_list_by_status(status))
 }
 
 fn tool_plan_get(id: Option(json.Json), raw_line: String) -> String {
@@ -282,7 +291,7 @@ fn tool_plan_get(id: Option(json.Json), raw_line: String) -> String {
     decode.success(i)
   }
   case json.parse(raw_line, id_decoder) {
-    Ok(task_id) -> tool_content_response(id, c3i_nif.plan_get_task(task_id))
+    Ok(task_id) -> tool_adapter_response(id, c3i_nif.plan_get_task(task_id))
     Error(_) -> error_response(id, -32_602, "Missing params.arguments.id")
   }
 }
@@ -301,7 +310,7 @@ fn tool_plan_add(id: Option(json.Json), raw_line: String) -> String {
   }
   case json.parse(raw_line, decoder) {
     Ok(#(title, priority)) ->
-      tool_content_response(id, c3i_nif.plan_add_task(title, priority))
+      tool_adapter_response(id, c3i_nif.plan_add_task(title, priority))
     Error(_) ->
       error_response(
         id,
@@ -322,7 +331,7 @@ fn tool_plan_update(id: Option(json.Json), raw_line: String) -> String {
   }
   case json.parse(raw_line, decoder) {
     Ok(#(task_id, status)) ->
-      tool_content_response(id, c3i_nif.plan_update_task(task_id, status))
+      tool_adapter_response(id, c3i_nif.plan_update_task(task_id, status))
     Error(_) ->
       error_response(
         id,
@@ -338,7 +347,7 @@ fn tool_plan_search(id: Option(json.Json), raw_line: String) -> String {
     decode.success(q)
   }
   case json.parse(raw_line, query_decoder) {
-    Ok(query) -> tool_content_response(id, c3i_nif.plan_search(query))
+    Ok(query) -> tool_adapter_response(id, c3i_nif.plan_search(query))
     Error(_) -> error_response(id, -32_602, "Missing params.arguments.query")
   }
 }
@@ -348,23 +357,23 @@ fn tool_plan_search(id: Option(json.Json), raw_line: String) -> String {
 // ---------------------------------------------------------------------------
 
 fn tool_system_health(id: Option(json.Json)) -> String {
-  tool_content_response(id, c3i_nif.system_health())
+  tool_adapter_response(id, c3i_nif.system_health())
 }
 
 fn tool_system_dashboard(id: Option(json.Json)) -> String {
-  tool_content_response(id, c3i_nif.system_dashboard())
+  tool_adapter_response(id, c3i_nif.system_dashboard())
 }
 
 fn tool_system_immune(id: Option(json.Json)) -> String {
-  tool_content_response(id, c3i_nif.system_immune())
+  tool_adapter_response(id, c3i_nif.system_immune())
 }
 
 fn tool_system_zenoh(id: Option(json.Json)) -> String {
-  tool_content_response(id, c3i_nif.system_zenoh())
+  tool_adapter_response(id, c3i_nif.system_zenoh())
 }
 
 fn tool_system_verification(id: Option(json.Json)) -> String {
-  tool_content_response(id, c3i_nif.system_verification())
+  tool_adapter_response(id, c3i_nif.system_verification())
 }
 
 // ---------------------------------------------------------------------------
@@ -380,11 +389,11 @@ fn tool_knowledge_search(id: Option(json.Json), raw_line: String) -> String {
     Ok(q) -> q
     Error(_) -> ""
   }
-  tool_content_response(id, c3i_nif.knowledge_search(query))
+  tool_adapter_response(id, c3i_nif.knowledge_search(query))
 }
 
 fn tool_verification_run(id: Option(json.Json)) -> String {
-  tool_content_response(id, c3i_nif.verification_run())
+  tool_adapter_response(id, c3i_nif.verification_run())
 }
 
 fn tool_read_file(id: Option(json.Json), raw_line: String) -> String {
@@ -396,7 +405,7 @@ fn tool_read_file(id: Option(json.Json), raw_line: String) -> String {
     Ok(path) -> {
       case read_file_as_string(path) {
         Ok(content) -> tool_content_response(id, content)
-        Error(e) -> tool_content_response(id, "Error reading file: " <> e)
+        Error(e) -> tool_error_response(id, "Error reading file: " <> e)
       }
     }
     Error(_) -> error_response(id, -32_602, "Missing params.arguments.path")
@@ -405,7 +414,7 @@ fn tool_read_file(id: Option(json.Json), raw_line: String) -> String {
 
 /// Route a per-page tool through the Wisp router to get JSON data.
 fn tool_page_json(id: Option(json.Json), api_path: String) -> String {
-  tool_content_response(id, wisp_router.route(api_path))
+  tool_adapter_response(id, wisp_router.route(api_path))
 }
 
 // ---------------------------------------------------------------------------
@@ -442,6 +451,54 @@ fn tool_content_response(id: Option(json.Json), text: String) -> String {
       ),
     ]),
   )
+}
+
+fn tool_error_response(id: Option(json.Json), text: String) -> String {
+  success_response(
+    id,
+    json.object([
+      #("isError", json.bool(True)),
+      #(
+        "content",
+        json.preprocessed_array([
+          json.object([
+            #("type", json.string("text")),
+            #("text", json.string(text)),
+          ]),
+        ]),
+      ),
+    ]),
+  )
+}
+
+fn adapter_failed(text: String) -> Bool {
+  let error_decoder = {
+    use _ <- decode.field("error", decode.dynamic)
+    decode.success(True)
+  }
+  let ok_decoder = {
+    use ok <- decode.field("ok", decode.bool)
+    decode.success(!ok)
+  }
+  let status_decoder = {
+    use status <- decode.field("status", decode.string)
+    decode.success(string.lowercase(status) == "error")
+  }
+  case
+    json.parse(text, error_decoder),
+    json.parse(text, ok_decoder),
+    json.parse(text, status_decoder)
+  {
+    Ok(True), _, _ | _, Ok(True), _ | _, _, Ok(True) -> True
+    _, _, _ -> False
+  }
+}
+
+fn tool_adapter_response(id: Option(json.Json), text: String) -> String {
+  case adapter_failed(text) {
+    True -> tool_error_response(id, text)
+    False -> tool_content_response(id, text)
+  }
 }
 
 fn success_response(id: Option(json.Json), result: json.Json) -> String {
@@ -498,58 +555,45 @@ pub fn handle_request_raw(line: String) -> Option(String) {
 // ---------------------------------------------------------------------------
 
 /// Missing runtime bindings are tool errors, never synthesized success receipts.
-fn tool_unavailable(id: Option(json.Json), name: String) -> String {
-  success_response(
+fn tool_unavailable(
+  id: Option(json.Json),
+  name: String,
+  reason: String,
+) -> String {
+  tool_error_response(
     id,
-    json.object([
-      #("isError", json.bool(True)),
-      #(
-        "content",
-        json.array(
-          [
-            json.object([
-              #("type", json.string("text")),
-              #(
-                "text",
-                json.string(
-                  "UNAVAILABLE: "
-                  <> name
-                  <> " has no verified runtime binding; no action or verification was performed.",
-                ),
-              ),
-            ]),
-          ],
-          fn(x) { x },
-        ),
-      ),
-    ]),
+    "UNAVAILABLE: "
+      <> name
+      <> " — "
+      <> reason
+      <> "; no action or verification was performed.",
   )
 }
 
 fn tool_control_loop(id: Option(json.Json), _raw_line: String) -> String {
-  tool_unavailable(id, "control_loop")
+  tool_unavailable(id, "control_loop", "no verified runtime binding")
 }
 
 fn tool_safety_status(id: Option(json.Json)) -> String {
-  tool_unavailable(id, "safety_status")
+  tool_unavailable(id, "safety_status", "no verified runtime binding")
 }
 
 fn tool_registry_status(id: Option(json.Json)) -> String {
-  tool_unavailable(id, "registry_status")
+  tool_unavailable(id, "registry_status", "no verified runtime binding")
 }
 
 fn tool_run_selfcheck(id: Option(json.Json), _raw_line: String) -> String {
-  tool_unavailable(id, "run_selfcheck")
+  tool_unavailable(id, "run_selfcheck", "no verified runtime binding")
 }
 
 fn tool_run_gate(id: Option(json.Json), _raw_line: String) -> String {
-  tool_unavailable(id, "run_gate")
+  tool_unavailable(id, "run_gate", "no verified runtime binding")
 }
 
 fn tool_zk_search(id: Option(json.Json), _raw_line: String) -> String {
-  tool_unavailable(id, "zk_search")
+  tool_unavailable(id, "zk_search", "no verified runtime binding")
 }
 
 fn tool_sa_bridge_submit(id: Option(json.Json), _raw_line: String) -> String {
-  tool_unavailable(id, "sa_bridge_submit")
+  tool_unavailable(id, "sa_bridge_submit", "no verified runtime binding")
 }

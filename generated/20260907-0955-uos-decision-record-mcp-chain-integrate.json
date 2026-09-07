@@ -1,0 +1,90 @@
+{
+  "carrier": "uos-decision-record/v1",
+  "phase": "prepared",
+  "decision_id": "DR-20260907-0955-L0FABLE-MCP-CHAIN-INTEGRATE",
+  "identity_scope": {
+    "hive": "uos-tui-swarm",
+    "tenant": "uos",
+    "actor_kind": "model-agent (design authority, L0)",
+    "actor_id": "L0-fable",
+    "session": "656f0d2c-6019-4d9e-b0ce-b9e39b240047",
+    "provider_model": {
+      "provider": "anthropic",
+      "model": "claude-fable-5-1",
+      "self_report": true
+    }
+  },
+  "task_authority": {
+    "task": "integrate the MCP chain cb625f48 -> 4eabfc34 -> 88fe4fa8 (corrective, stdio completion, legacy expectation fix)",
+    "resource": "integration/main",
+    "lease_epoch": "claim at action time; refusal aborts",
+    "proposed_action": "bookmark set integration/uos-swarm and main to merge vyuvlqrp after the full cepaf failure set equals the mainline set",
+    "policy_refs": [
+      "SYNC-03",
+      "SC-HIVE-DECISION-001",
+      "jj discipline D3/D4"
+    ],
+    "authorization": "Codex: 'Please integrate pending MCP chain through 88fe preserving parents, run appropriate combined gate and report exact main'"
+  },
+  "evidence_choice": {
+    "observations": [
+      {
+        "source": "split-gate.sh",
+        "value": "uos_tui 198, uos_swarm 502, 0 warnings",
+        "grade": "Measured"
+      },
+      {
+        "source": "eunit focused",
+        "value": "wave3_4_test 20/20, mcp_catalog_truth_test 4/4, mcp_runtime_truth_test 5/5",
+        "grade": "Measured"
+      },
+      {
+        "source": "producer report",
+        "value": "29/29 focused pass; positive NIF path UNRUN (no .so); 1 MiB line bound after io:get_line allocation",
+        "grade": "Reported (peer self-report)"
+      }
+    ],
+    "alternatives": [
+      {
+        "option": "land now",
+        "tradeoff": "attribution pending"
+      },
+      {
+        "option": "wait for the full suite",
+        "tradeoff": "9 minutes"
+      }
+    ],
+    "selected": "wait for the full suite; land only if the failure set equals the mainline set (164)",
+    "rationale": "the previous attempt was parked for exactly this reason",
+    "risks": [
+      "NIF positive path untested here"
+    ],
+    "unresolved": []
+  },
+  "process": {
+    "steps": [
+      "full cepaf suite",
+      "diff",
+      "claim lease (abort on refusal)",
+      "bookmarks",
+      "release",
+      "Integrate + session report",
+      "completed record",
+      "retire integration/candidates-mcp-chain-pending"
+    ],
+    "rollback": "bookmarks back to 643c1344",
+    "escalation": "any new failure -> park again with names"
+  },
+  "forecast": {
+    "horizon": "20 min",
+    "clock_domain": "UTC host nas-1",
+    "observed_at": "2026-09-07T09:55:34.220255+00:00",
+    "expires_at": "2026-09-07T10:15:34.220255+00:00",
+    "predicted_outcome": "failure set identical to mainline (164); chain lands",
+    "probability": 0.9,
+    "basis": "Estimated: the only prior new failures were the three wave3_4 tests now fixed; not calibrated",
+    "unknowns": [
+      "NIF-family flakiness (Unknown)"
+    ]
+  }
+}
