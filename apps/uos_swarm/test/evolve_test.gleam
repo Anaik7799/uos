@@ -3,6 +3,7 @@ import gleam/string
 import gleeunit/should
 import uos_swarm/dream
 import uos_swarm/evolve
+import uos_swarm/sangita
 
 fn p(id: String, alpha: Float, beta: Float) -> evolve.Proposal {
   evolve.Proposal(
@@ -196,4 +197,25 @@ pub fn from_jsonl_skips_malformed_lines_test() {
   let text = "not json\n" <> evolve.to_jsonl([p("a", 5.0, 1.0)])
   let round = evolve.from_jsonl(text)
   list.length(round) |> should.equal(1)
+}
+
+pub fn record_in_harmony_refuses_a_drop_test() {
+  let p =
+    evolve.Proposal(
+      "p-harmony",
+      "verify the quiet senders",
+      "verify",
+      1.0,
+      1.0,
+      evolve.Proposed,
+      "deterministic",
+      0.0,
+      [],
+    )
+  let hi = sangita.Harmony(0.9, [], [], 1, "Yaman")
+  let lo = sangita.Harmony(0.6, [], [], 1, "Malkauns")
+  let assert Error(why) = evolve.record_in_harmony(p, True, "ev-1", hi, lo)
+  string.contains(why, "harmony gate refused") |> should.be_true
+  let assert Ok(q) = evolve.record_in_harmony(p, True, "ev-1", hi, hi)
+  q.alpha |> should.equal(2.0)
 }

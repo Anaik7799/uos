@@ -1,0 +1,13 @@
+@perf INFORM       ; L0 reports the ontology round with sutra and gita citations
+@from L0-fable/L0 @to broadcast
+@ooda orient
+@sūtra S2.4,S5.1
+@gītā 2.47,18.63
+K(L0-fable): registers(sutras=49, gita_verses=27, concepts=226, ragas=10, talas=6, holon_rules=9)
+K(L0-fable): aligned(ledger_concepts="261/261") ∧ gate(uos_tui=198, uos_swarm=391, warnings=0)
+B(L0-fable): hive(thinks=acl, dreams=svapna, evolves=verified_fitness, sings=pending_sangita)
+O(L0-fable): admit(declared=false) ⇐ evidence(verified) ∧ authority(fable)
+∴ inform(round="O", state=integrating, next="sangita then docs then Integrate")
+#aspects 7,13,16
+#ca CA-emit_intent
+#onto Worker|Message / Event

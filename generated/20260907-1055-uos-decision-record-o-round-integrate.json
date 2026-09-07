@@ -1,0 +1,180 @@
+{
+  "carrier": "uos-decision-record/v1",
+  "phase": "prepared",
+  "decision_id": "DR-20260907-1055-L0FABLE-O-ROUND-INTEGRATE",
+  "identity_scope": {
+    "hive": "uos-tui-swarm",
+    "tenant": "uos",
+    "actor_kind": "model-agent (design authority, L0)",
+    "actor_id": "L0-fable",
+    "session": "656f0d2c-6019-4d9e-b0ce-b9e39b240047",
+    "session_generation": "session_sync sequence 21 (heartbeat op l0-fable-heartbeat-20260907-1050)",
+    "provider_model": {
+      "provider": "anthropic",
+      "model": "claude-fable-5-1",
+      "self_report": true
+    }
+  },
+  "task_authority": {
+    "task": "round O integration: system ontology, sutra/gita, raga/tala + holon rules, dream/evolve, C06 router, sangita",
+    "goal": "land the ontology round on integration/uos-swarm and main with gates green; hive+tenant scoped; no private chain-of-thought disclosed",
+    "candidate_revision": {
+      "main": "e83b24e0e9cdb14c5fd4b2760e60de6ff6ca2800",
+      "chain": [
+        "yvmnnloymuvu",
+        "tnmyqrrknmyp",
+        "zkuyxsxptynr",
+        "tokstztvqzww",
+        "opnkoqpvputl",
+        "<sangita pending>"
+      ]
+    },
+    "resource": "integration/main",
+    "lease_epoch": "to be claimed at action time (refusal aborts)",
+    "proposed_action": "jj bookmark set integration/uos-swarm and main to the chain head after gate PASS",
+    "policy_refs": [
+      "contracts/rules/20260907-0653-tri-agent-coordination.md SYNC-03/05/06",
+      "coord.default_policy design_models=[fable]",
+      "SC-HIVE-DECISION-001"
+    ],
+    "authorization": "operator directive 'lift the pause, execute the tui/swarm split with cheapest agents' + Codex relinquished integration writing; sole main integrator"
+  },
+  "evidence_choice": {
+    "observations": [
+      {
+        "source": "split-gate.sh on split-int",
+        "value": "uos_tui 198 tests, uos_swarm 391 tests, 0 warnings, boundary empty",
+        "grade": "Measured",
+        "observed_at": "2026-09-07T08:27:51.181346+00:00"
+      },
+      {
+        "source": "gleam run -- ontology check <ledger>",
+        "value": "aligned 261/261",
+        "grade": "Measured"
+      },
+      {
+        "source": "board validate",
+        "value": "194 messages valid, 3 explicit causal gaps",
+        "grade": "Measured"
+      },
+      {
+        "source": "worker self-reports O-1..O-5",
+        "value": "tests 291/284/301/307/291 in their workspaces",
+        "grade": "Estimated (model self-report, re-measured after rebase: 391 combined)"
+      }
+    ],
+    "freshness": "same host/boot; UTC 08:27:51Z",
+    "constraints": [
+      "no edits to Codex-owned session_sync*/herdr*/board-insights modules",
+      "no main move without a live lease",
+      "declared evidence not admissible"
+    ],
+    "alternatives": [
+      {
+        "option": "integrate now without sangita",
+        "tradeoff": "earlier mainline, second integration later"
+      },
+      {
+        "option": "wait for sangita then integrate once",
+        "tradeoff": "one gate run, one lease, slightly later"
+      }
+    ],
+    "selected": "wait for sangita (O-6) then integrate once",
+    "rationale": "one gate, one lease claim, one Integrate message; O-6 is bounded and near completion",
+    "risks": [
+      "O-6 may not converge (then integrate five and record NotApplicable for sangita)",
+      "rebase conflicts on shared files (none so far: disjoint ownership)"
+    ],
+    "unresolved": [
+      "harmony gate wiring into evolve depends on O-6 API"
+    ]
+  },
+  "process": {
+    "steps": [
+      "rebase O-6 change onto opnkoqpvputl",
+      "alias sangita local types to raga where possible; wire harmony_gate into evolve.record",
+      "split-gate.sh + ontology check + board validate",
+      "write completed decision record",
+      "heartbeat + claim integration/main (abort on refusal)",
+      "bookmark set integration/uos-swarm and main; jj new",
+      "release lease; post Integrate with decision_record ref"
+    ],
+    "dependencies": [
+      "O-6 completion"
+    ],
+    "verification": "gate PASS (both builds 0 warnings, both suites green), alignment 100%, board valid",
+    "rollback": "bookmarks can be moved back to sslrvptv (jj op restore); no destructive operation",
+    "escalation": "any red gate -> jidoka: no bookmark move, Andon amber on the board"
+  },
+  "shared_state": {
+    "goals": [
+      "honest admission",
+      "cheapest adequate tier",
+      "separate streams",
+      "hive that thinks, dreams, evolves, sings in harmony"
+    ],
+    "beliefs": [
+      {
+        "claim": "O-6 finishes within 20 min",
+        "basis": "other O workers took 17-33 min",
+        "grade": "Estimated"
+      }
+    ],
+    "open_questions": [
+      "will the default workspace be updated by Codex to the new package paths?"
+    ],
+    "active_task": "round O integration",
+    "constraints": [
+      "VCS: only my workspaces",
+      "budget: no paid dispatch"
+    ],
+    "resources": {
+      "tokens_subagents_round_O": "O-1 355971, O-2 371741, O-3 353808, O-4 390150, O-5 327452, O-6 unknown (running)",
+      "paid_usd": 0.0
+    },
+    "next_actions": [
+      "integrate",
+      "docs (Haiku)",
+      "send audio to operator"
+    ]
+  },
+  "forecast": {
+    "horizon": "next 60 min",
+    "clock_domain": "UTC host nas-1 (chrony offset < 1 s per mandate receipt)",
+    "observed_at": "2026-09-07T08:27:51.181346+00:00",
+    "expires_at": "2026-09-07T09:27:51.181346+00:00",
+    "predicted_outcome": "gate PASS and main advanced with all six changes",
+    "alternatives": [
+      "five changes integrated, sangita deferred"
+    ],
+    "assumptions": [
+      "no concurrent writer touches my modules",
+      "router stays up"
+    ],
+    "confidence": {
+      "probability_gate_pass": 0.85,
+      "basis": "5 of 5 worker changes so far rebased without conflict and passed gates; Estimated, not calibrated"
+    },
+    "duration_estimate_min": {
+      "value": 45,
+      "grade": "Estimated"
+    },
+    "cost_estimate": {
+      "subagent_tokens": "~350k for O-6 + ~150k Haiku docs (Estimated)",
+      "usd_paid": 0.0
+    },
+    "failure_signals": [
+      "rebase conflict",
+      "test failure in merged tree",
+      "lease refused"
+    ],
+    "unknowns": [
+      "O-6 wall time (Unknown: not yet observed)",
+      "provider billing for subagent tokens (Unknown: unmetered)"
+    ]
+  },
+  "labels": {
+    "private_chain_of_thought": "not collected",
+    "model_self_report": "yes, marked per field"
+  }
+}

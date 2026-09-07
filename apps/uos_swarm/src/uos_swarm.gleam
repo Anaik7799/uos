@@ -40,10 +40,13 @@ import uos_swarm/board.{Agent, Causality, Draft, Semantics}
 import uos_swarm/cockpit
 import uos_swarm/coord
 import uos_swarm/fmea
+import uos_swarm/gita
 import uos_swarm/holon
 import uos_swarm/manager
 import uos_swarm/ooda
+import uos_swarm/raga
 import uos_swarm/stpa
+import uos_swarm/sutra
 import uos_swarm/swarm
 import uos_swarm/system_audit
 import uos_swarm/system_ontology
@@ -255,6 +258,13 @@ pub fn main() -> Nil {
         )
       })
     }
+    ["sutra"] -> io.println(sutra.to_markdown())
+    ["sutra", "json"] -> io.println(json.to_string(sutra.to_json()))
+    ["gita"] -> io.println(gita.to_markdown())
+    ["gita", "json"] -> io.println(json.to_string(gita.to_json()))
+    ["holon", "rules"] -> io.println(holon.base_rules_markdown())
+    ["raga"] -> io.println(raga.to_markdown())
+    ["raga", "json"] -> io.println(json.to_string(raga.to_json()))
     ["holon"] -> io.println(holon.to_markdown(holon.holarchy()))
     ["holon-json"] ->
       io.println(json.to_string(holon.to_json(holon.holarchy())))

@@ -32,6 +32,7 @@ import gleam/result
 import gleam/string
 import uos_swarm/agent_runtime
 import uos_swarm/dream
+import uos_swarm/sangita
 
 // ---------------------------------------------------------------------------
 // Types
@@ -331,4 +332,21 @@ pub fn from_jsonl(text: String) -> List(Proposal) {
   |> list.filter_map(fn(l) {
     json.parse(from: l, using: proposal_decoder()) |> result.replace_error(Nil)
   })
+}
+
+/// Growth in harmony: a verified outcome is recorded only when the hive's harmony
+/// after the trial has not dropped below the harmony before it (`sangita.harmony_gate`).
+/// A failed gate returns the explanation and leaves the proposal untouched, so evolution
+/// can never adopt a change that makes the hive less consonant.
+pub fn record_in_harmony(
+  p: Proposal,
+  verified_pass: Bool,
+  evidence_ref: String,
+  before: sangita.Harmony,
+  after: sangita.Harmony,
+) -> Result(Proposal, String) {
+  case sangita.harmony_gate(before, after) {
+    Ok(_) -> Ok(record(p, verified_pass, evidence_ref))
+    Error(why) -> Error("harmony gate refused: " <> why)
+  }
 }
