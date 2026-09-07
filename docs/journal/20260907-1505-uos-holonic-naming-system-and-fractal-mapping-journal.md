@@ -76,8 +76,19 @@ Single canonical record; generation of derived surfaces; census as oracle (B10);
 ## 9. Architectural Observations
 The holon record is the natural join between the control plane (supervision), the message plane (keys, roster), the evidence plane (audit, formal), the planning plane (sa-plan) and the knowledge plane (wiki, ZK). Generating all five from one validated record is what makes the fractal claim mechanical.
 
+### 7a. HOLARCHY-CENSUS addendum (2026-09-07 16:1x UTC)
+| Check | Result |
+|---|---|
+| holarchy after W-J (usnrkwzn@11d8fa5c) | 157 holons: 34 original + 10 subsystem + 113 process; levels L0 18 / L1 19 / L2 22 / L3 7 / L4 58 / L5 26 / L6 6 / L7 1 (measured) |
+| base rules | B1–B9 PASS over 157; B10 census parity is a test against the census fixture; B13 placeholder (measured) |
+| tests | uos_swarm 581 passed, 0 warnings, format clean; split gate PASS with uos_tui 198 (measured) |
+| integration | two-parent merge rnqvrplsnlwq/73808b50c4f4 on main under lease epoch 27 (coordinator events 369/373); receipt tyzwypwovvqs/61f2ddc6; DR-20260907-1539 completed; sa-plan HOLARCHY-CENSUS completed (measured) |
+| modelling consequence | B5 level-monotonic rule cascaded `cepaf-gleam`, `uos-swarm`, `tools`, `native-nifs` and three planes to L0 because L0 process rows sit under their subsystem; refinement recorded in the design's Appendix C for HOLON-LIFECYCLE (an L0 constitution holon as the whole) |
+| ontology vocabulary | the signed board's concept registry (`system_ontology`) has no holon, holarchy or census concept; Integrate posts for this slice had to cite `Compositor` and `17 Aspect audit`; registering holonic concepts is a KM task |
+
 ## 10. Remaining Gaps
-- P1: HOLARCHY-CENSUS, SUP-GENERATOR, KEY-ALIGN, PROJECTIONS not started (sa-plan tasks available).
+- P1: SUP-GENERATOR, KEY-ALIGN, PROJECTIONS not started (sa-plan tasks available); HOLARCHY-CENSUS completed 16:1x UTC (see 7a); HOLON-LIFECYCLE must first fix the level cascade.
+- P2: board ontology lacks holonic concepts (holon, holarchy, census, lifecycle); posts about this work cite unrelated concepts until KM registers them.
 - P1: tri-sovereign review of the design (CHK-17).
 - P2: lifecycle and vitals semantics to be reconciled with the C3I metabolic domain before implementation.
 - P3: names for layers 8 and 9 proposed here (Evolution, Cosmos) and need ratification.

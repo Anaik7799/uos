@@ -1186,6 +1186,47 @@ pub fn cli_exposes_only_non_mutating_current_state_dry_runs_test() {
   |> should.be_error
 }
 
+pub fn fractal_jidoka_andon_halt_test() {
+  let command = integration_command(action.InspectIntegration)
+  let val_dec =
+    validated_decision_for(
+      "codex",
+      "codex",
+      "shadow_task_001",
+      candidate,
+      action.scope(command),
+      1,
+      action.selected_action(command),
+    )
+  let req =
+    action.Request(
+      "op-jidoka-1",
+      hive,
+      tenant,
+      "codex",
+      decision.DeterministicActor,
+      "codex",
+      "shadow_task_001",
+      1,
+      command,
+      Some(val_dec),
+    )
+  let pol = integration_policy(action.InspectIntegration)
+  let auth = authorization(req)
+  let state = claimed("integration/main")
+
+  case action.authorize(state, boot, now, req, pol, auth) {
+    Ok(_) -> panic as "Should have failed closed under Fractal Jidoka"
+    Error(err) -> {
+      should.equal(
+        err,
+        "Fractal Jidoka Andon Halt: Non-sa-plan task execution attempted (SC-JIDOKA-001)",
+      )
+    }
+  }
+}
+
+
 @external(erlang, "session_sync_ffi", "unique_id")
 fn unique_id() -> String
 

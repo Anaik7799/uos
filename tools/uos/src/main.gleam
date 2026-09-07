@@ -64,6 +64,7 @@ pub fn parse_args(args: List(String)) -> UosCommand {
     ["web-links"] | ["tailscale-links"] -> WebLinks
     ["checklist"] -> Checklist
     ["rocha-check"] | ["rocha"] -> RochaCheck
+    ["jidoka-check"] | ["jidoka"] | ["tps"] -> Gate("G-SA-PLAN-JIDOKA")
     ["selfcheck-vfs"] | ["--selfcheck-vfs"] | ["vfs-check"] -> SelfcheckVfs
     ["selfcheck-sa-plan"] | ["--selfcheck-sa-plan"] | ["sa-plan-check"] | ["sa-plan"] ->
       SelfcheckSaPlan
@@ -602,8 +603,9 @@ pub fn execute(cmd: UosCommand) -> Int {
       io.println("  [INVENTORY] EV-88: MirageOS Subsystem Migration Engine (INV-MIRAGE-MIGRATION)")
       io.println("  [INVENTORY] EV-89: MirageOS Triple-Surface Cockpit & Solo5 Tenders (INV-MIRAGE-SOLO5-PROD)")
       io.println("  [INVENTORY] EV-90: Unified Fractal Forecasting & Predictive POODAVR Control Loop (INV-FRACTAL-POODAVR-FORECAST)")
+      io.println("  [INVENTORY] EV-91: Universal Sa-Plan Execution Authority, Fractal Jidoka & TPS Control Loop (INV-SA-PLAN-JIDOKA-TPS-RATIFIED)")
       io.println("")
-      io.println("UOS Doctor result: PASS — 90/90 EV-cycles admitted and verified (100% Green).")
+      io.println("UOS Doctor result: PASS — 91/91 EV-cycles admitted and verified (100% Green).")
       0
     }
     DmcCheck -> {

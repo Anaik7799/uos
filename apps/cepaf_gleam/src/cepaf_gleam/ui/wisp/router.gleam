@@ -294,6 +294,12 @@ fn route_internal(path: String) -> String {
         "planning",
         "page",
       ))
+    "/api/v1/planning/jidoka" | "/api/planning/jidoka" ->
+      module_guard.unwrap(module_guard.guard_json(
+        planning_jidoka_json(),
+        "planning/jidoka",
+        "page",
+      ))
     "/api/v1/immune" | "/api/immune/status" ->
       module_guard.unwrap(module_guard.guard_nif_object(immune_json(), "immune"))
     "/api/v1/knowledge" | "/api/knowledge/graph" ->
@@ -744,6 +750,41 @@ fn planning_json() -> String {
     #("status", json.string("active")),
     #("summary_raw", json.string(status_json)),
     #("pending_raw", json.string(pending_json)),
+  ])
+  |> json.to_string()
+}
+
+/// Fractal Jidoka TPS planning status (SC-JIDOKA-001, SC-SA-PLAN-001).
+fn planning_jidoka_json() -> String {
+  json.object([
+    #("status", json.string("ACTIVE")),
+    #("rule", json.string("SC-JIDOKA-001")),
+    #("mandate", json.string("SC-SA-PLAN-001")),
+    #("andon_stop_line_error_code", json.int(-32_002)),
+    #("sole_execution_authority", json.string("tools/sa-plan")),
+    #("backing_store", json.string("var/sa-plan/uos.sqlite3")),
+    #(
+      "fractal_tps_pillars",
+      json.array(
+        [
+          "poka_yoke_parameter_validation",
+          "jidoka_autonomation_stop_line",
+          "muda_zero_waste_elimination",
+          "standardized_work_cli_schemas",
+          "heijunka_leveled_pull_queues",
+        ],
+        json.string,
+      ),
+    ),
+    #(
+      "fractal_layers_enforced",
+      json.array(
+        ["L0", "L1", "L2", "L3", "L4", "L5", "L6", "L7", "L8", "L9"],
+        json.string,
+      ),
+    ),
+    #("zenoh_topic", json.string("indrajaal/l0/const/jidoka/andon")),
+    #("ev_cycle", json.string("EV-91")),
   ])
   |> json.to_string()
 }

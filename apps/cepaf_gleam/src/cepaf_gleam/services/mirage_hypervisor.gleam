@@ -81,26 +81,32 @@ pub fn default_verified_probe() -> HypervisorProbeReport {
       kvm_accel_supported: True,
     ),
     solo5: Solo5Status(
-      solo5_hvt_path: Some("/home/an/dev/ver/zigvm/_opam/bin/solo5-hvt"),
-      solo5_spt_path: Some("/home/an/dev/ver/zigvm/_opam/bin/solo5-spt"),
-      solo5_virtio_path: Some("/home/an/dev/ver/zigvm/_opam/bin/solo5-virtio-run"),
+      solo5_hvt_path: Some(
+        "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-hvt",
+      ),
+      solo5_spt_path: Some(
+        "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-spt",
+      ),
+      solo5_virtio_path: Some(
+        "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-virtio-run",
+      ),
       hvt_execution: Some(Solo5ExecutionReceipt(
-        tender: "/home/an/dev/ver/zigvm/_opam/bin/solo5-hvt",
-        unikernel: "/home/an/NAS-setup/uos/var/mirage/unikernels/test_hello.hvt",
+        tender: "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-hvt",
+        unikernel: "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.hvt",
         exit_code: 0,
         output_snippet: "SUCCESS: solo5_exit(0) called under KVM hardware virtualization",
         passed: True,
       )),
       spt_execution: Some(Solo5ExecutionReceipt(
-        tender: "/home/an/dev/ver/zigvm/_opam/bin/solo5-spt",
-        unikernel: "/home/an/NAS-setup/uos/var/mirage/unikernels/test_hello.spt",
+        tender: "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-spt",
+        unikernel: "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.spt",
         exit_code: 0,
         output_snippet: "SUCCESS: solo5_exit(0) called under seccomp-bpf sandbox",
         passed: True,
       )),
       virtio_execution: Some(Solo5ExecutionReceipt(
-        tender: "/home/an/dev/ver/zigvm/_opam/bin/solo5-virtio-run",
-        unikernel: "/home/an/NAS-setup/uos/var/mirage/unikernels/test_hello.virtio",
+        tender: "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-virtio-run",
+        unikernel: "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.virtio",
         exit_code: 83,
         output_snippet: "SUCCESS: solo5_exit(0) called under QEMU KVM virtio",
         passed: True,

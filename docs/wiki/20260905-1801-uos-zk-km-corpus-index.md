@@ -156,7 +156,10 @@ The operational system coordinates across five distinct language tiers:
   - `[[wiki:20260906-2200-uos-codex-session-handover-and-wave4-synthesis-wiki]]` ([Codex Session Handover & Wave 4 Synthesis Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260906-2200-uos-codex-session-handover-and-wave4-synthesis-wiki.md))
   - `[[zk:ADR-059]]` Master Session Handover to OpenAI Codex & 84 Cycles Transfer ([ADR-059 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-2200-adr-059-master-session-handover-to-codex-and-84-cycles-transfer.md))
   - `[[wiki:20260907-1530-uos-sa-plan-fractal-jidoka-tps-guide]]` ([Sa-Plan Fractal Jidoka & TPS Operational Guide](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-1530-uos-sa-plan-fractal-jidoka-tps-guide.md))
+  - `[[wiki:20260907-1550-uos-fractal-tps-and-jidoka-sublimation-specification]]` ([Fractal TPS & Jidoka Sublimation Specification](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-1550-uos-fractal-tps-and-jidoka-sublimation-specification.md))
   - `[[zk:ADR-066]]` Sa-Plan Exclusivity, Fractal Jidoka & TPS Universal Execution Authority ([ADR-066 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-1530-adr-066-sa-plan-fractal-jidoka-tps-and-universal-execution-authority.md))
+  - `[[zk:ADR-067]]` Fractal Symbiosis, Sa-Plan Sublimation & EV-91 Ratification ([ADR-067 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-1550-adr-067-fractal-symbiosis-sa-plan-sublimation-and-ev91-ratification.md))
+  - `[[zk:ADR-068]]` Multidimensional Fractal Vectors & 10-Layer × 7-Surface Sa-Plan TPS Matrix ([ADR-068 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-1605-adr-068-multidimensional-fractal-vectors-sa-plan-tps-matrix.md))
 
 
 

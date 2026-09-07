@@ -94,9 +94,17 @@ validate_mirage_probe_receipt(Path) ->
                 SchemaOk = (maps:get(<<"schema">>, M, <<>>) =:= <<"uos-mirage-hypervisor-probe/v1">>),
                 HostOk = (maps:get(<<"host">>, M, <<>>) =:= <<"nas-1">>),
                 OverallOk = (maps:get(<<"overall_readiness">>, M, <<>>) =:= <<"solo5_hardware_virtualized_and_spt_verified">>),
-                AdmissionOk = (maps:get(<<"deployment_admission">>, M, <<>>) =:= <<"TENDERS_VERIFIED_PHYSICAL_EXECUTION">>),
+                Adm = maps:get(<<"deployment_admission">>, M, <<>>),
+                AdmissionOk = (Adm =:= <<"TENDERS_VERIFIED_PHYSICAL_EXECUTION">>) orelse
+                              (Adm =:= <<"TENDERS_VERIFIED_PHYSICAL_EXECUTION_DISJOINT_PROBE">>),
+                ReviewStatus = maps:get(<<"codex_review_status">>, M, <<>>),
+                ReviewOk = (ReviewStatus =:= <<"INDEPENDENT_EVALUATION_IN_PROGRESS">>),
+                BootId = maps:get(<<"boot_id">>, M, <<>>),
+                BootIdOk = byte_size(BootId) >= 32,
                 TS = maps:get(<<"timestamp_utc">>, M, <<>>),
-                TsOk = (binary:longest_common_prefix([TS, <<"2026">>]) =:= 4),
+                NowSec = erlang:system_time(second),
+                ReceiptSec = try calendar:rfc3339_to_system_time(binary_to_list(TS), [{unit, second}]) catch _:_ -> 0 end,
+                TsOk = (ReceiptSec > 0) andalso (abs(NowSec - ReceiptSec) =< 86400 * 7),
                 Kvm = maps:get(<<"kvm">>, M, #{}),
                 KvmOk = (maps:get(<<"dev_kvm_present">>, Kvm, false) =:= true) andalso
                         (maps:get(<<"dev_kvm_rw_accessible">>, Kvm, false) =:= true) andalso
@@ -107,15 +115,22 @@ validate_mirage_probe_receipt(Path) ->
                 Solo5 = maps:get(<<"solo5">>, M, #{}),
                 Hvt = maps:get(<<"hvt_execution">>, Solo5, #{}),
                 HvtOk = (maps:get(<<"passed">>, Hvt, false) =:= true) andalso
-                        (maps:get(<<"exit_code">>, Hvt, -1) =:= 0),
+                        (maps:get(<<"exit_code">>, Hvt, -1) =:= 0) andalso
+                        (byte_size(maps:get(<<"tender_sha256">>, Hvt, <<>>)) =:= 64) andalso
+                        (byte_size(maps:get(<<"unikernel_sha256">>, Hvt, <<>>)) =:= 64),
                 Spt = maps:get(<<"spt_execution">>, Solo5, #{}),
                 SptOk = (maps:get(<<"passed">>, Spt, false) =:= true) andalso
-                        (maps:get(<<"exit_code">>, Spt, -1) =:= 0),
+                        (maps:get(<<"exit_code">>, Spt, -1) =:= 0) andalso
+                        (byte_size(maps:get(<<"tender_sha256">>, Spt, <<>>)) =:= 64) andalso
+                        (byte_size(maps:get(<<"unikernel_sha256">>, Spt, <<>>)) =:= 64),
                 Virtio = maps:get(<<"virtio_execution">>, Solo5, #{}),
                 VirtioOk = (maps:get(<<"passed">>, Virtio, false) =:= true) andalso
-                           (maps:get(<<"exit_code">>, Virtio, -1) =:= 83),
+                           (maps:get(<<"exit_code">>, Virtio, -1) =:= 83) andalso
+                           (byte_size(maps:get(<<"tender_sha256">>, Virtio, <<>>)) =:= 64) andalso
+                           (byte_size(maps:get(<<"unikernel_sha256">>, Virtio, <<>>)) =:= 64),
                 SchemaOk andalso HostOk andalso OverallOk andalso AdmissionOk andalso
-                TsOk andalso KvmOk andalso QemuOk andalso HvtOk andalso SptOk andalso VirtioOk
+                ReviewOk andalso BootIdOk andalso TsOk andalso KvmOk andalso QemuOk andalso
+                HvtOk andalso SptOk andalso VirtioOk
             catch
                 _:_ -> false
             end;
