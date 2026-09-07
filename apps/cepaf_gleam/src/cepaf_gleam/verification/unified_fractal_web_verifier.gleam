@@ -352,21 +352,27 @@ pub fn verify_nav_graph(pages: List(String)) -> NavGraphProperties {
 
 pub type ComprehensiveChecklistSummary {
   ComprehensiveChecklistSummary(
+    status: String,
     domains_total: Int,
     domains_passing: Int,
     checks_total: Int,
     checks_passing: Int,
+    metrics_available: Bool,
+    missing_denominators: List(String),
     all_green: Bool,
   )
 }
 
 pub fn evaluate_comprehensive_checklist() -> ComprehensiveChecklistSummary {
   ComprehensiveChecklistSummary(
+    status: "UNRUN",
     domains_total: 5,
-    domains_passing: 5,
+    domains_passing: 0,
     checks_total: 18,
-    checks_passing: 18,
-    all_green: True,
+    checks_passing: 0,
+    metrics_available: False,
+    missing_denominators: ["runtime_receipt", "formal_receipt", "metric_inputs"],
+    all_green: False,
   )
 }
 

@@ -1,19 +1,15 @@
 import cepaf_gleam/api/denotational_intent_router
 import cepaf_gleam/verification/browser_emulation_bridge
 import cepaf_gleam/verification/dmc_biosemiotics_interlock
-import cepaf_gleam/verification/unified_verification_supervisor
+import cepaf_gleam/verification/evidence_truth
 import gleam/list
 import gleeunit/should
 
-pub fn verification_patrol_execution_test() {
-  let report = unified_verification_supervisor.run_verification_patrol()
-  report.web_checks_count |> should.equal(18)
-  report.browser_suites_count |> should.equal(64)
-  report.ocaml_subsystems_count |> should.equal(17)
-  report.all_green |> should.be_true()
-
-  let healthy = unified_verification_supervisor.patrol_healthy(report)
-  healthy |> should.be_true()
+pub fn verification_endpoint_shared_state_test() {
+  let decision = evidence_truth.unrun()
+  decision.status |> should.equal("UNRUN")
+  decision.admitted |> should.be_false()
+  decision.metrics_available |> should.be_false()
 }
 
 pub fn denotational_intent_authorization_test() {

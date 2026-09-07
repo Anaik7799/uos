@@ -20,10 +20,11 @@ import gleeunit/should
 // =============================================================================
 
 pub fn browser_suite_full_completeness_test() {
-  let #(total, passing, mean_eff) = mvr.verify_browser_suite_efficacy()
-  total |> should.equal(64)
-  passing |> should.equal(64)
-  { mean_eff >=. 0.9 } |> should.be_true
+  let evidence = mvr.verify_browser_suite_efficacy()
+  evidence.total_claims |> should.equal(64)
+  evidence.passing_observations |> should.equal(0)
+  evidence.status |> should.equal("UNRUN")
+  evidence.metrics_available |> should.be_false()
 }
 
 pub fn browser_suite_engine_breakdown_test() {
@@ -40,11 +41,11 @@ pub fn browser_suite_engine_breakdown_test() {
 pub fn browser_test_efficacy_ratings_bound_test() {
   let tests = mvr.all_browser_tests()
   list.each(tests, fn(t) {
-    { t.efficacy_rating >=. 0.8 && t.efficacy_rating <=. 1.0 }
+    { t.historical_efficacy_claim >=. 0.8 && t.historical_efficacy_claim <=. 1.0 }
     |> should.be_true
-    { t.effectiveness_rating >=. 0.8 && t.effectiveness_rating <=. 1.0 }
+    { t.historical_effectiveness_claim >=. 0.8 && t.historical_effectiveness_claim <=. 1.0 }
     |> should.be_true
-    t.passes |> should.be_true
+    t.historical_pass_claim |> should.be_true
   })
 }
 
@@ -53,15 +54,16 @@ pub fn browser_test_efficacy_ratings_bound_test() {
 // =============================================================================
 
 pub fn skills_and_superpowers_completeness_test() {
-  let #(total, mean_eff) = mvr.verify_skills_effectiveness()
-  total |> should.equal(16)
-  { mean_eff >=. 0.95 } |> should.be_true
+  let evidence = mvr.verify_skills_effectiveness()
+  evidence.total_claims |> should.equal(16)
+  evidence.status |> should.equal("UNRUN")
+  evidence.metrics_available |> should.be_false()
 }
 
 pub fn skills_superpowers_ratings_bound_test() {
   let skills = mvr.all_skills_and_superpowers()
   list.each(skills, fn(s) {
-    { s.effectiveness_score >=. 0.9 && s.effectiveness_score <=. 1.0 }
+    { s.historical_effectiveness_claim >=. 0.9 && s.historical_effectiveness_claim <=. 1.0 }
     |> should.be_true
   })
 }
@@ -71,10 +73,10 @@ pub fn skills_superpowers_ratings_bound_test() {
 // =============================================================================
 
 pub fn standards_and_algorithms_completeness_test() {
-  let #(total, passing, mean_eff) = mvr.verify_algorithm_standards_efficacy()
-  total |> should.equal(19)
-  passing |> should.equal(19)
-  { mean_eff >=. 0.94 } |> should.be_true
+  let evidence = mvr.verify_algorithm_standards_efficacy()
+  evidence.total_claims |> should.equal(19)
+  evidence.passing_observations |> should.equal(0)
+  evidence.status |> should.equal("UNRUN")
 }
 
 pub fn standards_and_algorithms_domain_distribution_test() {
@@ -91,9 +93,9 @@ pub fn standards_and_algorithms_domain_distribution_test() {
 pub fn standards_and_algorithms_efficacy_scores_test() {
   let algs = mvr.all_standards_and_algorithms()
   list.each(algs, fn(a) {
-    { a.efficacy_score >=. 0.9 && a.efficacy_score <=. 1.0 }
+    { a.historical_efficacy_claim >=. 0.9 && a.historical_efficacy_claim <=. 1.0 }
     |> should.be_true
-    a.verified |> should.be_true
+    a.historical_verified_claim |> should.be_true
   })
 }
 
@@ -155,12 +157,12 @@ pub fn master_16_render_laws_test() {
 // =============================================================================
 
 pub fn master_c3i_256_agent_ecology_test() {
-  let #(total, sdlc, sre, ver, intel, all_valid) =
-    mvr.verify_c3i_agent_ecology()
-  total |> should.equal(256)
-  sdlc |> should.equal(64)
-  sre |> should.equal(64)
-  ver |> should.equal(64)
-  intel |> should.equal(64)
-  all_valid |> should.be_true
+  let evidence = mvr.verify_c3i_agent_ecology()
+  evidence.total_claims |> should.equal(256)
+  evidence.sdlc_claims |> should.equal(64)
+  evidence.sre_claims |> should.equal(64)
+  evidence.verification_claims |> should.equal(64)
+  evidence.intelligence_claims |> should.equal(64)
+  evidence.passing_observations |> should.equal(0)
+  evidence.status |> should.equal("UNRUN")
 }

@@ -184,11 +184,13 @@ pub fn l4_navigation_graph_topology_test() {
 
 pub fn l4_comprehensive_checklist_18_checks_test() {
   let summary = ufwv.evaluate_comprehensive_checklist()
+  summary.status |> should.equal("UNRUN")
   summary.domains_total |> should.equal(5)
-  summary.domains_passing |> should.equal(5)
+  summary.domains_passing |> should.equal(0)
   summary.checks_total |> should.equal(18)
-  summary.checks_passing |> should.equal(18)
-  summary.all_green |> should.be_true()
+  summary.checks_passing |> should.equal(0)
+  summary.metrics_available |> should.be_false()
+  summary.all_green |> should.be_false()
 }
 
 // -----------------------------------------------------------------------------
@@ -268,10 +270,10 @@ pub fn l7_tailscale_fqdn_and_telemetry_test() {
 pub fn master_full_fractal_verification_runner_test() {
   let report = ufwv.run_full_fractal_verification()
   report.total_checks |> should.equal(8)
-  report.passed_checks |> should.equal(8)
-  report.failed_checks |> should.equal(0)
+  report.passed_checks |> should.equal(0)
+  report.failed_checks |> should.equal(8)
   report.layers_evaluated |> should.equal(8)
-  report.is_ratified |> should.be_true()
+  report.is_ratified |> should.be_false()
 }
 
 // -----------------------------------------------------------------------------

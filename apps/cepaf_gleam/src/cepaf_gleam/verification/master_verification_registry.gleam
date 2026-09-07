@@ -10,8 +10,8 @@
 //// =============================================================================
 
 import cepaf_gleam/fpp/agent_taxonomy
-import gleam/int
 import gleam/list
+import gleam/option.{type Option, None}
 
 // =============================================================================
 // 1. Browser-Based Tests Domain (64 Suites)
@@ -25,9 +25,9 @@ pub type BrowserTest {
     test_file: String,
     test_name: String,
     target_route: String,
-    efficacy_rating: Float,
-    effectiveness_rating: Float,
-    passes: Bool,
+    historical_efficacy_claim: Float,
+    historical_effectiveness_claim: Float,
+    historical_pass_claim: Bool,
   )
 }
 
@@ -41,9 +41,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "tests/playwright/planning.spec.ts",
       test_name: "Planning Page Interactive Spec",
       target_route: "/planning",
-      efficacy_rating: 0.96,
-      effectiveness_rating: 0.95,
-      passes: True,
+      historical_efficacy_claim: 0.96,
+      historical_effectiveness_claim: 0.95,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-02",
@@ -52,9 +52,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "tests/playwright/planning-full-functionality.spec.js",
       test_name: "Planning Full Functionality E2E",
       target_route: "/planning",
-      efficacy_rating: 0.98,
-      effectiveness_rating: 0.97,
-      passes: True,
+      historical_efficacy_claim: 0.98,
+      historical_effectiveness_claim: 0.97,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-03",
@@ -63,9 +63,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "tests/playwright/planning-preflight.mjs",
       test_name: "Planning Preflight Smoke Test",
       target_route: "/planning",
-      efficacy_rating: 0.94,
-      effectiveness_rating: 0.92,
-      passes: True,
+      historical_efficacy_claim: 0.94,
+      historical_effectiveness_claim: 0.92,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-04",
@@ -74,9 +74,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/e2e/full-planning-grid.spec.js",
       test_name: "Planning Data Grid Full E2E",
       target_route: "/planning",
-      efficacy_rating: 0.95,
-      effectiveness_rating: 0.96,
-      passes: True,
+      historical_efficacy_claim: 0.95,
+      historical_effectiveness_claim: 0.96,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-05",
@@ -85,9 +85,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/e2e/planning-datagrid.spec.js",
       test_name: "Planning Data Grid Sorting & Filtering",
       target_route: "/planning",
-      efficacy_rating: 0.93,
-      effectiveness_rating: 0.94,
-      passes: True,
+      historical_efficacy_claim: 0.93,
+      historical_effectiveness_claim: 0.94,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-06",
@@ -96,9 +96,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/e2e/planning-deep.spec.js",
       test_name: "Planning Deep State Transitions",
       target_route: "/planning",
-      efficacy_rating: 0.97,
-      effectiveness_rating: 0.98,
-      passes: True,
+      historical_efficacy_claim: 0.97,
+      historical_effectiveness_claim: 0.98,
+      historical_pass_claim: True,
     ),
     // --- C3I LiveView Wallaby Suites (40 suites) ---
     BrowserTest(
@@ -108,9 +108,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/monitoring_dashboard_live_wallaby_test.exs",
       test_name: "Monitoring Dashboard LiveView Wallaby",
       target_route: "/dashboard",
-      efficacy_rating: 0.95,
-      effectiveness_rating: 0.94,
-      passes: True,
+      historical_efficacy_claim: 0.95,
+      historical_effectiveness_claim: 0.94,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-08",
@@ -119,9 +119,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna_live_wallaby_test.exs",
       test_name: "Prajna Breaker LiveView Wallaby",
       target_route: "/prajna",
-      efficacy_rating: 0.96,
-      effectiveness_rating: 0.96,
-      passes: True,
+      historical_efficacy_claim: 0.96,
+      historical_effectiveness_claim: 0.96,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-09",
@@ -130,9 +130,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/system_status_live_wallaby_test.exs",
       test_name: "System Status LiveView Wallaby",
       target_route: "/system-status",
-      efficacy_rating: 0.92,
-      effectiveness_rating: 0.91,
-      passes: True,
+      historical_efficacy_claim: 0.92,
+      historical_effectiveness_claim: 0.91,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-10",
@@ -141,9 +141,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/admin/system_status_live_wallaby_test.exs",
       test_name: "Admin System Status LiveView Wallaby",
       target_route: "/admin/system",
-      efficacy_rating: 0.91,
-      effectiveness_rating: 0.9,
-      passes: True,
+      historical_efficacy_claim: 0.91,
+      historical_effectiveness_claim: 0.9,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-11",
@@ -152,9 +152,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/admin/config_management_live_wallaby_test.exs",
       test_name: "Admin Config Management LiveView Wallaby",
       target_route: "/admin/config",
-      efficacy_rating: 0.93,
-      effectiveness_rating: 0.92,
-      passes: True,
+      historical_efficacy_claim: 0.93,
+      historical_effectiveness_claim: 0.92,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-12",
@@ -163,9 +163,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/access_control_monitoring_live_wallaby_test.exs",
       test_name: "Access Control Monitoring Wallaby",
       target_route: "/access-control",
-      efficacy_rating: 0.94,
-      effectiveness_rating: 0.93,
-      passes: True,
+      historical_efficacy_claim: 0.94,
+      historical_effectiveness_claim: 0.93,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-13",
@@ -174,9 +174,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/permissions_management_live_wallaby_test.exs",
       test_name: "Permissions Management Wallaby",
       target_route: "/permissions",
-      efficacy_rating: 0.94,
-      effectiveness_rating: 0.94,
-      passes: True,
+      historical_efficacy_claim: 0.94,
+      historical_effectiveness_claim: 0.94,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-14",
@@ -185,9 +185,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/stamp_tdg_gde_dashboard_live_wallaby_test.exs",
       test_name: "STAMP/STPA Safety Dashboard Wallaby",
       target_route: "/stamp",
-      efficacy_rating: 0.98,
-      effectiveness_rating: 0.97,
-      passes: True,
+      historical_efficacy_claim: 0.98,
+      historical_effectiveness_claim: 0.97,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-15",
@@ -196,9 +196,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/zenoh/zenoh_mesh_health_wallaby_test.exs",
       test_name: "Zenoh Mesh Health Wallaby",
       target_route: "/zenoh",
-      efficacy_rating: 0.95,
-      effectiveness_rating: 0.95,
-      passes: True,
+      historical_efficacy_claim: 0.95,
+      historical_effectiveness_claim: 0.95,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-16",
@@ -207,9 +207,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/performance_dashboard_live_wallaby_test.exs",
       test_name: "Performance Dashboard Wallaby",
       target_route: "/perf",
-      efficacy_rating: 0.93,
-      effectiveness_rating: 0.92,
-      passes: True,
+      historical_efficacy_claim: 0.93,
+      historical_effectiveness_claim: 0.92,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-17",
@@ -218,9 +218,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/navigation_portal_live_wallaby_test.exs",
       test_name: "Navigation Portal Wallaby",
       target_route: "/navigation",
-      efficacy_rating: 0.92,
-      effectiveness_rating: 0.91,
-      passes: True,
+      historical_efficacy_claim: 0.92,
+      historical_effectiveness_claim: 0.91,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-18",
@@ -229,9 +229,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/stamp_tdg_gde_advanced_analytics_live_wallaby_test.exs",
       test_name: "Advanced Safety Analytics Wallaby",
       target_route: "/analytics",
-      efficacy_rating: 0.96,
-      effectiveness_rating: 0.95,
-      passes: True,
+      historical_efficacy_claim: 0.96,
+      historical_effectiveness_claim: 0.95,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-19",
@@ -240,9 +240,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/compliance_live_wallaby_test.exs",
       test_name: "Prajna Compliance Wallaby",
       target_route: "/compliance",
-      efficacy_rating: 0.94,
-      effectiveness_rating: 0.94,
-      passes: True,
+      historical_efficacy_claim: 0.94,
+      historical_effectiveness_claim: 0.94,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-20",
@@ -251,9 +251,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/copilot_live_wallaby_test.exs",
       test_name: "Prajna Copilot Wallaby",
       target_route: "/copilot",
-      efficacy_rating: 0.95,
-      effectiveness_rating: 0.96,
-      passes: True,
+      historical_efficacy_claim: 0.95,
+      historical_effectiveness_claim: 0.96,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-21",
@@ -262,9 +262,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/video_live_wallaby_test.exs",
       test_name: "Prajna Video Wallaby",
       target_route: "/video",
-      efficacy_rating: 0.91,
-      effectiveness_rating: 0.9,
-      passes: True,
+      historical_efficacy_claim: 0.91,
+      historical_effectiveness_claim: 0.9,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-22",
@@ -273,9 +273,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/observability_live_wallaby_test.exs",
       test_name: "Prajna Observability Wallaby",
       target_route: "/observability",
-      efficacy_rating: 0.97,
-      effectiveness_rating: 0.96,
-      passes: True,
+      historical_efficacy_claim: 0.97,
+      historical_effectiveness_claim: 0.96,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-23",
@@ -284,9 +284,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/alarms_live_wallaby_test.exs",
       test_name: "Prajna Alarms Wallaby",
       target_route: "/alarms",
-      efficacy_rating: 0.96,
-      effectiveness_rating: 0.95,
-      passes: True,
+      historical_efficacy_claim: 0.96,
+      historical_effectiveness_claim: 0.95,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-24",
@@ -295,9 +295,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/register_live_wallaby_test.exs",
       test_name: "Prajna Register Wallaby",
       target_route: "/register",
-      efficacy_rating: 0.93,
-      effectiveness_rating: 0.92,
-      passes: True,
+      historical_efficacy_claim: 0.93,
+      historical_effectiveness_claim: 0.92,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-25",
@@ -306,9 +306,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/guardian_live_wallaby_test.exs",
       test_name: "Prajna Guardian Wallaby",
       target_route: "/guardian",
-      efficacy_rating: 0.99,
-      effectiveness_rating: 0.99,
-      passes: True,
+      historical_efficacy_claim: 0.99,
+      historical_effectiveness_claim: 0.99,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-26",
@@ -317,9 +317,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/settings_live_wallaby_test.exs",
       test_name: "Prajna Settings Wallaby",
       target_route: "/settings",
-      efficacy_rating: 0.92,
-      effectiveness_rating: 0.91,
-      passes: True,
+      historical_efficacy_claim: 0.92,
+      historical_effectiveness_claim: 0.91,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-27",
@@ -328,9 +328,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/diagnostics_live_wallaby_test.exs",
       test_name: "Prajna Diagnostics Wallaby",
       target_route: "/diagnostics",
-      efficacy_rating: 0.95,
-      effectiveness_rating: 0.94,
-      passes: True,
+      historical_efficacy_claim: 0.95,
+      historical_effectiveness_claim: 0.94,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-28",
@@ -339,9 +339,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/containers_live_wallaby_test.exs",
       test_name: "Prajna Containers Wallaby",
       target_route: "/containers",
-      efficacy_rating: 0.94,
-      effectiveness_rating: 0.93,
-      passes: True,
+      historical_efficacy_claim: 0.94,
+      historical_effectiveness_claim: 0.93,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-29",
@@ -350,9 +350,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/sentinel_dashboard_live_wallaby_test.exs",
       test_name: "Prajna Sentinel Wallaby",
       target_route: "/sentinel",
-      efficacy_rating: 0.96,
-      effectiveness_rating: 0.95,
-      passes: True,
+      historical_efficacy_claim: 0.96,
+      historical_effectiveness_claim: 0.95,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-30",
@@ -361,9 +361,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/devices_live_wallaby_test.exs",
       test_name: "Prajna Devices Wallaby",
       target_route: "/devices",
-      efficacy_rating: 0.93,
-      effectiveness_rating: 0.92,
-      passes: True,
+      historical_efficacy_claim: 0.93,
+      historical_effectiveness_claim: 0.92,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-31",
@@ -372,9 +372,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/knowledge_live_wallaby_test.exs",
       test_name: "Prajna Knowledge Wallaby",
       target_route: "/knowledge",
-      efficacy_rating: 0.97,
-      effectiveness_rating: 0.96,
-      passes: True,
+      historical_efficacy_claim: 0.97,
+      historical_effectiveness_claim: 0.96,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-32",
@@ -383,9 +383,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/test_cockpit_live_wallaby_test.exs",
       test_name: "Prajna Test Cockpit Wallaby",
       target_route: "/test-cockpit",
-      efficacy_rating: 0.95,
-      effectiveness_rating: 0.94,
-      passes: True,
+      historical_efficacy_claim: 0.95,
+      historical_effectiveness_claim: 0.94,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-33",
@@ -394,9 +394,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/analytics_live_wallaby_test.exs",
       test_name: "Prajna Analytics Wallaby",
       target_route: "/analytics",
-      efficacy_rating: 0.94,
-      effectiveness_rating: 0.93,
-      passes: True,
+      historical_efficacy_claim: 0.94,
+      historical_effectiveness_claim: 0.93,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-34",
@@ -405,9 +405,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/shutdown_live_wallaby_test.exs",
       test_name: "Prajna Emergency Shutdown Wallaby",
       target_route: "/shutdown",
-      efficacy_rating: 0.99,
-      effectiveness_rating: 0.99,
-      passes: True,
+      historical_efficacy_claim: 0.99,
+      historical_effectiveness_claim: 0.99,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-35",
@@ -416,9 +416,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/mesh_live_wallaby_test.exs",
       test_name: "Prajna Mesh Wallaby",
       target_route: "/mesh",
-      efficacy_rating: 0.95,
-      effectiveness_rating: 0.95,
-      passes: True,
+      historical_efficacy_claim: 0.95,
+      historical_effectiveness_claim: 0.95,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-36",
@@ -427,9 +427,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/cluster_live_wallaby_test.exs",
       test_name: "Prajna Cluster Wallaby",
       target_route: "/cluster",
-      efficacy_rating: 0.96,
-      effectiveness_rating: 0.96,
-      passes: True,
+      historical_efficacy_claim: 0.96,
+      historical_effectiveness_claim: 0.96,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-37",
@@ -438,9 +438,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/startup_live_wallaby_test.exs",
       test_name: "Prajna Startup Sequence Wallaby",
       target_route: "/startup",
-      efficacy_rating: 0.95,
-      effectiveness_rating: 0.94,
-      passes: True,
+      historical_efficacy_claim: 0.95,
+      historical_effectiveness_claim: 0.94,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-38",
@@ -449,9 +449,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/health_sparkline_live_wallaby_test.exs",
       test_name: "Prajna Health Sparkline Wallaby",
       target_route: "/health",
-      efficacy_rating: 0.93,
-      effectiveness_rating: 0.92,
-      passes: True,
+      historical_efficacy_claim: 0.93,
+      historical_effectiveness_claim: 0.92,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-39",
@@ -460,9 +460,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/commands_live_wallaby_test.exs",
       test_name: "Prajna Commands Console Wallaby",
       target_route: "/commands",
-      efficacy_rating: 0.94,
-      effectiveness_rating: 0.93,
-      passes: True,
+      historical_efficacy_claim: 0.94,
+      historical_effectiveness_claim: 0.93,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-40",
@@ -471,9 +471,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/threat_live_wallaby_test.exs",
       test_name: "Prajna Threat Level Wallaby",
       target_route: "/threat",
-      efficacy_rating: 0.96,
-      effectiveness_rating: 0.95,
-      passes: True,
+      historical_efficacy_claim: 0.96,
+      historical_effectiveness_claim: 0.95,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-41",
@@ -482,9 +482,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/prajna/access_control_live_wallaby_test.exs",
       test_name: "Prajna Access Control Wallaby",
       target_route: "/access",
-      efficacy_rating: 0.94,
-      effectiveness_rating: 0.93,
-      passes: True,
+      historical_efficacy_claim: 0.94,
+      historical_effectiveness_claim: 0.93,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-42",
@@ -493,9 +493,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/operations/active_alarms_live_wallaby_test.exs",
       test_name: "Operations Active Alarms Wallaby",
       target_route: "/ops/alarms",
-      efficacy_rating: 0.96,
-      effectiveness_rating: 0.95,
-      passes: True,
+      historical_efficacy_claim: 0.96,
+      historical_effectiveness_claim: 0.95,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-43",
@@ -504,9 +504,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/operations/video_wall_live_wallaby_test.exs",
       test_name: "Operations Video Wall Wallaby",
       target_route: "/ops/video",
-      efficacy_rating: 0.92,
-      effectiveness_rating: 0.91,
-      passes: True,
+      historical_efficacy_claim: 0.92,
+      historical_effectiveness_claim: 0.91,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-44",
@@ -515,9 +515,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/operations/dispatch_console_live_wallaby_test.exs",
       test_name: "Operations Dispatch Console Wallaby",
       target_route: "/ops/dispatch",
-      efficacy_rating: 0.95,
-      effectiveness_rating: 0.94,
-      passes: True,
+      historical_efficacy_claim: 0.95,
+      historical_effectiveness_claim: 0.94,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-45",
@@ -526,9 +526,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/operations/alarm_investigation_live_wallaby_test.exs",
       test_name: "Operations Alarm Investigation Wallaby",
       target_route: "/ops/investigation",
-      efficacy_rating: 0.97,
-      effectiveness_rating: 0.96,
-      passes: True,
+      historical_efficacy_claim: 0.97,
+      historical_effectiveness_claim: 0.96,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-C3I-46",
@@ -537,9 +537,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "test/indrajaal_web/live/operations/access_dashboard_live_wallaby_test.exs",
       test_name: "Operations Access Dashboard Wallaby",
       target_route: "/ops/access",
-      efficacy_rating: 0.93,
-      effectiveness_rating: 0.92,
-      passes: True,
+      historical_efficacy_claim: 0.93,
+      historical_effectiveness_claim: 0.92,
+      historical_pass_claim: True,
     ),
 
     // --- Indrajaal Gleam Web Browser Suites (6 suites) ---
@@ -550,9 +550,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "apps/cepaf_gleam/test/playwright/e2e_all_pages.spec.ts",
       test_name: "Comprehensive All 31 Pages E2E Suite",
       target_route: "all 31 pages",
-      efficacy_rating: 0.99,
-      effectiveness_rating: 0.99,
-      passes: True,
+      historical_efficacy_claim: 0.99,
+      historical_effectiveness_claim: 0.99,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-IND-02",
@@ -561,9 +561,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "apps/cepaf_gleam/test/playwright/e2e_component_demo.spec.ts",
       test_name: "A2UI Component Demo Live Interaction",
       target_route: "/components",
-      efficacy_rating: 0.96,
-      effectiveness_rating: 0.95,
-      passes: True,
+      historical_efficacy_claim: 0.96,
+      historical_effectiveness_claim: 0.95,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-IND-03",
@@ -572,9 +572,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "apps/cepaf_gleam/test/playwright/e2e_allium_viewer.spec.ts",
       test_name: "Allium Specification Viewer E2E",
       target_route: "/allium",
-      efficacy_rating: 0.97,
-      effectiveness_rating: 0.96,
-      passes: True,
+      historical_efficacy_claim: 0.97,
+      historical_effectiveness_claim: 0.96,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-IND-04",
@@ -583,9 +583,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "apps/cepaf_gleam/test/wallaby_regression_test.gleam",
       test_name: "Wallaby GUI Regression Suite in Gleam",
       target_route: "all Lustre widgets",
-      efficacy_rating: 0.94,
-      effectiveness_rating: 0.95,
-      passes: True,
+      historical_efficacy_claim: 0.94,
+      historical_effectiveness_claim: 0.95,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-IND-05",
@@ -594,9 +594,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "apps/cepaf_gleam/test/chrome_browser_test.gleam",
       test_name: "Chrome Browser Screenshot & DOM Analysis",
       target_route: "/planning, /cockpit",
-      efficacy_rating: 0.95,
-      effectiveness_rating: 0.94,
-      passes: True,
+      historical_efficacy_claim: 0.95,
+      historical_effectiveness_claim: 0.94,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-IND-06",
@@ -605,9 +605,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "apps/cepaf_gleam/test/comprehensive_ui_regression_test.gleam",
       test_name: "381 Comprehensive UI Regression Tests",
       target_route: "15 tabs x 8 layers",
-      efficacy_rating: 0.99,
-      effectiveness_rating: 0.99,
-      passes: True,
+      historical_efficacy_claim: 0.99,
+      historical_effectiveness_claim: 0.99,
+      historical_pass_claim: True,
     ),
 
     // --- ZigVM Engine Browser Suites (12 suites) ---
@@ -618,9 +618,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "import/zigvm/code/playwright/test_playwright_controller.ml",
       test_name: "Playwright Controller Protocol Suite",
       target_route: "headless chromium",
-      efficacy_rating: 0.95,
-      effectiveness_rating: 0.94,
-      passes: True,
+      historical_efficacy_claim: 0.95,
+      historical_effectiveness_claim: 0.94,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-ZIG-02",
@@ -629,9 +629,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "import/zigvm/code/journal/test_journal_playwright_contract.ml",
       test_name: "Journal Playwright Gospel Contract",
       target_route: "journal dashboard",
-      efficacy_rating: 0.98,
-      effectiveness_rating: 0.97,
-      passes: True,
+      historical_efficacy_claim: 0.98,
+      historical_effectiveness_claim: 0.97,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-ZIG-03",
@@ -640,9 +640,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "import/zigvm/code/journal/journal_bundle_dashboard_playwright.ml",
       test_name: "Journal Bundle Dashboard E2E",
       target_route: "/journal/dashboard",
-      efficacy_rating: 0.94,
-      effectiveness_rating: 0.93,
-      passes: True,
+      historical_efficacy_claim: 0.94,
+      historical_effectiveness_claim: 0.93,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-ZIG-04",
@@ -651,9 +651,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "import/zigvm/code/journal/journal_html_playwright.ml",
       test_name: "Journal HTML Rendering Browser Test",
       target_route: "/journal/html",
-      efficacy_rating: 0.93,
-      effectiveness_rating: 0.92,
-      passes: True,
+      historical_efficacy_claim: 0.93,
+      historical_effectiveness_claim: 0.92,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-ZIG-05",
@@ -662,9 +662,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "import/zigvm/code/infranodus/infranodus_full_ui_playwright.ml",
       test_name: "Infranodus Network UI Browser Test",
       target_route: "/infranodus",
-      efficacy_rating: 0.96,
-      effectiveness_rating: 0.95,
-      passes: True,
+      historical_efficacy_claim: 0.96,
+      historical_effectiveness_claim: 0.95,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-ZIG-06",
@@ -673,9 +673,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "modules/swarm/run_lmstudio_dashboard_playwright.ml",
       test_name: "LM Studio Swarm Dashboard Playwright",
       target_route: "/swarm/dashboard",
-      efficacy_rating: 0.95,
-      effectiveness_rating: 0.94,
-      passes: True,
+      historical_efficacy_claim: 0.95,
+      historical_effectiveness_claim: 0.94,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-ZIG-07",
@@ -684,9 +684,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "work/benchmarks/sa-plan/ooda-control-plane/playwright-tailscale",
       test_name: "OODA Control Plane Tailscale Browser Test",
       target_route: "http://nas-1.tailnet:4100",
-      efficacy_rating: 0.97,
-      effectiveness_rating: 0.96,
-      passes: True,
+      historical_efficacy_claim: 0.97,
+      historical_effectiveness_claim: 0.96,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-ZIG-08",
@@ -695,9 +695,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "work/benchmarks/sa-plan/wiki-selfcheck/playwright-doc-dashboard",
       test_name: "Wiki Doc Dashboard Browser Snapshot",
       target_route: "/wiki/dashboard",
-      efficacy_rating: 0.94,
-      effectiveness_rating: 0.93,
-      passes: True,
+      historical_efficacy_claim: 0.94,
+      historical_effectiveness_claim: 0.93,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-ZIG-09",
@@ -706,9 +706,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "work/benchmarks/sa-plan/wiki-selfcheck/playwright-main-journal",
       test_name: "Wiki Main Journal Browser Snapshot",
       target_route: "/wiki/journal",
-      efficacy_rating: 0.95,
-      effectiveness_rating: 0.94,
-      passes: True,
+      historical_efficacy_claim: 0.95,
+      historical_effectiveness_claim: 0.94,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-ZIG-10",
@@ -717,9 +717,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "work/benchmarks/sa-plan/wiki-selfcheck/playwright-tailscale-dashboard",
       test_name: "Tailscale Dashboard Browser E2E",
       target_route: "http://nas-1.tailnet:4100",
-      efficacy_rating: 0.98,
-      effectiveness_rating: 0.97,
-      passes: True,
+      historical_efficacy_claim: 0.98,
+      historical_effectiveness_claim: 0.97,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-ZIG-11",
@@ -728,9 +728,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "third_party/ocaml_playwright_55/test/test_playwright.ml",
       test_name: "OCaml Playwright Bindings Unit Test",
       target_route: "browser context",
-      efficacy_rating: 0.93,
-      effectiveness_rating: 0.92,
-      passes: True,
+      historical_efficacy_claim: 0.93,
+      historical_effectiveness_claim: 0.92,
+      historical_pass_claim: True,
     ),
     BrowserTest(
       id: "BRW-ZIG-12",
@@ -739,9 +739,9 @@ pub fn all_browser_tests() -> List(BrowserTest) {
       test_file: "third_party/ocaml_playwright_55/test/test_e2e.ml",
       test_name: "OCaml Playwright Bindings E2E Test",
       target_route: "page lifecycle",
-      efficacy_rating: 0.94,
-      effectiveness_rating: 0.93,
-      passes: True,
+      historical_efficacy_claim: 0.94,
+      historical_effectiveness_claim: 0.93,
+      historical_pass_claim: True,
     ),
   ]
 }
@@ -756,7 +756,7 @@ pub type SkillCapability {
     kind: String,
     purpose: String,
     source_path: String,
-    effectiveness_score: Float,
+    historical_effectiveness_claim: Float,
   )
 }
 
@@ -889,8 +889,8 @@ pub type AlgorithmStandard {
     algorithm_type: String,
     formula_or_metric: String,
     application_in_uos: String,
-    efficacy_score: Float,
-    verified: Bool,
+    historical_efficacy_claim: Float,
+    historical_verified_claim: Bool,
   )
 }
 
@@ -1150,40 +1150,38 @@ pub fn total_mapped_ocaml_tests() -> Int {
 // 5. Efficacy and Effectiveness Evaluation
 // =============================================================================
 
-pub fn verify_browser_suite_efficacy() -> #(Int, Int, Float) {
-  let tests = all_browser_tests()
-  let total = list.length(tests)
-  let passing = list.count(tests, fn(t) { t.passes })
-  let sum_eff = list.fold(tests, 0.0, fn(acc, t) { acc +. t.efficacy_rating })
-  let mean_eff = case total > 0 {
-    True -> sum_eff /. int.to_float(total)
-    False -> 0.0
-  }
-  #(total, passing, mean_eff)
+pub type RegistryAggregate {
+  RegistryAggregate(
+    status: String,
+    total_claims: Int,
+    passing_observations: Int,
+    metrics_available: Bool,
+    mean_efficacy: Option(Float),
+    missing_denominators: List(String),
+  )
 }
 
-pub fn verify_algorithm_standards_efficacy() -> #(Int, Int, Float) {
-  let algs = all_standards_and_algorithms()
-  let total = list.length(algs)
-  let passing = list.count(algs, fn(a) { a.verified })
-  let sum_eff = list.fold(algs, 0.0, fn(acc, a) { acc +. a.efficacy_score })
-  let mean_eff = case total > 0 {
-    True -> sum_eff /. int.to_float(total)
-    False -> 0.0
-  }
-  #(total, passing, mean_eff)
+fn unrun_aggregate(total: Int) -> RegistryAggregate {
+  RegistryAggregate(
+    status: "UNRUN",
+    total_claims: total,
+    passing_observations: 0,
+    metrics_available: False,
+    mean_efficacy: None,
+    missing_denominators: ["runtime_receipts", "formal_receipts", "metric_inputs"],
+  )
 }
 
-pub fn verify_skills_effectiveness() -> #(Int, Float) {
-  let skills = all_skills_and_superpowers()
-  let total = list.length(skills)
-  let sum_eff =
-    list.fold(skills, 0.0, fn(acc, s) { acc +. s.effectiveness_score })
-  let mean_eff = case total > 0 {
-    True -> sum_eff /. int.to_float(total)
-    False -> 0.0
-  }
-  #(total, mean_eff)
+pub fn verify_browser_suite_efficacy() -> RegistryAggregate {
+  unrun_aggregate(list.length(all_browser_tests()))
+}
+
+pub fn verify_algorithm_standards_efficacy() -> RegistryAggregate {
+  unrun_aggregate(list.length(all_standards_and_algorithms()))
+}
+
+pub fn verify_skills_effectiveness() -> RegistryAggregate {
+  unrun_aggregate(list.length(all_skills_and_superpowers()))
 }
 
 // =============================================================================
@@ -1203,7 +1201,7 @@ pub type C3iAgentRegistryEntry {
     sre_resilience_tier: String,
     operational_domain: String,
     evidence_contracts: List(String),
-    passes: Bool,
+    historical_pass_claim: Bool,
   )
 }
 
@@ -1221,12 +1219,24 @@ pub fn all_c3i_agent_registry_entries() -> List(C3iAgentRegistryEntry) {
       sre_resilience_tier: spec.sre_resilience_tier,
       operational_domain: spec.operational_domain,
       evidence_contracts: spec.evidence_contracts,
-      passes: True,
+      historical_pass_claim: True,
     )
   })
 }
 
-pub fn verify_c3i_agent_ecology() -> #(Int, Int, Int, Int, Int, Bool) {
+pub type AgentEcologyEvidence {
+  AgentEcologyEvidence(
+    status: String,
+    total_claims: Int,
+    sdlc_claims: Int,
+    sre_claims: Int,
+    verification_claims: Int,
+    intelligence_claims: Int,
+    passing_observations: Int,
+  )
+}
+
+pub fn verify_c3i_agent_ecology() -> AgentEcologyEvidence {
   let entries = all_c3i_agent_registry_entries()
   let total = list.length(entries)
   let sdlc_count = list.count(entries, fn(e) { e.c3i_system == "C3I-SDLC" })
@@ -1235,11 +1245,13 @@ pub fn verify_c3i_agent_ecology() -> #(Int, Int, Int, Int, Int, Bool) {
     list.count(entries, fn(e) { e.c3i_system == "C3I-VERIFICATION" })
   let intel_count =
     list.count(entries, fn(e) { e.c3i_system == "C3I-INTELLIGENCE" })
-  let all_valid =
-    total == 256
-    && sdlc_count == 64
-    && sre_count == 64
-    && ver_count == 64
-    && intel_count == 64
-  #(total, sdlc_count, sre_count, ver_count, intel_count, all_valid)
+  AgentEcologyEvidence(
+    status: "UNRUN",
+    total_claims: total,
+    sdlc_claims: sdlc_count,
+    sre_claims: sre_count,
+    verification_claims: ver_count,
+    intelligence_claims: intel_count,
+    passing_observations: 0,
+  )
 }
