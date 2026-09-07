@@ -14,6 +14,7 @@
 /// Span types: Observe, Orient, Decide, Act (OODA loop phases)
 ///
 /// STAMP: SC-GLM-CORE-001, SC-GLM-CORE-002, SC-GLM-CORE-003, SC-ZENOH-001
+import cepaf_gleam/ha/trace_context
 import cepaf_gleam/ui/domain.{
   type Page, Agents, Auth, Bicameral, Biomorphic, Bridge, Cockpit, ComponentDemo,
   Config, Dashboard, Database, Evolution, Federation, Git, HealthGrid, Holon,
@@ -22,7 +23,6 @@ import cepaf_gleam/ui/domain.{
   Verification, Zenoh, page_to_path,
 }
 import cepaf_gleam/zenoh/client
-import gleam/int
 import gleam/json
 
 // ---------------------------------------------------------------------------
@@ -53,7 +53,7 @@ pub type OtelSpan {
 }
 
 /// Topic prefix for OTel spans.
-const otel_prefix = "indrajaal/otel/ops/"
+pub const span_topic_prefix = "indrajaal/otel/ops/"
 
 // ---------------------------------------------------------------------------
 // OodaPhase serialization
@@ -111,27 +111,6 @@ pub fn page_to_string(page: Page) -> String {
 // FFI bindings
 // ---------------------------------------------------------------------------
 
-@external(erlang, "cepaf_gleam_ffi", "generate_id")
-fn generate_id() -> String
-
-@external(erlang, "cepaf_gleam_ffi", "system_time_nanos")
-fn system_time_nanos() -> String
-
-fn now_ms() -> Int {
-  case int.parse(system_time_nanos()) {
-    Ok(nanos) -> nanos / 1_000_000
-    Error(_) -> 0
-  }
-}
-
-fn generate_trace_id() -> String {
-  generate_id()
-}
-
-fn generate_span_id() -> String {
-  generate_id()
-}
-
 // ---------------------------------------------------------------------------
 // Span builders
 // ---------------------------------------------------------------------------
@@ -153,7 +132,7 @@ fn span_to_json(span: OtelSpan) -> json.Json {
 
 /// Build the Zenoh topic for a given page and element.
 fn otel_topic(page: Page, element: String) -> String {
-  otel_prefix <> page_to_string(page) <> "/" <> element
+  span_topic_prefix <> page_to_string(page) <> "/" <> element
 }
 
 /// Create a new OTel span for a UI state change.
@@ -163,14 +142,16 @@ pub fn new_span(
   ooda_phase: OodaPhase,
   attributes: json.Json,
 ) -> OtelSpan {
+  let context =
+    trace_context.new_trace(page_to_path(page) <> "/" <> element, "L6")
   OtelSpan(
-    trace_id: generate_trace_id(),
-    span_id: generate_span_id(),
+    trace_id: context.trace_id,
+    span_id: context.span_id,
     name: page_to_path(page) <> "/" <> element,
     ooda_phase: ooda_phase,
     page: page,
     element: element,
-    timestamp: now_ms(),
+    timestamp: context.start_time / 1_000_000,
     duration_us: 0,
     attributes: attributes,
   )
@@ -537,63 +518,78 @@ pub fn agent_span(
 // Uses the global NIF Zenoh session (SC-GLM-ZEN-001)
 // ---------------------------------------------------------------------------
 
-/// Publish an OTel span using the global NIF Zenoh session.
-/// This is the PRIMARY entry point for Lustre pages — no Session needed.
+/// Publish an OTel span using the global NIF Zenoh session and return the real
+/// transport result. Prefer this in code that can handle delivery failure.
+pub fn emit_result(
+  page: Page,
+  element: String,
+  phase: OodaPhase,
+) -> Result(Nil, String) {
+  emit_span(page, element, phase, json.object([]))
+}
+
+/// Compatibility adapter for existing Lustre update functions. This is
+/// explicitly best-effort: callers that need evidence must use `emit_result`.
 pub fn emit(page: Page, element: String, phase: OodaPhase) -> Nil {
-  let span = new_span(page, element, phase, json.object([]))
-  let topic = otel_topic(span.page, span.element)
-  let payload = json.to_string(span_to_json(span))
-  let _ = client.put_nif(topic, payload)
+  let _ = emit_result(page, element, phase)
   Nil
 }
 
-/// Emit with custom attributes.
+/// Emit with custom attributes and return the real transport result.
+pub fn emit_with_result(
+  page: Page,
+  element: String,
+  phase: OodaPhase,
+  attrs: json.Json,
+) -> Result(Nil, String) {
+  emit_span(page, element, phase, attrs)
+}
+
+/// Compatibility best-effort adapter. Use `emit_with_result` when the caller
+/// must distinguish accepted and failed publication.
 pub fn emit_with(
   page: Page,
   element: String,
   phase: OodaPhase,
   attrs: json.Json,
 ) -> Nil {
-  let span = new_span(page, element, phase, attrs)
-  let topic = otel_topic(span.page, span.element)
-  let payload = json.to_string(span_to_json(span))
-  let _ = client.put_nif(topic, payload)
+  let _ = emit_with_result(page, element, phase, attrs)
   Nil
 }
 
 /// All 31 page topic prefixes (for observer subscription).
 pub fn all_page_topics() -> List(String) {
   [
-    otel_prefix <> "dashboard",
-    otel_prefix <> "planning",
-    otel_prefix <> "immune",
-    otel_prefix <> "knowledge",
-    otel_prefix <> "zenoh",
-    otel_prefix <> "cockpit",
-    otel_prefix <> "verification",
-    otel_prefix <> "substrate",
-    otel_prefix <> "metabolic",
-    otel_prefix <> "podman",
-    otel_prefix <> "mcp",
-    otel_prefix <> "kms",
-    otel_prefix <> "telemetry",
-    otel_prefix <> "federation",
-    otel_prefix <> "health_grid",
-    otel_prefix <> "prajna",
-    otel_prefix <> "agents",
-    otel_prefix <> "holon",
-    otel_prefix <> "config",
-    otel_prefix <> "git",
-    otel_prefix <> "database",
-    otel_prefix <> "bridge",
-    otel_prefix <> "smriti",
-    otel_prefix <> "planning_dashboard",
-    otel_prefix <> "integrity",
-    otel_prefix <> "evolution",
-    otel_prefix <> "biomorphic",
-    otel_prefix <> "homeostasis",
-    otel_prefix <> "bicameral",
-    otel_prefix <> "singularity",
-    otel_prefix <> "component_demo",
+    span_topic_prefix <> "dashboard",
+    span_topic_prefix <> "planning",
+    span_topic_prefix <> "immune",
+    span_topic_prefix <> "knowledge",
+    span_topic_prefix <> "zenoh",
+    span_topic_prefix <> "cockpit",
+    span_topic_prefix <> "verification",
+    span_topic_prefix <> "substrate",
+    span_topic_prefix <> "metabolic",
+    span_topic_prefix <> "podman",
+    span_topic_prefix <> "mcp",
+    span_topic_prefix <> "kms",
+    span_topic_prefix <> "telemetry",
+    span_topic_prefix <> "federation",
+    span_topic_prefix <> "health_grid",
+    span_topic_prefix <> "prajna",
+    span_topic_prefix <> "agents",
+    span_topic_prefix <> "holon",
+    span_topic_prefix <> "config",
+    span_topic_prefix <> "git",
+    span_topic_prefix <> "database",
+    span_topic_prefix <> "bridge",
+    span_topic_prefix <> "smriti",
+    span_topic_prefix <> "planning_dashboard",
+    span_topic_prefix <> "integrity",
+    span_topic_prefix <> "evolution",
+    span_topic_prefix <> "biomorphic",
+    span_topic_prefix <> "homeostasis",
+    span_topic_prefix <> "bicameral",
+    span_topic_prefix <> "singularity",
+    span_topic_prefix <> "component_demo",
   ]
 }

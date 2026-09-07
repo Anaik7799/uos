@@ -43,6 +43,7 @@ import cepaf_gleam/rules/engine as rule_engine
 import cepaf_gleam/substrate/beam_cache
 import cepaf_gleam/symbiosis/tensor as symbiosis_tensor
 import cepaf_gleam/symbiosis/types as symbiosis_types
+import cepaf_gleam/telemetry/exporter as otel_exporter
 import cepaf_gleam/ui/domain.{
   type HealthStatus, Critical, Degraded, Healthy, Unknown, all_pages,
   layer_to_string, page_control_plane, page_data_plane, page_fractal_layer,
@@ -2087,13 +2088,10 @@ fn kms_json() -> String {
 
 /// Telemetry status endpoint
 fn telemetry_json() -> String {
-  json.object([
-    #("page", json.string("Telemetry")),
-    #("active_spans", json.int(8)),
-    #("total_traces", json.int(1247)),
-    #("log_level", json.string("info")),
-  ])
-  |> json.to_string()
+  case otel_exporter.config_from_env() {
+    Ok(config) -> otel_exporter.status_json(config)
+    Error(reason) -> otel_exporter.configuration_error_json(reason)
+  }
 }
 
 /// Mathematical Integrity endpoint

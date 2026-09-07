@@ -369,8 +369,12 @@ pub fn route_kms_contains_checkpoints_test() {
 pub fn route_telemetry_contains_otel_test() {
   let result = router.route("/api/telemetry/status")
   string.contains(result, "\"Telemetry\"") |> should.be_true()
+  string.contains(result, "\"standard\":\"OpenTelemetry\"")
+  |> should.be_true()
+  string.contains(result, "\"transport\":\"OTLP/HTTP\"")
+  |> should.be_true()
   string.contains(result, "\"total_traces\"") |> should.be_true()
-  string.contains(result, "\"log_level\"") |> should.be_true()
+  string.contains(result, "\"log_level\":null") |> should.be_true()
 }
 
 // =============================================================================

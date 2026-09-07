@@ -8,7 +8,13 @@ import gleam/io
 import gleam/otp/actor
 import gleam/string
 
-pub const span_topic_prefix = "indrajaal/otel/spans/"
+/// Canonical UI span topic registry. Kept public so emitters and deployment
+/// subscribers can verify that they use the same key expression.
+pub const span_topic_prefix = "indrajaal/otel/ops/"
+
+pub fn accepts_topic(topic: String) -> Bool {
+  string.starts_with(topic, span_topic_prefix)
+}
 
 pub type Message {
   ZenohMessage(topic: String, payload: String)
@@ -40,33 +46,41 @@ fn handle_message(state: State, msg: Message) -> actor.Next(State, Message) {
     }
     True -> {
       case msg {
-        ZenohMessage(_topic, payload) -> {
-          let is_fema_critical = string.contains(payload, "CRITICAL")
-
-          case is_fema_critical {
+        ZenohMessage(topic, payload) -> {
+          case accepts_topic(topic) {
+            False -> actor.continue(state)
             True -> {
-              io.println(
-                "L2_Immune: FEMA Tensor > 100 detected. Recording failure.",
-              )
-              let tripped_breaker =
-                circuit_breaker.record_failure(breaker_checked, current_time)
+              let is_fema_critical = string.contains(payload, "CRITICAL")
 
-              case tripped_breaker.state {
-                BreakerOpen(_) ->
+              case is_fema_critical {
+                True -> {
                   io.println(
-                    "L2_Immune: CIRCUIT TRIPPED! V_dot(x) < 0 constraint activated.",
+                    "L2_Immune: FEMA Tensor > 100 detected. Recording failure.",
                   )
-                _ -> Nil
+                  let tripped_breaker =
+                    circuit_breaker.record_failure(
+                      breaker_checked,
+                      current_time,
+                    )
+
+                  case tripped_breaker.state {
+                    BreakerOpen(_) ->
+                      io.println(
+                        "L2_Immune: CIRCUIT TRIPPED! V_dot(x) < 0 constraint activated.",
+                      )
+                    _ -> Nil
+                  }
+                  actor.continue(State(..state, breaker: tripped_breaker))
+                }
+                False -> {
+                  let success_breaker =
+                    circuit_breaker.record_success(breaker_checked)
+                  actor.continue(State(
+                    breaker: success_breaker,
+                    span_count: state.span_count + 1,
+                  ))
+                }
               }
-              actor.continue(State(..state, breaker: tripped_breaker))
-            }
-            False -> {
-              let success_breaker =
-                circuit_breaker.record_success(breaker_checked)
-              actor.continue(State(
-                breaker: success_breaker,
-                span_count: state.span_count + 1,
-              ))
             }
           }
         }
