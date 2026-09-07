@@ -1,0 +1,52 @@
+{
+  "carrier": "uos-failure-classification/v1",
+  "generated_at": "2026-09-07T13:00:00Z",
+  "by": "L0-fable (R0 deterministic classification over the full-suite log of main tzmnqxwrnxvy/e2abf9d6; no model tokens)",
+  "suite": "apps/cepaf_gleam gleam test --target erlang",
+  "totals": { "passed": 10074, "aggregate_failure_lines": 202, "distinct_failing_identities": 164 },
+  "method": "awk over the eunit log: per failing test capture the actual/expected pair and any `code:` line; group by module; confirm the predicate by reading the first failing test of each module and the loader/erl stubs",
+  "clusters": [
+    {
+      "id": "A-nif-absent",
+      "root_cause": "priv/c3i_ocaml_nif.so is not present; c3i_ocaml_nif.erl fails closed and every rule-engine, Rete-UL, DAG, hook, data-quality and Zenoh-bridge evaluation returns Error or a FAIL_CLOSED JSON. priv/c3i_ocaml_nif.sha256 pins an artifact that lived in the pre-migration C3I tree; native/nifs/ocaml holds only a README (sources not ingested)",
+      "modules": { "rule_engine_nif_test": 64, "vault_rete_ul_test": 17, "dag_coverage_test": 15, "hook_rules_test": 13, "c3i_ocaml_nif_test": 12, "data_quality_rules_test": 6, "zenoh_rete_bridge_test": 5, "c3i_nif_mcp_test": 5 },
+      "count": 137,
+      "signature": "Error -> expected action atom (BlockBoot, EmergencyStop, NoAction, Reached, FailClosed, ...) or False -> True on version/loaded predicates; one explicit 'FAIL_CLOSED: c3i_ocaml_nif.so not loaded'",
+      "fix_class": "artifact provisioning + source ingestion (R4/R5): build the NIF from the frozen C3I sources under governance/sources discipline, record its sha256, load evidence via the existing runtime-truth gate; tests stay honest on hosts without the artifact",
+      "note": "not test defects; the tests encode the intended positive path"
+    },
+    {
+      "id": "B-health-json-via-nif",
+      "root_cause": "router.route('/health'), get('/health') and the MCP system_* tools assemble their JSON from c3i_nif.system_health/dashboard/verification, which fail closed without the NIF; the assertions look for 'interface', 'port', '4100', 'ok', 'wisp', 'status' in the body",
+      "modules": { "wisp_tui_content_test": 5, "e2e_full_stack_test": 5, "webui_full_coverage_test": 4 },
+      "count": 14,
+      "signature": "False -> True on string.contains over the health/pages bodies",
+      "fix_class": "collapses into A once the NIF loads; re-measure after A; any residue is a router truthfulness defect (Codex's telemetry route repair already keeps discovery honest)"
+    },
+    {
+      "id": "C-tls-fixtures-absent",
+      "root_cause": "tls_listener_test reads priv/ssl/cert.pem and priv/ssl/key.pem; priv/ssl does not exist; committing key material is barred by the ingestion rules",
+      "modules": { "tls_listener_test": 4 },
+      "count": 4,
+      "signature": "let assert Ok(content) = simplifile.read(cert_path|key_path) -> Error(Enoent)",
+      "fix_class": "R4 Sonnet slice: generate an ephemeral self-signed certificate and key at test time with Erlang public_key test-data helpers into a scratch directory; server.gleam keeps reading priv/ssl at runtime; no key material in the repo"
+    },
+    {
+      "id": "D-remaining",
+      "root_cause": "to be classified after A: 9 tests across modules with fewer than 4 failures each",
+      "count": 9,
+      "fix_class": "re-measure after A and C; classify the residue"
+    }
+  ],
+  "measured_after_provisioning_13_25Z": {
+    "step_1_c3i_ocaml_nif_only": { "passed": 10086, "distinct_failing": 152, "fixed": 12, "new": 0, "note": "only c3i_ocaml_nif_test cleared; the rule engine, Rete-UL, DAG, hook, data-quality and bridge tests depend on rule_engine_nif.so; the health/pages bodies on c3i_nif.so" },
+    "step_2_plus_rule_engine_c3i_rusty_vault": { "passed": 10271, "aggregate_failures": 5, "distinct_failing": 5, "fixed_vs_baseline": 160, "new": 1, "remaining": { "tls_listener_test": 4, "mcp_runtime_truth_test": 1 }, "new_failure": "mcp_runtime_truth_test.absent_nif_is_not_advertised_and_call_fails_closed_test asserts tools.nif_runtime_available() == False by reading host state; true only on hosts without the NIF; needs injected absence (reported to Codex, the module owner)" },
+    "corrections_to_the_classification": "cluster A splits by artifact: c3i_ocaml_nif (12 tests), rule_engine_nif (125 tests across rule_engine/vault_rete_ul/dag_coverage/hook_rules/data_quality/zenoh_rete_bridge/ooda_test_monitor), c3i_nif (cluster B, 14 + c3i_nif_mcp 5); rusty_vault_nif provisioned alongside; residue D was NIF-bound too",
+    "provisioning_record": "governance/sources/20260907-1305-c3i-ocaml-nif-artifact-provisioning.json"
+  },
+  "plan": [
+    "C first (independent, small): Sonnet worker in .uos-workspaces/w-tls",
+    "A: locate the frozen NIF sources and pinned artifact in the C3I evidence trees; build in isolation with the pinned OCaml toolchain; verify sha256 against priv/c3i_ocaml_nif.sha256; place the artifact under priv as a host-provisioned build product (ignored by jj) with a governance/sources record of revision, digest and locator; re-run the full suite; attribute",
+    "B and D: re-measure after A"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "carrier": "uos-source-provisioning/v1",
+  "timestamp": "20260907-1305",
+  "recorded_by": "L0-fable",
+  "session": "656f0d2c-6019-4d9e-b0ce-b9e39b240047",
+  "decision_record": "generated/20260907-1300-uos-decision-record-cepaf-baseline-burndown-1.json",
+  "artifact": {
+    "name": "c3i_ocaml_nif.so",
+    "kind": "compiled Erlang NIF (ELF 64-bit x86-64 shared object) linking the OCaml RETE-UL / Gospel substrate",
+    "target_path": "apps/cepaf_gleam/priv/c3i_ocaml_nif.so",
+    "repository_status": "host-provisioned build product; matched by the repository ignore rule `*.so`; never committed",
+    "pinned_digest_file": "apps/cepaf_gleam/priv/c3i_ocaml_nif.sha256",
+    "pinned_sha256": "cfa6ab0be38bc23dc288e8a017d66ffa767bf1fa18ccfb2d9e374a071072df30",
+    "size_bytes": 3905616,
+    "built": "2026-09-04T16:46:04 local (file mtime of the source locator)"
+  },
+  "source_locator": {
+    "artifact": "/home/an/NAS-setup/c3i/lib/cepaf_gleam/priv/c3i_ocaml_nif.so (identical copy at /home/an/dev/ver/c3i/lib/cepaf_gleam/priv/c3i_ocaml_nif.so)",
+    "c_shim_source": "/home/an/NAS-setup/c3i/lib/cepaf_gleam/native/ocaml_nif/c3i_ocaml_nif.c",
+    "authority": "VM-1 C3I evidence tree (read-only per policy section 3); the UOS tree holds only native/nifs/ocaml/README.md for these sources"
+  },
+  "verification": {
+    "digest_match": "sha256 of the provisioned file equals the pinned digest (verified at provisioning time; see the decision record's completed block for the measured values)",
+    "load_evidence": "c3i_ocaml_nif:loaded/0 and engine_version/0 executed on OTP 27 (erts 15.2.7) after provisioning; result recorded in the decision record",
+    "two_key": "key 1 = pinned digest in the repository; key 2 = fresh load and full-suite behaviour on this host"
+  },
+  "additional_artifacts_provisioned_13_20Z": [
+    { "name": "rule_engine_nif.so", "sha256": "ffd159d7d864ea4a (full digest in priv/rule_engine_nif.sha256)", "size_bytes": 1871816, "loader": "src/rule_engine_nif.erl", "provenance": "identical bytes in /home/an/NAS-setup/c3i and /home/an/dev/ver/c3i C3I trees", "pin_added": "apps/cepaf_gleam/priv/rule_engine_nif.sha256 (new; candidate for tri-sovereign review)" },
+    { "name": "c3i_nif.so", "sha256": "f4f6885a8af6ca02 (full digest in priv/c3i_nif.sha256)", "size_bytes": 14405296, "loader": "src/c3i_nif.erl", "provenance": "identical bytes in both C3I trees", "pin_added": "apps/cepaf_gleam/priv/c3i_nif.sha256 (new; candidate for tri-sovereign review)" },
+    { "name": "rusty_vault_nif.so", "sha256": "c00d91574f351ff0 (full digest in priv/rusty_vault_nif.sha256)", "size_bytes": 683608, "loader": "src/rusty_vault_nif.erl", "provenance": "identical bytes in both C3I trees", "pin_added": "apps/cepaf_gleam/priv/rusty_vault_nif.sha256 (new; candidate for tri-sovereign review)" }
+  ],
+  "deliberately_not_provisioned": [
+    { "name": "graphene_nif.so", "reason": "Zero-Muda: Graphene is barred (0 Graphene NIF)" },
+    { "name": "ferriskey_nif.so", "reason": "the two C3I trees hold different bytes (73d4e1bb... vs fcf76217...); ambiguous provenance; no pin" },
+    { "name": "planning_nif.so, nas_setup_nif.so", "reason": "no failing test depends on them; not needed for the burndown" }
+  ],
+  "scope_and_limits": [
+    "the artifact is provisioned on nas-1 only; tests that need it stay honest (fail closed) on hosts without it",
+    "no source ingestion has happened: the OCaml/C sources remain external evidence until adapted, tested and admitted",
+    "runtime deployment (ports 4100/8080) is not touched; runtime ownership stays with Codex",
+    "a rebuilt artifact from sources would carry a new digest and would need a new pin with provenance, never a silent replacement"
+  ]
+}

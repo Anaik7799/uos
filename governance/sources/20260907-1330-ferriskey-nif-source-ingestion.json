@@ -1,0 +1,49 @@
+{
+  "carrier": "uos-source-ingestion/v1",
+  "timestamp": "20260907-1330",
+  "recorded_by": "L0-fable",
+  "session": "656f0d2c-6019-4d9e-b0ce-b9e39b240047",
+  "operator_directive": "continue, get and fully integrate ferriskey",
+  "decision_record": "generated/20260907-1300-uos-decision-record-cepaf-baseline-burndown-1.json (ferriskey extension; completed block will cite this record)",
+  "subject": "FerrisKey IAM NIF (Rust, rustler cdylib) for apps/cepaf_gleam: local-first identity provider with Google Cloud IAM federation (realms, users, groups, roles, JWT/JWKS, GCP STS, SCIM)",
+  "source": {
+    "authority": "VM-1 C3I evidence tree (policy section 3, read-only)",
+    "crate_locator": "/home/an/NAS-setup/c3i/lib/cepaf_gleam/native/ferriskey_nif (identical crate sources also under /home/an/dev/ver/c3i/lib/cepaf_gleam/native/ferriskey_nif)",
+    "crate": { "name": "ferriskey_nif", "version": "0.1.0", "edition": "2021", "license": "Apache-2.0", "crate_type": "cdylib", "rust_sources": 13, "rust_lines": 5305 },
+    "dependencies": "crates.io only (rustler 0.37, tokio, reqwest rustls, jsonwebtoken, ring, ed25519-dalek, bcrypt, rusqlite bundled, r2d2, serde, chrono, uuid, tracing); the vendored ferriskey-domain path dependency is commented out upstream and not enabled",
+    "vendored_upstream": "/home/an/NAS-setup/c3i/sub-projects/ferriskey-vendored (upstream FerrisKey workspace, Apache-2.0) — NOT ingested; only the NIF crate is in scope",
+    "formal_evidence": "/home/an/dev/ver/c3i/specs/tla/FerrisKeyIAM.tla (TLA+ spec) — candidate for formal/tla/ as external evidence; not yet copied (guard)",
+    "governing_rule_upstream": "/home/an/dev/ver/c3i/.claude/rules/iam-ferriskey-nif.md (SC-FERRISKEY-NIF-001..010, SC-GCP-IAM-001..020)"
+  },
+  "sanitization": {
+    "secret_scan": "no .pem/.key/.env/.db/.sqlite/.json files in the crate; no credentials in sources (grep); Cargo.lock pins crates.io versions only",
+    "zero_muda": "no bevy, no graphite, no graphene references in Cargo.toml or sources",
+    "excluded": "target/ build directory (1.6 GB of compiler output) never copied"
+  },
+  "snapshot": {
+    "manifest": "15 files (Cargo.toml, Cargo.lock, 13 src/*.rs) hashed with sha256 in a scratch copy taken 2026-09-07 ~13:25Z",
+    "snapshot_digest": "a2eb0cdaf78dbbba09fe61182006c58dc8f300d9af834fdec97efc946f376223 (sha256 of the sorted manifest)",
+    "per_file_prefixes": { "Cargo.lock": "2ab5a05c89f9", "Cargo.toml": "2865cec138da", "src/audit.rs": "20cf51d7f469", "src/db.rs": "2a45b34d2e1e", "src/gcp_iam.rs": "aef3d39d6907", "src/gcp_sts.rs": "9f3d58d9298e", "src/group.rs": "e7748e124a8d", "src/jwks.rs": "4c15e2b71c22", "src/lib.rs": "839211d50842", "src/realm.rs": "486c45990643", "src/role.rs": "5314dd69d91e", "src/runtime.rs": "c30d5645ab8d", "src/scim.rs": "6fe5ada579cf", "src/token.rs": "1e9d2dafcdbb", "src/user.rs": "02306aae491d" }
+  },
+  "build": {
+    "toolchain": "rustc 1.95.0 (59807616e 2026-04-14), cargo release profile, host x86-64 Linux, OTP 27 (erts 15.2.7)",
+    "result": "target/release/libferriskey_nif.so, 8,332,240 bytes, sha256 16969091909227c73ee24ddbe9fca3dd7495779c75fab025188fed54af617ed4, build time 1m03s",
+    "pre_migration_artifacts_for_comparison": "C3I NAS copy 73d4e1bb... (8,332,112 bytes, 2026-05-03) and VM-1 copy fcf76217... (8,354,064 bytes, 2026-05-02) differ from each other and from this build; neither is used"
+  },
+  "uos_placement": {
+    "artifact": "apps/cepaf_gleam/priv/ferriskey_nif.so (host-provisioned, matched by the *.so ignore rule, never committed)",
+    "pin": "apps/cepaf_gleam/priv/ferriskey_nif.sha256 (committed; provenance line)",
+    "sources_target": "native/nifs/rust/ferriskey_nif/ (Cargo.toml, Cargo.lock, src/) — PENDING: the copy into the repository was refused by the operator's execution guard; requires operator permission",
+    "rule_mirrors_target": ".claude/rules, .gemini/rules, .agents/rules, .codex/rules — PENDING: same guard",
+    "loader_and_bindings_already_in_uos": "apps/cepaf_gleam/src/ferriskey_nif.erl (46 NIF stubs), src/cepaf_gleam/auth/ferriskey_nif.gleam (31 externals), iam/* supervisor, nif_manager, jwks_cache_actor, scim_outbound_actor, ui/wisp/auth_api.gleam; tests ferriskey_nif_wiring_test (33) and ferriskey_rbac_wiring_test (6)"
+  },
+  "verification": {
+    "two_key": "key 1 = source snapshot digest + artifact digest recorded here and in the pin; key 2 = fresh load and test behaviour on nas-1 (full cepaf suite with the artifact present; results in the decision record's completed block)",
+    "review_required": "Codex R5 sovereign security review before any admission claim (IAM, tokens, JWKS, GCP STS, SCIM); AGY review for tri-sovereign consensus"
+  },
+  "limits": [
+    "runtime deployment untouched; ports 4100/8080 unchanged; runtime ownership stays with Codex",
+    "the vendored upstream FerrisKey workspace and the GCP federation paths are not exercised here (no credentials, no network calls in tests)",
+    "a host without the artifact keeps failing closed (ferriskey_nif returns nif_not_loaded)"
+  ]
+}
