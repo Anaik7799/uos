@@ -1,0 +1,421 @@
+{
+  "schema": "uos.c07.agentic-journal-formal-verification.v1",
+  "title": "UOS C07 durable coordination journal bounded formal refinement",
+  "created_at_utc": "2026-09-07T08:13:01Z",
+  "document_path": "docs/reviews/20260907-0813-uos-c07-agentic-journal-formal-verification.json",
+  "scope": "BOUNDED_FORMAL_MODEL_AND_STRUCTURAL_SOURCE_CORRESPONDENCE",
+  "status": "MODEL_CHECKS_PASSED",
+  "system_admission": "NOT_ADMITTED",
+  "model_to_implementation_refinement": "STRUCTURAL_CORRESPONDENCE_ONLY",
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l2",
+    "#fractal-l3",
+    "#fractal-l5",
+    "#fractal-l8",
+    "#zk-adr",
+    "#zero-muda"
+  ],
+  "navigation": {
+    "live": "http://nas-1.tail55d152.ts.net:4100/docs/reviews/20260907-0813-uos-c07-agentic-journal-formal-verification.json",
+    "raw": "http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20260907-0813-uos-c07-agentic-journal-formal-verification.json",
+    "plan": "http://nas-1.tail55d152.ts.net:4100/docs/plans/20260907-0653-uos-tri-agent-cheaper-mode-implementation-plan.md"
+  },
+  "timestamp_evidence": {
+    "provider": "host date -u",
+    "observed": "2026-09-07T08:13:01Z",
+    "timedatectl": {
+      "NTP": "yes",
+      "NTPSynchronized": "yes",
+      "Timezone": "Europe/Stockholm",
+      "LocalRTC": "no"
+    },
+    "chronyc_tracking": "UNAVAILABLE: could not open connection to daemon",
+    "systemd_timesync_status": "UNAVAILABLE: systemd-timesyncd service not installed"
+  },
+  "candidate": {
+    "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/codex-coordination-formal",
+    "base_change_id": "sslrvptv",
+    "base_commit_id": "e83b24e0e9cdb14c5fd4b2760e60de6ff6ca2800",
+    "working_change_id": "utmmzunuzrlxmvovlwxwyqpxvowpqkry",
+    "working_commit_before_receipt": "8d78df925e1fea7a566fec7c6be3acada8f36283"
+  },
+  "structural_source_correspondence": {
+    "status": "SOURCE_SHAPES_MAPPED_NO_INTERPRETER_EQUIVALENCE_PROOF",
+    "c01_candidate_commit": "1c69804b45f13af549f0070a711ed089cee8a418",
+    "c01_candidate_change_id": "wkxqyxxwwqukwzzwrypunwoyznrnlyxp",
+    "sources": [
+      {
+        "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+        "candidate_sha256": "ba43afda772409cfaf90eec090327df7f7cadd66cd112ae8b73901834fcdbeb2",
+        "mapped_shapes": [
+          "monotone journal sequence",
+          "per-resource retained epoch",
+          "operation ID bound to exact command body",
+          "replay of matching duplicate",
+          "conflicting duplicate rejection",
+          "multiple session and resource identities",
+          "ACK as observation only"
+        ]
+      },
+      {
+        "path": "apps/uos_swarm/src/session_sync_ffi.erl",
+        "candidate_sha256": "41b33e65025c5e9ea68b5fbde62186a08a6524822bc6bf78e902d998559650fe",
+        "mapped_shapes": [
+          "immutable numbered commits",
+          "pending-file retention",
+          "write-sync-rename-directory-sync commit boundary",
+          "gap and unexpected-file replay refusal",
+          "crash before versus after rename"
+        ]
+      }
+    ]
+  },
+  "models": [
+    {
+      "path": "formal/lean/AgenticJournal.lean",
+      "sha256": "77f0012ef4327106a62b4db3a583058f183c849755e710470f43b0c0ae92f8cd",
+      "kind": "inductive executable kernel with theorem-checked transition properties",
+      "named_theorems": 16,
+      "theorems": [
+        "no_two_valid_lease_holders",
+        "pending_cannot_grant",
+        "torn_cannot_grant",
+        "pending_recovery_fails_closed",
+        "torn_recovery_fails_closed",
+        "clean_recovery_replays_committed",
+        "crash_before_preserves_committed_head",
+        "crash_after_preserves_committed_head",
+        "fresh_claim_advances_sequence_and_epoch",
+        "same_body_duplicate_replays",
+        "conflicting_duplicate_rejected",
+        "claim_does_not_change_other_resource",
+        "accepted_claim_survives_post_commit_crash",
+        "ack_preserves_action_boundary",
+        "ack_does_not_grant_action",
+        "missing_decision_record_cannot_effect"
+      ]
+    },
+    {
+      "path": "formal/quint/agentic_journal.qnt",
+      "sha256": "1c9ae97d266e458f63fa26b30687726e57ede1328724dbeae9efc8ddbfbd6c3a",
+      "kind": "finite temporal transition model with targeted scenarios, seeded simulation, and controlled unsafe mutants",
+      "bounds": {
+        "sessions": 3,
+        "resources": 3,
+        "operation_ids": 4,
+        "body_hash_values": 3,
+        "max_sequence": 8,
+        "max_epoch_per_resource": 4,
+        "simulation_samples": 400,
+        "max_steps_per_sample": 60,
+        "seed": "0x20260907",
+        "backend": "typescript"
+      },
+      "invariants": [
+        "sequence monotonicity",
+        "per-resource epoch monotonicity",
+        "no two valid holders for one resource",
+        "crash preserves committed head",
+        "conflicting duplicate cannot commit",
+        "pending/torn evidence fails closed",
+        "ACK does not alter action authority",
+        "effect requires matching validated decision evidence"
+      ]
+    }
+  ],
+  "decision_record_boundary": {
+    "required_match": [
+      "actor/session",
+      "resource",
+      "epoch",
+      "candidate revision",
+      "reservation attempt",
+      "task",
+      "action"
+    ],
+    "property": "an effect increment requires a validated decision record matching the complete modeled tuple",
+    "non_claims": [
+      "the model does not prove completeness or truth of a narrative decision summary",
+      "the model does not require or represent private chain of thought",
+      "the model does not authenticate the decision record constructor"
+    ]
+  },
+  "tools": {
+    "lean": {
+      "path": "/tmp/uos-lean-4.33.0.VwrqbM/lean-4.33.0-linux/bin/lean",
+      "version": "4.33.0",
+      "commit": "d8b18978322de05a8f3dba51ef03cf5461676c17",
+      "binary_sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "provenance": "existing cached pinned toolchain; no download or installation"
+    },
+    "quint": {
+      "path": "/home/an/.npm/_npx/fb57b81753a2bc55/node_modules/@informalsystems/quint/dist/src/cli.js",
+      "version": "0.32.0",
+      "cli_sha256": "ac12595b1cb7253feec93c79417615c6eb20fc3b6a3df35c5e3530b24e90a501",
+      "backend": "typescript",
+      "provenance": "existing npm cache; direct Node invocation without npm or npx download"
+    }
+  },
+  "invocations": [
+    {
+      "id": "LEAN-CHECK",
+      "argv": [
+        "/tmp/uos-lean-4.33.0.VwrqbM/lean-4.33.0-linux/bin/lean",
+        "formal/lean/AgenticJournal.lean"
+      ],
+      "exit_code": 0,
+      "status": "PASSED",
+      "log": "/tmp/c07-agentic-journal-lean.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "LEAN-AXIOM-INSPECTION",
+      "argv": [
+        "LEAN_PATH=/tmp",
+        "/tmp/uos-lean-4.33.0.VwrqbM/lean-4.33.0-linux/bin/lean",
+        "/tmp/C07AgenticJournalAxioms.lean"
+      ],
+      "exit_code": 0,
+      "status": "PASSED",
+      "custom_axiom_declarations": 0,
+      "sorry_occurrences": 0,
+      "logical_dependencies": [
+        "propext"
+      ],
+      "log": "/tmp/c07-agentic-journal-lean-axioms.log",
+      "log_sha256": "8d366c538ef7c731f5777abd7de2ccf3bfa1a5943a05b25dad6793d8ac2619cb"
+    },
+    {
+      "id": "QUINT-TYPECHECK",
+      "argv": [
+        "node",
+        "/home/an/.npm/_npx/fb57b81753a2bc55/node_modules/@informalsystems/quint/dist/src/cli.js",
+        "typecheck",
+        "formal/quint/agentic_journal.qnt"
+      ],
+      "exit_code": 0,
+      "status": "PASSED",
+      "log": "/tmp/c07-agentic-journal-quint-typecheck.log",
+      "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "id": "QUINT-TARGETED-SCENARIOS",
+      "argv": [
+        "node",
+        "/home/an/.npm/_npx/fb57b81753a2bc55/node_modules/@informalsystems/quint/dist/src/cli.js",
+        "test",
+        "formal/quint/agentic_journal.qnt",
+        "--main",
+        "agentic_journal_test",
+        "--backend",
+        "typescript",
+        "--seed",
+        "0x20260907",
+        "--max-samples",
+        "1",
+        "--verbosity",
+        "1"
+      ],
+      "exit_code": 0,
+      "status": "PASSED",
+      "passed": 9,
+      "failed": 0,
+      "tests": [
+        "positiveDecisionEffectTest",
+        "multipleSessionsResourcesTest",
+        "secondHolderRejectedTest",
+        "sameDuplicateReplayTest",
+        "conflictingDuplicateTest",
+        "crashBeforeRecoveryTest",
+        "tornFailsClosedTest",
+        "ackDoesNotGrantTest",
+        "missingDecisionFailsClosedTest"
+      ],
+      "log": "/tmp/c07-agentic-journal-quint-tests.log",
+      "log_sha256": "80cab6959aaa8d43cbc3ef1b4f795599ee4093684b0f260b9bd0db3fd8a08962"
+    },
+    {
+      "id": "QUINT-BOUNDED-SIMULATION",
+      "argv": [
+        "node",
+        "/home/an/.npm/_npx/fb57b81753a2bc55/node_modules/@informalsystems/quint/dist/src/cli.js",
+        "run",
+        "formal/quint/agentic_journal.qnt",
+        "--main",
+        "agentic_journal_test",
+        "--backend",
+        "typescript",
+        "--invariant",
+        "inv_all",
+        "--witnesses",
+        "witness_claim",
+        "witness_multiple_resources",
+        "witness_recovered_replay",
+        "witness_decision_effect",
+        "--max-steps",
+        "60",
+        "--max-samples",
+        "400",
+        "--seed",
+        "0x20260907",
+        "--verbosity",
+        "1"
+      ],
+      "exit_code": 0,
+      "status": "NO_VIOLATION_FOUND_WITHIN_BOUND",
+      "witness_trace_counts": {
+        "claim": 347,
+        "multiple_resources": 2,
+        "recovered_replay": 107,
+        "decision_effect": 0
+      },
+      "witness_note": "The decision-effect path is non-vacuously established by positiveDecisionEffectTest; the unconstrained seeded sampler did not select its exact seven-field decision tuple within this run.",
+      "log": "/tmp/c07-agentic-journal-quint-simulation.log",
+      "log_sha256": "bc849b86f0d1571c6397ddeb8c7d2cb646fb4b6e504c781ea141ed959a67226d"
+    },
+    {
+      "id": "QUINT-CONFLICTING-DUPLICATE-MUTANT",
+      "argv": [
+        "node",
+        "/home/an/.npm/_npx/fb57b81753a2bc55/node_modules/@informalsystems/quint/dist/src/cli.js",
+        "run",
+        "formal/quint/agentic_journal.qnt",
+        "--main",
+        "agentic_journal_test",
+        "--backend",
+        "typescript",
+        "--init",
+        "mutantConflictInit",
+        "--step",
+        "mutantAcceptConflictingDuplicate",
+        "--invariant",
+        "inv_conflicting_duplicate_rejected",
+        "--max-steps",
+        "2",
+        "--max-samples",
+        "1",
+        "--seed",
+        "0x1",
+        "--verbosity",
+        "1",
+        "--out-itf",
+        "/tmp/c07-agentic-journal-mutant-conflict.itf.json"
+      ],
+      "exit_code": 1,
+      "status": "EXPECTED_COUNTEREXAMPLE_OBSERVED",
+      "counterexample": {
+        "states": 2,
+        "sequence_before": 1,
+        "sequence_after": 2,
+        "body_before": 1,
+        "body_after": 2,
+        "incorrect_outcome": "accepted"
+      },
+      "log_sha256": "f076db2bbcfebad4ded20536dbb7b965993e7c10798a4bfae8630be54782aa6e",
+      "itf_sha256": "08a9405ac2846a009c29ca67e6488063bd289774e9f1464b896cc9f4f617ebae"
+    },
+    {
+      "id": "QUINT-ACK-AUTHORITY-MUTANT",
+      "argv": [
+        "node",
+        "/home/an/.npm/_npx/fb57b81753a2bc55/node_modules/@informalsystems/quint/dist/src/cli.js",
+        "run",
+        "formal/quint/agentic_journal.qnt",
+        "--main",
+        "agentic_journal_test",
+        "--backend",
+        "typescript",
+        "--step",
+        "mutantAckGrantsEffect",
+        "--invariant",
+        "inv_ack_non_authority",
+        "--max-steps",
+        "2",
+        "--max-samples",
+        "1",
+        "--seed",
+        "0x1",
+        "--verbosity",
+        "1",
+        "--out-itf",
+        "/tmp/c07-agentic-journal-mutant-ack.itf.json"
+      ],
+      "exit_code": 1,
+      "status": "EXPECTED_COUNTEREXAMPLE_OBSERVED",
+      "counterexample": {
+        "states": 2,
+        "last_kind": "ack",
+        "effects_before": 0,
+        "effects_after": 1,
+        "authority_unchanged": true
+      },
+      "log_sha256": "367e2afc7fdad3ceb38f12c90b424548705aebe3ef4eec0347e87916a15d0b45",
+      "itf_sha256": "9408113d6c39773039c31ebdd09098f3daa9c165d2e22e645eb61d3c75cab537"
+    },
+    {
+      "id": "QUINT-MISSING-DECISION-MUTANT",
+      "argv": [
+        "node",
+        "/home/an/.npm/_npx/fb57b81753a2bc55/node_modules/@informalsystems/quint/dist/src/cli.js",
+        "run",
+        "formal/quint/agentic_journal.qnt",
+        "--main",
+        "agentic_journal_test",
+        "--backend",
+        "typescript",
+        "--init",
+        "mutantMissingDecisionInit",
+        "--step",
+        "mutantEffectWithoutDecision",
+        "--invariant",
+        "inv_effect_requires_matching_decision",
+        "--max-steps",
+        "2",
+        "--max-samples",
+        "1",
+        "--seed",
+        "0x1",
+        "--verbosity",
+        "1",
+        "--out-itf",
+        "/tmp/c07-agentic-journal-mutant-decision.itf.json"
+      ],
+      "exit_code": 1,
+      "status": "EXPECTED_COUNTEREXAMPLE_OBSERVED",
+      "counterexample": {
+        "states": 2,
+        "decision_present": false,
+        "actor": 1,
+        "resource": "integration/main",
+        "epoch": 1,
+        "attempt": 1,
+        "task": 7,
+        "action": 9,
+        "effects_before": 0,
+        "effects_after": 1
+      },
+      "log_sha256": "f3f9e3e3f5cbcb733b954d4157410a324d44d3d49eef07ee2e126c440f497886",
+      "itf_sha256": "99e4b0c89364aadb2b2e977bebbb87ae1d5dcd673cc0cb3463b7aa6d262e6724"
+    }
+  ],
+  "independent_counterexample_oracle": {
+    "tool": "jq 1.8.1",
+    "status": "PASSED",
+    "checks": [
+      "decoded conflicting duplicate sequence/body replacement",
+      "decoded ACK-tagged effect increment with unchanged authority set",
+      "decoded effect increment while decisionPresent=false and exact action tuple was submitted"
+    ]
+  },
+  "limitations": [
+    "Quint simulation is seeded and bounded, not exhaustive verification.",
+    "Lean proves the abstract definitions in this file, not the concrete Gleam/Erlang interpreter.",
+    "The abstract atomic commit boundary does not establish filesystem, storage-device, kernel, or power-loss guarantees.",
+    "Evidence states do not validate actual JSON, SHA-256, permissions, lock owners, fsync behavior, or corruption detection.",
+    "Clock identity, expiry, boot changes, and production IAM are outside this model.",
+    "The action gate does not prove remote destination idempotency or that a privileged effect cannot occur outside the modeled consumer.",
+    "Decision evidence matching does not prove narrative completeness, rationale quality, or private reasoning disclosure.",
+    "No C07 swarm acceptance, deployment, release, or system admission is claimed by this receipt."
+  ]
+}
