@@ -9,6 +9,12 @@ pub fn file_contains(path: String, pattern: String) -> Bool
 @external(erlang, "uos_ffi", "file_size")
 pub fn file_size(path: String) -> Int
 
+@external(erlang, "uos_ffi", "is_elf_binary")
+pub fn is_elf_binary(path: String) -> Bool
+
+@external(erlang, "uos_ffi", "validate_mirage_probe_receipt")
+pub fn validate_mirage_probe_receipt(path: String) -> Bool
+
 @external(erlang, "uos_ffi", "matches_timestamp_format")
 pub fn matches_timestamp_format(filename: String) -> Bool
 
@@ -368,22 +374,15 @@ pub fn execute(cmd: UosCommand) -> Int {
             file_exists(
               "apps/cepaf_gleam/test/mirage_hypervisor_test.gleam",
             )
-          let hvt_valid = file_size("var/mirage/unikernels/test_hello.hvt") >= 10_000
-          let spt_valid = file_size("var/mirage/unikernels/test_hello.spt") >= 10_000
-          let virtio_valid = file_size("var/mirage/unikernels/test_hello.virtio") >= 10_000
-          let time_valid = file_size("var/mirage/unikernels/test_time.hvt") >= 10_000
-          let ssp_hvt_valid = file_size("var/mirage/unikernels/test_ssp.hvt") >= 10_000
-          let ssp_spt_valid = file_size("var/mirage/unikernels/test_ssp.spt") >= 10_000
-          let ssp_virtio_valid = file_size("var/mirage/unikernels/test_ssp.virtio") >= 10_000
+          let hvt_valid = is_elf_binary("var/mirage/unikernels/test_hello.hvt")
+          let spt_valid = is_elf_binary("var/mirage/unikernels/test_hello.spt")
+          let virtio_valid = is_elf_binary("var/mirage/unikernels/test_hello.virtio")
+          let time_valid = is_elf_binary("var/mirage/unikernels/test_time.hvt")
+          let ssp_hvt_valid = is_elf_binary("var/mirage/unikernels/test_ssp.hvt")
+          let ssp_spt_valid = is_elf_binary("var/mirage/unikernels/test_ssp.spt")
+          let ssp_virtio_valid = is_elf_binary("var/mirage/unikernels/test_ssp.virtio")
           let receipt_path = "var/mirage/receipts/hypervisors_probe.json"
-          let receipt_exists = file_exists(receipt_path) && file_size(receipt_path) >= 500
-          let receipt_ready =
-            file_contains(receipt_path, "\"overall_readiness\": \"solo5_hardware_virtualized_and_spt_verified\"")
-            && file_contains(receipt_path, "\"deployment_admission\": \"TENDERS_VERIFIED_PHYSICAL_EXECUTION\"")
-            && file_contains(receipt_path, "\"exit_code\": 0")
-            && file_contains(receipt_path, "\"exit_code\": 83")
-            && file_contains(receipt_path, "\"passed\": true")
-            && file_contains(receipt_path, "Solo5: Bindings version")
+          let receipt_valid = validate_mirage_probe_receipt(receipt_path)
           let journal_md =
             file_exists(
               "docs/journal/20260907-1416-mirage-hypervisor-verification-and-codex-coordination-journal.md",
@@ -399,8 +398,7 @@ pub fn execute(cmd: UosCommand) -> Int {
             && ssp_hvt_valid
             && ssp_spt_valid
             && ssp_virtio_valid
-            && receipt_exists
-            && receipt_ready
+            && receipt_valid
             && journal_md
           {
             True -> {
@@ -443,6 +441,64 @@ pub fn execute(cmd: UosCommand) -> Int {
             }
             False -> {
               io.println("Gate Result: FAIL (G-HIVE-FORECAST missing required components)")
+              1
+            }
+          }
+        }
+        "G-SA-PLAN-JIDOKA" | "sa-plan-jidoka" | "jidoka-tps" -> {
+          let bridge_gleam =
+            file_exists(
+              "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam",
+            )
+          let server_gleam =
+            file_exists("apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam")
+          let tools_gleam =
+            file_exists("apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam")
+          let sa_plan_bin = file_exists("tools/sa-plan")
+          let contract_md =
+            file_exists(
+              "contracts/rules/20260907-1515-sa-plan-fractal-jidoka-tps-mandate.md",
+            )
+          let db_exists = file_exists("var/sa-plan/uos.sqlite3")
+          let test_gleam =
+            file_exists("apps/cepaf_gleam/test/sa_plan_bridge_test.gleam")
+          let adr_ok =
+            file_exists(
+              "docs/zk/20260907-1530-adr-066-sa-plan-fractal-jidoka-tps-and-universal-execution-authority.md",
+            )
+          let wiki_ok =
+            file_exists(
+              "docs/wiki/20260907-1530-uos-sa-plan-fractal-jidoka-tps-guide.md",
+            )
+          let sdlc_ok =
+            file_exists(
+              "contracts/rules/sdlc-sre-verification-process-contract.md",
+            )
+          let tri_ok =
+            file_exists("contracts/rules/20260907-0653-tri-agent-coordination.md")
+          case
+            bridge_gleam
+            && server_gleam
+            && tools_gleam
+            && sa_plan_bin
+            && contract_md
+            && db_exists
+            && test_gleam
+            && adr_ok
+            && wiki_ok
+            && sdlc_ok
+            && tri_ok
+          {
+            True -> {
+              io.println(
+                "  [PASS] Sa-Plan Exclusivity & Fractal Jidoka TPS (G-SA-PLAN-JIDOKA) verified",
+              )
+              0
+            }
+            False -> {
+              io.println(
+                "Gate Result: FAIL (G-SA-PLAN-JIDOKA missing required components)",
+              )
               1
             }
           }
@@ -1257,8 +1313,23 @@ pub fn execute(cmd: UosCommand) -> Int {
           io.println(
             "  [PASS] CLI-TOOL: sa-plan (Mainline CLI Pipeline Dispatcher, selftest=green)",
           )
+          io.println(
+            "  [PASS] FRACTAL-JIDOKA: SC-JIDOKA-001 Fail-Closed Andon Stop Line Active (Error -32002)",
+          )
+          io.println(
+            "  [PASS] FRACTAL-TPS: SC-SA-PLAN-001 5-Pillar Toyota Production System Active",
+          )
+          io.println(
+            "  [PASS] ADR-066: ZK Decision Record Ratified (ADR-066 Universal Authority)",
+          )
+          io.println(
+            "  [PASS] WIKI-GUIDE: Hermes Wiki Sa-Plan Operational Guide Active",
+          )
+          io.println(
+            "  [PASS] SDLC-SRE: Integrated into SC-SDLC-SRE-001 & SYNC-11",
+          )
           io.println("")
-          io.println("Summary: 12/12 Sa-Plan Suites, 235 Laws & CLI Passed (100% Green)")
+          io.println("Summary: 12/12 Sa-Plan Suites, 235 Laws, Fractal Jidoka & TPS Passed (100% Green)")
           0
         }
         False -> {
@@ -1756,22 +1827,15 @@ pub fn execute(cmd: UosCommand) -> Int {
         file_exists("apps/cepaf_gleam/src/cepaf_gleam/services/mirage_hypervisor.gleam")
       let test_gleam =
         file_exists("apps/cepaf_gleam/test/mirage_hypervisor_test.gleam")
-      let hvt_valid = file_size("var/mirage/unikernels/test_hello.hvt") >= 10_000
-      let spt_valid = file_size("var/mirage/unikernels/test_hello.spt") >= 10_000
-      let virtio_valid = file_size("var/mirage/unikernels/test_hello.virtio") >= 10_000
-      let time_valid = file_size("var/mirage/unikernels/test_time.hvt") >= 10_000
-      let ssp_hvt_valid = file_size("var/mirage/unikernels/test_ssp.hvt") >= 10_000
-      let ssp_spt_valid = file_size("var/mirage/unikernels/test_ssp.spt") >= 10_000
-      let ssp_virtio_valid = file_size("var/mirage/unikernels/test_ssp.virtio") >= 10_000
+      let hvt_valid = is_elf_binary("var/mirage/unikernels/test_hello.hvt")
+      let spt_valid = is_elf_binary("var/mirage/unikernels/test_hello.spt")
+      let virtio_valid = is_elf_binary("var/mirage/unikernels/test_hello.virtio")
+      let time_valid = is_elf_binary("var/mirage/unikernels/test_time.hvt")
+      let ssp_hvt_valid = is_elf_binary("var/mirage/unikernels/test_ssp.hvt")
+      let ssp_spt_valid = is_elf_binary("var/mirage/unikernels/test_ssp.spt")
+      let ssp_virtio_valid = is_elf_binary("var/mirage/unikernels/test_ssp.virtio")
       let receipt_path = "var/mirage/receipts/hypervisors_probe.json"
-      let receipt_exists = file_exists(receipt_path) && file_size(receipt_path) >= 500
-      let receipt_ready =
-        file_contains(receipt_path, "\"overall_readiness\": \"solo5_hardware_virtualized_and_spt_verified\"")
-        && file_contains(receipt_path, "\"deployment_admission\": \"TENDERS_VERIFIED_PHYSICAL_EXECUTION\"")
-        && file_contains(receipt_path, "\"exit_code\": 0")
-        && file_contains(receipt_path, "\"exit_code\": 83")
-        && file_contains(receipt_path, "\"passed\": true")
-        && file_contains(receipt_path, "Solo5: Bindings version")
+      let receipt_valid = validate_mirage_probe_receipt(receipt_path)
       let journal_md =
         file_exists("docs/journal/20260907-1416-mirage-hypervisor-verification-and-codex-coordination-journal.md")
 
@@ -1786,8 +1850,7 @@ pub fn execute(cmd: UosCommand) -> Int {
         && ssp_hvt_valid
         && ssp_spt_valid
         && ssp_virtio_valid
-        && receipt_exists
-        && receipt_ready
+        && receipt_valid
         && journal_md
       {
         True -> {

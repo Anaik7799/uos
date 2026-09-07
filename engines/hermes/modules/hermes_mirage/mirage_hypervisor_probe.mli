@@ -46,3 +46,9 @@ type hypervisor_probe_result = {
 val probe_hypervisors : unit -> hypervisor_probe_result
 
 val probe_to_json : hypervisor_probe_result -> Yojson.Safe.t
+
+val is_allowed_tender : string -> bool
+
+val is_successful_execution : tender:string -> exit_code:int -> output:string -> bool
+
+val run_tender_test : string option -> string -> int list -> string list -> solo5_execution_receipt option

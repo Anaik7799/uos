@@ -8,10 +8,12 @@
 ////   - Single-Instance vs Multi-Instance Actor & Agent Ecosystem
 ////   - 10 Fractal Layers (L0..L9) x 5 Fractal Surfaces
 
+import gleam/bit_array
 import gleam/int
 import gleam/json
 import gleam/list
 import gleam/option.{type Option, None, Some}
+import gleam/string
 
 // =============================================================================
 // Domain Types: Planning, Tasks, Jobs, Workflows
@@ -818,3 +820,223 @@ pub fn serialize_aspects_json() -> String {
   ])
   |> json.to_string
 }
+
+// =============================================================================
+// Fractal Jidoka & Toyota Production System (TPS) Mandate (SC-JIDOKA-001)
+// =============================================================================
+
+pub type JidokaDefect {
+  BypassAttempt(reason: String)
+  UnledgeredExecution(actor: String, action: String)
+  SchemaViolation(payload: String)
+  LeaseExpired(task_id: String)
+  ShadowRegistryAttempt(target: String)
+}
+
+pub type JidokaStatus {
+  JidokaNominal
+  JidokaAndonHalt(
+    reason: String,
+    layer: Int,
+    actor: String,
+    attempted_action: String,
+  )
+}
+
+/// Enforces Fractal Jidoka fail-closed Stop Line (SC-JIDOKA-001).
+/// If any agent or BEAM actor attempts task execution or mutation outside
+/// sa-plan, immediately halts execution with an Andon stop error.
+pub fn enforce_fractal_jidoka(
+  source: String,
+  action: String,
+  is_sa_plan_authorized: Bool,
+) -> Result(Nil, String) {
+  case is_sa_plan_authorized {
+    True -> Ok(Nil)
+    False ->
+      Error(
+        "Fractal Jidoka Andon Halt: Non-sa-plan task execution attempted by "
+        <> source
+        <> " for action "
+        <> action
+        <> ". Execution stopped per SC-JIDOKA-001.",
+      )
+  }
+}
+
+/// TPS Poka-Yoke: Validates task arguments before creation to prevent defects.
+pub fn poka_yoke_validate_task(
+  plan: String,
+  id: String,
+  name: String,
+  title: String,
+) -> Result(Nil, String) {
+  case
+    string.is_empty(string.trim(plan))
+    || string.is_empty(string.trim(id))
+    || string.is_empty(string.trim(name))
+    || string.is_empty(string.trim(title))
+  {
+    True ->
+      Error(
+        "TPS Poka-Yoke Error: Invalid task arguments. Plan, id, name, and title must be non-empty.",
+      )
+    False -> Ok(Nil)
+  }
+}
+
+/// TPS Poka-Yoke: Validates Oban job parameters.
+pub fn poka_yoke_validate_job(
+  queue: String,
+  worker: String,
+  args: String,
+) -> Result(Nil, String) {
+  case
+    string.is_empty(string.trim(queue))
+    || string.is_empty(string.trim(worker))
+    || string.is_empty(string.trim(args))
+  {
+    True ->
+      Error(
+        "TPS Poka-Yoke Error: Invalid Oban job arguments. Queue, worker, and args must be non-empty.",
+      )
+    False -> Ok(Nil)
+  }
+}
+
+/// TPS Poka-Yoke: Validates Temporal workflow parameters.
+pub fn poka_yoke_validate_workflow(
+  id: String,
+  workflow_type: String,
+) -> Result(Nil, String) {
+  case
+    string.is_empty(string.trim(id))
+    || string.is_empty(string.trim(workflow_type))
+  {
+    True ->
+      Error(
+        "TPS Poka-Yoke Error: Invalid Temporal workflow arguments. Id and workflow_type must be non-empty.",
+      )
+    False -> Ok(Nil)
+  }
+}
+
+// =============================================================================
+// CLI Execution Adapter for tools/sa-plan (Hermes OCaml Subsystem)
+// =============================================================================
+
+@external(erlang, "cepaf_gleam_ffi", "os_cmd")
+fn erl_os_cmd(cmd: String) -> Result(BitArray, String)
+
+@external(erlang, "cepaf_gleam_ffi", "file_read")
+fn erl_file_read(path: String) -> Result(BitArray, String)
+
+/// Resolves the absolute or relative path to the tools/sa-plan binary.
+pub fn resolve_sa_plan_binary() -> String {
+  case erl_file_read("tools/sa-plan") {
+    Ok(_) -> "tools/sa-plan"
+    Error(_) ->
+      case erl_file_read("../../tools/sa-plan") {
+        Ok(_) -> "../../tools/sa-plan"
+        Error(_) -> "/home/an/NAS-setup/uos/tools/sa-plan"
+      }
+  }
+}
+
+/// Executes tools/sa-plan with the specified argument list and returns standard output.
+pub fn run_sa_plan_cli(args: List(String)) -> Result(String, String) {
+  let bin = resolve_sa_plan_binary()
+  let joined_args = string.join(args, " ")
+  let cmd = bin <> " " <> joined_args
+  case erl_os_cmd(cmd) {
+    Ok(output_binary) -> {
+      case bit_array.to_string(output_binary) {
+        Ok(output_str) -> Ok(string.trim(output_str))
+        Error(_) -> Error("Failed to decode sa-plan output as UTF-8")
+      }
+    }
+    Error(err) -> Error("Failed to execute sa-plan CLI: " <> err)
+  }
+}
+
+/// Queries canonical sa-plan status.
+pub fn query_sa_plan_status() -> Result(String, String) {
+  run_sa_plan_cli(["status"])
+}
+
+/// Lists all plans in the canonical sa-plan store.
+pub fn query_sa_plan_list() -> Result(String, String) {
+  run_sa_plan_cli(["plan", "list"])
+}
+
+/// Claims a task for an authorized worker with a 30s lease.
+pub fn claim_sa_task(
+  worker: String,
+  plan: String,
+  task_id: String,
+) -> Result(String, String) {
+  run_sa_plan_cli(["task", "claim", worker, plan, "30000000000", task_id])
+}
+
+/// Completes a task in sa-plan with execution receipt.
+pub fn complete_sa_task(
+  plan: String,
+  task_id: String,
+  worker: String,
+  result: String,
+) -> Result(String, String) {
+  run_sa_plan_cli(["task", "complete", plan, task_id, worker, result])
+}
+
+/// Enqueues an Oban background job into sa-plan.
+pub fn enqueue_sa_job(
+  id: String,
+  name: String,
+  queue: String,
+  worker: String,
+  args: String,
+) -> Result(String, String) {
+  run_sa_plan_cli(["job", "enqueue", id, name, queue, worker, args])
+}
+
+/// Starts a Temporal durable workflow in sa-plan.
+pub fn start_sa_workflow(
+  id: String,
+  name: String,
+  kind: String,
+  input: String,
+) -> Result(String, String) {
+  run_sa_plan_cli(["workflow", "start", id, name, kind, input])
+}
+
+/// Formats a structured Zenoh telemetry payload for a Fractal Jidoka Andon Stop Line event.
+pub fn format_jidoka_andon_event(
+  source: String,
+  action: String,
+  reason: String,
+  timestamp_utc: String,
+) -> String {
+  json.object([
+    #("event_type", json.string("FRACTAL_JIDOKA_ANDON_HALT")),
+    #("error_code", json.int(-32_002)),
+    #("source", json.string(source)),
+    #("action", json.string(action)),
+    #("reason", json.string(reason)),
+    #("timestamp", json.string(timestamp_utc)),
+    #("status", json.string("HALTED_FAIL_CLOSED")),
+    #("rule", json.string("SC-JIDOKA-001")),
+  ])
+  |> json.to_string
+}
+
+/// Returns the canonical Zenoh topic for Jidoka Andon events.
+pub fn jidoka_andon_topic() -> String {
+  "indrajaal/l0/const/jidoka/andon"
+}
+
+/// Returns the canonical Zenoh topic for Sa-Plan task events.
+pub fn sa_plan_task_topic(task_id: String, operation: String) -> String {
+  "indrajaal/planning/task/" <> task_id <> "/" <> operation
+}
+
+

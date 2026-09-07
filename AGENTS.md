@@ -142,6 +142,17 @@ delete shared Zenoh keys. A model result, board ACK or lease does not independen
 grant deployment authority or system admission. Default remote advisory work to
 free-only bounded OpenRouter requests; paid and aggregate budgets are explicit.
 
+### 5.5 Sa-Plan Exclusivity & Fractal Jidoka TPS Mandate (`SC-JIDOKA-001`, `SC-SA-PLAN-001`)
+
+`sa-plan` (`tools/sa-plan`, `var/sa-plan/uos.sqlite3`) is the sole canonical execution authority
+for all plans, tasks, Oban jobs, and Temporal workflows. All autonomous agentic systems (AGY,
+Claude, Codex, swarms, BEAM actors) must exclusively execute planning and task operations
+through `sa-plan`. Any attempt to manipulate or execute tasks outside `sa-plan` triggers an
+immediate fail-closed **Andon Stop Line** (`SC-JIDOKA-001`), halting execution immediately.
+Fractal TPS principles (Poka-Yoke parameter interceptors, Jidoka autonomation, Muda waste
+elimination, Standardized Work CLI schemas, and Heijunka leveled pull queues) govern task claiming
+and execution across all 10 fractal layers $L_0 \dots L_9$.
+
 ## 6. Evidence, Gates, and Completion Semantics
 
 State transitions must advance strictly through:
@@ -209,6 +220,7 @@ FRACTAL OBSERVABILITY: UNIVERSAL C3I CONTRACT ENFORCED (c3i_fractal_observabilit
 ZERO-MUDA PURITY: 0 BEVY, 0 GRAPHITE, 0 GRAPHENE NIF (PURE BEAM & HERMES OCAML)
 STORAGE SAFETY: HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736" ENFORCED (7/7 PASS)
 KM TRIAD: 56 ZK ADRs + MASTER MOC + WIKI CORPUS INDEX + LIVING ONTOLOGY ACTIVE
+SA-PLAN STATUS: SOLE EXECUTION AUTHORITY ENFORCED (SC-JIDOKA-001, SC-SA-PLAN-001)
 TIMESTAMP RULE: MANDATORY YYYYMMDD-HHSS- PREFIX ACTIVE
 CODEX AUDIT: SOVEREIGN REVISION-BOUND VERIFICATION RATIFIED
 IMPLEMENTATION/CUTOVER: SEALED UNDER MULTILAYER OTP 29 ROOT SUPERVISOR

@@ -1,0 +1,45 @@
+{
+  "schema": "uos-mirage-hypervisor-probe/v1",
+  "timestamp_utc": "2026-09-07T13:28:09Z",
+  "host": "nas-1",
+  "overall_readiness": "solo5_hardware_virtualized_and_spt_verified",
+  "execution_policy": "two_key_receipt_required_before_admission",
+  "evidence_scope": "host_hypervisor_hardware_probe",
+  "deployment_admission": "TENDERS_VERIFIED_PHYSICAL_EXECUTION",
+  "kvm": {
+    "dev_kvm_present": true,
+    "dev_kvm_rw_accessible": true,
+    "api_version": 12
+  },
+  "qemu": {
+    "binary_path": "/usr/bin/qemu-system-x86_64",
+    "microvm_supported": true,
+    "kvm_accel_supported": true
+  },
+  "solo5": {
+    "solo5_hvt_path": "/home/an/dev/ver/zigvm/_opam/bin/solo5-hvt",
+    "solo5_spt_path": "/home/an/dev/ver/zigvm/_opam/bin/solo5-spt",
+    "solo5_virtio_path": "/home/an/dev/ver/zigvm/_opam/bin/solo5-virtio-run",
+    "hvt_execution": {
+      "tender": "/home/an/dev/ver/zigvm/_opam/bin/solo5-hvt",
+      "unikernel": "/home/an/NAS-setup/uos/var/mirage/unikernels/test_hello.hvt",
+      "exit_code": 0,
+      "output_snippet": "            |      ___|\n  __|  _ \\  |  _ \\ __ \\\n\\__ \\ (   | | (   |  ) |\n____/\\___/ _|\\___/____/\nSolo5: Bindings version v0.12.1\nSolo5: Memory map: 512 MB addressable:\nSolo5:   reserved @ (0x0 - 0xfff",
+      "passed": true
+    },
+    "spt_execution": {
+      "tender": "/home/an/dev/ver/zigvm/_opam/bin/solo5-spt",
+      "unikernel": "/home/an/NAS-setup/uos/var/mirage/unikernels/test_hello.spt",
+      "exit_code": 0,
+      "output_snippet": "            |      ___|\n  __|  _ \\  |  _ \\ __ \\\n\\__ \\ (   | | (   |  ) |\n____/\\___/ _|\\___/____/\nSolo5: Bindings version v0.12.1\nSolo5: Memory map: 512 MB addressable:\nSolo5:   reserved @ (0x0 - 0xfff",
+      "passed": true
+    },
+    "virtio_execution": {
+      "tender": "/home/an/dev/ver/zigvm/_opam/bin/solo5-virtio-run",
+      "unikernel": "/home/an/NAS-setup/uos/var/mirage/unikernels/test_hello.virtio",
+      "exit_code": 83,
+      "output_snippet": "+ exec qemu-system-x86_64 -cpu host -enable-kvm -m 128 -nodefaults -machine acpi=off -display none -serial stdio -device isa-debug-exit -kernel /home/an/NAS-setup/uos/var/mirage/unikernels/test_hello.",
+      "passed": true
+    }
+  }
+}

@@ -130,6 +130,29 @@ Per operator mandate (`contracts/rules/comprehensive-checklist-contract.md` `SC-
 3. **Uniform Cohesive Navigation**: Grouped Sidebar (Command & Control, Knowledge Base, Repository & Gov), Top Status Bar with clickable Tailscale FQDN URL and click-to-copy, Breadcrumb hierarchy, Dual View Mode (Rendered Markdown vs Raw Source toggle), Bottom linear Prev/Next navigation, and Persistent System Footer.
 4. **Machine Verification**: Validated by `tools/uos checklist`, gate `G-CHECKLIST`, and `tools/uos doctor` EV-19.
 
+### 5.4 Shared Claude, Codex, AGY and OpenRouter Coordination
+
+For parallel SDLC/SRE and swarm work, read and follow
+`contracts/rules/20260907-0653-tri-agent-coordination.md`.
+Use the durable session coordinator for task/workspace claims and separate
+`integration/main` and `runtime:<service>` ownership. Discover actual Herdr
+sessions, exchange compact work/evidence references on the message board, and
+record explicit peer acknowledgements. Never regenerate a shared live journal or
+delete shared Zenoh keys. A model result, board ACK or lease does not independently
+grant deployment authority or system admission. Default remote advisory work to
+free-only bounded OpenRouter requests; paid and aggregate budgets are explicit.
+
+### 5.5 Sa-Plan Exclusivity & Fractal Jidoka TPS Mandate (`SC-JIDOKA-001`, `SC-SA-PLAN-001`)
+
+`sa-plan` (`tools/sa-plan`, `var/sa-plan/uos.sqlite3`) is the sole canonical execution authority
+for all plans, tasks, Oban jobs, and Temporal workflows. All autonomous agentic systems (AGY,
+Claude, Codex, swarms, BEAM actors) must exclusively execute planning and task operations
+through `sa-plan`. Any attempt to manipulate or execute tasks outside `sa-plan` triggers an
+immediate fail-closed **Andon Stop Line** (`SC-JIDOKA-001`), halting execution immediately.
+Fractal TPS principles (Poka-Yoke parameter interceptors, Jidoka autonomation, Muda waste
+elimination, Standardized Work CLI schemas, and Heijunka leveled pull queues) govern task claiming
+and execution across all 10 fractal layers $L_0 \dots L_9$.
+
 ## 6. Evidence, Gates, and Completion Semantics
 
 State transitions must advance strictly through:
@@ -173,6 +196,18 @@ Every task completion journal MUST contain the exact 13 required sections:
 
 Scaling boundaries: trivial (1–3 files: 1–2 lines/sec), standard (4–14 files: paragraph detail), major (15+ files: full subsections & diagrams).
 
+### 8.3 Mandatory Diagram Source Rule (`SC-DIAGRAM-001`)
+
+Per operator directive, every newly authored or revised explanatory diagram MUST
+have editable ASCII and Mermaid source. ASCII is the readable fallback and Mermaid
+is the structured rendering source; both MUST describe the same nodes, edges, and
+labels. Do not author diagrams solely as raster images, SVG, Graphviz/DOT, slides,
+or generated artwork. Screenshots, videos, and scientific measurement plots are
+observed test evidence, not explanatory diagrams, and MUST retain provenance.
+Preserve historical and external originals byte-for-byte; record nonconformance
+without rewriting them. Apply this rule to documentation, journals, specifications,
+skills, and UI design artifacts at every fractal layer L0–L9.
+
 ## 9. Status Line
 
 ```text
@@ -185,6 +220,7 @@ FRACTAL OBSERVABILITY: UNIVERSAL C3I CONTRACT ENFORCED (c3i_fractal_observabilit
 ZERO-MUDA PURITY: 0 BEVY, 0 GRAPHITE, 0 GRAPHENE NIF (PURE BEAM & HERMES OCAML)
 STORAGE SAFETY: HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736" ENFORCED (7/7 PASS)
 KM TRIAD: 56 ZK ADRs + MASTER MOC + WIKI CORPUS INDEX + LIVING ONTOLOGY ACTIVE
+SA-PLAN STATUS: SOLE EXECUTION AUTHORITY ENFORCED (SC-JIDOKA-001, SC-SA-PLAN-001)
 TIMESTAMP RULE: MANDATORY YYYYMMDD-HHSS- PREFIX ACTIVE
 CODEX AUDIT: SOVEREIGN REVISION-BOUND VERIFICATION RATIFIED
 IMPLEMENTATION/CUTOVER: SEALED UNDER MULTILAYER OTP 29 ROOT SUPERVISOR

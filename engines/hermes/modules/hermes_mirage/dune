@@ -12,6 +12,7 @@
   mirage_dns_resolver
   mirage_tls_ingress
   mirage_hypervisor_probe)
+ (foreign_stubs (language c) (names kvm_ioctl_stub))
  (libraries digestif yojson mirage-crypto mirage-crypto-ec unix))
 
 (executable
