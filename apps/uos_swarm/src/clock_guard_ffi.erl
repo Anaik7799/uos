@@ -1,5 +1,6 @@
 -module(clock_guard_ffi).
--export([sample/0, parse/1, load_floor/1, store_floor/2, fetch/4]).
+-export([sample/0, parse/1, load_floor/1, store_floor/2, fetch/4,
+         sync_directory/1, halt_failure/0]).
 
 fetch(Url, MaxBytes, TimeoutMs, Projection) ->
   try
@@ -20,7 +21,7 @@ fetch(Url, MaxBytes, TimeoutMs, Projection) ->
     ConnectTimeout = io_lib:format("~.3f", [min(TimeoutMs, 2000) / 1000]),
     Marker = <<"\nUOS_CLOCK_GUARD_META\t">>,
     WriteOut = binary_to_list(<<Marker/binary, "%{http_code}\t%{content_type}\t%{size_download}">>),
-    Args = ["--silent", "--show-error", "--proto", "=http", "--max-redirs", "0",
+    Args = ["-q", "--silent", "--show-error", "--noproxy", "*", "--proto", "=http", "--max-redirs", "0",
       "--max-time", lists:flatten(Timeout), "--connect-timeout", lists:flatten(ConnectTimeout),
       "--max-filesize", integer_to_list(MaxBytes), "--header", "Accept: application/json",
       "--write-out", WriteOut, binary_to_list(Url)],
@@ -107,8 +108,11 @@ allowed_host(Host) ->
 store_projection(Path, Body) ->
   Tmp = <<Path/binary, ".pending">>,
   case file:write_file(Tmp, Body, [sync]) of
-    ok -> case file:rename(Tmp, Path) of ok -> sync_dir(filename:dirname(Path)), ok; {error, Why} -> {error, atom_to_binary(Why)} end;
-    {error, Why} -> {error, atom_to_binary(Why)}
+    ok -> case file:rename(Tmp, Path) of
+      ok -> sync_dir(filename:dirname(Path));
+      {error, Why} -> {error, durability_error(<<"projection rename">>, Why)}
+    end;
+    {error, Why} -> {error, durability_error(<<"projection write">>, Why)}
   end.
 
 sample() ->
@@ -176,13 +180,35 @@ load_floor(Path) ->
 store_floor(Path, Floor) when is_integer(Floor), Floor >= 0 ->
   Tmp = <<Path/binary, ".pending">>,
   case file:write_file(Tmp, integer_to_binary(Floor), [sync]) of
-    ok -> case file:rename(Tmp, Path) of ok -> sync_dir(filename:dirname(Path)), {ok, nil}; {error, Why} -> {error, atom_to_binary(Why)} end;
-    {error, Why} -> {error, atom_to_binary(Why)}
+    ok -> case file:rename(Tmp, Path) of
+      ok -> case sync_dir(filename:dirname(Path)) of
+        ok -> {ok, nil};
+        {error, Why} -> {error, Why}
+      end;
+      {error, Why} -> {error, durability_error(<<"floor rename">>, Why)}
+    end;
+    {error, Why} -> {error, durability_error(<<"floor write">>, Why)}
   end;
 store_floor(_, _) -> {error, <<"invalid Lamport floor">>}.
 
 sync_dir(Dir) ->
-  case file:open(Dir, [read, raw]) of
-    {ok, Fd} -> try file:sync(Fd) after file:close(Fd) end;
-    _ -> ok
+  case file:open(Dir, [read, raw, directory]) of
+    {ok, Fd} ->
+      Synced = file:sync(Fd),
+      Closed = file:close(Fd),
+      case {Synced, Closed} of
+        {ok, ok} -> ok;
+        {{error, Why}, _} -> {error, durability_error(<<"directory sync">>, Why)};
+        {_, {error, Why}} -> {error, durability_error(<<"directory close">>, Why)}
+      end;
+    {error, Why} -> {error, durability_error(<<"directory open">>, Why)}
   end.
+
+sync_directory(Path) when is_binary(Path) ->
+  case sync_dir(Path) of ok -> {ok, nil}; {error, Why} -> {error, Why} end;
+sync_directory(_) -> {error, <<"invalid directory path">>}.
+
+durability_error(Operation, Why) ->
+  <<Operation/binary, " failed: ", (atom_to_binary(Why))/binary>>.
+
+halt_failure() -> erlang:halt(1).

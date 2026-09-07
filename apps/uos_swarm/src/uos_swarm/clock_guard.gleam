@@ -26,6 +26,9 @@ pub fn load_floor(path: String) -> Result(Int, String)
 @external(erlang, "clock_guard_ffi", "store_floor")
 pub fn store_floor(path: String, floor: Int) -> Result(Nil, String)
 
+@external(erlang, "clock_guard_ffi", "sync_directory")
+pub fn verify_durable_directory(path: String) -> Result(Nil, String)
+
 pub const state_version = 1
 
 pub type Sample {
