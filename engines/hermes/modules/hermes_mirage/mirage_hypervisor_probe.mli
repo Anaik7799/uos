@@ -16,7 +16,9 @@ type qemu_status = {
 
 type solo5_execution_receipt = {
   tender : string;
+  tender_sha256 : string;
   unikernel : string;
+  unikernel_sha256 : string;
   exit_code : int;
   output_snippet : string;
   passed : bool;
@@ -34,12 +36,14 @@ type solo5_status = {
 type hypervisor_probe_result = {
   schema : string;
   timestamp_utc : string;
+  boot_id : string;
   host : string;
   kvm : kvm_status;
   qemu : qemu_status;
   solo5 : solo5_status;
   overall_readiness : string;
   execution_policy : string;
+  codex_review_status : string;
   deployment_admission : string;
 }
 

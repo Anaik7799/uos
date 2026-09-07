@@ -331,6 +331,12 @@ pub fn authorize(
       && identifier(request.task_id),
     "invalid action identity",
   ))
+  use _ <- result.try(require(
+    !string.contains(request.task_id, "bypass")
+      && !string.starts_with(request.task_id, "shadow_")
+      && !string.contains(request.task_id, "unledgered"),
+    "Fractal Jidoka Andon Halt: Non-sa-plan task execution attempted (SC-JIDOKA-001)",
+  ))
   use _ <- result.try(require(request.epoch > 0, "lease epoch must be positive"))
   use _ <- result.try(require(
     command_valid(request.command),

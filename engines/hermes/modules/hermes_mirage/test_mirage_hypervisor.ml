@@ -6,8 +6,10 @@ let () =
   let probe = Mirage_hypervisor_probe.probe_hypervisors () in
   assert (probe.schema = "uos-mirage-hypervisor-probe/v1");
   assert (probe.execution_policy = "two_key_receipt_required_before_admission");
+  assert (probe.codex_review_status = "INDEPENDENT_EVALUATION_IN_PROGRESS");
+  assert (String.length probe.boot_id > 0);
   Printf.printf "  [PASS] Probe schema: %s\n" probe.schema;
-  Printf.printf "  [PASS] Host: %s, Timestamp: %s\n" probe.host probe.timestamp_utc;
+  Printf.printf "  [PASS] Host: %s, Boot ID: %s, Timestamp: %s\n" probe.host probe.boot_id probe.timestamp_utc;
   Printf.printf "  [PASS] KVM present: %b, rw_accessible: %b, api_version: %s\n"
     probe.kvm.dev_kvm_present probe.kvm.dev_kvm_rw_accessible
     (match probe.kvm.api_version with Some v -> string_of_int v | None -> "none");
@@ -15,6 +17,15 @@ let () =
     (match probe.qemu.binary_path with Some p -> p | None -> "none")
     probe.qemu.microvm_supported probe.qemu.kvm_accel_supported;
   Printf.printf "  [PASS] Overall readiness: %s\n" probe.overall_readiness;
+  Printf.printf "  [PASS] Codex review status: %s\n" probe.codex_review_status;
+
+  (* Validate receipt artifact SHA-256 hashes if executed *)
+  (match probe.solo5.hvt_execution with
+   | Some hvt ->
+       assert (String.length hvt.tender_sha256 = 64);
+       assert (String.length hvt.unikernel_sha256 = 64);
+       Printf.printf "  [PASS] HVT Tender SHA-256: %s, Unikernel SHA-256: %s\n" hvt.tender_sha256 hvt.unikernel_sha256
+   | None -> ());
 
   (* Validate JSON conversion *)
   let json = Mirage_hypervisor_probe.probe_to_json probe in
@@ -29,8 +40,9 @@ let () =
   assert (not (Mirage_hypervisor_probe.is_allowed_tender "/usr/bin/solo5-malicious"));
   assert (not (Mirage_hypervisor_probe.is_allowed_tender "/tmp/solo5-hvt"));
   assert (not (Mirage_hypervisor_probe.is_allowed_tender "/var/tmp/solo5-spt"));
-  assert (Mirage_hypervisor_probe.is_allowed_tender "/usr/bin/solo5-hvt");
-  assert (Mirage_hypervisor_probe.is_allowed_tender "/usr/bin/solo5-spt");
+  assert (Mirage_hypervisor_probe.is_allowed_tender "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-hvt");
+  assert (Mirage_hypervisor_probe.is_allowed_tender "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-spt");
+  assert (Mirage_hypervisor_probe.is_allowed_tender "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-virtio-run");
   assert (Mirage_hypervisor_probe.is_allowed_tender "/home/an/dev/ver/zigvm/_opam/bin/solo5-hvt");
   assert (Mirage_hypervisor_probe.is_allowed_tender "/home/an/dev/ver/zigvm/_opam/bin/solo5-virtio-run");
   let rejected_exec = Mirage_hypervisor_probe.run_tender_test (Some "/bin/sh") "test_hello.hvt" [0] [] in
@@ -40,23 +52,31 @@ let () =
   Printf.printf "  [PASS] Negative Control 1: Unauthorized and /tmp tenders rejected fail-closed\n";
 
   (* Negative Control 2: Non-existent, truncated, or non-ELF unikernels must be rejected *)
-  let non_existent_exec = Mirage_hypervisor_probe.run_tender_test (Some "/usr/bin/solo5-hvt") "non_existent.hvt" [0] [] in
+  let non_existent_exec = Mirage_hypervisor_probe.run_tender_test (Some "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-hvt") "non_existent.hvt" [0] [] in
   assert (non_existent_exec = None);
   Printf.printf "  [PASS] Negative Control 2: Missing/invalid unikernels rejected fail-closed\n";
 
-  (* Negative Control 3: Corrupted output or abnormal exit codes must fail is_successful_execution *)
+  (* Negative Control 3: Corrupted output, missing SUCCESS, or abnormal exit codes must fail is_successful_execution *)
   assert (not (Mirage_hypervisor_probe.is_successful_execution
     ~tender:"solo5-virtio-run"
     ~exit_code:83
     ~output:"Solo5: ABORT: Stack corruption detected"));
   assert (not (Mirage_hypervisor_probe.is_successful_execution
     ~tender:"solo5-virtio-run"
+    ~exit_code:83
+    ~output:"Solo5: Bindings version v0.13.0\nSolo5: solo5_exit(0) called")); (* Missing SUCCESS *)
+  assert (not (Mirage_hypervisor_probe.is_successful_execution
+    ~tender:"solo5-hvt"
     ~exit_code:0
-    ~output:"Solo5: Bindings version v0.12.1\nSolo5: solo5_exit(0) called"));
+    ~output:"Solo5: Bindings version v0.13.0\nSolo5: solo5_exit(0) called")); (* Missing SUCCESS *)
+  assert (not (Mirage_hypervisor_probe.is_successful_execution
+    ~tender:"solo5-virtio-run"
+    ~exit_code:0
+    ~output:"Solo5: Bindings version v0.13.0\nSUCCESS\nSolo5: solo5_exit(0) called")); (* Exit 0 instead of 83 for virtio *)
   assert (not (Mirage_hypervisor_probe.is_successful_execution
     ~tender:"solo5-hvt"
     ~exit_code:1
-    ~output:"Solo5: Bindings version v0.12.1\nSolo5: solo5_exit(0) called"));
+    ~output:"Solo5: Bindings version v0.13.0\nSUCCESS\nSolo5: solo5_exit(0) called")); (* Exit 1 instead of 0 for hvt *)
   assert (not (Mirage_hypervisor_probe.is_successful_execution
     ~tender:"solo5-spt"
     ~exit_code:0
@@ -64,15 +84,19 @@ let () =
   assert (not (Mirage_hypervisor_probe.is_successful_execution
     ~tender:"solo5-hvt"
     ~exit_code:0
-    ~output:"SUCCESS"));
+    ~output:"SUCCESS")); (* Missing bindings version & exit0 *)
   assert (Mirage_hypervisor_probe.is_successful_execution
     ~tender:"solo5-hvt"
     ~exit_code:0
-    ~output:"Solo5: Bindings version v0.12.1\nSolo5: solo5_exit(0) called");
+    ~output:"Solo5: Bindings version v0.13.0\nSUCCESS\nSolo5: solo5_exit(0) called");
   assert (Mirage_hypervisor_probe.is_successful_execution
     ~tender:"solo5-virtio-run"
     ~exit_code:83
-    ~output:"Solo5: Bindings version v0.12.1\nSolo5: solo5_exit(0) called");
-  Printf.printf "  [PASS] Negative Control 3: Stack corruption aborts, fake SUCCESS, and invalid exits rejected fail-closed\n";
+    ~output:"Solo5: Bindings version v0.13.0\nSUCCESS\nSolo5: solo5_exit(0) called");
+  assert (Mirage_hypervisor_probe.is_successful_execution
+    ~tender:"solo5-hvt"
+    ~exit_code:0
+    ~output:"Solo5: Bindings version v0.12.1\nSUCCESS\nSolo5: solo5_exit(0) called");
+  Printf.printf "  [PASS] Negative Control 3: Stack corruption aborts, missing SUCCESS, fake SUCCESS, and invalid exits rejected fail-closed\n";
 
   Printf.printf "=== ALL HYPERVISOR PROBE CHECKS & NEGATIVE CONTROLS PASSED ===\n"
