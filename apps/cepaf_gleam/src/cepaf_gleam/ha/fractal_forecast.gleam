@@ -896,6 +896,14 @@ pub fn forecast_health_json() -> json.Json {
     #("kalman_state", json.string("converged")),
     #("lyapunov_stability", json.string("stable_dissipative")),
     #("brier_calibration", json.float(0.024)),
-    #("advisory", json.string("All predictive boundaries active across L0-L9")),
+    #("data_mode", json.string("demonstration_baseline")),
+    #("live_ledger_calibrated", json.bool(False)),
+    #("live_ledger_sample_count", json.int(0)),
+    #(
+      "advisory",
+      json.string(
+        "Demonstration predictive baseline active across L0-L9; live calibration ledger initialized at sample_count=0",
+      ),
+    ),
   ])
 }

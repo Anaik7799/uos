@@ -24,7 +24,10 @@ pub fn status_json(model: InferenceTierModel) -> json.Json {
     #("avg_latency_ms", json.int(model.avg_latency_ms)),
     #("cache_hit_rate", json.float(model.cache_hit_rate)),
     #("all_healthy", json.bool(inference_tier.all_circuits_healthy(model))),
-    #("engine", json.string("Modular MAX / Mojo (v2.2.0)")),
+    #("engine", json.string("Modular MAX 26.5.0 / Mojo 1.0.0 (ed45d567)")),
+    #("runtime_installed", json.bool(True)),
+    #("model_weights_loaded", json.bool(False)),
+    #("data_mode", json.string("toolchain_ready_unloaded_weights")),
     #("qps_capacity", json.int(50_770)),
     #(
       "tailscale_ingress",
