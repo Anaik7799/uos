@@ -218,7 +218,10 @@ pub fn canonical_resource(resource: String) -> Result(String, String) {
   }
 }
 
-fn canonical_command(command: Command) -> Result(Command, String) {
+/// Public so `session_store` can apply the same workspace/resource
+/// canonicalization before entering its own SQLite transaction, exactly as
+/// `execute` does for the file journal.
+pub fn canonical_command(command: Command) -> Result(Command, String) {
   case command {
     Register(_, _, workspace, _, _) -> {
       use _ <- result.try(require_canonical_workspace(workspace))
@@ -262,7 +265,10 @@ fn fresh(
   Ok(current)
 }
 
-fn rebase_clock(
+/// Public so `session_store`'s read-only `observe` can normalize replayed
+/// state against the current host/boot/tick exactly like the file
+/// coordinator's `observe` does before running a status/inbox/check query.
+pub fn rebase_clock(
   state: State,
   host: String,
   boot: String,
@@ -689,6 +695,32 @@ pub fn event_string(event: Event) -> String {
       #("digest", json.string(event.digest)),
     ]),
   )
+}
+
+/// The exact bytes `make_event`'s digest is computed over: the canonical
+/// `body` sub-object, serialized. `session_store` persists this string
+/// verbatim as `events.body_json` so a stored row can recompute and verify
+/// its own digest, and so `session_store.replay` can rebuild a canonical
+/// journal line as `{"body":<body_json>,"digest":"<digest>"}` without
+/// re-encoding (and thereby risking byte drift from) the stored JSON.
+pub fn body_json_string(event: Event) -> String {
+  json.to_string(event_body(event))
+}
+
+/// The command sub-object exactly as embedded in `event_body`. Exposed so
+/// `session_store` can persist `events.command_json` as the same bytes,
+/// independent of the digest-bearing `body_json` column.
+pub fn command_to_json(command: Command) -> Json {
+  command_json(command)
+}
+
+/// Public wrapper over the private `event_decoder`, for callers (such as
+/// `session_store`) that reconstruct a single canonical journal line from
+/// stored columns and need to decode it back into an `Event` without
+/// duplicating the schema-version and field-shape checks below.
+pub fn decode_event(line: String) -> Result(Event, String) {
+  json.parse(line, event_decoder())
+  |> result.replace_error("malformed journal event; decode refused")
 }
 
 fn event_decoder() -> decode.Decoder(Event) {
