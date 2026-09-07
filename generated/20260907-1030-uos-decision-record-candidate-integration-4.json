@@ -15,10 +15,10 @@
     }
   },
   "task_authority": {
-    "task": "integrate four Codex-session candidates: telemetry route repair chain (a5fae5a5 -> 8180c736), C04/C05+KPI final fix (d6557335, parents 94ed6c2e + 4e6632fc preserved), strict board validator (e0b50cdc), final artifact child (f9f323bd, three files)",
+    "task": "integrate the Codex-session candidates: telemetry route repair chain (a5fae5a5 -> 8180c736), C04/C05+KPI final fix (d6557335, parents 94ed6c2e + 4e6632fc preserved), strict board validator (e0b50cdc), final artifact chain (f9f323bd -> 4826d07a, three frozen files plus two doc/JSON clarifications)",
     "resource": "integration/main",
     "lease_epoch": "claim at action time; refusal aborts",
-    "proposed_action": "step 1: bookmark set integration/uos-swarm and main to the composed head xwnklmstwpzx/a045de38f84a1ad50d3191e7afe56886b117afe7; step 2 (same lease): after board receipts and the completed record are written, move both bookmarks once more to the receipt change so main carries the receipts; then rebase the default workspace onto main preserving peer dirty files; retire the two superseded parked bookmarks",
+    "proposed_action": "step 1: bookmark set integration/uos-swarm and main to the composed head change rqpsnznvvvnk (commit id recorded in the completed block); step 2 (same lease): after board receipts and the completed record are written, move both bookmarks once more to the receipt change so main carries the receipts; then rebase the default workspace onto main preserving peer dirty files; retire the two superseded parked bookmarks",
     "policy_refs": [
       "SYNC-03",
       "SYNC-05",
@@ -31,7 +31,7 @@
     "observations": [
       {
         "source": "full cepaf suite on the telemetry merge 42e1994d",
-        "value": "10013 passed / 202 failures; failing set 164 == mainline failing set 164; 0 new; 0 fixed",
+        "value": "10013 passed and 202 aggregate failure lines (raw eunit count); 164 distinct failing test identities, identical to the mainline baseline set of 164 identities; 0 new identities; 0 fixed. This is an attribution result, not a full-suite-green claim",
         "grade": "Measured"
       },
       {
@@ -51,7 +51,7 @@
       },
       {
         "source": "artifact child files",
-        "value": "reuse JSON parses; journal 13 numbered sections, 18 CHK ids, 5 Tailscale links; unit has Unit/Service/Install and sha256 ExecStartPre",
+        "value": "reuse JSON parses (after 4826d07a too); journal 13 numbered sections, 18 CHK ids, 5 Tailscale links; unit has Unit/Service/Install and sha256 ExecStartPre; 0 code/unit files changed after f9",
         "grade": "Measured (shape only; systemd verify PASS is the producer report)"
       },
       {
@@ -101,7 +101,7 @@
     "clock_domain": "UTC host nas-1",
     "observed_at": "2026-09-07T10:26:59.286098406Z",
     "expires_at": "2026-09-07T10:46:59.288856541Z",
-    "predicted_outcome": "all four candidates on main in one composed revision; default rebased with peer files preserved; both parked bookmarks retired",
+    "predicted_outcome": "all candidates (through artifact head 4826d07a) on main in one composed revision; default rebased with peer files preserved; both parked bookmarks retired",
     "probability": 0.9,
     "basis": "attribution already measured clean; residual risk is lease refusal or an unexpected default conflict (2 of 6 prior rounds needed a correction)",
     "unknowns": [

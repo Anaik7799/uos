@@ -523,12 +523,15 @@
       "swarm_passed": 502,
       "focused_passed": 29,
       "cepaf_passed": 10003,
-      "cepaf_baseline_failures": 164,
       "new_failures": 0,
       "source": "Observed Herdr integration receipt and main ancestry",
       "native_positive_path": "UNRUN",
       "live_adapters": "UNRUN",
-      "production_admission": false
+      "production_admission": false,
+      "cepaf_baseline_failing_test_identities": 164,
+      "failure_count_scope": "164 is the number of distinct failing test identities in attribution, not an aggregate failure-event count.",
+      "cepaf_aggregate_failures": 202,
+      "aggregate_log_ref": "/tmp/claude-1000/-home-an-NAS-setup/656f0d2c-6019-4d9e-b0ce-b9e39b240047/tasks/bcx1v0t53.output"
     },
     "document_serving": {
       "initial_http_status": 200,
@@ -613,7 +616,16 @@
       "integrator": "Claude session656f0d2c-6019-4d9e-b0ce-b9e39b240047",
       "state": "Candidate checks complete; composed revision gate and main move belong to the integration receipt",
       "production_admission": false
+    },
+    "telemetry_composition_log": {
+      "source": "/tmp/claude-1000/-home-an-NAS-setup/656f0d2c-6019-4d9e-b0ce-b9e39b240047/tasks/bffqu5joo.output",
+      "passed": 10013,
+      "aggregate_failures": 202,
+      "distinct_failing_test_identities": 164,
+      "new_failure_identities": 0,
+      "fixed_failure_identities": 0,
+      "note": "Integration test output; final mainline revision is bound in the integrator receipt."
     }
   },
-  "updated_at": "2026-09-07T10:22:02Z"
+  "updated_at": "2026-09-07T10:25:59Z"
 }

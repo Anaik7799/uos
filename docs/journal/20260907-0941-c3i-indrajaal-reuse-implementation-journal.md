@@ -2,7 +2,7 @@
 
 #fractal-l0 #fractal-l3 #fractal-l4 #fractal-l5 #zk-adr #zero-muda #tailscale-web
 
-**Created:** 2026-09-07T09:26:41Z. **Updated:** 2026-09-07T10:22:02Z. **Status:** development implementation with two live read-only observers; production admission is outstanding.
+**Created:** 2026-09-07T09:26:41Z. **Updated:** 2026-09-07T10:25:59Z. **Status:** development implementation with two live read-only observers; production admission is outstanding.
 
 [UOS cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [ZK](http://nas-1.tail55d152.ts.net:4100/zk) · [Checklist](http://nas-1.tail55d152.ts.net:4100/checklist)
 
@@ -73,7 +73,7 @@ External C3I/Indrajaal sources remain read-only evidence. The [source receipt](h
 | Telemetry repair | 88 focused tests passed | Collector/backend delivery still unproved |
 | MCP parent | Four focused tests passed | Independent review found additional runtime gaps |
 | MCP runtime corrective child | Nine focused tests passed | Missing-NIF path exercised; loaded-NIF path unavailable |
-| MCP final integration at be5c2c70 | 29 focused tests passed; full suite 10,003 passed | Same 164 failures as baseline; zero new failures; native positive path UNRUN |
+| MCP final integration at be5c2c70 | 29 focused tests passed; full suite 10,003 passed | Same 164 distinct failing test identities as baseline; zero new failures; native positive path UNRUN |
 | Clock provenance adapter f0a9d7e6 | 505 swarm tests and build passed; real Zenoh/chrony canary executed | Foreign and missing provenance remain UNKNOWN; no remote NTP receipt |
 | Live evolution merged at 94ed6c2e | 519 swarm tests passed on the composed clock tree | Development readiness/handoff model; full traffic handoff unbound |
 | C04/C05 and KPI integration repair d6557335 | Reproduced exactly three failures; 557 tests passed after fixture correction | Real canonical workspace fixture; production fences unchanged |
@@ -100,7 +100,7 @@ The cooperative epoch-2 check rejected the first primary-update attempt because 
 
 The MCP follow-on **4eabfc34fea9d0a96317fff4c759d8b3141a2c73** preserves the parent fixes and adds real stdio verification: five input messages yielded four parseable JSON responses, no response to the notification, preserved numeric/string IDs, and explicit missing-NIF/file errors. Diagnostics stayed on stderr. The line-size check bounds decoding after the IO read; it does not prove bounded initial line allocation.
 
-The final MCP test child **88fe4fa8edd8b8c4dbc893e6c3fa8498b79f919f** replaces three legacy success expectations with runtime-dependent assertions: missing native code requires explicit UNAVAILABLE and no fabricated counts; available native code requires the typed response schema. Claude integrated the complete chain at **be5c2c70cf82b905f3f4e8674ac683b0d666d9d4** under integration lease epoch 14. The candidate preserved all parents. The combined gate passed 198 library tests, 502 swarm tests, and 29 focused MCP tests; the full CEPaF run had 10,003 passes and exactly the same 164 failures as baseline. Source integration is distinct from exposure through a running MCP endpoint.
+The final MCP test child **88fe4fa8edd8b8c4dbc893e6c3fa8498b79f919f** replaces three legacy success expectations with runtime-dependent assertions: missing native code requires explicit UNAVAILABLE and no fabricated counts; available native code requires the typed response schema. Claude integrated the complete chain at **be5c2c70cf82b905f3f4e8674ac683b0d666d9d4** under integration lease epoch 14. The candidate preserved all parents. The combined gate passed 198 library tests, 502 swarm tests, and 29 focused MCP tests; the full CEPaF run had 10,003 passes and exactly the same set of 164 distinct failing test identities as baseline. The attribution set size is not an aggregate failure-event count. Source integration is distinct from exposure through a running MCP endpoint.
 
 The C04/C05/KPI seam repair **d65573354bb619e8c94a63b28c45efcd4e5c1a3e** preserves parents 94ed6c2e and 4e6632fc. Investigation disproved the initial directory-creation hypothesis: C01 canonicalizes the registered workspace before journal I/O, and three action tests used nonexistent /uos. The tests now use the existing canonical workspace fixture. Only the test file changed; current-state, freshness and effect fences are unchanged. The telemetry child **8180c73608373b00b46f7836af71f50ce6f40de7** restores static OpenTelemetry/OTLP identity on the existing status route while keeping unobserved counts and log level null and collector/backend states unknown. Integration receipts must remain distinct from these candidate test receipts.
 
