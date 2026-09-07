@@ -93,5 +93,21 @@
     "unknowns": [
       "NIF-family test flakiness (Unknown)"
     ]
+  },
+  "completed": {
+    "observed_at": "2026-09-07T09:45:13.709851+00:00",
+    "observed_actions": [
+      "full cepaf suite on the tree with the MCP chain: 10000 passed / 205 failures; 3 NEW vs the previous mainline set: wave3_4_test.system_{health,dashboard,verification}_tool_returns_json_test (they assert tool content without a loaded NIF, i.e. the fabricated success the corrective candidate removes)",
+      "MCP chain merge parked on integration/candidates-mcp-chain-pending (parents preserved)",
+      "clock observer merge rebuilt on the ledger change (parents xmnxxoyz + xsyyvxll/98936f9e); cepaf files unchanged vs main so the attribution stands",
+      "gates: uos_tui 198, uos_swarm 502, 0 warnings; board valid 222",
+      "lease integration/main epoch 12 -> main = nuomwrkotqru/b1fc2332e8cbb9d9b9129d53f3a7786897df0286 -> released"
+    ],
+    "outcome": "alternative realized (clock observer only) — Measured",
+    "forecast_resolution": "p=0.85 for both candidates landing -> did not happen (Brier 0.7225); the reason was an attributable regression, correctly predicted as the escalation path",
+    "consumed": {
+      "tokens": "0 for integration steps",
+      "usd": 0.0
+    }
   }
 }
