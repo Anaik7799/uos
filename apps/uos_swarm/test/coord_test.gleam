@@ -659,3 +659,74 @@ fn string_of(i: Int) -> String {
 
 @external(erlang, "erlang", "integer_to_binary")
 fn gleam_int_to_string(i: Int) -> String
+
+fn mk(kind: board.Kind, to: String) -> board.Draft {
+  Draft(
+    Agent("L0-fable", "L0", "fable"),
+    to,
+    kind,
+    [#("note", "x")],
+    Semantics(["Worker"], [13], ["CA-emit_intent"], [], 0),
+    Causality(None, []),
+    None,
+    None,
+  )
+}
+
+pub fn recipient_self_ack_rule_test() {
+  let p = policy()
+  let to_w03 =
+    board.seal(
+      Draft(..mk(board.Report, "W03"), from: Agent("L0-fable", "L0", "fable")),
+      "sw",
+      1,
+      1,
+      "aaaaaaaaaaaaaaaa",
+      board.genesis_digest,
+    )
+  let to_w01 =
+    board.seal(
+      Draft(..mk(board.Report, "W01"), from: Agent("L0-fable", "L0", "fable")),
+      "sw",
+      2,
+      2,
+      "bbbbbbbbbbbbbbbb",
+      to_w03.digest,
+    )
+  let local = [to_w03, to_w01]
+  let ack_by = fn(who: String, layer: String, target: String) {
+    board.seal(
+      board.ack_draft(Agent(who, layer, "sonnet"), target),
+      "sw",
+      3,
+      3,
+      "cccccccccccccccc",
+      "",
+    )
+  }
+  coord.ack_target_ok(p, ack_by("W03", "L2", to_w03.id), local)
+  |> should.equal(Ok(Nil))
+  coord.ack_target_ok(p, ack_by("W03", "L2", to_w01.id), local)
+  |> should.equal(Error(coord.AckNotRecipient("W03", to_w01.id)))
+  coord.ack_target_ok(p, ack_by("L0-fable", "L0", to_w01.id), local)
+  |> should.equal(Ok(Nil))
+  coord.ack_target_ok(p, ack_by("W03", "L2", "lost-id"), local)
+  |> should.equal(Error(coord.AckNotRecipient("W03", "lost-id")))
+  let gap =
+    board.seal(
+      Draft(
+        ..mk(board.Andon, "broadcast"),
+        from: Agent("L0-fable", "L0", "fable"),
+        payload: [#("causal_gap", "lost-id")],
+      ),
+      "sw",
+      4,
+      4,
+      "dddddddddddddddd",
+      to_w01.digest,
+    )
+  coord.ack_target_ok(p, ack_by("W03", "L2", "lost-id"), [gap, ..local])
+  |> should.equal(Ok(Nil))
+  coord.authorize(p, board.ack_draft(Agent("V1", "L3", "haiku"), to_w03.id))
+  |> should.equal(Ok(Nil))
+}

@@ -6,7 +6,7 @@
 - **Tailscale FQDN Link**: [http://nas-1.tail55d152.ts.net:4100/docs/docs/plans/20260907-0910-uos-tui-and-swarm-work-stream-split-plan.md](http://nas-1.tail55d152.ts.net:4100/docs/docs/plans/20260907-0910-uos-tui-and-swarm-work-stream-split-plan.md)
 - **Operator directive (verbatim)**: "split and tui and swarm work into separate work streams"
 - **Transclusions**: `[[zk:20260906-2150-adr-061-uos-tui-gleam-library-textual-reference]]` `[[zk:20260907-0537-adr-062-uos-tui-swarm-hive-mind-message-board-coordination-acl-and-zenoh-infra]]` `[[zk:20260905-1801-moc-uos-unified-master]]` `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
-- **Status**: designed; execution gated on the live Codex session reporting "mainline final" (it asked for VCS quiescence while it merges `integration/uos-tui-swarm` with `main`).
+- **Status**: executed 20260907-0950; see ADR-063 and `docs/journal/20260907-0950-uos-tui-swarm-work-stream-split-journal.md` for full execution record.
 
 ## Comprehensive Verification Checklist (SC-CHECKLIST-001)
 <details><summary>18 checkpoints (plan-time status)</summary>
@@ -58,3 +58,29 @@ Rules: the TUI stream never imports from the swarm stream; the swarm stream inte
 - G2: both suites green with 0 warnings; test counts recorded per stream.
 - G3: the regenerated system audit is not worse than 56 / 78 / 2 and the board validates.
 - G4: journal, ADR consequences and README updated; bookmarks and workspaces listed in the journal.
+
+## 7. Execution Record
+
+**Executed**: 20260907-0950- by Fable (design authority) + Sonnet W-A (352,872 tokens) + Sonnet W-B (308,739 tokens) in parallel sibling workspaces.
+
+**Gate Results**:
+- **G1 PASS**: No `import uos_swarm/...` in `apps/uos_tui`; boundary grep empty; `gleam build` of `uos_tui` alone succeeds.
+- **G2 PASS**: uos_tui 198 tests (18 test modules), uos_swarm 271 tests (14 test modules), total 469; both build 0 warnings.
+- **G3 PASS**: System audit PASS 56 · DECLARED 78 · FAIL 2 (honest checklist evaluations); board validates at 187 messages; admissible=false pending CHK-09 math gates and tri-sovereign review.
+- **G4 IN PROGRESS**: Journal created; ADR-063 created; README.md work streams section added; plan updated; MOC updated with ADR-063 line.
+
+**Change IDs**:
+- **T** (integration/uos-tui): `tmwpokqm` — TUI library modules + design docs.
+- **S** (integration/uos-swarm): `wyowkrpw` (child of T) — Swarm modules + artefacts + tests.
+- **main advance**: S under session_sync lease `integration/main` epoch 1 (Codex relinquished).
+
+**Coordination**:
+- L0-fable registered in shared coordinator `var/coordination/tri-agent` (sequence 3).
+- 69 inbox board messages acknowledged.
+- "Integrate" and "green Andon" posted after split.
+
+**Open Work**:
+- Peers must rebase C01–C07 onto `integration/uos-swarm`.
+- Default workspace update (deferred).
+- CHK-09 math gates (Shannon Entropy, CCM, Trajectory Divergence, ITQS) pending tri-sovereign validation.
+- Boundary review by AGY + Codex + Claude (tri-sovereign) pending.

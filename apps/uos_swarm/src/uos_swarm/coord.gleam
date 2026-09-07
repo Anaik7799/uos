@@ -71,10 +71,13 @@ pub type Violation {
   NoSuchLease(resource: String)
   LeaseExpired(resource: String, expired_us: Int)
   WipLimitReached(limit: Int)
+  AckNotRecipient(from: String, target: String)
 }
 
 pub fn violation_label(v: Violation) -> String {
   case v {
+    AckNotRecipient(from, target) ->
+      "ack by " <> from <> " on a message not addressed to it: " <> target
     UnknownAgent(id) -> "unknown agent " <> id
     KindNotAllowed(k, l) ->
       board.kind_label(k) <> " not allowed for " <> layer_label(l)
@@ -138,6 +141,7 @@ pub fn default_policy(roster: List(Agent), wip_limit: Int) -> Policy {
         board.Intent,
       ]),
       #(L2, [
+        board.Ack,
         board.Claim,
         board.Progress,
         board.Report,
@@ -147,6 +151,7 @@ pub fn default_policy(roster: List(Agent), wip_limit: Int) -> Policy {
         board.Intent,
       ]),
       #(L3, [
+        board.Ack,
         board.Verdict,
         board.Andon,
         board.Jidoka,
@@ -666,6 +671,42 @@ pub type SyncReport {
 }
 
 /// Re-derive the draft a remote message claims to be and authorize it against our policy.
+/// Recipient self-ACK rule: L0/L1 may acknowledge anything; every other sender may only
+/// acknowledge a message addressed to it or broadcast. A target absent from the local
+/// ledger is accepted only when an explicit causal-gap record documents it (the gap stays
+/// visible; it is never treated as restored history).
+pub fn ack_target_ok(
+  policy: Policy,
+  m: Message,
+  local: List(Message),
+) -> Result(Nil, Violation) {
+  case m.kind {
+    board.Ack ->
+      case find_agent(policy, m.from.id) |> option.map(layer_of) {
+        Some(L0) | Some(L1) -> Ok(Nil)
+        _ -> {
+          let target = case m.causality.in_reply_to {
+            Some(id) -> id
+            None -> list.key_find(m.payload, "ack") |> result.unwrap("")
+          }
+          case list.find(local, fn(x) { x.id == target }) {
+            Ok(x) ->
+              case x.to == m.from.id || x.to == "broadcast" {
+                True -> Ok(Nil)
+                False -> Error(AckNotRecipient(m.from.id, target))
+              }
+            Error(_) ->
+              case list.contains(board.causal_gaps(local), target) {
+                True -> Ok(Nil)
+                False -> Error(AckNotRecipient(m.from.id, target))
+              }
+          }
+        }
+      }
+    _ -> Ok(Nil)
+  }
+}
+
 pub fn authorize_message(policy: Policy, m: Message) -> Result(Nil, Violation) {
   authorize(
     policy,
@@ -729,7 +770,10 @@ pub fn reconcile(
   let conflicts = count_conflicts(local, remote)
   // Every pulled message must pass policy (forgery of a higher layer is refused) and, when keyed, the signature.
   let #(pull, policy_rejected) =
-    list.partition(pull, fn(m) { authorize_message(c.policy, m) == Ok(Nil) })
+    list.partition(pull, fn(m) {
+      authorize_message(c.policy, m) == Ok(Nil)
+      && ack_target_ok(c.policy, m, local) == Ok(Nil)
+    })
     |> fn(p) { #(p.0, list.length(p.1)) }
   let #(pull, signature_rejected) = case b.key {
     Some(_) ->

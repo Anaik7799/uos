@@ -103,7 +103,11 @@ pub fn main() -> Nil {
           io.println(
             "board valid: "
             <> int.to_string(list.length(load_board_messages(path)))
-            <> " messages, chain intact, semantics resolved",
+            <> " messages, chain intact, semantics resolved, causal gaps "
+            <> int.to_string(
+              list.length(board.causal_gaps(load_board_messages(path))),
+            )
+            <> " (explicit records; lost history is not restored)",
           )
         Error(e) -> io.println("board INVALID: " <> e)
       }
@@ -160,7 +164,12 @@ pub fn main() -> Nil {
           let #(policy, roster) = policy_and_roster()
           let agent = rostered_agent(roster, Agent(from, layer, "cli"))
           let draft = board.ack_draft(agent, id)
-          case coord.authorize(policy, draft) {
+          let local = load_board_messages(path)
+          let probe = board.seal(draft, "probe", 0, 0, "0000000000000000", "")
+          case
+            coord.authorize(policy, draft)
+            |> result.try(fn(_) { coord.ack_target_ok(policy, probe, local) })
+          {
             Ok(_) -> {
               let #(_, m) = board.post(b, draft)
               io.println(board.to_string(m))
