@@ -1,0 +1,141 @@
+{
+  "schema": "uos.solo5-toolchain.v1",
+  "recorded_at": "2026-09-07T14:00:01Z",
+  "task": "uos/mirage-security/20260907-1310/SOLO5-UPDATE",
+  "workflow": "uos/mirage-security/20260907-1310/workflow",
+  "recorded_by": {
+    "agent": "Codex-Astra",
+    "session": "01a07a68-b3b7-70f3-9e64-fac68a156c21"
+  },
+  "source": {
+    "project": "Solo5",
+    "version": "0.13.0",
+    "tag": "v0.13.0",
+    "commit": "65f23c5945d3fc43d98780ef67cff718bbf04c61",
+    "published_at": "2026-08-28T09:27:11Z",
+    "url": "https://github.com/Solo5/solo5/releases/download/v0.13.0/solo5-v0.13.0.tar.gz",
+    "sha256": "4fa409ba249ad05591ff7c94f8e2fb8d2e13a808512fb3c5f2434fd66a508f11",
+    "sha512": "cb2f9ea7140d09796dfe2cd5496d9bab858ce1f2144ecaf62cd8f5c9291bcfde8547cd2f42382dea07bd8dcc1ea7173b86ef2ca35247a92a5ed6bfa2ccf056f2",
+    "bytes": 483078,
+    "license": "ISC",
+    "license_sha256": "cb04ae7ff432a2b3d895d3109330782a23b3521913e361598ee805266a9676e3",
+    "quiescence": "Published archive bytes fixed by two upstream checksums; no mutable external working tree copied.",
+    "local_archive": "var/quarantine/solo5-0.13.0/downloads/solo5-v0.13.0.tar.gz",
+    "patches": [],
+    "patch_decision": "Unmodified release configures, builds and passes selected execution profiles with the installed host compiler."
+  },
+  "build": {
+    "host": "nas-1",
+    "architecture": "x86_64-linux-gnu",
+    "cc": "GCC 15.2.0 (Ubuntu 15.2.0-16ubuntu1)",
+    "linker": "GNU binutils 2.46",
+    "libseccomp": "2.6.0",
+    "qemu": "10.2.1",
+    "prefix": "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0",
+    "configure": [
+      "./configure.sh",
+      "--prefix=/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0"
+    ],
+    "compile": [
+      "make",
+      "-j4"
+    ],
+    "install": [
+      "make",
+      "install"
+    ],
+    "configure_exit": 0,
+    "build_exit": 0,
+    "install_exit": 0,
+    "build_wall_seconds": 2.9,
+    "build_max_rss_kib": 53688,
+    "build_log_sha256": "d8c8bd9eb4bd78a3f76199e4f55b44c69555b23cfe4df9161d5867c2a3deeb74",
+    "native_git_invoked": false,
+    "notes": "Release version.h.distrib avoids VCS lookup. No distrib or tests/run-tests.sh targets invoked; those upstream scripts require Git."
+  },
+  "artifacts": {
+    "manifest": "governance/sources/20260907-1336-solo5-0.13.0-installed.sha256",
+    "manifest_sha256": "8157c42b0b6b0d495458108faff2ffe226ed4681b37f1fb7123c539a05697b0f",
+    "file_count": 262,
+    "hvt_sha256": "5ac9c80ccb413dcff3f0b8cc19863d926b4249f72d96313b925d5ef354425944",
+    "spt_sha256": "cc56911c77db44ba66b9027886de681d36f30dd372be19e9b16902afaed516de",
+    "virtio_launcher_sha256": "ea5f1a1c251710e841477cf3880603de65760cd3689e9be012beae740f348af1",
+    "storage": "Ignored host var/ only; binaries and upstream source archive are not admitted to JJ source history."
+  },
+  "verification": {
+    "status": "PASSED_SCOPED_HOST_ACCEPTANCE",
+    "receipt": "generated/20260907-1336-solo5-0.13.0-runtime-evidence.json",
+    "receipt_sha256": "f876cacc7d61543acf1820afcd43afd48039d551ad2039cc12509103d767a2cc",
+    "checker": "tools/verification/solo5_toolchain.ml",
+    "checker_sha256": "375fc5545b89c3a11b73f7c1adf8a5cb4c8b3ed632babeccf3e6506ecd20a213",
+    "supervisor": "tests/acceptance/process_supervisor.ml",
+    "supervisor_sha256": "923fae561572ab20540af783e73731175e9df6d1604d3d1cfa4acfb023d9c789",
+    "cases": 12,
+    "passed": 12,
+    "profiles": [
+      "hello",
+      "time",
+      "ssp",
+      "hello_wrong_argument"
+    ],
+    "targets": [
+      "hvt",
+      "spt",
+      "virtio"
+    ],
+    "timeout_ms_per_case": 12000,
+    "stream_byte_limit": 65536,
+    "hardware_observations": [
+      "HVT KVM_GET_API_VERSION=12; KVM_CREATE_VM and KVM_RUN observed",
+      "SPT successful SECCOMP_SET_MODE_FILTER observed",
+      "VirtIO QEMU KVM_GET_API_VERSION=12 and KVM_CREATE_VM observed"
+    ],
+    "trace_receipts": [
+      {
+        "path": "var/quarantine/solo5-0.13.0/receipts/hvt-syscalls.log",
+        "sha256": "ac82d1a02eefe997de7b229c7ee910b1a4ce223d5abfd1492d0bea7db52e452f"
+      },
+      {
+        "path": "var/quarantine/solo5-0.13.0/receipts/spt-syscalls.log",
+        "sha256": "c5201343f7a50e033a90e8d5312ceccf534a561ca2c5dc6be95da936f1ebda95"
+      },
+      {
+        "path": "var/quarantine/solo5-0.13.0/receipts/virtio-syscalls.log",
+        "sha256": "891d056c4fb7a4758a42ed64190012c20997541b2c0448ab4f00556ec58b0d69"
+      }
+    ],
+    "formal_status": "NOT_IMPLEMENTATION_REFINED",
+    "peer_review": "PENDING",
+    "application_admitted": false
+  },
+  "compatibility": {
+    "prior_solo5": "0.12.1",
+    "prior_retained": "/home/an/dev/ver/zigvm/_opam",
+    "mirage": "4.11.2",
+    "ocaml_solo5": "1.3.4",
+    "ocaml_constraint": ">=5.5 and <5.6",
+    "selected_ocaml": "5.5.0",
+    "cross_compiler_status": "BUILD_IN_PROGRESS_IN_SEPARATE_ISOLATED_SWITCH",
+    "note": "Latest OCaml-Solo5 and Mirage versions checked against official OPAM metadata; no claim that the in-progress cross closure is already installed."
+  },
+  "clock": {
+    "observed_at": "2026-09-07T14:00:01Z",
+    "ntp_offset_seconds": -0.000664892,
+    "leap_status": "Normal",
+    "deadline_clock": "Mtime monotonic",
+    "lamport": "Separate coordination counter, not wall time"
+  },
+  "activation": {
+    "current_services_changed": false,
+    "probe_binding": "AGY follow-up required for exact paths and hashes",
+    "rollback": "Keep existing 0.12.1 prefix/artifacts and receipts; select the prior profile only through a separately authorized runtime action."
+  },
+  "limits": [
+    "Only x86_64 Linux nas-1 tested; no RISC-V or cross-host claim.",
+    "No network/block devices attached; no throughput, egress-policy or device-isolation admission.",
+    "No application service migrated; measured saved RAM remains 0.",
+    "Physical acceptance does not repair the existing weak Mirage receipt gate.",
+    "Artifact before/after hashes are cooperative host evidence, not hostile-host remote attestation.",
+    "Current UOS integration and any production cutover remain separate work-order steps."
+  ]
+}
