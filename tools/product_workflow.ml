@@ -9,7 +9,8 @@ let database="data/sqlite/uos_verification_tracking.sqlite3"
 let native_case="native.eligibility.case"
 let normalizer="exact-lines/v1:trim-line-edges;drop-empty-lines;preserve-line-order"
 let source_paths=["tools/product_catalog.ml";"tools/product_workflow.ml";"tools/product_workflow_core.ml";
- "tools/product_workflow_core.mli";"tools/product_oracle.ml";"tools/test_product_catalog.ml";"tools/test_product_workflow_core.ml"]
+ "tools/product_workflow_core.mli";"tools/product_oracle.ml";"tools/test_product_catalog.ml";"tools/test_product_workflow_core.ml";
+ "tools/test_product_workflow.ml";"tools/test_product_oracles.ml";"tools/product_workflow_view.ml"]
 let json_string value=`String value
 let json_strings xs=`List(List.map json_string xs)
 let data_text=function Sqlite3.Data.TEXT value->value | _->fail "expected database text"
@@ -65,6 +66,9 @@ let node_row candidate owner task (n:W.node) payload =
 let init db spec revision owner task ~authorize =
  require(String.trim owner<>"" && String.trim task<>"") "owner and Sa-plan reference required";
  let catalog=get_catalog db spec revision in
+ require (match String.split_on_char '#' task with [plan;task_id]->
+   plan=text "sa_plan_plan" (member "specification" catalog) && String.trim task_id<>"" | _->false)
+   "workflow task reference differs from catalog plan";
  let root="product:"^spec in
  let node id parent level required payload=W.{id;parent;level;required},payload in
  let nodes = node root None W.Product true (member "specification" catalog) ::
@@ -79,8 +83,8 @@ let init db spec revision owner task ~authorize =
       | `Null,[r]->text "id" r | _->fail "ambiguous acceptance parent; require explicit requirement_id" in
      node(text "id" a)(Some parent)W.Acceptance true a)(items "acceptance" feature))) (items "features" catalog) @
   [node "native.eligibility" (Some root) W.Feature false (`Assoc["name",json_string "Native evidence eligibility (internal check)"]);
-   node "native.eligibility.requirement" (Some "native.eligibility") W.Requirement false (`Assoc["shall",json_string "The executable nine-boolean eligibility kernel accepts exactly the all-true vector."]);
-   node native_case (Some "native.eligibility.requirement") W.Acceptance false (`Assoc["assertion",json_string "Exhaust all 512 vectors; compare actual kernel truth table to independent Z3 conjunction with satisfiable controls. This proves only this finite predicate, not the 138 infrastructure cases."])] in
+   node "native.eligibility.requirement" (Some "native.eligibility") W.Requirement false (`Assoc["shall",json_string "The full receipt gate accepts exactly the all-true combination in 512 representative configurations of nine conditions."]);
+   node native_case (Some "native.eligibility.requirement") W.Acceptance false (`Assoc["assertion",json_string "Compare the observed evaluate_case truth table to independent Z3 conjunction with SAT controls. This covers only these finite representative configurations, not every possible receipt or the 138 infrastructure cases."])] in
  (match W.validate_nodes(List.map fst nodes)with Ok()->()|Error e->fail e);
  let manifest=`Assoc["schema",json_string "uos.product-workflow-candidate/v1";"spec_id",json_string spec;"revision",json_string revision;
   "catalog_sha256",json_string(sha(encoded catalog));"sources",sources();"executables",binary_manifest();"normalizer",json_string normalizer;
@@ -105,9 +109,19 @@ let execution_json (r:O.execution)=`Assoc["input",json_string r.input;"output",j
  "identity",`List(List.map(fun(path,digest)->`Assoc["path",json_string path;"sha256",json_string digest])r.identity)]
 let successful (r:O.execution)=r.exit_code=0 && r.fault=None && r.elapsed<=10. && String.trim r.error=""
 let lines body=String.split_on_char '\n' body |>List.map String.trim |>List.filter((<>)"")
+let actual_gate bits =
+ require (List.length bits=9) "nine representative receipt conditions required";
+ let flag=List.nth bits in
+ let expected=W.{candidate="candidate";specification="spec";oracle="oracle";executable="exe";normalizer="normalizer";checker="checker"} in
+ let runtime=W.{case_id="case";kind=Runtime;binding=(if flag 0 then expected else {expected with candidate="wrong"});
+  sequence=(if flag 6 then 1 else 0);observed=(if flag 2 then 10. else 16.);expires=(if flag 3 then 20. else 12.);
+  passed=flag 7;artifact_valid=flag 4;invocation_valid=flag 5} in
+ let formal=W.{runtime with kind=Formal;binding=expected;sequence=2;observed=10.;expires=20.;passed=true;artifact_valid=true;invocation_valid=true} in
+ let receipts=if flag 1 then [runtime;formal] else [runtime;runtime;formal] in
+ (W.evaluate_case ~now:15. ~source_current:(flag 8) ~expected ~case_id:"case" receipts).state=W.Passed
 let truth_query () =
  let accepted=List.init 512(fun mask->mask,List.init 9(fun bit->mask land (1 lsl bit)<>0))
-  |>List.filter(fun(_,bits)->W.eligible_bits bits) in
+  |>List.filter(fun(_,bits)->actual_gate bits) in
  let term(_,bits)="(and "^String.concat " " (List.mapi(fun i b ->if b then "b"^string_of_int i else "(not b"^string_of_int i^")")bits)^")" in
  let candidate=if accepted=[] then "false" else "(or "^String.concat " " (List.map term accepted)^")" in
  String.concat "\n" ((List.init 9(fun i->"(declare-const b"^string_of_int i^" Bool)")) @
@@ -133,20 +147,20 @@ let run_oracles db candidate ~authorize =
  let hashes=List.map(fun input->let r=O.run O.Sha256 ~version:false input in
   let expected=sha input^"  -" in successful r && lines r.output=[expected],execution_json r)fixtures in
  let table=List.init 512(fun mask->let bits=List.init 9(fun bit->mask land (1 lsl bit)<>0) in
-  `Assoc["mask",`Int mask;"accepted",`Bool(W.eligible_bits bits)]) in
+  `Assoc["mask",`Int mask;"accepted",`Bool(actual_gate bits)]) in
  let runtime_pass=successful sha_version && successful z3_version && List.for_all fst hashes &&
   List.for_all(fun row->member "accepted" row=`Bool(member "mask" row=`Int 511))table in
  let now=Unix.gettimeofday() in
  let runtime=`Assoc["schema",json_string "uos.native-eligibility-runtime/v1";"observed",`Float now;"passed",`Bool runtime_pass;
   "case_id",json_string native_case;"vectors",`List table;"hash_comparisons",`List(List.map snd hashes);
   "versions",`List[execution_json sha_version;execution_json z3_version];
-  "scope",json_string "512 actual eligibility vectors plus five executable SHA256 comparisons; no infrastructure acceptance credit"] in
+  "scope",json_string "512 representative evaluate_case executions plus five executable SHA256 comparisons; no infrastructure acceptance credit"] in
  append_observation db candidate "runtime" runtime ~authorize;
  let proof=O.run O.Z3 ~version:false (truth_query()) in
  let formal_pass=successful proof && lines proof.output=["sat";"unsat";"sat"] in
  let formal=`Assoc["schema",json_string "uos.native-eligibility-formal/v1";"observed",`Float(Unix.gettimeofday());"passed",`Bool formal_pass;
   "case_id",json_string native_case;"execution",execution_json proof;
-  "scope",json_string "Finite extensional equivalence for nine booleans only; sat controls before and after UNSAT counterexample query; not a proof of all receipt selectors or the full system"] in
+  "scope",json_string "Finite equivalence of 512 representative evaluate_case configurations to independent conjunction; two SAT controls; not a universal proof of all receipts, selectors or the full system"] in
  append_observation db candidate "formal" formal ~authorize;
  require(runtime_pass && formal_pass) "native oracle comparison failed; failure observations retained"
 let observed_success e =
@@ -175,8 +189,16 @@ let receipts db candidate =
   member "identity" e=member "identity" expected && member "argv" e=json_strings(O.command oracle ~version) in
  query db "SELECT r.sequence,r.case_id,r.kind,r.binding,r.observed,r.expires,a.content,a.sha256 FROM product_workflow_receipts r JOIN product_artifacts a ON a.id=r.artifact_id AND a.revision=r.artifact_revision WHERE r.candidate_id=? ORDER BY r.sequence" [s candidate]
  |>List.map(function [Sqlite3.Data.INT seq;Sqlite3.Data.TEXT case_id;Sqlite3.Data.TEXT kind;Sqlite3.Data.TEXT b;observed;expires;Sqlite3.Data.TEXT content;Sqlite3.Data.TEXT digest]->
+  let float=function Sqlite3.Data.FLOAT f->f | Sqlite3.Data.INT n->Int64.to_float n | _->Float.nan in
+  let invalid=W.{case_id;kind=(if kind="runtime" then Runtime else Formal);binding=binding manifest candidate;
+   sequence=Int64.to_int seq;observed=float observed;expires=float expires;passed=false;artifact_valid=false;invocation_valid=false} in
+  (try
+  require(String.length content<=8*1024*1024) "receipt body too large";
   let payload=Yojson.Basic.from_string content in
-  let artifact_valid=sha content=digest && text "case_id" payload=case_id in
+  ignore(canonical payload);
+  ignore(canonical(Yojson.Basic.from_string b));
+  let artifact_valid=sha content=digest && text "case_id" payload=case_id &&
+   to_number(member "observed" payload)=float observed && float expires=float observed+.3600. in
   let invocation_valid=case_id=native_case && (match kind with
    | "runtime" -> text "schema" payload="uos.native-eligibility-runtime/v1" && List.length(items "vectors" payload)=512 &&
      List.for_all(checked_execution O.Sha256 ~version:false)(items "hash_comparisons" payload) &&
@@ -184,9 +206,9 @@ let receipts db candidate =
    | "formal" -> text "schema" payload="uos.native-eligibility-formal/v1" && text "input" (member "execution" payload)=truth_query() && checked_execution O.Z3 ~version:false (member "execution" payload)
    | _->false) in
   let measured_pass=payload_result kind payload && (kind<>"runtime" || runtime_invocations payload) in
-  let float=function Sqlite3.Data.FLOAT f->f | Sqlite3.Data.INT n->Int64.to_float n | _->fail "invalid receipt time" in
   W.{case_id;kind=(if kind="runtime" then Runtime else Formal);binding=decode_binding(Yojson.Basic.from_string b);
    sequence=Int64.to_int seq;observed=float observed;expires=float expires;passed=measured_pass && member "passed" payload=`Bool true;artifact_valid;invocation_valid}
+  with _ -> invalid)
   |_->fail "invalid receipt row")
 let report db candidate =
  let manifest=get_candidate db candidate in let nodes=read_nodes db candidate in
@@ -210,7 +232,11 @@ let report db candidate =
   "receipt_count",`Int(List.length receipts);"nodes",`List(List.map node_json nodes);
   "scope",json_string "Required-child rollup; internal finite oracle is separate from original infrastructure acceptance"]
 let run_workflow ()=match Array.to_list Sys.argv with
- | [_;"init";spec;revision;owner;task]->with_db ~readonly:false database(fun db->print_endline(init db spec revision owner task ~authorize))
+ | [_;"init";spec;revision;owner;task]->
+   require(Some owner=Sys.getenv_opt "UOS_PRODUCT_WORKER" &&
+    Some task=Option.bind (Sys.getenv_opt "UOS_PRODUCT_PLAN") (fun p->Option.map(fun t->p^"#"^t)(Sys.getenv_opt "UOS_PRODUCT_TASK")))
+    "candidate owner/task differs from current Sa-plan authority";
+   with_db ~readonly:false database(fun db->print_endline(init db spec revision owner task ~authorize))
  | [_;"oracle";candidate]->with_db ~readonly:false database(fun db->run_oracles db candidate ~authorize;print_endline(encoded(report db candidate)))
  | [_;"report";candidate]->with_db ~readonly:true database(fun db->print_endline(Yojson.Basic.pretty_to_string(report db candidate)))
  | _->fail "usage: product_workflow.ml init SPEC REV OWNER SA_PLAN_REF | oracle CANDIDATE | report CANDIDATE"

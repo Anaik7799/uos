@@ -73,9 +73,20 @@ let () =
         require (query db "SELECT count(*) FROM product_json_versions" [] = [[Sqlite3.Data.INT 2L]]) "old JSON missing");
       check "JSON replacement rejected with recursive triggers disabled" (fun () ->
         require (rejects (fun () -> exec db "INSERT OR REPLACE INTO product_json_versions SELECT path,revision,'{}',sha256,created_at FROM product_json_versions")) "JSON replacement accepted");
+      check "historical JSON replay cannot rewind the head" (fun () ->
+        let current = document_head db "test/spec.json" |> Option.get |> fst in
+        let old = "{\"text\":\"O'Brien\"}\n" in
+        require (rejects (fun () -> transaction db (fun () ->
+          ignore (store_document db ~path:"test/spec.json" ~body:old ~expected:(Some current) ~actor:"test")))) "rewind accepted";
+        require (document_head db "test/spec.json" = Some(current,"{\"v\":2}")) "head rewound";
+        require (query db "SELECT count(*) FROM product_json_events" [] = [[Sqlite3.Data.INT 2L]]) "event history changed");
       check "JSON path aliases and duplicate keys rejected" (fun () ->
         List.iter (fun path -> require (rejects (fun () -> ignore (store_document db ~path ~body:"{}" ~expected:None ~actor:"test"))) ("alias accepted: "^path)) ["../escape.json";"/absolute.json";"./same.json";"a//b.json";"a/./b.json"];
         require (rejects (fun () -> ignore (store_document db ~path:"test/dup.json" ~body:"{\"x\":1,\"x\":2}" ~expected:None ~actor:"test"))) "duplicate key accepted");
+      check "bounded document reader rejects a FIFO without waiting" (fun () ->
+        let fifo=path^".fifo" in Unix.mkfifo fifo 0o600;
+        Fun.protect ~finally:(fun()->Sys.remove fifo) (fun()->
+          require (rejects(fun()->ignore(read fifo))) "FIFO accepted"));
       check "lease loss rolls back entire import" (fun () ->
         let calls = ref 0 in
         let changed = set "specification" (set "revision" (`String "v2") (member "specification" j)) j in

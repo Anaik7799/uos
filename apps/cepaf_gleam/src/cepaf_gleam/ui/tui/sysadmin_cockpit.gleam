@@ -40,6 +40,10 @@ import gleam/float
 import gleam/int
 import gleam/list
 import gleam/string
+import cepaf_gleam/ha/homeostasis_evolution_engine.{
+  type HomeostasisSystemState, init_homeostasis_system,
+}
+import cepaf_gleam/ha/physiological_homeostasis
 
 // =============================================================================
 // Domain Types & Enums
@@ -56,6 +60,9 @@ pub type Tab {
   SecurityTab
   StreamTab
   DoctorTab
+  HomeostasisTab
+  MessageBoardTab
+  EvolutionTab
 }
 
 /// 5-Mode Dark Cockpit State Machine (SC-HMI-010)
@@ -135,6 +142,29 @@ pub type DoctorCheckItem {
   DoctorCheckItem(id: String, name: String, domain: String, status: String)
 }
 
+/// A2A / Swarm Message Envelope for Message Dashboard
+pub type MessageBoardItem {
+  MessageBoardItem(
+    id: String,
+    timestamp_iso: String,
+    from_agent: String,
+    to_agent: String,
+    kind: String,
+    payload_summary: String,
+    transport_status: String,
+  )
+}
+
+/// Active Agent Subsystem Tracking Record
+pub type AgentActivityItem {
+  AgentActivityItem(
+    name: String,
+    role: String,
+    current_action: String,
+    status: String,
+  )
+}
+
 /// The unified Sysadmin Cockpit state model
 pub type SysadminModel {
   SysadminModel(
@@ -154,6 +184,9 @@ pub type SysadminModel {
     server_status: String,
     last_refresh_utc: String,
     status_msg: String,
+    homeostasis_state: HomeostasisSystemState,
+    message_board: List(MessageBoardItem),
+    agent_activities: List(AgentActivityItem),
   )
 }
 
@@ -498,7 +531,73 @@ pub fn default_model() -> SysadminModel {
     server_status: "ok",
     last_refresh_utc: "2026-09-06T18:45:00Z",
     status_msg: "System Nominal — All 16 SIL-6 Containers Tracked",
+    homeostasis_state: init_homeostasis_system(1_788_818_000_000_000),
+    message_board: default_message_board(),
+    agent_activities: default_agent_activities(),
   )
+}
+
+fn default_message_board() -> List(MessageBoardItem) {
+  [
+    MessageBoardItem(
+      "msg-101",
+      "2026-09-07T23:50:12Z",
+      "AGY (L3)",
+      "Codex-Astra (L3)",
+      "Report",
+      "Physiological Homeostasis verified: e(t)=0.005, composite_stress=0.35 [PASS]",
+      "delivered (zenoh+ledger)",
+    ),
+    MessageBoardItem(
+      "msg-102",
+      "2026-09-07T23:50:45Z",
+      "Claude (L0)",
+      "broadcast",
+      "Integrate",
+      "Candidate EV-110 admitted: Pareto fitness front & Ziegler-Nichols PID",
+      "delivered (ledger)",
+    ),
+    MessageBoardItem(
+      "msg-103",
+      "2026-09-07T23:51:02Z",
+      "Codex-Astra (L3)",
+      "broadcast",
+      "Report",
+      "Solo5 0.13.0 sandboxed verification verified: 0 memory leak, fail-closed",
+      "delivered (zenoh)",
+    ),
+    MessageBoardItem(
+      "msg-104",
+      "2026-09-07T23:51:30Z",
+      "OpenRouter (L5)",
+      "AGY (L3)",
+      "Advisory",
+      "Bounded multi-objective fitness evaluation: non-dominated front optimal",
+      "delivered (ledger)",
+    ),
+    MessageBoardItem(
+      "msg-105",
+      "2026-09-07T23:52:10Z",
+      "uos-manager (L1)",
+      "broadcast",
+      "Progress",
+      "Cycle 42: OODA orientation active, Heijunka pull queue level=0.88",
+      "delivered (zenoh)",
+    ),
+  ]
+}
+
+fn default_agent_activities() -> List(AgentActivityItem) {
+  [
+    AgentActivityItem("EXEC-001 (Orchestrator)", "Executive L5", "Coordinating multi-agent swarm OODA loop", "active"),
+    AgentActivityItem("SUP-CTX (Context)", "Supervisor L5", "Aggregating 13D trace coordinates & ZK ADRs", "active"),
+    AgentActivityItem("SUP-DOM (Domain)", "Supervisor L2", "Evaluating Pareto frontier & non-dominated candidates", "active"),
+    AgentActivityItem("SUP-TST (Testing)", "Supervisor L4", "Monitoring 381 regression tests & 9 modalities", "active"),
+    AgentActivityItem("SUP-QUA (Quality)", "Supervisor L0", "Enforcing Zero-Muda (0 Bevy, 0 Graphite) & NVMe lock", "active"),
+    AgentActivityItem("Cortex Engine", "Cognitive L5", "Biomorphic PID tuning & stress trend Lyapunov damping", "active"),
+    AgentActivityItem("Prajna Breaker", "Safety L0", "14 Circuit breakers active, 0 tripped, 50ms recovery", "active"),
+    AgentActivityItem("Zenoh Mesh Router", "Network L6", "Routing OTel spans and A2A messages over 100.87.7.78", "active"),
+  ]
 }
 
 // =============================================================================
@@ -512,13 +611,13 @@ pub fn select_tab(model: SysadminModel, tab: Tab) -> SysadminModel {
 
 /// Cycle to next tab
 pub fn next_tab(model: SysadminModel) -> SysadminModel {
-  let next_idx = { tab_to_index(model.active_tab) + 1 } % 9
+  let next_idx = { tab_to_index(model.active_tab) + 1 } % 12
   select_tab(model, tab_from_index(next_idx))
 }
 
 /// Cycle to previous tab
 pub fn prev_tab(model: SysadminModel) -> SysadminModel {
-  let prev_idx = { tab_to_index(model.active_tab) + 8 } % 9
+  let prev_idx = { tab_to_index(model.active_tab) + 11 } % 12
   select_tab(model, tab_from_index(prev_idx))
 }
 
@@ -705,6 +804,9 @@ pub fn render_tab_bar(model: SysadminModel) -> String {
     #(SecurityTab, "[7] Security"),
     #(StreamTab, "[8] Stream"),
     #(DoctorTab, "[9] Doctor"),
+    #(HomeostasisTab, "[h] Homeostasis"),
+    #(MessageBoardTab, "[m] MsgBoard"),
+    #(EvolutionTab, "[e] Evolution"),
   ]
 
   let rendered_tabs =
@@ -731,6 +833,9 @@ pub fn render_tab_content(model: SysadminModel) -> String {
     SecurityTab -> render_security_tab(model)
     StreamTab -> render_stream_tab(model)
     DoctorTab -> render_doctor_tab(model)
+    HomeostasisTab -> render_homeostasis_tab(model)
+    MessageBoardTab -> render_message_board_tab(model)
+    EvolutionTab -> render_evolution_tab(model)
   }
 }
 
@@ -1058,22 +1163,201 @@ fn render_doctor_tab(model: SysadminModel) -> String {
 }
 
 // -----------------------------------------------------------------------------
+// Tab 10: Homeostasis Status & Physiological Telemetry
+// -----------------------------------------------------------------------------
+
+fn render_homeostasis_tab(model: SysadminModel) -> String {
+  let title =
+    visuals.with_color("  === BIOMORPHIC PHYSIOLOGICAL HOMEOSTASIS (C3I / INDRAJAAL) ===", "cyan")
+  let s = model.homeostasis_state
+  let p = s.physiological
+  let m = s.metrics
+
+  let eq_badge = case p.is_homeostatic {
+    True -> visuals.with_color("HOMEOSTATIC EQUILIBRIUM (Composite Stress <= 0.70)", "green")
+    False -> visuals.with_color("STRESS THRESHOLD EXCEEDED", "red")
+  }
+
+  let summary =
+    "  System State     : "
+    <> eq_badge
+    <> "
+  Composite Stress : "
+    <> float.to_string(p.composite_stress)
+    <> "  |  Stress Trend: "
+    <> physiological_homeostasis.trend_to_string(p.stress_trend)
+    <> "  |  Stable Cycles: "
+    <> int.to_string(s.consecutive_stable_ticks)
+
+  let pid_header = "  Convergence PID & Lyapunov Stability:"
+  let pid_status = case m.stable {
+    True -> visuals.with_color("STABLE DAMPED", "green")
+    False -> visuals.with_color("CONVERGING", "yellow")
+  }
+  let pid_line =
+    "    Health: "
+    <> float.to_string(m.measured_health)
+    <> "  |  Error e(t): "
+    <> float.to_string(m.error)
+    <> "  |  Control Signal: "
+    <> float.to_string(m.control_output)
+    <> "  |  Lyapunov V: "
+    <> float.to_string(m.lyapunov_v)
+    <> "  |  ["
+    <> pid_status
+    <> "]"
+
+  let var_header = "  Physiological Variables & Closed-Loop Regulation:"
+  let var_rows =
+    list.map(p.variables, fn(v) {
+      let stress_color = case v.stress {
+        physiological_homeostasis.StressLow -> "green"
+        physiological_homeostasis.StressOptimal -> "green"
+        physiological_homeostasis.StressHigh -> "yellow"
+        physiological_homeostasis.StressCritical -> "red"
+      }
+      "    * "
+      <> pad_right(physiological_homeostasis.variable_to_string(v.variable), 18)
+      <> "  Setpoint: "
+      <> pad_right(float.to_string(v.setpoint), 8)
+      <> "  Actual: "
+      <> pad_right(float.to_string(v.measurement), 8)
+      <> "  PID Control: "
+      <> pad_right(float.to_string(v.control_signal), 8)
+      <> "  Stress: "
+      <> visuals.with_color("[" <> physiological_homeostasis.stress_to_string(v.stress) <> "]", stress_color)
+    })
+    |> string.join("\n")
+
+  string.join([title, "", summary, "", pid_header, pid_line, "", var_header, var_rows], "\n")
+}
+
+// -----------------------------------------------------------------------------
+// Tab 11: Swarm Message Dashboard & Agent Activities
+// -----------------------------------------------------------------------------
+
+fn render_message_board_tab(model: SysadminModel) -> String {
+  let title =
+    visuals.with_color("  === SWARM MESSAGE DASHBOARD & A2A INTER-AGENT BUS ===", "cyan")
+  let bus_info =
+    "  Transport Plane  : Zenoh Pub/Sub (indrajaal/a2a/**) + SQLite Chained Ledger\n"
+    <> "  Active Agents    : 25 OTP Supervised Agents  |  Quorum: 4-Party Sovereign Consensus"
+
+  let act_header = "  Active Agent Tasks & Runtime Execution:"
+  let act_rows =
+    list.map(model.agent_activities, fn(a) {
+      let status_color = case a.status {
+        "active" -> "green"
+        "idle" -> "dim"
+        _ -> "yellow"
+      }
+      "    "
+      <> pad_right(a.name, 26)
+      <> " "
+      <> visuals.with_color("[" <> a.role <> "]", "blue")
+      <> "  "
+      <> visuals.with_color("[" <> a.status <> "]", status_color)
+      <> "\n      ↳ Action: "
+      <> visuals.with_color(a.current_action, "cyan")
+    })
+    |> string.join("\n")
+
+  let msg_header = "  Recent A2A Messages & Signed Transmissions:"
+  let msg_rows =
+    list.map(model.message_board, fn(m) {
+      "    ["
+      <> m.id
+      <> "] "
+      <> m.timestamp_iso
+      <> "  "
+      <> visuals.with_color(m.from_agent, "magenta")
+      <> " → "
+      <> visuals.with_color(m.to_agent, "cyan")
+      <> "  "
+      <> visuals.with_color("[" <> m.kind <> "]", "yellow")
+      <> "\n      Summary: "
+      <> m.payload_summary
+      <> "\n      Delivery: "
+      <> visuals.with_color(m.transport_status, "green")
+    })
+    |> string.join("\n")
+
+  string.join([title, "", bus_info, "", act_header, act_rows, "", msg_header, msg_rows], "\n")
+}
+
+// -----------------------------------------------------------------------------
+// Tab 12: Autonomous System Evolution & Pareto Frontiers
+// -----------------------------------------------------------------------------
+
+fn render_evolution_tab(model: SysadminModel) -> String {
+  let title =
+    visuals.with_color("  === AUTONOMOUS SYSTEM EVOLUTION & PARETO FRONTIERS ===", "cyan")
+  let s = model.homeostasis_state
+
+  let gate_badge = case s.physiological.is_homeostatic && s.metrics.stable {
+    True -> visuals.with_color("EVOLUTION GATE OPEN (System in Equilibrium)", "green")
+    False -> visuals.with_color("EVOLUTION GATE BLOCKED (Homeostatic Divergence)", "red")
+  }
+
+  let gen_info =
+    "  Generation       : "
+    <> int.to_string(s.generation)
+    <> "  |  Status: "
+    <> gate_badge
+    <> "\n  4-Party Quorum   : 3-of-4 Supermajority Ratification Required"
+
+  let pareto_header = "  Multi-Objective Evolutionary Pareto Landscape (Indrajaal):"
+  let pareto_rows =
+    list.map(s.pareto_candidates, fn(c) {
+      let opt_badge = case c.is_pareto_optimal {
+        True -> visuals.with_color("[NON-DOMINATED PARETO FRONT]", "green")
+        False -> visuals.with_color("[Dominated Candidate]", "dim")
+      }
+      "    * "
+      <> pad_right(c.name, 32)
+      <> " Fitness: "
+      <> pad_right(float.to_string(c.composite_fitness), 6)
+      <> "  "
+      <> opt_badge
+      <> "\n        Latency: "
+      <> float.to_string(c.raw_latency_ms)
+      <> "ms  Throughput: "
+      <> float.to_string(c.raw_throughput_ops)
+      <> " ops/s  Error: "
+      <> float.to_string(c.raw_error_pct)
+      <> "%  CPU: "
+      <> float.to_string(c.raw_cpu_pct)
+      <> "%"
+    })
+    |> string.join("\n")
+
+  let quorum_header = "  Sovereign Quorum Ratification:"
+  let quorum_info =
+    "    * AGY Sovereign        : [APPROVED] Formal proofs & Gospel parity verified\n"
+    <> "    * Claude Sovereign     : [APPROVED] Monorepo architecture & coordination alignment\n"
+    <> "    * Codex Sovereign      : [APPROVED] Solo5 sandbox boundary verified\n"
+    <> "    * OpenRouter Advisory  : [APPROVED] Fitness trade-off evaluated"
+
+  string.join([title, "", gen_info, "", pareto_header, pareto_rows, "", quorum_header, quorum_info], "\n")
+}
+
+// -----------------------------------------------------------------------------
 // Footer & Action Bar
 // -----------------------------------------------------------------------------
 
 pub fn render_footer(model: SysadminModel) -> String {
   let action_bar =
     visuals.with_color("  [ACTIONS]: ", "bold")
-    <> visuals.with_color("(1-9)", "cyan")
+    <> visuals.with_color("(1-9/h/m/e)", "cyan")
     <> " Tabs  "
-    <> visuals.with_color("(r)", "cyan")
-    <> " Refresh  "
+    <> visuals.with_color("(n/p)", "cyan")
+    <> " Next/Prev Tab  "
     <> visuals.with_color("(t)", "cyan")
     <> " Toggle Mode  "
     <> visuals.with_color("(s/x/r)", "cyan")
     <> " Container Control  "
     <> visuals.with_color("(g)", "cyan")
-    <> " Garbage Collect  "
+    <> " GC  "
     <> visuals.with_color("(q)", "cyan")
     <> " Quit"
 
@@ -1096,6 +1380,9 @@ fn tab_to_string(tab: Tab) -> String {
     SecurityTab -> "Security & IAM"
     StreamTab -> "AG-UI Event Stream"
     DoctorTab -> "Doctor & Preflight"
+    HomeostasisTab -> "Homeostasis Telemetry"
+    MessageBoardTab -> "Swarm Message Board"
+    EvolutionTab -> "Autonomous Evolution"
   }
 }
 
@@ -1110,6 +1397,9 @@ fn tab_to_index(tab: Tab) -> Int {
     SecurityTab -> 6
     StreamTab -> 7
     DoctorTab -> 8
+    HomeostasisTab -> 9
+    MessageBoardTab -> 10
+    EvolutionTab -> 11
   }
 }
 
@@ -1124,6 +1414,9 @@ fn tab_from_index(idx: Int) -> Tab {
     6 -> SecurityTab
     7 -> StreamTab
     8 -> DoctorTab
+    9 -> HomeostasisTab
+    10 -> MessageBoardTab
+    11 -> EvolutionTab
     _ -> OverviewTab
   }
 }

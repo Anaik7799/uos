@@ -10,8 +10,18 @@ open Yojson.Basic.Util
 let fail message = failwith message
 let require condition message = if not condition then fail message
 let read path =
-  require ((Unix.stat path).Unix.st_size <= 8 * 1024 * 1024) "input exceeds 8 MiB";
-  match Bos.OS.File.read (Fpath.v path) with Ok s -> s | Error (`Msg e) -> fail e
+  let ic = Unix.in_channel_of_descr (Unix.openfile path [Unix.O_RDONLY;Unix.O_NONBLOCK;Unix.O_CLOEXEC] 0) in
+  Fun.protect ~finally:(fun () -> close_in_noerr ic) (fun () ->
+    let before = Unix.fstat (Unix.descr_of_in_channel ic) in
+    require (before.Unix.st_kind = Unix.S_REG && before.st_size <= 8 * 1024 * 1024)
+      "input must be a regular file of at most 8 MiB";
+    let body = really_input_string ic before.st_size in
+    let at_end = try ignore (input_char ic); false with End_of_file -> true in
+    require at_end "input grew while reading";
+    let after = Unix.fstat (Unix.descr_of_in_channel ic) in
+    require ((before.st_dev,before.st_ino,before.st_size,before.st_mtime,before.st_ctime) =
+      (after.st_dev,after.st_ino,after.st_size,after.st_mtime,after.st_ctime)) "input changed while reading";
+    body)
 let sha s = Cryptokit.hash_string (Cryptokit.Hash.sha256 ()) s
   |> Cryptokit.transform_string (Cryptokit.Hexa.encode ())
 let rec canonical = function
@@ -79,6 +89,10 @@ CREATE TRIGGER IF NOT EXISTS product_json_events_no_delete BEFORE DELETE ON prod
 CREATE TRIGGER IF NOT EXISTS product_json_events_chain BEFORE INSERT ON product_json_events
  WHEN NEW.previous_revision IS NOT (SELECT revision FROM product_json_events WHERE path=NEW.path ORDER BY sequence DESC LIMIT 1)
  BEGIN SELECT RAISE(ABORT,'stale JSON predecessor'); END;
+CREATE UNIQUE INDEX IF NOT EXISTS product_json_events_version_once ON product_json_events(path,revision);
+CREATE TRIGGER IF NOT EXISTS product_json_events_no_rewind BEFORE INSERT ON product_json_events
+ WHEN EXISTS(SELECT 1 FROM product_json_events WHERE path=NEW.path AND revision=NEW.revision)
+ BEGIN SELECT RAISE(ABORT,'historical JSON version cannot become head again; retain recovery provenance in a new version'); END;
 |}
 let document_head db path =
   if query db "SELECT name FROM sqlite_master WHERE name='product_json_heads'" [] = [] then None

@@ -22,7 +22,12 @@ type oracle = Sha256 | Z3
 let binary = function Sha256 -> "/usr/bin/sha256sum" | Z3 -> "/home/an/dev/ver/zigvm/_opam/bin/z3"
 let support = ["/usr/bin/bwrap";"/usr/bin/prlimit";"/lib64/ld-linux-x86-64.so.2";
  "/usr/lib/x86_64-linux-gnu/libc.so.6";"/usr/lib/x86_64-linux-gnu/libstdc++.so.6";
- "/usr/lib/x86_64-linux-gnu/libm.so.6";"/usr/lib/x86_64-linux-gnu/libgcc_s.so.1"]
+ "/usr/lib/x86_64-linux-gnu/libm.so.6";"/usr/lib/x86_64-linux-gnu/libgcc_s.so.1";
+ "/usr/lib/x86_64-linux-gnu/libselinux.so.1";"/usr/lib/x86_64-linux-gnu/libpcre2-8.so.0";
+ "/usr/lib/x86_64-linux-gnu/libcap.so.2";"/usr/lib/x86_64-linux-gnu/libsmartcols.so.1"]
+(* Observed ELF dependency closure of these four fixed binaries on this host.
+   A different host/toolchain must revise this list and invalidate candidates.
+   This fingerprints the executable closure, not the host kernel or all /usr. *)
 let identity oracle = List.map(fun p -> p,hash_file p) (binary oracle::support)
 type execution = { input:string; output:string; error:string; exit_code:int;
  elapsed:float; fault:string option; identity:(string*string) list; argv:string list }

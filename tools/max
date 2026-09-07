@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -euo pipefail
+PIXI_BIN="/home/an/.pixi/bin/pixi"
+MAX_DIR="/home/an/NAS-setup/uos/services/inference/max"
+exec "$PIXI_BIN" run --manifest-path "$MAX_DIR/pixi.toml" max "$@"

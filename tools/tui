@@ -72,6 +72,9 @@ case "$CMD" in
         security|iam) ACTIVE_TAB="security_tab" ;;
         stream|events) ACTIVE_TAB="stream_tab" ;;
         doctor|preflight) ACTIVE_TAB="doctor_tab" ;;
+        homeostasis|phys) ACTIVE_TAB="homeostasis_tab" ;;
+        messages|msg|board) ACTIVE_TAB="message_board_tab" ;;
+        evolution|pareto) ACTIVE_TAB="evolution_tab" ;;
         *) ;;
       esac
     done
@@ -87,9 +90,12 @@ case "$CMD" in
 
     printf "\033[?25l" 2>/dev/null || true
     stty -echo 2>/dev/null || true
+    # Initial one-time screen clear to initialize terminal buffer
+    printf "\033[2J\033[H"
 
     while true; do
-      printf "\033[2J\033[H"
+      # Flicker-free cursor positioning (SC-TUI-PERF-001): \033[H homes cursor without blanking the terminal
+      printf "\033[H"
 
       run_erl '
         M0 = cepaf_gleam@ui@tui@sysadmin_cockpit:default_model(),
@@ -132,6 +138,9 @@ case "$CMD" in
         7) ACTIVE_TAB="security_tab" ;;
         8) ACTIVE_TAB="stream_tab" ;;
         9) ACTIVE_TAB="doctor_tab" ;;
+        h|H) ACTIVE_TAB="homeostasis_tab" ;;
+        m|M) ACTIVE_TAB="message_board_tab" ;;
+        e|E) ACTIVE_TAB="evolution_tab" ;;
         j|J) SEL_CONTAINER=$(( (SEL_CONTAINER + 1) % 16 )) ;;
         k|K) SEL_CONTAINER=$(( (SEL_CONTAINER + 15) % 16 )) ;;
         r|R)
@@ -169,12 +178,15 @@ case "$CMD" in
             tasks_tab) ACTIVE_TAB="security_tab" ;;
             security_tab) ACTIVE_TAB="stream_tab" ;;
             stream_tab) ACTIVE_TAB="doctor_tab" ;;
-            doctor_tab) ACTIVE_TAB="overview_tab" ;;
+            doctor_tab) ACTIVE_TAB="homeostasis_tab" ;;
+            homeostasis_tab) ACTIVE_TAB="message_board_tab" ;;
+            message_board_tab) ACTIVE_TAB="evolution_tab" ;;
+            evolution_tab) ACTIVE_TAB="overview_tab" ;;
           esac
           ;;
         p|P)
           case "$ACTIVE_TAB" in
-            overview_tab) ACTIVE_TAB="doctor_tab" ;;
+            overview_tab) ACTIVE_TAB="evolution_tab" ;;
             containers_tab) ACTIVE_TAB="overview_tab" ;;
             storage_tab) ACTIVE_TAB="containers_tab" ;;
             zenoh_tab) ACTIVE_TAB="storage_tab" ;;
@@ -183,6 +195,9 @@ case "$CMD" in
             security_tab) ACTIVE_TAB="tasks_tab" ;;
             stream_tab) ACTIVE_TAB="security_tab" ;;
             doctor_tab) ACTIVE_TAB="stream_tab" ;;
+            homeostasis_tab) ACTIVE_TAB="doctor_tab" ;;
+            message_board_tab) ACTIVE_TAB="homeostasis_tab" ;;
+            evolution_tab) ACTIVE_TAB="message_board_tab" ;;
           esac
           ;;
         q|Q) break ;;
@@ -283,7 +298,7 @@ Specialized Subsystem Views:
   - homeostasis          - bicameral            - singularity
   - markdown             - hooks                - voice
   - ruliology            - fmea                 - pipeline-tracer
-  - homeostasis-evolution
+  - homeostasis-evolution - message-board        - agent-activity
 
 EOF
     ;;
@@ -360,6 +375,26 @@ EOF
           Init = cepaf_gleam@ui@lustre@evolution:init(),
           M = cepaf_gleam@ui@lustre@evolution:update(Init, {metrics_loaded, 2.67, 42, 0.03, 0.95, 88, <<"2026-09-06T18:20:00Z">>}),
           Output = cepaf_gleam@ui@tui@evolution_view:render(M),
+          io:put_chars(Output),
+          io:nl(),
+          init:stop().
+        '
+        ;;
+      message-board|messages)
+        run_erl '
+          M0 = cepaf_gleam@ui@tui@sysadmin_cockpit:default_model(),
+          M1 = cepaf_gleam@ui@tui@sysadmin_cockpit:select_tab(M0, message_board_tab),
+          Output = cepaf_gleam@ui@tui@sysadmin_cockpit:render(M1),
+          io:put_chars(Output),
+          io:nl(),
+          init:stop().
+        '
+        ;;
+      agent-activity|agents-live)
+        run_erl '
+          M0 = cepaf_gleam@ui@tui@sysadmin_cockpit:default_model(),
+          M1 = cepaf_gleam@ui@tui@sysadmin_cockpit:select_tab(M0, message_board_tab),
+          Output = cepaf_gleam@ui@tui@sysadmin_cockpit:render(M1),
           io:put_chars(Output),
           io:nl(),
           init:stop().

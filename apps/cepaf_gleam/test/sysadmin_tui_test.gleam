@@ -1,6 +1,7 @@
 import cepaf_gleam/ui/tui/sysadmin_cockpit.{
-  Bright, ContainersTab, Dark, Dim, DoctorTab, Emergency, Normal, OverviewTab,
-  SecurityTab, StorageTab, StreamTab, SupervisorsTab, TasksTab, ZenohTab,
+  Bright, ContainersTab, Dark, Dim, DoctorTab, Emergency, EvolutionTab,
+  HomeostasisTab, MessageBoardTab, Normal, OverviewTab, SecurityTab,
+  StorageTab, StreamTab, SupervisorsTab, TasksTab, ZenohTab,
   default_model, next_container, next_tab, prev_container, prev_tab, render,
   restart_selected_container, select_tab, start_selected_container,
   stop_selected_container, toggle_mode, trigger_garbage_collection,
@@ -30,9 +31,18 @@ pub fn tab_selection_and_cycling_test() {
   let m3 = prev_tab(m2)
   should.equal(m3.active_tab, ContainersTab)
 
-  // Cycle all 9 tabs forward
+  // Cycle tabs forward across 12 tabs
   let m_doctor = select_tab(model, DoctorTab)
-  let m_cycle_back = next_tab(m_doctor)
+  let m_homeo = next_tab(m_doctor)
+  should.equal(m_homeo.active_tab, HomeostasisTab)
+
+  let m_msg = next_tab(m_homeo)
+  should.equal(m_msg.active_tab, MessageBoardTab)
+
+  let m_evo = next_tab(m_msg)
+  should.equal(m_evo.active_tab, EvolutionTab)
+
+  let m_cycle_back = next_tab(m_evo)
   should.equal(m_cycle_back.active_tab, OverviewTab)
 }
 
@@ -138,4 +148,22 @@ pub fn render_all_9_tabs_test() {
   let out_doctor = render(select_tab(model, DoctorTab))
   should.equal(string.contains(out_doctor, "SYSTEM DOCTOR"), True)
   should.equal(string.contains(out_doctor, "100% ALL CHECKS PASS"), True)
+
+  // Homeostasis Tab
+  let out_homeo = render(select_tab(model, HomeostasisTab))
+  should.equal(string.contains(out_homeo, "BIOMORPHIC PHYSIOLOGICAL HOMEOSTASIS"), True)
+  should.equal(string.contains(out_homeo, "HOMEOSTATIC EQUILIBRIUM"), True)
+  should.equal(string.contains(out_homeo, "cpu_pct"), True)
+
+  // Message Board Tab
+  let out_msg = render(select_tab(model, MessageBoardTab))
+  should.equal(string.contains(out_msg, "SWARM MESSAGE DASHBOARD"), True)
+  should.equal(string.contains(out_msg, "AGY (L3)"), True)
+  should.equal(string.contains(out_msg, "Codex-Astra (L3)"), True)
+
+  // Evolution Tab
+  let out_evo = render(select_tab(model, EvolutionTab))
+  should.equal(string.contains(out_evo, "AUTONOMOUS SYSTEM EVOLUTION"), True)
+  should.equal(string.contains(out_evo, "EVOLUTION GATE OPEN"), True)
+  should.equal(string.contains(out_evo, "MAX SIMD Scorer Optimization"), True)
 }
