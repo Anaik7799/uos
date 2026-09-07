@@ -2207,6 +2207,154 @@ fn jj_concepts() -> List(Concept) {
 }
 
 // ---------------------------------------------------------------------------
+// 20. Holon meta-vocabulary (sa-plan uos/holonic-mapping/20260907-1505, task KM): the ten core
+//     structural terms of the holon model itself (`uos_swarm/holon.gleam`) -- distinct from the
+//     158 holons `holon_concepts()` derives from `holarchy()`, whose ids these never collide with
+//     (namespaced `holon-meta:*`).
+// ---------------------------------------------------------------------------
+
+fn holon_meta(
+  id: String,
+  english: String,
+  iast: String,
+  devanagari: String,
+  domain: Domain,
+  layer: Int,
+  plane: String,
+  definition: String,
+  relates: List(String),
+) -> Concept {
+  mk(
+    "holon-meta:" <> id,
+    english,
+    iast,
+    devanagari,
+    domain,
+    layer,
+    [],
+    plane,
+    definition,
+    relates,
+    "uos_swarm/holon.gleam:HOLARCHY-CENSUS",
+  )
+}
+
+fn holon_meta_concepts() -> List(Concept) {
+  [
+    holon_meta(
+      "holon",
+      "Holon",
+      "svayaṃ-pūrṇa-aṅga",
+      "स्वयं-पूर्ण-अङ्ग",
+      Structure,
+      2,
+      "structure-plane",
+      "A self-complete part: a unit simultaneously whole to its own parts and part of a larger whole (Koestler); every entry of `holon.holarchy()` instantiates this pattern via the `Holon` record (id, whole, parts, level, plane, kind, uid, lifecycle, vitals).",
+      ["holon-meta:holarchy", "holon-meta:whole", "holon-meta:part"],
+    ),
+    holon_meta(
+      "holarchy",
+      "Holarchy",
+      "aṅga-sopāna",
+      "अङ्ग-सोपान",
+      Structure,
+      2,
+      "structure-plane",
+      "The layered structure formed by holons nested through whole/part relationships across levels (`holon.holarchy()`), validated acyclic and level-monotonic by the nine core base rules B1..B9 (`holon.base_rules`).",
+      ["holon-meta:holon", "holon-meta:level", "uos"],
+    ),
+    holon_meta(
+      "constitution",
+      "Constitution",
+      "saṃvidhāna",
+      "संविधान",
+      Governance,
+      0,
+      "control-plane",
+      "The L0 constitutional-whole pattern: an `Subsystem`-kind holon (e.g. the `constitution` holon itself) grouping IAM, secrets, clock-guard and governance rows so their L0 level never pulls an unrelated subsystem down (HOLON-LIFECYCLE).",
+      ["constitution", "holon-meta:holon", "holon-meta:level"],
+    ),
+    holon_meta(
+      "census",
+      "Census",
+      "gaṇanā",
+      "गणना",
+      Structure,
+      4,
+      "runtime-plane",
+      "The 113-row daemon census that census-derived `Process`-kind holons mirror one-to-one (base rule B10, `holon.rule_b10`/`holon.b10_missing`), so every observed daemon names exactly one Process holon and vice versa.",
+      ["holon-meta:holon", "holon-meta:lifecycle"],
+    ),
+    holon_meta(
+      "lifecycle",
+      "Lifecycle",
+      "jīvana-cakra",
+      "जीवन-चक्र",
+      Structure,
+      4,
+      "runtime-plane",
+      "The six-state biological holon lifecycle (Dormant/Awakening/Active/Stressed/Healing/Apoptotic, HOLON-LIFECYCLE) and its legal `holon.transition` state machine; census-derived holons start from `holon.lifecycle_from_status`.",
+      ["holon-meta:holon", "holon-meta:vitals", "holon-meta:census"],
+    ),
+    holon_meta(
+      "vitals",
+      "Vitals",
+      "prāṇa-lakṣaṇa",
+      "प्राण-लक्षण",
+      Structure,
+      4,
+      "runtime-plane",
+      "The optional observed-liveness record on a holon (`heartbeat_age_s`, `restarts`, `last_transition`, `holon.Vitals`) -- distinct from the census-derived `lifecycle` classification, which is a one-shot snapshot, not a live poll.",
+      ["holon-meta:lifecycle", "holon-meta:holon"],
+    ),
+    holon_meta(
+      "plane",
+      "Plane",
+      "tala",
+      "तल",
+      Structure,
+      1,
+      "structure-plane",
+      "One of the seven control/structure/runtime/data/messaging/intelligence/language planes (`holon.Plane`) every holon is assigned to; each plane sounds one Hindustani svara via `holon.swara_of_plane`.",
+      ["holon-meta:holon", "planes"],
+    ),
+    holon_meta(
+      "whole",
+      "Whole",
+      "pūrṇa",
+      "पूर्ण",
+      Structure,
+      2,
+      "structure-plane",
+      "The optional parent holon id a holon names as its whole (`Holon.whole`); `None` only for the root (`uos`); reciprocated by the parent's `parts` list under base rule B2.",
+      ["holon-meta:holon", "holon-meta:part"],
+    ),
+    holon_meta(
+      "part",
+      "Part",
+      "aṅga",
+      "अङ्ग",
+      Structure,
+      2,
+      "structure-plane",
+      "One child holon id listed in a holon's `parts` field (`Holon.parts`); every part's `whole` must name this holon back (base rule B2) and every part's `level` must be at or above this holon's `level` (base rule B4).",
+      ["holon-meta:holon", "holon-meta:whole", "holon-meta:level"],
+    ),
+    holon_meta(
+      "level",
+      "Level",
+      "stara",
+      "स्तर",
+      Structure,
+      2,
+      "structure-plane",
+      "The integer fractal layer (0..9) a holon occupies (`Holon.level`), used verbatim in its board address (`uos/holon/L<level>/<plane>/<id>`, `holon.address`) and constrained level-monotonic across whole/part edges (base rule B4).",
+      ["holon-meta:holon", "holon-meta:whole", "holon-meta:part"],
+    ),
+  ]
+}
+
+// ---------------------------------------------------------------------------
 // Registry
 // ---------------------------------------------------------------------------
 
@@ -2214,6 +2362,7 @@ pub fn concepts() -> List(Concept) {
   list.flatten([
     textual_concepts(),
     holon_concepts(),
+    holon_meta_concepts(),
     aspect_concepts(),
     control_action_concepts(),
     muda_concepts(),

@@ -16,10 +16,30 @@ pub fn registry_has_at_least_160_concepts_test() {
   { list.length(system_ontology.concepts()) >= 160 } |> should.be_true
 }
 
-/// The Jujutsu ontology adds 28 `jj:`-prefixed concepts to the shipped 226, so the registry
-/// now carries at least 252 concepts (operator directive: "create jujutsu ontology").
+/// The Jujutsu ontology adds 28 `jj:`-prefixed concepts and the holon meta-vocabulary
+/// (sa-plan uos/holonic-mapping/20260907-1505, task KM) adds 10 `holon-meta:`-prefixed concepts
+/// to the shipped 226, so the registry now carries at least 262 concepts (226 + 28 jj + 10
+/// holon-meta = 264 currently shipped; the test keeps a small margin below that).
 pub fn registry_has_at_least_252_concepts_after_jujutsu_ontology_test() {
   { list.length(system_ontology.concepts()) >= 252 } |> should.be_true
+}
+
+/// The 10 holon meta-vocabulary concepts (sa-plan uos/holonic-mapping/20260907-1505, task KM)
+/// push the registry to at least 262 concepts (252 + 10), and each resolves by its `holon-meta:`
+/// id with a non-empty Devanagari gloss.
+pub fn registry_has_at_least_262_concepts_after_holon_meta_test() {
+  { list.length(system_ontology.concepts()) >= 262 } |> should.be_true
+  let ids = [
+    "holon-meta:holon", "holon-meta:holarchy", "holon-meta:constitution",
+    "holon-meta:census", "holon-meta:lifecycle", "holon-meta:vitals",
+    "holon-meta:plane", "holon-meta:whole", "holon-meta:part",
+    "holon-meta:level",
+  ]
+  list.each(ids, fn(id) {
+    let assert Ok(c) = system_ontology.resolve(id)
+    c.id |> should.equal(id)
+    { c.devanagari != "" } |> should.be_true
+  })
 }
 
 pub fn jujutsu_domain_has_at_least_26_concepts_test() {
