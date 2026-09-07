@@ -1,0 +1,97 @@
+{
+  "carrier": "uos-decision-record/v1",
+  "phase": "prepared",
+  "decision_id": "DR-20260907-1505-L0FABLE-CANDIDATE-INTEGRATION-3",
+  "identity_scope": {
+    "hive": "uos-tui-swarm",
+    "tenant": "uos",
+    "actor_kind": "model-agent (design authority, L0)",
+    "actor_id": "L0-fable",
+    "session": "656f0d2c-6019-4d9e-b0ce-b9e39b240047",
+    "provider_model": {
+      "provider": "anthropic",
+      "model": "claude-fable-5-1",
+      "self_report": true
+    }
+  },
+  "task_authority": {
+    "task": "integrate MCP corrective + stdio completion chain (cb625f48 -> 4eabfc34) and clock observer final (98936f9e)",
+    "resource": "integration/main",
+    "lease_epoch": "claim at action time; refusal aborts",
+    "proposed_action": "bookmark set integration/uos-swarm and main to the merge chain head after the full cepaf suite matches the previous mainline failure set",
+    "policy_refs": [
+      "SYNC-03",
+      "SC-HIVE-DECISION-001",
+      "jj discipline D3/D4"
+    ],
+    "authorization": "Codex: 'Please integrate final chain through 4eab'; clock observer announced final with root versioned export ready (integration ownership mine; runtime launch theirs)"
+  },
+  "evidence_choice": {
+    "observations": [
+      {
+        "source": "split-gate.sh",
+        "value": "uos_tui 198, uos_swarm 502, 0 warnings",
+        "grade": "Measured"
+      },
+      {
+        "source": "eunit focused",
+        "value": "mcp_catalog_truth_test 4/4, mcp_runtime_truth_test 5/5",
+        "grade": "Measured"
+      },
+      {
+        "source": "producer report",
+        "value": "MCP: 9 focused pass, positive NIF path UNRUN (no .so), page adapters live-unprobed, 1 MiB line bound after io:get_line allocation; clock observer: 300 tests",
+        "grade": "Reported (peer self-report)"
+      },
+      {
+        "source": "board validate",
+        "value": "222 valid, 3 gaps, 3 forks explicit",
+        "grade": "Measured"
+      }
+    ],
+    "alternatives": [
+      {
+        "option": "land MCP chain only",
+        "tradeoff": "clock observer waits"
+      },
+      {
+        "option": "land both if the cepaf diff is clean",
+        "tradeoff": "none identified; disjoint files"
+      }
+    ],
+    "selected": "land both if the full cepaf failure set equals the previous mainline set",
+    "rationale": "disjoint files, focused tests green, attribution gate pending",
+    "risks": [
+      "NIF positive path untested here",
+      "live adapters unprobed"
+    ],
+    "unresolved": [
+      "whether the operator wants the clock observer units launched (root's call)"
+    ]
+  },
+  "process": {
+    "steps": [
+      "full cepaf suite",
+      "diff failure sets",
+      "claim lease (abort on refusal)",
+      "bookmarks",
+      "release",
+      "Integrate + session report",
+      "completed record"
+    ],
+    "rollback": "bookmarks back to f2de959e",
+    "escalation": "any new cepaf failure -> park the responsible candidate"
+  },
+  "forecast": {
+    "horizon": "30 min",
+    "clock_domain": "UTC host nas-1",
+    "observed_at": "2026-09-07T09:43:14.532257+00:00",
+    "expires_at": "2026-09-07T10:13:14.532257+00:00",
+    "predicted_outcome": "failure set identical; both candidates on main",
+    "probability": 0.85,
+    "basis": "Estimated from two prior attribution rounds; not calibrated",
+    "unknowns": [
+      "NIF-family test flakiness (Unknown)"
+    ]
+  }
+}
