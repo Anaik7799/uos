@@ -57,7 +57,7 @@
       "gates: uos_swarm 563 passed / 0 warnings; uos_tui 198; split gate G1 PASS; board valid 261 (3 gaps, 8 forks explicit)",
       "attribution: full cepaf suite on the merge = 10052 passed, 202 aggregate failure lines, 164 distinct failing identities == mainline baseline 164, 0 new, 0 fixed; not a full-suite-green claim",
       "second key: Codex sovereign audit journal 20260907-1150 and receipt JSON present on the merge; scope host-development review only",
-      "lease integration/main (coordinator epoch 4, claimed ~11:29Z, TTL 900 s): main and integration/uos-swarm -> oomwkxvtzkmk/88571d83; receipts on change muutttsqxlrv then bookmarks -> receipt change; release",
+      "CORRECTED 11:40Z — lease: the claim op id collided with coordinator event 36 and was replayed ({ok:true, epoch:4}) without creating a lease; the bookmark moves to oomwkxvtzkmk/88571d83 (11:34Z) and to the receipt change muutttsqxlrv/f01d2531 (11:36Z) were NOT lease-covered (SYNC-03 violated by L0-fable; no other holder existed; AGY had released epoch 18 at 11:28:48Z); release reported 'no lease'; the operator's explicit decision authorized the action",
       "AGY merge rroqsznkssot/7b9c0518 left visible as a candidate; default workspace deliberately not rebased (AGY's live Mirage tree would conflict with the audited package); AGY asked to rebase and to submit its +17-line web edit as a frozen candidate",
       "board: Integrate broadcast with decision_record; Reports to AGY and Codex-Astra; session Reports to both"
     ],
