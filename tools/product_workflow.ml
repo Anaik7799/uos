@@ -60,6 +60,13 @@ let binding_json (b:W.binding)=`Assoc["candidate",json_string b.candidate;"speci
  "oracle",json_string b.oracle;"executable",json_string b.executable;"normalizer",json_string b.normalizer;"checker",json_string b.checker]
 let decode_binding j = W.{candidate=text "candidate" j;specification=text "specification" j;oracle=text "oracle" j;
  executable=text "executable" j;normalizer=text "normalizer" j;checker=text "checker" j}
+let validate_candidate_authority manifest ~plan ~task ~owner =
+ require(text "owner" manifest=owner && text "sa_plan_ref" manifest=plan^"#"^task)
+   "candidate owner/task differs from current Sa-plan authority"
+let authorize_candidate manifest () =
+ let env name=Option.value(Sys.getenv_opt name)~default:"" in
+ validate_candidate_authority manifest ~plan:(env "UOS_PRODUCT_PLAN") ~task:(env "UOS_PRODUCT_TASK") ~owner:(env "UOS_PRODUCT_WORKER");
+ authorize()
 let node_row candidate owner task (n:W.node) payload =
  [s candidate;s n.id;(match n.parent with None->Sqlite3.Data.NULL|Some p->s p);Sqlite3.Data.INT(Int64.of_int(W.rank_level n.level));
  Sqlite3.Data.INT(if n.required then 1L else 0L);s owner;s task;s(encoded payload)]
@@ -237,7 +244,9 @@ let run_workflow ()=match Array.to_list Sys.argv with
     Some task=Option.bind (Sys.getenv_opt "UOS_PRODUCT_PLAN") (fun p->Option.map(fun t->p^"#"^t)(Sys.getenv_opt "UOS_PRODUCT_TASK")))
     "candidate owner/task differs from current Sa-plan authority";
    with_db ~readonly:false database(fun db->print_endline(init db spec revision owner task ~authorize))
- | [_;"oracle";candidate]->with_db ~readonly:false database(fun db->run_oracles db candidate ~authorize;print_endline(encoded(report db candidate)))
+ | [_;"oracle";candidate]->with_db ~readonly:false database(fun db->
+   let authorize=authorize_candidate(get_candidate db candidate) in
+   run_oracles db candidate ~authorize;print_endline(encoded(report db candidate)))
  | [_;"report";candidate]->with_db ~readonly:true database(fun db->print_endline(Yojson.Basic.pretty_to_string(report db candidate)))
  | _->fail "usage: product_workflow.ml init SPEC REV OWNER SA_PLAN_REF | oracle CANDIDATE | report CANDIDATE"
 let ()=if not !Sys.interactive && Filename.basename Sys.argv.(0)="product_workflow.ml" then

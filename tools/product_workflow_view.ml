@@ -6,7 +6,7 @@
 let md text =
  let b=Buffer.create(String.length text) in
  String.iter(function '&'->Buffer.add_string b "&amp;"|'<'->Buffer.add_string b "&lt;"|'>'->Buffer.add_string b "&gt;"|
-  '|'->Buffer.add_string b "\\|"|'\n'|'\r'->Buffer.add_char b ' '|c->Buffer.add_char b c)text;Buffer.contents b
+  '|'->Buffer.add_string b "\\|"|'`'->Buffer.add_string b "&#96;"|'\n'|'\r'->Buffer.add_char b ' '|c->Buffer.add_char b c)text;Buffer.contents b
 let optional key j=match member key j with `String value->value|`Null->"—"|value->encoded value
 let utc t=let x=Unix.gmtime t in Printf.sprintf "%04d-%02d-%02dT%02d:%02d:%02dZ" (x.Unix.tm_year+1900)(x.Unix.tm_mon+1)x.Unix.tm_mday x.Unix.tm_hour x.Unix.tm_min x.Unix.tm_sec
 let stamp t=let x=Unix.gmtime t in Printf.sprintf "%04d%02d%02d-%02d%02d" (x.Unix.tm_year+1900)(x.Unix.tm_mon+1)x.Unix.tm_mday x.Unix.tm_hour x.Unix.tm_sec
@@ -21,7 +21,7 @@ let render_view db candidate =
  add("Generated from SQLite at **"^utc now^"**. This is a dated projection. Re-run the view command to observe later receipts or expiry.\n\n");
  add("**Product state: "^text "state" r^" · Admission: NOT_ADMITTED.** "^string_of_int(to_int(member "required_cases" r))^" required acceptance cases are counted independently of the internal oracle check.\n\n");
  add("Candidate: `"^candidate^"`. Current selected-source identity: `"^optional "source_current" r^"`. Owner: "^md(text "owner" r)^". Sa-plan reference: `"^md(text "sa_plan_ref" r)^"`.\n\n");
- add("Internal nine-boolean eligibility check: **"^text "native_eligibility" r^"**. Receipt count: "^optional "receipt_count" r^". It gives no automatic credit to the original infrastructure acceptance cases.\n\n");
+ add("Internal receipt gate check (512 representative configurations): **"^text "native_eligibility" r^"**. Receipt count: "^optional "receipt_count" r^". It gives no automatic credit to the original infrastructure acceptance cases.\n\n");
  let task_ref=text "sa_plan_ref" r in
  add "## Execution and dependencies\n\n";
  (match String.split_on_char '#' task_ref with
@@ -33,7 +33,7 @@ let render_view db candidate =
      add("Current Sa-plan task: **"^md(show state)^"**; worker "^md(show worker)^"; attempt "^md(show attempt)^"; lease UTC nanoseconds "^md(show lease)^".\n\n")
     |_->add "Sa-plan reference is unresolved; no execution authority inferred.\n\n")
  | _->add "Sa-plan reference is not a canonical plan#task locator; unresolved.\n\n");
- add "Containment is Product → Feature → Requirement → Acceptance. Every required child participates in completion. Cross-reference maps and oracle links do not add containment parents. Missing evidence remains UNRUN; stale identities, failed runs and invalid receipts withhold completion. Feature-specific planning references below are declared mappings and may be unresolved.\n\n";
+ add "A product contains features, each feature contains requirements, and each requirement contains acceptance cases. Every required child participates in completion. Cross-reference maps and oracle links do not add containment parents. Missing evidence remains UNRUN; stale identities, failed runs and invalid receipts withhold completion. Feature-specific planning references below are declared mappings and may be unresolved.\n\n";
  add "## Feature summary\n\n| Feature | Category | Declared map | Observed evidence | Oracle references |\n|---|---|---|---|---|\n";
  let nodes=items "nodes" r in
  let state id=match List.find_opt(fun n->text "id" n=id)nodes with None->"UNKNOWN"|Some n->text "state" n in
@@ -69,11 +69,18 @@ let render_view db candidate =
  Buffer.contents b
 let save_view candidate =
  with_db ~readonly:false database(fun db->
+  let manifest=get_candidate db candidate in
+  let authorize=authorize_candidate manifest in
   let body=render_view db candidate in let digest=sha body in
   let path="docs/reviews/"^stamp(Unix.gettimeofday())^"-product-cockpit-"^String.sub candidate 0 12^"-"^String.sub digest 0 12^".md" in
   let artifact=`Assoc["id",json_string("product-cockpit:"^candidate);"revision",json_string digest;
    "kind",json_string "product-cockpit-projection";"locator",json_string path;"content",json_string body;"sha256",json_string digest] in
-  transaction db(fun()->authorize();store_artifact db artifact;authorize());
+  transaction db(fun()->authorize();store_artifact db artifact;
+   insert_absent db ~table:"product_artifact_links" ~columns:["spec_id";"revision";"artifact_id";"artifact_revision";"role"]
+    ~values:[s(text "spec_id" manifest);s(text "revision" manifest);s(text "id" artifact);s digest;s "cockpit-projection"]
+    ~keys:["spec_id";"revision";"artifact_id";"artifact_revision";"role"]
+    ~key_values:[s(text "spec_id" manifest);s(text "revision" manifest);s(text "id" artifact);s digest;s "cockpit-projection"];
+   authorize());
   require(not(Sys.file_exists path)) "projection file exists; immutable DB artifact retained";
   (match Bos.OS.File.write(Fpath.v path)body with Ok()->()|Error(`Msg e)->fail e);
   require(read path=body) "projection readback mismatch";

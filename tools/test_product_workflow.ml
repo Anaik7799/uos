@@ -19,6 +19,12 @@ let () =
    require(query db "SELECT count(*) FROM product_workflow_candidates" []=[[Sqlite3.Data.INT 2L]]) "history not retained");
   test "cross-plan candidate is rejected" (fun()->
    require(rejects(fun()->ignore(init db "test" "v1" "test-worker" "other#test" ~authorize:(fun()->())))) "cross-plan accepted");
+  test "oracle mutation requires the candidate owner and exact task" (fun()->
+   let manifest=get_candidate db id in
+   validate_candidate_authority manifest ~plan:"isolated" ~task:"test" ~owner:"test-worker";
+   List.iter(fun(plan,task,owner)->require(rejects(fun()->
+    validate_candidate_authority manifest ~plan ~task ~owner)) "foreign task can write candidate receipts")
+    ["other","test","test-worker";"isolated","other","test-worker";"isolated","test","other-worker"]);
   test "representative vectors execute the full receipt gate" (fun()->
    List.init 512 Fun.id |>List.iter(fun mask->
     let bits=List.init 9(fun bit->mask land(1 lsl bit)<>0) in
