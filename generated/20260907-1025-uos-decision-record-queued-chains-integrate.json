@@ -1,0 +1,97 @@
+{
+  "carrier": "uos-decision-record/v1",
+  "phase": "prepared",
+  "decision_id": "DR-20260907-1025-L0FABLE-QUEUED-CHAINS-INTEGRATE",
+  "identity_scope": {
+    "hive": "uos-tui-swarm",
+    "tenant": "uos",
+    "actor_kind": "model-agent (L0)",
+    "actor_id": "L0-fable",
+    "session": "656f0d2c-6019-4d9e-b0ce-b9e39b240047",
+    "provider_model": {
+      "provider": "anthropic",
+      "model": "claude-fable-5-1",
+      "self_report": true
+    }
+  },
+  "task_authority": {
+    "task": "preserve and integrate compatible queued chains: C04/C05+KPI 4e6632fc, telemetry a5fae5a5, live evolution 78d8fef6",
+    "resource": "integration/main",
+    "lease_epoch": "claim at action time; refusal aborts",
+    "proposed_action": "land the chains that pass scoped verification; park the rest with exact failing tests",
+    "policy_refs": [
+      "SYNC-03",
+      "SC-HIVE-DECISION-001"
+    ],
+    "authorization": "Codex: 'Please preserve and integrate compatible chains with scoped verification'"
+  },
+  "evidence_choice": {
+    "observations": [
+      {
+        "source": "uos_swarm suite with KPI stack",
+        "value": "540 passed, 3 failures (action_boundary enoent) -> parked again, diagnosis sent",
+        "grade": "Measured"
+      },
+      {
+        "source": "uos_swarm suite with live evolution",
+        "value": "519 passed, 0 warnings, no clock adaptation needed, nothing of L0's modules modified",
+        "grade": "Measured"
+      },
+      {
+        "source": "telemetry",
+        "value": "merge pending scoped verification: focused modules + full cepaf suite vs mainline set (164)",
+        "grade": "pending"
+      }
+    ],
+    "selected": "land live evolution; land telemetry only if the full cepaf failure set equals mainline",
+    "rationale": "attribution gate is the only reliable criterion for cepaf changes",
+    "risks": [
+      "telemetry's earlier regression may persist"
+    ],
+    "unresolved": []
+  },
+  "process": {
+    "steps": [
+      "full cepaf suite",
+      "diff",
+      "lease",
+      "bookmarks",
+      "release",
+      "report"
+    ],
+    "rollback": "bookmarks back to d916ac66",
+    "escalation": "new failure -> park telemetry with names"
+  },
+  "forecast": {
+    "horizon": "30 min",
+    "clock_domain": "UTC host nas-1",
+    "observed_at": "2026-09-07T10:05:12.669250+00:00",
+    "expires_at": "2026-09-07T10:35:12.669250+00:00",
+    "predicted_outcome": "live evolution lands; telemetry parked again (regression persists)",
+    "probability": 0.6,
+    "basis": "Estimated: the regressing test asserted the /telemetry route content and the MCP chain did not touch it; not calibrated",
+    "unknowns": [
+      "whether Godel adapted that test (Unknown)"
+    ]
+  },
+  "note": "prepared record was written while the working copy was the telemetry merge; it travelled into that parked commit and was recovered from it before completion",
+  "completed": {
+    "observed_at": "2026-09-07T10:07:20.621656+00:00",
+    "observed_actions": [
+      "KPI stack: 540/3 (action_boundary enoent x3) -> parked on integration/candidates-c04-c05-pending with diagnosis sent",
+      "live evolution 78d8fef6: merged clean, 5 new files, 519 tests, no clock adaptation needed -> landed",
+      "telemetry a5fae5a5: full cepaf 10012 passed / 203 failures, 1 new vs mainline (webui_full_coverage_test.route_telemetry_contains_otel_test) -> parked on integration/candidates-telemetry-pending (merge preserved)",
+      "lease epoch 16 -> main = pyqkzztnrpku/94ed6c2e0056b0c0dccb35e2b1f77226887217bb -> released"
+    ],
+    "outcome": "predicted outcome realized (live evolution landed, telemetry parked) — Measured",
+    "integrated_exact_pins": [
+      "78d8fef66199f1c5c82a7013efd43099d04437be"
+    ],
+    "consumed": {
+      "tokens": "0 for integration steps",
+      "usd": 0.0,
+      "paid_models": "none"
+    },
+    "calibration_ref": "p=0.6 -> pass"
+  }
+}
