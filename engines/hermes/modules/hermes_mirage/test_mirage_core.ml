@@ -145,7 +145,7 @@ let test_solo5_tender () =
       assert (cold_start < 20.0);
       let json = Mirage_solo5_tender.generate_manifest_json config in
       assert (String.length json > 50);
-      Printf.printf "  [PASS] Solo5 Tender safety and cold start verified (cold_start: %.2f ms).\n" cold_start
+      Printf.printf "  [PASS] Tender configuration predicates and formula %.2f ms; no tender execution.\n" cold_start
 
 let test_interceptor () =
   Printf.printf "Testing Mirage Zero-Trust Interceptor...\n";
@@ -171,14 +171,25 @@ let test_interceptor () =
       | Error e -> failwith ("Signing failed: " ^ e)
       | Ok sig_bytes ->
           assert (String.length sig_bytes = 64);
-          Printf.printf "  [PASS] Zero-Trust Interceptor and Ed25519 receipt verified.\n"
+          let key = match Mirage_crypto_ec.Ed25519.priv_of_octets seed with
+            | Ok key -> key | Error _ -> failwith "test key construction failed" in
+          let public_key_octets = Mirage_crypto_ec.Ed25519.(pub_to_octets (pub_of_priv key)) in
+          let verify = Mirage_interceptor.verify_admission_receipt ~public_key_octets in
+          assert (verify digest ~signature:sig_bytes);
+          assert (not (verify (digest ^ "tampered") ~signature:sig_bytes));
+          assert (not (verify digest ~signature:"short"));
+          assert (not (Mirage_interceptor.verify_admission_receipt
+            ~public_key_octets:"invalid" digest ~signature:sig_bytes));
+          assert (Result.is_error (Mirage_interceptor.sign_admission_receipt
+            ~secret_seed:"short" digest));
+          Printf.printf "  [PASS] Host payload filter and Ed25519 valid/tampered/malformed controls; no authorization claim.\n"
       end
   | _ -> failwith "Failed to admit safe payload"
 
 let () =
-  Printf.printf "=== Running MirageOS Unikernel Core Verification Suite ===\n";
+  Printf.printf "=== Running Hermes Mirage Host Library Checks ===\n";
   test_block_device ();
   test_merkle_kv ();
   test_solo5_tender ();
   test_interceptor ();
-  Printf.printf "=== All MirageOS Unikernel Core Tests Passed (100%% Green) ===\n"
+  Printf.printf "=== Host library checks passed; Solo5 deployment remains NOT_VERIFIED ===\n"

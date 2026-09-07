@@ -5,6 +5,11 @@ let print_json json =
   Yojson.Safe.pretty_to_channel stdout json;
   print_newline ()
 
+let model_json scope = function
+  | `Assoc fields -> `Assoc (("evidence_scope", `String scope)
+      :: ("deployment_admission", `String "NOT_VERIFIED") :: fields)
+  | _ -> failwith "model result must be a JSON object"
+
 let run_catalog () =
   let json = Mirage_migration_catalog.catalog_to_json () in
   print_json json
@@ -21,7 +26,8 @@ let run_dns domain =
   let state = Mirage_dns_resolver.create_resolver () in
   match Mirage_dns_resolver.resolve_query state domain Mirage_dns_resolver.A with
   | Ok resp ->
-      print_json (Mirage_dns_resolver.response_to_json resp)
+      print_json (model_json "host_static_and_synthetic_dns_model"
+        (Mirage_dns_resolver.response_to_json resp))
   | Error `Blocked_domain ->
       let json = `Assoc [("error", `String "BLOCKED_DOMAIN"); ("domain", `String domain)] in
       print_json json;
@@ -55,20 +61,21 @@ let run_ingress sni path =
         ("target_port", `Int target_port);
         ("sanitized_headers", headers_json);
       ] in
-      print_json json
+      print_json (model_json "host_ingress_policy_model_no_tls_handshake" json)
   | Mirage_tls_ingress.Terminate_with_error { status_code; message } ->
       let json = `Assoc [
         ("decision", `String "TERMINATE");
         ("status_code", `Int status_code);
         ("message", `String message);
       ] in
-      print_json json;
+      print_json (model_json "host_ingress_policy_model_no_tls_handshake" json);
       exit 3
 
 let run_tender id =
   let tender = Mirage_solo5_tender.default_tender_config id in
   let manifest_str = Mirage_solo5_tender.generate_manifest_json tender in
-  print_endline manifest_str
+  print_json (model_json "tender_configuration_proposal_no_boot"
+    (Yojson.Safe.from_string manifest_str))
 
 let run_selftest () =
   Printf.printf "=== HERMES MIRAGE RUNNER SELF-TEST ===\n";

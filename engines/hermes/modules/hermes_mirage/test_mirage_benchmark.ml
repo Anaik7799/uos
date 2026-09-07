@@ -94,7 +94,25 @@ let () =
     require "MB-10 benchmark scope"
       (Json.(json |> member "scope" |> to_string) = "host_ocaml_library");
     require "MB-10 no boot claim" (Json.(json |> member "solo5_boot_measured" |> to_bool) = false);
-    require "MB-10 two workloads" (List.length Json.(json |> member "results" |> to_list) = 2)
+    let results = Json.(json |> member "results" |> to_list) in
+    require "MB-10 two workloads" (List.length results = 2);
+    let cfg = unwrap (parse_config_args args) in
+    List.iter2 (fun workload actual ->
+      let expected = unwrap (Reference.run cfg workload) in
+      require "MB-10 actual JSON summary agrees with independent oracle"
+        (Json.(actual |> member "workload" |> to_string) = workload_name workload
+         && Json.(actual |> member "roundtrips" |> to_int) = expected.roundtrips
+         && Json.(actual |> member "library_calls" |> to_int) = expected.library_calls
+         && Json.(actual |> member "verified_roundtrips" |> to_int) = expected.verified_roundtrips
+         && Int64.of_int Json.(actual |> member "payload_checksum" |> to_int) = expected.checksum);
+      let cpu = Json.(actual |> member "process_cpu_seconds" |> to_float) in
+      require "MB-07 actual JSON CPU duration is valid" (Float.is_finite cpu && cpu >= 0.);
+      let rate = Json.(actual |> member "library_calls_per_cpu_second") in
+      if cpu = 0. then require "MB-08 actual JSON zero duration has null rate" (rate = `Null)
+      else let rate = Json.to_float rate in
+        require "MB-07 actual JSON rate matches observed interval"
+          (Float.is_finite rate && rate = float_of_int expected.library_calls /. cpu)
+    ) workloads results
   ) [[]; ["1"]; ["10000"]];
   let status, output = run_cli runner ["catalog"] in
   require "MB-10 actual catalog CLI succeeds" (status = Unix.WEXITED 0);

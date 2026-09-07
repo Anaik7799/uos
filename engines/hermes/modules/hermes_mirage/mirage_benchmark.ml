@@ -31,10 +31,11 @@ end
 let ( let* ) = Result.bind
 
 module Native : EXECUTION = struct
-  let run_loop config workload roundtrip =
-    let rec loop index calls checksum =
+  let counted calls operation = incr calls; operation ()
+  let run_loop config workload calls roundtrip =
+    let rec loop index checksum =
       if index = config.iterations then
-        Ok { workload; roundtrips = index; library_calls = calls;
+        Ok { workload; roundtrips = index; library_calls = !calls;
              verified_roundtrips = index; checksum }
       else
         let expected = String.make payload_bytes (Char.chr (index mod 251)) in
@@ -43,31 +44,33 @@ module Native : EXECUTION = struct
         else
           let bytes = String.fold_left
             (fun sum byte -> Int64.add sum (Int64.of_int (Char.code byte))) 0L actual in
-          loop (index + 1) (calls + 2) (Int64.add checksum bytes)
+          loop (index + 1) (Int64.add checksum bytes)
     in
-    loop 0 0 0L
+    loop 0 0L
 
   let run config workload = match workload with
     | Block_roundtrip ->
+        let calls = ref 0 in
         let* device = Mirage_memory_block.create ~sector_size:payload_bytes
           (Int64.of_int retained_slots) in
         Fun.protect ~finally:(fun () -> Mirage_memory_block.disconnect device)
-          (fun () -> run_loop config workload (fun slot expected ->
-            let* () = Mirage_memory_block.write device (Int64.of_int slot)
-              [Bytes.of_string expected]
+          (fun () -> run_loop config workload calls (fun slot expected ->
+            let* () = counted calls (fun () -> Mirage_memory_block.write device (Int64.of_int slot)
+              [Bytes.of_string expected])
               |> Result.map_error (fun _ -> "block write failed") in
             let actual = Bytes.make payload_bytes '\000' in
-            let* () = Mirage_memory_block.read device (Int64.of_int slot) [actual]
+            let* () = counted calls (fun () -> Mirage_memory_block.read device (Int64.of_int slot) [actual])
               |> Result.map_error (fun _ -> "block read failed") in
             Ok (Bytes.to_string actual)))
     | Kv_roundtrip ->
+        let calls = ref 0 in
         let store = ref (Mirage_merkle_kv.create ()) in
-        run_loop config workload (fun slot expected ->
+        run_loop config workload calls (fun slot expected ->
           let key = ["benchmark"; string_of_int slot] in
-          let* next = Mirage_merkle_kv.set !store key expected
+          let* next = counted calls (fun () -> Mirage_merkle_kv.set !store key expected)
             |> Result.map_error (fun _ -> "key/value set failed") in
           store := next;
-          Mirage_merkle_kv.get !store key
+          counted calls (fun () -> Mirage_merkle_kv.get !store key)
           |> Result.map_error (fun _ -> "key/value get failed"))
 end
 
@@ -133,7 +136,11 @@ let run_suite config =
     "scope", `String "host_ocaml_library";
     "ocaml_version", `String Sys.ocaml_version;
     "clock", `String "process_cpu_seconds:Sys.time";
-    "timing_includes", `String "setup, library calls, payload verification, checksum and cleanup";
+    "timing_includes", `String "setup, I/O, payload verification, checksum, block disconnect; GC only if naturally triggered";
+    "counted_library_calls", `String "write/read or set/get only; setup and cleanup excluded from call counts";
+    "checksum_algorithm", `String "additive sum of unsigned payload bytes; not a cryptographic digest";
+    "evidence_receipt", `Bool false;
+    "receipt_binding_required", `String "caller must bind candidate revision, host, observed wall time and artifact digest";
     "solo5_boot_measured", `Bool false;
     "ram_savings_measured", `Bool false;
     "deployment_admission", `String "NOT_VERIFIED";
