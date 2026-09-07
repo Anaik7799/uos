@@ -6,6 +6,7 @@
 // bridge for Gleam. It wraps the standard Erlang `telemetry` library
 // to ensure seamless integration with the BEAM ecosystem.
 
+import cepaf_gleam/ha/trace_context
 import gleam/dict.{type Dict}
 import gleam/dynamic.{type Dynamic}
 import gleam/list
@@ -49,6 +50,12 @@ pub type SpanContext {
 pub type Measurements =
   Dict(String, Float)
 
+/// Exact Unix-nanosecond wall-clock measurement for span starts. This is kept
+/// separate from floating-point duration measurements so timestamp precision
+/// is not lost before the Erlang telemetry event is emitted.
+pub type WallClockMeasurements =
+  Dict(String, Int)
+
 /// Represents the metadata/tags associated with an event.
 pub type Metadata =
   Dict(String, String)
@@ -64,9 +71,18 @@ fn erl_telemetry_execute(
 @external(erlang, "cepaf_gleam_ffi", "identity")
 fn to_dynamic(a: a) -> Dynamic
 
+@external(erlang, "cepaf_gleam_ffi", "system_time_nanos")
+fn system_time_nanos() -> Int
+
 // ============================================================================
 // Tracing & Metrics API
 // ============================================================================
+
+/// Measurements for a span start event. Kept separate so instrumentation tests
+/// can verify that a real wall-clock value is emitted rather than a sentinel.
+pub fn start_measurements() -> WallClockMeasurements {
+  dict.from_list([#("system_time", system_time_nanos())])
+}
 
 /// Start a new span/activity with optional parent context.
 pub fn start_span(
@@ -87,7 +103,7 @@ pub fn start_span(
 
   erl_telemetry_execute(
     event_name,
-    to_dynamic(dict.from_list([#("system_time", 0.0)])),
+    to_dynamic(start_measurements()),
     to_dynamic(tags_with_ctx),
   )
 }
@@ -140,6 +156,7 @@ fn inject_context(tags: Metadata, ctx: Option(SpanContext)) -> Metadata {
       tags
       |> dict.insert(trace_id_key, c.trace_id)
       |> dict.insert(span_id_key, c.span_id)
+      |> dict.insert(parent_span_id_key, c.parent_span_id)
     }
     None -> tags
   }
@@ -149,7 +166,7 @@ fn inject_context(tags: Metadata, ctx: Option(SpanContext)) -> Metadata {
 pub fn generate_context(parent: Option(SpanContext)) -> SpanContext {
   let trace_id = case parent {
     Some(p) -> p.trace_id
-    None -> generate_id()
+    None -> trace_context.generate_id(32)
   }
   let parent_id = case parent {
     Some(p) -> p.span_id
@@ -157,13 +174,10 @@ pub fn generate_context(parent: Option(SpanContext)) -> SpanContext {
   }
   SpanContext(
     trace_id: trace_id,
-    span_id: generate_id(),
+    span_id: trace_context.generate_id(16),
     parent_span_id: parent_id,
   )
 }
-
-@external(erlang, "cepaf_gleam_ffi", "generate_id")
-fn generate_id() -> String
 
 /// Helper to construct Erlang atom lists for telemetry events (e.g., [:cepaf, :podman, :start]).
 fn build_event_name(base: List(String), suffix: String) -> List(Dynamic) {
