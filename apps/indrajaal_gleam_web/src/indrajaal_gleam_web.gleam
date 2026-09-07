@@ -512,7 +512,7 @@ pub fn main() {
         )
         |> response.prepend_header("content-type", "text/html")
       }
-      ["mirage"] -> {
+      ["mirage"] | ["mirage", "cockpit"] -> {
         let content_html = mirage_cockpit.view()
         let page =
           render_lustre_page(
@@ -557,18 +557,6 @@ pub fn main() {
           render_lustre_page(
             "NASA JPL F Prime Aerospace Agent Cockpit",
             "fpp-agents",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["mirage"] | ["mirage", "cockpit"] -> {
-        let content_html = mirage_cockpit.view()
-        let page =
-          render_lustre_page(
-            "MirageOS Unikernel Migration Cockpit",
-            "mirage",
             content_html,
           )
         response.new(200)

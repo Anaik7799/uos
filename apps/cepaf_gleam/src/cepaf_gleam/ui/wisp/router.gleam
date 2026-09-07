@@ -29,6 +29,7 @@ import cepaf_gleam/fractal/l0_constitutional.{
 }
 import cepaf_gleam/ha/beam_metrics
 import cepaf_gleam/ha/fitness_gate
+import cepaf_gleam/ha/fractal_forecast
 import cepaf_gleam/ha/guard_grid
 import cepaf_gleam/ha/health_cascade
 import cepaf_gleam/ha/hot_reload
@@ -151,6 +152,13 @@ fn route_internal(path: String) -> String {
       |> json.to_string()
     "/api/v1/mirage/hypervisors" | "/api/mirage/hypervisors" ->
       mirage_api.hypervisors_json()
+      |> json.to_string()
+    // Unified Fractal Forecasting & Predictive OODA (SC-HIVE-FORECAST-001, SC-PRED-001)
+    "/api/v1/forecast/layers" | "/api/forecast/layers" ->
+      fractal_forecast.all_layers_forecast_json()
+      |> json.to_string()
+    "/api/v1/forecast/health" | "/api/forecast/health" ->
+      fractal_forecast.forecast_health_json()
       |> json.to_string()
     // SC-VAULT-009 + SC-VAULT-025: secrets vault API for .pi/ + dashboard tile.
     // Pass-6 wiring (skeleton response — Slice E continuation wires real vault.get).

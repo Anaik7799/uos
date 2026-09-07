@@ -659,5 +659,94 @@ pub fn get_tool_definitions() -> List(ToolDefinition) {
         #("required", json.array(["task"], json.string)),
       ]),
     ),
+    // -- Unified Fractal Forecasting & Agentic Preflight Tools (SC-HIVE-FORECAST-001, SC-PRED-001) --
+    ToolDefinition(
+      name: "forecast_predict",
+      description: "Compute unified fractal forecast across any layer L0-L9 (Kalman 1D, Bayesian EMA credible intervals, Lyapunov stability, NATO estimative probability)",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "layer",
+              json.object([
+                #("type", json.string("string")),
+                #(
+                  "description",
+                  json.string(
+                    "Target layer: L0_Constitutional, L1_Atomic, L2_Component, L3_Transaction, L4_System, L5_Cognitive, L6_Ecosystem, L7_Federation, L8_Mutation, L9_Verification, or all",
+                  ),
+                ),
+              ]),
+            ),
+            #(
+              "horizon_seconds",
+              json.object([
+                #("type", json.string("integer")),
+                #(
+                  "description",
+                  json.string("Prediction horizon in seconds (default: 60)"),
+                ),
+              ]),
+            ),
+          ]),
+        ),
+        #("required", json.array(["layer"], json.string)),
+      ]),
+    ),
+    ToolDefinition(
+      name: "preflight_check",
+      description: "Verify agentic decision preflight certificate via Subjective Expected Utility (SEU) and break-even probability gating before action execution",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "actor",
+              json.object([
+                #("type", json.string("string")),
+                #(
+                  "description",
+                  json.string("Calling agent or service identity"),
+                ),
+              ]),
+            ),
+            #(
+              "action",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Proposed action to execute")),
+              ]),
+            ),
+            #(
+              "benefit",
+              json.object([
+                #("type", json.string("number")),
+                #(
+                  "description",
+                  json.string("Quantified utility if successful"),
+                ),
+              ]),
+            ),
+            #(
+              "cost",
+              json.object([
+                #("type", json.string("number")),
+                #(
+                  "description",
+                  json.string("Quantified cost/loss if failed"),
+                ),
+              ]),
+            ),
+          ]),
+        ),
+        #(
+          "required",
+          json.array(["actor", "action", "benefit", "cost"], json.string),
+        ),
+      ]),
+    ),
   ]
 }
