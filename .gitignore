@@ -90,3 +90,4 @@ Thumbs.db
 
 # ferriskey_nif is a cdylib NIF: its lockfile is part of the reproducible build (governance/sources/20260907-1330-ferriskey-nif-source-ingestion.json)
 !native/nifs/rust/ferriskey_nif/Cargo.lock
+apps/uos_swarm/test/scratch_systemd/

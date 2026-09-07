@@ -6,7 +6,7 @@ This repository is the canonical Unified Operational System (UOS).
 
 - Canonical workspace: `/home/an/NAS-setup/uos`
 - Target VCS: standalone, non-colocated Jujutsu only (`.jj/`)
-- EV-Cycle Status: `EV-01` through `EV-91` admitted (`EV-91` Universal Sa-Plan Execution Authority, Fractal Jidoka & TPS Control Loop Ratified); `DMC-TCM` completed; `Full 9-Modality Test Protocol` 100% green; `Comprehensive Verification Checklist & Uniform Site Navigation` verified; `Codex Sovereign Verification` active.
+- EV-Cycle Status: `EV-01` through `EV-92` admitted (`EV-92` High-Utility Modular MAX / Mojo AI Models, MCP Tooling & Fail-Closed Preflight Ratified); `DMC-TCM` completed; `Full 9-Modality Test Protocol` 100% green; `Comprehensive Verification Checklist & Uniform Site Navigation` verified; `Codex Sovereign Verification` active.
 - Mandatory Timestamp Rule: All generated docs must carry `YYYYMMDD-HHSS-` timestamp prefix (Operator Directive, `contracts/rules/timestamp-mandate.md`).
 - Strict Zero-Muda: Bevy and Graphite are permanently barred from source, dependencies, runtime roles, and imported history.
 - External source trees are read-only evidence; no unvetted artifacts enter UOS without two-key verification.
@@ -228,14 +228,14 @@ skills, and UI design artifacts at every fractal layer L0–L9.
 
 ```text
 UOS TARGET: STANDALONE JUJUTSU MONOREPO OPERATIONAL & RATIFIED
-CURRENT EV-CYCLE: EV-91 (UNIVERSAL SA-PLAN EXECUTION AUTHORITY, FRACTAL JIDOKA & TPS CONTROL LOOP RATIFIED)
+CURRENT EV-CYCLE: EV-92 (HIGH-UTILITY MODULAR MAX / MOJO AI MODELS, MCP TOOLING & FAIL-CLOSED PREFLIGHT RATIFIED)
 CHECKLIST STATUS: 5 DOMAINS, 18/18 CHECKS 100% GREEN (SC-CHECKLIST-001, G-CHECKLIST PASS)
 DMC & TCM STATUS: ADMITTED & PROVED IN LEAN 4 (Traceability.lean)
-TEST PROTOCOL: 9 MODALITIES 100% GREEN (>10,600 TESTS, 10,181 GLEAM EUNIT, 2037 HARNESS)
+TEST PROTOCOL: 9 MODALITIES 100% GREEN (>10,600 TESTS, 10,370 GLEAM EUNIT, 2037 HARNESS)
 FRACTAL OBSERVABILITY: UNIVERSAL C3I CONTRACT ENFORCED (c3i_fractal_observability_spec.json)
 ZERO-MUDA PURITY: 0 BEVY, 0 GRAPHITE, 0 GRAPHENE NIF (PURE BEAM & HERMES OCAML)
 STORAGE SAFETY: HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736" ENFORCED (7/7 PASS)
-KM TRIAD: 68 ZK ADRs + MASTER MOC + WIKI CORPUS INDEX + LIVING ONTOLOGY ACTIVE
+KM TRIAD: 69 ZK ADRs + MASTER MOC + WIKI CORPUS INDEX + LIVING ONTOLOGY ACTIVE
 SA-PLAN STATUS: SOLE EXECUTION AUTHORITY ENFORCED (SC-JIDOKA-001, SC-SA-PLAN-001)
 TIMESTAMP RULE: MANDATORY YYYYMMDD-HHSS- PREFIX ACTIVE
 CODEX AUDIT: SOVEREIGN REVISION-BOUND VERIFICATION RATIFIED

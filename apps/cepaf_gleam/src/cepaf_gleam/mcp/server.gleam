@@ -15,8 +15,11 @@ import cepaf_gleam/ha/fractal_forecast
 import cepaf_gleam/mcp/protocol.{type ToolDefinition}
 import cepaf_gleam/mcp/tools
 import cepaf_gleam/planning/sa_plan_bridge
+import cepaf_gleam/services/max_inference_daemon as max_daemon
+import cepaf_gleam/ui/wisp/inference_api
 import cepaf_gleam/ui/wisp/router as wisp_router
 import gleam/dynamic/decode
+import gleam/int
 import gleam/io
 import gleam/json
 import gleam/list
@@ -243,7 +246,18 @@ pub fn check_fractal_jidoka_violation(
     _ -> False
   }
 
-  case is_bypass || is_unledgered || is_shadow {
+  // Model 1: Live AST Anomaly & Security Invariant Check (SC-INF-001)
+  let ast_rep = inference_api.evaluate_ast_anomaly(raw_line, "json", True)
+  let ast_blocked = case ast_rep.passed {
+    False ->
+      list.contains(ast_rep.violations, "JIDOKA_BYPASS_ATTEMPT")
+      || list.contains(ast_rep.violations, "RAW_SQL_INJECTION")
+      || list.contains(ast_rep.violations, "NUL_BYTE_INJECTION")
+      || list.contains(ast_rep.violations, "OS_STORAGE_DENIED_SERIAL")
+    True -> False
+  }
+
+  case is_bypass || is_unledgered || is_shadow || ast_blocked {
     True ->
       sa_plan_bridge.enforce_fractal_jidoka(
         "AutonomousAgent",
@@ -313,13 +327,40 @@ pub fn verify_mutating_action_preflight(
     Error(_) -> base_forecast
   }
 
-  fractal_forecast.verify_agentic_preflight(
-    actor,
-    action,
-    forecast,
-    benefit,
-    cost,
-  )
+  // Model 4: STPA-UCA & FMEA Causal Hazard Evaluation (SC-INF-001, SC-SIL6-001)
+  let stpa_rep =
+    inference_api.evaluate_stpa_fmea(
+      action,
+      "mcp_actuator",
+      raw_line,
+      4,
+      "ready",
+      4,
+    )
+  case stpa_rep.gate_decision == "ANDON_STOP_BLOCKED" || stpa_rep.severity >= 9 {
+    True ->
+      fractal_forecast.PreflightVetoed(
+        certificate_id: "CERT-STPA-" <> action,
+        actor: actor,
+        action: action,
+        rejection_reason: "STPA-FMEA Safety Gate: "
+          <> stpa_rep.gate_decision
+          <> " (RPN="
+          <> int.to_string(stpa_rep.rpn)
+          <> ", SIL="
+          <> stpa_rep.sil_rating
+          <> ")",
+        risk_score: 1.0,
+      )
+    False ->
+      fractal_forecast.verify_agentic_preflight(
+        actor,
+        action,
+        forecast,
+        benefit,
+        cost,
+      )
+  }
 }
 
 fn execute_tool(
@@ -424,6 +465,14 @@ fn execute_available_tool(
     "sa_task_complete" -> tool_sa_task_complete(id, raw_line)
     "sa_job_enqueue" -> tool_sa_job_enqueue(id, raw_line)
     "sa_workflow_start" -> tool_sa_workflow_start(id, raw_line)
+    // Modular MAX / Mojo High-Utility AI Models (SC-INF-001)
+    "stpa_fmea_hazard" -> tool_stpa_fmea_hazard(id, raw_line)
+    "rete_rule_conflict" -> tool_rete_rule_conflict(id, raw_line)
+    "ruliad_branch_eval" -> tool_ruliad_branch_eval(id, raw_line)
+    "shruti_harmonics" -> tool_shruti_harmonics(id, raw_line)
+    "ast_anomaly_detect" -> tool_ast_anomaly_detect(id, raw_line)
+    "zk_transclude" -> tool_zk_transclude(id, raw_line)
+    "lyapunov_trend_predict" -> tool_lyapunov_trend_predict(id, raw_line)
     _ -> error_response(id, -32_602, "Unknown tool: " <> name)
   }
 }
@@ -957,6 +1006,303 @@ fn tool_sa_workflow_start(id: Option(json.Json), raw_line: String) -> String {
   }
 }
 
+// ---------------------------------------------------------------------------
+// Modular MAX / Mojo High-Utility Model Handlers (SC-INF-001)
+// ---------------------------------------------------------------------------
+
+fn tool_stpa_fmea_hazard(id: Option(json.Json), raw_line: String) -> String {
+  let action_decoder = {
+    use a <- decode.subfield(["params", "arguments", "action"], decode.string)
+    decode.success(a)
+  }
+  let component_decoder = {
+    use c <- decode.subfield(["params", "arguments", "component"], decode.string)
+    decode.success(c)
+  }
+  let context_decoder = {
+    use ctx <- decode.subfield(["params", "arguments", "context"], decode.string)
+    decode.success(ctx)
+  }
+  let crit_decoder = {
+    use cr <- decode.subfield(["params", "arguments", "criticality"], decode.int)
+    decode.success(cr)
+  }
+  let dep_decoder = {
+    use d <- decode.subfield(
+      ["params", "arguments", "dependency_readiness"],
+      decode.string,
+    )
+    decode.success(d)
+  }
+  let impact_decoder = {
+    use i <- decode.subfield(["params", "arguments", "impact"], decode.int)
+    decode.success(i)
+  }
+
+  let action = case json.parse(raw_line, action_decoder) {
+    Ok(a) -> a
+    Error(_) -> "unknown_action"
+  }
+  let component = case json.parse(raw_line, component_decoder) {
+    Ok(c) -> c
+    Error(_) -> "general"
+  }
+  let context = case json.parse(raw_line, context_decoder) {
+    Ok(ctx) -> ctx
+    Error(_) -> ""
+  }
+  let crit = case json.parse(raw_line, crit_decoder) {
+    Ok(cr) -> cr
+    Error(_) -> 3
+  }
+  let dep = case json.parse(raw_line, dep_decoder) {
+    Ok(d) -> d
+    Error(_) -> "ready"
+  }
+  let impact = case json.parse(raw_line, impact_decoder) {
+    Ok(i) -> i
+    Error(_) -> 3
+  }
+
+  let rep =
+    inference_api.evaluate_stpa_fmea(
+      action,
+      component,
+      context,
+      crit,
+      dep,
+      impact,
+    )
+  tool_adapter_response(id, max_daemon.stpa_fmea_report_to_json(rep))
+}
+
+fn tool_rete_rule_conflict(id: Option(json.Json), raw_line: String) -> String {
+  let rule_decoder = {
+    use r_id <- decode.field("id", decode.string)
+    use name <- decode.optional_field("name", "rule", decode.string)
+    use layer <- decode.optional_field("layer", "L5", decode.string)
+    use score <- decode.optional_field("score", 10.0, decode.float)
+    use layer_rank <- decode.optional_field("layer_rank", 5, decode.int)
+    use salience <- decode.optional_field("salience", 1.0, decode.float)
+    use specificity <- decode.optional_field("specificity", 1, decode.int)
+    use matched_conditions <- decode.optional_field(
+      "matched_conditions",
+      1,
+      decode.int,
+    )
+    use action <- decode.optional_field("action", "execute", decode.string)
+    decode.success(max_daemon.ReteRuleScore(
+      id: r_id,
+      name: name,
+      layer: layer,
+      score: score,
+      layer_rank: layer_rank,
+      salience: salience,
+      specificity: specificity,
+      matched_conditions: matched_conditions,
+      action: action,
+    ))
+  }
+  let rules_decoder = {
+    use r <- decode.subfield(
+      ["params", "arguments", "rules"],
+      decode.list(rule_decoder),
+    )
+    decode.success(r)
+  }
+
+  let rules = case json.parse(raw_line, rules_decoder) {
+    Ok(r) -> r
+    Error(_) -> []
+  }
+
+  let rep = inference_api.evaluate_rete_conflict(rules)
+  tool_adapter_response(id, max_daemon.rete_conflict_report_to_json(rep))
+}
+
+fn tool_ruliad_branch_eval(id: Option(json.Json), raw_line: String) -> String {
+  let src_decoder = {
+    use s <- decode.subfield(["params", "arguments", "source_branch"], decode.string)
+    decode.success(s)
+  }
+  let tgt_decoder = {
+    use t <- decode.subfield(["params", "arguments", "target_branch"], decode.string)
+    decode.success(t)
+  }
+  let changes_decoder = {
+    use c <- decode.subfield(
+      ["params", "arguments", "candidate_changes"],
+      decode.list(decode.string),
+    )
+    decode.success(c)
+  }
+  let agents_decoder = {
+    use a <- decode.subfield(
+      ["params", "arguments", "agents"],
+      decode.list(decode.string),
+    )
+    decode.success(a)
+  }
+
+  let src = case json.parse(raw_line, src_decoder) {
+    Ok(s) -> s
+    Error(_) -> "integration/main"
+  }
+  let tgt = case json.parse(raw_line, tgt_decoder) {
+    Ok(t) -> t
+    Error(_) -> "feature/current"
+  }
+  let changes = case json.parse(raw_line, changes_decoder) {
+    Ok(c) -> c
+    Error(_) -> []
+  }
+  let agents = case json.parse(raw_line, agents_decoder) {
+    Ok(a) -> a
+    Error(_) -> ["AutonomousAgent"]
+  }
+
+  let rep = inference_api.evaluate_ruliad_branch(src, tgt, changes, agents)
+  tool_adapter_response(id, max_daemon.ruliad_branch_report_to_json(rep))
+}
+
+fn tool_shruti_harmonics(id: Option(json.Json), raw_line: String) -> String {
+  let raga_decoder = {
+    use r <- decode.subfield(["params", "arguments", "raga"], decode.string)
+    decode.success(r)
+  }
+  let fund_decoder = {
+    use f <- decode.subfield(
+      ["params", "arguments", "fundamental_hz"],
+      decode.float,
+    )
+    decode.success(f)
+  }
+  let telem_decoder = {
+    use t <- decode.subfield(
+      ["params", "arguments", "telemetry"],
+      decode.list(decode.float),
+    )
+    decode.success(t)
+  }
+
+  let raga = case json.parse(raw_line, raga_decoder) {
+    Ok(r) -> r
+    Error(_) -> "Durga"
+  }
+  let fund = case json.parse(raw_line, fund_decoder) {
+    Ok(f) -> f
+    Error(_) -> 136.1
+  }
+  let telem = case json.parse(raw_line, telem_decoder) {
+    Ok(t) -> t
+    Error(_) -> [1.0, 1.25, 1.5]
+  }
+
+  let rep = inference_api.evaluate_shruti_harmonics(telem, raga, fund)
+  tool_adapter_response(id, max_daemon.shruti_harmonic_report_to_json(rep))
+}
+
+fn tool_ast_anomaly_detect(id: Option(json.Json), raw_line: String) -> String {
+  let code_decoder = {
+    use c <- decode.subfield(["params", "arguments", "code"], decode.string)
+    decode.success(c)
+  }
+  let lang_decoder = {
+    use l <- decode.subfield(["params", "arguments", "language"], decode.string)
+    decode.success(l)
+  }
+  let strict_decoder = {
+    use s <- decode.subfield(["params", "arguments", "strict_mode"], decode.bool)
+    decode.success(s)
+  }
+
+  let code = case json.parse(raw_line, code_decoder) {
+    Ok(c) -> c
+    Error(_) -> ""
+  }
+  let lang = case json.parse(raw_line, lang_decoder) {
+    Ok(l) -> l
+    Error(_) -> "gleam"
+  }
+  let strict = case json.parse(raw_line, strict_decoder) {
+    Ok(s) -> s
+    Error(_) -> True
+  }
+
+  let rep = inference_api.evaluate_ast_anomaly(code, lang, strict)
+  tool_adapter_response(id, max_daemon.ast_report_to_json(rep))
+}
+
+fn tool_zk_transclude(id: Option(json.Json), raw_line: String) -> String {
+  let query_decoder = {
+    use q <- decode.subfield(["params", "arguments", "query"], decode.string)
+    decode.success(q)
+  }
+  let limit_decoder = {
+    use l <- decode.subfield(["params", "arguments", "limit"], decode.int)
+    decode.success(l)
+  }
+
+  let query = case json.parse(raw_line, query_decoder) {
+    Ok(q) -> q
+    Error(_) -> "sa-plan"
+  }
+  let limit = case json.parse(raw_line, limit_decoder) {
+    Ok(l) -> l
+    Error(_) -> 3
+  }
+
+  let rep = inference_api.evaluate_zk_transclusion(query, limit)
+  tool_adapter_response(id, max_daemon.zk_result_to_json(rep))
+}
+
+fn tool_lyapunov_trend_predict(id: Option(json.Json), raw_line: String) -> String {
+  let telem_decoder = {
+    use t <- decode.subfield(
+      ["params", "arguments", "telemetry"],
+      decode.list(decode.float),
+    )
+    decode.success(t)
+  }
+  let dt_decoder = {
+    use d <- decode.subfield(["params", "arguments", "dt"], decode.float)
+    decode.success(d)
+  }
+  let horizon_decoder = {
+    use h <- decode.subfield(
+      ["params", "arguments", "horizon_seconds"],
+      decode.float,
+    )
+    decode.success(h)
+  }
+  let thresh_decoder = {
+    use cr <- decode.subfield(
+      ["params", "arguments", "critical_threshold"],
+      decode.float,
+    )
+    decode.success(cr)
+  }
+
+  let telem = case json.parse(raw_line, telem_decoder) {
+    Ok(t) -> t
+    Error(_) -> [1.0, 1.01, 1.02]
+  }
+  let dt = case json.parse(raw_line, dt_decoder) {
+    Ok(d) -> d
+    Error(_) -> 1.0
+  }
+  let horizon = case json.parse(raw_line, horizon_decoder) {
+    Ok(h) -> h
+    Error(_) -> 60.0
+  }
+  let thresh = case json.parse(raw_line, thresh_decoder) {
+    Ok(cr) -> cr
+    Error(_) -> 100.0
+  }
+
+  let rep = inference_api.evaluate_lyapunov_trend(telem, dt, horizon, thresh)
+  tool_adapter_response(id, max_daemon.lyapunov_result_to_json(rep))
+}
 
 // ---------------------------------------------------------------------------
 // Helpers

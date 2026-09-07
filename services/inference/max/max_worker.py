@@ -6,7 +6,7 @@
 # Length-delimited framing: 4-byte big-endian prefix + UTF-8 JSON payload.
 # Implements all 8 methods: health, metrics, modalities, infer_text, infer_image,
 # infer_audio, infer_video, embed.
-# Resolves GAP-02: authentic neural embeddings, real acoustic synthesis, and
+# Resolves GAP-02: deterministic semantic projections, real acoustic synthesis, and
 # bounded FMEA cognitive classifier replacing synthetic stubs.
 # ==============================================================================
 
@@ -85,15 +85,16 @@ def compute_shannon_entropy(probs: List[float]) -> float:
     return h
 
 # ------------------------------------------------------------------------------
-# Authentic Neural Semantic Embedding Architecture
+# Deterministic Semantic Vector Projection Architecture
 # ------------------------------------------------------------------------------
 
 class NeuralSemanticEmbedder:
     """
-    Deterministic Neural Semantic Embedding model implementing subword tokenization,
-    dense projection with learned orthogonal semantic cluster priors, GELU feedforward
-    layers, residual connections, LayerNorm, and L2 hyperspherical normalization.
-    Replaces synthetic MD5 token hashing with genuine continuous vector geometry.
+    Deterministic Semantic Vector Projection model implementing subword tokenization,
+    dense projection with learned orthogonal semantic cluster priors, sinusoidal positional
+    encodings, GELU feedforward layers, residual connections, LayerNorm, and L2 hyperspherical
+    normalization. Operates as an isolated deterministic projection without neural weights
+    (replaces synthetic MD5 token hashing with continuous vector geometry).
     """
 
     # Semantic cluster keywords defining positive semantic attractors

@@ -941,5 +941,286 @@ pub fn get_tool_definitions() -> List(ToolDefinition) {
         ),
       ]),
     ),
+    // -- Modular MAX / Mojo High-Utility AI Models (SC-INF-001) --
+    ToolDefinition(
+      name: "stpa_fmea_hazard",
+      description: "Evaluate STPA-UCA & AIAG-VDA FMEA causal hazards, RPN, and PSI safety interlocks (SC-SIL6-001)",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "action",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Proposed action name or verb")),
+              ]),
+            ),
+            #(
+              "component",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Target component or subsystem")),
+              ]),
+            ),
+            #(
+              "context",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Execution context or parameters")),
+              ]),
+            ),
+            #(
+              "criticality",
+              json.object([
+                #("type", json.string("integer")),
+                #("description", json.string("Criticality level (1..5)")),
+              ]),
+            ),
+            #(
+              "dependency_readiness",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Dependency status: ready / blocked")),
+              ]),
+            ),
+            #(
+              "impact",
+              json.object([
+                #("type", json.string("integer")),
+                #("description", json.string("Severity impact (1..5)")),
+              ]),
+            ),
+          ]),
+        ),
+        #("required", json.array(["action"], json.string)),
+      ]),
+    ),
+    ToolDefinition(
+      name: "rete_rule_conflict",
+      description: "Resolve rule discrimination conflicts via Rete-UL with strict L0 constitutional dominance",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "rules",
+              json.object([
+                #("type", json.string("array")),
+                #(
+                  "items",
+                  json.object([
+                    #("type", json.string("object")),
+                    #(
+                      "properties",
+                      json.object([
+                        #("id", json.object([#("type", json.string("string"))])),
+                        #("name", json.object([#("type", json.string("string"))])),
+                        #("layer", json.object([#("type", json.string("string"))])),
+                        #("score", json.object([#("type", json.string("number"))])),
+                        #("layer_rank", json.object([#("type", json.string("integer"))])),
+                        #("salience", json.object([#("type", json.string("number"))])),
+                        #("specificity", json.object([#("type", json.string("integer"))])),
+                        #("matched_conditions", json.object([#("type", json.string("integer"))])),
+                        #("action", json.object([#("type", json.string("string"))])),
+                      ]),
+                    ),
+                  ]),
+                ),
+                #("description", json.string("Candidate rules to evaluate")),
+              ]),
+            ),
+          ]),
+        ),
+        #("required", json.array(["rules"], json.string)),
+      ]),
+    ),
+    ToolDefinition(
+      name: "ruliad_branch_eval",
+      description: "Compute Ruliad multiway branchial distance, entanglement entropy, and merge readiness",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "source_branch",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Source branch name")),
+              ]),
+            ),
+            #(
+              "target_branch",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Target branch name")),
+              ]),
+            ),
+            #(
+              "candidate_changes",
+              json.object([
+                #("type", json.string("array")),
+                #("items", json.object([#("type", json.string("string"))])),
+                #("description", json.string("List of candidate file changes or descriptions")),
+              ]),
+            ),
+            #(
+              "agents",
+              json.object([
+                #("type", json.string("array")),
+                #("items", json.object([#("type", json.string("string"))])),
+                #("description", json.string("Participating agent identities")),
+              ]),
+            ),
+          ]),
+        ),
+        #(
+          "required",
+          json.array(["source_branch", "target_branch"], json.string),
+        ),
+      ]),
+    ),
+    ToolDefinition(
+      name: "shruti_harmonics",
+      description: "Synthesize 22-Shruti microtonal frequencies and evaluate acoustic harmony and jawari shimmer",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "raga",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Raga name (e.g. Durga, Bhairav, Yaman)")),
+              ]),
+            ),
+            #(
+              "fundamental_hz",
+              json.object([
+                #("type", json.string("number")),
+                #("description", json.string("Fundamental frequency in Hz")),
+              ]),
+            ),
+            #(
+              "telemetry",
+              json.object([
+                #("type", json.string("array")),
+                #("items", json.object([#("type", json.string("number"))])),
+                #("description", json.string("Telemetry samples to synthesize")),
+              ]),
+            ),
+          ]),
+        ),
+        #("required", json.array(["raga"], json.string)),
+      ]),
+    ),
+    ToolDefinition(
+      name: "ast_anomaly_detect",
+      description: "Detect code AST anomalies, NUL byte injection, raw SQL, and Jidoka bypass attempts (DAL-A)",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "code",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Source code snippet or AST payload")),
+              ]),
+            ),
+            #(
+              "language",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Programming language (gleam, rust, python, etc.)")),
+              ]),
+            ),
+            #(
+              "strict_mode",
+              json.object([
+                #("type", json.string("boolean")),
+                #("description", json.string("Whether strict fail-closed mode is enforced")),
+              ]),
+            ),
+          ]),
+        ),
+        #("required", json.array(["code"], json.string)),
+      ]),
+    ),
+    ToolDefinition(
+      name: "zk_transclude",
+      description: "Search 68 ZK ADRs and Master MOC for transclusion references with Tailscale FQDN links",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "query",
+              json.object([
+                #("type", json.string("string")),
+                #("description", json.string("Search keywords or query text")),
+              ]),
+            ),
+            #(
+              "limit",
+              json.object([
+                #("type", json.string("integer")),
+                #("description", json.string("Maximum number of results to return (1..10)")),
+              ]),
+            ),
+          ]),
+        ),
+        #("required", json.array(["query"], json.string)),
+      ]),
+    ),
+    ToolDefinition(
+      name: "lyapunov_trend_predict",
+      description: "Predict finite-time Lyapunov exponent stability, T_cascade horizon, and SEU preflight certification",
+      input_schema: json.object([
+        #("type", json.string("object")),
+        #(
+          "properties",
+          json.object([
+            #(
+              "telemetry",
+              json.object([
+                #("type", json.string("array")),
+                #("items", json.object([#("type", json.string("number"))])),
+                #("description", json.string("Telemetry timeseries samples")),
+              ]),
+            ),
+            #(
+              "dt",
+              json.object([
+                #("type", json.string("number")),
+                #("description", json.string("Sampling period dt in seconds")),
+              ]),
+            ),
+            #(
+              "horizon_seconds",
+              json.object([
+                #("type", json.string("number")),
+                #("description", json.string("Forecast horizon in seconds")),
+              ]),
+            ),
+            #(
+              "critical_threshold",
+              json.object([
+                #("type", json.string("number")),
+                #("description", json.string("Critical instability threshold")),
+              ]),
+            ),
+          ]),
+        ),
+        #("required", json.array(["telemetry"], json.string)),
+      ]),
+    ),
   ]
 }
+

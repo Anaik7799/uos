@@ -60,6 +60,7 @@ import cepaf_gleam/ui/lustre/mirage_cockpit
 import cepaf_gleam/ui/state as mesh_state
 import cepaf_gleam/ui/web/page_views
 import cepaf_gleam/ui/web/shell
+import cepaf_gleam/ui/wisp/agui_sse_api
 import cepaf_gleam/ui/wisp/auth
 import cepaf_gleam/ui/wisp/iam_api
 import cepaf_gleam/ui/wisp/inference_api
@@ -736,6 +737,10 @@ fn route_internal(path: String) -> String {
     "/api/v1/page-spec" -> page_spec_index()
     // AG-UI protocol routes (SSE event streams)
     "/ag-ui/run" | "/ag-ui/events" -> agui_run_json(path)
+    "/ag-ui/events/sse" | "/api/v1/ag-ui/stream" ->
+      agui_sse_api.sse_32_event_manifest_stream(agui_sse_api.default_config())
+    "/ag-ui/manifest" | "/api/v1/ag-ui/manifest" ->
+      agui_sse_api.agui_manifest_summary_json()
     "/ag-ui/health" -> agui_sse.health_json()
     _ -> {
       // Dynamic route matching for paths with query parameters
@@ -856,7 +861,7 @@ fn planning_jidoka_json() -> String {
       ),
     ),
     #("zenoh_topic", json.string("indrajaal/l0/const/jidoka/andon")),
-    #("ev_cycle", json.string("EV-91")),
+    #("ev_cycle", json.string("EV-92")),
   ])
   |> json.to_string()
 }
@@ -3607,6 +3612,12 @@ fn handle_get(path: String) -> HttpResponse(String) {
         "thread-001",
         "run-001",
       ))
+    "/ag-ui/events/sse" | "/api/v1/ag-ui/stream" ->
+      sse_response(
+        agui_sse_api.sse_32_event_manifest_stream(agui_sse_api.default_config()),
+      )
+    "/ag-ui/manifest" | "/api/v1/ag-ui/manifest" ->
+      json_response(agui_sse_api.agui_manifest_summary_json(), 200)
     "/ag-ui/health" -> json_response(agui_sse.health_json(), 200)
     "/ag-ui/hitl/pending" ->
       json_response(
