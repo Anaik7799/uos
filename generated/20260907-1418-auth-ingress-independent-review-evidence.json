@@ -1,0 +1,321 @@
+{
+  "schema": "uos-auth-ingress-review-evidence/v1",
+  "generated_at_utc": "2026-09-07T14:36:18Z",
+  "clock": {
+    "source": "host UTC",
+    "ntp_synchronized": true,
+    "synchronization_observed_at_utc": "2026-09-07T14:29:47Z"
+  },
+  "task": "AUTH-INGRESS",
+  "review_workspace": "/home/an/NAS-setup/uos/.uos-workspaces/codex-auth-ingress-review",
+  "candidate": {
+    "commit_id": "6b033f3781e159495b3cb9812b5480f4802a8855",
+    "change_id": "vwpypxztntyrsrulmztyplwzpvvlmnyz",
+    "parent_commit": "9193385706282ea61300e77cbcc6f4664273a57d"
+  },
+  "verdict": {
+    "candidate": "NOT_APPROVED",
+    "adapter_authentication_and_reload_method_fix": "PASS_BOUNDED",
+    "ingestion_byte_bound": "FAIL_OBSERVED",
+    "deployment": "NOT_REQUESTED_NOT_PERFORMED"
+  },
+  "toolchain": {
+    "gleam": "1.16.0",
+    "otp": "29",
+    "erts": "17.0.6",
+    "mist": "6.0.2",
+    "gleam_http": "4.3.0",
+    "otp_path": "/nix/store/qq9f90d5giydnhpdxlqq83n21c22jq0b-erlang-29.0.6/lib/erlang/bin",
+    "erl_flags": "+S 4:4 +A 4"
+  },
+  "build": {
+    "status": "PASS",
+    "fresh_generation": [
+      "apps/cepaf_gleam",
+      "apps/indrajaal_gleam_web"
+    ],
+    "own_beam_directory": "var/auth-ingress-review/ebin",
+    "dependency_cache": "/home/an/NAS-setup/uos/.uos-workspaces/codex-auth-ingress/apps/indrajaal_gleam_web/build/dev/erlang",
+    "limits": {
+      "generation_seconds": 90,
+      "test_vm_seconds": 30,
+      "termination_grace_seconds": 2
+    },
+    "limitation": "Selected candidate application modules rebuilt; dependencies came from a local cache. No full dependency rebuild or live binary identity claim."
+  },
+  "supplied_eunit": {
+    "count": 2,
+    "passed": 2,
+    "failed": 0,
+    "exit_code": 0,
+    "output": "OTP 29\nindrajaal_gleam_web var/auth-ingress-review/ebin/indrajaal_gleam_web.beam\nauth_ingress_test var/auth-ingress-review/ebin/auth_ingress_test.beam\nauth_ingress_test_ffi var/auth-ingress-review/ebin/auth_ingress_test_ffi.beam\ncepaf_gleam@ui@wisp@router var/auth-ingress-review/ebin/cepaf_gleam@ui@wisp@router.beam\ncepaf_gleam@auth@oidc var/auth-ingress-review/ebin/cepaf_gleam@auth@oidc.beam\n======================== EUnit ========================\nmodule 'auth_ingress_test'\n  auth_ingress_test: method_auth_body_and_response_are_preserved_test...[0.032 s] ok\n  auth_ingress_test: body_conversion_is_bounded_and_utf8_checked_test...ok\n  [done in 0.038 s]\n=======================================================\n  2 tests passed.\n"
+  },
+  "independent": {
+    "exit_code": 0,
+    "report": {
+      "otp_release": "29",
+      "adapter_checks": {
+        "total": 46,
+        "failed": 0,
+        "passed": 46,
+        "results": [
+          {
+            "name": "unknown_post_rejects_static_credential",
+            "passed": true
+          },
+          {
+            "name": "signed_unknown_post_reaches_404",
+            "passed": true
+          },
+          {
+            "name": "adapter_post_rejects:/api/v1/podman/action",
+            "passed": true
+          },
+          {
+            "name": "adapter_post_rejects:/api/v1/podman/restart",
+            "passed": true
+          },
+          {
+            "name": "adapter_post_rejects:/api/v1/podman/stop",
+            "passed": true
+          },
+          {
+            "name": "adapter_post_rejects:/api/v1/emergency/trigger",
+            "passed": true
+          },
+          {
+            "name": "adapter_post_rejects:/api/v1/guardian/respond",
+            "passed": true
+          },
+          {
+            "name": "adapter_post_rejects:/api/v1/ooda/trigger",
+            "passed": true
+          },
+          {
+            "name": "adapter_post_rejects:/api/v1/system/ooda-trigger",
+            "passed": true
+          },
+          {
+            "name": "adapter_post_rejects:/api/v1/plan/update",
+            "passed": true
+          },
+          {
+            "name": "adapter_post_rejects:/api/v1/planning/add",
+            "passed": true
+          },
+          {
+            "name": "adapter_post_rejects:/api/v1/reload",
+            "passed": true
+          },
+          {
+            "name": "adapter_post_rejects:/api/v1/zenoh/publish",
+            "passed": true
+          },
+          {
+            "name": "adapter_post_rejects:/api/v1/cockpit/mode",
+            "passed": true
+          },
+          {
+            "name": "adapter_post_rejects:/api/v1/pi/prompt",
+            "passed": true
+          },
+          {
+            "name": "adapter_post_rejects:/ag-ui/run",
+            "passed": true
+          },
+          {
+            "name": "adapter_post_rejects:/ag-ui/hitl/respond",
+            "passed": true
+          },
+          {
+            "name": "adapter_post_rejects:/ag-ui/tools/result",
+            "passed": true
+          },
+          {
+            "name": "get_reload_405",
+            "passed": true
+          },
+          {
+            "name": "head_reload_405_empty_body",
+            "passed": true
+          },
+          {
+            "name": "get_reload_query_405",
+            "passed": true
+          },
+          {
+            "name": "head_reload_query_405",
+            "passed": true
+          },
+          {
+            "name": "signed_get_reload_405",
+            "passed": true
+          },
+          {
+            "name": "reload_allow_header_preserved",
+            "passed": true
+          },
+          {
+            "name": "get_unknown_404",
+            "passed": true
+          },
+          {
+            "name": "head_unknown_404_empty_body",
+            "passed": true
+          },
+          {
+            "name": "query_reaches_canonical_dispatch",
+            "passed": true
+          },
+          {
+            "name": "redirect_query_and_location_preserved",
+            "passed": true
+          },
+          {
+            "name": "options_status_and_allow_headers_preserved",
+            "passed": true
+          },
+          {
+            "name": "empty_authorization_rejected",
+            "passed": true
+          },
+          {
+            "name": "missing_authorization_rejected",
+            "passed": true
+          },
+          {
+            "name": "signed_agui_pure_response",
+            "passed": true
+          },
+          {
+            "name": "signed_body_reaches_validation",
+            "passed": true
+          },
+          {
+            "name": "body_exact_65536_reaches_auth",
+            "passed": true
+          },
+          {
+            "name": "body_65537_rejected",
+            "passed": true
+          },
+          {
+            "name": "utf8_exact_byte_limit_reaches_auth",
+            "passed": true
+          },
+          {
+            "name": "utf8_excess_byte_limit_rejected",
+            "passed": true
+          },
+          {
+            "name": "invalid_utf8_rejected",
+            "passed": true
+          },
+          {
+            "name": "oversize_takes_priority_before_utf8",
+            "passed": true
+          },
+          {
+            "name": "put_405",
+            "passed": true
+          },
+          {
+            "name": "delete_405",
+            "passed": true
+          },
+          {
+            "name": "patch_405",
+            "passed": true
+          },
+          {
+            "name": "get_canonical_response_preserved",
+            "passed": true
+          },
+          {
+            "name": "head_canonical_response_preserved",
+            "passed": true
+          },
+          {
+            "name": "post_canonical_response_preserved",
+            "passed": true
+          },
+          {
+            "name": "options_canonical_response_preserved",
+            "passed": true
+          }
+        ]
+      },
+      "mist_limit_probe": {
+        "socket": "unused_socket",
+        "chunked_oversize_rejected": false,
+        "chunked_payload_bytes": 65537,
+        "content_length_oversize_rejected": true,
+        "declared_limit": 65536,
+        "returned_bytes": 65537
+      },
+      "production_configuration": "not read; env -i VM and public fixtures",
+      "schema": "uos-auth-ingress-independent/v1",
+      "traffic": "none; complete in-memory framing with dummy socket"
+    },
+    "exit_semantics": "Exit code covers adapter assertions. The separate reader probe deliberately records the observed defect; its false rejection result must not be summarized as passing ingestion."
+  },
+  "findings": [
+    {
+      "id": "INGRESS-BODY-001",
+      "severity": "HIGH",
+      "status": "CONFIRMED",
+      "source": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam:950",
+      "problem": "The new Mist reader limit only bounds advertised Content-Length, while actual chunked data are fully accumulated before the helper sees them.",
+      "evidence": "Actual Mist 6.0.2 read_body(req,65536) returned Ok with 65537 payload bytes for a complete in-memory chunked request. Oversize Content-Length negative control returned ExcessBody.",
+      "library_correspondence": [
+        "mist.gleam:220-235 checks Content-Length or default 0 before delegating",
+        "mist/internal/http.gleam:403-413 reads all chunked data with no bound parameter",
+        "mist/internal/http.gleam:186-240 recursively appends decoded chunks",
+        "application helper:990 applies byte_size only after materialization; specialized branches do not call this helper"
+      ],
+      "request_fix": "Reject unsupported/chunked/ambiguous framing before reading and enforce a bounded fixed-length profile, or use an independently bounded cumulative reader with total deadline. Enforce the post-read cap before every branch.",
+      "runtime_scope": "Complete 65537-byte in-memory payload with dummy non-socket; no listener, traffic or resource exhaustion."
+    },
+    {
+      "id": "INGRESS-HEADERS-002",
+      "severity": "LOW",
+      "status": "SOURCE_LIMIT",
+      "source": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam:1002",
+      "problem": "Folding routed headers through response.set_header collapses duplicate names; this is not exact response-header-list preservation.",
+      "evidence": "Pinned gleam_http response.set_header uses list.key_set; response.set_body preserves the record and duplicate headers.",
+      "observed_impact": "No duplicate header was emitted by the bounded tested routes. No current credential bypass claimed.",
+      "request_fix": "Map or set only the routed response body to Mist.Bytes, preserving original status and header list."
+    }
+  ],
+  "retained_scope_limits": [
+    "Specialized API branches in main remain direct method-agnostic handlers; this review's authentication result covers AG-UI and the API fallback routes only.",
+    "The inner path-only route function still has a reload effect, but the tested HTTP adapter now uses handle_request and GET/HEAD reload yield 405.",
+    "Known mutation routes were called with rejected credentials only after the actual unknown-route rejection check passed. Signed positives were pure AG-UI output, unknown routes, and a deliberately invalid planning status rejected before persistence.",
+    "No live IdP configuration, production secret, live endpoint, deployment, reload effect, or main/workspace integration was touched.",
+    "The initial query-echo test expected the unknown-route JSON to echo its path; actual router intentionally emits only error:not_found. Replaced with a meaningful query-dependent dispatch test plus exact redirect-location preservation. Final 46 checks passed.",
+    "No request-smuggling, general HTTP implementation, RBAC, total listener-memory, full-suite or system admission claim."
+  ],
+  "hashes": {
+    "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam": "d928045d9b5cf83517671b258201eb641b6e5f8c2eba19e7942d2d43654ee738",
+    "apps/indrajaal_gleam_web/test/auth_ingress_test.gleam": "647471532dd7210345babd2b9bc01f212edc8d7cd04bdd4c73843ca518c07771",
+    "apps/indrajaal_gleam_web/test/auth_ingress_test_ffi.erl": "f29416b91793c4a768d359c7471771a3d402a8b33dfa1d71e72769273d46271e",
+    "apps/indrajaal_gleam_web/manifest.toml": "38eed0d504c0dd48abc7b0dfc2a3d9280cc8d97db358bda62a3b25d5156383ed",
+    "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam": "089ed00fe1f4f088e8a513f57cfdea5e71dfdc2c2079c02e08236ac75d1e4a4e",
+    "tools/verification/oidc/auth_ingress_independent_review.erl": "74bf1269ae414197c18200539bfe6395972741d614ed9cdc7df344e5cff997eb"
+  },
+  "dependency_hashes": {
+    "/home/an/NAS-setup/uos/.uos-workspaces/codex-auth-ingress/apps/indrajaal_gleam_web/build/packages/mist/src/mist.gleam": "489e4883d11db7abf7190a48688e577fb083a041d1403cf765d35cd547dc091d",
+    "/home/an/NAS-setup/uos/.uos-workspaces/codex-auth-ingress/apps/indrajaal_gleam_web/build/packages/mist/src/mist/internal/http.gleam": "18f5d2fe5272faa2967d9f76f030e725665dd78d89c99900b9b9dd4e5feff151"
+  },
+  "reproduction": {
+    "test_source": "tools/verification/oidc/auth_ingress_independent_review.erl",
+    "entrypoint": "auth_ingress_independent_review:run/0",
+    "reader_probe": "auth_ingress_independent_review:mist_limit_probe/0",
+    "environment": "env -i with pinned OTP29 PATH, ERL_FLAGS and LANG only",
+    "vm_command_template": "timeout --kill-after=2s 30s erl -noshell -pa <LOCAL_DEPENDENCY_CACHE>/*/ebin -pa var/auth-ingress-review/ebin -eval 'erlang:halt(auth_ingress_independent_review:run()).'"
+  },
+  "artifacts": {
+    "journal": "docs/journal/20260907-1418-auth-ingress-independent-review.md",
+    "evidence": "generated/20260907-1418-auth-ingress-independent-review-evidence.json"
+  }
+}
