@@ -115,6 +115,10 @@ pub fn main() -> Nil {
             <> int.to_string(
               list.length(board.causal_gaps(load_board_messages(path))),
             )
+            <> ", chain forks "
+            <> int.to_string(
+              list.length(board.chain_forks(load_board_messages(path))),
+            )
             <> " (explicit records; lost history is not restored)",
           )
         Error(e) -> io.println("board INVALID: " <> e)
@@ -604,8 +608,10 @@ fn ingest_with_labels(
 fn reconcile(path: String, base: String) -> Nil {
   case open_board(path, base) {
     Ok(b) -> {
-      let c =
-        coord.new(coord.default_policy([supervisor, coord.system_agent], 11))
+      // The policy must carry the real roster (ledger agents + reviewers), otherwise
+      // every peer message is refused as an unknown agent and the refusal was invisible.
+      let #(policy, _) = policy_and_roster()
+      let c = coord.new(policy)
       case coord.reconcile(b, c) {
         Ok(#(_, _, r)) ->
           io.println(
@@ -618,7 +624,15 @@ fn reconcile(path: String, base: String) -> Nil {
             <> ", remote "
             <> int.to_string(r.remote_total)
             <> ", local "
-            <> int.to_string(r.local_total),
+            <> int.to_string(r.local_total)
+            <> " | policy_rejected "
+            <> int.to_string(r.policy_rejected)
+            <> " | signature_rejected "
+            <> int.to_string(r.signature_rejected)
+            <> " | conflicts "
+            <> int.to_string(r.conflicts)
+            <> " | chain_rejected "
+            <> int.to_string(r.chain_rejected),
           )
         Error(e) -> io.println("reconcile error: " <> e)
       }

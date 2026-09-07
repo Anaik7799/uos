@@ -792,9 +792,10 @@ pub fn reconcile(
   let #(b, chain_rejected) =
     list.fold(pull, #(b, 0), fn(acc, m) {
       let #(b, n) = acc
-      let before = b.count
       let b2 = board.absorb(b, m)
-      case b2.count == before {
+      // Absorbed but not extending the sender's head: a fork or a gap in that chain.
+      let extended = dict.get(b2.heads, m.from.id) == Ok(m.digest)
+      case !extended {
         True -> {
           let _ = case b.ledger_path {
             Some(path) ->
@@ -804,7 +805,7 @@ pub fn reconcile(
               )
             None -> Ok(Nil)
           }
-          #(b, n + 1)
+          #(b2, n + 1)
         }
         False -> #(b2, n)
       }

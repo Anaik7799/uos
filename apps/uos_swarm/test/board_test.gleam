@@ -912,3 +912,51 @@ pub fn reply_to_lost_message_needs_a_causal_gap_record_test() {
   board.validate([signed(a), signed(reply), signed(gap)])
   |> should.equal(Ok(Nil))
 }
+
+pub fn chain_fork_record_lets_a_second_branch_validate_test() {
+  let a =
+    board.seal(
+      draft(board.Report, "broadcast"),
+      "sw",
+      1,
+      1,
+      "aaaaaaaaaaaaaaaa",
+      board.genesis_digest,
+    )
+  let b =
+    board.seal(
+      draft(board.Report, "broadcast"),
+      "sw",
+      2,
+      2,
+      "bbbbbbbbbbbbbbbb",
+      a.digest,
+    )
+  // c forks from a (a second writer of the same sender extended a instead of b)
+  let c =
+    board.seal(
+      draft(board.Report, "broadcast"),
+      "sw",
+      3,
+      3,
+      "cccccccccccccccc",
+      a.digest,
+    )
+  let assert Error(e) = board.validate([signed(a), signed(b), signed(c)])
+  e |> should.equal("chain broken at " <> c.id)
+  let fork =
+    board.seal(
+      Draft(..draft(board.Andon, "broadcast"), payload: [
+        #("chain_fork", c.id),
+        #("reason", "sender wrote from two ledger copies"),
+      ]),
+      "sw",
+      4,
+      4,
+      "dddddddddddddddd",
+      c.digest,
+    )
+  board.chain_forks([fork]) |> should.equal([c.id])
+  board.validate([signed(a), signed(b), signed(c), signed(fork)])
+  |> should.equal(Ok(Nil))
+}

@@ -1199,10 +1199,11 @@ pub fn validate(messages: List(Message)) -> Result(Nil, String) {
     None -> Ok(Nil)
   })
   // One hash chain per sender (per-author log), ordered by id (timestamp) within the sender.
+  let forks = chain_forks(messages)
   messages
   |> list.group(fn(m) { m.from.id })
   |> dict.values
-  |> list.try_each(fn(ms) { chain_ok(list.reverse(ms), genesis_digest) })
+  |> list.try_each(fn(ms) { chain_ok(list.reverse(ms), genesis_digest, forks) })
 }
 
 /// Ids documented as lost by explicit causal-gap records (payload key `causal_gap`).
@@ -1221,13 +1222,33 @@ pub fn causal_gaps(messages: List(Message)) -> List(String) {
   |> list.unique
 }
 
+/// Message ids documented as the start of a second branch of a sender's chain
+/// (payload key `chain_fork`). A fork is never repaired by rewriting; the record makes
+/// it visible and lets validation follow each branch as its own chain.
+pub fn chain_forks(messages: List(Message)) -> List(String) {
+  messages
+  |> list.flat_map(fn(m) {
+    list.filter_map(m.payload, fn(p) {
+      case p.0 == "chain_fork" {
+        True -> Ok(p.1)
+        False -> Error(Nil)
+      }
+    })
+  })
+  |> list.unique
+}
+
 /// Distributed note: `list.group` returns each group newest-first, hence the reverse.
-fn chain_ok(messages: List(Message), prev: String) -> Result(Nil, String) {
+fn chain_ok(
+  messages: List(Message),
+  prev: String,
+  forks: List(String),
+) -> Result(Nil, String) {
   case messages {
     [] -> Ok(Nil)
     [m, ..rest] ->
-      case m.prev_digest == prev {
-        True -> chain_ok(rest, m.digest)
+      case m.prev_digest == prev || list.contains(forks, m.id) {
+        True -> chain_ok(rest, m.digest, forks)
         False -> Error("chain broken at " <> m.id)
       }
   }
