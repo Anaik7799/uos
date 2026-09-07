@@ -20,6 +20,11 @@ let bound_source_paths =
     "tests/acceptance/run.ml";
     "tests/acceptance/golden/receipt.schema.json";
     "tests/acceptance/compiler_diagnostics.ml";
+    "tools/source_review/census.ml";
+    "tests/acceptance/e04_adapter.ml";
+    "governance/sources/20260907-0513-e04-census-reproducibility-index.json";
+    "tools/ocaml_test_inventory/src/ocaml_test_inventory/inventory.gleam";
+    "tools/ocaml_test_inventory/src/ocaml_test_inventory/files.gleam";
     "apps/cepaf_gleam/gleam.toml";
     "apps/cepaf_gleam/manifest.toml";
     "apps/cepaf_gleam/test/c3i_knowledge_actor_test.gleam";
@@ -120,7 +125,10 @@ let read_regular_bounded ~maximum path =
 let rec read_binding_set acc = function
   | [] -> Ok (List.rev acc)
   | path :: rest ->
-      match read_checked_file ~maximum:1_048_576 path with
+      let maximum =
+        if path = "governance/sources/20260907-0513-e04-census-reproducibility-index.json"
+        then 4 * 1024 * 1024 else 1_048_576 in
+      match read_checked_file ~maximum path with
       | Error _ as error -> error
       | Ok checked -> read_binding_set (checked.checked_binding :: acc) rest
 
