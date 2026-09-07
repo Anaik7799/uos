@@ -1,0 +1,163 @@
+{
+  "schema": "uos.runtime-component-staging.v1",
+  "observed_at": "2026-09-07T14:34:20Z",
+  "candidate": "dc12e5314369363c5dfbac845a7a7298f20ac2c8",
+  "parent": "f734f8fb82c7ad5264edf8a0593645a7495c3556",
+  "plan": "uos/mirage-security/20260907-1310",
+  "task": "RUNTIME-PREP",
+  "application_admitted": false,
+  "action": {
+    "schema": "uos.manual-runtime-action.v1",
+    "kind": "stage_and_observe",
+    "operator_authority": "Execute work order using sa-plan tasks/jobs/workflows; prepare primary/backup under OTP29",
+    "plan": "uos/mirage-security/20260907-1310",
+    "task": "RUNTIME-PREP",
+    "candidate": "dc12e5314369363c5dfbac845a7a7298f20ac2c8",
+    "resource": "runtime:indrajaal-web-staging",
+    "holder": "01a07a68-b3b7-70f3-9e64-fac68a156c21",
+    "epoch": 1,
+    "targets": [
+      "uos-indrajaal-web@stage-dc12e531-primary.service",
+      "uos-indrajaal-web@stage-dc12e531-backup.service"
+    ],
+    "bind": "127.0.0.1",
+    "ports": [
+      4103,
+      4104
+    ],
+    "effects": [
+      "Install new versioned release files",
+      "Start two local-only staging services",
+      "Terminate only owned backup process to verify systemd recovery"
+    ],
+    "rollback": "Stop only these two staging units; preserve artifacts and production PID3243794/port4100",
+    "preconditions": [
+      "Fresh local cooperative fence",
+      "SHA256 manifest validation",
+      "OTP29 exact binary",
+      "Ports4103/4104 observed unused"
+    ],
+    "postconditions": [
+      "Two live OS PIDs on OTP29 with candidate identity",
+      "New backup run_id after recovery; primary unchanged",
+      "No production4100 change"
+    ],
+    "application_admitted": false,
+    "scope": "Manual operator-authorized staging, not automatic policy engine admission"
+  },
+  "recovery": {
+    "primary_before": {
+      "schema": "uos.web-runtime-identity.v1",
+      "runtime_ready": true,
+      "application_admitted": false,
+      "authority": "running VM observation; release metadata is declared, not attested",
+      "otp_release": "29",
+      "erts_version": "17.0.6",
+      "os_pid": "3668604",
+      "run_id": "3668604-1788790613153554",
+      "started_utc_us": 1788790613153554,
+      "observed_utc_us": 1788790634014667,
+      "vm_monotonic_elapsed_ms": 20861,
+      "declared_candidate_revision": "dc12e5314369363c5dfbac845a7a7298f20ac2c8",
+      "declared_instance_id": "stage-dc12e531-primary",
+      "declared_role": "primary",
+      "managed": true,
+      "scope": "VM identity only; application readiness, artifact binding and writer fencing require independent checks"
+    },
+    "primary_after": {
+      "schema": "uos.web-runtime-identity.v1",
+      "runtime_ready": true,
+      "application_admitted": false,
+      "authority": "running VM observation; release metadata is declared, not attested",
+      "otp_release": "29",
+      "erts_version": "17.0.6",
+      "os_pid": "3668604",
+      "run_id": "3668604-1788790613153554",
+      "started_utc_us": 1788790613153554,
+      "observed_utc_us": 1788791484441038,
+      "vm_monotonic_elapsed_ms": 871287,
+      "declared_candidate_revision": "dc12e5314369363c5dfbac845a7a7298f20ac2c8",
+      "declared_instance_id": "stage-dc12e531-primary",
+      "declared_role": "primary",
+      "managed": true,
+      "scope": "VM identity only; application readiness, artifact binding and writer fencing require independent checks"
+    },
+    "backup_before": {
+      "schema": "uos.web-runtime-identity.v1",
+      "runtime_ready": true,
+      "application_admitted": false,
+      "authority": "running VM observation; release metadata is declared, not attested",
+      "otp_release": "29",
+      "erts_version": "17.0.6",
+      "os_pid": "3668602",
+      "run_id": "3668602-1788790613168093",
+      "started_utc_us": 1788790613168093,
+      "observed_utc_us": 1788790634078966,
+      "vm_monotonic_elapsed_ms": 20911,
+      "declared_candidate_revision": "dc12e5314369363c5dfbac845a7a7298f20ac2c8",
+      "declared_instance_id": "stage-dc12e531-backup",
+      "declared_role": "backup",
+      "managed": true,
+      "scope": "VM identity only; application readiness, artifact binding and writer fencing require independent checks"
+    },
+    "backup_after": {
+      "schema": "uos.web-runtime-identity.v1",
+      "runtime_ready": true,
+      "application_admitted": false,
+      "authority": "running VM observation; release metadata is declared, not attested",
+      "otp_release": "29",
+      "erts_version": "17.0.6",
+      "os_pid": "3682872",
+      "run_id": "3682872-1788791484372100",
+      "started_utc_us": 1788791484372100,
+      "observed_utc_us": 1788791484431329,
+      "vm_monotonic_elapsed_ms": 59,
+      "declared_candidate_revision": "dc12e5314369363c5dfbac845a7a7298f20ac2c8",
+      "declared_instance_id": "stage-dc12e531-backup",
+      "declared_role": "backup",
+      "managed": true,
+      "scope": "VM identity only; application readiness, artifact binding and writer fencing require independent checks"
+    }
+  },
+  "negative_startups": {
+    "otp27_exit": 1,
+    "invalid_managed_config_exit": 78,
+    "otp27_result": "refused_before_listen_because_OTP29_BEAM_not_loadable_on_OTP27",
+    "startup_guard_on_OTP27": "NOT_REACHED",
+    "invalid_managed_config_passed": true,
+    "all_negative_startups_refused": true
+  },
+  "assertions": {
+    "actual_otp29": true,
+    "primary_stable": true,
+    "backup_restarted": true,
+    "production_pid_unchanged": true,
+    "production_pid": 3243794,
+    "loopback_only": true,
+    "manifest_validated": true
+  },
+  "tests": {
+    "web_suite_passed": 17,
+    "bind_controls": 3,
+    "systemd_backup_restart_count": 1
+  },
+  "limits": [
+    "Component staging before integrated candidate and authentication fixes",
+    "OTP27 cannot load OTP29 BEAM; startup guard was not reached in that negative test",
+    "Declared revision is not artifact attestation",
+    "No automatic failover routing or writer lease enforcement tested",
+    "Crash artifacts quarantined by presence only; no payload copied or hashed",
+    "Sa-plan CLI leases currently use epoch wall time; coordinator uses boot-relative clocks"
+  ],
+  "cleanup": {
+    "observed_at": "2026-09-07T14:39:50Z",
+    "primary": "inactive/dead/PID0",
+    "backup": "inactive/dead/PID0",
+    "ports4103_4104_closed": true,
+    "production4100_pid": 3243794,
+    "lease_released_operation": "codex-stage-release-20260907-1436",
+    "release_files_retained": true,
+    "services_enabled_for_boot": false,
+    "scope": "Stopped units observed again through systemd; original stop is recorded in host journal"
+  }
+}

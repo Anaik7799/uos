@@ -1,0 +1,30 @@
+[Unit]
+Description=UOS Indrajaal web %i on pinned OTP 29
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+WorkingDirectory=%h/NAS-setup/uos/var/releases/indrajaal-web/%i
+EnvironmentFile=%h/NAS-setup/uos/var/releases/indrajaal-web/%i.env
+Environment="UOS_WEB_MANAGED=true"
+ExecStartPre=/usr/bin/sha256sum --check --quiet --strict artifacts.sha256
+ExecStart=/nix/store/qq9f90d5giydnhpdxlqq83n21c22jq0b-erlang-29.0.6/lib/erlang/bin/erl +S 4:4 +A 4 -noshell -eval "code:add_paths(filelib:wildcard(\"*/ebin\")), 'indrajaal_gleam_web@@main':run(indrajaal_gleam_web)."
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=10
+KillMode=control-group
+UMask=0077
+NoNewPrivileges=true
+MemoryMax=1G
+CPUQuota=200%
+TasksMax=256
+LimitNOFILE=4096
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=uos-web-%i
+
+[Install]
+WantedBy=default.target

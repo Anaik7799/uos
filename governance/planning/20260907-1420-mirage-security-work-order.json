@@ -1,0 +1,224 @@
+{
+  "schema": "uos.work-order.v1",
+  "plan_id": "uos/mirage-security/20260907-1310",
+  "parent_plan": "uos/full-implementation/20260906-1655",
+  "database": "/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3",
+  "workflow": "uos/mirage-security/20260907-1310/workflow",
+  "state_authority": "Sa_plan.Store; this file is a static contract and discovery map, not completion authority",
+  "base_revision": "c08ec3942e12c41d2ac60c3ab4e954969e3983ae",
+  "operator_request": "execute all items identified in work order, use sa-plan, for tasks, jobs and workflows",
+  "dispatch": "manual coordinated executors; durable jobs do not imply autonomous dispatch",
+  "session": "01a07a68-b3b7-70f3-9e64-fac68a156c21",
+  "tasks": [
+    {
+      "id": "PLAN",
+      "title": "Register durable work order and peer ownership",
+      "dependencies": [],
+      "owner": "codex",
+      "priority": 100,
+      "job": "uos/mirage-security/20260907-1310/job/plan",
+      "queue": "mirage-security-plan"
+    },
+    {
+      "id": "MIRAGE-REPAIR",
+      "title": "Repair truthful bounded Solo5 execution and gate receipts",
+      "dependencies": [
+        "PLAN"
+      ],
+      "owner": "agy",
+      "priority": 100,
+      "job": "uos/mirage-security/20260907-1310/job/mirage-repair",
+      "queue": "mirage-security-mirage-repair"
+    },
+    {
+      "id": "AUTH-OIDC",
+      "title": "Verify OIDC signatures audience and reject downgrade",
+      "dependencies": [
+        "PLAN"
+      ],
+      "owner": "codex-oidc",
+      "priority": 100,
+      "job": "uos/mirage-security/20260907-1310/job/auth-oidc",
+      "queue": "mirage-security-auth-oidc"
+    },
+    {
+      "id": "MIRAGE-VERIFY",
+      "title": "Independent adversarial and formal Mirage verification",
+      "dependencies": [
+        "MIRAGE-REPAIR"
+      ],
+      "owner": "codex-review",
+      "priority": 100,
+      "job": "uos/mirage-security/20260907-1310/job/mirage-verify",
+      "queue": "mirage-security-mirage-verify"
+    },
+    {
+      "id": "AUTH-VERIFY",
+      "title": "Independent OIDC acceptance and regression review",
+      "dependencies": [
+        "AUTH-OIDC"
+      ],
+      "owner": "codex-review",
+      "priority": 100,
+      "job": "uos/mirage-security/20260907-1310/job/auth-verify",
+      "queue": "mirage-security-auth-verify"
+    },
+    {
+      "id": "INTEGRATE",
+      "title": "Serialize frozen candidate integration and evidence",
+      "dependencies": [
+        "MIRAGE-VERIFY",
+        "AUTH-VERIFY"
+      ],
+      "owner": "claude",
+      "priority": 90,
+      "job": "uos/mirage-security/20260907-1310/job/integrate",
+      "queue": "mirage-security-integrate"
+    },
+    {
+      "id": "OTP29-STAGE",
+      "title": "Stage integrated service on OTP29 and verify recovery",
+      "dependencies": [
+        "INTEGRATE"
+      ],
+      "owner": "codex-sre",
+      "priority": 90,
+      "job": "uos/mirage-security/20260907-1310/job/otp29-stage",
+      "queue": "mirage-security-otp29-stage"
+    },
+    {
+      "id": "OTP29-CUTOVER",
+      "title": "Fenced primary backup cutover with rollback and probes",
+      "dependencies": [
+        "OTP29-STAGE"
+      ],
+      "owner": "claude",
+      "priority": 90,
+      "job": "uos/mirage-security/20260907-1310/job/otp29-cutover",
+      "queue": "mirage-security-otp29-cutover"
+    },
+    {
+      "id": "METRICS-BUILD",
+      "title": "Build real MIG-08 metrics application and measured receipt",
+      "dependencies": [
+        "MIRAGE-VERIFY"
+      ],
+      "owner": "codex-metrics",
+      "priority": 80,
+      "job": "uos/mirage-security/20260907-1310/job/metrics-build",
+      "queue": "mirage-security-metrics-build"
+    },
+    {
+      "id": "METRICS-VERIFY",
+      "title": "Verify metrics measurement freshness restart and isolation",
+      "dependencies": [
+        "METRICS-BUILD",
+        "OTP29-CUTOVER"
+      ],
+      "owner": "codex-review",
+      "priority": 80,
+      "job": "uos/mirage-security/20260907-1310/job/metrics-verify",
+      "queue": "mirage-security-metrics-verify"
+    },
+    {
+      "id": "CLOSE",
+      "title": "Reconcile tasks jobs workflows and final work order evidence",
+      "dependencies": [
+        "METRICS-VERIFY"
+      ],
+      "owner": "codex",
+      "priority": 70,
+      "job": "uos/mirage-security/20260907-1310/job/close",
+      "queue": "mirage-security-close"
+    },
+    {
+      "id": "METRICS-PREP",
+      "title": "Prepare isolated real Mirage metrics application and build evidence",
+      "dependencies": [
+        "PLAN"
+      ],
+      "owner": "codex-metrics",
+      "priority": 80,
+      "job": "uos/mirage-security/20260907-1310/job/metrics-prep",
+      "queue": "mirage-security-metrics-prep"
+    },
+    {
+      "id": "RUNTIME-PREP",
+      "title": "Implement runtime identity and bounded primary backup launch recipe",
+      "dependencies": [
+        "PLAN"
+      ],
+      "owner": "codex-sre",
+      "priority": 90,
+      "job": "uos/mirage-security/20260907-1310/job/runtime-prep",
+      "queue": "mirage-security-runtime-prep"
+    },
+    {
+      "id": "SOLO5-UPDATE",
+      "title": "Update pinned Solo5 tenders to current compatible upstream toolchain",
+      "dependencies": [
+        "PLAN"
+      ],
+      "owner": "codex-toolchain",
+      "priority": 100,
+      "job": "uos/mirage-security/20260907-1310/job/solo5-update",
+      "queue": "mirage-security-solo5-update"
+    },
+    {
+      "id": "AUTH-INGRESS",
+      "title": "Connect actual web ingress to authenticated bounded method-aware router",
+      "dependencies": [
+        "AUTH-OIDC"
+      ],
+      "owner": "codex-auth-ingress",
+      "priority": 100,
+      "job": "uos/mirage-security/20260907-1310/job/auth-ingress",
+      "queue": "mirage-security-auth-ingress"
+    }
+  ],
+  "acceptance": {
+    "mirage": [
+      "all nine Codex findings independently tested",
+      "bounded argv execution with output cap and process-tree cleanup",
+      "trusted identity, freshness, output semantics and three-tender aggregation",
+      "no synthetic runtime success"
+    ],
+    "oidc": [
+      "genuine signatures and trusted JWKS",
+      "issuer audience expiry and claim validation",
+      "OIDC failure cannot downgrade to static admin",
+      "independent real signed token tests",
+      "Actual network ingress preserves authorization and HTTP semantics",
+      "Body framing and aggregate size bounded before reading",
+      "GET and HEAD cannot trigger reload"
+    ],
+    "runtime": [
+      "serialized exact candidate and fresh runtime lease",
+      "actual OTP29 executable and version",
+      "staging and restart recovery",
+      "concrete rollback and health probes"
+    ],
+    "metrics": [
+      "real OCaml Mirage application execution",
+      "measured startup memory and freshness with provenance",
+      "restart failure and stale evidence tests",
+      "no claimed savings for unmigrated MIG01..07"
+    ]
+  },
+  "clock": {
+    "observed_utc": "2026-09-07T13:10:28Z",
+    "ntp_offset_slow_seconds": 0.001357233,
+    "leap_status": "Normal",
+    "lamport_scope": "session coordinator; distinct from UTC and monotonic clock"
+  },
+  "artifact_generated_utc": "2026-09-07T14:34:20Z",
+  "acknowledgements": [
+    "l0-fable-ack-workorder-1313-20260907-131622-26592"
+  ],
+  "coordination_limitations": [
+    "AGY implementation completion is self-reported; independent MIRAGE-VERIFY remains nonpassing",
+    "Local cooperative claims do not enforce the JJ binary; main admission requires separate checks",
+    "AUTH-INGRESS is an additional cutover prerequisite; 6b033f37 needs pre-read framing repair",
+    "Sa-plan persisted CLI lease time uses wall clock; do not call it monotonic or a kernel fence"
+  ]
+}

@@ -39,6 +39,7 @@ oauth_client_secret*.json
 build/
 _build/
 *.beam
+erl_crash.dump
 
 # OCaml / Dune Build Artifacts
 _opam/
