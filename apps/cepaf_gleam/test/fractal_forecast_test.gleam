@@ -8,22 +8,24 @@ import cepaf_gleam/ha/fractal_forecast.{
   LayerL5Cognitive, LayerL6Ecosystem, LayerL7Federation, LayerL8Mutation,
   LayerL9Verification, Likely, PreflightApproved, PreflightVetoed,
   RealisticPossibility, RemoteChance, SdlcPreflightBlock, SdlcPreflightPass,
-  SreSopBypassed, SreSopTriggered, StableConverging, Unlikely, UnstableDiverging,
-  breakeven_probability, calculate_seu, classify_probability,
-  compute_brier_score, evaluate_lyapunov_drift, evaluate_sdlc_mutation_sop,
-  evaluate_sre_capacity_sop, evaluate_sre_lyapunov_sop, forecast_series_ema,
-  init_kalman, is_brier_calibrated, kalman_predict_step, kalman_update_step,
-  nato_band_rank, predict_l0_constitutional, predict_l1_atomic,
-  predict_l2_component, predict_l3_transaction, predict_l4_system,
-  predict_l5_cognitive, predict_l6_ecosystem, predict_l7_federation,
-  predict_l8_mutation, predict_l9_verification, run_predictive_ooda_evaluation,
-  to_nato_band, verify_agentic_preflight,
+  SreSopBypassed, SreSopTriggered, StableConverging, Unavailable, Undetermined,
+  Unlikely, UnstableDiverging, breakeven_probability, brier_calibration,
+  calculate_seu, classify_probability, classify_risk, evaluate_lyapunov_drift,
+  evaluate_sdlc_mutation_sop, evaluate_sre_capacity_sop,
+  evaluate_sre_lyapunov_sop, forecast_series_ema, init_kalman,
+  is_brier_calibrated, kalman_predict_step, kalman_update_step, nato_band_rank,
+  predict_l0_constitutional, predict_l1_atomic, predict_l2_component,
+  predict_l3_transaction, predict_l4_system, predict_l5_cognitive,
+  predict_l6_ecosystem, predict_l7_federation, predict_l8_mutation,
+  predict_l9_verification, run_predictive_ooda_evaluation, to_nato_band,
+  verify_agentic_preflight,
 }
 import cepaf_gleam/ha/predictive_zenoh_stream
 import cepaf_gleam/mcp/server as mcp_server
 import cepaf_gleam/planning/ooda.{observe_from_health, run_predictive_cycle}
 import cepaf_gleam/ui/lustre/forecast_cockpit
 import cepaf_gleam/ui/wisp/router as wisp_router
+import gleam/list
 import gleam/option.{Some}
 import gleam/string
 import gleeunit/should
@@ -84,7 +86,7 @@ pub fn bayesian_ema_forecast_test() {
   { forecast.predicted_val >. forecast.current_val } |> should.equal(True)
   { forecast.lower_bound_90 <=. forecast.predicted_val } |> should.equal(True)
   { forecast.upper_bound_90 >=. forecast.predicted_val } |> should.equal(True)
-  { forecast.confidence >. 0.0 } |> should.equal(True)
+  { forecast.sample_weight >. 0.0 } |> should.equal(True)
 }
 
 pub fn lyapunov_stability_test() {
@@ -111,10 +113,94 @@ pub fn brier_calibration_test() {
     fractal_forecast.BrierRecord("p2", 0.1, False),
     fractal_forecast.BrierRecord("p3", 0.8, True),
   ]
-  let score = compute_brier_score(records)
   // (0.1^2 + 0.1^2 + 0.2^2)/3 = (0.01 + 0.01 + 0.04)/3 = 0.06/3 = 0.02
+  let assert fractal_forecast.Calibrated(score, samples) =
+    brier_calibration(records)
   { score <. 0.05 } |> should.equal(True)
-  is_brier_calibrated(score) |> should.equal(True)
+  samples |> should.equal(3)
+  is_brier_calibrated(brier_calibration(records)) |> should.equal(True)
+}
+
+/// An empty ledger used to score 0.0 and report "calibrated": a system that had
+/// never resolved a forecast claimed perfect calibration (H-1, and a direct
+/// contradiction of SC-HIVE-KPI-001's "a zero denominator is unavailable, not
+/// perfect performance"). Calibration now carries its denominator.
+pub fn empty_ledger_is_unavailable_not_perfect_test() {
+  let assert Unavailable(reason) = brier_calibration([])
+  { string.length(reason) > 0 } |> should.equal(True)
+  is_brier_calibrated(brier_calibration([])) |> should.equal(False)
+
+  // A single resolved forecast is a measurement, however weak, and says so.
+  let assert fractal_forecast.Calibrated(_, samples) =
+    brier_calibration([fractal_forecast.BrierRecord("p1", 0.9, True)])
+  samples |> should.equal(1)
+
+  // A forecaster that is confidently wrong is not calibrated.
+  let wrong = [
+    fractal_forecast.BrierRecord("a", 0.95, False),
+    fractal_forecast.BrierRecord("b", 0.05, True),
+  ]
+  is_brier_calibrated(brier_calibration(wrong)) |> should.equal(False)
+}
+
+/// A risk score is a normalized threshold gap, not the probability of a
+/// proposition. Feeding one into the NATO/PHIA yardstick printed "Almost
+/// certain (95-100%)" for a value that was never a probability — including, in
+/// two predictors, the sample-count heuristic itself.
+pub fn risk_bands_and_probability_bands_are_separate_vocabularies_test() {
+  // No overlap between the two vocabularies at the same numeric value.
+  { classify_risk(0.9) == classify_probability(0.9) } |> should.equal(False)
+  { string.contains(classify_risk(0.9), "risk") } |> should.equal(True)
+  { string.contains(classify_probability(0.9), "likely") } |> should.equal(True)
+  // Risk rises monotonically through its bands.
+  { classify_risk(0.0) != classify_risk(0.5) } |> should.equal(True)
+  { classify_risk(0.5) != classify_risk(0.95) } |> should.equal(True)
+  { string.contains(classify_risk(0.95), "Severe") } |> should.equal(True)
+  { string.contains(classify_risk(0.0), "No risk") } |> should.equal(True)
+  // Out-of-range input is named, never silently banded.
+  { string.contains(classify_risk(1.5), "Invalid") } |> should.equal(True)
+  { string.contains(classify_risk(-0.1), "Invalid") } |> should.equal(True)
+  // A layer forecast reports a risk band, and it agrees with its own score.
+  let f = predict_l0_constitutional([0.2, 0.15, 0.1], 10)
+  f.risk_band |> should.equal(classify_risk(f.risk_score))
+}
+
+/// The stability verdict must not depend on the unit of the series. Energy is
+/// 0.5·(x−target)², so an absolute threshold on its drift called a series in
+/// millions "marginally stable" at drifts that were enormous.
+pub fn lyapunov_verdict_is_scale_invariant_test() {
+  let converging = [2.0, 1.8, 1.5, 1.3, 1.1, 1.05, 1.0]
+  let scaled = list.map(converging, fn(x) { x *. 1_000_000.0 })
+  let verdict_small = evaluate_lyapunov_drift(converging, 1.0)
+  let verdict_large = evaluate_lyapunov_drift(scaled, 1_000_000.0)
+  case verdict_small, verdict_large {
+    StableConverging(_), StableConverging(_) -> True
+    _, _ -> False
+  }
+  |> should.equal(True)
+
+  let diverging = [1.0, 1.2, 1.5, 2.0, 2.8, 4.0]
+  let diverging_tiny = list.map(diverging, fn(x) { x /. 1_000_000.0 })
+  case
+    evaluate_lyapunov_drift(diverging, 1.0),
+    evaluate_lyapunov_drift(diverging_tiny, 1.0 /. 1_000_000.0)
+  {
+    UnstableDiverging(_), UnstableDiverging(_) -> True
+    _, _ -> False
+  }
+  |> should.equal(True)
+
+  // Too few observations is not a verdict about stability.
+  case evaluate_lyapunov_drift([], 1.0) {
+    Undetermined(_) -> True
+    _ -> False
+  }
+  |> should.equal(True)
+  case evaluate_lyapunov_drift([1.0], 1.0) {
+    Undetermined(_) -> True
+    _ -> False
+  }
+  |> should.equal(True)
 }
 
 pub fn fractal_10_layers_forecast_test() {
@@ -354,5 +440,5 @@ pub fn predictive_zenoh_stream_test() {
       60,
     )
   f.layer |> should.equal(LayerL2Component)
-  { f.confidence >. 0.0 } |> should.equal(True)
+  { f.sample_weight >. 0.0 } |> should.equal(True)
 }

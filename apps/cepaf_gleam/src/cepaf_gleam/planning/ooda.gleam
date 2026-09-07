@@ -122,7 +122,7 @@ pub fn run_predictive_cycle(
       Decision(
         action: base_decision.action,
         score: adjusted_score,
-        reason: base_decision.reason <> " [Forecast: " <> forecast.nato_term <> "]",
+        reason: base_decision.reason <> " [Forecast: " <> forecast.risk_band <> "]",
       )
   }
   let _ = act(adjusted_decision)

@@ -800,6 +800,129 @@ pub fn replay(journal: String) -> Result(State, String) {
   })
 }
 
+/// A health verdict for a journal, computed without holding the write lock.
+pub type JournalHealth {
+  JournalHealth(
+    ok: Bool,
+    events: Int,
+    head_digest: String,
+    /// First failing sequence, or 0 when healthy. A probe reports the first
+    /// break rather than a list, because a chain is invalid from there on.
+    first_failure_sequence: Int,
+    failure: String,
+  )
+}
+
+/// Check a journal the way `replay` does, but report WHERE it breaks instead of
+/// refusing wholesale.
+///
+/// This is the Observe stage of the OODA loop: three corruptions of the shared
+/// journal on 2026-09-07 were each detected 18-24 minutes late, on the next
+/// command that needed a lease, because nothing looked at the journal in
+/// between. A probe can run this every 30 s and raise an Andon on the first
+/// break, naming the sequence that broke and why.
+pub fn journal_health(journal: String) -> JournalHealth {
+  let lines =
+    string.split(journal, "\n")
+    |> list.filter(fn(line) { string.trim(line) != "" })
+  let #(state, health) =
+    list.fold(lines, #(empty(), None), fn(acc, line) {
+      let #(state, failed) = acc
+      case failed {
+        Some(_) -> acc
+        None ->
+          case json.parse(line, event_decoder()) {
+            Error(_) -> #(
+              state,
+              Some(#(
+                state.sequence + 1,
+                "event does not decode: an operation outside the coordinator's command set, or a malformed body",
+              )),
+            )
+            Ok(event) ->
+              case
+                event.sequence == state.sequence + 1,
+                event.previous_digest == state.digest,
+                event.digest
+                == board.sha256_hex(json.to_string(event_body(event)))
+              {
+                False, _, _ -> #(
+                  state,
+                  Some(#(
+                    event.sequence,
+                    "sequence is not contiguous with the previous event",
+                  )),
+                )
+                _, False, _ -> #(
+                  state,
+                  Some(#(
+                    event.sequence,
+                    "previous_digest does not link to the prior event's digest",
+                  )),
+                )
+                _, _, False -> #(
+                  state,
+                  Some(#(
+                    event.sequence,
+                    "digest does not recompute from the event body",
+                  )),
+                )
+                True, True, True ->
+                  case
+                    apply(
+                      state,
+                      event.command,
+                      event.operation_id,
+                      event.host_id,
+                      event.boot_id,
+                      event.tick_us,
+                      event.utc_us,
+                    )
+                  {
+                    Ok(#(next, _, _)) -> #(
+                      State(..next, digest: event.digest),
+                      None,
+                    )
+                    Error(reason) -> #(
+                      state,
+                      Some(#(event.sequence, "refused by apply: " <> reason)),
+                    )
+                  }
+              }
+          }
+      }
+    })
+  case health {
+    None ->
+      JournalHealth(
+        ok: True,
+        events: state.sequence,
+        head_digest: state.digest,
+        first_failure_sequence: 0,
+        failure: "",
+      )
+    Some(#(sequence, reason)) ->
+      JournalHealth(
+        ok: False,
+        events: state.sequence,
+        head_digest: state.digest,
+        first_failure_sequence: sequence,
+        failure: reason,
+      )
+  }
+}
+
+pub fn journal_health_json(health: JournalHealth) -> Json {
+  json.object([
+    #("ok", json.bool(health.ok)),
+    #("healthy_events", json.int(health.events)),
+    #("head_digest", json.string(health.head_digest)),
+    #("first_failure_sequence", json.int(health.first_failure_sequence)),
+    #("failure", json.string(health.failure)),
+    #("evidence_grade", json.string("Measured")),
+  ])
+}
+
 /// Compact a journal after invalid events have been removed from it.
 ///
 /// Incident 2026-09-07 20:00–21:21Z: a foreign writer OVERWROTE events 417–419

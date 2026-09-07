@@ -108,6 +108,7 @@ pub fn run(args: List(String)) -> Result(String, String) {
     [root, "journal"] -> sync.read_journal(root)
     [root, "resign", out_root] -> resign_into(root, out_root)
     [root, "compact", out_root] -> compact_into(root, out_root)
+    [root, "verify"] -> verify_journal(root)
     [root, "recover-lock"] -> {
       use message <- result.try(sync.recover_lock(root))
       Ok(
@@ -168,6 +169,21 @@ fn resign_into(root: String, out_root: String) -> Result(String, String) {
       ]),
     ),
   )
+}
+
+/// `verify <root>`: report the journal's health without taking the write lock,
+/// naming the first sequence that breaks and why. Exit code 0 when healthy and
+/// 1 when not, so a 30-second probe can gate on it (workstream S3 of
+/// PLAN-UOS-STABILIZE-001: three corruptions on 2026-09-07 were each found
+/// 18-24 minutes late, on the next command that needed a lease).
+fn verify_journal(root: String) -> Result(String, String) {
+  use journal <- result.try(read_damaged_journal(root))
+  let health = sync.journal_health(journal)
+  let rendered = json.to_string(sync.journal_health_json(health))
+  case health.ok {
+    True -> Ok(rendered)
+    False -> Error(rendered)
+  }
 }
 
 /// Read an event directory that `session_sync_ffi:read_events/1` would refuse.

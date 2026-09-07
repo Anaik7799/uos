@@ -12,7 +12,7 @@
 
 import gleam/float
 import gleam/int
-import gleam/json
+import gleam/json.{type Json}
 import gleam/list
 import gleam/string
 
@@ -60,6 +60,27 @@ pub fn classify_probability(p: Float) -> String {
       <> ")"
     _ if p <=. 1.0 -> "Almost certain (95-100%)"
     _ -> "Invalid (>1.0)"
+  }
+}
+
+/// Band a layer forecast's risk score.
+///
+/// A risk score here is a normalized distance between a predicted metric and
+/// its threshold — not the probability of a proposition. The NATO/PHIA yardstick
+/// (`classify_probability`) is for stated likelihoods, and feeding a threshold
+/// gap or a sample count into it printed "Almost certain (95-100%)" for values
+/// that were never probabilities. Risk gets its own vocabulary so a reader
+/// cannot mistake one for the other.
+pub fn classify_risk(risk: Float) -> String {
+  case risk {
+    _ if risk <. 0.0 -> "Invalid risk (<0.0)"
+    _ if risk <=. 0.0 -> "No risk detected (threshold not approached)"
+    _ if risk <=. 0.15 -> "Low risk (0-15% of threshold margin consumed)"
+    _ if risk <=. 0.35 -> "Moderate risk (15-35%)"
+    _ if risk <=. 0.6 -> "Elevated risk (35-60%)"
+    _ if risk <=. 0.85 -> "High risk (60-85%)"
+    _ if risk <=. 1.0 -> "Severe risk (85-100%)"
+    _ -> "Invalid risk (>1.0)"
   }
 }
 
@@ -186,7 +207,7 @@ pub type EmaForecast {
     lower_bound_90: Float,
     upper_bound_90: Float,
     drift_rate: Float,
-    confidence: Float,
+    sample_weight: Float,
   )
 }
 
@@ -210,7 +231,7 @@ pub fn forecast_series_ema(
         Error(_) -> 0.01
       }
       let margin_90 = 1.645 *. std_dev *. { 1.0 +. 0.1 *. h_f }
-      let confidence = clamp_float(int.to_float(n) /. 10.0, 0.2, 0.95)
+      let sample_weight = clamp_float(int.to_float(n) /. 10.0, 0.2, 0.95)
 
       EmaForecast(
         current_val: ema,
@@ -219,7 +240,7 @@ pub fn forecast_series_ema(
         lower_bound_90: predicted -. margin_90,
         upper_bound_90: predicted +. margin_90,
         drift_rate: drift,
-        confidence: confidence,
+        sample_weight: sample_weight,
       )
     }
   }
@@ -233,6 +254,9 @@ pub type StabilityVerdict {
   StableConverging(decay_rate: Float)
   MarginallyStable(variance: Float)
   UnstableDiverging(growth_rate: Float)
+  /// Fewer than two observations: no drift can be computed. Distinct from
+  /// `MarginallyStable`, which is a measured verdict about a real series.
+  Undetermined(reason: String)
 }
 
 pub fn evaluate_lyapunov_drift(
@@ -240,7 +264,8 @@ pub fn evaluate_lyapunov_drift(
   target: Float,
 ) -> StabilityVerdict {
   case series {
-    [] | [_] -> MarginallyStable(0.0)
+    [] | [_] ->
+      Undetermined("fewer than two observations; no energy drift to measure")
     _ -> {
       let energy =
         list.map(series, fn(x) { 0.5 *. { x -. target } *. { x -. target } })
@@ -255,11 +280,28 @@ pub fn evaluate_lyapunov_drift(
         True -> drift_sum /. count
         False -> 0.0
       }
+      // The verdict must not depend on the unit of `series`. Energy is
+      // 0.5·(x−target)², so an absolute threshold on its drift calls a series
+      // measured in millions "marginally stable" at drifts that are enormous,
+      // and a series measured in fractions "diverging" at noise. Compare the
+      // drift with the scale of the energy it moves through instead.
+      let scale =
+        list.fold(energy, 0.0, fn(acc, e) { acc +. float.absolute_value(e) })
+        /. int.to_float(list.length(energy))
+      // Energies are non-negative, so a zero mean energy means every point sits
+      // exactly on the target: stationary, not drifting. Any fixed epsilon here
+      // would reintroduce the scale dependence this normalization removes — a
+      // series in units of 1e-6 has energies around 1e-12 and would be silently
+      // called marginal.
+      let relative = case scale >. 0.0 {
+        True -> mean_drift /. scale
+        False -> 0.0
+      }
 
-      case mean_drift <. -0.001 {
+      case relative <. -0.001 {
         True -> StableConverging(float.absolute_value(mean_drift))
         False ->
-          case mean_drift >. 0.001 {
+          case relative >. 0.001 {
             True -> UnstableDiverging(mean_drift)
             False -> MarginallyStable(mean_drift)
           }
@@ -280,11 +322,29 @@ pub type BrierRecord {
   )
 }
 
-pub fn compute_brier_score(records: List(BrierRecord)) -> Float {
-  let count = list.length(records)
-  case count {
-    0 -> 0.0
-    _ -> {
+/// Calibration carries its denominator, because a Brier score without one is
+/// not a measurement.
+///
+/// The previous API returned `0.0` for an empty ledger and `is_brier_calibrated`
+/// then reported `True`: a system that had never resolved a single forecast
+/// claimed perfect calibration. That is the H-1 hazard (green while unmeasured)
+/// and it contradicts SC-HIVE-KPI-001, which states that a zero denominator is
+/// unavailable, not perfect performance.
+pub type Calibration {
+  /// Brier score over `samples` resolved, precommitted forecasts.
+  Calibrated(score: Float, samples: Int)
+  /// No resolved forecast to score. Never comparable to a score.
+  Unavailable(reason: String)
+}
+
+/// Mean squared error between each precommitted probability and its observed
+/// outcome, over resolved forecasts only. Lower is better; 0.25 is the score of
+/// always predicting 0.5, so it is the line above which a forecaster carries no
+/// information.
+pub fn brier_calibration(records: List(BrierRecord)) -> Calibration {
+  case list.length(records) {
+    0 -> Unavailable("no resolved forecast has been scored")
+    count -> {
       let total_squared_error =
         list.fold(records, 0.0, fn(acc, rec) {
           let outcome_float = case rec.observed_outcome {
@@ -294,13 +354,39 @@ pub fn compute_brier_score(records: List(BrierRecord)) -> Float {
           let err = rec.predicted_probability -. outcome_float
           acc +. { err *. err }
         })
-      total_squared_error /. int.to_float(count)
+      Calibrated(total_squared_error /. int.to_float(count), count)
     }
   }
 }
 
-pub fn is_brier_calibrated(score: Float) -> Bool {
-  score <=. 0.25
+/// `Unavailable` is never calibrated: absence of evidence is not evidence of
+/// calibration.
+pub fn is_brier_calibrated(calibration: Calibration) -> Bool {
+  case calibration {
+    Calibrated(score, _) -> score <=. 0.25
+    Unavailable(_) -> False
+  }
+}
+
+/// Render a calibration for a report or an endpoint without inventing a number.
+pub fn calibration_json(calibration: Calibration) -> Json {
+  case calibration {
+    Calibrated(score, samples) ->
+      json.object([
+        #("brier_score", json.float(score)),
+        #("samples", json.int(samples)),
+        #("calibrated", json.bool(score <=. 0.25)),
+        #("evidence_grade", json.string("Measured")),
+      ])
+    Unavailable(reason) ->
+      json.object([
+        #("brier_score", json.null()),
+        #("samples", json.int(0)),
+        #("calibrated", json.bool(False)),
+        #("evidence_grade", json.string("Unknown")),
+        #("reason", json.string(reason)),
+      ])
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -344,8 +430,8 @@ pub type LayerForecast {
     horizon_seconds: Int,
     credible_lower: Float,
     credible_upper: Float,
-    confidence: Float,
-    nato_term: String,
+    sample_weight: Float,
+    risk_band: String,
     risk_score: Float,
     recommendation: String,
   )
@@ -372,8 +458,8 @@ pub fn predict_l0_constitutional(
     horizon_seconds: horizon_s,
     credible_lower: forecast.lower_bound_90,
     credible_upper: forecast.upper_bound_90,
-    confidence: forecast.confidence,
-    nato_term: classify_probability(1.0 -. risk),
+    sample_weight: forecast.sample_weight,
+    risk_band: classify_risk(risk),
     risk_score: risk,
     recommendation: rec,
   )
@@ -401,8 +487,8 @@ pub fn predict_l1_atomic(
     horizon_seconds: horizon_s,
     credible_lower: forecast.lower_bound_90,
     credible_upper: forecast.upper_bound_90,
-    confidence: forecast.confidence,
-    nato_term: classify_probability(forecast.confidence),
+    sample_weight: forecast.sample_weight,
+    risk_band: classify_risk(risk),
     risk_score: risk,
     recommendation: rec,
   )
@@ -433,8 +519,8 @@ pub fn predict_l2_component(
     horizon_seconds: horizon_s,
     credible_lower: forecast.lower_bound_90,
     credible_upper: forecast.upper_bound_90,
-    confidence: forecast.confidence,
-    nato_term: classify_probability(forecast.confidence),
+    sample_weight: forecast.sample_weight,
+    risk_band: classify_risk(risk),
     risk_score: risk,
     recommendation: rec,
   )
@@ -458,8 +544,8 @@ pub fn predict_l3_transaction(
     horizon_seconds: horizon_s,
     credible_lower: forecast.lower_bound_90,
     credible_upper: forecast.upper_bound_90,
-    confidence: forecast.confidence,
-    nato_term: classify_probability(1.0 -. risk),
+    sample_weight: forecast.sample_weight,
+    risk_band: classify_risk(risk),
     risk_score: risk,
     recommendation: rec,
   )
@@ -483,8 +569,8 @@ pub fn predict_l4_system(
     horizon_seconds: horizon_s,
     credible_lower: forecast.lower_bound_90,
     credible_upper: forecast.upper_bound_90,
-    confidence: forecast.confidence,
-    nato_term: classify_probability(1.0 -. risk),
+    sample_weight: forecast.sample_weight,
+    risk_band: classify_risk(risk),
     risk_score: risk,
     recommendation: rec,
   )
@@ -511,8 +597,8 @@ pub fn predict_l5_cognitive(
     horizon_seconds: horizon_s,
     credible_lower: forecast.lower_bound_90,
     credible_upper: forecast.upper_bound_90,
-    confidence: forecast.confidence,
-    nato_term: classify_probability(1.0 -. risk),
+    sample_weight: forecast.sample_weight,
+    risk_band: classify_risk(risk),
     risk_score: risk,
     recommendation: rec,
   )
@@ -539,8 +625,8 @@ pub fn predict_l6_ecosystem(
     horizon_seconds: horizon_s,
     credible_lower: forecast.lower_bound_90,
     credible_upper: forecast.upper_bound_90,
-    confidence: forecast.confidence,
-    nato_term: classify_probability(forecast.predicted_val),
+    sample_weight: forecast.sample_weight,
+    risk_band: classify_risk(risk),
     risk_score: risk,
     recommendation: rec,
   )
@@ -567,8 +653,8 @@ pub fn predict_l7_federation(
     horizon_seconds: horizon_s,
     credible_lower: forecast.lower_bound_90,
     credible_upper: forecast.upper_bound_90,
-    confidence: forecast.confidence,
-    nato_term: classify_probability(1.0 -. risk),
+    sample_weight: forecast.sample_weight,
+    risk_band: classify_risk(risk),
     risk_score: risk,
     recommendation: rec,
   )
@@ -595,8 +681,8 @@ pub fn predict_l8_mutation(
     horizon_seconds: horizon_s,
     credible_lower: forecast.lower_bound_90,
     credible_upper: forecast.upper_bound_90,
-    confidence: forecast.confidence,
-    nato_term: classify_probability(forecast.predicted_val),
+    sample_weight: forecast.sample_weight,
+    risk_band: classify_risk(risk),
     risk_score: risk,
     recommendation: rec,
   )
@@ -623,8 +709,8 @@ pub fn predict_l9_verification(
     horizon_seconds: horizon_s,
     credible_lower: forecast.lower_bound_90,
     credible_upper: forecast.upper_bound_90,
-    confidence: forecast.confidence,
-    nato_term: classify_probability(1.0 -. risk),
+    sample_weight: forecast.sample_weight,
+    risk_band: classify_risk(risk),
     risk_score: risk,
     recommendation: rec,
   )
@@ -707,7 +793,7 @@ pub type SreSopVerdict {
 
 pub fn evaluate_sre_capacity_sop(forecast: LayerForecast) -> SreSopVerdict {
   // SOP-SRE-01: Proactive Resource Preemption
-  case forecast.predicted_value >. 0.8 && forecast.confidence >=. 0.7 {
+  case forecast.predicted_value >. 0.8 && forecast.sample_weight >=. 0.7 {
     True ->
       SreSopTriggered(
         "SOP-SRE-01",
@@ -792,11 +878,15 @@ pub fn verify_agentic_preflight(
     <> string.slice(actor, 0, 4)
     <> "-"
     <> string.slice(action, 0, 6)
+  // `p` is a derived success proxy (one minus the normalized threshold gap),
+  // not an observed frequency and not a calibrated probability. It is usable
+  // for ranking through SEU; it must never be reported as an estimative
+  // probability, so the certificate states where it came from.
   let p = clamp_float(1.0 -. forecast.risk_score, 0.0, 1.0)
   let seu = calculate_seu(p, benefit, cost)
 
   case
-    forecast.risk_score <=. 0.15 && forecast.confidence >=. 0.7 && seu >. 0.0
+    forecast.risk_score <=. 0.15 && forecast.sample_weight >=. 0.7 && seu >. 0.0
   {
     True ->
       PreflightApproved(
@@ -804,7 +894,11 @@ pub fn verify_agentic_preflight(
         actor: actor,
         action: action,
         seu_score: seu,
-        confidence_rating: classify_probability(p),
+        confidence_rating: "derived success proxy 1-risk="
+          <> format_percent(p)
+          <> " (uncalibrated; "
+          <> format_percent(forecast.sample_weight)
+          <> " sample weight)",
       )
     False -> {
       let reason = case forecast.risk_score >. 0.15 {
@@ -813,8 +907,9 @@ pub fn verify_agentic_preflight(
           <> format_percent(forecast.risk_score)
           <> " > 15%)"
         False ->
-          case forecast.confidence <. 0.7 {
-            True -> "Insufficient prediction confidence (< 70%)"
+          case forecast.sample_weight <. 0.7 {
+            True ->
+              "Insufficient observations (sample weight < 0.7: fewer than 7 points in the series)"
             False -> "Negative or uncompensated Subjective Expected Utility"
           }
       }
@@ -949,8 +1044,8 @@ pub fn layer_forecast_to_json(forecast: LayerForecast) -> json.Json {
     #("horizon_seconds", json.int(forecast.horizon_seconds)),
     #("credible_lower", json.float(forecast.credible_lower)),
     #("credible_upper", json.float(forecast.credible_upper)),
-    #("confidence", json.float(forecast.confidence)),
-    #("nato_term", json.string(forecast.nato_term)),
+    #("sample_weight", json.float(forecast.sample_weight)),
+    #("risk_band", json.string(forecast.risk_band)),
     #("risk_score", json.float(forecast.risk_score)),
     #("recommendation", json.string(forecast.recommendation)),
   ])

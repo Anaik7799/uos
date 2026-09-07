@@ -146,7 +146,7 @@ fn render_forecast_rows(forecasts: List(LayerForecast)) -> String {
     <> upper_str
     <> "]</td>"
     <> "<td style=\"padding:0.75rem\"><span style=\"background:#1e293b;color:#93c5fd;padding:0.2rem 0.5rem;border-radius:4px;font-size:0.8rem\">"
-    <> f.nato_term
+    <> f.risk_band
     <> "</span></td>"
     <> "<td style=\"padding:0.75rem;color:"
     <> risk_color
