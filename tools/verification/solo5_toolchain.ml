@@ -1,6 +1,6 @@
 #!/usr/bin/env -S ocaml
 #use "topfind";;
-#require "digestif.ocaml,yojson";;
+#require "digestif.c,yojson";;
 #use "./tests/acceptance/process_supervisor.ml";;
 
 (** Fixed-profile, read-only Solo5 toolchain acceptance. Reuses the existing
@@ -85,9 +85,11 @@ let observe target profile =
     | Wrong_argument -> ["Deliberately_Wrong_Argument"] | _ -> [] in
   let argv = if target = "virtio" then [binary; "-H"; "kvm"; "-m"; "64"; guest; "--"] @ args
     else [binary; "--mem=64"; guest] @ args in
-  let before = List.map file_binding [binary; guest] in
+  let bound_paths = [binary; guest] @
+    (if target = "virtio" then ["/usr/bin/qemu-system-x86_64"] else []) in
+  let before = List.map file_binding bound_paths in
   let result = run_bounded limits argv in
-  let unchanged = before = List.map file_binding [binary; guest] in
+  let unchanged = before = List.map file_binding bound_paths in
   let passed = unchanged && check_profile target profile result in
   let row = `Assoc ["target", `String target; "case", `String (profile_name profile);
     "argv", `List (List.map (fun s -> `String s) argv);
@@ -109,6 +111,9 @@ let now_utc () =
     (t.tm_year + 1900) (t.tm_mon + 1) t.tm_mday t.tm_hour t.tm_min t.tm_sec
 
 let main () =
+  (* The upstream VirtIO launcher invokes QEMU and coreutils by basename.
+     Restrict resolution for every child to host system tools. *)
+  Unix.putenv "PATH" "/usr/bin:/bin";
   let started = now_utc () in
   let profiles = [Hello; Timer; Stack_protection; Wrong_argument] in
   let observations = List.concat_map (fun target -> List.map (observe target) profiles)
@@ -122,6 +127,7 @@ let main () =
     "checker", file_binding "tools/verification/solo5_toolchain.ml";
     "source_archive", file_binding (root ^ "/var/quarantine/solo5-" ^ release ^ "/downloads/solo5-v" ^ release ^ ".tar.gz");
     "qemu", file_binding "/usr/bin/qemu-system-x86_64";
+    "child_path", `String "/usr/bin:/bin";
     "timeout_ms", `Int limits.timeout_ms; "stream_limit_bytes", `Int limits.stdout_limit;
     "cases", `List (List.map snd observations); "all_assertions_passed", `Bool passed;
     "case_count", `Int (List.length observations);
