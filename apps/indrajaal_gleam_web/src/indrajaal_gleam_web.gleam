@@ -66,6 +66,9 @@ fn erl_read_repo_file(path: String) -> Result(BitArray, String)
 @external(erlang, "indrajaal_web_ffi", "listen_port")
 fn listen_port(default: Int) -> Int
 
+@external(erlang, "indrajaal_web_ffi", "listen_host")
+fn listen_host() -> String
+
 pub fn main() {
   case runtime_identity.startup_check(runtime_identity.observe()) {
     Ok(Nil) -> serve()
@@ -1012,7 +1015,7 @@ fn serve() {
   let assert Ok(_) =
     mist.new(router)
     |> mist.port(port)
-    |> mist.bind("0.0.0.0")
+    |> mist.bind(listen_host())
     |> mist.start
 
   io.println("C3I Cockpit listener active on port " <> int.to_string(port))

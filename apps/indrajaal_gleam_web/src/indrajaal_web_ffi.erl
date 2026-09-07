@@ -1,5 +1,16 @@
 -module(indrajaal_web_ffi).
--export([read_repo_file/1, list_repo_dir/1, listen_port/1]).
+-export([read_repo_file/1, list_repo_dir/1, listen_port/1, listen_host/0]).
+
+listen_host() ->
+    case os:getenv("UOS_WEB_BIND") of
+        false -> <<"127.0.0.1">>;
+        Value when length(Value) =< 64 ->
+            case inet:parse_address(Value) of
+                {ok, _Address} -> list_to_binary(Value);
+                {error, _} -> erlang:error(invalid_uos_web_bind)
+            end;
+        _ -> erlang:error(invalid_uos_web_bind)
+    end.
 
 listen_port(Default) ->
     case os:getenv("UOS_WEB_PORT") of
