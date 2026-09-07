@@ -28,14 +28,14 @@ fn print_error(code: String, detail: String) -> Nil {
   )
 }
 
-fn expected_active(root: String) -> Result(List(String), String) {
+fn expected_active(root: String) -> Result(List(guard.ExpectedActor), String) {
   use journal <- result.try(session_sync.read_journal(root))
   use state <- result.try(session_sync.replay(journal))
   Ok(
     state.sessions
     |> dict.values
     |> list.filter(fn(session) { !session.retired })
-    |> list.map(fn(session) { session.id }),
+    |> list.map(fn(session) { guard.expected_actor(session.id, session.refs) }),
   )
 }
 
@@ -48,7 +48,7 @@ fn board(
   use body <- result.try(clock_guard_fetch.fetch(url, projection))
   use input <- result.try(board_reader.from_zenoh(body))
   case input.malformed_count {
-    0 -> Ok(guard.from_board_input(input, expected))
+    0 -> Ok(guard.from_board_input_bound(input, expected))
     _ -> Error("board snapshot contains malformed events")
   }
 }

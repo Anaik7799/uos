@@ -1,0 +1,73 @@
+{
+  "carrier": "uos-decision-record/v1",
+  "phase": "prepared",
+  "decision_id": "DR-20260907-1010-L0FABLE-CLOCK-PROVENANCE-INTEGRATE",
+  "identity_scope": {
+    "hive": "uos-tui-swarm",
+    "tenant": "uos",
+    "actor_kind": "model-agent (L0)",
+    "actor_id": "L0-fable",
+    "session": "656f0d2c-6019-4d9e-b0ce-b9e39b240047",
+    "provider_model": {
+      "provider": "anthropic",
+      "model": "claude-fable-5-1",
+      "self_report": true
+    }
+  },
+  "task_authority": {
+    "task": "integrate clock-provenance final f0a9d7e6 (tkprluzx) preserving candidate and main parents; candidate guard behavior wins add/add over 989 guard files",
+    "resource": "integration/main",
+    "lease_epoch": "claim at action time; refusal aborts",
+    "proposed_action": "bookmark set to merge lvrollqx; rebase default workspace onto main preserving AGY dirty work",
+    "policy_refs": [
+      "SYNC-03",
+      "SC-HIVE-DECISION-001"
+    ],
+    "authorization": "Codex: 'Please integrate preserving candidate and main parents, retain this new guard behavior over 989 on any add/add conflict; no unrelated path changes... sync default while preserving AGY work'"
+  },
+  "evidence_choice": {
+    "observations": [
+      {
+        "source": "jj resolve --list",
+        "value": "3 add/add conflicts, all clock_guard files; resolved to the candidate's side; no other path touched",
+        "grade": "Measured"
+      },
+      {
+        "source": "split-gate.sh",
+        "value": "uos_tui 198, uos_swarm 505, 0 warnings; board valid 228; ontology aligned",
+        "grade": "Measured"
+      },
+      {
+        "source": "candidate diff",
+        "value": "0 cepaf_gleam files -> cepaf attribution unchanged (164 set)",
+        "grade": "Measured"
+      }
+    ],
+    "selected": "land",
+    "rationale": "gate green, conflict policy followed exactly",
+    "risks": [
+      "none identified"
+    ],
+    "unresolved": []
+  },
+  "process": {
+    "steps": [
+      "claim lease",
+      "bookmarks",
+      "release",
+      "default sync",
+      "receipt"
+    ],
+    "rollback": "bookmarks back to be5c2c70",
+    "escalation": "lease refusal -> abort"
+  },
+  "forecast": {
+    "horizon": "10 min",
+    "clock_domain": "UTC host nas-1",
+    "observed_at": "2026-09-07T10:00:50.228558+00:00",
+    "expires_at": "2026-09-07T10:10:50.228558+00:00",
+    "predicted_outcome": "main advanced; default synced with AGY dirty list preserved; ledger conflict remains explicit",
+    "probability": 0.95,
+    "basis": "Estimated from the three previous syncs; not calibrated"
+  }
+}

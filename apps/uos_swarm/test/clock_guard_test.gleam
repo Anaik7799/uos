@@ -11,13 +11,13 @@ const host = "nas-1"
 
 const boot = "boot-a"
 
-fn message() -> board.Message {
+fn message_with_payload(payload: List(#(String, String))) -> board.Message {
   board.seal(
     board.Draft(
       board.Agent("codex", "L2", "declared-model"),
       "broadcast",
       board.Report,
-      [#("tenant_id", "tenant-a")],
+      payload,
       board.no_semantics,
       board.Causality(None, []),
       None,
@@ -29,6 +29,10 @@ fn message() -> board.Message {
     "aaaaaaaaaaaaaaaa",
     board.genesis_digest,
   )
+}
+
+fn message() -> board.Message {
+  message_with_payload([#("tenant_id", "tenant-a")])
 }
 
 fn sample(utc: Int, mono: Int) -> guard.Sample {
@@ -54,7 +58,11 @@ pub fn healthy_sample_and_board_advance_floor_test() {
     guard.audit(
       guard.new(guard.strict_config(), 4),
       Ok(sample(1_000_000, 1_000_000)),
-      Ok(guard.BoardSnapshot([event], [#("codex", 999_999)])),
+      Ok(
+        guard.BoardSnapshot([event], [
+          guard.ActorObservation("codex", Some("codex"), Some(event)),
+        ]),
+      ),
     )
   state.lamport_floor |> should.equal(7)
   state.last_faults |> should.equal([])
@@ -87,7 +95,11 @@ pub fn discontinuity_boot_future_causality_and_stale_actor_fail_test() {
     guard.audit(
       initial,
       Ok(later),
-      Ok(guard.BoardSnapshot([bad], [#("claude", -200_000_000)])),
+      Ok(
+        guard.BoardSnapshot([bad], [
+          guard.ActorObservation("claude", Some("claude"), None),
+        ]),
+      ),
     )
   list.is_empty(state.last_faults) |> should.equal(False)
   state.last_faults
@@ -157,11 +169,15 @@ pub fn first_healthy_report_exists_and_unchanged_health_stays_fresh_test() {
   reading.utc_us |> should.equal(2_000_000)
 }
 
-fn stale_actors(remaining: Int) -> List(#(String, Int)) {
+fn stale_actors(remaining: Int) -> List(guard.ActorObservation) {
   case remaining <= 0 {
     True -> []
     False -> [
-      #("actor-" <> int.to_string(remaining), 0),
+      guard.ActorObservation(
+        "session-" <> int.to_string(remaining),
+        Some("actor-" <> int.to_string(remaining)),
+        None,
+      ),
       ..stale_actors(remaining - 1)
     ]
   }
@@ -185,7 +201,11 @@ pub fn bounded_reader_drives_nonempty_snapshot_and_floor_is_durable_test() {
   let assert Ok(input) = board_reader.from_jsonl(board.to_string(m))
   let snapshot = guard.from_board_input(input, ["codex"])
   snapshot.events |> list.length |> should.equal(1)
-  snapshot.actor_last_seen |> should.equal([#("codex", 1_000_000)])
+  let assert [actor] = snapshot.actor_last_seen
+  actor.session_id |> should.equal("codex")
+  actor.board_actor |> should.equal(Some("codex"))
+  let assert Some(latest) = actor.latest
+  latest.utc_us |> should.equal(1_000_000)
 
   let path = "/tmp/uos-clock-floor-" <> m.id
   guard.store_floor(path, 77) |> should.be_ok
@@ -193,6 +213,71 @@ pub fn bounded_reader_drives_nonempty_snapshot_and_floor_is_durable_test() {
   let assert Ok(reloaded) =
     guard.reload(guard.new(guard.strict_config(), 77), guard.strict_config())
   reloaded.lamport_floor |> should.equal(77)
+}
+
+pub fn same_host_boot_provenance_supports_freshness_test() {
+  let m =
+    message_with_payload([
+      #("host", host),
+      #("boot_id", boot),
+      #("boot_us", "999000"),
+    ])
+  let assert Ok(input) = board_reader.from_jsonl(board.to_string(m))
+  let snapshot =
+    guard.from_board_input_bound(input, [
+      guard.expected_actor("session-codex", ["board:codex"]),
+    ])
+  let state =
+    guard.audit(
+      guard.new(guard.strict_config(), 0),
+      Ok(sample(1_000_000, 1_000_000)),
+      Ok(snapshot),
+    )
+  state.last_faults |> should.equal([])
+}
+
+pub fn missing_provenance_and_unbound_session_remain_unknown_test() {
+  let m = message()
+  let assert Ok(input) = board_reader.from_jsonl(board.to_string(m))
+  let snapshot =
+    guard.from_board_input_bound(input, [
+      guard.expected_actor("session-codex", ["board:codex"]),
+      guard.expected_actor("session-unbound", []),
+    ])
+  let state =
+    guard.audit(
+      guard.new(guard.strict_config(), 0),
+      Ok(sample(1_000_000, 1_000_000)),
+      Ok(snapshot),
+    )
+  let labels = list.map(state.last_faults, guard.fault_label)
+  labels |> list.contains("event_clock_domain_unknown") |> should.equal(True)
+  labels |> list.contains("actor_freshness_unknown") |> should.equal(True)
+  labels |> list.contains("actor_binding_unknown") |> should.equal(True)
+}
+
+pub fn foreign_clock_never_uses_local_boot_or_ntp_as_freshness_proof_test() {
+  let m =
+    message_with_payload([
+      #("host", "vm-1"),
+      #("boot_id", "remote-boot"),
+      #("boot_us", "999999999"),
+    ])
+  let assert Ok(input) = board_reader.from_jsonl(board.to_string(m))
+  let snapshot =
+    guard.from_board_input_bound(input, [
+      guard.expected_actor("session-codex", ["board:codex"]),
+    ])
+  let state =
+    guard.audit(
+      guard.new(guard.strict_config(), 0),
+      Ok(sample(1_000_000, 1_000_000)),
+      Ok(snapshot),
+    )
+  let labels = list.map(state.last_faults, guard.fault_label)
+  labels |> list.contains("foreign_clock_unverified") |> should.equal(True)
+  labels |> list.contains("actor_freshness_unknown") |> should.equal(True)
+  labels |> list.contains("event_observed_in_future") |> should.equal(False)
 }
 
 pub fn captured_chrony_fourteen_field_fixture_has_correct_units_test() {

@@ -50,7 +50,19 @@ pub type CausalEvent {
 pub type BoardSnapshot {
   BoardSnapshot(
     events: List(CausalEvent),
-    actor_last_seen: List(#(String, Int)),
+    actor_last_seen: List(ActorObservation),
+  )
+}
+
+pub type ExpectedActor {
+  ExpectedActor(session_id: String, board_actor: Option(String))
+}
+
+pub type ActorObservation {
+  ActorObservation(
+    session_id: String,
+    board_actor: Option(String),
+    latest: Option(CausalEvent),
   )
 }
 
@@ -63,6 +75,9 @@ pub type Fault {
   EventDomainMismatch(String)
   EventObservedInFuture(String)
   EventClockDomainUnknown(String)
+  ForeignClockUnverified(String)
+  ActorBindingUnknown(String)
+  ActorFreshnessUnknown(String)
 }
 
 pub type Config {
@@ -146,78 +161,171 @@ fn event_faults(
   sample: Sample,
   config: Config,
 ) -> List(Fault) {
-  let domain = case event.domain == sample.observed.domain {
-    True -> []
-    False -> [EventDomainMismatch(event.id)]
-  }
-  let observed = case event.observed_boot_us {
-    value if value < 0 -> [EventClockDomainUnknown(event.id), ..domain]
-    value if value > sample.observed.boot_us -> [
-      EventObservedInFuture(event.id),
-      ..domain
+  let physical = case event.domain, event.observed_boot_us {
+    clock.Domain("unknown", _), _ -> [EventClockDomainUnknown(event.id)]
+    clock.Domain(_, "unknown"), _ -> [EventClockDomainUnknown(event.id)]
+    _, value if value < 0 -> [EventClockDomainUnknown(event.id)]
+    domain, _ if domain != sample.observed.domain -> [
+      ForeignClockUnverified(event.id),
     ]
-    _ -> domain
-  }
-  let physical = case
-    clock.event_time(
-      event.utc_us,
-      sample.observed,
-      sample.evidence,
-      config.policy,
-    )
-  {
-    Ok(_) -> observed
-    Error(failure) -> [ClockFault(failure), ..observed]
-  }
-  case event.parent_lamport {
-    None -> physical
-    Some(parent) ->
-      case clock.causal_edge(parent, event.lamport) {
-        Ok(_) -> physical
-        Error(failure) -> [ClockFault(failure), ..physical]
+    _, value if value > sample.observed.boot_us -> [
+      EventObservedInFuture(event.id),
+    ]
+    _, _ ->
+      case
+        clock.event_time(
+          event.utc_us,
+          sample.observed,
+          sample.evidence,
+          config.policy,
+        )
+      {
+        Ok(_) -> []
+        Error(failure) -> [ClockFault(failure)]
       }
   }
+  let causal = case event.parent_lamport {
+    None -> []
+    Some(parent) ->
+      case clock.causal_edge(parent, event.lamport) {
+        Ok(_) -> []
+        Error(failure) -> [ClockFault(failure)]
+      }
+  }
+  list.append(physical, causal)
+}
+
+fn message_provenance(message: board.Message) -> Option(#(clock.Domain, Int)) {
+  case
+    list.key_find(message.payload, "host"),
+    list.key_find(message.payload, "boot_id"),
+    list.key_find(message.payload, "boot_us")
+  {
+    Ok(host), Ok(boot), Ok(raw_boot_us) ->
+      case int.parse(raw_boot_us) {
+        Ok(boot_us) if host != "" && boot != "" && boot_us >= 0 ->
+          Some(#(clock.Domain(host, boot), boot_us))
+        _ -> None
+      }
+    _, _, _ -> None
+  }
+}
+
+fn causal_event(
+  message: board.Message,
+  events: List(board.Message),
+) -> CausalEvent {
+  let parent_id = case message.causality.in_reply_to {
+    Some(id) -> Some(id)
+    None -> list.first(message.causality.caused_by) |> option.from_result
+  }
+  let parent_lamport =
+    parent_id
+    |> option.then(fn(id) {
+      events
+      |> list.find(fn(candidate) { candidate.id == id })
+      |> result.map(fn(parent) { parent.lamport })
+      |> option.from_result
+    })
+  let #(domain, boot_us) =
+    message_provenance(message)
+    |> option.unwrap(#(clock.Domain("unknown", "unknown"), -1))
+  CausalEvent(
+    message.id,
+    message.from.id,
+    domain,
+    message.ts_us,
+    message.lamport,
+    parent_lamport,
+    boot_us,
+  )
+}
+
+pub fn expected_actor(session_id: String, refs: List(String)) -> ExpectedActor {
+  let board_refs =
+    refs
+    |> list.filter_map(fn(ref) {
+      case string.starts_with(ref, "board:") {
+        True -> {
+          let value = string.drop_start(ref, 6)
+          case value == "" {
+            True -> Error(Nil)
+            False -> Ok(value)
+          }
+        }
+        False -> Error(Nil)
+      }
+    })
+    |> list.unique
+  ExpectedActor(session_id, case board_refs {
+    [only] -> Some(only)
+    _ -> None
+  })
 }
 
 pub fn from_board_input(
   input: board_reader.Input(board.Message),
   expected_active_actors: List(String),
 ) -> BoardSnapshot {
+  from_board_input_bound(
+    input,
+    list.map(expected_active_actors, fn(id) { ExpectedActor(id, Some(id)) }),
+  )
+}
+
+pub fn from_board_input_bound(
+  input: board_reader.Input(board.Message),
+  expected_active_actors: List(ExpectedActor),
+) -> BoardSnapshot {
   let events = input.events
-  let causal =
-    list.map(events, fn(message) {
-      let parent_id = case message.causality.in_reply_to {
-        Some(id) -> Some(id)
-        None -> list.first(message.causality.caused_by) |> option.from_result
-      }
-      let parent_lamport =
-        parent_id
-        |> option.then(fn(id) {
-          events
-          |> list.find(fn(candidate) { candidate.id == id })
-          |> result.map(fn(parent) { parent.lamport })
-          |> option.from_result
-        })
-      CausalEvent(
-        message.id,
-        message.from.id,
-        clock.Domain("unknown", "unknown"),
-        message.ts_us,
-        message.lamport,
-        parent_lamport,
-        -1,
-      )
-    })
+  let causal = list.map(events, fn(message) { causal_event(message, events) })
   let actors =
     expected_active_actors
-    |> list.map(fn(id) {
-      let latest =
-        events
-        |> list.filter(fn(message) { message.from.id == id })
-        |> list.fold(0, fn(n, message) { int.max(n, message.ts_us) })
-      #(id, latest)
+    |> list.map(fn(expected) {
+      let latest = case expected.board_actor {
+        None -> None
+        Some(actor) ->
+          causal
+          |> list.filter(fn(event) { event.actor == actor })
+          |> list.fold(None, fn(current: Option(CausalEvent), event) {
+            case current {
+              Some(previous) if previous.utc_us >= event.utc_us -> current
+              _ -> Some(event)
+            }
+          })
+      }
+      ActorObservation(expected.session_id, expected.board_actor, latest)
     })
   BoardSnapshot(causal, actors)
+}
+
+fn actor_faults(actor: ActorObservation, sample: Sample, ttl_us: Int) {
+  case actor.board_actor, actor.latest {
+    None, _ -> [ActorBindingUnknown(actor.session_id)]
+    Some(_), None -> [StaleActor(actor.session_id)]
+    Some(_), Some(event) ->
+      case event.domain, event.observed_boot_us {
+        clock.Domain("unknown", _), _ -> [
+          ActorFreshnessUnknown(actor.session_id),
+        ]
+        clock.Domain(_, "unknown"), _ -> [
+          ActorFreshnessUnknown(actor.session_id),
+        ]
+        _, value if value < 0 -> [ActorFreshnessUnknown(actor.session_id)]
+        domain, _ if domain != sample.observed.domain -> [
+          ActorFreshnessUnknown(actor.session_id),
+        ]
+        _, _ ->
+          case
+            sample.observed.utc_us - event.utc_us > ttl_us
+            || event.utc_us > sample.observed.utc_us
+            || event.observed_boot_us > sample.observed.boot_us
+          {
+            True -> [StaleActor(actor.session_id)]
+            False -> []
+          }
+      }
+  }
 }
 
 pub fn audit(
@@ -241,14 +349,8 @@ pub fn audit(
             |> list.flat_map(fn(e) { event_faults(e, sample, state.config) })
           let stale =
             actors
-            |> list.filter_map(fn(pair) {
-              case
-                observed.utc_us - pair.1 > state.config.actor_ttl_us
-                || pair.1 > observed.utc_us
-              {
-                True -> Ok(StaleActor(pair.0))
-                False -> Error(Nil)
-              }
+            |> list.flat_map(fn(actor) {
+              actor_faults(actor, sample, state.config.actor_ttl_us)
             })
           let max_seen =
             events
@@ -470,6 +572,11 @@ fn fault_detail(fault: Fault) -> String {
     EventDomainMismatch(id)
     | EventObservedInFuture(id)
     | EventClockDomainUnknown(id) -> id
+    ForeignClockUnverified(id) ->
+      id <> ": independent remote clock evidence unavailable"
+    ActorBindingUnknown(id) -> id <> ": no unique explicit board: reference"
+    ActorFreshnessUnknown(id) ->
+      id <> ": message clock provenance is missing or foreign"
   }
 }
 
@@ -483,5 +590,8 @@ pub fn fault_label(fault: Fault) -> String {
     EventDomainMismatch(_) -> "event_domain_mismatch"
     EventObservedInFuture(_) -> "event_observed_in_future"
     EventClockDomainUnknown(_) -> "event_clock_domain_unknown"
+    ForeignClockUnverified(_) -> "foreign_clock_unverified"
+    ActorBindingUnknown(_) -> "actor_binding_unknown"
+    ActorFreshnessUnknown(_) -> "actor_freshness_unknown"
   }
 }
