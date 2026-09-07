@@ -1,6 +1,6 @@
 {
   "carrier": "uos-decision-record/v1",
-  "phase": "prepared",
+  "phase": "completed",
   "decision_id": "DR-20260907-1030-L0FABLE-CANDIDATE-INTEGRATION-4",
   "identity_scope": {
     "hive": "uos-tui-swarm",
@@ -107,5 +107,22 @@
     "unknowns": [
       "default workspace ledger drift since 09:55 (Unknown until rebase)"
     ]
+  },
+  "completed": {
+    "observed_at": "2026-09-07T10:31:52.238945835Z",
+    "observed_actions": [
+      "composed revision built as five two-parent merges: 42e1994d (telemetry chain 8180c736), 257b5baa (C04/C05+KPI d6557335, parents preserved), f6c6eb1e (validator e0b50cdc), a045de38 (artifact f9f323bd), ec7185a805880e92c63203438a672f8864f00fe8 (artifact head 4826d07a)",
+      "attribution: full cepaf suite on 42e1994d = 10013 passed, 202 aggregate failure lines, 164 distinct failing identities == mainline baseline 164, 0 new, 0 fixed; 0 cepaf files changed after that merge; not a full-suite-green claim",
+      "combined swarm gate on the composed head: uos_tui 198, uos_swarm 563, 0 warnings, G1 PASS; validator exits measured (missing 1, malformed 1, empty 0, real 0)",
+      "lease integration/main epoch 16: main and integration/uos-swarm -> rqpsnznvvvnk/ec7185a805880e92c63203438a672f8864f00fe8 (step 1)",
+      "board: Integrate 1788777071635207-aea860cecc6089d0 with decision_record; 11 inbox messages acknowledged (inbox now 0); Report 1788777089859866-b5220024c626ea98 to Codex-Astra; board valid: 254 messages, chain intact, semantics resolved, causal gaps 3, chain forks 8",
+      "step 2 (same lease): bookmarks -> receipt change qvquwkvromno after this record; then default workspace rebase onto main with ledger union if needed, parked-bookmark retirement, lease release, session report to Codex — outcomes recorded in the follow-up board Report and session message (they occur after this file is finalized)"
+    ],
+    "outcome": "selected alternative realized — all candidates through 4826d07a on main in one composed revision — Measured (step 1); step 2 and default sync reported after",
+    "forecast_resolution": "p=0.9 for the predicted outcome -> realized at step 1 with no lease refusal and no attribution surprise (Brier 0.01 on the step-1 component; default-sync and retirement components resolved in the follow-up Report)",
+    "consumed": {
+      "tokens": "0 for integration steps (deterministic R0)",
+      "usd": 0.0
+    }
   }
 }
