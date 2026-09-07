@@ -31,39 +31,49 @@ let disconnect t =
   t.connected <- false;
   Hashtbl.clear t.storage
 
+let validate_request t sector_start buffers make_error =
+  if sector_start < 0L then
+    Error (make_error "sector start must be non-negative")
+  else if sector_start > t.size_sectors then
+    Error (make_error "sector start is out of bounds")
+  else if List.exists (fun buffer -> Bytes.length buffer <> t.sector_size) buffers then
+    Error (make_error "each buffer must contain exactly one sector")
+  else
+    match buffers with
+    | [] -> Ok ()
+    | _ ->
+        let sector_count = Int64.of_int (List.length buffers) in
+        if sector_start >= t.size_sectors ||
+           sector_count > Int64.sub t.size_sectors sector_start then
+          Error (make_error "out of bounds sector range")
+        else
+          Ok ()
+
 let read t sector_start buffers =
   if not t.connected then Error `Disconnected
-  else
+  else match validate_request t sector_start buffers (fun message -> `Read_error message) with
+  | Error error -> Error error
+  | Ok () ->
     let rec loop idx = function
       | [] -> Ok ()
       | buf :: rest ->
-          if idx >= t.size_sectors then
-            Error (`Read_error "out of bounds sector read")
-          else begin
-            begin match Hashtbl.find_opt t.storage idx with
-            | Some data ->
-                let len = min (Bytes.length buf) (Bytes.length data) in
-                Bytes.blit data 0 buf 0 len
-            | None ->
-                Bytes.fill buf 0 (Bytes.length buf) '\000'
-            end;
-            loop (Int64.add idx 1L) rest
-          end
+          begin match Hashtbl.find_opt t.storage idx with
+          | Some data -> Bytes.blit data 0 buf 0 t.sector_size
+          | None -> Bytes.fill buf 0 t.sector_size '\000'
+          end;
+          loop (Int64.add idx 1L) rest
     in
     loop sector_start buffers
 
 let write t sector_start buffers =
   if not t.connected then Error `Disconnected
-  else
+  else match validate_request t sector_start buffers (fun message -> `Write_error message) with
+  | Error error -> Error error
+  | Ok () ->
     let rec loop idx = function
       | [] -> Ok ()
       | buf :: rest ->
-          if idx >= t.size_sectors then
-            Error (`Write_error "out of bounds sector write")
-          else begin
-            let copy = Bytes.copy buf in
-            Hashtbl.replace t.storage idx copy;
-            loop (Int64.add idx 1L) rest
-          end
+          Hashtbl.replace t.storage idx (Bytes.copy buf);
+          loop (Int64.add idx 1L) rest
     in
     loop sector_start buffers

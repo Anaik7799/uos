@@ -20,11 +20,65 @@ let test_block_device () =
       | Error _ -> failwith "Read failed"
       | Ok () ->
           assert (Bytes.sub_string read_buf 0 (Bytes.length write_buf) = "Hello MirageOS Block Sector!");
-          Printf.printf "  [PASS] Mirage Memory Block Device I/O verified.\n"
-      end
+          ()
+      end;
+      let sector = Bytes.make 512 '\001' in
+      begin match Mirage_memory_block.write dev (-1L) [sector] with
+      | Error (`Write_error _) -> ()
+      | _ -> failwith "Negative sector write was not rejected"
+      end;
+      begin match Mirage_memory_block.read dev (-1L) [Bytes.make 512 '\000'] with
+      | Error (`Read_error _) -> ()
+      | _ -> failwith "Negative sector read was not rejected"
+      end;
+      begin match Mirage_memory_block.write dev 17L [] with
+      | Error (`Write_error _) -> ()
+      | _ -> failwith "Out-of-range empty write was not rejected"
+      end;
+      begin match Mirage_memory_block.write dev 1L [Bytes.make 511 '\000'] with
+      | Error (`Write_error _) -> ()
+      | _ -> failwith "Short sector write was not rejected"
+      end;
+      begin match Mirage_memory_block.read dev 1L [Bytes.make 1024 '\000'] with
+      | Error (`Read_error _) -> ()
+      | _ -> failwith "Oversized sector read was not rejected"
+      end;
+      (* A failing multi-sector write must not commit its in-range prefix. *)
+      begin match Mirage_memory_block.write dev 15L [sector; sector] with
+      | Error (`Write_error _) -> ()
+      | _ -> failwith "Out-of-bounds multi-sector write was not rejected"
+      end;
+      let rollback_control = Bytes.make 512 '\001' in
+      begin match Mirage_memory_block.read dev 15L [rollback_control] with
+      | Error _ -> failwith "Rollback control read failed"
+      | Ok () -> assert (rollback_control = Bytes.make 512 '\000')
+      end;
+      let read_rollback_a = Bytes.make 512 '\004' in
+      let read_rollback_b = Bytes.make 512 '\005' in
+      begin match Mirage_memory_block.read dev 15L [read_rollback_a; read_rollback_b] with
+      | Error (`Read_error _) ->
+          assert (read_rollback_a = Bytes.make 512 '\004');
+          assert (read_rollback_b = Bytes.make 512 '\005')
+      | _ -> failwith "Out-of-bounds multi-sector read was not rejected"
+      end;
+      let sector_a = Bytes.make 512 '\002' in
+      let sector_b = Bytes.make 512 '\003' in
+      begin match Mirage_memory_block.write dev 1L [sector_a; sector_b] with
+      | Error _ -> failwith "Valid multi-sector write failed"
+      | Ok () -> ()
+      end;
+      let read_a = Bytes.make 512 '\000' in
+      let read_b = Bytes.make 512 '\000' in
+      begin match Mirage_memory_block.read dev 1L [read_a; read_b] with
+      | Error _ -> failwith "Valid multi-sector read failed"
+      | Ok () ->
+          assert (read_a = sector_a);
+          assert (read_b = sector_b)
+      end;
+      Printf.printf "  [PASS] Mirage Memory Block Device I/O and bounds verified.\n"
 
 let test_merkle_kv () =
-  Printf.printf "Testing Irmin-style Merkle KV Store...\n";
+  Printf.printf "Testing content-hashed KV Store...\n";
   let store = Mirage_merkle_kv.create () in
   let store = match Mirage_merkle_kv.set store ["config"; "network"] "dhcp=true" with
     | Ok s -> s | Error _ -> failwith "Set failed" in
@@ -32,6 +86,27 @@ let test_merkle_kv () =
     | Ok s -> s | Error _ -> failwith "Set failed" in
   let hash1 = Mirage_merkle_kv.root_hash store in
   assert (String.length hash1 = 64);
+
+  let set_ok store key value =
+    match Mirage_merkle_kv.set store key value with
+    | Ok next -> next
+    | Error _ -> failwith "Merkle test setup failed"
+  in
+  let segmented = set_ok (Mirage_merkle_kv.create ()) ["a"; "b"] "v" in
+  let slash_in_segment = set_ok (Mirage_merkle_kv.create ()) ["a/b"] "v" in
+  assert (Mirage_merkle_kv.root_hash segmented <>
+          Mirage_merkle_kv.root_hash slash_in_segment);
+  let ordered =
+    Mirage_merkle_kv.create ()
+    |> fun s -> set_ok s ["a"; "b"] "v"
+    |> fun s -> set_ok s ["x:y"; "z|w"] "second"
+  in
+  let reversed =
+    Mirage_merkle_kv.create ()
+    |> fun s -> set_ok s ["x:y"; "z|w"] "second"
+    |> fun s -> set_ok s ["a"; "b"] "v"
+  in
+  assert (Mirage_merkle_kv.root_hash ordered = Mirage_merkle_kv.root_hash reversed);
   
   begin match Mirage_merkle_kv.get store ["config"; "ports"] with
   | Ok "4100" -> ()
@@ -57,7 +132,7 @@ let test_merkle_kv () =
       | Ok "standby" -> ()
       | _ -> failwith "m2"
       end;
-      Printf.printf "  [PASS] Irmin-style Merkle KV branching and 3-way merge verified.\n"
+      Printf.printf "  [PASS] Content-hashed KV branching and two-way merge verified.\n"
   end
 
 let test_solo5_tender () =
