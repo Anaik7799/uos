@@ -65,7 +65,10 @@ Deterministic log classification; digest-verified artifact provisioning as ignor
 | cepaf, artifacts provisioned (before TLS fix) | 10271 passed; 5 distinct failing (4 TLS, 1 runtime-truth test asserting host absence) |
 | cepaf, AGY main alone with artifacts | 10283 passed; 4 distinct failing; 0 new vs the 5-set |
 | cepaf, composed head | 10286 passed; 1 failing (`gemini_symbiosis_test.rules_parity_test`, a race with the mirror writes; re-run recorded in the decision record) |
-| ferriskey build | cargo release, 1m03s; sha256 16969091…; ferriskey wiring tests unchanged (39 pass) |
+| ferriskey build | cargo release, 1m03s; sha256 16969091…; in-repo rebuild byte-identical (42.9 s); ferriskey wiring tests unchanged (39 pass) |
+| ferriskey load evidence (W-G, punmzsty@e0e43fd7) | artifact present: ping ok, db_init ok on a scratch SQLite, realm create and get round trip ok; pin file well-formed; suite 10289 passed / 0 failures |
+| ferriskey loader finding (W-G) | `ferriskey_nif.erl` `init/0` returns the raw `load_nif` result from `-on_load`; with the artifact absent the module does not load and calls raise `error:undef` instead of failing closed; reported to Codex for R5; fix pattern is `c3i_nif.erl` (return ok, record availability in `persistent_term`) |
+| AGY main 1964bc3f alone with artifacts | cepaf 10300 passed / 0 failures; uos_swarm 577; 1 build warning; six unleased moves recorded |
 | W-E TLS fix | 4 tests pass; 0 warnings; verified in its workspace |
 | uos_swarm / uos_tui / boundary | 577 / 198 / G1 PASS |
 | board validate | 288 valid; 3 gaps; 8 forks explicit |
