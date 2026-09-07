@@ -1612,49 +1612,41 @@ pub fn execute(cmd: UosCommand) -> Int {
     }
     SelfcheckWave3Cycles -> {
       io.println(
-        "Evaluating 15 Wave 3 Evolutionary Cycles (--selfcheck-wave3-cycles, EV-55..EV-69):",
+        "Evaluating 15 Wave 3 Evolutionary Cycles (--selfcheck-wave3-cycles, EV-55..EV-69): INVENTORY of ratification records only; runtime evidence is not re-run here",
       )
-      io.println("  [PASS] EV-55: C3I Agentic Ingestion & Sanitization Engine (INV-AGENTIC-INGESTION-SANITIZED)")
-      io.println("  [PASS] EV-56: Supervised OCaml Port Pool & Reductions Protection (INV-SUPERVISED-OCAML-PORT-POOL)")
-      io.println("  [PASS] EV-57: Dynamic Trust Decay & Negative Knowledge Actor Swarm (INV-DYNAMIC-DECAY-ACTOR-SWARM)")
-      io.println("  [PASS] EV-58: Real-Time Tripartite Knowledge Presentation & SSE Mesh (INV-TRIPARTITE-SSE-KNOWLEDGE-MESH)")
-      io.println("  [PASS] EV-59: Tri-Sovereign Autonomic Governance & Self-Healing Closure (INV-TRI-SOVEREIGN-AUTONOMIC-CLOSURE)")
-      io.println("  [PASS] EV-60: Distributed Knowledge Cache & In-Memory Sheaf Harmonizer (INV-DISTRIBUTED-KNOWLEDGE-CACHE)")
-      io.println("  [PASS] EV-61: Zero-Trust Cryptographic Signature Verification & Trace Lineage (INV-ZT-CRYPTO-SIGNATURE-TRACE)")
-      io.println("  [PASS] EV-62: Automated Anti-Pattern Mitigation & Regression Interceptor (INV-AUTO-ANTI-PATTERN-INTERCEPTOR)")
-      io.println("  [PASS] EV-63: Bounded Gospel Verification Oracle & Z3 Solver Process Tree (INV-GOSPEL-Z3-PROCESS-TREE)")
-      io.println("  [PASS] EV-64: Descriptor-Relative VFS Journal Sync & WAL Durability (INV-VFS-JOURNAL-SYNC-DURABILITY)")
-      io.println("  [PASS] EV-65: Lyapunov-Windowed Telemetry Freshness & Dead-Man Swarm (INV-LYAPUNOV-FRESHNESS-SWARM)")
-      io.println("  [PASS] EV-66: 17-Aspect Cross-Language Homomorphism & ABI Invariants (INV-17-ASPECT-ABI-HOMOMORPHISM)")
-      io.println("  [PASS] EV-67: Elastic Multi-Tenant Agent Swarm Concurrency Scaling (INV-ELASTIC-SWARM-SCALING)")
-      io.println("  [PASS] EV-68: Universal Tailscale FQDN Tripartite Presentation & Nav Graph (INV-TAILSCALE-TRIPARTITE-NAV)")
-      io.println("  [PASS] EV-69: Sovereign Synthesis Ratification & Mainline Monorepo Closure (INV-SOVEREIGN-SYNTHESIS-CLOSURE)")
+      let records = wave3_records()
+      list.each(records, fn(rec) {
+        let #(ev, title, path) = rec
+        io.println(
+          "  " <> inventory_tag(file_exists(path)) <> " " <> ev <> ": " <> title <> " (record: " <> path <> ")",
+        )
+      })
+      let checks = list.map(records, fn(rec) { file_exists(rec.2) })
       io.println("")
-      io.println("Summary: 15/15 Wave 3 Evolutionary Cycles Operational & Formally Ratified (100% Green)")
-      0
+      io.println(
+        summary_line("Wave 3 Ratification Records Present", checks)
+        <> " (inventory; not fresh admission evidence)",
+      )
+      exit_for(checks)
     }
     SelfcheckWave4Cycles -> {
       io.println(
-        "Evaluating 15 Wave 4 Evolutionary Cycles (--selfcheck-wave4-cycles, EV-70..EV-84):",
+        "Evaluating 15 Wave 4 Evolutionary Cycles (--selfcheck-wave4-cycles, EV-70..EV-84): INVENTORY of ratification records only; runtime evidence is not re-run here",
       )
-      io.println("  [PASS] EV-70: Vertical Slice Journal Ingestion to Cited Retrieval Pipeline (INV-SLICE-JOURNAL-RETRIEVAL)")
-      io.println("  [PASS] EV-71: Supervised OCaml Worker Port Protocol & Subprocess Reductions (INV-OCAML-SUBPROCESS-PROTOCOL)")
-      io.println("  [PASS] EV-72: Rust NIF & OCaml Differential Conformance Oracle (INV-RUST-OCAML-DIFF-CONFORMANCE)")
-      io.println("  [PASS] EV-73: Callable OCaml Knowledge Lookup & Cited Recall Service (INV-CALLABLE-OCAML-CITED-RECALL)")
-      io.println("  [PASS] EV-74: Tripartite Tri-Surface SSR/API/TUI Knowledge Display (INV-TRIPARTITE-KNOWLEDGE-SURFACES)")
-      io.println("  [PASS] EV-75: 17-Aspect C3I VM-1 Artifacts Comprehensive Synthesis (INV-17-ASPECT-C3I-SYNTHESIS)")
-      io.println("  [PASS] EV-76: Dynamic Agentic Knowledge Mesh & Autonomous Swarm Topology (INV-DYNAMIC-KNOWLEDGE-SWARM)")
-      io.println("  [PASS] EV-77: Biosemiotic Semantic Invariant Verification & Rocha Decoupling (INV-BIOSEMIOTIC-ROCHA-VERIF)")
-      io.println("  [PASS] EV-78: 13D TCM Coordinate Conservation & Fail-Closed Gatekeeper (INV-13D-TCM-FAIL-CLOSED)")
-      io.println("  [PASS] EV-79: Lyapunov-Bounded Trust Decay & Negative Knowledge Eviction (INV-LYAPUNOV-TRUST-EVICTION)")
-      io.println("  [PASS] EV-80: Zero-Trust Payload Interceptor & Cryptographic Receipt Ledger (INV-ZT-PAYLOAD-LEDGER)")
-      io.println("  [PASS] EV-81: Multi-Tenant Elastic BEAM Swarm Scaling Invariant (INV-BEAM-SWARM-ELASTIC-SCALE)")
-      io.println("  [PASS] EV-82: Universal Tailscale FQDN Web/API/WebSocket Routing Matrix (INV-TAILSCALE-FQDN-ROUTING)")
-      io.println("  [PASS] EV-83: Formal Gospel Specification & Bounded Z3 Oracle Pipeline (INV-GOSPEL-Z3-ORACLE-PIPELINE)")
-      io.println("  [PASS] EV-84: Tri-Sovereign Multi-Model Consensus & Mainline Jujutsu Closure (INV-TRI-SOV-MAINLINE-CLOSURE)")
+      let records = wave4_records()
+      list.each(records, fn(rec) {
+        let #(ev, title, path) = rec
+        io.println(
+          "  " <> inventory_tag(file_exists(path)) <> " " <> ev <> ": " <> title <> " (record: " <> path <> ")",
+        )
+      })
+      let checks = list.map(records, fn(rec) { file_exists(rec.2) })
       io.println("")
-      io.println("Summary: 15/15 Wave 4 Evolutionary Cycles Operational & Formally Ratified (100% Green)")
-      0
+      io.println(
+        summary_line("Wave 4 Ratification Records Present", checks)
+        <> " (inventory; not fresh admission evidence)",
+      )
+      exit_for(checks)
     }
     SelfcheckVerticalSlice -> {
       io.println(
@@ -1739,201 +1731,104 @@ pub fn execute(cmd: UosCommand) -> Int {
       }
     }
     SelfcheckMirage -> {
-      io.println(
-        "Evaluating MirageOS Library OS & Solo5 SIL-6 Unikernel Engine (--selfcheck-mirage):",
-      )
-      let mirage_sig =
-        file_exists("engines/hermes/modules/hermes_mirage/mirage_signatures.ml")
-      let mirage_block =
-        file_exists("engines/hermes/modules/hermes_mirage/mirage_memory_block.ml")
-      let mirage_kv =
-        file_exists("engines/hermes/modules/hermes_mirage/mirage_merkle_kv.ml")
-      let mirage_solo5 =
-        file_exists("engines/hermes/modules/hermes_mirage/mirage_solo5_tender.ml")
-      let mirage_inter =
-        file_exists("engines/hermes/modules/hermes_mirage/mirage_interceptor.ml")
-      let mirage_gleam =
-        file_exists("apps/cepaf_gleam/src/cepaf_gleam/services/mirage_unikernel_daemon.gleam")
-      let mirage_test =
-        file_exists("apps/cepaf_gleam/test/mirage_unikernel_daemon_test.gleam")
-      let mirage_contract =
-        file_exists("contracts/rules/mirage-unikernel-contract.md")
-      let mirage_spec =
-        file_exists("docs/design/20260907-1150-mirageos-unikernel-architecture-and-uos-integration-spec.md")
-      case
-        mirage_sig
-        && mirage_block
-        && mirage_kv
-        && mirage_solo5
-        && mirage_inter
-        && mirage_gleam
-        && mirage_test
-        && mirage_contract
-        && mirage_spec
-      {
-        True -> {
-          io.println("  [PASS] MIRAGE-01: MirageOS Library OS AST & Gospel-specified Signatures")
-          io.println("  [PASS] MIRAGE-02: Merkle-Tree KV Store & Memory Block Device Drivers")
-          io.println("  [PASS] MIRAGE-03: Solo5 Tender Dispatch Abstraction & Execution Context")
-          io.println("  [PASS] MIRAGE-04: Fail-Closed Zero-Trust Interceptor & System Call Containment")
-          io.println("  [PASS] MIRAGE-05: Gleam Mirage Unikernel Daemon & OTP Supervised Lifecycle")
-          io.println("")
-          io.println("Summary: 5/5 MirageOS Library OS Checks Passed (100% Green)")
-          0
-        }
-        False -> {
-          io.println("  [FAIL] Missing required MirageOS Library OS components.")
-          1
-        }
+      io.println("Evaluating MirageOS library-OS selfcheck (--selfcheck-mirage): source presence plus the executed Hermes host-library suite")
+      let sources = ["engines/hermes/modules/hermes_mirage/mirage_signatures.ml", "engines/hermes/modules/hermes_mirage/mirage_memory_block.ml", "engines/hermes/modules/hermes_mirage/mirage_merkle_kv.ml", "engines/hermes/modules/hermes_mirage/mirage_solo5_tender.ml", "engines/hermes/modules/hermes_mirage/mirage_interceptor.ml", "apps/cepaf_gleam/src/cepaf_gleam/services/mirage_unikernel_daemon.gleam", "apps/cepaf_gleam/test/mirage_unikernel_daemon_test.gleam", "contracts/rules/mirage-unikernel-contract.md", "docs/design/20260907-1150-mirageos-unikernel-architecture-and-uos-integration-spec.md"]
+      list.each(sources, fn(path) {
+        io.println("  " <> fail_tag(file_exists(path)) <> " SOURCE: " <> path)
+      })
+      let #(exe, args, min_pass, phrase, label) = mirage_core_suite()
+      let #(code, out) = case file_exists(exe) {
+        True -> run_command(exe, args, 120_000)
+        False -> #(127, "suite executable missing: " <> exe)
       }
+      let suite = suite_pass_ok(code, out, min_pass, phrase)
+      io.println(
+        "  " <> fail_tag(suite) <> " SUITE: " <> label <> " [exit " <> int.to_string(code)
+        <> ", PASS-lines " <> int.to_string(count_pass_lines(out)) <> "]",
+      )
+      io.println("  [SUITE-VERDICT] " <> last_line(out))
+      let checks = list.append(list.map(sources, file_exists), [suite])
+      io.println("")
+      io.println(
+        summary_line("MirageOS Library-OS Sources and Executed Suite", checks)
+        <> " (the suite's own verdict line above states what remains unverified)",
+      )
+      exit_for(checks)
     }
     SelfcheckMirageMigration -> {
-      io.println(
-        "Evaluating MirageOS Subsystem Migration Engine (--selfcheck-mirage-migration, 7 Candidates):",
-      )
-      let cat_ml =
-        file_exists("engines/hermes/modules/hermes_mirage/mirage_migration_catalog.ml")
-      let dns_ml =
-        file_exists("engines/hermes/modules/hermes_mirage/mirage_dns_resolver.ml")
-      let tls_ml =
-        file_exists("engines/hermes/modules/hermes_mirage/mirage_tls_ingress.ml")
-      let test_ml =
-        file_exists("engines/hermes/modules/hermes_mirage/test_mirage_migration.ml")
-      let gleam_eng =
-        file_exists("apps/cepaf_gleam/src/cepaf_gleam/services/mirage_migration_engine.gleam")
-      let gleam_tst =
-        file_exists("apps/cepaf_gleam/test/mirage_migration_engine_test.gleam")
-      let policy_md =
-        file_exists("contracts/rules/mirage-migration-policy.md")
-      let spec_md =
-        file_exists("docs/design/20260907-1120-mirageos-comprehensive-migration-and-subsystem-spec.md")
-      let journal_md =
-        file_exists("docs/journal/20260907-1120-mirageos-comprehensive-migration-and-subsystem-journal.md")
-      case
-        cat_ml
-        && dns_ml
-        && tls_ml
-        && test_ml
-        && gleam_eng
-        && gleam_tst
-        && policy_md
-        && spec_md
-        && journal_md
-      {
-        True -> {
-          io.println("  [PASS] MIGRATE-01: 7 Subsystem Migration Candidates Registered in Hermes Catalog")
-          io.println("  [PASS] MIGRATE-02: Mirage Pure OCaml DNS Unikernel Resolver (Gospel Verified)")
-          io.println("  [PASS] MIGRATE-03: Mirage TLS 1.3 Ingress Terminator with Zero Memory Leaks")
-          io.println("  [PASS] MIGRATE-04: Gleam OTP Migration Engine with Preflight Verification Gating")
-          io.println("  [PASS] MIGRATE-05: Dynamic Verification Parity Oracles & Failover Circuit Breakers")
-          io.println("")
-          io.println("Summary: 5/5 MirageOS Subsystem Migration Checks Passed (100% Green)")
-          0
-        }
-        False -> {
-          io.println("  [FAIL] Missing required MirageOS migration engine components.")
-          1
-        }
+      io.println("Evaluating MirageOS subsystem migration selfcheck (--selfcheck-mirage-migration): source presence plus the executed migration-model suite")
+      let sources = ["engines/hermes/modules/hermes_mirage/mirage_migration_catalog.ml", "engines/hermes/modules/hermes_mirage/mirage_dns_resolver.ml", "engines/hermes/modules/hermes_mirage/mirage_tls_ingress.ml", "engines/hermes/modules/hermes_mirage/test_mirage_migration.ml", "apps/cepaf_gleam/src/cepaf_gleam/services/mirage_migration_engine.gleam", "apps/cepaf_gleam/test/mirage_migration_engine_test.gleam", "contracts/rules/mirage-migration-policy.md", "docs/design/20260907-1120-mirageos-comprehensive-migration-and-subsystem-spec.md", "docs/journal/20260907-1120-mirageos-comprehensive-migration-and-subsystem-journal.md"]
+      list.each(sources, fn(path) {
+        io.println("  " <> fail_tag(file_exists(path)) <> " SOURCE: " <> path)
+      })
+      let #(exe, args, min_pass, phrase, label) = mirage_migration_suite()
+      let #(code, out) = case file_exists(exe) {
+        True -> run_command(exe, args, 120_000)
+        False -> #(127, "suite executable missing: " <> exe)
       }
+      let suite = suite_pass_ok(code, out, min_pass, phrase)
+      io.println(
+        "  " <> fail_tag(suite) <> " SUITE: " <> label <> " [exit " <> int.to_string(code)
+        <> ", PASS-lines " <> int.to_string(count_pass_lines(out)) <> "]",
+      )
+      io.println("  [SUITE-VERDICT] " <> last_line(out))
+      let checks = list.append(list.map(sources, file_exists), [suite])
+      io.println("")
+      io.println(
+        summary_line("MirageOS Migration Sources and Executed Suite", checks)
+        <> " (the suite's own verdict line above states what remains unverified)",
+      )
+      exit_for(checks)
     }
     SelfcheckMirageProd -> {
-      io.println(
-        "Evaluating MirageOS Triple-Surface Cockpit & Cutover (--selfcheck-mirage-prod):",
-      )
-      let runner_ml =
-        file_exists("engines/hermes/modules/hermes_mirage/hermes_mirage_runner.ml")
-      let ui_gleam =
-        file_exists("apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/mirage_cockpit.gleam")
-      let api_gleam =
-        file_exists("apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mirage_api.gleam")
-      let tui_gleam =
-        file_exists("apps/cepaf_gleam/src/cepaf_gleam/ui/tui/mirage_view.gleam")
-      let test_gleam =
-        file_exists("apps/cepaf_gleam/test/mirage_cockpit_test.gleam")
-      let contract_md =
-        file_exists("contracts/rules/mirage-production-integration-contract.md")
-      let spec_md =
-        file_exists("docs/design/20260907-1215-mirageos-triple-surface-cockpit-and-solo5-cutover-spec.md")
-      let journal_md =
-        file_exists("docs/journal/20260907-1215-mirageos-triple-surface-cockpit-and-solo5-cutover-journal.md")
-      case
-        runner_ml
-        && ui_gleam
-        && api_gleam
-        && tui_gleam
-        && test_gleam
-        && contract_md
-        && spec_md
-        && journal_md
-      {
-        True -> {
-          io.println("  [PASS] PROD-01: Triple-Surface Presentation (Lustre WebUI, Wisp JSON, ANSI TUI)")
-          io.println("  [PASS] PROD-02: REST Endpoints (/api/v1/mirage/status, /candidates, /hypervisors)")
-          io.println("  [PASS] PROD-03: Solo5 Tender Integration (Hardware Virtualized, Sandboxed, Virtio)")
-          io.println("  [PASS] PROD-04: Zero-Muda Compliant (Pure BEAM + Hermes OCaml, 0 Bevy, 0 Graphite)")
-          io.println("  [PASS] PROD-05: STAMP/STPA Safety & Hard Denied System NVMe Drive Protection Active")
-          io.println("")
-          io.println("Summary: 5/5 MirageOS Triple-Surface Cockpit Checks Passed (100% Green)")
-          0
-        }
-        False -> {
-          io.println("  [FAIL] Missing required MirageOS production cutover components.")
-          1
-        }
+      io.println("Evaluating MirageOS triple-surface cockpit selfcheck (--selfcheck-mirage-prod): source presence plus the executed runner self-test")
+      let sources = ["engines/hermes/modules/hermes_mirage/hermes_mirage_runner.ml", "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/mirage_cockpit.gleam", "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mirage_api.gleam", "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/mirage_view.gleam", "apps/cepaf_gleam/test/mirage_cockpit_test.gleam", "contracts/rules/mirage-production-integration-contract.md", "docs/design/20260907-1215-mirageos-triple-surface-cockpit-and-solo5-cutover-spec.md", "docs/journal/20260907-1215-mirageos-triple-surface-cockpit-and-solo5-cutover-journal.md"]
+      list.each(sources, fn(path) {
+        io.println("  " <> fail_tag(file_exists(path)) <> " SOURCE: " <> path)
+      })
+      let #(exe, args, min_pass, phrase, label) = mirage_runner_suite()
+      let #(code, out) = case file_exists(exe) {
+        True -> run_command(exe, args, 120_000)
+        False -> #(127, "suite executable missing: " <> exe)
       }
+      let suite = suite_pass_ok(code, out, min_pass, phrase)
+      io.println(
+        "  " <> fail_tag(suite) <> " SUITE: " <> label <> " [exit " <> int.to_string(code)
+        <> ", PASS-lines " <> int.to_string(count_pass_lines(out)) <> "]",
+      )
+      io.println("  [SUITE-VERDICT] " <> last_line(out))
+      let checks = list.append(list.map(sources, file_exists), [suite])
+      io.println("")
+      io.println(
+        summary_line("MirageOS Cockpit Sources and Executed Runner Self-Test", checks)
+        <> " (the suite's own verdict line above states what remains unverified)",
+      )
+      exit_for(checks)
     }
     SelfcheckMirageTenders -> {
-      io.println(
-        "Evaluating MirageOS Solo5 Tenders & Hardware Virtualization (--selfcheck-mirage-tenders):",
-      )
-      let probe_ml =
-        file_exists("engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml")
-      let probe_gleam =
-        file_exists("apps/cepaf_gleam/src/cepaf_gleam/services/mirage_hypervisor.gleam")
-      let test_gleam =
-        file_exists("apps/cepaf_gleam/test/mirage_hypervisor_test.gleam")
-      let hvt_valid = is_elf_binary("var/mirage/unikernels/test_hello.hvt")
-      let spt_valid = is_elf_binary("var/mirage/unikernels/test_hello.spt")
-      let virtio_valid = is_elf_binary("var/mirage/unikernels/test_hello.virtio")
-      let time_valid = is_elf_binary("var/mirage/unikernels/test_time.hvt")
-      let ssp_hvt_valid = is_elf_binary("var/mirage/unikernels/test_ssp.hvt")
-      let ssp_spt_valid = is_elf_binary("var/mirage/unikernels/test_ssp.spt")
-      let ssp_virtio_valid = is_elf_binary("var/mirage/unikernels/test_ssp.virtio")
-      let receipt_path = "var/mirage/receipts/hypervisors_probe.json"
-      let receipt_valid = validate_mirage_probe_receipt(receipt_path)
-      let journal_md =
-        file_exists("docs/journal/20260907-1416-mirage-hypervisor-verification-and-codex-coordination-journal.md")
-
-      case
-        probe_ml
-        && probe_gleam
-        && test_gleam
-        && hvt_valid
-        && spt_valid
-        && virtio_valid
-        && time_valid
-        && ssp_hvt_valid
-        && ssp_spt_valid
-        && ssp_virtio_valid
-        && receipt_valid
-        && journal_md
-      {
-        True -> {
-          io.println("  [PASS] solo5-hvt: Hardware Virtualized Tender (/dev/kvm) executed (exit 0, 'SUCCESS')")
-          io.println("  [PASS] solo5-spt: Sandboxed Process Tender (seccomp-bpf) executed (exit 0, 'SUCCESS')")
-          io.println("  [PASS] solo5-virtio: Direct Kernel Boot Tender (QEMU KVM) executed (exit 83, 'SUCCESS')")
-          io.println("  [PASS] Dynamic hypervisor probe receipt validated (exit codes 0, 83 & guest banners)")
-          io.println("  [PASS] Unikernel test binaries validated (non-empty ELF images >= 10KB, including SSP)")
-          io.println("  [PASS] Hermes OCaml & Gleam hypervisor probes updated with authentic execution receipts")
-          io.println("")
-          io.println("Summary: 3/3 Solo5 Tenders Verified via Physical Execution (100% Green)")
-          0
-        }
-        False -> {
-          io.println("  [FAIL] Missing required Solo5 tender components, invalid unikernels, or failed execution receipt.")
-          1
-        }
+      io.println("Evaluating Solo5 tender selfcheck (--selfcheck-mirage-tenders): source presence plus the executed hypervisor probe suite")
+      let sources = ["engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml", "apps/cepaf_gleam/src/cepaf_gleam/services/mirage_hypervisor.gleam", "apps/cepaf_gleam/test/mirage_hypervisor_test.gleam", "docs/journal/20260907-1416-mirage-hypervisor-verification-and-codex-coordination-journal.md"]
+      list.each(sources, fn(path) {
+        io.println("  " <> fail_tag(file_exists(path)) <> " SOURCE: " <> path)
+      })
+      let #(exe, args, min_pass, phrase, label) = mirage_hypervisor_suite()
+      let #(code, out) = case file_exists(exe) {
+        True -> run_command(exe, args, 120_000)
+        False -> #(127, "suite executable missing: " <> exe)
       }
+      let suite = suite_pass_ok(code, out, min_pass, phrase)
+      io.println(
+        "  " <> fail_tag(suite) <> " SUITE: " <> label <> " [exit " <> int.to_string(code)
+        <> ", PASS-lines " <> int.to_string(count_pass_lines(out)) <> "]",
+      )
+      io.println("  [SUITE-VERDICT] " <> last_line(out))
+      let checks = list.append(list.map(sources, file_exists), [suite])
+      io.println("")
+      io.println(
+        summary_line("Solo5 Tender Sources and Executed Probe Suite", checks)
+        <> " (the suite's own verdict line above states what remains unverified)",
+      )
+      exit_for(checks)
     }
     SelfcheckForecast -> {
       io.println("Evaluating Unified Fractal Forecasting & Predictive OODA (--selfcheck-forecast):")
@@ -2248,4 +2143,131 @@ pub fn suite_ok(exit_code: Int, output: String, min_ok: Int, phrase: String) -> 
     0 -> string.contains(output, phrase)
     n -> count_ok_lines(output) >= n
   }
+}
+
+/// Lines containing a `[PASS]` marker in a suite's output.
+pub fn count_pass_lines(output: String) -> Int {
+  output
+  |> string.split("\n")
+  |> list.filter(fn(line) { string.contains(line, "[PASS]") })
+  |> list.length
+}
+
+/// The last non-empty line of a suite's output: these suites end with their
+/// own verdict, which states what remains unverified.
+pub fn last_line(output: String) -> String {
+  output
+  |> string.split("\n")
+  |> list.map(string.trim)
+  |> list.filter(fn(l) { l != "" })
+  |> list.last
+  |> result_or("(no output)")
+}
+
+fn result_or(r: Result(String, Nil), fallback: String) -> String {
+  case r {
+    Ok(v) -> v
+    Error(Nil) -> fallback
+  }
+}
+
+/// A `[PASS]`-reporting suite passed when it exited 0, printed at least
+/// `min_pass` PASS lines, and its output contains its terminal `phrase`.
+pub fn suite_pass_ok(
+  exit_code: Int,
+  output: String,
+  min_pass: Int,
+  phrase: String,
+) -> Bool {
+  exit_code == 0
+  && count_pass_lines(output) >= min_pass
+  && string.contains(output, phrase)
+}
+
+const mirage_build = "engines/hermes/_build/default/modules/hermes_mirage/"
+
+pub fn mirage_core_suite() -> #(String, List(String), Int, String, String) {
+  #(
+    mirage_build <> "test_mirage_core.exe",
+    [],
+    4,
+    "Host library checks passed",
+    "test_mirage_core (block device, Merkle KV, tender manifest, interceptor)",
+  )
+}
+
+pub fn mirage_migration_suite() -> #(String, List(String), Int, String, String) {
+  #(
+    mirage_build <> "test_mirage_migration.exe",
+    [],
+    15,
+    "Host migration model checks passed",
+    "test_mirage_migration (catalog, DNS resolver, TLS ingress models)",
+  )
+}
+
+pub fn mirage_runner_suite() -> #(String, List(String), Int, String, String) {
+  #(
+    mirage_build <> "hermes_mirage_runner.exe",
+    ["selftest"],
+    6,
+    "HOST MODEL CHECKS PASSED",
+    "hermes_mirage_runner selftest (host models behind the triple surface)",
+  )
+}
+
+pub fn mirage_hypervisor_suite() -> #(String, List(String), Int, String, String) {
+  #(
+    mirage_build <> "test_mirage_hypervisor.exe",
+    [],
+    11,
+    "ALL HYPERVISOR PROBE CHECKS & NEGATIVE CONTROLS PASSED",
+    "test_mirage_hypervisor (KVM probe, pinned tenders, negative controls)",
+  )
+}
+
+/// EV-55..EV-69 with the ratification record each row points at.
+pub fn wave3_records() -> List(#(String, String, String)) {
+  let c3i = "docs/journal/20260906-1930-uos-c3i-artifacts-ingestion-and-15-cycles-journal.md"
+  [
+    #("EV-55", "C3I Agentic Ingestion & Sanitization Engine", "docs/journal/20260906-2000-uos-master-session-handover-to-codex-journal.md"),
+    #("EV-56", "Supervised OCaml Port Pool & Reductions Protection", "docs/journal/20260907-1841-ocaml-worker-pool-sysml-validator-and-ui-manifest-journal.md"),
+    #("EV-57", "Dynamic Trust Decay & Negative Knowledge Actor Swarm", c3i),
+    #("EV-58", "Real-Time Tripartite Knowledge Presentation & SSE Mesh", c3i),
+    #("EV-59", "Tri-Sovereign Autonomic Governance & Self-Healing Closure", c3i),
+    #("EV-60", "Distributed Knowledge Cache & In-Memory Sheaf Harmonizer", c3i),
+    #("EV-61", "Zero-Trust Cryptographic Signature Verification & Trace Lineage", c3i),
+    #("EV-62", "Automated Anti-Pattern Mitigation & Regression Interceptor", c3i),
+    #("EV-63", "Bounded Gospel Verification Oracle & Z3 Solver Process Tree", c3i),
+    #("EV-64", "Descriptor-Relative VFS Journal Sync & WAL Durability", c3i),
+    #("EV-65", "Lyapunov-Windowed Telemetry Freshness & Dead-Man Swarm", c3i),
+    #("EV-66", "17-Aspect Cross-Language Homomorphism & ABI Invariants", c3i),
+    #("EV-67", "Elastic Multi-Tenant Agent Swarm Concurrency Scaling", c3i),
+    #("EV-68", "Universal Tailscale FQDN Tripartite Presentation & Nav Graph", c3i),
+    #("EV-69", "Sovereign Synthesis Ratification & Mainline Monorepo Closure", c3i),
+  ]
+}
+
+/// EV-70..EV-84 with the ratification record each row points at.
+pub fn wave4_records() -> List(#(String, String, String)) {
+  let codex = "docs/design/20260906-1649-codex-master-session-handover.md"
+  let tri = "docs/design/20260906-2200-uos-tri-sovereign-master-session-handover-to-codex.md"
+  let slice = "docs/design/20260906-2100-uos-c3i-vertical-slice-and-wave4-synthesis-tome.md"
+  [
+    #("EV-70", "Vertical Slice Journal Ingestion to Cited Retrieval Pipeline", "docs/journal/20260906-2000-uos-master-session-handover-to-codex-journal.md"),
+    #("EV-71", "Supervised OCaml Worker Port Protocol & Subprocess Reductions", tri),
+    #("EV-72", "Rust NIF & OCaml Differential Conformance Oracle", codex),
+    #("EV-73", "Callable OCaml Knowledge Lookup & Cited Recall Service", slice),
+    #("EV-74", "Tripartite Tri-Surface SSR/API/TUI Knowledge Display", codex),
+    #("EV-75", "17-Aspect C3I VM-1 Artifacts Comprehensive Synthesis", codex),
+    #("EV-76", "Dynamic Agentic Knowledge Mesh & Autonomous Swarm Topology", codex),
+    #("EV-77", "Biosemiotic Semantic Invariant Verification & Rocha Decoupling", tri),
+    #("EV-78", "13D TCM Coordinate Conservation & Fail-Closed Gatekeeper", tri),
+    #("EV-79", "Lyapunov-Bounded Trust Decay & Negative Knowledge Eviction", tri),
+    #("EV-80", "Zero-Trust Payload Interceptor & Cryptographic Receipt Ledger", "docs/journal/20260907-1110-modular-mojo-max-ai-ml-integration-journal.md"),
+    #("EV-81", "Multi-Tenant Elastic BEAM Swarm Scaling Invariant", slice),
+    #("EV-82", "Universal Tailscale FQDN Web/API/WebSocket Routing Matrix", slice),
+    #("EV-83", "Formal Gospel Specification & Bounded Z3 Oracle Pipeline", codex),
+    #("EV-84", "Tri-Sovereign Multi-Model Consensus & Mainline Jujutsu Closure", "docs/journal/20260907-1145-cybernetic-raga-durga-and-22-shruti-synthesis-journal.md"),
+  ]
 }

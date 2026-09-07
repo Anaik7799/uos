@@ -1,8 +1,11 @@
 import gleeunit/should
 import main.{
-  Checklist, Selfcheck15Cycles, SelfcheckInference, SelfcheckSaPlan,
-  SelfcheckVfs, count_ok_lines, count_passed, exit_for, execute,
-  inference_selfcheck_ok, sa_plan_suites, suite_ok, summary_line, vfs_laws,
+  Checklist, Selfcheck15Cycles, SelfcheckInference, SelfcheckMirage,
+  SelfcheckMirageMigration, SelfcheckMirageProd, SelfcheckMirageTenders,
+  SelfcheckSaPlan, SelfcheckVfs, SelfcheckWave3Cycles, SelfcheckWave4Cycles,
+  count_ok_lines, count_pass_lines, count_passed, exit_for, execute,
+  inference_selfcheck_ok, last_line, sa_plan_suites, suite_ok, suite_pass_ok,
+  summary_line, vfs_laws, wave3_records, wave4_records,
 }
 
 // --- pure verdict helpers -------------------------------------------------
@@ -154,4 +157,74 @@ pub fn sa_plan_gate_executes_thirteen_suites_and_returns_zero_test() {
   |> should.equal(13)
   execute(SelfcheckSaPlan)
   |> should.equal(0)
+}
+
+
+// --- wave inventories -----------------------------------------------------------
+
+pub fn wave_records_cover_ev_55_to_84_test() {
+  wave3_records() |> list_length |> should.equal(15)
+  wave4_records() |> list_length |> should.equal(15)
+  // Every row names a distinct EV and a record path.
+  wave3_records()
+  |> list_all_third_nonempty
+  |> should.be_true
+  wave4_records()
+  |> list_all_third_nonempty
+  |> should.be_true
+}
+
+pub fn wave_gates_return_zero_when_every_record_present_test() {
+  execute(SelfcheckWave3Cycles)
+  |> should.equal(0)
+  execute(SelfcheckWave4Cycles)
+  |> should.equal(0)
+}
+
+// --- mirage suite predicates ------------------------------------------------------
+
+pub fn count_pass_lines_counts_pass_markers_test() {
+  count_pass_lines("  [PASS] a\nnoise\n  [PASS] b\n[FAIL] c\n")
+  |> should.equal(2)
+}
+
+pub fn last_line_returns_terminal_verdict_test() {
+  last_line("first\n=== deployment NOT_VERIFIED ===\n\n")
+  |> should.equal("=== deployment NOT_VERIFIED ===")
+  last_line("")
+  |> should.equal("(no output)")
+}
+
+pub fn suite_pass_ok_requires_exit_count_and_phrase_test() {
+  let out = "[PASS] a\n[PASS] b\nHost library checks passed\n"
+  suite_pass_ok(0, out, 2, "Host library checks passed")
+  |> should.be_true
+  // wrong exit
+  suite_pass_ok(1, out, 2, "Host library checks passed")
+  |> should.be_false
+  // too few PASS lines
+  suite_pass_ok(0, out, 3, "Host library checks passed")
+  |> should.be_false
+  // terminal phrase absent
+  suite_pass_ok(0, out, 2, "ALL CHECKS PASSED")
+  |> should.be_false
+}
+
+pub fn mirage_gates_execute_their_suites_and_return_zero_test() {
+  execute(SelfcheckMirage)
+  |> should.equal(0)
+  execute(SelfcheckMirageMigration)
+  |> should.equal(0)
+  execute(SelfcheckMirageProd)
+  |> should.equal(0)
+  execute(SelfcheckMirageTenders)
+  |> should.equal(0)
+}
+
+fn list_all_third_nonempty(items: List(#(String, String, String))) -> Bool {
+  case items {
+    [] -> True
+    [#(a, b, c), ..rest] ->
+      a != "" && b != "" && c != "" && list_all_third_nonempty(rest)
+  }
 }
