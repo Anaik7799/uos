@@ -15,7 +15,12 @@ get_arguments() ->
 file_exists(Path) ->
     case file:read_file_info(Path) of
         {ok, _} -> true;
-        _ -> false
+        _ ->
+            RootPath = filename:join(["/home/an/NAS-setup/uos", Path]),
+            case file:read_file_info(RootPath) of
+                {ok, _} -> true;
+                _ -> false
+            end
     end.
 
 matches_timestamp_format(Filename) ->
@@ -25,7 +30,12 @@ matches_timestamp_format(Filename) ->
     end.
 
 file_contains(Path, Pattern) ->
-    RealPath = file:read_file(Path),
+    RealPath = case file:read_file(Path) of
+        {ok, Bin} -> {ok, Bin};
+        _ ->
+            RootPath = filename:join(["/home/an/NAS-setup/uos", Path]),
+            file:read_file(RootPath)
+    end,
     case RealPath of
         {ok, Content} ->
             PatternBin = case is_list(Pattern) of
@@ -38,3 +48,4 @@ file_contains(Path, Pattern) ->
             end;
         _ -> false
     end.
+

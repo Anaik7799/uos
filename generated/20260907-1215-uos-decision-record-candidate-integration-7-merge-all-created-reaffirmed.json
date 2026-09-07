@@ -1,0 +1,53 @@
+{
+  "carrier": "uos-decision-record/v1",
+  "phase": "prepared",
+  "decision_id": "DR-20260907-1215-L0FABLE-CANDIDATE-INTEGRATION-7-MERGE-ALL-CREATED-REAFFIRMED",
+  "identity_scope": {
+    "hive": "uos-tui-swarm",
+    "tenant": "uos",
+    "actor_kind": "model-agent (design authority, L0; integration/main owner)",
+    "actor_id": "L0-fable",
+    "session": "656f0d2c-6019-4d9e-b0ce-b9e39b240047",
+    "provider_model": { "provider": "anthropic", "model": "claude-fable-5-1", "self_report": true }
+  },
+  "task_authority": {
+    "task": "operator reaffirmed 'continue, merge all functionality created' after two items were parked: merge every remaining non-empty commit off main, including the two parked items and the peers' newest work, resolving stale conflicts toward main so nothing on main is lost",
+    "resource": "integration/main",
+    "lease_epoch": "20 (claimed 12:10:59Z, op id l0-fable-claim-integration-main-20260907-121059-1880, verified as coordinator event 184; TTL 3600 s)",
+    "proposed_action": "bookmark set integration/uos-swarm and main to the composed head (change zyrrorxvpxvt) if the gates pass; if a gate fails, drop only the responsible merge and re-run; receipts on a following change; bookmarks there; release",
+    "policy_refs": [ "SYNC-03 lease verified by coordinator event", "SC-HIVE-DECISION-001", "attribution gate (cepaf files touched: full suite vs the 164-identity baseline)", "jj discipline D3/D4/D7", "language boundary" ],
+    "authorization": "operator, twice: 'continue, merge all functionality created' (second time after the park report)"
+  },
+  "evidence_choice": {
+    "observations": [
+      { "source": "head census after integration 6", "value": "new since the last census: AGY f3515bd1 (Mirage Solo5 cockpit/API on the primary dashboard) and AGY working copy 12f04f3f (unified fractal forecasting + predictive POODAVR loop), Codex ainf-design working copy ff7ce43f (3 docs), execution-stream N01 3213dc7d (peer_http_service tool + test + web provenance) and S24 75ba75ed (review JSON)", "grade": "Measured" },
+      { "source": "merges", "value": "N01 -> ztmlsntxuxus; S24 -> wlsuvstvlluv; AGY web -> oywtlqssrsnk; Codex docs -> rzwymmomkkst; e03-evidence 42568ef7 -> wywnypwpwnnv with tools/uos/src/main.gleam and exit_status_test.gleam restored from main; acceptance orphan a28bd944 -> lrvoslzzktvp with all five tests/acceptance files restored from main (E04 lineage; its only unique definition proc_pgrp is superseded); Codex 91eb child 986ec4b7 -> rmoovywsqnzo with the benchmark contract restored from main; AGY forecast 12f04f3f -> zyrrorxvpxvt clean", "grade": "Measured" },
+      { "source": "concurrent rewrite during gating (~12:15Z)", "value": "another session squashed commits under the AGY forecast parent (op 'squash commits into bd89c6c9'); jj rebased my composed head, the split-int working copy went stale, and this record file was lost once and re-created; the resulting head content is re-measured in the completed block", "grade": "Measured" },
+      { "source": "parked (lineage-only, no functionality)", "value": "pnpktttv/fb945a48 and qtvsuzxu/501fdbff: both parents already on main; their only conflicts are in two old decision-record files; left as historical merges", "grade": "Measured" },
+      { "source": "gates", "value": "recorded in the completed block: cepaf build + full suite attribution, web app, tools/uos, swarm, split gate, ledger, Hermes dune for changed modules, N01 script", "grade": "pending" }
+    ],
+    "alternatives": [
+      { "option": "merge only frozen described commits", "tradeoff": "leaves AGY's forecast work (a live working copy) and Codex's docs off main against the operator's reaffirmed instruction" },
+      { "option": "merge everything, resolving stale files toward main, gate the composed head, drop only what fails", "tradeoff": "working-copy snapshots may move on; recorded as snapshots by commit id" }
+    ],
+    "selected": "merge everything, resolving stale files toward main, gate the composed head, drop only what fails",
+    "rationale": "operator decision reaffirmed; toward-main resolution guarantees no regression of main's own content; gates decide admission of the new code",
+    "risks": [ "AGY forecast snapshot is a live working copy and was rewritten by its owner during gating", "e03-evidence remnants may break tools/uos (gate decides)" ],
+    "unresolved": [ "peer review (AGY, Codex) of the composition" ]
+  },
+  "process": {
+    "steps": [ "lease", "census", "merges with toward-main resolution", "gates", "prepared record", "bookmarks -> head", "receipts", "bookmarks -> receipt change", "release", "reports", "journal" ],
+    "rollback": "bookmark set main -r ozrqspzwtmqw --allow-backwards under lease",
+    "escalation": "gate failure -> abandon the responsible merge change (candidate commits untouched), re-gate, report"
+  },
+  "forecast": {
+    "horizon": "45 min",
+    "clock_domain": "UTC host nas-1",
+    "observed_at": "2026-09-07T12:15:00.000000Z",
+    "expires_at": "2026-09-07T13:00:00.000000Z",
+    "predicted_outcome": "composed head on main with 0 new cepaf failing identities; at most one merge dropped for a compile failure",
+    "probability": 0.6,
+    "basis": "27 cepaf files from two independent authors (e03-evidence from 2026-09-06, AGY forecast from minutes ago) raise compile-conflict odds; not calibrated",
+    "unknowns": [ "cepaf compile of the combined tree (Unknown)", "Hermes forecast modules build (Unknown)" ]
+  }
+}

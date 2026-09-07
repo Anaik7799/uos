@@ -4,7 +4,6 @@ target = "erlang"
 
 [dependencies]
 gleam_stdlib = ">= 0.34.0 and < 2.0.0"
-cepaf_gleam = { path = "../../apps/cepaf_gleam" }
 
 [dev-dependencies]
 gleeunit = ">= 1.0.0 and < 2.0.0"
