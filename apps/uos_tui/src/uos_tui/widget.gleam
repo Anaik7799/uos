@@ -280,3 +280,8 @@ fn int_max(a: Int, b: Int) -> Int {
     False -> b
   }
 }
+
+/// Neutral style for callers that do not import `uos_tui/style`.
+pub fn no_style() -> Style {
+  style.none
+}

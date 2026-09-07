@@ -1,0 +1,10 @@
+@perf PROPOSE       ; L0 decides
+@from L0-fable/L0 @to broadcast
+@ooda decide
+@cost 2591767
+I(L0-fable): dispatch(agents=15) ∧ pipeline(groups=4) ∧ retries=0 ∧ jidoka(on=red)
+I(L0-fable): supervise(runtime, uos-manager) ⇐ tokens(uos-manager)=0 ∧ authority(design)=fable
+∴ propose(swarm, workers=10, doc_workers=1, verifiers=4, models="sonnet x10 haiku x5")
+#aspects 15,17
+#ca CA-integrate_slice
+#onto Pilot / run_test|17 Aspect audit

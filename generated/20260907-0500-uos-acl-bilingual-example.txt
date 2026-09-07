@@ -1,0 +1,10 @@
+@kārya prastāva  ; en: @perf PROPOSE
+@preṣaka L0-fable/L0 @prāpaka broadcast  ; en: @from L0-fable/L0 @to broadcast
+@cakra nirṇaya  ; en: @ooda decide
+@mūlya 2591767
+iṣ(L0-fable): dispatch(agents=15) ∧ pipeline(groups=4) ∧ retries=0 ∧ jidoka(on=red)  ; en: L0-fable intends dispatch(agents=15) and pipeline(groups=4) and retries=0 and jidoka(on=red)
+iṣ(L0-fable): supervise(runtime, uos-manager) ⇐ tokens(uos-manager)=0 ∧ authority(design)=fable  ; en: L0-fable intends supervise(runtime, uos-manager), provided tokens(uos-manager)=0 and authority(design)=fable
+tasmāt propose(swarm, workers=10, doc_workers=1, verifiers=4, models="sonnet x10 haiku x5")  ; en: therefore propose(swarm, workers=10, doc_workers=1, verifiers=4, models="sonnet x10 haiku x5")
+#pakṣa 15,17  ; en: #aspects
+#niyantraṇa CA-integrate_slice  ; en: #ca control actions
+#sattā Pilot / run_test|17 Aspect audit  ; en: #onto concepts

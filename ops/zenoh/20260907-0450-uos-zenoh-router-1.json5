@@ -1,0 +1,25 @@
+// 20260907-0450- UOS Zenoh router 1 (derived from /home/an/dev/ver/c3i/config/zenoh/zenoh-router-1.json5)
+// Differences from the C3I source: single-router topology (no connect endpoints to router-2/3),
+// REST plugin on 8080 because port 8000 on nas-1 is occupied by the Gutenprint printer service.
+// Tailscale: http://nas-1.tail55d152.ts.net:8080 (REST), tcp/nas-1.tail55d152.ts.net:7447 (peers/clients).
+{
+  mode: "router",
+  listen: { endpoints: ["tcp/0.0.0.0:7447"] },
+  connect: { endpoints: [] },
+  plugins: {
+    rest: { http_port: 8080 },
+    // Memory storages make the message board queryable over Zenoh GET (REST and native).
+    storage_manager: {
+      storages: {
+        a2a_board: { key_expr: "c3i/a2a/**", volume: "memory" },
+        agui_events: { key_expr: "c3i/agui/events/**", volume: "memory" },
+        uos_tui: { key_expr: "uos/tui/**", volume: "memory" }
+      }
+    }
+  },
+  scouting: {
+    gossip: {},
+    multicast: { enabled: true, address: "224.0.0.224:7446", interface: "auto" }
+  },
+  routing: { router: { peers_failover_brokering: true } }
+}

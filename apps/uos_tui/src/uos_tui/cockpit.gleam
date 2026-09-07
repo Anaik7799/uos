@@ -14,6 +14,8 @@ import uos_tui/geometry.{type Size}
 import uos_tui/layout.{Cells, Fraction, Horizontal, Vertical}
 import uos_tui/render
 import uos_tui/style
+import uos_tui/swarm
+import uos_tui/telemetry
 import uos_tui/widget.{
   type ChecklistDomain, type TreeNode, type Widget, Binding, ChecklistDomain,
   ChecklistItem, Column, StatusField, TreeNode,
@@ -36,6 +38,7 @@ pub type Tab {
   Tasks
   Security
   Doctor
+  Swarm
 }
 
 pub const tabs = [
@@ -47,6 +50,7 @@ pub const tabs = [
   Tasks,
   Security,
   Doctor,
+  Swarm,
 ]
 
 pub type Intent {
@@ -75,6 +79,7 @@ pub type Model {
     lease_epoch: Int,
     checklist_passed: List(String),
     frame_count: Int,
+    ledger: option.Option(swarm.Ledger),
   )
 }
 
@@ -113,6 +118,7 @@ pub fn init_model(utc: String, change_id: String) -> Model {
     lease_epoch: 0,
     checklist_passed: [],
     frame_count: 0,
+    ledger: None,
   )
 }
 
@@ -132,6 +138,7 @@ pub fn app(initial: Model) -> App(Model, Msg) {
       Binding(event.Char("6"), SelectTab(5), "tasks"),
       Binding(event.Char("7"), SelectTab(6), "security"),
       Binding(event.Char("8"), SelectTab(7), "doctor"),
+      Binding(event.Char("9"), SelectTab(8), "swarm"),
       Binding(event.Char("m"), CycleMode, "mode"),
       Binding(event.Char("r"), RequestIntent("restart"), "restart(confirm)"),
       Binding(event.Char("x"), RequestIntent("stop"), "stop(confirm)"),
@@ -255,6 +262,24 @@ pub fn mode_label(mode: Mode) -> String {
   }
 }
 
+/// The status-bar DRIVE badge text: "LOCKED" only when the interlock was actually probed
+/// Locked; otherwise the honest "UNLOCKED" or "UNPROBED" state, never a declared constant.
+fn interlock_badge_text(i: aspects.Interlock) -> String {
+  case i {
+    aspects.Locked(serial) -> serial <> " LOCKED"
+    aspects.Unlocked -> aspects.os_nvme_serial <> " UNLOCKED"
+    aspects.Unprobed -> aspects.os_nvme_serial <> " UNPROBED"
+  }
+}
+
+fn interlock_badge_style(i: aspects.Interlock) -> style.Style {
+  case i {
+    aspects.Locked(_) -> style.none |> style.fg(style.Green)
+    aspects.Unlocked -> style.none |> style.fg(style.Red) |> style.bold
+    aspects.Unprobed -> style.none |> style.fg(style.Yellow)
+  }
+}
+
 fn mode_style(mode: Mode) -> style.Style {
   case mode {
     Dark -> style.none |> style.fg(style.BrightBlack)
@@ -276,6 +301,7 @@ pub fn tab_label(tab: Tab) -> String {
     Tasks -> "Tasks"
     Security -> "Security"
     Doctor -> "Doctor"
+    Swarm -> "Swarm"
   }
 }
 
@@ -322,7 +348,54 @@ pub fn checklist_domains(passed: List(String)) -> List(ChecklistDomain) {
   ]
 }
 
+/// Compute the checklist's honestly-evidenced `passed` ids from process-observable facts
+/// instead of declaring everything passed: the tailnet FQDN constant (always rendered by
+/// `view`), the audit context's dependency manifest and probed interlock and supervised
+/// flag, the model's jj change id, and a fresh telemetry trace/span id pair checked against
+/// the W3C hex rule. Every other checklist item (including CHK-08) has no in-process evidence
+/// source yet and stays unmet until its own subject audit (`system_audit`) evidences it.
+/// CHK-01 needs a generated document filename to check for the mandatory `YYYYMMDD-HHMM-`
+/// prefix; `Model` carries no such field today, so CHK-01 stays permanently unmet here.
+pub fn evidence_checklist_passed(
+  model: Model,
+  ctx: aspects.Context,
+) -> List(String) {
+  let barred = fn(deps: List(String)) {
+    list.any(deps, fn(d) {
+      let d = string.lowercase(d)
+      string.contains(d, "bevy")
+      || string.contains(d, "graphite")
+      || string.contains(d, "graphene")
+    })
+  }
+  let deps_clean = ctx.dependencies != [] && !barred(ctx.dependencies)
+  let interlock_locked = case ctx.interlock {
+    aspects.Locked(serial) -> serial == aspects.os_nvme_serial
+    _ -> False
+  }
+  let trace = telemetry.new_trace_id()
+  let span = telemetry.new_span_id()
+  let telemetry_ok =
+    telemetry.is_hex_id(trace, 32) && telemetry.is_hex_id(span, 16)
+  [
+    #("CHK-02-TAIL", True),
+    #("CHK-05-MUDA", deps_clean),
+    #("CHK-06-GRAPH", deps_clean),
+    #("CHK-07-DRIVE", interlock_locked),
+    #("CHK-12-GLEAM", ctx.supervised),
+    #("CHK-16-OTEL", telemetry_ok),
+    #("CHK-18-JJ", model.change_id != ""),
+  ]
+  |> list.filter_map(fn(p) {
+    case p.1 {
+      True -> Ok(p.0)
+      False -> Error(Nil)
+    }
+  })
+}
+
 pub fn view(model: Model) -> Widget(Msg) {
+  let interlock = aspects.probe_interlock()
   let status =
     widget.StatusBar("status", [
       StatusField("", aspects.tailnet_fqdn, style.none |> style.fg(style.Cyan)),
@@ -330,8 +403,8 @@ pub fn view(model: Model) -> Widget(Msg) {
       StatusField("MODE", mode_label(model.mode), mode_style(model.mode)),
       StatusField(
         "DRIVE",
-        aspects.os_nvme_serial <> " LOCKED",
-        style.none |> style.fg(style.Green),
+        interlock_badge_text(interlock),
+        interlock_badge_style(interlock),
       ),
       StatusField("JJ", model.change_id, style.none),
     ])
@@ -440,6 +513,16 @@ fn tab_content(model: Model) -> Widget(Msg) {
         Some(ContainerSelect),
       )
     Ok(Tasks) -> sa_plan_table("sa-plan-tasks-full", model)
+    Ok(Swarm) ->
+      case model.ledger {
+        Some(l) -> swarm.view(l, model.container_cursor)
+        None ->
+          widget.Static(
+            "swarm-none",
+            "no swarm ledger loaded",
+            style.none |> style.fg(style.Yellow),
+          )
+      }
     Ok(Overview) ->
       widget.Container(
         "overview",
@@ -550,7 +633,11 @@ fn confirm_view(model: Model) -> Widget(Msg) {
   )
 }
 
-/// The aspect context a live driver would supply for this app.
+/// The aspect context a live driver would supply for this app. `interlock` is always
+/// freshly probed (`aspects.probe_interlock/0`), never a declared constant; `supervised` and
+/// `deps` are still the caller's declarations because only the caller (CLI vs. supervised
+/// runtime) knows whether it was actually started under a supervisor and which packages are
+/// really linked in.
 pub fn context(
   model: Model,
   size: Size,
@@ -558,7 +645,7 @@ pub fn context(
   deps: List(String),
 ) -> aspects.Context {
   aspects.Context(
-    interlock: aspects.Locked(aspects.os_nvme_serial),
+    interlock: aspects.probe_interlock(),
     vcs: aspects.Jujutsu(model.change_id),
     dependencies: deps,
     supervised: supervised,

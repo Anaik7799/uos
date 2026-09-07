@@ -5,6 +5,19 @@ Tags: `#rocha-semiotics`, `#cybernetics`, `#fractal-l0`, `#fractal-l1`, `#fracta
 
 ## §1.0 Executive Architecture & Corpus Triad
 
+### Agentic infrastructure specification — 20260907-0550
+
+**Status: SPECIFIED / implementation UNRUN / NOT ADMITTED.** Native UOS building
+blocks, 21 services, 17 canonical aspects, 357 service/aspect obligations,
+18 invariants, 63 acceptance cases and an eight-package implementation sequence.
+
+- [Formal specification](http://nas-1.tail55d152.ts.net:4100/docs/docs/design/20260907-0550-uos-agentic-infrastructure-17-aspect-formal-spec.md)
+- [C3I and Indrajaal source review across all 17 aspects](http://nas-1.tail55d152.ts.net:4100/docs/docs/reviews/20260907-0550-uos-c3i-indrajaal-17-aspect-infrastructure-source-review.md)
+- [Infrastructure wiki](http://nas-1.tail55d152.ts.net:4100/docs/docs/wiki/20260907-0550-uos-agentic-infrastructure-building-blocks.md) — `[[wiki:20260907-0550-uos-agentic-infrastructure-building-blocks]]`
+- [ADR-UOS-AINF-001](http://nas-1.tail55d152.ts.net:4100/docs/docs/zk/20260907-0550-adr-uos-agentic-infrastructure-native-building-blocks.md) — `[[zk:20260907-0550-adr-uos-agentic-infrastructure-native-building-blocks]]`
+- [Specification completion journal](http://nas-1.tail55d152.ts.net:4100/docs/docs/journal/20260907-0550-uos-agentic-infrastructure-formal-spec-journal.md)
+
+
 The Unified Operational System (UOS) integrates three foundational corpora into an interconnected, bidirectional living knowledge graph:
 
 ```mermaid
@@ -69,6 +82,7 @@ graph TD
 | **ADR-059** | [`20260906-2200-adr-059-master-session-handover-to-codex-and-84-cycles-transfer.md`](file:///home/an/NAS-setup/uos/docs/zk/20260906-2200-adr-059-master-session-handover-to-codex-and-84-cycles-transfer.md) | <span class="badge badge-fractal">#fractal-l0</span> | [ADR-059 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-2200-adr-059-master-session-handover-to-codex-and-84-cycles-transfer.md) | Master Session Handover to OpenAI Codex — 84 Cumulative Cycles & Operational Command Transfer, 10,188 EUnit Tests Green. |
 | **ADR-060** | [`20260906-2048-adr-060-sysadmin-remote-tui-cockpit-architecture.md`](file:///home/an/NAS-setup/uos/docs/zk/20260906-2048-adr-060-sysadmin-remote-tui-cockpit-architecture.md) | <span class="badge badge-fractal">#fractal-l0</span> | [ADR-060 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-2048-adr-060-sysadmin-remote-tui-cockpit-architecture.md) | Sovereign Remote SysAdmin TUI Cockpit Architecture, 9-Tab Workflow Engine, Container Lifecycle Controls, Storage Safety Lock, 10,196 Tests Green. |
 | **ADR-061** | [`20260906-2150-adr-061-uos-tui-gleam-library-textual-reference.md`](file:///home/an/NAS-setup/uos/docs/zk/20260906-2150-adr-061-uos-tui-gleam-library-textual-reference.md) | <span class="badge badge-fractal">#fractal-l2</span> | [ADR-061 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260906-2150-adr-061-uos-tui-gleam-library-textual-reference.md) | uos_tui pure-Gleam TUI library (Textual reference, TEA on OTP, 17-widget catalog, F´ ground dictionary, 17-aspect fail-closed audit, fractal Textual ontology), 116 tests green, status Proposed. |
+| **ADR-062** | [`20260907-0537-adr-062-uos-tui-swarm-hive-mind-message-board-coordination-acl-and-zenoh-infra.md`](file:///home/an/NAS-setup/uos/docs/zk/20260907-0537-adr-062-uos-tui-swarm-hive-mind-message-board-coordination-acl-and-zenoh-infra.md) | <span class="badge badge-fractal">#fractal-l0</span> | [ADR-062 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-0537-adr-062-uos-tui-swarm-hive-mind-message-board-coordination-acl-and-zenoh-infra.md) | 15-agent swarm (11/11 PASS), hive-mind message board on Zenoh (ETS + JSONL + per-sender chains, inbox/ack/retry/dead-letter/replay, live proof acknowledged), coordination layer (fable-only design authority, fenced leases, heartbeats, reconcile, usage), F´ manager, system-wide 17-aspect audit 62/74/0, Sanskrit-English ACL, 33-holon holarchy, C3I Zenoh infra started. 354 tests. |
 
 
 

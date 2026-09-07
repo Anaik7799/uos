@@ -1,0 +1,10 @@
+utterance  := header+ clause* tag*
+header     := '@perf' PERF | '@from' AGENT '/' LAYER '@to' AGENT | '@re' ID | '@ooda' PHASE | '@conf' FLOAT | '@cost' INT | '@by' ISO8601
+clause     := modal atoms ('⇐' atoms)?
+modal      := 'K(' AGENT '):' | 'B(' AGENT '):' | 'I(' AGENT '):' | 'O(' AGENT '):' | 'G:' | '∴'
+atoms      := atom ('∧' atom)*
+atom       := IDENT ('(' value (',' value)* ')')? ('=' value)?
+value      := IDENT | NUMBER | STRING
+tag        := '#aspects' INT(,INT)* | '#ca' CA(,CA)* | '#onto' CONCEPT(|CONCEPT)* | '#muda' MUDA(,MUDA)*
+PERF       := INFORM|REQUEST|PROPOSE|ACCEPT|REJECT|QUERY|CONFIRM|COMMIT|ASSERT|RETRACT|HYPOTHESIZE|ANDON
+comment    := ';' to end of line

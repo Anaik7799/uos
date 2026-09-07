@@ -9,6 +9,7 @@ import uos_tui/event.{KeyPress}
 import uos_tui/frame
 import uos_tui/geometry.{Size}
 import uos_tui/headless
+import uos_tui/swarm
 import uos_tui/widget
 
 fn model() -> cockpit.Model {
@@ -20,13 +21,13 @@ fn model() -> cockpit.Model {
       Container("obs-prod", "T3", "running", 1.2),
     ],
     lease_epoch: 7,
+    // Full 18/18: this fixture stands in for a fully-evidenced system, so the
+    // ComprehensiveChecklist aspect is genuinely Pass rather than merely structural.
     checklist_passed: [
-      "CHK-01-TIME",
-      "CHK-02-TAIL",
-      "CHK-05-MUDA",
-      "CHK-07-DRIVE",
-      "CHK-12-GLEAM",
-      "CHK-18-JJ",
+      "CHK-01-TIME", "CHK-02-TAIL", "CHK-03-FRACT", "CHK-04-KM", "CHK-05-MUDA",
+      "CHK-06-GRAPH", "CHK-07-DRIVE", "CHK-08-C1C8", "CHK-09-MATH",
+      "CHK-10-9MOD", "CHK-11-REGR", "CHK-12-GLEAM", "CHK-13-HERMES",
+      "CHK-14-ZIGVM", "CHK-15-MAX", "CHK-16-OTEL", "CHK-17-SOV", "CHK-18-JJ",
     ],
   )
 }
@@ -143,7 +144,11 @@ pub fn cockpit_passes_all_seventeen_aspects_test() {
     )
   list.length(findings) |> should.equal(17)
   aspects.failed(findings) |> should.equal(0)
-  aspects.admissible(findings) |> should.be_true
+  // No Fail anywhere, but 5 aspects are still only Declared (dictionary/config bindings, not
+  // fresh observed behaviour), so the softer FAIL-only gate is true while strict two-key
+  // admission is honestly false.
+  aspects.no_failures(findings) |> should.be_true
+  aspects.admissible(findings) |> should.be_false
   aspects.passed(findings) |> should.equal(12)
   aspects.declared(findings) |> should.equal(5)
 }
@@ -182,5 +187,21 @@ pub fn scalability_large_table_test() {
   headless.last_frame(run)
   |> frame.to_text
   |> string.contains("c5000")
+  |> should.be_true
+}
+
+pub fn swarm_tab_inherits_cockpit_chrome_and_passes_all_aspects_test() {
+  let m =
+    cockpit.Model(..model(), tab: 8, ledger: option.Some(swarm.sample_ledger()))
+  let findings =
+    aspects.audit(
+      cockpit.view(m),
+      cockpit.context(m, Size(120, 40), True, deps()),
+    )
+  aspects.failed(findings) |> should.equal(0)
+  headless.run(cockpit.app(m), Size(120, 40), keys("9"))
+  |> headless.last_frame
+  |> frame.to_text
+  |> string.contains("Swarm")
   |> should.be_true
 }

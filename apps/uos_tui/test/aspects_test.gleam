@@ -1,5 +1,6 @@
 import gleam/list
 import gleam/option.{None}
+import gleam/string
 import gleeunit/should
 import prng
 import uos_tui/aspects.{type Context, type Finding, Context, Fail, Pass}
@@ -42,8 +43,11 @@ pub fn empty_context_fails_closed_test() {
       widget.Static("s", "hello", style.none),
       aspects.empty_context(Size(10, 1)),
     )
-  aspects.failed(findings) |> should.equal(16)
+  // 15 Fail, 1 Declared (GleamOtpSupervisor: unsupervised is Declared, not Fail), 1 Pass.
+  aspects.failed(findings) |> should.equal(15)
+  aspects.declared(findings) |> should.equal(1)
   verdict(findings, aspects.PentaStackAccessibility) |> should.equal(Pass)
+  aspects.no_failures(findings) |> should.be_false
   aspects.admissible(findings) |> should.be_false
 }
 
@@ -75,6 +79,28 @@ pub fn checklist_shape_enforced_test() {
     )
   verdict(aspects.audit(short, ctx()), aspects.ComprehensiveChecklist)
   |> should.equal(Fail)
+}
+
+pub fn checklist_unmet_items_fail_and_list_ids_test() {
+  // A correctly-shaped 5-domain/18-item checklist with everything unmet except the few ids
+  // that `cockpit.evidence_checklist_passed` could actually evidence in-process. CHK-08-C1C8
+  // has no in-process evidence source, so it must always be reported as unmet here.
+  let full =
+    widget.Checklist(
+      "c",
+      cockpit.checklist_domains([
+        "CHK-02-TAIL", "CHK-05-MUDA", "CHK-06-GRAPH", "CHK-07-DRIVE",
+        "CHK-12-GLEAM", "CHK-16-OTEL", "CHK-18-JJ",
+      ]),
+      [],
+      None,
+    )
+  let f = aspects.audit(full, ctx())
+  verdict(f, aspects.ComprehensiveChecklist) |> should.equal(Fail)
+  case list.find(f, fn(x) { x.aspect == aspects.ComprehensiveChecklist }) {
+    Ok(finding) -> string.contains(finding.evidence, "CHK-08") |> should.be_true
+    Error(_) -> should.fail()
+  }
 }
 
 pub fn barred_dependency_fails_zero_muda_test() {
@@ -110,12 +136,12 @@ pub fn git_vcs_fails_aspect_2_test() {
   |> should.equal(Fail)
 }
 
-pub fn unsupervised_runtime_fails_aspect_4_test() {
+pub fn unsupervised_runtime_declared_aspect_4_test() {
   verdict(
     aspects.audit(cockpit.view(model()), Context(..ctx(), supervised: False)),
     aspects.GleamOtpSupervisor,
   )
-  |> should.equal(Fail)
+  |> should.equal(aspects.Declared)
 }
 
 pub fn engine_ports_only_reach_declared_test() {
@@ -133,8 +159,10 @@ pub fn engine_ports_only_reach_declared_test() {
 pub fn sa_plan_requires_live_lease_test() {
   let m = cockpit.Model(..model(), lease_epoch: 0, tab: 5)
   let c = cockpit.context(m, Size(120, 40), True, ["gleam_stdlib"])
+  // No live lease epoch observed is Declared (soft), not Fail: the table is mounted, the
+  // epoch is simply not yet evidenced by a real coordinator in this invocation.
   verdict(aspects.audit(cockpit.view(m), c), aspects.SaPlanDurability)
-  |> should.equal(Fail)
+  |> should.equal(aspects.Declared)
   let m = cockpit.Model(..m, lease_epoch: 9)
   verdict(
     aspects.audit(

@@ -6,6 +6,7 @@
 
 import gleam/list
 import gleam/option.{type Option, None, Some}
+import gleam/result
 import gleam/string
 import uos_tui/frame
 import uos_tui/geometry.{type Size}
@@ -143,6 +144,35 @@ pub fn empty_context(size: Size) -> Context {
   Context(Unprobed, UnknownVcs, [], False, [], [], False, [], 0, size)
 }
 
+@external(erlang, "uos_tui_ffi", "list_dir")
+fn list_dir(path: String) -> Result(List(String), String)
+
+@external(erlang, "uos_tui_ffi", "file_read")
+fn read_file(path: String) -> Result(String, String)
+
+/// Probe the host hardware interlock directly (no declared/constant substitute): list
+/// `/sys/class/nvme`, read each `<dev>/serial` (trimmed), and report `Locked(serial)` when the
+/// denied host-OS serial (`os_nvme_serial`) is present among them, `Unlocked` when NVMe devices
+/// exist but it is absent, and `Unprobed` when sysfs cannot be listed (or lists no devices at
+/// all, since lock status cannot then be attested).
+pub fn probe_interlock() -> Interlock {
+  case list_dir("/sys/class/nvme") {
+    Error(_) -> Unprobed
+    Ok(devices) -> {
+      let serials =
+        list.filter_map(devices, fn(dev) {
+          read_file("/sys/class/nvme/" <> dev <> "/serial")
+          |> result.map(string.trim)
+        })
+      case list.contains(serials, os_nvme_serial), devices {
+        True, _ -> Locked(os_nvme_serial)
+        False, [] -> Unprobed
+        False, _ -> Unlocked
+      }
+    }
+  }
+}
+
 fn all_text(widget: Widget(msg)) -> String {
   widget |> widget.flatten |> list.flat_map(widget.texts) |> string.join("\n")
 }
@@ -210,7 +240,12 @@ fn check(
     GleamOtpSupervisor ->
       case ctx.supervised {
         True -> Finding(aspect, Pass, "runtime started as supervised child")
-        False -> Finding(aspect, Fail, "runtime not under a supervisor")
+        False ->
+          Finding(
+            aspect,
+            Declared,
+            "not started under a supervisor in this invocation",
+          )
       }
     ZigVmEngine -> port_declared(aspect, ctx, "zigvm_tlm_in")
     HermesEvidence -> port_declared(aspect, ctx, "hermes_evidence_in")
@@ -296,10 +331,31 @@ fn check(
     ComprehensiveChecklist ->
       case find_kind(widget, "Checklist") {
         Some(widget.Checklist(_, domains, _, _)) -> {
-          let items =
-            list.fold(domains, 0, fn(acc, d) { acc + list.length(d.items) })
-          case list.length(domains), items {
-            5, 18 -> Finding(aspect, Pass, "5 domains / 18 checkpoints mounted")
+          let items = list.flat_map(domains, fn(d) { d.items })
+          case list.length(domains), list.length(items) {
+            5, 18 -> {
+              let unmet =
+                list.filter_map(items, fn(i) {
+                  case i.passed {
+                    True -> Error(Nil)
+                    False -> Ok(i.id)
+                  }
+                })
+              case unmet {
+                [] ->
+                  Finding(
+                    aspect,
+                    Pass,
+                    "5 domains / 18 checkpoints mounted and passed",
+                  )
+                ids ->
+                  Finding(
+                    aspect,
+                    Fail,
+                    "unmet checklist items: " <> string.join(ids, ","),
+                  )
+              }
+            }
             d, i ->
               Finding(
                 aspect,
@@ -333,7 +389,7 @@ fn check(
               <> string.inspect(ctx.lease_epoch),
           )
         Some(widget.DataTable(..)), False ->
-          Finding(aspect, Fail, "sa-plan table without a live lease epoch")
+          Finding(aspect, Declared, "no live lease epoch observed")
         _, _ -> Finding(aspect, Fail, "no DataTable#sa-plan-tasks")
       }
   }
@@ -363,8 +419,17 @@ pub fn failed(findings: List(Finding)) -> Int {
   list.count(findings, fn(f) { f.verdict == Fail })
 }
 
-/// Admission is fail-closed: any Fail blocks.
+/// Strict two-key admission (DMC-TCM): zero `Fail` AND zero `Declared`. A `Declared` finding
+/// is bound by dictionary/config declaration, not fresh observed runtime behaviour, so it
+/// blocks full admission even though nothing has failed outright.
 pub fn admissible(findings: List(Finding)) -> Bool {
+  failed(findings) == 0 && declared(findings) == 0
+}
+
+/// The softer FAIL-only gate: any `Fail` blocks, `Declared` is tolerated. Use this where the
+/// old `admissible` behaviour is what is actually needed — e.g. jidoka stop/resume decisions
+/// that care only about outright breakage, not about declared-but-unverified evidence.
+pub fn no_failures(findings: List(Finding)) -> Bool {
   failed(findings) == 0
 }
 
