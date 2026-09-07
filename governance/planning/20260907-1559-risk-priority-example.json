@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "policy": "SC-RISK-PRIORITY-001",
+  "assessment_id": "risk-sop-policy-example-v1",
+  "plan_id": "uos/risk-sop/20260907-1559",
+  "task_id": "SOP-POLICY",
+  "actor": "codex-side-risk-sop",
+  "scope": "Repository-local policy, skill/plugin discovery and journal only; no production effects.",
+  "phase": "planning",
+  "fractal_layer": 4,
+  "observed_at": "2026-09-07T15:58:59Z",
+  "valid_until": "2026-09-08T15:58:59Z",
+  "task_state": "executing",
+  "snapshot": {
+    "kind": "working_tree",
+    "reference": "Pre-edit agent-policy observation; illustrative assessment, not current source freshness evidence.",
+    "evidence": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "6146704bcdbe32bb6b5b689890f4a022227d18ec410fd188041586f0e84a2a45",
+        "observed_at": "2026-09-07T15:58:59Z"
+      }
+    ]
+  },
+  "factors": {
+    "criticality": {
+      "value": 3,
+      "low": 3,
+      "high": 3,
+      "rationale": "Operator requested a bounded policy update; this is not incident containment.",
+      "evidence_refs": [
+        "AGENTS.md",
+        "engines/hermes/modules/sa_plan/sa_plan_store.ml:2356"
+      ]
+    },
+    "stpa": {
+      "value": 4,
+      "low": 4,
+      "high": 4,
+      "rationale": "Conflicting selection guidance can omit critical constraints; runtime enforcement is not established.",
+      "evidence_refs": [
+        "AGENTS.md",
+        "engines/hermes/modules/sa_plan/sa_plan_store.ml:2356"
+      ]
+    },
+    "fmea": {
+      "value": 4,
+      "low": 4,
+      "high": 4,
+      "rationale": "False confidence in a policy-only gate is a major evidence failure; S4 O3 Det3 produces RPN36 and band4.",
+      "evidence_refs": [
+        "AGENTS.md",
+        "engines/hermes/modules/sa_plan/sa_plan_store.ml:2356"
+      ]
+    },
+    "dependency": {
+      "value": 5,
+      "low": 5,
+      "high": 5,
+      "rationale": "The common rule is consumed by all lifecycle and agent policy entry points.",
+      "evidence_refs": [
+        "AGENTS.md",
+        "engines/hermes/modules/sa_plan/sa_plan_store.ml:2356"
+      ]
+    },
+    "impact": {
+      "value": 4,
+      "low": 4,
+      "high": 4,
+      "rationale": "One shared policy improves consistent decisions across several development and operational roles.",
+      "evidence_refs": [
+        "AGENTS.md",
+        "engines/hermes/modules/sa_plan/sa_plan_store.ml:2356"
+      ]
+    }
+  },
+  "fmea_modes": [
+    {
+      "id": "FM-RISK-001",
+      "cause": "Selection criteria and authority claims diverge across guides.",
+      "effect": "Agents select unsafe or blocked work, or call unimplemented enforcement active.",
+      "controls": "Shared explicit policy; manual scope/authority checks; report-only validation; independent runtime admission later.",
+      "s": 4,
+      "o": 3,
+      "det": 3,
+      "rpn": 36,
+      "band": 4
+    }
+  ],
+  "stpa_analysis": {
+    "controller": "UOS planning actor",
+    "control_action": "Select the next authorized task",
+    "losses": [
+      "L-RISK-UNAUTHORIZED-EFFECT"
+    ],
+    "hazards": [
+      "H-RISK-FALSE-CLEARANCE",
+      "H-RISK-STALE-SELECTION"
+    ],
+    "ucas": [
+      {
+        "type": "not_provided",
+        "applicability": "applicable",
+        "context": "A necessary hazard repair is never selected.",
+        "hazard_ids": [
+          "H-RISK-FALSE-CLEARANCE",
+          "H-RISK-STALE-SELECTION"
+        ],
+        "constraint": "Check safety class and inherited prerequisite urgency before score."
+      },
+      {
+        "type": "provided_unsafe",
+        "applicability": "applicable",
+        "context": "A high score is mistaken for release authorization.",
+        "hazard_ids": [
+          "H-RISK-FALSE-CLEARANCE",
+          "H-RISK-STALE-SELECTION"
+        ],
+        "constraint": "Authorization and effect constraints precede ranking."
+      },
+      {
+        "type": "wrong_timing",
+        "applicability": "applicable",
+        "context": "Selection relies on a stale candidate or unfinished dependency.",
+        "hazard_ids": [
+          "H-RISK-FALSE-CLEARANCE",
+          "H-RISK-STALE-SELECTION"
+        ],
+        "constraint": "Re-observe and reject affected stale/blocked selection."
+      },
+      {
+        "type": "duration",
+        "applicability": "applicable",
+        "context": "An old worker keeps acting beyond its lease or budget.",
+        "hazard_ids": [
+          "H-RISK-FALSE-CLEARANCE",
+          "H-RISK-STALE-SELECTION"
+        ],
+        "constraint": "Recheck current owner, fencing, expiry and budget before effects."
+      }
+    ]
+  },
+  "class": "P2",
+  "readiness": "ready",
+  "blockers": [],
+  "dependencies": [],
+  "score": 960,
+  "score_interval": [
+    960,
+    960
+  ],
+  "decision": {
+    "summary": "Create one local policy and bind lifecycle entry points. This sample is not a claim of runtime enforcement.",
+    "alternatives": [
+      "Continue with disconnected imported guidance",
+      "Install global hooks affecting all running sessions"
+    ],
+    "counterevidence": [
+      "Existing STPA and FDC guides already contain useful safety constraints."
+    ],
+    "assumptions": [
+      "The bounded side-conversation request covers local policy files and its own Sa-plan records."
+    ],
+    "confidence": "analyst_estimate",
+    "forecast": "Static selection consistency should improve; operational effect is unmeasured.",
+    "falsifier": "A consuming guide still permits score-only dispatch or points to a private global skill path.",
+    "acceptance": [
+      "Local validation succeeds",
+      "Agent and Superpowers bindings resolve inside the repository",
+      "No production or parent-work-order mutation"
+    ],
+    "rollback": "Revert only this packet's scoped additions using a reviewed JJ change; preserve other writers.",
+    "reviewer": "Independent review pending; author validation only.",
+    "budget": "Local deterministic tools; no remote model calls; no paid inference; one bounded task.",
+    "residuals": [
+      "Mandatory runtime scheduling and atomic authority enforcement require a separate verified implementation."
+    ],
+    "supersedes": null
+  }
+}
+
