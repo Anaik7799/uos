@@ -11,6 +11,7 @@
   "observed_at": "2026-09-07T15:58:59Z",
   "valid_until": "2026-09-08T15:58:59Z",
   "task_state": "executing",
+  "ready_since": "2026-09-07T15:58:59Z",
   "snapshot": {
     "kind": "working_tree",
     "reference": "Pre-edit agent-policy observation; illustrative assessment, not current source freshness evidence.",
@@ -178,4 +179,3 @@
     "supersedes": null
   }
 }
-

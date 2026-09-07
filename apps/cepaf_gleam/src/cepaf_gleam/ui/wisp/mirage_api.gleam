@@ -3,6 +3,7 @@
 
 import cepaf_gleam/services/mirage_hypervisor
 import cepaf_gleam/services/mirage_migration_engine.{type MigrationCandidate}
+import cepaf_gleam/services/mirage_telemetry
 import cepaf_gleam/services/mirage_unikernel_daemon.{
   type MirageDaemonState, type UnikernelInstance,
 }
@@ -147,5 +148,10 @@ pub fn instance_json(inst: UnikernelInstance) -> json.Json {
 
 pub fn hypervisors_json() -> json.Json {
   mirage_hypervisor.probe_report_to_json(mirage_hypervisor.read_probe_receipt())
+}
+
+pub fn telemetry_json() -> json.Json {
+  let state = mirage_telemetry.init_telemetry_state("nas-1")
+  mirage_telemetry.state_to_json(state)
 }
 

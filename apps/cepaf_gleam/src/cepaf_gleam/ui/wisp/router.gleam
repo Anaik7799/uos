@@ -63,6 +63,7 @@ import cepaf_gleam/ui/web/shell
 import cepaf_gleam/ui/wisp/auth
 import cepaf_gleam/ui/wisp/iam_api
 import cepaf_gleam/ui/wisp/inference_api
+import cepaf_gleam/ui/wisp/intelligence_api
 import cepaf_gleam/ui/wisp/mini_app_routes
 import cepaf_gleam/ui/wisp/mirage_api
 import cepaf_gleam/ui/wisp/podman_api
@@ -156,6 +157,21 @@ fn route_internal(path: String) -> String {
       |> json.to_string()
     "/api/v1/mirage/hypervisors" | "/api/mirage/hypervisors" ->
       mirage_api.hypervisors_json()
+      |> json.to_string()
+    "/api/v1/mirage/telemetry" | "/api/mirage/telemetry" ->
+      mirage_api.telemetry_json()
+      |> json.to_string()
+    // OpenRouter Cost-Aware Intelligence Router (SC-ROUTING-001)
+    "/api/v1/intelligence/catalog" | "/api/intelligence/catalog" ->
+      intelligence_api.catalog_json()
+      |> json.to_string()
+    "/api/v1/intelligence/route" | "/api/intelligence/route" ->
+      intelligence_api.route_request_json(
+        "task-adhoc",
+        "Query execution plan",
+        "zero_cost_prefer_free",
+        False,
+      )
       |> json.to_string()
     // Unified Fractal Forecasting & Predictive OODA (SC-HIVE-FORECAST-001, SC-PRED-001)
     "/api/v1/forecast/layers" | "/api/forecast/layers" ->
