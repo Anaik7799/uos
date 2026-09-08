@@ -1,0 +1,204 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "homeostasis-ui-repair",
+    "plan_id": "uos/homeostasis-ui/20260908-0045",
+    "task_id": "REPAIR",
+    "actor": "codex-side-homeostasis",
+    "scope": "Apply reviewed interface rules to homeostasis documentation, typed status projections, GUI/TUI rendering, route/SSE integration and focused tests in an isolated candidate. No runtime cutover or peer calls. Operator extended scope to test/real modes, 30 verified model cycles, page/component recordings, denotational algebra and test strategy.",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-08T01:27:25Z",
+    "valid_until": "2026-09-08T03:25:00Z",
+    "task_state": "executing",
+    "ready_since": "2026-09-08T01:27:25Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Canonical intake at 888b0df29e68d5e1051545f19d27175d9319db79. Repair uses isolated merge of this base and prior skills candidate efbaea22; listed hashes bind intake, not future changed output.",
+      "evidence": [
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "598653f5a9df9179b5527920f030878894787fa81d791b5ac742b0a53d60a613",
+          "observed_at": "2026-09-08T01:27:25Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam",
+          "sha256": "eb9ca76d3221bf88cbd0df9648211a6da36661703c6c50aacd2d5bbfb8fd5909",
+          "observed_at": "2026-09-08T01:27:25Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/homeostasis_fprime.gleam",
+          "sha256": "0f90cada82395ca1c1073f65670cf7d5e46a7dc19c4b77cdc5f4db8eaf05f39a",
+          "observed_at": "2026-09-08T01:27:25Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Operational feedback can mislead high-impact decisions.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/fpp/homeostasis_fprime.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Unsafe positive feedback and invalid guard inputs need containment.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/fpp/homeostasis_fprime.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O3 Det3 RPN36 gives F4; major evidence/operation damage.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/fpp/homeostasis_fprime.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Shared projection underlies GUI, TUI, APIs and their acceptance tests.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/fpp/homeostasis_fprime.gleam"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Corrects cross-surface trust and reduces misleading system reports.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam",
+          "apps/cepaf_gleam/src/cepaf_gleam/fpp/homeostasis_fprime.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-UI-FALSE-HEALTH",
+        "cause": "Static or missing telemetry is labeled healthy in a UI.",
+        "effect": "Operator acts on invalid system feedback.",
+        "controls": "Explicit unknown/stale/simulated states; source-bound checks and actual client-path tests.",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Interface author and reviewer",
+      "control_action": "Publish an operational status or enabled UI action",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "No unavailable/stale status is shown when telemetry stops.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Model unavailable states explicitly."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Static healthy badges are treated as observed evidence.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Bind labels to typed source observations."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Old events are displayed as current after reconnect.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Separate observed time from received time and reject stale order."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Status persists indefinitely without a freshness bound.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Expire live status and provide bounded retention."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 1024,
+    "score_interval": [
+      1024,
+      1024
+    ],
+    "decision": {
+      "summary": "Implement the previously reviewed corrections in an isolated candidate, using unknown state when no trusted telemetry source exists.",
+      "alternatives": [
+        "Retain static healthy fixtures as production state (rejected).",
+        "Use one typed observation projection with safe unavailable behavior and explicit simulation (selected)."
+      ],
+      "counterevidence": [
+        "Pure model tests already pass; they should remain distinct from live evidence.",
+        "Mainline advanced with multimedia fixtures; preserve their historical artifacts and label simulation rather than claim physical evolution."
+      ],
+      "assumptions": [
+        "Only homeostasis-related source/docs changes are authorized.",
+        "No trusted live physiology/peer evidence adapter is inferred from constant JSON."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Source-linked unknown/stale handling and real transport checks will prevent the previously observed false-positive acceptance.",
+      "falsifier": "Any repaired production surface still reports verified healthy peers from initial fixture data.",
+      "acceptance": [
+        "Rules/skills/process index",
+        "Homeostasis docs/spec and code agree on evidence states",
+        "Failing regressions followed by passing targeted tests",
+        "Private listener and UI checks where tooling permits",
+        "No live cutover or peer activity",
+        "30 model evolution cycles plus test/real browser and PTY recordings with source-bound artifact manifests"
+      ],
+      "rollback": "Keep isolated JJ candidate; no production rollback needed.",
+      "reviewer": "Author verification; independent admission remains separate.",
+      "budget": "One bounded Sa-plan task; attempt 2 renews authority for the expanded 30-cycle recording scope. Two-hour lease; local tests and at most three browser contexts; no paid models.",
+      "residuals": [
+        "Actual sensor/peer adapters may remain unavailable and must show unavailable.",
+        "No peer or independent subagent reviews in this side session."
+      ],
+      "supersedes": "none"
+    }
+  }
+]

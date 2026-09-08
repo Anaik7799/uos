@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "name": "uos-interface-quality",
+  "version": "1.0.0",
+  "status": "LOCAL_CANDIDATE_NOT_ADMITTED",
+  "created_at": "2026-09-07T23:30:00Z",
+  "candidate_base": "4eab8b7280e13186cca69aecc101ba17d12b0247",
+  "scope": "Repository-owned skill source, local discovery aliases and report-only validation; no global loader installation or runtime mutation.",
+  "sources": "plugins/uos-interface-quality/references/20260907-2312-primary-sources.json",
+  "scenarios": "plugins/uos-interface-quality/references/20260907-2312-acceptance-scenarios.json",
+  "skills": [
+    {
+      "name": "uos-gui-design",
+      "entry": "plugins/uos-interface-quality/skills/uos-gui-design/SKILL.md",
+      "aliases": [
+        ".agents/skills/uos-gui-design",
+        ".codex/skills/uos-gui-design",
+        ".claude/skills/uos-gui-design",
+        ".gemini/skills/uos-gui-design"
+      ]
+    },
+    {
+      "name": "uos-tui-design",
+      "entry": "plugins/uos-interface-quality/skills/uos-tui-design/SKILL.md",
+      "aliases": [
+        ".agents/skills/uos-tui-design",
+        ".codex/skills/uos-tui-design",
+        ".claude/skills/uos-tui-design",
+        ".gemini/skills/uos-tui-design"
+      ]
+    },
+    {
+      "name": "uos-ui-superpowers",
+      "entry": "plugins/uos-interface-quality/skills/uos-ui-superpowers/SKILL.md",
+      "aliases": [
+        ".agents/skills/uos-ui-superpowers",
+        ".codex/skills/uos-ui-superpowers",
+        ".claude/skills/uos-ui-superpowers",
+        ".gemini/skills/uos-ui-superpowers"
+      ]
+    }
+  ],
+  "resources": [
+    {
+      "path": "plugins/uos-interface-quality/skills/uos-gui-design/20260907-2312-gui-design.md",
+      "sha256": "c2c09ee92aec1586bfe27dddff6097d75aa1f9c0bc259164e52ba6cffc432043"
+    },
+    {
+      "path": "plugins/uos-interface-quality/skills/uos-tui-design/20260907-2312-tui-design.md",
+      "sha256": "537de387bfafa896feb660dd7926d8e0b8cf54fcd59c32ec1412c4044118a2df"
+    },
+    {
+      "path": "plugins/uos-interface-quality/skills/uos-ui-superpowers/20260907-2312-ui-superpowers.md",
+      "sha256": "761fbce99c6cc4ae831a4e4e4e82649bc8d53515815b4b39dfbfe48ed5de49f4"
+    },
+    {
+      "path": "plugins/uos-interface-quality/references/20260907-2312-interface-rules.md",
+      "sha256": "ab06fc264c322555573068cb7a36ec33eedbbe2636cd3ea8cf09495c8162bf80"
+    },
+    {
+      "path": "plugins/uos-interface-quality/references/20260907-2312-acceptance-scenarios.json",
+      "sha256": "928f7c240409ac49d440f39133ec8d0e2a003e3b0fd9962f14e19a523e95bda9"
+    },
+    {
+      "path": "plugins/uos-interface-quality/references/20260907-2312-primary-sources.json",
+      "sha256": "1cb05ee9167605ceb527ea3642019e895a292a5da52e82dc6ddf2a0228da6537"
+    },
+    {
+      "path": "plugins/uos-interface-quality/validation/dune-project",
+      "sha256": "bd2fd88223c58c6aab48ae86aa7f5509602f5771aa875392791ac929b5fc9ed9"
+    },
+    {
+      "path": "plugins/uos-interface-quality/validation/dune",
+      "sha256": "855781f202c52ded269fa8de9bf478d63154762da7516d555d73e2632e5a5d61"
+    },
+    {
+      "path": "plugins/uos-interface-quality/validation/check.ml",
+      "sha256": "7a64626cb8c62afdc6c095a4589ce166f1939d6274af0c0777816d31573fcf77"
+    },
+    {
+      "path": "tools/ui-skill-check",
+      "sha256": "bed8fc06f2f2ac25813f794d2185e4fc8493273da0cdecf8e833412f838cfa93"
+    }
+  ],
+  "prerequisites": [
+    "UOS OCaml/Dune toolchain",
+    "Yojson, Cryptokit and Unix/Str libraries",
+    "Bash, timeout, mktemp"
+  ],
+  "external_code_imported": false,
+  "independent_skill_testing": "UNRUN",
+  "runtime_admission": "NOT_GRANTED"
+}

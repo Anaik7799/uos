@@ -44,6 +44,24 @@ pub fn supported(otp: String) -> Bool {
   otp == "29"
 }
 
+/// Supported runtime identity must be internally consistent. A declaration or
+/// a healthy HTTP handler cannot replace these observations.
+pub fn coherent(vm: Vm) -> Bool {
+  supported(vm.otp)
+  && string.starts_with(vm.erts, "17.")
+  && list.all(string.split(vm.erts, "."), fn(part) {
+    part != ""
+    && list.all(string.to_graphemes(part), fn(char) {
+      string.contains("0123456789", char)
+    })
+  })
+  && vm.os_pid != ""
+  && vm.run_id != ""
+  && vm.started_utc_us > 0
+  && vm.observed_utc_us >= vm.started_utc_us
+  && vm.uptime_ms >= 0
+}
+
 pub fn valid_candidate(candidate: String) -> Bool {
   string.byte_size(candidate) == 40
   && list.all(string.to_graphemes(candidate), fn(char) {
@@ -69,7 +87,7 @@ pub fn configured(config: Configuration) -> Bool {
 }
 
 pub fn from_observation(vm: Vm, config: Configuration) -> Report {
-  Report(vm, config, supported(vm.otp) && configured(config))
+  Report(vm, config, coherent(vm) && configured(config))
 }
 
 pub fn observe() -> Report {
@@ -83,12 +101,14 @@ pub fn observe() -> Report {
 
 pub fn startup_check(report: Report) -> Result(Nil, String) {
   case
-    supported(report.vm.otp),
+    coherent(report.vm),
     report.configuration.managed,
     configured(report.configuration)
   {
     False, _, _ ->
-      Error("UOS web requires OTP 29; observed OTP " <> report.vm.otp)
+      Error(
+        "UOS web requires observed OTP 29 / ERTS 17, process identity and consistent observation times",
+      )
     True, True, False ->
       Error(
         "Managed UOS web requires a 40-hex candidate, bounded instance ID and primary/backup role",
@@ -101,6 +121,7 @@ pub fn to_json(report: Report) -> String {
   json.object([
     #("schema", json.string("uos.web-runtime-identity.v1")),
     #("runtime_ready", json.bool(report.runtime_ready)),
+    #("identity_consistent", json.bool(coherent(report.vm))),
     #("application_admitted", json.bool(False)),
     #(
       "authority",

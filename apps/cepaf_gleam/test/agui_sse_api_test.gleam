@@ -105,14 +105,9 @@ pub fn router_agui_routes_test() {
 
 pub fn homeostasis_telemetry_sse_stream_test() {
   let stream = homeostasis_telemetry_sse_stream()
-  string.contains(stream, "event: homeostasis_pid\n") |> should.be_true()
-  string.contains(stream, "event: prajna_breaker\n") |> should.be_true()
-  string.contains(stream, "event: deadman_watchdog\n") |> should.be_true()
-  string.contains(stream, "event: swarm_ooda\n") |> should.be_true()
-  string.contains(stream, "event: evolution_gate\n") |> should.be_true()
-  string.contains(stream, "event: quorum_ballot\n") |> should.be_true()
-  string.contains(stream, "event: physiological_monitor\n") |> should.be_true()
-
-  let router_stream = router.route("/api/v1/homeostasis/stream")
-  string.contains(router_stream, "event: homeostasis_pid\n") |> should.be_true()
+  string.contains(stream, "event: homeostasis_status\n") |> should.be_true()
+  string.contains(stream, "\"status\":\"unavailable\"") |> should.be_true()
+  string.contains(stream, "RATIFIED") |> should.be_false()
+  string.contains(stream, "id: homeo-") |> should.be_false()
+  router.route("/api/v1/homeostasis/stream") |> should.equal(stream)
 }

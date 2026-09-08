@@ -25,6 +25,7 @@
 
 import cepaf_gleam/agui/events.{type AgUiEvent}
 import cepaf_gleam/agui/sse_stream.{SSEEvent}
+import cepaf_gleam/ui/homeostasis_status
 import gleam/json
 import gleam/list
 import gleam/option.{Some}
@@ -201,44 +202,11 @@ pub fn agui_manifest_summary_json() -> String {
   |> json.to_string()
 }
 
-/// Emits live W3C SSE telemetry frames for cybernetic homeostasis monitoring.
+/// A truthful single snapshot for pure route/fixture consumers.
+/// Streaming HTTP is owned by indrajaal/homeostasis_http. No replay IDs
+/// are manufactured in the absence of a durable event history.
 pub fn homeostasis_telemetry_sse_stream() -> String {
-  let frames = [
-    sse_cockpit_push_frame(
-      "homeostasis_pid",
-      "{\"subsystem\":\"HOMEO-PID\",\"level\":\"NOMINAL\",\"error\":0.005,\"lyapunov_v\":0.0000125,\"control_u\":-0.002,\"msg\":\"PID closed-loop equilibrium locked: e=0.005, u=-0.002, V(e)=0.0000125, dV/dt<=0\"}",
-      "homeo-001",
-    ),
-    sse_cockpit_push_frame(
-      "prajna_breaker",
-      "{\"subsystem\":\"PRAJNA-BREAKER\",\"level\":\"CLOSED\",\"consecutive_successes\":48,\"trip_threshold\":5,\"msg\":\"Prajna circuit breaker state CLOSED, consecutive successes=48, trip threshold=5\"}",
-      "homeo-002",
-    ),
-    sse_cockpit_push_frame(
-      "deadman_watchdog",
-      "{\"subsystem\":\"DEADMAN-WATCHDOG\",\"level\":\"HEALTHY\",\"node\":\"nas-1.tail55d152.ts.net:4100\",\"dt_ms\":45,\"max_dt_ms\":1000,\"msg\":\"Watchdog pulse from node nas-1.tail55d152.ts.net:4100 verified fresh (dt=45ms <= 1000ms)\"}",
-      "homeo-003",
-    ),
-    sse_cockpit_push_frame(
-      "swarm_ooda",
-      "{\"subsystem\":\"SWARM-OODA\",\"level\":\"ORIENT->DECIDE\",\"phase\":\"orient_completed\",\"candidate\":\"mut-cand-02-heijunka\",\"msg\":\"Swarm OODA cycle: orient completed, evaluated candidate mut-cand-02-heijunka\"}",
-      "homeo-004",
-    ),
-    sse_cockpit_push_frame(
-      "evolution_gate",
-      "{\"subsystem\":\"EVO-GATE\",\"level\":\"RATIFIED\",\"candidate_fitness\":0.96,\"pareto_frontier\":true,\"msg\":\"Evolutionary gate passed: candidate non-dominated on Pareto frontier (fitness=0.96)\"}",
-      "homeo-005",
-    ),
-    sse_cockpit_push_frame(
-      "quorum_ballot",
-      "{\"subsystem\":\"QUORUM-BALLOT\",\"level\":\"CONSENSUS\",\"tally\":\"4/4\",\"supermajority\":true,\"msg\":\"4-Party Quorum (AGY, Claude, Codex, OpenRouter): 4/4 unanimous ratification for Gen 1\"}",
-      "homeo-006",
-    ),
-    sse_cockpit_push_frame(
-      "physiological_monitor",
-      "{\"subsystem\":\"PHYSIO-MONITOR\",\"level\":\"NOMINAL\",\"composite_stress\":0.38,\"stress_trend\":\"STABLE\",\"msg\":\"Multi-variable setpoints: CPU 45%, Mem 52%, Latency 48ms, Err 0.02% (Stress 0.38 <= 0.70)\"}",
-      "homeo-007",
-    ),
-  ]
-  string.concat(frames)
+  "event: homeostasis_status\ndata: "
+  <> homeostasis_status.to_json(homeostasis_status.unavailable(), 0)
+  <> "\nretry: 3000\n\n"
 }

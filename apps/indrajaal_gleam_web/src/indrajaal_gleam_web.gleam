@@ -57,6 +57,7 @@ import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
 import indrajaal/runtime_identity
+import indrajaal/homeostasis_http
 import lustre/element
 import mist.{type Connection, type ResponseData}
 
@@ -93,6 +94,12 @@ fn serve() {
     let path = "/" <> string.join(request.path_segments(req), "/")
 
     case request.path_segments(req) {
+      ["homeostasis"] | ["homeostasis", "evolution"]
+      | ["homeostasis", "components"] | ["homeostasis", "terminal"]
+      | ["homeostasis", "evolution", "hud"] | ["homeostasis", "stream"]
+      | ["api", "v1", "homeostasis"] | ["api", "v1", "homeostasis", "evolution"]
+      | ["api", "v1", "homeostasis", "stream"] -> homeostasis_http.handle(req)
+      ["api", "v1", "homeostasis", "review"] | ["api", "v1", "homeostasis", "terminal"] -> homeostasis_http.handle(req)
       // AG-UI protocol routes (SSE event streams + health)
       ["ag-ui", ..] -> {
         let json_body = c3i_router.route(path)
@@ -1039,21 +1046,14 @@ fn serve() {
     |> mist.start
 
   io.println("C3I Cockpit listener active on port " <> int.to_string(port))
-  io.println("  Tailscale FQDN:  http://nas-1.tail55d152.ts.net:4100")
-  io.println("  Tailscale IP:    http://100.87.7.78:4100")
-  io.println("  LAN:             http://192.168.1.134:4100")
-  io.println(
-    "  Verify Patrol:   http://nas-1.tail55d152.ts.net:4100/verify-patrol",
-  )
-  io.println("  Planning UI:     http://nas-1.tail55d152.ts.net:4100/planning")
-  io.println("  Testing Spec:    http://nas-1.tail55d152.ts.net:4100/testing")
-  io.println("  Wiki Index:      http://nas-1.tail55d152.ts.net:4100/wiki")
-  io.println("  ZK Master MOC:   http://nas-1.tail55d152.ts.net:4100/zk")
-  io.println("  KM Triad:        http://nas-1.tail55d152.ts.net:4100/km")
-  io.println("  Checklist:       http://nas-1.tail55d152.ts.net:4100/checklist")
-  io.println(
-    "  AG-UI SSE:       http://nas-1.tail55d152.ts.net:4100/ag-ui/events",
-  )
+  let public_base = "http://nas-1.tail55d152.ts.net:" <> int.to_string(port)
+  io.println("  Tailscale FQDN:  " <> public_base)
+  io.println("  Private staging requires the declared local resolver mapping.")
+  io.println("  Runtime identity: " <> public_base <> "/api/v1/runtime/identity")
+  io.println("  Homeostasis UI:  " <> public_base <> "/homeostasis/evolution")
+  io.println("  Planning UI:     " <> public_base <> "/planning")
+  io.println("  Wiki Index:      " <> public_base <> "/wiki")
+  io.println("  AG-UI SSE:       " <> public_base <> "/ag-ui/events")
   process.sleep_forever()
 }
 

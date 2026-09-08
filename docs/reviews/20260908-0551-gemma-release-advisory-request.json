@@ -1,0 +1,33 @@
+{
+  "schema": "uos.advisory-review-request.v1",
+  "status": "BLOCKED_PENDING_TAILSCALE_GATEWAY",
+  "provider": "OpenRouter",
+  "model": "google/gemma-4-31b-it:free",
+  "model_availability": "CONFIGURED_IN_UOS; LIVE_CATALOG_NOT_VERIFIED",
+  "max_tokens": 512,
+  "timeout_ms": 30000,
+  "free_only": true,
+  "max_provider_cost_usd": 0,
+  "endpoint": null,
+  "required_endpoint_host_suffix": ".ts.net",
+  "credential_handling": "existing approved credential broker/environment only; never include token in prompt, source, logs or command arguments",
+  "authority": "ADVISORY_ONLY",
+  "candidate": "c0480a3a91323e4819e0d7e5c3eb7a1249565728",
+  "messages": [
+    {
+      "role": "system",
+      "content": "You are an advisory release reviewer. Use only the supplied evidence. Identify concrete gaps and falsifiable checks; do not claim execution, formal proof, calibrated probability, deployment approval or access to hidden model internals. Reply in under 400 words."
+    },
+    {
+      "role": "user",
+      "content": "Review this scoped BEAM web release process. Gleam owns a typed 12-stage FPP projection; OCaml provides bounded argv-only process checks, timeout/process-group cleanup, source-stable build, SHA256 complete package inventory, smoke, browser and TUI. Mojo independently models prefix transitions and forwards operational commands through existing Python stdlib execv to the same OCaml core. Tests observed: 84 scoped EUnit,113 checker,338 finite transition rows,15 exact frontend parity cases,69 browser assertions,5 package checks. Final private canary observes actual OTP29/ERTS17 with stable run identity; unsupported health remains UNKNOWN. Production remains unmanaged with no source binding, old misleading OTP label, no proven exact rollback artifact and unresolved file-viewer authorization/path containment. Cooperative epoch/heartbeat and canonical task attempt checked before effects; no atomic compare-and-act claim. Earlier bounded backup restart and A/B/A artifact restoration tested; no production cutover, cross-node failover, manual human acceptance, complete17-aspect proof, live calibrated forecasting or Rete release integration. Existing forecast health exposes explicitly marked demonstration values with zero live samples. Rank the next three tests/fixes using STPA constraints and FMEA/dependency/impact, identify an overlooked failure mode and whether the current tests justify production admission. Do not treat the number of checks as a coverage percentage."
+    }
+  ],
+  "acceptance": [
+    "Live model catalog confirms exact requested model and zero prompt/completion pricing before dispatch",
+    "Tailscale gateway discovered and current task authority checked",
+    "One bounded request; no paid or model fallback",
+    "Record actual model/provider, response, tokens, cost, finish reason and elapsed time",
+    "Keep content advisory; independently inspect any suggested fix"
+  ]
+}

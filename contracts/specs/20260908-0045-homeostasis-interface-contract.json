@@ -1,0 +1,111 @@
+{
+  "contract_id": "SC-HOMEO-UI-001",
+  "schema_version": 1,
+  "status": "IMPLEMENTED_CANDIDATE_NOT_ADMITTED",
+  "scope": "homeostasis GUI, HTTP/SSE, terminal projection",
+  "plan_id": "uos/homeostasis-ui/20260908-0045",
+  "task_id": "REPAIR",
+  "modes": [
+    "real",
+    "test"
+  ],
+  "scenarios": [
+    "nominal",
+    "disturbance",
+    "recovery",
+    "unavailable"
+  ],
+  "cycles": {
+    "min": 1,
+    "max": 30
+  },
+  "evidence_states": [
+    "unavailable",
+    "simulated",
+    "observed",
+    "stale"
+  ],
+  "authority": "none",
+  "real_source": "local serving BEAM VM counters",
+  "missing_sources": [
+    "physiological health",
+    "CPU percentage",
+    "host memory percentage",
+    "request latency",
+    "error rate",
+    "peer votes",
+    "Pareto runtime candidates"
+  ],
+  "bounds": {
+    "source_ttl_us": 5000000,
+    "attributed_ttl_max_us": 60000000,
+    "sse_frames_per_connection": 120,
+    "sse_nominal_interval_ms": 1000,
+    "history_rows": 50,
+    "frame_characters": 16384,
+    "field_characters": 1000,
+    "terminal_columns": 240,
+    "terminal_rows": 100
+  },
+  "law_mapping": [
+    {
+      "id": "L1",
+      "law": "missing_evidence",
+      "test": "homeostasis_evidence_test"
+    },
+    {
+      "id": "L2",
+      "law": "freshness",
+      "test": "homeostasis_evidence_test"
+    },
+    {
+      "id": "L3",
+      "law": "simulation_separation",
+      "test": "homeostasis_algebra_test"
+    },
+    {
+      "id": "L4",
+      "law": "projection_parity",
+      "test": "homeostasis_algebra_test"
+    },
+    {
+      "id": "L5",
+      "law": "bounded_rendering",
+      "test": "homeostasis_evidence_test"
+    },
+    {
+      "id": "L6",
+      "law": "atomic_field_schema",
+      "test": "homeostasis_browser_check.ml"
+    },
+    {
+      "id": "L7",
+      "law": "transport_evidence_separation",
+      "test": "homeostasis_browser_check.ml"
+    },
+    {
+      "id": "L8",
+      "law": "review_monotonicity",
+      "test": "homeostasis_algebra_test"
+    },
+    {
+      "id": "L9",
+      "law": "model_accounting",
+      "test": "homeostasis_algebra_test"
+    },
+    {
+      "id": "L10",
+      "law": "sampled_energy_identity",
+      "test": "homeostasis_algebra_test"
+    }
+  ],
+  "proof_scope": "bounded executable contracts; independent Lean/Quint invocation UNRUN",
+  "release_authority": "NONE",
+  "fractal_tags": [
+    "fractal-l0",
+    "fractal-l2",
+    "fractal-l5",
+    "zk-adr",
+    "zero-muda"
+  ]
+}

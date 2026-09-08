@@ -1,9 +1,29 @@
+import gleam/list
 import gleam/string
 import gleeunit/should
 import indrajaal/runtime_identity as runtime
 
 fn vm(otp: String) -> runtime.Vm {
-  runtime.Vm(otp, "observed-erts", "123", "run-1", 100, 200, 1)
+  runtime.Vm(otp, "17.0.6", "123", "run-1", 100, 200, 1)
+}
+
+pub fn inconsistent_runtime_and_clock_cannot_report_ready_test() {
+  let base = vm("29")
+  [
+    runtime.Vm(..base, erts: "15.2.7.4"),
+    runtime.Vm(..base, erts: "17.bad"),
+    runtime.Vm(..base, erts: "17."),
+    runtime.Vm(..base, os_pid: ""),
+    runtime.Vm(..base, run_id: ""),
+    runtime.Vm(..base, started_utc_us: 0),
+    runtime.Vm(..base, observed_utc_us: 99),
+    runtime.Vm(..base, uptime_ms: -1),
+  ]
+  |> list.each(fn(value) {
+    let report = runtime.from_observation(value, config())
+    report.runtime_ready |> should.be_false()
+    runtime.startup_check(report) |> should.be_error()
+  })
 }
 
 fn config() -> runtime.Configuration {

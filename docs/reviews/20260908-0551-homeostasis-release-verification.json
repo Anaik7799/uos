@@ -1,0 +1,231 @@
+{
+  "schema": "uos.release-assurance-review.v1",
+  "recorded_at_utc": "2026-09-08T07:06:51Z",
+  "scope": "homeostasis/web release preparation in isolated side-conversation workspace",
+  "authority": "NONE",
+  "application_admitted": false,
+  "system_compliance": "NOT_VERIFIED",
+  "candidate_revision": "c0480a3a91323e4819e0d7e5c3eb7a1249565728",
+  "source_bases": [
+    "a0679e3ddc6cbe22a2b38bfcabacf28378598b39",
+    "bf136217a93b887c6f8a2f5e52cc2c3e278a5cc6"
+  ],
+  "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/codex-homeostasis-release-20260908-0551",
+  "plan": "uos/homeostasis-release/20260908-0551",
+  "task": "PREPARE",
+  "attempt": 2,
+  "task_closure": {
+    "state": "COMPLETED_SCOPED_PREPARATION",
+    "canonical_request_id": "sa-plan-1788851209967092894",
+    "production_admission": false
+  },
+  "source_binding": "Application/tools match packaged c0480a3a91323e4819e0d7e5c3eb7a1249565728. Later changes are documentation/evidence and explicit JJ tracking of the identical Nix lockfile; its SHA256 is separately bound.",
+  "release": {
+    "path": "/home/an/NAS-setup/uos/var/releases/indrajaal-web/homeostasis-native-v5-20260908-0551",
+    "files": 3523,
+    "manifest_sha256": "d73dd7f795dbe761629c6932c60ee90e32a98b46a4bc2b4047d80459b103fc40",
+    "build_seconds": 46.77354303,
+    "build_log": "/tmp/uos-native-release-843495/build.log",
+    "status": "BUILT_AND_PRIVATELY_EXECUTED"
+  },
+  "tools": {
+    "ocaml": "5.5",
+    "gleam": "1.16",
+    "otp": "29.0.6",
+    "erts": "17.0.6",
+    "mojo": "1.0.0",
+    "nix": "Determinate Nix 3.22.3 / Nix 2.35.2",
+    "toolchain": "/nix/store/6qdx3qvjidcdwjdjyanl5fawv48j1nyr-uos-release-checker-dependencies",
+    "nixpkgs": "c25784012c9982bca5b3e0de87e90bbdac8927d3",
+    "new_python_installed": false,
+    "mojo_execution": "existing pixi environment with --no-install --frozen"
+  },
+  "source_sha256": {
+    "tools/release_process.ml": "936207093f15a2391502604fc0a47298fe9e0609660a6862efe71d7a57cb0b4c",
+    "tools/release_process.mojo": "058afb57ca365d95424d25177f53516bd633ac9647843f91ebdcd711dbf5b130",
+    "tools/validation/homeostasis_browser_check.ml": "ca6678e335364079c869fa7641d1f8d0c9fc5a754d3b9c090ac137244e1108ce",
+    "ops/release/flake.nix": "7b2eb942c9f2b2f381beeaafc811ada173b4105b27b24db0e2463d9c41f029b9",
+    "ops/release/flake.lock": "1e4856ce741bc1c1d3e9cc5c0cff715dbb657828c0860dff8e5704d927322f58"
+  },
+  "tests": [
+    {
+      "name": "Gleam EUnit",
+      "result": "PASS",
+      "count": 84,
+      "evidence": "docs/evidence/20260908-0551-release/20260908-0551-unit.txt",
+      "sha256": "368ac7f8cc193a229a8bb1ada5bef4c273532355cee75d18e7d33a677f07fee9",
+      "scope": "named release/homeostasis/runtime modules; final application source unchanged"
+    },
+    {
+      "name": "native checker",
+      "result": "PASS",
+      "count": 113,
+      "evidence": "docs/evidence/20260908-0551-release/20260908-0551-checker.jsonl",
+      "sha256": "9335af49ced04bb9d06147c359b5d1cd303624194518a1f43bc9fdab641016d0",
+      "scope": "bounded process and structural stage/packet checks; not production stage receipts"
+    },
+    {
+      "name": "finite prefix model",
+      "result": "PASS",
+      "count": 338,
+      "evidence": "docs/evidence/20260908-0551-release/20260908-0551-model-table.txt",
+      "sha256": "321814068d7d0ebe454828b3ec30cd75987455e71cb8f6ea5cffd3266feb6429",
+      "scope": "Gleam/OCaml/Mojo equality; separate Gleam fault/intent tests"
+    },
+    {
+      "name": "package corruption",
+      "result": "PASS",
+      "count": 5,
+      "evidence": "docs/evidence/20260908-0551-release/20260908-0551-package-faults.jsonl",
+      "sha256": "297b6aa2199cba94aa8d91ceda5b61f4fc6ee1e1a94487b61a30502b24ae3079",
+      "scope": "baseline and four mutations of own copy; original preserved"
+    },
+    {
+      "schema": "uos.release-check.v1",
+      "stage": "frontend-parity",
+      "status": "PASS",
+      "authority": "NONE",
+      "cases": 15,
+      "evidence": "/tmp/uos-frontend-parity-6db7db",
+      "candidate": "c0480a3a91323e4819e0d7e5c3eb7a1249565728",
+      "scope": "exact exit/stdout parity for listed cases; dynamic VM values and mutation targets have separate probes"
+    },
+    {
+      "schema": "uos.release-check.v1",
+      "stage": "browser",
+      "status": "PASS",
+      "authority": "NONE",
+      "checks": 69,
+      "evidence": "/tmp/uos-release-browser-c153a9",
+      "candidate": "c0480a3a91323e4819e0d7e5c3eb7a1249565728",
+      "toolchain": "/nix/store/6qdx3qvjidcdwjdjyanl5fawv48j1nyr-uos-release-checker-dependencies",
+      "retained_evidence": "docs/evidence/20260908-0551-release/20260908-0551-browser.txt",
+      "sha256": "b5eedd73016c3d97baf92649dca61d6e43d621570d7c5be440a89613707a0f5f"
+    },
+    {
+      "name": "real TUI",
+      "result": "PASS",
+      "scope": "packaged Mojo frontend, observed own VM counters and UNKNOWN unsupported health"
+    }
+  ],
+  "staging": {
+    "unit": "uos-homeostasis-stage-0551-v5.service",
+    "invocation_id": "4b568287040b4aabb8f6dc3abd7d30bc",
+    "base_url": "http://nas-1.tail55d152.ts.net:59457",
+    "name_resolution": "explicit private local mapping; no remote reachability claim",
+    "os_pid": "2020861",
+    "run_id": "2020861-1788850173980473",
+    "otp": "29",
+    "erts": "17.0.6",
+    "identity_consistent": true,
+    "application_admitted": false,
+    "restarts": 0,
+    "cleanup": "inactive/dead; no listeners on owned ports59457/59458 at 06:56 UTC"
+  },
+  "production": {
+    "base_url": "http://nas-1.tail55d152.ts.net:4100",
+    "os_pid": "1261131",
+    "run_id": "1261131-1788827505320531",
+    "managed": false,
+    "declared_candidate": "",
+    "reported_otp": "29",
+    "actual_erts": "15.2.7.4",
+    "status": "UNCHANGED; false OTP label remains in old deployed code"
+  },
+  "coordination": {
+    "session": "codex-side-homeostasis-release-20260908-0551",
+    "resource": "runtime:indrajaal-web-staging",
+    "epoch": 3,
+    "latest_start_fence_sequence": 577,
+    "latest_stop_heartbeat_sequence": 578,
+    "peer_messages_sent": 0,
+    "subagents_used": 0,
+    "lease_scope": "cooperative; not atomic execution fencing",
+    "closure": {
+      "resource_released_sequence": 580,
+      "session_retired_sequence": 581,
+      "state": "CLOSED"
+    }
+  },
+  "clock": {
+    "observed_at": "2026-09-08T06:49:18Z",
+    "ntp_abs_offset_seconds": 0.000384755,
+    "uncertainty_seconds": 0.0169973195,
+    "source": "chronyc tracking / active risk checker",
+    "system_model_clock_equality": "NOT_CLAIMED",
+    "lamport_wall_clock_equality": "NOT_MEANINGFUL; logical sequencing and wall time are distinct"
+  },
+  "recovery": {
+    "backup_process_kill_restart": "Observed on v1 backup with primary run unchanged during that bounded restart check",
+    "artifact_aba": "v1->v2->v1 restored on private backup with candidate smoke checks",
+    "limitations": [
+      "Earlier primary later restarted at RuntimeMaxSec; no whole-drill uninterrupted-primary claim",
+      "Transient backup unit disappeared after stop; recreated saved definition before verified restoration",
+      "No production rollback, traffic draining or cross-node failover tested"
+    ]
+  },
+  "retained_failures": [
+    "Initial Mojo Process.run argument forwarding failed; changed to Python stdlib os.execv and parity passed",
+    "Missing Nix libcurl output rejected; flake corrected and browser linked/passed",
+    "Synchronous browser route abort deadlocked; asynchronous bounded handler passed final69",
+    "Expired coordinator epoch2 refused cleanup; fresh epoch3 acquired before dependent effect",
+    "Pre-ready curl connection failed; later readiness explicitly checked",
+    "RuntimeMaxSec with Restart=on-failure restarted old staging; final units use Restart=no"
+  ],
+  "blocked": [
+    "Exact current production rollback/source binding",
+    "Document/file-viewer authorization and private-path containment",
+    "Independent review/integration/admission and production ownership"
+  ],
+  "unrun": [
+    "Manual human acceptance",
+    "Production cutover and rollback",
+    "All17-aspect completion",
+    "Official FPP / new Lean / Gospel / Quint proofs",
+    "Full site/components semantic coverage",
+    "New30-cycle/30-second capture suite at final revision",
+    "Cross-node/reboot/drain/failover",
+    "Live forecast calibration and Rete release integration",
+    "End-to-end OTel delivery"
+  ],
+  "forecast_review": "docs/reviews/20260908-0551-release-decision-and-forecast-review.md",
+  "limits": [
+    "Receipts are author-observed local integrity evidence, not signatures or independent admission",
+    "Dependency profile contains C toolchain/libcurl, not every existing OCaml/Mojo/OTP/browser installation",
+    "Temporary build directories and old screenshots remain local ignored evidence; current key textual receipts are retained in source",
+    "No global success percentage is computed from overlapping tests"
+  ],
+  "documentation_validation": {
+    "journal_sections": 13,
+    "aspects": 17,
+    "checklist_domains": 5,
+    "checkpoints": 18,
+    "local_references": 7,
+    "unit": 84,
+    "browser": 69,
+    "checker": 113,
+    "model_rows": 338,
+    "status": "PASS",
+    "scope": "local document structure and retained receipts; not live publication or independent validation"
+  },
+  "openrouter_advisory": {
+    "state": "BLOCKED_PENDING_TAILSCALE_GATEWAY",
+    "requested_model": "google/gemma-4-31b-it:free",
+    "live_model_catalog": "UNVERIFIED",
+    "credential_presence_only": true,
+    "requests_sent": 0,
+    "request_packet": "docs/reviews/20260908-0551-gemma-release-advisory-request.json",
+    "user_gateway_question": "PENDING"
+  },
+  "vcs": {
+    "own_workspace_jj": true,
+    "own_workspace_dot_git": false,
+    "shared_root_dot_git": "EMPTY_PLACEHOLDER; strict absence check FAIL",
+    "shared_root_dot_git_head": false,
+    "shared_root_dot_git_config": false,
+    "jj_git_target": "internal store/git",
+    "native_git_commands": 0,
+    "shared_state_mutated": false,
+    "status": "NO_ACTIVE_COLOCATION_FOUND; strict root absence conformance remains open"
+  }
+}

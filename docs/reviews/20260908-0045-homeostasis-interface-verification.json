@@ -1,0 +1,722 @@
+{
+  "contract": "SC-HOMEO-UI-001",
+  "status": "SCOPED_CHECK_PASS",
+  "runtime_admission": "NOT_GRANTED",
+  "control_authority": "NONE",
+  "scope": "private candidate capture; receipt continuity and media integrity, not current production health",
+  "browser_views": 26,
+  "browser_verified_cycles": 780,
+  "native_terminal_cycles": 60,
+  "videos": [
+    {
+      "mode": "real",
+      "page": "homeostasis",
+      "component": "all",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.92,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-all.webm",
+        "sha256": "3c4ac93d2225820451010299157b92262226192ed52f442e065eb81e138cf31f",
+        "bytes": 3685639
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-all.json",
+        "sha256": "9b60442b7381a6944c88f93ffa1d1af8ee5cb68e7a485d5c26e8d6b8a0c8c402",
+        "bytes": 6529
+      }
+    },
+    {
+      "mode": "real",
+      "page": "homeostasis/evolution",
+      "component": "all",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 31.36,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-evolution-all.webm",
+        "sha256": "90e8eac62c695e11a2215c6887ef29cbcd3f49a4c17cdb102c404749e408aee0",
+        "bytes": 3758947
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-evolution-all.json",
+        "sha256": "14db1fc911a8f497ec9705d34a8c00990bee899ad3916cefb3ce4ed5c4018e7b",
+        "bytes": 6539
+      }
+    },
+    {
+      "mode": "real",
+      "page": "homeostasis/terminal",
+      "component": "all",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.96,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-terminal-all.webm",
+        "sha256": "a15279689d52b2520a23e3003988ba06bef7f319515f9ca271034433bd3912ff",
+        "bytes": 1458450
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-terminal-all.json",
+        "sha256": "6c3ca366513e9be9c0927f866a08485e547680d5ffbc15186cd961c7710704cd",
+        "bytes": 6538
+      }
+    },
+    {
+      "mode": "real",
+      "page": "homeostasis/components",
+      "component": "provenance",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.96,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-components-provenance.webm",
+        "sha256": "cbb0fc3beb0778d211e037a0731774b80634f8cb549c80e5fccceb3f16bec53f",
+        "bytes": 1308162
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-components-provenance.json",
+        "sha256": "abeb36c5553118866b5134705f28ba251656576f92ca8b16b0de5e0721dd27f7",
+        "bytes": 6547
+      }
+    },
+    {
+      "mode": "real",
+      "page": "homeostasis/components",
+      "component": "controls",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.96,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-components-controls.webm",
+        "sha256": "b759131eee102984a1e853e14263a278309f0a54355bbe70d593185d61b7dcb8",
+        "bytes": 949256
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-components-controls.json",
+        "sha256": "1bcc777cb119c0f1bc1c3abc3d79ca4762ed9e4e96cd9fc97f2e4190e886548a",
+        "bytes": 6545
+      }
+    },
+    {
+      "mode": "real",
+      "page": "homeostasis/components",
+      "component": "pid",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.96,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-components-pid.webm",
+        "sha256": "fd966304fe24e638c2ca70ad83d9de86279b1f16ebbb0ed223c3be07e028afa6",
+        "bytes": 1256744
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-components-pid.json",
+        "sha256": "48fc67c22eba57c2f74065224c0055476aa2ed4a967970c2c39d52ed7df17481",
+        "bytes": 6540
+      }
+    },
+    {
+      "mode": "real",
+      "page": "homeostasis/components",
+      "component": "phase",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.92,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-components-phase.webm",
+        "sha256": "02407cf0f3904ccff141026ebf50d114f8784a75e3268aa15131a2b893b7ad0d",
+        "bytes": 675347
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-components-phase.json",
+        "sha256": "28c0805328a4108ea6803d66019f76a40381d219dd3f0a65eb6735a3b63dd958",
+        "bytes": 6542
+      }
+    },
+    {
+      "mode": "real",
+      "page": "homeostasis/components",
+      "component": "physiology",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.96,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-components-physiology.webm",
+        "sha256": "d588131aaa939e8e899dbd2067a055b0ad4100152181291c778787bd2722c76e",
+        "bytes": 795698
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-components-physiology.json",
+        "sha256": "91ab517b1aea8e0bd9f4f4cfb0b8bb390849b34e6596be99e04bb3e38b72e423",
+        "bytes": 6547
+      }
+    },
+    {
+      "mode": "real",
+      "page": "homeostasis/components",
+      "component": "runtime",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 31,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-components-runtime.webm",
+        "sha256": "5e93313465c1ce2eff8e4083fe26f3e6e6efe11bf47b2b81d8d3146524cd6f35",
+        "bytes": 744349
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-components-runtime.json",
+        "sha256": "e4061cface8da35fde6e11c6fc5d722b2295fc52864fcdaa7b83eebd31b47d05",
+        "bytes": 6544
+      }
+    },
+    {
+      "mode": "real",
+      "page": "homeostasis/components",
+      "component": "pareto",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.96,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-components-pareto.webm",
+        "sha256": "58a5158b812a4431626c4b500b6f3497924f4f20230c3e1ea3929d87c91c88be",
+        "bytes": 580755
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-components-pareto.json",
+        "sha256": "1b6827f875c83adb6105a5974a0b24c47b7d8d50b6c169df223d97526be7487f",
+        "bytes": 6543
+      }
+    },
+    {
+      "mode": "real",
+      "page": "homeostasis/components",
+      "component": "quorum",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.92,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-components-quorum.webm",
+        "sha256": "39e090d5920b230d263b7fc7ba5de32b1034f169d26d4cfe2fedd876d739143b",
+        "bytes": 591139
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-components-quorum.json",
+        "sha256": "876dbb5c3e4978cde59bc04f74875d06a983796f883c158c0d7e3642efae1a4a",
+        "bytes": 6543
+      }
+    },
+    {
+      "mode": "real",
+      "page": "homeostasis/components",
+      "component": "stream",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.96,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-components-stream.webm",
+        "sha256": "69e81cf9d08e3acd80f495df3fe454428c264ab50bb057278317e24c9ab2a9f0",
+        "bytes": 1570277
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-components-stream.json",
+        "sha256": "06709de491bca1c03be37cb9aede2138833fb74ba997f439d8e02e12bba3a58e",
+        "bytes": 6543
+      }
+    },
+    {
+      "mode": "real",
+      "page": "homeostasis/components",
+      "component": "checklist",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.96,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-components-checklist.webm",
+        "sha256": "495b84166462b24c87f9fa93a8639e9d5cfe5611642eedeb71ea5036bb7cc86e",
+        "bytes": 1516733
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-real-homeostasis-components-checklist.json",
+        "sha256": "0fe92c8031c5be809388a1b49dc15216794dbbc88c2ae3d3fb3390ff36a3425f",
+        "bytes": 6546
+      }
+    },
+    {
+      "mode": "test",
+      "page": "homeostasis",
+      "component": "all",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 31.36,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-all.webm",
+        "sha256": "284a1cca70887068b2157bf58bec38bc15eb325f4572fb73779f3301b7adff1a",
+        "bytes": 3640457
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-all.json",
+        "sha256": "1fe77f5aa90c82b6caa0bb1556db3ec875e8d6fc4080d7ce4923ce708c406ca7",
+        "bytes": 5980
+      }
+    },
+    {
+      "mode": "test",
+      "page": "homeostasis/evolution",
+      "component": "all",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 31.2,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-evolution-all.webm",
+        "sha256": "9d61ddb9f78c465e10e3b2b59107ad14aac0ff1b36a6be6cb29375c804c4bbe8",
+        "bytes": 3771955
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-evolution-all.json",
+        "sha256": "8a0822a9d775132f2c5a07301664e265fb23fb9e991118436d52a091e73a4294",
+        "bytes": 5990
+      }
+    },
+    {
+      "mode": "test",
+      "page": "homeostasis/terminal",
+      "component": "all",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.96,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-terminal-all.webm",
+        "sha256": "fe819d60fe3d93b1d877adb0731bf563cf1446c68007012884ead192a71a91e4",
+        "bytes": 1409774
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-terminal-all.json",
+        "sha256": "37d658093650429860462d59e92340892a8fc89b7037625a3695ea62f343acbe",
+        "bytes": 5989
+      }
+    },
+    {
+      "mode": "test",
+      "page": "homeostasis/components",
+      "component": "provenance",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.96,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-components-provenance.webm",
+        "sha256": "60db68b38b7722b5ca3b274ea210a3813e8cdf01e9581fbd04726daf87bec52b",
+        "bytes": 1239720
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-components-provenance.json",
+        "sha256": "a1b0083c6c9fcbae046ef2dcd9e268633f1563549e14bf2ccd80b7373962d838",
+        "bytes": 5998
+      }
+    },
+    {
+      "mode": "test",
+      "page": "homeostasis/components",
+      "component": "controls",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.96,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-components-controls.webm",
+        "sha256": "a88f0de736196f4e8176768bb61e2d687eb2cfeb0de33c4ed1c844e8961b5425",
+        "bytes": 956586
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-components-controls.json",
+        "sha256": "3abd33986bf3235e83814504b14503e8672ca3b513ac1366a03b57cfb080b537",
+        "bytes": 5996
+      }
+    },
+    {
+      "mode": "test",
+      "page": "homeostasis/components",
+      "component": "pid",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.92,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-components-pid.webm",
+        "sha256": "8bd225d08025cb43c8a10b6ee0d12ad222ea012771396aabfb86860b0181405e",
+        "bytes": 1161659
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-components-pid.json",
+        "sha256": "55c6a2542d010c9e3e8db9c98505e4b74893e6b961786bb2112c4f6f9090c67a",
+        "bytes": 5991
+      }
+    },
+    {
+      "mode": "test",
+      "page": "homeostasis/components",
+      "component": "phase",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.92,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-components-phase.webm",
+        "sha256": "46d56c0d24c6bed623196ec75f24c6a84ea3791dcb68e82c12f7b644cadd1586",
+        "bytes": 695675
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-components-phase.json",
+        "sha256": "3de8caa77d105c64948decdfc3de3a0e7b49d29ccd18cce705b549dd51d095ec",
+        "bytes": 5993
+      }
+    },
+    {
+      "mode": "test",
+      "page": "homeostasis/components",
+      "component": "physiology",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.96,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-components-physiology.webm",
+        "sha256": "1a156ccab0af53375818c3a8c6f9f8ce272a825642deb9dbf324af0b6513a7e8",
+        "bytes": 714451
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-components-physiology.json",
+        "sha256": "d534072004206f24f48d7846c736d12abe7ad0f2de784f4c283e116fa8464338",
+        "bytes": 5998
+      }
+    },
+    {
+      "mode": "test",
+      "page": "homeostasis/components",
+      "component": "runtime",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.92,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-components-runtime.webm",
+        "sha256": "b1c40594a5ecc584a85a80779e14ec1f2ca2d94307fb99acf4997e19da92f079",
+        "bytes": 780566
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-components-runtime.json",
+        "sha256": "eed6a6b1177caeb50b8ed6e753759c8d0704ac753e8352134b262b4f7371285a",
+        "bytes": 5995
+      }
+    },
+    {
+      "mode": "test",
+      "page": "homeostasis/components",
+      "component": "pareto",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.92,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-components-pareto.webm",
+        "sha256": "a748f0b3c600397fd3b5aa315ab24afb5bb2261b8e36603c769980e74bf69195",
+        "bytes": 572332
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-components-pareto.json",
+        "sha256": "462d55caaddb07e1555a3c1308a6d8a5bcba2516bd9d53bb8fef7f9bd1ac10e6",
+        "bytes": 5994
+      }
+    },
+    {
+      "mode": "test",
+      "page": "homeostasis/components",
+      "component": "quorum",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.96,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-components-quorum.webm",
+        "sha256": "f0f3c28fffddf57052e4d0bfcd4f1a045f009f2b46c0457a9bfb20c804b94d3d",
+        "bytes": 606723
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-components-quorum.json",
+        "sha256": "9176129a54634f22913eaa83d723663f9d7d00b4b97d76a5eb87b75c95930533",
+        "bytes": 5994
+      }
+    },
+    {
+      "mode": "test",
+      "page": "homeostasis/components",
+      "component": "stream",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.96,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-components-stream.webm",
+        "sha256": "d13945b7b16ec2fcb1c36ed7dfeec7726093232055a9ae4f97692b899f31eca2",
+        "bytes": 1321563
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-components-stream.json",
+        "sha256": "154cb69e21e318fe2d3708b4339b6f2c04e5ca2a57920fec2a3f92558348c4c9",
+        "bytes": 5994
+      }
+    },
+    {
+      "mode": "test",
+      "page": "homeostasis/components",
+      "component": "checklist",
+      "cycles": 30,
+      "continuous_updates": true,
+      "duration_seconds": 30.96,
+      "video": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-components-checklist.webm",
+        "sha256": "d27bb0c9ba8fdaeeea1c21f897d21563b0face6705095b763013b15aa6f61771",
+        "bytes": 1514085
+      },
+      "receipt": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-test-homeostasis-components-checklist.json",
+        "sha256": "812fabba2a3d307250cddc8c78ddc03049a18b4e5ff32711fdca86fc2e989ea2",
+        "bytes": 5997
+      }
+    }
+  ],
+  "pty": [
+    {
+      "mode": "real",
+      "cycles": 30,
+      "transcript": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-pty-real.txt",
+        "sha256": "043d6b7db6b59d028902b0b3508bee1d5bccfd1a8812de482f89564c9a4afeff",
+        "bytes": 30992
+      },
+      "timing": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-pty-real.timing",
+        "sha256": "103cff91b543ca788ee5fec2bad1da8e0d8ec91dc8db1aaae315669b961987ad",
+        "bytes": 390
+      }
+    },
+    {
+      "mode": "test",
+      "cycles": 30,
+      "transcript": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-pty-test.txt",
+        "sha256": "b413159fc84191869c25a318e068d73aa381c26747fed6e42ac053a9ce35a408",
+        "bytes": 29305
+      },
+      "timing": {
+        "path": "var/evidence/homeostasis/20260908-0045/pass2/20260908-0045-pty-test.timing",
+        "sha256": "012aa8c4b28227466ecee71bc0729f0d14f05bfa0d7e2120fb392a1bdbad021f",
+        "bytes": 390
+      }
+    }
+  ],
+  "source_revision": "294661d3941946413b591285b394969def88c42e",
+  "source_binding": "Changed implementation and test hashes below; 682 application source files and 12 test/probe modules equal the compiled private copy. No production admission.",
+  "checked_at_utc": "2026-09-08 01:56:45 UTC",
+  "source_files": [
+    {
+      "sha256": "5b7c7a506cb9c4414c889b141009b69c7a65615e8b692373e7902e9eb623061a",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/fpp/homeostasis_fprime.gleam"
+    },
+    {
+      "sha256": "1de2894c94be10780574912e8f78ab56e72a6146ee04e4db908eef32973f24dd",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/homeostasis_data.gleam"
+    },
+    {
+      "sha256": "63165cfbab94e869c267f8269af78d886a93f0bd5e6285969de81fb74d86e970",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/homeostasis_status.gleam"
+    },
+    {
+      "sha256": "82e54d13b46673450c52ee8442b0df85dd2aad4240cf4133557e0ec84fdb4522",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/homeostasis.gleam"
+    },
+    {
+      "sha256": "2c1ee1287a6016b00676ff2d6d75825e3aa3817a674f38aae56b31e84cbaced0",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/homeostasis_evolution_hud.gleam"
+    },
+    {
+      "sha256": "ec84fab071cf883bf9f4d51fd94668e3e2109d847e3c60d2093436ed138958a1",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/widgets/homeostasis_control.gleam"
+    },
+    {
+      "sha256": "8b62380372458d38e20068f9c83e9af4976200bfaeb48ae2c337c4328c9aaa4c",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/homeostasis_evolution_view.gleam"
+    },
+    {
+      "sha256": "4f8b2f9c977c064533781d89151519575ef10cc2f2ad00b4b7ac04eaf266d2e4",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/homeostasis_view.gleam"
+    },
+    {
+      "sha256": "49fa8670bc4d6cff128347f15991063c8dc49d79c8689fef84f0b1415d800620",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/renderer.gleam"
+    },
+    {
+      "sha256": "f556f27c2953711c3f6949e6e081288b7c228d09c933b12acc5d6c6955647b29",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/tui/sysadmin_cockpit.gleam"
+    },
+    {
+      "sha256": "64316898c7079541a721aa2a783c2d45436070be828926d47b8ca6955d13e284",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/special_views.gleam"
+    },
+    {
+      "sha256": "526cb2f6f1e3d01d22a83a99583cc4cf9b974374a21966a811877e371197c921",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam"
+    },
+    {
+      "sha256": "335260504d7b7b9845854d8346a3b65c7ed78b0a5f11a0214bb79313db6038f7",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/homeostasis_api.gleam"
+    },
+    {
+      "sha256": "55c7dd835ca04a524f3cb9e79c9245ec402e0295c988682566b3dc5c450b835e",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam"
+    },
+    {
+      "sha256": "5b007659f6990c3721b351ca447e1f8c6c760c717c51255374c2a21781c16d3f",
+      "path": "apps/cepaf_gleam/test/agui_sse_api_test.gleam"
+    },
+    {
+      "sha256": "f09c8be03ed0212157fa46952d7ae5ac54a685df20a6be2c1de945a22f5c258d",
+      "path": "apps/cepaf_gleam/test/homeostasis_algebra_test.gleam"
+    },
+    {
+      "sha256": "7a4a443ac012a59c3a4bab7d7a91646651e48b8a276e6d706c689326492881bf",
+      "path": "apps/cepaf_gleam/test/homeostasis_evidence_test.gleam"
+    },
+    {
+      "sha256": "cb2798096b238a193b39673d392688bf146e1f4a9cfbd8056bc08d45bf8e9011",
+      "path": "apps/cepaf_gleam/test/homeostasis_fprime_wired_test.gleam"
+    },
+    {
+      "sha256": "caec50c4fe4b81589ff40f72df2ffa0517eb61311e2c369ca2137ad5ae5bd4da",
+      "path": "apps/cepaf_gleam/test/homeostasis_ui_contract_test.gleam"
+    },
+    {
+      "sha256": "df1e3aa5da40feff003a698d793066c2388d1f631231f23a8e019d31fa36bb99",
+      "path": "apps/cepaf_gleam/test/sysadmin_tui_test.gleam"
+    },
+    {
+      "sha256": "adbadb4b9473f193c8b2d5a5ff95c9462d4593e0c111f1842663d5f9a259c987",
+      "path": "apps/indrajaal_gleam_web/src/indrajaal/homeostasis_http.gleam"
+    },
+    {
+      "sha256": "5ff7aabbbe0285e377b664752f12c0f2f06bd6f468792d6172d108815ef75525",
+      "path": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam"
+    },
+    {
+      "sha256": "fcdeac69dff8897b48e98d1772d12b1a007aae4766c7b63e3f74a7354fba52d6",
+      "path": "apps/indrajaal_gleam_web/test/homeostasis_http_probe.gleam"
+    },
+    {
+      "sha256": "4d0fa13a85034044e27fe8a6fef31abf7bac01c008768c9a90c88f8f0d5243ec",
+      "path": "apps/indrajaal_gleam_web/test/homeostasis_transport_test.gleam"
+    },
+    {
+      "sha256": "b1db60cd86a6785fc2b12c57821db6e1414661c4e3b66d0d750554cc38aaeba7",
+      "path": "contracts/specs/20260908-0045-homeostasis-interface-contract.json"
+    },
+    {
+      "sha256": "edc6dd4757979097fd4142e2783a19bb8cb898a0a7f5d7a503a6d599abc1eced",
+      "path": "formal/lean/Homeostasis_Evolution.lean"
+    },
+    {
+      "sha256": "960939924c74652be544b4b8f917c26e58a6182e7f514b23328e46febb2968c3",
+      "path": "tools/homeostasis-ui-check"
+    },
+    {
+      "sha256": "9abc1da8194d83b0334e9e04a53a2293726b1e6723decafe4831deaae34fdc6c",
+      "path": "tools/validation/homeostasis_browser_check.ml"
+    },
+    {
+      "sha256": "45e463b8a72e3960279cdcea7ed830ed63e902196999396a20ca5dd099897ed4",
+      "path": "tools/validation/homeostasis_evidence_check.ml"
+    },
+    {
+      "sha256": "8bf9f7e1079b80b3799da1e2ae548fa689260ff87de1415275c9be405d6ccb61",
+      "path": "tools/validation/homeostasis_pty_check"
+    },
+    {
+      "sha256": "bdcd6bbb5f9f318f0b62abcd0be4ef75f45388968c4a752790f6920ad2fdace5",
+      "path": "tools/validation/homeostasis_recording_check.ml"
+    },
+    {
+      "sha256": "ce3cff529a1fbd9def512b1695ee9b0b5ea521179d911d3b7ec590dfa08d4c1d",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/homeostasis_evolution_engine.gleam"
+    },
+    {
+      "sha256": "87f1d9d5bb67930c523619649d86eb0e9666b6a07d7479cfc69ea20c9aa59af8",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/beam_metrics.gleam"
+    },
+    {
+      "sha256": "258bba9c5b6c697c29b38ec926700db7ddd12655113ec291775703cbf5bd245f",
+      "path": "apps/cepaf_gleam/gleam.toml"
+    },
+    {
+      "sha256": "47d99e2365ea7041812f2abc5f7ac82dded5d1a9fe8a0db9520af5a49e1ff95f",
+      "path": "apps/cepaf_gleam/manifest.toml"
+    },
+    {
+      "sha256": "c638d0826265f65f7f662e74ba5f45d7b53f6bfc1ffdd027aab5bcec909ed3eb",
+      "path": "apps/indrajaal_gleam_web/gleam.toml"
+    },
+    {
+      "sha256": "38eed0d504c0dd48abc7b0dfc2a3d9280cc8d97db358bda62a3b25d5156383ed",
+      "path": "apps/indrajaal_gleam_web/manifest.toml"
+    }
+  ],
+  "negative_controls": [
+    {
+      "case": "missing_cycle",
+      "status": "REJECTED",
+      "expected_error": "cycle count",
+      "exit_code": 2
+    },
+    {
+      "case": "stalled_update",
+      "status": "REJECTED",
+      "expected_error": "stalled render",
+      "exit_code": 2
+    },
+    {
+      "case": "clock_rollback",
+      "status": "REJECTED",
+      "expected_error": "source clock failed to advance",
+      "exit_code": 2
+    },
+    {
+      "case": "false_real_mode",
+      "status": "REJECTED",
+      "expected_error": "false real attribution",
+      "exit_code": 2
+    }
+  ],
+  "tests": {
+    "otp_release": 29,
+    "gleam_version": "1.16.0",
+    "eunit_passed": 69,
+    "eunit_failed": 0,
+    "browser_checks_passed": 43,
+    "browser_widths": [
+      320,
+      768,
+      1280
+    ],
+    "model_evolutions": 30,
+    "fixture_projection_cases": 120,
+    "source_copy_compared_files": 682,
+    "test_probe_modules_compared": 12,
+    "independent_lean": "UNRUN",
+    "full_uos_test_protocol": "UNRUN",
+    "production_cutover": "NOT_PERFORMED"
+  },
+  "skill_check": {
+    "skills": 3,
+    "aliases": 12,
+    "resources": 10,
+    "negative_fixtures_rejected": 8,
+    "behavioral_admission": "NOT_GRANTED"
+  },
+  "chronology": {
+    "intake_stamp": "20260908-0045",
+    "recording_started_utc": "2026-09-08 01:44:37 UTC",
+    "risk_attempt": 2
+  },
+  "capture_attempt": "pass2",
+  "manifest_self_hash": "Excluded to avoid recursive self-reference; bound by final JJ review candidate."
+}

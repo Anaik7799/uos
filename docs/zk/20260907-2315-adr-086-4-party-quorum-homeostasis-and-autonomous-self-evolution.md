@@ -1,3 +1,5 @@
+> **Interface claim correction — 2026-09-08; SC-HOMEO-UI-001.** This document is historical design evidence. Current homeostasis GUI/TUI data modes, source freshness, read-only control boundaries, denotational laws and verification scope are defined by the [current interface specification](../design/20260908-0045-homeostasis-interface-specification.md). Fixed “online”, “18/18 verified”, physical-source, consensus, Lyapunov convergence and production-admission claims below require independent revision-bound evidence and must not be treated as current system status. The original text is preserved below for provenance.
+
 # 20260907-2315 — ADR-086: 4-Party Sovereign Quorum Homeostasis & Cybernetic Self-Evolution Engine & EV-109 Ratification
 
 #fractal-l0 #fractal-l1 #fractal-l2 #fractal-l4 #fractal-l5 #zk-adr #zero-muda #tailscale-web #checklist-nav
