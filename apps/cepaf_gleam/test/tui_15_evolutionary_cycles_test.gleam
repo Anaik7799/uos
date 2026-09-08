@@ -18,9 +18,9 @@
 
 import cepaf_gleam/ha/homeostasis_evolution_engine.{
   type EvolutionaryMutation, type HomeostasisSystemState,
-  AutonomousEvolutionActive, EvolutionaryMutation,
-  apply_ratified_evolution, ingest_telemetry, init_homeostasis_system,
-  propose_evolution, vote_on_evolution,
+  AutonomousEvolutionActive, EvolutionaryMutation, apply_ratified_evolution,
+  ingest_telemetry, init_homeostasis_system, propose_evolution,
+  vote_on_evolution,
 }
 import cepaf_gleam/ha/multi_agent_quorum.{
   AgySovereign, ClaudeSovereign, CodexSovereign, OpenRouterSovereign,
@@ -171,7 +171,8 @@ pub fn execute_single_cycle(
   let eq_state = reach_equilibrium(state, base_time_us)
 
   // 2. Propose evolution
-  let assert Ok(prop0) = propose_evolution(eq_state, mutation, base_time_us + 4000)
+  let assert Ok(prop0) =
+    propose_evolution(eq_state, mutation, base_time_us + 4000)
 
   // 3. Quorum balloting (4-party ratification)
   let prop1 =
@@ -242,11 +243,14 @@ pub fn evolutionary_cycle_01_simd_scorer_test() {
 
   // Verify TUI Render
   let tui_text = homeostasis_evolution_view.render(s1)
-  string.contains(tui_text, "CYBERNETIC HOMEOSTASIS & 4-PARTY QUORUM EVOLUTION") |> should.be_true()
+  string.contains(tui_text, "CYBERNETIC HOMEOSTASIS & 4-PARTY QUORUM EVOLUTION")
+  |> should.be_true()
   string.contains(tui_text, "mut-01-simd-scorer") |> should.be_true()
   string.contains(tui_text, "Generation: 1") |> should.be_true()
-  string.contains(tui_text, "● uos · 1 (agy)") |> should.be_true()
-  string.contains(tui_text, "○ uos · 5 (openrouter)") |> should.be_true()
+  string.contains(tui_text, "SIMULATED") |> should.be_true()
+  string.contains(tui_text, "current owners/presence UNKNOWN")
+  |> should.be_true()
+  string.contains(tui_text, "● uos") |> should.be_false()
 }
 
 pub fn evolutionary_cycle_02_heijunka_queue_test() {
@@ -413,44 +417,41 @@ pub fn continuous_15_evolutionary_cycles_e2e_test() {
 
   // Fold through all 15 mutations, accumulating generations and testing TUI output
   let final_state =
-    list.index_fold(
-      mutations,
-      initial_state,
-      fn(acc_state, mutation, idx) {
-        let cycle_num = idx + 1
-        let base_time = 1_000_000 + cycle_num * 100_000
-        let next_state = execute_single_cycle(acc_state, mutation, base_time)
+    list.index_fold(mutations, initial_state, fn(acc_state, mutation, idx) {
+      let cycle_num = idx + 1
+      let base_time = 1_000_000 + cycle_num * 100_000
+      let next_state = execute_single_cycle(acc_state, mutation, base_time)
 
-        // Verify generation increment
-        next_state.generation |> should.equal(cycle_num)
+      // Verify generation increment
+      next_state.generation |> should.equal(cycle_num)
 
-        // Verify ratified evolution list length
-        list.length(next_state.ratified_evolutions) |> should.equal(cycle_num)
+      // Verify ratified evolution list length
+      list.length(next_state.ratified_evolutions) |> should.equal(cycle_num)
 
-        // Verify TUI rendering for every generation
-        let tui_rendered = homeostasis_evolution_view.render(next_state)
-        string.contains(tui_rendered, "Generation: " <> int.to_string(cycle_num))
-        |> should.be_true()
-        string.contains(tui_rendered, mutation.mutation_id)
-        |> should.be_true()
+      // Verify TUI rendering for every generation
+      let tui_rendered = homeostasis_evolution_view.render(next_state)
+      string.contains(tui_rendered, "Generation: " <> int.to_string(cycle_num))
+      |> should.be_true()
+      string.contains(tui_rendered, mutation.mutation_id)
+      |> should.be_true()
 
-        // Verify Sysadmin Cockpit integration with EvolutionTab
-        let cockpit_model =
-          default_model()
-          |> select_tab(EvolutionTab)
+      // Verify Sysadmin Cockpit integration with EvolutionTab
+      let cockpit_model =
+        default_model()
+        |> select_tab(EvolutionTab)
 
-        let cockpit_with_homeo =
-          sysadmin_cockpit.SysadminModel(
-            ..cockpit_model,
-            homeostasis_state: next_state,
-          )
+      let cockpit_with_homeo =
+        sysadmin_cockpit.SysadminModel(
+          ..cockpit_model,
+          homeostasis_state: next_state,
+        )
 
-        let cockpit_rendered = render(cockpit_with_homeo)
-        string.contains(cockpit_rendered, "Autonomous Evolution") |> should.be_true()
+      let cockpit_rendered = render(cockpit_with_homeo)
+      string.contains(cockpit_rendered, "Autonomous Evolution")
+      |> should.be_true()
 
-        next_state
-      },
-    )
+      next_state
+    })
 
   // Assert terminal state after 15 cycles
   final_state.generation |> should.equal(15)

@@ -1,0 +1,49 @@
+{
+  "schema": "uos.video-provenance.v1",
+  "authority": "NONE",
+  "candidate": "c65ad8e2bd85aa03dbb3d07d846129d8935a8c10",
+  "videos": [
+    {
+      "path": "cockpit.webm",
+      "sha256": "54428c539f3105eae981b4a40ba117b5b1ff135b5d4b53f567cc43fcdbaa60a3",
+      "encoded_seconds": 31.92
+    },
+    {
+      "path": "planning.webm",
+      "sha256": "5ea23b418735907a4afee6120798def943be91b4d47c0da62e637c47222f2f76",
+      "encoded_seconds": 31.16
+    },
+    {
+      "path": "mirage.webm",
+      "sha256": "df8d9fb0a9b59362d15c8eed8395bec8d53a3d6890cc8e40f62f8104789534c8",
+      "encoded_seconds": 31.72
+    },
+    {
+      "path": "wiki.webm",
+      "sha256": "e5fc7d99ec4b7626ff76879bb8d3eb52dbcdf810ac9b541b8624e6498275ad24",
+      "encoded_seconds": 31.6
+    },
+    {
+      "path": "zk.webm",
+      "sha256": "2e4e483137ce59e0902b04b5848652aea9cd31770bd7bb63bd206571d5f4b44a",
+      "encoded_seconds": 31.44
+    },
+    {
+      "path": "evolution.webm",
+      "sha256": "b02c6e0f92cf20f60d5147468fd320f4543f595416e430cb8958d288445bfdd5",
+      "encoded_seconds": 31.96
+    },
+    {
+      "path": "components.webm",
+      "sha256": "5769261b1241b7e13c5a28868a6fd41edb1272d4b7364a219dcae63017363630",
+      "encoded_seconds": 31.88
+    },
+    {
+      "path": "terminal.webm",
+      "sha256": "bb3f4997176aefbc46233fe29847c6ae0c69f1d9768c010551d100f31ee353c6",
+      "encoded_seconds": 31.2
+    }
+  ],
+  "observed_updates": [ "evolution", "components", "terminal" ],
+  "scope": "8 routes; not all components or human acceptance"
+}

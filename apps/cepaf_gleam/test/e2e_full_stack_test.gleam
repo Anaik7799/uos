@@ -6,9 +6,11 @@
 // STAMP: SC-GLM-UI-001, SC-GLM-UI-003, SC-GLM-UI-006, SC-AGUI-002, SC-SEC-001
 
 import cepaf_gleam/ui/wisp/router
+import gleam/dynamic/decode
 import gleam/http
 import gleam/http/request
 import gleam/http/response
+import gleam/json
 import gleam/list
 import gleam/string
 import gleeunit/should
@@ -408,7 +410,13 @@ pub fn e2e_workflow_prajna_biomorphic_check_test() {
   // Step 3: Check homeostasis
   let homeo = get("/api/v1/homeostasis")
   homeo.status |> should.equal(200)
-  contains(homeo.body, "kp")
+  let authority = {
+    use value <- decode.field("control_authority", decode.string)
+    decode.success(value)
+  }
+  json.parse(homeo.body, authority) |> should.equal(Ok("none"))
+  contains(homeo.body, "Observed local BEAM counters")
+  string.contains(homeo.body, "\"metrics\":null") |> should.be_true()
 }
 
 // =============================================================================

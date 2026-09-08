@@ -369,6 +369,12 @@ let main()=match Array.to_list Sys.argv with
  | [_;"runtime-check";source]->runtime_check source
  | [_;"build";dest]->build dest
  | [_;"capture-build";source]->emit "capture-build" "PASS"["evidence",`String(compile_capture source)]
+ | [_;"compat";source;mode]->
+   print_string(checked ~seconds:240. "/home/an/dev/ver/zigvm/_opam/bin/ocaml"
+    ["-I";source^"/tools";source^"/tools/homeostasis_compat_check.ml";source;mode])
+ | [_;"guard";source]->
+   print_string(checked ~seconds:120. "/home/an/dev/ver/zigvm/_opam/bin/ocaml"
+    ["-I";source^"/tools";source^"/tools/output_guard_check.ml";source])
  | [_;"verify";dest]->let rev=verify_release dest in emit "package" "PASS" ["candidate",`String rev]
  | [_;"smoke";base;rev]->smoke base rev
  | [_;"packet";p;rev]->packet p rev

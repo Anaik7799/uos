@@ -225,10 +225,11 @@ pub fn render_snapshot(
     "HOMEOSTASIS | " <> state_label,
     "Source: " <> origin,
     "Source UTC us: " <> time,
-  ], list.map(status.fields(snapshot,now_us),fn(f) { safe_text(f.1 <> ": " <> f.2) }), [
-    "Peer presence: UNKNOWN",
+    // Keep the control boundary visible before a short terminal clips metrics.
     "Control authority: NONE",
+    "Peer presence: UNKNOWN",
     "Verification: UNRUN / candidate receipts required",
+  ], list.map(status.fields(snapshot,now_us),fn(f) { safe_text(f.1 <> ": " <> f.2) }), [
     "http://nas-1.tail55d152.ts.net:4100/homeostasis/evolution",
   ]])
   case width == 0 {

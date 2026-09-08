@@ -1,0 +1,29 @@
+{
+  "schema": "uos.codex-merge.release.v1",
+  "source_commit": "78e8f379bb30c5753223f4d1f6114f515af265ab",
+  "preserved_source": "6d15a6d32f798116634a8eb8760e775eb409133c",
+  "already_covered": {
+    "source": "83d5a7caabb7ecfa28352a0ce8f091179347e9b7",
+    "main_variant": "e73430f15115e2be011c297fdc8e792f1dddb558",
+    "proof": "jj interdiff empty; current policy retained"
+  },
+  "changes": [
+    "Preserved 274 missing evidence/tool files without altering historical receipts",
+    "Retained TUI no-authority labels before clipping",
+    "Integrated archive/compatibility/media tooling and JSON numeric capture fix"
+  ],
+  "checks": {
+    "release_checker_selftest": 113,
+    "focused_homeostasis_tests": 7,
+    "historical_archive_cycles_verified": 50,
+    "integrity_positive_negative_checks": 26,
+    "archive_diff_against_source": "empty",
+    "all_listed_checks": "PASSED"
+  },
+  "remaining": [
+    "Full composed runtime/package/browser/Mojo parity testing remains M6",
+    "Native ABI baseline failure persists",
+    "Current independent review and owner acknowledgements absent"
+  ],
+  "authority": "NONE; main not advanced"
+}
