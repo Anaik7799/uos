@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Native terminal evidence from the compiled candidate; no root UOS supervisor.
+set -euo pipefail
+[[ $# = 4 ]] || { echo 'usage: homeostasis_pty_check real|test COMPILED_EBIN DEPENDENCY_LIB OUTPUT_DIR' >&2; exit 64; }
+uos_pty_mode=$1
+uos_pty_ebin=$2
+uos_pty_lib=$3
+uos_pty_output=$4
+case "$uos_pty_mode" in real) uos_pty_atom=real_data;; test) uos_pty_atom=test_data;; *) exit 64;; esac
+[[ -d "$uos_pty_ebin" && -d "$uos_pty_lib/gleam_stdlib" ]] || exit 78
+[[ "$(erl +S 2:2 -noshell -eval 'io:put_chars(erlang:system_info(otp_release)),halt().')" = 29 ]] || { echo 'OTP 29 required' >&2; exit 78; }
+mkdir -p -- "$uos_pty_output"
+uos_pty_prefix="$uos_pty_output/20260908-0045-pty-$uos_pty_mode"
+# Each frame executes the real candidate data adapter and renderer. Trusted ANSI
+# clears this private PTY only; source values are escaped by the Gleam renderer.
+uos_pty_expr="lists:foreach(fun(N) -> {Snapshot,Now}=cepaf_gleam@ui@homeostasis_data:read({selection,$uos_pty_atom,nominal,N}), View=cepaf_gleam@ui@tui@homeostasis_evolution_view:render_snapshot(Snapshot,Now,120,100), io:format(\"~c[2J~c[H~ts~nVERIFIED_CYCLE ~B/30~n\",[27,27,View,N]), timer:sleep(1000) end,lists:seq(1,30)),halt(0)."
+uos_pty_args=(timeout --kill-after=2s 45s erl +S 2:2 -noshell -pa "$uos_pty_lib"/*/ebin -pa "$uos_pty_ebin" -eval "$uos_pty_expr")
+printf -v uos_pty_command '%q ' "${uos_pty_args[@]}"
+script --quiet --return --command "$uos_pty_command" --log-out "$uos_pty_prefix.txt" --log-timing "$uos_pty_prefix.timing" > "$uos_pty_prefix.launcher.log" 2>&1
+[[ "$(rg -a -c 'VERIFIED_CYCLE [0-9]+/30' "$uos_pty_prefix.txt")" = 30 ]] || exit 1
+rg -a -q 'COMMAND_EXIT_CODE="0"' "$uos_pty_prefix.txt"
+printf 'PASS: native OTP 29 PTY, %s, 30 cycles; %s\n' "$uos_pty_mode" "$uos_pty_prefix"
+

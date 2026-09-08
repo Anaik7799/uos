@@ -57,6 +57,7 @@ import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
 import indrajaal/runtime_identity
+import indrajaal/homeostasis_http
 import lustre/element
 import mist.{type Connection, type ResponseData}
 
@@ -93,6 +94,12 @@ fn serve() {
     let path = "/" <> string.join(request.path_segments(req), "/")
 
     case request.path_segments(req) {
+      ["homeostasis"] | ["homeostasis", "evolution"]
+      | ["homeostasis", "components"] | ["homeostasis", "terminal"]
+      | ["homeostasis", "evolution", "hud"] | ["homeostasis", "stream"]
+      | ["api", "v1", "homeostasis"] | ["api", "v1", "homeostasis", "evolution"]
+      | ["api", "v1", "homeostasis", "stream"] -> homeostasis_http.handle(req)
+      ["api", "v1", "homeostasis", "review"] | ["api", "v1", "homeostasis", "terminal"] -> homeostasis_http.handle(req)
       // AG-UI protocol routes (SSE event streams + health)
       ["ag-ui", ..] -> {
         let json_body = c3i_router.route(path)

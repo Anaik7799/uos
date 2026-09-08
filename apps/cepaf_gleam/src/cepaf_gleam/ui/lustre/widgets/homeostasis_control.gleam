@@ -17,7 +17,7 @@ pub fn view(msg_mapper: fn(HomeostasisMsg) -> msg) -> Element(msg) {
     render_control("CPU Limit", "cpu", 0.85, msg_mapper),
     render_control("Memory Pressure", "mem", 0.75, msg_mapper),
     html.button([event.on_click(msg_mapper(TriggerEquilibrium))], [
-      element.text("Trigger Equilibrium"),
+      element.text("Request equilibrium review"),
     ]),
   ])
 }
@@ -29,8 +29,9 @@ fn render_control(
   msg_mapper: fn(HomeostasisMsg) -> msg,
 ) -> Element(msg) {
   html.div([attribute.class("control-row")], [
-    html.label([], [element.text(label)]),
+    html.label([attribute.attribute("for", "homeostasis-" <> metric)], [element.text(label)]),
     html.input([
+      attribute.id("homeostasis-" <> metric),
       attribute.type_("range"),
       attribute.min("0"),
       attribute.max("1"),
