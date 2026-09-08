@@ -104,3 +104,9 @@ apps/uos_swarm/test/scratch_systemd/
 # The environment itself (services/inference/max/.pixi/, ~1 GB) stays untracked,
 # exactly like the host-provisioned priv/*.so artifacts.
 !services/inference/max/pixi.lock
+
+# Formal toolchains are host-provisioned, in-project, and untracked (operator
+# mandate: all toolchains live inside the UOS project). Each is pinned by URL and
+# hash in a governance/sources/ installation manifest, exactly like the MAX/Mojo
+# pixi environment and the priv/*.so NIF artifacts.
+formal/.toolchain/
