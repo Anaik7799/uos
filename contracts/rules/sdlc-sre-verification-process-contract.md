@@ -113,3 +113,15 @@ The 5 pillars of TPS govern all software engineering and operational loops acros
 4. **Standardized Work**: Typed CLI and API schemas for Plan, Task, Oban Job, and Temporal Workflow guaranteeing deterministic reproducibility.
 5. **Heijunka (Production Leveling)**: Leveled pull queues with monotonic leases (`claim WORKER PLAN LEASE_NS TASK_ID`), preventing task starvation, thundering herds, and resource contention.
 
+---
+
+## 7. Denotational Intent, Algebraic Atlas & Constitutional Verification (SC-INTENT-ATLAS-001, SC-CONST-MIG-001)
+
+All architectural mutations, agent tool calls, and cross-layer state transitions across the SDLC and SRE pipelines must adhere to the mathematical contracts:
+1. **Denotational Valuation**: Every state mutation is modeled as an intent $I$ evaluated through $\llbracket I \rrbracket : \Sigma \to \Sigma \cup \{\bot\}$. If unconstitutional, it evaluates to $\bot$ fail-closed.
+2. **Algebraic Atlas Verification**: State transitions must map to covering charts $\{U_0 \dots U_9\}$ and preserve transition morphisms $\phi_{ij}: U_i \to U_j$ satisfying cocycle transitivity ($\phi_{jk} \circ \phi_{ij} = \phi_{ik}$) and sheaf gluing.
+3. **Constitutional Invariants ($\\Psi_0 \dots \\Psi_5, \\Omega_0, \\Omega_{0.5}$)**:
+   - Automated SRE health checks must continuously stream constitutional health $H_C \in [0.0, 1.0]$.
+   - Guardian veto is absolute and unchallengeable (`SC-CONST-007`).
+   - Any consensus collapse triggers immediate $\\Omega_{0.5}$ mutual termination fail-closed.
+   - Every mutation mints an immutable receipt (`SC-CONST-008`) and requires a pre-tested rollback path (`SC-CONST-009`).

@@ -1,0 +1,46 @@
+{
+  "id": "gen-1788856738-2K8ZRx8hlxtLwzKhl9rh",
+  "object": "chat.completion",
+  "created": 1788856738,
+  "model": "google/gemma-4-31b-it",
+  "provider": "CoreWeave",
+  "system_fingerprint": null,
+  "service_tier": null,
+  "choices": [
+    {
+      "index": 0,
+      "logprobs": null,
+      "finish_reason": "length",
+      "native_finish_reason": "length",
+      "message": {
+        "role": "assistant",
+        "content": "**SYSTEM ANALYSIS REPORT**\n**ID:** CSA-992-G4\n**SUBJECT:** Authenticity Verification of Bounded Advisory Response\n**STATUS:** ANALYSIS PENDING INPUT\n\nTo perform a cryptographic and linguistic verification of a \"bounded advisory response,\" I require the **source text** of the response in question. \n\nAs a cybernetic systems analyst, I evaluate authenticity based on the following three-tier verification framework:\n\n### 1. Structural Boundary Analysis (The \"Bound\")\nI will examine the response for specific architectural markers unique to the Gemma 4 UOS (Unified Operating System) deployment, including:\n",
+        "refusal": null,
+        "reasoning": null
+      }
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 43,
+    "completion_tokens": 128,
+    "total_tokens": 171,
+    "cost": 4.782e-05,
+    "is_byok": false,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "cache_write_tokens": 0,
+      "audio_tokens": 0,
+      "video_tokens": 0
+    },
+    "cost_details": {
+      "upstream_inference_cost": 4.782e-05,
+      "upstream_inference_prompt_cost": 4.3e-06,
+      "upstream_inference_completions_cost": 4.352e-05
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "image_tokens": 0,
+      "audio_tokens": 0
+    }
+  }
+}

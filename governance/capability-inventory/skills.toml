@@ -820,3 +820,26 @@ source = "codex"
 reference_only = false
 state = "admitted"
 
+[[skill]]
+name = "denotational-intent-algebraic-atlas"
+source = "uos"
+reference_only = false
+state = "implemented_pure_gleam_and_lean4_formal_authority"
+path = "apps/cepaf_gleam/src/cepaf_gleam/semantics/algebraic_atlas.gleam"
+authority = "SC-INTENT-ATLAS-001"
+
+[[skill]]
+name = "indrajaal-constitution-migration"
+source = "uos"
+reference_only = false
+state = "implemented_pure_gleam_and_lean4_formal_authority"
+path = "apps/cepaf_gleam/src/cepaf_gleam/fractal/l0_constitutional.gleam"
+authority = "SC-CONST-MIG-001"
+
+[[skill]]
+name = "c3i-indrajaal-holon-parity"
+source = "uos"
+reference_only = false
+state = "implemented_158_holon_holarchy"
+path = "contracts/rules/20260908-0955-c3i-indrajaal-parity-and-superiority-matrix.md"
+authority = "SC-C3I-PARITY-001"

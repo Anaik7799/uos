@@ -69,7 +69,7 @@ graph TD
    - Bidirectional transclusion syntax `[[wiki:...]]` and similarity graph calculation (`wiki_similarity.ml`).
    - Server-side typed TyXML rendering without client JavaScript.
 2. **ZigVM Zettelkasten** (`docs/zk/`):
-   - Permanent Architectural Decision Records ([`ADR-001`](file:///home/an/NAS-setup/uos/docs/zk/20260904-150139-adr-001-closed-rete-fact-schema-and-strict-typing-invariant.md) through [`ADR-086`](file:///home/an/NAS-setup/uos/docs/zk/20260907-2315-adr-086-4-party-quorum-homeostasis-and-autonomous-self-evolution.md)); 86 records, fully enumerated in [§2.2](#22-complete-decision-record-index).
+   - Permanent Architectural Decision Records ([`ADR-001`](file:///home/an/NAS-setup/uos/docs/zk/20260904-150139-adr-001-closed-rete-fact-schema-and-strict-typing-invariant.md) through [`ADR-090`](file:///home/an/NAS-setup/uos/docs/zk/20260908-1400-adr-090-20-cycle-intent-atlas-web-tui-testing.md)); 90 records, fully enumerated in [§2.2](#22-complete-decision-record-index).
    - `ADR-071`..`ADR-086` assert ratification of `EV-94`..`EV-109` and are `NOT_ADMITTED` per the [§2.1 quarantine boundary](#21-quarantine-boundary-ev-93--ev-94).
    - Structural Maps of Content (MOCs) preserving algebra-driven doctrines and fractal layers.
 3. **C3I Living Ontology & Evidence Plane** (`docs/wiki/`, `governance/`):
@@ -78,10 +78,10 @@ graph TD
 
 ---
 
-## §2.0 Permanent Architectural Decision Records (ADR-001..ADR-087)
+## §2.0 Permanent Architectural Decision Records (ADR-001..ADR-090)
 
-Enumerated from the observed corpus at `docs/zk/` on 2026-09-08 (87 records,
-`ADR-001` through `ADR-087`, no gaps and no duplicate numbers). Every row links
+Enumerated from the observed corpus at `docs/zk/` on 2026-09-08 (90 records,
+`ADR-001` through `ADR-090`, no gaps and no duplicate numbers). Every row links
 the live Tailscale view and the repository source. The `Provenance` column is
 **not** an admission verdict: it records whether the record's own ratification
 claim falls inside the quarantined evidence range described below.
@@ -244,8 +244,11 @@ record stays outside the quarantine range.
 | **ADR-083** | <span class="badge badge-fractal">#fractal-l2</span> | **NOT_ADMITTED** [^q] (EV-106) | [Dynamic Workload Autoscaler, Predictive Token Flow Optimization & EV-106 Monorepo Ratification](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-2315-adr-083-dynamic-workload-autoscaler-predictive-token-flow-and-ev106-ratification.md) | [`20260907-2315-adr-083-dynamic-workload-autoscaler-predictive-token-flow-and-ev106-ratification.md`](file:///home/an/NAS-setup/uos/docs/zk/20260907-2315-adr-083-dynamic-workload-autoscaler-predictive-token-flow-and-ev106-ratification.md) |
 | **ADR-084** | <span class="badge badge-fractal">#fractal-l0</span> | **NOT_ADMITTED** [^q] (EV-107) | [Deep Gospel/Z3 Contract Expansion, Rete-UL Rule Consistency Verifier & EV-107 Monorepo Ratification](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-2330-adr-084-deep-gospel-z3-contracts-rete-ul-and-ev107-ratification.md) | [`20260907-2330-adr-084-deep-gospel-z3-contracts-rete-ul-and-ev107-ratification.md`](file:///home/an/NAS-setup/uos/docs/zk/20260907-2330-adr-084-deep-gospel-z3-contracts-rete-ul-and-ev107-ratification.md) |
 | **ADR-085** | <span class="badge badge-fractal">#fractal-l0</span> | **NOT_ADMITTED** [^q] (EV-108) | [Ultra-Fast OODA Convergence Triad (Modular MAX SIMD Scorer, Sa-Plan Heijunka Pull Queue, Solo5 Sandboxing) & EV-108 Ratification](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-2240-adr-085-fast-ooda-convergence-simd-scorer-heijunka-solo5-and-ev108-ratification.md) | [`20260907-2240-adr-085-fast-ooda-convergence-simd-scorer-heijunka-solo5-and-ev108-ratification.md`](file:///home/an/NAS-setup/uos/docs/zk/20260907-2240-adr-085-fast-ooda-convergence-simd-scorer-heijunka-solo5-and-ev108-ratification.md) |
-| **ADR-086** | <span class="badge badge-fractal">#fractal-l0</span> | **NOT_ADMITTED** [^q] (EV-109) | [4-Party Sovereign Quorum Homeostasis & Cybernetic Self-Evolution Engine & EV-109 Ratification](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-2315-adr-086-4-party-quorum-homeostasis-and-autonomous-self-evolution.md) | [`20260907-2315-adr-086-4-party-quorum-homeostasis-and-autonomous-self-evolution.md`](file:///home/an/NAS-setup/uos/docs/zk/20260907-2315-adr-086-4-party-quorum-homeostasis-and-autonomous-self-evolution.md) |
+| **ADR-086** | <span class="badge badge-fractal">#fractal-l0</span> | **NOT_ADMITTED** [^q] (EV-109) | [4-Party Sovereign Quorum Homeostasis & Cybernetic Self-Evolution Engine & EV-109 Ratification](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-2315-adr-086-4-party-quorum-homeostasis-and-autonomous-self-evolution.md) | [`20260907-2315-adr-086-4-party-quorum-homeostasis-and-autonomous-self-evolution.md`](file:///home/an/NAS-setup/uos/docs/zk/20260907-2315-adr-086-4-party-quorum-homeostasis-and-autonomous-self-evolution.md) <!-- NOT_ADMITTED --> |
 | **ADR-087** | <span class="badge badge-fractal">#fractal-l3</span> | outside quarantine | [Provenance Integrity, the KM Gate, and the Mojo Metrics Kernel](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-0927-adr-087-provenance-integrity-km-gate-and-mojo-metrics-kernel.md) | [`20260908-0927-adr-087-provenance-integrity-km-gate-and-mojo-metrics-kernel.md`](file:///home/an/NAS-setup/uos/docs/zk/20260908-0927-adr-087-provenance-integrity-km-gate-and-mojo-metrics-kernel.md) |
+| **ADR-088** | <span class="badge badge-fractal">#fractal-l0</span> | outside quarantine | [Denotational Intent, Algebraic Atlas, and Claude Holon Review Ratification](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-1130-adr-088-denotational-intent-algebraic-atlas-and-claude-holon-evolution.md) | [`20260908-1130-adr-088-denotational-intent-algebraic-atlas-and-claude-holon-evolution.md`](file:///home/an/NAS-setup/uos/docs/zk/20260908-1130-adr-088-denotational-intent-algebraic-atlas-and-claude-holon-evolution.md) |
+| **ADR-089** | <span class="badge badge-fractal">#fractal-l0</span> | outside quarantine | [5-Cycle Design and Implementation Approach Ratification](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-1345-adr-089-5-cycle-design-and-implementation-approach.md) | [`20260908-1345-adr-089-5-cycle-design-and-implementation-approach.md`](file:///home/an/NAS-setup/uos/docs/zk/20260908-1345-adr-089-5-cycle-design-and-implementation-approach.md) |
+| **ADR-090** | <span class="badge badge-fractal">#fractal-l0</span> | outside quarantine | [20-Cycle Intent, Atlas & Dual-Surface WebUI/TUI Testing Ratification](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-1400-adr-090-20-cycle-intent-atlas-web-tui-testing.md) | [`20260908-1400-adr-090-20-cycle-intent-atlas-web-tui-testing.md`](file:///home/an/NAS-setup/uos/docs/zk/20260908-1400-adr-090-20-cycle-intent-atlas-web-tui-testing.md) |
 
 [^q]: `NOT_ADMITTED` — the record asserts ratification of an EV cycle above
 `EV-93`, which the `AGENTS.md` provenance caveat places in the quarantined
@@ -280,6 +283,7 @@ and Mermaid sources.
 - Zero-Trust Hook: `[[zk:agent_dispatch_hook]]` (`engines/hermes/modules/hermes_harness/agent_dispatch_hook.ml`)
 - Storage Safety Interlock: `[[zk:hardware_serial_interlock]]` (`HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736"`)
 - Zero-Muda Graphene Exclusion: `[[zk:pure_erlang_math]]` (`apps/cepaf_gleam/src/graphene_nif.erl`)
+- Manual TUI & GUI Verification Guide: `[[wiki:20260908-1325-tui-and-gui-manual-verification-guide]]` ([DOC-MANUAL-TUI-GUI](http://nas-1.tail55d152.ts.net:4100/docs/manual/20260908-1325-tui-and-gui-manual-verification-guide.md))
 
 ## Comprehensive verification checklist
 

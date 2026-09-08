@@ -119,7 +119,7 @@ The operational system coordinates across five distinct language tiers:
 ## §4.0 Bi-Directional Transclusion Registry
 
 - Permanent MOC: `[[zk:20260905-1801-moc-uos-unified-master]]`
-- ADR Directory (87 records, `ADR-001`..`ADR-087`, enumerated from `docs/zk/` on 2026-09-08).
+- ADR Directory (90 records, `ADR-001`..`ADR-090`, enumerated from `docs/zk/` on 2026-09-08).
   Sixteen records marked **NOT_ADMITTED** assert ratification of `EV-94`..`EV-109`,
   which the [`AGENTS.md`](http://nas-1.tail55d152.ts.net:4100/files/AGENTS.md) provenance caveat
   places in the quarantined evidence range; see
@@ -212,6 +212,9 @@ The operational system coordinates across five distinct language tiers:
   - `[[zk:20260907-2240-adr-085-fast-ooda-convergence-simd-scorer-heijunka-solo5-and-ev108-ratification]]` [ADR-085](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-2240-adr-085-fast-ooda-convergence-simd-scorer-heijunka-solo5-and-ev108-ratification.md) Ultra-Fast OODA Convergence Triad (Modular MAX SIMD Scorer, Sa-Plan H... — **NOT_ADMITTED** (claims EV-108)
   - `[[zk:20260907-2315-adr-086-4-party-quorum-homeostasis-and-autonomous-self-evolution]]` [ADR-086](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-2315-adr-086-4-party-quorum-homeostasis-and-autonomous-self-evolution.md) 4-Party Sovereign Quorum Homeostasis & Cybernetic Self-Evolution Engi... — **NOT_ADMITTED** (claims EV-109)
   - `[[zk:20260908-0927-adr-087-provenance-integrity-km-gate-and-mojo-metrics-kernel]]` [ADR-087](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-0927-adr-087-provenance-integrity-km-gate-and-mojo-metrics-kernel.md) Provenance Integrity, the KM Gate, and the Mojo Metrics Kernel
+  - `[[zk:20260908-1130-adr-088-denotational-intent-algebraic-atlas-and-claude-holon-evolution]]` [ADR-088](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-1130-adr-088-denotational-intent-algebraic-atlas-and-claude-holon-evolution.md) Denotational Intent, Algebraic Atlas, and Claude Holon Review Ratification
+  - `[[zk:20260908-1345-adr-089-5-cycle-design-and-implementation-approach]]` [ADR-089](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-1345-adr-089-5-cycle-design-and-implementation-approach.md) 5-Cycle Design and Implementation Approach Ratification
+  - `[[zk:20260908-1400-adr-090-20-cycle-intent-atlas-web-tui-testing]]` [ADR-090](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-1400-adr-090-20-cycle-intent-atlas-web-tui-testing.md) 20-Cycle Intent, Atlas & Dual-Surface WebUI/TUI Testing Ratification
 - Formal Proofs:
   - `[[zk:TwoLattice_STM]]` (`formal/lean/TwoLattice_STM.lean`)
   - `[[zk:Traceability]]` (`formal/lean/Traceability.lean`)
@@ -254,6 +257,8 @@ The operational system coordinates across five distinct language tiers:
   - `[[zk:ADR-066]]` Sa-Plan Exclusivity, Fractal Jidoka & TPS Universal Execution Authority ([ADR-066 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-1530-adr-066-sa-plan-fractal-jidoka-tps-and-universal-execution-authority.md))
   - `[[zk:ADR-067]]` Fractal Symbiosis, Sa-Plan Sublimation & EV-91 Ratification ([ADR-067 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-1550-adr-067-fractal-symbiosis-sa-plan-sublimation-and-ev91-ratification.md))
   - `[[zk:ADR-068]]` Multidimensional Fractal Vectors & 10-Layer × 7-Surface Sa-Plan TPS Matrix ([ADR-068 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-1605-adr-068-multidimensional-fractal-vectors-sa-plan-tps-matrix.md))
+  - `[[wiki:20260908-1325-tui-and-gui-manual-verification-guide]]` ([Manual TUI & GUI Verification Guide](http://nas-1.tail55d152.ts.net:4100/docs/manual/20260908-1325-tui-and-gui-manual-verification-guide.md))
+
 
 
 

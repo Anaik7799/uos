@@ -1,0 +1,37 @@
+{
+  "version": "1.0.0",
+  "name": "uos-baseline-intent",
+  "authority": "sa-plan",
+  "target_drive_serial": "SAMSUNG_990_PRO_SECONDARY",
+  "prajna_health_threshold": 0.85,
+  "topology_nodes": [
+    "nas-1.tail55d152.ts.net",
+    "vm-1.tail55d152.ts.net"
+  ],
+  "containers": [
+    {
+      "name": "c3i-zenoh-router",
+      "image": "eclipse/zenoh:1.2.1",
+      "port": 8080,
+      "enabled": true
+    },
+    {
+      "name": "c3i-redis-telemetry",
+      "image": "redis:7.2-alpine",
+      "port": 6379,
+      "enabled": true
+    },
+    {
+      "name": "c3i-postgres-store",
+      "image": "postgres:16-alpine",
+      "port": 5432,
+      "enabled": true
+    }
+  ],
+  "zenoh_topics": [
+    "indrajaal/l0/const/**",
+    "indrajaal/l1/atomic/**",
+    "indrajaal/l2/health/**",
+    "indrajaal/otel/spans/**"
+  ]
+}
