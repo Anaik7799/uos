@@ -41,25 +41,30 @@ read_repo_file(RelativePath) ->
                 {error, eisdir} ->
                     render_dir_listing(FullPath, CleanPath);
                 {error, enoent} ->
-                    %% Try adding .md extension
-                    case file:read_file(FullPath ++ ".md") of
-                        {ok, MdBin} -> {ok, MdBin};
+                    PrivCandidate = filename:join([Root, "apps/cepaf_gleam/priv/static", CleanPath]),
+                    case file:read_file(PrivCandidate) of
+                        {ok, PrivBin} -> {ok, PrivBin};
                         _ ->
-                            %% Search in directory for matching file prefix/substring
-                            Dir = filename:dirname(FullPath),
-                            Base = string:lowercase(filename:basename(FullPath)),
-                            case file:list_dir(Dir) of
-                                {ok, Files} ->
-                                    Matching = [F || F <- Files,
-                                        string:find(string:lowercase(F), Base) =/= nomatch],
-                                    case Matching of
-                                        [FirstMatch | _] ->
-                                            file:read_file(filename:join([Dir, FirstMatch]));
-                                        [] ->
-                                            {error, <<"enoent">>}
-                                    end;
+                            %% Try adding .md extension
+                            case file:read_file(FullPath ++ ".md") of
+                                {ok, MdBin} -> {ok, MdBin};
                                 _ ->
-                                    {error, <<"enoent">>}
+                                    %% Search in directory for matching file prefix/substring
+                                    Dir = filename:dirname(FullPath),
+                                    Base = string:lowercase(filename:basename(FullPath)),
+                                    case file:list_dir(Dir) of
+                                        {ok, Files} ->
+                                            Matching = [F || F <- Files,
+                                                string:find(string:lowercase(F), Base) =/= nomatch],
+                                            case Matching of
+                                                [FirstMatch | _] ->
+                                                    file:read_file(filename:join([Dir, FirstMatch]));
+                                                [] ->
+                                                    {error, <<"enoent">>}
+                                            end;
+                                        _ ->
+                                            {error, <<"enoent">>}
+                                    end
                             end
                     end;
                 {error, Reason} ->
