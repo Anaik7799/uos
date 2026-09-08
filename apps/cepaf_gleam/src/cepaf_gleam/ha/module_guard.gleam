@@ -33,6 +33,9 @@
 ////
 //// STAMP: SC-SATYA-001, SC-TRUTH-001, SC-NASA-001
 
+import gleam/bit_array
+import gleam/dynamic/decode
+import gleam/json
 import gleam/string
 
 /// Result of a module guard check
@@ -57,53 +60,58 @@ pub type GuardVerdict {
 // JSON API Guards — verify every API response before sending
 // ═══════════════════════════════════════════════════════════════
 
-/// Guard a JSON API response — verify non-empty, minimum length, contains expected field
+/// Syntax and exact top-level field-presence guard, bounded to one MiB.
+/// Passing bytes are preserved. Value schemas and authorization are separate.
 pub fn guard_json(
   output: String,
   endpoint_name: String,
   expected_field: String,
 ) -> GuardResult {
-  case string.length(output) < 3 {
-    True ->
-      GuardFailed(
-        "JSON empty for " <> endpoint_name,
-        "{\"error\":\"empty_response\",\"endpoint\":\""
-          <> endpoint_name
-          <> "\"}",
-      )
-    False ->
-      case string.contains(output, expected_field) {
-        True -> GuardPassed(output)
-        False ->
-          GuardFailed(
-            "JSON missing field '"
-              <> expected_field
-              <> "' for "
-              <> endpoint_name,
-            "{\"error\":\"missing_field\",\"field\":\""
-              <> expected_field
-              <> "\",\"endpoint\":\""
-              <> endpoint_name
-              <> "\"}",
-          )
+  let bytes = output |> bit_array.from_string |> bit_array.byte_size
+  case bytes < 3, bytes > 1_048_576 {
+    True, _ -> json_failure("empty_response", endpoint_name, expected_field)
+    _, True -> json_failure("response_too_large", endpoint_name, expected_field)
+    _, _ -> {
+      let decoder = {
+        use value <- decode.field(expected_field, decode.dynamic)
+        decode.success(value)
       }
+      case json.parse(output, decoder) {
+        Ok(_) -> GuardPassed(output)
+        Error(json.UnableToDecode(_)) ->
+          json_failure("missing_field", endpoint_name, expected_field)
+        Error(_) -> json_failure("invalid_json", endpoint_name, expected_field)
+      }
+    }
   }
 }
 
-/// Guard a JSON response — only check non-empty (for endpoints with variable structure)
+fn json_failure(error: String, endpoint: String, field: String) -> GuardResult {
+  GuardFailed(
+    "JSON " <> error <> " for " <> endpoint,
+    json.object([
+      #("error", json.string(error)),
+      #("endpoint", json.string(endpoint)),
+      #("field", json.string(field)),
+    ])
+      |> json.to_string,
+  )
+}
+
+/// Guard variable JSON structure with the same byte and syntax limits.
 pub fn guard_json_nonempty(
   output: String,
   endpoint_name: String,
 ) -> GuardResult {
-  case string.length(output) < 3 {
-    True ->
-      GuardFailed(
-        "JSON empty for " <> endpoint_name,
-        "{\"error\":\"empty_response\",\"endpoint\":\""
-          <> endpoint_name
-          <> "\"}",
-      )
-    False -> GuardPassed(output)
+  let bytes = output |> bit_array.from_string |> bit_array.byte_size
+  case bytes < 3, bytes > 1_048_576 {
+    True, _ -> json_failure("empty_response", endpoint_name, "")
+    _, True -> json_failure("response_too_large", endpoint_name, "")
+    _, _ ->
+      case json.parse(output, decode.dynamic) {
+        Ok(_) -> GuardPassed(output)
+        Error(_) -> json_failure("invalid_json", endpoint_name, "")
+      }
   }
 }
 
@@ -220,17 +228,31 @@ pub fn is_passed(result: GuardResult) -> Bool {
 pub fn verdict(result: GuardResult) -> GuardVerdict {
   case result {
     GuardPassed(_) -> Passed
-    GuardFailed(reason, _) ->
-      case string.contains(reason, "empty") {
-        True -> FailedEmpty
+    GuardFailed(reason, fallback) -> {
+      let error_decoder = {
+        use error <- decode.field("error", decode.string)
+        decode.success(error)
+      }
+      case json.parse(fallback, error_decoder) {
+        Ok("empty_response") -> FailedEmpty
+        Ok("missing_field") -> FailedMissingField
+        Ok("invalid_json") | Ok("response_too_large") -> FailedCorrupted
+        _ -> legacy_verdict(reason)
+      }
+    }
+  }
+}
+
+fn legacy_verdict(reason: String) -> GuardVerdict {
+  case string.contains(reason, "empty") {
+    True -> FailedEmpty
+    False ->
+      case string.contains(reason, "missing field") {
+        True -> FailedMissingField
         False ->
-          case string.contains(reason, "missing field") {
-            True -> FailedMissingField
-            False ->
-              case string.contains(reason, "short") {
-                True -> FailedTooShort
-                False -> FailedCorrupted
-              }
+          case string.contains(reason, "short") {
+            True -> FailedTooShort
+            False -> FailedCorrupted
           }
       }
   }
