@@ -98,6 +98,93 @@ let unit_layer () =
 
   check (floor_bytes = mib 512) "UNIT floor is 512 MiB" (string_of_int floor_bytes)
 
+let numeric_domain_layer () =
+  let open Resource_envelope in
+  let verdict needed margin available =
+    evaluate (Disk_space { path = "/numeric-fixture"; bytes_needed = needed; margin })
+      (Space { available_bytes = available })
+  in
+  List.iter
+    (fun (label, needed, margin, available) ->
+      let result = verdict needed margin available in
+      check (not result.met) ("NUMERIC " ^ label) result.detail;
+      check (not (satisfied [result]))
+        ("NUMERIC " ^ label ^ " never conveys authority") "")
+    [ ("negative request", -1, 0.20, floor_bytes);
+      ("negative margin", floor_bytes, -1.0, 2 * floor_bytes);
+      ("negative infinite margin", floor_bytes, neg_infinity, 2 * floor_bytes);
+      ("positive infinite margin", 0, infinity, floor_bytes);
+      ("nan margin", 0, nan, floor_bytes);
+      ("negative observed capacity", min_int, 0.20, -1);
+      ("subtraction wrap", min_int, 0.0, max_int);
+      ("invalid negative capacity", 0, 0.0, min_int) ];
+  check (verdict 0 0.0 floor_bytes).met "NUMERIC zero request at floor" "";
+  check (not (verdict 0 0.0 (floor_bytes - 1)).met)
+    "NUMERIC zero request one byte below floor" "";
+  check (verdict (max_int - floor_bytes) 0.0 max_int).met
+    "NUMERIC full-width valid capacity remains supported" "";
+  check (not (verdict max_int 0.0 max_int).met)
+    "NUMERIC full-width request still needs floor" "";
+  (* Capacity integer rounding must not hide a one-byte shortage. *)
+  let needed = max_int / 4 in
+  check (not (verdict needed 1.0 (needed * 2 - 1)).met)
+    "NUMERIC exact large margin rejects one-byte shortage" "";
+  check (verdict needed 1.0 (needed * 2)).met
+    "NUMERIC exact large margin accepts equality" ""
+
+(* Independent oracle: decompose IEEE-754 bits and compare integer products.
+   It never calls Q.of_float or the implementation's resource arithmetic. *)
+let numeric_oracle needed margin available =
+  if needed < 0 || available < 0 || margin < 0.0
+     || (match classify_float margin with FP_nan | FP_infinite -> true | _ -> false)
+  then false
+  else
+    let bits = Int64.bits_of_float (1.0 +. margin) in
+    let exponent = Int64.(to_int (logand (shift_right_logical bits 52) 0x7ffL)) - 1023 - 52 in
+    let significand = Int64.(logor (logand bits 0xfffffffffffffL) 0x10000000000000L) in
+    let request = Z.mul (Z.of_int needed) (Z.of_int64 significand) in
+    let capacity = Z.of_int available in
+    let capacity, request =
+      if exponent < 0 then Z.shift_left capacity (-exponent), request
+      else capacity, Z.shift_left request exponent in
+    Z.compare capacity request >= 0
+    && Z.compare (Z.sub (Z.of_int available) (Z.of_int needed))
+         (Z.of_int Resource_envelope.floor_bytes) >= 0
+
+let numeric_oracle_layer () =
+  let open Resource_envelope in
+  let values = [min_int; -1; 0; 1; floor_bytes - 1; floor_bytes; floor_bytes + 1;
+    max_int / 4; max_int / 2; max_int - floor_bytes; max_int] in
+  let margins = [neg_infinity; -1.0; -0.0; 0.0; Float.min_float; 0.20; 0.25;
+    0.5; 1.0; 2.0; max_float; infinity; nan] in
+  let compare_one needed margin available =
+    let actual = evaluate (Temp_space {bytes_needed = needed; margin})
+      (Space {available_bytes = available}) in
+    let expected = numeric_oracle needed margin available in
+    check (actual.met = expected) "ORACLE exact space decision"
+      (Printf.sprintf "needed=%d margin=%.17g available=%d expected=%b actual=%b"
+        needed margin available expected actual.met);
+    check (not (satisfied [actual])) "ORACLE facts never mint receipts" ""
+  in
+  List.iter (fun needed -> List.iter (fun margin ->
+    List.iter (compare_one needed margin) values) margins) values;
+  (* Identically seeded generators feed oracle and final interpretations. *)
+  List.iter (fun seed ->
+    let initial = Random.State.make [|seed|] and final = Random.State.make [|seed|] in
+    let generate state =
+      let needed = Random.State.full_int state max_int in
+      let available = Random.State.full_int state max_int in
+      let margin = List.nth margins (Random.State.int state (List.length margins)) in
+      needed, margin, available
+    in
+    for _ = 1 to 500 do
+      let n, m, a = generate initial and n2, m2, a2 = generate final in
+      let observed = evaluate (Disk_space {path="/seeded"; bytes_needed=n2; margin=m2})
+        (Space {available_bytes=a2}) in
+      check (observed.met = numeric_oracle n m a)
+        ("TWIN-SEED " ^ string_of_int seed) ""
+    done) [20260907; 1906]
+
 let supervision_unit_layer () =
   let open Resource_envelope in
   let exact = Exact_executable { path = "/oracle"; expected = sample_identity } in
@@ -528,7 +615,9 @@ let () =
     (fun (name, layer) ->
       layer ();
       Printf.printf "  %-12s done\n" name)
-    [ ("unit", unit_layer); ("supervision", supervision_unit_layer);
+    [ ("unit", unit_layer); ("numeric", numeric_domain_layer);
+      ("oracle", numeric_oracle_layer);
+      ("supervision", supervision_unit_layer);
       ("feature", feature_layer); ("bdd", bdd_layer);
       ("property", property_layer); ("otel", otel_layer); ("fuzz", fuzz_layer);
       ("chaos", chaos_layer); ("structure", structure_layer) ];

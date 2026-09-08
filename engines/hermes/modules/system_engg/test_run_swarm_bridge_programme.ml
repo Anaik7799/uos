@@ -34,6 +34,47 @@ let no_programme_rows path =
       | Ok None, Ok [], Ok [] -> true
       | _ -> false)
 
+let contains text fragment =
+  let rec scan index =
+    index + String.length fragment <= String.length text
+    && (String.sub text index (String.length fragment) = fragment || scan (index + 1))
+  in scan 0
+
+let unavailable_preflight_has_no_effect () =
+  let cwd = Sys.getcwd () in
+  let directory = Filename.temp_file "resource-preflight-fixture" "" in
+  Sys.remove directory;
+  Unix.mkdir directory 0o700;
+  let state = Filename.concat directory "state" in
+  let db = Filename.concat directory Run_swarm_bridge_programme.state_path in
+  let finally () =
+    Sys.chdir cwd;
+    if Sys.file_exists db then Sys.remove db;
+    if Sys.file_exists state then Unix.rmdir state;
+    Unix.rmdir directory
+  in
+  Fun.protect ~finally (fun () ->
+    Sys.chdir directory;
+    let refused = function
+      | Error reason -> contains reason "owner injection"
+      | Ok _ -> false
+    in
+    check "unavailable observer is disclosed even when state directory is absent"
+      (refused (Run_swarm_bridge_programme.preflight_state_path
+        Run_swarm_bridge_programme.state_path));
+    check "unavailable materialization refuses before creating state directory"
+      (refused (Run_swarm_bridge_programme.materialize ~now_ns:1L)
+       && not (Sys.file_exists state));
+    Unix.mkdir state 0o700;
+    let sentinel = "not a database: no SQLite open is authorized" in
+    let channel = open_out_bin db in
+    output_string channel sentinel;
+    close_out channel;
+    check "unavailable materialization preserves existing bytes and creates no sidecars"
+      (refused (Run_swarm_bridge_programme.materialize ~now_ns:1L)
+       && Digest.file db = Digest.string sentinel
+       && Array.to_list (Sys.readdir state) = ["run_swarm_bridge_programme.sqlite3"]))
+
 let count_matching values ~f =
   List.fold_left (fun count value -> if f value then count + 1 else count) 0
     values
@@ -133,9 +174,15 @@ let () =
      && Result.is_error
           (Run_swarm_bridge_programme.parse_cli_arguments
              [ "--path"; "/tmp/unbounded.sqlite3" ]));
-  check "operator state path passes resource preflight"
-    (Run_swarm_bridge_programme.preflight_state_path
-       Run_swarm_bridge_programme.state_path = Ok ());
+  check "operator state path refuses unavailable observation"
+    (Result.is_error (Run_swarm_bridge_programme.preflight_state_path
+       Run_swarm_bridge_programme.state_path));
+  unavailable_preflight_has_no_effect ();
+  let model = Resource_envelope.evaluate
+    (Resource_envelope.Disk_space {path = "/fixture"; bytes_needed = 1; margin = 0.20})
+    (Resource_envelope.Space {available_bytes = 1024 * 1024 * 1024}) in
+  check "ample fixture fact is met without granting operational authority"
+    (model.met && not (Resource_envelope.satisfied [model]));
   check "resource envelope declares proportional disk margin and 512 MiB floor"
     (match Run_swarm_bridge_programme.state_resources
              Run_swarm_bridge_programme.state_path with
@@ -306,14 +353,14 @@ let () =
                     ~now_ns:72L)
       in
       check "cancelled recovery projection is refused on replay" refused);
-  let total = 19 in
-  let skipped = total - !executed in
-  if !failures = 0 && skipped = 0 then begin
+  let total = 23 in
+  let skipped = max 0 (total - !executed) in
+  if !failures = 0 && !executed = total then begin
     let observation = T.observe ~suite:"run_swarm_bridge_programme"
         ~passed:!executed ~failed:0 ~skipped:0 in
     print_string (T.emit observation
       ~targets:[ Stanza.run_swarm_bridge_programme ]);
-    print_endline "run Swarm bridge programme laws: 19/19 passed"
+    Printf.printf "run Swarm bridge programme laws: %d/%d passed\n" !executed total
   end else begin
     let observation = T.observe ~suite:"run_swarm_bridge_programme"
         ~passed:(!executed - !failures) ~failed:!failures ~skipped in

@@ -69,14 +69,22 @@ let operational_status = Implemented_unavailable operational_unavailable_reason
    99%). The floor is the backstop the margin is not. Margin is checked first so
    the reason a caller sees is the tighter of the two constraints. *)
 let space_verdict ~needed ~margin available =
-  let threshold = float_of_int needed *. (1. +. margin) in
-  let margin_ok = float_of_int available >= threshold in
-  let floor_ok = available - needed >= floor_bytes in
+  if needed < 0 || available < 0 then
+    (false, "invalid resource quantity: required and available bytes must be nonnegative")
+  else if not (Float.is_finite margin) || margin < 0.0 then
+    (false, "invalid resource margin: must be finite and nonnegative")
+  else
+  (* Keep byte counts exact. Integer-to-float rounding can otherwise accept a
+     one-byte shortage above 2^53. Binary64 has a bounded exponent/significand,
+     so these rational operations remain bounded (under 1200 bits here). *)
+  let threshold = Q.mul (Q.of_int needed) (Q.of_float (1. +. margin)) in
+  let margin_ok = Q.compare (Q.of_int available) threshold >= 0 in
+  let floor_ok = available >= needed && available - needed >= floor_bytes in
   if not margin_ok then
     ( false,
       Printf.sprintf
-        "insufficient headroom: %d bytes free, need %d with a %.0f%% margin (>= %.0f)"
-        available needed (margin *. 100.) threshold )
+        "insufficient headroom: %d bytes free, need %d with multiplier %.17g (exact threshold %s)"
+        available needed (1. +. margin) (Q.to_string threshold) )
   else if not floor_ok then
     ( false,
       Printf.sprintf "below the safety floor: only %d bytes would remain after %d, floor is %d"
