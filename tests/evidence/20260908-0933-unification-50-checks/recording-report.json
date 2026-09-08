@@ -1,0 +1,58 @@
+{
+  "schema": "uos.browser-recording.v1",
+  "status": "PASS",
+  "authority": "NONE",
+  "routes": 8,
+  "samples": 56,
+  "recordings": [
+    {
+      "page": "/",
+      "artifact": "cockpit.webm",
+      "observed_seconds": 30.997115544,
+      "bytes": 1789975
+    },
+    {
+      "page": "/planning",
+      "artifact": "planning.webm",
+      "observed_seconds": 31.262616005,
+      "bytes": 665131
+    },
+    {
+      "page": "/mirage",
+      "artifact": "mirage.webm",
+      "observed_seconds": 31.210642598,
+      "bytes": 1491473
+    },
+    {
+      "page": "/wiki",
+      "artifact": "wiki.webm",
+      "observed_seconds": 31.202567825,
+      "bytes": 1660639
+    },
+    {
+      "page": "/zk",
+      "artifact": "zk.webm",
+      "observed_seconds": 31.187953756000002,
+      "bytes": 1706061
+    },
+    {
+      "page": "/homeostasis/evolution",
+      "artifact": "evolution.webm",
+      "observed_seconds": 31.160009866,
+      "bytes": 950062
+    },
+    {
+      "page": "/homeostasis/components",
+      "artifact": "components.webm",
+      "observed_seconds": 31.102854779,
+      "bytes": 888296
+    },
+    {
+      "page": "/homeostasis/terminal",
+      "artifact": "terminal.webm",
+      "observed_seconds": 31.005439568,
+      "bytes": 852014
+    }
+  ],
+  "limit": "Eight routes only; not all233 components or manual acceptance"
+}

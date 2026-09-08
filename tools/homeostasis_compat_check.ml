@@ -38,7 +38,16 @@ let ()=try
   require(List.length modules>100)"missing complete test module inventory";
   "["^String.concat","(List.map(fun n->"'"^Filename.chop_suffix n".beam"^"'")modules)^"]"in
  let expr="{module,gleeunit}=code:ensure_loaded(gleeunit),case eunit:test("^selected^",[verbose,{scale_timeouts,10}]) of ok->halt(0);error->halt(1) end."in
- let run_tests=in_dir tmp(fun()->run ~seconds:240. ~limit:8388608
+ let run_dir=if mode="focused"then tmp else(
+  let root=tmp^"/fixture-repository"in mkdir root 0o700;mkdir(root^"/apps")0o700;
+  let app=root^"/apps/cepaf_gleam"in mkdir app 0o700;mkdir(app^"/test")0o700;
+  copy(source^"/apps/cepaf_gleam/test/fixtures")(app^"/test/fixtures");
+  List.iter(fun rel->
+   let rec parents p=if p<>root&&not(Sys.file_exists p)then(parents(Filename.dirname p);mkdir p 0o700)in
+   parents(Filename.dirname(root^"/"^rel));copy(source^"/"^rel)(root^"/"^rel))
+   ["tools/verification/candidate_snapshot.ml";"engines/hermes/modules/hermes_dependability/dependability_approval.ml"];
+  copy(tmp^"/priv")(app^"/priv");copy(source^"/GEMINI.md")(app^"/GEMINI.md");app)in
+ let run_tests=in_dir run_dir(fun()->run ~seconds:240. ~limit:8388608
   ~extra:["UOS_SA_PLAN_DB="^tmp^"/fixture-sa-plan.sqlite3";"UOS_KM_DB="^tmp^"/fixture-km.sqlite3"]
   (otp^"/erl")(["+S";"4:4";"-noshell";"-pa"]@paths@["-pa";compiled^"/ebin";"-eval";expr]))in
  write_new(tmp^"/test.log")run_tests.output;
