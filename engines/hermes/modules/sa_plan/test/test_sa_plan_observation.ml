@@ -76,7 +76,7 @@ let () =
               | _ -> assert false)));
 
       let store_a = ok (Store.open_db path) in
-      require "LAW C02-SCHEMA-MIGRATES-TO-V6" (Store.schema_version store_a = 6);
+      require "LAW C02-SCHEMA-MIGRATES-TO-V7" (Store.schema_version store_a = 7);
       ok
         (Store.create_plan store_a ~id:"authority-plan"
            ~name:"coordination/observation-authority" ~title:"Authority sentinel"

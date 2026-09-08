@@ -97,6 +97,7 @@ type bridge_lease = {
   lease_id : string;
   fencing_token : int64;
   expires_at_ns : int64;
+  task_attempt : int option;
 }
 
 type summary = { total : int; completed : int; ready : int; executing : int }
@@ -346,7 +347,10 @@ val find_bridge_lease :
   t -> mapping_id:string -> (bridge_lease option, string) Result.t
 
 (** Completes the mapped task only if [owner], [lease_id], and
-    [fencing_token] describe the currently unexpired durable lease. *)
+    [fencing_token] describe the current durable lease AND its recorded task
+    attempt still owns the task. Both leases must expire strictly after [now_ns].
+    Schema-v6 leases migrate with [task_attempt = None] and cannot complete;
+    expiry and a fresh claim establish a binding, never a lookup at completion. *)
 val complete_bridge_task :
   t ->
   mapping_id:string ->
@@ -411,6 +415,10 @@ val rename_task :
 
 val summary : t -> plan_id:string -> (summary, string) Result.t
 
+(** Claims require a non-empty worker, non-negative observed time, positive
+    duration and representable deadline/next attempt. Expiry is exclusive:
+    a lease is reclaimable at [now_ns = lease_until_ns]. Dependencies must be
+    completed. The returned attempt must be retained by the original caller. *)
 val claim_next :
   t ->
   plan_id:string ->
@@ -428,11 +436,18 @@ val claim_task :
   lease_ns:int64 ->
   (claim, string) Result.t
 
+(** Finalization law: only the caller's original [expected_attempt], current
+    worker, executing state and strictly unexpired lease permit a transition.
+    Empty worker, non-positive attempt or negative time is rejected. Rejection
+    changes no state, including when a worker name is reused after takeover.
+    The store trusts [now_ns] supplied by its supervised local clock adapter;
+    this is a concurrency fence, not authentication or remote-effect authority. *)
 val release_task :
   t ->
   plan_id:string ->
   task_id:string ->
   worker:string ->
+  expected_attempt:int ->
   now_ns:int64 ->
   (unit, string) Result.t
 
@@ -441,6 +456,7 @@ val complete_task :
   plan_id:string ->
   task_id:string ->
   worker:string ->
+  expected_attempt:int ->
   result:string ->
   now_ns:int64 ->
   (unit, string) Result.t
@@ -496,10 +512,14 @@ val claim_job :
 val retry_delay_ns : attempt:int -> int64
 (** C3I/Oban retry class: 15 seconds times [2^attempt], capped at one hour. *)
 
+(** Same finalization law as [release_task], for success and error/retry alike.
+    The original job claim attempt is required, never inferred from a live row.
+    Retry deadline overflow is rejected without modifying the job. *)
 val complete_job :
   t ->
   id_or_name:string ->
   worker:string ->
+  expected_attempt:int ->
   outcome:[ `Ok of string | `Error of string ] ->
   now_ns:int64 ->
   (job_view, string) Result.t

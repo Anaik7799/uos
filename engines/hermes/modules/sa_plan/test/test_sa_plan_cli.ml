@@ -119,3 +119,28 @@ let () =
   require "LAW CLI-UNKNOWN-REJECTION"
     (Result.is_error
        (Sa_plan_cli.validate [| "sa-plan"; "frobnicate" |]))
+
+
+let () =
+  let valid = [
+    [| "sa-plan"; "task"; "complete"; "p"; "t"; "w"; "2"; "done" |];
+    [| "sa-plan"; "task"; "release"; "p"; "t"; "w"; "2" |];
+    [| "sa-plan"; "job"; "complete"; "j"; "w"; "2"; "OK"; "done" |];
+    [| "sa-plan"; "oban"; "complete"; "j"; "w"; "2"; "ERROR"; "retry" |]
+  ] in
+  List.iter (fun args -> require "LAW CLI-ORIGINAL-ATTEMPT-ACCEPTED"
+    (Result.is_ok (Sa_plan_cli.validate (Sa_plan_cli.normalize args)))) valid;
+  let invalid = [
+    [| "sa-plan"; "task"; "complete"; "p"; "t"; "w"; "done" |];
+    [| "sa-plan"; "task"; "release"; "p"; "t"; "w" |];
+    [| "sa-plan"; "job"; "complete"; "j"; "w"; "OK"; "done" |];
+    [| "sa-plan"; "task"; "complete"; "p"; "t"; "w"; "0"; "done" |];
+    [| "sa-plan"; "task"; "complete"; "p"; "t"; "w"; "-1"; "done" |];
+    [| "sa-plan"; "task"; "complete"; "p"; "t"; "w"; "999999999999999999999"; "done" |];
+    [| "sa-plan"; "task"; "release"; "p"; "t"; "w"; "latest" |];
+    [| "sa-plan"; "job"; "complete"; "j"; "w"; "0x2"; "OK"; "done" |];
+    [| "sa-plan"; "job"; "complete"; "j"; "w"; "2"; "OK"; "done"; "extra" |];
+    [| "sa-plan"; "--complete"; "p"; "t"; "w"; "done" |]
+  ] in
+  List.iter (fun args -> require "LAW CLI-MISSING-OR-MALFORMED-ATTEMPT-REJECTED"
+    (Result.is_error (Sa_plan_cli.validate (Sa_plan_cli.normalize args)))) invalid

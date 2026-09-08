@@ -1,7 +1,7 @@
 #use "topfind";;
-#require "core,sqlite3,yojson,bos.setup";;
-#directory "/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/sa_plan/.sa_plan.objs/byte";;
-#directory "/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/sa_plan";;
+#require "core,digestif.ocaml,sqlite3,yojson,bos.setup";;
+#directory "engines/hermes/_build/default/modules/sa_plan/.sa_plan.objs/byte";;
+#directory "engines/hermes/_build/default/modules/sa_plan";;
 #load "sa_plan.cma";;
 #use "sa_plan_swarm.ml";;
 
@@ -317,8 +317,8 @@ let () =
                   ~dependencies:[ "PLAN00", `String "PASSED" ]
              ~evidence:[ "local-receipt" ])
              ~now_ns:Int64.(restarted.expires_at_ns - 20L)));
-    require "SWARM-LEASE-EQUALITY-IS-LIVE"
-      (Result.is_ok
+    require "SWARM-LEASE-EQUALITY-IS-EXPIRED"
+      (Result.is_error
          (current_lease store first ~owner:"worker-a"
             ~lease_id:restarted.lease_id ~now_ns:restarted.expires_at_ns));
     require "SWARM-CLI-MINIMUM-LEASE-SECONDS"
@@ -343,6 +343,9 @@ let () =
                 ~evidence:[ "bounded-test-receipt" ]) ~now_ns:Int64.(restarted.expires_at_ns - 1L))
     in
     require "SWARM-FINISHES-SUPPORT-ONLY" (Poly.equal finished.state S.Job_completed);
+    require "SWARM-COMPLETED-TASK-INVALIDATES-BRIDGE-RECEIPT"
+      (Result.is_error (current_lease store first ~owner:"worker-a"
+        ~lease_id:restarted.lease_id ~now_ns:Int64.(restarted.expires_at_ns - 1L)));
     require "SWARM-ORIGINAL-TASK-UNTOUCHED"
       (match ok (S.find_task store ~plan_id:manifest.plan_id ~id_or_name:"E01") with
        | Some task -> String.equal task.state "executing"

@@ -32,13 +32,12 @@ let () =
   task "cp12-t3" "control-plane/kpi/03-executing-live";
   task "cp12-t4" "control-plane/kpi/04-executing-expired";
   (* t1: completed. *)
-  ignore
-    (ok
+  let task_claim = ok
        (Store.claim_task store ~plan_id:"cp12-plan" ~task_id:"cp12-t1"
-          ~worker:"kpi-w" ~now_ns:10L ~lease_ns:100L));
+          ~worker:"kpi-w" ~now_ns:10L ~lease_ns:100L) in
   ok
     (Store.complete_task store ~plan_id:"cp12-plan" ~task_id:"cp12-t1"
-       ~worker:"kpi-w" ~result:"green" ~now_ns:20L);
+       ~worker:"kpi-w" ~expected_attempt:task_claim.attempt ~result:"green" ~now_ns:20L);
   (* t3: executing with a lease live at now=500 (until 1100). *)
   ignore
     (ok
@@ -60,14 +59,13 @@ let () =
        (Store.enqueue_job store ~id:"cp12-j2" ~name:"cp12/job-done"
           ~queue:"cp12-kpi-done" ~worker:"noop" ~args:"{}" ~max_attempts:3
           ~now_ns:50L));
-  ignore
-    (ok
+  let job_claim = Option.get (ok
        (Store.claim_job store ~queue:"cp12-kpi-done" ~worker:"kpi-w"
-          ~now_ns:60L ~lease_ns:100L));
+          ~now_ns:60L ~lease_ns:100L)) in
   ignore
     (ok
        (Store.complete_job store ~id_or_name:"cp12-j2" ~worker:"kpi-w"
-          ~outcome:(`Ok "done") ~now_ns:70L));
+          ~expected_attempt:job_claim.attempt ~outcome:(`Ok "done") ~now_ns:70L));
   (* One open workflow; one completed workflow (not open). *)
   ok (Store.start_workflow store ~id:"cp12-w1" ~name:"cp12/wf-open" ~now_ns:80L);
   ok (Store.start_workflow store ~id:"cp12-w2" ~name:"cp12/wf-done" ~now_ns:80L);
