@@ -1,0 +1,70 @@
+{
+  "schema": "uos-km-ooda/v1",
+  "contract": "SC-PROVENANCE-001",
+  "authority": "REPORT_ONLY",
+  "effect_authority": "NONE",
+  "observed_at": "2026-09-08T08:12:03Z",
+  "observe": {
+    "adr_total": 87,
+    "layer_entropy_bits": 1.3588975052553565,
+    "index_completeness": 1.0,
+    "quarantine_marking": 1.0
+  },
+  "orient": [
+    {
+      "metric": "layer_entropy_bits",
+      "observations": 9,
+      "current": 1.3588975052553565,
+      "ewma_level": 1.3588975052553565,
+      "threshold": 2.5,
+      "projection": {
+        "slope_per_observation": 0.0,
+        "rms_residual": 0.0,
+        "projected_5_steps": 1.3588975052553565,
+        "band_low": 1.3588975052553565,
+        "band_high": 1.3588975052553565,
+        "decisive_against_threshold": true
+      }
+    },
+    {
+      "metric": "index_completeness",
+      "observations": 9,
+      "current": 1.0,
+      "ewma_level": 1.0,
+      "threshold": 1.0,
+      "projection": {
+        "slope_per_observation": 0.0,
+        "rms_residual": 0.0,
+        "projected_5_steps": 1.0,
+        "band_low": 1.0,
+        "band_high": 1.0,
+        "decisive_against_threshold": false
+      }
+    },
+    {
+      "metric": "quarantine_marking",
+      "observations": 9,
+      "current": 1.0,
+      "ewma_level": 1.0,
+      "threshold": 1.0,
+      "projection": {
+        "slope_per_observation": 0.0,
+        "rms_residual": 0.0,
+        "projected_5_steps": 1.0,
+        "band_low": 1.0,
+        "band_high": 1.0,
+        "decisive_against_threshold": false
+      }
+    }
+  ],
+  "decide": {
+    "verdict": "HOLD",
+    "breaches": [ "layer_entropy_bits below 2.50" ]
+  },
+  "act": "reported; no document written, no admission changed, no work dispatched",
+  "limits": [
+    "A projection is a least-squares line, not a probabilistic model; no confidence level is claimed.",
+    "The band is one RMS residual either side. A band spanning the threshold decides nothing and is marked not decisive.",
+    "History accumulates only when this pass runs, so the series is a record of observations, not of wall-clock time."
+  ]
+}

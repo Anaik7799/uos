@@ -1,0 +1,153 @@
+{
+  "status": "HOLD",
+  "findings": [
+    {
+      "rule": "KMP-ENTROPY",
+      "detail": "fractal layer entropy 1.359 bits is below the CHK-09-MATH floor of 2.50"
+    }
+  ],
+  "schema": "uos-km-provenance-metrics/v1",
+  "contract": "SC-PROVENANCE-001",
+  "authority": "REPORT_ONLY",
+  "runtime_admission": "NOT_GRANTED",
+  "observed_at": "2026-09-08T08:12:03Z",
+  "admitted_ev_ceiling": 93,
+  "corpus": {
+    "adr_total": 87,
+    "adr_first": 1,
+    "adr_last": 87,
+    "contiguous": true,
+    "first_gap_at": null,
+    "duplicate_numbers": [],
+    "layer_entropy_bits": 1.3588975052553565,
+    "quarantined_total": 16,
+    "quarantined_ids": [
+      71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86
+    ]
+  },
+  "indexes": [
+    {
+      "label": "zk-master-moc",
+      "path": "docs/zk/20260905-1801-moc-uos-unified-master.md",
+      "adrs_enumerated": 87,
+      "adrs_total": 87,
+      "completeness_ratio": 1.0,
+      "quarantined_marked": 16,
+      "quarantined_total": 16,
+      "marking_ratio": 1.0
+    },
+    {
+      "label": "wiki-corpus-index",
+      "path": "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md",
+      "adrs_enumerated": 87,
+      "adrs_total": 87,
+      "completeness_ratio": 1.0,
+      "quarantined_marked": 16,
+      "quarantined_total": 16,
+      "marking_ratio": 1.0
+    }
+  ],
+  "quarantined_records": [
+    {
+      "adr": 71,
+      "file": "20260907-2030-adr-071-zmof-zenoh-backplane-wiki-transclusion-and-ev94-ratification.md",
+      "claims_ev": 94,
+      "layer": "#fractal-l5"
+    },
+    {
+      "adr": 72,
+      "file": "20260907-2045-adr-072-cross-host-peer-simulator-agui-sparklines-and-ev95-ratification.md",
+      "claims_ev": 95,
+      "layer": "#fractal-l6"
+    },
+    {
+      "adr": 73,
+      "file": "20260907-2055-adr-073-adaptive-lyapunov-damping-and-ev96-ratification.md",
+      "claims_ev": 96,
+      "layer": "#fractal-l0"
+    },
+    {
+      "adr": 74,
+      "file": "20260907-2105-adr-074-heijunka-scheduler-ws-hot-stream-and-ev97-ratification.md",
+      "claims_ev": 97,
+      "layer": "#fractal-l0"
+    },
+    {
+      "adr": 75,
+      "file": "20260907-2130-adr-075-crdt-delta-mesh-engine-deadman-freshness-and-ev98-ratification.md",
+      "claims_ev": 98,
+      "layer": "#fractal-l0"
+    },
+    {
+      "adr": 76,
+      "file": "20260907-2145-adr-076-decentralized-work-stealing-topology-view-and-ev99-ratification.md",
+      "claims_ev": 99,
+      "layer": "#fractal-l0"
+    },
+    {
+      "adr": 77,
+      "file": "20260907-2200-adr-077-century-milestone-swarm-harmony-and-ev100-ratification.md",
+      "claims_ev": 100,
+      "layer": "#fractal-l0"
+    },
+    {
+      "adr": 78,
+      "file": "20260907-2210-adr-078-autonomous-semantic-knowledge-sheaf-and-ev101-ratification.md",
+      "claims_ev": 101,
+      "layer": "#fractal-l0"
+    },
+    {
+      "adr": 79,
+      "file": "20260907-2220-adr-079-biomorphic-chaos-immune-engine-and-ev102-ratification.md",
+      "claims_ev": 102,
+      "layer": "#fractal-l0"
+    },
+    {
+      "adr": 80,
+      "file": "20260907-2230-adr-080-dynamic-semantic-rag-vector-cache-and-ev103-ratification.md",
+      "claims_ev": 103,
+      "layer": "#fractal-l0"
+    },
+    {
+      "adr": 81,
+      "file": "20260907-2245-adr-081-autonomous-ooda-copilot-shruti-synthesizer-and-ev104-ratification.md",
+      "claims_ev": 104,
+      "layer": "#fractal-l0"
+    },
+    {
+      "adr": 82,
+      "file": "20260907-2300-adr-082-autonomous-multi-agent-consensus-quorum-and-ev105-ratification.md",
+      "claims_ev": 105,
+      "layer": "#fractal-l0"
+    },
+    {
+      "adr": 83,
+      "file": "20260907-2315-adr-083-dynamic-workload-autoscaler-predictive-token-flow-and-ev106-ratification.md",
+      "claims_ev": 106,
+      "layer": "#fractal-l2"
+    },
+    {
+      "adr": 84,
+      "file": "20260907-2330-adr-084-deep-gospel-z3-contracts-rete-ul-and-ev107-ratification.md",
+      "claims_ev": 107,
+      "layer": "#fractal-l0"
+    },
+    {
+      "adr": 85,
+      "file": "20260907-2240-adr-085-fast-ooda-convergence-simd-scorer-heijunka-solo5-and-ev108-ratification.md",
+      "claims_ev": 108,
+      "layer": "#fractal-l0"
+    },
+    {
+      "adr": 86,
+      "file": "20260907-2315-adr-086-4-party-quorum-homeostasis-and-autonomous-self-evolution.md",
+      "claims_ev": 109,
+      "layer": "#fractal-l0"
+    }
+  ],
+  "limits": [
+    "Byte presence of a filename in an index does not prove the index text is correct.",
+    "A marker proves the index states the record is not admitted; it does not adjudicate the record.",
+    "This gate observes documents only; it asserts nothing about runtime behaviour."
+  ]
+}

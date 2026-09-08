@@ -51,7 +51,7 @@ Every webpage rendered by the UOS web engine and every canonical `.md` file must
 
 ### Domain 5: Tri-Sovereign Governance & VCS Purity
 - [x] **CHK-17-SOV**: Tri-sovereign multi-agent review consensus (Antigravity/AGY, Claude, and Codex) verified and ratified.
-- [x] **CHK-18-JJ**: Standalone non-colocated Jujutsu repository (`.jj/`) with 0 native Git mutations; all 18 EV-cycles PASS in `tools/uos doctor`.
+- [x] **CHK-18-JJ**: Standalone non-colocated Jujutsu repository (`.jj/`) with 0 native Git mutations; all 18 EV-cycles PASS in `tools/uos-cli doctor`.
 
 ### Domain 6: Provenance & Admission Integrity (`SC-PROVENANCE-001`, added 2026-09-08)
 

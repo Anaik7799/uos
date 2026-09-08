@@ -1,0 +1,657 @@
+{
+  "schema": "uos-km-layer-proposal/v1",
+  "contract": "SC-PROVENANCE-001",
+  "authority": "PROPOSAL_ONLY",
+  "applied": false,
+  "observed_at": "2026-09-08T08:12:03Z",
+  "method": "term-frequency vector over a fixed vocabulary, cosine similarity against one archetype per layer, highest wins",
+  "vocabulary_terms": 121,
+  "records": 87,
+  "records_where_proposal_differs": 52,
+  "low_margin_records": 34,
+  "entropy_bits": {
+    "current": 1.3588975052553562,
+    "if_proposal_applied": 2.148695824545486,
+    "floor": 2.5
+  },
+  "current_distribution": {
+    "#fractal-l0": 68,
+    "#fractal-l1": 0,
+    "#fractal-l2": 3,
+    "#fractal-l3": 2,
+    "#fractal-l4": 1,
+    "#fractal-l5": 5,
+    "#fractal-l6": 4,
+    "#fractal-l7": 1,
+    "#fractal-l8": 2,
+    "#fractal-l9": 1
+  },
+  "proposed_distribution": {
+    "#fractal-l0": 31,
+    "#fractal-l1": 0,
+    "#fractal-l2": 2,
+    "#fractal-l3": 0,
+    "#fractal-l4": 14,
+    "#fractal-l5": 30,
+    "#fractal-l6": 0,
+    "#fractal-l7": 3,
+    "#fractal-l8": 4,
+    "#fractal-l9": 3
+  },
+  "proposals": [
+    {
+      "file": "20260904-150139-adr-001-closed-rete-fact-schema-and-strict-typing-invariant.md",
+      "current": "#fractal-l5",
+      "proposed": "#fractal-l5",
+      "confidence": 0.3191423692521127,
+      "margin": 0.15189396725069454
+    },
+    {
+      "file": "20260904-150142-adr-002-embedded-nul-ingress-trap-and-memory-allocation-containment.md",
+      "current": "#fractal-l6",
+      "proposed": "#fractal-l5",
+      "confidence": 0.4536323543632774,
+      "margin": 0.3743894691882447
+    },
+    {
+      "file": "20260904-150145-adr-003-pure-100-byte-binary-sqlite-header-verification-rule-r31.md",
+      "current": "#fractal-l3",
+      "proposed": "#fractal-l5",
+      "confidence": 0.4362514358891158,
+      "margin": 0.2750449658343255
+    },
+    {
+      "file": "20260904-150151-adr-004-supervised-persistent-zenoh-session-lifecycle-in-moz-client.md",
+      "current": "#fractal-l6",
+      "proposed": "#fractal-l5",
+      "confidence": 0.4099457958749615,
+      "margin": 0.2542460070426569
+    },
+    {
+      "file": "20260904-151412-adr-005-dual-host-unified-operational-system-topology-and-live-tailnet-wiki-integration.md",
+      "current": "#fractal-l7",
+      "proposed": "#fractal-l5",
+      "confidence": 0.3148148148148148,
+      "margin": 0.11910262683081943
+    },
+    {
+      "file": "20260904-153122-adr-006-twelve-pillar-fractal-architecture-composability-and-multi-paradigm-integration.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l5",
+      "confidence": 0.40467232413704873,
+      "margin": 0.25513517299840394
+    },
+    {
+      "file": "20260904-153714-adr-007-tripartite-cross-agent-multi-cycle-review-and-full-twelve-pillar-system-acceptance.md",
+      "current": "#fractal-l5",
+      "proposed": "#fractal-l5",
+      "confidence": 0.41286141192238524,
+      "margin": 0.2013070577832072
+    },
+    {
+      "file": "20260904-154335-adr-008-nas-1-codebase-unification-rust-ocaml-nif-conversion-and-gleam-migration-strategy.md",
+      "current": "#fractal-l2",
+      "proposed": "#fractal-l5",
+      "confidence": 0.420084025208403,
+      "margin": 0.11738126791006237
+    },
+    {
+      "file": "20260904-154524-adr-009-distinct-functional-relocation-from-ocaml-and-rust-into-native-gleam.md",
+      "current": "#fractal-l2",
+      "proposed": "#fractal-l5",
+      "confidence": 0.36913583036771336,
+      "margin": 0.014481596247174766
+    },
+    {
+      "file": "20260904-155000-adr-010-seven-level-fractal-granularity-taxonomy-and-100-functional-mapping-kpis.md",
+      "current": "#fractal-l8",
+      "proposed": "#fractal-l5",
+      "confidence": 0.32879797461071464,
+      "margin": 0.11819872401365208
+    },
+    {
+      "file": "20260904-155139-adr-011-tripartite-surface-system-architecture-and-inter-fractal-traceability-closure.md",
+      "current": "#fractal-l4",
+      "proposed": "#fractal-l5",
+      "confidence": 0.2916666666666667,
+      "margin": 0.00879047573865771
+    },
+    {
+      "file": "20260904-155425-adr-012-four-cycle-deep-tripartite-audit-and-sovereign-system-attestation.md",
+      "current": "#fractal-l5",
+      "proposed": "#fractal-l5",
+      "confidence": 0.3425800798515744,
+      "margin": 0.14003220643484107
+    },
+    {
+      "file": "20260904-155835-adr-013-sovereign-tripartite-review-cycle-continuation-and-multi-domain-deep-verification.md",
+      "current": "#fractal-l5",
+      "proposed": "#fractal-l5",
+      "confidence": 0.3171675237082733,
+      "margin": 0.03588318514517602
+    },
+    {
+      "file": "20260904-160005-adr-014-quad-cycle-iii-sovereign-tripartite-audit-and-comprehensive-kpi-integration-closure.md",
+      "current": "#fractal-l8",
+      "proposed": "#fractal-l5",
+      "confidence": 0.3217979514674192,
+      "margin": 0.1237684428720843
+    },
+    {
+      "file": "20260904-160159-adr-015-master-codex-session-handover-full-trajectory-archive-and-sovereign-operational-transfer.md",
+      "current": "#fractal-l9",
+      "proposed": "#fractal-l5",
+      "confidence": 0.2822672434909292,
+      "margin": 0.02956565440533243
+    },
+    {
+      "file": "20260904-164632-adr-016-master-fractal-system-integration-7-level-granularity-closure-and-tripartite-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l5",
+      "confidence": 0.33220529851337466,
+      "margin": 0.10422492221959803
+    },
+    {
+      "file": "20260906-0836-adr-017-tri-sovereign-10d-tensor-evolution-master-handover-to-codex-session.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.33938964745836475,
+      "margin": 0.17299797606838813
+    },
+    {
+      "file": "20260906-0945-adr-018-nasa-jpl-fprime-beam-ontology-dmc-tcm-algebraic-atlas.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.277160067190604,
+      "margin": 0.07185631371608253
+    },
+    {
+      "file": "20260906-0955-adr-019-fprime-hsm-agent-factory-and-taxonomy.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l4",
+      "confidence": 0.3232878750699198,
+      "margin": 0.06755647159229117
+    },
+    {
+      "file": "20260906-0955-adr-020-harness-bionic-agentic-ecosystem-mapping-and-import.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l4",
+      "confidence": 0.34980550175310365,
+      "margin": 0.13008893532338509
+    },
+    {
+      "file": "20260906-1015-adr-021-15-cycle-sovereign-agentic-ecosystem-evolution.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l9",
+      "confidence": 0.2582704427178425,
+      "margin": 0.020696189159673722
+    },
+    {
+      "file": "20260906-1034-adr-022-zigvm-deterministic-engine-and-30-cycle-evolution.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.40348502177920165,
+      "margin": 0.18156825980064076
+    },
+    {
+      "file": "20260906-1045-adr-023-full-zigvm-subsystem-and-60-cycle-sovereign-evolution.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l4",
+      "confidence": 0.3651121735662627,
+      "margin": 0.08014657468527714
+    },
+    {
+      "file": "20260906-1055-adr-024-mainline-merge-and-32-agent-ecology.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.2809568828775093,
+      "margin": 0.04013669755392993
+    },
+    {
+      "file": "20260906-1139-adr-025-c3i-sdlc-sre-verification-48-agent-ecology.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.26207120918047955,
+      "margin": 0.043853318944487185
+    },
+    {
+      "file": "20260906-1215-adr-026-c3i-72-agent-ecology-adk-and-zigvm-lifecycle-transmutation.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l4",
+      "confidence": 0.2657134120548434,
+      "margin": 0.057091627025639
+    },
+    {
+      "file": "20260906-1230-adr-027-adk-complete-coverage-and-master-ontology.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l5",
+      "confidence": 0.27345140881161467,
+      "margin": 0.05451506256959468
+    },
+    {
+      "file": "20260906-1300-adr-028-algebraic-fractal-sdlc-sre-and-verification-process.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l5",
+      "confidence": 0.27937211830783126,
+      "margin": 0.07268423345660932
+    },
+    {
+      "file": "20260906-1330-adr-029-256-agent-symmetrical-ecology-and-vm1-testing-disciplines.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.2952617265740468,
+      "margin": 0.042176192452281214
+    },
+    {
+      "file": "20260906-1400-adr-030-codex-fractal-understanding-and-component-packet-closure.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.3023852923370624,
+      "margin": 0.032614500138481106
+    },
+    {
+      "file": "20260906-1430-adr-031-sa-plan-durability-and-fractal-forecasting-closure.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l4",
+      "confidence": 0.3108071320694868,
+      "margin": 0.05180118867824779
+    },
+    {
+      "file": "20260906-1155-adr-032-codex-fractal-understanding-and-uos-system-mapping.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l4",
+      "confidence": 0.30273642273327744,
+      "margin": 0.05613794177524145
+    },
+    {
+      "file": "20260906-1215-adr-033-fractal-aspect-agent-ecosystem-and-prompt-lineage.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l4",
+      "confidence": 0.24060886975572662,
+      "margin": 0.03436939190965024
+    },
+    {
+      "file": "20260906-1230-adr-034-aspect-agent-feature-matrix-and-prompt-lineage-closure.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.3025711416752231,
+      "margin": 0.04654940641157279
+    },
+    {
+      "file": "20260906-1245-adr-035-fractal-aspect-processing-agents-and-holonic-alignment.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l8",
+      "confidence": 0.3257918827675008,
+      "margin": 0.04123668615526466
+    },
+    {
+      "file": "20260906-1300-adr-036-control-data-verification-planes-ascii-architecture.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.4296689244236597,
+      "margin": 0.1790287185098582
+    },
+    {
+      "file": "20260906-1330-adr-037-complete-14-aspect-processing-tri-plane-closure-and-prompt-lineage.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.269659685815003,
+      "margin": 0.0
+    },
+    {
+      "file": "20260906-1345-adr-038-native-nif-zenoh-and-rete-ul-integration.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l4",
+      "confidence": 0.3222516933177448,
+      "margin": 0.03580574370197159
+    },
+    {
+      "file": "20260906-1400-adr-039-complete-aspects-tri-plane-nif-dataplane-and-km-closure.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l5",
+      "confidence": 0.2886751345948129,
+      "margin": 0.011325036482198347
+    },
+    {
+      "file": "20260906-1415-adr-040-17-aspect-ecosystem-documentation-zenoh-rete-ul-agents.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l4",
+      "confidence": 0.3983772752571306,
+      "margin": 0.13182028026553905
+    },
+    {
+      "file": "20260906-1430-adr-041-complete-session-analysis-and-prompt-lineage-closure.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.49702605909808056,
+      "margin": 0.3245856844192274
+    },
+    {
+      "file": "20260906-1500-adr-042-22-prompt-master-history-and-analysis-closure.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.5229763603684907,
+      "margin": 0.36421313629921065
+    },
+    {
+      "file": "20260906-1515-adr-043-23-prompt-master-history-and-definitive-analysis-closure.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.5229763603684907,
+      "margin": 0.36421313629921065
+    },
+    {
+      "file": "20260906-1530-adr-044-24-prompt-master-history-and-supreme-analysis-closure.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.5229763603684907,
+      "margin": 0.36421313629921065
+    },
+    {
+      "file": "20260906-1545-adr-045-master-prompt-history-journal-and-mainline-merge.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.3414295644814353,
+      "margin": 0.053748151026909885
+    },
+    {
+      "file": "20260906-1620-adr-046-master-prompt-history-and-vfs-analysis-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l5",
+      "confidence": 0.3677294506498706,
+      "margin": 0.1526754334883443
+    },
+    {
+      "file": "20260906-1635-adr-047-sa-plan-ocaml-engine-and-actor-ecosystem-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.24557187972246775,
+      "margin": 0.0
+    },
+    {
+      "file": "20260906-1700-adr-048-hermes-bionic-full-integration-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l5",
+      "confidence": 0.24411127907894134,
+      "margin": 0.0457708648273015
+    },
+    {
+      "file": "20260906-1730-adr-049-omni-fractal-systemic-symbiosis-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l4",
+      "confidence": 0.26207120918047955,
+      "margin": 0.06988565578146119
+    },
+    {
+      "file": "20260906-1745-adr-050-omni-fractal-mainline-merge-and-sovereign-closure.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.30917347120042116,
+      "margin": 0.01212920830741887
+    },
+    {
+      "file": "20260906-1755-adr-051-omni-fractal-full-generation-and-systemic-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.23188676384649343,
+      "margin": 0.0
+    },
+    {
+      "file": "20260906-1800-adr-052-omni-fractal-systemic-cartesian-tensor-closure.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l4",
+      "confidence": 0.23533936216582083,
+      "margin": 0.019611613513818404
+    },
+    {
+      "file": "20260906-1800-adr-053-master-session-handover-to-codex-cartesian-tensor-closure.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.30946851714098544,
+      "margin": 0.12106897868084046
+    },
+    {
+      "file": "20260906-1830-adr-054-15-evolutionary-and-functional-cycles-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l9",
+      "confidence": 0.3922583729796397,
+      "margin": 0.2436832810371657
+    },
+    {
+      "file": "20260906-1900-adr-055-c3i-integrated-knowledge-runtime-and-15-cycles-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l5",
+      "confidence": 0.3083041757200657,
+      "margin": 0.21158284647574904
+    },
+    {
+      "file": "20260906-1930-adr-056-c3i-artifacts-ingestion-and-15-cycles-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l5",
+      "confidence": 0.25912185565633494,
+      "margin": 0.0682554156150679
+    },
+    {
+      "file": "20260906-2000-adr-057-master-session-handover-to-codex-and-69-cycles-transfer.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.39577767774255823,
+      "margin": 0.19691083133806056
+    },
+    {
+      "file": "20260906-2100-adr-058-c3i-vertical-slice-and-wave4-evolutionary-cycles.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l5",
+      "confidence": 0.2589191112012619,
+      "margin": 0.010157675632189167
+    },
+    {
+      "file": "20260906-2200-adr-059-master-session-handover-to-codex-and-84-cycles-transfer.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.3002402883845384,
+      "margin": 0.04003203845127179
+    },
+    {
+      "file": "20260906-2048-adr-060-sysadmin-remote-tui-cockpit-architecture.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l4",
+      "confidence": 0.30649178689247536,
+      "margin": 0.0216643172988657
+    },
+    {
+      "file": "20260906-2150-adr-061-uos-tui-gleam-library-textual-reference.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l2",
+      "confidence": 0.3505839284808859,
+      "margin": 0.040745260784292525
+    },
+    {
+      "file": "20260907-0537-adr-062-uos-tui-swarm-hive-mind-message-board-coordination-acl-and-zenoh-infra.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l5",
+      "confidence": 0.32102894156205125,
+      "margin": 0.03187147557893116
+    },
+    {
+      "file": "20260907-0950-adr-063-uos-tui-and-swarm-work-stream-split.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l2",
+      "confidence": 0.4290692466374651,
+      "margin": 0.270350088155645
+    },
+    {
+      "file": "20260907-1105-adr-064-uos-system-ontology-sutra-sangita-and-hive-cognition.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l5",
+      "confidence": 0.3834467582343421,
+      "margin": 0.1639721963533503
+    },
+    {
+      "file": "20260907-1310-adr-065-uos-jujutsu-ontology-and-library.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l5",
+      "confidence": 0.3437886872463945,
+      "margin": 0.1358210844923336
+    },
+    {
+      "file": "20260907-1530-adr-066-sa-plan-fractal-jidoka-tps-and-universal-execution-authority.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.34544086116173023,
+      "margin": 0.16566773728506154
+    },
+    {
+      "file": "20260907-1550-adr-067-fractal-symbiosis-sa-plan-sublimation-and-ev91-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l5",
+      "confidence": 0.2450677209745791,
+      "margin": 0.023464473632200306
+    },
+    {
+      "file": "20260907-1605-adr-068-multidimensional-fractal-vectors-sa-plan-tps-matrix.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.2932290926287861,
+      "margin": 0.01332859511949025
+    },
+    {
+      "file": "20260907-1830-adr-069-modular-max-mojo-high-utility-models-and-fail-closed-preflight-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l4",
+      "confidence": 0.2868422580664471,
+      "margin": 0.04412957816406879
+    },
+    {
+      "file": "20260907-2015-adr-070-multi-host-crdt-sync-prajna-health-and-ev93-ratification.md",
+      "current": "#fractal-l6",
+      "proposed": "#fractal-l7",
+      "confidence": 0.3426660329788179,
+      "margin": 0.08308387559280694
+    },
+    {
+      "file": "20260907-2030-adr-071-zmof-zenoh-backplane-wiki-transclusion-and-ev94-ratification.md",
+      "current": "#fractal-l5",
+      "proposed": "#fractal-l5",
+      "confidence": 0.3161680045562236,
+      "margin": 0.10485364408946965
+    },
+    {
+      "file": "20260907-2045-adr-072-cross-host-peer-simulator-agui-sparklines-and-ev95-ratification.md",
+      "current": "#fractal-l6",
+      "proposed": "#fractal-l7",
+      "confidence": 0.2823253117471173,
+      "margin": 0.09519045328157566
+    },
+    {
+      "file": "20260907-2055-adr-073-adaptive-lyapunov-damping-and-ev96-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l8",
+      "confidence": 0.3055555555555556,
+      "margin": 0.038675299213743686
+    },
+    {
+      "file": "20260907-2105-adr-074-heijunka-scheduler-ws-hot-stream-and-ev97-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l8",
+      "confidence": 0.2723523897009611,
+      "margin": 0.06883305808060794
+    },
+    {
+      "file": "20260907-2130-adr-075-crdt-delta-mesh-engine-deadman-freshness-and-ev98-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l7",
+      "confidence": 0.3503851503857935,
+      "margin": 0.028077689707015463
+    },
+    {
+      "file": "20260907-2145-adr-076-decentralized-work-stealing-topology-view-and-ev99-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l4",
+      "confidence": 0.4688072309384954,
+      "margin": 0.37121722364364207
+    },
+    {
+      "file": "20260907-2200-adr-077-century-milestone-swarm-harmony-and-ev100-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.4285277034855043,
+      "margin": 0.2352498676142372
+    },
+    {
+      "file": "20260907-2210-adr-078-autonomous-semantic-knowledge-sheaf-and-ev101-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l5",
+      "confidence": 0.46085722358554115,
+      "margin": 0.23946857444406827
+    },
+    {
+      "file": "20260907-2220-adr-079-biomorphic-chaos-immune-engine-and-ev102-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.4211597863173308,
+      "margin": 0.2959149281003009
+    },
+    {
+      "file": "20260907-2230-adr-080-dynamic-semantic-rag-vector-cache-and-ev103-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.30050125348238005,
+      "margin": 0.01669451408235445
+    },
+    {
+      "file": "20260907-2245-adr-081-autonomous-ooda-copilot-shruti-synthesizer-and-ev104-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.31008683647302115,
+      "margin": 0.07340452087145677
+    },
+    {
+      "file": "20260907-2300-adr-082-autonomous-multi-agent-consensus-quorum-and-ev105-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.5205196500917993,
+      "margin": 0.4338358054797908
+    },
+    {
+      "file": "20260907-2315-adr-083-dynamic-workload-autoscaler-predictive-token-flow-and-ev106-ratification.md",
+      "current": "#fractal-l2",
+      "proposed": "#fractal-l0",
+      "confidence": 0.45596075258755325,
+      "margin": 0.22798037629377663
+    },
+    {
+      "file": "20260907-2330-adr-084-deep-gospel-z3-contracts-rete-ul-and-ev107-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.38129862676233406,
+      "margin": 0.18061513899268458
+    },
+    {
+      "file": "20260907-2240-adr-085-fast-ooda-convergence-simd-scorer-heijunka-solo5-and-ev108-ratification.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l0",
+      "confidence": 0.24315671600215621,
+      "margin": 0.008148720031945333
+    },
+    {
+      "file": "20260907-2315-adr-086-4-party-quorum-homeostasis-and-autonomous-self-evolution.md",
+      "current": "#fractal-l0",
+      "proposed": "#fractal-l9",
+      "confidence": 0.3450733550555322,
+      "margin": 0.034705842523843455
+    },
+    {
+      "file": "20260908-0927-adr-087-provenance-integrity-km-gate-and-mojo-metrics-kernel.md",
+      "current": "#fractal-l3",
+      "proposed": "#fractal-l8",
+      "confidence": 0.2722550403896021,
+      "margin": 0.010680858499303614
+    }
+  ],
+  "limits": [
+    "A term-frequency match is weak evidence of architectural layer; it reflects vocabulary, not design intent.",
+    "Records with margin below 0.05 were barely separated and should be treated as unclassified.",
+    "Nothing is written. Applying a layer is an authorship act belonging to the record author or sovereign review."
+  ]
+}

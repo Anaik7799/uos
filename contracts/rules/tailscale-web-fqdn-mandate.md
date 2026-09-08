@@ -27,6 +27,6 @@ All generated dashboards, web pages, wiki articles, Zettelkasten decision record
 | **Zenoh Mesh API** | `/api/zenoh/health` | `http://nas-1.tail55d152.ts.net:4100/api/zenoh/health` | Zenoh session, throughput, and topic health |
 
 ## 3. Machine Enforcement
-1. Validated via `tools/uos web-links` CLI command.
-2. Verified by UOS admission gate `tools/uos gate G-TAILSCALE-WEB`.
-3. Tracked under `EV-18` in `tools/uos doctor`.
+1. Validated via `tools/uos-cli web-links` CLI command.
+2. Verified by UOS admission gate `tools/uos-cli gate G-TAILSCALE-WEB`.
+3. Tracked under `EV-18` in `tools/uos-cli doctor`.

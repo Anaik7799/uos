@@ -242,9 +242,176 @@ def uos_km_drift_distance(
 
 
 # ------------------------------------------------------------------------------
-# 6. Kernel identity
+# 7. Cosine similarity (layer classification, SC-PROVENANCE-001 KMP-ENTROPY)
+# ------------------------------------------------------------------------------
+# Drives content-based fractal-layer classification: each document and each
+# layer archetype becomes a term-frequency vector, and the closest archetype is
+# the proposed layer. Returns a value in [-1, 1] for non-negative inputs in
+# [0, 1]. A zero-magnitude vector has no direction, so it is rejected rather
+# than reported as similarity 0.
+
+@export
+def uos_km_cosine_similarity(
+    a: Pointer[Float32, ImmutAnyOrigin],
+    b: Pointer[Float32, ImmutAnyOrigin],
+    n: Int,
+) abi("C") -> Float32:
+    if not _bounded(n):
+        return REJECTED
+
+    var dot = SIMD[DType.float32, WIDTH](0.0)
+    var na = SIMD[DType.float32, WIDTH](0.0)
+    var nb = SIMD[DType.float32, WIDTH](0.0)
+    var i = 0
+    var limit = n - (n % WIDTH)
+
+    while i < limit:
+        var va = (a + i).unsafe_load[width=WIDTH]()
+        var vb = (b + i).unsafe_load[width=WIDTH]()
+        dot = dot + va * vb
+        na = na + va * va
+        nb = nb + vb * vb
+        i += WIDTH
+
+    var d = dot.reduce_add()
+    var ma = na.reduce_add()
+    var mb = nb.reduce_add()
+
+    while i < n:
+        var x = a[i]
+        var y = b[i]
+        d += x * y
+        ma += x * x
+        mb += y * y
+        i += 1
+
+    if not _finite(d) or not _finite(ma) or not _finite(mb):
+        return NON_FINITE
+    if ma <= 0.0 or mb <= 0.0:
+        return REJECTED
+    return d / (sqrt(ma) * sqrt(mb))
+
+
+# ------------------------------------------------------------------------------
+# 8. Forecasting primitives (fast OODA orient/predict stage)
+# ------------------------------------------------------------------------------
+# These support a bounded predictive loop over recorded metric history. They are
+# deliberately the simplest defensible estimators: an EWMA level and an
+# ordinary-least-squares slope. Neither is a probabilistic model, and neither
+# licenses a confidence claim beyond the residual it reports.
+
+# Exponentially weighted moving average. alpha in (0,1]: higher weights recent
+# observations more. Returns the level after the final observation.
+@export
+def uos_km_ewma(
+    series: Pointer[Float32, ImmutAnyOrigin],
+    n: Int,
+    alpha: Float32,
+) abi("C") -> Float32:
+    if not _bounded(n):
+        return REJECTED
+    if alpha <= 0.0 or alpha > 1.0 or not _finite(alpha):
+        return REJECTED
+
+    var level = series[0]
+    if not _finite(level):
+        return NON_FINITE
+    var i = 1
+    while i < n:
+        var x = series[i]
+        if not _finite(x):
+            return NON_FINITE
+        level = alpha * x + (1.0 - alpha) * level
+        i += 1
+    return level
+
+
+# Ordinary least squares slope of y against its index 0..n-1. Requires n >= 2,
+# because a single point has no trend. Returns the slope per step.
+@export
+def uos_km_linear_slope(
+    series: Pointer[Float32, ImmutAnyOrigin],
+    n: Int,
+) abi("C") -> Float32:
+    if not _bounded(n) or n < 2:
+        return REJECTED
+
+    var nf = Float32(n)
+    var sum_x: Float32 = 0.0
+    var sum_y: Float32 = 0.0
+    var sum_xy: Float32 = 0.0
+    var sum_xx: Float32 = 0.0
+    var i = 0
+    while i < n:
+        var x = Float32(i)
+        var y = series[i]
+        if not _finite(y):
+            return NON_FINITE
+        sum_x += x
+        sum_y += y
+        sum_xy += x * y
+        sum_xx += x * x
+        i += 1
+
+    var denom = nf * sum_xx - sum_x * sum_x
+    if denom == 0.0:
+        return REJECTED
+    var slope = (nf * sum_xy - sum_x * sum_y) / denom
+    if not _finite(slope):
+        return NON_FINITE
+    return slope
+
+
+# Root mean squared residual of the series against its own least-squares line.
+# This is the honest width of any forecast built on that line: a small slope
+# with a large residual forecasts nothing.
+@export
+def uos_km_trend_residual(
+    series: Pointer[Float32, ImmutAnyOrigin],
+    n: Int,
+) abi("C") -> Float32:
+    if not _bounded(n) or n < 2:
+        return REJECTED
+
+    var nf = Float32(n)
+    var sum_x: Float32 = 0.0
+    var sum_y: Float32 = 0.0
+    var sum_xy: Float32 = 0.0
+    var sum_xx: Float32 = 0.0
+    var i = 0
+    while i < n:
+        var x = Float32(i)
+        var y = series[i]
+        sum_x += x
+        sum_y += y
+        sum_xy += x * y
+        sum_xx += x * x
+        i += 1
+
+    var denom = nf * sum_xx - sum_x * sum_x
+    if denom == 0.0:
+        return REJECTED
+    var slope = (nf * sum_xy - sum_x * sum_y) / denom
+    var intercept = (sum_y - slope * sum_x) / nf
+
+    var acc: Float32 = 0.0
+    i = 0
+    while i < n:
+        var predicted = intercept + slope * Float32(i)
+        var e = series[i] - predicted
+        acc += e * e
+        i += 1
+
+    var rms = sqrt(acc / nf)
+    if not _finite(rms):
+        return NON_FINITE
+    return rms
+
+
+# ------------------------------------------------------------------------------
+# 9. Kernel identity
 # ------------------------------------------------------------------------------
 
 @export
 def uos_km_kernel_abi_version() abi("C") -> Int32:
-    return 1
+    return 3

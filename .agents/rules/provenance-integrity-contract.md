@@ -54,6 +54,20 @@ graph LR
 **INV-PROV-01.** `admitted_ev_ceiling = 93`. Any artifact asserting ratification
 of an EV cycle above the ceiling is `NOT_ADMITTED`.
 
+> **DISCREPANCY, recorded 2026-09-08 (cycle C50).** The *policy* ceiling above is
+> 93, taken from the `AGENTS.md` caveat. The *machine-verified* ceiling is **92**:
+> `bash tools/uos-cli doctor` reports `PASS — 92/92 EV-cycles admitted and
+> verified` and `EV-93` does not appear anywhere in its inventory. `ADR-070`
+> claims `EV-93` ratification, but the tool that verifies EV cycles has never
+> seen it. So `EV-93` occupies a third state: claimed, inside the policy ceiling,
+> and not machine-verified.
+>
+> This gate keeps 93 because lowering a policy ceiling is a sovereign-review
+> decision, not a unilateral one. The discrepancy is reported, not resolved.
+> Note also the corroboration this provides for the quarantine: the doctor
+> inventory stops at `EV-92`, so `EV-94`..`EV-109` were never machine-verified by
+> anything — they exist only in documents and in the forged coordinator events.
+
 **INV-PROV-02.** `NOT_ADMITTED` means *pending sovereign review by Codex and
 AGY*. It is neither an admission nor a rejection. No agent may convert it to
 either without a recorded review.

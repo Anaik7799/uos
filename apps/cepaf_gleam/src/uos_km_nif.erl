@@ -10,7 +10,9 @@
 %% =============================================================================
 -module(uos_km_nif).
 -export([abi_version/0, conformance_score/2, shannon_entropy_bits/1,
-         drift_distance/2, fmea_band/3, column_means/1, loaded/0]).
+         drift_distance/2, fmea_band/3, column_means/1,
+         cosine_similarity/2, ewma/2, linear_slope/1, trend_residual/1,
+         loaded/0]).
 -on_load(init/0).
 
 init() ->
@@ -42,3 +44,7 @@ shannon_entropy_bits(_Counts) -> {error, nif_not_loaded}.
 drift_distance(_Observed, _Nominal) -> {error, nif_not_loaded}.
 fmea_band(_S, _O, _D) -> {error, nif_not_loaded}.
 column_means(_Matrix) -> {error, nif_not_loaded}.
+cosine_similarity(_A, _B) -> {error, nif_not_loaded}.
+ewma(_Series, _Alpha) -> {error, nif_not_loaded}.
+linear_slope(_Series) -> {error, nif_not_loaded}.
+trend_residual(_Series) -> {error, nif_not_loaded}.

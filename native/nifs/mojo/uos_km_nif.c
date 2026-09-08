@@ -27,6 +27,10 @@ extern float   uos_km_shannon_entropy_bits(const float *c, long n);
 extern int32_t uos_km_fmea_band(int32_t s, int32_t o, int32_t d);
 extern float   uos_km_drift_distance(const float *o, const float *nom, long n);
 extern int32_t uos_km_kernel_abi_version(void);
+extern float   uos_km_cosine_similarity(const float *a, const float *b, long n);
+extern float   uos_km_ewma(const float *s, long n, float alpha);
+extern float   uos_km_linear_slope(const float *s, long n);
+extern float   uos_km_trend_residual(const float *s, long n);
 
 #define UOS_KM_MAX_ELEMS 4096
 
@@ -163,7 +167,68 @@ static ERL_NIF_TERM nif_column_means(ErlNifEnv *env, int argc, const ERL_NIF_TER
     return enif_make_tuple2(env, enif_make_atom(env, "ok"), out);
 }
 
+static ERL_NIF_TERM nif_cosine_similarity(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]) {
+    (void)argc;
+    float *a = NULL, *b = NULL;
+    long na = read_float_list(env, argv[0], &a);
+    if (na < 0) return err(env, "bad_vector_a");
+    long nb = read_float_list(env, argv[1], &b);
+    if (nb < 0) { enif_free(a); return err(env, "bad_vector_b"); }
+    if (na != nb) { enif_free(a); enif_free(b); return err(env, "length_mismatch"); }
+
+    float r = uos_km_cosine_similarity(a, b, na);
+    enif_free(a); enif_free(b);
+    /* -1.0 is both the rejection sentinel and a legal similarity (opposed
+       vectors). Non-negative term-frequency vectors can never be opposed, so
+       within this contract a negative result is unambiguously a rejection. */
+    if (r < 0.0f) return err(env, "rejected_by_kernel");
+    return enif_make_double(env, (double)r);
+}
+
+static ERL_NIF_TERM nif_ewma(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]) {
+    (void)argc;
+    float *v = NULL;
+    long n = read_float_list(env, argv[0], &v);
+    if (n < 0) return err(env, "bad_series");
+    double alpha;
+    if (!enif_get_double(env, argv[1], &alpha)) { enif_free(v); return err(env, "bad_alpha"); }
+    float r = uos_km_ewma(v, n, (float)alpha);
+    enif_free(v);
+    if (r == -1.0f) return err(env, "rejected_by_kernel");
+    return enif_make_double(env, (double)r);
+}
+
+static ERL_NIF_TERM nif_linear_slope(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]) {
+    (void)argc;
+    float *v = NULL;
+    long n = read_float_list(env, argv[0], &v);
+    if (n < 0) return err(env, "bad_series");
+    float r = uos_km_linear_slope(v, n);
+    enif_free(v);
+    /* A slope is legitimately negative, so -1.0 alone cannot mean rejection
+       here. n < 2 is the only rejection this wrapper can distinguish, and it is
+       checked before the call. */
+    if (n < 2) return err(env, "series_too_short");
+    return enif_make_double(env, (double)r);
+}
+
+static ERL_NIF_TERM nif_trend_residual(ErlNifEnv* env, int argc, const ERL_NIF_TERM argv[]) {
+    (void)argc;
+    float *v = NULL;
+    long n = read_float_list(env, argv[0], &v);
+    if (n < 0) return err(env, "bad_series");
+    if (n < 2) { enif_free(v); return err(env, "series_too_short"); }
+    float r = uos_km_trend_residual(v, n);
+    enif_free(v);
+    if (r < 0.0f) return err(env, "rejected_by_kernel");
+    return enif_make_double(env, (double)r);
+}
+
 static ErlNifFunc nif_funcs[] = {
+    {"ewma",                 2, nif_ewma,                 0},
+    {"linear_slope",         1, nif_linear_slope,         0},
+    {"trend_residual",       1, nif_trend_residual,       0},
+    {"cosine_similarity",    2, nif_cosine_similarity,    0},
     {"abi_version",          0, nif_abi_version,          0},
     {"conformance_score",    2, nif_conformance_score,    0},
     {"shannon_entropy_bits", 1, nif_shannon_entropy_bits, 0},

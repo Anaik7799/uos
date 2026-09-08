@@ -41,7 +41,7 @@ Example:
    - Never rename immutable historical files retroactively. Historical lineage is tracked via content digest and source locator.
 
 3. **Machine-Checked Enforcement**:
-   - `tools/uos timestamp-check` validates compliance across generated documents.
+   - `tools/uos-cli timestamp-check` validates compliance across generated documents.
    - `engines/hermes/modules/hermes_dependability/dependability_clock.ml` enforces the `YYYYMMDD-HHSS` calendar projection.
    - Continuous integration and admission gates reject any commit adding un-prefixed generated documentation.
 

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# SC-PROVENANCE-001 — invoke the UOS Gleam CLI (tools/uos) from anywhere.
+#
+# `tools/uos` is a Gleam PACKAGE DIRECTORY, not an executable, so the form
+# `tools/uos doctor` cited in AGENTS.md and three rule files never ran. This
+# wrapper provides that entry point without renaming the package.
+#
+#   bash tools/uos-cli doctor
+#   bash tools/uos-cli checklist | web-links | timestamp-check | km-check
+#   bash tools/uos-cli gate <name> | verify-all
+set -euo pipefail
+uos_repo="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+command -v gleam >/dev/null || { echo "Missing toolchain dependency: gleam" >&2; exit 2; }
+cd "$uos_repo/tools/uos"
+# The CLI resolves repository-relative paths, so run it with the repo as cwd.
+exec env UOS_REPO="$uos_repo" gleam run -- "$@"

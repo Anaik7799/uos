@@ -139,7 +139,7 @@ Per operator mandate (`contracts/rules/comprehensive-checklist-contract.md` `SC-
 1. **Interactive Checklist Component**: 18/18 checks rendered via expandable accordion component on every single web screen and document view.
 2. **5 Verification Domains**: (1) Metadata/Timestamp/Tailscale Navigation, (2) Zero-Muda Purity & Storage Safety, (3) Testing Gold Standard C1–C8 & 4 Math Gates, (4) Cross-Language Control & Observability, (5) Tri-Sovereign Governance & Jujutsu Monorepo.
 3. **Uniform Cohesive Navigation**: Grouped Sidebar (Command & Control, Knowledge Base, Repository & Gov), Top Status Bar with clickable Tailscale FQDN URL and click-to-copy, Breadcrumb hierarchy, Dual View Mode (Rendered Markdown vs Raw Source toggle), Bottom linear Prev/Next navigation, and Persistent System Footer.
-4. **Machine Verification**: Validated by `tools/uos checklist`, gate `G-CHECKLIST`, and `tools/uos doctor` EV-19.
+4. **Machine Verification**: Validated by `tools/uos-cli checklist`, gate `G-CHECKLIST`, and `tools/uos-cli doctor` EV-19.
 
 ### 5.4 Shared Claude, Codex, AGY and OpenRouter Coordination
 
@@ -207,7 +207,7 @@ discovered -> classified -> mapped -> implemented -> built -> executed -> passed
 - Host NTP offset, system-to-model delta, and agent-context delta are non-aliasing typed measurements.
 - Inherited drift bands: nominal (<2s), minor (2–5s), warning (5–10s), critical (>10s).
 - **Mandatory Generated Document Timestamp Prefix**: Per explicit operator mandate (`contracts/rules/timestamp-mandate.md`), all newly generated documents across UOS MUST carry the `YYYYMMDD-HHSS-` timestamp prefix (e.g. `20260905-1725-`). Historical source formats are preserved byte-for-byte in typed namespaces.
-- Machine-checked by `tools/uos timestamp-check` and `dependability_clock.ml`.
+- Machine-checked by `tools/uos-cli timestamp-check` and `dependability_clock.ml`.
 
 ### 8.2 Journal Protocol (`SC-JOURNAL`)
 Every task completion journal MUST contain the exact 13 required sections:

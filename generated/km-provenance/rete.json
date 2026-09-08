@@ -1,0 +1,32 @@
+{
+  "schema": "uos-km-rete/v1",
+  "contract": "SC-PROVENANCE-001",
+  "governing_invariant": "ADR-001 closed fact schema, strict typing, duplicate-key rejection",
+  "authority": "REPORT_ONLY",
+  "observed_at": "2026-09-08T08:12:03Z",
+  "initial_facts": 91,
+  "working_memory_after_fixpoint": 108,
+  "cycles_to_fixpoint": 3,
+  "derived_quarantined": 16,
+  "firing_trace": [
+    {
+      "cycle": 1,
+      "rule": "R1-quarantine-above-ceiling",
+      "derived_facts": 16
+    },
+    { "cycle": 2, "rule": "R4-ceiling-discrepancy", "derived_facts": 1 }
+  ],
+  "andon": [],
+  "violations": [
+    {
+      "rule": "KMP-CEILING-SPLIT",
+      "detail": "policy ceiling 93 exceeds machine-verified ceiling 92"
+    }
+  ],
+  "verdict": "HOLD",
+  "limits": [
+    "A rule network decides over the facts it is given; it cannot see state nobody asserted.",
+    "Salience orders conflict resolution; it is not a proof of precedence correctness.",
+    "REPORT_ONLY: no verdict here grants admission or dispatches any effect."
+  ]
+}
