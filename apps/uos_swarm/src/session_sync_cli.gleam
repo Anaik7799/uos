@@ -7,8 +7,10 @@ import argv
 import gleam/int
 import gleam/io
 import gleam/json
+import gleam/list
 import gleam/result
 import gleam/string
+import simplifile
 import uos_swarm/board
 import uos_swarm/session_sync as sync
 
@@ -104,6 +106,9 @@ pub fn run(args: List(String)) -> Result(String, String) {
       })
     }
     [root, "journal"] -> sync.read_journal(root)
+    [root, "resign", out_root] -> resign_into(root, out_root)
+    [root, "compact", out_root] -> compact_into(root, out_root)
+    [root, "verify"] -> verify_journal(root)
     [root, "recover-lock"] -> {
       use message <- result.try(sync.recover_lock(root))
       Ok(
@@ -117,6 +122,159 @@ pub fn run(args: List(String)) -> Result(String, String) {
     }
     _ -> Error(usage())
   }
+}
+
+/// `resign <root> <out_root>`: rebuild the journal under `root` with this
+/// module's canonical byte form and digests (see `session_sync.resign`) and
+/// write it as a fresh `events/` directory under `out_root`, which must not
+/// already contain an `events/` directory. The source journal is never
+/// modified; swapping directories is a separate, recorded operator step.
+fn resign_into(root: String, out_root: String) -> Result(String, String) {
+  use journal <- result.try(sync.read_journal(root))
+  use events <- result.try(sync.resign(journal))
+  let dir = out_root <> "/events"
+  use _ <- result.try(case simplifile.is_directory(dir) {
+    Ok(True) -> Error("refusing to write: " <> dir <> " already exists")
+    _ -> Ok(Nil)
+  })
+  use _ <- result.try(
+    simplifile.create_directory_all(dir)
+    |> result.map_error(fn(e) {
+      "cannot create " <> dir <> ": " <> string.inspect(e)
+    }),
+  )
+  let _ = simplifile.set_permissions_octal(out_root, 0o700)
+  let _ = simplifile.set_permissions_octal(dir, 0o700)
+  use last <- result.try(
+    list.try_fold(events, "", fn(_, event) {
+      let name = string.pad_start(int.to_string(event.sequence), 10, "0")
+      let path = dir <> "/" <> name <> ".json"
+      use _ <- result.try(
+        simplifile.write(path, sync.event_string(event))
+        |> result.map_error(fn(e) {
+          "cannot write " <> path <> ": " <> string.inspect(e)
+        }),
+      )
+      let _ = simplifile.set_permissions_octal(path, 0o600)
+      Ok(event.digest)
+    }),
+  )
+  Ok(
+    json.to_string(
+      json.object([
+        #("ok", json.bool(True)),
+        #("resigned_events", json.int(list.length(events))),
+        #("out_root", json.string(out_root)),
+        #("last_digest", json.string(last)),
+      ]),
+    ),
+  )
+}
+
+/// `verify <root>`: report the journal's health without taking the write lock,
+/// naming the first sequence that breaks and why. Exit code 0 when healthy and
+/// 1 when not, so a 30-second probe can gate on it (workstream S3 of
+/// PLAN-UOS-STABILIZE-001: three corruptions on 2026-09-07 were each found
+/// 18-24 minutes late, on the next command that needed a lease).
+fn verify_journal(root: String) -> Result(String, String) {
+  use journal <- result.try(read_damaged_journal(root))
+  let health = sync.journal_health(journal)
+  let rendered = json.to_string(sync.journal_health_json(health))
+  case health.ok {
+    True -> Ok(rendered)
+    False -> Error(rendered)
+  }
+}
+
+/// Read an event directory that `session_sync_ffi:read_events/1` would refuse.
+///
+/// The storage reader demands a contiguous `events/NNNNNNNNNN.json` run and
+/// fails with "journal gap or unexpected file" otherwise — correct for every
+/// normal path, and exactly the state compaction exists to repair (invalid
+/// events removed leave a gap). This lenient reader is used ONLY by `compact`:
+/// it takes the `*.json` files in name order and concatenates them, leaving
+/// every validity judgement to `session_sync.compact`.
+fn read_damaged_journal(root: String) -> Result(String, String) {
+  let dir = root <> "/events"
+  use names <- result.try(
+    simplifile.read_directory(dir)
+    |> result.map_error(fn(e) {
+      "cannot read " <> dir <> ": " <> string.inspect(e)
+    }),
+  )
+  let lines =
+    names
+    |> list.filter(string.ends_with(_, ".json"))
+    |> list.sort(string.compare)
+    |> list.map(fn(name) {
+      case simplifile.read(dir <> "/" <> name) {
+        Ok(text) -> string.trim(text)
+        Error(_) -> ""
+      }
+    })
+    |> list.filter(fn(line) { line != "" })
+  case lines {
+    [] -> Error("no readable events under " <> dir)
+    _ -> Ok(string.join(lines, "\n"))
+  }
+}
+
+/// `compact <root> <out_root>`: rebuild the SURVIVING events of the journal
+/// under `root` into a fresh `events/` directory under `out_root`, closing the
+/// sequence gaps left by quarantining invalid events (see
+/// `session_sync.compact`). Events the coordinator would refuse in their new
+/// context are not written; they are listed in the receipt as `orphaned` with
+/// their original sequence and the refusal, so the caller can quarantine them
+/// as evidence. The source journal is never modified.
+fn compact_into(root: String, out_root: String) -> Result(String, String) {
+  use journal <- result.try(read_damaged_journal(root))
+  use #(events, orphaned) <- result.try(sync.compact(journal))
+  let dir = out_root <> "/events"
+  use _ <- result.try(case simplifile.is_directory(dir) {
+    Ok(True) -> Error("refusing to write: " <> dir <> " already exists")
+    _ -> Ok(Nil)
+  })
+  use _ <- result.try(
+    simplifile.create_directory_all(dir)
+    |> result.map_error(fn(e) {
+      "cannot create " <> dir <> ": " <> string.inspect(e)
+    }),
+  )
+  let _ = simplifile.set_permissions_octal(out_root, 0o700)
+  let _ = simplifile.set_permissions_octal(dir, 0o700)
+  use last <- result.try(
+    list.try_fold(events, "", fn(_, event) {
+      let name = string.pad_start(int.to_string(event.sequence), 10, "0")
+      let path = dir <> "/" <> name <> ".json"
+      use _ <- result.try(
+        simplifile.write(path, sync.event_string(event))
+        |> result.map_error(fn(e) {
+          "cannot write " <> path <> ": " <> string.inspect(e)
+        }),
+      )
+      let _ = simplifile.set_permissions_octal(path, 0o600)
+      Ok(event.digest)
+    }),
+  )
+  Ok(
+    json.to_string(
+      json.object([
+        #("ok", json.bool(True)),
+        #("compacted_events", json.int(list.length(events))),
+        #(
+          "orphaned",
+          json.array(orphaned, fn(entry) {
+            json.object([
+              #("original_sequence", json.int(entry.0)),
+              #("reason", json.string(entry.1)),
+            ])
+          }),
+        ),
+        #("out_root", json.string(out_root)),
+        #("last_digest", json.string(last)),
+      ]),
+    ),
+  )
 }
 
 pub fn usage() -> String {

@@ -16,10 +16,34 @@ pub fn registry_has_at_least_160_concepts_test() {
   { list.length(system_ontology.concepts()) >= 160 } |> should.be_true
 }
 
-/// The Jujutsu ontology adds 28 `jj:`-prefixed concepts to the shipped 226, so the registry
-/// now carries at least 252 concepts (operator directive: "create jujutsu ontology").
+/// The Jujutsu ontology adds `jj:`-prefixed concepts to the shipped 226. This threshold is not
+/// derived from that arithmetic (an earlier draft's 226+28 estimate did not match measurement):
+/// it is the registry size actually measured at this candidate via
+/// `erl -pa build/dev/erlang/*/ebin -noshell -eval 'io:format("~p~n",
+/// [length(uos_swarm@system_ontology:concepts())]), init:stop().'`, which reported 389 concepts
+/// after the holon meta-vocabulary group (task KM) was added. Kept as a lower bound, not an exact
+/// equality, so later concept groups added by other work do not spuriously fail this test.
 pub fn registry_has_at_least_252_concepts_after_jujutsu_ontology_test() {
   { list.length(system_ontology.concepts()) >= 252 } |> should.be_true
+}
+
+/// The 10 holon meta-vocabulary concepts (sa-plan uos/holonic-mapping/20260907-1505, task KM)
+/// are part of the measured 389-concept registry (see the comment above); each resolves by its
+/// `holon-meta:` id with a non-empty Devanagari gloss. 389 is the actual measured count at this
+/// candidate, not a value derived from an unmeasured 226+28+10 estimate.
+pub fn registry_has_at_least_389_concepts_after_holon_meta_test() {
+  { list.length(system_ontology.concepts()) >= 389 } |> should.be_true
+  let ids = [
+    "holon-meta:holon", "holon-meta:holarchy", "holon-meta:constitution",
+    "holon-meta:census", "holon-meta:lifecycle", "holon-meta:vitals",
+    "holon-meta:plane", "holon-meta:whole", "holon-meta:part",
+    "holon-meta:level",
+  ]
+  list.each(ids, fn(id) {
+    let assert Ok(c) = system_ontology.resolve(id)
+    c.id |> should.equal(id)
+    { c.devanagari != "" } |> should.be_true
+  })
 }
 
 pub fn jujutsu_domain_has_at_least_26_concepts_test() {

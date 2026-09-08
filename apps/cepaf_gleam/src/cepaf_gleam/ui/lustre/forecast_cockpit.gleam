@@ -14,6 +14,7 @@ import gleam/list
 import gleam/string
 
 const forecast_api_layers_url = "http://nas-1.tail55d152.ts.net:4100/api/v1/forecast/layers"
+
 const forecast_api_health_url = "http://nas-1.tail55d152.ts.net:4100/api/v1/forecast/health"
 
 pub fn view() -> String {
@@ -27,8 +28,12 @@ pub fn view() -> String {
   <> "<span style=\"background:#059669;color:#fff;padding:0.25rem 0.5rem;border-radius:4px;font-size:0.8rem\">POODAVR ACTIVE</span></div>"
   <> "</div>"
   <> "<p style=\"color:#94a3b8;margin:0.5rem 0 0 0\">Mathematical Ensemble: 1D Kalman State Estimation &middot; Bayesian EMA Credible Intervals &middot; Lyapunov Energy Stability &middot; SEU Break-Even Gating</p>"
-  <> "<p style=\"font-size:0.85rem;margin-top:0.5rem\"><a href=\"" <> forecast_api_layers_url <> "\" style=\"color:#38bdf8;text-decoration:none;margin-right:1rem\">API: /api/v1/forecast/layers</a>"
-  <> "<a href=\"" <> forecast_api_health_url <> "\" style=\"color:#38bdf8;text-decoration:none\">API: /api/v1/forecast/health</a></p>"
+  <> "<p style=\"font-size:0.85rem;margin-top:0.5rem\"><a href=\""
+  <> forecast_api_layers_url
+  <> "\" style=\"color:#38bdf8;text-decoration:none;margin-right:1rem\">API: /api/v1/forecast/layers</a>"
+  <> "<a href=\""
+  <> forecast_api_health_url
+  <> "\" style=\"color:#38bdf8;text-decoration:none\">API: /api/v1/forecast/health</a></p>"
   <> "</header>"
   <> render_poodavr_stage_diagram()
   <> render_ensemble_summary()
@@ -81,8 +86,8 @@ fn render_ensemble_summary() -> String {
   <> "<div style=\"color:#64748b;font-size:0.8rem\">Asymptotically Stable Dissipation</div></div>"
   <> "<div style=\"background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:1rem\">"
   <> "<div style=\"color:#94a3b8;font-size:0.8rem\">BRIER CALIBRATION SCORE</div>"
-  <> "<div style=\"color:#38bdf8;font-size:1.25rem;font-weight:bold;margin:0.25rem 0\">0.024</div>"
-  <> "<div style=\"color:#64748b;font-size:0.8rem\">Target: &le; 0.25 (Superior Calibration)</div></div>"
+  <> "<div style=\"color:#f59e0b;font-size:1.25rem;font-weight:bold;margin:0.25rem 0\">UNRUN</div>"
+  <> "<div style=\"color:#64748b;font-size:0.8rem\">Target: &le; 0.25; 0 resolved forecasts observed (ETC-1)</div></div>"
   <> "<div style=\"background:#0f172a;border:1px solid #1e293b;border-radius:8px;padding:1rem\">"
   <> "<div style=\"color:#94a3b8;font-size:0.8rem\">PREFLIGHT GATING</div>"
   <> "<div style=\"color:#10b981;font-size:1.25rem;font-weight:bold;margin:0.25rem 0\">FAIL-CLOSED</div>"
@@ -123,14 +128,34 @@ fn render_forecast_rows(forecasts: List(LayerForecast)) -> String {
     let risk_str = int.to_string(float.round(f.risk_score *. 100.0)) <> "%"
 
     "<tr style=\"border-bottom:1px solid #1e293b\">"
-    <> "<td style=\"padding:0.75rem;font-weight:bold;color:#38bdf8\">" <> fractal_layer_to_string(f.layer) <> "</td>"
-    <> "<td style=\"padding:0.75rem;color:#e2e8f0\">" <> f.metric_name <> "</td>"
-    <> "<td style=\"padding:0.75rem;color:#94a3b8\">" <> curr_str <> "</td>"
-    <> "<td style=\"padding:0.75rem;font-weight:bold;color:#f1f5f9\">" <> pred_str <> "</td>"
-    <> "<td style=\"padding:0.75rem;color:#94a3b8\">[" <> lower_str <> " &ndash; " <> upper_str <> "]</td>"
-    <> "<td style=\"padding:0.75rem\"><span style=\"background:#1e293b;color:#93c5fd;padding:0.2rem 0.5rem;border-radius:4px;font-size:0.8rem\">" <> f.nato_term <> "</span></td>"
-    <> "<td style=\"padding:0.75rem;color:" <> risk_color <> ";font-weight:bold\">" <> risk_str <> "</td>"
-    <> "<td style=\"padding:0.75rem;color:#94a3b8;font-size:0.85rem\">" <> f.recommendation <> "</td>"
+    <> "<td style=\"padding:0.75rem;font-weight:bold;color:#38bdf8\">"
+    <> fractal_layer_to_string(f.layer)
+    <> "</td>"
+    <> "<td style=\"padding:0.75rem;color:#e2e8f0\">"
+    <> f.metric_name
+    <> "</td>"
+    <> "<td style=\"padding:0.75rem;color:#94a3b8\">"
+    <> curr_str
+    <> "</td>"
+    <> "<td style=\"padding:0.75rem;font-weight:bold;color:#f1f5f9\">"
+    <> pred_str
+    <> "</td>"
+    <> "<td style=\"padding:0.75rem;color:#94a3b8\">["
+    <> lower_str
+    <> " &ndash; "
+    <> upper_str
+    <> "]</td>"
+    <> "<td style=\"padding:0.75rem\"><span style=\"background:#1e293b;color:#93c5fd;padding:0.2rem 0.5rem;border-radius:4px;font-size:0.8rem\">"
+    <> f.risk_band
+    <> "</span></td>"
+    <> "<td style=\"padding:0.75rem;color:"
+    <> risk_color
+    <> ";font-weight:bold\">"
+    <> risk_str
+    <> "</td>"
+    <> "<td style=\"padding:0.75rem;color:#94a3b8;font-size:0.85rem\">"
+    <> f.recommendation
+    <> "</td>"
     <> "</tr>"
   })
   |> string.join("")

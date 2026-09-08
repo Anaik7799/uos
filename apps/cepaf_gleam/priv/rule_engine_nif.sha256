@@ -1,1 +1,1 @@
-ffd159d7d864ea4a10d69bd8eaa5315ab4b0cea868bead36ea6f73917a8511fc  /home/an/NAS-setup/c3i/lib/cepaf_gleam/priv/rule_engine_nif.so
+ffd159d7d864ea4a10d69bd8eaa5315ab4b0cea868bead36ea6f73917a8511fc  apps/cepaf_gleam/priv/rule_engine_nif.so  host-provisioned 2026-09-07: copied from /home/an/NAS-setup/c3i/lib/cepaf_gleam/priv/rule_engine_nif.so (identical bytes in /home/an/dev/ver/c3i/lib/cepaf_gleam/priv/rule_engine_nif.so); provenance governance/sources/20260907-1305-c3i-ocaml-nif-artifact-provisioning.json; never committed

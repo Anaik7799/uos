@@ -14,6 +14,12 @@
 # SQLite live journals & locks (never commit live DB states)
 sa_plan.sqlite3
 **/state/*.sqlite3
+# Runtime coordinator and holarchy stores: regenerable, never source.
+**/var/coordination/**/*.sqlite3
+**/var/holarchy/*.sqlite3
+# Stray databases written into a package root by tests or ad-hoc probes
+# (2026-09-07: review agents left apps/uos_swarm/{crash,race}.sqlite3).
+apps/*/*.sqlite3
 *.sqlite3-wal
 *.sqlite3-shm
 *.sqlite3-journal
@@ -91,3 +97,10 @@ Thumbs.db
 # ferriskey_nif is a cdylib NIF: its lockfile is part of the reproducible build (governance/sources/20260907-1330-ferriskey-nif-source-ingestion.json)
 !native/nifs/rust/ferriskey_nif/Cargo.lock
 apps/uos_swarm/test/scratch_systemd/
+
+# The MAX/Mojo toolchain lock pins every Modular and conda-forge artifact by URL
+# and hash: it is the reproducible-build manifest for the inference tier, not a
+# live lock (governance/sources/20260907-2300-modular-max-mojo-toolchain-installation.json).
+# The environment itself (services/inference/max/.pixi/, ~1 GB) stays untracked,
+# exactly like the host-provisioned priv/*.so artifacts.
+!services/inference/max/pixi.lock

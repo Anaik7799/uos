@@ -140,6 +140,13 @@ pub type Kind {
   Dataset
 }
 
+/// The C3I biological holon lifecycle (design doc 1.2, Appendix C "HOLON-LIFECYCLE"). For
+/// census-derived (`Process`-kind) holons this is DERIVED from the census `status` string at
+/// census time (`lifecycle_from_status`, wired through `with_process`) -- it is a one-shot
+/// classification of what the census snapshot said, NOT an observed-live state; nothing in this
+/// module polls a running process to keep it current. `transition` below is the only sanctioned
+/// way to move a holon between lifecycle states once something (a future supervisor/monitor) does
+/// track it live.
 pub type Lifecycle {
   Dormant
   Awakening
@@ -147,6 +154,99 @@ pub type Lifecycle {
   Stressed
   Healing
   Apoptotic
+}
+
+/// Events that drive `transition`. Names match the biological metaphor: a holon `Wake`s from
+/// `Dormant`, becomes `Ready`, comes under `Stress`, is given a chance to `Heal`, and may
+/// `Recover` back to `Active`; `Die` is the one event legal from every non-terminal state.
+pub type LifecycleEvent {
+  Wake
+  Ready
+  Stress
+  Heal
+  Recover
+  Die
+}
+
+pub fn lifecycle_event_label(e: LifecycleEvent) -> String {
+  case e {
+    Wake -> "Wake"
+    Ready -> "Ready"
+    Stress -> "Stress"
+    Heal -> "Heal"
+    Recover -> "Recover"
+    Die -> "Die"
+  }
+}
+
+/// The sole legal lifecycle state machine (HOLON-LIFECYCLE). Legal edges:
+///   Dormant + Wake -> Awakening
+///   Awakening + Ready -> Active
+///   Active + Stress -> Stressed
+///   Stressed + Heal -> Healing
+///   Healing + Recover -> Active
+///   any state except Apoptotic + Die -> Apoptotic
+/// `Apoptotic` is terminal: every event from it (including another `Die`) is an `Error`. Every
+/// other `(state, event)` pair not listed above is also an `Error` naming both the state and the
+/// event, so a caller always gets a precise diagnostic rather than a silently-ignored transition.
+pub fn transition(
+  from: Lifecycle,
+  event: LifecycleEvent,
+) -> Result(Lifecycle, String) {
+  case from, event {
+    Dormant, Wake -> Ok(Awakening)
+    Awakening, Ready -> Ok(Active)
+    Active, Stress -> Ok(Stressed)
+    Stressed, Heal -> Ok(Healing)
+    Healing, Recover -> Ok(Active)
+    Dormant, Die -> Ok(Apoptotic)
+    Awakening, Die -> Ok(Apoptotic)
+    Active, Die -> Ok(Apoptotic)
+    Stressed, Die -> Ok(Apoptotic)
+    Healing, Die -> Ok(Apoptotic)
+    Apoptotic, _ ->
+      Error(
+        "lifecycle "
+        <> lifecycle_label(Apoptotic)
+        <> " is terminal: "
+        <> lifecycle_event_label(event)
+        <> " has no legal transition",
+      )
+    _, _ ->
+      Error(
+        "illegal lifecycle transition: "
+        <> lifecycle_label(from)
+        <> " + "
+        <> lifecycle_event_label(event),
+      )
+  }
+}
+
+/// Maps a daemon-census `status` string (SC-HOLON-CENSUS rows) onto its DERIVED lifecycle at
+/// census time -- not an observed-live state (see the `Lifecycle` doc comment above). "running"
+/// is Active; "stopped" and "absent" are Dormant (present in the census but not currently up);
+/// "failed" is Stressed (up but unhealthy); "superseded" is Apoptotic (retired by design, not
+/// coming back); anything else (including "integrated", "imported-not-wired", "barred",
+/// "deferred", and "" -- none of which are literal census-observed run states) defaults to
+/// Dormant, the safe/unknown default the `holon()` constructor already used before this field was
+/// derived.
+pub fn lifecycle_from_status(status: String) -> Lifecycle {
+  case status {
+    "running" -> Active
+    "stopped" -> Dormant
+    "absent" -> Dormant
+    "failed" -> Stressed
+    "superseded" -> Apoptotic
+    _ -> Dormant
+  }
+}
+
+pub type Vitals {
+  Vitals(
+    heartbeat_age_s: Option(Int),
+    restarts: Int,
+    last_transition: Option(String),
+  )
 }
 
 pub type Holon {
@@ -167,6 +267,7 @@ pub type Holon {
     status: String,
     uid: String,
     lifecycle: Lifecycle,
+    vitals: Option(Vitals),
   )
 }
 
@@ -186,9 +287,10 @@ fn uid_of(id: String) -> String {
 
 /// Compact constructor for the common case: fills `audit_subject`/`board_agent` with `None`,
 /// `kind` with `Component`, `domain`/`process_class`/`status` with `""`, `uid` computed from
-/// `id`, and `lifecycle` with `Dormant`. Chain the `with_*` helpers below to override any of
-/// those six fields — keeps the 34 original architectural entries (and the census-derived ones)
-/// compact instead of repeating ten unchanged trailing arguments on every holon.
+/// `id`, `lifecycle` with `Dormant`, and `vitals` with `None`. Chain the `with_*` helpers below to
+/// override any of those seven fields — keeps the 34 original architectural entries (and the
+/// census-derived ones) compact instead of repeating ten unchanged trailing arguments on every
+/// holon.
 pub fn holon(
   id: String,
   name: String,
@@ -216,6 +318,7 @@ pub fn holon(
     status: "",
     uid: uid_of(id),
     lifecycle: Dormant,
+    vitals: None,
   )
 }
 
@@ -227,13 +330,27 @@ pub fn with_domain(h: Holon, d: String) -> Holon {
   Holon(..h, domain: d)
 }
 
-/// Sets both `process_class` and `status` together (census rows always carry both).
+/// Sets both `process_class` and `status` together (census rows always carry both), and derives
+/// `lifecycle` from `status` via `lifecycle_from_status` (HOLON-LIFECYCLE) so census-derived
+/// holons no longer all default to `Dormant` regardless of their recorded status. This lifecycle
+/// is DERIVED from the census status at census time, not observed live -- see the `Lifecycle` doc
+/// comment. Call `with_lifecycle` afterwards to override it explicitly if a caller has a better
+/// (live-observed) value.
 pub fn with_process(h: Holon, process_class: String, status: String) -> Holon {
-  Holon(..h, process_class: process_class, status: status)
+  Holon(
+    ..h,
+    process_class: process_class,
+    status: status,
+    lifecycle: lifecycle_from_status(status),
+  )
 }
 
 pub fn with_lifecycle(h: Holon, l: Lifecycle) -> Holon {
   Holon(..h, lifecycle: l)
+}
+
+pub fn with_vitals(h: Holon, v: Vitals) -> Holon {
+  Holon(..h, vitals: Some(v))
 }
 
 pub fn with_audit_subject(h: Holon, a: String) -> Holon {
@@ -291,22 +408,41 @@ pub fn address(h: Holon) -> String {
 ///      never silently guessed. 6 of the 113 rows fall through to this case (ad hoc dev/test
 ///      scripts and the superseded Elixir/Phoenix `indrajaal_web`).
 ///
-/// `whole`/`parts` stay reciprocal (B2) and level-monotonic (B4): a census holon's `whole` is one
-/// of the 10 `Subsystem` holons below, whose own level starts at 2 but is pulled down to the
-/// minimum level of its census children when that minimum is lower (the design's own words:
-/// "the design allows peer-level parts; if a census holon's level is lower than its subsystem
-/// whole's level, set the subsystem whole's level to the minimum of its parts"). That adjustment
-/// cascades one level further up the whole-chain where needed to keep B4 satisfied everywhere:
-/// because `cepaf-gleam` and `uos-swarm` and `tools`/`ops`/`native-nifs` each pick up at least one
-/// L0 census child (IAM/vault/clock-guard/constitutional rows) or an L1 NIF child, their level
-/// drops to 0 (or 1 for `zigvm`), which in turn pulls `control-plane`, `runtime-plane` and
-/// `messaging-plane` (and, transitively, `planes` itself) down from their original level 1 to
-/// level 0 -- so `planes` and three of the seven plane-instance holons now sit at the same level
-/// as `uos`. `structure-plane`, `data-plane`, `intelligence-plane` and `language-plane` keep
-/// their original level 1 (none of their subsystems picked up an L0/L1 child). This is the
-/// documented, instructed outcome of the level-monotonic invariant meeting real census data, not
-/// a bug: the daemon census shows IAM/vault/clock-guard/constitutional concerns nested three
-/// hops below `uos` today, and B4 must stay honest about that rather than silently overriding it.
+/// L0-CONSTITUTIONAL WHOLE (HOLON-LIFECYCLE, superseding the first cut of this comment): the L0
+/// constitutional/IAM/secret/clock-guard/governance rows identified by rule 2 above do NOT sit
+/// under their subsystem (`cepaf-gleam`, `uos-swarm`, `native-nifs`) as HOLARCHY-CENSUS first
+/// wired them. The level-monotonic rule (B4: a part's level >= its whole's level) cascaded through
+/// that wiring: an L0 process under `cepaf-gleam` forced `cepaf-gleam` itself down to L0, which
+/// forced `control-plane` down to L0, which forced `planes` down to L0 -- three of the seven
+/// architectural plane holons and the `planes` grouping node were pulled down to sit at the same
+/// level as `uos`, even though nothing about "control plane" or "the seven planes" is itself L0
+/// constitutional. This is fixed by giving those L0 rows their own L0 whole: `constitution`
+/// (id "constitution", kind `Subsystem`, whole `uos`, module
+/// `apps/cepaf_gleam/src/cepaf_gleam/fractal/l0_constitutional.gleam`), sibling to `supervisor`
+/// and `planes` under `uos`. The 9 census rows that matched rule 2 (`c3i-iam-native-guard-service`,
+/// `uos-clock-guard-service`, `iam-supervisor-gleam`, `vault-supervisor-gleam`,
+/// `fractal-l0-constitutional-gleam`, `ferriskey-vendored-operator-rust`,
+/// `rusty-vault-vendored-rust-source-of-rusty-vault-nif-so`, `ferriskey-nif`, `rusty-vault-nif`)
+/// now name `constitution` as their whole (and are listed in `constitution.parts`) instead of
+/// their former subsystem; `domain`, `process_class` and `status` are untouched by the move.
+///
+/// With those 9 rows gone, each formerly-affected subsystem's level is recomputed as
+/// `min(2, min level of its remaining parts)` -- 2 is every `Subsystem` holon's natural level
+/// (one below its plane), and the `min` keeps B4 honest if a subsystem still has a lower-level
+/// (L1 NIF/native-kernel) child: `cepaf-gleam` and `uos-swarm` have no L0 or L1 children left, so
+/// both return to L2; `native-nifs` still parents L1 native-kernel/NIF rows (`ferriskey-nif` and
+/// `rusty-vault-nif` left, but `graphene-nif-loader`, `c3i-ocaml-nif`, etc. remain), so it settles
+/// at L1, not L2. `tools` never had an L0 child (only L1 Rust rows), so it was already correctly
+/// at L1 before this fix and is untouched. `control-plane`, `runtime-plane` and `messaging-plane`
+/// -- whose minimum-level part was one of the now-restored subsystems -- return to their original
+/// L1 (matching `structure-plane`/`data-plane`/`intelligence-plane`/`language-plane`, which never
+/// picked up an L0/L1 child and were never pulled down); `planes` itself, whose minimum-level part
+/// is now L1 across all seven plane holons, returns to L1. `uos` (L0, the root) and `supervisor`
+/// (L0, peer-level design authority) are untouched -- both were already consistent with B4 once
+/// their parts (`planes` at L1, `constitution` at L0) are at or above L0.
+///
+/// Level distribution after this fix (158 holons): L0 12, L1 24, L2 24, L3 7, L4 58, L5 26, L6 6,
+/// L7 1.
 pub fn holarchy() -> List(Holon) {
   [
     // -- Original architectural holons (uos root, planes, and their level-2/3 members) --
@@ -317,7 +453,7 @@ pub fn holarchy() -> List(Holon) {
       0,
       Control,
       None,
-      ["supervisor", "planes"],
+      ["supervisor", "planes", "constitution"],
       "apps/uos_tui",
     )
       |> with_kind(System),
@@ -335,10 +471,31 @@ pub fn holarchy() -> List(Holon) {
       |> with_audit_subject("coordination policy")
       |> with_board_agent("L0-fable"),
     holon(
+      "constitution",
+      "L0 constitutional whole: IAM, secrets, clock guard, governance",
+      "saṃvidhāna (संविधान)",
+      0,
+      Control,
+      Some("uos"),
+      [
+        "c3i-iam-native-guard-service",
+        "uos-clock-guard-service",
+        "iam-supervisor-gleam",
+        "vault-supervisor-gleam",
+        "fractal-l0-constitutional-gleam",
+        "ferriskey-vendored-operator-rust",
+        "rusty-vault-vendored-rust-source-of-rusty-vault-nif-so",
+        "ferriskey-nif",
+        "rusty-vault-nif",
+      ],
+      "apps/cepaf_gleam/src/cepaf_gleam/fractal/l0_constitutional.gleam",
+    )
+      |> with_kind(Subsystem),
+    holon(
       "planes",
       "Seven planes",
       "sapta-tala (सप्त-तल)",
-      0,
+      1,
       Structure,
       Some("uos"),
       [
@@ -357,7 +514,7 @@ pub fn holarchy() -> List(Holon) {
       "control-plane",
       "Control plane",
       "niyantraṇa-tala (नियन्त्रण-तल)",
-      0,
+      1,
       Control,
       Some("planes"),
       ["coord", "stpa", "cepaf-gleam", "tools"],
@@ -382,7 +539,7 @@ pub fn holarchy() -> List(Holon) {
       "runtime-plane",
       "Runtime plane",
       "pravartana-tala (प्रवर्तन-तल)",
-      0,
+      1,
       Runtime,
       Some("planes"),
       [
@@ -415,7 +572,7 @@ pub fn holarchy() -> List(Holon) {
       "messaging-plane",
       "Messaging plane",
       "sandeśa-tala (सन्देश-तल)",
-      0,
+      1,
       Messaging,
       Some("planes"),
       ["board", "zenoh-router", "uos-swarm"],
@@ -702,12 +859,11 @@ pub fn holarchy() -> List(Holon) {
       "cepaf-gleam",
       "CEPAF Gleam control plane",
       "niyantrana-yantra (नियन्त्रण-यन्त्र)",
-      0,
+      2,
       Control,
       Some("control-plane"),
       [
         "c3i-gleam-server-service",
-        "c3i-iam-native-guard-service",
         "c3i-pi-runtime-service",
         "c3i-tls-proxy-service",
         "uos-sup-gleam-root-supervisor",
@@ -719,18 +875,13 @@ pub fn holarchy() -> List(Holon) {
         "c3i-knowledge-supervisor-gleam",
         "pi-supervisor-gleam",
         "cpig-supervisor-gleam",
-        "iam-supervisor-gleam",
-        "vault-supervisor-gleam",
         "ha-supervisor-config-gleam",
         "prajna-circuit-breaker-gleam",
         "ha-lyapunov-proof-gleam",
         "ha-freshness-monitor-gleam",
-        "fractal-l0-constitutional-gleam",
         "cepaf-gleam-web-server-gleam-mist-http-listener",
         "cepaf-gleam-web-server-gleam-mist-https-listener",
         "ag-ui-sse-stream-ag-ui-events",
-        "ferriskey-vendored-operator-rust",
-        "rusty-vault-vendored-rust-source-of-rusty-vault-nif-so",
       ],
       "apps/cepaf_gleam",
     )
@@ -756,11 +907,10 @@ pub fn holarchy() -> List(Holon) {
       "uos-swarm",
       "UOS swarm package",
       "jhunda (झुण्ड)",
-      0,
+      2,
       Messaging,
       Some("messaging-plane"),
       [
-        "uos-clock-guard-service",
         "spec-child-max-isolated-worker",
         "max-worker-py",
         "swarm-dune-module",
@@ -902,7 +1052,7 @@ pub fn holarchy() -> List(Holon) {
       "native-nifs",
       "Native bounded NIF kernels",
       "mula-bija (मूल-बीज)",
-      0,
+      1,
       Runtime,
       Some("runtime-plane"),
       [
@@ -911,13 +1061,11 @@ pub fn holarchy() -> List(Holon) {
         "native-ignition-daemon-rust",
         "graphene-nif-rust-crate-lib-cepaf-gleam-native-graphene-nif",
         "graphite-editor-bevy-based-rust-desktop-editor",
-        "ferriskey-nif",
         "c3i-ocaml-nif",
         "rule-engine-nif",
         "planning-nif",
         "c3i-nif",
         "graphene-nif-loader",
-        "rusty-vault-nif",
       ],
       "native/nifs",
     )
@@ -991,7 +1139,7 @@ pub fn holarchy() -> List(Holon) {
       "prakriya (प्रक्रिया)",
       0,
       Runtime,
-      Some("cepaf-gleam"),
+      Some("constitution"),
       [],
       "/home/an/NAS-setup/c3i/scripts/systemd/c3i-user/iam-native-guard.sh",
     )
@@ -1247,7 +1395,7 @@ pub fn holarchy() -> List(Holon) {
       "prakriya (प्रक्रिया)",
       0,
       Runtime,
-      Some("uos-swarm"),
+      Some("constitution"),
       [],
       "~/.config/systemd/user/uos-clock-guard@.service; UOS copy at ops/observability/20260907-0941-uos-clock-guard@.service",
     )
@@ -1481,7 +1629,7 @@ pub fn holarchy() -> List(Holon) {
       "prakriya (प्रक्रिया)",
       0,
       Runtime,
-      Some("cepaf-gleam"),
+      Some("constitution"),
       [],
       "apps/cepaf_gleam/src/cepaf_gleam/iam/supervisor.gleam",
     )
@@ -1494,7 +1642,7 @@ pub fn holarchy() -> List(Holon) {
       "prakriya (प्रक्रिया)",
       0,
       Runtime,
-      Some("cepaf-gleam"),
+      Some("constitution"),
       [],
       "apps/cepaf_gleam/src/cepaf_gleam/vault_supervisor.gleam",
     )
@@ -1556,7 +1704,7 @@ pub fn holarchy() -> List(Holon) {
       "prakriya (प्रक्रिया)",
       0,
       Runtime,
-      Some("cepaf-gleam"),
+      Some("constitution"),
       [],
       "apps/cepaf_gleam/src/cepaf_gleam/fractal/l0_constitutional.gleam",
     )
@@ -1893,7 +2041,7 @@ pub fn holarchy() -> List(Holon) {
       "prakriya (प्रक्रिया)",
       0,
       Runtime,
-      Some("cepaf-gleam"),
+      Some("constitution"),
       [],
       "/home/an/dev/ver/c3i/sub-projects/ferriskey-vendored/operator (Cargo [[bin]])",
     )
@@ -1906,7 +2054,7 @@ pub fn holarchy() -> List(Holon) {
       "prakriya (प्रक्रिया)",
       0,
       Runtime,
-      Some("cepaf-gleam"),
+      Some("constitution"),
       [],
       "/home/an/dev/ver/c3i/sub-projects/rusty_vault_vendored",
     )
@@ -2161,7 +2309,7 @@ pub fn holarchy() -> List(Holon) {
       "prakriya (प्रक्रिया)",
       0,
       Runtime,
-      Some("native-nifs"),
+      Some("constitution"),
       [],
       "apps/cepaf_gleam/src/ferriskey_nif.erl -> priv/ferriskey_nif.so",
     )
@@ -2234,7 +2382,7 @@ pub fn holarchy() -> List(Holon) {
       "prakriya (प्रक्रिया)",
       0,
       Runtime,
-      Some("native-nifs"),
+      Some("constitution"),
       [],
       "apps/cepaf_gleam/src/rusty_vault_nif.erl -> priv/rusty_vault_nif.so",
     )
@@ -2793,6 +2941,21 @@ pub fn to_json(hs: List(Holon)) -> Json {
       #("status", json.string(h.status)),
       #("uid", json.string(h.uid)),
       #("lifecycle", json.string(lifecycle_label(h.lifecycle))),
+      #("vitals", case h.vitals {
+        None -> json.null()
+        Some(v) ->
+          json.object([
+            #("heartbeat_age_s", case v.heartbeat_age_s {
+              Some(s) -> json.int(s)
+              None -> json.null()
+            }),
+            #("restarts", json.int(v.restarts)),
+            #("last_transition", case v.last_transition {
+              Some(t) -> json.string(t)
+              None -> json.null()
+            }),
+          ])
+      }),
       #("address", json.string(address(h))),
     ])
   })

@@ -31,16 +31,16 @@
 #   5. High-Throughput FMEA Risk Classifier
 # ==============================================================================
 
-from math import exp, sqrt, log2
-from sys.info import simdwidthof
+from std.math import exp, sqrt, log2
+from std.sys import simd_width_of
 
-alias float_simd_width = simdwidthof[DType.float32]()
+comptime float_simd_width = simd_width_of[DType.float32]()
 
 # ------------------------------------------------------------------------------
 # 1. SIMD Vector Dot Product & Cosine Similarity
 # ------------------------------------------------------------------------------
 
-fn simd_dot_product(a: List[Float32], b: List[Float32]) -> Float32:
+def simd_dot_product(a: List[Float32], b: List[Float32]) -> Float32:
     """Compute dot product of two vectors using SIMD acceleration."""
     var total: Float32 = 0.0
     var n = len(a)
@@ -65,14 +65,14 @@ fn simd_dot_product(a: List[Float32], b: List[Float32]) -> Float32:
         
     return total
 
-fn vector_norm(v: List[Float32]) -> Float32:
+def vector_norm(v: List[Float32]) -> Float32:
     """Compute L2 Euclidean norm of a vector."""
     var sum_sq: Float32 = 0.0
     for i in range(len(v)):
         sum_sq += v[i] * v[i]
     return sqrt(sum_sq)
 
-fn simd_cosine_similarity(a: List[Float32], b: List[Float32]) -> Float32:
+def simd_cosine_similarity(a: List[Float32], b: List[Float32]) -> Float32:
     """Compute cosine similarity between two embedding vectors [-1.0, 1.0]."""
     var norm_a = vector_norm(a)
     var norm_b = vector_norm(b)
@@ -85,12 +85,12 @@ fn simd_cosine_similarity(a: List[Float32], b: List[Float32]) -> Float32:
 # 2. Neural Activation Functions (Softmax, GELU, LayerNorm)
 # ------------------------------------------------------------------------------
 
-fn softmax_tensor(scores: List[Float32]) -> List[Float32]:
+def softmax_tensor(scores: List[Float32]) -> List[Float32]:
     """Numerically stable softmax activation over 1D tensor."""
     var n = len(scores)
     var result = List[Float32]()
     if n == 0:
-        return result
+        return result^
 
     # Find max for numerical stability
     var max_val = scores[0]
@@ -107,12 +107,12 @@ fn softmax_tensor(scores: List[Float32]) -> List[Float32]:
     for i in range(n):
         result[i] = result[i] / sum_exp
 
-    return result
+    return result^
 
-fn gelu(x: Float32) -> Float32:
+def gelu(x: Float32) -> Float32:
     """Gaussian Error Linear Unit (GELU) activation."""
     # Approximation: 0.5 * x * (1 + tanh(sqrt(2/pi) * (x + 0.044715 * x^3)))
-    var c = 0.7978845608  # sqrt(2/pi)
+    var c: Float32 = 0.7978845608  # sqrt(2/pi)
     var inner = c * (x + 0.044715 * x * x * x)
     # Tanh approx
     var e2 = exp(2.0 * inner)
@@ -123,7 +123,7 @@ fn gelu(x: Float32) -> Float32:
 # 3. Acoustic AI: Indian Classical Raga Synthesis Tensors
 # ------------------------------------------------------------------------------
 
-fn meend_pitch_s_curve(f_start: Float32, f_end: Float32, t: Float32, duration: Float32, steepness: Float32) -> Float32:
+def meend_pitch_s_curve(f_start: Float32, f_end: Float32, t: Float32, duration: Float32, steepness: Float32) -> Float32:
     """
     Calculate continuous microtonal pitch transition using an S-curve (logistic)
     glissando contour characteristic of authentic North Indian Bansuri meend.
@@ -135,7 +135,7 @@ fn meend_pitch_s_curve(f_start: Float32, f_end: Float32, t: Float32, duration: F
     var logistic = 1.0 / (1.0 + exp(-steepness * normalized_t))
     return f_start + (f_end - f_start) * logistic
 
-fn tanpura_jawari_shimmer(base_freq: Float32, harmonic_index: Int, thread_pressure: Float32) -> Float32:
+def tanpura_jawari_shimmer(base_freq: Float32, harmonic_index: Int, thread_pressure: Float32) -> Float32:
     """
     Simulates the non-linear buzzing bridge (Jawari) shimmer of a 4-string Tanpura.
     Computes amplitude weight for harmonic n under curved bridge boundary conditions.
@@ -145,7 +145,7 @@ fn tanpura_jawari_shimmer(base_freq: Float32, harmonic_index: Int, thread_pressu
     var jawari_boost = thread_pressure * exp(-0.5 * (n - 4.0) * (n - 4.0))
     return decay + jawari_boost
 
-fn tabla_bayan_pitch_glide(base_freq: Float32, t: Float32, strike_duration: Float32, pressure_delta: Float32) -> Float32:
+def tabla_bayan_pitch_glide(base_freq: Float32, t: Float32, strike_duration: Float32, pressure_delta: Float32) -> Float32:
     """
     Simulates the bass drum (Dagga/Bayan) heel-of-the-hand pressure pitch slide ('Ghe').
     Frequency rises as the player applies palm pressure, then decays back to resonant baseline.
@@ -161,7 +161,7 @@ fn tabla_bayan_pitch_glide(base_freq: Float32, t: Float32, strike_duration: Floa
 # 4. Psychoacoustic Spectral Metrics: Shannon Entropy & Lyapunov Exponent
 # ------------------------------------------------------------------------------
 
-fn spectral_shannon_entropy(probabilities: List[Float32]) -> Float32:
+def spectral_shannon_entropy(probabilities: List[Float32]) -> Float32:
     """
     Calculates Shannon Entropy H = -sum(p_i * log2(p_i)) over normalized spectral bins.
     Measures acoustic harmonic complexity and informational richness (Target H >= 2.50).
@@ -173,7 +173,7 @@ fn spectral_shannon_entropy(probabilities: List[Float32]) -> Float32:
             entropy -= p * log2(p)
     return entropy
 
-fn lyapunov_stability_index(divergences: List[Float32]) -> Float32:
+def lyapunov_stability_index(divergences: List[Float32]) -> Float32:
     """
     Computes the maximum finite-time Lyapunov exponent from an ensemble of state trajectories.
     A negative or bounded exponent indicates orbital stability and phase-space convergence.
@@ -191,11 +191,11 @@ fn lyapunov_stability_index(divergences: List[Float32]) -> Float32:
 # 5. Cognitive FMEA Risk Scoring
 # ------------------------------------------------------------------------------
 
-fn calculate_rpn(severity: Int, occurrence: Int, detection: Int) -> Int:
+def calculate_rpn(severity: Int, occurrence: Int, detection: Int) -> Int:
     """Compute Failure Mode and Effects Analysis (FMEA) Risk Priority Number (RPN)."""
     return severity * occurrence * detection
 
-fn map_rpn_to_sil(rpn: Int) -> String:
+def map_rpn_to_sil(rpn: Int) -> String:
     """Map RPN score to Safety Integrity Level (SIL-1 to SIL-6)."""
     if rpn >= 300:
         return "SIL-6"
@@ -214,7 +214,7 @@ fn map_rpn_to_sil(rpn: Int) -> String:
 # 6. High-Utility Model 1: AST Structural Anomaly Detector
 # ------------------------------------------------------------------------------
 
-fn simd_ast_anomaly_distance(ast_embedding: List[Float32], nominal_centroid: List[Float32]) -> Float32:
+def simd_ast_anomaly_distance(ast_embedding: List[Float32], nominal_centroid: List[Float32]) -> Float32:
     """
     Computes normalized Euclidean and cosine anomaly metric between candidate AST embedding
     and the nominal structural centroid.
@@ -230,7 +230,7 @@ fn simd_ast_anomaly_distance(ast_embedding: List[Float32], nominal_centroid: Lis
 # 7. High-Utility Model 2: ZK Knowledge Transclusion Embeddings & Match
 # ------------------------------------------------------------------------------
 
-fn simd_zk_transclusion_score(query_vec: List[Float32], target_vec: List[Float32], layer_weight: Float32) -> Float32:
+def simd_zk_transclusion_score(query_vec: List[Float32], target_vec: List[Float32], layer_weight: Float32) -> Float32:
     """
     Computes SIMD cosine similarity scaled by fractal layer relevance weight.
     """
@@ -242,7 +242,7 @@ fn simd_zk_transclusion_score(query_vec: List[Float32], target_vec: List[Float32
 # 8. High-Utility Model 3: Anticipatory Lyapunov Trend Predictor
 # ------------------------------------------------------------------------------
 
-fn compute_finite_time_lyapunov_exponent(telemetry: List[Float32], dt: Float32) -> Float32:
+def compute_finite_time_lyapunov_exponent(telemetry: List[Float32], dt: Float32) -> Float32:
     """
     Computes finite-time Lyapunov exponent lambda from an evenly spaced telemetry time series.
     Formula: lambda = 1 / (N * dt) * sum_{i=1}^{N-1} ln(|(x_{i+1} - x_i) / x_i|)
@@ -266,7 +266,7 @@ fn compute_finite_time_lyapunov_exponent(telemetry: List[Float32], dt: Float32) 
         
     return (sum_growth / valid_points) / dt
 
-fn estimate_time_to_cascade(current_val: Float32, critical_val: Float32, lambda_exp: Float32) -> Float32:
+def estimate_time_to_cascade(current_val: Float32, critical_val: Float32, lambda_exp: Float32) -> Float32:
     """
     Solves x(t) = x(0) * exp(lambda * t) for t when lambda > 0.
     t_cascade = ln(critical_val / current_val) / lambda
@@ -282,7 +282,7 @@ fn estimate_time_to_cascade(current_val: Float32, critical_val: Float32, lambda_
 # 9. High-Utility Model 4: STPA-UCA & FMEA Causal Hazard Scorer
 # ------------------------------------------------------------------------------
 
-fn simd_stpa_fmea_hazard_eval(
+def simd_stpa_fmea_hazard_eval(
     severity: Float32,
     occurrence: Float32,
     detection: Float32,
@@ -295,7 +295,7 @@ fn simd_stpa_fmea_hazard_eval(
     where FMEA_factor = max(Severity, RPN_band).
     """
     var rpn = severity * occurrence * detection
-    var rpn_band: Float32 = 1.0
+    var rpn_band: Float32
     if rpn > 120.0:
         rpn_band = 5.0
     elif rpn > 60.0:
@@ -317,7 +317,7 @@ fn simd_stpa_fmea_hazard_eval(
 # 10. High-Utility Model 5: Rete-UL Discrimination Accelerator
 # ------------------------------------------------------------------------------
 
-fn simd_rete_conflict_resolution(
+def simd_rete_conflict_resolution(
     saliences: List[Float32],
     specificities: List[Float32],
     layer_ranks: List[Float32]
@@ -346,7 +346,7 @@ fn simd_rete_conflict_resolution(
 # 11. High-Utility Model 6: Ruliad Multiway Branch Evaluator
 # ------------------------------------------------------------------------------
 
-fn simd_ruliad_branchial_distance(vec_a: List[Float32], vec_b: List[Float32]) -> Float32:
+def simd_ruliad_branchial_distance(vec_a: List[Float32], vec_b: List[Float32]) -> Float32:
     """
     Computes geodesic distance in multiway branchial space between two branch states:
     D = sqrt(2.0 * (1.0 - simd_cosine_similarity(vec_a, vec_b)))
@@ -362,7 +362,7 @@ fn simd_ruliad_branchial_distance(vec_a: List[Float32], vec_b: List[Float32]) ->
 # 12. High-Utility Model 7: Biomorphic Shruti Acoustic Telemetry Inverter
 # ------------------------------------------------------------------------------
 
-fn simd_shruti_harmonic_synthesis(
+def simd_shruti_harmonic_synthesis(
     base_freq: Float32,
     shruti_ratios: List[Float32],
     amplitudes: List[Float32]

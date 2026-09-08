@@ -1,1 +1,1 @@
-cfa6ab0be38bc23dc288e8a017d66ffa767bf1fa18ccfb2d9e374a071072df30  /home/an/NAS-setup/c3i/lib/cepaf_gleam/priv/c3i_ocaml_nif.so
+cfa6ab0be38bc23dc288e8a017d66ffa767bf1fa18ccfb2d9e374a071072df30  apps/cepaf_gleam/priv/c3i_ocaml_nif.so  host-provisioned 2026-09-07: copied from /home/an/NAS-setup/c3i/lib/cepaf_gleam/priv/c3i_ocaml_nif.so (identical bytes in /home/an/dev/ver/c3i/lib/cepaf_gleam/priv/c3i_ocaml_nif.so); provenance governance/sources/20260907-1305-c3i-ocaml-nif-artifact-provisioning.json; never committed

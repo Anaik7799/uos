@@ -1,18 +1,18 @@
 {
   "name": "uos-risk-prioritization",
   "version": "1.1.0",
-  "description": "UOS risk SOP, bounded evidence and Sa-plan preflight checks, and independent priority oracles.",
+  "description": "Uos Risk Prioritization plugin",
   "author": {
-    "name": "UOS contributors"
+    "name": "Local developer"
   },
   "skills": "./skills/",
   "interface": {
-    "displayName": "UOS Risk Prioritization",
-    "shortDescription": "Prioritize UOS work with safety and dependency constraints.",
-    "longDescription": "Repository-owned SOP and SDLC, SRE, Superpowers and agent guidance. Report-only validation does not grant runtime authority.",
-    "developerName": "UOS contributors",
+    "displayName": "Uos Risk Prioritization",
+    "shortDescription": "Use Uos Risk Prioritization in Codex.",
+    "longDescription": "Uos Risk Prioritization adds a local Codex plugin scaffold.",
+    "developerName": "Local developer",
     "category": "Productivity",
     "capabilities": [],
-    "defaultPrompt": ["Prioritize current UOS work using SC-RISK-PRIORITY-001."]
+    "defaultPrompt": "Help me use Uos Risk Prioritization."
   }
 }

@@ -22,6 +22,7 @@
 ////   manager-run <ledger.json> <board.jsonl> <zenoh_base|-> <cycles>
 ////   ontology dictionary | ontology glossary | ontology wiki | ontology json
 ////   ontology check <ledger.jsonl> | ontology resolve <name>
+////   holon-km <stamp> <repo_root>   write one wiki page per holon + the holarchy ZK MOC
 ////   decision-record prepare <out_dir> <slug> <spec.json>
 ////   decision-record complete <record.json> <completion.json>
 ////   (anything else)             prints this usage
@@ -36,6 +37,7 @@ import gleam/list
 import gleam/option.{None, Some}
 import gleam/result
 import gleam/string
+import simplifile
 import uos_swarm/acl
 import uos_swarm/agent_runtime
 import uos_swarm/board.{Agent, Causality, Draft, Semantics}
@@ -46,6 +48,7 @@ import uos_swarm/decision_record_cli
 import uos_swarm/fmea
 import uos_swarm/gita
 import uos_swarm/holon
+import uos_swarm/holon_km
 import uos_swarm/manager
 import uos_swarm/ooda
 import uos_swarm/raga
@@ -93,6 +96,7 @@ const usage = "Package entry. `gleam run -- <command>`:
   manager-run <ledger.json> <board.jsonl> <zenoh_base|-> <cycles>
   ontology dictionary | ontology glossary | ontology wiki | ontology json
   ontology check <ledger.jsonl> | ontology resolve <name>
+  holon-km <stamp> <repo_root>   write one wiki page per holon + the holarchy ZK MOC
   decision-record prepare <out_dir> <slug> <spec.json>
   decision-record complete <record.json> <completion.json>"
 
@@ -334,6 +338,7 @@ pub fn main() -> Nil {
       io.println(json.to_string(system_ontology.to_json()))
     ["ontology", "check", path] -> ontology_check(path)
     ["ontology", "resolve", name] -> ontology_resolve(name)
+    ["holon-km", stamp, repo_root] -> holon_km_write(stamp, repo_root)
     ["decision-record", "prepare", out_dir, slug, spec_path] ->
       case decision_record_cli.write_prepared(out_dir, slug, spec_path) {
         Ok(path) -> io.println(path)
@@ -388,6 +393,102 @@ fn ontology_resolve(name: String) -> Nil {
         <> c.definition,
       )
     Error(_) -> io.println("unresolved: " <> name)
+  }
+}
+
+/// `holon-km <stamp> <repo_root>`: validates `stamp` (`holon_km.validate_stamp`) and that
+/// `repo_root` is an actual directory before touching the filesystem (Poka-Yoke: a malformed
+/// stamp or a bad root fails closed with `halt(2)`, never a partial/misplaced write), then writes
+/// every page of `holon_km.pages(stamp)` under `repo_root`. Every `create_directory_all` and
+/// `write` failure is reported individually (relative path + `simplifile` error) before the
+/// process halts fail-closed.
+fn holon_km_write(stamp: String, repo_root: String) -> Nil {
+  case holon_km.validate_stamp(stamp) {
+    Error(reason) -> {
+      io.println("holon-km: invalid stamp: " <> reason)
+      io.println(
+        "usage: holon-km <YYYYMMDD-HHMM> <repo_root>   (stamp must be exactly 8 digits, '-', 4 digits)",
+      )
+      halt(2)
+    }
+    Ok(Nil) ->
+      case simplifile.is_directory(repo_root) {
+        Ok(True) -> holon_km_write_pages(stamp, repo_root)
+        Ok(False) -> {
+          io.println("holon-km: repo_root is not a directory: " <> repo_root)
+          io.println("usage: holon-km <YYYYMMDD-HHMM> <repo_root>")
+          halt(2)
+        }
+        Error(e) -> {
+          io.println(
+            "holon-km: repo_root not accessible: "
+            <> repo_root
+            <> " ("
+            <> string.inspect(e)
+            <> ")",
+          )
+          io.println("usage: holon-km <YYYYMMDD-HHMM> <repo_root>")
+          halt(2)
+        }
+      }
+  }
+}
+
+fn holon_km_write_pages(stamp: String, repo_root: String) -> Nil {
+  let dirs = ["docs/wiki/holons", "docs/zk"]
+  let dir_results =
+    list.map(dirs, fn(rel_dir) {
+      #(rel_dir, simplifile.create_directory_all(repo_root <> "/" <> rel_dir))
+    })
+  let dir_failures =
+    list.filter_map(dir_results, fn(pair) {
+      case pair.1 {
+        Ok(_) -> Error(Nil)
+        Error(e) -> Ok(#(pair.0, e))
+      }
+    })
+  case dir_failures {
+    [] -> Nil
+    fails -> {
+      list.each(fails, fn(f) {
+        io.println(
+          "holon-km: failed to create directory "
+          <> f.0
+          <> ": "
+          <> string.inspect(f.1),
+        )
+      })
+      halt(1)
+    }
+  }
+  let pages = holon_km.pages(stamp)
+  let write_results =
+    list.map(pages, fn(pair) {
+      let #(rel_path, contents) = pair
+      #(
+        rel_path,
+        simplifile.write(to: repo_root <> "/" <> rel_path, contents: contents),
+      )
+    })
+  let write_failures =
+    list.filter_map(write_results, fn(pair) {
+      case pair.1 {
+        Ok(_) -> Error(Nil)
+        Error(e) -> Ok(#(pair.0, e))
+      }
+    })
+  let written = list.length(pages) - list.length(write_failures)
+  io.println("wrote " <> int.to_string(written) <> " holon-km pages")
+  case write_failures {
+    [] -> Nil
+    fails -> {
+      list.each(fails, fn(f) {
+        io.println(
+          "holon-km: failed to write " <> f.0 <> ": " <> string.inspect(f.1),
+        )
+      })
+      halt(1)
+    }
   }
 }
 

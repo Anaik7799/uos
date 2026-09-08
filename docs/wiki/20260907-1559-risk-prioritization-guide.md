@@ -32,8 +32,7 @@ A larger number is a work-ordering aid, not permission.
 | governance/agents/policy/20260907-1559-risk-priority-bindings.toml | Agent/skill/plugin consumption map |
 
 The repository supplies every authored policy, schema, binding, example and validator.
-Prerequisites are OCaml >=4.14, Dune >=3.0 and Yojson >=2.0, declared in the
-repository-owned validation/uos-risk-priority-validation.opam manifest.
+Prerequisites are a normal OCaml toolchain, Dune >=3.0 and Yojson >=2.0.
 Use tools on PATH or an explicitly selected UOS toolchain. No private ZigVM checkout or global
 skill directory is required by the package. Compiler dependencies are ordinary toolchain dependencies,
 not vendored model weights, caches or private source snapshots.
@@ -45,7 +44,6 @@ From any directory, invoke the wrapper by its repository path:
 - **bash tools/risk-priority-check --selftest** — bounded arithmetic, freshness and dependency/ranking cases.
 - **bash tools/risk-priority-check --package** — local manifests, discovery bindings and required references.
 - **bash tools/risk-priority-check --record governance/planning/20260907-1559-risk-priority-example.json** — structural and arithmetic check of the example; does not attest current file content or authorize work.
-- **bash tools/risk-priority-check --rank PORTFOLIO.json** — advisory ordering of a JSON array of records from one plan; include all dependencies. Live digest authentication and cost tie review remain separate.
 
 The wrapper builds in a temporary directory and removes its own build directory on exit.
 Checks read the repository and print results. They never write a task, score gate, admission receipt,
@@ -62,21 +60,6 @@ evaluation remain separate implementation/verification work. Do not call the pro
 a fleet-wide mandatory runtime gate.
 
 [[zk:20260907-1559-adr-risk-prioritization]]
-
-## 20260907-1606 — Strong checker integration (SC-RISK-CHECK-001)
-
-Follow the repository-owned
-[checker contract](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260907-1606-risk-checker-contract.md)
-and [operating guide](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-1606-risk-checkers-guide.md).
-Run **bash tools/risk-priority-check --all** for checker/policy changes and relevant CI.
-Before a claim use **--preflight PORTFOLIO TASK**; during owned work use
-**--active-check PORTFOLIO TASK WORKER ATTEMPT** with current Sa-plan identity.
-Both require a complete, fresh, source-bound plan assessment. Reused receipts require
-**--receipt RECEIPT**. HOLD, missing tools/evidence, clock failures and provisional
-ordering fail closed; investigate the reported next check before retry.
-These are local preflight observations. Atomic admission, semantic review and actual
-effect-time fencing remain separate requirements. No global hooks or agent reload are implied.
-
 
 ## Comprehensive verification checklist
 
@@ -123,3 +106,4 @@ UNRUN and NOT_ADMITTED remain nonpassing; N/A must be justified for each actual 
 </details>
 
 **UOS footer:** use repository sources when Tailnet rendering is unavailable; serving status unverified.
+

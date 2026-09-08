@@ -1,0 +1,90 @@
+{
+  "carrier": "uos-source-ingestion/v1",
+  "id": "SRC-20260907-2300-MODULAR-MAX-MOJO",
+  "title": "Modular MAX and Mojo toolchain installed on nas-1",
+  "recorded_at": "2026-09-07T23:0xZ",
+  "actor": "L0-fable (claude-opus-5), session 656f0d2c-6019-4d9e-b0ce-b9e39b240047",
+  "authorization": "operator directive 2026-09-07 ~22:5xZ: 'install mojo and max on this nas-1'",
+  "host": {
+    "name": "nas-1",
+    "os": "Ubuntu 26.04.1 LTS",
+    "arch": "x86_64",
+    "cpus": 24,
+    "ram_gb": 43,
+    "gpu": "none detected (no nvidia-smi); CPU-only installation",
+    "system_python": "3.14.4"
+  },
+  "installer": {
+    "tool": "pixi",
+    "version": "0.80.0",
+    "source": "https://pixi.sh/install.sh",
+    "installer_sha256_prefix": "d6ebd2d547174f48",
+    "install_path": "/home/an/.pixi/bin/pixi",
+    "scope": "user-level; no root; PATH not modified (PIXI_NO_PATH_UPDATE=1)",
+    "note": "Installer downloaded and inspected before execution: it fetches a release tarball and places a single binary under $PIXI_HOME/bin."
+  },
+  "environment": {
+    "path": "services/inference/max",
+    "manifest": "services/inference/max/pixi.toml (tracked)",
+    "lock": "services/inference/max/pixi.lock (tracked; un-ignored explicitly, like the ferriskey Cargo.lock)",
+    "env_dir": "services/inference/max/.pixi (UNTRACKED, ~972 MB, regenerable with `pixi install`)",
+    "channels": ["https://conda.modular.com/max", "conda-forge"],
+    "platform": "linux-64"
+  },
+  "installed": {
+    "mojo": "1.0.0 (ed45d567)",
+    "max": "26.5.0",
+    "env_python": "3.12.14",
+    "pinned_artifacts": [
+      "https://conda.modular.com/max/linux-64/mojo-compiler-1.0.0-release.conda",
+      "https://conda.modular.com/max/noarch/mojo-python-1.0.0-release.conda",
+      "max-26.5.0-3.12release.conda"
+    ]
+  },
+  "verification": {
+    "grade": "Measured",
+    "checks": [
+      { "check": "mojo --version", "result": "Mojo 1.0.0 (ed45d567)" },
+      { "check": "max --version", "result": "MAX 26.5.0" },
+      { "check": "compile and run a fresh Mojo program", "result": "ran; printed the expected sum of squares 385" },
+      { "check": "mojo build to a native binary", "result": "25816-byte executable produced and executed standalone" },
+      { "check": "MAX Python API import", "result": "max.engine imported successfully" },
+      { "check": "Python interop from Mojo", "result": "CPython 3.12.14 reached from Mojo via `from std.python import Python`; math.sqrt(2) evaluated" },
+      { "check": "Mojo driving a real Textual app headless", "result": "ClockApp mounted with 2 widgets through Python interop (textual 8.2.8, installed then removed from the tracked manifest)" }
+    ]
+  },
+  "findings": [
+    {
+      "id": "F-1",
+      "severity": "major",
+      "finding": "services/inference/max/max_kernel.mojo does not compile under Mojo 1.0.0. It uses `fn` (removed in 1.0; `def` is now required), `alias` (deprecated in favour of `comptime`), and `from math import ...` / `from sys.info import ...` which no longer resolve. The file has therefore never been compiled on any host with a real toolchain.",
+      "evidence": "mojo build max_kernel.mojo reports 3 errors and 1 deprecation warning",
+      "relation": "corroborates evidence-truth finding ETC-2 (generated/20260907-1650-uos-evidence-truth-checks.json): the MAX/Mojo tier was claimed but never executed"
+    },
+    {
+      "id": "F-2",
+      "severity": "note",
+      "finding": "Modular's published documentation is stale for Mojo 1.0: it gives `from python import Python`, which does not resolve. The working import is `from std.python import Python`, and a function using it must be declared `raises`.",
+      "evidence": "measured on this host against Mojo 1.0.0"
+    },
+    {
+      "id": "F-3",
+      "severity": "note",
+      "finding": "No Nix path exists for Mojo or MAX. Determinate Nix 3.22.3 (Nix 2.35.2) is installed on this host with flakes enabled, but `nix search nixpkgs mojo` returns only Perl Mojolicious packages; there is no Mojo or MAX derivation in nixpkgs. The nixpkgs package request was auto-closed, and the only community package is one maintainer's personal configuration whose forum topic closed in August 2025, with the author unsure the proprietary licence permits upstreaming.",
+      "evidence": "nix search on nas-1; https://github.com/NixOS/nixpkgs/issues/257274; https://forum.modular.com/t/mojo-in-nix-full-package-with-lsp-support/548"
+    }
+  ],
+  "boundaries": {
+    "python_confinement": "Respected: the environment lives under services/inference/max, the only location where Python is permitted (AGENTS.md section 5, item 4).",
+    "zero_muda": "No Bevy, Graphite or Graphene introduced. MAX and Mojo are proprietary prebuilt binaries from Modular's official conda channel.",
+    "runtime": "No runtime service was started, stopped or reconfigured. No port was bound. Nothing was deployed.",
+    "tracked_artifacts": "Only the manifest and lock are committed; the ~972 MB environment is untracked and regenerable, matching the priv/*.so artifact-pin precedent."
+  },
+  "reproduce": [
+    "curl -fsSL https://pixi.sh/install.sh | PIXI_NO_PATH_UPDATE=1 sh",
+    "cd services/inference/max && ~/.pixi/bin/pixi install",
+    "~/.pixi/bin/pixi run mojo --version   # Mojo 1.0.0",
+    "~/.pixi/bin/pixi run max --version    # MAX 26.5.0",
+    "~/.pixi/bin/pixi add --pypi textual   # optional: reproduces the Textual interop demonstration"
+  ]
+}

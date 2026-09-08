@@ -119,8 +119,7 @@ At a safety-critical effect boundary, recheck the actual required controls even 
 1. Re-observe changed evidence and identify hard constraints and P0/P1 holds.
 2. Validate the dependency DAG; unresolved references or cycles block affected tasks and create a bounded repair/probe.
 3. Propagate urgency to genuine unfinished prerequisites: effective class is the most urgent class among the task and its blocked consumers.
-   Effective score is the maximum score among those in the most urgent inherited class,
-   with origin IDs retained. Preserve the prerequisite's own score.
+   Effective score is the maximum of their scores, with origin IDs retained. Preserve the prerequisite's own score.
    Never propagate through cycles or make the blocked consumer eligible.
 4. Among authorized, evidence-sufficient, dependency-ready tasks, choose effective class P0 before P1 before P2 before P3,
    then descending effective score.
@@ -226,21 +225,6 @@ Revalidate these working priorities against live evidence before claims; this ta
 6. Optional optimization after measured acceptance.
 
 The policy rollout's own evidence is in its journal. Historical “completed” task labels are not independent production approval.
-
-## 20260907-1606 — Strong checker integration (SC-RISK-CHECK-001)
-
-Follow the repository-owned
-[checker contract](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260907-1606-risk-checker-contract.md)
-and [operating guide](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-1606-risk-checkers-guide.md).
-Run **bash tools/risk-priority-check --all** for checker/policy changes and relevant CI.
-Before a claim use **--preflight PORTFOLIO TASK**; during owned work use
-**--active-check PORTFOLIO TASK WORKER ATTEMPT** with current Sa-plan identity.
-Both require a complete, fresh, source-bound plan assessment. Reused receipts require
-**--receipt RECEIPT**. HOLD, missing tools/evidence, clock failures and provisional
-ordering fail closed; investigate the reported next check before retry.
-These are local preflight observations. Atomic admission, semantic review and actual
-effect-time fencing remain separate requirements. No global hooks or agent reload are implied.
-
 
 ## Comprehensive verification checklist
 

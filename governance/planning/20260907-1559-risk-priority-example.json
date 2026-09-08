@@ -172,7 +172,7 @@
     ],
     "rollback": "Revert only this packet's scoped additions using a reviewed JJ change; preserve other writers.",
     "reviewer": "Independent review pending; author validation only.",
-    "budget": "Local deterministic tools; no additional model-provider requests; primary session cost UNKNOWN; one bounded task.",
+    "budget": "Local deterministic tools; no remote model calls; no paid inference; one bounded task.",
     "residuals": [
       "Mandatory runtime scheduling and atomic authority enforcement require a separate verified implementation."
     ],

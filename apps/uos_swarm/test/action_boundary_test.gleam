@@ -1226,7 +1226,6 @@ pub fn fractal_jidoka_andon_halt_test() {
   }
 }
 
-
 @external(erlang, "session_sync_ffi", "unique_id")
 fn unique_id() -> String
 

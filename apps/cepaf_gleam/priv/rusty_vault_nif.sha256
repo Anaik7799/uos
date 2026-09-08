@@ -1,1 +1,1 @@
-c00d91574f351ff0712ad396b928c84b957145fbcf739e115085ad6a8a80c777  /home/an/NAS-setup/c3i/lib/cepaf_gleam/priv/rusty_vault_nif.so
+c00d91574f351ff0712ad396b928c84b957145fbcf739e115085ad6a8a80c777  apps/cepaf_gleam/priv/rusty_vault_nif.so  host-provisioned 2026-09-07: copied from /home/an/NAS-setup/c3i/lib/cepaf_gleam/priv/rusty_vault_nif.so (identical bytes in /home/an/dev/ver/c3i/lib/cepaf_gleam/priv/rusty_vault_nif.so); provenance governance/sources/20260907-1305-c3i-ocaml-nif-artifact-provisioning.json; never committed
