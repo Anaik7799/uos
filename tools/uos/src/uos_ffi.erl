@@ -1,5 +1,5 @@
 -module(uos_ffi).
--export([get_arguments/0, file_exists/1, file_size/1, matches_timestamp_format/1, file_contains/2, is_elf_binary/1, validate_mirage_probe_receipt/1, halt/1, run_command/3]).
+-export([get_arguments/0, read_file/1, file_exists/1, file_size/1, matches_timestamp_format/1, file_contains/2, is_elf_binary/1, validate_mirage_probe_receipt/1, halt/1, run_command/3]).
 -include_lib("kernel/include/file.hrl").
 
 halt(Code) ->
@@ -13,23 +13,70 @@ get_arguments() ->
         _ -> list_to_binary(A)
      end || A <- Args].
 
-file_exists(Path) ->
-    case file:read_file_info(Path) of
-        {ok, _} -> true;
-        _ ->
-            RootPath = filename:join(["/home/an/NAS-setup/uos", Path]),
-            case file:read_file_info(RootPath) of
-                {ok, _} -> true;
-                _ -> false
+%% Repository root resolution.
+%%
+%% The CLI runs with cwd = tools/uos (see tools/uos-cli), so repository-relative
+%% paths do not resolve directly. A fallback is therefore necessary. The previous
+%% implementation hardcoded "/home/an/NAS-setup/uos", which meant every gate
+%% measured the CANONICAL checkout no matter which workspace it ran in: from a
+%% sibling workspace with no var/ at all, file_exists("var/km/...") returned true.
+%%
+%% Resolution order is now: UOS_REPO if the wrapper set it, else walk upwards
+%% from cwd looking for the repository marker. Never a hardcoded path.
+repo_root() ->
+    case os:getenv("UOS_REPO") of
+        false -> find_root(filename:absname("."));
+        [] -> find_root(filename:absname("."));
+        Root -> Root
+    end.
+
+find_root(Dir) ->
+    Marker = filelib:is_dir(filename:join(Dir, ".jj"))
+        orelse filelib:is_regular(filename:join(Dir, "AGENTS.md")),
+    case Marker of
+        true -> Dir;
+        false ->
+            Parent = filename:dirname(Dir),
+            case Parent =:= Dir of
+                true -> Dir;
+                false -> find_root(Parent)
             end
     end.
 
-file_size(Path) ->
-    Info = case file:read_file_info(Path) of
-        {ok, I} -> {ok, I};
+resolve(Path) ->
+    case file:read_file_info(Path) of
+        {ok, _} -> {ok, Path};
         _ ->
-            RootPath = filename:join(["/home/an/NAS-setup/uos", Path]),
-            file:read_file_info(RootPath)
+            Rooted = filename:join([repo_root(), Path]),
+            case file:read_file_info(Rooted) of
+                {ok, _} -> {ok, Rooted};
+                _ -> error
+            end
+    end.
+
+%% Whole-file read through the same workspace-honest resolver. Returns <<>> when
+%% the file is absent, so callers see empty content rather than a crash; every
+%% caller treats empty as "nothing to verify", which is fail-closed.
+read_file(Path) ->
+    case resolve(Path) of
+        {ok, P} ->
+            case file:read_file(P) of
+                {ok, Bin} -> Bin;
+                _ -> <<>>
+            end;
+        error -> <<>>
+    end.
+
+file_exists(Path) ->
+    case resolve(Path) of
+        {ok, _} -> true;
+        error -> false
+    end.
+
+file_size(Path) ->
+    Info = case resolve(Path) of
+        {ok, P} -> file:read_file_info(P);
+        error -> error
     end,
     case Info of
         {ok, #file_info{size = Size}} -> Size;
@@ -46,7 +93,7 @@ file_contains(Path, Pattern) ->
     RealPath = case file:read_file(Path) of
         {ok, Bin} -> {ok, Bin};
         _ ->
-            RootPath = filename:join(["/home/an/NAS-setup/uos", Path]),
+            RootPath = filename:join([repo_root(), Path]),
             file:read_file(RootPath)
     end,
     case RealPath of
@@ -66,7 +113,7 @@ is_elf_binary(Path) ->
     RealPath = case file:open(Path, [read, binary]) of
         {ok, Fd0} -> {ok, Fd0};
         _ ->
-            RootPath = filename:join(["/home/an/NAS-setup/uos", Path]),
+            RootPath = filename:join([repo_root(), Path]),
             file:open(RootPath, [read, binary])
     end,
     case RealPath of
@@ -84,7 +131,7 @@ validate_mirage_probe_receipt(Path) ->
     RealPath = case file:read_file(Path) of
         {ok, B} -> {ok, B};
         _ ->
-            RootPath = filename:join(["/home/an/NAS-setup/uos", Path]),
+            RootPath = filename:join([repo_root(), Path]),
             file:read_file(RootPath)
     end,
     case RealPath of
@@ -145,7 +192,7 @@ validate_mirage_probe_receipt(Path) ->
 %% stdout, and returns {ExitCode, Output}. On TimeoutMs the port is closed and
 %% exit code 124 is returned. No shell is involved.
 run_command(Exe, Args, TimeoutMs) ->
-    Root = "/home/an/NAS-setup/uos",
+    Root = repo_root(),
     ExeStr = binary_to_list(Exe),
     ArgStrs = [binary_to_list(A) || A <- Args],
     Resolved = case lists:member($/, ExeStr) of

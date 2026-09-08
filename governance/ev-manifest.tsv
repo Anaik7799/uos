@@ -1,0 +1,113 @@
+# UOS EV manifest — generated from the observed docs/zk corpus.
+# Consumed by `uos doctor`, which CHECKS each artifact rather than printing a literal.
+# An EV with artifact '-' has no checkable record and is reported UNVERIFIABLE, never PASS.
+# Columns: ev<TAB>artifact<TAB>label
+1	-	no ADR record claims this cycle
+2	-	no ADR record claims this cycle
+3	-	no ADR record claims this cycle
+4	-	no ADR record claims this cycle
+5	-	no ADR record claims this cycle
+6	-	no ADR record claims this cycle
+7	-	no ADR record claims this cycle
+8	-	no ADR record claims this cycle
+9	-	no ADR record claims this cycle
+10	-	no ADR record claims this cycle
+11	-	no ADR record claims this cycle
+12	-	no ADR record claims this cycle
+13	-	no ADR record claims this cycle
+14	-	no ADR record claims this cycle
+15	-	no ADR record claims this cycle
+16	-	no ADR record claims this cycle
+17	-	no ADR record claims this cycle
+18	-	no ADR record claims this cycle
+19	-	no ADR record claims this cycle
+20	-	no ADR record claims this cycle
+21	-	no ADR record claims this cycle
+22	-	no ADR record claims this cycle
+23	-	no ADR record claims this cycle
+24	-	no ADR record claims this cycle
+25	-	no ADR record claims this cycle
+26	-	no ADR record claims this cycle
+27	-	no ADR record claims this cycle
+28	-	no ADR record claims this cycle
+29	-	no ADR record claims this cycle
+30	-	no ADR record claims this cycle
+31	-	no ADR record claims this cycle
+32	-	no ADR record claims this cycle
+33	-	no ADR record claims this cycle
+34	-	no ADR record claims this cycle
+35	-	no ADR record claims this cycle
+36	-	no ADR record claims this cycle
+37	-	no ADR record claims this cycle
+38	-	no ADR record claims this cycle
+39	-	no ADR record claims this cycle
+40	-	no ADR record claims this cycle
+41	-	no ADR record claims this cycle
+42	-	no ADR record claims this cycle
+43	-	no ADR record claims this cycle
+44	-	no ADR record claims this cycle
+45	-	no ADR record claims this cycle
+46	-	no ADR record claims this cycle
+47	-	no ADR record claims this cycle
+48	-	no ADR record claims this cycle
+49	-	no ADR record claims this cycle
+50	-	no ADR record claims this cycle
+51	-	no ADR record claims this cycle
+52	-	no ADR record claims this cycle
+53	-	no ADR record claims this cycle
+54	-	no ADR record claims this cycle
+55	-	no ADR record claims this cycle
+56	-	no ADR record claims this cycle
+57	-	no ADR record claims this cycle
+58	-	no ADR record claims this cycle
+59	-	no ADR record claims this cycle
+60	-	no ADR record claims this cycle
+61	-	no ADR record claims this cycle
+62	-	no ADR record claims this cycle
+63	-	no ADR record claims this cycle
+64	-	no ADR record claims this cycle
+65	-	no ADR record claims this cycle
+66	-	no ADR record claims this cycle
+67	-	no ADR record claims this cycle
+68	-	no ADR record claims this cycle
+69	-	no ADR record claims this cycle
+70	docs/zk/20260906-2100-adr-058-c3i-vertical-slice-and-wave4-evolutionary-cycles.md	C3I Knowledge Runtime Vertical Slice & 15 Wave 4 Evolutionary Cycles (EV-70..EV-84) Ratification
+71	-	no ADR record claims this cycle
+72	-	no ADR record claims this cycle
+73	-	no ADR record claims this cycle
+74	-	no ADR record claims this cycle
+75	-	no ADR record claims this cycle
+76	-	no ADR record claims this cycle
+77	-	no ADR record claims this cycle
+78	-	no ADR record claims this cycle
+79	-	no ADR record claims this cycle
+80	-	no ADR record claims this cycle
+81	-	no ADR record claims this cycle
+82	-	no ADR record claims this cycle
+83	-	no ADR record claims this cycle
+84	-	no ADR record claims this cycle
+85	-	no ADR record claims this cycle
+86	-	no ADR record claims this cycle
+87	-	no ADR record claims this cycle
+88	-	no ADR record claims this cycle
+89	-	no ADR record claims this cycle
+90	-	no ADR record claims this cycle
+91	-	no ADR record claims this cycle
+92	-	no ADR record claims this cycle
+93	docs/zk/20260907-2015-adr-070-multi-host-crdt-sync-prajna-health-and-ev93-ratification.md	Multi-Host CRDT Mesh Synchronization, Prajna Health Homeostasis & EV-93 Monorepo Ratification
+94	docs/zk/20260907-2030-adr-071-zmof-zenoh-backplane-wiki-transclusion-and-ev94-ratification.md	ZMOF Zenoh Backplane, Hermes Wiki Transclusion & EV-94 Monorepo Ratification
+95	docs/zk/20260907-2045-adr-072-cross-host-peer-simulator-agui-sparklines-and-ev95-ratification.md	Cross-Host Peer Simulator, AG-UI Live Sparklines & EV-95 Monorepo Ratification
+96	docs/zk/20260907-2055-adr-073-adaptive-lyapunov-damping-and-ev96-ratification.md	Adaptive Lyapunov Dynamic Damping, Zenoh WS Bridge & EV-96 Monorepo Ratification
+97	docs/zk/20260907-2105-adr-074-heijunka-scheduler-ws-hot-stream-and-ev97-ratification.md	Autonomous Heijunka Task Scheduler, AG-UI WS Hot Stream & EV-97 Monorepo Ratification
+98	docs/zk/20260907-2130-adr-075-crdt-delta-mesh-engine-deadman-freshness-and-ev98-ratification.md	Multi-Host CRDT Delta Mesh Engine, Actor Dead-Man Freshness & EV-98 Monorepo Ratification
+99	docs/zk/20260907-2145-adr-076-decentralized-work-stealing-topology-view-and-ev99-ratification.md	Decentralized Work-Stealing Swarm Mesh, SVG Topology View & EV-99 Monorepo Ratification
+100	docs/zk/20260907-2200-adr-077-century-milestone-swarm-harmony-and-ev100-ratification.md	Century Milestone Swarm Harmony, Adaptive PID Telemetry, Unified Century HUD & EV-100 Monorepo Ratif
+101	docs/zk/20260907-2210-adr-078-autonomous-semantic-knowledge-sheaf-and-ev101-ratification.md	Autonomous Semantic Knowledge Sheaf, Holographic ZK Transclusion Engine & EV-101 Monorepo Ratificati
+102	docs/zk/20260907-2220-adr-079-biomorphic-chaos-immune-engine-and-ev102-ratification.md	Biomorphic Chaos Immune Engine, Self-Healing SRE Mesh & EV-102 Monorepo Ratification
+103	docs/zk/20260907-2230-adr-080-dynamic-semantic-rag-vector-cache-and-ev103-ratification.md	Dynamic Semantic RAG Vector Refresher, LLM Cache Mesh & EV-103 Monorepo Ratification
+104	docs/zk/20260907-2245-adr-081-autonomous-ooda-copilot-shruti-synthesizer-and-ev104-ratification.md	Autonomous OODA Agent Copilot, 22-Shruti Synthesizer Pipeline & EV-104 Monorepo Ratification
+105	docs/zk/20260907-2300-adr-082-autonomous-multi-agent-consensus-quorum-and-ev105-ratification.md	Autonomous Multi-Agent Consensus, Quorum Voting Engine & EV-105 Monorepo Ratification
+106	docs/zk/20260907-2315-adr-083-dynamic-workload-autoscaler-predictive-token-flow-and-ev106-ratification.md	Dynamic Workload Autoscaler, Predictive Token Flow Optimization & EV-106 Monorepo Ratification
+107	docs/zk/20260907-2330-adr-084-deep-gospel-z3-contracts-rete-ul-and-ev107-ratification.md	Deep Gospel/Z3 Contract Expansion, Rete-UL Rule Consistency Verifier & EV-107 Monorepo Ratification
+108	docs/zk/20260907-2240-adr-085-fast-ooda-convergence-simd-scorer-heijunka-solo5-and-ev108-ratification.md	Ultra-Fast OODA Convergence Triad (Modular MAX SIMD Scorer, Sa-Plan Heijunka Pull Queue, Solo5 Sandb
+109	docs/zk/20260907-2315-adr-086-4-party-quorum-homeostasis-and-autonomous-self-evolution.md	4-Party Sovereign Quorum Homeostasis & Cybernetic Self-Evolution Engine & EV-109 Ratification

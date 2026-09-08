@@ -6,6 +6,9 @@ import gleam/string
 @external(erlang, "uos_ffi", "file_exists")
 pub fn file_exists(path: String) -> Bool
 
+@external(erlang, "uos_ffi", "read_file")
+pub fn read_file(path: String) -> String
+
 @external(erlang, "uos_ffi", "file_contains")
 pub fn file_contains(path: String, pattern: String) -> Bool
 
@@ -585,103 +588,116 @@ pub fn execute(cmd: UosCommand) -> Int {
       }
     }
     Doctor -> {
-      io.println("UOS Doctor inventory: 92 EV-cycle entries are registered.")
-      io.println("UOS Doctor execution: generic EV-01..EV-86 gates are not re-run here; their rows are inventory metadata, not fresh admission evidence.")
-      io.println("  [INVENTORY] EV-01 Bootstrap (Jujutsu non-colocated)")
-      io.println("  [INVENTORY] EV-02 Governance & Directive Superset (38 families)")
-      io.println("  [INVENTORY] EV-03 Source Freeze & Sanitized Ancestry")
-      io.println("  [INVENTORY] EV-04 Gleam Control Plane & Holon Actor Runtime")
-      io.println("  [INVENTORY] EV-05 Hermes Oracle & Evidence Store")
-      io.println("  [INVENTORY] EV-06 ZigVM Runtime & Bytecode Engine")
-      io.println("  [INVENTORY] EV-07 Kubernetes & Secondary Drive Allocation")
-      io.println("  [INVENTORY] EV-08 Zero-Muda Audit (0 Bevy, 0 Graphite)")
-      io.println("  [INVENTORY] EV-09 Consolidations (NIFs, Services, Formal, Contracts)")
-      io.println("  [INVENTORY] EV-10 Symbiosis (170 Skills, 14 Superpowers, AGY/Codex/Claude)")
-      io.println("  [INVENTORY] EV-11 Unified MCP Control Loop (35+ tools in contracts/mcp)")
-      io.println("  [INVENTORY] EV-12 Modular MAX Worker (Services inference isolated)")
-      io.println("  [INVENTORY] EV-13 Multi-Layer OTP 29 Root Supervisor (uos_sup.gleam)")
-      io.println("  [INVENTORY] EV-14 Hermes Parity Suites (409/409 differential tests)")
-      io.println("  [INVENTORY] EV-15 System Admission & Storage Cutover Runbook")
-      io.println("  [INVENTORY] EV-16 Cross-Language C3I Control Plane Integration (Gleam, OCaml, Zig, Rust, MAX)")
-      io.println("  [INVENTORY] EV-17 Knowledge Management, Wiki & ZK Triad Integration (Hermes Wiki, ZigVM ZK, C3I Ontology)")
-      io.println("  [INVENTORY] EV-18 Tailscale FQDN Web Integration (Dashboards, Wiki, ZK, APIs on http://nas-1.tail55d152.ts.net:4100)")
-      io.println("  [INVENTORY] EV-19 Comprehensive Verification Checklist & Uniform Site Navigation (5 Domains, 18 Checks)")
-      io.println("  [INVENTORY] EV-20 Rocha Cybernetic & Semiotic Knowledge Closure (43/43 docs tagged, SC-ROCHA-001)")
-      io.println("  [INVENTORY] EV-21 Descriptor-Relative VFS & 8 Laws Integration (--selfcheck-vfs 8/8 pass)")
-      io.println("  [INVENTORY] EV-22 Sa-Plan OCaml Integration (12/12 suites, 235 laws, sa-plan CLI)")
-      io.println("  [INVENTORY] EV-23 Hermes-Bionic Integration (18 L1 families, L2 catalog, L0-L6 evidence, LX control plane, FPP elements)")
-      io.println("  [INVENTORY] EV-24 Omni-Fractal Systemic Symbiosis & 17-Aspect Generation Closure (14 vectors, 17 aspects, 10 use cases)")
-      io.println("  [INVENTORY] EV-25 Fractal Layers & Presentation Surfaces Synthesis (INV-SURFACE-HOMOMORPHISM)")
-      io.println("  [INVENTORY] EV-26 Multi-Layer System Components Homeostasis (INV-COMPONENT-P99-BOUNDED)")
-      io.println("  [INVENTORY] EV-27 Control Flows & Circuit Breaker Matrix (INV-PRAJNA-TRIP-BOUND)")
-      io.println("  [INVENTORY] EV-28 Data Flows & VFS/WAL/Zenoh Mesh (INV-VFS-WAL-DURABILITY)")
-      io.println("  [INVENTORY] EV-29 L0-L6 Recursive Evidence Plane (INV-TWO-KEY-EVIDENCE)")
-      io.println("  [INVENTORY] EV-30 Fast OODA Adaptive Regulator (INV-FAST-OODA-SUBSECOND)")
-      io.println("  [INVENTORY] EV-31 Fractal SDLC 10-Stage Verification (INV-SDLC-GATE-CLOSURE)")
-      io.println("  [INVENTORY] EV-32 Fractal SRE Resilience & SIL-6 Safety (INV-SRE-LYAPUNOV-STABLE)")
-      io.println("  [INVENTORY] EV-33 170 Skills Inventory Federation (INV-SKILL-FEDERATION)")
-      io.println("  [INVENTORY] EV-34 Policy Standards & AGENTS.md Governance (INV-ZERO-MUDA-STORAGE-LOCK)")
-      io.println("  [INVENTORY] EV-35 14 SDD Superpowers Formal Gates (INV-SUPERPOWERS-GATED)")
-      io.println("  [INVENTORY] EV-36 Unified MCP Tooling & Zero-Trust Interceptor (INV-ZERO-TRUST-PAYLOAD)")
-      io.println("  [INVENTORY] EV-37 266-Actor Elastic Symbiosis Swarm (INV-UNCONSTRAINED-BEAM-SCALE)")
-      io.println("  [INVENTORY] EV-38 17-Aspect Process Cryptographic Receipts (INV-17-ASPECT-RECEIPTS)")
-      io.println("  [INVENTORY] EV-39 Omni-Cartesian Tensor Closure (INV-CARTESIAN-TENSOR-CLOSED)")
-      io.println("  [INVENTORY] EV-40 C3I Knowledge Authority & Subsystem Partitioning (INV-KNOW-AUTHORITY-PARTITION)")
-      io.println("  [INVENTORY] EV-41 Supervised OCaml Worker Port & Reductions Protection (INV-OCAML-PORT-REDUCTIONS)")
-      io.println("  [INVENTORY] EV-42 Typed Cross-Language Protocol & Envelopes (INV-CROSS-LANG-ENVELOPE)")
-      io.println("  [INVENTORY] EV-43 Zero-Trust Security & Ingress Traps (NUL -2, SQL -3) (INV-ZERO-TRUST-INGRESS-TRAP)")
-      io.println("  [INVENTORY] EV-44 Exponential Trust Decay & Freshness Dynamics (INV-EXPONENTIAL-TRUST-DECAY)")
-      io.println("  [INVENTORY] EV-45 Negative Knowledge & Anti-Pattern Detection Matrix (INV-ANTI-PATTERN-DETECTION)")
-      io.println("  [INVENTORY] EV-46 Multi-Corpus Cited Recall & Source Grounding (INV-CITED-RECALL-GROUNDING)")
-      io.println("  [INVENTORY] EV-47 7,918-File Zero-Error C3I Knowledge Ingestion (INV-7918-FILE-ZERO-ERROR)")
-      io.println("  [INVENTORY] EV-48 Biosemiotic Knowledge Morphisms & Rocha Cut (INV-BIOSEMIOTIC-KNOWLEDGE-CUT)")
-      io.println("  [INVENTORY] EV-49 Wisp/Mist REST API Knowledge Routes & Endpoints (INV-WISP-KNOWLEDGE-API)")
-      io.println("  [INVENTORY] EV-50 ZK ADR-055 & Knowledge Management Triad Integration (INV-ZK-ADR-055-KM-TRIAD)")
-      io.println("  [INVENTORY] EV-51 Scalability, Concurrency & Elastic Actor Knowledge Mesh (INV-ELASTIC-KNOWLEDGE-MESH)")
-      io.println("  [INVENTORY] EV-52 Formal Verification, Gospel Contracts & Parity Verification (INV-FORMAL-GOSPEL-PARITY)")
-      io.println("  [INVENTORY] EV-53 SRE Resilience, Freshness & Circuit-Breaker Fault Tolerance (INV-SRE-KNOWLEDGE-FRESHNESS)")
-      io.println("  [INVENTORY] EV-54 Tri-Sovereign Knowledge Symbiosis & Mainline Closure (INV-TRI-SOV-KNOWLEDGE-CLOSURE)")
-      io.println("  [INVENTORY] EV-55 C3I Agentic Ingestion & Sanitization Engine (INV-AGENTIC-INGESTION-SANITIZED)")
-      io.println("  [INVENTORY] EV-56 Supervised OCaml Port Pool & Reductions Protection (INV-SUPERVISED-OCAML-PORT-POOL)")
-      io.println("  [INVENTORY] EV-57 Dynamic Trust Decay & Negative Knowledge Actor Swarm (INV-DYNAMIC-DECAY-ACTOR-SWARM)")
-      io.println("  [INVENTORY] EV-58 Real-Time Tripartite Knowledge Presentation & SSE Mesh (INV-TRIPARTITE-SSE-KNOWLEDGE-MESH)")
-      io.println("  [INVENTORY] EV-59 Tri-Sovereign Autonomic Governance & Self-Healing Closure (INV-TRI-SOVEREIGN-AUTONOMIC-CLOSURE)")
-      io.println("  [INVENTORY] EV-60 Distributed Knowledge Cache & In-Memory Sheaf Harmonizer (INV-DISTRIBUTED-KNOWLEDGE-CACHE)")
-      io.println("  [INVENTORY] EV-61 Zero-Trust Cryptographic Signature Verification & Trace Lineage (INV-ZT-CRYPTO-SIGNATURE-TRACE)")
-      io.println("  [INVENTORY] EV-62 Automated Anti-Pattern Mitigation & Regression Interceptor (INV-AUTO-ANTI-PATTERN-INTERCEPTOR)")
-      io.println("  [INVENTORY] EV-63 Bounded Gospel Verification Oracle & Z3 Solver Process Tree (INV-GOSPEL-Z3-PROCESS-TREE)")
-      io.println("  [INVENTORY] EV-64 Descriptor-Relative VFS Journal Sync & WAL Durability (INV-VFS-JOURNAL-SYNC-DURABILITY)")
-      io.println("  [INVENTORY] EV-65 Lyapunov-Windowed Telemetry Freshness & Dead-Man Swarm (INV-LYAPUNOV-FRESHNESS-SWARM)")
-      io.println("  [INVENTORY] EV-66 17-Aspect Cross-Language Homomorphism & ABI Invariants (INV-17-ASPECT-ABI-HOMOMORPHISM)")
-      io.println("  [INVENTORY] EV-67 Elastic Multi-Tenant Agent Swarm Concurrency Scaling (INV-ELASTIC-SWARM-SCALING)")
-      io.println("  [INVENTORY] EV-68 Universal Tailscale FQDN Tripartite Presentation & Nav Graph (INV-TAILSCALE-TRIPARTITE-NAV)")
-      io.println("  [INVENTORY] EV-69 Sovereign Synthesis Ratification & Mainline Monorepo Closure (INV-SOVEREIGN-SYNTHESIS-CLOSURE)")
-      io.println("  [INVENTORY] EV-70 Vertical Slice Journal Ingestion to Cited Retrieval Pipeline (INV-SLICE-JOURNAL-RETRIEVAL)")
-      io.println("  [INVENTORY] EV-71 Supervised OCaml Worker Port Protocol & Subprocess Reductions (INV-OCAML-SUBPROCESS-PROTOCOL)")
-      io.println("  [INVENTORY] EV-72 Rust NIF & OCaml Differential Conformance Oracle (INV-RUST-OCAML-DIFF-CONFORMANCE)")
-      io.println("  [INVENTORY] EV-73 Callable OCaml Knowledge Lookup & Cited Recall Service (INV-CALLABLE-OCAML-CITED-RECALL)")
-      io.println("  [INVENTORY] EV-74 Tripartite Tri-Surface SSR/API/TUI Knowledge Display (INV-TRIPARTITE-KNOWLEDGE-SURFACES)")
-      io.println("  [INVENTORY] EV-75 17-Aspect C3I VM-1 Artifacts Comprehensive Synthesis (INV-17-ASPECT-C3I-SYNTHESIS)")
-      io.println("  [INVENTORY] EV-76 Dynamic Agentic Knowledge Mesh & Autonomous Swarm Topology (INV-DYNAMIC-KNOWLEDGE-SWARM)")
-      io.println("  [INVENTORY] EV-77 Biosemiotic Semantic Invariant Verification & Rocha Decoupling (INV-BIOSEMIOTIC-ROCHA-VERIF)")
-      io.println("  [INVENTORY] EV-78 13D TCM Coordinate Conservation & Fail-Closed Gatekeeper (INV-13D-TCM-FAIL-CLOSED)")
-      io.println("  [INVENTORY] EV-79 Lyapunov-Bounded Trust Decay & Negative Knowledge Eviction (INV-LYAPUNOV-TRUST-EVICTION)")
-      io.println("  [INVENTORY] EV-80 Zero-Trust Payload Interceptor & Cryptographic Receipt Ledger (INV-ZT-PAYLOAD-LEDGER)")
-      io.println("  [INVENTORY] EV-81 Multi-Tenant Elastic BEAM Swarm Scaling Invariant (INV-BEAM-SWARM-ELASTIC-SCALE)")
-      io.println("  [INVENTORY] EV-82 Universal Tailscale FQDN Web/API/WebSocket Routing Matrix (INV-TAILSCALE-FQDN-ROUTING)")
-      io.println("  [INVENTORY] EV-83 Formal Gospel Specification & Bounded Z3 Oracle Pipeline (INV-GOSPEL-Z3-ORACLE-PIPELINE)")
-      io.println("  [INVENTORY] EV-84 Tri-Sovereign Multi-Model Consensus & Mainline Jujutsu Closure (INV-TRI-SOV-MAINLINE-CLOSURE)")
-      io.println("  [INVENTORY] EV-85: ZigVM ADD Fractal Mapping & Agentic Sublimation Engine (INV-ZIGVM-ADD-SUBLIMATION)")
-      io.println("  [INVENTORY] EV-86: Cybernetic Raga & 22-Shruti Microtonal Synthesis Engine (INV-RAGA-SHRUTI-HARMONY)")
-      io.println("  [INVENTORY] EV-87: MirageOS Library OS Architecture (INV-MIRAGE-LIBOS)")
-      io.println("  [INVENTORY] EV-88: MirageOS Subsystem Migration Engine (INV-MIRAGE-MIGRATION)")
-      io.println("  [INVENTORY] EV-89: MirageOS Triple-Surface Cockpit & Solo5 Tenders (INV-MIRAGE-SOLO5-PROD)")
-      io.println("  [INVENTORY] EV-90: Unified Fractal Forecasting & Predictive POODAVR Control Loop (INV-FRACTAL-POODAVR-FORECAST)")
-      io.println("  [INVENTORY] EV-91: Universal Sa-Plan Execution Authority, Fractal Jidoka & TPS Control Loop (INV-SA-PLAN-JIDOKA-TPS-RATIFIED)")
-      io.println("  [INVENTORY] EV-92: High-Utility Modular MAX / Mojo AI Models, MCP Tooling & Fail-Closed Preflight (INV-MAX-MOJO-MCP-JIDOKA-RATIFIED)")
+      // Reads governance/ev-manifest.tsv and CHECKS each declared artifact.
+      //
+      // This branch previously held 96 io.println calls, zero conditionals and a
+      // hardcoded `0`, so it printed "PASS - 92/92 admitted and verified (100%
+      // Green)" even with its cited artifacts deleted. It now computes.
+      //
+      // Three outcomes per cycle, and UNVERIFIABLE is deliberately NOT a pass:
+      //   VERIFIED     a declared artifact exists
+      //   MISSING      a declared artifact does not exist   -> failure
+      //   UNVERIFIABLE no artifact is declared for the cycle -> not admitted
+      let manifest = read_file("governance/ev-manifest.tsv")
+      let rows =
+        manifest
+        |> string.split("\n")
+        |> list.filter(fn(l) { l != "" && !string.starts_with(l, "#") })
+
+      let results =
+        list.map(rows, fn(line) {
+          case string.split(line, "\t") {
+            [ev, artifact, label] ->
+              case artifact {
+                "-" -> #(ev, "UNVERIFIABLE", label)
+                p ->
+                  case file_exists(p) {
+                    True -> #(ev, "VERIFIED", label)
+                    False -> #(ev, "MISSING", label)
+                  }
+              }
+            _ -> #("?", "MALFORMED", line)
+          }
+        })
+
+      let verified = list.filter(results, fn(r) { r.1 == "VERIFIED" })
+      let missing = list.filter(results, fn(r) { r.1 == "MISSING" })
+      let unverifiable = list.filter(results, fn(r) { r.1 == "UNVERIFIABLE" })
+      let total = list.length(results)
+
+      case total {
+        0 ->
+          io.println(
+            "UOS Doctor: FAIL - governance/ev-manifest.tsv is absent or empty; nothing could be checked.",
+          )
+        _ -> {
+          io.println(
+            "UOS Doctor: checking "
+            <> int.to_string(total)
+            <> " EV cycles against governance/ev-manifest.tsv",
+          )
+          list.each(results, fn(r) {
+            io.println("  [" <> r.1 <> "] EV-" <> r.0 <> ": " <> r.2)
+          })
+          io.println("")
+        }
+      }
+
+      io.println(
+        "  verified (artifact present):    " <> int.to_string(list.length(verified)),
+      )
+      io.println(
+        "  MISSING (artifact declared, absent): "
+        <> int.to_string(list.length(missing)),
+      )
+      io.println(
+        "  unverifiable (no artifact declared): "
+        <> int.to_string(list.length(unverifiable)),
+      )
       io.println("")
-      io.println("UOS Doctor result: PASS — 92/92 EV-cycles admitted and verified (100% Green).")
-      0
+      io.println(
+        "NOTE: an existing artifact is NOT two-key admission. It shows a record is present,",
+      )
+      io.println(
+        "      not that runtime behaviour and a formal specification were verified at a",
+      )
+      io.println(
+        "      revision. For computed admission run: bash tools/km-gate --ev-admission <rev>",
+      )
+      io.println("")
+
+      case list.length(missing) > 0, list.length(verified) == total {
+        True, _ -> {
+          io.println(
+            "UOS Doctor result: FAIL - "
+            <> int.to_string(list.length(missing))
+            <> " declared artifact(s) are missing.",
+          )
+          1
+        }
+        False, True -> {
+          io.println(
+            "UOS Doctor result: PASS - "
+            <> int.to_string(total)
+            <> "/"
+            <> int.to_string(total)
+            <> " EV cycles have their declared artifact present.",
+          )
+          0
+        }
+        False, False -> {
+          io.println(
+            "UOS Doctor result: HOLD - "
+            <> int.to_string(list.length(verified))
+            <> "/"
+            <> int.to_string(total)
+            <> " cycles have a checkable artifact; "
+            <> int.to_string(list.length(unverifiable))
+            <> " declare none and are NOT admitted.",
+          )
+          1
+        }
+      }
     }
     DmcCheck -> {
       io.println("Evaluating DMC (Deterministic Memory Coherence & Mathematical Core):")
