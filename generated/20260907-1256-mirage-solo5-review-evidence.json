@@ -1,0 +1,899 @@
+{
+  "schema": "uos-mirage-independent-review/v1",
+  "review_id": "MIRAGE-TENDERS-REVIEW-20260907-1256",
+  "created_at_utc": "2026-09-07T12:48:56Z",
+  "candidate": {
+    "base": "a9d40c6e63696f16ca0c83d5512636be5a16ff1c",
+    "implementation": "aef028b715a2f876d5027a0a81070d24b0d652f9",
+    "reviewed": "b64532f327fc5d66db60a36311d50044749083de",
+    "scope": "Mirage tender implementation, projections, gates, tests and claims; unrelated forecasting/MCP additions are excluded"
+  },
+  "reviewer": {
+    "actor": "Codex",
+    "session_id": "01a07a68-b3b7-70f3-9e64-fac68a156c21",
+    "independent_subreview": {
+      "model": "gpt-6-astra",
+      "reasoning_effort": "max",
+      "task": "/root/mirage_receipt_review",
+      "scope": "Read-only exact-candidate receipt audit and controlled negative fixtures"
+    }
+  },
+  "decision": {
+    "review_status": "CHANGES_REQUIRED",
+    "physical_observation": "Eight target-specific test executions observed on nas-1 at recorded times; no persistent-service claim",
+    "system_admission": "NOT_VERIFIED",
+    "deploy_authority": false,
+    "source_modifications": 0,
+    "source_imports": 0
+  },
+  "clock": {
+    "sample_utc": "2026-09-07T12:46:30Z",
+    "chrony_reference_utc": "2026-09-07T12:36:09Z",
+    "chrony_system_seconds_slow": 0.000687654,
+    "leap_status": "Normal",
+    "scope": "Host clock sample only; fleet synchronization unverified. UTC, boot-monotonic deadlines, and Lamport counters are distinct.",
+    "coordination_task_epoch": 1
+  },
+  "findings": [
+    {
+      "id": "MR-01",
+      "severity": "P1",
+      "title": "Presence-only admission gate",
+      "path": "tools/uos/src/main.gleam",
+      "lines": [
+        348,
+        1673
+      ],
+      "observed": "Both gate and selfcheck returned 0 with eight zero-byte placeholder files and no execution receipts.",
+      "required_fix": "Verify strict candidate-, artifact-, host/boot- and invocation-bound execution receipts; missing or invalid evidence must return nonzero."
+    },
+    {
+      "id": "MR-02",
+      "severity": "P1",
+      "title": "Hard-coded live verification",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/services/mirage_hypervisor.gleam",
+      "lines": [
+        61
+      ],
+      "observed": "default_verified_probe always reports nas-1, 2026-09-07T12:21:04Z and three passing executions. Wisp serializes it directly; live HTTP response matched these constants.",
+      "required_fix": "Project fresh supervised observations; expose absent, stale, failed and unknown states across API and cockpit."
+    },
+    {
+      "id": "MR-03",
+      "severity": "P1",
+      "title": "Unquoted shell interpolation",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml",
+      "lines": [
+        88,
+        101
+      ],
+      "observed": "Existing image below a PWD directory containing '; true #' turned /usr/bin/false into exit_code=0, passed=true.",
+      "required_fix": "Use argument-vector process creation, trusted executable selection and confined artifact paths; no shell string construction."
+    },
+    {
+      "id": "MR-04",
+      "severity": "P1",
+      "title": "Unbounded tender processes",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml",
+      "lines": [
+        103,
+        113
+      ],
+      "observed": "sleep-5 fixture produced no receipt before an external 1-second timeout killed its process group. input_line has no line-byte limit; close_process_in has no deadline.",
+      "required_fix": "OTP-owned monotonic deadlines, bounded stdout/stderr, concurrent draining, process-group termination and reaping; receipt must represent timeout distinctly."
+    },
+    {
+      "id": "MR-05",
+      "severity": "P1",
+      "title": "Exit-only receipt accepts failed or absent guest behavior",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml",
+      "lines": [
+        115,
+        130
+      ],
+      "observed": "/usr/bin/true plus an empty image was accepted with empty output. Real virtio hello without expected cmdline and real stack-corruption abort both exited 83.",
+      "required_fix": "Require pinned executable/image identity and per-test output predicates; distinguish successful hello from expected SSP abort. Bind full bounded output digest and profile, not exit code alone."
+    },
+    {
+      "id": "MR-06",
+      "severity": "P2",
+      "title": "Aggregate excludes virtio",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml",
+      "lines": [
+        149
+      ],
+      "observed": "Aggregate matches only HVT and SPT receipts; virtio result does not participate.",
+      "required_fix": "Return named per-target states; any all-target claim must require all specified targets and every required check."
+    },
+    {
+      "id": "MR-07",
+      "severity": "P2",
+      "title": "Tests affirm labels without checking tender behavior",
+      "path": "engines/hermes/modules/hermes_mirage/test_mirage_hypervisor.ml",
+      "lines": [
+        6,
+        22
+      ],
+      "observed": "Exact test returned 0 with PATH=/nonexistent and overall_readiness=hypervisor_unavailable; Gleam test asserts the static PASS report.",
+      "required_fix": "Add absence, invalid image/output, wrong backend, timeout, mutation, stale receipt, artifact replacement, parser and partial-aggregate negative tests."
+    },
+    {
+      "id": "MR-08",
+      "severity": "P1",
+      "title": "Live OTP version contradicts the hard requirement",
+      "observed": "Port 4100 listener PID3117652 executable /usr/lib/erlang/erts-15.2.7.4/bin/beam.smp belongs to host OTP27. Page displays OTP29. Isolated tests used OTP29.0.6.",
+      "required_fix": "Publish actual runtime identity and perform separately authorized tested OTP29 deployment with current runtime ownership; build success alone does not establish the running version.",
+      "runtime_locator": "nas-1 TCP 4100 listener PID 3117652 at review time"
+    },
+    {
+      "id": "MR-09",
+      "severity": "P2",
+      "title": "Inherited KVM probe invents API version",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml",
+      "lines": [
+        69,
+        70
+      ],
+      "observed": "Probe assigns Some 12 after open(O_RDWR), with no ioctl. Independent strace did observe actual KVM_GET_API_VERSION=12 on this host.",
+      "required_fix": "Report the actual ioctl receipt or unknown; do not convert device accessibility into API verification."
+    }
+  ],
+  "checks": {
+    "mirage_eunit": {
+      "passed": 24,
+      "failed": 0,
+      "runtime": "OTP29.0.6",
+      "scope": "Four focused Mirage modules"
+    },
+    "dune": {
+      "targets_passed": 5,
+      "failed": 0,
+      "runner_selfchecks": 6,
+      "selfchecks_included_in_target_count": true
+    },
+    "web": {
+      "passed": 12,
+      "failed": 0,
+      "runtime": "OTP29.0.6"
+    },
+    "tools": {
+      "passed": 14,
+      "failed": 0,
+      "runtime": "OTP29.0.6"
+    },
+    "full_cepaf_suite": "NOT_RERUN",
+    "build_warning_claim": "CONTRADICTED: isolated OTP29 builds emit existing deprecation/empty-module warnings",
+    "formal_candidate_verification": "UNRUN",
+    "end_to_end_migrated_applications": "UNRUN"
+  },
+  "endpoint_observations": {
+    "base": "http://nas-1.tail55d152.ts.net:4100",
+    "http_200": [
+      "/mirage",
+      "/api/v1/mirage/hypervisors",
+      "/api/v1/mirage/status",
+      "/api/v1/mirage/candidates",
+      "/files/docs/design/20260907-1037-mirage-benchmark-contract.md"
+    ],
+    "hypervisor_response": "Static observation dated 2026-09-07T12:21:04Z; not live validation",
+    "runtime_mode": "simulation_only",
+    "health": "unknown",
+    "candidate_count": 7,
+    "verified_admitted_count": 0,
+    "measured_ram_savings_mb": null,
+    "projected_ram_savings_mb": 1092
+  },
+  "negative_controls": [
+    {
+      "id": "gate_zero_files",
+      "gate_exit": 0,
+      "selfcheck_exit": 0,
+      "files": 8,
+      "each_file_bytes": 0,
+      "expected": "nonzero / NOT_VERIFIED",
+      "result": "DEFECT_REPRODUCED"
+    },
+    {
+      "id": "true_empty_guest",
+      "exit_code": 0,
+      "passed": true,
+      "output": "",
+      "result": "DEFECT_REPRODUCED"
+    },
+    {
+      "id": "pwd_shell_injection",
+      "selected_executable": "/usr/bin/false",
+      "observed_exit_code": 0,
+      "passed": true,
+      "result": "DEFECT_REPRODUCED"
+    },
+    {
+      "id": "unbounded_wait",
+      "fixture_sleep_seconds": 5,
+      "outer_timeout_seconds": 1,
+      "outer_exit_code": 124,
+      "result": "DEFECT_REPRODUCED"
+    },
+    {
+      "id": "unavailable_tenders_unit_test",
+      "path": "/nonexistent",
+      "test_exit": 0,
+      "readiness": "hypervisor_unavailable",
+      "result": "TEST_COVERAGE_GAP_REPRODUCED"
+    },
+    {
+      "id": "virtio_wrong_command_line",
+      "exit_code": 83,
+      "expected_success_marker_present": false,
+      "result": "EXIT_CODE_NOT_GUEST_SUCCESS"
+    },
+    {
+      "id": "virtio_ssp_abort",
+      "exit_code": 83,
+      "stack_corruption_abort_marker_present": true,
+      "result": "EXIT_CODE_NOT_GUEST_SUCCESS"
+    }
+  ],
+  "source_provenance": {
+    "solo5_source_locator": "/home/an/dev/ver/zigvm/_opam/.opam-switch/sources/solo5.0.12.1",
+    "source_writers_quiesced": false,
+    "independent_rebuild": false,
+    "pristine_source_digest_verified": false,
+    "package_metadata": "Installed OPAM record names Solo5 0.12.1 and a release SHA512; this review did not independently rebuild or validate the entire source snapshot.",
+    "ssp_staged_artifacts_match_build_artifacts": true,
+    "binaries_versioned_in_review": false,
+    "external_source_mutations_by_reviewer": false
+  },
+  "coordination": {
+    "task": "MIRAGE-TENDERS-REVIEW",
+    "findings_messages": [
+      "codex-mirage-review-block-20260907-1240",
+      "codex-mirage-review-agy-findings-20260907-1245",
+      "codex-mirage-review-integrator-findings-20260907-1245",
+      "codex-mirage-ssp-findings-20260907-1248"
+    ],
+    "agy_response": "op-agy-send-codex-provenance-144600",
+    "agy_ack_sequences": [
+      234,
+      235
+    ],
+    "agy_response_scope": "Agrees with blocking findings, preserves b64532f3 and will prepare fixes separately; not deployment/admission authority"
+  },
+  "recommended_features": [
+    {
+      "id": "MIRAGE-REC-01",
+      "priority": 1,
+      "name": "Bounded tender conformance and receipt service",
+      "owner": "Gleam/OTP lifecycle and fencing; Hermes OCaml receipt schema/oracle",
+      "acceptance": "Fresh candidate/image/executable/host/boot/run-bound receipts; strict per-test outcomes; bounded argv execution; negative-control tests; all projections use the same validated observation."
+    },
+    {
+      "id": "MIG-08-METRICS",
+      "priority": 2,
+      "name": "Measured tender metrics and first actual Mirage leaf",
+      "owner": "Hermes measurement analysis, Gleam control; optional OCaml Mirage exporter",
+      "acceptance": "Per-profile cold-start/ready latency distributions, CPU/RSS/sample count and uncertainty; separate projections from measurements; actual target build/boot/network and restart tests before admission."
+    }
+  ],
+  "references": [
+    {
+      "title": "Solo5 0.12.1 virtio exit implementation",
+      "url": "https://github.com/Solo5/solo5/blob/v0.12.1/bindings/virtio/platform.c",
+      "interpretation": "Writes 41 to isa-debug-exit, yielding 83 regardless of guest exit status."
+    },
+    {
+      "title": "Solo5 0.12.1 hello test",
+      "url": "https://github.com/Solo5/solo5/blob/v0.12.1/tests/test_hello/test_hello.c",
+      "interpretation": "Expected command line controls SUCCESS output; function still returns success for other arguments."
+    },
+    {
+      "title": "Solo5 architecture",
+      "url": "https://github.com/Solo5/solo5/blob/v0.12.1/docs/architecture.md",
+      "interpretation": "HVT and SPT are tenders; virtio is a target launched here through a QEMU wrapper."
+    }
+  ],
+  "journal_path": "docs/journal/20260907-1256-mirage-solo5-independent-review.md",
+  "resource_use": {
+    "parallel_reviewers": 1,
+    "host_test_timeout_seconds": 12,
+    "host_test_kill_after_seconds": 2,
+    "test_vm_network_devices": 0,
+    "test_vm_block_devices": 0,
+    "observed_free_disk_gib_approx": 830,
+    "observed_available_ram_mib": 32837,
+    "token_and_currency_cost": "UNMEASURED",
+    "protected_service_restarts": 0,
+    "main_bookmark_moves": 0,
+    "openrouter_calls": 0
+  },
+  "physical_runs": [
+    {
+      "name": "hvt",
+      "start_utc": "2026-09-07T12:40:10.995239474Z",
+      "end_utc": "2026-09-07T12:40:11.104449127Z",
+      "exit_code": 0,
+      "outer_timeout_seconds": 12,
+      "stdout": "            |      ___|\n  __|  _ \\  |  _ \\ __ \\\n\\__ \\ (   | | (   |  ) |\n____/\\___/ _|\\___/____/\nSolo5: Bindings version v0.12.1\nSolo5: Memory map: 512 MB addressable:\nSolo5:   reserved @ (0x0 - 0xfffff)\nSolo5:       text @ (0x100000 - 0x104fff)\nSolo5:     rodata @ (0x105000 - 0x106fff)\nSolo5:       data @ (0x107000 - 0x30bfff)\nSolo5:       heap >= 0x30c000 < stack < 0x20000000\n\n**** Solo5 standalone test_hello ****\n\nHello, World\nCommand line is: 'Hello_Solo5'\nSUCCESS\nSolo5: solo5_exit(0) called\n",
+      "launch_argv": [
+        "/home/an/dev/ver/zigvm/_opam/bin/solo5-hvt",
+        "/home/an/NAS-setup/uos/var/mirage/unikernels/test_hello.hvt",
+        "Hello_Solo5"
+      ]
+    },
+    {
+      "name": "spt",
+      "start_utc": "2026-09-07T12:40:11.115405959Z",
+      "end_utc": "2026-09-07T12:40:11.224688991Z",
+      "exit_code": 0,
+      "outer_timeout_seconds": 12,
+      "stdout": "            |      ___|\n  __|  _ \\  |  _ \\ __ \\\n\\__ \\ (   | | (   |  ) |\n____/\\___/ _|\\___/____/\nSolo5: Bindings version v0.12.1\nSolo5: Memory map: 512 MB addressable:\nSolo5:   reserved @ (0x0 - 0xfffff)\nSolo5:       text @ (0x100000 - 0x103fff)\nSolo5:     rodata @ (0x104000 - 0x104fff)\nSolo5:       data @ (0x105000 - 0x106fff)\nSolo5:       heap >= 0x107000 < stack < 0x20000000\n\n**** Solo5 standalone test_hello ****\n\nHello, World\nCommand line is: 'Hello_Solo5'\nSUCCESS\nSolo5: solo5_exit(0) called\n",
+      "launch_argv": [
+        "/home/an/dev/ver/zigvm/_opam/bin/solo5-spt",
+        "/home/an/NAS-setup/uos/var/mirage/unikernels/test_hello.spt",
+        "Hello_Solo5"
+      ]
+    },
+    {
+      "name": "virtio",
+      "start_utc": "2026-09-07T12:40:11.235076731Z",
+      "end_utc": "2026-09-07T12:40:11.845381354Z",
+      "exit_code": 83,
+      "outer_timeout_seconds": 12,
+      "stdout": "+ exec qemu-system-x86_64 -cpu host -enable-kvm -m 128 -nodefaults -machine acpi=off -display none -serial stdio -device isa-debug-exit -kernel /home/an/NAS-setup/uos/var/mirage/unikernels/test_hello.virtio -append Hello_Solo5\n            |      ___|\r\n  __|  _ \\  |  _ \\ __ \\\r\n\\__ \\ (   | | (   |  ) |\r\n____/\\___/ _|\\___/____/\r\nSolo5: Bindings version v0.12.1\r\nSolo5: Memory map: 128 MB addressable:\r\nSolo5:   reserved @ (0x0 - 0xfffff)\r\nSolo5:       text @ (0x100000 - 0x106fff)\r\nSolo5:     rodata @ (0x107000 - 0x108fff)\r\nSolo5:       data @ (0x109000 - 0x11dfff)\r\nSolo5:       heap >= 0x11e000 < stack < 0x8000000\r\nSolo5: Clock source: KVM paravirtualized clock\r\n\r\n**** Solo5 standalone test_hello ****\r\n\r\nHello, World\r\nCommand line is: 'Hello_Solo5'\r\nSUCCESS\r\nSolo5: solo5_exit(0) called\r\n",
+      "launch_argv": [
+        "/home/an/dev/ver/zigvm/_opam/bin/solo5-virtio-run",
+        "-H",
+        "kvm",
+        "/home/an/NAS-setup/uos/var/mirage/unikernels/test_hello.virtio",
+        "--",
+        "Hello_Solo5"
+      ]
+    },
+    {
+      "name": "time_hvt",
+      "start_utc": "2026-09-07T12:40:11.859187749Z",
+      "end_utc": "2026-09-07T12:40:16.979853812Z",
+      "exit_code": 0,
+      "outer_timeout_seconds": 12,
+      "stdout": "            |      ___|\n  __|  _ \\  |  _ \\ __ \\\n\\__ \\ (   | | (   |  ) |\n____/\\___/ _|\\___/____/\nSolo5: Bindings version v0.12.1\nSolo5: Memory map: 512 MB addressable:\nSolo5:   reserved @ (0x0 - 0xfffff)\nSolo5:       text @ (0x100000 - 0x105fff)\nSolo5:     rodata @ (0x106000 - 0x107fff)\nSolo5:       data @ (0x108000 - 0x30cfff)\nSolo5:       heap >= 0x30d000 < stack < 0x20000000\n\n**** Solo5 standalone test_time ****\n\nOverhead of solo5_yield(): 32050 ns\n[5] Sleeping for one second...\n[5] Slept for 1000054441 ns\n[4] Sleeping for one second...\n[4] Slept for 1000050444 ns\n[3] Sleeping for one second...\n[3] Slept for 1000054932 ns\n[2] Sleeping for one second...\n[2] Slept for 1000056545 ns\n[1] Sleeping for one second...\n[1] Slept for 1000036648 ns\nSUCCESS\nSolo5: solo5_exit(0) called\n",
+      "launch_argv": [
+        "/home/an/dev/ver/zigvm/_opam/bin/solo5-hvt",
+        "/home/an/NAS-setup/uos/var/mirage/unikernels/test_time.hvt"
+      ]
+    },
+    {
+      "name": "time_spt",
+      "start_utc": "2026-09-07T12:40:16.997581788Z",
+      "end_utc": "2026-09-07T12:40:22.016148180Z",
+      "exit_code": 0,
+      "outer_timeout_seconds": 12,
+      "stdout": "            |      ___|\n  __|  _ \\  |  _ \\ __ \\\n\\__ \\ (   | | (   |  ) |\n____/\\___/ _|\\___/____/\nSolo5: Bindings version v0.12.1\nSolo5: Memory map: 512 MB addressable:\nSolo5:   reserved @ (0x0 - 0xfffff)\nSolo5:       text @ (0x100000 - 0x104fff)\nSolo5:     rodata @ (0x105000 - 0x106fff)\nSolo5:       data @ (0x107000 - 0x108fff)\nSolo5:       heap >= 0x109000 < stack < 0x20000000\n\n**** Solo5 standalone test_time ****\n\nOverhead of solo5_yield(): 19777 ns\n[5] Sleeping for one second...\n[5] Slept for 1000025786 ns\n[4] Sleeping for one second...\n[4] Slept for 1000032258 ns\n[3] Sleeping for one second...\n[3] Slept for 1000023492 ns\n[2] Sleeping for one second...\n[2] Slept for 1000030495 ns\n[1] Sleeping for one second...\n[1] Slept for 1000023923 ns\nSUCCESS\nSolo5: solo5_exit(0) called\n",
+      "launch_argv": [
+        "/home/an/dev/ver/zigvm/_opam/bin/solo5-spt",
+        "/home/an/NAS-setup/uos/var/mirage/unikernels/test_time.spt"
+      ]
+    },
+    {
+      "name": "ssp_hvt",
+      "start_utc": "2026-09-07T12:47:41.777196575Z",
+      "end_utc": "2026-09-07T12:47:41.885008538Z",
+      "exit_code": 255,
+      "outer_timeout_seconds": 12,
+      "stdout": "            |      ___|\n  __|  _ \\  |  _ \\ __ \\\n\\__ \\ (   | | (   |  ) |\n____/\\___/ _|\\___/____/\nSolo5: Bindings version v0.12.1\nSolo5: Memory map: 512 MB addressable:\nSolo5:   reserved @ (0x0 - 0xfffff)\nSolo5:       text @ (0x100000 - 0x104fff)\nSolo5:     rodata @ (0x105000 - 0x106fff)\nSolo5:       data @ (0x107000 - 0x30bfff)\nSolo5:       heap >= 0x30c000 < stack < 0x20000000\n\n**** Solo5 standalone test_ssp ****\n\n1234567890123456789012345678901234567890\nSolo5: ABORT: Stack corruption detected\n\u0000",
+      "launch_argv": [
+        "/home/an/dev/ver/zigvm/_opam/bin/solo5-hvt",
+        "/home/an/NAS-setup/uos/var/mirage/unikernels/test_ssp.hvt"
+      ]
+    },
+    {
+      "name": "ssp_spt",
+      "start_utc": "2026-09-07T12:47:41.893621067Z",
+      "end_utc": "2026-09-07T12:47:42.002547568Z",
+      "exit_code": 255,
+      "outer_timeout_seconds": 12,
+      "stdout": "            |      ___|\n  __|  _ \\  |  _ \\ __ \\\n\\__ \\ (   | | (   |  ) |\n____/\\___/ _|\\___/____/\nSolo5: Bindings version v0.12.1\nSolo5: Memory map: 512 MB addressable:\nSolo5:   reserved @ (0x0 - 0xfffff)\nSolo5:       text @ (0x100000 - 0x102fff)\nSolo5:     rodata @ (0x103000 - 0x103fff)\nSolo5:       data @ (0x104000 - 0x105fff)\nSolo5:       heap >= 0x106000 < stack < 0x20000000\n\n**** Solo5 standalone test_ssp ****\n\n1234567890123456789012345678901234567890\nSolo5: ABORT: Stack corruption detected\n\u0000",
+      "launch_argv": [
+        "/home/an/dev/ver/zigvm/_opam/bin/solo5-spt",
+        "/home/an/NAS-setup/uos/var/mirage/unikernels/test_ssp.spt"
+      ]
+    },
+    {
+      "name": "ssp_virtio",
+      "start_utc": "2026-09-07T12:47:42.012914399Z",
+      "end_utc": "2026-09-07T12:47:42.220918072Z",
+      "exit_code": 83,
+      "outer_timeout_seconds": 12,
+      "stdout": "+ exec qemu-system-x86_64 -cpu host -enable-kvm -m 128 -nodefaults -machine acpi=off -display none -serial stdio -device isa-debug-exit -kernel /home/an/NAS-setup/uos/var/mirage/unikernels/test_ssp.virtio\n            |      ___|\r\n  __|  _ \\  |  _ \\ __ \\\r\n\\__ \\ (   | | (   |  ) |\r\n____/\\___/ _|\\___/____/\r\nSolo5: Bindings version v0.12.1\r\nSolo5: Memory map: 128 MB addressable:\r\nSolo5:   reserved @ (0x0 - 0xfffff)\r\nSolo5:       text @ (0x100000 - 0x106fff)\r\nSolo5:     rodata @ (0x107000 - 0x108fff)\r\nSolo5:       data @ (0x109000 - 0x11dfff)\r\nSolo5:       heap >= 0x11e000 < stack < 0x8000000\r\nSolo5: Clock source: KVM paravirtualized clock\r\n\r\n**** Solo5 standalone test_ssp ****\r\n\r\n1234567890123456789012345678901234567890\r\nSolo5: ABORT: Stack corruption detected\r\n\u0000Solo5: ACPI: RSDP",
+      "launch_argv": [
+        "/home/an/dev/ver/zigvm/_opam/bin/solo5-virtio-run",
+        "-H",
+        "kvm",
+        "/home/an/NAS-setup/uos/var/mirage/unikernels/test_ssp.virtio"
+      ]
+    }
+  ],
+  "artifact_digests": [
+    {
+      "sha256": "2fcccfa1895623f1821093fb80e666a822301910efa5a8ef8e2b6dc3fc6f6d12",
+      "path": "/home/an/NAS-setup/uos/var/mirage/unikernels/test_hello.hvt"
+    },
+    {
+      "sha256": "a4829c241289e44ec68dc314e02dc71ecdcd7aeb29b67bfbe18b7dff02c034a0",
+      "path": "/home/an/NAS-setup/uos/var/mirage/unikernels/test_hello.spt"
+    },
+    {
+      "sha256": "ef50564ed65bf6a5ad1570e3937ae13e7339f397a46e74edb332335ca7bd361c",
+      "path": "/home/an/NAS-setup/uos/var/mirage/unikernels/test_hello.virtio"
+    },
+    {
+      "sha256": "75c5f738f2f7889d922b8311baaa06bae46ad6b9210b5ee1b436407b8f7770ad",
+      "path": "/home/an/NAS-setup/uos/var/mirage/unikernels/test_time.hvt"
+    },
+    {
+      "sha256": "675cb516e2bab8f8b755ba50053b339933d59bee123d1bfc8eea1431707532d0",
+      "path": "/home/an/NAS-setup/uos/var/mirage/unikernels/test_time.spt"
+    },
+    {
+      "sha256": "e5ad60e93d45b0a38b9b3593885c56f23b2ceb88fdecaf79fdbd930bd4f0ad99",
+      "path": "/home/an/dev/ver/zigvm/_opam/bin/solo5-hvt"
+    },
+    {
+      "sha256": "c7f67502c1bc162ba211cb88d32571bb96cbca17af40a5d97e20278ff014a5d3",
+      "path": "/home/an/dev/ver/zigvm/_opam/bin/solo5-spt"
+    },
+    {
+      "sha256": "ea5f1a1c251710e841477cf3880603de65760cd3689e9be012beae740f348af1",
+      "path": "/home/an/dev/ver/zigvm/_opam/bin/solo5-virtio-run"
+    },
+    {
+      "sha256": "0cd4112a8f0cb891eb7c10e8df38c9dfeec8c7389bb22db6aa425f0d6fe733dc",
+      "path": "/usr/bin/qemu-system-x86_64"
+    }
+  ],
+  "ssp_digests": [
+    {
+      "sha256": "9e2a552a8a64184a1079dd7443a5f350145fb28caeba7be1d1c8d58a8ce4738a",
+      "path": "/home/an/NAS-setup/uos/var/mirage/unikernels/test_ssp.hvt"
+    },
+    {
+      "sha256": "f1111c3ddf7d5d82198469dcdebc1d1250d60a51d1ceb33f53bb807dec13d47a",
+      "path": "/home/an/NAS-setup/uos/var/mirage/unikernels/test_ssp.spt"
+    },
+    {
+      "sha256": "9ea39db4179c3981aae3d5fb1b3efab09175a838e8fb5515b0b078a17f5757a1",
+      "path": "/home/an/NAS-setup/uos/var/mirage/unikernels/test_ssp.virtio"
+    },
+    {
+      "sha256": "84d592c0df34701ae105d0ff4ab3598a2de1de58facc6c06e835f032b3e8d435",
+      "path": "/home/an/dev/ver/zigvm/_opam/.opam-switch/sources/solo5.0.12.1/tests/test_ssp/test_ssp.c"
+    },
+    {
+      "sha256": "9e2a552a8a64184a1079dd7443a5f350145fb28caeba7be1d1c8d58a8ce4738a",
+      "path": "/home/an/dev/ver/zigvm/_opam/.opam-switch/sources/solo5.0.12.1/tests/test_ssp/test_ssp.hvt"
+    },
+    {
+      "sha256": "f1111c3ddf7d5d82198469dcdebc1d1250d60a51d1ceb33f53bb807dec13d47a",
+      "path": "/home/an/dev/ver/zigvm/_opam/.opam-switch/sources/solo5.0.12.1/tests/test_ssp/test_ssp.spt"
+    },
+    {
+      "sha256": "9ea39db4179c3981aae3d5fb1b3efab09175a838e8fb5515b0b078a17f5757a1",
+      "path": "/home/an/dev/ver/zigvm/_opam/.opam-switch/sources/solo5.0.12.1/tests/test_ssp/test_ssp.virtio"
+    }
+  ],
+  "candidate_file_digests": [
+    {
+      "sha256": "600efce913f85f8caf2883944f6b1326a6873bc5f49ae8fc438e0b436223cd98",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/fractal_forecast.gleam"
+    },
+    {
+      "sha256": "b3069f19cbe07f7f6861db91b1fd42a2e0732111753219778afa4ec075c0cf5e",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam"
+    },
+    {
+      "sha256": "92e848c63b5e76992adcca3808a75a5cf511df43dc7c7a9adbcdf5b9f115324c",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam"
+    },
+    {
+      "sha256": "7e7be2171a8ef89217688be21f62e3b38f621e32601425f8313558a95816eea9",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/services/mirage_hypervisor.gleam"
+    },
+    {
+      "sha256": "b7d54981514473954474d34c3da6f7812fc0a742a63074e5326ce95ccc53a31e",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/mirage_cockpit.gleam"
+    },
+    {
+      "sha256": "176d37d1fca159398b7a0d08ce963486118c61884f4e316f22a1441cc9215c86",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam"
+    },
+    {
+      "sha256": "cfedd3736b6920b1ea2d7e1d403f1e001976eb12473b255d621374650933e7d0",
+      "path": "apps/cepaf_gleam/test/fractal_forecast_test.gleam"
+    },
+    {
+      "sha256": "c8ab113ef1b4f9ce436283016f84ec6978fd100fe55a0a97d5683256a69a2c06",
+      "path": "apps/cepaf_gleam/test/mirage_cockpit_test.gleam"
+    },
+    {
+      "sha256": "c12f2ec31913f2f514e038d887b3652ae36b9febd739721cd1b38ff14444f7f7",
+      "path": "apps/cepaf_gleam/test/mirage_hypervisor_test.gleam"
+    },
+    {
+      "sha256": "c03b2b421e8d4ba5c7068fe3bea9b105ce452005e96f55297ce1f95b99ec1543",
+      "path": "apps/indrajaal_gleam_web/src/indrajaal_gleam_web.gleam"
+    },
+    {
+      "sha256": "2845b6aabcaaa7a032f1266f6bf5ac1e5a073876e920e28102cbaf30acbe52ad",
+      "path": "docs/journal/20260907-1416-mirage-hypervisor-verification-and-codex-coordination-journal.md"
+    },
+    {
+      "sha256": "afb1b1a8af93a17d38cd73f2f790b7351c3ecf2ffa990aab0f461580e4106088",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml"
+    },
+    {
+      "sha256": "2a9ecc96e20a55487044cac20d2cc74920eeca909517b8231dac2f017d32d412",
+      "path": "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.mli"
+    },
+    {
+      "sha256": "8efdd5b5f1db37dd66d9203dc9e745da67fb4466643356d91fdb40290692c884",
+      "path": "tools/uos/src/main.gleam"
+    }
+  ],
+  "observed_output": {
+    "hvt_ioctl": "ioctl(4, KVM_GET_API_VERSION, 0)        = 12\nioctl(4, KVM_CREATE_VM, 0)              = 5\nioctl(5, KVM_CREATE_VCPU, 0)            = 6\nioctl(4, KVM_GET_VCPU_MMAP_SIZE, 0)     = 12288\nioctl(4, KVM_CHECK_EXTENSION, KVM_CAP_USER_MEMORY) = 1\nioctl(5, KVM_SET_USER_MEMORY_REGION, {slot=0, flags=0, guest_phys_addr=0, memory_size=536870912, userspace_addr=0x734478800000}) = 0\nioctl(4, KVM_CHECK_EXTENSION, KVM_CAP_IOEVENTFD) = 1\nioctl(4, KVM_GET_SUPPORTED_CPUID, {nent=67, entries=[...]}) = 0\nioctl(6, KVM_SET_CPUID2, {nent=67, entries=[...]}) = 0\nioctl(6, KVM_SET_SREGS, {cs={base=0, limit=4294967295, selector=8, type=9, present=1, dpl=0, db=0, s=1, l=1, g=1, avl=0}, ...}) = 0\nioctl(4, KVM_CHECK_EXTENSION, KVM_CAP_GET_TSC_KHZ) = 1\nioctl(6, KVM_GET_TSC_KHZ, 0x1)          = 1996246\nioctl(6, KVM_SET_REGS, {rax=0, ..., rsp=0x1ffffff8, rbp=0, ..., rip=0x100040, rflags=0x2}) = 0\nioctl(6, KVM_RUN, 0)                    = 0\nioctl(6, KVM_RUN, 0)                    = 0\nioctl(6, KVM_RUN, 0)                    = 0\nioctl(6, KVM_RUN, 0)                    = 0\nioctl(6, KVM_RUN, 0)                    = 0\nioctl(6, KVM_RUN, 0)                    = 0\nioctl(6, KVM_RUN, 0)                    = 0\nioctl(6, KVM_RUN, 0)                    = 0\nioctl(6, KVM_RUN, 0)                    = 0\nioctl(6, KVM_RUN, 0)                    = 0\nioctl(6, KVM_RUN, 0)                    = 0\nioctl(6, KVM_RUN, 0)                    = 0\nioctl(6, KVM_RUN, 0)                    = 0\nioctl(6, KVM_RUN, 0)                    = 0\nioctl(6, KVM_RUN, 0)                    = 0\nioctl(6, KVM_RUN, 0)                    = 0\nioctl(6, KVM_RUN, 0)                    = 0\nioctl(6, KVM_RUN, 0)                    = 0\n+++ exited with 0 +++\n",
+    "spt_seccomp": "seccomp(SECCOMP_SET_MODE_STRICT, 0x1, NULL) = -1 EINVAL (Invalid argument)\nseccomp(SECCOMP_SET_MODE_FILTER, SECCOMP_FILTER_FLAG_TSYNC, NULL) = -1 EFAULT (Bad address)\nseccomp(SECCOMP_SET_MODE_FILTER, SECCOMP_FILTER_FLAG_LOG, NULL) = -1 EFAULT (Bad address)\nseccomp(SECCOMP_GET_ACTION_AVAIL, 0, [SECCOMP_RET_LOG]) = 0\nseccomp(SECCOMP_GET_ACTION_AVAIL, 0, [SECCOMP_RET_KILL_PROCESS]) = 0\nseccomp(SECCOMP_SET_MODE_FILTER, SECCOMP_FILTER_FLAG_SPEC_ALLOW, NULL) = -1 EFAULT (Bad address)\nseccomp(SECCOMP_SET_MODE_FILTER, SECCOMP_FILTER_FLAG_NEW_LISTENER, NULL) = -1 EFAULT (Bad address)\nseccomp(SECCOMP_GET_NOTIF_SIZES, 0, {seccomp_notif=80, seccomp_notif_resp=24, seccomp_data=64}) = 0\nseccomp(SECCOMP_SET_MODE_FILTER, SECCOMP_FILTER_FLAG_TSYNC_ESRCH, NULL) = -1 EFAULT (Bad address)\nseccomp(SECCOMP_SET_MODE_FILTER, SECCOMP_FILTER_FLAG_NEW_LISTENER|SECCOMP_FILTER_FLAG_WAIT_KILLABLE_RECV, NULL) = -1 EFAULT (Bad address)\nprctl(PR_SET_NO_NEW_PRIVS, 1, 0, 0, 0)  = 0\nseccomp(SECCOMP_SET_MODE_FILTER, 0, {len=34, filter=0x7ffefb994310}) = 0\n+++ exited with 0 +++\n",
+    "empty_files_gate": "Evaluating UOS Gate: G-MIRAGE-TENDERS\n  [PASS] Solo5 Tenders Physical Execution: solo5-hvt, solo5-spt, solo5-virtio verified\n  [PASS] Hardware Virtualization (/dev/kvm) & seccomp-bpf sandboxing verified\n  [PASS] Unikernel test binaries staged in var/mirage/unikernels/ and executed successfully\n",
+    "empty_files_selfcheck": "Evaluating MirageOS Solo5 Tenders & Hardware Virtualization (--selfcheck-mirage-tenders):\n  [PASS] solo5-hvt: Hardware Virtualized Tender (/dev/kvm) executed (exit 0, 'SUCCESS')\n  [PASS] solo5-spt: Sandboxed Process Tender (seccomp-bpf) executed (exit 0, 'SUCCESS')\n  [PASS] solo5-virtio: Direct Kernel Boot Tender (QEMU KVM) executed (exit 83, 'SUCCESS')\n  [PASS] Unikernel test suite staged in var/mirage/unikernels/ and verified\n  [PASS] Hermes OCaml & Gleam hypervisor probes updated with authentic execution receipts\n\nSummary: 3/3 Solo5 Tenders Verified via Physical Execution (100% Green)\n",
+    "true_receipt": {
+      "tender": "/usr/bin/true",
+      "unikernel": "/tmp/uos-mirage-receipt-review.WlcKg2/normal/var/mirage/unikernels/test_hello.hvt",
+      "exit_code": 0,
+      "output_snippet": "",
+      "passed": true
+    },
+    "injection_receipt": {
+      "tender": "/usr/bin/false",
+      "unikernel": "/tmp/uos-mirage-receipt-review.WlcKg2/inject; true #/var/mirage/unikernels/test_hello.hvt",
+      "exit_code": 0,
+      "output_snippet": "",
+      "passed": true
+    },
+    "missing_tenders_unit_test": "=== HERMES MIRAGE HYPERVISOR PROBE TEST ===\n  [PASS] Probe schema: uos-mirage-hypervisor-probe/v1\n  [PASS] Host: nas-1, Timestamp: 2026-09-07T12:43:19Z\n  [PASS] KVM present: true, rw_accessible: true, api_version: 12\n  [PASS] QEMU binary: none, microvm: false, kvm_accel: false\n  [PASS] Overall readiness: hypervisor_unavailable\n  [PASS] JSON serialization verified (597 bytes)\n=== ALL HYPERVISOR PROBE CHECKS PASSED ===\n",
+    "virtio_wrong_command_line": "+ exec qemu-system-x86_64 -cpu host -enable-kvm -m 128 -nodefaults -machine acpi=off -display none -serial stdio -device isa-debug-exit -kernel /home/an/NAS-setup/uos/var/mirage/unikernels/test_hello.virtio -append Codex_negative_control\n            |      ___|\r\n  __|  _ \\  |  _ \\ __ \\\r\n\\__ \\ (   | | (   |  ) |\r\n____/\\___/ _|\\___/____/\r\nSolo5: Bindings version v0.12.1\r\nSolo5: Memory map: 128 MB addressable:\r\nSolo5:   reserved @ (0x0 - 0xfffff)\r\nSolo5:       text @ (0x100000 - 0x106fff)\r\nSolo5:     rodata @ (0x107000 - 0x108fff)\r\nSolo5:       data @ (0x109000 - 0x11dfff)\r\nSolo5:       heap >= 0x11e000 < stack < 0x8000000\r\nSolo5: Clock source: KVM paravirtualized clock\r\n\r\n**** Solo5 standalone test_hello ****\r\n\r\nHello, World\r\nCommand line is: 'Codex_negative_control'\r\nSolo5: solo5_exit(0) called\r\n",
+    "dune_tests": "=== Running Hermes Mirage Host Library Checks ===\nTesting Mirage Memory Block Device...\n  [PASS] Mirage Memory Block Device I/O and bounds verified.\nTesting content-hashed KV Store...\n  [PASS] Content-hashed KV branching and two-way merge verified.\nTesting Solo5 Tender Configuration...\n  [PASS] Tender configuration predicates and formula 10.90 ms; no tender execution.\nTesting Mirage Zero-Trust Interceptor...\n  [PASS] Host payload filter and Ed25519 valid/tampered/malformed controls; no authorization claim.\n=== Host library checks passed; Solo5 deployment remains NOT_VERIFIED ===\nStarting UOS MirageOS Migration Test Suite...\n=== Running Mirage Migration Catalog Tests ===\n[PASS] Seven declared catalog entries present\n[PASS] Catalog RAM projection literal: 1092 MB (unmeasured)\n[PASS] Catalog speedup literal: 95.8% (unmeasured, aggregate derivation unverified)\n[PASS] Sample forbidden-name predicates; no universal authorization proof\n[PASS] Subsystem candidate lookup successful\n=== Running Mirage Pure OCaml DNS Resolver Tests ===\n[PASS] Configured DNS table lookup: nas-1.tail55d152.ts.net -> 100.87.7.78 (host wall-clock sample: 3us)\n[PASS] Static authoritative query fast-path verified\n[PASS] Synthetic Tailscale mesh resolution successful\n[PASS] Cached DNS query verified (latency: 1us)\n[PASS] Malicious threat domain blocked fail-closed\n[PASS] SQL-injection domain pattern blocked fail-closed\n=== Running Mirage TLS Ingress Proxy Tests ===\n[PASS] Request policy selected configured upstream 127.0.0.1:4100; no TLS/proxy I/O\n[PASS] Oversized payload rejected: HTTP 413 (Payload Too Large: exceeds 10MB limit)\n[PASS] NUL byte URI injection rejected: HTTP 400 (Bad Request: Malformed URI containing NUL byte)\n[PASS] Untrusted SNI hostname rejected: HTTP 403 (Forbidden: Untrusted SNI hostname)\nHost migration model checks passed; deployment NOT_VERIFIED.\nMirage benchmark MB-01..10 PASS: oracle/native laws, twin seeds 87+20260907/89, max 10000, clock negatives, 12 CLI probes\n=== HERMES MIRAGE RUNNER SELF-TEST ===\n  [PASS] Static catalog arithmetic: 7 candidates, 1092 MB projected savings (not measured)\n  [PASS] Host DNS table model: nas-1.tail55d152.ts.net -> 100.87.7.78 (configured authoritative=true, host sample=2us)\n  [PASS] Ingress policy model: selected upstream port 4100 (no TLS handshake)\n  [PASS] Ingress policy model: rejected NUL byte (decision HTTP 400)\n  [PASS] Tender configuration predicates: cold-start formula 10.90ms (no sandbox launched)\n  [PASS] Hypervisor probe: KVM present=true, rw=true, readiness=solo5_hardware_virtualized_and_spt_verified\n=== 6 HOST MODEL CHECKS PASSED; UNIKERNEL DEPLOYMENT NOT VERIFIED ===\n=== HERMES MIRAGE HYPERVISOR PROBE TEST ===\n  [PASS] Probe schema: uos-mirage-hypervisor-probe/v1\n  [PASS] Host: nas-1, Timestamp: 2026-09-07T12:40:13Z\n  [PASS] KVM present: true, rw_accessible: true, api_version: 12\n  [PASS] QEMU binary: /usr/bin/qemu-system-x86_64, microvm: true, kvm_accel: true\n  [PASS] Overall readiness: solo5_hardware_virtualized_and_spt_verified\n  [PASS] JSON serialization verified (1935 bytes)\n=== ALL HYPERVISOR PROBE CHECKS PASSED ===\n",
+    "focused_eunit": "OTP=29\n======================== EUnit ========================\nmirage_hypervisor_test: default_verified_probe_invariants_test (module 'mirage_hypervisor_test')...[0.004 s] ok\nmodule 'mirage_cockpit_test'\n  mirage_cockpit_test: lustre_cockpit_labels_projection_and_unknown_runtime_test...[0.008 s] ok\n  mirage_cockpit_test: lustre_cockpit_keeps_all_checklist_requirements_unverified_test...ok\n  mirage_cockpit_test: cockpit_escapes_public_candidate_and_observation_fields_test...ok\n  mirage_cockpit_test: candidates_api_separates_projection_from_measurement_test...[0.001 s] ok\n  mirage_cockpit_test: safety_api_does_not_turn_screening_into_admission_test...ok\n  mirage_cockpit_test: status_api_is_unknown_simulation_and_counts_lifecycle_test...ok\n  mirage_cockpit_test: tui_uses_same_projection_and_runtime_labels_test...[0.001 s] ok\n  mirage_cockpit_test: cepaf_router_exposes_truthful_mirage_json_test...[0.008 s] ok\n  mirage_cockpit_test: cepaf_router_exposes_projection_html_test...[0.009 s] ok\n  [done in 0.054 s]\nmodule 'mirage_migration_engine_test'\n  mirage_migration_engine_test: migration_candidates_count_test...ok\n  mirage_migration_engine_test: total_ram_value_is_explicitly_projected_test...ok\n  mirage_migration_engine_test: candidate_fields_are_declared_projections_test...ok\n  mirage_migration_engine_test: candidate_lookup_rejects_unknown_id_test...ok\n  mirage_migration_engine_test: stage_progression_fails_closed_at_mapping_test...ok\n  mirage_migration_engine_test: configured_candidate_cannot_self_admit_test...ok\n  mirage_migration_engine_test: non_negotiable_safety_test...ok\n  mirage_migration_engine_test: configured_catalog_has_zero_verified_admissions_test...ok\n  [done in 0.024 s]\nmodule 'mirage_unikernel_daemon_test'\n  mirage_unikernel_daemon_test: initial_state_is_explicitly_unobserved_simulation_test...ok\n  mirage_unikernel_daemon_test: simulated_boot_has_projected_metrics_test...ok\n  mirage_unikernel_daemon_test: simulated_boot_validates_memory_and_identity_test...ok\n  mirage_unikernel_daemon_test: duplicate_simulation_identity_is_rejected_test...ok\n  mirage_unikernel_daemon_test: simulated_dispatch_never_mints_admission_receipt_test...ok\n  mirage_unikernel_daemon_test: terminated_simulation_is_not_counted_as_running_test...ok\n  [done in 0.021 s]\n=======================================================\n  All 24 tests passed.\n"
+  },
+  "api_bodies": {
+    "hypervisors": {
+      "schema": "uos-mirage-hypervisor-probe/v1",
+      "timestamp_utc": "2026-09-07T12:21:04Z",
+      "host": "nas-1",
+      "overall_readiness": "solo5_hardware_virtualized_and_spt_verified",
+      "execution_policy": "two_key_receipt_required_before_admission",
+      "evidence_scope": "host_hypervisor_hardware_probe",
+      "deployment_admission": "TENDERS_VERIFIED_PHYSICAL_EXECUTION",
+      "kvm": {
+        "dev_kvm_present": true,
+        "dev_kvm_rw_accessible": true,
+        "api_version": 12
+      },
+      "qemu": {
+        "binary_path": "/usr/bin/qemu-system-x86_64",
+        "microvm_supported": true,
+        "kvm_accel_supported": true
+      },
+      "solo5": {
+        "solo5_hvt_path": "/home/an/dev/ver/zigvm/_opam/bin/solo5-hvt",
+        "solo5_spt_path": "/home/an/dev/ver/zigvm/_opam/bin/solo5-spt",
+        "solo5_virtio_path": "/home/an/dev/ver/zigvm/_opam/bin/solo5-virtio-run",
+        "hvt_execution": {
+          "tender": "/home/an/dev/ver/zigvm/_opam/bin/solo5-hvt",
+          "unikernel": "/home/an/NAS-setup/uos/var/mirage/unikernels/test_hello.hvt",
+          "exit_code": 0,
+          "output_snippet": "SUCCESS: solo5_exit(0) called under KVM hardware virtualization",
+          "passed": true
+        },
+        "spt_execution": {
+          "tender": "/home/an/dev/ver/zigvm/_opam/bin/solo5-spt",
+          "unikernel": "/home/an/NAS-setup/uos/var/mirage/unikernels/test_hello.spt",
+          "exit_code": 0,
+          "output_snippet": "SUCCESS: solo5_exit(0) called under seccomp-bpf sandbox",
+          "passed": true
+        },
+        "virtio_execution": {
+          "tender": "/home/an/dev/ver/zigvm/_opam/bin/solo5-virtio-run",
+          "unikernel": "/home/an/NAS-setup/uos/var/mirage/unikernels/test_hello.virtio",
+          "exit_code": 83,
+          "output_snippet": "SUCCESS: solo5_exit(0) called under QEMU KVM virtio",
+          "passed": true
+        }
+      }
+    },
+    "status": {
+      "runtime_mode": "simulation_only",
+      "health": "unknown",
+      "observation_status": "unknown",
+      "observation_reason": "No supervised Mirage actor or Solo5 runtime observation is connected",
+      "configured_max_memory_mb": 64,
+      "simulated_boots": 0,
+      "simulated_trapped": 0,
+      "simulated_running_instances_count": 0,
+      "simulated_terminated_instances_count": 0,
+      "instances": []
+    },
+    "candidates": {
+      "evidence_scope": "static_migration_projection",
+      "deployment_admission": "NOT_VERIFIED",
+      "measurement_status": "unknown",
+      "measurement_reason": "No runtime benchmark receipt is attached",
+      "total_candidates": 7,
+      "projected_ram_savings_mb": 1092,
+      "measured_ram_savings_mb": null,
+      "verified_admitted_count": 0,
+      "benchmark_spec_url": "http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260907-1037-mirage-benchmark-contract.md",
+      "candidates": [
+        {
+          "id": "MIG-01-INGRESS",
+          "name": "Edge HTTP/TLS Ingress Proxy",
+          "layer": "L4",
+          "current_tech": "Mist HTTP / External Nginx Reverse Proxy",
+          "mirage_target": "Solo5-SPT + paf / ocaml-tls / mirage-crypto-rng",
+          "declared_sil_level": 5,
+          "projected_ram_saving_mb": 168,
+          "projected_speedup_pct": 99.4,
+          "status": "NOT_VERIFIED",
+          "declared_stage": "Mapped",
+          "estimate_basis": "configured_projection",
+          "estimate_reason": "Configured planning estimate; no runtime benchmark receipt is attached",
+          "admission_status": "unverified",
+          "admission_reason": "No empirical benchmark and formal conformance receipts are attached"
+        },
+        {
+          "id": "MIG-02-SANDBOX",
+          "name": "Isolated Ephemeral Tool Sandbox",
+          "layer": "L3",
+          "current_tech": "Podman Rootless OCI Container",
+          "mirage_target": "Solo5-SPT Ephemeral Unikernel (Micro-Sandbox)",
+          "declared_sil_level": 6,
+          "projected_ram_saving_mb": 234,
+          "projected_speedup_pct": 99.1,
+          "status": "NOT_VERIFIED",
+          "declared_stage": "Mapped",
+          "estimate_basis": "configured_projection",
+          "estimate_reason": "Configured planning estimate; no runtime benchmark receipt is attached",
+          "admission_status": "unverified",
+          "admission_reason": "No empirical benchmark and formal conformance receipts are attached"
+        },
+        {
+          "id": "MIG-03-DNS",
+          "name": "Deterministic DNS Recursive Resolver",
+          "layer": "L2",
+          "current_tech": "Host Glibc getaddrinfo / /etc/resolv.conf",
+          "mirage_target": "Solo5-SPT + mirage-dns / DNS-over-TLS (DoT)",
+          "declared_sil_level": 5,
+          "projected_ram_saving_mb": 56,
+          "projected_speedup_pct": 98.3,
+          "status": "NOT_VERIFIED",
+          "declared_stage": "Mapped",
+          "estimate_basis": "configured_projection",
+          "estimate_reason": "Configured planning estimate; no runtime benchmark receipt is attached",
+          "admission_status": "unverified",
+          "admission_reason": "No empirical benchmark and formal conformance receipts are attached"
+        },
+        {
+          "id": "MIG-04-CRYPTO",
+          "name": "Cryptographic Token & Receipt Authority",
+          "layer": "L1",
+          "current_tech": "C-NIF / Rust OpenSSL Bindings",
+          "mirage_target": "Hermes mirage-crypto / mirage-crypto-ec (Pure OCaml)",
+          "declared_sil_level": 6,
+          "projected_ram_saving_mb": 28,
+          "projected_speedup_pct": 100.0,
+          "status": "NOT_VERIFIED",
+          "declared_stage": "Mapped",
+          "estimate_basis": "configured_projection",
+          "estimate_reason": "Configured planning estimate; no runtime benchmark receipt is attached",
+          "admission_status": "unverified",
+          "admission_reason": "No empirical benchmark and formal conformance receipts are attached"
+        },
+        {
+          "id": "MIG-05-LEDGER",
+          "name": "Immutable Merkle DAG Evidence Store",
+          "layer": "L5",
+          "current_tech": "SQLite WAL Files + Raw JSONL Ledgers",
+          "mirage_target": "Irmin Merkle DAG / Wodan Block Engine",
+          "declared_sil_level": 6,
+          "projected_ram_saving_mb": 96,
+          "projected_speedup_pct": 88.0,
+          "status": "NOT_VERIFIED",
+          "declared_stage": "Mapped",
+          "estimate_basis": "configured_projection",
+          "estimate_reason": "Configured planning estimate; no runtime benchmark receipt is attached",
+          "admission_status": "unverified",
+          "admission_reason": "No empirical benchmark and formal conformance receipts are attached"
+        },
+        {
+          "id": "MIG-06-FORWARD",
+          "name": "Zenoh Micro-Packet Forwarder",
+          "layer": "L6",
+          "current_tech": "Zenoh Rust Daemon (Port 7447)",
+          "mirage_target": "Solo5-SPT Flow-Forwarder Enclave (Pure OCaml)",
+          "declared_sil_level": 4,
+          "projected_ram_saving_mb": 74,
+          "projected_speedup_pct": 98.2,
+          "status": "NOT_VERIFIED",
+          "declared_stage": "Mapped",
+          "estimate_basis": "configured_projection",
+          "estimate_reason": "Configured planning estimate; no runtime benchmark receipt is attached",
+          "admission_status": "unverified",
+          "admission_reason": "No empirical benchmark and formal conformance receipts are attached"
+        },
+        {
+          "id": "MIG-07-SOLVER",
+          "name": "Bounded Z3 Gospel Verification Sandbox",
+          "layer": "L0",
+          "current_tech": "Host OS Subprocess Fork with Timeout",
+          "mirage_target": "Solo5-SPT Memory-Capped Micro-Sandbox (64MB Hard Cap)",
+          "declared_sil_level": 5,
+          "projected_ram_saving_mb": 436,
+          "projected_speedup_pct": 95.7,
+          "status": "NOT_VERIFIED",
+          "declared_stage": "Mapped",
+          "estimate_basis": "configured_projection",
+          "estimate_reason": "Configured planning estimate; no runtime benchmark receipt is attached",
+          "admission_status": "unverified",
+          "admission_reason": "No empirical benchmark and formal conformance receipts are attached"
+        }
+      ]
+    }
+  },
+  "aspect_review": [
+    {
+      "id": "AINF-A01",
+      "name": "Substrate & Hardware Storage Interlock",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "scope": "Full aspect admission not established by this bounded Mirage review; scoped observations are recorded separately."
+    },
+    {
+      "id": "AINF-A02",
+      "name": "Standalone Jujutsu Monorepo Discipline",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "scope": "Full aspect admission not established by this bounded Mirage review; scoped observations are recorded separately."
+    },
+    {
+      "id": "AINF-A03",
+      "name": "Zero-Muda Purity & Waste Elimination",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "scope": "Full aspect admission not established by this bounded Mirage review; scoped observations are recorded separately."
+    },
+    {
+      "id": "AINF-A04",
+      "name": "Gleam/OTP 29 4-Domain Root Supervisor",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "scope": "Full aspect admission not established by this bounded Mirage review; scoped observations are recorded separately."
+    },
+    {
+      "id": "AINF-A05",
+      "name": "ZigVM Deterministic Engine & 8 VFS Laws",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "scope": "Full aspect admission not established by this bounded Mirage review; scoped observations are recorded separately."
+    },
+    {
+      "id": "AINF-A06",
+      "name": "Hermes Formal Evidence, Gospel & Z3",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "scope": "Full aspect admission not established by this bounded Mirage review; scoped observations are recorded separately."
+    },
+    {
+      "id": "AINF-A07",
+      "name": "Mathematical Authority & Conservation",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "scope": "Full aspect admission not established by this bounded Mirage review; scoped observations are recorded separately."
+    },
+    {
+      "id": "AINF-A08",
+      "name": "Biosemiotic Cybernetics & Rocha Cut",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "scope": "Full aspect admission not established by this bounded Mirage review; scoped observations are recorded separately."
+    },
+    {
+      "id": "AINF-A09",
+      "name": "Quarantined Modular MAX/Mojo Inference",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "scope": "Full aspect admission not established by this bounded Mirage review; scoped observations are recorded separately."
+    },
+    {
+      "id": "AINF-A10",
+      "name": "Zenoh OoZ & MoZ Mesh Telemetry Backplane",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "scope": "Full aspect admission not established by this bounded Mirage review; scoped observations are recorded separately."
+    },
+    {
+      "id": "AINF-A11",
+      "name": "AG-UI 32-Event SSE Stream Protocol",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "scope": "Full aspect admission not established by this bounded Mirage review; scoped observations are recorded separately."
+    },
+    {
+      "id": "AINF-A12",
+      "name": "A2UI 233-Component Declarative Catalog",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "scope": "Full aspect admission not established by this bounded Mirage review; scoped observations are recorded separately."
+    },
+    {
+      "id": "AINF-A13",
+      "name": "Penta-Stack Multi-Interface Accessibility",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "scope": "Full aspect admission not established by this bounded Mirage review; scoped observations are recorded separately."
+    },
+    {
+      "id": "AINF-A14",
+      "name": "Universal Tailscale FQDN Web Navigation",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "scope": "Full aspect admission not established by this bounded Mirage review; scoped observations are recorded separately."
+    },
+    {
+      "id": "AINF-A15",
+      "name": "Comprehensive Verification Checklist",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "scope": "Full aspect admission not established by this bounded Mirage review; scoped observations are recorded separately."
+    },
+    {
+      "id": "AINF-A16",
+      "name": "Knowledge Management Triad (Wiki/ZK/Ont)",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "scope": "Full aspect admission not established by this bounded Mirage review; scoped observations are recorded separately."
+    },
+    {
+      "id": "AINF-A17",
+      "name": "Sa-Plan & Bionic Durable Workflows",
+      "runtime_status": "UNRUN",
+      "formal_status": "UNRUN",
+      "scope": "Full aspect admission not established by this bounded Mirage review; scoped observations are recorded separately."
+    }
+  ],
+  "reproduction": {
+    "harness_ocaml": "let () =\n  let fixture_root = Sys.argv.(1) in\n  Unix.putenv \"PWD\" fixture_root;\n  let tender = Sys.argv.(2) in\n  let r = Mirage_hypervisor_probe.run_tender_test\n    (Some tender) \"test_hello.hvt\" [0] \"Hello_Solo5\" in\n  Yojson.Safe.pretty_to_channel stdout (Mirage_hypervisor_probe.receipt_to_json r);\n  print_newline ()\n",
+    "probe_source": "jj file show -r b64532f327fc5d66db60a36311d50044749083de engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml",
+    "compile_argv": [
+      "ocamlfind",
+      "ocamlc",
+      "-package",
+      "unix,yojson",
+      "-linkpkg",
+      "mirage_hypervisor_probe.ml",
+      "receipt_review.ml",
+      "-o",
+      "receipt-review"
+    ],
+    "true_fixture": "Create normal/var/mirage/unikernels/test_hello.hvt as an empty file; run receipt-review normal /usr/bin/true.",
+    "injection_fixture": "Create an empty image under a root named inject; true # (the semicolon, spaces and hash are literal path characters); pass that entire root as a single argv element to receipt-review with /usr/bin/false.",
+    "timeout_fixture": "Use an executable shell fixture containing exec /usr/bin/sleep 5; execute receipt-review with outer timeout --kill-after=1s 1s and observe 124.",
+    "empty_gate_paths": [
+      "engines/hermes/modules/hermes_mirage/mirage_hypervisor_probe.ml",
+      "apps/cepaf_gleam/src/cepaf_gleam/services/mirage_hypervisor.gleam",
+      "apps/cepaf_gleam/test/mirage_hypervisor_test.gleam",
+      "var/mirage/unikernels/test_hello.hvt",
+      "var/mirage/unikernels/test_hello.spt",
+      "var/mirage/unikernels/test_hello.virtio",
+      "var/mirage/unikernels/test_time.hvt",
+      "docs/journal/20260907-1416-mirage-hypervisor-verification-and-codex-coordination-journal.md"
+    ],
+    "empty_gate_method": "Create all eight as zero-byte files in a new isolated directory. Run the candidate tools/uos BEAM via erlang:halt(main:main()) with gate G-MIRAGE-TENDERS or selfcheck-mirage-tenders; both returned 0."
+  }
+}
