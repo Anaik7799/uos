@@ -41,7 +41,7 @@ fn observe_vm() -> #(String, String, String, String, Int, Int, Int)
 fn configuration() -> #(String, String, String, Bool)
 
 pub fn supported(otp: String) -> Bool {
-  otp == "29" || otp == "27"
+  otp == "29"
 }
 
 pub fn valid_candidate(candidate: String) -> Bool {
