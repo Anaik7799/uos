@@ -7,7 +7,21 @@
 exception Invalid of string
 let require c m = if not c then raise (Invalid m)
 
-let db_path = "var/km/provenance-cycles.sqlite3"
+(* The cycle chain is shared runtime state, not repository content: var/ is
+   gitignored, so it exists only in the canonical checkout and is NOT copied
+   into sibling workspaces. Resolving this path relative to the current
+   workspace would silently create a SECOND chain per workspace, each with its
+   own sequence 1 and its own digests, which is precisely the divergence the
+   append-only store exists to prevent.
+
+   So the path is absolute and canonical by default, and overridable by
+   UOS_KM_DB for tests, mirroring how tools/sa-plan resolves UOS_SA_PLAN_DB. *)
+let default_db_path = "/home/an/NAS-setup/uos/var/km/provenance-cycles.sqlite3"
+
+let db_path =
+  match Sys.getenv_opt "UOS_KM_DB" with
+  | Some p when String.trim p <> "" -> p
+  | _ -> default_db_path
 
 let schema = {sql|
 CREATE TABLE IF NOT EXISTS cycle (
