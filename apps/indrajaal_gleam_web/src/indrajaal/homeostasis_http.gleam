@@ -26,6 +26,13 @@ import mist.{type Connection, type ResponseData}
 pub fn document() -> String { selected_document(data.default(), "all") }
 
 pub fn selected_document(selection: data.Selection, component: String) -> String {
+  selected_document_on_port(selection, component, 4100)
+}
+
+@external(erlang, "indrajaal_web_ffi", "listen_port")
+fn listen_port(default: Int) -> Int
+
+pub fn selected_document_on_port(selection: data.Selection, component: String, port: Int) -> String {
   let #(snapshot, now) = data.read(selection)
   "<!doctype html>" <> element.to_string(html.html([attribute.attribute("lang","en")], [
     html.head([], [
@@ -34,7 +41,7 @@ pub fn selected_document(selection: data.Selection, component: String) -> String
       html.title([], "Homeostasis evidence | UOS"),
     ]),
     html.body([], [
-      hud.render_view(selection,component,snapshot,now),
+      hud.render_view_on_port(selection,component,snapshot,now,port),
     ]),
   ]))
 }
@@ -91,7 +98,7 @@ pub fn handle(req: Request(Connection)) -> Response(ResponseData) {
           json_response(case status.status(snapshot,now) { status.Unavailable | status.Stale -> 503 _ -> 200 },status.to_json(snapshot,now))
         }
         http.Get, _ -> response.new(200)
-          |> response.set_body(mist.Bytes(bytes_tree.from_string(selected_document(selection,component))))
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(selected_document_on_port(selection,component,listen_port(4100)))))
           |> response.set_header("content-type","text/html; charset=utf-8")
           |> response.set_header("cache-control","no-store")
         _, _ -> response.new(405)

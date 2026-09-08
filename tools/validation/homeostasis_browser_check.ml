@@ -22,11 +22,11 @@ let restrict_to_tailnet ~sw context =
       regex_flags=None; url_pattern=None
     } |] context
 
-let run ~sw browser url artifacts full_release =
+let run ~sw browser url artifacts full_release manual =
   let suffix = "/homeostasis/evolution" in
   if not (String.ends_with ~suffix url) then failwith "homeostasis page URL required";
   let base = String.sub url 0 (String.length url - String.length suffix) in
-  if full_release then begin
+  if full_release || manual then begin
    let context = Playwright.Browser.new_context browser in
    restrict_to_tailnet ~sw context;
    Fun.protect ~finally:(fun () -> Playwright.BrowserContext.close context) (fun () ->
@@ -39,7 +39,8 @@ let run ~sw browser url artifacts full_release =
       check ("route has usable links: " ^ path)
         (yes page "Array.from(document.querySelectorAll('a[href]')).some(a=>a.textContent.trim().length>0)");
       check ("route has no script errors: " ^ path) (Playwright.Page.page_errors page = [||])
-    ) ["/";"/planning";"/mirage";"/wiki";"/zk";"/homeostasis/evolution";"/homeostasis/components";"/homeostasis/terminal"];
+    ) (if manual then ["/";"/homeostasis/evolution";"/homeostasis/components";"/homeostasis/terminal"]
+       else ["/";"/planning";"/mirage";"/wiki";"/zk";"/homeostasis/evolution";"/homeostasis/components";"/homeostasis/terminal"]);
     check "live identity pairs OTP29 with ERTS17 without granting admission"
       (yes page "fetch('/api/v1/runtime/identity').then(async r=>{const x=await r.json();return r.ok&&x.otp_release==='29'&&/^17\\./.test(x.erts_version)&&x.identity_consistent===true&&x.application_admitted===false})");
     check "unavailable fixture carries no invented health"
@@ -58,6 +59,8 @@ let run ~sw browser url artifacts full_release =
         (yes page "document.querySelectorAll('#homeostasis-live-stream-body tr').length>0");
       check (Printf.sprintf "no page overflow at %dpx" width)
         (yes page "document.documentElement.scrollWidth<=window.innerWidth");
+      if manual then check "all navigation remains on this testing origin"
+        (yes page "Array.from(document.querySelectorAll('a[href]')).every(a=>a.origin===location.origin)");
       check "unknown is not healthy" (yes page "!document.body.textContent.includes('Status: ONLINE') && !document.body.textContent.includes('18/18 Checks Validated')");
       check "API returns observed VM data without invented homeostasis" (yes page "fetch('/api/v1/homeostasis').then(async r=>r.status===200 && (await r.json()).metrics===null)");
       Playwright.Page.press ~selector:".checklist-accordion > summary" ~key:"Enter" page;
@@ -107,12 +110,25 @@ let run ~sw browser url artifacts full_release =
         ignore (eval page "document.getElementById('homeostasis-mode').value='real';document.getElementById('homeostasis-mode-form').requestSubmit();true");
         wait page "document.getElementById('homeostasis-evidence-status').textContent.startsWith('OBSERVED')&&document.getElementById('value-cpu_pct').textContent==='UNKNOWN'";
         check "return to real data clears simulated physiology" true;
+        if manual then begin
+          let before = eval page "document.getElementById('homeostasis-source-time').textContent" |> Yojson.Safe.Util.to_string in
+          let start = String.split_on_char ' ' before |> List.rev |> List.hd |> Int64.of_string in
+          let target = Int64.add start 30000000L in
+          ignore(Playwright.Page.wait_for_function ~timeout:35000. page
+            ~expression:("Number(document.getElementById('homeostasis-source-time').textContent.split(' ').pop())>=" ^ Int64.to_string target));
+          check "real source updates throughout thirty-second observation"
+            (yes page "Number(document.getElementById('frame-marker').dataset.count)>=10 && document.getElementById('homeostasis-stream-status').textContent.includes('CONNECTED / OBSERVED')");
+          Playwright.Page.click ~selector:"nav[aria-label='Homeostasis navigation'] a[href*='/homeostasis/terminal?']" page;
+          check "terminal navigation reaches the testing instance"
+            (yes page "location.pathname==='/homeostasis/terminal' && document.getElementById('homeostasis-terminal')!==null");
+        end;
       end
     )) [320; 768; 1280]
 
 let () =
   let full_release = Array.length Sys.argv = 5 && Sys.argv.(4) = "--full-release" in
-  if Array.length Sys.argv <> 4 && not full_release then failwith "usage: homeostasis_browser_check PRIVATE_URL ARTIFACT_DIR CHROME_PATH [--full-release]";
+  let manual = Array.length Sys.argv = 5 && Sys.argv.(4) = "--manual-test" in
+  if Array.length Sys.argv <> 4 && not full_release && not manual then failwith "usage: homeostasis_browser_check PRIVATE_URL ARTIFACT_DIR CHROME_PATH [--full-release|--manual-test]";
   let url = Sys.argv.(1) in
   if not (String.starts_with ~prefix:"http://nas-1.tail55d152.ts.net:" url) then
     failwith "canonical Tailscale FQDN required";
@@ -122,7 +138,8 @@ let () =
   let playwright = Playwright.create ~env ~sw () in
   Fun.protect ~finally:(fun () -> Playwright.destroy playwright) (fun () ->
     let browser = Playwright.BrowserType.launch ~executable_path:Sys.argv.(3)
-      ~args:[|"--host-resolver-rules=MAP nas-1.tail55d152.ts.net 127.0.0.1";"--no-proxy-server";"--disable-background-networking"|]
+      ~args:(if manual then [|"--no-proxy-server";"--disable-background-networking"|]
+        else [|"--host-resolver-rules=MAP nas-1.tail55d152.ts.net 127.0.0.1";"--no-proxy-server";"--disable-background-networking"|])
       ~headless:true ~timeout:15000. (Playwright.Playwright.chromium playwright) in
     Fun.protect ~finally:(fun () -> Playwright.Browser.close browser)
-      (fun () -> run ~sw browser url Sys.argv.(2) full_release))
+      (fun () -> run ~sw browser url Sys.argv.(2) full_release manual))

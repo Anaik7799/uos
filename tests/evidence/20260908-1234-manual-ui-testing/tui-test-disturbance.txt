@@ -1,0 +1,28 @@
+HOMEOSTASIS | SIMULATED
+Source: Deterministic model fixture; no live health or peer presence.
+Source UTC us: UNKNOWN
+Control authority: NONE
+Peer presence: UNKNOWN
+Verification: UNRUN / candidate receipts required
+Attributed health: 0.35
+Error e(t): 0.65
+PID output: 1.0725
+Quadratic energy V: 0.21125000000000002
+Sampled energy change: 0.0
+Model stability heuristic: stable
+Model phase: Intervention
+Model generation: 0
+Model time (microseconds): 3000000
+Model composite stress: 0.8574999999999999
+Pareto candidate count: 4
+Voting evidence: SIMULATED model; no peer contact
+cpu_pct: 98.0
+memory_pct: 95.0
+latency_ms: 350.0
+error_rate_pct: 4.0
+Online schedulers: UNKNOWN
+BEAM processes: UNKNOWN
+BEAM memory MiB: UNKNOWN
+Run queue length: UNKNOWN
+VM uptime seconds: UNKNOWN
+http://nas-1.tail55d152.ts.net:4100/homeostasis/evolution

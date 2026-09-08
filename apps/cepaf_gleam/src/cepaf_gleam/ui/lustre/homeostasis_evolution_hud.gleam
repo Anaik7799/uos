@@ -28,6 +28,12 @@ fn panel(id: String, title: String, children: List(Element(msg))) -> Element(msg
 }
 
 pub fn render_view(selection: data.Selection, component: String, snapshot: status.Snapshot, now: Int) -> Element(msg) {
+  render_view_on_port(selection, component, snapshot, now, 4100)
+}
+
+/// The listener supplies the port; request headers never determine navigation.
+pub fn render_view_on_port(selection: data.Selection, component: String, snapshot: status.Snapshot, now: Int, port: Int) -> Element(msg) {
+  let origin = "http://nas-1.tail55d152.ts.net:" <> int.to_string(port)
   let fields = status.fields(snapshot, now)
   let visibility = case component == "all" { True -> "" False -> ".homeostasis-evolution-hud section[data-component]{display:none}.homeostasis-evolution-hud #component-" <> component <> "{display:block}" }
   html.div([
@@ -36,12 +42,12 @@ pub fn render_view(selection: data.Selection, component: String, snapshot: statu
   ], [
     html.style([], "body{margin:0;background:#101827;color:#e0e6ed;font:16px/1.5 system-ui,sans-serif}.homeostasis-evolution-hud{padding:1rem;max-width:100%;overflow-wrap:anywhere}a{color:#8bd6ff}:focus-visible{outline:3px solid #ffc857;outline-offset:3px}section{border:1px solid #34435b;border-radius:8px;padding:1rem;margin-block:1rem;max-width:100%;overflow-x:auto}h1{font-size:1.6rem}h2{font-size:1.15rem}table{width:100%;border-collapse:collapse}td,th{text-align:left;padding:.4rem}nav{display:flex;flex-wrap:wrap;gap:1rem}input,select,button{font:inherit;min-height:32px;max-width:100%}label{display:block;margin-top:.5rem}button{margin-top:.75rem}#homeostasis-live-stream-container{max-height:200px;overflow:auto}.fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));gap:.5rem}.field{padding:.4rem;background:#19263a}pre{white-space:pre-wrap}" <> visibility),
     html.nav([attribute.attribute("aria-label","Homeostasis navigation")], [
-      link("http://nas-1.tail55d152.ts.net:4100/", "Cockpit"),
-      link("http://nas-1.tail55d152.ts.net:4100/homeostasis?" <> data.query(selection), "Homeostasis"),
-      link("http://nas-1.tail55d152.ts.net:4100/homeostasis/evolution?" <> data.query(selection), "Evolution"),
-      link("http://nas-1.tail55d152.ts.net:4100/homeostasis/terminal?" <> data.query(selection), "Terminal view"),
+      link(origin <> "/", "Cockpit"),
+      link(origin <> "/homeostasis?" <> data.query(selection), "Homeostasis"),
+      link(origin <> "/homeostasis/evolution?" <> data.query(selection), "Evolution"),
+      link(origin <> "/homeostasis/terminal?" <> data.query(selection), "Terminal view"),
     ]),
-    html.details([], [html.summary([], [html.text("Component views")]), html.nav([attribute.attribute("aria-label","Homeostasis components")], list.map(components,fn(name){link("http://nas-1.tail55d152.ts.net:4100/homeostasis/components?" <> data.query(selection) <> "&component=" <> name,name)}))]),
+    html.details([], [html.summary([], [html.text("Component views")]), html.nav([attribute.attribute("aria-label","Homeostasis components")], list.map(components,fn(name){link(origin <> "/homeostasis/components?" <> data.query(selection) <> "&component=" <> name,name)}))]),
     html.h1([], [html.text("Homeostasis evidence and model evolution")]),
     html.p([attribute.id("mode-label")],[html.text("Mode: " <> data.mode_name(selection.mode) <> " | Component: " <> component)]),
     html.p([attribute.id("frame-marker")],[html.text("Received frames: 0")]),
@@ -104,7 +110,7 @@ pub fn render_view(selection: data.Selection, component: String, snapshot: statu
 
       ]),
     ]),
-    html.footer([],[html.text("Read-only evidence surface. Missing sensors remain UNKNOWN. "),link("http://nas-1.tail55d152.ts.net:4100/api/v1/runtime/identity","Runtime identity")]),
+    html.footer([],[html.text("Read-only evidence surface. Missing sensors remain UNKNOWN. "),link(origin <> "/api/v1/runtime/identity","Runtime identity")]),
     html.script([],stream_script()),
   ])
 }
