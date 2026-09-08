@@ -1,0 +1,51 @@
+{
+  "schema": "uos.unification-verification.v1",
+  "observed_at": "2026-09-08T08:18:22Z",
+  "authority": "NONE",
+  "system_admitted": false,
+  "task": "uos/unification-cycles/20260908-0701/RUN30",
+  "subject_candidate": "c0480a3a91323e4819e0d7e5c3eb7a1249565728",
+  "original_checker": "10eb56ce35e3943d9581825a8b32b9f3e676c5a9",
+  "reconciliation_checker": "d0da0693ae97c064af0ab2d081f4ffadd85f3474",
+  "cycles": {
+    "total": 30,
+    "pass": 18,
+    "blocked": 5,
+    "observed": 4,
+    "fail": 3,
+    "original_statuses_preserved": true
+  },
+  "verification": {
+    "unit": 84,
+    "browser": 69,
+    "release_core": 113,
+    "selector": 14,
+    "selector_independent_cases": 100,
+    "transition_cases": 338,
+    "repair_checks": 13,
+    "receipt_tamper_rejections": 8,
+    "lossless_readbacks": 30,
+    "risk_baseline": 375,
+    "risk_adversarial": 32843,
+    "risk_dag_scenarios": 32768,
+    "risk_local_paths": 39
+  },
+  "staging": {
+    "unit": "uos-unification-stage-0701.service",
+    "invocation": "f9b7049c84c74a608e1e69acd651c88c",
+    "after": "inactive/dead",
+    "production_changed": false
+  },
+  "advisory": {
+    "gemma4": "NOT_INVOKED",
+    "reason": "permitted Tailnet gateway unavailable"
+  },
+  "limits": [
+    "Original 5 transport gaps remain HOLD in original receipts; new lossless receipts passed",
+    "Production candidate/rollback and actual runtime inconsistent",
+    "Full17 formal/system admission unverified",
+    "Offline Nix fixed-output source download attempts occurred and failed; no Python installed",
+    "No all-page 30-second recordings or human acceptance",
+    "Shared integration ownership must be acquired before main movement"
+  ]
+}

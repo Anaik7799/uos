@@ -6,10 +6,17 @@
       system = "x86_64-linux";
       pkgs = import nixpkgs { inherit system; };
     in {
-      packages.${system}.default = pkgs.buildEnv {
+      packages.${system} = {
+      default = pkgs.buildEnv {
         name = "uos-release-checker-dependencies";
         paths = [ pkgs.stdenv.cc pkgs.curl (pkgs.lib.getLib pkgs.curl) pkgs.curl.dev pkgs.pkg-config pkgs.zlib pkgs.zlib.dev ];
         pathsToLink = [ "/bin" "/lib" "/include" ];
+      };
+      risk-checker = pkgs.buildEnv {
+        name = "uos-risk-checker-dependencies";
+        paths = [ pkgs.stdenv.cc pkgs.gmp pkgs.gmp.dev pkgs.sqlite pkgs.sqlite.dev ];
+        pathsToLink = [ "/bin" "/lib" "/include" ];
+      };
       };
       devShells.${system}.default = pkgs.mkShell {
         packages = [ pkgs.stdenv.cc pkgs.curl pkgs.pkg-config ];

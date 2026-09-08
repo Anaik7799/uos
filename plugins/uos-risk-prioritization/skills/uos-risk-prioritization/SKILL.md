@@ -39,7 +39,8 @@ For SDLC/SRE stages and Superpowers integration read the repository-local
 The binding is sufficient when Superpowers is not installed.
 
 Run the local report-only validation wrapper:
-**bash tools/risk-priority-check --selftest**, then **bash tools/risk-priority-check --package**.
+**ocaml -I tools tools/unification_cycles.ml risk-check --selftest**, then
+**ocaml -I tools tools/unification_cycles.ml risk-check --package**.
 Its dependencies and reproducible commands are in the package wiki.
 Do not claim runtime enforcement from these checks.
 
@@ -48,7 +49,7 @@ Do not claim runtime enforcement from these checks.
 Follow the repository-owned
 [checker contract](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260907-1606-risk-checker-contract.md)
 and [operating guide](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260907-1606-risk-checkers-guide.md).
-Run **bash tools/risk-priority-check --all** for checker/policy changes and relevant CI.
+Run **ocaml -I tools tools/unification_cycles.ml risk-check --all** for checker/policy changes and relevant CI.
 Before a claim use **--preflight PORTFOLIO TASK**; during owned work use
 **--active-check PORTFOLIO TASK WORKER ATTEMPT** with current Sa-plan identity.
 Both require a complete, fresh, source-bound plan assessment. Reused receipts require
@@ -59,6 +60,12 @@ effect-time fencing remain separate requirements. No global hooks or agent reloa
 
 
 ## Comprehensive verification checklist
+
+For bounded evolutionary reviews, apply `docs/sop/20260908-0844-unification-cycle-sop.md`.
+Preserve failed receipts, distinguish observation dependencies from passing release gates,
+receive bounded board/Zenoh observations and use exact byte/hash envelopes for publication.
+Nix `--offline` alone is not an egress guarantee; require realized dependency outputs or
+an authorized Tailscale fetch path. Never fetch a missing closure implicitly.
 
 This is a process/document package. The entries below do not assert production conformance.
 UNRUN and NOT_ADMITTED remain nonpassing; N/A must be justified for each actual change.
@@ -103,4 +110,3 @@ UNRUN and NOT_ADMITTED remain nonpassing; N/A must be justified for each actual 
 </details>
 
 **UOS footer:** local skill adapter; canonical selection state remains in Sa-plan.
-

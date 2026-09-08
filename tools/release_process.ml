@@ -357,6 +357,7 @@ let main()=match Array.to_list Sys.argv with
  | _::("web"|"tui" as kind)::release::rest->launch kind release rest
  | _->failwith "usage: selftest | runtime-check SOURCE | unit SOURCE | browser SOURCE RELEASE PRIVATE_PORT | build DEST | verify RELEASE | web RELEASE PORT TAILSCALE_FQDN | tui RELEASE MODE SCENARIO CYCLE | smoke TAILSCALE_BASE REVISION | packet JSON REVISION | parity SOURCE RELEASE TAILSCALE_BASE"
 let ()=
+ if Filename.basename Sys.argv.(0) = "release_process.ml" then (
  Sys.set_signal Sys.sigalrm (Sys.Signal_handle(fun _->failwith "overall command deadline"));
  ignore(alarm 240);
- try main() with e->emit "command" "FAIL" ["error",`String(Printexc.to_string e)];exit 1
+ try main() with e->emit "command" "FAIL" ["error",`String(Printexc.to_string e)];exit 1)
