@@ -18,7 +18,7 @@
 //// </c3i-module>
 //// =============================================================================
 
-import cepaf_gleam/knowledge/rag_cache_mesh.{type RagCacheMesh, type RagMetrics}
+import cepaf_gleam/knowledge/rag_cache_mesh.{type RagCacheMesh}
 import gleam/float
 import gleam/int
 

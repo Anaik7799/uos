@@ -5,10 +5,8 @@ import cepaf_gleam/ui/homeostasis_status as status
 import cepaf_gleam/ui/homeostasis_data as data
 import cepaf_gleam/ui/tui/homeostasis_evolution_view as terminal
 import gleam/list
-import gleam/option.{Some}
 import gleam/json
 import gleam/result
-import gleam/int
 import gleam/float
 import cepaf_gleam/ui/lustre/homeostasis_evolution_hud as hud
 import gleam/bytes_tree

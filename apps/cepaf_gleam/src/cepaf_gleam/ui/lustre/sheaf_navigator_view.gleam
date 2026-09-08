@@ -18,8 +18,7 @@
 //// =============================================================================
 
 import cepaf_gleam/knowledge/sheaf_engine.{
-  type QueryResult, type SheafGraph, type SheafNode, doc_type_to_string,
-  init_sheaf_graph,
+  type QueryResult, type SheafGraph, doc_type_to_string, init_sheaf_graph,
 }
 import gleam/float
 import gleam/int

@@ -18,8 +18,7 @@
 //// =============================================================================
 
 import cepaf_gleam/immune/chaos_immune_engine.{
-  type ImmuneAntibody, type ImmuneEngineState, compute_metabolic_health,
-  init_immune_engine,
+  type ImmuneEngineState, compute_metabolic_health, init_immune_engine,
 }
 import gleam/float
 import gleam/int

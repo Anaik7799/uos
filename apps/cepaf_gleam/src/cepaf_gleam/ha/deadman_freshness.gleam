@@ -21,7 +21,6 @@
 //// </c3i-module>
 //// =============================================================================
 
-import gleam/int
 import gleam/list
 import gleam/option.{type Option, None, Some}
 

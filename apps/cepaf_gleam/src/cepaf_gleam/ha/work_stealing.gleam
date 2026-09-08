@@ -23,7 +23,7 @@
 import gleam/int
 import gleam/list
 import gleam/option.{type Option, None, Some}
-import gleam/order.{Eq, Gt, Lt}
+import gleam/order.{Gt, Lt}
 
 /// Strategy for selecting a donor/victim node during work stealing.
 pub type StealStrategy {
