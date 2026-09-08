@@ -255,7 +255,7 @@ let unit source =
  ignore(checked "/usr/bin/cp" ["-R";"--";source^"/apps/indrajaal_gleam_web/src/.";tmp^"/src/"]);
  let toml=read_file(source^"/apps/cepaf_gleam/gleam.toml")65536 in
  write_new(tmp^"/gleam.toml")(String.split_on_char '\n' toml|>List.filter((<>)"[dev-dependencies]")|>String.concat "\n");
- let names=["homeostasis_algebra";"homeostasis_ui_contract";"homeostasis_evidence";"agui_sse_api";"homeostasis_evolution_engine";"homeostasis_evolution_hud";"homeostasis_fprime_simulated";"homeostasis_fprime_wired";"physiological_homeostasis";"sysadmin_tui";"release_lifecycle"] in
+ let names=["homeostasis_algebra";"homeostasis_ui_contract";"homeostasis_evidence";"agui_sse_api";"homeostasis_evolution_engine";"homeostasis_evolution_hud";"homeostasis_fprime_simulated";"homeostasis_fprime_wired";"physiological_homeostasis";"sysadmin_tui";"release_lifecycle";"module_guard";"module_guard_substring_weakness";"module_guard_contract"] in
  List.iter(fun n->copy(source^"/apps/cepaf_gleam/test/"^n^"_test.gleam")(tmp^"/src/"^n^"_test.gleam"))names;
  List.iter(fun n->copy(source^"/apps/indrajaal_gleam_web/test/"^n^".gleam")(tmp^"/src/"^n^".gleam"))
  ["runtime_identity_test";"homeostasis_transport_test";"homeostasis_http_probe"];
@@ -295,6 +295,22 @@ let browser source release p =
  require(r.code=0)("browser failed: "^tmp^"/browser.log");smoke base rev;
  let checks=String.split_on_char '\n' r.output|>List.filter(String.starts_with ~prefix:"PASS: ")|>List.length in
  emit "browser" "PASS" ["checks",`Int checks;"evidence",`String tmp;"candidate",`String rev;"toolchain",`String toolchain]
+let compile_capture source =
+ let tmp=temp "uos-browser-capture-"in
+ let toolchain=canonical^"/var/releases/indrajaal-web/toolchain-20260908-0551"|>realpath in
+ require(String.starts_with ~prefix:"/nix/store/"toolchain)"realized Nix toolchain required";
+ copy(source^"/tools/validation/release_browser_capture.ml")(tmp^"/capture.ml");
+ ignore(checked ~seconds:60. "/home/an/dev/ver/zigvm/_opam/bin/ocamlfind"
+ ["ocamlopt";"-cc";toolchain^"/bin/cc";"-ccopt";"-L"^toolchain^"/lib";"-cclib";"-Wl,-rpath,"^toolchain^"/lib";"-linkpkg";"-package";"playwright,eio_main,yojson,mtime.clock.os";"-o";tmp^"/capture";tmp^"/capture.ml"]);tmp
+let capture source release p =
+ require(port p>=49152) "capture requires private port";
+ let revision=verify_release release in
+ let base="http://nas-1.tail55d152.ts.net:"^p in smoke base revision;
+ let tmp=compile_capture source in
+ let r=run ~seconds:120. (tmp^"/capture")[base;tmp^"/recordings";"/opt/google/chrome/chrome"]in
+ write_new(tmp^"/capture.log")r.output;require(r.code=0)("capture failed: "^tmp^"/capture.log");
+ smoke base revision;emit "capture" "PASS"["candidate",`String revision;"evidence",`String(tmp^"/recordings");"routes",`Int 8]
+
 let package_faults release =
  ignore(verify_release release);
  let tmp=temp "uos-package-faults-" in
@@ -343,6 +359,7 @@ let parity source release base =
  "scope",`String "exact exit/stdout parity for listed cases; dynamic VM values and mutation targets have separate probes"]
 let main()=match Array.to_list Sys.argv with
  | [_;"browser";source;release;p]->browser source release p
+ | [_;"capture";source;release;p]->capture source release p
  | [_;"parity";source;release;base]->parity source release base
  | [_;"model-selftest"]->ignore(model_table());emit "model-selftest" "PASS" ["checks",`Int 338]
  | [_;"package-faults";release]->package_faults release
@@ -351,6 +368,13 @@ let main()=match Array.to_list Sys.argv with
  | [_;"selftest"]->selftest()
  | [_;"runtime-check";source]->runtime_check source
  | [_;"build";dest]->build dest
+ | [_;"capture-build";source]->emit "capture-build" "PASS"["evidence",`String(compile_capture source)]
+ | [_;"compat";source;mode]->
+   print_string(checked ~seconds:240. "/home/an/dev/ver/zigvm/_opam/bin/ocaml"
+    ["-I";source^"/tools";source^"/tools/homeostasis_compat_check.ml";source;mode])
+ | [_;"guard";source]->
+   print_string(checked ~seconds:120. "/home/an/dev/ver/zigvm/_opam/bin/ocaml"
+    ["-I";source^"/tools";source^"/tools/output_guard_check.ml";source])
  | [_;"verify";dest]->let rev=verify_release dest in emit "package" "PASS" ["candidate",`String rev]
  | [_;"smoke";base;rev]->smoke base rev
  | [_;"packet";p;rev]->packet p rev

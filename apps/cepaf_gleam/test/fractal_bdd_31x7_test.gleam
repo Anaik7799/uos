@@ -1942,8 +1942,10 @@ pub fn bdd_l2_homeostasis_interaction_test() {
       zenoh_connected: True,
     )
   let frame = renderer.render_frame(ctx)
-  string.contains(frame, "Homeostasis")
+  // A caller's Healthy label cannot fabricate a missing observation.
+  string.contains(frame, "HOMEOSTASIS | UNAVAILABLE")
   |> should.be_true()
+  string.contains(frame, "Control authority: NONE") |> should.be_true()
 }
 
 pub fn bdd_l3_homeostasis_telemetry_emit_test() {

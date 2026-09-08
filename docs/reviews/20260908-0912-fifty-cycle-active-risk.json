@@ -1,0 +1,205 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "fifty-cycle-guard-repair",
+    "plan_id": "uos/unification-50/20260908-0852",
+    "task_id": "RUN50",
+    "actor": "codex-side-unification-50",
+    "scope": "Repair JSON guard and reusable OCaml/Mojo assurance in owned sibling; execute50 new risk-selected cycles and scoped source integration. No production cutover.",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-08T09:08:12Z",
+    "valid_until": "2026-09-08T09:54:30Z",
+    "task_state": "executing",
+    "ready_since": "2026-09-08T08:54:30Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Fresh canonical source plus immutable main0114d306; effects require current ownership fences.",
+      "evidence": [
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-09-08T09:08:12Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/module_guard.gleam",
+          "sha256": "c02d21b680977e531bf879df9fafc7b159eca83d77730225685f982388efe5ef",
+          "observed_at": "2026-09-08T09:08:12Z"
+        },
+        {
+          "path": "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl",
+          "sha256": "a4e1a6b44f227e25c4349b0cd36d9c0292f068e94bae87fdbe4c6529e8561625",
+          "observed_at": "2026-09-08T09:08:12Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "Observed output safety control falsely passes ordinary missing-field payloads.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ha/module_guard.gleam",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "stpa": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "GuardPassed for status appearing only as substring is an observed unsafe control action.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ha/module_guard.gleam",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "fmea": {
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "rationale": "S4 O5 Det4 gives RPN80 and F5; ordinary crafted bodies silently pass.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ha/module_guard.gleam",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Typed response integrity is a predecessor of seven endpoint gates and release verification.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ha/module_guard.gleam",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Several API endpoints and reusable release/assurance tooling benefit.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ha/module_guard.gleam",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-JSON-SUBSTRING-ADMISSION",
+        "cause": "Serialized substring search replaces JSON parsing and top-level field lookup.",
+        "effect": "Invalid or missing fields are emitted as guarded responses.",
+        "controls": "Typed JSON, malformed/nested/type tests, escaped fallback, byte budget and independent oracle.",
+        "s": 4,
+        "o": 5,
+        "det": 4,
+        "rpn": 80,
+        "band": 5
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Owned typed output guard and bounded release assurance",
+      "control_action": "Reject unsafe output and verify repairs without replacing production",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing required-key rejection is not provided.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Return well-formed failure responses for malformed/missing structure."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "GuardPassed is issued for a value substring or longer key.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Require exact parsed top-level field and preserve passing bytes."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "A verdict is reused after source or authority changes.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Bind receipts to current source and check task/ownership before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Unbounded JSON or subprocess work starves supervision.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Bound bytes, process time/output and private runtime lifespan."
+        }
+      ]
+    },
+    "class": "P0",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 2000,
+    "score_interval": [
+      2000,
+      2000
+    ],
+    "decision": {
+      "summary": "Repair demonstrated guard boundary first; execute50 distinct dependency/risk-selected checks; retain counterevidence.",
+      "alternatives": [
+        "Repeat all prior suites50 times (rejected as waste)",
+        "Repair fault, then50 distinct focuses with explicit same-suite receipt reuse (selected)"
+      ],
+      "counterevidence": [
+        "Prior tests explicitly asserted unsafe guard behavior",
+        "Production lacks runtime/candidate binding",
+        "No permitted Tailnet completion endpoint verified"
+      ],
+      "assumptions": [
+        "Operator explicitly authorized commit, merge and sync after initial audit",
+        "External providers can coordinate through board; no subagents or uncontrolled peer dispatch"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Typed validation should reject demonstrated false accepts; infrastructure audits may retain unavailable or contradictory capabilities.",
+      "falsifier": "A failed or unrun prerequisite is reported as passing, an external model grants authority, or a publication overwrites another session's state.",
+      "acceptance": [
+        "Known false accepts reject; valid top-level fields remain compatible",
+        "OCaml/Mojo command and independent reference parity",
+        "50 new receipts with precommitted forecasts and outcomes",
+        "Fresh browser/TUI/package/source verification",
+        "Owned board and lossless Zenoh round trips",
+        "Source merge under current integration ownership"
+      ],
+      "rollback": "Stop only owned canary; preserve previous review commit and all shared data. Never delete or regenerate shared board/Zenoh history.",
+      "reviewer": "Author runtime verification; no independent peer or system-admission claim.",
+      "budget": "One local worker, no subagents, existing toolchains only, bounded private stage and fifty focuses; no paid calls.",
+      "residuals": [
+        "Production and full17 admission remain gated",
+        "Local estimates do not measure whole-system intelligence"
+      ],
+      "supersedes": "docs/reviews/20260908-0830-fifty-cycle-risk.json; refreshed after exact task claim"
+    }
+  }
+]

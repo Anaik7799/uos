@@ -12,10 +12,9 @@
 //// =============================================================================
 
 import cepaf_gleam/ui/tui/sysadmin_cockpit.{
-  ContainersTab, Dark, DoctorTab, EvolutionTab, HomeostasisTab,
-  MessageBoardTab, OverviewTab, SecurityTab, StorageTab, StreamTab,
-  SupervisorsTab, TasksTab, ZenohTab, default_model, next_tab, prev_tab, render,
-  select_tab,
+  ContainersTab, Dark, DoctorTab, EvolutionTab, HomeostasisTab, MessageBoardTab,
+  OverviewTab, SecurityTab, StorageTab, StreamTab, SupervisorsTab, TasksTab,
+  ZenohTab, default_model, next_tab, prev_tab, render, select_tab,
 }
 import gleam/list
 import gleam/regexp
@@ -87,7 +86,7 @@ pub fn given_doctor_tab_when_cycled_forward_then_traverses_cybernetics_and_wraps
 // SCENARIO 3: Biological Homeostasis Monitoring
 // =============================================================================
 
-pub fn given_homeostasis_tab_when_rendered_then_displays_equilibrium_and_factors_test() {
+pub fn given_homeostasis_tab_without_observation_then_reports_unknown_test() {
   // GIVEN: The model is set to HomeostasisTab
   let model = default_model()
   let m_homeo = select_tab(model, HomeostasisTab)
@@ -96,16 +95,15 @@ pub fn given_homeostasis_tab_when_rendered_then_displays_equilibrium_and_factors
   let frame = render(m_homeo)
   let clean_text = strip_ansi(frame)
 
-  // THEN: The header announces Biomorphic Homeostasis
-  should.equal(string.contains(clean_text, "BIOMORPHIC PHYSIOLOGICAL HOMEOSTASIS"), True)
-
-  // AND: The equilibrium status is stable
-  should.equal(string.contains(clean_text, "HOMEOSTATIC EQUILIBRIUM"), True)
-
-  // AND: Physiological telemetry factors are present
-  should.equal(string.contains(clean_text, "cpu_pct"), True)
-  should.equal(string.contains(clean_text, "memory_pct"), True)
-  should.equal(string.contains(clean_text, "Lyapunov V"), True)
+  // Missing source must not become equilibrium or measured health.
+  should.equal(string.contains(clean_text, "HOMEOSTASIS | UNAVAILABLE"), True)
+  should.equal(string.contains(clean_text, "CPU percentage: UNKNOWN"), True)
+  should.equal(
+    string.contains(clean_text, "Host memory percentage: UNKNOWN"),
+    True,
+  )
+  should.equal(string.contains(clean_text, "Control authority: NONE"), True)
+  should.equal(string.contains(clean_text, "HOMEOSTATIC EQUILIBRIUM"), False)
 
   // AND: Zero unhandled or invalid tokens exist
   should.equal(string.contains(clean_text, "NaN"), False)
@@ -142,7 +140,7 @@ pub fn given_message_board_tab_when_rendered_then_displays_active_agents_and_bus
 // SCENARIO 5: Swarm Evolution & Constitutional Quorum Ratification
 // =============================================================================
 
-pub fn given_evolution_tab_when_rendered_then_displays_pareto_and_4party_quorum_test() {
+pub fn given_evolution_tab_without_observation_then_denies_execution_test() {
   // GIVEN: The model is set to EvolutionTab
   let model = default_model()
   let m_evo = select_tab(model, EvolutionTab)
@@ -151,21 +149,15 @@ pub fn given_evolution_tab_when_rendered_then_displays_pareto_and_4party_quorum_
   let frame = render(m_evo)
   let clean_text = strip_ansi(frame)
 
-  // THEN: The header announces Autonomous System Evolution
-  should.equal(string.contains(clean_text, "AUTONOMOUS SYSTEM EVOLUTION"), True)
-
-  // AND: The gate indicator is active
-  should.equal(string.contains(clean_text, "EVOLUTION GATE OPEN"), True)
-
-  // AND: Pareto frontier candidates are listed
-  should.equal(string.contains(clean_text, "MAX SIMD Scorer Optimization"), True)
-
-  // AND: Constitutional 4-party quorum consensus is displayed
-  should.equal(string.contains(clean_text, "4-Party Quorum   : 3-of-4 Supermajority Ratification Required"), True)
-  should.equal(string.contains(clean_text, "Codex Sovereign"), True)
-  should.equal(string.contains(clean_text, "AGY Sovereign"), True)
-  should.equal(string.contains(clean_text, "Claude Sovereign"), True)
-  should.equal(string.contains(clean_text, "OpenRouter Advisory"), True)
+  should.equal(string.contains(clean_text, "HOMEOSTASIS | UNAVAILABLE"), True)
+  should.equal(string.contains(clean_text, "Peer presence: UNKNOWN"), True)
+  should.equal(string.contains(clean_text, "Control authority: NONE"), True)
+  should.equal(string.contains(clean_text, "Voting evidence: UNKNOWN"), True)
+  should.equal(string.contains(clean_text, "EVOLUTION GATE OPEN"), False)
+  should.equal(
+    string.contains(clean_text, "MAX SIMD Scorer Optimization"),
+    False,
+  )
 }
 
 // =============================================================================
@@ -225,6 +217,9 @@ pub fn given_ansi_output_when_stripped_then_clean_semantic_text_isolated_test() 
 
   // AND: The semantic text remains completely intact
   should.equal(string.contains(clean_frame, "SYSTEM OVERVIEW"), True)
-  should.equal(string.contains(clean_frame, "nas-1.tail55d152.ts.net:4100"), True)
+  should.equal(
+    string.contains(clean_frame, "nas-1.tail55d152.ts.net:4100"),
+    True,
+  )
   should.equal(string.contains(clean_frame, "LOCKED (25503L801736)"), True)
 }

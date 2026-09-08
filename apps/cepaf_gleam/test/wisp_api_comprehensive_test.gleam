@@ -34,6 +34,7 @@ import cepaf_gleam/ui/wisp/verification_api
 import cepaf_gleam/verification/graph_verification
 import cepaf_gleam/verification/prometheus
 import cepaf_gleam/verification/swarm
+import gleam/dynamic/decode
 import gleam/json
 import gleam/option
 import gleam/string
@@ -873,14 +874,20 @@ pub fn biomorphic_has_symbiosis_test() {
 // 26. Homeostasis PID fields
 // ---------------------------------------------------------------------------
 
-pub fn homeostasis_has_pid_test() {
+pub fn homeostasis_has_no_control_authority_test() {
   let result = router.route("/api/v1/homeostasis")
-  result |> string.contains("pid") |> should.be_true()
+  let authority = {
+    use value <- decode.field("control_authority", decode.string)
+    decode.success(value)
+  }
+  json.parse(result, authority) |> should.equal(Ok("none"))
 }
 
-pub fn homeostasis_convergence_present_test() {
+pub fn homeostasis_does_not_fabricate_pid_convergence_test() {
   let result = router.route("/api/v1/homeostasis")
-  result |> string.contains("convergence_pct") |> should.be_true()
+  result |> string.contains("\"metrics\":null") |> should.be_true()
+  result |> string.contains("Observed local BEAM counters") |> should.be_true()
+  result |> string.contains("convergence_pct") |> should.be_false()
 }
 
 // ---------------------------------------------------------------------------
