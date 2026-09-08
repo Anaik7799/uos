@@ -7,7 +7,21 @@
 exception Invalid of string
 let require c m = if not c then raise (Invalid m)
 
-let db_path = "var/km/provenance-cycles.sqlite3"
+(* The cycle chain is shared runtime state, not repository content: var/ is
+   gitignored, so it exists only in the canonical checkout and is NOT copied
+   into sibling workspaces. Resolving this path relative to the current
+   workspace would silently create a SECOND chain per workspace, each with its
+   own sequence 1 and its own digests, which is precisely the divergence the
+   append-only store exists to prevent.
+
+   So the path is absolute and canonical by default, and overridable by
+   UOS_KM_DB for tests, mirroring how tools/sa-plan resolves UOS_SA_PLAN_DB. *)
+let default_db_path = "/home/an/NAS-setup/uos/var/km/provenance-cycles.sqlite3"
+
+let db_path =
+  match Sys.getenv_opt "UOS_KM_DB" with
+  | Some p when String.trim p <> "" -> p
+  | _ -> default_db_path
 
 let schema = {sql|
 CREATE TABLE IF NOT EXISTS cycle (
@@ -33,6 +47,34 @@ WHEN NOT (
   AND NEW.previous_digest = COALESCE((SELECT digest FROM cycle WHERE sequence = NEW.sequence-1), '')
 )
 BEGIN SELECT RAISE(ABORT, 'cycle chain broken: sequence must be contiguous and previous_digest must match'); END;
+
+CREATE TABLE IF NOT EXISTS ev_evidence (
+  ev            INTEGER NOT NULL,
+  revision      TEXT NOT NULL,
+  runtime_ref   TEXT,
+  formal_ref    TEXT,
+  recorded_utc  TEXT NOT NULL,
+  recorded_by   TEXT NOT NULL,
+  PRIMARY KEY (ev, revision)
+);
+CREATE TRIGGER IF NOT EXISTS ev_evidence_no_update BEFORE UPDATE ON ev_evidence
+BEGIN SELECT RAISE(ABORT, 'ev_evidence is append-only'); END;
+CREATE TRIGGER IF NOT EXISTS ev_evidence_no_delete BEFORE DELETE ON ev_evidence
+BEGIN SELECT RAISE(ABORT, 'ev_evidence is append-only'); END;
+
+CREATE TABLE IF NOT EXISTS ev_verdict (
+  sequence      INTEGER PRIMARY KEY,
+  ev            INTEGER NOT NULL,
+  revision      TEXT NOT NULL,
+  verdict       TEXT NOT NULL,
+  reason        TEXT NOT NULL,
+  observed_utc  TEXT NOT NULL,
+  digest        TEXT NOT NULL
+);
+CREATE TRIGGER IF NOT EXISTS ev_verdict_no_update BEFORE UPDATE ON ev_verdict
+BEGIN SELECT RAISE(ABORT, 'ev_verdict is append-only'); END;
+CREATE TRIGGER IF NOT EXISTS ev_verdict_no_delete BEFORE DELETE ON ev_verdict
+BEGIN SELECT RAISE(ABORT, 'ev_verdict is append-only'); END;
 |sql}
 
 let ok rc = require (rc = Sqlite3.Rc.OK) "sqlite operation failed"
