@@ -31,6 +31,8 @@ The packet checker tests the structure of a complete 12-stage evidence packet. I
 
 ## Commands — no new Bash scripts
 
+For the configurable fifty-focus run, exact JSON guard, native recording command and stronger receipt checker, apply the [fifty-cycle assurance extension](http://nas-1.tail55d152.ts.net:4100/docs/sop/20260908-0906-fifty-cycle-assurance-sop.md). Its freshness and dependency restrictions supersede an assumption that an offline Nix command cannot download.
+
 Package provisioning follows [SC-RELEASE-ASSURANCE-001](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260908-0551-release-assurance-sdlc-sre-sop.md). The repository carries ops/release/flake.nix and flake.lock. Provision once with Determinate Nix before running browser checks:
 
 ```text

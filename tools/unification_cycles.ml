@@ -95,7 +95,7 @@ let coord args=
  let expr="case session_sync_cli:run(["^params^"]) of {ok,B}->io:put_chars(B),halt(0);{error,E}->io:put_chars(E),halt(1) end."in
  let lib=canonical^"/apps/uos_swarm/build/dev/erlang"in
  let paths=Sys.readdir lib|>Array.to_list|>List.filter_map(fun d->let p=lib^"/"^d^"/ebin"in if Sys.file_exists p then Some p else None)in
- checked(otp^"/erl")(["+S";"2:2";"-noshell";"-pa"]@paths@["-eval";expr])|>Yojson.Safe.from_string
+ checked(otp^"/erl")(["+S";"2:2";"-noshell";"-pa"]@paths@["-eval";expr])|>first_json
 let request base path=
  target base;let prefix="http://nas-1.tail55d152.ts.net:"in let p=String.sub base(String.length prefix)(String.length base-String.length prefix)in
  let resolve=if port p>=49152 then["--resolve";"nas-1.tail55d152.ts.net:"^p^":127.0.0.1"]else[]in
@@ -357,7 +357,7 @@ let retain out reconciled dest=
  write_new(dest^"/20260908-0753-inventory.json")(json(jobj(List.map(fun(p,h)->p,jstr h)entries)));
  emit "unification-evidence-retention" "PASS"["files",jint(List.length entries);"destination",jstr dest]
 
-let ()=
+let ()= if Filename.basename Sys.argv.(0)="unification_cycles.ml" then (
  Sys.set_signal Sys.sigalrm(Sys.Signal_handle(fun _->failwith "overall audit deadline"));ignore(alarm 600);
  try(match Array.to_list Sys.argv with
  |[_;"plan"]->print_endline(json(plan_json()))
@@ -376,4 +376,4 @@ let ()=
  |[_;"retain";out;reconciled;dest]->retain out reconciled dest
  |[_;"run";source;release;p;out;risk]->run_cycles source release p out risk
  |_->failwith "usage: plan | selection-table | selftest | repair-tests | listen | probe-real TAILSCALE_BASE | authority-check RISK | verify-run OUT | verify-integrity OUT | receipt-faults OUT | reconcile-run OUT NEW_DEST RISK | verify-reconciliation OUT RECONCILED | retain OUT RECONCILED NEW_DEST | run SOURCE RELEASE PRIVATE_PORT NEW_OUTPUT RISK")
- with e->emit "unification-command" "FAIL"["error",jstr(Printexc.to_string e)];exit 1
+ with e->emit "unification-command" "FAIL"["error",jstr(Printexc.to_string e)];exit 1)
