@@ -114,7 +114,7 @@ collect(Port, OsPid, TimeoutMs, Acc) ->
         %% Reap the process tree, then the port. A timeout is an honest failure,
         %% not a zero-exit success.
         reap(OsPid),
-        catch erlang:port_close(Port),
+        _ = (try erlang:port_close(Port) catch _:_ -> ok end),
         {error, <<"timeout">>}
     end.
 

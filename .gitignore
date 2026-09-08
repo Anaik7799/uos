@@ -105,8 +105,15 @@ apps/uos_swarm/test/scratch_systemd/
 # exactly like the host-provisioned priv/*.so artifacts.
 !services/inference/max/pixi.lock
 
+# flake.lock pins the Determinate Nix / FlakeHub nixpkgs revision that provides
+# OTP 29, Zig, Z3 and Quint (SC-NIX-DEVENV-001). The blanket `*.lock` rule above
+# targets LIVE locks; this is a reproducible-build manifest, exactly like
+# Cargo.lock and pixi.lock. Ignoring it would leave the FlakeHub `nixpkgs-weekly/*`
+# wildcard floating and the flake would pin nothing.
+!flake.lock
+
 # Formal toolchains are host-provisioned, in-project, and untracked (operator
 # mandate: all toolchains live inside the UOS project). Each is pinned by URL and
 # hash in a governance/sources/ installation manifest, exactly like the MAX/Mojo
 # pixi environment and the priv/*.so NIF artifacts.
-formal/.toolchain/
+toolchains/

@@ -269,7 +269,7 @@ let unit source =
  require(tested.code=0)("unit failure: "^tmp^"/unit.log");
  let gleam=checked(otp^"/erl")(args@["release_lifecycle_test:print_model_table(),halt()."]) in
  require(gleam=model_table()) "FPP interpreter disagrees with OCaml prefix oracle";
- let mojo=checked ~seconds:60. (canonical^"/formal/.toolchain/pixi/bin/pixi")
+ let mojo=checked ~seconds:60. (canonical^"/toolchains/pixi/bin/pixi")
  ["run";"--no-install";"--frozen";"--manifest-path";canonical^"/services/inference/max/pixi.toml";"mojo";source^"/tools/release_process.mojo";"model-table"] in
  require(mojo=model_table()) "Mojo interpreter disagrees with OCaml prefix oracle";
  write_new(tmp^"/differential.txt")gleam;
@@ -337,7 +337,7 @@ let parity source release base =
  let n=ref 0 in
  let compare_case label arguments expected =
   let a=run ~seconds:90. ml ((source^"/tools/release_process.ml")::arguments) in
-  let b=run ~seconds:90. (canonical^"/formal/.toolchain/pixi/bin/pixi")
+  let b=run ~seconds:90. (canonical^"/toolchains/pixi/bin/pixi")
    (["run";"--no-install";"--frozen";"--manifest-path";canonical^"/services/inference/max/pixi.toml";
       "mojo";source^"/tools/release_process.mojo"]@arguments) in
   write_new(tmp^"/"^label^"-ocaml.txt")a.output;write_new(tmp^"/"^label^"-mojo.txt")b.output;

@@ -171,7 +171,7 @@ pub fn backend_for(capability: String) -> Result(Backend, String) {
         toolchain("engines/hermes/_build/default/modules/hermes_harness/test_hermes_rete.exe"),
       ))
     "formal_twin" ->
-      Ok(Executable("lean4", toolchain("formal/.toolchain/lean-4.33.0/bin/lean")))
+      Ok(Executable("lean4", toolchain("toolchains/lean-4.33.0/bin/lean")))
     "modular_max" -> Ok(Nif("uos_km_nif"))
     "openrouter_free" -> Ok(Network("openrouter", "OPENROUTER_API_KEY"))
     other -> Error("unknown capability: " <> other)
@@ -336,7 +336,7 @@ fn perform(capability: String, b: Backend, input: String) -> Outcome {
     "formal_twin" -> {
       // Lean is asked for its identity, bounded. A digital twin that cannot name
       // its own checker is not a twin.
-      let path = toolchain("formal/.toolchain/lean-4.33.0/bin/lean")
+      let path = toolchain("toolchains/lean-4.33.0/bin/lean")
       case ffi_run_bounded(path, ["--version"], 30_000) {
         Ok(#(0, out)) ->
           Engaged(

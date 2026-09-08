@@ -1,5 +1,8 @@
 {
   "manifest_id": "20260908-2016-formal-toolchain-in-project-installation",
+  "status": "SUPERSEDED",
+  "superseded_by": "governance/sources/20260908-2103-nix-devenv-toolchain-in-project-installation.json",
+  "supersession_note": "DO NOT CONSULT AS A LIVE PIN. Every in_project_path below points under formal/.toolchain/, which no longer exists; the tree was relocated to toolchains/ and the BEAM, Zig, Z3 and Quint entrypoints were re-provisioned through Determinate Nix (SC-NIX-DEVENV-001). Retained as the observation record of the 2026-09-08T18:43Z state.",
   "contract": "SC-TOOLCHAIN-INPROJECT-001",
   "authority": "Operator Directive (2026-09-08): \"all tool chain must be in uos project, mandatory requirement\"",
   "observed_at_utc": "2026-09-08T18:43:16.230336Z",

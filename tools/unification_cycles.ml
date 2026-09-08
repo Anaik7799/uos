@@ -163,7 +163,7 @@ let probe kind source release base risk completed publications=
  |"production"->let code,b=request "http://nas-1.tail55d152.ts.net:4100" "/api/v1/runtime/identity"in let m=Yojson.Safe.from_string b|>assoc in
   if code<>200||not(bool(field "managed"m))||str(field "declared_candidate_revision"m)=""then"BLOCKED","Production candidate/recovery binding absent",jobj m else"OBSERVED","Identity only; admission not established",jobj m
  |"checker"->"PASS","Fresh native process and stage checker",jstr(call["selftest"])
- |"prefix"->let a=call["model-table"]in let b=checked ~seconds:45. (canonical^"/formal/.toolchain/pixi/bin/pixi")["run";"--no-install";"--frozen";"--manifest-path";canonical^"/services/inference/max/pixi.toml";"mojo";source^"/tools/release_process.mojo";"model-table"]in require(a=b)"prefix parity";"PASS","Independent prefix agreement",jstr(digest a)
+ |"prefix"->let a=call["model-table"]in let b=checked ~seconds:45. (canonical^"/toolchains/pixi/bin/pixi")["run";"--no-install";"--frozen";"--manifest-path";canonical^"/services/inference/max/pixi.toml";"mojo";source^"/tools/release_process.mojo";"model-table"]in require(a=b)"prefix parity";"PASS","Independent prefix agreement",jstr(digest a)
  |"unit"->"PASS","Fresh Gleam and three-language differential execution",jstr(call["unit";source])
  |"corruption"->"PASS","Private copy corruption rejected",jstr(call["package-faults";release])
  |"tui-real"|"tui-test"|"tui-unavailable" as k->

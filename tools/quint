@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# In-project toolchain wrapper (SC-TOOLCHAIN-INPROJECT-001, SC-NIX-DEVENV-001).
+# Quint 0.32.0 front-end compiler from the Determinate Nix profile. Supersedes
+# tools/quint-eval, whose backend (the standalone Rust evaluator 0.6.0, which
+# consumed compiled IR on stdin) is no longer installed: the full CLI typechecks,
+# runs and verifies .qnt SOURCE directly, which the evaluator could not do.
+set -euo pipefail
+source "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/lib/uos-toolchain.sh"
+exec "$(uos_tool quint)" "$@"

@@ -1,0 +1,293 @@
+{
+  "manifest_id": "20260908-2103-nix-devenv-toolchain-in-project-installation",
+  "contract": "SC-NIX-DEVENV-001",
+  "companion_contract": "SC-TOOLCHAIN-INPROJECT-001",
+  "supersedes": "governance/sources/20260908-2016-formal-toolchain-in-project-installation.json",
+  "supersession_reason": "The prior manifest pins entrypoints under formal/.toolchain/, a directory that no longer exists. The toolchain tree was relocated to toolchains/ and the BEAM, Zig, Z3 and Quint entrypoints were re-provisioned through Determinate Nix. Every path in the prior manifest is therefore unresolvable and it must not be consulted as a live pin.",
+  "authority": "Operator Directives (2026-09-08): \"all tool chain must be in uos project, mandatory requirement\"; \"do not use zig vrsion of otp, use only otp 29 in uos\"; \"get it from determinate nixos or devenv if possible. do not build it\"; \"add mandatory rule to use determinate nix and devenv. mandatory\"",
+  "observed_at_utc": "2026-09-08T19:29:47.682549Z",
+  "clock_provenance": {
+    "ntp_synchronized": true,
+    "source": "timedatectl NTPSynchronized=yes",
+    "host_local": "2026-09-08T21:29:47+02:00",
+    "drift_band": "nominal"
+  },
+  "provisioner": {
+    "nix": "Determinate Nix 3.22.3 (Nix 2.35.2)",
+    "determinate_nixd": "present at /usr/local/bin/determinate-nixd",
+    "devenv": "2.2.2 (x86_64-linux)",
+    "flake_input": "https://flakehub.com/f/DeterminateSystems/nixpkgs-weekly/*.tar.gz",
+    "flake_lock": {
+      "path": "flake.lock",
+      "nixpkgs_rev": "34ab99075ac4f7e40cf037eef32cb1c360bb85e9",
+      "nixpkgs_rev_count": 1064949,
+      "nar_hash": "sha256-hn1oU2rue2SYK8dAr8+WNZWtbsz1S2W5mnHlSEuh3bo=",
+      "last_modified_utc": "2026-08-31",
+      "status": "VERIFIED_LOCKED",
+      "note": "Before this manifest the flake carried NO lock file, so its own header claim to be 'the reproducible PIN' was false: the FlakeHub wildcard resolved to whatever nixpkgs-weekly happened to be current. The lock now fixes it.",
+      "vcs": "tracked in Jujutsu via the .gitignore negation !flake.lock"
+    },
+    "invocation_boundary": "nix flake lock 'path:/home/an/NAS-setup/uos' -- the bare 'nix flake lock' fails with libgit2 error 6 because an EMPTY stray directory /home/an/NAS-setup/uos/.git makes Nix classify the tree as a Git flake. UOS is standalone non-colocated Jujutsu; that directory contains no Git repository and drives no VCS behaviour, but flake commands must use the explicit path: URL until it is removed.",
+    "evaluation_evidence": {
+      "packages.x86_64-linux.otp29.name": "erlang-29.0.5",
+      "devShells.x86_64-linux.default.drvPath": "/nix/store/f71q8rr5pb2z2g58za7xrg0nczpsx8nr-nix-shell.drv"
+    }
+  },
+  "policy": {
+    "in_project": true,
+    "tracked_in_jj": false,
+    "gitignore_entry": "toolchains/",
+    "tracked_surfaces": [
+      "flake.nix",
+      "flake.lock",
+      "devenv.nix",
+      "devenv.yaml",
+      "tools/lib/uos-toolchain.sh",
+      "governance/sources/20260908-2103-nix-devenv-toolchain-in-project-installation.json"
+    ],
+    "honest_boundary": "Nix-provided binaries live in /nix/store by construction: their RPATHs and ELF interpreter paths are absolute store paths, so they CANNOT be relocated under toolchains/ and still execute. toolchains/nix-profile is a symlink farm into the store, not a copy. Any claim that the Nix binaries are physically inside the project is false.",
+    "profile": {
+      "link": "toolchains/nix-profile -> toolchains/nix-profile-1-link",
+      "store_path": "/nix/store/s8ymcvqsvxc9571xliy5d0f1fi0l7z2j-profile"
+    }
+  },
+  "beam_policy": {
+    "admitted": "OTP 29 only",
+    "observed": {
+      "otp_release": "29",
+      "erts_version": "17.0.5",
+      "derivation": "beamMinimal29Packages.erlang 29.0.5"
+    },
+    "barred": [
+      {
+        "what": "host OTP 27 at /usr/lib/erlang",
+        "reason": "operator directive: OTP 29 only; uos_env PREPENDS the in-project profile so /usr/bin/erl cannot win a PATH race"
+      },
+      {
+        "what": "OTP-30-era .beam artifacts vendored in /home/an/dev/ver/zigvm/src/otp_*.beam",
+        "reason": "external evidence tree (canonical policy section 3) and unverifiable provenance"
+      }
+    ],
+    "minimal_rationale": "beamMinimal29 avoids the wxwidgets + webkitgtk closure (~1.1 GiB) that the full erlang derivation drags in; a headless UOS node never executes it."
+  },
+  "toolchains": [
+    {
+      "name": "erlang_otp",
+      "version": "29.0.5",
+      "source": "nix",
+      "entrypoint": "toolchains/nix-profile/bin/erl",
+      "store_realpath": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/erl",
+      "sha256_entrypoint": "ef4292ee944622942f2e961553eae2222a9dce112eb7e5bfec04dcb9a0d54970",
+      "capability_binding": "beam_supervision",
+      "status": "VERIFIED_RUNNABLE",
+      "verification": "erl -noshell -eval 'io:format(\"~s ~s\",[otp_release,version])' -> 29 17.0.5"
+    },
+    {
+      "name": "erlc",
+      "version": "29.0.5",
+      "source": "nix",
+      "entrypoint": "toolchains/nix-profile/bin/erlc",
+      "sha256_entrypoint": "260f026b6746ebcfa99e2568852c3dfda3bcef6227984315f5e5888ff5c9d503",
+      "status": "VERIFIED_RUNNABLE"
+    },
+    {
+      "name": "escript",
+      "version": "29.0.5",
+      "source": "nix",
+      "entrypoint": "toolchains/nix-profile/bin/escript",
+      "sha256_entrypoint": "985522721e68d744f021d43146a3d3e739d4da039280f03f6763987140774a24",
+      "status": "VERIFIED_RUNNABLE"
+    },
+    {
+      "name": "rebar3",
+      "version": "3.27.0",
+      "source": "nix",
+      "entrypoint": "toolchains/nix-profile/bin/rebar3",
+      "store_realpath": "/nix/store/xg7y5pql9k6p71j151f9p2g556gvw1l9-rebar3-3.27.0/bin/rebar3",
+      "sha256_entrypoint": "184ba526e938e82f08cd8b1bc8c02bbd4547b2b08854d353a56f2e6a86c23032",
+      "status": "VERIFIED_RUNNABLE",
+      "verification": "rebar3 --version -> rebar 3.27.0 on Erlang/OTP 29 Erts 17.0.5 (built against OTP 29, not the host OTP 27)"
+    },
+    {
+      "name": "zig",
+      "version": "0.16.0",
+      "source": "nix",
+      "entrypoint": "toolchains/nix-profile/bin/zig",
+      "store_realpath": "/nix/store/kbb1kfzlvqiwbcpw4sd2j3v63vqab3vg-zig-0.16.0/bin/zig",
+      "sha256_entrypoint": "c3e11b84b3fe69e1b456fce998bf3e9c2202ed55c5003b207e67e0a5b63ba955",
+      "capability_binding": "zigvm_kernel",
+      "status": "VERIFIED_RUNNABLE",
+      "verification": "zig version -> 0.16.0 (matches the engines/zigvm README pin)"
+    },
+    {
+      "name": "z3",
+      "version": "4.16.0",
+      "source": "nix",
+      "entrypoint": "toolchains/nix-profile/bin/z3",
+      "store_realpath": "/nix/store/xv5zrxcpp6qj1lkbq1kxj5xfv017v39n-z3-4.16.0/bin/z3",
+      "sha256_entrypoint": "49162af210ee76b3e115e58b687c52f974d32124ce99dd8f42f2696af4a17b41",
+      "capability_binding": "formal_twin, rete_ul",
+      "status": "VERIFIED_RUNNABLE",
+      "provenance_change": "The prior manifest sourced z3 by COPY from the external evidence tree /home/an/dev/ver/zigvm/_opam/bin/z3. It is now provisioned from Determinate Nix, which removes an external-evidence-tree dependency that SC-NIX-DEVENV-001 invariant 1 bars.",
+      "policy_note": "Canonical policy section 7: Z3 runs only in isolated bounded worker processes with timeouts and process-tree reaping. Unbounded solvers in NIFs remain barred."
+    },
+    {
+      "name": "quint",
+      "version": "0.32.0",
+      "source": "nix",
+      "entrypoint": "toolchains/nix-profile/bin/quint",
+      "store_realpath": "/nix/store/s90yin0j1q75gr8iyr11qxqzbjdssv25-quint-0.32.0/bin/quint",
+      "sha256_entrypoint": "190d69b28bd6ca6bd2f965e745b596b4b6b3ba7cb80e0b9e27ab36d8fe13f6f0",
+      "capability_binding": "formal_twin",
+      "status": "VERIFIED_RUNNABLE",
+      "wrapper": "tools/quint",
+      "closes_residual_risk": "The prior manifest recorded 'Quint front-end compiler absent: .qnt model checking is NOT available; formal_twin must fail closed for Quint until admitted.' The full CLI is now installed and all four formal/quint/*.qnt specs typecheck, so that specific gap is closed. Model-checking VERDICTS are a separate, still-unrun claim.",
+      "supersedes_entry": "quint_evaluator 0.6.0 (formal/.toolchain/quint-0.6.0/quint_evaluator), the standalone Rust simulation backend that consumed compiled IR on stdin and could not read .qnt source. It is no longer installed; tools/quint-eval was removed rather than left pointing at an absent binary."
+    },
+    {
+      "name": "gleam",
+      "version": "1.16.0",
+      "source": "materialised_in_project",
+      "entrypoint": "toolchains/gleam-1.16.0/bin/gleam",
+      "sha256_entrypoint": "9d57b042c9f857ed898f4b99116ad8433bed2504619613c97d72a52288bef697",
+      "capability_binding": "beam_supervision",
+      "status": "VERIFIED_RUNNABLE",
+      "nix_exception_reason": "Project pin. nixpkgs currently offers Gleam 1.18.1 and that bump is unverified against apps/*; the pin is a version decision, not drift licence."
+    },
+    {
+      "name": "opam_ocaml_switch",
+      "version": "OCaml 5.5.0 / dune 3.23.1",
+      "source": "materialised_in_project",
+      "entrypoint": "toolchains/opam-ocaml/bin/ocaml",
+      "sha256_entrypoint": "f63584aac3923ba0060b0795274846b6df425b17b7f2f45bc6368b81e3b2ad92",
+      "dune_sha256": "9b0a4d43cecade7d25cf0d524834bc4063d4c23497872d3d47c983f76d52170a",
+      "capability_binding": "rete_ul, evidence_ledger, gospel, z3_worker",
+      "status": "VERIFIED_RUNNABLE",
+      "nix_exception_reason": "Hermes needs the full package set (cryptokit, gospel, z3, sqlite3, yojson, domainslib); the nixpkgs ocaml derivation alone does not supply it.",
+      "note": "Relocated from formal/.toolchain/opam-ocaml to toolchains/opam-ocaml. An opam switch can embed absolute paths, so relocation safety must be RE-verified at the new prefix, not inherited from the prior manifest."
+    },
+    {
+      "name": "lean4",
+      "version": "4.33.0",
+      "source": "materialised_in_project",
+      "entrypoint": "toolchains/lean-4.33.0/bin/lean",
+      "sha256_entrypoint": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "lake_sha256": "60330ab6f07dce20f3fa9ebb08e8b984ea9549eac172afeb15d9d2227060e2b3",
+      "commit": "d8b18978322de05a8f3dba51ef03cf5461676c17",
+      "capability_binding": "formal_twin",
+      "status": "VERIFIED_RUNNABLE",
+      "nix_exception_reason": "formal/lean/*.lean are verified to check at 4.33.0; nixpkgs currently offers 4.30.0."
+    },
+    {
+      "name": "rustup_toolchain",
+      "version": "rustup-managed",
+      "source": "materialised_in_project",
+      "entrypoint": "toolchains/cargo/bin/cargo",
+      "resolved_realpath": "toolchains/cargo/bin/rustup",
+      "sha256_entrypoint": "4acc9acc76d5079515b46346a485974457b5a79893cfb01112423c89aeb5aa10",
+      "status": "VERIFIED_RUNNABLE",
+      "note": "cargo and rustc are rustup PROXY shims and hash identically to rustup itself; the hash therefore pins the proxy, not the compiler. CARGO_HOME and RUSTUP_HOME are pinned in-project by uos_env."
+    },
+    {
+      "name": "node",
+      "version": "22",
+      "source": "materialised_in_project",
+      "entrypoint": "toolchains/node-22/bin/node",
+      "sha256_entrypoint": "d0efb6fcb9d023ba4e2b160ec2384dc28fe4f17732141ef47f676828fa960505",
+      "npm_sha256": "8e5f6f3429f8cdbe693cdc29904e9d5a7b127a494bd15c804bd54c7403bfcbe7",
+      "status": "VERIFIED_RUNNABLE"
+    },
+    {
+      "name": "pixi",
+      "version": "0.80.0",
+      "source": "materialised_in_project",
+      "entrypoint": "toolchains/pixi/bin/pixi",
+      "sha256_entrypoint": "387a2d3052e656f61ccf735e6750255451366f45635a2da09116b1f8394b2837",
+      "capability_binding": "modular_max",
+      "status": "VERIFIED_RUNNABLE"
+    },
+    {
+      "name": "mojo_max",
+      "version": "pixi-managed",
+      "source": "in_project_pixi_env",
+      "entrypoint": "services/inference/max/.pixi/envs/default/bin/mojo",
+      "sha256_entrypoint": "0bce743c710ca91b9513eb6bbe600dcce41892dd2b52f29427b17eeeb97d32fa",
+      "capability_binding": "modular_max",
+      "status": "VERIFIED_RUNNABLE"
+    }
+  ],
+  "resolver": {
+    "library": "tools/lib/uos-toolchain.sh",
+    "entrypoint_table_size": 19,
+    "report": "bash -c 'source tools/lib/uos-toolchain.sh; uos_toolchain_report' -> 19/19 PRESENT",
+    "env": "uos_env PREPENDS toolchains/{nix-profile,gleam-1.16.0,opam-ocaml,lean-4.33.0,cargo,node-22}/bin and pins OPAM_SWITCH_PREFIX, CARGO_HOME, RUSTUP_HOME, ZIG_GLOBAL_CACHE_DIR inside the project",
+    "wrappers": [
+      "tools/lean",
+      "tools/lake",
+      "tools/z3",
+      "tools/quint",
+      "tools/mojo",
+      "tools/max"
+    ],
+    "removed_wrappers": [
+      "tools/quint-eval"
+    ],
+    "contract": "Every wrapper resolves UOS_ROOT from its own location and refuses to run an absent toolchain rather than falling back to a host path. uos_have() reports absence honestly so callers fail closed.",
+    "repointed_stale_references": [
+      {
+        "file": "apps/cepaf_gleam/src/cepaf_gleam/ecology/capability_port.gleam",
+        "lines": [
+          174,
+          339
+        ],
+        "from": "formal/.toolchain/lean-4.33.0/bin/lean",
+        "to": "toolchains/lean-4.33.0/bin/lean"
+      },
+      {
+        "file": "tools/release_process.ml",
+        "lines": [
+          272,
+          340
+        ],
+        "from": "formal/.toolchain/pixi/bin/pixi",
+        "to": "toolchains/pixi/bin/pixi"
+      },
+      {
+        "file": "tools/unification_cycles.ml",
+        "lines": [
+          166
+        ],
+        "from": "formal/.toolchain/pixi/bin/pixi",
+        "to": "toolchains/pixi/bin/pixi"
+      }
+    ]
+  },
+  "residual_risks": [
+    "UNRUN: tools/release_process.ml and tools/unification_cycles.ml are `ocaml` TOPLEVEL scripts (shebang + #use directives); ocamlc cannot compile-check them and they were not executed because they drive a release process. Their pixi path repoint is verified only as a single-token string-literal substitution.",
+    "UNRUN: no Quint model-checking VERDICT is claimed. All four formal/quint/*.qnt specs typecheck at 0.32.0; typecheck success is not invariant proof.",
+    "UNRUN: 'devenv test' (the enterTest OTP-29 fail-closed assertion) has not been executed in this session; the equivalent assertion was observed directly against toolchains/nix-profile/bin/erl instead.",
+    "UNRUN: the repointed Gleam and OCaml call sites (capability_port.gleam, release_process.ml, unification_cycles.ml) have been path-corrected but not rebuilt or executed at this revision.",
+    "OPEN: an empty stray directory /home/an/NAS-setup/uos/.git makes bare 'nix flake' commands misclassify the tree as a Git flake. It holds no Git repository and no native Git mutation has occurred, so VCS policy section 4 is not violated, but flake invocations require the explicit path: URL until it is removed.",
+    "OPEN: formal/lean/Denotational_Atlas_Cohomology.lean contains 3 'sorry' placeholders and carries ZERO formal authority per canonical policy section 7.",
+    "OPEN: formal/lean has no lakefile and no lean-toolchain pin; proofs are checked as standalone files against the in-project Lean 4.33.0.",
+    "BOUNDARY: cargo/rustc hashes pin the rustup proxy shim, not the compiler binaries."
+  ],
+  "verification_runs": {
+    "observed_at_utc": "2026-09-08T19:45Z (host NTP-synchronised, drift band nominal)",
+    "uos_toolchain_report": "19/19 PRESENT, every entrypoint under $UOS_ROOT",
+    "otp_release": "erl -> 29 (erts 17.0.5) via toolchains/nix-profile; the host /usr/bin/erl OTP 27 is shadowed, not consulted",
+    "opam_relocation_at_new_prefix": "PASS -- ocamlfind printconf resolves entirely under toolchains/opam-ocaml (config, search path, stdlib). Previously asserted from the old prefix; now observed at the new one.",
+    "hermes_dune_build": "PASS (exit 0) using only the in-project switch",
+    "cepaf_gleam_build": "PASS (exit 0) at Gleam 1.16.0 after the capability_port.gleam Lean path repoint; warnings are pre-existing unused-import warnings",
+    "quint_typecheck": "4/4 PASS -- agentic_coordination.qnt, agentic_journal.qnt, intent_invariants.qnt, parity_frontier.qnt",
+    "wrappers": "tools/quint -> 0.32.0, tools/z3 -> 4.16.0, tools/lean -> 4.33.0 (commit d8b18978322de05a8f3dba51ef03cf5461676c17)",
+    "shell_portability": "source tools/lib/uos-toolchain.sh; uos_env now yields UOS_ROOT=/home/an/NAS-setup/uos and OTP 29 under BOTH bash and zsh"
+  },
+  "defects_closed_in_this_pass": [
+    "tools/lib/uos-toolchain.sh resolved UOS_ROOT from ${BASH_SOURCE[0]} under `set -euo pipefail`. Sourced from the operator's zsh login shell this aborted on an unset parameter, and without nounset it would have silently produced a wrong UOS_ROOT -- making uos_have() report ABSENT for installed toolchains. The library now resolves its own path under bash and zsh, and only applies `set -euo pipefail` when EXECUTED, never when sourced into an interactive shell.",
+    "flake.nix claimed to be 'the reproducible PIN' with no flake.lock present, so the FlakeHub nixpkgs-weekly/* wildcard floated. flake.lock now pins rev 34ab99075ac4f7e40cf037eef32cb1c360bb85e9.",
+    "Five call sites still pointed at the removed formal/.toolchain/ tree (capability_port.gleam x2 Lean, release_process.ml x2 pixi, unification_cycles.ml x1 pixi).",
+    "tools/quint-eval fronted an absent binary (Rust evaluator 0.6.0); replaced by tools/quint against the installed 0.32.0 CLI.",
+    "flake.lock was swallowed by the blanket `*.lock` rule in .gitignore, so the mandatory pin would have stayed untracked and the reproducibility claim would have been unbacked in VCS. A documented negation (!flake.lock) was added alongside the existing Cargo.lock and pixi.lock exceptions."
+  ]
+}
