@@ -75,6 +75,34 @@ CREATE TRIGGER IF NOT EXISTS ev_verdict_no_update BEFORE UPDATE ON ev_verdict
 BEGIN SELECT RAISE(ABORT, 'ev_verdict is append-only'); END;
 CREATE TRIGGER IF NOT EXISTS ev_verdict_no_delete BEFORE DELETE ON ev_verdict
 BEGIN SELECT RAISE(ABORT, 'ev_verdict is append-only'); END;
+
+CREATE TABLE IF NOT EXISTS merge_hold (
+  sequence            INTEGER PRIMARY KEY,
+  branch              TEXT NOT NULL,
+  reason              TEXT NOT NULL,
+  clearing_condition  TEXT NOT NULL,
+  recorded_utc        TEXT NOT NULL,
+  recorded_by         TEXT NOT NULL
+);
+CREATE TRIGGER IF NOT EXISTS merge_hold_no_update BEFORE UPDATE ON merge_hold
+BEGIN SELECT RAISE(ABORT, 'merge_hold is append-only; record a release row instead'); END;
+CREATE TRIGGER IF NOT EXISTS merge_hold_no_delete BEFORE DELETE ON merge_hold
+BEGIN SELECT RAISE(ABORT, 'merge_hold is append-only; record a release row instead'); END;
+CREATE TRIGGER IF NOT EXISTS merge_hold_needs_condition BEFORE INSERT ON merge_hold
+WHEN TRIM(NEW.clearing_condition) = ''
+BEGIN SELECT RAISE(ABORT, 'a hold must state its clearing condition'); END;
+
+CREATE TABLE IF NOT EXISTS merge_hold_release (
+  sequence      INTEGER PRIMARY KEY,
+  hold_sequence INTEGER NOT NULL,
+  evidence      TEXT NOT NULL,
+  released_utc  TEXT NOT NULL,
+  released_by   TEXT NOT NULL
+);
+CREATE TRIGGER IF NOT EXISTS merge_hold_release_no_update BEFORE UPDATE ON merge_hold_release
+BEGIN SELECT RAISE(ABORT, 'merge_hold_release is append-only'); END;
+CREATE TRIGGER IF NOT EXISTS merge_hold_release_no_delete BEFORE DELETE ON merge_hold_release
+BEGIN SELECT RAISE(ABORT, 'merge_hold_release is append-only'); END;
 |sql}
 
 let ok rc = require (rc = Sqlite3.Rc.OK) "sqlite operation failed"

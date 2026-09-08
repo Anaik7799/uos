@@ -186,3 +186,160 @@ for and which has not been done for any cycle.
 It also does not repair `tools/uos`. `doctor` still prints `92/92`. Replacing a
 CLI that four rule families cite is a change other sessions must agree to; this
 RCA reports the defect and provides a working alternative beside it.
+
+---
+
+# Part II — What Blocks the Merge (added 20260908-1145)
+
+Part I answered *why an EV cannot be admitted*: there is no admission function.
+Part II answers the second half of the question — *why the work does not land* —
+which turns out to have a different root cause on the same theme.
+
+## 9. The backlog is small and uniform
+
+| Measure | Value |
+|---|---|
+| Bookmarks total | 91 |
+| Already merged into `main` | 77 |
+| **Not merged** | **13** |
+| Commits ahead, each | **exactly 1** |
+| Age range | 34 minutes – 22 hours |
+
+5 × `candidate/*`, 2 × `integration/codex-*`, 6 × `review/codex-*`. Not one is a
+large divergent branch. **Merging is not hard here.** Something is withholding
+small, ready changes.
+
+## 10. The hold is a string in a name
+
+`review/codex-unification-50-merge-held` is named for its hold. Its commit says
+*"broad native gates held"*. That is the **entire** machine-readable content of
+the hold.
+
+Its own risk record says:
+
+```json
+"blockers": [],  "readiness": "ready"
+```
+
+So no check is failing. A discretionary decision is encoded in a bookmark name.
+Nothing can evaluate it, nothing can clear it, and so the work accumulates.
+
+## 11. Root cause: authorisation expires faster than review
+
+| Measure | Value |
+|---|---|
+| Risk assessments with `observed_at` + `valid_until` | 49 |
+| **Expired** | **48** |
+| Median validity window | **120 minutes** |
+| Shortest windows | 60 minutes |
+| Waiting branches' age | 5 – 22 hours |
+| Oldest expiry | 16 hours ago |
+
+`SC-RISK-CHECK-001` forbids force-passing a stale result. So landing work
+requires re-assessment — which itself takes time, during which the new
+assessment also expires.
+
+```text
+   assess (60-120 min window)
+        │
+        ├── review, build, coordinate  ── hours ──┐
+        │                                          │
+        └────────── window closes ─────────────────┘
+                                                   │
+                                          re-assess, repeat
+```
+
+```mermaid
+graph LR
+    A["assess<br/>60-120 min window"] --> R["review, build, coordinate<br/>hours"]
+    R --> X{"still fresh?"}
+    X -->|no, 48 of 49| A
+    X -->|yes, 1 of 49| M["merge"]
+```
+
+**This is the treadmill.** It is not negligence; it is a units mismatch between
+how long authorisation lasts and how long the work it authorises takes.
+
+## 12. The freshness axis is wrong
+
+A branch nobody has touched does not become riskier because two hours passed.
+Wall-clock expiry measures the wrong thing.
+
+Binding an assessment to the **content revision** keeps it valid exactly as long
+as the thing it assessed is unchanged, and invalidates it the moment the branch
+moves — which is when risk actually changes.
+
+Both predicates are implemented side by side in `km_merge.ml`
+(`fresh_wallclock`, `fresh_revision`) so the difference is measurable rather
+than argued. Laws **M6** exercise both directions.
+
+## 13. Denotation
+
+```
+  [[mergeable]] : Branch -> Revision -> Time -> Verdict
+
+  [[mergeable]](b, r, t) = Mergeable
+      iff  ∃ a ∈ Assessment. covers(a,b) ∧ fresh(a,t) ∧ readiness(a)=Ready
+                              ∧ blockers(a)=∅
+        ∧ builds(b, r)
+        ∧ ¬∃ h ∈ Hold. applies(h,b) ∧ ¬cleared(h)
+```
+
+Two-valued, `NotMergeable` absorbing. Conjuncts are evaluated in a fixed order so
+the reported reason is the **first** failure, making verdicts stable and
+diffable across runs.
+
+**16 laws, 0 failures** (`km-gate --merge-selftest`): fail-closed, expiry,
+blockers, readiness, build, hold semantics including the undischargeable case,
+both freshness axes, and falsifiability under a moving clock alone.
+
+## 14. Hardening: a hold is now data
+
+`merge_hold` and `merge_hold_release`, both append-only.
+
+A `BEFORE INSERT` trigger refuses any hold whose `clearing_condition` is blank:
+
+> **a hold must state its clearing condition**
+
+A hold that cannot say what would discharge it is a permanent block wearing the
+costume of a temporary one. Verified:
+
+| Attempt | Store response |
+|---|---|
+| Insert with blank clearing condition | **refused** — `a hold must state its clearing condition` |
+| `UPDATE merge_hold` | **refused** — `record a release row instead` |
+| `DELETE FROM merge_hold` | **refused** — `record a release row instead` |
+| Insert with a real condition | accepted |
+
+The real hold was recorded with the condition its bookmark name never carried:
+*"native gate suite reports green at the branch tip AND its risk assessment is
+fresh at that revision."*
+
+## 15. Coordination outcome worth recording
+
+The `guard_json` substring defect reported in cycle C37 has been **fixed by
+Codex** on `review/codex-unification-50-tested`. `guard_json` now calls
+`json.parse` with `decode.field`, a real key lookup, adds a 1 MiB size bound, and
+distinguishes `invalid_json` from `missing_field`. They also extended the
+weakness test I left behind and added `module_guard_contract_test.gleam`.
+
+Reported → fixed by another agent → verified here. That loop worked.
+
+## 16. Answer to the question, both halves
+
+| Question | Answer |
+|---|---|
+| What blocks an EV being **admitted**? | Nothing checks it. `doctor` is 96 print statements; admission was never computed. |
+| What blocks work being **merged**? | Nothing is failing. Authorisation expires (48/49) faster than review completes, and the residual hold exists only as a string in a bookmark name. |
+
+Both halves are the same defect in different clothing: **a state that matters was
+recorded as something to be read rather than something to be evaluated.** One as
+a print statement, one as a bookmark name.
+
+## 17. What is still not done
+
+`ev_evidence` remains empty and `merge_hold` holds exactly one row, recorded to
+demonstrate the mechanism. Neither store has been populated to make a number
+move. The 13 branches are still unmerged: deciding to land another session's
+work is not mine to take, and the RCA's purpose was to say **why** they are
+stuck, not to push them through.

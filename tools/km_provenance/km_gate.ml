@@ -20,6 +20,8 @@
      km_gate --ev-admission REVISION        compute [[admit]] per EV from evidence
      km_gate --ev-selftest                  the seven admission laws
      km_gate --ev-record EV REV RUNTIME FORMAL   append one evidence row
+     km_gate --merge-selftest               the merge-readiness laws
+     km_gate --merge-hold BRANCH REASON CONDITION   record a hold as data
 *)
 
 open Km_corpus
@@ -645,6 +647,87 @@ let ev_selftest () =
   Printf.printf "\n%d checks, %d failures\n" !checks !fails;
   if !fails = 0 then 0 else 1
 
+(* --- merge readiness laws ---------------------------------------------- *)
+
+let merge_selftest () =
+  let open Km_merge in
+  let checks = ref 0 and fails = ref 0 in
+  let check name ok =
+    incr checks;
+    if ok then Printf.printf "ok   %s\n" name
+    else (incr fails; Printf.printf "FAIL %s\n" name) in
+
+  let a ?(readiness=Ready) ?(blockers=[]) ?(rev="rev-A") ~valid_until branch =
+    { branch; revision = rev; observed_at = 0.0; valid_until; readiness; blockers } in
+  let ok_assess = [a ~valid_until:100.0 "b"] in
+  let m ?(assessments=ok_assess) ?(holds=[]) ?(builds=true) ?(now=50.0)
+        ?(rev="rev-A") ?(use_rev=false) () =
+    mergeable ~assessments ~holds ~builds ~now ~current_revision:rev
+              ~use_revision_freshness:use_rev "b" in
+
+  check "M1 fail-closed: no assessment covering the branch is NotMergeable"
+    (m ~assessments:[] () <> Mergeable);
+  check "M0 baseline: fresh, ready, unblocked, building, unheld is Mergeable"
+    (m () = Mergeable);
+  check "M2 freshness: an expired assessment is NotMergeable"
+    (m ~now:200.0 () <> Mergeable);
+  check "M2 reason names expiry, not something else"
+    (match m ~now:200.0 () with Not_mergeable r -> r = "assessment expired" | _ -> false);
+  check "M3 blockers: a non-empty blocker list is NotMergeable"
+    (m ~assessments:[a ~blockers:["x"] ~valid_until:100.0 "b"] () <> Mergeable);
+  check "M3 readiness other than ready is NotMergeable"
+    (m ~assessments:[a ~readiness:Blocked ~valid_until:100.0 "b"] () <> Mergeable);
+  check "M4 build: a branch that does not build is NotMergeable"
+    (m ~builds:false () <> Mergeable);
+  check "M5 hold: an uncleared hold blocks even when everything else passes"
+    (m ~holds:[{ h_branch="b"; h_reason="native gates"; h_clearing_condition="gates green";
+                 h_cleared=false }] () <> Mergeable);
+  check "M5 a cleared hold does not block"
+    (m ~holds:[{ h_branch="b"; h_reason="native gates"; h_clearing_condition="gates green";
+                 h_cleared=true }] () = Mergeable);
+  check "M5 a hold on another branch does not block this one"
+    (m ~holds:[{ h_branch="other"; h_reason="x"; h_clearing_condition="y";
+                 h_cleared=false }] () = Mergeable);
+  check "M5 an undischargeable hold is reported as such in the reason"
+    (match m ~holds:[{ h_branch="b"; h_reason="held"; h_clearing_condition="";
+                       h_cleared=false }] () with
+     | Not_mergeable r ->
+       (try ignore (Str.search_forward (Str.regexp_string "cannot be discharged") r 0); true
+        with Not_found -> false)
+     | _ -> false);
+  check "M5 a hold with no clearing condition is not well-formed"
+    (not (hold_well_formed { h_branch="b"; h_reason="r"; h_clearing_condition=" ";
+                             h_cleared=false }));
+
+  (* M6/M7: the freshness axis. Same assessment, same instant, different axis. *)
+  check "M6 revision freshness: unchanged revision stays valid past the wall clock"
+    (m ~now:99999.0 ~use_rev:true ~rev:"rev-A" () = Mergeable);
+  check "M6 revision freshness: a changed revision invalidates it"
+    (m ~now:50.0 ~use_rev:true ~rev:"rev-B" () <> Mergeable);
+  check "M7 falsifiable: the SAME inputs flip verdict when only the clock moves"
+    (m ~now:50.0 () = Mergeable && m ~now:200.0 () <> Mergeable);
+  check "first failing conjunct is reported: expiry precedes the hold"
+    (match m ~now:200.0
+              ~holds:[{ h_branch="b"; h_reason="h"; h_clearing_condition="c";
+                        h_cleared=false }] () with
+     | Not_mergeable r -> r = "assessment expired" | _ -> false);
+
+  Printf.printf "\n%d checks, %d failures\n" !checks !fails;
+  if !fails = 0 then 0 else 1
+
+let merge_hold branch reason condition =
+  let db = Km_chain.open_db () in
+  Fun.protect ~finally:(fun () -> Km_chain.close db) (fun () ->
+    let stmt = Sqlite3.prepare db
+      "INSERT INTO merge_hold (branch,reason,clearing_condition,recorded_utc,recorded_by) \
+       VALUES (?,?,?,?,?)" in
+    Fun.protect ~finally:(fun () -> ignore (Sqlite3.finalize stmt)) (fun () ->
+      List.iteri (fun i v -> ignore (Sqlite3.bind_text stmt (i + 1) v))
+        [branch; reason; condition; now_utc (); "fable-km-refresh-20260908-0912"];
+      require (Sqlite3.step stmt = Sqlite3.Rc.DONE) "merge_hold insert refused");
+    print_json (`Assoc ["recorded", `Bool true; "branch", `String branch]);
+    0)
+
 let () =
   let fail msg =
     print_json (`Assoc ["status", `String "HOLD"; "authority", `String "NONE";
@@ -664,6 +747,8 @@ let () =
     | [_; "--publish"] -> exit (publish ())
     | [_; "--ev-admission"; rev] -> exit (ev_admission rev)
     | [_; "--ev-selftest"] -> exit (ev_selftest ())
+    | [_; "--merge-selftest"] -> exit (merge_selftest ())
+    | [_; "--merge-hold"; b; r; c] -> exit (merge_hold b r c)
     | [_; "--ev-record"; n; rev; rt; fm] -> exit (ev_record (int_of_string n) rev rt fm)
     | [_; "--series"; m] -> exit (show_series m)
     | [_; "--fit"; csv] ->
@@ -684,5 +769,6 @@ let () =
   | Km_ooda.Invalid m -> fail m
   | Km_rete.Invalid m -> fail m
   | Km_ev.Invalid m -> fail m
+  | Km_merge.Invalid m -> fail m
   | Km_chain.Invalid m -> fail m
   | Sys_error m -> fail m
