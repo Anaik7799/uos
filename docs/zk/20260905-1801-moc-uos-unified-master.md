@@ -36,7 +36,7 @@ The Unified Operational System (UOS) integrates three foundational corpora into 
   +------------------------------+                +------------------------------+
   | Hermes Wiki Engine           |  transclusion  | ZigVM Zettelkasten           |
   | engines/hermes/modules/      |<-------------->| docs/zk/                     |
-  |   hermes_wiki                |  [[wiki:...]]  | ADR-001..ADR-094 & MOCs      |
+  |   hermes_wiki                |  [[wiki:...]]  | ADR-001..ADR-095 & MOCs      |
   | AST, TyXML, Gospel,          |                | ADR-071..086 NOT_ADMITTED    |
   | Similarity                   |                |                              |
   +--------------+---------------+                +---------------+--------------+
@@ -255,6 +255,7 @@ record stays outside the quarantine range.
 | **ADR-092** | <span class="badge badge-fractal">#fractal-l0</span> | outside quarantine | [15-Cycle Constitutional Invariants Expansion, Hive Mind Decider & KM Triad Synthesis](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-1715-adr-092-constitutional-invariants-expansion-and-km-triad.md) | [`20260908-1715-adr-092-constitutional-invariants-expansion-and-km-triad.md`](file:///home/an/NAS-setup/uos/docs/zk/20260908-1715-adr-092-constitutional-invariants-expansion-and-km-triad.md) |
 | **ADR-093** | <span class="badge badge-fractal">#fractal-l0</span> | outside quarantine | [Super-Agent Holon Ecology, 11-Capability Substrate & Selective Activation Architecture](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-1850-adr-093-super-agent-holon-ecology-and-11-capability-substrate.md) | [`20260908-1850-adr-093-super-agent-holon-ecology-and-11-capability-substrate.md`](file:///home/an/NAS-setup/uos/docs/zk/20260908-1850-adr-093-super-agent-holon-ecology-and-11-capability-substrate.md) |
 | **ADR-094** | <span class="badge badge-fractal">#fractal-l0</span> | outside quarantine | [Living 21-Holon Swarm Ecology, 11-Capability Substrate & Cybernetic Singing Harmony Engine](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-1915-adr-094-living-swarm-ecology-and-cybernetic-singing-engine.md) | [`20260908-1915-adr-094-living-swarm-ecology-and-cybernetic-singing-engine.md`](file:///home/an/NAS-setup/uos/docs/zk/20260908-1915-adr-094-living-swarm-ecology-and-cybernetic-singing-engine.md) |
+| **ADR-095** | <span class="badge badge-fractal">#fractal-l4</span> | outside quarantine | [UOS, C3I, Indrajaal & Intelitor Triadic Architecture Comparison and Complete Monorepo Ingestion & Integration](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-2020-adr-095-uos-c3i-indrajaal-triadic-unification-and-complete-migration.md) | [`20260908-2020-adr-095-uos-c3i-indrajaal-triadic-unification-and-complete-migration.md`](file:///home/an/NAS-setup/uos/docs/zk/20260908-2020-adr-095-uos-c3i-indrajaal-triadic-unification-and-complete-migration.md) |
 
 [^q]: `NOT_ADMITTED` — the record asserts ratification of an EV cycle above
 `EV-93`, which the `AGENTS.md` provenance caveat places in the quarantined
