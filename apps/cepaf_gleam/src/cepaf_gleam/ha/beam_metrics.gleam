@@ -47,7 +47,8 @@ import gleam/list
 // Public types
 // ---------------------------------------------------------------------------
 
-/// BEAM VM metrics snapshot — all counters captured atomically by the FFI.
+/// BEAM VM sample. The FFI reads counters sequentially; it does not provide
+/// a transactionally atomic snapshot across all counters.
 pub type BeamMetrics {
   BeamMetrics(
     /// Number of online schedulers (hardware concurrency)
@@ -90,13 +91,13 @@ fn ffi_snapshot() -> BeamMetrics
 
 /// Capture a point-in-time BEAM VM metrics snapshot via Erlang FFI.
 ///
-/// [C3I-SIL6] ATOMIC CONTRACT
+/// Local runtime sampling contract (not a formal or atomicity certificate).
 /// <c3i-atomic>
 ///   <morphism type="injective">Erlang runtime stats ↪ BeamMetrics</morphism>
 ///   <formal-proof>
 ///     <P> Pre: Erlang runtime is running (always true in BEAM context) </P>
 ///     <C> snapshot() </C>
-///     <Q> Post: Returns BeamMetrics with all fields >= 0. Never raises. </Q>
+///     <Q> Normal return: nonnegative counters. FFI exceptions propagate. </Q>
 ///   </formal-proof>
 /// </c3i-atomic>
 pub fn snapshot() -> BeamMetrics {

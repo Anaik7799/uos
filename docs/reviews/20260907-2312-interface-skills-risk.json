@@ -1,0 +1,201 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "interface-skills-package",
+    "plan_id": "uos/interface-skills/20260907-2312",
+    "task_id": "PACKAGE",
+    "actor": "codex-side-interface-skills",
+    "scope": "Add repository-owned GUI/TUI skills, rules, process bindings and validation in an isolated workspace; read-only homeostasis review. No peer dispatch, application-source modification, runtime operation or admission.",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-07T23:30:00Z",
+    "valid_until": "2026-09-08T00:30:00Z",
+    "task_state": "executing",
+    "ready_since": "2026-09-07T23:28:48Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Dedicated workspace based on 4eab8b7280e13186cca69aecc101ba17d12b0247; no application source changes.",
+      "evidence": [
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "598653f5a9df9179b5527920f030878894787fa81d791b5ac742b0a53d60a613",
+          "observed_at": "2026-09-07T23:30:00Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam",
+          "sha256": "eb9ca76d3221bf88cbd0df9648211a6da36661703c6c50aacd2d5bbfb8fd5909",
+          "observed_at": "2026-09-07T23:30:00Z"
+        },
+        {
+          "path": "governance/capability-inventory/superpowers.toml",
+          "sha256": "f1cbf8d785bb9a0745836c8b928b8f094846fcf9d93eda7a31fde919fe906529",
+          "observed_at": "2026-09-07T23:30:00Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Needed for reliable GUI/TUI development and review.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam",
+          "governance/capability-inventory/superpowers.toml"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Operator feedback can incorrectly authorize risky action; this task changes guidance only.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam",
+          "governance/capability-inventory/superpowers.toml"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O3 Det3 gives RPN36 and severity-floor F4 for false healthy feedback.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam",
+          "governance/capability-inventory/superpowers.toml"
+        ]
+      },
+      "dependency": {
+        "value": 2,
+        "low": 2,
+        "high": 2,
+        "rationale": "Enables UI review and subsequent UI repairs; no runtime dependency installed.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam",
+          "governance/capability-inventory/superpowers.toml"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Improves recurring interface reviews across two user surfaces.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam",
+          "governance/capability-inventory/superpowers.toml"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-UI-FALSE-HEALTH",
+        "cause": "Static or missing telemetry is labeled healthy in a UI.",
+        "effect": "Operator acts on invalid system feedback.",
+        "controls": "Explicit unknown/stale/simulated states; source-bound checks and actual client-path tests.",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Interface author and reviewer",
+      "control_action": "Publish an operational status or enabled UI action",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "No unavailable/stale status is shown when telemetry stops.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Model unavailable states explicitly."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Static healthy badges are treated as observed evidence.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Bind labels to typed source observations."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Old events are displayed as current after reconnect.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Separate observed time from received time and reject stale order."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Status persists indefinitely without a freshness bound.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Expire live status and provide bounded retention."
+        }
+      ]
+    },
+    "class": "P2",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 216,
+    "score_interval": [
+      216,
+      216
+    ],
+    "decision": {
+      "supersedes": "none",
+      "summary": "Add three scoped, repository-owned skills and explicit verification scenarios using current UOS architecture.",
+      "alternatives": [
+        "Install a broad external frontend framework (unnecessary runtime and provenance burden).",
+        "Adapt bounded GUI/TUI practices locally with primary references (selected)."
+      ],
+      "counterevidence": [
+        "Lustre and Superpowers guidance already exists; reuse its intent without duplicating global symlinks."
+      ],
+      "assumptions": [
+        "Local guidance additions do not change runtime authority.",
+        "Existing application sources are read-only."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Explicit negative cases will expose false-live claims missed by string-presence tests.",
+      "falsifier": "Guidance labels HTTP200, static healthy values or unrun PTY/browser checks as passing.",
+      "acceptance": [
+        "Self-contained skills and local aliases",
+        "Explicit GUI TUI and evidence rules",
+        "Structural validation and manual scenario review",
+        "No source runtime or peer effects"
+      ],
+      "rollback": "Retain or abandon only the isolated candidate; no runtime change.",
+      "reviewer": "Author self-review; independent behavioral review remains unrun.",
+      "budget": "One bounded task and one-hour lease; deterministic tools; no paid models.",
+      "residuals": [
+        "New skills do not automatically enforce runtime behavior.",
+        "Independent agent skill testing is prohibited in this side session."
+      ]
+    }
+  }
+]

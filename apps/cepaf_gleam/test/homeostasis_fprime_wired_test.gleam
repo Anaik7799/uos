@@ -2,7 +2,8 @@
 //// [UOS-FPP-HOMEO-WIRED-TEST] NASA JPL F Prime Wired State Machine Test Suite
 //// =============================================================================
 //// Validates the wired execution semantics of all 5 F Prime Homeostasis State
-//// Machines coupled with authentic live telemetry contexts (WiredContext):
+//// Machines evaluated against literal context fixtures (WiredContext).
+//// These are deterministic model tests, not hardware/Zenoh integration receipts:
 //// 1. Prajna Circuit Breaker: Wired fault threshold evaluation and trip/recovery
 //// 2. Dead-Man Watchdog: Wired heartbeat age signal derivation and fail-closed lock
 //// 3. Swarm Cognitive OODA: Wired quorum supermajority guard enforcement

@@ -1,0 +1,202 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "unification-integration-prepare",
+    "plan_id": "uos/unification-integration/20260908-0821",
+    "task_id": "MERGE",
+    "actor": "codex-side-unification-integration",
+    "scope": "Prepare and verify an isolated merge of reviewed9bbc5217 with current main. Coordinate handoff. No shared workspace changes; main movement requires current exclusive integration/main ownership and a fresh gate. No production cutover.",
+    "phase": "implementation",
+    "fractal_layer": 4,
+    "observed_at": "2026-09-08T08:24:33Z",
+    "valid_until": "2026-09-08T09:24:33Z",
+    "task_state": "executing",
+    "ready_since": "2026-09-08T08:21:34Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Fresh canonical source observations after transient rule-alias drift; candidate9bbc5217 immutable, observed main51d9cb965ae26757e5550328f6c5c190ed7c049a; preserve moving root.",
+      "evidence": [
+        {
+          "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+          "observed_at": "2026-09-08T08:24:33Z"
+        },
+        {
+          "path": "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl",
+          "sha256": "a4e1a6b44f227e25c4349b0cd36d9c0292f068e94bae87fdbe4c6529e8561625",
+          "observed_at": "2026-09-08T08:24:33Z"
+        },
+        {
+          "path": "ops/web/20260907-1309-uos-indrajaal-web@.service",
+          "sha256": "526639ebc0ff84c123ed90a8b85735bf96cb36e14d65fdb2e966e7e8477e2968",
+          "observed_at": "2026-09-08T08:24:33Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Requested production update is blocked by release identity and recovery evidence.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl",
+          "ops/web/20260907-1309-uos-indrajaal-web@.service"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Live endpoint defaults OTP to 29 despite ERTS15 executable; effects need source, authority and rollback checks.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl",
+          "ops/web/20260907-1309-uos-indrajaal-web@.service"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O3 Det3 RPN36 gives F4: wrong release can damage service/evidence.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl",
+          "ops/web/20260907-1309-uos-indrajaal-web@.service"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Runtime identity, artifact binding and staged rollback are required release predecessors.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl",
+          "ops/web/20260907-1309-uos-indrajaal-web@.service"
+        ]
+      },
+      "impact": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Integration unifies source and evidence used across the release process; actual main mutation is separately fenced.",
+        "evidence_refs": [
+          "contracts/rules/20260907-1559-risk-prioritization-sop.md",
+          "apps/indrajaal_gleam_web/src/uos_web_runtime_ffi.erl",
+          "ops/web/20260907-1309-uos-indrajaal-web@.service"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-WEB-WRONG-RELEASE",
+        "cause": "An unbound process or unverified bytecode replaces a live listener.",
+        "effect": "Service outage, inconsistent routes or false OTP/admission metadata.",
+        "controls": "Exact build manifests, pinned actual OTP29, staging, exclusive lease and tested rollback.",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Owned integration preparation and fenced mainline update",
+      "control_action": "Prepare private JJ merge and advance main only with current integration ownership",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Required rollback is missing when new listener fails.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Prove a rollback listener before touching the old process."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Wrong candidate or wrong process is stopped.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Bind effects to manifest, exact PID/start identity and runtime lease."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Shared source or runtime ownership changes during release.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Recheck canonical source, lease epoch and target process immediately before effects."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "A stopped or unready service persists unnoticed.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE",
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Bound startup and post-change checks; roll back on failure."
+        }
+      ]
+    },
+    "class": "P1",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "score": 1024,
+    "score_interval": [
+      1024,
+      1024
+    ],
+    "decision": {
+      "summary": "Prepare tested merge while exclusive integration/main holder retains main authority; require a fresh handoff before any shared bookmark update.",
+      "alternatives": [
+        "Rerun unchanged broad suites30 times (rejected as redundant)",
+        "Adaptively select bounded distinct checks, reuse exact fresh evidence explicitly and report gaps (selected)"
+      ],
+      "counterevidence": [
+        "The previous UI-only tests do not verify current full-application startup.",
+        "The installed web unit is present but no active managed web unit was observed."
+      ],
+      "assumptions": [
+        "Operator explicitly authorized commit, merge and sync after initial audit",
+        "External providers can coordinate through board; no subagents or uncontrolled peer dispatch"
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Source-bound shared receipts should expose drift among interface, runtime and knowledge claims; global unification remains unverified until relevant gates pass.",
+      "falsifier": "A failed or unrun prerequisite is reported as passing, an external model grants authority, or a publication overwrites another session's state.",
+      "acceptance": [
+        "Own isolated merge preserves both source branches",
+        "Conflicts resolved and affected tests run at candidate",
+        "No main movement without current exclusive integration ownership",
+        "Source-bound journal and board/Zenoh receipts"
+      ],
+      "rollback": "Stop only owned canary; preserve previous review commit and all shared data. Never delete or regenerate shared board/Zenoh history.",
+      "reviewer": "Author runtime verification; no independent peer or system-admission claim.",
+      "budget": "One local worker, bounded native checks and own private canary; free-only Gemma advisory only through a permitted Tailnet gateway; scope-owned board/Zenoh keys.",
+      "residuals": [
+        "Production and whole-system admission remain blocked",
+        "Existing integration/main epoch34 held by another session"
+      ],
+      "supersedes": "New operator merge request after completed RUN30 review"
+    }
+  }
+]

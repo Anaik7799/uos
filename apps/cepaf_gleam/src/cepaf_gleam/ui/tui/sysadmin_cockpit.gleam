@@ -36,6 +36,9 @@
 //// STAMP: SC-GLM-UI-001, SC-GLM-UI-004, SC-GLM-UI-007, SC-MUDA-001
 
 import cepaf_gleam/cockpit/visuals
+import cepaf_gleam/ui/homeostasis_data as homeostasis_data
+import cepaf_gleam/ui/homeostasis_status as homeostasis_status
+import cepaf_gleam/ui/tui/homeostasis_evolution_view as homeostasis_view
 import gleam/float
 import gleam/int
 import gleam/list
@@ -185,6 +188,9 @@ pub type SysadminModel {
     last_refresh_utc: String,
     status_msg: String,
     homeostasis_state: HomeostasisSystemState,
+    homeostasis_snapshot: homeostasis_status.Snapshot,
+    homeostasis_observed_at: Int,
+    homeostasis_selection: homeostasis_data.Selection,
     message_board: List(MessageBoardItem),
     agent_activities: List(AgentActivityItem),
   )
@@ -532,6 +538,9 @@ pub fn default_model() -> SysadminModel {
     last_refresh_utc: "2026-09-06T18:45:00Z",
     status_msg: "System Nominal — All 16 SIL-6 Containers Tracked",
     homeostasis_state: init_homeostasis_system(1_788_818_000_000_000),
+    homeostasis_snapshot: homeostasis_status.unavailable(),
+    homeostasis_observed_at: 0,
+    homeostasis_selection: homeostasis_data.default(),
     message_board: default_message_board(),
     agent_activities: default_agent_activities(),
   )
@@ -833,9 +842,9 @@ pub fn render_tab_content(model: SysadminModel) -> String {
     SecurityTab -> render_security_tab(model)
     StreamTab -> render_stream_tab(model)
     DoctorTab -> render_doctor_tab(model)
-    HomeostasisTab -> render_homeostasis_tab(model)
+    HomeostasisTab -> homeostasis_view.render_snapshot(model.homeostasis_snapshot,model.homeostasis_observed_at,120,100)
     MessageBoardTab -> render_message_board_tab(model)
-    EvolutionTab -> render_evolution_tab(model)
+    EvolutionTab -> homeostasis_view.render_snapshot(model.homeostasis_snapshot,model.homeostasis_observed_at,120,100)
   }
 }
 
@@ -1168,7 +1177,7 @@ fn render_doctor_tab(model: SysadminModel) -> String {
 
 fn render_homeostasis_tab(model: SysadminModel) -> String {
   let title =
-    visuals.with_color("  === BIOMORPHIC PHYSIOLOGICAL HOMEOSTASIS (C3I / INDRAJAAL) ===", "cyan")
+    visuals.with_color("  === SIMULATED: BIOMORPHIC PHYSIOLOGICAL HOMEOSTASIS (C3I / INDRAJAAL) ===", "cyan")
   let s = model.homeostasis_state
   let p = s.physiological
   let m = s.metrics
@@ -1238,7 +1247,7 @@ fn render_homeostasis_tab(model: SysadminModel) -> String {
 
 fn render_message_board_tab(model: SysadminModel) -> String {
   let title =
-    visuals.with_color("  === SWARM MESSAGE DASHBOARD & A2A INTER-AGENT BUS ===", "cyan")
+    visuals.with_color("  === SIMULATED: SWARM MESSAGE DASHBOARD & A2A INTER-AGENT BUS ===", "cyan")
   let bus_info =
     "  Transport Plane  : Zenoh Pub/Sub (indrajaal/a2a/**) + SQLite Chained Ledger\n"
     <> "  Active Agents    : 25 OTP Supervised Agents  |  Quorum: 4-Party Sovereign Consensus"
@@ -1291,7 +1300,7 @@ fn render_message_board_tab(model: SysadminModel) -> String {
 
 fn render_evolution_tab(model: SysadminModel) -> String {
   let title =
-    visuals.with_color("  === AUTONOMOUS SYSTEM EVOLUTION & PARETO FRONTIERS ===", "cyan")
+    visuals.with_color("  === SIMULATED: AUTONOMOUS SYSTEM EVOLUTION & PARETO FRONTIERS ===", "cyan")
   let s = model.homeostasis_state
 
   let gate_badge = case s.physiological.is_homeostatic && s.metrics.stable {
@@ -1333,10 +1342,10 @@ fn render_evolution_tab(model: SysadminModel) -> String {
 
   let quorum_header = "  Sovereign Quorum Ratification:"
   let quorum_info =
-    "    * AGY Sovereign        : [APPROVED] Formal proofs & Gospel parity verified\n"
-    <> "    * Claude Sovereign     : [APPROVED] Monorepo architecture & coordination alignment\n"
-    <> "    * Codex Sovereign      : [APPROVED] Solo5 sandbox boundary verified\n"
-    <> "    * OpenRouter Advisory  : [APPROVED] Fitness trade-off evaluated"
+    "    * AGY Sovereign        : [UNKNOWN] Reference role: formal proof review\n"
+    <> "    * Claude Sovereign     : [UNKNOWN] Monorepo architecture & coordination alignment\n"
+    <> "    * Codex Sovereign      : [UNKNOWN] Reference role: sandbox verification\n"
+    <> "    * OpenRouter Advisory  : [UNKNOWN] Reference role: bounded advice"
 
   string.join([title, "", gen_info, "", pareto_header, pareto_rows, "", quorum_header, quorum_info], "\n")
 }
@@ -1437,4 +1446,10 @@ fn pad_right(text: String, width: Int) -> String {
     True -> string.slice(text, 0, width)
     False -> text <> string.repeat(" ", width - len)
   }
+}
+
+/// Explicit effect boundary; tab renderers consume the resulting immutable model.
+pub fn refresh_homeostasis(model: SysadminModel, selection: homeostasis_data.Selection) -> SysadminModel {
+  let #(snapshot,now) = homeostasis_data.read(selection)
+  SysadminModel(..model,homeostasis_snapshot: snapshot,homeostasis_observed_at: now,homeostasis_selection: selection)
 }

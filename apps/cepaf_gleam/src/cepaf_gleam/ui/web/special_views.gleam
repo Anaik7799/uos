@@ -36,6 +36,7 @@ import cepaf_gleam/ui/state.{
   cockpit_mode_to_string, ooda_phase_to_string,
 }
 import cepaf_gleam/ui/web/page_helpers.{page_header}
+import cepaf_gleam/ui/lustre/homeostasis_evolution_hud
 import gleam/float
 import gleam/int
 import gleam/list
@@ -456,62 +457,9 @@ fn tensor_row(
 // 28. Homeostasis Controls — L2 Component
 // ---------------------------------------------------------------------------
 
-pub fn homeostasis_view(state: SharedMeshState) -> Element(msg) {
-  let stability_status = case state.quorum_healthy && state.zenoh_connected {
-    True -> "Healthy"
-    False -> "Degraded"
-  }
-  let stability_label = case state.quorum_healthy && state.zenoh_connected {
-    True -> "STABLE"
-    False -> "DRIFTING"
-  }
-  html.div([attribute.class("w-full")], [
-    page_header(
-      "Homeostasis (L2 Component)",
-      "PID controller: setpoint, actual, error, control output",
-    ),
-    shell.section("State", [
-      html.div([attribute.class("card-grid")], [
-        shell.status_card(
-          "Stability",
-          stability_status,
-          stability_label,
-          "converged",
-        ),
-        shell.status_card("Convergence", "Healthy", "98.5%", "of setpoint"),
-        shell.status_card("Samples", "Healthy", "1024", "collected"),
-      ]),
-    ]),
-    shell.section("PID Controller", [
-      html.div([attribute.class("card-grid-wide")], [
-        shell.status_card("Setpoint", "Healthy", "1.0", "target"),
-        shell.status_card("Actual", "Healthy", "0.985", "measured"),
-        shell.status_card("Error", "Healthy", "0.015", "delta"),
-        shell.status_card("Output", "Healthy", "0.12", "control signal"),
-        shell.status_card("Kp", "Healthy", "1.0", "proportional"),
-        shell.status_card("Ki", "Healthy", "0.1", "integral"),
-        shell.status_card("Kd", "Healthy", "0.05", "derivative"),
-      ]),
-    ]),
-    shell.section("Homeostasis Metrics", [
-      shell.data_table(["Metric", "Value", "Threshold", "Status"], [
-        ["Temperature", "0.985", "1.0", "OK"],
-        ["Pressure", "0.97", "1.0", "OK"],
-        ["Flow", "0.99", "1.0", "OK"],
-        ["Error", "0.015", "< 0.05", "OK"],
-      ]),
-    ]),
-    element.element(
-      "script",
-      [
-        attribute.attribute(
-          "src",
-          "/static/page-grid.bundled.js?page=homeostasis",
-        ),
-      ],
-      [],
-    ),
-  ])
+/// SharedMeshState connectivity is not evidence of physiological homeostasis.
+pub fn homeostasis_view(_state: SharedMeshState) -> Element(msg) {
+  homeostasis_evolution_hud.render_unavailable()
 }
 
 // ---------------------------------------------------------------------------

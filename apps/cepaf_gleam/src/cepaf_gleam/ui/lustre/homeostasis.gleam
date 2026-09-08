@@ -79,6 +79,7 @@ pub fn update(
       HomeostasisModel(
         ..model,
         pid: PidState(..model.pid, actual: a, error: e, output: o),
+        stable: False,
         sample_count: model.sample_count + 1,
       )
     RefreshHomeostasis -> HomeostasisModel(..model, loading: True)

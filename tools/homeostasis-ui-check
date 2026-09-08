@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+# Read-only candidate verification; builds and browser output stay in a private temp dir.
+set -euo pipefail
+uos_ui_root=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)
+uos_ui_lib=${UOS_UI_LIB:-$uos_ui_root/apps/cepaf_gleam/build/dev/erlang}
+uos_ui_tmp=$(mktemp -d /tmp/uos-homeostasis-check.XXXXXX)
+uos_ui_mode=${1:---unit}
+uos_ui_server_pid=''
+trap 'if [[ -n "$uos_ui_server_pid" ]]; then kill "$uos_ui_server_pid" 2>/dev/null || true; wait "$uos_ui_server_pid" 2>/dev/null || true; fi' EXIT
+case "$uos_ui_mode" in --unit|--browser) ;; *) echo 'usage: homeostasis-ui-check [--unit|--browser]' >&2; exit 64;; esac
+[[ -d "$uos_ui_lib/gleam_stdlib" ]] || { echo 'Missing cached dependencies; set UOS_UI_LIB to the prepared dependency directory.' >&2; exit 78; }
+[[ "$(erl +S 2:2 -noshell -eval 'io:put_chars(erlang:system_info(otp_release)),halt().')" = 29 ]] || { echo 'OTP 29 is required on PATH; the checker will not silently use another runtime.' >&2; exit 78; }
+cp -R "$uos_ui_root/apps/cepaf_gleam/src" "$uos_ui_tmp/src"
+cp -R "$uos_ui_root/apps/indrajaal_gleam_web/src/." "$uos_ui_tmp/src/"
+sed '/^\[dev-dependencies\]$/d' "$uos_ui_root/apps/cepaf_gleam/gleam.toml" > "$uos_ui_tmp/gleam.toml"
+for uos_ui_test in homeostasis_ui_contract homeostasis_algebra homeostasis_evidence homeostasis_evolution_engine homeostasis_evolution_hud homeostasis_fprime_simulated homeostasis_fprime_wired physiological_homeostasis sysadmin_tui agui_sse_api; do
+  cp "$uos_ui_root/apps/cepaf_gleam/test/${uos_ui_test}_test.gleam" "$uos_ui_tmp/src/"
+done
+cp "$uos_ui_root/apps/indrajaal_gleam_web/test/homeostasis_transport_test.gleam" "$uos_ui_root/apps/indrajaal_gleam_web/test/homeostasis_http_probe.gleam" "$uos_ui_tmp/src/"
+printf 'Evidence directory: %s\n' "$uos_ui_tmp"
+ERL_FLAGS='+S 2:2' timeout --kill-after=2s 60s gleam compile-package --target erlang --package "$uos_ui_tmp" --out "$uos_ui_tmp/compiled" --lib "$uos_ui_lib" > "$uos_ui_tmp/build.log" 2>&1 || { tail -60 "$uos_ui_tmp/build.log"; exit 1; }
+timeout --kill-after=2s 45s erl +S 2:2 -noshell -pa "$uos_ui_lib"/*/ebin -pa "$uos_ui_tmp/compiled/ebin" -eval 'io:format("Runtime: ~s~nTest module: ~s~n",[erlang:system_info(system_version),code:which(homeostasis_ui_contract_test)]), case eunit:test([homeostasis_algebra_test,homeostasis_ui_contract_test,homeostasis_evidence_test,homeostasis_transport_test,agui_sse_api_test,homeostasis_evolution_engine_test,homeostasis_evolution_hud_test,homeostasis_fprime_simulated_test,homeostasis_fprime_wired_test,physiological_homeostasis_test,sysadmin_tui_test],[verbose]) of ok -> halt(0); error -> halt(1) end.' > "$uos_ui_tmp/unit.log" 2>&1 || { cat "$uos_ui_tmp/unit.log"; exit 1; }
+tail -3 "$uos_ui_tmp/unit.log"
+if [[ "$uos_ui_mode" = --browser ]]; then
+  uos_ui_port=${UOS_UI_TEST_PORT:-59451}
+  [[ "$uos_ui_port" =~ ^[0-9]+$ ]] && (( uos_ui_port >= 49152 && uos_ui_port <= 65535 )) || { echo 'Private test port must be 49152..65535' >&2; exit 64; }
+  uos_ui_chrome=${UOS_UI_CHROME:-/opt/google/chrome/chrome}
+  [[ -x "$uos_ui_chrome" ]] || { echo 'Preinstalled Chrome is required; set UOS_UI_CHROME.' >&2; exit 78; }
+  cp "$uos_ui_root/tools/validation/homeostasis_browser_check.ml" "$uos_ui_tmp/browser_check.ml"
+  ocamlfind ocamlopt -cc "${UOS_UI_CC:-/usr/bin/cc}" -linkpkg -package playwright,eio_main,yojson -o "$uos_ui_tmp/browser-check" "$uos_ui_tmp/browser_check.ml"
+  timeout --kill-after=2s 180s erl +S 2:2 -noshell -pa "$uos_ui_lib"/*/ebin -pa "$uos_ui_tmp/compiled/ebin" -eval "application:ensure_all_started(crypto),application:ensure_all_started(ssl),application:ensure_all_started(mist),homeostasis_http_probe:serve($uos_ui_port),halt()." > "$uos_ui_tmp/http.log" 2>&1 &
+  uos_ui_server_pid=$!
+  for uos_ui_attempt in 1 2 3 4 5; do
+    kill -0 "$uos_ui_server_pid" 2>/dev/null || { cat "$uos_ui_tmp/http.log"; exit 1; }
+    if curl --silent --fail --max-time 1 "http://127.0.0.1:$uos_ui_port/homeostasis/evolution" > /dev/null; then break; fi
+    sleep 0.2
+  done
+  timeout --kill-after=2s 50s "$uos_ui_tmp/browser-check" "http://127.0.0.1:$uos_ui_port/homeostasis/evolution" "$uos_ui_tmp" "$uos_ui_chrome" > "$uos_ui_tmp/browser.log" 2>&1 || { cat "$uos_ui_tmp/browser.log"; exit 1; }
+  cat "$uos_ui_tmp/browser.log"
+fi
+printf 'PASS: scoped homeostasis UI verification (%s); no production cutover or admission.\n' "$uos_ui_mode"

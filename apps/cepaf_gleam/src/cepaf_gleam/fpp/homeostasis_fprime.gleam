@@ -558,7 +558,8 @@ pub fn step_simulated(
   dispatch_signal(machine, guards, current, signal)
 }
 
-/// Wired execution context holding live sensor telemetry
+/// Caller-supplied context for a pure state-machine calculation.
+/// This type does not itself read hardware or establish sensor provenance.
 pub type WiredContext {
   WiredContext(
     cpu_pct: Float,
@@ -573,26 +574,37 @@ pub type WiredContext {
   )
 }
 
-/// Compute live guards from authentic wired telemetry context
+pub fn valid_wired_context(ctx: WiredContext) -> Bool {
+  ctx.cpu_pct >=. 0.0 && ctx.cpu_pct <=. 100.0
+  && ctx.memory_pct >=. 0.0 && ctx.memory_pct <=. 100.0
+  && ctx.latency_ms >=. 0.0 && ctx.error_rate_pct >=. 0.0
+  && ctx.error_rate_pct <=. 100.0 && ctx.heartbeat_age_ms >= 0
+  && ctx.fault_count >= 0 && ctx.lyapunov_v >=. 0.0
+  && ctx.quorum_votes >= 0 && ctx.quorum_votes <= 4
+}
+
+/// Validate the context before permitting a positive guard.
 pub fn evaluate_wired_guards(ctx: WiredContext) -> List(#(String, Bool)) {
+  let valid = valid_wired_context(ctx)
   [
-    #("fault_threshold_exceeded", ctx.fault_count >= 5),
-    #("handshake_revalidated", ctx.heartbeat_age_ms <= 1000),
-    #("supermajority_passed", ctx.quorum_votes >= 3),
+    #("fault_threshold_exceeded", !valid || ctx.fault_count >= 5),
+    #("handshake_revalidated", valid && ctx.heartbeat_age_ms <= 1000),
+    #("supermajority_passed", valid && ctx.quorum_votes >= 3),
     #(
       "lyapunov_dissipative_and_quorum",
-      ctx.lyapunov_lambda <=. 0.0 && ctx.quorum_votes >= 3,
+      valid && ctx.lyapunov_lambda <=. 0.0 && ctx.quorum_votes >= 3,
     ),
   ]
 }
 
 /// Derive appropriate live FPP signal from wired context for Watchdog
 pub fn wired_watchdog_signal(ctx: WiredContext) -> String {
-  case ctx.heartbeat_age_ms {
-    age if age <= 2000 -> "heartbeat_tick"
-    age if age <= 5000 -> "warning_timeout"
-    age if age <= 10000 -> "stale_timeout"
-    _ -> "dead_timeout"
+  case valid_wired_context(ctx), ctx.heartbeat_age_ms {
+    False, _ -> "dead_timeout"
+    True, age if age <= 2000 -> "heartbeat_tick"
+    True, age if age <= 5000 -> "warning_timeout"
+    True, age if age <= 10000 -> "stale_timeout"
+    True, _ -> "dead_timeout"
   }
 }
 
@@ -607,14 +619,15 @@ pub fn wired_envelope_signal(error: Float) -> String {
   }
 }
 
-/// Execute a wired step on any F Prime state machine using live WiredContext
+/// Compute a model transition. Returned action labels do not execute effects.
 pub fn step_wired(
   machine: StateMachine,
   current: MachineState,
   signal: String,
   ctx: WiredContext,
 ) -> Result(MachineState, String) {
-  let guards = evaluate_wired_guards(ctx)
-  dispatch_signal(machine, guards, current, signal)
+  case valid_wired_context(ctx) {
+    False -> Error("invalid wired context")
+    True -> dispatch_signal(machine, evaluate_wired_guards(ctx), current, signal)
+  }
 }
-

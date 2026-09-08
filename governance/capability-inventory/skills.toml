@@ -8,6 +8,31 @@ canonical_core_union = 129
 all_project_roots_union = 219
 authority = "A0_reference"
 
+# Local additions do not rewrite the historical source-union counts above.
+[[skill]]
+name = "uos-gui-design"
+source = "uos"
+reference_only = false
+state = "local_candidate_packaging_checked_behavior_unrun"
+path = "plugins/uos-interface-quality/skills/uos-gui-design/SKILL.md"
+authority = "UOS-UI-QUALITY-001 scoped guidance; no runtime admission"
+
+[[skill]]
+name = "uos-tui-design"
+source = "uos"
+reference_only = false
+state = "local_candidate_packaging_checked_behavior_unrun"
+path = "plugins/uos-interface-quality/skills/uos-tui-design/SKILL.md"
+authority = "UOS-UI-QUALITY-001 scoped guidance; no runtime admission"
+
+[[skill]]
+name = "uos-ui-superpowers"
+source = "uos"
+reference_only = false
+state = "local_candidate_packaging_checked_behavior_unrun"
+path = "plugins/uos-interface-quality/skills/uos-ui-superpowers/SKILL.md"
+authority = "UOS-UI-QUALITY-001 scoped workflow; no dispatch authority"
+
 [[skill]]
 name = "uos-risk-prioritization"
 source = "uos"
@@ -819,4 +844,3 @@ name = "stage-durability"
 source = "codex"
 reference_only = false
 state = "admitted"
-

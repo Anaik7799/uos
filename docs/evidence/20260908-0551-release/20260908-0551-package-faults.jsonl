@@ -1,0 +1,5 @@
+{"schema":"uos.release-check.v1","stage":"altered_artifact","status":"PASS","authority":"NONE"}
+{"schema":"uos.release-check.v1","stage":"unexpected_file","status":"PASS","authority":"NONE"}
+{"schema":"uos.release-check.v1","stage":"missing_artifact","status":"PASS","authority":"NONE"}
+{"schema":"uos.release-check.v1","stage":"symlink","status":"PASS","authority":"NONE"}
+{"schema":"uos.release-check.v1","stage":"package-faults","status":"PASS","authority":"NONE","checks":5,"scope":"private copied release only"}

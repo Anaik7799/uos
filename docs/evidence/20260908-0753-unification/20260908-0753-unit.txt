@@ -1,0 +1,113 @@
+======================== EUnit ========================
+module 'homeostasis_algebra_test'
+  homeostasis_algebra_test: thirty_model_evolutions_preserve_generation_and_history_test...[0.005 s] ok
+  homeostasis_algebra_test: thirty_cycles_all_modes_and_scenarios_share_denotation_test...[0.066 s] ok
+  homeostasis_algebra_test: real_mode_observes_vm_without_inventing_homeostasis_test...[0.001 s] ok
+  homeostasis_algebra_test: invalid_mode_and_cycle_cannot_select_real_execution_test...ok
+  homeostasis_algebra_test: threshold_preview_is_monotone_and_has_no_real_authority_test...ok
+  [done in 0.087 s]
+module 'homeostasis_ui_contract_test'
+  homeostasis_ui_contract_test: initial_model_is_explicitly_simulated_in_hud_test...ok
+  homeostasis_ui_contract_test: initial_model_has_no_claimed_live_peers_in_tui_test...ok
+  homeostasis_ui_contract_test: unavailable_homeostasis_api_has_no_healthy_fallback_test...[0.007 s] ok
+  homeostasis_ui_contract_test: status_stream_does_not_fabricate_observations_test...ok
+  homeostasis_ui_contract_test: browser_event_handler_is_safe_and_handles_disconnect_test...ok
+  homeostasis_ui_contract_test: invalid_negative_heartbeat_cannot_revalidate_handshake_test...ok
+  homeostasis_ui_contract_test: impossible_quorum_cannot_arm_evolution_test...ok
+  homeostasis_ui_contract_test: threshold_widget_has_associated_labels_and_request_semantics_test...[0.001 s] ok
+  [done in 0.033 s]
+module 'homeostasis_evidence_test'
+  homeostasis_evidence_test: invalid_runtime_counters_do_not_become_observed_test...ok
+  homeostasis_evidence_test: live_counter_sample_expires_and_has_no_health_score_test...ok
+  homeostasis_evidence_test: freshness_boundary_and_clock_rollback_test...ok
+  homeostasis_evidence_test: invalid_provenance_is_rejected_test...ok
+  homeostasis_evidence_test: fixtures_never_become_observed_with_time_test...ok
+  homeostasis_evidence_test: gui_tui_api_agree_on_evidence_state_test...[0.002 s] ok
+  homeostasis_evidence_test: untrusted_source_is_text_in_gui_and_terminal_test...ok
+  homeostasis_evidence_test: terminal_dimensions_and_plain_fallback_are_bounded_test...ok
+  homeostasis_evidence_test: partial_pid_update_invalidates_previous_stability_test...ok
+  [done in 0.029 s]
+module 'agui_sse_api_test'
+  agui_sse_api_test: default_config_test...ok
+  agui_sse_api_test: sse_32_event_manifest_contains_all_categories_test...[0.006 s] ok
+  agui_sse_api_test: sse_cockpit_push_frame_test...ok
+  agui_sse_api_test: agui_manifest_summary_test...ok
+  agui_sse_api_test: router_agui_routes_test...ok
+  agui_sse_api_test: homeostasis_telemetry_sse_stream_test...ok
+  [done in 0.024 s]
+module 'homeostasis_evolution_engine_test'
+  homeostasis_evolution_engine_test: four_party_quorum_members_test...ok
+  homeostasis_evolution_engine_test: pid_homeostasis_convergence_test...ok
+  homeostasis_evolution_engine_test: equilibrium_transition_test...ok
+  homeostasis_evolution_engine_test: propose_evolution_blocked_before_homeostasis_test...ok
+  homeostasis_evolution_engine_test: three_of_four_evolution_ratification_test...ok
+  homeostasis_evolution_engine_test: instability_intervention_test...ok
+  homeostasis_evolution_engine_test: three_of_four_evolution_rejection_test...ok
+  homeostasis_evolution_engine_test: homeostasis_actor_lifecycle_test...[0.002 s] ok
+  homeostasis_evolution_engine_test: physiological_homeostasis_gating_test...ok
+  [done in 0.029 s]
+module 'homeostasis_evolution_hud_test'
+  homeostasis_evolution_hud_test: render_hud_converging_test...[0.001 s] ok
+  homeostasis_evolution_hud_test: render_hud_equilibrium_test...ok
+  homeostasis_evolution_hud_test: render_hud_live_event_log_test...ok
+  [done in 0.010 s]
+module 'homeostasis_fprime_simulated_test'
+  homeostasis_fprime_simulated_test: prajna_breaker_initial_state_test...ok
+  homeostasis_fprime_simulated_test: prajna_breaker_guard_trip_test...ok
+  homeostasis_fprime_simulated_test: prajna_breaker_canary_failure_re_trip_test...ok
+  homeostasis_fprime_simulated_test: deadman_watchdog_fail_closed_cascade_test...ok
+  homeostasis_fprime_simulated_test: ooda_swarm_full_cycle_test...ok
+  homeostasis_fprime_simulated_test: evolutionary_gate_lock_and_rollback_test...ok
+  homeostasis_fprime_simulated_test: tolerance_envelope_displacement_test...ok
+  [done in 0.022 s]
+module 'homeostasis_fprime_wired_test'
+  homeostasis_fprime_wired_test: evaluate_wired_guards_spectrum_test...ok
+  homeostasis_fprime_wired_test: prajna_breaker_wired_nominal_suppression_test...ok
+  homeostasis_fprime_wired_test: prajna_breaker_wired_trip_and_cooldown_recovery_test...ok
+  homeostasis_fprime_wired_test: prajna_breaker_wired_canary_failure_retrip_test...ok
+  homeostasis_fprime_wired_test: deadman_watchdog_wired_signal_derivation_test...ok
+  homeostasis_fprime_wired_test: deadman_watchdog_wired_cascade_to_dead_test...ok
+  homeostasis_fprime_wired_test: deadman_watchdog_wired_fail_closed_handshake_guard_test...ok
+  homeostasis_fprime_wired_test: ooda_swarm_wired_quorum_guard_test...ok
+  homeostasis_fprime_wired_test: evolution_gate_wired_dual_key_guard_test...ok
+  homeostasis_fprime_wired_test: dynamic_tolerance_envelope_wired_signals_test...ok
+  homeostasis_fprime_wired_test: integrated_homeostasis_multi_machine_flight_loop_test...ok
+  [done in 0.033 s]
+module 'physiological_homeostasis_test'
+  physiological_homeostasis_test: default_variables_count_test...ok
+  physiological_homeostasis_test: stress_classification_test...ok
+  physiological_homeostasis_test: step_variable_pid_anti_windup_test...ok
+  physiological_homeostasis_test: physiological_telemetry_trend_and_homeostasis_test...ok
+  [done in 0.012 s]
+module 'sysadmin_tui_test'
+  sysadmin_tui_test: default_model_initialization_test...[0.001 s] ok
+  sysadmin_tui_test: tab_selection_and_cycling_test...ok
+  sysadmin_tui_test: cockpit_mode_toggling_test...ok
+  sysadmin_tui_test: container_navigation_and_actions_test...ok
+  sysadmin_tui_test: garbage_collection_test...ok
+  sysadmin_tui_test: render_all_9_tabs_test...[0.001 s] ok
+  sysadmin_tui_test: terminal_dimension_and_bounds_test...[0.001 s] ok
+  [done in 0.024 s]
+module 'release_lifecycle_test'
+  release_lifecycle_test: declarative_intent_has_the_same_observation_as_direct_interpreter_test...[0.002 s] ok
+  release_lifecycle_test: every_transition_matches_prefix_oracle_test...[0.002 s] ok
+  release_lifecycle_test: every_stage_rejects_invalid_evidence_test...[0.002 s] ok
+  release_lifecycle_test: guards_are_closed_in_the_underlying_fprime_interpreter_test...ok
+  release_lifecycle_test: all_stages_route_faults_to_a_safe_state_test...[0.002 s] ok
+  release_lifecycle_test: rollback_requires_fresh_evidence_and_is_terminal_test...ok
+  release_lifecycle_test: replay_is_deterministic_and_chunkable_test...[0.002 s] ok
+  [done in 0.031 s]
+module 'runtime_identity_test'
+  runtime_identity_test: inconsistent_runtime_and_clock_cannot_report_ready_test...[0.001 s] ok
+  runtime_identity_test: wrong_otp_cannot_start_or_be_ready_test...ok
+  runtime_identity_test: managed_missing_candidate_cannot_start_test...ok
+  runtime_identity_test: candidate_and_role_are_bounded_test...ok
+  runtime_identity_test: supported_managed_identity_is_not_admission_test...ok
+  runtime_identity_test: real_vm_identity_is_stable_and_time_is_observed_test...ok
+  [done in 0.019 s]
+module 'homeostasis_transport_test'
+  homeostasis_transport_test: unavailable_is_service_unavailable_and_uncacheable_test...[0.001 s] ok
+  homeostasis_transport_test: document_is_actual_homeostasis_and_executable_bridge_test...[0.001 s] ok
+  [done in 0.008 s]
+=======================================================
+  All 84 tests passed.

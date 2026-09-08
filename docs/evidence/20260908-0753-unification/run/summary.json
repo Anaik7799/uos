@@ -1,0 +1,565 @@
+{
+  "schema": "uos.unification-run.v1",
+  "decisions": 30,
+  "system_admitted": false,
+  "checker_revision": "10eb56ce35e3943d9581825a8b32b9f3e676c5a9",
+  "subject_candidate": "c0480a3a91323e4819e0d7e5c3eb7a1249565728",
+  "hash_chain_tip": "ba85f23158125ada7a6b2d2ddf17a08c5a78413129acea660fe348bdf11e2b96",
+  "nonpassing": [
+    { "focus": "C30", "status": "FAIL" },
+    { "focus": "C29", "status": "BLOCKED" },
+    { "focus": "C23", "status": "OBSERVED" },
+    { "focus": "C22", "status": "OBSERVED" },
+    { "focus": "C27", "status": "OBSERVED" },
+    { "focus": "C15", "status": "FAIL" },
+    { "focus": "C20", "status": "FAIL" },
+    { "focus": "C19", "status": "OBSERVED" },
+    { "focus": "C28", "status": "BLOCKED" },
+    { "focus": "C25", "status": "BLOCKED" },
+    { "focus": "C26", "status": "BLOCKED" },
+    { "focus": "C06", "status": "BLOCKED" }
+  ],
+  "publications": [
+    {
+      "cycle": 1,
+      "evidence_sha256": "b313510c2e167a672a46ec3f3cac62d060b8d9d964d5a6f9f8569bd3b029d200",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-01",
+        "operation": "send",
+        "sequence": 614,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-01",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/01",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 2,
+      "evidence_sha256": "26e5ef2250ca9d5e14083c39a367210d318d10105f17242e69c5b57a68f2c4ff",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-02",
+        "operation": "send",
+        "sequence": 616,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-02",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/02",
+      "zenoh_readback": false,
+      "error": "Failure(\"Zenoh exact readback missing\")"
+    },
+    {
+      "cycle": 3,
+      "evidence_sha256": "fbd8f8c1a12c025bf91abdf2852e259e7d7836c9eef63cec8b821a1951fa7d25",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-03",
+        "operation": "send",
+        "sequence": 618,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-03",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/03",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 4,
+      "evidence_sha256": "f7cee544442781836b4217f6bed864e3c17fb1598515b808c645727814abfc5b",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-04",
+        "operation": "send",
+        "sequence": 620,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-04",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/04",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 5,
+      "evidence_sha256": "47b999dcc499588685dab7b8bf0ac167779638246a5cf19210d4e050b1ae0c78",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-05",
+        "operation": "send",
+        "sequence": 622,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-05",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/05",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 6,
+      "evidence_sha256": "e5621e6a6aabb6ad25e75a0e6b5272cad89fd9596cc217ed0ebf968f852dfba0",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-06",
+        "operation": "send",
+        "sequence": 625,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-06",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/06",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 7,
+      "evidence_sha256": "8da1782890f9a68e3bacc5f0d6d691f38dbb73fb5b19284a4accbb6c02a464fa",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-07",
+        "operation": "send",
+        "sequence": 627,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-07",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/07",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 8,
+      "evidence_sha256": "c59e188fa7c938c494cf36f3e6b117efa7d6ffc8b559f2909b08a5d6007edea3",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-08",
+        "operation": "send",
+        "sequence": 629,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-08",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/08",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 9,
+      "evidence_sha256": "b55257b050402b261a88ce3d875b5f8cf1ca6bc6e8354da10145dad5fbfab4e2",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-09",
+        "operation": "send",
+        "sequence": 631,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-09",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/09",
+      "zenoh_readback": false,
+      "error": "Failure(\"Zenoh exact readback missing\")"
+    },
+    {
+      "cycle": 10,
+      "evidence_sha256": "35c75bb2d605902f44bded5f51ebdcf53f3c0e9795ab59d43faa393a4e85cfd6",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-10",
+        "operation": "send",
+        "sequence": 633,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-10",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/10",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 11,
+      "evidence_sha256": "4af677fb6a09b19ca86f1c6ca79b8516c098a6e1a90ab3e10461a4adee2483c3",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-11",
+        "operation": "send",
+        "sequence": 635,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-11",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/11",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 12,
+      "evidence_sha256": "4be41caae6ce2e6253609accbbbca77b82ad4cbf882ec87bb0b8f95222a45e82",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-12",
+        "operation": "send",
+        "sequence": 637,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-12",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/12",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 13,
+      "evidence_sha256": "50a9cd0d52edfb8e34b1811692e4a569556efc7f7b94fff7ad7d577a09fd45ce",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-13",
+        "operation": "send",
+        "sequence": 639,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-13",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/13",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 14,
+      "evidence_sha256": "52c5304e37840dceb7f894648c0aadf0351994de16e451f35071be5185043505",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-14",
+        "operation": "send",
+        "sequence": 641,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-14",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/14",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 15,
+      "evidence_sha256": "bc7389a1e84cc2c72ec5177018f9e4664c99d6fd27bd8576cf8d94d29d2d1e0e",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-15",
+        "operation": "send",
+        "sequence": 643,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-15",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/15",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 16,
+      "evidence_sha256": "56de1bb59465cc4d083d7a08ad54e0c441b3e7eceb516dee76eee4261c921c51",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-16",
+        "operation": "send",
+        "sequence": 645,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-16",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/16",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 17,
+      "evidence_sha256": "0e03af4eeba33da0271db41249a0eff6ac94958cbe7958a2824ddf7cf8b7712f",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-17",
+        "operation": "send",
+        "sequence": 647,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-17",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/17",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 18,
+      "evidence_sha256": "58734329e40913de5721e912b70c0bbbd7914c1583857b8e3cf42fffadddff8b",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-18",
+        "operation": "send",
+        "sequence": 649,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-18",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/18",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 19,
+      "evidence_sha256": "adebb9726a72e06d603e2e64112a4d10d0132d1373678c78f89671fd0f07b496",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-19",
+        "operation": "send",
+        "sequence": 651,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-19",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/19",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 20,
+      "evidence_sha256": "44419d21b6363f8ead9fa817c8a73e8b7ee61fda8e55b8e9a1d69a727be727e6",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-20",
+        "operation": "send",
+        "sequence": 653,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-20",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/20",
+      "zenoh_readback": false,
+      "error": "Failure(\"Zenoh exact readback missing\")"
+    },
+    {
+      "cycle": 21,
+      "evidence_sha256": "cef8f964f4b3753f80a1ae34d8e8694d619c30d47c3d7784b5cdad6569413c45",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-21",
+        "operation": "send",
+        "sequence": 655,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-21",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/21",
+      "zenoh_readback": false,
+      "error": "Failure(\"Zenoh exact readback missing\")"
+    },
+    {
+      "cycle": 22,
+      "evidence_sha256": "349aaa5d3a208d6c765271bc3247c7c2772bb689e2179352dd2f3e840cf2f0aa",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-22",
+        "operation": "send",
+        "sequence": 657,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-22",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/22",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 23,
+      "evidence_sha256": "4c16c26c5c0b21c2b46137f32ab6e85a056db1dac94b9d6340ec0e0216c60c1b",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-23",
+        "operation": "send",
+        "sequence": 659,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-23",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/23",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 24,
+      "evidence_sha256": "762cba6cee649e3103768555f0f0b1149ccee8c663f95d311adc9f2ac7524d0e",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-24",
+        "operation": "send",
+        "sequence": 661,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-24",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/24",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 25,
+      "evidence_sha256": "e7f1816e2975aa3697c731749a5a7ff4f644a061026e8f3b1c775d75133487a9",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-25",
+        "operation": "send",
+        "sequence": 663,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-25",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/25",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 26,
+      "evidence_sha256": "f206cdba2a2841ef0b5887dac84dfe9bfa31d9f726dfed48aff5eda8f76e13be",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-26",
+        "operation": "send",
+        "sequence": 665,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-26",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/26",
+      "zenoh_readback": false,
+      "error": "Failure(\"Zenoh exact readback missing\")"
+    },
+    {
+      "cycle": 27,
+      "evidence_sha256": "46fe75ea8622ee84d77e727d8b755a962a4f34661c044aeaba0e1e3e29d8ed3d",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-27",
+        "operation": "send",
+        "sequence": 667,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-27",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/27",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 28,
+      "evidence_sha256": "b3a21d68826b03607ccd941198bacd6a62bddb3fbd045aa7e9f996d82afd32f8",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-28",
+        "operation": "send",
+        "sequence": 669,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-28",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/28",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 29,
+      "evidence_sha256": "e5d836aebddbdfe909495e357358d05443c5d20b188779186d0916bb5edae5cd",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-29",
+        "operation": "send",
+        "sequence": 671,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-29",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/29",
+      "zenoh_readback": true,
+      "error": ""
+    },
+    {
+      "cycle": 30,
+      "evidence_sha256": "ba85f23158125ada7a6b2d2ddf17a08c5a78413129acea660fe348bdf11e2b96",
+      "board_ack": {
+        "ok": true,
+        "operation_id": "evo-0701-cycle-30",
+        "operation": "send",
+        "sequence": 673,
+        "duplicate": false,
+        "epoch": 0,
+        "expires_boot_us": 0,
+        "message_id": "evo-0701-cycle-30",
+        "authority": "local-cooperative-lease; executor must recheck current fence"
+      },
+      "zenoh_key": "uos/tui/state/evolution/codex-side-unification-20260908-0701/cycle/30",
+      "zenoh_readback": true,
+      "error": ""
+    }
+  ],
+  "elapsed_monotonic_seconds": 76.728800557
+}

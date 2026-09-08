@@ -32,7 +32,8 @@ import cepaf_gleam/ha/fitness_gate
 import cepaf_gleam/ha/fractal_forecast
 import cepaf_gleam/ha/guard_grid
 import cepaf_gleam/ha/health_cascade
-import cepaf_gleam/ha/homeostasis_evolution_engine
+import cepaf_gleam/ui/homeostasis_status
+import cepaf_gleam/ui/wisp/homeostasis_api
 import cepaf_gleam/ha/hot_reload
 import cepaf_gleam/mcp/tools as mcp_tools
 import cepaf_gleam/ha/invariant_gate
@@ -100,7 +101,10 @@ pub fn route(path: String) -> String {
   case request_guard.check() {
     request_guard.Block(reason) ->
       "{\"error\":\"service_unavailable\",\"reason\":\"" <> reason <> "\"}"
-    request_guard.Proceed -> route_internal(path)
+    request_guard.Proceed -> case homeostasis_api.response(path) {
+      option.Some(body) -> body
+      option.None -> route_internal(path)
+    }
   }
 }
 
@@ -2376,150 +2380,11 @@ fn build_symbiosis_index() -> symbiosis_types.SymbiosisIndex {
 }
 
 fn homeostasis_json() -> String {
-  json.object([
-    #("page", json.string("Homeostasis")),
-    #("layer", json.string("L2_COMPONENT")),
-    #("stable", json.bool(True)),
-    #("convergence_pct", json.float(98.5)),
-    #("sample_count", json.int(1024)),
-    #(
-      "pid",
-      json.object([
-        #("setpoint", json.float(1.0)),
-        #("actual", json.float(0.985)),
-        #("error", json.float(0.015)),
-        #("output", json.float(0.12)),
-        #("kp", json.float(1.0)),
-        #("ki", json.float(0.1)),
-        #("kd", json.float(0.05)),
-      ]),
-    ),
-  ])
-  |> json.to_string()
+  homeostasis_status.to_json(homeostasis_status.unavailable(), 0)
 }
 
 fn homeostasis_evolution_json() -> String {
-  json.object([
-    #("page", json.string("HomeostasisEvolution")),
-    #("layer", json.string("L0_CONSTITUTIONAL")),
-    #("homeostasis_stable", json.bool(True)),
-    #("phase", json.string("HomeostaticEquilibrium")),
-    #("composite_stress", json.float(0.38)),
-    #("stress_trend", json.string("STABLE")),
-    #(
-      "pid_convergence",
-      json.object([
-        #("setpoint", json.float(1.0)),
-        #("actual", json.float(0.995)),
-        #("error", json.float(0.005)),
-        #("lyapunov_v", json.float(0.0000125)),
-      ]),
-    ),
-    #(
-      "physiological_variables",
-      json.array(
-        [
-          json.object([
-            #("variable", json.string("cpu_pct")),
-            #("setpoint", json.float(60.0)),
-            #("actual", json.float(45.0)),
-            #("stress", json.string("OPTIMAL")),
-            #("control_signal", json.float(0.0)),
-          ]),
-          json.object([
-            #("variable", json.string("memory_pct")),
-            #("setpoint", json.float(70.0)),
-            #("actual", json.float(52.0)),
-            #("stress", json.string("OPTIMAL")),
-            #("control_signal", json.float(0.0)),
-          ]),
-          json.object([
-            #("variable", json.string("latency_ms")),
-            #("setpoint", json.float(100.0)),
-            #("actual", json.float(48.0)),
-            #("stress", json.string("OPTIMAL")),
-            #("control_signal", json.float(0.0)),
-          ]),
-          json.object([
-            #("variable", json.string("error_rate_pct")),
-            #("setpoint", json.float(0.5)),
-            #("actual", json.float(0.02)),
-            #("stress", json.string("LOW")),
-            #("control_signal", json.float(0.0)),
-          ]),
-        ],
-        fn(x) { x },
-      ),
-    ),
-    #(
-      "pareto_landscape",
-      json.array(
-        [
-          json.object([
-            #("candidate_id", json.string("cand-01-simd")),
-            #("name", json.string("MAX SIMD Scorer Optimization")),
-            #("latency_ms", json.float(25.0)),
-            #("throughput_ops", json.float(8500.0)),
-            #("error_pct", json.float(0.02)),
-            #("cpu_pct", json.float(48.0)),
-            #("composite_fitness", json.float(0.94)),
-            #("pareto_optimal", json.bool(True)),
-          ]),
-          json.object([
-            #("candidate_id", json.string("cand-02-heijunka")),
-            #("name", json.string("Heijunka Leveled Pull Queue")),
-            #("latency_ms", json.float(40.0)),
-            #("throughput_ops", json.float(9200.0)),
-            #("error_pct", json.float(0.01)),
-            #("cpu_pct", json.float(42.0)),
-            #("composite_fitness", json.float(0.96)),
-            #("pareto_optimal", json.bool(True)),
-          ]),
-          json.object([
-            #("candidate_id", json.string("cand-03-solo5")),
-            #("name", json.string("Solo5 Sandboxed Isolation")),
-            #("latency_ms", json.float(65.0)),
-            #("throughput_ops", json.float(4500.0)),
-            #("error_pct", json.float(0.005)),
-            #("cpu_pct", json.float(35.0)),
-            #("composite_fitness", json.float(0.91)),
-            #("pareto_optimal", json.bool(True)),
-          ]),
-          json.object([
-            #("candidate_id", json.string("cand-04-suboptimal")),
-            #("name", json.string("Unbounded Thread Allocator")),
-            #("latency_ms", json.float(320.0)),
-            #("throughput_ops", json.float(1200.0)),
-            #("error_pct", json.float(2.5)),
-            #("cpu_pct", json.float(92.0)),
-            #("composite_fitness", json.float(0.24)),
-            #("pareto_optimal", json.bool(False)),
-          ]),
-        ],
-        fn(x) { x },
-      ),
-    ),
-    #(
-      "quorum_consensus",
-      json.object([
-        #("policy", json.string("ThreeOfFourSovereign")),
-        #("status", json.string("RATIFIED")),
-        #(
-          "members",
-          json.array(
-            [
-              "AGY Sovereign: ONLINE",
-              "Claude Sovereign: ONLINE",
-              "Codex Sovereign: ONLINE",
-              "OpenRouter Sovereign: ONLINE",
-            ],
-            json.string,
-          ),
-        ),
-      ]),
-    ),
-  ])
-  |> json.to_string()
+  homeostasis_status.to_json(homeostasis_status.unavailable(), 0)
 }
 
 fn bicameral_json() -> String {
@@ -4519,9 +4384,7 @@ fn route_html(path: String) -> String {
         "Cybernetic Homeostasis & Quorum Evolution HUD",
         "homeostasis",
         guard("homeostasis", fn(_state) {
-          homeostasis_evolution_hud.render_hud(
-            homeostasis_evolution_engine.init_homeostasis_system(0),
-          )
+          homeostasis_evolution_hud.render_unavailable()
         }),
       )
     "/bicameral" ->

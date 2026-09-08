@@ -239,6 +239,22 @@ Preserve historical and external originals byte-for-byte; record nonconformance
 without rewriting them. Apply this rule to documentation, journals, specifications,
 skills, and UI design artifacts at every fractal layer L0–L9.
 
+## 8.4 SDLC/SRE Release Assurance and Package Provisioning
+
+Follow `contracts/rules/20260908-0551-release-assurance-sdlc-sre-sop.md`
+(`SC-RELEASE-ASSURANCE-001`) for release and operational changes. Provision new
+packages, including Python and Python libraries, only through repository-pinned
+Determinate Nix or devenv inputs. Use native OCaml/Mojo release commands, canonical
+Sa-plan authority, candidate-bound tests, actual OTP/ERTS observations, explicit
+17-aspect evidence, fractal RCA/Jidoka containment and tested recovery. Historical
+status strings and passing component counts never replace current evidence.
+Operational host names, URLs and remote targets must use Tailscale FQDNs even
+for private staging. Require already-realized Nix outputs or a configured Tailnet fetch
+path; `--offline` alone does not prevent fixed-output builders downloading sources.
+For bounded multi-layer reviews use `docs/sop/20260908-0844-unification-cycle-sop.md`:
+preserve failures, check source/task/runtime fences, receive bounded peer observations,
+and verify exact byte/hash board-to-Zenoh reconciliation without implied admission.
+
 ## 9. Status Line
 
 ```text

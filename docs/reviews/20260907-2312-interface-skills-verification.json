@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "recorded_at": "2026-09-07T23:49:04Z",
+  "scope": "Local interface skill package and bounded read-only homeostasis review",
+  "workspace": "/home/an/NAS-setup/uos/.uos-workspaces/codex-side-interface-skills",
+  "candidate_change_id": "ylnmkosswnypxssplzmwlvtrnkwznpqx",
+  "base_commit": "4eab8b7280e13186cca69aecc101ba17d12b0247",
+  "default_workspace_head_observed": "a2c414a1f8aff94739ea6ae340dd493f786d7f16",
+  "sa_plan": {
+    "plan": "uos/interface-skills/20260907-2312",
+    "task": "PACKAGE",
+    "worker": "codex-side-interface-skills",
+    "attempt": 1
+  },
+  "catalog": {
+    "path": "plugins/uos-interface-quality/references/20260907-2312-catalog.json",
+    "sha256": "a6338177e9a968abeba0c7b53cf3c34bea60028dc24ccbdc2b726c73dcbdfa5d"
+  },
+  "checks": [
+    {
+      "name": "package",
+      "command": "bash tools/ui-skill-check --selftest",
+      "status": "PASS",
+      "skills": 3,
+      "aliases": 12,
+      "digest_bound_resources": 10,
+      "scenario_records": 12,
+      "negative_fixtures_rejected": 8,
+      "limit": "Does not evaluate application behavior or independent skill adherence."
+    },
+    {
+      "name": "risk_checker",
+      "command": "bash tools/risk-priority-check --all",
+      "status": "PASS",
+      "baseline_checks": 375,
+      "adversarial_checks": 32843,
+      "included_dag_scenarios": 32768,
+      "runtime_admission": "NOT_GRANTED"
+    },
+    {
+      "name": "candidate_build",
+      "status": "PASS_WITH_WARNINGS",
+      "toolchain": {
+        "gleam": "1.16.0",
+        "erlang_otp": "27"
+      },
+      "private_harness": "/tmp/uos-homeostasis-ui.EdFYPa",
+      "compile_log_sha256": "2f96ded47bc555907035d0738d0ff90a8a313e1f04755eec709bc0893278b66e",
+      "harness_change": "Four selected test modules copied under temporary src; gleeunit moved to regular dependency only in temporary manifest.",
+      "timeout_seconds": 60
+    },
+    {
+      "name": "candidate_selected_unit_tests",
+      "status": "PASS",
+      "test_count": 27,
+      "modules": [
+        "agui_sse_api_test",
+        "homeostasis_evolution_hud_test",
+        "homeostasis_fprime_wired_test",
+        "sysadmin_tui_test"
+      ],
+      "command": "eunit:test([agui_sse_api_test, homeostasis_evolution_hud_test, homeostasis_fprime_wired_test, sysadmin_tui_test], [verbose])",
+      "beam_schedulers": "2:2",
+      "timeout_seconds": 35,
+      "tests_log_sha256": "6dca383fc9016c465b3791e1388318c8a1f4322439ab7d10ad9add03762a522a"
+    },
+    {
+      "name": "initial_peer_badge_probe",
+      "status": "DEFECT_OBSERVED",
+      "result": "ONLINE emitted from init(0) with no peer observations"
+    },
+    {
+      "name": "stream_repeat_probe",
+      "status": "FIXTURE_OBSERVED",
+      "result": "Two identical string results with seven named event frames"
+    },
+    {
+      "name": "live_stream",
+      "observed_at": "2026-09-07T23:42:19Z",
+      "url": "http://nas-1.tail55d152.ts.net:4100/api/v1/homeostasis/stream",
+      "http_status": 200,
+      "content_type": "application/json",
+      "body": {
+        "error": "not_found"
+      },
+      "sha256": "d2dfdc9511fbeaa0701d1f8730f4989313b062ca1b61a2bd8bed8f4f5d654b5d",
+      "status": "FAIL"
+    },
+    {
+      "name": "live_hud",
+      "observed_at": "2026-09-07T23:42:19Z",
+      "url": "http://nas-1.tail55d152.ts.net:4100/homeostasis/evolution",
+      "http_status": 200,
+      "content_type": "text/html",
+      "body_bytes": 36238,
+      "body_sha256": "b9faff9281f0ec7bbee404a17b36a08c37faf54b14da7c204a5e25e54f628eb5",
+      "missing_markers": [
+        "homeostasis-evolution-hud",
+        "homeostasis-live-stream-body",
+        "UOS Cybernetic Homeostasis"
+      ],
+      "status": "FAIL"
+    },
+    {
+      "name": "live_pid",
+      "observed_at": "2026-09-07T23:42:19Z",
+      "url": "http://nas-1.tail55d152.ts.net:4100/api/v1/homeostasis",
+      "status": "STATIC_VALUES_OBSERVED",
+      "body_sha256": "25729d61a5f128b24d84549c08408990bacfb05f532be2c24df14933c1a58ba8"
+    }
+  ],
+  "unrun": [
+    "independent skill pressure tests",
+    "actual agent loader activation",
+    "browser/assistive-technology checks",
+    "PTY interaction and cleanup",
+    "OTP 29",
+    "full 10609-test suite",
+    "hardware acquisition",
+    "formal proof rerun",
+    "deployed revision attestation"
+  ],
+  "runtime_admission": "NOT_GRANTED",
+  "external_code_imported": false,
+  "paid_external_model_calls": 0,
+  "peer_calls": 0
+}
