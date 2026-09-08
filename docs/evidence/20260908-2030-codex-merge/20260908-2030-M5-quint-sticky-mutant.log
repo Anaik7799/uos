@@ -1,0 +1,149 @@
+An example execution:
+
+[State 0]
+{
+  s:
+    {
+      admitted: true,
+      boot: 1,
+      candidate: 1,
+      clock: 0,
+      invocation: 1,
+      pending:
+        Map(
+          0 ->
+            {
+              active: false,
+              at: 0,
+              boot: 0,
+              candidate: 0,
+              good: false,
+              invocation: 0
+            },
+          1 ->
+            {
+              active: false,
+              at: 0,
+              boot: 0,
+              candidate: 0,
+              good: false,
+              invocation: 0
+            },
+          2 ->
+            {
+              active: false,
+              at: 0,
+              boot: 0,
+              candidate: 0,
+              good: false,
+              invocation: 0
+            }
+        ),
+      receipts:
+        Map(
+          0 ->
+            {
+              active: true,
+              at: 0,
+              boot: 1,
+              candidate: 1,
+              good: true,
+              invocation: 1
+            },
+          1 ->
+            {
+              active: true,
+              at: 0,
+              boot: 1,
+              candidate: 1,
+              good: true,
+              invocation: 1
+            },
+          2 ->
+            {
+              active: true,
+              at: 0,
+              boot: 1,
+              candidate: 1,
+              good: true,
+              invocation: 1
+            }
+        )
+    }
+}
+
+[State 1]
+{
+  s:
+    {
+      admitted: true,
+      boot: 1,
+      candidate: 1,
+      clock: 2,
+      invocation: 1,
+      pending:
+        Map(
+          0 ->
+            {
+              active: false,
+              at: 0,
+              boot: 0,
+              candidate: 0,
+              good: false,
+              invocation: 0
+            },
+          1 ->
+            {
+              active: false,
+              at: 0,
+              boot: 0,
+              candidate: 0,
+              good: false,
+              invocation: 0
+            },
+          2 ->
+            {
+              active: false,
+              at: 0,
+              boot: 0,
+              candidate: 0,
+              good: false,
+              invocation: 0
+            }
+        ),
+      receipts:
+        Map(
+          0 ->
+            {
+              active: true,
+              at: 0,
+              boot: 1,
+              candidate: 1,
+              good: true,
+              invocation: 1
+            },
+          1 ->
+            {
+              active: true,
+              at: 0,
+              boot: 1,
+              candidate: 1,
+              good: true,
+              invocation: 1
+            },
+          2 ->
+            {
+              active: true,
+              at: 0,
+              boot: 1,
+              candidate: 1,
+              good: true,
+              invocation: 1
+            }
+        )
+    }
+}
+
+[violation] Found an issue (13ms at 77 traces/second).
+Use --verbosity=3 to show executions.
+error: Invariant violated

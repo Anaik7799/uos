@@ -1,0 +1,1 @@
+{"schema":"uos.release-check.v1","stage":"unit-and-differential","status":"PASS","authority":"NONE","evidence":"/home/an/NAS-setup/uos/.uos-workspaces/codex-merge-execute-20260908-1925/var/merge-checks/uos-native-unit-7834bc","transition_cases":338,"unit_output":"  [done in 0.018 s]\n=======================================================\n  All 128 tests passed.\n"}

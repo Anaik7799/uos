@@ -1,0 +1,191 @@
+======================== EUnit ========================
+module 'c3i_ocaml_nif_test'
+  c3i_ocaml_nif_test: ocaml_nif_version_test...[c3i_ocaml_nif] NIF load failed: {load_failed,
+                                     "Failed to load NIF library: '/nix/store/pdwlyjkmc6icc0wb5gaw08m9ynqrg683-glibc-2.40-218/lib/libc.so.6: version `GLIBC_2.42' not found (required by build/dev/erlang/cepaf_gleam/priv/c3i_ocaml_nif.so)'"} (path: build/dev/erlang/cepaf_gleam/priv/c3i_ocaml_nif)
+*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from c3i_ocaml_nif_test:ocaml_nif_version_test/0 (test/c3i_ocaml_nif_test.gleam, line 14)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+**error:#{function => <<"equal">>,line => 10,
+  message => <<"\nFalse\nshould equal\nTrue">>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  c3i_ocaml_nif_test: ocaml_nif_rete_nominal_test...*failed*
+in function c3i_ocaml_nif_test:ocaml_nif_rete_nominal_test/0 (test/c3i_ocaml_nif_test.gleam, line 32)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"ocaml_nif_rete_nominal_test">>,line => 25,
+  message =>
+      <<"Nominal gate unexpectedly rejected: FAIL_CLOSED: c3i_ocaml_nif.so not lo"...>>,
+  module => <<"c3i_ocaml_nif_test">>,
+  file => <<"test/c3i_ocaml_nif_test.gleam">>,gleam_error => panic}
+  output:<<"">>
+
+  c3i_ocaml_nif_test: ocaml_nif_rete_estop_fail_closed_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from c3i_ocaml_nif_test:ocaml_nif_rete_estop_fail_closed_test/0 (test/c3i_ocaml_nif_test.gleam, line 39)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+**error:#{function => <<"equal">>,line => 10,
+  message => <<"\nFalse\nshould equal\nTrue">>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  c3i_ocaml_nif_test: ocaml_nif_rete_high_drift_fail_closed_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from c3i_ocaml_nif_test:ocaml_nif_rete_high_drift_fail_closed_test/0 (test/c3i_ocaml_nif_test.gleam, line 53)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+**error:#{function => <<"equal">>,line => 10,
+  message => <<"\nFalse\nshould equal\nTrue">>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  c3i_ocaml_nif_test: ocaml_nif_gospel_contract_pass_test...*failed*
+in function gleeunit@should:be_ok/1 (src/gleeunit/should.gleam, line 40)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"be_ok">>,line => 35,
+  message =>
+      <<"\nError(\"{\\\"valid\\\":false,\\\"status\\\":\\\"rejected\\\",\\\"error\\\":\\\"FAIL_CLOSED"...>>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  c3i_ocaml_nif_test: ocaml_nif_gospel_contract_violation_test...ok
+  c3i_ocaml_nif_test: ocaml_nif_zenoh_dispatch_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from c3i_ocaml_nif_test:ocaml_nif_zenoh_dispatch_test/0 (test/c3i_ocaml_nif_test.gleam, line 79)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+**error:#{function => <<"equal">>,line => 10,
+  message => <<"\nFalse\nshould equal\nTrue">>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  c3i_ocaml_nif_test: ocaml_nif_parity_check_test...*failed*
+in function gleeunit@should:be_ok/1 (src/gleeunit/should.gleam, line 40)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"be_ok">>,line => 35,
+  message =>
+      <<"\nError(\"{\\\"valid\\\":false,\\\"error\\\":\\\"FAIL_CLOSED: c3i_ocaml_nif.so not l"...>>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  c3i_ocaml_nif_test: ocaml_nif_rete_missing_keys_fail_closed_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"equal">>,line => 10,
+  message => <<"\nFalse\nshould equal\nTrue">>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  c3i_ocaml_nif_test: ocaml_nif_rete_buffer_overflow_fail_closed_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"equal">>,line => 10,
+  message => <<"\nFalse\nshould equal\nTrue">>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  c3i_ocaml_nif_test: ocaml_nif_rete_unknown_key_fail_closed_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"equal">>,line => 10,
+  message => <<"\nFalse\nshould equal\nTrue">>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  c3i_ocaml_nif_test: ocaml_nif_rete_invalid_boolean_fail_closed_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"equal">>,line => 10,
+  message => <<"\nFalse\nshould equal\nTrue">>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  c3i_ocaml_nif_test: ocaml_nif_rete_duplicate_key_fail_closed_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"equal">>,line => 10,
+  message => <<"\nFalse\nshould equal\nTrue">>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  [done in 0.063 s]
+=======================================================
+  Failed: 12.  Skipped: 0.  Passed: 1.

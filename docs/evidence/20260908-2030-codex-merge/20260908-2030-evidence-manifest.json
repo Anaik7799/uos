@@ -1,0 +1,135 @@
+{
+  "schema": "uos.codex-merge.evidence-manifest.v1",
+  "recorded_utc": "2026-09-08T20:23:30Z",
+  "source_candidate": "5bb3af799ae69dd56b39b1b702cc565276e61467",
+  "source_scope": "M1-M5 incremental runs. Refer to individual source-bound wave receipts; logs are not a final whole-system verification.",
+  "files": [
+    {
+      "sha256": "9d473c27717345999f1b3c89c0c62c2557ba19eb636731cd423d3c81545e9daf",
+      "source_path": "var/merge-checks/baseline-c3i-ocaml-nif-test.log",
+      "filename": "baseline-c3i-ocaml-nif-test.log",
+      "retained_path": "docs/evidence/20260908-2030-codex-merge/20260908-2030-baseline-c3i-ocaml-nif-test.log"
+    },
+    {
+      "sha256": "591637fee48ec3f2d94e1592e4898205d6a9ab565c13b35e34c09307704e1890",
+      "source_path": "var/merge-checks/M2-auth-tests.log",
+      "filename": "M2-auth-tests.log",
+      "retained_path": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M2-auth-tests.log"
+    },
+    {
+      "sha256": "93a73d286b9facc5fbe0332854c2f69d15015f7fe3411ccc40297fb570b604d4",
+      "source_path": "var/merge-checks/M2-framing-oracle.jsonl",
+      "filename": "M2-framing-oracle.jsonl",
+      "retained_path": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M2-framing-oracle.jsonl"
+    },
+    {
+      "sha256": "9335af49ced04bb9d06147c359b5d1cd303624194518a1f43bc9fdab641016d0",
+      "source_path": "var/merge-checks/M3-release-selftest.jsonl",
+      "filename": "M3-release-selftest.jsonl",
+      "retained_path": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M3-release-selftest.jsonl"
+    },
+    {
+      "sha256": "c648c93b787ea9bc66f1725172056e1e4e34ebf14965f09356a6de55c7d4ffbb",
+      "source_path": "var/merge-checks/M3-compat-focused.jsonl",
+      "filename": "M3-compat-focused.jsonl",
+      "retained_path": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M3-compat-focused.jsonl"
+    },
+    {
+      "sha256": "5241133ecf2f80372814bec977f683c56717f10ab656672a1a2ea57192d5598b",
+      "source_path": "var/merge-checks/M3-archive-verify.jsonl",
+      "filename": "M3-archive-verify.jsonl",
+      "retained_path": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M3-archive-verify.jsonl"
+    },
+    {
+      "sha256": "9f767130a48d100b41fe5ed333c4a2d4a10b96cbcae6eb2f0d7b1d96aa934ddc",
+      "source_path": "var/merge-checks/M3-archive-negative-tests.jsonl",
+      "filename": "M3-archive-negative-tests.jsonl",
+      "retained_path": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M3-archive-negative-tests.jsonl"
+    },
+    {
+      "sha256": "60d8140149f37bf5e94983d01c6bacffb52179b053d2245ade274eb3b74c3aa3",
+      "source_path": "var/merge-checks/M4-unit-parity.jsonl",
+      "filename": "M4-unit-parity.jsonl",
+      "retained_path": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M4-unit-parity.jsonl"
+    },
+    {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_path": "var/merge-checks/M5-quint-typecheck.log",
+      "filename": "M5-quint-typecheck.log",
+      "retained_path": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M5-quint-typecheck.log"
+    },
+    {
+      "sha256": "425b0957570936e903beb16268126eda77c0c1eb4852458ce2e5315d550fa053",
+      "source_path": "var/merge-checks/M5-quint-lifecycle.log",
+      "filename": "M5-quint-lifecycle.log",
+      "retained_path": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M5-quint-lifecycle.log"
+    },
+    {
+      "sha256": "77271f5edecf777f3058fe0796f0a0e3f06f24c41996a69c47dff22d22496b15",
+      "source_path": "var/merge-checks/M5-quint-normal.log",
+      "filename": "M5-quint-normal.log",
+      "retained_path": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M5-quint-normal.log"
+    },
+    {
+      "sha256": "5162e15c9eb8ed237146b0d6de952f0fcc73dc4a30086b1e4de003c4ce52a592",
+      "source_path": "var/merge-checks/M5-quint-valid.log",
+      "filename": "M5-quint-valid.log",
+      "retained_path": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M5-quint-valid.log"
+    },
+    {
+      "sha256": "7a89ebe796839dfce45b605038860e80e428880d7eaff12afbabe1901b4548e7",
+      "source_path": "var/merge-checks/M5-quint-sticky-mutant.log",
+      "filename": "M5-quint-sticky-mutant.log",
+      "retained_path": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M5-quint-sticky-mutant.log"
+    },
+    {
+      "sha256": "ea504b8c0b1fb550b4c0035d22e752e903dfccfbd96cfe7937c023c0d220826b",
+      "source_path": "var/merge-checks/M5-quint-omitted-mutant.log",
+      "filename": "M5-quint-omitted-mutant.log",
+      "retained_path": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M5-quint-omitted-mutant.log"
+    },
+    {
+      "sha256": "a4df6179dd7af84953b08a5be10a16cf9daa8792eaf9b829f3460d47de5b7990",
+      "source_path": "var/merge-checks/M5-finite-oracle.jsonl",
+      "filename": "M5-finite-oracle.jsonl",
+      "retained_path": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M5-finite-oracle.jsonl"
+    },
+    {
+      "sha256": "0d36fa31fcc3f79215dbcfeac35b544a786965f810e97bfbd705233a1b2b9b74",
+      "source_path": "var/merge-checks/M5-sticky-mutant.itf.json",
+      "filename": "M5-sticky-mutant.itf.json",
+      "retained_path": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M5-sticky-mutant.itf.json"
+    },
+    {
+      "sha256": "a91c884005fa417f06925cfc2bdff1135f76fece8e7390126663d7ff8b8b4c6d",
+      "source_path": "var/merge-checks/M5-omitted-mutant.itf.json",
+      "filename": "M5-omitted-mutant.itf.json",
+      "retained_path": "docs/evidence/20260908-2030-codex-merge/20260908-2030-M5-omitted-mutant.itf.json"
+    },
+    {
+      "sha256": "3ca032095466cf49573ea78b0c893274ff1f24bf76b52c6e8f857d56582bd8ed",
+      "source_path": "var/merge-checks/sa-plan/test_sa_plan_cli.log",
+      "filename": "sa-plan-test_sa_plan_cli.log",
+      "retained_path": "docs/evidence/20260908-2030-codex-merge/20260908-2030-sa-plan-test_sa_plan_cli.log"
+    },
+    {
+      "sha256": "0a369e420944646c4e09f59ad224ba0f5d5892f119fdceb945e4f5a7ddb41e3c",
+      "source_path": "var/merge-checks/sa-plan/test_sa_plan_leases.log",
+      "filename": "sa-plan-test_sa_plan_leases.log",
+      "retained_path": "docs/evidence/20260908-2030-codex-merge/20260908-2030-sa-plan-test_sa_plan_leases.log"
+    },
+    {
+      "sha256": "38bf5d3129df21183033d3ee5fde61fab5a4f4047e9e0032a745649ec08a40e1",
+      "source_path": "var/merge-checks/sa-plan/test_sa_plan_durable.log",
+      "filename": "sa-plan-test_sa_plan_durable.log",
+      "retained_path": "docs/evidence/20260908-2030-codex-merge/20260908-2030-sa-plan-test_sa_plan_durable.log"
+    }
+  ],
+  "retention": "Exact copies of non-secret local test output and synthetic negative traces; no binaries, live databases, tokens, caches or weights admitted.",
+  "lean_csv": {
+    "path": "var/merge-checks/M5-lean-admission.csv",
+    "sha256": "356d0ee333034e2b23ec059338c2622ec3b8290d24b6102a26a214dfafb3189e",
+    "retained": false,
+    "reason": "Reproducible 1.36 MB finite table; source and compact independent result retained."
+  }
+}
