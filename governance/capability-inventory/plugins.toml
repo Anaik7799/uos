@@ -17,3 +17,12 @@ status = "LOCAL_POLICY_BUNDLE"
 path = "plugins/uos-risk-prioritization"
 installation = "NOT_ASSERTED"
 runtime_authority = "NONE"
+
+[[plugin]]
+name = "uos-holon-atlas-plugin"
+version = "1.0.0"
+source = "uos"
+status = "PURE_BEAM_PLUGIN"
+path = "apps/cepaf_gleam/src/cepaf_gleam/semantics/algebraic_atlas.gleam"
+installation = "EMBEDDED_OTP"
+runtime_authority = "BEAM_OTP_SUPERVISED"

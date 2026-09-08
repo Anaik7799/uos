@@ -9,6 +9,7 @@
 //// constitutional monitoring (Psi-0..5, Omega-0).
 //// HITL approval is MANDATORY at this layer (SC-AGUI-004).
 
+import gleam/int
 import gleam/json
 import gleam/list
 import gleam/option.{type Option, None, Some}
@@ -276,3 +277,165 @@ pub fn approval_to_json(req: ApprovalRequest) -> json.Json {
     #("timestamp", json.int(req.timestamp)),
   ])
 }
+
+// =============================================================================
+// Omega-0 & Dynamic Constitutional Reconfiguration Protocol (DCRP)
+// =============================================================================
+
+/// Supreme Founder Directive (Omega-0).
+pub type OmegaDirective {
+  Omega01FounderPrimacy
+  Omega02LineageProtection
+  Omega03EthicalBoundary
+  Omega04HumanSurvival
+  Omega05MutualTermination
+}
+
+pub fn omega_directive_to_string(dir: OmegaDirective) -> String {
+  case dir {
+    Omega01FounderPrimacy -> "Omega-0.1 Founder Primacy"
+    Omega02LineageProtection -> "Omega-0.2 Lineage Protection"
+    Omega03EthicalBoundary -> "Omega-0.3 Ethical Boundary"
+    Omega04HumanSurvival -> "Omega-0.4 Human Survival"
+    Omega05MutualTermination -> "Omega-0.5 Mutual Termination"
+  }
+}
+
+/// Verified Rollback Path Specification (SC-CONST-009).
+pub type RollbackState {
+  RollbackState(snapshot_id: String, state_digest: String, is_verified: Bool)
+}
+
+/// Dynamic Constitutional Reconfiguration Proposal (DCRP).
+pub type ReconfigurationProposal {
+  ReconfigurationProposal(
+    proposal_id: String,
+    proposer_holon: String,
+    target_subsystem: String,
+    description: String,
+    psi_checks: List(PsiCheck),
+    rollback_state: Option(RollbackState),
+    is_emergency_termination: Bool,
+  )
+}
+
+pub type ReconfigurationOutcome {
+  ReconfigurationRatified(proposal_id: String, receipt: String)
+  ReconfigurationRejected(proposal_id: String, reason: String)
+}
+
+/// Evaluates a DCRP proposal against Psi invariants, Rollback path, and Guardian consensus.
+pub fn evaluate_reconfiguration(
+  proposal: ReconfigurationProposal,
+  consensus: ConsensusState,
+) -> ReconfigurationOutcome {
+  case proposal.is_emergency_termination {
+    True -> {
+      // Omega-0.5 requires 2 approved guardian votes with no rejects/vetoes
+      case approve_count(consensus) >= 2 && reject_count(consensus) == 0 {
+        True ->
+          ReconfigurationRatified(
+            proposal.proposal_id,
+            "rcpt-term-" <> proposal.proposal_id,
+          )
+        False ->
+          ReconfigurationRejected(
+            proposal.proposal_id,
+            "Omega-0.5 Quorum Unsatisfied",
+          )
+      }
+    }
+    False -> {
+      case reject_count(consensus) > 0 {
+        True ->
+          ReconfigurationRejected(
+            proposal.proposal_id,
+            "Guardian Veto Invoked",
+          )
+        False -> {
+          case all_psi_pass(proposal.psi_checks) {
+            False ->
+              ReconfigurationRejected(
+                proposal.proposal_id,
+                "Constitutional Psi Axiom Violation",
+              )
+            True -> {
+              case proposal.rollback_state {
+                None ->
+                  ReconfigurationRejected(
+                    proposal.proposal_id,
+                    "Rollback Path Unverified",
+                  )
+                Some(rb) -> {
+                  case rb.is_verified {
+                    False ->
+                      ReconfigurationRejected(
+                        proposal.proposal_id,
+                        "Rollback Path Unverified",
+                      )
+                    True -> {
+                      case evaluate_consensus(consensus) {
+                        ConsensusApproved ->
+                          ReconfigurationRatified(
+                            proposal.proposal_id,
+                            "rcpt-ratified-" <> proposal.proposal_id,
+                          )
+                        ConsensusRejected ->
+                          ReconfigurationRejected(
+                            proposal.proposal_id,
+                            "Consensus Rejected",
+                          )
+                        ConsensusIncomplete ->
+                          ReconfigurationRejected(
+                            proposal.proposal_id,
+                            "Consensus Voting Incomplete",
+                          )
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/// Compute Real-Time Constitutional Health Metric (SC-CONST-010) in [0.0, 1.0].
+pub fn compute_constitutional_health(checks: List(PsiCheck)) -> Float {
+  let total = list.length(checks)
+  case total == 0 {
+    True -> 0.0
+    False -> {
+      let passed = list.count(checks, fn(c) { c.status == Pass })
+      int.to_float(passed) /. int.to_float(total)
+    }
+  }
+}
+
+/// Omega-0.5 Dual-Key Mutual Termination.
+pub fn omega_mutual_termination(
+  guardian_a: String,
+  guardian_b: String,
+  timestamp: Int,
+) -> Result(EmergencyState, String) {
+  case guardian_a != guardian_b && guardian_a != "" && guardian_b != "" {
+    True -> {
+      let state =
+        initial_emergency_state()
+        |> arm_emergency
+        |> trigger_emergency(
+          "Omega-0.5 Dual-Key Mutual Termination authorized by "
+            <> guardian_a
+            <> " and "
+            <> guardian_b,
+          timestamp,
+        )
+      Ok(state)
+    }
+    False -> Error("Dual distinct guardian keys required for Omega-0.5")
+  }
+}
+

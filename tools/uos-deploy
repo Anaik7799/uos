@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# =============================================================================
+# tools/uos-deploy — Unified Operational System (UOS) Deployment CLI Wrapper
+# =============================================================================
+set -euo pipefail
+
+UOS_ROOT="/home/an/NAS-setup/uos"
+exec bash "${UOS_ROOT}/scripts/deploy-cockpit-harness.sh" "$@"
