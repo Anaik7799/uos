@@ -56,10 +56,20 @@ import gleam/json
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
-import indrajaal/runtime_identity
 import indrajaal/homeostasis_http
+import indrajaal/runtime_identity
 import lustre/element
 import mist.{type Connection, type ResponseData}
+
+const maximum_request_body_bytes = 65_536
+
+const request_body_read_timeout_milliseconds = 5000
+
+pub type FixedBodyReadError {
+  FixedBodyMalformed
+  FixedBodyReadTimeout
+  FixedBodyUnsupported
+}
 
 @external(erlang, "indrajaal_web_ffi", "read_repo_file")
 fn erl_read_repo_file(path: String) -> Result(BitArray, String)
@@ -69,6 +79,14 @@ fn listen_port(default: Int) -> Int
 
 @external(erlang, "indrajaal_web_ffi", "listen_host")
 fn listen_host() -> String
+
+@external(erlang, "indrajaal_web_ffi", "read_fixed_request_body")
+fn read_fixed_request_body(
+  req: Request(Connection),
+  content_length: Int,
+  maximum_bytes: Int,
+  timeout_milliseconds: Int,
+) -> Result(Request(BitArray), FixedBodyReadError)
 
 pub fn main() {
   case runtime_identity.startup_check(runtime_identity.observe()) {
@@ -90,953 +108,962 @@ fn serve() {
     "Starting isolated-capable listener on port " <> int.to_string(port),
   )
 
-  let router = fn(req: Request(Connection)) -> Response(ResponseData) {
-    let path = "/" <> string.join(request.path_segments(req), "/")
-
-    case request.path_segments(req) {
-      ["homeostasis"] | ["homeostasis", "evolution"]
-      | ["homeostasis", "components"] | ["homeostasis", "terminal"]
-      | ["homeostasis", "evolution", "hud"] | ["homeostasis", "stream"]
-      | ["api", "v1", "homeostasis"] | ["api", "v1", "homeostasis", "evolution"]
-      | ["api", "v1", "homeostasis", "stream"] -> homeostasis_http.handle(req)
-      ["api", "v1", "homeostasis", "review"] | ["api", "v1", "homeostasis", "terminal"] -> homeostasis_http.handle(req)
-      // AG-UI protocol routes (SSE event streams + health)
-      ["ag-ui", ..] -> {
-        let json_body = c3i_router.route(path)
-        case string.contains(path, "events") || string.contains(path, "run") {
-          True -> {
-            response.new(200)
-            |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-            |> response.prepend_header("content-type", "text/event-stream")
-            |> response.prepend_header("cache-control", "no-cache")
-            |> response.prepend_header("connection", "keep-alive")
-            |> response.prepend_header("access-control-allow-origin", "*")
-          }
-          False -> {
-            response.new(200)
-            |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-            |> response.prepend_header("content-type", "application/json")
-            |> response.prepend_header("access-control-allow-origin", "*")
-          }
-        }
-      }
-      ["api", "verify", "patrol"] -> {
-        let report = unified_verification_supervisor.run_verification_patrol()
-        let is_healthy = unified_verification_supervisor.patrol_healthy(report)
-        let json_body =
-          json.object([
-            #("status", json.string("ok")),
-            #("healthy", json.bool(is_healthy)),
-            #("all_green", json.bool(report.all_green)),
-            #("web_checks_count", json.int(report.web_checks_count)),
-            #("browser_suites_count", json.int(report.browser_suites_count)),
-            #("ocaml_subsystems_count", json.int(report.ocaml_subsystems_count)),
-            #("contract", json.string("SC-VERIFY-PATROL-001")),
-          ])
-          |> json.to_string
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "verify", "intent"] -> {
-        let serial = case req.query {
-          Some(q) ->
-            case
-              string.contains(
-                q,
-                "serial="
-                  <> dmc_biosemiotics_interlock.hard_denied_system_os_serial,
-              )
-            {
-              True -> dmc_biosemiotics_interlock.hard_denied_system_os_serial
-              False -> "SAFE_STORAGE_NVME_01"
-            }
-          None -> "SAFE_STORAGE_NVME_01"
-        }
-        let payload =
-          denotational_intent_router.IntentPayload(
-            actor: "operator",
-            action: "verify_intent",
-            target: "storage_subsystem",
-            device_serial: serial,
-          )
-        let resp = denotational_intent_router.evaluate_intent_api(payload)
-        let json_body =
-          denotational_intent_router.encode_intent_response_json(resp)
-        response.new(resp.status_code)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "verify", "dmc"] -> {
-        let rocha_status = case
-          dmc_biosemiotics_interlock.verify_rocha_cut(True)
-        {
-          dmc_biosemiotics_interlock.RochaDecoupled -> "RochaDecoupled"
-          dmc_biosemiotics_interlock.RochaConflated -> "RochaConflated"
-        }
-        let t0 =
-          dmc_biosemiotics_interlock.Tcm13DCoordinates(
-            layer: 4,
-            domain: "Verification",
-            authority: "A0_reference",
-            trust_indicator: 1,
-          )
-        let t1 =
-          dmc_biosemiotics_interlock.Tcm13DCoordinates(
-            layer: 4,
-            domain: "Verification",
-            authority: "A0_reference",
-            trust_indicator: 1,
-          )
-        let tcm_conserved =
-          dmc_biosemiotics_interlock.verify_coordinate_conservation(t0, t1)
-        let lock_status = case
-          dmc_biosemiotics_interlock.check_hardware_safety_interlock(
-            dmc_biosemiotics_interlock.hard_denied_system_os_serial,
-          )
-        {
-          dmc_biosemiotics_interlock.AccessDenied(reason) -> reason
-          dmc_biosemiotics_interlock.AccessGranted -> "UNLOCKED_WARNING"
-        }
-        let json_body =
-          json.object([
-            #("status", json.string("ok")),
-            #("contract", json.string("SC-ROCHA-001")),
-            #("rocha_cut", json.string(rocha_status)),
-            #("tcm_conserved", json.bool(tcm_conserved)),
-            #(
-              "hard_denied_serial",
-              json.string(
-                dmc_biosemiotics_interlock.hard_denied_system_os_serial,
+  let router = fn(connection_req: Request(Connection)) -> Response(ResponseData) {
+    let bounded_router = fn(req: Request(BitArray)) -> Response(ResponseData) {
+      case request.path_segments(req) {
+        ["homeostasis"]
+        | ["homeostasis", "evolution"]
+        | ["homeostasis", "components"]
+        | ["homeostasis", "terminal"]
+        | ["homeostasis", "evolution", "hud"]
+        | ["homeostasis", "stream"]
+        | ["api", "v1", "homeostasis"]
+        | ["api", "v1", "homeostasis", "evolution"]
+        | ["api", "v1", "homeostasis", "stream"] ->
+          homeostasis_http.handle(connection_req)
+        ["api", "v1", "homeostasis", "review"]
+        | ["api", "v1", "homeostasis", "terminal"] ->
+          homeostasis_http.handle(connection_req)
+        // AG-UI protocol routes (SSE event streams + health)
+        ["ag-ui", ..] -> handle_c3i_http_request(req)
+        ["api", "verify", "patrol"] -> {
+          let report = unified_verification_supervisor.run_verification_patrol()
+          let is_healthy =
+            unified_verification_supervisor.patrol_healthy(report)
+          let json_body =
+            json.object([
+              #("status", json.string("ok")),
+              #("healthy", json.bool(is_healthy)),
+              #("all_green", json.bool(report.all_green)),
+              #("web_checks_count", json.int(report.web_checks_count)),
+              #("browser_suites_count", json.int(report.browser_suites_count)),
+              #(
+                "ocaml_subsystems_count",
+                json.int(report.ocaml_subsystems_count),
               ),
-            ),
-            #("lock_status", json.string(lock_status)),
-            #("storage_safety_locked", json.bool(True)),
-          ])
-          |> json.to_string
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "verify", "browser-suites"] -> {
-        let suites = [
-          browser_emulation_bridge.BrowserSuiteSpec(
-            id: "BS-01",
-            name: "Playwright E2E",
-            engine: browser_emulation_bridge.C3IPlaywright,
-            target_route: "/dashboard",
-            test_count: 18,
-            efficacy: 1.0,
-            effectiveness: 1.0,
-          ),
-          browser_emulation_bridge.BrowserSuiteSpec(
-            id: "BS-02",
-            name: "Wallaby Browser Integration",
-            engine: browser_emulation_bridge.C3IWallaby,
-            target_route: "/planning",
-            test_count: 14,
-            efficacy: 1.0,
-            effectiveness: 1.0,
-          ),
-          browser_emulation_bridge.BrowserSuiteSpec(
-            id: "BS-03",
-            name: "Indrajaal CDP DevTools Protocol",
-            engine: browser_emulation_bridge.IndrajaalCdp,
-            target_route: "/testing",
-            test_count: 16,
-            efficacy: 1.0,
-            effectiveness: 1.0,
-          ),
-          browser_emulation_bridge.BrowserSuiteSpec(
-            id: "BS-04",
-            name: "ZigVM TyXML Pure Engine",
-            engine: browser_emulation_bridge.ZigvmTyxml,
-            target_route: "/wiki",
-            test_count: 16,
-            efficacy: 1.0,
-            effectiveness: 1.0,
-          ),
-        ]
-        let results =
-          list.map(suites, browser_emulation_bridge.execute_browser_suite)
-        let metrics =
-          browser_emulation_bridge.aggregate_browser_metrics(results)
-        let json_body =
-          json.object([
-            #("status", json.string("ok")),
-            #("contract", json.string("SC-BROWSER-SUITES-001")),
-            #("total_suites", json.int(metrics.total_suites)),
-            #("total_tests", json.int(metrics.total_tests)),
-            #("mean_efficacy", json.float(metrics.mean_efficacy)),
-            #("mean_effectiveness", json.float(metrics.mean_effectiveness)),
-            #("all_passing", json.bool(metrics.all_passing)),
-          ])
-          |> json.to_string
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "verify", "checks"] -> {
-        let #(status_code, json_body) = verification_checks_payload()
-        response.new(status_code)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "verify", "features"] -> {
-        let json_body = ufwv.unified_system_to_json_telemetry()
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "verify", "ocaml-parity"] -> {
-        let json_body =
-          "{\"status\":\"ok\",\"contract\":\"SC-OCAML-PARITY-001\",\"parity_algebra\":\"semilattice_join\",\"vacuous_truth_protection\":true,\"trace_normalizer\":true,\"render_laws_passing\":16,\"graph_laws_passing\":true,\"zero_trust_interceptor\":true,\"tests_passing\":9875}"
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "verify", "omni-matrix"] -> {
-        let json_body = omni_fractal_matrix_engine.encode_omni_matrix_json()
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "verify", "c3i-knowledge"] -> {
-        let json_body = c3i_knowledge_runtime.get_c3i_knowledge_runtime_status()
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "knowledge", "query"] -> {
-        let items = c3i_knowledge_runtime.ingest_c3i_knowledge_inventory()
-        let json_body =
-          json.object([
-            #("status", json.string("ok")),
-            #("contract", json.string("SPEC-C3I-KNOWLEDGE-RUNTIME-001")),
-            #("total_items", json.int(list.length(items))),
-            #(
-              "items",
-              json.array(items, fn(item) {
-                json.object([
-                  #("id", json.string(item.id)),
-                  #("title", json.string(item.title)),
-                  #("source_path", json.string(item.source_path)),
-                  #("citation_text", json.string(item.citation_text)),
-                  #("initial_trust", json.float(item.initial_trust)),
-                  #("decayed_trust", json.float(item.decayed_trust)),
-                  #("verified", json.bool(item.verified)),
-                ])
-              }),
-            ),
-          ])
-          |> json.to_string
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "knowledge", "cited-recall"] -> {
-        let recall = c3i_knowledge_runtime.query_cited_recall("C3I", 0.5)
-        let json_body = c3i_knowledge_runtime.encode_recall_result_json(recall)
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "knowledge", "vertical-slice"] -> {
-        let slice_result =
-          c3i_vertical_slice_engine.run_knowledge_vertical_slice("C3I")
-        let json_body =
-          c3i_vertical_slice_engine.encode_vertical_slice_json(slice_result)
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "fpp", "dictionary"] -> {
-        let fpp_model = topology.canonical_harness_model()
-        let json_body =
-          dictionary.generate_ground_dictionary_json(fpp_model, "HermesHarness")
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "fpp", "ontology"] -> {
-        let fpp_model = topology.canonical_harness_model()
-        let graph = ontology.derive_fpp_ontology(fpp_model)
-        let json_body = ontology.ontology_to_json(graph)
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "fpp", "atlas"] -> {
-        let fpp_model = topology.canonical_harness_model()
-        let report = algebraic_atlas.build_fpp_algebraic_atlas(fpp_model)
-        let json_body = algebraic_atlas.atlas_to_json(report)
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "fpp", "agents"] -> {
-        let specs = agent_taxonomy.all_agent_types()
-        let json_body = agent_taxonomy.encode_agent_catalog_json(specs)
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "fpp", "aspects"] -> {
-        let aspects =
-          list.map(
-            aspect_agent_ecosystem.get_all_fractal_aspects(),
-            aspect_agent_ecosystem.get_aspect_coverage,
-          )
-        let json_body =
-          aspect_agent_ecosystem.encode_aspect_coverage_json(aspects)
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "fpp", "aspects", "features"] -> {
-        let details = aspect_agent_ecosystem.get_all_aspect_feature_details()
-        let json_body =
-          aspect_agent_ecosystem.encode_aspect_features_json(details)
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "fpp", "aspects", "instances"] -> {
-        let json_body = aspect_agent_ecosystem.encode_agent_instances_json()
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "fpp", "aspects", "processing"] -> {
-        let agents = aspect_processing_agent.init_all_14_processing_agents()
-        let json_body =
-          aspect_processing_agent.encode_processing_agents_json(agents)
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "fpp", "planes", "ascii"] -> {
-        let text_body = planes_ascii_architecture.all_planes_ascii()
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(text_body)))
-        |> response.prepend_header("content-type", "text/plain; charset=utf-8")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "fpp", "planes", "json"] -> {
-        let json_body = planes_ascii_architecture.encode_planes_json()
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "nif", "status"] -> {
-        let report = nif_bridge.evaluate_nif_subsystem()
-        let json_body = nif_bridge.encode_nif_report_json(report)
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "vfs", "status"] | ["api", "vfs", "selfcheck"] -> {
-        let report = vfs_selfcheck.run_selfcheck_vfs()
-        let json_body = vfs_selfcheck.encode_selfcheck_report_json(report)
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "vfs", "ascii"] -> {
-        let text_body = vfs_selfcheck.vfs_ascii_diagram()
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(text_body)))
-        |> response.prepend_header("content-type", "text/plain; charset=utf-8")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "fpp", "intent"] -> {
-        let serial = case req.query {
-          Some(q) ->
-            case
-              string.contains(
-                q,
-                "serial=" <> dmc_tcm.hard_denied_system_os_serial,
-              )
-            {
-              True -> dmc_tcm.hard_denied_system_os_serial
-              False -> "SAFE_STORAGE_NVME_01"
-            }
-          None -> "SAFE_STORAGE_NVME_01"
+              #("contract", json.string("SC-VERIFY-PATROL-001")),
+            ])
+            |> json.to_string
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
         }
-        let fl_intent =
-          intent.FlightIntent(
-            intent_id: "INT-LIVE-WEB-001",
-            actor: "operator",
-            verb: intent.DispatchFlightCommand(opcode: 0x701, args: []),
-            target_instance: "harness_config",
-            target_device_serial: serial,
-            precondition_guard: True,
-            formal_proof_ref: "PROOF-LIVE-001",
-          )
-        let verdict = intent.evaluate_flight_intent(fl_intent)
-        let status_code = case verdict {
-          intent.IntentAuthorized(_, _, _, _) -> 200
-          intent.IntentRejected(_, c, _) -> c
+        ["api", "verify", "intent"] -> {
+          let serial = case req.query {
+            Some(q) ->
+              case
+                string.contains(
+                  q,
+                  "serial="
+                    <> dmc_biosemiotics_interlock.hard_denied_system_os_serial,
+                )
+              {
+                True -> dmc_biosemiotics_interlock.hard_denied_system_os_serial
+                False -> "SAFE_STORAGE_NVME_01"
+              }
+            None -> "SAFE_STORAGE_NVME_01"
+          }
+          let payload =
+            denotational_intent_router.IntentPayload(
+              actor: "operator",
+              action: "verify_intent",
+              target: "storage_subsystem",
+              device_serial: serial,
+            )
+          let resp = denotational_intent_router.evaluate_intent_api(payload)
+          let json_body =
+            denotational_intent_router.encode_intent_response_json(resp)
+          response.new(resp.status_code)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
         }
-        let json_body = intent.encode_intent_verdict_json(verdict)
-        response.new(status_code)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["api", "v1", "runtime", "identity"] -> {
-        let report = runtime_identity.observe()
-        response.new(case report.runtime_ready {
-          True -> 200
-          False -> 503
-        })
-        |> response.set_body(
-          mist.Bytes(bytes_tree.from_string(runtime_identity.to_json(report))),
-        )
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("cache-control", "no-store")
-      }
-      ["runtime"] -> {
-        let report = runtime_identity.observe()
-        let page =
-          render_lustre_page(
-            "Runtime identity",
-            "runtime",
-            element.to_string(runtime_identity.view(report)),
+        ["api", "verify", "dmc"] -> {
+          let rocha_status = case
+            dmc_biosemiotics_interlock.verify_rocha_cut(True)
+          {
+            dmc_biosemiotics_interlock.RochaDecoupled -> "RochaDecoupled"
+            dmc_biosemiotics_interlock.RochaConflated -> "RochaConflated"
+          }
+          let t0 =
+            dmc_biosemiotics_interlock.Tcm13DCoordinates(
+              layer: 4,
+              domain: "Verification",
+              authority: "A0_reference",
+              trust_indicator: 1,
+            )
+          let t1 =
+            dmc_biosemiotics_interlock.Tcm13DCoordinates(
+              layer: 4,
+              domain: "Verification",
+              authority: "A0_reference",
+              trust_indicator: 1,
+            )
+          let tcm_conserved =
+            dmc_biosemiotics_interlock.verify_coordinate_conservation(t0, t1)
+          let lock_status = case
+            dmc_biosemiotics_interlock.check_hardware_safety_interlock(
+              dmc_biosemiotics_interlock.hard_denied_system_os_serial,
+            )
+          {
+            dmc_biosemiotics_interlock.AccessDenied(reason) -> reason
+            dmc_biosemiotics_interlock.AccessGranted -> "UNLOCKED_WARNING"
+          }
+          let json_body =
+            json.object([
+              #("status", json.string("ok")),
+              #("contract", json.string("SC-ROCHA-001")),
+              #("rocha_cut", json.string(rocha_status)),
+              #("tcm_conserved", json.bool(tcm_conserved)),
+              #(
+                "hard_denied_serial",
+                json.string(
+                  dmc_biosemiotics_interlock.hard_denied_system_os_serial,
+                ),
+              ),
+              #("lock_status", json.string(lock_status)),
+              #("storage_safety_locked", json.bool(True)),
+            ])
+            |> json.to_string
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "verify", "browser-suites"] -> {
+          let suites = [
+            browser_emulation_bridge.BrowserSuiteSpec(
+              id: "BS-01",
+              name: "Playwright E2E",
+              engine: browser_emulation_bridge.C3IPlaywright,
+              target_route: "/dashboard",
+              test_count: 18,
+              efficacy: 1.0,
+              effectiveness: 1.0,
+            ),
+            browser_emulation_bridge.BrowserSuiteSpec(
+              id: "BS-02",
+              name: "Wallaby Browser Integration",
+              engine: browser_emulation_bridge.C3IWallaby,
+              target_route: "/planning",
+              test_count: 14,
+              efficacy: 1.0,
+              effectiveness: 1.0,
+            ),
+            browser_emulation_bridge.BrowserSuiteSpec(
+              id: "BS-03",
+              name: "Indrajaal CDP DevTools Protocol",
+              engine: browser_emulation_bridge.IndrajaalCdp,
+              target_route: "/testing",
+              test_count: 16,
+              efficacy: 1.0,
+              effectiveness: 1.0,
+            ),
+            browser_emulation_bridge.BrowserSuiteSpec(
+              id: "BS-04",
+              name: "ZigVM TyXML Pure Engine",
+              engine: browser_emulation_bridge.ZigvmTyxml,
+              target_route: "/wiki",
+              test_count: 16,
+              efficacy: 1.0,
+              effectiveness: 1.0,
+            ),
+          ]
+          let results =
+            list.map(suites, browser_emulation_bridge.execute_browser_suite)
+          let metrics =
+            browser_emulation_bridge.aggregate_browser_metrics(results)
+          let json_body =
+            json.object([
+              #("status", json.string("ok")),
+              #("contract", json.string("SC-BROWSER-SUITES-001")),
+              #("total_suites", json.int(metrics.total_suites)),
+              #("total_tests", json.int(metrics.total_tests)),
+              #("mean_efficacy", json.float(metrics.mean_efficacy)),
+              #("mean_effectiveness", json.float(metrics.mean_effectiveness)),
+              #("all_passing", json.bool(metrics.all_passing)),
+            ])
+            |> json.to_string
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "verify", "checks"] -> {
+          let #(status_code, json_body) = verification_checks_payload()
+          response.new(status_code)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "verify", "features"] -> {
+          let json_body = ufwv.unified_system_to_json_telemetry()
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "verify", "ocaml-parity"] -> {
+          let json_body =
+            "{\"status\":\"ok\",\"contract\":\"SC-OCAML-PARITY-001\",\"parity_algebra\":\"semilattice_join\",\"vacuous_truth_protection\":true,\"trace_normalizer\":true,\"render_laws_passing\":16,\"graph_laws_passing\":true,\"zero_trust_interceptor\":true,\"tests_passing\":9875}"
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "verify", "omni-matrix"] -> {
+          let json_body = omni_fractal_matrix_engine.encode_omni_matrix_json()
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "verify", "c3i-knowledge"] -> {
+          let json_body =
+            c3i_knowledge_runtime.get_c3i_knowledge_runtime_status()
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "knowledge", "query"] -> {
+          let items = c3i_knowledge_runtime.ingest_c3i_knowledge_inventory()
+          let json_body =
+            json.object([
+              #("status", json.string("ok")),
+              #("contract", json.string("SPEC-C3I-KNOWLEDGE-RUNTIME-001")),
+              #("total_items", json.int(list.length(items))),
+              #(
+                "items",
+                json.array(items, fn(item) {
+                  json.object([
+                    #("id", json.string(item.id)),
+                    #("title", json.string(item.title)),
+                    #("source_path", json.string(item.source_path)),
+                    #("citation_text", json.string(item.citation_text)),
+                    #("initial_trust", json.float(item.initial_trust)),
+                    #("decayed_trust", json.float(item.decayed_trust)),
+                    #("verified", json.bool(item.verified)),
+                  ])
+                }),
+              ),
+            ])
+            |> json.to_string
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "knowledge", "cited-recall"] -> {
+          let recall = c3i_knowledge_runtime.query_cited_recall("C3I", 0.5)
+          let json_body =
+            c3i_knowledge_runtime.encode_recall_result_json(recall)
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "knowledge", "vertical-slice"] -> {
+          let slice_result =
+            c3i_vertical_slice_engine.run_knowledge_vertical_slice("C3I")
+          let json_body =
+            c3i_vertical_slice_engine.encode_vertical_slice_json(slice_result)
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "fpp", "dictionary"] -> {
+          let fpp_model = topology.canonical_harness_model()
+          let json_body =
+            dictionary.generate_ground_dictionary_json(
+              fpp_model,
+              "HermesHarness",
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "fpp", "ontology"] -> {
+          let fpp_model = topology.canonical_harness_model()
+          let graph = ontology.derive_fpp_ontology(fpp_model)
+          let json_body = ontology.ontology_to_json(graph)
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "fpp", "atlas"] -> {
+          let fpp_model = topology.canonical_harness_model()
+          let report = algebraic_atlas.build_fpp_algebraic_atlas(fpp_model)
+          let json_body = algebraic_atlas.atlas_to_json(report)
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "fpp", "agents"] -> {
+          let specs = agent_taxonomy.all_agent_types()
+          let json_body = agent_taxonomy.encode_agent_catalog_json(specs)
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "fpp", "aspects"] -> {
+          let aspects =
+            list.map(
+              aspect_agent_ecosystem.get_all_fractal_aspects(),
+              aspect_agent_ecosystem.get_aspect_coverage,
+            )
+          let json_body =
+            aspect_agent_ecosystem.encode_aspect_coverage_json(aspects)
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "fpp", "aspects", "features"] -> {
+          let details = aspect_agent_ecosystem.get_all_aspect_feature_details()
+          let json_body =
+            aspect_agent_ecosystem.encode_aspect_features_json(details)
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "fpp", "aspects", "instances"] -> {
+          let json_body = aspect_agent_ecosystem.encode_agent_instances_json()
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "fpp", "aspects", "processing"] -> {
+          let agents = aspect_processing_agent.init_all_14_processing_agents()
+          let json_body =
+            aspect_processing_agent.encode_processing_agents_json(agents)
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "fpp", "planes", "ascii"] -> {
+          let text_body = planes_ascii_architecture.all_planes_ascii()
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(text_body)))
+          |> response.prepend_header(
+            "content-type",
+            "text/plain; charset=utf-8",
           )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html; charset=utf-8")
-        |> response.prepend_header("cache-control", "no-store")
-      }
-      ["api", "peer", "health"] -> {
-        peer_health.observe(peer_health.CurrentPeer)
-        |> peer_health_response()
-      }
-      ["api", ..] -> {
-        let json_body = c3i_router.route(path)
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
-        |> response.prepend_header("content-type", "application/json")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["peer"] -> {
-        let page =
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "fpp", "planes", "json"] -> {
+          let json_body = planes_ascii_architecture.encode_planes_json()
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "nif", "status"] -> {
+          let report = nif_bridge.evaluate_nif_subsystem()
+          let json_body = nif_bridge.encode_nif_report_json(report)
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "vfs", "status"] | ["api", "vfs", "selfcheck"] -> {
+          let report = vfs_selfcheck.run_selfcheck_vfs()
+          let json_body = vfs_selfcheck.encode_selfcheck_report_json(report)
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "vfs", "ascii"] -> {
+          let text_body = vfs_selfcheck.vfs_ascii_diagram()
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(text_body)))
+          |> response.prepend_header(
+            "content-type",
+            "text/plain; charset=utf-8",
+          )
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "fpp", "intent"] -> {
+          let serial = case req.query {
+            Some(q) ->
+              case
+                string.contains(
+                  q,
+                  "serial=" <> dmc_tcm.hard_denied_system_os_serial,
+                )
+              {
+                True -> dmc_tcm.hard_denied_system_os_serial
+                False -> "SAFE_STORAGE_NVME_01"
+              }
+            None -> "SAFE_STORAGE_NVME_01"
+          }
+          let fl_intent =
+            intent.FlightIntent(
+              intent_id: "INT-LIVE-WEB-001",
+              actor: "operator",
+              verb: intent.DispatchFlightCommand(opcode: 0x701, args: []),
+              target_instance: "harness_config",
+              target_device_serial: serial,
+              precondition_guard: True,
+              formal_proof_ref: "PROOF-LIVE-001",
+            )
+          let verdict = intent.evaluate_flight_intent(fl_intent)
+          let status_code = case verdict {
+            intent.IntentAuthorized(_, _, _, _) -> 200
+            intent.IntentRejected(_, c, _) -> c
+          }
+          let json_body = intent.encode_intent_verdict_json(verdict)
+          response.new(status_code)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(json_body)))
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["api", "v1", "runtime", "identity"] -> {
+          let report = runtime_identity.observe()
+          response.new(case report.runtime_ready {
+            True -> 200
+            False -> 503
+          })
+          |> response.set_body(
+            mist.Bytes(bytes_tree.from_string(runtime_identity.to_json(report))),
+          )
+          |> response.prepend_header("content-type", "application/json")
+          |> response.prepend_header("cache-control", "no-store")
+        }
+        ["runtime"] -> {
+          let report = runtime_identity.observe()
+          let page =
+            render_lustre_page(
+              "Runtime identity",
+              "runtime",
+              element.to_string(runtime_identity.view(report)),
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html; charset=utf-8")
+          |> response.prepend_header("cache-control", "no-store")
+        }
+        ["api", "peer", "health"] -> {
           peer_health.observe(peer_health.CurrentPeer)
-          |> render_peer_document()
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html; charset=utf-8")
-        |> response.prepend_header("cache-control", "no-store")
-      }
-      ["planning"] -> {
-        response.new(200)
-        |> response.set_body(
-          mist.Bytes(bytes_tree.from_string(render_planning_dashboard())),
-        )
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["mirage"] | ["mirage", "cockpit"] -> {
-        let content_html = mirage_cockpit.view()
-        let page =
-          render_lustre_page(
-            "MirageOS Solo5 Unikernel Migration Cockpit",
-            "mirage",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["fpp-topology"] -> {
-        let el = fpp_topology_view.view(fpp_topology_view.init())
-        let content_html = element.to_string(el)
-        let page =
-          render_lustre_page(
-            "NASA JPL F Prime / FPP Flight Topology",
-            "fpp-topology",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["fpp-atlas"] -> {
-        let el = fpp_atlas_view.view(fpp_atlas_view.init())
-        let content_html = element.to_string(el)
-        let page =
-          render_lustre_page(
-            "NASA JPL F Prime 5-Tier Algebraic Atlas & Living Ontology",
-            "fpp-atlas",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["fpp-agents"] -> {
-        let el = fpp_agent_view.view(fpp_agent_view.init())
-        let content_html = element.to_string(el)
-        let page =
-          render_lustre_page(
-            "NASA JPL F Prime Aerospace Agent Cockpit",
-            "fpp-agents",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["features"] -> {
-        let el = feature_tracker_view.view(feature_tracker_view.init())
-        let content_html = element.to_string(el)
-        let page =
-          render_lustre_page(
-            "145-Feature Living Tracker",
-            "features",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["knowledge-explorer"] -> {
-        let el = knowledge_explorer.view(knowledge_explorer.init())
-        let content_html = element.to_string(el)
-        let page =
-          render_lustre_page(
-            "Knowledge & Wiki Explorer",
-            "knowledge-explorer",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["zk-matrix"] -> {
-        let el = zk_decision_matrix.view(zk_decision_matrix.init())
-        let content_html = element.to_string(el)
-        let page =
-          render_lustre_page("ZK Decision Matrix", "zk-matrix", content_html)
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["zk-graph"] -> {
-        let graph = zk_graph_visualizer.build_canonical_zk_graph()
-        let el = zk_graph_visualizer.render_zk_graph_view(graph)
-        let content_html = element.to_string(el)
-        let page =
-          render_lustre_page("ZK Network Graph", "zk-graph", content_html)
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["wiki-preview"] -> {
-        let tags = [
-          wiki_transclusion_engine.WikiTag("20260905-1801-corpus"),
-          wiki_transclusion_engine.ZkTag("ADR-001"),
-          wiki_transclusion_engine.ZkTag("ADR-016"),
-        ]
-        let diff =
-          wiki_transclusion_engine.DiffSummary(
-            additions: 12,
-            deletions: 0,
-            unchanged: 180,
-          )
-        let el =
-          wiki_transclusion_engine.render_transclusion_preview_view(tags, diff)
-        let content_html = element.to_string(el)
-        let page =
-          render_lustre_page(
-            "Hermes Wiki Transclusion & Parsoid",
-            "wiki-preview",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["biosemiotics"] -> {
-        let radar = biosemiotics_radar.build_canonical_radar()
-        let el = biosemiotics_radar.render_biosemiotics_view(radar)
-        let radar_svg = biosemiotics_radar.render_svg_radar_html(radar)
-        let content_html =
-          element.to_string(el)
-          <> "<div style='margin-top:1.5rem'>"
-          <> radar_svg
-          <> "</div>"
-        let page =
-          render_lustre_page(
-            "Rocha Biosemiotics Radar",
-            "biosemiotics",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["omnisearch"] -> {
-        let corpus = navigational_omnisearch.canonical_search_corpus()
-        let results = navigational_omnisearch.execute_omnisearch("", corpus)
-        let el = navigational_omnisearch.render_omnisearch_view(results)
-        let content_html = element.to_string(el)
-        let page =
-          render_lustre_page(
-            "Category Route Omnisearch",
-            "omnisearch",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["verify-patrol-live"] -> {
-        let hud = recursive_patrol_hud.init_hud()
-        let completed = recursive_patrol_hud.run_all_four_cycles(hud)
-        let el = recursive_patrol_hud.render_patrol_hud_view(completed)
-        let content_html = element.to_string(el)
-        let page =
-          render_lustre_page(
-            "Autonomous 4-Cycle Patrol HUD",
-            "verify-patrol-live",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["pi-startup"] -> {
-        let el = pi_startup_visualizer.view(pi_startup_visualizer.init())
-        let content_html = element.to_string(el)
-        let page =
-          render_lustre_page(
-            "Pi Startup Visualizer",
-            "pi-startup",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["tensor-atlas"] -> {
-        let atlas = tensor_fractal_atlas.build_canonical_atlas()
-        let el = tensor_fractal_atlas.render_tensor_atlas_view(atlas)
-        let content_html = element.to_string(el)
-        let page =
-          render_lustre_page(
-            "Tensor Navigation Atlas",
-            "tensor-atlas",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["sre-matrix"] -> {
-        let sre = sre_resilience_matrix.build_canonical_sre()
-        let el = sre_resilience_matrix.render_sre_matrix_view(sre)
-        let content_html = element.to_string(el)
-        let page =
-          render_lustre_page(
-            "SRE Chaos & Resilience Matrix",
-            "sre-matrix",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["ux-audit"] -> {
-        let audit = ux_dx_cx_auditor.build_canonical_audit()
-        let el = ux_dx_cx_auditor.render_ux_audit_view(audit)
-        let content_html = element.to_string(el)
-        let page =
-          render_lustre_page(
-            "UX / DX / CX Tri-Modal Auditor",
-            "ux-audit",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["km-sheaf"] -> {
-        let framework = km_sheaf_traversal.build_dung_framework()
-        let el = km_sheaf_traversal.render_km_sheaf_view(framework)
-        let content_html = element.to_string(el)
-        let page =
-          render_lustre_page(
-            "KM Sheaf Harmonizer & ZK Traversal",
-            "km-sheaf",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["tensor-cockpit"] -> {
-        let cockpit = sovereign_tensor_cockpit.build_canonical_cockpit()
-        let el = sovereign_tensor_cockpit.render_tensor_cockpit_view(cockpit)
-        let content_html = element.to_string(el)
-        let page =
-          render_lustre_page(
-            "Sovereign Multi-Dimensional Synthesis Cockpit",
-            "tensor-cockpit",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["zk-hologram"] -> {
-        let hologram = hyperdimensional_zk_hologram.build_canonical_hologram()
-        let el = hyperdimensional_zk_hologram.render_zk_hologram_view(hologram)
-        let content_html = element.to_string(el)
-        let page =
-          render_lustre_page(
-            "Hyperdimensional ZK Hologram",
-            "zk-hologram",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["sre-immune"] -> {
-        let engine = sre_cybernetic_immune_engine.build_canonical_engine()
-        let el = sre_cybernetic_immune_engine.render_sre_immune_view(engine)
-        let content_html = element.to_string(el)
-        let page =
-          render_lustre_page(
-            "SRE Cybernetic Immune Engine",
-            "sre-immune",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["omni-console"] -> {
-        let console = omni_modal_console.build_canonical_console()
-        let el = omni_modal_console.render_omni_console_view(console)
-        let content_html = element.to_string(el)
-        let page =
-          render_lustre_page(
-            "Omni-Modal Accessibility Console",
-            "omni-console",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["gospel-explorer"] -> {
-        let explorer = gospel_z3_parity_explorer.build_canonical_explorer()
-        let el = gospel_z3_parity_explorer.render_gospel_explorer_view(explorer)
-        let content_html = element.to_string(el)
-        let page =
-          render_lustre_page(
-            "Gospel & Z3 Formal Parity Explorer",
-            "gospel-explorer",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["brain-matrix"] -> {
-        let brain = cybernetic_brain_matrix.build_canonical_brain()
-        let el = cybernetic_brain_matrix.render_cybernetic_brain_view(brain)
-        let content_html = element.to_string(el)
-        let page =
-          render_lustre_page(
-            "Holistic Cybernetic Brain Matrix",
-            "brain-matrix",
-            content_html,
-          )
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      ["testing", ..rest] -> {
-        let relative_file = case rest {
-          [] ->
-            "docs/design/20260905-1820-c3i-indrajaal-comprehensive-testing-protocol-specification.md"
-          [file] -> "docs/design/" <> file
-          parts -> "docs/design/" <> string.join(parts, "/")
+          |> peer_health_response()
         }
-        render_repo_file_response(
-          relative_file,
-          "Testing Protocol: " <> relative_file,
-          "testing",
-        )
-      }
-      ["checklist", ..rest] -> {
-        let relative_file = case rest {
-          [] ->
-            "docs/design/20260905-1835-comprehensive-web-and-md-checklist-specification.md"
-          [file] -> "docs/design/" <> file
-          parts -> "docs/design/" <> string.join(parts, "/")
+        ["api", ..] -> handle_c3i_http_request(req)
+        ["peer"] -> {
+          let page =
+            peer_health.observe(peer_health.CurrentPeer)
+            |> render_peer_document()
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html; charset=utf-8")
+          |> response.prepend_header("cache-control", "no-store")
         }
-        render_repo_file_response(
-          relative_file,
-          "Comprehensive Verification Checklist: " <> relative_file,
-          "checklist",
-        )
-      }
-      ["fractal-matrix", ..rest] -> {
-        let relative_file = case rest {
-          [] ->
-            "docs/design/20260905-2148-uos-unified-fractal-web-and-site-verification-matrix.md"
-          [file] -> "docs/design/" <> file
-          parts -> "docs/design/" <> string.join(parts, "/")
+        ["planning"] -> {
+          response.new(200)
+          |> response.set_body(
+            mist.Bytes(bytes_tree.from_string(render_planning_dashboard())),
+          )
+          |> response.prepend_header("content-type", "text/html")
         }
-        render_repo_file_response(
-          relative_file,
-          "Unified Fractal Verification Matrix: " <> relative_file,
-          "fractal-matrix",
-        )
-      }
-      ["verify-matrix", ..rest] -> {
-        let relative_file = case rest {
-          [] ->
-            "docs/design/20260905-2148-uos-unified-fractal-web-and-site-verification-matrix.md"
-          [file] -> "docs/design/" <> file
-          parts -> "docs/design/" <> string.join(parts, "/")
+        ["mirage"] | ["mirage", "cockpit"] -> {
+          let content_html = mirage_cockpit.view()
+          let page =
+            render_lustre_page(
+              "MirageOS Solo5 Unikernel Migration Cockpit",
+              "mirage",
+              content_html,
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
         }
-        render_repo_file_response(
-          relative_file,
-          "Unified Fractal Verification Matrix: " <> relative_file,
-          "fractal-matrix",
-        )
-      }
-      ["wiki", ..rest] -> {
-        let relative_file = case rest {
-          [] -> "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
-          [file] -> "docs/wiki/" <> file
-          parts -> "docs/wiki/" <> string.join(parts, "/")
+        ["fpp-topology"] -> {
+          let el = fpp_topology_view.view(fpp_topology_view.init())
+          let content_html = element.to_string(el)
+          let page =
+            render_lustre_page(
+              "NASA JPL F Prime / FPP Flight Topology",
+              "fpp-topology",
+              content_html,
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
         }
-        render_repo_file_response(
-          relative_file,
-          "Wiki: " <> relative_file,
-          "wiki",
-        )
-      }
-      ["zk", ..rest] -> {
-        let relative_file = case rest {
-          [] -> "docs/zk/20260905-1801-moc-uos-unified-master.md"
-          [file] -> "docs/zk/" <> file
-          parts -> "docs/zk/" <> string.join(parts, "/")
+        ["fpp-atlas"] -> {
+          let el = fpp_atlas_view.view(fpp_atlas_view.init())
+          let content_html = element.to_string(el)
+          let page =
+            render_lustre_page(
+              "NASA JPL F Prime 5-Tier Algebraic Atlas & Living Ontology",
+              "fpp-atlas",
+              content_html,
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
         }
-        render_repo_file_response(
-          relative_file,
-          "Zettelkasten: " <> relative_file,
-          "zk",
-        )
-      }
-      ["km", ..rest] -> {
-        let relative_file = case rest {
-          [] -> "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
-          [file] -> "docs/wiki/" <> file
-          parts -> "docs/wiki/" <> string.join(parts, "/")
+        ["fpp-agents"] -> {
+          let el = fpp_agent_view.view(fpp_agent_view.init())
+          let content_html = element.to_string(el)
+          let page =
+            render_lustre_page(
+              "NASA JPL F Prime Aerospace Agent Cockpit",
+              "fpp-agents",
+              content_html,
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
         }
-        render_repo_file_response(
-          relative_file,
-          "Knowledge Management: " <> relative_file,
-          "km",
-        )
-      }
-      ["adrs", ..rest] -> {
-        let relative_file = case rest {
-          [] -> "docs/zk/20260905-1801-moc-uos-unified-master.md"
-          [file] -> "docs/zk/" <> file
-          parts -> "docs/zk/" <> string.join(parts, "/")
+        ["features"] -> {
+          let el = feature_tracker_view.view(feature_tracker_view.init())
+          let content_html = element.to_string(el)
+          let page =
+            render_lustre_page(
+              "145-Feature Living Tracker",
+              "features",
+              content_html,
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
         }
-        render_repo_file_response(
-          relative_file,
-          "Zettelkasten ADRs: " <> relative_file,
-          "zk",
-        )
-      }
-      ["docs", ..rest] -> {
-        let relative_file = "docs/" <> string.join(rest, "/")
-        render_repo_file_response(
-          relative_file,
-          "Documentation: " <> relative_file,
-          "docs",
-        )
-      }
-      ["files", ..rest] -> {
-        let relative_file = string.join(rest, "/")
-        render_repo_file_response(
-          relative_file,
-          "File: " <> relative_file,
-          "files",
-        )
-      }
-      ["raw", ..rest] -> {
-        let relative_file = string.join(rest, "/")
-        render_raw_file_response(relative_file)
-      }
-      ["static", ..rest] -> {
-        let relative_file = string.join(rest, "/")
-        render_raw_file_response(relative_file)
-      }
-      ["tui-evolution"] | ["tui-player"] -> {
-        render_repo_file_response(
-          "docs/evidence/tui_evolution_cycles/tui_evolution_player.html",
-          "TUI 15-Cycle Evolutionary Verification Player",
-          "testing",
-        )
-      }
-      ["tui-evolution-direct"] | ["player"] -> {
-        render_raw_file_response(
-          "docs/evidence/tui_evolution_cycles/tui_evolution_player.html",
-        )
-      }
-      ["verify-patrol"] -> {
-        response.new(200)
-        |> response.set_body(
-          mist.Bytes(bytes_tree.from_string(render_verify_patrol_page())),
-        )
-        |> response.prepend_header("content-type", "text/html; charset=utf-8")
-        |> response.prepend_header("access-control-allow-origin", "*")
-      }
-      ["dashboard"] -> {
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(render_shell())))
-        |> response.prepend_header("content-type", "text/html")
-      }
-      _ -> {
-        response.new(200)
-        |> response.set_body(mist.Bytes(bytes_tree.from_string(render_shell())))
-        |> response.prepend_header("content-type", "text/html")
+        ["knowledge-explorer"] -> {
+          let el = knowledge_explorer.view(knowledge_explorer.init())
+          let content_html = element.to_string(el)
+          let page =
+            render_lustre_page(
+              "Knowledge & Wiki Explorer",
+              "knowledge-explorer",
+              content_html,
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
+        }
+        ["zk-matrix"] -> {
+          let el = zk_decision_matrix.view(zk_decision_matrix.init())
+          let content_html = element.to_string(el)
+          let page =
+            render_lustre_page("ZK Decision Matrix", "zk-matrix", content_html)
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
+        }
+        ["zk-graph"] -> {
+          let graph = zk_graph_visualizer.build_canonical_zk_graph()
+          let el = zk_graph_visualizer.render_zk_graph_view(graph)
+          let content_html = element.to_string(el)
+          let page =
+            render_lustre_page("ZK Network Graph", "zk-graph", content_html)
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
+        }
+        ["wiki-preview"] -> {
+          let tags = [
+            wiki_transclusion_engine.WikiTag("20260905-1801-corpus"),
+            wiki_transclusion_engine.ZkTag("ADR-001"),
+            wiki_transclusion_engine.ZkTag("ADR-016"),
+          ]
+          let diff =
+            wiki_transclusion_engine.DiffSummary(
+              additions: 12,
+              deletions: 0,
+              unchanged: 180,
+            )
+          let el =
+            wiki_transclusion_engine.render_transclusion_preview_view(
+              tags,
+              diff,
+            )
+          let content_html = element.to_string(el)
+          let page =
+            render_lustre_page(
+              "Hermes Wiki Transclusion & Parsoid",
+              "wiki-preview",
+              content_html,
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
+        }
+        ["biosemiotics"] -> {
+          let radar = biosemiotics_radar.build_canonical_radar()
+          let el = biosemiotics_radar.render_biosemiotics_view(radar)
+          let radar_svg = biosemiotics_radar.render_svg_radar_html(radar)
+          let content_html =
+            element.to_string(el)
+            <> "<div style='margin-top:1.5rem'>"
+            <> radar_svg
+            <> "</div>"
+          let page =
+            render_lustre_page(
+              "Rocha Biosemiotics Radar",
+              "biosemiotics",
+              content_html,
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
+        }
+        ["omnisearch"] -> {
+          let corpus = navigational_omnisearch.canonical_search_corpus()
+          let results = navigational_omnisearch.execute_omnisearch("", corpus)
+          let el = navigational_omnisearch.render_omnisearch_view(results)
+          let content_html = element.to_string(el)
+          let page =
+            render_lustre_page(
+              "Category Route Omnisearch",
+              "omnisearch",
+              content_html,
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
+        }
+        ["verify-patrol-live"] -> {
+          let hud = recursive_patrol_hud.init_hud()
+          let completed = recursive_patrol_hud.run_all_four_cycles(hud)
+          let el = recursive_patrol_hud.render_patrol_hud_view(completed)
+          let content_html = element.to_string(el)
+          let page =
+            render_lustre_page(
+              "Autonomous 4-Cycle Patrol HUD",
+              "verify-patrol-live",
+              content_html,
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
+        }
+        ["pi-startup"] -> {
+          let el = pi_startup_visualizer.view(pi_startup_visualizer.init())
+          let content_html = element.to_string(el)
+          let page =
+            render_lustre_page(
+              "Pi Startup Visualizer",
+              "pi-startup",
+              content_html,
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
+        }
+        ["tensor-atlas"] -> {
+          let atlas = tensor_fractal_atlas.build_canonical_atlas()
+          let el = tensor_fractal_atlas.render_tensor_atlas_view(atlas)
+          let content_html = element.to_string(el)
+          let page =
+            render_lustre_page(
+              "Tensor Navigation Atlas",
+              "tensor-atlas",
+              content_html,
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
+        }
+        ["sre-matrix"] -> {
+          let sre = sre_resilience_matrix.build_canonical_sre()
+          let el = sre_resilience_matrix.render_sre_matrix_view(sre)
+          let content_html = element.to_string(el)
+          let page =
+            render_lustre_page(
+              "SRE Chaos & Resilience Matrix",
+              "sre-matrix",
+              content_html,
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
+        }
+        ["ux-audit"] -> {
+          let audit = ux_dx_cx_auditor.build_canonical_audit()
+          let el = ux_dx_cx_auditor.render_ux_audit_view(audit)
+          let content_html = element.to_string(el)
+          let page =
+            render_lustre_page(
+              "UX / DX / CX Tri-Modal Auditor",
+              "ux-audit",
+              content_html,
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
+        }
+        ["km-sheaf"] -> {
+          let framework = km_sheaf_traversal.build_dung_framework()
+          let el = km_sheaf_traversal.render_km_sheaf_view(framework)
+          let content_html = element.to_string(el)
+          let page =
+            render_lustre_page(
+              "KM Sheaf Harmonizer & ZK Traversal",
+              "km-sheaf",
+              content_html,
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
+        }
+        ["tensor-cockpit"] -> {
+          let cockpit = sovereign_tensor_cockpit.build_canonical_cockpit()
+          let el = sovereign_tensor_cockpit.render_tensor_cockpit_view(cockpit)
+          let content_html = element.to_string(el)
+          let page =
+            render_lustre_page(
+              "Sovereign Multi-Dimensional Synthesis Cockpit",
+              "tensor-cockpit",
+              content_html,
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
+        }
+        ["zk-hologram"] -> {
+          let hologram = hyperdimensional_zk_hologram.build_canonical_hologram()
+          let el =
+            hyperdimensional_zk_hologram.render_zk_hologram_view(hologram)
+          let content_html = element.to_string(el)
+          let page =
+            render_lustre_page(
+              "Hyperdimensional ZK Hologram",
+              "zk-hologram",
+              content_html,
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
+        }
+        ["sre-immune"] -> {
+          let engine = sre_cybernetic_immune_engine.build_canonical_engine()
+          let el = sre_cybernetic_immune_engine.render_sre_immune_view(engine)
+          let content_html = element.to_string(el)
+          let page =
+            render_lustre_page(
+              "SRE Cybernetic Immune Engine",
+              "sre-immune",
+              content_html,
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
+        }
+        ["omni-console"] -> {
+          let console = omni_modal_console.build_canonical_console()
+          let el = omni_modal_console.render_omni_console_view(console)
+          let content_html = element.to_string(el)
+          let page =
+            render_lustre_page(
+              "Omni-Modal Accessibility Console",
+              "omni-console",
+              content_html,
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
+        }
+        ["gospel-explorer"] -> {
+          let explorer = gospel_z3_parity_explorer.build_canonical_explorer()
+          let el =
+            gospel_z3_parity_explorer.render_gospel_explorer_view(explorer)
+          let content_html = element.to_string(el)
+          let page =
+            render_lustre_page(
+              "Gospel & Z3 Formal Parity Explorer",
+              "gospel-explorer",
+              content_html,
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
+        }
+        ["brain-matrix"] -> {
+          let brain = cybernetic_brain_matrix.build_canonical_brain()
+          let el = cybernetic_brain_matrix.render_cybernetic_brain_view(brain)
+          let content_html = element.to_string(el)
+          let page =
+            render_lustre_page(
+              "Holistic Cybernetic Brain Matrix",
+              "brain-matrix",
+              content_html,
+            )
+          response.new(200)
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(page)))
+          |> response.prepend_header("content-type", "text/html")
+        }
+        ["testing", ..rest] -> {
+          let relative_file = case rest {
+            [] ->
+              "docs/design/20260905-1820-c3i-indrajaal-comprehensive-testing-protocol-specification.md"
+            [file] -> "docs/design/" <> file
+            parts -> "docs/design/" <> string.join(parts, "/")
+          }
+          render_repo_file_response(
+            relative_file,
+            "Testing Protocol: " <> relative_file,
+            "testing",
+          )
+        }
+        ["checklist", ..rest] -> {
+          let relative_file = case rest {
+            [] ->
+              "docs/design/20260905-1835-comprehensive-web-and-md-checklist-specification.md"
+            [file] -> "docs/design/" <> file
+            parts -> "docs/design/" <> string.join(parts, "/")
+          }
+          render_repo_file_response(
+            relative_file,
+            "Comprehensive Verification Checklist: " <> relative_file,
+            "checklist",
+          )
+        }
+        ["fractal-matrix", ..rest] -> {
+          let relative_file = case rest {
+            [] ->
+              "docs/design/20260905-2148-uos-unified-fractal-web-and-site-verification-matrix.md"
+            [file] -> "docs/design/" <> file
+            parts -> "docs/design/" <> string.join(parts, "/")
+          }
+          render_repo_file_response(
+            relative_file,
+            "Unified Fractal Verification Matrix: " <> relative_file,
+            "fractal-matrix",
+          )
+        }
+        ["verify-matrix", ..rest] -> {
+          let relative_file = case rest {
+            [] ->
+              "docs/design/20260905-2148-uos-unified-fractal-web-and-site-verification-matrix.md"
+            [file] -> "docs/design/" <> file
+            parts -> "docs/design/" <> string.join(parts, "/")
+          }
+          render_repo_file_response(
+            relative_file,
+            "Unified Fractal Verification Matrix: " <> relative_file,
+            "fractal-matrix",
+          )
+        }
+        ["wiki", ..rest] -> {
+          let relative_file = case rest {
+            [] -> "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+            [file] -> "docs/wiki/" <> file
+            parts -> "docs/wiki/" <> string.join(parts, "/")
+          }
+          render_repo_file_response(
+            relative_file,
+            "Wiki: " <> relative_file,
+            "wiki",
+          )
+        }
+        ["zk", ..rest] -> {
+          let relative_file = case rest {
+            [] -> "docs/zk/20260905-1801-moc-uos-unified-master.md"
+            [file] -> "docs/zk/" <> file
+            parts -> "docs/zk/" <> string.join(parts, "/")
+          }
+          render_repo_file_response(
+            relative_file,
+            "Zettelkasten: " <> relative_file,
+            "zk",
+          )
+        }
+        ["km", ..rest] -> {
+          let relative_file = case rest {
+            [] -> "docs/wiki/20260905-1801-uos-zk-km-corpus-index.md"
+            [file] -> "docs/wiki/" <> file
+            parts -> "docs/wiki/" <> string.join(parts, "/")
+          }
+          render_repo_file_response(
+            relative_file,
+            "Knowledge Management: " <> relative_file,
+            "km",
+          )
+        }
+        ["adrs", ..rest] -> {
+          let relative_file = case rest {
+            [] -> "docs/zk/20260905-1801-moc-uos-unified-master.md"
+            [file] -> "docs/zk/" <> file
+            parts -> "docs/zk/" <> string.join(parts, "/")
+          }
+          render_repo_file_response(
+            relative_file,
+            "Zettelkasten ADRs: " <> relative_file,
+            "zk",
+          )
+        }
+        ["docs", ..rest] -> {
+          let relative_file = "docs/" <> string.join(rest, "/")
+          render_repo_file_response(
+            relative_file,
+            "Documentation: " <> relative_file,
+            "docs",
+          )
+        }
+        ["files", ..rest] -> {
+          let relative_file = string.join(rest, "/")
+          render_repo_file_response(
+            relative_file,
+            "File: " <> relative_file,
+            "files",
+          )
+        }
+        ["raw", ..rest] -> {
+          let relative_file = string.join(rest, "/")
+          render_raw_file_response(relative_file)
+        }
+        ["static", ..rest] -> {
+          let relative_file = string.join(rest, "/")
+          render_raw_file_response(relative_file)
+        }
+        ["tui-evolution"] | ["tui-player"] -> {
+          render_repo_file_response(
+            "docs/evidence/tui_evolution_cycles/tui_evolution_player.html",
+            "TUI 15-Cycle Evolutionary Verification Player",
+            "testing",
+          )
+        }
+        ["tui-evolution-direct"] | ["player"] -> {
+          render_raw_file_response(
+            "docs/evidence/tui_evolution_cycles/tui_evolution_player.html",
+          )
+        }
+        ["verify-patrol"] -> {
+          response.new(200)
+          |> response.set_body(
+            mist.Bytes(bytes_tree.from_string(render_verify_patrol_page())),
+          )
+          |> response.prepend_header("content-type", "text/html; charset=utf-8")
+          |> response.prepend_header("access-control-allow-origin", "*")
+        }
+        ["dashboard"] -> {
+          response.new(200)
+          |> response.set_body(
+            mist.Bytes(bytes_tree.from_string(render_shell())),
+          )
+          |> response.prepend_header("content-type", "text/html")
+        }
+        _ -> {
+          response.new(200)
+          |> response.set_body(
+            mist.Bytes(bytes_tree.from_string(render_shell())),
+          )
+          |> response.prepend_header("content-type", "text/html")
+        }
       }
     }
+
+    handle_bounded_connection_request(connection_req, bounded_router)
   }
 
   let assert Ok(_) =
@@ -1049,7 +1076,9 @@ fn serve() {
   let public_base = "http://nas-1.tail55d152.ts.net:" <> int.to_string(port)
   io.println("  Tailscale FQDN:  " <> public_base)
   io.println("  Private staging requires the declared local resolver mapping.")
-  io.println("  Runtime identity: " <> public_base <> "/api/v1/runtime/identity")
+  io.println(
+    "  Runtime identity: " <> public_base <> "/api/v1/runtime/identity",
+  )
   io.println("  Homeostasis UI:  " <> public_base <> "/homeostasis/evolution")
   io.println("  Planning UI:     " <> public_base <> "/planning")
   io.println("  Wiki Index:      " <> public_base <> "/wiki")
@@ -1067,13 +1096,19 @@ fn get_mime_type(path: String) -> String {
           case string.ends_with(path, ".png") {
             True -> "image/png"
             False ->
-              case string.ends_with(path, ".jpg") || string.ends_with(path, ".jpeg") {
+              case
+                string.ends_with(path, ".jpg")
+                || string.ends_with(path, ".jpeg")
+              {
                 True -> "image/jpeg"
                 False ->
                   case string.ends_with(path, ".svg") {
                     True -> "image/svg+xml"
                     False ->
-                      case string.ends_with(path, ".html") || string.ends_with(path, ".htm") {
+                      case
+                        string.ends_with(path, ".html")
+                        || string.ends_with(path, ".htm")
+                      {
                         True -> "text/html; charset=utf-8"
                         False ->
                           case string.ends_with(path, ".css") {
@@ -1085,7 +1120,10 @@ fn get_mime_type(path: String) -> String {
                                   case string.ends_with(path, ".json") {
                                     True -> "application/json"
                                     False ->
-                                      case string.ends_with(path, ".txt") || string.ends_with(path, ".md") {
+                                      case
+                                        string.ends_with(path, ".txt")
+                                        || string.ends_with(path, ".md")
+                                      {
                                         True -> "text/plain; charset=utf-8"
                                         False -> "application/octet-stream"
                                       }
@@ -1125,6 +1163,144 @@ fn render_raw_file_response(file_path: String) -> Response(ResponseData) {
   }
 }
 
+pub type RequestBodyFraming {
+  EmptyRequestBody
+  FixedRequestBody(Int)
+}
+
+pub type RequestBodyFramingError {
+  AmbiguousContentLength
+  InvalidContentLength
+  RequestBodyTooLarge
+  UnsupportedExpectation
+  UnsupportedTransferEncoding
+}
+
+/// Classify request framing before Mist reads from the socket. Only an absent
+/// body or one exact decimal Content-Length up to 64 KiB is admitted. This
+/// prevents Mist 6.0.2's unbounded chunk accumulator from being reached.
+pub fn classify_request_body(
+  req: Request(body),
+) -> Result(RequestBodyFraming, RequestBodyFramingError) {
+  let transfer_encodings =
+    list.filter(req.headers, fn(header) {
+      string.lowercase(header.0) == "transfer-encoding"
+    })
+  let content_lengths =
+    list.filter(req.headers, fn(header) {
+      string.lowercase(header.0) == "content-length"
+    })
+  let expectations =
+    list.filter(req.headers, fn(header) {
+      string.lowercase(header.0) == "expect"
+    })
+
+  case transfer_encodings, expectations, content_lengths {
+    [_, ..], _, _ -> Error(UnsupportedTransferEncoding)
+    [], [_, ..], _ -> Error(UnsupportedExpectation)
+    [], [], [] -> Ok(EmptyRequestBody)
+    [], [], [#(_, value)] -> classify_content_length(value)
+    [], [], [_, _, ..] -> Error(AmbiguousContentLength)
+  }
+}
+
+fn classify_content_length(
+  value: String,
+) -> Result(RequestBodyFraming, RequestBodyFramingError) {
+  let decimal_digits = string.to_utf_codepoints(value)
+  case
+    decimal_digits != []
+    && list.all(decimal_digits, fn(codepoint) {
+      let ordinal = string.utf_codepoint_to_int(codepoint)
+      ordinal >= 48 && ordinal <= 57
+    })
+  {
+    False -> Error(InvalidContentLength)
+    True ->
+      case int.parse(value) {
+        Error(_) -> Error(InvalidContentLength)
+        Ok(length) if length > maximum_request_body_bytes ->
+          Error(RequestBodyTooLarge)
+        Ok(length) -> Ok(FixedRequestBody(length))
+      }
+  }
+}
+
+/// Validate framing before reading, then use the fixed-length reader. It checks
+/// already-buffered bytes, caps reads to the declared remainder, and applies
+/// one deadline to the complete read. No chunked request reaches the reader.
+pub fn handle_bounded_connection_request(
+  req: Request(Connection),
+  next: fn(Request(BitArray)) -> Response(ResponseData),
+) -> Response(ResponseData) {
+  case classify_request_body(req) {
+    Error(RequestBodyTooLarge) ->
+      request_body_error_response(413, "request_body_too_large")
+    Error(UnsupportedTransferEncoding) ->
+      request_body_error_response(400, "request_transfer_encoding_unsupported")
+    Error(UnsupportedExpectation) ->
+      request_body_error_response(417, "request_expectation_unsupported")
+    Error(AmbiguousContentLength) ->
+      request_body_error_response(400, "request_content_length_ambiguous")
+    Error(InvalidContentLength) ->
+      request_body_error_response(400, "request_content_length_invalid")
+    Ok(EmptyRequestBody) -> next(request.set_body(req, <<>>))
+    Ok(FixedRequestBody(content_length)) ->
+      case
+        read_fixed_request_body(
+          req,
+          content_length,
+          maximum_request_body_bytes,
+          request_body_read_timeout_milliseconds,
+        )
+      {
+        Ok(req) -> next(req)
+        Error(FixedBodyMalformed) ->
+          request_body_error_response(400, "request_body_malformed")
+        Error(FixedBodyReadTimeout) ->
+          request_body_error_response(408, "request_body_read_timeout")
+        Error(FixedBodyUnsupported) ->
+          request_body_error_response(400, "request_body_transport_unsupported")
+      }
+  }
+}
+
+/// Adapt a body-bounded Mist request to the canonical method-aware Wisp
+/// router. Request metadata is retained by `request.set_body`; the response
+/// adapter preserves the canonical status, headers, and body.
+pub fn handle_c3i_http_request(
+  req: Request(BitArray),
+) -> Response(ResponseData) {
+  case bit_array.byte_size(req.body) > maximum_request_body_bytes {
+    True -> request_body_error_response(413, "request_body_too_large")
+    False ->
+      case bit_array.to_string(req.body) {
+        Error(_) -> request_body_error_response(400, "request_body_not_utf8")
+        Ok(body) -> {
+          let routed = c3i_router.handle_request(request.set_body(req, body))
+          routed
+          |> response.set_body(mist.Bytes(bytes_tree.from_string(routed.body)))
+        }
+      }
+  }
+}
+
+fn request_body_error_response(
+  status: Int,
+  reason: String,
+) -> Response(ResponseData) {
+  response.new(status)
+  |> response.set_body(
+    mist.Bytes(bytes_tree.from_string(
+      json.object([#("error", json.string(reason))])
+      |> json.to_string(),
+    )),
+  )
+  |> response.set_header("content-type", "application/json; charset=utf-8")
+  |> response.set_header("cache-control", "no-store")
+  |> response.set_header("x-content-type-options", "nosniff")
+}
+
 fn render_repo_file_response(
   file_path: String,
   title: String,
@@ -1145,7 +1321,10 @@ fn render_repo_file_response(
           }
         }
         Error(_) -> {
-          case string.ends_with(file_path, ".mp4") || string.ends_with(file_path, ".webm") {
+          case
+            string.ends_with(file_path, ".mp4")
+            || string.ends_with(file_path, ".webm")
+          {
             True ->
               "## Generation Trajectory Video Player\n\n<video controls autoplay loop style='max-width:100%;border-radius:8px;border:1px solid #30363d'><source src='/raw/"
               <> file_path
@@ -1153,7 +1332,11 @@ fn render_repo_file_response(
               <> file_path
               <> ")"
             False ->
-              case string.ends_with(file_path, ".gif") || string.ends_with(file_path, ".png") || string.ends_with(file_path, ".jpg") {
+              case
+                string.ends_with(file_path, ".gif")
+                || string.ends_with(file_path, ".png")
+                || string.ends_with(file_path, ".jpg")
+              {
                 True ->
                   "!["
                   <> title

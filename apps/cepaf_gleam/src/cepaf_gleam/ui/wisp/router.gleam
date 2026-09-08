@@ -32,18 +32,18 @@ import cepaf_gleam/ha/fitness_gate
 import cepaf_gleam/ha/fractal_forecast
 import cepaf_gleam/ha/guard_grid
 import cepaf_gleam/ha/health_cascade
-import cepaf_gleam/ui/homeostasis_status
-import cepaf_gleam/ui/wisp/homeostasis_api
 import cepaf_gleam/ha/hot_reload
-import cepaf_gleam/mcp/tools as mcp_tools
 import cepaf_gleam/ha/invariant_gate
 import cepaf_gleam/ha/module_guard
-import cepaf_gleam/ui/lustre/homeostasis_evolution_hud
 import cepaf_gleam/ha/request_guard
 import cepaf_gleam/ha/slo_tracker
+import cepaf_gleam/mcp/tools as mcp_tools
 import cepaf_gleam/moz/client as moz_client
 import cepaf_gleam/rules/dispatcher as rule_dispatcher
 import cepaf_gleam/rules/engine as rule_engine
+import cepaf_gleam/services/max_inference_daemon as max_daemon
+import cepaf_gleam/services/mirage_migration_engine
+import cepaf_gleam/services/mirage_unikernel_daemon
 import cepaf_gleam/substrate/beam_cache
 import cepaf_gleam/symbiosis/tensor as symbiosis_tensor
 import cepaf_gleam/symbiosis/types as symbiosis_types
@@ -53,11 +53,10 @@ import cepaf_gleam/ui/domain.{
   layer_to_string, page_control_plane, page_data_plane, page_fractal_layer,
   page_primary_clients, page_to_label, page_to_path,
 }
-import cepaf_gleam/services/max_inference_daemon as max_daemon
-import cepaf_gleam/services/mirage_migration_engine
-import cepaf_gleam/services/mirage_unikernel_daemon
+import cepaf_gleam/ui/homeostasis_status
 import cepaf_gleam/ui/lustre/agui_cockpit
 import cepaf_gleam/ui/lustre/forecast_cockpit
+import cepaf_gleam/ui/lustre/homeostasis_evolution_hud
 import cepaf_gleam/ui/lustre/hook_subsystem as hook_subsystem_view
 import cepaf_gleam/ui/lustre/inference_tier
 import cepaf_gleam/ui/lustre/mirage_cockpit
@@ -66,6 +65,7 @@ import cepaf_gleam/ui/web/page_views
 import cepaf_gleam/ui/web/shell
 import cepaf_gleam/ui/wisp/agui_sse_api
 import cepaf_gleam/ui/wisp/auth
+import cepaf_gleam/ui/wisp/homeostasis_api
 import cepaf_gleam/ui/wisp/iam_api
 import cepaf_gleam/ui/wisp/inference_api
 import cepaf_gleam/ui/wisp/intelligence_api
@@ -101,10 +101,11 @@ pub fn route(path: String) -> String {
   case request_guard.check() {
     request_guard.Block(reason) ->
       "{\"error\":\"service_unavailable\",\"reason\":\"" <> reason <> "\"}"
-    request_guard.Proceed -> case homeostasis_api.response(path) {
-      option.Some(body) -> body
-      option.None -> route_internal(path)
-    }
+    request_guard.Proceed ->
+      case homeostasis_api.response(path) {
+        option.Some(body) -> body
+        option.None -> route_internal(path)
+      }
   }
 }
 
@@ -158,10 +159,14 @@ fn route_internal(path: String) -> String {
       ))
     // MirageOS Unikernel & Migration routes (SC-MIRAGE-001, SC-MIRAGE-MIGRATE-001)
     "/api/v1/mirage/candidates" | "/api/mirage/candidates" ->
-      mirage_api.candidates_json(mirage_migration_engine.get_migration_candidates())
+      mirage_api.candidates_json(
+        mirage_migration_engine.get_migration_candidates(),
+      )
       |> json.to_string()
     "/api/v1/mirage/status" | "/api/mirage/status" ->
-      mirage_api.unikernel_status_json(mirage_unikernel_daemon.new_daemon_state())
+      mirage_api.unikernel_status_json(
+        mirage_unikernel_daemon.new_daemon_state(),
+      )
       |> json.to_string()
     "/api/v1/mirage/hypervisors" | "/api/mirage/hypervisors" ->
       mirage_api.hypervisors_json()
@@ -3849,6 +3854,7 @@ fn is_post_only_path(path: String) -> Bool {
     | "/api/v1/system/ooda-trigger"
     | "/api/v1/plan/update"
     | "/api/v1/planning/add"
+    | "/api/v1/reload"
     | "/api/v1/zenoh/publish"
     | "/api/v1/pi/prompt" -> True
     _ -> False
@@ -4196,34 +4202,19 @@ fn route_html(path: String) -> String {
       shell.render_page(
         "MirageOS Unikernel Cockpit",
         "mirage",
-        element.unsafe_raw_html(
-          "",
-          "div",
-          [],
-          mirage_cockpit.view(),
-        ),
+        element.unsafe_raw_html("", "div", [], mirage_cockpit.view()),
       )
     "/forecast" | "/forecast/cockpit" ->
       shell.render_page(
         "Fractal Forecasting & POODAVR Cockpit",
         "forecast",
-        element.unsafe_raw_html(
-          "",
-          "div",
-          [],
-          forecast_cockpit.view(),
-        ),
+        element.unsafe_raw_html("", "div", [], forecast_cockpit.view()),
       )
     "/ag-ui" | "/ag-ui/cockpit" ->
       shell.render_page(
         "AG-UI Real-Time Cockpit",
         "ag-ui",
-        element.unsafe_raw_html(
-          "",
-          "div",
-          [],
-          agui_cockpit.view(),
-        ),
+        element.unsafe_raw_html("", "div", [], agui_cockpit.view()),
       )
     "/planning" ->
       shell.render_page(
@@ -4549,7 +4540,9 @@ fn inference_zk_transclude_post_response(body: String) -> HttpResponse(String) {
   }
 }
 
-fn inference_lyapunov_trend_post_response(body: String) -> HttpResponse(String) {
+fn inference_lyapunov_trend_post_response(
+  body: String,
+) -> HttpResponse(String) {
   case inference_api.parse_lyapunov_trend_body(body) {
     Ok(#(telemetry, dt, horizon_s, crit)) -> {
       let result =
@@ -4584,7 +4577,8 @@ fn inference_stpa_fmea_post_response(body: String) -> HttpResponse(String) {
 fn inference_ruliad_branch_post_response(body: String) -> HttpResponse(String) {
   case inference_api.parse_ruliad_branch_body(body) {
     Ok(#(src, tgt, changes, agents)) -> {
-      let report = inference_api.evaluate_ruliad_branch(src, tgt, changes, agents)
+      let report =
+        inference_api.evaluate_ruliad_branch(src, tgt, changes, agents)
       json_response(max_daemon.ruliad_branch_report_to_json(report), 200)
     }
     Error(_) -> {
@@ -4596,7 +4590,9 @@ fn inference_ruliad_branch_post_response(body: String) -> HttpResponse(String) {
   }
 }
 
-fn inference_shruti_harmonics_post_response(body: String) -> HttpResponse(String) {
+fn inference_shruti_harmonics_post_response(
+  body: String,
+) -> HttpResponse(String) {
   case inference_api.parse_shruti_harmonics_body(body) {
     Ok(#(telemetry, raga, fundamental_hz)) -> {
       let report =
