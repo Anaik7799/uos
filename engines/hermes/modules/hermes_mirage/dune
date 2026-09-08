@@ -8,6 +8,7 @@
   mirage_solo5_tender
   mirage_interceptor
   mirage_benchmark
+  mirage_metrics
   mirage_migration_catalog
   mirage_dns_resolver
   mirage_tls_ingress
@@ -30,9 +31,23 @@
  (modules test_mirage_benchmark)
  (libraries hermes_mirage unix yojson))
 
+(executable
+ (name test_mirage_metrics)
+ (modules test_mirage_metrics)
+ (libraries hermes_mirage unix))
+
+(executable
+ (name mirage_metrics_bridge)
+ (modules mirage_metrics_bridge)
+ (libraries hermes_mirage unix mtime.clock.os))
+
 (rule
  (alias runtest)
  (action (run ./test_mirage_benchmark.exe %{exe:hermes_mirage_runner.exe})))
+
+(rule
+ (alias runtest)
+ (action (run ./test_mirage_metrics.exe %{exe:mirage_metrics_bridge.exe})))
 
 (executable
  (name hermes_mirage_runner)
