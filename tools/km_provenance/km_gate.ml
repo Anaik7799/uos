@@ -17,6 +17,9 @@
      km_gate --rete                         forward-chain the provenance rule network
      km_gate --rete-selftest                closed-schema and salience laws
      km_gate --publish                      write live JSON artifacts under generated/
+     km_gate --ev-admission REVISION        compute [[admit]] per EV from evidence
+     km_gate --ev-selftest                  the seven admission laws
+     km_gate --ev-record EV REV RUNTIME FORMAL   append one evidence row
 *)
 
 open Km_corpus
@@ -499,6 +502,149 @@ let publish () =
     "artifacts", `List written]);
   0
 
+(* --- EV admission, computed from evidence ------------------------------- *)
+
+(* Presence is resolved against the CURRENT WORKING TREE only. It deliberately
+   does NOT fall back to a canonical absolute root the way tools/uos/uos_ffi.erl
+   file_exists/1 does: that fallback is why every existing gate measures the
+   canonical checkout instead of the workspace it runs in, and why deleting an
+   artifact in a sibling workspace does not fail its gate. *)
+let workspace_present path =
+  (not (Filename.is_relative path)) = false && Sys.file_exists path
+
+let read_evidence db =
+  let stmt = Sqlite3.prepare db
+    "SELECT ev,revision,runtime_ref,formal_ref FROM ev_evidence ORDER BY ev" in
+  Fun.protect ~finally:(fun () -> ignore (Sqlite3.finalize stmt)) (fun () ->
+    let opt i = match Sqlite3.column stmt i with
+      | Sqlite3.Data.TEXT t when String.trim t <> "" -> Some t
+      | _ -> None in
+    let num i = match Sqlite3.column stmt i with
+      | Sqlite3.Data.INT n -> Int64.to_int n | _ -> 0 in
+    let txt i = match Sqlite3.column stmt i with
+      | Sqlite3.Data.TEXT t -> t | _ -> "" in
+    let rec loop acc = match Sqlite3.step stmt with
+      | Sqlite3.Rc.ROW ->
+        loop ({ Km_ev.ev = num 0; revision = txt 1;
+                runtime_ref = opt 2; formal_ref = opt 3 } :: acc)
+      | Sqlite3.Rc.DONE -> List.rev acc
+      | _ -> raise (Invalid "ev_evidence scan failed") in
+    loop [])
+
+let ev_record ev revision runtime_ref formal_ref =
+  let db = Km_chain.open_db () in
+  Fun.protect ~finally:(fun () -> Km_chain.close db) (fun () ->
+    let stmt = Sqlite3.prepare db
+      "INSERT INTO ev_evidence (ev,revision,runtime_ref,formal_ref,recorded_utc,recorded_by) \
+       VALUES (?,?,?,?,?,?)" in
+    Fun.protect ~finally:(fun () -> ignore (Sqlite3.finalize stmt)) (fun () ->
+      ignore (Sqlite3.bind_int stmt 1 ev);
+      List.iteri (fun i v -> ignore (Sqlite3.bind_text stmt (i + 2) v))
+        [revision; runtime_ref; formal_ref; now_utc (); "fable-km-refresh-20260908-0912"];
+      require (Sqlite3.step stmt = Sqlite3.Rc.DONE) "ev_evidence insert refused");
+    print_json (`Assoc ["recorded", `Bool true; "ev", `Int ev;
+                        "revision", `String revision]);
+    0)
+
+let ev_admission revision =
+  let db = Km_chain.open_db () in
+  Fun.protect ~finally:(fun () -> Km_chain.close db) (fun () ->
+    let evidence = read_evidence db in
+    (* Every EV that is CLAIMED anywhere, whether or not evidence exists for it.
+       Claims come from the ADR corpus; evidence comes from the database. The
+       point of the exercise is that these two sets differ. *)
+    let claimed =
+      List.filter_map (fun a -> a.claimed_ev) (adrs ())
+      |> List.sort_uniq compare in
+    let claimed = if claimed = [] then [] else
+      let hi = List.fold_left max 0 claimed in
+      List.init hi (fun i -> i + 1) in
+    let results =
+      List.map (fun n ->
+        match List.find_opt (fun e -> e.Km_ev.ev = n) evidence with
+        | None -> (n, Km_ev.Not_admitted "no evidence row in ev_evidence")
+        | Some e -> (n, Km_ev.admit ~present:workspace_present ~at_revision:revision e))
+        claimed in
+    let results = Km_ev.apply_no_gap results in
+    let admitted = Km_ev.admitted_count results in
+    let ceiling = Km_ev.ceiling results in
+    print_json (`Assoc [
+      "schema", `String "uos-ev-admission/v1";
+      "contract", `String "SC-PROVENANCE-001";
+      "authority", `String "REPORT_ONLY";
+      "observed_at", `String (now_utc ());
+      "candidate_revision", `String revision;
+      "denotation", `String "admit(n,r) = Admitted iff exists e. runtime(e,n,r) and formal(e,n,r) and bound_to(e,r); NotAdmitted otherwise";
+      "ev_claimed", `Int (List.length results);
+      (* Two counts, deliberately. The total includes rows outside the claimed
+         range, such as the ev=999 row inserted on 2026-09-08 to prove the
+         append-only triggers refuse UPDATE and DELETE. That row cannot be
+         removed, which is the trigger working as designed, so it is disclosed
+         rather than filtered away silently. *)
+      "evidence_rows_total", `Int (List.length evidence);
+      "evidence_rows_in_claimed_range",
+        `Int (List.length (List.filter (fun e ->
+                let n = e.Km_ev.ev in
+                List.exists (fun (m, _) -> m = n) results) evidence));
+      "ev_admitted", `Int admitted;
+      "derived_ceiling", `Int ceiling;
+      "verdicts", `List (List.map (fun (n, v) -> `Assoc [
+        "ev", `Int n;
+        "verdict", `String (Km_ev.verdict_to_string v);
+        "reason", `String (Km_ev.reason v)]) results);
+      "limits", `List (List.map (fun s -> `String s) [
+        "Presence is resolved against the current working tree only; there is no fallback to a canonical root.";
+        "An evidence row asserts that two artifacts exist at a revision; it does not re-execute them.";
+        "REPORT_ONLY: this computes a verdict, it does not grant admission." ]) ]);
+    if admitted = List.length results then 0 else 1)
+
+(* The seven laws, each executed. *)
+let ev_selftest () =
+  let open Km_ev in
+  let checks = ref 0 and fails = ref 0 in
+  let check name ok =
+    incr checks;
+    if ok then Printf.printf "ok   %s\n" name
+    else (incr fails; Printf.printf "FAIL %s\n" name) in
+  let all _ = true and none _ = false in
+  let ev n ?rt ?fm rev = { ev = n; revision = rev; runtime_ref = rt; formal_ref = fm } in
+  let r = "rev-A" in
+
+  check "L1 fail-closed: no evidence at all is NotAdmitted"
+    (admit ~present:all ~at_revision:r (ev 1 r) <> Admitted);
+  check "L2 two-key: runtime alone is NotAdmitted"
+    (admit ~present:all ~at_revision:r (ev 1 ~rt:"t.receipt" r) <> Admitted);
+  check "L2 two-key: formal alone is NotAdmitted"
+    (admit ~present:all ~at_revision:r (ev 1 ~fm:"s.lean" r) <> Admitted);
+  check "L2 two-key: both keys present is Admitted"
+    (admit ~present:all ~at_revision:r (ev 1 ~rt:"t.receipt" ~fm:"s.lean" r) = Admitted);
+  check "L3 revision-bound: evidence at rev-A says nothing at rev-B"
+    (admit ~present:all ~at_revision:"rev-B" (ev 1 ~rt:"t" ~fm:"s" r) <> Admitted);
+  check "L3 revision-bound: empty candidate revision is NotAdmitted"
+    (admit ~present:all ~at_revision:"" (ev 1 ~rt:"t" ~fm:"s" r) <> Admitted);
+  check "L7 falsifiable: same evidence, absent artifacts, flips to NotAdmitted"
+    (admit ~present:all ~at_revision:r (ev 1 ~rt:"t" ~fm:"s" r) = Admitted
+     && admit ~present:none ~at_revision:r (ev 1 ~rt:"t" ~fm:"s" r) <> Admitted);
+  check "L6 idempotent: identical inputs give identical verdicts"
+    (admit ~present:all ~at_revision:r (ev 1 ~rt:"t" ~fm:"s" r)
+     = admit ~present:all ~at_revision:r (ev 1 ~rt:"t" ~fm:"s" r));
+
+  let full n = (n, admit ~present:all ~at_revision:r (ev n ~rt:"t" ~fm:"s" r)) in
+  let bare n = (n, admit ~present:all ~at_revision:r (ev n r)) in
+  let gapped = apply_no_gap [full 1; bare 2; full 3] in
+  check "L4 no-gap: EV-3 with full evidence is refused when EV-2 is not admitted"
+    (List.assoc 3 gapped <> Admitted);
+  check "L4 no-gap: EV-1 is unaffected by the gap rule"
+    (List.assoc 1 gapped = Admitted);
+  check "L5 non-inflation: adding a claim with no evidence never raises the count"
+    (admitted_count (apply_no_gap [full 1]) = 1
+     && admitted_count (apply_no_gap [full 1; bare 2]) = 1);
+  check "ceiling is derived: contiguous admitted prefix only"
+    (ceiling (apply_no_gap [full 1; full 2; bare 3; full 4]) = 2);
+
+  Printf.printf "\n%d checks, %d failures\n" !checks !fails;
+  if !fails = 0 then 0 else 1
+
 let () =
   let fail msg =
     print_json (`Assoc ["status", `String "HOLD"; "authority", `String "NONE";
@@ -516,6 +662,9 @@ let () =
     | [_; "--rete"] -> exit (rete ())
     | [_; "--rete-selftest"] -> exit (rete_selftest ())
     | [_; "--publish"] -> exit (publish ())
+    | [_; "--ev-admission"; rev] -> exit (ev_admission rev)
+    | [_; "--ev-selftest"] -> exit (ev_selftest ())
+    | [_; "--ev-record"; n; rev; rt; fm] -> exit (ev_record (int_of_string n) rev rt fm)
     | [_; "--series"; m] -> exit (show_series m)
     | [_; "--fit"; csv] ->
       let xs = List.map float_of_string (String.split_on_char ',' csv) in
@@ -534,5 +683,6 @@ let () =
   | Km_layers.Invalid m -> fail m
   | Km_ooda.Invalid m -> fail m
   | Km_rete.Invalid m -> fail m
+  | Km_ev.Invalid m -> fail m
   | Km_chain.Invalid m -> fail m
   | Sys_error m -> fail m

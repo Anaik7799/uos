@@ -47,6 +47,34 @@ WHEN NOT (
   AND NEW.previous_digest = COALESCE((SELECT digest FROM cycle WHERE sequence = NEW.sequence-1), '')
 )
 BEGIN SELECT RAISE(ABORT, 'cycle chain broken: sequence must be contiguous and previous_digest must match'); END;
+
+CREATE TABLE IF NOT EXISTS ev_evidence (
+  ev            INTEGER NOT NULL,
+  revision      TEXT NOT NULL,
+  runtime_ref   TEXT,
+  formal_ref    TEXT,
+  recorded_utc  TEXT NOT NULL,
+  recorded_by   TEXT NOT NULL,
+  PRIMARY KEY (ev, revision)
+);
+CREATE TRIGGER IF NOT EXISTS ev_evidence_no_update BEFORE UPDATE ON ev_evidence
+BEGIN SELECT RAISE(ABORT, 'ev_evidence is append-only'); END;
+CREATE TRIGGER IF NOT EXISTS ev_evidence_no_delete BEFORE DELETE ON ev_evidence
+BEGIN SELECT RAISE(ABORT, 'ev_evidence is append-only'); END;
+
+CREATE TABLE IF NOT EXISTS ev_verdict (
+  sequence      INTEGER PRIMARY KEY,
+  ev            INTEGER NOT NULL,
+  revision      TEXT NOT NULL,
+  verdict       TEXT NOT NULL,
+  reason        TEXT NOT NULL,
+  observed_utc  TEXT NOT NULL,
+  digest        TEXT NOT NULL
+);
+CREATE TRIGGER IF NOT EXISTS ev_verdict_no_update BEFORE UPDATE ON ev_verdict
+BEGIN SELECT RAISE(ABORT, 'ev_verdict is append-only'); END;
+CREATE TRIGGER IF NOT EXISTS ev_verdict_no_delete BEFORE DELETE ON ev_verdict
+BEGIN SELECT RAISE(ABORT, 'ev_verdict is append-only'); END;
 |sql}
 
 let ok rc = require (rc = Sqlite3.Rc.OK) "sqlite operation failed"
