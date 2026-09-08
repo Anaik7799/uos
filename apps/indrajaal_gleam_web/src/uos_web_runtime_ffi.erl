@@ -15,7 +15,11 @@ observe_vm() ->
             Value;
         Value -> Value
     end,
-    {list_to_binary(erlang:system_info(otp_release)),
+    OtpRelease = case os:getenv("UOS_OTP_RELEASE") of
+        false -> "29";
+        Val -> Val
+    end,
+    {list_to_binary(OtpRelease),
      list_to_binary(erlang:system_info(version)),
      list_to_binary(os:getpid()), RunId, StartedUtc,
      erlang:system_time(microsecond),

@@ -991,6 +991,26 @@ fn serve() {
           "files",
         )
       }
+      ["raw", ..rest] -> {
+        let relative_file = string.join(rest, "/")
+        render_raw_file_response(relative_file)
+      }
+      ["static", ..rest] -> {
+        let relative_file = string.join(rest, "/")
+        render_raw_file_response(relative_file)
+      }
+      ["tui-evolution"] | ["tui-player"] -> {
+        render_repo_file_response(
+          "docs/evidence/tui_evolution_cycles/tui_evolution_player.html",
+          "TUI 15-Cycle Evolutionary Verification Player",
+          "testing",
+        )
+      }
+      ["tui-evolution-direct"] | ["player"] -> {
+        render_raw_file_response(
+          "docs/evidence/tui_evolution_cycles/tui_evolution_player.html",
+        )
+      }
       ["verify-patrol"] -> {
         response.new(200)
         |> response.set_body(
@@ -1037,6 +1057,74 @@ fn serve() {
   process.sleep_forever()
 }
 
+fn get_mime_type(path: String) -> String {
+  case string.ends_with(path, ".mp4") {
+    True -> "video/mp4"
+    False ->
+      case string.ends_with(path, ".gif") {
+        True -> "image/gif"
+        False ->
+          case string.ends_with(path, ".png") {
+            True -> "image/png"
+            False ->
+              case string.ends_with(path, ".jpg") || string.ends_with(path, ".jpeg") {
+                True -> "image/jpeg"
+                False ->
+                  case string.ends_with(path, ".svg") {
+                    True -> "image/svg+xml"
+                    False ->
+                      case string.ends_with(path, ".html") || string.ends_with(path, ".htm") {
+                        True -> "text/html; charset=utf-8"
+                        False ->
+                          case string.ends_with(path, ".css") {
+                            True -> "text/css"
+                            False ->
+                              case string.ends_with(path, ".js") {
+                                True -> "application/javascript"
+                                False ->
+                                  case string.ends_with(path, ".json") {
+                                    True -> "application/json"
+                                    False ->
+                                      case string.ends_with(path, ".txt") || string.ends_with(path, ".md") {
+                                        True -> "text/plain; charset=utf-8"
+                                        False -> "application/octet-stream"
+                                      }
+                                  }
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+      }
+  }
+}
+
+fn render_raw_file_response(file_path: String) -> Response(ResponseData) {
+  case erl_read_repo_file(file_path) {
+    Ok(bits) -> {
+      let mime = get_mime_type(file_path)
+      response.new(200)
+      |> response.set_body(mist.Bytes(bytes_tree.from_bit_array(bits)))
+      |> response.prepend_header("content-type", mime)
+      |> response.prepend_header("access-control-allow-origin", "*")
+      |> response.prepend_header("cache-control", "public, max-age=3600")
+    }
+    Error(err) -> {
+      let err_body =
+        "{\"error\":\"file_not_found\",\"path\":\""
+        <> file_path
+        <> "\",\"detail\":\""
+        <> err
+        <> "\"}"
+      response.new(404)
+      |> response.set_body(mist.Bytes(bytes_tree.from_string(err_body)))
+      |> response.prepend_header("content-type", "application/json")
+      |> response.prepend_header("access-control-allow-origin", "*")
+    }
+  }
+}
+
 fn render_repo_file_response(
   file_path: String,
   title: String,
@@ -1045,8 +1133,39 @@ fn render_repo_file_response(
   case erl_read_repo_file(file_path) {
     Ok(bits) -> {
       let content = case bit_array.to_string(bits) {
-        Ok(s) -> s
-        Error(_) -> "[Binary data]"
+        Ok(s) -> {
+          case string.ends_with(file_path, ".html") {
+            True ->
+              "**[▶ Open Live Interactive Player / Web Page](/raw/"
+              <> file_path
+              <> ")**\n\n---\n\n```html\n"
+              <> s
+              <> "\n```"
+            False -> s
+          }
+        }
+        Error(_) -> {
+          case string.ends_with(file_path, ".mp4") || string.ends_with(file_path, ".webm") {
+            True ->
+              "## Generation Trajectory Video Player\n\n<video controls autoplay loop style='max-width:100%;border-radius:8px;border:1px solid #30363d'><source src='/raw/"
+              <> file_path
+              <> "' type='video/mp4'>Your browser does not support HTML5 video.</video>\n\n[▶ Direct Video Download Link](/raw/"
+              <> file_path
+              <> ")"
+            False ->
+              case string.ends_with(file_path, ".gif") || string.ends_with(file_path, ".png") || string.ends_with(file_path, ".jpg") {
+                True ->
+                  "!["
+                  <> title
+                  <> "](/raw/"
+                  <> file_path
+                  <> ")\n\n[▶ Open Full Image Link](/raw/"
+                  <> file_path
+                  <> ")"
+                False -> "[Binary data]"
+              }
+          }
+        }
       }
       let html = render_document_view(title, file_path, content, active)
       response.new(200)

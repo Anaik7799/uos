@@ -3,7 +3,7 @@
 
 listen_host() ->
     case os:getenv("UOS_WEB_BIND") of
-        false -> <<"127.0.0.1">>;
+        false -> <<"0.0.0.0">>;
         Value when length(Value) =< 64 ->
             case inet:parse_address(Value) of
                 {ok, _Address} -> list_to_binary(Value);
