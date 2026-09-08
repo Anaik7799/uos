@@ -1,0 +1,416 @@
+{
+  "schema": "uos.solo5-toolchain.acceptance.v1",
+  "version": "0.13.0",
+  "host": "nas-1",
+  "boot_id": "1d08ac42-93f9-4839-951f-f7745671cca3",
+  "started_at": "2026-09-07T13:57:30Z",
+  "completed_at": "2026-09-07T13:58:19Z",
+  "supervisor": {
+    "path": "tests/acceptance/process_supervisor.ml",
+    "size_bytes": 16099,
+    "sha256": "923fae561572ab20540af783e73731175e9df6d1604d3d1cfa4acfb023d9c789"
+  },
+  "checker": {
+    "path": "tools/verification/solo5_toolchain.ml",
+    "size_bytes": 7440,
+    "sha256": "375fc5545b89c3a11b73f7c1adf8a5cb4c8b3ed632babeccf3e6506ecd20a213"
+  },
+  "source_archive": {
+    "path": "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/downloads/solo5-v0.13.0.tar.gz",
+    "size_bytes": 483078,
+    "sha256": "4fa409ba249ad05591ff7c94f8e2fb8d2e13a808512fb3c5f2434fd66a508f11"
+  },
+  "qemu": {
+    "path": "/usr/bin/qemu-system-x86_64",
+    "size_bytes": 31328048,
+    "sha256": "0cd4112a8f0cb891eb7c10e8df38c9dfeec8c7389bb22db6aa425f0d6fe733dc"
+  },
+  "timeout_ms": 12000,
+  "stream_limit_bytes": 65536,
+  "cases": [
+    {
+      "target": "hvt",
+      "case": "hello",
+      "argv": [
+        "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-hvt",
+        "--mem=64",
+        "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.hvt",
+        "Hello_Solo5"
+      ],
+      "artifacts": [
+        {
+          "path": "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-hvt",
+          "size_bytes": 202664,
+          "sha256": "5ac9c80ccb413dcff3f0b8cc19863d926b4249f72d96313b925d5ef354425944"
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.hvt",
+          "size_bytes": 119904,
+          "sha256": "0ea6659e620e47ed1194a6db414a50ce4ff973d882731d56251642cc2e966654"
+        }
+      ],
+      "artifacts_unchanged": true,
+      "termination": { "exit_code": 0 },
+      "duration_ms": 51.03781300000004,
+      "children_reaped": true,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "stdout": "            |      ___|\n  __|  _ \\  |  _ \\ __ \\\n\\__ \\ (   | | (   |  ) |\n____/\\___/ _|\\___/____/\nSolo5: Bindings version v0.13.0\nSolo5: Memory map: 64 MB addressable:\nSolo5:   reserved @ (0x0 - 0xfffff)\nSolo5:       text @ (0x100000 - 0x104fff)\nSolo5:     rodata @ (0x105000 - 0x106fff)\nSolo5:       data @ (0x107000 - 0x30bfff)\nSolo5:       heap >= 0x30c000 < stack < 0x4000000\n\n**** Solo5 standalone test_hello ****\n\nHello, World\nCommand line is: 'Hello_Solo5'\nSUCCESS\nSolo5: solo5_exit(0) called\n",
+      "stderr": "",
+      "assertion_passed": true,
+      "guest_success": true
+    },
+    {
+      "target": "hvt",
+      "case": "time",
+      "argv": [
+        "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-hvt",
+        "--mem=64",
+        "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_time/test_time.hvt"
+      ],
+      "artifacts": [
+        {
+          "path": "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-hvt",
+          "size_bytes": 202664,
+          "sha256": "5ac9c80ccb413dcff3f0b8cc19863d926b4249f72d96313b925d5ef354425944"
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_time/test_time.hvt",
+          "size_bytes": 137672,
+          "sha256": "c05b7905427c52e8ffafd5d899ebf82e6890cf0a971d59502fba4264d579770c"
+        }
+      ],
+      "artifacts_unchanged": true,
+      "termination": { "exit_code": 0 },
+      "duration_ms": 5057.090816000001,
+      "children_reaped": true,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "stdout": "            |      ___|\n  __|  _ \\  |  _ \\ __ \\\n\\__ \\ (   | | (   |  ) |\n____/\\___/ _|\\___/____/\nSolo5: Bindings version v0.13.0\nSolo5: Memory map: 64 MB addressable:\nSolo5:   reserved @ (0x0 - 0xfffff)\nSolo5:       text @ (0x100000 - 0x105fff)\nSolo5:     rodata @ (0x106000 - 0x107fff)\nSolo5:       data @ (0x108000 - 0x30cfff)\nSolo5:       heap >= 0x30d000 < stack < 0x4000000\n\n**** Solo5 standalone test_time ****\n\nOverhead of solo5_yield(): 31859 ns\n[5] Sleeping for one second...\n[5] Slept for 1000035856 ns\n[4] Sleeping for one second...\n[4] Slept for 1000046837 ns\n[3] Sleeping for one second...\n[3] Slept for 1000053069 ns\n[2] Sleeping for one second...\n[2] Slept for 1000046206 ns\n[1] Sleeping for one second...\n[1] Slept for 1000032039 ns\nSUCCESS\nSolo5: solo5_exit(0) called\n",
+      "stderr": "",
+      "assertion_passed": true,
+      "guest_success": true
+    },
+    {
+      "target": "hvt",
+      "case": "ssp",
+      "argv": [
+        "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-hvt",
+        "--mem=64",
+        "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_ssp/test_ssp.hvt"
+      ],
+      "artifacts": [
+        {
+          "path": "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-hvt",
+          "size_bytes": 202664,
+          "sha256": "5ac9c80ccb413dcff3f0b8cc19863d926b4249f72d96313b925d5ef354425944"
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_ssp/test_ssp.hvt",
+          "size_bytes": 119616,
+          "sha256": "68792dc6e6d91233cdab465b275c52b702a1edc06580a960d990c512b16c7ac3"
+        }
+      ],
+      "artifacts_unchanged": true,
+      "termination": { "exit_code": 255 },
+      "duration_ms": 48.84191799999993,
+      "children_reaped": true,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "stdout": "            |      ___|\n  __|  _ \\  |  _ \\ __ \\\n\\__ \\ (   | | (   |  ) |\n____/\\___/ _|\\___/____/\nSolo5: Bindings version v0.13.0\nSolo5: Memory map: 64 MB addressable:\nSolo5:   reserved @ (0x0 - 0xfffff)\nSolo5:       text @ (0x100000 - 0x104fff)\nSolo5:     rodata @ (0x105000 - 0x106fff)\nSolo5:       data @ (0x107000 - 0x30bfff)\nSolo5:       heap >= 0x30c000 < stack < 0x4000000\n\n**** Solo5 standalone test_ssp ****\n\n1234567890123456789012345678901234567890\nSolo5: ABORT: Stack corruption detected\n\u0000",
+      "stderr": "",
+      "assertion_passed": true,
+      "guest_success": false
+    },
+    {
+      "target": "hvt",
+      "case": "hello_wrong_argument",
+      "argv": [
+        "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-hvt",
+        "--mem=64",
+        "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.hvt",
+        "Deliberately_Wrong_Argument"
+      ],
+      "artifacts": [
+        {
+          "path": "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-hvt",
+          "size_bytes": 202664,
+          "sha256": "5ac9c80ccb413dcff3f0b8cc19863d926b4249f72d96313b925d5ef354425944"
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.hvt",
+          "size_bytes": 119904,
+          "sha256": "0ea6659e620e47ed1194a6db414a50ce4ff973d882731d56251642cc2e966654"
+        }
+      ],
+      "artifacts_unchanged": true,
+      "termination": { "exit_code": 0 },
+      "duration_ms": 49.3577390000004,
+      "children_reaped": true,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "stdout": "            |      ___|\n  __|  _ \\  |  _ \\ __ \\\n\\__ \\ (   | | (   |  ) |\n____/\\___/ _|\\___/____/\nSolo5: Bindings version v0.13.0\nSolo5: Memory map: 64 MB addressable:\nSolo5:   reserved @ (0x0 - 0xfffff)\nSolo5:       text @ (0x100000 - 0x104fff)\nSolo5:     rodata @ (0x105000 - 0x106fff)\nSolo5:       data @ (0x107000 - 0x30bfff)\nSolo5:       heap >= 0x30c000 < stack < 0x4000000\n\n**** Solo5 standalone test_hello ****\n\nHello, World\nCommand line is: 'Deliberately_Wrong_Argument'\nSolo5: solo5_exit(0) called\n",
+      "stderr": "",
+      "assertion_passed": true,
+      "guest_success": false
+    },
+    {
+      "target": "spt",
+      "case": "hello",
+      "argv": [
+        "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-spt",
+        "--mem=64",
+        "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.spt",
+        "Hello_Solo5"
+      ],
+      "artifacts": [
+        {
+          "path": "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-spt",
+          "size_bytes": 116496,
+          "sha256": "cc56911c77db44ba66b9027886de681d36f30dd372be19e9b16902afaed516de"
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.spt",
+          "size_bytes": 86992,
+          "sha256": "fcbb35ce8d4609a5d43b055798f54b11548156670febc5dae3a0b12ba3bbc7a0"
+        }
+      ],
+      "artifacts_unchanged": true,
+      "termination": { "exit_code": 0 },
+      "duration_ms": 32.341608999999494,
+      "children_reaped": true,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "stdout": "            |      ___|\n  __|  _ \\  |  _ \\ __ \\\n\\__ \\ (   | | (   |  ) |\n____/\\___/ _|\\___/____/\nSolo5: Bindings version v0.13.0\nSolo5: Memory map: 64 MB addressable:\nSolo5:   reserved @ (0x0 - 0xfffff)\nSolo5:       text @ (0x100000 - 0x103fff)\nSolo5:     rodata @ (0x104000 - 0x104fff)\nSolo5:       data @ (0x105000 - 0x106fff)\nSolo5:       heap >= 0x107000 < stack < 0x4000000\n\n**** Solo5 standalone test_hello ****\n\nHello, World\nCommand line is: 'Hello_Solo5'\nSUCCESS\nSolo5: solo5_exit(0) called\n",
+      "stderr": "",
+      "assertion_passed": true,
+      "guest_success": true
+    },
+    {
+      "target": "spt",
+      "case": "time",
+      "argv": [
+        "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-spt",
+        "--mem=64",
+        "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_time/test_time.spt"
+      ],
+      "artifacts": [
+        {
+          "path": "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-spt",
+          "size_bytes": 116496,
+          "sha256": "cc56911c77db44ba66b9027886de681d36f30dd372be19e9b16902afaed516de"
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_time/test_time.spt",
+          "size_bytes": 108872,
+          "sha256": "6adc682af18c50cc855de95e9b9cbae30c1d53ada86c0aa9db5dad4c5ac31dce"
+        }
+      ],
+      "artifacts_unchanged": true,
+      "termination": { "exit_code": 0 },
+      "duration_ms": 5044.440544,
+      "children_reaped": true,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "stdout": "            |      ___|\n  __|  _ \\  |  _ \\ __ \\\n\\__ \\ (   | | (   |  ) |\n____/\\___/ _|\\___/____/\nSolo5: Bindings version v0.13.0\nSolo5: Memory map: 64 MB addressable:\nSolo5:   reserved @ (0x0 - 0xfffff)\nSolo5:       text @ (0x100000 - 0x104fff)\nSolo5:     rodata @ (0x105000 - 0x106fff)\nSolo5:       data @ (0x107000 - 0x108fff)\nSolo5:       heap >= 0x109000 < stack < 0x4000000\n\n**** Solo5 standalone test_time ****\n\nOverhead of solo5_yield(): 21551 ns\n[5] Sleeping for one second...\n[5] Slept for 1000020059 ns\n[4] Sleeping for one second...\n[4] Slept for 1000053893 ns\n[3] Sleeping for one second...\n[3] Slept for 1000032563 ns\n[2] Sleeping for one second...\n[2] Slept for 1000027183 ns\n[1] Sleeping for one second...\n[1] Slept for 1000030109 ns\nSUCCESS\nSolo5: solo5_exit(0) called\n",
+      "stderr": "",
+      "assertion_passed": true,
+      "guest_success": true
+    },
+    {
+      "target": "spt",
+      "case": "ssp",
+      "argv": [
+        "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-spt",
+        "--mem=64",
+        "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_ssp/test_ssp.spt"
+      ],
+      "artifacts": [
+        {
+          "path": "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-spt",
+          "size_bytes": 116496,
+          "sha256": "cc56911c77db44ba66b9027886de681d36f30dd372be19e9b16902afaed516de"
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_ssp/test_ssp.spt",
+          "size_bytes": 82608,
+          "sha256": "93480810f83a79b6884a11f37b41bb5945ed9068c18b4e70c6e1e5e912784740"
+        }
+      ],
+      "artifacts_unchanged": true,
+      "termination": { "exit_code": 255 },
+      "duration_ms": 50.251872000000475,
+      "children_reaped": true,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "stdout": "            |      ___|\n  __|  _ \\  |  _ \\ __ \\\n\\__ \\ (   | | (   |  ) |\n____/\\___/ _|\\___/____/\nSolo5: Bindings version v0.13.0\nSolo5: Memory map: 64 MB addressable:\nSolo5:   reserved @ (0x0 - 0xfffff)\nSolo5:       text @ (0x100000 - 0x102fff)\nSolo5:     rodata @ (0x103000 - 0x103fff)\nSolo5:       data @ (0x104000 - 0x105fff)\nSolo5:       heap >= 0x106000 < stack < 0x4000000\n\n**** Solo5 standalone test_ssp ****\n\n1234567890123456789012345678901234567890\nSolo5: ABORT: Stack corruption detected\n\u0000",
+      "stderr": "",
+      "assertion_passed": true,
+      "guest_success": false
+    },
+    {
+      "target": "spt",
+      "case": "hello_wrong_argument",
+      "argv": [
+        "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-spt",
+        "--mem=64",
+        "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.spt",
+        "Deliberately_Wrong_Argument"
+      ],
+      "artifacts": [
+        {
+          "path": "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-spt",
+          "size_bytes": 116496,
+          "sha256": "cc56911c77db44ba66b9027886de681d36f30dd372be19e9b16902afaed516de"
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.spt",
+          "size_bytes": 86992,
+          "sha256": "fcbb35ce8d4609a5d43b055798f54b11548156670febc5dae3a0b12ba3bbc7a0"
+        }
+      ],
+      "artifacts_unchanged": true,
+      "termination": { "exit_code": 0 },
+      "duration_ms": 50.5585900000014,
+      "children_reaped": true,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "stdout": "            |      ___|\n  __|  _ \\  |  _ \\ __ \\\n\\__ \\ (   | | (   |  ) |\n____/\\___/ _|\\___/____/\nSolo5: Bindings version v0.13.0\nSolo5: Memory map: 64 MB addressable:\nSolo5:   reserved @ (0x0 - 0xfffff)\nSolo5:       text @ (0x100000 - 0x103fff)\nSolo5:     rodata @ (0x104000 - 0x104fff)\nSolo5:       data @ (0x105000 - 0x106fff)\nSolo5:       heap >= 0x107000 < stack < 0x4000000\n\n**** Solo5 standalone test_hello ****\n\nHello, World\nCommand line is: 'Deliberately_Wrong_Argument'\nSolo5: solo5_exit(0) called\n",
+      "stderr": "",
+      "assertion_passed": true,
+      "guest_success": false
+    },
+    {
+      "target": "virtio",
+      "case": "hello",
+      "argv": [
+        "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-virtio-run",
+        "-H", "kvm", "-m", "64",
+        "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.virtio",
+        "--", "Hello_Solo5"
+      ],
+      "artifacts": [
+        {
+          "path": "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-virtio-run",
+          "size_bytes": 7765,
+          "sha256": "ea5f1a1c251710e841477cf3880603de65760cd3689e9be012beae740f348af1"
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.virtio",
+          "size_bytes": 216296,
+          "sha256": "6382630707f92302ba98d8e45e408e5d691830acd87940d25aa87764c26483e6"
+        }
+      ],
+      "artifacts_unchanged": true,
+      "termination": { "exit_code": 83 },
+      "duration_ms": 263.0427839999996,
+      "children_reaped": true,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "stdout": "            |      ___|\r\n  __|  _ \\  |  _ \\ __ \\\r\n\\__ \\ (   | | (   |  ) |\r\n____/\\___/ _|\\___/____/\r\nSolo5: Bindings version v0.13.0\r\nSolo5: Memory map: 64 MB addressable:\r\nSolo5:   reserved @ (0x0 - 0xfffff)\r\nSolo5:       text @ (0x100000 - 0x106fff)\r\nSolo5:     rodata @ (0x107000 - 0x108fff)\r\nSolo5:       data @ (0x109000 - 0x11dfff)\r\nSolo5:       heap >= 0x11e000 < stack < 0x4000000\r\nSolo5: Clock source: KVM paravirtualized clock\r\n\r\n**** Solo5 standalone test_hello ****\r\n\r\nHello, World\r\nCommand line is: 'Hello_Solo5'\r\nSUCCESS\r\nSolo5: solo5_exit(0) called\r\n",
+      "stderr": "+ exec qemu-system-x86_64 -cpu host -enable-kvm -m 64 -nodefaults -machine acpi=off -display none -serial stdio -device isa-debug-exit -kernel /home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.virtio -append Hello_Solo5\n",
+      "assertion_passed": true,
+      "guest_success": true
+    },
+    {
+      "target": "virtio",
+      "case": "time",
+      "argv": [
+        "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-virtio-run",
+        "-H", "kvm", "-m", "64",
+        "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_time/test_time.virtio",
+        "--"
+      ],
+      "artifacts": [
+        {
+          "path": "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-virtio-run",
+          "size_bytes": 7765,
+          "sha256": "ea5f1a1c251710e841477cf3880603de65760cd3689e9be012beae740f348af1"
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_time/test_time.virtio",
+          "size_bytes": 238160,
+          "sha256": "0396ee330ddb3b4d603328381263388790616693ea4f818e39220df132625835"
+        }
+      ],
+      "artifacts_unchanged": true,
+      "termination": { "exit_code": 83 },
+      "duration_ms": 5207.573793,
+      "children_reaped": true,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "stdout": "            |      ___|\r\n  __|  _ \\  |  _ \\ __ \\\r\n\\__ \\ (   | | (   |  ) |\r\n____/\\___/ _|\\___/____/\r\nSolo5: Bindings version v0.13.0\r\nSolo5: Memory map: 64 MB addressable:\r\nSolo5:   reserved @ (0x0 - 0xfffff)\r\nSolo5:       text @ (0x100000 - 0x107fff)\r\nSolo5:     rodata @ (0x108000 - 0x10afff)\r\nSolo5:       data @ (0x10b000 - 0x11ffff)\r\nSolo5:       heap >= 0x120000 < stack < 0x4000000\r\nSolo5: Clock source: KVM paravirtualized clock\r\n\r\n**** Solo5 standalone test_time ****\r\n\r\nOverhead of solo5_yield(): 4779 ns\r\n[5] Sleeping for one second...\r\n[5] Slept for 1000056796 ns\r\n[4] Sleeping for one second...\r\n[4] Slept for 1000086923 ns\r\n[3] Sleeping for one second...\r\n[3] Slept for 1000031809 ns\r\n[2] Sleeping for one second...\r\n[2] Slept for 1003408618 ns\r\n[1] Sleeping for one second...\r\n[1] Slept for 1000039754 ns\r\nSUCCESS\r\nSolo5: solo5_exit(0) called\r\n",
+      "stderr": "+ exec qemu-system-x86_64 -cpu host -enable-kvm -m 64 -nodefaults -machine acpi=off -display none -serial stdio -device isa-debug-exit -kernel /home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_time/test_time.virtio\n",
+      "assertion_passed": true,
+      "guest_success": true
+    },
+    {
+      "target": "virtio",
+      "case": "ssp",
+      "argv": [
+        "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-virtio-run",
+        "-H", "kvm", "-m", "64",
+        "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_ssp/test_ssp.virtio",
+        "--"
+      ],
+      "artifacts": [
+        {
+          "path": "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-virtio-run",
+          "size_bytes": 7765,
+          "sha256": "ea5f1a1c251710e841477cf3880603de65760cd3689e9be012beae740f348af1"
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_ssp/test_ssp.virtio",
+          "size_bytes": 216000,
+          "sha256": "827f9ee03bed4bbeda73b78c739cc2e55f5501ba76b73eb6a1ac981b43f4135d"
+        }
+      ],
+      "artifacts_unchanged": true,
+      "termination": { "exit_code": 83 },
+      "duration_ms": 218.93058900000284,
+      "children_reaped": true,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "stdout": "            |      ___|\r\n  __|  _ \\  |  _ \\ __ \\\r\n\\__ \\ (   | | (   |  ) |\r\n____/\\___/ _|\\___/____/\r\nSolo5: Bindings version v0.13.0\r\nSolo5: Memory map: 64 MB addressable:\r\nSolo5:   reserved @ (0x0 - 0xfffff)\r\nSolo5:       text @ (0x100000 - 0x106fff)\r\nSolo5:     rodata @ (0x107000 - 0x108fff)\r\nSolo5:       data @ (0x109000 - 0x11dfff)\r\nSolo5:       heap >= 0x11e000 < stack < 0x4000000\r\nSolo5: Clock source: KVM paravirtualized clock\r\n\r\n**** Solo5 standalone test_ssp ****\r\n\r\n1234567890123456789012345678901234567890\r\nSolo5: ABORT: Stack corruption detected\r\n\u0000Solo",
+      "stderr": "+ exec qemu-system-x86_64 -cpu host -enable-kvm -m 64 -nodefaults -machine acpi=off -display none -serial stdio -device isa-debug-exit -kernel /home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_ssp/test_ssp.virtio\n",
+      "assertion_passed": true,
+      "guest_success": false
+    },
+    {
+      "target": "virtio",
+      "case": "hello_wrong_argument",
+      "argv": [
+        "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-virtio-run",
+        "-H", "kvm", "-m", "64",
+        "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.virtio",
+        "--", "Deliberately_Wrong_Argument"
+      ],
+      "artifacts": [
+        {
+          "path": "/home/an/NAS-setup/uos/var/toolchains/solo5/0.13.0/bin/solo5-virtio-run",
+          "size_bytes": 7765,
+          "sha256": "ea5f1a1c251710e841477cf3880603de65760cd3689e9be012beae740f348af1"
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.virtio",
+          "size_bytes": 216296,
+          "sha256": "6382630707f92302ba98d8e45e408e5d691830acd87940d25aa87764c26483e6"
+        }
+      ],
+      "artifacts_unchanged": true,
+      "termination": { "exit_code": 83 },
+      "duration_ms": 242.8727670000015,
+      "children_reaped": true,
+      "stdout_truncated": false,
+      "stderr_truncated": false,
+      "stdout": "            |      ___|\r\n  __|  _ \\  |  _ \\ __ \\\r\n\\__ \\ (   | | (   |  ) |\r\n____/\\___/ _|\\___/____/\r\nSolo5: Bindings version v0.13.0\r\nSolo5: Memory map: 64 MB addressable:\r\nSolo5:   reserved @ (0x0 - 0xfffff)\r\nSolo5:       text @ (0x100000 - 0x106fff)\r\nSolo5:     rodata @ (0x107000 - 0x108fff)\r\nSolo5:       data @ (0x109000 - 0x11dfff)\r\nSolo5:       heap >= 0x11e000 < stack < 0x4000000\r\nSolo5: Clock source: KVM paravirtualized clock\r\n\r\n**** Solo5 standalone test_hello ****\r\n\r\nHello, World\r\nCommand line is: 'Deliberately_Wrong_Argument'\r\nSolo5: solo5_exit(0) called\r\n",
+      "stderr": "+ exec qemu-system-x86_64 -cpu host -enable-kvm -m 64 -nodefaults -machine acpi=off -display none -serial stdio -device isa-debug-exit -kernel /home/an/NAS-setup/uos/var/quarantine/solo5-0.13.0/solo5-v0.13.0/tests/test_hello/test_hello.virtio -append Deliberately_Wrong_Argument\n",
+      "assertion_passed": true,
+      "guest_success": false
+    }
+  ],
+  "all_assertions_passed": true,
+  "case_count": 12,
+  "application_admitted": false,
+  "scope": "Linux x86_64 on this host; no network or block-device configuration; no migration or RAM-saving claim"
+}
