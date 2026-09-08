@@ -155,6 +155,13 @@ fn render_quorum() -> String {
       "    Claude Sovereign:      ONLINE (Holistic Architecture & Coordinator)",
       "    Codex Sovereign:       ONLINE (Solo5 Sandboxing & Verification)",
       "    OpenRouter Sovereign:  ONLINE (Bounded Cognitive Advisory)",
+      "",
+      "  5-Agent Sovereign Workspace & Artifact Allocation Matrix (Herdr Mesh):",
+      "    ● uos · 1 (agy):        Master Single File (20260908-0113-...md) & Formal Proofs",
+      "    ● uos · 2 (claude):     Lustre Web HUD (homeostasis_evolution_hud.gleam) & SSE Generator",
+      "    ○ uos · 3 (codex):      Wisp Router (router.gleam) & F Prime Engine (homeostasis_fprime.gleam)",
+      "    ○ uos · 4 (codex):      SSE Test Suite (agui_sse_api_test.gleam) & HUD Test Suite",
+      "    ○ uos · 5 (openrouter): Evolutionary Engine & Pareto Fitness & Sa-Plan Ledger Authority",
     ],
     "\n",
   )

@@ -12,6 +12,16 @@
   - Peer Runtime Host: [http://vm-1.tail55d152.ts.net:8088/](http://vm-1.tail55d152.ts.net:8088/)
 - **Fractal Annotations:** `#fractal-l0` `#fractal-l1` `#fractal-l2` `#fractal-l3` `#fractal-l4` `#fractal-l5` `#fractal-l6` `#fractal-l7` `#zero-muda` `#tailscale-web` `#checklist-nav` `#zk-adr`
 
+### Canonical 5-Agent Sovereign Workspace & Artifact Allocation Matrix
+
+| Session | Agent | Status | Primary Role | Assigned Artifact Location |
+|:---:|:---:|:---:|---|---|
+| **● uos · 1** | `agy` | `ACTIVE` | Master Single File Spec & Formal Proofs | [`docs/design/20260908-0113-homeostasis-monitoring-unified-master-sdlc-journal-and-specification.md`](file:///home/an/NAS-setup/uos/docs/design/20260908-0113-homeostasis-monitoring-unified-master-sdlc-journal-and-specification.md) |
+| **● uos · 2** | `claude` | `ACTIVE` | Lustre Web HUD & W3C SSE Generator | [`apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/homeostasis_evolution_hud.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/homeostasis_evolution_hud.gleam)<br>[`apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam) |
+| **○ uos · 3** | `codex` | `STANDBY` | Wisp Router Dispatch & F Prime Engine | [`apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam)<br>[`apps/cepaf_gleam/src/cepaf_gleam/fpp/homeostasis_fprime.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/fpp/homeostasis_fprime.gleam) |
+| **○ uos · 4** | `codex` | `STANDBY` | SSE & HUD Test Suites | [`apps/cepaf_gleam/test/agui_sse_api_test.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/test/agui_sse_api_test.gleam)<br>[`apps/cepaf_gleam/test/homeostasis_evolution_hud_test.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/test/homeostasis_evolution_hud_test.gleam) |
+| **○ uos · 5** | `openrouter`<br>/ `agy` | `ACTIVE` | Evolution Engine, Pareto & Sa-Plan Authority | [`apps/cepaf_gleam/src/cepaf_gleam/ha/homeostasis_evolution_engine.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ha/homeostasis_evolution_engine.gleam)<br>[`apps/cepaf_gleam/src/cepaf_gleam/ha/pareto_fitness_evaluator.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ha/pareto_fitness_evaluator.gleam)<br>[`apps/cepaf_gleam/src/cepaf_gleam/ha/physiological_homeostasis.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ha/physiological_homeostasis.gleam)<br>[`var/sa-plan/uos.sqlite3`](file:///home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3) |
+
 ---
 
 ## 1. Scope & Trigger
@@ -179,12 +189,16 @@ Executed `gleam check` and the full Gleam EUnit test suite in `apps/cepaf_gleam`
 
 1. [`apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/homeostasis_evolution_hud.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/homeostasis_evolution_hud.gleam)
    - Added `render_homeostasis_event_log/0` with SSE stream binding, dynamic table, and FIFO buffer.
-   - Updated `render_hud/1` to include the live log stream component.
-2. [`apps/cepaf_gleam/test/homeostasis_evolution_hud_test.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/test/homeostasis_evolution_hud_test.gleam)
+   - Updated `render_quorum_panel/0` to display the 5-Agent Sovereign Workspace Grouping & Artifact Location Matrix.
+2. [`apps/cepaf_gleam/src/cepaf_gleam/ui/tui/homeostasis_evolution_view.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/tui/homeostasis_evolution_view.gleam)
+   - Updated `render_quorum/0` with the 5-Agent Sovereign Session Grouping & Artifact Location Matrix.
+3. [`apps/cepaf_gleam/test/homeostasis_evolution_hud_test.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/test/homeostasis_evolution_hud_test.gleam)
    - Added `render_hud_live_event_log_test/0` verifying stream element presence in rendered HTML.
-3. [`docs/design/20260908-0105-homeostasis-monitoring-sdlc-specification.md`](file:///home/an/NAS-setup/uos/docs/design/20260908-0105-homeostasis-monitoring-sdlc-specification.md)
-   - Authored complete SDLC specification with prompt history, 6D matrix, component trees, and state machine diagrams.
-4. [`docs/journal/20260908-0105-homeostasis-dynamic-monitoring-and-sdlc-journal.md`](file:///home/an/NAS-setup/uos/docs/journal/20260908-0105-homeostasis-dynamic-monitoring-and-sdlc-journal.md)
+4. [`docs/design/20260908-0113-homeostasis-monitoring-unified-master-sdlc-journal-and-specification.md`](file:///home/an/NAS-setup/uos/docs/design/20260908-0113-homeostasis-monitoring-unified-master-sdlc-journal-and-specification.md)
+   - Master Single-File SDLC specification, prompt catalog, 6D matrix, and 5-agent workspace matrix.
+5. [`docs/design/20260908-0105-homeostasis-monitoring-sdlc-specification.md`](file:///home/an/NAS-setup/uos/docs/design/20260908-0105-homeostasis-monitoring-sdlc-specification.md)
+   - Updated with 5-agent workspace matrix and dynamic stream endpoint.
+6. [`docs/journal/20260908-0105-homeostasis-dynamic-monitoring-and-sdlc-journal.md`](file:///home/an/NAS-setup/uos/docs/journal/20260908-0105-homeostasis-dynamic-monitoring-and-sdlc-journal.md)
    - This 13-section completion journal.
 
 ---

@@ -12,6 +12,16 @@
   - Peer Runtime Host: [http://vm-1.tail55d152.ts.net:8088/](http://vm-1.tail55d152.ts.net:8088/)
 - **Fractal Annotations:** `#fractal-l0` `#fractal-l1` `#fractal-l2` `#fractal-l3` `#fractal-l4` `#fractal-l5` `#fractal-l6` `#fractal-l7` `#zero-muda` `#tailscale-web` `#checklist-nav` `#zk-adr`
 
+### Canonical 5-Agent Sovereign Workspace & Artifact Allocation Matrix
+
+| Session | Agent | Status | Primary Role | Assigned Artifact Location |
+|:---:|:---:|:---:|---|---|
+| **● uos · 1** | `agy` | `ACTIVE` | Master Single File Spec & Formal Proofs | [`docs/design/20260908-0113-homeostasis-monitoring-unified-master-sdlc-journal-and-specification.md`](file:///home/an/NAS-setup/uos/docs/design/20260908-0113-homeostasis-monitoring-unified-master-sdlc-journal-and-specification.md) |
+| **● uos · 2** | `claude` | `ACTIVE` | Lustre Web HUD & W3C SSE Generator | [`apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/homeostasis_evolution_hud.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/homeostasis_evolution_hud.gleam)<br>[`apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam) |
+| **○ uos · 3** | `codex` | `STANDBY` | Wisp Router Dispatch & F Prime Engine | [`apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam)<br>[`apps/cepaf_gleam/src/cepaf_gleam/fpp/homeostasis_fprime.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/fpp/homeostasis_fprime.gleam) |
+| **○ uos · 4** | `codex` | `STANDBY` | SSE & HUD Test Suites | [`apps/cepaf_gleam/test/agui_sse_api_test.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/test/agui_sse_api_test.gleam)<br>[`apps/cepaf_gleam/test/homeostasis_evolution_hud_test.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/test/homeostasis_evolution_hud_test.gleam) |
+| **○ uos · 5** | `openrouter`<br>/ `agy` | `ACTIVE` | Evolution Engine, Pareto & Sa-Plan Authority | [`apps/cepaf_gleam/src/cepaf_gleam/ha/homeostasis_evolution_engine.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ha/homeostasis_evolution_engine.gleam)<br>[`apps/cepaf_gleam/src/cepaf_gleam/ha/pareto_fitness_evaluator.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ha/pareto_fitness_evaluator.gleam)<br>[`apps/cepaf_gleam/src/cepaf_gleam/ha/physiological_homeostasis.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ha/physiological_homeostasis.gleam)<br>[`var/sa-plan/uos.sqlite3`](file:///home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3) |
+
 ---
 
 ## 1. Executive Summary & Architectural Scope
@@ -289,15 +299,24 @@ mindmap
 |   - Candidate Mutations: SIMD Scorer, Heijunka Queue, Solo5 Isolation       |
 |   - Pareto Frontier: Non-Dominated vs Dominated badges                      |
 +-----------------------------------------------------------------------------+
-| [6. 4-Party Sovereign Quorum Panel]                                         |
+| [6. 4-Party Sovereign Quorum Panel & 5-Agent Workspace Matrix]             |
 |   - AGY Sovereign (ONLINE) | Claude Sovereign (ONLINE)                      |
 |   - Codex Sovereign (ONLINE) | OpenRouter Sovereign (ONLINE)                |
+|   +-----------+--------+--------------------+------------------------------+ |
+|   | Session   | Agent  | Role               | Artifact Location            | |
+|   +-----------+--------+--------------------+------------------------------+ |
+|   | ● uos · 1 | agy    | Master Single File | 20260908-0113-...md          | |
+|   | ● uos · 2 | claude | Lustre HUD / SSE   | homeostasis_evolution_hud... | |
+|   | ○ uos · 3 | codex  | Router / F Prime   | router.gleam / fprime.gleam  | |
+|   | ○ uos · 4 | codex  | SSE / HUD Tests    | agui_sse_api_test.gleam...   | |
+|   | ○ uos · 5 | openr. | Evolution & Sa-Plan| homeostasis_evolution_eng... | |
+|   +-----------+--------+--------------------+------------------------------+ |
 +-----------------------------------------------------------------------------+
 | [7. Cybernetic Stability SVG]                                               |
 |   - Dynamic SVG Ring (Green/Yellow) with Lyapunov Energy V(e) Display       |
 +-----------------------------------------------------------------------------+
 | [8. Live Dynamic Event & Message Log Stream]                                |
-|   - Status: SSE STREAM: ACTIVE (/ag-ui/events/sse) | Poll: 500ms | FIFO: 50 |
+|   - Status: SSE STREAM: ACTIVE (/api/v1/homeostasis/stream) | Buffer: 50 FIFO|
 |   - Dynamic Table: Timestamp | Subsystem | Severity | Message               |
 +-----------------------------------------------------------------------------+
 | [9. Comprehensive Verification Checklist Accordion]                         |
@@ -320,6 +339,14 @@ graph TD
     HUD --> H8[render_homeostasis_event_log]
     HUD --> H9[render_checklist_accordion]
     HUD --> H10[render_footer]
+
+    H6 --> Q1[4-Party Sovereign Quorum Ballot]
+    H6 --> Q2[5-Agent Sovereign Workspace Matrix]
+    Q2 --> S1["● uos · 1 (agy): Master Single File Spec & Journal"]
+    Q2 --> S2["● uos · 2 (claude): Lustre Web HUD & W3C SSE Generator"]
+    Q2 --> S3["○ uos · 3 (codex): Wisp Router & NASA JPL F Prime Engine"]
+    Q2 --> S4["○ uos · 4 (codex): SSE & HUD Test Suites"]
+    Q2 --> S5["○ uos · 5 (openrouter / agy): Evolution Engine, Pareto & Sa-Plan"]
 
     H2 --> T1[HealthCard]
     H2 --> T2[ErrorCard]

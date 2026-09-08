@@ -14,6 +14,16 @@
   - Peer Runtime Host: [http://vm-1.tail55d152.ts.net:8088/](http://vm-1.tail55d152.ts.net:8088/)
 - **Fractal Annotations:** `#fractal-l0` `#fractal-l1` `#fractal-l2` `#fractal-l3` `#fractal-l4` `#fractal-l5` `#fractal-l6` `#fractal-l7` `#zero-muda` `#tailscale-web` `#checklist-nav` `#zk-adr`
 
+### Canonical 5-Agent Sovereign Workspace & Artifact Allocation Matrix
+
+| Session | Agent | Status | Primary Role | Assigned Artifact Location |
+|:---:|:---:|:---:|---|---|
+| **● uos · 1** | `agy` | `ACTIVE` | Master Single File Spec & Formal Proofs | [`docs/design/20260908-0113-homeostasis-monitoring-unified-master-sdlc-journal-and-specification.md`](file:///home/an/NAS-setup/uos/docs/design/20260908-0113-homeostasis-monitoring-unified-master-sdlc-journal-and-specification.md) |
+| **● uos · 2** | `claude` | `ACTIVE` | Lustre Web HUD & W3C SSE Generator | [`apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/homeostasis_evolution_hud.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/homeostasis_evolution_hud.gleam)<br>[`apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam) |
+| **○ uos · 3** | `codex` | `STANDBY` | Wisp Router Dispatch & F Prime Engine | [`apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam)<br>[`apps/cepaf_gleam/src/cepaf_gleam/fpp/homeostasis_fprime.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/fpp/homeostasis_fprime.gleam) |
+| **○ uos · 4** | `codex` | `STANDBY` | SSE & HUD Test Suites | [`apps/cepaf_gleam/test/agui_sse_api_test.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/test/agui_sse_api_test.gleam)<br>[`apps/cepaf_gleam/test/homeostasis_evolution_hud_test.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/test/homeostasis_evolution_hud_test.gleam) |
+| **○ uos · 5** | `openrouter`<br>/ `agy` | `ACTIVE` | Evolution Engine, Pareto & Sa-Plan Authority | [`apps/cepaf_gleam/src/cepaf_gleam/ha/homeostasis_evolution_engine.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ha/homeostasis_evolution_engine.gleam)<br>[`apps/cepaf_gleam/src/cepaf_gleam/ha/pareto_fitness_evaluator.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ha/pareto_fitness_evaluator.gleam)<br>[`apps/cepaf_gleam/src/cepaf_gleam/ha/physiological_homeostasis.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ha/physiological_homeostasis.gleam)<br>[`var/sa-plan/uos.sqlite3`](file:///home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3) |
+
 ---
 
 ## Table of Contents
@@ -191,6 +201,33 @@ graph LR
 
 - **Cybernetic Analysis:**
   Consolidated all requirements, specifications, journals, diagrams, state machine mappings, and live streaming architecture into this single, self-contained, authoritative master artifact (`SPEC-HOMEO-UNIFIED-MASTER-001`).
+
+### Prompt 12: 5-Agent Sovereign Workspace Grouping & Artifact Synchronization
+> **User Request:**
+> ```
+> agents           grouped│                                                                                                                     ▕
+> │   Role                   | Artifact Location                                                                        ▕
+> ● uos · 1               │  ------------------------|---------------------------------------------------------------------------------------   ▕
+> agy                   │   Master Single File     | 20260908-0113-homeostasis-monitoring-unified-master-sdlc-journal-and-specification.md    ▕
+> ● uos · 2               │   Lustre Web HUD         | homeostasis_evolution_hud.gleam                                                          ▕
+> claude                │   W3C SSE Generator      | agui_sse_api.gleam                                                                       ▕
+> ○ uos · 3               │   Wisp Router            | router.gleam                                                                             ▕
+> codex                 │   F Prime Engine         | homeostasis_fprime.gleam                                                                 ▕
+> ○ uos · 4               │   SSE Test Suite         | agui_sse_api_test.gleam                                                                  ▕
+> codex                 │   HUD Test Suite         | homeostasis_evolution_hud_test.gleam                                                     ▕
+> ○ uos · 5               │   Evolution Engine       | homeostasis_evolution_engine.gleam                                                       ▕
+> openrouter / agy        │   Pareto Fitness Engine  | pareto_fitness_evaluator.gleam                                                           ▕
+>                         │   Physiology Model       | physiological_homeostasis.gleam                                                          ▕
+>                         │   Sa-Plan Authority      | var/sa-plan/uos.sqlite3                                                                  ▕
+> ```
+> *"update all homeostaris artifacts based on this"*
+
+- **Cybernetic Analysis:**
+  Integrated the active 5-agent sovereign session matrix from the Herdr terminal workspace manager (`w2:t1` through `w2:t6`) into every layer of the cybernetic homeostasis monitoring architecture:
+  1. *Lustre Web HUD (`homeostasis_evolution_hud.gleam`)*: Updated `render_quorum_panel()` to display both the 4-Party Sovereign Consensus summary and the full 5-session matrix table (`● uos · 1` through `○ uos · 5`) with associated roles, artifact locations, and live states.
+  2. *Split-Screen TUI (`homeostasis_evolution_view.gleam`)*: Updated `render_quorum()` to print the 5-session distribution and artifact paths directly in terminal consoles.
+  3. *Master Specification (`SPEC-HOMEO-UNIFIED-MASTER-001`)*: Synced component trees, screen layouts, and quorum ballot architecture with the 5-agent workspace topology.
+  4. *SDLC Specifications & Task Journals*: Enforced full bidirectional traceability across all touched artifacts.
 
 ---
 
@@ -431,9 +468,18 @@ mindmap
 |   - Candidate Mutations: SIMD Scorer, Heijunka Queue, Solo5 Isolation       |
 |   - Pareto Frontier: Non-Dominated vs Dominated badges                      |
 +-----------------------------------------------------------------------------+
-| [6. 4-Party Sovereign Quorum Panel]                                         |
+| [6. 4-Party Sovereign Quorum Panel & 5-Agent Workspace Matrix]             |
 |   - AGY Sovereign (ONLINE) | Claude Sovereign (ONLINE)                      |
 |   - Codex Sovereign (ONLINE) | OpenRouter Sovereign (ONLINE)                |
+|   +-----------+--------+--------------------+------------------------------+ |
+|   | Session   | Agent  | Role               | Artifact Location            | |
+|   +-----------+--------+--------------------+------------------------------+ |
+|   | ● uos · 1 | agy    | Master Single File | 20260908-0113-...md          | |
+|   | ● uos · 2 | claude | Lustre HUD / SSE   | homeostasis_evolution_hud... | |
+|   | ○ uos · 3 | codex  | Router / F Prime   | router.gleam / fprime.gleam  | |
+|   | ○ uos · 4 | codex  | SSE / HUD Tests    | agui_sse_api_test.gleam...   | |
+|   | ○ uos · 5 | openr. | Evolution & Sa-Plan| homeostasis_evolution_eng... | |
+|   +-----------+--------+--------------------+------------------------------+ |
 +-----------------------------------------------------------------------------+
 | [7. Cybernetic Stability SVG]                                               |
 |   - Dynamic SVG Ring (Green/Yellow) with Lyapunov Energy V(e) Display       |
@@ -462,6 +508,14 @@ graph TD
     HUD --> H8[render_homeostasis_event_log]
     HUD --> H9[render_checklist_accordion]
     HUD --> H10[render_footer]
+
+    H6 --> Q1[4-Party Sovereign Quorum Ballot]
+    H6 --> Q2[5-Agent Sovereign Workspace Matrix]
+    Q2 --> S1["● uos · 1 (agy): Master Single File Spec & Journal"]
+    Q2 --> S2["● uos · 2 (claude): Lustre Web HUD & W3C SSE Generator"]
+    Q2 --> S3["○ uos · 3 (codex): Wisp Router & NASA JPL F Prime Engine"]
+    Q2 --> S4["○ uos · 4 (codex): SSE & HUD Test Suites"]
+    Q2 --> S5["○ uos · 5 (openrouter / agy): Evolution Engine, Pareto & Sa-Plan"]
 
     H2 --> T1[HealthCard]
     H2 --> T2[ErrorCard]
@@ -775,6 +829,7 @@ The operator issued instructions to create a single authoritative document that 
 3. **Authored Comprehensive Tests**: Added `homeostasis_telemetry_sse_stream_test()` and `render_hud_live_event_log_test()`.
 4. **Verified Full Test Protocol**: Executed full EUnit test suite, expanding passing count from 10,607 to **10,609 passed / 0 failures / 100% green**.
 5. **Consolidated Master Single File**: Authored this unified document (`SPEC-HOMEO-UNIFIED-MASTER-001`).
+6. **5-Agent Sovereign Workspace Matrix Synchronization**: Bound the 5 active workspace sessions (`● uos · 1 agy`, `● uos · 2 claude`, `○ uos · 3 codex`, `○ uos · 4 codex`, `○ uos · 5 openrouter / agy`) to their assigned artifact locations across the Lustre Web HUD, Split-Screen TUI, and master specifications.
 
 ### Section 4: Root Cause Analysis
 - *Problem*: Server-side rendered HTML requires whole-page reloads to reflect sub-second state changes in Lyapunov energy or circuit breaker trips.
@@ -784,13 +839,15 @@ The operator issued instructions to create a single authoritative document that 
 ### Section 5: Fix Taxonomy
 - **Architectural**: Dual-mode NASA JPL F Prime state machines (`homeostasis_fprime.gleam`).
 - **Protocol**: W3C Server-Sent Events (`/api/v1/homeostasis/stream`).
-- **User Interface**: Lustre MVU HUD with live event stream (`homeostasis_evolution_hud.gleam`).
+- **User Interface**: Lustre MVU HUD with live event stream (`homeostasis_evolution_hud.gleam`) and Split-Screen TUI (`homeostasis_evolution_view.gleam`).
+- **Coordination**: 5-Agent Sovereign Workspace Grouping & Artifact Location Matrix.
 - **Verification**: Dedicated test suites in `agui_sse_api_test.gleam` and `homeostasis_evolution_hud_test.gleam`.
 - **Governance**: Unified Master SDLC and Journal documentation.
 
 ### Section 6: Patterns & Anti-Patterns Discovered
 - *Pattern (Zero-Muda SSE Streaming)*: Pure EventSource hook embedded directly in HTML provides sub-50ms streaming without npm, webpack, or client JS dependencies.
 - *Pattern (FIFO Buffer Pruning)*: Enforcing `tbody.children.length <= 50` prevents unbounded memory growth during 24/7 continuous cockpit operation.
+- *Pattern (5-Agent Sovereign Artifact Partitioning)*: Assigning each sovereign agent session a distinct artifact prevents write conflicts and enforces two-key verification.
 - *Anti-Pattern Avoided (Polling via Meta Refresh)*: Eliminates full page reloads and scroll resets.
 
 ### Section 7: Verification Matrix
@@ -805,6 +862,7 @@ The operator issued instructions to create a single authoritative document that 
 | **F Prime Simulated Suite** | 11/11 state machine tests green | 11/11 passed | **PASS** |
 | **F Prime Wired Suite** | 11/11 hardware integration tests green | 11/11 passed | **PASS** |
 | **TUI BDD Scenarios** | 7/7 cockpit scenario tests green | 7/7 passed | **PASS** |
+| **5-Agent Matrix Parity** | Web HUD & TUI render 5 sessions | Both surfaces verified | **PASS** |
 | **Timestamp Mandate** | `YYYYMMDD-HHSS-` prefix | `20260908-0113-` enforced | **PASS** |
 | **Tailscale Web Links** | Clickable Tailscale FQDN links | All URLs use `nas-1.tail55d152.ts.net:4100` | **PASS** |
 | **Zero-Muda Purity** | 0 Bevy, 0 Graphite, 0 Graphene NIF | 0 occurrences | **PASS** |
@@ -814,10 +872,11 @@ The operator issued instructions to create a single authoritative document that 
 ### Section 8: Files Modified & Created
 1. [`apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/agui_sse_api.gleam) — Added `homeostasis_telemetry_sse_stream/0`.
 2. [`apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/router.gleam) — Wired `/api/v1/homeostasis/stream`.
-3. [`apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/homeostasis_evolution_hud.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/homeostasis_evolution_hud.gleam) — Added live streaming table and EventSource listener hook.
-4. [`apps/cepaf_gleam/test/agui_sse_api_test.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/test/agui_sse_api_test.gleam) — Added `homeostasis_telemetry_sse_stream_test/0`.
-5. [`apps/cepaf_gleam/test/homeostasis_evolution_hud_test.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/test/homeostasis_evolution_hud_test.gleam) — Added `render_hud_live_event_log_test/0`.
-6. [`docs/design/20260908-0113-homeostasis-monitoring-unified-master-sdlc-journal-and-specification.md`](file:///home/an/NAS-setup/uos/docs/design/20260908-0113-homeostasis-monitoring-unified-master-sdlc-journal-and-specification.md) — This master single file.
+3. [`apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/homeostasis_evolution_hud.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/homeostasis_evolution_hud.gleam) — Added live streaming table and 5-Agent Sovereign Workspace Matrix.
+4. [`apps/cepaf_gleam/src/cepaf_gleam/ui/tui/homeostasis_evolution_view.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/src/cepaf_gleam/ui/tui/homeostasis_evolution_view.gleam) — Updated TUI quorum panel with 5-Agent Sovereign Matrix.
+5. [`apps/cepaf_gleam/test/agui_sse_api_test.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/test/agui_sse_api_test.gleam) — Added `homeostasis_telemetry_sse_stream_test/0`.
+6. [`apps/cepaf_gleam/test/homeostasis_evolution_hud_test.gleam`](file:///home/an/NAS-setup/uos/apps/cepaf_gleam/test/homeostasis_evolution_hud_test.gleam) — Added `render_hud_live_event_log_test/0`.
+7. [`docs/design/20260908-0113-homeostasis-monitoring-unified-master-sdlc-journal-and-specification.md`](file:///home/an/NAS-setup/uos/docs/design/20260908-0113-homeostasis-monitoring-unified-master-sdlc-journal-and-specification.md) — Master single-file specification and SDLC journal.
 
 ### Section 9: Architectural Observations
 The fusion of NASA JPL F Prime dual-mode state machines with pure BEAM MVU and W3C Server-Sent Events achieves the ideal cybernetic operating envelope: mathematical determinism at the kernel layer, decoupled event distribution over the mesh, and sub-50ms reactive visualization for human operators.

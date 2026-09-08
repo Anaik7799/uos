@@ -216,6 +216,14 @@ fn render_quorum_panel() -> Element(msg) {
     #("OpenRouter Sovereign", "Bounded Cross-Model Cognitive Advisory (Free-Only)", "ONLINE"),
   ]
 
+  let session_matrix = [
+    #("● uos · 1", "agy", "Master Single File", "20260908-0113-homeostasis-monitoring-unified-master-sdlc-journal-and-specification.md", "ACTIVE"),
+    #("● uos · 2", "claude", "Lustre Web HUD & SSE Generator", "homeostasis_evolution_hud.gleam, agui_sse_api.gleam", "ACTIVE"),
+    #("○ uos · 3", "codex", "Wisp Router & F Prime Engine", "router.gleam, homeostasis_fprime.gleam", "STANDBY"),
+    #("○ uos · 4", "codex", "SSE & HUD Test Suites", "agui_sse_api_test.gleam, homeostasis_evolution_hud_test.gleam", "STANDBY"),
+    #("○ uos · 5", "openrouter / agy", "Evolution Engine, Pareto & Sa-Plan", "pareto_fitness_evaluator.gleam, homeostasis_evolution_engine.gleam", "ACTIVE"),
+  ]
+
   html.section([attribute.class("quorum-panel")], [
     html.h3([], [html.text("4-Party Sovereign Quorum Consensus (3-of-4 Supermajority Ratification)")]),
     html.ul([], list.map(agents, fn(a) {
@@ -225,6 +233,31 @@ fn render_quorum_panel() -> Element(msg) {
         html.span([], [html.text(role <> " [Status: " <> status <> "]")]),
       ])
     })),
+    html.h4([], [html.text("5-Agent Sovereign Session Grouping & Artifact Location Matrix")]),
+    html.table([attribute.class("session-matrix-table")], [
+      html.thead([], [
+        html.tr([], [
+          html.th([], [html.text("Session")]),
+          html.th([], [html.text("Agent")]),
+          html.th([], [html.text("Role")]),
+          html.th([], [html.text("Artifact Location")]),
+          html.th([], [html.text("State")]),
+        ]),
+      ]),
+      html.tbody(
+        [],
+        list.map(session_matrix, fn(row) {
+          let #(session, agent, role, artifact, state) = row
+          html.tr([], [
+            html.td([], [html.strong([], [html.text(session)])]),
+            html.td([], [html.text(agent)]),
+            html.td([], [html.text(role)]),
+            html.td([], [html.code([], [html.text(artifact)])]),
+            html.td([], [html.span([attribute.class("session-state-badge")], [html.text(state)])]),
+          ])
+        }),
+      ),
+    ]),
   ])
 }
 
