@@ -1,0 +1,120 @@
+{
+  "schema": "uos.gateway-observation.v1",
+  "authority": "NONE",
+  "completion_invoked": false,
+  "route": {
+    "status": "ok",
+    "decision": {
+      "task_id": "task-adhoc",
+      "layer": "L5",
+      "strategy": "zero_cost_prefer_free",
+      "model": {
+        "id": "google/gemma-4-31b-it:free",
+        "name": "Gemma 4 31B Instruct (Free)",
+        "tier": "free_openrouter"
+      },
+      "estimated_prompt_tokens": 5,
+      "estimated_completion_tokens": 256,
+      "estimated_cost_usd": 0,
+      "budget_approved": true,
+      "reasoning": "Zero-cost OpenRouter free tier model selected adhering to SC-ROUTING-001",
+      "fallback_chain": [
+        "nvidia/nemotron-3.5-lightning:free",
+        "minimax/minimax-m3:free",
+        "hermes/rete-local"
+      ]
+    }
+  },
+  "status": {
+    "active_tier": 1,
+    "active_tier_name": "Modular MAX / Mojo",
+    "hedged_mode": true,
+    "total_requests": 0,
+    "avg_latency_ms": 0,
+    "cache_hit_rate": 0,
+    "all_healthy": true,
+    "engine": "Modular MAX 26.5.0 / Mojo 1.0.0 (ed45d567)",
+    "runtime_installed": true,
+    "model_weights_loaded": false,
+    "data_mode": "toolchain_ready_unloaded_weights",
+    "qps_capacity": 50770,
+    "tailscale_ingress": "http://nas-1.tail55d152.ts.net:4100/api/v1/inference/status",
+    "modalities": [
+      "text",
+      "image",
+      "audio",
+      "video",
+      "embedding",
+      "ast_anomaly",
+      "zk_transclusion",
+      "lyapunov_trend",
+      "stpa_fmea_hazard",
+      "rete_conflict",
+      "ruliad_branch",
+      "shruti_harmonics"
+    ],
+    "tiers": [
+      {
+        "tier": 1,
+        "name": "Modular MAX / Mojo",
+        "model": "modular-max-v26.5.0-mojo",
+        "latency_ms": 25,
+        "active": true,
+        "circuit": "CLOSED",
+        "requests_total": 0,
+        "failures_total": 0
+      },
+      {
+        "tier": 2,
+        "name": "Gemini Direct",
+        "model": "gemini-3.1-flash-lite-preview",
+        "latency_ms": 900,
+        "active": true,
+        "circuit": "CLOSED",
+        "requests_total": 0,
+        "failures_total": 0
+      },
+      {
+        "tier": 3,
+        "name": "OpenRouter",
+        "model": "gemini-3-flash-preview",
+        "latency_ms": 1100,
+        "active": true,
+        "circuit": "CLOSED",
+        "requests_total": 0,
+        "failures_total": 0
+      },
+      {
+        "tier": 4,
+        "name": "Ollama gemma4",
+        "model": "gemma4",
+        "latency_ms": 4000,
+        "active": false,
+        "circuit": "CLOSED",
+        "requests_total": 0,
+        "failures_total": 0
+      },
+      {
+        "tier": 5,
+        "name": "RETE-UL Rules",
+        "model": "rule-engine",
+        "latency_ms": 1,
+        "active": false,
+        "circuit": "CLOSED",
+        "requests_total": 0,
+        "failures_total": 0
+      },
+      {
+        "tier": 6,
+        "name": "Static Ack",
+        "model": "static",
+        "latency_ms": 0,
+        "active": false,
+        "circuit": "CLOSED",
+        "requests_total": 0,
+        "failures_total": 0
+      }
+    ]
+  },
+  "conclusion": "Route returns a selection decision; neither inspected endpoint executes a model. Peer Gemma usage is not independently verified."
+}

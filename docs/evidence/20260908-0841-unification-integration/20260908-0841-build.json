@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "candidate": "cd503010f654d9abd876a6328fb80ad14ed14ab3",
+  "release": "/home/an/NAS-setup/uos/var/releases/indrajaal-web/unification-merge-final-20260908-0835",
+  "build_log": "/tmp/uos-native-release-843a45/build.log",
+  "elapsed_monotonic_seconds": 77.804863789,
+  "files": 3534
+}

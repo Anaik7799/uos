@@ -1,0 +1,8 @@
+{
+  "status": "PASS",
+  "checks": 69,
+  "evidence": "/tmp/uos-release-browser-c74707",
+  "candidate": "cd503010f654d9abd876a6328fb80ad14ed14ab3",
+  "run_id": "2239367-1788856650728671",
+  "pages": 8
+}

@@ -1,0 +1,50 @@
+{
+  "schema": "uos.unification-runtime-observations.v1",
+  "authority": "NONE",
+  "staging": {
+    "schema": "uos.web-runtime-identity.v1",
+    "runtime_ready": true,
+    "identity_consistent": true,
+    "application_admitted": false,
+    "authority": "running VM observation; release metadata is declared, not attested",
+    "otp_release": "29",
+    "erts_version": "17.0.6",
+    "os_pid": "2239367",
+    "run_id": "2239367-1788856650728671",
+    "started_utc_us": 1788856650728671,
+    "observed_utc_us": 1788856757105101,
+    "vm_monotonic_elapsed_ms": 106376,
+    "declared_candidate_revision": "cd503010f654d9abd876a6328fb80ad14ed14ab3",
+    "declared_instance_id": "unification-merge-0835",
+    "declared_role": "backup",
+    "managed": true,
+    "scope": "VM identity only; application readiness, artifact binding and writer fencing require independent checks"
+  },
+  "staging_unit": "uos-unification-merge-stage-0835.service",
+  "staging_invocation": "28327c6d25e8449f81417cfd9d6cfbef",
+  "staging_after": "inactive/dead",
+  "runtime_lease_released": {
+    "epoch": 5,
+    "sequence": 846
+  },
+  "production": {
+    "schema": "uos.web-runtime-identity.v1",
+    "runtime_ready": false,
+    "application_admitted": false,
+    "authority": "running VM observation; release metadata is declared, not attested",
+    "otp_release": "29",
+    "erts_version": "15.2.7.4",
+    "os_pid": "1261131",
+    "run_id": "1261131-1788827505320531",
+    "started_utc_us": 1788827505320531,
+    "observed_utc_us": 1788856787830083,
+    "vm_monotonic_elapsed_ms": 29282509,
+    "declared_candidate_revision": "",
+    "declared_instance_id": "",
+    "declared_role": "",
+    "managed": false,
+    "scope": "VM identity only; application readiness, artifact binding and writer fencing require independent checks"
+  },
+  "production_http": 503,
+  "production_changed": false
+}

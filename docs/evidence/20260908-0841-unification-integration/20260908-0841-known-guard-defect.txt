@@ -1,0 +1,1 @@
+Candidate cd503010: guard_json accepts both {"message":"no status available"} and {"substatus":1} when status is required. Two guard_passed results reproduced from the exact built package at 2026-09-08T08:41:17Z. This is an open defect, not a passing safety gate. No mutation executed.
