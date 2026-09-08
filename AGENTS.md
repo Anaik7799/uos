@@ -6,7 +6,7 @@ This repository is the canonical Unified Operational System (UOS).
 
 - Canonical workspace: `/home/an/NAS-setup/uos`
 - Target VCS: standalone, non-colocated Jujutsu only (`.jj/`)
-- EV-Cycle Status: `EV-01` through `EV-99` admitted (`EV-99` Decentralized Work-Stealing Swarm Mesh, SVG Topology View & Lean 4 Fairness Ratified); `DMC-TCM` completed; `Full 9-Modality Test Protocol` 100% green; `Comprehensive Verification Checklist & Uniform Site Navigation` verified; `Codex Sovereign Verification` active.
+- EV-Cycle Status: admitted ceiling is `EV-93` (`SC-PROVENANCE-001`, `admitted_ev_ceiling = 93`). Cycles `EV-94`..`EV-109` are `NOT_ADMITTED` pending sovereign review by Codex and AGY. No new EV number may be minted while that range is under review (`INV-PROV-05`). `DMC-TCM` completed; `Comprehensive Verification Checklist & Uniform Site Navigation` verified; `Codex Sovereign Verification` active.
 - Mandatory Timestamp Rule: All generated docs must carry `YYYYMMDD-HHSS-` timestamp prefix (Operator Directive, `contracts/rules/timestamp-mandate.md`).
 - Strict Zero-Muda: Bevy and Graphite are permanently barred from source, dependencies, runtime roles, and imported history.
 - External source trees are read-only evidence; no unvetted artifacts enter UOS without two-key verification.
@@ -16,10 +16,10 @@ This repository is the canonical Unified Operational System (UOS).
 >
 > 1. **`EV-94` through `EV-104` originate in quarantined coordinator events.** Events 422 to 432 were appended by a foreign writer using an invented `publish_evidence` operation that the coordinator's command type has no constructor for, stamped with session `656f0d2c`'s identity although that session did not write them. Their content is exactly these EV claims plus `ADR-071` and related test-green counts. Evidence: `var/coordination/tri-agent/events-quarantine/0000000422-0000000432.quarantine-note.txt`.
 > 2. **`EV-108`'s identifier matches a forged journal event.** At approximately 22:5xZ, journal event 437 briefly carried `operation_id` `l0-ev108-fast-ooda-1788812700000000` with `tick_us` equal to `utc_us`, an impossible clock, before being repaired back to its true content. That was the **third** in-place journal corruption of the day.
-> 3. **The two statements in this file disagree.** This line says `EV-01` through `EV-99` admitted; section 9 says `CURRENT EV-CYCLE: EV-108`. Both cannot be current.
+> 3. **The two statements in this file disagreed.** The first line claimed `EV-01`..`EV-99` admitted while section 9 advertised `CURRENT EV-CYCLE: EV-108`. RESOLVED 2026-09-08 under sa-plan `uos/km-index-refresh/20260908-0912` (`t10`): both now state the `EV-93` ceiling and carry the `NOT_ADMITTED` range. The contradiction is recorded here because it existed, not because it persists.
 > 4. **Two-key verification is not satisfied** for any EV cycle above `EV-93`: no fresh observed runtime behaviour is bound to a candidate revision for them in this workspace.
 >
-> Status of these claims is `NOT_ADMITTED` pending sovereign review by Codex and AGY. The structural fix that prevents a recurrence, the SQLite coordinator store with append-only triggers, was integrated on 2026-09-07 under task `s1-sqlite-coordinator-cutover`; its falsifiers, a raw `UPDATE` and a raw `DELETE` on the events table, are both refused with `events are append-only`.
+> Status of these claims is `NOT_ADMITTED` pending sovereign review by Codex and AGY. The boundary is now pinned as a single constant and machine-checked: see [`SC-PROVENANCE-001`](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260908-0912-provenance-integrity-contract.md) and `bash tools/km-gate --gate`. The structural fix that prevents a recurrence, the SQLite coordinator store with append-only triggers, was integrated on 2026-09-07 under task `s1-sqlite-coordinator-cutover`; its falsifiers, a raw `UPDATE` and a raw `DELETE` on the events table, are both refused with `events are append-only`.
 
 
 All agents operating in this repository must strictly adhere to the policies, boundaries, and evidence contracts defined herein.
@@ -243,15 +243,18 @@ skills, and UI design artifacts at every fractal layer L0–L9.
 
 ```text
 UOS TARGET: STANDALONE JUJUTSU MONOREPO OPERATIONAL & RATIFIED
-CURRENT EV-CYCLE: EV-108 (FAST OODA CONVERGENCE TRIAD: MAX SIMD SCORER, HEIJUNKA PULL QUEUE & SOLO5 SANDBOX RATIFIED)
-EV-CYCLE PROVENANCE: EV-94..EV-108 NOT_ADMITTED - sourced from quarantined coordinator events 422-432 and a forged event 437; see the provenance caveat in section 1
-CHECKLIST STATUS: 5 DOMAINS, 18/18 CHECKS 100% GREEN (SC-CHECKLIST-001, G-CHECKLIST PASS)
+ADMITTED EV CEILING: EV-93 (SC-PROVENANCE-001, admitted_ev_ceiling = 93)
+HIGHEST EV CLAIMED: EV-109 (ADR-086) - NOT_ADMITTED, pending sovereign review by Codex and AGY
+EV-CYCLE PROVENANCE: EV-94..EV-109 NOT_ADMITTED - sourced from quarantined coordinator events 422-432 and a forged event 437; see the provenance caveat in section 1
+NEW EV NUMBERS: BARRED WHILE THE RANGE ABOVE THE CEILING IS UNDER REVIEW (INV-PROV-05); work is numbered within its sa-plan
+CHECKLIST STATUS: 6 DOMAINS, 18/18 CORE CHECKS + DOMAIN 6 PROVENANCE (SC-CHECKLIST-001, SC-PROVENANCE-001)
+KM PROVENANCE GATE: HOLD on KMP-ENTROPY (fractal layer entropy 1.306 bits vs 2.50 floor; 68 of 86 ADRs tagged fractal-l0) - all other checks PASS (tools/km-gate)
 DMC & TCM STATUS: ADMITTED & PROVED IN LEAN 4 (Traceability.lean, Century_Harmony.lean, Sheaf_Presheaf.lean, Chaos_Containment.lean, RAG_Cache_Consistency.lean, OODA_Convergence.lean, Quorum_Consensus.lean, Autoscaler_Stability.lean, Gospel_Rete_Consistency.lean, Fast_OODA_Convergence.lean)
-TEST PROTOCOL: 9 MODALITIES 100% GREEN (>10,636 TESTS, 10,546 GLEAM EUNIT, 2037 HARNESS)
+TEST PROTOCOL: GLEAM SUITE OBSERVED 10,640 PASSED / 0 FAILED ON 2026-09-08 (gleam test, apps/cepaf_gleam); MOJO KM KERNEL 29/29 INDEPENDENT C ORACLE CHECKS; OTHER MODALITY COUNTS NOT RE-OBSERVED THIS SESSION
 FRACTAL OBSERVABILITY: UNIVERSAL C3I CONTRACT ENFORCED (c3i_fractal_observability_spec.json)
-ZERO-MUDA PURITY: 0 BEVY, 0 GRAPHITE, 0 GRAPHENE NIF (PURE BEAM & HERMES OCAML)
+ZERO-MUDA PURITY: 0 BEVY, 0 GRAPHITE, 0 GRAPHENE NIF DECLARED IN ANY MANIFEST (VERIFIED 2026-09-08); NOTE: graphene_nif.erl LOADS NO NIF BUT IS A STUB FACADE, NOT AN IMPLEMENTATION - SEE CYCLE C17
 STORAGE SAFETY: HARD_DENIED_SYSTEM_OS_SERIAL = "25503L801736" ENFORCED (7/7 PASS)
-KM TRIAD: 85 ZK ADRs + MASTER MOC + WIKI CORPUS INDEX + LIVING ONTOLOGY ACTIVE
+KM TRIAD: 86 ZK ADRs (ADR-001..ADR-086, CONTIGUOUS) + MASTER MOC + WIKI CORPUS INDEX, BOTH 86/86 ENUMERATED AND 16/16 QUARANTINE-MARKED (tools/km-gate)
 SA-PLAN STATUS: SOLE EXECUTION AUTHORITY ENFORCED (SC-JIDOKA-001, SC-SA-PLAN-001)
 TIMESTAMP RULE: MANDATORY YYYYMMDD-HHSS- PREFIX ACTIVE
 CODEX AUDIT: SOVEREIGN REVISION-BOUND VERIFICATION RATIFIED

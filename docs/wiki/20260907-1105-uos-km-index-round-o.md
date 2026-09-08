@@ -8,6 +8,19 @@ Transclusions:
 - `[[wiki:20260905-1801-uos-zk-km-corpus-index]]`
 - `[[design:20260907-0925-uos-global-intelligence-routing-design]]`
 
+
+> **ROUND SCOPE NOTICE (added 2026-09-08, sa-plan task `uos/km-index-refresh/20260908-0912` `t3`).**
+> This document is the historical record of **Round O** and stops at `ADR-064`.
+> It is preserved as written; nothing below this banner has been rewritten.
+> The current corpus holds **86 records** (`ADR-001`..`ADR-086`). For the live index use:
+> [ZK master MOC §2.2](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260905-1801-moc-uos-unified-master.md) ·
+> [wiki corpus index §4.0](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260905-1801-uos-zk-km-corpus-index.md).
+>
+> Records `ADR-071`..`ADR-086` assert ratification of `EV-94`..`EV-109` and are
+> **`NOT_ADMITTED`** per the [`AGENTS.md`](http://nas-1.tail55d152.ts.net:4100/files/AGENTS.md)
+> provenance caveat. None of them existed at Round O, so nothing in this document
+> depends on them.
+
 ---
 
 ## Round O Generated Files
@@ -143,7 +156,8 @@ Transclusions:
 
 **Prev**: [`[[zk:20260907-0950-adr-063-uos-tui-and-swarm-work-stream-split]]`](http://nas-1.tail55d152.ts.net:4100/zk/20260907-0950-adr-063-uos-tui-and-swarm-work-stream-split.md)  
 **Up**: [Master MOC](http://nas-1.tail55d152.ts.net:4100/zk/20260905-1801-moc-uos-unified-master.md) | [Wiki Index](http://nas-1.tail55d152.ts.net:4100/wiki)  
-**Next**: (Round O+1 deliverables — to be scheduled)
+**Next**: [ZK master MOC §2.2 — complete ADR-001..ADR-086 index](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260905-1801-moc-uos-unified-master.md)  
+**Superseded for indexing by**: [wiki corpus index §4.0](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260905-1801-uos-zk-km-corpus-index.md) (Round O content itself stands)
 
 ---
 

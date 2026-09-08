@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+# SC-PROVENANCE-001: local OCaml report-only KM provenance gate; isolated build.
+set -euo pipefail
+km_repo="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+for km_tool in dune ocamlfind timeout; do
+  command -v "$km_tool" >/dev/null || { echo "Missing toolchain dependency: $km_tool" >&2; exit 2; }
+done
+ocamlfind query yojson cryptokit sqlite3 >/dev/null || { echo "Missing OCaml dependency (yojson/cryptokit/sqlite3)" >&2; exit 2; }
+km_build="$(mktemp -d "${TMPDIR:-/tmp}/uos-km-gate.XXXXXX")"
+trap 'rm -rf -- "$km_build"' EXIT
+cd "$km_repo"
+DUNE_CACHE=disabled timeout --kill-after=2s 120s dune build -j 1 \
+  --root "$km_repo/tools/km_provenance" --build-dir "$km_build" ./km_gate.exe
+if (( $# == 0 )); then set -- --gate; fi
+timeout --kill-after=2s 60s "$km_build/default/km_gate.exe" "$@"

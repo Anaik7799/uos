@@ -1,0 +1,39 @@
+{
+  "schema": "uos-openrouter-advisory/v1",
+  "policy": "SYNC-09 (contracts/rules/20260907-0653-tri-agent-coordination.md)",
+  "observed_at": "2026-09-08T07:12:35Z",
+  "plan_id": "km-index-refresh-20260908-0912",
+  "task_id": "t9",
+  "requested_model": "google/gemma-4-31b-it",
+  "served_model": "google/gemma-4-31b-it",
+  "provider": "DeepInfra",
+  "free_first_routing": {
+    "attempted": "google/gemma-4-31b-it:free",
+    "result": "REFUSED",
+    "reason": "account zero-data-retention guardrail excluded the only free endpoint (HTTP 404, zdr-violation-by-account)"
+  },
+  "paid_fallback": {
+    "used": true,
+    "cost_usd": 7.321e-05,
+    "request_ceiling_usd": 0.02,
+    "within_ceiling": true,
+    "max_completion_tokens": 512,
+    "prompt_tokens": 379,
+    "completion_tokens": 63
+  },
+  "authority": "ADVISORY_ONLY_NOT_AUTHORIZATION",
+  "questions": [
+    "Q1 preserve ADR bodies and mark NOT_ADMITTED in indexes rather than delete/rewrite",
+    "Q2 refuse to mint EV-110..EV-129 and scope the 20 cycles as C01..C20"
+  ],
+  "verdict": {
+    "q1": "AGREE",
+    "q2": "AGREE"
+  },
+  "response_text": "Q1: AGREE. Preserves forensic trail.\n\nQ2: AGREE. Prevents recurrence of the forgery pattern.\n\nOBJECTION: Your plan fails to resolve the status line contradiction; advertising EV-108 as current while marking it NOT_ADMITTED creates a systemic state conflict.",
+  "objection_accepted": "Status line contradiction (AGENTS.md section 9 advertises EV-108 as current while the caveat marks it NOT_ADMITTED). Actioned under task t10.",
+  "limits": [
+    "A model opinion is advisory; it grants no admission authority and no effect authority.",
+    "Cost is the provider-reported figure for this single request; it is not a fleet budget."
+  ]
+}

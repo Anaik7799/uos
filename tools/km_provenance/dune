@@ -1,0 +1,4 @@
+(executable
+ (name km_gate)
+ (modules km_corpus km_metrics km_chain km_gate)
+ (libraries yojson unix cryptokit sqlite3))

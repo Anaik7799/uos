@@ -17,7 +17,7 @@ This contract establishes the mandatory, uniform quality and verification checkl
 
 ---
 
-## 2. Canonical 5-Domain, 18-Item Comprehensive Checklist
+## 2. Canonical 6-Domain, 24-Item Comprehensive Checklist
 
 Every webpage rendered by the UOS web engine and every canonical `.md` file must satisfy and display this comprehensive verification checklist:
 
@@ -52,6 +52,31 @@ Every webpage rendered by the UOS web engine and every canonical `.md` file must
 ### Domain 5: Tri-Sovereign Governance & VCS Purity
 - [x] **CHK-17-SOV**: Tri-sovereign multi-agent review consensus (Antigravity/AGY, Claude, and Codex) verified and ratified.
 - [x] **CHK-18-JJ**: Standalone non-colocated Jujutsu repository (`.jj/`) with 0 native Git mutations; all 18 EV-cycles PASS in `tools/uos doctor`.
+
+### Domain 6: Provenance & Admission Integrity (`SC-PROVENANCE-001`, added 2026-09-08)
+
+Domain 6 is the anti-laundering domain. Domains 1–5 assert that things are
+present and green; Domain 6 asserts that a green claim is *entitled* to be
+believed. It exists because on 2026-09-07 a foreign writer corrupted the shared
+coordinator journal three times, and sixteen decision records were then authored
+downstream of the forged evidence.
+
+- [ ] **CHK-19-CEIL**: `admitted_ev_ceiling = 93`. No artifact asserts admission of an EV cycle above the ceiling without a `NOT_ADMITTED` marker (`INV-PROV-01`, rule `KMP-UNMARKED`).
+- [ ] **CHK-20-INDEX**: Every KM index enumerates every record in the observed corpus; `completeness_ratio` is 1.0 (rule `KMP-INCOMPLETE`).
+- [ ] **CHK-21-PRESERVE**: Quarantine-derived records are byte-identical; nonconformance is marked additively, never by rewriting (`INV-PROV-03`).
+- [ ] **CHK-22-CHAIN**: The cycle journal is append-only SQLite and every digest recomputes; raw `UPDATE`, raw `DELETE`, a sequence gap and a wrong `previous_digest` are all refused by the store (`--verify-chain`).
+- [ ] **CHK-23-NOMINT**: No new EV number is minted while the range above the ceiling is under review (`INV-PROV-05`).
+- [ ] **CHK-24-FAILCLOSED**: Every metric path is fail-closed. A missing kernel yields an error, never a passing number (`INV-PROV-06`).
+
+Verification: `bash tools/km-gate --gate` and `bash tools/km-gate --verify-chain`.
+Authority: `REPORT_ONLY`. A Domain 6 `PASS` means the indexes match the observed
+corpus and every quarantine-derived record is marked. It does **not** mean any
+EV cycle is admitted.
+
+**Current observed state (2026-09-08):** `HOLD`. CHK-19 through CHK-24 pass;
+the gate holds on `KMP-ENTROPY` — the fractal layer entropy of the ADR corpus is
+1.306 bits against the CHK-09-MATH floor of 2.50, because 68 of 86 records are
+tagged `#fractal-l0`. Reported, not suppressed.
 
 ---
 
