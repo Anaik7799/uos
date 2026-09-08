@@ -1,0 +1,438 @@
+  Compiling esqlite
+===> Fetching pc v1.15.0
+===> Analyzing applications...
+===> Compiling pc
+===> Analyzing applications...
+===> Compiling esqlite
+===> Compiling c_src/esqlite3_nif.c
+===> Compiling c_src/sqlite3/sqlite3.c
+===> Linking /tmp/uos-native-release-c65d3c/apps/indrajaal_gleam_web/build/prod/erlang/esqlite/priv/esqlite3_nif.so
+  Compiling gleam_stdlib
+/tmp/uos-native-release-c65d3c/apps/indrajaal_gleam_web/build/prod/erlang/gleam_stdlib/_gleam_artefacts/gleam_stdlib.erl:75:10: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%   75|     case catch binary_to_integer(String, Base) of
+%     |          ^
+
+/tmp/uos-native-release-c65d3c/apps/indrajaal_gleam_web/build/prod/erlang/gleam_stdlib/_gleam_artefacts/gleam_stdlib.erl:81:10: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%   81|     case catch binary_to_integer(String) of
+%     |          ^
+
+/tmp/uos-native-release-c65d3c/apps/indrajaal_gleam_web/build/prod/erlang/gleam_stdlib/_gleam_artefacts/gleam_stdlib.erl:87:10: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%   87|     case catch binary_to_float(String) of
+%     |          ^
+
+  Compiling gleam_crypto
+  Compiling gleam_erlang
+  Compiling gleam_http
+  Compiling gleam_json
+  Compiling gleam_otp
+  Compiling gleam_regexp
+  Compiling certifi
+===> Analyzing applications...
+===> Compiling certifi
+  Compiling idna
+===> Analyzing applications...
+===> Compiling idna
+  Compiling mimerl
+===> Analyzing applications...
+===> Compiling mimerl
+  Compiling parse_trans
+===> Analyzing applications...
+===> Compiling parse_trans
+  Compiling quic
+===> Analyzing applications...
+===> Compiling quic
+  Compiling ssl_verify_fun
+  Compiling ssl_verify_fun
+===> Analyzing applications...
+===> Compiling ssl_verify_fun
+  Compiling hackney
+===> Analyzing applications...
+===> Compiling hackney
+     ┌─ src/hackney_pool.erl:
+     │
+ 675 │                  catch hackney_conn:stop(Pid)
+     │                  ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney_pool.erl:
+     │
+ 684 │              catch hackney_conn:stop(Pid)
+     │              ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney_pool.erl:
+     │
+ 692 │              catch hackney_conn:stop(Pid)
+     │              ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney_pool.erl:
+     │
+ 775 │                      catch hackney_conn:stop(Pid),
+     │                      ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney_pool.erl:
+     │
+ 805 │                      ShouldClose = (catch hackney_conn:is_upgraded_ssl(Pid)) =:= true orelse
+     │                                     ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney_pool.erl:
+     │
+ 806 │                                    (catch hackney_conn:is_no_reuse(Pid)) =:= true,
+     │                                     ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney_pool.erl:
+     │
+ 810 │                              catch hackney_conn:stop(Pid),
+     │                              ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+      ┌─ src/hackney_pool.erl:
+      │
+ 1041 │                      catch hackney_conn:stop(Pid)
+      │                      ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+
+     ┌─ src/hackney_ws.erl:
+     │
+ 231 │      catch Transport:close(Socket),
+     │      ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney_ws.erl:
+     │
+ 986 │      catch Transport:close(Socket),
+     │      ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+
+     ┌─ src/hackney.erl:
+     │
+ 125 │            catch hackney_conn:stop(ConnPid),
+     │            ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney.erl:
+     │
+ 240 │            case catch hackney_conn:get_protocol(ConnPid) of
+     │                 ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney.erl:
+     │
+ 247 │                catch hackney_conn:stop(ConnPid),
+     │                ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney.erl:
+     │
+ 252 │            catch hackney_conn:stop(ConnPid),
+     │            ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney.erl:
+     │
+ 283 │                catch hackney_conn:stop(ConnPid),
+     │                ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney.erl:
+     │
+ 298 │    case catch hackney_conn:get_protocol(ConnPid) of
+     │         ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney.erl:
+     │
+ 321 │    case catch hackney_conn:is_upgraded_ssl(ConnPid) of
+     │         ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney.erl:
+     │
+ 657 │            catch exit(WsPid, shutdown),
+     │            ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney.erl:
+     │
+ 661 │            catch exit(WsPid, shutdown),
+     │            ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+
+     ┌─ src/hackney_happy.erl:
+     │
+ 105 │    catch exit(Pid, normal),
+     │    ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney_happy.erl:
+     │
+ 132 │    case (catch inet_res:getbyname(Hostname, Type)) of
+     │          ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney_happy.erl:
+     │
+ 155 │    case (catch inet:gethostbyname(Hostname, InetType)) of
+     │          ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+
+     ┌─ src/hackney_quic.erl:
+     │
+ 428 │              catch quic:close(QuicConn, shutdown)
+     │              ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+
+     ┌─ src/hackney_trace.erl:
+     │
+ 132 │    (catch io:format(standard_io, "stop trace at ~s~n", [format_timestamp(Timestamp)])),
+     │     ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney_trace.erl:
+     │
+ 139 │    (catch io:format(Fd, "stop trace at ~s~n", [format_timestamp(Timestamp)])),
+     │     ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney_trace.erl:
+     │
+ 146 │    (catch io:format(Fd, "stop trace at ~s~n", [format_timestamp(Timestamp)])),
+     │     ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney_trace.erl:
+     │
+ 147 │    (catch file:close(Fd)),
+     │     ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney_trace.erl:
+     │
+ 154 │    (catch io:format(Fd, "stop trace at ~s~n", [format_timestamp(Timestamp)])),
+     │     ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney_trace.erl:
+     │
+ 155 │    (catch file:close(Fd)),
+     │     ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney_trace.erl:
+     │
+ 161 │    (catch print_hackney_trace(Fd, Sev, Timestamp, Who,
+     │     ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+     ┌─ src/hackney_trace.erl:
+     │
+ 165 │    (catch print_trace(Fd, Event)),
+     │     ╰── Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+
+
+  Compiling houdini
+warning: Empty module
+
+Module 'houdini/internal/escape_js' contains no public definitions.
+
+Hint: You can safely remove this module.
+
+  Compiling lustre
+  Compiling envoy
+  Compiling platform
+  Compiling filepath
+  Compiling simplifile
+  Compiling directories
+  Compiling exception
+  Compiling logging
+  Compiling marceau
+  Compiling glisten
+  Compiling gramps
+  Compiling hpack_erl
+===> Analyzing applications...
+===> Compiling hpack
+  Compiling mist
+  Compiling wisp
+  Compiling cepaf_gleam
+warning: Unused imported module
+   ┌─ /tmp/uos-native-release-c65d3c/apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam:24:1
+   │
+24 │ import gleam/int
+   │ ^^^^^^^^^^^^^^^^ This imported module is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+   ┌─ /tmp/uos-native-release-c65d3c/apps/cepaf_gleam/src/cepaf_gleam/ha/work_stealing.gleam:26:21
+   │
+26 │ import gleam/order.{Eq, Gt, Lt}
+   │                     ^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported type
+   ┌─ /tmp/uos-native-release-c65d3c/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/immune_sre_hud.gleam:21:3
+   │
+21 │   type ImmuneAntibody, type ImmuneEngineState, compute_metabolic_health,
+   │   ^^^^^^^^^^^^^^^^^^^ This imported type is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported type
+   ┌─ /tmp/uos-native-release-c65d3c/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/rag_cache_hud.gleam:21:65
+   │
+21 │ import cepaf_gleam/knowledge/rag_cache_mesh.{type RagCacheMesh, type RagMetrics}
+   │                                                                 ^^^^^^^^^^^^^^^ This imported type is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported type
+   ┌─ /tmp/uos-native-release-c65d3c/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/sheaf_navigator_view.gleam:21:38
+   │
+21 │   type QueryResult, type SheafGraph, type SheafNode, doc_type_to_string,
+   │                                      ^^^^^^^^^^^^^^ This imported type is never used
+
+Hint: You can safely remove it.
+
+warning: Unused private function
+     ┌─ /tmp/uos-native-release-c65d3c/apps/cepaf_gleam/src/cepaf_gleam/ui/tui/sysadmin_cockpit.gleam:1178:1
+     │
+1178 │ fn render_homeostasis_tab(model: SysadminModel) -> String {
+     │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ This private function is never used
+
+Hint: You can safely remove it.
+
+warning: Unused private function
+     ┌─ /tmp/uos-native-release-c65d3c/apps/cepaf_gleam/src/cepaf_gleam/ui/tui/sysadmin_cockpit.gleam:1301:1
+     │
+1301 │ fn render_evolution_tab(model: SysadminModel) -> String {
+     │ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ This private function is never used
+
+Hint: You can safely remove it.
+
+/tmp/uos-native-release-c65d3c/apps/indrajaal_gleam_web/build/prod/erlang/cepaf_gleam/_gleam_artefacts/graphene_nif.erl:32:10: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%   32|     case catch json:decode(iolist_to_binary(NodesJson)) of
+%     |          ^
+
+/tmp/uos-native-release-c65d3c/apps/indrajaal_gleam_web/build/prod/erlang/cepaf_gleam/_gleam_artefacts/graphene_nif.erl:39:10: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%   39|     case catch json:decode(iolist_to_binary(EdgesJson)) of
+%     |          ^
+
+/tmp/uos-native-release-c65d3c/apps/indrajaal_gleam_web/build/prod/erlang/cepaf_gleam/_gleam_artefacts/graphene_nif.erl:320:18: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%  320|     IsDag = case catch json:decode(TopoJson) of
+%     |                  ^
+
+/tmp/uos-native-release-c65d3c/apps/indrajaal_gleam_web/build/prod/erlang/cepaf_gleam/_gleam_artefacts/graphene_nif.erl:325:21: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%  325|     SccCount = case catch json:decode(SccJson) of
+%     |                     ^
+
+/tmp/uos-native-release-c65d3c/apps/indrajaal_gleam_web/build/prod/erlang/cepaf_gleam/_gleam_artefacts/graphene_nif.erl:364:17: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%  364|     Type = case catch json:decode(ShapeJson) of
+%     |                 ^
+
+/tmp/uos-native-release-c65d3c/apps/indrajaal_gleam_web/build/prod/erlang/cepaf_gleam/_gleam_artefacts/graphene_nif.erl:374:19: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%  374|     Params = case catch json:decode(ParamsJson) of
+%     |                   ^
+
+/tmp/uos-native-release-c65d3c/apps/indrajaal_gleam_web/build/prod/erlang/cepaf_gleam/_gleam_artefacts/graphene_nif.erl:397:17: Warning: matching on the float 0.0 will no longer also match -0.0 in OTP 27.
+If you specifically intend to match 0.0 alone, write +0.0 instead.
+%  397|                 0.0 -> {0.0, 0.0};
+%     |                 ^
+
+/tmp/uos-native-release-c65d3c/apps/indrajaal_gleam_web/build/prod/erlang/cepaf_gleam/_gleam_artefacts/secret_api_ffi.erl:154:9: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%  154|         catch port_close(Port),
+%     |         ^
+
+src/cepaf_gleam/ui/web/dashboard_views.gleam:177:13: Warning: a term is constructed, but never used
+/tmp/uos-native-release-c65d3c/apps/indrajaal_gleam_web/build/prod/erlang/cepaf_gleam/_gleam_artefacts/cepaf_gleam_ffi.erl:469:34: Warning: http_uri:encode/1 is deprecated; use uri_string:quote function instead
+%  469|     unicode:characters_to_binary(http_uri:encode(binary_to_list(Input))).
+%     |                                  ^
+
+  Compiling indrajaal_gleam_web
+warning: Unused imported item
+  ┌─ /tmp/uos-native-release-c65d3c/apps/indrajaal_gleam_web/src/indrajaal/homeostasis_http.gleam:8:22
+  │
+8 │ import gleam/option.{Some}
+  │                      ^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported module
+   ┌─ /tmp/uos-native-release-c65d3c/apps/indrajaal_gleam_web/src/indrajaal/homeostasis_http.gleam:11:1
+   │
+11 │ import gleam/int
+   │ ^^^^^^^^^^^^^^^^ This imported module is never used
+
+Hint: You can safely remove it.
+
+   Compiled in 47.10s
+   Exported indrajaal_gleam_web
+
+Your Erlang shipment has been generated to /tmp/uos-native-release-c65d3c/apps/indrajaal_gleam_web/build/erlang-shipment.
+
+It can be copied to a compatible server with Erlang installed and run with
+one of the following scripts:
+    - entrypoint.ps1 (PowerShell script)
+    - entrypoint.sh (POSIX Shell script)
+

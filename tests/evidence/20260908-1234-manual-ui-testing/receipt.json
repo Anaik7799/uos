@@ -1,0 +1,51 @@
+{
+  "schema": "uos.manual-ui-test-receipt.v1",
+  "observed_at_utc": "2026-09-08 12:08:34 UTC",
+  "candidate": "517252df824c487ee80e61dfb4dec0fc139ec086",
+  "source_base": "231ba3dbf23080d90020a06ce4ce331824e9dac1",
+  "reviewed_ui": "6d15a6d32f798116634a8eb8760e775eb409133c",
+  "source_workspace": "/home/an/NAS-setup/uos/.uos-workspaces/codex-manual-ui-20260908-1150",
+  "release": "/home/an/NAS-setup/uos/var/releases/indrajaal-web/manual-ui-20260908-1200",
+  "unit": "uos-manual-ui-59463.service",
+  "invocation_id": "ba557de3ef1e44e6a272142baea0056a",
+  "pid": 2599189,
+  "run_id": "2599189-1788868993762662",
+  "url": "http://nas-1.tail55d152.ts.net:59463/homeostasis/evolution",
+  "started_at_utc": "2026-09-08T12:03:12Z",
+  "expires_no_later_than_utc": "2026-09-08T16:03:12Z",
+  "otp_release": "29",
+  "erts_version": "17.0.6",
+  "application_admitted": false,
+  "main_changed": false,
+  "production_changed": false,
+  "task": {
+    "plan": "uos/manual-ui/20260908-1150",
+    "task": "PREPARE",
+    "worker": "codex-manual-ui",
+    "attempt": 1
+  },
+  "checks": {
+    "unit": 127,
+    "transition_parity": 338,
+    "browser": 62,
+    "manual_http": 16,
+    "native_tui_modes": 4,
+    "mojo_shared_core_fixture_comparison": "PASS",
+    "remote_vm_1_tailnet": "PASS",
+    "live_updates_seconds": 30
+  },
+  "test_logs": {
+    "unit": "/tmp/uos-native-unit-93388e",
+    "browser": "/tmp/uos-release-browser-d3143f",
+    "build": "/tmp/uos-native-release-c65d3c/build.log"
+  },
+  "limitations": [
+    "No full-system or production admission",
+    "No all-page or complete 17-aspect verification",
+    "Native real TUI observes its own transient VM",
+    "Known broader NIF ABI failures remain",
+    "Production readiness still 503",
+    "No human acceptance or new video recording"
+  ],
+  "authority": "NONE"
+}

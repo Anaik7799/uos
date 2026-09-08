@@ -1,0 +1,62 @@
+PASS: route renders content: /
+PASS: route has usable links: /
+PASS: route has no script errors: /
+PASS: route renders content: /homeostasis/evolution
+PASS: route has usable links: /homeostasis/evolution
+PASS: route has no script errors: /homeostasis/evolution
+PASS: route renders content: /homeostasis/components
+PASS: route has usable links: /homeostasis/components
+PASS: route has no script errors: /homeostasis/components
+PASS: route renders content: /homeostasis/terminal
+PASS: route has usable links: /homeostasis/terminal
+PASS: route has no script errors: /homeostasis/terminal
+PASS: live identity pairs OTP29 with ERTS17 without granting admission
+PASS: unavailable fixture carries no invented health
+PASS: named SSE delivered at 320px
+PASS: no page overflow at 320px
+PASS: all navigation remains on this testing origin
+PASS: unknown is not healthy
+PASS: API returns observed VM data without invented homeostasis
+PASS: checklist opens with keyboard
+PASS: no browser script errors
+PASS: threshold sliders update their accessible output
+PASS: real control fails closed without authority
+PASS: review validates threshold boundaries
+PASS: pagehide visibly closes stream
+PASS: named SSE delivered at 768px
+PASS: no page overflow at 768px
+PASS: all navigation remains on this testing origin
+PASS: unknown is not healthy
+PASS: API returns observed VM data without invented homeostasis
+PASS: checklist opens with keyboard
+PASS: no browser script errors
+PASS: threshold sliders update their accessible output
+PASS: real control fails closed without authority
+PASS: review validates threshold boundaries
+PASS: pagehide visibly closes stream
+PASS: named SSE delivered at 1280px
+PASS: no page overflow at 1280px
+PASS: all navigation remains on this testing origin
+PASS: unknown is not healthy
+PASS: API returns observed VM data without invented homeostasis
+PASS: checklist opens with keyboard
+PASS: no browser script errors
+PASS: threshold sliders update their accessible output
+PASS: real control fails closed without authority
+PASS: review validates threshold boundaries
+PASS: pagehide visibly closes stream
+PASS: FIFO bound 50 under burst
+PASS: payload is text, not executable HTML
+PASS: malformed frame rejected
+PASS: partial schema cannot leave old measurements visible
+PASS: oversized frame rejected
+PASS: event cannot grant execution authority
+PASS: out-of-order frame rejected
+PASS: source TTL expires without refresh
+PASS: disconnect does not imply health
+PASS: fake subscription cleaned up
+PASS: mode form routes to simulated disturbance data
+PASS: test review responds to selected fixture and thresholds
+PASS: return to real data clears simulated physiology
+PASS: real source updates throughout thirty-second observation
+PASS: terminal navigation reaches the testing instance

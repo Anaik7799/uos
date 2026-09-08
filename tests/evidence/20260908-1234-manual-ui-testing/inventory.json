@@ -1,0 +1,46 @@
+{
+  "schema": "uos.evidence-inventory.v1",
+  "candidate": "517252df824c487ee80e61dfb4dec0fc139ec086",
+  "files": [
+    {
+      "path": "browser.txt",
+      "sha256": "10a339632cda1b8e6c6da0c2256fe47ab7ea4d9e3a8236fdb8ffee0ca19b265a"
+    },
+    {
+      "path": "build.txt",
+      "sha256": "33a9b893736119632d438f2d73823465b647e1af14a0057d0f6bbf554a842311"
+    },
+    {
+      "path": "mojo-tui-parity.txt",
+      "sha256": "c61870d94c54d4760fa3f0d7329cff4c2584f679b06528c6b69fc71e12078063"
+    },
+    {
+      "path": "receipt.json",
+      "sha256": "da3f32f69a7d8959dfcc723e5bd5b8f196a23b19f33c2c868d5ce8228040aec5"
+    },
+    {
+      "path": "transition-parity.txt",
+      "sha256": "321814068d7d0ebe454828b3ec30cd75987455e71cb8f6ea5cffd3266feb6429"
+    },
+    {
+      "path": "tui-real-nominal.txt",
+      "sha256": "62d7ff6d4c9dcc6687b157d5a02b74b63f08407b4959773480f3da0034dfea03"
+    },
+    {
+      "path": "tui-test-disturbance.txt",
+      "sha256": "311a0c54c20262d2555ff628d02731689e7d2583cf2b36618c3b0630b73b646c"
+    },
+    {
+      "path": "tui-test-recovery.txt",
+      "sha256": "c412194c2665136aa7a5935667e874d2b028cce3be9959d5b92bc21ad7ae659d"
+    },
+    {
+      "path": "tui-test-unavailable.txt",
+      "sha256": "b95a641d06a9aeda75a87f9f5d0dec477af9995dbc0d5d1186cef5b58881b755"
+    },
+    {
+      "path": "unit.txt",
+      "sha256": "5c89493f3eed784941e0b79af4d4f7e2dfa4a289803665049e75bcaa47cc68f7"
+    }
+  ]
+}

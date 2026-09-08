@@ -1,0 +1,28 @@
+HOMEOSTASIS | OBSERVED
+Source: Observed local BEAM counters; CPU percentage, host memory percentage, latency, error rate, PID convergence and p
+Source UTC us: 1788869566250634
+Control authority: NONE
+Peer presence: UNKNOWN
+Verification: UNRUN / candidate receipts required
+Attributed health: UNKNOWN
+Error e(t): UNKNOWN
+PID output: UNKNOWN
+Quadratic energy V: UNKNOWN
+Sampled energy change: UNKNOWN
+Model stability heuristic: UNKNOWN
+Model phase: UNKNOWN
+Model generation: UNKNOWN
+Model time (microseconds): UNKNOWN
+Model composite stress: UNKNOWN
+CPU percentage: UNKNOWN
+Host memory percentage: UNKNOWN
+Request latency ms: UNKNOWN
+Error rate percentage: UNKNOWN
+Online schedulers: 2
+BEAM processes: 43
+BEAM memory MiB: 35
+Run queue length: 0
+VM uptime seconds: 0
+Pareto candidate count: UNKNOWN
+Voting evidence: UNKNOWN
+http://nas-1.tail55d152.ts.net:4100/homeostasis/evolution
