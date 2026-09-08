@@ -69,9 +69,11 @@ graph TD
    - Bidirectional transclusion syntax `[[wiki:...]]` and similarity graph calculation (`wiki_similarity.ml`).
    - Server-side typed TyXML rendering without client JavaScript.
 2. **ZigVM Zettelkasten** (`docs/zk/`):
-   - Permanent Architectural Decision Records ([`ADR-001`](file:///home/an/NAS-setup/uos/docs/zk/20260904-150139-adr-001-closed-rete-fact-schema-and-strict-typing-invariant.md) through [`ADR-090`](file:///home/an/NAS-setup/uos/docs/zk/20260908-1400-adr-090-20-cycle-intent-atlas-web-tui-testing.md)); 90 records, fully enumerated in [§2.2](#22-complete-decision-record-index).
-   - `ADR-071`..`ADR-086` assert ratification of `EV-94`..`EV-109` and are `NOT_ADMITTED` per the [§2.1 quarantine boundary](#21-quarantine-boundary-ev-93--ev-94).
-   - Structural Maps of Content (MOCs) preserving algebra-driven doctrines and fractal layers.
+   - Permanent Architectural Decision Records ([`ADR-001`](file:///home/an/NAS-setup/uos/docs/zk/20260904-150139-adr-001-closed-rete-fact-schema-and-strict-typing-invariant.md) through [`ADR-091`](file:///home/an/NAS-setup/uos/docs/zk/20260908-1630-adr-091-pure-gleam-mojo-intent-atlas-web-tui-testing.md)); 91 records, fully enumerated in [§2.2](#22-complete-decision-record-index).
+   - Core Maps of Content ([`MOC-001`](file:///home/an/NAS-setup/uos/docs/zk/20260904-150212-moc-001-living-architecture-and-multi-agent-system-governance.md) through [`MOC-007`](file:///home/an/NAS-setup/uos/docs/zk/20260904-150849-moc-007-formal-verification-and-correctness-guarantees.md));
+   - Topological Invariant Records ([`INV-001`](file:///home/an/NAS-setup/uos/docs/zk/20260904-150854-inv-001-two-party-cryptographic-signing-ceremony-and-tamper-evidence.md) through [`INV-006`](file:///home/an/NAS-setup/uos/docs/zk/20260904-150919-inv-006-zero-warning-and-zero-muda-compilation-gate.md)).
+   - **Contiguity**: 91/91 ADRs present, strictly contiguous, no gaps.
+   - **Traceability**: All 91 ADRs link to their respective authority.
 3. **C3I Living Ontology & Evidence Plane** (`docs/wiki/`, `governance/`):
    - STAMP/STPA safety lattices, SQLite living catalogs, and 13D trace coordinates.
    - Dual-lattice STM non-interference proved in Lean 4 (`formal/lean/TwoLattice_STM.lean`).
@@ -249,6 +251,7 @@ record stays outside the quarantine range.
 | **ADR-088** | <span class="badge badge-fractal">#fractal-l0</span> | outside quarantine | [Denotational Intent, Algebraic Atlas, and Claude Holon Review Ratification](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-1130-adr-088-denotational-intent-algebraic-atlas-and-claude-holon-evolution.md) | [`20260908-1130-adr-088-denotational-intent-algebraic-atlas-and-claude-holon-evolution.md`](file:///home/an/NAS-setup/uos/docs/zk/20260908-1130-adr-088-denotational-intent-algebraic-atlas-and-claude-holon-evolution.md) |
 | **ADR-089** | <span class="badge badge-fractal">#fractal-l0</span> | outside quarantine | [5-Cycle Design and Implementation Approach Ratification](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-1345-adr-089-5-cycle-design-and-implementation-approach.md) | [`20260908-1345-adr-089-5-cycle-design-and-implementation-approach.md`](file:///home/an/NAS-setup/uos/docs/zk/20260908-1345-adr-089-5-cycle-design-and-implementation-approach.md) |
 | **ADR-090** | <span class="badge badge-fractal">#fractal-l0</span> | outside quarantine | [20-Cycle Intent, Atlas & Dual-Surface WebUI/TUI Testing Ratification](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-1400-adr-090-20-cycle-intent-atlas-web-tui-testing.md) | [`20260908-1400-adr-090-20-cycle-intent-atlas-web-tui-testing.md`](file:///home/an/NAS-setup/uos/docs/zk/20260908-1400-adr-090-20-cycle-intent-atlas-web-tui-testing.md) |
+| **ADR-091** | <span class="badge badge-fractal">#fractal-l4</span> | outside quarantine | [20-Cycle Pure Gleam & Mojo Intent Atlas and Multi-Surface TUI/WebGUI Testing Ratification](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-1630-adr-091-pure-gleam-mojo-intent-atlas-web-tui-testing.md) | [`20260908-1630-adr-091-pure-gleam-mojo-intent-atlas-web-tui-testing.md`](file:///home/an/NAS-setup/uos/docs/zk/20260908-1630-adr-091-pure-gleam-mojo-intent-atlas-web-tui-testing.md) |
 
 [^q]: `NOT_ADMITTED` — the record asserts ratification of an EV cycle above
 `EV-93`, which the `AGENTS.md` provenance caveat places in the quarantined
