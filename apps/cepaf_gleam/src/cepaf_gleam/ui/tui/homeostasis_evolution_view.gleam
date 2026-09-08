@@ -16,15 +16,39 @@ import cepaf_gleam/ha/physiological_homeostasis.{
   type PhysiologicalState,
   stress_to_string, trend_to_string, variable_to_string,
 }
+import cepaf_gleam/ui/homeostasis_status as status
+import cepaf_gleam/ui/homeostasis_data as data
+import gleam/result
+import gleam/option.{None, Some}
 import gleam/float
+import gleam/io
 import gleam/int
 import gleam/list
 import gleam/string
 
+/// Reachable one-shot, plain-text entrypoint. Full-screen input ownership belongs
+/// to the UOS TUI host; this view never changes terminal modes or executes effects.
+@external(erlang, "cepaf_gleam_ffi", "get_arguments")
+fn arguments() -> List(String)
+
+pub fn main() -> Nil {
+  let args = arguments()
+  let mode = list.first(args) |> result.unwrap("real")
+  let scenario = list.first(list.drop(args,1)) |> result.unwrap("nominal")
+  let cycle = list.first(list.drop(args,2)) |> result.unwrap("1")
+  case data.parse([#("mode",mode),#("scenario",scenario),#("cycle",cycle)]) {
+    Error(reason) -> io.println("INVALID: " <> reason)
+    Ok(selection) -> {
+      let #(snapshot,now) = data.read(selection)
+      render_snapshot(snapshot,now,120,100) |> io.println()
+    }
+  }
+}
+
 pub fn render(state: HomeostasisSystemState) -> String {
   let header =
     visuals.with_color(
-      "  CYBERNETIC HOMEOSTASIS & 4-PARTY QUORUM EVOLUTION (L0/L2/L5)",
+      "  SIMULATED / CYBERNETIC HOMEOSTASIS & 4-PARTY QUORUM EVOLUTION (L0/L2/L5)",
       "cyan",
     )
   let status_line = render_phase(state.phase, state.generation)
@@ -61,11 +85,11 @@ fn render_phase(phase: HomeostasisPhase, gen: Int) -> String {
       "green",
     )
     AutonomousEvolutionActive(cycle, g) -> #(
-      "AUTONOMOUS EVOLUTION ACTIVE [Gen " <> int.to_string(g) <> ": " <> cycle <> "]",
+      "AUTONOMOUS EVOLUTION ACTIVE [Gen " <> int.to_string(g) <> ": " <> safe_text(cycle) <> "]",
       "cyan",
     )
     InstabilityIntervention(reason) -> #(
-      "ANDON HALT: " <> reason,
+      "ANDON HALT: " <> safe_text(reason),
       "red",
     )
   }
@@ -137,7 +161,7 @@ fn render_pareto(candidates: List(CandidateEvaluation)) -> String {
         False -> visuals.with_color("[Dominated]", "yellow")
       }
       "    * "
-      <> c.name
+      <> safe_text(c.name)
       <> " (Fitness: "
       <> float.to_string(c.composite_fitness)
       <> ") "
@@ -151,18 +175,68 @@ fn render_quorum() -> String {
   string.join(
     [
       "  4-Party Sovereign Quorum Consensus (3-of-4 Supermajority):",
-      "    AGY Sovereign:         ONLINE (Formal/Lean 4 Proofs)",
-      "    Claude Sovereign:      ONLINE (Holistic Architecture & Coordinator)",
-      "    Codex Sovereign:       ONLINE (Solo5 Sandboxing & Verification)",
-      "    OpenRouter Sovereign:  ONLINE (Bounded Cognitive Advisory)",
+      "    AGY Sovereign:         UNKNOWN (Formal/Lean 4 Proofs)",
+      "    Claude Sovereign:      UNKNOWN (Holistic Architecture & Coordinator)",
+      "    Codex Sovereign:       UNKNOWN (Solo5 Sandboxing & Verification)",
+      "    OpenRouter Sovereign:  UNKNOWN (Bounded Cognitive Advisory)",
       "",
-      "  5-Agent Sovereign Workspace & Artifact Allocation Matrix (Herdr Mesh):",
-      "    ● uos · 1 (agy):        Master Single File (20260908-0113-...md) & Formal Proofs",
-      "    ● uos · 2 (claude):     Lustre Web HUD (homeostasis_evolution_hud.gleam) & SSE Generator",
-      "    ○ uos · 3 (codex):      Wisp Router (router.gleam) & F Prime Engine (homeostasis_fprime.gleam)",
-      "    ○ uos · 4 (codex):      SSE Test Suite (agui_sse_api_test.gleam) & HUD Test Suite",
-      "    ○ uos · 5 (openrouter): Evolutionary Engine & Pareto Fitness & Sa-Plan Ledger Authority",
+      "  Historical artifact allocation (current owners/presence UNKNOWN):",
+      "    uos · 1 (agy):        Master Single File (20260908-0113-...md) & Formal Proofs",
+      "    uos · 2 (claude):     Lustre Web HUD (homeostasis_evolution_hud.gleam) & SSE Generator",
+      "    uos · 3 (codex):      Wisp Router (router.gleam) & F Prime Engine (homeostasis_fprime.gleam)",
+      "    uos · 4 (codex):      SSE Test Suite (agui_sse_api_test.gleam) & HUD Test Suite",
+      "    uos · 5 (openrouter): Evolutionary Engine & Pareto Fitness & Sa-Plan Ledger Authority",
     ],
     "\n",
   )
+}
+
+/// ASCII fallback for narrow terminals, pipes, NO_COLOR and TERM=dumb.
+/// Only printable ASCII reaches this boundary; no OSC, CSI, C1 or bidi controls.
+pub fn safe_text(value: String) -> String {
+  value
+  |> string.to_utf_codepoints()
+  |> list.map(fn(cp) {
+    let n = string.utf_codepoint_to_int(cp)
+    case n >= 32 && n <= 126 {
+      True -> string.from_utf_codepoints([cp])
+      False -> "?"
+    }
+  })
+  |> string.concat()
+}
+
+/// Same evidence projection as GUI and HTTP; dimensions are hard output bounds.
+/// No cursor movement or terminal mode changes are performed by this renderer.
+pub fn render_snapshot(
+  snapshot: status.Snapshot,
+  now_us: Int,
+  columns: Int,
+  rows: Int,
+) -> String {
+  let state_label = status.status(snapshot, now_us) |> status.label()
+  let origin = status.source(snapshot) |> safe_text()
+  let time = case status.observed_at(snapshot) {
+    Some(at) -> int.to_string(at)
+    None -> "UNKNOWN"
+  }
+  let width = int.clamp(columns, 0, 240)
+  let lines = list.flatten([[
+    "HOMEOSTASIS | " <> state_label,
+    "Source: " <> origin,
+    "Source UTC us: " <> time,
+  ], list.map(status.fields(snapshot,now_us),fn(f) { safe_text(f.1 <> ": " <> f.2) }), [
+    "Peer presence: UNKNOWN",
+    "Control authority: NONE",
+    "Verification: UNRUN / candidate receipts required",
+    "http://nas-1.tail55d152.ts.net:4100/homeostasis/evolution",
+  ]])
+  case width == 0 {
+    True -> ""
+    False ->
+      lines
+      |> list.take(int.clamp(rows, 0, 100))
+      |> list.map(fn(line) { string.slice(line, 0, width) })
+      |> string.join("\n")
+  }
 }

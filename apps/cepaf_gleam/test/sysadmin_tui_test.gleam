@@ -151,9 +151,9 @@ pub fn render_all_9_tabs_test() {
 
   // Homeostasis Tab
   let out_homeo = render(select_tab(model, HomeostasisTab))
-  should.equal(string.contains(out_homeo, "BIOMORPHIC PHYSIOLOGICAL HOMEOSTASIS"), True)
-  should.equal(string.contains(out_homeo, "HOMEOSTATIC EQUILIBRIUM"), True)
-  should.equal(string.contains(out_homeo, "cpu_pct"), True)
+  should.equal(string.contains(out_homeo, "HOMEOSTASIS | UNAVAILABLE"), True)
+  should.equal(string.contains(out_homeo, "Attributed health: UNKNOWN"), True)
+  should.equal(string.contains(out_homeo, "Control authority: NONE"), True)
 
   // Message Board Tab
   let out_msg = render(select_tab(model, MessageBoardTab))
@@ -163,9 +163,9 @@ pub fn render_all_9_tabs_test() {
 
   // Evolution Tab
   let out_evo = render(select_tab(model, EvolutionTab))
-  should.equal(string.contains(out_evo, "AUTONOMOUS SYSTEM EVOLUTION"), True)
-  should.equal(string.contains(out_evo, "EVOLUTION GATE OPEN"), True)
-  should.equal(string.contains(out_evo, "MAX SIMD Scorer Optimization"), True)
+  should.equal(string.contains(out_evo, "Model generation: UNKNOWN"), True)
+  should.equal(string.contains(out_evo, "EVOLUTION GATE OPEN"), False)
+  should.equal(string.contains(out_evo, "Control authority: NONE"), True)
 }
 
 pub fn terminal_dimension_and_bounds_test() {
@@ -197,4 +197,3 @@ pub fn terminal_dimension_and_bounds_test() {
     should.equal(string.is_empty(first_line), False)
   })
 }
-

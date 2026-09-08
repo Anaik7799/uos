@@ -1,14 +1,11 @@
 /- Homeostasis_Evolution.lean — Lean 4 Formal Model of Cybernetic Swarm Homeostasis,
    4-Party Sovereign Quorum Consensus, and Autonomous Self-Evolution.
 
-   Formalizes:
-   1. Lyapunov Homeostatic Convergence: If V(e) = 1/2 * e^2 and dV/dt <= 0,
-      the system error monotonically decreases toward homeostatic equilibrium (|e| <= ε).
-   2. Three-of-Four Quorum Intersection: For N = 4 and quorum threshold Q = 3,
-      any two ratified quorums intersect in at least Q1 + Q2 - N = 3 + 3 - 4 = 2 nodes,
-      proving that conflicting evolutionary mutations can never be ratified concurrently.
-   3. Conditional Self-Evolution Invariant: Autonomous self-evolution is conditionally
-      unlocked if and only if the system is in homeostatic equilibrium.
+   Scope correction (SC-HOMEO-UI-001): the theorems below establish arithmetic
+   facts and consequences of supplied hypotheses. They do not prove convergence
+   of the Gleam floating-point controller, unique voting, distributed consensus,
+   operational deployment safety, or a code refinement relation.
+   Non-increasing energy alone does not imply asymptotic convergence.
 -/
 
 namespace UOS.Homeostasis
@@ -55,9 +52,9 @@ theorem three_of_four_quorum_intersection (n q1 q2 : Nat)
   subst hn; subst hq1; subst hq2
   rfl
 
-/-- THEOREM 2: Split-Brain Evolution Impossibility.
-    Two conflicting evolutionary proposals cannot both achieve 3 approvals
-    out of 4 agents because 3 + 3 = 6 > 4. -/
+/-- Arithmetic quorum-size inequality. The legacy name is retained for callers.
+    This is NOT a split-brain impossibility proof: agents can vote for conflicting
+    proposals unless epoch binding, single-vote and fencing rules are enforced. -/
 theorem split_brain_evolution_impossible (n q1 q2 : Nat)
     (hn : n = 4) (hq1 : q1 = 3) (hq2 : q2 = 3) :
     q1 + q2 > n := by
@@ -69,8 +66,8 @@ theorem split_brain_evolution_impossible (n q1 q2 : Nat)
 def in_equilibrium (s : LeanHomeostasisState) : Prop :=
   s.error <= 5 ∧ s.consecutive_ticks >= 3
 
-/-- THEOREM 3: Evolution Gating Soundness.
-    If self-evolution is activated, the system must have satisfied the homeostatic equilibrium condition. -/
+/-- Conditional consequence of an ASSUMED gating invariant; not a proof that
+    the runtime establishes that invariant or that a transition is authorized. -/
 theorem evolution_gated_by_homeostasis (s : LeanHomeostasisState)
     (h_phase : s.phase = HomeostasisPhase.EvolutionActive)
     (h_invariant : s.phase = HomeostasisPhase.EvolutionActive → in_equilibrium s) :

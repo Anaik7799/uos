@@ -15,10 +15,9 @@ observe_vm() ->
             Value;
         Value -> Value
     end,
-    OtpRelease = case os:getenv("UOS_OTP_RELEASE") of
-        false -> "29";
-        Val -> Val
-    end,
+    %% A requested runtime version is configuration, never an observation.
+    %% In particular, UOS_OTP_RELEASE must not bypass the startup guard.
+    OtpRelease = erlang:system_info(otp_release),
     {list_to_binary(OtpRelease),
      list_to_binary(erlang:system_info(version)),
      list_to_binary(os:getpid()), RunId, StartedUtc,

@@ -9,6 +9,8 @@ import cepaf_gleam/ui/domain.{
   type HealthStatus, type Page, type RenderContext, type TelemetryPoint,
   Critical, Dashboard, Degraded, Healthy, Unknown, page_to_label,
 }
+import cepaf_gleam/ui/homeostasis_status
+import cepaf_gleam/ui/tui/homeostasis_evolution_view
 import gleam/int
 import gleam/list
 import gleam/string
@@ -71,6 +73,14 @@ pub fn mode_label(mode: CockpitMode) -> String {
 
 /// Render a full TUI frame for the given context.
 pub fn render_frame(ctx: RenderContext) -> String {
+  case ctx.page {
+    domain.HomeostasisPage ->
+      homeostasis_evolution_view.render_snapshot(homeostasis_status.unavailable(), 0, 80, 24)
+    _ -> render_overview(ctx)
+  }
+}
+
+fn render_overview(ctx: RenderContext) -> String {
   let mode = determine_mode(ctx.health, 0)
   let header = render_header(ctx, mode)
   let health_line = render_health(ctx.health)
