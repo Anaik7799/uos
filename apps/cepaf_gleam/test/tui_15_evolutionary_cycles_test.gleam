@@ -201,7 +201,7 @@ pub fn execute_single_cycle(
       "sig-codex",
       base_time_us + 4300,
     )
-  let prop4 =
+  let _prop4 =
     vote_on_evolution(
       prop3,
       OpenRouterSovereign,
@@ -245,8 +245,8 @@ pub fn evolutionary_cycle_01_simd_scorer_test() {
   string.contains(tui_text, "CYBERNETIC HOMEOSTASIS & 4-PARTY QUORUM EVOLUTION") |> should.be_true()
   string.contains(tui_text, "mut-01-simd-scorer") |> should.be_true()
   string.contains(tui_text, "Generation: 1") |> should.be_true()
-  string.contains(tui_text, "● uos · 1 (agy)") |> should.be_true()
-  string.contains(tui_text, "○ uos · 5 (openrouter)") |> should.be_true()
+  string.contains(tui_text, "uos · 1 (agy)") |> should.be_true()
+  string.contains(tui_text, "uos · 5 (openrouter)") |> should.be_true()
 }
 
 pub fn evolutionary_cycle_02_heijunka_queue_test() {

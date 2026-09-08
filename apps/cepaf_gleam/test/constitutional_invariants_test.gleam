@@ -1,13 +1,24 @@
-import gleam/option.{None, Some}
+import cepaf_gleam/agents/hive_mind_decider.{
+  AgentSignal, LongTerm24h, MediumTerm1h, ShortTerm10m,
+  compute_forecast, decision_to_json, ingest_signal, init_hive_mind,
+  predict_risk, synthesize_decision,
+}
 import cepaf_gleam/fractal/l0_constitutional.{
-  Fail, Pass, Psi0Existence, Psi1Regeneration, Psi2History, Psi3Verification,
-  Psi4HumanAlignment, Psi5Truthfulness, PsiCheck, VoteApprove, VoteReject,
+  Fail, Pass, Psi0Existence, Psi10CyberneticHomeostasis, Psi1Regeneration,
+  Psi2History, Psi3Verification, Psi4HumanAlignment, Psi5Truthfulness,
+  Psi6HardwareInviolability, Psi7ProvenanceCeiling, Psi8SubstratePurity,
+  Psi9SaPlanExclusivity, PsiCheck, VoteApprove, VoteReject,
   Omega01FounderPrimacy, Omega02LineageProtection, Omega03EthicalBoundary,
   Omega04HumanSurvival, Omega05MutualTermination,
+  Omega06RevisionBoundFreshness, Omega07ComputableDoctorAuthority,
+  Omega08TriSovereignQuorum, Omega09HiveMindResonance,
   ReconfigurationProposal, ReconfigurationRatified, ReconfigurationRejected,
   RollbackState, cast_vote, compute_constitutional_health, evaluate_reconfiguration,
-  new_consensus, omega_directive_to_string, omega_mutual_termination,
+  is_zero_fenced_axiom, new_consensus, omega_directive_to_string,
+  omega_mutual_termination, psi_invariant_to_string,
 }
+import gleam/json
+import gleam/option.{None, Some}
 import gleeunit/should
 
 pub fn omega_directive_strings_test() {
@@ -25,6 +36,18 @@ pub fn omega_directive_strings_test() {
 
   omega_directive_to_string(Omega05MutualTermination)
   |> should.equal("Omega-0.5 Mutual Termination")
+
+  omega_directive_to_string(Omega06RevisionBoundFreshness)
+  |> should.equal("Omega-0.6 Revision-Bound Freshness")
+
+  omega_directive_to_string(Omega07ComputableDoctorAuthority)
+  |> should.equal("Omega-0.7 Computable Doctor Authority")
+
+  omega_directive_to_string(Omega08TriSovereignQuorum)
+  |> should.equal("Omega-0.8 Tri-Sovereign Quorum")
+
+  omega_directive_to_string(Omega09HiveMindResonance)
+  |> should.equal("Omega-0.9 Hive Mind Resonance")
 }
 
 pub fn omega_mutual_termination_test() {
@@ -229,3 +252,151 @@ pub fn dcrp_reconfiguration_guardian_veto_test() {
     }
   }
 }
+
+pub fn psi_invariant_strings_all_11_test() {
+  psi_invariant_to_string(Psi0Existence)
+  |> should.equal("Psi-0 Existence")
+
+  psi_invariant_to_string(Psi1Regeneration)
+  |> should.equal("Psi-1 Regeneration")
+
+  psi_invariant_to_string(Psi2History)
+  |> should.equal("Psi-2 History")
+
+  psi_invariant_to_string(Psi3Verification)
+  |> should.equal("Psi-3 Verification")
+
+  psi_invariant_to_string(Psi4HumanAlignment)
+  |> should.equal("Psi-4 Human Alignment")
+
+  psi_invariant_to_string(Psi5Truthfulness)
+  |> should.equal("Psi-5 Truthfulness")
+
+  psi_invariant_to_string(Psi6HardwareInviolability)
+  |> should.equal("Psi-6 Hardware Inviolability")
+
+  psi_invariant_to_string(Psi7ProvenanceCeiling)
+  |> should.equal("Psi-7 Provenance Ceiling")
+
+  psi_invariant_to_string(Psi8SubstratePurity)
+  |> should.equal("Psi-8 Substrate Purity")
+
+  psi_invariant_to_string(Psi9SaPlanExclusivity)
+  |> should.equal("Psi-9 Sa-Plan Exclusivity")
+
+  psi_invariant_to_string(Psi10CyberneticHomeostasis)
+  |> should.equal("Psi-10 Cybernetic Homeostasis")
+}
+
+pub fn zero_fenced_axioms_test() {
+  is_zero_fenced_axiom(Psi0Existence) |> should.equal(True)
+  is_zero_fenced_axiom(Psi4HumanAlignment) |> should.equal(True)
+  is_zero_fenced_axiom(Psi6HardwareInviolability) |> should.equal(True)
+  is_zero_fenced_axiom(Psi7ProvenanceCeiling) |> should.equal(True)
+  is_zero_fenced_axiom(Psi9SaPlanExclusivity) |> should.equal(True)
+
+  is_zero_fenced_axiom(Psi1Regeneration) |> should.equal(False)
+  is_zero_fenced_axiom(Psi2History) |> should.equal(False)
+  is_zero_fenced_axiom(Psi3Verification) |> should.equal(False)
+  is_zero_fenced_axiom(Psi5Truthfulness) |> should.equal(False)
+  is_zero_fenced_axiom(Psi8SubstratePurity) |> should.equal(False)
+  is_zero_fenced_axiom(Psi10CyberneticHomeostasis) |> should.equal(False)
+
+  // Critical zero-fencing on hardware inviolability failure
+  let checks_with_psi6_fail = [
+    PsiCheck(Psi0Existence, Pass, "pass"),
+    PsiCheck(Psi6HardwareInviolability, Fail, "osd_wipe_blocked"),
+  ]
+  compute_constitutional_health(checks_with_psi6_fail)
+  |> should.equal(0.0)
+
+  // Critical zero-fencing on provenance ceiling failure
+  let checks_with_psi7_fail = [
+    PsiCheck(Psi0Existence, Pass, "pass"),
+    PsiCheck(Psi7ProvenanceCeiling, Fail, "ev_108_unadmitted"),
+  ]
+  compute_constitutional_health(checks_with_psi7_fail)
+  |> should.equal(0.0)
+
+  // Critical zero-fencing on sa-plan exclusivity failure
+  let checks_with_psi9_fail = [
+    PsiCheck(Psi0Existence, Pass, "pass"),
+    PsiCheck(Psi9SaPlanExclusivity, Fail, "unledgered_side_effect"),
+  ]
+  compute_constitutional_health(checks_with_psi9_fail)
+  |> should.equal(0.0)
+}
+
+pub fn hive_mind_decider_test() {
+  let hm = init_hive_mind()
+  hm.epoch |> should.equal(1)
+  hm.current_health |> should.equal(1.0)
+
+  let signal_agy =
+    AgentSignal(
+      agent_id: "agy",
+      signal_type: "observation",
+      confidence: 0.99,
+      sentiment: "harmonic",
+      cognitive_narrative: "System converging rapidly to Lyapunov attractor",
+      evidence_ref: "sha256-evidence-agy",
+      timestamp_us: 1788880000000,
+    )
+
+  let hm2 = ingest_signal(hm, signal_agy)
+  hm2.current_health |> should.equal(0.99)
+
+  // Forecast projection
+  let forecast_short = compute_forecast(hm2, ShortTerm10m)
+  forecast_short.is_convergent |> should.equal(True)
+
+  let forecast_med = compute_forecast(hm2, MediumTerm1h)
+  forecast_med.is_convergent |> should.equal(True)
+
+  let forecast_long = compute_forecast(hm2, LongTerm24h)
+  forecast_long.is_convergent |> should.equal(True)
+
+  // Risk prediction for safe action
+  let safe_risk = predict_risk("prop-safe-001", "SANDISK-SDCZ48", 93, True)
+  safe_risk.zero_fence_violation_risk |> should.equal(False)
+  safe_risk.failure_probability |> should.equal(0.01)
+
+  // Risk prediction for root drive violation
+  let bad_drive_risk = predict_risk("prop-bad-001", "25503L801736", 93, True)
+  bad_drive_risk.zero_fence_violation_risk |> should.equal(True)
+  bad_drive_risk.failure_probability |> should.equal(1.0)
+
+  // Risk prediction for unadmitted EV cycle
+  let bad_ev_risk = predict_risk("prop-bad-002", "SANDISK-SDCZ48", 108, True)
+  bad_ev_risk.zero_fence_violation_risk |> should.equal(True)
+
+  // Decision synthesis: ratified safe action
+  let safe_dec =
+    synthesize_decision(
+      hm2,
+      "dec-001",
+      "deploy_c3i_module",
+      "SANDISK-SDCZ48",
+      93,
+      Some("task-c360"),
+    )
+  safe_dec.is_ratified |> should.equal(True)
+  safe_dec.consensus_score |> should.equal(1.0)
+
+  // Decision synthesis: rejected drive wipe action
+  let bad_dec =
+    synthesize_decision(
+      hm2,
+      "dec-002",
+      "wipe_drive",
+      "25503L801736",
+      93,
+      Some("task-c360"),
+    )
+  bad_dec.is_ratified |> should.equal(False)
+
+  // JSON serialization
+  let dec_json = decision_to_json(safe_dec)
+  should.be_true(dec_json != json.null())
+}
+

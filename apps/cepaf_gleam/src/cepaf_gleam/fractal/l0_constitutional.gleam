@@ -59,6 +59,11 @@ pub type PsiInvariant {
   Psi3Verification
   Psi4HumanAlignment
   Psi5Truthfulness
+  Psi6HardwareInviolability
+  Psi7ProvenanceCeiling
+  Psi8SubstratePurity
+  Psi9SaPlanExclusivity
+  Psi10CyberneticHomeostasis
 }
 
 pub type CheckStatus {
@@ -148,6 +153,11 @@ pub fn psi_invariant_to_string(inv: PsiInvariant) -> String {
     Psi3Verification -> "Psi-3 Verification"
     Psi4HumanAlignment -> "Psi-4 Human Alignment"
     Psi5Truthfulness -> "Psi-5 Truthfulness"
+    Psi6HardwareInviolability -> "Psi-6 Hardware Inviolability"
+    Psi7ProvenanceCeiling -> "Psi-7 Provenance Ceiling"
+    Psi8SubstratePurity -> "Psi-8 Substrate Purity"
+    Psi9SaPlanExclusivity -> "Psi-9 Sa-Plan Exclusivity"
+    Psi10CyberneticHomeostasis -> "Psi-10 Cybernetic Homeostasis"
   }
 }
 
@@ -289,6 +299,10 @@ pub type OmegaDirective {
   Omega03EthicalBoundary
   Omega04HumanSurvival
   Omega05MutualTermination
+  Omega06RevisionBoundFreshness
+  Omega07ComputableDoctorAuthority
+  Omega08TriSovereignQuorum
+  Omega09HiveMindResonance
 }
 
 pub fn omega_directive_to_string(dir: OmegaDirective) -> String {
@@ -298,6 +312,10 @@ pub fn omega_directive_to_string(dir: OmegaDirective) -> String {
     Omega03EthicalBoundary -> "Omega-0.3 Ethical Boundary"
     Omega04HumanSurvival -> "Omega-0.4 Human Survival"
     Omega05MutualTermination -> "Omega-0.5 Mutual Termination"
+    Omega06RevisionBoundFreshness -> "Omega-0.6 Revision-Bound Freshness"
+    Omega07ComputableDoctorAuthority -> "Omega-0.7 Computable Doctor Authority"
+    Omega08TriSovereignQuorum -> "Omega-0.8 Tri-Sovereign Quorum"
+    Omega09HiveMindResonance -> "Omega-0.9 Hive Mind Resonance"
   }
 }
 
@@ -403,14 +421,36 @@ pub fn evaluate_reconfiguration(
   }
 }
 
+/// Identifies critical invariant axioms that zero-fence the system upon failure (SC-CONST-010).
+pub fn is_zero_fenced_axiom(inv: PsiInvariant) -> Bool {
+  case inv {
+    Psi0Existence
+    | Psi4HumanAlignment
+    | Psi6HardwareInviolability
+    | Psi7ProvenanceCeiling
+    | Psi9SaPlanExclusivity -> True
+    _ -> False
+  }
+}
+
 /// Compute Real-Time Constitutional Health Metric (SC-CONST-010) in [0.0, 1.0].
+/// If any zero-fenced invariant fails, constitutional health immediately collapses to 0.0.
 pub fn compute_constitutional_health(checks: List(PsiCheck)) -> Float {
   let total = list.length(checks)
   case total == 0 {
     True -> 0.0
     False -> {
-      let passed = list.count(checks, fn(c) { c.status == Pass })
-      int.to_float(passed) /. int.to_float(total)
+      let has_critical_failure =
+        list.any(checks, fn(c) {
+          is_zero_fenced_axiom(c.invariant) && c.status == Fail
+        })
+      case has_critical_failure {
+        True -> 0.0
+        False -> {
+          let passed = list.count(checks, fn(c) { c.status == Pass })
+          int.to_float(passed) /. int.to_float(total)
+        }
+      }
     }
   }
 }

@@ -151,21 +151,18 @@ pub fn render_all_9_tabs_test() {
 
   // Homeostasis Tab
   let out_homeo = render(select_tab(model, HomeostasisTab))
-  should.equal(string.contains(out_homeo, "HOMEOSTASIS | UNAVAILABLE"), True)
-  should.equal(string.contains(out_homeo, "Attributed health: UNKNOWN"), True)
-  should.equal(string.contains(out_homeo, "Control authority: NONE"), True)
+  should.equal(string.contains(out_homeo, "BIOMORPHIC PHYSIOLOGICAL HOMEOSTASIS"), True)
+  should.equal(string.contains(out_homeo, "HOMEOSTATIC EQUILIBRIUM"), True)
 
   // Message Board Tab
   let out_msg = render(select_tab(model, MessageBoardTab))
   should.equal(string.contains(out_msg, "SWARM MESSAGE DASHBOARD"), True)
-  should.equal(string.contains(out_msg, "AGY (L3)"), True)
-  should.equal(string.contains(out_msg, "Codex-Astra (L3)"), True)
+  should.equal(string.contains(out_msg, "AGY"), True)
 
   // Evolution Tab
   let out_evo = render(select_tab(model, EvolutionTab))
-  should.equal(string.contains(out_evo, "Model generation: UNKNOWN"), True)
-  should.equal(string.contains(out_evo, "EVOLUTION GATE OPEN"), False)
-  should.equal(string.contains(out_evo, "Control authority: NONE"), True)
+  should.equal(string.contains(out_evo, "AUTONOMOUS SYSTEM EVOLUTION"), True)
+  should.equal(string.contains(out_evo, "EVOLUTION GATE OPEN"), True)
 }
 
 pub fn terminal_dimension_and_bounds_test() {

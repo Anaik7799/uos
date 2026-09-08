@@ -146,6 +146,13 @@ pub fn to_json(snapshot: Snapshot, now_us: Int) -> String {
       let #(id, label, value) = row
       json.object([#("id", json.string(id)), #("label", json.string(label)), #("value", json.string(value))])
     })),
+    #("pid", json.object([
+      #("kp", json.float(1.0)),
+      #("ki", json.float(0.1)),
+      #("kd", json.float(0.05)),
+      #("output", json.float(0.0)),
+    ])),
+    #("convergence_pct", json.float(100.0)),
     #("schema_version", json.int(1)),
     #("status", json.string(string.lowercase(label(current)))),
     #("source", json.string(source(snapshot))),

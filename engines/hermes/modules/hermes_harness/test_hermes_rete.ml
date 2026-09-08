@@ -4,6 +4,11 @@
 
 let () =
   let open Hermes_rete in
+  let contains n h =
+    let hl = String.length h and nl = String.length n in
+    let rec f i = i + nl <= hl && (String.sub h i nl = n || f (i + 1)) in
+    f 0
+  in
   let wm = WM.create () in
   WM.insert wm "drift" [ ("target", Value.String "hermes.a.b"); ("actual", Value.String "divergent") ];
   WM.insert wm "drift" [ ("target", Value.String "hermes.c.d"); ("actual", Value.String "unmapped") ];
@@ -56,11 +61,6 @@ let () =
   in
   (match fire_rules wm [ gate ] with
   | Error message ->
-      let contains n h =
-        let hl = String.length h and nl = String.length n in
-        let rec f i = i + nl <= hl && (String.sub h i nl = n || f (i + 1)) in
-        f 0
-      in
       assert (contains "no-unmapped-drift-allowed" message)
   | Ok () -> failwith "the gate must reject");
 
@@ -76,6 +76,49 @@ let () =
   in
   (match fire_rules wm [ prefix_rule ] with Ok () -> () | Error e -> failwith e);
   assert (!prefixed = 2);
+
+  (* Constitutional Invariant Gates (Psi-6, Psi-7, Psi-9) *)
+  WM.insert wm "storage_request" [ ("serial", Value.String "25503L801736"); ("action", Value.String "osd_wipe") ];
+  WM.insert wm "provenance_claim" [ ("ev_cycle", Value.Int 108); ("source", Value.String "quarantined_event_437") ];
+  WM.insert wm "task_execution" [ ("task_id", Value.String "ad_hoc_task"); ("has_sa_plan_lease", Value.Bool false) ];
+
+  let psi6_gate =
+    { name = "psi6-hardware-inviolability-gate";
+      patterns =
+        [ { pat_kind = "storage_request";
+            conds = [ FieldCmp ("serial", Eq, Value.String "25503L801736");
+                      FieldCmp ("action", Eq, Value.String "osd_wipe") ];
+            bind_name = None } ];
+      action = (fun _ _ -> Error "Psi-6 Violation: OS root NVMe drive 25503L801736 cannot be wiped") }
+  in
+  (match fire_rules wm [ psi6_gate ] with
+  | Error msg -> assert (contains "Psi-6 Violation" msg)
+  | Ok () -> failwith "Psi-6 gate must reject");
+
+  let psi7_gate =
+    { name = "psi7-provenance-ceiling-gate";
+      patterns =
+        [ { pat_kind = "provenance_claim";
+            conds = [ FieldCmp ("source", Eq, Value.String "quarantined_event_437") ];
+            bind_name = None } ];
+      action = (fun _ _ -> Error "Psi-7 Violation: EV cycles above EV-93 ceiling originate in quarantined events") }
+  in
+  (match fire_rules wm [ psi7_gate ] with
+  | Error msg -> assert (contains "Psi-7 Violation" msg)
+  | Ok () -> failwith "Psi-7 gate must reject");
+
+  let psi9_gate =
+    { name = "psi9-sa-plan-exclusivity-gate";
+      patterns =
+        [ { pat_kind = "task_execution";
+            conds = [ FieldCmp ("has_sa_plan_lease", Eq, Value.Bool false) ];
+            bind_name = None } ];
+      action = (fun _ _ -> Error "-32002: Fractal Jidoka Andon Halt: Non-sa-plan task execution attempted") }
+  in
+  (match fire_rules wm [ psi9_gate ] with
+  | Error msg -> assert (contains "-32002" msg)
+  | Ok () -> failwith "Psi-9 gate must reject");
+
   print_endline "hermes_rete: ok"
 
 let () =

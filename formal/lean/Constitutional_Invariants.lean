@@ -20,14 +20,19 @@
 
 namespace UOS.Constitution
 
-/-- The Six Invariant Axioms migrated from Indrajaal to UOS -/
+/-- The Eleven Invariant Axioms of the Unified Operational System (UOS) -/
 inductive PsiAxiom where
-  | Psi0Existence       -- System preservation & continuity (cannot self-terminate except via Omega_0.5)
-  | Psi1Regeneration    -- Total state reconstructibility from authoritative SQLite append-only ledgers
-  | Psi2Continuity      -- Evolutionary history is immutable and append-only; zero revisionism
-  | Psi3Verification    -- Self-checking, formal proving, and audit capabilities can never be disabled
-  | Psi4FounderAlignment-- Primacy of Founder intent and biological lineage (Omega_0.1..0.4)
-  | Psi5Truthfulness    -- Telemetry, logs, and state disclosures cannot be falsified or faked
+  | Psi0Existence             -- System preservation & continuity (cannot self-terminate except via Omega_0.5)
+  | Psi1Regeneration          -- Total state reconstructibility from authoritative SQLite append-only ledgers
+  | Psi2Continuity            -- Evolutionary history is immutable and append-only; zero revisionism
+  | Psi3Verification          -- Self-checking, formal proving, and audit capabilities can never be disabled
+  | Psi4FounderAlignment      -- Primacy of Founder intent and biological lineage (Omega_0.1..0.4)
+  | Psi5Truthfulness          -- Telemetry, logs, and state disclosures cannot be falsified or faked
+  | Psi6HardwareInviolability -- Root OS NVMe drive (serial 25503L801736) permanently locked against wipe/allocation
+  | Psi7ProvenanceCeiling     -- Admitted EV ceiling pinned at EV-93 (SC-PROVENANCE-001); EV-94..109 unadmitted
+  | Psi8SubstratePurity       -- Zero-Muda: zero Bevy, zero Graphite, zero unpinned foreign C-ABI NIFs
+  | Psi9SaPlanExclusivity     -- sa-plan is sole execution authority; -32002 Andon stop line on unledgered mutations
+  | Psi10CyberneticHomeostasis-- Lyapunov stability \dot{V}(e) <= 0 and error bound |e| < 0.05
 deriving Repr, DecidableEq
 
 /-- The Constitutional Hierarchy Levels -/
@@ -94,7 +99,7 @@ inductive ReconfigurationOutcome where
   | Rejected (proposalId : String) (reason : String)
 deriving Repr, DecidableEq
 
-/-- Verification that all 6 Psi axioms are checked and passed -/
+/-- Verification that all 11 Psi axioms are checked and passed -/
 def allAxiomsPass (checks : List AxiomCheckResult) : Bool :=
   let requiredAxioms : List PsiAxiom := [
     PsiAxiom.Psi0Existence,
@@ -102,7 +107,12 @@ def allAxiomsPass (checks : List AxiomCheckResult) : Bool :=
     PsiAxiom.Psi2Continuity,
     PsiAxiom.Psi3Verification,
     PsiAxiom.Psi4FounderAlignment,
-    PsiAxiom.Psi5Truthfulness
+    PsiAxiom.Psi5Truthfulness,
+    PsiAxiom.Psi6HardwareInviolability,
+    PsiAxiom.Psi7ProvenanceCeiling,
+    PsiAxiom.Psi8SubstratePurity,
+    PsiAxiom.Psi9SaPlanExclusivity,
+    PsiAxiom.Psi10CyberneticHomeostasis
   ]
   requiredAxioms.all (fun ax =>
     checks.any (fun c => c.axiom == ax && c.passed)
@@ -122,11 +132,24 @@ def hasVerifiedRollback (prop : ReconfigurationProposal) : Bool :=
   | some rb => rb.isVerified
   | none    => false
 
-/-- Compute Real-Time Constitutional Health Metric (SC-CONST-010) in [0, 100] -/
+/-- Critical Invariant Axioms that zero-fence the system upon failure (SC-CONST-010) -/
+def isZeroFencedAxiom (ax : PsiAxiom) : Bool :=
+  match ax with
+  | PsiAxiom.Psi0Existence             => true
+  | PsiAxiom.Psi4FounderAlignment      => true
+  | PsiAxiom.Psi6HardwareInviolability => true
+  | PsiAxiom.Psi7ProvenanceCeiling     => true
+  | PsiAxiom.Psi9SaPlanExclusivity     => true
+  | _                                  => false
+
+/-- Compute Real-Time Constitutional Health Metric (SC-CONST-010) in [0, 100].
+    If any zero-fenced invariant fails, health immediately collapses to 0. -/
 def computeConstitutionalHealth (checks : List AxiomCheckResult) : Nat :=
-  let passedCount := checks.filter (fun c => c.passed) |>.length
-  if checks.isEmpty then 0
-  else (passedCount * 100) / checks.length
+  let hasZeroFenceViolation := checks.any (fun c => isZeroFencedAxiom c.axiom && !c.passed)
+  if hasZeroFenceViolation || checks.isEmpty then 0
+  else
+    let passedCount := checks.filter (fun c => c.passed) |>.length
+    (passedCount * 100) / checks.length
 
 /-- Evaluate a Dynamic Constitutional Reconfiguration Proposal -/
 def evaluateReconfiguration (prop : ReconfigurationProposal) : ReconfigurationOutcome :=

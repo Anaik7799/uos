@@ -28,6 +28,7 @@ pub type Intent {
 }
 
 pub const hard_denied_system_os_serial = "25503L801736"
+pub const admitted_ev_ceiling = 93
 
 pub fn bottom(reason: String) -> LatticeState {
   LatticeState(
@@ -84,6 +85,18 @@ pub fn evaluate(intent: Intent, state: LatticeState) -> LatticeState {
         }
       }
     }
+  }
+}
+
+/// Evaluates an intent with provenance ceiling check (Psi-7, SC-PROVENANCE-001).
+pub fn evaluate_with_provenance(
+  intent: Intent,
+  state: LatticeState,
+  ev_cycle: Int,
+) -> LatticeState {
+  case ev_cycle > admitted_ev_ceiling {
+    True -> bottom("UNADMITTED_EV_CYCLE_ABOVE_CEILING_93")
+    False -> evaluate(intent, state)
   }
 }
 

@@ -38,7 +38,6 @@
 import cepaf_gleam/cockpit/visuals
 import cepaf_gleam/ui/homeostasis_data as homeostasis_data
 import cepaf_gleam/ui/homeostasis_status as homeostasis_status
-import cepaf_gleam/ui/tui/homeostasis_evolution_view as homeostasis_view
 import gleam/float
 import gleam/int
 import gleam/list
@@ -842,9 +841,9 @@ pub fn render_tab_content(model: SysadminModel) -> String {
     SecurityTab -> render_security_tab(model)
     StreamTab -> render_stream_tab(model)
     DoctorTab -> render_doctor_tab(model)
-    HomeostasisTab -> homeostasis_view.render_snapshot(model.homeostasis_snapshot,model.homeostasis_observed_at,120,100)
+    HomeostasisTab -> render_homeostasis_tab(model)
     MessageBoardTab -> render_message_board_tab(model)
-    EvolutionTab -> homeostasis_view.render_snapshot(model.homeostasis_snapshot,model.homeostasis_observed_at,120,100)
+    EvolutionTab -> render_evolution_tab(model)
   }
 }
 
@@ -1175,7 +1174,7 @@ fn render_doctor_tab(model: SysadminModel) -> String {
 // Tab 10: Homeostasis Status & Physiological Telemetry
 // -----------------------------------------------------------------------------
 
-fn render_homeostasis_tab(model: SysadminModel) -> String {
+pub fn render_homeostasis_tab(model: SysadminModel) -> String {
   let title =
     visuals.with_color("  === SIMULATED: BIOMORPHIC PHYSIOLOGICAL HOMEOSTASIS (C3I / INDRAJAAL) ===", "cyan")
   let s = model.homeostasis_state
@@ -1298,7 +1297,7 @@ fn render_message_board_tab(model: SysadminModel) -> String {
 // Tab 12: Autonomous System Evolution & Pareto Frontiers
 // -----------------------------------------------------------------------------
 
-fn render_evolution_tab(model: SysadminModel) -> String {
+pub fn render_evolution_tab(model: SysadminModel) -> String {
   let title =
     visuals.with_color("  === SIMULATED: AUTONOMOUS SYSTEM EVOLUTION & PARETO FRONTIERS ===", "cyan")
   let s = model.homeostasis_state
