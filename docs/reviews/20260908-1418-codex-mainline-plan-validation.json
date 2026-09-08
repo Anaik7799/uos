@@ -1,0 +1,224 @@
+{
+  "schema_version": 1,
+  "kind": "CODEX_MAINLINE_PLAN_VALIDATION",
+  "observed_at_utc": "2026-09-08T15:03:29Z",
+  "plan_id": "uos/codex-mainline-merge/20260908-1439",
+  "task_id": "PLAN",
+  "session": "codex-merge-plan-20260908-1439",
+  "scope": "Planning artifacts, census and authority observations only; no code/runtime/integration verification.",
+  "jj_operation": "3f75a63b43a634c3c3c7a09e90937fb187eabf3a126f6673d75a8668ae28d27544820b13673e5958cac431279445c77050938745109f09bb29329fe083d455aa",
+  "pinned_main": "1be8029d72bc9530b1937564a37c555bd0b4b938",
+  "main_observed_after_artifact_creation": "1be8029d72bc9530b1937564a37c555bd0b4b938",
+  "manifest": [
+    {
+      "sha256": "4aed5d0763b41f77a5a96b1086f2577659a56be42e34dc71499067db1b1b8469",
+      "path": "docs/superpowers/plans/20260908-1418-codex-mainline-consolidation-plan.md"
+    },
+    {
+      "sha256": "30908e8911feab934df2cef587758e186266e9638d4ce125ddae9ed0866c8f62",
+      "path": "docs/reviews/20260908-1418-codex-mainline-census.json"
+    },
+    {
+      "sha256": "79f20851d31e9a3ebbedd8d66b66abd2fb929318fa965f8ca82988675035040b",
+      "path": "docs/reviews/20260908-1418-codex-mainline-bookmarks.txt"
+    },
+    {
+      "sha256": "b9850a81892d1f0d68a9739f952b0421b796eb76c5adc52a74ff9264d4798be1",
+      "path": "docs/reviews/20260908-1418-codex-mainline-workspaces.txt"
+    },
+    {
+      "sha256": "e4b16041d0b5314e681236e7d1368d5a0e4f4910c14e8ac6e118346e302b1ff2",
+      "path": "docs/journal/20260908-1418-codex-mainline-merge-planning-journal.md"
+    },
+    {
+      "sha256": "b31eb27a242404264a419edd94c53dee1cccea5002627404a0c340a89005014d",
+      "path": "docs/reviews/20260908-1418-codex-merge-plan-active-risk.json"
+    }
+  ],
+  "manifest_self_exclusion": "This validation receipt excludes itself to avoid recursive digest claims.",
+  "structural_checks": {
+    "command_program": "jq",
+    "filter": "\ndef rpn_band: if . <= 5 then 1 elif . <= 15 then 2 elif . <= 35 then 3 elif . <= 70 then 4 else 5 end;\ndef acyclic($left;$done):\n if ($left|length)==0 then true\n else [$left[] | select(all(.dependencies[]; . as $dep | ($done|index($dep)) != null))] as $ready\n | if ($ready|length)==0 then false else\n ($ready|map(.id)) as $ids |\n acyclic([$left[] | select(.id as $id | ($ids|index($id)) == null)]; $done+$ids)\n end end;\n. as $c |\n{\n counts: (.counts.source_records == (.source_records|length) and .counts.bookmarks == ([.source_records[]|select(.kind==\"bookmark\")]|length) and .counts.workspaces == ([.source_records[]|select(.kind==\"workspace\")]|length) and .counts.distinct_heads == (.heads|length) and .counts.distinct_outside_nonempty_commits == (.unintegrated_changes|length)),\n unique_source_records: (([.source_records[]|[.kind,.name]]|unique|length)==.counts.source_records),\n unique_heads: (([.heads[].commit]|unique|length)==.counts.distinct_heads),\n full_commit_ids: (all(.heads[].commit; test(\"^[0-9a-f]{40}$\")) and (.main_commit|test(\"^[0-9a-f]{40}$\"))),\n source_heads_resolve: all(.source_records[]; .head_commit as $id | any($c.heads[]; .commit==$id)),\n outside_union: (([.heads[].unintegrated_nonempty[].commit]|unique|sort)==([.unintegrated_changes[].commit]|unique|sort)),\n stage_coverage: all(.unintegrated_changes[]; .stage_id as $id | any($c.stages[]; .id==$id)),\n dag_refs_resolve: all(.stages[].dependencies[]; . as $id | any($c.stages[]; .id==$id)),\n dag_acyclic: acyclic(.stages;[]),\n risk_arithmetic: all(.stages[]; .score == ([.factors[]]|reduce .[] as $x (1; .*$x)) and .fmea.rpn == (.fmea.s*.fmea.o*.fmea.det) and .fmea.band == ([.fmea.s, (.fmea.rpn|rpn_band)]|max) and .factors.F == .fmea.band),\n specification_not_dispatch: all(.stages[]; .activation==\"SPECIFICATION_ONLY_NOT_DISPATCHED\"),\n every_worktree_unfrozen_explicit: all(.source_records[]|select(.kind==\"workspace\"); .dirty_worktree_status==\"UNSNAPSHOTTED_BYTES_NOT_INSPECTED_OR_FROZEN\")\n} | . as $results | if all(.[]; . == true) then $results else error(\"planning invariant failure: \"+($results|tostring)) end",
+    "input": "docs/reviews/20260908-1418-codex-mainline-census.json",
+    "exit_code": 0,
+    "results": {
+      "counts": true,
+      "unique_source_records": true,
+      "unique_heads": true,
+      "full_commit_ids": true,
+      "source_heads_resolve": true,
+      "outside_union": true,
+      "stage_coverage": true,
+      "dag_refs_resolve": true,
+      "dag_acyclic": true,
+      "risk_arithmetic": true,
+      "specification_not_dispatch": true,
+      "every_worktree_unfrozen_explicit": true
+    }
+  },
+  "journal_headings": [
+    "9:## 1. Scope & Trigger",
+    "15:## 2. Pre-State Assessment",
+    "21:## 3. Execution Detail",
+    "29:## 4. Root Cause Analysis",
+    "35:## 5. Fix Taxonomy",
+    "41:## 6. Patterns & Anti-Patterns Discovered",
+    "47:## 7. Verification Matrix",
+    "64:## 8. Files Modified",
+    "78:## 9. Architectural Observations",
+    "84:## 10. Remaining Gaps",
+    "90:## 11. Metrics Summary",
+    "96:## 12. STAMP & Constitutional Alignment",
+    "102:## 13. Conclusion"
+  ],
+  "active_risk_validation": {
+    "status": "ACTIVE_OBSERVATION_PASS",
+    "authority": "NONE",
+    "runtime_admission": "NOT_GRANTED",
+    "observed_at": "2026-09-08T15:01:18Z",
+    "completed_at": "2026-09-08T15:01:18Z",
+    "elapsed_monotonic_seconds": 0.212304491,
+    "clock_start": {
+      "source": "chronyc tracking",
+      "abs_ntp_offset_seconds": 0.000214599,
+      "uncertainty_seconds": 0.0178048505,
+      "reference_age_seconds": 940.2943518161774,
+      "stratum": 3
+    },
+    "clock_end": {
+      "source": "chronyc tracking",
+      "abs_ntp_offset_seconds": 0.000214584,
+      "uncertainty_seconds": 0.0178049725,
+      "reference_age_seconds": 940.4017918109894,
+      "stratum": 3
+    },
+    "assessment_sha256": "b31eb27a242404264a419edd94c53dee1cccea5002627404a0c340a89005014d",
+    "evidence_files_checked": 3,
+    "sa_plan": {
+      "plan_id": "uos/codex-mainline-merge/20260908-1439",
+      "snapshot_sha256": "a8303881572ef3c0257a475b16e0bdf8357852dad8ae58a124bc97feba10498a",
+      "tasks": [
+        {
+          "task_id": "PLAN",
+          "state": "executing",
+          "worker": "codex-merge-plan",
+          "lease_until_ns": "1788881798597122599",
+          "attempt": 1,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": []
+        }
+      ],
+      "mode": "READONLY",
+      "lease_fencing_authority": "NOT_GRANTED"
+    },
+    "order": [],
+    "findings": [],
+    "limits": [
+      "Listed byte equality does not prove source completeness, runtime behavior or signed provenance.",
+      "Analysis prose, class judgments, cost ties and control effectiveness require qualified review.",
+      "Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.",
+      "Snapshot is confined to one complete plan; no global optimum is asserted."
+    ]
+  },
+  "own_workspace_fence": {
+    "checked_boot_us": 332215170000,
+    "epoch": 1,
+    "holder": "codex-merge-plan-20260908-1439",
+    "ok": true,
+    "resource": "workspace:/home/an/NAS-setup/uos/.uos-workspaces/codex-merge-plan-20260908-1439",
+    "scope": "cooperative fence observation; no action executed"
+  },
+  "rejected_invocations": [
+    {
+      "tool": "risk-priority-check",
+      "cause": "Plan ID supplied in task-ID position; no dependent mutation followed.",
+      "exit_code": 1,
+      "receipt": {
+        "status": "HOLD",
+        "authority": "NONE",
+        "runtime_admission": "NOT_GRANTED",
+        "observed_at": "2026-09-08T15:00:53Z",
+        "completed_at": "2026-09-08T15:00:53Z",
+        "elapsed_monotonic_seconds": 0.214025519,
+        "clock_start": {
+          "source": "chronyc tracking",
+          "abs_ntp_offset_seconds": 0.000217989,
+          "uncertainty_seconds": 0.0177765855,
+          "reference_age_seconds": 915.3275480270386,
+          "stratum": 3
+        },
+        "clock_end": {
+          "source": "chronyc tracking",
+          "abs_ntp_offset_seconds": 0.000217974,
+          "uncertainty_seconds": 0.0177767095,
+          "reference_age_seconds": 915.4364030361176,
+          "stratum": 3
+        },
+        "assessment_sha256": "b31eb27a242404264a419edd94c53dee1cccea5002627404a0c340a89005014d",
+        "evidence_files_checked": 3,
+        "sa_plan": {
+          "plan_id": "uos/codex-mainline-merge/20260908-1439",
+          "snapshot_sha256": "a8303881572ef3c0257a475b16e0bdf8357852dad8ae58a124bc97feba10498a",
+          "tasks": [
+            {
+              "task_id": "PLAN",
+              "state": "executing",
+              "worker": "codex-merge-plan",
+              "lease_until_ns": "1788881798597122599",
+              "attempt": 1,
+              "completed_at_ns": null,
+              "result_present": false,
+              "dependencies": []
+            }
+          ],
+          "mode": "READONLY",
+          "lease_fencing_authority": "NOT_GRANTED"
+        },
+        "order": [],
+        "findings": [
+          {
+            "rule": "RP-ACTIVE-OWNER",
+            "task_id": "uos/codex-mainline-merge/20260908-1439",
+            "severity": "HOLD",
+            "detail": "Active worker/attempt does not match the current executing task.",
+            "next_check": "Stop this attempt's effects; re-observe ownership through Sa-plan."
+          }
+        ],
+        "limits": [
+          "Listed byte equality does not prove source completeness, runtime behavior or signed provenance.",
+          "Analysis prose, class judgments, cost ties and control effectiveness require qualified review.",
+          "Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.",
+          "Snapshot is confined to one complete plan; no global optimum is asserted."
+        ]
+      },
+      "resolution": "Inspected usage and reran --active-check FILE PLAN codex-merge-plan 1; fresh PASS retained above."
+    },
+    {
+      "tool": "session_sync check",
+      "cause": "Session heartbeat stale.",
+      "resolution": "Renewed own heartbeat at coordinator sequence 1132, then checked own epoch-1 lease successfully."
+    }
+  ],
+  "document_link": {
+    "url": "http://nas-1.tail55d152.ts.net:4100/files/.uos-workspaces/codex-merge-plan-20260908-1439/docs/superpowers/plans/20260908-1418-codex-mainline-consolidation-plan.md",
+    "http_status": 200,
+    "content_assertions": [
+      "Intended title present",
+      "Pinned main full commit ID present"
+    ],
+    "browser_test": false
+  },
+  "not_run": [
+    "Source reconciliation or merge",
+    "Production or private runtime changes",
+    "Application test suites",
+    "GUI/TUI regressions",
+    "Physical Solo5 tests",
+    "Formal proof execution",
+    "Independent composed-candidate review"
+  ],
+  "authority": "NONE; this receipt does not grant integration or runtime admission.",
+  "execution_stages_dispatched": 0
+}
+
