@@ -8,9 +8,8 @@
 //// as the field name appears anywhere in the bytes: inside a value, inside a
 //// longer key, or inside an error message.
 ////
-//// These tests assert the CURRENT behaviour so the weakness is visible and any
-//// future repair is a deliberate, reviewed change rather than a silent one.
-//// They are documentation, not endorsement.
+//// The unsafe baseline is preserved in main0114d306 and its execution receipt.
+//// These tests now require rejection after the explicit typed JSON repair.
 ////
 //// Observed context: the staged release on :59457 returned
 //// {"error":"missing_field","field":"status","endpoint":"health"}. That was the
@@ -31,8 +30,8 @@ pub fn guard_passes_on_genuine_field_test() {
 }
 
 /// A response with NO "status" key, where the word appears only inside a value.
-/// A key-aware guard would reject this. The substring guard accepts it.
-pub fn guard_falsely_passes_when_name_appears_only_in_a_value_test() {
+/// The repaired key-aware guard rejects this.
+pub fn guard_rejects_when_name_appears_only_in_a_value_test() {
   case
     module_guard.guard_json(
       "{\"message\":\"no status available\"}",
@@ -40,16 +39,16 @@ pub fn guard_falsely_passes_when_name_appears_only_in_a_value_test() {
       "status",
     )
   {
-    module_guard.GuardPassed(_) -> True
+    module_guard.GuardFailed(_, _) -> True
     _ -> False
   }
   |> should.be_true()
 }
 
 /// A response whose only key merely CONTAINS the required name as a substring.
-pub fn guard_falsely_passes_on_longer_key_test() {
+pub fn guard_rejects_longer_key_test() {
   case module_guard.guard_json("{\"substatus\":1}", "health", "status") {
-    module_guard.GuardPassed(_) -> True
+    module_guard.GuardFailed(_, _) -> True
     _ -> False
   }
   |> should.be_true()

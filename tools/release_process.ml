@@ -129,10 +129,22 @@ let build dest =
 let port s=
  require(String.length s<=5 && s<>"" && String.for_all(function '0'..'9'->true|_->false)s) "invalid port";
  let p=int_of_string s in require(p>=1024 && p<=65535) "port out of range";p
+let tailnet_bind host =
+ require(host="nas-1.tail55d152.ts.net") "canonical Tailscale FQDN required";
+ let addresses=(gethostbyname host).h_addr_list |> Array.to_list |> List.filter(fun address ->
+  match String.split_on_char '.'(string_of_inet_addr address) with
+  |["100";b;_;_]->let n=int_of_string b in n>=64 && n<=127
+  |_->false) |> List.sort_uniq compare in
+ require(List.length addresses=1) "exactly one canonical Tailnet IPv4 address required";
+ string_of_inet_addr(List.hd addresses)
 let launch kind release rest =
  let rev=verify_release release in
  let paths=Sys.readdir release|>Array.to_list|>List.filter_map(fun d->let p=release^"/"^d^"/ebin" in if Sys.file_exists p then Some p else None) in
  let extra,tail=match kind,rest with
+ | "manual-web",[p;host]->require(port p>=49152) "manual testing requires a private high port";
+   ["UOS_WEB_CANDIDATE="^rev;"UOS_WEB_PORT="^p;"UOS_WEB_BIND="^tailnet_bind host;
+    "UOS_WEB_INSTANCE=manual-test-"^p;"UOS_WEB_ROLE=backup";"UOS_WEB_MANAGED=false"],
+   ["-eval";"'indrajaal_gleam_web@@main':run('indrajaal@manual_test')."]
  | "web",[p;host]->ignore(port p);
    require(host="nas-1.tail55d152.ts.net") "canonical Tailscale FQDN required for private staging";
    ["UOS_WEB_CANDIDATE="^rev;"UOS_WEB_PORT="^p;"UOS_WEB_BIND="^string_of_inet_addr inet_addr_loopback;
@@ -166,6 +178,13 @@ let fetch base path =
  let resolve=if port p>=49152 then ["--resolve";"nas-1.tail55d152.ts.net:"^p^":127.0.0.1"] else [] in
  checked ~seconds:10. "/usr/bin/curl" (["--silent";"--show-error";"--fail";"--max-time";"5";"--connect-timeout";"2";
  "--max-filesize";"1048576";"--noproxy";"*"]@resolve@[base^path])
+let manual_request ?(method_="GET") base path =
+ target base;
+ let response=checked ~seconds:10. "/usr/bin/curl"
+ ["--silent";"--show-error";"--max-time";"5";"--connect-timeout";"2";"--max-filesize";"1048576";
+  "--noproxy";"*";"-X";method_;"-w";"\n%{http_code}";base^path] in
+ let cut=String.rindex response '\n' in
+ int_of_string(String.sub response (cut+1)(String.length response-cut-1)),String.sub response 0 cut
 let identity body candidate =
  let m=Yojson.Safe.from_string body|>assoc in
  require(str(field "schema" m)="uos.web-runtime-identity.v1") "identity schema";
@@ -175,6 +194,23 @@ let identity body candidate =
  require(not(bool(field "application_admitted" m))) "telemetry cannot grant admission";
  require(str(field "declared_candidate_revision" m)=candidate) "wrong candidate";
  let pid=str(field "os_pid" m) and id=str(field "run_id" m) in require(pid<>"" && id<>"") "missing process identity";id
+let smoke_manual base revision =
+ let get path expected=let status,body=manual_request base path in
+  require(status=expected)(Printf.sprintf "manual route %s returned%d, expected%d"path status expected);body in
+ let run_id=identity(get "/api/v1/runtime/identity" 200)revision in
+ List.iter(fun path->let body=get path 200 in require(String.length body>100)"empty manual page")
+ ["/";"/homeostasis/evolution";"/homeostasis/components";"/homeostasis/terminal"];
+ let real=get "/api/v1/homeostasis?mode=real" 200 |> Yojson.Safe.from_string |> assoc in
+ require(str(field "status"real)="observed"&&field "metrics"real=`Null&&str(field "control_authority"real)="none")"real source/authority mismatch";
+ let missing=get "/api/v1/homeostasis?mode=test&scenario=unavailable" 503 |> Yojson.Safe.from_string |> assoc in
+ require(str(field "status"missing)="unavailable"&&field "metrics"missing=`Null)"false available fixture";
+ ignore(get "/api/v1/homeostasis/review?mode=real" 403);
+ let preview=get "/api/v1/homeostasis/review?mode=test&scenario=disturbance" 200 |> Yojson.Safe.from_string |> assoc in
+ require(not(bool(field "executed"preview)))"preview executed an action";
+ List.iter(fun path->ignore(get path 404))["/files/AGENTS.md";"/raw/AGENTS.md";"/api/verify/patrol";"/api/mcp";"/planning"];
+ let status,_=manual_request ~method_:"POST" base "/api/v1/homeostasis/review" in require(status=405)"manual mutation accepted";
+ require(identity(get "/api/v1/runtime/identity" 200)revision=run_id)"manual instance changed during smoke";
+ emit "manual-smoke" "PASS"["candidate",`String revision;"run_id",`String run_id;"transport",`String "Tailnet DNS; no loopback resolver override";"routes",`Int 16]
 let smoke base rev =
  require(hex 40 rev) "invalid expected revision";
  let before=identity(fetch base "/api/v1/runtime/identity")rev in
@@ -255,16 +291,16 @@ let unit source =
  ignore(checked "/usr/bin/cp" ["-R";"--";source^"/apps/indrajaal_gleam_web/src/.";tmp^"/src/"]);
  let toml=read_file(source^"/apps/cepaf_gleam/gleam.toml")65536 in
  write_new(tmp^"/gleam.toml")(String.split_on_char '\n' toml|>List.filter((<>)"[dev-dependencies]")|>String.concat "\n");
- let names=["homeostasis_algebra";"homeostasis_ui_contract";"homeostasis_evidence";"agui_sse_api";"homeostasis_evolution_engine";"homeostasis_evolution_hud";"homeostasis_fprime_simulated";"homeostasis_fprime_wired";"physiological_homeostasis";"sysadmin_tui";"release_lifecycle"] in
+ let names=["homeostasis_algebra";"homeostasis_ui_contract";"homeostasis_evidence";"agui_sse_api";"homeostasis_evolution_engine";"homeostasis_evolution_hud";"homeostasis_fprime_simulated";"homeostasis_fprime_wired";"physiological_homeostasis";"sysadmin_tui";"release_lifecycle";"module_guard";"module_guard_substring_weakness";"module_guard_contract"] in
  List.iter(fun n->copy(source^"/apps/cepaf_gleam/test/"^n^"_test.gleam")(tmp^"/src/"^n^"_test.gleam"))names;
  List.iter(fun n->copy(source^"/apps/indrajaal_gleam_web/test/"^n^".gleam")(tmp^"/src/"^n^".gleam"))
- ["runtime_identity_test";"homeostasis_transport_test";"homeostasis_http_probe"];
+ ["runtime_identity_test";"homeostasis_transport_test";"homeostasis_http_probe";"manual_test_test"];
  let lib=canonical^"/apps/cepaf_gleam/build/dev/erlang" in
  let built=run ~seconds:90. "/home/an/.nix-profile/bin/gleam" ["compile-package";"--target";"erlang";"--package";tmp;"--out";tmp^"/compiled";"--lib";lib] in
  write_new(tmp^"/build.log")built.output;require(built.code=0)("unit build failed: "^tmp^"/build.log");
  let paths=Sys.readdir lib|>Array.to_list|>List.filter_map(fun d->let p=lib^"/"^d^"/ebin" in if Sys.file_exists p then Some p else None) in
  let args=["-noshell";"-pa"]@paths@["-pa";tmp^"/compiled/ebin";"-eval"] in
- let expr="case eunit:test(["^String.concat ","(List.map(fun n->n^"_test")names@["runtime_identity_test";"homeostasis_transport_test"])^"],[verbose]) of ok->halt(0);error->halt(1) end." in
+ let expr="case eunit:test(["^String.concat ","(List.map(fun n->n^"_test")names@["runtime_identity_test";"homeostasis_transport_test";"manual_test_test"])^"],[verbose]) of ok->halt(0);error->halt(1) end." in
  let tested=run ~seconds:60. (otp^"/erl")(args@[expr]) in write_new(tmp^"/unit.log")tested.output;
  require(tested.code=0)("unit failure: "^tmp^"/unit.log");
  let gleam=checked(otp^"/erl")(args@["release_lifecycle_test:print_model_table(),halt()."]) in
@@ -275,10 +311,11 @@ let unit source =
  write_new(tmp^"/differential.txt")gleam;
  emit "unit-and-differential" "PASS" ["evidence",`String tmp;"transition_cases",`Int 338;
  "unit_output",`String(String.sub tested.output (max 0(String.length tested.output-100))(min 100(String.length tested.output)))]
-let browser source release p =
+let browser ?(manual=false) source release p =
  require(port p>=49152) "browser checks require a private high port";
  let rev=verify_release release and tmp=temp "uos-release-browser-" in
- let base="http://nas-1.tail55d152.ts.net:"^p in smoke base rev;
+ let base="http://nas-1.tail55d152.ts.net:"^p in
+ let check = if manual then smoke_manual else smoke in check base rev;
  copy(source^"/tools/validation/homeostasis_browser_check.ml")(tmp^"/browser_check.ml");
  let toolchain=Option.value(Sys.getenv_opt "UOS_RELEASE_TOOLCHAIN")
   ~default:(canonical^"/var/releases/indrajaal-web/toolchain-20260908-0551") |> realpath in
@@ -290,11 +327,27 @@ let browser source release p =
    "-cclib";"-Wl,-rpath,"^toolchain^"/lib";"-linkpkg";"-package";"playwright,eio_main,yojson";
    "-o";tmp^"/browser-check";tmp^"/browser_check.ml"]);
  let r=run ~seconds:90. (tmp^"/browser-check")
-  [base^"/homeostasis/evolution";tmp;"/opt/google/chrome/chrome";"--full-release"] in
+  [base^"/homeostasis/evolution";tmp;"/opt/google/chrome/chrome";if manual then "--manual-test" else "--full-release"] in
  write_new(tmp^"/browser.log")r.output;
- require(r.code=0)("browser failed: "^tmp^"/browser.log");smoke base rev;
+ require(r.code=0)("browser failed: "^tmp^"/browser.log");check base rev;
  let checks=String.split_on_char '\n' r.output|>List.filter(String.starts_with ~prefix:"PASS: ")|>List.length in
  emit "browser" "PASS" ["checks",`Int checks;"evidence",`String tmp;"candidate",`String rev;"toolchain",`String toolchain]
+let compile_capture source =
+ let tmp=temp "uos-browser-capture-"in
+ let toolchain=canonical^"/var/releases/indrajaal-web/toolchain-20260908-0551"|>realpath in
+ require(String.starts_with ~prefix:"/nix/store/"toolchain)"realized Nix toolchain required";
+ copy(source^"/tools/validation/release_browser_capture.ml")(tmp^"/capture.ml");
+ ignore(checked ~seconds:60. "/home/an/dev/ver/zigvm/_opam/bin/ocamlfind"
+ ["ocamlopt";"-cc";toolchain^"/bin/cc";"-ccopt";"-L"^toolchain^"/lib";"-cclib";"-Wl,-rpath,"^toolchain^"/lib";"-linkpkg";"-package";"playwright,eio_main,yojson,mtime.clock.os";"-o";tmp^"/capture";tmp^"/capture.ml"]);tmp
+let capture source release p =
+ require(port p>=49152) "capture requires private port";
+ let revision=verify_release release in
+ let base="http://nas-1.tail55d152.ts.net:"^p in smoke base revision;
+ let tmp=compile_capture source in
+ let r=run ~seconds:120. (tmp^"/capture")[base;tmp^"/recordings";"/opt/google/chrome/chrome"]in
+ write_new(tmp^"/capture.log")r.output;require(r.code=0)("capture failed: "^tmp^"/capture.log");
+ smoke base revision;emit "capture" "PASS"["candidate",`String revision;"evidence",`String(tmp^"/recordings");"routes",`Int 8]
+
 let package_faults release =
  ignore(verify_release release);
  let tmp=temp "uos-package-faults-" in
@@ -342,7 +395,10 @@ let parity source release base =
  emit "frontend-parity" "PASS" ["cases",`Int !n;"evidence",`String tmp;
  "scope",`String "exact exit/stdout parity for listed cases; dynamic VM values and mutation targets have separate probes"]
 let main()=match Array.to_list Sys.argv with
+ | [_;"browser-manual";source;release;p]->browser ~manual:true source release p
+ | [_;"smoke-manual";base;rev]->smoke_manual base rev
  | [_;"browser";source;release;p]->browser source release p
+ | [_;"capture";source;release;p]->capture source release p
  | [_;"parity";source;release;base]->parity source release base
  | [_;"model-selftest"]->ignore(model_table());emit "model-selftest" "PASS" ["checks",`Int 338]
  | [_;"package-faults";release]->package_faults release
@@ -351,10 +407,17 @@ let main()=match Array.to_list Sys.argv with
  | [_;"selftest"]->selftest()
  | [_;"runtime-check";source]->runtime_check source
  | [_;"build";dest]->build dest
+ | [_;"capture-build";source]->emit "capture-build" "PASS"["evidence",`String(compile_capture source)]
+ | [_;"compat";source;mode]->
+   print_string(checked ~seconds:240. "/home/an/dev/ver/zigvm/_opam/bin/ocaml"
+    ["-I";source^"/tools";source^"/tools/homeostasis_compat_check.ml";source;mode])
+ | [_;"guard";source]->
+   print_string(checked ~seconds:120. "/home/an/dev/ver/zigvm/_opam/bin/ocaml"
+    ["-I";source^"/tools";source^"/tools/output_guard_check.ml";source])
  | [_;"verify";dest]->let rev=verify_release dest in emit "package" "PASS" ["candidate",`String rev]
  | [_;"smoke";base;rev]->smoke base rev
  | [_;"packet";p;rev]->packet p rev
- | _::("web"|"tui" as kind)::release::rest->launch kind release rest
+ | _::("web"|"manual-web"|"tui" as kind)::release::rest->launch kind release rest
  | _->failwith "usage: selftest | runtime-check SOURCE | unit SOURCE | browser SOURCE RELEASE PRIVATE_PORT | build DEST | verify RELEASE | web RELEASE PORT TAILSCALE_FQDN | tui RELEASE MODE SCENARIO CYCLE | smoke TAILSCALE_BASE REVISION | packet JSON REVISION | parity SOURCE RELEASE TAILSCALE_BASE"
 let ()=
  if Filename.basename Sys.argv.(0) = "release_process.ml" then (
