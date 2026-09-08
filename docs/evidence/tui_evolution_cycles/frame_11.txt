@@ -1,44 +1,44 @@
 ================================================================================================
-  UOS MISSION CONTROL — CYBERNETIC HOMEOSTASIS & EVOLUTION TUI (CYCLE 11/15)
+  UOS MISSION CONTROL — CYBERNETIC HOMEOSTASIS & EVOLUTION TUI (FRAME 11/30 | 11s)
   Tailscale FQDN: http://nas-1.tail55d152.ts.net:4100/  |  Peer: vm-1:8088  |  OTP 29 BEAM
 ================================================================================================
 
-  [PHASE] AUTONOMOUS EVOLUTION ACTIVE [Gen 11: mut-11-prajna-breaker]
-  Generation:        11 / 15  (Cumulative Ratified Mutations: 11)
-  Active Mutation:   Prajna 2oo3 Constitutional Fast-Trip Interlock (+15.5% throughput, risk=0.01)
-  Architecture Spec: Immediate fail-closed circuit breaker isolating degrading actors
+  [PHASE A] CANDIDATE MUTATION PROPOSAL & PERTURBATION EVALUATION [Gen 06]
+  Generation:        06 / 15  (Continuous 30s Capture @ t=10s)
+  Candidate Mut:     Zenoh ZMOF Zero-Copy Backplane Transport (Target Gain: +28.2%, Param Risk: 0.02)
+  Architecture Spec: High-throughput pub/sub telemetry multiplexing with zero Muda
 
   Convergence PID & Lyapunov State:
-    State:       STABLE (Equilibrium Locked)
-    Health:      0.9984  |  Error e(t):  0.0016  |  Control u(t): -0.0008
-    Lyapunov V:  0.00000128 (dV/dt <= 0 Asymptotically Stable)
+    State:       EVALUATING (Step Perturbation Injected delta=+0.024)
+    Health:      0.9840  |  Error e(t):  +0.0160  |  Control u(t): -0.0085
+    Lyapunov V:  0.00000845 (dV/dt = -0.000142 <= 0 Stabilizing Derivative Verified)
 
-  Biomorphic Physiological Homeostasis (4-Factor Envelope):
-    Composite Stress: 0.28  |  Trend: STABLE  |  Status: NOMINAL (<=0.40 Optimal)
-    * CPU Utilization : 42.5% [Set: 60%] -> Stress: OPTIMAL
-    * Memory Usage    : 48.2% [Set: 70%] -> Stress: OPTIMAL
-    * Network Latency : 41.8ms [Set: 100ms] -> Stress: OPTIMAL
-    * Error Rate      : 0.012% [Set: 0.5%] -> Stress: OPTIMAL
+  Biomorphic Physiological Homeostasis (4-Factor Dynamic Envelope):
+    Composite Stress: 0.34  |  Trend: CONVERGING  |  Status: EVALUATING (Threshold <=0.40)
+    * CPU Utilization : 56.4% [Set: 60%] -> Stress: EVALUATING DYNAMICS
+    * Memory Usage    : 52.8% [Set: 70%] -> Stress: OPTIMAL
+    * Network Latency : 64.2ms [Set: 100ms] -> Stress: OPTIMAL
+    * Error Rate      : 0.038% [Set: 0.5%] -> Stress: NOMINAL
 
   Multi-Objective Evolutionary Pareto Landscape:
-    * mut-09-solo5-cas (Fitness: 0.9220, Gain: +30.5%) [Dominated]
-    * mut-10-max-mojo-vec (Fitness: 0.9310, Gain: +26.0%) [Dominated]
-    * mut-11-prajna-breaker (Fitness: 0.9400, Gain: +15.5%) [NON-DOMINATED PARETO FRONT]
+    * mut-04-crdt-delta-sync (Fitness: 0.8770, Gain: +16.8%) [Dominated]
+    * mut-05-lyapunov-pid (Fitness: 0.8860, Gain: +20.4%) [Dominated]
+    * mut-06-zenoh-zmof (Fitness: 0.8950, Gain: +28.2%) [EVALUATING CANDIDATE FRONTIER]
 
-  4-Party Sovereign Quorum Consensus (3-of-4 Supermajority Ratification):
-    AGY Sovereign        : [APPROVED] Lean 4 formal invariants verified (sig-agy)
-    Claude Sovereign     : [APPROVED] Monorepo architecture and coordinator clean (sig-claude)
-    Codex Sovereign      : [APPROVED] Solo5 sandbox boundary and CAS proof verified (sig-codex)
-    OpenRouter Sovereign : [APPROVED] Multi-objective Pareto frontier non-dominated (sig-or)
-    Quorum Tally: 4/4 Unanimous Ratification -> DEPLOYMENT COMMITTED
+  4-Party Sovereign Quorum Consensus (3-of-4 Supermajority Evaluation):
+    AGY Sovereign        : [EVALUATING] Lean 4 Gospel contract theorem check running...
+    Claude Sovereign     : [APPROVED] Monorepo architecture & workspace isolation clean
+    Codex Sovereign      : [EVALUATING] Solo5 linear CAS allocation boundary test running...
+    OpenRouter Sovereign : [APPROVED] Multi-objective Pareto frontier non-dominance valid
+    Quorum Tally: 2/4 Approvals (Consensus Pending Threshold >= 3/4)
 
   5-Agent Sovereign Workspace & Artifact Allocation Matrix (Herdr Mesh):
     ● uos · 1 (agy)        | Master Single File Spec & Journal (20260908-0113-...md) | ACTIVE
     ● uos · 2 (claude)     | Lustre Web HUD & W3C SSE Generator (agui_sse_api.gleam) | ACTIVE
-    ○ uos · 3 (codex)      | Wisp Router & NASA JPL F Prime Engine                   | STANDBY
+    ○ uos · 3 (codex)      | Wisp Router & NASA JPL F Prime Engine                   | ACTIVE
     ○ uos · 4 (codex)      | SSE & HUD Comprehensive Test Suites                     | STANDBY
     ○ uos · 5 (openrouter) | Evolution Engine, Pareto & Sa-Plan Authority            | ACTIVE
 
 ------------------------------------------------------------------------------------------------
-  [ACTIONS]: (1-9/h/m/e) Tabs  (n/p) Cycle Tab  (s) Stabilize  (q) Quit  |  STATUS: NOMINAL
+  [ACTIONS]: (1-9/h/m/e) Tabs  (n/p) Cycle Tab  (s) Stabilize  (q) Quit  |  TIME: 11s/30s
 ================================================================================================
