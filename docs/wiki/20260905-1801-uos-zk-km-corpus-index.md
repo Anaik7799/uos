@@ -119,7 +119,7 @@ The operational system coordinates across five distinct language tiers:
 ## §4.0 Bi-Directional Transclusion Registry
 
 - Permanent MOC: `[[zk:20260905-1801-moc-uos-unified-master]]`
-- ADR Directory (93 records, `ADR-001`..`ADR-093`, enumerated from `docs/zk/` on 2026-09-08).
+- ADR Directory (94 records, `ADR-001`..`ADR-094`, enumerated from `docs/zk/` on 2026-09-08).
   Sixteen records marked **NOT_ADMITTED** assert ratification of `EV-94`..`EV-109`,
   which the [`AGENTS.md`](http://nas-1.tail55d152.ts.net:4100/files/AGENTS.md) provenance caveat
   places in the quarantined evidence range; see
@@ -218,6 +218,7 @@ The operational system coordinates across five distinct language tiers:
   - `[[zk:20260908-1630-adr-091-pure-gleam-mojo-intent-atlas-web-tui-testing]]` [ADR-091](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-1630-adr-091-pure-gleam-mojo-intent-atlas-web-tui-testing.md) 20-Cycle Pure Gleam & Mojo Intent Atlas and Multi-Surface TUI/WebGUI Testing Ratification
   - `[[zk:20260908-1715-adr-092-constitutional-invariants-expansion-and-km-triad]]` [ADR-092](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-1715-adr-092-constitutional-invariants-expansion-and-km-triad.md) 15-Cycle Constitutional Invariants Expansion, Hive Mind Decider & KM Triad Synthesis
   - `[[zk:20260908-1850-adr-093-super-agent-holon-ecology-and-11-capability-substrate]]` [ADR-093](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-1850-adr-093-super-agent-holon-ecology-and-11-capability-substrate.md) Super-Agent Holon Ecology, 11-Capability Substrate & Selective Activation Architecture
+  - `[[zk:20260908-1915-adr-094-living-swarm-ecology-and-cybernetic-singing-engine]]` [ADR-094](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-1915-adr-094-living-swarm-ecology-and-cybernetic-singing-engine.md) Living 21-Holon Swarm Ecology, 11-Capability Substrate & Cybernetic Singing Harmony Engine
 - Formal Proofs:
   - `[[zk:TwoLattice_STM]]` (`formal/lean/TwoLattice_STM.lean`)
   - `[[zk:Traceability]]` (`formal/lean/Traceability.lean`)
