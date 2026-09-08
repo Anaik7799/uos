@@ -19,7 +19,7 @@ reassess changed evidence, and journal results and residual risk. See the SOP's 
 Superpowers, agent and plugin bindings. Existing completion/admission controls still apply.
 The current selection API stores advisory evidence; it does not implement this scheduling policy.
 
-+## 1. The 5-Tier Fractal Lifecycle
+## 1. The 5-Tier Fractal Lifecycle
 
 Every software evolution and operational cycle within UOS must execute within one of the 5 fractal OODA loops:
 
@@ -112,3 +112,4 @@ The 5 pillars of TPS govern all software engineering and operational loops acros
 3. **Muda Elimination (Waste Reduction)**: Zero duplicate planning registries, shadow task queues, or dead code across the repository (`SC-MUDA-001`).
 4. **Standardized Work**: Typed CLI and API schemas for Plan, Task, Oban Job, and Temporal Workflow guaranteeing deterministic reproducibility.
 5. **Heijunka (Production Leveling)**: Leveled pull queues with monotonic leases (`claim WORKER PLAN LEASE_NS TASK_ID`), preventing task starvation, thundering herds, and resource contention.
+
