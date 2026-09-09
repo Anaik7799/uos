@@ -1,0 +1,71 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "ev-rag-freshness-followup-20260909-0718",
+    "plan_id": "uos/ev-rag-freshness/20260909",
+    "task_id": "REPAIR",
+    "actor": "codex-ev-rag-freshness",
+    "fractal_layer": 5,
+    "phase": "implementation",
+    "scope": "Bounded pure-Gleam follow-up for independently observed RAG cache time-ordering, content-versus-embedding freshness, semantic vector dimension agreement, and finite arithmetic input refusal. The scope remains the cache model, focused tests, and focused runner. It excludes actual retrieval, model inference, persistence, network, deployment, admission, and claims of durable refresh.",
+    "task_state": "executing",
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": [],
+    "class": "P1",
+    "observed_at": "2026-09-09T05:18:00Z",
+    "ready_since": "2026-09-09T05:18:00Z",
+    "valid_until": "2026-09-09T06:18:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "cfd3afba7d50fe474ae56b3c45f9853d204d22c9; descendant of reviewed candidate 12b978fd0a140b36f9ca22d2489e3069b2b4851f and immutable base 337f99137673d7866b958a38bd490fb876b2880f",
+      "evidence": [
+        {"path": ".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam", "sha256": "41410d4871b00a58f2e93f69cd4daa51f75000d79d1a06f9e9a755d98ea31f72", "observed_at": "2026-09-09T05:17:00Z"},
+        {"path": ".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/test/rag_cache_mesh_test.gleam", "sha256": "c14458a77766f64d9378a742c4d41a882cba5730781174ec6287a3ab61b68b2b", "observed_at": "2026-09-09T05:17:00Z"},
+        {"path": ".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/test/ev_rag_freshness_runner.gleam", "sha256": "3f05eac42b6b213e1caef2b7dda92f29f31549a692ce5fe27c8701cde9112360", "observed_at": "2026-09-09T05:17:00Z"}
+      ]
+    },
+    "factors": {
+      "criticality": {"rationale": "The cache could represent content as fresh before it was observed or after its content lifetime ended.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam"]},
+      "stpa": {"rationale": "Unsafe controls include accepting future observations, allowing an embedding update to acknowledge content freshness, comparing incompatible vectors, and letting extreme values reach arithmetic.", "value": 5, "low": 5, "high": 5, "evidence_refs": [".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/test/rag_cache_mesh_test.gleam"]},
+      "fmea": {"rationale": "FM-RAG-TIME, FM-RAG-IDENTITY, and FM-RAG-NUMERIC are S5 O2 Det3, RPN30 each.", "value": 5, "low": 5, "high": 5, "evidence_refs": [".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/test/ev_rag_freshness_runner.gleam"]},
+      "dependency": {"rationale": "This repairs independently observed counterexamples against the prior candidate; no external component is needed to exercise the pure model.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/test/rag_cache_mesh_test.gleam"]},
+      "impact": {"rationale": "Typed stale, missing, and refused outcomes prevent this model from representing unsafe data as an acceptable semantic hit.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam"]}
+    },
+    "score": 1600,
+    "score_interval": [1600, 1600],
+    "fmea_modes": [
+      {"id": "FM-RAG-TIME", "s": 5, "o": 2, "det": 3, "rpn": 30, "band": 5, "cause": "Content and embedding observation times were conflated and future observations were not refused at lookup.", "effect": "The cache can return content as fresh outside its observed lifetime.", "controls": "Content TTL is evaluated from content observation, requires now at or after observation, and embedding has its own observation time."},
+      {"id": "FM-RAG-IDENTITY", "s": 5, "o": 2, "det": 3, "rpn": 30, "band": 5, "cause": "Semantic comparison zipped vectors without proving equal dimensions.", "effect": "A partial vector can be treated as a complete semantic match.", "controls": "Semantic candidates require exact dimension equality before similarity."},
+      {"id": "FM-RAG-NUMERIC", "s": 5, "o": 2, "det": 3, "rpn": 30, "band": 5, "cause": "Extreme float input could reach dot-product and norm arithmetic.", "effect": "A BEAM Badarith exception replaces a typed cache boundary result.", "controls": "Validation refuses empty, oversized, or out-of-range embedding values before state or arithmetic."}
+    ],
+    "stpa_analysis": {
+      "controller": "Pure RAG cache mesh",
+      "control_action": "Insert, refresh, and look up cache entries",
+      "losses": ["L-STALE-ANSWER", "L-SEMANTIC-MISMATCH", "L-RUNTIME-ARITHMETIC-FAILURE"],
+      "hazards": ["H-FUTURE-CONTENT", "H-REFRESHED-CONTENT-CLAIM", "H-DIMENSION-MISMATCH", "H-UNBOUNDED-FLOAT"],
+      "ucas": [
+        {"type": "not_provided", "applicability": "applicable", "context": "Lookup does not reject content whose observation is later than now.", "hazard_ids": ["H-FUTURE-CONTENT"], "constraint": "Freshness requires observed_at_ts <= now_ts as well as unexpired TTL."},
+        {"type": "provided_unsafe", "applicability": "applicable", "context": "Refresh changes embedding and makes unchanged content appear newly observed.", "hazard_ids": ["H-REFRESHED-CONTENT-CLAIM"], "constraint": "Content and embedding observations remain separate; embedding refresh does not extend content TTL."},
+        {"type": "wrong_timing", "applicability": "applicable", "context": "An older embedding refresh replaces a later embedding observation.", "hazard_ids": ["H-FUTURE-CONTENT"], "constraint": "Refresh is monotonic for embedding_observed_at_ts."},
+        {"type": "duration", "applicability": "applicable", "context": "Unbounded vector values are retained or evaluated.", "hazard_ids": ["H-UNBOUNDED-FLOAT", "H-DIMENSION-MISMATCH"], "constraint": "Vectors have finite magnitude bounds and matching dimensions before semantic arithmetic."}
+      ]
+    },
+    "decision": {
+      "summary": "Preserve content identity and lifetime while treating embedding metadata as a separate, monotonic observation; refuse unsafe semantic inputs before arithmetic.",
+      "alternatives": ["Keep one timestamp for content and embeddings", "Use separately typed observation times and bounded input validation"],
+      "assumptions": ["This is a pure in-memory model; timestamps are caller-provided integers and have no clock synchronisation claim."],
+      "confidence": "analyst_estimate",
+      "counterevidence": ["The prior candidate passed 11 focused checks yet failed five independently generated adverse probes."],
+      "forecast": "All five reviewed counterexamples yield stale, unchanged, missing, or refused typed results without runtime arithmetic failure.",
+      "falsifier": "A pre-observation lookup returns Fresh, stale content becomes fresh after embedding-only refresh, unequal dimensions match, or extreme input raises an arithmetic error.",
+      "acceptance": ["Focused native Gleam/OTP runner exercises each reviewed adverse scenario", "Exact final source hashes are recorded", "Native active check passes for executing REPAIR attempt 1"],
+      "rollback": "Preserve all immutable candidates and do not integrate, deploy, complete, or admit.",
+      "budget": "Existing realized Gleam 1.16.0 and OTP 29 toolchains only; no downloads.",
+      "reviewer": "Parent coordinator and independent reviewer.",
+      "residuals": ["No actual retrieval, embedding generation, inference, persistence, network, or formal proof is exercised."],
+      "supersedes": "20260909-0450 initial risk assessment for reviewed candidate 12b978."
+    }
+  }
+]

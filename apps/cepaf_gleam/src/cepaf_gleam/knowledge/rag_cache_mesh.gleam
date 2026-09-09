@@ -22,6 +22,22 @@ import gleam/int
 import gleam/list
 import gleam/string
 
+pub const max_cache_capacity = 1024
+
+pub const max_embedding_dimensions = 1024
+
+pub const max_query_characters = 8192
+
+pub const max_response_characters = 65_536
+
+pub const max_retrieved_chunks = 32
+
+pub const max_chunk_characters = 8192
+
+pub const max_token_count = 1_000_000
+
+pub const max_ttl_seconds = 86_400
+
 /// A cached semantic vector entry for RAG and LLM completions.
 pub type CacheEntry {
   CacheEntry(
@@ -34,9 +50,32 @@ pub type CacheEntry {
     cost_saved_usd: Float,
     hit_count: Int,
     created_at_ts: Int,
+    observed_at_ts: Int,
+    embedding_observed_at_ts: Int,
     last_accessed_ts: Int,
     ttl_seconds: Int,
   )
+}
+
+/// Explicit lookup outcome; no outcome implies external retrieval or model work.
+pub type CacheLookup {
+  CacheFresh(CacheEntry, Float)
+  CacheStale(CacheEntry)
+  CacheMissing
+  CacheRefused(CacheInputError)
+}
+
+/// Input refusal is pure and leaves the cache state unchanged.
+pub type CacheInputError {
+  InvalidIdentifier
+  InvalidQuery
+  InvalidResponsePayload
+  InvalidEmbedding
+  InvalidRetrievedChunks
+  InvalidTokenCount
+  InvalidObservationTime
+  InvalidTtl
+  EntryNotFound
 }
 
 /// Dynamic Semantic RAG Cache Mesh State.
@@ -70,9 +109,11 @@ pub type RagMetrics {
 pub fn new(max_capacity: Int, similarity_threshold: Float) -> RagCacheMesh {
   let bounded_cap = case max_capacity < 1 {
     True -> 100
-    False -> max_capacity
+    False -> int.min(max_capacity, max_cache_capacity)
   }
-  let bounded_thresh = case similarity_threshold <=. 0.0 || similarity_threshold >. 1.0 {
+  let bounded_thresh = case
+    similarity_threshold <=. 0.0 || similarity_threshold >. 1.0
+  {
     True -> 0.85
     False -> similarity_threshold
   }
@@ -97,14 +138,38 @@ pub fn dot_product(v1: List(Float), v2: List(Float)) -> Float {
   })
 }
 
-/// Euclidean L2 norm of a vector.
+fn absolute(value: Float) -> Float {
+  case value <. 0.0 {
+    True -> 0.0 -. value
+    False -> value
+  }
+}
+
+fn vector_scale(v: List(Float)) -> Float {
+  list.fold(v, 0.0, fn(largest, value) {
+    let magnitude = absolute(value)
+    case magnitude >. largest {
+      True -> magnitude
+      False -> largest
+    }
+  })
+}
+
+fn scale_vector(v: List(Float), scale: Float) -> List(Float) {
+  list.map(v, fn(value) { value /. scale })
+}
+
+/// Euclidean L2 norm of a vector, calculated after scale normalization.
+/// The Newton iteration sees a sum in [1, vector length], rather than the
+/// unbounded sum of squared source values.
 pub fn vector_norm(v: List(Float)) -> Float {
-  let sum_sq = list.fold(v, 0.0, fn(acc, x) { acc +. { x *. x } })
-  case sum_sq <=. 0.0 {
+  let scale = vector_scale(v)
+  case scale <=. 0.0 {
     True -> 0.0
     False -> {
-      // Newton-Raphson approximation for square root in pure Gleam
-      approx_sqrt(sum_sq, sum_sq /. 2.0, 10)
+      let normalized = scale_vector(v, scale)
+      let sum_sq = list.fold(normalized, 0.0, fn(acc, x) { acc +. { x *. x } })
+      scale *. approx_sqrt(sum_sq, 1.0, 12)
     }
   }
 }
@@ -121,30 +186,63 @@ fn approx_sqrt(val: Float, guess: Float, iters: Int) -> Float {
 
 /// Cosine similarity between two float vectors in [-1.0, 1.0].
 pub fn cosine_similarity(v1: List(Float), v2: List(Float)) -> Float {
-  let n1 = vector_norm(v1)
-  let n2 = vector_norm(v2)
-  case n1 <=. 0.000001 || n2 <=. 0.000001 {
-    True -> 0.0
-    False -> {
-      let dot = dot_product(v1, v2)
-      let sim = dot /. { n1 *. n2 }
-      case sim >. 1.0 {
-        True -> 1.0
-        False -> case sim <. -1.0 {
-          True -> -1.0
-          False -> sim
+  case list.length(v1) == list.length(v2) {
+    False -> 0.0
+    True -> {
+      let scale1 = vector_scale(v1)
+      let scale2 = vector_scale(v2)
+      case scale1 <=. 0.0 || scale2 <=. 0.0 {
+        True -> 0.0
+        False -> {
+          let normalized1 = scale_vector(v1, scale1)
+          let normalized2 = scale_vector(v2, scale2)
+          let n1 = vector_norm(normalized1)
+          let n2 = vector_norm(normalized2)
+          let sim = dot_product(normalized1, normalized2) /. { n1 *. n2 }
+          case sim >. 1.0 {
+            True -> 1.0
+            False ->
+              case sim <. -1.0 {
+                True -> -1.0
+                False -> sim
+              }
+          }
         }
       }
     }
   }
 }
 
-/// Exact match lookup by normalized query text.
-pub fn lookup_exact(mesh: RagCacheMesh, query: String) -> Result(CacheEntry, Nil) {
+/// Exact lookup at an explicit observation time.
+pub fn lookup_exact(
+  mesh: RagCacheMesh,
+  query: String,
+  now_ts: Int,
+) -> CacheLookup {
+  case validate_lookup(query, now_ts) {
+    Error(reason) -> CacheRefused(reason)
+    Ok(Nil) -> lookup_exact_validated(mesh, query, now_ts)
+  }
+}
+
+fn lookup_exact_validated(
+  mesh: RagCacheMesh,
+  query: String,
+  now_ts: Int,
+) -> CacheLookup {
   let norm_q = string.trim(string.lowercase(query))
-  list.find(mesh.entries, fn(e) {
-    string.trim(string.lowercase(e.query_text)) == norm_q
-  })
+  case
+    list.find(mesh.entries, fn(e) {
+      string.trim(string.lowercase(e.query_text)) == norm_q
+    })
+  {
+    Error(Nil) -> CacheMissing
+    Ok(entry) ->
+      case entry_is_fresh(entry, now_ts) {
+        True -> CacheFresh(entry, 1.0)
+        False -> CacheStale(entry)
+      }
+  }
 }
 
 /// Semantic match lookup by cosine similarity against vector embeddings.
@@ -153,32 +251,54 @@ pub fn lookup_semantic(
   mesh: RagCacheMesh,
   query: String,
   query_embedding: List(Float),
-) -> Result(#(CacheEntry, Float), Nil) {
+  now_ts: Int,
+) -> CacheLookup {
   // First attempt exact match
-  case lookup_exact(mesh, query) {
-    Ok(entry) -> Ok(#(entry, 1.0))
-    Error(Nil) -> {
-      // Evaluate cosine similarity across all entries
-      let candidates =
-        list.map(mesh.entries, fn(e) {
-          let sim = cosine_similarity(query_embedding, e.embedding)
-          #(e, sim)
-        })
-        |> list.filter(fn(pair) {
-          let #(_entry, sim) = pair
-          sim >=. mesh.similarity_threshold
-        })
-        |> list.sort(fn(a, b) {
-          let #(_ea, sim_a) = a
-          let #(_eb, sim_b) = b
-          float.compare(sim_b, sim_a)
-        })
-
-      case list.first(candidates) {
-        Ok(best) -> Ok(best)
-        Error(Nil) -> Error(Nil)
+  case lookup_exact(mesh, query, now_ts) {
+    CacheFresh(entry, score) -> CacheFresh(entry, score)
+    CacheStale(entry) -> CacheStale(entry)
+    CacheRefused(reason) -> CacheRefused(reason)
+    CacheMissing -> {
+      case validate_embedding(query_embedding) {
+        Error(reason) -> CacheRefused(reason)
+        Ok(Nil) -> lookup_semantic_validated(mesh, query_embedding, now_ts)
       }
     }
+  }
+}
+
+fn lookup_semantic_validated(
+  mesh: RagCacheMesh,
+  query_embedding: List(Float),
+  now_ts: Int,
+) -> CacheLookup {
+  // Evaluate cosine similarity across all entries
+  let candidates =
+    list.filter(mesh.entries, fn(e) {
+      entry_is_fresh(e, now_ts)
+      && e.embedding_observed_at_ts <= now_ts
+      && list.length(e.embedding) == list.length(query_embedding)
+    })
+    |> list.map(fn(e) {
+      let sim = cosine_similarity(query_embedding, e.embedding)
+      #(e, sim)
+    })
+    |> list.filter(fn(pair) {
+      let #(_entry, sim) = pair
+      sim >=. mesh.similarity_threshold
+    })
+    |> list.sort(fn(a, b) {
+      let #(_ea, sim_a) = a
+      let #(_eb, sim_b) = b
+      float.compare(sim_b, sim_a)
+    })
+
+  case list.first(candidates) {
+    Ok(best) -> {
+      let #(entry, score) = best
+      CacheFresh(entry, score)
+    }
+    Error(Nil) -> CacheMissing
   }
 }
 
@@ -207,7 +327,7 @@ pub fn record_hit(
 
   let hit_entry = list.find(mesh.entries, fn(e) { e.id == entry_id })
   let saved_tokens = case hit_entry {
-    Ok(e) -> e.token_count
+    Ok(e) -> int.max(0, e.token_count)
     Error(Nil) -> 0
   }
   let saved_usd = int.to_float(saved_tokens) *. 0.000002
@@ -238,6 +358,45 @@ pub fn put(
   now_ts: Int,
   ttl_seconds: Int,
 ) -> RagCacheMesh {
+  case
+    validate_cache_input(
+      id,
+      query_text,
+      embedding,
+      response_payload,
+      retrieved_chunks,
+      token_count,
+      now_ts,
+      ttl_seconds,
+    )
+  {
+    Error(_) -> mesh
+    Ok(Nil) ->
+      put_validated(
+        mesh,
+        id,
+        query_text,
+        embedding,
+        response_payload,
+        retrieved_chunks,
+        token_count,
+        now_ts,
+        ttl_seconds,
+      )
+  }
+}
+
+fn put_validated(
+  mesh: RagCacheMesh,
+  id: String,
+  query_text: String,
+  embedding: List(Float),
+  response_payload: String,
+  retrieved_chunks: List(String),
+  token_count: Int,
+  now_ts: Int,
+  ttl_seconds: Int,
+) -> RagCacheMesh {
   let entry =
     CacheEntry(
       id: id,
@@ -249,11 +408,10 @@ pub fn put(
       cost_saved_usd: 0.0,
       hit_count: 1,
       created_at_ts: now_ts,
+      observed_at_ts: now_ts,
+      embedding_observed_at_ts: now_ts,
       last_accessed_ts: now_ts,
-      ttl_seconds: case ttl_seconds <= 0 {
-        True -> 3600
-        False -> ttl_seconds
-      },
+      ttl_seconds: ttl_seconds,
     )
 
   // Remove previous entry with same id if any
@@ -277,10 +435,7 @@ pub fn put(
 /// Evict expired entries according to TTL and current timestamp.
 pub fn evict_expired(mesh: RagCacheMesh, now_ts: Int) -> RagCacheMesh {
   let active_entries =
-    list.filter(mesh.entries, fn(e) {
-      let expiry = e.created_at_ts + e.ttl_seconds
-      expiry > now_ts
-    })
+    list.filter(mesh.entries, fn(e) { entry_is_fresh(e, now_ts) })
   RagCacheMesh(..mesh, entries: active_entries)
 }
 
@@ -291,19 +446,133 @@ pub fn refresh_vector(
   new_embedding: List(Float),
   now_ts: Int,
 ) -> RagCacheMesh {
+  case validate_refresh_input(new_embedding, now_ts) {
+    Error(_) -> mesh
+    Ok(Nil) -> refresh_vector_validated(mesh, entry_id, new_embedding, now_ts)
+  }
+}
+
+fn refresh_vector_validated(
+  mesh: RagCacheMesh,
+  entry_id: String,
+  new_embedding: List(Float),
+  now_ts: Int,
+) -> RagCacheMesh {
   let updated_entries =
     list.map(mesh.entries, fn(e) {
       case e.id == entry_id {
         True ->
-          CacheEntry(
-            ..e,
-            embedding: new_embedding,
-            last_accessed_ts: now_ts,
-          )
+          case now_ts < e.embedding_observed_at_ts {
+            True -> e
+            False ->
+              CacheEntry(
+                ..e,
+                embedding: new_embedding,
+                embedding_observed_at_ts: now_ts,
+                last_accessed_ts: now_ts,
+              )
+          }
         False -> e
       }
     })
   RagCacheMesh(..mesh, entries: updated_entries)
+}
+
+fn entry_is_fresh(entry: CacheEntry, now_ts: Int) -> Bool {
+  now_ts >= entry.observed_at_ts
+  && entry.observed_at_ts + entry.ttl_seconds > now_ts
+}
+
+fn validate_lookup(query: String, now_ts: Int) -> Result(Nil, CacheInputError) {
+  case now_ts < 0 {
+    True -> Error(InvalidObservationTime)
+    False ->
+      case string.length(query) > max_query_characters {
+        True -> Error(InvalidQuery)
+        False -> Ok(Nil)
+      }
+  }
+}
+
+fn validate_embedding(embedding: List(Float)) -> Result(Nil, CacheInputError) {
+  case
+    embedding == []
+    || list.length(embedding) > max_embedding_dimensions
+    || !list.all(embedding, fn(value) {
+      value >=. -1.0e100 && value <=. 1.0e100
+    })
+  {
+    True -> Error(InvalidEmbedding)
+    False -> Ok(Nil)
+  }
+}
+
+fn validate_refresh_input(
+  embedding: List(Float),
+  now_ts: Int,
+) -> Result(Nil, CacheInputError) {
+  case validate_embedding(embedding) {
+    Error(reason) -> Error(reason)
+    Ok(Nil) ->
+      case now_ts < 0 {
+        True -> Error(InvalidObservationTime)
+        False -> Ok(Nil)
+      }
+  }
+}
+
+fn validate_cache_input(
+  id: String,
+  query_text: String,
+  embedding: List(Float),
+  response_payload: String,
+  retrieved_chunks: List(String),
+  token_count: Int,
+  now_ts: Int,
+  ttl_seconds: Int,
+) -> Result(Nil, CacheInputError) {
+  case string.trim(id) == "" {
+    True -> Error(InvalidIdentifier)
+    False ->
+      case
+        string.trim(query_text) == ""
+        || string.length(query_text) > max_query_characters
+      {
+        True -> Error(InvalidQuery)
+        False ->
+          case string.length(response_payload) > max_response_characters {
+            True -> Error(InvalidResponsePayload)
+            False ->
+              case validate_embedding(embedding) {
+                Error(reason) -> Error(reason)
+                Ok(Nil) ->
+                  case
+                    list.length(retrieved_chunks) > max_retrieved_chunks
+                    || !list.all(retrieved_chunks, fn(chunk) {
+                      string.length(chunk) <= max_chunk_characters
+                    })
+                  {
+                    True -> Error(InvalidRetrievedChunks)
+                    False ->
+                      case token_count < 0 || token_count > max_token_count {
+                        True -> Error(InvalidTokenCount)
+                        False ->
+                          case now_ts < 0 {
+                            True -> Error(InvalidObservationTime)
+                            False ->
+                              case
+                                ttl_seconds < 1 || ttl_seconds > max_ttl_seconds
+                              {
+                                True -> Error(InvalidTtl)
+                                False -> Ok(Nil)
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+      }
+  }
 }
 
 /// Compute the cache hit ratio [0.0, 1.0].

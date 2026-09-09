@@ -59,20 +59,37 @@ pub fn exact_and_semantic_lookup_test() {
     )
 
   // Exact lookup
-  let exact_res = rag_cache_mesh.lookup_exact(mesh, "what is zero-muda architecture? ")
-  should.be_true(exact_res != Error(Nil))
+  let exact_res =
+    rag_cache_mesh.lookup_exact(mesh, "what is zero-muda architecture? ", 1100)
+  case exact_res {
+    rag_cache_mesh.CacheFresh(_, 1.0) -> Nil
+    _ -> should.fail()
+  }
 
   // Semantic lookup with close vector
   let v_query_close = [0.79, 0.61, 0.0]
   let semantic_res =
-    rag_cache_mesh.lookup_semantic(mesh, "explain zero-muda design", v_query_close)
-  should.be_true(semantic_res != Error(Nil))
+    rag_cache_mesh.lookup_semantic(
+      mesh,
+      "explain zero-muda design",
+      v_query_close,
+      1100,
+    )
+  case semantic_res {
+    rag_cache_mesh.CacheFresh(_, _) -> Nil
+    _ -> should.fail()
+  }
 
   // Semantic lookup with distant vector should miss
   let v_query_distant = [0.0, 0.0, 1.0]
   let distant_res =
-    rag_cache_mesh.lookup_semantic(mesh, "unrelated cooking query", v_query_distant)
-  should.equal(distant_res, Error(Nil))
+    rag_cache_mesh.lookup_semantic(
+      mesh,
+      "unrelated cooking query",
+      v_query_distant,
+      1100,
+    )
+  distant_res |> should.equal(rag_cache_mesh.CacheMissing)
 }
 
 pub fn record_hit_and_miss_test() {
@@ -103,41 +120,11 @@ pub fn record_hit_and_miss_test() {
 pub fn lru_capacity_and_expiry_test() {
   let mesh = rag_cache_mesh.new(2, 0.85)
   let mesh =
-    rag_cache_mesh.put(
-      mesh,
-      "e1",
-      "q1",
-      [1.0, 0.0],
-      "r1",
-      [],
-      100,
-      1000,
-      100,
-    )
+    rag_cache_mesh.put(mesh, "e1", "q1", [1.0, 0.0], "r1", [], 100, 1000, 100)
   let mesh =
-    rag_cache_mesh.put(
-      mesh,
-      "e2",
-      "q2",
-      [0.0, 1.0],
-      "r2",
-      [],
-      200,
-      1100,
-      500,
-    )
+    rag_cache_mesh.put(mesh, "e2", "q2", [0.0, 1.0], "r2", [], 200, 1100, 500)
   let mesh =
-    rag_cache_mesh.put(
-      mesh,
-      "e3",
-      "q3",
-      [0.5, 0.5],
-      "r3",
-      [],
-      300,
-      1200,
-      500,
-    )
+    rag_cache_mesh.put(mesh, "e3", "q3", [0.5, 0.5], "r3", [], 300, 1200, 500)
 
   // Cap should be 2
   let metrics = rag_cache_mesh.to_summary_metrics(mesh)
@@ -170,14 +157,278 @@ pub fn vector_refresh_test() {
       3600,
     )
 
-  let mesh =
-    rag_cache_mesh.refresh_vector(mesh, "e-refresh", [0.0, 1.0], 1500)
-  let entry_res = rag_cache_mesh.lookup_exact(mesh, "Dynamic schema query")
+  let mesh = rag_cache_mesh.refresh_vector(mesh, "e-refresh", [0.0, 1.0], 1500)
+  let entry_res =
+    rag_cache_mesh.lookup_exact(mesh, "Dynamic schema query", 1500)
   case entry_res {
-    Ok(e) -> {
+    rag_cache_mesh.CacheFresh(e, _) -> {
       e.embedding |> should.equal([0.0, 1.0])
       e.last_accessed_ts |> should.equal(1500)
     }
-    Error(Nil) -> should.fail()
+    _ -> should.fail()
+  }
+}
+
+pub fn expired_lookup_is_not_returned_as_a_hit_test() {
+  let mesh = rag_cache_mesh.new(5, 0.85)
+  let mesh =
+    rag_cache_mesh.put(
+      mesh,
+      "expired",
+      "freshness query",
+      [1.0, 0.0],
+      "old response",
+      [],
+      10,
+      1000,
+      10,
+    )
+
+  rag_cache_mesh.lookup_exact(mesh, "freshness query", 1010)
+  |> should.equal(
+    rag_cache_mesh.CacheStale(rag_cache_mesh.CacheEntry(
+      "expired",
+      "freshness query",
+      [1.0, 0.0],
+      "old response",
+      [],
+      10,
+      0.0,
+      1,
+      1000,
+      1000,
+      1000,
+      1000,
+      10,
+    )),
+  )
+}
+
+pub fn put_refuses_negative_counts_and_oversize_vectors_test() {
+  let mesh = rag_cache_mesh.new(5, 0.85)
+  let negative =
+    rag_cache_mesh.put(
+      mesh,
+      "negative",
+      "negative token query",
+      [1.0],
+      "response",
+      [],
+      -1,
+      1000,
+      60,
+    )
+  list_length_helper(negative.entries) |> should.equal(0)
+
+  let oversize =
+    rag_cache_mesh.put(
+      mesh,
+      "oversize",
+      "oversize vector query",
+      repeated_vector(1025),
+      "response",
+      [],
+      1,
+      1000,
+      60,
+    )
+  list_length_helper(oversize.entries) |> should.equal(0)
+}
+
+pub fn refresh_updates_the_freshness_observation_test() {
+  let mesh = rag_cache_mesh.new(5, 0.85)
+  let mesh =
+    rag_cache_mesh.put(
+      mesh,
+      "refresh-ttl",
+      "refresh freshness query",
+      [1.0, 0.0],
+      "response",
+      [],
+      10,
+      1000,
+      100,
+    )
+  let refreshed =
+    rag_cache_mesh.refresh_vector(mesh, "refresh-ttl", [0.0, 1.0], 1200)
+
+  // Embedding refresh cannot make the unchanged cached response content fresh.
+  let active = rag_cache_mesh.evict_expired(refreshed, 1250)
+  list_length_helper(active.entries) |> should.equal(0)
+}
+
+pub fn refresh_refuses_an_empty_vector_test() {
+  let mesh = rag_cache_mesh.new(5, 0.85)
+  let mesh =
+    rag_cache_mesh.put(
+      mesh,
+      "refresh-invalid",
+      "refresh invalid query",
+      [1.0, 0.0],
+      "response",
+      [],
+      10,
+      1000,
+      60,
+    )
+  let refreshed =
+    rag_cache_mesh.refresh_vector(mesh, "refresh-invalid", [], 1100)
+  case rag_cache_mesh.lookup_exact(refreshed, "refresh invalid query", 1050) {
+    rag_cache_mesh.CacheFresh(entry, _) ->
+      entry.embedding |> should.equal([1.0, 0.0])
+    _ -> should.fail()
+  }
+}
+
+pub fn lookup_before_content_observation_is_stale_test() {
+  let mesh = rag_cache_mesh.new(5, 0.85)
+  let mesh =
+    rag_cache_mesh.put(
+      mesh,
+      "future-observation",
+      "future content query",
+      [1.0, 0.0],
+      "response observed at 1000",
+      [],
+      10,
+      1000,
+      100,
+    )
+
+  case rag_cache_mesh.lookup_exact(mesh, "future content query", 999) {
+    rag_cache_mesh.CacheStale(_) -> Nil
+    _ -> should.fail()
+  }
+}
+
+pub fn refresh_before_embedding_observation_preserves_embedding_test() {
+  let mesh = rag_cache_mesh.new(5, 0.85)
+  let mesh =
+    rag_cache_mesh.put(
+      mesh,
+      "ordered-refresh",
+      "ordered refresh query",
+      [1.0, 0.0],
+      "response",
+      [],
+      10,
+      1000,
+      100,
+    )
+  let refreshed =
+    rag_cache_mesh.refresh_vector(mesh, "ordered-refresh", [0.0, 1.0], 900)
+
+  case rag_cache_mesh.lookup_exact(refreshed, "ordered refresh query", 1000) {
+    rag_cache_mesh.CacheFresh(entry, _) -> {
+      entry.embedding |> should.equal([1.0, 0.0])
+      entry.embedding_observed_at_ts |> should.equal(1000)
+    }
+    _ -> should.fail()
+  }
+}
+
+pub fn semantic_lookup_requires_matching_dimensions_test() {
+  let mesh = rag_cache_mesh.new(5, 0.85)
+  let mesh =
+    rag_cache_mesh.put(
+      mesh,
+      "two-dimensional",
+      "cached semantic source",
+      [1.0, 0.0],
+      "response",
+      [],
+      10,
+      1000,
+      100,
+    )
+
+  rag_cache_mesh.lookup_semantic(mesh, "different query", [1.0], 1001)
+  |> should.equal(rag_cache_mesh.CacheMissing)
+}
+
+pub fn semantic_lookup_refuses_extreme_embedding_without_arithmetic_test() {
+  let mesh = rag_cache_mesh.new(5, 0.85)
+  let mesh =
+    rag_cache_mesh.put(
+      mesh,
+      "bounded-semantic",
+      "cached semantic source",
+      [1.0, 0.0],
+      "response",
+      [],
+      10,
+      1000,
+      100,
+    )
+
+  rag_cache_mesh.lookup_semantic(mesh, "different query", [1.0e200], 1001)
+  |> should.equal(rag_cache_mesh.CacheRefused(rag_cache_mesh.InvalidEmbedding))
+}
+
+pub fn accepted_embedding_boundary_has_stable_cosine_test() {
+  let mesh = rag_cache_mesh.new(5, 0.85)
+  let mesh =
+    rag_cache_mesh.put(
+      mesh,
+      "accepted-boundary",
+      "cached semantic source",
+      [1.0e100],
+      "response",
+      [],
+      10,
+      1000,
+      100,
+    )
+
+  case
+    rag_cache_mesh.lookup_semantic(mesh, "different query", [1.0e100], 1050)
+  {
+    rag_cache_mesh.CacheFresh(_, score) -> should.be_true(score >=. 0.99)
+    _ -> should.fail()
+  }
+}
+
+pub fn tiny_nonzero_vectors_preserve_analytic_similarity_test() {
+  let similarity =
+    rag_cache_mesh.cosine_similarity([3.0e-100, 4.0e-100], [4.0e-100, 3.0e-100])
+  should.be_true(similarity >=. 0.959 && similarity <=. 0.961)
+}
+
+pub fn tiny_accepted_embedding_can_semantically_match_test() {
+  let mesh = rag_cache_mesh.new(5, 0.85)
+  let mesh =
+    rag_cache_mesh.put(
+      mesh,
+      "tiny-accepted",
+      "cached tiny source",
+      [1.0e-100],
+      "response",
+      [],
+      10,
+      1000,
+      100,
+    )
+
+  case
+    rag_cache_mesh.lookup_semantic(mesh, "different query", [1.0e-100], 1050)
+  {
+    rag_cache_mesh.CacheFresh(_, score) -> should.be_true(score >=. 0.99)
+    _ -> should.fail()
+  }
+}
+
+pub fn subnormal_identity_and_zero_vector_controls_test() {
+  let subnormal_similarity =
+    rag_cache_mesh.cosine_similarity([1.0e-320], [1.0e-320])
+  should.be_true(subnormal_similarity >=. 0.99)
+
+  rag_cache_mesh.cosine_similarity([0.0, 0.0], [1.0, 0.0])
+  |> should.equal(0.0)
+}
+
+fn repeated_vector(remaining: Int) -> List(Float) {
+  case remaining <= 0 {
+    True -> []
+    False -> [1.0, ..repeated_vector(remaining - 1)]
   }
 }
