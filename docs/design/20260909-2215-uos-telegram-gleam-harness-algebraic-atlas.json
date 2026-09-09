@@ -1,0 +1,2772 @@
+{
+  "schema_version": 1,
+  "status": "ADMITTED",
+  "specification_path": "docs/design/20260909-2215-uos-telegram-gleam-harness-denotational-spec-and-design.md",
+  "authority": "operator_instruction",
+  "transports": [
+    "zenoh",
+    "in_process",
+    "edge_transport"
+  ],
+  "control_language": "gleam",
+  "runtime": "otp",
+  "bounded_domain_fields": [
+    "effect.class",
+    "transports[0]"
+  ],
+  "capabilities": [
+    {
+      "id": "telegram.ingress.raw_update",
+      "denotation": {
+        "input": "RawTelegramUpdate",
+        "output": "Result(RawUpdateRecord, IngressError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of telegram.ingress.raw_update. Evaluated over typed domain RawTelegramUpdate.",
+            "falsifier": "Test trace where composite telegram.ingress.raw_update invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_telegram_ingress_raw_update_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "telegram.ingress.raw_update commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of telegram.ingress.raw_update with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_telegram_ingress_raw_update_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of telegram.ingress.raw_update refines declared relation RawTelegramUpdate -> Result(RawUpdateRecord, IngressError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(RawUpdateRecord, IngressError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for telegram.ingress.raw_update obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to telegram.ingress.raw_update granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_telegram_ingress_raw_update_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for telegram.ingress.raw_update is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with telegram.ingress.raw_update preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "telegram.ingress.raw_update is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "telegram.ingress.raw_update maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "telegram.ingress.raw_update obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "telegram.ingress.raw_update exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_telegram_ingress_raw_update_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read"
+      },
+      "transports": [
+        "edge_transport"
+      ],
+      "description": "Raw Telegram Update Ingress from HTTPS webhook or long-poll"
+    },
+    {
+      "id": "telegram.ingress.envelope_decode",
+      "denotation": {
+        "input": "RawUpdateRecord",
+        "output": "Result(IntentEnvelope, DecodeError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of telegram.ingress.envelope_decode. Evaluated over typed domain RawUpdateRecord.",
+            "falsifier": "Test trace where composite telegram.ingress.envelope_decode invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_telegram_ingress_envelope_decode_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "telegram.ingress.envelope_decode commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of telegram.ingress.envelope_decode with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_telegram_ingress_envelope_decode_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of telegram.ingress.envelope_decode refines declared relation RawUpdateRecord -> Result(IntentEnvelope, DecodeError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(IntentEnvelope, DecodeError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for telegram.ingress.envelope_decode obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to telegram.ingress.envelope_decode granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_telegram_ingress_envelope_decode_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for telegram.ingress.envelope_decode is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with telegram.ingress.envelope_decode preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "telegram.ingress.envelope_decode is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "telegram.ingress.envelope_decode maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "telegram.ingress.envelope_decode obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "telegram.ingress.envelope_decode exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_telegram_ingress_envelope_decode_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "compute"
+      },
+      "transports": [
+        "edge_transport"
+      ],
+      "description": "Envelope Decoding & Signature Verification with HMAC-SHA256"
+    },
+    {
+      "id": "telegram.ingress.deduplication",
+      "denotation": {
+        "input": "IntentEnvelope",
+        "output": "Result(IntentEnvelope, DuplicateError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of telegram.ingress.deduplication. Evaluated over typed domain IntentEnvelope.",
+            "falsifier": "Test trace where composite telegram.ingress.deduplication invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_telegram_ingress_deduplication_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "telegram.ingress.deduplication commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of telegram.ingress.deduplication with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_telegram_ingress_deduplication_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of telegram.ingress.deduplication refines declared relation IntentEnvelope -> Result(IntentEnvelope, DuplicateError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(IntentEnvelope, DuplicateError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for telegram.ingress.deduplication obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to telegram.ingress.deduplication granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_telegram_ingress_deduplication_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for telegram.ingress.deduplication is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with telegram.ingress.deduplication preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "telegram.ingress.deduplication is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "telegram.ingress.deduplication maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "telegram.ingress.deduplication obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "telegram.ingress.deduplication exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_telegram_ingress_deduplication_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "verify"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Message Deduplication & In-Memory LRU Cache Filter"
+    },
+    {
+      "id": "telegram.ingress.auth_interlock",
+      "denotation": {
+        "input": "IntentEnvelope",
+        "output": "Result(AuthorizedIntent, AuthError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of telegram.ingress.auth_interlock. Evaluated over typed domain IntentEnvelope.",
+            "falsifier": "Test trace where composite telegram.ingress.auth_interlock invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_telegram_ingress_auth_interlock_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "telegram.ingress.auth_interlock commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of telegram.ingress.auth_interlock with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_telegram_ingress_auth_interlock_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of telegram.ingress.auth_interlock refines declared relation IntentEnvelope -> Result(AuthorizedIntent, AuthError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(AuthorizedIntent, AuthError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for telegram.ingress.auth_interlock obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to telegram.ingress.auth_interlock granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_telegram_ingress_auth_interlock_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for telegram.ingress.auth_interlock is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with telegram.ingress.auth_interlock preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "telegram.ingress.auth_interlock is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "telegram.ingress.auth_interlock maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "telegram.ingress.auth_interlock obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "telegram.ingress.auth_interlock exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_telegram_ingress_auth_interlock_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "verify"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Authorization Interlock & Operator Whitelist Verification"
+    },
+    {
+      "id": "telegram.transport.zenoh_publish_req",
+      "denotation": {
+        "input": "AuthorizedIntent",
+        "output": "Result(ZenohReceipt, TransportError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of telegram.transport.zenoh_publish_req. Evaluated over typed domain AuthorizedIntent.",
+            "falsifier": "Test trace where composite telegram.transport.zenoh_publish_req invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_telegram_transport_zenoh_publish_req_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "telegram.transport.zenoh_publish_req commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of telegram.transport.zenoh_publish_req with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_telegram_transport_zenoh_publish_req_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of telegram.transport.zenoh_publish_req refines declared relation AuthorizedIntent -> Result(ZenohReceipt, TransportError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(ZenohReceipt, TransportError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for telegram.transport.zenoh_publish_req obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to telegram.transport.zenoh_publish_req granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_telegram_transport_zenoh_publish_req_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for telegram.transport.zenoh_publish_req is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with telegram.transport.zenoh_publish_req preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "HOLDS",
+            "predicate": "Replay of committed intent log for telegram.transport.zenoh_publish_req yields isomorphic recoverable state.",
+            "falsifier": "Divergent state detected after replaying committed log of telegram.transport.zenoh_publish_req.",
+            "oracle": "test/replication_replay_test.gleam:test_telegram_transport_zenoh_publish_req_replay",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "telegram.transport.zenoh_publish_req maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "telegram.transport.zenoh_publish_req obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "telegram.transport.zenoh_publish_req exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_telegram_transport_zenoh_publish_req_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "write"
+      },
+      "transports": [
+        "zenoh"
+      ],
+      "description": "Zenoh Ingress Intent Publication to indrajaal/l5/cog/intent/req"
+    },
+    {
+      "id": "telegram.transport.zenoh_poll_inbound",
+      "denotation": {
+        "input": "PollRequest",
+        "output": "Result(List(AuthorizedIntent), TransportError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of telegram.transport.zenoh_poll_inbound. Evaluated over typed domain PollRequest.",
+            "falsifier": "Test trace where composite telegram.transport.zenoh_poll_inbound invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_telegram_transport_zenoh_poll_inbound_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "telegram.transport.zenoh_poll_inbound commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of telegram.transport.zenoh_poll_inbound with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_telegram_transport_zenoh_poll_inbound_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of telegram.transport.zenoh_poll_inbound refines declared relation PollRequest -> Result(List(AuthorizedIntent), TransportError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(List(AuthorizedIntent), TransportError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for telegram.transport.zenoh_poll_inbound obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to telegram.transport.zenoh_poll_inbound granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_telegram_transport_zenoh_poll_inbound_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for telegram.transport.zenoh_poll_inbound is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with telegram.transport.zenoh_poll_inbound preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "telegram.transport.zenoh_poll_inbound is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "telegram.transport.zenoh_poll_inbound maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "telegram.transport.zenoh_poll_inbound obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "telegram.transport.zenoh_poll_inbound exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_telegram_transport_zenoh_poll_inbound_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read"
+      },
+      "transports": [
+        "zenoh"
+      ],
+      "description": "Zenoh Inbound Intent Polling by Gleam Cognitive Worker"
+    },
+    {
+      "id": "harness.ooda.observe",
+      "denotation": {
+        "input": "ObserveContext",
+        "output": "Result(ObservedState, OodaError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of harness.ooda.observe. Evaluated over typed domain ObserveContext.",
+            "falsifier": "Test trace where composite harness.ooda.observe invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_harness_ooda_observe_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "harness.ooda.observe commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of harness.ooda.observe with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_harness_ooda_observe_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of harness.ooda.observe refines declared relation ObserveContext -> Result(ObservedState, OodaError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(ObservedState, OodaError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for harness.ooda.observe obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to harness.ooda.observe granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_harness_ooda_observe_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for harness.ooda.observe is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with harness.ooda.observe preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "harness.ooda.observe is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "harness.ooda.observe maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "harness.ooda.observe obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "harness.ooda.observe exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_harness_ooda_observe_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "compute"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "OODA Phase 1: Observe payload, headers, metadata, and trace context"
+    },
+    {
+      "id": "harness.ooda.orient",
+      "denotation": {
+        "input": "ObservedState",
+        "output": "Result(OrientedContext, OodaError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of harness.ooda.orient. Evaluated over typed domain ObservedState.",
+            "falsifier": "Test trace where composite harness.ooda.orient invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_harness_ooda_orient_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "harness.ooda.orient commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of harness.ooda.orient with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_harness_ooda_orient_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of harness.ooda.orient refines declared relation ObservedState -> Result(OrientedContext, OodaError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(OrientedContext, OodaError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for harness.ooda.orient obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to harness.ooda.orient granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_harness_ooda_orient_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for harness.ooda.orient is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with harness.ooda.orient preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "harness.ooda.orient is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "harness.ooda.orient maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "harness.ooda.orient obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "harness.ooda.orient exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_harness_ooda_orient_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "compute"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "OODA Phase 2: Orient state against Lyapunov trends and NIF telemetry"
+    },
+    {
+      "id": "harness.ooda.decide",
+      "denotation": {
+        "input": "OrientedContext",
+        "output": "Result(DecisionAction, OodaError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of harness.ooda.decide. Evaluated over typed domain OrientedContext.",
+            "falsifier": "Test trace where composite harness.ooda.decide invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_harness_ooda_decide_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "harness.ooda.decide commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of harness.ooda.decide with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_harness_ooda_decide_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of harness.ooda.decide refines declared relation OrientedContext -> Result(DecisionAction, OodaError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(DecisionAction, OodaError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for harness.ooda.decide obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to harness.ooda.decide granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_harness_ooda_decide_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for harness.ooda.decide is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with harness.ooda.decide preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "harness.ooda.decide is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "harness.ooda.decide maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "harness.ooda.decide obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "harness.ooda.decide exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_harness_ooda_decide_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "compute"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "OODA Phase 3: Decide actions via deterministic dispatch or AGY reasoner"
+    },
+    {
+      "id": "harness.ooda.act",
+      "denotation": {
+        "input": "DecisionAction",
+        "output": "Result(ActionResult, OodaError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of harness.ooda.act. Evaluated over typed domain DecisionAction.",
+            "falsifier": "Test trace where composite harness.ooda.act invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_harness_ooda_act_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "harness.ooda.act commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of harness.ooda.act with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_harness_ooda_act_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of harness.ooda.act refines declared relation DecisionAction -> Result(ActionResult, OodaError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(ActionResult, OodaError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for harness.ooda.act obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to harness.ooda.act granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_harness_ooda_act_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for harness.ooda.act is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with harness.ooda.act preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "HOLDS",
+            "predicate": "Replay of committed intent log for harness.ooda.act yields isomorphic recoverable state.",
+            "falsifier": "Divergent state detected after replaying committed log of harness.ooda.act.",
+            "oracle": "test/replication_replay_test.gleam:test_harness_ooda_act_replay",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "harness.ooda.act maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "harness.ooda.act obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "harness.ooda.act exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_harness_ooda_act_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "write"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "OODA Phase 4: Act by executing state commit and multi-target dispatch"
+    },
+    {
+      "id": "harness.agy.intent_parser",
+      "denotation": {
+        "input": "AgyParseRequest",
+        "output": "Result(AgyParsedIntent, AgyError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of harness.agy.intent_parser. Evaluated over typed domain AgyParseRequest.",
+            "falsifier": "Test trace where composite harness.agy.intent_parser invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_harness_agy_intent_parser_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "harness.agy.intent_parser commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of harness.agy.intent_parser with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_harness_agy_intent_parser_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of harness.agy.intent_parser refines declared relation AgyParseRequest -> Result(AgyParsedIntent, AgyError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(AgyParsedIntent, AgyError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for harness.agy.intent_parser obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to harness.agy.intent_parser granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_harness_agy_intent_parser_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for harness.agy.intent_parser is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with harness.agy.intent_parser preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "harness.agy.intent_parser is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "harness.agy.intent_parser maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "harness.agy.intent_parser obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "harness.agy.intent_parser exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_harness_agy_intent_parser_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "compute"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "AGY Sovereign Intent Parser and Natural Language Disambiguation"
+    },
+    {
+      "id": "harness.agy.reasoning_emitter",
+      "denotation": {
+        "input": "AgyReasoningRequest",
+        "output": "Result(AgyReasoningTrace, AgyError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of harness.agy.reasoning_emitter. Evaluated over typed domain AgyReasoningRequest.",
+            "falsifier": "Test trace where composite harness.agy.reasoning_emitter invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_harness_agy_reasoning_emitter_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "harness.agy.reasoning_emitter commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of harness.agy.reasoning_emitter with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_harness_agy_reasoning_emitter_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of harness.agy.reasoning_emitter refines declared relation AgyReasoningRequest -> Result(AgyReasoningTrace, AgyError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(AgyReasoningTrace, AgyError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for harness.agy.reasoning_emitter obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to harness.agy.reasoning_emitter granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_harness_agy_reasoning_emitter_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for harness.agy.reasoning_emitter is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with harness.agy.reasoning_emitter preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "harness.agy.reasoning_emitter is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "harness.agy.reasoning_emitter maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "harness.agy.reasoning_emitter obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "harness.agy.reasoning_emitter exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_harness_agy_reasoning_emitter_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "compute"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "AGY Cognitive Reasoning Emitter generating structured thought steps"
+    },
+    {
+      "id": "harness.agy.tool_dispatch",
+      "denotation": {
+        "input": "AgyToolRequest",
+        "output": "Result(AgyToolResult, AgyError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of harness.agy.tool_dispatch. Evaluated over typed domain AgyToolRequest.",
+            "falsifier": "Test trace where composite harness.agy.tool_dispatch invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_harness_agy_tool_dispatch_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "harness.agy.tool_dispatch commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of harness.agy.tool_dispatch with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_harness_agy_tool_dispatch_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of harness.agy.tool_dispatch refines declared relation AgyToolRequest -> Result(AgyToolResult, AgyError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(AgyToolResult, AgyError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for harness.agy.tool_dispatch obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to harness.agy.tool_dispatch granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_harness_agy_tool_dispatch_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for harness.agy.tool_dispatch is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with harness.agy.tool_dispatch preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "harness.agy.tool_dispatch is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "harness.agy.tool_dispatch maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "harness.agy.tool_dispatch obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "harness.agy.tool_dispatch exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_harness_agy_tool_dispatch_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "compute"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "AGY Sovereign Tool Dispatcher invoking verified in-process functions"
+    },
+    {
+      "id": "harness.agy.response_synthesizer",
+      "denotation": {
+        "input": "AgySynthRequest",
+        "output": "Result(AgyFormattedResponse, AgyError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of harness.agy.response_synthesizer. Evaluated over typed domain AgySynthRequest.",
+            "falsifier": "Test trace where composite harness.agy.response_synthesizer invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_harness_agy_response_synthesizer_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "harness.agy.response_synthesizer commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of harness.agy.response_synthesizer with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_harness_agy_response_synthesizer_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of harness.agy.response_synthesizer refines declared relation AgySynthRequest -> Result(AgyFormattedResponse, AgyError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(AgyFormattedResponse, AgyError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for harness.agy.response_synthesizer obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to harness.agy.response_synthesizer granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_harness_agy_response_synthesizer_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for harness.agy.response_synthesizer is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with harness.agy.response_synthesizer preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "harness.agy.response_synthesizer is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "harness.agy.response_synthesizer maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "harness.agy.response_synthesizer obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "harness.agy.response_synthesizer exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_harness_agy_response_synthesizer_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "compute"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "AGY Markdown Response Synthesizer with rich GitHub-flavored formatting"
+    },
+    {
+      "id": "harness.state.two_lattice_stm",
+      "denotation": {
+        "input": "StmMutationRequest",
+        "output": "Result(StmCommitReceipt, StmError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of harness.state.two_lattice_stm. Evaluated over typed domain StmMutationRequest.",
+            "falsifier": "Test trace where composite harness.state.two_lattice_stm invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_harness_state_two_lattice_stm_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "harness.state.two_lattice_stm commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of harness.state.two_lattice_stm with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_harness_state_two_lattice_stm_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of harness.state.two_lattice_stm refines declared relation StmMutationRequest -> Result(StmCommitReceipt, StmError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(StmCommitReceipt, StmError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for harness.state.two_lattice_stm obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to harness.state.two_lattice_stm granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_harness_state_two_lattice_stm_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for harness.state.two_lattice_stm is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with harness.state.two_lattice_stm preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "HOLDS",
+            "predicate": "Replay of committed intent log for harness.state.two_lattice_stm yields isomorphic recoverable state.",
+            "falsifier": "Divergent state detected after replaying committed log of harness.state.two_lattice_stm.",
+            "oracle": "test/replication_replay_test.gleam:test_harness_state_two_lattice_stm_replay",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "harness.state.two_lattice_stm maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "harness.state.two_lattice_stm obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "harness.state.two_lattice_stm exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_harness_state_two_lattice_stm_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "write"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Two-Lattice STM State Transition with non-interfering observations"
+    },
+    {
+      "id": "harness.state.semaphore_lease",
+      "denotation": {
+        "input": "LeaseAcquireRequest",
+        "output": "Result(LeaseToken, LeaseError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of harness.state.semaphore_lease. Evaluated over typed domain LeaseAcquireRequest.",
+            "falsifier": "Test trace where composite harness.state.semaphore_lease invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_harness_state_semaphore_lease_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "harness.state.semaphore_lease commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of harness.state.semaphore_lease with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_harness_state_semaphore_lease_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of harness.state.semaphore_lease refines declared relation LeaseAcquireRequest -> Result(LeaseToken, LeaseError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(LeaseToken, LeaseError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for harness.state.semaphore_lease obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to harness.state.semaphore_lease granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_harness_state_semaphore_lease_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for harness.state.semaphore_lease is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with harness.state.semaphore_lease preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "HOLDS",
+            "predicate": "Replay of committed intent log for harness.state.semaphore_lease yields isomorphic recoverable state.",
+            "falsifier": "Divergent state detected after replaying committed log of harness.state.semaphore_lease.",
+            "oracle": "test/replication_replay_test.gleam:test_harness_state_semaphore_lease_replay",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "harness.state.semaphore_lease maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "harness.state.semaphore_lease obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "harness.state.semaphore_lease exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_harness_state_semaphore_lease_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "write"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Single-Writer Fenced Lease Allocation with 64-bit monotonic epoch"
+    },
+    {
+      "id": "nif.c3i.system_health",
+      "denotation": {
+        "input": "HealthQuery",
+        "output": "Result(HealthSnapshot, NifError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of nif.c3i.system_health. Evaluated over typed domain HealthQuery.",
+            "falsifier": "Test trace where composite nif.c3i.system_health invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_nif_c3i_system_health_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "nif.c3i.system_health commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of nif.c3i.system_health with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_nif_c3i_system_health_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of nif.c3i.system_health refines declared relation HealthQuery -> Result(HealthSnapshot, NifError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(HealthSnapshot, NifError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for nif.c3i.system_health obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to nif.c3i.system_health granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_nif_c3i_system_health_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for nif.c3i.system_health is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with nif.c3i.system_health preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "nif.c3i.system_health is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "nif.c3i.system_health maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "nif.c3i.system_health obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "nif.c3i.system_health exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_nif_c3i_system_health_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Native NIF System Health Query in Rust C-ABI (sub-millisecond execution)"
+    },
+    {
+      "id": "nif.c3i.system_immune",
+      "denotation": {
+        "input": "ImmuneQuery",
+        "output": "Result(ImmuneStatus, NifError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of nif.c3i.system_immune. Evaluated over typed domain ImmuneQuery.",
+            "falsifier": "Test trace where composite nif.c3i.system_immune invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_nif_c3i_system_immune_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "nif.c3i.system_immune commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of nif.c3i.system_immune with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_nif_c3i_system_immune_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of nif.c3i.system_immune refines declared relation ImmuneQuery -> Result(ImmuneStatus, NifError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(ImmuneStatus, NifError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for nif.c3i.system_immune obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to nif.c3i.system_immune granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_nif_c3i_system_immune_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for nif.c3i.system_immune is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with nif.c3i.system_immune preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "nif.c3i.system_immune is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "nif.c3i.system_immune maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "nif.c3i.system_immune obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "nif.c3i.system_immune exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_nif_c3i_system_immune_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Native NIF Chaos Immune Status and Self-Healing Circuit Breaker Check"
+    },
+    {
+      "id": "nif.c3i.fmea_report",
+      "denotation": {
+        "input": "FmeaQuery",
+        "output": "Result(FmeaReport, NifError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of nif.c3i.fmea_report. Evaluated over typed domain FmeaQuery.",
+            "falsifier": "Test trace where composite nif.c3i.fmea_report invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_nif_c3i_fmea_report_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "nif.c3i.fmea_report commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of nif.c3i.fmea_report with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_nif_c3i_fmea_report_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of nif.c3i.fmea_report refines declared relation FmeaQuery -> Result(FmeaReport, NifError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(FmeaReport, NifError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for nif.c3i.fmea_report obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to nif.c3i.fmea_report granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_nif_c3i_fmea_report_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for nif.c3i.fmea_report is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with nif.c3i.fmea_report preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "nif.c3i.fmea_report is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "nif.c3i.fmea_report maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "nif.c3i.fmea_report obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "nif.c3i.fmea_report exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_nif_c3i_fmea_report_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Native NIF FMEA Risk Assessment and Failure Mode Telemetry"
+    },
+    {
+      "id": "nif.ocaml.rete_eval",
+      "denotation": {
+        "input": "ReteFactBatch",
+        "output": "Result(ReteAgenda, NifError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of nif.ocaml.rete_eval. Evaluated over typed domain ReteFactBatch.",
+            "falsifier": "Test trace where composite nif.ocaml.rete_eval invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_nif_ocaml_rete_eval_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "nif.ocaml.rete_eval commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of nif.ocaml.rete_eval with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_nif_ocaml_rete_eval_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of nif.ocaml.rete_eval refines declared relation ReteFactBatch -> Result(ReteAgenda, NifError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(ReteAgenda, NifError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for nif.ocaml.rete_eval obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to nif.ocaml.rete_eval granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_nif_ocaml_rete_eval_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for nif.ocaml.rete_eval is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with nif.ocaml.rete_eval preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "nif.ocaml.rete_eval is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "nif.ocaml.rete_eval maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "nif.ocaml.rete_eval obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "nif.ocaml.rete_eval exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_nif_ocaml_rete_eval_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "compute"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Native OCaml RETE-UL Forward Chaining and Agenda Activation"
+    },
+    {
+      "id": "nif.ocaml.gospel_verify",
+      "denotation": {
+        "input": "GospelContractQuery",
+        "output": "Result(GospelVerdict, NifError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of nif.ocaml.gospel_verify. Evaluated over typed domain GospelContractQuery.",
+            "falsifier": "Test trace where composite nif.ocaml.gospel_verify invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_nif_ocaml_gospel_verify_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "nif.ocaml.gospel_verify commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of nif.ocaml.gospel_verify with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_nif_ocaml_gospel_verify_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of nif.ocaml.gospel_verify refines declared relation GospelContractQuery -> Result(GospelVerdict, NifError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(GospelVerdict, NifError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for nif.ocaml.gospel_verify obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to nif.ocaml.gospel_verify granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_nif_ocaml_gospel_verify_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for nif.ocaml.gospel_verify is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with nif.ocaml.gospel_verify preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "nif.ocaml.gospel_verify is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "nif.ocaml.gospel_verify maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "nif.ocaml.gospel_verify obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "nif.ocaml.gospel_verify exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_nif_ocaml_gospel_verify_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "verify"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Native OCaml Gospel Contract Verifier against formal specifications"
+    },
+    {
+      "id": "nif.mojo.simd_entropy",
+      "denotation": {
+        "input": "VectorBuffer",
+        "output": "Result(ShannonEntropyScore, NifError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of nif.mojo.simd_entropy. Evaluated over typed domain VectorBuffer.",
+            "falsifier": "Test trace where composite nif.mojo.simd_entropy invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_nif_mojo_simd_entropy_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "nif.mojo.simd_entropy commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of nif.mojo.simd_entropy with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_nif_mojo_simd_entropy_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of nif.mojo.simd_entropy refines declared relation VectorBuffer -> Result(ShannonEntropyScore, NifError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(ShannonEntropyScore, NifError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for nif.mojo.simd_entropy obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to nif.mojo.simd_entropy granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_nif_mojo_simd_entropy_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for nif.mojo.simd_entropy is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with nif.mojo.simd_entropy preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "nif.mojo.simd_entropy is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "nif.mojo.simd_entropy maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "nif.mojo.simd_entropy obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "nif.mojo.simd_entropy exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_nif_mojo_simd_entropy_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "compute"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Modular MAX / Mojo SIMD AVX-512 Entropy and Conformance Evaluation"
+    },
+    {
+      "id": "agui.event.lifecycle_stream",
+      "denotation": {
+        "input": "AguiLifecycleEvent",
+        "output": "Result(StreamReceipt, StreamError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of agui.event.lifecycle_stream. Evaluated over typed domain AguiLifecycleEvent.",
+            "falsifier": "Test trace where composite agui.event.lifecycle_stream invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_agui_event_lifecycle_stream_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "agui.event.lifecycle_stream commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of agui.event.lifecycle_stream with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_agui_event_lifecycle_stream_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of agui.event.lifecycle_stream refines declared relation AguiLifecycleEvent -> Result(StreamReceipt, StreamError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(StreamReceipt, StreamError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for agui.event.lifecycle_stream obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to agui.event.lifecycle_stream granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_agui_event_lifecycle_stream_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for agui.event.lifecycle_stream is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with agui.event.lifecycle_stream preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "HOLDS",
+            "predicate": "Replay of committed intent log for agui.event.lifecycle_stream yields isomorphic recoverable state.",
+            "falsifier": "Divergent state detected after replaying committed log of agui.event.lifecycle_stream.",
+            "oracle": "test/replication_replay_test.gleam:test_agui_event_lifecycle_stream_replay",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "agui.event.lifecycle_stream maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "agui.event.lifecycle_stream obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "agui.event.lifecycle_stream exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_agui_event_lifecycle_stream_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "write"
+      },
+      "transports": [
+        "zenoh"
+      ],
+      "description": "AG-UI Lifecycle Event Stream (RunStarted, RunFinished, StepStarted)"
+    },
+    {
+      "id": "agui.event.reasoning_stream",
+      "denotation": {
+        "input": "AguiReasoningEvent",
+        "output": "Result(StreamReceipt, StreamError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of agui.event.reasoning_stream. Evaluated over typed domain AguiReasoningEvent.",
+            "falsifier": "Test trace where composite agui.event.reasoning_stream invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_agui_event_reasoning_stream_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "agui.event.reasoning_stream commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of agui.event.reasoning_stream with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_agui_event_reasoning_stream_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of agui.event.reasoning_stream refines declared relation AguiReasoningEvent -> Result(StreamReceipt, StreamError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(StreamReceipt, StreamError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for agui.event.reasoning_stream obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to agui.event.reasoning_stream granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_agui_event_reasoning_stream_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for agui.event.reasoning_stream is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with agui.event.reasoning_stream preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "HOLDS",
+            "predicate": "Replay of committed intent log for agui.event.reasoning_stream yields isomorphic recoverable state.",
+            "falsifier": "Divergent state detected after replaying committed log of agui.event.reasoning_stream.",
+            "oracle": "test/replication_replay_test.gleam:test_agui_event_reasoning_stream_replay",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "agui.event.reasoning_stream maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "agui.event.reasoning_stream obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "agui.event.reasoning_stream exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_agui_event_reasoning_stream_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "write"
+      },
+      "transports": [
+        "zenoh"
+      ],
+      "description": "AG-UI Reasoning Event Stream (ReasoningStart, Content, End)"
+    },
+    {
+      "id": "agui.event.tool_stream",
+      "denotation": {
+        "input": "AguiToolEvent",
+        "output": "Result(StreamReceipt, StreamError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of agui.event.tool_stream. Evaluated over typed domain AguiToolEvent.",
+            "falsifier": "Test trace where composite agui.event.tool_stream invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_agui_event_tool_stream_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "agui.event.tool_stream commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of agui.event.tool_stream with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_agui_event_tool_stream_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of agui.event.tool_stream refines declared relation AguiToolEvent -> Result(StreamReceipt, StreamError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(StreamReceipt, StreamError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for agui.event.tool_stream obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to agui.event.tool_stream granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_agui_event_tool_stream_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for agui.event.tool_stream is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with agui.event.tool_stream preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "HOLDS",
+            "predicate": "Replay of committed intent log for agui.event.tool_stream yields isomorphic recoverable state.",
+            "falsifier": "Divergent state detected after replaying committed log of agui.event.tool_stream.",
+            "oracle": "test/replication_replay_test.gleam:test_agui_event_tool_stream_replay",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "agui.event.tool_stream maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "agui.event.tool_stream obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "agui.event.tool_stream exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_agui_event_tool_stream_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "write"
+      },
+      "transports": [
+        "zenoh"
+      ],
+      "description": "AG-UI Tool Call Event Stream (ToolCallStart, Args, End, Result)"
+    },
+    {
+      "id": "telegram.egress.zenoh_publish_outbound",
+      "denotation": {
+        "input": "OutboundEnvelope",
+        "output": "Result(ZenohReceipt, TransportError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of telegram.egress.zenoh_publish_outbound. Evaluated over typed domain OutboundEnvelope.",
+            "falsifier": "Test trace where composite telegram.egress.zenoh_publish_outbound invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_telegram_egress_zenoh_publish_outbound_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "telegram.egress.zenoh_publish_outbound commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of telegram.egress.zenoh_publish_outbound with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_telegram_egress_zenoh_publish_outbound_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of telegram.egress.zenoh_publish_outbound refines declared relation OutboundEnvelope -> Result(ZenohReceipt, TransportError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(ZenohReceipt, TransportError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for telegram.egress.zenoh_publish_outbound obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to telegram.egress.zenoh_publish_outbound granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_telegram_egress_zenoh_publish_outbound_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for telegram.egress.zenoh_publish_outbound is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with telegram.egress.zenoh_publish_outbound preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "HOLDS",
+            "predicate": "Replay of committed intent log for telegram.egress.zenoh_publish_outbound yields isomorphic recoverable state.",
+            "falsifier": "Divergent state detected after replaying committed log of telegram.egress.zenoh_publish_outbound.",
+            "oracle": "test/replication_replay_test.gleam:test_telegram_egress_zenoh_publish_outbound_replay",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "telegram.egress.zenoh_publish_outbound maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "telegram.egress.zenoh_publish_outbound obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "telegram.egress.zenoh_publish_outbound exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_telegram_egress_zenoh_publish_outbound_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "write"
+      },
+      "transports": [
+        "zenoh"
+      ],
+      "description": "Zenoh Outbound Queue Publisher to c3i/a2a/telegram/outbound"
+    },
+    {
+      "id": "telegram.egress.dequeue_worker",
+      "denotation": {
+        "input": "DequeueRequest",
+        "output": "Result(List(OutboundEnvelope), TransportError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of telegram.egress.dequeue_worker. Evaluated over typed domain DequeueRequest.",
+            "falsifier": "Test trace where composite telegram.egress.dequeue_worker invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_telegram_egress_dequeue_worker_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "telegram.egress.dequeue_worker commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of telegram.egress.dequeue_worker with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_telegram_egress_dequeue_worker_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of telegram.egress.dequeue_worker refines declared relation DequeueRequest -> Result(List(OutboundEnvelope), TransportError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(List(OutboundEnvelope), TransportError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for telegram.egress.dequeue_worker obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to telegram.egress.dequeue_worker granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_telegram_egress_dequeue_worker_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for telegram.egress.dequeue_worker is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with telegram.egress.dequeue_worker preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "telegram.egress.dequeue_worker is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "telegram.egress.dequeue_worker maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "telegram.egress.dequeue_worker obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "telegram.egress.dequeue_worker exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_telegram_egress_dequeue_worker_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read"
+      },
+      "transports": [
+        "edge_transport"
+      ],
+      "description": "50ms Mutex-Synchronized Outbound Dequeue Worker in Native OCaml"
+    },
+    {
+      "id": "telegram.egress.rate_limit_throttle",
+      "denotation": {
+        "input": "OutboundEnvelope",
+        "output": "Result(OutboundEnvelope, RateLimitDelay)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of telegram.egress.rate_limit_throttle. Evaluated over typed domain OutboundEnvelope.",
+            "falsifier": "Test trace where composite telegram.egress.rate_limit_throttle invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_telegram_egress_rate_limit_throttle_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "telegram.egress.rate_limit_throttle commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of telegram.egress.rate_limit_throttle with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_telegram_egress_rate_limit_throttle_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of telegram.egress.rate_limit_throttle refines declared relation OutboundEnvelope -> Result(OutboundEnvelope, RateLimitDelay).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(OutboundEnvelope, RateLimitDelay).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for telegram.egress.rate_limit_throttle obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to telegram.egress.rate_limit_throttle granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_telegram_egress_rate_limit_throttle_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for telegram.egress.rate_limit_throttle is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with telegram.egress.rate_limit_throttle preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "telegram.egress.rate_limit_throttle is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "telegram.egress.rate_limit_throttle maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "telegram.egress.rate_limit_throttle obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "telegram.egress.rate_limit_throttle exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_telegram_egress_rate_limit_throttle_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "compute"
+      },
+      "transports": [
+        "edge_transport"
+      ],
+      "description": "Telegram Bot API Rate Limit Token Bucket (30 msg/sec global)"
+    },
+    {
+      "id": "telegram.egress.format_markdown_v2",
+      "denotation": {
+        "input": "RawMarkdownString",
+        "output": "Result(EscapedMarkdownV2, FormatError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of telegram.egress.format_markdown_v2. Evaluated over typed domain RawMarkdownString.",
+            "falsifier": "Test trace where composite telegram.egress.format_markdown_v2 invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_telegram_egress_format_markdown_v2_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "telegram.egress.format_markdown_v2 commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of telegram.egress.format_markdown_v2 with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_telegram_egress_format_markdown_v2_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of telegram.egress.format_markdown_v2 refines declared relation RawMarkdownString -> Result(EscapedMarkdownV2, FormatError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(EscapedMarkdownV2, FormatError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for telegram.egress.format_markdown_v2 obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to telegram.egress.format_markdown_v2 granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_telegram_egress_format_markdown_v2_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for telegram.egress.format_markdown_v2 is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with telegram.egress.format_markdown_v2 preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "telegram.egress.format_markdown_v2 is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "telegram.egress.format_markdown_v2 maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "telegram.egress.format_markdown_v2 obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "telegram.egress.format_markdown_v2 exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_telegram_egress_format_markdown_v2_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "compute"
+      },
+      "transports": [
+        "edge_transport"
+      ],
+      "description": "MarkdownV2 Character Escaping, Safe UTF-8 Splitting, and Chunking"
+    },
+    {
+      "id": "governance.tri_sovereign_consensus",
+      "denotation": {
+        "input": "ProposalResolution",
+        "output": "Result(ConsensusReceipt, ConsensusError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of governance.tri_sovereign_consensus. Evaluated over typed domain ProposalResolution.",
+            "falsifier": "Test trace where composite governance.tri_sovereign_consensus invocation diverges from sequential composition.",
+            "oracle": "test/harness_algebra_test.gleam:test_governance_tri_sovereign_consensus_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "governance.tri_sovereign_consensus commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of governance.tri_sovereign_consensus with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_governance_tri_sovereign_consensus_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Every admitted backend implementation of governance.tri_sovereign_consensus refines declared relation ProposalResolution -> Result(ConsensusReceipt, ConsensusError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(ConsensusReceipt, ConsensusError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for governance.tri_sovereign_consensus obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to governance.tri_sovereign_consensus granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_governance_tri_sovereign_consensus_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for governance.tri_sovereign_consensus is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with governance.tri_sovereign_consensus preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "governance.tri_sovereign_consensus is stateless read/compute/verify with no durable replicated state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "governance.tri_sovereign_consensus maintains backward-compatible schema within canonical protocol v1; no active schema migration required.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "governance.tri_sovereign_consensus obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "governance.tri_sovereign_consensus exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_governance_tri_sovereign_consensus_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "verify"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Tri-Sovereign 2oo3 Quorum Consensus between AGY, Claude, and Codex"
+    }
+  ],
+  "otp_inventory": {
+    "otp_release": "29",
+    "erts_version": "17.0.5",
+    "root_dir": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+    "lib_dir": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/lib",
+    "installed_application_count": 35,
+    "installed_applications": [
+      "asn1-5.5",
+      "common_test-1.31.1",
+      "compiler-10.0.3",
+      "crypto-5.9.2",
+      "debugger-7.0",
+      "dialyzer-6.0.2",
+      "diameter-2.7.2",
+      "edoc-1.5",
+      "eldap-1.3",
+      "erl_interface-5.8.1",
+      "erts-17.0.5",
+      "et-1.8",
+      "eunit-2.11",
+      "ftp-1.2.6",
+      "inets-9.7.1",
+      "kernel-11.0.3",
+      "megaco-4.9.1",
+      "mnesia-4.26.1",
+      "observer-2.19",
+      "odbc-2.17",
+      "os_mon-2.12",
+      "parsetools-2.8",
+      "public_key-1.21.4",
+      "reltool-1.1",
+      "runtime_tools-2.4",
+      "sasl-4.4",
+      "snmp-5.20.4",
+      "ssh-6.0.4",
+      "ssl-11.7.4",
+      "stdlib-8.0.3",
+      "syntax_tools-4.1",
+      "tftp-1.3",
+      "tools-4.2.1",
+      "wx-2.6",
+      "xmerl-2.2"
+    ],
+    "observed_at_utc": "2026-09-09T11:44:31Z",
+    "observed_by": "erlang:system_info/1 and code:lib_dir/0 in the pinned BEAM resolved through tools/lib/uos-toolchain.sh",
+    "how_to_falsify": "readlink -f $(command -v erl) must equal root_dir/../../bin/erl under the same /nix/store path; a different derivation reporting otp_release \"29\" is exactly the defect SC-NIX-DEVENV-001 invariant 3 exists for (29.0.5 and 29.0.6 both answer \"29\").",
+    "excluded": [
+      {
+        "name": "mnesia",
+        "reason": "present in the installation but unused: canonical durable storage is SQLite. Listed here because presence in lib_dir is not use."
+      }
+    ]
+  }
+}
