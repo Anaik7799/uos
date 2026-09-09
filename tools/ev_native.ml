@@ -11,9 +11,20 @@ let root = "/home/an/NAS-setup/uos"
 let require condition message = if not condition then failwith message
 let mono () = Mtime.Span.to_float_ns (Mtime_clock.elapsed ()) /. 1e9
 let tc = root ^ "/toolchains"
+let otp_root = "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang"
+let erts_bin = otp_root ^ "/erts-17.0.5/bin"
+let erlexec = erts_bin ^ "/erlexec"
+let native_otp_path = lazy (
+  let reservation = Filename.temp_file "uos-ev-native-otp-" ".reserve" in
+  let directory = reservation ^ ".d" in
+  Unix.mkdir directory 0o700;
+  (* A private executable-name alias, not a generated shell wrapper. *)
+  Unix.symlink erlexec (directory ^ "/erl");
+  directory)
 let pinned name = match name with
-  | "ocaml" | "dune" -> tc ^ "/opam-ocaml/bin/" ^ name
-  | "jj" | "erl" -> tc ^ "/nix-profile/bin/" ^ name
+  | "ocaml" | "ocamlrun" | "dune" -> tc ^ "/opam-ocaml/bin/" ^ name
+  | "jj" -> tc ^ "/nix-profile/bin/" ^ name
+  | "erl" -> erlexec
   | "gleam" -> tc ^ "/gleam-1.16.0/bin/gleam"
   | "mojo" -> root ^ "/services/inference/max/.pixi/envs/default/bin/mojo"
   | _ -> failwith ("unknown native tool: " ^ name)
@@ -24,11 +35,14 @@ let env () =
     "SSL_CERT_FILE"; "NIX_SSL_CERT_FILE"; "LIBRARY_PATH"; "LD_LIBRARY_PATH"] |> List.filter_map (fun key ->
       Option.map (fun value -> key ^ "=" ^ value) (Sys.getenv_opt key)) in
   Array.of_list ([
-    "PATH=" ^ tc ^ "/nix-profile/bin:" ^ tc ^ "/gleam-1.16.0/bin:"
+    "PATH=" ^ Lazy.force native_otp_path ^ ":" ^ otp_root ^ "/bin:" ^ tc ^ "/nix-profile/bin:" ^ tc ^ "/gleam-1.16.0/bin:"
       ^ tc ^ "/opam-ocaml/bin:/usr/bin:/bin";
     "OCAMLPATH=" ^ tc ^ "/opam-ocaml/lib";
     "LANG=C.UTF-8"; "DUNE_CACHE=disabled";
     "ERL_FLAGS=+S 2:2 +A 2"; "ERL_CRASH_DUMP=/dev/null";
+    "ROOTDIR=" ^ otp_root; "BINDIR=" ^ erts_bin; "EMU=beam"; "PROGNAME=erl";
+    "ERL_ROOTDIR=" ^ otp_root; "ESCRIPT_EMULATOR=" ^ erlexec;
+    "ERLC_EMULATOR=" ^ erlexec; "ERLC_USE_SERVER=false";
     "MODULAR_HOME=" ^ root ^ "/services/inference/max/.pixi/envs/default/share/max";
     "UOS_SA_PLAN_DB=" ^ root ^ "/var/sa-plan/uos.sqlite3"
   ] @ inherited)
@@ -74,6 +88,8 @@ let command tool args = match tool, args with
       @ ["-pa"; output; "-s"; main; "main"; "-s"; "init"; "stop"]
       @ (if arguments = [] then [] else "-extra" :: arguments)
   | ("gleam" | "mojo" | "jj" | "dune"), _ -> pinned tool, args
+  | "ocaml", _ -> pinned "ocamlrun", pinned "ocaml" :: args
+  | "otp-version", [] -> erlexec, ["-version"]
   | "chronyc", _ -> "/usr/bin/chronyc", args
   | "native", executable :: rest ->
     require (not (Filename.is_relative executable)) "native executable must be absolute";
@@ -98,6 +114,7 @@ let termination = function
 let ignore_missing_process f = try f () with Unix.Unix_error (Unix.ESRCH, _, _) -> ()
 let run cwd seconds input executable args =
   require (seconds > 0. && seconds <= 240.) "seconds must be within (0,240]";
+  let child_environment = env () in
   let cmd = Bos.Cmd.(v executable %% of_list args) |> Bos.Cmd.to_list in
   let r, w = Unix.pipe ~cloexec:true () in
   let started = mono () and utc_started = Unix.gettimeofday () in
@@ -108,7 +125,7 @@ let run cwd seconds input executable args =
       Unix.dup2 w Unix.stdout; Unix.dup2 w Unix.stderr; Unix.close w;
       let source = Unix.openfile input [Unix.O_RDONLY] 0 in
       Unix.dup2 source Unix.stdin; Unix.close source;
-      Unix.execve executable (Array.of_list cmd) (env ())
+      Unix.execve executable (Array.of_list cmd) child_environment
     with error ->
       prerr_endline (Printexc.to_string error); Unix._exit 127
   end;
@@ -156,6 +173,14 @@ let run cwd seconds input executable args =
     "child_termination", termination !status;
     "failure", (match !reason with None -> `Null | Some value -> `String value);
     "clock_synchronization", `String "NOT_CHECKED_BY_ADAPTER";
+    "otp_launch", `Assoc [
+      "executable", `String erlexec;
+      "environment", `List (Array.to_list child_environment |> List.filter (fun value ->
+        List.exists (fun prefix -> String.starts_with ~prefix value)
+          ["PATH="; "ROOTDIR="; "BINDIR="; "EMU="; "PROGNAME="; "ERL_ROOTDIR=";
+           "ESCRIPT_EMULATOR="; "ERLC_EMULATOR="; "ERLC_USE_SERVER="; "ERL_FLAGS="])
+        |> List.map (fun value -> `String value));
+      "descendant_execution_audit", `String "NOT_PERFORMED_BY_ADAPTER"];
     "inherited_linker_paths", `Assoc (List.filter_map (fun key ->
       Option.map (fun value -> key, `String value) (Sys.getenv_opt key))
       ["LIBRARY_PATH"; "LD_LIBRARY_PATH"]);

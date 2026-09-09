@@ -7,6 +7,7 @@
 let root = "/home/an/NAS-setup/uos"
 let source = Filename.dirname (Unix.realpath Sys.argv.(0))
 let ml = root ^ "/toolchains/opam-ocaml/bin/ocaml"
+let mlrun = root ^ "/toolchains/opam-ocaml/bin/ocamlrun"
 let mono () = Mtime.Span.to_float_ns (Mtime_clock.elapsed ()) /. 1e9
 let temp = Filename.temp_file "uos-ev-native-tests-" ""
 let () = Unix.unlink temp; Unix.mkdir temp 0o700
@@ -48,7 +49,8 @@ let child = temp ^ "/ev_native_test_child.exe"
 let () = let code, output = run (root ^ "/toolchains/opam-ocaml/bin/ocamlfind")
   ["ocamlopt"; "-package"; "unix"; "-linkpkg"; "-o"; child; temp ^ "/ev_native_test_child.ml"] in
   if code <> 0 then failwith ("fixture build: " ^ output)
-let invoke options args = run ml ([source ^ "/ev_native.ml"] @ options @ ["--"; "native"; child] @ args)
+let run_ml ?(closed_stdout=false) args = run ~closed_stdout mlrun (ml :: args)
+let invoke options args = run_ml ([source ^ "/ev_native.ml"] @ options @ ["--"; "native"; child] @ args)
 let checks = ref 0
 let check name condition =
   if not condition then failwith ("FAIL: " ^ name);
@@ -59,14 +61,14 @@ let contains text part =
     && (String.sub text i (String.length part) = part || at (i + 1)) in at 0
 let () =
   let refused_receipt = temp ^ "/sa-plan-help-refused.json" in
-  let code, diagnostic = run ml [source ^ "/ev_native.ml"; "--receipt";
+  let code, diagnostic = run_ml [source ^ "/ev_native.ml"; "--receipt";
     refused_receipt; "--"; "sa-plan"; "task"; "claim"; "--help"] in
   check "Sa-plan option-style help refuses before child execution"
     (code = 2 && contains diagnostic "refused before execution"
       && not (Sys.file_exists refused_receipt));
   List.iteri (fun index args ->
     let receipt = temp ^ "/sa-plan-worker-refused-" ^ string_of_int index ^ ".json" in
-    let code, diagnostic = run ml ([source ^ "/ev_native.ml"; "--receipt";
+    let code, diagnostic = run_ml ([source ^ "/ev_native.ml"; "--receipt";
       receipt; "--"; "sa-plan"] @ args) in
     check "Sa-plan task/job option workers refuse before child execution"
       (code = 2 && contains diagnostic "WORKER refused before execution"
@@ -86,7 +88,7 @@ let () =
   check "successful child outcome and effect are retained"
     (code = 0 && Sys.file_exists marker && field "exit_code" observation = `Int 0);
   let receipt = temp ^ "/closed-output.json" and marker = temp ^ "/closed-output-effect" in
-  let code, diagnostic = run ~closed_stdout:true ml
+  let code, diagnostic = run_ml ~closed_stdout:true
     [source ^ "/ev_native.ml"; "--receipt"; receipt; "--"; "native"; child; "mark"; marker] in
   let observation = Yojson.Safe.from_file receipt in
   check "closed stdout cannot prevent post-execution receipt persistence"

@@ -7,6 +7,7 @@ let root = "/home/an/NAS-setup/uos"
 let workspace = Sys.getcwd ()
 let adapter = workspace ^ "/tools/ev_native.ml"
 let ocaml = root ^ "/toolchains/opam-ocaml/bin/ocaml"
+let ocamlrun = root ^ "/toolchains/opam-ocaml/bin/ocamlrun"
 let read p = let ch = open_in_bin p in
   Fun.protect ~finally:(fun () -> close_in_noerr ch) (fun () ->
     let n = in_channel_length ch in if n > 4_194_304 then failwith "file bound";
@@ -37,9 +38,9 @@ let rec copy_sources relative destination =
     | _ -> ())
 let command label expect tool_args =
   let receipt = directory ^ "/" ^ label ^ ".json" in
-  let argv = [ocaml; adapter; "--cwd"; directory; "--seconds"; "60";
+  let argv = [ocamlrun; ocaml; adapter; "--cwd"; directory; "--seconds"; "60";
     "--receipt"; receipt; "--"] @ tool_args in
-  let child = Unix.create_process ocaml (Array.of_list argv)
+  let child = Unix.create_process ocamlrun (Array.of_list argv)
     Unix.stdin Unix.stdout Unix.stderr in
   let _, status = Unix.waitpid [] child in
   let code = match status with Unix.WEXITED n -> n | _ -> 125 in
