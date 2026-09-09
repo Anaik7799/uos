@@ -1,0 +1,179 @@
+{
+  "schema": "uos.harness-successor-review.v1",
+  "reviewer": {
+    "model": "claude-opus-5",
+    "display": "Claude Opus 5",
+    "session_id": "a65088e0-0f2b-497e-bd5c-97eeed9c3594",
+    "pane": "w2:p2",
+    "plan_id": "uos/harness-admission-repair/20260909-1751",
+    "task_id": "ADMISSION-CLAUDE-REVIEW",
+    "worker": "worker-claude-a65088e0",
+    "attempt": 2,
+    "lease_until_ns": 1788983456875493482,
+    "lease_until_utc": "2026-09-09T19:50:56Z",
+    "role": "independent_peer_reviewer"
+  },
+  "observed_at_utc": "2026-09-09T18:55:31Z",
+  "verdict": "BLOCKERS_PRESENT_LOCAL_DEV_MCP_TEST",
+  "verdict_scope": "Blockers to LOCAL DEV MCP TEST only. Not production admission, not an admission vote, not full verification.",
+  "method": "source and evidence reading plus digest arithmetic; nothing executed, no MCP started, no build, no source edit, no VCS mutation, no paid model call",
+  "source_frozen_at": "v9",
+  "verified_ok": [
+    "proposal_sha256 31bb8309ac0729c16b905944e3539e70e7ead0b084fb0e208aabdf533267613e recomputes exactly",
+    "review_sha256 4fa76e5bc657f86a108a1740897579bd6833e5a67aca627951855e79752a0b29 recomputes exactly",
+    "v8->v9 counterexample is genuine: REVISE verdict refused by v9; verdict gated twice (admission.gleam:175-176 and :215-216)",
+    "grant-equality preconditions hold on live files: reviewer session abe9bd8d != grant session 01a083d2; grant_proposal path/sha256/grant_id/target_session/target_worker all bind",
+    "same_object is a correct top-level set equality (equal length, unique keys both sides)",
+    "effect dedup sound: durable intent before dispatch, pending-without-result refuses, replay refuses non-EXECUTED"
+  ],
+  "findings": [
+    {
+      "id": "B1",
+      "severity": "BLOCKER",
+      "title": "stop line traps on errors with no effect; session cannot recover",
+      "where": [
+        "successor_mcp.gleam:171-174",
+        "successor_mcp.gleam:137-140",
+        "successor_mcp.gleam:193-198",
+        "successor_mcp.gleam:200-203"
+      ],
+      "detail": "Every error in the claim/attach selected block sets unresolved:True, including pure argument validation and a.lookup task_not_in_reviewed_grant, which dispatch nothing. harness_claim is then refused (:160-162); harness_attach fails because admission.gleam:307 requires an already-executing owned row; harness_reconcile routes to recover() which reads a completion-intent that was never written. Unrecoverable without a process restart.",
+      "falsifier": "harness_claim with plan 'uos/does-not-exist', then harness_claim with the correct plan: the second call is refused.",
+      "bounded_fix": "Apply the discrimination already present at :210-211 to :139/:173/:197/:202, or gate on an explicit outcome-unknown allowlist. The stop line must mean the outcome is unknown, never that a request was refused.",
+      "proved_by": "construction"
+    },
+    {
+      "id": "B2",
+      "severity": "BLOCKER",
+      "title": "dangling effect intent has no reconciliation path",
+      "where": [
+        "operations.gleam:113-114",
+        "operations.gleam:126",
+        "operations.gleam:299",
+        "operations.gleam:336"
+      ],
+      "detail": "effect() refuses forever when an intent exists without a result (correct no-retry rule), but reconcile() and recover() both read '<intent>-completion-intent.json' while effect() writes '<intent>-intent.json'. After a transport restart mid-effect the state is permanently unresolvable through the MCP surface.",
+      "falsifier": "Create <grant-id>-probe-intent.json with no -result.json, attach, harness_write_file intent_id probe -> unknown_effect_outcome_requires_reconciliation; harness_reconcile intent_id probe -> fails on the missing completion-intent path. No tool sequence clears it.",
+      "bounded_fix": "harness_reconcile should dispatch on which intent file exists; for a dangling effect intent, re-capture the scope, compare against the receipt input_manifest, and write a terminal FAILED_OR_UNVERIFIED result. Never re-execute.",
+      "proved_by": "construction"
+    },
+    {
+      "id": "B3",
+      "severity": "BLOCKER",
+      "title": "grant validity is point-in-time while task and coordinator are horizon-checked (root's temporal-authority question: CONFIRMED)",
+      "where": [
+        "admission.gleam:140-145",
+        "admission.gleam:342-345",
+        "development.gleam fence_for:17-21",
+        "operations.gleam:117",
+        "operations.gleam:128",
+        "operations.gleam:133",
+        "operations.gleam:275-283"
+      ],
+      "detail": "fence_for horizon-checks the Sa-plan lease and coordinator_deadline against now+required_ms, but validate_window only requires grant.expires_us > now with no lower bound on remaining time, and admission.fence passes no window to it. An operation may begin with 1 microsecond of grant validity left. For effects the overrun IS caught by the closing fence at operations.gleam:133 and the receipt records FAILED_OR_UNVERIFIED - but harness_write_file already replaced the file inside perform (:85), so the side effect is committed under expired authority. WORSE for harness_finish: after the 10s fence at :275 nothing revalidates the grant, so sa.complete_sa_task at :280 can commit a canonical Sa-plan completion after grant expiry with no closing fence at all.",
+      "falsifier": "Set expires_utc_us to now+2_000_000 (2s), attach, call harness_finish. The 10s fence passes on the task lease; the completion lands after grant expiry and no error is raised.",
+      "bounded_fix": "Add a required_us parameter to validate_window (grant.expires_us - now >= required_us) and have admission.fence pass {duration_ms+5000}*1000, so grant, task lease and coordinator lease share one horizon. Also add a.check(execution.grant) immediately after operations.gleam:283 so completion has a closing fence like effects do.",
+      "proved_by": "construction"
+    },
+    {
+      "id": "B4",
+      "severity": "BLOCKER",
+      "title": "frame_bound error is unreachable; an oversize frame halts the transport",
+      "where": [
+        "successor_mcp.gleam:61-62",
+        "mcp.gleam serve_loop:20-23",
+        "mcp.gleam:198-201"
+      ],
+      "detail": "serve_loop accepts a byte only while size < frame_limit, so the longest deliverable line is exactly 524288 bytes; handle() guards byte_size(line) <= frame_limit, and 524288 <= 524288 is True. The -32600 frame_bound branch can never be taken. serve_loop reaches the bound first and calls halt(1): the client sees EOF instead of a protocol error, and state.execution and state.unresolved die with the process, which then lands in B2.",
+      "falsifier": "Send one 600 KB line. Expected -32600 frame_bound; actual process exit 1 with 'harness: frame bound' on stderr.",
+      "bounded_fix": "On exceeding the bound, drain to the next newline and hand the handler a sentinel producing the -32600 reply instead of halting.",
+      "proved_by": "arithmetic"
+    },
+    {
+      "id": "B5",
+      "severity": "HIGH",
+      "title": "review task binding never checked; a review of a completed task activates the grant",
+      "where": [
+        "admission.gleam:188-198"
+      ],
+      "detail": "validate_review binds grant_id, target_session, target_worker, proposal path and digest, and requires reviewer.session_id != grant.session. It never reads reviewer.task_id. The live v9 review carries reviewer.task_id ADMISSION-REVIEW, the completed old task, and the grant validates today.",
+      "falsifier": "The current files: docs/reviews/20260909-1751-agy-successor-v9-grant-review.json names a completed task and admission.check returns Ok.",
+      "bounded_fix": "Require reviewer.task_id to name a task that is not completed in canonical Sa-plan at check time and belongs to the same plan. Trap to avoid: checking mere presence of the field is a coarser observable than the property; the value must be resolved against the store.",
+      "proved_by": "live files"
+    },
+    {
+      "id": "B6",
+      "severity": "MEDIUM",
+      "title": "harness_finish is not gated by the unresolved stop line",
+      "where": [
+        "successor_mcp.gleam:200-203",
+        "successor_mcp.gleam:204-206",
+        "operations.gleam:219-229"
+      ],
+      "detail": "finish runs regardless of state.unresolved while write/build/test are gated. Partially mitigated because successful_check requires both receipts EXECUTED with matching input_manifest, so an unverified effect cannot reach completion. Residue: an unresolved set by a failed release or assess lets the task complete with unreconciled coordinator/risk state.",
+      "falsifier": "Trip unresolved via a failing harness_release, then call harness_finish with valid build/test receipts: it proceeds.",
+      "bounded_fix": "Apply the same guard to harness_finish, or document in the module header why finish is deliberately exempt.",
+      "proved_by": "reading"
+    },
+    {
+      "id": "B7",
+      "severity": "MEDIUM",
+      "title": "grant equality is order-sensitive inside nested objects and reports nothing useful",
+      "where": [
+        "admission.gleam:158-167",
+        "value.gleam:10",
+        "value.gleam:62-68",
+        "admission.gleam:179",
+        "admission.gleam:202"
+      ],
+      "detail": "same_object is order-insensitive at the top level but compares nested values with structural equality on value.Value, whose Object is List(#(String,Value)). Semantically identical tasks[] entries with different key order compare unequal. Fail-closed and therefore safe, but any re-serialization by a different writer breaks activation with the single opaque message grant_differs_from_reviewed_proposal. Related low note: validate_review:179 reads review_sha256 from the grant and :202 sets that same value into expected, so that key's equality is a tautology; the real binding lives entirely in check:211.",
+      "falsifier": "Reorder the keys inside tasks[0] of the grant without changing content: activation fails with grant_differs_from_reviewed_proposal and no field named.",
+      "bounded_fix": "Make the comparison structural-recursive with key-set semantics and return the first differing key path.",
+      "proved_by": "reading"
+    },
+    {
+      "id": "B8",
+      "severity": "LOW",
+      "title": "harness_clock skips grant revalidation",
+      "where": [
+        "successor_mcp.gleam:128",
+        "successor_mcp.gleam:107"
+      ],
+      "detail": "harness_clock calls clock.observe() directly while every other tool re-runs a.check. A clock read still answers after the grant expires or its file changes.",
+      "falsifier": "Expire the grant, then call harness_clock: it succeeds while harness_status fails.",
+      "bounded_fix": "Route harness_clock through a.check like harness_status, or document the exemption.",
+      "proved_by": "reading"
+    },
+    {
+      "id": "B9",
+      "severity": "LOW",
+      "title": "sa-plan task claim takes an unbounded duration with no sanity ceiling (reviewer incident, preserved)",
+      "where": [
+        "tools/sa-plan task claim WORKER PLAN LEASE_NS TASK_ID"
+      ],
+      "detail": "This reviewer passed an absolute epoch-ns timestamp where LEASE_NS is a duration. Result: lease_until_ns 3577964911517363985 = 2083-05-19T15:08:31Z, a 56.7-year lease, accepted silently. Released and reclaimed at root's instruction with LEASE_NS=3600000000000: now attempt 2, lease_until_ns 1788983456875493482 = 2026-09-09T19:50:56Z, 60.0 minutes. 'sa-plan help task' documents the parameter only as LEASE_NS, which reads equally as a deadline.",
+      "falsifier": "tools/sa-plan task claim W PLAN $(date +%s%N) TASK stores a lease decades in the future without complaint.",
+      "bounded_fix": "Reject a duration above a policy ceiling (24h) and rename the CLI parameter LEASE_DURATION_NS.",
+      "proved_by": "observed"
+    },
+    {
+      "id": "B10",
+      "severity": "OBSERVATION",
+      "title": "preflight FAIL at review time, unrelated to v9",
+      "where": [
+        "tools/preflight arm tracked/tools-tree"
+      ],
+      "detail": "FAIL (1 of 31): 2 untracked, first tools/telegram_client.cmi. OCaml build intermediates from concurrent Telegram work, not v9 source. Reported and NOT tidied: SC-WORKSPACE-ISO-001 INV-WS-02 makes another session's artifacts an incident to report rather than clean.",
+      "falsifier": "bash tools/preflight",
+      "bounded_fix": "Owner of the Telegram work removes the intermediates or gitignores them.",
+      "proved_by": "observed"
+    }
+  ],
+  "limits": [
+    "Source and evidence only. Nothing was executed and no MCP was started.",
+    "The 84 passes figure is quoted from test-v9.json and was NOT independently re-run.",
+    "Not full verification, no admission, no admission vote.",
+    "Root owns ADMISSION attempt 2 and all source writes.",
+    "Reviewer identity is self-reported and not cryptographically provable, the same bounded limit the grant's own known_limits declares."
+  ]
+}
