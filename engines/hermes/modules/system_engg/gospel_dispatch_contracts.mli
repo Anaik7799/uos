@@ -26,6 +26,14 @@ val validate_dispatch_contract : string -> verdict
              | FailClosed { error_code; _ } -> error_code = -2 \/ error_code = -3 \/ error_code = -1 *)
 
 val bounded_differential_oracle : string -> string -> (bool, string) result
-(** [bounded_differential_oracle payload baseline_output] executes differential comparison
-    between primary dispatch validation and independent formal reference oracle.
-    @ensures returns Ok true iff primary and reference oracle produce identical verdicts. *)
+(** [bounded_differential_oracle payload expected_digest] compares the two local
+    payload-filter implementations. [expected_digest] must be exactly 64 lowercase
+    hexadecimal bytes and equal SHA-256 of the exact [payload] bytes; malformed or
+    mismatching expectations return [Error], including for rejected payloads.
+
+    Passing results must both carry that exact digest. Rejections agree only when
+    both error codes match. Diagnostic timestamps and reason prose are not compared.
+    [Ok true] means comparison agreement: both filters may reject the payload.
+    It never grants dispatch authority, authenticates an oracle, or invokes a
+    formal solver. The two implementations share SQL-pattern and digest helpers;
+    this is not an independent proof of those helpers. *)

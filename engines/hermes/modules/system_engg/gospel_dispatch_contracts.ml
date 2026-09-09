@@ -67,13 +67,22 @@ let reference_oracle_check payload =
   else
     Pass { digest = sha256_digest payload; timestamp = "REF_OK" }
 
-let bounded_differential_oracle payload _expected_digest =
+let bounded_differential_oracle payload expected_digest =
+  let canonical_digest =
+    String.length expected_digest = 64
+    && String.for_all (function '0'..'9' | 'a'..'f' -> true | _ -> false) expected_digest
+  in
+  if not canonical_digest then
+    Error "Expected digest must be 64 lowercase hexadecimal bytes"
+  else if sha256_digest payload <> expected_digest then
+    Error "Expected digest does not match exact payload bytes"
+  else
   let v1 = validate_dispatch_contract payload in
   let v2 = reference_oracle_check payload in
   match v1, v2 with
-  | Pass p1, Pass _ ->
-      if String.length p1.digest = 64 then Ok true
-      else Error "Digest length mismatch in primary oracle"
+  | Pass p1, Pass p2 ->
+      if p1.digest = expected_digest && p2.digest = expected_digest then Ok true
+      else Error "Digest discrepancy between payload expectation and oracle results"
   | FailClosed f1, FailClosed f2 ->
       if f1.error_code = f2.error_code then Ok true
       else Error "Error code discrepancy between primary and reference oracle"
