@@ -1,0 +1,72 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "ev-rag-freshness-20260909-0450",
+    "plan_id": "uos/ev-rag-freshness/20260909",
+    "task_id": "REPAIR",
+    "actor": "codex-ev-rag-freshness",
+    "fractal_layer": 5,
+    "phase": "implementation",
+    "scope": "Bounded pure-Gleam repair of RAG cache freshness and input/resource limits: lookup must report fresh, stale, and missing outcomes at an observation time; insertion and refresh must refuse invalid or oversized input; refresh must create a new valid observation rather than only toggle a cache field. Scope is the cache module, its focused tests, and a focused test runner. No retrieval, model, network, disk, integration, deployment, or admission claim is authorized.",
+    "task_state": "executing",
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": [],
+    "class": "P1",
+    "observed_at": "2026-09-09T05:04:00Z",
+    "ready_since": "2026-09-09T05:04:00Z",
+    "valid_until": "2026-09-09T06:04:00Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "12b978fd0a140b36f9ca22d2489e3069b2b4851f; descendant of immutable base 337f99137673d7866b958a38bd490fb876b2880f",
+      "evidence": [
+        {"path": ".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam", "sha256": "4d64da8f446196ccaa9161d766a6961c13c3cb0b9f19e5aeb1301c2764244ec5", "observed_at": "2026-09-09T05:03:00Z"},
+        {"path": ".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/test/rag_cache_mesh_test.gleam", "sha256": "55f7c2756461c0325af31337d36f2ba4d8f897ae1205917638d7eb26704b6c16", "observed_at": "2026-09-09T05:03:00Z"},
+        {"path": ".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/test/ev_rag_freshness_runner.gleam", "sha256": "8f753ec01b438f374ff91691e6cbcc0ca29c523ae3f8840642c48e88aad3c75f", "observed_at": "2026-09-09T05:03:00Z"},
+        {"path": ".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/rag_cache_hud.gleam", "sha256": "8255063d14f1c7706502f087c5973f168ed3de126b1f9c534d4a43eb9d71516a", "observed_at": "2026-09-09T05:03:00Z"},
+        {"path": ".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/test/rag_cache_hud_test.gleam", "sha256": "3903b9a7529c3e87fc049246c3f636dd72f46290089f710359ff7314c6e7b183", "observed_at": "2026-09-09T05:03:00Z"}
+      ]
+    },
+    "factors": {
+      "criticality": {"rationale": "Unbounded or stale cache output can be represented as a current semantic response.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam"]},
+      "stpa": {"rationale": "Unsafe actions are serving expired observations, accepting invalid negative counts, and admitting unbounded input vectors or payloads.", "value": 5, "low": 5, "high": 5, "evidence_refs": [".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/test/rag_cache_mesh_test.gleam"]},
+      "fmea": {"rationale": "FM-RAG-STALE and FM-RAG-UNBOUNDED are S5 O2 Det3 RPN30.", "value": 5, "low": 5, "high": 5, "evidence_refs": [".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/rag_cache_hud.gleam"]},
+      "dependency": {"rationale": "Freshness and resource refusal are review gaps for EV103 cache evidence.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/test/rag_cache_hud_test.gleam"]},
+      "impact": {"rationale": "A typed cache result lets callers distinguish missing and stale data without claiming external retrieval.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-rag-freshness-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam"]}
+    },
+    "score": 1600,
+    "score_interval": [1600, 1600],
+    "fmea_modes": [
+      {"id": "FM-RAG-STALE", "s": 5, "o": 2, "det": 3, "rpn": 30, "band": 5, "cause": "Lookup receives no observation timestamp and does not consult entry TTL.", "effect": "Expired data is indistinguishable from a valid hit.", "controls": "Typed Fresh, Stale, and Missing lookup outcomes at a caller-provided observation time."},
+      {"id": "FM-RAG-UNBOUNDED", "s": 5, "o": 2, "det": 3, "rpn": 30, "band": 5, "cause": "Put and refresh accept arbitrary string, chunk, vector, token, and timestamp values.", "effect": "Invalid data or resource consumption escapes the cache boundary.", "controls": "Typed validation failures and explicit bounded constants."}
+    ],
+    "stpa_analysis": {
+      "controller": "Pure RAG cache mesh",
+      "control_action": "Insert, refresh, and look up cache entries",
+      "losses": ["L-STALE-ANSWER", "L-RESOURCE-EXHAUSTION", "L-INVALID-ACCOUNTING"],
+      "hazards": ["H-STALE-HIT", "H-UNBOUNDED-INPUT", "H-NEGATIVE-COUNT", "H-FLAG-ONLY-REFRESH"],
+      "ucas": [
+        {"type": "not_provided", "applicability": "applicable", "context": "Lookup omits the observation time needed to enforce TTL.", "hazard_ids": ["H-STALE-HIT"], "constraint": "Lookup takes now_ts and returns explicit stale or missing outcomes."},
+        {"type": "provided_unsafe", "applicability": "applicable", "context": "Put or refresh accepts oversize payload/vector/chunk input or negative accounting values.", "hazard_ids": ["H-UNBOUNDED-INPUT", "H-NEGATIVE-COUNT"], "constraint": "Validation refuses invalid input before state mutation."},
+        {"type": "wrong_timing", "applicability": "applicable", "context": "A vector refresh only changes an incidental field while its observation remains expired.", "hazard_ids": ["H-FLAG-ONLY-REFRESH"], "constraint": "Refresh records a validated new observation timestamp and lookup uses it."},
+        {"type": "duration", "applicability": "applicable", "context": "Input size and retained entry lifetime are unbounded.", "hazard_ids": ["H-UNBOUNDED-INPUT", "H-STALE-HIT"], "constraint": "Constants bound input dimensions and TTL; stale entries cannot produce a fresh result."}
+      ]
+    },
+    "decision": {
+      "summary": "Add the smallest typed cache boundary that proves model-level freshness and bounded refusal.",
+      "alternatives": ["Continue returning untyped Result(CacheEntry, Nil)", "Return typed lookup and mutation results with explicit limits"],
+      "assumptions": ["The cache model does not perform actual retrieval, embedding, model inference, network, disk, or authentication work."],
+      "confidence": "analyst_estimate",
+      "counterevidence": ["Existing HUD metrics do not provide retrieval provenance."],
+      "forecast": "Fresh lookup succeeds before TTL, stale lookup returns Stale, invalid input is refused without mutation, and valid refresh restores freshness by timestamped state.",
+      "falsifier": "An expired entry returns Fresh, a negative or oversize input mutates state, or refresh changes only a flag without a fresh observation.",
+      "acceptance": ["Focused direct Gleam runner fails before and passes after repair", "Candidate source hashes match the final portfolio", "Native preflight passes before claim and active check passes with the claimed attempt"],
+      "rollback": "Preserve candidate history and do not integrate, deploy, complete, or admit.",
+      "budget": "Existing realized Gleam and OTP toolchains only; no downloads.",
+      "reviewer": "Parent coordinator and independent reviewer.",
+      "residuals": ["No actual retrieval/model integration or persistence proof", "Formal refinement remains outside bounded cache repair."],
+      "supersedes": "No prior candidate; this begins from the immutable base."
+    }
+  }
+]
