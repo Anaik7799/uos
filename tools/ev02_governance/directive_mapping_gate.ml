@@ -48,8 +48,16 @@ let normalize body =
     else body
   in
   List.fold_left
-    (fun text surface -> replace_all ~needle:surface ~replacement:"<surface>/" text)
-    without_header [".agents/"; ".claude/"; ".gemini/"; ".codex/"]
+    (fun text locator -> replace_all ~needle:locator ~replacement:"<surface-policy-link>/" text)
+    without_header [
+      "http://nas-1.tail55d152.ts.net:4100/docs/.agents/rules/";
+      "http://nas-1.tail55d152.ts.net:4100/docs/.claude/rules/";
+      "http://nas-1.tail55d152.ts.net:4100/docs/.gemini/rules/";
+      "http://nas-1.tail55d152.ts.net:4100/docs/.codex/rules/";
+      "http://nas-1.tail55d152.ts.net:4100/files/.agents/rules/";
+      "http://nas-1.tail55d152.ts.net:4100/files/.claude/rules/";
+      "http://nas-1.tail55d152.ts.net:4100/files/.gemini/rules/";
+      "http://nas-1.tail55d152.ts.net:4100/files/.codex/rules/" ]
 
 let ids_from_superset path =
   let channel = open_in path in
@@ -169,8 +177,8 @@ let print observation =
 
 let selftest () =
   let check label actual = if not actual then failwith ("selftest failed: " ^ label) in
-  check "known-header" (normalize "---\ntrigger: always_on\n---\n\nSee .agents/rules/a" = "See <surface>/rules/a");
-  check "prose-not-erased" (normalize "MUST preserve normative prose" = "MUST preserve normative prose");
+  check "known-header" (normalize "---\ntrigger: always_on\n---\n\nSee http://nas-1.tail55d152.ts.net:4100/docs/.agents/rules/a" = "See <surface-policy-link>/a");
+  check "prose-not-erased" (normalize "MUST preserve .agents/rules/a as normative prose" = "MUST preserve .agents/rules/a as normative prose");
   check "duplicate-id" (duplicate ["DIR-A"; "DIR-A"]);
   check "set-mismatch" (sort_unique ["DIR-A"] <> sort_unique ["DIR-B"]);
   check "anchor-is-line" (not (exact_line "## Section x" "## Section"));

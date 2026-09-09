@@ -35,8 +35,15 @@ let normalize body =
   let header = "---\ntrigger: always_on\n---\n\n" in
   let body = if String.starts_with ~prefix:header body then
       String.sub body (String.length header) (String.length body - String.length header) else body in
-  [".agents/"; ".claude/"; ".gemini/"; ".codex/"]
-  |> List.fold_left (fun text surface -> replace_all ~needle:surface ~replacement:"<surface>/" text) body
+  ["http://nas-1.tail55d152.ts.net:4100/docs/.agents/rules/";
+   "http://nas-1.tail55d152.ts.net:4100/docs/.claude/rules/";
+   "http://nas-1.tail55d152.ts.net:4100/docs/.gemini/rules/";
+   "http://nas-1.tail55d152.ts.net:4100/docs/.codex/rules/";
+   "http://nas-1.tail55d152.ts.net:4100/files/.agents/rules/";
+   "http://nas-1.tail55d152.ts.net:4100/files/.claude/rules/";
+   "http://nas-1.tail55d152.ts.net:4100/files/.gemini/rules/";
+   "http://nas-1.tail55d152.ts.net:4100/files/.codex/rules/"]
+  |> List.fold_left (fun text locator -> replace_all ~needle:locator ~replacement:"<surface-policy-link>/" text) body
 
 let intersection = function
   | [] -> []
@@ -107,9 +114,9 @@ let selftest () =
   check "divergence" (has "normalized-body-divergence"
     (evaluate ~directive_count:38 [exact; exact] [same; ["a\000one"; "b\000changed"]]));
   check "header-and-link-normalization"
-    (normalize "---\ntrigger: always_on\n---\n\nSee .agents/rules/x" = "See <surface>/rules/x");
+    (normalize "---\ntrigger: always_on\n---\n\nSee http://nas-1.tail55d152.ts.net:4100/docs/.agents/rules/x" = "See <surface-policy-link>/x");
   check "normative-prose-retained"
-    (normalize "MUST keep this sentence" = "MUST keep this sentence");
+    (normalize "MUST keep .agents/rules/x in this sentence" = "MUST keep .agents/rules/x in this sentence");
   print_endline "PASS policy-surface selftest: mapping/missing/directive-count/divergence"
 
 let () =
