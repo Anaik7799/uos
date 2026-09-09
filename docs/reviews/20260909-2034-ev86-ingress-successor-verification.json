@@ -1,0 +1,312 @@
+{
+  "schema": "uos.ev86.ingress-successor.v1",
+  "observed_at_epoch": 1788984394.108373,
+  "candidate": "7774d111070091c49c8af2a08cb430f8153bf59d",
+  "prior_failed_candidate": "9c59632d7951153d43f01a3b7e54940480436f7d",
+  "prior_evidence": "bf205154ccd86a8e6eba98c332f09f7ba3372766",
+  "status": "COMPONENT_VERIFIED_PENDING_INDEPENDENT_REVIEW",
+  "plan": "uos/ev86-audio-serving/20260909",
+  "task": "ROUTE",
+  "worker": "codex-ev86-audio-serving",
+  "attempt": 2,
+  "task_state": "executing",
+  "lease_until_ns": "1788987234279189522",
+  "input_bindings": 3794,
+  "compiled_artifacts": 54,
+  "direct_groups": 17,
+  "actual_http_cases": 15,
+  "filesystem_fixture_roots": 18,
+  "controls": [
+    "Designated oversized normalized-to-music assertion fails on exact old compiled source",
+    "4096 bytes admitted to ordinary dispatch;4097 refused414 before normalization; HEAD has empty body and matching error Content-Length",
+    "Malformed percent plus valid encoded music namespace is reserved and refused by exact lexical resolver",
+    "Full changed package compile and retained15 direct groups plus2 new groups pass",
+    "Actual private HTTP full configured same-origin Tailnet media URLs and exact MP3/WAV hashes pass",
+    "Grouped navigation/status/breadcrumb/Rendered-Raw links and native details/PrevNext/18 checks/Domain6 are present without JS or autoplay"
+  ],
+  "limits": [
+    "No live4100 deployment, runtime ownership, playback activation, synthesis/authenticity/quality or whole-EV86 admission",
+    "Configured public origin is syntax-validated and operator-selected; request Host never selects it; same-origin ownership is not authenticated",
+    "Automatic click-to-copy is explicitly unavailable; source raw view uses native details, not JS-rendered Markdown",
+    "Generic file reader remains unchanged; new universal raw path-size refusal is the deliberately authorized common ingress change",
+    "Cooperative filesystem snapshots only; hostile atomic descriptor-relative containment and full MP3 decoding remain unproved",
+    "Successor invocations directly use pinned native launchers and bounded receipts. Descendant ELF trace was performed on prior9c campaign, not redundantly repeated for7774; prior failed wrapper invocation remains excluded",
+    "Whole-EV86 formal evidence, sovereign review and release/library closure are unavailable"
+  ],
+  "tool_and_helper_bindings": [
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/tools/ev86_music_stage.ml",
+      "bytes": 3863,
+      "sha256": "1fad24896bb0387d63d19e73b8be9846354116b5baf781cefdba3b0f8b06179d"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/tools/ev86_music_fixtures.ml",
+      "bytes": 2753,
+      "sha256": "95b854467da4f6e0608d0b7d18dc986fa4d8ee32a3bb776feb80f3a30ccf2c84"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/tools/ev86_music_http.ml",
+      "bytes": 7000,
+      "sha256": "33fdedd4685facc9d8db53959897b7bae16dafb90fad1c36455c93f7cb00fb18"
+    },
+    {
+      "path": "/tmp/ev86-run.ml",
+      "bytes": 948,
+      "sha256": "56d60672cf7a4bde8789e2a018d078105c3ccbeaede5dc5293ae8153ad4b0bc8"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_native.ml",
+      "bytes": 13974,
+      "sha256": "2674b8445c704c7fe9d22e23e7479d886779d4cab635e167723776e1124960b6"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+      "bytes": 2029504,
+      "sha256": "2cb8989363a58b9ca352ea1cd245bf0e8b8adb2c1c64e87b52cbea80bc3e4e0f"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+      "bytes": 28040368,
+      "sha256": "f63584aac3923ba0060b0795274846b6df425b17b7f2f45bc6368b81e3b2ad92"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+      "bytes": 24440408,
+      "sha256": "9d57b042c9f857ed898f4b99116ad8433bed2504619613c97d72a52288bef697"
+    },
+    {
+      "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "bytes": 67320,
+      "sha256": "bd67dd9a907245330ed2959749d00345b7f9f3cfa7dbb109e970c16168e231a8"
+    }
+  ],
+  "http_artifacts": [
+    {
+      "path": "/tmp/ev86-http-observation-232a83/http-above-path.response",
+      "bytes": 344,
+      "sha256": "d56e64b699be382468e637293c0c5a93fd5b356a3c879677f4a438044e4cea69"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-232a83/http-backslash.response",
+      "bytes": 334,
+      "sha256": "084e7fcd2d56ae8512dc6266753278eba98a9bada2425171c985d8ea78977311"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-232a83/http-exact-path.response",
+      "bytes": 334,
+      "sha256": "084e7fcd2d56ae8512dc6266753278eba98a9bada2425171c985d8ea78977311"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-232a83/http-head.response",
+      "bytes": 292,
+      "sha256": "1cf4098c2867a901914beee58535553bc63c24b094741fc1c8bd626832ce0705"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-232a83/http-long-head.response",
+      "bytes": 313,
+      "sha256": "eaa1e11987ab7c2469cba59549739a88145459609e35a849f84df454f34fced8"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-232a83/http-long-normalized-music.response",
+      "bytes": 344,
+      "sha256": "d56e64b699be382468e637293c0c5a93fd5b356a3c879677f4a438044e4cea69"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-232a83/http-malformed-mixed.response",
+      "bytes": 334,
+      "sha256": "084e7fcd2d56ae8512dc6266753278eba98a9bada2425171c985d8ea78977311"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-232a83/http-method.response",
+      "bytes": 355,
+      "sha256": "8fa8027cd21df5b3bfca02002760ad4f96b665f44a3d1380f661635138967359"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-232a83/http-missing.response",
+      "bytes": 334,
+      "sha256": "084e7fcd2d56ae8512dc6266753278eba98a9bada2425171c985d8ea78977311"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-232a83/http-mp3.response",
+      "bytes": 480988,
+      "sha256": "3a1faef06d9498623fd4b90ba8a26a701ff0cfd8061f8dcec11e5199d9e04511"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-232a83/http-percent.response",
+      "bytes": 334,
+      "sha256": "084e7fcd2d56ae8512dc6266753278eba98a9bada2425171c985d8ea78977311"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-232a83/http-player.response",
+      "bytes": 1302107,
+      "sha256": "bf7b8d5cdd656c85e7fb5d2582f94e8623a22e8cbc7f7dd0a1e797241d1295d8"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-232a83/http-server.log",
+      "bytes": 149,
+      "sha256": "7e030e85322040cefc02d9d45b9d543947af32967a5a836892294dce534c6d7a"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-232a83/http-studio.response",
+      "bytes": 44429,
+      "sha256": "bcab1ba64f3b781f67ad68eed8d216114a8aabf05bcaf3e87a8f3b1554ebe6e6"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-232a83/http-traversal.response",
+      "bytes": 334,
+      "sha256": "084e7fcd2d56ae8512dc6266753278eba98a9bada2425171c985d8ea78977311"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-232a83/http-verification.json",
+      "bytes": 23127,
+      "sha256": "ca3e33ab2ced8343f2426bcb677f59c200f34161381a158f2f3edb0263bf4f90"
+    },
+    {
+      "path": "/tmp/ev86-http-observation-232a83/http-wav.response",
+      "bytes": 2646336,
+      "sha256": "02a28b93adc472046691d62e00defe2b4e7e205fad3a81525a2b5a1cf0d477a2"
+    }
+  ],
+  "records": [
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-bindings-0.json",
+      "origin": "/tmp/20260909-2034-ev86-ingress-successor-bindings-0.json",
+      "sha256": "cc04d4817603a19e380bb1f100efe5a833e75c86ee6c7e958b5cb57c056c2683"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-bindings-1.json",
+      "origin": "/tmp/20260909-2034-ev86-ingress-successor-bindings-1.json",
+      "sha256": "3bcbe2d6a6b4e0905b018e3336c0ba833b14973b490fe6fbd3028ec73f12f6f8"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-bindings-2.json",
+      "origin": "/tmp/20260909-2034-ev86-ingress-successor-bindings-2.json",
+      "sha256": "490c86683debda330ccd17ab5cdfd8bdd69603c53d3ae7b0a4f11a0a949dc346"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-bindings-3.json",
+      "origin": "/tmp/20260909-2034-ev86-ingress-successor-bindings-3.json",
+      "sha256": "53cb9546ede1461769b6672aa0e38c6ebdba0dba6aa329c37aececd17dd63445"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-bindings-4.json",
+      "origin": "/tmp/20260909-2034-ev86-ingress-successor-bindings-4.json",
+      "sha256": "8c3e4cfffe9ae35428f215b802933a68a82b93f7651b28eaead60a177e4d9383"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-bindings-5.json",
+      "origin": "/tmp/20260909-2034-ev86-ingress-successor-bindings-5.json",
+      "sha256": "c3f0689f68fa06ef5ecb525793ebcba1aabbcf610def81c67054445a5c3b4fce"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-bindings-6.json",
+      "origin": "/tmp/20260909-2034-ev86-ingress-successor-bindings-6.json",
+      "sha256": "11b0b7afb171402a0a6527ce2f8f1888fc4b338c6f6a527636280f7a9ba11868"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-bindings-7.json",
+      "origin": "/tmp/20260909-2034-ev86-ingress-successor-bindings-7.json",
+      "sha256": "ceda06c697cf8ba4c0eda50882649c1c443e5424e3f04b69caa0d4053ce4e5dc"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-bindings-8.json",
+      "origin": "/tmp/20260909-2034-ev86-ingress-successor-bindings-8.json",
+      "sha256": "1041463f6ebd8da528643dce34951ea4e04e40a90af801eea28f9afe6a5ee66b"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-bindings-9.json",
+      "origin": "/tmp/20260909-2034-ev86-ingress-successor-bindings-9.json",
+      "sha256": "fcb914eda9f8314c6ffd9740c91deda73ec5880a9cb8b0aa87979be0514fa913"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-bindings-10.json",
+      "origin": "/tmp/20260909-2034-ev86-ingress-successor-bindings-10.json",
+      "sha256": "7e4d691a978fdea551ba13813c24352275caa102c49a00e872867af474c57229"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-bindings-11.json",
+      "origin": "/tmp/20260909-2034-ev86-ingress-successor-bindings-11.json",
+      "sha256": "4d0080f51c3523800f37a28a47135120f9d64b426013927fb9d25153b7335556"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-bindings-12.json",
+      "origin": "/tmp/20260909-2034-ev86-ingress-successor-bindings-12.json",
+      "sha256": "d974703d18929145c0d4c174984d256cd8538fdf5e75226a93f3eb97671100dc"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-bindings-13.json",
+      "origin": "/tmp/20260909-2034-ev86-ingress-successor-bindings-13.json",
+      "sha256": "8b14df52b54bf7149f3b44245d8dc86eb961cc8e94360b29aaa4723ce848a07f"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-bindings-14.json",
+      "origin": "/tmp/20260909-2034-ev86-ingress-successor-bindings-14.json",
+      "sha256": "8bdc97232533778ba683f61bbd156458abfdb60cf35a6867796464ad5aecf93b"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-compiled.json",
+      "origin": "/tmp/20260909-2034-ev86-ingress-successor-compiled.json",
+      "sha256": "1758cc1918ddab51c43507e5b99a285888f7528290f1c675bfed4f422fc33524"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-active.json",
+      "origin": "/tmp/ev86-ingress-source-active.json",
+      "sha256": "5c41454514ed192ccb33ed5ae6dcbed2a9e5fb06509b329d0245eb1f3858a0af"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-stage.json",
+      "origin": "/tmp/ev86-ingress-stage.json",
+      "sha256": "8406d762e15c1e16c7c1fe1f9625e7d3f5988103c4e84acb802392d4d897dcd9"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-fixtures.json",
+      "origin": "/tmp/ev86-ingress-fixtures.json",
+      "sha256": "7a4400c29868f905110afedeec11b0f8a9042932a62eeafd2ecfd0c9a9ebfc72"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-compile.json",
+      "origin": "/tmp/ev86-ingress-compile.json",
+      "sha256": "a7f39e346139e6a05fa405d3487384eea5088563d03369d902a47c01e0abbec3"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-tests.json",
+      "origin": "/tmp/ev86-ingress-tests.json",
+      "sha256": "9ccf3309bb7f192259e72575d375e1517ec4ef2caa097734aa8333c58c1e2c53"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-http-invocation.json",
+      "origin": "/tmp/ev86-ingress-http.json",
+      "sha256": "1f9a5da7b476929ecf96eb4a068cf08b282c9fe98e2886c34511f0d207507b9e"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-http-verification.json",
+      "origin": "/tmp/ev86-http-observation-232a83/http-verification.json",
+      "sha256": "ca3e33ab2ced8343f2426bcb677f59c200f34161381a158f2f3edb0263bf4f90"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-designated-red.json",
+      "origin": "/tmp/ev86-bypass-assert-red.json",
+      "sha256": "c7e5c161d784a065b1d3e45632a01cabe45f905f6cdce6c83e88ac8fb1a0a174"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-designated-red-compile.json",
+      "origin": "/tmp/ev86-bypass-assert-compile.json",
+      "sha256": "29be4e5f053306d974059b4297982b5de0b2d0eb694976c8963521054f4303cc"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-designated-red-source.gleam.txt",
+      "origin": "/tmp/ev86-bypass-probe-1956/package/src/ev86_bypass_probe.gleam",
+      "sha256": "3563dbf3a8002890da89842d46e0d0d3d22501ad81dff7fd132f35c4202c7d39"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-workspace-renewal.json",
+      "origin": "/tmp/ev-workspace-renew-codec-1956.json",
+      "sha256": "37c98eec908995591344f588a90baac4225d1e2b36c9efb4ccadaf7ffb619df5"
+    },
+    {
+      "path": "docs/reviews/20260909-2034-ev86-ingress-successor-evidence-helper.ml.txt",
+      "origin": "/tmp/ev86-seal-ingress.ml",
+      "sha256": "740975b423e179a9fb7a06cd5d4a5e26a3f411de1020a4a9970df184c75b9974"
+    }
+  ]
+}
