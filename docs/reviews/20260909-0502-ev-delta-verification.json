@@ -1,0 +1,112 @@
+{
+  "schema": "uos.ev-delta-freshness-verification.v1",
+  "status": "PASS",
+  "authority": "NONE",
+  "observed_utc_seconds": 1788930205.822708,
+  "tested_source_commit": "df0978287c4ffa9dcad14a10298081297327d3f5",
+  "base_commit": "337f99137673d7866b958a38bd490fb876b2880f",
+  "source_manifest": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam",
+      "sha256": "76a035fc3441331a25eceb4ad7c29c52e8ad8e8079a3788887ad32c33933f8f1",
+      "staged_path": "/tmp/ev-delta-green-20260909-0445/src/cepaf_gleam/crdt/delta_state.gleam",
+      "candidate_bytes_equal": true,
+      "staged_bytes_equal": true
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam",
+      "sha256": "3aa47feda6bda72d00b42ad568ad3b3b013d26a025b64c0fd6b88fc0f08333e4",
+      "staged_path": "/tmp/ev-delta-green-20260909-0445/src/cepaf_gleam/crdt/health_bridge.gleam",
+      "candidate_bytes_equal": true,
+      "staged_bytes_equal": true
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+      "sha256": "dccc4a14c8707c256d29b2698a02a1cf9cb58b425b557ad306ea1cb9e601036f",
+      "staged_path": "/tmp/ev-delta-green-20260909-0445/src/cepaf_gleam/crdt/mesh_sync.gleam",
+      "candidate_bytes_equal": true,
+      "staged_bytes_equal": true
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+      "sha256": "de4213569622474eef5ae1ecfc93037059a40550793c208f5af5abd0fef77e1d",
+      "staged_path": "/tmp/ev-delta-green-20260909-0445/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+      "candidate_bytes_equal": true,
+      "staged_bytes_equal": true
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+      "sha256": "2b40cb70a185e96a8128e1babef752fab467655d22cd0b11f0bcf62b17bdee50",
+      "staged_path": "/tmp/ev-delta-green-20260909-0445/src/cepaf_gleam/ha/deadman_freshness.gleam",
+      "candidate_bytes_equal": true,
+      "staged_bytes_equal": true
+    },
+    {
+      "path": "apps/cepaf_gleam/test/delta_mesh_engine_test.gleam",
+      "sha256": "5bb94ffa252e641393efb8169702c7874ac766a72634d25a521b50cdf633c1ce",
+      "staged_path": "/tmp/ev-delta-green-20260909-0445/src/delta_mesh_engine_test.gleam",
+      "candidate_bytes_equal": true,
+      "staged_bytes_equal": true
+    },
+    {
+      "path": "apps/cepaf_gleam/test/deadman_freshness_test.gleam",
+      "sha256": "e6ea49acee8d58d076087f2ebd6dcbdc738ba0883ee76f21b475ef2b1df3e138",
+      "staged_path": "/tmp/ev-delta-green-20260909-0445/src/deadman_freshness_test.gleam",
+      "candidate_bytes_equal": true,
+      "staged_bytes_equal": true
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ev_delta_freshness_runner.gleam",
+      "sha256": "479f8adf246dcfb6e4f9233b14916ff216870e1984f363e2f877a0ba775fbc27",
+      "staged_path": "/tmp/ev-delta-green-20260909-0445/src/ev_delta_freshness_runner.gleam",
+      "candidate_bytes_equal": true,
+      "staged_bytes_equal": true
+    }
+  ],
+  "manifest": {
+    "path": "apps/cepaf_gleam/gleam.toml",
+    "sha256": "16981483da2c0eed23e5c33768a7ed956988019f42ba99d7359bc293f53dd94b"
+  },
+  "private_manifest_sha256": "48b630b24c37d15f18bebee666efc4d54c1baec5f5f4678b981d356684a78f08",
+  "private_manifest_transformation": "Only remove the exact [dev-dependencies] header line so copied tests compile as application modules.",
+  "invocations": [
+    {
+      "path": "docs/reviews/20260909-0445-ev-delta-green-compile.json",
+      "sha256": "ec2b817ee229e511d6a07ddc99fb36ed13678dfd7413e2a67e2a5cb381388ee4"
+    },
+    {
+      "path": "docs/reviews/20260909-0445-ev-delta-green-tests.json",
+      "sha256": "803abfc28d519cd212ac37f7235df70ab3d5cd8e3c38ada585fe4cd1248a6139"
+    },
+    {
+      "path": "docs/reviews/20260909-0445-ev-delta-direct-runner.json",
+      "sha256": "9d7e380af2396f66390319902520fd3f26d52aafcbb8dfd9ebb1bfdc5496fdea"
+    },
+    {
+      "path": "docs/reviews/20260909-0445-ev-delta-format.json",
+      "sha256": "1013cf0228f8c312303a2b02367f4dfb8eeb858b95d857ea71ff6370ea769b21"
+    },
+    {
+      "path": "docs/reviews/20260909-0451-ev-delta-final-active-observation.json",
+      "sha256": "5734c91a1e4d27ae9ad52bd2f28c3690f2867b973fc18d72e508372fcc10d4fc"
+    }
+  ],
+  "tests_passed": 32,
+  "tests_failed": 0,
+  "preserved_red_observations": [
+    "docs/reviews/20260909-0434-ev-delta-red-tests.json:11 passed,7 failed",
+    "docs/reviews/20260909-0440-ev-delta-expanded-tests.json:26 passed,1 failed"
+  ],
+  "risk_assessment": {
+    "path": "docs/reviews/20260909-0429-ev-delta-freshness-risk-review.json",
+    "sha256": "178c8573af076484a694dd7d0254c686f75fa22c8fc3e0044dcd19b608a8bdf2"
+  },
+  "dependencies": "Reused already-realized canonical apps/cepaf_gleam/build/dev/erlang artifacts; exact ebin search paths appear in native invocation receipts. Adapter excludes stale cepaf_gleam and uos_swarm outputs. Dependency closure provenance/reproducibility is not established by this receipt.",
+  "limits": [
+    "Author-observed structural state tests; independent review still required. No EV admission or formal refinement proof.",
+    "256 bounds queued message count, not payload bytes, peers or health entries.",
+    "Response preview and queued copy are the same messages; callers must not dispatch both. Drain is in-memory ownership transfer, not transport acknowledgment.",
+    "Exactly-once trip requests depend on retaining returned state and a serialized owner; old-state replay, crashes and network failures are outside tested scope.",
+    "This receipt checks current staged/source byte equality after execution; it does not authenticate historical producers or establish an atomic execution snapshot."
+  ]
+}
