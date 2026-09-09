@@ -122,10 +122,11 @@ let selftest () =
 let () =
   match Array.to_list Sys.argv with
   | [_; "--selftest"] -> selftest ()
-  | [_; "--observe"; root] ->
-      let outcome, shared, inventories, count = observe root in
-      let contents = List.map (fun relative ->
-        List.map (fun name -> Option.value ~default:"" (read_bounded (Filename.concat root (Filename.concat relative name)) |> Option.map normalize)) shared) surfaces in
-      print_json outcome shared inventories count contents;
-      (match outcome with Pass -> exit 0 | Hold _ -> exit 1)
-  | _ -> failwith "usage: policy_surface_gate.ml --selftest | --observe ROOT"
+  | [_; "--observe"; _] ->
+      (* This broad surface walker is retained only as historical diagnostic
+         code.  It is not a callable gate: it lacked the descriptor-relative
+         regular-file policy required for hostile paths.  The mapping gate is
+         the bounded observer used by EV-02 checks. *)
+      print_endline "{\"schema\":\"uos.ev02-policy-surface/v1\",\"authority\":\"REPORT_ONLY\",\"admission\":\"NOT_GRANTED\",\"status\":\"HOLD\",\"errors\":[\"retired-unsafe-observer\"]}";
+      exit 1
+  | _ -> failwith "usage: policy_surface_gate.ml --selftest | --observe ROOT (retired)"

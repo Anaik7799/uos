@@ -9,6 +9,7 @@
    local link prefixes. *)
 
 type rule = { id : string; file : string; anchor : string }
+type directive = { directive_id : string; clauses : string list }
 
 let max_rules = 64
 let max_bytes = 1_048_576
@@ -106,23 +107,32 @@ let normalize body =
       "http://nas-1.tail55d152.ts.net:4100/files/.gemini/rules/";
       "http://nas-1.tail55d152.ts.net:4100/files/.codex/rules/" ]
 
-let ids_from_superset ~budget path =
+let directives_from_superset ~budget path =
   let lines = String.split_on_char '\n' (read_regular ~budget path) in
-  let ids = ref [] in
-  let awaiting_id = ref false in
+  let directives = ref [] in
+  let current_id = ref None and current_clauses = ref [] in
+  let flush () =
+    match !current_id with
+    | None -> ()
+    | Some directive_id ->
+        directives := { directive_id; clauses = List.rev !current_clauses } :: !directives;
+        current_id := None; current_clauses := []
+  in
   List.iter (fun raw ->
     let line = String.trim raw in
-    if line = "[[directive]]" then awaiting_id := true
-    else if !awaiting_id && String.starts_with ~prefix:"id = \"" line then begin
+    if line = "[[directive]]" then flush ()
+    else if String.starts_with ~prefix:"id = \"" line then begin
       let start = String.length "id = \"" in
       match String.index_from_opt line start '"' with
       | None -> bounded_error "unterminated-directive-id"
       | Some stop ->
-          ids := String.sub line start (stop - start) :: !ids;
-          awaiting_id := false
-    end) lines;
-  if !awaiting_id || List.length !ids > max_rules then bounded_error "directive-count";
-  List.rev !ids
+          if !current_id <> None then bounded_error "duplicate-directive-id";
+          current_id := Some (String.sub line start (stop - start))
+    end else if !current_id <> None && line <> "" && line.[0] <> '#' then
+      current_clauses := line :: !current_clauses) lines;
+  flush ();
+  if List.length !directives > max_rules then bounded_error "directive-count";
+  List.rev !directives
 
 let rules_from_json ~budget path =
   let raw = read_regular ~budget path in
@@ -156,6 +166,7 @@ let json_strings values = values |> List.map quote |> String.concat ","
 
 type observation = {
   directive_ids : string list;
+  directive_clauses : (string * string list) list;
   rules : rule list;
   rule_rows : (rule * bool * int * bool) list;
   mapping_errors : string list;
@@ -165,7 +176,8 @@ type observation = {
 
 let observe root mapping_path =
   let budget = ref 0 in
-  let directive_ids = ids_from_superset ~budget (Filename.concat root "governance/agents/policy/superset.toml") in
+  let directives = directives_from_superset ~budget (Filename.concat root "governance/agents/policy/superset.toml") in
+  let directive_ids = List.map (fun directive -> directive.directive_id) directives in
   let rules = rules_from_json ~budget mapping_path in
   let shared_files =
     surfaces |> List.map (fun surface -> list_rule_names (Filename.concat root surface))
@@ -213,7 +225,9 @@ let observe root mapping_path =
   let body_differences =
     rule_rows |> List.filter_map (fun (rule, _, surface_count, normalized_equal) ->
       if surface_count = List.length surfaces && not normalized_equal then Some (rule.id, rule.file) else None) in
-  { directive_ids; rules; rule_rows; mapping_errors = List.rev !mapping_errors;
+  { directive_ids;
+    directive_clauses = List.map (fun directive -> directive.directive_id, directive.clauses) directives;
+    rules; rule_rows; mapping_errors = List.rev !mapping_errors;
     body_differences;
     unmapped_shared_files = List.filter (fun file -> not (contains mapped_files file)) shared_files }
 
@@ -225,13 +239,17 @@ let print observation =
   let body_differences = observation.body_differences |> List.map (fun (id, file) ->
     "{\"id\":" ^ quote id ^ ",\"file\":" ^ quote file ^ "}") |> String.concat "," in
   let rule_rows = observation.rule_rows |> List.map (fun (rule, anchor_present, surface_count, normalized_equal) ->
-    let source_clause, semantic_status, missing_facet =
-      if rule.id = "DIR-TIME-001" then
-        ("format_mandate=YYYYMMDD-HHSS-; description requires timestamp prefix; enforcement=tools/uos timestamp-check",
-         "PARTIAL_HOLD", "Anchor presence and body parity do not prove enforcement execution or historic provenance")
+    let clauses = Option.value ~default:[] (List.assoc_opt rule.id observation.directive_clauses) in
+    let source_clause = String.concat "; " clauses in
+    let has_normative = List.exists (fun clause ->
+      String.starts_with ~prefix:"format_mandate =" clause ||
+      String.starts_with ~prefix:"description =" clause ||
+      String.starts_with ~prefix:"enforcement =" clause) clauses in
+    let semantic_status, missing_facet =
+      if has_normative then
+        ("PARTIAL_HOLD", "Source clause is observed, but anchor presence and body parity do not prove enforcement execution or historic provenance")
       else
-        ("status=CLASSIFIED_MAPPED; authority_role=AUT-OPERATOR; lifecycle=active; disposition=NORMALIZED",
-         "UNSUPPORTED_HOLD", "superset.toml provides no directive-specific normative clause to establish anchor coverage") in
+        ("UNSUPPORTED_HOLD", "superset.toml supplies only metadata for this directive; it does not establish anchor coverage") in
     "{\"id\":" ^ quote rule.id ^ ",\"canonical_file\":" ^ quote rule.file ^
     ",\"anchor\":" ^ quote rule.anchor ^ ",\"anchor_present\":" ^ string_of_bool anchor_present ^
     ",\"surface_count\":" ^ string_of_int surface_count ^
@@ -315,7 +333,19 @@ let fixture_selftest () =
   let budget_map = Filename.concat budget_root "mapping.json" in
   write budget_map (mapping_text rows);
   expect_mapping_hold "aggregate-budget" (fun () -> observe budget_root budget_map);
-  print_endline "{\"schema\":\"uos.ev02-directive-mapping/v1\",\"status\":\"PASS\",\"cases\":7}"
+  let source_root = private_root "mapping-source" in
+  build_fixture source_root ~all_surfaces:true ~body:"# Anchor\ncontent\n";
+  let source_superset = Filename.concat source_root "governance/agents/policy/superset.toml" in
+  write source_superset
+    ("[[directive]]\nid = \"DIR-01\"\nstatus = \"REVOKED_SYNTHETIC\"\nformat_mandate = \"COUNTERFACTUAL\"\n\n" ^
+     (List.tl ids |> List.map (fun id -> "[[directive]]\nid = \"" ^ id ^ "\"\nstatus = \"REVOKED_SYNTHETIC\"\n") |> String.concat "\n"));
+  let source_map = Filename.concat source_root "mapping.json" in
+  write source_map (mapping_text rows);
+  let source_observation = observe source_root source_map in
+  if List.assoc "DIR-01" source_observation.directive_clauses <>
+     ["status = \"REVOKED_SYNTHETIC\""; "format_mandate = \"COUNTERFACTUAL\""] then
+    failwith "selftest source clauses were not read";
+  print_endline "{\"schema\":\"uos.ev02-directive-mapping/v1\",\"status\":\"PASS\",\"cases\":8}"
 
 let selftest () =
   let check label actual = if not actual then failwith ("selftest failed: " ^ label) in
