@@ -1,0 +1,10 @@
+#directory "+unix";;
+#load "unix.cma";;
+let root="/home/an/NAS-setup/uos"
+let stage=Sys.argv.(1) and receipt=Sys.argv.(2)
+let exe=root^"/toolchains/opam-ocaml/bin/ocamlrun"
+let full=Sys.file_exists(stage^"/full-lib")
+let lib=stage^(if full then "/full-lib" else "/lib")
+let paths=Sys.readdir lib |> Array.to_list |> List.sort String.compare |> List.map(fun n->lib^"/"^n^"/ebin") |> List.filter Sys.file_exists
+let args=[exe;root^"/toolchains/opam-ocaml/bin/ocaml";root^"/.uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_native.ml";"--cwd";stage;"--seconds";"60";"--receipt";receipt;"--";"native";"/usr/bin/env";"UOS_MUSIC_ROOT="^stage^"/content";"/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec";"-noshell";"-noinput";"-pa"] @ paths @ [stage^(if full then "/full-compiled/ebin" else "/compiled/ebin");"-s";"music_files_test";"main";"-s";"init";"stop"]
+let ()=Unix.execv exe(Array.of_list args)
