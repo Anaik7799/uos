@@ -1,0 +1,43 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/tmp/ev107-rete-initial-green-1639/package",
+  "argv": [
+    "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+    "compile-package", "--target", "erlang", "--package",
+    "/tmp/ev107-rete-initial-green-1639/package", "--out",
+    "/tmp/ev107-rete-initial-green-1639/compiled", "--lib",
+    "/tmp/ev107-rete-initial-green-1639/lib"
+  ],
+  "utc_started": 1788971928.878079,
+  "utc_finished": 1788971928.912614,
+  "elapsed_seconds": 0.034531610000000004,
+  "deadline_seconds": 60.0,
+  "exit_code": 1,
+  "output": "warning: Unused imported module\n   ┌─ /tmp/ev107-rete-initial-green-1639/package/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam:20:1\n   │\n20 │ import gleam/result\n   │ ^^^^^^^^^^^^^^^^^^^ This imported module is never used\n\nHint: You can safely remove it.\n\nwarning: Unused function argument\n    ┌─ /tmp/ev107-rete-initial-green-1639/package/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam:257:7\n    │\n257 │   use final <- result.then(run_round(\n    │       ^^^^^ This argument is never used\n\nHint: You can ignore it with an underscore: `_final`.\n\nerror: Unknown module value\n    ┌─ /tmp/ev107-rete-initial-green-1639/package/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam:252:19\n    │\n252 │   use _ <- result.then(case budget >= 1 && budget <= maximum_match_steps {\n    │                   ^^^^\n\nThe module `gleam/result` does not have a `then` value.\n\nerror: Unknown module value\n    ┌─ /tmp/ev107-rete-initial-green-1639/package/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam:256:19\n    │\n256 │   use _ <- result.then(validate_forward_memory(wm))\n    │                   ^^^^\n\nThe module `gleam/result` does not have a `then` value.\n\nerror: Unknown module value\n    ┌─ /tmp/ev107-rete-initial-green-1639/package/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam:257:23\n    │\n257 │   use final <- result.then(run_round(\n    │                       ^^^^\n\nThe module `gleam/result` does not have a `then` value.\n\nerror: Unknown type for record access\n    ┌─ /tmp/ev107-rete-initial-green-1639/package/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam:264:32\n    │\n264 │     WorkingMemory(..wm, facts: final.facts, fired_count: final.fired_count),\n    │                                ^^^^^ I don't know what type this is\n\nIn order to access a record field we need to know what type it is, but I\ncan't tell the type here. Try adding type annotations to your function and\ntry again.\n\nerror: Unknown type for record access\n    ┌─ /tmp/ev107-rete-initial-green-1639/package/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam:264:58\n    │\n264 │     WorkingMemory(..wm, facts: final.facts, fired_count: final.fired_count),\n    │                                                          ^^^^^ I don't know what type this is\n\nIn order to access a record field we need to know what type it is, but I\ncan't tell the type here. Try adding type annotations to your function and\ntry again.\n\nerror: Unknown type for record access\n    ┌─ /tmp/ev107-rete-initial-green-1639/package/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam:265:18\n    │\n265 │     list.reverse(final.verdicts),\n    │                  ^^^^^ I don't know what type this is\n\nIn order to access a record field we need to know what type it is, but I\ncan't tell the type here. Try adding type annotations to your function and\ntry again.\n\nerror: Unknown type for record access\n    ┌─ /tmp/ev107-rete-initial-green-1639/package/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam:266:14\n    │\n266 │     budget - final.remaining,\n    │              ^^^^^ I don't know what type this is\n\nIn order to access a record field we need to know what type it is, but I\ncan't tell the type here. Try adding type annotations to your function and\ntry again.\n\nerror: Unknown module value\n    ┌─ /tmp/ev107-rete-initial-green-1639/package/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam:360:31\n    │\n360 │       use remaining <- result.then(visit(remaining))\n    │                               ^^^^\n\nThe module `gleam/result` does not have a `then` value.\n\nerror: Unknown module value\n    ┌─ /tmp/ev107-rete-initial-green-1639/package/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam:385:31\n    │\n385 │       use remaining <- result.then(visit(remaining))\n    │                               ^^^^\n\nThe module `gleam/result` does not have a `then` value.\n\nerror: Unknown module value\n    ┌─ /tmp/ev107-rete-initial-green-1639/package/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam:389:47\n    │\n389 │           use #(matched, remaining) <- result.then(check_attributes(\n    │                                               ^^^^\n\nThe module `gleam/result` does not have a `then` value.\n\nerror: Unknown module value\n    ┌─ /tmp/ev107-rete-initial-green-1639/package/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam:414:31\n    │\n414 │       use remaining <- result.then(visit(remaining))\n    │                               ^^^^\n\nThe module `gleam/result` does not have a `then` value.\n\nerror: Unknown module value\n    ┌─ /tmp/ev107-rete-initial-green-1639/package/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam:415:43\n    │\n415 │       use #(matched, remaining) <- result.then(check_facts(\n    │                                           ^^^^\n\nThe module `gleam/result` does not have a `then` value.\n\nerror: Unknown module value\n    ┌─ /tmp/ev107-rete-initial-green-1639/package/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam:447:43\n    │\n447 │       use #(present, remaining) <- result.then(check_facts(\n    │                                           ^^^^\n\nThe module `gleam/result` does not have a `then` value.\n\nerror: Unknown module value\n    ┌─ /tmp/ev107-rete-initial-green-1639/package/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam:484:31\n    │\n484 │       use remaining <- result.then(visit(state.remaining))\n    │                               ^^^^\n\nThe module `gleam/result` does not have a `then` value.\n\nerror: Unknown module value\n    ┌─ /tmp/ev107-rete-initial-green-1639/package/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam:485:43\n    │\n485 │       use #(matched, remaining) <- result.then(check_conditions(\n    │                                           ^^^^\n\nThe module `gleam/result` does not have a `then` value.\n\nerror: Unknown module value\n    ┌─ /tmp/ev107-rete-initial-green-1639/package/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam:494:31\n    │\n494 │           use state <- result.then(apply_consequence(rule, state))\n    │                               ^^^^\n\nThe module `gleam/result` does not have a `then` value.\n\n",
+  "output_sha256": "36bfe9aeea706f29032f9e1fbe9ab7ed0daa44bbfec82f9db6975e9cd4005c3d",
+  "child_termination": { "kind": "EXITED", "code": 1 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "otp_launch": {
+    "executable": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+    "environment": [
+      "PATH=/tmp/uos-ev-native-otp-e6171c:/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin:/home/an/NAS-setup/uos/toolchains/nix-profile/bin:/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin:/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin:/usr/bin:/bin",
+      "ERL_FLAGS=+S 2:2 +A 2",
+      "ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "BINDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin",
+      "EMU=beam", "PROGNAME=erl",
+      "ERL_ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "ESCRIPT_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_USE_SERVER=false"
+    ],
+    "descendant_execution_audit": "NOT_PERFORMED_BY_ADAPTER"
+  },
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

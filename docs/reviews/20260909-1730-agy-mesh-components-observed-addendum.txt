@@ -1,0 +1,53 @@
+### Sovereign Peer Review Addendum: Factual Corrections & Clarifications
+  Reviewer Identity: abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82 (AGY)
+  Requesting Worker: 01a08017-fd72-7b20-9d32-4df53154bcc8 (Codex worker codex-ev-admission-01a08017, PROGRAM
+  attempt 4)
+  Target Candidate Revision: 8152a497929d68f830385a1a887570f94ccebd77
+  Workspace Path: /home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210
+  Governing Contract: SC-PROVENANCE-001 http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260908-0912-
+  provenance-integrity-contract.md (admitted_ev_ceiling = 93, EV-94..EV-109 NOT_ADMITTED)
+  ──────
+  ### 1. Factual Corrections & Clarifications
+
+  1. HTTP Header Budget vs. Actual Wire Upper Bound:
+      • Configured Parser Constant: max_header = 8192 bytes in mesh_zenoh_http.gleam.
+      • Observed Actual Wire Ceiling: 8194 bytes total wire header upper bound.
+      • Evidence & Rationale: Per 20260909-1450-transport-header-bound-addendum.json, response() subtracts the
+      parsed status line text from max_header. The status line CRLF contributes two additional wire bytes, while
+      subsequent header lines include their CRLFs in the remaining budget. This structural distinction (8192
+      parser budget vs. 8194 wire ceiling) is explicitly noted and preserved.
+  2. Recovery Runner Call-Set Composition:
+      • The generator (generate_ev_recovery_runner.ml) retains the ordered 168 original calls plus 9 reviewed
+      causal calls (177 ordered invocations total).
+      • The relationship is documented strictly as ordered preservation of the 168 baseline calls alongside the 9
+      new causal calls under the enforced 177-name SHA256 digest, without asserting an unverified tail-append
+      layout.
+  3. Fence Refusal Sequencing Incident:
+      • The initial fence check failure at 16:20:21 UTC (ev-root-mesh-seal-fence-1622.json) was a sequencing
+      incident caused by an expired session heartbeat (exit_code: 1, "error":"session heartbeat is stale...").
+      • A Jujutsu description write followed this failure before a valid fence was re-established; this earlier
+      check is classified strictly as a refusal, not a passing pre-effect fence.
+      • The subsequent heartbeat (event 1607) and corrected fence check at 16:20:49 UTC
+      (ev-root-mesh-seal-fence-corrected-1623.json, exit_code: 0, "ok":true) successfully established the active
+      fence prior to later child creation and board dispatch 1608.
+  4. Nature & Scope of AGY Sovereign Review:
+      • This review represents a read-only sovereign inspection and audit of preserved candidate sources,
+      manifests, and execution receipts.
+      • It is not a new independent runtime execution by AGY, nor does it establish a complete authenticated or
+      transitive release closure.
+
+  ──────
+  ### 2. Preserved Boundaries & Verdict Reaffirmation
+
+  • Verdict: APPROVE (Bounded Component Scope Only).
+  • Components Covered: Bounded TRANSPORT, SYNC_STATUS, RECIPE_CODEC, and associated runner/discovery fixtures at
+  candidate 8152a497929d68f830385a1a887570f94ccebd77.
+  • Retained Exclusions: Multi-host network execution, crash-durable state persistence, cryptographic peer
+  authentication, unbounded distributed-model refinement, and production cutover remain unproved and out of scope.
+  • EV Invariant: Admitted EV ceiling remains strictly pinned at EV-93 (SC-PROVENANCE-001); EV-94 through EV-109
+  remain NOT_ADMITTED. Zero EV admission credit is granted.
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+>
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+? for shortcuts                                                                               Gemini 3.8 Flash · high
