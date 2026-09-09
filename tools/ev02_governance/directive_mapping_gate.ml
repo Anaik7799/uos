@@ -57,16 +57,17 @@ let list_rule_names path =
   if stat.Unix.st_kind <> Unix.S_DIR then bounded_error "rule-directory-not-directory";
   let directory = try Unix.opendir path with Unix.Unix_error _ -> bounded_error "rule-directory-open" in
   Fun.protect ~finally:(fun () -> Unix.closedir directory) (fun () ->
-    let rec loop names seen =
+    let rec loop names seen entries =
       match Unix.readdir directory with
+      | entry when entries >= max_rules * 4 -> bounded_error "rule-directory-entry-count"
       | entry ->
-          if entry = "." || entry = ".." then loop names seen
+          if entry = "." || entry = ".." then loop names seen entries
           else if Filename.check_suffix entry ".md" && entry <> "README.md" then
             if seen >= max_rules then bounded_error "rule-directory-count"
-            else loop (entry :: names) (seen + 1)
-          else loop names seen
+            else loop (entry :: names) (seen + 1) (entries + 1)
+          else loop names seen (entries + 1)
       | exception End_of_file -> sort_unique names
-    in loop [] 0)
+    in loop [] 0 0)
 
 let replace_all ~needle ~replacement text =
   let n = String.length needle in
