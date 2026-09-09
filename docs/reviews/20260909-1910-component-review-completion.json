@@ -1,0 +1,30 @@
+{
+  "schema": "uos.review-completion.v1",
+  "plan": "uos/component-composition-review/20260909",
+  "task": "REVIEW",
+  "worker": "codex-component-review",
+  "attempt": 1,
+  "state": "completed",
+  "source": "79a4ab732ec7af350db3e3eb66fcb8cde6f03d5f",
+  "review_evidence": "784b92d017f41944f93db1988e1e3e773fc62433",
+  "approval_sha256": "49d1d4386b47e2c5ae441e407622911a73a6250cdf661b657759a6694801bc6d",
+  "authority": "NONE",
+  "full_ev_admission": "NOT_GRANTED",
+  "records": [
+    {
+      "original": "/tmp/ev-composition-review-final-active.json",
+      "durable": "docs/reviews/20260909-1910-component-review-final-active.json",
+      "sha256": "03c0a434984c6369e30aef48657dc8acd18196722c484158f981dcb329035a04"
+    },
+    {
+      "original": "/tmp/ev-composition-review-completed.json",
+      "durable": "docs/reviews/20260909-1910-component-review-completed.json",
+      "sha256": "13585443c5b06430f9c8c5fbc08a588bcc504796520b406e023b4eea88e4b142"
+    },
+    {
+      "original": "/tmp/ev-composition-review-head.json",
+      "durable": "docs/reviews/20260909-1910-component-review-head.json",
+      "sha256": "61cba8dd1ef43517bd7c3b81b3880c4a7f14c75f0864b3781d5310bbd54fb05b"
+    }
+  ]
+}
