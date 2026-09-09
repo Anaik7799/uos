@@ -310,7 +310,7 @@ let fixture_selftest () =
   let budget_map = Filename.concat budget_root "mapping.json" in
   write budget_map (mapping_text rows);
   expect_mapping_hold "aggregate-budget" (fun () -> observe budget_root budget_map);
-  print_endline "PASS directive-mapping fixture selftest: valid/duplicate/unknown/traversal/symlink/missing/budget"
+  print_endline "{\"schema\":\"uos.ev02-directive-mapping/v1\",\"status\":\"PASS\",\"cases\":7}"
 
 let selftest () =
   let check label actual = if not actual then failwith ("selftest failed: " ^ label) in
@@ -319,7 +319,7 @@ let selftest () =
   check "duplicate-id" (duplicate ["DIR-A"; "DIR-A"]);
   check "set-mismatch" (sort_unique ["DIR-A"] <> sort_unique ["DIR-B"]);
   check "anchor-is-line" (not (exact_line "## Section x" "## Section"));
-  print_endline "PASS directive-mapping selftest: normalization/duplicate/set/anchor"
+  print_endline "{\"schema\":\"uos.ev02-directive-mapping/v1\",\"status\":\"PASS\",\"cases\":5}"
 
 let () =
   match Array.to_list Sys.argv with

@@ -117,7 +117,7 @@ let selftest () =
     (normalize "---\ntrigger: always_on\n---\n\nSee http://nas-1.tail55d152.ts.net:4100/docs/.agents/rules/x" = "See <surface-policy-link>/x");
   check "normative-prose-retained"
     (normalize "MUST keep .agents/rules/x in this sentence" = "MUST keep .agents/rules/x in this sentence");
-  print_endline "PASS policy-surface selftest: mapping/missing/directive-count/divergence"
+  print_endline "{\"schema\":\"uos.ev02-policy-surface/v1\",\"status\":\"PASS\",\"cases\":6}"
 
 let () =
   match Array.to_list Sys.argv with
