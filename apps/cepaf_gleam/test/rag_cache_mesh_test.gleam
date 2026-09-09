@@ -195,11 +195,11 @@ pub fn expired_lookup_is_not_returned_as_a_hit_test() {
       10,
       0.0,
       1,
-        1000,
-        1000,
-        1000,
-        1000,
-        10,
+      1000,
+      1000,
+      1000,
+      1000,
+      10,
     )),
   )
 }
@@ -278,6 +278,91 @@ pub fn refresh_refuses_an_empty_vector_test() {
       entry.embedding |> should.equal([1.0, 0.0])
     _ -> should.fail()
   }
+}
+
+pub fn lookup_before_content_observation_is_stale_test() {
+  let mesh = rag_cache_mesh.new(5, 0.85)
+  let mesh =
+    rag_cache_mesh.put(
+      mesh,
+      "future-observation",
+      "future content query",
+      [1.0, 0.0],
+      "response observed at 1000",
+      [],
+      10,
+      1000,
+      100,
+    )
+
+  case rag_cache_mesh.lookup_exact(mesh, "future content query", 999) {
+    rag_cache_mesh.CacheStale(_) -> Nil
+    _ -> should.fail()
+  }
+}
+
+pub fn refresh_before_embedding_observation_preserves_embedding_test() {
+  let mesh = rag_cache_mesh.new(5, 0.85)
+  let mesh =
+    rag_cache_mesh.put(
+      mesh,
+      "ordered-refresh",
+      "ordered refresh query",
+      [1.0, 0.0],
+      "response",
+      [],
+      10,
+      1000,
+      100,
+    )
+  let refreshed =
+    rag_cache_mesh.refresh_vector(mesh, "ordered-refresh", [0.0, 1.0], 900)
+
+  case rag_cache_mesh.lookup_exact(refreshed, "ordered refresh query", 1000) {
+    rag_cache_mesh.CacheFresh(entry, _) -> {
+      entry.embedding |> should.equal([1.0, 0.0])
+      entry.embedding_observed_at_ts |> should.equal(1000)
+    }
+    _ -> should.fail()
+  }
+}
+
+pub fn semantic_lookup_requires_matching_dimensions_test() {
+  let mesh = rag_cache_mesh.new(5, 0.85)
+  let mesh =
+    rag_cache_mesh.put(
+      mesh,
+      "two-dimensional",
+      "cached semantic source",
+      [1.0, 0.0],
+      "response",
+      [],
+      10,
+      1000,
+      100,
+    )
+
+  rag_cache_mesh.lookup_semantic(mesh, "different query", [1.0], 1001)
+  |> should.equal(rag_cache_mesh.CacheMissing)
+}
+
+pub fn semantic_lookup_refuses_extreme_embedding_without_arithmetic_test() {
+  let mesh = rag_cache_mesh.new(5, 0.85)
+  let mesh =
+    rag_cache_mesh.put(
+      mesh,
+      "bounded-semantic",
+      "cached semantic source",
+      [1.0, 0.0],
+      "response",
+      [],
+      10,
+      1000,
+      100,
+    )
+
+  rag_cache_mesh.lookup_semantic(mesh, "different query", [1.0e200], 1001)
+  |> should.equal(rag_cache_mesh.CacheRefused(rag_cache_mesh.InvalidEmbedding))
 }
 
 fn repeated_vector(remaining: Int) -> List(Float) {

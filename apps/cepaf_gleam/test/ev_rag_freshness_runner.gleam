@@ -12,4 +12,8 @@ pub fn main() {
   rag_cache_mesh_test.put_refuses_negative_counts_and_oversize_vectors_test()
   rag_cache_mesh_test.refresh_updates_the_freshness_observation_test()
   rag_cache_mesh_test.refresh_refuses_an_empty_vector_test()
+  rag_cache_mesh_test.lookup_before_content_observation_is_stale_test()
+  rag_cache_mesh_test.refresh_before_embedding_observation_preserves_embedding_test()
+  rag_cache_mesh_test.semantic_lookup_requires_matching_dimensions_test()
+  rag_cache_mesh_test.semantic_lookup_refuses_extreme_embedding_without_arithmetic_test()
 }
