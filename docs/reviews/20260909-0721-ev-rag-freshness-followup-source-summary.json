@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-09T05:21:00Z",
+  "task": {"plan_id": "uos/ev-rag-freshness/20260909", "task_id": "REPAIR", "worker": "codex-ev-rag-freshness", "attempt": 1, "state": "executing"},
+  "lineage": {
+    "immutable_base": "337f99137673d7866b958a38bd490fb876b2880f",
+    "reviewed_hold_candidate": "12b978fd0a140b36f9ca22d2489e3069b2b4851f",
+    "content_embedding_repair": "539e6c5367089a599892711c0c1ab7c097b4f4ca",
+    "followup_regression_candidate": "cfd3afbae74f996d42321843cc48248cd3aaf956"
+  },
+  "source_sha256": {
+    "apps/cepaf_gleam/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam": "41410d4871b00a58f2e93f69cd4daa51f75000d79d1a06f9e9a755d98ea31f72",
+    "apps/cepaf_gleam/test/rag_cache_mesh_test.gleam": "c14458a77766f64d9378a742c4d41a882cba5730781174ec6287a3ab61b68b2b",
+    "apps/cepaf_gleam/test/ev_rag_freshness_runner.gleam": "3f05eac42b6b213e1caef2b7dda92f29f31549a692ce5fe27c8701cde9112360"
+  },
+  "reviewed_adverse_cases": [
+    "lookup at 999 for content observed at 1000 returns CacheStale",
+    "refresh at 900 cannot replace an embedding observed at 1000",
+    "embedding-only refresh at 1200 cannot extend content observed at 1000 with TTL 100",
+    "query dimension 1 cannot semantically match cached dimension 2",
+    "embedding 1.0e200 returns CacheRefused(InvalidEmbedding) before arithmetic"
+  ],
+  "execution": {
+    "compile": "Gleam 1.16.0 compile-package --target erlang; output /tmp/uos-rag-followup5-20260909-0535; passed with unrelated existing warnings",
+    "runner": "OTP 29 erl +S 2:2 -noshell -s ev_rag_freshness_runner main -s init stop; 15 direct checks passed; no handwritten eval",
+    "risk": "native active check passed 2026-09-09T05:20:20Z; assessment_sha256 8a4da56cca4a3d1c33c96491b9f1ef8d6583055ba432f9f6a077e6d81fb71705; authority NONE; runtime admission NOT_GRANTED",
+    "receipt": "/tmp/ev-rag-followup-active-risk-20260909-0719.json"
+  },
+  "limits": [
+    "The cache model does not perform actual retrieval, embedding generation, inference, network, or disk persistence.",
+    "The result is pending independent re-review and does not complete the Sa-plan task or admit EV103."
+  ]
+}
