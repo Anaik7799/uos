@@ -1,0 +1,2772 @@
+{
+  "schema_version": 1,
+  "status": "ADMITTED",
+  "specification_path": "docs/design/20260909-2225-uos-telegram-domain-d-collaboration-spec.md",
+  "authority": "operator_instruction",
+  "transports": [
+    "zenoh",
+    "in_process",
+    "edge_transport"
+  ],
+  "control_language": "gleam",
+  "runtime": "otp",
+  "bounded_domain_fields": [
+    "effect.class",
+    "transports[0]"
+  ],
+  "otp_inventory": {
+    "otp_release": "29",
+    "erts_version": "17.0.5",
+    "root_dir": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+    "lib_dir": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/lib",
+    "installed_application_count": 35,
+    "installed_applications": [
+      "asn1-5.5",
+      "common_test-1.31.1",
+      "compiler-10.0.3",
+      "crypto-5.9.2",
+      "debugger-7.0",
+      "dialyzer-6.0.2",
+      "diameter-2.7.2",
+      "edoc-1.5",
+      "eldap-1.3",
+      "erl_interface-5.8.1",
+      "erts-17.0.5",
+      "et-1.8",
+      "eunit-2.11",
+      "ftp-1.2.6",
+      "inets-9.7.1",
+      "kernel-11.0.3",
+      "megaco-4.9.1",
+      "mnesia-4.26.1",
+      "observer-2.19",
+      "odbc-2.17",
+      "os_mon-2.12",
+      "parsetools-2.8",
+      "public_key-1.21.4",
+      "reltool-1.1",
+      "runtime_tools-2.4",
+      "sasl-4.4",
+      "snmp-5.20.4",
+      "ssh-5.3",
+      "ssl-11.3.1",
+      "stdlib-6.2.1",
+      "syntax_tools-3.2.2",
+      "tftp-1.2.2",
+      "tools-4.1.2",
+      "wx-2.5",
+      "xmerl-2.1.3"
+    ],
+    "observed_at_utc": "2026-09-09T20:12:00Z",
+    "observed_by": "erlang:system_info/1 and code:lib_dir/0 in the pinned BEAM resolved through tools/lib/uos-toolchain.sh",
+    "how_to_falsify": "readlink -f $(command -v erl) must equal root_dir/../../bin/erl under the same /nix/store path; a different derivation reporting otp_release \"29\" is exactly the defect SC-NIX-DEVENV-001 invariant 3 exists for (29.0.5 and 29.0.6 both answer \"29\").",
+    "excluded": [
+      {
+        "name": "mnesia",
+        "reason": "present in the installation but unused: canonical durable storage is SQLite. Listed here because presence in lib_dir is not use."
+      }
+    ]
+  },
+  "capabilities": [
+    {
+      "id": "user.collab.sidecar.audio_stream_demux",
+      "denotation": {
+        "input": "ConferenceAudioPayload",
+        "output": "Result(IsolatedAudioStream, AudioError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.sidecar.audio_stream_demux over typed carrier ConferenceAudioPayload.",
+            "falsifier": "Composition test trace where composite user.collab.sidecar.audio_stream_demux invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_sidecar_audio_stream_demux_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.sidecar.audio_stream_demux commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.sidecar.audio_stream_demux with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_sidecar_audio_stream_demux_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.sidecar.audio_stream_demux refines declared relation ConferenceAudioPayload -> Result(IsolatedAudioStream, AudioError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(IsolatedAudioStream, AudioError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.sidecar.audio_stream_demux obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.sidecar.audio_stream_demux granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_sidecar_audio_stream_demux_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.sidecar.audio_stream_demux is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.sidecar.audio_stream_demux preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.sidecar.audio_stream_demux operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.sidecar.audio_stream_demux maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.sidecar.audio_stream_demux obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.sidecar.audio_stream_demux exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_sidecar_audio_stream_demux_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "telegram"
+      ],
+      "description": "Demuxing multi-party conference audio into isolated speaker streams"
+    },
+    {
+      "id": "user.collab.sidecar.telemetry_whisper_synth",
+      "denotation": {
+        "input": "WhisperPromptContext",
+        "output": "Result(SynthesizedWhisperAudio, SynthError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.sidecar.telemetry_whisper_synth over typed carrier WhisperPromptContext.",
+            "falsifier": "Composition test trace where composite user.collab.sidecar.telemetry_whisper_synth invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_sidecar_telemetry_whisper_synth_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.sidecar.telemetry_whisper_synth commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.sidecar.telemetry_whisper_synth with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_sidecar_telemetry_whisper_synth_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.sidecar.telemetry_whisper_synth refines declared relation WhisperPromptContext -> Result(SynthesizedWhisperAudio, SynthError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(SynthesizedWhisperAudio, SynthError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.sidecar.telemetry_whisper_synth obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.sidecar.telemetry_whisper_synth granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_sidecar_telemetry_whisper_synth_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.sidecar.telemetry_whisper_synth is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.sidecar.telemetry_whisper_synth preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.sidecar.telemetry_whisper_synth operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.sidecar.telemetry_whisper_synth maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.sidecar.telemetry_whisper_synth obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.sidecar.telemetry_whisper_synth exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_sidecar_telemetry_whisper_synth_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "advisory"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Synthesizing low-latency private coaching whispers from live telemetry"
+    },
+    {
+      "id": "user.collab.sidecar.private_channel_route",
+      "denotation": {
+        "input": "SynthesizedWhisperAudio",
+        "output": "Result(EarbudRouteReceipt, RouterError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.sidecar.private_channel_route over typed carrier SynthesizedWhisperAudio.",
+            "falsifier": "Composition test trace where composite user.collab.sidecar.private_channel_route invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_sidecar_private_channel_route_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.sidecar.private_channel_route commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.sidecar.private_channel_route with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_sidecar_private_channel_route_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.sidecar.private_channel_route refines declared relation SynthesizedWhisperAudio -> Result(EarbudRouteReceipt, RouterError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(EarbudRouteReceipt, RouterError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.sidecar.private_channel_route obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.sidecar.private_channel_route granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_sidecar_private_channel_route_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.sidecar.private_channel_route is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.sidecar.private_channel_route preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.sidecar.private_channel_route operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.sidecar.private_channel_route maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.sidecar.private_channel_route obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.sidecar.private_channel_route exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_sidecar_private_channel_route_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "state_mutation"
+      },
+      "transports": [
+        "zenoh"
+      ],
+      "description": "Routing private audio whisper to designated incident lead earbud"
+    },
+    {
+      "id": "user.collab.quorum.acoustic_voiceprint_extract",
+      "denotation": {
+        "input": "SpokenAuthorizationAudio",
+        "output": "Result(VoiceprintFeatures, BiometricError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.quorum.acoustic_voiceprint_extract over typed carrier SpokenAuthorizationAudio.",
+            "falsifier": "Composition test trace where composite user.collab.quorum.acoustic_voiceprint_extract invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_quorum_acoustic_voiceprint_extract_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.quorum.acoustic_voiceprint_extract commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.quorum.acoustic_voiceprint_extract with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_quorum_acoustic_voiceprint_extract_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.quorum.acoustic_voiceprint_extract refines declared relation SpokenAuthorizationAudio -> Result(VoiceprintFeatures, BiometricError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(VoiceprintFeatures, BiometricError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.quorum.acoustic_voiceprint_extract obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.quorum.acoustic_voiceprint_extract granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_quorum_acoustic_voiceprint_extract_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.quorum.acoustic_voiceprint_extract is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.quorum.acoustic_voiceprint_extract preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.quorum.acoustic_voiceprint_extract operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.quorum.acoustic_voiceprint_extract maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.quorum.acoustic_voiceprint_extract obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.quorum.acoustic_voiceprint_extract exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_quorum_acoustic_voiceprint_extract_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "telegram"
+      ],
+      "description": "Extracting acoustic vocal tract biometrics from spoken authorization"
+    },
+    {
+      "id": "user.collab.quorum.speaker_id_verify",
+      "denotation": {
+        "input": "VoiceprintFeatures",
+        "output": "Result(VerifiedSpeakerId, AuthError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.quorum.speaker_id_verify over typed carrier VoiceprintFeatures.",
+            "falsifier": "Composition test trace where composite user.collab.quorum.speaker_id_verify invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_quorum_speaker_id_verify_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.quorum.speaker_id_verify commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.quorum.speaker_id_verify with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_quorum_speaker_id_verify_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.quorum.speaker_id_verify refines declared relation VoiceprintFeatures -> Result(VerifiedSpeakerId, AuthError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(VerifiedSpeakerId, AuthError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.quorum.speaker_id_verify obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.quorum.speaker_id_verify granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_quorum_speaker_id_verify_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.quorum.speaker_id_verify is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.quorum.speaker_id_verify preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.quorum.speaker_id_verify operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.quorum.speaker_id_verify maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.quorum.speaker_id_verify obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.quorum.speaker_id_verify exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_quorum_speaker_id_verify_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Matching voiceprint features against enrolled Ed25519 commander identity"
+    },
+    {
+      "id": "user.collab.quorum.multi_party_tally",
+      "denotation": {
+        "input": "VerifiedSpeakerId",
+        "output": "Result(QuorumConsensusReceipt, ConsensusError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.quorum.multi_party_tally over typed carrier VerifiedSpeakerId.",
+            "falsifier": "Composition test trace where composite user.collab.quorum.multi_party_tally invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_quorum_multi_party_tally_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.quorum.multi_party_tally commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.quorum.multi_party_tally with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_quorum_multi_party_tally_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.quorum.multi_party_tally refines declared relation VerifiedSpeakerId -> Result(QuorumConsensusReceipt, ConsensusError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(QuorumConsensusReceipt, ConsensusError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.quorum.multi_party_tally obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.quorum.multi_party_tally granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_quorum_multi_party_tally_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.quorum.multi_party_tally is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.quorum.multi_party_tally preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.quorum.multi_party_tally operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.quorum.multi_party_tally maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.quorum.multi_party_tally obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.quorum.multi_party_tally exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_quorum_multi_party_tally_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "state_mutation"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Tallying 2oo3 multi-party constitutional consensus from voice votes"
+    },
+    {
+      "id": "user.collab.babel.multilingual_transcribe",
+      "denotation": {
+        "input": "MultilingualAudioStream",
+        "output": "Result(SourceTranscript, AudioError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.babel.multilingual_transcribe over typed carrier MultilingualAudioStream.",
+            "falsifier": "Composition test trace where composite user.collab.babel.multilingual_transcribe invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_babel_multilingual_transcribe_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.babel.multilingual_transcribe commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.babel.multilingual_transcribe with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_babel_multilingual_transcribe_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.babel.multilingual_transcribe refines declared relation MultilingualAudioStream -> Result(SourceTranscript, AudioError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(SourceTranscript, AudioError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.babel.multilingual_transcribe obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.babel.multilingual_transcribe granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_babel_multilingual_transcribe_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.babel.multilingual_transcribe is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.babel.multilingual_transcribe preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.babel.multilingual_transcribe operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.babel.multilingual_transcribe maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.babel.multilingual_transcribe obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.babel.multilingual_transcribe exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_babel_multilingual_transcribe_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "telegram"
+      ],
+      "description": "Real-time multilingual speech recognition across technical vocabularies"
+    },
+    {
+      "id": "user.collab.babel.ontology_term_map",
+      "denotation": {
+        "input": "SourceTranscript",
+        "output": "Result(TargetTranscript, TranslationError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.babel.ontology_term_map over typed carrier SourceTranscript.",
+            "falsifier": "Composition test trace where composite user.collab.babel.ontology_term_map invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_babel_ontology_term_map_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.babel.ontology_term_map commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.babel.ontology_term_map with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_babel_ontology_term_map_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.babel.ontology_term_map refines declared relation SourceTranscript -> Result(TargetTranscript, TranslationError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(TargetTranscript, TranslationError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.babel.ontology_term_map obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.babel.ontology_term_map granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_babel_ontology_term_map_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.babel.ontology_term_map is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.babel.ontology_term_map preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.babel.ontology_term_map operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.babel.ontology_term_map maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.babel.ontology_term_map obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.babel.ontology_term_map exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_babel_ontology_term_map_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Translating technical domain terms via UOS living ontology mapping"
+    },
+    {
+      "id": "user.collab.babel.voice_stream_dub",
+      "denotation": {
+        "input": "TargetTranscript",
+        "output": "Result(DubbedAudioStream, SynthError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.babel.voice_stream_dub over typed carrier TargetTranscript.",
+            "falsifier": "Composition test trace where composite user.collab.babel.voice_stream_dub invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_babel_voice_stream_dub_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.babel.voice_stream_dub commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.babel.voice_stream_dub with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_babel_voice_stream_dub_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.babel.voice_stream_dub refines declared relation TargetTranscript -> Result(DubbedAudioStream, SynthError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(DubbedAudioStream, SynthError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.babel.voice_stream_dub obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.babel.voice_stream_dub granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_babel_voice_stream_dub_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.babel.voice_stream_dub is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.babel.voice_stream_dub preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.babel.voice_stream_dub operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.babel.voice_stream_dub maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.babel.voice_stream_dub obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.babel.voice_stream_dub exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_babel_voice_stream_dub_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "advisory"
+      },
+      "transports": [
+        "zenoh"
+      ],
+      "description": "Streaming synthesized real-time voice-dubbed translation in voice room"
+    },
+    {
+      "id": "user.collab.whiteboard.diagram_ocr",
+      "denotation": {
+        "input": "WhiteboardPhotoPayload",
+        "output": "Result(GraphNodesAndEdges, VisionError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.whiteboard.diagram_ocr over typed carrier WhiteboardPhotoPayload.",
+            "falsifier": "Composition test trace where composite user.collab.whiteboard.diagram_ocr invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_whiteboard_diagram_ocr_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.whiteboard.diagram_ocr commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.whiteboard.diagram_ocr with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_whiteboard_diagram_ocr_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.whiteboard.diagram_ocr refines declared relation WhiteboardPhotoPayload -> Result(GraphNodesAndEdges, VisionError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(GraphNodesAndEdges, VisionError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.whiteboard.diagram_ocr obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.whiteboard.diagram_ocr granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_whiteboard_diagram_ocr_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.whiteboard.diagram_ocr is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.whiteboard.diagram_ocr preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.whiteboard.diagram_ocr operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.whiteboard.diagram_ocr maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.whiteboard.diagram_ocr obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.whiteboard.diagram_ocr exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_whiteboard_diagram_ocr_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "zenoh"
+      ],
+      "description": "MAX/Mojo computer vision extraction of whiteboard state machine diagrams"
+    },
+    {
+      "id": "user.collab.whiteboard.gleam_statem_synth",
+      "denotation": {
+        "input": "GraphNodesAndEdges",
+        "output": "Result(GleamOtpSourceCode, CompilerError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.whiteboard.gleam_statem_synth over typed carrier GraphNodesAndEdges.",
+            "falsifier": "Composition test trace where composite user.collab.whiteboard.gleam_statem_synth invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_whiteboard_gleam_statem_synth_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.whiteboard.gleam_statem_synth commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.whiteboard.gleam_statem_synth with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_whiteboard_gleam_statem_synth_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.whiteboard.gleam_statem_synth refines declared relation GraphNodesAndEdges -> Result(GleamOtpSourceCode, CompilerError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(GleamOtpSourceCode, CompilerError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.whiteboard.gleam_statem_synth obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.whiteboard.gleam_statem_synth granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_whiteboard_gleam_statem_synth_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.whiteboard.gleam_statem_synth is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.whiteboard.gleam_statem_synth preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.whiteboard.gleam_statem_synth operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.whiteboard.gleam_statem_synth maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.whiteboard.gleam_statem_synth obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.whiteboard.gleam_statem_synth exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_whiteboard_gleam_statem_synth_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "state_mutation"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Synthesizing pure Gleam OTP state machine actors from extracted diagram"
+    },
+    {
+      "id": "user.collab.whiteboard.gospel_spec_gen",
+      "denotation": {
+        "input": "GraphNodesAndEdges",
+        "output": "Result(GospelSpecificationFile, SpecError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.whiteboard.gospel_spec_gen over typed carrier GraphNodesAndEdges.",
+            "falsifier": "Composition test trace where composite user.collab.whiteboard.gospel_spec_gen invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_whiteboard_gospel_spec_gen_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.whiteboard.gospel_spec_gen commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.whiteboard.gospel_spec_gen with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_whiteboard_gospel_spec_gen_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.whiteboard.gospel_spec_gen refines declared relation GraphNodesAndEdges -> Result(GospelSpecificationFile, SpecError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(GospelSpecificationFile, SpecError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.whiteboard.gospel_spec_gen obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.whiteboard.gospel_spec_gen granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_whiteboard_gospel_spec_gen_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.whiteboard.gospel_spec_gen is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.whiteboard.gospel_spec_gen preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.whiteboard.gospel_spec_gen operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.whiteboard.gospel_spec_gen maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.whiteboard.gospel_spec_gen obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.whiteboard.gospel_spec_gen exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_whiteboard_gospel_spec_gen_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "state_mutation"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Generating companion Gospel contracts for synthesized state machines"
+    },
+    {
+      "id": "user.collab.socratic.hypothesis_extract",
+      "denotation": {
+        "input": "DebatingChatMessages",
+        "output": "Result(CompetingHypotheses, NlpError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.socratic.hypothesis_extract over typed carrier DebatingChatMessages.",
+            "falsifier": "Composition test trace where composite user.collab.socratic.hypothesis_extract invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_socratic_hypothesis_extract_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.socratic.hypothesis_extract commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.socratic.hypothesis_extract with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_socratic_hypothesis_extract_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.socratic.hypothesis_extract refines declared relation DebatingChatMessages -> Result(CompetingHypotheses, NlpError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(CompetingHypotheses, NlpError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.socratic.hypothesis_extract obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.socratic.hypothesis_extract granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_socratic_hypothesis_extract_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.socratic.hypothesis_extract is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.socratic.hypothesis_extract preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.socratic.hypothesis_extract operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.socratic.hypothesis_extract maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.socratic.hypothesis_extract obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.socratic.hypothesis_extract exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_socratic_hypothesis_extract_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "telegram"
+      ],
+      "description": "Extracting competing technical failure hypotheses from heated team chat"
+    },
+    {
+      "id": "user.collab.socratic.parallel_telemetry_probe",
+      "denotation": {
+        "input": "CompetingHypotheses",
+        "output": "Result(ComparativeTelemetryData, ProbeError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.socratic.parallel_telemetry_probe over typed carrier CompetingHypotheses.",
+            "falsifier": "Composition test trace where composite user.collab.socratic.parallel_telemetry_probe invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_socratic_parallel_telemetry_probe_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.socratic.parallel_telemetry_probe commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.socratic.parallel_telemetry_probe with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_socratic_parallel_telemetry_probe_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.socratic.parallel_telemetry_probe refines declared relation CompetingHypotheses -> Result(ComparativeTelemetryData, ProbeError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(ComparativeTelemetryData, ProbeError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.socratic.parallel_telemetry_probe obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.socratic.parallel_telemetry_probe granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_socratic_parallel_telemetry_probe_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.socratic.parallel_telemetry_probe is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.socratic.parallel_telemetry_probe preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.socratic.parallel_telemetry_probe operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.socratic.parallel_telemetry_probe maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.socratic.parallel_telemetry_probe obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.socratic.parallel_telemetry_probe exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_socratic_parallel_telemetry_probe_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "zenoh"
+      ],
+      "description": "Simultaneously probing network and database telemetry to test claims"
+    },
+    {
+      "id": "user.collab.socratic.impartial_evidence_card",
+      "denotation": {
+        "input": "ComparativeTelemetryData",
+        "output": "Result(SocraticEvidenceCard, UiError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.socratic.impartial_evidence_card over typed carrier ComparativeTelemetryData.",
+            "falsifier": "Composition test trace where composite user.collab.socratic.impartial_evidence_card invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_socratic_impartial_evidence_card_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.socratic.impartial_evidence_card commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.socratic.impartial_evidence_card with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_socratic_impartial_evidence_card_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.socratic.impartial_evidence_card refines declared relation ComparativeTelemetryData -> Result(SocraticEvidenceCard, UiError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(SocraticEvidenceCard, UiError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.socratic.impartial_evidence_card obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.socratic.impartial_evidence_card granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_socratic_impartial_evidence_card_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.socratic.impartial_evidence_card is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.socratic.impartial_evidence_card preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.socratic.impartial_evidence_card operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.socratic.impartial_evidence_card maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.socratic.impartial_evidence_card obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.socratic.impartial_evidence_card exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_socratic_impartial_evidence_card_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "advisory"
+      },
+      "transports": [
+        "telegram"
+      ],
+      "description": "Rendering an impartial factual evidence card resolving war room arguments"
+    },
+    {
+      "id": "user.collab.handover.task_lease_aggregate",
+      "denotation": {
+        "input": "ShiftTimeWindow",
+        "output": "Result(ActiveLeaseInventory, LedgerError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.handover.task_lease_aggregate over typed carrier ShiftTimeWindow.",
+            "falsifier": "Composition test trace where composite user.collab.handover.task_lease_aggregate invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_handover_task_lease_aggregate_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.handover.task_lease_aggregate commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.handover.task_lease_aggregate with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_handover_task_lease_aggregate_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.handover.task_lease_aggregate refines declared relation ShiftTimeWindow -> Result(ActiveLeaseInventory, LedgerError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(ActiveLeaseInventory, LedgerError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.handover.task_lease_aggregate obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.handover.task_lease_aggregate granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_handover_task_lease_aggregate_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.handover.task_lease_aggregate is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.handover.task_lease_aggregate preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.handover.task_lease_aggregate operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.handover.task_lease_aggregate maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.handover.task_lease_aggregate obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.handover.task_lease_aggregate exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_handover_task_lease_aggregate_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Aggregating all Sa-Plan tasks, active leases, and open incident threads"
+    },
+    {
+      "id": "user.collab.handover.markdown_dossier_compile",
+      "denotation": {
+        "input": "ActiveLeaseInventory",
+        "output": "Result(HandoverDossierPath, VfsError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.handover.markdown_dossier_compile over typed carrier ActiveLeaseInventory.",
+            "falsifier": "Composition test trace where composite user.collab.handover.markdown_dossier_compile invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_handover_markdown_dossier_compile_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.handover.markdown_dossier_compile commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.handover.markdown_dossier_compile with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_handover_markdown_dossier_compile_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.handover.markdown_dossier_compile refines declared relation ActiveLeaseInventory -> Result(HandoverDossierPath, VfsError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(HandoverDossierPath, VfsError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.handover.markdown_dossier_compile obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.handover.markdown_dossier_compile granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_handover_markdown_dossier_compile_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.handover.markdown_dossier_compile is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.handover.markdown_dossier_compile preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.handover.markdown_dossier_compile operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.handover.markdown_dossier_compile maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.handover.markdown_dossier_compile obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.handover.markdown_dossier_compile exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_handover_markdown_dossier_compile_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "state_mutation"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Compiling canonical 13-section shift handover Markdown document"
+    },
+    {
+      "id": "user.collab.handover.podcast_audio_render",
+      "denotation": {
+        "input": "HandoverDossierPath",
+        "output": "Result(SynthesizedPodcastAudio, AudioError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.handover.podcast_audio_render over typed carrier HandoverDossierPath.",
+            "falsifier": "Composition test trace where composite user.collab.handover.podcast_audio_render invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_handover_podcast_audio_render_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.handover.podcast_audio_render commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.handover.podcast_audio_render with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_handover_podcast_audio_render_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.handover.podcast_audio_render refines declared relation HandoverDossierPath -> Result(SynthesizedPodcastAudio, AudioError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(SynthesizedPodcastAudio, AudioError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.handover.podcast_audio_render obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.handover.podcast_audio_render granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_handover_podcast_audio_render_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.handover.podcast_audio_render is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.handover.podcast_audio_render preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.handover.podcast_audio_render operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.handover.podcast_audio_render maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.handover.podcast_audio_render obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.handover.podcast_audio_render exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_handover_podcast_audio_render_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "advisory"
+      },
+      "transports": [
+        "telegram"
+      ],
+      "description": "Rendering a 2-minute synthesized audio briefing for incoming shift SRE"
+    },
+    {
+      "id": "user.collab.pair.duplex_voice_listen",
+      "denotation": {
+        "input": "EngineerVoiceStream",
+        "output": "Result(RefactoringIntent, NlpError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.pair.duplex_voice_listen over typed carrier EngineerVoiceStream.",
+            "falsifier": "Composition test trace where composite user.collab.pair.duplex_voice_listen invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_pair_duplex_voice_listen_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.pair.duplex_voice_listen commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.pair.duplex_voice_listen with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_pair_duplex_voice_listen_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.pair.duplex_voice_listen refines declared relation EngineerVoiceStream -> Result(RefactoringIntent, NlpError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(RefactoringIntent, NlpError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.pair.duplex_voice_listen obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.pair.duplex_voice_listen granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_pair_duplex_voice_listen_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.pair.duplex_voice_listen is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.pair.duplex_voice_listen preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.pair.duplex_voice_listen operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.pair.duplex_voice_listen maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.pair.duplex_voice_listen obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.pair.duplex_voice_listen exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_pair_duplex_voice_listen_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "telegram"
+      ],
+      "description": "Conversational listening to engineer design thoughts during voice pairing"
+    },
+    {
+      "id": "user.collab.pair.sibling_workspace_mint",
+      "denotation": {
+        "input": "RefactoringIntent",
+        "output": "Result(SiblingWorkspacePath, JjError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.pair.sibling_workspace_mint over typed carrier RefactoringIntent.",
+            "falsifier": "Composition test trace where composite user.collab.pair.sibling_workspace_mint invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_pair_sibling_workspace_mint_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.pair.sibling_workspace_mint commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.pair.sibling_workspace_mint with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_pair_sibling_workspace_mint_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.pair.sibling_workspace_mint refines declared relation RefactoringIntent -> Result(SiblingWorkspacePath, JjError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(SiblingWorkspacePath, JjError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.pair.sibling_workspace_mint obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.pair.sibling_workspace_mint granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_pair_sibling_workspace_mint_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.pair.sibling_workspace_mint is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.pair.sibling_workspace_mint preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.pair.sibling_workspace_mint operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.pair.sibling_workspace_mint maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.pair.sibling_workspace_mint obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.pair.sibling_workspace_mint exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_pair_sibling_workspace_mint_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "state_mutation"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Instantiating isolated Jujutsu sibling workspace for pair programming"
+    },
+    {
+      "id": "user.collab.pair.test_suite_exec",
+      "denotation": {
+        "input": "SiblingWorkspacePath",
+        "output": "Result(TestExecutionMetrics, HarnessError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.pair.test_suite_exec over typed carrier SiblingWorkspacePath.",
+            "falsifier": "Composition test trace where composite user.collab.pair.test_suite_exec invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_pair_test_suite_exec_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.pair.test_suite_exec commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.pair.test_suite_exec with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_pair_test_suite_exec_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.pair.test_suite_exec refines declared relation SiblingWorkspacePath -> Result(TestExecutionMetrics, HarnessError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(TestExecutionMetrics, HarnessError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.pair.test_suite_exec obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.pair.test_suite_exec granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_pair_test_suite_exec_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.pair.test_suite_exec is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.pair.test_suite_exec preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.pair.test_suite_exec operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.pair.test_suite_exec maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.pair.test_suite_exec obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.pair.test_suite_exec exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_pair_test_suite_exec_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "zenoh"
+      ],
+      "description": "Executing isolated EUnit tests and reporting audio/visual results to pair"
+    },
+    {
+      "id": "user.collab.exec_brief.jargon_distill",
+      "denotation": {
+        "input": "TechnicalIncidentStatus",
+        "output": "Result(PlainLanguageSummary, NlpError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.exec_brief.jargon_distill over typed carrier TechnicalIncidentStatus.",
+            "falsifier": "Composition test trace where composite user.collab.exec_brief.jargon_distill invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_exec_brief_jargon_distill_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.exec_brief.jargon_distill commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.exec_brief.jargon_distill with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_exec_brief_jargon_distill_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.exec_brief.jargon_distill refines declared relation TechnicalIncidentStatus -> Result(PlainLanguageSummary, NlpError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(PlainLanguageSummary, NlpError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.exec_brief.jargon_distill obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.exec_brief.jargon_distill granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_exec_brief_jargon_distill_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.exec_brief.jargon_distill is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.exec_brief.jargon_distill preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.exec_brief.jargon_distill operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.exec_brief.jargon_distill maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.exec_brief.jargon_distill obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.exec_brief.jargon_distill exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_exec_brief_jargon_distill_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "advisory"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Translating SRE telemetry jargon into plain business impact bullet points"
+    },
+    {
+      "id": "user.collab.exec_brief.channel_broadcast",
+      "denotation": {
+        "input": "PlainLanguageSummary",
+        "output": "Result(BroadcastReceipt, TelegramError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.exec_brief.channel_broadcast over typed carrier PlainLanguageSummary.",
+            "falsifier": "Composition test trace where composite user.collab.exec_brief.channel_broadcast invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_exec_brief_channel_broadcast_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.exec_brief.channel_broadcast commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.exec_brief.channel_broadcast with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_exec_brief_channel_broadcast_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.exec_brief.channel_broadcast refines declared relation PlainLanguageSummary -> Result(BroadcastReceipt, TelegramError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(BroadcastReceipt, TelegramError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.exec_brief.channel_broadcast obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.exec_brief.channel_broadcast granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_exec_brief_channel_broadcast_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.exec_brief.channel_broadcast is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.exec_brief.channel_broadcast preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.exec_brief.channel_broadcast operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.exec_brief.channel_broadcast maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.exec_brief.channel_broadcast obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.exec_brief.channel_broadcast exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_exec_brief_channel_broadcast_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "advisory"
+      },
+      "transports": [
+        "telegram"
+      ],
+      "description": "Broadcasting periodic executive updates to non-technical stakeholder channel"
+    },
+    {
+      "id": "user.collab.commitments.verbal_promise_extract",
+      "denotation": {
+        "input": "WarRoomAudioTranscript",
+        "output": "Result(ExtractedPromisesList, NlpError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.commitments.verbal_promise_extract over typed carrier WarRoomAudioTranscript.",
+            "falsifier": "Composition test trace where composite user.collab.commitments.verbal_promise_extract invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_commitments_verbal_promise_extract_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.commitments.verbal_promise_extract commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.commitments.verbal_promise_extract with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_commitments_verbal_promise_extract_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.commitments.verbal_promise_extract refines declared relation WarRoomAudioTranscript -> Result(ExtractedPromisesList, NlpError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(ExtractedPromisesList, NlpError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.commitments.verbal_promise_extract obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.commitments.verbal_promise_extract granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_commitments_verbal_promise_extract_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.commitments.verbal_promise_extract is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.commitments.verbal_promise_extract preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.commitments.verbal_promise_extract operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.commitments.verbal_promise_extract maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.commitments.verbal_promise_extract obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.commitments.verbal_promise_extract exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_commitments_verbal_promise_extract_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "telegram"
+      ],
+      "description": "Continuously parsing verbal commitments and assignments from war room call"
+    },
+    {
+      "id": "user.collab.commitments.pinned_checklist_update",
+      "denotation": {
+        "input": "ExtractedPromisesList",
+        "output": "Result(PinnedMessageReceipt, TelegramError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.commitments.pinned_checklist_update over typed carrier ExtractedPromisesList.",
+            "falsifier": "Composition test trace where composite user.collab.commitments.pinned_checklist_update invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_commitments_pinned_checklist_update_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.commitments.pinned_checklist_update commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.commitments.pinned_checklist_update with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_commitments_pinned_checklist_update_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.commitments.pinned_checklist_update refines declared relation ExtractedPromisesList -> Result(PinnedMessageReceipt, TelegramError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(PinnedMessageReceipt, TelegramError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.commitments.pinned_checklist_update obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.commitments.pinned_checklist_update granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_commitments_pinned_checklist_update_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.commitments.pinned_checklist_update is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.commitments.pinned_checklist_update preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.commitments.pinned_checklist_update operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.commitments.pinned_checklist_update maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.commitments.pinned_checklist_update obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.commitments.pinned_checklist_update exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_commitments_pinned_checklist_update_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "state_mutation"
+      },
+      "transports": [
+        "telegram"
+      ],
+      "description": "Maintaining an auto-editing pinned checklist of war room commitments"
+    },
+    {
+      "id": "user.collab.acoustic_hud.spatial_pulse_synth",
+      "denotation": {
+        "input": "LyapunovClusterState",
+        "output": "Result(BinauralPulseAudio, AudioError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.acoustic_hud.spatial_pulse_synth over typed carrier LyapunovClusterState.",
+            "falsifier": "Composition test trace where composite user.collab.acoustic_hud.spatial_pulse_synth invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_acoustic_hud_spatial_pulse_synth_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.acoustic_hud.spatial_pulse_synth commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.acoustic_hud.spatial_pulse_synth with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_acoustic_hud_spatial_pulse_synth_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.acoustic_hud.spatial_pulse_synth refines declared relation LyapunovClusterState -> Result(BinauralPulseAudio, AudioError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(BinauralPulseAudio, AudioError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.acoustic_hud.spatial_pulse_synth obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.acoustic_hud.spatial_pulse_synth granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_acoustic_hud_spatial_pulse_synth_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.acoustic_hud.spatial_pulse_synth is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.acoustic_hud.spatial_pulse_synth preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.acoustic_hud.spatial_pulse_synth operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.acoustic_hud.spatial_pulse_synth maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.acoustic_hud.spatial_pulse_synth obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.acoustic_hud.spatial_pulse_synth exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_acoustic_hud_spatial_pulse_synth_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "advisory"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Synthesizing spatial binaural auditory pulses representing cluster health"
+    },
+    {
+      "id": "user.collab.acoustic_hud.binaural_stream",
+      "denotation": {
+        "input": "BinauralPulseAudio",
+        "output": "Result(AcousticHudStreamReceipt, AudioError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.acoustic_hud.binaural_stream over typed carrier BinauralPulseAudio.",
+            "falsifier": "Composition test trace where composite user.collab.acoustic_hud.binaural_stream invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_acoustic_hud_binaural_stream_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.acoustic_hud.binaural_stream commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.acoustic_hud.binaural_stream with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_acoustic_hud_binaural_stream_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.acoustic_hud.binaural_stream refines declared relation BinauralPulseAudio -> Result(AcousticHudStreamReceipt, AudioError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(AcousticHudStreamReceipt, AudioError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.acoustic_hud.binaural_stream obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.acoustic_hud.binaural_stream granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_acoustic_hud_binaural_stream_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.acoustic_hud.binaural_stream is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.acoustic_hud.binaural_stream preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.acoustic_hud.binaural_stream operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.acoustic_hud.binaural_stream maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.acoustic_hud.binaural_stream obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.acoustic_hud.binaural_stream exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_acoustic_hud_binaural_stream_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "advisory"
+      },
+      "transports": [
+        "telegram"
+      ],
+      "description": "Streaming spatial acoustic HUD to mobile commander's Bluetooth earbuds"
+    },
+    {
+      "id": "user.collab.retro.stamp_uca_categorize",
+      "denotation": {
+        "input": "RetrospectiveDiscussion",
+        "output": "Result(CategorizedUcas, StampError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.retro.stamp_uca_categorize over typed carrier RetrospectiveDiscussion.",
+            "falsifier": "Composition test trace where composite user.collab.retro.stamp_uca_categorize invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_retro_stamp_uca_categorize_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.retro.stamp_uca_categorize commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.retro.stamp_uca_categorize with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_retro_stamp_uca_categorize_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.retro.stamp_uca_categorize refines declared relation RetrospectiveDiscussion -> Result(CategorizedUcas, StampError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(CategorizedUcas, StampError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.retro.stamp_uca_categorize obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.retro.stamp_uca_categorize granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_retro_stamp_uca_categorize_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.retro.stamp_uca_categorize is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.retro.stamp_uca_categorize preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.retro.stamp_uca_categorize operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.retro.stamp_uca_categorize maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.retro.stamp_uca_categorize obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.retro.stamp_uca_categorize exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_retro_stamp_uca_categorize_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Categorizing retrospective lessons learned into STAMP/STPA safety lattices"
+    },
+    {
+      "id": "user.collab.retro.adr_mint_and_link",
+      "denotation": {
+        "input": "CategorizedUcas",
+        "output": "Result(MintedAdrPath, KmError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.retro.adr_mint_and_link over typed carrier CategorizedUcas.",
+            "falsifier": "Composition test trace where composite user.collab.retro.adr_mint_and_link invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_retro_adr_mint_and_link_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.retro.adr_mint_and_link commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.retro.adr_mint_and_link with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_retro_adr_mint_and_link_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.retro.adr_mint_and_link refines declared relation CategorizedUcas -> Result(MintedAdrPath, KmError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(MintedAdrPath, KmError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.retro.adr_mint_and_link obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.retro.adr_mint_and_link granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_retro_adr_mint_and_link_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.retro.adr_mint_and_link is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.retro.adr_mint_and_link preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.retro.adr_mint_and_link operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.retro.adr_mint_and_link maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.retro.adr_mint_and_link obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.retro.adr_mint_and_link exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_retro_adr_mint_and_link_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "state_mutation"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Minting permanent ZK ADRs and preventive Sa-Plan tasks from retro lessons"
+    },
+    {
+      "id": "user.collab.gameday.fault_injection_orchestrate",
+      "denotation": {
+        "input": "GameDayScenarioSpec",
+        "output": "Result(GameDayScorecard, DrillError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.collab.gameday.fault_injection_orchestrate over typed carrier GameDayScenarioSpec.",
+            "falsifier": "Composition test trace where composite user.collab.gameday.fault_injection_orchestrate invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_collab_gameday_fault_injection_orchestrate_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.collab.gameday.fault_injection_orchestrate commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.collab.gameday.fault_injection_orchestrate with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_collab_gameday_fault_injection_orchestrate_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.collab.gameday.fault_injection_orchestrate refines declared relation GameDayScenarioSpec -> Result(GameDayScorecard, DrillError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(GameDayScorecard, DrillError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.collab.gameday.fault_injection_orchestrate obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.collab.gameday.fault_injection_orchestrate granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_collab_gameday_fault_injection_orchestrate_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.collab.gameday.fault_injection_orchestrate is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.collab.gameday.fault_injection_orchestrate preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.gameday.fault_injection_orchestrate operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.collab.gameday.fault_injection_orchestrate maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.collab.gameday.fault_injection_orchestrate obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.collab.gameday.fault_injection_orchestrate exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_collab_gameday_fault_injection_orchestrate_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "state_mutation"
+      },
+      "transports": [
+        "zenoh"
+      ],
+      "description": "Orchestrating synthetic chaos drills and evaluating team MTTR and response"
+    }
+  ]
+}
