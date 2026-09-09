@@ -13,9 +13,9 @@
     "class": "P1",
     "score": 2000,
     "score_interval": [ 2000, 2000 ],
-    "observed_at": "2026-09-09T16:36:44Z",
-    "ready_since": "2026-09-09T16:36:44Z",
-    "valid_until": "2026-09-09T17:36:45Z",
+    "observed_at": "2026-09-09T17:00:58Z",
+    "ready_since": "2026-09-09T17:00:58Z",
+    "valid_until": "2026-09-09T18:00:58Z",
     "readiness": "ready",
     "blockers": [],
     "dependencies": [],
@@ -26,12 +26,12 @@
         {
           "path": ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/agents/ooda_shruti_copilot.gleam",
           "sha256": "389fc2456cc1ab13d8799a3fb3050a6404a4120f064cfccdc748b006c39c4621",
-          "observed_at": "2026-09-09T16:36:44Z"
+          "observed_at": "2026-09-09T17:00:58Z"
         },
         {
           "path": ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/test/ooda_shruti_copilot_test.gleam",
           "sha256": "b1a253de4bbe1c0b76f40a847c52a8537ccf0cd4cfb7a7c556046e30bde1b6c6",
-          "observed_at": "2026-09-09T16:36:44Z"
+          "observed_at": "2026-09-09T17:00:58Z"
         }
       ]
     },
