@@ -107,31 +107,63 @@ let normalize body =
       "http://nas-1.tail55d152.ts.net:4100/files/.gemini/rules/";
       "http://nas-1.tail55d152.ts.net:4100/files/.codex/rules/" ]
 
+type section = Outside | InDirective of string option * string list | ForeignTable
+
+let table_header line =
+  if not (String.starts_with ~prefix:"[" line) then None
+  else if line = "[[directive]]" then Some true
+  else if String.starts_with ~prefix:"[[" line then
+    if String.length line >= 4 && String.ends_with ~suffix:"]]" line then Some false
+    else bounded_error "unsupported-table-header"
+  else if String.length line >= 3 && line.[String.length line - 1] = ']' then Some false
+  else bounded_error "unsupported-table-header"
+
+let valid_key key =
+  key <> "" && String.for_all (function 'a'..'z' | 'A'..'Z' | '0'..'9' | '_' | '-' -> true | _ -> false) key
+let scalar_assignment line =
+  match String.index_opt line '=' with
+  | None -> bounded_error "unsupported-toml-syntax"
+  | Some at ->
+      let key = String.trim (String.sub line 0 at) in
+      let value = String.trim (String.sub line (at + 1) (String.length line - at - 1)) in
+      if not (valid_key key) || String.length value < 2 || value.[0] <> '"' ||
+         value.[String.length value - 1] <> '"' then bounded_error "unsupported-toml-scalar";
+      key, line
+
 let directives_from_superset ~budget path =
   let lines = String.split_on_char '\n' (read_regular ~budget path) in
   let directives = ref [] in
-  let current_id = ref None and current_clauses = ref [] in
+  let state = ref Outside in
   let flush () =
-    match !current_id with
-    | None -> ()
-    | Some directive_id ->
-        directives := { directive_id; clauses = List.rev !current_clauses } :: !directives;
-        current_id := None; current_clauses := []
+    match !state with
+    | InDirective (None, _) -> bounded_error "directive-missing-id"
+    | InDirective (Some directive_id, clauses) ->
+        directives := { directive_id; clauses = List.rev clauses } :: !directives
+    | Outside | ForeignTable -> ()
   in
   List.iter (fun raw ->
     let line = String.trim raw in
-    if line = "[[directive]]" then flush ()
-    else if String.starts_with ~prefix:"id = \"" line then begin
-      let start = String.length "id = \"" in
-      match String.index_from_opt line start '"' with
-      | None -> bounded_error "unterminated-directive-id"
-      | Some stop ->
-          if !current_id <> None then bounded_error "duplicate-directive-id";
-          current_id := Some (String.sub line start (stop - start))
-    end else if !current_id <> None && line <> "" && line.[0] <> '#' then
-      current_clauses := line :: !current_clauses) lines;
+    if line = "" || line.[0] = '#' then ()
+    else match table_header line with
+    | Some true -> flush (); state := InDirective (None, [])
+    | Some false -> flush (); state := ForeignTable
+    | None ->
+        match !state with
+        | Outside | ForeignTable -> ()
+        | InDirective (id, clauses) ->
+            let key, clause = scalar_assignment line in
+            if key = "id" then
+              match id with
+              | Some _ -> bounded_error "duplicate-directive-id"
+              | None ->
+                  let value = String.trim (String.sub clause (String.index clause '=' + 1) (String.length clause - String.index clause '=' - 1)) in
+                  state := InDirective (Some (String.sub value 1 (String.length value - 2)), clauses)
+            else match id with
+              | None -> bounded_error "directive-field-before-id"
+              | Some _ -> state := InDirective (id, clause :: clauses)) lines;
   flush ();
-  if List.length !directives > max_rules then bounded_error "directive-count";
+  if List.length !directives > max_rules || has_duplicate (List.map (fun directive -> directive.directive_id) !directives) then
+    bounded_error "directive-count-or-duplicate";
   List.rev !directives
 
 let rules_from_json ~budget path =
@@ -338,14 +370,25 @@ let fixture_selftest () =
   let source_superset = Filename.concat source_root "governance/agents/policy/superset.toml" in
   write source_superset
     ("[[directive]]\nid = \"DIR-01\"\nstatus = \"REVOKED_SYNTHETIC\"\nformat_mandate = \"COUNTERFACTUAL\"\n\n" ^
-     (List.tl ids |> List.map (fun id -> "[[directive]]\nid = \"" ^ id ^ "\"\nstatus = \"REVOKED_SYNTHETIC\"\n") |> String.concat "\n"));
+     (List.tl ids |> List.map (fun id -> "[[directive]]\nid = \"" ^ id ^ "\"\nstatus = \"REVOKED_SYNTHETIC\"\n") |> String.concat "\n") ^
+     "\n[unrelated]\ndescription = \"UNRELATED_TABLE_ONLY\"\n");
   let source_map = Filename.concat source_root "mapping.json" in
   write source_map (mapping_text rows);
   let source_observation = observe source_root source_map in
   if List.assoc "DIR-01" source_observation.directive_clauses <>
      ["status = \"REVOKED_SYNTHETIC\""; "format_mandate = \"COUNTERFACTUAL\""] then
     failwith "selftest source clauses were not read";
-  print_endline "{\"schema\":\"uos.ev02-directive-mapping/v1\",\"status\":\"PASS\",\"cases\":8}"
+  let malformed_root = private_root "mapping-malformed" in
+  build_fixture malformed_root ~all_surfaces:true ~body:"# Anchor\ncontent\n";
+  write (Filename.concat malformed_root "governance/agents/policy/superset.toml")
+    "[[directive]\nid = \"DIR-01\"\n";
+  expect_refusal "malformed-table" (fun () -> observe malformed_root valid);
+  let duplicate_root = private_root "mapping-duplicate-id" in
+  build_fixture duplicate_root ~all_surfaces:true ~body:"# Anchor\ncontent\n";
+  write (Filename.concat duplicate_root "governance/agents/policy/superset.toml")
+    ("[[directive]]\nid = \"DIR-01\"\n\n[[directive]]\nid = \"DIR-01\"\n");
+  expect_refusal "duplicate-semantic-id" (fun () -> observe duplicate_root valid);
+  print_endline "{\"schema\":\"uos.ev02-directive-mapping/v1\",\"status\":\"PASS\",\"cases\":10}"
 
 let selftest () =
   let check label actual = if not actual then failwith ("selftest failed: " ^ label) in

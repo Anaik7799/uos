@@ -134,19 +134,71 @@ let command_argv exe args = Array.of_list (exe :: args)
 let requires condition label = if not condition then failwith label
 let rec lowercase_hex s i = if i=String.length s then true else match s.[i] with '0'..'9'|'a'..'f' -> lowercase_hex s (i+1) | _ -> false
 let source_paths = ["tools/ev02_governance/run_checks.ml";"tools/ev02_governance/directive_mapping_gate.ml";"tools/ev02_governance/policy_surface_gate.ml";"governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json"]
+let superset_rel = "governance/agents/policy/superset.toml"
+let amendment_rel = "governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json"
+let max_staged_inputs = 258
 let local_bytes path =
   let channel = open_in_bin (workspace ^ "/" ^ path) in
   Fun.protect ~finally:(fun () -> close_in_noerr channel) (fun () -> really_input_string channel (in_channel_length channel))
-let candidate_bytes revision path =
+let candidate_query revision build =
   let selector = "commit_id(\"" ^ revision ^ "\")" in
-  let c = run ~seconds:4. (command_argv jj ["--ignore-working-copy";"--no-pager";"--color";"never";"-R";workspace;"file";"show";"-r";selector;"-T";"";"--";"root:" ^ path]) in
-  match c.termination with Exited 0 -> c.stdout | _ -> failwith ("candidate-bytes-unavailable:" ^ path)
+  let c = run ~seconds:4. (command_argv jj (["--ignore-working-copy";"--no-pager";"--color";"never";"-R";workspace] @ build selector)) in
+  match c.termination with Exited 0 -> c.stdout | _ -> failwith "candidate-query-unavailable"
+let candidate_bytes revision path =
+  candidate_query revision (fun selector -> ["file";"show";"-r";selector;"-T";"";"--";"root:" ^ path])
 let bind_candidate revision =
   requires (String.length revision=40 && lowercase_hex revision 0) "immutable-candidate-required";
   List.map (fun path ->
     let local = local_bytes path and candidate = candidate_bytes revision path in
     requires (local = candidate) ("workspace-bytes-differ:" ^ path);
     `Assoc["path",`String path;"sha256",`String(sha local);"bytes",`Int(String.length local)]) source_paths
+
+let candidate_regular revision path =
+  let listing = candidate_query revision (fun selector ->
+    ["file";"list";"-r";selector;"-T";"file_type ++ \" \" ++ path ++ \"\\n\"";"--";"root:" ^ path]) in
+  requires (listing = "file " ^ path ^ "\n") ("candidate-not-regular:" ^ path)
+
+let valid_rule_file file =
+  file = Filename.basename file && Filename.check_suffix file ".md" && file <> "." && file <> ".." &&
+  not (String.contains file '/') && not (String.contains file '\\') && String.length file <= 255
+let amendment_files bytes =
+  let json = try Yojson.Safe.from_string bytes with Yojson.Json_error _ -> failwith "candidate-amendment-json" in
+  match json with
+  | `Assoc fields ->
+      begin match List.assoc_opt "rules" fields with
+      | Some (`List rows) ->
+          let files = rows |> List.map (function
+            | `List [`String _; `String file; `String _] when valid_rule_file file -> file
+            | _ -> failwith "candidate-amendment-rule-shape") |> List.sort_uniq String.compare in
+          requires (files <> [] && List.length files <= 64) "candidate-rule-file-bound";
+          files
+      | _ -> failwith "candidate-amendment-rules"
+      end
+  | _ -> failwith "candidate-amendment-root"
+let rec mkdirs path =
+  if Sys.file_exists path then () else (mkdirs (Filename.dirname path); Unix.mkdir path 0o700)
+let private_stage () =
+  let reservation = Filename.temp_file "ev02-candidate-stage-" ".reserve" in
+  let root = reservation ^ ".d" in Unix.mkdir root 0o700; root
+let stage_write root rel bytes =
+  let target = Filename.concat root rel in
+  mkdirs (Filename.dirname target);
+  let fd = Unix.openfile target [Unix.O_WRONLY;Unix.O_CREAT;Unix.O_EXCL;Unix.O_CLOEXEC] 0o600 in
+  let channel = Unix.out_channel_of_descr fd in
+  Fun.protect ~finally:(fun () -> close_out_noerr channel) (fun () -> output_string channel bytes; flush channel)
+let stage_inputs revision =
+  let root = private_stage () in
+  let amendment = candidate_bytes revision amendment_rel in
+  let files = amendment_files amendment in
+  let rels = superset_rel :: amendment_rel ::
+    List.concat_map (fun file -> List.map (fun surface -> surface ^ "/" ^ file) [".agents/rules";".claude/rules";".gemini/rules";".codex/rules"]) files in
+  requires (List.length rels <= max_staged_inputs) "candidate-input-count";
+  let bindings = List.map (fun rel ->
+    candidate_regular revision rel;
+    let bytes = candidate_bytes revision rel in
+    stage_write root rel bytes;
+    `Assoc["path",`String rel;"candidate_kind",`String "file";"sha256",`String(sha bytes);"bytes",`Int(String.length bytes)]) rels in
+  root, Filename.concat root amendment_rel, bindings
 
 let harness_selftest () =
   let f=Filename.temp_file "ev02-harness-" ".ml" in
@@ -184,14 +236,15 @@ let () = match Sys.argv.(1) with
 let checks out revision =
   if Sys.file_exists out then failwith "nonexclusive-output"; Unix.mkdir out 0o700;
   let bindings = bind_candidate revision in
+  let staged_root, staged_amendment, input_bindings = stage_inputs revision in
   let one id expect validate argv = let c=run~seconds:10. argv in row out id argv (expect c && validate c) c in
   let rows=[
     one "mapping-selftest" (fun c->c.termination=Exited 0) (structured~schema:"uos.ev02-directive-mapping/v1"~status:"PASS"~cases:5) (script_argv mapping ["--selftest"]);
-    one "mapping-fixture-selftest" (fun c->c.termination=Exited 0) (structured~schema:"uos.ev02-directive-mapping/v1"~status:"PASS"~cases:8) (script_argv mapping ["--fixture-selftest"]);
-    one "mapping-observation" (fun c->c.termination=Exited 1) mapping_hold (script_argv mapping ["--observe";workspace;amendment])
+    one "mapping-fixture-selftest" (fun c->c.termination=Exited 0) (structured~schema:"uos.ev02-directive-mapping/v1"~status:"PASS"~cases:10) (script_argv mapping ["--fixture-selftest"]);
+    one "mapping-observation" (fun c->c.termination=Exited 1) mapping_hold (script_argv mapping ["--observe";staged_root;staged_amendment])
   ] in
   let valid=List.for_all(function `Assoc x->List.assoc "valid" x=`Bool true|_->false) rows in
-  write(out^"/summary.json")(Yojson.Safe.pretty_to_string(`Assoc["schema",`String"uos.ev02-governance-checks/v3";"authority",`String"REPORT_ONLY";"admission",`String"NOT_GRANTED";"candidate_commit",`String revision;"source_bindings",`List bindings;"rows",`List rows;"valid",`Bool valid])^"\n");
+  write(out^"/summary.json")(Yojson.Safe.pretty_to_string(`Assoc["schema",`String"uos.ev02-governance-checks/v4";"authority",`String"REPORT_ONLY";"admission",`String"NOT_GRANTED";"candidate_commit",`String revision;"source_bindings",`List bindings;"candidate_input_bindings",`List input_bindings;"rows",`List rows;"valid",`Bool valid])^"\n");
   if valid then 0 else 1
 let () = match Array.to_list Sys.argv with
   | [_;"--harness-selftest"] -> harness_selftest ()
