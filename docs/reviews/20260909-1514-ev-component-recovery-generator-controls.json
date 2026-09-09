@@ -1,0 +1,149 @@
+{
+  "schema": "uos.recovery-generator-controls.v1",
+  "candidate": "bfeda779d73a1bebab4c562a25e7036d7e5170d7",
+  "authority": "NONE",
+  "observed_at": 1788967748.856548,
+  "checks": [
+    "fresh_exact_177", "occupied_path_preserved",
+    "explicit_regular_replacement_exact", "marked_symlink_target_preserved",
+    "dangling_symlink_preserved", "unmarked_file_preserved",
+    "directory_preserved", "hardlink_other_name_preserved",
+    "symlink_parent_refused", "same_count_unreviewed_name_refused",
+    "same_count_duplicate_refused", "reduced_denominator_refused",
+    "same_count_reordered_calls_refused", "restored_source_exact",
+    "all_legacy168_ordered_with_reviewed9"
+  ],
+  "checks_passed": 15,
+  "source_bindings": [
+    {
+      "path": "tools/generate_ev_recovery_runner.ml",
+      "sha256": "bd42b2f5ba1b262711a78192da4afb460a2537126d727b45dee1afd357b2df51"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ev_control_bounds_test.gleam",
+      "sha256": "0897c332216a9d9b753070a3600f7b4a3d20d1f54a7f8d4b6eaae0959e1e33b0"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ev_control_boundary_test.gleam",
+      "sha256": "1a69160cef04b7d557271ba338d4727078a6bef1ac40a41b2e36d1f3ba463053"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/multi_agent_quorum_test.gleam",
+      "sha256": "0be7803b7ac3c3adf8687adff031f2256efe81422099ab87aeed52b5a101e05f"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/predictive_autoscaler_test.gleam",
+      "sha256": "263b6f92b6f2f855a879cce834b6828e199effd06b4bd97dd65288e022055e42"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/predictive_autoscaler_hud_test.gleam",
+      "sha256": "b5f162f3117e26b8aec5c4796347699e6863b764d281b3dfea3a4df0d201b924"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/homeostasis_evolution_engine_test.gleam",
+      "sha256": "e695759e908bb4cbc26dc8bde2108ce3ba351c993a72684711fe2ab85df71b08"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/tui_15_evolutionary_cycles_test.gleam",
+      "sha256": "df4c8f6c6c7ee20192c5f505149914e6be91171b0b5bbd80c6f20fdb4ea3186c"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/homeostasis_evolution_hud_test.gleam",
+      "sha256": "e01a4c2c9ef9a3258a3bd6a7eca8130db307141f125af6c66de2277cf664ec0a"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/multi_agent_quorum_hud_test.gleam",
+      "sha256": "82ee32d8672f714d49ea4416991742a207ddf3b94da15be600c8e2a46fd480eb"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/heijunka_scheduler_test.gleam",
+      "sha256": "58eb5f07cd70fd4cec8ad9dc9b1f92b8a2ed5b95c73cc76a5ff1349cd428b7e1"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/work_stealing_test.gleam",
+      "sha256": "96ede4e24cbdcba58f053a71f5856834c168e37cd06c3cf8911cc60a56c4b9e9"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/delta_mesh_engine_test.gleam",
+      "sha256": "de5dc4bcf33a89cc30adce1ed559c69b431e2bc063307345a861fde07fdc784f"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/deadman_freshness_test.gleam",
+      "sha256": "e6ea49acee8d58d076087f2ebd6dcbdc738ba0883ee76f21b475ef2b1df3e138"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/crdt_health_bridge_test.gleam",
+      "sha256": "c9f10351c62d927277943ca9ec1a7c2f2fd3491f80d22ea1d892a0713eb5852d"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/crdt_mesh_sync_test.gleam",
+      "sha256": "28b7fab329415f3cb48bd022f497bfdeb7a312e6ae19bb206ac35aeb961b8b83"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/rag_cache_mesh_test.gleam",
+      "sha256": "0ce228fe12bda4dd366b32ff654d2c6f6a15c47e57eeea11eb0ad3a503b3d793"
+    }
+  ],
+  "generator_sha256": "bd42b2f5ba1b262711a78192da4afb460a2537126d727b45dee1afd357b2df51",
+  "runner_sha256": "1e867c16325423712a4408f8a855d7dc7dbfe5347e27ebe767b49d2ddebe9bd2",
+  "driver_sha256": "b96f37f49073ad0e2f1bb988915970b41ec59f6d69ad6c0ac8ab1fb3e4738e7b",
+  "invocations": [
+    {
+      "path": "/tmp/ev-recovery-generator-controls-1529/case-1.json",
+      "sha256": "0d26816c0dfcec96d84b64d5a15063cc276984a9e4b7d1b5fa958dc922b1fc02"
+    },
+    {
+      "path": "/tmp/ev-recovery-generator-controls-1529/case-2.json",
+      "sha256": "50c418aff242c7b3786df79b44701bde02330275803c4d015139592482f2c61f"
+    },
+    {
+      "path": "/tmp/ev-recovery-generator-controls-1529/case-3.json",
+      "sha256": "368bc9ddc5e49be584bc2e1b68b06077ebe288b4a38e0de143f9c48dd46c605b"
+    },
+    {
+      "path": "/tmp/ev-recovery-generator-controls-1529/case-4.json",
+      "sha256": "f581f02b7ac4d49f37a8d1f5257cb7d75a74afdc0897046fb16d16059c0da7fb"
+    },
+    {
+      "path": "/tmp/ev-recovery-generator-controls-1529/case-5.json",
+      "sha256": "0828001fdb604d7c78ec9c671813687da1ffe6fcbf4f530f71236538a1fa810c"
+    },
+    {
+      "path": "/tmp/ev-recovery-generator-controls-1529/case-6.json",
+      "sha256": "b426497b59fce2840675c391bb3b233da55c150c236554a394a075d3d39e32e0"
+    },
+    {
+      "path": "/tmp/ev-recovery-generator-controls-1529/case-7.json",
+      "sha256": "187b0f3366f9f1f5b638be744901df14c05a3a28ba0fba7c04749db99cfb259f"
+    },
+    {
+      "path": "/tmp/ev-recovery-generator-controls-1529/case-8.json",
+      "sha256": "21901832cc4bef9280b87e0884a2f2c5cc6c114c2876e6e6c22e79099f10d1f5"
+    },
+    {
+      "path": "/tmp/ev-recovery-generator-controls-1529/case-9.json",
+      "sha256": "b18f426902e0bd4be682ed7934854216d768bbb4a437c1214c74bcea1e9170c4"
+    },
+    {
+      "path": "/tmp/ev-recovery-generator-controls-1529/case-10.json",
+      "sha256": "d9cfbd1cf0cb6c4306a490feb831ec4fc936d26f6b23fa1aefd9d850f5c0f070"
+    },
+    {
+      "path": "/tmp/ev-recovery-generator-controls-1529/case-11.json",
+      "sha256": "75b5f818b6e62cd93eb79d6c04fac2a1dadec5d23a57ee23692167da73c2285b"
+    },
+    {
+      "path": "/tmp/ev-recovery-generator-controls-1529/case-12.json",
+      "sha256": "d62e73cd596d40fa6ab373315457de842c7c87f3851b270a9728be49223b3ea5"
+    },
+    {
+      "path": "/tmp/ev-recovery-generator-controls-1529/case-13.json",
+      "sha256": "d5de2365012f4f5adeb540ccb892d3455aa62c0e9d42b26a5768f5ff5783a0dc"
+    },
+    {
+      "path": "/tmp/ev-recovery-generator-controls-1529/case-14.json",
+      "sha256": "27c38611a422d3b99d0e089588addd1f79d0d54bf50b7f9ef3447a6f935399f5"
+    }
+  ],
+  "limits": "Private deterministic file controls; concurrent hostile directory replacement and crash durability remain unproved. This checks enumeration, not all EV behavior."
+}

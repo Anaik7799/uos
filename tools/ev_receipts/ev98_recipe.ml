@@ -1,15 +1,19 @@
 (* Closed EV98 component recipe. Any recipe/tool/acceptance update requires review. *)
-let id = "uos.ev98.component-campaign.v1"
+let id = "uos.ev98.component-campaign.v2"
 let canonical_root = "/home/an/NAS-setup/uos"
-let baseline = "f5f86e7e9841ae20da69f3d6c7fc44f1a2e50396"
+let baseline = "9c590e75b87e2bca63adb4af966e465269203b4d"
+let previous_baseline = "f5f86e7e9841ae20da69f3d6c7fc44f1a2e50396"
+let previous_recipe_sha256 = "412ab8bc2e203603f8fe8a5f57b8bf1359b59c82dce5fd37b523a64502cea6d8"
+let update_notes = ["Version 2 explicitly stages the reviewed wire codec and all 25 codec cases; version 1's 42 case IDs remain obligations"; "Any baseline acceptance byte correction must appear in acceptance_updates with old/new digest and requirement rationale"; "Reviewed synchronization corrections retain original entrypoints and explicitly add causal-status cases"]
 let sources = [
  "apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam";
  "apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam";
  "apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam";
+ "apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam";
  "apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam";
  "apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam";
 ]
-let fixed = [
+let baseline_fixed = [
  "apps/cepaf_gleam/test/delta_mesh_engine_test.gleam","1e48182f8a94c44a3a9885f58adde2de8628d9a130ab9420c077f4653028d13b";
  "apps/cepaf_gleam/test/deadman_freshness_test.gleam","e6ea49acee8d58d076087f2ebd6dcbdc738ba0883ee76f21b475ef2b1df3e138";
  "apps/cepaf_gleam/test/crdt_health_bridge_test.gleam","c9f10351c62d927277943ca9ec1a7c2f2fd3491f80d22ea1d892a0713eb5852d";
@@ -17,7 +21,17 @@ let fixed = [
  "apps/cepaf_gleam/test/ev_delta_freshness_runner.gleam","bdb4753d8a90403747cdb87258fa160d6df6ce49882f36892b3a6969f3ed0e0b";
  "contracts/rules/20260908-0912-provenance-integrity-contract.md","f764207e524b5c493252be58fc1a7e426dd92239f8d92bc43ae2e74fc50f8d57";
 ]
-let cases = [
+let acceptance_updates : (string * string * string * string) list = [
+ "apps/cepaf_gleam/test/delta_mesh_engine_test.gleam", "1e48182f8a94c44a3a9885f58adde2de8628d9a130ab9420c077f4653028d13b", "de5dc4bcf33a89cc30adce1ed559c69b431e2bc063307345a861fde07fdc784f", "Reviewed SYNC_STATUS 0d9bd0a8a8ecf26014904975a5e8e9a6c97d8d8d: replace digest-only false completion with full exchange; retain ACK temporal watermark assertions with recovery output; add causal coverage and stale observation regressions while retaining every original case ID";
+]
+let codec_fixed = [
+ "apps/cepaf_gleam/test/mesh_sync_codec_test.gleam","140eddbe3e47c4e1b3e24daca0416dd681bdc9413e23b298caa0be56b0af16f0";
+]
+let fixed = List.map (fun (path, original) -> path,
+ match List.find_opt (fun (p,_,_,_) -> p=path) acceptance_updates with
+ | None -> original
+ | Some (_,expected,updated,_) -> if expected<>original then failwith "acceptance baseline mismatch"; updated) baseline_fixed @ codec_fixed
+let baseline_cases = [
  "delta_mesh_engine_test.engine_init_test";
  "delta_mesh_engine_test.engine_register_peer_test";
  "delta_mesh_engine_test.engine_local_mutation_and_gossip_test";
@@ -61,6 +75,45 @@ let cases = [
  "crdt_mesh_sync_test.mesh_sync_digest_and_drift_test";
  "crdt_mesh_sync_test.mesh_sync_reconciliation_and_ack_test";
 ]
+let codec_cases = [
+ "mesh_sync_codec_test.diagnostic_delta_retains_payload_test";
+ "mesh_sync_codec_test.all_fields_and_forwarding_origin_roundtrip_test";
+ "mesh_sync_codec_test.digest_and_ack_roundtrip_test";
+ "mesh_sync_codec_test.empty_delta_and_zero_boundaries_roundtrip_test";
+ "mesh_sync_codec_test.independent_exact_wire_layout_test";
+ "mesh_sync_codec_test.wire_reconciliation_matches_typed_oracle_test";
+ "mesh_sync_codec_test.malformed_wire_refuses_before_reconciliation_test";
+ "mesh_sync_codec_test.exact_byte_decode_boundary_test";
+ "mesh_sync_codec_test.exact_byte_encode_boundary_test";
+ "mesh_sync_codec_test.depth_checked_before_recursive_parse_test";
+ "mesh_sync_codec_test.collection_boundary_and_order_test";
+ "mesh_sync_codec_test.utf8_string_byte_boundaries_test";
+ "mesh_sync_codec_test.safe_integer_and_negative_boundaries_test";
+ "mesh_sync_codec_test.closed_grammar_rejects_ambiguous_and_malformed_inputs_test";
+ "mesh_sync_codec_test.duplicate_clock_and_counter_keys_refused_test";
+ "mesh_sync_codec_test.duplicate_health_keys_and_mismatched_nodes_refused_test";
+ "mesh_sync_codec_test.duplicate_live_tombstone_and_cross_set_dots_refused_test";
+ "mesh_sync_codec_test.empty_node_identities_refused_test";
+ "mesh_sync_codec_test.physical_and_logical_health_times_survive_independently_test";
+ "mesh_sync_codec_test.nonfinite_numeric_literals_are_refused_test";
+ "mesh_sync_codec_test.exact_float_extremes_and_escaped_strings_roundtrip_test";
+ "mesh_sync_codec_test.every_composite_collection_has_an_encoder_bound_test";
+ "mesh_sync_codec_test.malformed_nested_wire_records_refused_test";
+ "mesh_sync_codec_test.aggregate_budget_stops_before_invalid_shared_tail_test";
+ "mesh_sync_codec_test.deeply_shared_tree_and_escaping_have_aggregate_bounds_test";
+]
+let sync_cases : string list = [
+ "delta_mesh_engine_test.digest_only_exchange_does_not_claim_remote_state_test";
+ "delta_mesh_engine_test.local_mutation_invalidates_prior_peer_coverage_test";
+ "delta_mesh_engine_test.stale_ack_cannot_restore_peer_coverage_after_local_change_test";
+ "delta_mesh_engine_test.stale_ack_cannot_erase_a_newer_peer_frontier_test";
+ "delta_mesh_engine_test.stale_delta_cannot_erase_a_newer_peer_frontier_test";
+ "delta_mesh_engine_test.remote_ahead_ack_requests_the_missing_delta_test";
+ "delta_mesh_engine_test.full_two_way_exchange_converges_only_after_remote_delta_test";
+ "delta_mesh_engine_test.incoming_merge_invalidates_other_peer_coverage_test";
+ "delta_mesh_engine_test.stale_ack_recovery_refuses_when_outbound_queue_is_full_test";
+]
+let cases = baseline_cases @ codec_cases @ sync_cases
 let dependencies = ["gleam_stdlib";"gleam_json";"gleeunit"]
 let dependency_root = "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang"
 let dependency_files = [

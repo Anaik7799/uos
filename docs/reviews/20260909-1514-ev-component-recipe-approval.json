@@ -1,0 +1,180 @@
+{
+  "candidate": "dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93",
+  "status": "BOUNDED_COMPONENT_APPROVED",
+  "authority": "NONE",
+  "review": {
+    "path": "/tmp/ev-recipe-independent-20260909-1524/20260909-1524-independent-review.json",
+    "sha256": "fa6e17d944a715cf21e0fe4ab9a363581dfd1de6f0857819d32f35944a1448f0",
+    "bytes": 2438
+  },
+  "source_binding": {
+    "path": "/tmp/ev-recipe-independent-20260909-1524/20260909-1524-source-binding.json",
+    "sha256": "8df54028a7702128614f8ea00fc97671869bdd7336969b4e6e5bea80d4eb4634",
+    "bytes": 1266
+  },
+  "build": {
+    "path": "/tmp/ev-recipe-independent-20260909-1524/build.json",
+    "sha256": "55a76a4b0ce7502f94319242fcf714362c10420f9d442c175ae5ae4ab0d235a3",
+    "bytes": 2252
+  },
+  "unit_tests": {
+    "path": "/tmp/ev-recipe-independent-20260909-1524/unit.json",
+    "sha256": "c3078b3d66be3e8607702a8cb91bc962345c9e5052e1894e5c5570577eccecaa",
+    "bytes": 2935
+  },
+  "audit_runtime": {
+    "path": "/tmp/ev-recipe-independent-20260909-1524/audit-runtime-2.json",
+    "sha256": "76ef0a662dfc547c95297ac4d1eb4eb4ca450d37736f4f8b5509f91bda087db7",
+    "bytes": 3494
+  },
+  "trace": {
+    "path": "/tmp/ev-recipe-codec-final-exec.trace",
+    "sha256": "fec76726d79f66cfc5b18ee1a916910e3f878197b3517746a8bcda1d101889ca",
+    "bytes": 140583
+  },
+  "successful_execs": 189,
+  "failed_lookups": 167,
+  "trace_executables": [
+    {
+      "observed_path": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+      "resolved_path": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+      "sha256": "9d57b042c9f857ed898f4b99116ad8433bed2504619613c97d72a52288bef697"
+    },
+    {
+      "observed_path": "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj",
+      "resolved_path": "/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj",
+      "sha256": "630fe2c54d0b9f53794aa37c1274a344e6067175ac9e8925087974fb3d0c4966"
+    },
+    {
+      "observed_path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/escript",
+      "resolved_path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/escript",
+      "sha256": "985522721e68d744f021d43146a3d3e739d4da039280f03f6763987140774a24"
+    },
+    {
+      "observed_path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp",
+      "resolved_path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp",
+      "sha256": "632442f4075f4014172cd95f18151a5b4c048c483a7fb3c10577826cdb3b8966"
+    },
+    {
+      "observed_path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup",
+      "resolved_path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup",
+      "sha256": "e9a620ec4fcd8fb2ac55dfd9a8b0c59ee52ef363454c6502ff26efa2f5476025"
+    },
+    {
+      "observed_path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "resolved_path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "sha256": "bd67dd9a907245330ed2959749d00345b7f9f3cfa7dbb109e970c16168e231a8"
+    },
+    {
+      "observed_path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost",
+      "resolved_path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost",
+      "sha256": "ca4553748665924716d883b9be80e8a4648565c9108ae22a4e56b9f9467b86e0"
+    },
+    {
+      "observed_path": "/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj",
+      "resolved_path": "/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj",
+      "sha256": "630fe2c54d0b9f53794aa37c1274a344e6067175ac9e8925087974fb3d0c4966"
+    },
+    {
+      "observed_path": "/tmp/ev-recipe-codec-final-build/default/campaign_test.exe",
+      "resolved_path": "/tmp/ev-recipe-codec-final-build/default/campaign_test.exe",
+      "sha256": "6ea49a9c4b051766d580a3977729165e9dd4529b831b87c03089c78c414cfcd7"
+    },
+    {
+      "observed_path": "/tmp/ev-recipe-codec-final-build/default/ev_receipt.exe",
+      "resolved_path": "/tmp/ev-recipe-codec-final-build/default/ev_receipt.exe",
+      "sha256": "6a291776d9af849fe159c438597faec40f693c7d1dda599d1af687247d61ee06"
+    },
+    {
+      "observed_path": "/usr/bin/chronyc",
+      "resolved_path": "/usr/bin/chronyc",
+      "sha256": "0cd6afd41067d36b080222cfc51517755b8a03496e4c3ef628ec54ee2435531f"
+    },
+    {
+      "observed_path": "/usr/bin/tput",
+      "resolved_path": "/usr/bin/tput",
+      "sha256": "568b559c40262dcb851aed26115767ca646b4269118a0c93ded7d2dd5c565ec6"
+    }
+  ],
+  "cli_refusals": [
+    {
+      "argv": [
+        "/tmp/ev-recipe-independent-20260909-1524/build/default/ev_receipt.exe",
+        "observe",
+        "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909",
+        "99", "dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93"
+      ],
+      "result": {
+        "path": "/tmp/ev-recipe-independent-20260909-1524/cli-0.json",
+        "sha256": "ea71f3456357d850a08633fdcdaf7392eb119487b41b64404d22de07108feb56",
+        "bytes": 161
+      }
+    },
+    {
+      "argv": [
+        "/tmp/ev-recipe-independent-20260909-1524/build/default/ev_receipt.exe",
+        "observe",
+        "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909",
+        "98", "@"
+      ],
+      "result": {
+        "path": "/tmp/ev-recipe-independent-20260909-1524/cli-1.json",
+        "sha256": "ea71f3456357d850a08633fdcdaf7392eb119487b41b64404d22de07108feb56",
+        "bytes": 161
+      }
+    },
+    {
+      "argv": [
+        "/tmp/ev-recipe-independent-20260909-1524/build/default/ev_receipt.exe",
+        "observe",
+        "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909",
+        "98", "dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93",
+        "caller-policy.json"
+      ],
+      "result": {
+        "path": "/tmp/ev-recipe-independent-20260909-1524/cli-2.json",
+        "sha256": "0dcdd275066c16ab11f77fcf00c7b877c4f9674bf3b84a7bf38b43f703ea4909",
+        "bytes": 231
+      }
+    },
+    {
+      "argv": [
+        "/tmp/ev-recipe-independent-20260909-1524/build/default/ev_receipt.exe",
+        "observe",
+        "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909",
+        "98", "dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93", "--command", "fake"
+      ],
+      "result": {
+        "path": "/tmp/ev-recipe-independent-20260909-1524/cli-3.json",
+        "sha256": "0dcdd275066c16ab11f77fcf00c7b877c4f9674bf3b84a7bf38b43f703ea4909",
+        "bytes": 231
+      }
+    }
+  ],
+  "author_evidence_revision": "3129f25125dc8d098e7546284158ea8ee8f7d447",
+  "author_evidence_sha256": "507f26be14fb6e22088702eef3a245635070bb8946c794d5a4c4b304c9676461",
+  "review_scripts": [
+    {
+      "path": "/tmp/ev_recipe_independent_extract.ml",
+      "sha256": "ac7ee1b0a729d75bd9310659880a481e5bb0be45f141f85d62e39b4b4b8efcbb",
+      "bytes": 1271
+    },
+    {
+      "path": "/tmp/ev_recipe_independent_audit.ml",
+      "sha256": "4b4a1ec5bb7aa90b474fec29ad9b4e1247bb216834f25f833f5131fd68f841e7",
+      "bytes": 9449
+    },
+    {
+      "path": "/tmp/ev_recipe_independent_finish.ml",
+      "sha256": "3681ab336b4779d838f0d1f7342c7e1f8bbaaa16725f9975b6eff0b7fa842e88",
+      "bytes": 4913
+    }
+  ],
+  "limitations": [
+    "25 unit/process cases rerun after independent immutable OCaml build; 23 additional audit/replay groups and four CLI refusals pass",
+    "76 positive cases and four designated mutants replayed from completely rehashed author Gleam/BEAM artifacts; full Gleam campaign compilation not repeated",
+    "Author trace independently parsed and observed files rehashed; no new syscall trace recorded for the replay",
+    "Local cooperative producer and carrier, no cryptographic invocation authentication; no complete dynamic-library or reproducible release closure",
+    "Formal unavailable, sovereign pending, no full multi-host runtime or EV admission"
+  ]
+}

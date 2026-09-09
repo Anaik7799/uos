@@ -1,0 +1,3334 @@
+{
+  "candidate": "52e013cfe8c32d6c8d4353c27cfdf0a23f225124",
+  "base": "bfeda779d73a1bebab4c562a25e7036d7e5170d7",
+  "verdict": "APPROVED_BOUNDED_FIVE_FILE_FIX",
+  "authority": "NONE",
+  "static_review": {
+    "path": "/tmp/ev-fault52-independent-discovery/20260909-1540-static-review.json",
+    "sha256": "d7939b8cde29dfbd881434696ff7a95ff64681f21fda8790580d5cedcdcba260",
+    "bytes": 1334
+  },
+  "stages": [
+    {
+      "variant": "discovery",
+      "bindings": {
+        "path": "/tmp/ev-fault52-independent-discovery/bindings.json",
+        "sha256": "a1421f57e8567b4382d9287280fa3daa7e5cd78d54e953075f143c1f9ada389a",
+        "bytes": 82570
+      },
+      "fault_bindings": null,
+      "compile": {
+        "path": "/tmp/ev-fault52-independent-discovery/compile.json",
+        "sha256": "7f417438e7677601d36556a17c1d25fedc09794e2b7f0dbdf417b38cceb81975",
+        "bytes": 2255
+      },
+      "runtime": {
+        "path": "/tmp/ev-fault52-independent-discovery/runtime.json",
+        "sha256": "06fafcf663d3a0c0c2122c3483f627e8002a3ece9c25e9c88f5b28a636161d39",
+        "bytes": 3356
+      },
+      "dependency_files": 211,
+      "compiled_artifacts": [
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_mesh_engine.cache",
+          "sha256": "2cb3745a9d239d0a791a61df018cca63c05ebf50c9cccd3386c9bd067884c6db",
+          "bytes": 24405
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_mesh_engine.cache_meta",
+          "sha256": "5cb708e904475831fc63d64461dca35e6482ca43f1ff8cf5b9c038a653be38ef",
+          "bytes": 2046
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_mesh_engine.erl",
+          "sha256": "b78bba21f2ec4ee303b7543efbda77be4758134c46da588194260faad071d534",
+          "bytes": 22693
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_state.cache",
+          "sha256": "c90471592650ba8a253a75ee3627ff0e154b33cef9e3a5d937164e8b4e18950c",
+          "bytes": 29302
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_state.cache_meta",
+          "sha256": "d40c3d742361bea526ede2afae1216d7675f45ff3f9e30b2511f533454176e7f",
+          "bytes": 1301
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_state.erl",
+          "sha256": "9f01be43f72d9f19a365ce2040fa7436498e92918ea829511394ae4e0670f90f",
+          "bytes": 11712
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@health_bridge.cache",
+          "sha256": "ffd40f8aa98c3fd5e70ec017c416f151b3cfcb14b69a3d3ce2cedf5f57d7f326",
+          "bytes": 16689
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@health_bridge.cache_meta",
+          "sha256": "cb2f2f3fb31e73d022c809f9ebb4f41f47b95be74b6120b9f9cf21ac303a1892",
+          "bytes": 981
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@health_bridge.erl",
+          "sha256": "41c566725bdc9fc00a83e24e086a5a7c873232290a2e45bd976814748652bf45",
+          "bytes": 10285
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer.cache",
+          "sha256": "c4d302c37683fc875aa716477cb7053306f85db1a4467dee5fa32aee32beb273",
+          "bytes": 44174
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer.cache_meta",
+          "sha256": "0017bd5887780e2a5a5014495047d98f4a717c464fd52bb171478e92cf0284ca",
+          "bytes": 2158
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer.erl",
+          "sha256": "8299f43a094bcf06d45a76c4f95b1a7702aff0217a3d137ce05e918a1f8a7179",
+          "bytes": 31329
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer_actor.cache",
+          "sha256": "40c6df36bad82acddc6718874a39bacf0aa55a94df61dd38061fb0badf7f53c0",
+          "bytes": 45616
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer_actor.cache_meta",
+          "sha256": "59dbec2e445e9aa203a64c43abf778887457386aee58492469749e78a76429c3",
+          "bytes": 1692
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer_actor.erl",
+          "sha256": "459d06c9b5ae22f7ff016ca331412d5a201a6debc3578b854a917ea1ffaadc8f",
+          "bytes": 17353
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_sync.cache",
+          "sha256": "9b0fee47745aae570a0ec6a940900b231b926ca6115341ca2a2ebafec5ca1db4",
+          "bytes": 37108
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_sync.cache_meta",
+          "sha256": "88b75f7a3b25b8fea1c57fe22c3babd1c34a6f8283778a86de82965a34eb4dae",
+          "bytes": 2491
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_sync.erl",
+          "sha256": "48cf02b15004fa4fb6d1f1fbb6eb140e30d7325b7091cf661eecf10643261031",
+          "bytes": 29711
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_wire.cache",
+          "sha256": "a92eb700b1f0f6ee4a61b46828c394f0d376221be37a944e786a68dfe9816822",
+          "bytes": 19817
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_wire.cache_meta",
+          "sha256": "9e08acc380d5f5238b633a3027cd2f6281220b027498bfe27cff4e7440ff0ead",
+          "bytes": 1046
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_wire.erl",
+          "sha256": "f5f7a16cd1d62f17ec7aa1d97aae1d36839c6b6ef308d86023ea2ed54f98a82a",
+          "bytes": 10427
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_http.cache",
+          "sha256": "df218b651dd3dc2d47886b0e3857580d4b4d64a274e789198e699b6c3802588d",
+          "bytes": 38533
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_http.cache_meta",
+          "sha256": "83d5057e48fcea9007097ac5137eeb8533d4caf4493bdf440924540aab614b48",
+          "bytes": 2317
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_http.erl",
+          "sha256": "ad7f48cd9543b3d9ee4635951f1a2049d9ab2e939125bacaeb2fb93fdea1cf4b",
+          "bytes": 29773
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_transport.cache",
+          "sha256": "08b372617b844c19b9c5447bbe2ec938d48e8f4cd9d31e21c3eba99adf54f9f7",
+          "bytes": 54909
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_transport.cache_meta",
+          "sha256": "66942b6cc8aa611079aabc3c64c2bc512eb296d7530ff4ea862bfa1d78c9b15b",
+          "bytes": 3287
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_transport.erl",
+          "sha256": "f5b32055fd1e6e2fdaad9502ce83dd3c7ba0a6c2995fdbc15e90539d551abe88",
+          "bytes": 57020
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@ha@deadman_freshness.cache",
+          "sha256": "6ddec7285e42296524ee28c18be7011d937c0f2ce92bc78279b620eda2cd37e1",
+          "bytes": 22129
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@ha@deadman_freshness.cache_meta",
+          "sha256": "3c5b4327c9725ef15b35b76682ef43205d8bf87a5c479926e4ed2b1f58708512",
+          "bytes": 1286
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/cepaf_gleam@ha@deadman_freshness.erl",
+          "sha256": "87e4690bbded7b1c65702e5bdf6832a162c24d5e60f4f1a9d1d1a908fff15efe",
+          "bytes": 13786
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/crdt_delta_state_test.cache",
+          "sha256": "a59fb79d755cb7d2a88bed5f5590698636ddacf8ed85a34acdf6cf3c291b228f",
+          "bytes": 5306
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/crdt_delta_state_test.cache_meta",
+          "sha256": "01f244187a09208e99a2ca4cda1e03926a5c2763f2c0c6d9d622a08d94d513f6",
+          "bytes": 692
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/crdt_delta_state_test.erl",
+          "sha256": "9ad15f80e69dffd0b117cc039fe080bc5fc4a1975306fdcb89bff1d98c9a160e",
+          "bytes": 8036
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/crdt_health_bridge_test.cache",
+          "sha256": "e00bbed191abe1ccee33930ab0f8b955bd71d620a782094eee0ceaa714ecf498",
+          "bytes": 2516
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/crdt_health_bridge_test.cache_meta",
+          "sha256": "442dbba281d78a372887c1f2f76d651d428528258c0da9ecf390120dedbf5a55",
+          "bytes": 530
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/crdt_health_bridge_test.erl",
+          "sha256": "e2eecb613f928d9069a53d56ba90542cd279ebe9cdbb3d7b1f7c5c6e9ca9dff1",
+          "bytes": 2784
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/crdt_mesh_sync_test.cache",
+          "sha256": "0246d547c743656a0669ccdb9f73d9852d68db797a53d61224a49747cc9c3e9d",
+          "bytes": 3281
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/crdt_mesh_sync_test.cache_meta",
+          "sha256": "d86f1d96c538c354c3c0511cc9b50a605d9456186536d6ceeecd3f57b6f42b7e",
+          "bytes": 492
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/crdt_mesh_sync_test.erl",
+          "sha256": "f56210eff2b8217056fb68c7214ed92478f0a7641898b6e37cc8c9b817b3a928",
+          "bytes": 4181
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/deadman_freshness_test.cache",
+          "sha256": "c7f986dab79b0951936c9255ca46f36ac7132df7ed04bfbda1999f313c911e94",
+          "bytes": 9959
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/deadman_freshness_test.cache_meta",
+          "sha256": "0f02c2708f4391ee46d900a7f17ab99d985178499055f83cf017fa9faf77e7bb",
+          "bytes": 1034
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/deadman_freshness_test.erl",
+          "sha256": "11351002d7bab81c502d5fb94c6d04df19759ab72cd797d3fd8539576e9e99e0",
+          "bytes": 17469
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/delta_mesh_engine_test.cache",
+          "sha256": "5a72444cf1067e7dfb1dd26b3e30d7e9e484afc78e851e192e84b7e6c59fb9a9",
+          "bytes": 22823
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/delta_mesh_engine_test.cache_meta",
+          "sha256": "6ea6fcbb36db643f3a99aedb0933c6eb813ab12fd396a1af435e90dd5a1bfc55",
+          "bytes": 2202
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/delta_mesh_engine_test.erl",
+          "sha256": "fe408c69e5f4e8c25403a52877f71bcfae54e65b1c34ae1fcea83b9e1791f2dd",
+          "bytes": 73103
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/ev98_codec_runner.cache",
+          "sha256": "512e48257b73f8a8451ce5824602bcd2655e42b42eebb48828c44becc095a338",
+          "bytes": 11607
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/ev98_codec_runner.cache_meta",
+          "sha256": "4a8dc8a3196aa3f0d2584369f9f30c5299612a9165645bcefcc8b9a47d71da12",
+          "bytes": 1956
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/ev98_codec_runner.erl",
+          "sha256": "316096e765fa529cf923cd07ebb576d90000c0d311e293334abbb485f7b4075e",
+          "bytes": 23721
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/ev_peer_independent_probe.cache",
+          "sha256": "fbfac0962c5c22c3476a2c7d545af87c1e9ff22fb00df0c80160eb59b8c739dc",
+          "bytes": 11517
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/ev_peer_independent_probe.cache_meta",
+          "sha256": "8baa388376d70e5cbf6b0499822e65c7c52a95427eba7a15899ea4f4c31bd943",
+          "bytes": 1139
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/ev_peer_independent_probe.erl",
+          "sha256": "2243ca1772f2cbd76f04a942536b7ad1202328d2cced0d54c0c4973f517bab20",
+          "bytes": 31761
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/ev_transport_independent_http.cache",
+          "sha256": "0fbf7980203074230288c13ef305a55be704aee5b4627d6a47b9e407b2ef5afa",
+          "bytes": 17622
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/ev_transport_independent_http.cache_meta",
+          "sha256": "fc6fae075d397f84e9a949843cd87e7802a01f2fb364e96b2c1d38cf82a92321",
+          "bytes": 1018
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/ev_transport_independent_http.erl",
+          "sha256": "eb50d0ec9750cd5917fb45c5368e5a80d7b9f20016de0220f460643c4b9735dc",
+          "bytes": 17784
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/ev_transport_test_discovery.cache",
+          "sha256": "a7d511f43bfb1f449b1e48453c60d4a80e7eb34fdeb81ab60168d03b942fac8c",
+          "bytes": 1801
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/ev_transport_test_discovery.cache_meta",
+          "sha256": "d926ffc05a408eb6e92fdf1164a02bd9348b34488a95dea57ffe7671818ffc77",
+          "bytes": 193
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/ev_transport_test_discovery.erl",
+          "sha256": "fe2a4e5fa25a0d6c0dc4336a6f2c74f50fad2db814b5aa09c8bf511044375e13",
+          "bytes": 614
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/gleam@@compile.erl",
+          "sha256": "c3dda42ad646bf321000099eacde4a4ef794c778f7f4994e71be00cd28217196",
+          "bytes": 6231
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/mesh_peer_actor_test.cache",
+          "sha256": "ae3110a7aa49154855b6ddacfcf1ecd2975536a758c62f9845f3b13e5319ceda",
+          "bytes": 8641
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/mesh_peer_actor_test.cache_meta",
+          "sha256": "25f22e4a80bbab14a71f0fb0c47e7c21f89f375815aa8250245a0cf59ff06daf",
+          "bytes": 1078
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/mesh_peer_actor_test.erl",
+          "sha256": "ae2b4b8b3a02c22703694041cba84e555b6cea516ef95ee3c226155a72d89eb3",
+          "bytes": 27757
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/mesh_peer_test.cache",
+          "sha256": "b0b5a6f4d8cdc3adf20454f26f902b3ea084e290263138dd86f9ea77e75ad421",
+          "bytes": 11582
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/mesh_peer_test.cache_meta",
+          "sha256": "dfb5366bc551e19308b2ee3a11ee273fc1c091e41cd1e045c471d54d764df62d",
+          "bytes": 1355
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/mesh_peer_test.erl",
+          "sha256": "65e1551e69191afe819fa7679a5ffceff441b2e4bf2797353341f7c28c8390b2",
+          "bytes": 31576
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/mesh_sync_codec_test.cache",
+          "sha256": "11c8a8855b82b907b6cb30466c7f16bf4db751c07b9a80377e2d0c2da0c2ee99",
+          "bytes": 19849
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/mesh_sync_codec_test.cache_meta",
+          "sha256": "872b709a19cc85c8b4fd27ad8f30d2c801d470dc9a58fc36b9b142927412940f",
+          "bytes": 2071
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/mesh_sync_codec_test.erl",
+          "sha256": "7c9db61798195d391d5a00ee9556994bceba880c1aea0b45adb0a60152877132",
+          "bytes": 32132
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/mesh_zenoh_live_test.cache",
+          "sha256": "296a61a555ed6d0c8e435bd0a4ec2301945bdb251b7fc60d0587e1368b3fdefb",
+          "bytes": 10723
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/mesh_zenoh_live_test.cache_meta",
+          "sha256": "a3c79b0704961ea3ce7890bede96a4484ef053217b7f5fd14908a044bb404290",
+          "bytes": 1344
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/mesh_zenoh_live_test.erl",
+          "sha256": "952e04c012ea75b26df21a0bbc31bfabd59b564013045b494ac9b8bd8032cdad",
+          "bytes": 23363
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/mesh_zenoh_test.cache",
+          "sha256": "21ea7383b9be843161e70f65427434bb8e208969d1187598bc6de7eb86705fff",
+          "bytes": 31969
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/mesh_zenoh_test.cache_meta",
+          "sha256": "db235878075a775019a9037c91e5b9bf647337ff63e81113aa83a5dd99b5aa7c",
+          "bytes": 3113
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/_gleam_artefacts/mesh_zenoh_test.erl",
+          "sha256": "b69ef8e815c876b853f6f202197c1c9fe2f153129eafc6021d98965121791c64",
+          "bytes": 93844
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/cepaf_gleam@crdt@delta_mesh_engine.beam",
+          "sha256": "eca8b878a31d4593b05d717d110024ceace0ed4bfadf4119ed2159a2d7921931",
+          "bytes": 17852
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/cepaf_gleam@crdt@delta_state.beam",
+          "sha256": "173362e751e2caa790da4854a918f118432089384f9b0bf82b3e756fd64770e7",
+          "bytes": 13432
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/cepaf_gleam@crdt@health_bridge.beam",
+          "sha256": "0233b8ebdccaf2209d3c9f557f63312a68bd1f0bc5ef337caff9a63c7be2cf6f",
+          "bytes": 9112
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/cepaf_gleam@crdt@mesh_peer.beam",
+          "sha256": "587e0ec20f593758531a1a847f305385922e6c995ccf54dc2ae4d30b94d661c2",
+          "bytes": 23592
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/cepaf_gleam@crdt@mesh_peer_actor.beam",
+          "sha256": "7e04645174385a3e8ab68576bfba683d7ebce8c52b1c9622cb1452e49c8bdafb",
+          "bytes": 16932
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/cepaf_gleam@crdt@mesh_sync.beam",
+          "sha256": "4919ba210e9b84393b8ef2958a909af5779e68ce81ae6c0c1ab53888561cbea9",
+          "bytes": 26776
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/cepaf_gleam@crdt@mesh_wire.beam",
+          "sha256": "76cf3b5e47bc3ba743bdc7adcf1ec3aa6c2ec87deb1cbe2fc964a6310591f9c6",
+          "bytes": 11280
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/cepaf_gleam@crdt@mesh_zenoh_http.beam",
+          "sha256": "3c25d0a47dda54d5ebf498c758128d4d0ab4cdd6fb40a002b91040b9bf027f3f",
+          "bytes": 25832
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/cepaf_gleam@crdt@mesh_zenoh_transport.beam",
+          "sha256": "f141caf2a4d58a30914c4e904b1cd217b23a1dd9aa0c94f217899af8e864ebcb",
+          "bytes": 34272
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/cepaf_gleam@ha@deadman_freshness.beam",
+          "sha256": "524d8bdd6dbd4698b3021481c66430cea3abc4c6e58f517f69be68d6edc2bac1",
+          "bytes": 10996
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/crdt_delta_state_test.beam",
+          "sha256": "b863f089e2e2a6fc4bd87885f8d0f98937bfeb1c8d1820cc451553228e0712fc",
+          "bytes": 7908
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/crdt_health_bridge_test.beam",
+          "sha256": "7298f38b0bae9752c1e5fbaff5d18c369ce8a09f40288f314c587e2fc3215d7c",
+          "bytes": 3572
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/crdt_mesh_sync_test.beam",
+          "sha256": "9ed74fb0a88b136aa191e2108fa3fe7b6d14e6b8a0863f3c384d3ad64f3f7723",
+          "bytes": 5272
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/deadman_freshness_test.beam",
+          "sha256": "fad566a04c15b6c291c587549004bf9d15fafbce803a83db42bc637a96654b2b",
+          "bytes": 14000
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/delta_mesh_engine_test.beam",
+          "sha256": "bc97eef9919ed93bb13b0fdeeb01d70c833795e798ed04eb4cc8b8c9779ae124",
+          "bytes": 49116
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/ev98_codec_runner.beam",
+          "sha256": "9d455632a2ac48d1754feca804449335490d118d0f8934ffedbfde7f3625c3a8",
+          "bytes": 26272
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/ev_peer_independent_probe.beam",
+          "sha256": "690609cad0dfe8346bbeb512f44140615c79032ca4d9f6a36fb50f649c052a51",
+          "bytes": 23848
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/ev_transport_independent_http.beam",
+          "sha256": "8de80b5c8cfb47e16e7357d118fb8e5625eca47b5938b91dfaeccbdab910bf99",
+          "bytes": 14668
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/ev_transport_test_discovery.beam",
+          "sha256": "e430d04d1ae481fbd67e93ffcff16b4efbc7122f2ca12f5ff8087203c54b42a3",
+          "bytes": 1672
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/mesh_peer_actor_test.beam",
+          "sha256": "796a39067a88faad827a571f120304b9cb6ddcebd915937676260bf966055e3a",
+          "bytes": 20868
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/mesh_peer_test.beam",
+          "sha256": "00dd151331c631f4945230cc9e3a9ec8fa8d0fbe5a77d32873c1b82256d87565",
+          "bytes": 24680
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/mesh_sync_codec_test.beam",
+          "sha256": "4f05f94580e84ee2c9784127949c02798eb7e431fde06e8b02ea698ad82d6cd5",
+          "bytes": 33948
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/mesh_zenoh_live_test.beam",
+          "sha256": "1dee5a2dcf6c095448782aff343a076f7d21f403a51e6b390efda48f312a88fb",
+          "bytes": 20080
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/ebin/mesh_zenoh_test.beam",
+          "sha256": "89028c320ea9c4dbda1741c370176ebcdfe0dcd29d8f229716fcd7fb65eadb5e",
+          "bytes": 60132
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@delta_mesh_engine_DeltaMeshEngine.hrl",
+          "sha256": "724252207f3ffd90f74c02d3f47e03b8cf750c0b63433e105a1e5314ced60a9e",
+          "bytes": 492
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@delta_mesh_engine_OutboundQueueFull.hrl",
+          "sha256": "bac1a59beb897fe946b2cca4c3625659a63214fd6a2f73276192b7fa467d8195",
+          "bytes": 55
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@delta_state_Dot.hrl",
+          "sha256": "0f359544b6008cc68fccd2cb7caf9234c35f5239e17e9f669b68a1d54cef8596",
+          "bytes": 56
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@delta_state_LWWRegister.hrl",
+          "sha256": "dd690b5f0fd31de4865534c50db41bf31b764033f64d709f65d881a2a65f867a",
+          "bytes": 104
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@delta_state_MeshDeltaState.hrl",
+          "sha256": "5e1aced17c7b9d15ab745f0ba9e2ce35b4016b2800435af14a9dee9f4505affe",
+          "bytes": 346
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@delta_state_ORSet.hrl",
+          "sha256": "e7a4d67d6865f78b8b9a0d8e68c46ede66d77e49bc6f9182e57008c864b46f48",
+          "bytes": 149
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@delta_state_PNCounter.hrl",
+          "sha256": "c8d8579e0f9f37257d8b6471acf61fdc62b3488e75a0f55e14e425bffe8db84d",
+          "bytes": 116
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@health_bridge_NodeHealthTelemetry.hrl",
+          "sha256": "6687cc42311002053190f8263a57ae650e250ef4d6d6575f088064db31747ffc",
+          "bytes": 214
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@mesh_peer_Config.hrl",
+          "sha256": "8d60a432317de5f1bc8d291f7bd20f0c1b42819b0017877adf9eb8435cda196c",
+          "bytes": 205
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@mesh_peer_Frame.hrl",
+          "sha256": "82983e4f8d1cfe2ba9268d9cff0565907653984200fa6705eb6dbcc16f3bb886",
+          "bytes": 120
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@mesh_peer_FrameId.hrl",
+          "sha256": "32879d687937059c71ffef05eec5e75380d5221f1712797fbbdb5c9d4444eddd",
+          "bytes": 67
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@mesh_peer_Peer.hrl",
+          "sha256": "39377966e764798eee8d14bc7a9b66994acb9b762c166e09cf7af514d4701f6e",
+          "bytes": 53
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@mesh_peer_State.hrl",
+          "sha256": "970434c00bd7287a09610dfa08bfe5f38b84e126aa17868adbd1de82656ee3f7",
+          "bytes": 525
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@mesh_peer_Tick.hrl",
+          "sha256": "40f8c4d4501dc3cd54dbd515261485ac950cca841640600b7b3cbdf5c3f23099",
+          "bytes": 144
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@mesh_peer_actor_Handle.hrl",
+          "sha256": "5a692674f96b435bd44eaf85383cb1a18622e18c520d46a33a2d3f315b1b433f",
+          "bytes": 110
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@mesh_peer_actor_View.hrl",
+          "sha256": "078b68c23fc2509fbbacb5f8bc9a368b45772ca59ac639601f2e9e902dbfb92a",
+          "bytes": 161
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@mesh_sync_Lagging.hrl",
+          "sha256": "af2e74a07751e670bc636210782aa3146084b96ac62a76b7dcf2ab18c8dc8b52",
+          "bytes": 47
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@mesh_sync_PeerSyncEndpoint.hrl",
+          "sha256": "4e05853f7adbfabf00248fbe10b1ab5c46dfaeeb33d8552f2cc50476adba9aad",
+          "bytes": 234
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@mesh_sync_SyncAck.hrl",
+          "sha256": "c565e715f2a57fad1c6b2fcb3a21cb831bdae8ec359748f7fa2768747adf892e",
+          "bytes": 151
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@mesh_sync_SyncDelta.hrl",
+          "sha256": "80eb40d9f8e175da0ea0f46a9a2330b958a248daa09248c35713c9ba0451ac34",
+          "bytes": 292
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@mesh_sync_SyncDigest.hrl",
+          "sha256": "b95e7b0ba4b6e93e9feef8d56ed48b841a468d585c38b30f94a6f8ae3f15de20",
+          "bytes": 167
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@mesh_zenoh_http_Endpoint.hrl",
+          "sha256": "dc631b76f287b971108f876f46c22a956724b750354a70fbb6353aa65d76bb04",
+          "bytes": 58
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@mesh_zenoh_http_Response.hrl",
+          "sha256": "7d5dfb48c9318f498da409e8bfa80b92bf9ca6cae541027bcda7622ab9869fee",
+          "bytes": 60
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@mesh_zenoh_transport_Config.hrl",
+          "sha256": "6b61c27c16b1d7882fc061aa26a3df374be77e11f8eaa378867c834aa5535156",
+          "bytes": 155
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@mesh_zenoh_transport_Handle.hrl",
+          "sha256": "2ab00e78bc95084de962ead3c642f34ee34e3abbde014f9c407c002d9cb1e6d2",
+          "bytes": 115
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@crdt@mesh_zenoh_transport_Stats.hrl",
+          "sha256": "330a7004d33b809f66527a202441e4afe44fdb0aa2b7cbc6a623ee5125d874e1",
+          "bytes": 357
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@ha@deadman_freshness_ActionInitiateFailover.hrl",
+          "sha256": "22596b7360a798166a97697a4fc970cf783ef75b6050bec0dae0d8f5f21a5f84",
+          "bytes": 116
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@ha@deadman_freshness_ActionTripDeadMan.hrl",
+          "sha256": "6e92263c63651319c9e0627be86bb1c1afbfd185a8a353cf0c802980a939207b",
+          "bytes": 108
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@ha@deadman_freshness_ActionWarnStaleness.hrl",
+          "sha256": "c43c3c818fa263d69f61dd4d2110258e592846ee9c6d5f51096dcead252b6ad5",
+          "bytes": 110
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@ha@deadman_freshness_ActorRegistration.hrl",
+          "sha256": "d647fd9bd353b8c1fc9f961e36eb0b8e075d723572c2277d65d734fca0732878",
+          "bytes": 364
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@ha@deadman_freshness_DeadManRegistry.hrl",
+          "sha256": "4a6bde6b282183a79876cd24ba7e84edc6932beb3d57bbaeb631d0072c15d044",
+          "bytes": 176
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@ha@deadman_freshness_HeartbeatTripped.hrl",
+          "sha256": "0457809d39ad974007d2eb5963f19cd162bc3d6de7073470aa8554037fc8dc13",
+          "bytes": 53
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-discovery/compiled/include/cepaf_gleam@ha@deadman_freshness_HeartbeatWarning.hrl",
+          "sha256": "1533892f942c4c45ad70224685bbdcecaa525ab53bad8e02c4df18d62d02118b",
+          "bytes": 51
+        }
+      ]
+    },
+    {
+      "variant": "report",
+      "bindings": {
+        "path": "/tmp/ev-fault52-independent-report/bindings.json",
+        "sha256": "4a953dbd1d105dea3e3eba26a5c01eaae7ab7f1046db17b79963f606fee7bab1",
+        "bytes": 81859
+      },
+      "fault_bindings": {
+        "path": "/tmp/ev-fault52-independent-report/fault-bindings.json",
+        "sha256": "2c48a6c087a29461db3c651e588dced08579df0bbe7a14b81ce667009cc775fd",
+        "bytes": 1288
+      },
+      "compile": {
+        "path": "/tmp/ev-fault52-independent-report/compile.json",
+        "sha256": "6ccd00e19e1f7b3668c9bbc95e1e41b01bf9f607cc1cf99d11d635562599d46e",
+        "bytes": 2266
+      },
+      "runtime": {
+        "path": "/tmp/ev-fault52-independent-report/runtime.json",
+        "sha256": "cbc863a0da5a14993ef604c3254a4c17ca208f59bf59adb8ec0ba5bd905c22cb",
+        "bytes": 2912
+      },
+      "dependency_files": 211,
+      "compiled_artifacts": [
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_mesh_engine.cache",
+          "sha256": "b7333b8d8056d0ab6373e1e7c0a9a58a78aa9966faaaa861d35917c11e79b2fd",
+          "bytes": 24402
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_mesh_engine.cache_meta",
+          "sha256": "d198a9039a7fd6d51206ec97946b54175bdfa76e1f5b5206ade3961f748c0de2",
+          "bytes": 2046
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_mesh_engine.erl",
+          "sha256": "b78bba21f2ec4ee303b7543efbda77be4758134c46da588194260faad071d534",
+          "bytes": 22693
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_state.cache",
+          "sha256": "b7916eb3c9821bb83755b1743236d19cd78bade1ded36cc251443ae5defa5625",
+          "bytes": 29299
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_state.cache_meta",
+          "sha256": "024ecf80ced27cee3641b6c4f77fa6f8f2d9a4af6456cf0cc906d9f1f71ff3be",
+          "bytes": 1301
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_state.erl",
+          "sha256": "9f01be43f72d9f19a365ce2040fa7436498e92918ea829511394ae4e0670f90f",
+          "bytes": 11712
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@health_bridge.cache",
+          "sha256": "c987d70e8966e00fb4dc7e139ea2cc9ff1aaa4e302ce6bbe91334198d0c5c6bc",
+          "bytes": 16686
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@health_bridge.cache_meta",
+          "sha256": "dd9918d7343a4615be5e1d25fb01edd15c9e7d817cba38a9f1a122b2149c8afd",
+          "bytes": 981
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@health_bridge.erl",
+          "sha256": "41c566725bdc9fc00a83e24e086a5a7c873232290a2e45bd976814748652bf45",
+          "bytes": 10285
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer.cache",
+          "sha256": "956d406a56556f927dfb808a73f1736d28a835cdad2da32ec22f07b20abed252",
+          "bytes": 44171
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer.cache_meta",
+          "sha256": "56ef8bf384afc5dc5f07279690e2b4a95549f2cc0086a8b7c1cbfc89e39451b3",
+          "bytes": 2158
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer.erl",
+          "sha256": "8299f43a094bcf06d45a76c4f95b1a7702aff0217a3d137ce05e918a1f8a7179",
+          "bytes": 31329
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer_actor.cache",
+          "sha256": "55a032d72e2e3aab11737091a8e00fb67cf48f1ef044d8323710760b7a0a3a38",
+          "bytes": 45706
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer_actor.cache_meta",
+          "sha256": "7aaf71a8021535c7d07ac691971a7bf61bd7e91a1a3823c9985c5ab800ad04ed",
+          "bytes": 1688
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer_actor.erl",
+          "sha256": "310fced02e44aec1b668e8e62a86edad14f36bfd3d32230f77c60c98fa0c74a4",
+          "bytes": 17485
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_sync.cache",
+          "sha256": "4351d11bad22066d32655a3265aabc703b08903ad62b0579ee7a001f8a18dc7f",
+          "bytes": 37105
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_sync.cache_meta",
+          "sha256": "074bf8a33afdfe4ae40d7d35a62123df39caf9cb61cfddeb46f8f62a98ce71fb",
+          "bytes": 2491
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_sync.erl",
+          "sha256": "48cf02b15004fa4fb6d1f1fbb6eb140e30d7325b7091cf661eecf10643261031",
+          "bytes": 29711
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_wire.cache",
+          "sha256": "eadfa628a97d8e7938b02ce8e19960e1533b58bccbcc27490c6f89682fb15cac",
+          "bytes": 19814
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_wire.cache_meta",
+          "sha256": "a9ab79b736d96ee76a0ad788228ed73fedcbc12c6a181c35b0f2f3c2b42dcd15",
+          "bytes": 1046
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_wire.erl",
+          "sha256": "f5f7a16cd1d62f17ec7aa1d97aae1d36839c6b6ef308d86023ea2ed54f98a82a",
+          "bytes": 10427
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_http.cache",
+          "sha256": "4af0e223e1da47fd35540ab42eedea9adc6bca26b6ba295c45bcf881258f8a84",
+          "bytes": 38530
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_http.cache_meta",
+          "sha256": "ff4697becd30765ecea29a4f4071aa30755ed4b434020f342f8c11c8732c7424",
+          "bytes": 2317
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_http.erl",
+          "sha256": "ad7f48cd9543b3d9ee4635951f1a2049d9ab2e939125bacaeb2fb93fdea1cf4b",
+          "bytes": 29773
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_transport.cache",
+          "sha256": "8cf33a281844838c587ef5b51b0cbecaeb47a0e5699e128692ec67b947ad1cb3",
+          "bytes": 54906
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_transport.cache_meta",
+          "sha256": "71cb653fd5554ecbcfcdab836af80f001cc4412ea5b9e616a7f79a5d13e1ff1e",
+          "bytes": 3287
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_transport.erl",
+          "sha256": "f5b32055fd1e6e2fdaad9502ce83dd3c7ba0a6c2995fdbc15e90539d551abe88",
+          "bytes": 57020
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@ha@deadman_freshness.cache",
+          "sha256": "07139ce39f11bd5fade5b940d673a4293a7e3a50a54eb341bde7c33e181ba207",
+          "bytes": 22126
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@ha@deadman_freshness.cache_meta",
+          "sha256": "205fa97962f654e7417b6ed81df7748b0db603b455e49d1b11673204cb465eaf",
+          "bytes": 1286
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/cepaf_gleam@ha@deadman_freshness.erl",
+          "sha256": "87e4690bbded7b1c65702e5bdf6832a162c24d5e60f4f1a9d1d1a908fff15efe",
+          "bytes": 13786
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/crdt_delta_state_test.cache",
+          "sha256": "6aae85c44038cc54ac770c45d093a32a653553982172ae5145e7c5a28ead75c1",
+          "bytes": 5303
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/crdt_delta_state_test.cache_meta",
+          "sha256": "9f2d976c1a19b67f44a47687f8a7058edfe440351fe517205123bc2141aa1a90",
+          "bytes": 692
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/crdt_delta_state_test.erl",
+          "sha256": "9ad15f80e69dffd0b117cc039fe080bc5fc4a1975306fdcb89bff1d98c9a160e",
+          "bytes": 8036
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/crdt_health_bridge_test.cache",
+          "sha256": "488a3e6829a0847c85c4b1a2532b329f11f6760d577989ee48527623c73f2afd",
+          "bytes": 2513
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/crdt_health_bridge_test.cache_meta",
+          "sha256": "b0c3ccdd660d1d5f4a17500bc6473803bfcf2d93b74fbe4ea9004fc7c673d4a2",
+          "bytes": 530
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/crdt_health_bridge_test.erl",
+          "sha256": "e2eecb613f928d9069a53d56ba90542cd279ebe9cdbb3d7b1f7c5c6e9ca9dff1",
+          "bytes": 2784
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/crdt_mesh_sync_test.cache",
+          "sha256": "7dfed0e34afe22bb48def6226ded9e383588e4d5298060a702a8d08267a94f02",
+          "bytes": 3278
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/crdt_mesh_sync_test.cache_meta",
+          "sha256": "293124f3e87c0dd8a4e4ce6cefc5a54143549d92fca890347faed0663aefa86c",
+          "bytes": 492
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/crdt_mesh_sync_test.erl",
+          "sha256": "f56210eff2b8217056fb68c7214ed92478f0a7641898b6e37cc8c9b817b3a928",
+          "bytes": 4181
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/deadman_freshness_test.cache",
+          "sha256": "4139908a3d6eadf7e59f08ad8ea68524779dc007195c0a0c2558a8fd2a46a372",
+          "bytes": 9956
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/deadman_freshness_test.cache_meta",
+          "sha256": "07036943bcf80787451bb3917ee92dd9252bda30a1e4ca1a51e7c251036b097f",
+          "bytes": 1034
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/deadman_freshness_test.erl",
+          "sha256": "11351002d7bab81c502d5fb94c6d04df19759ab72cd797d3fd8539576e9e99e0",
+          "bytes": 17469
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/delta_mesh_engine_test.cache",
+          "sha256": "e0f01aea88e432251b69fe954c6534006d990571e578d8a7a61cb015450afc43",
+          "bytes": 22820
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/delta_mesh_engine_test.cache_meta",
+          "sha256": "602f0c6cc808743a98d47588734910a60ea344c9d2ba642f43260bd6318c7e19",
+          "bytes": 2202
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/delta_mesh_engine_test.erl",
+          "sha256": "fe408c69e5f4e8c25403a52877f71bcfae54e65b1c34ae1fcea83b9e1791f2dd",
+          "bytes": 73103
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/ev98_codec_runner.cache",
+          "sha256": "642ff2be8b89b816c946a3cf7d1ac4888fd1016115fc3802335600c1e32be651",
+          "bytes": 11604
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/ev98_codec_runner.cache_meta",
+          "sha256": "3351ab8fced30d1057fc32ecca315122083c2920705a5e281aebff4f22bf330f",
+          "bytes": 1956
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/ev98_codec_runner.erl",
+          "sha256": "316096e765fa529cf923cd07ebb576d90000c0d311e293334abbb485f7b4075e",
+          "bytes": 23721
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/ev_peer_independent_probe.cache",
+          "sha256": "58971167c4b9c7c42d01e13e9f1d881354c4db9c744d730bdf3923e522c67ea0",
+          "bytes": 11514
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/ev_peer_independent_probe.cache_meta",
+          "sha256": "5f1bb23b2a10df04c169361de87e30e9eba3c6a3566179db4b9825af1a8d0e9b",
+          "bytes": 1139
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/ev_peer_independent_probe.erl",
+          "sha256": "2243ca1772f2cbd76f04a942536b7ad1202328d2cced0d54c0c4973f517bab20",
+          "bytes": 31761
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/ev_transport_independent_http.cache",
+          "sha256": "11724aa3b03f53b7a3be1dd3e1f4cfd279426c6728fcfdb3b76c6f8eea513229",
+          "bytes": 17619
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/ev_transport_independent_http.cache_meta",
+          "sha256": "0d9b8790aeffdb8ef958d96f0d9adcb211b9b408fe84d2058c3fafb33b804ffc",
+          "bytes": 1018
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/ev_transport_independent_http.erl",
+          "sha256": "eb50d0ec9750cd5917fb45c5368e5a80d7b9f20016de0220f460643c4b9735dc",
+          "bytes": 17784
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/gleam@@compile.erl",
+          "sha256": "c3dda42ad646bf321000099eacde4a4ef794c778f7f4994e71be00cd28217196",
+          "bytes": 6231
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/mesh_peer_actor_test.cache",
+          "sha256": "e89e6ac9cba12c1a980e9ca391ff7252d944eddd973162374d3a24c8bac28579",
+          "bytes": 8638
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/mesh_peer_actor_test.cache_meta",
+          "sha256": "3eac010197ff897a9c3425aff0580400bd4253aab1dcd582996ef13a980e6e18",
+          "bytes": 1078
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/mesh_peer_actor_test.erl",
+          "sha256": "ae2b4b8b3a02c22703694041cba84e555b6cea516ef95ee3c226155a72d89eb3",
+          "bytes": 27757
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/mesh_peer_test.cache",
+          "sha256": "492192a1129c5f9224e0effe29241ce1773649b08434bd51f62ddfdde4f184bf",
+          "bytes": 11579
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/mesh_peer_test.cache_meta",
+          "sha256": "01c93f469244b8a51a3530a792a32c9d22c4563709f7cca639c5e97f5c4419e6",
+          "bytes": 1355
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/mesh_peer_test.erl",
+          "sha256": "65e1551e69191afe819fa7679a5ffceff441b2e4bf2797353341f7c28c8390b2",
+          "bytes": 31576
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/mesh_sync_codec_test.cache",
+          "sha256": "63143b57fa610986170f98e25292747362e84c7bef5a7ff6f003d268e5809fa5",
+          "bytes": 19846
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/mesh_sync_codec_test.cache_meta",
+          "sha256": "4e7a35163877956f8afe937dee6a2eda0a0038e51b8ca3b07fffbc7d0c9436a1",
+          "bytes": 2071
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/mesh_sync_codec_test.erl",
+          "sha256": "7c9db61798195d391d5a00ee9556994bceba880c1aea0b45adb0a60152877132",
+          "bytes": 32132
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/mesh_zenoh_live_test.cache",
+          "sha256": "f57c54315e73daf774f36cfd9e97ebb5925514311a49ffc34f474a91d20ad19f",
+          "bytes": 873
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/mesh_zenoh_live_test.cache_meta",
+          "sha256": "f6019bf25f5ce163caf2ec7c0462eefc84a20484a1f0659c76ccf91bc66322f6",
+          "bytes": 92
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/mesh_zenoh_live_test.erl",
+          "sha256": "20a37fdbf6ea101d37d16422aef77d40eddee9ce5e283c83a333e1688afa30d2",
+          "bytes": 325
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/mesh_zenoh_test.cache",
+          "sha256": "6526c1b1f1d8e522828193f49ac600f518aaf9faabe48c140f3832b6992ad00d",
+          "bytes": 31966
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/mesh_zenoh_test.cache_meta",
+          "sha256": "39b8089c22fb8d25df251fb5cfb386473418afd061d014803653ff682af03a69",
+          "bytes": 3113
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/_gleam_artefacts/mesh_zenoh_test.erl",
+          "sha256": "b69ef8e815c876b853f6f202197c1c9fe2f153129eafc6021d98965121791c64",
+          "bytes": 93844
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/cepaf_gleam@crdt@delta_mesh_engine.beam",
+          "sha256": "fe43043b1bbf66b6600597859f96dcb851772ac5934bc1a56ee601d0bc6d3629",
+          "bytes": 17840
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/cepaf_gleam@crdt@delta_state.beam",
+          "sha256": "314313829e617f6f1962b2be66c50f021f7409f3b64ed3ea47eec797f3a04be4",
+          "bytes": 13420
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/cepaf_gleam@crdt@health_bridge.beam",
+          "sha256": "be0d13c8486578250bea9b1860b8cfeb89b7e69df988fc4c18c459eed04f112f",
+          "bytes": 9104
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/cepaf_gleam@crdt@mesh_peer.beam",
+          "sha256": "60682b0db113e4735a149b2304831702ac0c2c7669fb63418665ab119fbd0263",
+          "bytes": 23580
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/cepaf_gleam@crdt@mesh_peer_actor.beam",
+          "sha256": "bbb6b410150322466e4ddbc40696dd04efaf68d232f7a0c912541f53af7fced1",
+          "bytes": 17108
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/cepaf_gleam@crdt@mesh_sync.beam",
+          "sha256": "408e104b0fe0ec925400c72e42c400ab43c8b3c3b03c1e14de6372b0761e8d55",
+          "bytes": 26764
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/cepaf_gleam@crdt@mesh_wire.beam",
+          "sha256": "b38050abb3250279fda71ad40b2e00b4ad72d118d3a38e42c0bcb173efb85bf3",
+          "bytes": 11272
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/cepaf_gleam@crdt@mesh_zenoh_http.beam",
+          "sha256": "46ccbfb3baf33ef31d474ad8948c9c33e85f16651c5543c80c5354c743a339f1",
+          "bytes": 25820
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/cepaf_gleam@crdt@mesh_zenoh_transport.beam",
+          "sha256": "cffe3807acb61381dff03b8d9f32bd9f834f615037e73ff6ceeb9adc7342614f",
+          "bytes": 34264
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/cepaf_gleam@ha@deadman_freshness.beam",
+          "sha256": "f3a4d0473c15b4961c04590181d21c41ca70d8e2e029c01980408571347b1c48",
+          "bytes": 10988
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/crdt_delta_state_test.beam",
+          "sha256": "63ea85073002e6e7effeb2fe794bb151e4e4482578750b9e0dd9b3b69e18a42f",
+          "bytes": 7904
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/crdt_health_bridge_test.beam",
+          "sha256": "873f53abe24fe9128e366848f8f2322e7acbf6c23b073c495bd6ad5e4aeb6a76",
+          "bytes": 3568
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/crdt_mesh_sync_test.beam",
+          "sha256": "f6b497ad1e5e4f8644170e933c18a084f0985fac4af1bd599cc3f19d8129dbf8",
+          "bytes": 5264
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/deadman_freshness_test.beam",
+          "sha256": "749fc6956f986ecbcff699434ba7e569020e2fe60657c895c50cf1a0547d1deb",
+          "bytes": 13988
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/delta_mesh_engine_test.beam",
+          "sha256": "1b1278bb65ba651a18021861978f64655b2a3bd2737adbe0cfdb5aa5d87ccaa0",
+          "bytes": 49112
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/ev98_codec_runner.beam",
+          "sha256": "0a4fdf0c3e77cefbc6635ad4cd62d5c064fdebffbb48af4467048f00ea892bac",
+          "bytes": 26264
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/ev_peer_independent_probe.beam",
+          "sha256": "bfa5833f6d82e793bce226ad550bbebe66096d35a4cb9470fb0500c6147329fd",
+          "bytes": 23836
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/ev_transport_independent_http.beam",
+          "sha256": "38456f9604396112266c3700c553352e056af963e04be00db63faa4eead3aa18",
+          "bytes": 14660
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/mesh_peer_actor_test.beam",
+          "sha256": "ae494fa72224dcd77fb1fdc5969fd3010aa0a0f676aaeca7cc41f9c323699853",
+          "bytes": 20860
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/mesh_peer_test.beam",
+          "sha256": "778b56e0f78246847e680f8239cf8b7eb7f1e09a46762d607570d0d1a6bc23da",
+          "bytes": 24668
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/mesh_sync_codec_test.beam",
+          "sha256": "3bd1e7b4389f47dba2740871c6aff661e64ef1b0b2e61f52253cc62ab10e9bd7",
+          "bytes": 33940
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/mesh_zenoh_live_test.beam",
+          "sha256": "421077efb6d4d21018c69bbe2e2f86415d84ccbe3999677da8cdccfaff79df99",
+          "bytes": 1096
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/ebin/mesh_zenoh_test.beam",
+          "sha256": "bb36d54f7dc06649c2bb20412f5f26ad9c8b9ffd1671e3195a54ddfab203bc27",
+          "bytes": 60120
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@delta_mesh_engine_DeltaMeshEngine.hrl",
+          "sha256": "724252207f3ffd90f74c02d3f47e03b8cf750c0b63433e105a1e5314ced60a9e",
+          "bytes": 492
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@delta_mesh_engine_OutboundQueueFull.hrl",
+          "sha256": "bac1a59beb897fe946b2cca4c3625659a63214fd6a2f73276192b7fa467d8195",
+          "bytes": 55
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@delta_state_Dot.hrl",
+          "sha256": "0f359544b6008cc68fccd2cb7caf9234c35f5239e17e9f669b68a1d54cef8596",
+          "bytes": 56
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@delta_state_LWWRegister.hrl",
+          "sha256": "dd690b5f0fd31de4865534c50db41bf31b764033f64d709f65d881a2a65f867a",
+          "bytes": 104
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@delta_state_MeshDeltaState.hrl",
+          "sha256": "5e1aced17c7b9d15ab745f0ba9e2ce35b4016b2800435af14a9dee9f4505affe",
+          "bytes": 346
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@delta_state_ORSet.hrl",
+          "sha256": "e7a4d67d6865f78b8b9a0d8e68c46ede66d77e49bc6f9182e57008c864b46f48",
+          "bytes": 149
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@delta_state_PNCounter.hrl",
+          "sha256": "c8d8579e0f9f37257d8b6471acf61fdc62b3488e75a0f55e14e425bffe8db84d",
+          "bytes": 116
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@health_bridge_NodeHealthTelemetry.hrl",
+          "sha256": "6687cc42311002053190f8263a57ae650e250ef4d6d6575f088064db31747ffc",
+          "bytes": 214
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@mesh_peer_Config.hrl",
+          "sha256": "8d60a432317de5f1bc8d291f7bd20f0c1b42819b0017877adf9eb8435cda196c",
+          "bytes": 205
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@mesh_peer_Frame.hrl",
+          "sha256": "82983e4f8d1cfe2ba9268d9cff0565907653984200fa6705eb6dbcc16f3bb886",
+          "bytes": 120
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@mesh_peer_FrameId.hrl",
+          "sha256": "32879d687937059c71ffef05eec5e75380d5221f1712797fbbdb5c9d4444eddd",
+          "bytes": 67
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@mesh_peer_Peer.hrl",
+          "sha256": "39377966e764798eee8d14bc7a9b66994acb9b762c166e09cf7af514d4701f6e",
+          "bytes": 53
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@mesh_peer_State.hrl",
+          "sha256": "970434c00bd7287a09610dfa08bfe5f38b84e126aa17868adbd1de82656ee3f7",
+          "bytes": 525
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@mesh_peer_Tick.hrl",
+          "sha256": "40f8c4d4501dc3cd54dbd515261485ac950cca841640600b7b3cbdf5c3f23099",
+          "bytes": 144
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@mesh_peer_actor_Handle.hrl",
+          "sha256": "5a692674f96b435bd44eaf85383cb1a18622e18c520d46a33a2d3f315b1b433f",
+          "bytes": 110
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@mesh_peer_actor_View.hrl",
+          "sha256": "078b68c23fc2509fbbacb5f8bc9a368b45772ca59ac639601f2e9e902dbfb92a",
+          "bytes": 161
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@mesh_sync_Lagging.hrl",
+          "sha256": "af2e74a07751e670bc636210782aa3146084b96ac62a76b7dcf2ab18c8dc8b52",
+          "bytes": 47
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@mesh_sync_PeerSyncEndpoint.hrl",
+          "sha256": "4e05853f7adbfabf00248fbe10b1ab5c46dfaeeb33d8552f2cc50476adba9aad",
+          "bytes": 234
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@mesh_sync_SyncAck.hrl",
+          "sha256": "c565e715f2a57fad1c6b2fcb3a21cb831bdae8ec359748f7fa2768747adf892e",
+          "bytes": 151
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@mesh_sync_SyncDelta.hrl",
+          "sha256": "80eb40d9f8e175da0ea0f46a9a2330b958a248daa09248c35713c9ba0451ac34",
+          "bytes": 292
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@mesh_sync_SyncDigest.hrl",
+          "sha256": "b95e7b0ba4b6e93e9feef8d56ed48b841a468d585c38b30f94a6f8ae3f15de20",
+          "bytes": 167
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@mesh_zenoh_http_Endpoint.hrl",
+          "sha256": "dc631b76f287b971108f876f46c22a956724b750354a70fbb6353aa65d76bb04",
+          "bytes": 58
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@mesh_zenoh_http_Response.hrl",
+          "sha256": "7d5dfb48c9318f498da409e8bfa80b92bf9ca6cae541027bcda7622ab9869fee",
+          "bytes": 60
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@mesh_zenoh_transport_Config.hrl",
+          "sha256": "6b61c27c16b1d7882fc061aa26a3df374be77e11f8eaa378867c834aa5535156",
+          "bytes": 155
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@mesh_zenoh_transport_Handle.hrl",
+          "sha256": "2ab00e78bc95084de962ead3c642f34ee34e3abbde014f9c407c002d9cb1e6d2",
+          "bytes": 115
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@crdt@mesh_zenoh_transport_Stats.hrl",
+          "sha256": "330a7004d33b809f66527a202441e4afe44fdb0aa2b7cbc6a623ee5125d874e1",
+          "bytes": 357
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@ha@deadman_freshness_ActionInitiateFailover.hrl",
+          "sha256": "22596b7360a798166a97697a4fc970cf783ef75b6050bec0dae0d8f5f21a5f84",
+          "bytes": 116
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@ha@deadman_freshness_ActionTripDeadMan.hrl",
+          "sha256": "6e92263c63651319c9e0627be86bb1c1afbfd185a8a353cf0c802980a939207b",
+          "bytes": 108
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@ha@deadman_freshness_ActionWarnStaleness.hrl",
+          "sha256": "c43c3c818fa263d69f61dd4d2110258e592846ee9c6d5f51096dcead252b6ad5",
+          "bytes": 110
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@ha@deadman_freshness_ActorRegistration.hrl",
+          "sha256": "d647fd9bd353b8c1fc9f961e36eb0b8e075d723572c2277d65d734fca0732878",
+          "bytes": 364
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@ha@deadman_freshness_DeadManRegistry.hrl",
+          "sha256": "4a6bde6b282183a79876cd24ba7e84edc6932beb3d57bbaeb631d0072c15d044",
+          "bytes": 176
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@ha@deadman_freshness_HeartbeatTripped.hrl",
+          "sha256": "0457809d39ad974007d2eb5963f19cd162bc3d6de7073470aa8554037fc8dc13",
+          "bytes": 53
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-report/compiled/include/cepaf_gleam@ha@deadman_freshness_HeartbeatWarning.hrl",
+          "sha256": "1533892f942c4c45ad70224685bbdcecaa525ab53bad8e02c4df18d62d02118b",
+          "bytes": 51
+        }
+      ]
+    },
+    {
+      "variant": "cleanup",
+      "bindings": {
+        "path": "/tmp/ev-fault52-independent-cleanup/bindings.json",
+        "sha256": "6c423e33d9e7fc9b9f729040315b6e958ec3a3c45f17f2178e501176b788b062",
+        "bytes": 82096
+      },
+      "fault_bindings": {
+        "path": "/tmp/ev-fault52-independent-cleanup/fault-bindings.json",
+        "sha256": "04c59a1d59a290543798fb1fc236e84b7d6fa281d807b130c8a8710e41b6f7e2",
+        "bytes": 1293
+      },
+      "compile": {
+        "path": "/tmp/ev-fault52-independent-cleanup/compile.json",
+        "sha256": "3172246c07b2eaf737e2e47dd1da27ad8e56640d3449e66ab56652dc88371e8f",
+        "bytes": 2268
+      },
+      "runtime": {
+        "path": "/tmp/ev-fault52-independent-cleanup/runtime.json",
+        "sha256": "463ac67e691ada98b920cd70bad17070a42dc2ed2d66623d21b2ea4ca3166381",
+        "bytes": 2617
+      },
+      "dependency_files": 211,
+      "compiled_artifacts": [
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_mesh_engine.cache",
+          "sha256": "eb8833bcbc9d1fb16865fb33e9a0640af1233926b905ba03f21240fd2ec57b65",
+          "bytes": 24403
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_mesh_engine.cache_meta",
+          "sha256": "6f02d9a4899779bfacae64a70ef4b6a0382545c4f0779533f416c096f5bacca5",
+          "bytes": 2046
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_mesh_engine.erl",
+          "sha256": "b78bba21f2ec4ee303b7543efbda77be4758134c46da588194260faad071d534",
+          "bytes": 22693
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_state.cache",
+          "sha256": "bfc2f24fd505cf22969aedb9ad82c7ab75a9ce8000e68a77e901202db3145267",
+          "bytes": 29300
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_state.cache_meta",
+          "sha256": "3ab9a19b353be5335e80fbd37e125049e85e5e9d1680a65a750db6e2753a186b",
+          "bytes": 1301
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_state.erl",
+          "sha256": "9f01be43f72d9f19a365ce2040fa7436498e92918ea829511394ae4e0670f90f",
+          "bytes": 11712
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@health_bridge.cache",
+          "sha256": "98d18404ef061b85b0d7bed89aaabc508d6c1591e7b90a59f159145c8c0e36e0",
+          "bytes": 16687
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@health_bridge.cache_meta",
+          "sha256": "afde09327a67ac197ebb4946fca76c291b00841c9c0254f4c184ae215ca03d54",
+          "bytes": 981
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@health_bridge.erl",
+          "sha256": "41c566725bdc9fc00a83e24e086a5a7c873232290a2e45bd976814748652bf45",
+          "bytes": 10285
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer.cache",
+          "sha256": "d1dc5a6e984f60e2154a132907092d41fa19a62af8f23b1440a0a2dd818206c5",
+          "bytes": 44172
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer.cache_meta",
+          "sha256": "e0497faa6241c01208b6ad7913cc20bf1857cc06ef121af465ee1a10f398bebf",
+          "bytes": 2158
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer.erl",
+          "sha256": "8299f43a094bcf06d45a76c4f95b1a7702aff0217a3d137ce05e918a1f8a7179",
+          "bytes": 31329
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer_actor.cache",
+          "sha256": "de1cf92aaa4aad9a3e857ac1c579461b76430dedf62c583732246c922c3cc14e",
+          "bytes": 45614
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer_actor.cache_meta",
+          "sha256": "507265fce159a708b62dba87467ecf13ab0fa0fbb5e2df5135d1519d8c30a2f5",
+          "bytes": 1692
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer_actor.erl",
+          "sha256": "459d06c9b5ae22f7ff016ca331412d5a201a6debc3578b854a917ea1ffaadc8f",
+          "bytes": 17353
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_sync.cache",
+          "sha256": "4c606bb3dacd0f6a5fcd113d061f926f68caa87ecbb69c5c0f370d0786215822",
+          "bytes": 37106
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_sync.cache_meta",
+          "sha256": "0d51f75ab50e0ece82a6e65fceac06c1c66f757f85ba201a83640d1f7649b958",
+          "bytes": 2491
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_sync.erl",
+          "sha256": "48cf02b15004fa4fb6d1f1fbb6eb140e30d7325b7091cf661eecf10643261031",
+          "bytes": 29711
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_wire.cache",
+          "sha256": "817fd5a99b582a0a2d1e425605ae764f9149992b7ab60d950c723b4a84eac3ce",
+          "bytes": 19815
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_wire.cache_meta",
+          "sha256": "b8b0b9c66c8b5c0fe1ef56e5e3f6004b1fcb95fcda92183a05fc27ed005dc0da",
+          "bytes": 1046
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_wire.erl",
+          "sha256": "f5f7a16cd1d62f17ec7aa1d97aae1d36839c6b6ef308d86023ea2ed54f98a82a",
+          "bytes": 10427
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_http.cache",
+          "sha256": "bbb20ba458b8f0c9236a57dd84a7cc314881a19b514231ed0cf56479f7159e51",
+          "bytes": 38571
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_http.cache_meta",
+          "sha256": "863cc2fb47d7dc28fc16d3894e450a08a5a3e8e0beadb314cccecd00b132afc4",
+          "bytes": 2321
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_http.erl",
+          "sha256": "73870dbc57b75ead653db434621c637d0eccfa40fb80eb83fb8d1e67ba3b38fd",
+          "bytes": 30433
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_transport.cache",
+          "sha256": "6de0596995660f335de016a8fd874daf18174a36e1ead7d88185377b55b98734",
+          "bytes": 54907
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_transport.cache_meta",
+          "sha256": "59825a4418b0d34af215aae5d36b2b273afc1c08e1361556d55e77fdd5a1cdc6",
+          "bytes": 3287
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_transport.erl",
+          "sha256": "f5b32055fd1e6e2fdaad9502ce83dd3c7ba0a6c2995fdbc15e90539d551abe88",
+          "bytes": 57020
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@ha@deadman_freshness.cache",
+          "sha256": "c0f268dc74504e2648464ae8ddee1d352b7cae89f40f605e59b133e5bf05112f",
+          "bytes": 22127
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@ha@deadman_freshness.cache_meta",
+          "sha256": "c5047e686be8524b601f1ce466ba8821ab10f82341d103f866f1f2f7c311dde3",
+          "bytes": 1286
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/cepaf_gleam@ha@deadman_freshness.erl",
+          "sha256": "87e4690bbded7b1c65702e5bdf6832a162c24d5e60f4f1a9d1d1a908fff15efe",
+          "bytes": 13786
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/crdt_delta_state_test.cache",
+          "sha256": "639e4485843408dc1127dc251e2f1a7aa0f4948fa2466e1b337cc8ea9425692b",
+          "bytes": 5304
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/crdt_delta_state_test.cache_meta",
+          "sha256": "ef667659f65d129ef3e8bd327a4ce35023ce87f3617b8f6408cef63f2880ac4a",
+          "bytes": 692
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/crdt_delta_state_test.erl",
+          "sha256": "9ad15f80e69dffd0b117cc039fe080bc5fc4a1975306fdcb89bff1d98c9a160e",
+          "bytes": 8036
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/crdt_health_bridge_test.cache",
+          "sha256": "fd263d8795b8fbd83bb9ee72d070e4373ffe7190045ecc6bb77fd57db1f33ca0",
+          "bytes": 2514
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/crdt_health_bridge_test.cache_meta",
+          "sha256": "8264d372ad3219269b466734bb471443fd25e5a0bf3094e957191f6f795b25be",
+          "bytes": 530
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/crdt_health_bridge_test.erl",
+          "sha256": "e2eecb613f928d9069a53d56ba90542cd279ebe9cdbb3d7b1f7c5c6e9ca9dff1",
+          "bytes": 2784
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/crdt_mesh_sync_test.cache",
+          "sha256": "d5281fbccad7a214767736de26cf77d6e0f1a1bf6632abb640182c32d74fad23",
+          "bytes": 3279
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/crdt_mesh_sync_test.cache_meta",
+          "sha256": "c618f90fa956067dc6386429aa87f4255a2a5eb9afd8e7da33d70209211b939a",
+          "bytes": 492
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/crdt_mesh_sync_test.erl",
+          "sha256": "f56210eff2b8217056fb68c7214ed92478f0a7641898b6e37cc8c9b817b3a928",
+          "bytes": 4181
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/deadman_freshness_test.cache",
+          "sha256": "d9f05fd87f4322e61adcf3f303a688932d6cbdbc2872ed67cfcf61e0db343932",
+          "bytes": 9957
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/deadman_freshness_test.cache_meta",
+          "sha256": "30f53405873a30f8de2942b952e76c9015ef239a5b14db6c537e6ea00c52191d",
+          "bytes": 1034
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/deadman_freshness_test.erl",
+          "sha256": "11351002d7bab81c502d5fb94c6d04df19759ab72cd797d3fd8539576e9e99e0",
+          "bytes": 17469
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/delta_mesh_engine_test.cache",
+          "sha256": "5c67dc60bce622c3f657239652e5aebf882327a51dfbf1a11d3f3c0a6bf246ce",
+          "bytes": 22821
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/delta_mesh_engine_test.cache_meta",
+          "sha256": "0f0bb5829bc7f2a4d47f034afba4f459a39afabe219f2d1e95e1f2e273d650ac",
+          "bytes": 2202
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/delta_mesh_engine_test.erl",
+          "sha256": "fe408c69e5f4e8c25403a52877f71bcfae54e65b1c34ae1fcea83b9e1791f2dd",
+          "bytes": 73103
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/ev98_codec_runner.cache",
+          "sha256": "9f62b5d7312592b7df6dee2f6580456d567336d5a15f9a85e5731351fd9f442a",
+          "bytes": 11605
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/ev98_codec_runner.cache_meta",
+          "sha256": "76bedbb3b112df2fc0b07f540a80205a2004ee44a2f4a7bf83de3148264de1c2",
+          "bytes": 1956
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/ev98_codec_runner.erl",
+          "sha256": "316096e765fa529cf923cd07ebb576d90000c0d311e293334abbb485f7b4075e",
+          "bytes": 23721
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/ev_peer_independent_probe.cache",
+          "sha256": "e2ec366f835c590a8d1834d02c6b9f9334868b9e26e12047d45a1b9d614b5a90",
+          "bytes": 11515
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/ev_peer_independent_probe.cache_meta",
+          "sha256": "8fca8a7d00e6633a7d403da6ea766f95449017062625b5b8cb68039bac23807d",
+          "bytes": 1139
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/ev_peer_independent_probe.erl",
+          "sha256": "2243ca1772f2cbd76f04a942536b7ad1202328d2cced0d54c0c4973f517bab20",
+          "bytes": 31761
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/ev_transport_independent_http.cache",
+          "sha256": "96a98aa47f68f96db9ef93f249622aab4bd6fe9da4a5e29e116a846d18ea0b75",
+          "bytes": 17620
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/ev_transport_independent_http.cache_meta",
+          "sha256": "7f4e79020c8a05cac243eb3a512be8544fd2f3da19d55f259c1725326986e0a1",
+          "bytes": 1018
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/ev_transport_independent_http.erl",
+          "sha256": "eb50d0ec9750cd5917fb45c5368e5a80d7b9f20016de0220f460643c4b9735dc",
+          "bytes": 17784
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/gleam@@compile.erl",
+          "sha256": "c3dda42ad646bf321000099eacde4a4ef794c778f7f4994e71be00cd28217196",
+          "bytes": 6231
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/mesh_peer_actor_test.cache",
+          "sha256": "fce7aa8c64b46714532bc78a0efd46bf7165edc1c74bbb1203bc349b391cf3cf",
+          "bytes": 8639
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/mesh_peer_actor_test.cache_meta",
+          "sha256": "76736b3711fcf0716db4bf3b3331553412a59572e8b1ec465739621987a31ab2",
+          "bytes": 1078
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/mesh_peer_actor_test.erl",
+          "sha256": "ae2b4b8b3a02c22703694041cba84e555b6cea516ef95ee3c226155a72d89eb3",
+          "bytes": 27757
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/mesh_peer_test.cache",
+          "sha256": "2a7c88998e12b6739ef0b97baf0d1be4ad5c41214a8c698ccf9c5c4ef9ab7179",
+          "bytes": 11580
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/mesh_peer_test.cache_meta",
+          "sha256": "e8b88174b815b6a82560d850740d3bdc20a676956a86aff9ca2a13bc80aa0a5b",
+          "bytes": 1355
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/mesh_peer_test.erl",
+          "sha256": "65e1551e69191afe819fa7679a5ffceff441b2e4bf2797353341f7c28c8390b2",
+          "bytes": 31576
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/mesh_sync_codec_test.cache",
+          "sha256": "f270661f440ebd632c61da0000f9f425933f3facc6f2ae0cf12c6a642c635548",
+          "bytes": 19847
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/mesh_sync_codec_test.cache_meta",
+          "sha256": "b89d932d35b323fc0f1c4393a543f3bfc740b5371882dae1c3a6c892c3caabde",
+          "bytes": 2071
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/mesh_sync_codec_test.erl",
+          "sha256": "7c9db61798195d391d5a00ee9556994bceba880c1aea0b45adb0a60152877132",
+          "bytes": 32132
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/mesh_zenoh_live_test.cache",
+          "sha256": "9f883cf4fbe49037aecd0259df9b23e41b0a5663e861e1bcc7ceb87a0b3d0314",
+          "bytes": 872
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/mesh_zenoh_live_test.cache_meta",
+          "sha256": "7652407ce46a875ba38a6b334d237a542dbc57eddd97cbf6a4661c0029aef3eb",
+          "bytes": 92
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/mesh_zenoh_live_test.erl",
+          "sha256": "3a5f4ccf54c104c52e50c9589cbdbc32d09bd3d0be91eb5e6637c650a09be01e",
+          "bytes": 323
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/mesh_zenoh_test.cache",
+          "sha256": "9ceeb9388b404f000b93cea46978214ec5986b2a4dccc6752ed390f1512b90df",
+          "bytes": 31967
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/mesh_zenoh_test.cache_meta",
+          "sha256": "5eef348bff08518b4d23e32128806b34d642807563b55a50c4d20fc3e58f71e1",
+          "bytes": 3113
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/_gleam_artefacts/mesh_zenoh_test.erl",
+          "sha256": "b69ef8e815c876b853f6f202197c1c9fe2f153129eafc6021d98965121791c64",
+          "bytes": 93844
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/cepaf_gleam@crdt@delta_mesh_engine.beam",
+          "sha256": "a10f45e6a97d59083744a46ce2983c796ae4b561e82300cf8da6ce7baea11c2b",
+          "bytes": 17848
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/cepaf_gleam@crdt@delta_state.beam",
+          "sha256": "e7bd87cc887600b38c8ec373bbaaaaa2c794bb88e12cfc9098c4464208ad217f",
+          "bytes": 13424
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/cepaf_gleam@crdt@health_bridge.beam",
+          "sha256": "8e681c57ed66a818d21726eeb20897359c8adc4874085b18556de7c0cd256377",
+          "bytes": 9108
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/cepaf_gleam@crdt@mesh_peer.beam",
+          "sha256": "44a31e9f532d84d5206c10a8bef54b1eb57e789a35aca9f7a905c8377f99de24",
+          "bytes": 23592
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/cepaf_gleam@crdt@mesh_peer_actor.beam",
+          "sha256": "4213028e3653ccf5353584c06d5663917c2e246fecb6daf354eb8f8a3850e221",
+          "bytes": 16924
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/cepaf_gleam@crdt@mesh_sync.beam",
+          "sha256": "65fccab9f499f755e21cb99e72bbd97293f43f6ba3bc8da00be9ae877619ec0a",
+          "bytes": 26768
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/cepaf_gleam@crdt@mesh_wire.beam",
+          "sha256": "377daf2d21fbb7dce6a921ab9f123f44f8630c77c7b31a00ee4f28361b3d8c4d",
+          "bytes": 11276
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/cepaf_gleam@crdt@mesh_zenoh_http.beam",
+          "sha256": "9c15555cf6cf71fb6651ca660ede02dea036344cfbb228cfa8580b73d35ba418",
+          "bytes": 25988
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/cepaf_gleam@crdt@mesh_zenoh_transport.beam",
+          "sha256": "b8f44b6ed2899c4b3eb02855fe735e546716d8282f1f9d8c0694e0be2c5be7ec",
+          "bytes": 34268
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/cepaf_gleam@ha@deadman_freshness.beam",
+          "sha256": "5612a6d3005808ebb4b8abeea0431a28c4a3f157092ce8fed87a5e2d23066546",
+          "bytes": 10992
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/crdt_delta_state_test.beam",
+          "sha256": "573ab19ab22888e11d5922ac542ff6c3a44af33ebe7ebe10d31bffe8441326f5",
+          "bytes": 7904
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/crdt_health_bridge_test.beam",
+          "sha256": "f39dd81713699c20fed6b9b0d87395ea34b12a676d64649b1e7605be5d0a7ca6",
+          "bytes": 3568
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/crdt_mesh_sync_test.beam",
+          "sha256": "91ca8e94a445c82f43fec80f0bedf9959c2e2a7b5a0d7a77b197b5408691b4b1",
+          "bytes": 5268
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/deadman_freshness_test.beam",
+          "sha256": "73763cdf74600049234e1dcf4a9d717465920662f48db21cd48031056192a75f",
+          "bytes": 13996
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/delta_mesh_engine_test.beam",
+          "sha256": "d199bae791a912b832e6c31162b0cce58985f107f75362dea770a1967b1977ad",
+          "bytes": 49116
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/ev98_codec_runner.beam",
+          "sha256": "8323f9b344ace48f3a29ee290ee7a415c255386f89d0c2073b9ae8bc5d473c27",
+          "bytes": 26264
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/ev_peer_independent_probe.beam",
+          "sha256": "1322c12b72f24822ff8ce61742d7c9527633391f66b9b99e66a2bfd8e9ad781e",
+          "bytes": 23840
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/ev_transport_independent_http.beam",
+          "sha256": "ec20f073ef63547bc9be03ac23373642330ef5490e9a79db7d468092bb43a8da",
+          "bytes": 14660
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/mesh_peer_actor_test.beam",
+          "sha256": "a9c604599b0600ee369df424eae0a16c2f347fd87c84105112ef954dea3c169c",
+          "bytes": 20864
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/mesh_peer_test.beam",
+          "sha256": "d631d20b009256cca8988df129e18dbe239092cfd2aa238ad73b2f776e6b8b23",
+          "bytes": 24680
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/mesh_sync_codec_test.beam",
+          "sha256": "46b6014e164653e151f8a404d33542b23d2566781bdcf5cebc39da55c36078cc",
+          "bytes": 33940
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/mesh_zenoh_live_test.beam",
+          "sha256": "f325cd0ee9b6ee7b9abb1ce9185af4a1e4b9bdc10e2bd9e2d5d9afe686717194",
+          "bytes": 1092
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/ebin/mesh_zenoh_test.beam",
+          "sha256": "c5e9f223179bc3cf3d5d10e77edb3892b2b39bddc2e21a90c166fab68df6ee9a",
+          "bytes": 60120
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@delta_mesh_engine_DeltaMeshEngine.hrl",
+          "sha256": "724252207f3ffd90f74c02d3f47e03b8cf750c0b63433e105a1e5314ced60a9e",
+          "bytes": 492
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@delta_mesh_engine_OutboundQueueFull.hrl",
+          "sha256": "bac1a59beb897fe946b2cca4c3625659a63214fd6a2f73276192b7fa467d8195",
+          "bytes": 55
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@delta_state_Dot.hrl",
+          "sha256": "0f359544b6008cc68fccd2cb7caf9234c35f5239e17e9f669b68a1d54cef8596",
+          "bytes": 56
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@delta_state_LWWRegister.hrl",
+          "sha256": "dd690b5f0fd31de4865534c50db41bf31b764033f64d709f65d881a2a65f867a",
+          "bytes": 104
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@delta_state_MeshDeltaState.hrl",
+          "sha256": "5e1aced17c7b9d15ab745f0ba9e2ce35b4016b2800435af14a9dee9f4505affe",
+          "bytes": 346
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@delta_state_ORSet.hrl",
+          "sha256": "e7a4d67d6865f78b8b9a0d8e68c46ede66d77e49bc6f9182e57008c864b46f48",
+          "bytes": 149
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@delta_state_PNCounter.hrl",
+          "sha256": "c8d8579e0f9f37257d8b6471acf61fdc62b3488e75a0f55e14e425bffe8db84d",
+          "bytes": 116
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@health_bridge_NodeHealthTelemetry.hrl",
+          "sha256": "6687cc42311002053190f8263a57ae650e250ef4d6d6575f088064db31747ffc",
+          "bytes": 214
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@mesh_peer_Config.hrl",
+          "sha256": "8d60a432317de5f1bc8d291f7bd20f0c1b42819b0017877adf9eb8435cda196c",
+          "bytes": 205
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@mesh_peer_Frame.hrl",
+          "sha256": "82983e4f8d1cfe2ba9268d9cff0565907653984200fa6705eb6dbcc16f3bb886",
+          "bytes": 120
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@mesh_peer_FrameId.hrl",
+          "sha256": "32879d687937059c71ffef05eec5e75380d5221f1712797fbbdb5c9d4444eddd",
+          "bytes": 67
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@mesh_peer_Peer.hrl",
+          "sha256": "39377966e764798eee8d14bc7a9b66994acb9b762c166e09cf7af514d4701f6e",
+          "bytes": 53
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@mesh_peer_State.hrl",
+          "sha256": "970434c00bd7287a09610dfa08bfe5f38b84e126aa17868adbd1de82656ee3f7",
+          "bytes": 525
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@mesh_peer_Tick.hrl",
+          "sha256": "40f8c4d4501dc3cd54dbd515261485ac950cca841640600b7b3cbdf5c3f23099",
+          "bytes": 144
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@mesh_peer_actor_Handle.hrl",
+          "sha256": "5a692674f96b435bd44eaf85383cb1a18622e18c520d46a33a2d3f315b1b433f",
+          "bytes": 110
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@mesh_peer_actor_View.hrl",
+          "sha256": "078b68c23fc2509fbbacb5f8bc9a368b45772ca59ac639601f2e9e902dbfb92a",
+          "bytes": 161
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@mesh_sync_Lagging.hrl",
+          "sha256": "af2e74a07751e670bc636210782aa3146084b96ac62a76b7dcf2ab18c8dc8b52",
+          "bytes": 47
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@mesh_sync_PeerSyncEndpoint.hrl",
+          "sha256": "4e05853f7adbfabf00248fbe10b1ab5c46dfaeeb33d8552f2cc50476adba9aad",
+          "bytes": 234
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@mesh_sync_SyncAck.hrl",
+          "sha256": "c565e715f2a57fad1c6b2fcb3a21cb831bdae8ec359748f7fa2768747adf892e",
+          "bytes": 151
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@mesh_sync_SyncDelta.hrl",
+          "sha256": "80eb40d9f8e175da0ea0f46a9a2330b958a248daa09248c35713c9ba0451ac34",
+          "bytes": 292
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@mesh_sync_SyncDigest.hrl",
+          "sha256": "b95e7b0ba4b6e93e9feef8d56ed48b841a468d585c38b30f94a6f8ae3f15de20",
+          "bytes": 167
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@mesh_zenoh_http_Endpoint.hrl",
+          "sha256": "dc631b76f287b971108f876f46c22a956724b750354a70fbb6353aa65d76bb04",
+          "bytes": 58
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@mesh_zenoh_http_Response.hrl",
+          "sha256": "7d5dfb48c9318f498da409e8bfa80b92bf9ca6cae541027bcda7622ab9869fee",
+          "bytes": 60
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@mesh_zenoh_transport_Config.hrl",
+          "sha256": "6b61c27c16b1d7882fc061aa26a3df374be77e11f8eaa378867c834aa5535156",
+          "bytes": 155
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@mesh_zenoh_transport_Handle.hrl",
+          "sha256": "2ab00e78bc95084de962ead3c642f34ee34e3abbde014f9c407c002d9cb1e6d2",
+          "bytes": 115
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@crdt@mesh_zenoh_transport_Stats.hrl",
+          "sha256": "330a7004d33b809f66527a202441e4afe44fdb0aa2b7cbc6a623ee5125d874e1",
+          "bytes": 357
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@ha@deadman_freshness_ActionInitiateFailover.hrl",
+          "sha256": "22596b7360a798166a97697a4fc970cf783ef75b6050bec0dae0d8f5f21a5f84",
+          "bytes": 116
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@ha@deadman_freshness_ActionTripDeadMan.hrl",
+          "sha256": "6e92263c63651319c9e0627be86bb1c1afbfd185a8a353cf0c802980a939207b",
+          "bytes": 108
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@ha@deadman_freshness_ActionWarnStaleness.hrl",
+          "sha256": "c43c3c818fa263d69f61dd4d2110258e592846ee9c6d5f51096dcead252b6ad5",
+          "bytes": 110
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@ha@deadman_freshness_ActorRegistration.hrl",
+          "sha256": "d647fd9bd353b8c1fc9f961e36eb0b8e075d723572c2277d65d734fca0732878",
+          "bytes": 364
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@ha@deadman_freshness_DeadManRegistry.hrl",
+          "sha256": "4a6bde6b282183a79876cd24ba7e84edc6932beb3d57bbaeb631d0072c15d044",
+          "bytes": 176
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@ha@deadman_freshness_HeartbeatTripped.hrl",
+          "sha256": "0457809d39ad974007d2eb5963f19cd162bc3d6de7073470aa8554037fc8dc13",
+          "bytes": 53
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-cleanup/compiled/include/cepaf_gleam@ha@deadman_freshness_HeartbeatWarning.hrl",
+          "sha256": "1533892f942c4c45ad70224685bbdcecaa525ab53bad8e02c4df18d62d02118b",
+          "bytes": 51
+        }
+      ]
+    },
+    {
+      "variant": "receive",
+      "bindings": {
+        "path": "/tmp/ev-fault52-independent-receive/bindings.json",
+        "sha256": "65146266ea40786e28c7c11bd33c8447dd35c0e77912cbd893b9c81a1cc69234",
+        "bytes": 82096
+      },
+      "fault_bindings": {
+        "path": "/tmp/ev-fault52-independent-receive/fault-bindings.json",
+        "sha256": "017015252a1eec5698a80e14a6ee8dc2d27126cb831a29a59bab0076d18ad54c",
+        "bytes": 1292
+      },
+      "compile": {
+        "path": "/tmp/ev-fault52-independent-receive/compile.json",
+        "sha256": "9d455c0a2d3dee9040e544e11cd7efad7281757fa854449bbcc570051db39ae8",
+        "bytes": 2270
+      },
+      "runtime": {
+        "path": "/tmp/ev-fault52-independent-receive/runtime.json",
+        "sha256": "dc02996b625ba130438398905b475d1c1d5f74890428eade21ea47bbe2f5507d",
+        "bytes": 2631
+      },
+      "dependency_files": 211,
+      "compiled_artifacts": [
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_mesh_engine.cache",
+          "sha256": "578fced925f1542af3ad9d53b715f4e5d30e8b908ac2251de3aff82b8ee3e002",
+          "bytes": 24403
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_mesh_engine.cache_meta",
+          "sha256": "f331cde7009d539c7f3388a603ee5a255cbfd6338e957a6057fdd72531705c7a",
+          "bytes": 2046
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_mesh_engine.erl",
+          "sha256": "b78bba21f2ec4ee303b7543efbda77be4758134c46da588194260faad071d534",
+          "bytes": 22693
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_state.cache",
+          "sha256": "4369406743a773dd17eb17be5a66327998c51d24becdbac8ad90d368229f87f2",
+          "bytes": 29300
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_state.cache_meta",
+          "sha256": "4a38aad082edea95286d3e0e3429492af1d88373816145e0daa7b7903afa9edb",
+          "bytes": 1301
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_state.erl",
+          "sha256": "9f01be43f72d9f19a365ce2040fa7436498e92918ea829511394ae4e0670f90f",
+          "bytes": 11712
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@health_bridge.cache",
+          "sha256": "8b2f47ac0a7ed1cdba9341090ab93475597ac9cf678fe836f4f6f4c19126b6d6",
+          "bytes": 16687
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@health_bridge.cache_meta",
+          "sha256": "86ce1e51474080c2459cfde43982bd07b128dabad0a4525f49fa2fed772f0870",
+          "bytes": 981
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@health_bridge.erl",
+          "sha256": "41c566725bdc9fc00a83e24e086a5a7c873232290a2e45bd976814748652bf45",
+          "bytes": 10285
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer.cache",
+          "sha256": "ecf01ed3cf35ad9ac235e0bc21593429fa56e5835130c2a2527799808f399b78",
+          "bytes": 44172
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer.cache_meta",
+          "sha256": "d55c8e2f6a008a15ff1564b6e5b5b3f2e5b26222adf2c9ea0728156be1e2747c",
+          "bytes": 2158
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer.erl",
+          "sha256": "8299f43a094bcf06d45a76c4f95b1a7702aff0217a3d137ce05e918a1f8a7179",
+          "bytes": 31329
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer_actor.cache",
+          "sha256": "78657264506dd33dfcce321c4b143c28e72f12dfc9d472e0f68b62e6a9cfc18f",
+          "bytes": 46323
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer_actor.cache_meta",
+          "sha256": "be04dd215b7c0b521c53a6fb5e2a6477f889fe5e63797f6691cc8512d415fc80",
+          "bytes": 1737
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer_actor.erl",
+          "sha256": "a3dc3f0c9ebb229d36e3d0f02e4f49a87f31417c850c9ebb9fc4266a6ed2bfa1",
+          "bytes": 17806
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_sync.cache",
+          "sha256": "2e7275ae99e88730c5a4346a2aa1c148096784042ed54f94ee97e4a391b73c4f",
+          "bytes": 37106
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_sync.cache_meta",
+          "sha256": "23a4200d9760dd0858c4bd2669db95013fe4a0429f8bf1d01b1e935a0bd187ff",
+          "bytes": 2491
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_sync.erl",
+          "sha256": "48cf02b15004fa4fb6d1f1fbb6eb140e30d7325b7091cf661eecf10643261031",
+          "bytes": 29711
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_wire.cache",
+          "sha256": "5b398666d02a566a6782b945c26b26301169c8adef7d9b508e6719a58600f0ee",
+          "bytes": 19815
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_wire.cache_meta",
+          "sha256": "9c55d9490e564da4e04c5293dbbecb15e6319ca51f80d7de54478e8ae0b9d7d4",
+          "bytes": 1046
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_wire.erl",
+          "sha256": "f5f7a16cd1d62f17ec7aa1d97aae1d36839c6b6ef308d86023ea2ed54f98a82a",
+          "bytes": 10427
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_http.cache",
+          "sha256": "e2f4537e1794eec629cfc4a9bab68c06b21ebb0547cb4045493ec3383fd0adb8",
+          "bytes": 38531
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_http.cache_meta",
+          "sha256": "432c39391a0bb85e90705cc33dc91d0335ca0837f2930a7acf77f136fc57d3c6",
+          "bytes": 2317
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_http.erl",
+          "sha256": "ad7f48cd9543b3d9ee4635951f1a2049d9ab2e939125bacaeb2fb93fdea1cf4b",
+          "bytes": 29773
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_transport.cache",
+          "sha256": "a96f339058a98b863aa25ed0c2684c29ed98f22f1b88f9dc234df417e8f955e8",
+          "bytes": 54907
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_transport.cache_meta",
+          "sha256": "2b72925d9c84c2358a25a97fa1943d775ae48fb21d8d11b1debec78e503d316e",
+          "bytes": 3287
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_transport.erl",
+          "sha256": "f5b32055fd1e6e2fdaad9502ce83dd3c7ba0a6c2995fdbc15e90539d551abe88",
+          "bytes": 57020
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@ha@deadman_freshness.cache",
+          "sha256": "645fe7476f93c7465dbc1d8704dbe8103dd3ef8b66760769d80295e210692d18",
+          "bytes": 22127
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@ha@deadman_freshness.cache_meta",
+          "sha256": "5fd945610f8d6be91380c2bcb066b7df9b1a96989f34760ffcc836a5f0148988",
+          "bytes": 1286
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/cepaf_gleam@ha@deadman_freshness.erl",
+          "sha256": "87e4690bbded7b1c65702e5bdf6832a162c24d5e60f4f1a9d1d1a908fff15efe",
+          "bytes": 13786
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/crdt_delta_state_test.cache",
+          "sha256": "81899f2608abc92b84a4d9107010375017fe92a294b91b6f5cf222656728fbfd",
+          "bytes": 5304
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/crdt_delta_state_test.cache_meta",
+          "sha256": "2c868416064efb27a66660918553a96f1df630be51d60b5b229f0f223e20a9da",
+          "bytes": 692
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/crdt_delta_state_test.erl",
+          "sha256": "9ad15f80e69dffd0b117cc039fe080bc5fc4a1975306fdcb89bff1d98c9a160e",
+          "bytes": 8036
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/crdt_health_bridge_test.cache",
+          "sha256": "b49c6f17fdd5447635dd997417305cd6196938b2e5ab212e581ebdba72c436fd",
+          "bytes": 2514
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/crdt_health_bridge_test.cache_meta",
+          "sha256": "0ff205aee3ae1c8a1b6ec3570ff548d9497936405ff6495012668faaf83a79b4",
+          "bytes": 530
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/crdt_health_bridge_test.erl",
+          "sha256": "e2eecb613f928d9069a53d56ba90542cd279ebe9cdbb3d7b1f7c5c6e9ca9dff1",
+          "bytes": 2784
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/crdt_mesh_sync_test.cache",
+          "sha256": "7c99edcb83121fa300a25014a99989903590148acdf137b62702e5337b34c435",
+          "bytes": 3279
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/crdt_mesh_sync_test.cache_meta",
+          "sha256": "942db1f47978c8980b98f4e039f92e4cd46be9a875f8e99e81c602b7e2bb9c6c",
+          "bytes": 492
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/crdt_mesh_sync_test.erl",
+          "sha256": "f56210eff2b8217056fb68c7214ed92478f0a7641898b6e37cc8c9b817b3a928",
+          "bytes": 4181
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/deadman_freshness_test.cache",
+          "sha256": "6fa79aa090d0b4ac460915bc33875675cbc4239a1b7715dae466a254cae9d093",
+          "bytes": 9957
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/deadman_freshness_test.cache_meta",
+          "sha256": "bab4d247f4eb51a2de8164a0b0d71fb29bb421986d617bddafa8c896c560e38a",
+          "bytes": 1034
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/deadman_freshness_test.erl",
+          "sha256": "11351002d7bab81c502d5fb94c6d04df19759ab72cd797d3fd8539576e9e99e0",
+          "bytes": 17469
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/delta_mesh_engine_test.cache",
+          "sha256": "1650bcd9b6678bbe63e43549b0b566cb8bfb02bef78f18ebfee40bb617dbd0b1",
+          "bytes": 22821
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/delta_mesh_engine_test.cache_meta",
+          "sha256": "325b1f20889a7231b9ddf1f045cd1a391aadd7bbba1e4b1ff9f08cdf49bc2634",
+          "bytes": 2202
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/delta_mesh_engine_test.erl",
+          "sha256": "fe408c69e5f4e8c25403a52877f71bcfae54e65b1c34ae1fcea83b9e1791f2dd",
+          "bytes": 73103
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/ev98_codec_runner.cache",
+          "sha256": "6cd92774ae1211912f7be3aa20f2a98ea525c7ad5f0e54cca3f97d6dcce3a5dc",
+          "bytes": 11605
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/ev98_codec_runner.cache_meta",
+          "sha256": "323e5c6169b9a85a97bcc23d4315d4c40267d71658d6479b5d32e5f820d30479",
+          "bytes": 1956
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/ev98_codec_runner.erl",
+          "sha256": "316096e765fa529cf923cd07ebb576d90000c0d311e293334abbb485f7b4075e",
+          "bytes": 23721
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/ev_peer_independent_probe.cache",
+          "sha256": "7540f60bba13d09933c520b588c719cfa2d1424ffd16cd267ba1757fe0fdb4bc",
+          "bytes": 11515
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/ev_peer_independent_probe.cache_meta",
+          "sha256": "a096e1176c2f060ce71c55228a50062c32a66f4b5274d2d69d14a68078f92198",
+          "bytes": 1139
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/ev_peer_independent_probe.erl",
+          "sha256": "2243ca1772f2cbd76f04a942536b7ad1202328d2cced0d54c0c4973f517bab20",
+          "bytes": 31761
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/ev_transport_independent_http.cache",
+          "sha256": "9b92b445a04d395393220bc57eaf45515f967ec1a1d126f6bae0926de5d08aa4",
+          "bytes": 17620
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/ev_transport_independent_http.cache_meta",
+          "sha256": "eec837b3396b8952df5619af0387a72dd6f423a3ecf15a5df27421d9d565507c",
+          "bytes": 1018
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/ev_transport_independent_http.erl",
+          "sha256": "eb50d0ec9750cd5917fb45c5368e5a80d7b9f20016de0220f460643c4b9735dc",
+          "bytes": 17784
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/gleam@@compile.erl",
+          "sha256": "c3dda42ad646bf321000099eacde4a4ef794c778f7f4994e71be00cd28217196",
+          "bytes": 6231
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/mesh_peer_actor_test.cache",
+          "sha256": "87764ca01970b0661af7323fd25e00b5b2611690f9ba5ba8c15241a888db184a",
+          "bytes": 8639
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/mesh_peer_actor_test.cache_meta",
+          "sha256": "bd1285d803043dd82dc730c44bc48664ec3d2ba586eb67e0b56097fbf4e9961f",
+          "bytes": 1078
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/mesh_peer_actor_test.erl",
+          "sha256": "ae2b4b8b3a02c22703694041cba84e555b6cea516ef95ee3c226155a72d89eb3",
+          "bytes": 27757
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/mesh_peer_test.cache",
+          "sha256": "db34ec618d5d3d98a46f412d86dc3a22ad507e231b50e48908e20cc52f65c525",
+          "bytes": 11580
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/mesh_peer_test.cache_meta",
+          "sha256": "3e15b216b3f1954d49934d88a63914de5d5049fc3faaec0b4bc5a380c2c20ec1",
+          "bytes": 1355
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/mesh_peer_test.erl",
+          "sha256": "65e1551e69191afe819fa7679a5ffceff441b2e4bf2797353341f7c28c8390b2",
+          "bytes": 31576
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/mesh_sync_codec_test.cache",
+          "sha256": "f1bafa5c6ac8d5e406413b68f6e82a3d1a82724689bd2a795c2f613a69bad928",
+          "bytes": 19847
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/mesh_sync_codec_test.cache_meta",
+          "sha256": "df4853eccb22eeb4e4fa27aaddc59db2a2285d3e5631eb6dd85146b18fdb4657",
+          "bytes": 2071
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/mesh_sync_codec_test.erl",
+          "sha256": "7c9db61798195d391d5a00ee9556994bceba880c1aea0b45adb0a60152877132",
+          "bytes": 32132
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/mesh_zenoh_live_test.cache",
+          "sha256": "51a88b1accfc62475aa23f6f20c81cbeb8069f254bc562811aef4703b357a0d7",
+          "bytes": 873
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/mesh_zenoh_live_test.cache_meta",
+          "sha256": "0234a701788f8f4ab53c15dbc389e65d5bf25654d016c6a88a8746bb30ae623b",
+          "bytes": 92
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/mesh_zenoh_live_test.erl",
+          "sha256": "ea284687704918fbea62f2b818ed8d54946ea87ab7c2433cc53c52654ced74f1",
+          "bytes": 324
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/mesh_zenoh_test.cache",
+          "sha256": "fa429148330bd1e02bc32a0bc575c9bb2fb3b0d6b1f08a89f20ac1fc43142e2b",
+          "bytes": 31967
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/mesh_zenoh_test.cache_meta",
+          "sha256": "05f3ffd4f01aa81093680e4b14aadcb55af6a750e15cc19054255f2f22b0d155",
+          "bytes": 3113
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/_gleam_artefacts/mesh_zenoh_test.erl",
+          "sha256": "b69ef8e815c876b853f6f202197c1c9fe2f153129eafc6021d98965121791c64",
+          "bytes": 93844
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/cepaf_gleam@crdt@delta_mesh_engine.beam",
+          "sha256": "009d0df8df73109cd21beddc43de4ede2f06c5c40ee715d3145eaa28a7820587",
+          "bytes": 17848
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/cepaf_gleam@crdt@delta_state.beam",
+          "sha256": "8c320bc884a685d1b99e20fbaede4393d6e8678c756f4420bb8320fdcdd4b690",
+          "bytes": 13428
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/cepaf_gleam@crdt@health_bridge.beam",
+          "sha256": "c7b77171678e29eba6a11de781e792155d47884de6ef9b52c4ff67c14ba39a94",
+          "bytes": 9108
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/cepaf_gleam@crdt@mesh_peer.beam",
+          "sha256": "14dd6afade5817348c2519a8a68e955fcfdb69aab7fae1232809b2da8feb01da",
+          "bytes": 23588
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/cepaf_gleam@crdt@mesh_peer_actor.beam",
+          "sha256": "0c1410683311babea042a3e97be915ff52677c4fd11c51c4b506ba9714442675",
+          "bytes": 17412
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/cepaf_gleam@crdt@mesh_sync.beam",
+          "sha256": "ef17dfec2ed259e70340b81b9fa5fb7af5ac990f283f980fb7cfb134304968ba",
+          "bytes": 26768
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/cepaf_gleam@crdt@mesh_wire.beam",
+          "sha256": "63dd3c3d82d6011bf69f0b0b04cb4998e01fa09ce3347d65f90b0d242e0e5cfa",
+          "bytes": 11280
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/cepaf_gleam@crdt@mesh_zenoh_http.beam",
+          "sha256": "b5530e026fb436773d128e56b24c5f5b0efd0526b07e2b2f5a8dd1254691fd0e",
+          "bytes": 25824
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/cepaf_gleam@crdt@mesh_zenoh_transport.beam",
+          "sha256": "ddf16c45ab3941a73e1741b9fcb0cff340117b3df1d7f72e5a8e93a4d0aa0de9",
+          "bytes": 34272
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/cepaf_gleam@ha@deadman_freshness.beam",
+          "sha256": "48c903a9a90a7349a924efdced13942f741b44a20b3aff624ec206563a8bf1e9",
+          "bytes": 10988
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/crdt_delta_state_test.beam",
+          "sha256": "7169a2901f8b49de477308461e7578324bf6873c161b181020007d51d8e373f0",
+          "bytes": 7904
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/crdt_health_bridge_test.beam",
+          "sha256": "7a67f7f5b6ee5cc73247bb9b8e9050b462d4cfc7a853e5db1583c9eb4aeba975",
+          "bytes": 3568
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/crdt_mesh_sync_test.beam",
+          "sha256": "a3b44bf2ef47f1dfd92214cde16f197c70b63baec4a02bcb163cdf2efe54342b",
+          "bytes": 5268
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/deadman_freshness_test.beam",
+          "sha256": "7fbdcd6818735a3ac0a6394b27a95045b6989a44c6a0e276cc2845c614100fa1",
+          "bytes": 13996
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/delta_mesh_engine_test.beam",
+          "sha256": "7cb8d71d9742f36c8d04f223bed622e0cca848d058b28788172edafd4d38a37d",
+          "bytes": 49116
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/ev98_codec_runner.beam",
+          "sha256": "7a107eeef190d179e319995d0f8a28a98a1bda1daacf764f254b27d595354ffd",
+          "bytes": 26264
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/ev_peer_independent_probe.beam",
+          "sha256": "d8712a6fa6e329566e821d5926b36af49d0f555a0d560fb1b604361e5f54a2e7",
+          "bytes": 23836
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/ev_transport_independent_http.beam",
+          "sha256": "b8f9babba8204e8d3af79a20f147ae399d9c36638d613056790c319f6e060738",
+          "bytes": 14660
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/mesh_peer_actor_test.beam",
+          "sha256": "7ae7de4bd7c9190095bc1c14cf5a72b913b0d39633d9e8f82fd99e2c4bea9a2d",
+          "bytes": 20860
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/mesh_peer_test.beam",
+          "sha256": "fb7697ec5be57a2761e128e3cd06b0229ddd0de2a3247e22f1ed12971591ba59",
+          "bytes": 24676
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/mesh_sync_codec_test.beam",
+          "sha256": "254e8c3a9791dbb99c274aa41c581e813c4be1c9fd806e09155bddcb6dbdd2b4",
+          "bytes": 33940
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/mesh_zenoh_live_test.beam",
+          "sha256": "68d0b9ee6c34bdd887a6b8d81520cd47cea2681238503301da6c8275f26b0911",
+          "bytes": 1092
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/ebin/mesh_zenoh_test.beam",
+          "sha256": "c5be38a62ffbc6123b4ff6684b8d51941a2b8e97e7a7ba10066f6e49c8419ff4",
+          "bytes": 60120
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@delta_mesh_engine_DeltaMeshEngine.hrl",
+          "sha256": "724252207f3ffd90f74c02d3f47e03b8cf750c0b63433e105a1e5314ced60a9e",
+          "bytes": 492
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@delta_mesh_engine_OutboundQueueFull.hrl",
+          "sha256": "bac1a59beb897fe946b2cca4c3625659a63214fd6a2f73276192b7fa467d8195",
+          "bytes": 55
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@delta_state_Dot.hrl",
+          "sha256": "0f359544b6008cc68fccd2cb7caf9234c35f5239e17e9f669b68a1d54cef8596",
+          "bytes": 56
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@delta_state_LWWRegister.hrl",
+          "sha256": "dd690b5f0fd31de4865534c50db41bf31b764033f64d709f65d881a2a65f867a",
+          "bytes": 104
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@delta_state_MeshDeltaState.hrl",
+          "sha256": "5e1aced17c7b9d15ab745f0ba9e2ce35b4016b2800435af14a9dee9f4505affe",
+          "bytes": 346
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@delta_state_ORSet.hrl",
+          "sha256": "e7a4d67d6865f78b8b9a0d8e68c46ede66d77e49bc6f9182e57008c864b46f48",
+          "bytes": 149
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@delta_state_PNCounter.hrl",
+          "sha256": "c8d8579e0f9f37257d8b6471acf61fdc62b3488e75a0f55e14e425bffe8db84d",
+          "bytes": 116
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@health_bridge_NodeHealthTelemetry.hrl",
+          "sha256": "6687cc42311002053190f8263a57ae650e250ef4d6d6575f088064db31747ffc",
+          "bytes": 214
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@mesh_peer_Config.hrl",
+          "sha256": "8d60a432317de5f1bc8d291f7bd20f0c1b42819b0017877adf9eb8435cda196c",
+          "bytes": 205
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@mesh_peer_Frame.hrl",
+          "sha256": "82983e4f8d1cfe2ba9268d9cff0565907653984200fa6705eb6dbcc16f3bb886",
+          "bytes": 120
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@mesh_peer_FrameId.hrl",
+          "sha256": "32879d687937059c71ffef05eec5e75380d5221f1712797fbbdb5c9d4444eddd",
+          "bytes": 67
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@mesh_peer_Peer.hrl",
+          "sha256": "39377966e764798eee8d14bc7a9b66994acb9b762c166e09cf7af514d4701f6e",
+          "bytes": 53
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@mesh_peer_State.hrl",
+          "sha256": "970434c00bd7287a09610dfa08bfe5f38b84e126aa17868adbd1de82656ee3f7",
+          "bytes": 525
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@mesh_peer_Tick.hrl",
+          "sha256": "40f8c4d4501dc3cd54dbd515261485ac950cca841640600b7b3cbdf5c3f23099",
+          "bytes": 144
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@mesh_peer_actor_Handle.hrl",
+          "sha256": "5a692674f96b435bd44eaf85383cb1a18622e18c520d46a33a2d3f315b1b433f",
+          "bytes": 110
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@mesh_peer_actor_View.hrl",
+          "sha256": "078b68c23fc2509fbbacb5f8bc9a368b45772ca59ac639601f2e9e902dbfb92a",
+          "bytes": 161
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@mesh_sync_Lagging.hrl",
+          "sha256": "af2e74a07751e670bc636210782aa3146084b96ac62a76b7dcf2ab18c8dc8b52",
+          "bytes": 47
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@mesh_sync_PeerSyncEndpoint.hrl",
+          "sha256": "4e05853f7adbfabf00248fbe10b1ab5c46dfaeeb33d8552f2cc50476adba9aad",
+          "bytes": 234
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@mesh_sync_SyncAck.hrl",
+          "sha256": "c565e715f2a57fad1c6b2fcb3a21cb831bdae8ec359748f7fa2768747adf892e",
+          "bytes": 151
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@mesh_sync_SyncDelta.hrl",
+          "sha256": "80eb40d9f8e175da0ea0f46a9a2330b958a248daa09248c35713c9ba0451ac34",
+          "bytes": 292
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@mesh_sync_SyncDigest.hrl",
+          "sha256": "b95e7b0ba4b6e93e9feef8d56ed48b841a468d585c38b30f94a6f8ae3f15de20",
+          "bytes": 167
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@mesh_zenoh_http_Endpoint.hrl",
+          "sha256": "dc631b76f287b971108f876f46c22a956724b750354a70fbb6353aa65d76bb04",
+          "bytes": 58
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@mesh_zenoh_http_Response.hrl",
+          "sha256": "7d5dfb48c9318f498da409e8bfa80b92bf9ca6cae541027bcda7622ab9869fee",
+          "bytes": 60
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@mesh_zenoh_transport_Config.hrl",
+          "sha256": "6b61c27c16b1d7882fc061aa26a3df374be77e11f8eaa378867c834aa5535156",
+          "bytes": 155
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@mesh_zenoh_transport_Handle.hrl",
+          "sha256": "2ab00e78bc95084de962ead3c642f34ee34e3abbde014f9c407c002d9cb1e6d2",
+          "bytes": 115
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@crdt@mesh_zenoh_transport_Stats.hrl",
+          "sha256": "330a7004d33b809f66527a202441e4afe44fdb0aa2b7cbc6a623ee5125d874e1",
+          "bytes": 357
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@ha@deadman_freshness_ActionInitiateFailover.hrl",
+          "sha256": "22596b7360a798166a97697a4fc970cf783ef75b6050bec0dae0d8f5f21a5f84",
+          "bytes": 116
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@ha@deadman_freshness_ActionTripDeadMan.hrl",
+          "sha256": "6e92263c63651319c9e0627be86bb1c1afbfd185a8a353cf0c802980a939207b",
+          "bytes": 108
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@ha@deadman_freshness_ActionWarnStaleness.hrl",
+          "sha256": "c43c3c818fa263d69f61dd4d2110258e592846ee9c6d5f51096dcead252b6ad5",
+          "bytes": 110
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@ha@deadman_freshness_ActorRegistration.hrl",
+          "sha256": "d647fd9bd353b8c1fc9f961e36eb0b8e075d723572c2277d65d734fca0732878",
+          "bytes": 364
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@ha@deadman_freshness_DeadManRegistry.hrl",
+          "sha256": "4a6bde6b282183a79876cd24ba7e84edc6932beb3d57bbaeb631d0072c15d044",
+          "bytes": 176
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@ha@deadman_freshness_HeartbeatTripped.hrl",
+          "sha256": "0457809d39ad974007d2eb5963f19cd162bc3d6de7073470aa8554037fc8dc13",
+          "bytes": 53
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-receive/compiled/include/cepaf_gleam@ha@deadman_freshness_HeartbeatWarning.hrl",
+          "sha256": "1533892f942c4c45ad70224685bbdcecaa525ab53bad8e02c4df18d62d02118b",
+          "bytes": 51
+        }
+      ]
+    },
+    {
+      "variant": "quota",
+      "bindings": {
+        "path": "/tmp/ev-fault52-independent-quota/bindings.json",
+        "sha256": "c2423f5947bef2c8a271a182befa25d7405ae66337fc0aa30857602a9154ba4b",
+        "bytes": 81622
+      },
+      "fault_bindings": {
+        "path": "/tmp/ev-fault52-independent-quota/fault-bindings.json",
+        "sha256": "0fc06c7764b1b5a3eab9ad7501e6e9030d36acfae9976d55bf35af97eb12fa1a",
+        "bytes": 1295
+      },
+      "compile": {
+        "path": "/tmp/ev-fault52-independent-quota/compile.json",
+        "sha256": "0df0b8b8408c6730dc85673e88ab5ab864ae06eb68e700852954b93c0deda33f",
+        "bytes": 2260
+      },
+      "runtime": {
+        "path": "/tmp/ev-fault52-independent-quota/runtime.json",
+        "sha256": "4dc325c11a22be44bef72835683dd0b6be0dc5d63bd62426fad2f1b243627932",
+        "bytes": 2617
+      },
+      "dependency_files": 211,
+      "compiled_artifacts": [
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_mesh_engine.cache",
+          "sha256": "09eb0e6cd53f1dda1dcbe997b9e34afcbda817bd4795299d9bb4056c34bb1633",
+          "bytes": 24401
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_mesh_engine.cache_meta",
+          "sha256": "52190d6f4866e2baf2ea9061dc9b250845fd9ddec2502b8382cf24caefa4382f",
+          "bytes": 2046
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_mesh_engine.erl",
+          "sha256": "b78bba21f2ec4ee303b7543efbda77be4758134c46da588194260faad071d534",
+          "bytes": 22693
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_state.cache",
+          "sha256": "fd8f882b75387663376971e952c94cc6db8c8b5c41069361b023b75618072de5",
+          "bytes": 29298
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_state.cache_meta",
+          "sha256": "35322a209396325493884ae1589e7eb4152805e05db4b42bff468744d47c339c",
+          "bytes": 1301
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@delta_state.erl",
+          "sha256": "9f01be43f72d9f19a365ce2040fa7436498e92918ea829511394ae4e0670f90f",
+          "bytes": 11712
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@health_bridge.cache",
+          "sha256": "24374d23f8cbd440ea624af62f7ee5f8e71cdd057d671f3e935eb3463d25bf58",
+          "bytes": 16685
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@health_bridge.cache_meta",
+          "sha256": "b996078aff914f07554eac7a5d9c16a7becc980ad45de70b93f800d8197ab883",
+          "bytes": 981
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@health_bridge.erl",
+          "sha256": "41c566725bdc9fc00a83e24e086a5a7c873232290a2e45bd976814748652bf45",
+          "bytes": 10285
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer.cache",
+          "sha256": "d9dd6e5de688f2c2e5f5a964c6db243b4096fa90680bdfa5c2db3e598827dd32",
+          "bytes": 44170
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer.cache_meta",
+          "sha256": "dc8215a1ceece06e81eb451d6358d6957c8b3fa18f57bfa8b78d57f68227567f",
+          "bytes": 2158
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer.erl",
+          "sha256": "8299f43a094bcf06d45a76c4f95b1a7702aff0217a3d137ce05e918a1f8a7179",
+          "bytes": 31329
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer_actor.cache",
+          "sha256": "28c0576c732cf71f13a7b013e195463040db48a673767e53e45767532f91d62d",
+          "bytes": 45612
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer_actor.cache_meta",
+          "sha256": "9b81d4c8314b32ead24f123ec77281536b0e4a8a6ecb31c2577bbec03ee844b3",
+          "bytes": 1692
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_peer_actor.erl",
+          "sha256": "459d06c9b5ae22f7ff016ca331412d5a201a6debc3578b854a917ea1ffaadc8f",
+          "bytes": 17353
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_sync.cache",
+          "sha256": "733b67d06b466d20750978a3189d93fb1cf18d7dd7c6012ca07982a924975ee1",
+          "bytes": 37104
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_sync.cache_meta",
+          "sha256": "dbaff95f677010c15398640d17ffbe51d44b7184a98f57e49709aedc8a1fb6f8",
+          "bytes": 2491
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_sync.erl",
+          "sha256": "48cf02b15004fa4fb6d1f1fbb6eb140e30d7325b7091cf661eecf10643261031",
+          "bytes": 29711
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_wire.cache",
+          "sha256": "175746bc76594e772230c7ddeb5424f1e7765d8d5ee9125f22799969567f929f",
+          "bytes": 19813
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_wire.cache_meta",
+          "sha256": "8f9e1612f21cd7665db2bd06da560d9750819e206392cfb6cda95aaa53a1b8ae",
+          "bytes": 1046
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_wire.erl",
+          "sha256": "f5f7a16cd1d62f17ec7aa1d97aae1d36839c6b6ef308d86023ea2ed54f98a82a",
+          "bytes": 10427
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_http.cache",
+          "sha256": "92ef5ea52f82fa8db6a9f8a9630864e74b4cc2c048637cffb84b8597a9c1993e",
+          "bytes": 38529
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_http.cache_meta",
+          "sha256": "8f7c632ee0bf59336940ee09d3f5b551104b7cdf4f536d559341418ea60e6582",
+          "bytes": 2317
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_http.erl",
+          "sha256": "ad7f48cd9543b3d9ee4635951f1a2049d9ab2e939125bacaeb2fb93fdea1cf4b",
+          "bytes": 29773
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_transport.cache",
+          "sha256": "8e7ad902df4b5eaafaf76a0bf408a95fd829771a6be18c8323140257c750b52d",
+          "bytes": 54905
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_transport.cache_meta",
+          "sha256": "ffed14aedf5208c13b9f46905e978caaede3d1b711364549fe7b7899476f9239",
+          "bytes": 3287
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@crdt@mesh_zenoh_transport.erl",
+          "sha256": "25becca3e19656ae8994ca2eed30e124f01240eab8c0d21ae7a8d49de4f4e35c",
+          "bytes": 57022
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@ha@deadman_freshness.cache",
+          "sha256": "96d1b0ffc9916f3050924346e97f9dfdf3c08b394e3bc2af7ab066eaeb9155d6",
+          "bytes": 22125
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@ha@deadman_freshness.cache_meta",
+          "sha256": "e05e27bc04075fb67d3367b0a8099b685a54383dddc4ecd7c74c66ffd5226466",
+          "bytes": 1286
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/cepaf_gleam@ha@deadman_freshness.erl",
+          "sha256": "87e4690bbded7b1c65702e5bdf6832a162c24d5e60f4f1a9d1d1a908fff15efe",
+          "bytes": 13786
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/crdt_delta_state_test.cache",
+          "sha256": "776aad40d4c980f526f833fd74ba188e2bbb3dbd0eaf90b2c182c0078a396456",
+          "bytes": 5302
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/crdt_delta_state_test.cache_meta",
+          "sha256": "fa70c4bb5e53dcd2d6c72d8259465d379b5fe3c60cd1ac94121b0a16cb94bfc0",
+          "bytes": 692
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/crdt_delta_state_test.erl",
+          "sha256": "9ad15f80e69dffd0b117cc039fe080bc5fc4a1975306fdcb89bff1d98c9a160e",
+          "bytes": 8036
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/crdt_health_bridge_test.cache",
+          "sha256": "925175381dce81556bf8b5f05b661b404c33510ffb93e16f404594ba74ca081d",
+          "bytes": 2512
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/crdt_health_bridge_test.cache_meta",
+          "sha256": "194bed5b677614bd2a11b182400f2d9348da019417ec45413140b4193f3f05d9",
+          "bytes": 530
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/crdt_health_bridge_test.erl",
+          "sha256": "e2eecb613f928d9069a53d56ba90542cd279ebe9cdbb3d7b1f7c5c6e9ca9dff1",
+          "bytes": 2784
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/crdt_mesh_sync_test.cache",
+          "sha256": "ca7e46f26a27df0ae0168e93f1799b7aee40c7ece30258918946fb1111455204",
+          "bytes": 3277
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/crdt_mesh_sync_test.cache_meta",
+          "sha256": "ee014342fabfecab2ba5ea5e5d2700a91bd30e715804d026a5b419d7b13bfb75",
+          "bytes": 492
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/crdt_mesh_sync_test.erl",
+          "sha256": "f56210eff2b8217056fb68c7214ed92478f0a7641898b6e37cc8c9b817b3a928",
+          "bytes": 4181
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/deadman_freshness_test.cache",
+          "sha256": "a1433ec7f87a0e94e2a34d39fda2ebc4d65b1edfb7423c1290ae3ad837676bc5",
+          "bytes": 9955
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/deadman_freshness_test.cache_meta",
+          "sha256": "1648bc6ca5a97c1932de2994946fcb52bfd6c09a66969f21dc06c09b3652d1e6",
+          "bytes": 1034
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/deadman_freshness_test.erl",
+          "sha256": "11351002d7bab81c502d5fb94c6d04df19759ab72cd797d3fd8539576e9e99e0",
+          "bytes": 17469
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/delta_mesh_engine_test.cache",
+          "sha256": "158555ebf9dfcdb1dc2bc83efb20a1584b946871209f8c52bc03f32f2f947fe3",
+          "bytes": 22819
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/delta_mesh_engine_test.cache_meta",
+          "sha256": "f6e133b0b2116f812728832265c9608ce07003652f19d6d386ccdcf4e0fb48b6",
+          "bytes": 2202
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/delta_mesh_engine_test.erl",
+          "sha256": "fe408c69e5f4e8c25403a52877f71bcfae54e65b1c34ae1fcea83b9e1791f2dd",
+          "bytes": 73103
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/ev98_codec_runner.cache",
+          "sha256": "2a6082d39f63474e743598255b73804f5abbcfa1e171dab6444ef95c85b4aea5",
+          "bytes": 11603
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/ev98_codec_runner.cache_meta",
+          "sha256": "ad75f2ba0fe04db8a9a806ee15345eb0478d143595350f69f9c7d724dd55055e",
+          "bytes": 1956
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/ev98_codec_runner.erl",
+          "sha256": "316096e765fa529cf923cd07ebb576d90000c0d311e293334abbb485f7b4075e",
+          "bytes": 23721
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/ev_peer_independent_probe.cache",
+          "sha256": "10b74a31f59507de78a989aaee80d2c7e3e994f3bd7f9388e5f1c5d3961782a1",
+          "bytes": 11513
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/ev_peer_independent_probe.cache_meta",
+          "sha256": "5dd64cbfed43fba00cabcd35334dea460434b9da78abc72cc0d58f8e1d215689",
+          "bytes": 1139
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/ev_peer_independent_probe.erl",
+          "sha256": "2243ca1772f2cbd76f04a942536b7ad1202328d2cced0d54c0c4973f517bab20",
+          "bytes": 31761
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/ev_transport_independent_http.cache",
+          "sha256": "7020f47c594d9d1c3f505be04a150f4498a4e9f318e576581bd0bc00dc177d29",
+          "bytes": 17618
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/ev_transport_independent_http.cache_meta",
+          "sha256": "2ecb002d2bd43f53bf590f8d6d16cc24e638846e35dddfb55704bebc399d6a78",
+          "bytes": 1018
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/ev_transport_independent_http.erl",
+          "sha256": "eb50d0ec9750cd5917fb45c5368e5a80d7b9f20016de0220f460643c4b9735dc",
+          "bytes": 17784
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/gleam@@compile.erl",
+          "sha256": "c3dda42ad646bf321000099eacde4a4ef794c778f7f4994e71be00cd28217196",
+          "bytes": 6231
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/mesh_peer_actor_test.cache",
+          "sha256": "4eb3c05526b30c438321b46448ed38b0eaf44faeedea82496360bdbf2d5b59b4",
+          "bytes": 8637
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/mesh_peer_actor_test.cache_meta",
+          "sha256": "72ac314fa67744fd111367226224368785f5d2de7edee58349a2570ad64726b3",
+          "bytes": 1078
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/mesh_peer_actor_test.erl",
+          "sha256": "ae2b4b8b3a02c22703694041cba84e555b6cea516ef95ee3c226155a72d89eb3",
+          "bytes": 27757
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/mesh_peer_test.cache",
+          "sha256": "1fd310742b1c519b287bb292fe3c9ea4e5c8c3e6ea88b8ea4c0c612abdd54aaf",
+          "bytes": 11578
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/mesh_peer_test.cache_meta",
+          "sha256": "411243c04cbd1f8078228007003a3550916c3263b5527a32e845cb189001f122",
+          "bytes": 1355
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/mesh_peer_test.erl",
+          "sha256": "65e1551e69191afe819fa7679a5ffceff441b2e4bf2797353341f7c28c8390b2",
+          "bytes": 31576
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/mesh_sync_codec_test.cache",
+          "sha256": "c8c2b94b9b10d8848016b9b52e61805228ac80f320f2394e28b526304b98fd04",
+          "bytes": 19845
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/mesh_sync_codec_test.cache_meta",
+          "sha256": "d2e84a02a86019ba9e38c93c4e041df0a12e1f028cb2d94b505275d09598aaed",
+          "bytes": 2071
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/mesh_sync_codec_test.erl",
+          "sha256": "7c9db61798195d391d5a00ee9556994bceba880c1aea0b45adb0a60152877132",
+          "bytes": 32132
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/mesh_zenoh_live_test.cache",
+          "sha256": "95808f42fee92bc887af5c5a598c3591b7f21d944c6700d1a798175823ac439c",
+          "bytes": 872
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/mesh_zenoh_live_test.cache_meta",
+          "sha256": "301aa9ed714b608911cb5a63a9d06ef8695ca5f62b4c16a4157c5b63d1e60cdc",
+          "bytes": 92
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/mesh_zenoh_live_test.erl",
+          "sha256": "03d3a13336459c861f8a3851eedb8e7f3b25f387588af0332b913772106dc04b",
+          "bytes": 325
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/mesh_zenoh_test.cache",
+          "sha256": "dcebba1c2899d25874f98729eb0342a4b996d70a6008ef099fe994a238eab0a1",
+          "bytes": 31965
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/mesh_zenoh_test.cache_meta",
+          "sha256": "25fa5797661e245ac9951d6e568a597c886df80f80e397f105c79e537d146804",
+          "bytes": 3113
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/_gleam_artefacts/mesh_zenoh_test.erl",
+          "sha256": "b69ef8e815c876b853f6f202197c1c9fe2f153129eafc6021d98965121791c64",
+          "bytes": 93844
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/cepaf_gleam@crdt@delta_mesh_engine.beam",
+          "sha256": "91b2263b369bd171dd113e356a1fc5ab7213e1ea4e0b207f55ad2b534a61a527",
+          "bytes": 17844
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/cepaf_gleam@crdt@delta_state.beam",
+          "sha256": "209f0873fb319964b39a309f900bccc3dbb9db61cc99bccbbf8b6ac9794f1cb8",
+          "bytes": 13424
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/cepaf_gleam@crdt@health_bridge.beam",
+          "sha256": "521b14c2b1cf2e323eea7ab2f4e30136433c6233f7a7dde39900cc4024262243",
+          "bytes": 9104
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/cepaf_gleam@crdt@mesh_peer.beam",
+          "sha256": "8286c906b7248d83313e531e416381d88308dfb88238b850cbf7f8d28912c049",
+          "bytes": 23580
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/cepaf_gleam@crdt@mesh_peer_actor.beam",
+          "sha256": "06d982ac7fc23c690c3f16e859b3fd862e09347066339c075f12a865017c7cd1",
+          "bytes": 16924
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/cepaf_gleam@crdt@mesh_sync.beam",
+          "sha256": "c8779053d03c520a352efea848558cf5a3edef35d252116c3f36f56beadc864d",
+          "bytes": 26764
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/cepaf_gleam@crdt@mesh_wire.beam",
+          "sha256": "8ab8992303f9701b8841aa056e195c29af5a218dbc19409f032345fbc469ebc2",
+          "bytes": 11276
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/cepaf_gleam@crdt@mesh_zenoh_http.beam",
+          "sha256": "29145272860ee1487515f11b1972c95a22ccf7f46624a4ca54051b683f4a390e",
+          "bytes": 25824
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/cepaf_gleam@crdt@mesh_zenoh_transport.beam",
+          "sha256": "d24834c006710c8534804193b30be4156d26c2ec80b6aa7e5cf7c4d214ae616d",
+          "bytes": 34268
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/cepaf_gleam@ha@deadman_freshness.beam",
+          "sha256": "accf56faeaf186a099a9a09ba5ac3ba4fb43b11760556d07afc31116cc618220",
+          "bytes": 10992
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/crdt_delta_state_test.beam",
+          "sha256": "f786f50284a924e8c50092758b522f98ec42f21b46a055bd56dd0eb69ea36499",
+          "bytes": 7904
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/crdt_health_bridge_test.beam",
+          "sha256": "e3f86baf0d8f3976f372f12f7d72d135eae0b515cfb0afd9010b11e18a831593",
+          "bytes": 3564
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/crdt_mesh_sync_test.beam",
+          "sha256": "cbf7af5728af978afbc43e0af15149e084d5aa91c24f848d36992ba489cce8e3",
+          "bytes": 5260
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/deadman_freshness_test.beam",
+          "sha256": "810041e420e2324584d679eb67023c423a471401e4ae9499ec0c316061ca8843",
+          "bytes": 13988
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/delta_mesh_engine_test.beam",
+          "sha256": "574a8d574ef1546e7cecf73c9b02ab61893e13aaf779f9ad4a2c20052f3b45ae",
+          "bytes": 49112
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/ev98_codec_runner.beam",
+          "sha256": "2580339cb85282d797a554665dfddfcf39f4ae4a1fbb476b6eeb896def529a56",
+          "bytes": 26264
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/ev_peer_independent_probe.beam",
+          "sha256": "1552c9a6b437e71a0b24125d314376ad4996854c05e97134ac3179b68ffafe91",
+          "bytes": 23836
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/ev_transport_independent_http.beam",
+          "sha256": "80c7c3c46993738d8516074cb7cf11babe0e99380ddab595f85388d08eb53378",
+          "bytes": 14660
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/mesh_peer_actor_test.beam",
+          "sha256": "ff2f64cd73f222e2dc538d2d5d9c8dd9c8cc70a2d5cad7a62904206cef6a2cbf",
+          "bytes": 20860
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/mesh_peer_test.beam",
+          "sha256": "66c2a3fac6a90d0f5b002cd06d40dc8437ee419aa1c7c495cb7b9cc1dfb61868",
+          "bytes": 24672
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/mesh_sync_codec_test.beam",
+          "sha256": "60f0d6f016a0f672f101e4d350e94f6773b52106b538194739216735ec324aeb",
+          "bytes": 33940
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/mesh_zenoh_live_test.beam",
+          "sha256": "27dc77704840fc5f9f13dc6e3ad028c8dbb846e6c5f221b60b016c931dab2c28",
+          "bytes": 1096
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/ebin/mesh_zenoh_test.beam",
+          "sha256": "3ab242ef2b717794e029659c6af1582b9f20d27813285d2cbf001a22d32411b5",
+          "bytes": 60116
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@delta_mesh_engine_DeltaMeshEngine.hrl",
+          "sha256": "724252207f3ffd90f74c02d3f47e03b8cf750c0b63433e105a1e5314ced60a9e",
+          "bytes": 492
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@delta_mesh_engine_OutboundQueueFull.hrl",
+          "sha256": "bac1a59beb897fe946b2cca4c3625659a63214fd6a2f73276192b7fa467d8195",
+          "bytes": 55
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@delta_state_Dot.hrl",
+          "sha256": "0f359544b6008cc68fccd2cb7caf9234c35f5239e17e9f669b68a1d54cef8596",
+          "bytes": 56
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@delta_state_LWWRegister.hrl",
+          "sha256": "dd690b5f0fd31de4865534c50db41bf31b764033f64d709f65d881a2a65f867a",
+          "bytes": 104
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@delta_state_MeshDeltaState.hrl",
+          "sha256": "5e1aced17c7b9d15ab745f0ba9e2ce35b4016b2800435af14a9dee9f4505affe",
+          "bytes": 346
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@delta_state_ORSet.hrl",
+          "sha256": "e7a4d67d6865f78b8b9a0d8e68c46ede66d77e49bc6f9182e57008c864b46f48",
+          "bytes": 149
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@delta_state_PNCounter.hrl",
+          "sha256": "c8d8579e0f9f37257d8b6471acf61fdc62b3488e75a0f55e14e425bffe8db84d",
+          "bytes": 116
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@health_bridge_NodeHealthTelemetry.hrl",
+          "sha256": "6687cc42311002053190f8263a57ae650e250ef4d6d6575f088064db31747ffc",
+          "bytes": 214
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@mesh_peer_Config.hrl",
+          "sha256": "8d60a432317de5f1bc8d291f7bd20f0c1b42819b0017877adf9eb8435cda196c",
+          "bytes": 205
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@mesh_peer_Frame.hrl",
+          "sha256": "82983e4f8d1cfe2ba9268d9cff0565907653984200fa6705eb6dbcc16f3bb886",
+          "bytes": 120
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@mesh_peer_FrameId.hrl",
+          "sha256": "32879d687937059c71ffef05eec5e75380d5221f1712797fbbdb5c9d4444eddd",
+          "bytes": 67
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@mesh_peer_Peer.hrl",
+          "sha256": "39377966e764798eee8d14bc7a9b66994acb9b762c166e09cf7af514d4701f6e",
+          "bytes": 53
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@mesh_peer_State.hrl",
+          "sha256": "970434c00bd7287a09610dfa08bfe5f38b84e126aa17868adbd1de82656ee3f7",
+          "bytes": 525
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@mesh_peer_Tick.hrl",
+          "sha256": "40f8c4d4501dc3cd54dbd515261485ac950cca841640600b7b3cbdf5c3f23099",
+          "bytes": 144
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@mesh_peer_actor_Handle.hrl",
+          "sha256": "5a692674f96b435bd44eaf85383cb1a18622e18c520d46a33a2d3f315b1b433f",
+          "bytes": 110
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@mesh_peer_actor_View.hrl",
+          "sha256": "078b68c23fc2509fbbacb5f8bc9a368b45772ca59ac639601f2e9e902dbfb92a",
+          "bytes": 161
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@mesh_sync_Lagging.hrl",
+          "sha256": "af2e74a07751e670bc636210782aa3146084b96ac62a76b7dcf2ab18c8dc8b52",
+          "bytes": 47
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@mesh_sync_PeerSyncEndpoint.hrl",
+          "sha256": "4e05853f7adbfabf00248fbe10b1ab5c46dfaeeb33d8552f2cc50476adba9aad",
+          "bytes": 234
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@mesh_sync_SyncAck.hrl",
+          "sha256": "c565e715f2a57fad1c6b2fcb3a21cb831bdae8ec359748f7fa2768747adf892e",
+          "bytes": 151
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@mesh_sync_SyncDelta.hrl",
+          "sha256": "80eb40d9f8e175da0ea0f46a9a2330b958a248daa09248c35713c9ba0451ac34",
+          "bytes": 292
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@mesh_sync_SyncDigest.hrl",
+          "sha256": "b95e7b0ba4b6e93e9feef8d56ed48b841a468d585c38b30f94a6f8ae3f15de20",
+          "bytes": 167
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@mesh_zenoh_http_Endpoint.hrl",
+          "sha256": "dc631b76f287b971108f876f46c22a956724b750354a70fbb6353aa65d76bb04",
+          "bytes": 58
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@mesh_zenoh_http_Response.hrl",
+          "sha256": "7d5dfb48c9318f498da409e8bfa80b92bf9ca6cae541027bcda7622ab9869fee",
+          "bytes": 60
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@mesh_zenoh_transport_Config.hrl",
+          "sha256": "6b61c27c16b1d7882fc061aa26a3df374be77e11f8eaa378867c834aa5535156",
+          "bytes": 155
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@mesh_zenoh_transport_Handle.hrl",
+          "sha256": "2ab00e78bc95084de962ead3c642f34ee34e3abbde014f9c407c002d9cb1e6d2",
+          "bytes": 115
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@crdt@mesh_zenoh_transport_Stats.hrl",
+          "sha256": "330a7004d33b809f66527a202441e4afe44fdb0aa2b7cbc6a623ee5125d874e1",
+          "bytes": 357
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@ha@deadman_freshness_ActionInitiateFailover.hrl",
+          "sha256": "22596b7360a798166a97697a4fc970cf783ef75b6050bec0dae0d8f5f21a5f84",
+          "bytes": 116
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@ha@deadman_freshness_ActionTripDeadMan.hrl",
+          "sha256": "6e92263c63651319c9e0627be86bb1c1afbfd185a8a353cf0c802980a939207b",
+          "bytes": 108
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@ha@deadman_freshness_ActionWarnStaleness.hrl",
+          "sha256": "c43c3c818fa263d69f61dd4d2110258e592846ee9c6d5f51096dcead252b6ad5",
+          "bytes": 110
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@ha@deadman_freshness_ActorRegistration.hrl",
+          "sha256": "d647fd9bd353b8c1fc9f961e36eb0b8e075d723572c2277d65d734fca0732878",
+          "bytes": 364
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@ha@deadman_freshness_DeadManRegistry.hrl",
+          "sha256": "4a6bde6b282183a79876cd24ba7e84edc6932beb3d57bbaeb631d0072c15d044",
+          "bytes": 176
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@ha@deadman_freshness_HeartbeatTripped.hrl",
+          "sha256": "0457809d39ad974007d2eb5963f19cd162bc3d6de7073470aa8554037fc8dc13",
+          "bytes": 53
+        },
+        {
+          "path": "/tmp/ev-fault52-independent-quota/compiled/include/cepaf_gleam@ha@deadman_freshness_HeartbeatWarning.hrl",
+          "sha256": "1533892f942c4c45ad70224685bbdcecaa525ab53bad8e02c4df18d62d02118b",
+          "bytes": 51
+        }
+      ]
+    }
+  ],
+  "review_drivers": [
+    {
+      "path": "/tmp/ev_transport_independent_fault52.ml",
+      "sha256": "3bc4cc22a206ef4c175467c9fcb48c6dd1e8a89afc9de246e2fd62b61a16bc69",
+      "bytes": 3770
+    },
+    {
+      "path": "/tmp/ev_fault52_review.ml",
+      "sha256": "4f8b45cc20cb0e713b1ec5708078fd72d39d74c8ef5ed2ab47080ec0d5b3dcb0",
+      "bytes": 3318
+    },
+    {
+      "path": "/tmp/ev_fault52_finish.ml",
+      "sha256": "0a3df941efa8770f986b4dd7680d245d406935a999e60fbde46a6aaa95c133cb",
+      "bytes": 4736
+    }
+  ],
+  "findings": [],
+  "limits": [
+    "Scope one Gleam test module and four OCaml fault staging helpers; production module bytes unchanged",
+    "Actual EUnit discovers one nonempty production wrapper invoking existing12-group main; synthetic fault entrypoints are explicit and excluded from normal EUnit suffix discovery",
+    "Four separate immutable-source private variants compile and pass; each changes exactly one intended production module plus explicit fault runner;211 dependency files per stage rehashed",
+    "Delayed-report test preserves expected late-reply warning observations; no new claim of clean mailbox or authenticated delivery",
+    "No full-suite/transport redesign, cross-host, formal, sovereign or EV admission approval"
+  ]
+}

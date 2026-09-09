@@ -1,0 +1,8 @@
+import gleam/io
+import mesh_sync_codec_test
+
+pub fn main() {
+  io.println("EV98 START mesh_sync_codec_test.all_fields_and_forwarding_origin_roundtrip_test")
+  mesh_sync_codec_test.all_fields_and_forwarding_origin_roundtrip_test()
+  io.println("EV98 PASS mesh_sync_codec_test.all_fields_and_forwarding_origin_roundtrip_test")
+}

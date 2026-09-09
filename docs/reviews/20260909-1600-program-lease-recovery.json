@@ -1,0 +1,82 @@
+{
+  "schema": "uos.program-lease-recovery.v1",
+  "authority": "NONE",
+  "observed_at_epoch": 1788970800.087566,
+  "plan": "uos/ev-admission/20260909-0210",
+  "task": "PROGRAM",
+  "worker": "codex-ev-admission-01a08017",
+  "previous_attempt": 4,
+  "recovered_attempt": 5,
+  "lease_until_ns": "1788977805651008043",
+  "source_before_record": "103168bc9cc4d113a6b16fc960571fe0a8478c85",
+  "recovery": "Expired executing lease observed as HOLD; preflight HOLD preserved; same worker reclaimed through canonical Sa-plan and current attempt passed active observation before continued work.",
+  "workspace_leases": "Existing root, codec, formal and peer leases renewed under the actual root session; no integration/main or runtime lease claimed.",
+  "artifacts": [
+    {
+      "source": "/tmp/ev-root-program-expired-active-1616.json",
+      "path": "docs/reviews/20260909-1600-program-recovery-ev-root-program-expired-active-1616.json",
+      "sha256": "660c9c954682acfc89fc6c13b4217292ab377fcd4146049dc18e235f29be667a",
+      "bytes": 4044
+    },
+    {
+      "source": "/tmp/ev-root-program-task-1616.json",
+      "path": "docs/reviews/20260909-1600-program-recovery-ev-root-program-task-1616.json",
+      "sha256": "52b0361427584cdcf836e653792d48a39ac7c404f17f8b3cf5af82db4e7c9519",
+      "bytes": 3328
+    },
+    {
+      "source": "/tmp/ev-root-program-recovery-preflight-1617.json",
+      "path": "docs/reviews/20260909-1600-program-recovery-ev-root-program-recovery-preflight-1617.json",
+      "sha256": "6a8ccfc8c16760efbd209395a3320c15051c199a22e695794c1de57720048749",
+      "bytes": 4244
+    },
+    {
+      "source": "/tmp/ev-root-program-recovery-claim-1617.json",
+      "path": "docs/reviews/20260909-1600-program-recovery-ev-root-program-recovery-claim-1617.json",
+      "sha256": "232e7f56149b53e11c1643e723444ffb2022deee4f11bb9f2e7fc66b777a8a68",
+      "bytes": 3070
+    },
+    {
+      "source": "/tmp/ev-root-program-recovery-active-1617.json",
+      "path": "docs/reviews/20260909-1600-program-recovery-ev-root-program-recovery-active-1617.json",
+      "sha256": "aeb2d8346bd9ea3b1b9a4e76d9ee1b4ec2ab710ce94d19600aca727d7719fc98",
+      "bytes": 3809
+    },
+    {
+      "source": "/tmp/ev-root-heartbeat-recovery-1617.json",
+      "path": "docs/reviews/20260909-1600-program-recovery-ev-root-heartbeat-recovery-1617.json",
+      "sha256": "6ed03ffe482d0b11e639829859a852c2aad81b7c8ea18da21278b406faf0e623",
+      "bytes": 3614
+    },
+    {
+      "source": "/tmp/ev-workspace-renew-root-1618.json",
+      "path": "docs/reviews/20260909-1600-program-recovery-ev-workspace-renew-root-1618.json",
+      "sha256": "7b471ec6ecff54aa4e064e09b47c204130ce7694d9458a2e45ed71b680d6f0c3",
+      "bytes": 3554
+    },
+    {
+      "source": "/tmp/ev-workspace-renew-codec-1618.json",
+      "path": "docs/reviews/20260909-1600-program-recovery-ev-workspace-renew-codec-1618.json",
+      "sha256": "309765b6c3b0e05301cba4051d6028b6d8069c1e062830b0897bb8c81cfdc520",
+      "bytes": 3540
+    },
+    {
+      "source": "/tmp/ev-workspace-renew-formal-1618.json",
+      "path": "docs/reviews/20260909-1600-program-recovery-ev-workspace-renew-formal-1618.json",
+      "sha256": "5df109267f29f471d49c74adbaf983bc35d2d1298eca8909a6dfb1e49fb35a68",
+      "bytes": 3545
+    },
+    {
+      "source": "/tmp/ev-workspace-renew-peer-1618.json",
+      "path": "docs/reviews/20260909-1600-program-recovery-ev-workspace-renew-peer-1618.json",
+      "sha256": "cc52469584f9c90813886df0111f27d630d6d97d8b5b0585866aa2aa8352f549",
+      "bytes": 3537
+    }
+  ],
+  "new_ev_admissions": 0,
+  "policy_ceiling": 93,
+  "limits": [
+    "Read-only risk observation is not an atomic scheduler fence.",
+    "No expired observation is counted as passing evidence."
+  ]
+}

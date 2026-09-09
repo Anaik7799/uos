@@ -1,0 +1,1214 @@
+1504418 execve("/tmp/ev-recipe-codec-final-build/default/campaign_test.exe", ["/tmp/ev-recipe-codec-final-build/default/campaign_test.exe", "/tmp/ev-recipe-codec-final-build/default/ev_receipt.exe", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93"], 0x7fffecb41640 /* 22 vars */) = 0
+1504419 execve("/tmp/ev-recipe-codec-final-build/default/ev_receipt.exe", ["/tmp/ev-recipe-codec-final-build/default/ev_receipt.exe", "observe", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "98", "dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93"], 0x7fff7c98f410 /* 22 vars */) = 0
+1504420 execve("/usr/bin/chronyc", ["/usr/bin/chronyc", "-c", "tracking"], 0x7ffd9cc50218 /* 22 vars */) = 0
+1504420 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504420, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504432 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "log", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x57b663436610 /* 15 vars */) = 0
+1504434 execve("/tmp/uos-ev98-campaign-cefdc5.reserve.d/native-bin/tput", ["tput", "cols"], 0x7ffdfe4a2af8 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1504434 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "cols"], 0x7ffdfe4a2af8 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1504434 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffdfe4a2af8 /* 15 vars */) = 0
+1504434 +++ exited with 2 +++
+1504432 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504434, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1504435 execve("/tmp/uos-ev98-campaign-cefdc5.reserve.d/native-bin/tput", ["tput", "lines"], 0x7ffdfe4a2af8 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1504435 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "lines"], 0x7ffdfe4a2af8 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1504435 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffdfe4a2af8 /* 15 vars */) = 0
+1504435 +++ exited with 2 +++
+1504432 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504435, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1504433 +++ exited with 0 +++
+1504432 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504432, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504436 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam"], 0x57b663435750 /* 15 vars */) = 0
+1504437 +++ exited with 0 +++
+1504436 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504436, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1504438 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam"], 0x57b663435920 /* 15 vars */) = 0
+1504439 +++ exited with 0 +++
+1504438 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504438, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504440 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam"], 0x57b663435ab0 /* 15 vars */) = 0
+1504441 +++ exited with 0 +++
+1504440 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504440, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504442 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam"], 0x57b663435c80 /* 15 vars */) = 0
+1504443 +++ exited with 0 +++
+1504442 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504442, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504444 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam"], 0x57b663435e10 /* 15 vars */) = 0
+1504445 +++ exited with 0 +++
+1504444 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504444, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1504446 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam"], 0x57b663435fe0 /* 15 vars */) = 0
+1504447 +++ exited with 0 +++
+1504446 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504446, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1504448 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam"], 0x57b663436170 /* 15 vars */) = 0
+1504449 +++ exited with 0 +++
+1504448 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504448, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504450 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam"], 0x57b663436340 /* 15 vars */) = 0
+1504451 +++ exited with 0 +++
+1504450 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504450, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504452 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam"], 0x57b663454440 /* 15 vars */) = 0
+1504453 +++ exited with 0 +++
+1504452 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504452, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504454 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam"], 0x57b663458720 /* 15 vars */) = 0
+1504455 +++ exited with 0 +++
+1504454 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504454, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504456 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam"], 0x57b6634359e0 /* 15 vars */) = 0
+1504457 +++ exited with 0 +++
+1504456 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504456, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1504458 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam"], 0x57b663435830 /* 15 vars */) = 0
+1504459 +++ exited with 0 +++
+1504458 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504458, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504460 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/delta_mesh_engine_test.gleam"], 0x57b663435680 /* 15 vars */) = 0
+1504461 +++ exited with 0 +++
+1504460 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504460, si_uid=1000, si_status=0, si_utime=0, si_stime=1 /* 0.01 s */} ---
+1504464 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/delta_mesh_engine_test.gleam"], 0x57b6634354d0 /* 15 vars */) = 0
+1504465 +++ exited with 0 +++
+1504464 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504464, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504466 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/deadman_freshness_test.gleam"], 0x57b66341b180 /* 15 vars */) = 0
+1504467 +++ exited with 0 +++
+1504466 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504466, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1504468 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/deadman_freshness_test.gleam"], 0x57b66341b350 /* 15 vars */) = 0
+1504469 +++ exited with 0 +++
+1504468 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504468, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504470 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/crdt_health_bridge_test.gleam"], 0x57b663451390 /* 15 vars */) = 0
+1504471 +++ exited with 0 +++
+1504470 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504470, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1504472 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/crdt_health_bridge_test.gleam"], 0x57b66340a690 /* 15 vars */) = 0
+1504473 +++ exited with 0 +++
+1504472 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504472, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504476 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/crdt_mesh_sync_test.gleam"], 0x57b6634355f0 /* 15 vars */) = 0
+1504477 +++ exited with 0 +++
+1504476 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504476, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504478 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/crdt_mesh_sync_test.gleam"], 0x57b6634357a0 /* 15 vars */) = 0
+1504479 +++ exited with 0 +++
+1504478 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504478, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504480 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/ev_delta_freshness_runner.gleam"], 0x57b663435950 /* 15 vars */) = 0
+1504481 +++ exited with 0 +++
+1504480 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504480, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504482 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/ev_delta_freshness_runner.gleam"], 0x57b663435b00 /* 15 vars */) = 0
+1504483 +++ exited with 0 +++
+1504482 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504482, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504484 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:contracts/rules/20260908-0912-provenance-integrity-contract.md"], 0x57b66343e550 /* 15 vars */) = 0
+1504485 +++ exited with 0 +++
+1504484 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504484, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504486 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:contracts/rules/20260908-0912-provenance-integrity-contract.md"], 0x57b663420ab0 /* 15 vars */) = 0
+1504487 +++ exited with 0 +++
+1504486 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504486, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504488 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/mesh_sync_codec_test.gleam"], 0x57b66344a4e0 /* 15 vars */) = 0
+1504489 +++ exited with 0 +++
+1504488 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504488, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504490 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/mesh_sync_codec_test.gleam"], 0x57b663420b70 /* 15 vars */) = 0
+1504491 +++ exited with 0 +++
+1504490 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504490, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504493 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/gleam.toml"], 0x57b663420d20 /* 15 vars */) = 0
+1504494 +++ exited with 0 +++
+1504493 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504493, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504495 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/gleam.toml"], 0x57b66340a140 /* 15 vars */) = 0
+1504496 +++ exited with 0 +++
+1504495 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504495, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504497 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/manifest.toml"], 0x57b66340a370 /* 15 vars */) = 0
+1504498 +++ exited with 0 +++
+1504497 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504497, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1504499 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/manifest.toml"], 0x57b66340a540 /* 15 vars */) = 0
+1504500 +++ exited with 0 +++
+1504499 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504499, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504501 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", ["/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", "--version"], 0x57b663420d80 /* 15 vars */) = 0
+1504501 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504501, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504502 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", "-version"], 0x57b66340a7b0 /* 15 vars */) = 0
+1504502 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", "-V", "--", "-root", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang", "-bindir", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin", "-progname", "erl", "--", "-home", "/tmp/uos-ev98-campaign-cefdc5.reserve.d", "--", "--"], 0x7ffdab051140 /* 15 vars */) = 0
+1504503 +++ exited with 0 +++
+1504502 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504502, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504504 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", ["/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", "compile-package", "--target", "erlang", "--package", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/positive", "--out", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/positive/compiled", "--lib", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib"], 0x57b663449fe0 /* 15 vars */) = 0
+1504505 execve("/tmp/uos-ev98-campaign-cefdc5.reserve.d/native-bin/escript", ["escript", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/positive/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffd41c85420 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1504505 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/escript", ["escript", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/positive/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffd41c85420 /* 15 vars */) = 0
+1504505 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", "+B", "-noshell", "-boot", "$ROOT/no_dot_erlang", "-run", "escript", "start", "-extra", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/positive/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x596524e42500 /* 16 vars */) = 0
+1504505 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", ["/tmp/uos-ev98-campaign-cefdc5.reserve.d/positive/compiled/_gleam_artefacts/gleam@@compile.erl", "-B", "--", "-root", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang", "-bindir", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin", "-progname", "erl", "--", "-home", "/tmp/uos-ev98-campaign-cefdc5.reserve.d", "--", "-noshell", "-boot", "$ROOT/no_dot_erlang", "-run", "escript", "start", "--", "--", "-extra", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/positive/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffc928f0aa0 /* 16 vars */) = 0
+1504509 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup", ["erl_child_setup", "524288"], 0x7ffe8a3b62a8 /* 16 vars */) = 0
+1504570 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", "4"], 0x5deed26e3940 /* 16 vars */) = 0
+1504571 --- SIGUSR1 {si_signo=SIGUSR1, si_code=SI_USER, si_pid=1504570, si_uid=1000} ---
+1504571 +++ killed by SIGUSR1 +++
+1504570 +++ exited with 0 +++
+1504509 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504570, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504508 +++ exited with 0 +++
+1504561 ???( <unfinished ...>
+1504569 +++ exited with 0 +++
+1504568 +++ exited with 0 +++
+1504567 +++ exited with 0 +++
+1504566 +++ exited with 0 +++
+1504565 +++ exited with 0 +++
+1504564 +++ exited with 0 +++
+1504563 +++ exited with 0 +++
+1504562 +++ exited with 0 +++
+1504561 +++ exited with 0 +++
+1504560 +++ exited with 0 +++
+1504559 +++ exited with 0 +++
+1504558 +++ exited with 0 +++
+1504557 +++ exited with 0 +++
+1504556 +++ exited with 0 +++
+1504555 +++ exited with 0 +++
+1504554 +++ exited with 0 +++
+1504553 +++ exited with 0 +++
+1504552 +++ exited with 0 +++
+1504551 +++ exited with 0 +++
+1504550 +++ exited with 0 +++
+1504549 +++ exited with 0 +++
+1504548 +++ exited with 0 +++
+1504547 +++ exited with 0 +++
+1504546 +++ exited with 0 +++
+1504545 +++ exited with 0 +++
+1504544 +++ exited with 0 +++
+1504543 +++ exited with 0 +++
+1504542 +++ exited with 0 +++
+1504541 +++ exited with 0 +++
+1504540 +++ exited with 0 +++
+1504539 +++ exited with 0 +++
+1504538 +++ exited with 0 +++
+1504537 +++ exited with 0 +++
+1504536 +++ exited with 0 +++
+1504535 +++ exited with 0 +++
+1504534 +++ exited with 0 +++
+1504533 +++ exited with 0 +++
+1504532 +++ exited with 0 +++
+1504531 +++ exited with 0 +++
+1504530 +++ exited with 0 +++
+1504529 +++ exited with 0 +++
+1504528 +++ exited with 0 +++
+1504527 +++ exited with 0 +++
+1504526 +++ exited with 0 +++
+1504525 +++ exited with 0 +++
+1504524 +++ exited with 0 +++
+1504523 +++ exited with 0 +++
+1504522 +++ exited with 0 +++
+1504521 +++ exited with 0 +++
+1504520 +++ exited with 0 +++
+1504519 +++ exited with 0 +++
+1504518 +++ exited with 0 +++
+1504517 +++ exited with 0 +++
+1504516 +++ exited with 0 +++
+1504515 +++ exited with 0 +++
+1504514 +++ exited with 0 +++
+1504512 +++ exited with 0 +++
+1504511 +++ exited with 0 +++
+1504510 +++ exited with 0 +++
+1504507 +++ exited with 0 +++
+1504506 +++ exited with 0 +++
+1504513 +++ exited with 0 +++
+1504509 +++ exited with 0 +++
+1504505 +++ exited with 0 +++
+1504504 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504505, si_uid=1000, si_status=0, si_utime=85 /* 0.85 s */, si_stime=60 /* 0.60 s */} ---
+1504504 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504504, si_uid=1000, si_status=0, si_utime=2 /* 0.02 s */, si_stime=0} ---
+1504574 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", "+S", "2:2", "+A", "1", "-noinput", "-noshell", "-boot", "no_dot_erlang", "-pa", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/positive/compiled/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleam_stdlib/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleam_json/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleeunit/ebin", "-s", "ev98_campaign_runner", "main", "-s", "init", "stop"], 0x57b6634357a0 /* 15 vars */) = 0
+1504574 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", "-S", "2:2", "-A", "1", "--", "-root", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang", "-bindir", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin", "-progname", "erl", "--", "-home", "/tmp/uos-ev98-campaign-cefdc5.reserve.d", "--", "-noshell", "-noinput", "-noshell", "-boot", "no_dot_erlang", "-pa", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/positive/compiled/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleam_stdlib/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleam_json/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleeunit/ebin", "-s", "ev98_campaign_runner", "main", "-s", "init", "stop", "--"], 0x7ffc1410b440 /* 15 vars */) = 0
+1504578 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup", ["erl_child_setup", "524288"], 0x7ffcf2433078 /* 15 vars */) = 0
+1504595 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", "4"], 0x5f53a8e2a8d0 /* 15 vars */) = 0
+1504596 --- SIGUSR1 {si_signo=SIGUSR1, si_code=SI_USER, si_pid=1504595, si_uid=1000} ---
+1504596 +++ killed by SIGUSR1 +++
+1504595 +++ exited with 0 +++
+1504578 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504595, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504577 +++ exited with 0 +++
+1504594 +++ exited with 0 +++
+1504593 +++ exited with 0 +++
+1504592 +++ exited with 0 +++
+1504591 +++ exited with 0 +++
+1504590 +++ exited with 0 +++
+1504589 +++ exited with 0 +++
+1504588 +++ exited with 0 +++
+1504587 +++ exited with 0 +++
+1504586 +++ exited with 0 +++
+1504585 +++ exited with 0 +++
+1504584 +++ exited with 0 +++
+1504583 +++ exited with 0 +++
+1504582 +++ exited with 0 +++
+1504581 +++ exited with 0 +++
+1504580 +++ exited with 0 +++
+1504579 +++ exited with 0 +++
+1504576 +++ exited with 0 +++
+1504578 +++ exited with 0 +++
+1504575 +++ exited with 0 +++
+1504574 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504574, si_uid=1000, si_status=0, si_utime=17 /* 0.17 s */, si_stime=10 /* 0.10 s */} ---
+1504598 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", ["/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", "compile-package", "--target", "erlang", "--package", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/queue-capacity", "--out", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/queue-capacity/compiled", "--lib", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib"], 0x57b663435710 /* 15 vars */) = 0
+1504599 execve("/tmp/uos-ev98-campaign-cefdc5.reserve.d/native-bin/escript", ["escript", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/queue-capacity/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7fff18269710 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1504599 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/escript", ["escript", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/queue-capacity/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7fff18269710 /* 15 vars */) = 0
+1504599 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", "+B", "-noshell", "-boot", "$ROOT/no_dot_erlang", "-run", "escript", "start", "-extra", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/queue-capacity/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x572429468500 /* 16 vars */) = 0
+1504599 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", ["/tmp/uos-ev98-campaign-cefdc5.reserve.d/queue-capacity/compiled/_gleam_artefacts/gleam@@compile.erl", "-B", "--", "-root", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang", "-bindir", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin", "-progname", "erl", "--", "-home", "/tmp/uos-ev98-campaign-cefdc5.reserve.d", "--", "-noshell", "-boot", "$ROOT/no_dot_erlang", "-run", "escript", "start", "--", "--", "-extra", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/queue-capacity/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffd187e1690 /* 16 vars */) = 0
+1504603 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup", ["erl_child_setup", "524288"], 0x7ffe30c275d8 /* 16 vars */) = 0
+1504664 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", "4"], 0x599b418f4940 /* 16 vars */) = 0
+1504665 --- SIGUSR1 {si_signo=SIGUSR1, si_code=SI_USER, si_pid=1504664, si_uid=1000} ---
+1504665 +++ killed by SIGUSR1 +++
+1504664 +++ exited with 0 +++
+1504603 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504664, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504602 +++ exited with 0 +++
+1504663 +++ exited with 0 +++
+1504662 +++ exited with 0 +++
+1504660 +++ exited with 0 +++
+1504659 +++ exited with 0 +++
+1504658 +++ exited with 0 +++
+1504657 +++ exited with 0 +++
+1504656 +++ exited with 0 +++
+1504655 +++ exited with 0 +++
+1504654 +++ exited with 0 +++
+1504653 +++ exited with 0 +++
+1504652 +++ exited with 0 +++
+1504651 +++ exited with 0 +++
+1504650 +++ exited with 0 +++
+1504649 +++ exited with 0 +++
+1504648 +++ exited with 0 +++
+1504647 +++ exited with 0 +++
+1504646 +++ exited with 0 +++
+1504645 +++ exited with 0 +++
+1504644 +++ exited with 0 +++
+1504643 +++ exited with 0 +++
+1504642 +++ exited with 0 +++
+1504641 +++ exited with 0 +++
+1504640 +++ exited with 0 +++
+1504639 +++ exited with 0 +++
+1504638 +++ exited with 0 +++
+1504637 +++ exited with 0 +++
+1504636 +++ exited with 0 +++
+1504635 +++ exited with 0 +++
+1504634 +++ exited with 0 +++
+1504633 +++ exited with 0 +++
+1504632 +++ exited with 0 +++
+1504631 +++ exited with 0 +++
+1504630 +++ exited with 0 +++
+1504629 +++ exited with 0 +++
+1504628 +++ exited with 0 +++
+1504627 +++ exited with 0 +++
+1504626 +++ exited with 0 +++
+1504625 +++ exited with 0 +++
+1504624 +++ exited with 0 +++
+1504623 +++ exited with 0 +++
+1504622 +++ exited with 0 +++
+1504621 +++ exited with 0 +++
+1504620 +++ exited with 0 +++
+1504619 +++ exited with 0 +++
+1504618 +++ exited with 0 +++
+1504617 +++ exited with 0 +++
+1504616 +++ exited with 0 +++
+1504615 +++ exited with 0 +++
+1504614 +++ exited with 0 +++
+1504613 +++ exited with 0 +++
+1504612 +++ exited with 0 +++
+1504611 +++ exited with 0 +++
+1504610 +++ exited with 0 +++
+1504609 +++ exited with 0 +++
+1504608 +++ exited with 0 +++
+1504607 +++ exited with 0 +++
+1504606 +++ exited with 0 +++
+1504605 +++ exited with 0 +++
+1504604 +++ exited with 0 +++
+1504601 +++ exited with 0 +++
+1504600 +++ exited with 0 +++
+1504603 +++ exited with 0 +++
+1504661 +++ exited with 0 +++
+1504599 +++ exited with 0 +++
+1504598 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504599, si_uid=1000, si_status=0, si_utime=102 /* 1.02 s */, si_stime=67 /* 0.67 s */} ---
+1504598 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504598, si_uid=1000, si_status=0, si_utime=2 /* 0.02 s */, si_stime=0} ---
+1504669 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", "+S", "2:2", "+A", "1", "-noinput", "-noshell", "-boot", "no_dot_erlang", "-pa", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/queue-capacity/compiled/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleam_stdlib/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleam_json/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleeunit/ebin", "-s", "ev98_campaign_runner", "main", "-s", "init", "stop"], 0x57b663436580 /* 15 vars */) = 0
+1504669 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", "-S", "2:2", "-A", "1", "--", "-root", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang", "-bindir", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin", "-progname", "erl", "--", "-home", "/tmp/uos-ev98-campaign-cefdc5.reserve.d", "--", "-noshell", "-noinput", "-noshell", "-boot", "no_dot_erlang", "-pa", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/queue-capacity/compiled/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleam_stdlib/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleam_json/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleeunit/ebin", "-s", "ev98_campaign_runner", "main", "-s", "init", "stop", "--"], 0x7ffc49f997c0 /* 15 vars */) = 0
+1504673 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup", ["erl_child_setup", "524288"], 0x7ffc0dae5e28 /* 15 vars */) = 0
+1504703 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", "4"], 0x60c0d36f58d0 /* 15 vars */) = 0
+1504706 --- SIGUSR1 {si_signo=SIGUSR1, si_code=SI_USER, si_pid=1504703, si_uid=1000} ---
+1504706 +++ killed by SIGUSR1 +++
+1504703 +++ exited with 0 +++
+1504673 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504703, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504684 +++ exited with 1 +++
+1504674 +++ exited with 1 +++
+1504670 +++ exited with 1 +++
+1504689 +++ exited with 1 +++
+1504688 +++ exited with 1 +++
+1504687 +++ exited with 1 +++
+1504686 +++ exited with 1 +++
+1504685 +++ exited with 1 +++
+1504683 +++ exited with 1 +++
+1504682 +++ exited with 1 +++
+1504681 +++ exited with 1 +++
+1504680 +++ exited with 1 +++
+1504679 +++ exited with 1 +++
+1504678 +++ exited with 1 +++
+1504677 +++ exited with 1 +++
+1504676 +++ exited with 1 +++
+1504675 +++ exited with 1 +++
+1504671 +++ exited with 1 +++
+1504673 +++ exited with 0 +++
+1504672 +++ exited with 1 +++
+1504669 +++ exited with 1 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504669, si_uid=1000, si_status=1, si_utime=15 /* 0.15 s */, si_stime=16 /* 0.16 s */} ---
+1504734 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", ["/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", "compile-package", "--target", "erlang", "--package", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/physical-health-order", "--out", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/physical-health-order/compiled", "--lib", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib"], 0x57b663435830 /* 15 vars */) = 0
+1504735 execve("/tmp/uos-ev98-campaign-cefdc5.reserve.d/native-bin/escript", ["escript", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/physical-health-order/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffed5c88750 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1504735 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/escript", ["escript", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/physical-health-order/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffed5c88750 /* 15 vars */) = 0
+1504735 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", "+B", "-noshell", "-boot", "$ROOT/no_dot_erlang", "-run", "escript", "start", "-extra", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/physical-health-order/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x65480076b500 /* 16 vars */) = 0
+1504735 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", ["/tmp/uos-ev98-campaign-cefdc5.reserve.d/physical-health-order/compiled/_gleam_artefacts/gleam@@compile.erl", "-B", "--", "-root", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang", "-bindir", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin", "-progname", "erl", "--", "-home", "/tmp/uos-ev98-campaign-cefdc5.reserve.d", "--", "-noshell", "-boot", "$ROOT/no_dot_erlang", "-run", "escript", "start", "--", "--", "-extra", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/physical-health-order/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffe1cf915f0 /* 16 vars */) = 0
+1504739 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup", ["erl_child_setup", "524288"], 0x7ffd2f9fbb58 /* 16 vars */) = 0
+1504800 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", "4"], 0x5ce99514b950 /* 16 vars */) = 0
+1504801 --- SIGUSR1 {si_signo=SIGUSR1, si_code=SI_USER, si_pid=1504800, si_uid=1000} ---
+1504801 +++ killed by SIGUSR1 +++
+1504800 +++ exited with 0 +++
+1504739 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504800, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504738 +++ exited with 0 +++
+1504790 ???( <unfinished ...>
+1504799 +++ exited with 0 +++
+1504798 +++ exited with 0 +++
+1504797 +++ exited with 0 +++
+1504796 +++ exited with 0 +++
+1504795 +++ exited with 0 +++
+1504794 +++ exited with 0 +++
+1504793 +++ exited with 0 +++
+1504792 +++ exited with 0 +++
+1504791 +++ exited with 0 +++
+1504790 +++ exited with 0 +++
+1504789 +++ exited with 0 +++
+1504788 +++ exited with 0 +++
+1504787 +++ exited with 0 +++
+1504786 +++ exited with 0 +++
+1504785 +++ exited with 0 +++
+1504784 +++ exited with 0 +++
+1504783 +++ exited with 0 +++
+1504782 +++ exited with 0 +++
+1504781 +++ exited with 0 +++
+1504780 +++ exited with 0 +++
+1504779 +++ exited with 0 +++
+1504778 +++ exited with 0 +++
+1504777 +++ exited with 0 +++
+1504776 +++ exited with 0 +++
+1504775 +++ exited with 0 +++
+1504774 +++ exited with 0 +++
+1504773 +++ exited with 0 +++
+1504772 +++ exited with 0 +++
+1504771 +++ exited with 0 +++
+1504770 +++ exited with 0 +++
+1504769 +++ exited with 0 +++
+1504768 +++ exited with 0 +++
+1504767 +++ exited with 0 +++
+1504766 +++ exited with 0 +++
+1504765 +++ exited with 0 +++
+1504764 +++ exited with 0 +++
+1504763 +++ exited with 0 +++
+1504762 +++ exited with 0 +++
+1504761 +++ exited with 0 +++
+1504760 +++ exited with 0 +++
+1504759 +++ exited with 0 +++
+1504758 +++ exited with 0 +++
+1504757 +++ exited with 0 +++
+1504756 +++ exited with 0 +++
+1504755 +++ exited with 0 +++
+1504754 +++ exited with 0 +++
+1504753 +++ exited with 0 +++
+1504752 +++ exited with 0 +++
+1504751 +++ exited with 0 +++
+1504750 +++ exited with 0 +++
+1504749 +++ exited with 0 +++
+1504748 +++ exited with 0 +++
+1504747 +++ exited with 0 +++
+1504746 +++ exited with 0 +++
+1504745 +++ exited with 0 +++
+1504744 +++ exited with 0 +++
+1504743 +++ exited with 0 +++
+1504742 +++ exited with 0 +++
+1504741 +++ exited with 0 +++
+1504740 +++ exited with 0 +++
+1504736 +++ exited with 0 +++
+1504739 +++ exited with 0 +++
+1504737 +++ exited with 0 +++
+1504735 +++ exited with 0 +++
+1504734 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504735, si_uid=1000, si_status=0, si_utime=102 /* 1.02 s */, si_stime=68 /* 0.68 s */} ---
+1504734 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504734, si_uid=1000, si_status=0, si_utime=3 /* 0.03 s */, si_stime=0} ---
+1504802 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", "+S", "2:2", "+A", "1", "-noinput", "-noshell", "-boot", "no_dot_erlang", "-pa", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/physical-health-order/compiled/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleam_stdlib/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleam_json/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleeunit/ebin", "-s", "ev98_campaign_runner", "main", "-s", "init", "stop"], 0x57b663435950 /* 15 vars */) = 0
+1504802 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", "-S", "2:2", "-A", "1", "--", "-root", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang", "-bindir", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin", "-progname", "erl", "--", "-home", "/tmp/uos-ev98-campaign-cefdc5.reserve.d", "--", "-noshell", "-noinput", "-noshell", "-boot", "no_dot_erlang", "-pa", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/physical-health-order/compiled/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleam_stdlib/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleam_json/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleeunit/ebin", "-s", "ev98_campaign_runner", "main", "-s", "init", "stop", "--"], 0x7ffeb4efca60 /* 15 vars */) = 0
+1504806 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup", ["erl_child_setup", "524288"], 0x7ffd51e49ea8 /* 15 vars */) = 0
+1504827 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", "4"], 0x586d871ee8d0 /* 15 vars */) = 0
+1504828 --- SIGUSR1 {si_signo=SIGUSR1, si_code=SI_USER, si_pid=1504827, si_uid=1000} ---
+1504828 +++ killed by SIGUSR1 +++
+1504827 +++ exited with 0 +++
+1504806 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504827, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504822 +++ exited with 1 +++
+1504821 +++ exited with 1 +++
+1504820 +++ exited with 1 +++
+1504819 +++ exited with 1 +++
+1504818 +++ exited with 1 +++
+1504817 +++ exited with 1 +++
+1504816 +++ exited with 1 +++
+1504815 +++ exited with 1 +++
+1504814 +++ exited with 1 +++
+1504813 +++ exited with 1 +++
+1504812 +++ exited with 1 +++
+1504811 +++ exited with 1 +++
+1504810 +++ exited with 1 +++
+1504809 +++ exited with 1 +++
+1504808 +++ exited with 1 +++
+1504807 +++ exited with 1 +++
+1504805 +++ exited with 1 +++
+1504804 +++ exited with 1 +++
+1504803 +++ exited with 1 +++
+1504802 +++ exited with 1 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504802, si_uid=1000, si_status=1, si_utime=11 /* 0.11 s */, si_stime=11 /* 0.11 s */} ---
+1504806 +++ exited with 0 +++
+1504829 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", ["/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", "compile-package", "--target", "erlang", "--package", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/nonforward-deadman-time", "--out", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/nonforward-deadman-time/compiled", "--lib", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib"], 0x57b663473460 /* 15 vars */) = 0
+1504830 execve("/tmp/uos-ev98-campaign-cefdc5.reserve.d/native-bin/escript", ["escript", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/nonforward-deadman-time/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7fff7600f520 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1504830 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/escript", ["escript", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/nonforward-deadman-time/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7fff7600f520 /* 15 vars */) = 0
+1504830 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", "+B", "-noshell", "-boot", "$ROOT/no_dot_erlang", "-run", "escript", "start", "-extra", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/nonforward-deadman-time/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x5f6b2e148510 /* 16 vars */) = 0
+1504830 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", ["/tmp/uos-ev98-campaign-cefdc5.reserve.d/nonforward-deadman-time/compiled/_gleam_artefacts/gleam@@compile.erl", "-B", "--", "-root", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang", "-bindir", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin", "-progname", "erl", "--", "-home", "/tmp/uos-ev98-campaign-cefdc5.reserve.d", "--", "-noshell", "-boot", "$ROOT/no_dot_erlang", "-run", "escript", "start", "--", "--", "-extra", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/nonforward-deadman-time/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffc0bf9cd70 /* 16 vars */) = 0
+1504834 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup", ["erl_child_setup", "524288"], 0x7ffd3b52eff8 /* 16 vars */) = 0
+1504895 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", "4"], 0x617b15b1c950 /* 16 vars */) = 0
+1504896 --- SIGUSR1 {si_signo=SIGUSR1, si_code=SI_USER, si_pid=1504895, si_uid=1000} ---
+1504896 +++ killed by SIGUSR1 +++
+1504895 +++ exited with 0 +++
+1504834 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504895, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504833 +++ exited with 0 +++
+1504841 ???( <unfinished ...>
+1504842 +++ exited with 0 +++
+1504840 +++ exited with 0 +++
+1504839 +++ exited with 0 +++
+1504838 +++ exited with 0 +++
+1504837 +++ exited with 0 +++
+1504836 +++ exited with 0 +++
+1504835 +++ exited with 0 +++
+1504894 +++ exited with 0 +++
+1504893 +++ exited with 0 +++
+1504892 +++ exited with 0 +++
+1504891 +++ exited with 0 +++
+1504890 +++ exited with 0 +++
+1504889 +++ exited with 0 +++
+1504888 +++ exited with 0 +++
+1504887 +++ exited with 0 +++
+1504886 +++ exited with 0 +++
+1504885 +++ exited with 0 +++
+1504884 +++ exited with 0 +++
+1504883 +++ exited with 0 +++
+1504882 +++ exited with 0 +++
+1504881 +++ exited with 0 +++
+1504880 +++ exited with 0 +++
+1504879 +++ exited with 0 +++
+1504878 +++ exited with 0 +++
+1504877 +++ exited with 0 +++
+1504876 +++ exited with 0 +++
+1504875 +++ exited with 0 +++
+1504874 +++ exited with 0 +++
+1504873 +++ exited with 0 +++
+1504872 +++ exited with 0 +++
+1504871 +++ exited with 0 +++
+1504870 +++ exited with 0 +++
+1504869 +++ exited with 0 +++
+1504868 +++ exited with 0 +++
+1504867 +++ exited with 0 +++
+1504866 +++ exited with 0 +++
+1504865 +++ exited with 0 +++
+1504864 +++ exited with 0 +++
+1504863 +++ exited with 0 +++
+1504862 +++ exited with 0 +++
+1504861 +++ exited with 0 +++
+1504860 +++ exited with 0 +++
+1504859 +++ exited with 0 +++
+1504858 +++ exited with 0 +++
+1504857 +++ exited with 0 +++
+1504856 +++ exited with 0 +++
+1504855 +++ exited with 0 +++
+1504854 +++ exited with 0 +++
+1504853 +++ exited with 0 +++
+1504852 +++ exited with 0 +++
+1504851 +++ exited with 0 +++
+1504850 +++ exited with 0 +++
+1504849 +++ exited with 0 +++
+1504848 +++ exited with 0 +++
+1504847 +++ exited with 0 +++
+1504846 +++ exited with 0 +++
+1504845 +++ exited with 0 +++
+1504844 +++ exited with 0 +++
+1504843 +++ exited with 0 +++
+1504841 +++ exited with 0 +++
+1504832 +++ exited with 0 +++
+1504831 +++ exited with 0 +++
+1504834 +++ exited with 0 +++
+1504830 +++ exited with 0 +++
+1504829 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504830, si_uid=1000, si_status=0, si_utime=112 /* 1.12 s */, si_stime=75 /* 0.75 s */} ---
+1504829 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504829, si_uid=1000, si_status=0, si_utime=3 /* 0.03 s */, si_stime=0} ---
+1504897 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", "+S", "2:2", "+A", "1", "-noinput", "-noshell", "-boot", "no_dot_erlang", "-pa", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/nonforward-deadman-time/compiled/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleam_stdlib/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleam_json/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleeunit/ebin", "-s", "ev98_campaign_runner", "main", "-s", "init", "stop"], 0x57b6634353d0 /* 15 vars */) = 0
+1504897 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", "-S", "2:2", "-A", "1", "--", "-root", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang", "-bindir", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin", "-progname", "erl", "--", "-home", "/tmp/uos-ev98-campaign-cefdc5.reserve.d", "--", "-noshell", "-noinput", "-noshell", "-boot", "no_dot_erlang", "-pa", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/nonforward-deadman-time/compiled/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleam_stdlib/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleam_json/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleeunit/ebin", "-s", "ev98_campaign_runner", "main", "-s", "init", "stop", "--"], 0x7fff94d0f670 /* 15 vars */) = 0
+1504901 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup", ["erl_child_setup", "524288"], 0x7fff74bc1598 /* 15 vars */) = 0
+1504920 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", "4"], 0x5d8c5589a8d0 /* 15 vars */) = 0
+1504921 --- SIGUSR1 {si_signo=SIGUSR1, si_code=SI_USER, si_pid=1504920, si_uid=1000} ---
+1504921 +++ killed by SIGUSR1 +++
+1504920 +++ exited with 0 +++
+1504901 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504920, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504917 +++ exited with 1 +++
+1504916 +++ exited with 1 +++
+1504915 +++ exited with 1 +++
+1504914 +++ exited with 1 +++
+1504913 +++ exited with 1 +++
+1504912 +++ exited with 1 +++
+1504911 +++ exited with 1 +++
+1504910 +++ exited with 1 +++
+1504909 +++ exited with 1 +++
+1504908 +++ exited with 1 +++
+1504907 +++ exited with 1 +++
+1504906 +++ exited with 1 +++
+1504905 +++ exited with 1 +++
+1504904 +++ exited with 1 +++
+1504903 +++ exited with 1 +++
+1504902 +++ exited with 1 +++
+1504900 +++ exited with 1 +++
+1504899 +++ exited with 1 +++
+1504898 +++ exited with 1 +++
+1504897 +++ exited with 1 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504897, si_uid=1000, si_status=1, si_utime=16 /* 0.16 s */, si_stime=8 /* 0.08 s */} ---
+1504901 +++ exited with 0 +++
+1504922 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", ["/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", "compile-package", "--target", "erlang", "--package", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/codec-physical-sample", "--out", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/codec-physical-sample/compiled", "--lib", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib"], 0x57b663436580 /* 15 vars */) = 0
+1504923 execve("/tmp/uos-ev98-campaign-cefdc5.reserve.d/native-bin/escript", ["escript", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/codec-physical-sample/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7fffd9acb4f0 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1504923 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/escript", ["escript", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/codec-physical-sample/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7fffd9acb4f0 /* 15 vars */) = 0
+1504923 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", "+B", "-noshell", "-boot", "$ROOT/no_dot_erlang", "-run", "escript", "start", "-extra", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/codec-physical-sample/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x5a8629801500 /* 16 vars */) = 0
+1504923 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", ["/tmp/uos-ev98-campaign-cefdc5.reserve.d/codec-physical-sample/compiled/_gleam_artefacts/gleam@@compile.erl", "-B", "--", "-root", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang", "-bindir", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin", "-progname", "erl", "--", "-home", "/tmp/uos-ev98-campaign-cefdc5.reserve.d", "--", "-noshell", "-boot", "$ROOT/no_dot_erlang", "-run", "escript", "start", "--", "--", "-extra", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/codec-physical-sample/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffdb6260bc0 /* 16 vars */) = 0
+1504927 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup", ["erl_child_setup", "524288"], 0x7ffc2b737b58 /* 16 vars */) = 0
+1504988 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", "4"], 0x55fb79445950 /* 16 vars */) = 0
+1504989 --- SIGUSR1 {si_signo=SIGUSR1, si_code=SI_USER, si_pid=1504988, si_uid=1000} ---
+1504989 +++ killed by SIGUSR1 +++
+1504988 +++ exited with 0 +++
+1504927 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504988, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504926 +++ exited with 0 +++
+1504951 ???( <unfinished ...>
+1504950 ???( <unfinished ...>
+1504987 +++ exited with 0 +++
+1504986 +++ exited with 0 +++
+1504985 +++ exited with 0 +++
+1504984 +++ exited with 0 +++
+1504983 +++ exited with 0 +++
+1504982 +++ exited with 0 +++
+1504981 +++ exited with 0 +++
+1504980 +++ exited with 0 +++
+1504979 +++ exited with 0 +++
+1504978 +++ exited with 0 +++
+1504977 +++ exited with 0 +++
+1504976 +++ exited with 0 +++
+1504975 +++ exited with 0 +++
+1504974 +++ exited with 0 +++
+1504973 +++ exited with 0 +++
+1504972 +++ exited with 0 +++
+1504971 +++ exited with 0 +++
+1504970 +++ exited with 0 +++
+1504969 +++ exited with 0 +++
+1504968 +++ exited with 0 +++
+1504967 +++ exited with 0 +++
+1504966 +++ exited with 0 +++
+1504965 +++ exited with 0 +++
+1504964 +++ exited with 0 +++
+1504963 +++ exited with 0 +++
+1504962 +++ exited with 0 +++
+1504961 +++ exited with 0 +++
+1504960 +++ exited with 0 +++
+1504959 +++ exited with 0 +++
+1504958 +++ exited with 0 +++
+1504957 +++ exited with 0 +++
+1504956 +++ exited with 0 +++
+1504955 +++ exited with 0 +++
+1504954 +++ exited with 0 +++
+1504953 +++ exited with 0 +++
+1504952 +++ exited with 0 +++
+1504951 +++ exited with 0 +++
+1504950 +++ exited with 0 +++
+1504949 +++ exited with 0 +++
+1504948 +++ exited with 0 +++
+1504947 +++ exited with 0 +++
+1504946 +++ exited with 0 +++
+1504945 +++ exited with 0 +++
+1504944 +++ exited with 0 +++
+1504943 +++ exited with 0 +++
+1504942 +++ exited with 0 +++
+1504941 +++ exited with 0 +++
+1504940 +++ exited with 0 +++
+1504939 +++ exited with 0 +++
+1504938 +++ exited with 0 +++
+1504937 +++ exited with 0 +++
+1504936 +++ exited with 0 +++
+1504935 +++ exited with 0 +++
+1504934 +++ exited with 0 +++
+1504933 +++ exited with 0 +++
+1504932 +++ exited with 0 +++
+1504931 +++ exited with 0 +++
+1504930 +++ exited with 0 +++
+1504929 +++ exited with 0 +++
+1504928 +++ exited with 0 +++
+1504925 +++ exited with 0 +++
+1504924 +++ exited with 0 +++
+1504927 +++ exited with 0 +++
+1504923 +++ exited with 0 +++
+1504922 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504923, si_uid=1000, si_status=0, si_utime=104 /* 1.04 s */, si_stime=55 /* 0.55 s */} ---
+1504922 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504922, si_uid=1000, si_status=0, si_utime=4 /* 0.04 s */, si_stime=0} ---
+1504991 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", "+S", "2:2", "+A", "1", "-noinput", "-noshell", "-boot", "no_dot_erlang", "-pa", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/codec-physical-sample/compiled/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleam_stdlib/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleam_json/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleeunit/ebin", "-s", "ev98_campaign_runner", "main", "-s", "init", "stop"], 0x57b663435560 /* 15 vars */) = 0
+1504991 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", "-S", "2:2", "-A", "1", "--", "-root", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang", "-bindir", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin", "-progname", "erl", "--", "-home", "/tmp/uos-ev98-campaign-cefdc5.reserve.d", "--", "-noshell", "-noinput", "-noshell", "-boot", "no_dot_erlang", "-pa", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/codec-physical-sample/compiled/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleam_stdlib/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleam_json/ebin", "/tmp/uos-ev98-campaign-cefdc5.reserve.d/lib/gleeunit/ebin", "-s", "ev98_campaign_runner", "main", "-s", "init", "stop", "--"], 0x7ffc38970d80 /* 15 vars */) = 0
+1504995 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup", ["erl_child_setup", "524288"], 0x7ffdedd43768 /* 15 vars */) = 0
+1505012 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", "4"], 0x5cd9b41b98d0 /* 15 vars */) = 0
+1505013 --- SIGUSR1 {si_signo=SIGUSR1, si_code=SI_USER, si_pid=1505012, si_uid=1000} ---
+1505012 +++ exited with 0 +++
+1504995 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505012, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505013 +++ killed by SIGUSR1 +++
+1505007 +++ exited with 1 +++
+1505009 +++ exited with 1 +++
+1505011 +++ exited with 1 +++
+1505010 +++ exited with 1 +++
+1505008 +++ exited with 1 +++
+1505006 +++ exited with 1 +++
+1505005 +++ exited with 1 +++
+1505004 +++ exited with 1 +++
+1505003 +++ exited with 1 +++
+1505002 +++ exited with 1 +++
+1505001 +++ exited with 1 +++
+1505000 +++ exited with 1 +++
+1504999 +++ exited with 1 +++
+1504998 +++ exited with 1 +++
+1504997 +++ exited with 1 +++
+1504996 +++ exited with 1 +++
+1504994 +++ exited with 1 +++
+1504993 +++ exited with 1 +++
+1504995 +++ exited with 0 +++
+1504992 +++ exited with 1 +++
+1504991 +++ exited with 1 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504991, si_uid=1000, si_status=1, si_utime=12 /* 0.12 s */, si_stime=8 /* 0.08 s */} ---
+1505017 execve("/usr/bin/chronyc", ["/usr/bin/chronyc", "-c", "tracking"], 0x7ffd9cc50218 /* 22 vars */) = 0
+1505017 +++ exited with 0 +++
+1504419 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505017, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1504419 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1504419, si_uid=1000, si_status=0, si_utime=68 /* 0.68 s */, si_stime=25 /* 0.25 s */} ---
+1505045 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "log", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7fff7c98f410 /* 22 vars */) = 0
+1505047 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "cols"], 0x7ffea477e118 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505047 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "cols"], 0x7ffea477e118 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505047 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "cols"], 0x7ffea477e118 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505047 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "cols"], 0x7ffea477e118 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505047 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "cols"], 0x7ffea477e118 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505047 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffea477e118 /* 22 vars */) = 0
+1505047 +++ exited with 2 +++
+1505045 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505047, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505048 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "lines"], 0x7ffea477e118 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505048 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "lines"], 0x7ffea477e118 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505048 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "lines"], 0x7ffea477e118 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505048 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "lines"], 0x7ffea477e118 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505048 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "lines"], 0x7ffea477e118 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505048 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffea477e118 /* 22 vars */) = 0
+1505048 +++ exited with 2 +++
+1505046 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505048, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505046 +++ exited with 0 +++
+1505045 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505045, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1505052 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/gleam.toml"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505053 +++ exited with 0 +++
+1505052 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505052, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505118 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/gleam.toml"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505119 +++ exited with 0 +++
+1505118 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505118, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505120 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "log", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7fff7c98f410 /* 22 vars */) = 0
+1505124 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "cols"], 0x7fff04a06c68 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505124 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "cols"], 0x7fff04a06c68 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505124 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "cols"], 0x7fff04a06c68 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505124 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "cols"], 0x7fff04a06c68 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505124 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "cols"], 0x7fff04a06c68 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505124 execve("/usr/bin/tput", ["tput", "cols"], 0x7fff04a06c68 /* 22 vars */) = 0
+1505124 +++ exited with 2 +++
+1505120 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505124, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505125 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "lines"], 0x7fff04a06c68 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505125 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "lines"], 0x7fff04a06c68 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505125 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "lines"], 0x7fff04a06c68 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505125 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "lines"], 0x7fff04a06c68 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505125 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "lines"], 0x7fff04a06c68 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505125 execve("/usr/bin/tput", ["tput", "lines"], 0x7fff04a06c68 /* 22 vars */) = 0
+1505125 +++ exited with 2 +++
+1505123 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505125, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505123 +++ exited with 0 +++
+1505120 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505120, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505126 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/manifest.toml"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505127 +++ exited with 0 +++
+1505126 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505126, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505131 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/manifest.toml"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505132 +++ exited with 0 +++
+1505131 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505131, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1505133 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "log", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7fff7c98f410 /* 22 vars */) = 0
+1505138 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "cols"], 0x7fff1e83c028 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505138 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "cols"], 0x7fff1e83c028 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505138 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "cols"], 0x7fff1e83c028 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505138 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "cols"], 0x7fff1e83c028 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505138 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "cols"], 0x7fff1e83c028 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505138 execve("/usr/bin/tput", ["tput", "cols"], 0x7fff1e83c028 /* 22 vars */) = 0
+1505138 +++ exited with 2 +++
+1505133 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505138, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505139 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "lines"], 0x7fff1e83c028 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505139 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "lines"], 0x7fff1e83c028 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505139 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "lines"], 0x7fff1e83c028 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505139 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "lines"], 0x7fff1e83c028 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505139 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "lines"], 0x7fff1e83c028 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505139 execve("/usr/bin/tput", ["tput", "lines"], 0x7fff1e83c028 /* 22 vars */) = 0
+1505139 +++ exited with 2 +++
+1505133 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505139, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505136 +++ exited with 0 +++
+1505133 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505133, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505142 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505144 +++ exited with 0 +++
+1505142 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505142, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505148 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505151 +++ exited with 0 +++
+1505148 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505148, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1505156 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "log", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7fff7c98f410 /* 22 vars */) = 0
+1505158 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "cols"], 0x7ffd37e30658 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505158 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "cols"], 0x7ffd37e30658 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505158 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "cols"], 0x7ffd37e30658 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505158 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "cols"], 0x7ffd37e30658 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505158 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "cols"], 0x7ffd37e30658 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505158 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffd37e30658 /* 22 vars */) = 0
+1505158 +++ exited with 2 +++
+1505157 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505158, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505159 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "lines"], 0x7ffd37e30658 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505159 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "lines"], 0x7ffd37e30658 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505159 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "lines"], 0x7ffd37e30658 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505159 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "lines"], 0x7ffd37e30658 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505159 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "lines"], 0x7ffd37e30658 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505159 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffd37e30658 /* 22 vars */) = 0
+1505159 +++ exited with 2 +++
+1505156 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505159, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505157 +++ exited with 0 +++
+1505156 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505156, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505163 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505166 +++ exited with 0 +++
+1505163 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505163, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505173 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505174 +++ exited with 0 +++
+1505173 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505173, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1505176 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "log", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7fff7c98f410 /* 22 vars */) = 0
+1505183 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "cols"], 0x7fffdaab7388 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505183 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "cols"], 0x7fffdaab7388 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505183 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "cols"], 0x7fffdaab7388 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505183 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "cols"], 0x7fffdaab7388 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505183 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "cols"], 0x7fffdaab7388 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505183 execve("/usr/bin/tput", ["tput", "cols"], 0x7fffdaab7388 /* 22 vars */) = 0
+1505183 +++ exited with 2 +++
+1505179 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505183, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505185 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "lines"], 0x7fffdaab7388 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505185 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "lines"], 0x7fffdaab7388 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505185 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "lines"], 0x7fffdaab7388 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505185 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "lines"], 0x7fffdaab7388 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505185 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "lines"], 0x7fffdaab7388 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505185 execve("/usr/bin/tput", ["tput", "lines"], 0x7fffdaab7388 /* 22 vars */) = 0
+1505185 +++ exited with 2 +++
+1505176 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505185, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505179 +++ exited with 0 +++
+1505176 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505176, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505186 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505188 +++ exited with 0 +++
+1505186 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505186, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1505192 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505193 +++ exited with 0 +++
+1505192 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505192, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505194 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "log", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7fff7c98f410 /* 22 vars */) = 0
+1505199 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "cols"], 0x7ffe7c9378c8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505199 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "cols"], 0x7ffe7c9378c8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505199 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "cols"], 0x7ffe7c9378c8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505199 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "cols"], 0x7ffe7c9378c8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505199 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "cols"], 0x7ffe7c9378c8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505199 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffe7c9378c8 /* 22 vars */) = 0
+1505199 +++ exited with 2 +++
+1505194 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505199, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505200 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "lines"], 0x7ffe7c9378c8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505200 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "lines"], 0x7ffe7c9378c8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505200 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "lines"], 0x7ffe7c9378c8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505200 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "lines"], 0x7ffe7c9378c8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505200 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "lines"], 0x7ffe7c9378c8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505200 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffe7c9378c8 /* 22 vars */) = 0
+1505200 +++ exited with 2 +++
+1505194 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505200, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505197 +++ exited with 0 +++
+1505194 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505194, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1505201 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505202 +++ exited with 0 +++
+1505201 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505201, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505207 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505209 +++ exited with 0 +++
+1505207 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505207, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505210 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "log", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7fff7c98f410 /* 22 vars */) = 0
+1505213 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "cols"], 0x7ffd364f40f8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505213 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "cols"], 0x7ffd364f40f8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505213 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "cols"], 0x7ffd364f40f8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505213 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "cols"], 0x7ffd364f40f8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505213 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "cols"], 0x7ffd364f40f8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505213 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffd364f40f8 /* 22 vars */) = 0
+1505213 +++ exited with 2 +++
+1505211 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505213, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505215 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "lines"], 0x7ffd364f40f8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505215 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "lines"], 0x7ffd364f40f8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505215 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "lines"], 0x7ffd364f40f8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505215 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "lines"], 0x7ffd364f40f8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505215 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "lines"], 0x7ffd364f40f8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505215 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffd364f40f8 /* 22 vars */) = 0
+1505215 +++ exited with 2 +++
+1505211 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505215, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505211 +++ exited with 0 +++
+1505210 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505210, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505220 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505221 +++ exited with 0 +++
+1505220 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505220, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505225 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505226 +++ exited with 0 +++
+1505225 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505225, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1505233 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "log", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7fff7c98f410 /* 22 vars */) = 0
+1505235 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "cols"], 0x7ffea15d9058 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505235 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "cols"], 0x7ffea15d9058 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505235 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "cols"], 0x7ffea15d9058 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505235 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "cols"], 0x7ffea15d9058 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505235 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "cols"], 0x7ffea15d9058 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505235 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffea15d9058 /* 22 vars */) = 0
+1505235 +++ exited with 2 +++
+1505233 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505235, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505236 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "lines"], 0x7ffea15d9058 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505236 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "lines"], 0x7ffea15d9058 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505236 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "lines"], 0x7ffea15d9058 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505236 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "lines"], 0x7ffea15d9058 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505236 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "lines"], 0x7ffea15d9058 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505236 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffea15d9058 /* 22 vars */) = 0
+1505236 +++ exited with 2 +++
+1505234 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505236, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505234 +++ exited with 0 +++
+1505233 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505233, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1505239 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505241 +++ exited with 0 +++
+1505239 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505239, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505247 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505249 +++ exited with 0 +++
+1505247 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505247, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505251 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "log", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7fff7c98f410 /* 22 vars */) = 0
+1505257 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "cols"], 0x7fffad3c2988 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505257 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "cols"], 0x7fffad3c2988 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505257 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "cols"], 0x7fffad3c2988 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505257 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "cols"], 0x7fffad3c2988 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505257 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "cols"], 0x7fffad3c2988 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505257 execve("/usr/bin/tput", ["tput", "cols"], 0x7fffad3c2988 /* 22 vars */) = 0
+1505257 +++ exited with 2 +++
+1505251 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505257, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505258 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "lines"], 0x7fffad3c2988 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505258 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "lines"], 0x7fffad3c2988 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505258 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "lines"], 0x7fffad3c2988 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505258 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "lines"], 0x7fffad3c2988 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505258 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "lines"], 0x7fffad3c2988 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505258 execve("/usr/bin/tput", ["tput", "lines"], 0x7fffad3c2988 /* 22 vars */) = 0
+1505258 +++ exited with 2 +++
+1505251 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505258, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505253 +++ exited with 0 +++
+1505251 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505251, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1505262 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/delta_mesh_engine_test.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505264 +++ exited with 0 +++
+1505262 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505262, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505273 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/delta_mesh_engine_test.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505275 +++ exited with 0 +++
+1505273 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505273, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1505284 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "log", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7fff7c98f410 /* 22 vars */) = 0
+1505287 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "cols"], 0x7ffe257bbf28 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505287 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "cols"], 0x7ffe257bbf28 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505287 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "cols"], 0x7ffe257bbf28 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505287 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "cols"], 0x7ffe257bbf28 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505287 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "cols"], 0x7ffe257bbf28 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505287 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffe257bbf28 /* 22 vars */) = 0
+1505287 +++ exited with 2 +++
+1505284 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505287, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505288 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "lines"], 0x7ffe257bbf28 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505288 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "lines"], 0x7ffe257bbf28 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505288 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "lines"], 0x7ffe257bbf28 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505288 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "lines"], 0x7ffe257bbf28 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505288 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "lines"], 0x7ffe257bbf28 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505288 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffe257bbf28 /* 22 vars */) = 0
+1505288 +++ exited with 2 +++
+1505284 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505288, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505286 +++ exited with 0 +++
+1505284 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505284, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1505289 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/deadman_freshness_test.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505290 +++ exited with 0 +++
+1505289 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505289, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505291 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/deadman_freshness_test.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505292 +++ exited with 0 +++
+1505291 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505291, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505293 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "log", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7fff7c98f410 /* 22 vars */) = 0
+1505295 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "cols"], 0x7ffc38c597f8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505295 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "cols"], 0x7ffc38c597f8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505295 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "cols"], 0x7ffc38c597f8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505295 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "cols"], 0x7ffc38c597f8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505295 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "cols"], 0x7ffc38c597f8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505295 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffc38c597f8 /* 22 vars */) = 0
+1505295 +++ exited with 2 +++
+1505293 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505295, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505296 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "lines"], 0x7ffc38c597f8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505296 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "lines"], 0x7ffc38c597f8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505296 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "lines"], 0x7ffc38c597f8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505296 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "lines"], 0x7ffc38c597f8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505296 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "lines"], 0x7ffc38c597f8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505296 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffc38c597f8 /* 22 vars */) = 0
+1505296 +++ exited with 2 +++
+1505293 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505296, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505294 +++ exited with 0 +++
+1505293 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505293, si_uid=1000, si_status=0, si_utime=0, si_stime=1 /* 0.01 s */} ---
+1505297 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/crdt_health_bridge_test.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505298 +++ exited with 0 +++
+1505297 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505297, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505299 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/crdt_health_bridge_test.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505300 +++ exited with 0 +++
+1505299 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505299, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1505301 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "log", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7fff7c98f410 /* 22 vars */) = 0
+1505303 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "cols"], 0x7ffff43da688 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505303 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "cols"], 0x7ffff43da688 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505303 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "cols"], 0x7ffff43da688 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505303 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "cols"], 0x7ffff43da688 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505303 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "cols"], 0x7ffff43da688 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505303 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffff43da688 /* 22 vars */) = 0
+1505303 +++ exited with 2 +++
+1505301 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505303, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505304 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "lines"], 0x7ffff43da688 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505304 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "lines"], 0x7ffff43da688 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505304 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "lines"], 0x7ffff43da688 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505304 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "lines"], 0x7ffff43da688 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505304 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "lines"], 0x7ffff43da688 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505304 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffff43da688 /* 22 vars */) = 0
+1505304 +++ exited with 2 +++
+1505301 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505304, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505302 +++ exited with 0 +++
+1505301 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505301, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505305 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/crdt_mesh_sync_test.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505306 +++ exited with 0 +++
+1505305 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505305, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505307 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/crdt_mesh_sync_test.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505308 +++ exited with 0 +++
+1505307 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505307, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505309 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "log", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7fff7c98f410 /* 22 vars */) = 0
+1505311 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "cols"], 0x7ffdcfbe4d78 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505311 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "cols"], 0x7ffdcfbe4d78 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505311 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "cols"], 0x7ffdcfbe4d78 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505311 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "cols"], 0x7ffdcfbe4d78 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505311 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "cols"], 0x7ffdcfbe4d78 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505311 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffdcfbe4d78 /* 22 vars */) = 0
+1505311 +++ exited with 2 +++
+1505309 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505311, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505312 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "lines"], 0x7ffdcfbe4d78 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505312 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "lines"], 0x7ffdcfbe4d78 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505312 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "lines"], 0x7ffdcfbe4d78 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505312 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "lines"], 0x7ffdcfbe4d78 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505312 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "lines"], 0x7ffdcfbe4d78 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505312 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffdcfbe4d78 /* 22 vars */) = 0
+1505312 +++ exited with 2 +++
+1505309 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505312, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505310 +++ exited with 0 +++
+1505309 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505309, si_uid=1000, si_status=0, si_utime=0, si_stime=1 /* 0.01 s */} ---
+1505313 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/ev_delta_freshness_runner.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505314 +++ exited with 0 +++
+1505313 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505313, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505315 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/ev_delta_freshness_runner.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505316 +++ exited with 0 +++
+1505315 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505315, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505317 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "log", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7fff7c98f410 /* 22 vars */) = 0
+1505319 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "cols"], 0x7fff95ff0ef8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505319 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "cols"], 0x7fff95ff0ef8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505319 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "cols"], 0x7fff95ff0ef8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505319 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "cols"], 0x7fff95ff0ef8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505319 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "cols"], 0x7fff95ff0ef8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505319 execve("/usr/bin/tput", ["tput", "cols"], 0x7fff95ff0ef8 /* 22 vars */) = 0
+1505319 +++ exited with 2 +++
+1505318 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505319, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505320 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "lines"], 0x7fff95ff0ef8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505320 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "lines"], 0x7fff95ff0ef8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505320 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "lines"], 0x7fff95ff0ef8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505320 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "lines"], 0x7fff95ff0ef8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505320 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "lines"], 0x7fff95ff0ef8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505320 execve("/usr/bin/tput", ["tput", "lines"], 0x7fff95ff0ef8 /* 22 vars */) = 0
+1505320 +++ exited with 2 +++
+1505317 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505320, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505318 +++ exited with 0 +++
+1505317 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505317, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505321 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:contracts/rules/20260908-0912-provenance-integrity-contract.md"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505322 +++ exited with 0 +++
+1505321 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505321, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505323 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:contracts/rules/20260908-0912-provenance-integrity-contract.md"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505324 +++ exited with 0 +++
+1505323 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505323, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1505325 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "log", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x7fff7c98f410 /* 22 vars */) = 0
+1505327 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "cols"], 0x7fffe3292bc8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505327 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "cols"], 0x7fffe3292bc8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505327 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "cols"], 0x7fffe3292bc8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505327 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "cols"], 0x7fffe3292bc8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505327 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "cols"], 0x7fffe3292bc8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505327 execve("/usr/bin/tput", ["tput", "cols"], 0x7fffe3292bc8 /* 22 vars */) = 0
+1505327 +++ exited with 2 +++
+1505326 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505327, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505328 execve("/tmp/uos-ev-native-otp-2c1735/tput", ["tput", "lines"], 0x7fffe3292bc8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505328 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "lines"], 0x7fffe3292bc8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505328 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/tput", ["tput", "lines"], 0x7fffe3292bc8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505328 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/tput", ["tput", "lines"], 0x7fffe3292bc8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505328 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/tput", ["tput", "lines"], 0x7fffe3292bc8 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1505328 execve("/usr/bin/tput", ["tput", "lines"], 0x7fffe3292bc8 /* 22 vars */) = 0
+1505328 +++ exited with 2 +++
+1505325 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505328, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505326 +++ exited with 0 +++
+1505325 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505325, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505329 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/test/mesh_sync_codec_test.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505330 +++ exited with 0 +++
+1505329 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505329, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505331 execve("/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", ["/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/test/mesh_sync_codec_test.gleam"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505332 +++ exited with 0 +++
+1505331 +++ exited with 0 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505331, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505333 execve("/tmp/ev-recipe-codec-final-build/default/ev_receipt.exe", ["/tmp/ev-recipe-codec-final-build/default/ev_receipt.exe", "observe", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "99", "dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505333 +++ exited with 1 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505333, si_uid=1000, si_status=1, si_utime=0, si_stime=0} ---
+1505334 execve("/tmp/ev-recipe-codec-final-build/default/ev_receipt.exe", ["/tmp/ev-recipe-codec-final-build/default/ev_receipt.exe", "observe", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "98", "@"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505334 +++ exited with 1 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505334, si_uid=1000, si_status=1, si_utime=0, si_stime=0} ---
+1505335 execve("/tmp/ev-recipe-codec-final-build/default/ev_receipt.exe", ["/tmp/ev-recipe-codec-final-build/default/ev_receipt.exe", "observe", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "98", "0000000000000000000000000000000000000000"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505336 execve("/usr/bin/chronyc", ["/usr/bin/chronyc", "-c", "tracking"], 0x7fffc462e608 /* 22 vars */) = 0
+1505336 +++ exited with 0 +++
+1505335 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505336, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505380 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "log", "-r", "commit_id(\"0000000000000000000000000000000000000000\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x5c1da6e20610 /* 15 vars */) = 0
+1505382 execve("/tmp/uos-ev98-campaign-2a7c31.reserve.d/native-bin/tput", ["tput", "cols"], 0x7ffd32473e78 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1505382 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "cols"], 0x7ffd32473e78 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1505382 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffd32473e78 /* 15 vars */) = 0
+1505382 +++ exited with 2 +++
+1505380 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505382, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505383 execve("/tmp/uos-ev98-campaign-2a7c31.reserve.d/native-bin/tput", ["tput", "lines"], 0x7ffd32473e78 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1505383 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "lines"], 0x7ffd32473e78 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1505383 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffd32473e78 /* 15 vars */) = 0
+1505383 +++ exited with 2 +++
+1505380 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505383, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505381 +++ exited with 0 +++
+1505380 +++ exited with 0 +++
+1505335 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505380, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505384 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"0000000000000000000000000000000000000000\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam"], 0x5c1da6e1f750 /* 15 vars */) = 0
+1505385 +++ exited with 0 +++
+1505384 +++ exited with 0 +++
+1505335 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505384, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505335 +++ exited with 1 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505335, si_uid=1000, si_status=1, si_utime=39 /* 0.39 s */, si_stime=4 /* 0.04 s */} ---
+1505387 execve("/tmp/ev-recipe-codec-final-build/default/ev_receipt.exe", ["/tmp/ev-recipe-codec-final-build/default/ev_receipt.exe", "observe", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "98", "dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93", "arbitrary-policy.json"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505387 +++ exited with 1 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505387, si_uid=1000, si_status=1, si_utime=0, si_stime=0} ---
+1505388 execve("/tmp/ev-recipe-codec-final-build/default/ev_receipt.exe", ["/tmp/ev-recipe-codec-final-build/default/ev_receipt.exe", "observe", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "98", "337f99137673d7866b958a38bd490fb876b2880f"], 0x7fff7c98f410 /* 22 vars */) = 0
+1505389 execve("/usr/bin/chronyc", ["/usr/bin/chronyc", "-c", "tracking"], 0x7ffd06f6d498 /* 22 vars */) = 0
+1505389 +++ exited with 0 +++
+1505388 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505389, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505390 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "log", "-r", "commit_id(\"337f99137673d7866b958a38bd490fb876b2880f\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x5d3453085610 /* 15 vars */) = 0
+1505392 execve("/tmp/uos-ev98-campaign-d980eb.reserve.d/native-bin/tput", ["tput", "cols"], 0x7ffe18fc5a78 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1505392 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "cols"], 0x7ffe18fc5a78 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1505392 execve("/usr/bin/tput", ["tput", "cols"], 0x7ffe18fc5a78 /* 15 vars */) = 0
+1505392 +++ exited with 2 +++
+1505390 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505392, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505393 execve("/tmp/uos-ev98-campaign-d980eb.reserve.d/native-bin/tput", ["tput", "lines"], 0x7ffe18fc5a78 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1505393 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/tput", ["tput", "lines"], 0x7ffe18fc5a78 /* 15 vars */) = -1 ENOENT (No such file or directory)
+1505393 execve("/usr/bin/tput", ["tput", "lines"], 0x7ffe18fc5a78 /* 15 vars */) = 0
+1505393 +++ exited with 2 +++
+1505390 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505393, si_uid=1000, si_status=2, si_utime=0, si_stime=0} ---
+1505391 +++ exited with 0 +++
+1505390 +++ exited with 0 +++
+1505388 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505390, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505394 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"337f99137673d7866b958a38bd490fb876b2880f\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam"], 0x5d3453084750 /* 15 vars */) = 0
+1505395 +++ exited with 0 +++
+1505394 +++ exited with 0 +++
+1505388 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505394, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505396 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"337f99137673d7866b958a38bd490fb876b2880f\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam"], 0x5d3453084920 /* 15 vars */) = 0
+1505397 +++ exited with 0 +++
+1505396 +++ exited with 0 +++
+1505388 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505396, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505398 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"337f99137673d7866b958a38bd490fb876b2880f\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam"], 0x5d3453084ab0 /* 15 vars */) = 0
+1505399 +++ exited with 0 +++
+1505398 +++ exited with 0 +++
+1505388 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505398, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505400 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"337f99137673d7866b958a38bd490fb876b2880f\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam"], 0x5d3453084c80 /* 15 vars */) = 0
+1505401 +++ exited with 0 +++
+1505400 +++ exited with 0 +++
+1505388 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505400, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505402 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"337f99137673d7866b958a38bd490fb876b2880f\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam"], 0x5d3453084e10 /* 15 vars */) = 0
+1505403 +++ exited with 0 +++
+1505402 +++ exited with 0 +++
+1505388 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505402, si_uid=1000, si_status=0, si_utime=1 /* 0.01 s */, si_stime=0} ---
+1505404 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "show", "-r", "commit_id(\"337f99137673d7866b958a38bd490fb876b2880f\")", "-T", "\"\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam"], 0x5d3453084fe0 /* 15 vars */) = 0
+1505405 +++ exited with 0 +++
+1505404 +++ exited with 0 +++
+1505388 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505404, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505406 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909", "file", "list", "-r", "commit_id(\"337f99137673d7866b958a38bd490fb876b2880f\")", "-T", "file_type ++ \" \" ++ path ++ \"\\n\"", "--", "root:apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam"], 0x5d3453085170 /* 15 vars */) = 0
+1505407 +++ exited with 0 +++
+1505406 +++ exited with 0 +++
+1505388 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505406, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505388 +++ exited with 1 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505388, si_uid=1000, si_status=1, si_utime=37 /* 0.37 s */, si_stime=6 /* 0.06 s */} ---
+1505408 execve("/tmp/ev-recipe-codec-final-build/default/ev_receipt.exe", ["/tmp/ev-recipe-codec-final-build/default/ev_receipt.exe", "observe", "/tmp/uos-ev98-campaign-a9130b.reserve.d", "98", "dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93"], 0x623a9c474160 /* 23 vars */) = 0
+1505409 execve("/usr/bin/chronyc", ["/usr/bin/chronyc", "-c", "tracking"], 0x7fff407be0f8 /* 23 vars */) = 0
+1505409 +++ exited with 0 +++
+1505408 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505409, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1505412 execve("/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", ["/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj", "--ignore-working-copy", "--no-pager", "--color", "never", "-R", "/tmp/uos-ev98-campaign-a9130b.reserve.d", "log", "-r", "commit_id(\"dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93\")", "--no-graph", "-T", "self.commit_id() ++ \"\\n\""], 0x63fcabd78610 /* 15 vars */) = 0
+1505413 +++ exited with 255 +++
+1505412 +++ exited with 255 +++
+1505408 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505412, si_uid=1000, si_status=255, si_utime=0, si_stime=0} ---
+1505408 +++ exited with 1 +++
+1504418 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1505408, si_uid=1000, si_status=1, si_utime=36 /* 0.36 s */, si_stime=3 /* 0.03 s */} ---
+1504418 +++ exited with 0 +++

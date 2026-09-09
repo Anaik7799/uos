@@ -1,0 +1,117 @@
+{
+  "task": {
+    "plan_id": "uos/ev98-sync-status/20260909",
+    "task_id": "SYNC_STATUS",
+    "worker": "codex-ev98-sync-status",
+    "attempt": 2,
+    "state": "completed",
+    "completion_receipt": {
+      "path": "/tmp/ev98-sync-status-completed-20260909-1543.json",
+      "sha256": "a16d1976912469ff7eb6b8998a638a7e1d371d344fb2b672c126de603123ba37",
+      "bytes": 3103
+    }
+  },
+  "completion_active_check": {
+    "path": "/tmp/ev98-sync-completion-active-attempt2-20260909-1540.json",
+    "sha256": "c58ddde19d351cd9157f358b67c7500d9d08e16e1c2c702daa915aa114c45b1e",
+    "bytes": 3782
+  },
+  "independent_review": {
+    "verdict": "APPROVE_BOUNDED_SYNC_STATUS",
+    "authority": "NONE",
+    "admission": "NOT_GRANTED",
+    "receipt": {
+      "path": "/tmp/ev-sync-root-reorder-green-1508/20260909-1536-sync_status-independent-approval.json",
+      "sha256": "287b419f76f5a1b1fbc2468d3b41b9d8acd319a5d8cbf35d1825276d7d87bc92",
+      "bytes": 7352
+    }
+  },
+  "independent_reorder_probe": {
+    "state": "APPROVED_BOUNDED",
+    "approval": {
+      "path": "/tmp/ev-sync-root-reorder-green-1508/20260909-1536-sync_status-independent-approval.json",
+      "sha256": "287b419f76f5a1b1fbc2468d3b41b9d8acd319a5d8cbf35d1825276d7d87bc92",
+      "bytes": 7352
+    },
+    "summary": "Independent unchanged stale ACK and Delta probes passed at candidate 0d9; 174 bindings and author 11/72 receipts were rehashed."
+  },
+  "schema": "uos.ev98.sync-status-evidence.v1",
+  "observed_at": "2026-09-09T15:23:42Z",
+  "source_commit": "0d9bd0a8a8ecf26014904975a5e8e9a6c97d8d8d",
+  "source_change": "kmmrlyzwnlkqomtnrxzzkrmrtmnqxtut",
+  "source_parent": "9a75d96856da2f8e6120291747e168b790394891",
+  "source_files": [
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+      "sha256": "05aa33ffb9318a5d7bcde2b72d30f2495757a33abdc28d843e27f3005aacdbde",
+      "bytes": 13593
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+      "sha256": "5ad7dfef1c5600546957b8f590e8b12a0b75f9b274fc5b88810a207c935a6146",
+      "bytes": 16023
+    },
+    {
+      "path": "apps/cepaf_gleam/test/delta_mesh_engine_test.gleam",
+      "sha256": "de5dc4bcf33a89cc30adce1ed559c69b431e2bc063307345a861fde07fdc784f",
+      "bytes": 19535
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ev98_sync_status_runner.gleam",
+      "sha256": "79bef00d78f058ccd19828da87bda10694a1e68a691f094cd3bce9a77d21b162",
+      "bytes": 1781
+    },
+    {
+      "path": "docs/reviews/20260909-1425-ev98-sync-status-followup-risk.json",
+      "sha256": "d7e5085b9de9329bfc4fe378c94acb7199dd833263ff0d5a466841fc3547237b",
+      "bytes": 12668
+    }
+  ],
+  "receipts": [
+    {
+      "path": "/tmp/ev98-sync-status-three-peer-red-run-20260909-1422.json",
+      "sha256": "a7e663d834f180c7d3a3362cbfd8151bdd4482b7234398e1d9c76641503af845",
+      "bytes": 5996
+    },
+    {
+      "path": "/tmp/ev98-sync-status-frontier-ack-red-run-20260909-1501.json",
+      "sha256": "bca2186ea1cf1af885c4877b8a4259f6b78c335a5601bb4da83421d216bdc8ff",
+      "bytes": 7169
+    },
+    {
+      "path": "/tmp/ev98-sync-status-frontier-green-build-20260909-1510.json",
+      "sha256": "36140cf4eb0078fc1654e3a28648b56f9cb6a1357e0ffdf023d8066d7a49e31e",
+      "bytes": 2274
+    },
+    {
+      "path": "/tmp/ev98-sync-status-frontier-green-run-20260909-1510.json",
+      "sha256": "9da5cacc2b277e31d8738a60e1f49bd9b9f300abfe08aee54aa358378cc67037",
+      "bytes": 5501
+    },
+    {
+      "path": "/tmp/ev98-sync-status-retained-frontier-build-20260909-1518.json",
+      "sha256": "c1fcc141729c27ba5bcee1f7d823e38f296c35414a04e002427a464a565d573d",
+      "bytes": 96806
+    },
+    {
+      "path": "/tmp/ev98-sync-status-retained-frontier-run-20260909-1518.json",
+      "sha256": "92363cb7de608596079f29844ad6dac336659c08feabed266edbb664795ca2f4",
+      "bytes": 15359
+    },
+    {
+      "path": "/tmp/ev98-sync-frontier-active-attempt2-20260909-1528.json",
+      "sha256": "9062458224b1e58596d75e3f539bbed2d3e8d6afb80099c143db08a558ca6804",
+      "bytes": 3790
+    }
+  ],
+  "manifest": {
+    "path": "/tmp/ev98-sync-status-frontier-candidate-20260909-1529.json",
+    "sha256": "c3f6b157ab6fe4f4d202edacb755001b8997e6354249d0e09e62483f066e83db",
+    "bytes": 3640
+  },
+  "limits": [
+    "The observed frontier is in-memory state for the current process incarnation.",
+    "The model assumes typed messages contain honest clock and sender identity values; it does not authenticate either.",
+    "No network delivery, deployed peer loop, transport authority, or full-mesh admission is established."
+  ]
+}

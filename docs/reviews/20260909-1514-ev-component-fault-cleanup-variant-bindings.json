@@ -1,0 +1,25 @@
+{
+  "source_candidate": "14057e08112c1cd5d44297eac6a9c853e8287b7a",
+  "variant": "cleanup",
+  "authority": "NONE",
+  "baseline_manifest_sha256": "63c76831f803f49f16a33b27f6b1628d7f67a97c372030a050738734e74698f9",
+  "mutator_source": "tools/ev_transport_cleanup_fault.ml",
+  "mutator_sha256": "18471c90ef75d57f6bf068d76b4fba3532400c3ff943a69b78363e3c5386889e",
+  "changes": [
+    {
+      "source": "candidate:apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_http.gleam",
+      "staged": "/tmp/ev-transport-root-fault-cleanup-1511/package/src/cepaf_gleam/crdt/mesh_zenoh_http.gleam",
+      "baseline_sha256": "247d32160def65e50f2906f39713d4f0da11bf913336da9ae7980b87e233652c",
+      "variant_sha256": "f92d49a55ce16bdb4155e5297bec472c177d4d3ef3b573cf91b38391b02493a6",
+      "variant_bytes": 12980
+    },
+    {
+      "source": "candidate:apps/cepaf_gleam/test/mesh_zenoh_live_test.gleam",
+      "staged": "/tmp/ev-transport-root-fault-cleanup-1511/package/test/mesh_zenoh_live_test.gleam",
+      "baseline_sha256": "db087489e7f6096df32cf0dbe97b1ed768a9f390789c32d61e7e8301bfaa2e01",
+      "variant_sha256": "516a7c76629eba0e876b6db5072e7514b2024085db72b74aca7dd23b8d94b5db",
+      "variant_bytes": 77
+    }
+  ],
+  "review_driver_sha256": "7dd760a83ac00e114c7d0da79571f55116194d2ca9d0a2348b81986e43c4e41d"
+}

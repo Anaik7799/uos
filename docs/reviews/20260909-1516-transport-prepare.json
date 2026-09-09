@@ -1,0 +1,51 @@
+{
+  "schema": "uos.ev98.transport-completion.v1",
+  "source_candidate": "14057e08112c1cd5d44297eac6a9c853e8287b7a",
+  "execution_evidence_candidate": "743f9f1b07e31647ef50d9bcc9f3548282ee97c0",
+  "state": "PREPARED_FOR_CANONICAL_COMPLETION",
+  "observed_utc_seconds": 1788967010.299216,
+  "plan": "uos/ev98-peer-loop/20260909",
+  "task": "TRANSPORT",
+  "worker": "codex-ev98-transport",
+  "attempt": 2,
+  "approval_sha256": "068e95c6b856f7870de0d40c11f8b87fef2d7c0fc9e6ee79c216afe1814af399",
+  "scope": "Bounded cooperative transport component only; no EV admission, authentication, crash durability, cross-host or production integration claim",
+  "authority": "NONE",
+  "artifacts": [
+    {
+      "kind": "independent-approval",
+      "path": "docs/reviews/20260909-1516-transport-independent-approval.json",
+      "sha256": "068e95c6b856f7870de0d40c11f8b87fef2d7c0fc9e6ee79c216afe1814af399"
+    },
+    {
+      "kind": "expired-hold",
+      "path": "docs/reviews/20260909-1516-transport-expired-hold.json",
+      "sha256": "154f1e05925a0cdde3ca23f3e8d01da5e40ecfc96226956edb14e3c06d6027db"
+    },
+    {
+      "kind": "recovery-preflight-hold",
+      "path": "docs/reviews/20260909-1516-transport-recovery-preflight-hold.json",
+      "sha256": "58e95c42322a1b6af8d27efec98f413ca87a102545e79a501874c5d28cd85adf"
+    },
+    {
+      "kind": "recovery-claim",
+      "path": "docs/reviews/20260909-1516-transport-recovery-claim.json",
+      "sha256": "52836d9aedbd73b9e55b868997d5924f0c7a3761e23b091525e0348418e50226"
+    },
+    {
+      "kind": "recovery-active",
+      "path": "docs/reviews/20260909-1516-transport-recovery-active.json",
+      "sha256": "8a4c6770953ed74e2a82a330e941659eba8ef0bb9e7e9c16a6d5d738a7d79473"
+    },
+    {
+      "kind": "pre-completion-active",
+      "path": "docs/reviews/20260909-1516-transport-pre-completion-active.json",
+      "sha256": "b65363842738ba9060e318fd44dec414bd19efeb7274a66b31c105cef7f98543"
+    },
+    {
+      "kind": "parent-expired-release-refusal",
+      "path": "docs/reviews/20260909-1516-transport-parent-expired-release-refusal.json",
+      "sha256": "9d5e57900205ead42321a9f13563820fd0016b4e92cdd24259d9e7faac5e2bad"
+    }
+  ]
+}

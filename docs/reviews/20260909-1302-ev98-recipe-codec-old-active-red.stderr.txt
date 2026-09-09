@@ -1,0 +1,1237 @@
+error: Unknown module
+   ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:34:1
+   │  
+34 │ ╭ import cepaf_gleam/crdt/mesh_wire.{
+35 │ │   type Value, type WireError, Array, Boolean, CollectionLimit, DuplicateDot,
+36 │ │   DuplicateKey, Integer, InvalidIdentity, InvalidShape, NodeMismatch, Real, Text,
+37 │ │ }
+   │ ╰─^
+
+No module has been found with the name `cepaf_gleam/crdt/mesh_wire`.
+
+error: Unknown module
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:181:26
+    │
+181 │         #("delta_state", mesh_wire.diagnostic_json(state_value(state))),
+    │                          ^^^^^^^^^
+
+No module has been found with the name `mesh_wire`.
+
+error: Unknown module
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:182:25
+    │
+182 │         #("health_map", mesh_wire.diagnostic_json(health_value(health))),
+    │                         ^^^^^^^^^
+
+No module has been found with the name `mesh_wire`.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:204:39
+    │
+204 │ fn clock_value(clock: VectorClock) -> Value {
+    │                                       ^^^^^
+
+The type `Value` is not defined or imported in this module.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:205:3
+    │
+205 │   Array(list.map(clock, fn(p) { Array([Text(p.0), Integer(p.1)]) }))
+    │   ^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:205:33
+    │
+205 │   Array(list.map(clock, fn(p) { Array([Text(p.0), Integer(p.1)]) }))
+    │                                 ^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:205:40
+    │
+205 │   Array(list.map(clock, fn(p) { Array([Text(p.0), Integer(p.1)]) }))
+    │                                        ^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:205:51
+    │
+205 │   Array(list.map(clock, fn(p) { Array([Text(p.0), Integer(p.1)]) }))
+    │                                                   ^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:208:39
+    │
+208 │ fn dot_value(dot: delta_state.Dot) -> Value {
+    │                                       ^^^^^
+
+The type `Value` is not defined or imported in this module.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:209:3
+    │
+209 │   Array([Text(dot.node), Integer(dot.counter)])
+    │   ^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:209:10
+    │
+209 │   Array([Text(dot.node), Integer(dot.counter)])
+    │          ^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:209:26
+    │
+209 │   Array([Text(dot.node), Integer(dot.counter)])
+    │                          ^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:212:42
+    │
+212 │ fn state_value(state: MeshDeltaState) -> Value {
+    │                                          ^^^^^
+
+The type `Value` is not defined or imported in this module.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:213:3
+    │
+213 │   Array([
+    │   ^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:214:5
+    │
+214 │     Text(state.origin_node),
+    │     ^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:215:5
+    │
+215 │     Integer(state.epoch_us),
+    │     ^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:217:5
+    │
+217 │     Array([
+    │     ^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:218:7
+    │
+218 │       Array(
+    │       ^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:220:11
+    │
+220 │           Array([Text(p.0), dot_value(p.1)])
+    │           ^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:220:18
+    │
+220 │           Array([Text(p.0), dot_value(p.1)])
+    │                  ^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:223:7
+    │
+223 │       Array(list.map(state.active_workers.tombstones, dot_value)),
+    │       ^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:225:5
+    │
+225 │     Array([
+    │     ^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:229:5
+    │
+229 │     Array([
+    │     ^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:230:7
+    │
+230 │       Text(state.leader_lease.value),
+    │       ^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:231:7
+    │
+231 │       Integer(state.leader_lease.timestamp_us),
+    │       ^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:232:7
+    │
+232 │       Text(state.leader_lease.writer),
+    │       ^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:237:46
+    │
+237 │ fn health_value(health: ClusterHealthMap) -> Value {
+    │                                              ^^^^^
+
+The type `Value` is not defined or imported in this module.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:238:3
+    │
+238 │   Array(
+    │   ^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:242:7
+    │
+242 │       Array([
+    │       ^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:243:9
+    │
+243 │         Text(p.0),
+    │         ^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:244:9
+    │
+244 │         Array([
+    │         ^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:245:11
+    │
+245 │           Array([
+    │           ^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:246:13
+    │
+246 │             Text(h.node),
+    │             ^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:247:13
+    │
+247 │             Real(h.health_score),
+    │             ^^^^
+
+The custom type variant constructor `Real` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:248:13
+    │
+248 │             Real(h.lyapunov_exponent),
+    │             ^^^^
+
+The custom type variant constructor `Real` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:249:13
+    │
+249 │             Boolean(h.is_stable),
+    │             ^^^^^^^
+
+The custom type variant constructor `Boolean` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:250:13
+    │
+250 │             Text(h.breaker_state),
+    │             ^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:251:13
+    │
+251 │             Integer(h.sample_epoch_us),
+    │             ^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:253:11
+    │
+253 │           Integer(reg.timestamp_us),
+    │           ^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:254:11
+    │
+254 │           Text(reg.writer),
+    │           ^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:261:47
+    │
+261 │ fn message_value(message: MeshSyncMessage) -> Value {
+    │                                               ^^^^^
+
+The type `Value` is not defined or imported in this module.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:264:7
+    │
+264 │       Array([
+    │       ^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:265:9
+    │
+265 │         Integer(1),
+    │         ^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:266:9
+    │
+266 │         Text("sync_digest"),
+    │         ^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:267:9
+    │
+267 │         Text(node),
+    │         ^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:269:9
+    │
+269 │         Integer(count),
+    │         ^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:270:9
+    │
+270 │         Integer(epoch),
+    │         ^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:273:7
+    │
+273 │       Array([
+    │       ^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:274:9
+    │
+274 │         Integer(1),
+    │         ^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:275:9
+    │
+275 │         Text("sync_delta"),
+    │         ^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:276:9
+    │
+276 │         Text(node),
+    │         ^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:279:9
+    │
+279 │         Integer(epoch),
+    │         ^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:282:7
+    │
+282 │       Array([
+    │       ^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:283:9
+    │
+283 │         Integer(1),
+    │         ^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:284:9
+    │
+284 │         Text("sync_ack"),
+    │         ^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:285:9
+    │
+285 │         Text(node),
+    │         ^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:287:9
+    │
+287 │         Text(status),
+    │         ^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:288:9
+    │
+288 │         Integer(epoch),
+    │         ^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown module
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:296:7
+    │
+296 │       mesh_wire.bounded_list(clock)
+    │       ^^^^^^^^^
+
+No module has been found with the name `mesh_wire`.
+
+error: Unknown module
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:298:7
+    │
+298 │       mesh_wire.bounded_list(state.vector_clock)
+    │       ^^^^^^^^^
+
+No module has been found with the name `mesh_wire`.
+
+error: Unknown module
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:299:10
+    │
+299 │       && mesh_wire.bounded_list(state.active_workers.elements)
+    │          ^^^^^^^^^
+
+No module has been found with the name `mesh_wire`.
+
+error: Unknown module
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:300:10
+    │
+300 │       && mesh_wire.bounded_list(state.active_workers.tombstones)
+    │          ^^^^^^^^^
+
+No module has been found with the name `mesh_wire`.
+
+error: Unknown module
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:301:10
+    │
+301 │       && mesh_wire.bounded_list(state.task_counters.positive)
+    │          ^^^^^^^^^
+
+No module has been found with the name `mesh_wire`.
+
+error: Unknown module
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:302:10
+    │
+302 │       && mesh_wire.bounded_list(state.task_counters.negative)
+    │          ^^^^^^^^^
+
+No module has been found with the name `mesh_wire`.
+
+error: Unknown module
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:303:10
+    │
+303 │       && mesh_wire.bounded_list(health)
+    │          ^^^^^^^^^
+
+No module has been found with the name `mesh_wire`.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:312:21
+    │
+312 │ ) -> Result(String, WireError) {
+    │                     ^^^^^^^^^
+
+The type `WireError` is not defined or imported in this module.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:315:20
+    │
+315 │     False -> Error(CollectionLimit)
+    │                    ^^^^^^^^^^^^^^^
+
+The custom type variant constructor `CollectionLimit` is not in scope here.
+
+error: Unknown module
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:318:23
+    │
+318 │   use _ <- result.try(mesh_wire.validate(value))
+    │                       ^^^^^^^^^
+
+No module has been found with the name `mesh_wire`.
+
+error: Unknown module
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:320:3
+    │
+320 │   mesh_wire.encode(value)
+    │   ^^^^^^^^^
+
+No module has been found with the name `mesh_wire`.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:325:30
+    │
+325 │ ) -> Result(MeshSyncMessage, WireError) {
+    │                              ^^^^^^^^^
+
+The type `WireError` is not defined or imported in this module.
+
+error: Unknown module
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:326:27
+    │
+326 │   use value <- result.try(mesh_wire.parse(bytes))
+    │                           ^^^^^^^^^
+
+No module has been found with the name `mesh_wire`.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:338:67
+    │
+338 │ ) -> Result(#(MeshDeltaState, ClusterHealthMap, MeshSyncMessage), WireError) {
+    │                                                                   ^^^^^^^^^
+
+The type `WireError` is not defined or imported in this module.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:349:45
+    │
+349 │ fn identity(node: String) -> Result(String, WireError) {
+    │                                             ^^^^^^^^^
+
+The type `WireError` is not defined or imported in this module.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:352:20
+    │
+352 │     False -> Error(InvalidIdentity)
+    │                    ^^^^^^^^^^^^^^^ Did you mean `identity`?
+
+The custom type variant constructor `InvalidIdentity` is not in scope here.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:358:33
+    │
+358 │ ) -> Result(List(#(String, a)), WireError) {
+    │                                 ^^^^^^^^^
+
+The type `WireError` is not defined or imported in this module.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:362:20
+    │
+362 │     False -> Error(DuplicateKey)
+    │                    ^^^^^^^^^^^^
+
+The custom type variant constructor `DuplicateKey` is not in scope here.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:366:22
+    │
+366 │ fn read_clock(value: Value) -> Result(VectorClock, WireError) {
+    │                      ^^^^^
+
+The type `Value` is not defined or imported in this module.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:366:52
+    │
+366 │ fn read_clock(value: Value) -> Result(VectorClock, WireError) {
+    │                                                    ^^^^^^^^^
+
+The type `WireError` is not defined or imported in this module.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:368:5
+    │
+368 │     Array(entries) -> {
+    │     ^^^^^^^^^^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:372:13
+    │
+372 │             Array([Text(node), Integer(counter)]) -> {
+    │             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:372:20
+    │
+372 │             Array([Text(node), Integer(counter)]) -> {
+    │                    ^^^^^^^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:372:32
+    │
+372 │             Array([Text(node), Integer(counter)]) -> {
+    │                                ^^^^^^^^^^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:376:24
+    │
+376 │             _ -> Error(InvalidShape)
+    │                        ^^^^^^^^^^^^
+
+The custom type variant constructor `InvalidShape` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:382:16
+    │
+382 │     _ -> Error(InvalidShape)
+    │                ^^^^^^^^^^^^
+
+The custom type variant constructor `InvalidShape` is not in scope here.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:386:20
+    │
+386 │ fn read_dot(value: Value) -> Result(delta_state.Dot, WireError) {
+    │                    ^^^^^
+
+The type `Value` is not defined or imported in this module.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:386:54
+    │
+386 │ fn read_dot(value: Value) -> Result(delta_state.Dot, WireError) {
+    │                                                      ^^^^^^^^^
+
+The type `WireError` is not defined or imported in this module.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:388:5
+    │
+388 │     Array([Text(node), Integer(counter)]) -> {
+    │     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:388:12
+    │
+388 │     Array([Text(node), Integer(counter)]) -> {
+    │            ^^^^^^^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:388:24
+    │
+388 │     Array([Text(node), Integer(counter)]) -> {
+    │                        ^^^^^^^^^^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:392:16
+    │
+392 │     _ -> Error(InvalidShape)
+    │                ^^^^^^^^^^^^
+
+The custom type variant constructor `InvalidShape` is not in scope here.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:396:24
+    │
+396 │ fn read_workers(value: Value) -> Result(delta_state.ORSet(String), WireError) {
+    │                        ^^^^^
+
+The type `Value` is not defined or imported in this module.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:396:68
+    │
+396 │ fn read_workers(value: Value) -> Result(delta_state.ORSet(String), WireError) {
+    │                                                                    ^^^^^^^^^
+
+The type `WireError` is not defined or imported in this module.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:398:5
+    │
+398 │     Array([Array(elements), Array(tombstones)]) -> {
+    │     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:398:12
+    │
+398 │     Array([Array(elements), Array(tombstones)]) -> {
+    │            ^^^^^^^^^^^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:398:29
+    │
+398 │     Array([Array(elements), Array(tombstones)]) -> {
+    │                             ^^^^^^^^^^^^^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:402:13
+    │
+402 │             Array([Text(worker), dot]) -> {
+    │             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:402:20
+    │
+402 │             Array([Text(worker), dot]) -> {
+    │                    ^^^^^^^^^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:406:24
+    │
+406 │             _ -> Error(InvalidShape)
+    │                        ^^^^^^^^^^^^
+
+The custom type variant constructor `InvalidShape` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:414:24
+    │
+414 │         False -> Error(DuplicateDot)
+    │                        ^^^^^^^^^^^^
+
+The custom type variant constructor `DuplicateDot` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:417:16
+    │
+417 │     _ -> Error(InvalidShape)
+    │                ^^^^^^^^^^^^
+
+The custom type variant constructor `InvalidShape` is not in scope here.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:421:22
+    │
+421 │ fn read_state(value: Value) -> Result(MeshDeltaState, WireError) {
+    │                      ^^^^^
+
+The type `Value` is not defined or imported in this module.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:421:55
+    │
+421 │ fn read_state(value: Value) -> Result(MeshDeltaState, WireError) {
+    │                                                       ^^^^^^^^^
+
+The type `WireError` is not defined or imported in this module.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:423:5
+    │  
+423 │ ╭     Array([
+424 │ │       Text(origin),
+425 │ │       Integer(epoch),
+426 │ │       clock,
+    · │
+429 │ │       Array([Text(leader), Integer(version), Text(writer)]),
+430 │ │     ]) -> {
+    │ ╰──────^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:424:7
+    │
+424 │       Text(origin),
+    │       ^^^^^^^^^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:425:7
+    │
+425 │       Integer(epoch),
+    │       ^^^^^^^^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:428:7
+    │
+428 │       Array([positive, negative]),
+    │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:429:7
+    │
+429 │       Array([Text(leader), Integer(version), Text(writer)]),
+    │       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:429:14
+    │
+429 │       Array([Text(leader), Integer(version), Text(writer)]),
+    │              ^^^^^^^^^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:429:28
+    │
+429 │       Array([Text(leader), Integer(version), Text(writer)]),
+    │                            ^^^^^^^^^^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:429:46
+    │
+429 │       Array([Text(leader), Integer(version), Text(writer)]),
+    │                                              ^^^^^^^^^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:446:16
+    │
+446 │     _ -> Error(InvalidShape)
+    │                ^^^^^^^^^^^^
+
+The custom type variant constructor `InvalidShape` is not in scope here.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:450:23
+    │
+450 │ fn read_health(value: Value) -> Result(ClusterHealthMap, WireError) {
+    │                       ^^^^^
+
+The type `Value` is not defined or imported in this module.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:450:58
+    │
+450 │ fn read_health(value: Value) -> Result(ClusterHealthMap, WireError) {
+    │                                                          ^^^^^^^^^
+
+The type `WireError` is not defined or imported in this module.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:452:5
+    │
+452 │     Array(entries) -> {
+    │     ^^^^^^^^^^^^^^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:456:13
+    │  
+456 │ ╭             Array([
+457 │ │               Text(key),
+458 │ │               Array([
+459 │ │                 Array([
+    · │
+469 │ │               ]),
+470 │ │             ]) -> {
+    │ ╰──────────────^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:457:15
+    │
+457 │               Text(key),
+    │               ^^^^^^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:458:15
+    │  
+458 │ ╭               Array([
+459 │ │                 Array([
+460 │ │                   Text(node),
+461 │ │                   Real(score),
+    · │
+468 │ │                 Text(writer),
+469 │ │               ]),
+    │ ╰────────────────^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:459:17
+    │  
+459 │ ╭                 Array([
+460 │ │                   Text(node),
+461 │ │                   Real(score),
+462 │ │                   Real(exponent),
+    · │
+465 │ │                   Integer(sample),
+466 │ │                 ]),
+    │ ╰──────────────────^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:460:19
+    │
+460 │                   Text(node),
+    │                   ^^^^^^^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:461:19
+    │
+461 │                   Real(score),
+    │                   ^^^^^^^^^^^
+
+The custom type variant constructor `Real` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:462:19
+    │
+462 │                   Real(exponent),
+    │                   ^^^^^^^^^^^^^^
+
+The custom type variant constructor `Real` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:463:19
+    │
+463 │                   Boolean(stable),
+    │                   ^^^^^^^^^^^^^^^
+
+The custom type variant constructor `Boolean` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:464:19
+    │
+464 │                   Text(breaker),
+    │                   ^^^^^^^^^^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:465:19
+    │
+465 │                   Integer(sample),
+    │                   ^^^^^^^^^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:467:17
+    │
+467 │                 Integer(version),
+    │                 ^^^^^^^^^^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:468:17
+    │
+468 │                 Text(writer),
+    │                 ^^^^^^^^^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:490:32
+    │
+490 │                 False -> Error(NodeMismatch)
+    │                                ^^^^^^^^^^^^
+
+The custom type variant constructor `NodeMismatch` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:493:24
+    │
+493 │             _ -> Error(InvalidShape)
+    │                        ^^^^^^^^^^^^
+
+The custom type variant constructor `InvalidShape` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:499:16
+    │
+499 │     _ -> Error(InvalidShape)
+    │                ^^^^^^^^^^^^
+
+The custom type variant constructor `InvalidShape` is not in scope here.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:503:24
+    │
+503 │ fn read_message(value: Value) -> Result(MeshSyncMessage, WireError) {
+    │                        ^^^^^
+
+The type `Value` is not defined or imported in this module.
+
+error: Unknown type
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:503:58
+    │
+503 │ fn read_message(value: Value) -> Result(MeshSyncMessage, WireError) {
+    │                                                          ^^^^^^^^^
+
+The type `WireError` is not defined or imported in this module.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:505:5
+    │  
+505 │ ╭     Array([
+506 │ │       Integer(1),
+507 │ │       Text("sync_digest"),
+508 │ │       Text(node),
+    · │
+511 │ │       Integer(epoch),
+512 │ │     ]) -> {
+    │ ╰──────^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:506:7
+    │
+506 │       Integer(1),
+    │       ^^^^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:507:7
+    │
+507 │       Text("sync_digest"),
+    │       ^^^^^^^^^^^^^^^^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:508:7
+    │
+508 │       Text(node),
+    │       ^^^^^^^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:510:7
+    │
+510 │       Integer(count),
+    │       ^^^^^^^^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:511:7
+    │
+511 │       Integer(epoch),
+    │       ^^^^^^^^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:517:5
+    │  
+517 │ ╭     Array([
+518 │ │       Integer(1),
+519 │ │       Text("sync_delta"),
+520 │ │       Text(node),
+    · │
+523 │ │       Integer(epoch),
+524 │ │     ]) -> {
+    │ ╰──────^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:518:7
+    │
+518 │       Integer(1),
+    │       ^^^^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:519:7
+    │
+519 │       Text("sync_delta"),
+    │       ^^^^^^^^^^^^^^^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:520:7
+    │
+520 │       Text(node),
+    │       ^^^^^^^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:523:7
+    │
+523 │       Integer(epoch),
+    │       ^^^^^^^^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:530:5
+    │  
+530 │ ╭     Array([
+531 │ │       Integer(1),
+532 │ │       Text("sync_ack"),
+533 │ │       Text(node),
+    · │
+536 │ │       Integer(epoch),
+537 │ │     ]) -> {
+    │ ╰──────^
+
+The custom type variant constructor `Array` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:531:7
+    │
+531 │       Integer(1),
+    │       ^^^^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:532:7
+    │
+532 │       Text("sync_ack"),
+    │       ^^^^^^^^^^^^^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:533:7
+    │
+533 │       Text(node),
+    │       ^^^^^^^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:535:7
+    │
+535 │       Text(status),
+    │       ^^^^^^^^^^^^
+
+The custom type variant constructor `Text` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:536:7
+    │
+536 │       Integer(epoch),
+    │       ^^^^^^^^^^^^^^
+
+The custom type variant constructor `Integer` is not in scope here.
+
+error: Unknown variable
+    ┌─ /tmp/uos-ev98-campaign-7364cb.reserve.d/positive/src/cepaf_gleam/crdt/mesh_sync.gleam:542:16
+    │
+542 │     _ -> Error(InvalidShape)
+    │                ^^^^^^^^^^^^
+
+The custom type variant constructor `InvalidShape` is not in scope here.
+

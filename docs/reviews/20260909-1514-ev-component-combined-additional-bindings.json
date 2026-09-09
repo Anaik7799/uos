@@ -1,0 +1,18 @@
+{
+  "candidate": "bfeda779d73a1bebab4c562a25e7036d7e5170d7",
+  "authority": "NONE",
+  "base_bindings_sha256": "96e68464cab8ffc7844a1f53029128574158439d46f24992af9508cf633c9864",
+  "additional_candidate": {
+    "source": "candidate:apps/cepaf_gleam/test/ev98_sync_status_runner.gleam",
+    "staged": "/tmp/ev-transport-sync-composed-fixed-1527/package/test/ev98_sync_status_runner.gleam",
+    "sha256": "79bef00d78f058ccd19828da87bda10694a1e68a691f094cd3bce9a77d21b162",
+    "bytes": 1781
+  },
+  "additional_probe": {
+    "source": "/tmp/ev_sync_reorder_probe.gleam",
+    "staged": "/tmp/ev-transport-sync-composed-fixed-1527/package/test/ev_sync_reorder_probe.gleam",
+    "sha256": "6f6d8446f89e9c78d40191739af4e651d644a9c3987b4ab91cb12c828d0107d3",
+    "bytes": 1540
+  },
+  "stager_sha256": "8d06fa25a6bd0adc7a84aa176538d95b91d1d85817614bcab2aca3a7844d5fe0"
+}

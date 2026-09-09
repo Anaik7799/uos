@@ -1,0 +1,47 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/tmp/ev-transport-discovery-red-1535",
+  "argv": [
+    "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+    "-noshell", "-noinput", "-pa",
+    "/tmp/ev-transport-discovery-red-1535/lib/gleam_stdlib/ebin", "-pa",
+    "/tmp/ev-transport-discovery-red-1535/lib/gleam_erlang/ebin", "-pa",
+    "/tmp/ev-transport-discovery-red-1535/lib/gleam_otp/ebin", "-pa",
+    "/tmp/ev-transport-discovery-red-1535/lib/gleam_json/ebin", "-pa",
+    "/tmp/ev-transport-discovery-red-1535/lib/gleeunit/ebin", "-pa",
+    "/tmp/ev-transport-discovery-red-1535/compiled/ebin", "-s",
+    "ev_transport_test_discovery", "main", "-s", "init", "stop"
+  ],
+  "utc_started": 1788968072.966408,
+  "utc_finished": 1788968077.023097,
+  "elapsed_seconds": 4.056684561,
+  "deadline_seconds": 45.0,
+  "exit_code": 1,
+  "output": "======================== EUnit ========================\nmodule 'mesh_zenoh_test'\n  mesh_zenoh_test: delayed_report_test...[3.024 s] ok\n  mesh_zenoh_test: cleanup_halt_test...*failed*\nin function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)\nin call from mesh_zenoh_test:cleanup_halt_test/0 (test/mesh_zenoh_test.gleam, line 518)\nin call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)\nin call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)\nin call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)\nin call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)\nin call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)\nin call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)\n**error:#{function => <<\"equal\">>,line => 10,message => <<\"\\n0\\nshould equal\\n1\">>,\n  module => <<\"gleeunit/should\">>,file => <<\"src/gleeunit/should.gleam\">>,\n  gleam_error => panic}\n  output:<<\"\">>\n\n  mesh_zenoh_test: receive_retry_test...*failed*\nin function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)\nin call from mesh_zenoh_test:receive_retry_test/0 (test/mesh_zenoh_test.gleam, line 561)\nin call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)\nin call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)\nin call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)\nin call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)\nin call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)\nin call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)\n**error:#{function => <<\"equal\">>,line => 10,message => <<\"\\n0\\nshould equal\\n1\">>,\n  module => <<\"gleeunit/should\">>,file => <<\"src/gleeunit/should.gleam\">>,\n  gleam_error => panic}\n  output:<<\"\">>\n\n  mesh_zenoh_test: quota_boundary_test...*failed*\nin function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)\nin call from mesh_zenoh_test:quota_boundary_test/0 (test/mesh_zenoh_test.gleam, line 658)\nin call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)\nin call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)\nin call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)\nin call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)\nin call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)\nin call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)\n**error:#{function => <<\"equal\">>,line => 10,message => <<\"\\n2\\nshould equal\\n256\">>,\n  module => <<\"gleeunit/should\">>,file => <<\"src/gleeunit/should.gleam\">>,\n  gleam_error => panic}\n  output:<<\"\">>\n\n  [done in 3.750 s]\n=======================================================\n  Failed: 3.  Skipped: 0.  Passed: 1.\n{error,#{function=><<\"equal\">>,line=>10,message=><<10,34,101,114,114,111,114,34,10,115,104,111,117,108,100,32,101,113,117,97,108,10,34,111,107,34>>,module=><<\"gleeunit/should\">>,file=><<\"src/gleeunit/should.gleam\">>,gleam_error=>panic},[{'gleeunit@should',equal,2,[{file,\"src/gleeunit/should.gleam\"},{line,14}]},{ev_transport_test_discovery,main,0,[{file,\"test/ev_transport_test_discovery.gleam\"},{line,16}]},{init,start_it,1,[]},{init,start_em,1,[]},{init,do_boot,3,[]}]}\r\nRuntime terminating during boot ({#{function=><<\"equal\">>,line=>10,message=><<10,34,101,114,114,111,114,34,10,115,104,111,117,108,100,32,101,113,117,97,108,10,34,111,107,34>>,module=><<\"gleeunit/should\">>,file=><<\"src/gleeunit/should.gleam\">>,gleam_error=>panic},[{'gleeunit@should',equal,2,[{file,\"src/gleeunit/should.gleam\"},{line,14}]},{ev_transport_test_discovery,main,0,[{file,\"test/ev_transport_test_discovery.gleam\"},{line,16}]},{init,start_it,1,[]},{init,start_em,1,[]},{init,do_boot,3,[]}]})\r\n\r\nCrash dump is being written to: /dev/null...done\r\n",
+  "output_sha256": "2b53ef10879b48258d7a67aa9a186b219cf4389bc9bd9b0edd3fa91a2fa1d3f6",
+  "child_termination": { "kind": "EXITED", "code": 1 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "otp_launch": {
+    "executable": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+    "environment": [
+      "PATH=/tmp/uos-ev-native-otp-526093:/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin:/home/an/NAS-setup/uos/toolchains/nix-profile/bin:/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin:/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin:/usr/bin:/bin",
+      "ERL_FLAGS=+S 2:2 +A 2",
+      "ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "BINDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin",
+      "EMU=beam", "PROGNAME=erl",
+      "ERL_ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "ESCRIPT_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_USE_SERVER=false"
+    ],
+    "descendant_execution_audit": "NOT_PERFORMED_BY_ADAPTER"
+  },
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

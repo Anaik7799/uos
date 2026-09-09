@@ -1,0 +1,176 @@
+{
+  "schema": "uos.ev98-sync_status-independent-review.v1",
+  "source_candidate": "0d9bd0a8a8ecf26014904975a5e8e9a6c97d8d8d",
+  "observed_at": 1788966876.688424,
+  "reviewer": "Codex parent, independent of component author",
+  "verdict": "APPROVE_BOUNDED_SYNC_STATUS",
+  "authority": "NONE",
+  "admission": "NOT_GRANTED",
+  "checks": {
+    "independent_unchanged_reorder_probes": [
+      "independent_stale_ack_after_newer_digest",
+      "independent_stale_delta_after_newer_digest"
+    ],
+    "immutable_source_files": 5,
+    "all_staged_bindings": 174,
+    "author_focused_invocations": 11,
+    "author_retained_invocations": 72,
+    "reviewed_invariants": [
+      "Peer observed clocks merge monotonically after queue admission.",
+      "Synchronized requires equal local clock and coverage of the retained peer frontier.",
+      "Local changes and incoming merges invalidate affected peer coverage.",
+      "Queue refusal preserves prior state, frontier and synchronization metadata."
+    ]
+  },
+  "artifacts": [
+    {
+      "path": "/tmp/ev-sync-root-reorder-green-1508/package/test/ev_sync_reorder_probe.gleam",
+      "sha256": "6f6d8446f89e9c78d40191739af4e651d644a9c3987b4ab91cb12c828d0107d3",
+      "bytes": 1540
+    },
+    {
+      "path": "/tmp/ev-sync-root-reorder-green-1508/bindings.json",
+      "sha256": "3352bea8a57496890e04c58493047b781a9e391b83ccb1fd1f3a145a431576e9",
+      "bytes": 57300
+    },
+    {
+      "path": "/tmp/ev_sync_reorder_stage.ml",
+      "sha256": "9c69418dffeef7f85d8bdec74ff63a8c7cdcd452cc2de932dcef687e8e1b7112",
+      "bytes": 3320
+    },
+    {
+      "path": "/tmp/ev-sync-root-reorder-red-1429/bindings.json",
+      "sha256": "4bdbd5401916bb97c94c1568e5c84acc207dcfee2cb1ec7afe1da98b9dc2e4e0",
+      "bytes": 56952
+    },
+    {
+      "path": "/tmp/ev-sync-root-reorder-red-1429/compile.json",
+      "sha256": "a08ea9babbc4aa801f4368e1c0b3800730ac6521db3a3caaab20dcb7d51e6062",
+      "bytes": 2274
+    },
+    {
+      "path": "/tmp/ev-sync-root-reorder-red-1429/stale-ack.json",
+      "sha256": "ccd1abdbcf8393d4da3c6e9490131380df255fa322755914c8b16d3f3d9dd49e",
+      "bytes": 3537
+    },
+    {
+      "path": "/tmp/ev-sync-root-reorder-red-1429/stale-delta.json",
+      "sha256": "af7a5d9d0ee32038f8f56a3f5494bd4bbaf743cb89b0a2a4a4ceb4e286139be1",
+      "bytes": 3552
+    },
+    {
+      "path": "/tmp/ev-sync-root-reorder-green-1508/compile.json",
+      "sha256": "d585284fc7ddaa17cc08135ad4dc4dfe6ddfd537ca61245dda10f707579b3e53",
+      "bytes": 2274
+    },
+    {
+      "path": "/tmp/ev-sync-root-reorder-green-1508/runtime.json",
+      "sha256": "04c1618a80b83e9805bdeccc6b7cc67d2ff5a6a8f8cc2be5c80ca7c9dfa9bc2a",
+      "bytes": 2612
+    },
+    {
+      "path": "/tmp/ev-sync-root-reorder-green-1508/compiled/ebin/cepaf_gleam@crdt@delta_mesh_engine.beam",
+      "sha256": "dd036cacd2fa84485dad02c8637a9c7f0d9b1ef77c668c1f7a5be053f9d385c8",
+      "bytes": 17852
+    },
+    {
+      "path": "/tmp/ev-sync-root-reorder-green-1508/compiled/ebin/cepaf_gleam@crdt@delta_state.beam",
+      "sha256": "0bba215c876afd1afc1ba2c051f0ac78854517adae819ab751246e851247b229",
+      "bytes": 13416
+    },
+    {
+      "path": "/tmp/ev-sync-root-reorder-green-1508/compiled/ebin/cepaf_gleam@crdt@health_bridge.beam",
+      "sha256": "f829207736e5c5ad2b928360cc75694129171dc41f846399b3259734631e25d5",
+      "bytes": 9112
+    },
+    {
+      "path": "/tmp/ev-sync-root-reorder-green-1508/compiled/ebin/cepaf_gleam@crdt@mesh_sync.beam",
+      "sha256": "855e7c9bcec957db37d5f788ad26380651db2675e0adc41a605b5407250a7c2d",
+      "bytes": 26780
+    },
+    {
+      "path": "/tmp/ev-sync-root-reorder-green-1508/compiled/ebin/cepaf_gleam@crdt@mesh_wire.beam",
+      "sha256": "cdabdd1f625024b765096e74cd1c0791575b3d67184e9bacd2f735ab9254ccd4",
+      "bytes": 11284
+    },
+    {
+      "path": "/tmp/ev-sync-root-reorder-green-1508/compiled/ebin/ev_sync_reorder_probe.beam",
+      "sha256": "bfd83db9bd59a4e06dc51f663e733a8d96ce22bfcb77f63fd290891cdd37ecb0",
+      "bytes": 5276
+    },
+    {
+      "path": "/tmp/ev98-sync-status-three-peer-red-run-20260909-1422.json",
+      "sha256": "a7e663d834f180c7d3a3362cbfd8151bdd4482b7234398e1d9c76641503af845",
+      "bytes": 5996
+    },
+    {
+      "path": "/tmp/ev98-sync-status-frontier-ack-red-run-20260909-1501.json",
+      "sha256": "bca2186ea1cf1af885c4877b8a4259f6b78c335a5601bb4da83421d216bdc8ff",
+      "bytes": 7169
+    },
+    {
+      "path": "/tmp/ev98-sync-status-frontier-green-build-20260909-1510.json",
+      "sha256": "36140cf4eb0078fc1654e3a28648b56f9cb6a1357e0ffdf023d8066d7a49e31e",
+      "bytes": 2274
+    },
+    {
+      "path": "/tmp/ev98-sync-status-frontier-green-run-20260909-1510.json",
+      "sha256": "9da5cacc2b277e31d8738a60e1f49bd9b9f300abfe08aee54aa358378cc67037",
+      "bytes": 5501
+    },
+    {
+      "path": "/tmp/ev98-sync-status-retained-frontier-build-20260909-1518.json",
+      "sha256": "c1fcc141729c27ba5bcee1f7d823e38f296c35414a04e002427a464a565d573d",
+      "bytes": 96806
+    },
+    {
+      "path": "/tmp/ev98-sync-status-retained-frontier-run-20260909-1518.json",
+      "sha256": "92363cb7de608596079f29844ad6dac336659c08feabed266edbb664795ca2f4",
+      "bytes": 15359
+    },
+    {
+      "path": "/tmp/ev98-sync-frontier-active-attempt2-20260909-1528.json",
+      "sha256": "9062458224b1e58596d75e3f539bbed2d3e8d6afb80099c143db08a558ca6804",
+      "bytes": 3790
+    },
+    {
+      "path": "/tmp/ev98-sync-status-frontier-green-20260909-1510/beam/ebin/ev98_sync_status_runner.beam",
+      "sha256": "a1e5268d45a37a8e72b60f7bbd349656199c661a94bc8d38a614ba1bc3827d2c",
+      "bytes": 3632
+    },
+    {
+      "path": "/tmp/ev98-sync-status-retained-frontier-20260909-1518/beam/ebin/ev98_codec_runner.beam",
+      "sha256": "950cd66c80dc4b04fea5d1e0a820703cfa15ffbb8074c1cb22be12ecd3409f53",
+      "bytes": 26308
+    },
+    {
+      "path": "/tmp/ev98-sync-status-frontier-candidate-20260909-1529.json",
+      "sha256": "c3f6b157ab6fe4f4d202edacb755001b8997e6354249d0e09e62483f066e83db",
+      "bytes": 3640
+    },
+    {
+      "path": "/tmp/ev98-sync-status-frontier-green-run-20260909-1510.json",
+      "sha256": "9da5cacc2b277e31d8738a60e1f49bd9b9f300abfe08aee54aa358378cc67037",
+      "bytes": 5501
+    },
+    {
+      "path": "/tmp/ev98-sync-status-retained-frontier-run-20260909-1518.json",
+      "sha256": "92363cb7de608596079f29844ad6dac336659c08feabed266edbb664795ca2f4",
+      "bytes": 15359
+    },
+    {
+      "path": "/tmp/ev_independent_reviews_record.ml",
+      "sha256": "c50ba5ad1faec564fa22a5f9e3a0869ca15310cf71be7faf3ee84b5c9ecc17ed",
+      "bytes": 15289
+    }
+  ],
+  "limits": [
+    "Current in-memory incarnation only; registration/restart is not durable clock recovery.",
+    "Clock equality assumes honest unique causal writers; it does not authenticate a producer or prove payload equality against malicious clocks.",
+    "Nominal fixture endpoints are not observed deployment evidence.",
+    "Two independent probes were rebuilt and executed by the reviewer. Author 11/72 results are rehashed observations, with overlapping properties.",
+    "Production and composed peer/transport behavior require separate acceptance. No full EV98 admission.",
+    "Direct native ERTS was used; complete descendant execution and shared-library closure were not established.",
+    "A fresh active task check is required for scoped completion."
+  ]
+}
