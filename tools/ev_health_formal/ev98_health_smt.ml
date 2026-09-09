@@ -228,12 +228,15 @@ let rows () =
          && select_without_writer_independent left right
             <> select_without_writer_independent right left) ]
 
-let rows_hold () =
-  rows ()
+let rows_hold rows =
+  rows
   |> List.for_all (fun row ->
     row.expected = row.actual && row.independently_validated)
 
-let all_laws_hold () =
+let emitted_rows_hold rows =
   Ev98_health_model.laws_hold_by_enumeration ()
   && finite_witness ()
-  && rows_hold ()
+  && rows_hold rows
+
+let all_laws_hold () =
+  emitted_rows_hold (rows ())

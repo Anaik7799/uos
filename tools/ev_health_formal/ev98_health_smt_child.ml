@@ -14,7 +14,7 @@ let emit row =
 let () =
   let rows = Ev98_health_smt.rows () in
   List.iter emit rows;
-  if Ev98_health_smt.all_laws_hold () then
+  if Ev98_health_smt.emitted_rows_hold rows then
     print_endline "PASS EV98 bounded Smtml child"
   else begin
     prerr_endline "FAIL EV98 bounded Smtml child";
