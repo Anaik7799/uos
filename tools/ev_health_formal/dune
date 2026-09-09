@@ -18,3 +18,8 @@
  (name ev98_health_projection_verify)
  (modules ev98_health_projection_verify)
  (libraries ev98_health_formal yojson cryptokit))
+
+(executable
+ (name test_ev98_health_projection_verify)
+ (modules test_ev98_health_projection_verify)
+ (libraries ev98_health_formal yojson unix))
