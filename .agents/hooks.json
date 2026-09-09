@@ -5,6 +5,11 @@
         "command": "test -d /home/an/NAS-setup/uos/.jj && printf '%s\\n' '{\"injectSteps\":[{\"ephemeralMessage\":\"UOS uses standalone Jujutsu. Consult AGENTS.md for Zero-Muda, OTP and evidence requirements.\"}]}'",
         "timeout": 5,
         "type": "command"
+      },
+      {
+        "command": "cd /home/an/NAS-setup/uos && out=$(bash tools/preflight --max-age 900 --quiet 2>&1) || out=$(bash tools/preflight --receipt --quiet 2>&1 | tail -1); printf '{\"injectSteps\":[{\"ephemeralMessage\":\"UOS toolchain preflight: %s\"}]}' \"$(printf '%s' \"$out\" | tr -d '\\\"' | tr '\\n' ' ' | cut -c1-300)\"",
+        "timeout": 120,
+        "type": "command"
       }
     ]
   }

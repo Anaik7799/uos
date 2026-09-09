@@ -38,12 +38,11 @@ let toolchains = uos_root^"/toolchains"
 (* The table. Mirrors tools/lib/uos-toolchain.sh entry for entry; tool_table_parity
    below proves the mirror, so the duplication cannot drift silently. *)
 let tool_path = function
- | "erl"|"erlc"|"escript"|"rebar3"|"zig"|"z3"|"quint"|"jj" as n -> Some(toolchains^"/nix-profile/bin/"^n)
+ | "erl"|"erlc"|"escript"|"rebar3"|"zig"|"z3"|"quint"|"jj"|"node"|"npm" as n -> Some(toolchains^"/nix-profile/bin/"^n)
  | "gleam" -> Some(toolchains^"/gleam-1.16.0/bin/gleam")
  | "ocaml"|"ocamlfind"|"dune" as n -> Some(toolchains^"/opam-ocaml/bin/"^n)
  | "lean"|"lake"|"leanc" as n -> Some(toolchains^"/lean-4.33.0/bin/"^n)
  | "cargo"|"rustc"|"rustup" as n -> Some(toolchains^"/cargo/bin/"^n)
- | "node"|"npm" as n -> Some(toolchains^"/node-22/bin/"^n)
  | "pixi" -> Some(toolchains^"/pixi/bin/pixi")
  | "mojo" -> Some(uos_root^"/services/inference/max/.pixi/envs/default/bin/mojo")
  | _ -> None

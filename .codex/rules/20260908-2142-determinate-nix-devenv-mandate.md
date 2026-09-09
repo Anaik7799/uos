@@ -110,7 +110,31 @@
 
 ---
 
-## 3. Machine Enforcement
+## 3. SDLC, SRE & Agentic Integration
+
+The preflight is not a tool anyone has to remember. It is wired at three levels,
+and each level fails closed:
+
+| Level | Wiring | Behaviour |
+|---|---|---|
+| **SDLC** | `uos-cli gate G-PREFLIGHT`; runs **first** in `uos-cli verify-all` | The gate EXECUTES the preflight and names the failing arms. Every later check assumes a working toolchain, so proving that assumption first is the cheapest failure to surface. |
+| **SRE** | `bash tools/preflight --receipt` writes `var/preflight/latest.json` plus a timestamped copy | A durable, scrapeable `uos.preflight.v1` record carrying status, per-arm rows, the JJ revision, and the sha256 of BOTH the checker and the resolver table it consulted. `--max-age N` answers "is there a recent PASS?" without executing anything. |
+| **Agentic** | `SessionStart` / `PreInvocation` hooks on `.claude`, `.agents` and `.codex` | Each session starts with a verdict. The hook tries the cached receipt first and re-runs the full sweep (~4.5 s) only when the receipt is missing, stale, or written by a different checker. |
+
+A receipt is honoured ONLY if the checker is byte-identical to the one that wrote
+it. An edited `tools/preflight` or an edited `tools/lib/uos-toolchain.sh`
+invalidates every prior receipt, because otherwise a `--max-age` caller would
+inherit confidence from a run that never examined the current code.
+
+The preflight probes under `uos_env`, never the caller's environment. A check
+whose verdict depends on which shell invoked it is not a check: `npm` reported
+`9.2.0` from an operator terminal and died with
+`Cannot find module 'semver/functions/satisfies'` as a child of the BEAM.
+
+**A passing preflight is evidence the toolchain works. It is not admission
+authority, and it does not complete a Sa-plan task.**
+
+## 4. Machine Enforcement
 
 1. `bash -c 'source tools/lib/uos-toolchain.sh; uos_toolchain_report'` — every
    entrypoint must resolve under `$UOS_ROOT`.

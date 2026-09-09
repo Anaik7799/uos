@@ -29,13 +29,60 @@ PF_ROOT="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PF_ROOT"
 # shellcheck source=/dev/null
 source "$PF_ROOT/tools/lib/uos-toolchain.sh"
+# Probe in the SAME environment the tools actually run in. Without this the
+# preflight inherits whatever shell invoked it, and a check can pass from an
+# operator's terminal while failing under `uos-cli gate G-PREFLIGHT` -- which is
+# exactly what happened: npm reported 9.2.0 ambiently and died with
+# "Cannot find module 'semver/functions/satisfies'" as a child of the BEAM.
+# A check whose verdict depends on the caller's environment is not a check.
+uos_env
 
-PF_JSON=0; PF_FULL=0; PF_QUIET=0
-for a in "$@"; do case "$a" in
-  --json) PF_JSON=1 ;; --full) PF_FULL=1 ;; --quiet) PF_QUIET=1 ;;
-  -h|--help) sed -n '2,25p' "$0"; exit 0 ;;
-  *) echo "unknown option: $a" >&2; exit 2 ;;
-esac; done
+PF_JSON=0; PF_FULL=0; PF_QUIET=0; PF_RECEIPT=0; PF_MAX_AGE=""
+PF_RECEIPT_DIR="var/preflight"
+while [ $# -gt 0 ]; do case "$1" in
+  --json) PF_JSON=1 ;;
+  --full) PF_FULL=1 ;;
+  --quiet) PF_QUIET=1 ;;
+  --receipt) PF_RECEIPT=1 ;;
+  --max-age) shift; PF_MAX_AGE="${1:-}" ;;
+  --max-age=*) PF_MAX_AGE="${1#*=}" ;;
+  -h|--help) sed -n '2,30p' "$0"; exit 0 ;;
+  *) echo "unknown option: $1" >&2; exit 2 ;;
+esac; shift; done
+
+# --- --max-age: freshness check, NOT a re-run -------------------------------
+# Reads the last receipt and answers "is there a recent PASS?" without executing
+# anything. For callers that run often enough that a 4.5s sweep is too costly.
+#
+# A receipt is only honoured if the CHECKER ITSELF is unchanged since it was
+# written. Otherwise an edited preflight -- or an edited resolver table -- would
+# inherit the confidence of a run that never examined it.
+if [ -n "$PF_MAX_AGE" ]; then
+  latest="$PF_RECEIPT_DIR/latest.json"
+  if [ ! -f "$latest" ]; then
+    echo "NO RECEIPT at $latest (run: bash tools/preflight --receipt)"
+    exit 1
+  fi
+  now="$(date -u +%s)"
+  written="$(sed -n 's/.*"epoch_s":\([0-9]*\).*/\1/p' "$latest" | head -1)"
+  status="$(sed -n 's/.*"status":"\([A-Z]*\)".*/\1/p' "$latest" | head -1)"
+  self_now="$(sha256sum "$0" | cut -d" " -f1)"
+  lib_now="$(sha256sum tools/lib/uos-toolchain.sh | cut -d" " -f1)"
+  self_was="$(sed -n 's/.*"preflight_sha256":"\([0-9a-f]*\).*/\1/p' "$latest" | head -1)"
+  lib_was="$(sed -n 's/.*"resolver_sha256":"\([0-9a-f]*\).*/\1/p' "$latest" | head -1)"
+  age=$(( now - ${written:-0} ))
+  if [ "$status" != "PASS" ]; then
+    echo "last receipt is $status (age ${age}s)"; exit 1
+  fi
+  if [ "$age" -gt "$PF_MAX_AGE" ]; then
+    echo "receipt STALE (${age}s > ${PF_MAX_AGE}s)"; exit 1
+  fi
+  if [ "$self_now" != "$self_was" ] || [ "$lib_now" != "$lib_was" ]; then
+    echo "receipt INVALID -- checker changed since it was written"; exit 1
+  fi
+  echo "PASS (cached receipt, age ${age}s, $(sed -n 's/.*"failures":\([0-9]*\).*/\1/p' "$latest" | head -1) failures)"
+  exit 0
+fi
 
 PF_FAIL=0
 PF_ROWS=()
@@ -77,7 +124,7 @@ pf_probe() {
   if [ ! -x "$p" ]; then row useable "$name" FAIL "not executable"; return; fi
   out="$(timeout 90 "$@" 2>&1)"; rc=$?
   if [ "$rc" -ne 0 ]; then
-    row useable "$name" FAIL "exit $rc: $(printf '%s' "$out" | head -1 | cut -c1-70)"
+    row useable "$name" FAIL "exit $rc: $(printf '%s' "$out" | tr '\n' ' ' | cut -c1-240)"
   elif [ "$expect" = out ] && [ -z "${out//[[:space:]]/}" ]; then
     row useable "$name" FAIL "exit 0 but produced NO output (empty executable?)"
   else
@@ -118,7 +165,10 @@ pf_probe lake out    "$(uos_tool_path lake)"    --version
 pf_probe cargo out   "$(uos_tool_path cargo)"   --version
 pf_probe rustc out   "$(uos_tool_path rustc)"   --version
 pf_probe node out    "$(uos_tool_path node)"    --version
-pf_probe npm out     "$(uos_tool_path npm)"     --version
+# `npm --version` is NOT a useability probe: the broken in-project npm answered it
+# correctly while failing on every path that loads configuration. `config get`
+# exercises that path, which is where the missing semver actually bit.
+pf_probe npm out     "$(uos_tool_path npm)"     config get cache
 pf_probe pixi out    "$(uos_tool_path pixi)"    --version
 pf_probe mojo out    "$(uos_tool_path mojo)"    --version
 
@@ -190,11 +240,21 @@ else
   note "(identity arms skipped; run with --full for nix flake check + devenv test)"
 fi
 
-if [ "$PF_JSON" = 1 ]; then
-  printf '{"schema":"uos.preflight.v1","status":"%s","authority":"NONE","failures":%d,"full":%s,"rows":[' \
+# --- machine record ----------------------------------------------------------
+# The receipt carries the sha256 of the checker AND of the resolver table it
+# consulted. A receipt is evidence about a specific checker examining a specific
+# table; without those digests a later --max-age caller would inherit confidence
+# from a run that never saw the current code.
+pf_emit_json() {
+  printf '{"schema":"uos.preflight.v1","status":"%s","authority":"NONE","failures":%d,"full":%s' \
     "$([ "$PF_FAIL" -eq 0 ] && echo PASS || echo FAIL)" "$PF_FAIL" \
     "$([ "$PF_FULL" = 1 ] && echo true || echo false)"
-  sep=""
+  printf ',"observed_at_utc":"%s","epoch_s":%s' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$(date -u +%s)"
+  printf ',"preflight_sha256":"%s","resolver_sha256":"%s"' \
+    "$(sha256sum "$0" | cut -d' ' -f1)" "$(sha256sum tools/lib/uos-toolchain.sh | cut -d' ' -f1)"
+  printf ',"revision":"%s"' "$( ("$(uos_tool_path jj)" --repository "$PF_ROOT" log -r @ --no-graph -T commit_id 2>/dev/null || echo unknown) | head -1)"
+  printf ',"rows":['
+  local sep="" arm name status detail
   for r in "${PF_ROWS[@]}"; do
     IFS='|' read -r arm name status detail <<<"$r"
     printf '%s{"arm":"%s","name":"%s","status":"%s","detail":"%s"}' \
@@ -202,11 +262,30 @@ if [ "$PF_JSON" = 1 ]; then
     sep=","
   done
   printf ']}\n'
+}
+
+if [ "$PF_RECEIPT" = 1 ]; then
+  mkdir -p "$PF_RECEIPT_DIR"
+  pf_emit_json > "$PF_RECEIPT_DIR/latest.json"
+  cp "$PF_RECEIPT_DIR/latest.json" "$PF_RECEIPT_DIR/$(date -u +%Y%m%d-%H%S)-preflight.json"
+  note "receipt: $PF_RECEIPT_DIR/latest.json"
 fi
 
-if [ "$PF_FAIL" -eq 0 ]; then
-  note "preflight: PASS (${#PF_ROWS[@]} checks)"
-  exit 0
+if [ "$PF_JSON" = 1 ]; then
+  pf_emit_json
 fi
-note "preflight: FAIL ($PF_FAIL of ${#PF_ROWS[@]} checks)"
+
+if [ "$PF_JSON" != 1 ]; then
+  if [ "$PF_FAIL" -eq 0 ]; then
+    echo "PASS (${#PF_ROWS[@]} checks)"
+  else
+    printf 'FAIL (%d of %d checks):' "$PF_FAIL" "${#PF_ROWS[@]}"
+    for r in "${PF_ROWS[@]}"; do
+      IFS='|' read -r arm name status detail <<<"$r"
+      [ "$status" = PASS ] || printf ' [%s/%s %s]' "$arm" "$name" "$(printf '%s' "$detail" | cut -c1-80)"
+    done
+    printf '\n'
+  fi
+fi
+[ "$PF_FAIL" -eq 0 ] && exit 0
 exit 1

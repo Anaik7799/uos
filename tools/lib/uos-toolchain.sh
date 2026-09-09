@@ -79,8 +79,11 @@ uos_tool_path() {
     # --- inference / js ---
     pixi)       printf '%s\n' "$UOS_TC/pixi/bin/pixi" ;;
     mojo)       printf '%s\n' "$UOS_ROOT/services/inference/max/.pixi/envs/default/bin/mojo" ;;
-    node)       printf '%s\n' "$UOS_TC/node-22/bin/node" ;;
-    npm)        printf '%s\n' "$UOS_TC/node-22/bin/npm" ;;
+    # From the Nix profile, not the hand-materialised toolchains/node-22 tree:
+    # that tree's npm was INCOMPLETE (its bundled node_modules lacked semver), so
+    # it answered `--version` correctly and died on any path that loads config.
+    node)       printf '%s\n' "$UOS_TC/nix-profile/bin/node" ;;
+    npm)        printf '%s\n' "$UOS_TC/nix-profile/bin/npm" ;;
     *)          return 1 ;;
   esac
 }
@@ -110,7 +113,7 @@ uos_tool() {
 # Export an in-project environment. Deliberately PREPENDS, and pins the BEAM and
 # OCaml roots, so a stray host erl/ocaml cannot win a PATH race.
 uos_env() {
-  export PATH="$UOS_TC/nix-profile/bin:$UOS_TC/gleam-1.16.0/bin:$UOS_TC/opam-ocaml/bin:$UOS_TC/lean-4.33.0/bin:$UOS_TC/cargo/bin:$UOS_TC/node-22/bin:$PATH"
+  export PATH="$UOS_TC/nix-profile/bin:$UOS_TC/gleam-1.16.0/bin:$UOS_TC/opam-ocaml/bin:$UOS_TC/lean-4.33.0/bin:$UOS_TC/cargo/bin:$PATH"
   export OPAM_SWITCH_PREFIX="$UOS_TC/opam-ocaml"
   export CARGO_HOME="$UOS_TC/cargo"
   export RUSTUP_HOME="$UOS_TC/rustup"

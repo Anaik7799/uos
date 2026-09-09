@@ -77,6 +77,8 @@ pub fn parse_args(args: List(String)) -> UosCommand {
     ["checklist"] -> Checklist
     ["rocha-check"] | ["rocha"] -> RochaCheck
     ["jidoka-check"] | ["jidoka"] | ["tps"] -> Gate("G-SA-PLAN-JIDOKA")
+    ["preflight"] | ["preflight-check"] | ["toolchain-check"] ->
+      Gate("G-PREFLIGHT")
     ["selfcheck-vfs"] | ["--selfcheck-vfs"] | ["vfs-check"] -> SelfcheckVfs
     ["selfcheck-sa-plan"] | ["--selfcheck-sa-plan"] | ["sa-plan-check"] | ["sa-plan"] ->
       SelfcheckSaPlan
@@ -135,6 +137,52 @@ pub fn execute(cmd: UosCommand) -> Int {
             }
             False -> {
               io.println("  [FAIL] .jj not found")
+              1
+            }
+          }
+        }
+        // Deliberately EXECUTES the preflight rather than checking that the
+        // script exists. A gate that asserts file presence is exactly the
+        // failure class SC-NIX-DEVENV-001 invariant 10 bars: a tool can be
+        // present and not work, and a checker that only stats it cannot tell.
+        "G-PREFLIGHT" -> {
+          let #(code, out) = case file_exists("tools/preflight") {
+            True -> run_command("bash", ["tools/preflight", "--json", "--quiet"], 300_000)
+            False -> #(127, "tools/preflight is absent")
+          }
+          let passed = code == 0 && string.contains(out, "\"status\":\"PASS\"")
+          case passed {
+            True -> {
+              io.println(
+                "  [PASS] Toolchain preflight executed: resolver, useable, wrapper, tracked and parity arms green",
+              )
+              io.println(
+                "         (identity arms -- nix flake check, devenv test -- run only under `bash tools/preflight --full`)",
+              )
+              0
+            }
+            False -> {
+              // Name the arms that failed. A gate that prints a truncated blob
+              // makes the operator re-run the tool by hand to learn anything,
+              // which is the same as not reporting.
+              let failing =
+                out
+                |> string.split("},{")
+                |> list.filter(fn(chunk) {
+                  string.contains(chunk, "\"status\":\"FAIL\"")
+                  && string.contains(chunk, "\"arm\"")
+                })
+              io.println(
+                "  [FAIL] Toolchain preflight [exit " <> int.to_string(code) <> "]",
+              )
+              case failing {
+                [] ->
+                  io.println("         " <> string.slice(out, 0, 300))
+                rows ->
+                  list.each(rows, fn(r) {
+                    io.println("         " <> string.slice(r, 0, 220))
+                  })
+              }
               1
             }
           }
@@ -1233,6 +1281,10 @@ pub fn execute(cmd: UosCommand) -> Int {
     VerifyAll -> {
       io.println("=== Unified Operational System (UOS) Programmatic In-Code Verification Suite ===")
       io.println("")
+      // Preflight runs FIRST: every check below assumes a working toolchain,
+      // so proving that assumption is the cheapest failure to surface.
+      let preflight_res = execute(Gate("G-PREFLIGHT"))
+      io.println("")
       let dmc_res = execute(DmcCheck)
       io.println("")
       let tcm_res = execute(TcmCheck)
@@ -1280,7 +1332,7 @@ pub fn execute(cmd: UosCommand) -> Int {
       let doc_res = execute(Doctor)
       io.println("")
       let total_res =
-        dmc_res + tcm_res + time_res + km_res + chk_res + rocha_res + vfs_res + saplan_res + bionic_res + omni_res + cycles_res + c3i_res + wave3_res + wave4_res + slice_res + add_res + raga_res + mirage_res + mirage_mig_res + mirage_prod_res + forecast_res + inference_res + doc_res
+        preflight_res + dmc_res + tcm_res + time_res + km_res + chk_res + rocha_res + vfs_res + saplan_res + bionic_res + omni_res + cycles_res + c3i_res + wave3_res + wave4_res + slice_res + add_res + raga_res + mirage_res + mirage_mig_res + mirage_prod_res + forecast_res + inference_res + doc_res
 
       case total_res == 0 {
         True -> {

@@ -40,6 +40,7 @@
         pkgs.z3                        # 4.16.0
         pkgs.quint                     # 0.32.0 -- .qnt front-end compiler
         pkgs.jujutsu                   # 0.44.0 -- the sole VCS; see note below
+        pkgs.nodejs_22                 # 22.23.2 -- complete npm (see note)
       ];
 
       # The exact erl this pin admits. Every guard compares against THIS path and
@@ -50,6 +51,12 @@
       # while every release-number assertion in the tree stayed green.
       pinnedErl = "${otp29}/lib/erlang/bin/erl";
 
+      # nodejs_22 replaces a hand-materialised toolchains/node-22 tree whose npm
+      # was INCOMPLETE: its bundled node_modules was missing semver, so npm died
+      # with "Cannot find module 'semver/functions/satisfies'" the moment it took
+      # any path that loads config. `npm --version` still answered 9.2.0, which is
+      # why it looked healthy -- a present, self-identifying, non-working tool.
+      #
       # jujutsu is provisioned here rather than consumed from ~/.cargo/bin because
       # canonical policy section 4 makes JJ the sole VCS: a tool that reads and
       # could write .jj/ must be pinned, not whatever the host happens to have.

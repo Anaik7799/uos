@@ -48,7 +48,7 @@
     "honest_boundary": "Nix-provided binaries live in /nix/store by construction: their RPATHs and ELF interpreter paths are absolute store paths, so they CANNOT be relocated under toolchains/ and still execute. toolchains/nix-profile is a symlink farm into the store, not a copy. Any claim that the Nix binaries are physically inside the project is false.",
     "profile": {
       "link": "toolchains/nix-profile -> nix-profile-3-link",
-      "store_path": "/nix/store/npny8aglip778fczc383j23hi5i78q80-profile",
+      "store_path": "/nix/store/imvmiamj92ay85br68df9mpd50b4aa09-profile",
       "env_store_path": "/nix/store/6dqqdjgss98qj24x4nri09wcsv87fr92-uos-toolchain",
       "installed_from": "path:/home/an/NAS-setup/uos#packages.x86_64-linux.default (flake-backed, so `nix profile upgrade` now works; the prior generation was added from a bare store path and could not be upgraded)",
       "rollback": "generations 1 and 2 retained as nix-profile-1-link and nix-profile-2-link"
@@ -315,7 +315,9 @@
       "quint_anti_vacuity": "Probes 'authorizedIntents.size()==0' and 'vetoedIntents.size()==0' BOTH violate immediately, proving the model reaches authorized and vetoed states and the passing invariants are not trivially true"
     },
     "quint_agentic_coordination_resolved": "RESOLVED (was 'exceeds 900s, reduced-step run outstanding'). agentic_coordination_test inv_all verifies NoError at --max-steps 1 in 18.1s and at --max-steps 2 in 75.0s. The ~4x cost per additional step is ordinary depth blow-up, not a structural defect: extrapolating, 5 steps is roughly 80 minutes, which is why the 560s bounded run returned nothing. The spec is verifiable; the default depth is simply out of budget for an interactive run.",
-    "preflight": "31/31 PASS (--full), 29/29 PASS (fast tier)"
+    "preflight": "31/31 PASS (--full), 29/29 PASS (fast tier)",
+    "gate_G_PREFLIGHT": "PASS -- uos-cli gate G-PREFLIGHT executes the preflight and reports resolver/useable/wrapper/tracked/parity green",
+    "preflight_after_node_swap": "31/31 PASS with --full (identity arms green after the profile swap); 29/29 fast tier"
   },
   "defects_closed_in_this_pass": [
     "tools/lib/uos-toolchain.sh resolved UOS_ROOT from ${BASH_SOURCE[0]} under `set -euo pipefail`. Sourced from the operator's zsh login shell this aborted on an unset parameter, and without nounset it would have silently produced a wrong UOS_ROOT -- making uos_have() report ABSENT for installed toolchains. The library now resolves its own path under bash and zsh, and only applies `set -euo pipefail` when EXECUTED, never when sourced into an interactive shell.",
@@ -345,7 +347,11 @@
     "nix flake check pin gate: rejects any erl_bin under /usr/* or /home/* by construction.",
     "N5 present-but-broken binary: node repointed to a zero-byte executable inside toolchains/. FIRST version of the probe reported PASS -- an empty file with the execute bit IS a valid empty shell script, exiting 0 with no output. The probe now requires non-empty output and reports 'exit 0 but produced NO output (empty executable?)'. Note the resolver arm still PASSED (the decoy was inside $UOS_ROOT, so locality held), which is precisely why useability is a separate layer; the OCaml parity arm caught the table change independently.",
     "N6 untracked tooling: two files matching the *.lock ignore rule created under tools/ -> 'tracked tools-tree FAIL: 2 untracked, first: tools/pf-neg1.lock'. Exposed and fixed a reporting bug where `printf '%s' | wc -l` counted 0 for a single line without a trailing newline.",
-    "N7 escript probe: the first version of the escript probe FAILED on the real toolchain ('Premature end of file reached') because escript skips a source file's first line as its header slot. The probe was wrong, not the tool -- and an exit-status-blind check would have shown green."
+    "N7 escript probe: the first version of the escript probe FAILED on the real toolchain ('Premature end of file reached') because escript skips a source file's first line as its header slot. The probe was wrong, not the tool -- and an exit-status-blind check would have shown green.",
+    "N8 stale receipt: --max-age 1 against a 12s-old receipt -> 'receipt STALE (12s > 1s)', exit 1.",
+    "N9 checker changed: a byte appended to tools/preflight -> 'receipt INVALID -- checker changed since it was written', exit 1. File restored and diff-verified.",
+    "N10 no receipt: latest.json moved aside -> 'NO RECEIPT ...', exit 1.",
+    "N11 hook failure path: z3 repointed to a zero-byte executable, receipt cleared -> the .claude hook emitted 'FAIL (2 of 29 checks): [useable/z3 exit 0 but produced NO output (empty executable?)] [parity/ocaml-table preflight command did not run]'. Two arms caught it independently. Restored, zero strays."
   ],
   "preflight": {
     "tool": "tools/preflight",
@@ -362,5 +368,21 @@
     },
     "observed": "31/31 PASS with --full; 29/29 PASS in the fast tier.",
     "design_note": "`test -x` is not evidence of use. A binary can be present and broken: a relocated opam switch whose findlib.conf still points at the old prefix, a rustup proxy with no toolchain, a store path whose closure was collected. Exit status alone is not evidence either -- see negative test N5."
+  },
+  "integration": {
+    "mandate": "Operator (2026-09-09): \"fully harden, wire and integrate into sdlc, sre and agentic processes\".",
+    "sdlc": "uos-cli gate G-PREFLIGHT (Gleam CLI, tools/uos/src/main.gleam) EXECUTES tools/preflight via the bounded uos_ffi:run_command port and names the failing arms. Wired to run FIRST in verify-all, before every check that assumes a working toolchain.",
+    "sre": "tools/preflight --receipt writes var/preflight/latest.json plus a timestamped copy: uos.preflight.v1 with status, per-arm rows, JJ revision, and sha256 of BOTH the checker and the resolver table. --max-age N answers freshness without executing anything. var/ is gitignored: receipts are runtime state, not source.",
+    "agentic": "SessionStart / PreInvocation hooks on .claude/settings.json, .agents/hooks.json and .codex/hooks.json. Each tries the cached receipt and re-runs the ~4.5s sweep only when it is missing, stale, or written by a different checker. Verified by executing each configured command verbatim: cold start -> 'PASS (29 checks)', warm -> 'PASS (cached receipt, age 0s, 0 failures)', broken -> names both failing arms.",
+    "contract": "contracts/rules/20260907-0653-tri-agent-coordination.md gained SYNC-13: preflight before task claim or evidence production; a PASS is toolchain evidence, never Sa-plan completion or admission authority.",
+    "determinism": "The preflight now calls uos_env before probing. Previously it inherited the caller's environment, and npm passed from an operator terminal while failing as a child of the BEAM. A check whose verdict depends on the caller is not a check."
+  },
+  "npm_defect": {
+    "found_by": "The G-PREFLIGHT gate, running the preflight in a different environment than the operator's shell.",
+    "symptom": "exit 7, Cannot find module 'semver/functions/satisfies' from toolchains/node-22/npm/lib/cli.js:48.",
+    "cause": "The hand-materialised toolchains/node-22 tree carried an INCOMPLETE npm: its bundled node_modules held 41 entries and no semver. `npm --version` answered 9.2.0 because that path never loads config; anything that does died.",
+    "severity": "A present, self-identifying, non-working tool -- the exact failure class this contract's invariant 10 exists to catch, and invisible to both `test -x` and a version probe.",
+    "fix": "Provisioned pkgs.nodejs_22 (22.23.2, npm 10.9.8) from the locked nixpkgs; resolver and OCaml tables repointed to toolchains/nix-profile; the broken node-22 tree removed from the uos_env PATH. The npm probe is now `npm config get cache`, which exercises the config load that actually failed, not `--version`, which demonstrably lies.",
+    "consumers": "None. Nothing in the repository used node or npm except these probes, so the breakage had never been noticed."
   }
 }

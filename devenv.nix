@@ -29,6 +29,7 @@ in
     pkgs.z3                             # 4.16.0 -- bounded solver workers only
     pkgs.quint                          # 0.32.0 -- .qnt front-end compiler
     pkgs.jujutsu                        # 0.44.0 -- the sole VCS (policy 4)
+    pkgs.nodejs_22                      # 22.23.2 -- complete npm
   ];
 
   enterShell = ''

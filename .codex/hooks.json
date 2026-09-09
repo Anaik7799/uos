@@ -10,6 +10,15 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /home/an/NAS-setup/uos && out=$(bash tools/preflight --max-age 900 --quiet 2>&1) || out=$(bash tools/preflight --receipt --quiet 2>&1 | tail -1); printf '{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"UOS toolchain preflight: %s. Advisory: a passing preflight is evidence the toolchain works, not admission authority.\"}}' \"$(printf '%s' \"$out\" | tr -d '\\\"' | tr '\\n' ' ' | cut -c1-300)\"",
+            "timeout": 120
+          }
+        ]
       }
     ]
   }
