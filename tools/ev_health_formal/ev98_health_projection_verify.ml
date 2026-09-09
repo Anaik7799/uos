@@ -31,6 +31,7 @@ let reject_duplicate_keys text =
   and object_ depth i keys =
     if i < length && text.[i] = '}' then i + 1 else
     let key, after_key = string_at i in
+    if String.contains key '\\' then fail "escaped JSON object key";
     if Hashtbl.mem keys key then fail "duplicate JSON key";
     Hashtbl.add keys key ();
     let colon = space after_key in
@@ -135,14 +136,12 @@ let output_from_receipt receipt expected_output main =
       | value :: rest -> let before, after = split (count - 1) rest in value :: before, after
       | [] -> [], [] in
     let prefix, observed_suffix = if prefix_length < 1 then [], argv else split prefix_length argv in
-    let rec dependency_paths = function
-      | [] -> true
-      | "-pa" :: path :: rest ->
-        String.length path > 1 && path.[0] = '/' && path.[0] <> '-' && dependency_paths rest
-      | _ -> false in
+    let dependency_paths paths =
+      paths <> []
+      && List.for_all (fun path -> String.length path > 1 && path.[0] = '/' && path.[0] <> '-') paths in
     let dependencies =
       match prefix with
-      | launcher :: "-noshell" :: "-noinput" :: rest -> launcher = direct && dependency_paths rest
+      | launcher :: "-noshell" :: "-noinput" :: "-pa" :: paths -> launcher = direct && dependency_paths paths
       | _ -> false in
     if prefix_length < 5 || List.length argv > 300
        || List.exists (fun arg -> String.length arg > 4096) argv

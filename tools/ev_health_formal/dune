@@ -22,4 +22,4 @@
 (executable
  (name test_ev98_health_projection_verify)
  (modules test_ev98_health_projection_verify)
- (libraries ev98_health_formal yojson unix))
+ (libraries ev98_health_formal yojson unix cryptokit))

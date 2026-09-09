@@ -16,6 +16,8 @@ let rejects name json =
   match status with Unix.WEXITED 0 -> failwith ("accepted " ^ name) | _ -> Printf.printf "PASS %s\n%!" name
 let () =
   let base = J.from_file receipt in
+  let positive = Unix.create_process exe [|exe; receipt; beam; digest|] Unix.stdin Unix.stdout Unix.stderr in
+  (match snd (Unix.waitpid [] positive) with Unix.WEXITED 0 -> print_endline "PASS positive_baseline" | _ -> failwith "rejected positive baseline");
   rejects "nonzero_exit" (replace "exit_code" (`Int 1) base);
   rejects "failure_reason" (replace "failure" (`String "timeout") base);
   rejects "wrong_termination" (replace "child_termination" (`Assoc ["kind", `String "SIGNALED"]) base);
@@ -26,6 +28,23 @@ let () =
   output_string out (String.sub rendered 0 (String.length rendered - 1) ^ ",\"exit_code\":1}"); close_out out;
   let pid = Unix.create_process exe [|exe; duplicate; beam; digest|] Unix.stdin Unix.stdout Unix.stderr in
   (match snd (Unix.waitpid [] pid) with Unix.WEXITED 0 -> failwith "accepted duplicate exit_code" | _ -> print_endline "PASS duplicate_exit_code");
+  let output = Yojson.Safe.Util.member "output" base |> Yojson.Safe.Util.to_string in
+  let needle = "\"winner\":{" in
+  let rec locate index =
+    if String.sub output index (String.length needle) = needle then index
+    else locate (index + 1) in
+  let index = locate 0 in
+  let altered_output =
+    String.sub output 0 (index + String.length needle)
+    ^ "\"payload\":0,"
+    ^ String.sub output (index + String.length needle)
+        (String.length output - index - String.length needle) in
+  let output_digest =
+    Cryptokit.hash_string (Cryptokit.Hash.sha256 ()) altered_output
+    |> Cryptokit.transform_string (Cryptokit.Hexa.encode ()) in
+  rejects "duplicate_projection_row_key"
+    (replace "output_sha256" (`String output_digest)
+       (replace "output" (`String altered_output) base));
   rejects "wrong_runner" (replace "argv" (`List [`String "not-runner"]) base);
   rejects "nonstring_argv" (replace "argv" (`List [`Int 1]) base);
   let argv = match Yojson.Safe.Util.member "argv" base with `List values -> values | _ -> failwith "argv" in
