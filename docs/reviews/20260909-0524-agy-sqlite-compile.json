@@ -1,0 +1,28 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/tmp/uos-store-verification-run-729981",
+  "argv": [
+    "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+    "compile-package", "--target", "erlang", "--package",
+    "/tmp/uos-store-verification-run-729981/package", "--out",
+    "/tmp/uos-store-verification-run-729981/compiled", "--lib",
+    "/home/an/NAS-setup/uos/apps/uos_swarm/build/dev/erlang"
+  ],
+  "utc_started": 1788932574.05445,
+  "utc_finished": 1788932578.033032,
+  "elapsed_seconds": 3.9785790869999995,
+  "deadline_seconds": 60.0,
+  "exit_code": 0,
+  "output": "/tmp/uos-store-verification-run-729981/compiled/_gleam_artefacts/session_sync_ffi.erl:256:26: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.\nCompile directive 'nowarn_deprecated_catch' can be used to suppress\nwarnings in selected modules.\n%  256|                     case catch binary_to_integer(Pid) of\n%     |                          ^\n\n/tmp/uos-store-verification-run-729981/compiled/_gleam_artefacts/uos_jj_ffi.erl:67:9: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.\nCompile directive 'nowarn_deprecated_catch' can be used to suppress\nwarnings in selected modules.\n%   67|     _ = catch erlang:port_close(Port),\n%     |         ^\n\n/tmp/uos-store-verification-run-729981/compiled/_gleam_artefacts/uos_jj_ffi.erl:81:38: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.\nCompile directive 'nowarn_deprecated_catch' can be used to suppress\nwarnings in selected modules.\n%   81|                     after 250 -> _ = catch erlang:port_close(Killer), ok\n%     |                                      ^\n\n/tmp/uos-store-verification-run-729981/compiled/_gleam_artefacts/uos_swarm@decision_record.erl:162:2: Warning: local redefinition of built-in type: record()\n%  162| -type record() :: {prepared_record, prepared_decision()} |\n%     |  ^\n\n/tmp/uos-store-verification-run-729981/compiled/_gleam_artefacts/uos_herdr_ffi.erl:115:9: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.\nCompile directive 'nowarn_deprecated_catch' can be used to suppress\nwarnings in selected modules.\n%  115|     _ = catch erlang:port_close(Port),\n%     |         ^\n\n/tmp/uos-store-verification-run-729981/compiled/_gleam_artefacts/uos_herdr_ffi.erl:129:38: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.\nCompile directive 'nowarn_deprecated_catch' can be used to suppress\nwarnings in selected modules.\n%  129|                     after 250 -> _ = catch erlang:port_close(Killer), ok\n%     |                                      ^\n\n",
+  "output_sha256": "e65e4f4f453da263d0fd87dc7d56b46fced8d530e06ea8b42441e6cc11e55211",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

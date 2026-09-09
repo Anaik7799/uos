@@ -1,0 +1,85 @@
+{
+  "schema": "uos.ev-scope-resolution.v1",
+  "observed_at": "2026-09-09T05:50:11Z",
+  "authority": "REPORT_ONLY",
+  "parent_plan": "uos/ev-admission/20260909-0210",
+  "task": "PROGRAM",
+  "codex_session": "01a08017-fd72-7b20-9d32-4df53154bcc8",
+  "existing_inventory": {
+    "path": "docs/reviews/20260909-0306-ev-scope-inventory.json",
+    "sha256": "e29bb307244b38205bfdad380a72dd9e8c23588bc68ac13ff5cec567a7ef87b1"
+  },
+  "inventory_rows_checked": 109,
+  "decisions": [
+    {
+      "ev": 1,
+      "scope_label": "Bootstrap",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "status": "AGREED_SCOPE_ONLY",
+      "basis": "Canonical foundation architecture and AGY event1207 agree on foundational EV identities. Earlier UI-cycle records remain historical verification evidence under CHK-10-9MOD; no historical record is renamed.",
+      "admission": "NOT_GRANTED_BY_SCOPE_DECISION"
+    },
+    {
+      "ev": 2,
+      "scope_label": "Governance & Directive Superset",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "status": "AGREED_SCOPE_ONLY",
+      "basis": "Canonical foundation architecture and AGY event1207 agree on foundational EV identities. Earlier UI-cycle records remain historical verification evidence under CHK-10-9MOD; no historical record is renamed.",
+      "admission": "NOT_GRANTED_BY_SCOPE_DECISION"
+    },
+    {
+      "ev": 3,
+      "scope_label": "Source Freeze & Sanitized Ancestry",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "status": "AGREED_SCOPE_ONLY",
+      "basis": "Canonical foundation architecture and AGY event1207 agree on foundational EV identities. Earlier UI-cycle records remain historical verification evidence under CHK-10-9MOD; no historical record is renamed.",
+      "admission": "NOT_GRANTED_BY_SCOPE_DECISION"
+    },
+    {
+      "ev": 4,
+      "scope_label": "Gleam Control Plane & Holon Actor Runtime",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "status": "AGREED_SCOPE_ONLY",
+      "basis": "Canonical foundation architecture and AGY event1207 agree on foundational EV identities. Earlier UI-cycle records remain historical verification evidence under CHK-10-9MOD; no historical record is renamed.",
+      "admission": "NOT_GRANTED_BY_SCOPE_DECISION"
+    },
+    {
+      "ev": 5,
+      "scope_label": "Hermes Oracle & Evidence Store",
+      "scope_source": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "status": "AGREED_SCOPE_ONLY",
+      "basis": "Canonical foundation architecture and AGY event1207 agree on foundational EV identities. Earlier UI-cycle records remain historical verification evidence under CHK-10-9MOD; no historical record is renamed.",
+      "admission": "NOT_GRANTED_BY_SCOPE_DECISION"
+    },
+    {
+      "ev": 86,
+      "scope_label": "Cybernetic Raga Durga and 22-Shruti Microtonal Synthesis Engine plus Live Web Audio Studio",
+      "scope_source": "docs/journal/20260907-1145-cybernetic-raga-durga-and-22-shruti-synthesis-journal.md",
+      "status": "AGREED_SCOPE_ONLY",
+      "basis": "Implementation journal identifies musical synthesis and Live Web Audio. AGY withdrew the Acoustic Sheaf addition in event1224.",
+      "admission": "NOT_GRANTED_BY_SCOPE_DECISION"
+    }
+  ],
+  "primary_sources": [
+    {
+      "path": "docs/design/20260906-1649-codex-master-session-handover.md",
+      "sha256": "0174e48cf2a7a64d0330f578d9ffc3d944633fc81b5eaa67426ce083e2eb4882"
+    },
+    {
+      "path": "docs/journal/20260907-1145-cybernetic-raga-durga-and-22-shruti-synthesis-journal.md",
+      "sha256": "0cf208ccdbffe9c8b8d1ae11c8a21d874e1b9a5f88e0f7809b85317689a46c71"
+    }
+  ],
+  "peer_report": {
+    "path": "/home/an/NAS-setup/uos/var/coordination/tri-agent/events/0000001224.json",
+    "file_sha256": "07cadaaaa1cb5e22194a021996a6c7555bd9345acea2d787497917918f3d6087",
+    "body_digest": "49a977b123ba6abf4bb9eb31f4ff960efc1d2bba80c905d06726dc13c20184e7",
+    "operation_id": "op-agy-evidence-clarification-1788931284",
+    "ack_operation_id": "ev-admission-ack-agy-clarification-01",
+    "ack_sequence": 1232,
+    "authority_limit": "Observed file-backend report, not cryptographic producer authentication"
+  },
+  "policy_ceiling": 93,
+  "new_admissions": 0,
+  "evidence_caveat": "AGY earlier references include Codex-produced logs and a nonimplemented native adapter command. Those are treated as reviewed observations; independent replay is not established by that narrative. A fresh separate native execution was requested."
+}

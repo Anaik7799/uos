@@ -1,0 +1,67 @@
+{
+  "schema": "uos.ev-agy-replay-observation.v1",
+  "observed_at": "2026-09-09T05:52:24Z",
+  "candidate": "e2bb27072c55128420d529533686a86e896dec62",
+  "sources_checked": 70,
+  "driver_sources_checked": 2,
+  "component_cases_passed": 20,
+  "cli_cases_passed": 6,
+  "artifacts": [
+    {
+      "path": "docs/reviews/20260909-0524-agy-sqlite-compile.json",
+      "sha256": "9b83ae64f87e0421ab5fd5d51db2a13a1e0b323d96f3b45dfcea31a9a2e4c515",
+      "original_path": "/tmp/uos-store-verification-run-729981/compile.json"
+    },
+    {
+      "path": "docs/reviews/20260909-0524-agy-sqlite-unit-tests.json",
+      "sha256": "b2d1f7d5e4b5991a5662107940fa19d888838cff40037ba59bf31d32a9b1b006",
+      "original_path": "/tmp/uos-store-verification-run-729981/unit-tests.json"
+    },
+    {
+      "path": "docs/reviews/20260909-0524-agy-sqlite-cli-register.json",
+      "sha256": "20f5d9c5b027653a954d99094cb69bde88e4a8f2e7d8d17e082d3c44af58b914",
+      "original_path": "/tmp/uos-store-verification-run-729981/cli-register.json"
+    },
+    {
+      "path": "docs/reviews/20260909-0524-agy-sqlite-cli-valid.json",
+      "sha256": "6b6e7ba5037a108b32a114d8488ec6e1cd60ef0159144602a39e50527a016723",
+      "original_path": "/tmp/uos-store-verification-run-729981/cli-valid.json"
+    },
+    {
+      "path": "docs/reviews/20260909-0524-agy-sqlite-cli-valid-unchanged.json",
+      "sha256": "c9f9d86ff7fdb24c59959aaad79c5fbf540d1d9302515492d9657cedcfcd2634",
+      "original_path": "/tmp/uos-store-verification-run-729981/cli-valid-unchanged.json"
+    },
+    {
+      "path": "docs/reviews/20260909-0524-agy-sqlite-cli-tampered.json",
+      "sha256": "964ebf09a23144e569a74b36b8699555a5a5386719d194ab112602af914d79b7",
+      "original_path": "/tmp/uos-store-verification-run-729981/cli-tampered.json"
+    },
+    {
+      "path": "docs/reviews/20260909-0524-agy-sqlite-cli-absent.json",
+      "sha256": "1488ffa3883ac4b6abe5cb54c613754320770c013d18d9800f5e0f9bbe0fc0fa",
+      "original_path": "/tmp/uos-store-verification-run-729981/cli-absent.json"
+    },
+    {
+      "path": "docs/reviews/20260909-0524-agy-sqlite-cli-empty.json",
+      "sha256": "8890ea07b4a018b574416d7950febff9ca71e4da4977983549b9cf687f85e96e",
+      "original_path": "/tmp/uos-store-verification-run-729981/cli-empty.json"
+    },
+    {
+      "path": "docs/reviews/20260909-0524-agy-sqlite-source-manifest.json",
+      "sha256": "8f738fdc8a744bd07ebe5a534eccc9f6b065a9968cce4095d00d599b9b4fd5b0",
+      "original_path": "/tmp/uos-store-verification-run-729981/source-manifest.json"
+    }
+  ],
+  "peer_event": {
+    "path": "/home/an/NAS-setup/uos/var/coordination/tri-agent/events/0000001247.json",
+    "sha256": "74eb1a83c07f40439a737f9efab947f15910231482b21f8f1b033044597b4601",
+    "digest": "40f971f85e16f63d897600de5e9b980cf16dda30a779ba05f4175d89ee936d74"
+  },
+  "authority": "NONE",
+  "limits": [
+    "Receipts are newly observed local executions reported by the actual AGY session; the file coordinator is not cryptographic producer authentication.",
+    "Source bytes match explicit immutable JJ candidate and current private composition; reusable dependency and toolchain closure are not proven by this report.",
+    "Private synthetic SQLite component and CLI scope only; no live coordinator cutover, full semantic schema proof or EV admission."
+  ]
+}
