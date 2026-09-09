@@ -84,7 +84,8 @@ let run ~seconds argv =
         in if !status = None then loop ()
       in
       let cleanup () =
-        kill_group pid; kill_direct pid;
+        kill_group pid;
+        if !status = None then kill_direct pid;
         reap_nonblocking 0.10;
         close out_r; close err_r
       in
