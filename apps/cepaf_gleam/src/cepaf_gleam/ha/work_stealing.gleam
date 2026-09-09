@@ -88,6 +88,15 @@ pub type AcceptedTransfer {
   )
 }
 
+/// Receiver-side reservation made before asking a donor to remove any work.
+pub type PendingTransfer {
+  PendingTransfer(
+    donor_node: String,
+    recipient_node: String,
+    transfer_id: String,
+  )
+}
+
 /// Donor-side replay receipt retaining the first response for one transfer.
 pub type HandledTransfer {
   HandledTransfer(
@@ -106,6 +115,7 @@ pub type WorkStealingEngine {
     capacity: Int,
     peer_queues: List(NodeQueueState),
     accepted_transfers: List(AcceptedTransfer),
+    pending_transfers: List(PendingTransfer),
     handled_transfers: List(HandledTransfer),
     steal_history_count: Int,
     last_steal_epoch_us: Int,
@@ -124,6 +134,7 @@ pub fn init_work_stealing(
     capacity: capacity,
     peer_queues: [],
     accepted_transfers: [],
+    pending_transfers: [],
     handled_transfers: [],
     steal_history_count: 0,
     last_steal_epoch_us: 0,
@@ -205,16 +216,50 @@ pub fn generate_steal_request(
   victim_node: String,
   transfer_id: String,
   now_us: Int,
-) -> StealRequest {
+) -> #(WorkStealingEngine, Option(StealRequest)) {
   let available_slots = engine.capacity - engine.active_workers
   let max_to_steal = int.max(1, available_slots / 2)
-  StealRequest(
-    initiator_node: engine.local_node_id,
-    donor_node: victim_node,
-    transfer_id: transfer_id,
-    max_tasks: max_to_steal,
-    epoch_us: now_us,
-  )
+  let request =
+    StealRequest(
+      initiator_node: engine.local_node_id,
+      donor_node: victim_node,
+      transfer_id: transfer_id,
+      max_tasks: max_to_steal,
+      epoch_us: now_us,
+    )
+  let pending =
+    PendingTransfer(
+      donor_node: victim_node,
+      recipient_node: engine.local_node_id,
+      transfer_id: transfer_id,
+    )
+  let accepted =
+    AcceptedTransfer(
+      donor_node: victim_node,
+      recipient_node: engine.local_node_id,
+      transfer_id: transfer_id,
+    )
+  case
+    has_pending_transfer(engine.pending_transfers, pending)
+    || list.any(engine.accepted_transfers, fn(receipt) { receipt == accepted })
+  {
+    True -> #(engine, Some(request))
+    False -> {
+      let reserved_count =
+        list.length(engine.accepted_transfers)
+        + list.length(engine.pending_transfers)
+      case reserved_count >= max_transfer_receipts {
+        True -> #(engine, None)
+        False -> #(
+          WorkStealingEngine(..engine, pending_transfers: [
+            pending,
+            ..engine.pending_transfers
+          ]),
+          Some(request),
+        )
+      }
+    }
+  }
 }
 
 /// Donor handles an incoming steal request and yields up to half its queue.
@@ -249,9 +294,18 @@ pub fn apply_steal_response(
   let is_recipient = resp.recipient_node == engine.local_node_id
   let already_accepted =
     list.any(engine.accepted_transfers, fn(accepted) { accepted == receipt })
+  let pending =
+    PendingTransfer(resp.donor_node, resp.recipient_node, resp.transfer_id)
+  let #(has_reservation, remaining_pending) =
+    remove_pending_transfer(engine.pending_transfers, pending)
   let receipt_capacity_available =
     list.length(engine.accepted_transfers) < max_transfer_receipts
-  case is_recipient && !already_accepted && receipt_capacity_available {
+  case
+    is_recipient
+    && has_reservation
+    && !already_accepted
+    && receipt_capacity_available
+  {
     False -> engine
     True -> {
       let new_tasks = unseen_tasks(resp.stolen_tasks, engine.local_queue)
@@ -260,9 +314,35 @@ pub fn apply_steal_response(
         ..engine,
         local_queue: list.append(engine.local_queue, new_tasks),
         accepted_transfers: [receipt, ..engine.accepted_transfers],
+        pending_transfers: remaining_pending,
         steal_history_count: engine.steal_history_count + count,
         last_steal_epoch_us: resp.epoch_us,
       )
+    }
+  }
+}
+
+fn has_pending_transfer(
+  transfers: List(PendingTransfer),
+  pending: PendingTransfer,
+) -> Bool {
+  list.any(transfers, fn(current) { current == pending })
+}
+
+fn remove_pending_transfer(
+  transfers: List(PendingTransfer),
+  pending: PendingTransfer,
+) -> #(Bool, List(PendingTransfer)) {
+  case transfers {
+    [] -> #(False, [])
+    [current, ..remaining] -> {
+      case current == pending {
+        True -> #(True, remaining)
+        False -> {
+          let #(removed, retained) = remove_pending_transfer(remaining, pending)
+          #(removed, [current, ..retained])
+        }
+      }
     }
   }
 }
