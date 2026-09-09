@@ -136,6 +136,20 @@ pub fn main() {
   io.println(
     "PASS mesh_sync_codec_test.malformed_nested_wire_records_refused_test",
   )
+  io.println(
+    "START mesh_sync_codec_test.aggregate_budget_stops_before_invalid_shared_tail_test",
+  )
+  mesh_sync_codec_test.aggregate_budget_stops_before_invalid_shared_tail_test()
+  io.println(
+    "PASS mesh_sync_codec_test.aggregate_budget_stops_before_invalid_shared_tail_test",
+  )
+  io.println(
+    "START mesh_sync_codec_test.deeply_shared_tree_and_escaping_have_aggregate_bounds_test",
+  )
+  mesh_sync_codec_test.deeply_shared_tree_and_escaping_have_aggregate_bounds_test()
+  io.println(
+    "PASS mesh_sync_codec_test.deeply_shared_tree_and_escaping_have_aggregate_bounds_test",
+  )
   io.println("START crdt_mesh_sync_test.mesh_sync_digest_and_drift_test")
   crdt_mesh_sync_test.mesh_sync_digest_and_drift_test()
   io.println("PASS crdt_mesh_sync_test.mesh_sync_digest_and_drift_test")

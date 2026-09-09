@@ -5,7 +5,6 @@
 import gleam/bit_array
 import gleam/dynamic/decode
 import gleam/json
-import gleam/list
 import gleam/result
 import gleam/string
 
@@ -107,33 +106,72 @@ fn scan(
 }
 
 pub fn validate(value: Value) -> Result(Nil, WireError) {
-  validate_at(value, 0)
+  validate_at(value, 0, max_bytes) |> result.map(fn(_) { Nil })
 }
 
-fn validate_at(value: Value, depth: Int) -> Result(Nil, WireError) {
+fn consume(left: Int, bytes: Int) -> Result(Int, WireError) {
+  case bytes <= left {
+    True -> Ok(left - bytes)
+    False -> Error(ByteLimit)
+  }
+}
+
+// Render only one locally bounded primitive to account for its exact JSON
+// escaping and numeric spelling. No full recursive JSON value exists yet.
+fn atom_size(value: Value, left: Int) -> Result(Int, WireError) {
+  value
+  |> diagnostic_json
+  |> json.to_string
+  |> string.byte_size
+  |> consume(left, _)
+}
+
+// Every visited value consumes at least one encoded byte (arrays consume two).
+// The shared byte allowance therefore bounds both traversal and output, even
+// when a caller builds a compact, highly shared recursive Value in memory.
+fn validate_at(value: Value, depth: Int, left: Int) -> Result(Int, WireError) {
   case value {
     Text(s) ->
       case string.byte_size(s) <= max_string_bytes {
-        True -> Ok(Nil)
+        True -> atom_size(value, left)
         False -> Error(StringLimit)
       }
     Integer(n) ->
       case n >= 0 && n <= max_integer {
-        True -> Ok(Nil)
+        True -> atom_size(value, left)
         False -> Error(IntegerLimit)
       }
     Real(f) ->
       case f >=. -1.7976931348623157e308 && f <=. 1.7976931348623157e308 {
-        True -> Ok(Nil)
+        True -> atom_size(value, left)
         False -> Error(NonFinite)
       }
-    Boolean(_) -> Ok(Nil)
+    Boolean(_) -> atom_size(value, left)
     Array(items) ->
       case depth >= max_depth, bounded_list(items) {
         True, _ -> Error(DepthLimit)
         _, False -> Error(CollectionLimit)
-        False, True -> list.try_each(items, fn(v) { validate_at(v, depth + 1) })
+        False, True -> {
+          use left <- result.try(consume(left, 2))
+          validate_items(items, depth + 1, left)
+        }
       }
+  }
+}
+
+fn validate_items(
+  items: List(Value),
+  depth: Int,
+  left: Int,
+) -> Result(Int, WireError) {
+  case items {
+    [] -> Ok(left)
+    [value] -> validate_at(value, depth, left)
+    [value, ..rest] -> {
+      use left <- result.try(validate_at(value, depth, left))
+      use left <- result.try(consume(left, 1))
+      validate_items(rest, depth, left)
+    }
   }
 }
 

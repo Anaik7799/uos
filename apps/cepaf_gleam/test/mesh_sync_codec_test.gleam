@@ -392,3 +392,23 @@ pub fn malformed_nested_wire_records_refused_test() {
     },
   )
 }
+
+pub fn aggregate_budget_stops_before_invalid_shared_tail_test() {
+  let leaf = Array(list.repeat(Text(string.repeat("x", 1024)), 256))
+  let wide = Array([Array(list.repeat(leaf, 256)), mesh_wire.Integer(-1)])
+  mesh_wire.validate(wide) |> should.equal(Error(ByteLimit))
+  mesh_wire.encode(wide) |> should.equal(Error(ByteLimit))
+}
+
+pub fn deeply_shared_tree_and_escaping_have_aggregate_bounds_test() {
+  let tree =
+    list.fold(list.repeat(Nil, 12), Text(""), fn(child, _) {
+      Array(list.repeat(child, 256))
+    })
+  mesh_wire.validate(tree) |> should.equal(Error(ByteLimit))
+  mesh_wire.encode(tree) |> should.equal(Error(ByteLimit))
+  mesh_wire.encode(
+    Array(list.repeat(Text(string.repeat("\u{0000}", 1024)), 256)),
+  )
+  |> should.equal(Error(ByteLimit))
+}
