@@ -6,7 +6,7 @@ let guard_unit source =
  copy(source^"/apps/cepaf_gleam/test/module_guard_contract_test.gleam")(tmp^"/src/module_guard_contract_test.gleam");
  write_new(tmp^"/gleam.toml") "name = \"guard_checks\"\nversion = \"1.0.0\"\ntarget = \"erlang\"\n[dependencies]\ngleam_stdlib = \">= 0.60.0 and < 2.0.0\"\ngleam_json = \">= 3.0.0 and < 4.0.0\"\ngleeunit = \">= 1.0.0 and < 2.0.0\"\n";
  let lib=canonical^"/apps/cepaf_gleam/build/dev/erlang" in
- let built=run ~seconds:45. "/home/an/.nix-profile/bin/gleam" ["compile-package";"--target";"erlang";"--package";tmp;"--out";tmp^"/compiled";"--lib";lib] in
+ let built=run ~seconds:45. (tool "gleam") ["compile-package";"--target";"erlang";"--package";tmp;"--out";tmp^"/compiled";"--lib";lib] in
  write_new(tmp^"/build.log")built.output;require(built.code=0)("guard build failed: "^built.output);
  let paths=Sys.readdir lib|>Array.to_list|>List.filter_map(fun d->let p=lib^"/"^d^"/ebin" in if Sys.file_exists p then Some p else None) in
  let prefix=["+S";"2:2";"-noshell";"-pa"]@paths@["-pa";tmp^"/compiled/ebin";"-eval"] in

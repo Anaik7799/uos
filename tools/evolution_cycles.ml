@@ -100,11 +100,12 @@ let selftest50()=
 let run50 c=
  ignore(active50 c);require(not(Sys.file_exists c.out))"new output directory required";mkdir c.out 0o700;
  let subject=verify_release c.release in
- let revision=checked "/home/an/.cargo/bin/jj"["--repository";c.source;"log";"-r";"@";"--no-graph";"-T";"commit_id"]|>String.trim in
+ let revision=checked (tool "jj")["--repository";c.source;"log";"-r";"@";"--no-graph";"-T";"commit_id"]|>String.trim in
  let protected=["tools/evolution_cycles.ml";"tools/evolution_cycles.mojo";"tools/unification_cycles.ml";"tools/release_process.ml";"tools/release_process.mojo";"tools/output_guard_check.ml";"tools/validation/release_browser_capture.ml";"apps/cepaf_gleam/src/cepaf_gleam/ha/module_guard.gleam";"apps/cepaf_gleam/test/module_guard_contract_test.gleam"]in
  let hashes=List.map(fun p->p,sha(c.source^"/"^p))protected in
  let memo=Hashtbl.create 8 in
- let call tool args=checked ~seconds:230. "/home/an/dev/ver/zigvm/_opam/bin/ocaml"(["-I";c.source^"/tools";c.source^"/tools/"^tool]@args)in
+ (* parameter renamed from `tool` so it no longer shadows the resolver of the same name *)
+ let call script args=checked ~seconds:230. (tool "ocaml")(["-I";c.source^"/tools";c.source^"/tools/"^script]@args)in
  let cached key thunk=match Hashtbl.find_opt memo key with Some x->x|None->let x=thunk()in Hashtbl.add memo key x;x in
  let guard()=cached "guard"(fun()->let report=call "output_guard_check.ml"[c.source]|>last_json in
    let path=str(field "evidence"(assoc report))in

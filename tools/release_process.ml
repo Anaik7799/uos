@@ -10,10 +10,100 @@ let emit stage status fields =
  ["schema",`String "uos.release-check.v1";"stage",`String stage;
   "status",`String status;"authority",`String "NONE"] @ fields)))
 let mono() = Mtime.Span.to_float_ns(Mtime_clock.elapsed()) /. 1e9
-let otp = "/nix/store/qq9f90d5giydnhpdxlqq83n21c22jq0b-erlang-29.0.6/lib/erlang/bin"
-let canonical = "/home/an/NAS-setup/uos"
+(* --- in-project toolchain resolver (SC-TOOLCHAIN-INPROJECT-001, SC-NIX-DEVENV-001) ---
+   This file previously hardcoded 17 absolute paths, of which nine were toolchains
+   outside the project: /nix/store/...-erlang-29.0.6 (a SECOND OTP 29, not the
+   pinned 29.0.5), ~/.cargo/bin/jj, ~/.nix-profile/bin/gleam, and four entrypoints
+   in /home/an/dev/ver/zigvm/_opam -- a read-only evidence tree that canonical
+   policy section 3 and SC-NIX-DEVENV-001 invariant 1 both bar as a runtime
+   dependency. None of them were stale: they never went through the resolver at
+   all, which is why no grep for the relocated tree ever found them and why
+   uos_toolchain_report could pass 19/19 while this file used none of those 19.
+
+   The 29.0.6 case is the instructive one. Every OTP assertion in the tree tested
+   erlang:system_info(otp_release), and 29.0.6 answers "29" exactly as 29.0.5 does,
+   so a release-number check can never separate the pinned BEAM from an unpinned
+   one. The guards now compare derivations, not release numbers. *)
+let uos_root =
+ let rec ascend p n =
+  if n<=0 then failwith "UOS root not found: no .jj marker above this script"
+  else if Sys.file_exists(p^"/.jj") then p
+  else let up=Filename.dirname p in
+   if up=p then failwith "UOS root not found: reached filesystem root" else ascend up (n-1) in
+ (* Derived from this script's own location, never from the environment: an
+    inherited UOS_ROOT is caller-controlled and would let a wrong tree resolve. *)
+ ascend (realpath(Filename.dirname Sys.argv.(0))) 8
+let canonical = uos_root
+let toolchains = uos_root^"/toolchains"
+(* The table. Mirrors tools/lib/uos-toolchain.sh entry for entry; tool_table_parity
+   below proves the mirror, so the duplication cannot drift silently. *)
+let tool_path = function
+ | "erl"|"erlc"|"escript"|"rebar3"|"zig"|"z3"|"quint"|"jj" as n -> Some(toolchains^"/nix-profile/bin/"^n)
+ | "gleam" -> Some(toolchains^"/gleam-1.16.0/bin/gleam")
+ | "ocaml"|"ocamlfind"|"dune" as n -> Some(toolchains^"/opam-ocaml/bin/"^n)
+ | "lean"|"lake"|"leanc" as n -> Some(toolchains^"/lean-4.33.0/bin/"^n)
+ | "cargo"|"rustc"|"rustup" as n -> Some(toolchains^"/cargo/bin/"^n)
+ | "node"|"npm" as n -> Some(toolchains^"/node-22/bin/"^n)
+ | "pixi" -> Some(toolchains^"/pixi/bin/pixi")
+ | "mojo" -> Some(uos_root^"/services/inference/max/.pixi/envs/default/bin/mojo")
+ | _ -> None
+(* Absence fails closed. There is deliberately no host fallback: substituting
+   /usr/bin/erl for an absent pinned erl is exactly the failure this file had. *)
+let tool name = match tool_path name with
+ | None -> failwith("no in-project toolchain entry: "^name)
+ | Some p -> require(Sys.file_exists p)("toolchain absent (no host fallback): "^p); p
+(* Host OS utilities are NOT toolchains and stay on absolute host paths; they are
+   named here so the distinction is explicit rather than incidental. *)
+let os_util name =
+ let p="/usr/bin/"^name in require(Sys.file_exists p)("host utility absent: "^p); p
+let otp = Filename.dirname(tool "erl")
+(* Parity guard: parse the shell resolver's case arms and require this table to
+   agree. Pure text scan -- no shell is executed, matching this file's argv-only
+   discipline. Divergence is a hard failure, not a warning. *)
+let tool_table_parity () =
+ let lib=uos_root^"/tools/lib/uos-toolchain.sh" in
+ require(Sys.file_exists lib)("resolver library missing: "^lib);
+ let ic=open_in lib in
+ let arms=ref [] in
+ (try while true do
+   let line=String.trim(input_line ic) in
+   match String.index_opt line ')' with
+   | Some i when i>0 && i<32 ->
+     let name=String.sub line 0 i in
+     if String.for_all(function 'a'..'z'|'0'..'9'|'-'->true|_->false) name && name<>"" then
+      (match String.index_opt line '"' with
+       | Some a ->
+         (match String.index_from_opt line (a+1) '"' with
+          | Some b ->
+            let raw=String.sub line (a+1) (b-a-1) in
+            let sub pat rep s =
+             let n=String.length pat in
+             if String.length s>=n && String.sub s 0 n=pat then rep^String.sub s n (String.length s-n) else s in
+            let expanded=raw |> sub "$UOS_TC" toolchains |> sub "$UOS_ROOT" uos_root in
+            if String.length expanded>0 && expanded.[0]='/' then arms:=(name,expanded)::!arms
+          | None->())
+       | None->())
+   | _->()
+  done with End_of_file->close_in_noerr ic);
+ require(List.length !arms>=15)("resolver table parse found only "^string_of_int(List.length !arms)^" arms");
+ List.iter(fun(name,shell_path)->
+  match tool_path name with
+  | None -> failwith("shell resolver knows "^name^" but this table does not")
+  | Some ocaml_path -> require(ocaml_path=shell_path)
+      ("toolchain table drift for "^name^": shell="^shell_path^" ocaml="^ocaml_path)) !arms;
+ List.length !arms
+(* BEAM identity guard. Release number alone is insufficient (see header). *)
+let beam_pin_check () =
+ let erl=tool "erl" in
+ let real=realpath erl in
+ require(String.length real>11 && String.sub real 0 11="/nix/store/")
+  ("pinned erl escaped the Nix store: "^real);
+ List.iter(fun bad->require(not(String.length real>=String.length bad && String.sub real 0 (String.length bad)=bad))
+  ("erl resolves into a barred tree: "^real))
+  ["/usr/";"/opt/";"/home/an/dev/ver/"];
+ real
 let env extra =
- let base=["PATH="^otp^":/home/an/.cargo/bin:/home/an/.nix-profile/bin:/home/an/dev/ver/zigvm/_opam/bin:/usr/bin:/bin";
+ let base=["PATH="^otp^":"^toolchains^"/gleam-1.16.0/bin:"^toolchains^"/opam-ocaml/bin:"^toolchains^"/cargo/bin:"^toolchains^"/node-22/bin:/usr/bin:/bin";
  "LANG=C.UTF-8";"ERL_FLAGS=+S 2:2 +A 2";"ERL_CRASH_DUMP=/dev/null";"CC=/usr/bin/cc"] in
  let inherited=List.filter_map(fun k->Option.map(fun v->k^"="^v)(Sys.getenv_opt k))
  ["HOME";"XDG_RUNTIME_DIR";"DBUS_SESSION_BUS_ADDRESS";"OPAM_SWITCH_PREFIX";"OCAMLPATH"] in
@@ -93,7 +183,7 @@ let verify_release root =
  require(String.trim(read_file(root^"/candidate.revision")42)=rev) "candidate differs";
  require(String.trim(checked(otp^"/erl")["-noshell";"-eval";"io:put_chars(erlang:system_info(otp_release)),halt()."])="29") "wrong actual OTP";
  rev
-let copy src dst=ignore(checked "/usr/bin/cp" ["-R";"--";src;dst])
+let copy src dst=ignore(checked (os_util "cp") ["-R";"--";src;dst])
 let in_dir p f=let old=getcwd() in chdir p;Fun.protect f ~finally:(fun()->chdir old)
 let source_root()=
  let p=Sys.argv.(0)|>Filename.dirname|>Filename.dirname|>realpath in
@@ -101,7 +191,7 @@ let source_root()=
 let build dest =
  require(not(Filename.is_relative dest) && not(Sys.file_exists dest)) "new absolute destination required";
  let source=source_root() in
- let revision()=checked "/home/an/.cargo/bin/jj" ["--repository";source;"log";"-r";"@";"--no-graph";"-T";"commit_id"]|>String.trim in
+ let revision()=checked (tool "jj") ["--repository";source;"log";"-r";"@";"--no-graph";"-T";"commit_id"]|>String.trim in
  let rev=revision() in require(hex 40 rev) "invalid JJ revision";
  let tmp=temp "uos-native-release-" in mkdir(tmp^"/apps")0o700;
  List.iter(fun app->let s=source^"/apps/"^app and d=tmp^"/apps/"^app in mkdir d 0o700;
@@ -110,7 +200,7 @@ let build dest =
  ["cepaf_gleam";"indrajaal_gleam_web"];
  let app=tmp^"/apps/indrajaal_gleam_web" in mkdir(app^"/build")0o700;
  copy(canonical^"/apps/indrajaal_gleam_web/build/packages")(app^"/build/packages");
- let r=in_dir app(fun()->run ~seconds:180. "/home/an/.nix-profile/bin/gleam" ["export";"erlang-shipment"]) in
+ let r=in_dir app(fun()->run ~seconds:180. (tool "gleam") ["export";"erlang-shipment"]) in
  write_new(tmp^"/build.log")r.output;require(r.code=0)("build failed: "^tmp^"/build.log");
  require(revision()=rev) "source changed during build";
  mkdir dest 0o700;
@@ -164,7 +254,7 @@ let fetch base path =
  let prefix="http://nas-1.tail55d152.ts.net:" in
  let p=String.sub base (String.length prefix) (String.length base-String.length prefix) in
  let resolve=if port p>=49152 then ["--resolve";"nas-1.tail55d152.ts.net:"^p^":127.0.0.1"] else [] in
- checked ~seconds:10. "/usr/bin/curl" (["--silent";"--show-error";"--fail";"--max-time";"5";"--connect-timeout";"2";
+ checked ~seconds:10. (os_util "curl") (["--silent";"--show-error";"--fail";"--max-time";"5";"--connect-timeout";"2";
  "--max-filesize";"1048576";"--noproxy";"*"]@resolve@[base^path])
 let identity body candidate =
  let m=Yojson.Safe.from_string body|>assoc in
@@ -216,10 +306,10 @@ let packet p rev =
 let selftest()=
  let n=ref 0 in let check label f=f();incr n;emit label "PASS" [] in
  let rejects f=try f();false with _->true in
- check "argv_no_shell"(fun()->let r=run "/usr/bin/printf" ["%s";"$(id);literal"] in require(r.code=0 && r.output="$(id);literal") "argv interpreted");
- check "nonzero_preserved"(fun()->require((run "/usr/bin/false" []).code=1) "exit lost");
- check "timeout_reaped"(fun()->require(rejects(fun()->ignore(run ~seconds:0.05 "/usr/bin/sleep" ["2"]))) "timeout accepted");
- check "output_bounded"(fun()->require(rejects(fun()->ignore(run ~limit:16 "/usr/bin/printf" ["%100s";"x"]))) "large output accepted");
+ check "argv_no_shell"(fun()->let r=run (os_util "printf") ["%s";"$(id);literal"] in require(r.code=0 && r.output="$(id);literal") "argv interpreted");
+ check "nonzero_preserved"(fun()->require((run (os_util "false") []).code=1) "exit lost");
+ check "timeout_reaped"(fun()->require(rejects(fun()->ignore(run ~seconds:0.05 (os_util "sleep") ["2"]))) "timeout accepted");
+ check "output_bounded"(fun()->require(rejects(fun()->ignore(run ~limit:16 (os_util "printf") ["%100s";"x"]))) "large output accepted");
  check "exec_failure"(fun()->require((run "/does/not/exist" []).code=127) "exec failure lost");
  check "bad_url"(fun()->require(rejects(fun()->target "http://example.com:4100")) "host accepted");
  check "bad_port"(fun()->require(rejects(fun()->ignore(port "4100;id"))) "port accepted");
@@ -252,7 +342,7 @@ let model_table() =
  done done done;Buffer.contents b
 let unit source =
  let tmp=temp "uos-native-unit-" in copy(source^"/apps/cepaf_gleam/src")(tmp^"/src");
- ignore(checked "/usr/bin/cp" ["-R";"--";source^"/apps/indrajaal_gleam_web/src/.";tmp^"/src/"]);
+ ignore(checked (os_util "cp") ["-R";"--";source^"/apps/indrajaal_gleam_web/src/.";tmp^"/src/"]);
  let toml=read_file(source^"/apps/cepaf_gleam/gleam.toml")65536 in
  write_new(tmp^"/gleam.toml")(String.split_on_char '\n' toml|>List.filter((<>)"[dev-dependencies]")|>String.concat "\n");
  let names=["homeostasis_algebra";"homeostasis_ui_contract";"homeostasis_evidence";"agui_sse_api";"homeostasis_evolution_engine";"homeostasis_evolution_hud";"homeostasis_fprime_simulated";"homeostasis_fprime_wired";"physiological_homeostasis";"sysadmin_tui";"release_lifecycle";"module_guard";"module_guard_substring_weakness";"module_guard_contract"] in
@@ -260,7 +350,7 @@ let unit source =
  List.iter(fun n->copy(source^"/apps/indrajaal_gleam_web/test/"^n^".gleam")(tmp^"/src/"^n^".gleam"))
  ["runtime_identity_test";"homeostasis_transport_test";"homeostasis_http_probe"];
  let lib=canonical^"/apps/cepaf_gleam/build/dev/erlang" in
- let built=run ~seconds:90. "/home/an/.nix-profile/bin/gleam" ["compile-package";"--target";"erlang";"--package";tmp;"--out";tmp^"/compiled";"--lib";lib] in
+ let built=run ~seconds:90. (tool "gleam") ["compile-package";"--target";"erlang";"--package";tmp;"--out";tmp^"/compiled";"--lib";lib] in
  write_new(tmp^"/build.log")built.output;require(built.code=0)("unit build failed: "^tmp^"/build.log");
  let paths=Sys.readdir lib|>Array.to_list|>List.filter_map(fun d->let p=lib^"/"^d^"/ebin" in if Sys.file_exists p then Some p else None) in
  let args=["-noshell";"-pa"]@paths@["-pa";tmp^"/compiled/ebin";"-eval"] in
@@ -285,7 +375,7 @@ let browser source release p =
  require(String.starts_with ~prefix:"/nix/store/" toolchain
    && Sys.file_exists(toolchain^"/bin/cc") && Sys.file_exists(toolchain^"/lib/libcurl.so"))
   "pinned Nix release toolchain required; see ops/release/flake.nix";
- ignore(checked ~seconds:60. "/home/an/dev/ver/zigvm/_opam/bin/ocamlfind"
+ ignore(checked ~seconds:60. (tool "ocamlfind")
   ["ocamlopt";"-cc";toolchain^"/bin/cc";"-ccopt";"-L"^toolchain^"/lib";
    "-cclib";"-Wl,-rpath,"^toolchain^"/lib";"-linkpkg";"-package";"playwright,eio_main,yojson";
    "-o";tmp^"/browser-check";tmp^"/browser_check.ml"]);
@@ -300,7 +390,7 @@ let compile_capture source =
  let toolchain=canonical^"/var/releases/indrajaal-web/toolchain-20260908-0551"|>realpath in
  require(String.starts_with ~prefix:"/nix/store/"toolchain)"realized Nix toolchain required";
  copy(source^"/tools/validation/release_browser_capture.ml")(tmp^"/capture.ml");
- ignore(checked ~seconds:60. "/home/an/dev/ver/zigvm/_opam/bin/ocamlfind"
+ ignore(checked ~seconds:60. (tool "ocamlfind")
  ["ocamlopt";"-cc";toolchain^"/bin/cc";"-ccopt";"-L"^toolchain^"/lib";"-cclib";"-Wl,-rpath,"^toolchain^"/lib";"-linkpkg";"-package";"playwright,eio_main,yojson,mtime.clock.os";"-o";tmp^"/capture";tmp^"/capture.ml"]);tmp
 let capture source release p =
  require(port p>=49152) "capture requires private port";
@@ -333,7 +423,7 @@ let package_faults release =
  emit "package-faults" "PASS" ["checks",`Int 5;"scope",`String "private copied release only"]
 let parity source release base =
  let rev=verify_release release and tmp=temp "uos-frontend-parity-" in
- let ml="/home/an/dev/ver/zigvm/_opam/bin/ocaml" in
+ let ml=tool "ocaml" in
  let n=ref 0 in
  let compare_case label arguments expected =
   let a=run ~seconds:90. ml ((source^"/tools/release_process.ml")::arguments) in
@@ -357,6 +447,12 @@ let parity source release base =
   "test_tui",["tui";release;"test";"disturbance";"3"],0];
  emit "frontend-parity" "PASS" ["cases",`Int !n;"evidence",`String tmp;
  "scope",`String "exact exit/stdout parity for listed cases; dynamic VM values and mutation targets have separate probes"]
+(* Runs before EVERY command, not just the toolchain one. A file that once
+   silently used an unpinned BEAM does not get to opt in to being checked. *)
+let toolchain_preflight () =
+ let arms=tool_table_parity() in
+ let erl=beam_pin_check() in
+ (arms,erl)
 let main()=match Array.to_list Sys.argv with
  | [_;"browser";source;release;p]->browser source release p
  | [_;"capture";source;release;p]->capture source release p
@@ -366,6 +462,9 @@ let main()=match Array.to_list Sys.argv with
  | [_;"unit";source]->unit source
  | [_;"model-table"]->print_string(model_table())
  | [_;"selftest"]->selftest()
+ | [_;"toolchain"]->let arms,erl=toolchain_preflight() in
+   emit "toolchain" "PASS" ["resolver_arms",`Int arms;"erl",`String erl;
+   "scope",`String "table parity with tools/lib/uos-toolchain.sh and BEAM derivation identity; does not assert which nixpkgs revision produced it"]
  | [_;"runtime-check";source]->runtime_check source
  | [_;"build";dest]->build dest
  | [_;"capture-build";source]->emit "capture-build" "PASS"["evidence",`String(compile_capture source)]
@@ -378,4 +477,5 @@ let ()=
  if Filename.basename Sys.argv.(0) = "release_process.ml" then (
  Sys.set_signal Sys.sigalrm (Sys.Signal_handle(fun _->failwith "overall command deadline"));
  ignore(alarm 240);
- try main() with e->emit "command" "FAIL" ["error",`String(Printexc.to_string e)];exit 1)
+ try ignore(toolchain_preflight()); main()
+ with e->emit "command" "FAIL" ["error",`String(Printexc.to_string e)];exit 1)

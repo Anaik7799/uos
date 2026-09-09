@@ -99,7 +99,7 @@ let coord args=
 let request base path=
  target base;let prefix="http://nas-1.tail55d152.ts.net:"in let p=String.sub base(String.length prefix)(String.length base-String.length prefix)in
  let resolve=if port p>=49152 then["--resolve";"nas-1.tail55d152.ts.net:"^p^":127.0.0.1"]else[]in
- let r=run ~seconds:10. "/usr/bin/curl"(["--noproxy";"*";"--silent";"--show-error";"--max-time";"6";"--max-filesize";"1048576";"-w";"\n%{http_code}"]@resolve@[base^path])in
+ let r=run ~seconds:10. (os_util "curl")(["--noproxy";"*";"--silent";"--show-error";"--max-time";"6";"--max-filesize";"1048576";"-w";"\n%{http_code}"]@resolve@[base^path])in
  require(r.code=0)"HTTP transport";let cut=String.rindex r.output '\n'in
  int_of_string(String.sub r.output(cut+1)(String.length r.output-cut-1)),String.sub r.output 0 cut
 let risk_binary=lazy(
@@ -110,7 +110,7 @@ let risk_binary=lazy(
   require((stat actual).st_kind=S_REG)"runtime library missing";symlink actual(links^"/"^name);actual,sha actual)
  ["libsqlite3.so","libsqlite3.so.0";"libgmp.so","libgmp.so.10"]in
  write_new(build^"/existing-runtime-libraries.json")(json(jobj(List.map(fun(p,h)->p,jstr h)libraries)));
- ignore(checked ~seconds:90. ~extra:["DUNE_CACHE=disabled";"LIBRARY_PATH="^links] "/home/an/dev/ver/zigvm/_opam/bin/dune"
+ ignore(checked ~seconds:90. ~extra:["DUNE_CACHE=disabled";"LIBRARY_PATH="^links] (tool "dune")
  ["build";"-j";"1";"--root";source;"--build-dir";build;"./validate.exe"]);
  require(inventory source=before)"risk checker source changed during build";
  require(List.for_all(fun(p,h)->sha p=h)libraries)"runtime library changed during build";
@@ -151,14 +151,14 @@ let validate_envelope original received=
  let bytes=str(field "payload_json"a)in require(bytes=json original&&str(field "payload_sha256"a)=digest bytes)"envelope substitution"
 
 let probe kind source release base risk completed publications=
- let call args=checked ~seconds:230. "/home/an/dev/ver/zigvm/_opam/bin/ocaml"((source^"/tools/release_process.ml")::args)in
+ let call args=checked ~seconds:230. (tool "ocaml")((source^"/tools/release_process.ml")::args)in
  let file p=read_file(source^"/"^p)4194304 in
  let body path code needles=let c,b=request base path in require(c=code)("HTTP "^string_of_int c);List.iter(fun n->require(contains b n)("missing "^n))needles;b in
  match kind with
  |"authority"->ignore(active risk);"PASS","Canonical task and clock checked; fencing is cooperative",jnull
  |"clock"->let o=active risk|>assoc in "PASS","Physical uncertainty and logical sequence are distinct",field "clock_end"o
  |"package"->"PASS","Complete inventory and bytes verified",jstr(verify_release release)
- |"source"->let rev=verify_release release in let d=checked "/home/an/.cargo/bin/jj"["--repository";source;"diff";"--from";rev;"--to";"@";"--summary";"apps"]in require(String.trim d="")"application source drift";"PASS","Application source unchanged",jnull
+ |"source"->let rev=verify_release release in let d=checked (tool "jj")["--repository";source;"diff";"--from";rev;"--to";"@";"--summary";"apps"]in require(String.trim d="")"application source drift";"PASS","Application source unchanged",jnull
  |"identity"->let b=fetch base "/api/v1/runtime/identity"in ignore(identity b(verify_release release));"PASS","Actual private identity",Yojson.Safe.from_string b
  |"production"->let code,b=request "http://nas-1.tail55d152.ts.net:4100" "/api/v1/runtime/identity"in let m=Yojson.Safe.from_string b|>assoc in
   if code<>200||not(bool(field "managed"m))||str(field "declared_candidate_revision"m)=""then"BLOCKED","Production candidate/recovery binding absent",jobj m else"OBSERVED","Identity only; admission not established",jobj m
@@ -190,7 +190,7 @@ let probe kind source release base risk completed publications=
 let run_cycles source release p out risk=
  require(port p>=49152)"private staging required";require(not(Filename.is_relative out)&&not(Sys.file_exists out))"new output directory required";
  let subject=verify_release release and base="http://nas-1.tail55d152.ts.net:"^p in ignore(active risk);mkdir out 0o700;
- let revision=String.trim(checked "/home/an/.cargo/bin/jj"["--repository";source;"log";"-r";"@";"--no-graph";"-T";"commit_id"])in
+ let revision=String.trim(checked (tool "jj")["--repository";source;"log";"-r";"@";"--no-graph";"-T";"commit_id"])in
  let code_hash=sha(source^"/tools/unification_cycles.ml")and core_hash=sha(source^"/tools/release_process.ml")in
  require(hex 40 revision)"invalid checker revision";
  write_new(out^"/plan.json")(json(plan_json()));
@@ -286,7 +286,7 @@ let repair_tests ()=
 let reconcile out dest risk=
  verify_cycles ~require_mirrors:false out;
  require(not(Filename.is_relative dest)&&not(Sys.file_exists dest))"new reconciliation output required";ignore(active risk);mkdir dest 0o700;
- let revision=String.trim(checked "/home/an/.cargo/bin/jj"["log";"-r";"@";"--no-graph";"-T";"commit_id"])in require(hex 40 revision)"repair revision";
+ let revision=String.trim(checked (tool "jj")["log";"-r";"@";"--no-graph";"-T";"commit_id"])in require(hex 40 revision)"repair revision";
  let receipts=List.init 30(fun i->
   let cycle=i+1 in ignore(active risk);
   let raw=read_file(Printf.sprintf "%s/cycle-%02d.json"out cycle)4194304 in let doc=Yojson.Safe.from_string raw in

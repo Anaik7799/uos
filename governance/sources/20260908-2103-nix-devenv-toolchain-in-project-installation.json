@@ -47,8 +47,11 @@
     ],
     "honest_boundary": "Nix-provided binaries live in /nix/store by construction: their RPATHs and ELF interpreter paths are absolute store paths, so they CANNOT be relocated under toolchains/ and still execute. toolchains/nix-profile is a symlink farm into the store, not a copy. Any claim that the Nix binaries are physically inside the project is false.",
     "profile": {
-      "link": "toolchains/nix-profile -> toolchains/nix-profile-1-link",
-      "store_path": "/nix/store/s8ymcvqsvxc9571xliy5d0f1fi0l7z2j-profile"
+      "link": "toolchains/nix-profile -> nix-profile-3-link",
+      "store_path": "/nix/store/npny8aglip778fczc383j23hi5i78q80-profile",
+      "env_store_path": "/nix/store/6dqqdjgss98qj24x4nri09wcsv87fr92-uos-toolchain",
+      "installed_from": "path:/home/an/NAS-setup/uos#packages.x86_64-linux.default (flake-backed, so `nix profile upgrade` now works; the prior generation was added from a bare store path and could not be upgraded)",
+      "rollback": "generations 1 and 2 retained as nix-profile-1-link and nix-profile-2-link"
     }
   },
   "beam_policy": {
@@ -143,6 +146,18 @@
       "wrapper": "tools/quint",
       "closes_residual_risk": "The prior manifest recorded 'Quint front-end compiler absent: .qnt model checking is NOT available; formal_twin must fail closed for Quint until admitted.' The full CLI is now installed and all four formal/quint/*.qnt specs typecheck, so that specific gap is closed. Model-checking VERDICTS are a separate, still-unrun claim.",
       "supersedes_entry": "quint_evaluator 0.6.0 (formal/.toolchain/quint-0.6.0/quint_evaluator), the standalone Rust simulation backend that consumed compiled IR on stdin and could not read .qnt source. It is no longer installed; tools/quint-eval was removed rather than left pointing at an absent binary."
+    },
+    {
+      "name": "jujutsu",
+      "version": "0.44.0",
+      "source": "nix",
+      "entrypoint": "toolchains/nix-profile/bin/jj",
+      "store_realpath": "/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj",
+      "sha256_entrypoint": "630fe2c54d0b9f53794aa37c1274a344e6067175ac9e8925087974fb3d0c4966",
+      "capability_binding": "vcs",
+      "status": "VERIFIED_RUNNABLE",
+      "rationale": "Canonical policy section 4 makes standalone Jujutsu the sole VCS. A tool that reads and could write .jj/ must be pinned like any other toolchain, not consumed from $HOME/.cargo/bin as release_process.ml, unification_cycles.ml and evolution_cycles.ml previously did.",
+      "risk_check": "The locked nixpkgs supplies 0.44.0 -- byte-identical in version to the host jj already managing this repository -- so the swap carries no repo-format risk. Verified before the profile swap, not after."
     },
     {
       "name": "gleam",
@@ -263,11 +278,13 @@
     ]
   },
   "residual_risks": [
-    "UNRUN: tools/release_process.ml and tools/unification_cycles.ml are `ocaml` TOPLEVEL scripts (shebang + #use directives); ocamlc cannot compile-check them and they were not executed because they drive a release process. Their pixi path repoint is verified only as a single-token string-literal substitution.",
+    "CORRECTED (was recorded as a single stray directory): git-tree ascent, not one directory, is the cause. Removing the empty /home/an/NAS-setup/uos/.git did NOT fix bare `nix flake` -- Nix then ascends to /home/an/NAS-setup/.git, which is ALSO an empty directory that git itself does not recognise as a repository. `path:$UOS_ROOT` is therefore the permanent invocation, not a workaround pending cleanup. The parent directory is outside UOS and was left untouched.",
+    "OPEN: /home/an/NAS-setup/.git is an empty non-repository directory outside the UOS workspace. Not removed: out of scope, and removal would not change the required `path:` invocation anyway.",
+    "BOUNDED: quint verify of formal/quint/agentic_coordination.qnt exceeds 900s at default max-steps for both agentic_coordination_test and agentic_coordination_runtime_test; a reduced-step run is outstanding. agentic_journal_test verifies NoError in 17.2s. intent_invariants verifies NoError for both invariants.",
+    "BOUNDARY: os_util() keeps /usr/bin/{cp,curl,printf,false,sleep} and /opt/google/chrome/chrome on host paths. These are OS utilities, not language toolchains, and the mandate bars toolchains. Noted: /usr/bin/timeout on this host is a uutils-coreutils symlink, so host coreutils are not the GNU ones.",
+    "INTENTIONAL, NOT A DEFECT: release_process.ml runtime_check deliberately iterates BOTH /usr/lib/erlang/bin (host OTP 27) and the pinned OTP 29 bin. It is a differential oracle -- the same FFI must self-report its own release correctly under two different BEAMs. Observed: 'OTP 27 ERTS 15.2.7.4' and 'OTP 29 ERTS 17.0.5'. Do not 'fix' this to use only the pinned toolchain; that would destroy the differential.",
     "UNRUN: no Quint model-checking VERDICT is claimed. All four formal/quint/*.qnt specs typecheck at 0.32.0; typecheck success is not invariant proof.",
-    "UNRUN: 'devenv test' (the enterTest OTP-29 fail-closed assertion) has not been executed in this session; the equivalent assertion was observed directly against toolchains/nix-profile/bin/erl instead.",
     "UNRUN: the repointed Gleam and OCaml call sites (capability_port.gleam, release_process.ml, unification_cycles.ml) have been path-corrected but not rebuilt or executed at this revision.",
-    "OPEN: an empty stray directory /home/an/NAS-setup/uos/.git makes bare 'nix flake' commands misclassify the tree as a Git flake. It holds no Git repository and no native Git mutation has occurred, so VCS policy section 4 is not violated, but flake invocations require the explicit path: URL until it is removed.",
     "OPEN: formal/lean/Denotational_Atlas_Cohomology.lean contains 3 'sorry' placeholders and carries ZERO formal authority per canonical policy section 7.",
     "OPEN: formal/lean has no lakefile and no lean-toolchain pin; proofs are checked as standalone files against the in-project Lean 4.33.0.",
     "BOUNDARY: cargo/rustc hashes pin the rustup proxy shim, not the compiler binaries."
@@ -281,7 +298,22 @@
     "cepaf_gleam_build": "PASS (exit 0) at Gleam 1.16.0 after the capability_port.gleam Lean path repoint; warnings are pre-existing unused-import warnings",
     "quint_typecheck": "4/4 PASS -- agentic_coordination.qnt, agentic_journal.qnt, intent_invariants.qnt, parity_frontier.qnt",
     "wrappers": "tools/quint -> 0.32.0, tools/z3 -> 4.16.0, tools/lean -> 4.33.0 (commit d8b18978322de05a8f3dba51ef03cf5461676c17)",
-    "shell_portability": "source tools/lib/uos-toolchain.sh; uos_env now yields UOS_ROOT=/home/an/NAS-setup/uos and OTP 29 under BOTH bash and zsh"
+    "shell_portability": "source tools/lib/uos-toolchain.sh; uos_env now yields UOS_ROOT=/home/an/NAS-setup/uos and OTP 29 under BOTH bash and zsh",
+    "hardening_pass_runs": {
+      "nix_flake_check": "PASS -- checks.x86_64-linux.toolchain-pin built and green",
+      "devenv_test": "PASS -- all three arms; 'profile parity OK' then 'OTP 29 OK at /nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/erl'",
+      "uos_toolchain_verify": "PASS (presence, locality, beam) across 20 entrypoints",
+      "release_process_toolchain": "PASS -- resolver_arms=22, erl=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/erl",
+      "release_process_selftest": "PASS -- 113 checks",
+      "release_process_model_selftest": "PASS -- 338 checks",
+      "release_process_runtime_check": "PASS x2 -- OTP 27 ERTS 15.2.7.4 and OTP 29 ERTS 17.0.5 (intentional differential)",
+      "output_guard_check": "PASS -- guard-unit exit 0",
+      "unification_cycles_selftest": "PASS -- 14 checks",
+      "evolution_cycles_selftest": "PASS -- 14 checks",
+      "quint_verify_intent_invariants": "NoError for invStorageLockPreserved and invDisjointResolution (Apalache, bounded)",
+      "quint_verify_agentic_journal": "NoError for inv_all at agentic_journal_test (17.2s)",
+      "quint_anti_vacuity": "Probes 'authorizedIntents.size()==0' and 'vetoedIntents.size()==0' BOTH violate immediately, proving the model reaches authorized and vetoed states and the passing invariants are not trivially true"
+    }
   },
   "defects_closed_in_this_pass": [
     "tools/lib/uos-toolchain.sh resolved UOS_ROOT from ${BASH_SOURCE[0]} under `set -euo pipefail`. Sourced from the operator's zsh login shell this aborted on an unset parameter, and without nounset it would have silently produced a wrong UOS_ROOT -- making uos_have() report ABSENT for installed toolchains. The library now resolves its own path under bash and zsh, and only applies `set -euo pipefail` when EXECUTED, never when sourced into an interactive shell.",
@@ -289,5 +321,25 @@
     "Five call sites still pointed at the removed formal/.toolchain/ tree (capability_port.gleam x2 Lean, release_process.ml x2 pixi, unification_cycles.ml x1 pixi).",
     "tools/quint-eval fronted an absent binary (Rust evaluator 0.6.0); replaced by tools/quint against the installed 0.32.0 CLI.",
     "flake.lock was swallowed by the blanket `*.lock` rule in .gitignore, so the mandatory pin would have stayed untracked and the reproducibility claim would have been unbacked in VCS. A documented negation (!flake.lock) was added alongside the existing Cargo.lock and pixi.lock exceptions."
+  ],
+  "hardening_pass": {
+    "observed_at_utc": "2026-09-09T02:22:56Z (host NTP-synchronised, drift band nominal)",
+    "trigger": "Operator: \"fold it in, fix the guard and the paths, make this robust, correct and paranoid\".",
+    "root_finding": "tools/release_process.ml -- the shared native core #used by output_guard_check.ml, unification_cycles.ml, evolution_cycles.ml and release_process.mojo -- never called the resolver. It hardcoded 17 absolute paths, of which nine were toolchains outside the project: /nix/store/qq9f90d5giydnhpdxlqq83n21c22jq0b-erlang-29.0.6 (a SECOND OTP 29, not the pinned 29.0.5), $HOME/.cargo/bin/jj, $HOME/.nix-profile/bin/gleam (x2), and /home/an/dev/ver/zigvm/_opam/bin/{ocaml,ocamlfind x2,dune}. These were never stale references: they bypassed the table entirely, which is why no grep for the relocated tree found them and why uos_toolchain_report could report 19/19 PRESENT while this file used none of those 19.",
+    "guard_defect": "Every OTP assertion in the tree tested erlang:system_info(otp_release). 29.0.6 answers \"29\" exactly as 29.0.5 does, so a release-number check is structurally incapable of separating the pinned BEAM from an unpinned one. The devenv enterTest verified on 2026-09-08 was therefore weaker than the mandate it claimed to enforce."
+  },
+  "guards": {
+    "nix_flake_check": "checks.x86_64-linux.toolchain-pin -- a runCommand that fails the FLAKE (not merely a shell) unless the pinned erl exists, reports OTP 29, and has not escaped the store into /usr or /home. Output: /nix/store/fnaqzh9jpm4q44q1glc6kaqy357bisdb-uos-toolchain-pin-check. Verified PASS.",
+    "devenv_enterTest": "Three arms, each catching what the others cannot: [release] otp_release == 29; [derivation] readlink -f $(command -v erl) == the pinned store path; [profile parity] toolchains/nix-profile/bin/erl resolves to that SAME derivation, which is what catches devenv.lock and flake.lock drifting apart. Verified PASS; profile parity confirmed both resolve /nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5.",
+    "uos_toolchain_verify": "New shell function. Three arms: presence, LOCALITY (no entrypoint resolving under $HOME, /usr, /opt or /home/an/dev/ver/*), and BEAM (OTP 29 and store-resolved). This is the arm that would have caught release_process.ml. Deliberately does NOT hardcode a store path: identity is the flake's authority, locality is the shell's, and a third source of truth would drift.",
+    "ocaml_tool_table_parity": "release_process.ml now carries an OCaml resolver mirroring the shell table, plus a parity guard that text-parses tools/lib/uos-toolchain.sh (no shell executed, preserving the file's argv-only discipline) and fails closed on any divergence. 22 arms compared.",
+    "ocaml_beam_pin_check": "Requires realpath(erl) to start with /nix/store/ and to lie outside /usr, /opt and /home/an/dev/ver.",
+    "preflight_scope": "toolchain_preflight() runs before EVERY release_process.ml command, not only a dedicated one: a file that once silently used an unpinned BEAM does not get to opt in to being checked."
+  },
+  "negative_tests": [
+    "devenv enterTest guard: replayed with a stub erl reporting 27 -> exits 1 with the SC-NIX-DEVENV-001 violation message. Not vacuous.",
+    "uos_toolchain_verify: table shadowed so jj -> $HOME/.cargo/bin/jj and erl -> /usr/lib/erlang/bin/erl -> 18 findings, exit 1, naming locality AND beam arms. Not vacuous.",
+    "ocaml_tool_table_parity: shell table perturbed to gleam-1.18.1 -> FAIL naming 'toolchain table drift for gleam: shell=.../gleam-1.18.1/bin/gleam ocaml=.../gleam-1.16.0/bin/gleam'. File byte-restored and diff-verified afterwards. Not vacuous.",
+    "nix flake check pin gate: rejects any erl_bin under /usr/* or /home/* by construction."
   ]
 }
