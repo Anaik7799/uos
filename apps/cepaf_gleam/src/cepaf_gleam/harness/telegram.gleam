@@ -7,6 +7,9 @@
 //// Governs all inbound Telegram messages, directives, planning queries,
 //// deterministic runtime executions, and cognitive mesh dispatch.
 
+import cepaf_gleam/harness/telegram_collab
+import cepaf_gleam/harness/telegram_creative
+import cepaf_gleam/harness/telegram_ops
 import gleam/dynamic/decode
 import gleam/int
 import gleam/json
@@ -107,19 +110,56 @@ fn handle_directive(cmd_text: String, _inbound: InboundMessage) -> String {
     "/start" | "/help" ->
       "🛡️ *UOS Cybernetic Cockpit Controller (@c3i_talk_bot)*\n\n"
       <> "Governed by the **UOS Gleam/OTP 29 Harness** (`apps/cepaf_gleam`).\n\n"
-      <> "*SRE & Operations:*\n"
+      <> "*Domain A: Foundational SRE & Operations (ADR-104)*\n"
       <> "• `/status` - Live cluster telemetry & service health\n"
       <> "• `/storage` - NVMe 25503L801736 hardware safety enclave lock\n"
       <> "• `/dark` - Dark cockpit autonomic isolation protocol\n"
-      <> "• `/andon [confirm <id>]` - Emergency Andon stop line\n\n"
-      <> "*Developer & Execution:*\n"
+      <> "• `/andon [confirm <id>]` - Emergency Andon stop line\n"
       <> "• `/zigvm [eval <expr>|version]` - Deterministic runtime execution\n"
       <> "• `/plan` - Current active tasks in Sa-plan ledger\n"
-      <> "• `/sutra` - Sutra Matrix homeserver CS v1.18 status\n\n"
-      <> "*Knowledge & Governance:*\n"
-      <> "• `/zk [query]` - ZK architectural decision records (103 ADRs)\n"
+      <> "• `/sutra` - Sutra Matrix homeserver CS v1.18 status\n"
+      <> "• `/zk [query]` - ZK architectural decision records (108 ADRs)\n"
       <> "• `/checklist` - 18/18 Comprehensive Verification Scorecard\n"
-      <> "• `/cockpit` - Open Tailscale FQDN Web Cockpit links\n\n"
+      <> "• `/cockpit` - Open Tailscale FQDN Web Cockpit links\n"
+      <> "• `/approval <plan> <task> <title>` - 2oo3 constitutional approval\n\n"
+      <> "*Domain B: Advanced SRE & Disaster Recovery (ADR-105)*\n"
+      <> "• `/resuscitate [node]` - Replicated storage disaster recovery\n"
+      <> "• `/chaos inject [target]` - Controlled chaos injection\n"
+      <> "• `/repro [trace_id]` - Ephemeral Jujutsu bug reproduction\n"
+      <> "• `/merge <bookmark>` - Mobile Jujutsu fast-forward merge\n"
+      <> "• `/bisect <test_name>` - Flaky test bisection across revisions\n"
+      <> "• `/escalate <role>` - Ephemeral JIT privilege escalation\n"
+      <> "• `/rotate-keys [ring]` - Staged zero-downtime key rotation\n"
+      <> "• `/mesh [reconcile]` - Tailscale mesh CRDT reconciliation\n"
+      <> "• `/migrate <container>` - Cross-host Podman container migration\n"
+      <> "• `/adr draft <title>` - Instant architectural decision record\n"
+      <> "• `/blast-radius <module>` - Holographic dependency impact analysis\n\n"
+      <> "*Domain C: Creative Cybernetics & Digital Twin (ADR-106)*\n"
+      <> "• `/pacing [nap]` - Circadian cognitive fatigue pacing\n"
+      <> "• `/whatif <scenario>` - Digital-twin shadow simulation\n"
+      <> "• `/rack-cv [photo_ref]` - Computer vision chassis diagnostic\n"
+      <> "• `/acoustic [sample]` - Acoustic FFT fan bearing diagnostic\n"
+      <> "• `/rewind [offset]` - Time-machine historical state scrubbing\n"
+      <> "• `/postmortem [id]` - Automated blameless post-mortem synthesis\n"
+      <> "• `/finops` - Dynamic token governor & free-tier budget\n"
+      <> "• `/eco-schedule [run]` - Solar surplus batch job execution\n"
+      <> "• `/radar` - Live ASCII cluster heatmap radar\n"
+      <> "• `/canvas` - Tactile visual topology canvas WebApp\n"
+      <> "• `/lockbox [engage]` - Air-gap emergency defensive enclave\n"
+      <> "• `/export-audit [standard]` - Cryptographic compliance dossier\n\n"
+      <> "*Domain D: Team Collaboration & Voice Cybernetics (ADR-107)*\n"
+      <> "• `/sidecar [listen]` - Whisper-to-ear private telemetry audio\n"
+      <> "• `/voice-roll-call verify <id>` - Vocal tract biometric quorum vote\n"
+      <> "• `/babel start <l1> <l2>` - Multilingual technical speech bridge\n"
+      <> "• `/whiteboard [photo_ref]` - Whiteboard-to-code FSM synthesis\n"
+      <> "• `/socratic [topic]` - Socratic referee & conflict mediator\n"
+      <> "• `/handover [generate]` - Shift handover dossier & podcast\n"
+      <> "• `/pair-voice [start]` - Conversational voice pair-programming\n"
+      <> "• `/exec-brief [ref]` - Executive plain-language incident brief\n"
+      <> "• `/commitments [list]` - War room spoken action-item overseer\n"
+      <> "• `/acoustic-hud [engage]` - Spatial acoustic binaural HUD\n"
+      <> "• `/retro export <id>` - Retrospective scribe & ZK ADR exporter\n"
+      <> "• `/gameday start <scenario>` - Synthetic adversary chaos drill\n\n"
       <> "Mesh Integration: Active on TCP:7447 / REST:8080\n"
       <> "Authority: Pure BEAM Supervisor (`uos_sup.gleam`)"
 
@@ -170,6 +210,47 @@ fn handle_directive(cmd_text: String, _inbound: InboundMessage) -> String {
         }
         _ -> "Usage: `/approval <plan_id> <task_id> <title>`"
       }
+
+    // ADR-105: Advanced Ops
+    "/resuscitate" -> telegram_ops.handle_resuscitate(args)
+    "/chaos" -> telegram_ops.handle_chaos(args)
+    "/repro" -> telegram_ops.handle_repro(args)
+    "/merge" -> telegram_ops.handle_merge(args)
+    "/bisect" -> telegram_ops.handle_bisect(args)
+    "/escalate" -> telegram_ops.handle_escalate(args)
+    "/rotate-keys" -> telegram_ops.handle_rotate_keys(args)
+    "/mesh" -> telegram_ops.handle_mesh(args)
+    "/migrate" -> telegram_ops.handle_migrate(args)
+    "/adr" -> telegram_ops.handle_adr(args)
+    "/blast-radius" -> telegram_ops.handle_blast_radius(args)
+
+    // ADR-106: Creative Cybernetics
+    "/pacing" -> telegram_creative.handle_pacing(args)
+    "/whatif" | "/simulate" -> telegram_creative.handle_whatif(args)
+    "/rack-cv" -> telegram_creative.handle_rack_cv(args)
+    "/acoustic" -> telegram_creative.handle_acoustic(args)
+    "/rewind" -> telegram_creative.handle_rewind(args)
+    "/postmortem" -> telegram_creative.handle_postmortem(args)
+    "/finops" | "/budget" -> telegram_creative.handle_finops(args)
+    "/eco-schedule" -> telegram_creative.handle_eco_schedule(args)
+    "/radar" -> telegram_creative.handle_radar()
+    "/canvas" -> telegram_creative.handle_canvas()
+    "/lockbox" -> telegram_creative.handle_lockbox(args)
+    "/export-audit" -> telegram_creative.handle_export_audit(args)
+
+    // ADR-107: Team Collaboration & Voice Cybernetics (Domain D)
+    "/sidecar" -> telegram_collab.handle_sidecar(args)
+    "/voice-roll-call" -> telegram_collab.handle_voice_roll_call(args)
+    "/babel" -> telegram_collab.handle_babel(args)
+    "/whiteboard" -> telegram_collab.handle_whiteboard(args)
+    "/socratic" -> telegram_collab.handle_socratic(args)
+    "/handover" -> telegram_collab.handle_handover(args)
+    "/pair-voice" -> telegram_collab.handle_pair_voice(args)
+    "/exec-brief" -> telegram_collab.handle_exec_brief(args)
+    "/commitments" -> telegram_collab.handle_commitments(args)
+    "/acoustic-hud" -> telegram_collab.handle_acoustic_hud(args)
+    "/retro" -> telegram_collab.handle_retro(args)
+    "/gameday" -> telegram_collab.handle_gameday(args)
 
     _ ->
       "⚠️ Unknown directive: `"

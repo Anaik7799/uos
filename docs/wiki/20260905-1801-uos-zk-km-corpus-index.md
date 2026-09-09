@@ -252,6 +252,8 @@ The operational system coordinates across five distinct language tiers:
   - `[[wiki:20260909-2220-uos-telegram-creative-user-usecases-guide]]` [Creative User Use Cases Guide Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-2220-uos-telegram-creative-user-usecases-guide.md) UOS Telegram Creative User-Centric Cybernetic Use Cases Guide Wiki
   - `[[zk:20260909-2225-adr-107-domain-d-team-collaboration-and-voice-cybernetics]]` [ADR-107](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260909-2225-adr-107-domain-d-team-collaboration-and-voice-cybernetics.md) Domain D Team Collaboration, War Rooms & Voice Cybernetics
   - `[[wiki:20260909-2225-uos-telegram-domain-d-collaboration-guide]]` [Domain D Collaboration Guide Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-2225-uos-telegram-domain-d-collaboration-guide.md) UOS Telegram Domain D Team Collaboration & Voice Cybernetics Guide Wiki
+  - `[[zk:20260909-2235-adr-108-full-feature-implementation-and-simulator-suite]]` [ADR-108](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260909-2235-adr-108-full-feature-implementation-and-simulator-suite.md) Full 48-Feature Implementation, Multimodal Simulator & Codex Ratification
+  - `[[wiki:20260909-2235-uos-telegram-full-implementation-and-simulator-guide]]` [Full Implementation & Simulator Guide Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-2235-uos-telegram-full-implementation-and-simulator-guide.md) UOS Telegram Full 48-Feature Implementation, Multimodal Simulator & Codex Operations Guide Wiki
 - Formal Proofs:
   - `[[zk:TwoLattice_STM]]` (`formal/lean/TwoLattice_STM.lean`)
   - `[[zk:Traceability]]` (`formal/lean/Traceability.lean`)
