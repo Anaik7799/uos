@@ -1,0 +1,42 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/sa_plan/test/sa_plan_main.exe",
+    "task", "complete", "uos/ev98-peer-loop/20260909", "TRANSPORT",
+    "codex-ev98-transport", "2",
+    "{\"status\":\"VERIFIED_BOUNDED_COMPONENT\",\"source_candidate\":\"14057e08112c1cd5d44297eac6a9c853e8287b7a\",\"execution_evidence_candidate\":\"743f9f1b07e31647ef50d9bcc9f3548282ee97c0\",\"independent_approval\":\"docs/reviews/20260909-1516-transport-independent-approval.json\",\"approval_sha256\":\"068e95c6b856f7870de0d40c11f8b87fef2d7c0fc9e6ee79c216afe1814af399\",\"scope\":\"bounded cooperative Zenoh transport component\",\"admission\":\"NOT_GRANTED\",\"remaining\":\"authentication, crash durability, cross-host and production integration remain separate\"}"
+  ],
+  "utc_started": 1788967024.959214,
+  "utc_finished": 1788967025.00617,
+  "elapsed_seconds": 0.04695600299999998,
+  "deadline_seconds": 30.0,
+  "exit_code": 0,
+  "output": "completed=true plan_id=uos/ev98-peer-loop/20260909 task=TRANSPORT attempt=2\nsa-plan-pipeline {\"request_id\":\"sa-plan-1788967024972328600\",\"command\":\"--complete\",\"authority\":\"report_only\",\"total_ns\":12374776,\"server_timing\":\"decode;dur=0.001, normalize;dur=0.001, validate;dur=0.001, store_open;dur=1.488, dispatch;dur=9.973, store_close;dur=0.896, total;dur=12.375\",\"stages\":[{\"name\":\"decode\",\"duration_ns\":1082,\"duration_ms\":0.001082},{\"name\":\"normalize\",\"duration_ns\":1382,\"duration_ms\":0.001382},{\"name\":\"validate\",\"duration_ns\":1082,\"duration_ms\":0.001082},{\"name\":\"store_open\",\"duration_ns\":1487818,\"duration_ms\":1.487818},{\"name\":\"dispatch\",\"duration_ns\":9973239,\"duration_ms\":9.973239},{\"name\":\"store_close\",\"duration_ns\":896105,\"duration_ms\":0.896105}]}\n",
+  "output_sha256": "987daf777565479c37b36221775fd386face6883fda163686728e4d1008e2062",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "otp_launch": {
+    "executable": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+    "environment": [
+      "PATH=/tmp/uos-ev-native-otp-ec13f5:/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin:/home/an/NAS-setup/uos/toolchains/nix-profile/bin:/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin:/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin:/usr/bin:/bin",
+      "ERL_FLAGS=+S 2:2 +A 2",
+      "ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "BINDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin",
+      "EMU=beam", "PROGNAME=erl",
+      "ERL_ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "ESCRIPT_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_USE_SERVER=false"
+    ],
+    "descendant_execution_audit": "NOT_PERFORMED_BY_ADAPTER"
+  },
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}
