@@ -112,10 +112,10 @@ type section = Outside | InDirective of string option * string list | ForeignTab
 let table_header line =
   if not (String.starts_with ~prefix:"[" line) then None
   else if line = "[[directive]]" then Some true
-  else if String.starts_with ~prefix:"[[" line then
-    if String.length line >= 4 && String.ends_with ~suffix:"]]" line then Some false
-    else bounded_error "unsupported-table-header"
-  else if String.length line >= 3 && line.[String.length line - 1] = ']' then Some false
+  else if String.starts_with ~prefix:"[[" line then bounded_error "unsupported-array-table"
+  else if String.length line >= 3 && line.[String.length line - 1] = ']' &&
+          String.for_all (function 'a'..'z' | 'A'..'Z' | '0'..'9' | '_' | '-' -> true | _ -> false)
+            (String.sub line 1 (String.length line - 2)) then Some false
   else bounded_error "unsupported-table-header"
 
 let valid_key key =
@@ -127,6 +127,7 @@ let scalar_assignment line =
       let key = String.trim (String.sub line 0 at) in
       let value = String.trim (String.sub line (at + 1) (String.length line - at - 1)) in
       if not (valid_key key) || String.length value < 2 || value.[0] <> '"' ||
+         String.starts_with ~prefix:{|"""|} value ||
          value.[String.length value - 1] <> '"' then bounded_error "unsupported-toml-scalar";
       key, line
 
@@ -134,6 +135,7 @@ let directives_from_superset ~budget path =
   let lines = String.split_on_char '\n' (read_regular ~budget path) in
   let directives = ref [] in
   let state = ref Outside in
+  let foreign_headers = ref [] in
   let flush () =
     match !state with
     | InDirective (None, _) -> bounded_error "directive-missing-id"
@@ -146,7 +148,10 @@ let directives_from_superset ~budget path =
     if line = "" || line.[0] = '#' then ()
     else match table_header line with
     | Some true -> flush (); state := InDirective (None, [])
-    | Some false -> flush (); state := ForeignTable
+    | Some false ->
+        if List.mem line !foreign_headers then bounded_error "duplicate-foreign-table";
+        foreign_headers := line :: !foreign_headers;
+        flush (); state := ForeignTable
     | None ->
         match !state with
         | Outside | ForeignTable -> ()
@@ -369,7 +374,7 @@ let fixture_selftest () =
   build_fixture source_root ~all_surfaces:true ~body:"# Anchor\ncontent\n";
   let source_superset = Filename.concat source_root "governance/agents/policy/superset.toml" in
   write source_superset
-    ("[[directive]]\nid = \"DIR-01\"\nstatus = \"REVOKED_SYNTHETIC\"\nformat_mandate = \"COUNTERFACTUAL\"\n\n" ^
+    ("[foreign]\ndescription = \"BEFORE_DIRECTIVE\"\n\n[[directive]]\nid = \"DIR-01\"\nstatus = \"REVOKED_SYNTHETIC\"\nformat_mandate = \"COUNTERFACTUAL\"\n\n" ^
      (List.tl ids |> List.map (fun id -> "[[directive]]\nid = \"" ^ id ^ "\"\nstatus = \"REVOKED_SYNTHETIC\"\n") |> String.concat "\n") ^
      "\n[unrelated]\ndescription = \"UNRELATED_TABLE_ONLY\"\n");
   let source_map = Filename.concat source_root "mapping.json" in
@@ -388,7 +393,17 @@ let fixture_selftest () =
   write (Filename.concat duplicate_root "governance/agents/policy/superset.toml")
     ("[[directive]]\nid = \"DIR-01\"\n\n[[directive]]\nid = \"DIR-01\"\n");
   expect_refusal "duplicate-semantic-id" (fun () -> observe duplicate_root valid);
-  print_endline "{\"schema\":\"uos.ev02-directive-mapping/v1\",\"status\":\"PASS\",\"cases\":10}"
+  let foreign_root = private_root "mapping-duplicate-foreign" in
+  build_fixture foreign_root ~all_surfaces:true ~body:"# Anchor\ncontent\n";
+  write (Filename.concat foreign_root "governance/agents/policy/superset.toml")
+    "[foreign]\ndescription = \"one\"\n[foreign]\ndescription = \"two\"\n";
+  expect_refusal "duplicate-foreign-table" (fun () -> observe foreign_root valid);
+  let multiline_root = private_root "mapping-multiline" in
+  build_fixture multiline_root ~all_surfaces:true ~body:"# Anchor\ncontent\n";
+  write (Filename.concat multiline_root "governance/agents/policy/superset.toml")
+    "[[directive]]\nid = \"DIR-01\"\ndescription = \"\"\"not-supported\"\"\"\n";
+  expect_refusal "multiline-string" (fun () -> observe multiline_root valid);
+  print_endline "{\"schema\":\"uos.ev02-directive-mapping/v1\",\"status\":\"PASS\",\"cases\":12}"
 
 let selftest () =
   let check label actual = if not actual then failwith ("selftest failed: " ^ label) in

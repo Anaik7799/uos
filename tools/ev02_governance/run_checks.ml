@@ -245,7 +245,7 @@ let checks out revision =
   let one id expect validate argv = let c=run~seconds:10. argv in row out id argv (expect c && validate c) c in
   let rows=[
     one "mapping-selftest" (fun c->c.termination=Exited 0) (structured~schema:"uos.ev02-directive-mapping/v1"~status:"PASS"~cases:5) (script_argv mapping ["--selftest"]);
-    one "mapping-fixture-selftest" (fun c->c.termination=Exited 0) (structured~schema:"uos.ev02-directive-mapping/v1"~status:"PASS"~cases:10) (script_argv mapping ["--fixture-selftest"]);
+    one "mapping-fixture-selftest" (fun c->c.termination=Exited 0) (structured~schema:"uos.ev02-directive-mapping/v1"~status:"PASS"~cases:12) (script_argv mapping ["--fixture-selftest"]);
     one "mapping-observation" (fun c->c.termination=Exited 1) mapping_hold (script_argv mapping ["--observe";staged_root;staged_amendment])
   ] in
   let valid=List.for_all(function `Assoc x->List.assoc "valid" x=`Bool true|_->false) rows in
