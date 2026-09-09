@@ -51,6 +51,7 @@ pub type CacheEntry {
     hit_count: Int,
     created_at_ts: Int,
     observed_at_ts: Int,
+    embedding_observed_at_ts: Int,
     last_accessed_ts: Int,
     ttl_seconds: Int,
   )
@@ -241,7 +242,11 @@ fn lookup_semantic_validated(
 ) -> CacheLookup {
   // Evaluate cosine similarity across all entries
   let candidates =
-    list.filter(mesh.entries, fn(e) { entry_is_fresh(e, now_ts) })
+    list.filter(mesh.entries, fn(e) {
+      entry_is_fresh(e, now_ts)
+      && e.embedding_observed_at_ts <= now_ts
+      && list.length(e.embedding) == list.length(query_embedding)
+    })
     |> list.map(fn(e) {
       let sim = cosine_similarity(query_embedding, e.embedding)
       #(e, sim)
@@ -372,6 +377,7 @@ fn put_validated(
       hit_count: 1,
       created_at_ts: now_ts,
       observed_at_ts: now_ts,
+      embedding_observed_at_ts: now_ts,
       last_accessed_ts: now_ts,
       ttl_seconds: ttl_seconds,
     )
@@ -424,12 +430,16 @@ fn refresh_vector_validated(
     list.map(mesh.entries, fn(e) {
       case e.id == entry_id {
         True ->
-          CacheEntry(
-            ..e,
-            embedding: new_embedding,
-            observed_at_ts: now_ts,
-            last_accessed_ts: now_ts,
-          )
+          case now_ts < e.embedding_observed_at_ts {
+            True -> e
+            False ->
+              CacheEntry(
+                ..e,
+                embedding: new_embedding,
+                embedding_observed_at_ts: now_ts,
+                last_accessed_ts: now_ts,
+              )
+          }
         False -> e
       }
     })
@@ -437,7 +447,8 @@ fn refresh_vector_validated(
 }
 
 fn entry_is_fresh(entry: CacheEntry, now_ts: Int) -> Bool {
-  entry.observed_at_ts + entry.ttl_seconds > now_ts
+  now_ts >= entry.observed_at_ts
+  && entry.observed_at_ts + entry.ttl_seconds > now_ts
 }
 
 fn validate_lookup(query: String, now_ts: Int) -> Result(Nil, CacheInputError) {
@@ -452,7 +463,13 @@ fn validate_lookup(query: String, now_ts: Int) -> Result(Nil, CacheInputError) {
 }
 
 fn validate_embedding(embedding: List(Float)) -> Result(Nil, CacheInputError) {
-  case embedding == [] || list.length(embedding) > max_embedding_dimensions {
+  case
+    embedding == []
+    || list.length(embedding) > max_embedding_dimensions
+    || !list.all(embedding, fn(value) {
+      value >=. -1.0e100 && value <=. 1.0e100
+    })
+  {
     True -> Error(InvalidEmbedding)
     False -> Ok(Nil)
   }

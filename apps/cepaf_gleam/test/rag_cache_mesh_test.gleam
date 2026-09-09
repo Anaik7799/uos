@@ -195,10 +195,11 @@ pub fn expired_lookup_is_not_returned_as_a_hit_test() {
       10,
       0.0,
       1,
-      1000,
-      1000,
-      1000,
-      10,
+        1000,
+        1000,
+        1000,
+        1000,
+        10,
     )),
   )
 }
@@ -251,9 +252,9 @@ pub fn refresh_updates_the_freshness_observation_test() {
   let refreshed =
     rag_cache_mesh.refresh_vector(mesh, "refresh-ttl", [0.0, 1.0], 1200)
 
-  // A refresh must renew the observation used for TTL, not only last-accessed state.
+  // Embedding refresh cannot make the unchanged cached response content fresh.
   let active = rag_cache_mesh.evict_expired(refreshed, 1250)
-  list_length_helper(active.entries) |> should.equal(1)
+  list_length_helper(active.entries) |> should.equal(0)
 }
 
 pub fn refresh_refuses_an_empty_vector_test() {
