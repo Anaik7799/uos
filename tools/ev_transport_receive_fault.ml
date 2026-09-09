@@ -1,0 +1,10 @@
+let root=Sys.argv.(1);;
+let read p=let c=open_in_bin p in let s=really_input_string c(in_channel_length c)in close_in c;s;;
+let write p s=let c=open_out_bin p in output_string c s;close_out c;;
+let replace text src dst=let n=String.length src in let hits=ref []in for i=0 to String.length text-n do if String.sub text i n=src then hits:=i::!hits done;match !hits with[i]->String.sub text 0 i^dst^String.sub text(i+n)(String.length text-i-n)|_->failwith "exact fault source mismatch";;
+let path=root^"/src/cepaf_gleam/crdt/mesh_peer_actor.gleam";;
+let text=read path;;
+let text=replace text "import gleam/int" "import gleam/int\nimport gleam/dynamic\n@external(erlang,\"erlang\",\"put\")\nfn synthetic_once(key: String, value: Bool) -> dynamic.Dynamic";;
+let text=replace text "  case\n    string.byte_size(bytes) <= wire.max_bytes" "  use _ <- result.try(case synthetic_once(\"private-receive-once\",True) == dynamic.bool(True) { True -> Ok(Nil) False -> Error(peer.ActorUnavailable) })\n  case\n    string.byte_size(bytes) <= wire.max_bytes";;
+write path text;;
+write(root^"/test/mesh_zenoh_live_test.gleam")"import mesh_zenoh_test\npub fn main() { mesh_zenoh_test.receive_retry_test() }\n";;
