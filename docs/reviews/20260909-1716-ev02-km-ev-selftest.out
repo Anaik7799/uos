@@ -1,0 +1,19 @@
+ok   L1 fail-closed: no evidence at all is NotAdmitted
+ok   L2 two-key: runtime alone is NotAdmitted
+ok   L2 two-key: formal alone is NotAdmitted
+ok   L2 two-key: two file references alone cannot establish admission
+ok   L3 revision-bound: evidence at rev-A says nothing at rev-B
+ok   L3 revision-bound: empty candidate revision is NotAdmitted
+ok   L7 absent artifacts cannot establish admission
+ok   L6 idempotent: identical inputs give identical verdicts
+ok   L4 no-gap: EV-3 with full evidence is refused when EV-2 is not admitted
+ok   L4 no-gap: EV-1 is unaffected by the gap rule
+ok   L5 non-inflation: adding a claim with no evidence never raises the count
+ok   ceiling is derived: contiguous admitted prefix only
+ok   regression: two directory references cannot establish admission
+ok   regression: absent EV-2 blocks EV-3
+ok   regression: a range starting at EV-94 has no admitted prefix
+ok   regression: duplicate EV-1 cannot inflate or authorize the prefix
+ok   regression: negative EV identifiers cannot be admitted
+
+17 checks, 0 failures

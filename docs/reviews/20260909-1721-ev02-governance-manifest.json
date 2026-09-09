@@ -1,0 +1,48 @@
+{
+  "schema": "uos.ev02-governance-manifest/v1",
+  "authority": "REPORT_ONLY",
+  "admission": "NOT_GRANTED",
+  "base_commit": "8152a497929d68f830385a1a887570f94ccebd77",
+  "files": [
+    {
+      "path": "tools/ev02_governance/policy_surface_gate.ml",
+      "sha256": "b403ed742d6353fd87638f7ef81e98a822f77593c668290586b222e3e6bc92a2"
+    },
+    {
+      "path": "tools/ev02_governance/run_checks.ml",
+      "sha256": "20d531a3dc5e03990bdd4e7967b29b66001f53513e9e5eb489ddc4593c98f499"
+    },
+    {
+      "path": "tools/ev02_governance/write_manifest.ml",
+      "sha256": "60f8c3c29c157da5ba7614d35850e15336fd9b0dd28ee94a564880cf6abdd2cb"
+    },
+    {
+      "path": "docs/reviews/20260909-1725-ev02-governance-risk.json",
+      "sha256": "d8b8fef9c4241f48ceeb3c128411e8d092a7335e827a07ce572f9a2adfb172d0"
+    },
+    {
+      "path": "docs/reviews/20260909-1716-ev02-governance-checks.json",
+      "sha256": "e2942ae66dec6f128eb79831fd5ea8038023c9703670dae34a5c00a8b92e9510"
+    },
+    {
+      "path": "docs/reviews/20260909-1716-ev02-policy-selftest.out",
+      "sha256": "22d06405fa19defc061e5808ff6650749162af3a6b82dbe8da492a4353e4b2e5"
+    },
+    {
+      "path": "docs/reviews/20260909-1716-ev02-policy-observation.out",
+      "sha256": "472c54e5d686f918c1e2fbd29bf05d7d580357cd24ef8480f5c77fb1e1281b41"
+    },
+    {
+      "path": "docs/reviews/20260909-1716-ev02-km-gate.out",
+      "sha256": "c1643b443d5230049cf204635cd70038072e20b4e013b92432248e81e64d7255"
+    },
+    {
+      "path": "docs/reviews/20260909-1716-ev02-km-ev-selftest.out",
+      "sha256": "187d881ad962469b937a7f45c0e458cea615f387c1e2e28c4a7e6c93ed89adc3"
+    },
+    {
+      "path": "docs/journal/20260909-1720-ev02-governance-dossier.md",
+      "sha256": "4805a5ddb766d3bf1901e1a05915ada40bfc670d26d4e36d886aa9a0020289a0"
+    }
+  ]
+}
