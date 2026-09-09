@@ -1,0 +1,338 @@
+{
+  "schema": "uos.ev98-codec-verification.v1",
+  "source_revision": "5e1edaa7bb1b3b39a501e771720bc2ef63174a87",
+  "observed_at": "2026-09-09T11:57:02Z",
+  "authority": "NONE",
+  "admission": "NOT_GRANTED",
+  "formal": "NOT_ESTABLISHED_FOR_CODEC",
+  "case_count": 72,
+  "new_codec_cases": 25,
+  "existing_regression_cases": 47,
+  "case_names": [
+    "mesh_sync_codec_test.diagnostic_delta_retains_payload_test",
+    "mesh_sync_codec_test.all_fields_and_forwarding_origin_roundtrip_test",
+    "mesh_sync_codec_test.digest_and_ack_roundtrip_test",
+    "mesh_sync_codec_test.empty_delta_and_zero_boundaries_roundtrip_test",
+    "mesh_sync_codec_test.independent_exact_wire_layout_test",
+    "mesh_sync_codec_test.wire_reconciliation_matches_typed_oracle_test",
+    "mesh_sync_codec_test.malformed_wire_refuses_before_reconciliation_test",
+    "mesh_sync_codec_test.exact_byte_decode_boundary_test",
+    "mesh_sync_codec_test.exact_byte_encode_boundary_test",
+    "mesh_sync_codec_test.depth_checked_before_recursive_parse_test",
+    "mesh_sync_codec_test.collection_boundary_and_order_test",
+    "mesh_sync_codec_test.utf8_string_byte_boundaries_test",
+    "mesh_sync_codec_test.safe_integer_and_negative_boundaries_test",
+    "mesh_sync_codec_test.closed_grammar_rejects_ambiguous_and_malformed_inputs_test",
+    "mesh_sync_codec_test.duplicate_clock_and_counter_keys_refused_test",
+    "mesh_sync_codec_test.duplicate_health_keys_and_mismatched_nodes_refused_test",
+    "mesh_sync_codec_test.duplicate_live_tombstone_and_cross_set_dots_refused_test",
+    "mesh_sync_codec_test.empty_node_identities_refused_test",
+    "mesh_sync_codec_test.physical_and_logical_health_times_survive_independently_test",
+    "mesh_sync_codec_test.nonfinite_numeric_literals_are_refused_test",
+    "mesh_sync_codec_test.exact_float_extremes_and_escaped_strings_roundtrip_test",
+    "mesh_sync_codec_test.every_composite_collection_has_an_encoder_bound_test",
+    "mesh_sync_codec_test.malformed_nested_wire_records_refused_test",
+    "mesh_sync_codec_test.aggregate_budget_stops_before_invalid_shared_tail_test",
+    "mesh_sync_codec_test.deeply_shared_tree_and_escaping_have_aggregate_bounds_test",
+    "crdt_mesh_sync_test.mesh_sync_digest_and_drift_test",
+    "crdt_mesh_sync_test.mesh_sync_reconciliation_and_ack_test",
+    "crdt_delta_state_test.vector_clock_semilattice_properties_test",
+    "crdt_delta_state_test.lww_register_convergence_test",
+    "crdt_delta_state_test.orset_add_remove_convergence_test",
+    "crdt_delta_state_test.pncounter_increment_decrement_test",
+    "crdt_delta_state_test.mesh_delta_state_composition_test",
+    "crdt_health_bridge_test.record_and_merge_health_test",
+    "crdt_health_bridge_test.health_telemetry_lww_convergence_test",
+    "delta_mesh_engine_test.health_observation_advances_causal_clock_test",
+    "delta_mesh_engine_test.worker_observation_epoch_cannot_regress_test",
+    "delta_mesh_engine_test.stale_health_does_not_advance_clock_test",
+    "delta_mesh_engine_test.gossip_queue_is_bounded_test",
+    "delta_mesh_engine_test.engine_init_test",
+    "delta_mesh_engine_test.engine_register_peer_test",
+    "delta_mesh_engine_test.engine_local_mutation_and_gossip_test",
+    "delta_mesh_engine_test.engine_two_node_reconciliation_test",
+    "delta_mesh_engine_test.engine_health_aggregation_test",
+    "delta_mesh_engine_test.full_queue_rejects_without_advancing_round_and_can_drain_test",
+    "delta_mesh_engine_test.outbound_drain_retains_fifo_and_is_empty_on_repeat_test",
+    "delta_mesh_engine_test.full_queue_defers_delta_application_until_retry_test",
+    "delta_mesh_engine_test.full_queue_can_receive_ack_and_peer_time_does_not_regress_test",
+    "delta_mesh_engine_test.health_only_change_generates_delta_against_previous_clock_test",
+    "delta_mesh_engine_test.full_queue_rejects_both_digest_response_branches_test",
+    "delta_mesh_engine_test.gossip_timestamp_cannot_precede_latest_observation_test",
+    "delta_mesh_engine_test.repeated_health_sample_is_idempotent_test",
+    "delta_mesh_engine_test.reversed_same_tick_health_deltas_preserve_latest_sample_test",
+    "delta_mesh_engine_test.concurrent_same_target_health_converges_in_both_orders_test",
+    "delta_mesh_engine_test.local_health_after_merge_supersedes_same_tick_remote_sample_test",
+    "delta_mesh_engine_test.successive_gossip_retains_accepted_epoch_test",
+    "delta_mesh_engine_test.incoming_ack_and_digest_observations_advance_outgoing_epoch_test",
+    "delta_mesh_engine_test.newer_sample_time_wins_over_an_older_logical_counter_test",
+    "deadman_freshness_test.repeated_trip_emits_no_duplicate_actions_test",
+    "deadman_freshness_test.backward_tick_cannot_clear_a_trip_test",
+    "deadman_freshness_test.stale_heartbeat_cannot_recover_a_trip_test",
+    "deadman_freshness_test.fresh_recovery_rearms_one_new_trip_test",
+    "deadman_freshness_test.exact_single_interval_trips_test",
+    "deadman_freshness_test.repeated_warning_and_duplicate_tick_are_quiet_test",
+    "deadman_freshness_test.invalid_intervals_are_quarantined_and_not_heartbeat_recovered_test",
+    "deadman_freshness_test.stale_reregistration_cannot_clear_a_trip_test",
+    "deadman_freshness_test.actor_order_is_stable_across_ticks_test",
+    "deadman_freshness_test.explicit_valid_configuration_can_recover_quarantine_test",
+    "deadman_freshness_test.heartbeat_at_trip_observation_time_does_not_rearm_test",
+    "deadman_freshness_test.deadman_init_test",
+    "deadman_freshness_test.deadman_registration_nominal_test",
+    "deadman_freshness_test.deadman_warning_escalation_test",
+    "deadman_freshness_test.deadman_trip_and_failover_test"
+  ],
+  "actual_native_receipts": [
+    {
+      "path": "docs/reviews/20260909-1102-ev98-codec-source-binding.json",
+      "sha256": "d1607b46e7f2f6bfeb98affc2d8ff46aa937b3cb7046bd51dc4384b4fde9d699",
+      "bytes": 25629
+    },
+    {
+      "path": "docs/reviews/20260909-1102-ev98-codec-compile.json",
+      "sha256": "1290ef434d81afd18d24a5bca8798278708ed6bc92d78dbbfe92808f0d52efda",
+      "bytes": 2285
+    },
+    {
+      "path": "docs/reviews/20260909-1102-ev98-codec-direct-tests.json",
+      "sha256": "f0113f733cb9401ad77ef5145ade8792b966a0b19c9c9d3d73c70b5c14372e91",
+      "bytes": 13009
+    },
+    {
+      "path": "docs/reviews/20260909-1102-ev98-codec-sample-mutant-compile.json",
+      "sha256": "9c0125eb026f614e82a3f788b54fa1970eb467a38a16f0fb71ee587e9850cd5b",
+      "bytes": 2303
+    },
+    {
+      "path": "docs/reviews/20260909-1102-ev98-codec-sample-mutant-tests.json",
+      "sha256": "cbd54f76925cbe6a0a247dc486f8c75f5696e7515dcf55e112e909402284fe6d",
+      "bytes": 7677
+    },
+    {
+      "path": "docs/reviews/20260909-1102-ev98-codec-sample-mutation.json",
+      "sha256": "63f04f8f99bb824ce0da37b3d0f5eb21f75cca1f96a4fd42ecd3b97a6a132407",
+      "bytes": 481
+    },
+    {
+      "path": "docs/reviews/20260909-1102-ev98-codec-sample-mutant-source.txt",
+      "sha256": "73d9670ad06d6fcebbce7c2f7d20921341116eb7b919f3c45d67ed5e58e19aa6",
+      "bytes": 15912
+    },
+    {
+      "path": "docs/reviews/20260909-1102-ev98-codec-initial-loss-red.json",
+      "sha256": "88544c5923d960e28c7e182248e45d43164729e53c6acbc8951cbbd212de5bb6",
+      "bytes": 5899
+    },
+    {
+      "path": "docs/reviews/20260909-1102-ev98-codec-initial-loss-red-compile.json",
+      "sha256": "cacd438d125aa0f88e8e6a39ec0ace91ead1904fac1b7a221ae51e4126956574",
+      "bytes": 2248
+    },
+    {
+      "path": "docs/reviews/20260909-1102-ev98-codec-initial-compiler-argv-failure.json",
+      "sha256": "fd14857215112da368b27cc9a4f47584b9fdc99020f39be25eb20819142670ba",
+      "bytes": 2528
+    },
+    {
+      "path": "docs/reviews/20260909-1102-ev98-codec-initial-api-compile-failure.json",
+      "sha256": "5c8a46ef515404f9df366bae0504f9e5ec05d95fab05d01742820f69061a2fff",
+      "bytes": 2566
+    },
+    {
+      "path": "docs/reviews/20260909-1102-ev98-codec-runner-format-failure.json",
+      "sha256": "340ba71a680147e2ee837041da6a1e091fd5154bece4ae4f842b0f098b31c125",
+      "bytes": 2485
+    },
+    {
+      "path": "docs/reviews/20260909-1102-ev98-codec-aggregate-red-compile.json",
+      "sha256": "9ec0b7fdda01bcbd61028e67161ac18b26d9eb274598b15c5a866530aef0b650",
+      "bytes": 2273
+    },
+    {
+      "path": "docs/reviews/20260909-1102-ev98-codec-aggregate-red-tests.json",
+      "sha256": "32be16084ced77a3582add3812970dd2648054af13674852f9dc2e314a86ce8d",
+      "bytes": 9694
+    },
+    {
+      "path": "docs/reviews/20260909-1102-ev98-codec-format-check.json",
+      "sha256": "2cf39e6fd79fc9fc56a5fab47d449244e03ce9cc676f5a03fec79c92eb77e84b",
+      "bytes": 2385
+    },
+    {
+      "path": "docs/reviews/20260909-1102-ev98-codec-intake.json",
+      "sha256": "02091cbee1b8360519e3e5adb0fbab55cc2bfa2a4bc3a95ceac934f72deffae3",
+      "bytes": 3816
+    },
+    {
+      "path": "docs/reviews/20260909-1102-ev98-codec-claim.json",
+      "sha256": "e47b5ea753e84cd5787021fbaddbce8265611d208ec5617334a6315de489b900",
+      "bytes": 3048
+    },
+    {
+      "path": "docs/reviews/20260909-1102-ev98-codec-active-start.json",
+      "sha256": "acf1544d845ae129450e00e4e9a9017e423d37a79bdc43757a16a6d5296e3dcf",
+      "bytes": 1696
+    },
+    {
+      "path": "docs/reviews/20260909-1102-ev98-codec-active-final.json",
+      "sha256": "99de41bcf3e6c79a0cf218dd6539ac6929233684ff5da864df4080f2277b4ac0",
+      "bytes": 1698
+    },
+    {
+      "path": "docs/reviews/20260909-1102-ev98-codec-staging-helper.txt",
+      "sha256": "b4e403155eec190f145f458131f038885d7e009d649389ba703c7aaba22bc82d",
+      "bytes": 2969
+    },
+    {
+      "path": "docs/reviews/20260909-1102-ev98-codec-mutation-helper.txt",
+      "sha256": "fd28fb06d1db45a80e1d033510f28fb9383f01b911e68aeef2115c3a8d9f400d",
+      "bytes": 1450
+    }
+  ],
+  "compiled_artifacts": [
+    {
+      "path": "/tmp/ev98-codec-final-5e1edaa7/compiled/ebin/cepaf_gleam@crdt@delta_mesh_engine.beam",
+      "sha256": "5b2186ca8372fe154751137e0bf15d5dc9bafd4929d4fdd1ab01d5e3a9dead33",
+      "bytes": 14772
+    },
+    {
+      "path": "/tmp/ev98-codec-final-5e1edaa7/compiled/ebin/cepaf_gleam@crdt@delta_state.beam",
+      "sha256": "ab76422d588578a40452876fe1ff50322e7e0284790a82412f78c3ec8f3fc83b",
+      "bytes": 13408
+    },
+    {
+      "path": "/tmp/ev98-codec-final-5e1edaa7/compiled/ebin/cepaf_gleam@crdt@health_bridge.beam",
+      "sha256": "6f63e2dec34f550efb2875a97054cdcb96690d623112d57acde8bf2958c8e972",
+      "bytes": 9096
+    },
+    {
+      "path": "/tmp/ev98-codec-final-5e1edaa7/compiled/ebin/cepaf_gleam@crdt@mesh_sync.beam",
+      "sha256": "6686aadfa40f9bf13e91a530e3af206599f02dc8043c3d99a2fd7864f2e5a135",
+      "bytes": 26604
+    },
+    {
+      "path": "/tmp/ev98-codec-final-5e1edaa7/compiled/ebin/cepaf_gleam@crdt@mesh_wire.beam",
+      "sha256": "151002e5ceaf5c121f83bd52c5c11f98fe5de318f3dfc139138d50273a910997",
+      "bytes": 11268
+    },
+    {
+      "path": "/tmp/ev98-codec-final-5e1edaa7/compiled/ebin/cepaf_gleam@ha@deadman_freshness.beam",
+      "sha256": "1b98cdecb9de80b3b3780488e74e1fccb8ecc991a80532f5bd1b8ba7d31d7e1e",
+      "bytes": 10980
+    },
+    {
+      "path": "/tmp/ev98-codec-final-5e1edaa7/compiled/ebin/crdt_delta_state_test.beam",
+      "sha256": "d16a63290cd2fd79a109cb6805c9a31b82b92c5af5d5433a81a265d775ffd1e2",
+      "bytes": 7896
+    },
+    {
+      "path": "/tmp/ev98-codec-final-5e1edaa7/compiled/ebin/crdt_health_bridge_test.beam",
+      "sha256": "d6539840cd3cdb373daac4d054b2be71564dfbb5979a530d91129edd07427501",
+      "bytes": 3560
+    },
+    {
+      "path": "/tmp/ev98-codec-final-5e1edaa7/compiled/ebin/crdt_mesh_sync_test.beam",
+      "sha256": "52d37f5a2d01048c74d081a0620b13196fec6f05086ef4e8408fa087b80d4d1f",
+      "bytes": 5256
+    },
+    {
+      "path": "/tmp/ev98-codec-final-5e1edaa7/compiled/ebin/deadman_freshness_test.beam",
+      "sha256": "e7cdb423b46e8a319e7bbead2a400b213f64fb69bfc1779f7e2c2d6acb746137",
+      "bytes": 13976
+    },
+    {
+      "path": "/tmp/ev98-codec-final-5e1edaa7/compiled/ebin/delta_mesh_engine_test.beam",
+      "sha256": "2d49491377afddb87222f4e949b3359c5428731a27dbdc1bf42afce6e53fbde3",
+      "bytes": 32704
+    },
+    {
+      "path": "/tmp/ev98-codec-final-5e1edaa7/compiled/ebin/ev98_codec_runner.beam",
+      "sha256": "78f47c7f0bba0b2b4d9f21de3e5d123ae7d9953a29bab161d741e549375e0e31",
+      "bytes": 26264
+    },
+    {
+      "path": "/tmp/ev98-codec-final-5e1edaa7/compiled/ebin/mesh_sync_codec_test.beam",
+      "sha256": "deffd9381f83dd9e20d51ce54f70cd365dcbd36a55d1a56d49c8c4944c17886c",
+      "bytes": 33940
+    }
+  ],
+  "tools_and_native_inputs": [
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+      "sha256": "9d57b042c9f857ed898f4b99116ad8433bed2504619613c97d72a52288bef697",
+      "bytes": 24440408
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+      "sha256": "2cb8989363a58b9ca352ea1cd245bf0e8b8adb2c1c64e87b52cbea80bc3e4e0f",
+      "bytes": 2029504
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+      "sha256": "f63584aac3923ba0060b0795274846b6df425b17b7f2f45bc6368b81e3b2ad92",
+      "bytes": 28040368
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj",
+      "sha256": "630fe2c54d0b9f53794aa37c1274a344e6067175ac9e8925087974fb3d0c4966",
+      "bytes": 29619592
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/tools/ev_native.ml",
+      "sha256": "2674b8445c704c7fe9d22e23e7479d886779d4cab635e167723776e1124960b6",
+      "bytes": 13974
+    },
+    {
+      "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "sha256": "bd67dd9a907245330ed2959749d00345b7f9f3cfa7dbb109e970c16168e231a8",
+      "bytes": 67320
+    },
+    {
+      "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp",
+      "sha256": "632442f4075f4014172cd95f18151a5b4c048c483a7fb3c10577826cdb3b8966",
+      "bytes": 11063664
+    },
+    {
+      "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup",
+      "sha256": "e9a620ec4fcd8fb2ac55dfd9a8b0c59ee52ef363454c6502ff26efa2f5476025",
+      "bytes": 31056
+    },
+    {
+      "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost",
+      "sha256": "ca4553748665924716d883b9be80e8a4648565c9108ae22a4e56b9f9467b86e0",
+      "bytes": 66744
+    },
+    {
+      "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/escript",
+      "sha256": "985522721e68d744f021d43146a3d3e739d4da039280f03f6763987140774a24",
+      "bytes": 48144
+    },
+    {
+      "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/erlc",
+      "sha256": "260f026b6746ebcfa99e2568852c3dfda3bcef6227984315f5e5888ff5c9d503",
+      "bytes": 151048
+    },
+    {
+      "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/no_dot_erlang.boot",
+      "sha256": "70204d7d0754c4d9ae767cd9b014493d895e272f9532532f0bceac728288b4be",
+      "bytes": 7060
+    }
+  ],
+  "source_and_dependency_rehash": "13 source files and 128 staged dependency files checked after final execution",
+  "limits": [
+    "Private component execution; no live mesh, transport or authentication",
+    "No codec formal evidence or sovereign admission",
+    "Copied runtime dependencies used explicitly by final direct ERTS argv",
+    "No reproducible dynamic-library release closure or hostile same-UID filesystem defense",
+    "Existing closed EV98 campaign recipe must add mesh_wire source before observing this candidate"
+  ],
+  "task": "CODEC executing attempt 1; independent bounded approval received, parent completion pending",
+  "independent_review": {
+    "path": "docs/reviews/20260909-1122-ev98-codec-independent-approval.json",
+    "sha256": "140e515cffb98fff8a497cffdc6ff6c17c2c4ff6bfb580dd67a59759d2a177d5"
+  },
+  "latest_active": {
+    "path": "docs/reviews/20260909-1122-ev98-codec-active-latest.json",
+    "sha256": "85e24080743f62f9f9cd0617178ba243b537d231ab44db3646bd8c54d0ddf75f"
+  }
+}
