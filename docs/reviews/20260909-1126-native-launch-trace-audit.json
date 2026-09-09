@@ -1,0 +1,78 @@
+{
+  "schema": "uos.ev-native-trace-review.v1",
+  "observed_at_epoch": 1788953050.458314,
+  "authority": "NONE",
+  "build": {
+    "trace": {
+      "path": "/tmp/ev-native-direct-build-0638.execve.log",
+      "sha256": "2528fdf4a6bcfc4f12e9ea1e3b379859e979b6330a9731db37d8a335cdccc2a6"
+    },
+    "successful_execve_count": 6,
+    "native_executables": [
+      {
+        "path": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+        "sha256": "9d57b042c9f857ed898f4b99116ad8433bed2504619613c97d72a52288bef697"
+      },
+      {
+        "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/escript",
+        "sha256": "985522721e68d744f021d43146a3d3e739d4da039280f03f6763987140774a24"
+      },
+      {
+        "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp",
+        "sha256": "632442f4075f4014172cd95f18151a5b4c048c483a7fb3c10577826cdb3b8966"
+      },
+      {
+        "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup",
+        "sha256": "e9a620ec4fcd8fb2ac55dfd9a8b0c59ee52ef363454c6502ff26efa2f5476025"
+      },
+      {
+        "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+        "sha256": "bd67dd9a907245330ed2959749d00345b7f9f3cfa7dbb109e970c16168e231a8"
+      },
+      {
+        "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost",
+        "sha256": "ca4553748665924716d883b9be80e8a4648565c9108ae22a4e56b9f9467b86e0"
+      }
+    ],
+    "scope": "Observed execve trace and current executable bytes; cooperative local filesystem; not a proof about untraced invocations"
+  },
+  "runtime": {
+    "trace": {
+      "path": "/tmp/ev-native-direct-tests-1123.execve.log",
+      "sha256": "83c3826629b3028e2616d6c6b2c2bf59bd1b1770216ee90e54bcab9a41fb49c0"
+    },
+    "successful_execve_count": 5,
+    "native_executables": [
+      {
+        "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+        "sha256": "2cb8989363a58b9ca352ea1cd245bf0e8b8adb2c1c64e87b52cbea80bc3e4e0f"
+      },
+      {
+        "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp",
+        "sha256": "632442f4075f4014172cd95f18151a5b4c048c483a7fb3c10577826cdb3b8966"
+      },
+      {
+        "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup",
+        "sha256": "e9a620ec4fcd8fb2ac55dfd9a8b0c59ee52ef363454c6502ff26efa2f5476025"
+      },
+      {
+        "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+        "sha256": "bd67dd9a907245330ed2959749d00345b7f9f3cfa7dbb109e970c16168e231a8"
+      },
+      {
+        "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost",
+        "sha256": "ca4553748665924716d883b9be80e8a4648565c9108ae22a4e56b9f9467b86e0"
+      }
+    ],
+    "scope": "Observed execve trace and current executable bytes; cooperative local filesystem; not a proof about untraced invocations"
+  },
+  "runtime_receipt": {
+    "path": "/tmp/ev-native-direct-tests-1123.json",
+    "sha256": "76f5ed2222ca0a41953cf6cae280a9bfe11c43ccc779ff8f4991e6d01fef2a50"
+  },
+  "runtime_case_count": 168,
+  "installed_wrapper_negative_control": "REFUSED_AS_NON_ELF",
+  "build_task_lease": "EXPIRED_WHILE_APPROVAL_PENDING; private observation only",
+  "runtime_task_attempt": 2,
+  "ev_admission": "NOT_GRANTED"
+}

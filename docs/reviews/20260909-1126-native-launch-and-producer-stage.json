@@ -1,0 +1,106 @@
+{
+  "schema": "uos.ev-native-stage.v1",
+  "observed_at": "2026-09-09T11:38:26Z",
+  "authority": "NONE",
+  "admitted_ev_ceiling": 93,
+  "native_source_candidate": "fac5d6791bdf3a816294a314275960baad3ee09d",
+  "producer_source_candidate": "b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53",
+  "producer_evidence_candidate": "70cb94e756534a2cbd174f9c1ba1e8f050ace880",
+  "producer_task": "COMPLETED_COMPONENT_SCOPE_ONLY",
+  "programme_task": "EXECUTING_ATTEMPT_2",
+  "artifacts": [
+    {
+      "path": "docs/reviews/20260909-1126-native-launch-independent-approval.json",
+      "sha256": "c67fe27a002c2bc449c01c7bd153576240817a8997e5480323abb7a0b6f006e2",
+      "original_locator": "/tmp/ev-native-independent-fac5d679/20260909-1140-independent-review.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1126-producer-independent-approval.json",
+      "sha256": "1a921d5da60e8bdae21005cf69ab4cab8c3a366b5c1e48e40066cdf75d63fa7d",
+      "original_locator": "/tmp/ev-campaign-independent-direct-review-20260909/20260909-1133-producer-independent-approval.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1126-native-launch-trace-audit.json",
+      "sha256": "feca7465115d661bdaf20e2dd3e17be358c769b4ad71552490ace59353b84d1a",
+      "original_locator": "/tmp/ev-native-direct-trace-review-1124.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1126-native-launch-trace-audit-source.ml",
+      "sha256": "63b3ac8c86a66ad73c2b3e282ee1dd0070c2763566c1260dbbda7495db220754",
+      "original_locator": "/tmp/ev_native_trace_audit.ml"
+    },
+    {
+      "path": "docs/reviews/20260909-1126-native-launch-build-trace.log",
+      "sha256": "2528fdf4a6bcfc4f12e9ea1e3b379859e979b6330a9731db37d8a335cdccc2a6",
+      "original_locator": "/tmp/ev-native-direct-build-0638.execve.log"
+    },
+    {
+      "path": "docs/reviews/20260909-1126-native-launch-runtime-trace.log",
+      "sha256": "83c3826629b3028e2616d6c6b2c2bf59bd1b1770216ee90e54bcab9a41fb49c0",
+      "original_locator": "/tmp/ev-native-direct-tests-1123.execve.log"
+    },
+    {
+      "path": "docs/reviews/20260909-1126-native-launch-build-observation.json",
+      "sha256": "b01d32eaa6270eb66233d655bf79c29201614c6e70b6caf26729300a84c418da",
+      "original_locator": "/tmp/ev-native-direct-build-0638.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1126-native-launch-runtime-observation.json",
+      "sha256": "76f5ed2222ca0a41953cf6cae280a9bfe11c43ccc779ff8f4991e6d01fef2a50",
+      "original_locator": "/tmp/ev-native-direct-tests-1123.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1126-native-launch-ptrace-refusal.json",
+      "sha256": "2519e8a514838af79c06f88d07f65a60f163036349404585f0ec96193c229d16",
+      "original_locator": "/tmp/ev-native-direct-build-0637.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1126-native-program-lease-recovery.json",
+      "sha256": "36f8927e7b4dcb781ab6b3e592861a044a2d7d3412a7b1b3ea0992257b048d02",
+      "original_locator": "/tmp/ev-program-expired-lease-reclaim-1119.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1126-native-program-active.json",
+      "sha256": "c131c4fc54c9a96ef137abb0d5850f227ef1b4e78b0b89f7bea6cf5f602ebb6d",
+      "original_locator": "/tmp/ev-program-native-active-1129.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1126-producer-precomplete-active.json",
+      "sha256": "dbb73a1e509d1173f86652f02447bba88bb574bfe51bc2a81c86c270b80a31f0",
+      "original_locator": "/tmp/ev-producer-precomplete-active.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1126-producer-task-completed.json",
+      "sha256": "96572ec192537ec4522a239d6502d881f9e39c5b99488cebbc17f99e8a108c28",
+      "original_locator": "/tmp/ev-producer-component-completed.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1126-native-child-success.json",
+      "sha256": "2f971441029650829948a4fd93102bee75fc8f8d42ceacfe85bc68ecff67a781",
+      "original_locator": "/tmp/uos-ev-native-tests-ace91d/success.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1126-native-child-closed-output.json",
+      "sha256": "3286d8d4641ee862f7cfb1a66d2b8ef2652e1d79683c2fde95b46b4b60e2a9a2",
+      "original_locator": "/tmp/uos-ev-native-tests-ace91d/closed-output.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1126-native-child-signal.json",
+      "sha256": "acf8a62d18fd2e93f648ad984e7e6ab1517f91708e5a3f58f57880e8216d93bb",
+      "original_locator": "/tmp/uos-ev-native-tests-ace91d/signal.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1126-native-child-deadline.json",
+      "sha256": "7fff5752b881cdf9418d862a572948add8ffb3c3ec5e7cf859d90c0573acfcbb",
+      "original_locator": "/tmp/uos-ev-native-tests-ace91d/deadline.json"
+    }
+  ],
+  "late_build_caveat": "Approval delay crossed task lease expiry; first direct build is a private behavior observation and cannot confer effect authority. Runtime and final producer rerun followed attempt-2 recovery.",
+  "historical_wrapper_caveat": "Earlier pinned erl invocations used a Bash wrapper; receipts remain preserved and are not no-Bash evidence.",
+  "unresolved": [
+    "full EV runtime campaigns", "formal projection independent review",
+    "cryptographic producer authentication",
+    "complete OTP shared-library closure",
+    "full mesh transport and authentication", "sovereign EV admission"
+  ]
+}
