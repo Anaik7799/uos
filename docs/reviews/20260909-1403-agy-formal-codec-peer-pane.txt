@@ -1,0 +1,240 @@
+
+   Component            | Candidate Re… | Evidence / Receipts                      | Verdict
+  ----------------------|---------------|------------------------------------------|------------------------------
+   Native Launcher      | ev_native.ml  | 20260909-1126-native-launch-trace-audit.json | APPROVED (Scoped Component)
+                        |               |                                          |
+   Observation Producer | ev_receipts   | 20260909-1126-native-launch-and-producer-stage.json | APPROVED (Scoped
+Component)
+                        |               |                                          |
+   Private Composition  | b53bebd188e4a | .uos-workspaces/codex-ev-admission-      | OBSERVED (Private Workspace)
+                        | 8407d61d13a83 | 20260909-0210                            |
+                        | 23928499f8df6 |                                          |
+                        | c             |                                          |
+
+  #### Key Findings:
+
+  • Zero-Bash Execution Enforced: Direct ERTS invocation (erts-17.0.5/bin/erlexec with explicit ROOTDIR/BINDIR
+  environment and transient alias directories) and native ocamlrun were verified via execve trace logs (/tmp/ev-
+  native-direct-build-0638.execve.log and /tmp/ev-native-direct-tests-1123.execve.log). All executed processes
+  were verified native ELF binaries. The historical wrapper negative control was verified REFUSED_AS_NON_ELF.
+  • Component Test Suite: 20 unit/process controls passed, 7 CLI cases passed, 42 positive runtime cases executed,
+  3 designated mutants detected, and 444 bindings rehashed. Scoped PRODUCER task attempt 2 completed at 11:36:18
+  UTC (COMPLETED_COMPONENT_SCOPE_ONLY).
+  complete OTP shared-library closure remain OPEN and unresolved.
+  ──────
+  ### 3. Preserved Boundaries & Open Items
+
+  • Unresolved Capabilities: Formal projection independent review, full mesh transport/authentication, and
+  • EV Ceiling Invariant: admitted_ev_ceiling = 93 remains strictly enforced (SC-PROVENANCE-001). Cycles EV-94..
+  EV-109 remain NOT_ADMITTED.
+  • Fencing Discipline: This component review is strictly read-only and confers no execution or deployment
+  authority. The foreign ZigVM tree remains read-only evidence.
+
+  Detailed review notes have been saved to artifact 20260909-1152-agy-ev-producer-native-launch-review.md.
+────────────────────────────────────────────────────────────
+> UOS bounded read-only peer review request from Codex session01a08017-fd72-7b20-9d32-4df53154bcc8. Native
+  docs/reviews/20260909-1219-formal-codec-component-stage.json and
+  coordinator board event1594 op ev-admission-formal-codec-peer-agy-review-1436; PROGRAM attempt4 active
+  through16:14:34UTC, fresh active14:35:10Z. Please explicitly ACK this request and inspect the sealed
+  candidate59f5b1f2b1446c2f1bdd649be5de71d0d9586714 using source/evidence files in
+  /home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210. Start with
+  docs/reviews/20260909-1400-peer-component-completion.json, then their referenced independent approvals and
+  relevant source. Review bounded finite health formal af6a3acc347a6393c317e2efc541d0cccde93a00,
+  codec5e1edaa7bb1b3b39a501e771720bc2ef63174a87, peer layeree6037cc8b2ce7f8eb0cda58a3e21f2ffbd66335. Identify
+  unsupported claims, causal gaps or refusal errors. Do not rerun full suites or change any source, runtime, shared
+  DB, external ZigVM tree, or admission state. User requires Gleam/OCaml/Mojo only and NO BASH: use direct read
+  tools for this inspection, do not run Bash or shell programs. If any native observation is essential, only
+  explicit native ocamlrun plus pinned OCaml and reviewed tools/ev_native.ml is allowed; direct ocaml has a shell
+  header. Read-only response in this pane is enough; root will retain it without impersonating your coordinator
+  identity. Return explicit scope, immutable source IDs and APPROVE or HOLD with evidence. Known underlying
+  SyncStatus false positives and new transport are under separate repair; do not approve those or full EV98.
+  Ceiling93 and EV94..109 NOT_ADMITTED remain. Please perform the bounded inspection now and reply here without
+  modifying files.
+▸ Thought for 5s, 1.7k tokens
+  Interpreting Review Request Details
+
+● Read(~/NAS-setup/uos/.uos-workspaces/codex-ev-admission-2...iews/20260909-1219-formal-codec-component-stage.json)
+● Read(~/NAS-setup/uos/.uos-workspaces/codex-ev-admission-2...reviews/20260909-1400-peer-component-completion.json)
+● Read(~/NAS-setup/uos/.uos-workspaces/codex-ev-ad...0260909-1400-peer-component-completion.json) (ctrl+o to expand)
+
+▸ Thought for 5s, 433 tokens
+  Assessing System Limitations
+
+● Read(~/NAS-setup/uos/.uos-workspaces/codex-ev-admission-2...20260909-1219-formal-final-independent-approval.json)
+● Read(~/NAS-setup/uos/.uos-workspaces/codex-ev-ad...1219-formal-final-independent-approval.json) (ctrl+o to expand)
+
+▸ Thought for 2s, 187 tokens
+  Identifying Resolved Findings & Limits
+
+● Read(~/NAS-setup/uos/.uos-workspaces/codex-ev-admission-2...eviews/20260909-1219-codec-independent-approval.json)
+● Read(~/NAS-setup/uos/.uos-workspaces/codex-ev-admission-2...eviews/20260909-1219-codec-independent-approval.json)
+● Read(~/NAS-setup/uos/.uos-workspaces/codex-ev-admission-2...reviews/20260909-1400-peer-independent-approval.json)
+● Read(~/NAS-setup/uos/.uos-workspaces/codex-ev-admission-2...reviews/20260909-1400-peer-independent-approval.json)
+● Search(Search for candidate commit hash in docs)
+● ListDir(~/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews)
+● ListDir(~/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/docs/journal)
+● Read(~/NAS-setup/uos/.uos-workspaces/codex-ev-admission-2...09-1219-formal-codec-component-completion-journal.md)
+● Read(~/NAS-setup/uos/.uos-workspaces/codex-ev-ad...9-1400-peer-component-completion-journal.md) (ctrl+o to expand)
+
+▸ Thought for 3s, 779 tokens
+  Initiating Candidate Inspection
+
+● Read(~/NAS-setup/uos/.uos-workspaces/codex-ev-admission-2...pps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam)
+● Read(~/NAS-setup/uos/.uos-workspaces/codex-ev-admission-2...pps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam)
+● Read(~/NAS-setup/uos/.uos-workspaces/codex-ev-ad..._gleam/src/cepaf_gleam/crdt/mesh_sync.gleam) (ctrl+o to expand)
+
+▸ Thought for 4s, 305 tokens
+  Interpreting sync status constraints
+
+● Search(Check wire references in mesh_sync.gleam)
+● Read(~/NAS-setup/uos/.uos-workspaces/codex-ev-admission-2...pps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam)
+● Read(~/NAS-setup/uos/.uos-workspaces/codex-ev-admission-2...pps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer.gleam)
+● Read(~/NAS-setup/uos/.uos-workspaces/codex-ev-admission-2...paf_gleam/src/cepaf_gleam/crdt/mesh_peer_actor.gleam)
+● ListDir(~/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_health_formal)
+● Read(~/NAS-setup/uos/.uos-workspaces/codex-ev-ad...tools/ev_health_formal/ev98_health_model.ml) (ctrl+o to expand)
+
+▸ Thought for 3s, 837 tokens
+  Analyzing the health model registers
+
+● Read(~/NAS-setup/uos/var/coordination/tri-agent/events/0000001594.json) (ctrl+o to expand)
+▸ Thought for 2s, 521 tokens
+  Reviewing Sovereign Component Report
+
+● Read(~/NAS-setup/uos/var/coordination/tri-agent/events/0000001593.json)
+● Read(~/NAS-setup/uos/var/coordination/tri-agent/events/0000001592.json)
+● Find(Find recent events in tri-agent)
+● Read(~/NAS-setup/uos/var/coordination/tri-agent/events/0000001591.json) (ctrl+o to expand)
+  Processing Peer Review Request
+▸ Thought for 11s, 3.0k tokens
+
+● Read(~/NAS-setup/uos/.uos-workspaces/codex-ev-admission-2.../reviews/20260909-1400-peer-independent-compile.json)
+● Read(~/NAS-setup/uos/.uos-workspaces/codex-ev-ad...20260909-1400-peer-independent-runtime.json) (ctrl+o to expand)
+
+▸ Thought for 9s
+  Confirming All Tests Successfully Passed
+  ### Bounded Sovereign Peer Review Receipt
+  Reviewer Identity: abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82 (AGY)
+  Requesting Worker: 01a08017-fd72-7b20-9d32-4df53154bcc8 (Codex worker codex-ev-admission-01a08017, PROGRAM
+  attempt 4)
+  Board Event: 1594 (op: ev-admission-formal-codec-peer-agy-review-1436, active PASS 14:35:10Z through 16:14:34
+  UTC)
+  Target Sealed Candidate: 59f5b1f2b1446c2f1bdd649be5de71d0d9586714
+  Governing Policy: SC-PROVENANCE-001 http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260908-0912-
+  provenance-integrity-contract.md (admitted_ev_ceiling = 93, EV-94..EV-109 NOT_ADMITTED)
+  Authority: authority: NONE (Observation & Bounded Component Review only; no production deployment or EV
+  admission authority)
+  ──────
+  ### 1. Explicit Request Acknowledgement
+  I explicitly acknowledge receipt of the bounded peer review request in board event 1594 from Codex session
+  01a08017-fd72-7b20-9d32-4df53154bcc8 under parent plan uos/ev-admission/20260909-0210. Inspection was performed
+  entirely via direct read tools without shell wrappers, Bash scripts, or workspace mutations.
+  ──────
+  ### 2. Component Review Matrix & Immutable Candidate IDs
+   Component         | Candidate Hash    | Evidence Manifest / Approval | Author + Independ… | Verdict
+  ---------------|----------------|------------------------------|-------------------------------|----------------
+   Finite Health | ev_health_formal | 20260909-1219-formal-final-independent-approval.json | 6 UNSAT laws, 3 SAT
+controls, | APPROVE
+   Formal        |                |                              | 2,862 compiled Gleam pairs    | (Bounded Model
+                 |                |                              | verified against OCaml model  | & Observed
+                 |                |                              |                               | Projection)
+   Mesh Wire     | mesh_wire.gleam | 20260909-1219-codec-independent-approval.json | 72 author cases, 10           |
+APPROVE
+   Codec         |                |                              | independent probe groups,     | (Bounded Wire
+                 |                |                              | aggregate encoded byte budget | Codec & Pure
+                 |                |                              | validation                    | Boundary)
+   Supervised    | mesh_peer.gleam | 20260909-1400-peer-independent-approval.json | 10 pure + 3 OTP groups, 72    |
+APPROVE
+   Peer Layer    |                |                              | regressions, 5 independent    | (Bounded
+                 |                |                              | probe groups, direct ERTS     | Supervised
+                 |                |                              | execution                     | Peer Layer
+                 |                |                              |                               | Only)
+   Sealed        | 59f5b1f2b1446c | 20260909-1400-peer-component-completion.json | Standalone JJ composition of  |
+APPROVE
+   Composition   | 2f1bdd649be5de |                              | reviewed launcher, producer,  | (Component
+                 | 71d0d9586714   |                              | formal, codec, and peer       | Scope Only;
+                 |                |                              |                               | Gaps Held)
+  ──────
+  ### 3. Detailed Component Findings
+
+  #### A. Finite Health Formal Model (af6a3acc347a6393c317e2efc541d0cccde93a00)
+  • Verified Capabilities:
+      • Independent Smtml/Z3 workers checked 6 UNSAT algebraic laws (commutativity, idempotence, monotonicity,
+      associativity) and 3 SAT sanity controls with separately verified models.
+      • 2,862 well-formed ordered health register pairs generated by compiled Gleam
+      (ev98_health_projection_runner.beam) match the finite extensional OCaml model (ev98_health_model.ml).
+      • 15 author checks + 13 independent probes passed.
+  • Identified Boundaries & Constraints:
+      • Bounded Domain Only: Finite sample/logical/writer space 0..2 and payload 0..1. Does not prove arbitrary
+      integer/string convergence, general malformed recovery, or unbounded distributed refinement.
+      • Transport & Authentication: Provides zero sender authentication or multihost network delivery proof.
+      • Zero-Bash Provenance: Historical shell-dependent formal replay remains excluded from valid no-Bash
+      evidence.
+
+
+  #### B. Mesh Wire Codec & Reconciliation Boundary (5e1edaa7bb1b3b39a501e771720bc2ef63174a87)
+  • Verified Capabilities:
+      • Positional version-1 wire grammar [1, tag, sender, ...payload..., epoch] prevents JSON object duplicate
+      key ambiguities.
+      • Quotas enforced: max_bytes = 131,072, max_depth = 12, max_entries = 256, max_string_bytes = 1024, non-
+      negative safe integer 0..9,007,199,254,740,991, and finite floats.
+      • Shared aggregate encoded byte budget validated during traversal prior to recursive JSON materialization;
+      prevents shared-pointer expansion attacks.
+      • Typed reconcile_remote_wire boundary rejects invalid wire bytes before merge; 72 author cases + 10
+      independent probe groups passed; designated mutant failed.
+  • Identified Boundaries & Constraints:
+      • Pure Boundary Only: Validates format and shape before calling merge; does not provide network transport,
+      socket I/O, or delivery guarantees.
+      • Diagnostic JSON rendering (diagnostic_json) remains outside the wire contract.
+
+  #### C. Supervised Peer Layer (ee6037cc8b2ce7f8eb0cda58a3e21f2ffbd66335)
+
+  • Verified Capabilities:
+      • Opaque State retains routed frames until exact destination and (instance, sequence) delivery confirmation.
+      • Supervised OTP actor directly calls ERTS monotonic clocks, preserves timer freshness decisions during
+      outbound refusal, and isolates failures.
+      • 10 pure author groups + 3 OTP groups + 72 regression cases + 5 independent probe groups passed (90 total
+      distinct pass labels).
+      • Executed directly via native ERTS (erts-17.0.5/bin/erlexec) without shell wrappers (docs/reviews/20260909-
+      1400-peer-independent-runtime.json).
+  • Causal Gaps, Refusal Errors & Preserved Controls:
+      • Preserved Negative Controls: Reviewer probe compiler failure (missing type annotation) preserved and
+      corrected without altering candidate source. Root attempt 3 lease refresh failed twice (incorrect named argv,
+      relative risk path) before corrected absolute path passed, proving fail-closed preflight enforcement.
+      • Memory Locality: Frame retention is in-memory and lost on node crash; shutdown returns an in-memory
+      snapshot but provides no durable recovery store.
+      • Actor Scoping: FrameId.instance is local to a single ERTS VM instance; routing ID checks match node
+      strings but do not constitute cryptographic authentication.
+
+  ──────
+  ### 4. Explicit Unsupported Claims & Required Holds
+
+  The following items are EXPLICITLY HELD and excluded from this approval:
+
+  1. HOLD on SyncStatus Diagnostic Flag:
+      • The underlying delta engine diagnostic SyncStatus flag has known false positives (e.g. reporting
+      Synchronized prematurely).
+      • While the peer layer safely avoids using SyncStatus as an authorization predicate, the underlying defect
+      remains under separate SYNC_STATUS repair. No claim of correct synchronization status is approved.
+  2. HOLD on Wire Transport & Network Delivery:
+      • No network transport, socket I/O, multi-host broker delivery, or cryptographic authentication is present
+      in these components. Transport remains under separate implementation.
+  3. HOLD on Full EV98 Capability & EV94..109 Admission:
+      • Per SC-PROVENANCE-001 http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260908-0912-provenance-
+      integrity-contract.md, the admitted EV ceiling remains strictly EV-93.
+      • Cycles EV-94 through EV-109 remain NOT_ADMITTED.
+      • This review establishes bounded component evidence only; it confers zero deployment authority, zero
+      canonical integration, and zero system admission.
+
+  ──────
+  ### 5. Final Disposition
+
+  • Candidate 59f5b1f2b1446c2f1bdd649be5de71d0d9586714: APPROVE (Bounded Component Scope Only).
+  • Component evidence for af6a3acc (formal health), 5e1edaa7 (codec), and ee6037cc (peer layer) is verified and
+  consistent with preserved author/independent receipts.
+  • All mentioned causal gaps, underlying SyncStatus defects, and network transport remain explicitly fenced under
+  their designated holds.
+
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+>
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+? for shortcuts                                                                               Gemini 3.8 Flash · high

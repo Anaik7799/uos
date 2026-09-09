@@ -1,0 +1,35 @@
+{
+  "schema": "uos.observed-agy-component-review.v1",
+  "observed_at": "2026-09-09T14:50:03Z",
+  "observer_session": "01a08017-fd72-7b20-9d32-4df53154bcc8",
+  "reviewer_session": "abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82",
+  "request_operation": "ev-admission-formal-codec-peer-agy-review-1436",
+  "request_event": 1594,
+  "candidate": "59f5b1f2b1446c2f1bdd649be5de71d0d9586714",
+  "observed_verdict": "APPROVE_BOUNDED_COMPONENT_SCOPE_ONLY",
+  "authority": "NONE",
+  "new_ev_admissions": 0,
+  "policy_ceiling": 93,
+  "artifacts": [
+    {
+      "path": "docs/reviews/20260909-1403-agy-formal-codec-peer-pane.txt",
+      "sha256": "c38f7baef2673f836d7f57d2024f6a89e5611fc595e1f0cef4f0be8e086dde43"
+    },
+    {
+      "path": "docs/reviews/20260909-1403-agy-formal-codec-peer-session-before.json",
+      "sha256": "a586daf867c9c19bc3e1152df3caa47560b97ecaf603025a3934fb6762032249"
+    },
+    {
+      "path": "docs/reviews/20260909-1403-agy-formal-codec-peer-session-after.json",
+      "sha256": "a586daf867c9c19bc3e1152df3caa47560b97ecaf603025a3934fb6762032249"
+    }
+  ],
+  "limits": [
+    "Observed AGY read-only source/evidence assessment through its actual Herdr pane; no new independent runtime execution is claimed.",
+    "Raw terminal text is cooperative evidence, not a signed producer attestation. It includes screen history and is retained without rewriting.",
+    "Underlying SyncStatus, network transport, production integration and complete EV admission are explicitly excluded.",
+    "The review wording about preflight enforcement describes observed checker refusal. The checker is report-only and does not establish runtime scheduler enforcement.",
+    "This observation is recorded by Codex, not appended under the AGY coordinator identity.",
+    "Native adapter Herdr attempt failed to find the session socket under its restricted environment; this invocation uses the existing native Herdr environment. No server was started or changed."
+  ]
+}
