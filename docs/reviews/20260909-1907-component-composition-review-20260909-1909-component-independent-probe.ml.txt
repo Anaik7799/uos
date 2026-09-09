@@ -1,0 +1,79 @@
+#use "topfind";;
+#require "unix,yojson,cryptokit,mtime.clock.os,str";;
+#directory "/tmp/ev-campaign-independent-direct-review-20260909/build/default/.ev_receipts.objs/byte";;
+#load "/tmp/ev-campaign-independent-direct-review-20260909/build/default/ev_receipts.cma";;
+open Yojson.Safe.Util
+let root="/home/an/NAS-setup/uos"
+let workspace=root^"/.uos-workspaces/codex-ev-admission-20260909-0210"
+let rev="79a4ab732ec7af350db3e3eb66fcb8cde6f03d5f"
+let stage="/tmp/ev-composition-independent-1905"
+let adapter=workspace^"/tools/ev_native.ml"
+let ocamlrun=root^"/toolchains/opam-ocaml/bin/ocamlrun"
+let ocaml=root^"/toolchains/opam-ocaml/bin/ocaml"
+let require b why=if not b then failwith why
+let read p=let c=open_in_bin p in let n=in_channel_length c in require(n<=16777216)"read bound";let b=really_input_string c n in close_in c;b
+let sha b=Cryptokit.transform_string(Cryptokit.Hexa.encode())(Cryptokit.hash_string(Cryptokit.Hash.sha256())b)
+let file_sha p=let c=open_in_bin p in let h=Cryptokit.hash_channel(Cryptokit.Hash.sha256())c in close_in c;Cryptokit.transform_string(Cryptokit.Hexa.encode())h
+let write p b=let c=open_out_gen[Open_wronly;Open_creat;Open_excl]0o600 p in output_string c b;close_out c
+let json p j=write p(Yojson.Safe.pretty_to_string j)
+let contains text pattern=try ignore(Str.search_forward(Str.regexp_string pattern)text 0);true with Not_found->false
+let source path=Receipt_validator.candidate_bytes workspace rev path
+let calls=ref[]
+let invoke label cwd command args=
+ let receipt=stage^"/"^label^".json"in
+ let fd=Unix.openfile(stage^"/"^label^".log")[Unix.O_WRONLY;Unix.O_CREAT;Unix.O_EXCL]0o600 and input=Unix.openfile "/dev/null"[Unix.O_RDONLY]0 in
+ let argv=[ocamlrun;ocaml;adapter;"--cwd";cwd;"--seconds";"60";"--receipt";receipt;"--";command]@args in
+ let pid=Unix.create_process ocamlrun(Array.of_list argv)input fd fd in Unix.close input;Unix.close fd;
+ let _,status=Unix.waitpid[]pid in let j=Yojson.Safe.from_string(read receipt)in
+ require(status=Unix.WEXITED(member "exit_code"j|>to_int))"reported normal outcome";
+ require(member "failure"j=`Null)"abnormal child";
+ require(sha(member "output"j|>to_string)=(member "output_sha256"j|>to_string))"child output digest";
+ calls:=`Assoc["path",`String receipt;"sha256",`String(file_sha receipt)]::!calls;j
+let trace path expected=
+ let content=read path in let lines=String.split_on_char '\n' content in
+ let paths=ref[] and failed=ref 0 in
+ List.iter(fun line->if contains line "execve("then (
+  require(not(contains line "unfinished") && not(contains line "resumed") && not(contains line "...") )"trace truncated or pending";
+  let start=Str.search_forward(Str.regexp_string "execve(\"")line 0+8 in
+  let ending=String.index_from line start '"'in let executable=String.sub line start(ending-start)in
+  if String.ends_with ~suffix:" = 0"line then paths:=executable::!paths
+  else (require(contains line " = -1 ")"unknown exec result";incr failed)))lines;
+ require(List.length !paths=expected)"trace success count";
+ let bindings=List.sort_uniq String.compare !paths|>List.map(fun p->let actual=Unix.realpath p in let c=open_in_bin actual in let magic=really_input_string c 4 in close_in c;require(magic="\127ELF")("nonELF "^p);`Assoc["path",`String p;"actual",`String actual;"sha256",`String(file_sha actual)])in
+ `Assoc["path",`String path;"sha256",`String(sha content);"successful_execve",`Int expected;"failed_execve",`Int !failed;"executable_bindings",`List bindings;"scope",`String "Observed successful execve paths only; no dynamic library or cryptographic producer closure"]
+let ()=
+ require(Sys.getcwd()=workspace)"explicit selected cwd";Unix.mkdir stage 0o700;
+ let driver=source "tools/ev_component_composition.ml"and runner=source "apps/cepaf_gleam/test/ev_component_composition_runner.gleam"in
+ write(stage^"/driver.ml")driver;write(stage^"/runner.gleam")runner;
+ json(stage^"/source.json")(`Assoc["candidate",`String rev;"driver_sha256",`String(sha driver);"runner_sha256",`String(sha runner)]);
+ let full=invoke "fresh-stage"workspace "ocaml"[stage^"/driver.ml";workspace;rev;stage^"/positive"]in require(member "exit_code"full=`Int 0)"fresh stage";
+ let fresh=Yojson.Safe.from_string(read(stage^"/positive/bindings.json"))and parent=Yojson.Safe.from_string(read "/tmp/ev-component-composition-1854/bindings.json")in
+ let flatten j=(member "sources"j|>to_list|>List.map(member "binding"))@[member "runner"j]@(member "dependencies"j|>to_list)@(member "approvals"j|>to_list)@(member "recipes"j|>to_list)in
+ let inventory j=flatten j|>List.map(fun b->let path=member "staged"b|>to_string in require(file_sha path=(member "sha256"b|>to_string))("binding mismatch "^path);member "source"b,member "sha256"b)|>List.sort compare in
+ require(inventory fresh=inventory parent)"independent stage inventory parity";
+ let refusal label cwd driver revision target reason=let j=invoke label cwd "ocaml"[driver;workspace;revision;target]in require(member "exit_code"j<>`Int 0 && contains(member "output"j|>to_string)reason)("wrong refusal "^label)in
+ refusal "existing-target"workspace(stage^"/driver.ml")rev(stage^"/positive")"fresh absolute stage";
+ refusal "wrong-cwd"stage(stage^"/driver.ml")rev(stage^"/unused")"child JJ reader cwd";
+ write(stage^"/altered.ml")(driver^"\n(* counterfeit alteration *)\n");
+ refusal "altered-driver"workspace(stage^"/altered.ml")rev(stage^"/unused")"running driver differs";
+ require(not(Sys.file_exists(stage^"/unused")))"refusals created stage";
+ let begin_at=Str.search_forward(Str.regexp_string "let private_dependency_path path=")driver 0 in
+ let end_at=Str.search_forward(Str.regexp_string "let graph=")driver begin_at in
+ let path_function=String.sub driver begin_at(end_at-begin_at)in
+ let probe="let require b s=if not b then failwith s\n"^path_function^"\nlet accept x=try private_dependency_path x; true with Failure _ -> false\nlet ()=let good=[\"gleam_stdlib/ebin/gleam@list.beam\";\"a.b-c_2/x@@y\";String.make 1024 'a'] and bad=[\"\";\"/absolute\";\"../x\";\"x/../y\";\"x//y\";\"x/./y\";\".git/config\";\".jj/repo\";\".ssh/key\";\".gnupg/key\";\"a\\\\b\";\"a:b\";\"a b\";\"a\\000b\";String.make 1025 'a';\"a/b/c/d/e/f/g/h/i\"]in List.iter(fun x->assert(accept x))good;List.iter(fun x->assert(not(accept x)))bad;Printf.printf \"PASS %d independent path boundary controls\\n\"(List.length good+List.length bad)\n"in
+ write(stage^"/path-probe.ml")probe;
+ let p=invoke "path-controls"stage "ocaml"[stage^"/path-probe.ml"]in require(member "exit_code"p=`Int 0)"path controls";
+ let traces=[trace "/tmp/ev-composition-gleam-permitted-1856.execve.log"7;trace "/tmp/ev-composition-digest-permitted-1856.execve.log"14]in
+ let compiled="/tmp/ev-component-composition-1854/compiled/ebin"and bc="/tmp/ev-component-composition-1854/digest-build/default/test_gospel_dispatch_contracts.bc"in
+ let beam_paths=Sys.readdir compiled|>Array.to_list|>List.filter(fun p->String.ends_with ~suffix:".beam"p)|>List.map(fun p->compiled^"/"^p)in
+ let artifact_paths=bc::beam_paths in
+ let artifacts=List.map(fun p->`Assoc["path",`String p;"sha256",`String(file_sha p)])artifact_paths in
+ let original=Yojson.Safe.from_string(read "/tmp/ev-composition-gleam-runtime-1859.json")in
+ let argv=member "argv"original|>to_list|>List.map to_string in
+ let gleam=invoke "gleam-runtime" "/tmp/ev-component-composition-1854/package" "native" argv in
+ require(member "exit_code"gleam=`Int 0 && contains(member "output"gleam|>to_string)"All 53 tests passed.")"actual53";
+ let digest=invoke "digest-runtime" "/tmp/ev-component-composition-1854/digest" "native"[ocamlrun;bc]in
+ require(member "exit_code"digest=`Int 0)"actual digest";
+ List.iter(fun b->require(file_sha(member "path"b|>to_string)=(member "sha256"b|>to_string))"artifact changed")artifacts;
+ ignore(inventory fresh);ignore(inventory parent);
+ json(stage^"/verification.json")(`Assoc["schema",`String "uos.component-independent-review.v1";"candidate",`String rev;"status",`String "OBSERVATIONS_PASS";"authority",`String "NONE";"driver_sha256",`String(sha driver);"runner_sha256",`String(sha runner);"exact_source_count",`Int 13;"dependency_count",`Int 168;"path_controls",`Int 19;"driver_refusals",`Int 3;"traces",`List traces;"artifacts",`List artifacts;"receipts",`List(List.rev !calls);"fresh_manifest_sha256",`String(file_sha(stage^"/positive/bindings.json"));"original_manifest_sha256",`String(file_sha "/tmp/ev-component-composition-1854/bindings.json")]);print_endline(stage^"/verification.json")

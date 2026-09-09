@@ -1,0 +1,302 @@
+{
+  "schema": "uos.component-independent-approval.v1",
+  "source_candidate": "79a4ab732ec7af350db3e3eb66fcb8cde6f03d5f",
+  "verdict": "APPROVED_BOUNDED_COMPONENT_COMPOSITION",
+  "authority": "NONE",
+  "admission": "NOT_GRANTED",
+  "driver_sha256": "85c262a3b597abe2fc59263d2d55b5092e9bcd0bc2343ad44e7f5f89c91877ca",
+  "runner_sha256": "63e0c1304d06fa8006a288e0f732954d0d75f63f600ac17ff0232c66c637805a",
+  "independent_production_and_test_source_parity": 13,
+  "unique_private_dependency_parity": 168,
+  "actual_gleam_cases": 53,
+  "actual_ocaml_cases": 18,
+  "path_controls": 19,
+  "actual_driver_refusals": 3,
+  "runtime_artifact_bindings": [
+    {
+      "path": "/tmp/ev-component-composition-1854/digest-build/default/test_gospel_dispatch_contracts.bc",
+      "sha256": "4065b5b984c58672ff009d8056f9a66bda6e4bb716c67d18b498113fa0d2dcbd"
+    },
+    {
+      "path": "/tmp/ev-component-composition-1854/compiled/ebin/cepaf_gleam@agents@ooda_shruti_copilot.beam",
+      "sha256": "c8fb5eeb5213e687b2d9f1936ded48629be89ca0f3995a9922066e0c235c474c"
+    },
+    {
+      "path": "/tmp/ev-component-composition-1854/compiled/ebin/cepaf_gleam@ui@state.beam",
+      "sha256": "6919d094a2e9acb315237a05dfe4881c2294b3f3564bc4906546142cbc6078df"
+    },
+    {
+      "path": "/tmp/ev-component-composition-1854/compiled/ebin/ev101_graph_integrity_test.beam",
+      "sha256": "537a1c94ea1b89d606fe90a4842c90a76d4721410e6b6ed34a6dfa52cc0b8142"
+    },
+    {
+      "path": "/tmp/ev-component-composition-1854/compiled/ebin/sheaf_engine_test.beam",
+      "sha256": "ca0ca4a5a0ed89a6ffb6769fedf0a6fef65fd9af00eee35cb9c4963f61af19b1"
+    },
+    {
+      "path": "/tmp/ev-component-composition-1854/compiled/ebin/ev_component_composition_runner.beam",
+      "sha256": "5f5b6001f10ada965f4ae3cd0f2e97532102ba3fe43444bbcdc2e0ff71047b43"
+    },
+    {
+      "path": "/tmp/ev-component-composition-1854/compiled/ebin/cepaf_gleam@knowledge@raga_cybernetic_synthesis.beam",
+      "sha256": "de59da31c4a735c4c8c11611aad03c35c3512dbdb39bd10edddf34c0a9699b6d"
+    },
+    {
+      "path": "/tmp/ev-component-composition-1854/compiled/ebin/cepaf_gleam@knowledge@sheaf_engine.beam",
+      "sha256": "b9014218ee47bcc38d0e388a54ddab112809e092d3e6462ad48783a268770227"
+    },
+    {
+      "path": "/tmp/ev-component-composition-1854/compiled/ebin/rete_ul_verifier_test.beam",
+      "sha256": "8804b26436faca215ada1a8c0742ae2808bdfafbea69c66e45d35f7f4fa65bf3"
+    },
+    {
+      "path": "/tmp/ev-component-composition-1854/compiled/ebin/ooda_shruti_copilot_test.beam",
+      "sha256": "49efe88025ac78af5b4984d2472fed934ac5cde1733af503aa81556d016df2e8"
+    },
+    {
+      "path": "/tmp/ev-component-composition-1854/compiled/ebin/cepaf_gleam@knowledge@rete_ul_verifier.beam",
+      "sha256": "1a4322de5289182cf44cee0c8dd76cec87a9116f21862d90992eb658177c27f8"
+    },
+    {
+      "path": "/tmp/ev-component-composition-1854/compiled/ebin/ev107_rete_closure_test.beam",
+      "sha256": "b3733e0b00dbb2c76aea7a2bac10f1e2d9293ddf06397dc3a8117d6a9f50afb2"
+    }
+  ],
+  "trace_audits": [
+    {
+      "path": "/tmp/ev-composition-gleam-permitted-1856.execve.log",
+      "sha256": "4b4c0212b1526a997bc262682f5b0df2af39bd81fbfecb5bec1488cfb78d97d3",
+      "successful_execve": 7,
+      "failed_execve": 1,
+      "executable_bindings": [
+        {
+          "path": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+          "actual": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+          "sha256": "9d57b042c9f857ed898f4b99116ad8433bed2504619613c97d72a52288bef697"
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+          "actual": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/x86_64-pc-linux-gnu-ocamlrun-a100",
+          "sha256": "2cb8989363a58b9ca352ea1cd245bf0e8b8adb2c1c64e87b52cbea80bc3e4e0f"
+        },
+        {
+          "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/escript",
+          "actual": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/escript",
+          "sha256": "985522721e68d744f021d43146a3d3e739d4da039280f03f6763987140774a24"
+        },
+        {
+          "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp",
+          "actual": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp",
+          "sha256": "632442f4075f4014172cd95f18151a5b4c048c483a7fb3c10577826cdb3b8966"
+        },
+        {
+          "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup",
+          "actual": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup",
+          "sha256": "e9a620ec4fcd8fb2ac55dfd9a8b0c59ee52ef363454c6502ff26efa2f5476025"
+        },
+        {
+          "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+          "actual": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+          "sha256": "bd67dd9a907245330ed2959749d00345b7f9f3cfa7dbb109e970c16168e231a8"
+        },
+        {
+          "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost",
+          "actual": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost",
+          "sha256": "ca4553748665924716d883b9be80e8a4648565c9108ae22a4e56b9f9467b86e0"
+        }
+      ],
+      "scope": "Observed successful execve paths only; no dynamic library or cryptographic producer closure"
+    },
+    {
+      "path": "/tmp/ev-composition-digest-permitted-1856.execve.log",
+      "sha256": "a1d1ae1cfb69bc5d8f61fdc7011bb8a92ffd53dffca34e5c73a6937b5ea16c7a",
+      "successful_execve": 14,
+      "failed_execve": 0,
+      "executable_bindings": [
+        {
+          "path": "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/nproc",
+          "actual": "/nix/store/3qgy8q2j64v2m9jy3a5jmssacbblhd4r-coreutils-9.11/bin/coreutils",
+          "sha256": "4889ee74963e175225b91d8e2160372d9932e1a4056b080eb8e3ae5474c1e87f"
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/dune",
+          "actual": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/dune",
+          "sha256": "9b0a4d43cecade7d25cf0d524834bc4063d4c23497872d3d47c983f76d52170a"
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlc.opt",
+          "actual": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlc.opt",
+          "sha256": "00f78789117b660082780c5a1b4a2d450a0b26723e548e881594bedc95e4c030"
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamldep.opt",
+          "actual": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamldep.opt",
+          "sha256": "fad9d80c54f4926c37cb92db0bdc946473c654a2477bd04616642fa83dbc2fba"
+        },
+        {
+          "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+          "actual": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/x86_64-pc-linux-gnu-ocamlrun-a100",
+          "sha256": "2cb8989363a58b9ca352ea1cd245bf0e8b8adb2c1c64e87b52cbea80bc3e4e0f"
+        }
+      ],
+      "scope": "Observed successful execve paths only; no dynamic library or cryptographic producer closure"
+    }
+  ],
+  "automation_support_bindings": [
+    {
+      "path": "/tmp/ev-campaign-independent-direct-review-20260909/build/default/ev_receipts.cma",
+      "sha256": "71ba709129744abcdf8dccdf97d0afa6326ce8bbe04063b316c3568b489c6023"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_native.ml",
+      "sha256": "2674b8445c704c7fe9d22e23e7479d886779d4cab635e167723776e1124960b6"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+      "sha256": "f63584aac3923ba0060b0795274846b6df425b17b7f2f45bc6368b81e3b2ad92"
+    }
+  ],
+  "source_review": [
+    "Only two new composition files; all13 production/test sources exactly equal their immutable prior reviewed revisions",
+    "Runner explicitly selects five modules using EUnit inparallel and requires ok; actual53 unique test records observed",
+    "Fixed approved168 dependency inventory has unique paths; current source and both staged copies rehashed",
+    "Relaxed @ grammar applies only to copied dependency basenames; generic receipt source grammar unchanged",
+    "CLI refuses existing target, wrong ambient cwd and altered executed driver before a new output stage is created",
+    "Raw-bytecode digest recipe -without-runtime avoids wrapper launch; observed compilation traces contain only21 successful ELF executions"
+  ],
+  "limits": [
+    "Independent replay uses parent-compiled artifacts after exact source, dependency and artifact checks; independent fresh staging performed, compile itself not redundantly repeated",
+    "Stage target is caller-selected fresh absolute path; it is not an authorization sandbox or hostile-symlink confinement guarantee",
+    "Fixed approved dependency inventory and cooperative filesystem are assumptions; asynchronous hostile mutation is outside scope",
+    "Reusable ev_receipts.cma and native adapter are existing automation support, hashed here; no complete interpreter/archive/dynamic-library build closure claimed",
+    "Trace audit is of supplied actual compile execve records and currently resolved executable bytes, not authenticated author identity or all possible transitive executions",
+    "Concurrent tests establish this component composition only: no live music/UI/audio, global suite, full EV101/104/107 proof, admission or release closure"
+  ],
+  "records": [
+    {
+      "original": "/tmp/ev-composition-independent-1905/verification.json",
+      "durable": "docs/reviews/20260909-1909-component-independent-verification.json",
+      "sha256": "5d768d74b9fca911908a3e6d7af360446904ee394167a4544eb8da01e3bc4c88"
+    },
+    {
+      "original": "/tmp/ev-composition-independent-1905/positive/bindings.json",
+      "durable": "docs/reviews/20260909-1909-component-independent-fresh-bindings.json",
+      "sha256": "1ee06739ed6ba60ba99502b40b1a2670f6d82d47763b96215fb371bb671d0dbe"
+    },
+    {
+      "original": "/tmp/ev-component-composition-1854/bindings.json",
+      "durable": "docs/reviews/20260909-1909-component-independent-original-bindings.json",
+      "sha256": "c06d2cd730aca039ec3dd41948cb12192c357a552e3f4aca422418c42a3569f4"
+    },
+    {
+      "original": "/tmp/ev_composition_independent.ml",
+      "durable": "docs/reviews/20260909-1909-component-independent-probe.ml.txt",
+      "sha256": "ce6fc3ce667ef5b95f45fcf5b57db2f1d0d6e8132205a2d1b7aa5302b16b11ad"
+    },
+    {
+      "original": "/tmp/ev-composition-independent-1905/driver.ml",
+      "durable": "docs/reviews/20260909-1909-component-independent-driver.ml.txt",
+      "sha256": "85c262a3b597abe2fc59263d2d55b5092e9bcd0bc2343ad44e7f5f89c91877ca"
+    },
+    {
+      "original": "/tmp/ev-composition-independent-1905/runner.gleam",
+      "durable": "docs/reviews/20260909-1909-component-independent-runner.gleam.txt",
+      "sha256": "63e0c1304d06fa8006a288e0f732954d0d75f63f600ac17ff0232c66c637805a"
+    },
+    {
+      "original": "/tmp/ev-composition-independent-1905/path-probe.ml",
+      "durable": "docs/reviews/20260909-1909-component-independent-path-probe.ml.txt",
+      "sha256": "d333ae94a1c8f669fa9b6d5746edca3035415d81345fbcebe0f1fa7a75e95175"
+    },
+    {
+      "original": "/tmp/ev-composition-independent-native.json",
+      "durable": "docs/reviews/20260909-1909-component-independent-native.json",
+      "sha256": "565405fc44f26f5178f23737c456e50e2ec7ea8b6d1feded55fa5dd98ec6c88a"
+    },
+    {
+      "original": "/tmp/ev-composition-review-preflight.json",
+      "durable": "docs/reviews/20260909-1909-component-independent-preflight-hold.json",
+      "sha256": "80ad1726a6163f3706cc441c82e82f09a3e164ad58ac858bc2f42ac2b4c1b27c"
+    },
+    {
+      "original": "/tmp/ev-composition-review-preflight-corrected.json",
+      "durable": "docs/reviews/20260909-1909-component-independent-preflight.json",
+      "sha256": "0226a28732ecfbc3a28f3033468b8e410769dab8034d692e2e6544597f260607"
+    },
+    {
+      "original": "/tmp/ev-composition-review-claim.json",
+      "durable": "docs/reviews/20260909-1909-component-independent-claim.json",
+      "sha256": "2f74a37c248853e42e2cee6066473bf8869172f97e461f94cb38306986ff7786"
+    },
+    {
+      "original": "/tmp/ev-composition-review-active.json",
+      "durable": "docs/reviews/20260909-1909-component-independent-active.json",
+      "sha256": "5dd3f55aa4f09f51ba3ade8703c25c5979944fea786308826bdb946e2d03c79b"
+    },
+    {
+      "original": "/tmp/ev-composition-gleam-compile-permitted-1856.json",
+      "durable": "docs/reviews/20260909-1909-component-independent-gleam-compile.json",
+      "sha256": "ac965dd8387cde03876f6c4a216e7a6379ac05f2394c705cedcd681f04f6fbd7"
+    },
+    {
+      "original": "/tmp/ev-composition-digest-compile-permitted-1856.json",
+      "durable": "docs/reviews/20260909-1909-component-independent-digest-compile.json",
+      "sha256": "b2e3f2c0f9aaa936fef0407ef53b7b929196f61d39f6220be21215087f8fc068"
+    },
+    {
+      "original": "/tmp/ev-composition-gleam-permitted-1856.execve.log",
+      "durable": "docs/reviews/20260909-1909-component-independent-gleam-trace.txt",
+      "sha256": "4b4c0212b1526a997bc262682f5b0df2af39bd81fbfecb5bec1488cfb78d97d3"
+    },
+    {
+      "original": "/tmp/ev-composition-digest-permitted-1856.execve.log",
+      "durable": "docs/reviews/20260909-1909-component-independent-digest-trace.txt",
+      "sha256": "a1d1ae1cfb69bc5d8f61fdc7011bb8a92ffd53dffca34e5c73a6937b5ea16c7a"
+    },
+    {
+      "original": "/tmp/ev-component-composition-stage-1849.json",
+      "durable": "docs/reviews/20260909-1909-component-independent-original-stage-failure.json",
+      "sha256": "c9a7e851447d2f33414a7cf096bfd9090fc66905fd26720628c12df847e633b4"
+    },
+    {
+      "original": "/tmp/ev-composition-independent-1905/fresh-stage.json",
+      "durable": "docs/reviews/20260909-1909-component-independent-invocation-00.json",
+      "sha256": "a48f9206a8f03aa395f7d7e22483a4ff5468c9ee31123742d756e19de9d98b2f"
+    },
+    {
+      "original": "/tmp/ev-composition-independent-1905/existing-target.json",
+      "durable": "docs/reviews/20260909-1909-component-independent-invocation-01.json",
+      "sha256": "576150f4e277af93fb19292dbcecced7f76c90184b2e350649ddcbcaa9c5f3a3"
+    },
+    {
+      "original": "/tmp/ev-composition-independent-1905/wrong-cwd.json",
+      "durable": "docs/reviews/20260909-1909-component-independent-invocation-02.json",
+      "sha256": "359b82783cdf8d276862d8c365384ffdccab7d7188461c73ace19256236aa652"
+    },
+    {
+      "original": "/tmp/ev-composition-independent-1905/altered-driver.json",
+      "durable": "docs/reviews/20260909-1909-component-independent-invocation-03.json",
+      "sha256": "49bbd7a3b02d1b8d16cc38989499db33a7c23e29c711c75e28ec081f83a99f6f"
+    },
+    {
+      "original": "/tmp/ev-composition-independent-1905/path-controls.json",
+      "durable": "docs/reviews/20260909-1909-component-independent-invocation-04.json",
+      "sha256": "ecb8342392656c3e6f81cb014d0aba0e4e91de61c2d57c9c779e87f2437f830f"
+    },
+    {
+      "original": "/tmp/ev-composition-independent-1905/gleam-runtime.json",
+      "durable": "docs/reviews/20260909-1909-component-independent-invocation-05.json",
+      "sha256": "b7f6dd65a6c1f6bdaa3c1a3613c66010b14b5300481bcc3bd931b9717b9a9090"
+    },
+    {
+      "original": "/tmp/ev-composition-independent-1905/digest-runtime.json",
+      "durable": "docs/reviews/20260909-1909-component-independent-invocation-06.json",
+      "sha256": "87794bd0df58aa1877e955c81d6d501a811e2ea051d6626f762d1726b552106a"
+    },
+    {
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-1831-agy-advice-and-program-recovery-observation.json",
+      "durable": "docs/reviews/20260909-1909-component-independent-agy-observation.json",
+      "sha256": "6b342cdd30450ed1cfe89edfdede60eaee5454e0c66c2a8b9cc5ffff0378eeff"
+    }
+  ]
+}

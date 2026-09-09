@@ -1,0 +1,55 @@
+{
+  "schema": "uos.observed-agy-advice.v1",
+  "observed_at_epoch": 1788982102.516537,
+  "observer_session": "01a08017-fd72-7b20-9d32-4df53154bcc8",
+  "reviewer_session": "abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82",
+  "markers": [ "AGY_ADVICE_EV86_1841", "AGY_ADVICE_EV_ROUTE_HARNESS_1912" ],
+  "authority": "NONE",
+  "new_ev_admissions": 0,
+  "policy_ceiling": 93,
+  "artifacts": [
+    {
+      "path": "docs/reviews/20260909-1922-agy-music-and-ev02-advice-identity-before.json",
+      "sha256": "fd03d78b997705d0cfec0723d04fe0e2442a2d273b8eb8ef40989646ae241d35",
+      "bytes": 440
+    },
+    {
+      "path": "docs/reviews/20260909-1922-agy-music-and-ev02-advice-pane.txt",
+      "sha256": "48a03b6e28b5f5b490bd14016c664d3cbe24e8c8c16479ef6a1aa531141b45bd",
+      "bytes": 59750
+    },
+    {
+      "path": "docs/reviews/20260909-1922-agy-music-and-ev02-advice-identity-after.json",
+      "sha256": "fd03d78b997705d0cfec0723d04fe0e2442a2d273b8eb8ef40989646ae241d35",
+      "bytes": 440
+    },
+    {
+      "path": "docs/reviews/20260909-1922-agy-music-and-ev02-advice-audio1841.txt",
+      "sha256": "e54941f240169d895e49c1aae6f94193523c7143ed744050dc0dae09cab97238",
+      "bytes": 5174
+    },
+    {
+      "path": "docs/reviews/20260909-1922-agy-music-and-ev02-advice-repairs1912.txt",
+      "sha256": "5a5fb94f05b09749ed92ff9158fe59269e2c87c2c533d9da1ca8340b85d239d0",
+      "bytes": 7793
+    }
+  ],
+  "decisions_after_advice": [
+    "Proceed with a closed music-only route slice in existing UOS Indrajaal using an explicit selected root, exact two document paths and declared media aliases, bounded native reads and semantic server-rendered HTML5 audio.",
+    "Reject malformed or unknown music requests before the generic fallback; test traversal, encoding, NUL, backslash, symlink escape, nonregular and oversized inputs, true404, media signature, MIME and exact content length.",
+    "Preserve the external older C3I live4100 origin mismatch. No deployment, service restart or audible playback activation is authorized by this advice.",
+    "Historical recorded previews must be labeled as historical recordings; interactive synthesis and actual acoustic verification remain distinct unmet obligations.",
+    "Preserve e843 EV2 source and fixed1842 evidence before repairing single-read output capture. Require bounded EOF capture, timeout/reaping, fresh exclusive output directories and structured semantic result checks, not exit-code equality alone.",
+    "Keep actual metadata-only policy directives unsupported until authoritative clause text exists. Required schema values and positive/adverse controls must be checked. Policy HOLD differs from missing output, startup failure or crash."
+  ],
+  "qualifications": [
+    "Herdr identity checked before and after; captured pane is unsigned cooperative advice, not authenticated sovereign admission.",
+    "Reject AGY1841 Effect-TS fallback under the user requirement: generated code uses Gleam, OCaml or Mojo only, with no Bash or authored JS/TS/Erlang.",
+    "Reject illustrative AGY1841 frequency constants as an oracle: Dha405Hz is inconsistent with the declared5/3 ratio for a240Hz tonic. Derive any later reference from the actual approved model; RMS does not establish musical quality.",
+    "AGY1912 example1MiB Markdown ceiling is smaller than the observed1,296,561-byte historical player. Bounds must reflect measured inputs; the illustrative50MiB media ceiling is not adopted without need.",
+    "AGY1912 invents an example feature-mapping schema and clause count. The implementation must validate the actual declared schema and source clauses, not manufacture a positive count for metadata-only rows.",
+    "AGY wording such as ratified or prove does not grant runtime authority. Headless HTTP/media evidence does not demonstrate audible playback or subjective quality.",
+    "Pane also contains another Root task and stop acknowledgement with mixed identities. No grants, builds or effects in that unrelated task are adopted by this EV programme.",
+    "The harness truncation mechanism is established from source and identical saved warning-only output; the exact amount of lost child output is not recoverable from those artifacts."
+  ]
+}

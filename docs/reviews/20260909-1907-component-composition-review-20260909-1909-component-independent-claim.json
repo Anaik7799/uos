@@ -1,0 +1,41 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/sa_plan/test/sa_plan_main.exe",
+    "task", "claim", "codex-component-review",
+    "uos/component-composition-review/20260909", "3600000000000", "REVIEW"
+  ],
+  "utc_started": 1788980589.399594,
+  "utc_finished": 1788980589.442256,
+  "elapsed_seconds": 0.042659718999999985,
+  "deadline_seconds": 30.0,
+  "exit_code": 0,
+  "output": "claimed=true task=REVIEW attempt=1 lease_until_ns=1788984189417229829\nsa-plan-pipeline {\"request_id\":\"sa-plan-1788980589414958736\",\"command\":\"--claim\",\"authority\":\"report_only\",\"total_ns\":4983255,\"server_timing\":\"decode;dur=0.002, normalize;dur=0.002, validate;dur=0.001, store_open;dur=2.243, dispatch;dur=1.960, store_close;dur=0.754, total;dur=4.983\",\"stages\":[{\"name\":\"decode\",\"duration_ns\":1753,\"duration_ms\":0.001753},{\"name\":\"normalize\",\"duration_ns\":1523,\"duration_ms\":0.001523},{\"name\":\"validate\",\"duration_ns\":661,\"duration_ms\":0.000661},{\"name\":\"store_open\",\"duration_ns\":2243040,\"duration_ms\":2.24304},{\"name\":\"dispatch\",\"duration_ns\":1959786,\"duration_ms\":1.959786},{\"name\":\"store_close\",\"duration_ns\":753768,\"duration_ms\":0.753768}]}\n",
+  "output_sha256": "3806c02f1d8967a1548a1eee462687895468925a326d82caad09e7f6e0f4ff00",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "otp_launch": {
+    "executable": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+    "environment": [
+      "PATH=/tmp/uos-ev-native-otp-00e7c9:/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin:/home/an/NAS-setup/uos/toolchains/nix-profile/bin:/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin:/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin:/usr/bin:/bin",
+      "ERL_FLAGS=+S 2:2 +A 2",
+      "ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "BINDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin",
+      "EMU=beam", "PROGNAME=erl",
+      "ERL_ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "ESCRIPT_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_USE_SERVER=false"
+    ],
+    "descendant_execution_audit": "NOT_PERFORMED_BY_ADAPTER"
+  },
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

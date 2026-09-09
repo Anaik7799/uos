@@ -1,0 +1,38 @@
+1869132 execve("/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun", ["/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun", "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml", "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_native.ml", "--cwd", "/tmp/ev-component-composition-1854/package", "--seconds", "60", "--receipt", "/tmp/ev-composition-gleam-compile-permitted-1856.json", "--", "gleam", "compile-package", "--target", "erlang", "--package", "/tmp/ev-component-composition-1854/package", "--out", "/tmp/ev-component-composition-1854/compiled", "--lib", "/tmp/ev-component-composition-1854/lib"], 0x7ffcc45e0140 /* 22 vars */) = 0
+1869150 execve("/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", ["/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", "compile-package", "--target", "erlang", "--package", "/tmp/ev-component-composition-1854/package", "--out", "/tmp/ev-component-composition-1854/compiled", "--lib", "/tmp/ev-component-composition-1854/lib"], 0x574fac6ddda0 /* 22 vars */) = 0
+1869152 execve("/tmp/uos-ev-native-otp-845786/escript", ["escript", "/tmp/ev-component-composition-1854/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffd4e3b9cb0 /* 22 vars */) = -1 ENOENT (No such file or directory)
+1869152 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/escript", ["escript", "/tmp/ev-component-composition-1854/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffd4e3b9cb0 /* 22 vars */) = 0
+1869152 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec", "+B", "-noshell", "-boot", "$ROOT/no_dot_erlang", "-run", "escript", "start", "-extra", "/tmp/ev-component-composition-1854/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x635d3c1874f0 /* 23 vars */) = 0
+1869152 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp", ["/tmp/ev-component-composition-1854/compiled/_gleam_artefacts/gleam@@compile.erl", "-B", "-S", "2:2", "-A", "2", "--", "-root", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang", "-bindir", "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin", "-progname", "erl", "--", "-home", "/home/an", "--", "-noshell", "-boot", "$ROOT/no_dot_erlang", "-run", "escript", "start", "--", "--", "--", "-extra", "/tmp/ev-component-composition-1854/compiled/_gleam_artefacts/gleam@@compile.erl"], 0x7ffefb459ab0 /* 23 vars */) = 0
+1869165 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup", ["erl_child_setup", "524288"], 0x7ffdd94675f0 /* 23 vars */) = 0
+1869254 execve("/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", ["/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost", "4"], 0x5d279b01ab30 /* 23 vars */) = 0
+1869255 --- SIGUSR1 {si_signo=SIGUSR1, si_code=SI_USER, si_pid=1869254, si_uid=1000} ---
+1869255 +++ killed by SIGUSR1 +++
+1869254 +++ exited with 0 +++
+1869165 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1869254, si_uid=1000, si_status=0, si_utime=0, si_stime=0} ---
+1869164 +++ exited with 0 +++
+1869163 +++ exited with 0 +++
+1869204 +++ exited with 0 +++
+1869203 +++ exited with 0 +++
+1869207 +++ exited with 0 +++
+1869206 +++ exited with 0 +++
+1869205 +++ exited with 0 +++
+1869202 +++ exited with 0 +++
+1869201 +++ exited with 0 +++
+1869200 +++ exited with 0 +++
+1869199 +++ exited with 0 +++
+1869198 +++ exited with 0 +++
+1869197 +++ exited with 0 +++
+1869196 +++ exited with 0 +++
+1869194 +++ exited with 0 +++
+1869193 +++ exited with 0 +++
+1869156 +++ exited with 0 +++
+1869208 +++ exited with 0 +++
+1869162 +++ exited with 0 +++
+1869165 +++ exited with 0 +++
+1869195 +++ exited with 0 +++
+1869152 +++ exited with 0 +++
+1869150 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1869152, si_uid=1000, si_status=0, si_utime=46 /* 0.46 s */, si_stime=14 /* 0.14 s */} ---
+1869150 +++ exited with 0 +++
+1869132 --- SIGCHLD {si_signo=SIGCHLD, si_code=CLD_EXITED, si_pid=1869150, si_uid=1000, si_status=0, si_utime=2 /* 0.02 s */, si_stime=1 /* 0.01 s */} ---
+1869132 +++ exited with 0 +++

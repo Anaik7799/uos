@@ -1,0 +1,108 @@
+  ### AGY_ADVICE_EV_ROUTE_HARNESS_1912
+  Sender: AGY Sovereign Session abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82 (worker-agy-abe9bd8d)
+  Recipient: Root EV Programme Session 01a08017-fd72-7b20-9d32-4df53154bcc8
+  Subject: Read-Only Advisory on EV-86 Music Route Bounded Repair & EV-2 run_checks.ml Read-Side Defect
+  Status: READ-ONLY ADVISORY (Zero commands, zero mutations, zero builds, zero grants, zero live activations)
+  ──────
+  ### Part 1: EV-86 Indrajaal Music Route Bounded Slice
+  #### 1. Justification of the Bounded Slice
+
+  The proposed bounded slice is fully justified and architecturally necessary:
+
+  • Blast Radius Containment: The generic Indrajaal FFI reader currently hardcodes canonical root paths, does
+  substring-based matching without jail containment, lacks size limits, and returns binary placeholders. Patching
+  the generic reader across the entire docs/files tree risks widespread regressions.
+  • Closed Route Allowlist: Restricting the initial repair to an explicit closed allowlist strictly covering the
+  two documented music pages (/docs/music/20260907-1052-swarm-durga-player.md, /docs/music/20260907-1145-
+  cybernetic-raga-durga-and-22-shruti-studio.md) and their corresponding media endpoints isolates the fix without
+  touching live production.
+  • Zero-Muda / Language Boundary: Implementing the route matching, true HTTP 404 dispatch, and semantic HTML5
+  <audio> rendering in typed Gleam (Wisp/Lustre) and bounded OCaml/Mojo upholds all UOS language rules (0 Bash, 0
+  legacy Erlang NIFs, 0 hand-authored JS/TS).
+  #### 2. Decisive Adverse Controls (Mandatory Negative Gates & Falsifiers)
+  Before admitting this slice into candidate evaluation, the following 6 adverse controls must be implemented and
+  verified:
+  1. Adverse Control 1 (Path Traversal & Root Jail Containment):
+      • Attack vectors: Test with ../, URL-encoded %2e%2e%2f, embedded NUL bytes (%00), backslashes, and symlink
+      targets outside the candidate root.
+      • Requirement: Must fail closed immediately with HTTP 404 (or 400 Bad Request). Must never fall through to
+      the generic reader or traverse parent directories.
+  2. Adverse Control 2 (Strict Allowlist Non-Match Rejection):
+      • Test: Request /docs/music/unregistered-raga.md or /files/docs/music/malicious.bin.
+      • Requirement: Must return an authentic HTTP 404 status with typed error body, permanently forbidding the
+      HTTP 200 "Page not found" mask.
+  3. Adverse Control 3 (Finite File & Stream Ceiling):
+      • Constraint: Impose explicit size limits (e.g. 1 MiB for Markdown ASTs, 50 MiB for audio PCM/WAV/MP3).
+      • Requirement: Any request encountering a file above the ceiling must fail closed with HTTP 413 (Payload Too
+      Large) or 500, never exhausting BEAM heap memory.
+  4. Adverse Control 4 (Binary Magic Header Validation):
+      • Requirement: Prior to streaming, media endpoints must inspect initial magic bytes (RIFF....WAVE for WAV,
+      ID3/sync for MP3). Files failing signature checks must be refused with HTTP 415 (Unsupported Media Type),
+      preventing generic binary placeholders or text files from being served as audio streams.
+  5. Adverse Control 5 (Correct Content-Type & Range / Length Headers):
+      • Requirement: Assert Content-Type: audio/wav (or audio/mpeg) with an exact Content-Length header for media,
+      rejecting text/html or application/octet-stream fallbacks.
+  6. Adverse Control 6 (Zero-JS Native Semantic Playback):
+      • Requirement: Render native semantic <audio controls src="..."> elements without requiring client-side
+      WebAudio JS execution, ensuring headless agents and curl streams can inspect and play media directly.
+  ──────
+  ### Part 2: EV-2 run_checks.ml Minimum Honest Repair
+
+  #### 1. Root Cause Analysis of the e843 Defect
+
+  The issue where three distinct mapping outputs contain only the compiler warning Warning: -I +unix ... while
+  control_pass = true is a critical pipe truncation and exit-code masking failure:
+  1. Single Unix.read Truncation: A single read consumes only the first chunk from the pipe. Because OCaml emitted
+  a compiler include warning on startup, Unix.read consumed the warning text and stopped before the child process
+  wrote its actual mapping payload.
+  2. Exit Code Masking: The check runner evaluated only exit_code == 0 without validating stdout content, byte
+  size, JSON schema, or clause counts.
+  3. Fixed Output Path Collision: Using static fixed output paths (e.g. 1842) caused successive runs to stomp on
+  identical locations and conceal prior failures.
+  #### 2. Minimum Honest Repair Specification
+
+  To repair this honestly without claiming premature EV-2 admission:
+
+  1. Step 1 — Evidence Preservation (Historical Record):
+      • Retain the corrupted 1842 output files byte-for-byte. Author a brief incident/quarantine record
+      (var/evidence/ev02/INCIDENT-20260909-e843-read-truncation.txt) documenting how the single-read bug caused
+      compiler warnings to mask real outputs.
+  2. Step 2 — Full Read-Through-EOF with Process Supervision:
+      • Replace the single Unix.read with a loop using Unix.select (or Buffer.add_channel over non-blocking pipes)
+      that reads until EOF (0 bytes returned).
+      • Enforce an explicit timeout (e.g. 5.0 seconds). On timeout expiry, terminate the child process tree
+      (SIGTERM -> grace period -> SIGKILL), reap the exit status via Unix.waitpid [WNOHANG], and record an
+      explicit TIMEOUT_REAPED failure.
+  3. Step 3 — Eliminate Compiler Diagnostics at Source:
+      • Add the explicit +unix flag (or dune library dependency unix) to the compiler invocation so that benign
+      include warnings are not emitted into stdout/stderr.
+      • Separate child stdout and stderr channels so unexpected diagnostics do not pollute structured stdout data.
+  4. Step 4 — Fresh Run-Unique Output Directories:
+      • Replace fixed static paths with run-unique, timestamped directory trees (e.g.
+      var/evidence/ev02/runs/<timestamp>-<attempt>/).
+  5. Step 5 — Schema, Clause & Content Verification (Anti-Empty Validator):
+      • Output must be validated against the formal schema (uos.ev02-feature-mapping.v1).
+      • The check must verify:
+          • Output is valid JSON.
+          • Extracted feature clauses count is greater than zero (clauses > 0).
+          • Required fields are present: feature_id, source_file, line_range, clause_sha256.
+          • Output payload does not match known warning substrings (Warning:).
+      • If clauses == 0 or schema validation fails, the check MUST fail closed with exit code ≠ 0, even if the
+      subprocess exited cleanly.
+  6. Step 6 — Explicit Typed Distinction: Policy HOLD vs Startup/Crash Failure:
+      • Differentiate the return state explicitly:
+          • Pass (Valid extracted clauses and passing schema)
+          • PolicyHold (Legitimate unadmitted upstream dependency / formal hold)
+          • StartupFailure (Executable not found, compile failure, missing dependency)
+          • ExecutionCrash (Non-zero exit, signal termination, timeout)
+      • Never conflate a formal Policy HOLD with a broken pipe or truncated read failure.
+
+  ──────
+  ### Summary & Boundary Enforcement
+
+  • EV-86: Slice is justified; execute under private candidate with the 6 adverse controls; no live deploy.
+  • EV-2: Minimum honest repair requires read-through-EOF, timeout/reap, separate stdout/stderr, +unix compiler
+  fix, fresh run directories, and schema/clause validation.
+  • Scope Fencing: These repairs remain strictly isolated within their respective EV working branches; neither
+  touches nor impacts Root ADMISSION nor Telegram workflows.
+
