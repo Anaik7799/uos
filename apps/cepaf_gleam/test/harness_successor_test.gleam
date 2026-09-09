@@ -1,9 +1,11 @@
 import cepaf_gleam/harness/admission as a
 import cepaf_gleam/harness/development as dev
+import cepaf_gleam/harness/files
 import cepaf_gleam/harness/operations as ops
 import cepaf_gleam/harness/successor_mcp as mcp
 import cepaf_gleam/harness/value
 import gleam/json
+import simplifile
 import gleam/option.{None, Some}
 import gleam/string
 import gleeunit/should
@@ -73,13 +75,103 @@ pub fn payload_identity_and_backend_are_refused_test() {
     #("intent_id", value.Text("one")), #("attempt", value.Integer(9))])) |> should.be_error
   ops.validate_args("arbitrary_shell", value.Object([])) |> should.be_error
 }
+// C4: tools/ecology_process.ml bounds every effect's time, output and process
+// group, and was bound by nothing -- no path list, no control module. It could
+// change while the review, the task row, the candidate manifest and all nine
+// control ids stayed matched. Every arm here fails closed.
+pub fn control_dependencies_are_bound_and_fail_closed_test() {
+  let assert Ok(actual) = simplifile.read("/home/an/NAS-setup/uos/tools/ecology_process.ml")
+  let digest = files.digest(actual)
+  let declared = fn(v) { value.Object([#("tools/ecology_process.ml", v)]) }
+
+  a.control_dependencies_match(declared(value.Text(digest))) |> should.be_ok
+  // a changed guardian is refused
+  a.control_dependencies_match(declared(value.Text(string.repeat("a", 64)))) |> should.be_error
+  // a malformed digest is refused, not coerced
+  a.control_dependencies_match(declared(value.Text("short"))) |> should.be_error
+  a.control_dependencies_match(declared(value.Integer(1))) |> should.be_error
+  // an undeclared dependency set is refused
+  a.control_dependencies_match(value.Object([])) |> should.be_error
+  a.control_dependencies_match(value.Object([#("tools/other.ml", value.Text(digest))]))
+    |> should.be_error
+  // an extra declaration cannot pad the set
+  a.control_dependencies_match(value.Object([
+    #("tools/ecology_process.ml", value.Text(digest)),
+    #("tools/other.ml", value.Text(digest))])) |> should.be_error
+  a.control_dependencies_match(value.Text("not an object")) |> should.be_error
+}
+
 pub fn success_replay_requires_exact_binding_and_terminal_success_test() {
-  let good = json.object([#("signature", json.string("expected")), #("status", json.string("EXECUTED"))])
-    |> json.to_string
+  let good = json.object([#("schema", json.string("uos.harness-successor-effect.v1")),
+    #("kind", json.string("effect_result")), #("signature", json.string("expected")),
+    #("status", json.string("EXECUTED"))]) |> json.to_string
   ops.replay(good, "expected") |> should.be_ok
   ops.replay(good, "other") |> should.be_error
   ops.replay("not json", "expected") |> should.be_error
   ops.replay("{\"signature\":\"expected\",\"status\":\"FAILED_OR_UNVERIFIED\"}", "expected") |> should.be_error
+}
+
+// C2: an untyped record is no longer replayable, because its meaning used to be
+// carried entirely by the filename it was found under -- and two different kinds
+// of record could land on the same filename.
+pub fn replay_refuses_a_record_that_does_not_declare_its_own_kind_test() {
+  let untyped = json.object([#("signature", json.string("expected")),
+    #("status", json.string("EXECUTED"))]) |> json.to_string
+  ops.replay(untyped, "expected") |> should.be_error
+  let wrong_kind = json.object([#("schema", json.string("uos.harness-successor-effect.v1")),
+    #("kind", json.string("quarantine_record")), #("signature", json.string("expected")),
+    #("status", json.string("EXECUTED"))]) |> json.to_string
+  ops.replay(wrong_kind, "expected") |> should.be_error
+  let wrong_schema = json.object([#("schema", json.string("uos.harness-successor-completion.v1")),
+    #("kind", json.string("effect_result")), #("signature", json.string("expected")),
+    #("status", json.string("EXECUTED"))]) |> json.to_string
+  ops.replay(wrong_schema, "expected") |> should.be_error
+}
+
+// C2 by construction: "@" is outside the admission.component charset, so an
+// intent id can no longer contain the delimiter and impersonate a suffix.
+// Before this, intent "x-completion" with suffix "intent" and intent "x" with
+// suffix "completion-intent" produced the SAME path.
+pub fn effect_paths_cannot_collide_across_record_kinds_test() {
+  let a = ops.effect_path_for("G", "x-completion", "intent")
+  let b = ops.effect_path_for("G", "x", "completion-intent")
+  a |> should.not_equal(b)
+  ops.effect_path_for("G", "x", "intent")
+    |> should.not_equal(ops.effect_path_for("G", "x", "result"))
+  ops.effect_path_for("G", "x", "intent")
+    |> should.not_equal(ops.effect_path_for("H", "x", "intent"))
+}
+
+// C3: a write to an authorized path OUTSIDE scope.sources used to be invisible
+// to every guard. The guard manifest now covers sources and writes together,
+// while candidate identity stays narrow so a journal written after the build
+// does not invalidate the completion it belongs to.
+pub fn guard_manifest_covers_authorized_writes_while_identity_stays_narrow_test() {
+  let scope = a.Scope("uos/p", "T", [], ["docs/journal/absent-j.md"], ["tools/absent-a.gleam"], ["m"],
+    "var/harness/x-current-risk.json")
+  let assert Ok(identity) = ops.capture(scope)
+  let assert Ok(guard) = ops.guard_capture(scope)
+  identity |> string.contains("docs/journal/absent-j.md") |> should.be_false
+  guard |> string.contains("docs/journal/absent-j.md") |> should.be_true
+  guard |> string.contains("tools/absent-a.gleam") |> should.be_true
+}
+
+// The write guard replaces `name == "harness_write_file" || before == after`,
+// which permitted ANY other file to move underneath a write.
+pub fn write_guard_pins_the_target_digest_and_refuses_other_movement_test() {
+  let entry = fn(p, h) {
+    json.object([#("path", json.string(p)), #("sha256", json.string(h))])
+  }
+  let manifest = fn(target_hash, other_hash) {
+    json.array([entry("t.gleam", target_hash), entry("o.gleam", other_hash)], fn(x) { x })
+    |> json.to_string
+  }
+  let before = manifest("aa", "bb")
+  ops.write_manifest_clean(before, manifest("cc", "bb"), "t.gleam", "cc") |> should.be_ok
+  // the target did not become what the effect claims it wrote
+  ops.write_manifest_clean(before, manifest("dd", "bb"), "t.gleam", "cc") |> should.be_error
+  // something else moved underneath the write
+  ops.write_manifest_clean(before, manifest("cc", "zz"), "t.gleam", "cc") |> should.be_error
 }
 pub fn mcp_initialization_notifications_and_closed_sessions_test() {
   let state = mcp.initial(grant())
