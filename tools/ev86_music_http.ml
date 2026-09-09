@@ -26,7 +26,12 @@ let b=Buffer.create 4096 and tmp=Bytes.create 65536 in let until=Unix.gettimeofd
 let complete()=try let bytes=Buffer.contents b in let at=Str.search_forward(Str.regexp_string"\r\n\r\n")bytes 0 in let headers=String.sub bytes 0 at |> String.split_on_char '\n' in
 let length=if method_="HEAD"then 0 else let line=List.find(fun l->String.starts_with ~prefix:"content-length:"(String.lowercase_ascii l))headers in int_of_string(String.trim(String.sub line 15(String.length line-15)))in Buffer.length b>=at+4+length with Not_found->false in
 let rec recv()=if not(complete())then(let ready,_,_=Unix.select[fd][][](max 0. (until-.Unix.gettimeofday()))in if ready=[]then(write(run^"/failed-partial.response")(Buffer.contents b);failwith"HTTP receive deadline");let n=Unix.read fd tmp 0 65536 in if n<>0 then(require(Buffer.length b+n<=16777216)"HTTP output bound";Buffer.add_subbytes b tmp 0 n;recv()))in recv();Buffer.contents b)
-let check name method_ path expected mime=let raw=request method_ path in let i=Str.search_forward(Str.regexp_string"\r\n\r\n")raw 0 in let head=String.sub raw 0 i and body=String.sub raw(i+4)(String.length raw-i-4)in
+(* Preserve exact received bytes before parsing or any acceptance assertion.
+   These are parsed-path application tests; they do not establish a bound or
+   lexical identity for the original wire request target before Mist parsing. *)
+let check_response name method_ path expected mime raw=
+write(run^"/http-"^name^".response")raw;
+let i=Str.search_forward(Str.regexp_string"\r\n\r\n")raw 0 in let head=String.sub raw 0 i and body=String.sub raw(i+4)(String.length raw-i-4)in
 let lines=String.split_on_char '\n' head |> List.map String.trim in let status=Scanf.sscanf(List.hd lines)"HTTP/1.1 %d"(fun x->x)in require(status=expected)(name^" status");
 let header k=let prefix=String.lowercase_ascii k^":"in List.find_map(fun l->let low=String.lowercase_ascii l in if String.starts_with ~prefix low then Some(String.trim(String.sub l(String.length prefix)(String.length l-String.length prefix)))else None)lines in
 Option.iter(fun m->require(header"content-type"=Some m)(name^" MIME"))mime;
@@ -36,7 +41,8 @@ if name="player"||name="studio"then(require(try ignore(Str.search_forward(Str.re
 if method_="HEAD"then require(body="")"HEAD returned body";
 if name="mp3"then require(sha body="d5e2e97ae5787b60bc0ec8adf3dbde0e2a08484d4e81a203130ef41da4f32d9a")"MP3 exact source bytes";
 if name="wav"then require(sha body="b281fc8bd0b681603de1c15a37e1d1b3fe863181214119b2f8d8238b5baa1ef6")"WAV exact source bytes";
-write(run^"/http-"^name^".response")raw;`Assoc["case",`String name;"method",`String method_;"path",`String path;"status",`Int status;"content_type",(match header"content-type"with Some s->`String s|None->`Null);"body_bytes",`Int(String.length body);"body_sha256",`String(sha body);"raw_sha256",`String(sha raw)]
+`Assoc["case",`String name;"method",`String method_;"path",`String path;"status",`Int status;"content_type",(match header"content-type"with Some s->`String s|None->`Null);"body_bytes",`Int(String.length body);"body_sha256",`String(sha body);"raw_sha256",`String(sha raw)]
+let check name method_ path expected mime=let raw=request method_ path in check_response name method_ path expected mime raw
 let ()=Fun.protect ~finally:(fun()->(try Unix.kill(-pid)Sys.sigterm with _->());ignore(Unix.waitpid[]pid))(fun()->wait(Unix.gettimeofday()+.5.);
 let cases=["player","GET","/docs/music/player",200,Some"text/html; charset=utf-8";"studio","GET","/docs/music/studio",200,Some"text/html; charset=utf-8";"mp3","GET","/media/music/historical-enhanced.mp3",200,Some"audio/mpeg";"wav","GET","/media/music/historical-mix.wav",200,Some"audio/wav";"head","HEAD","/media/music/historical-enhanced.mp3",200,Some"audio/mpeg";"missing","GET","/docs/music/absent",404,None;"traversal","GET","/docs/music/../design/private",404,None;"percent","GET","/docs/%6dusic/player",404,None;"backslash","GET","/docs/music%5cplayer",404,None;"method","POST","/docs/music/player",405,None]in
 let cases=cases@["exact-path","GET","/docs/music/"^String.make 4084 'x',404,None;"above-path","GET","/docs/music/"^String.make 4085 'x',414,None;"long-normalized-music","GET","/"^String.make 4100 'x'^"/../docs/music/player",414,None;"long-head","HEAD","/"^String.make 4096 'x',414,None;"malformed-mixed","GET","/%zz/../%64ocs/%6dusic/player",404,None]in

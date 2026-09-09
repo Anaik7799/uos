@@ -97,7 +97,8 @@ fn serve() {
   )
 
   let router = fn(req: Request(Connection)) -> Response(ResponseData) {
-    // Reserve the original music path before generic normalisation/file lookup.
+    // Reserve Mist's parsed path before application normalisation/file lookup.
+    // This does not establish the original wire request-target boundary.
     case music_files.handles(req.path) {
       True -> {
         let reply = music_files.handle(music_files.configured_root(), req.method, req.path)

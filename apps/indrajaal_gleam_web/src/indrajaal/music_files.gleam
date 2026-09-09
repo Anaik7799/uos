@@ -2,6 +2,8 @@
 //// it does not implement studio synthesis, authenticate music, or grant admission.
 //// File observations assume a cooperative responsive filesystem. They refuse
 //// observed symlinks/changes, but are not a descriptor-relative hostile-race VFS.
+//// In the HTTP integration, paths have already passed through Mist's URI parser.
+//// This module does not establish original wire-target bounds or lexical identity.
 
 import gleam/bit_array
 import gleam/dynamic.{type Dynamic}
@@ -180,11 +182,12 @@ fn music_namespace(path: String) -> Bool {
   || string.starts_with(path, "/media/music")
 }
 
-/// Inspect the original path before the generic router removes dot segments.
-/// Also reserve encoded/normalised music paths so they cannot fall through.
+/// Inspect the supplied application path before generic application routing.
+/// Mist supplies an already-parsed request.path. Original wire-target protection
+/// remains unestablished. Reserve encoded/normalised music paths at this layer.
 pub fn handles(path: String) -> Bool {
   case string.byte_size(path) > path_limit {
-    // Universal raw ingress refusal, before any normalization or file routing.
+    // Application-path refusal. Mist has already parsed the wire request target.
     True -> True
     False -> {
       let decoded = namespace_decode(path)
