@@ -1,0 +1,86 @@
+{
+  "schema": "uos.ev-rag-independent-review.v1",
+  "status": "HOLD",
+  "authority": "NONE",
+  "observed_utc_seconds": 1788931948.707451,
+  "tested_source_commit": "7d577676120e61c32c3901e56e82a36984f3a763",
+  "author_cases_passed": 16,
+  "previous_adverse_passed": 9,
+  "new_numeric_passed": 4,
+  "new_numeric_failed": 2,
+  "artifacts": [
+    {
+      "path": "/tmp/ev-rag-independent-numeric-review-20260909/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam",
+      "sha256": "85a3efa6b0f39d26c25b70b1aa344b6c67cdd94f827ac05c09fab2ec8c2865dc"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-numeric-review-20260909/src/rag_cache_mesh_test.gleam",
+      "sha256": "76768e06b2933aae0a0b15bdc4c47149e73242979c7766d045bdee9357e57c4d"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-numeric-review-20260909/src/ev_rag_freshness_runner.gleam",
+      "sha256": "ab13d45b4d77ac77d776d983247a09ad0fb172d9dbfebcdde1160aa8f68fb402"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-numeric-review-20260909/src/ev_rag_adverse_test.gleam",
+      "sha256": "dfeed0527740539f11e04fd6349445fa690c85583314c427b617f0b390adf78f"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-numeric-review-20260909/src/ev_rag_boundary_test.gleam",
+      "sha256": "924f03acb2119251399d93bee0fa751d776e9d3fac3ea81b28d985ea7895b5ca"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-numeric-review-20260909/src/ev_rag_numeric_test.gleam",
+      "sha256": "d1b18033574fad2406547311c984b065d64bc4c5e637c39947ada18a3d3c20bd"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-numeric-review-20260909/compiled/ebin/cepaf_gleam@knowledge@rag_cache_mesh.beam",
+      "sha256": "f76d80442fd1e73636423bac4438bcfe68f34183bb0ac68cd5231b973fac3995"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-numeric-review-20260909/compiled/ebin/rag_cache_mesh_test.beam",
+      "sha256": "6730686db503045fa9a1b9bf07217f55239744087b45b54e1bbe2fe5a22fff46"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-numeric-review-20260909/compiled/ebin/ev_rag_adverse_test.beam",
+      "sha256": "3b1d7f9b9871c72e4225ab5860ec48f0f9bc7e98cf124ad4b16019b962eca73d"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-numeric-review-20260909/compiled/ebin/ev_rag_boundary_test.beam",
+      "sha256": "03c65b383f72b13695d1f8067c49242a3f93f6a523d401bd4da5bda59e805a66"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-numeric-review-20260909/compiled/ebin/ev_rag_numeric_test.beam",
+      "sha256": "46977524756785a83263a2274fb825d660712de3cce5762e71cee2d4e6e644e3"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-numeric-review-20260909/compile.json",
+      "sha256": "893a3c653dff6fae846b82bd71a99053f1d2ca4d92f722115efb3344da8e4965"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-numeric-review-20260909/original-tests.json",
+      "sha256": "c30365d9176956be614059a0096493298e640f057f69dbd239084d85203d35cb"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-numeric-review-20260909/adverse-tests.json",
+      "sha256": "842d967b86d2fab96e3514a61b0b2a50ca7ba141cd13133cc7e20f8d162ddcf3"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-numeric-review-20260909/numeric-tests.json",
+      "sha256": "92aaaab9232c8c35ae52e9d46f6eee67decd53e91e06cdea504200e1f00e0b2a"
+    },
+    {
+      "path": "/tmp/ev-rag-independent-numeric-review-20260909/source-manifest.json",
+      "sha256": "0cbb3e3f971f6be1cb2c01f8da7e86bed71f884800dbd6f9d1ebf3feee96dcee"
+    }
+  ],
+  "findings": [
+    {
+      "priority": "P2",
+      "source_line": 194,
+      "finding": "Accepted tiny nonzero embeddings are treated as zero by the scale<=1e-6 guard. Cosine([3e-100,4e-100],[4e-100,3e-100]) returns0 instead of0.96; identical accepted[1e-100] semantic lookup returnsCacheMissing instead ofCacheFresh. Scale normalization permits computing these safely. Use an exact-zero guard or consistently refuse/document the subthreshold domain; accepted cosine semantics currently disagree."
+    }
+  ],
+  "passed_controls": "Original7probes plus accepted1e100/futureembedding controls pass. New1024dimidenticalandorthogonal, mixedscaleanalytic0.96/antipodal, zerovector controls pass within1e-9 tolerance. Overflow defects fixed at tested extremes; freshness and dimension fixes retained.",
+  "limits": "Private source extracted by explicit commit_id from immutable candidate; native Gleam/BEAM using realized canonical dependencies. No full floating-point proof, producer authentication, reproducible release closure or admission. No repository/source/task/live mutation. Mathematical probes test known analytic cases, not exhaustive input enumeration."
+}

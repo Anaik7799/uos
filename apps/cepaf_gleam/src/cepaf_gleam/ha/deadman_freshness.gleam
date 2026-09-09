@@ -21,6 +21,7 @@
 //// </c3i-module>
 //// =============================================================================
 
+import gleam/int
 import gleam/list
 import gleam/option.{type Option, None, Some}
 
@@ -64,11 +65,7 @@ pub type DeadManAction {
 
 /// Initialize an empty dead-man registry.
 pub fn init_deadman_registry() -> DeadManRegistry {
-  DeadManRegistry(
-    actors: [],
-    last_eval_ms: 0,
-    total_tripped_count: 0,
-  )
+  DeadManRegistry(actors: [], last_eval_ms: 0, total_tripped_count: 0)
 }
 
 /// Register a new distributed actor into the dead-man switch monitor.
@@ -81,20 +78,38 @@ pub fn register_actor(
   failover: Option(String),
   now_ms: Int,
 ) -> DeadManRegistry {
-  let existing_filtered =
-    list.filter(reg.actors, fn(a) { a.actor_id != actor_id })
-  let entry =
-    ActorRegistration(
-      actor_id: actor_id,
-      fractal_layer: layer,
-      heartbeat_interval_ms: interval_ms,
-      max_missed_heartbeats: max_missed,
-      last_heartbeat_ms: now_ms,
-      missed_count: 0,
-      status: HeartbeatNominal,
-      failover_target: failover,
-    )
-  DeadManRegistry(..reg, actors: [entry, ..existing_filtered])
+  let stale_registration =
+    list.any(reg.actors, fn(actor) {
+      actor.actor_id == actor_id
+      && now_ms <= int.max(actor.last_heartbeat_ms, reg.last_eval_ms)
+    })
+  case stale_registration {
+    True -> reg
+    False -> {
+      let existing_filtered =
+        list.filter(reg.actors, fn(a) { a.actor_id != actor_id })
+      let entry =
+        ActorRegistration(
+          actor_id: actor_id,
+          fractal_layer: layer,
+          heartbeat_interval_ms: interval_ms,
+          max_missed_heartbeats: max_missed,
+          last_heartbeat_ms: now_ms,
+          missed_count: 0,
+          status: case
+            interval_ms > 0
+            && max_missed > 0
+            && now_ms >= reg.last_eval_ms
+            && now_ms >= 0
+          {
+            True -> HeartbeatNominal
+            False -> HeartbeatQuarantined
+          },
+          failover_target: failover,
+        )
+      DeadManRegistry(..reg, actors: [entry, ..existing_filtered])
+    }
+  }
 }
 
 /// Record a heartbeat event from an actor.
@@ -105,7 +120,11 @@ pub fn record_heartbeat(
 ) -> DeadManRegistry {
   let updated_actors =
     list.map(reg.actors, fn(a) {
-      case a.actor_id == actor_id {
+      case
+        a.actor_id == actor_id
+        && now_ms > int.max(a.last_heartbeat_ms, reg.last_eval_ms)
+        && a.status != HeartbeatQuarantined
+      {
         True ->
           ActorRegistration(
             ..a,
@@ -124,77 +143,118 @@ pub fn evaluate_freshness_tick(
   reg: DeadManRegistry,
   now_ms: Int,
 ) -> #(DeadManRegistry, List(DeadManAction)) {
-  let #(updated_actors, actions, newly_tripped) =
-    list.fold(reg.actors, #([], [], 0), fn(acc, actor) {
-      let #(actor_list, action_list, trip_count) = acc
-      let elapsed_ms = now_ms - actor.last_heartbeat_ms
-      let interval = actor.heartbeat_interval_ms
+  case now_ms <= reg.last_eval_ms {
+    True -> #(reg, [])
+    False -> {
+      let #(actors, action_groups, trips) =
+        list.fold(reg.actors, #([], [], 0), fn(acc, actor) {
+          let #(actors, groups, trips) = acc
+          let #(updated, actions, newly_tripped) = evaluate_actor(actor, now_ms)
+          #([updated, ..actors], [actions, ..groups], trips + newly_tripped)
+        })
+      #(
+        DeadManRegistry(
+          actors: list.reverse(actors),
+          last_eval_ms: now_ms,
+          total_tripped_count: reg.total_tripped_count + trips,
+        ),
+        action_groups |> list.reverse |> list.flatten,
+      )
+    }
+  }
+}
 
-      case elapsed_ms > interval {
-        False -> {
-          // Healthy
-          let updated = ActorRegistration(..actor, status: HeartbeatNominal, missed_count: 0)
-          #([updated, ..actor_list], action_list, trip_count)
-        }
-        True -> {
-          let missed = elapsed_ms / interval
+fn evaluate_actor(
+  actor: ActorRegistration,
+  now_ms: Int,
+) -> #(ActorRegistration, List(DeadManAction), Int) {
+  case
+    actor.status == HeartbeatQuarantined
+    || actor.heartbeat_interval_ms <= 0
+    || actor.max_missed_heartbeats <= 0
+  {
+    True -> #(ActorRegistration(..actor, status: HeartbeatQuarantined), [], 0)
+    False -> {
+      let missed =
+        int.max(0, now_ms - actor.last_heartbeat_ms)
+        / actor.heartbeat_interval_ms
+      case actor.status {
+        // A tick cannot recover a tripped actor; only a new heartbeat can rearm it.
+        HeartbeatTripped(_) -> #(
+          ActorRegistration(
+            ..actor,
+            missed_count: int.max(actor.missed_count, missed),
+          ),
+          [],
+          0,
+        )
+        _ ->
           case missed >= actor.max_missed_heartbeats {
             True -> {
-              // Tripped dead-man switch
-              let updated =
-                ActorRegistration(
-                  ..actor,
-                  missed_count: missed,
-                  status: HeartbeatTripped(since_ms: now_ms),
-                )
-              let trip_action =
+              let trip =
                 ActionTripDeadMan(
-                  actor_id: actor.actor_id,
-                  layer: actor.fractal_layer,
-                  reason: "missed heartbeats exceeded threshold",
+                  actor.actor_id,
+                  actor.fractal_layer,
+                  "missed heartbeats exceeded threshold",
                 )
-              let actions_with_failover = case actor.failover_target {
+              let actions = case actor.failover_target {
                 Some(target) -> [
                   ActionInitiateFailover(
-                    from_actor: actor.actor_id,
-                    to_actor: target,
-                    layer: actor.fractal_layer,
+                    actor.actor_id,
+                    target,
+                    actor.fractal_layer,
                   ),
-                  trip_action,
-                  ..action_list
+                  trip,
                 ]
-                None -> [trip_action, ..action_list]
+                None -> [trip]
               }
-              #([updated, ..actor_list], actions_with_failover, trip_count + 1)
-            }
-            False -> {
-              // Warning phase
-              let updated =
+              #(
                 ActorRegistration(
                   ..actor,
                   missed_count: missed,
-                  status: HeartbeatWarning(missed: missed),
-                )
-              let warn_action =
-                ActionWarnStaleness(
-                  actor_id: actor.actor_id,
-                  layer: actor.fractal_layer,
-                  missed: missed,
-                )
-              #([updated, ..actor_list], [warn_action, ..action_list], trip_count)
+                  status: HeartbeatTripped(now_ms),
+                ),
+                actions,
+                1,
+              )
             }
+            False ->
+              case missed == 0 {
+                True -> #(
+                  ActorRegistration(
+                    ..actor,
+                    missed_count: 0,
+                    status: HeartbeatNominal,
+                  ),
+                  [],
+                  0,
+                )
+                False -> {
+                  let actions = case actor.status == HeartbeatWarning(missed) {
+                    True -> []
+                    False -> [
+                      ActionWarnStaleness(
+                        actor.actor_id,
+                        actor.fractal_layer,
+                        missed,
+                      ),
+                    ]
+                  }
+                  #(
+                    ActorRegistration(
+                      ..actor,
+                      missed_count: missed,
+                      status: HeartbeatWarning(missed),
+                    ),
+                    actions,
+                    0,
+                  )
+                }
+              }
           }
-        }
       }
-    })
-
-  let updated_reg =
-    DeadManRegistry(
-      actors: updated_actors,
-      last_eval_ms: now_ms,
-      total_tripped_count: reg.total_tripped_count + newly_tripped,
-    )
-  #(updated_reg, actions)
+    }
+  }
 }
 
 /// Count number of currently healthy nominal actors.

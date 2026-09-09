@@ -1,0 +1,28 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+    "compile-package", "--target", "erlang", "--package",
+    "/tmp/ev-delta-review-green-20260909-0520", "--out",
+    "/tmp/ev-delta-review-green-20260909-0520/compiled", "--lib",
+    "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang"
+  ],
+  "utc_started": 1788931036.012697,
+  "utc_finished": 1788931036.483542,
+  "elapsed_seconds": 0.470844621,
+  "deadline_seconds": 30.0,
+  "exit_code": 0,
+  "output": "",
+  "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}
