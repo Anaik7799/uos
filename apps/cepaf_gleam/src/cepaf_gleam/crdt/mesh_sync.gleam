@@ -54,6 +54,7 @@ pub type PeerSyncEndpoint {
     node_id: NodeId,
     tailscale_fqdn: String,
     last_sync_epoch_us: Int,
+    observed_clock: VectorClock,
     status: SyncStatus,
   )
 }
@@ -146,12 +147,14 @@ pub fn default_cluster_topology(now_us: Int) -> List(PeerSyncEndpoint) {
       node_id: "nas-1",
       tailscale_fqdn: "http://nas-1.tail55d152.ts.net:4100",
       last_sync_epoch_us: now_us,
+      observed_clock: [#("nas-1", 1)],
       status: Synchronized,
     ),
     PeerSyncEndpoint(
       node_id: "vm-1",
       tailscale_fqdn: "http://vm-1.tail55d152.ts.net:8088",
       last_sync_epoch_us: now_us,
+      observed_clock: [#("vm-1", 1)],
       status: Synchronized,
     ),
   ]

@@ -414,6 +414,38 @@ pub fn main() {
   )
   delta_mesh_engine_test.engine_two_node_reconciliation_test()
   io.println("PASS delta_mesh_engine_test.engine_two_node_reconciliation_test")
+  delta_mesh_engine_test.digest_only_exchange_does_not_claim_remote_state_test()
+  io.println(
+    "PASS delta_mesh_engine_test.digest_only_exchange_does_not_claim_remote_state_test",
+  )
+  delta_mesh_engine_test.local_mutation_invalidates_prior_peer_coverage_test()
+  io.println(
+    "PASS delta_mesh_engine_test.local_mutation_invalidates_prior_peer_coverage_test",
+  )
+  delta_mesh_engine_test.stale_ack_cannot_restore_peer_coverage_after_local_change_test()
+  io.println(
+    "PASS delta_mesh_engine_test.stale_ack_cannot_restore_peer_coverage_after_local_change_test",
+  )
+  delta_mesh_engine_test.stale_ack_cannot_erase_a_newer_peer_frontier_test()
+  io.println(
+    "PASS delta_mesh_engine_test.stale_ack_cannot_erase_a_newer_peer_frontier_test",
+  )
+  delta_mesh_engine_test.stale_delta_cannot_erase_a_newer_peer_frontier_test()
+  io.println(
+    "PASS delta_mesh_engine_test.stale_delta_cannot_erase_a_newer_peer_frontier_test",
+  )
+  delta_mesh_engine_test.remote_ahead_ack_requests_the_missing_delta_test()
+  io.println(
+    "PASS delta_mesh_engine_test.remote_ahead_ack_requests_the_missing_delta_test",
+  )
+  delta_mesh_engine_test.full_two_way_exchange_converges_only_after_remote_delta_test()
+  io.println(
+    "PASS delta_mesh_engine_test.full_two_way_exchange_converges_only_after_remote_delta_test",
+  )
+  delta_mesh_engine_test.incoming_merge_invalidates_other_peer_coverage_test()
+  io.println(
+    "PASS delta_mesh_engine_test.incoming_merge_invalidates_other_peer_coverage_test",
+  )
   delta_mesh_engine_test.engine_health_aggregation_test()
   io.println("PASS delta_mesh_engine_test.engine_health_aggregation_test")
   delta_mesh_engine_test.full_queue_rejects_without_advancing_round_and_can_drain_test()
@@ -439,6 +471,10 @@ pub fn main() {
   delta_mesh_engine_test.full_queue_rejects_both_digest_response_branches_test()
   io.println(
     "PASS delta_mesh_engine_test.full_queue_rejects_both_digest_response_branches_test",
+  )
+  delta_mesh_engine_test.stale_ack_recovery_refuses_when_outbound_queue_is_full_test()
+  io.println(
+    "PASS delta_mesh_engine_test.stale_ack_recovery_refuses_when_outbound_queue_is_full_test",
   )
   delta_mesh_engine_test.gossip_timestamp_cannot_precede_latest_observation_test()
   io.println(
@@ -592,5 +628,5 @@ pub fn main() {
   io.println(
     "PASS rag_cache_mesh_test.subnormal_identity_and_zero_vector_controls_test",
   )
-  io.println("168 component checks passed; EV admission NOT_GRANTED")
+  io.println("177 component invocations passed; EV admission NOT_GRANTED")
 }

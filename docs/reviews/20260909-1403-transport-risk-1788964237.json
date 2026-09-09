@@ -1,0 +1,385 @@
+[
+  {
+    "factors": {
+      "criticality": {
+        "rationale": "HTTP omission, unbounded response or custody confusion can lose peer updates; bounded private transport tests before isolated owned namespace publication.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer_actor.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_http.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_transport.gleam"
+        ],
+        "value": 4,
+        "low": 4,
+        "high": 4
+      },
+      "stpa": {
+        "rationale": "HTTP omission, unbounded response or custody confusion can lose peer updates; bounded private transport tests before isolated owned namespace publication.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer_actor.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_http.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_transport.gleam"
+        ],
+        "value": 5,
+        "low": 5,
+        "high": 5
+      },
+      "fmea": {
+        "rationale": "HTTP omission, unbounded response or custody confusion can lose peer updates; bounded private transport tests before isolated owned namespace publication.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer_actor.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_http.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_transport.gleam"
+        ],
+        "value": 5,
+        "low": 5,
+        "high": 5
+      },
+      "dependency": {
+        "rationale": "HTTP omission, unbounded response or custody confusion can lose peer updates; bounded private transport tests before isolated owned namespace publication.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer_actor.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_http.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_transport.gleam"
+        ],
+        "value": 5,
+        "low": 5,
+        "high": 5
+      },
+      "impact": {
+        "rationale": "HTTP omission, unbounded response or custody confusion can lose peer updates; bounded private transport tests before isolated owned namespace publication.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer_actor.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_http.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_transport.gleam"
+        ],
+        "value": 5,
+        "low": 5,
+        "high": 5
+      }
+    },
+    "assessment_id": "peer-complete-1788964237",
+    "task_state": "completed",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Transport sibling; bounded new source only",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer.gleam",
+          "sha256": "fc44263b04bd08fbff3c9a60244f3a7d49c9094e0d7ed72e66c9a4e94a0fb313",
+          "observed_at": "2026-09-09T14:30:37Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer_actor.gleam",
+          "sha256": "8c58b08aeea63a0f2936034881108122ee14e518cba8715465f3515f014dbfc0",
+          "observed_at": "2026-09-09T14:30:37Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_http.gleam",
+          "sha256": "2d6a6bcf1c4be54b7d26b94258497fe33eb3327f933c8889d4acdf85e251b5f6",
+          "observed_at": "2026-09-09T14:30:37Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_transport.gleam",
+          "sha256": "aa2a75f99422f9b9a2dc2fc3b12789991b8dad358b55c67f803dc884232e5aef",
+          "observed_at": "2026-09-09T14:30:37Z"
+        }
+      ]
+    },
+    "valid_until": "2026-09-09T15:30:37Z",
+    "ready_since": "2026-09-09T14:30:37Z",
+    "observed_at": "2026-09-09T14:30:37Z",
+    "stpa_analysis": {
+      "controller": "Supervised peer state machine and independent reviewers",
+      "control_action": "Route bounded frames, accept exact transport reports and evaluate monotonic freshness",
+      "losses": [ "L-RISK-UNAUTHORIZED-EFFECT" ],
+      "hazards": [ "H-RISK-FALSE-CLEARANCE", "H-RISK-STALE-SELECTION" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Freshness evaluation stops when queued transport work cannot progress.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Commit monotonic freshness independently of outbound/UTC refusal."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "A frame is misrouted or a wrong report retires another outstanding frame.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Configured sender equality and exact lifetime/id/destination matching; retain bytes on failures."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Replayed remote timestamps rearm a tripped peer.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Only strictly advancing remote activity watermark may record a local-monotonic heartbeat."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Actor work or effects escape bounded state and current execution authority.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Bound configuration/queues/advisories/child calls; no network I/O or effect dispatch; supervise and hand off retained state at controlled shutdown."
+        }
+      ]
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-PEER-STATE",
+        "s": 5,
+        "o": 3,
+        "det": 4,
+        "rpn": 60,
+        "band": 5,
+        "cause": "Queue transfer, destination matching or freshness-clock coupling can discard retained work or falsely refresh stale peers if composed into runtime.",
+        "effect": "Lost updates or false peer-health clearance.",
+        "controls": "Opaque state, atomic typed refusal, retained addressed IDs, epoch watermarks, independent monotonic timer, negative controls and separate integration review."
+      }
+    ],
+    "decision": {
+      "supersedes": "New child task under uos/ev-admission/20260909-0210 PROGRAM",
+      "residuals": [
+        "Routing identity is not authentication",
+        "Actor mailbox and node crash persistence are not bounded durable transport",
+        "Advisory deadman actions have no effect dispatcher",
+        "No live supervisor or network modifications"
+      ],
+      "acceptance": [
+        "RED then GREEN source and real OTP tests",
+        "Malformed/unknown/mismatched/replayed frames cannot incorrectly rearm freshness",
+        "Quota and failed transport reports preserve retained frames",
+        "Periodic actor tick evaluates freshness despite full outbox",
+        "Immutable candidate independently reviewed before task completion"
+      ],
+      "summary": "Implement bounded opaque peer loop with retained routed outbox, strict routing checks, replay-independent local deadman clock, and supervised actor. Parent PROGRAM coordinates later transport.",
+      "alternatives": [
+        "Promote recorded historical counts",
+        "Repair gaps and execute revision-bound checks"
+      ],
+      "assumptions": [
+        "User authorizes completing and admitting existing EVs; evidence requirements remain in force."
+      ],
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "Only synthetic EV999 exists in the legacy evidence table; actual EV evidence must be obtained."
+      ],
+      "forecast": "Negative tests will expose unsupported admission and fixed-positive verification; genuine runtime/formal obligations may require additional scoped work.",
+      "falsifier": "Any missing, tampered, stale, wrong-candidate or nonpassing evidence is accepted for admission.",
+      "rollback": "Preserve failed receipts and immutable work. Do not rewrite shared journal/cycle history or replace runtime without its own checked fence and recovery path.",
+      "budget": "Existing realized tools only; no package downloads or paid inference. Two build jobs, two BEAM schedulers per probe, bounded subprocess timeouts; stage-specific execution ceilings recorded with receipts.",
+      "reviewer": "Independent code review and actual Codex/AGY sovereign review; no model impersonation."
+    },
+    "scope": "New-only modules mesh_peer and mesh_peer_actor, tests and native staging in isolated peer-loop workspace; no production startup/network. Parent PROGRAM; own PEER_LOOP authority.",
+    "actor": "codex-ev98-peer-loop",
+    "task_id": "PEER_LOOP",
+    "plan_id": "uos/ev98-peer-loop/20260909",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 0,
+    "phase": "implementation",
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": [],
+    "class": "P1",
+    "score": 2500,
+    "score_interval": [ 2500, 2500 ]
+  },
+  {
+    "dependencies": [ "PEER_LOOP" ],
+    "decision": {
+      "supersedes": "PEER_LOOP complete; independent TRANSPORT task",
+      "residuals": [
+        "Routing is not authentication",
+        "Broker custody is not peer application",
+        "Run-local cursors not crash durable",
+        "Mailbox callers must bound demand",
+        "Single writer owned namespace cooperation, not atomic broker CAS"
+      ],
+      "acceptance": [
+        "RED/green actual worker behavior",
+        "Timeout, oversize, failed publish preserve frame",
+        "Replay and namespace collision refuse unsafe overwrite",
+        "Owned namespace two-actor broker roundtrip if safe primitive established",
+        "Independent review before completion"
+      ],
+      "summary": "Bounded HTTP request child, retained frames until broker custody, exact-key polling and peer apply distinction.",
+      "alternatives": [
+        "Promote recorded historical counts",
+        "Repair gaps and execute revision-bound checks"
+      ],
+      "assumptions": [
+        "User authorizes completing and admitting existing EVs; evidence requirements remain in force."
+      ],
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "Only synthetic EV999 exists in the legacy evidence table; actual EV evidence must be obtained."
+      ],
+      "forecast": "Negative tests will expose unsupported admission and fixed-positive verification; genuine runtime/formal obligations may require additional scoped work.",
+      "falsifier": "Any missing, tampered, stale, wrong-candidate or nonpassing evidence is accepted for admission.",
+      "rollback": "Preserve failed receipts and immutable work. Do not rewrite shared journal/cycle history or replace runtime without its own checked fence and recovery path.",
+      "budget": "Existing realized tools only; no package downloads or paid inference. Two build jobs, two BEAM schedulers per probe, bounded subprocess timeouts; stage-specific execution ceilings recorded with receipts.",
+      "reviewer": "Independent code review and actual Codex/AGY sovereign review; no model impersonation."
+    },
+    "factors": {
+      "criticality": {
+        "rationale": "HTTP omission, unbounded response or custody confusion can lose peer updates; bounded private transport tests before isolated owned namespace publication.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer_actor.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_http.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_transport.gleam"
+        ],
+        "value": 4,
+        "low": 4,
+        "high": 4
+      },
+      "stpa": {
+        "rationale": "HTTP omission, unbounded response or custody confusion can lose peer updates; bounded private transport tests before isolated owned namespace publication.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer_actor.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_http.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_transport.gleam"
+        ],
+        "value": 5,
+        "low": 5,
+        "high": 5
+      },
+      "fmea": {
+        "rationale": "HTTP omission, unbounded response or custody confusion can lose peer updates; bounded private transport tests before isolated owned namespace publication.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer_actor.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_http.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_transport.gleam"
+        ],
+        "value": 5,
+        "low": 5,
+        "high": 5
+      },
+      "dependency": {
+        "rationale": "HTTP omission, unbounded response or custody confusion can lose peer updates; bounded private transport tests before isolated owned namespace publication.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer_actor.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_http.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_transport.gleam"
+        ],
+        "value": 5,
+        "low": 5,
+        "high": 5
+      },
+      "impact": {
+        "rationale": "HTTP omission, unbounded response or custody confusion can lose peer updates; bounded private transport tests before isolated owned namespace publication.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer_actor.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_http.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_transport.gleam"
+        ],
+        "value": 5,
+        "low": 5,
+        "high": 5
+      }
+    },
+    "scope": "New Gleam supervised worker and bounded HTTP; private fake server then owned fresh-run Zenoh keys only under uos/tui/state/ev98-peer/01a08017-fd72-7b20-9d32-4df53154bcc8. No existing key overwrite/delete or production startup.",
+    "actor": "codex-ev98-transport",
+    "task_state": "executing",
+    "task_id": "TRANSPORT",
+    "assessment_id": "transport-1788964237",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Transport sibling; bounded new source only",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer.gleam",
+          "sha256": "fc44263b04bd08fbff3c9a60244f3a7d49c9094e0d7ed72e66c9a4e94a0fb313",
+          "observed_at": "2026-09-09T14:30:37Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer_actor.gleam",
+          "sha256": "8c58b08aeea63a0f2936034881108122ee14e518cba8715465f3515f014dbfc0",
+          "observed_at": "2026-09-09T14:30:37Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_http.gleam",
+          "sha256": "2d6a6bcf1c4be54b7d26b94258497fe33eb3327f933c8889d4acdf85e251b5f6",
+          "observed_at": "2026-09-09T14:30:37Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_zenoh_transport.gleam",
+          "sha256": "aa2a75f99422f9b9a2dc2fc3b12789991b8dad358b55c67f803dc884232e5aef",
+          "observed_at": "2026-09-09T14:30:37Z"
+        }
+      ]
+    },
+    "valid_until": "2026-09-09T15:30:37Z",
+    "ready_since": "2026-09-09T14:30:37Z",
+    "observed_at": "2026-09-09T14:30:37Z",
+    "stpa_analysis": {
+      "controller": "Supervised peer state machine and independent reviewers",
+      "control_action": "Route bounded frames, accept exact transport reports and evaluate monotonic freshness",
+      "losses": [ "L-RISK-UNAUTHORIZED-EFFECT" ],
+      "hazards": [ "H-RISK-FALSE-CLEARANCE", "H-RISK-STALE-SELECTION" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Freshness evaluation stops when queued transport work cannot progress.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Commit monotonic freshness independently of outbound/UTC refusal."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "A frame is misrouted or a wrong report retires another outstanding frame.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Configured sender equality and exact lifetime/id/destination matching; retain bytes on failures."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Replayed remote timestamps rearm a tripped peer.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Only strictly advancing remote activity watermark may record a local-monotonic heartbeat."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Actor work or effects escape bounded state and current execution authority.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Bound configuration/queues/advisories/child calls; no network I/O or effect dispatch; supervise and hand off retained state at controlled shutdown."
+        }
+      ]
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-PEER-STATE",
+        "s": 5,
+        "o": 3,
+        "det": 4,
+        "rpn": 60,
+        "band": 5,
+        "cause": "Queue transfer, destination matching or freshness-clock coupling can discard retained work or falsely refresh stale peers if composed into runtime.",
+        "effect": "Lost updates or false peer-health clearance.",
+        "controls": "Opaque state, atomic typed refusal, retained addressed IDs, epoch watermarks, independent monotonic timer, negative controls and separate integration review."
+      }
+    ],
+    "plan_id": "uos/ev98-peer-loop/20260909",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 0,
+    "phase": "implementation",
+    "readiness": "ready",
+    "blockers": [],
+    "class": "P1",
+    "score": 2500,
+    "score_interval": [ 2500, 2500 ]
+  }
+]

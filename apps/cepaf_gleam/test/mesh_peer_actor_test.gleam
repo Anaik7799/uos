@@ -92,7 +92,15 @@ pub fn timer_full_queue_and_replay_test() {
     HeartbeatTripped(_) -> Nil
     _ -> panic as "timer did not trip full queue"
   }
-  peer_actor.receive_wire(handle, "b", bytes) |> should.equal(Ok(Nil))
+  peer_actor.receive_wire(handle, "b", bytes) |> should.equal(Error(FrameQuota))
+  let assert Ok(covering_ack) =
+    mesh_sync.encode_sync_message(mesh_sync.SyncAck(
+      "b",
+      mesh_peer.engine_snapshot(view.peer).local_mesh_state.vector_clock,
+      "clock_in_sync",
+      1,
+    ))
+  peer_actor.receive_wire(handle, "b", covering_ack) |> should.equal(Ok(Nil))
   let assert Ok(replayed) = peer_actor.snapshot(handle)
   let assert [after] = mesh_peer.freshness(replayed.peer).actors
   after.status |> should.equal(entry.status)

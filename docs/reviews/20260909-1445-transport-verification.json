@@ -1,0 +1,807 @@
+{
+  "schema": "uos.ev98.transport-verification.v1",
+  "source_candidate": "14057e08112c1cd5d44297eac6a9c853e8287b7a",
+  "parent": "0a17bed584cefca57565ccdfe7705f22ccaae244",
+  "status": "EXECUTED_PASS_AWAITING_INDEPENDENT_REVIEW",
+  "authority": "NONE",
+  "observed_at_utc_seconds": 1788965244.73432,
+  "task": {
+    "plan": "uos/ev98-peer-loop/20260909",
+    "task": "TRANSPORT",
+    "worker": "codex-ev98-transport",
+    "attempt": 1,
+    "state": "executing"
+  },
+  "workspace_fence": {
+    "holder": "01a08017-fd72-7b20-9d32-4df53154bcc8",
+    "epoch": 2,
+    "parent_reported_sequence": 1592,
+    "parent_receipt": "/tmp/ev-workspace-renew-peer-1433.json",
+    "expiry": "approximately15:32UTC"
+  },
+  "counts": {
+    "transport_groups": 12,
+    "synthetic_fault_groups": 4,
+    "actual_owned_broker_roundtrip": 1,
+    "existing_peer_codec_regressions": 85,
+    "compiler_inputs": 23,
+    "unchanged_dependency_files": 211
+  },
+  "broker_run": "r1788965028743063-1",
+  "broker_readback_digests": [
+    {
+      "key": "uos/tui/state/ev98-peer/01a08017-fd72-7b20-9d32-4df53154bcc8/r1788965028743063-1/a/b/1",
+      "body_sha256": "03a7d75be09ca165e11de96c16560ee7bcd9081652535e3e86608fb649dd42ae",
+      "wire_sha256": "283eb0c303cd0e68fa0d39b49030296cdc54c2bccf353a7a720d56528ae08053",
+      "wire_bytes": 50
+    },
+    {
+      "key": "uos/tui/state/ev98-peer/01a08017-fd72-7b20-9d32-4df53154bcc8/r1788965028743063-1/a/b/2",
+      "body_sha256": "9d9323e3db1683b86aa82c0057d3b3e679fe055f1938ffd0afda4ab4e4537805",
+      "wire_sha256": "da8b3ca29205be011248f2398949e1653bf3519d900878f1fdfcb1ffb429f1d8",
+      "wire_bytes": 230
+    },
+    {
+      "key": "uos/tui/state/ev98-peer/01a08017-fd72-7b20-9d32-4df53154bcc8/r1788965028743063-1/a/b/3",
+      "body_sha256": "3d8ba945155a330b0aa4e188068cce70a6fc0e79850672b41be406d3787c7f43",
+      "wire_sha256": "ca54cb74f97d0bc0a783d9cb4ff7ac466ce3185e0431e2b4c784b6a03f5fc610",
+      "wire_bytes": 69
+    },
+    {
+      "key": "uos/tui/state/ev98-peer/01a08017-fd72-7b20-9d32-4df53154bcc8/r1788965028743063-1/b/a/1",
+      "body_sha256": "9810f3652907cf5069d1346fd17d95175078c274fa35943a29fb71c5acd02740",
+      "wire_sha256": "a9dbbd4a447d09ad35f2453ee718c6a3ebfe53e0bfbc495c7a61710ab131d904",
+      "wire_bytes": 50
+    },
+    {
+      "key": "uos/tui/state/ev98-peer/01a08017-fd72-7b20-9d32-4df53154bcc8/r1788965028743063-1/b/a/2",
+      "body_sha256": "6cf7757a50218942c5cfefb88ae3733b0f4b8b77ec8e314a16b8daab0588bf52",
+      "wire_sha256": "06f5afa467bb07ed7b56b3c6319569d84ce4158319421df652259af877bc9d83",
+      "wire_bytes": 119
+    },
+    {
+      "key": "uos/tui/state/ev98-peer/01a08017-fd72-7b20-9d32-4df53154bcc8/r1788965028743063-1/b/a/3",
+      "body_sha256": "2a9352b87bb98b6d03b6ea755d20a8532ad4f8298fe9985779f5c708e6ec0de6",
+      "wire_sha256": "deb1a862f003e7b476ae6e7fe47f39eb80f5b32768a9bcce198833c0df1d9259",
+      "wire_bytes": 69
+    }
+  ],
+  "actual_producer_consumer_wire_sha256": "ca54cb74f97d0bc0a783d9cb4ff7ac466ce3185e0431e2b4c784b6a03f5fc610",
+  "peer_application": {
+    "kind": "peer_applied",
+    "worker": "worker-owned-live",
+    "health": 0.91,
+    "a_broker_custody_reports": 3,
+    "b_applied_frames": 3,
+    "run": "r1788965028743063-1"
+  },
+  "durable_receipts": [
+    {
+      "kind": "source-manifest",
+      "path": "docs/reviews/20260909-1445-transport-source-manifest.json",
+      "sha256": "312a2d7974777fe71c095c7181dff0fbfc24fd1ef3e8f3087b7381201f0d81d1"
+    },
+    {
+      "kind": "build",
+      "path": "docs/reviews/20260909-1445-transport-build.json",
+      "sha256": "09c5050a1157d143754507bfabf282f84aa721e49309aaa9f40fcaa464456000"
+    },
+    {
+      "kind": "transport",
+      "path": "docs/reviews/20260909-1445-transport-transport.json",
+      "sha256": "19c58f47d0251bdc20015c050764eeb010c1af30b8d3448225c0996ee2f26dad"
+    },
+    {
+      "kind": "peer",
+      "path": "docs/reviews/20260909-1445-transport-peer.json",
+      "sha256": "8e3ab97bb8b57306a5268980a47b20c1b2cfd7b368638c32e8e1d61bd0ad81b6"
+    },
+    {
+      "kind": "peer-actor",
+      "path": "docs/reviews/20260909-1445-transport-peer-actor.json",
+      "sha256": "48ae5fcb608704d84c3733e08311853f82aa39f6c0311c15d57c29be10287fdb"
+    },
+    {
+      "kind": "regressions",
+      "path": "docs/reviews/20260909-1445-transport-regressions.json",
+      "sha256": "de393f415db84dea3f0c8b91342b9906800b2b5ca91c7bb057e61b8af3065df6"
+    },
+    {
+      "kind": "live",
+      "path": "docs/reviews/20260909-1445-transport-live.json",
+      "sha256": "969fdb4d566220ae3f41d75c38391f37ad9ac952f4423bf2045546d4f15eea50"
+    },
+    {
+      "kind": "format",
+      "path": "docs/reviews/20260909-1445-transport-format.json",
+      "sha256": "749aae066fad93a43d31c4b7dd46c1e15905d2e20be4abd900a4baff05aec929"
+    },
+    {
+      "kind": "erts",
+      "path": "docs/reviews/20260909-1445-transport-erts.json",
+      "sha256": "9d4907a92230c050b9800f8fc4df9bee2dc384f10123277b64ab8265a9cb035f"
+    },
+    {
+      "kind": "red-configuration",
+      "path": "docs/reviews/20260909-1445-transport-red-configuration.json",
+      "sha256": "eaf0bb2599bb473341d35ea41f9890fadbb64fe89b445a26a50607f349ea677f"
+    },
+    {
+      "kind": "red-http-framing",
+      "path": "docs/reviews/20260909-1445-transport-red-http-framing.json",
+      "sha256": "ce1040aa31d43bb32078be8ce9bdc177bc4858dd87a79ccd5238128125d0ebac"
+    },
+    {
+      "kind": "red-one-sided-gossip",
+      "path": "docs/reviews/20260909-1445-transport-red-one-sided-gossip.json",
+      "sha256": "d4f3f334c95c89c77638670d8501ea933c0d4f7dce059deff91aa400b493fdd0"
+    },
+    {
+      "kind": "red-report",
+      "path": "docs/reviews/20260909-1445-transport-red-report.json",
+      "sha256": "035e09b372d0b7c46a7949ea1ab5df069313811340fa59c33799e276d6960133"
+    },
+    {
+      "kind": "red-cleanup",
+      "path": "docs/reviews/20260909-1445-transport-red-cleanup.json",
+      "sha256": "43c0346fdfb7674f283a2e48fe02e55920bfb78fbd9c8de79e521b0c25e04263"
+    },
+    {
+      "kind": "red-broker-schema",
+      "path": "docs/reviews/20260909-1445-transport-red-broker-schema.json",
+      "sha256": "521cbf37b562d8f9ce5c011a790ff138a69ba94774d2ea947840a4e7392e9ea6"
+    },
+    {
+      "kind": "preflight-refused-shape",
+      "path": "docs/reviews/20260909-1445-transport-preflight-refused-shape.json",
+      "sha256": "007cd73c419194bf3b526261fe02add70c80cb3d488ab99f0d909c565aad4808"
+    },
+    {
+      "kind": "preflight-refused-binding",
+      "path": "docs/reviews/20260909-1445-transport-preflight-refused-binding.json",
+      "sha256": "a67f665d87bd94fc560c4dd106950b754b1c91917cee7eaefed6ef69cac09c22"
+    },
+    {
+      "kind": "preflight",
+      "path": "docs/reviews/20260909-1445-transport-preflight.json",
+      "sha256": "4b12735ee751102c027df1e9cf570cc22395981be9348a5d99af9e27cf954f9f"
+    },
+    {
+      "kind": "claim",
+      "path": "docs/reviews/20260909-1445-transport-claim.json",
+      "sha256": "c46db6db4ff5840c98d9610e9abeb4ac71222d81f9cdae7e965f6ae4c1571c92"
+    },
+    {
+      "kind": "active-source",
+      "path": "docs/reviews/20260909-1445-transport-active-source.json",
+      "sha256": "1c506bc33351c7000b487c46d5b178cd4a67db78194bd4b2ef9724c5ed554b83"
+    },
+    {
+      "kind": "active-handoff",
+      "path": "docs/reviews/20260909-1445-transport-active-handoff.json",
+      "sha256": "347c45d4c8bd38bd46c7039d48fdc8c2c7988f801297051dba6c15243e74da1b"
+    },
+    {
+      "kind": "fault-report-source-manifest",
+      "path": "docs/reviews/20260909-1445-transport-fault-report-source-manifest.json",
+      "sha256": "ba95d691decaeee70ce9b41da3ec161a3a896b6ebf64ab24423ae35841bf5857"
+    },
+    {
+      "kind": "fault-report-build",
+      "path": "docs/reviews/20260909-1445-transport-fault-report-build.json",
+      "sha256": "1865b85f44e96c4cf14c56815480cbde9189de9c2e4bc59fb673c8ca36f2ded1"
+    },
+    {
+      "kind": "fault-report-run",
+      "path": "docs/reviews/20260909-1445-transport-fault-report-run.json",
+      "sha256": "b4ac914aaf3237b50f406fdc8d1d4efcc19f794685fa1d1001e87481391a7c30"
+    },
+    {
+      "kind": "fault-cleanup-source-manifest",
+      "path": "docs/reviews/20260909-1445-transport-fault-cleanup-source-manifest.json",
+      "sha256": "a809a878e86af0f9f2e6e50a236361a2c0489a8a398e62c39f2ceefb6333fe53"
+    },
+    {
+      "kind": "fault-cleanup-build",
+      "path": "docs/reviews/20260909-1445-transport-fault-cleanup-build.json",
+      "sha256": "eb2563bc6a831bf93495d5f0abd8648ecabd51ca4f5e1e181bc599620503f895"
+    },
+    {
+      "kind": "fault-cleanup-run",
+      "path": "docs/reviews/20260909-1445-transport-fault-cleanup-run.json",
+      "sha256": "bf30398b1e8f400fec7bfae1e285e395227ccede12ad990f0d78d1a5d80f56f7"
+    },
+    {
+      "kind": "fault-receive-source-manifest",
+      "path": "docs/reviews/20260909-1445-transport-fault-receive-source-manifest.json",
+      "sha256": "0c30715c26971dcb69cb98b50e85acd3c830103423b4656e21d3ca534e6c64d9"
+    },
+    {
+      "kind": "fault-receive-build",
+      "path": "docs/reviews/20260909-1445-transport-fault-receive-build.json",
+      "sha256": "9849b6266a6a10fdb380c8dfaeb3efd5b61ba75bcc8058cde366b166c098ddaf"
+    },
+    {
+      "kind": "fault-receive-run",
+      "path": "docs/reviews/20260909-1445-transport-fault-receive-run.json",
+      "sha256": "6a2c4b2e23e9c1ecfac961b48152f15028b06350db90243d78c0dbcc03b0ba81"
+    },
+    {
+      "kind": "fault-quota-source-manifest",
+      "path": "docs/reviews/20260909-1445-transport-fault-quota-source-manifest.json",
+      "sha256": "ac378c2183193b6d294c3573ff06da3702141977d77d2e020ffd42486dc11732"
+    },
+    {
+      "kind": "fault-quota-build",
+      "path": "docs/reviews/20260909-1445-transport-fault-quota-build.json",
+      "sha256": "ba354aeaed2e243f5641fa945f251d70cbd390829a067ab5ae10f619d8d0e4ef"
+    },
+    {
+      "kind": "fault-quota-run",
+      "path": "docs/reviews/20260909-1445-transport-fault-quota-run.json",
+      "sha256": "38554e520f87187486b9f48328b357ef809797bad906367e39a6418c60721618"
+    }
+  ],
+  "fixture_sources": {
+    "path": "docs/reviews/20260909-1445-transport-synthetic-sources.json",
+    "sha256": "c6d6218309c78cfeda3d8cae1c20f2f35b9ca953322719536331be3fcdb9a50b"
+  },
+  "actual_beam_hashes": [
+    {
+      "variant": "production",
+      "path": "/tmp/ev-transport-final-20260909/beam/ebin/cepaf_gleam@crdt@delta_mesh_engine.beam",
+      "sha256": "88a23fa55542cba2f140037b1af3ed406bfafb43bb6761970bf709dcb3a2a888"
+    },
+    {
+      "variant": "production",
+      "path": "/tmp/ev-transport-final-20260909/beam/ebin/cepaf_gleam@crdt@delta_state.beam",
+      "sha256": "4592d51d585b113a22a27b6d80efdf84b6faa3ee4b35f00d306cd0845aef1ff4"
+    },
+    {
+      "variant": "production",
+      "path": "/tmp/ev-transport-final-20260909/beam/ebin/cepaf_gleam@crdt@health_bridge.beam",
+      "sha256": "66fb5250903380c80ad14bced75298208e63106873ba2b5d1e42913b3c6cd263"
+    },
+    {
+      "variant": "production",
+      "path": "/tmp/ev-transport-final-20260909/beam/ebin/cepaf_gleam@crdt@mesh_peer.beam",
+      "sha256": "78df45e06d490ba070a981b1e00047675894b6e18c5015a2e960a818d2907faf"
+    },
+    {
+      "variant": "production",
+      "path": "/tmp/ev-transport-final-20260909/beam/ebin/cepaf_gleam@crdt@mesh_peer_actor.beam",
+      "sha256": "46444b29f45e163a2a473e4beefaba4d9530f41b6be2d1241e06bd9f18903254"
+    },
+    {
+      "variant": "production",
+      "path": "/tmp/ev-transport-final-20260909/beam/ebin/cepaf_gleam@crdt@mesh_sync.beam",
+      "sha256": "d2285e871481ba28c74ebbcda3ead67f49350c808349d9d548d7ff3140ac3e23"
+    },
+    {
+      "variant": "production",
+      "path": "/tmp/ev-transport-final-20260909/beam/ebin/cepaf_gleam@crdt@mesh_wire.beam",
+      "sha256": "84c1d3d4e9ababf749e10d2a9186d0785255b8f712ce1a8c906268d331aabfed"
+    },
+    {
+      "variant": "production",
+      "path": "/tmp/ev-transport-final-20260909/beam/ebin/cepaf_gleam@crdt@mesh_zenoh_http.beam",
+      "sha256": "183eae2ebe3818644b532486a277a9d006fcd84679ca62a905e225ff87c1842e"
+    },
+    {
+      "variant": "production",
+      "path": "/tmp/ev-transport-final-20260909/beam/ebin/cepaf_gleam@crdt@mesh_zenoh_transport.beam",
+      "sha256": "ec458739b84264031bd289cb328f3e51c5439c0772f283e98c90833026e0f68c"
+    },
+    {
+      "variant": "production",
+      "path": "/tmp/ev-transport-final-20260909/beam/ebin/cepaf_gleam@ha@deadman_freshness.beam",
+      "sha256": "932e72e24f96b0d42c12258fb75652b174d6bff34af29aef292d52f2fdaf11d0"
+    },
+    {
+      "variant": "production",
+      "path": "/tmp/ev-transport-final-20260909/beam/ebin/crdt_delta_state_test.beam",
+      "sha256": "94b8a9e5fc54fd9f922958ea51d546c52eff9a01a27a54d0a82e400f39484535"
+    },
+    {
+      "variant": "production",
+      "path": "/tmp/ev-transport-final-20260909/beam/ebin/crdt_health_bridge_test.beam",
+      "sha256": "135e87c07fadb751272047569c9f5edbefc0a75809980abf8f4dd26d6a9eb3e2"
+    },
+    {
+      "variant": "production",
+      "path": "/tmp/ev-transport-final-20260909/beam/ebin/crdt_mesh_sync_test.beam",
+      "sha256": "1b035bb2638178737eff4a6bd6aca61373cbea58ab039977c4a14402a1760c49"
+    },
+    {
+      "variant": "production",
+      "path": "/tmp/ev-transport-final-20260909/beam/ebin/deadman_freshness_test.beam",
+      "sha256": "020b53729f33d6ca71066cc4c7746932bafce612c982bc3a148d75c3bea8b473"
+    },
+    {
+      "variant": "production",
+      "path": "/tmp/ev-transport-final-20260909/beam/ebin/delta_mesh_engine_test.beam",
+      "sha256": "b5dfef7801c376c2f310bdefc4ec89c82acbc4b5b7b63ebcc36861f822d84d9e"
+    },
+    {
+      "variant": "production",
+      "path": "/tmp/ev-transport-final-20260909/beam/ebin/ev98_codec_runner.beam",
+      "sha256": "0a39673d1d038dc5025ba1ec8ead8ec25feee60247e4902ebc1196c9d902966d"
+    },
+    {
+      "variant": "production",
+      "path": "/tmp/ev-transport-final-20260909/beam/ebin/mesh_peer_actor_test.beam",
+      "sha256": "c526e5642cb78f68bfe2e67ef59247834929d092a3ebea48454c0c6808d5e64a"
+    },
+    {
+      "variant": "production",
+      "path": "/tmp/ev-transport-final-20260909/beam/ebin/mesh_peer_test.beam",
+      "sha256": "b1cef8120cd97f4b37327f10227410e1164c3d67bb69e067a4f510847944ecb5"
+    },
+    {
+      "variant": "production",
+      "path": "/tmp/ev-transport-final-20260909/beam/ebin/mesh_sync_codec_test.beam",
+      "sha256": "d2969a18b521b13aea4654178d1f2c30dbfa3bba930890ccca0a51f0fa56bdf6"
+    },
+    {
+      "variant": "production",
+      "path": "/tmp/ev-transport-final-20260909/beam/ebin/mesh_zenoh_live_test.beam",
+      "sha256": "6006ae3812f7b1ffd39ec82679c2e00dd26831f1d629a20d6bec9ac7e56e707a"
+    },
+    {
+      "variant": "production",
+      "path": "/tmp/ev-transport-final-20260909/beam/ebin/mesh_zenoh_test.beam",
+      "sha256": "9f61576f1e074bfd95198ebe0e89ca0db3995b4e66c2ffd599d3ff47cf476ce3"
+    },
+    {
+      "variant": "report",
+      "path": "/tmp/ev-transport-final-20260909/fault-report/beam/ebin/cepaf_gleam@crdt@delta_mesh_engine.beam",
+      "sha256": "970be7705c2e19609bca553dc44a076dbf99952b011570caeb7a8b2199d3666d"
+    },
+    {
+      "variant": "report",
+      "path": "/tmp/ev-transport-final-20260909/fault-report/beam/ebin/cepaf_gleam@crdt@delta_state.beam",
+      "sha256": "9a9adc651afebe9692bb263aaade019a1cc0bb62427432210af5aac0f38064b0"
+    },
+    {
+      "variant": "report",
+      "path": "/tmp/ev-transport-final-20260909/fault-report/beam/ebin/cepaf_gleam@crdt@health_bridge.beam",
+      "sha256": "afcba9a3a6ba4b139cc120d445f07db2ad618d64cf7831c9e50a42fdda6ebbdd"
+    },
+    {
+      "variant": "report",
+      "path": "/tmp/ev-transport-final-20260909/fault-report/beam/ebin/cepaf_gleam@crdt@mesh_peer.beam",
+      "sha256": "33f2671f0678bf7d37cdad5c59b368d75f6e911327a3cfc2f063385eda579aff"
+    },
+    {
+      "variant": "report",
+      "path": "/tmp/ev-transport-final-20260909/fault-report/beam/ebin/cepaf_gleam@crdt@mesh_peer_actor.beam",
+      "sha256": "6006d0854ac72c2b4d2bd1ecc54fb38b248efd790a4d16a96127e80c1b49c858"
+    },
+    {
+      "variant": "report",
+      "path": "/tmp/ev-transport-final-20260909/fault-report/beam/ebin/cepaf_gleam@crdt@mesh_sync.beam",
+      "sha256": "17d2c297fad464534f1236f45bfe54a66f33230ace191cf46af78ccb6e464b21"
+    },
+    {
+      "variant": "report",
+      "path": "/tmp/ev-transport-final-20260909/fault-report/beam/ebin/cepaf_gleam@crdt@mesh_wire.beam",
+      "sha256": "f2b76d38a7437c623efdfc29bdac2372dc48fe00f7374e7860bc120371ce501e"
+    },
+    {
+      "variant": "report",
+      "path": "/tmp/ev-transport-final-20260909/fault-report/beam/ebin/cepaf_gleam@crdt@mesh_zenoh_http.beam",
+      "sha256": "466d45fe3f75003527d28a8d41685d8887d0be2ff045f2fbeacdd4bfc9b16479"
+    },
+    {
+      "variant": "report",
+      "path": "/tmp/ev-transport-final-20260909/fault-report/beam/ebin/cepaf_gleam@crdt@mesh_zenoh_transport.beam",
+      "sha256": "79c6dfdb307ebc207cb00ab1b53223cf1d2ac8c81b367b22817b89406894bd74"
+    },
+    {
+      "variant": "report",
+      "path": "/tmp/ev-transport-final-20260909/fault-report/beam/ebin/cepaf_gleam@ha@deadman_freshness.beam",
+      "sha256": "564d99c869a8099dfb1282110ce046816cfc3f19a70d68f5c8229d1560a6231e"
+    },
+    {
+      "variant": "report",
+      "path": "/tmp/ev-transport-final-20260909/fault-report/beam/ebin/crdt_delta_state_test.beam",
+      "sha256": "3d1d23639ac49b3a6b7527d7dfef0624a72565ef289e8b1b75c672e18c81d8b1"
+    },
+    {
+      "variant": "report",
+      "path": "/tmp/ev-transport-final-20260909/fault-report/beam/ebin/crdt_health_bridge_test.beam",
+      "sha256": "926dc2196b1422fa5348f37926887aefed8436600c3673229e354dbe30200dbf"
+    },
+    {
+      "variant": "report",
+      "path": "/tmp/ev-transport-final-20260909/fault-report/beam/ebin/crdt_mesh_sync_test.beam",
+      "sha256": "e09ba9de83a45fe8496514499288fafa713c5628f7b0d16f37609c3f15d3162b"
+    },
+    {
+      "variant": "report",
+      "path": "/tmp/ev-transport-final-20260909/fault-report/beam/ebin/deadman_freshness_test.beam",
+      "sha256": "39ef0ff5bf1c4637ce6162a472485fd47d37f10d0033ca85bcc4a290384ebb41"
+    },
+    {
+      "variant": "report",
+      "path": "/tmp/ev-transport-final-20260909/fault-report/beam/ebin/delta_mesh_engine_test.beam",
+      "sha256": "d35d01840df55544672d4a31e80b1332858bce0a83f0c7db108263e67c9a6eb7"
+    },
+    {
+      "variant": "report",
+      "path": "/tmp/ev-transport-final-20260909/fault-report/beam/ebin/ev98_codec_runner.beam",
+      "sha256": "cfa7b3b0460045cc8d62f70acf6d2e28178887f4976c97e31b60884b588b7bf0"
+    },
+    {
+      "variant": "report",
+      "path": "/tmp/ev-transport-final-20260909/fault-report/beam/ebin/mesh_peer_actor_test.beam",
+      "sha256": "800e098ef3944522227f830c7a351d6f1d939b077bbd3830af36bc4ff434cede"
+    },
+    {
+      "variant": "report",
+      "path": "/tmp/ev-transport-final-20260909/fault-report/beam/ebin/mesh_peer_test.beam",
+      "sha256": "7a8618c507241b6cbe1d0d977c41905b15d3777f01543b689286f41119eca809"
+    },
+    {
+      "variant": "report",
+      "path": "/tmp/ev-transport-final-20260909/fault-report/beam/ebin/mesh_sync_codec_test.beam",
+      "sha256": "6be9f45bc16dbc7b8546f72c74bb783680b355f5f4b266e8ae8601f6f5735028"
+    },
+    {
+      "variant": "report",
+      "path": "/tmp/ev-transport-final-20260909/fault-report/beam/ebin/mesh_zenoh_live_test.beam",
+      "sha256": "a3c8efc12025ff08c79fc5565d2ee4291d3fc3807e0e2474458c7d05f4bd206d"
+    },
+    {
+      "variant": "report",
+      "path": "/tmp/ev-transport-final-20260909/fault-report/beam/ebin/mesh_zenoh_test.beam",
+      "sha256": "045883f6a613681c4b3e50362bd7de6422462b75d22eb54c518a031682a72951"
+    },
+    {
+      "variant": "cleanup",
+      "path": "/tmp/ev-transport-final-20260909/fault-cleanup/beam/ebin/cepaf_gleam@crdt@delta_mesh_engine.beam",
+      "sha256": "86c62ba52bc0e5cc860716a3d9582950b0a4b49ccb2e1586019322757a5f0864"
+    },
+    {
+      "variant": "cleanup",
+      "path": "/tmp/ev-transport-final-20260909/fault-cleanup/beam/ebin/cepaf_gleam@crdt@delta_state.beam",
+      "sha256": "2e4042f25095e34f29a17198657bf36c3ec1b3ee94ac716f84269b80f417baed"
+    },
+    {
+      "variant": "cleanup",
+      "path": "/tmp/ev-transport-final-20260909/fault-cleanup/beam/ebin/cepaf_gleam@crdt@health_bridge.beam",
+      "sha256": "8b9135f09aa0f022167fb8554ec49687d31467f37108f1ccd4a10dd3827a765e"
+    },
+    {
+      "variant": "cleanup",
+      "path": "/tmp/ev-transport-final-20260909/fault-cleanup/beam/ebin/cepaf_gleam@crdt@mesh_peer.beam",
+      "sha256": "6fba5e8edd3f8176319060d292e35065b0a29b6451c0638e9ec163e8300c6d66"
+    },
+    {
+      "variant": "cleanup",
+      "path": "/tmp/ev-transport-final-20260909/fault-cleanup/beam/ebin/cepaf_gleam@crdt@mesh_peer_actor.beam",
+      "sha256": "58435cb927cdedb2f9a18d76bdf195a396a5ea4ecdf29f2dd32f24128c18fb56"
+    },
+    {
+      "variant": "cleanup",
+      "path": "/tmp/ev-transport-final-20260909/fault-cleanup/beam/ebin/cepaf_gleam@crdt@mesh_sync.beam",
+      "sha256": "d5ce8916648ccbff17559fba310b450111e0f21db7628bdb921f70b6ab6304c3"
+    },
+    {
+      "variant": "cleanup",
+      "path": "/tmp/ev-transport-final-20260909/fault-cleanup/beam/ebin/cepaf_gleam@crdt@mesh_wire.beam",
+      "sha256": "35d75f9d20ab90f28a37532da6890daedf31596e03775eca58469c2802f71ba8"
+    },
+    {
+      "variant": "cleanup",
+      "path": "/tmp/ev-transport-final-20260909/fault-cleanup/beam/ebin/cepaf_gleam@crdt@mesh_zenoh_http.beam",
+      "sha256": "b7c6459c61b2a418adeed3a2c5c889694bf92f440614c2ebea96391f51a9f55a"
+    },
+    {
+      "variant": "cleanup",
+      "path": "/tmp/ev-transport-final-20260909/fault-cleanup/beam/ebin/cepaf_gleam@crdt@mesh_zenoh_transport.beam",
+      "sha256": "a52a8bc8ca898890a63af0cbf9cac3372cc23409b7009b23881ad9dcbc05cdce"
+    },
+    {
+      "variant": "cleanup",
+      "path": "/tmp/ev-transport-final-20260909/fault-cleanup/beam/ebin/cepaf_gleam@ha@deadman_freshness.beam",
+      "sha256": "d2d3e21be7ba3b925505cb626767d05284f9bae9e40c6a3f67adb46b81cc75de"
+    },
+    {
+      "variant": "cleanup",
+      "path": "/tmp/ev-transport-final-20260909/fault-cleanup/beam/ebin/crdt_delta_state_test.beam",
+      "sha256": "0534fc44038e6f895e8f3d261a0046fe5919dc087102d3821ea48a8d5170c973"
+    },
+    {
+      "variant": "cleanup",
+      "path": "/tmp/ev-transport-final-20260909/fault-cleanup/beam/ebin/crdt_health_bridge_test.beam",
+      "sha256": "87ac34f0acdba75e9a63d022016c915628c033090b092e7e384585b1f562e570"
+    },
+    {
+      "variant": "cleanup",
+      "path": "/tmp/ev-transport-final-20260909/fault-cleanup/beam/ebin/crdt_mesh_sync_test.beam",
+      "sha256": "43a893f163358b92caea5bbebb61bd6ae5f553c50b8c43dd4ba3da04df678334"
+    },
+    {
+      "variant": "cleanup",
+      "path": "/tmp/ev-transport-final-20260909/fault-cleanup/beam/ebin/deadman_freshness_test.beam",
+      "sha256": "86e27e2da90efc7f345b5f651325b76f6cdc893064acff7aaf590b92bcba5254"
+    },
+    {
+      "variant": "cleanup",
+      "path": "/tmp/ev-transport-final-20260909/fault-cleanup/beam/ebin/delta_mesh_engine_test.beam",
+      "sha256": "e73c628598b9585a5ffa05a76b8f4ad8aa7c6a7b4a69dc30903bd007ee004371"
+    },
+    {
+      "variant": "cleanup",
+      "path": "/tmp/ev-transport-final-20260909/fault-cleanup/beam/ebin/ev98_codec_runner.beam",
+      "sha256": "1a749e138b7acc44ea605444d59fa8bb4c991b4a1aab630fb66b8ca064f9ccab"
+    },
+    {
+      "variant": "cleanup",
+      "path": "/tmp/ev-transport-final-20260909/fault-cleanup/beam/ebin/mesh_peer_actor_test.beam",
+      "sha256": "dbdc417868c7c36c43e122526cba3aaf9fa12f67925e1ab664f8515d7d259894"
+    },
+    {
+      "variant": "cleanup",
+      "path": "/tmp/ev-transport-final-20260909/fault-cleanup/beam/ebin/mesh_peer_test.beam",
+      "sha256": "aa1d21b8252bf0247ddfabb8f9f8d6306b9f7c860775f7ee6d24fbb4fe0ea282"
+    },
+    {
+      "variant": "cleanup",
+      "path": "/tmp/ev-transport-final-20260909/fault-cleanup/beam/ebin/mesh_sync_codec_test.beam",
+      "sha256": "4ac8ea492deda7c88c85b9bbca5e7b4345fa085a6d55eca7401f43e39e9cbb14"
+    },
+    {
+      "variant": "cleanup",
+      "path": "/tmp/ev-transport-final-20260909/fault-cleanup/beam/ebin/mesh_zenoh_live_test.beam",
+      "sha256": "ee8edc06ba9dbdc12440d2ab3928a5d127301bc554d85f90cdb29d53ff106ef7"
+    },
+    {
+      "variant": "cleanup",
+      "path": "/tmp/ev-transport-final-20260909/fault-cleanup/beam/ebin/mesh_zenoh_test.beam",
+      "sha256": "812ed6d626d85778cb747988cf667525a0858f1a7c75d198a3ecd3e4877bebbf"
+    },
+    {
+      "variant": "receive",
+      "path": "/tmp/ev-transport-final-20260909/fault-receive/beam/ebin/cepaf_gleam@crdt@delta_mesh_engine.beam",
+      "sha256": "e7288abb1eca61284285d5805577f857892f5caa4610bfb457b81769af96ece6"
+    },
+    {
+      "variant": "receive",
+      "path": "/tmp/ev-transport-final-20260909/fault-receive/beam/ebin/cepaf_gleam@crdt@delta_state.beam",
+      "sha256": "7ad550662d58ad7723e488ac0dac8c3f7a387e0be02fcaed610bd53d614fa77d"
+    },
+    {
+      "variant": "receive",
+      "path": "/tmp/ev-transport-final-20260909/fault-receive/beam/ebin/cepaf_gleam@crdt@health_bridge.beam",
+      "sha256": "a0a7f9fa4873555b406fe0d2c89c83a572975e9584c03c910bf0511e207bc1a3"
+    },
+    {
+      "variant": "receive",
+      "path": "/tmp/ev-transport-final-20260909/fault-receive/beam/ebin/cepaf_gleam@crdt@mesh_peer.beam",
+      "sha256": "e502d670662b6db589f8fa74b8dbe08208096993d3b17936271ce36504dca3b8"
+    },
+    {
+      "variant": "receive",
+      "path": "/tmp/ev-transport-final-20260909/fault-receive/beam/ebin/cepaf_gleam@crdt@mesh_peer_actor.beam",
+      "sha256": "6073b3d319c8071731528b0b51d369aba47d7abd1bb45531bdc7816c23b67e62"
+    },
+    {
+      "variant": "receive",
+      "path": "/tmp/ev-transport-final-20260909/fault-receive/beam/ebin/cepaf_gleam@crdt@mesh_sync.beam",
+      "sha256": "fdab6c9ef7146703cc78fbc67a5633d8b45d7bce8f918c645f865b5db16f6292"
+    },
+    {
+      "variant": "receive",
+      "path": "/tmp/ev-transport-final-20260909/fault-receive/beam/ebin/cepaf_gleam@crdt@mesh_wire.beam",
+      "sha256": "3a6d8b6c41770099720f8b3a5eeb942e21e5bad69ad4eaa21a12a6586a2af230"
+    },
+    {
+      "variant": "receive",
+      "path": "/tmp/ev-transport-final-20260909/fault-receive/beam/ebin/cepaf_gleam@crdt@mesh_zenoh_http.beam",
+      "sha256": "7c0d852387f13cd2b323fb8495f30eee8c17eb98d18aa03d2ae65f20beef179e"
+    },
+    {
+      "variant": "receive",
+      "path": "/tmp/ev-transport-final-20260909/fault-receive/beam/ebin/cepaf_gleam@crdt@mesh_zenoh_transport.beam",
+      "sha256": "50d077b2dac793860c362ee43db5adb5fe47950cda4a37cc9e21344ba577a547"
+    },
+    {
+      "variant": "receive",
+      "path": "/tmp/ev-transport-final-20260909/fault-receive/beam/ebin/cepaf_gleam@ha@deadman_freshness.beam",
+      "sha256": "be5df8cd469fe85b55ee5b04c19d5cfa37e77083274933242cdd659a5392b769"
+    },
+    {
+      "variant": "receive",
+      "path": "/tmp/ev-transport-final-20260909/fault-receive/beam/ebin/crdt_delta_state_test.beam",
+      "sha256": "39a59ee0a252920c9d366513c8766e466caaf9348f6d864d0662d5e1c069fffd"
+    },
+    {
+      "variant": "receive",
+      "path": "/tmp/ev-transport-final-20260909/fault-receive/beam/ebin/crdt_health_bridge_test.beam",
+      "sha256": "0da9d0213edb2c05e50b714cf9504b9518083a9d2deb60dee939a982c35c2958"
+    },
+    {
+      "variant": "receive",
+      "path": "/tmp/ev-transport-final-20260909/fault-receive/beam/ebin/crdt_mesh_sync_test.beam",
+      "sha256": "ed046f52bfad23f7530264b05bc77f4e6cd7931ef1a3e72c711ff17555be9b51"
+    },
+    {
+      "variant": "receive",
+      "path": "/tmp/ev-transport-final-20260909/fault-receive/beam/ebin/deadman_freshness_test.beam",
+      "sha256": "bc04ba6fec0eeae31fc5b6cde262f3de17a9602c76dab76d01831a51992d65ad"
+    },
+    {
+      "variant": "receive",
+      "path": "/tmp/ev-transport-final-20260909/fault-receive/beam/ebin/delta_mesh_engine_test.beam",
+      "sha256": "f076eea924989337aeb314b05e7dfa138b5e19d3ef9ece82617dac1c9b5fb742"
+    },
+    {
+      "variant": "receive",
+      "path": "/tmp/ev-transport-final-20260909/fault-receive/beam/ebin/ev98_codec_runner.beam",
+      "sha256": "fad59d13348a93b624d2f1950daf859d2e6c07f289be0f22decf800a4ae080f7"
+    },
+    {
+      "variant": "receive",
+      "path": "/tmp/ev-transport-final-20260909/fault-receive/beam/ebin/mesh_peer_actor_test.beam",
+      "sha256": "e8dcfb50f042750d534ed11b20d4b5cb67536792d472428c5bc7823f15856044"
+    },
+    {
+      "variant": "receive",
+      "path": "/tmp/ev-transport-final-20260909/fault-receive/beam/ebin/mesh_peer_test.beam",
+      "sha256": "280097fe3848efc6f20d2244c1244805da2ff9eafbb990a5976afd7aecd9f5cd"
+    },
+    {
+      "variant": "receive",
+      "path": "/tmp/ev-transport-final-20260909/fault-receive/beam/ebin/mesh_sync_codec_test.beam",
+      "sha256": "509c53dbfbb08f782fce1053b4c36192b039e83ef4bab59d8ec49e4355e08fa5"
+    },
+    {
+      "variant": "receive",
+      "path": "/tmp/ev-transport-final-20260909/fault-receive/beam/ebin/mesh_zenoh_live_test.beam",
+      "sha256": "624a7f5171bc70959ae21f2958dfd44b586053cdcd7f494c7123ff37b9f02e56"
+    },
+    {
+      "variant": "receive",
+      "path": "/tmp/ev-transport-final-20260909/fault-receive/beam/ebin/mesh_zenoh_test.beam",
+      "sha256": "772087d4bd1dbc9637e154ad5169b87472b0f1d864b294c45f0c2098ca486ff0"
+    },
+    {
+      "variant": "quota",
+      "path": "/tmp/ev-transport-final-20260909/fault-quota/beam/ebin/cepaf_gleam@crdt@delta_mesh_engine.beam",
+      "sha256": "561bdd2593901843c0fdb6fb1cfabb22e8aaed3c3be67fae3a902ede9ff29d80"
+    },
+    {
+      "variant": "quota",
+      "path": "/tmp/ev-transport-final-20260909/fault-quota/beam/ebin/cepaf_gleam@crdt@delta_state.beam",
+      "sha256": "57ee4887a6ccf02a0e9b1e035bf5c29ec99445243121413293f2af3628eefaca"
+    },
+    {
+      "variant": "quota",
+      "path": "/tmp/ev-transport-final-20260909/fault-quota/beam/ebin/cepaf_gleam@crdt@health_bridge.beam",
+      "sha256": "eabe9ea650f159e8787ed1cce5c83e4cd79f8d543a31ca0901125f19e5c0a81f"
+    },
+    {
+      "variant": "quota",
+      "path": "/tmp/ev-transport-final-20260909/fault-quota/beam/ebin/cepaf_gleam@crdt@mesh_peer.beam",
+      "sha256": "3fc03210c0396e94c836b37db39e601953a342ed98ecd257150d0031e4b80f47"
+    },
+    {
+      "variant": "quota",
+      "path": "/tmp/ev-transport-final-20260909/fault-quota/beam/ebin/cepaf_gleam@crdt@mesh_peer_actor.beam",
+      "sha256": "4d912eae39a30479bb2abf7e8e51da074533794ac1e6e5495bd82bafdf6c7eff"
+    },
+    {
+      "variant": "quota",
+      "path": "/tmp/ev-transport-final-20260909/fault-quota/beam/ebin/cepaf_gleam@crdt@mesh_sync.beam",
+      "sha256": "ee94768605a28bd4c8cfc7acf9d603d3a8417e8d4e7a0a4fcf90f908816b9c54"
+    },
+    {
+      "variant": "quota",
+      "path": "/tmp/ev-transport-final-20260909/fault-quota/beam/ebin/cepaf_gleam@crdt@mesh_wire.beam",
+      "sha256": "145825cea4250352fb7b343e100d5bbe79f669d745c78d92b91bfcc65bc77d30"
+    },
+    {
+      "variant": "quota",
+      "path": "/tmp/ev-transport-final-20260909/fault-quota/beam/ebin/cepaf_gleam@crdt@mesh_zenoh_http.beam",
+      "sha256": "f35f613d3a14a555b9805a7dcf2cb34c4eab9aecce64cb2413c2260ec9e9ee67"
+    },
+    {
+      "variant": "quota",
+      "path": "/tmp/ev-transport-final-20260909/fault-quota/beam/ebin/cepaf_gleam@crdt@mesh_zenoh_transport.beam",
+      "sha256": "843e1c769f9d0651355d089ffabdc882d4cdc9f7c91e7315c7e1c6f14c579898"
+    },
+    {
+      "variant": "quota",
+      "path": "/tmp/ev-transport-final-20260909/fault-quota/beam/ebin/cepaf_gleam@ha@deadman_freshness.beam",
+      "sha256": "235ad3eb52af526d9bcf5963dfa98d859b7676fbd8657167963a6bc035529b38"
+    },
+    {
+      "variant": "quota",
+      "path": "/tmp/ev-transport-final-20260909/fault-quota/beam/ebin/crdt_delta_state_test.beam",
+      "sha256": "457443ec75d810599ddfd15b49a3e71a16c0135f6d139d19d11f334869cb2b10"
+    },
+    {
+      "variant": "quota",
+      "path": "/tmp/ev-transport-final-20260909/fault-quota/beam/ebin/crdt_health_bridge_test.beam",
+      "sha256": "b0e878cec046e580679e6ec1d39bf14f455583caff731be71dca4b78534d17d5"
+    },
+    {
+      "variant": "quota",
+      "path": "/tmp/ev-transport-final-20260909/fault-quota/beam/ebin/crdt_mesh_sync_test.beam",
+      "sha256": "93dc51fd1b8815a2f1cb8972084901a72963dac2f6b09df05875e0e5c1e0d6de"
+    },
+    {
+      "variant": "quota",
+      "path": "/tmp/ev-transport-final-20260909/fault-quota/beam/ebin/deadman_freshness_test.beam",
+      "sha256": "014a09c454374d99be3606859ab59228ebfe72cdb6c75e99b0a57a88cfc6f718"
+    },
+    {
+      "variant": "quota",
+      "path": "/tmp/ev-transport-final-20260909/fault-quota/beam/ebin/delta_mesh_engine_test.beam",
+      "sha256": "8acd92db3880b023d83a50de670c4219239db71cea351e869acfe63c383eb448"
+    },
+    {
+      "variant": "quota",
+      "path": "/tmp/ev-transport-final-20260909/fault-quota/beam/ebin/ev98_codec_runner.beam",
+      "sha256": "5b832e6618be913594c2761d036cb46cf98a720886fdbe8de1d95aa090ed437f"
+    },
+    {
+      "variant": "quota",
+      "path": "/tmp/ev-transport-final-20260909/fault-quota/beam/ebin/mesh_peer_actor_test.beam",
+      "sha256": "85a12202bd8344afe692f7d92218d03c2343e5e6fab9f33aa3964e697c291362"
+    },
+    {
+      "variant": "quota",
+      "path": "/tmp/ev-transport-final-20260909/fault-quota/beam/ebin/mesh_peer_test.beam",
+      "sha256": "e98b7730216fbb0f494bc2ad325866429b9bd73931dfc3c4af515bfac2b1c93d"
+    },
+    {
+      "variant": "quota",
+      "path": "/tmp/ev-transport-final-20260909/fault-quota/beam/ebin/mesh_sync_codec_test.beam",
+      "sha256": "7ec21e6fb17605c0f4d30d0b1135fa42dd3934728d5abebf98d8153d0e8d29c4"
+    },
+    {
+      "variant": "quota",
+      "path": "/tmp/ev-transport-final-20260909/fault-quota/beam/ebin/mesh_zenoh_live_test.beam",
+      "sha256": "5bf28245c7b383e4627922d1323704ffd1eeb22c187f8c14cfe0690ae41652a0"
+    },
+    {
+      "variant": "quota",
+      "path": "/tmp/ev-transport-final-20260909/fault-quota/beam/ebin/mesh_zenoh_test.beam",
+      "sha256": "754af02a2e8cef8f649145a55934ed7f4a65db57cda0b4fee0f93825a50e6c85"
+    }
+  ],
+  "bounds": {
+    "peers": 16,
+    "run_publications_per_worker": 256,
+    "receive_cursor_per_route": 256,
+    "pending_custodied_frame": 1,
+    "diagnostic_wire_copies": 2,
+    "each_wire_bytes": 131072,
+    "http_body_bytes": 800000,
+    "http_header_bytes": 8192,
+    "header_line_bytes": 1024,
+    "http_chunks": 4096,
+    "request_worker_ms": 500,
+    "cleanup_observation_ms": 300,
+    "socket_read_bytes": 4096,
+    "request_processes": 2,
+    "worker_tick_ms": 20,
+    "worker_control_and_shutdown_ms": 4000
+  },
+  "limits": [
+    "Cooperative GET-before-PUT collision/readback checking is not atomic CAS or ownership against concurrent/external writers.",
+    "Local OTP global term registration refuses a second live worker for the same run/node within this ERTS instance; not cryptographic identity or a cross-VM durable fence.",
+    "Broker custody is separate from receiving peer application. The final run observed both; no cross-host or complete mesh claim.",
+    "Frames, cursors and diagnostics are in memory. Crash/restart uses explicit fresh run; old broker data is preserved, not overwritten/deleted.",
+    "Routing is not authentication; HTTP is plaintext inside the configured Tailnet. Namespace ownership is scoped execution authority, not producer signature.",
+    "CleanupUnconfirmed latches I/O off; no late-response or cleanup success claim in that state. Watchdog installation follows child spawn; immediate atomic owner-death cleanup is not claimed.",
+    "ActorUnavailable has unknown operation outcome; pending custody survives delivery-report retry, while replay-safe peer logic tolerates duplicate incoming application.",
+    "Caller mailbox demand, scheduler latency, OS socket buffers, dynamic libraries and complete reproducible runtime closure are not proven bounded here.",
+    "Only one pending frame plus two last-wire diagnostics are retained in this worker; it never drains the peer outbox before confirmed custody retirement.",
+    "Synthetic fault variants alter private staged bytes only and are not production or admission evidence. Delayed peer-reply warnings are preserved.",
+    "No production supervisor, shared namespace, historical event, task completion or EV admission was modified. Parallel SYNC_STATUS remains parent-composed."
+  ]
+}
