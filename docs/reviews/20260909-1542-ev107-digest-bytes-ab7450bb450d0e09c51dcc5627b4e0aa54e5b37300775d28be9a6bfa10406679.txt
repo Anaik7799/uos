@@ -1,0 +1,15 @@
+#use "topfind";;
+#require "unix,cryptokit,yojson";;
+let read p = let c = open_in_bin p in Fun.protect ~finally:(fun () -> close_in_noerr c) (fun () -> really_input_string c (in_channel_length c))
+let write p b = let c = open_out_bin p in Fun.protect ~finally:(fun () -> close_out_noerr c) (fun () -> output_string c b)
+let sha b = Cryptokit.hash_string (Cryptokit.Hash.sha256 ()) b |> Cryptokit.transform_string (Cryptokit.Hexa.encode ())
+let () =
+ let source = Sys.argv.(1) and target = Sys.argv.(2) in
+ if Sys.file_exists target then failwith "stage must be new";
+ Unix.mkdir target 0o700;
+ let names = ["gospel_dispatch_contracts.ml";"gospel_dispatch_contracts.mli";"test_gospel_dispatch_contracts.ml"] in
+ let bindings = List.map (fun name -> let bytes = read (source^"/engines/hermes/modules/system_engg/"^name) in write (target^"/"^name) bytes; `Assoc ["file",`String name;"sha256",`String (sha bytes)]) names in
+ write (target^"/dune-project") "(lang dune 3.0)\n(name ev107_digest_probe)\n";
+ write (target^"/dune") "(executable (name test_gospel_dispatch_contracts) (modules gospel_dispatch_contracts test_gospel_dispatch_contracts) (libraries unix str cryptokit))\n";
+ Yojson.Safe.to_file (target^"/source-bindings.json") (`List bindings);
+ print_endline target

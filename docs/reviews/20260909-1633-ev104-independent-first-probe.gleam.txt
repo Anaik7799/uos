@@ -1,0 +1,77 @@
+import cepaf_gleam/agents/ooda_shruti_copilot as copilot
+import gleam/io
+import gleam/list
+import gleeunit/should
+import ooda_shruti_copilot_test as retained
+
+fn anomaly(code: Int) -> copilot.AstAnomaly {
+  copilot.AstAnomaly(
+    id: case code % 2 { 0 -> "a" _ -> "b" },
+    anomaly_type: "independent",
+    severity: case code / 4 { 0 -> 0.849999 1 -> 0.85 _ -> 1.2 },
+    file_path: "private-fixture",
+    suggested_patch: "opaque patch bytes",
+    resolved: code / 2 % 2 == 1,
+  )
+}
+
+fn check(state: copilot.OodaCopilotState, target: String) {
+  let pending = list.filter(state.anomalies, fn(a) { !a.resolved })
+  let target_count = list.length(list.filter(pending, fn(a) { a.id == target }))
+  let remaining_critical = list.filter(pending, fn(a) {
+    a.id != target && a.severity >=. 0.85
+  })
+  let after = copilot.remediate_anomaly(state, target)
+  case target_count {
+    0 -> after |> should.equal(state)
+    _ -> {
+      after.remediated_count |> should.equal(state.remediated_count + 1)
+      after.anomalies |> list.zip(state.anomalies) |> list.each(fn(pair) {
+        let #(a, before) = pair
+        a |> should.equal(copilot.AstAnomaly(..before, resolved: before.resolved || before.id == target))
+      })
+      list.length(after.anomalies) |> should.equal(list.length(state.anomalies))
+      after.is_andon_active |> should.equal(!list.is_empty(remaining_critical))
+      after.lyapunov_exponent |> should.equal(case remaining_critical {
+        [] -> -3.85
+        _ -> state.lyapunov_exponent
+      })
+      copilot.OodaCopilotState(..after, anomalies: state.anomalies,
+        remediated_count: state.remediated_count,
+        is_andon_active: state.is_andon_active,
+        lyapunov_exponent: state.lyapunov_exponent)
+      |> should.equal(state)
+    }
+  }
+  copilot.remediate_anomaly(after, target) |> should.equal(after)
+}
+
+pub fn main() {
+  retained.init_copilot_test()
+  retained.phase_advance_test()
+  retained.shruti_consonance_test()
+  retained.anomaly_injection_and_remediation_test()
+  retained.unknown_remediation_id_leaves_state_unchanged_test()
+  retained.repeated_remediation_id_is_idempotent_test()
+  retained.unresolved_critical_anomaly_keeps_andon_active_test()
+  retained.copilot_summary_test()
+  io.println("PASS all 8 retained tests")
+  let init = copilot.init_copilot()
+  list.range(0, 1727) |> list.each(fn(code) {
+    let anomalies = [anomaly(code % 12), anomaly(code / 12 % 12), anomaly(code / 144 % 12)]
+    list.each([False, True], fn(halt) {
+      list.each([-7.2, 0.0, 2.5], fn(lyapunov) {
+        let state = copilot.OodaCopilotState(..init, anomalies: anomalies,
+          remediated_count: 41, is_andon_active: halt, lyapunov_exponent: lyapunov,
+          timestamp_us: 123456, cycle_count: 9, harmonic_consonance: 0.123)
+        list.each(["a", "b", "unknown", ""], fn(target) { check(state, target) })
+        let left = state |> copilot.remediate_anomaly("a") |> copilot.remediate_anomaly("b")
+        let right = state |> copilot.remediate_anomaly("b") |> copilot.remediate_anomaly("a")
+        left |> should.equal(right)
+      })
+    })
+  })
+  io.println("PASS 41472 duplicate-ID, threshold, resolved, unknown, replay, halt and Lyapunov transitions")
+  io.println("PASS 10368 distinct-ID remediation order controls")
+  io.println("PASS bounded EV104 state transition review; patch execution, audio and admission NOT_GRANTED")
+}

@@ -1,0 +1,57 @@
+#use "topfind";;
+#require "yojson,cryptokit,unix,mtime.clock.os";;
+#directory "/tmp/ev-campaign-independent-direct-review-20260909/build/default/.ev_receipts.objs/byte";;
+#load "/tmp/ev-campaign-independent-direct-review-20260909/build/default/ev_receipts.cma";;
+open Yojson.Basic.Util
+let root="/home/an/NAS-setup/uos"
+let ws=root^"/.uos-workspaces/ev98-wire-codec-20260909"
+let peer=root^"/.uos-workspaces/ev98-peer-loop-20260909"
+let stage="/tmp/ev101-independent-review-20260909-1621"
+let rev="ea6cd8e8dcc0775239d49697390d54728e9eded0"
+let jj="/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj"
+let budget=Receipt_validator.make_budget ~seconds:60. ~bytes:134217728 ()
+let read=Ev_campaign.read_file budget
+let sha=Receipt_validator.sha
+let require=Receipt_validator.require
+let s x=`String x
+let strings xs=`List(List.map s xs)
+let bind p=let bytes=read p in `Assoc["path",s p;"sha256",s(sha bytes);"bytes",`Int(String.length bytes)]
+let now=Unix.gettimeofday()
+let t=Unix.gmtime now
+let stamp=Printf.sprintf "%04d%02d%02d-%02d%02d"(t.tm_year+1900)(t.tm_mon+1)t.tm_mday t.tm_hour t.tm_sec
+let iso=Printf.sprintf "%04d-%02d-%02dT%02d:%02d:%02dZ"(t.tm_year+1900)(t.tm_mon+1)t.tm_mday t.tm_hour t.tm_min t.tm_sec
+let prefix=ws^"/docs/reviews/"^stamp^"-ev101-independent"
+let query args=Receipt_validator.run ~seconds:5. ~limit:1048576 jj (["--ignore-working-copy";"--no-pager";"--color";"never";"-R";peer]@args)
+let expr="commit_id(\""^rev^"\")"
+let check_bound source b=let expected=b|>member "sha256"|>to_string in
+ require(sha(read(b|>member "staged"|>to_string))=expected) "staged input changed";
+ if source then require(sha(read(b|>member "source"|>to_string))=expected) "runtime dependency changed"
+let ()=
+ let inputs=Yojson.Basic.from_file(stage^"/bindings.json") in
+ let sources=inputs|>member "sources"|>to_list in
+ let deps=inputs|>member "dependencies"|>to_list in
+ List.iter(check_bound false)sources;List.iter(check_bound true)deps;
+ check_bound false(inputs|>member "probe");check_bound false(inputs|>member "profile");
+ require(query["log";"-r";expr;"--no-graph";"-T";"self.commit_id() ++ \"\\n\""]=rev^"\n") "full revision mismatch";
+ let extra=List.map(fun path->let bytes=query["file";"show";"-r";expr;"--";"root:"^path] in
+ let out=prefix^"-source-"^Filename.basename path^".txt" in Ev_campaign.write out bytes;
+ `Assoc["candidate_path",s path;"sha256",s(sha bytes);"bytes",`Int(String.length bytes);"archive",s out])
+ ["tools/ev101_graph_stage.ml";"apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/sheaf_navigator_view.gleam"] in
+ let receipt_names=["stage";"compile";"author-tests";"independent-probe";"preflight";"active";"claim";"plan-create";"task-create"] in
+ let receipts=List.map(fun name->let path="/tmp/ev101-review-"^name^".json" in
+ let bytes=read path in let j=Yojson.Basic.from_string bytes in
+ require(j|>member "exit_code"|>to_int=0)("receipt exit "^name);
+ require(sha(j|>member "output"|>to_string)=(j|>member "output_sha256"|>to_string))("output hash "^name);
+ let out=prefix^"-"^name^".json" in Ev_campaign.write out bytes;bind out)receipt_names in
+ let archives=List.map(fun path->let out=prefix^"-"^Filename.basename path^".txt" in Ev_campaign.write out(read path);bind out)
+ ["/tmp/ev101_independent_probe.gleam";"/tmp/ev101-independent-stage.ml";"/tmp/ev101-review-evidence.ml";stage^"/bindings.json"] in
+ let compiled=Ev_campaign.file_names(stage^"/compiled")"ebin"|>List.map(fun p->bind(stage^"/compiled/"^p)) in
+ let tools=List.map bind[jj;root^"/toolchains/gleam-1.16.0/bin/gleam";root^"/toolchains/opam-ocaml/bin/ocamlrun";root^"/toolchains/opam-ocaml/bin/ocaml";root^"/.uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_native.ml";"/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec";"/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp"] in
+ let report=`Assoc["schema",s "uos.ev101-independent-review.v1";"observed_at",s iso;"verdict",s "APPROVE_BOUNDED_COMPONENT";"source_candidate",s rev;"author_evidence_candidate",s "e42c79197add2f893d3a88db9a6441f9e4f836d0";"authority",`Assoc["plan",s "uos/ev101-graph-review/20260909";"task",s "REVIEW";"worker",s "codex-ev101-graph-review";"attempt",`Int 1;"admission",s "NOT_GRANTED"];
+ "blocking_findings",`List[];
+ "actually_executed",`Assoc["fresh_native_compile",`Bool true;"author_tests",`Int 22;"independent_replacements",`Int 12288;"independent_edge_additions",`Int 4608;"independent_raw_multiset_states",`Int 6561;"additional_controls",strings["64/65 nodes and full-quota replacement";"forged count/score refusal preservation";"million-node input early refusal";"1024/1026 UTF8 metadata byte boundary"]];
+ "static_review",strings["sheaf_engine.gleam:159-223 bounds and raw/cached validity";"sheaf_engine.gleam:240-333 derived inbound adjacency, outgoing-authoritative replacement, self/duplicate edge and legacy atomic refusal";"sheaf_engine.gleam:349-391 invalid lookup/search refusal";"sheaf_engine.gleam:440-487 duplicate-aware adjacency reciprocity metric";"sheaf_navigator_view.gleam:20,41 existing production caller initializes and renders the graph; no production mutation caller found"];
+ "inputs_before_and_after",inputs;"extra_immutable_sources",`List extra;"compiled_artifacts_after_execution",`List compiled;"tool_hashes_after_execution",`List tools;"dependency_files_rehashed_at_staged_and_runtime_origin",`Int(List.length deps);"receipts",`List receipts;"archived_review_sources",`List archives;
+ "limits",strings["Bounded directed graph invariants and reciprocity score only, not mathematical sheaf/cohomology proof or full EV101 admission.";"No live corpus, UI truth, deployment or effects exercised.";"No fresh descendant execve trace; native adapter direct erlexec and compiler environment observed, previously reviewed launcher relied upon.";"Tool and compiled hashes are post-execution bindings; reproducible linker/runtime closure and hostile concurrent replacement resistance are not established.";"Only the three required dependency packages were staged and rehashed; adapter exposes additional canonical dependency search paths.";"Author staging helper is a local cooperative utility using workspace-resolved candidate reader; independent staging used the exact pinned JJ executable. No authenticated producer claim.";"Author historical RED receipts were read, not rerun; independently executed final source and separate oracle probes."]]
+ in let output=prefix^"-approval.json" in Ev_campaign.write output(Yojson.Basic.pretty_to_string report^"\n");
+ Printf.printf "REVIEW %s\nSHA256 %s\nDEPENDENCIES %d\n"output(sha(read output))(List.length deps)

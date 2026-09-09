@@ -1,0 +1,84 @@
+{
+  "schema": "uos.observed-agy-advice-and-recovery.v1",
+  "observed_at_epoch": 1788979231.352743,
+  "observer_session": "01a08017-fd72-7b20-9d32-4df53154bcc8",
+  "reviewer_session": "abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82",
+  "request_operation": "ev-admission-agy-advice-1758",
+  "request_event": 1642,
+  "followup_marker": "AGY_ADVICE_EV_CWD_1833",
+  "authority": "NONE",
+  "new_ev_admissions": 0,
+  "policy_ceiling": 93,
+  "composition_source": "e16cd38216a6bb9801f701bf787e81abb3dcfacf",
+  "programme": {
+    "plan": "uos/ev-admission/20260909-0210",
+    "task": "PROGRAM",
+    "worker": "codex-ev-admission-01a08017",
+    "expired_attempt": 5,
+    "active_attempt": 6,
+    "lease_until_ns": "1788985997821753556"
+  },
+  "artifacts": [
+    {
+      "path": "docs/reviews/20260909-1831-agy-advice-and-program-recovery-session-before.json",
+      "sha256": "cb600db15135c528e28df95303f26dbb1e6c6d72eda444850ac12f08fe73b942",
+      "bytes": 440
+    },
+    {
+      "path": "docs/reviews/20260909-1831-agy-advice-and-program-recovery-pane.txt",
+      "sha256": "1a2d289598875c24c47d318b7fd436fb87a8a1d8a8ec9e3847b63d188bacece5",
+      "bytes": 63124
+    },
+    {
+      "path": "docs/reviews/20260909-1831-agy-advice-and-program-recovery-session-after.json",
+      "sha256": "cb600db15135c528e28df95303f26dbb1e6c6d72eda444850ac12f08fe73b942",
+      "bytes": 440
+    },
+    {
+      "path": "docs/reviews/20260909-1831-agy-advice-and-program-recovery-corrected-advice.txt",
+      "sha256": "a34dde1e0208348f68d2f04c25d5a91ccd16b0f719b75e31d76410e577d7ee2d",
+      "bytes": 6622
+    },
+    {
+      "path": "docs/reviews/20260909-1831-agy-advice-and-program-recovery-expired-attempt5.json",
+      "sha256": "24d6d3a069e1acf2b4e5247c94f5a96d92e039d101a8acb43743eff088646e75",
+      "bytes": 4044
+    },
+    {
+      "path": "docs/reviews/20260909-1831-agy-advice-and-program-recovery-reclaim-attempt6.json",
+      "sha256": "09b6894519b1df8cdda9a758db69c5e9e45ceaef4c16b8f766dfbfd45b22b34c",
+      "bytes": 3057
+    },
+    {
+      "path": "docs/reviews/20260909-1831-agy-advice-and-program-recovery-attempt6-active-transcript.json",
+      "sha256": "51927f575904ed4b0c4f9fe998e4f55ed0606afbb49674e3df3088c61e4317b0",
+      "bytes": 1883
+    },
+    {
+      "path": "docs/reviews/20260909-1831-agy-advice-and-program-recovery-composition-native.json",
+      "sha256": "9789a3df5f7134c2d052ad5e22ba45ee236d836620214e32ef43f20b2bbd5ee7",
+      "bytes": 2962
+    },
+    {
+      "path": "docs/reviews/20260909-1831-agy-advice-and-program-recovery-request-native.json",
+      "sha256": "65801871706aceca6618af81380313ae68e05ab5d274c5b518fcfeba84d2053c",
+      "bytes": 4120
+    }
+  ],
+  "decisions_after_advice": [
+    "Verify immutable component byte equality, then clean private direct-ERTS composition and raw-bytecode OCaml digest replay. No full-package wrapper execution.",
+    "Repair Bootstrap_observer child cwd binding with parent cwd unchanged and typed fail-closed refusal; compare two entirely private repos and configs. Preserve the independent harness isolation error and observed config write attribution.",
+    "Preserve inherited selected secure-config preflight in operational observation; ephemeral XDG applies to private fixtures, never resetting canonical config metadata.",
+    "Build explicit evidence-backed mapping of actual38 directive IDs and full-body policy normalization with an explicit transformation allowlist. Preserve client-specific frontmatter and reject remaining differences.",
+    "Current-dated lineage amendment may be proposed, while missing historical lineage remains recorded. Never claim undocumented backdated supersession or uncommitted original notes.",
+    "No marker deletion and no entropy relabeling to force a floor; no whole-EV admission."
+  ],
+  "qualifications": [
+    "Actual Herdr identity checked before and after. Pane evidence is cooperative unsigned observation, not authenticated sovereign admission.",
+    "Original1758 advice contains wrong parent/component mapping, an unsafe deletion suggestion and unsupported historical claims. The observed1833 correction supersedes those recommendations; raw pane retains both.",
+    "AGY1833 refers to an external marker and premature unknown-writer attribution. The affected marker is in canonical UOS, and the reviewer actually attributed the config write to its own invocation; no unknown-writer claim is adopted.",
+    "AGY mixing other Root harness task content grants this EV programme no authority over that task or its shared build. Only explicitly scoped EV advice is used.",
+    "The root attempt5 expired while a sandbox-required host-clock approval was pending. Its HOLD remains; same-worker canonical reclaim produced attempt6, then fresh ACTIVE_PASS at18:33:39. No source effects were performed during the expired interval.",
+    "18:32:39 preflight also returned HOLD for expired lease/noneligible task in the tool transcript; raw native receipt not captured for that invocation. No preflight PASS is asserted."
+  ]
+}

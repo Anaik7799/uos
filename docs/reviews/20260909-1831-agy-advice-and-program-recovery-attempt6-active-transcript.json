@@ -1,0 +1,11 @@
+{
+  "schema": "uos.tool-transcript-copy.v1",
+  "provenance": "Exact exec_command result copied by tool orchestration; not an ev_native receipt",
+  "result": {
+    "chunk_id": "37480b",
+    "wall_time_seconds": 0.722133846,
+    "exit_code": 0,
+    "original_token_count": 368,
+    "output": "{\"status\":\"ACTIVE_OBSERVATION_PASS\",\"authority\":\"NONE\",\"runtime_admission\":\"NOT_GRANTED\",\"observed_at\":\"2026-09-09T18:33:39Z\",\"completed_at\":\"2026-09-09T18:33:39Z\",\"elapsed_monotonic_seconds\":0.073511148,\"clock_start\":{\"source\":\"chronyc tracking\",\"abs_ntp_offset_seconds\":0.000566151,\"uncertainty_seconds\":0.0165629805,\"reference_age_seconds\":31.833969593048096,\"stratum\":3},\"clock_end\":{\"source\":\"chronyc tracking\",\"abs_ntp_offset_seconds\":0.00056613,\"uncertainty_seconds\":0.0165630395,\"reference_age_seconds\":31.89018964767456,\"stratum\":3},\"assessment_sha256\":\"8db11fa95ce0fa1e79f5c14035c5aa0bac5a8af2b6f10629b412a53baa6d8ba5\",\"evidence_files_checked\":123,\"sa_plan\":{\"plan_id\":\"uos/ev-admission/20260909-0210\",\"snapshot_sha256\":\"a4e31e51edb2608bfaffdb6512e0becc773361bdcea2ceb49e37229c8de4c389\",\"tasks\":[{\"task_id\":\"PROGRAM\",\"state\":\"executing\",\"worker\":\"codex-ev-admission-01a08017\",\"lease_until_ns\":\"1788985997821753556\",\"attempt\":6,\"completed_at_ns\":null,\"result_present\":false,\"dependencies\":[]}],\"mode\":\"READONLY\",\"lease_fencing_authority\":\"NOT_GRANTED\"},\"order\":[],\"findings\":[],\"limits\":[\"Listed byte equality does not prove source completeness, runtime behavior or signed provenance.\",\"Analysis prose, class judgments, cost ties and control effectiveness require qualified review.\",\"Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.\",\"Snapshot is confined to one complete plan; no global optimum is asserted.\"]}\n"
+  }
+}

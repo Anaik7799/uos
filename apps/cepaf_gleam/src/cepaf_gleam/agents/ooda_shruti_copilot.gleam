@@ -173,27 +173,34 @@ pub fn remediate_anomaly(
   state: OodaCopilotState,
   anomaly_id: String,
 ) -> OodaCopilotState {
-  let updated_anomalies =
-    list.map(state.anomalies, fn(a) {
-      case a.id == anomaly_id {
-        True -> AstAnomaly(..a, resolved: True)
-        False -> a
-      }
-    })
+  let has_known_unresolved_id =
+    list.any(state.anomalies, fn(a) { a.id == anomaly_id && !a.resolved })
 
-  let has_unresolved_critical =
-    list.any(updated_anomalies, fn(a) { !a.resolved && a.severity >=. 0.85 })
+  case has_known_unresolved_id {
+    False -> state
+    True -> {
+      let updated_anomalies =
+        list.map(state.anomalies, fn(a) {
+          case a.id == anomaly_id {
+            True -> AstAnomaly(..a, resolved: True)
+            False -> a
+          }
+        })
+      let has_unresolved_critical =
+        list.any(updated_anomalies, fn(a) { !a.resolved && a.severity >=. 0.85 })
 
-  OodaCopilotState(
-    ..state,
-    anomalies: updated_anomalies,
-    remediated_count: state.remediated_count + 1,
-    is_andon_active: has_unresolved_critical,
-    lyapunov_exponent: case has_unresolved_critical {
-      True -> state.lyapunov_exponent
-      False -> -3.85
-    },
-  )
+      OodaCopilotState(
+        ..state,
+        anomalies: updated_anomalies,
+        remediated_count: state.remediated_count + 1,
+        is_andon_active: has_unresolved_critical,
+        lyapunov_exponent: case has_unresolved_critical {
+          True -> state.lyapunov_exponent
+          False -> -3.85
+        },
+      )
+    }
+  }
 }
 
 /// Summary status for UI HUD and verification.
