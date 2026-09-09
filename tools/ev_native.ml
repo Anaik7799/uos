@@ -15,11 +15,15 @@ let otp_root = "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/er
 let erts_bin = otp_root ^ "/erts-17.0.5/bin"
 let erlexec = erts_bin ^ "/erlexec"
 let native_otp_path = lazy (
-  let reservation = Filename.temp_file "uos-ev-native-otp-" ".reserve" in
-  let directory = reservation ^ ".d" in
-  Unix.mkdir directory 0o700;
+  let directory = Filename.temp_dir "uos-ev-native-otp-" "" in
   (* A private executable-name alias, not a generated shell wrapper. *)
-  Unix.symlink erlexec (directory ^ "/erl");
+  let alias = directory ^ "/erl" in
+  (try Unix.symlink erlexec alias
+   with error -> Unix.rmdir directory; raise error);
+  (* Registered in the parent before fork; exec/_exit in the child cannot remove
+     its parent's alias. Normal adapter exits remove only this owned directory.
+     SIGKILL/host failure still requires the host's ordinary temporary cleanup. *)
+  at_exit (fun () -> Unix.unlink alias; Unix.rmdir directory);
   directory)
 let pinned name = match name with
   | "ocaml" | "ocamlrun" | "dune" -> tc ^ "/opam-ocaml/bin/" ^ name

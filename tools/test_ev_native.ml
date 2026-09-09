@@ -87,6 +87,13 @@ let () =
   let observation = Yojson.Safe.from_file receipt in
   check "successful child outcome and effect are retained"
     (code = 0 && Sys.file_exists marker && field "exit_code" observation = `Int 0);
+  let launch_environment = Yojson.Safe.Util.(field "otp_launch" observation
+    |> field "environment" |> to_list |> List.map to_string) in
+  let launch_path = List.find (String.starts_with ~prefix:"PATH=") launch_environment in
+  let first_path = List.hd (String.split_on_char ':' launch_path) in
+  let private_alias = String.sub first_path 5 (String.length first_path - 5) in
+  check "completed adapter removes its private OTP executable alias"
+    (not (Sys.file_exists private_alias));
   let receipt = temp ^ "/closed-output.json" and marker = temp ^ "/closed-output-effect" in
   let code, diagnostic = run_ml ~closed_stdout:true
     [source ^ "/ev_native.ml"; "--receipt"; receipt; "--"; "native"; child; "mark"; marker] in
