@@ -153,10 +153,12 @@ let bind_candidate revision =
     requires (local = candidate) ("workspace-bytes-differ:" ^ path);
     `Assoc["path",`String path;"sha256",`String(sha local);"bytes",`Int(String.length local)]) source_paths
 
-let candidate_regular revision path =
+let candidate_kind revision path =
   let listing = candidate_query revision (fun selector ->
     ["file";"list";"-r";selector;"-T";"file_type ++ \" \" ++ path ++ \"\\n\"";"--";"root:" ^ path]) in
-  requires (listing = "file " ^ path ^ "\n") ("candidate-not-regular:" ^ path)
+  let prefix = match String.index_opt listing ' ' with Some at -> String.sub listing 0 at | None -> "" in
+  requires (listing = prefix ^ " " ^ path ^ "\n" && List.mem prefix ["file";"symlink";"absent"]) ("candidate-invalid-kind:" ^ path);
+  prefix
 
 let valid_rule_file file =
   file = Filename.basename file && Filename.check_suffix file ".md" && file <> "." && file <> ".." &&
@@ -194,10 +196,13 @@ let stage_inputs revision =
     List.concat_map (fun file -> List.map (fun surface -> surface ^ "/" ^ file) [".agents/rules";".claude/rules";".gemini/rules";".codex/rules"]) files in
   requires (List.length rels <= max_staged_inputs) "candidate-input-count";
   let bindings = List.map (fun rel ->
-    candidate_regular revision rel;
-    let bytes = candidate_bytes revision rel in
-    stage_write root rel bytes;
-    `Assoc["path",`String rel;"candidate_kind",`String "file";"sha256",`String(sha bytes);"bytes",`Int(String.length bytes)]) rels in
+    let kind = candidate_kind revision rel in
+    if kind = "file" then begin
+      let bytes = candidate_bytes revision rel in
+      stage_write root rel bytes;
+      `Assoc["path",`String rel;"candidate_kind",`String kind;"sha256",`String(sha bytes);"bytes",`Int(String.length bytes)]
+    end else
+      `Assoc["path",`String rel;"candidate_kind",`String kind;"status",`String "UNSTAGED_HOLD"]) rels in
   root, Filename.concat root amendment_rel, bindings
 
 let harness_selftest () =
