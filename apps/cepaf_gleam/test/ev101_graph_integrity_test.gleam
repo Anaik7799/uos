@@ -346,3 +346,20 @@ pub fn every_two_node_raw_adjacency_metric_matches_pair_oracle_test() {
     |> should.equal(expected)
   })
 }
+
+pub fn asymmetric_raw_edge_limit_cannot_emit_consistency_credit_test() {
+  let ids = list.map(range(1, 17), int.to_string)
+  let pairs = list.flat_map(ids, fn(a) { list.map(ids, fn(b) { #(a, b) }) })
+  let outgoing = list.take(pairs, 257)
+  let incoming = list.take(pairs, 255)
+  let g = from_edges(ids, outgoing)
+  let ns = list.map(g.nodes, fn(n) {
+    let ins = list.filter_map(incoming, fn(e) {
+      case e.1 == n.id { True -> Ok(e.0) False -> Error(Nil) }
+    })
+    graph.SheafNode(..n, inbound_references: ins)
+  })
+  let oversized = graph.SheafGraph(ns, 257, 1.0)
+  graph.compute_cohomology_consistency(oversized) |> should.equal(0.0)
+  graph.validate_graph(oversized) |> should.equal(Error(graph.EdgeLimit))
+}
