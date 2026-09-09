@@ -1,0 +1,233 @@
+[
+  {
+    "fmea_modes": [
+      {
+        "id": "FM-ASSERTION-CLOSURE",
+        "s": 3,
+        "o": 4,
+        "det": 3,
+        "rpn": 36,
+        "band": 4,
+        "cause": "Count-only result and duplicate-condition reasoning conceal assertion closure defects.",
+        "effect": "Misleading correctness evidence.",
+        "controls": "Independent finite reachability and complete corpus/refusal controls."
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Independent static closure receipt reviewer",
+      "control_action": "Assess finite assertion closure and coverage",
+      "losses": [ "L-RISK-UNAUTHORIZED-EFFECT" ],
+      "hazards": [ "H-RISK-FALSE-CLEARANCE" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Missing output facts concealed by count-only checks.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Check exact closure bitmask against independent reachability."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Forged/incomplete corpus accepted as full behavior.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Exact unique coverage and digest/normal outcome validation; no authenticated producer claim."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Mutable implementation or expired task reused.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Fresh task observation and immutable candidate binding before replay."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Unbounded receipt or parser exceeds review scope.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Bound file/output/nesting/rows and native test child deadlines."
+        }
+      ]
+    },
+    "decision": {
+      "falsifier": "Oracle accepts missing, duplicate or incorrect closure rows or abnormal child output.",
+      "forecast": "Reachability relation detects missing asserted facts despite plausible fired counts.",
+      "supersedes": "New independent Rete REVIEW task; earlier graph and digest tasks completed",
+      "residuals": [
+        "Finite four-node acyclic corpus only; not arbitrary Rete proof",
+        "Local receipt cannot authenticate producer or source without external binding",
+        "No live effects, formal solver or full EV admission"
+      ],
+      "assumptions": [
+        "Static add-only facts and each rule fires at most once; no variable binding or retraction",
+        "Parent owns production implementation; reviewer only helper and evidence in own epoch2 peer workspace"
+      ],
+      "acceptance": [
+        "Exactly2048 unique tuples for64edge masks16seed masks2orders",
+        "Independent reflexive transitive reachability facts and antecedent edge count",
+        "Malformed/duplicate/missing/tampered/abnormal receipt refusal controls",
+        "Actual immutable candidate replay and typed atomic refusal review once source is available"
+      ],
+      "summary": "Prepare independent native receipt oracle then review immutable static Rete closure source; production files remain read-only.",
+      "alternatives": [
+        "Keep heuristic metrics and merely adjust displayed count",
+        "Bound and validate graph operations, then compare with independent finite edge-set oracle"
+      ],
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "Existing five tests do not challenge edge idempotence, missing endpoints or reciprocity",
+        "Public constructors permit arbitrary externally assembled graph values"
+      ],
+      "rollback": "Preserve immutable base and failures; isolate child and do not integrate or rewrite history.",
+      "budget": "Pure Gleam only; native OCaml staging; realized Gleam/directERTS; private stages; <=2 schedulers and <=30second bounded native child; no network/package downloads.",
+      "reviewer": "Parent independent bounded source review; no admission from this component."
+    },
+    "factors": {
+      "criticality": {
+        "rationale": "Independent finite reachability oracle constrains false assertion-closure evidence; no production dispatch or runtime changes.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/math/rete.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/tools/ev107_rete_reference.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev107_rete_closure_test.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev107_rete_runner.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev107_rete_projection.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev107_rete_stage.ml"
+        ],
+        "value": 3,
+        "low": 3,
+        "high": 3
+      },
+      "stpa": {
+        "rationale": "Independent finite reachability oracle constrains false assertion-closure evidence; no production dispatch or runtime changes.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/math/rete.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/tools/ev107_rete_reference.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev107_rete_closure_test.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev107_rete_runner.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev107_rete_projection.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev107_rete_stage.ml"
+        ],
+        "value": 3,
+        "low": 3,
+        "high": 3
+      },
+      "fmea": {
+        "rationale": "Independent finite reachability oracle constrains false assertion-closure evidence; no production dispatch or runtime changes.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/math/rete.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/tools/ev107_rete_reference.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev107_rete_closure_test.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev107_rete_runner.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev107_rete_projection.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev107_rete_stage.ml"
+        ],
+        "value": 4,
+        "low": 4,
+        "high": 4
+      },
+      "dependency": {
+        "rationale": "Independent finite reachability oracle constrains false assertion-closure evidence; no production dispatch or runtime changes.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/math/rete.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/tools/ev107_rete_reference.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev107_rete_closure_test.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev107_rete_runner.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev107_rete_projection.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev107_rete_stage.ml"
+        ],
+        "value": 2,
+        "low": 2,
+        "high": 2
+      },
+      "impact": {
+        "rationale": "Independent finite reachability oracle constrains false assertion-closure evidence; no production dispatch or runtime changes.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/math/rete.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/tools/ev107_rete_reference.ml",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev107_rete_closure_test.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev107_rete_runner.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev107_rete_projection.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev107_rete_stage.ml"
+        ],
+        "value": 3,
+        "low": 3,
+        "high": 3
+      }
+    },
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Own peer workspace historical Rete context plus oracle when created; production candidate bound separately before later replay",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/math/rete.gleam",
+          "sha256": "20b742c3d0561ac9e5a10f074a2a2b251c0293069b813bbf575fbb3a7624b448",
+          "observed_at": "2026-09-09T16:47:46Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+          "sha256": "ef99830d561646b113376ecf60fc25810f20afc3f5d8d14f8dc2d647517580f7",
+          "observed_at": "2026-09-09T16:47:46Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/tools/ev107_rete_reference.ml",
+          "sha256": "d0a29c44acccfb18c61cbcbac643d5d0878db615f03d14531143e0474c9c03ec",
+          "observed_at": "2026-09-09T16:47:46Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+          "sha256": "d5c54d35aa3addbb24d5dd865f6266772880c1f1ce91ccf25eaa84cbe87bbefd",
+          "observed_at": "2026-09-09T16:47:46Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev107_rete_closure_test.gleam",
+          "sha256": "ca86ee21859cd4f421b3ee6c1410de44dd9a85aa327d2305d5bd02d4dafb8bf3",
+          "observed_at": "2026-09-09T16:47:46Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev107_rete_runner.gleam",
+          "sha256": "2ef64ebe5a0d2f54b31131beda7f47ea57e151f831bd0745a8a1a6f070c95934",
+          "observed_at": "2026-09-09T16:47:46Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/ev107_rete_projection.gleam",
+          "sha256": "ad575743b6209de755e3434336fb16f40010ddf2033d61e384e9d1c0be7bb2f2",
+          "observed_at": "2026-09-09T16:47:46Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/tools/ev107_rete_stage.ml",
+          "sha256": "5a6341348ffcf30a8cb53bc36f10b2a8f50535935cbaf10b18e9201192cb1699",
+          "observed_at": "2026-09-09T16:47:46Z"
+        }
+      ]
+    },
+    "valid_until": "2026-09-09T17:47:46Z",
+    "ready_since": "2026-09-09T16:47:46Z",
+    "observed_at": "2026-09-09T16:47:46Z",
+    "scope": "Independent tools/ev107_rete_reference.ml and own review evidence only; candidate production source read-only",
+    "task_state": "executing",
+    "actor": "codex-ev107-rete-review",
+    "plan_id": "uos/ev107-rete-review/20260909",
+    "assessment_id": "ev107-rete-review-1788972466",
+    "phase": "review",
+    "task_id": "REVIEW",
+    "score_interval": [ 216, 216 ],
+    "score": 216,
+    "class": "P2",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 0,
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": []
+  }
+]

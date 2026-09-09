@@ -1,0 +1,42 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+    "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+    "/tmp/ev107-rete-oracle-immutable/ev107_rete_reference.ml",
+    "/tmp/ev107-rete-full-projection-1647.json"
+  ],
+  "utc_started": 1788972479.509808,
+  "utc_finished": 1788972479.837058,
+  "elapsed_seconds": 0.32724407499999997,
+  "deadline_seconds": 30.0,
+  "exit_code": 0,
+  "output": "{\"schema\":\"uos.ev107.rete-reference.v1\",\"status\":\"FINITE_CORPUS_CONSISTENT\",\"authority\":\"NONE\",\"admission\":\"NOT_GRANTED\",\"receipt_sha256\":\"5f669dc15301e1351fa477f58bb6018f8ceea7445d8c8cd8410e9ad8053816e6\",\"output_sha256\":\"de27d5992fc03c6bc6ccbdd0bb77c32e3c50b2b6245e141bd596559df378cb2e\",\"cases\":2048,\"diagnostic_lines\":1,\"algorithm\":\"Four-node reflexive transitive relation; fired count is present edges with reachable antecedent\",\"limits\":[\"Finite64DAG edge masks16seed masks2orders only; no general Rete refinement proof\",\"Receipt consistency cannot authenticate producer, candidate, executable or source; external immutable bindings and actual replay required\",\"Matching corpus does not grant dispatch effects, formal authority or EV admission\",\"Input4MiB/output1MiB/depth64/nodes10000/lines4096/line4096; native declared deadline<=60s checked, not externally enforced by this reader\",\"Recorded finite ordered timestamps checked; freshness/NTP synchronization and transitive execution closure not established\"]}\n",
+  "output_sha256": "724f0316ec0d54c7197c13df23b94a2c0a44b066ccdb8099307a6dbb198dce62",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "otp_launch": {
+    "executable": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+    "environment": [
+      "PATH=/tmp/uos-ev-native-otp-aaa5f2:/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin:/home/an/NAS-setup/uos/toolchains/nix-profile/bin:/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin:/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin:/usr/bin:/bin",
+      "ERL_FLAGS=+S 2:2 +A 2",
+      "ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "BINDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin",
+      "EMU=beam", "PROGNAME=erl",
+      "ERL_ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "ESCRIPT_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_USE_SERVER=false"
+    ],
+    "descendant_execution_audit": "NOT_PERFORMED_BY_ADAPTER"
+  },
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

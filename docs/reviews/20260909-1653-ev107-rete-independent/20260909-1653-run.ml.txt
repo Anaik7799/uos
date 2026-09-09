@@ -1,0 +1,12 @@
+#use "topfind";;
+#require "yojson,cryptokit,unix,mtime.clock.os";;
+#directory "/tmp/ev-campaign-independent-direct-review-20260909/build/default/.ev_receipts.objs/byte";;
+#load "/tmp/ev-campaign-independent-direct-review-20260909/build/default/ev_receipts.cma";;
+let root="/home/an/NAS-setup/uos"
+let stage="/tmp/ev107-rete-independent-1650"
+let adapter=root^"/.uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_native.ml"
+let run id args=ignore(Receipt_validator.run ~seconds:35. ~limit:1048576(root^"/toolchains/opam-ocaml/bin/ocamlrun")([root^"/toolchains/opam-ocaml/bin/ocaml";adapter;"--cwd";stage^"/package";"--seconds";"30";"--receipt";stage^"/"^id^".json";"--"]@args))
+let ()=
+ List.iter(fun(id,main)->run id["native";"/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec";"-noshell";"-noinput";"-pa";stage^"/lib/gleam_stdlib/ebin";stage^"/lib/gleam_erlang/ebin";stage^"/lib/gleeunit/ebin";stage^"/compiled/ebin";"-s";main;"main";"-s";"init";"stop"])["author23","ev107_rete_runner";"independent6","ev107_rete_independent_probe";"projection2048","ev107_rete_projection"];
+ run "oracle2048"["ocaml";"/tmp/ev107-rete-oracle-immutable/ev107_rete_reference.ml";stage^"/projection2048.json"];
+ print_endline "Native author runner, independent6groups, projection and reference all exited0"
