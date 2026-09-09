@@ -1,0 +1,199 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "ev-control-bounds-20260909-0335-active",
+    "plan_id": "uos/ev-control-bounds/20260909",
+    "task_id": "BOUNDS",
+    "actor": "codex-ev-control-bounds",
+    "fractal_layer": 2,
+    "phase": "implementation",
+    "scope": "Parent uos/ev-admission/20260909-0210 PROGRAM: bound pending proposals and retire terminal instances without replay authority; partition-invariant token refill, time-normalized queue derivative, typed constructor guards. Two HA modules and narrow tests/callers only; no live runtime or admission.",
+    "task_state": "executing",
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": [],
+    "class": "P1",
+    "observed_at": "2026-09-09T03:32:35Z",
+    "ready_since": "2026-09-09T03:32:35Z",
+    "valid_until": "2026-09-09T04:32:35Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Immutable reviewed predecessor31e238cb7cb440ec8d17e28df7e021522d6fb3a6; source hashes observed directly.",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/multi_agent_quorum.gleam",
+          "sha256": "823f15fbf92e99cd7df062e9a62598169e93c1fabbbd3a4b1b7faefdd310b6dd",
+          "observed_at": "2026-09-09T03:32:35Z"
+        },
+        {
+          "path": ".uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/predictive_autoscaler.gleam",
+          "sha256": "8ac8f3d15e0449f48f204316de5c74c071e8cb15990bef68e310711b99f74007",
+          "observed_at": "2026-09-09T03:32:35Z"
+        },
+        {
+          "path": ".uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/homeostasis_evolution_engine.gleam",
+          "sha256": "cde36572ee859078b1644bd5d4c8ca1cb903a39f99d7870b246c00c589fb12ff",
+          "observed_at": "2026-09-09T03:32:35Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "rationale": "Follow-up repair needed before broader component admission.",
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "evidence_refs": [
+          ".uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/multi_agent_quorum.gleam",
+          ".uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/predictive_autoscaler.gleam",
+          ".uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/homeostasis_evolution_engine.gleam"
+        ]
+      },
+      "stpa": {
+        "rationale": "Unbounded pending proposals and invalid rate/bound handling can create resource exhaustion or unsafe scaling decisions.",
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "evidence_refs": [
+          ".uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/multi_agent_quorum.gleam",
+          ".uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/predictive_autoscaler.gleam",
+          ".uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/homeostasis_evolution_engine.gleam"
+        ]
+      },
+      "fmea": {
+        "rationale": "S5 O3 Det4 RPN60; severity floor makes F5 for false system admission.",
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "evidence_refs": [
+          ".uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/multi_agent_quorum.gleam",
+          ".uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/predictive_autoscaler.gleam",
+          ".uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/homeostasis_evolution_engine.gleam"
+        ]
+      },
+      "dependency": {
+        "rationale": "Parent PROGRAM requests bounded control evidence before admission.",
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "evidence_refs": [
+          ".uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/multi_agent_quorum.gleam",
+          ".uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/predictive_autoscaler.gleam",
+          ".uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/homeostasis_evolution_engine.gleam"
+        ]
+      },
+      "impact": {
+        "rationale": "Protect shared sovereign voting and evolution control state.",
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "evidence_refs": [
+          ".uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/multi_agent_quorum.gleam",
+          ".uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/predictive_autoscaler.gleam",
+          ".uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/homeostasis_evolution_engine.gleam"
+        ]
+      }
+    },
+    "score": 2500,
+    "score_interval": [
+      2500,
+      2500
+    ],
+    "fmea_modes": [
+      {
+        "id": "FM-UNSAFE-CONTROL-ACCEPTANCE",
+        "s": 5,
+        "o": 3,
+        "det": 4,
+        "rpn": 60,
+        "band": 5,
+        "cause": "Unbounded registered proposal list, rounding per refill call, missing elapsed-time divisor and unchecked constructor limits.",
+        "effect": "Resource exhaustion, fabricated budget and out-of-bound scaling.",
+        "controls": "Preserve history, use canonical Sa-plan, immutable candidates, negative controls, independent sovereign review and effect-time fencing."
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "EV admission programme owner and independent sovereign reviewers",
+      "control_action": "Repair and verify candidate capabilities, then record admission only for satisfied obligations",
+      "losses": [
+        "L-RISK-UNAUTHORIZED-EFFECT"
+      ],
+      "hazards": [
+        "H-RISK-FALSE-CLEARANCE",
+        "H-RISK-STALE-SELECTION"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Required runtime or formal checks are omitted before admission.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Every EV has explicit acceptance obligations and executed receipts."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Printouts, stale files, fabricated reviewers or quarantined claims grant admission.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE"
+          ],
+          "constraint": "Validate evidence content, digests, scope, candidate and independent review; no ceiling changes before review."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "A candidate or owner changes after observation.",
+          "hazard_ids": [
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Use immutable JJ revisions and current task/workspace/integration/runtime fences at each effect."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Tests or workers outlive resource or ownership bounds.",
+          "hazard_ids": [
+            "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Bound subprocesses, outputs and lease durations; recheck before effects."
+        }
+      ]
+    },
+    "decision": {
+      "summary": "Write failing behavior tests then bounded control repairs under a new canonical child task.",
+      "alternatives": [
+        "Trust current acceptance tests",
+        "Reproduce falsifiers and repair effect boundary"
+      ],
+      "assumptions": [
+        "User authorizes completing and admitting existing EVs; evidence requirements remain in force."
+      ],
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "Previous candidate passed61 scoped tests but did not cover these boundary and partition cases."
+      ],
+      "forecast": "Falsifiers fail on base and pass after bounded repairs; runtime IAM and formal refinement remain separate obligations.",
+      "falsifier": "Any outsider vote, negative debit, forged or stale proposal applies successfully.",
+      "acceptance": [
+        "Pending intake is bounded and terminal retirement frees capacity",
+        "Retired snapshots cannot vote or apply after equivalent resubmission",
+        "Token refill is invariant under timestamp partitioning",
+        "Queue derivative uses elapsed seconds and ignores non-forward samples",
+        "Invalid constructor inputs return typed errors",
+        "Full affected scoped regression suite passes on immutable candidate"
+      ],
+      "rollback": "Preserve failed receipts and immutable work. Do not rewrite shared journal/cycle history or replace runtime without its own checked fence and recovery path.",
+      "budget": "Existing realized tools only; no package downloads or paid inference. Two build jobs, two BEAM schedulers per probe, bounded subprocess timeouts; stage-specific execution ceilings recorded with receipts.",
+      "reviewer": "Parent independent reviewer; implementer is not sovereign admission authority.",
+      "residuals": [
+        "No authenticated sovereign workload binding or runtime refinement proof.",
+        "No live deployment or fleet admission.",
+        "Cooperative fences do not establish kernel isolation."
+      ],
+      "supersedes": "0335-preflight; BOUNDS claimed codex-ev-control-bounds attempt1"
+    }
+  }
+]
