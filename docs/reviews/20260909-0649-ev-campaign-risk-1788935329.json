@@ -1,0 +1,271 @@
+[
+  {
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Owned JJ sibling from f5f86e7e9841ae20da69f3d6c7fc44f1a2e50396; exact scoped bytes observed",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          "sha256": "fec299362dae754656801a5a59c8763947054fa048e5d6db0afbc60036d2426d",
+          "observed_at": "2026-09-09T06:28:49Z"
+        },
+        {
+          "path": ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam",
+          "sha256": "8c11774981bcd6806b3154a8c7ec0edab378750258a9259882323fe0e8dbad76",
+          "observed_at": "2026-09-09T06:28:49Z"
+        },
+        {
+          "path": ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+          "sha256": "2b40cb70a185e96a8128e1babef752fab467655d22cd0b11f0bcf62b17bdee50",
+          "observed_at": "2026-09-09T06:28:49Z"
+        },
+        {
+          "path": ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/test/ev_delta_freshness_runner.gleam",
+          "sha256": "bdb4753d8a90403747cdb87258fa160d6df6ce49882f36892b3a6969f3ed0e0b",
+          "observed_at": "2026-09-09T06:28:49Z"
+        },
+        {
+          "path": ".uos-workspaces/ev-evidence-campaign-20260909/contracts/rules/20260908-0912-provenance-integrity-contract.md",
+          "sha256": "f764207e524b5c493252be58fc1a7e426dd92239f8d92bc43ae2e74fc50f8d57",
+          "observed_at": "2026-09-09T06:28:49Z"
+        },
+        {
+          "path": ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_native.ml",
+          "sha256": "f44349d131202ad18e6d5becf0bedf601dc91bacf5a773369dd576accc13df14",
+          "observed_at": "2026-09-09T06:28:49Z"
+        },
+        {
+          "path": ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/campaign_test.ml",
+          "sha256": "02b40bd767fc469429033f93f631563d4271aea637502a399a449aa13aa83f7c",
+          "observed_at": "2026-09-09T06:28:49Z"
+        },
+        {
+          "path": ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/dune",
+          "sha256": "938562c7c23d206b162d091dea25d57480926ad200567c1b0bc2e08f71bb3069",
+          "observed_at": "2026-09-09T06:28:49Z"
+        },
+        {
+          "path": ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/ev98_recipe.ml",
+          "sha256": "0cc62cea03a9ff409bb8e98eb64a376d09b47f38177a16556f0bf4cbf9e5f53a",
+          "observed_at": "2026-09-09T06:28:49Z"
+        },
+        {
+          "path": ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/ev_campaign.ml",
+          "sha256": "a4c9358cb0b69d22d61b825a92a190091bbe0d331f22008376fccb24d109270a",
+          "observed_at": "2026-09-09T06:28:49Z"
+        },
+        {
+          "path": ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/ev_receipt.ml",
+          "sha256": "a9418d5dd7e0321549affcdae2e978afc8b748314dfe2eb170c9b5da87565913",
+          "observed_at": "2026-09-09T06:28:49Z"
+        },
+        {
+          "path": ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/receipt_validator.ml",
+          "sha256": "9f4ceda788586cc6aa79ae99cd33a01ec68523395fbfca3759f66d960be09618",
+          "observed_at": "2026-09-09T06:28:49Z"
+        }
+      ]
+    },
+    "valid_until": "2026-09-09T07:28:49Z",
+    "observed_at": "2026-09-09T06:28:49Z",
+    "assessment_id": "ev-campaign-20260909-0649",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "plan_id": "uos/ev-evidence-campaign/20260909",
+    "task_id": "PRODUCER",
+    "actor": "codex-ev-campaign-producer",
+    "fractal_layer": 0,
+    "phase": "implementation",
+    "scope": "Native EV98 component evidence campaign producer only: fixed recipe, immutable source staging, observed exact case coverage, negative controls and truthful partial runtime/formal/sovereign states. Planned source paths tools/ev_receipts/{ev_campaign,ev98_recipe,campaign_test}.ml plus CLI/dune; no live runtime, task admission, solver or ledger changes.",
+    "task_state": "executing",
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": [],
+    "class": "P1",
+    "ready_since": "2026-09-09T06:28:49Z",
+    "factors": {
+      "criticality": {
+        "rationale": "Requested admission is blocked by observed provenance and false-positive verification gaps.",
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "evidence_refs": [
+          ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam",
+          ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+          ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/test/ev_delta_freshness_runner.gleam",
+          ".uos-workspaces/ev-evidence-campaign-20260909/contracts/rules/20260908-0912-provenance-integrity-contract.md",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_native.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/campaign_test.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/dune",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/ev98_recipe.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/ev_campaign.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/ev_receipt.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/receipt_validator.ml"
+        ]
+      },
+      "stpa": {
+        "rationale": "Observed printed deployment PASS and file-presence admission can assert safe completion without required behavior.",
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "evidence_refs": [
+          ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam",
+          ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+          ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/test/ev_delta_freshness_runner.gleam",
+          ".uos-workspaces/ev-evidence-campaign-20260909/contracts/rules/20260908-0912-provenance-integrity-contract.md",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_native.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/campaign_test.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/dune",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/ev98_recipe.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/ev_campaign.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/ev_receipt.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/receipt_validator.ml"
+        ]
+      },
+      "fmea": {
+        "rationale": "S5 O3 Det4 RPN60; severity floor makes F5 for false system admission.",
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "evidence_refs": [
+          ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam",
+          ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+          ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/test/ev_delta_freshness_runner.gleam",
+          ".uos-workspaces/ev-evidence-campaign-20260909/contracts/rules/20260908-0912-provenance-integrity-contract.md",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_native.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/campaign_test.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/dune",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/ev98_recipe.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/ev_campaign.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/ev_receipt.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/receipt_validator.ml"
+        ]
+      },
+      "dependency": {
+        "rationale": "Evidence and authority repairs gate all requested EV admissions.",
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "evidence_refs": [
+          ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam",
+          ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+          ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/test/ev_delta_freshness_runner.gleam",
+          ".uos-workspaces/ev-evidence-campaign-20260909/contracts/rules/20260908-0912-provenance-integrity-contract.md",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_native.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/campaign_test.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/dune",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/ev98_recipe.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/ev_campaign.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/ev_receipt.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/receipt_validator.ml"
+        ]
+      },
+      "impact": {
+        "rationale": "Correct admission protects the shared fleet-wide control and evidence boundary.",
+        "value": 5,
+        "low": 5,
+        "high": 5,
+        "evidence_refs": [
+          ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam",
+          ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+          ".uos-workspaces/ev-evidence-campaign-20260909/apps/cepaf_gleam/test/ev_delta_freshness_runner.gleam",
+          ".uos-workspaces/ev-evidence-campaign-20260909/contracts/rules/20260908-0912-provenance-integrity-contract.md",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_native.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/campaign_test.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/dune",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/ev98_recipe.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/ev_campaign.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/ev_receipt.ml",
+          ".uos-workspaces/ev-evidence-campaign-20260909/tools/ev_receipts/receipt_validator.ml"
+        ]
+      }
+    },
+    "score": 2500,
+    "score_interval": [ 2500, 2500 ],
+    "fmea_modes": [
+      {
+        "id": "FM-FALSE-ADMISSION",
+        "s": 5,
+        "o": 3,
+        "det": 4,
+        "rpn": 60,
+        "band": 5,
+        "cause": "Noncanonical writers and unobserved fixed-positive checks can be mistaken for runtime and formal evidence.",
+        "effect": "False system admission or unsafe downstream release.",
+        "controls": "Preserve history, use canonical Sa-plan, immutable candidates, negative controls, independent sovereign review and effect-time fencing."
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "EV admission programme owner and independent sovereign reviewers",
+      "control_action": "Repair and verify candidate capabilities, then record admission only for satisfied obligations",
+      "losses": [ "L-RISK-UNAUTHORIZED-EFFECT" ],
+      "hazards": [ "H-RISK-FALSE-CLEARANCE", "H-RISK-STALE-SELECTION" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Required runtime or formal checks are omitted before admission.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Every EV has explicit acceptance obligations and executed receipts."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Printouts, stale files, fabricated reviewers or quarantined claims grant admission.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Validate evidence content, digests, scope, candidate and independent review; no ceiling changes before review."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "A candidate or owner changes after observation.",
+          "hazard_ids": [ "H-RISK-STALE-SELECTION" ],
+          "constraint": "Use immutable JJ revisions and current task/workspace/integration/runtime fences at each effect."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Tests or workers outlive resource or ownership bounds.",
+          "hazard_ids": [ "H-RISK-STALE-SELECTION" ],
+          "constraint": "Bound subprocesses, outputs and lease durations; recheck before effects."
+        }
+      ]
+    },
+    "decision": {
+      "summary": "Build the fixed EV98 component evidence producer under parent PROGRAM; no formal or sovereign credit is supplied.",
+      "alternatives": [
+        "Continue accepting producer-authored receipt claims",
+        "Bind fixed recipe to native observed execution"
+      ],
+      "assumptions": [
+        "Parent owns workspace lease and authorizes bounded producer task; no authorization to admit EVs"
+      ],
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "Native invocation capture has no candidate/policy binding; consistency cannot authenticate execution"
+      ],
+      "forecast": "Negative coverage, candidate and nonpassing-process controls expose unsupported credit",
+      "falsifier": "Fabricated, missing, stale, wrong-candidate or incomplete observation earns component credit",
+      "acceptance": [
+        "Fixed EV98 source and check denominator",
+        "Immutable staged source plus tool/dependency/output byte binding",
+        "Observed per-case positive and negative controls",
+        "Formal_unavailable and Sovereign_pending retained",
+        "Independent review before task completion"
+      ],
+      "rollback": "Preserve private failures and immutable revisions; no live or admission mutation",
+      "budget": "Realized tools only, no packages; one build at a time, two BEAM schedulers, bounded processes and byte manifests",
+      "reviewer": "Parent-arranged independent review, not sovereign impersonation",
+      "residuals": [
+        "Cooperative local host; no same-UID hostile race defense",
+        "Full EV98 runtime/formal/admission remain unavailable"
+      ],
+      "supersedes": "Adapt parent assessment to the explicitly authorized PRODUCER task and current source/time"
+    }
+  }
+]

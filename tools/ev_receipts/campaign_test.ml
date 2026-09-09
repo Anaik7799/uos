@@ -17,6 +17,13 @@ let unit_tests () =
  test "unique mutation"(fun()->require(Ev_campaign.replace_once "a-b-c" "b" "x"="a-x-c") "mutation result");
  test "missing mutation anchor"(fun()->refuses(fun()->ignore(Ev_campaign.replace_once "a" "b" "x")));
  test "ambiguous mutation anchor"(fun()->refuses(fun()->ignore(Ev_campaign.replace_once "b-b" "b" "x")));
+ test "recipe executables are ELF"(fun()->List.iter(fun(name,path,_)->if name<>"boot" then
+  let c=open_in_bin path in let magic=Fun.protect ~finally:(fun()->close_in_noerr c)(fun()->really_input_string c 4) in
+  require(magic="\127ELF") ("recipe executable uses a wrapper: "^name)) Ev98_recipe.tools);
+ test "nested compilers select the pinned ELF launcher"(fun()->
+  let _,launcher,_=List.find(fun(name,_,_)->name="erlexec")Ev98_recipe.tools in
+  List.iter(fun expected->require(List.mem expected Ev98_recipe.launcher_environment) "compiler emulator selection is not pinned")
+   ["ESCRIPT_EMULATOR="^launcher;"ERLC_EMULATOR="^launcher;"ERLC_USE_SERVER=false"]);
  let child mode seconds limit =Ev_campaign.process ~deadline:(Receipt_validator.mono()+.2.) ~cwd:"/tmp" ~environment:[||]
   ~seconds ~limit (Unix.realpath Sys.executable_name) [mode] in
  test "actual nonzero child"(fun()->let r=child "child-exit" 1. 1024 in require(r.status=Unix.WEXITED 3 && r.failure=None && r.output="actual child\n") "child status lost");

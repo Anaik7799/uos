@@ -194,8 +194,10 @@ let dependency_files = [
  "gleeunit/include/gleeunit@internal@reporting_State.hrl","0a97a575b059315e4facc437123674cafb4946698512947787db5a47c433c2f2";
 ]
 let tools = [
+ "tput","/usr/bin/tput","568b559c40262dcb851aed26115767ca646b4269118a0c93ded7d2dd5c565ec6";
+ "erl_child_setup","/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup","e9a620ec4fcd8fb2ac55dfd9a8b0c59ee52ef363454c6502ff26efa2f5476025";
+ "inet_gethost","/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost","ca4553748665924716d883b9be80e8a4648565c9108ae22a4e56b9f9467b86e0";
  "gleam","/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam","9d57b042c9f857ed898f4b99116ad8433bed2504619613c97d72a52288bef697";
- "erl","/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/erl","ef4292ee944622942f2e961553eae2222a9dce112eb7e5bfec04dcb9a0d54970";
  "jj","/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj","630fe2c54d0b9f53794aa37c1274a344e6067175ac9e8925087974fb3d0c4966";
  "chronyc","/usr/bin/chronyc","0cd6afd41067d36b080222cfc51517755b8a03496e4c3ef628ec54ee2435531f";
  "erlc","/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/erlc","260f026b6746ebcfa99e2568852c3dfda3bcef6227984315f5e5888ff5c9d503";
@@ -203,4 +205,13 @@ let tools = [
  "boot","/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/no_dot_erlang.boot","70204d7d0754c4d9ae767cd9b014493d895e272f9532532f0bceac728288b4be";
  "erlexec","/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec","bd67dd9a907245330ed2959749d00345b7f9f3cfa7dbb109e970c16168e231a8";
  "beam","/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp","632442f4075f4014172cd95f18151a5b4c048c483a7fb3c10577826cdb3b8966";
+]
+(* Inspected OTP-29.0.5 erlc/escript native launch controls. No shell wrapper. *)
+let otp_root = "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang"
+let bindir = otp_root ^ "/erts-17.0.5/bin"
+let launcher_environment = [
+ "ROOTDIR=" ^ otp_root; "ERL_ROOTDIR=" ^ otp_root; "BINDIR=" ^ bindir;
+ "EMU=beam"; "PROGNAME=erl";
+ "ESCRIPT_EMULATOR=" ^ bindir ^ "/erlexec";
+ "ERLC_EMULATOR=" ^ bindir ^ "/erlexec"; "ERLC_USE_SERVER=false";
 ]

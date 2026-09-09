@@ -130,6 +130,7 @@ let recipe_descriptor =
   "sources",strings Ev98_recipe.sources;"fixed_acceptance_and_policy",refs Ev98_recipe.fixed;
   "cases",strings Ev98_recipe.cases;"dependency_files",refs Ev98_recipe.dependency_files;
   "tools",`List(List.map(fun(n,p,h)->`Assoc["name",js n;"path",js p;"sha256",js h])Ev98_recipe.tools);
+  "launcher_protocol",js "direct-ELF-ERTS";"launcher_environment",strings Ev98_recipe.launcher_environment;
   "private_manifest",js manifest;"positive_runner_sha256",js(sha(runner Ev98_recipe.cases));
   "mutations",`List(List.map(fun(n,p,b,a,c)->`Assoc["id",js n;"path",js p;"before",js b;"after",js a;"case",js c])mutations)]
 let recipe_bytes = Yojson.Basic.to_string recipe_descriptor
@@ -145,9 +146,11 @@ let observe ~workspace ~ev ~revision =
  let observations=ref [] and bindings=ref [] and negatives=ref [] and executed=ref [] in
  let finished_clock=ref `Null and error=ref None in
  let tool n=let _,p,_=List.find(fun(name,_,_)->name=n)Ev98_recipe.tools in p in
- let environment=[|"PATH="^Filename.dirname(tool "erl")^":/usr/bin:/bin";
+ let alias_dir=directory^"/native-bin" in Unix.mkdir alias_dir 0o700;
+ let alias=alias_dir^"/erl" in Unix.symlink(tool "erlexec")alias;
+ let environment=Array.of_list(["PATH="^alias_dir^":"^Filename.dirname(tool "escript")^":/usr/bin:/bin";
   "HOME="^directory;"TMPDIR="^directory;"LANG=C.UTF-8";"LC_ALL=C.UTF-8";
-  "ERL_CRASH_DUMP="^directory^"/erl_crash.dump";"ERL_CRASH_DUMP_SECONDS=0"|] in
+  "ERL_CRASH_DUMP="^directory^"/erl_crash.dump";"ERL_CRASH_DUMP_SECONDS=0"] @ Ev98_recipe.launcher_environment) in
  let invocations=ref 0 in
  let invoke name seconds exe args =
   check_budget budget;incr invocations;
@@ -169,7 +172,9 @@ let observe ~workspace ~ev ~revision =
  (try
    write(directory^"/recipe.json")recipe_bytes;bind(directory^"/recipe.json")recipe_bytes;
    write(directory^"/clock-start.output")clock_start;bind(directory^"/clock-start.output")clock_start;
-   List.iter(fun(_,p,h)->let bytes=read_file budget p in require(sha bytes=h) "pinned tool digest mismatch";bind p bytes)Ev98_recipe.tools;
+   List.iter(fun(name,p,h)->let bytes=read_file budget p in
+    require(name="boot" || String.starts_with ~prefix:"\127ELF" bytes) "recipe executable is not ELF";
+    require(sha bytes=h) "pinned tool digest mismatch";bind p bytes)Ev98_recipe.tools;
    let producer_path=Unix.realpath Sys.executable_name in
    bind producer_path (read_file budget producer_path);
    (* The candidate reader is exactly the hashed recipe tool, never a workspace
@@ -198,7 +203,7 @@ let observe ~workspace ~ev ~revision =
     let target=directory^"/lib/"^path in write target bytes;bind target bytes)Ev98_recipe.dependency_files;
    let gleam_version=invoke "gleam-version" 5. (tool "gleam") ["--version"] in
    require(passed gleam_version) "Gleam version observation failed";
-   let otp_version=invoke "otp-version" 5. (tool "erl") ["-version"] in
+   let otp_version=invoke "otp-version" 5. (tool "erlexec") ["-version"] in
    require(passed otp_version) "OTP version observation failed";
    let run_package name cases mutation =
     let package=directory^"/"^name in
@@ -216,7 +221,7 @@ let observe ~workspace ~ev ~revision =
     let outputs=file_names compiled "" in require(List.length outputs<=1024) "compiled file quota";
     List.iter(fun p->let full=compiled^"/"^p in bind full(read_file budget full))outputs;
     let paths=(compiled^"/ebin")::List.map(fun dep->directory^"/lib/"^dep^"/ebin")Ev98_recipe.dependencies in
-    invoke(name^"-execute")15. (tool "erl")
+    invoke(name^"-execute")15. (tool "erlexec")
      (["+S";"2:2";"+A";"1";"-noinput";"-noshell";"-boot";"no_dot_erlang";"-pa"]@paths@
       ["-s";"ev98_campaign_runner";"main";"-s";"init";"stop"]) in
    let positive=run_package "positive" Ev98_recipe.cases None in
@@ -246,6 +251,7 @@ let observe ~workspace ~ev ~revision =
     let path=Yojson.Basic.Util.to_string(field "path" ref) in
     require(sha(read_file budget path)=Yojson.Basic.Util.to_string(field "sha256" ref)) "captured output changed during campaign")
     ["combined_output";"stdout";"stderr"]) !observations;
+   require((Unix.lstat alias).Unix.st_kind=Unix.S_LNK && Unix.readlink alias=tool "erlexec" && Unix.realpath alias=tool "erlexec") "native launcher alias changed";
    check_budget budget;
    let clock_end=run ~seconds:(min 3. (budget.deadline-.mono())) ~limit:8192 "/usr/bin/chronyc" ["-c";"tracking"] in
    let finished=Unix.gettimeofday() in validate_clock_text ~now:finished clock_end;check_budget budget;
@@ -267,6 +273,7 @@ let observe ~workspace ~ev ~revision =
   "started_at",`Float now;"finished_at",`Float(Unix.gettimeofday());
   "clock_start",js(sha clock_start);"clock_end", !finished_clock;
   "environment",strings(Array.to_list environment);
+  "launcher_alias",`Assoc["path",js alias;"target",js(tool "erlexec")];
   "executed_cases",strings !executed;"negative_controls",`List !negatives;
   "bindings",`List !bindings;"invocations",`List !observations;
   "artifacts",js directory;"error",(match !error with None->`Null|Some s->js s)] in
