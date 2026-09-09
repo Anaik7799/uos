@@ -137,6 +137,7 @@ let source_paths = ["tools/ev02_governance/run_checks.ml";"tools/ev02_governance
 let superset_rel = "governance/agents/policy/superset.toml"
 let amendment_rel = "governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json"
 let max_staged_inputs = 258
+let max_staged_bytes = 16_777_216
 let local_bytes path =
   let channel = open_in_bin (workspace ^ "/" ^ path) in
   Fun.protect ~finally:(fun () -> close_in_noerr channel) (fun () -> really_input_string channel (in_channel_length channel))
@@ -190,6 +191,7 @@ let stage_write root rel bytes =
   Fun.protect ~finally:(fun () -> close_out_noerr channel) (fun () -> output_string channel bytes; flush channel)
 let stage_inputs revision =
   let root = private_stage () in
+  let total = ref 0 in
   let amendment = candidate_bytes revision amendment_rel in
   let files = amendment_files amendment in
   let rels = superset_rel :: amendment_rel ::
@@ -199,6 +201,8 @@ let stage_inputs revision =
     let kind = candidate_kind revision rel in
     if kind = "file" then begin
       let bytes = candidate_bytes revision rel in
+      requires (!total + String.length bytes <= max_staged_bytes) "candidate-input-byte-quota";
+      total := !total + String.length bytes;
       stage_write root rel bytes;
       `Assoc["path",`String rel;"candidate_kind",`String kind;"sha256",`String(sha bytes);"bytes",`Int(String.length bytes)]
     end else
