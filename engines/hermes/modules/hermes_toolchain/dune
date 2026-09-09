@@ -23,3 +23,19 @@
  (name test_tool_hygiene)
  (modules test_tool_hygiene)
  (libraries hermes_harness_suite_telemetry))
+
+; The preflight's denotational core is a LIBRARY for the same reason
+; toolchain_core is: the law suite must link the shipped semantics, not a copy.
+; It is deliberately pure -- no unix, no process, no clock -- so every law below
+; is about MEANING, and the effectful shell (tools/preflight) only supplies
+; observations.
+
+(library
+ (name preflight_algebra)
+ (wrapped false)
+ (modules preflight_algebra))
+
+(executable
+ (name test_preflight_algebra)
+ (modules test_preflight_algebra)
+ (libraries preflight_algebra hermes_harness_suite_telemetry))

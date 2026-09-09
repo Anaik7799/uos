@@ -278,6 +278,7 @@
     ]
   },
   "residual_risks": [
+    "PRE-EXISTING, NOT INTRODUCED: tools/km-gate reports HOLD on KMP-ENTROPY -- corpus fractal-layer entropy 1.322 bits against the CHK-09-MATH floor of 2.50. Measured at the same 1.322 both before and after ADR-096 was added, so this pass neither caused nor repaired it. The two KMP-INCOMPLETE findings this pass DID cause were cleared by registering ADR-096 in both indexes.",
     "CORRECTED (was recorded as a single stray directory): git-tree ascent, not one directory, is the cause. Removing the empty /home/an/NAS-setup/uos/.git did NOT fix bare `nix flake` -- Nix then ascends to /home/an/NAS-setup/.git, which is ALSO an empty directory that git itself does not recognise as a repository. `path:$UOS_ROOT` is therefore the permanent invocation, not a workaround pending cleanup. The parent directory is outside UOS and was left untouched.",
     "OPEN: /home/an/NAS-setup/.git is an empty non-repository directory outside the UOS workspace. Not removed: out of scope, and removal would not change the required `path:` invocation anyway.",
     "BOUNDED (was OPEN): quint verify of agentic_coordination.qnt is depth-limited, not blocked. NoError at 1 step (18.1s) and 2 steps (75.0s); ~4x per step puts the default depth beyond an interactive budget. Deeper verification needs a batch run, not a fix.",
@@ -317,7 +318,16 @@
     "quint_agentic_coordination_resolved": "RESOLVED (was 'exceeds 900s, reduced-step run outstanding'). agentic_coordination_test inv_all verifies NoError at --max-steps 1 in 18.1s and at --max-steps 2 in 75.0s. The ~4x cost per additional step is ordinary depth blow-up, not a structural defect: extrapolating, 5 steps is roughly 80 minutes, which is why the 560s bounded run returned nothing. The spec is verifiable; the default depth is simply out of budget for an interactive run.",
     "preflight": "31/31 PASS (--full), 29/29 PASS (fast tier)",
     "gate_G_PREFLIGHT": "PASS -- uos-cli gate G-PREFLIGHT executes the preflight and reports resolver/useable/wrapper/tracked/parity green",
-    "preflight_after_node_swap": "31/31 PASS with --full (identity arms green after the profile swap); 29/29 fast tier"
+    "preflight_after_node_swap": "31/31 PASS with --full (identity arms green after the profile swap); 29/29 fast tier",
+    "formal_layer_runs": {
+      "test_preflight_algebra": "27/27 passed, 0 failed",
+      "lean_check": "exit 0; axiom audit clean (propext, Quot.sound only)",
+      "quint_typecheck": "6/6 .qnt specs typecheck including the new preflight_receipt.qnt",
+      "quint_verify_preflight_receipt": "inv_all NoError (2.5s); not(accepted) violates, proving non-vacuity",
+      "km_gate": "KMP-INCOMPLETE cleared for both indexes after registering ADR-096",
+      "gate_G_PREFLIGHT": "PASS",
+      "preflight": "29/29 fast tier"
+    }
   },
   "defects_closed_in_this_pass": [
     "tools/lib/uos-toolchain.sh resolved UOS_ROOT from ${BASH_SOURCE[0]} under `set -euo pipefail`. Sourced from the operator's zsh login shell this aborted on an unset parameter, and without nounset it would have silently produced a wrong UOS_ROOT -- making uos_have() report ABSENT for installed toolchains. The library now resolves its own path under bash and zsh, and only applies `set -euo pipefail` when EXECUTED, never when sourced into an interactive shell.",
@@ -351,7 +361,11 @@
     "N8 stale receipt: --max-age 1 against a 12s-old receipt -> 'receipt STALE (12s > 1s)', exit 1.",
     "N9 checker changed: a byte appended to tools/preflight -> 'receipt INVALID -- checker changed since it was written', exit 1. File restored and diff-verified.",
     "N10 no receipt: latest.json moved aside -> 'NO RECEIPT ...', exit 1.",
-    "N11 hook failure path: z3 repointed to a zero-byte executable, receipt cleared -> the .claude hook emitted 'FAIL (2 of 29 checks): [useable/z3 exit 0 but produced NO output (empty executable?)] [parity/ocaml-table preflight command did not run]'. Two arms caught it independently. Restored, zero strays."
+    "N11 hook failure path: z3 repointed to a zero-byte executable, receipt cleared -> the .claude hook emitted 'FAIL (2 of 29 checks): [useable/z3 exit 0 but produced NO output (empty executable?)] [parity/ocaml-table preflight command did not run]'. Two arms caught it independently. Restored, zero strays.",
+    "M1 mutation: Exited_zero_silent under Output_required mapped to Pass (the npm defect re-introduced) -> kills L9 ONLY. 26/27.",
+    "M2 mutation: meet drops finding accumulation (Fail f, Fail _ -> Fail f) -> kills L7 ONLY. 26/27.",
+    "M3 mutation: Quint valid() loses r.checker == checkerNow -> inv_no_foreign_accept VIOLATED by Apalache.",
+    "M4 mutation: Quint valid() loses the age bound -> inv_no_stale_accept VIOLATED by Apalache."
   ],
   "preflight": {
     "tool": "tools/preflight",
@@ -384,5 +398,16 @@
     "severity": "A present, self-identifying, non-working tool -- the exact failure class this contract's invariant 10 exists to catch, and invisible to both `test -x` and a version probe.",
     "fix": "Provisioned pkgs.nodejs_22 (22.23.2, npm 10.9.8) from the locked nixpkgs; resolver and OCaml tables repointed to toolchains/nix-profile; the broken node-22 tree removed from the uos_env PATH. The npm probe is now `npm config get cache`, which exercises the config load that actually failed, not `--version`, which demonstrably lies.",
     "consumers": "None. Nothing in the repository used node or npm except these probes, so the breakage had never been noticed."
+  },
+  "formal_layer": {
+    "mandate": "Operator (2026-09-09): denotonic spec and design, algebraic atlas, formal specs, wiki, km, zk, journal, all aspects.",
+    "thesis": "Three passes produced the same defect three times -- otp_release could not separate two builds, test -x could not separate working from broken, exit status could not separate doing the job from doing nothing. Each observable was coarser than the property enforced. That is a missing-semantics problem, not a coding-habit problem, so the interpretation of observations is now written down and proved.",
+    "split": "shell : World -> Observation (tools/preflight, effectful) versus [[.]] : Observation -> Verdict (Preflight_algebra, pure). Only the second half is provable, and only it is proved.",
+    "denotational_core": "engines/hermes/modules/hermes_toolchain/preflight_algebra.{ml,mli}: verdict meet-semilattice with top Pass and absorbing Fail. No Unknown constructor -- an absent or unparseable observation DENOTES Fail, so fail-closed is a theorem about the absorbing element rather than a per-call-site discipline.",
+    "law_suite": "test_preflight_algebra.ml -- 27 laws linking the SHIPPED module. Observed 27/27 passed, 0 failed.",
+    "lean": "formal/lean/Preflight_Verdict_Algebra.lean -- meet_assoc, meet_comm_isPass, meet_idem_isPass, meet_pass_left/right, fail_absorbs_left/right, meet_isPass_iff, meetAll_isPass_iff_all, meetAll_fails_of_mem_fail, checker_change_invalidates, table_change_invalidates, cached_fail_never_valid, fresh_antitone. Checked exit 0 at Lean 4.33.0. Axiom audit PRINTED AT CHECK TIME: every theorem depends only on propext and Quot.sound; no sorryAx, no declared axiom, no Mathlib.",
+    "quint": "formal/quint/preflight_receipt.qnt -- temporal receipt lifecycle over clock ticks, checker edits, table edits, toolchain breakage and cached acceptance. inv_all verifies NoError under Apalache (bounded). Anti-vacuity: the invariant not(accepted) VIOLATES, so acceptCached is genuinely reachable.",
+    "atlas": "Six charts with distinct authorities: identity (flake), locality (shell), parity (ocaml reads shell), presence (stat), useability (execution), tracked (ask jj). The transition morphism static -> dynamic is NOT an isomorphism, and N5 exhibits the witness: a zero-byte executable inside $UOS_ROOT satisfies presence, locality and parity, and is caught only by useability.",
+    "km": "docs/design/20260909-0525-preflight-denotational-spec-and-algebraic-atlas.md; docs/wiki/20260909-0525-uos-toolchain-preflight-guide.md; docs/zk/20260909-0525-adr-096-...md. ADR-096 registered in BOTH indexes (zk-master-moc and wiki-corpus-index); km-gate KMP-INCOMPLETE findings cleared."
   }
 }
