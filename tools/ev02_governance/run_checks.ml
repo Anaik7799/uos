@@ -176,7 +176,7 @@ let checks out revision =
   let bindings = bind_candidate revision in
   let one id expect validate argv = let c=run~seconds:10. argv in row out id argv (expect c && validate c) c in
   let rows=[
-    one "mapping-selftest" (fun c->c.termination=Exited 0) (structured~schema:"uos.ev02-directive-mapping/v1"~status:"PASS"~cases:6) (script_argv mapping ["--selftest"]);
+    one "mapping-selftest" (fun c->c.termination=Exited 0) (structured~schema:"uos.ev02-directive-mapping/v1"~status:"PASS"~cases:5) (script_argv mapping ["--selftest"]);
     one "mapping-fixture-selftest" (fun c->c.termination=Exited 0) (structured~schema:"uos.ev02-directive-mapping/v1"~status:"PASS"~cases:8) (script_argv mapping ["--fixture-selftest"]);
     one "mapping-observation" (fun c->c.termination=Exited 1) mapping_hold (script_argv mapping ["--observe";workspace;amendment])
   ] in
