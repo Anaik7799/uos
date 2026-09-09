@@ -248,6 +248,8 @@ The operational system coordinates across five distinct language tiers:
   - `[[wiki:20260909-2205-uos-telegram-user-centric-usecases-guide]]` [User-Centric Use Cases Guide Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-2205-uos-telegram-user-centric-usecases-guide.md) UOS Telegram User-Centric Operational Use Cases & Interaction Guide Wiki
   - `[[zk:20260909-2215-adr-105-advanced-user-usecases-and-human-cybernetics]]` [ADR-105](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260909-2215-adr-105-advanced-user-usecases-and-human-cybernetics.md) Advanced User-Centric Cybernetic Use Cases & Operator Experience Evolution
   - `[[wiki:20260909-2215-uos-telegram-advanced-user-usecases-guide]]` [Advanced User Use Cases Guide Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-2215-uos-telegram-advanced-user-usecases-guide.md) UOS Telegram Advanced User-Centric Cybernetic Use Cases Guide Wiki
+  - `[[zk:20260909-2220-adr-106-creative-user-cybernetics-and-symbiotic-paradigms]]` [ADR-106](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260909-2220-adr-106-creative-user-cybernetics-and-symbiotic-paradigms.md) Creative User Cybernetics & Symbiotic Interaction Paradigms
+  - `[[wiki:20260909-2220-uos-telegram-creative-user-usecases-guide]]` [Creative User Use Cases Guide Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-2220-uos-telegram-creative-user-usecases-guide.md) UOS Telegram Creative User-Centric Cybernetic Use Cases Guide Wiki
 - Formal Proofs:
   - `[[zk:TwoLattice_STM]]` (`formal/lean/TwoLattice_STM.lean`)
   - `[[zk:Traceability]]` (`formal/lean/Traceability.lean`)

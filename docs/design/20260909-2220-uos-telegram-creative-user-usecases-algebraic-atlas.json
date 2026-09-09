@@ -1,0 +1,2592 @@
+{
+  "schema_version": 1,
+  "status": "ADMITTED",
+  "specification_path": "docs/design/20260909-2220-uos-telegram-creative-user-usecases-spec.md",
+  "authority": "operator_instruction",
+  "transports": [
+    "zenoh",
+    "in_process",
+    "edge_transport"
+  ],
+  "control_language": "gleam",
+  "runtime": "otp",
+  "bounded_domain_fields": [
+    "effect.class",
+    "transports[0]"
+  ],
+  "otp_inventory": {
+    "otp_release": "29",
+    "erts_version": "17.0.5",
+    "root_dir": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+    "lib_dir": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/lib",
+    "installed_application_count": 35,
+    "installed_applications": [
+      "asn1-5.5",
+      "common_test-1.31.1",
+      "compiler-10.0.3",
+      "crypto-5.9.2",
+      "debugger-7.0",
+      "dialyzer-6.0.2",
+      "diameter-2.7.2",
+      "edoc-1.5",
+      "eldap-1.3",
+      "erl_interface-5.8.1",
+      "erts-17.0.5",
+      "et-1.8",
+      "eunit-2.11",
+      "ftp-1.2.6",
+      "inets-9.7.1",
+      "kernel-11.0.3",
+      "megaco-4.9.1",
+      "mnesia-4.26.1",
+      "observer-2.19",
+      "odbc-2.17",
+      "os_mon-2.12",
+      "parsetools-2.8",
+      "public_key-1.21.4",
+      "reltool-1.1",
+      "runtime_tools-2.4",
+      "sasl-4.4",
+      "snmp-5.20.4",
+      "ssh-5.3",
+      "ssl-11.3.1",
+      "stdlib-6.2.1",
+      "syntax_tools-3.2.2",
+      "tftp-1.2.2",
+      "tools-4.1.2",
+      "wx-2.5",
+      "xmerl-2.1.3"
+    ],
+    "observed_at_utc": "2026-09-09T20:12:00Z",
+    "observed_by": "erlang:system_info/1 and code:lib_dir/0 in the pinned BEAM resolved through tools/lib/uos-toolchain.sh",
+    "how_to_falsify": "readlink -f $(command -v erl) must equal root_dir/../../bin/erl under the same /nix/store path; a different derivation reporting otp_release \"29\" is exactly the defect SC-NIX-DEVENV-001 invariant 3 exists for (29.0.5 and 29.0.6 both answer \"29\").",
+    "excluded": [
+      {
+        "name": "mnesia",
+        "reason": "present in the installation but unused: canonical durable storage is SQLite. Listed here because presence in lib_dir is not use."
+      }
+    ]
+  },
+  "capabilities": [
+    {
+      "id": "user.creative.pacing.cadence_tracker",
+      "denotation": {
+        "input": "SessionCadence(UserId)",
+        "output": "Result(CadenceMetrics, PacingError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.pacing.cadence_tracker over typed carrier SessionCadence(UserId).",
+            "falsifier": "Composition test trace where composite user.creative.pacing.cadence_tracker invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_pacing_cadence_tracker_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.pacing.cadence_tracker commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.pacing.cadence_tracker with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_pacing_cadence_tracker_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.pacing.cadence_tracker refines declared relation SessionCadence(UserId) -> Result(CadenceMetrics, PacingError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(CadenceMetrics, PacingError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.pacing.cadence_tracker obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.pacing.cadence_tracker granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_pacing_cadence_tracker_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.pacing.cadence_tracker is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.pacing.cadence_tracker preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.pacing.cadence_tracker operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.pacing.cadence_tracker maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.pacing.cadence_tracker obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.pacing.cadence_tracker exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_pacing_cadence_tracker_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "telegram"
+      ],
+      "description": "Passive cadence and keystroke jitter tracking for fatigue evaluation"
+    },
+    {
+      "id": "user.creative.pacing.dark_cockpit_auto",
+      "denotation": {
+        "input": "CadenceMetrics",
+        "output": "Result(DarkCockpitState, PacingError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.pacing.dark_cockpit_auto over typed carrier CadenceMetrics.",
+            "falsifier": "Composition test trace where composite user.creative.pacing.dark_cockpit_auto invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_pacing_dark_cockpit_auto_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.pacing.dark_cockpit_auto commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.pacing.dark_cockpit_auto with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_pacing_dark_cockpit_auto_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.pacing.dark_cockpit_auto refines declared relation CadenceMetrics -> Result(DarkCockpitState, PacingError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(DarkCockpitState, PacingError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.pacing.dark_cockpit_auto obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.pacing.dark_cockpit_auto granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_pacing_dark_cockpit_auto_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.pacing.dark_cockpit_auto is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.pacing.dark_cockpit_auto preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.pacing.dark_cockpit_auto operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.pacing.dark_cockpit_auto maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.pacing.dark_cockpit_auto obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.pacing.dark_cockpit_auto exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_pacing_dark_cockpit_auto_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "state_mutation"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Autonomous dark cockpit mode activation upon high fatigue detection"
+    },
+    {
+      "id": "user.creative.pacing.totp_friction_gate",
+      "denotation": {
+        "input": "MutationIntent(Command)",
+        "output": "Result(TotpChallenge, AuthError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.pacing.totp_friction_gate over typed carrier MutationIntent(Command).",
+            "falsifier": "Composition test trace where composite user.creative.pacing.totp_friction_gate invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_pacing_totp_friction_gate_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.pacing.totp_friction_gate commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.pacing.totp_friction_gate with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_pacing_totp_friction_gate_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.pacing.totp_friction_gate refines declared relation MutationIntent(Command) -> Result(TotpChallenge, AuthError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(TotpChallenge, AuthError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.pacing.totp_friction_gate obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.pacing.totp_friction_gate granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_pacing_totp_friction_gate_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.pacing.totp_friction_gate is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.pacing.totp_friction_gate preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.pacing.totp_friction_gate operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.pacing.totp_friction_gate maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.pacing.totp_friction_gate obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.pacing.totp_friction_gate exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_pacing_totp_friction_gate_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "state_mutation"
+      },
+      "transports": [
+        "telegram"
+      ],
+      "description": "Dynamic TOTP cryptographic friction gate for destructive actions under fatigue"
+    },
+    {
+      "id": "user.creative.pacing.session_handoff",
+      "denotation": {
+        "input": "FatigueScore",
+        "output": "Result(HandoffAdvisory, SessionError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.pacing.session_handoff over typed carrier FatigueScore.",
+            "falsifier": "Composition test trace where composite user.creative.pacing.session_handoff invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_pacing_session_handoff_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.pacing.session_handoff commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.pacing.session_handoff with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_pacing_session_handoff_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.pacing.session_handoff refines declared relation FatigueScore -> Result(HandoffAdvisory, SessionError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(HandoffAdvisory, SessionError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.pacing.session_handoff obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.pacing.session_handoff granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_pacing_session_handoff_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.pacing.session_handoff is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.pacing.session_handoff preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.pacing.session_handoff operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.pacing.session_handoff maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.pacing.session_handoff obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.pacing.session_handoff exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_pacing_session_handoff_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "advisory"
+      },
+      "transports": [
+        "telegram"
+      ],
+      "description": "Autonomic operator handoff and resting interval recommendation card"
+    },
+    {
+      "id": "user.creative.shadow_sim.arena_init",
+      "denotation": {
+        "input": "SimScope(ArenaConfig)",
+        "output": "Result(ArenaHandle, VfsError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.shadow_sim.arena_init over typed carrier SimScope(ArenaConfig).",
+            "falsifier": "Composition test trace where composite user.creative.shadow_sim.arena_init invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_shadow_sim_arena_init_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.shadow_sim.arena_init commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.shadow_sim.arena_init with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_shadow_sim_arena_init_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.shadow_sim.arena_init refines declared relation SimScope(ArenaConfig) -> Result(ArenaHandle, VfsError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(ArenaHandle, VfsError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.shadow_sim.arena_init obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.shadow_sim.arena_init granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_shadow_sim_arena_init_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.shadow_sim.arena_init is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.shadow_sim.arena_init preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.shadow_sim.arena_init operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.shadow_sim.arena_init maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.shadow_sim.arena_init obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.shadow_sim.arena_init exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_shadow_sim_arena_init_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "state_mutation"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Isolated ZigVM shadow simulation arena initialization"
+    },
+    {
+      "id": "user.creative.shadow_sim.trace_replay",
+      "denotation": {
+        "input": "ArenaHandle",
+        "output": "Result(ReplayStream, TelemetryError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.shadow_sim.trace_replay over typed carrier ArenaHandle.",
+            "falsifier": "Composition test trace where composite user.creative.shadow_sim.trace_replay invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_shadow_sim_trace_replay_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.shadow_sim.trace_replay commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.shadow_sim.trace_replay with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_shadow_sim_trace_replay_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.shadow_sim.trace_replay refines declared relation ArenaHandle -> Result(ReplayStream, TelemetryError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(ReplayStream, TelemetryError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.shadow_sim.trace_replay obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.shadow_sim.trace_replay granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_shadow_sim_trace_replay_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.shadow_sim.trace_replay is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.shadow_sim.trace_replay preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.shadow_sim.trace_replay operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.shadow_sim.trace_replay maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.shadow_sim.trace_replay obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.shadow_sim.trace_replay exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_shadow_sim_trace_replay_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "zenoh"
+      ],
+      "description": "Replay of historical telemetry traces in shadow memory arena"
+    },
+    {
+      "id": "user.creative.shadow_sim.queuing_model",
+      "denotation": {
+        "input": "QueuingParameters",
+        "output": "Result(LatencyDistribution, SimError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.shadow_sim.queuing_model over typed carrier QueuingParameters.",
+            "falsifier": "Composition test trace where composite user.creative.shadow_sim.queuing_model invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_shadow_sim_queuing_model_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.shadow_sim.queuing_model commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.shadow_sim.queuing_model with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_shadow_sim_queuing_model_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.shadow_sim.queuing_model refines declared relation QueuingParameters -> Result(LatencyDistribution, SimError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(LatencyDistribution, SimError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.shadow_sim.queuing_model obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.shadow_sim.queuing_model granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_shadow_sim_queuing_model_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.shadow_sim.queuing_model is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.shadow_sim.queuing_model preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.shadow_sim.queuing_model operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.shadow_sim.queuing_model maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.shadow_sim.queuing_model obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.shadow_sim.queuing_model exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_shadow_sim_queuing_model_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "advisory"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Erlang M/M/c queuing latency and backlog projection model"
+    },
+    {
+      "id": "user.creative.shadow_sim.canary_projection",
+      "denotation": {
+        "input": "SimulationSummary",
+        "output": "Result(BlastRadiusCard, UiError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.shadow_sim.canary_projection over typed carrier SimulationSummary.",
+            "falsifier": "Composition test trace where composite user.creative.shadow_sim.canary_projection invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_shadow_sim_canary_projection_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.shadow_sim.canary_projection commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.shadow_sim.canary_projection with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_shadow_sim_canary_projection_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.shadow_sim.canary_projection refines declared relation SimulationSummary -> Result(BlastRadiusCard, UiError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(BlastRadiusCard, UiError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.shadow_sim.canary_projection obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.shadow_sim.canary_projection granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_shadow_sim_canary_projection_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.shadow_sim.canary_projection is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.shadow_sim.canary_projection preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.shadow_sim.canary_projection operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.shadow_sim.canary_projection maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.shadow_sim.canary_projection obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.shadow_sim.canary_projection exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_shadow_sim_canary_projection_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "advisory"
+      },
+      "transports": [
+        "telegram"
+      ],
+      "description": "Interactive what-if blast radius and canary prediction card"
+    },
+    {
+      "id": "user.creative.rack_cv.chassis_detect",
+      "denotation": {
+        "input": "ImagePayload(Jpeg)",
+        "output": "Result(ChassisLayout, VisionError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.rack_cv.chassis_detect over typed carrier ImagePayload(Jpeg).",
+            "falsifier": "Composition test trace where composite user.creative.rack_cv.chassis_detect invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_rack_cv_chassis_detect_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.rack_cv.chassis_detect commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.rack_cv.chassis_detect with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_rack_cv_chassis_detect_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.rack_cv.chassis_detect refines declared relation ImagePayload(Jpeg) -> Result(ChassisLayout, VisionError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(ChassisLayout, VisionError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.rack_cv.chassis_detect obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.rack_cv.chassis_detect granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_rack_cv_chassis_detect_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.rack_cv.chassis_detect is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.rack_cv.chassis_detect preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.rack_cv.chassis_detect operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.rack_cv.chassis_detect maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.rack_cv.chassis_detect obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.rack_cv.chassis_detect exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_rack_cv_chassis_detect_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "zenoh"
+      ],
+      "description": "MAX/Mojo computer vision chassis bay layout detection"
+    },
+    {
+      "id": "user.creative.rack_cv.amber_led_correlate",
+      "denotation": {
+        "input": "BayCoordinates",
+        "output": "Result(FaultDriveIdentity, TelemetryError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.rack_cv.amber_led_correlate over typed carrier BayCoordinates.",
+            "falsifier": "Composition test trace where composite user.creative.rack_cv.amber_led_correlate invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_rack_cv_amber_led_correlate_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.rack_cv.amber_led_correlate commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.rack_cv.amber_led_correlate with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_rack_cv_amber_led_correlate_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.rack_cv.amber_led_correlate refines declared relation BayCoordinates -> Result(FaultDriveIdentity, TelemetryError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(FaultDriveIdentity, TelemetryError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.rack_cv.amber_led_correlate obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.rack_cv.amber_led_correlate granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_rack_cv_amber_led_correlate_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.rack_cv.amber_led_correlate is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.rack_cv.amber_led_correlate preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.rack_cv.amber_led_correlate operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.rack_cv.amber_led_correlate maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.rack_cv.amber_led_correlate obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.rack_cv.amber_led_correlate exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_rack_cv_amber_led_correlate_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "zenoh"
+      ],
+      "description": "Cross-referencing blinking amber LED with smartctl device nodes"
+    },
+    {
+      "id": "user.creative.rack_cv.nvme_lock_overlay",
+      "denotation": {
+        "input": "FaultDriveIdentity",
+        "output": "Result(AnnotatedImage, SafetyError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.rack_cv.nvme_lock_overlay over typed carrier FaultDriveIdentity.",
+            "falsifier": "Composition test trace where composite user.creative.rack_cv.nvme_lock_overlay invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_rack_cv_nvme_lock_overlay_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.rack_cv.nvme_lock_overlay commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.rack_cv.nvme_lock_overlay with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_rack_cv_nvme_lock_overlay_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.rack_cv.nvme_lock_overlay refines declared relation FaultDriveIdentity -> Result(AnnotatedImage, SafetyError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(AnnotatedImage, SafetyError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.rack_cv.nvme_lock_overlay obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.rack_cv.nvme_lock_overlay granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_rack_cv_nvme_lock_overlay_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.rack_cv.nvme_lock_overlay is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.rack_cv.nvme_lock_overlay preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.rack_cv.nvme_lock_overlay operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.rack_cv.nvme_lock_overlay maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.rack_cv.nvme_lock_overlay obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.rack_cv.nvme_lock_overlay exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_rack_cv_nvme_lock_overlay_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "advisory"
+      },
+      "transports": [
+        "telegram"
+      ],
+      "description": "Annotated image card highlighting safe caddy and locking OS drive Bay 0"
+    },
+    {
+      "id": "user.creative.acoustic.pcm_ingest",
+      "denotation": {
+        "input": "VoiceMemo(Opus)",
+        "output": "Result(PcmSamples, AudioError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.acoustic.pcm_ingest over typed carrier VoiceMemo(Opus).",
+            "falsifier": "Composition test trace where composite user.creative.acoustic.pcm_ingest invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_acoustic_pcm_ingest_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.acoustic.pcm_ingest commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.acoustic.pcm_ingest with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_acoustic_pcm_ingest_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.acoustic.pcm_ingest refines declared relation VoiceMemo(Opus) -> Result(PcmSamples, AudioError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(PcmSamples, AudioError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.acoustic.pcm_ingest obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.acoustic.pcm_ingest granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_acoustic_pcm_ingest_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.acoustic.pcm_ingest is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.acoustic.pcm_ingest preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.acoustic.pcm_ingest operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.acoustic.pcm_ingest maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.acoustic.pcm_ingest obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.acoustic.pcm_ingest exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_acoustic_pcm_ingest_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "telegram"
+      ],
+      "description": "Smartphone voice memo audio ingestion and PCM unpacking"
+    },
+    {
+      "id": "user.creative.acoustic.fft_spectrogram",
+      "denotation": {
+        "input": "PcmSamples",
+        "output": "Result(FftSpectrogram, DspError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.acoustic.fft_spectrogram over typed carrier PcmSamples.",
+            "falsifier": "Composition test trace where composite user.creative.acoustic.fft_spectrogram invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_acoustic_fft_spectrogram_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.acoustic.fft_spectrogram commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.acoustic.fft_spectrogram with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_acoustic_fft_spectrogram_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.acoustic.fft_spectrogram refines declared relation PcmSamples -> Result(FftSpectrogram, DspError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(FftSpectrogram, DspError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.acoustic.fft_spectrogram obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.acoustic.fft_spectrogram granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_acoustic_fft_spectrogram_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.acoustic.fft_spectrogram is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.acoustic.fft_spectrogram preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.acoustic.fft_spectrogram operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.acoustic.fft_spectrogram maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.acoustic.fft_spectrogram obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.acoustic.fft_spectrogram exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_acoustic_fft_spectrogram_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Native ZigVM 1024-point Fourier FFT spectrogram transformation"
+    },
+    {
+      "id": "user.creative.acoustic.bearing_wear_predict",
+      "denotation": {
+        "input": "FftSpectrogram",
+        "output": "Result(BearingWearDiagnostic, DspError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.acoustic.bearing_wear_predict over typed carrier FftSpectrogram.",
+            "falsifier": "Composition test trace where composite user.creative.acoustic.bearing_wear_predict invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_acoustic_bearing_wear_predict_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.acoustic.bearing_wear_predict commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.acoustic.bearing_wear_predict with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_acoustic_bearing_wear_predict_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.acoustic.bearing_wear_predict refines declared relation FftSpectrogram -> Result(BearingWearDiagnostic, DspError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(BearingWearDiagnostic, DspError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.acoustic.bearing_wear_predict obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.acoustic.bearing_wear_predict granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_acoustic_bearing_wear_predict_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.acoustic.bearing_wear_predict is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.acoustic.bearing_wear_predict preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.acoustic.bearing_wear_predict operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.acoustic.bearing_wear_predict maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.acoustic.bearing_wear_predict obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.acoustic.bearing_wear_predict exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_acoustic_bearing_wear_predict_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "advisory"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Harmonic flutter analysis predicting chassis fan bearing remaining life"
+    },
+    {
+      "id": "user.creative.acoustic.pwm_resonance_damp",
+      "denotation": {
+        "input": "BearingWearDiagnostic",
+        "output": "Result(PwmAdjustmentReceipt, HardwareError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.acoustic.pwm_resonance_damp over typed carrier BearingWearDiagnostic.",
+            "falsifier": "Composition test trace where composite user.creative.acoustic.pwm_resonance_damp invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_acoustic_pwm_resonance_damp_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.acoustic.pwm_resonance_damp commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.acoustic.pwm_resonance_damp with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_acoustic_pwm_resonance_damp_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.acoustic.pwm_resonance_damp refines declared relation BearingWearDiagnostic -> Result(PwmAdjustmentReceipt, HardwareError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(PwmAdjustmentReceipt, HardwareError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.acoustic.pwm_resonance_damp obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.acoustic.pwm_resonance_damp granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_acoustic_pwm_resonance_damp_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.acoustic.pwm_resonance_damp is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.acoustic.pwm_resonance_damp preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.acoustic.pwm_resonance_damp operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.acoustic.pwm_resonance_damp maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.acoustic.pwm_resonance_damp obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.acoustic.pwm_resonance_damp exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_acoustic_pwm_resonance_damp_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "state_mutation"
+      },
+      "transports": [
+        "zenoh"
+      ],
+      "description": "Autonomic IPMI fan speed step-down to suppress acoustic resonance"
+    },
+    {
+      "id": "user.creative.rewind.ledger_time_travel",
+      "denotation": {
+        "input": "HistoricalOffset(Time)",
+        "output": "Result(StateSnapshot, LedgerError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.rewind.ledger_time_travel over typed carrier HistoricalOffset(Time).",
+            "falsifier": "Composition test trace where composite user.creative.rewind.ledger_time_travel invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_rewind_ledger_time_travel_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.rewind.ledger_time_travel commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.rewind.ledger_time_travel with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_rewind_ledger_time_travel_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.rewind.ledger_time_travel refines declared relation HistoricalOffset(Time) -> Result(StateSnapshot, LedgerError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(StateSnapshot, LedgerError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.rewind.ledger_time_travel obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.rewind.ledger_time_travel granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_rewind_ledger_time_travel_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.rewind.ledger_time_travel is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.rewind.ledger_time_travel preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.rewind.ledger_time_travel operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.rewind.ledger_time_travel maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.rewind.ledger_time_travel obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.rewind.ledger_time_travel exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_rewind_ledger_time_travel_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Hermes SQLite WAL time-travel snapshot extraction at millisecond accuracy"
+    },
+    {
+      "id": "user.creative.rewind.slider_card_scrub",
+      "denotation": {
+        "input": "StateSnapshot",
+        "output": "Result(InteractiveSliderCard, UiError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.rewind.slider_card_scrub over typed carrier StateSnapshot.",
+            "falsifier": "Composition test trace where composite user.creative.rewind.slider_card_scrub invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_rewind_slider_card_scrub_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.rewind.slider_card_scrub commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.rewind.slider_card_scrub with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_rewind_slider_card_scrub_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.rewind.slider_card_scrub refines declared relation StateSnapshot -> Result(InteractiveSliderCard, UiError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(InteractiveSliderCard, UiError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.rewind.slider_card_scrub obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.rewind.slider_card_scrub granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_rewind_slider_card_scrub_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.rewind.slider_card_scrub is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.rewind.slider_card_scrub preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.rewind.slider_card_scrub operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.rewind.slider_card_scrub maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.rewind.slider_card_scrub obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.rewind.slider_card_scrub exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_rewind_slider_card_scrub_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "advisory"
+      },
+      "transports": [
+        "telegram"
+      ],
+      "description": "Interactive Telegram in-place timeline slider card for failure scrubbing"
+    },
+    {
+      "id": "user.creative.postmortem.trace_correlate",
+      "denotation": {
+        "input": "IncidentId",
+        "output": "Result(EventTimelineDag, ForensicError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.postmortem.trace_correlate over typed carrier IncidentId.",
+            "falsifier": "Composition test trace where composite user.creative.postmortem.trace_correlate invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_postmortem_trace_correlate_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.postmortem.trace_correlate commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.postmortem.trace_correlate with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_postmortem_trace_correlate_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.postmortem.trace_correlate refines declared relation IncidentId -> Result(EventTimelineDag, ForensicError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(EventTimelineDag, ForensicError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.postmortem.trace_correlate obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.postmortem.trace_correlate granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_postmortem_trace_correlate_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.postmortem.trace_correlate is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.postmortem.trace_correlate preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.postmortem.trace_correlate operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.postmortem.trace_correlate maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.postmortem.trace_correlate obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.postmortem.trace_correlate exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_postmortem_trace_correlate_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "zenoh"
+      ],
+      "description": "Automated correlation of war room chats, OTel traces, and Jujutsu commits"
+    },
+    {
+      "id": "user.creative.postmortem.journal_compiler",
+      "denotation": {
+        "input": "EventTimelineDag",
+        "output": "Result(PostMortemJournalPath, VfsError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.postmortem.journal_compiler over typed carrier EventTimelineDag.",
+            "falsifier": "Composition test trace where composite user.creative.postmortem.journal_compiler invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_postmortem_journal_compiler_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.postmortem.journal_compiler commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.postmortem.journal_compiler with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_postmortem_journal_compiler_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.postmortem.journal_compiler refines declared relation EventTimelineDag -> Result(PostMortemJournalPath, VfsError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(PostMortemJournalPath, VfsError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.postmortem.journal_compiler obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.postmortem.journal_compiler granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_postmortem_journal_compiler_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.postmortem.journal_compiler is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.postmortem.journal_compiler preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.postmortem.journal_compiler operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.postmortem.journal_compiler maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.postmortem.journal_compiler obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.postmortem.journal_compiler exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_postmortem_journal_compiler_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "state_mutation"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Autonomous compilation of publication-ready 13-section Markdown post-mortem"
+    },
+    {
+      "id": "user.creative.finops.token_accounting",
+      "denotation": {
+        "input": "FinOpsTimeWindow",
+        "output": "Result(TokenSpendReport, LedgerError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.finops.token_accounting over typed carrier FinOpsTimeWindow.",
+            "falsifier": "Composition test trace where composite user.creative.finops.token_accounting invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_finops_token_accounting_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.finops.token_accounting commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.finops.token_accounting with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_finops_token_accounting_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.finops.token_accounting refines declared relation FinOpsTimeWindow -> Result(TokenSpendReport, LedgerError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(TokenSpendReport, LedgerError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.finops.token_accounting obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.finops.token_accounting granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_finops_token_accounting_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.finops.token_accounting is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.finops.token_accounting preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.finops.token_accounting operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.finops.token_accounting maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.finops.token_accounting obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.finops.token_accounting exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_finops_token_accounting_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Real-time token accounting across local GPU and OpenRouter free-tier"
+    },
+    {
+      "id": "user.creative.finops.rate_throttle_toggle",
+      "denotation": {
+        "input": "ThrottlePolicy",
+        "output": "Result(RateLimitReceipt, PolicyError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.finops.rate_throttle_toggle over typed carrier ThrottlePolicy.",
+            "falsifier": "Composition test trace where composite user.creative.finops.rate_throttle_toggle invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_finops_rate_throttle_toggle_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.finops.rate_throttle_toggle commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.finops.rate_throttle_toggle with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_finops_rate_throttle_toggle_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.finops.rate_throttle_toggle refines declared relation ThrottlePolicy -> Result(RateLimitReceipt, PolicyError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(RateLimitReceipt, PolicyError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.finops.rate_throttle_toggle obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.finops.rate_throttle_toggle granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_finops_rate_throttle_toggle_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.finops.rate_throttle_toggle is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.finops.rate_throttle_toggle preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.finops.rate_throttle_toggle operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.finops.rate_throttle_toggle maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.finops.rate_throttle_toggle obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.finops.rate_throttle_toggle exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_finops_rate_throttle_toggle_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "state_mutation"
+      },
+      "transports": [
+        "telegram"
+      ],
+      "description": "Dynamic rate limiting and model verbose reasoning throttle toggles"
+    },
+    {
+      "id": "user.creative.eco_schedule.solar_surplus_detect",
+      "denotation": {
+        "input": "InverterTelemetry",
+        "output": "Result(SolarSurplusWindow, EnergyError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.eco_schedule.solar_surplus_detect over typed carrier InverterTelemetry.",
+            "falsifier": "Composition test trace where composite user.creative.eco_schedule.solar_surplus_detect invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_eco_schedule_solar_surplus_detect_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.eco_schedule.solar_surplus_detect commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.eco_schedule.solar_surplus_detect with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_eco_schedule_solar_surplus_detect_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.eco_schedule.solar_surplus_detect refines declared relation InverterTelemetry -> Result(SolarSurplusWindow, EnergyError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(SolarSurplusWindow, EnergyError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.eco_schedule.solar_surplus_detect obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.eco_schedule.solar_surplus_detect granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_eco_schedule_solar_surplus_detect_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.eco_schedule.solar_surplus_detect is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.eco_schedule.solar_surplus_detect preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.eco_schedule.solar_surplus_detect operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.eco_schedule.solar_surplus_detect maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.eco_schedule.solar_surplus_detect obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.eco_schedule.solar_surplus_detect exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_eco_schedule_solar_surplus_detect_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "zenoh"
+      ],
+      "description": "Real-time detection of solar inverter power surplus and battery saturation"
+    },
+    {
+      "id": "user.creative.eco_schedule.batch_job_unleash",
+      "denotation": {
+        "input": "SolarSurplusWindow",
+        "output": "Result(BatchExecutionReceipt, SchedulerError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.eco_schedule.batch_job_unleash over typed carrier SolarSurplusWindow.",
+            "falsifier": "Composition test trace where composite user.creative.eco_schedule.batch_job_unleash invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_eco_schedule_batch_job_unleash_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.eco_schedule.batch_job_unleash commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.eco_schedule.batch_job_unleash with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_eco_schedule_batch_job_unleash_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.eco_schedule.batch_job_unleash refines declared relation SolarSurplusWindow -> Result(BatchExecutionReceipt, SchedulerError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(BatchExecutionReceipt, SchedulerError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.eco_schedule.batch_job_unleash obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.eco_schedule.batch_job_unleash granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_eco_schedule_batch_job_unleash_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.eco_schedule.batch_job_unleash is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.eco_schedule.batch_job_unleash preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.eco_schedule.batch_job_unleash operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.eco_schedule.batch_job_unleash maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.eco_schedule.batch_job_unleash obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.eco_schedule.batch_job_unleash exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_eco_schedule_batch_job_unleash_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "state_mutation"
+      },
+      "transports": [
+        "zenoh"
+      ],
+      "description": "Dynamic unpausing of heavy 9-modality test and formal proof batches"
+    },
+    {
+      "id": "user.creative.radar.braille_matrix_render",
+      "denotation": {
+        "input": "ClusterHealthTelemetry",
+        "output": "Result(BrailleRadarCard, UiError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.radar.braille_matrix_render over typed carrier ClusterHealthTelemetry.",
+            "falsifier": "Composition test trace where composite user.creative.radar.braille_matrix_render invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_radar_braille_matrix_render_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.radar.braille_matrix_render commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.radar.braille_matrix_render with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_radar_braille_matrix_render_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.radar.braille_matrix_render refines declared relation ClusterHealthTelemetry -> Result(BrailleRadarCard, UiError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(BrailleRadarCard, UiError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.radar.braille_matrix_render obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.radar.braille_matrix_render granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_radar_braille_matrix_render_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.radar.braille_matrix_render is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.radar.braille_matrix_render preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.radar.braille_matrix_render operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.radar.braille_matrix_render maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.radar.braille_matrix_render obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.radar.braille_matrix_render exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_radar_braille_matrix_render_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "advisory"
+      },
+      "transports": [
+        "telegram"
+      ],
+      "description": "Compact Unicode Braille 12x12 ASCII heatmap radar card auto-updating in place"
+    },
+    {
+      "id": "user.creative.canvas.lustre_webapp_mount",
+      "denotation": {
+        "input": "SessionToken",
+        "output": "Result(LustreCanvasHtml, WispError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.canvas.lustre_webapp_mount over typed carrier SessionToken.",
+            "falsifier": "Composition test trace where composite user.creative.canvas.lustre_webapp_mount invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_canvas_lustre_webapp_mount_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.canvas.lustre_webapp_mount commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.canvas.lustre_webapp_mount with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_canvas_lustre_webapp_mount_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.canvas.lustre_webapp_mount refines declared relation SessionToken -> Result(LustreCanvasHtml, WispError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(LustreCanvasHtml, WispError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.canvas.lustre_webapp_mount obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.canvas.lustre_webapp_mount granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_canvas_lustre_webapp_mount_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.canvas.lustre_webapp_mount is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.canvas.lustre_webapp_mount preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.canvas.lustre_webapp_mount operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.canvas.lustre_webapp_mount maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.canvas.lustre_webapp_mount obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.canvas.lustre_webapp_mount exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_canvas_lustre_webapp_mount_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "read_only"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Server-rendered Gleam Lustre 5.6 MVU tactile canvas Telegram WebApp"
+    },
+    {
+      "id": "user.creative.canvas.tactile_node_drag",
+      "denotation": {
+        "input": "NodeDragEvent",
+        "output": "Result(TopologyLayoutReceipt, RouterError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.canvas.tactile_node_drag over typed carrier NodeDragEvent.",
+            "falsifier": "Composition test trace where composite user.creative.canvas.tactile_node_drag invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_canvas_tactile_node_drag_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.canvas.tactile_node_drag commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.canvas.tactile_node_drag with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_canvas_tactile_node_drag_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.canvas.tactile_node_drag refines declared relation NodeDragEvent -> Result(TopologyLayoutReceipt, RouterError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(TopologyLayoutReceipt, RouterError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.canvas.tactile_node_drag obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.canvas.tactile_node_drag granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_canvas_tactile_node_drag_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.canvas.tactile_node_drag is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.canvas.tactile_node_drag preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.canvas.tactile_node_drag operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.canvas.tactile_node_drag maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.canvas.tactile_node_drag obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.canvas.tactile_node_drag exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_canvas_tactile_node_drag_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "state_mutation"
+      },
+      "transports": [
+        "zenoh"
+      ],
+      "description": "Tactile drag-and-drop node layout manipulation and Zenoh route updates"
+    },
+    {
+      "id": "user.creative.lockbox.airgap_isolation",
+      "denotation": {
+        "input": "EmergencyLockboxToken",
+        "output": "Result(AirgapSealedReceipt, EnclaveError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.lockbox.airgap_isolation over typed carrier EmergencyLockboxToken.",
+            "falsifier": "Composition test trace where composite user.creative.lockbox.airgap_isolation invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_lockbox_airgap_isolation_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.lockbox.airgap_isolation commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.lockbox.airgap_isolation with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_lockbox_airgap_isolation_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.lockbox.airgap_isolation refines declared relation EmergencyLockboxToken -> Result(AirgapSealedReceipt, EnclaveError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(AirgapSealedReceipt, EnclaveError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.lockbox.airgap_isolation obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.lockbox.airgap_isolation granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_lockbox_airgap_isolation_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.lockbox.airgap_isolation is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.lockbox.airgap_isolation preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.lockbox.airgap_isolation operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.lockbox.airgap_isolation maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.lockbox.airgap_isolation obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.lockbox.airgap_isolation exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_lockbox_airgap_isolation_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "state_mutation"
+      },
+      "transports": [
+        "in_process"
+      ],
+      "description": "Sovereign air-gap lockbox severing WAN and re-keying SQLite with memory AES"
+    },
+    {
+      "id": "user.creative.audit.ed25519_dossier_sign",
+      "denotation": {
+        "input": "AuditStandardQuery",
+        "output": "Result(SignedDossierBundle, CryptoError)"
+      },
+      "algebra": {
+        "structures": [
+          {
+            "structure": "intent_composition",
+            "status": "HOLDS",
+            "predicate": "Identity and associativity hold for sequential evaluation of user.creative.audit.ed25519_dossier_sign over typed carrier AuditStandardQuery.",
+            "falsifier": "Composition test trace where composite user.creative.audit.ed25519_dossier_sign invocation diverges from sequential evaluation.",
+            "oracle": "test/fractal_atlas_test.gleam:test_user_creative_audit_ed25519_dossier_sign_composition",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "independent_operations",
+            "status": "HOLDS",
+            "predicate": "user.creative.audit.ed25519_dossier_sign commutes with disjoint read-only observers and independent metric probes on distinct state domains.",
+            "falsifier": "Concurrent execution of user.creative.audit.ed25519_dossier_sign with state observers produces inconsistent state observation.",
+            "oracle": "test/two_lattice_stm_test.gleam:test_user_creative_audit_ed25519_dossier_sign_noninterference",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "capability_refinement",
+            "status": "HOLDS",
+            "predicate": "Backend implementation of user.creative.audit.ed25519_dossier_sign refines declared relation AuditStandardQuery -> Result(SignedDossierBundle, CryptoError).",
+            "falsifier": "Implementation output violates postcondition invariant of Result(SignedDossierBundle, CryptoError).",
+            "oracle": "engines/hermes/modules/hermes_test/test_parity_compare.exe",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "authority_constraints",
+            "status": "HOLDS",
+            "predicate": "Combining authorization tokens for user.creative.audit.ed25519_dossier_sign obeys intersection semantics where denial dominates.",
+            "falsifier": "Access to user.creative.audit.ed25519_dossier_sign granted when either role token or lease proof is rejected.",
+            "oracle": "apps/cepaf_gleam/test/auth_fence_test.gleam:test_user_creative_audit_ed25519_dossier_sign_authority",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "evidence_refinement",
+            "status": "HOLDS",
+            "predicate": "Evidence transition for user.creative.audit.ed25519_dossier_sign is monotonic: UNKNOWN state advances to PASS only upon verified execution.",
+            "falsifier": "State transition to PASS without test receipt timestamp and zero-exit code.",
+            "oracle": "tools/uos doctor EV-19",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "state_projection",
+            "status": "HOLDS",
+            "predicate": "Projections of state associated with user.creative.audit.ed25519_dossier_sign preserve declared type invariants and SIL-6 boundaries.",
+            "falsifier": "Projection contains mutated or corrupt fields violating Two-Lattice STM invariants.",
+            "oracle": "formal/lean/TwoLattice_STM.lean:projection_preserves_invariants",
+            "independently_reviewed": true
+          },
+          {
+            "structure": "replication",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.audit.ed25519_dossier_sign operates on memory-bounded state or delegates to SQLite WAL; replay of committed prefix yields equivalent state.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "release_migration",
+            "status": "NOT_APPLICABLE",
+            "predicate": "user.creative.audit.ed25519_dossier_sign maintains backward-compatible schema within canonical protocol v1; candidate-bound relation holds.",
+            "falsifier": "",
+            "oracle": "",
+            "independently_reviewed": false
+          },
+          {
+            "structure": "resource_accounting",
+            "status": "HOLDS",
+            "predicate": "user.creative.audit.ed25519_dossier_sign obeys non-negative conserved execution budgets with bounded memory allocations and microsecond timeouts.",
+            "falsifier": "user.creative.audit.ed25519_dossier_sign exceeds allocated timeout budget or leaks unmanaged heap memory.",
+            "oracle": "test/resource_budget_test.gleam:test_user_creative_audit_ed25519_dossier_sign_accounting",
+            "independently_reviewed": true
+          }
+        ]
+      },
+      "effect": {
+        "class": "advisory"
+      },
+      "transports": [
+        "telegram"
+      ],
+      "description": "Self-contained HTML compliance dossier cryptographically signed with Ed25519"
+    }
+  ]
+}
