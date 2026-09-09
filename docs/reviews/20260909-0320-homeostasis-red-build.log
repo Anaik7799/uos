@@ -1,0 +1,201 @@
+  Compiling uos_tui
+  Compiling uos_swarm
+/home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/build/dev/erlang/uos_swarm/_gleam_artefacts/uos_jj_ffi.erl:67:9: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%   67|     _ = catch erlang:port_close(Port),
+%     |         ^
+
+/home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/build/dev/erlang/uos_swarm/_gleam_artefacts/uos_jj_ffi.erl:81:38: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%   81|                     after 250 -> _ = catch erlang:port_close(Killer), ok
+%     |                                      ^
+
+/home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/build/dev/erlang/uos_swarm/_gleam_artefacts/uos_swarm@decision_record.erl:162:2: Warning: local redefinition of built-in type: record()
+%  162| -type record() :: {prepared_record, prepared_decision()} |
+%     |  ^
+
+/home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/build/dev/erlang/uos_swarm/_gleam_artefacts/uos_herdr_ffi.erl:115:9: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%  115|     _ = catch erlang:port_close(Port),
+%     |         ^
+
+/home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/build/dev/erlang/uos_swarm/_gleam_artefacts/uos_herdr_ffi.erl:129:38: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%  129|                     after 250 -> _ = catch erlang:port_close(Killer), ok
+%     |                                      ^
+
+/home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/build/dev/erlang/uos_swarm/_gleam_artefacts/session_sync_ffi.erl:256:26: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%  256|                     case catch binary_to_integer(Pid) of
+%     |                          ^
+
+/home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/build/dev/erlang/uos_swarm/_gleam_artefacts/session_sync_test_ffi.erl:43:9: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%   43|         catch port_close(Port),
+%     |         ^
+
+/home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/build/dev/erlang/uos_swarm/_gleam_artefacts/session_sync_test_ffi.erl:47:5: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%   47|     catch port_close(Port),
+%     |     ^
+
+  Compiling cepaf_gleam
+warning: Unused imported item
+  ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/century_hud_test.gleam:6:3
+  │
+6 │   CenturyHudState, MathGates, TriSovereignStatus, init_century_hud, render_ansi,
+  │   ^^^^^^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+  ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/century_hud_test.gleam:6:20
+  │
+6 │   CenturyHudState, MathGates, TriSovereignStatus, init_century_hud, render_ansi,
+  │                    ^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+  ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/century_hud_test.gleam:6:31
+  │
+6 │   CenturyHudState, MathGates, TriSovereignStatus, init_century_hud, render_ansi,
+  │                               ^^^^^^^^^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+  ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/chaos_immune_engine_test.gleam:6:44
+  │
+6 │   AntibodyNeutralized, AndonEmergencyHalt, HeartbeatJitter, HotReloadTriggered,
+  │                                            ^^^^^^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+  ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/deadman_freshness_test.gleam:7:3
+  │
+7 │   HeartbeatNominal, HeartbeatTripped, HeartbeatWarning,
+  │   ^^^^^^^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+  ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/deadman_freshness_test.gleam:7:21
+  │
+7 │   HeartbeatNominal, HeartbeatTripped, HeartbeatWarning,
+  │                     ^^^^^^^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+  ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/deadman_freshness_test.gleam:7:39
+  │
+7 │   HeartbeatNominal, HeartbeatTripped, HeartbeatWarning,
+  │                                       ^^^^^^^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+   ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/delta_mesh_engine_test.gleam:11:3
+   │
+11 │   SyncDelta, SyncDigest,
+   │   ^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported type
+   ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/intent_validator_test.gleam:10:3
+   │
+10 │   type ContainerIntent, type IntentConfig, ContainerIntent, IntentConfig,
+   │   ^^^^^^^^^^^^^^^^^^^^ This imported type is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported type
+   ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/multi_surface_verifier_test.gleam:15:3
+   │
+15 │   type ContainerIntent, type IntentConfig, ContainerIntent, IntentConfig,
+   │   ^^^^^^^^^^^^^^^^^^^^ This imported type is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported type
+   ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/multi_surface_verifier_test.gleam:15:25
+   │
+15 │   type ContainerIntent, type IntentConfig, ContainerIntent, IntentConfig,
+   │                         ^^^^^^^^^^^^^^^^^ This imported type is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+  ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/work_stealing_test.gleam:7:3
+  │
+7 │   RandomVictim, StealableTask, apply_steal_response, enqueue_local_task,
+  │   ^^^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+/home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/_gleam_artefacts/secret_api_ffi.erl:154:9: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%  154|         catch port_close(Port),
+%     |         ^
+
+/home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/_gleam_artefacts/cepaf_gleam_ffi.erl:469:34: Warning: http_uri:encode/1 is deprecated; use uri_string:quote function instead
+%  469|     unicode:characters_to_binary(http_uri:encode(binary_to_list(Input))).
+%     |                                  ^
+
+/home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/_gleam_artefacts/graphene_nif.erl:32:10: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%   32|     case catch json:decode(iolist_to_binary(NodesJson)) of
+%     |          ^
+
+/home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/_gleam_artefacts/graphene_nif.erl:39:10: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%   39|     case catch json:decode(iolist_to_binary(EdgesJson)) of
+%     |          ^
+
+/home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/_gleam_artefacts/graphene_nif.erl:320:18: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%  320|     IsDag = case catch json:decode(TopoJson) of
+%     |                  ^
+
+/home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/_gleam_artefacts/graphene_nif.erl:325:21: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%  325|     SccCount = case catch json:decode(SccJson) of
+%     |                     ^
+
+/home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/_gleam_artefacts/graphene_nif.erl:364:17: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%  364|     Type = case catch json:decode(ShapeJson) of
+%     |                 ^
+
+/home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/_gleam_artefacts/graphene_nif.erl:374:19: Warning: 'catch ...' is deprecated; please use 'try ... catch ... end' instead.
+Compile directive 'nowarn_deprecated_catch' can be used to suppress
+warnings in selected modules.
+%  374|     Params = case catch json:decode(ParamsJson) of
+%     |                   ^
+
+/home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/build/dev/erlang/cepaf_gleam/_gleam_artefacts/graphene_nif.erl:397:17: Warning: matching on the float 0.0 will no longer also match -0.0 in OTP 27.
+If you specifically intend to match 0.0 alone, write +0.0 instead.
+%  397|                 0.0 -> {0.0, 0.0};
+%     |                 ^
+
+src/cepaf_gleam/ui/web/dashboard_views.gleam:177:13: Warning: a term is constructed, but never used
+%  177|       "Biomorphic SIL-6 Mesh - 50 cybernetic enhancement vectors active | R refresh | Ctrl+K search",
+%     |             ^
+
+   Compiled in 15.07s

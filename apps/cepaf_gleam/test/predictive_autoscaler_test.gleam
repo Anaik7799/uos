@@ -42,7 +42,9 @@ pub fn token_exhaustion_test() {
   let res = consume_tokens(a0, 500, 1000)
   case res {
     Ok(_) -> panic as "Expected error due to token exhaustion"
-    Error(msg) -> should.be_true(msg != "")
+    Error(error) ->
+      error
+      |> should.equal(predictive_autoscaler.TokenBudgetExhausted(500, 100))
   }
 }
 

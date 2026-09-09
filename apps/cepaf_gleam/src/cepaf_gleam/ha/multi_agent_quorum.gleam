@@ -83,6 +83,7 @@ pub type QuorumBallot {
     policy: QuorumPolicy,
     total_eligible: Int,
     required_approvals: Int,
+    eligible_voters: List(SovereignAgent),
     votes: List(BallotVote),
     byzantine_violators: List(String),
     verdict: QuorumVerdict,
@@ -130,6 +131,29 @@ pub fn create_ballot(
     }
     UnanimousSovereign -> #(3, 3)
   }
+  // Identity is the typed sovereign, never its display name. Larger BFT
+  // configurations require a separate explicit roster API before use.
+  let eligible_voters = case policy {
+    TwoOfThreeSovereign | UnanimousSovereign -> [
+      AgySovereign,
+      ClaudeSovereign,
+      CodexSovereign,
+    ]
+    ThreeOfFourSovereign | ByzantineFaultTolerant(1) -> [
+      AgySovereign,
+      ClaudeSovereign,
+      CodexSovereign,
+      OpenRouterSovereign,
+    ]
+    ByzantineFaultTolerant(0) -> [AgySovereign]
+    ByzantineFaultTolerant(_) -> []
+  }
+  let verdict = case
+    list.length(eligible_voters) == total_eligible && total_eligible > 0
+  {
+    True -> VerdictPending
+    False -> VerdictByzantineFault("POLICY", "Unsupported sovereign roster")
+  }
 
   QuorumBallot(
     proposal_id: proposal_id,
@@ -137,9 +161,10 @@ pub fn create_ballot(
     policy: policy,
     total_eligible: total_eligible,
     required_approvals: required_approvals,
+    eligible_voters: eligible_voters,
     votes: [],
     byzantine_violators: [],
-    verdict: VerdictPending,
+    verdict: verdict,
     created_at_us: now_us,
     finalized_at_us: 0,
   )
@@ -154,12 +179,26 @@ pub fn cast_ballot_vote(
   digest: String,
   now_us: Int,
 ) -> QuorumBallot {
+  let eligible = list.contains(ballot.eligible_voters, voter)
   case ballot.verdict {
-    VerdictRatified(..) | VerdictRejected(..) -> ballot
-    _ -> {
+    VerdictRatified(..) | VerdictRejected(..) | VerdictByzantineFault(..) ->
+      ballot
+    VerdictPending if !eligible ->
+      QuorumBallot(
+        ..ballot,
+        verdict: VerdictByzantineFault(
+          sovereign_to_string(voter),
+          "Voter is not eligible for this ballot",
+        ),
+        byzantine_violators: [
+          sovereign_to_string(voter),
+          ..ballot.byzantine_violators
+        ],
+        finalized_at_us: now_us,
+      )
+    VerdictPending -> {
       let voter_name = sovereign_to_string(voter)
-      let existing_vote =
-        list.find(ballot.votes, fn(v) { sovereign_to_string(v.voter) == voter_name })
+      let existing_vote = list.find(ballot.votes, fn(v) { v.voter == voter })
 
       case existing_vote {
         Ok(prev) -> {
@@ -191,7 +230,12 @@ pub fn cast_ballot_vote(
               timestamp_us: now_us,
             )
           let updated_votes = [new_entry, ..ballot.votes]
-          let outcome = evaluate_ballot_verdict(updated_votes, ballot.required_approvals, ballot.total_eligible)
+          let outcome =
+            evaluate_ballot_verdict(
+              updated_votes,
+              ballot.required_approvals,
+              ballot.total_eligible,
+            )
           let final_ts = case outcome {
             VerdictPending -> 0
             _ -> now_us
@@ -238,10 +282,12 @@ pub fn evaluate_ballot_verdict(
       let max_possible_approvals = total_eligible - rejects
       case max_possible_approvals < required_approvals {
         True -> VerdictRejected(rejections: rejects, total_votes: total_cast)
-        False -> case total_cast >= total_eligible {
-          True -> VerdictRejected(rejections: rejects, total_votes: total_cast)
-          False -> VerdictPending
-        }
+        False ->
+          case total_cast >= total_eligible {
+            True ->
+              VerdictRejected(rejections: rejects, total_votes: total_cast)
+            False -> VerdictPending
+          }
       }
     }
   }
@@ -255,11 +301,15 @@ pub fn compute_vote_entropy(ballot: QuorumBallot) -> Float {
     False -> {
       let total_f = int.to_float(total)
       let approves =
-        int.to_float(list.count(ballot.votes, fn(v) { v.vote == QuorumApprove }))
+        int.to_float(
+          list.count(ballot.votes, fn(v) { v.vote == QuorumApprove }),
+        )
       let rejects =
         int.to_float(list.count(ballot.votes, fn(v) { v.vote == QuorumReject }))
       let abstains =
-        int.to_float(list.count(ballot.votes, fn(v) { v.vote == QuorumAbstain }))
+        int.to_float(
+          list.count(ballot.votes, fn(v) { v.vote == QuorumAbstain }),
+        )
 
       let entropy =
         term_entropy(approves, total_f)
@@ -297,11 +347,12 @@ pub fn record_ballot(
   engine: QuorumEngineState,
   ballot: QuorumBallot,
 ) -> QuorumEngineState {
-  let is_new =
-    case list.find(engine.ballots, fn(b) { b.proposal_id == ballot.proposal_id }) {
-      Ok(_) -> False
-      Error(Nil) -> True
-    }
+  let is_new = case
+    list.find(engine.ballots, fn(b) { b.proposal_id == ballot.proposal_id })
+  {
+    Ok(_) -> False
+    Error(Nil) -> True
+  }
 
   let filtered =
     list.filter(engine.ballots, fn(b) { b.proposal_id != ballot.proposal_id })

@@ -1,0 +1,182 @@
+OTP="29" ERTS="17.0.5"
+======================== EUnit ========================
+module 'ev_control_boundary_test'
+  ev_control_boundary_test: outsider_cannot_ratify_test...*failed*
+in function gleeunit@should:not_equal/2 (src/gleeunit/should.gleam, line 27)
+in call from ev_control_boundary_test:outsider_cannot_ratify_test/0 (test/ev_control_boundary_test.gleam, line 56)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+**error:#{function => <<"not_equal">>,line => 23,
+  message =>
+      <<"\nVerdictRatified(2, 2)\nshould not equal\nVerdictRatified(2, 2)">>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  ev_control_boundary_test: named_peer_cannot_impersonate_sovereign_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"equal">>,line => 10,
+  message =>
+      <<"\n[BallotVote(PeerSovereign(\"AGY\"), QuorumApprove, \"\", \"\", 1100)]\nshould "...>>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  ev_control_boundary_test: byzantine_fault_is_terminal_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"equal">>,line => 10,
+  message =>
+      <<"\nQuorumBallot(\"p\", \"fixture\", TwoOfThreeSovereign, 3, 2, [BallotVote(Cla"...>>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  ev_control_boundary_test: negative_debit_is_rejected_test...*failed*
+in function gleeunit@should:be_error/1 (src/gleeunit/should.gleam, line 47)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"be_error">>,line => 42,
+  message =>
+      <<"\nOk(AutoscalerState(1, 1, 2, 0, 0, 0.0, TokenBucket(100, 101, 10, 1000),"...>>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  ev_control_boundary_test: intervention_after_ratification_blocks_apply_test...*failed*
+in function gleeunit@should:be_error/1 (src/gleeunit/should.gleam, line 47)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"be_error">>,line => 42,
+  message =>
+      <<"\nOk(HomeostasisSystemState(HomeostasisPidConfig(1.2, 0.15, 0.08, 1.0, 2."...>>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  ev_control_boundary_test: physiology_after_ratification_blocks_apply_test...*failed*
+in function gleeunit@should:be_error/1 (src/gleeunit/should.gleam, line 47)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"be_error">>,line => 42,
+  message =>
+      <<"\nOk(HomeostasisSystemState(HomeostasisPidConfig(1.2, 0.15, 0.08, 1.0, 2."...>>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  ev_control_boundary_test: ratified_replay_is_rejected_test...*failed*
+in function gleeunit@should:be_error/1 (src/gleeunit/should.gleam, line 47)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"be_error">>,line => 42,
+  message =>
+      <<"\nOk(HomeostasisSystemState(HomeostasisPidConfig(1.2, 0.15, 0.08, 1.0, 2."...>>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  ev_control_boundary_test: forged_verdict_without_votes_is_rejected_test...*failed*
+in function gleeunit@should:be_error/1 (src/gleeunit/should.gleam, line 47)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"be_error">>,line => 42,
+  message =>
+      <<"\nOk(HomeostasisSystemState(HomeostasisPidConfig(1.2, 0.15, 0.08, 1.0, 2."...>>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  ev_control_boundary_test: mismatched_mutation_is_rejected_test...*failed*
+in function gleeunit@should:be_error/1 (src/gleeunit/should.gleam, line 47)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"be_error">>,line => 42,
+  message =>
+      <<"\nOk(HomeostasisSystemState(HomeostasisPidConfig(1.2, 0.15, 0.08, 1.0, 2."...>>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  ev_control_boundary_test: skipped_generation_is_rejected_test...*failed*
+in function gleeunit@should:be_error/1 (src/gleeunit/should.gleam, line 47)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"be_error">>,line => 42,
+  message =>
+      <<"\nOk(HomeostasisSystemState(HomeostasisPidConfig(1.2, 0.15, 0.08, 1.0, 2."...>>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  ev_control_boundary_test: actor_rejects_unsubmitted_proposal_test...*failed*
+in function gleeunit@should:be_error/1 (src/gleeunit/should.gleam, line 47)
+in call from ev_control_boundary_test:actor_rejects_unsubmitted_proposal_test/0 (test/ev_control_boundary_test.gleam, line 154)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+**error:#{function => <<"be_error">>,line => 42,
+  message =>
+      <<"\nOk(HomeostasisSystemState(HomeostasisPidConfig(1.2, 0.15, 0.08, 1.0, 2."...>>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  [done in 0.042 s]
+=======================================================
+  Failed: 11.  Skipped: 0.  Passed: 0.

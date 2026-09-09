@@ -1,0 +1,133 @@
+warning: Unused imported item
+  ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/century_hud_test.gleam:6:3
+  │
+6 │   CenturyHudState, MathGates, TriSovereignStatus, init_century_hud, render_ansi,
+  │   ^^^^^^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+  ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/century_hud_test.gleam:6:20
+  │
+6 │   CenturyHudState, MathGates, TriSovereignStatus, init_century_hud, render_ansi,
+  │                    ^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+  ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/century_hud_test.gleam:6:31
+  │
+6 │   CenturyHudState, MathGates, TriSovereignStatus, init_century_hud, render_ansi,
+  │                               ^^^^^^^^^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+  ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/chaos_immune_engine_test.gleam:6:44
+  │
+6 │   AntibodyNeutralized, AndonEmergencyHalt, HeartbeatJitter, HotReloadTriggered,
+  │                                            ^^^^^^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+  ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/deadman_freshness_test.gleam:7:3
+  │
+7 │   HeartbeatNominal, HeartbeatTripped, HeartbeatWarning,
+  │   ^^^^^^^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+  ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/deadman_freshness_test.gleam:7:21
+  │
+7 │   HeartbeatNominal, HeartbeatTripped, HeartbeatWarning,
+  │                     ^^^^^^^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+  ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/deadman_freshness_test.gleam:7:39
+  │
+7 │   HeartbeatNominal, HeartbeatTripped, HeartbeatWarning,
+  │                                       ^^^^^^^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+   ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/delta_mesh_engine_test.gleam:11:3
+   │
+11 │   SyncDelta, SyncDigest,
+   │   ^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported type
+   ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/intent_validator_test.gleam:10:3
+   │
+10 │   type ContainerIntent, type IntentConfig, ContainerIntent, IntentConfig,
+   │   ^^^^^^^^^^^^^^^^^^^^ This imported type is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported type
+   ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/multi_surface_verifier_test.gleam:15:3
+   │
+15 │   type ContainerIntent, type IntentConfig, ContainerIntent, IntentConfig,
+   │   ^^^^^^^^^^^^^^^^^^^^ This imported type is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported type
+   ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/multi_surface_verifier_test.gleam:15:25
+   │
+15 │   type ContainerIntent, type IntentConfig, ContainerIntent, IntentConfig,
+   │                         ^^^^^^^^^^^^^^^^^ This imported type is never used
+
+Hint: You can safely remove it.
+
+warning: Unused imported item
+  ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/work_stealing_test.gleam:7:3
+  │
+7 │   RandomVictim, StealableTask, apply_steal_response, enqueue_local_task,
+  │   ^^^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+  Compiling cepaf_gleam
+warning: Unused imported item
+   ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/homeostasis_evolution_engine.gleam:31:62
+   │
+31 │   CodexSovereign, OpenRouterSovereign, ThreeOfFourSovereign, VerdictPending,
+   │                                                              ^^^^^^^^^^^^^^ This imported constructor is never used
+
+Hint: You can safely remove it.
+
+warning: Unused function argument
+    ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/ev_control_boundary_test.gleam:248:15
+    │
+248 │ fn stop_actor(started) {
+    │               ^^^^^^^ This argument is never used
+
+Hint: You can ignore it with an underscore: `_started`.
+
+error: Unknown type for record access
+    ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/ev_control_boundary_test.gleam:249:18
+    │
+249 │   process.unlink(started.pid)
+    │                  ^^^^^^^ I don't know what type this is
+
+In order to access a record field we need to know what type it is, but I
+can't tell the type here. Try adding type annotations to your function and
+try again.
+
+error: Unknown type for record access
+    ┌─ /home/an/NAS-setup/uos/.uos-workspaces/ev-homeostasis-repair-20260909/apps/cepaf_gleam/test/ev_control_boundary_test.gleam:250:16
+    │
+250 │   process.kill(started.pid)
+    │                ^^^^^^^ I don't know what type this is
+
+In order to access a record field we need to know what type it is, but I
+can't tell the type here. Try adding type annotations to your function and
+try again.
+

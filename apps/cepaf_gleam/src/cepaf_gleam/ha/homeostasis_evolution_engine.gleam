@@ -27,22 +27,21 @@
 //// ratify, and dispatch autonomous self-evolution cycles with fail-closed Andon stops.
 
 import cepaf_gleam/ha/multi_agent_quorum.{
-  type QuorumBallot, type SovereignAgent,
-  AgySovereign, ClaudeSovereign, CodexSovereign, OpenRouterSovereign,
-  ThreeOfFourSovereign, VerdictPending,
-  VerdictRatified, VerdictRejected, cast_ballot_vote, create_ballot,
+  type QuorumBallot, type SovereignAgent, AgySovereign, ClaudeSovereign,
+  CodexSovereign, OpenRouterSovereign, ThreeOfFourSovereign,
+  VerdictRatified, cast_ballot_vote, create_ballot,
 }
-import cepaf_gleam/ha/pareto_fitness_evaluator.{
-  type CandidateEvaluation,
-}
+import cepaf_gleam/ha/pareto_fitness_evaluator.{type CandidateEvaluation}
 import cepaf_gleam/ha/physiological_homeostasis.{
   type PhysiologicalState, type PhysiologicalVariable,
 }
 import gleam/erlang/process.{type Subject}
 import gleam/float
 import gleam/int
+import gleam/list
 import gleam/otp/actor
 import gleam/otp/supervision
+import gleam/result
 
 // ---------------------------------------------------------------------------
 // 1. Cybernetic PID & Lyapunov Homeostasis State
@@ -99,10 +98,11 @@ pub fn step_homeostasis(
   let raw_integral = prev.integral +. { error *. dt }
   let integral = case raw_integral >. config.integral_clamp {
     True -> config.integral_clamp
-    False -> case raw_integral <. -0.0 -. config.integral_clamp {
-      True -> -0.0 -. config.integral_clamp
-      False -> raw_integral
-    }
+    False ->
+      case raw_integral <. -0.0 -. config.integral_clamp {
+        True -> -0.0 -. config.integral_clamp
+        False -> raw_integral
+      }
   }
 
   let derivative = { error -. prev.error } /. dt
@@ -116,7 +116,8 @@ pub fn step_homeostasis(
   // dV/dt = e * de/dt
   let lyapunov_dot_v = error *. derivative
   // Stability condition: error is damped or zero
-  let is_stable = lyapunov_dot_v <=. 0.0001 || float.absolute_value(error) <=. 0.05
+  let is_stable =
+    lyapunov_dot_v <=. 0.0001 || float.absolute_value(error) <=. 0.05
 
   HomeostasisMetrics(
     measured_health: measured_health,
@@ -186,6 +187,7 @@ pub type HomeostasisSystemState {
     consecutive_stable_ticks: Int,
     generation: Int,
     ratified_evolutions: List(EvolutionaryMutation),
+    pending_proposals: List(EvolutionProposal),
   )
 }
 
@@ -199,6 +201,7 @@ pub fn init_homeostasis_system(now_us: Int) -> HomeostasisSystemState {
     consecutive_stable_ticks: 0,
     generation: 0,
     ratified_evolutions: [],
+    pending_proposals: [],
   )
 }
 
@@ -210,7 +213,13 @@ pub fn ingest_telemetry(
   now_us: Int,
 ) -> HomeostasisSystemState {
   let updated_metrics =
-    step_homeostasis(state.metrics, measured_health, dt_seconds, state.pid_config, now_us)
+    step_homeostasis(
+      state.metrics,
+      measured_health,
+      dt_seconds,
+      state.pid_config,
+      now_us,
+    )
 
   let abs_err = float.absolute_value(updated_metrics.error)
   let is_in_band = abs_err <=. 0.05 && updated_metrics.stable
@@ -222,17 +231,25 @@ pub fn ingest_telemetry(
 
   // Phase transition logic
   let new_phase = case True {
-    _ if abs_err >. 0.20 || !state.physiological.is_homeostatic ->
-      InstabilityIntervention("Critical divergence from homeostasis (error > 0.20 or physiological stress)")
+    _ if abs_err >. 0.2 || !state.physiological.is_homeostatic ->
+      InstabilityIntervention(
+        "Critical divergence from homeostasis (error > 0.20 or physiological stress)",
+      )
     _ if new_ticks >= 3 ->
       case state.phase {
         AutonomousEvolutionActive(cycle, gen) ->
           AutonomousEvolutionActive(cycle, gen)
         _ ->
-          HomeostaticEquilibrium(consecutive_cycles: new_ticks, mean_error: abs_err)
+          HomeostaticEquilibrium(
+            consecutive_cycles: new_ticks,
+            mean_error: abs_err,
+          )
       }
     _ ->
-      Converging(current_error: updated_metrics.error, lyapunov_v: updated_metrics.lyapunov_v)
+      Converging(
+        current_error: updated_metrics.error,
+        lyapunov_v: updated_metrics.lyapunov_v,
+      )
   }
 
   HomeostasisSystemState(
@@ -286,6 +303,7 @@ pub fn update_pareto_candidates(
 
 /// Create an Evolution Proposal evaluated by the 4-Party Sovereign Quorum.
 /// Fails closed if the system has not yet reached Homeostatic Equilibrium or if physiological stress is high.
+/// This pure preview is not registered; submit_evolution owns that transition.
 pub fn propose_evolution(
   state: HomeostasisSystemState,
   mutation: EvolutionaryMutation,
@@ -321,13 +339,22 @@ pub fn propose_evolution(
       }
     }
     Converging(err, _) ->
-      Error("Cannot initiate self-evolution: system converging toward homeostasis (error=" <> float.to_string(err) <> ")")
+      Error(
+        "Cannot initiate self-evolution: system converging toward homeostasis (error="
+        <> float.to_string(err)
+        <> ")",
+      )
     InstabilityIntervention(reason) ->
-      Error("Cannot initiate self-evolution: Andon stop triggered (" <> reason <> ")")
+      Error(
+        "Cannot initiate self-evolution: Andon stop triggered ("
+        <> reason
+        <> ")",
+      )
   }
 }
 
 /// Cast a vote from one of the 4 sovereign agents.
+/// This is a pure preview; use cast_registered_vote to advance owned state.
 pub fn vote_on_evolution(
   proposal: EvolutionProposal,
   agent: SovereignAgent,
@@ -337,41 +364,172 @@ pub fn vote_on_evolution(
   now_us: Int,
 ) -> EvolutionProposal {
   let updated_ballot =
-    cast_ballot_vote(
-      proposal.ballot,
-      agent,
-      vote,
-      rationale,
-      digest,
-      now_us,
-    )
+    cast_ballot_vote(proposal.ballot, agent, vote, rationale, digest, now_us)
 
   EvolutionProposal(..proposal, ballot: updated_ballot)
 }
 
-/// Apply a ratified evolution into the system state, incrementing generation.
+pub type EvolutionError {
+  EvolutionNotReady(reason: String)
+  EvolutionAlreadyApplied(proposal_id: String)
+  EvolutionGenerationMismatch(expected: Int, supplied: Int)
+  EvolutionUnknownProposal(proposal_id: String)
+  EvolutionProposalMismatch(proposal_id: String)
+  EvolutionNotRatified(verdict: multi_agent_quorum.QuorumVerdict)
+}
+
+pub fn evolution_error_to_string(error: EvolutionError) -> String {
+  case error {
+    EvolutionNotReady(reason) -> reason
+    EvolutionAlreadyApplied(id) -> "Evolution already applied: " <> id
+    EvolutionGenerationMismatch(expected, supplied) ->
+      "Evolution generation mismatch: expected "
+      <> int.to_string(expected)
+      <> ", supplied "
+      <> int.to_string(supplied)
+    EvolutionUnknownProposal(id) -> "Unknown evolution proposal: " <> id
+    EvolutionProposalMismatch(id) ->
+      "Evolution proposal differs from registered state: " <> id
+    EvolutionNotRatified(_) -> "Evolution proposal is not ratified"
+  }
+}
+
+/// Register a proposal in the owned state. Pure propose_evolution previews carry
+/// no application authority. This model does not authenticate remote voters.
+pub fn submit_evolution(
+  state: HomeostasisSystemState,
+  mutation: EvolutionaryMutation,
+  now_us: Int,
+) -> Result(#(HomeostasisSystemState, EvolutionProposal), EvolutionError) {
+  case
+    list.any(state.ratified_evolutions, fn(m) {
+      m.mutation_id == mutation.mutation_id
+    })
+  {
+    True -> Error(EvolutionAlreadyApplied(mutation.mutation_id))
+    False -> {
+      case
+        list.any(state.pending_proposals, fn(p) {
+          p.proposal_id == mutation.mutation_id
+        })
+      {
+        True -> Error(EvolutionProposalMismatch(mutation.mutation_id))
+        False -> {
+          use proposal <- result.try(
+            propose_evolution(state, mutation, now_us)
+            |> result.map_error(EvolutionNotReady),
+          )
+          Ok(#(
+            HomeostasisSystemState(..state, pending_proposals: [
+              proposal,
+              ..state.pending_proposals
+            ]),
+            proposal,
+          ))
+        }
+      }
+    }
+  }
+}
+
+fn registered_proposal(
+  state: HomeostasisSystemState,
+  proposal: EvolutionProposal,
+) -> Result(Nil, EvolutionError) {
+  case
+    list.find(state.pending_proposals, fn(p) {
+      p.proposal_id == proposal.proposal_id
+    })
+  {
+    Error(_) -> Error(EvolutionUnknownProposal(proposal.proposal_id))
+    Ok(stored) if stored != proposal ->
+      Error(EvolutionProposalMismatch(proposal.proposal_id))
+    Ok(_) -> Ok(Nil)
+  }
+}
+
+/// Vote only on the exact currently registered proposal; stale or substituted
+/// snapshots cannot overwrite earlier votes or resurrect a terminal ballot.
+pub fn cast_registered_vote(
+  state: HomeostasisSystemState,
+  proposal: EvolutionProposal,
+  agent: SovereignAgent,
+  vote: multi_agent_quorum.QuorumVote,
+  rationale: String,
+  digest: String,
+  now_us: Int,
+) -> Result(#(HomeostasisSystemState, EvolutionProposal), EvolutionError) {
+  use _ <- result.try(registered_proposal(state, proposal))
+  let updated =
+    vote_on_evolution(proposal, agent, vote, rationale, digest, now_us)
+  let proposals =
+    list.map(state.pending_proposals, fn(p) {
+      case p.proposal_id == proposal.proposal_id {
+        True -> updated
+        False -> p
+      }
+    })
+  Ok(#(HomeostasisSystemState(..state, pending_proposals: proposals), updated))
+}
+
+/// Revalidate live control state and exact owned proposal before application.
 pub fn apply_ratified_evolution(
   state: HomeostasisSystemState,
   proposal: EvolutionProposal,
-) -> Result(HomeostasisSystemState, String) {
+) -> Result(HomeostasisSystemState, EvolutionError) {
+  use _ <- result.try(case state.phase {
+    HomeostaticEquilibrium(..) | AutonomousEvolutionActive(..) -> {
+      case
+        state.physiological.is_homeostatic
+        && state.metrics.stable
+        && float.absolute_value(state.metrics.error) <=. 0.05
+        && state.consecutive_stable_ticks >= 3
+      {
+        True -> Ok(Nil)
+        False ->
+          Error(EvolutionNotReady(
+            "Current physiology or health is outside equilibrium",
+          ))
+      }
+    }
+    _ -> Error(EvolutionNotReady("Current phase does not permit evolution"))
+  })
+  use _ <- result.try(
+    case
+      list.any(state.ratified_evolutions, fn(m) {
+        m.mutation_id == proposal.proposal_id
+      })
+    {
+      True -> Error(EvolutionAlreadyApplied(proposal.proposal_id))
+      False -> Ok(Nil)
+    },
+  )
+  use _ <- result.try(case proposal.generation == state.generation + 1 {
+    True -> Ok(Nil)
+    False ->
+      Error(EvolutionGenerationMismatch(
+        state.generation + 1,
+        proposal.generation,
+      ))
+  })
+  use _ <- result.try(registered_proposal(state, proposal))
   case proposal.ballot.verdict {
     VerdictRatified(_approvals, _total) -> {
       let updated_evolutions = [proposal.mutation, ..state.ratified_evolutions]
       Ok(
         HomeostasisSystemState(
           ..state,
-          phase: AutonomousEvolutionActive(proposal.mutation.mutation_id, proposal.generation),
+          phase: AutonomousEvolutionActive(
+            proposal.mutation.mutation_id,
+            proposal.generation,
+          ),
           generation: proposal.generation,
           ratified_evolutions: updated_evolutions,
+          pending_proposals: [],
         ),
       )
     }
-    VerdictRejected(rejections, _) ->
-      Error("Evolution proposal rejected by 4-party quorum (" <> int.to_string(rejections) <> " rejections)")
-    VerdictPending ->
-      Error("Evolution proposal pending 4-party quorum votes")
-    multi_agent_quorum.VerdictByzantineFault(violator, reason) ->
-      Error("Evolution proposal halted: Byzantine fault by " <> violator <> " (" <> reason <> ")")
+    verdict -> Error(EvolutionNotRatified(verdict))
   }
 }
 
@@ -389,7 +547,7 @@ pub type HomeostasisActorMsg {
   SubmitMutationProposal(
     mutation: EvolutionaryMutation,
     now_us: Int,
-    reply_to: Subject(Result(EvolutionProposal, String)),
+    reply_to: Subject(Result(EvolutionProposal, EvolutionError)),
   )
   CastQuorumVote(
     proposal: EvolutionProposal,
@@ -398,11 +556,11 @@ pub type HomeostasisActorMsg {
     rationale: String,
     digest: String,
     now_us: Int,
-    reply_to: Subject(EvolutionProposal),
+    reply_to: Subject(Result(EvolutionProposal, EvolutionError)),
   )
   ApplyMutationEvolution(
     proposal: EvolutionProposal,
-    reply_to: Subject(Result(HomeostasisSystemState, String)),
+    reply_to: Subject(Result(HomeostasisSystemState, EvolutionError)),
   )
   IngestPhysiological(
     measurements: List(#(PhysiologicalVariable, Float)),
@@ -435,15 +593,39 @@ pub fn handle_actor_message(
     }
 
     SubmitMutationProposal(mutation, now_us, reply_to) -> {
-      let result = propose_evolution(state, mutation, now_us)
-      process.send(reply_to, result)
-      actor.continue(state)
+      case submit_evolution(state, mutation, now_us) {
+        Ok(#(next, proposal)) -> {
+          process.send(reply_to, Ok(proposal))
+          actor.continue(next)
+        }
+        Error(err) -> {
+          process.send(reply_to, Error(err))
+          actor.continue(state)
+        }
+      }
     }
 
     CastQuorumVote(proposal, agent, vote, rationale, digest, now_us, reply_to) -> {
-      let updated = vote_on_evolution(proposal, agent, vote, rationale, digest, now_us)
-      process.send(reply_to, updated)
-      actor.continue(state)
+      case
+        cast_registered_vote(
+          state,
+          proposal,
+          agent,
+          vote,
+          rationale,
+          digest,
+          now_us,
+        )
+      {
+        Ok(#(next, updated)) -> {
+          process.send(reply_to, Ok(updated))
+          actor.continue(next)
+        }
+        Error(err) -> {
+          process.send(reply_to, Error(err))
+          actor.continue(state)
+        }
+      }
     }
 
     ApplyMutationEvolution(proposal, reply_to) -> {
