@@ -512,7 +512,15 @@ let publish () =
    canonical checkout instead of the workspace it runs in, and why deleting an
    artifact in a sibling workspace does not fail its gate. *)
 let workspace_present path =
-  (not (Filename.is_relative path)) = false && Sys.file_exists path
+  Filename.is_relative path
+  && not (List.exists (fun p -> p = ".." || p = "." || p = "")
+            (String.split_on_char '/' path))
+  && (try
+        let root = Unix.realpath (Sys.getcwd ()) ^ "/" in
+        let resolved = Unix.realpath path in
+        String.starts_with ~prefix:root resolved
+        && (Unix.lstat path).Unix.st_kind = Unix.S_REG
+      with Unix.Unix_error _ | Sys_error _ -> false)
 
 let read_evidence db =
   let stmt = Sqlite3.prepare db
@@ -533,37 +541,21 @@ let read_evidence db =
       | _ -> raise (Invalid "ev_evidence scan failed") in
     loop [])
 
-let ev_record ev revision runtime_ref formal_ref =
-  let db = Km_chain.open_db () in
-  Fun.protect ~finally:(fun () -> Km_chain.close db) (fun () ->
-    let stmt = Sqlite3.prepare db
-      "INSERT INTO ev_evidence (ev,revision,runtime_ref,formal_ref,recorded_utc,recorded_by) \
-       VALUES (?,?,?,?,?,?)" in
-    Fun.protect ~finally:(fun () -> ignore (Sqlite3.finalize stmt)) (fun () ->
-      ignore (Sqlite3.bind_int stmt 1 ev);
-      List.iteri (fun i v -> ignore (Sqlite3.bind_text stmt (i + 2) v))
-        [revision; runtime_ref; formal_ref; now_utc (); "fable-km-refresh-20260908-0912"];
-      require (Sqlite3.step stmt = Sqlite3.Rc.DONE) "ev_evidence insert refused");
-    print_json (`Assoc ["recorded", `Bool true; "ev", `Int ev;
-                        "revision", `String revision]);
-    0)
+let ev_record _ev _revision _runtime_ref _formal_ref =
+  print_json (`Assoc ["recorded", `Bool false; "authority", `String "NONE";
+    "reason", `String "Legacy file-reference recording is disabled: executed receipts and authenticated task ownership are required. Historical rows are preserved."]);
+  1
 
 let ev_admission revision =
-  let db = Km_chain.open_db () in
+  let db = Sqlite3.db_open ~mode:`READONLY Km_chain.db_path in
   Fun.protect ~finally:(fun () -> Km_chain.close db) (fun () ->
     let evidence = read_evidence db in
-    (* Every EV that is CLAIMED anywhere, whether or not evidence exists for it.
-       Claims come from the ADR corpus; evidence comes from the database. The
-       point of the exercise is that these two sets differ. *)
-    let claimed =
-      List.filter_map (fun a -> a.claimed_ev) (adrs ())
-      |> List.sort_uniq compare in
-    let claimed = if claimed = [] then [] else
-      let hi = List.fold_left max 0 claimed in
-      List.init hi (fun i -> i + 1) in
+    (* Operator scope is fixed. Removing titles or ADR files must not shrink
+       the obligation or turn empty coverage into success. *)
+    let claimed = List.init 109 (fun i -> i + 1) in
     let results =
       List.map (fun n ->
-        match List.find_opt (fun e -> e.Km_ev.ev = n) evidence with
+        match List.find_opt (fun e -> e.Km_ev.ev = n && e.revision = revision) evidence with
         | None -> (n, Km_ev.Not_admitted "no evidence row in ev_evidence")
         | Some e -> (n, Km_ev.admit ~present:workspace_present ~at_revision:revision e))
         claimed in
@@ -571,12 +563,12 @@ let ev_admission revision =
     let admitted = Km_ev.admitted_count results in
     let ceiling = Km_ev.ceiling results in
     print_json (`Assoc [
-      "schema", `String "uos-ev-admission/v1";
+      "schema", `String "uos-ev-admission/v2";
       "contract", `String "SC-PROVENANCE-001";
       "authority", `String "REPORT_ONLY";
       "observed_at", `String (now_utc ());
       "candidate_revision", `String revision;
-      "denotation", `String "admit(n,r) = Admitted iff exists e. runtime(e,n,r) and formal(e,n,r) and bound_to(e,r); NotAdmitted otherwise";
+      "denotation", `String "Legacy artifact references never establish admission. Executed evidence and separately recorded sovereign authority are required.";
       "ev_claimed", `Int (List.length results);
       (* Two counts, deliberately. The total includes rows outside the claimed
          range, such as the ev=999 row inserted on 2026-09-08 to prove the
@@ -596,7 +588,7 @@ let ev_admission revision =
         "reason", `String (Km_ev.reason v)]) results);
       "limits", `List (List.map (fun s -> `String s) [
         "Presence is resolved against the current working tree only; there is no fallback to a canonical root.";
-        "An evidence row asserts that two artifacts exist at a revision; it does not re-execute them.";
+        "Legacy evidence rows do not contain verifiable execution receipts or authenticated sovereign decisions.";
         "REPORT_ONLY: this computes a verdict, it does not grant admission." ]) ]);
     if admitted = List.length results then 0 else 1)
 
@@ -618,20 +610,20 @@ let ev_selftest () =
     (admit ~present:all ~at_revision:r (ev 1 ~rt:"t.receipt" r) <> Admitted);
   check "L2 two-key: formal alone is NotAdmitted"
     (admit ~present:all ~at_revision:r (ev 1 ~fm:"s.lean" r) <> Admitted);
-  check "L2 two-key: both keys present is Admitted"
-    (admit ~present:all ~at_revision:r (ev 1 ~rt:"t.receipt" ~fm:"s.lean" r) = Admitted);
+  check "L2 two-key: two file references alone cannot establish admission"
+    (admit ~present:all ~at_revision:r (ev 1 ~rt:"t.receipt" ~fm:"s.lean" r) <> Admitted);
   check "L3 revision-bound: evidence at rev-A says nothing at rev-B"
     (admit ~present:all ~at_revision:"rev-B" (ev 1 ~rt:"t" ~fm:"s" r) <> Admitted);
   check "L3 revision-bound: empty candidate revision is NotAdmitted"
     (admit ~present:all ~at_revision:"" (ev 1 ~rt:"t" ~fm:"s" r) <> Admitted);
-  check "L7 falsifiable: same evidence, absent artifacts, flips to NotAdmitted"
-    (admit ~present:all ~at_revision:r (ev 1 ~rt:"t" ~fm:"s" r) = Admitted
-     && admit ~present:none ~at_revision:r (ev 1 ~rt:"t" ~fm:"s" r) <> Admitted);
+  check "L7 absent artifacts cannot establish admission"
+    (admit ~present:none ~at_revision:r (ev 1 ~rt:"t" ~fm:"s" r) <> Admitted);
   check "L6 idempotent: identical inputs give identical verdicts"
     (admit ~present:all ~at_revision:r (ev 1 ~rt:"t" ~fm:"s" r)
      = admit ~present:all ~at_revision:r (ev 1 ~rt:"t" ~fm:"s" r));
 
-  let full n = (n, admit ~present:all ~at_revision:r (ev n ~rt:"t" ~fm:"s" r)) in
+  (* Prefix law fixtures represent decisions, not legacy evidence. *)
+  let full n = (n, Admitted) in
   let bare n = (n, admit ~present:all ~at_revision:r (ev n r)) in
   let gapped = apply_no_gap [full 1; bare 2; full 3] in
   check "L4 no-gap: EV-3 with full evidence is refused when EV-2 is not admitted"
@@ -644,10 +636,55 @@ let ev_selftest () =
   check "ceiling is derived: contiguous admitted prefix only"
     (ceiling (apply_no_gap [full 1; full 2; bare 3; full 4]) = 2);
 
+  check "regression: two directory references cannot establish admission"
+    (admit ~present:all ~at_revision:r (ev 109 ~rt:"." ~fm:"." r) <> Admitted);
+  check "regression: absent EV-2 blocks EV-3"
+    (List.assoc 3 (apply_no_gap [1, Admitted; 3, Admitted]) <> Admitted);
+  check "regression: a range starting at EV-94 has no admitted prefix"
+    (admitted_count (apply_no_gap [94, Admitted]) = 0);
+  check "regression: duplicate EV-1 cannot inflate or authorize the prefix"
+    (admitted_count (apply_no_gap [1, Admitted; 1, Admitted; 2, Admitted]) = 0);
+  check "regression: negative EV identifiers cannot be admitted"
+    (admit ~present:all ~at_revision:r (ev (-1) ~rt:"t" ~fm:"s" r) <> Admitted);
+
   Printf.printf "\n%d checks, %d failures\n" !checks !fails;
   if !fails = 0 then 0 else 1
 
 (* --- merge readiness laws ---------------------------------------------- *)
+
+let append_only_selftest () =
+  let db = Sqlite3.db_open ":memory:" in
+  Fun.protect ~finally:(fun () -> ignore (Sqlite3.db_close db)) (fun () ->
+    Km_chain.ok (Sqlite3.exec db Km_chain.schema);
+    Km_chain.ok (Sqlite3.exec db "PRAGMA recursive_triggers=OFF");
+    let cases = [
+      "ev_evidence", "INSERT INTO ev_evidence VALUES (1,'r','rt','fm','t','author')",
+        "INSERT OR REPLACE INTO ev_evidence VALUES (1,'r','forged','fm','t','forged')";
+      "ev_verdict", "INSERT INTO ev_verdict VALUES (1,1,'r','NOT_ADMITTED','reason','t','digest')",
+        "INSERT OR REPLACE INTO ev_verdict VALUES (1,1,'r','ADMITTED','forged','t','forged')";
+      "merge_hold", "INSERT INTO merge_hold VALUES (1,'b','held','condition','t','author')",
+        "INSERT OR REPLACE INTO merge_hold VALUES (1,'b','forged','condition','t','forged')";
+      "merge_hold_release", "INSERT INTO merge_hold_release VALUES (1,1,'evidence','t','author')",
+        "INSERT OR REPLACE INTO merge_hold_release VALUES (1,1,'forged','t','forged')";
+      "cycle", "INSERT INTO cycle VALUES (1,'c','p','t','kind','title','body','time','{}','','d1')",
+        "INSERT OR REPLACE INTO cycle VALUES (2,'c','p','t','kind','forged','body','time','{}','d1','d2')"
+    ] in
+    let snapshot table =
+      let rows = ref [] in
+      Km_chain.ok (Sqlite3.exec_not_null db ~cb:(fun row _headers ->
+        rows := Array.to_list row :: !rows) ("SELECT * FROM " ^ table));
+      !rows in
+    let failures = ref 0 in
+    List.iter (fun (table, insert, replace) ->
+      Km_chain.ok (Sqlite3.exec db insert);
+      let before = snapshot table in
+      let rc = Sqlite3.exec db replace in
+      let passed = rc <> Sqlite3.Rc.OK && snapshot table = before in
+      if not passed then incr failures;
+      Printf.printf "%s %s rejects REPLACE with recursive triggers OFF and preserves bytes\n"
+        (if passed then "ok  " else "FAIL") table) cases;
+    Printf.printf "%d checks, %d failures\n" (List.length cases) !failures;
+    if !failures = 0 then 0 else 1)
 
 let merge_selftest () =
   let open Km_merge in
@@ -747,6 +784,7 @@ let () =
     | [_; "--publish"] -> exit (publish ())
     | [_; "--ev-admission"; rev] -> exit (ev_admission rev)
     | [_; "--ev-selftest"] -> exit (ev_selftest ())
+    | [_; "--append-only-selftest"] -> exit (append_only_selftest ())
     | [_; "--merge-selftest"] -> exit (merge_selftest ())
     | [_; "--merge-hold"; b; r; c] -> exit (merge_hold b r c)
     | [_; "--ev-record"; n; rev; rt; fm] -> exit (ev_record (int_of_string n) rev rt fm)

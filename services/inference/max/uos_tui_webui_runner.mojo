@@ -18,16 +18,16 @@
 # </c3i-module>
 # ==============================================================================
 #
-# Implements complete Mojo-based test execution, verification, and deployment
-# harness for UOS System TUI and WebGUI across 20 evolutionary cycles (C333..C352).
+# Runs a bounded numeric model and intent predicate, and lists manual UI checks.
+# These component checks do not observe the TUI, WebUI or deployed services.
 #
-# Operates in 4 modes:
-#   1. auto-test: Automated headless verification of all 32 TUI screens,
-#                 12 subsystem views, split-screen mode, and 15 Web tabs.
+# Operates in 5 modes:
+#   1. component-test: Executes the 1115 local model/predicate checks.
+#   2. auto-test: Executes component checks; exits HOLD for unrun UI acceptance.
 #   2. manual-instructions: Outputs step-by-step interactive manual verification
 #                           guide for human verification of TUI & WebGUI.
-#   3. deploy-preflight: Evaluates runtime safety, Zero-Muda purity, and interlocks.
-#   4. deploy-full: Executes comprehensive end-to-end multi-surface acceptance.
+#   4. deploy-preflight: Exits HOLD because this runner has no runtime probes.
+#   5. deploy-full: Exits HOLD; this runner has no deployment authority.
 # ==============================================================================
 
 from std.sys import argv, exit
@@ -153,19 +153,6 @@ def get_tui_subsystem_views() -> List[String]:
     views.append("Dark Cockpit Mode (Silent Flight & Anomaly Illumination)")
     return views^
 
-def verify_tui_screens() -> Int:
-    var count: Int = 0
-    # 32 canonical screens in 4 clusters
-    for _ in range(4):
-        for _ in range(8):
-            count += 1
-    # 12 subsystem views
-    for _ in range(12):
-        count += 1
-    # 1 split-screen mode
-    count += 1
-    return count
-
 # ------------------------------------------------------------------------------
 # 4. WebGUI 15-Tab & C1-C8 Gold Standard Verification
 # ------------------------------------------------------------------------------
@@ -189,14 +176,6 @@ def get_webui_tabs() -> List[String]:
     tabs.append("MCP")
     return tabs^
 
-def verify_webui_gold_standard() -> Int:
-    # 15 tabs * 8 Gold Standard categories (C1..C8)
-    return 15 * 8
-
-def verify_webui_checklists() -> Int:
-    # 15 tabs * 18 Comprehensive Verification Checklist items
-    return 15 * 18
-
 # ------------------------------------------------------------------------------
 # 5. Output Modes
 # ------------------------------------------------------------------------------
@@ -207,53 +186,26 @@ def print_banner():
     print("    Pure Mojo Engine (Zero-Bash, Zero-Muda, Standalone Jujutsu, EV-93 Ceiling)   ")
     print("================================================================================")
 
-def run_auto_test():
+def run_component_test():
     print_banner()
-    print("[*] MODE: Automated Headless Multi-Surface Verification (20 Cycles C333..C352)")
-    print("")
-
-    # Phase 1: Cohomology
-    print("--- [PHASE 1: Algebraic Atlas Sheaf Cohomology] ---")
+    print("MODE: component-test | authority: NONE")
     var coh_checks = verify_sheaf_cohomology()
-    print("  ✓ Sheaf Cocycle Checks Passed: " + String(coh_checks) + " / 1110")
-    print("  ✓ Vanishing Cohomology H^1(Atlas, F) = 0 mathematically verified")
-
-    # Phase 2: Intent Validation
-    print("")
-    print("--- [PHASE 2: Declarative Intent Poka-Yoke Invariants] ---")
     var intent_checks = verify_intent_rules()
-    print("  ✓ Intent Boundary Invariants Passed: " + String(intent_checks) + " / 5")
-    print("  ✓ SC-JIDOKA-001 (sa-plan authority enforcement): ACTIVE")
-    print("  ✓ SC-DRIVE-001 (Root OS NVMe 25503L801736 interlock): LOCKED")
+    print("Finite Float32 transition examples passed: " + String(coh_checks) + " / 1110")
+    print("Local intent predicate examples passed: " + String(intent_checks) + " / 5")
+    print("These checks establish neither a formal proof nor runtime enforcement.")
+    if coh_checks != 1110 or intent_checks != 5:
+        print("COMPONENT STATUS: FAIL")
+        exit(1)
+    print("COMPONENT STATUS: PASS (1115/1115 executed examples)")
 
-    # Phase 3: TUI Testing
-    print("")
-    print("--- [PHASE 3: System TUI 32-Screen & 12-View Test Cycle (Cycles C338..C345)] ---")
-    var tui_count = verify_tui_screens()
-    var clusters = get_tui_clusters()
-    for i in range(len(clusters)):
-        print("  ✓ " + clusters[i] + " [8 Screens Tested: PASS]")
-    print("  ✓ 12 Specialized Subsystem Views Tested: PASS")
-    print("  ✓ Split-Screen Dual-Pane Swarm/OTel Buffer Tested: PASS")
-    print("  ✓ Total TUI Buffers Validated: " + String(tui_count) + " / 45")
-
-    # Phase 4: WebGUI Testing
-    print("")
-    print("--- [PHASE 4: WebGUI 15-Tab & Gold Standard Test Cycle (Cycles C346..C352)] ---")
-    var tabs = get_webui_tabs()
-    for i in range(len(tabs)):
-        print("  ✓ Tab " + String(i + 1) + " [" + tabs[i] + "] C1-C8 Gold Standard: PASS (8/8) | 18-Point Checklist: PASS (18/18)")
-    var c1_c8_total = verify_webui_gold_standard()
-    var chk_total = verify_webui_checklists()
-    print("  ✓ Total C1-C8 Checks Passed: " + String(c1_c8_total) + " / 120")
-    print("  ✓ Total Checklist Accordion Checks Passed: " + String(chk_total) + " / 270")
-    print("  ✓ Tailscale FQDN Resolution: " + TAILSCALE_BASE_FQDN + " [VERIFIED]")
-
-    print("")
-    print("================================================================================")
-    print("  AUTOMATED VERIFICATION SUMMARY: 100% GREEN (1545/1545 CHECKS PASSED)")
-    print("  EV-Cycle Status: Admitted Ceiling EV-93 Pinned | Provenance Cycles: C333..C352")
-    print("================================================================================")
+def run_auto_test():
+    run_component_test()
+    print("TUI acceptance: UNRUN (32 screens, 12 subsystem views, split-screen)")
+    print("WebUI acceptance: UNRUN (15 tabs, interaction and checklist checks)")
+    print("Runtime, storage interlocks and provenance chain: UNRUN")
+    print("AUTOMATED VERIFICATION STATUS: HOLD | admission: NOT_GRANTED")
+    exit(2)
 
 def print_manual_instructions():
     print_banner()
@@ -314,29 +266,13 @@ def print_manual_instructions():
 
 def run_deploy_preflight():
     print_banner()
-    print("[*] MODE: Deployment Preflight Check (Zero-Bash, Mojo Engine)")
-    print("  1. Verifying BEAM OTP 29 Supervisor Root ... [PASS]")
-    print("  2. Verifying Zero-Muda Purity (0 Bevy, 0 Graphite) ... [PASS]")
-    print("  3. Verifying Root OS NVMe Serial Lock ('25503L801736') ... [PASS]")
-    print("  4. Verifying sa-plan Database Authority (var/sa-plan/uos.sqlite3) ... [PASS]")
-    print("  5. Verifying Provenance Cycle Integrity (var/km/provenance-cycles.sqlite3) ... [PASS]")
-    print("  6. Verifying Zenoh Bus Availability (http://127.0.0.1:8080) ... [PASS]")
-    print("PREFLIGHT STATUS: READY FOR ZERO-DOWNTIME DEPLOYMENT")
+    print("PREFLIGHT STATUS: HOLD | authority: NONE")
+    print("This runner has no observed OTP, purity, storage, Sa-plan, chain or Zenoh probes.")
+    print("Use candidate-bound release checks under SC-RELEASE-ASSURANCE-001.")
+    exit(2)
 
 def run_deploy_full():
-    print_banner()
-    print("[*] MODE: Full Multi-Surface Deployment & Verification Cycle")
     run_deploy_preflight()
-    print("")
-    print("[*] Executing Multi-Surface Verification...")
-    run_auto_test()
-    print("")
-    print("[*] Final Deployment Handshake:")
-    print("  ✓ Deployment Target: Standalone Jujutsu Monorepo (/home/an/NAS-setup/uos)")
-    print("  ✓ Web Endpoint: " + TAILSCALE_BASE_FQDN)
-    print("  ✓ TUI Entrypoint: apps/cepaf_gleam (cepaf_gleam/ui/tui/app)")
-    print("  ✓ EV-Cycle Provenance: Pinned Ceiling EV-93 (Cycles C333..C352 Intact)")
-    print("DEPLOYMENT RATIFIED: SYSTEM OPERATIONAL & 100% COMPLIANT")
 
 # ------------------------------------------------------------------------------
 # Main Entry Point
@@ -348,7 +284,9 @@ def main() raises:
     if len(args) >= 2:
         mode = String(args[1])
 
-    if mode == "auto-test":
+    if mode == "component-test":
+        run_component_test()
+    elif mode == "auto-test":
         run_auto_test()
     elif mode == "manual-instructions":
         print_manual_instructions()
@@ -358,5 +296,5 @@ def main() raises:
         run_deploy_full()
     else:
         print("Unknown mode: " + mode)
-        print("Available modes: auto-test, manual-instructions, deploy-preflight, deploy-full")
+        print("Available modes: component-test, auto-test, manual-instructions, deploy-preflight, deploy-full")
         exit(1)
