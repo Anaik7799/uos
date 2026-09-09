@@ -178,6 +178,17 @@ let amendment_files bytes =
       | _ -> failwith "candidate-amendment-rules"
       end
   | _ -> failwith "candidate-amendment-root"
+let candidate_surface_paths revision surface =
+  let listing = candidate_query revision (fun selector ->
+    ["file";"list";"-r";selector;"-T";"path ++ \"\\n\"";"--";"root:" ^ surface]) in
+  let prefix = surface ^ "/" in
+  let paths = String.split_on_char '\n' listing |> List.filter (fun path -> path <> "") in
+  requires (List.length paths <= 64 && List.length paths = List.length (List.sort_uniq String.compare paths)) "candidate-surface-entry-bound";
+  List.iter (fun path ->
+    requires (String.starts_with ~prefix path &&
+      valid_rule_file (String.sub path (String.length prefix) (String.length path - String.length prefix)))
+      ("candidate-surface-path:" ^ path)) paths;
+  paths
 let rec mkdirs path =
   if Sys.file_exists path then () else (mkdirs (Filename.dirname path); Unix.mkdir path 0o700)
 let private_stage () =
@@ -213,8 +224,12 @@ let stage_inputs revision =
   let sealed = ref [] in
   let amendment = candidate_bytes revision amendment_rel in
   let files = amendment_files amendment in
-  let rels = superset_rel :: amendment_rel ::
-    List.concat_map (fun file -> List.map (fun surface -> surface ^ "/" ^ file) [".agents/rules";".claude/rules";".gemini/rules";".codex/rules"]) files in
+  let all_surface_paths = List.concat_map (candidate_surface_paths revision) [".agents/rules";".claude/rules";".gemini/rules";".codex/rules"] in
+  List.iter (fun file -> List.iter (fun surface ->
+    requires (List.mem (surface ^ "/" ^ file) all_surface_paths) ("candidate-mapped-file-missing:" ^ file))
+    [".agents/rules";".claude/rules";".gemini/rules";".codex/rules"]) files;
+  List.iter (fun surface -> mkdirs (Filename.concat root surface)) [".agents/rules";".claude/rules";".gemini/rules";".codex/rules"];
+  let rels = superset_rel :: amendment_rel :: all_surface_paths in
   requires (List.length rels <= max_staged_inputs) "candidate-input-count";
   let bindings = List.map (fun rel ->
     let kind = candidate_kind revision rel in
