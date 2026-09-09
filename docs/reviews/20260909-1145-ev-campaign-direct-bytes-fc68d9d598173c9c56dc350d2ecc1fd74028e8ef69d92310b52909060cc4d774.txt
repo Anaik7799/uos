@@ -1,0 +1,8 @@
+import gleam/io
+import deadman_freshness_test
+
+pub fn main() {
+  io.println("EV98 START deadman_freshness_test.backward_tick_cannot_clear_a_trip_test")
+  deadman_freshness_test.backward_tick_cannot_clear_a_trip_test()
+  io.println("EV98 PASS deadman_freshness_test.backward_tick_cannot_clear_a_trip_test")
+}

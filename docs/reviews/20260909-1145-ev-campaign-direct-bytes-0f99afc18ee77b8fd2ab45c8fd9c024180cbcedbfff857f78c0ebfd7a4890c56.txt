@@ -1,0 +1,8 @@
+import gleam/io
+import delta_mesh_engine_test
+
+pub fn main() {
+  io.println("EV98 START delta_mesh_engine_test.full_queue_rejects_without_advancing_round_and_can_drain_test")
+  delta_mesh_engine_test.full_queue_rejects_without_advancing_round_and_can_drain_test()
+  io.println("EV98 PASS delta_mesh_engine_test.full_queue_rejects_without_advancing_round_and_can_drain_test")
+}

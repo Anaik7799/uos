@@ -1,0 +1,27 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/tmp/uos-ev-campaign-green-build/default/campaign_test.exe",
+    "/tmp/uos-ev-campaign-green-build/default/ev_receipt.exe",
+    "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909",
+    "f5f86e7e9841ae20da69f3d6c7fc44f1a2e50396"
+  ],
+  "utc_started": 1788933551.185659,
+  "utc_finished": 1788933557.676475,
+  "elapsed_seconds": 6.490814829,
+  "deadline_seconds": 180.0,
+  "exit_code": 0,
+  "output": "observed /tmp/uos-campaign-test-65fe06.json: \"COMPONENT_OBSERVED\" null\nobserved /tmp/uos-campaign-test-908891.json: \"HOLD\" \"Failure(\\\"observe supports only EV98 and a full lowercase immutable commit ID\\\")\"\nobserved /tmp/uos-campaign-test-9a5dac.json: \"HOLD\" \"Failure(\\\"observe supports only EV98 and a full lowercase immutable commit ID\\\")\"\nobserved /tmp/uos-campaign-test-db44ed.json: \"HOLD\" \"Failure(\\\"candidate source missing or nonregular\\\")\"\nobserved /tmp/uos-campaign-test-ef8058.json: \"HOLD\" \"Failure(\\\"usage: ev_receipt validate WORKSPACE RELATIVE_BUNDLE EV_NUMBER IMMUTABLE_40_HEX_REVISION | observe WORKSPACE 98 IMMUTABLE_40_HEX_REVISION\\\")\"\nobserved /tmp/uos-campaign-test-8643c0.json: \"HOLD\" \"Failure(\\\"fixed acceptance or policy mismatch: apps/cepaf_gleam/test/delta_mesh_engine_test.gleam\\\")\"\nobserved /tmp/uos-campaign-test-f49403.json: \"HOLD\" \"Failure(\\\"pinned candidate reader failed\\\")\"\nPASS 7 campaign CLI cases including artifact rehash and reader substitution refusal\n",
+  "output_sha256": "31e2ca4b59c81862b960e476726f75231d1dc17b6caeb7d7227a056fc1d2a72d",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

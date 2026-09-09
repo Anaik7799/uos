@@ -1,0 +1,24 @@
+{
+  "schema": "native-cli-capture",
+  "argv": [
+    "/usr/bin/strace",
+    "-f",
+    "-s",
+    "8192",
+    "-e",
+    "trace=execve,execveat",
+    "-o",
+    "/tmp/uos-campaign-direct-b8da78ab.trace",
+    "/tmp/uos-campaign-direct-build/default/campaign_test.exe",
+    "/tmp/uos-campaign-direct-build/default/ev_receipt.exe",
+    "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909",
+    "b8da78ab9e88c5d8f41f4dc36d26f3aad3e1bc53"
+  ],
+  "result": {
+    "chunk_id": "7167c5",
+    "wall_time_seconds": 2.895294167,
+    "exit_code": 0,
+    "original_token_count": 248,
+    "output": "observed /tmp/uos-campaign-test-4dd645.json: \"COMPONENT_OBSERVED\" null\nobserved /tmp/uos-campaign-test-866650.json: \"HOLD\" \"Failure(\\\"observe supports only EV98 and a full lowercase immutable commit ID\\\")\"\nobserved /tmp/uos-campaign-test-b6757a.json: \"HOLD\" \"Failure(\\\"observe supports only EV98 and a full lowercase immutable commit ID\\\")\"\nobserved /tmp/uos-campaign-test-f425ff.json: \"HOLD\" \"Failure(\\\"candidate source missing or nonregular\\\")\"\nobserved /tmp/uos-campaign-test-dcee33.json: \"HOLD\" \"Failure(\\\"usage: ev_receipt validate WORKSPACE RELATIVE_BUNDLE EV_NUMBER IMMUTABLE_40_HEX_REVISION | observe WORKSPACE 98 IMMUTABLE_40_HEX_REVISION\\\")\"\nobserved /tmp/uos-campaign-test-90b030.json: \"HOLD\" \"Failure(\\\"fixed acceptance or policy mismatch: apps/cepaf_gleam/test/delta_mesh_engine_test.gleam\\\")\"\nobserved /tmp/uos-campaign-test-2ff3a8.json: \"HOLD\" \"Failure(\\\"pinned candidate reader failed\\\")\"\nPASS 7 campaign CLI cases including artifact rehash and reader substitution refusal\n"
+  }
+}

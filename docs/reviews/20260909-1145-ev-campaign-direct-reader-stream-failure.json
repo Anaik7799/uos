@@ -1,0 +1,27 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/tmp/uos-ev-campaign-green-build/default/campaign_test.exe",
+    "/tmp/uos-ev-campaign-green-build/default/ev_receipt.exe",
+    "/home/an/NAS-setup/uos/.uos-workspaces/ev-evidence-campaign-20260909",
+    "f5f86e7e9841ae20da69f3d6c7fc44f1a2e50396"
+  ],
+  "utc_started": 1788933473.973475,
+  "utc_finished": 1788933474.456232,
+  "elapsed_seconds": 0.48275143600000003,
+  "deadline_seconds": 180.0,
+  "exit_code": 2,
+  "output": "observed /tmp/uos-campaign-test-0aefba.json: \"HOLD\" \"Failure(\\\"resolved commit ID mismatch\\\")\"\nFatal error: exception Failure(\"fixed EV98 campaign must execute successfully\")\n",
+  "output_sha256": "1d928e4c6197754c2c5b9ad5d0b4e5e565137cb971451574f876f2e6a58ba646",
+  "child_termination": { "kind": "EXITED", "code": 2 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}
