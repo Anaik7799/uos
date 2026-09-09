@@ -1,0 +1,24 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/tmp/uos-ev-combined-66304950-km/default/km_gate.exe", "--ev-selftest"
+  ],
+  "utc_started": 1788929565.326058,
+  "utc_finished": 1788929565.349759,
+  "elapsed_seconds": 0.023699998999999985,
+  "deadline_seconds": 30.0,
+  "exit_code": 0,
+  "output": "ok   L1 fail-closed: no evidence at all is NotAdmitted\nok   L2 two-key: runtime alone is NotAdmitted\nok   L2 two-key: formal alone is NotAdmitted\nok   L2 two-key: two file references alone cannot establish admission\nok   L3 revision-bound: evidence at rev-A says nothing at rev-B\nok   L3 revision-bound: empty candidate revision is NotAdmitted\nok   L7 absent artifacts cannot establish admission\nok   L6 idempotent: identical inputs give identical verdicts\nok   L4 no-gap: EV-3 with full evidence is refused when EV-2 is not admitted\nok   L4 no-gap: EV-1 is unaffected by the gap rule\nok   L5 non-inflation: adding a claim with no evidence never raises the count\nok   ceiling is derived: contiguous admitted prefix only\nok   regression: two directory references cannot establish admission\nok   regression: absent EV-2 blocks EV-3\nok   regression: a range starting at EV-94 has no admitted prefix\nok   regression: duplicate EV-1 cannot inflate or authorize the prefix\nok   regression: negative EV identifiers cannot be admitted\n\n17 checks, 0 failures\n",
+  "output_sha256": "187d881ad962469b937a7f45c0e458cea615f387c1e2e28c4a7e6c93ed89adc3",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

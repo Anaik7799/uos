@@ -1,0 +1,22 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [ "/tmp/uos-ev-combined-66304950-mojo.exe", "auto-test" ],
+  "utc_started": 1788929457.669638,
+  "utc_finished": 1788929457.701711,
+  "elapsed_seconds": 0.032073488,
+  "deadline_seconds": 30.0,
+  "exit_code": 2,
+  "output": "================================================================================\n    UNIFIED OPERATIONAL SYSTEM (UOS) — MOJO AUTOMATION & DEPLOYMENT HARNESS     \n    Pure Mojo Engine (Zero-Bash, Zero-Muda, Standalone Jujutsu, EV-93 Ceiling)   \n================================================================================\nMODE: component-test | authority: NONE\nFinite Float32 transition examples passed: 1110 / 1110\nLocal intent predicate examples passed: 5 / 5\nThese checks establish neither a formal proof nor runtime enforcement.\nCOMPONENT STATUS: PASS (1115/1115 executed examples)\nTUI acceptance: UNRUN (32 screens, 12 subsystem views, split-screen)\nWebUI acceptance: UNRUN (15 tabs, interaction and checklist checks)\nRuntime, storage interlocks and provenance chain: UNRUN\nAUTOMATED VERIFICATION STATUS: HOLD | admission: NOT_GRANTED\n",
+  "output_sha256": "37a4fccd6607a0a7bdf546d9775bb9763b940623ae606ef997f2c00f11f57ba2",
+  "child_termination": { "kind": "EXITED", "code": 2 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

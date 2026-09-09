@@ -1,0 +1,25 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/tmp/uos-ev-combined-66304950-km/default/km_gate.exe",
+    "--append-only-selftest"
+  ],
+  "utc_started": 1788929565.367107,
+  "utc_finished": 1788929565.392244,
+  "elapsed_seconds": 0.02513651,
+  "deadline_seconds": 30.0,
+  "exit_code": 0,
+  "output": "ok   ev_evidence rejects REPLACE with recursive triggers OFF and preserves bytes\nok   ev_verdict rejects REPLACE with recursive triggers OFF and preserves bytes\nok   merge_hold rejects REPLACE with recursive triggers OFF and preserves bytes\nok   merge_hold_release rejects REPLACE with recursive triggers OFF and preserves bytes\nok   cycle rejects REPLACE with recursive triggers OFF and preserves bytes\n5 checks, 0 failures\n",
+  "output_sha256": "8f29b1ed5d6d4066d8ebc1dc4defcdaac25232b223eb5410929d625688acf929",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}
