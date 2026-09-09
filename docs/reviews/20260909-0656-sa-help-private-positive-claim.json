@@ -1,0 +1,13 @@
+{
+  "argv": [
+    "/tmp/uos-sa-plan-help-573b1c/_build/default/cli/sa_plan_main.exe",
+    "task", "claim", "private-worker", "private", "60000000000", "t"
+  ],
+  "database": "/tmp/uos-sa-plan-help-573b1c/private.sqlite3",
+  "utc_started": 1788933963.2836,
+  "utc_finished": 1788933963.304451,
+  "exit_code": 0,
+  "output": "claimed=true task=t attempt=1 lease_until_ns=1788934023299114730\nsa-plan-pipeline {\"request_id\":\"sa-plan-1788933963298071767\",\"command\":\"--claim\",\"authority\":\"report_only\",\"total_ns\":1430492,\"server_timing\":\"decode;dur=0.003, normalize;dur=0.001, validate;dur=0.001, store_open;dur=1.018, dispatch;dur=0.270, store_close;dur=0.120, total;dur=1.430\",\"stages\":[{\"name\":\"decode\",\"duration_ns\":3176,\"duration_ms\":0.003176},{\"name\":\"normalize\",\"duration_ns\":1022,\"duration_ms\":0.001022},{\"name\":\"validate\",\"duration_ns\":1292,\"duration_ms\":0.001292},{\"name\":\"store_open\",\"duration_ns\":1018416,\"duration_ms\":1.018416},{\"name\":\"dispatch\",\"duration_ns\":269988,\"duration_ms\":0.269988},{\"name\":\"store_close\",\"duration_ns\":119755,\"duration_ms\":0.119755}]}\n",
+  "output_sha256": "907e13ab8b04eb6257112717207764d295cf45d56aab74a207d9f9bc3735d2e3",
+  "authority": "NONE"
+}

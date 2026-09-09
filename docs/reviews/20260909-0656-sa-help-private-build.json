@@ -1,0 +1,14 @@
+{
+  "argv": [
+    "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/dune", "build",
+    "--root", "/tmp/uos-sa-plan-help-573b1c", "-j", "2",
+    "cli/sa_plan_main.exe", "cli/test_sa_plan_cli.exe"
+  ],
+  "database": "/tmp/uos-sa-plan-help-573b1c/never-created/store.sqlite3",
+  "utc_started": 1788933958.371171,
+  "utc_finished": 1788933962.673049,
+  "exit_code": 0,
+  "output": "",
+  "output_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "authority": "NONE"
+}
