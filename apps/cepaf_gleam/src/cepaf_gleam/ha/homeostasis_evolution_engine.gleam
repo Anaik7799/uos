@@ -28,8 +28,8 @@
 
 import cepaf_gleam/ha/multi_agent_quorum.{
   type QuorumBallot, type SovereignAgent, AgySovereign, ClaudeSovereign,
-  CodexSovereign, OpenRouterSovereign, ThreeOfFourSovereign,
-  VerdictRatified, cast_ballot_vote, create_ballot,
+  CodexSovereign, OpenRouterSovereign, ThreeOfFourSovereign, VerdictRatified,
+  cast_ballot_vote, create_ballot,
 }
 import cepaf_gleam/ha/pareto_fitness_evaluator.{type CandidateEvaluation}
 import cepaf_gleam/ha/physiological_homeostasis.{
@@ -174,6 +174,7 @@ pub type EvolutionProposal {
     ballot: QuorumBallot,
     generation: Int,
     created_at_us: Int,
+    proposal_sequence: Int,
   )
 }
 
@@ -188,6 +189,7 @@ pub type HomeostasisSystemState {
     generation: Int,
     ratified_evolutions: List(EvolutionaryMutation),
     pending_proposals: List(EvolutionProposal),
+    last_proposal_sequence: Int,
   )
 }
 
@@ -202,6 +204,7 @@ pub fn init_homeostasis_system(now_us: Int) -> HomeostasisSystemState {
     generation: 0,
     ratified_evolutions: [],
     pending_proposals: [],
+    last_proposal_sequence: 0,
   )
 }
 
@@ -334,6 +337,7 @@ pub fn propose_evolution(
             ballot: ballot,
             generation: state.generation + 1,
             created_at_us: now_us,
+            proposal_sequence: state.last_proposal_sequence + 1,
           ))
         }
       }
@@ -370,6 +374,8 @@ pub fn vote_on_evolution(
 }
 
 pub type EvolutionError {
+  EvolutionCapacityReached(limit: Int)
+  EvolutionNotTerminal(proposal_id: String)
   EvolutionNotReady(reason: String)
   EvolutionAlreadyApplied(proposal_id: String)
   EvolutionGenerationMismatch(expected: Int, supplied: Int)
@@ -380,6 +386,10 @@ pub type EvolutionError {
 
 pub fn evolution_error_to_string(error: EvolutionError) -> String {
   case error {
+    EvolutionCapacityReached(limit) ->
+      "Pending evolution capacity reached: " <> int.to_string(limit)
+    EvolutionNotTerminal(id) ->
+      "Cannot retire a pending evolution ballot: " <> id
     EvolutionNotReady(reason) -> reason
     EvolutionAlreadyApplied(id) -> "Evolution already applied: " <> id
     EvolutionGenerationMismatch(expected, supplied) ->
@@ -401,6 +411,10 @@ pub fn submit_evolution(
   mutation: EvolutionaryMutation,
   now_us: Int,
 ) -> Result(#(HomeostasisSystemState, EvolutionProposal), EvolutionError) {
+  use _ <- result.try(case list.length(state.pending_proposals) >= 32 {
+    True -> Error(EvolutionCapacityReached(32))
+    False -> Ok(Nil)
+  })
   case
     list.any(state.ratified_evolutions, fn(m) {
       m.mutation_id == mutation.mutation_id
@@ -420,10 +434,11 @@ pub fn submit_evolution(
             |> result.map_error(EvolutionNotReady),
           )
           Ok(#(
-            HomeostasisSystemState(..state, pending_proposals: [
-              proposal,
-              ..state.pending_proposals
-            ]),
+            HomeostasisSystemState(
+              ..state,
+              last_proposal_sequence: proposal.proposal_sequence,
+              pending_proposals: [proposal, ..state.pending_proposals],
+            ),
             proposal,
           ))
         }
@@ -470,6 +485,29 @@ pub fn cast_registered_vote(
       }
     })
   Ok(#(HomeostasisSystemState(..state, pending_proposals: proposals), updated))
+}
+
+/// Retire an exact terminal proposal, freeing an intake slot. A monotonic
+/// sequence distinguishes a later submission even if all its other fields
+/// match; retired snapshots cannot regain membership through resubmission.
+pub fn retire_terminal_proposal(
+  state: HomeostasisSystemState,
+  proposal: EvolutionProposal,
+) -> Result(HomeostasisSystemState, EvolutionError) {
+  use _ <- result.try(registered_proposal(state, proposal))
+  case proposal.ballot.verdict {
+    multi_agent_quorum.VerdictPending ->
+      Error(EvolutionNotTerminal(proposal.proposal_id))
+    _ ->
+      Ok(
+        HomeostasisSystemState(
+          ..state,
+          pending_proposals: list.filter(state.pending_proposals, fn(p) {
+            p.proposal_sequence != proposal.proposal_sequence
+          }),
+        ),
+      )
+  }
 }
 
 /// Revalidate live control state and exact owned proposal before application.
@@ -562,6 +600,10 @@ pub type HomeostasisActorMsg {
     proposal: EvolutionProposal,
     reply_to: Subject(Result(HomeostasisSystemState, EvolutionError)),
   )
+  RetireMutationProposal(
+    proposal: EvolutionProposal,
+    reply_to: Subject(Result(HomeostasisSystemState, EvolutionError)),
+  )
   IngestPhysiological(
     measurements: List(#(PhysiologicalVariable, Float)),
     dt_seconds: Float,
@@ -630,6 +672,19 @@ pub fn handle_actor_message(
 
     ApplyMutationEvolution(proposal, reply_to) -> {
       case apply_ratified_evolution(state, proposal) {
+        Ok(next_state) -> {
+          process.send(reply_to, Ok(next_state))
+          actor.continue(next_state)
+        }
+        Error(err) -> {
+          process.send(reply_to, Error(err))
+          actor.continue(state)
+        }
+      }
+    }
+
+    RetireMutationProposal(proposal, reply_to) -> {
+      case retire_terminal_proposal(state, proposal) {
         Ok(next_state) -> {
           process.send(reply_to, Ok(next_state))
           actor.continue(next_state)

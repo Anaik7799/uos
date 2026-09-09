@@ -110,7 +110,8 @@ pub fn byzantine_fault_is_terminal_test() {
 }
 
 pub fn negative_debit_is_rejected_test() {
-  a.consume_tokens(a.init_autoscaler(1, 2, 50.0, 100, 10, 1000), -1, 1000)
+  let assert Ok(state) = a.init_autoscaler(1, 2, 50.0, 100, 10, 1000)
+  a.consume_tokens(state, -1, 1000)
   |> should.equal(Error(a.InvalidTokenAmount(-1)))
 }
 
@@ -195,7 +196,7 @@ pub fn stale_generation_cannot_regress_state_test() {
 }
 
 pub fn token_debits_conserve_available_and_consumed_test() {
-  let state = a.init_autoscaler(1, 2, 50.0, 100, 10, 1000)
+  let assert Ok(state) = a.init_autoscaler(1, 2, 50.0, 100, 10, 1000)
   list.each([#(0, 100), #(1, 99), #(99, 1), #(100, 0)], fn(pair) {
     let assert Ok(next) = a.consume_tokens(state, pair.0, 1000)
     next.token_bucket.available_tokens |> should.equal(pair.1)
