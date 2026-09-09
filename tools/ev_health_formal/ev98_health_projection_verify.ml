@@ -38,34 +38,60 @@ let require_order = function
 
 let verify_controls collision raw =
   let forward = register (member "forward" collision) and reverse = register (member "reverse" collision) in
-  if forward.payload = reverse.payload then fail "collision control did not expose equal-key payload ambiguity";
+  if forward <> { M.sample = 1; logical = 1; writer = 1; payload = 1 }
+     || reverse <> { M.sample = 1; logical = 1; writer = 1; payload = 0 }
+  then fail "collision control fixture";
   let forward_order = member "forward" raw and reverse_order = member "reverse" raw in
-  if forward_order = reverse_order then fail "raw map control did not expose association-list order";
+  if forward_order <> `List [`String "a"; `String "b"]
+     || reverse_order <> `List [`String "b"; `String "a"]
+  then fail "raw map order fixture";
   require_order (member "canonical" raw)
 
+let read_bounded_regular path =
+  let before = Unix.lstat path in
+  if before.Unix.st_kind <> Unix.S_REG || before.Unix.st_size > 4 * 1024 * 1024
+  then fail "bounded regular file required";
+  let fd = Unix.openfile path [Unix.O_RDONLY; Unix.O_NONBLOCK; Unix.O_CLOEXEC] 0 in
+  Fun.protect ~finally:(fun () -> Unix.close fd) (fun () ->
+    let opened = Unix.fstat fd in
+    if opened.Unix.st_kind <> Unix.S_REG || opened.st_dev <> before.st_dev || opened.st_ino <> before.st_ino
+    then fail "file identity changed";
+    let bytes = Bytes.create (4 * 1024 * 1024 + 1) in
+    let rec read_all offset =
+      if offset = Bytes.length bytes then fail "file exceeds bound";
+      match Unix.read fd bytes offset (Bytes.length bytes - offset) with
+      | 0 -> offset
+      | count -> read_all (offset + count) in
+    let length = read_all 0 in
+    let after = Unix.fstat fd in
+    if after.st_dev <> opened.st_dev || after.st_ino <> opened.st_ino
+       || after.st_size <> length then fail "file changed while read";
+    Bytes.sub_string bytes 0 length)
+
 let digest_file path =
-  let stat = Unix.stat path in
-  if stat.Unix.st_kind <> Unix.S_REG || stat.Unix.st_size > 4 * 1024 * 1024
-  then fail "BEAM must be a bounded regular file";
-  let channel = open_in_bin path in
-  let digest = Cryptokit.hash_channel (Cryptokit.Hash.sha256 ()) channel in
-  close_in channel;
-  Cryptokit.transform_string (Cryptokit.Hexa.encode ()) digest
+  Cryptokit.hash_string (Cryptokit.Hash.sha256 ()) (read_bounded_regular path)
+  |> Cryptokit.transform_string (Cryptokit.Hexa.encode ())
 
 let output_from_receipt receipt expected_output main =
-  let stat = Unix.stat receipt in
-  if stat.Unix.st_kind <> Unix.S_REG || stat.Unix.st_size > 4 * 1024 * 1024
-  then fail "receipt must be a bounded regular file";
-  match J.from_file receipt with
+  match J.from_string (read_bounded_regular receipt) with
   | `Assoc _ as json ->
     if member "exit_code" json <> `Int 0 || member "failure" json <> `Null
        || member "child_termination" json <> `Assoc ["kind", `String "EXITED"; "code", `Int 0]
     then fail "receipt did not observe a successful child";
     let argv =
       match member "argv" json with
-      | `List values -> List.filter_map (function `String value -> Some value | _ -> None) values
+      | `List values -> List.map (function `String value -> value | _ -> fail "receipt argv nonstring") values
       | _ -> fail "receipt argv missing" in
-    if not (List.mem expected_output argv && List.mem "-s" argv && List.mem main argv)
+    let suffix = ["-pa"; expected_output; "-s"; main; "main"; "-s"; "init"; "stop"] in
+    let direct = "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec" in
+    let prefix_length = List.length argv - List.length suffix in
+    let rec split count values =
+      if count = 0 then [], values else match values with
+      | value :: rest -> let before, after = split (count - 1) rest in value :: before, after
+      | [] -> [], [] in
+    let prefix, observed_suffix = if prefix_length < 1 then [], argv else split prefix_length argv in
+    if prefix = [] || List.hd prefix <> direct || observed_suffix <> suffix
+       || List.exists (fun arg -> arg = "-s" || arg = "-eval" || arg = "-extra") prefix
     then fail "receipt launch identity";
     (match member "output" json with
      | `String output ->

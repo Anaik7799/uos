@@ -21,10 +21,14 @@ let () =
   rejects "wrong_termination" (replace "child_termination" (`Assoc ["kind", `String "SIGNALED"]) base);
   rejects "wrong_digest" (replace "output_sha256" (`String "00") base);
   rejects "wrong_runner" (replace "argv" (`List [`String "not-runner"]) base);
+  rejects "nonstring_argv" (replace "argv" (`List [`Int 1]) base);
   let path = Filename.temp_file "ev98-oversize" ".json" in
   let out = open_out_bin path in output_string out (String.make (4 * 1024 * 1024 + 1) 'x'); close_out out;
   let pid = Unix.create_process exe [|exe; path; beam; digest|] Unix.stdin Unix.stdout Unix.stderr in
   (match snd (Unix.waitpid [] pid) with Unix.WEXITED 0 -> failwith "accepted oversize" | _ -> print_endline "PASS oversize_before_parse");
+  let link = Filename.temp_file "ev98-link" ".json" in Unix.unlink link; Unix.symlink receipt link;
+  let pid = Unix.create_process exe [|exe; link; beam; digest|] Unix.stdin Unix.stdout Unix.stderr in
+  (match snd (Unix.waitpid [] pid) with Unix.WEXITED 0 -> failwith "accepted receipt symlink" | _ -> print_endline "PASS receipt_symlink");
   match Ev98_health_smt.rows () with
   | first :: rest ->
     let altered = { first with independently_validated = false } :: rest in
