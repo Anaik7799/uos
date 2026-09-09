@@ -1,5 +1,11 @@
 # 20260908-0950 — Fractal Hive Cadence, Subsystem Matrix & Strong Observability Contract
 
+> **Taxonomy note (SC-FRACTAL-TAXONOMY-001, 2026-09-09):** the canonical definition of
+> `#fractal-l0` .. `#fractal-l9` lives in
+> [`contracts/rules/20260909-0704-fractal-layer-taxonomy-single-source.md`](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260909-0704-fractal-layer-taxonomy-single-source.md).
+> The table below is retained as one column of that definition; amend the single source, not this file.
+
+
 #fractal-l0 #fractal-l1 #fractal-l2 #fractal-l3 #fractal-l4 #fractal-l5 #fractal-l6 #fractal-l7 #fractal-l8 #fractal-l9 #zk-adr #zero-muda #tailscale-web
 
 - **Contract ID**: `SC-FRACTAL-CADENCE-001`

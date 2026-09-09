@@ -30,6 +30,7 @@ in
     pkgs.quint                          # 0.32.0 -- .qnt front-end compiler
     pkgs.jujutsu                        # 0.44.0 -- the sole VCS (policy 4)
     pkgs.nodejs_22                      # 22.23.2 -- complete npm
+    pkgs.coreutils                      # 9.x -- pinned OS utilities
   ];
 
   enterShell = ''

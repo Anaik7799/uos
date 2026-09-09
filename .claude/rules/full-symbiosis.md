@@ -26,6 +26,11 @@ Keep Codex/GPT, Claude, Gemini, `.agents`, repo-local `.codex`, Pi-mono, and C3I
 
 ## L0-L7 Gate
 
+> **Taxonomy note (SC-FRACTAL-TAXONOMY-001, 2026-09-09):** the canonical definition of
+> `#fractal-l0` .. `#fractal-l9` lives in
+> [`contracts/rules/20260909-0704-fractal-layer-taxonomy-single-source.md`](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260909-0704-fractal-layer-taxonomy-single-source.md).
+> The table below is retained as one column of that definition; amend the single source, not this file.
+
 | Layer | Gate |
 |---|---|
 | L0 Constitutional | No rule bypass, no silent downgrade, no contradictory active guidance. |

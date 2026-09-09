@@ -278,10 +278,11 @@
     ]
   },
   "residual_risks": [
-    "CORRECTED (was recorded as a single stray directory): git-tree ascent, not one directory, is the cause. Removing the empty /home/an/NAS-setup/uos/.git did NOT fix bare `nix flake` -- Nix then ascends to /home/an/NAS-setup/.git, which is ALSO an empty directory that git itself does not recognise as a repository. `path:$UOS_ROOT` is therefore the permanent invocation, not a workaround pending cleanup. The parent directory is outside UOS and was left untouched.",
-    "OPEN: /home/an/NAS-setup/.git is an empty non-repository directory outside the UOS workspace. Not removed: out of scope, and removal would not change the required `path:` invocation anyway.",
+    "OPEN, MONITORED: something outside the repository recreated uos/.git once (04:01). The marker is removed and bare nix works, but recurrence is possible; preflight arm vcs/no-git-marker detects it. The recreating actor was not identified.",
+    "IN FLIGHT: quint verify of agentic_coordination at --max-steps 4 is running as a batch job; 1 and 2 steps are already NoError at 18.1s and 75.0s.",
+    "UNRUN BY DESIGN: the effecting release_process.ml commands (build, browser, capture, parity, smoke, web, tui) require a destination, a private port or a browser and have real effects. They are out of scope for an unattended pass and remain honestly UNRUN.",
+    "STATED LIMIT: tag-distribution entropy cannot detect ritual tagging (all-ten-everywhere scores 3.3219 against a 3.3219 ceiling). SC-FRACTAL-TAXONOMY-001 records this rather than closing it; a per-claim evidence audit would need its own contract and acceptance evidence under SC-JIDOKA-001.",
     "BOUNDED (was OPEN): quint verify of agentic_coordination.qnt is depth-limited, not blocked. NoError at 1 step (18.1s) and 2 steps (75.0s); ~4x per step puts the default depth beyond an interactive budget. Deeper verification needs a batch run, not a fix.",
-    "BOUNDARY: os_util() keeps /usr/bin/{cp,curl,printf,false,sleep} and /opt/google/chrome/chrome on host paths. These are OS utilities, not language toolchains, and the mandate bars toolchains. Noted: /usr/bin/timeout on this host is a uutils-coreutils symlink, so host coreutils are not the GNU ones.",
     "INTENTIONAL, NOT A DEFECT: release_process.ml runtime_check deliberately iterates BOTH /usr/lib/erlang/bin (host OTP 27) and the pinned OTP 29 bin. It is a differential oracle -- the same FFI must self-report its own release correctly under two different BEAMs. Observed: 'OTP 27 ERTS 15.2.7.4' and 'OTP 29 ERTS 17.0.5'. Do not 'fix' this to use only the pinned toolchain; that would destroy the differential.",
     "UNRUN: no Quint model-checking VERDICT is claimed. All four formal/quint/*.qnt specs typecheck at 0.32.0; typecheck success is not invariant proof.",
     "UNRUN: the repointed Gleam and OCaml call sites (capability_port.gleam, release_process.ml, unification_cycles.ml) have been path-corrected but not rebuilt or executed at this revision.",
@@ -326,6 +327,16 @@
       "km_gate": "KMP-INCOMPLETE cleared for both indexes after registering ADR-096",
       "gate_G_PREFLIGHT": "PASS",
       "preflight": "29/29 fast tier"
+    },
+    "issue_resolution_runs": {
+      "preflight_full": "33/33 PASS (+2 from the new vcs arm)",
+      "preflight_vcs_negative": "creating .git -> FAIL (1 of 31) naming vcs/no-git-marker; removed, PASS restored",
+      "km_gate": "PASS, entropy 3.3079, 0 findings, after km_layers deletion",
+      "km_gate_suites": "--gate --metrics-selftest --rete-selftest --ev-selftest --merge-selftest all PASS; --classify-layers and --layer-vectors gone as intended",
+      "metrics_selftest": "10/10 including E9/E10 (out-of-range tag names no layer)",
+      "release_process": "toolchain 22 arms PASS; selftest 113 checks PASS after os_util repointing",
+      "nix_bare_invocation": "nix flake metadata (no path: prefix) resolves correctly once no git marker exists",
+      "coreutils": "cp/printf/sleep/false from the profile report GNU coreutils 9.11"
     }
   },
   "defects_closed_in_this_pass": [
@@ -424,5 +435,15 @@
     "preconditions_checked": "untracked in jj (0 files); resolver and OCaml tables already repointed to toolchains/nix-profile; ONE live reference remained and was fixed first -- tools/release_process.ml built its subprocess PATH with toolchains/node-22/bin, which would have silently pointed at a nonexistent directory.",
     "manifest": "the node entry now records nodejs 22.23.2 / npm 10.9.8 from the Nix profile, with the removal and its reason.",
     "post_checks": "preflight 29/29 PASS with node v22.23.2 and npm config get cache -> /home/an/.npm; uos-cli gate G-PREFLIGHT PASS; ocaml tools/release_process.ml selftest 113 checks PASS."
+  },
+  "issue_resolution_pass": {
+    "mandate": "Operator (2026-09-09): \"fix or resolve all issues, fractal tps\".",
+    "tps_frame": "Jidoka: stop at the defect and fix at source. Poka-yoke: make recurrence detectable. Muda: delete what carries no value. Heijunka: level the work through sa-plan rather than a burst. Genchi genbutsu: every claim below was measured, not inferred.",
+    "taxonomy": "SC-FRACTAL-TAXONOMY-001 (contracts/rules/20260909-0704-...) single-sources #fractal-l0..l9. The two prior definitions are reconciled as two COLUMNS of one table -- concern vs enacting subsystem -- rather than one overruling the other. L8 (evolutionary) and L9 (sovereign/provenance) receive a governing definition for the first time. l10+ declared nonexistent. Mirrored to 4 agent surfaces; both source documents now carry a pointer, so a reader landing on either cannot restate the taxonomy from a partial view.",
+    "adr010_correction": "The Codex review called ADR-010 a taxonomy collision. Measured: ADR-010 carries only #fractal-l5 and #fractal-l8 as tags and defines a SEVEN-LEVEL GRANULARITY axis (mesh topology -> memory layout) in prose. It is orthogonal, and the hazard is a shorthand collision, not a definitional conflict. The contract fixes the naming: fractal layers are #fractal-lN or 'layer LN'; granularity is 'granularity level N', never bare LN.",
+    "muda_km_layers": "km_layers.ml deleted with classify_layers, layer_vectors, both CLI subcommands, the layers.json publish entry, the Km_layers.Invalid handler and the dune module entry. Unanimous tri-sovereign verdict. All five km-gate suites PASS afterwards; gate PASS 3.3079, 0 findings.",
+    "poka_yoke_vcs": "BOTH stray empty .git markers removed; bare `nix flake metadata` now resolves path:/home/an/NAS-setup/uos. This SUPERSEDES the 20260909-0456 finding that the path: URL was permanent -- that conclusion was correct for the state observed then, when a marker still existed above the workspace. The uos/.git had been RECREATED by something outside the repository (observed 04:01), so the condition is now detected rather than assumed fixed: preflight arm vcs/no-git-marker fails closed on any git marker in the workspace.",
+    "poka_yoke_os_utils": "pkgs.coreutils pinned; os_util resolves cp/printf/sleep/false from toolchains/nix-profile (GNU coreutils 9.11) with a narrow named host fallback for curl and chrome. Removes the unexamined assumption that host coreutils were GNU -- /usr/bin/timeout on this host is a uutils symlink.",
+    "ev_manifest": "EV-110 and EV-111 added with checkable artifacts so uos doctor covers the preflight integration and the km_layers review."
   }
 }

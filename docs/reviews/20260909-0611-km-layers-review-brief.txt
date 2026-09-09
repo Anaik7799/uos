@@ -1,0 +1,51 @@
+Sovereign review request: should tools/km_provenance/km_layers.ml continue to exist?
+
+CONTEXT (verify independently; do not take my word for it).
+km_layers.ml is a content-based fractal-layer classifier for the ZK corpus in docs/zk.
+It was built to raise the KMP-ENTROPY metric in tools/km_provenance/km_metrics.ml, whose
+header stated "68 of 87 ADRs are tagged #fractal-l0, collapsing the layer taxonomy to
+~1.3 bits". On 2026-09-09 I established that reading was a MEASUREMENT ARTIFACT:
+layer_entropy_bits folded over Km_corpus.layer, which is only the FIRST #fractal-lN tag
+in a record. ADRs are multi-label (47 of 80 carry all ten layers; 6 carry as few as two)
+and the tag block is written ascending by house style, so 74 of 80 records read as l0.
+Measured over all tags the same corpus scores 3.309 bits against an unchanged 2.50 floor,
+and tools/km-gate now returns PASS with 0 findings. Method: term-frequency vector over a
+121-term vocabulary, cosine similarity against one 0/1 archetype vector per layer,
+highest wins; classify/1 returns a single proposed layer plus confidence and margin.
+
+MY FINDINGS (challenge any of these).
+F1 The motivating premise is gone: the number it was built to raise was never low.
+F2 Even applying every proposal reaches only 2.214 bits, below the 2.50 floor it targeted,
+   while rewriting 58 of 96 records, 35 of which the tool itself flags margin < 0.05.
+F3 Vocabulary-prevalence bias: Spearman rho between a layer's mean term document-frequency
+   across the corpus and how often that layer is proposed is 0.988 (n=10). The classifier
+   appears to rank layers by how common their vocabulary happens to be, not by content.
+F4 18 of 121 vocabulary terms occur in ZERO ADRs. #fractal-l1 (4/13 dead terms, mean df
+   7.3%) and #fractal-l6 (5/12 dead, 10.6%) are proposed 0 times: structurally unable to win.
+F5 No IDF/stopword weighting. 'sovereign', 'system' and 'wiki' appear in >=90% of ADRs and
+   are weighted equally with rare terms. doc_vector is raw counts, archetype_vector is 0/1.
+F6 Substring matching, not tokenisation. 23% of 'sync' matches are inside 'asynchronous';
+   17% of 'commit' matches are inside 'commitment'. In a Jujutsu monorepo the remaining
+   'commit' hits are overwhelmingly VCS commits, not the L3 transaction sense - a semantic
+   false positive substring matching cannot detect at all.
+F7 Single-label output for a demonstrably multi-label corpus.
+F8 No law suite. km_gate has --rete-selftest, --ev-selftest, --merge-selftest and now
+   --metrics-selftest; km_layers has none.
+F9 The header claims a differential oracle ("the Mojo kernel computes the same quantity"),
+   exposed via km_gate --layer-vectors, but grep finds NO consumer of that subcommand
+   anywhere in the repository. The oracle is aspirational, not running.
+F10 km_gate --layer-vectors passes classify's result to archetype_vector without guarding
+   the None case; List.assoc "" archetypes would raise Not_found, which is not in the
+   handler list at the bottom of km_gate.ml.
+
+QUESTIONS.
+Q1 Is deletion, retention-with-a-corrected-header (current state), or repair correct?
+Q2 If repaired: is a single-label classifier ever the right shape for a multi-label corpus,
+   or must the output become a per-layer relevance vector?
+Q3 Is F3 a fair characterisation, or is rho=0.988 an artifact of my own method?
+Q4 What evidence would justify RETAINING it? Name a concrete acceptance test.
+Q5 Anything I have missed, including anything I have overstated.
+
+Constraints: this is a standalone non-colocated Jujutsu repository; do not run git mutations.
+Report only; you grant no admission. Disagreement is more useful to me than agreement.
+Answer concisely with a clear verdict and the reasoning that supports it.

@@ -41,6 +41,7 @@
         pkgs.quint                     # 0.32.0 -- .qnt front-end compiler
         pkgs.jujutsu                   # 0.44.0 -- the sole VCS; see note below
         pkgs.nodejs_22                 # 22.23.2 -- complete npm (see note)
+        pkgs.coreutils                 # 9.x -- cp/printf/sleep/false, see note below
       ];
 
       # The exact erl this pin admits. Every guard compares against THIS path and
@@ -51,6 +52,13 @@
       # while every release-number assertion in the tree stayed green.
       pinnedErl = "${otp29}/lib/erlang/bin/erl";
 
+      # coreutils is pinned because tools/release_process.ml shells out to cp,
+      # printf, sleep and false on absolute /usr/bin paths. Those are OS utilities
+      # rather than language toolchains, so the mandate did not bar them -- but on
+      # THIS host /usr/bin/timeout is a symlink into a uutils (Rust) coreutils
+      # install, so "the host coreutils" are not the GNU ones and their behaviour
+      # is not the behaviour anyone assumed. Pinning removes the assumption.
+      #
       # nodejs_22 replaces a hand-materialised toolchains/node-22 tree whose npm
       # was INCOMPLETE: its bundled node_modules was missing semver, so npm died
       # with "Cannot find module 'semver/functions/satisfies'" the moment it took

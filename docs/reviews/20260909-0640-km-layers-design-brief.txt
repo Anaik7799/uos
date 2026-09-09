@@ -1,0 +1,63 @@
+Second sovereign review, different question. Previous round asked whether
+tools/km_provenance/km_layers.ml should exist; all three of us said delete. The operator
+now asks the forward question instead: WHAT WOULD HAVE TO BE ADDED TO MAKE IT USEFUL?
+Treat "delete it" as already argued and rejected as an answer here. Argue the design.
+
+ESTABLISHED FACTS (verify; do not take my word).
+- ADRs in docs/zk are MULTI-LABEL. 47 of 80 carry all ten #fractal-lN tags; mean 7.41 of 10;
+  only 6 carry as few as two.
+- Corpus KMP-ENTROPY, measured over all tags, is 3.309 bits vs a 2.50 floor; km-gate PASSes.
+  But tagging EVERY document with ALL TEN layers yields 3.3219 bits, also maximal. The metric
+  measures marginal tag diversity, not whether a tag is EARNED. It cannot see ritual tagging.
+- The classifier is: raw term counts over a 121-term vocabulary, cosine against one 0/1
+  archetype vector per layer, argmax, single label out, plus a `margin` and `confidence` that
+  are not calibrated probabilities (median confidence 0.323, median margin 0.082).
+- 18 of 121 vocabulary terms occur in zero ADRs. `wiki`, `system`, `sovereign` occur in >=90%
+  of ADRs; in 56 of 79 ADRs every `wiki` hit is inside the navigation/checklist boilerplate
+  that SC-CHECKLIST-001 mandates on every file.
+- Matching is substring, not token: `null` does not match `NUL`. Concretely, ADR-002
+  "embedded NUL ingress trap and memory allocation containment" -- unambiguously L1 by the
+  repo's own archetype -- is proposed L5 at the classifier's second-highest confidence,
+  because its only L1 hit is `byte` x2 while `wiki` x6 comes from the header.
+- I reimplemented the cosine independently in Python and reproduced the shipped OCaml exactly
+  (ADR-002: 0.4536 vs 0.454). A synthetic pure-L1 document scores L1 at 0.832 and still scores
+  L1 at 0.817 with the full mandated header prepended, so boilerplate only decides the outcome
+  when content signal is near zero. The failure mode is VOCABULARY COVERAGE, not boilerplate.
+
+MY PROPOSAL, WHICH I WANT ATTACKED.
+P1 Change the question the module answers. Not "which layer is this document?" -- a single
+   label is the wrong shape for a corpus where 59% claim all ten. Instead: "of the N layers
+   this document CLAIMS, which are EVIDENCED by its content, and which are unsupported?"
+   Output a per-layer support verdict in {evidenced, unsupported, abstain}, never an argmax.
+P2 That reframing makes the module answer the exact question the entropy metric cannot: it
+   detects ritual tagging, which is the corpus's real quality risk now that the floor passes.
+P3 Required additions, roughly in dependency order:
+   (a) tokenisation with morphological folding, replacing substring matching;
+   (b) an evidence model that is per-layer independent, not a competition -- e.g. a
+       support score per layer with its own threshold, so ten layers can all be evidenced;
+   (c) boilerplate excision: strip the mandated nav/checklist/transclusion block before
+       scoring, since it is a constant offset present in every document by contract;
+   (d) IDF or a stopword floor so terms in >=90% of the corpus carry ~no weight;
+   (e) explicit ABSTAIN when a layer's live vocabulary coverage in the corpus is too low to
+       decide -- 18 dead terms mean some layers currently cannot be argued either way;
+   (f) vocabulary repair driven by the corpus, not by the L0-L7 gate prose it was seeded from;
+   (g) calibration: map scores to something with an operational meaning, or drop the word
+       "confidence";
+   (h) a law suite (--layer-selftest) and an actually-wired differential oracle against the
+       existing Mojo cosine kernel;
+   (i) fix: --classify-layers still publishes the discredited first-tag entropy (1.322)
+       alongside a single-label proposal entropy, which is now meaningless.
+
+QUESTIONS.
+Q1 Is P1/P2 the right reframing, or is there a better question this module should answer?
+Q2 Which of (a)-(i) are necessary, which are optional, and what is missing from the list?
+Q3 What is the minimum viable version that is USEFUL rather than merely defensible? Be concrete.
+Q4 What would make this HARMFUL if built badly? Name the specific failure mode you most fear.
+Q5 Is there an approach that beats a lexical model entirely for this corpus and this purpose,
+   given the constraint that UOS bars unbounded/foreign runtimes and prefers pure OCaml?
+Q6 What acceptance evidence would justify admitting the rebuilt module?
+
+Constraints: standalone non-colocated Jujutsu; REPORT ONLY -- do not modify, create or delete
+any file, and do not run VCS mutations. The previous AGY run deleted files despite a report-only
+brief; that will be treated as a mandate violation again. Disagreement is more useful than
+agreement. Be concrete and concise.

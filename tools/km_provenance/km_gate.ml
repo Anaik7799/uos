@@ -11,7 +11,6 @@
      km_gate --verify-chain                recompute every cycle digest
      km_gate --append CYCLE KIND TITLE BODY EVIDENCE_JSON   append one cycle row
      km_gate --cycles                      list the recorded cycle chain
-     km_gate --classify-layers              propose a fractal layer per record
      km_gate --ooda                         one bounded observe/orient/decide/act pass
      km_gate --series METRIC                the recorded history of one metric
      km_gate --rete                         forward-chain the provenance rule network
@@ -156,77 +155,6 @@ let cycles () =
         | Sqlite3.Rc.DONE -> List.rev acc
         | _ -> raise (Invalid "cycle listing failed") in
       print_json (`Assoc ["cycles", `List (loop [])]); 0))
-
-(* --- layer classification proposal (KMP-ENTROPY) ----------------------- *)
-
-let classify_layers () =
-  let all = adrs () in
-  let proposals =
-    List.filter_map (fun a ->
-      let body = read (Filename.concat "docs/zk" a.file) in
-      Km_layers.classify ~file:a.file ~current:a.layer ~body) all in
-  let current_counts = Km_layers.tally (List.map (fun p -> p.Km_layers.current) proposals) in
-  let proposed_counts = Km_layers.tally (List.map (fun p -> p.Km_layers.proposed) proposals) in
-  let h_now = Km_layers.entropy_of current_counts in
-  let h_prop = Km_layers.entropy_of proposed_counts in
-  let changed = List.filter (fun p -> p.Km_layers.current <> p.Km_layers.proposed) proposals in
-  (* A small margin means the archetypes barely separated: say so per record. *)
-  let low_margin = List.filter (fun p -> p.Km_layers.margin < 0.05) proposals in
-  let dist name counts = name, `Assoc (List.map (fun (l, c) -> l, `Int c) counts) in
-  print_json (`Assoc [
-    "schema", `String "uos-km-layer-proposal/v1";
-    "contract", `String "SC-PROVENANCE-001";
-    "authority", `String "PROPOSAL_ONLY";
-    "applied", `Bool false;
-    "observed_at", `String (now_utc ());
-    "method", `String "term-frequency vector over a fixed vocabulary, cosine similarity against one archetype per layer, highest wins";
-    "vocabulary_terms", `Int Km_layers.dim;
-    "records", `Int (List.length proposals);
-    "records_where_proposal_differs", `Int (List.length changed);
-    "low_margin_records", `Int (List.length low_margin);
-    "entropy_bits", `Assoc [
-      "current", `Float h_now;
-      "if_proposal_applied", `Float h_prop;
-      "floor", `Float 2.5 ];
-    (let (n, v) = dist "current_distribution" current_counts in n, v);
-    (let (n, v) = dist "proposed_distribution" proposed_counts in n, v);
-    "proposals", `List (List.map (fun p -> `Assoc [
-      "file", `String p.Km_layers.file;
-      "current", `String p.Km_layers.current;
-      "proposed", `String p.Km_layers.proposed;
-      "confidence", `Float p.Km_layers.confidence;
-      "margin", `Float p.Km_layers.margin ]) proposals);
-    "limits", `List (List.map (fun s -> `String s) [
-      "A term-frequency match is weak evidence of architectural layer; it reflects vocabulary, not design intent.";
-      "Records with margin below 0.05 were barely separated and should be treated as unclassified.";
-      "Nothing is written. Applying a layer is an authorship act belonging to the record author or sovereign review." ]) ]);
-  0
-
-(* Emits real document/archetype vector pairs so an independent implementation
-   (the Mojo kernel via its NIF) can recompute the same cosine values. Two
-   implementations agreeing is the differential oracle; one implementation
-   agreeing with itself is not evidence. *)
-let layer_vectors n =
-  let all = adrs () in
-  let take k l = List.filteri (fun i _ -> i < k) l in
-  let sample = take n all in
-  let pairs = List.map (fun a ->
-    let body = read (Filename.concat "docs/zk" a.file) in
-    let v = Km_layers.doc_vector body in
-    let best = match Km_layers.classify ~file:a.file ~current:a.layer ~body with
-      | Some p -> p.Km_layers.proposed | None -> "" in
-    let av = Km_layers.archetype_vector best in
-    let ocaml_cos = match Km_layers.cosine v av with Some c -> c | None -> -1.0 in
-    `Assoc ["file", `String a.file;
-            "layer", `String best;
-            "doc", `List (List.map (fun x -> `Float x) v);
-            "archetype", `List (List.map (fun x -> `Float x) av);
-            "ocaml_cosine", `Float ocaml_cos]) sample in
-  print_json (`Assoc ["schema", `String "uos-km-layer-vectors/v1";
-                      "dim", `Int Km_layers.dim;
-                      "pairs", `List pairs]);
-  0
-
 (* --- bounded predictive OODA pass -------------------------------------- *)
 
 let plan_id = "km-convergence-20260908-0940"
@@ -486,7 +414,6 @@ let publish () =
     "gate.json", gate;
     "rete.json", rete;
     "ooda.json", ooda;
-    "layers.json", classify_layers;
   ] in
   let written = List.map (fun (name, f) ->
     let (code, body) = capture f in
@@ -655,8 +582,9 @@ let ev_selftest () =
    This exists because the metric was wrong for a long time in a way that looked
    like a corpus defect: it folded over the FIRST #fractal-lN tag only, and the
    tag block is written ascending, so it reported the writing convention. A whole
-   cosine classifier (Km_layers) was then built to "fix" a corpus that was never
-   broken.
+   cosine classifier was then built to "fix" a corpus that was never broken; it was
+   removed on 2026-09-09 after unanimous tri-sovereign review (docs/reviews/
+   20260909-0648-km-layers-usefulness-design-synthesis.md).
 
    E5 is the important law: correcting a metric is only legitimate if the metric
    still fails what it is supposed to fail. *)
@@ -692,6 +620,13 @@ let metrics_selftest () =
        (List.init 40 (fun i -> mk i [ l 0; l 4 ])) < 2.5);
   check "E7 an untagged record falls back to \"none\" rather than vanishing"
     (close (Km_metrics.layer_entropy_bits [ mk 1 [] ]) 0.0);
+  check "E9 an out-of-range tag names no layer: #fractal-l10 must NOT be read as \
+         #fractal-l1 (found by sovereign review; masked in the live corpus only \
+         because every l10 document also carries a genuine l1)"
+    (let body = "tags: #fractal-l10 and nothing else" in
+     Km_corpus.all_layers body = []);
+  check "E10 a genuine single-digit tag is still read"
+    (Km_corpus.all_layers "x #fractal-l7 y" = [ "#fractal-l7" ]);
   check "E8 tag ORDER cannot change the entropy (the old metric depended on it)"
     (close
        (Km_metrics.layer_entropy_bits [ mk 1 [ l 0; l 4; l 7 ] ])
@@ -790,8 +725,6 @@ let () =
     | [_; "--gate"] -> exit (gate ())
     | [_; "--verify-chain"] -> exit (verify_chain ())
     | [_; "--cycles"] -> exit (cycles ())
-    | [_; "--classify-layers"] -> exit (classify_layers ())
-    | [_; "--layer-vectors"; n] -> exit (layer_vectors (int_of_string n))
     | [_; "--ooda"] -> exit (ooda ())
     | [_; "--rete"] -> exit (rete ())
     | [_; "--rete-selftest"] -> exit (rete_selftest ())
@@ -813,11 +746,9 @@ let () =
       exit 0
     | [_; "--append"; c; k; t; b; e] -> exit (append c k t b e)
     | _ ->
-      prerr_endline "Usage: km_gate --metrics | --gate | --verify-chain | --cycles | --classify-layers | --append CYCLE KIND TITLE BODY EVIDENCE_JSON";
       exit 2
   with
   | Invalid m -> fail m
-  | Km_layers.Invalid m -> fail m
   | Km_ooda.Invalid m -> fail m
   | Km_rete.Invalid m -> fail m
   | Km_ev.Invalid m -> fail m

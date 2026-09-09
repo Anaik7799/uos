@@ -51,10 +51,18 @@ let tool_path = function
 let tool name = match tool_path name with
  | None -> failwith("no in-project toolchain entry: "^name)
  | Some p -> require(Sys.file_exists p)("toolchain absent (no host fallback): "^p); p
-(* Host OS utilities are NOT toolchains and stay on absolute host paths; they are
-   named here so the distinction is explicit rather than incidental. *)
+(* OS utilities, now PINNED. They are not language toolchains, so the in-project
+   mandate did not bar them -- but on this host /usr/bin/timeout is a symlink into
+   a uutils (Rust) coreutils install, so "the host coreutils" were not the GNU ones
+   and their behaviour was an assumption nobody had checked. Resolved from the Nix
+   profile with the host path as an explicit, narrow fallback for utilities the
+   profile does not carry (curl, chrome), which are named at their call sites. *)
 let os_util name =
- let p="/usr/bin/"^name in require(Sys.file_exists p)("host utility absent: "^p); p
+ let pinned = toolchains^"/nix-profile/bin/"^name in
+ if Sys.file_exists pinned then pinned
+ else
+   let p="/usr/bin/"^name in
+   require(Sys.file_exists p)("utility absent from the pinned profile and the host: "^name); p
 let otp = Filename.dirname(tool "erl")
 (* Parity guard: parse the shell resolver's case arms and require this table to
    agree. Pure text scan -- no shell is executed, matching this file's argv-only

@@ -214,6 +214,25 @@ else
   row tracked tools-tree FAIL "pinned jj unavailable; tracking NOT checked"
 fi
 
+# --- arm 4b: VCS purity (poka-yoke) ------------------------------------------
+# Canonical policy section 4: standalone NON-COLOCATED Jujutsu. A .git marker in
+# the workspace is a policy signal even when empty -- and it is not inert: an
+# EMPTY .git directory makes Nix classify the tree as a Git flake, so every
+# `nix flake` command fails with libgit2 error 6 until it is removed. This one
+# has been recreated at least once by something outside the repository (observed
+# 2026-09-09 04:01), so the condition is detected at the line rather than
+# assumed fixed.
+if [ -e "$PF_ROOT/.git" ]; then
+  row vcs no-git-marker FAIL "$PF_ROOT/.git exists; standalone non-colocated jj admits no git marker (breaks bare \`nix flake\`)"
+else
+  row vcs no-git-marker PASS "no .git marker in the workspace"
+fi
+if [ -d "$PF_ROOT/.jj" ]; then
+  row vcs jj-present PASS ".jj present"
+else
+  row vcs jj-present FAIL ".jj absent; this is not a UOS workspace"
+fi
+
 # --- arm 5: table parity + BEAM pin (OCaml side) -----------------------------
 if out="$(cd "$PF_ROOT" && timeout 180 "$(uos_tool_path ocaml)" tools/release_process.ml toolchain 2>&1)"; then
   case "$out" in

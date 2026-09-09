@@ -106,7 +106,20 @@ let all_layers body =
       else
         let tag = String.sub body j 11 in
         let d = tag.[10] in
-        let acc = if d >= '0' && d <= '9' && not (List.mem tag acc) then tag :: acc else acc in
+        (* The digit must END the tag. Without this test "#fractal-l10" -- present
+           in 11 ADRs -- is read as "#fractal-l1", because the scan takes a fixed
+           11 characters and never looks at the next one. Currently masked: every
+           document carrying l10 also carries a genuine l1, and this list is
+           de-duplicated per document. Masked is not fixed. There is no L10 in the
+           taxonomy, so an out-of-range tag names no layer and is counted as none. *)
+        let ends_here =
+          j + 11 >= String.length body
+          || not (body.[j + 11] >= '0' && body.[j + 11] <= '9')
+        in
+        let acc =
+          if d >= '0' && d <= '9' && ends_here && not (List.mem tag acc) then tag :: acc
+          else acc
+        in
         go (j + 10) acc
   in
   List.sort String.compare (go 0 [])
