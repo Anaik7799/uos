@@ -89,53 +89,53 @@
         {
           "path": ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam",
           "sha256": "8c11774981bcd6806b3154a8c7ec0edab378750258a9259882323fe0e8dbad76",
-          "observed_at": "2026-09-09T11:34:10Z"
+          "observed_at": "2026-09-09T11:46:01Z"
         },
         {
           "path": ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam",
           "sha256": "76a035fc3441331a25eceb4ad7c29c52e8ad8e8079a3788887ad32c33933f8f1",
-          "observed_at": "2026-09-09T11:34:10Z"
+          "observed_at": "2026-09-09T11:46:01Z"
         },
         {
           "path": ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/test/ev98_health_projection_runner.gleam",
           "sha256": "d7f742436cbb22fa35cbee24d02978ed5eda33bc9a2b8a16f5101d491ce2ff36",
-          "observed_at": "2026-09-09T11:34:10Z"
+          "observed_at": "2026-09-09T11:46:01Z"
         },
         {
           "path": ".uos-workspaces/ev98-health-formal-20260909/tools/ev_health_formal/dune",
-          "sha256": "f7819c024cc76cc9b1a39361771bfa04939be2f6aacca1669e42db2c807a1683",
-          "observed_at": "2026-09-09T11:34:10Z"
+          "sha256": "16ba5e8aa2a726bf2246e4c0bd0e6c2590eee13a15d05b207963033ae6841166",
+          "observed_at": "2026-09-09T11:46:01Z"
         },
         {
           "path": ".uos-workspaces/ev98-health-formal-20260909/tools/ev_health_formal/ev98_health_model.ml",
           "sha256": "7a5232672c083675c9d7e47a612f628dcc81d5f2bde007896f99d9f9368661c4",
-          "observed_at": "2026-09-09T11:34:10Z"
+          "observed_at": "2026-09-09T11:46:01Z"
         },
         {
           "path": ".uos-workspaces/ev98-health-formal-20260909/tools/ev_health_formal/ev98_health_smt.ml",
           "sha256": "191799d03d2402c94807316a820bcfc8fad9f9668d09aeb0b0d395096bc0cd90",
-          "observed_at": "2026-09-09T11:34:10Z"
+          "observed_at": "2026-09-09T11:46:01Z"
         },
         {
           "path": ".uos-workspaces/ev98-health-formal-20260909/tools/ev_health_formal/ev98_health_smt_child.ml",
           "sha256": "f11254b518933e0a10d30a77a00f76ea810aaffa2bc6baa7048cc162222ab02b",
-          "observed_at": "2026-09-09T11:34:10Z"
+          "observed_at": "2026-09-09T11:46:01Z"
         },
         {
           "path": ".uos-workspaces/ev98-health-formal-20260909/tools/ev_health_formal/ev98_health_projection_verify.ml",
-          "sha256": "f07c0ad888ef9544f0d9c00b63032e839cb5129e70025fec33c0d9db9e2b8e75",
-          "observed_at": "2026-09-09T11:34:10Z"
+          "sha256": "7238379c9908b9616bf98805aadeeb82d3f255dc80bc9d1461326055b102cb73",
+          "observed_at": "2026-09-09T11:46:01Z"
         },
         {
           "path": ".uos-workspaces/ev98-health-formal-20260909/tools/ev_health_formal/test_ev98_health_projection_verify.ml",
-          "sha256": "432f9e4791ce5066660b59b2e6ebd4f3b3a1b1f471de83135f3af7196dcfdcf3",
-          "observed_at": "2026-09-09T11:34:10Z"
+          "sha256": "e5841a1c6039d234edfc0c40f89c82a6ae12613ae9a0ed789e1bcd7557f1a286",
+          "observed_at": "2026-09-09T11:46:01Z"
         }
       ]
     },
-    "valid_until": "2026-09-09T12:34:10Z",
-    "ready_since": "2026-09-09T11:34:10Z",
-    "observed_at": "2026-09-09T11:34:10Z",
+    "valid_until": "2026-09-09T12:46:01Z",
+    "ready_since": "2026-09-09T11:46:01Z",
+    "observed_at": "2026-09-09T11:46:01Z",
     "assessment_id": "ev98-health-formal-20260909-0614",
     "schema_version": 1,
     "policy": "SC-RISK-PRIORITY-001",
