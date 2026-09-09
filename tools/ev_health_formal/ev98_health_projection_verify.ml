@@ -4,6 +4,49 @@ module M = Ev98_health_model
 module J = Yojson.Safe
 
 let fail message = failwith ("EV98 projection refused: " ^ message)
+let reject_duplicate_keys text =
+  let length = String.length text and nodes = ref 0 in
+  let rec space i = if i < length && (match text.[i] with ' ' | '\n' | '\r' | '\t' -> true | _ -> false) then space (i + 1) else i in
+  let string_at i =
+    if i >= length || text.[i] <> '"' then fail "JSON string";
+    let buffer = Buffer.create 16 in
+    let rec loop j =
+      if j >= length then fail "unterminated JSON string"
+      else match text.[j] with
+      | '"' -> Buffer.contents buffer, j + 1
+      | '\\' when j + 1 < length -> Buffer.add_char buffer text.[j]; Buffer.add_char buffer text.[j + 1]; loop (j + 2)
+      | value -> Buffer.add_char buffer value; loop (j + 1) in
+    loop (i + 1) in
+  let rec value depth i =
+    incr nodes; if depth > 64 || !nodes > 10000 then fail "JSON complexity bound";
+    let i = space i in
+    if i >= length then fail "JSON value"
+    else match text.[i] with
+    | '{' -> object_ (depth + 1) (space (i + 1)) (Hashtbl.create 8)
+    | '[' -> array (depth + 1) (space (i + 1))
+    | '"' -> snd (string_at i)
+    | _ ->
+      let rec atom j = if j < length && not (List.mem text.[j] [' ';'\n';'\r';'\t';',';']';'}']) then atom (j + 1) else j in
+      atom i
+  and object_ depth i keys =
+    if i < length && text.[i] = '}' then i + 1 else
+    let key, after_key = string_at i in
+    if Hashtbl.mem keys key then fail "duplicate JSON key";
+    Hashtbl.add keys key ();
+    let colon = space after_key in
+    if colon >= length || text.[colon] <> ':' then fail "JSON colon";
+    let after_value = space (value depth (colon + 1)) in
+    if after_value < length && text.[after_value] = ',' then object_ depth (space (after_value + 1)) keys
+    else if after_value < length && text.[after_value] = '}' then after_value + 1
+    else fail "JSON object"
+  and array depth i =
+    if i < length && text.[i] = ']' then i + 1 else
+    let after_value = space (value depth i) in
+    if after_value < length && text.[after_value] = ',' then array depth (space (after_value + 1))
+    else if after_value < length && text.[after_value] = ']' then after_value + 1
+    else fail "JSON array" in
+  let finished = space (value 0 0) in
+  if finished <> length then fail "trailing JSON bytes"
 let member name = function `Assoc xs -> (try List.assoc name xs with Not_found -> fail ("missing " ^ name)) | _ -> fail "object expected"
 let integer name json = match member name json with `Int n -> n | _ -> fail (name ^ " must be an integer")
 let string name json = match member name json with `String s -> s | _ -> fail (name ^ " must be a string")
@@ -73,7 +116,9 @@ let digest_file path =
   |> Cryptokit.transform_string (Cryptokit.Hexa.encode ())
 
 let output_from_receipt receipt expected_output main =
-  match J.from_string (read_bounded_regular receipt) with
+  let bytes = read_bounded_regular receipt in
+  reject_duplicate_keys bytes;
+  match J.from_string bytes with
   | `Assoc _ as json ->
     if member "exit_code" json <> `Int 0 || member "failure" json <> `Null
        || member "child_termination" json <> `Assoc ["kind", `String "EXITED"; "code", `Int 0]
@@ -122,6 +167,7 @@ let () =
   let seen = Hashtbl.create 3000 and header = ref false and collision = ref None and raw = ref None in
   List.iter
     (fun line ->
+       reject_duplicate_keys line;
        let json = try J.from_string line with _ -> fail "invalid JSON line" in
        match string "kind" json with
        | "header" ->

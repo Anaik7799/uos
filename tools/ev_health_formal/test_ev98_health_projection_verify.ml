@@ -20,6 +20,12 @@ let () =
   rejects "failure_reason" (replace "failure" (`String "timeout") base);
   rejects "wrong_termination" (replace "child_termination" (`Assoc ["kind", `String "SIGNALED"]) base);
   rejects "wrong_digest" (replace "output_sha256" (`String "00") base);
+  let duplicate = Filename.temp_file "ev98-duplicate" ".json" in
+  let rendered = J.to_string base in
+  let out = open_out_bin duplicate in
+  output_string out (String.sub rendered 0 (String.length rendered - 1) ^ ",\"exit_code\":1}"); close_out out;
+  let pid = Unix.create_process exe [|exe; duplicate; beam; digest|] Unix.stdin Unix.stdout Unix.stderr in
+  (match snd (Unix.waitpid [] pid) with Unix.WEXITED 0 -> failwith "accepted duplicate exit_code" | _ -> print_endline "PASS duplicate_exit_code");
   rejects "wrong_runner" (replace "argv" (`List [`String "not-runner"]) base);
   rejects "nonstring_argv" (replace "argv" (`List [`Int 1]) base);
   let argv = match Yojson.Safe.Util.member "argv" base with `List values -> values | _ -> failwith "argv" in
