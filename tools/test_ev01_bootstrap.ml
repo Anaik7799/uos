@@ -55,8 +55,10 @@ let install path=
  write(path^"/AGENTS.md")"Private native EV01 fixture; not admission.\n"
 let init name colocated=let path=fixture name in
  ignore(success stage("init-"^name)"jj"["git";"init";(if colocated then "--colocate" else "--no-colocate");path]);install path;path
-let gate label path expected=
- let code,output=invoke path label "native"[erts;"-noshell";"-noinput";"-pa";stage^"/lib/gleam_stdlib/ebin";stage^"/compiled/ebin";"-s";"uos";"main";"-s";"init";"stop";"-extra";"gate";"G-BOOT1"]in
+let gate ?config label path expected=
+ let argv=[erts;"-noshell";"-noinput";"-pa";stage^"/lib/gleam_stdlib/ebin";stage^"/compiled/ebin";"-s";"uos";"main";"-s";"init";"stop";"-extra";"gate";"G-BOOT1"]in
+ let argv=match config with None->argv|Some path->["/usr/bin/env";"XDG_CONFIG_HOME="^path]@argv in
+ let code,output=invoke path label "native" argv in
  let reports=String.split_on_char '\n' output|>List.filter(fun line->String.starts_with ~prefix:"{" line)in
  let status=match reports with [line]->Yojson.Safe.from_string line|>member "status"|>to_string|_->"MISSING_OR_AMBIGUOUS"in
  record label(if expected then code=0 && status="OBSERVED_STANDALONE_JJ" else code=1 && status="REFUSED");
@@ -87,6 +89,27 @@ let ()=
  let first=current good in let checkout=read(good^"/.jj/working_copy/checkout")in
  ignore(gate "standalone-passes" good true);
  record "gate leaves revision and checkout unchanged"(first=current good && checkout=read(good^"/.jj/working_copy/checkout"));
+ let repo=good^"/.jj/repo"in
+ write(repo^"/config.toml")"[ui]\npager = 'never-run'\n";
+ ignore(gate "legacy-config-migration-refuses" good false);
+ record "legacy refusal performs no migration"(not(Sys.file_exists(repo^"/config-id")) && read(repo^"/config.toml")="[ui]\npager = 'never-run'\n");Unix.unlink(repo^"/config.toml");
+ let config=stage^"/private-config"in mkdir config;
+ let id="00000000000000000001"in write(repo^"/config-id")id;
+ ignore(gate ~config "missing-secure-metadata-refuses" good false);
+ record "missing secure config is not initialized"(Sys.readdir config=[||] && read(repo^"/config-id")=id);
+ write(repo^"/config-id")"bad";ignore(gate ~config "malformed-config-id-refuses" good false);write(repo^"/config-id")id;
+ let metadata=config^"/jj/repos/"^id^"/metadata.binpb"in
+ let encode path=let b=Buffer.create 128 in Buffer.add_char b '\010';let rec length n=if n<128 then Buffer.add_char b(Char.chr n)else(Buffer.add_char b(Char.chr((n land 127)lor 128));length(n lsr 7))in length(String.length path);Buffer.add_string b path;Buffer.contents b in
+ write metadata(encode repo);
+ let id_stat=Unix.lstat(repo^"/config-id")and meta_stat=Unix.lstat metadata in
+ ignore(gate ~config "existing-secure-config-passes" good true);
+ let stable s=s.Unix.st_ino,s.st_size,s.st_mtime,s.st_ctime in
+ record "existing secure metadata not rewritten"(stable id_stat=stable(Unix.lstat(repo^"/config-id")) && stable meta_stat=stable(Unix.lstat metadata));
+ write metadata(encode(good^"/another-repo"));ignore(gate ~config "relocated-secure-config-refuses" good false);
+ record "relocated metadata not rewritten"(read metadata=encode(good^"/another-repo"));
+ write metadata "malformed";ignore(gate ~config "malformed-secure-metadata-refuses" good false);Unix.unlink(repo^"/config-id");
+ write(good^"/.jj/workspace-config-id")id;
+ ignore(gate ~config "workspace-config-initialization-refuses" good false);Unix.unlink(good^"/.jj/workspace-config-id");
  mkdir(good^"/.git");let marker=Unix.lstat(good^"/.git")in
  let output=gate "empty-git-marker-passes" good true in
  record "empty marker is explicitly reported"(try ignore(Str.search_forward(Str.regexp_string "EMPTY_NON_OPERATIONAL_DIRECTORY")output 0);true with Not_found->false);

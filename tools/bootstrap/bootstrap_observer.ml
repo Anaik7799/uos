@@ -49,7 +49,7 @@ let command deadline remaining config_dir root arguments =
   let argv=Array.of_list(jj::["--ignore-working-copy";"--at-operation";"@";
     "--no-pager";"--color";"never";"-R";root]@arguments)in
   let environment=Array.of_list(
-    ["XDG_CONFIG_HOME="^config_dir;"XDG_DATA_HOME="^config_dir;
+    ["XDG_CONFIG_HOME="^config_dir;
      "JJ_CONFIG=/dev/null";"LANG=C.UTF-8";"NO_COLOR=1"] @
     (match Sys.getenv_opt "HOME" with None->[]|Some value->["HOME="^value]))in
   let pid=Unix.fork()in
@@ -88,18 +88,31 @@ let single_line bytes =
   require(not(String.contains value '\n') && not(String.contains value '\000'))"ambiguous JJ output";
   value
 let fingerprint paths=List.map(fun path->path,Option.map identity(stat path))paths
-let remove_private_config path =
-  let fuel=ref 64 in
-  let rec remove depth path =
-    require(depth<8 && !fuel>0)"private config cleanup bound";decr fuel;
-    match Unix.lstat path with
-    |s when s.Unix.st_kind=Unix.S_DIR ->
-      Sys.readdir path |> Array.iter(fun name->remove(depth+1)(path^"/"^name));Unix.rmdir path
-    |_->Unix.unlink path in
-  remove 0 path
+(* JJ0.44 may migrate legacy configuration or initialize missing secure metadata
+   even for root/log. Refuse those states before launching it. On Linux its
+   protobuf is a single optional bytes field containing the exact directory.
+   Accept only its canonical encoding; unknown extensions fail closed. *)
+let config_base () =
+  let value=match Sys.getenv_opt "XDG_CONFIG_HOME" with
+    |Some value when value<>""->value
+    |_->(match Sys.getenv_opt "HOME" with Some value when value<>""->value^"/.config"|_->raise(Refused "missing inherited config context"))in
+  require(not(Filename.is_relative value))"relative config context";value
+let encoded_metadata path =
+  let buffer=Buffer.create 128 in Buffer.add_char buffer '\010';
+  let rec varint n=if n<128 then Buffer.add_char buffer(Char.chr n)else(Buffer.add_char buffer(Char.chr((n land 127)lor 128));varint(n lsr 7))in
+  varint(String.length path);Buffer.add_string buffer path;Buffer.contents buffer
+let stable_config base directory id_name legacy_name kind =
+  let id_path=directory^"/"^id_name and legacy=directory^"/"^legacy_name in
+  match stat id_path with
+  |None->require(stat legacy=None)"JJ config migration would write";[id_path;legacy]
+  |Some _->
+    let id=read_small id_path in
+    require(String.length id=20 && String.for_all(function '0'..'9'|'a'..'f'|'A'..'F'->true|_->false)id)"invalid secure config ID";
+    let target=base^"/jj/"^kind^"/"^id in
+    let metadata=target^"/metadata.binpb"in
+    require(read_small metadata=encoded_metadata directory)"JJ secure config initialization or relocation would write";
+    [id_path;legacy;metadata;target^"/config.toml"]
 let observe selected =
-  let config_dir=ref None in
-  Fun.protect ~finally:(fun()->Option.iter remove_private_config !config_dir)(fun()->
   try
     let deadline=mono()+.5. and remaining=ref 65536 in
     let root=Unix.realpath selected in
@@ -123,22 +136,23 @@ let observe selected =
     require(directory(repo^"/store") && Unix.realpath(repo^"/store")=repo^"/store" &&
       directory git && Unix.realpath git=git && read_small(repo^"/store/type")="git" &&
       read_small(repo^"/store/git_target")="git")"Git store is not internal";
+    let inherited_config=config_base()in
+    let config_paths=stable_config inherited_config repo "config-id" "config.toml" "repos" @
+      stable_config inherited_config jj_marker "workspace-config-id" "workspace-config.toml" "workspaces"in
     let tracked=[root;repository_root;jj_marker;locator;jj_marker^"/working_copy/checkout";jj_marker^"/working_copy/tree_state";
-      repo^"/config.toml";repo^"/store/type";repo^"/store/git_target";git;repo^"/op_heads"]@marker_paths in
+      repo^"/config.toml";repo^"/store/type";repo^"/store/git_target";git;repo^"/op_heads"]@marker_paths@config_paths in
     let before=fingerprint tracked in
-    let private_config=Filename.temp_dir ~temp_dir:"/tmp" "uos-bootstrap-jj-config-"""in
-    config_dir:=Some private_config;
-    let observed_root=single_line(command deadline remaining private_config root["root"])in
+    let observed_root=single_line(command deadline remaining inherited_config root["root"])in
     require(Unix.realpath observed_root=root)"JJ selected root mismatch";
-    let observed_git=single_line(command deadline remaining private_config root["git";"root"])in
+    let observed_git=single_line(command deadline remaining inherited_config root["git";"root"])in
     require(Unix.realpath observed_git=Unix.realpath git)"JJ internal store mismatch";
     let revision_args=["log";"-r";"@";"--no-graph";"-T";"self.commit_id() ++ \"\\n\""]in
-    let revision=single_line(command deadline remaining private_config root revision_args)in
+    let revision=single_line(command deadline remaining inherited_config root revision_args)in
     require((String.length revision=40 || String.length revision=64) &&
       String.for_all(function '0'..'9'|'a'..'f'->true|_->false)revision)"invalid current revision";
-    let repeated=single_line(command deadline remaining private_config root revision_args)in
+    let repeated=single_line(command deadline remaining inherited_config root revision_args)in
     require(repeated=revision && before=fingerprint tracked && markers=List.map marker marker_paths && mono()<deadline)"repository changed during observation";
     Ok {root;revision;facts=List.map(fun fact->fact,true)facts;markers}
   with
   |Refused reason->Error reason
-  |Unix.Unix_error _|Sys_error _->Error "filesystem or process observation unavailable")
+  |Unix.Unix_error _|Sys_error _->Error "filesystem or process observation unavailable"
