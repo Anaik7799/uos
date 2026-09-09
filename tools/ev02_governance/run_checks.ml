@@ -159,16 +159,25 @@ let () = match Sys.argv.(1) with
 | "fail" -> exit 1
 | "large" -> print_string (String.make 900000 'o'); prerr_string (String.make 900000 'e')
 | "early-eof" -> close_out stdout; Unix.sleepf 0.7
-| "descendant" -> let p=Unix.fork() in if p=0 then Unix.sleepf 0.3 else exit 0
+| "descendant" ->
+    let p=Unix.fork() in
+    if p=0 then begin
+      Unix.sleepf 0.3;
+      let c=open_out Sys.argv.(2) in output_string c "late"; close_out c
+    end else exit 0
 | _ -> Unix.sleepf 1.0
 |};
   let call mode seconds = run ~seconds (script_argv f [mode]) in
-  let split=call "split" 1.0 and empty=call "empty" 1.0 and wrong=call "wrong" 1.0 and fail=call "fail" 1.0 and large=call "large" 1.0 and slow=call "slow" 0.05 and eof=call "early-eof" 0.05 and descendant=call "descendant" 1.0 and start=run~seconds:1.0[|"/definitely/missing"|] in
+  let split=call "split" 1.0 and empty=call "empty" 1.0 and wrong=call "wrong" 1.0 and fail=call "fail" 1.0 and large=call "large" 1.0 and slow=call "slow" 0.05 and eof=call "early-eof" 0.05 and start=run~seconds:1.0[|"/definitely/missing"|] in
+  let marker = Filename.temp_file "ev02-harness-descendant-" ".marker" in
+  Sys.remove marker;
+  let descendant=run ~seconds:1.0 (script_argv f ["descendant"; marker]) in
+  Unix.sleepf 0.35;
   requires (structured~schema:"x"~status:"PASS"~cases:1 split) "split-output";
   requires (empty.termination=Exited 0 && not(structured~schema:"x"~status:"PASS"~cases:1 empty)) "empty-exit0";
   requires (not(structured~schema:"x"~status:"PASS"~cases:1 wrong) && fail.termination=Exited 1) "schema-or-exit";
   requires (large.termination=Output_limit && slow.termination=Timeout && eof.termination=Timeout) "quota-or-deadline";
-  requires (descendant.termination=Exited 0 && descendant.elapsed<0.3) "descendant-held-writer";
+  requires (descendant.termination=Exited 0 && descendant.elapsed<0.3 && not (Sys.file_exists marker)) "descendant-held-writer";
   requires (match start.termination with Start_failure _ -> true | _ -> false) "startup-failure";
   print_endline {|{"schema":"uos.ev02-harness/v2","status":"PASS","cases":8}|}
 
