@@ -1,4 +1,16 @@
 {
+  "task": {
+    "plan_id": "uos/ev98-sync-status/20260909",
+    "task_id": "SYNC_STATUS",
+    "worker": "codex-ev98-sync-status",
+    "attempt": 2,
+    "state": "completed",
+    "completion_receipt": {
+      "path": "/tmp/ev98-sync-status-completed-20260909-1543.json",
+      "sha256": "a16d1976912469ff7eb6b8998a638a7e1d371d344fb2b672c126de603123ba37",
+      "bytes": 3103
+    }
+  },
   "completion_active_check": {
     "path": "/tmp/ev98-sync-completion-active-attempt2-20260909-1540.json",
     "sha256": "c58ddde19d351cd9157f358b67c7500d9d08e16e1c2c702daa915aa114c45b1e",
@@ -96,13 +108,6 @@
     "path": "/tmp/ev98-sync-status-frontier-candidate-20260909-1529.json",
     "sha256": "c3f6b157ab6fe4f4d202edacb755001b8997e6354249d0e09e62483f066e83db",
     "bytes": 3640
-  },
-  "task": {
-    "plan_id": "uos/ev98-sync-status/20260909",
-    "task_id": "SYNC_STATUS",
-    "worker": "codex-ev98-sync-status",
-    "attempt": 2,
-    "state": "executing"
   },
   "limits": [
     "The observed frontier is in-memory state for the current process incarnation.",

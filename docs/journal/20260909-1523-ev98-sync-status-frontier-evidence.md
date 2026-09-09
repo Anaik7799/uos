@@ -77,6 +77,8 @@ Independent root replay remains a required review input. The model's current-inc
 
 ### Independent review addendum
 
-Root independently rebuilt candidate `0d9bd0a8a8ecf26014904975a5e8e9a6c97d8d8d` and passed unchanged stale-ACK and stale-Delta probes. Approval: `/tmp/ev-sync-root-reorder-green-1508/20260909-1536-sync_status-independent-approval.json` (SHA-256 `87b419f76f5a1b1fbc2468d3b41b9d8acd319a5d8cbf35d1825276d7d87bc92`). Its verdict is bounded component approval only; task completion and EV admission remain separate authorities.
+Root independently rebuilt candidate `0d9bd0a8a8ecf26014904975a5e8e9a6c97d8d8d` and passed unchanged stale-ACK and stale-Delta probes. Approval: `/tmp/ev-sync-root-reorder-green-1508/20260909-1536-sync_status-independent-approval.json` (SHA-256 `287b419f76f5a1b1fbc2468d3b41b9d8acd319a5d8cbf35d1825276d7d87bc92`). Its verdict is bounded component approval only; task completion and EV admission remain separate authorities.
 
 Final active check: `/tmp/ev98-sync-completion-active-attempt2-20260909-1540.json` recorded `ACTIVE_OBSERVATION_PASS` for attempt 2 immediately before evidence freeze.
+
+Canonical completion: `/tmp/ev98-sync-status-completed-20260909-1543.json` records SYNC_STATUS attempt 2 as completed with result `reviewed_bounded_causal_status`.
