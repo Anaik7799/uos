@@ -15,7 +15,8 @@ let argv=Array.of_list([elf;"-noshell";"-noinput";"-pa"]@libs@[stage^"/full-comp
 let run=Filename.temp_dir "ev86-http-observation-" ""
 let log=Unix.openfile(run^"/http-server.log")[Unix.O_WRONLY;Unix.O_CREAT;Unix.O_EXCL]0o600
 let pid=Unix.fork()
-let ()=if pid=0 then(try ignore(Unix.setsid());Unix.chdir stage;Unix.dup2 log Unix.stdout;Unix.dup2 log Unix.stderr;Unix.close log;Unix.execve elf argv(Array.append(Unix.environment())[|"UOS_MUSIC_ROOT="^content;"UOS_MUSIC_TEST_PORT="^string_of_int port|])with _->Unix._exit 127)else Unix.close log
+let public_base="http://nas-1.tail55d152.ts.net:"^string_of_int port
+let ()=if pid=0 then(try ignore(Unix.setsid());Unix.chdir stage;Unix.dup2 log Unix.stdout;Unix.dup2 log Unix.stderr;Unix.close log;Unix.execve elf argv(Array.append(Unix.environment())[|"UOS_MUSIC_ROOT="^content;"UOS_MUSIC_TEST_PORT="^string_of_int port;"UOS_MUSIC_PUBLIC_BASE="^public_base|])with _->Unix._exit 127)else Unix.close log
 let connect()=let fd=Unix.socket Unix.PF_INET Unix.SOCK_STREAM 0 in Unix.set_close_on_exec fd;try Unix.connect fd(Unix.ADDR_INET(Unix.inet_addr_loopback,port));fd with e->Unix.close fd;raise e
 let rec wait until=try let fd=connect()in Unix.close fd with Unix.Unix_error(Unix.ECONNREFUSED,_,_)->require(Unix.gettimeofday()<until)"HTTP startup deadline";ignore(Unix.select[][][]0.05);wait until
 let request method_ path=let fd=connect()in Fun.protect ~finally:(fun()->Unix.close fd)(fun()->
@@ -31,10 +32,13 @@ let header k=let prefix=String.lowercase_ascii k^":"in List.find_map(fun l->let 
 Option.iter(fun m->require(header"content-type"=Some m)(name^" MIME"))mime;
 let length=Option.map int_of_string(header"content-length")in if method_<>"HEAD"then require(length=Some(String.length body))(name^" length");
 if name="player"||name="studio"then(require(try ignore(Str.search_forward(Str.regexp_string"<audio controls")body 0);true with Not_found->false)"audio missing";require(not(try ignore(Str.search_forward(Str.regexp_string"<script")body 0);true with Not_found->false))"script active");
+if name="player"||name="studio"then(require(try ignore(Str.search_forward(Str.regexp_string("src='"^public_base^"/media/music/"))body 0);true with Not_found->false)"configured full same-origin media URL missing");
+if method_="HEAD"then require(body="")"HEAD returned body";
 if name="mp3"then require(sha body="d5e2e97ae5787b60bc0ec8adf3dbde0e2a08484d4e81a203130ef41da4f32d9a")"MP3 exact source bytes";
 if name="wav"then require(sha body="b281fc8bd0b681603de1c15a37e1d1b3fe863181214119b2f8d8238b5baa1ef6")"WAV exact source bytes";
 write(run^"/http-"^name^".response")raw;`Assoc["case",`String name;"method",`String method_;"path",`String path;"status",`Int status;"content_type",(match header"content-type"with Some s->`String s|None->`Null);"body_bytes",`Int(String.length body);"body_sha256",`String(sha body);"raw_sha256",`String(sha raw)]
 let ()=Fun.protect ~finally:(fun()->(try Unix.kill(-pid)Sys.sigterm with _->());ignore(Unix.waitpid[]pid))(fun()->wait(Unix.gettimeofday()+.5.);
 let cases=["player","GET","/docs/music/player",200,Some"text/html; charset=utf-8";"studio","GET","/docs/music/studio",200,Some"text/html; charset=utf-8";"mp3","GET","/media/music/historical-enhanced.mp3",200,Some"audio/mpeg";"wav","GET","/media/music/historical-mix.wav",200,Some"audio/wav";"head","HEAD","/media/music/historical-enhanced.mp3",200,Some"audio/mpeg";"missing","GET","/docs/music/absent",404,None;"traversal","GET","/docs/music/../design/private",404,None;"percent","GET","/docs/%6dusic/player",404,None;"backslash","GET","/docs/music%5cplayer",404,None;"method","POST","/docs/music/player",405,None]in
+let cases=cases@["exact-path","GET","/docs/music/"^String.make 4084 'x',404,None;"above-path","GET","/docs/music/"^String.make 4085 'x',414,None;"long-normalized-music","GET","/"^String.make 4100 'x'^"/../docs/music/player",414,None;"long-head","HEAD","/"^String.make 4096 'x',414,None;"malformed-mixed","GET","/%zz/../%64ocs/%6dusic/player",404,None]in
 let rows=List.map(fun(n,m,p,s,c)->check n m p s c)cases in
 let j=`Assoc["scope",`String"Private native HTTP bytes only; no playback/deploy/admission";"host",`String"nas-1.tail55d152.ts.net";"private_resolver_mapping",`String"127.0.0.1";"port",`Int port;"child_argv",`List(Array.to_list argv |> List.map(fun s->`String s));"checks",`List rows]in Yojson.Safe.to_file(run^"/http-verification.json")j;print_endline("PASS "^string_of_int(List.length rows)^" actual HTTP cases "^run))

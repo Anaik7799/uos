@@ -97,15 +97,14 @@ fn serve() {
   )
 
   let router = fn(req: Request(Connection)) -> Response(ResponseData) {
-    let path = "/" <> string.join(request.path_segments(req), "/")
-
     // Reserve the original music path before generic normalisation/file lookup.
     case music_files.handles(req.path) {
       True -> {
         let reply = music_files.handle(music_files.configured_root(), req.method, req.path)
         response.set_body(reply, mist.Bytes(bytes_tree.from_bit_array(reply.body)))
       }
-      False ->
+      False -> {
+    let path = "/" <> string.join(request.path_segments(req), "/")
     case request.path_segments(req) {
       ["homeostasis"] | ["homeostasis", "evolution"]
       | ["homeostasis", "components"] | ["homeostasis", "terminal"]
@@ -1056,6 +1055,7 @@ fn serve() {
     }
   }
 
+  }
   let assert Ok(_) =
     mist.new(router)
     |> mist.port(port)

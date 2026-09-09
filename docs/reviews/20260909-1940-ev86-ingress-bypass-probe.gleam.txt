@@ -1,0 +1,15 @@
+import gleam/io
+import gleam/string
+import gleam/uri
+import indrajaal/music_files
+fn report(label, path) {
+  io.println(label)
+  io.println(case music_files.handles(path) { True -> "handles=true" False -> "handles=false" })
+  io.println("normalized=/" <> string.join(uri.path_segments(path), "/"))
+}
+pub fn main() {
+ report("oversized normalized music", "/" <> string.repeat("x", 4100) <> "/../docs/music/player")
+ report("malformed percent plus encoded namespace", "/%zz/../%64ocs/%6dusic/player")
+ report("malformed percent in target", "/%64ocs/%6dusic/%zz")
+ report("ordinary normalized music", "/x/../docs/music/player")
+}

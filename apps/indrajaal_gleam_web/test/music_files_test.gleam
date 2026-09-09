@@ -57,6 +57,8 @@ pub fn malformed_paths_test() {
       "/files/docs/music/../../AGENTS.md",
       "/raw/docs/music/player",
       "/media/music/no.wav",
+      "/%zz/../%64ocs/%6dusic/player",
+      "/%64ocs/%6dusic/%zz",
     ],
     fn(path) {
       music.handles(path) |> should.be_true
@@ -68,6 +70,73 @@ pub fn malformed_paths_test() {
   )
   music.handles("/health") |> should.be_false
   music.handles("/docs/design/plan.md") |> should.be_false
+}
+
+pub fn raw_ingress_bound_test() {
+  let exact = "/" <> string.repeat("x", 4095)
+  music.handles(exact) |> should.be_false
+  list.each(
+    [exact <> "x", "/" <> string.repeat("x", 4100) <> "/../docs/music/player"],
+    fn(path) {
+      music.handles(path) |> should.be_true
+      let get = music.handle(configured(), Get, path)
+      get.status |> should.equal(414)
+      let head = music.handle(configured(), Head, path)
+      head.status |> should.equal(414)
+      head.body |> should.equal(<<>>)
+      response.get_header(head, "content-length")
+      |> should.equal(response.get_header(get, "content-length"))
+    },
+  )
+  let music_exact = "/docs/music/" <> string.repeat("x", 4084)
+  string.byte_size(music_exact) |> should.equal(4096)
+  music.handle(configured(), Get, music_exact).status |> should.equal(404)
+  music.handle(configured(), Get, music_exact <> "x").status
+  |> should.equal(414)
+}
+
+pub fn public_origin_test() {
+  list.each(
+    [
+      "http://nas-1.tail55d152.ts.net:4100",
+      "https://vm-1.tail55d152.ts.net",
+      "http://nas-1.tail55d152.ts.net:65535",
+    ],
+    fn(origin) { music.public_base_valid(origin) |> should.be_true },
+  )
+  list.each(
+    [
+      "",
+      "http://localhost:4100",
+      "http://nas-1.tail55d152.ts.net/",
+      "http://nas-1.tail55d152.ts.net:0",
+      "http://nas-1.tail55d152.ts.net:65536",
+      "http://nas-1.tail55d152.ts.net:04100",
+      "http://a@nas-1.tail55d152.ts.net",
+      "http://nas-1.tail55d152.ts.net?x",
+      "javascript:alert(1)",
+      "http://nas-1.tail55d152.ts.net\u{0000}",
+      "http://-bad.tail55d152.ts.net",
+      "http://nas-1.tail55d152.ts.net#x",
+    ],
+    fn(origin) { music.public_base_valid(origin) |> should.be_false },
+  )
+  let path =
+    getenv(charlist.from_string("UOS_MUSIC_ROOT"), charlist.from_string(""))
+    |> charlist.to_string
+  let selected =
+    music.root_with_public_base(path, "https://vm-1.tail55d152.ts.net:8443")
+  let reply = music.handle(selected, Get, "/docs/music/player")
+  let assert Ok(body) = bit_array.to_string(reply.body)
+  string.contains(body, "src='https://vm-1.tail55d152.ts.net:8443/media/music/")
+  |> should.be_true
+  string.contains(body, "src='/media/") |> should.be_false
+  music.handle(
+    music.root_with_public_base(path, "http://evil.example"),
+    Get,
+    "/docs/music/player",
+  ).status
+  |> should.equal(503)
 }
 
 pub fn configuration_and_method_test() {
@@ -95,6 +164,25 @@ pub fn semantic_documents_test() {
       string.contains(body, "<script") |> should.be_false
       string.contains(body, "autoplay") |> should.be_false
       string.contains(body, "Historical") |> should.be_true
+      list.each(
+        [
+          "Grouped navigation",
+          "Status bar",
+          "Breadcrumb",
+          "Document view",
+          "Raw source",
+          "Previous and next",
+          "Domain 6: Provenance",
+          "18 Jujutsu",
+          "automatic copy is unavailable",
+        ],
+        fn(item) { string.contains(body, item) |> should.be_true },
+      )
+      string.contains(
+        body,
+        "src='http://nas-1.tail55d152.ts.net:4100/media/music/",
+      )
+      |> should.be_true
       response.get_header(r, "content-security-policy")
       |> should.equal(Ok(
         "default-src 'none'; media-src 'self'; frame-ancestors 'none'; base-uri 'none'",
@@ -197,6 +285,8 @@ pub fn wav_bounds_and_size_test() {
 pub fn main() {
   check("aliases", aliases_test)
   check("malformed_paths", malformed_paths_test)
+  check("raw_ingress_bound", raw_ingress_bound_test)
+  check("public_origin", public_origin_test)
   check("configuration_and_method", configuration_and_method_test)
   check("semantic_documents", semantic_documents_test)
   check("mp3_response", mp3_response_test)

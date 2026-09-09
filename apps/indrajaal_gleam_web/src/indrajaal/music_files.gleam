@@ -20,6 +20,8 @@ pub const document_limit = 2_097_152
 
 pub const media_limit = 4_194_304
 
+pub const path_limit = 4096
+
 const player = "docs/music/20260907-1052-swarm-durga-player.md"
 
 const studio = "docs/music/20260907-1145-cybernetic-raga-durga-and-22-shruti-studio.md"
@@ -31,7 +33,7 @@ const mix = "generated/20260907-1230-uos-hive-sings-full-mix.wav"
 const base = "http://nas-1.tail55d152.ts.net:4100"
 
 pub opaque type Root {
-  Root(path: String)
+  Root(path: String, public_base: String)
 }
 
 pub type Failure {
@@ -97,15 +99,63 @@ pub fn root(path: String) -> Result(Root, Failure) {
     && !string.ends_with(path, "/")
     && safe_parts(string.drop_start(path, 1))
   {
-    True -> Ok(Root(path))
+    True -> Ok(Root(path, base))
     False -> Error(MissingRoot)
   }
 }
 
 pub fn configured_root() -> Result(Root, Failure) {
-  getenv(charlist.from_string("UOS_MUSIC_ROOT"), charlist.from_string(""))
-  |> charlist.to_string
-  |> root
+  let path =
+    getenv(charlist.from_string("UOS_MUSIC_ROOT"), charlist.from_string(""))
+    |> charlist.to_string
+  let origin =
+    getenv(
+      charlist.from_string("UOS_MUSIC_PUBLIC_BASE"),
+      charlist.from_string(base),
+    )
+    |> charlist.to_string
+  root_with_public_base(path, origin)
+}
+
+/// The operator must configure the actual same-origin Tailnet listener. Request
+/// Host headers never select media origins. This validates syntax, not ownership.
+pub fn root_with_public_base(
+  path: String,
+  origin: String,
+) -> Result(Root, Failure) {
+  use selected <- result.try(root(path))
+  case public_base_valid(origin) {
+    True -> Ok(Root(..selected, public_base: origin))
+    False -> Error(MissingRoot)
+  }
+}
+
+pub fn public_base_valid(origin: String) -> Bool {
+  case string.byte_size(origin) <= 128, string.split(origin, "://") {
+    True, [scheme, authority] if scheme == "http" || scheme == "https" -> {
+      let #(host, port_ok) = case string.split(authority, ":") {
+        [host] -> #(host, True)
+        [host, port] -> #(host, case int.parse(port) {
+          Ok(n) -> n >= 1 && n <= 65_535 && int.to_string(n) == port
+          Error(_) -> False
+        })
+        _ -> #("", False)
+      }
+      let suffix = ".tail55d152.ts.net"
+      let node = string.drop_end(host, string.length(suffix))
+      port_ok
+      && string.ends_with(host, suffix)
+      && string.byte_size(node) >= 1
+      && string.byte_size(node) <= 63
+      && !string.starts_with(node, "-")
+      && !string.ends_with(node, "-")
+      && list.all(string.to_utf_codepoints(node), fn(c) {
+        let n = string.utf_codepoint_to_int(c)
+        n >= 97 && n <= 122 || n >= 48 && n <= 57 || n == 45
+      })
+    }
+    _, _ -> False
+  }
 }
 
 fn safe_parts(path: String) -> Bool {
@@ -133,15 +183,34 @@ fn music_namespace(path: String) -> Bool {
 /// Inspect the original path before the generic router removes dot segments.
 /// Also reserve encoded/normalised music paths so they cannot fall through.
 pub fn handles(path: String) -> Bool {
-  case string.byte_size(path) > 4096 {
-    True -> music_namespace(path)
+  case string.byte_size(path) > path_limit {
+    // Universal raw ingress refusal, before any normalization or file routing.
+    True -> True
     False -> {
-      let decoded = uri.percent_decode(path) |> result.unwrap(path)
+      let decoded = namespace_decode(path)
       music_namespace(path)
       || music_namespace(decoded)
       || music_namespace("/" <> string.join(uri.path_segments(path), "/"))
       || music_namespace("/" <> string.join(uri.path_segments(decoded), "/"))
     }
+  }
+}
+
+// Decode valid escapes for namespace reservation even when another escape is
+// malformed. Resolution still uses exact original bytes and refuses all aliases.
+fn namespace_decode(path: String) -> String {
+  case string.split(path, "%") {
+    [first, ..rest] ->
+      first
+      <> string.join(
+        list.map(rest, fn(part) {
+          let prefix = "%" <> string.slice(part, 0, 2)
+          uri.percent_decode(prefix) |> result.unwrap(prefix)
+          <> string.drop_start(part, 2)
+        }),
+        "",
+      )
+    [] -> path
   }
 }
 
@@ -395,10 +464,14 @@ fn escape(text: String) -> String {
   |> string.replace("'", "&#39;")
 }
 
-fn document(which: Resource, original: String) -> String {
+fn document(which: Resource, original: String, public_base: String) -> String {
   let title = case which {
     Studio -> "22-Shruti studio: recorded previews"
     _ -> "Historical music previews"
+  }
+  let page = case which {
+    Studio -> "/docs/music/studio"
+    _ -> "/docs/music/player"
   }
   "<!doctype html><html lang='en'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>"
   <> title
@@ -408,18 +481,64 @@ fn document(which: Resource, original: String) -> String {
   <> base
   <> "/docs/music/player'>Player</a> · <a href='"
   <> base
-  <> "/docs/music/studio'>Studio</a></header><main><h1>"
+  <> "/docs/music/studio'>Studio</a></header>"
+  <> navigation(public_base, page)
+  <> "<main id='rendered'><h1>"
   <> title
   <> "</h1><p>Historical recorded previews from the preserved player document. Interactive synthesis is not available on this page.</p>"
-  <> "<section><h2>Historical enhanced recording</h2><audio controls preload='none'><source src='/media/music/historical-enhanced.mp3' type='audio/mpeg'></audio></section>"
-  <> "<section><h2>Historical baseline recording</h2><audio controls preload='none'><source src='/media/music/historical-baseline.mp3' type='audio/mpeg'></audio></section>"
-  <> "<details><summary>Preserved document source (historical claims)</summary><pre>"
+  <> "<nav aria-label='Document view'><a href='"
+  <> public_base
+  <> page
+  <> "#rendered'>Rendered preview</a> · <a href='"
+  <> public_base
+  <> page
+  <> "#raw-source'>Raw source</a></nav>"
+  <> "<section><h2>Historical enhanced recording</h2><audio controls preload='none'><source src='"
+  <> public_base
+  <> "/media/music/historical-enhanced.mp3' type='audio/mpeg'></audio></section>"
+  <> "<section><h2>Historical baseline recording</h2><audio controls preload='none'><source src='"
+  <> public_base
+  <> "/media/music/historical-baseline.mp3' type='audio/mpeg'></audio></section>"
+  <> "<details id='raw-source'><summary>Raw source: preserved document (historical claims)</summary><pre>"
   <> escape(original)
   <> "</pre></details>"
   <> checklist()
+  <> "<nav aria-label='Previous and next'><a rel='prev' href='"
+  <> public_base
+  <> "/docs/music/player'>Previous: Player</a> · <a rel='next' href='"
+  <> public_base
+  <> "/docs/music/studio'>Next: Studio</a></nav>"
   <> "</main><footer><a href='"
   <> base
   <> "/planning'>Planning</a> · Recorded previews; no musical authenticity or quality claim.</footer></body></html>"
+}
+
+fn navigation(public_base: String, page: String) -> String {
+  "<aside><nav aria-label='Grouped navigation'><section><h2>Command &amp; Control</h2><a href='"
+  <> base
+  <> "/'>Cockpit</a> · <a href='"
+  <> base
+  <> "/planning'>Planning</a></section><section><h2>Knowledge Base</h2><a href='"
+  <> base
+  <> "/wiki'>Wiki</a> · <a href='"
+  <> base
+  <> "/zk'>Zettelkasten</a></section><section><h2>Repository &amp; Governance</h2><a href='"
+  <> base
+  <> "/files/AGENTS.md'>Policy</a> · <a href='"
+  <> public_base
+  <> "/docs/music/player'>Music documents</a></section></nav></aside>"
+  <> "<section aria-label='Status bar'><p>Recorded previews only · live synthesis unverified · no admission change</p><a href='"
+  <> public_base
+  <> page
+  <> "'>"
+  <> public_base
+  <> page
+  <> "</a><p>URL text can be selected manually; automatic copy is unavailable.</p></section>"
+  <> "<nav aria-label='Breadcrumb'><a href='"
+  <> base
+  <> "/'>UOS</a> / <a href='"
+  <> public_base
+  <> "/docs/music/player'>Music</a> / Recorded preview</nav>"
 }
 
 fn checklist() -> String {
@@ -468,7 +587,7 @@ fn checklist() -> String {
     }),
     "",
   )
-  <> "</details>"
+  <> "<details><summary>Domain 6: Provenance</summary><p>EV94–109 remain NOT_ADMITTED. Historical source claims are preserved as evidence, not current runtime or admission authority. This page does not demonstrate live synthesis or musical authenticity. The configured origin is syntax-validated, not authenticated.</p></details></details>"
 }
 
 pub fn content(
@@ -493,7 +612,7 @@ pub fn content(
       use _ <- result.try(previews(data))
       Ok(#(
         "text/html; charset=utf-8",
-        bit_array.from_string(document(resource, source)),
+        bit_array.from_string(document(resource, source, root.public_base)),
       ))
     }
     Enhanced | Baseline -> {
@@ -548,40 +667,55 @@ pub fn handle(
   method: Method,
   path: String,
 ) -> Response(BitArray) {
-  case resolve(path), method {
-    Error(_), _ ->
+  case string.byte_size(path) > path_limit {
+    True ->
       reply(
-        404,
+        414,
         "text/plain; charset=utf-8",
-        <<"Music resource not found">>,
+        <<"Request path exceeds 4096 bytes">>,
         method,
       )
-    Ok(_), Get | Ok(_), Head -> {
-      let output = {
-        use root <- result.try(config)
-        use resource <- result.try(resolve(path))
-        content(root, resource)
-      }
-      case output {
-        Ok(#(mime, bits)) -> reply(200, mime, bits, method)
-        Error(MissingRoot) ->
-          reply(
-            503,
-            "text/plain; charset=utf-8",
-            <<"Music content root is not configured">>,
-            method,
-          )
-        Error(_) ->
+    False ->
+      case resolve(path), method {
+        Error(_), _ ->
           reply(
             404,
             "text/plain; charset=utf-8",
-            <<"Music resource unavailable">>,
+            <<"Music resource not found">>,
             method,
           )
+        Ok(_), Get | Ok(_), Head -> {
+          let output = {
+            use root <- result.try(config)
+            use resource <- result.try(resolve(path))
+            content(root, resource)
+          }
+          case output {
+            Ok(#(mime, bits)) -> reply(200, mime, bits, method)
+            Error(MissingRoot) ->
+              reply(
+                503,
+                "text/plain; charset=utf-8",
+                <<"Music content root is not configured">>,
+                method,
+              )
+            Error(_) ->
+              reply(
+                404,
+                "text/plain; charset=utf-8",
+                <<"Music resource unavailable">>,
+                method,
+              )
+          }
+        }
+        Ok(_), _ ->
+          reply(
+            405,
+            "text/plain; charset=utf-8",
+            <<"Method not allowed">>,
+            method,
+          )
+          |> response.set_header("allow", "GET, HEAD")
       }
-    }
-    Ok(_), _ ->
-      reply(405, "text/plain; charset=utf-8", <<"Method not allowed">>, method)
-      |> response.set_header("allow", "GET, HEAD")
   }
 }

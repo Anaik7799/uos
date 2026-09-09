@@ -1,0 +1,47 @@
+{
+  "schema": "uos.ev86.ingress-bypass.v1",
+  "observed_at_epoch": 1788983873.047707,
+  "candidate": "9c59632d7951153d43f01a3b7e54940480436f7d",
+  "status": "HOLD",
+  "finding": "P1 oversized raw nonmusic path falls through then normalizes to music via legacy URI segmentation",
+  "reproducer": "handles(/ + repeat(x,4100) + /../docs/music/player) = false; uri.path_segments yields [docs,music,player]",
+  "effect_scope": "Pure module probe only. Existing generic route is reachable by matching normalized segments; generic reader and live HTTP were not invoked.",
+  "other_observations": [
+    "Mixed malformed percent/encoded music cases return handles=false, but normalized segments retain encoded names; generic music dispatch not demonstrated for those inputs.",
+    "Relative generated media src values and incomplete shared webpage navigation/Domain6 remain explicit webpage acceptance gaps."
+  ],
+  "harness_refusal": "Initial beam-mode argv was rejected before spawning or receipt reservation: compiled directory must be absolute. Corrected native erlexec invocation is preserved.",
+  "source_mutation": false,
+  "artifacts": [
+    {
+      "source": "/tmp/ev86-bypass-probe-1956/package/src/ev86_bypass_probe.gleam",
+      "path": "docs/reviews/20260909-1953-ev86-ingress-bypass-probe.gleam.txt",
+      "sha256": "b738ab6535b072e5784f4c01178ce900966df4d87242f1f20521d3a23f298c4d"
+    },
+    {
+      "source": "/tmp/ev86-bypass-probe-compile.json",
+      "path": "docs/reviews/20260909-1953-ev86-ingress-bypass-compile-first-failure.json",
+      "sha256": "b64f840cd24f80af81b830423da09690cd78350bb2a52eac3245e814e45c5760"
+    },
+    {
+      "source": "/tmp/ev86-bypass-probe-compile-corrected.json",
+      "path": "docs/reviews/20260909-1953-ev86-ingress-bypass-compile.json",
+      "sha256": "77a7edaf76ae54fd287c920cf1dfbacf3bfa329790c367a38601fc8dff569b02"
+    },
+    {
+      "source": "/tmp/ev86-bypass-probe-run-corrected.json",
+      "path": "docs/reviews/20260909-1953-ev86-ingress-bypass-runtime.json",
+      "sha256": "610b14c0b3dac697ab355e7d82bc7a21f66c2f065759f7f839215754c0ac82e0"
+    }
+  ],
+  "bindings": [
+    {
+      "path": "/tmp/ev86-immutable-final-1941/full-compiled/ebin/indrajaal@music_files.beam",
+      "sha256": "2d187f27478f19f08e9fbbdcabce8f459f21360963b167305a97179691e27fa4"
+    },
+    {
+      "path": "/tmp/ev86-bypass-probe-1956/compiled/ebin/ev86_bypass_probe.beam",
+      "sha256": "3829c03e3f7ab2119bbb4f0744bdc22489762893a3843d054413b415efb2505f"
+    }
+  ]
+}
