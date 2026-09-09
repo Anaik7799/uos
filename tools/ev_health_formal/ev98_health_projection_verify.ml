@@ -90,8 +90,18 @@ let output_from_receipt receipt expected_output main =
       | value :: rest -> let before, after = split (count - 1) rest in value :: before, after
       | [] -> [], [] in
     let prefix, observed_suffix = if prefix_length < 1 then [], argv else split prefix_length argv in
-    if prefix = [] || List.hd prefix <> direct || observed_suffix <> suffix
-       || List.exists (fun arg -> arg = "-s" || arg = "-eval" || arg = "-extra") prefix
+    let rec dependency_paths = function
+      | [] -> true
+      | "-pa" :: path :: rest ->
+        String.length path > 1 && path.[0] = '/' && path.[0] <> '-' && dependency_paths rest
+      | _ -> false in
+    let dependencies =
+      match prefix with
+      | launcher :: "-noshell" :: "-noinput" :: rest -> launcher = direct && dependency_paths rest
+      | _ -> false in
+    if prefix_length < 5 || List.length argv > 300
+       || List.exists (fun arg -> String.length arg > 4096) argv
+       || not dependencies || observed_suffix <> suffix
     then fail "receipt launch identity";
     (match member "output" json with
      | `String output ->

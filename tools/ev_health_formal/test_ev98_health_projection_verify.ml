@@ -22,6 +22,12 @@ let () =
   rejects "wrong_digest" (replace "output_sha256" (`String "00") base);
   rejects "wrong_runner" (replace "argv" (`List [`String "not-runner"]) base);
   rejects "nonstring_argv" (replace "argv" (`List [`Int 1]) base);
+  let argv = match Yojson.Safe.Util.member "argv" base with `List values -> values | _ -> failwith "argv" in
+  let injected options =
+    match argv with launcher :: noshell :: noinput :: rest -> `List (launcher :: noshell :: noinput :: options @ rest) | _ -> failwith "short argv" in
+  rejects "prefix_run" (replace "argv" (injected [`String "-run"; `String "foreign_runner"; `String "main"]) base);
+  rejects "prefix_args_file" (replace "argv" (injected [`String "-args_file"; `String "/tmp/foreign-runtime.args"]) base);
+  rejects "prefix_boot" (replace "argv" (injected [`String "-boot"; `String "/tmp/foreign.boot"]) base);
   let path = Filename.temp_file "ev98-oversize" ".json" in
   let out = open_out_bin path in output_string out (String.make (4 * 1024 * 1024 + 1) 'x'); close_out out;
   let pid = Unix.create_process exe [|exe; path; beam; digest|] Unix.stdin Unix.stdout Unix.stderr in
