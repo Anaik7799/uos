@@ -40,10 +40,10 @@ A full-length hexadecimal label can still be an alias in a configurable selector
 | Actual final rehash of large fixture | Refused with `aggregate content byte quota` | 8 MiB initial output bodies plus rehash work |
 | Actual Jujutsu metadata exhausts byte budget | Refused with `reader budget exhausted` | Content phase cannot begin |
 | Deadline after actual Jujutsu metadata | Refused with `validation deadline` | Deterministic monotonic observation, real metadata process |
-| Complete revised test suite | 66 passed, 0 failed | 56 prior cases plus 10 review cases |
+| Complete revised test suite | 67 passed, 0 failed | 56 prior cases plus 11 review cases |
 | Sovereign admission | Not granted | No authentic producer or formal semantics claim |
 
-Final source-bound receipts are recorded separately after freezing the repair source. Earlier green and red artifacts are unchanged.
+Final source-bound receipt generation from canonical cwd exposed one additional bug: Jujutsu -R did not make filesets repository-relative. A regression from /tmp failed before root: qualification and passed afterward. Final source-bound receipts are recorded separately after freezing that repaired source. Earlier green and red artifacts are unchanged.
 
 ## 8. Files Modified
 
@@ -59,7 +59,7 @@ Local filesystem/kernel calls and child reaping require cooperative OS return; t
 
 ## 11. Metrics Summary
 
-66 passing cases; five newly observed red cases across alias and boundary scaffolds; no new packages or paid inference. Shared accepted-content quota remains 16 MiB. Candidate file observation comprises three subprocesses, each limited to five seconds and further limited by the shared remaining budget. Final validity is checked after the final host-clock observation.
+67 passing cases; six newly observed red cases across alias and boundary scaffolds; no new packages or paid inference. Shared accepted-content quota remains 16 MiB. Candidate file observation comprises three subprocesses, each limited to five seconds and further limited by the shared remaining budget. Final validity is checked after the final host-clock observation.
 
 ## 12. STAMP & Constitutional Alignment
 

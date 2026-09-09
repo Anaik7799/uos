@@ -96,6 +96,14 @@ let ()=
  Printf.printf "SYNTHETIC consistency tests: checks=%d failed=%d; admission_authority=NONE\n%!" !checks !failures;
  if !failures>0 then exit 1
 let () =
+ let cwd=Unix.getcwd() in
+ let expected=read(path source) in
+ Unix.chdir "/tmp";
+ let actual=Fun.protect ~finally:(fun()->Unix.chdir cwd)(fun()->
+  try Some(Receipt_validator.candidate_bytes workspace revision source) with _->None) in
+ if actual<>Some expected then (print_endline "FAIL candidate_reader_independent_of_caller_cwd";exit 1)
+ else print_endline "PASS candidate_reader_independent_of_caller_cwd"
+let () =
  let clock_case name expected body =
   let got=try Receipt_validator.validate_clock_text ~now body;true with _->false in
   if got<>expected then (Printf.printf "FAIL %s\n%!" name;incr failures) else Printf.printf "PASS %s\n%!" name in
@@ -153,7 +161,7 @@ let () =
  if not result then (incr failures;print_endline "FAIL immutable_revision_ignores_conflicting_symbol_alias")
  else print_endline "PASS immutable_revision_ignores_conflicting_symbol_alias";
  if !failures>0 then exit 1
-let review_cases=ref 1
+let review_cases=ref 2
 let review_case label expected f =
  incr review_cases;
  let accepted=try f();true with _->false in

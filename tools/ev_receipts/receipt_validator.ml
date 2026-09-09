@@ -118,9 +118,10 @@ let candidate_bytes ?budget workspace revision path =
  let resolved=query ["log";"-r";selector;"--no-graph";"-T";"self.commit_id() ++ \"\\n\""] in
  require(resolved=revision^"\n") "resolved commit ID mismatch";
  ignore(safe_path path);
- let metadata=query ["file";"list";"-r";selector;"-T";"file_type ++ \" \" ++ path ++ \"\\n\"";"--";path] in
+ let fileset="root:"^path in
+ let metadata=query ["file";"list";"-r";selector;"-T";"file_type ++ \" \" ++ path ++ \"\\n\"";"--";fileset] in
  require(metadata="file "^path^"\n") "candidate source is missing, ambiguous, or nonregular";
- query ["file";"show";"-r";selector;"-T";"\"\"";"--";path]
+ query ["file";"show";"-r";selector;"-T";"\"\"";"--";fileset]
 let reference obj = keys ["path";"sha256"]obj;
  let p=str(field "path" obj) and h=str(field "sha256" obj) in ignore(safe_path p);require(hex 64 h) "invalid SHA256";p,h
 let period ~now obj =
