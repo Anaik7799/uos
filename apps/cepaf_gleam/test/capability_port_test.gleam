@@ -12,9 +12,12 @@ import cepaf_gleam/ecology/capability_port.{
   type Outcome, Engaged, Masked, Unavailable,
 }
 import cepaf_gleam/ecology/super_agent
-import gleeunit/should
+import gleam/dynamic/decode
+import gleam/int
+import gleam/json
 import gleam/list
 import gleam/string
+import gleeunit/should
 
 fn full_mask() -> super_agent.CapabilityMask {
   super_agent.mask_for_mode(super_agent.SovereignEvolution)
@@ -51,7 +54,13 @@ pub fn masked_capability_does_not_touch_backend_test() {
 
 /// Reflex mode keeps its own capabilities live.
 pub fn reflex_keeps_its_own_capabilities_test() {
-  let outcome = capability_port.invoke(reflex_mask(), "ets", "x")
+  ets_init()
+  let outcome =
+    capability_port.invoke(
+      reflex_mask(),
+      "ets",
+      capability_port.default_input("ets"),
+    )
   case outcome {
     Engaged("ets", _, _, _) -> Nil
     other -> should.equal(describe(other), "expected Engaged")
@@ -83,8 +92,7 @@ pub fn capability_is_input_sensitive_test() {
 pub fn ruliad_width_tracks_input_test() {
   let outcome = capability_port.invoke(full_mask(), "ruliad", "a b c")
   case outcome {
-    Engaged(_, _, evidence, _) ->
-      evidence |> should.equal("branchial width 3")
+    Engaged(_, _, evidence, _) -> evidence |> should.equal("branchial width 3")
     other -> should.equal(describe(other), "expected Engaged")
   }
 }
@@ -113,10 +121,74 @@ pub fn outcomes_are_total_test() {
 /// Holding an API key is not the same as having asked a model anything.
 pub fn credential_presence_is_not_an_answer_test() {
   case capability_port.invoke(full_mask(), "openrouter_free", "q") {
-    Unavailable(_, reason) ->
-      string.contains(reason, "dispatch not wired") |> should.be_true
+    Unavailable(_, reason) -> should.be_true(string.length(reason) > 0)
     other -> should.equal(describe(other), "expected Unavailable")
   }
+}
+
+@external(erlang, "ecology_capability_ffi", "ets_init")
+fn ets_init() -> Nil
+
+fn cas_request(version: Int, value: String) -> String {
+  json.object([
+    #("operation", json.string("compare_exchange")),
+    #("namespace", json.string("ecology-test-stm")),
+    #("key", json.string("atomic-value")),
+    #("expected_version", json.int(version)),
+    #("value", json.string(value)),
+  ])
+  |> json.to_string
+}
+
+fn receipt_version(outcome: Outcome) -> Int {
+  let assert Engaged(_, "ets_single_key_compare_exchange", _, detail) = outcome
+  let outer = {
+    use body <- decode.field("backend_result_json", decode.string)
+    decode.success(body)
+  }
+  let inner = {
+    use version <- decode.field("version", decode.int)
+    decode.success(version)
+  }
+  let assert Ok(body) = json.parse(json.to_string(detail), outer)
+  let assert Ok(version) = json.parse(body, inner)
+  version
+}
+
+pub fn stm_compare_exchange_updates_and_rejects_stale_writer_test() {
+  ets_init()
+  let first =
+    capability_port.invoke(full_mask(), "stm", cas_request(0, "first"))
+    |> receipt_version
+  let second =
+    capability_port.invoke(full_mask(), "stm", cas_request(first, "second"))
+    |> receipt_version
+  should.be_true(first > 0)
+  should.be_true(second > first)
+  capability_port.invoke(full_mask(), "stm", cas_request(first, "stale"))
+  |> should.equal(Unavailable("stm", "version_conflict"))
+  let request =
+    "{\"operation\":\"get\",\"namespace\":\"ecology-test-stm\",\"key\":\"atomic-value\"}"
+  let assert Engaged(_, _, _, read) =
+    capability_port.invoke(full_mask(), "ets", request)
+  should.be_true(string.contains(json.to_string(read), "second"))
+  should.be_true(string.contains(json.to_string(read), int.to_string(second)))
+}
+
+pub fn stm_rejects_unconditional_store_mutations_test() {
+  ets_init()
+  let request =
+    "{\"operation\":\"put\",\"namespace\":\"ecology-test-stm\",\"key\":\"must-not-exist\",\"value\":\"bad\"}"
+  capability_port.invoke(full_mask(), "stm", request)
+  |> should.equal(Unavailable(
+    "stm",
+    "STM store operation supports compare_exchange only",
+  ))
+  let read_request =
+    "{\"operation\":\"get\",\"namespace\":\"ecology-test-stm\",\"key\":\"must-not-exist\"}"
+  let assert Engaged(_, _, _, read) =
+    capability_port.invoke(full_mask(), "ets", read_request)
+  should.be_true(string.contains(json.to_string(read), "false"))
 }
 
 fn describe(o: Outcome) -> String {

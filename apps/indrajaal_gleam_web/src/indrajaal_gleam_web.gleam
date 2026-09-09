@@ -59,6 +59,7 @@ import gleam/string
 import indrajaal/runtime_identity
 import indrajaal/homeostasis_http
 import indrajaal/ecology_http
+import cepaf_gleam/ecology/living_swarm_actor
 import lustre/element
 import mist.{type Connection, type ResponseData}
 
@@ -85,6 +86,9 @@ pub fn main() {
 fn halt(code: Int) -> Nil
 
 fn serve() {
+  let assert Ok(#(_ecology_supervisor, ecology_runtime)) =
+    living_swarm_actor.start_runtime(1000)
+    as "Ecology supervision must start before accepting HTTP requests"
   let port = listen_port(4100)
   io.println("=== Indrajaal C3I Web Cockpit ===")
   io.println(
@@ -103,7 +107,7 @@ fn serve() {
       ["api", "v1", "homeostasis", "review"] | ["api", "v1", "homeostasis", "terminal"] -> homeostasis_http.handle(req)
       // Living Swarm Ecology & Cybernetic Singing routes
       ["ecology"] | ["ecology", ..] | ["api", "v1", "ecology", ..] ->
-        ecology_http.handle(req)
+        ecology_http.handle(req, ecology_runtime)
       // AG-UI protocol routes (SSE event streams + health)
       ["ag-ui", ..] -> {
         let json_body = c3i_router.route(path)

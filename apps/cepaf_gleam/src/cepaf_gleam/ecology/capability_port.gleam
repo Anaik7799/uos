@@ -19,34 +19,15 @@
 //// </c3i-module>
 //// =============================================================================
 ////
-//// WHY THIS MODULE EXISTS
-////
-//// `ecology/living_swarm.invoke_capability` advances a counter per capability:
-//// invoking "rete_ul" increments `rules_fired`, invoking "openrouter_free"
-//// increments `advisory_tokens_spent` by 64. No Rete network is consulted and no
-//// HTTP request is made. Under canonical policy section 6 that is a MOCK, and a
-//// mock yields strictly zero operational credit (indicatorTrust == 0). A holon
-//// built on it cannot honestly be called alive: it reports activity it never
-//// performed.
-////
-//// This module is the real boundary. Each of the 11 capabilities is bound to an
-//// actual backend and each invocation returns one of exactly three outcomes:
-////
-////   Engaged     -- the real backend ran and produced evidence
-////   Unavailable -- the backend is genuinely absent or failed; NOTHING happened
-////   Masked      -- the holon's CapabilityMask has this capability switched off
-////
-//// There is deliberately no fourth outcome and no default. A capability that
-//// cannot reach its backend reports `Unavailable` and the holon stays honest
-//// about what it can actually do. Absence is data, not an error to paper over.
-////
-//// Backends are probed LIVE (`probe_all`), never declared. All external
-//// toolchains resolve in-project per SC-TOOLCHAIN-INPROJECT-001 and every
-//// subprocess is bounded with a timeout and process-tree reaping.
+//// Invocation receipts bind input-sensitive computation, atomic ETS operations
+//// or bounded inference to a holon's active mask. Discovery probes carry no
+//// execution credit. Pure model evaluation states its limited scope; it never
+//// issues a live lease, deploys a controller or grants admission. A timeout
+//// outcome does not establish that an external effect rolled back.
 
+import cepaf_gleam/ecology/capability_compute
 import cepaf_gleam/ecology/super_agent.{type CapabilityMask}
-import gleam/float
-import gleam/int
+import gleam/dynamic/decode
 import gleam/json.{type Json}
 import gleam/list
 import gleam/string
@@ -57,10 +38,11 @@ import gleam/string
 
 /// The result of asking a holon to actually use one of its capabilities.
 pub type Outcome {
-  /// The real backend ran. `evidence` is an observed fact (a version string, a
-  /// row count, a solver verdict) -- never a restatement of the request.
+  /// The backend evaluated the request. Rejected model transitions are computed
+  /// results too; detail states their verdict and the bounded scope.
   Engaged(capability: String, backend: String, evidence: String, detail: Json)
-  /// The backend is absent or failed. No work was performed and no state moved.
+  /// The request was invalid, absent or failed. This is not a rollback receipt:
+  /// an external timeout can have an unknown effect outcome.
   Unavailable(capability: String, reason: String)
   /// The holon's mask has this capability switched off. Not a failure: a choice.
   Masked(capability: String)
@@ -110,6 +92,8 @@ pub type Backend {
   Nif(name: String)
   /// A network service gated on a credential.
   Network(name: String, credential_env: String)
+  /// A client whose actual availability is established only by a request.
+  Service(name: String)
 }
 
 pub fn backend_name(b: Backend) -> String {
@@ -118,6 +102,7 @@ pub fn backend_name(b: Backend) -> String {
     Executable(n, _) -> n
     Nif(n) -> n
     Network(n, _) -> n
+    Service(n) -> n
   }
 }
 
@@ -139,13 +124,17 @@ pub fn probe(b: Backend) -> Result(String, String) {
     Nif(_) ->
       case ffi_km_nif_loaded() {
         True -> Ok("uos_km_nif loaded")
-        False -> Error("uos_km_nif not loaded (priv/uos_km_nif.so absent or ABI mismatch)")
+        False ->
+          Error(
+            "uos_km_nif not loaded (priv/uos_km_nif.so absent or ABI mismatch)",
+          )
       }
     Network(n, env) ->
       case ffi_env_present(env) {
         True -> Ok(n <> " credential present in " <> env)
         False -> Error(n <> " credential absent: " <> env <> " unset")
       }
+    Service(n) -> Error(n <> " availability requires an actual bounded request")
   }
 }
 
@@ -158,22 +147,17 @@ pub fn toolchain(rel: String) -> String {
 /// Binding of each of the 11 capabilities to the backend that actually performs it.
 pub fn backend_for(capability: String) -> Result(Backend, String) {
   case capability {
-    "fprime" -> Ok(InProcess("fprime_fsm"))
+    "fprime" -> Ok(InProcess("pure_fpp_interpreter"))
     "bayesian" -> Ok(InProcess("beta_conjugate"))
     "ets" -> Ok(InProcess("ets"))
-    "stm" -> Ok(InProcess("two_lattice_stm"))
+    "stm" -> Ok(InProcess("two_lattice_transaction_model"))
     "ruliad" -> Ok(InProcess("multiway_rewriter"))
-    "denotational" -> Ok(InProcess("denotational_matrix"))
-    "algebraic_atlas" -> Ok(InProcess("sheaf_atlas"))
-    "rete_ul" ->
-      Ok(Executable(
-        "hermes_rete",
-        toolchain("engines/hermes/_build/default/modules/hermes_harness/test_hermes_rete.exe"),
-      ))
-    "formal_twin" ->
-      Ok(Executable("lean4", toolchain("toolchains/lean-4.33.0/bin/lean")))
-    "modular_max" -> Ok(Nif("uos_km_nif"))
-    "openrouter_free" -> Ok(Network("openrouter", "OPENROUTER_API_KEY"))
+    "denotational" -> Ok(InProcess("pure_intent_valuation"))
+    "algebraic_atlas" -> Ok(InProcess("finite_chart_atlas"))
+    "rete_ul" -> Ok(InProcess("beam_salience_production_engine"))
+    "formal_twin" -> Ok(InProcess("bounded_transaction_differential_twin"))
+    "modular_max" -> Ok(Service("supervised_max_daemon"))
+    "openrouter_free" -> Ok(Service("openrouter_free_policy_client"))
     other -> Error("unknown capability: " <> other)
   }
 }
@@ -198,6 +182,12 @@ pub fn probe_report_json() -> Json {
   json.object([
     #("contract", json.string("SC-HOLON-001")),
     #("probed_live", json.bool(True)),
+    #(
+      "scope",
+      json.string(
+        "backend discovery only; service availability requires invocation; no execution credit",
+      ),
+    ),
     #(
       "capabilities",
       json.array(probe_all(), fn(pair) {
@@ -248,10 +238,8 @@ pub fn mask_allows(mask: CapabilityMask, capability: String) -> Bool {
 
 /// Invoke a capability for real.
 ///
-/// Order of checks is deliberate: mask first (a switched-off capability must not
-/// even probe its backend, so a Reflex-mode holon never pays for a toolchain
-/// stat), then a live probe, then the actual call. Any failure yields
-/// `Unavailable` -- never a silently-successful no-op.
+/// Mask first, bounded input second, actual request third. Discovery probes
+/// never count as execution and do not establish an external service result.
 pub fn invoke(
   mask: CapabilityMask,
   capability: String,
@@ -260,12 +248,12 @@ pub fn invoke(
   case mask_allows(mask, capability) {
     False -> Masked(capability)
     True ->
-      case backend_for(capability) {
-        Error(e) -> Unavailable(capability, e)
-        Ok(b) ->
-          case probe(b) {
-            Error(why) -> Unavailable(capability, why)
-            Ok(_) -> perform(capability, b, input)
+      case string.byte_size(input) > 16_384 {
+        True -> Unavailable(capability, "input exceeds 16384 bytes")
+        False ->
+          case backend_for(capability) {
+            Error(e) -> Unavailable(capability, e)
+            Ok(b) -> perform(capability, b, input)
           }
       }
   }
@@ -273,130 +261,92 @@ pub fn invoke(
 
 fn perform(capability: String, b: Backend, input: String) -> Outcome {
   case capability {
-    // --- pure BEAM capabilities: genuinely computed here -------------------
-    "bayesian" -> {
-      // Beta-Bernoulli conjugate update over the observation string: each 'ok'
-      // token is a success, each 'fail' token a failure. Real arithmetic on real
-      // input, not a counter.
-      let toks = string.split(input, " ")
-      let successes =
-        list.length(list.filter(toks, fn(t) { t == "ok" || t == "pass" }))
-      let failures =
-        list.length(list.filter(toks, fn(t) { t == "fail" || t == "error" }))
-      let alpha = int.to_float(successes) +. 1.0
-      let beta = int.to_float(failures) +. 1.0
-      let mean = alpha /. { alpha +. beta }
-      Engaged(
-        capability,
-        backend_name(b),
-        "posterior mean " <> float.to_string(mean),
-        json.object([
-          #("alpha", json.float(alpha)),
-          #("beta", json.float(beta)),
-          #("posterior_mean", json.float(mean)),
-          #("successes", json.int(successes)),
-          #("failures", json.int(failures)),
-        ]),
-      )
-    }
-    "ets" -> {
-      // The probe already performed a real put/get/delete round-trip.
-      Engaged(
-        capability,
-        backend_name(b),
-        "ets round-trip verified",
-        json.object([#("input_bytes", json.int(string.length(input)))]),
-      )
-    }
-    "ruliad" -> {
-      // One real multiway rewrite step: every token is expanded by the rule
-      // a -> ab, and the branchial width is the observed number of successors.
-      let toks = string.split(input, " ")
-      let successors = list.map(toks, fn(t) { t <> t })
-      Engaged(
-        capability,
-        backend_name(b),
-        "branchial width " <> int.to_string(list.length(successors)),
-        json.object([
-          #("step", json.int(1)),
-          #("branchial_width", json.int(list.length(successors))),
-          #("successors", json.array(successors, json.string)),
-        ]),
-      )
-    }
-    "fprime" | "stm" | "denotational" | "algebraic_atlas" ->
-      Engaged(
-        capability,
-        backend_name(b),
-        backend_name(b) <> " evaluated in-process",
-        json.object([#("input_bytes", json.int(string.length(input)))]),
-      )
-
-    // --- external backends: bounded subprocess / NIF -----------------------
-    "formal_twin" -> {
-      // Lean is asked for its identity, bounded. A digital twin that cannot name
-      // its own checker is not a twin.
-      let path = toolchain("toolchains/lean-4.33.0/bin/lean")
-      case ffi_run_bounded(path, ["--version"], 30_000) {
-        Ok(#(0, out)) ->
-          Engaged(
+    "ets" -> external_outcome(capability, b, ffi_ets_request(input))
+    "stm" -> {
+      let decoder = {
+        use operation <- decode.optional_field("operation", "", decode.string)
+        decode.success(operation)
+      }
+      case json.parse(input, decoder) {
+        Ok("compare_exchange") ->
+          external_outcome(
             capability,
-            "lean4",
-            string.trim(out),
-            json.object([#("exit_code", json.int(0))]),
+            InProcess("ets_single_key_compare_exchange"),
+            ffi_ets_request(input),
           )
-        Ok(#(code, out)) ->
+        Ok("") -> pure_outcome(capability, b, input)
+        Ok(_) ->
           Unavailable(
             capability,
-            "lean exited " <> int.to_string(code) <> ": " <> string.trim(out),
+            "STM store operation supports compare_exchange only",
           )
-        Error(e) -> Unavailable(capability, "lean invocation failed: " <> e)
+        Error(_) -> Unavailable(capability, "invalid STM request schema")
       }
     }
-    "rete_ul" -> {
-      let path =
-        toolchain(
-          "engines/hermes/_build/default/modules/hermes_harness/test_hermes_rete.exe",
-        )
-      case ffi_run_bounded(path, [], 60_000) {
-        Ok(#(0, out)) ->
+    "modular_max" | "openrouter_free" ->
+      external_outcome(capability, b, ffi_invoke_external(capability, input))
+    _ -> pure_outcome(capability, b, input)
+  }
+}
+
+fn pure_outcome(capability: String, b: Backend, input: String) -> Outcome {
+  case capability_compute.run(capability, input) {
+    Ok(computed) ->
+      Engaged(capability, backend_name(b), computed.evidence, computed.detail)
+    Error(reason) -> Unavailable(capability, reason)
+  }
+}
+
+fn external_outcome(
+  capability: String,
+  b: Backend,
+  result: Result(String, String),
+) -> Outcome {
+  case result {
+    Error(reason) -> Unavailable(capability, reason)
+    Ok(output) ->
+      case json.parse(output, decode.dynamic) {
+        Error(_) ->
+          Unavailable(
+            capability,
+            "backend returned an invalid JSON receipt; effect outcome unknown",
+          )
+        Ok(_) ->
           Engaged(
             capability,
-            "hermes_rete",
-            "rete suite exit 0",
+            backend_name(b),
+            "bounded request returned a backend receipt",
             json.object([
-              #("exit_code", json.int(0)),
-              #("output_bytes", json.int(string.length(out))),
+              #("backend_result_json", json.string(output)),
             ]),
           )
-        Ok(#(code, out)) ->
-          Unavailable(
-            capability,
-            "hermes rete exited " <> int.to_string(code) <> ": " <> string.trim(out),
-          )
-        Error(e) -> Unavailable(capability, "hermes rete invocation failed: " <> e)
       }
-    }
+  }
+}
+
+/// Explicit bounded diagnostic inputs. Autonomous callers should replace these
+/// with observations when available and label fixed diagnostic runs as such.
+pub fn default_input(capability: String) -> String {
+  case capability {
+    "bayesian" -> "ok"
+    "fprime" -> "{\"machine\":\"watchdog\",\"signals\":[\"heartbeat_tick\"]}"
+    "rete_ul" ->
+      "{\"domain\":\"ooda\",\"facts\":[{\"key\":\"drift_detected\",\"value\":\"false\"},{\"key\":\"missing_critical\",\"value\":\"false\"}]}"
+    "ets" ->
+      "{\"operation\":\"put\",\"namespace\":\"ecology-diagnostics\",\"key\":\"bounded-check\",\"value\":\"diagnostic\"}"
+    "stm" | "formal_twin" ->
+      "{\"version\":1,\"snapshot\":1,\"owner\":1,\"actor\":1,\"epoch\":1,\"token\":1,\"now\":0,\"expires\":10,\"value\":\"before\",\"write\":\"after\"}"
+    "ruliad" ->
+      "{\"seed\":\"a\",\"rules\":[{\"from\":\"a\",\"to\":\"ab\"},{\"from\":\"a\",\"to\":\"ba\"}],\"steps\":2}"
+    "denotational" ->
+      "{\"authority\":\"sa-plan\",\"target_drive_serial\":\"model-only\",\"criticality\":\"DAL-B\",\"add_topics\":[\"ecology/diagnostic\"]}"
+    "algebraic_atlas" ->
+      "{\"sections\":[{\"chart\":0,\"value\":\"bounded\"},{\"chart\":1,\"value\":\"bounded\"}],\"overlaps\":[{\"source\":0,\"target\":1,\"value\":\"bounded\"}],\"path\":[0,1,2]}"
     "modular_max" ->
-      // The probe already confirmed the NIF reports itself loaded; a real metric
-      // call belongs to the caller that has real vectors.
-      Engaged(
-        capability,
-        "uos_km_nif",
-        "mojo kernel NIF loaded",
-        json.object([#("nif_loaded", json.bool(True))]),
-      )
+      "{\"operation\":\"linear_softmax\",\"features\":[2.0,-1.0],\"weights\":[[1.0,0.0],[0.0,1.0]],\"bias\":[0.5,-0.5]}"
     "openrouter_free" ->
-      // Credential presence is confirmed, but this port deliberately does NOT
-      // make the call: the free-tier request path with its $0.00 ceiling and
-      // model allowlist lives in uos_swarm/openrouter_worker. Reporting a
-      // credential as if it were an answer is exactly the failure this module
-      // exists to prevent.
-      Unavailable(
-        capability,
-        "credential present; dispatch not wired from this port -- use uos_swarm/openrouter_worker (free-tier allowlist, $0.00 ceiling)",
-      )
-    other -> Unavailable(other, "no implementation bound")
+      "{\"model\":\"openrouter/free\",\"prompt\":\"Describe one bounded observation an autonomous supervisor should record.\",\"max_tokens\":128}"
+    _ -> ""
   }
 }
 
@@ -419,9 +369,11 @@ fn ffi_km_nif_loaded() -> Bool
 @external(erlang, "ecology_capability_ffi", "env_present")
 fn ffi_env_present(name: String) -> Bool
 
-@external(erlang, "ecology_capability_ffi", "run_bounded")
-fn ffi_run_bounded(
-  path: String,
-  args: List(String),
-  timeout_ms: Int,
-) -> Result(#(Int, String), String)
+@external(erlang, "ecology_capability_ffi", "ets_request")
+fn ffi_ets_request(input: String) -> Result(String, String)
+
+@external(erlang, "ecology_capability_ffi", "invoke_external")
+fn ffi_invoke_external(
+  capability: String,
+  input: String,
+) -> Result(String, String)

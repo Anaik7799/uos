@@ -42,6 +42,9 @@ fn is_dir(path: String) -> Bool
 @external(erlang, "filelib", "is_file")
 fn is_file(path: String) -> Bool
 
+@external(erlang, "filelib", "ensure_dir")
+fn ensure_dir(path: String) -> Nil
+
 const scratch_base = "/tmp/claude-1000/-home-an-NAS-setup/656f0d2c-6019-4d9e-b0ce-b9e39b240047/scratchpad/jjlib-tests"
 
 /// Fails the test immediately with a clear message instead of letting it
@@ -73,6 +76,7 @@ fn rm_rf(dir: String) -> Nil {
 fn fresh_repo(name: String) -> jj.Repo {
   let jj_exe = require_binary("jj")
   let dir = scratch_base <> "/" <> name
+  let _ = ensure_dir(dir <> "/")
   rm_rf(dir)
   let assert Ok(#(0, _)) =
     ffi_run(jj_exe, ["git", "init", "--no-colocate", dir], "/tmp", 20_000)

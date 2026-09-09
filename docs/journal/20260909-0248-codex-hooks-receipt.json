@@ -1,0 +1,135 @@
+{
+  "schema": "uos.codex-hooks-repair.v1",
+  "observed_at": "2026-09-09T02:00:48Z",
+  "plan_id": "uos/ecology-hooks/20260909-0146",
+  "task_id": "HOOKS",
+  "worker": "codex-ecology-hooks",
+  "attempt": 1,
+  "parent_plan_id": "uos/ecology/20260909-0146",
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l4",
+    "#zk-adr",
+    "#zero-muda"
+  ],
+  "clock": {
+    "source": "chronyc tracking",
+    "stratum": 3,
+    "system_offset_seconds": 0.000012921,
+    "direction": "fast",
+    "leap_status": "Normal"
+  },
+  "candidate": {
+    "path": ".codex/hooks.json",
+    "sha256": "4854b8b2e35ba9b136f294a4a9ac46575e3e0564c6fb869bd804ae284f846ca7",
+    "verifier": "tools/verify_codex_hooks.ml",
+    "verifier_sha256": "ec120abe05b5ae3d0db10bcce2d1736678288f6f25e09c9352dcf9fb70f4760c",
+    "vcs_revision": "NOT_CAPTURED: delegated task forbids VCS mutation; exact scoped bytes are bound"
+  },
+  "installed_loader": {
+    "version": "codex-cli 0.153.4",
+    "binary": "/usr/local/lib/node_modules/@openai/codex/node_modules/@openai/codex-linux-x64/vendor/x86_64-unknown-linux-musl/bin/codex",
+    "binary_sha256": "56ef98ab4032d317ab26e9b5e5a175650717351edb16ed9cde0cb6d1734d62da",
+    "invocation": "timeout 45s codex app-server --stdio --enable hooks",
+    "requests": [
+      "initialize",
+      "initialized",
+      "hooks/list"
+    ],
+    "before": {
+      "config_sha256": "c101fbad0b4eb14ffef7c5ee7b7000509174fea0abeab2754abecdafc10643ae",
+      "project_hook_present": false,
+      "warning": "failed to parse hooks config /home/an/NAS-setup/uos/.codex/hooks.json: unknown field `uos_control_loop`, expected `description` or `hooks` at line 2 column 20"
+    },
+    "after": {
+      "cwd": "/home/an/NAS-setup/uos",
+      "hook": {
+        "key": "/home/an/NAS-setup/uos/.codex/hooks.json:session_start:0:0",
+        "eventName": "sessionStart",
+        "handlerType": "command",
+        "command": "test -d '/home/an/NAS-setup/uos/.jj' && printf '%s\\n' '{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"UOS standalone Jujutsu workspace. Follow AGENTS.md for Zero-Muda, Gleam/OTP supervision, Sa-plan authority, and current verification gates. This hook is an advisory reminder; it does not enforce policy or establish runtime admission.\"}}'",
+        "async": false,
+        "matcher": null,
+        "timeoutSec": 5,
+        "statusMessage": null,
+        "additionalContextLimit": null,
+        "sourcePath": "/home/an/NAS-setup/uos/.codex/hooks.json",
+        "source": "project",
+        "pluginId": null,
+        "displayOrder": 1,
+        "enabled": true,
+        "isManaged": false,
+        "currentHash": "sha256:e64498a49628b74f22bb0e7008e81ffa315766d081f8549bfa055e8101478482",
+        "trustStatus": "trusted"
+      },
+      "warnings": [],
+      "errors": []
+    }
+  },
+  "trust_update": {
+    "method": "config/value/write",
+    "key_path": "hooks.state",
+    "changed_entry": "/home/an/NAS-setup/uos/.codex/hooks.json:session_start:0:0",
+    "trusted_hash": "sha256:e64498a49628b74f22bb0e7008e81ffa315766d081f8549bfa055e8101478482",
+    "expected_version": "sha256:7f1264dfe64c38e3ffebdaa97f8986ef569fc9cfc433ebe26f0e8c51ff37c1ec",
+    "result": {
+      "status": "ok",
+      "version": "sha256:899a2bbf2556f5710faf4a1c6076f25fbe91e872cd90117eefde0960dfce3ecb",
+      "filePath": "/home/an/.codex/config.toml"
+    },
+    "unrelated_global_config_semantically_preserved": true,
+    "verification": "Remove only the new hook state entry from config/read's post-write user layer; recursively sort object keys and compare with the complete pre-write user layer. Equality observed."
+  },
+  "verification": [
+    {
+      "command": "ocaml tools/verify_codex_hooks.ml .codex/hooks.json",
+      "subject": "original malformed file",
+      "exit": 1,
+      "status": "EXPECTED_FAILURE",
+      "reason": "unsupported top-level hook field"
+    },
+    {
+      "command": "ocaml tools/verify_codex_hooks.ml /tmp/uos-ecology-hooks-candidate/.codex/hooks.json",
+      "subject": "candidate bytes equal installed file",
+      "exit": 0,
+      "status": "PASS",
+      "bounds": "timeout 5s with 1s kill grace; advisory JSON under 4KiB"
+    },
+    {
+      "command": "bash tools/risk-priority-check --all",
+      "exit": 0,
+      "status": "PASS",
+      "baseline_checks": 375,
+      "adversarial_checks": 32843,
+      "independent_dag_scenarios": 32768,
+      "local_paths_checked": 39
+    },
+    {
+      "command": "bash tools/risk-priority-check --preflight /tmp/uos-ecology-hooks-preflight.json HOOKS",
+      "exit": 0,
+      "status": "PREFLIGHT_PASS"
+    },
+    {
+      "command": "bash tools/risk-priority-check --active-check /tmp/uos-ecology-hooks-trust-risk.json HOOKS codex-ecology-hooks 1",
+      "exit": 0,
+      "status": "ACTIVE_OBSERVATION_PASS",
+      "observed_at": "2026-09-09T01:59:12Z"
+    }
+  ],
+  "counterevidence": [
+    "Initial verifier had a Bos result-type compile error; corrected before the successful red/green runs.",
+    "Temporary candidate project was omitted by hooks/list; canonical source path was separately verified.",
+    "First config-preservation comparison used unavailable structuredClone; corrected to JSON cloning and observed equality on readback.",
+    "The ordinary sandbox could not initialize Codex SQLite under ~/.codex; bounded app-server inspection and the protected file installation used explicit approved escalation."
+  ],
+  "limits": {
+    "inference_turns": 0,
+    "automatic_session_event_execution": "UNRUN; loader activation and direct command execution observed separately",
+    "live_client_reload": "UNRUN; fresh installed app-server discovery verified",
+    "policy_enforcement": "NOT_PROVIDED_BY_THIS_ADVISORY",
+    "runtime_admission": "NOT_GRANTED",
+    "global_hooks_or_plugins_changed": false,
+    "global_settings_changed": "Only this exact hook trusted_hash; all other settings semantically preserved",
+    "rollback": "Restore the recorded original repository configuration if required. Revoke only the new exact trust key through a fresh version-fenced Codex config write while preserving concurrent settings."
+  }
+}

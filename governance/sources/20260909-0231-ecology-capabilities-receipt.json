@@ -1,0 +1,95 @@
+{
+  "observed_at": "2026-09-09T02:13:31Z",
+  "plan_id": "uos/ecology-capabilities/20260909-0146",
+  "task_id": "CAPABILITIES",
+  "worker": "codex-ecology-capabilities",
+  "attempt": 1,
+  "state": "SCOPED_IMPLEMENTATION_VERIFIED",
+  "runtime_admission": "NOT_GRANTED",
+  "ev_ceiling": 93,
+  "vcs_mutation": false,
+  "snapshot": {
+    "kind": "working_tree",
+    "source_files": [
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/capability_port.gleam",
+        "sha256": "991c72f4e432b0b46a7997a2621daf57caf0123c51be2791bb52c9ed2b326963"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/capability_compute.gleam",
+        "sha256": "0e5f2110d3c7814ad2562cf775922814534a581cb392e95badf3c4e21823a504"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/capability_twin.gleam",
+        "sha256": "b8ad22dcac5e15d841ebb0bed40036064a75a4fee49d2bf41aa6836e37bd7d89"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/multiway.gleam",
+        "sha256": "d234e2ea3b34f69d5ccfcfb9c40935d1c234b49e24b6213169c5bfd9dffa936a"
+      },
+      {
+        "path": "apps/cepaf_gleam/test/capability_port_test.gleam",
+        "sha256": "83839332b3e2c343148c2cb7fda477c146e41fe8275b48335a1faf9a5e201911"
+      },
+      {
+        "path": "apps/cepaf_gleam/test/ecology_capability_compute_test.gleam",
+        "sha256": "5a7b0e415a060ce91cd8e89f46ea5457c75cdbd119dfce17d2c24f36f1441f94"
+      },
+      {
+        "path": "formal/lean/Ecology_Capability_Twin.lean",
+        "sha256": "2178270d36e406ec0003f0edd4576a2ba023b26a8c0af49ce4346769acc698af"
+      },
+      {
+        "path": "formal/quint/ecology_capability_twin.qnt",
+        "sha256": "2c17ed800b83592b2927c7a7c57f6bc9e26e29d44c6b94bb92e1ab4829051450"
+      }
+    ]
+  },
+  "runtime": {
+    "otp": "29",
+    "erts": "17.0.5",
+    "schedulers": 4,
+    "capability_tests_passed": 31,
+    "transaction_requests": 320,
+    "combined_run": "63 passed, 1 unrelated router assertion failed; no overall suite PASS claimed",
+    "transcript": {
+      "path": "governance/sources/20260909-0231-ecology-capabilities-combined-tests.log",
+      "sha256": "7b0d3734494e2c6a409b9980130a86525e075795cfc4a4157b89b7a6e83042cc"
+    }
+  },
+  "formal": {
+    "lean": "PASS; runtime_equals_reference axiom-free; other printed theorems use only core propext/Quot.sound, no sorryAx",
+    "quint_scenarios_passed": 8,
+    "quint_simulation": "1000 bounded samples, max30 steps, inv_all, seed93: no violation found",
+    "negative_control": {
+      "path": "governance/sources/20260909-0231-ecology-quint-negative-control.log",
+      "sha256": "ff2defa1576c374e9f2a2c3b6bdb04a05bc361cf4de736d7402ac9e6fe1968ab"
+    },
+    "negative_expected_exit": 1,
+    "scope": "natural-valued pure transaction model; simulation is not exhaustive or a UOS refinement proof"
+  },
+  "review_falsifiers": [
+    "Injected OpenRouter 200 {choices:[]} returned empty successful receipt; root owns repair.",
+    "Guardian exit124 while a setsid descendant wrote its bounded marker: group cleanup does not contain escaping descendants; root owns cgroup/scoping remedy.",
+    "httpc buffered response has no transport byte bound; handed off as next transport task."
+  ],
+  "risk": {
+    "class": "P1",
+    "c": 4,
+    "t": 4,
+    "f": 4,
+    "dep": 4,
+    "impact": 3,
+    "score": 768,
+    "raw_fmea": { "s": 4, "o": 3, "det": 3, "rpn": 36 },
+    "active_check": "PASS at 2026-09-09T02:11:06Z; two sandbox clock-access HOLD observations preserved in /tmp; successful check used approved host-clock access"
+  },
+  "limits": [
+    "Pure FPP interpreter records action names; no external controller effects or NASA certification.",
+    "Rete capability uses existing salience production rules, not UL variable unification or forward closure.",
+    "STM CAS is one ETS key with optimistic version checks, not durable multi-key STM; pure two-lattice model remains separately available.",
+    "Ruliad is bounded supplied string rewriting; atlas checks finite supplied overlaps/composition.",
+    "MAX/OpenRouter FFI implementations and runtime deployment belong to root integration; no full system admission implied."
+  ],
+  "journal": "docs/journal/20260909-0231-ecology-capabilities-codex-journal.md"
+}

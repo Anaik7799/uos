@@ -1,0 +1,31 @@
+[Unit]
+Description=UOS shared ecology %i on pinned OTP 29
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+WorkingDirectory=%h/NAS-setup/uos/var/releases/ecology/%i
+EnvironmentFile=%h/NAS-setup/uos/var/releases/ecology/%i.env
+Environment="UOS_WEB_MANAGED=true"
+Environment="ERL_CRASH_DUMP=/dev/null"
+ExecStartPre=%h/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml %h/NAS-setup/uos/tools/ecology_release.ml verify %h/NAS-setup/uos/var/releases/ecology/%i
+ExecStart=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/erl +S 4:4 +A 4 -noshell -eval "code:add_paths(filelib:wildcard(\"apps/*/ebin\")), 'indrajaal_gleam_web@@main':run('indrajaal@ecology_service')."
+Restart=on-failure
+RestartSec=3
+TimeoutStopSec=10
+KillMode=control-group
+UMask=0077
+NoNewPrivileges=true
+MemoryMax=2G
+CPUQuota=200%
+TasksMax=256
+LimitNOFILE=4096
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=uos-ecology-%i
+
+[Install]
+WantedBy=default.target

@@ -1,5 +1,5 @@
 //// =============================================================================
-//// [C3I-SIL6-MSTS] UOS LIVING SWARM ECOLOGY & CYBERNETIC SONG HTTP ADAPTER
+//// [C3I-BOUNDED-ECOLOGY] UOS ECOLOGY OBSERVATION HTTP ADAPTER
 //// =============================================================================
 //// <c3i-module>
 ////   <identity>
@@ -11,7 +11,7 @@
 ////     <mesh-domain>Ecology HTTP Endpoints, Dynamic SVG Spectrogram & Swarm Telemetry</mesh-domain>
 ////   </fractal-topology>
 ////   <compliance>
-////     <criticality>DAL-A / SIL-6 / READ-OBSERVE</criticality>
+////     <criticality>READ-OBSERVE; NOT SYSTEM ADMISSION</criticality>
 ////     <stamp-controls>
 ////       SC-HOLON-001, SC-BIO-HARMONY-001, SC-CHECKLIST-001, SC-TAILSCALE-WEB-001, SC-ZERO-MUDA-001
 ////     </stamp-controls>
@@ -22,10 +22,13 @@
 import cepaf_gleam/ecology/harmonic_song.{
   render_song_ascii_sparkline, render_song_svg, song_to_json,
 }
-import cepaf_gleam/ecology/living_swarm.{
-  init_living_swarm, step_swarm_cycle, swarm_to_json,
-}
+import cepaf_gleam/ecology/living_swarm.{type SwarmEcology, swarm_to_json}
+import cepaf_gleam/ecology/living_swarm_actor.{type LivingSwarmActorMsg}
+import cepaf_gleam/ecology/super_agent
+import cepaf_gleam/ui/ecology_refresh
 import gleam/bytes_tree
+import gleam/erlang/process.{type Subject}
+import gleam/float
 import gleam/http.{Get}
 import gleam/http/request.{type Request}
 import gleam/http/response.{type Response}
@@ -67,8 +70,7 @@ fn html_response(html: String) -> Response(ResponseData) {
 }
 
 /// Render full HTML page for the living swarm ecology cockpit with 18-checkpoint verification.
-pub fn render_ecology_html() -> String {
-  let swarm = init_living_swarm() |> step_swarm_cycle
+pub fn render_ecology_html(swarm: SwarmEcology) -> String {
   let song = swarm.current_song
   let svg = render_song_svg(song)
 
@@ -84,7 +86,13 @@ pub fn render_ecology_html() -> String {
       <> "<td style=\"padding:6px 12px;border-bottom:1px solid #1f293d;\"><span style=\"background:#16243b;color:#00d4ff;padding:2px 8px;border-radius:4px;\">"
       <> h.plane
       <> "</span></td>"
-      <> "<td style=\"padding:6px 12px;border-bottom:1px solid #1f293d;\"><span style=\"color:#00ffc4;\">● Active</span></td>"
+      <> "<td style=\"padding:6px 12px;border-bottom:1px solid #1f293d;\">"
+      <> super_agent.lifecycle_to_string(h.lifecycle)
+      <> " · "
+      <> super_agent.mode_to_string(h.mode)
+      <> " · "
+      <> int.to_string(h.successful_invocations)
+      <> " observed invocations</td>"
       <> "</tr>"
     })
     |> list.fold("", fn(acc, row) { acc <> row })
@@ -113,49 +121,85 @@ pub fn render_ecology_html() -> String {
 <body>
   <div class=\"container\">
     <div style=\"display:flex;justify-content:space-between;align-items:center;\">
-      <h1>UOS LIVING 21-HOLON SWARM ECOLOGY</h1>
+      <h1>UOS LIVING SWARM ECOLOGY</h1>
       <div>
-        <span class=\"badge badge-harmonic\">HARMONIC CONSONANCE: 78%</span>
+        <span class=\"badge badge-harmonic\">HARMONIC CONSONANCE: <span id=\"ecology-consonance\">" <> float.to_string(
+    song.harmonic_consonance *. 100.0,
+  ) <> "</span>%</span>
         <a href=\"http://nas-1.tail55d152.ts.net:4100/\" style=\"margin-left:16px;\">Back to Cockpit &rarr;</a>
       </div>
     </div>
     <p style=\"color:#94a3b8;margin-top:0;\">
-      Unified Cybernetic Biosphere & 11-Capability Substrate (Dal-A / SIL-6 / Autonomic Living)
+      <span id=\"ecology-participants\">" <> int.to_string(list.length(
+    swarm.holons,
+  )) <> "</span> participants · 11 discoverable capabilities · Observed cycle <span id=\"ecology-cycle\">" <> int.to_string(
+    swarm.cycle_counter,
+  ) <> "</span> · Invocation receipts <span id=\"ecology-invocations\">" <> int.to_string(
+    swarm.invocation_sequence,
+  ) <> "</span>
+      <br>Participant models share one ecology actor; external system bindings are absent.
+      <br>Local cognition and diagnostics; backend availability and system admission require separate evidence.
     </p>
+    <p id=\"ecology-refresh-status\" role=\"status\" aria-live=\"polite\">Initial snapshot; awaiting live refresh.</p>
 
     <!-- Comprehensive Verification Checklist Accordion (SC-CHECKLIST-001) -->
     <details class=\"checklist\" open>
       <summary style=\"cursor:pointer;font-weight:bold;color:#38bdf8;\">
-        Comprehensive Verification Checklist Status: 18/18 PASS (SC-CHECKLIST-001 / SPEC-CHECKLIST-NAV-001)
+        Comprehensive Verification Checklist: evidence required (SC-CHECKLIST-001)
       </summary>
       <div style=\"margin-top:12px;font-size:13px;display:grid;grid-template-columns:1fr 1fr;gap:8px;\">
-        <div>&check; <code>CHK-01-TIME</code>: Mandatory YYYYMMDD-HHSS- Prefix (PASS)</div>
-        <div>&check; <code>CHK-02-TAIL</code>: Full Clickable Tailscale FQDN Links (PASS)</div>
-        <div>&check; <code>CHK-03-FRACT</code>: Fractal Layer Tags #fractal-l0..l9 (PASS)</div>
-        <div>&check; <code>CHK-04-KM</code>: ZK ADR-001..094 Contiguous Ratification (PASS)</div>
-        <div>&check; <code>CHK-05-MUDA</code>: Zero Bevy & Zero Graphite Purity (PASS)</div>
-        <div>&check; <code>CHK-06-GRAPH</code>: Pure BEAM Vector Graphics (PASS)</div>
-        <div>&check; <code>CHK-07-DRIVE</code>: NVMe Serial 25503L801736 Hardware Interlock (PASS)</div>
-        <div>&check; <code>CHK-08-C1C8</code>: 8-Category Gold Standard Test Protocol (PASS)</div>
-        <div>&check; <code>CHK-12-GLEAM</code>: Gleam/OTP 29 Root Supervisor & Prajna (PASS)</div>
-        <div>&check; <code>CHK-PROV</code>: Admitted EV Ceiling Pinned at EV-93 (PASS)</div>
+        <details><summary>1. Metadata and navigation</summary>
+          <p><code>CHK-01-TIME</code>: host observation " <> int.to_string(
+    swarm.epoch_us,
+  ) <> " µs; synchronization gate separate</p>
+          <p><code>CHK-02-TAIL</code>: Tailnet navigation provided</p>
+          <p><code>CHK-03-FRACT</code>: local actor scope L4–L6</p>
+          <p><code>CHK-04-KM</code>: grouped artifacts require revision review</p>
+        </details>
+        <details><summary>2. Purity and storage safety</summary>
+          <p><code>CHK-05-MUDA</code>: fleet gate UNRUN in this view</p>
+          <p><code>CHK-06-GRAPH</code>: renderer observation only</p>
+          <p><code>CHK-07-DRIVE</code>: hardware interlock UNRUN in this view</p>
+        </details>
+        <details><summary>3. Tests and mathematics</summary>
+          <p><code>CHK-08-C1C8</code>: full UI suite UNRUN in this view</p>
+          <p><code>CHK-09-MATH</code>: song metrics grant no proof admission</p>
+          <p><code>CHK-10-9MOD</code>: candidate test receipts required</p>
+          <p><code>CHK-11-REGR</code>: regression monitoring UNRUN in this view</p>
+        </details>
+        <details><summary>4. Runtime and observability</summary>
+          <p><code>CHK-12-GLEAM</code>: persistent actor state observed</p>
+          <p><code>CHK-13-HERMES</code>: invocation receipts retain backend outcomes</p>
+          <p><code>CHK-14-ZIGVM</code>: kernel execution UNRUN in this view</p>
+          <p><code>CHK-15-MAX</code>: inference requires an engaged receipt</p>
+          <p><code>CHK-16-OTEL</code>: full trace correlation UNRUN in this view</p>
+        </details>
+        <details><summary>5. Governance and VCS</summary>
+          <p><code>CHK-17-SOV</code>: system admission NOT_ADMITTED</p>
+          <p><code>CHK-18-JJ</code>: integration authority separate</p>
+        </details>
+        <details><summary>6. Provenance</summary>
+          <p><code>CHK-PROV</code>: EV-93 ceiling; this runtime mints no EV number</p>
+        </details>
       </div>
     </details>
 
     <div class=\"card\">
-      <h3 style=\"color:#38bdf8;margin-top:0;\">Live Cybernetic Singing Spectrogram (Pure SVG)</h3>
+      <h3 style=\"color:#38bdf8;margin-top:0;\">Initial Cybernetic Singing Snapshot (Pure SVG)</h3>
       <div style=\"text-align:center;overflow-x:auto;\">
         " <> svg <> "
       </div>
       <div style=\"display:flex;justify-content:space-between;margin-top:12px;font-size:13px;color:#94a3b8;\">
         <div><strong>Raga:</strong> " <> song.raga_name <> "</div>
-        <div><strong>Teentaal Beat:</strong> " <> int.to_string(song.beat_number) <> "/16 (" <> song.current_bol.bol_name <> ")</div>
+        <div><strong>Teentaal Beat:</strong> " <> int.to_string(
+    song.beat_number,
+  ) <> "/16 (" <> song.current_bol.bol_name <> ")</div>
         <div><strong>Drone Frequencies:</strong> 261.63Hz, 392.44Hz, 523.25Hz</div>
       </div>
     </div>
 
     <div class=\"card\">
-      <h3 style=\"color:#38bdf8;margin-top:0;\">21 Participating Holons across 7 Systemic Planes</h3>
+      <h3 style=\"color:#38bdf8;margin-top:0;\">Participating Holons across 7 Systemic Planes</h3>
       <table>
         <thead>
           <tr>
@@ -165,36 +209,70 @@ pub fn render_ecology_html() -> String {
             <th>Biological Lifecycle</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody id=\"ecology-participant-rows\" data-layout=\"full\">
           " <> holon_rows <> "
         </tbody>
       </table>
     </div>
 
+    <details class=\"card\"><summary>Latest observed receipts</summary>
+      <pre id=\"ecology-receipts-json\" style=\"overflow:auto;max-height:32rem\"></pre>
+    </details>
+
     <footer style=\"margin-top:32px;font-size:12px;color:#64748b;text-align:center;\">
       Unified Operational System &bull; <a href=\"http://nas-1.tail55d152.ts.net:4100\">nas-1.tail55d152.ts.net:4100</a> &bull; BEAM OTP 29
     </footer>
   </div>
+  <script>" <> ecology_refresh.script() <> "</script>
 </body>
 </html>"
 }
 
 /// Main HTTP request handler for the ecology endpoints.
-pub fn handle(req: Request(Connection)) -> Response(ResponseData) {
-  let swarm = init_living_swarm() |> step_swarm_cycle
+pub fn handle(
+  req: Request(Connection),
+  runtime: Subject(LivingSwarmActorMsg),
+) -> Response(ResponseData) {
+  handle_snapshot(req, living_swarm_actor.get_swarm(runtime, 250))
+}
+
+pub fn handle_snapshot(
+  req: Request(body),
+  snapshot: Result(SwarmEcology, String),
+) -> Response(ResponseData) {
+  case snapshot {
+    Error(reason) ->
+      json_response(
+        503,
+        json.to_string(
+          json.object([
+            #("status", json.string("unavailable")),
+            #("reason", json.string(reason)),
+          ]),
+        ),
+      )
+    Ok(swarm) -> handle_live(req, swarm)
+  }
+}
+
+fn handle_live(
+  req: Request(body),
+  swarm: SwarmEcology,
+) -> Response(ResponseData) {
   let song = swarm.current_song
 
   case req.method, request.path_segments(req) {
-    Get, ["ecology"] -> html_response(render_ecology_html())
+    Get, ["ecology"] -> html_response(render_ecology_html(swarm))
     Get, ["ecology", "swarm"] | Get, ["api", "v1", "ecology", "swarm"] ->
       json_response(200, json.to_string(swarm_to_json(swarm)))
     Get, ["ecology", "song"] | Get, ["api", "v1", "ecology", "song"] ->
       json_response(200, json.to_string(song_to_json(song)))
     Get, ["ecology", "spectrogram.svg"]
-    | Get, ["api", "v1", "ecology", "spectrogram.svg"] ->
-      svg_response(render_song_svg(song))
-    Get, ["ecology", "sparkline"] | Get, ["api", "v1", "ecology", "sparkline"] ->
-      text_response(render_song_ascii_sparkline(song))
+    | Get, ["api", "v1", "ecology", "spectrogram.svg"]
+    -> svg_response(render_song_svg(song))
+    Get, ["ecology", "sparkline"]
+    | Get, ["api", "v1", "ecology", "sparkline"]
+    -> text_response(render_song_ascii_sparkline(song))
     _, _ -> json_response(404, "{\"error\":\"not_found\",\"path\":\"ecology\"}")
   }
 }

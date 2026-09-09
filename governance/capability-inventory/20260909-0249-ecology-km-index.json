@@ -1,0 +1,53 @@
+{
+  "schema": "uos.ecology-km-index.v1",
+  "parent_plan": "uos/ecology/20260909-0146",
+  "admitted": false,
+  "nodes": [
+    {
+      "kind": "wiki",
+      "path": "docs/wiki/20260909-0249-agentic-ecology.md"
+    },
+    {
+      "kind": "zk_permanent_decision",
+      "path": "docs/zk/20260909-0249-ecology-capability-activation-decision.md"
+    },
+    {
+      "kind": "specification",
+      "path": "docs/design/20260909-0249-agentic-ecology-spec.json"
+    },
+    {
+      "kind": "journal",
+      "path": "docs/journal/20260909-0248-codex-hooks-journal.md",
+      "agent": "codex-hooks"
+    },
+    {
+      "kind": "journal",
+      "path": "docs/journal/20260909-0231-ecology-capabilities-codex-journal.md",
+      "agent": "codex-capabilities"
+    }
+  ],
+  "pending_groups": [
+    "supervision",
+    "transport",
+    "package",
+    "root-runtime"
+  ],
+  "edges": [
+    {
+      "from": "docs/wiki/20260909-0249-agentic-ecology.md",
+      "to": "docs/zk/20260909-0249-ecology-capability-activation-decision.md",
+      "relation": "explains_decision"
+    },
+    {
+      "from": "docs/zk/20260909-0249-ecology-capability-activation-decision.md",
+      "to": "docs/design/20260909-0249-agentic-ecology-spec.json",
+      "relation": "specified_by"
+    },
+    {
+      "from": "docs/design/20260909-0249-agentic-ecology-spec.json",
+      "to": "docs/wiki/20260909-0249-agentic-ecology.md",
+      "relation": "documented_by"
+    }
+  ]
+}
+

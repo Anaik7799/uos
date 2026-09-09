@@ -50,6 +50,7 @@ pub type Allowed {
 /// Exact model ids, checked against the live public price list before each call.
 pub fn allowlist() -> List(Allowed) {
   [
+    Allowed("openrouter/free", Free, 0.0, 0.0),
     Allowed("google/gemma-4-31b-it:free", Free, 0.0, 0.0),
     Allowed("nvidia/nemotron-3.5-lightning:free", Free, 0.0, 0.0),
     Allowed("minimax/minimax-m3:free", Free, 0.0, 0.0),
@@ -219,6 +220,10 @@ pub fn admit(
     False -> Ok(Nil)
   })
   use price <- result.try(find_price(prices, req.model))
+  use _ <- result.try(case price.prompt <. 0.0 || price.completion <. 0.0 {
+    True -> Error(PriceUnknown(req.model))
+    False -> Ok(Nil)
+  })
   use _ <- result.try(
     case
       price.prompt >. allowed.prompt_ceiling
@@ -251,7 +256,17 @@ pub fn admit(
 
 /// OpenAI-compatible chat completion body: no tools, no streaming, deterministic.
 pub fn request_json(req: Request) -> String {
-  json.object([
+  let provider = case string.ends_with(req.model, ":free") || req.model == "openrouter/free" {
+    True -> [#("provider", json.object([
+      #("max_price", json.object([
+        #("prompt", json.float(0.0)),
+        #("completion", json.float(0.0)),
+        #("request", json.float(0.0)),
+      ])),
+    ]))]
+    False -> []
+  }
+  json.object(list.append([
     #("model", json.string(req.model)),
     #(
       "messages",
@@ -266,7 +281,7 @@ pub fn request_json(req: Request) -> String {
     #("temperature", json.float(0.0)),
     #("stream", json.bool(False)),
     #("usage", json.object([#("include", json.bool(True))])),
-  ])
+  ], provider))
   |> json.to_string
 }
 
@@ -288,7 +303,7 @@ fn number() -> decode.Decoder(Float) {
 }
 
 fn reply_decoder() -> decode.Decoder(Reply) {
-  use model <- decode.optional_field("model", "", decode.string)
+  use model <- decode.field("model", decode.string)
   use provider <- decode.optional_field("provider", "", decode.string)
   use choices <- decode.field(
     "choices",
@@ -298,10 +313,10 @@ fn reply_decoder() -> decode.Decoder(Reply) {
       decode.success(#(content, finish))
     }),
   )
-  use usage <- decode.optional_field("usage", #(0, 0, 0, None), {
-    use pt <- decode.optional_field("prompt_tokens", 0, decode.int)
-    use ct <- decode.optional_field("completion_tokens", 0, decode.int)
-    use tt <- decode.optional_field("total_tokens", 0, decode.int)
+  use usage <- decode.field("usage", {
+    use pt <- decode.field("prompt_tokens", decode.int)
+    use ct <- decode.field("completion_tokens", decode.int)
+    use tt <- decode.field("total_tokens", decode.int)
     use cost <- decode.optional_field("cost", None, decode.optional(number()))
     decode.success(#(pt, ct, tt, cost))
   })
@@ -321,8 +336,19 @@ fn reply_decoder() -> decode.Decoder(Reply) {
 }
 
 pub fn decode_reply(body: String) -> Result(Reply, Refusal) {
-  json.parse(body, reply_decoder())
-  |> result.map_error(fn(e) { BadResponse(string.inspect(e)) })
+  use reply <- result.try(json.parse(body, reply_decoder())
+    |> result.map_error(fn(_) { BadResponse("missing or invalid completion fields") }))
+  let valid_cost = case reply.reported_cost_usd {
+    Some(c) -> c >=. 0.0
+    None -> True
+  }
+  case string.trim(reply.model) != "" && string.trim(reply.content) != ""
+    && reply.prompt_tokens >= 0 && reply.completion_tokens > 0
+    && reply.total_tokens == reply.prompt_tokens + reply.completion_tokens
+    && valid_cost {
+    True -> Ok(reply)
+    False -> Error(BadResponse("empty completion or inconsistent usage"))
+  }
 }
 
 fn price_string() -> decode.Decoder(Float) {
@@ -349,7 +375,7 @@ pub fn decode_prices(body: String) -> Result(List(Price), Refusal) {
   }
   json.parse(body, decode.field("data", decode.list(entry), decode.success))
   |> result.map_error(fn(e) { BadResponse(string.inspect(e)) })
-  |> result.map(fn(ps) { list.filter(ps, fn(p) { p.prompt >=. 0.0 }) })
+  |> result.map(fn(ps) { list.filter(ps, fn(p) { p.prompt >=. 0.0 && p.completion >=. 0.0 }) })
 }
 
 /// Cost from measured usage at the admitted price; the provider's own figure wins when present.

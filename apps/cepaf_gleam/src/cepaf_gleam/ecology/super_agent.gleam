@@ -1,5 +1,5 @@
 //// =============================================================================
-//// [C3I-SIL6-MSTS] UOS SUPER-AGENT HOLON ECOLOGY & 11-CAPABILITY SUBSTRATE
+//// [C3I-BOUNDED-ECOLOGY] UOS AGENTIC PARTICIPANT & CAPABILITY SELECTION
 //// =============================================================================
 //// <c3i-module>
 ////   <identity>
@@ -11,7 +11,7 @@
 ////     <mesh-domain>Holon Ecology, Super-Agent Architecture & Capabilities</mesh-domain>
 ////   </fractal-topology>
 ////   <compliance>
-////     <criticality>DAL-A / SIL-6 / REVERSIBLE</criticality>
+////     <criticality>REVERSIBLE LOCAL STATE; NOT SYSTEM ADMISSION</criticality>
 ////     <stamp-controls>
 ////       SC-HOLON-001, SC-BIO-EVO-001, SC-MATH-001, SC-ZERO-MUDA-001
 ////     </stamp-controls>
@@ -19,8 +19,8 @@
 //// </c3i-module>
 //// =============================================================================
 ////
-//// Every holon in the UOS ecology is capable of becoming a Super-Agent:
-//// an entity endowed with the full superset of 11 systemic capabilities:
+//// Every participant model can discover the common eleven capability ports.
+//// Availability and actual execution remain separate observed outcomes:
 ////   1. F Prime (FPP) Component-Port State Machine Architecture
 ////   2. Bayesian Inference, Beta Beliefs & Pareto Optimization
 ////   3. Hermes Rete-UL Token Forward-Chaining Deduction
@@ -67,7 +67,7 @@ pub fn lifecycle_to_string(l: Lifecycle) -> String {
 }
 
 pub type OperationalMode {
-  /// Minimal autonomic reflex: ETS + FPrime (latency < 10us)
+  /// Minimal autonomic selection: ETS + FPrime.
   Reflex
   /// Analytical problem solving: + Bayesian + Rete-UL + STM
   Deliberative
@@ -147,15 +147,17 @@ pub const all_enabled = CapabilityMask(
   algebraic_atlas: True,
 )
 
+/// Discoverable services are shared by every agentic holon. A selected mask is
+/// an activation preference; neither selection nor discovery proves a backend ran.
+pub const all_capability_names: List(String) = [
+  "fprime", "bayesian", "rete_ul", "ets", "stm", "modular_max",
+  "openrouter_free", "ruliad", "formal_twin", "denotational", "algebraic_atlas",
+]
+
 /// Generate capability mask corresponding to an operational mode
 pub fn mask_for_mode(mode: OperationalMode) -> CapabilityMask {
   case mode {
-    Reflex ->
-      CapabilityMask(
-        ..all_disabled,
-        fprime: True,
-        ets: True,
-      )
+    Reflex -> CapabilityMask(..all_disabled, fprime: True, ets: True)
     Deliberative ->
       CapabilityMask(
         ..all_disabled,
@@ -241,11 +243,7 @@ pub type ReteULState {
 
 /// 4. ETS state: In-memory table identifier and entry count
 pub type EtsState {
-  EtsState(
-    table_name: String,
-    is_protected: Bool,
-    cached_entries: Int,
-  )
+  EtsState(table_name: String, is_protected: Bool, cached_entries: Int)
 }
 
 /// 5. Two-Lattice STM state: Leased single-writer epoch and reader snapshot version
@@ -333,6 +331,11 @@ pub type SuperAgentHolon {
     homeostatic_error: Float,
     lyapunov_energy: Float,
     freshness_ticks: Int,
+    successful_invocations: Int,
+    unavailable_invocations: Int,
+    masked_invocations: Int,
+    last_capability: String,
+    last_outcome: String,
     // Substrate states
     fprime: FPrimeState,
     bayesian: BayesianState,
@@ -366,6 +369,11 @@ pub fn create_super_agent(
     homeostatic_error: 0.0,
     lyapunov_energy: 0.0,
     freshness_ticks: 0,
+    successful_invocations: 0,
+    unavailable_invocations: 0,
+    masked_invocations: 0,
+    last_capability: "",
+    last_outcome: "unrun",
     fprime: FPrimeState(
       component_name: id,
       rate_group_hz: 1.0,
@@ -376,14 +384,14 @@ pub fn create_super_agent(
     bayesian: BayesianState(
       prior_mean: 1.0,
       prior_variance: 0.01,
-      alpha_health: 100.0,
+      alpha_health: 1.0,
       beta_health: 1.0,
-      expected_divergence_pct: 0.5,
+      expected_divergence_pct: 0.0,
     ),
     rete_ul: ReteULState(
       tokens_evaluated: 0,
-      alpha_nodes_count: 16,
-      beta_nodes_count: 8,
+      alpha_nodes_count: 0,
+      beta_nodes_count: 0,
       rules_fired: 0,
     ),
     ets: EtsState(
@@ -392,19 +400,19 @@ pub fn create_super_agent(
       cached_entries: 0,
     ),
     stm: StmState(
-      telemetry_snapshot_version: 1,
+      telemetry_snapshot_version: 0,
       intent_lease_epoch: 0,
       lease_fencing_token: "fence_" <> id <> "_0",
       has_writer_lease: False,
     ),
     mojo_max: MojoMaxState(
-      simd_width: 8,
-      embedding_dimensions: 384,
+      simd_width: 0,
+      embedding_dimensions: 0,
       cached_vectors: 0,
-      last_inference_us: 45,
+      last_inference_us: 0,
     ),
     openrouter_free: OpenRouterFreeState(
-      selected_model: "google/gemma-4-31b-it:free",
+      selected_model: "",
       cost_ceiling_usd: 0.0,
       cumulative_cost_usd: 0.0,
       advisory_tokens_spent: 0,
@@ -412,23 +420,23 @@ pub fn create_super_agent(
     ruliad: RuliadState(
       multiway_step: 0,
       branch_count: 1,
-      causal_invariance_holds: True,
-      branchial_entropy: 2.5,
+      causal_invariance_holds: False,
+      branchial_entropy: 0.0,
     ),
     formal_twin: FormalTwinState(
-      lean4_theorems_proved: 11,
-      quint_invariants_checked: 8,
+      lean4_theorems_proved: 0,
+      quint_invariants_checked: 0,
       sorry_count: 0,
-      digital_twin_parity_pct: 100.0,
+      digital_twin_parity_pct: 0.0,
     ),
     denotational: DenotationalState(
-      aspects_satisfied: 17,
+      aspects_satisfied: 0,
       aspects_total: 17,
-      fail_closed_passed: True,
+      fail_closed_passed: False,
     ),
     algebraic_atlas: AlgebraicAtlasState(
-      charts_glued: 10,
-      sheaf_consistency: True,
+      charts_glued: 0,
+      sheaf_consistency: False,
       delta_t13_norm: 0.0,
     ),
   )
@@ -445,14 +453,10 @@ pub fn awaken(holon: SuperAgentHolon) -> Result(SuperAgentHolon, String) {
       Ok(SuperAgentHolon(..holon, lifecycle: Awakening, freshness_ticks: 1))
     Awakening ->
       Ok(SuperAgentHolon(..holon, lifecycle: Active, freshness_ticks: 1))
-    Active ->
-      Ok(holon)
-    Stressed ->
-      Ok(SuperAgentHolon(..holon, lifecycle: Healing))
-    Healing ->
-      Ok(SuperAgentHolon(..holon, lifecycle: Active))
-    Apoptotic ->
-      Error("Cannot awaken an apoptotic (terminated) holon")
+    Active -> Ok(holon)
+    Stressed -> Ok(SuperAgentHolon(..holon, lifecycle: Healing))
+    Healing -> Ok(SuperAgentHolon(..holon, lifecycle: Active))
+    Apoptotic -> Error("Cannot awaken an apoptotic (terminated) holon")
   }
 }
 
@@ -461,11 +465,7 @@ pub fn set_mode(
   holon: SuperAgentHolon,
   mode: OperationalMode,
 ) -> SuperAgentHolon {
-  SuperAgentHolon(
-    ..holon,
-    mode: mode,
-    mask: mask_for_mode(mode),
-  )
+  SuperAgentHolon(..holon, mode: mode, mask: mask_for_mode(mode))
 }
 
 /// Custom selective activation: Enable or disable a specific capability
@@ -487,19 +487,43 @@ pub fn toggle_capability(
     "stm" ->
       Ok(SuperAgentHolon(..holon, mask: CapabilityMask(..m, stm: enabled)))
     "modular_max" ->
-      Ok(SuperAgentHolon(..holon, mask: CapabilityMask(..m, modular_max: enabled)))
+      Ok(
+        SuperAgentHolon(
+          ..holon,
+          mask: CapabilityMask(..m, modular_max: enabled),
+        ),
+      )
     "openrouter_free" ->
-      Ok(SuperAgentHolon(..holon, mask: CapabilityMask(..m, openrouter_free: enabled)))
+      Ok(
+        SuperAgentHolon(
+          ..holon,
+          mask: CapabilityMask(..m, openrouter_free: enabled),
+        ),
+      )
     "ruliad" ->
       Ok(SuperAgentHolon(..holon, mask: CapabilityMask(..m, ruliad: enabled)))
     "formal_twin" ->
-      Ok(SuperAgentHolon(..holon, mask: CapabilityMask(..m, formal_twin: enabled)))
+      Ok(
+        SuperAgentHolon(
+          ..holon,
+          mask: CapabilityMask(..m, formal_twin: enabled),
+        ),
+      )
     "denotational" ->
-      Ok(SuperAgentHolon(..holon, mask: CapabilityMask(..m, denotational: enabled)))
+      Ok(
+        SuperAgentHolon(
+          ..holon,
+          mask: CapabilityMask(..m, denotational: enabled),
+        ),
+      )
     "algebraic_atlas" ->
-      Ok(SuperAgentHolon(..holon, mask: CapabilityMask(..m, algebraic_atlas: enabled)))
-    _ ->
-      Error("Unknown capability name: " <> capability)
+      Ok(
+        SuperAgentHolon(
+          ..holon,
+          mask: CapabilityMask(..m, algebraic_atlas: enabled),
+        ),
+      )
+    _ -> Error("Unknown capability name: " <> capability)
   }
 }
 
@@ -527,12 +551,17 @@ pub fn execute_autonomic_pulse(
   target_latency_ms: Float,
 ) -> #(SuperAgentHolon, AutonomicPulseReport) {
   // 1. OBSERVE & ORIENT: Compute homeostatic error and Lyapunov energy V(e) = 0.5 * e^2
-  let raw_error = { observed_latency_ms -. target_latency_ms } /. target_latency_ms
+  let observation_valid =
+    target_latency_ms >. 0.0 && observed_latency_ms >=. 0.0
+  let raw_error = case observation_valid {
+    True -> { observed_latency_ms -. target_latency_ms } /. target_latency_ms
+    False -> 1.0
+  }
   let energy = 0.5 *. raw_error *. raw_error
   let is_stable = energy <=. 0.05
 
   // 2. DECIDE: Update Bayesian beliefs if active
-  let updated_bayesian = case holon.mask.bayesian {
+  let updated_bayesian = case holon.mask.bayesian && observation_valid {
     True -> {
       let b = holon.bayesian
       let alpha = case is_stable {
@@ -548,23 +577,8 @@ pub fn execute_autonomic_pulse(
     False -> holon.bayesian
   }
 
-  // 3. ACT: Evaluate Rete-UL tokens if active
-  let updated_rete = case holon.mask.rete_ul {
-    True -> {
-      let r = holon.rete_ul
-      ReteULState(..r, tokens_evaluated: r.tokens_evaluated + 1)
-    }
-    False -> holon.rete_ul
-  }
-
-  // 4. MULTIWAY & DIGITAL TWIN: Increment simulation step if active
-  let updated_ruliad = case holon.mask.ruliad {
-    True -> {
-      let ru = holon.ruliad
-      RuliadState(..ru, multiway_step: ru.multiway_step + 1)
-    }
-    False -> holon.ruliad
-  }
+  // Backend work is dispatched separately and credited only from its Outcome.
+  // A heartbeat observation is not a Rete firing, rewrite, proof or inference.
 
   // 5. REFLECT: Determine next lifecycle state based on stability
   let next_lifecycle = case holon.lifecycle, is_stable {
@@ -574,32 +588,33 @@ pub fn execute_autonomic_pulse(
     l, _ -> l
   }
 
-  let action = case is_stable {
-    True -> "equilibrium_maintained"
-    False -> "lyapunov_damping_engaged"
+  let action = case observation_valid, is_stable {
+    False, _ -> "invalid_latency_observation"
+    True, True -> "equilibrium_maintained"
+    True, False -> "latency_stress_observed"
   }
 
-  let updated_holon = SuperAgentHolon(
-    ..holon,
-    lifecycle: next_lifecycle,
-    homeostatic_error: raw_error,
-    lyapunov_energy: energy,
-    freshness_ticks: holon.freshness_ticks + 1,
-    bayesian: updated_bayesian,
-    rete_ul: updated_rete,
-    ruliad: updated_ruliad,
-  )
+  let updated_holon =
+    SuperAgentHolon(
+      ..holon,
+      lifecycle: next_lifecycle,
+      homeostatic_error: raw_error,
+      lyapunov_energy: energy,
+      freshness_ticks: holon.freshness_ticks + 1,
+      bayesian: updated_bayesian,
+    )
 
-  let report = AutonomicPulseReport(
-    holon_id: holon.id,
-    lifecycle: next_lifecycle,
-    mode: holon.mode,
-    active_capabilities: active_capability_count(holon.mask),
-    homeostatic_error: raw_error,
-    lyapunov_energy: energy,
-    is_stable: is_stable,
-    action_taken: action,
-  )
+  let report =
+    AutonomicPulseReport(
+      holon_id: holon.id,
+      lifecycle: next_lifecycle,
+      mode: holon.mode,
+      active_capabilities: active_capability_count(holon.mask),
+      homeostatic_error: raw_error,
+      lyapunov_energy: energy,
+      is_stable: is_stable,
+      action_taken: action,
+    )
 
   #(updated_holon, report)
 }
@@ -611,12 +626,20 @@ pub fn execute_autonomic_pulse(
 pub fn to_json(holon: SuperAgentHolon) -> Json {
   json.object([
     #("id", json.string(holon.id)),
+    #("participant_kind", json.string("local_agentic_model")),
+    #("external_system_binding", json.bool(False)),
     #("name", json.string(holon.name)),
     #("plane", json.string(holon.plane)),
     #("level", json.int(holon.level)),
     #("lifecycle", json.string(lifecycle_to_string(holon.lifecycle))),
     #("mode", json.string(mode_to_string(holon.mode))),
     #("active_capabilities", json.int(active_capability_count(holon.mask))),
+    #("capability_catalog", json.array(all_capability_names, json.string)),
+    #("successful_invocations", json.int(holon.successful_invocations)),
+    #("unavailable_invocations", json.int(holon.unavailable_invocations)),
+    #("masked_invocations", json.int(holon.masked_invocations)),
+    #("last_capability", json.string(holon.last_capability)),
+    #("last_outcome", json.string(holon.last_outcome)),
     #(
       "capabilities",
       json.object([

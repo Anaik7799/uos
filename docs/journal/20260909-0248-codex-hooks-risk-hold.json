@@ -1,0 +1,11 @@
+{
+  "status": "HOLD",
+  "authority": "NONE",
+  "rule": "RP-INVALID",
+  "detail": "record.decision.confidence: wrong enum",
+  "assessment_path": "docs/journal/20260909-0248-codex-hooks-risk.json",
+  "assessment_sha256": "caab71a29e6a9052b5019ed64ce978427ff6160069aa1f6596794457005c9b88",
+  "rejected_value": "observed local loader and command behavior; analyst-estimated severity and residuals",
+  "repair": "Use declared schema enum analyst_estimate, retaining the evidence and estimates in their dedicated fields.",
+  "runtime_admission": "NOT_GRANTED"
+}

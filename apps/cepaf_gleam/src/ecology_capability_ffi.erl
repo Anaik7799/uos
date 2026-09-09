@@ -9,14 +9,21 @@
 %% counted as engaged. Every probe below answers "is the real thing actually
 %% there, right now" -- never "was it declared".
 %%
-%% Every subprocess is bounded: explicit timeout, exit_status, and process-tree
-%% reaping via os:cmd("kill") on the OS pid, per canonical policy section 7
-%% (solvers and external engines run only in isolated bounded workers).
+%% Every subprocess is bounded by the OCaml process-group guardian: an absolute
+%% deadline, exit status, output ceiling and process-group cleanup. A service
+%% cgroup bounds children that create new sessions. This internal facade does
+%% not expose arbitrary executable dispatch as an agent capability.
 %% =============================================================================
 -module(ecology_capability_ffi).
 
 -export([uos_root/0, probe_executable/1, run_bounded/3,
-         ets_backend_probe/0, km_nif_loaded/0, env_present/1]).
+         ets_backend_probe/0, km_nif_loaded/0, env_present/1,
+         ets_init/0, ets_request/1, invoke_external/2, max_request/1]).
+
+-include_lib("kernel/include/file.hrl").
+-define(OUTPUT_LIMIT, 1048576).
+-define(TABLE, uos_ecology_state).
+-define(ROWS, 4096).
 
 %% --- repo root --------------------------------------------------------------
 %% Resolved from the loaded application's priv dir, so nothing hardcodes a
@@ -29,12 +36,10 @@ uos_root() ->
     unicode:characters_to_binary(ascend_to_repo_root(filename:absname(Start))).
 
 %% Walk upward until the directory holding the standalone Jujutsu repo (.jj) is
-%% found. That marker -- not a fixed number of ".." hops -- identifies the UOS
-%% root, so this works for a dev build (build/dev/erlang/<app>/priv) and for a
-%% release layout alike. Falls back to the starting path if no marker is found,
-%% which makes downstream probes report ABSENT rather than silently guess.
+%% found, or the exact immutable ecology release marker is found. No marker
+%% yields the filesystem root, where required resources fail closed.
 ascend_to_repo_root(Dir) ->
-    case filelib:is_dir(filename:join(Dir, ".jj")) of
+    case filelib:is_dir(filename:join(Dir, ".jj")) orelse release_root(Dir) of
         true -> Dir;
         false ->
             Parent = filename:dirname(Dir),
@@ -44,12 +49,45 @@ ascend_to_repo_root(Dir) ->
             end
     end.
 
+release_root(Dir) ->
+    file:read_file(filename:join(Dir,".uos-ecology-release")) =:=
+        {ok,<<"uos.ecology-release.v1\n">>}.
+
+%% Release executables and existing MAX environment inputs remain explicit
+%% dependencies. Their bytes are rechecked before each external invocation.
+dependency(Root,Name,DevelopmentRelative) ->
+    case release_root(Root) of
+        false -> filename:join(Root,DevelopmentRelative);
+        true ->
+            Manifest=filename:join(Root,"runtime-dependencies.json"),
+            {ok,#file_info{type=regular,size=N}}=file:read_file_info(Manifest),
+            true=N=<65536,
+            {ok,Body}=file:read_file(Manifest),
+            #{<<"schema">>:= <<"uos.ecology-runtime-dependencies.v1">>,
+              Name:=#{<<"path">>:=Path,<<"sha256">>:=Expected}}=json:decode(Body),
+            true=is_binary(Path) andalso filename:pathtype(Path)=:=absolute,
+            {ok,#file_info{type=regular,size=Size}}=file:read_file_info(Path),
+            true=Size=<134217728,
+            {ok,Fd}=file:open(Path,[read,binary,raw]),
+            Actual=try hash_file(Fd,crypto:hash_init(sha256),Size)
+                   after file:close(Fd) end,
+            true=Actual=:=Expected,
+            binary_to_list(Path)
+    end.
+
+hash_file(Fd,Hash,Remaining) ->
+    case file:read(Fd,65536) of
+        eof when Remaining=:=0 -> binary:encode_hex(crypto:hash_final(Hash),lowercase);
+        {ok,Bytes} when byte_size(Bytes)=<Remaining ->
+            hash_file(Fd,crypto:hash_update(Hash,Bytes),Remaining-byte_size(Bytes));
+        _ -> error(dependency_changed)
+    end.
+
 %% --- probes -----------------------------------------------------------------
 probe_executable(Path) ->
     P = binary_to_list(Path),
     case file:read_file_info(P) of
-        {ok, Info} ->
-            Mode = element(8, Info),
+        {ok, #file_info{type=regular, mode=Mode}} ->
             (Mode band 8#111) =/= 0;
         _ -> false
     end.
@@ -58,17 +96,9 @@ probe_executable(Path) ->
 %% than asserting that ETS "exists". A read-back mismatch reports false.
 ets_backend_probe() ->
     try
-        Key = {uos_ecology_probe, erlang:unique_integer()},
-        Val = erlang:monotonic_time(),
-        beam_cache_ffi:ets_init(),
-        beam_cache_ffi:ets_put(Key, Val),
-        Got = beam_cache_ffi:ets_get(Key),
-        beam_cache_ffi:ets_delete(Key),
-        case Got of
-            {ok, Val} -> true;
-            Val -> true;
-            _ -> false
-        end
+        Tab=ets:new(ecology_probe,[set]),
+        try ets:insert(Tab,{probe,observed}), [{probe,observed}]=ets:lookup(Tab,probe), true
+        after ets:delete(Tab) end
     catch _:_ -> false
     end.
 
@@ -86,43 +116,141 @@ env_present(Name) ->
 
 %% --- bounded execution ------------------------------------------------------
 %% Returns {ok, {ExitCode, Output}} | {error, Reason}. Never blocks past TimeoutMs.
-run_bounded(Path, Args, TimeoutMs) ->
-    P = binary_to_list(Path),
-    A = [binary_to_list(X) || X <- Args],
-    try
-        Port = erlang:open_port({spawn_executable, P},
-                                [stream, use_stdio, exit_status, binary,
-                                 stderr_to_stdout, {args, A}]),
-        OsPid = case erlang:port_info(Port, os_pid) of
-                    {os_pid, Pid} -> Pid;
-                    _ -> undefined
-                end,
-        collect(Port, OsPid, TimeoutMs, <<>>)
-    catch
-        _:Reason ->
-            {error, unicode:characters_to_binary(io_lib:format("~p", [Reason]))}
-    end.
+run_bounded(Path, Args, TimeoutMs) -> run_guarded(Path,Args,TimeoutMs,none).
 
-collect(Port, OsPid, TimeoutMs, Acc) ->
+run_guarded(Path, Args, TimeoutMs, Input)
+  when is_binary(Path), is_list(Args), is_integer(TimeoutMs),
+       TimeoutMs>0, TimeoutMs=<60000 ->
+    try
+        Root=binary_to_list(uos_root()),
+        Ocaml=dependency(Root,<<"ocaml">>,"toolchains/opam-ocaml/bin/ocaml"),
+        Guardian=filename:join(Root,"tools/ecology_process.ml"),
+        Mode=case Input of none->"merged";_->"framed" end,
+        A=["-I","+unix",Guardian,integer_to_list(TimeoutMs),
+           integer_to_list(?OUTPUT_LIMIT),Mode,binary_to_list(Path)] ++
+          [binary_to_list(X)||X<-Args],
+        Port = erlang:open_port({spawn_executable, Ocaml},
+                              [stream,use_stdio,exit_status,binary,{args,A}]),
+        case Input of
+            none->ok;
+            Data when is_binary(Data),byte_size(Data)=<65536 ->
+                true=erlang:port_command(Port,<<(byte_size(Data)):32/big,Data/binary>>)
+        end,
+        collect(Port, erlang:monotonic_time(millisecond)+TimeoutMs+1000, 0, [])
+    catch
+        _:_ -> {error, <<"backend_spawn_failed">>}
+    end;
+run_guarded(_,_,_,_) -> {error,<<"invalid_resource_bound">>}.
+
+collect(Port, Deadline, Size, Chunks) ->
+    Remaining=max(0,Deadline-erlang:monotonic_time(millisecond)),
     receive
         {Port, {data, Chunk}} ->
-            collect(Port, OsPid, TimeoutMs, <<Acc/binary, Chunk/binary>>);
+            case Size+byte_size(Chunk)=< ?OUTPUT_LIMIT of
+                true -> collect(Port,Deadline,Size+byte_size(Chunk),[Chunk|Chunks]);
+                false -> erlang:port_close(Port), {error,<<"output_limit">>}
+            end;
+        {Port, {exit_status, 124}} -> {error,<<"timeout">>};
+        {Port, {exit_status, 125}} -> {error,<<"backend_output_or_process_failure">>};
         {Port, {exit_status, Code}} ->
-            %% Shaped as {ok, {Code, Output}} to match Gleam's Result(#(Int, String), String).
-            {ok, {Code, Acc}}
-    after TimeoutMs ->
-        %% Reap the process tree, then the port. A timeout is an honest failure,
-        %% not a zero-exit success.
-        reap(OsPid),
+            {ok, {Code, iolist_to_binary(lists:reverse(Chunks))}}
+    after Remaining ->
         _ = (try erlang:port_close(Port) catch _:_ -> ok end),
-        {error, <<"timeout">>}
+        {error, <<"guardian_timeout">>}
     end.
 
-reap(undefined) -> ok;
-reap(OsPid) ->
-    %% TERM the group then the pid; ignore failures (process may already be gone).
-    _ = os:cmd("kill -TERM -" ++ integer_to_list(OsPid) ++ " 2>/dev/null"),
-    _ = os:cmd("kill -TERM " ++ integer_to_list(OsPid) ++ " 2>/dev/null"),
-    timer:sleep(50),
-    _ = os:cmd("kill -KILL " ++ integer_to_list(OsPid) ++ " 2>/dev/null"),
-    ok.
+%% The permanent Gleam actor owns this table; transient workers never own it.
+ets_init() ->
+    case ets:whereis(?TABLE) of
+        undefined -> ets:new(?TABLE,[named_table,public,set,{read_concurrency,true}]);
+        _ -> ok
+    end,
+    nil.
+
+ets_request(Input) when is_binary(Input),byte_size(Input)=<8192 ->
+    try
+        Req=json:decode(Input),
+        #{<<"operation">>:=Op,<<"namespace">>:=Ns,<<"key">>:=Key}=Req,
+        true=is_binary(Ns) andalso byte_size(Ns)>0 andalso byte_size(Ns)=<128,
+        true=is_binary(Key) andalso byte_size(Key)>0 andalso byte_size(Key)=<128,
+        true=(ets:whereis(?TABLE)=/=undefined),
+        Result=ets_operation(Op,{Ns,Key},Req),
+        {ok,iolist_to_binary(json:encode(Result))}
+    catch
+        throw:Why -> {error,Why};
+        _:_ -> {error,<<"invalid_ets_request_or_runtime_unavailable">>}
+    end;
+ets_request(_) -> {error,<<"ets_input_bound">>}.
+
+ets_operation(<<"get">>,Key,_) ->
+    case ets:lookup(?TABLE,Key) of
+        [{Key,Version,Value}] -> #{<<"found">>=>true,<<"version">>=>Version,<<"value">>=>Value};
+        [] -> #{<<"found">>=>false}
+    end;
+ets_operation(Op,Key,Req) when Op=:= <<"put">>;Op=:= <<"compare_exchange">> ->
+    Value=maps:get(<<"value">>,Req),
+    true=iolist_size(json:encode(Value))=<4096,
+    case ets:lookup(?TABLE,Key) of
+        [] ->
+            case Op=:= <<"compare_exchange">> andalso maps:get(<<"expected_version">>,Req,-1)=/=0 of
+                true -> throw(<<"version_conflict">>);
+                false -> ok
+            end,
+            %% Named-table insert count is conservatively bounded using an
+            %% atomic reservation; callers cannot access the reserved atom key.
+            Reserved=ets:update_counter(?TABLE,rows,{2,1},{rows,0}),
+            case Reserved=< ?ROWS of
+                false -> ets:update_counter(?TABLE,rows,{2,-1}),throw(<<"ets_capacity">>);
+                true ->
+                    Version=erlang:unique_integer([monotonic,positive]),
+                    case ets:insert_new(?TABLE,{Key,Version,Value}) of
+                        true -> #{<<"stored">>=>true,<<"version">>=>Version};
+                        false -> ets:update_counter(?TABLE,rows,{2,-1}),throw(<<"version_conflict">>)
+                    end
+            end;
+        [{Key,Version,_}] ->
+            Expected=case Op of <<"compare_exchange">>->maps:get(<<"expected_version">>,Req);_->Version end,
+            case Expected=:=Version of false->throw(<<"version_conflict">>);true->ok end,
+            Next=erlang:unique_integer([monotonic,positive]),
+            Match=[{{Key,Version,'_'},[],[{{{const,Key},Next,{const,Value}}}]}],
+            case ets:select_replace(?TABLE,Match) of
+                1 -> #{<<"stored">>=>true,<<"version">>=>Next};
+                0 -> throw(<<"version_conflict">>)
+            end
+    end;
+ets_operation(<<"delete">>,Key,_) ->
+    case ets:take(?TABLE,Key) of
+        [] -> #{<<"deleted">>=>false};
+        [_] -> ets:update_counter(?TABLE,rows,{2,-1}),#{<<"deleted">>=>true}
+    end;
+ets_operation(_,_,_) -> throw(<<"unknown_ets_operation">>).
+
+invoke_external(<<"modular_max">>,Input) -> max_request(Input);
+invoke_external(<<"openrouter_free">>,Input) ->
+    'cepaf_gleam@ecology@external_capabilities':openrouter(Input);
+invoke_external(_,_) -> {error,<<"unknown_external_capability">>}.
+
+max_request(Input) when is_binary(Input),byte_size(Input)=<65536 ->
+    try max_request_checked(Input) catch _:_->{error,<<"max_runtime_dependency_mismatch">>} end;
+max_request(_) -> {error,<<"max_input_bound">>}.
+
+max_request_checked(Input) ->
+    Root=uos_root(),
+    RootPath=binary_to_list(Root),
+    Pixi=list_to_binary(dependency(RootPath,<<"pixi">>,"toolchains/pixi/bin/pixi")),
+    Manifest=list_to_binary(dependency(RootPath,<<"max_manifest">>,"services/inference/max/pixi.toml")),
+    _=dependency(RootPath,<<"max_lock">>,"services/inference/max/pixi.lock"),
+    Args=[<<"run">>,<<"--no-install">>,<<"--frozen">>,<<"--manifest-path">>,
+          Manifest,<<"python">>,
+          <<Root/binary,"/services/inference/max/ecology_max_worker.py">>],
+    case run_guarded(Pixi,Args,30000,Input) of
+        {ok,{0,<<Size:32/big,Body:Size/binary>>}} ->
+            try json:decode(Body) of
+                #{<<"ok">>:=true,<<"result">>:=Result} ->
+                    {ok,iolist_to_binary(json:encode(Result))};
+                #{<<"ok">>:=false,<<"error">>:=Error} -> {error,Error};
+                _ -> {error,<<"invalid_max_response">>}
+            catch _:_ -> {error,<<"invalid_max_response">>} end;
+        {ok,{Code,_}} -> {error,<<"max_exit_or_framing_failure:",(integer_to_binary(Code))/binary>>};
+        Error -> Error
+    end.

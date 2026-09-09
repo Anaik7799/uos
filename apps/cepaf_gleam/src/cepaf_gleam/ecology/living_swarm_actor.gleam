@@ -1,199 +1,512 @@
-//// =============================================================================
-//// [C3I-SIL6-MSTS] UOS LIVING SWARM AUTONOMIC OTP ACTOR & BACKGROUND RUNNER
-//// =============================================================================
-//// <c3i-module>
-////   <identity>
-////     <module>cepaf_gleam/ecology/living_swarm_actor</module>
-////     <authority>UOS-CANONICAL-AGENT-POLICY</authority>
-////   </identity>
-////   <fractal-topology>
-////     <layer>L4_SYSTEM through L6_ECOSYSTEM</layer>
-////     <mesh-domain>Autonomic Swarm Supervisor, Cybernetic Singing & Living Ecology</mesh-domain>
-////   </fractal-topology>
-////   <compliance>
-////     <criticality>DAL-A / SIL-6 / AUTONOMIC-LIVING</criticality>
-////     <stamp-controls>
-////       SC-HOLON-001, SC-BIO-EVO-001, SC-BIO-HARMONY-001, SC-OTP-001, SC-ZERO-MUDA-001
-////     </stamp-controls>
-////   </compliance>
-//// </c3i-module>
-//// =============================================================================
-////
-//// Continuous autonomic OTP actor running the 21-holon living swarm and cybernetic
-//// singing engine on the BEAM virtual machine.
-////
-//// Beats continuously on the Teentaal 16-beat rhythmic matrix, stepping the
-//// OODA pulse for all 21 holons across 7 planes, calculating Lyapunov damping,
-//// and producing live harmonic polyphonic resonance.
-////
-//// STAMP: SC-HOLON-001, SC-BIO-EVO-001, SC-BIO-HARMONY-001, SC-OTP-001.
+//// Bounded living ecology: one timer, one external worker, rotating local
+//// cognition, truthful receipts and OTP recovery. Local state grants no effects.
+//// SC-HOLON-001 / SC-SA-PLAN-001 / SC-PROVENANCE-001 / SC-ZERO-MUDA-001.
 
+import cepaf_gleam/ecology/capability_port.{
+  type Outcome, Engaged, Masked, Unavailable,
+}
 import cepaf_gleam/ecology/harmonic_song.{
   type SwarmSong, render_song_ascii_sparkline, render_song_svg,
 }
-import cepaf_gleam/ecology/living_swarm.{
-  type SwarmEcology, init_living_swarm, invoke_capability, step_swarm_cycle,
+import cepaf_gleam/ecology/living_swarm.{type SwarmEcology}
+import cepaf_gleam/ecology/super_agent.{
+  type CapabilityMask, type OperationalMode, type SuperAgentHolon,
 }
-import cepaf_gleam/ecology/super_agent.{type SuperAgentHolon}
-import gleam/erlang/process.{type Subject}
+import gleam/dynamic.{type Dynamic}
+import gleam/erlang/process.{type Name, type Pid, type Subject, type Timer}
+import gleam/erlang/reference.{type Reference}
+import gleam/int
+import gleam/json
 import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/otp/actor
+import gleam/otp/static_supervisor.{type Supervisor}
 import gleam/otp/supervision
-
-// =============================================================================
-// 1. Message Protocol
-// =============================================================================
+import gleam/result
+import gleam/string
 
 pub type LivingSwarmActorMsg {
-  /// Internal self-scheduled timer tick advancing the Teentaal rhythmic beat.
+  /// Compatibility messages cannot create additional timer chains.
   Tick
-  /// Bootstrap message providing the actor with its own Subject for self-scheduling.
   SetSelfSubject(subj: Subject(LivingSwarmActorMsg))
-  /// Synchronous request for the current 21-holon swarm ecology state.
+  ScheduledTick(token: Reference)
   GetSwarmState(reply_to: Subject(SwarmEcology))
-  /// Synchronous request for the active cybernetic swarm song & chord.
   GetSwarmSong(reply_to: Subject(SwarmSong))
-  /// Synchronous request for real-time ANSI terminal sparkline.
   GetTuiSparkline(reply_to: Subject(String))
-  /// Synchronous request for dynamic pure SVG spectrogram.
   GetSpectrogramSvg(reply_to: Subject(String))
-  /// Synchronous request to invoke an active capability on a specific holon.
   InvokeHolonCapability(
     holon_id: String,
     capability_name: String,
     reply_to: Subject(Result(SuperAgentHolon, String)),
   )
+  InvokeWithInput(
+    holon_id: String,
+    capability_name: String,
+    input: String,
+    reply_to: Subject(Outcome),
+  )
+  InvocationFinished(token: Reference, outcome: Outcome)
+  SetHolonMode(
+    holon_id: String,
+    mode: OperationalMode,
+    reply_to: Subject(Result(SuperAgentHolon, String)),
+  )
+  SetHolonMask(
+    holon_id: String,
+    mask: CapabilityMask,
+    reply_to: Subject(Result(SuperAgentHolon, String)),
+  )
+  Stop
 }
 
-// =============================================================================
-// 2. Actor State
-// =============================================================================
+pub type InvocationReply {
+  HolonReply(Subject(Result(SuperAgentHolon, String)))
+  OutcomeReply(Subject(Outcome))
+}
+
+pub type PendingInvocation {
+  PendingInvocation(
+    token: Reference,
+    holon_id: String,
+    capability: String,
+    guardian: Pid,
+    reply: InvocationReply,
+  )
+}
 
 pub type SwarmActorState {
   SwarmActorState(
     swarm: SwarmEcology,
-    self_subject: Option(Subject(LivingSwarmActorMsg)),
+    self_subject: Subject(LivingSwarmActorMsg),
     tick_interval_ms: Int,
+    tick_token: Reference,
+    tick_timer: Timer,
+    last_tick_ms: Int,
+    pending: Option(PendingInvocation),
+    worker_timeout_ms: Int,
+    invoke_backend: fn(CapabilityMask, String, String) -> Outcome,
   )
 }
 
-// =============================================================================
-// 3. Actor Message Handler
-// =============================================================================
+type ClockUnit {
+  Millisecond
+}
+
+type RuntimeName {
+  UosLivingSwarm
+}
+
+@external(erlang, "gleam_erlang_ffi", "identity")
+fn registered_name(value: RuntimeName) -> Name(LivingSwarmActorMsg)
+
+/// One literal registered name for the canonical ecology in this BEAM VM.
+pub fn runtime_subject() -> Subject(LivingSwarmActorMsg) {
+  process.named_subject(registered_name(UosLivingSwarm))
+}
+
+@external(erlang, "erlang", "monotonic_time")
+fn monotonic_time(unit: ClockUnit) -> Int
+
+@external(erlang, "ecology_capability_ffi", "ets_init")
+fn initialise_ecology_ets() -> Nil
+
+// gleam_erlang NamedSubject messages use the Name itself as their tag.
+// Binding the same tag to a resolved pid avoids lookup/send races on restart.
+@external(erlang, "gleam_erlang_ffi", "identity")
+fn name_tag(name: Name(message)) -> Dynamic
+
+fn resolve_subject(
+  subject: Subject(message),
+) -> Result(Subject(message), String) {
+  use owner <- result.try(
+    process.subject_owner(subject)
+    |> result.map_error(fn(_) { "swarm_unavailable" }),
+  )
+  case process.subject_name(subject) {
+    Ok(name) -> Ok(process.unsafely_create_subject(owner, name_tag(name)))
+    Error(_) -> Ok(subject)
+  }
+}
 
 pub fn handle_message(
   state: SwarmActorState,
   msg: LivingSwarmActorMsg,
 ) -> actor.Next(SwarmActorState, LivingSwarmActorMsg) {
   case msg {
-    SetSelfSubject(subj) -> {
-      actor.continue(SwarmActorState(..state, self_subject: Some(subj)))
-    }
-
-    Tick -> {
-      let next_swarm = step_swarm_cycle(state.swarm)
-
-      case state.self_subject {
-        Some(subj) -> {
-          let _ = process.send_after(subj, state.tick_interval_ms, Tick)
-          Nil
-        }
-        None -> Nil
-      }
-
-      actor.continue(SwarmActorState(..state, swarm: next_swarm))
-    }
-
-    GetSwarmState(reply_to) -> {
-      process.send(reply_to, state.swarm)
-      actor.continue(state)
-    }
-
-    GetSwarmSong(reply_to) -> {
-      process.send(reply_to, state.swarm.current_song)
-      actor.continue(state)
-    }
-
-    GetTuiSparkline(reply_to) -> {
-      let sparkline = render_song_ascii_sparkline(state.swarm.current_song)
-      process.send(reply_to, sparkline)
-      actor.continue(state)
-    }
-
-    GetSpectrogramSvg(reply_to) -> {
-      let svg = render_song_svg(state.swarm.current_song)
-      process.send(reply_to, svg)
-      actor.continue(state)
-    }
-
-    InvokeHolonCapability(holon_id, capability_name, reply_to) -> {
-      let found =
-        list.find(state.swarm.holons, fn(h) { h.id == holon_id })
-
-      case found {
-        Error(_) -> {
-          process.send(reply_to, Error("holon_not_found: " <> holon_id))
-          actor.continue(state)
-        }
-        Ok(target) -> {
-          case invoke_capability(target, capability_name) {
-            Error(err) -> {
-              process.send(reply_to, Error(err))
-              actor.continue(state)
-            }
-            Ok(updated_holon) -> {
-              let next_holons =
-                list.map(state.swarm.holons, fn(h) {
-                  case h.id == holon_id {
-                    True -> updated_holon
-                    False -> h
-                  }
-                })
-              let next_swarm =
-                living_swarm.SwarmEcology(..state.swarm, holons: next_holons)
-              process.send(reply_to, Ok(updated_holon))
-              actor.continue(SwarmActorState(..state, swarm: next_swarm))
+    Tick | SetSelfSubject(_) -> actor.continue(state)
+    ScheduledTick(token) ->
+      case token == state.tick_token {
+        False -> actor.continue(state)
+        True -> {
+          let _ = process.cancel_timer(state.tick_timer)
+          let now = monotonic_time(Millisecond)
+          let swarm =
+            living_swarm.step_swarm_cycle_observed(
+              state.swarm,
+              living_swarm.observed_epoch_us(),
+              int.to_float(now - state.last_tick_ms),
+              int.to_float(state.tick_interval_ms),
+            )
+          let swarm = case living_swarm.next_local_invocation(swarm) {
+            None -> swarm
+            Some(#(holon, capability)) -> {
+              // Bayesian input is the measured heartbeat observation. Other fixed
+              // inputs exercise explicitly scoped local diagnostics.
+              let input = local_input(holon, capability)
+              let outcome =
+                capability_port.invoke(holon.mask, capability, input)
+              let kind = case capability {
+                "bayesian" | "ets" -> "observed_heartbeat"
+                _ -> "bounded_diagnostic"
+              }
+              living_swarm.record_outcome_kind(swarm, holon.id, kind, outcome)
             }
           }
+          let next_token = reference.new()
+          let timer =
+            process.send_after(
+              state.self_subject,
+              state.tick_interval_ms,
+              ScheduledTick(next_token),
+            )
+          actor.continue(
+            SwarmActorState(
+              ..state,
+              swarm: swarm,
+              tick_token: next_token,
+              tick_timer: timer,
+              last_tick_ms: now,
+            ),
+          )
         }
       }
+    GetSwarmState(reply) -> {
+      process.send(reply, state.swarm)
+      actor.continue(state)
+    }
+    GetSwarmSong(reply) -> {
+      process.send(reply, state.swarm.current_song)
+      actor.continue(state)
+    }
+    GetTuiSparkline(reply) -> {
+      process.send(reply, render_song_ascii_sparkline(state.swarm.current_song))
+      actor.continue(state)
+    }
+    GetSpectrogramSvg(reply) -> {
+      process.send(reply, render_song_svg(state.swarm.current_song))
+      actor.continue(state)
+    }
+    InvokeHolonCapability(id, capability, reply) ->
+      dispatch(
+        state,
+        id,
+        capability,
+        capability_port.default_input(capability),
+        HolonReply(reply),
+      )
+    InvokeWithInput(id, capability, input, reply) ->
+      dispatch(state, id, capability, input, OutcomeReply(reply))
+    SetHolonMode(id, mode, reply) ->
+      change_activation(
+        state,
+        id,
+        fn(h) { super_agent.set_mode(h, mode) },
+        reply,
+      )
+    SetHolonMask(id, mask, reply) ->
+      change_activation(
+        state,
+        id,
+        fn(h) { super_agent.SuperAgentHolon(..h, mask: mask) },
+        reply,
+      )
+    InvocationFinished(token, outcome) ->
+      case state.pending {
+        Some(pending) if pending.token == token -> {
+          let checked = case outcome {
+            Engaged(name, _, _, _)
+              | Unavailable(name, _)
+              | Masked(name)
+              if name != pending.capability
+            -> Unavailable(pending.capability, "backend_outcome_mismatch")
+            _ -> outcome
+          }
+          let next = complete(state, pending.holon_id, checked, pending.reply)
+          actor.continue(SwarmActorState(..next, pending: None))
+        }
+        _ -> actor.continue(state)
+      }
+    Stop -> {
+      let _ = process.cancel_timer(state.tick_timer)
+      case state.pending {
+        Some(p) -> process.kill(p.guardian)
+        None -> Nil
+      }
+      actor.stop()
     }
   }
 }
 
-// =============================================================================
-// 4. Lifecycle & Supervised Startup
-// =============================================================================
+fn change_activation(
+  state: SwarmActorState,
+  id: String,
+  change: fn(SuperAgentHolon) -> SuperAgentHolon,
+  reply: Subject(Result(SuperAgentHolon, String)),
+) -> actor.Next(SwarmActorState, LivingSwarmActorMsg) {
+  case state.pending {
+    Some(pending) if pending.holon_id == id -> {
+      process.send(reply, Error("capability_invocation_in_flight"))
+      actor.continue(state)
+    }
+    _ ->
+      case list.find(state.swarm.holons, fn(h) { h.id == id }) {
+        Error(_) -> {
+          process.send(reply, Error("holon_not_found: " <> id))
+          actor.continue(state)
+        }
+        Ok(holon) -> {
+          let updated = change(holon)
+          let holons =
+            list.map(state.swarm.holons, fn(h) {
+              case h.id == id {
+                True -> updated
+                False -> h
+              }
+            })
+          process.send(reply, Ok(updated))
+          actor.continue(
+            SwarmActorState(
+              ..state,
+              swarm: living_swarm.SwarmEcology(..state.swarm, holons: holons),
+            ),
+          )
+        }
+      }
+  }
+}
 
-/// Start an active living swarm actor on the BEAM.
+pub fn local_input(holon: SuperAgentHolon, capability: String) -> String {
+  case capability {
+    "bayesian" ->
+      case holon.lyapunov_energy <=. 0.05 {
+        True -> "ok"
+        False -> "fail"
+      }
+    "ets" ->
+      json.object([
+        #("operation", json.string("put")),
+        #("namespace", json.string("ecology-observations")),
+        #("key", json.string(holon.id)),
+        #(
+          "value",
+          json.object([
+            #("freshness_ticks", json.int(holon.freshness_ticks)),
+            #("homeostatic_error", json.float(holon.homeostatic_error)),
+            #("lyapunov_energy", json.float(holon.lyapunov_energy)),
+          ]),
+        ),
+      ])
+      |> json.to_string
+    _ -> capability_port.default_input(capability)
+  }
+}
+
+fn dispatch(
+  state: SwarmActorState,
+  id: String,
+  capability: String,
+  input: String,
+  reply: InvocationReply,
+) -> actor.Next(SwarmActorState, LivingSwarmActorMsg) {
+  case list.find(state.swarm.holons, fn(h) { h.id == id }) {
+    Error(_) ->
+      complete(
+        state,
+        id,
+        Unavailable(capability, "holon_not_found: " <> id),
+        reply,
+      )
+      |> actor.continue
+    Ok(holon) ->
+      case capability_port.mask_allows(holon.mask, capability), state.pending {
+        False, _ ->
+          complete(state, id, Masked(capability), reply) |> actor.continue
+        True, Some(_) ->
+          complete(
+            state,
+            id,
+            Unavailable(capability, "capability_worker_busy"),
+            reply,
+          )
+          |> actor.continue
+        True, None ->
+          case string.byte_size(input) > 4096 {
+            True ->
+              complete(
+                state,
+                id,
+                Unavailable(capability, "input_limit_exceeded"),
+                reply,
+              )
+              |> actor.continue
+            False -> {
+              let token = reference.new()
+              let owner = process.self()
+              let guardian =
+                process.spawn_unlinked(fn() {
+                  guard_invocation(
+                    owner,
+                    state.self_subject,
+                    token,
+                    state.worker_timeout_ms,
+                    holon.mask,
+                    capability,
+                    input,
+                    state.invoke_backend,
+                  )
+                })
+              actor.continue(
+                SwarmActorState(
+                  ..state,
+                  pending: Some(PendingInvocation(
+                    token,
+                    id,
+                    capability,
+                    guardian,
+                    reply,
+                  )),
+                ),
+              )
+            }
+          }
+      }
+  }
+}
+
+fn complete(
+  state: SwarmActorState,
+  id: String,
+  outcome: Outcome,
+  reply: InvocationReply,
+) -> SwarmActorState {
+  let swarm = living_swarm.record_outcome(state.swarm, id, outcome)
+  case reply {
+    OutcomeReply(subject) -> process.send(subject, outcome)
+    HolonReply(subject) -> {
+      let response = case outcome {
+        Engaged(..) ->
+          list.find(swarm.holons, fn(h) { h.id == id })
+          |> result.map_error(fn(_) { "holon_not_found" })
+        Unavailable(_, why) -> Error(why)
+        Masked(name) -> Error("capability_masked: " <> name)
+      }
+      process.send(subject, response)
+    }
+  }
+  SwarmActorState(..state, swarm: swarm)
+}
+
+type GuardMessage {
+  WorkerAnswer(Outcome)
+  OwnerDown(process.Down)
+  WorkerExit(process.ExitMessage)
+}
+
+fn guard_invocation(
+  owner: Pid,
+  subject: Subject(LivingSwarmActorMsg),
+  token: Reference,
+  timeout_ms: Int,
+  mask: CapabilityMask,
+  capability: String,
+  input: String,
+  invoke_backend: fn(CapabilityMask, String, String) -> Outcome,
+) -> Nil {
+  process.trap_exits(True)
+  let monitor = process.monitor(owner)
+  let answer = process.new_subject()
+  // A killed guardian reaps its linked child; actor death is separately monitored.
+  let worker =
+    process.spawn(fn() {
+      process.send(
+        answer,
+        WorkerAnswer(invoke_backend(mask, capability, input)),
+      )
+    })
+  let selector =
+    process.new_selector()
+    |> process.select(answer)
+    |> process.select_specific_monitor(monitor, OwnerDown)
+    |> process.select_trapped_exits(WorkerExit)
+  let reply = case process.selector_receive(selector, timeout_ms) {
+    Ok(WorkerAnswer(outcome)) -> Some(outcome)
+    Ok(OwnerDown(_)) -> None
+    Ok(WorkerExit(_)) ->
+      Some(Unavailable(capability, "capability_worker_crashed"))
+    Error(_) -> Some(Unavailable(capability, "capability_worker_timeout"))
+  }
+  process.kill(worker)
+  process.demonitor_process(monitor)
+  case reply {
+    Some(outcome) -> process.send(subject, InvocationFinished(token, outcome))
+    None -> Nil
+  }
+}
+
 pub fn start_actor(
   tick_interval_ms: Int,
-) -> Result(actor.Started(Subject(LivingSwarmActorMsg)), actor.StartError) {
-  let interval = case tick_interval_ms <= 0 {
-    True -> 1000
-    False -> tick_interval_ms
-  }
-
-  let initial =
-    SwarmActorState(
-      swarm: init_living_swarm(),
-      self_subject: None,
-      tick_interval_ms: interval,
-    )
-
-  case actor.new(initial) |> actor.on_message(handle_message) |> actor.start() {
-    Ok(started) -> {
-      let subj = started.data
-      process.send(subj, SetSelfSubject(subj))
-      process.send(subj, Tick)
-      Ok(started)
-    }
-    Error(err) -> Error(err)
-  }
+) -> actor.StartResult(Subject(LivingSwarmActorMsg)) {
+  start_configured(tick_interval_ms, 30_000, capability_port.invoke, None)
 }
 
-/// Supervision child specification for inclusion in the UOS root supervisor.
+/// Dependency injection verifies deadline/crash isolation without network work.
+pub fn start_actor_with_executor(
+  tick_interval_ms: Int,
+  worker_timeout_ms: Int,
+  invoke_backend: fn(CapabilityMask, String, String) -> Outcome,
+) -> actor.StartResult(Subject(LivingSwarmActorMsg)) {
+  start_configured(tick_interval_ms, worker_timeout_ms, invoke_backend, None)
+}
+
+fn start_configured(
+  tick_interval_ms: Int,
+  worker_timeout_ms: Int,
+  invoke_backend: fn(CapabilityMask, String, String) -> Outcome,
+  name: Option(Name(LivingSwarmActorMsg)),
+) -> actor.StartResult(Subject(LivingSwarmActorMsg)) {
+  let interval = case tick_interval_ms <= 0 {
+    True -> 1000
+    False -> int.max(10, tick_interval_ms)
+  }
+  let timeout = int.clamp(worker_timeout_ms, 10, 30_000)
+  let builder =
+    actor.new_with_initialiser(1000, fn(subject) {
+      use direct <- result.try(resolve_subject(subject))
+      initialise_ecology_ets()
+      let token = reference.new()
+      let timer = process.send_after(direct, interval, ScheduledTick(token))
+      let state =
+        SwarmActorState(
+          living_swarm.init_living_swarm(),
+          direct,
+          interval,
+          token,
+          timer,
+          monotonic_time(Millisecond),
+          None,
+          timeout,
+          invoke_backend,
+        )
+      actor.initialised(state) |> actor.returning(subject) |> Ok
+    })
+    |> actor.on_message(handle_message)
+  case name {
+    Some(name) -> actor.named(builder, name)
+    None -> builder
+  }
+  |> actor.start
+}
+
 pub fn supervised(
   tick_interval_ms: Int,
 ) -> supervision.ChildSpecification(Subject(LivingSwarmActorMsg)) {
@@ -201,38 +514,141 @@ pub fn supervised(
   |> supervision.restart(supervision.Permanent)
 }
 
-// =============================================================================
-// 5. Synchronous Client Helpers
-// =============================================================================
+/// Root-supervised ecology subtree, with a separate bounded restart budget.
+pub fn runtime_supervised(
+  tick_interval_ms: Int,
+) -> supervision.ChildSpecification(Supervisor) {
+  let child =
+    supervision.worker(fn() {
+      start_configured(
+        tick_interval_ms,
+        30_000,
+        capability_port.invoke,
+        Some(registered_name(UosLivingSwarm)),
+      )
+    })
+    |> supervision.restart(supervision.Permanent)
+  static_supervisor.new(static_supervisor.OneForOne)
+  |> static_supervisor.restart_tolerance(intensity: 2, period: 10)
+  |> static_supervisor.add(child)
+  |> static_supervisor.supervised
+}
+
+/// Allocate the name once outside the restarted child; clients keep this handle.
+/// Three restarts in ten seconds terminate the tree instead of looping forever.
+pub fn start_runtime(
+  tick_interval_ms: Int,
+) -> Result(
+  #(actor.Started(Supervisor), Subject(LivingSwarmActorMsg)),
+  actor.StartError,
+) {
+  let name = process.new_name("uos_ecology")
+  let child =
+    supervision.worker(fn() {
+      start_configured(
+        tick_interval_ms,
+        30_000,
+        capability_port.invoke,
+        Some(name),
+      )
+    })
+    |> supervision.restart(supervision.Permanent)
+  static_supervisor.new(static_supervisor.OneForOne)
+  |> static_supervisor.restart_tolerance(intensity: 2, period: 10)
+  |> static_supervisor.add(child)
+  |> static_supervisor.start
+  |> result.map(fn(started) { #(started, process.named_subject(name)) })
+}
+
+type QueryMessage(a) {
+  Answer(a)
+  Gone(process.Down)
+}
+
+fn query(
+  subject: Subject(LivingSwarmActorMsg),
+  timeout_ms: Int,
+  request: fn(Subject(a)) -> LivingSwarmActorMsg,
+) -> Result(a, String) {
+  use direct <- result.try(resolve_subject(subject))
+  use owner <- result.try(
+    process.subject_owner(direct)
+    |> result.map_error(fn(_) { "swarm_unavailable" }),
+  )
+  let monitor = process.monitor(owner)
+  let reply = process.new_subject()
+  process.send(direct, request(reply))
+  let answer =
+    process.new_selector()
+    |> process.select_map(reply, Answer)
+    |> process.select_specific_monitor(monitor, Gone)
+    |> process.selector_receive(int.clamp(timeout_ms, 1, 32_000))
+  process.demonitor_process(monitor)
+  case answer {
+    Ok(Answer(value)) -> Ok(value)
+    Ok(Gone(_)) -> Error("swarm_unavailable")
+    Error(_) -> Error("swarm_timeout")
+  }
+}
 
 pub fn get_swarm(
-  actor_subj: Subject(LivingSwarmActorMsg),
+  subject: Subject(LivingSwarmActorMsg),
   timeout_ms: Int,
 ) -> Result(SwarmEcology, String) {
-  let res = process.call(actor_subj, timeout_ms, fn(r) { GetSwarmState(r) })
-  Ok(res)
+  query(subject, timeout_ms, GetSwarmState)
 }
 
 pub fn get_song(
-  actor_subj: Subject(LivingSwarmActorMsg),
+  subject: Subject(LivingSwarmActorMsg),
   timeout_ms: Int,
 ) -> Result(SwarmSong, String) {
-  let res = process.call(actor_subj, timeout_ms, fn(r) { GetSwarmSong(r) })
-  Ok(res)
+  query(subject, timeout_ms, GetSwarmSong)
 }
 
 pub fn get_spectrogram(
-  actor_subj: Subject(LivingSwarmActorMsg),
+  subject: Subject(LivingSwarmActorMsg),
   timeout_ms: Int,
 ) -> Result(String, String) {
-  let res = process.call(actor_subj, timeout_ms, fn(r) { GetSpectrogramSvg(r) })
-  Ok(res)
+  query(subject, timeout_ms, GetSpectrogramSvg)
 }
 
 pub fn get_sparkline(
-  actor_subj: Subject(LivingSwarmActorMsg),
+  subject: Subject(LivingSwarmActorMsg),
   timeout_ms: Int,
 ) -> Result(String, String) {
-  let res = process.call(actor_subj, timeout_ms, fn(r) { GetTuiSparkline(r) })
-  Ok(res)
+  query(subject, timeout_ms, GetTuiSparkline)
+}
+
+pub fn invoke(
+  subject: Subject(LivingSwarmActorMsg),
+  id: String,
+  capability: String,
+  input: String,
+  timeout_ms: Int,
+) -> Result(Outcome, String) {
+  query(subject, timeout_ms, fn(reply) {
+    InvokeWithInput(id, capability, input, reply)
+  })
+}
+
+/// Typed, local activation selection. It does not grant effect, task, model-cost
+/// or admission authority, and refuses changes while this holon has work in flight.
+pub fn set_mode(
+  subject: Subject(LivingSwarmActorMsg),
+  id: String,
+  mode: OperationalMode,
+  timeout_ms: Int,
+) -> Result(SuperAgentHolon, String) {
+  query(subject, timeout_ms, fn(reply) { SetHolonMode(id, mode, reply) })
+  |> result.flatten
+}
+
+pub fn set_mask(
+  subject: Subject(LivingSwarmActorMsg),
+  id: String,
+  mask: CapabilityMask,
+  timeout_ms: Int,
+) -> Result(SuperAgentHolon, String) {
+  query(subject, timeout_ms, fn(reply) { SetHolonMask(id, mask, reply) })
+  |> result.flatten
 }

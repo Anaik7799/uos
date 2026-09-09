@@ -11,6 +11,16 @@ Tags: `#fractal-l0`, `#fractal-l1`, `#fractal-l2`, `#fractal-l3`, `#fractal-l4`,
 
 ## §1.0 Living Knowledge Graph Topology
 
+### Shared agentic ecology — 20260909-0249
+
+Task-local implementation and scoped verification under `uos/ecology/20260909-0146`; whole-system admission remains NOT_ADMITTED.
+[Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-0249-agentic-ecology.md) ·
+[Activation decision](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260909-0249-ecology-capability-activation-decision.md) ·
+[Specification](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260909-0249-agentic-ecology-spec.json) ·
+[Grouped agent journals and KM index](http://nas-1.tail55d152.ts.net:4100/files/governance/capability-inventory/20260909-0249-ecology-km-index.json).
+
+`[[wiki:20260909-0249-agentic-ecology]]` · `[[zk:20260909-0249-ecology-capability-activation-decision]]`
+
 The Unified Operational System (UOS) synthesizes knowledge artifacts from all language domains and development lineages into a unified directed hypergraph. Each node represents a verified theorem, architectural decision, code contract, or operational standard.
 
 ```text
@@ -263,7 +273,6 @@ The operational system coordinates across five distinct language tiers:
   - `[[zk:ADR-067]]` Fractal Symbiosis, Sa-Plan Sublimation & EV-91 Ratification ([ADR-067 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-1550-adr-067-fractal-symbiosis-sa-plan-sublimation-and-ev91-ratification.md))
   - `[[zk:ADR-068]]` Multidimensional Fractal Vectors & 10-Layer × 7-Surface Sa-Plan TPS Matrix ([ADR-068 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-1605-adr-068-multidimensional-fractal-vectors-sa-plan-tps-matrix.md))
   - `[[wiki:20260908-1325-tui-and-gui-manual-verification-guide]]` ([Manual TUI & GUI Verification Guide](http://nas-1.tail55d152.ts.net:4100/docs/manual/20260908-1325-tui-and-gui-manual-verification-guide.md))
-
 
 
 

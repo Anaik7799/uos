@@ -1,0 +1,200 @@
+[
+  {
+    "decision": {
+      "summary": "Close the bounded Codex hook repair after loader compatibility, direct command behavior, exact trust registration and global-setting preservation are observed.",
+      "alternatives": [
+        "Leave the invalid advisory inactive and record the failure",
+        "Repair only the supported event schema, message and exact hook trust entry"
+      ],
+      "counterevidence": [
+        "Temporary-project hooks/list omitted the candidate; canonical-path discovery was required.",
+        "Automatic SessionStart event execution in an already-open client remains UNRUN."
+      ],
+      "assumptions": [
+        "The user authorizes fixing hooks; the root authorized the exact supported-API trust entry after the loader showed untrusted."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Fresh Codex sessions discover the trusted canonical SessionStart handler and can run its bounded reminder.",
+      "falsifier": "The canonical hook is missing/untrusted, output lacks valid context, or any unrelated global config differs.",
+      "acceptance": [
+        "Original schema rejected by installed loader",
+        "Canonical repaired handler loaded without warnings/errors",
+        "Reviewed command returns valid advisory SessionStart context with exit 0",
+        "Exact handler enabled and trusted; unrelated global config semantically preserved",
+        "Bounded 13-section journal and source-bound receipt recorded"
+      ],
+      "rollback": "Preserved original hook bytes have sha256 c101fbad0b4eb14ffef7c5ee7b7000509174fea0abeab2754abecdafc10643ae. Revoke only the new trust key using a fresh version-fenced config operation if rollback is required.",
+      "reviewer": "Codex hook implementer; root reviews evidence for the ecology integration, with no system admission.",
+      "budget": "No inference turns, no dependencies, one delegated worker, five-second command bound and 45-second app-server bound.",
+      "residuals": [
+        "Automatic event execution and currently-open client reload are UNRUN.",
+        "No enforcement, production admission, full UI or full-system formal claim is made."
+      ],
+      "supersedes": "/tmp/uos-ecology-hooks-trust-risk.json — repair and trust readback now observed; replace generic ecology assessment with bounded hook-specific closure assessment"
+    },
+    "score_interval": [
+      288,
+      288
+    ],
+    "score": 288,
+    "class": "P2",
+    "stpa_analysis": {
+      "controller": "Codex hook configuration adapter",
+      "control_action": "Load and trust one UOS SessionStart advisory command",
+      "losses": [
+        "L-HOOKS-FALSE-CLEARANCE"
+      ],
+      "hazards": [
+        "H-HOOKS-MISSING-REMINDER",
+        "H-HOOKS-UNREVIEWED-COMMAND",
+        "H-HOOKS-FALSE-ENFORCEMENT"
+      ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "The installed loader rejects the configuration, omitting the intended reminder.",
+          "hazard_ids": [
+            "H-HOOKS-MISSING-REMINDER"
+          ],
+          "constraint": "Observe the canonical file as a recognized project SessionStart handler."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "A presence check claims enforcement, or unrelated hooks acquire trust.",
+          "hazard_ids": [
+            "H-HOOKS-FALSE-ENFORCEMENT",
+            "H-HOOKS-UNREVIEWED-COMMAND"
+          ],
+          "constraint": "Use advisory wording and trust only the reviewed current handler hash; compare all unrelated config."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "A trust write follows stale configuration or a changed hook command.",
+          "hazard_ids": [
+            "H-HOOKS-UNREVIEWED-COMMAND"
+          ],
+          "constraint": "Bind currentHash from installed loader and require expectedVersion on config/value/write."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "A blocking session hook or verification server exceeds its bounded startup purpose.",
+          "hazard_ids": [
+            "H-HOOKS-MISSING-REMINDER"
+          ],
+          "constraint": "Five-second hook timeout; direct-command five-second limit plus one-second kill grace; app-server limited to 45 seconds and explicitly stopped."
+        }
+      ]
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-HOOKS-LOADER",
+        "cause": "An unsupported top-level namespace and event name were authored without installed-loader verification.",
+        "effect": "The project hook is skipped; its intended banner also confuses directory presence with policy enforcement.",
+        "controls": "Installed hooks/list rejection/passing comparison, explicit advisory output, five-second timeout and exact version-fenced trust registration.",
+        "s": 4,
+        "o": 5,
+        "det": 2,
+        "rpn": 40,
+        "band": 4
+      }
+    ],
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Requested hook repair is necessary within the ecology work; no incident effect remains.",
+        "evidence_refs": [
+          ".codex/hooks.json",
+          "tools/verify_codex_hooks.ml",
+          "docs/journal/20260909-0248-codex-hooks-receipt.json"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "A trusted advisory must not be mistaken for a runtime policy gate; installed loader and output were observed separately.",
+        "evidence_refs": [
+          ".codex/hooks.json",
+          "tools/verify_codex_hooks.ml",
+          "docs/journal/20260909-0248-codex-hooks-receipt.json"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Observed original loader rejection and misleading banner: S4 O5 Det2 gives RPN40 and F4; occurrence describes deterministic original exposure, not a probability.",
+        "evidence_refs": [
+          ".codex/hooks.json",
+          "tools/verify_codex_hooks.ml",
+          "docs/journal/20260909-0248-codex-hooks-receipt.json"
+        ]
+      },
+      "dependency": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "A working session reminder supports Codex actors; it is not a runtime scheduler dependency.",
+        "evidence_refs": [
+          ".codex/hooks.json",
+          "tools/verify_codex_hooks.ml",
+          "docs/journal/20260909-0248-codex-hooks-receipt.json"
+        ]
+      },
+      "impact": {
+        "value": 2,
+        "low": 2,
+        "high": 2,
+        "rationale": "The repair restores one bounded Codex workspace workflow.",
+        "evidence_refs": [
+          ".codex/hooks.json",
+          "tools/verify_codex_hooks.ml",
+          "docs/journal/20260909-0248-codex-hooks-receipt.json"
+        ]
+      }
+    },
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Fresh exact scoped source snapshot; runtime observed separately.",
+      "evidence": [
+        {
+          "path": ".codex/hooks.json",
+          "sha256": "4854b8b2e35ba9b136f294a4a9ac46575e3e0564c6fb869bd804ae284f846ca7",
+          "observed_at": "2026-09-09T02:03:11Z"
+        },
+        {
+          "path": "tools/verify_codex_hooks.ml",
+          "sha256": "ec120abe05b5ae3d0db10bcce2d1736678288f6f25e09c9352dcf9fb70f4760c",
+          "observed_at": "2026-09-09T02:03:11Z"
+        },
+        {
+          "path": "docs/journal/20260909-0248-codex-hooks-receipt.json",
+          "sha256": "5a771d99e379ca2b10be9ad99537d9fd7393553b1f8681cd4296790ac2f41863",
+          "observed_at": "2026-09-09T02:03:11Z"
+        }
+      ]
+    },
+    "task_state": "executing",
+    "ready_since": "2026-09-09T02:03:11Z",
+    "valid_until": "2026-09-09T03:03:11Z",
+    "observed_at": "2026-09-09T02:03:11Z",
+    "phase": "review",
+    "scope": "Close the bounded Codex hook repair after loader compatibility, direct command behavior, exact trust registration and global-setting preservation are observed.",
+    "actor": "codex-ecology-hooks",
+    "task_id": "HOOKS",
+    "plan_id": "uos/ecology-hooks/20260909-0146",
+    "assessment_id": "HOOKS-2026-09-09T02:03:11Z",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 4,
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": []
+  }
+]

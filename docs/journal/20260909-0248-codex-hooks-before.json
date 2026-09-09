@@ -1,0 +1,11 @@
+{
+  "uos_control_loop": {
+    "PreInvocation": [
+      {
+        "command": "test -d /home/an/NAS-setup/uos/.jj && echo \"{\\\"systemMessage\\\":\\\"UOS Standalone Jujutsu repository active. Zero-Muda and OTP29 rules enforced.\\\"}\"",
+        "timeout": 5,
+        "type": "command"
+      }
+    ]
+  }
+}

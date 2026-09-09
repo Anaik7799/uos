@@ -4,7 +4,6 @@ import cepaf_gleam/ecology/super_agent.{
   set_mode, to_json, toggle_capability,
 }
 import gleam/json
-import gleam/result
 import gleam/string
 import gleeunit/should
 
@@ -80,12 +79,7 @@ pub fn operational_mode_transitions_test() {
 
 pub fn custom_selective_capability_toggle_test() {
   let holon =
-    create_super_agent(
-      "custom-agent",
-      "Custom Tuned Agent",
-      "data",
-      3,
-    )
+    create_super_agent("custom-agent", "Custom Tuned Agent", "data", 3)
 
   // Start with Reflex (2 capabilities: fprime, ets)
   active_capability_count(holon.mask) |> should.equal(2)
@@ -107,12 +101,7 @@ pub fn custom_selective_capability_toggle_test() {
 
 pub fn autonomic_pulse_ooda_loop_test() {
   let holon0 =
-    create_super_agent(
-      "lyapunov-sentinel",
-      "Lyapunov Sentinel",
-      "runtime",
-      2,
-    )
+    create_super_agent("lyapunov-sentinel", "Lyapunov Sentinel", "runtime", 2)
     |> set_mode(Deliberative)
 
   let assert Ok(awakened) = awaken(holon0)
@@ -120,21 +109,43 @@ pub fn autonomic_pulse_ooda_loop_test() {
   active_holon.lifecycle |> should.equal(Active)
 
   // Pulse 1: Target latency 10.0ms, observed 10.1ms -> Homeostatic error is small (1%), stable
-  let #(holon1, report1) =
-    execute_autonomic_pulse(active_holon, 10.1, 10.0)
+  let #(holon1, report1) = execute_autonomic_pulse(active_holon, 10.1, 10.0)
 
   report1.is_stable |> should.be_true
   report1.action_taken |> should.equal("equilibrium_maintained")
-  holon1.bayesian.alpha_health |> should.equal(101.0)
-  holon1.rete_ul.tokens_evaluated |> should.equal(1)
+  holon1.bayesian.alpha_health |> should.equal(2.0)
+  holon1.rete_ul.tokens_evaluated |> should.equal(0)
+  holon1.ruliad.multiway_step |> should.equal(0)
+  holon1.successful_invocations |> should.equal(0)
 
   // Pulse 2: Latency spike: Target 10.0ms, observed 20.0ms -> 100% error -> Lyapunov energy > 0.05 -> Stressed
-  let #(holon2, report2) =
-    execute_autonomic_pulse(holon1, 20.0, 10.0)
+  let #(holon2, report2) = execute_autonomic_pulse(holon1, 20.0, 10.0)
 
   report2.is_stable |> should.be_false
-  report2.action_taken |> should.equal("lyapunov_damping_engaged")
+  report2.action_taken |> should.equal("latency_stress_observed")
   holon2.lifecycle |> should.equal(super_agent.Stressed)
+}
+
+pub fn unobserved_capabilities_start_without_operational_credit_test() {
+  let h = create_super_agent("new", "New", "cognitive", 5)
+  h.formal_twin.lean4_theorems_proved |> should.equal(0)
+  h.formal_twin.quint_invariants_checked |> should.equal(0)
+  h.formal_twin.digital_twin_parity_pct |> should.equal(0.0)
+  h.denotational.aspects_satisfied |> should.equal(0)
+  h.denotational.fail_closed_passed |> should.be_false
+  h.mojo_max.last_inference_us |> should.equal(0)
+  h.algebraic_atlas.sheaf_consistency |> should.be_false
+  h.last_outcome |> should.equal("unrun")
+}
+
+pub fn invalid_latency_observation_does_not_update_beliefs_test() {
+  let h =
+    create_super_agent("invalid", "Invalid", "cognitive", 5)
+    |> set_mode(Deliberative)
+  let #(updated, report) = execute_autonomic_pulse(h, 10.0, 0.0)
+  report.is_stable |> should.be_false
+  report.action_taken |> should.equal("invalid_latency_observation")
+  updated.bayesian |> should.equal(h.bayesian)
 }
 
 pub fn json_serialization_test() {

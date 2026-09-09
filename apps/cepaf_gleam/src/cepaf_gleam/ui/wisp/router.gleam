@@ -20,6 +20,10 @@ import cepaf_gleam/agui/sse_stream
 import cepaf_gleam/agui/state as agui_state
 import cepaf_gleam/agui/tools as agui_tools
 import cepaf_gleam/bridge/pi_daemon
+import cepaf_gleam/ecology/capability_port
+import cepaf_gleam/ecology/living_swarm
+import cepaf_gleam/ecology/living_swarm_actor
+import cepaf_gleam/ecology/super_agent
 import cepaf_gleam/c3i/nif as c3i_nif
 import cepaf_gleam/fractal/l0_constitutional.{
   type ApprovalRequest, ApprovalRequest, Approved, Critical as ApprovalCritical,
@@ -53,6 +57,7 @@ import cepaf_gleam/ui/domain.{
   layer_to_string, page_control_plane, page_data_plane, page_fractal_layer,
   page_primary_clients, page_to_label, page_to_path,
 }
+import cepaf_gleam/ui/ecology_refresh
 import cepaf_gleam/services/max_inference_daemon as max_daemon
 import cepaf_gleam/services/mirage_migration_engine
 import cepaf_gleam/services/mirage_unikernel_daemon
@@ -85,7 +90,9 @@ import gleam/json
 import gleam/list
 import gleam/option
 import gleam/string
+import lustre/attribute
 import lustre/element
+import lustre/element/html
 
 @external(erlang, "cepaf_gleam_ffi", "system_time_nanos")
 fn router_system_time_nanos() -> Int
@@ -111,6 +118,8 @@ pub fn route(path: String) -> String {
 /// Internal router — only reached if request_guard passes.
 fn route_internal(path: String) -> String {
   case path {
+    "/api/v1/ecology/swarm" | "/ecology/swarm" -> ecology_runtime_response(path).body
+    "/api/v1/ecology/capabilities" -> capability_port.probe_report_json() |> json.to_string
     // Primary API routes — Sprint 6: guarded via module_guard (SC-SATYA-001)
     "/health" | "/api/health" ->
       module_guard.unwrap(module_guard.guard_json(
@@ -3553,6 +3562,10 @@ fn handle_get(path: String) -> HttpResponse(String) {
   // receive the full path so query parameters remain available to route().
   let route_path = path_without_query(path)
   case route_path {
+    "/ecology" | "/ecology/swarm" | "/api/v1/ecology/swarm" ->
+      ecology_runtime_response(route_path)
+    "/api/v1/ecology/capabilities" ->
+      json_response(capability_port.probe_report_json() |> json.to_string, 200)
     // SC-PERF-FAVICON-ICO (Pass-103) — Pass-81 emits an inline SVG
     // data-URI favicon, but legacy clients (IE-style polling, link
     // crawlers, Slack-preview bots, Apple touch-icon discovery) still
@@ -3827,6 +3840,62 @@ fn handle_get(path: String) -> HttpResponse(String) {
               }
           }
       }
+  }
+}
+
+fn ecology_runtime_response(path: String) -> HttpResponse(String) {
+  ecology_snapshot_response(path,
+    living_swarm_actor.get_swarm(living_swarm_actor.runtime_subject(), 250))
+}
+
+/// This read path has no fallback initialization: a stopped actor is a 503.
+pub fn ecology_snapshot_response(path: String,
+  snapshot: Result(living_swarm.SwarmEcology, String)) -> HttpResponse(String) {
+  case snapshot {
+    Error(reason) -> json_response(json.object([
+      #("status", json.string("unavailable")),
+      #("reason", json.string(reason)),
+    ]) |> json.to_string, 503)
+    Ok(swarm) -> case path {
+      "/ecology" -> {
+        let rows = list.map(swarm.holons, fn(h) { [h.id,
+          super_agent.mode_to_string(h.mode),
+          int.to_string(super_agent.active_capability_count(h.mask)) <> "/11",
+          int.to_string(h.successful_invocations), h.last_outcome]
+          |> list.map(fn(cell) { html.td([], [html.text(cell)]) })
+          |> html.tr([], _) })
+        let groups = [
+          #("1. Metadata and navigation", ["CHK-01-TIME", "CHK-02-TAIL", "CHK-03-FRACT", "CHK-04-KM"]),
+          #("2. Purity and storage", ["CHK-05-MUDA", "CHK-06-GRAPH", "CHK-07-DRIVE"]),
+          #("3. Tests and mathematics", ["CHK-08-C1C8", "CHK-09-MATH", "CHK-10-9MOD", "CHK-11-REGR"]),
+          #("4. Runtime and observability", ["CHK-12-GLEAM", "CHK-13-HERMES", "CHK-14-ZIGVM", "CHK-15-MAX", "CHK-16-OTEL"]),
+          #("5. Governance and Jujutsu", ["CHK-17-SOV", "CHK-18-JJ"]),
+          #("6. Provenance", ["CHK-PROV"]),
+        ]
+        let checks = list.map(groups, fn(group) {
+          html.details([], [html.summary([], [html.text(group.0)]),
+            html.p([], [html.text(string.join(group.1, " · ") <> ": candidate evidence required; this view grants no admission.")])])
+        })
+        shell.render_page("Living Ecology", "ecology", html.div([], [
+          html.h1([], [html.text("Living ecology")]),
+          html.p([], [html.text("Ucon, Indrajaal and all participant models share 11 discoverable services with selected activation. Each heartbeat performs bounded local cognition; service use retains the backend outcome.")]),
+          html.p([], [html.text("Observed cycle "), html.span([attribute.id("ecology-cycle")], [html.text(int.to_string(swarm.cycle_counter))]),
+            html.text(" · Participants "), html.span([attribute.id("ecology-participants")], [html.text(int.to_string(list.length(swarm.holons)))]),
+            html.text(" · Invocation receipts "), html.span([attribute.id("ecology-invocations")], [html.text(int.to_string(swarm.invocation_sequence))])]),
+          html.p([attribute.id("ecology-refresh-status"), attribute.attribute("role", "status"), attribute.attribute("aria-live", "polite")], [html.text("Initial snapshot; awaiting live refresh.")]),
+          shell.kv_row("Scope", "Participant models in one ecology actor; external system bindings are absent. Effects and tasks remain under Sa-plan authority."),
+          html.table([], [html.thead([], [html.tr([], list.map(["Holon", "Mode", "Selected", "Engaged", "Latest outcome"], fn(label) { html.th([], [html.text(label)]) }))]),
+            html.tbody([attribute.id("ecology-participant-rows")], rows)]),
+          html.h2([], [html.text("Comprehensive verification checklist")]),
+          html.div([], checks),
+          html.p([], [html.text("EV-93 is the admitted ceiling. No evolutionary identifier or sovereign admission is minted by this runtime.")]),
+          html.h2([], [html.text("Latest observed receipts")]),
+          html.pre([attribute.id("ecology-receipts-json")], [html.text(swarm |> living_swarm.swarm_to_json |> json.to_string)]),
+          html.script([], ecology_refresh.script()),
+        ])) |> html_response
+      }
+      _ -> json_response(living_swarm.swarm_to_json(swarm) |> json.to_string, 200)
+    }
   }
 }
 

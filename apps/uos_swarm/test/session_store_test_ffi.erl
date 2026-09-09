@@ -8,13 +8,21 @@
 raw_exec(PathBinary, SqlBinary) ->
     Path = unicode:characters_to_list(PathBinary),
     Sql = unicode:characters_to_list(SqlBinary),
+    Statements = [string:trim(S) || S <- string:lexemes(Sql, ";"), string:trim(S) =/= ""],
     case esqlite3:open(Path) of
         {ok, Conn} ->
-            Result = esqlite3:exec(Conn, Sql),
+            ExecAll = fun Loop([]) -> ok;
+                          Loop([Stmt | Rest]) ->
+                              case esqlite3:exec(Conn, Stmt) of
+                                  ok -> Loop(Rest);
+                                  {ok, _} -> Loop(Rest);
+                                  {error, Reason} -> {error, Reason}
+                              end
+                      end,
+            Result = ExecAll(Statements),
             _ = esqlite3:close(Conn),
             case Result of
                 ok -> {ok, nil};
-                {ok, _} -> {ok, nil};
                 {error, Reason} -> {error, fmt(Reason)}
             end;
         {error, Reason} -> {error, fmt(Reason)}

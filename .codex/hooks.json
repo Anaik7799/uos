@@ -1,10 +1,15 @@
 {
-  "uos_control_loop": {
-    "PreInvocation": [
+  "description": "UOS session-start policy reminder; advisory only, with no enforcement or admission claim.",
+  "hooks": {
+    "SessionStart": [
       {
-        "command": "test -d /home/an/NAS-setup/uos/.jj && echo \"{\\\"systemMessage\\\":\\\"UOS Standalone Jujutsu repository active. Zero-Muda and OTP29 rules enforced.\\\"}\"",
-        "timeout": 5,
-        "type": "command"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "test -d '/home/an/NAS-setup/uos/.jj' && printf '%s\\n' '{\"hookSpecificOutput\":{\"hookEventName\":\"SessionStart\",\"additionalContext\":\"UOS standalone Jujutsu workspace. Follow AGENTS.md for Zero-Muda, Gleam/OTP supervision, Sa-plan authority, and current verification gates. This hook is an advisory reminder; it does not enforce policy or establish runtime admission.\"}}'",
+            "timeout": 5
+          }
+        ]
       }
     ]
   }

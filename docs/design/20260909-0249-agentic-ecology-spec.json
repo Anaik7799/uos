@@ -1,0 +1,86 @@
+{
+  "schema": "uos.agentic-ecology-spec.v1",
+  "observed_at": "2026-09-09T02:16:49Z",
+  "parent_plan": "uos/ecology/20260909-0146",
+  "state": "implemented",
+  "admitted": false,
+  "ev_ceiling": 93,
+  "participants": 26,
+  "participant_binding": "models in one supervised ecology actor; external application/session bindings unverified",
+  "capabilities": [
+    "fprime",
+    "bayesian",
+    "rete_ul",
+    "ets",
+    "stm",
+    "modular_max",
+    "openrouter_free",
+    "ruliad",
+    "formal_twin",
+    "denotational",
+    "algebraic_atlas"
+  ],
+  "outcome_sum": [
+    "Masked(capability)",
+    "Unavailable(capability,reason)",
+    "Engaged(capability,backend,evidence,result)"
+  ],
+  "laws": [
+    {
+      "id": "MASK",
+      "denotation": "invoke(mask=false,input)=Masked; backend invocation count is unchanged",
+      "test": "apps/cepaf_gleam/test/capability_port_test.gleam"
+    },
+    {
+      "id": "CREDIT",
+      "denotation": "success_count' = success_count + indicator(outcome=Engaged)",
+      "test": "living_swarm_actor_test"
+    },
+    {
+      "id": "TIMER",
+      "denotation": "only the current timer token advances one cycle and schedules its successor",
+      "test": "living_swarm_actor_test"
+    },
+    {
+      "id": "FENCE",
+      "denotation": "commit only if positive owner/token/snapshot, matching epoch and version, now<expiry; rejected state unchanged",
+      "test": "formal/lean/Ecology_Capability_Twin.lean"
+    },
+    {
+      "id": "CAS",
+      "denotation": "at most one compare_exchange succeeds for the same present version; delete/reinsert must not reuse that version within VM lifetime",
+      "test": "tools/validation/ecology_capability_ffi_test.erl"
+    },
+    {
+      "id": "FREE",
+      "denotation": "exact allowed model, known nonnegative zero prices, bounded tokens, complete nonempty response with explicit reported zero cost",
+      "test": "apps/cepaf_gleam/test/ecology_external_capabilities_test.gleam"
+    },
+    {
+      "id": "MAX",
+      "denotation": "probabilities=softmax(features*weights+bias) for finite bounded caller-supplied arrays",
+      "test": "services/inference/max/test_ecology_max_worker.py"
+    },
+    {
+      "id": "AUTHORITY",
+      "denotation": "observation, advice, model transition and receipt do not create a Sa-plan attempt, live resource lease or admission",
+      "test": "effect adapters remain separate; whole-system enforcement unverified"
+    }
+  ],
+  "limits": {
+    "external_worker": 1,
+    "worker_timeout_ms": 30000,
+    "receipt_ring": 128,
+    "ets_rows": 4096,
+    "ets_value_bytes": 4096,
+    "completion_tokens": 512,
+    "remote_cost_ceiling_usd": 0
+  },
+  "machine_models": [
+    "formal/lean/Ecology_Capability_Twin.lean",
+    "formal/quint/ecology_capability_twin.qnt"
+  ],
+  "wiki": "docs/wiki/20260909-0249-agentic-ecology.md",
+  "decision": "docs/zk/20260909-0249-ecology-capability-activation-decision.md",
+  "km_index": "governance/capability-inventory/20260909-0249-ecology-km-index.json"
+}

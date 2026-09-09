@@ -5,6 +5,13 @@ Tags: `#rocha-semiotics`, `#cybernetics`, `#fractal-l0`, `#fractal-l1`, `#fracta
 
 ## §1.0 Executive Architecture & Corpus Triad
 
+### Capability symmetry and selective activation — 20260909-0249
+
+[Permanent decision](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260909-0249-ecology-capability-activation-decision.md) ·
+[Ecology wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-0249-agentic-ecology.md) ·
+[Grouped evidence index](http://nas-1.tail55d152.ts.net:4100/files/governance/capability-inventory/20260909-0249-ecology-km-index.json).
+26 participant models share a capability catalogue and select activation; external application bindings and whole-system admission are separate. No EV or numbered ADR is minted by this task.
+
 ### Shared agent design checkpoint — 20260907-0653
 
 Analysis, plan and design complete; implementation deferred by the operator.

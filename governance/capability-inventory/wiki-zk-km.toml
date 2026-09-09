@@ -139,3 +139,12 @@ zero_muda = ["#zero-muda", "#bevy-purged", "#graphite-excluded", "#graphene-not-
 status = "NOT_REQUIRED"
 rationale = "Zero-Muda compliance; pure Erlang/Gleam OTP and Hermes OCaml provide all vector mathematics and graph algorithms with zero external C/Rust NIF dependencies."
 
+[[knowledge_group]]
+id = "ECOSYSTEM-20260909-0249"
+plan = "uos/ecology/20260909-0146"
+state = "implemented"
+admitted = false
+index = "governance/capability-inventory/20260909-0249-ecology-km-index.json"
+wiki = "docs/wiki/20260909-0249-agentic-ecology.md"
+zk = "docs/zk/20260909-0249-ecology-capability-activation-decision.md"
+specification = "docs/design/20260909-0249-agentic-ecology-spec.json"

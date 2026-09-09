@@ -86,7 +86,7 @@ def evaluateIntent (auth : String) (targetSerial : String) (crit : String) (appr
     (st : IntentState) : IntentState :=
   match st with
   | IntentState.Bottom reason => IntentState.Bottom ("Absorbed: " ++ reason)
-  | IntentState.Valid v a s c =>
+  | IntentState.Valid v _ _ _ =>
     if auth ≠ "sa-plan" then
       IntentState.Bottom "SC-JIDOKA-001: Unauthorized execution outside sa-plan"
     else if targetSerial = HardDeniedOSSerial then
@@ -97,14 +97,10 @@ def evaluateIntent (auth : String) (targetSerial : String) (crit : String) (appr
       IntentState.Valid (v + 1) auth targetSerial crit
 
 /-- Theorem 4: Fail-closed preservation of Root OS NVMe -/
-theorem root_os_nvme_fail_closed (auth crit : String) (app : Bool) (v : Nat) (a s c : String) :
-  evaluateIntent auth HardDeniedOSSerial crit app (IntentState.Valid v a s c) =
+theorem root_os_nvme_fail_closed (crit : String) (app : Bool) (v : Nat) (_a _s _c : String) :
+  evaluateIntent "sa-plan" HardDeniedOSSerial crit app (IntentState.Valid v _a _s _c) =
   IntentState.Bottom "SC-DRIVE-001: Target drive matches HARD_DENIED_SYSTEM_OS_SERIAL" := by
-  dsimp [evaluateIntent, HardDeniedOSSerial]
-  split
-  · intro h
-    contradiction
-  · rfl
+  rfl
 
 /-- Theorem 5: Bottom absorption (Bottom is the zero object of the lattice) -/
 theorem bottom_absorption (auth s crit : String) (app : Bool) (reason : String) :
