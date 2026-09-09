@@ -138,14 +138,38 @@ pub fn dot_product(v1: List(Float), v2: List(Float)) -> Float {
   })
 }
 
-/// Euclidean L2 norm of a vector.
+fn absolute(value: Float) -> Float {
+  case value <. 0.0 {
+    True -> 0.0 -. value
+    False -> value
+  }
+}
+
+fn vector_scale(v: List(Float)) -> Float {
+  list.fold(v, 0.0, fn(largest, value) {
+    let magnitude = absolute(value)
+    case magnitude >. largest {
+      True -> magnitude
+      False -> largest
+    }
+  })
+}
+
+fn scale_vector(v: List(Float), scale: Float) -> List(Float) {
+  list.map(v, fn(value) { value /. scale })
+}
+
+/// Euclidean L2 norm of a vector, calculated after scale normalization.
+/// The Newton iteration sees a sum in [1, vector length], rather than the
+/// unbounded sum of squared source values.
 pub fn vector_norm(v: List(Float)) -> Float {
-  let sum_sq = list.fold(v, 0.0, fn(acc, x) { acc +. { x *. x } })
-  case sum_sq <=. 0.0 {
+  let scale = vector_scale(v)
+  case scale <=. 0.0 {
     True -> 0.0
     False -> {
-      // Newton-Raphson approximation for square root in pure Gleam
-      approx_sqrt(sum_sq, sum_sq /. 2.0, 10)
+      let normalized = scale_vector(v, scale)
+      let sum_sq = list.fold(normalized, 0.0, fn(acc, x) { acc +. { x *. x } })
+      scale *. approx_sqrt(sum_sq, 1.0, 12)
     }
   }
 }
@@ -162,20 +186,28 @@ fn approx_sqrt(val: Float, guess: Float, iters: Int) -> Float {
 
 /// Cosine similarity between two float vectors in [-1.0, 1.0].
 pub fn cosine_similarity(v1: List(Float), v2: List(Float)) -> Float {
-  let n1 = vector_norm(v1)
-  let n2 = vector_norm(v2)
-  case n1 <=. 0.000001 || n2 <=. 0.000001 {
-    True -> 0.0
-    False -> {
-      let dot = dot_product(v1, v2)
-      let sim = dot /. { n1 *. n2 }
-      case sim >. 1.0 {
-        True -> 1.0
-        False ->
-          case sim <. -1.0 {
-            True -> -1.0
-            False -> sim
+  case list.length(v1) == list.length(v2) {
+    False -> 0.0
+    True -> {
+      let scale1 = vector_scale(v1)
+      let scale2 = vector_scale(v2)
+      case scale1 <=. 0.000001 || scale2 <=. 0.000001 {
+        True -> 0.0
+        False -> {
+          let normalized1 = scale_vector(v1, scale1)
+          let normalized2 = scale_vector(v2, scale2)
+          let n1 = vector_norm(normalized1)
+          let n2 = vector_norm(normalized2)
+          let sim = dot_product(normalized1, normalized2) /. { n1 *. n2 }
+          case sim >. 1.0 {
+            True -> 1.0
+            False ->
+              case sim <. -1.0 {
+                True -> -1.0
+                False -> sim
+              }
           }
+        }
       }
     }
   }

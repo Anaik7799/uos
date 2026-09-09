@@ -365,6 +365,29 @@ pub fn semantic_lookup_refuses_extreme_embedding_without_arithmetic_test() {
   |> should.equal(rag_cache_mesh.CacheRefused(rag_cache_mesh.InvalidEmbedding))
 }
 
+pub fn accepted_embedding_boundary_has_stable_cosine_test() {
+  let mesh = rag_cache_mesh.new(5, 0.85)
+  let mesh =
+    rag_cache_mesh.put(
+      mesh,
+      "accepted-boundary",
+      "cached semantic source",
+      [1.0e100],
+      "response",
+      [],
+      10,
+      1000,
+      100,
+    )
+
+  case
+    rag_cache_mesh.lookup_semantic(mesh, "different query", [1.0e100], 1050)
+  {
+    rag_cache_mesh.CacheFresh(_, score) -> should.be_true(score >=. 0.99)
+    _ -> should.fail()
+  }
+}
+
 fn repeated_vector(remaining: Int) -> List(Float) {
   case remaining <= 0 {
     True -> []
