@@ -79,6 +79,7 @@ pub fn parse_args(args: List(String)) -> UosCommand {
     ["jidoka-check"] | ["jidoka"] | ["tps"] -> Gate("G-SA-PLAN-JIDOKA")
     ["preflight"] | ["preflight-check"] | ["toolchain-check"] ->
       Gate("G-PREFLIGHT")
+    ["atlas-check"] | ["atlas"] -> Gate("G-ATLAS")
     ["selfcheck-vfs"] | ["--selfcheck-vfs"] | ["vfs-check"] -> SelfcheckVfs
     ["selfcheck-sa-plan"] | ["--selfcheck-sa-plan"] | ["sa-plan-check"] | ["sa-plan"] ->
       SelfcheckSaPlan
@@ -137,6 +138,33 @@ pub fn execute(cmd: UosCommand) -> Int {
             }
             False -> {
               io.println("  [FAIL] .jj not found")
+              1
+            }
+          }
+        }
+        // Same discipline as G-PREFLIGHT: EXECUTE the checker, do not stat the
+        // atlas. The defect this gate exists for was invisible to every check
+        // that read the file -- 48 of 74 leaf fields carried one identical
+        // value on all 30 rows, and a schema validator saw a well-formed
+        // document. Only counting per field surfaced it.
+        "G-ATLAS" -> {
+          let #(code, out) = case file_exists("tools/atlas-check") {
+            True -> run_command("bash", ["tools/atlas-check"], 300_000)
+            False -> #(127, "tools/atlas-check is absent")
+          }
+          case code == 0 && string.contains(out, "\"status\":\"PASS\"") {
+            True -> {
+              io.println(
+                "  [PASS] Algebraic atlas conformance: nine formal-spec section-3 obligations on every capability row, no degenerate field, otp_inventory matches the running BEAM",
+              )
+              io.println(
+                "         (UNKNOWN obligations are recorded, not passing -- conformance means the atlas states its position honestly, never that a capability works)",
+              )
+              0
+            }
+            False -> {
+              io.println("  [FAIL] Algebraic atlas conformance failed")
+              io.println("         " <> string.slice(out, 0, 600))
               1
             }
           }
@@ -1285,6 +1313,8 @@ pub fn execute(cmd: UosCommand) -> Int {
       // so proving that assumption is the cheapest failure to surface.
       let preflight_res = execute(Gate("G-PREFLIGHT"))
       io.println("")
+      let atlas_res = execute(Gate("G-ATLAS"))
+      io.println("")
       let dmc_res = execute(DmcCheck)
       io.println("")
       let tcm_res = execute(TcmCheck)
@@ -1332,7 +1362,7 @@ pub fn execute(cmd: UosCommand) -> Int {
       let doc_res = execute(Doctor)
       io.println("")
       let total_res =
-        preflight_res + dmc_res + tcm_res + time_res + km_res + chk_res + rocha_res + vfs_res + saplan_res + bionic_res + omni_res + cycles_res + c3i_res + wave3_res + wave4_res + slice_res + add_res + raga_res + mirage_res + mirage_mig_res + mirage_prod_res + forecast_res + inference_res + doc_res
+        preflight_res + atlas_res + dmc_res + tcm_res + time_res + km_res + chk_res + rocha_res + vfs_res + saplan_res + bionic_res + omni_res + cycles_res + c3i_res + wave3_res + wave4_res + slice_res + add_res + raga_res + mirage_res + mirage_mig_res + mirage_prod_res + forecast_res + inference_res + doc_res
 
       case total_res == 0 {
         True -> {

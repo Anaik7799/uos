@@ -39,3 +39,26 @@
  (name test_preflight_algebra)
  (modules test_preflight_algebra)
  (libraries preflight_algebra hermes_harness_suite_telemetry))
+
+; The atlas conformance core, same split and same reason as preflight_algebra:
+; the law suite must link the shipped semantics, not a copy. Pure -- no unix,
+; no IO -- so every law is about MEANING; atlas_check.ml supplies observations.
+
+(library
+ (name atlas_algebra)
+ (wrapped false)
+ (modules atlas_algebra))
+
+(executable
+ (name test_atlas_algebra)
+ (modules test_atlas_algebra)
+ (libraries atlas_algebra hermes_harness_suite_telemetry))
+
+; The effectful shell. Kept separate from the library so the law suite links
+; no IO and no JSON parser -- a law that could fail on a parse bug is not a law
+; about meaning.
+
+(executable
+ (name atlas_check)
+ (modules atlas_check)
+ (libraries yojson atlas_algebra))

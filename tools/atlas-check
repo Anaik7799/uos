@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# Algebraic-atlas conformance gate.
+#
+# Thin shell over engines/hermes/.../atlas_check.exe. It exists for one reason:
+# the OTP facts must come from the resolver that owns toolchain identity
+# (SC-NIX-DEVENV-001 inv.11), not from a second resolver inside OCaml that could
+# drift from it. Everything else -- the nine section-3 structures, obligation
+# well-formedness, degeneracy, the bounded-domain rule -- lives in the checker,
+# and its MEANING lives in atlas_algebra.ml with a 35-law suite.
+set -euo pipefail
+
+UOS_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$UOS_ROOT"
+# shellcheck source=lib/uos-toolchain.sh
+source "$UOS_ROOT/tools/lib/uos-toolchain.sh"
+uos_env
+
+ATLAS="${1:-docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json}"
+EXE="$UOS_ROOT/engines/hermes/_build/default/modules/hermes_toolchain/atlas_check.exe"
+
+if [ ! -x "$EXE" ]; then
+  echo "atlas-check: checker not built at $EXE" >&2
+  echo "  build it: (cd engines/hermes && dune build modules/hermes_toolchain/atlas_check.exe)" >&2
+  exit 1
+fi
+
+# Observed, not declared. A wrong answer here must fail the gate, so the
+# observation is taken from the pinned BEAM and passed in verbatim.
+erl_q() { erl -noshell -eval "io:format(\"~s\",[$1]),halt()."; }
+OTP_RELEASE="$(erl_q 'erlang:system_info(otp_release)')"
+ERTS_VERSION="$(erl_q 'erlang:system_info(version)')"
+ROOT_DIR="$(erl_q 'code:root_dir()')"
+
+exec "$EXE" "$ATLAS" \
+  --otp-release "$OTP_RELEASE" \
+  --erts-version "$ERTS_VERSION" \
+  --root-dir "$ROOT_DIR"

@@ -232,7 +232,15 @@ fi
 # 2026-09-09 04:01), so the condition is detected at the line rather than
 # assumed fixed.
 if [ -e "$PF_ROOT/.git" ]; then
-  row vcs no-git-marker FAIL "$PF_ROOT/.git exists; standalone non-colocated jj admits no git marker (breaks bare \`nix flake\`)"
+  # Report PROVENANCE, not just presence. This marker has now been recreated by
+  # an unidentified actor three times in one day (04:01, 07:12, 13:18 local).
+  # Detection alone told the next observer nothing about who or when, so each
+  # recurrence started the same investigation from scratch. Entry count
+  # separates an empty marker -- which destroys nothing when removed -- from a
+  # real repository, which must never be removed without inspection.
+  _git_entries="$(ls -A "$PF_ROOT/.git" 2>/dev/null | grep -c . || true)"
+  _git_mtime="$(date -u -r "$PF_ROOT/.git" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || echo unknown)"
+  row vcs no-git-marker FAIL "$PF_ROOT/.git exists ($_git_entries entries, created $_git_mtime); standalone non-colocated jj admits no git marker (breaks bare \`nix flake\`). If entries is 0 it holds no repository and removing it destroys nothing; if nonzero, INSPECT before removing."
 else
   row vcs no-git-marker PASS "no .git marker in the workspace"
 fi
