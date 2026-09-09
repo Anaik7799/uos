@@ -54,7 +54,9 @@ let command deadline remaining config_dir root arguments =
     (match Sys.getenv_opt "HOME" with None->[]|Some value->["HOME="^value]))in
   let pid=Unix.fork()in
   if pid=0 then (
-    try ignore(Unix.setsid());Unix.close reader;Unix.close error_reader;
+    (* JJ loads startup-cwd config before applying -R. Bind both scopes to the
+       preflighted root in the child; failed chdir exits before exec. *)
+    try ignore(Unix.setsid());Unix.chdir root;Unix.close reader;Unix.close error_reader;
       let input=Unix.openfile "/dev/null"[Unix.O_RDONLY]0 in
       Unix.dup2 input Unix.stdin;Unix.dup2 writer Unix.stdout;Unix.dup2 error_writer Unix.stderr;
       Unix.close input;Unix.close writer;Unix.close error_writer;Unix.execve jj argv environment

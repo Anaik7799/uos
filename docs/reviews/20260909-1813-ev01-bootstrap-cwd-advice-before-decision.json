@@ -1,0 +1,17 @@
+{
+  "schema": "uos.ev01.cwd-advice.v1",
+  "observed_at_epoch": 1788979033.348101,
+  "parent_authorization": "Parent PROGRAM attempt6 ACTIVE18:33:39 authorizes bounded fix after own fresh fences",
+  "agy_marker": "AGY_ADVICE_EV_CWD_1833",
+  "agy_actual_session": "abe9bd8d",
+  "advice_source": "Parent relayed AGY advice; this is not independent authentication of the message",
+  "advice": [
+    "Bind child cwd to selected workspace before exec",
+    "Keep parent cwd immutable and fail closed on chdir failure",
+    "Two private repositories; fingerprint both configurations; old RED/new GREEN",
+    "Ephemeral XDG only for private fixtures, never runtime overwrite of canonical config context"
+  ],
+  "readiness": "Source0a8 readiness withdrawn; observer-induced startup-cwd writes attributed to reviewer invocation",
+  "decision": "PENDING_FRESH_OWN_TASK_FENCES; source unchanged",
+  "canonical_git": "UNTOUCHED_BY_THIS_FOLLOWUP"
+}
