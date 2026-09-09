@@ -26,8 +26,8 @@
 //// =============================================================================
 
 import cepaf_gleam/crdt/delta_state.{
-  type MeshDeltaState, type NodeId, increment_clock, new_mesh_delta_state,
-  dominates, orset_add, pncounter_increment,
+  type MeshDeltaState, type NodeId, empty_clock, increment_clock, merge_clocks,
+  new_mesh_delta_state, dominates, orset_add, pncounter_increment,
 }
 import cepaf_gleam/crdt/health_bridge.{
   type ClusterHealthMap, empty_health_map, evaluate_quorum, record_health_from,
@@ -92,6 +92,7 @@ pub fn register_peer(
       node_id: peer_node_id,
       tailscale_fqdn: peer_fqdn,
       last_sync_epoch_us: 0,
+      observed_clock: empty_clock(),
       status: Reconciling,
     )
   DeltaMeshEngine(..engine, peers: [new_peer, ..existing_filtered])
@@ -245,13 +246,6 @@ pub fn handle_incoming_message(
     )
   case msg {
     SyncDigest(from_node, remote_clock, _count, _epoch) -> {
-      let peer_status = case clocks_equal(
-        engine.local_mesh_state.vector_clock,
-        remote_clock,
-      ) {
-        True -> Synchronized
-        False -> Reconciling
-      }
       case requires_delta_sync(engine.local_mesh_state, remote_clock) {
         True -> {
           let delta_msg =
@@ -262,13 +256,13 @@ pub fn handle_incoming_message(
               epoch_us: current_epoch_us,
             )
           use queued <- result.try(enqueue_outbound(engine, delta_msg))
-          let updated_peers =
-            mark_peer_status(
-              engine.peers,
-              from_node,
-              peer_status,
-              current_epoch_us,
-            )
+          let updated_peers = observe_peer_clock(
+            engine.peers,
+            from_node,
+            engine.local_mesh_state.vector_clock,
+            remote_clock,
+            current_epoch_us,
+          )
           let updated_engine = DeltaMeshEngine(..queued, peers: updated_peers)
           Ok(#(updated_engine, [delta_msg]))
         }
@@ -281,23 +275,19 @@ pub fn handle_incoming_message(
               epoch_us: current_epoch_us,
             )
           use queued <- result.try(enqueue_outbound(engine, ack_msg))
-          let updated_peers =
-            mark_peer_status(
-              engine.peers,
-              from_node,
-              peer_status,
-              current_epoch_us,
-            )
+          let updated_peers = observe_peer_clock(
+            engine.peers,
+            from_node,
+            engine.local_mesh_state.vector_clock,
+            remote_clock,
+            current_epoch_us,
+          )
           let updated_engine = DeltaMeshEngine(..queued, peers: updated_peers)
           Ok(#(updated_engine, [ack_msg]))
         }
       }
     }
     SyncDelta(from_node, remote_state, _, _) -> {
-      let remote_covers_local = dominates(
-        remote_state.vector_clock,
-        engine.local_mesh_state.vector_clock,
-      )
       let #(merged_mesh, merged_health, ack) =
         reconcile_remote_delta(
           engine.local_node_id,
@@ -307,16 +297,20 @@ pub fn handle_incoming_message(
           current_epoch_us,
         )
       use queued <- result.try(enqueue_outbound(engine, ack))
-      let updated_peers =
-        mark_peer_status(
-          engine.peers,
-          from_node,
-          case remote_covers_local {
-            True -> Synchronized
-            False -> Reconciling
-          },
-          current_epoch_us,
-        )
+      let coverage_peers = case
+        merged_mesh == engine.local_mesh_state
+        && merged_health == engine.local_health_map
+      {
+        True -> engine.peers
+        False -> invalidate_peer_coverage(engine.peers)
+      }
+      let updated_peers = observe_peer_clock(
+        coverage_peers,
+        from_node,
+        merged_mesh.vector_clock,
+        remote_state.vector_clock,
+        current_epoch_us,
+      )
       let updated_engine =
         DeltaMeshEngine(
           ..queued,
@@ -333,13 +327,13 @@ pub fn handle_incoming_message(
       )
       case clocks_match {
         True -> {
-          let updated_peers =
-            mark_peer_status(
-              engine.peers,
-              from_node,
-              Synchronized,
-              current_epoch_us,
-            )
+          let updated_peers = observe_peer_clock(
+            engine.peers,
+            from_node,
+            engine.local_mesh_state.vector_clock,
+            applied_clock,
+            current_epoch_us,
+          )
           Ok(#(DeltaMeshEngine(..engine, peers: updated_peers), []))
         }
         False -> {
@@ -362,13 +356,13 @@ pub fn handle_incoming_message(
               )
           }
           use queued <- result.try(enqueue_outbound(engine, follow_up))
-          let updated_peers =
-            mark_peer_status(
-              queued.peers,
-              from_node,
-              Reconciling,
-              current_epoch_us,
-            )
+          let updated_peers = observe_peer_clock(
+            queued.peers,
+            from_node,
+            engine.local_mesh_state.vector_clock,
+            applied_clock,
+            current_epoch_us,
+          )
           Ok(#(DeltaMeshEngine(..queued, peers: updated_peers), [follow_up]))
         }
       }
@@ -388,26 +382,37 @@ fn invalidate_peer_coverage(
       node_id: peer.node_id,
       tailscale_fqdn: peer.tailscale_fqdn,
       last_sync_epoch_us: peer.last_sync_epoch_us,
+      observed_clock: peer.observed_clock,
       status: Reconciling,
     )
   })
 }
 
-fn mark_peer_status(
+fn observe_peer_clock(
   peers: List(PeerSyncEndpoint),
   node: NodeId,
-  status: mesh_sync.SyncStatus,
+  local_clock,
+  reported_clock,
   now_us: Int,
 ) -> List(PeerSyncEndpoint) {
   list.map(peers, fn(p) {
     case p.node_id == node {
-      True ->
+      True -> {
+        let observed_clock = merge_clocks(p.observed_clock, reported_clock)
         PeerSyncEndpoint(
           node_id: p.node_id,
           tailscale_fqdn: p.tailscale_fqdn,
           last_sync_epoch_us: int.max(p.last_sync_epoch_us, now_us),
-          status: status,
+          observed_clock: observed_clock,
+          status: case
+            clocks_equal(local_clock, reported_clock)
+            && dominates(reported_clock, p.observed_clock)
+          {
+            True -> Synchronized
+            False -> Reconciling
+          },
         )
+      }
       False -> p
     }
   })

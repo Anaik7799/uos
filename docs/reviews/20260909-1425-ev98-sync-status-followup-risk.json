@@ -1,0 +1,243 @@
+[
+  {
+    "decision": {
+      "summary": "Repair the pure peer-status model so synchronization represents observed causal coverage, not an outbound intent.",
+      "alternatives": [
+        "Retain false-positive status assertion",
+        "Add a transport/auth protocol outside this bounded state-machine repair",
+        "Use vector-clock coverage with focused two-node tests"
+      ],
+      "assumptions": [
+        "Messages are accepted only through the existing typed state-machine API.",
+        "This repair does not authenticate peers or deliver messages over a network."
+      ],
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "A queue admission only proves local retention, not peer receipt or remote application."
+      ],
+      "forecast": "Divergent peers remain reconciling after a digest-only exchange and become synchronized only after a full two-way delta/ACK exchange with covering clocks.",
+      "falsifier": "A digest-only, stale ACK, stale Delta, replayed ACK, or local mutation leaves an endpoint synchronized without current causal coverage.",
+      "acceptance": [
+        "Focused direct-ERTS tests preserve red failure then green causal-status behavior",
+        "Queue-full refusal remains fail-closed",
+        "Native active check passes for the claimed attempt"
+      ],
+      "rollback": "Preserve failed and candidate evidence; do not integrate, deploy, or admit.",
+      "budget": "Existing realized Gleam/OTP toolchain only; no downloads.",
+      "reviewer": "Parent coordinator and independent reviewer.",
+      "residuals": [
+        "No authenticated transport, network delivery, or deployed peer-loop claim is made by this pure model repair."
+      ],
+      "supersedes": "No prior sync-status risk assessment."
+    },
+    "stpa_analysis": {
+      "controller": "Delta mesh peer-status state machine",
+      "control_action": "Mark a registered endpoint synchronized",
+      "losses": [ "L-FALSE-SYNC", "L-STALE-ACK" ],
+      "hazards": [
+        "H-OUTBOUND-ONLY-SYNC", "H-ACK-WITHOUT-COVERAGE",
+        "H-LOCAL-CHANGE-UNINVALIDATED", "H-REORDERED-EVIDENCE-ERASURE"
+      ],
+      "ucas": [
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Receipt of a concurrent digest queues an outbound delta but does not merge a remote state.",
+          "hazard_ids": [ "H-OUTBOUND-ONLY-SYNC" ],
+          "constraint": "Keep peer Reconciling until local state merges that peer's delta or a covering ACK is observed."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "An ACK can report an applied clock older than local state.",
+          "hazard_ids": [ "H-ACK-WITHOUT-COVERAGE" ],
+          "constraint": "Require applied_clock to dominate current local vector clock before synchronized status."
+        },
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Local updates leave peer coverage stale.",
+          "hazard_ids": [ "H-LOCAL-CHANGE-UNINVALIDATED" ],
+          "constraint": "Every accepted local causal update invalidates registered peer status."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Delayed/replayed acknowledgements may arrive after later local updates.",
+          "hazard_ids": [ "H-ACK-WITHOUT-COVERAGE" ],
+          "constraint": "Coverage is evaluated against current state, preserving monotonic observation time."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "An older equal-local ACK or Delta follows a newer peer digest.",
+          "hazard_ids": [ "H-REORDERED-EVIDENCE-ERASURE" ],
+          "constraint": "Keep a monotone peer-observed vector frontier and require new equal-local evidence to dominate it before synchronized status."
+        }
+      ]
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-SYNC-FALSE-POSITIVE",
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5,
+        "cause": "A digest that triggers only an outbound delta is treated as evidence that the local node received the peer state.",
+        "effect": "A divergent two-node mesh reports full synchronization before both directions are applied.",
+        "controls": "Two-way exchange regression: only merged remote delta and an ACK whose applied clock covers local state may synchronize a peer."
+      },
+      {
+        "id": "FM-SYNC-STALE-ACK",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4,
+        "cause": "ACK applied_clock is ignored after local causal progress.",
+        "effect": "Stale or replayed acknowledgement restores synchronized status without coverage.",
+        "controls": "Coverage predicate and stale/replay negative tests keep the endpoint reconciling."
+      },
+      {
+        "id": "FM-SYNC-LOCAL-INVALIDATION",
+        "s": 4,
+        "o": 3,
+        "det": 2,
+        "rpn": 24,
+        "band": 4,
+        "cause": "New local worker or health mutations retain an old synchronized peer status.",
+        "effect": "Cluster status overstates remote causal coverage.",
+        "controls": "Local causal changes invalidate all registered peer coverage before any later confirmed ACK."
+      },
+      {
+        "id": "FM-SYNC-REORDERED-EVIDENCE",
+        "s": 5,
+        "o": 3,
+        "det": 3,
+        "rpn": 45,
+        "band": 5,
+        "cause": "A peer can first advertise a causally newer frontier, then replay an equal-local ACK or Delta.",
+        "effect": "A stale message can erase evidence of peer divergence and falsely restore synchronized status.",
+        "controls": "Retain one monotone vector-clock frontier per registered peer; synchronization requires an equal-local report that dominates the retained frontier."
+      }
+    ],
+    "factors": {
+      "criticality": {
+        "evidence_refs": [
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam",
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/test/delta_mesh_engine_test.gleam",
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/test/ev98_sync_status_runner.gleam"
+        ],
+        "rationale": "Incorrect health merge ordering can represent stale telemetry as current cluster state.",
+        "value": 4,
+        "low": 4,
+        "high": 4
+      },
+      "stpa": {
+        "evidence_refs": [
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam",
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/test/delta_mesh_engine_test.gleam",
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/test/ev98_sync_status_runner.gleam"
+        ],
+        "rationale": "Unsafe controls are selecting logical version before sample time, nondeterministic equal-key collisions, or mistaking list representation order for extensional convergence.",
+        "value": 5,
+        "low": 5,
+        "high": 5
+      },
+      "fmea": {
+        "evidence_refs": [
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam",
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/test/delta_mesh_engine_test.gleam",
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/test/ev98_sync_status_runner.gleam"
+        ],
+        "rationale": "FM-HM-ORDER and FM-HM-COLLISION are S5 O2 Det3, RPN30.",
+        "value": 5,
+        "low": 5,
+        "high": 5
+      },
+      "dependency": {
+        "evidence_refs": [
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam",
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/test/delta_mesh_engine_test.gleam",
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/test/ev98_sync_status_runner.gleam"
+        ],
+        "rationale": "Smtml and OCaml are realized local dependencies; the solver runs only in a child test executable with bounded finite domain.",
+        "value": 4,
+        "low": 4,
+        "high": 4
+      },
+      "impact": {
+        "evidence_refs": [
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam",
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/test/delta_mesh_engine_test.gleam",
+          ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/test/ev98_sync_status_runner.gleam"
+        ],
+        "rationale": "A candidate-bound independent relation can expose ordering regressions without claiming multi-host health authority.",
+        "value": 4,
+        "low": 4,
+        "high": 4
+      }
+    },
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "current JJ child from requested immutable parent 9c590e75b87e2bca63adb4af966e465269203b4d; refreshed parent and exact source hashes below",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          "sha256": "05aa33ffb9318a5d7bcde2b72d30f2495757a33abdc28d843e27f3005aacdbde",
+          "observed_at": "2026-09-09T14:57:22Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+          "sha256": "5ad7dfef1c5600546957b8f590e8b12a0b75f9b274fc5b88810a207c935a6146",
+          "observed_at": "2026-09-09T14:57:22Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam",
+          "sha256": "76a035fc3441331a25eceb4ad7c29c52e8ad8e8079a3788887ad32c33933f8f1",
+          "observed_at": "2026-09-09T14:57:22Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/test/delta_mesh_engine_test.gleam",
+          "sha256": "de5dc4bcf33a89cc30adce1ed559c69b431e2bc063307345a861fde07fdc784f",
+          "observed_at": "2026-09-09T14:57:22Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/test/ev98_sync_status_runner.gleam",
+          "sha256": "79bef00d78f058ccd19828da87bda10694a1e68a691f094cd3bce9a77d21b162",
+          "observed_at": "2026-09-09T14:57:22Z"
+        }
+      ]
+    },
+    "valid_until": "2026-09-09T15:57:22Z",
+    "ready_since": "2026-09-09T14:57:22Z",
+    "observed_at": "2026-09-09T14:57:22Z",
+    "scope": "Follow up the pure Gleam delta-mesh peer status repair: a remote merge that changes local state must invalidate every other peer's prior coverage, and retained per-peer causal evidence must prevent reordering from restoring false synchronization. Preserve bounded queue refusal; exclude transport authentication, deployment, task completion, and EV admission.",
+    "task_state": "executing",
+    "actor": "codex-ev98-sync-status",
+    "task_id": "SYNC_STATUS",
+    "plan_id": "uos/ev98-sync-status/20260909",
+    "assessment_id": "ev98-sync-status-20260909-1425-followup",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 2,
+    "phase": "implementation",
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": [],
+    "class": "P1",
+    "score": 1600,
+    "score_interval": [ 1600, 1600 ]
+  }
+]

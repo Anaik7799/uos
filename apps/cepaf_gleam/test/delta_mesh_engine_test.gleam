@@ -8,6 +8,7 @@ import cepaf_gleam/crdt/delta_mesh_engine.{
   is_cluster_fully_synchronized, record_local_health, record_worker_active,
   register_peer,
 }
+import cepaf_gleam/crdt/delta_state
 import cepaf_gleam/crdt/mesh_sync.{Reconciling, SyncAck, SyncDelta, SyncDigest}
 import gleam/list
 import gleeunit
@@ -141,6 +142,41 @@ pub fn stale_ack_cannot_restore_peer_coverage_after_local_change_test() {
   is_cluster_fully_synchronized(observed) |> should.be_false()
 }
 
+pub fn stale_ack_cannot_erase_a_newer_peer_frontier_test() {
+  let local =
+    init_engine("nas", "nas.tail55d152.ts.net:4100", 1000)
+    |> register_peer("peer", "peer.tail55d152.ts.net:8088")
+  let remote_ahead = SyncDigest("peer", [#("nas", 1), #("peer", 1)], 0, 1100)
+  let assert Ok(#(after_digest, [_])) =
+    handle_incoming_message(local, remote_ahead, 1100)
+  peer_status(after_digest, "peer") |> should.equal(Reconciling)
+
+  let stale_ack = SyncAck("peer", [#("nas", 1)], "clock_in_sync", 1000)
+  let assert Ok(#(after_stale_ack, [])) =
+    handle_incoming_message(after_digest, stale_ack, 1200)
+
+  peer_status(after_stale_ack, "peer") |> should.equal(Reconciling)
+  is_cluster_fully_synchronized(after_stale_ack) |> should.be_false()
+}
+
+pub fn stale_delta_cannot_erase_a_newer_peer_frontier_test() {
+  let local =
+    init_engine("nas", "nas.tail55d152.ts.net:4100", 1000)
+    |> register_peer("peer", "peer.tail55d152.ts.net:8088")
+  let remote_ahead = SyncDigest("peer", [#("nas", 1), #("peer", 1)], 0, 1100)
+  let assert Ok(#(after_digest, [_])) =
+    handle_incoming_message(local, remote_ahead, 1100)
+  let old_peer_copy =
+    delta_state.MeshDeltaState(..local.local_mesh_state, origin_node: "peer")
+  let old_delta =
+    SyncDelta("peer", old_peer_copy, local.local_health_map, 1000)
+  let assert Ok(#(after_stale_delta, [_])) =
+    handle_incoming_message(after_digest, old_delta, 1200)
+
+  peer_status(after_stale_delta, "peer") |> should.equal(Reconciling)
+  is_cluster_fully_synchronized(after_stale_delta) |> should.be_false()
+}
+
 pub fn remote_ahead_ack_requests_the_missing_delta_test() {
   let nas =
     init_engine("nas-1", "nas-1.tail55d152.ts.net:4100", 1000)
@@ -184,6 +220,31 @@ pub fn full_two_way_exchange_converges_only_after_remote_delta_test() {
   let assert Ok(#(vm_converged, [])) =
     handle_incoming_message(vm_after_digest, nas_ack, 1600)
   is_cluster_fully_synchronized(vm_converged) |> should.be_true()
+}
+
+pub fn incoming_merge_invalidates_other_peer_coverage_test() {
+  let local =
+    init_engine("nas", "nas.tail55d152.ts.net:4100", 1000)
+    |> register_peer("a", "a.tail55d152.ts.net:8088")
+    |> register_peer("b", "b.tail55d152.ts.net:8088")
+  let clock = local.local_mesh_state.vector_clock
+  let assert Ok(#(a_covered, [])) =
+    handle_incoming_message(local, SyncAck("a", clock, "clock_in_sync", 1000), 1000)
+  let assert Ok(#(covered, [])) =
+    handle_incoming_message(a_covered, SyncAck("b", clock, "clock_in_sync", 1000), 1000)
+  let remote_seed = init_engine("a", "a.tail55d152.ts.net:8088", 1000)
+  let inbound =
+    SyncDelta("nas", covered.local_mesh_state, covered.local_health_map, 1000)
+  let assert Ok(#(remote_with_nas, [_])) =
+    handle_incoming_message(remote_seed, inbound, 1100)
+  let remote = record_worker_active(remote_with_nas, "a-worker", 1200)
+  let delta =
+    SyncDelta("a", remote.local_mesh_state, remote.local_health_map, 1200)
+  let assert Ok(#(merged, [_])) = handle_incoming_message(covered, delta, 1300)
+
+  peer_status(merged, "a") |> should.not_equal(Reconciling)
+  peer_status(merged, "b") |> should.equal(Reconciling)
+  is_cluster_fully_synchronized(merged) |> should.be_false()
 }
 
 pub fn engine_health_aggregation_test() {
@@ -397,8 +458,9 @@ pub fn successive_gossip_retains_accepted_epoch_test() {
 
 pub fn incoming_ack_and_digest_observations_advance_outgoing_epoch_test() {
   let engine = init_engine("nas-1", "nas-1.tail55d152.ts.net:4100", 1000)
-  let assert Ok(#(observed, [])) =
+  let assert Ok(#(observed, [SyncDelta(_, _, _, ack_recovery_epoch)])) =
     handle_incoming_message(engine, SyncAck("vm-1", [], "ok", 3000), 3000)
+  ack_recovery_epoch |> should.equal(3000)
   let assert Ok(#(replied, [SyncDelta(_, _, _, response_epoch)])) =
     handle_incoming_message(observed, SyncDigest("vm-1", [], 0, 2000), 2000)
   response_epoch |> should.equal(3000)
