@@ -1,0 +1,10 @@
+let require b s=if not b then failwith s
+let private_dependency_path path=
+ let parts=String.split_on_char '/' path in
+ require(path<>"" && String.length path<=1024 && Filename.is_relative path && List.length parts<=8 &&
+  List.for_all(fun part->part<>"" && not(List.mem part[".";"..";".git";".jj";".ssh";".gnupg"]) &&
+   String.for_all(function 'a'..'z'|'A'..'Z'|'0'..'9'|'_'|'-'|'.'|'@'->true|_->false)part)parts)
+  "noncanonical private dependency path"
+
+let accept x=try private_dependency_path x; true with Failure _ -> false
+let ()=let good=["gleam_stdlib/ebin/gleam@list.beam";"a.b-c_2/x@@y";String.make 1024 'a'] and bad=["";"/absolute";"../x";"x/../y";"x//y";"x/./y";".git/config";".jj/repo";".ssh/key";".gnupg/key";"a\\b";"a:b";"a b";"a\000b";String.make 1025 'a';"a/b/c/d/e/f/g/h/i"]in List.iter(fun x->assert(accept x))good;List.iter(fun x->assert(not(accept x)))bad;Printf.printf "PASS %d independent path boundary controls\n"(List.length good+List.length bad)

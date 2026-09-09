@@ -1,0 +1,27 @@
+{
+  "schema": "uos.review-helper-observations.v1",
+  "source": "79a4ab732ec7af350db3e3eb66fcb8cde6f03d5f",
+  "observation": "Initial finalizer expected space before EUnit ok, rejecting valid zero-duration ...ok records. Corrected extraction accepts both and counts unique names before duration. First attempt wrote no final approval; actual runtime/source unchanged.",
+  "records": [
+    {
+      "original": "/tmp/ev_composition_review_finalize.ml",
+      "durable": "docs/reviews/20260909-1910-component-review-finalizer.ml.txt",
+      "sha256": "d746f1232ea13f106f7a2d7b39ceafb83be0a805a36f7150f8c54c01a035a3d5"
+    },
+    {
+      "original": "/tmp/ev_composition_review_setup.ml",
+      "durable": "docs/reviews/20260909-1910-component-review-setup.ml.txt",
+      "sha256": "7826890c0914d24f8f72158dcda0d25fb7b1f2b335daa70014dd4fac175c9540"
+    },
+    {
+      "original": "/tmp/ev-composition-independent-finalize-native.json",
+      "durable": "docs/reviews/20260909-1910-component-review-eunit-format-refusal.json",
+      "sha256": "8ef8a0a5c1ce97730d1b7cf74258bdc322074081807b532a2b902b554b486bb1"
+    },
+    {
+      "original": "/tmp/ev-composition-independent-finalize-native-2.json",
+      "durable": "docs/reviews/20260909-1910-component-review-finalizer-green.json",
+      "sha256": "2f34f2337d8e91453051416698dd53aa9c6544432f32c9dce991b5bc9f876a47"
+    }
+  ]
+}
