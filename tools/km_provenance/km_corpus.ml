@@ -24,6 +24,7 @@ type adr = {
   file : string;           (* basename under docs/zk *)
   title : string;          (* H1 with the leading stamp and id stripped *)
   layer : string;          (* first #fractal-lN tag, or "" *)
+  layers : string list;    (* ALL distinct #fractal-lN tags, ascending *)
   claimed_ev : int option; (* EV cycle asserted in the H1, if any *)
 }
 
@@ -86,6 +87,30 @@ let first_layer body =
   | None -> ""
   | Some i -> if i + 11 <= String.length body then String.sub body i 11 else ""
 
+(* ALL distinct #fractal-lN tags in the record, ascending.
+
+   first_layer is a LOSSY PROJECTION of the labelling, and reading the corpus
+   through it produced a false alarm that stood for some time. Records here are
+   multi-label -- 47 of 80 ADRs carry all ten layers, and only 6 carry as few as
+   two -- while the tag block is conventionally written in ascending order. So
+   `first_layer` returns "#fractal-l0" for 74 of 80 records, and any statistic
+   over it measures the WRITING CONVENTION rather than the corpus.
+
+   Nothing about the corpus was degenerate; the observable was. *)
+let all_layers body =
+  let rec go i acc =
+    match find_sub body "#fractal-l" i with
+    | None -> acc
+    | Some j ->
+      if j + 11 > String.length body then acc
+      else
+        let tag = String.sub body j 11 in
+        let d = tag.[10] in
+        let acc = if d >= '0' && d <= '9' && not (List.mem tag acc) then tag :: acc else acc in
+        go (j + 10) acc
+  in
+  List.sort String.compare (go 0 [])
+
 (* Highest EV-NNN mentioned in the H1 line only: a ratification claim lives in
    the title. Body mentions may be forward authorizations, which are not claims. *)
 let ev_in_title h1 =
@@ -114,7 +139,8 @@ let adrs () =
         let body = read (Filename.concat zk_dir name) in
         let h1 = first_h1 body in
         acc := { number = n; file = name; title = strip_title h1;
-                 layer = first_layer body; claimed_ev = ev_in_title h1 } :: !acc
+                 layer = first_layer body; layers = all_layers body;
+                 claimed_ev = ev_in_title h1 } :: !acc
       | _ -> ()) all;
   let l = List.sort (fun a b -> compare a.number b.number) !acc in
   require (l <> []) "no ADR documents found";

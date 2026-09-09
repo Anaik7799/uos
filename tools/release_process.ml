@@ -102,7 +102,7 @@ let beam_pin_check () =
   ["/usr/";"/opt/";"/home/an/dev/ver/"];
  real
 let env extra =
- let base=["PATH="^otp^":"^toolchains^"/gleam-1.16.0/bin:"^toolchains^"/opam-ocaml/bin:"^toolchains^"/cargo/bin:"^toolchains^"/node-22/bin:/usr/bin:/bin";
+ let base=["PATH="^otp^":"^toolchains^"/gleam-1.16.0/bin:"^toolchains^"/opam-ocaml/bin:"^toolchains^"/cargo/bin:/usr/bin:/bin";
  "LANG=C.UTF-8";"ERL_FLAGS=+S 2:2 +A 2";"ERL_CRASH_DUMP=/dev/null";"CC=/usr/bin/cc"] in
  let inherited=List.filter_map(fun k->Option.map(fun v->k^"="^v)(Sys.getenv_opt k))
  ["HOME";"XDG_RUNTIME_DIR";"DBUS_SESSION_BUS_ADDRESS";"OPAM_SWITCH_PREFIX";"OCAMLPATH"] in

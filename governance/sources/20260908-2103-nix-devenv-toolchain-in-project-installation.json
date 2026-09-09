@@ -205,12 +205,12 @@
     },
     {
       "name": "node",
-      "version": "22",
-      "source": "materialised_in_project",
-      "entrypoint": "toolchains/node-22/bin/node",
-      "sha256_entrypoint": "d0efb6fcb9d023ba4e2b160ec2384dc28fe4f17732141ef47f676828fa960505",
-      "npm_sha256": "8e5f6f3429f8cdbe693cdc29904e9d5a7b127a494bd15c804bd54c7403bfcbe7",
-      "status": "VERIFIED_RUNNABLE"
+      "version": "22.23.2",
+      "source": "nix",
+      "entrypoint": "toolchains/nix-profile/bin/node",
+      "status": "VERIFIED_RUNNABLE",
+      "npm_version": "10.9.8",
+      "replaced": "The hand-materialised toolchains/node-22 tree carried an INCOMPLETE npm (41 bundled node_modules entries, no semver): `npm --version` answered 9.2.0 while every path that loads configuration died. That tree was DELETED on 2026-09-09 after the resolver, the OCaml table and the release_process PATH were repointed; it was untracked, 2.4 MB, and had no consumer in the repository."
     },
     {
       "name": "pixi",
@@ -278,7 +278,6 @@
     ]
   },
   "residual_risks": [
-    "PRE-EXISTING, NOT INTRODUCED: tools/km-gate reports HOLD on KMP-ENTROPY -- corpus fractal-layer entropy 1.322 bits against the CHK-09-MATH floor of 2.50. Measured at the same 1.322 both before and after ADR-096 was added, so this pass neither caused nor repaired it. The two KMP-INCOMPLETE findings this pass DID cause were cleared by registering ADR-096 in both indexes.",
     "CORRECTED (was recorded as a single stray directory): git-tree ascent, not one directory, is the cause. Removing the empty /home/an/NAS-setup/uos/.git did NOT fix bare `nix flake` -- Nix then ascends to /home/an/NAS-setup/.git, which is ALSO an empty directory that git itself does not recognise as a repository. `path:$UOS_ROOT` is therefore the permanent invocation, not a workaround pending cleanup. The parent directory is outside UOS and was left untouched.",
     "OPEN: /home/an/NAS-setup/.git is an empty non-repository directory outside the UOS workspace. Not removed: out of scope, and removal would not change the required `path:` invocation anyway.",
     "BOUNDED (was OPEN): quint verify of agentic_coordination.qnt is depth-limited, not blocked. NoError at 1 step (18.1s) and 2 steps (75.0s); ~4x per step puts the default depth beyond an interactive budget. Deeper verification needs a batch run, not a fix.",
@@ -409,5 +408,21 @@
     "quint": "formal/quint/preflight_receipt.qnt -- temporal receipt lifecycle over clock ticks, checker edits, table edits, toolchain breakage and cached acceptance. inv_all verifies NoError under Apalache (bounded). Anti-vacuity: the invariant not(accepted) VIOLATES, so acceptCached is genuinely reachable.",
     "atlas": "Six charts with distinct authorities: identity (flake), locality (shell), parity (ocaml reads shell), presence (stat), useability (execution), tracked (ask jj). The transition morphism static -> dynamic is NOT an isomorphism, and N5 exhibits the witness: a zero-byte executable inside $UOS_ROOT satisfies presence, locality and parity, and is caught only by useability.",
     "km": "docs/design/20260909-0525-preflight-denotational-spec-and-algebraic-atlas.md; docs/wiki/20260909-0525-uos-toolchain-preflight-guide.md; docs/zk/20260909-0525-adr-096-...md. ADR-096 registered in BOTH indexes (zk-master-moc and wiki-corpus-index); km-gate KMP-INCOMPLETE findings cleared."
+  },
+  "entropy_metric_correction": {
+    "mandate": "Operator (2026-09-09): \"fix the entropy floor and delete the broken node-22 tree\".",
+    "finding": "KMP-ENTROPY was NOT a corpus defect. Km_metrics.layer_entropy_bits folded over Km_corpus.layer, which is the FIRST #fractal-lN tag in a record. Records are multi-label -- 47 of 80 ADRs carry all ten layers, only 6 carry as few as two -- and the tag block is written ascending by convention, so the first tag was #fractal-l0 for 74 of 80 records. The statistic measured the writing convention and discarded roughly 90% of the labelling.",
+    "measurement": "first-tag entropy 1.322 bits; all-tag entropy 3.309 bits against a ceiling of log2(10) = 3.322.",
+    "fix": "Km_corpus.adr gained a `layers` field (all distinct tags, ascending) and layer_entropy_bits now folds over every tag. The `layer` field is retained for its other consumers.",
+    "floor_unchanged": "The 2.50 floor was NOT moved. Correcting a metric is only legitimate if the threshold survives the correction, and law E5 proves the corrected metric still fails a genuinely degenerate corpus (all-l0 -> 0 bits) and E6 that a two-layer corpus stays below 2.50.",
+    "law_suite": "km_gate --metrics-selftest: 8 laws, 8/8 pass. E4 pins the multi-label behaviour; E8 pins order-independence, which the old metric lacked.",
+    "collateral": "Km_layers (the cosine layer classifier) was built ON THIS FALSE PREMISE. Its header now records that. Applying every one of its proposals would have reached only 2.21 bits -- still below the floor it was built to clear -- while rewriting 58 records of which 35 were explicitly low-margin. No proposal was applied: chasing a broken metric would have damaged the corpus to satisfy a statistic about tag ordering.",
+    "result": "tools/km-gate status PASS, 0 findings, entropy 3.309 bits."
+  },
+  "node22_removal": {
+    "removed": "toolchains/node-22 (2.4 MB, untracked, no consumer in the repository).",
+    "preconditions_checked": "untracked in jj (0 files); resolver and OCaml tables already repointed to toolchains/nix-profile; ONE live reference remained and was fixed first -- tools/release_process.ml built its subprocess PATH with toolchains/node-22/bin, which would have silently pointed at a nonexistent directory.",
+    "manifest": "the node entry now records nodejs 22.23.2 / npm 10.9.8 from the Nix profile, with the removal and its reason.",
+    "post_checks": "preflight 29/29 PASS with node v22.23.2 and npm config get cache -> /home/an/.npm; uos-cli gate G-PREFLIGHT PASS; ocaml tools/release_process.ml selftest 113 checks PASS."
   }
 }

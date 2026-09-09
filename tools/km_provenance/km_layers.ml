@@ -1,7 +1,31 @@
 (* SC-PROVENANCE-001 — content-based fractal layer classification (KMP-ENTROPY).
 
-   68 of 87 ADRs are tagged #fractal-l0, collapsing the layer taxonomy to ~1.3
-   bits. This module PROPOSES a layer for each record from its own content and
+   !! THE PREMISE BELOW WAS A MEASUREMENT ARTIFACT (corrected 2026-09-09) !!
+
+   This module was written because "68 of 87 ADRs are tagged #fractal-l0,
+   collapsing the layer taxonomy to ~1.3 bits". That reading came from
+   Km_metrics.layer_entropy_bits folding over Km_corpus.layer — the FIRST
+   #fractal-lN tag in a record. Records are multi-label (47 of 80 ADRs carry all
+   ten layers; only 6 carry as few as two) and the tag block is conventionally
+   written ascending, so the first tag is "#fractal-l0" for 74 of 80 records.
+   The statistic measured the WRITING CONVENTION, not the corpus.
+
+   Read over every tag, the same corpus measures 3.31 bits against a ceiling of
+   log2(10) = 3.32, and the gate passes its unchanged 2.50 floor. Nothing was
+   degenerate. The metric is now fixed at source and carries its own law suite
+   (km_gate --metrics-selftest), including a law that it must STILL fail a
+   genuinely collapsed corpus.
+
+   Consequence for this module: its classification is still a legitimate
+   authorship AID, but it must NOT be applied to raise entropy — that number was
+   never low. Note also that applying every proposal would have reached only 2.21
+   bits, below the floor it was built to clear, while rewriting 58 records of
+   which 35 were low-margin. Chasing a broken metric would have damaged the
+   corpus to satisfy a statistic about tag ordering.
+
+   Original description follows.
+
+   This module PROPOSES a layer for each record from its own content and
    reports what the entropy would become. It never rewrites a record: assigning
    a layer is an authorship act belonging to the record's author or to sovereign
    review, so the output is a proposal, not a patch.

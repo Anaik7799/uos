@@ -21,6 +21,7 @@
      km_gate --ev-selftest                  the seven admission laws
      km_gate --ev-record EV REV RUNTIME FORMAL   append one evidence row
      km_gate --merge-selftest               the merge-readiness laws
+     km_gate --metrics-selftest             the fractal-layer entropy laws
      km_gate --merge-hold BRANCH REASON CONDITION   record a hold as data
 *)
 
@@ -649,6 +650,56 @@ let ev_selftest () =
 
 (* --- merge readiness laws ---------------------------------------------- *)
 
+(* The entropy metric's own law suite (KMP-ENTROPY).
+
+   This exists because the metric was wrong for a long time in a way that looked
+   like a corpus defect: it folded over the FIRST #fractal-lN tag only, and the
+   tag block is written ascending, so it reported the writing convention. A whole
+   cosine classifier (Km_layers) was then built to "fix" a corpus that was never
+   broken.
+
+   E5 is the important law: correcting a metric is only legitimate if the metric
+   still fails what it is supposed to fail. *)
+let metrics_selftest () =
+  let checks = ref 0 and fails = ref 0 in
+  let check name ok =
+    incr checks;
+    if ok then Printf.printf "ok   %s\n" name
+    else (incr fails; Printf.printf "FAIL %s\n" name) in
+  let mk n layers =
+    { Km_corpus.number = n; file = Printf.sprintf "adr-%03d.md" n;
+      title = "t"; layer = (match layers with l :: _ -> l | [] -> "");
+      layers; claimed_ev = None } in
+  let l i = Printf.sprintf "#fractal-l%d" i in
+  let all_ten = List.init 10 l in
+  let close a b = Float.abs (a -. b) < 1e-9 in
+
+  check "E1 an empty corpus is 0 bits, not an error"
+    (close (Km_metrics.layer_entropy_bits []) 0.0);
+  check "E2 a corpus where every record carries ONLY l0 is 0 bits"
+    (close (Km_metrics.layer_entropy_bits (List.init 20 (fun i -> mk i [ l 0 ]))) 0.0);
+  check "E3 a corpus uniform over all ten layers reaches log2(10)"
+    (close (Km_metrics.layer_entropy_bits (List.init 10 (fun i -> mk i [ l i ])))
+       (log 10.0 /. log 2.0));
+  check "E4 multi-label records contribute EVERY tag, not just the first \
+         (the defect: 47 of 80 ADRs carry all ten layers and were counted as l0)"
+    (close (Km_metrics.layer_entropy_bits [ mk 1 all_ten ]) (log 10.0 /. log 2.0));
+  check "E5 the corrected metric STILL FAILS a genuinely degenerate corpus \
+         -- fixing a measurement is not moving a goalpost"
+    (Km_metrics.layer_entropy_bits (List.init 50 (fun i -> mk i [ l 0 ])) < 2.5);
+  check "E6 a corpus concentrated on two layers is still below the 2.50 floor"
+    (Km_metrics.layer_entropy_bits
+       (List.init 40 (fun i -> mk i [ l 0; l 4 ])) < 2.5);
+  check "E7 an untagged record falls back to \"none\" rather than vanishing"
+    (close (Km_metrics.layer_entropy_bits [ mk 1 [] ]) 0.0);
+  check "E8 tag ORDER cannot change the entropy (the old metric depended on it)"
+    (close
+       (Km_metrics.layer_entropy_bits [ mk 1 [ l 0; l 4; l 7 ] ])
+       (Km_metrics.layer_entropy_bits [ mk 1 [ l 7; l 4; l 0 ] ]));
+
+  Printf.printf "metrics_selftest: %d checks, %d failed\n" !checks !fails;
+  if !fails = 0 then 0 else 1
+
 let merge_selftest () =
   let open Km_merge in
   let checks = ref 0 and fails = ref 0 in
@@ -748,6 +799,7 @@ let () =
     | [_; "--ev-admission"; rev] -> exit (ev_admission rev)
     | [_; "--ev-selftest"] -> exit (ev_selftest ())
     | [_; "--merge-selftest"] -> exit (merge_selftest ())
+    | [_; "--metrics-selftest"] -> exit (metrics_selftest ())
     | [_; "--merge-hold"; b; r; c] -> exit (merge_hold b r c)
     | [_; "--ev-record"; n; rev; rt; fm] -> exit (ev_record (int_of_string n) rev rt fm)
     | [_; "--series"; m] -> exit (show_series m)
