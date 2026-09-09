@@ -1,3 +1,5 @@
+import crdt_health_bridge_test
+import crdt_mesh_sync_test
 import deadman_freshness_test
 import delta_mesh_engine_test
 
@@ -34,4 +36,14 @@ pub fn main() {
   deadman_freshness_test.actor_order_is_stable_across_ticks_test()
   deadman_freshness_test.explicit_valid_configuration_can_recover_quarantine_test()
   deadman_freshness_test.heartbeat_at_trip_observation_time_does_not_rearm_test()
+  delta_mesh_engine_test.reversed_same_tick_health_deltas_preserve_latest_sample_test()
+  delta_mesh_engine_test.concurrent_same_target_health_converges_in_both_orders_test()
+  delta_mesh_engine_test.local_health_after_merge_supersedes_same_tick_remote_sample_test()
+  delta_mesh_engine_test.successive_gossip_retains_accepted_epoch_test()
+  delta_mesh_engine_test.incoming_ack_and_digest_observations_advance_outgoing_epoch_test()
+  delta_mesh_engine_test.newer_sample_time_wins_over_an_older_logical_counter_test()
+  crdt_health_bridge_test.record_and_merge_health_test()
+  crdt_health_bridge_test.health_telemetry_lww_convergence_test()
+  crdt_mesh_sync_test.mesh_sync_digest_and_drift_test()
+  crdt_mesh_sync_test.mesh_sync_reconciliation_and_ack_test()
 }

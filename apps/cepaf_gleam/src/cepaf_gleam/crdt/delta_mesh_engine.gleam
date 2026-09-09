@@ -30,7 +30,7 @@ import cepaf_gleam/crdt/delta_state.{
   orset_add, pncounter_increment,
 }
 import cepaf_gleam/crdt/health_bridge.{
-  type ClusterHealthMap, empty_health_map, evaluate_quorum, record_health,
+  type ClusterHealthMap, empty_health_map, evaluate_quorum, record_health_from,
 }
 import cepaf_gleam/crdt/mesh_sync.{
   type MeshSyncMessage, type PeerSyncEndpoint, PeerSyncEndpoint, Reconciling,
@@ -138,8 +138,9 @@ pub fn record_local_health(
   epoch_us: Int,
 ) -> DeltaMeshEngine {
   let new_health =
-    record_health(
+    record_health_from(
       engine.local_health_map,
+      engine.local_node_id,
       target_node,
       health_score,
       lyapunov_exp,
@@ -199,15 +200,23 @@ pub fn generate_gossip_digest(
   engine: DeltaMeshEngine,
   epoch_us: Int,
 ) -> Result(#(DeltaMeshEngine, MeshSyncMessage), OutboundError) {
+  let epoch_us = int.max(engine.local_mesh_state.epoch_us, epoch_us)
   let digest =
     generate_sync_digest(
       engine.local_node_id,
       engine.local_mesh_state,
-      int.max(engine.local_mesh_state.epoch_us, epoch_us),
+      epoch_us,
     )
   use queued <- result.try(enqueue_outbound(engine, digest))
   let updated_engine =
-    DeltaMeshEngine(..queued, gossip_round: engine.gossip_round + 1)
+    DeltaMeshEngine(
+      ..queued,
+      gossip_round: engine.gossip_round + 1,
+      local_mesh_state: delta_state.MeshDeltaState(
+        ..engine.local_mesh_state,
+        epoch_us: epoch_us,
+      ),
+    )
   Ok(#(updated_engine, digest))
 }
 
@@ -219,6 +228,16 @@ pub fn handle_incoming_message(
 ) -> Result(#(DeltaMeshEngine, List(MeshSyncMessage)), OutboundError) {
   let current_epoch_us =
     int.max(current_epoch_us, engine.local_mesh_state.epoch_us)
+  // This local value is returned only after any required enqueue succeeds.
+  // Refusal therefore exposes no updated observation watermark to the caller.
+  let engine =
+    DeltaMeshEngine(
+      ..engine,
+      local_mesh_state: delta_state.MeshDeltaState(
+        ..engine.local_mesh_state,
+        epoch_us: current_epoch_us,
+      ),
+    )
   case msg {
     SyncDigest(from_node, remote_clock, _count, _epoch) -> {
       case requires_delta_sync(engine.local_mesh_state, remote_clock) {

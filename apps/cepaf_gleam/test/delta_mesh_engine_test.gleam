@@ -244,3 +244,104 @@ pub fn repeated_health_sample_is_idempotent_test() {
   record_local_health(engine, "nas-1", 0.8, -1.0, True, "closed", 2000)
   |> should.equal(engine)
 }
+
+fn health_delta(engine: delta_mesh_engine.DeltaMeshEngine) {
+  SyncDelta(
+    engine.local_node_id,
+    engine.local_mesh_state,
+    engine.local_health_map,
+    engine.local_mesh_state.epoch_us,
+  )
+}
+
+fn accept_delta(engine, remote) {
+  let assert Ok(#(updated, _)) =
+    handle_incoming_message(engine, health_delta(remote), 3000)
+  updated
+}
+
+pub fn reversed_same_tick_health_deltas_preserve_latest_sample_test() {
+  let initial = init_engine("nas-1", "nas-1.tail55d152.ts.net:4100", 1000)
+  let healthy =
+    record_local_health(initial, "nas-1", 0.9, -1.0, True, "closed", 2000)
+  let unhealthy =
+    record_local_health(healthy, "nas-1", 0.1, 1.0, False, "open", 2000)
+  let receiver = init_engine("vm-1", "vm-1.tail55d152.ts.net:8088", 1000)
+  let forward = receiver |> accept_delta(healthy) |> accept_delta(unhealthy)
+  let reverse = receiver |> accept_delta(unhealthy) |> accept_delta(healthy)
+  reverse.local_health_map |> should.equal(unhealthy.local_health_map)
+  reverse.local_health_map |> should.equal(forward.local_health_map)
+  let assert Ok(#(_, [SyncAck(_, _, _, _)])) =
+    handle_incoming_message(
+      unhealthy,
+      SyncDigest("vm-1", reverse.local_mesh_state.vector_clock, 0, 3000),
+      3000,
+    )
+  let assert [#(_, entry)] = reverse.local_health_map
+  entry.value.health_score |> should.equal(0.1)
+  entry.value.sample_epoch_us |> should.equal(2000)
+}
+
+pub fn concurrent_same_target_health_converges_in_both_orders_test() {
+  let a =
+    init_engine("nas-1", "nas-1.tail55d152.ts.net:4100", 1000)
+    |> record_local_health("target", 0.9, -1.0, True, "closed", 2000)
+  let b =
+    init_engine("vm-1", "vm-1.tail55d152.ts.net:8088", 1000)
+    |> record_local_health("target", 0.1, 1.0, False, "open", 2000)
+  let ab = accept_delta(a, b)
+  let ba = accept_delta(b, a)
+  ab.local_health_map |> should.equal(ba.local_health_map)
+  accept_delta(ab, a).local_health_map |> should.equal(ab.local_health_map)
+  accept_delta(ba, b).local_health_map |> should.equal(ba.local_health_map)
+}
+
+pub fn local_health_after_merge_supersedes_same_tick_remote_sample_test() {
+  let a = init_engine("nas-1", "nas-1.tail55d152.ts.net:4100", 1000)
+  let b =
+    init_engine("vm-1", "vm-1.tail55d152.ts.net:8088", 1000)
+    |> record_local_health("target", 0.9, -1.0, True, "closed", 2000)
+  let merged = accept_delta(a, b)
+  let updated =
+    record_local_health(merged, "target", 0.1, 1.0, False, "open", 2000)
+  let receiver = accept_delta(b, updated)
+  receiver.local_health_map |> should.equal(updated.local_health_map)
+  let assert [#(_, entry)] = receiver.local_health_map
+  entry.value.health_score |> should.equal(0.1)
+}
+
+pub fn successive_gossip_retains_accepted_epoch_test() {
+  let engine = init_engine("nas-1", "nas-1.tail55d152.ts.net:4100", 1000)
+  let assert Ok(#(first, SyncDigest(_, _, _, first_epoch))) =
+    generate_gossip_digest(engine, 3000)
+  let assert Ok(#(second, SyncDigest(_, _, _, second_epoch))) =
+    generate_gossip_digest(first, 2000)
+  first_epoch |> should.equal(3000)
+  second_epoch |> should.equal(first_epoch)
+  second.local_mesh_state.epoch_us |> should.equal(3000)
+}
+
+pub fn incoming_ack_and_digest_observations_advance_outgoing_epoch_test() {
+  let engine = init_engine("nas-1", "nas-1.tail55d152.ts.net:4100", 1000)
+  let assert Ok(#(observed, [])) =
+    handle_incoming_message(engine, SyncAck("vm-1", [], "ok", 3000), 3000)
+  let assert Ok(#(replied, [SyncDelta(_, _, _, response_epoch)])) =
+    handle_incoming_message(observed, SyncDigest("vm-1", [], 0, 2000), 2000)
+  response_epoch |> should.equal(3000)
+  let assert Ok(#(_, SyncDigest(_, _, _, gossip_epoch))) =
+    generate_gossip_digest(replied, 1500)
+  gossip_epoch |> should.equal(3000)
+}
+
+pub fn newer_sample_time_wins_over_an_older_logical_counter_test() {
+  let a =
+    init_engine("nas-1", "nas-1.tail55d152.ts.net:4100", 1000)
+    |> record_local_health("target", 0.9, -1.0, True, "closed", 2000)
+    |> record_local_health("target", 0.1, 1.0, False, "open", 2000)
+    |> record_local_health("target", 0.2, 1.0, False, "open", 2000)
+  let b =
+    init_engine("vm-1", "vm-1.tail55d152.ts.net:8088", 1000)
+    |> record_local_health("target", 0.95, -1.0, True, "closed", 2001)
+  accept_delta(a, b).local_health_map |> should.equal(b.local_health_map)
+  accept_delta(b, a).local_health_map |> should.equal(b.local_health_map)
+}
