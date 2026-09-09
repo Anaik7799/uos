@@ -18,7 +18,7 @@
      km_gate --publish                      write live JSON artifacts under generated/
      km_gate --ev-admission REVISION        compute [[admit]] per EV from evidence
      km_gate --ev-selftest                  the seven admission laws
-     km_gate --ev-record EV REV RUNTIME FORMAL   append one evidence row
+     km_gate --ev-record EV REV RUNTIME FORMAL RECORDED_BY   append one evidence row
      km_gate --merge-selftest               the merge-readiness laws
      km_gate --metrics-selftest             the fractal-layer entropy laws
      km_gate --merge-hold BRANCH REASON CONDITION   record a hold as data
@@ -439,8 +439,13 @@ let publish () =
    file_exists/1 does: that fallback is why every existing gate measures the
    canonical checkout instead of the workspace it runs in, and why deleting an
    artifact in a sibling workspace does not fail its gate. *)
+(* Presence is resolved against the working tree only, with no canonical-root
+   fallback: a reference must be workspace-relative, so an absolute path can
+   never satisfy it. Previously written as `(not (is_relative p)) = false`,
+   which states the requirement as its own double negative and reads at a glance
+   like the opposite of what it means. *)
 let workspace_present path =
-  (not (Filename.is_relative path)) = false && Sys.file_exists path
+  Filename.is_relative path && Sys.file_exists path
 
 let read_evidence db =
   let stmt = Sqlite3.prepare db
@@ -461,7 +466,18 @@ let read_evidence db =
       | _ -> raise (Invalid "ev_evidence scan failed") in
     loop [])
 
-let ev_record ev revision runtime_ref formal_ref =
+(* D1: `recorded_by` was the string literal "fable-km-refresh-20260908-0912",
+   so EVERY row this tool has ever written -- whoever ran it -- claimed to have
+   been recorded by one session that in general did not write it.
+
+   That is the same defect class that produced the original quarantine: shared
+   coordinator events stamped with a session identity that did not author them.
+   Here it sat inside the provenance tool itself, and the table is append-only
+   by trigger, so a wrong attribution can never be corrected -- only appended
+   around. The attributor is now supplied by the caller and refused if absent,
+   because an unattributed provenance row is worth less than no row. *)
+let ev_record ev revision runtime_ref formal_ref recorded_by =
+  require (String.trim recorded_by <> "") "recorded_by is required";
   let db = Km_chain.open_db () in
   Fun.protect ~finally:(fun () -> Km_chain.close db) (fun () ->
     let stmt = Sqlite3.prepare db
@@ -470,10 +486,11 @@ let ev_record ev revision runtime_ref formal_ref =
     Fun.protect ~finally:(fun () -> ignore (Sqlite3.finalize stmt)) (fun () ->
       ignore (Sqlite3.bind_int stmt 1 ev);
       List.iteri (fun i v -> ignore (Sqlite3.bind_text stmt (i + 2) v))
-        [revision; runtime_ref; formal_ref; now_utc (); "fable-km-refresh-20260908-0912"];
+        [revision; runtime_ref; formal_ref; now_utc (); recorded_by];
       require (Sqlite3.step stmt = Sqlite3.Rc.DONE) "ev_evidence insert refused");
     print_json (`Assoc ["recorded", `Bool true; "ev", `Int ev;
-                        "revision", `String revision]);
+                        "revision", `String revision;
+                        "recorded_by", `String recorded_by]);
     0)
 
 let ev_admission revision =
@@ -734,7 +751,8 @@ let () =
     | [_; "--merge-selftest"] -> exit (merge_selftest ())
     | [_; "--metrics-selftest"] -> exit (metrics_selftest ())
     | [_; "--merge-hold"; b; r; c] -> exit (merge_hold b r c)
-    | [_; "--ev-record"; n; rev; rt; fm] -> exit (ev_record (int_of_string n) rev rt fm)
+    | [_; "--ev-record"; n; rev; rt; fm; by] ->
+      exit (ev_record (int_of_string n) rev rt fm by)
     | [_; "--series"; m] -> exit (show_series m)
     | [_; "--fit"; csv] ->
       let xs = List.map float_of_string (String.split_on_char ',' csv) in
