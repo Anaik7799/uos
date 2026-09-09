@@ -1,0 +1,13 @@
+{
+  "schema": "uos.ev98.transport-bound-clarification.v1",
+  "source_candidate": "14057e08112c1cd5d44297eac6a9c853e8287b7a",
+  "authority": "NONE",
+  "clarifies": "docs/reviews/20260909-1445-transport-verification.json",
+  "clarified_report_sha256": "1260c72e594cb804f3dc4766f7264cc94141b6311a28bbc2786824dc9b63421c",
+  "parser_header_budget_bytes": 8192,
+  "actual_total_wire_header_upper_bound_bytes": 8194,
+  "reason": "response() subtracts the parsed status line text from max_header. The status line CRLF contributes two additional wire bytes. Subsequent lines include their CRLF in the remaining budget.",
+  "status": "BOUNDED_WITH_EXPLICIT_ACCOUNTING_LIMIT",
+  "source_change": false,
+  "runtime_receipts_modified": false
+}
