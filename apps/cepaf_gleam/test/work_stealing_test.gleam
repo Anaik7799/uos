@@ -9,6 +9,7 @@ import cepaf_gleam/ha/work_stealing.{
   init_work_stealing, select_victim_node, should_initiate_steal,
   total_cluster_queued_tasks, update_peer_queue,
 }
+import gleam/int
 import gleam/option.{Some}
 import gleeunit
 import gleeunit/should
@@ -206,6 +207,72 @@ pub fn apply_steal_response_rejects_a_response_for_another_recipient_test() {
 
   total_cluster_queued_tasks(rejected) |> should.equal(0)
   rejected.steal_history_count |> should.equal(0)
+}
+
+pub fn handle_steal_request_replays_its_original_response_test() {
+  let donor =
+    init_work_stealing("donor", 8)
+    |> enqueue_local_task(StealableTask("t1", "plan", 1, 10, "one"))
+    |> enqueue_local_task(StealableTask("t2", "plan", 1, 10, "two"))
+    |> enqueue_local_task(StealableTask("t3", "plan", 1, 10, "three"))
+    |> enqueue_local_task(StealableTask("t4", "plan", 1, 10, "four"))
+  let thief = init_work_stealing("thief", 8)
+  let request = generate_steal_request(thief, "donor", "transfer-replay", 1000)
+  let #(after_first, first_response) =
+    handle_steal_request(donor, request, 1000)
+  let #(after_replay, replayed_response) =
+    handle_steal_request(after_first, request, 1001)
+
+  // A duplicate request returns the original response and removes no second batch.
+  total_cluster_queued_tasks(after_replay) |> should.equal(2)
+  replayed_response |> should.equal(first_response)
+}
+
+pub fn handle_steal_request_rejects_a_request_for_another_donor_test() {
+  let donor =
+    init_work_stealing("donor-a", 8)
+    |> enqueue_local_task(StealableTask("t1", "plan", 1, 10, "one"))
+    |> enqueue_local_task(StealableTask("t2", "plan", 1, 10, "two"))
+  let request =
+    generate_steal_request(
+      init_work_stealing("thief", 8),
+      "donor-b",
+      "wrong-donor",
+      1000,
+    )
+
+  let #(after_request, response) = handle_steal_request(donor, request, 1000)
+
+  total_cluster_queued_tasks(after_request) |> should.equal(2)
+  list_len(response.stolen_tasks) |> should.equal(0)
+}
+
+pub fn apply_steal_response_bounds_empty_transfer_receipts_test() {
+  let accepted = apply_empty_responses(init_work_stealing("thief", 8), 1000)
+
+  // Full receipt state rejects new unique empty transfers instead of growing forever.
+  list_len(accepted.accepted_transfers) |> should.equal(256)
+}
+
+fn apply_empty_responses(engine, remaining) {
+  case remaining {
+    0 -> engine
+    _ -> {
+      let response =
+        StealResponse(
+          "donor",
+          "thief",
+          "empty-" <> int.to_string(remaining),
+          [],
+          0,
+          remaining,
+        )
+      apply_empty_responses(
+        apply_steal_response(engine, response),
+        remaining - 1,
+      )
+    }
+  }
 }
 
 fn list_len(l: List(a)) -> Int {

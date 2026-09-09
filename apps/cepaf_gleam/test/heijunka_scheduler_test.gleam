@@ -115,7 +115,7 @@ pub fn task_completion_and_reclaim_test() {
   let #(q3, _pulled) = pull_batch(q2, ctrl, "worker-1", 1, 1000, 1000)
 
   // Complete t1
-  let q4 = complete_task(q3, "t1", "worker-1", 1)
+  let q4 = complete_task(q3, "t1", "p1", "worker-1", 1)
   list.length(q4.active_leases) |> should.equal(1)
 
   // At time 3000, t2 lease (expires at 2000) is expired -> reclaim
@@ -172,8 +172,46 @@ pub fn complete_task_does_not_release_another_workers_lease_test() {
       max_queue_depth: 2,
     )
 
-  let completed = complete_task(queue, "same-task", "worker-a", 1)
+  let completed = complete_task(queue, "same-task", "plan", "worker-a", 1)
 
   // Completion must match the lease's worker and attempt, not just the task ID.
   list.length(completed.active_leases) |> should.equal(2)
+}
+
+pub fn complete_task_does_not_release_another_plans_lease_test() {
+  let plan_a = QueuedTask("same-task", "plan-a", 0, "payload")
+  let plan_b = QueuedTask("same-task", "plan-b", 0, "payload")
+  let queue =
+    HeijunkaQueue(
+      pending_tasks: [],
+      deferred_tasks: [],
+      active_leases: [
+        TaskLease(plan_a, "worker-a", 1, 1000, 2000),
+        TaskLease(plan_b, "worker-a", 1, 1000, 2000),
+      ],
+      max_queue_depth: 2,
+    )
+
+  let completed = complete_task(queue, "same-task", "plan-a", "worker-a", 1)
+
+  // A completion key must include plan identity as well as task, worker, and attempt.
+  list.length(completed.active_leases) |> should.equal(1)
+}
+
+pub fn pull_batch_drains_deferred_reclaims_test() {
+  let q0 = init_queue(1)
+  let expired_task = QueuedTask("expired", "plan", 0, "payload")
+  let waiting_task = QueuedTask("waiting", "plan", 0, "payload")
+  let assert Ok(q1) = enqueue_task(q0, expired_task)
+  let ctrl = init_controller(1, 1)
+  let #(q2, _) = pull_batch(q1, ctrl, "worker-1", 1, 1000, 1000)
+  let assert Ok(q3) = enqueue_task(q2, waiting_task)
+  let reclaimed = reclaim_expired(q3, 2001)
+
+  let #(drained, pulled) =
+    pull_batch(reclaimed, ctrl, "worker-2", 1, 1000, 2002)
+
+  list.length(pulled) |> should.equal(1)
+  list.length(drained.pending_tasks) |> should.equal(1)
+  list.length(drained.deferred_tasks) |> should.equal(0)
 }

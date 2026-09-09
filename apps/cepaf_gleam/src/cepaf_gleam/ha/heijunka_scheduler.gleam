@@ -138,12 +138,14 @@ pub fn pull_batch(
 pub fn complete_task(
   queue: HeijunkaQueue,
   task_id: String,
+  plan_id: String,
   worker_id: String,
   attempt: Int,
 ) -> HeijunkaQueue {
   let remaining_leases =
     list.filter(queue.active_leases, fn(l) {
       l.task.task_id != task_id
+      || l.task.plan_id != plan_id
       || l.worker_id != worker_id
       || l.attempt != attempt
     })

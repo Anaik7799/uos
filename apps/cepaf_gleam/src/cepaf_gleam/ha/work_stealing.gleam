@@ -25,6 +25,8 @@ import gleam/list
 import gleam/option.{type Option, None, Some}
 import gleam/order.{Gt, Lt}
 
+pub const max_transfer_receipts = 256
+
 /// Strategy for selecting a donor/victim node during work stealing.
 pub type StealStrategy {
   RandomVictim
@@ -86,6 +88,15 @@ pub type AcceptedTransfer {
   )
 }
 
+/// Donor-side replay receipt retaining the first response for one transfer.
+pub type HandledTransfer {
+  HandledTransfer(
+    initiator_node: String,
+    transfer_id: String,
+    response: StealResponse,
+  )
+}
+
 /// Decentralized work-stealing engine state.
 pub type WorkStealingEngine {
   WorkStealingEngine(
@@ -95,6 +106,7 @@ pub type WorkStealingEngine {
     capacity: Int,
     peer_queues: List(NodeQueueState),
     accepted_transfers: List(AcceptedTransfer),
+    handled_transfers: List(HandledTransfer),
     steal_history_count: Int,
     last_steal_epoch_us: Int,
   )
@@ -112,6 +124,7 @@ pub fn init_work_stealing(
     capacity: capacity,
     peer_queues: [],
     accepted_transfers: [],
+    handled_transfers: [],
     steal_history_count: 0,
     last_steal_epoch_us: 0,
   )
@@ -210,35 +223,18 @@ pub fn handle_steal_request(
   req: StealRequest,
   now_us: Int,
 ) -> #(WorkStealingEngine, StealResponse) {
-  let queue_len = list.length(engine.local_queue)
-
-  case queue_len > 1 {
-    True -> {
-      let steal_quota = int.min(req.max_tasks, queue_len / 2)
-      let #(stolen, remaining) = list.split(engine.local_queue, steal_quota)
-      let updated_engine = WorkStealingEngine(..engine, local_queue: remaining)
-      let resp =
-        StealResponse(
-          donor_node: engine.local_node_id,
-          recipient_node: req.initiator_node,
-          transfer_id: req.transfer_id,
-          stolen_tasks: stolen,
-          remaining_queue_depth: list.length(remaining),
-          epoch_us: now_us,
-        )
-      #(updated_engine, resp)
-    }
+  case req.donor_node != engine.local_node_id {
+    True -> #(engine, rejected_response(engine, req, now_us))
     False -> {
-      let resp =
-        StealResponse(
-          donor_node: engine.local_node_id,
-          recipient_node: req.initiator_node,
-          transfer_id: req.transfer_id,
-          stolen_tasks: [],
-          remaining_queue_depth: queue_len,
-          epoch_us: now_us,
-        )
-      #(engine, resp)
+      case find_handled_transfer(engine.handled_transfers, req) {
+        Some(response) -> #(engine, response)
+        None -> {
+          case list.length(engine.handled_transfers) >= max_transfer_receipts {
+            True -> #(engine, rejected_response(engine, req, now_us))
+            False -> serve_new_request(engine, req, now_us)
+          }
+        }
+      }
     }
   }
 }
@@ -253,7 +249,9 @@ pub fn apply_steal_response(
   let is_recipient = resp.recipient_node == engine.local_node_id
   let already_accepted =
     list.any(engine.accepted_transfers, fn(accepted) { accepted == receipt })
-  case is_recipient && !already_accepted {
+  let receipt_capacity_available =
+    list.length(engine.accepted_transfers) < max_transfer_receipts
+  case is_recipient && !already_accepted && receipt_capacity_available {
     False -> engine
     True -> {
       let new_tasks = unseen_tasks(resp.stolen_tasks, engine.local_queue)
@@ -265,6 +263,68 @@ pub fn apply_steal_response(
         steal_history_count: engine.steal_history_count + count,
         last_steal_epoch_us: resp.epoch_us,
       )
+    }
+  }
+}
+
+fn serve_new_request(
+  engine: WorkStealingEngine,
+  req: StealRequest,
+  now_us: Int,
+) -> #(WorkStealingEngine, StealResponse) {
+  let queue_len = list.length(engine.local_queue)
+  let #(stolen, remaining) = case queue_len > 1 {
+    True ->
+      list.split(engine.local_queue, int.min(req.max_tasks, queue_len / 2))
+    False -> #([], engine.local_queue)
+  }
+  let response =
+    StealResponse(
+      donor_node: engine.local_node_id,
+      recipient_node: req.initiator_node,
+      transfer_id: req.transfer_id,
+      stolen_tasks: stolen,
+      remaining_queue_depth: list.length(remaining),
+      epoch_us: now_us,
+    )
+  let receipt = HandledTransfer(req.initiator_node, req.transfer_id, response)
+  let updated_engine =
+    WorkStealingEngine(..engine, local_queue: remaining, handled_transfers: [
+      receipt,
+      ..engine.handled_transfers
+    ])
+  #(updated_engine, response)
+}
+
+fn rejected_response(
+  engine: WorkStealingEngine,
+  req: StealRequest,
+  now_us: Int,
+) -> StealResponse {
+  StealResponse(
+    donor_node: engine.local_node_id,
+    recipient_node: req.initiator_node,
+    transfer_id: req.transfer_id,
+    stolen_tasks: [],
+    remaining_queue_depth: list.length(engine.local_queue),
+    epoch_us: now_us,
+  )
+}
+
+fn find_handled_transfer(
+  receipts: List(HandledTransfer),
+  request: StealRequest,
+) -> Option(StealResponse) {
+  case receipts {
+    [] -> None
+    [receipt, ..remaining] -> {
+      case
+        receipt.initiator_node == request.initiator_node
+        && receipt.transfer_id == request.transfer_id
+      {
+        True -> Some(receipt.response)
+        False -> find_handled_transfer(remaining, request)
+      }
     }
   }
 }
