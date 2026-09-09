@@ -1,0 +1,204 @@
+[
+  {
+    "decision": {
+      "summary": "Implement and verify immutable ecology packaging only; no deploy/systemd/VCS mutations, package installs, secrets, live DB, caches, model-weight copies or broad symlinks.",
+      "alternatives": [
+        "Retain simulated counters without claiming operational credit",
+        "Wire tested backend execution with bounded supervision"
+      ],
+      "counterevidence": [
+        "Existing living swarm and capability port supply partial infrastructure, but several branches only count or probe."
+      ],
+      "assumptions": [
+        "User authorizes implementation, bounded delegated coding and autonomous runtime operation; external paid inference is not authorized."
+      ],
+      "confidence": "analyst_estimate",
+      "forecast": "Observed dispatch receipts and restart tests will distinguish executing services from declared capability masks.",
+      "falsifier": "An unavailable backend reports engaged, a timeout blocks heartbeats, or a disabled capability performs work.",
+      "acceptance": [
+        "Scoped regressions reproduce and resolve identified defects",
+        "Real backend results, mask gates and bounded negative cases are observed",
+        "Autonomous heartbeat, failure isolation and recovery observed",
+        "Formal models and runtime receipts report their actual scope",
+        "Hooks load in the installed runtime",
+        "Grouped journal/wiki/ZK/KM record remaining gaps"
+      ],
+      "rollback": "Preserve prior scoped files and versioned running release; restore only owned source/artifact on failed verification.",
+      "reviewer": "Codex implementer plus bounded independent feature review; no implied system admission.",
+      "budget": "At most 3 delegated Codex workers, 4 BEAM schedulers per check, local tools only by default; OpenRouter free-only, max 512 completion tokens/request, no paid fallback; no unbounded solver or model invocation.",
+      "residuals": [
+        "Whole-system admission remains NOT_ADMITTED until independent revision-bound evidence; source tests cannot certify all runtime services."
+      ],
+      "supersedes": null
+    },
+    "score_interval": [ 768, 768 ],
+    "score": 768,
+    "class": "P1",
+    "stpa_analysis": {
+      "control_action": "Dispatch a capability or advance an authorized evolutionary task",
+      "controller": "UOS ecology implementation and supervision",
+      "losses": [ "L-RISK-UNAUTHORIZED-EFFECT" ],
+      "hazards": [ "H-RISK-FALSE-CLEARANCE", "H-RISK-STALE-SELECTION" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "A necessary hazard repair is never selected.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE", "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Check safety class and inherited prerequisite urgency before score."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "A high score is mistaken for release authorization.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE", "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Authorization and effect constraints precede ranking."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Selection relies on a stale candidate or unfinished dependency.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE", "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Re-observe and reject affected stale/blocked selection."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "An old worker keeps acting beyond its lease or budget.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE", "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Recheck current owner, fencing, expiry and budget before effects."
+        }
+      ]
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-PACKAGE",
+        "cause": "Capability declaration, counters and actual backend outcomes are not bound end to end.",
+        "effect": "False capability success or stalled/unsupervised cognition.",
+        "controls": "Typed outcomes, fresh source hashes, bounded execution, actual runtime tests, exact Sa-plan claims and reversible staged release.",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Requested autonomous runtime needs working capability boundaries before activation.",
+        "evidence_refs": [
+          "tools/release_process.ml", "tools/ecology_process.ml",
+          "apps/cepaf_gleam/src/ecology_capability_ffi.erl",
+          "services/inference/max/ecology_max_worker.py",
+          "services/inference/max/pixi.toml"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Counters and backend-presence probes can misrepresent execution; current code must be observed and repaired.",
+        "evidence_refs": [
+          "tools/release_process.ml", "tools/ecology_process.ml",
+          "apps/cepaf_gleam/src/ecology_capability_ffi.erl",
+          "services/inference/max/ecology_max_worker.py",
+          "services/inference/max/pixi.toml"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O3 Det3 RPN36 band4: false execution evidence and blocked supervisor can cause service and evidence damage.",
+        "evidence_refs": [
+          "tools/release_process.ml", "tools/ecology_process.ml",
+          "apps/cepaf_gleam/src/ecology_capability_ffi.erl",
+          "services/inference/max/ecology_max_worker.py",
+          "services/inference/max/pixi.toml"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Real capability execution and bounded workers are prerequisites of the requested continuous ecology.",
+        "evidence_refs": [
+          "tools/release_process.ml", "tools/ecology_process.ml",
+          "apps/cepaf_gleam/src/ecology_capability_ffi.erl",
+          "services/inference/max/ecology_max_worker.py",
+          "services/inference/max/pixi.toml"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "One shared ecology runtime serves the requested participating holons.",
+        "evidence_refs": [
+          "tools/release_process.ml", "tools/ecology_process.ml",
+          "apps/cepaf_gleam/src/ecology_capability_ffi.erl",
+          "services/inference/max/ecology_max_worker.py",
+          "services/inference/max/pixi.toml"
+        ]
+      }
+    },
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Fresh exact scoped source snapshot; runtime observed separately.",
+      "evidence": [
+        {
+          "path": "tools/release_process.ml",
+          "sha256": "528c0cf55ddb37212aa2d65e5ef39e368fa07065a48f44d11d34cb2d3ed82f1a",
+          "observed_at": "2026-09-09T02:10:08Z"
+        },
+        {
+          "path": "tools/ecology_process.ml",
+          "sha256": "f85bef77c6bc7db0538fd7a8dcfb8cbb1a88740c46a5189d2553daa2c7767982",
+          "observed_at": "2026-09-09T02:10:08Z"
+        },
+        {
+          "path": "apps/cepaf_gleam/src/ecology_capability_ffi.erl",
+          "sha256": "aacc5dc24692318e95af2d6f79fc820d03d5ef493078456ab5cfcf6b64f30ccd",
+          "observed_at": "2026-09-09T02:10:08Z"
+        },
+        {
+          "path": "services/inference/max/ecology_max_worker.py",
+          "sha256": "b258f9d72bd31aba58aded8d21178c8b515c93758c2822b044e8f30b1be3f549",
+          "observed_at": "2026-09-09T02:10:08Z"
+        },
+        {
+          "path": "services/inference/max/pixi.toml",
+          "sha256": "19543e532ae8600821446915a9e7f6a8f655e5d29c288009182f7c6dbf9c39c4",
+          "observed_at": "2026-09-09T02:10:08Z"
+        }
+      ]
+    },
+    "task_state": "available",
+    "ready_since": "2026-09-09T02:10:08Z",
+    "valid_until": "2026-09-09T03:10:08Z",
+    "observed_at": "2026-09-09T02:10:08Z",
+    "phase": "implementation",
+    "scope": "Implement and verify immutable ecology packaging only; no deploy/systemd/VCS mutations, package installs, secrets, live DB, caches, model-weight copies or broad symlinks.",
+    "actor": "codex-ecology-release",
+    "task_id": "PACKAGE",
+    "plan_id": "uos/ecology-release/20260909-0243",
+    "assessment_id": "PACKAGE-2026-09-09T02:10:08Z",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 4,
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": []
+  }
+]

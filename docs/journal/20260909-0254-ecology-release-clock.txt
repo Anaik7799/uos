@@ -1,0 +1,13 @@
+Reference ID    : B97DBE7A (ntp-nts-2.ps5.canonical.com)
+Stratum         : 3
+Ref time (UTC)  : Wed Sep 09 02:27:59 2026
+System time     : 0.000248185 seconds fast of NTP time
+Last offset     : +0.000188175 seconds
+RMS offset      : 0.000357810 seconds
+Frequency       : 6.392 ppm slow
+Residual freq   : +0.018 ppm
+Skew            : 0.851 ppm
+Root delay      : 0.031150986 seconds
+Root dispersion : 0.001497005 seconds
+Update interval : 519.1 seconds
+Leap status     : Normal

@@ -1,0 +1,7 @@
+[35:35:20260909,043242.287945:ERROR socket.cc:45] setsockopt: Operation not permitted (1)
+Failed to initialize Crashpad.  Crash reporting will not be available.  Cause: crashpad failed to start handler
+{
+  "status": "PASS",
+  "checks": 17,
+  "scope": "bounded filesystem and direct release-verifier falsifiers; no external subprocesses or admission"
+}

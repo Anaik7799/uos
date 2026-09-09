@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-09T02:39:09Z",
+  "scope": "Read-only public OpenRouter routing, price and reasoning diagnosis; no credential request, source change, account change or runtime admission by this worker.",
+  "sa_plan": {
+    "plan": "uos/ecology-openrouter-diagnostic/20260909-0247",
+    "task": "DIAGNOSTIC",
+    "worker": "codex-ecology-capabilities",
+    "attempt": 1
+  },
+  "source_snapshot": [
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/openrouter_worker.gleam",
+      "sha256": "c59cd9eb45001b016624aba831e014b51d4a9fda453d97bc98cbc2bd2dc0e9bc"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/external_capabilities.gleam",
+      "sha256": "f911198948997d3e3bfe27d2312a76a16ee5d42a72022733a9f54343698586f3"
+    }
+  ],
+  "public_observations": [
+    {
+      "url": "https://openrouter.ai/api/v1/models",
+      "observed_window_utc": "2026-09-09T02:34:18Z/2026-09-09T02:39:09Z",
+      "local_snapshot": "/tmp/20260909-0247-openrouter-diagnostic-models.json",
+      "sha256": "aaab06c453b67c00ef806800013b311680971b39ad16b37f298853a372c7e32b",
+      "entries": 431
+    },
+    {
+      "url": "https://openrouter.ai/api/v1/endpoints/zdr",
+      "observed_window_utc": "2026-09-09T02:34:18Z/2026-09-09T02:39:09Z",
+      "local_snapshot": "/tmp/20260909-0247-openrouter-diagnostic-zdr.json",
+      "sha256": "4e3bdcdc888f588f9d4bc8fd0f3c931d67aef601053bdc50226387a8d5b61dd5",
+      "entries": 841
+    }
+  ],
+  "selection": {
+    "query": "Join ZDR endpoints.model_id to default models.id; require text input/output, :free suffix, and numeric prompt and completion prices both zero in both records.",
+    "eligible_text_endpoints": 2,
+    "candidates": [
+      {
+        "model": "inclusionai/ling-3.0-flash-fin:free",
+        "provider": "Novita",
+        "provider_tag": "novita",
+        "pricing": {"prompt": "0", "completion": "0", "discount": 0},
+        "request_price_field": "absent",
+        "status": 0,
+        "uptime_last_5m": 100,
+        "reasoning": {"mandatory": false, "default_enabled": true},
+        "supports_reasoning_parameter": true,
+        "direct_request_allowed_by_observed_local_allowlist": false
+      },
+      {
+        "model": "inclusionai/ling-3.0-flash-sante:free",
+        "provider": "Novita",
+        "provider_tag": "novita",
+        "pricing": {"prompt": "0", "completion": "0", "discount": 0},
+        "request_price_field": "absent",
+        "status": 0,
+        "uptime_last_5m": 100,
+        "reasoning": {"mandatory": false, "default_enabled": true},
+        "supports_reasoning_parameter": true,
+        "direct_request_allowed_by_observed_local_allowlist": false
+      }
+    ],
+    "limits": [
+      "A public endpoint listing does not prove eligibility under a particular key, guardrail, quota or current provider capacity.",
+      "Other audio, image and reranking endpoints have zero prompt/completion prices; some charge other price dimensions. They are outside this text-advisory query.",
+      "The free variants of Gemma 4 31B, Nemotron 3.5 Lightning and Inkling occur in the default model catalog but not in the observed ZDR endpoint list."
+    ]
+  },
+  "official_semantics": [
+    {
+      "source": "https://openrouter.ai/docs/guides/routing/provider-selection",
+      "finding": "provider.max_price supports prompt/completion caps in USD per million tokens and request for per-request pricing. Preserve all zero caps; the docs do not establish that an absent request price causes exclusion."
+    },
+    {
+      "source": "https://openrouter.ai/docs/guides/features/zdr",
+      "finding": "Account, guardrail and request ZDR combine by OR. A request cannot disable higher-level ZDR. Endpoint-specific policy can differ from provider defaults."
+    },
+    {
+      "source": "https://openrouter.ai/docs/guides/best-practices/reasoning-tokens",
+      "finding": "Reasoning tokens consume output budget. reasoning.exclude=true only omits reasoning from the response; it does not disable computation. Model metadata identifies mandatory reasoning and default enablement. Dynamic routers omit this metadata."
+    }
+  ],
+  "peer_counterevidence": {
+    "source": "Root agent message during this task; not independently credential-probed by this worker",
+    "request": "openrouter/free, max_tokens128, all provider.max_price values zero, account settings unchanged by this session",
+    "reported_observation": "HTTP200, selected inclusionai/ling-3.0-flash-fin:free via Novita, reported cost0, finish_reason length, content null with reasoning token exhaustion",
+    "inference": "This successful routing falsifies universal exclusion by max_price.request=0. It is not a usable advisory completion."
+  },
+  "jidoka_classes": [
+    {"class": "routing_policy_unavailable", "trigger": "HTTP404 with endpoint/policy error", "action": "Hold; retain exact root-owned error evidence; do not infer a permanent or account-global outage."},
+    {"class": "incomplete_answer_budget", "trigger": "HTTP200, null/empty final content and finish_reason length", "action": "Reject as unusable; do not substitute reasoning text for a final answer."},
+    {"class": "usable_advisory", "trigger": "Nonempty final content, consistent usage within512, explicit reported cost0 and existing policy gates pass", "action": "May record bounded advisory success; no side-effect authority or system admission follows."}
+  ],
+  "remediation_candidate": {
+    "status": "PROPOSED_TO_ROOT_UNTESTED_BY_THIS_WORKER",
+    "reasoning": {"enabled": false, "exclude": true},
+    "provider_constraints_to_preserve": {"max_price": {"prompt": 0, "completion": 0, "request": 0}},
+    "optional_stricter_provider_constraints": {"only": ["novita"], "zdr": true, "require_parameters": true},
+    "max_tokens_ceiling": 512,
+    "activation": "Root must verify a bounded zero-cost response through the strict adapter before resuming advisory use. Explicit Fin selection requires a reviewed exact-model allowlist update. No privacy or guardrail relaxation is proposed."
+  },
+  "active_check": {
+    "status": "ACTIVE_OBSERVATION_PASS",
+    "observed_at": "2026-09-09T02:39:09Z",
+    "evidence_files_checked": 2,
+    "assessment_sha256": "77089dd9bd5082b0997e47b6cde6feb21239b7cf92a4f0db415b668ec843de4d",
+    "clock_source": "chronyc tracking",
+    "abs_ntp_offset_seconds": 0.000158389,
+    "runtime_admission": "NOT_GRANTED"
+  },
+  "journal": "docs/journal/20260909-0209-ecology-openrouter-diagnostic-codex-journal.md"
+}

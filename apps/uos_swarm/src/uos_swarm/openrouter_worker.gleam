@@ -51,6 +51,7 @@ pub type Allowed {
 pub fn allowlist() -> List(Allowed) {
   [
     Allowed("openrouter/free", Free, 0.0, 0.0),
+    Allowed("inclusionai/ling-3.0-flash-fin:free", Free, 0.0, 0.0),
     Allowed("google/gemma-4-31b-it:free", Free, 0.0, 0.0),
     Allowed("nvidia/nemotron-3.5-lightning:free", Free, 0.0, 0.0),
     Allowed("minimax/minimax-m3:free", Free, 0.0, 0.0),
@@ -258,12 +259,20 @@ pub fn admit(
 pub fn request_json(req: Request) -> String {
   let provider = case string.ends_with(req.model, ":free") || req.model == "openrouter/free" {
     True -> [#("provider", json.object([
+      #("zdr", json.bool(True)),
       #("max_price", json.object([
         #("prompt", json.float(0.0)),
         #("completion", json.float(0.0)),
         #("request", json.float(0.0)),
       ])),
-    ]))]
+    ])),
+      // Short bounded advisory calls need a final answer within their token
+      // allowance. Optional hidden reasoning must not consume the whole cap.
+      #("reasoning", json.object([
+        #("enabled", json.bool(False)),
+        #("exclude", json.bool(True)),
+      ])),
+    ]
     False -> []
   }
   json.object(list.append([

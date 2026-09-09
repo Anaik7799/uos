@@ -25,19 +25,19 @@ def main() raises:
     if command.byte_length() > 4096 or path.byte_length() > 4096:
         command = "__invalid_cli__"
         path = ""
+    var executable_c = ocaml.as_c_string_slice()
+    var backend_c = backend.as_c_string_slice()
+    var command_c = command.as_c_string_slice()
+    var path_c = path.as_c_string_slice()
     # execl has two fixed arguments. Int(0) is the null pointer sentinel on the
     # supported Linux x86_64 ABI; all preceding variadic arguments are C strings.
     if len(args) == 3:
         _ = external_call["execl", c_int, num_fixed_args=2](
-            ocaml.as_c_string_slice().unsafe_ptr(),
-            ocaml.as_c_string_slice().unsafe_ptr(),
-            backend.as_c_string_slice().unsafe_ptr(),
-            command.as_c_string_slice().unsafe_ptr(),
-            path.as_c_string_slice().unsafe_ptr(), Int(0))
+            executable_c.unsafe_ptr(), executable_c.unsafe_ptr(),
+            backend_c.unsafe_ptr(), command_c.unsafe_ptr(),
+            path_c.unsafe_ptr(), Int(0))
     else:
         _ = external_call["execl", c_int, num_fixed_args=2](
-            ocaml.as_c_string_slice().unsafe_ptr(),
-            ocaml.as_c_string_slice().unsafe_ptr(),
-            backend.as_c_string_slice().unsafe_ptr(),
-            command.as_c_string_slice().unsafe_ptr(), Int(0))
+            executable_c.unsafe_ptr(), executable_c.unsafe_ptr(),
+            backend_c.unsafe_ptr(), command_c.unsafe_ptr(), Int(0))
     exit(125)

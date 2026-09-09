@@ -1,0 +1,195 @@
+{
+  "schema": "uos.ecology-release-evidence.v1",
+  "observed_at": "2026-09-09T02:38:11Z",
+  "task": {
+    "plan": "uos/ecology-release/20260909-0243",
+    "id": "PACKAGE",
+    "worker": "codex-ecology-release",
+    "attempt": 1
+  },
+  "stage": {
+    "status": "PASS",
+    "release": "/home/an/NAS-setup/uos/var/releases/ecology/20260909-0256-3eca9188251a0975349de9c9da456dcb408e62242e86d99f75c8bbb1300652fc",
+    "candidate_sha256": "3eca9188251a0975349de9c9da456dcb408e62242e86d99f75c8bbb1300652fc",
+    "payload_sha256": "7528a4b67d3ce693c1769a92462365b61ce9139dea27651eb6409a71e4b30fd5",
+    "source_sha256": "c0c8e13245ae4202bdab6c3ebf42e18869eb5bf5d733cc95957de777fa7c386b",
+    "files": 1116,
+    "payload_bytes": 27091636,
+    "otp": {
+      "otp_release": "29",
+      "root_dir": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "erts_version": "17.0.5"
+    },
+    "application_admitted": false
+  },
+  "verify_ocaml": {
+    "status": "PASS",
+    "release": "/home/an/NAS-setup/uos/var/releases/ecology/20260909-0256-3eca9188251a0975349de9c9da456dcb408e62242e86d99f75c8bbb1300652fc",
+    "payload_sha256": "7528a4b67d3ce693c1769a92462365b61ce9139dea27651eb6409a71e4b30fd5",
+    "application_admitted": false
+  },
+  "verify_mojo": {
+    "status": "PASS",
+    "release": "/home/an/NAS-setup/uos/var/releases/ecology/20260909-0256-3eca9188251a0975349de9c9da456dcb408e62242e86d99f75c8bbb1300652fc",
+    "payload_sha256": "7528a4b67d3ce693c1769a92462365b61ce9139dea27651eb6409a71e4b30fd5",
+    "application_admitted": false
+  },
+  "selftest": {
+    "status": "PASS",
+    "checks": 17,
+    "scope": "bounded filesystem and direct release-verifier falsifiers; no external subprocesses or admission"
+  },
+  "minimal_environment": {
+    "status": "PASS",
+    "variables": [ "PATH", "LANG" ],
+    "scope": "OCaml selftest, stage and published verify"
+  },
+  "source_input_count": 2477,
+  "build_mode": "dev",
+  "application_closure": {
+    "missing": [],
+    "applications": [
+      "argv", "cepaf_gleam", "certifi", "directories", "envoy", "esqlite",
+      "exception", "filepath", "gleam_crypto", "gleam_erlang", "gleam_http",
+      "gleam_json", "gleam_otp", "gleam_regexp", "gleam_stdlib", "gleeunit",
+      "glisten", "gramps", "hackney", "houdini", "hpack", "idna",
+      "indrajaal_gleam_web", "logging", "lustre", "marceau", "mimerl",
+      "mist", "parse_trans", "platform", "quic", "simplifile",
+      "ssl_verify_fun", "uos_swarm", "uos_tui", "wisp"
+    ],
+    "missing_modules": []
+  },
+  "manifest_file_sha256": "e2300640a09058b53634deb27ba9db382cbe8ebf486afc50c648ae17f0548ede",
+  "runtime_dependencies": {
+    "schema": "uos.ecology-runtime-dependencies.v1",
+    "ocaml": {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+      "sha256": "f63584aac3923ba0060b0795274846b6df425b17b7f2f45bc6368b81e3b2ad92"
+    },
+    "pixi": {
+      "path": "/home/an/NAS-setup/uos/toolchains/pixi/bin/pixi",
+      "sha256": "387a2d3052e656f61ccf735e6750255451366f45635a2da09116b1f8394b2837"
+    },
+    "erl": {
+      "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/erl",
+      "sha256": "ef4292ee944622942f2e961553eae2222a9dce112eb7e5bfec04dcb9a0d54970"
+    },
+    "max_manifest": {
+      "path": "/home/an/NAS-setup/uos/services/inference/max/pixi.toml",
+      "sha256": "19543e532ae8600821446915a9e7f6a8f655e5d29c288009182f7c6dbf9c39c4"
+    },
+    "max_lock": {
+      "path": "/home/an/NAS-setup/uos/services/inference/max/pixi.lock",
+      "sha256": "e8522dd06e5e4b6def2e2e41ff13ad76dddfdfa8731ea6cafc54fc4701030c0f"
+    },
+    "environment_locator": "/home/an/NAS-setup/uos/services/inference/max/.pixi/envs/default",
+    "environment_python": {
+      "path": "/home/an/NAS-setup/uos/services/inference/max/.pixi/envs/default/bin/python3.12",
+      "sha256": "7d2dcccfb583c52c8a53efb9cd195bc76cc1cd43a3dfae8f16bde624c6902265"
+    },
+    "environment_mode": "existing --no-install --frozen; environment closure is not copied",
+    "repository_resources": {
+      "path": "/home/an/NAS-setup/uos",
+      "mode": "source/toolchain locator only; dedicated ecology listener does not publish repository files"
+    }
+  },
+  "tool_versions": {
+    "ocaml": "5.5.0",
+    "mojo": "1.0.0 (ed45d567)",
+    "otp": {
+      "otp_release": "29",
+      "root_dir": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "erts_version": "17.0.5"
+    }
+  },
+  "code": [
+    {
+      "path": "tools/ecology_release.ml",
+      "sha256": "fd6a9f5463db99c0aa6292903bed979830a90aab243f44f2f4132e1dfa3bffd3"
+    },
+    {
+      "path": "tools/ecology_release.mojo",
+      "sha256": "063d03d32b7d833dd5b19471f211518a98ffb36b8469cc029433bf2afbc01231"
+    }
+  ],
+  "risk": {
+    "record": "docs/journal/20260909-0254-ecology-release-risk.json",
+    "sha256": "8408aca981b19ac068adc407d6539bdfc3156f9c4005e357a1d199c983d3befe",
+    "preflight": "PASS observed before attempt1 claim",
+    "active_check": {
+      "status": "ACTIVE_OBSERVATION_PASS",
+      "authority": "NONE",
+      "runtime_admission": "NOT_GRANTED",
+      "observed_at": "2026-09-09T02:35:23Z",
+      "completed_at": "2026-09-09T02:35:23Z",
+      "elapsed_monotonic_seconds": 0.210213534,
+      "clock_start": {
+        "source": "chronyc tracking",
+        "abs_ntp_offset_seconds": 0.000230105,
+        "uncertainty_seconds": 0.017239406,
+        "reference_age_seconds": 443.5689654350281,
+        "stratum": 3
+      },
+      "clock_end": {
+        "source": "chronyc tracking",
+        "abs_ntp_offset_seconds": 0.000230083,
+        "uncertainty_seconds": 0.017239604,
+        "reference_age_seconds": 443.6748812198639,
+        "stratum": 3
+      },
+      "assessment_sha256": "8408aca981b19ac068adc407d6539bdfc3156f9c4005e357a1d199c983d3befe",
+      "evidence_files_checked": 5,
+      "sa_plan": {
+        "plan_id": "uos/ecology-release/20260909-0243",
+        "snapshot_sha256": "a815206e99db1eaf11b8b00019b7d7d442c3590d4d091911d8bb21d2df043e9a",
+        "tasks": [
+          {
+            "task_id": "PACKAGE",
+            "state": "executing",
+            "worker": "codex-ecology-release",
+            "lease_until_ns": "1788927059234434989",
+            "attempt": 1,
+            "completed_at_ns": null,
+            "result_present": false,
+            "dependencies": []
+          }
+        ],
+        "mode": "READONLY",
+        "lease_fencing_authority": "NOT_GRANTED"
+      },
+      "order": [],
+      "findings": [],
+      "limits": [
+        "Listed byte equality does not prove source completeness, runtime behavior or signed provenance.",
+        "Analysis prose, class judgments, cost ties and control effectiveness require qualified review.",
+        "Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.",
+        "Snapshot is confined to one complete plan; no global optimum is asserted."
+      ]
+    },
+    "preserved_hold": "Refresh used invalid in_progress state enum; checker HOLD/RP-INVALID; corrected to observed Sa-plan executing state before stage."
+  },
+  "resource_bounds": {
+    "operation_seconds": 120,
+    "subprocess_seconds": 20,
+    "subprocess_output_bytes": 1048576,
+    "file_bytes": 134217728,
+    "total_bytes": 536870912,
+    "files": 20000,
+    "beam_schedulers": 2,
+    "disk_preflight": "Observed df with 20-percent margin and 512MiB remaining floor; resource-envelope owner injection is unavailable and is not claimed."
+  },
+  "build_evidence": [
+    "/tmp/uos-supervision-build-refresh-2.log",
+    "/tmp/uos-supervision-tests-refresh.log",
+    "/tmp/uos-supervision-web-build-final.log",
+    "/tmp/uos-supervision-web-tests-final.log"
+  ],
+  "limits": [
+    "Permissions are reversible by the owner; candidate hashes are not signatures.",
+    "Existing MAX environment library closure is externally referenced, not copied or completely hashed.",
+    "Already-built dev artifacts include tests; dedicated ecology entrypoint exposes no remote test API.",
+    "Build-to-source correspondence, service startup/recovery, human acceptance and independent admission are separate gates.",
+    "No service, VCS, dependency installation, external plugin or production mutation was performed by this worker."
+  ],
+  "application_admitted": false
+}
