@@ -1,0 +1,79 @@
+OTP="29" ERTS="17.0.5"
+======================== EUnit ========================
+module 'ev_control_boundary_test'
+  ev_control_boundary_test: outsider_cannot_ratify_test...[0.001 s] ok
+  ev_control_boundary_test: named_peer_cannot_impersonate_sovereign_test...ok
+  ev_control_boundary_test: byzantine_fault_is_terminal_test...ok
+  ev_control_boundary_test: negative_debit_is_rejected_test...ok
+  ev_control_boundary_test: intervention_after_ratification_blocks_apply_test...[0.002 s] ok
+  ev_control_boundary_test: physiology_after_ratification_blocks_apply_test...[0.001 s] ok
+  ev_control_boundary_test: ratified_replay_is_rejected_test...ok
+  ev_control_boundary_test: forged_verdict_without_votes_is_rejected_test...ok
+  ev_control_boundary_test: mismatched_mutation_is_rejected_test...ok
+  ev_control_boundary_test: skipped_generation_is_rejected_test...ok
+  ev_control_boundary_test: stale_generation_cannot_regress_state_test...ok
+  ev_control_boundary_test: token_debits_conserve_available_and_consumed_test...ok
+  ev_control_boundary_test: unconfigured_bft_roster_fails_closed_test...ok
+  ev_control_boundary_test: actor_rejects_forged_votes_and_stale_vote_snapshot_test...[0.003 s] ok
+  ev_control_boundary_test: actor_intervention_and_replay_preserve_owned_state_test...ok
+  ev_control_boundary_test: actor_byzantine_fault_cannot_be_overwritten_test...ok
+  ev_control_boundary_test: actor_rejects_unsubmitted_proposal_test...ok
+  [done in 0.058 s]
+module 'multi_agent_quorum_test'
+  multi_agent_quorum_test: sovereign_identities_test...ok
+  multi_agent_quorum_test: ballot_creation_test...ok
+  multi_agent_quorum_test: two_of_three_ratification_test...ok
+  multi_agent_quorum_test: two_of_three_rejection_test...ok
+  multi_agent_quorum_test: byzantine_conflicting_vote_detection_test...ok
+  multi_agent_quorum_test: vote_entropy_calculation_test...ok
+  multi_agent_quorum_test: quorum_engine_record_test...ok
+  [done in 0.021 s]
+module 'predictive_autoscaler_test'
+  predictive_autoscaler_test: init_autoscaler_test...ok
+  predictive_autoscaler_test: token_consumption_and_refill_test...[0.001 s] ok
+  predictive_autoscaler_test: token_exhaustion_test...ok
+  predictive_autoscaler_test: scale_up_on_queue_spike_test...ok
+  predictive_autoscaler_test: cooldown_inhibits_scaling_test...ok
+  predictive_autoscaler_test: scale_down_on_idle_queue_test...ok
+  [done in 0.019 s]
+module 'homeostasis_evolution_engine_test'
+  homeostasis_evolution_engine_test: four_party_quorum_members_test...ok
+  homeostasis_evolution_engine_test: pid_homeostasis_convergence_test...ok
+  homeostasis_evolution_engine_test: equilibrium_transition_test...ok
+  homeostasis_evolution_engine_test: propose_evolution_blocked_before_homeostasis_test...ok
+  homeostasis_evolution_engine_test: three_of_four_evolution_ratification_test...ok
+  homeostasis_evolution_engine_test: instability_intervention_test...ok
+  homeostasis_evolution_engine_test: three_of_four_evolution_rejection_test...ok
+  homeostasis_evolution_engine_test: homeostasis_actor_lifecycle_test...ok
+  homeostasis_evolution_engine_test: physiological_homeostasis_gating_test...ok
+  [done in 0.030 s]
+module 'tui_15_evolutionary_cycles_test'
+  tui_15_evolutionary_cycles_test: evolutionary_cycle_01_simd_scorer_test...[0.003 s] ok
+  tui_15_evolutionary_cycles_test: evolutionary_cycle_02_heijunka_queue_test...ok
+  tui_15_evolutionary_cycles_test: evolutionary_cycle_03_solo5_microvm_test...ok
+  tui_15_evolutionary_cycles_test: evolutionary_cycle_04_crdt_delta_sync_test...ok
+  tui_15_evolutionary_cycles_test: evolutionary_cycle_05_lyapunov_pid_test...ok
+  tui_15_evolutionary_cycles_test: evolutionary_cycle_06_zenoh_zmof_test...ok
+  tui_15_evolutionary_cycles_test: evolutionary_cycle_07_sre_antibody_test...ok
+  tui_15_evolutionary_cycles_test: evolutionary_cycle_08_gospel_rete_test...ok
+  tui_15_evolutionary_cycles_test: evolutionary_cycle_09_solo5_cas_test...ok
+  tui_15_evolutionary_cycles_test: evolutionary_cycle_10_max_mojo_vec_test...ok
+  tui_15_evolutionary_cycles_test: evolutionary_cycle_11_prajna_breaker_test...ok
+  tui_15_evolutionary_cycles_test: evolutionary_cycle_12_quantum_entangle_test...ok
+  tui_15_evolutionary_cycles_test: evolutionary_cycle_13_chaos_sandbox_test...ok
+  tui_15_evolutionary_cycles_test: evolutionary_cycle_14_crdt_sheaf_test...ok
+  tui_15_evolutionary_cycles_test: evolutionary_cycle_15_otel_stream_test...ok
+  tui_15_evolutionary_cycles_test: continuous_15_evolutionary_cycles_e2e_test...[0.010 s] ok
+  [done in 0.061 s]
+module 'homeostasis_evolution_hud_test'
+  homeostasis_evolution_hud_test: render_hud_converging_test...[0.006 s] ok
+  homeostasis_evolution_hud_test: render_hud_equilibrium_test...ok
+  homeostasis_evolution_hud_test: render_hud_live_event_log_test...ok
+  [done in 0.015 s]
+module 'multi_agent_quorum_hud_test'
+  multi_agent_quorum_hud_test: init_quorum_hud_test...ok
+  multi_agent_quorum_hud_test: update_from_engine_test...ok
+  multi_agent_quorum_hud_test: render_svg_and_html_test...ok
+  [done in 0.009 s]
+=======================================================
+  All 61 tests passed.

@@ -22,10 +22,11 @@ pub fn init_autoscaler_hud_test() {
 
 pub fn update_from_autoscaler_test() {
   let hud = predictive_autoscaler_hud.init_autoscaler_hud()
-  let engine0 = init_autoscaler(2, 10, 50.0, 1000, 100, 1000)
+  let assert Ok(engine0) = init_autoscaler(2, 10, 50.0, 1000, 100, 1000)
   let engine1 = evaluate_scaling(engine0, 25, 120.0, 1000 + 10_000_001)
 
-  let updated_hud = predictive_autoscaler_hud.update_from_autoscaler(hud, engine1)
+  let updated_hud =
+    predictive_autoscaler_hud.update_from_autoscaler(hud, engine1)
   updated_hud.current_workers |> should.equal(4)
   updated_hud.queue_depth |> should.equal(25)
   should.be_true(string.contains(updated_hud.last_action_desc, "SCALE UP"))

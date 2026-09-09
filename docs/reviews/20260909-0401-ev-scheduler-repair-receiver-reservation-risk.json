@@ -1,0 +1,73 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "ev-scheduler-repair-20260909-0401-receiver-reservation",
+    "plan_id": "uos/ev-scheduler-repair/20260909",
+    "task_id": "REPAIR",
+    "actor": "codex-ev-scheduler",
+    "fractal_layer": 3,
+    "phase": "implementation",
+    "scope": "Bounded repair of receiver-side work-steal admission: a pending typed transfer reservation is created before dispatch, accepted plus pending receipts are capped at 256, accepted responses require the matching donor, recipient, and transfer identity, and typed rejections cannot consume any reservation. Scope includes focused Gleam regression tests only. No deployment, integration, admission, or disk/network durability claim is authorized.",
+    "task_state": "executing",
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": [],
+    "class": "P1",
+    "observed_at": "2026-09-09T04:01:56Z",
+    "ready_since": "2026-09-09T04:01:56Z",
+    "valid_until": "2026-09-09T05:01:56Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "48160fe6faecc564296e72f9176e76611218782f; descendant of 5f6d08af7d95c870503738d1b61bd5f9dc352e24 and immutable receiver-reservation change 7dc0e1caa0b93d42fd65c5349389ecd7f3f69aa9",
+      "evidence": [
+        {"path": ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/work_stealing.gleam", "sha256": "b156c992ceca39fc0cb0b6c983c194164045fbb88b20ff9cf3212b04b23e7a8a", "observed_at": "2026-09-09T04:01:56Z"},
+        {"path": ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/test/work_stealing_test.gleam", "sha256": "96ede4e24cbdcba58f053a71f5856834c168e37cd06c3cf8911cc60a56c4b9e9", "observed_at": "2026-09-09T04:01:56Z"},
+        {"path": ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/test/ev_scheduler_repair_runner.gleam", "sha256": "763afef6080c2aa9bc922ffa63f43dd96a24ee7b2ff39570d5946c136e48af4d", "observed_at": "2026-09-09T04:01:56Z"},
+        {"path": ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/heijunka_scheduler.gleam", "sha256": "6380ad940b32bf517200c78165460e0f235fa61d67a301ce44592d290b6ea6e8", "observed_at": "2026-09-09T04:01:56Z"},
+        {"path": ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/test/heijunka_scheduler_test.gleam", "sha256": "58eb5f07cd70fd4cec8ad9dc9b1f92b8a2ed5b95c73cc76a5ff1349cd428b7e1", "observed_at": "2026-09-09T04:01:56Z"}
+      ]
+    },
+    "factors": {
+      "criticality": {"rationale": "A receiver can strand donor work when its receipt capacity is exhausted after a donor already removes a batch.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/work_stealing.gleam"]},
+      "stpa": {"rationale": "Unsafe control actions include requesting work without reserved receiver capacity and allowing a typed rejection to acknowledge an unrelated reservation.", "value": 5, "low": 5, "high": 5, "evidence_refs": [".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/test/work_stealing_test.gleam"]},
+      "fmea": {"rationale": "FM-RECEIVER-SATURATION and FM-REJECTION-IDENTITY are S5 O2 Det3 RPN30; capacity and rejection identity must fail closed.", "value": 5, "low": 5, "high": 5, "evidence_refs": [".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/test/ev_scheduler_repair_runner.gleam"]},
+      "dependency": {"rationale": "This is a decisive bounded scheduler evidence gap for EV97/EV99 review, without an admission claim.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/heijunka_scheduler.gleam"]},
+      "impact": {"rationale": "The repair maintains model-level work conservation and a bounded receipt state under full and near-full receiver capacity.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/work_stealing.gleam"]}
+    },
+    "score": 1600,
+    "score_interval": [1600, 1600],
+    "fmea_modes": [
+      {"id": "FM-RECEIVER-SATURATION", "s": 5, "o": 2, "det": 3, "rpn": 30, "band": 5, "cause": "Request generation did not reserve receiver receipt capacity, so a donor could remove work that a full receiver rejected.", "effect": "Donor work becomes stranded in a cached response with no modeled acceptance transition.", "controls": "Bounded pending transfer reservations, exact response matching, and full/255 capacity regression cases."},
+      {"id": "FM-REJECTION-IDENTITY", "s": 5, "o": 2, "det": 3, "rpn": 30, "band": 5, "cause": "A wrong-donor rejection used the rejecting node identity and looked like an empty accepted response for another pending transfer sharing the same transfer ID.", "effect": "A later valid donor response is discarded after its reservation was consumed by the rejection.", "controls": "Typed TransferRejected replies are rejected before reservation matching; shared-transfer-ID misroute regression."}
+    ],
+    "stpa_analysis": {
+      "controller": "Receiver and donor work-stealing models",
+      "control_action": "Reserve, dispatch, and accept a work-steal transfer",
+      "losses": ["L-WORK-LOSS", "L-UNBOUNDED-STATE"],
+      "hazards": ["H-RECEIVER-SATURATION", "H-UNMATCHED-RESPONSE", "H-REJECTION-IDENTITY", "H-UNBOUNDED-PENDING"],
+      "ucas": [
+        {"type": "not_provided", "applicability": "applicable", "context": "A valid donor response has no matching receiver reservation.", "hazard_ids": ["H-UNMATCHED-RESPONSE"], "constraint": "Response adoption requires an exact pending donor, recipient, and transfer identity."},
+        {"type": "provided_unsafe", "applicability": "applicable", "context": "Receiver sends a fresh request when accepted plus pending transfer receipts already fill the bounded limit.", "hazard_ids": ["H-RECEIVER-SATURATION", "H-UNBOUNDED-PENDING"], "constraint": "Fresh request generation fails closed at the combined receipt limit."},
+        {"type": "wrong_timing", "applicability": "applicable", "context": "Two requests consume the final receiver slot before either response arrives.", "hazard_ids": ["H-RECEIVER-SATURATION"], "constraint": "The first request reserves the final slot; a second fresh request returns None."},
+        {"type": "provided_unsafe", "applicability": "applicable", "context": "A wrong-donor rejection shares a transfer ID with another pending donor reservation.", "hazard_ids": ["H-REJECTION-IDENTITY"], "constraint": "Typed rejections cannot acknowledge or remove a pending reservation."},
+        {"type": "duration", "applicability": "applicable", "context": "Pending transfer reservations grow without a bound.", "hazard_ids": ["H-UNBOUNDED-PENDING"], "constraint": "Accepted plus pending reservations remain at most 256; response acceptance consumes exactly one pending reservation."}
+      ]
+    },
+    "decision": {
+      "summary": "Preserve reviewed candidates and add the smallest typed reservation state needed to prevent saturation-stranding.",
+      "alternatives": ["Reject responses after donor removal", "Reserve receiver capacity before request dispatch"],
+      "assumptions": ["The model has no physical network, authentication, disk, restart, or durability semantics."],
+      "confidence": "analyst_estimate",
+      "counterevidence": ["Package-wide test execution has unrelated failures and is outside this focused scope."],
+      "forecast": "Full capacity refuses a fresh request; at 255 only one request is reserved, and its response becomes locally runnable.",
+      "falsifier": "A fresh request can be created when accepted plus pending is 256, an unmatched or rejected response is accepted, the 255 two-request case removes more than one donor batch, or a shared-ID wrong-donor rejection consumes a valid donor reservation.",
+      "acceptance": ["Focused Gleam runner executes 28 scheduler tests through OTP 29", "Candidate source hashes match this portfolio", "The failed expired-lease preflight is preserved and the native active check passes under reclaimed attempt 4"],
+      "rollback": "Keep immutable candidates, do not integrate, complete, deploy, or admit this work.",
+      "budget": "Existing realized Gleam and OTP toolchains only; no package downloads.",
+      "reviewer": "Parent coordinator and independent reviewer.",
+      "residuals": ["No physical network/authentication/disk durability claim", "Formal refinement remains outside this bounded repair."],
+      "supersedes": "The receiver-saturation review finding, while preserving all prior candidates."
+    }
+  }
+]

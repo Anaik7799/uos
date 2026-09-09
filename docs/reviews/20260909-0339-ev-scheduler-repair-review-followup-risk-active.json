@@ -1,0 +1,44 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "ev-scheduler-repair-20260909-0339-review-followup",
+    "plan_id": "uos/ev-scheduler-repair/20260909",
+    "task_id": "REPAIR",
+    "actor": "codex-ev-scheduler",
+    "fractal_layer": 3,
+    "phase": "implementation",
+    "scope": "Review-directed bounded repair of plan-fenced completion, donor request replay, donor validation, receipt capacity, and deferred reclaim draining in the two scheduler modules and direct Gleam tests. The preceding immutable candidate is preserved. No deployment, integration, task completion, admission, or durability claim is authorized.",
+    "task_state": "executing",
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": [],
+    "class": "P1",
+    "observed_at": "2026-09-09T03:39:09Z",
+    "ready_since": "2026-09-09T03:11:19Z",
+    "valid_until": "2026-09-09T04:39:09Z",
+    "snapshot": {"kind": "working_tree", "reference": "Current empty JJ descendant of immutable b79962650, source observed directly.", "evidence": [
+      {"path": ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/heijunka_scheduler.gleam", "sha256": "846f657eea5f2666748625b227d1b63f282c1b2108155286aa2502ac11315428", "observed_at": "2026-09-09T03:39:09Z"},
+      {"path": ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/work_stealing.gleam", "sha256": "46f320ebaf19e77cf3aa0597aaeffb8112387243063bcec83bb97da35dad9307", "observed_at": "2026-09-09T03:39:09Z"},
+      {"path": ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/test/heijunka_scheduler_test.gleam", "sha256": "50b4d6e54c520c642094345bc45e7584562e26069daaedf340bd4a84f0b4cdf4", "observed_at": "2026-09-09T03:39:09Z"},
+      {"path": ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/test/work_stealing_test.gleam", "sha256": "1de148c96f713d97e8ad892116201171d491bfb3fbca076bf16a521564bcfd77", "observed_at": "2026-09-09T03:39:09Z"}
+    ]},
+    "factors": {
+      "criticality": {"rationale": "Reviewed counterexamples can lose work or incorrectly complete it in the in-memory scheduler model.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/heijunka_scheduler.gleam"]},
+      "stpa": {"rationale": "Unsafe actions include wrong-plan completion, duplicate donor removal, wrong-donor removal, and unbounded receipt retention.", "value": 5, "low": 5, "high": 5, "evidence_refs": [".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/work_stealing.gleam"]},
+      "fmea": {"rationale": "FM-SCHEDULER-REVIEW S5 O2 Det3 RPN30; F5 under severity floor.", "value": 5, "low": 5, "high": 5, "evidence_refs": [".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/test/work_stealing_test.gleam"]},
+      "dependency": {"rationale": "The paths are decisive EV97/EV99 evidence gaps.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/test/heijunka_scheduler_test.gleam"]},
+      "impact": {"rationale": "Acceptance protects scheduler work identity and conservation at this model scope.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/work_stealing.gleam"]}
+    },
+    "score": 1600,
+    "score_interval": [1600, 1600],
+    "fmea_modes": [{"id": "FM-SCHEDULER-REVIEW", "s": 5, "o": 2, "det": 3, "rpn": 30, "band": 5, "cause": "State lacks plan completion identity, donor replay state, donor validation, and a receipt bound.", "effect": "Work can be incorrectly removed or receipt memory grow without a safe bound.", "controls": "Red/green direct tests and bounded typed model state."}],
+    "stpa_analysis": {"controller": "Heijunka scheduler and donor/receiver work-stealing models", "control_action": "Complete, handle a request, and accept a response", "losses": ["L-WORK-LOSS", "L-WRONG-COMPLETION", "L-UNBOUNDED-STATE"], "hazards": ["H-PLAN-COLLISION", "H-REPLAY-LOSS", "H-WRONG-DONOR", "H-RECEIPT-EXHAUSTION"], "ucas": [
+      {"type": "not_provided", "applicability": "applicable", "context": "First donor response is unavailable for an identical repeated request.", "hazard_ids": ["H-REPLAY-LOSS"], "constraint": "Donor records bounded response receipts and returns the original response."},
+      {"type": "provided_unsafe", "applicability": "applicable", "context": "Completion omits plan or donor accepts a request addressed elsewhere.", "hazard_ids": ["H-PLAN-COLLISION", "H-WRONG-DONOR"], "constraint": "Completion includes plan; donor validates donor_node before removal."},
+      {"type": "wrong_timing", "applicability": "applicable", "context": "A duplicated request removes a second batch.", "hazard_ids": ["H-REPLAY-LOSS"], "constraint": "Transfer identity is replay-safe."},
+      {"type": "duration", "applicability": "applicable", "context": "Receipt storage grows beyond a configured model limit.", "hazard_ids": ["H-RECEIPT-EXHAUSTION"], "constraint": "Receipt intake fails closed when full; no eviction."}
+    ]},
+    "decision": {"summary": "Repair only the independent review findings with test-first cases.", "alternatives": ["Mark previous candidate ready", "Preserve it and issue a follow-up candidate"], "assumptions": ["In-memory replay state is not actual durability."], "confidence": "analyst_estimate", "counterevidence": ["No network/disk runtime behavior is in scope."], "forecast": "All five new cases fail before and pass after bounded state changes.", "falsifier": "Any test can remove wrong-plan work, second donor batch, wrong donor work, or silently evict/full-grow receipts.", "acceptance": ["Five new cases and existing suite pass at direct compiled Gleam scope", "New candidate is distinct from b79962650"], "rollback": "Preserve candidate history and do not integrate/complete/deploy/admit.", "budget": "Existing compiler inputs only; no downloads.", "reviewer": "Parent coordinator and independent review.", "residuals": ["Formal and runtime durability remain unrun."], "supersedes": "b79962650 review state, not its immutable history."}
+  }
+]

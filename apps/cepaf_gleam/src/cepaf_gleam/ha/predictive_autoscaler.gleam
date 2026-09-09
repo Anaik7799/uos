@@ -17,7 +17,6 @@
 //// </c3i-module>
 //// =============================================================================
 
-import gleam/float
 import gleam/int
 
 /// Scaling action recommended by the predictive engine.
@@ -34,6 +33,7 @@ pub type TokenBucket {
     available_tokens: Int,
     refill_rate_per_sec: Int,
     last_refill_us: Int,
+    refill_remainder: Int,
   )
 }
 
@@ -54,11 +54,46 @@ pub type AutoscalerState {
     last_scale_action: ScalingAction,
     last_scale_timestamp_us: Int,
     cooldown_period_us: Int,
+    last_observation_us: Int,
   )
 }
 
 /// Initialize the predictive autoscaler.
+pub type AutoscalerConfigError {
+  InvalidWorkerLimits(min_workers: Int, max_workers: Int)
+  InvalidTokenLimits(capacity: Int, refill_rate: Int)
+  InvalidTargetLatency(target_latency_ms: Float)
+}
+
 pub fn init_autoscaler(
+  min_workers: Int,
+  max_workers: Int,
+  target_latency_ms: Float,
+  token_capacity: Int,
+  refill_rate: Int,
+  now_us: Int,
+) -> Result(AutoscalerState, AutoscalerConfigError) {
+  let valid_target =
+    target_latency_ms >. 0.0 && target_latency_ms <=. 1.7976931348623157e308
+  case True {
+    _ if min_workers < 0 || max_workers < min_workers ->
+      Error(InvalidWorkerLimits(min_workers, max_workers))
+    _ if token_capacity < 0 || refill_rate < 0 ->
+      Error(InvalidTokenLimits(token_capacity, refill_rate))
+    _ if !valid_target -> Error(InvalidTargetLatency(target_latency_ms))
+    _ ->
+      Ok(init_valid_autoscaler(
+        min_workers,
+        max_workers,
+        target_latency_ms,
+        token_capacity,
+        refill_rate,
+        now_us,
+      ))
+  }
+}
+
+fn init_valid_autoscaler(
   min_workers: Int,
   max_workers: Int,
   target_latency_ms: Float,
@@ -72,6 +107,7 @@ pub fn init_autoscaler(
       available_tokens: token_capacity,
       refill_rate_per_sec: refill_rate,
       last_refill_us: now_us,
+      refill_remainder: 0,
     )
 
   AutoscalerState(
@@ -89,6 +125,7 @@ pub fn init_autoscaler(
     last_scale_action: ScaleHold("Initial state"),
     last_scale_timestamp_us: now_us,
     cooldown_period_us: 10_000_000,
+    last_observation_us: now_us,
     // 10 seconds cooldown
   )
 }
@@ -99,26 +136,47 @@ pub fn refill_tokens(bucket: TokenBucket, now_us: Int) -> TokenBucket {
   case elapsed_us <= 0 {
     True -> bucket
     False -> {
-      let elapsed_sec = int.to_float(elapsed_us) /. 1_000_000.0
-      let added_tokens =
-        float.round(elapsed_sec *. int.to_float(bucket.refill_rate_per_sec))
-      let new_tokens = int.min(bucket.capacity, bucket.available_tokens + added_tokens)
-      TokenBucket(..bucket, available_tokens: new_tokens, last_refill_us: now_us)
+      // Integer token-microseconds preserve fractions across arbitrary call
+      // partitions. Saturation discards excess credit, including fractions.
+      let credit =
+        elapsed_us * bucket.refill_rate_per_sec + bucket.refill_remainder
+      let added_tokens = credit / 1_000_000
+      let new_tokens =
+        int.min(bucket.capacity, bucket.available_tokens + added_tokens)
+      let remainder = case new_tokens == bucket.capacity {
+        True -> 0
+        False -> credit - added_tokens * 1_000_000
+      }
+      TokenBucket(
+        ..bucket,
+        available_tokens: new_tokens,
+        last_refill_us: now_us,
+        refill_remainder: remainder,
+      )
     }
   }
 }
 
 /// Consume tokens from the bucket if available.
+pub type TokenConsumptionError {
+  InvalidTokenAmount(requested: Int)
+  TokenBudgetExhausted(requested: Int, available: Int)
+}
+
 pub fn consume_tokens(
   state: AutoscalerState,
   tokens: Int,
   now_us: Int,
-) -> Result(AutoscalerState, String) {
+) -> Result(AutoscalerState, TokenConsumptionError) {
   let bucket = refill_tokens(state.token_bucket, now_us)
-  case bucket.available_tokens >= tokens {
-    True -> {
+  case tokens >= 0, bucket.available_tokens >= tokens {
+    False, _ -> Error(InvalidTokenAmount(tokens))
+    True, True -> {
       let updated_bucket =
-        TokenBucket(..bucket, available_tokens: bucket.available_tokens - tokens)
+        TokenBucket(
+          ..bucket,
+          available_tokens: bucket.available_tokens - tokens,
+        )
       Ok(
         AutoscalerState(
           ..state,
@@ -127,13 +185,7 @@ pub fn consume_tokens(
         ),
       )
     }
-    False ->
-      Error(
-        "Token budget exhausted: requested "
-        <> int.to_string(tokens)
-        <> ", available "
-        <> int.to_string(bucket.available_tokens),
-      )
+    True, False -> Error(TokenBudgetExhausted(tokens, bucket.available_tokens))
   }
 }
 
@@ -144,9 +196,24 @@ pub fn evaluate_scaling(
   new_latency_ms: Float,
   now_us: Int,
 ) -> AutoscalerState {
+  case now_us <= state.last_observation_us {
+    True -> state
+    False ->
+      evaluate_forward_scaling(state, new_queue_depth, new_latency_ms, now_us)
+  }
+}
+
+fn evaluate_forward_scaling(
+  state: AutoscalerState,
+  new_queue_depth: Int,
+  new_latency_ms: Float,
+  now_us: Int,
+) -> AutoscalerState {
   let bucket = refill_tokens(state.token_bucket, now_us)
   let delta_q = int.to_float(new_queue_depth - state.queue_depth)
-  let dq_dt = delta_q
+  let elapsed_seconds =
+    int.to_float(now_us - state.last_observation_us) /. 1_000_000.0
+  let dq_dt = delta_q /. elapsed_seconds
 
   // Compute Lyapunov stability: lambda = ln(|latency / target|)
   let ratio = new_latency_ms /. state.target_latency_ms
@@ -155,13 +222,22 @@ pub fn evaluate_scaling(
     False -> 0.0 -. { { 1.0 -. ratio } *. 2.0 }
   }
 
-  let in_cooldown = now_us - state.last_scale_timestamp_us < state.cooldown_period_us
+  let in_cooldown =
+    now_us - state.last_scale_timestamp_us < state.cooldown_period_us
 
   let #(new_workers, action, action_ts) = case in_cooldown {
-    True -> #(state.current_workers, ScaleHold("In cooldown period"), state.last_scale_timestamp_us)
+    True -> #(
+      state.current_workers,
+      ScaleHold("In cooldown period"),
+      state.last_scale_timestamp_us,
+    )
     False -> {
       // Scale UP trigger: high queue, positive derivative, or diverging Lyapunov
-      case new_queue_depth > state.current_workers * 5 || dq_dt >. 2.0 || lyapunov >. 0.5 {
+      case
+        new_queue_depth > state.current_workers * 5
+        || dq_dt >. 2.0
+        || lyapunov >. 0.5
+      {
         True -> {
           let target = int.min(state.max_workers, state.current_workers + 2)
           let delta = target - state.current_workers
@@ -171,25 +247,44 @@ pub fn evaluate_scaling(
               ScaleUp(delta, "Queue pressure d(Q)/dt > 2.0 or Lyapunov > 0.5"),
               now_us,
             )
-            False -> #(state.current_workers, ScaleHold("At maximum capacity"), state.last_scale_timestamp_us)
+            False -> #(
+              state.current_workers,
+              ScaleHold("At maximum capacity"),
+              state.last_scale_timestamp_us,
+            )
           }
         }
         False -> {
           // Scale DOWN trigger: low queue, non-positive derivative, negative Lyapunov
-          case new_queue_depth < state.current_workers && dq_dt <=. 0.0 && lyapunov <. -1.0 {
+          case
+            new_queue_depth < state.current_workers
+            && dq_dt <=. 0.0
+            && lyapunov <. -1.0
+          {
             True -> {
               let target = int.max(state.min_workers, state.current_workers - 1)
               let delta = state.current_workers - target
               case delta > 0 {
                 True -> #(
                   target,
-                  ScaleDown(delta, "Low queue depth and stable negative Lyapunov"),
+                  ScaleDown(
+                    delta,
+                    "Low queue depth and stable negative Lyapunov",
+                  ),
                   now_us,
                 )
-                False -> #(state.current_workers, ScaleHold("At minimum capacity"), state.last_scale_timestamp_us)
+                False -> #(
+                  state.current_workers,
+                  ScaleHold("At minimum capacity"),
+                  state.last_scale_timestamp_us,
+                )
               }
             }
-            False -> #(state.current_workers, ScaleHold("Workload within target envelope"), state.last_scale_timestamp_us)
+            False -> #(
+              state.current_workers,
+              ScaleHold("Workload within target envelope"),
+              state.last_scale_timestamp_us,
+            )
           }
         }
       }
@@ -207,5 +302,6 @@ pub fn evaluate_scaling(
     observed_latency_ms: new_latency_ms,
     last_scale_action: action,
     last_scale_timestamp_us: action_ts,
+    last_observation_us: now_us,
   )
 }

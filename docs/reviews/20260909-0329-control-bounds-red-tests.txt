@@ -1,0 +1,155 @@
+OTP="29" ERTS="17.0.5"
+======================== EUnit ========================
+module 'ev_control_bounds_test'
+  ev_control_bounds_test: pending_proposal_intake_is_bounded_test...*failed*
+in function gleeunit@should:be_error/1 (src/gleeunit/should.gleam, line 47)
+in call from ev_control_bounds_test:pending_proposal_intake_is_bounded_test/0 (test/ev_control_bounds_test.gleam, line 54)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+**error:#{function => <<"be_error">>,line => 42,
+  message =>
+      <<"\nOk(#(HomeostasisSystemState(HomeostasisPidConfig(1.2, 0.15, 0.08, 1.0, "...>>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  ev_control_bounds_test: fractional_refill_is_partition_invariant_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"equal">>,line => 10,message => <<"\n0\nshould equal\n1">>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  ev_control_bounds_test: partial_token_is_not_issued_early_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"equal">>,line => 10,message => <<"\n1\nshould equal\n0">>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  ev_control_bounds_test: queue_derivative_uses_elapsed_seconds_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from ev_control_bounds_test:queue_derivative_uses_elapsed_seconds_test/0 (test/ev_control_bounds_test.gleam, line 61)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+**error:#{function => <<"equal">>,line => 10,
+  message => <<"\n20.0\nshould equal\n2.0">>,module => <<"gleeunit/should">>,
+  file => <<"src/gleeunit/should.gleam">>,gleam_error => panic}
+  output:<<"">>
+
+  ev_control_bounds_test: nonforward_queue_sample_preserves_state_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from ev_control_bounds_test:nonforward_queue_sample_preserves_state_test/0 (test/ev_control_bounds_test.gleam, line 73)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+**error:#{function => <<"equal">>,line => 10,
+  message =>
+      <<"\nAutoscalerState(12, 10, 20, 200, 20, 180.0, TokenBucket(100, 100, 1, 10"...>>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  ev_control_bounds_test: invalid_worker_order_cannot_construct_unsafe_state_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"equal">>,line => 10,
+  message => <<"\nFalse\nshould equal\nTrue">>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  ev_control_bounds_test: negative_worker_limit_cannot_construct_unsafe_state_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"equal">>,line => 10,
+  message => <<"\nFalse\nshould equal\nTrue">>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  ev_control_bounds_test: negative_token_capacity_cannot_construct_unsafe_state_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"equal">>,line => 10,
+  message => <<"\nFalse\nshould equal\nTrue">>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  ev_control_bounds_test: negative_refill_rate_cannot_construct_unsafe_state_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"equal">>,line => 10,
+  message => <<"\nFalse\nshould equal\nTrue">>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  ev_control_bounds_test: nonpositive_latency_cannot_construct_unsafe_state_test...*failed*
+in function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)
+in call from eunit_test:'-mf_wrapper/2-fun-0-'/2 (eunit_test.erl, line 286)
+in call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)
+in call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)
+in call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)
+in call from eunit_proc:tests_inorder/3 (eunit_proc.erl, line 483)
+in call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 372)
+**error:#{function => <<"equal">>,line => 10,
+  message => <<"\nFalse\nshould equal\nTrue">>,
+  module => <<"gleeunit/should">>,file => <<"src/gleeunit/should.gleam">>,
+  gleam_error => panic}
+  output:<<"">>
+
+  [done in 0.035 s]
+=======================================================
+  Failed: 10.  Skipped: 0.  Passed: 0.

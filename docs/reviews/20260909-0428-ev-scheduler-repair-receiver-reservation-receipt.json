@@ -1,0 +1,76 @@
+{
+  "schema_version": 1,
+  "receipt_id": "ev-scheduler-repair-20260909-0428-receiver-reservation",
+  "candidate": {
+    "change_id": "zsxkpqstswnnvsmpytqqtttuwxmpotst",
+    "commit_id": "48160fe6faecc564296e72f9176e76611218782f",
+    "description": "Fence work-steal rejection responses by status",
+    "preserved_ancestors": [
+      "b79962650c2fdd7d66e51d045f1333a544d66f64",
+      "b0d781f02330ab2e113880222ce71c6408f290e7",
+      "7dc0e1caa0b93d42fd65c5349389ecd7f3f69aa9",
+      "5f6d08af7d95c870503738d1b61bd5f9dc352e24"
+    ]
+  },
+  "source_sha256": {
+    "apps/cepaf_gleam/src/cepaf_gleam/ha/work_stealing.gleam": "b156c992ceca39fc0cb0b6c983c194164045fbb88b20ff9cf3212b04b23e7a8a",
+    "apps/cepaf_gleam/test/work_stealing_test.gleam": "96ede4e24cbdcba58f053a71f5856834c168e37cd06c3cf8911cc60a56c4b9e9",
+    "apps/cepaf_gleam/test/ev_scheduler_repair_runner.gleam": "763afef6080c2aa9bc922ffa63f43dd96a24ee7b2ff39570d5946c136e48af4d",
+    "apps/cepaf_gleam/src/cepaf_gleam/ha/heijunka_scheduler.gleam": "6380ad940b32bf517200c78165460e0f235fa61d67a301ce44592d290b6ea6e8",
+    "apps/cepaf_gleam/test/heijunka_scheduler_test.gleam": "58eb5f07cd70fd4cec8ad9dc9b1f92b8a2ed5b95c73cc76a5ff1349cd428b7e1"
+  },
+  "tdd": {
+    "red": {
+      "observed": "2026-09-09T04:15Z",
+      "runner": "ev_scheduler_repair_runner",
+      "result": "FAIL",
+      "case": "wrong_donor_rejection_cannot_consume_another_donor_reservation_test",
+      "failure": "The wrong-donor empty response consumed donor-a's pending shared-transfer reservation, so donor-a's later valid response was rejected."
+    },
+    "green": {
+      "observed": "2026-09-09T04:23Z",
+      "runner": "ev_scheduler_repair_runner",
+      "result": "PASS",
+      "count": 28,
+      "coverage": "11 Heijunka scheduler tests and 17 work-stealing tests, including full 256 receipt capacity, 255 with two in-flight requests, response reservation matching, and shared-transfer-ID wrong-donor rejection."
+    }
+  },
+  "toolchain": {
+    "gleam": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam compile-package --target erlang --package . --out /tmp/uos-ev-scheduler-identity-green-20260909-0423 --lib /home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang",
+    "otp": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/bin/erl +S 2:2 -noshell -pa /tmp/uos-ev-scheduler-identity-green-20260909-0423/ebin /home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleeunit/ebin /home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_stdlib/ebin -s ev_scheduler_repair_runner main -s init stop",
+    "network": "No package download or network access was used. Existing realized root dependency ebin inputs were reused."
+  },
+  "risk": {
+    "portfolio": "docs/reviews/20260909-0401-ev-scheduler-repair-receiver-reservation-risk.json",
+    "preflight": {
+      "observed": "2026-09-09T04:26:33Z",
+      "status": "HOLD",
+      "reason": "Inherited attempt 3 lease was expired and task selection was not eligible. The failed preflight is preserved; it did not authorize a claim."
+    },
+    "claim": {
+      "observed": "2026-09-09T04:26Z",
+      "authority": "Native Sa-plan adapter, explicitly authorized parent recovery instruction",
+      "worker": "codex-ev-scheduler",
+      "attempt": 4,
+      "lease_until_ns": "1788931611972741377"
+    },
+    "active_check": {
+      "observed": "2026-09-09T04:29:36Z",
+      "status": "ACTIVE_OBSERVATION_PASS",
+      "assessment_sha256": "daa4038a7c5860fec752b094fb8f79494cc9960ce3d7146f538af10a77cbcde9",
+      "runtime_admission": "NOT_GRANTED",
+      "authority": "NONE"
+    }
+  },
+  "scope": {
+    "implemented": [
+      "Receiver reserves bounded accepted-plus-pending receipt capacity before issuing a fresh work-steal request.",
+      "A response adopts tasks only with an exact pending donor, recipient, and transfer identity.",
+      "TransferAccepted and TransferRejected are typed; a rejection cannot consume a pending reservation."
+    ],
+    "not_claimed": [
+      "Physical network delivery, authentication, disk persistence, restart durability, formal refinement, integration, deployment, or EV admission."
+    ]
+  },
+  "state": "READY_FOR_PARENT_REVIEW"
+}

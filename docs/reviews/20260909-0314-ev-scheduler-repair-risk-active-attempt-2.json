@@ -1,0 +1,68 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "ev-scheduler-repair-20260909-0314-active-attempt-2",
+    "plan_id": "uos/ev-scheduler-repair/20260909",
+    "task_id": "REPAIR",
+    "actor": "codex-ev-scheduler",
+    "fractal_layer": 3,
+    "phase": "implementation",
+    "scope": "Bounded repair of active-lease concurrency, expired-task identity preservation, and replay-safe work-steal adoption in the listed Gleam scheduler modules and their direct tests. No runtime deployment, EV admission record, or historical-record mutation is authorized.",
+    "task_state": "executing",
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": [],
+    "class": "P1",
+    "observed_at": "2026-09-09T03:14:03Z",
+    "ready_since": "2026-09-09T03:11:19Z",
+    "valid_until": "2026-09-09T04:14:03Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Isolated JJ workspace at immutable parent 337f99137673d7866b958a38bd490fb876b2880f; scoped source bytes observed directly before the repair.",
+      "evidence": [
+        {"path": ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/heijunka_scheduler.gleam", "sha256": "33fc9e6df61206be23b61651b3e3c6e65c6a90ba35b6c11bd0427026756ad057", "observed_at": "2026-09-09T03:11:19Z"},
+        {"path": ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/work_stealing.gleam", "sha256": "86ada0894b6949381dd22f8135e49528e9f0824523932ad7d4ee0d21e3dde4f4", "observed_at": "2026-09-09T03:11:19Z"},
+        {"path": ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/test/heijunka_scheduler_test.gleam", "sha256": "006785bec74c5ac0cf6061525a484c64043c99e721c0449b4e87d937daef747d", "observed_at": "2026-09-09T03:11:19Z"},
+        {"path": ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/test/work_stealing_test.gleam", "sha256": "e017c43d7ea5543f61ebfe2f36e9c00beea37ba5caa2641fd9aae3f3eb92ef84", "observed_at": "2026-09-09T03:11:19Z"}
+      ]
+    },
+    "factors": {
+      "criticality": {"rationale": "Scheduler state can exceed configured concurrency or lose task intent before an EV candidate is reviewed.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/heijunka_scheduler.gleam"]},
+      "stpa": {"rationale": "A scheduler can provide an unsafe pull, omit preserved task identity, or apply an already-applied transfer after the response timing has changed.", "value": 5, "low": 5, "high": 5, "evidence_refs": [".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/heijunka_scheduler.gleam", ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/work_stealing.gleam"]},
+      "fmea": {"rationale": "FM-SCHEDULER-IDENTITY S5 O2 Det3 RPN30; the severity floor produces F5 because work can be duplicated or lose its plan and payload identity.", "value": 5, "low": 5, "high": 5, "evidence_refs": [".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/heijunka_scheduler.gleam", ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/work_stealing.gleam"]},
+      "dependency": {"rationale": "This is a prerequisite repair for the EV97/EV99 scheduler claims and downstream bounded scheduling evidence.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/test/heijunka_scheduler_test.gleam", ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/test/work_stealing_test.gleam"]},
+      "impact": {"rationale": "Acceptance protects shared work identity and configured scheduler capacity in the affected control paths.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/heijunka_scheduler.gleam", ".uos-workspaces/ev-scheduler-repair-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/work_stealing.gleam"]}
+    },
+    "score": 1600,
+    "score_interval": [1600, 1600],
+    "fmea_modes": [{"id": "FM-SCHEDULER-IDENTITY", "s": 5, "o": 2, "det": 3, "rpn": 30, "band": 5, "cause": "Pulling ignores active leases, lease records omit the original queued task, and steal responses have no replay identity.", "effect": "Configured concurrency can be exceeded; reclaimed work loses plan/payload metadata; replay duplicates work.", "controls": "Regression tests establish bounded pulls, identity-preserving reclamation, and idempotent response adoption; candidate review binds evidence to these bytes."}],
+    "stpa_analysis": {
+      "controller": "Heijunka scheduler and work-stealing receiver",
+      "control_action": "Issue a pull lease, reclaim an expired task, and adopt a steal response",
+      "losses": ["L-SCHEDULER-DUPLICATE-WORK", "L-SCHEDULER-IDENTITY-LOSS"],
+      "hazards": ["H-CONCURRENCY-EXCEEDED", "H-RECLAIMED-TASK-CORRUPTED", "H-REPLAY-DUPLICATES-WORK"],
+      "ucas": [
+        {"type": "not_provided", "applicability": "applicable", "context": "An active lease is not counted when another batch is pulled.", "hazard_ids": ["H-CONCURRENCY-EXCEEDED"], "constraint": "A pull may lease no more than remaining controller concurrency."},
+        {"type": "provided_unsafe", "applicability": "applicable", "context": "Reclamation synthesizes replacement metadata or a replayed response appends transfers again.", "hazard_ids": ["H-RECLAIMED-TASK-CORRUPTED", "H-REPLAY-DUPLICATES-WORK"], "constraint": "Leases retain original queued task metadata; a response identity is adopted at most once."},
+        {"type": "wrong_timing", "applicability": "applicable", "context": "A response from an already-applied epoch is processed again.", "hazard_ids": ["H-REPLAY-DUPLICATES-WORK"], "constraint": "Replay detection is based on a stable response identity and preserves the existing queue."},
+        {"type": "duration", "applicability": "applicable", "context": "Expired work remains leased past its lease deadline.", "hazard_ids": ["H-CONCURRENCY-EXCEEDED"], "constraint": "Expired leases are removed and their original queued tasks return to pending work."}
+      ]
+    },
+    "decision": {
+      "summary": "Use test-first, source-local repairs to enforce scheduler capacity and work identity without expanding the EV programme scope.",
+      "alternatives": ["Preserve the known unsafe behavior for historical compatibility", "Add isolated regression tests and repair the responsible state representations"],
+      "assumptions": ["The two named modules and direct tests are the complete in-repository callers for these APIs at this base revision.", "The parent coordinator workspace fence remains valid while this task executes."],
+      "confidence": "analyst_estimate",
+      "counterevidence": ["No runtime deployment or multi-node replay observation is in scope; unit evidence cannot establish live distributed transport behavior."],
+      "forecast": "Targeted tests will fail on current code and pass after capacity accounting, task-retaining leases, and replay-safe adoption are implemented.",
+      "falsifier": "A repeated pull exceeds configured concurrency, a reclaimed task changes plan/payload/priority, or applying the same response changes the queue after its first adoption.",
+      "acceptance": ["Targeted Gleam regression tests fail before and pass after the repairs", "Existing direct scheduler and work-stealing tests pass with the realized Gleam and OTP toolchains", "An immutable JJ candidate contains only the scoped sources, tests, and reviewable risk artifact"],
+      "rollback": "Do not integrate or deploy this candidate; preserve the immutable base and test receipts for reviewer comparison.",
+      "budget": "Existing realized toolchains only; ERL_FLAGS='+S 2:2', Gleam build/test jobs no greater than two, no downloads or external inference.",
+      "reviewer": "Parent EV admission coordinator and independent source review before any task completion or integration.",
+      "residuals": ["The queue is in-memory and does not establish distributed fencing.", "Response identity requires a protocol-level stable key if equal donor/epoch responses can carry distinct transfers.", "Formal proof obligations remain unrun unless an existing directly relevant property is found and executed."],
+      "supersedes": "20260909-0311-ev-scheduler-repair-risk-active.json; attempt 1 expired before the required active check could pass."
+    }
+  }
+]
