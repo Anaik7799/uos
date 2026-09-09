@@ -1,0 +1,75 @@
+{
+  "schema": "uos.ev02-governance-checks/v2",
+  "authority": "REPORT_ONLY",
+  "admission": "NOT_GRANTED",
+  "source_commit": "e11692afdd54e39b5d2232389bcdc64f93ed0a61",
+  "rows": [
+    {
+      "id": "policy-selftest",
+      "argv": [
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+        "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/policy_surface_gate.ml",
+        "--selftest"
+      ],
+      "termination": { "kind": "exited", "code": 0 },
+      "elapsed_seconds": 0.08310699462890625,
+      "stdout_path": "/tmp/ev02-governance-harness-1916/policy-selftest.stdout",
+      "stdout_sha256": "f56409d25b327d0475ade2f86cb42bab4ca51746ef440cb6cdf3e2ae57576689",
+      "stderr_path": "/tmp/ev02-governance-harness-1916/policy-selftest.stderr",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "valid": true
+    },
+    {
+      "id": "mapping-selftest",
+      "argv": [
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+        "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/directive_mapping_gate.ml",
+        "--selftest"
+      ],
+      "termination": { "kind": "exited", "code": 0 },
+      "elapsed_seconds": 0.18330001831054688,
+      "stdout_path": "/tmp/ev02-governance-harness-1916/mapping-selftest.stdout",
+      "stdout_sha256": "a61d56eebd5fe58408647056d183ad09002f7b22cd3dbe4c58fa9041631eaeed",
+      "stderr_path": "/tmp/ev02-governance-harness-1916/mapping-selftest.stderr",
+      "stderr_sha256": "a534644f9f44b85826d0d3180ffa8fce603f7e92d6c1250d26bee4e8a9ab2864",
+      "valid": true
+    },
+    {
+      "id": "mapping-fixture-selftest",
+      "argv": [
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+        "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/directive_mapping_gate.ml",
+        "--fixture-selftest"
+      ],
+      "termination": { "kind": "exited", "code": 0 },
+      "elapsed_seconds": 1.3496038913726807,
+      "stdout_path": "/tmp/ev02-governance-harness-1916/mapping-fixture-selftest.stdout",
+      "stdout_sha256": "68fab3ab93bb29f6f17f333fef87db09b17d647af1b537634556f45f3bf1feac",
+      "stderr_path": "/tmp/ev02-governance-harness-1916/mapping-fixture-selftest.stderr",
+      "stderr_sha256": "a534644f9f44b85826d0d3180ffa8fce603f7e92d6c1250d26bee4e8a9ab2864",
+      "valid": true
+    },
+    {
+      "id": "mapping-observation",
+      "argv": [
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+        "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/tools/ev02_governance/directive_mapping_gate.ml",
+        "--observe",
+        "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909",
+        "/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909/governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json"
+      ],
+      "termination": { "kind": "exited", "code": 1 },
+      "elapsed_seconds": 0.4154469966888428,
+      "stdout_path": "/tmp/ev02-governance-harness-1916/mapping-observation.stdout",
+      "stdout_sha256": "804906b3fff65066d69afa62b96db786a853d0ea6b41f865c7c362c7cb3a54e7",
+      "stderr_path": "/tmp/ev02-governance-harness-1916/mapping-observation.stderr",
+      "stderr_sha256": "a534644f9f44b85826d0d3180ffa8fce603f7e92d6c1250d26bee4e8a9ab2864",
+      "valid": true
+    }
+  ],
+  "valid": true
+}

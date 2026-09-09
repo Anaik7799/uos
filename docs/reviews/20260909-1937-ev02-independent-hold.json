@@ -1,0 +1,221 @@
+{
+  "schema": "uos.ev02.independent-review.v1",
+  "source_candidate": "e11692afdd54e39b5d2232389bcdc64f93ed0a61",
+  "verdict": "HOLD_CONCRETE_DEFECTS",
+  "authority": "NONE",
+  "admission": "NOT_GRANTED",
+  "findings": [
+    {
+      "id": "EV2-R1",
+      "severity": "P2",
+      "title": "Deadline bypass after early EOF",
+      "source": "tools/ev02_governance/run_checks.ml",
+      "reproduced": true,
+      "observation": "seconds0.1 child closes both streams then sleeps0.7. Actual Exited0 at0.748545885s; first run0.7583s. Both EOF branch executes blocking waitpid without deadline checks.",
+      "repair_boundary": "Poll process exit under monotonic deadline even with empty read set; bounded cleanup and real abnormal state."
+    },
+    {
+      "id": "EV2-R2",
+      "severity": "P2",
+      "title": "Timeout leaves descendant effects and reader descriptors",
+      "source": "tools/ev02_governance/run_checks.ml",
+      "reproduced": true,
+      "observation": "Timeout returned0.114098s, FDcount6→8. Descendant holding writers created a private marker after return. Both finite child paths terminated naturally within1s. Runner only kills direct pid and returns without guaranteed pipe close.",
+      "repair_boundary": "Isolate process group, kill/reap and close all owned descriptors on every outcome; explicit cleanup-unknown if needed."
+    },
+    {
+      "id": "EV2-R3",
+      "severity": "P2",
+      "title": "Unsafe old policy observation remains callable",
+      "source": "tools/ev02_governance/policy_surface_gate.ml",
+      "reproduced": true,
+      "observation": "--observe on private FIFO rule blocks in open_in_bin; outer native monotonic deadline0.3s terminates124 at0.3034s. New run_checks excludes this observation but CLI remains exposed with unbounded directory/TOML reads and symlink-following open.",
+      "repair_boundary": "Remove/refuse obsolete observe path or reuse bounded regular-file observer; do not infer safety from exclusion from this one harness."
+    },
+    {
+      "id": "EV2-R4",
+      "severity": "P2",
+      "title": "Claimed supporting source clauses are hardcoded",
+      "source": "tools/ev02_governance/directive_mapping_gate.ml",
+      "reproduced": true,
+      "observation": "Synthetic38-ID TOML explicitly says format_mandate=COUNTERFACTUAL/status=REVOKED_SYNTHETIC. Output still claims YYYYMMDD-HHSS-/timestamp-check and CLASSIFIED_MAPPED/active from constants selected only by ID. Overall HOLD stays, but supporting source attribution is false.",
+      "repair_boundary": "Derive clauses from actual parsed/hash-bound source or label them expected/unverified template; retain HOLD and missing lineage."
+    }
+  ],
+  "other_observations": [
+    "Existing7-case harness selftest passes despite independent deadline/cleanup failures",
+    "Actual author summary has4 complete parseable JSON stdout records and all8 stream digests matched; summary.valid means expected report shape/HOLD, not governance approval",
+    "Per-stream1MiB limit allows observed1600454 aggregate bytes. Inner drain has no deadline check, but accepted reads are byte-capped; do not describe it as infinitely unbounded",
+    "Deadline uses Unix.gettimeofday, susceptible to clock adjustment; static finding only, no host clock changed",
+    "source_commit in summary is caller-provided unvalidated label; current e11692 bytes independently pinned here, no producer/candidate authentication claimed",
+    "Mapping rejects duplicate/unknown top-level amendment keys, invalid tuples and traversal references, compares normalized full bodies, and always reports HOLD. Anchor presence is not semantic coverage",
+    "Initial probe final assertion ignored interpreter warning bytes; retained and corrected only fixture expectation, repeated production-prefix counterexamples confirmed"
+  ],
+  "limits": [
+    "Finite private OCaml fixtures, native ocamlrun and outer deadlines only; no global source/runtime/task mutation or author fixes",
+    "No general process-tree verification, hostile filesystem proof, full EV2 lineage or sovereign admission",
+    "Author owns fixes and independent rereview remains required before approval"
+  ],
+  "records": [
+    {
+      "original": "/tmp/ev02-independent-review-1932/bindings.json",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-bindings.json",
+      "sha256": "b50d1f5a43f665ba0b6c57b820cb0a812013a68a61c5fbc82694b4c8983f4f6b"
+    },
+    {
+      "original": "/tmp/ev02-independent-review-1932/run_checks.ml",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-run-checks.ml.txt",
+      "sha256": "0ca986d341eced4cfa1d4aadeeb6e0557caa72b08c7b556d99f065d4d6f84e8c"
+    },
+    {
+      "original": "/tmp/ev02-independent-review-1932/directive_mapping_gate.ml",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-mapping-gate.ml.txt",
+      "sha256": "9888e5203918ce1f0b608fd39a25fe6add73734459304bc1ca5ecdfb8d56b6c8"
+    },
+    {
+      "original": "/tmp/ev02-independent-review-1932/policy_surface_gate.ml",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-policy-gate.ml.txt",
+      "sha256": "266f3c9b46ff25c9d564e6ceb4cf7fb897c4b9d295c628e89af2b2c0f9b6dfe8"
+    },
+    {
+      "original": "/tmp/ev02-independent-review-1932/20260909-1836-ev02-current-directive-rule-amendment.json",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-amendment.json",
+      "sha256": "c5602218fe8751bb78c080e975cd220dfd462b314f1f51d66d32771631879025"
+    },
+    {
+      "original": "/tmp/ev02-independent-review-1932/probes.json",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-first-probes.json",
+      "sha256": "34680f88b88226c4685cbc72b7ce2e0482f4729a188448be3183e1766ce07e29"
+    },
+    {
+      "original": "/tmp/ev02-independent-review-1932/probe-repeat/probes.json",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-probes.json",
+      "sha256": "26bce1f0acdb682c160fb2b3df5fb4bb1a385e929c4be58b21ba1792569c1992"
+    },
+    {
+      "original": "/tmp/ev02-independent-review-1932/probe-repeat/probe.ml",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-probe.ml.txt",
+      "sha256": "cc380eb1f95670afaddcf8b6142ce295176bd09f4c220384b64f143afeb1fcf5"
+    },
+    {
+      "original": "/tmp/ev02-independent-review-1932/probe-repeat/child.ml",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-child.ml.txt",
+      "sha256": "9cbd48ccb2d26eb27a9ec40b459e75e6c202e1f2cdf3d50212c787f8369156c5"
+    },
+    {
+      "original": "/tmp/ev02-review-private-probes.json",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-first-probes-native.json",
+      "sha256": "7800d5911e9b4d8cf807871b8610215cfa1de9fe9172b988312ae6c23103c98e"
+    },
+    {
+      "original": "/tmp/ev02-review-probe-repeat.json",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-repeat-native.json",
+      "sha256": "a8b6caca6f0d0f9ade09a5b54ac9a20756815625f41ae796e35e12c2ba37230a"
+    },
+    {
+      "original": "/tmp/ev02-independent-review-1932/mapping-source-probe.ml",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-mapping-probe.ml.txt",
+      "sha256": "196b6e5c83f796fc97d5ce05eacc23ed1713a43e2ec3752a3078a5627b188ee6"
+    },
+    {
+      "original": "/tmp/ev02-independent-review-1932/counterfactual-source/governance/agents/policy/superset.toml",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-counterfactual-source.toml.txt",
+      "sha256": "90c357856a6d1bc2909dfca1890802b1ad0a9fbf0308091edcfc8b2acb4df5d7"
+    },
+    {
+      "original": "/tmp/ev02-review-mapping-source.json",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-mapping-native.json",
+      "sha256": "f2da38544fdb67ff1ce677abebeb37e69907daf50c10106ca3760ad9ef6f4125"
+    },
+    {
+      "original": "/tmp/ev02-review-policy-fifo.json",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-fifo-native.json",
+      "sha256": "4d96582bc1b17d9879688c031500df208615e36ac21246a7890bc95ed2186d1a"
+    },
+    {
+      "original": "/tmp/ev02-review-author-harness-selftest.json",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-harness-selftest-native.json",
+      "sha256": "9938b0c8009381c67aae5d051c582f2d5a4b8e7cfe71df8551e0f3adba85a05a"
+    },
+    {
+      "original": "/tmp/ev02-governance-harness-1916/summary.json",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-author-summary.json",
+      "sha256": "52f3261e28f917ed3a603215fe385fcd1712fdd5f33f262786dcbb0c7a9dff28"
+    },
+    {
+      "original": "/tmp/ev02-review-stage.json",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-stage-native.json",
+      "sha256": "8335b68bb6e3af05f1b918131a80bbccfc3d0528bd8bff49dccd92f5c71d9cf3"
+    },
+    {
+      "original": "/tmp/ev02_review_stage.ml",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-stage.ml.txt",
+      "sha256": "a684e34909f9ccfdce71408e1c4ab12abe42e7955cbfb3dbdf22d714d7faa792"
+    },
+    {
+      "original": "/tmp/ev02_review_more.ml",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-more-fixtures.ml.txt",
+      "sha256": "93c0a8cf65c22a240bbdec106f619d6f4b165b367f2833143d04ae3e66c1fc92"
+    },
+    {
+      "original": "/tmp/ev02-review-final-active.json",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-active.json",
+      "sha256": "92f36f0291263d6e917e19c731ec916415a8af14a6a517d706674207b630d91e"
+    },
+    {
+      "original": "/tmp/ev02-review-claim.json",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-claim.json",
+      "sha256": "1c1644cf626336b702d3eedfb3b0c30b6a1938b3d89dd60b8290eeb57645f1c4"
+    },
+    {
+      "original": "/tmp/ev02-review-preflight.json",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-preflight.json",
+      "sha256": "7730099ae2b7b60e8a2f7e1d528a716da47d6ac337329246267eb2bf93db9491"
+    },
+    {
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-1922-agy-music-and-ev02-advice-observation.json",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-agy-advice.json",
+      "sha256": "95aa30445688bc553ac59fa127a1a206c3b71f128edd897a3468b1aa9765cce7"
+    },
+    {
+      "original": "/tmp/ev02-governance-harness-1916/policy-selftest.stdout",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-policy-selftest.stdout",
+      "sha256": "f56409d25b327d0475ade2f86cb42bab4ca51746ef440cb6cdf3e2ae57576689"
+    },
+    {
+      "original": "/tmp/ev02-governance-harness-1916/policy-selftest.stderr",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-policy-selftest.stderr",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "original": "/tmp/ev02-governance-harness-1916/mapping-selftest.stdout",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-mapping-selftest.stdout",
+      "sha256": "a61d56eebd5fe58408647056d183ad09002f7b22cd3dbe4c58fa9041631eaeed"
+    },
+    {
+      "original": "/tmp/ev02-governance-harness-1916/mapping-selftest.stderr",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-mapping-selftest.stderr",
+      "sha256": "a534644f9f44b85826d0d3180ffa8fce603f7e92d6c1250d26bee4e8a9ab2864"
+    },
+    {
+      "original": "/tmp/ev02-governance-harness-1916/mapping-fixture-selftest.stdout",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-mapping-fixture-selftest.stdout",
+      "sha256": "68fab3ab93bb29f6f17f333fef87db09b17d647af1b537634556f45f3bf1feac"
+    },
+    {
+      "original": "/tmp/ev02-governance-harness-1916/mapping-fixture-selftest.stderr",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-mapping-fixture-selftest.stderr",
+      "sha256": "a534644f9f44b85826d0d3180ffa8fce603f7e92d6c1250d26bee4e8a9ab2864"
+    },
+    {
+      "original": "/tmp/ev02-governance-harness-1916/mapping-observation.stdout",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-mapping-observation.stdout",
+      "sha256": "804906b3fff65066d69afa62b96db786a853d0ea6b41f865c7c362c7cb3a54e7"
+    },
+    {
+      "original": "/tmp/ev02-governance-harness-1916/mapping-observation.stderr",
+      "durable": "docs/reviews/20260909-1937-ev02-independent-mapping-observation.stderr",
+      "sha256": "a534644f9f44b85826d0d3180ffa8fce603f7e92d6c1250d26bee4e8a9ab2864"
+    }
+  ]
+}

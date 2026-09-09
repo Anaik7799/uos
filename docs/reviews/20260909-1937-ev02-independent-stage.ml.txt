@@ -1,0 +1,44 @@
+#use "topfind";;
+#require "unix,yojson,cryptokit,mtime.clock.os,str";;
+#directory "/tmp/ev-campaign-independent-direct-review-20260909/build/default/.ev_receipts.objs/byte";;
+#load "/tmp/ev-campaign-independent-direct-review-20260909/build/default/ev_receipts.cma";;
+let ws="/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909"
+let rev="e11692afdd54e39b5d2232389bcdc64f93ed0a61"
+let stage="/tmp/ev02-independent-review-1932"
+let write p s=let c=open_out_gen[Open_wronly;Open_creat;Open_excl]0o600 p in output_string c s;close_out c
+let ()=
+ if Sys.getcwd()<>ws then failwith "selected cwd";
+ Unix.mkdir stage 0o700;
+ let paths=["tools/ev02_governance/run_checks.ml";"tools/ev02_governance/directive_mapping_gate.ml";"tools/ev02_governance/policy_surface_gate.ml";"governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json"]in
+ let sources=List.map(fun p->let b=Receipt_validator.candidate_bytes ws rev p in let dest=stage^"/"^Filename.basename p in write dest b;`Assoc["path",`String p;"staged",`String dest;"sha256",`String(Receipt_validator.sha b)])paths in
+ write(stage^"/bindings.json")(Yojson.Safe.pretty_to_string(`Assoc["candidate",`String rev;"sources",`List sources]));
+ let b=Receipt_validator.candidate_bytes ws rev "tools/ev02_governance/run_checks.ml"in
+ let stop=Str.search_forward(Str.regexp_string "let()=match Array.to_list Sys.argv")b 0 in
+ let harness=String.sub b 0 stop in
+ let probes={|
+let fixture = Sys.argv.(1)
+let child = fixture ^ "/child.ml"
+let () = write child "#load \"unix.cma\";;\nlet write p s=let c=open_out_bin p in output_string c s;close_out c\nlet ()=match Sys.argv.(1)with\n|\"close\"->Unix.close Unix.stdout;Unix.close Unix.stderr;Unix.sleepf 0.7\n|\"descendant\"->(match Unix.fork()with 0->Unix.sleepf 0.65;write Sys.argv.(2) \"survived timeout\";exit 0|_->Unix.sleepf 1.0)\n|\"both\"->print_string(String.make 800000 'o');flush stdout;prerr_string(String.make 800000 'e');flush stderr\n|_->print_endline \"ok\"\n"
+let fdcount()=Array.length(Sys.readdir "/proc/self/fd")
+let describe name c extra = `Assoc(["case",`String name;"termination",term_json c.termination;"elapsed",`Float c.elapsed;"stdout_bytes",`Int(String.length c.stdout);"stderr_bytes",`Int(String.length c.stderr)]@extra)
+let ()=
+ let before=fdcount()in
+ let normal=run~seconds:1.0[|ocamlrun;ocaml;child;"normal"|]in
+ let early=run~seconds:0.1[|ocamlrun;ocaml;child;"close"|]in
+ let marker=fixture^"/descendant-finished"in
+ let descendants=run~seconds:0.1[|ocamlrun;ocaml;child;"descendant";marker|]in
+ let after=fdcount()in let absent_at_return=not(Sys.file_exists marker)in
+ Unix.sleepf 0.75;
+ let alive_after=Sys.file_exists marker in
+ let both=run~seconds:2.0[|ocamlrun;ocaml;child;"both"|]in
+ let rows=[describe "normal"normal [];describe "closed-streams-before-exit"early["deadline",`Float 0.1;"deadline_bypassed",`Bool(early.termination=Exited 0 && early.elapsed>0.6)];describe "descendant-writer"descendants["fd_before",`Int before;"fd_after",`Int after;"fd_growth",`Int(after-before);"marker_absent_at_return",`Bool absent_at_return;"descendant_effect_after_return",`Bool alive_after];describe "combined-stream-size"both[]]in
+ let report=`Assoc["schema",`String "uos.ev02.harness-independent-probes.v1";"rows",`List rows;"authority",`String "NONE";"source_prefix_sha256",`String(sha (let c=open_in_bin Sys.argv.(0)in let b=really_input_string c(in_channel_length c)in close_in c;b))]in
+ write(fixture^"/probes.json")(Yojson.Safe.pretty_to_string report);
+ assert(normal.termination=Exited 0);
+ assert(early.termination=Exited 0 && early.elapsed>0.6);
+ assert(descendants.termination=Timeout && after-before>=2 && absent_at_return && alive_after);
+ assert(both.termination=Exited 0 && String.length both.stdout+String.length both.stderr=1600000);
+ print_endline "REPRODUCED early-EOF deadline bypass; descendant effect after timeout; two reader FD leaks; aggregate output is per-stream"
+|}in
+ write(stage^"/probe.ml")(harness^probes);
+ Printf.printf "%s\n"stage
