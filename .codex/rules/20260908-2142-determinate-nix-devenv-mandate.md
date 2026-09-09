@@ -80,13 +80,22 @@
    Each exception is a version-pin decision, not a licence to drift; revisit when
    the pinned version is verified.
 
-9. **Jujutsu is a pinned toolchain.** Canonical policy section 4 makes standalone JJ
+13. **Jujutsu is a pinned toolchain.** Canonical policy section 4 makes standalone JJ
    the sole VCS, so the binary that reads and could write `.jj/` is pinned from the
    Nix profile, never taken from `~/.cargo/bin`. The locked nixpkgs supplies the same
    version already managing the repository, so the swap carries no repo-format risk —
    verify that BEFORE swapping, never after.
 
-10. **No tool bypasses the resolver.** A hardcoded absolute toolchain path is a
+10. **Tracked and verifiably useable.** All tooling MUST be tracked in Jujutsu and
+   MUST be proven to run. `test -x` is not evidence of use, and neither is exit
+   status alone: a zero-byte file with the execute bit set is a valid empty shell
+   script that exits 0 and prints nothing. Preflight probes therefore EXECUTE each
+   entrypoint, require non-empty output unless the tool is legitimately silent,
+   and prefer making the tool do its job (compile, run, solve, typecheck) over
+   printing a version. Tracking is asked of the VCS, never inferred from the
+   filesystem.
+
+11. **No tool bypasses the resolver.** A hardcoded absolute toolchain path is a
    violation even when it happens to work, because it is invisible to
    `uos_toolchain_report`: that report can read 19/19 PRESENT while the file under
    review uses none of those 19. Anything that resolves a toolchain goes through
@@ -94,7 +103,7 @@
    (`cp`, `curl`, `printf`) are not toolchains and stay on host paths, but must be
    named as such rather than left incidental.
 
-8. **No PATH races.** `tools/lib/uos-toolchain.sh` (`uos_env`) and the devenv
+12. **No PATH races.** `tools/lib/uos-toolchain.sh` (`uos_env`) and the devenv
    `enterShell` PREPEND in-project paths so a stray `/usr/bin/erl` cannot win.
    `uos_have` reports absence honestly; callers fail closed and never silently
    substitute a host binary.
@@ -124,6 +133,11 @@
    neither of which git itself recognises as a repository. Removing one only
    makes Nix climb to the next. No native Git mutation has occurred and
    canonical policy section 4 is intact.
-8. `tools/quint` (Quint 0.32.0) replaces `tools/quint-eval`, whose backend —
+8. `bash tools/preflight` — the single gate to run before work. Six arms:
+   resolver, useable (executes all 20 entrypoints), wrapper, tracked (asks
+   Jujutsu), parity, and — with `--full` — identity via `nix flake check` and
+   `devenv test`. Exit 0 only if every arm passes; JSON on stdout, table on
+   stderr. Observed 31/31 PASS with `--full`.
+9. `tools/quint` (Quint 0.32.0) replaces `tools/quint-eval`, whose backend —
    the standalone Rust evaluator 0.6.0 — is no longer installed. A wrapper
    fronting an absent binary is barred: fail closed, do not fabricate.

@@ -280,7 +280,7 @@
   "residual_risks": [
     "CORRECTED (was recorded as a single stray directory): git-tree ascent, not one directory, is the cause. Removing the empty /home/an/NAS-setup/uos/.git did NOT fix bare `nix flake` -- Nix then ascends to /home/an/NAS-setup/.git, which is ALSO an empty directory that git itself does not recognise as a repository. `path:$UOS_ROOT` is therefore the permanent invocation, not a workaround pending cleanup. The parent directory is outside UOS and was left untouched.",
     "OPEN: /home/an/NAS-setup/.git is an empty non-repository directory outside the UOS workspace. Not removed: out of scope, and removal would not change the required `path:` invocation anyway.",
-    "BOUNDED: quint verify of formal/quint/agentic_coordination.qnt exceeds 900s at default max-steps for both agentic_coordination_test and agentic_coordination_runtime_test; a reduced-step run is outstanding. agentic_journal_test verifies NoError in 17.2s. intent_invariants verifies NoError for both invariants.",
+    "BOUNDED (was OPEN): quint verify of agentic_coordination.qnt is depth-limited, not blocked. NoError at 1 step (18.1s) and 2 steps (75.0s); ~4x per step puts the default depth beyond an interactive budget. Deeper verification needs a batch run, not a fix.",
     "BOUNDARY: os_util() keeps /usr/bin/{cp,curl,printf,false,sleep} and /opt/google/chrome/chrome on host paths. These are OS utilities, not language toolchains, and the mandate bars toolchains. Noted: /usr/bin/timeout on this host is a uutils-coreutils symlink, so host coreutils are not the GNU ones.",
     "INTENTIONAL, NOT A DEFECT: release_process.ml runtime_check deliberately iterates BOTH /usr/lib/erlang/bin (host OTP 27) and the pinned OTP 29 bin. It is a differential oracle -- the same FFI must self-report its own release correctly under two different BEAMs. Observed: 'OTP 27 ERTS 15.2.7.4' and 'OTP 29 ERTS 17.0.5'. Do not 'fix' this to use only the pinned toolchain; that would destroy the differential.",
     "UNRUN: no Quint model-checking VERDICT is claimed. All four formal/quint/*.qnt specs typecheck at 0.32.0; typecheck success is not invariant proof.",
@@ -313,7 +313,9 @@
       "quint_verify_intent_invariants": "NoError for invStorageLockPreserved and invDisjointResolution (Apalache, bounded)",
       "quint_verify_agentic_journal": "NoError for inv_all at agentic_journal_test (17.2s)",
       "quint_anti_vacuity": "Probes 'authorizedIntents.size()==0' and 'vetoedIntents.size()==0' BOTH violate immediately, proving the model reaches authorized and vetoed states and the passing invariants are not trivially true"
-    }
+    },
+    "quint_agentic_coordination_resolved": "RESOLVED (was 'exceeds 900s, reduced-step run outstanding'). agentic_coordination_test inv_all verifies NoError at --max-steps 1 in 18.1s and at --max-steps 2 in 75.0s. The ~4x cost per additional step is ordinary depth blow-up, not a structural defect: extrapolating, 5 steps is roughly 80 minutes, which is why the 560s bounded run returned nothing. The spec is verifiable; the default depth is simply out of budget for an interactive run.",
+    "preflight": "31/31 PASS (--full), 29/29 PASS (fast tier)"
   },
   "defects_closed_in_this_pass": [
     "tools/lib/uos-toolchain.sh resolved UOS_ROOT from ${BASH_SOURCE[0]} under `set -euo pipefail`. Sourced from the operator's zsh login shell this aborted on an unset parameter, and without nounset it would have silently produced a wrong UOS_ROOT -- making uos_have() report ABSENT for installed toolchains. The library now resolves its own path under bash and zsh, and only applies `set -euo pipefail` when EXECUTED, never when sourced into an interactive shell.",
@@ -340,6 +342,25 @@
     "devenv enterTest guard: replayed with a stub erl reporting 27 -> exits 1 with the SC-NIX-DEVENV-001 violation message. Not vacuous.",
     "uos_toolchain_verify: table shadowed so jj -> $HOME/.cargo/bin/jj and erl -> /usr/lib/erlang/bin/erl -> 18 findings, exit 1, naming locality AND beam arms. Not vacuous.",
     "ocaml_tool_table_parity: shell table perturbed to gleam-1.18.1 -> FAIL naming 'toolchain table drift for gleam: shell=.../gleam-1.18.1/bin/gleam ocaml=.../gleam-1.16.0/bin/gleam'. File byte-restored and diff-verified afterwards. Not vacuous.",
-    "nix flake check pin gate: rejects any erl_bin under /usr/* or /home/* by construction."
-  ]
+    "nix flake check pin gate: rejects any erl_bin under /usr/* or /home/* by construction.",
+    "N5 present-but-broken binary: node repointed to a zero-byte executable inside toolchains/. FIRST version of the probe reported PASS -- an empty file with the execute bit IS a valid empty shell script, exiting 0 with no output. The probe now requires non-empty output and reports 'exit 0 but produced NO output (empty executable?)'. Note the resolver arm still PASSED (the decoy was inside $UOS_ROOT, so locality held), which is precisely why useability is a separate layer; the OCaml parity arm caught the table change independently.",
+    "N6 untracked tooling: two files matching the *.lock ignore rule created under tools/ -> 'tracked tools-tree FAIL: 2 untracked, first: tools/pf-neg1.lock'. Exposed and fixed a reporting bug where `printf '%s' | wc -l` counted 0 for a single line without a trailing newline.",
+    "N7 escript probe: the first version of the escript probe FAILED on the real toolchain ('Premature end of file reached') because escript skips a source file's first line as its header slot. The probe was wrong, not the tool -- and an exit-status-blind check would have shown green."
+  ],
+  "preflight": {
+    "tool": "tools/preflight",
+    "mandate": "Operator (2026-09-09): \"all tooling must be tracked and verifiably useable, preflight checks\".",
+    "invocation": "bash tools/preflight [--json] [--full] [--quiet]",
+    "exit_contract": "0 only if every arm passes. Human table on stderr, machine JSON (schema uos.preflight.v1) on stdout, so a parser never has to strip a table.",
+    "arms": {
+      "resolver": "uos_toolchain_verify -- presence, locality, beam.",
+      "useable": "EXECUTES all 20 entrypoints. Functional probes where cheap: erlc compiles a module and the .beam artifact is asserted separately, escript runs a script, z3 solves, quint typechecks a real spec, ocaml evaluates an expression. Version strings only where a functional probe would cost more than it proves.",
+      "wrapper": "tools/{quint,z3,lean,lake} each execute.",
+      "tracked": "Asks Jujutsu (`jj file list tools`), not the filesystem, and diffs it against the on-disk tree excluding build artefacts. Two checks: nothing present-but-untracked, and nothing tracked-but-absent.",
+      "parity": "ocaml tools/release_process.ml toolchain -- OCaml/shell table equality and BEAM pin.",
+      "identity": "--full only: nix flake check (checks.toolchain-pin) and devenv test. Owned by Nix because only the flake knows the lock."
+    },
+    "observed": "31/31 PASS with --full; 29/29 PASS in the fast tier.",
+    "design_note": "`test -x` is not evidence of use. A binary can be present and broken: a relocated opam switch whose findlib.conf still points at the old prefix, a rustup proxy with no toolchain, a store path whose closure was collected. Exit status alone is not evidence either -- see negative test N5."
+  }
 }

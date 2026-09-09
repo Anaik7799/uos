@@ -1,0 +1,212 @@
+#!/usr/bin/env bash
+# =============================================================================
+# UOS toolchain preflight (SC-NIX-DEVENV-001, SC-TOOLCHAIN-INPROJECT-001)
+# -----------------------------------------------------------------------------
+# Operator mandate (2026-09-09): "all tooling must be tracked and verifiably
+# useable, preflight checks".
+#
+# Two words in that mandate do real work:
+#
+#   TRACKED   -- a tool that exists only in a working copy is not tooling, it is
+#                a local artefact. Arm 4 asks Jujutsu, not the filesystem.
+#   USEABLE   -- `test -x` is NOT proof a tool works. A binary can be present and
+#                broken: a relocated opam switch whose findlib.conf still points
+#                at its old prefix, a rustup proxy with no toolchain installed, a
+#                store path whose closure was garbage-collected. Arm 2 therefore
+#                EXECUTES each entrypoint, and where it is cheap it makes the tool
+#                do its actual job (erlc compiles, escript runs, z3 solves, quint
+#                typechecks, ocaml evaluates) rather than merely print a version.
+#
+# Exit status is the contract: 0 only if every arm passes. Fail closed.
+#
+# Usage: bash tools/preflight [--json] [--full] [--quiet]
+#          --full   additionally runs `nix flake check` and `devenv test`
+#                   (derivation-identity gates; slow, needs the Nix daemon)
+# =============================================================================
+set -uo pipefail
+
+PF_ROOT="$(CDPATH= cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$PF_ROOT"
+# shellcheck source=/dev/null
+source "$PF_ROOT/tools/lib/uos-toolchain.sh"
+
+PF_JSON=0; PF_FULL=0; PF_QUIET=0
+for a in "$@"; do case "$a" in
+  --json) PF_JSON=1 ;; --full) PF_FULL=1 ;; --quiet) PF_QUIET=1 ;;
+  -h|--help) sed -n '2,25p' "$0"; exit 0 ;;
+  *) echo "unknown option: $a" >&2; exit 2 ;;
+esac; done
+
+PF_FAIL=0
+PF_ROWS=()
+PF_TMP="$(mktemp -d "${TMPDIR:-/tmp}/uos-preflight.XXXXXX")"
+trap 'rm -rf -- "$PF_TMP"' EXIT
+
+note() { [ "$PF_QUIET" = 1 ] || printf '%s\n' "$*" >&2; }
+# row ARM NAME STATUS DETAIL
+row() {
+  PF_ROWS+=("$1|$2|$3|$4")
+  [ "$3" = PASS ] || PF_FAIL=$((PF_FAIL+1))
+  # Human table goes to stderr so stdout stays pure JSON under --json; a caller
+  # piping this into a parser must not have to strip a table first.
+  [ "$PF_QUIET" = 1 ] || printf '%-10s %-14s %-6s %s\n' "$1" "$2" "$3" "$4" >&2
+}
+
+# --- arm 1: resolver (presence, locality, beam) ------------------------------
+if uos_toolchain_verify >"$PF_TMP/verify.out" 2>"$PF_TMP/verify.err"; then
+  row resolver uos_toolchain_verify PASS "presence, locality, beam"
+else
+  row resolver uos_toolchain_verify FAIL "$(head -1 "$PF_TMP/verify.err" | cut -c1-100)"
+fi
+
+# --- arm 2: USEABLE -- execute every entrypoint ------------------------------
+# Functional probes where cheap: the tool must do its job, not just self-identify.
+# pf_probe NAME out|silent CMD...
+#   out    -- success requires exit 0 AND non-empty output.
+#   silent -- the tool legitimately says nothing on success (erlc, quint typecheck);
+#             those carry a separate artifact/behaviour assertion instead.
+#
+# The "out" requirement is not pedantry. A zero-byte file with the execute bit set
+# is a VALID EMPTY SHELL SCRIPT: it exits 0 and prints nothing. An exit-status-only
+# probe reports such a file as a working toolchain -- observed while writing the
+# negative test for this very arm. Exit status alone is not evidence of use.
+pf_probe() {
+  local name="$1" expect="$2"; shift 2
+  local p out rc
+  if ! p="$(uos_tool_path "$name")"; then row useable "$name" FAIL "no table entry"; return; fi
+  if [ ! -x "$p" ]; then row useable "$name" FAIL "not executable"; return; fi
+  out="$(timeout 90 "$@" 2>&1)"; rc=$?
+  if [ "$rc" -ne 0 ]; then
+    row useable "$name" FAIL "exit $rc: $(printf '%s' "$out" | head -1 | cut -c1-70)"
+  elif [ "$expect" = out ] && [ -z "${out//[[:space:]]/}" ]; then
+    row useable "$name" FAIL "exit 0 but produced NO output (empty executable?)"
+  else
+    row useable "$name" PASS "$(printf '%s' "$out" | head -1 | cut -c1-70)"
+  fi
+}
+
+printf 'ok\n' > "$PF_TMP/expected"
+cat > "$PF_TMP/pf_mod.erl" <<'ERL'
+-module(pf_mod).
+-export([v/0]).
+v() -> ok.
+ERL
+# escript SKIPS the first line of a source file (it is the header/shebang slot).
+# Without a filler first line the script is empty and escript reports
+# "Premature end of file reached" -- which is exactly what this probe caught the
+# first time it ran, and precisely the class of breakage `test -x` cannot see.
+cat > "$PF_TMP/pf.escript" <<'ESC'
+#!/usr/bin/env escript
+main(_) -> io:format("escript-ok~n").
+ESC
+printf '(assert true)\n(check-sat)\n' > "$PF_TMP/pf.smt2"
+
+pf_probe erl out     "$(uos_tool_path erl)"     -noshell -eval 'io:format("OTP ~s erts ~s",[erlang:system_info(otp_release),erlang:system_info(version)]),halt().'
+pf_probe erlc silent    "$(uos_tool_path erlc)"    -o "$PF_TMP" "$PF_TMP/pf_mod.erl"
+pf_probe escript out "$(uos_tool_path escript)" "$PF_TMP/pf.escript"
+pf_probe rebar3 out  "$(uos_tool_path rebar3)"  --version
+pf_probe gleam out   "$(uos_tool_path gleam)"   --version
+pf_probe zig out     "$(uos_tool_path zig)"     version
+pf_probe z3 out      "$(uos_tool_path z3)"      "$PF_TMP/pf.smt2"
+pf_probe quint silent   "$(uos_tool_path quint)"   typecheck formal/quint/intent_invariants.qnt
+pf_probe jj out      "$(uos_tool_path jj)"      --version
+pf_probe ocaml out   "$(uos_tool_path ocaml)"   -e 'print_string "ocaml-ok"'
+pf_probe ocamlfind out "$(uos_tool_path ocamlfind)" printconf conf
+pf_probe dune out    "$(uos_tool_path dune)"    --version
+pf_probe lean out    "$(uos_tool_path lean)"    --version
+pf_probe lake out    "$(uos_tool_path lake)"    --version
+pf_probe cargo out   "$(uos_tool_path cargo)"   --version
+pf_probe rustc out   "$(uos_tool_path rustc)"   --version
+pf_probe node out    "$(uos_tool_path node)"    --version
+pf_probe npm out     "$(uos_tool_path npm)"     --version
+pf_probe pixi out    "$(uos_tool_path pixi)"    --version
+pf_probe mojo out    "$(uos_tool_path mojo)"    --version
+
+# erlc must have produced a real .beam; a zero exit that compiled nothing is not use.
+if [ -f "$PF_TMP/pf_mod.beam" ]; then
+  row useable erlc-artifact PASS "pf_mod.beam produced"
+else
+  row useable erlc-artifact FAIL "erlc exited 0 but produced no .beam"
+fi
+
+# --- arm 3: wrappers ---------------------------------------------------------
+for w in quint z3 lean lake; do
+  if out="$(timeout 90 "$PF_ROOT/tools/$w" --version 2>&1)" || [ -n "$out" ]; then
+    row wrapper "tools/$w" PASS "$(printf '%s' "$out" | head -1 | cut -c1-60)"
+  else
+    row wrapper "tools/$w" FAIL "wrapper did not run"
+  fi
+done
+
+# --- arm 4: TRACKED ----------------------------------------------------------
+# Ask the VCS, not the filesystem. Build artefacts are excluded by construction,
+# not by hoping they are absent.
+if command -v "$(uos_tool_path jj)" >/dev/null 2>&1; then
+  "$(uos_tool_path jj)" --repository "$PF_ROOT" file list tools 2>/dev/null | LC_ALL=C sort > "$PF_TMP/tracked"
+  find tools -type f \
+    -not -path '*/build/*' -not -path '*/_build/*' -not -path '*/.pixi/*' \
+    -not -name '*.beam' 2>/dev/null | LC_ALL=C sort > "$PF_TMP/present"
+  untracked="$(LC_ALL=C comm -13 "$PF_TMP/tracked" "$PF_TMP/present")"
+  missing="$(LC_ALL=C comm -23 "$PF_TMP/tracked" "$PF_TMP/present" \
+             | grep -v '/build/\|/_build/\|\.beam$' || true)"
+  n_t="$(wc -l < "$PF_TMP/tracked")"
+  if [ -z "$untracked" ]; then
+    row tracked tools-tree PASS "$n_t source files tracked, 0 untracked"
+  else
+    row tracked tools-tree FAIL "$(printf '%s\n' "$untracked" | grep -c .) untracked, first: $(printf '%s' "$untracked" | head -1)"
+  fi
+  if [ -z "$missing" ]; then
+    row tracked no-phantoms PASS "every tracked tool exists on disk"
+  else
+    row tracked no-phantoms FAIL "$(printf '%s\n' "$missing" | grep -c .) tracked but absent, first: $(printf '%s' "$missing" | head -1)"
+  fi
+else
+  row tracked tools-tree FAIL "pinned jj unavailable; tracking NOT checked"
+fi
+
+# --- arm 5: table parity + BEAM pin (OCaml side) -----------------------------
+if out="$(cd "$PF_ROOT" && timeout 180 "$(uos_tool_path ocaml)" tools/release_process.ml toolchain 2>&1)"; then
+  case "$out" in
+    *'"status":"PASS"'*) row parity ocaml-table PASS "$(printf '%s' "$out" | grep -o '"resolver_arms":[0-9]*') arms" ;;
+    *) row parity ocaml-table FAIL "$(printf '%s' "$out" | head -1 | cut -c1-90)" ;;
+  esac
+else
+  row parity ocaml-table FAIL "preflight command did not run"
+fi
+
+# --- arm 6 (--full): derivation identity, owned by Nix -----------------------
+if [ "$PF_FULL" = 1 ]; then
+  if timeout 900 nix flake check "path:$PF_ROOT" >"$PF_TMP/flake.out" 2>&1; then
+    row identity flake-check PASS "checks.toolchain-pin green"
+  else
+    row identity flake-check FAIL "$(tail -1 "$PF_TMP/flake.out" | cut -c1-80)"
+  fi
+  if timeout 900 devenv test >"$PF_TMP/devenv.out" 2>&1; then
+    row identity devenv-test PASS "release, derivation and profile-parity arms"
+  else
+    row identity devenv-test FAIL "$(tail -1 "$PF_TMP/devenv.out" | cut -c1-80)"
+  fi
+else
+  note "(identity arms skipped; run with --full for nix flake check + devenv test)"
+fi
+
+if [ "$PF_JSON" = 1 ]; then
+  printf '{"schema":"uos.preflight.v1","status":"%s","authority":"NONE","failures":%d,"full":%s,"rows":[' \
+    "$([ "$PF_FAIL" -eq 0 ] && echo PASS || echo FAIL)" "$PF_FAIL" \
+    "$([ "$PF_FULL" = 1 ] && echo true || echo false)"
+  sep=""
+  for r in "${PF_ROWS[@]}"; do
+    IFS='|' read -r arm name status detail <<<"$r"
+    printf '%s{"arm":"%s","name":"%s","status":"%s","detail":"%s"}' \
+      "$sep" "$arm" "$name" "$status" "$(printf '%s' "$detail" | sed 's/\\/\\\\/g; s/"/\\"/g')"
+    sep=","
+  done
+  printf ']}\n'
+fi
+
+if [ "$PF_FAIL" -eq 0 ]; then
+  note "preflight: PASS (${#PF_ROWS[@]} checks)"
+  exit 0
+fi
+note "preflight: FAIL ($PF_FAIL of ${#PF_ROWS[@]} checks)"
+exit 1
