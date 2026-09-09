@@ -18,6 +18,12 @@ let source revision path=Receipt_validator.candidate_bytes ~budget workspace rev
 let sha=Receipt_validator.sha
 let binding source staged bytes=`Assoc["source",`String source;"staged",`String staged;"sha256",`String(sha bytes);"bytes",`Int(String.length bytes)]
 let write source_name relative bytes=let staged=target^"/"^relative in Ev_campaign.write staged bytes;binding source_name staged bytes
+let private_dependency_path path=
+ let parts=String.split_on_char '/' path in
+ require(path<>"" && String.length path<=1024 && Filename.is_relative path && List.length parts<=8 &&
+  List.for_all(fun part->part<>"" && not(List.mem part[".";"..";".git";".jj";".ssh";".gnupg"]) &&
+   String.for_all(function 'a'..'z'|'A'..'Z'|'0'..'9'|'_'|'-'|'.'|'@'->true|_->false)part)parts)
+  "noncanonical private dependency path"
 let graph="ea6cd8e8dcc0775239d49697390d54728e9eded0"
 let rete="168c31943c90b0c494b60ca0baff9f25c8cc702c"
 let remediation="7375a867c5e86d020805976fb64d014009fac870"
@@ -63,7 +69,10 @@ let ()=
  let dependencies=List.map(fun entry->let path=entry|>field "staged"|>str in
   require(String.starts_with ~prefix:private_prefix path) "dependency outside reviewed private tree";
   let relative=String.sub path(String.length private_prefix)(String.length path-String.length private_prefix)in
-  ignore(Receipt_validator.safe_path relative);
+  (* Gleam BEAM/cache basenames contain @; the repository source-path grammar
+     deliberately excludes it. Keep the relaxed grammar local to this fixed,
+     hash-approved dependency inventory. *)
+  private_dependency_path relative;
   let bytes=read path in require(sha bytes=(entry|>field "sha256"|>str))("private dependency changed: "^path);
   write path ("lib/"^relative)bytes)reviewed_dependencies in
  let profile="name = \"cepaf_gleam\"\nversion = \"1.0.0\"\ntarget = \"erlang\"\n[dependencies]\ngleam_stdlib = \"0.71.0\"\ngleam_erlang = \"1.3.0\"\ngleam_json = \"3.1.0\"\ngleeunit = \"1.9.0\"\n"in
