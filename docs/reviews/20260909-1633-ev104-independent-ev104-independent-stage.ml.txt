@@ -1,0 +1,27 @@
+#use "topfind";;
+#require "yojson,cryptokit,unix,mtime.clock.os";;
+#directory "/tmp/ev-campaign-independent-direct-review-20260909/build/default/.ev_receipts.objs/byte";;
+#load "/tmp/ev-campaign-independent-direct-review-20260909/build/default/ev_receipts.cma";;
+let ws="/home/an/NAS-setup/uos/.uos-workspaces/ev98-health-formal-20260909"
+let rev="7375a867c5e86d020805976fb64d014009fac870"
+let target="/tmp/ev104-independent-review-20260909-1642"
+let jj="/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj"
+let budget=Receipt_validator.make_budget ~seconds:30. ~bytes:67108864 ()
+let require=Receipt_validator.require
+let read=Ev_campaign.read_file budget
+let query args=Receipt_validator.run ~seconds:5. ~limit:1048576 jj (["--ignore-working-copy";"--no-pager";"--color";"never";"-R";ws]@args)
+let expression="commit_id(\""^rev^"\")"
+let bound source staged bytes=`Assoc["source",`String source;"staged",`String staged;"sha256",`String(Receipt_validator.sha bytes);"bytes",`Int(String.length bytes)]
+let () =
+ require(not(Sys.file_exists target)) "new stage only";
+ require(query["log";"-r";expression;"--no-graph";"-T";"self.commit_id() ++ \"\\n\""]=rev^"\n") "revision mismatch";
+ let paths=["src/cepaf_gleam/agents/ooda_shruti_copilot.gleam";"src/cepaf_gleam/knowledge/raga_cybernetic_synthesis.gleam";"src/cepaf_gleam/ui/state.gleam";"test/ooda_shruti_copilot_test.gleam";"test/ev104_remediation_runner.gleam"] in
+ let sources=List.map(fun path->let source="apps/cepaf_gleam/"^path in let bytes=query["file";"show";"-r";expression;"--";"root:"^source] in let staged=target^"/package/"^path in Ev_campaign.write staged bytes;bound("candidate:"^source)staged bytes)paths in
+ let probe=read "/tmp/ev104_independent_probe.gleam" in
+ Ev_campaign.write(target^"/package/test/ev104_independent_probe.gleam")probe;
+ let profile="name = \"cepaf_gleam\"\nversion = \"1.0.0\"\ntarget = \"erlang\"\n[dependencies]\ngleam_stdlib = \"0.71.0\"\ngleam_erlang = \"1.3.0\"\ngleam_json = \"3.1.0\"\ngleeunit = \"1.9.0\"\n" in
+ Ev_campaign.write(target^"/package/gleam.toml")profile;
+ let root="/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang" in
+ let deps=List.concat_map(fun name->Ev_campaign.file_names root name)["gleam_stdlib";"gleam_erlang";"gleam_json";"gleeunit"]|>List.map(fun path->let source=root^"/"^path in let bytes=read source in let staged=target^"/lib/"^path in Ev_campaign.write staged bytes;bound source staged bytes) in
+ Ev_campaign.write(target^"/bindings.json")(Yojson.Basic.pretty_to_string(`Assoc["candidate",`String rev;"sources",`List sources;"dependencies",`List deps;"probe",bound "independent-authored-probe"(target^"/package/test/ev104_independent_probe.gleam")probe;"profile",bound "fixed-native-package"(target^"/package/gleam.toml")profile]));
+ Printf.printf "Staged immutable 5 inputs, independent probe and %d dependencies at %s\n"(List.length deps)target
