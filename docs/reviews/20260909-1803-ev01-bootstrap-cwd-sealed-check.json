@@ -1,0 +1,10 @@
+{
+  "schema": "uos.ev01-cwd-sealed-evidence-check.v1",
+  "evidence_revision": "45dc64f3d73cf2d0ff5f4ce652e4e4477ebdd586",
+  "source_revision": "3c13ba3b3e210e98c289147a2041aadcdcc72ebd",
+  "status": "PASS",
+  "dossier_sha256": "95178b12ca8c123cb5e72aed896f4bf0f33e8c6b0d88e7ccf7109afb194850ba",
+  "immutable_records_checked": 96,
+  "lossless_trace_archives_checked": 2,
+  "authority": "NONE"
+}
