@@ -1,0 +1,23 @@
+{
+  "schema": "uos.ev98.health-formal.active-risk-receipt.v1",
+  "observed_at": "2026-09-09T11:21:37Z",
+  "authority": "NONE",
+  "task": {
+    "plan_id": "uos/ev98-health-formal/20260909",
+    "task_id": "FORMAL",
+    "worker": "codex-ev98-health-formal",
+    "attempt": 2,
+    "state": "executing"
+  },
+  "assessment": {
+    "path": "docs/reviews/20260909-0614-ev98-health-formal-followup-risk.json",
+    "sha256": "b8b6694182d5ee3874c3f30ca2c0cb3fc5c8ad904c21c6fd2ed5d901622e0f5b"
+  },
+  "invocation": {
+    "path": "/tmp/ev98-health-risk-active-native-20260909-1122.json",
+    "sha256": "c913a08169784601b479175539ea345ff13ecccfa59668d3f7b982be12fb9e28",
+    "result": "ACTIVE_OBSERVATION_PASS"
+  },
+  "runtime_admission": "NOT_GRANTED",
+  "note": "Fresh risk observation only. Independent review, task completion, EV admission, and runtime authority remain absent."
+}
