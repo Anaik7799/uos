@@ -43,6 +43,7 @@ let () =
     one "policy-selftest" 0 [|ocamlrun; ocaml; policy; "--selftest"|];
     one "policy-observation" 1 [|ocamlrun; ocaml; policy; "--observe"; workspace|];
     one "mapping-selftest" 0 [|ocamlrun; ocaml; mapping_gate; "--selftest"|];
+    one "mapping-fixture-selftest" 0 [|ocamlrun; ocaml; mapping_gate; "--fixture-selftest"|];
     one "mapping-observation" 1 [|ocamlrun; ocaml; mapping_gate; "--observe"; workspace; mapping|];
     one "km-gate" 1 [|exe; "--gate"|];
     one "km-ev-selftest" 0 [|exe; "--ev-selftest"|]
