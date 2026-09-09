@@ -1,0 +1,204 @@
+{
+  "schema": "uos.ev02.successor-review.v1",
+  "observed_at_epoch": 1788986569.411139,
+  "candidate": "1e2f28d24d9f8ac11f7461a81455a8d97560f331",
+  "author_evidence": "2bd4873b4e3732d619cf00601cc8312b3002f03c",
+  "verdict": "HOLD",
+  "authority": "NONE",
+  "findings": [
+    "run_checks.ml194 emits literal backslash-n after JSON; exact summary2024 fails strict whole-document parsing",
+    "directive_mapping_gate.ml110-132 fails to end directive capture at unrelated TOML table; unrelated description is attributed to final directive",
+    "Candidate binding covers4 verifier/amendment files; observed superset and rule-body inputs are working-tree observations, not immutable candidate closure"
+  ],
+  "actual_observations": [
+    "8 author harness controls independently PASS",
+    "Normal, earlyEOF timeout0.102s, timeout descendant and normal-exit descendant markers absent after0.75s",
+    "FD6->6; aggregate1.5MiB refusal; continuous writer timeout; exact1MiB stdout retained",
+    "Retired policy FIFO invocation returns HOLD exit1 without blocking",
+    "Wrong candidate refuses; counterfactual clause text accurately replaces old canned claims"
+  ],
+  "authority_qualification": [
+    "20:36 runtime observations occurred after parent120s heartbeat freshness expired; they are actual observations, not fresh-fenced execution evidence",
+    "20:39 ACTIVE refused moving author source mismatch; reviewer batch incorrectly continued only private immutable staging after HOLD. No tests followed that refusal",
+    "Parent authorized stable planning-source binding, then ACTIVE20:41:35 and workspaceepoch2 fence passed before this archival",
+    "Preserve lapses, do not retroactively grant authority"
+  ],
+  "summary_inspection": "Original invalid bytes preserved unchanged; diagnostics removed exactly2 trailing backslash-n bytes solely to check4 source hashes and6 output hashes, not to relabel original JSON valid",
+  "source_hash_checks": [
+    {
+      "path": "tools/ev02_governance/run_checks.ml",
+      "sha256": "abb375337e0b65122084539c9d479cec669859188f3f51317f08787ec8e64321"
+    },
+    {
+      "path": "tools/ev02_governance/directive_mapping_gate.ml",
+      "sha256": "8adf821936740e8c629634057e884eb5998276c9fced08aea9910e0d99098a2c"
+    },
+    {
+      "path": "tools/ev02_governance/policy_surface_gate.ml",
+      "sha256": "4fab4af6d6dc066010f32c74712afee57dfdc7c8d3861960fcbce7936f14abcd"
+    },
+    {
+      "path": "governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json",
+      "sha256": "c5602218fe8751bb78c080e975cd220dfd462b314f1f51d66d32771631879025"
+    }
+  ],
+  "tools": [
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+      "sha256": "2cb8989363a58b9ca352ea1cd245bf0e8b8adb2c1c64e87b52cbea80bc3e4e0f"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+      "sha256": "f63584aac3923ba0060b0795274846b6df425b17b7f2f45bc6368b81e3b2ad92"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/yojson/yojson.cma",
+      "sha256": "de802c29119f7c4d5ecb960aa9a7ef5568523c1c94bba0a67daf01d7d742074a"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/cryptokit/cryptokit.cma",
+      "sha256": "e15b231251b7b3a40c12f6164fa5a3027de241bd0704f0a810da0a15de67930c"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/mtime/mtime.cma",
+      "sha256": "7e7713794d5fb8ac93742d0edc95b061c580ba701afad262d0ac3e65111f77ce"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib/mtime/clock/mtime_clock.cma",
+      "sha256": "44f27d9eafd90ac95b1e7a5ad5b1cb536621c66b6e1af60c75791738c2802694"
+    }
+  ],
+  "records": [
+    {
+      "source": "/tmp/ev02-successor-independent-2036/bindings.json",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-bindings.json",
+      "sha256": "b40b118a2cee4dcd2e92df79adde87cf401c18f2dadc7b0af6c152af99191b87"
+    },
+    {
+      "source": "/tmp/ev02-successor-independent-2036/lifecycle-results.json",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-lifecycle-results.json",
+      "sha256": "c0f0b3e08bcd31b7a1c121acf7fb32f2c6a18dd0e995504ed014e32f6c57d36b"
+    },
+    {
+      "source": "/tmp/ev02-successor-independent-2036/mapping-fixture/mapping-results.json",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-mapping-results.json",
+      "sha256": "014e893c9bd18a4167e0ec93b322dad5139e7b35e2cb499cae43fad6a444ed46"
+    },
+    {
+      "source": "/tmp/ev02-successor-independent-2036/mapping-fixture/counterfactual-observation.json",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-counterfactual-output.json",
+      "sha256": "2676b51b9b0883be6f0be0288d600497b647e5cbed30e1a28a94d7fe97bc3ca3"
+    },
+    {
+      "source": "/tmp/ev02-successor-independent-2036/mapping-fixture/governance/agents/policy/superset.toml",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-counterfactual-table.toml",
+      "sha256": "174a5db042dd9f222311df68ac4d480195b42ff88d3f643b3ef67c3a1d395801"
+    },
+    {
+      "source": "/tmp/ev02-successor-independent-2036/lifecycle_probe.ml",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-lifecycle-probe.ml",
+      "sha256": "04d5d753e968340fff02b29f0c6c5feba7382c9006a0bbc3b67a62193d69ee7b"
+    },
+    {
+      "source": "/tmp/ev02-successor-independent-2036/mapping_probe.ml",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-mapping-probe.ml",
+      "sha256": "6c755fdbf1a2442ec0a1fad8a1d02b0818c2896812d8e499331b849736028738"
+    },
+    {
+      "source": "/tmp/ev02-successor-independent-2036/child.ml",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-finite-child.ml",
+      "sha256": "5b2c9d30d2a8732c44da18ae938e6770327f3932105ba56aba7cd63228b3dd83"
+    },
+    {
+      "source": "/tmp/ev02_successor_stage.ml",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-staging-helper.ml",
+      "sha256": "869c15b1f200880741c468c13d570a17ed154c46b896d30cd9602a3624211497"
+    },
+    {
+      "source": "/tmp/ev02-successor-stage-2036.json",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-stage.json",
+      "sha256": "4e8f3f21de9c8c6bc8ec8d074757f48e6b60a1e5c89c9e97d50ee4a83fff44b9"
+    },
+    {
+      "source": "/tmp/ev02-successor-lifecycle-2037.json",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-lifecycle-runtime.json",
+      "sha256": "efb5241472c20eee8182fffe7715b6d3c3b8ba7470389668b34e9fc366ef42a8"
+    },
+    {
+      "source": "/tmp/ev02-successor-mapping-2037.json",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-mapping-runtime.json",
+      "sha256": "2dc21eb63ccba3439ae3c5c7d095d4c38ac3fcb6ab5fe63410b489164c098473"
+    },
+    {
+      "source": "/tmp/ev02-successor-selftest-2037.json",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-selftest-runtime.json",
+      "sha256": "ffd6c906f007799e0bda080f4fa581688ab143bd94f8a9bb47ba1a0148cea0fc"
+    },
+    {
+      "source": "/tmp/ev02-successor-fence-2038.json",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-stale-fence.json",
+      "sha256": "40d6029f800682c7413dbae1d3ad550e94ef614f9618c3e170a73c629b7d917c"
+    },
+    {
+      "source": "/tmp/ev02-successor-active-2039.json",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-source-mismatch-active.json",
+      "sha256": "164739a87bfb935a187105489f7884d202ed3a5feb3e1a8da7db278a583012cc"
+    },
+    {
+      "source": "/tmp/ev02-successor-stage-2039.json",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-post-hold-staging.json",
+      "sha256": "54e2c4f68c1d4f1ca7db43268c55cb96d9f60800aed732a8e557cb063a201f44"
+    },
+    {
+      "source": "/tmp/ev02-successor-active-2041.json",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-fresh-active.json",
+      "sha256": "a5e077d7c8b033a880f647443518ac0cff825b5f01a7f01b48479b6134a3f938"
+    },
+    {
+      "source": "/tmp/ev02-successor-fence-2041.json",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-fresh-fence.json",
+      "sha256": "9567a27ff1f4b27f34478039e9651858b3bfdd2408c817375ad73729b7fca861"
+    },
+    {
+      "source": "/tmp/ev02-governance-harness-2024/summary.json",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-original-malformed-summary.txt",
+      "sha256": "573aeccdafdb0f1341ce24cc05c812be5efb7d7b481c853ded67fd7bace2b6c0"
+    },
+    {
+      "source": "/tmp/ev02-governance-harness-2024/mapping-selftest.stdout",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-author-mapping-selftest-stdout.txt",
+      "sha256": "a61d56eebd5fe58408647056d183ad09002f7b22cd3dbe4c58fa9041631eaeed"
+    },
+    {
+      "source": "/tmp/ev02-governance-harness-2024/mapping-selftest.stderr",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-author-mapping-selftest-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/tmp/ev02-governance-harness-2024/mapping-fixture-selftest.stdout",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-author-mapping-fixture-selftest-stdout.txt",
+      "sha256": "bf2217df3965f4156f05ec95d38de82eee0436a7e6402e4184efc70332719057"
+    },
+    {
+      "source": "/tmp/ev02-governance-harness-2024/mapping-fixture-selftest.stderr",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-author-mapping-fixture-selftest-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "/tmp/ev02-governance-harness-2024/mapping-observation.stdout",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-author-mapping-observation-stdout.txt",
+      "sha256": "a3db56ce69660cdb9934734683d4449e9067f29a7ea7db76d1a99a950e421a3f"
+    },
+    {
+      "source": "/tmp/ev02-governance-harness-2024/mapping-observation.stderr",
+      "durable": "docs/reviews/20260909-2042-ev02-successor-author-mapping-observation-stderr.txt",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "limits": [
+    "Process-group cleanup and finite cooperative descendants only; escaped sessions, adversarial kernel/filesystem and complete dynamic-library closure unproved",
+    "Regular-file reads remain synchronous/cooperative; outer native deadlines bound these fixture invocations",
+    "No network or author-source changes; no full EV2, semantic sovereign or admission claim",
+    "Successor REVIEW remains executing pending frozen full-closure repair; author16561 mechanical summary fix not independently approved here"
+  ]
+}

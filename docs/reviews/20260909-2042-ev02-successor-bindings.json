@@ -1,0 +1,45 @@
+{
+  "candidate": "1e2f28d24d9f8ac11f7461a81455a8d97560f331",
+  "source_reads": [
+    {
+      "path": "tools/ev02_governance/run_checks.ml",
+      "sha256": "abb375337e0b65122084539c9d479cec669859188f3f51317f08787ec8e64321",
+      "bytes": 12402,
+      "resolved_commit": "1e2f28d24d9f8ac11f7461a81455a8d97560f331",
+      "jj": "/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj",
+      "elapsed": 0.029893348
+    },
+    {
+      "path": "tools/ev02_governance/directive_mapping_gate.ml",
+      "sha256": "8adf821936740e8c629634057e884eb5998276c9fced08aea9910e0d99098a2c",
+      "bytes": 20641,
+      "resolved_commit": "1e2f28d24d9f8ac11f7461a81455a8d97560f331",
+      "jj": "/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj",
+      "elapsed": 0.023997409999999997
+    },
+    {
+      "path": "tools/ev02_governance/policy_surface_gate.ml",
+      "sha256": "4fab4af6d6dc066010f32c74712afee57dfdc7c8d3861960fcbce7936f14abcd",
+      "bytes": 7624,
+      "resolved_commit": "1e2f28d24d9f8ac11f7461a81455a8d97560f331",
+      "jj": "/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj",
+      "elapsed": 0.033802691999999995
+    },
+    {
+      "path": "governance/agents/policy/20260909-1836-ev02-current-directive-rule-amendment.json",
+      "sha256": "c5602218fe8751bb78c080e975cd220dfd462b314f1f51d66d32771631879025",
+      "bytes": 4092,
+      "resolved_commit": "1e2f28d24d9f8ac11f7461a81455a8d97560f331",
+      "jj": "/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj",
+      "elapsed": 0.032880305
+    },
+    {
+      "path": "governance/agents/policy/superset.toml",
+      "sha256": "274f07ff118547535713f3da74246a653b5a3a460f77dd00a71fe7711ae1f158",
+      "bytes": 5921,
+      "resolved_commit": "1e2f28d24d9f8ac11f7461a81455a8d97560f331",
+      "jj": "/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj",
+      "elapsed": 0.032082622000000005
+    }
+  ]
+}

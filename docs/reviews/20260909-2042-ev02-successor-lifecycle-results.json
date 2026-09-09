@@ -1,0 +1,96 @@
+{
+  "source": "1e2f28d24d9f8ac11f7461a81455a8d97560f331",
+  "fd_before": 6,
+  "fd_after": 6,
+  "timeout_marker_present": false,
+  "normal_marker_present": false,
+  "checks": {
+    "normal": true,
+    "earlyEOF": true,
+    "timeout-descendant": true,
+    "normal-descendant": true,
+    "fd-cleanup": true,
+    "aggregate": true,
+    "writer-deadline": true,
+    "exact-bound": true,
+    "retired-policy": true,
+    "candidate-mismatch": true,
+    "strict-author-summary": false
+  },
+  "rows": [
+    {
+      "case": "normal",
+      "termination": { "kind": "exited", "code": 0 },
+      "elapsed": 0.038662558999999985,
+      "stdout_bytes": 7,
+      "stdout_sha256": "83d7d4df18591f6a966c7999355338c625e5a2f7c9cb0c35f11d3ed9f725e022",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "early-eof",
+      "termination": { "kind": "timeout" },
+      "elapsed": 0.10212702300000001,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "descendant-timeout",
+      "termination": { "kind": "timeout" },
+      "elapsed": 0.10220962800000002,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "normal-direct-descendant",
+      "termination": { "kind": "exited", "code": 0 },
+      "elapsed": 0.08157553399999995,
+      "stdout_bytes": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "aggregate-output",
+      "termination": { "kind": "output_limit" },
+      "elapsed": 0.09590031100000007,
+      "stdout_bytes": 800000,
+      "stdout_sha256": "5725f27a4c0d178e7d46fe0c9fc019183c30bbf24c0364c13b7d0b81f20ea84d",
+      "stderr_bytes": 770048,
+      "stderr_sha256": "3f5b9fb1171ecca718a136757dae1f4c4b253f386b04a00f25b2340b1a1a8181"
+    },
+    {
+      "case": "continuing-writer-deadline",
+      "termination": { "kind": "timeout" },
+      "elapsed": 0.10218672400000006,
+      "stdout_bytes": 155648,
+      "stdout_sha256": "dd1cac12c2c3780f5f1aea2eba3f8c6eb3b0789817577ea75329a6c66c66f4b1",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "exact-per-stream",
+      "termination": { "kind": "exited", "code": 0 },
+      "elapsed": 0.05659053400000014,
+      "stdout_bytes": 1048576,
+      "stdout_sha256": "8f990ba0b577b51cf009ea049368c16bbda1b21e1b93be07a824758bb253c39b",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "case": "retired-policy-fifo",
+      "termination": { "kind": "exited", "code": 1 },
+      "elapsed": 0.08417855800000007,
+      "stdout_bytes": 145,
+      "stdout_sha256": "1b7152b1f51d4090190d299d1dcbb19c535a4670deecd455bd573d6b10f1f1f6",
+      "stderr_bytes": 0,
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout": "{\"schema\":\"uos.ev02-policy-surface/v1\",\"authority\":\"REPORT_ONLY\",\"admission\":\"NOT_GRANTED\",\"status\":\"HOLD\",\"errors\":[\"retired-unsafe-observer\"]}\n"
+    }
+  ],
+  "authority": "NONE"
+}
