@@ -76,7 +76,14 @@ pub type StealResponse {
     stolen_tasks: List(StealableTask),
     remaining_queue_depth: Int,
     epoch_us: Int,
+    status: TransferStatus,
   )
+}
+
+/// A donor reply is either a transferable batch or a rejection that cannot consume a reservation.
+pub type TransferStatus {
+  TransferAccepted
+  TransferRejected
 }
 
 /// Durable-for-model receipt that fences a response to one receiver and transfer.
@@ -302,6 +309,7 @@ pub fn apply_steal_response(
     list.length(engine.accepted_transfers) < max_transfer_receipts
   case
     is_recipient
+    && resp.status == TransferAccepted
     && has_reservation
     && !already_accepted
     && receipt_capacity_available
@@ -366,6 +374,7 @@ fn serve_new_request(
       stolen_tasks: stolen,
       remaining_queue_depth: list.length(remaining),
       epoch_us: now_us,
+      status: TransferAccepted,
     )
   let receipt = HandledTransfer(req.initiator_node, req.transfer_id, response)
   let updated_engine =
@@ -388,6 +397,7 @@ fn rejected_response(
     stolen_tasks: [],
     remaining_queue_depth: list.length(engine.local_queue),
     epoch_us: now_us,
+    status: TransferRejected,
   )
 }
 

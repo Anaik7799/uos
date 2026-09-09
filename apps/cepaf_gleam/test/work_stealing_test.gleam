@@ -4,10 +4,11 @@
 
 import cepaf_gleam/ha/work_stealing.{
   type WorkStealingEngine, HeaviestQueueFirst, LyapunovDivergentFirst,
-  NodeQueueState, RandomVictim, StealResponse, StealableTask, WorkStealingEngine,
-  apply_steal_response, enqueue_local_task, generate_steal_request,
-  handle_steal_request, init_work_stealing, select_victim_node,
-  should_initiate_steal, total_cluster_queued_tasks, update_peer_queue,
+  NodeQueueState, RandomVictim, StealResponse, StealableTask, TransferAccepted,
+  TransferRejected, WorkStealingEngine, apply_steal_response, enqueue_local_task,
+  generate_steal_request, handle_steal_request, init_work_stealing,
+  select_victim_node, should_initiate_steal, total_cluster_queued_tasks,
+  update_peer_queue,
 }
 import gleam/int
 import gleam/option.{None, Some}
@@ -159,7 +160,15 @@ pub fn apply_steal_response_is_idempotent_for_a_replayed_transfer_test() {
 pub fn apply_steal_response_deduplicates_tasks_inside_one_transfer_test() {
   let task = StealableTask("same", "plan", 1, 10, "payload")
   let response =
-    StealResponse("donor", "thief", "transfer-3", [task, task], 0, 1000)
+    StealResponse(
+      "donor",
+      "thief",
+      "transfer-3",
+      [task, task],
+      0,
+      1000,
+      TransferAccepted,
+    )
 
   let accepted =
     apply_steal_response(
@@ -183,6 +192,7 @@ pub fn apply_steal_response_keeps_distinct_plan_task_identities_test() {
       [plan_a, plan_b, plan_a],
       0,
       1000,
+      TransferAccepted,
     )
 
   let accepted =
@@ -198,7 +208,16 @@ pub fn apply_steal_response_keeps_distinct_plan_task_identities_test() {
 
 pub fn apply_steal_response_remains_replay_safe_after_accepted_work_leaves_test() {
   let task = StealableTask("task", "plan", 1, 10, "payload")
-  let response = StealResponse("donor", "thief", "transfer-5", [task], 0, 1000)
+  let response =
+    StealResponse(
+      "donor",
+      "thief",
+      "transfer-5",
+      [task],
+      0,
+      1000,
+      TransferAccepted,
+    )
   let first =
     apply_steal_response(
       reserve_receiver("donor", "thief", "transfer-5"),
@@ -216,7 +235,15 @@ pub fn apply_steal_response_remains_replay_safe_after_accepted_work_leaves_test(
 pub fn apply_steal_response_rejects_a_response_for_another_recipient_test() {
   let task = StealableTask("task", "plan", 1, 10, "payload")
   let response =
-    StealResponse("donor", "other-node", "transfer-6", [task], 0, 1000)
+    StealResponse(
+      "donor",
+      "other-node",
+      "transfer-6",
+      [task],
+      0,
+      1000,
+      TransferAccepted,
+    )
 
   let rejected = apply_steal_response(init_work_stealing("thief", 8), response)
 
@@ -275,7 +302,15 @@ pub fn apply_steal_response_bounds_empty_transfer_receipts_test() {
 pub fn apply_steal_response_requires_a_reserved_request_test() {
   let task = StealableTask("task", "plan", 1, 10, "payload")
   let unsolicited =
-    StealResponse("donor", "thief", "unsolicited", [task], 0, 1000)
+    StealResponse(
+      "donor",
+      "thief",
+      "unsolicited",
+      [task],
+      0,
+      1000,
+      TransferAccepted,
+    )
 
   let rejected =
     apply_steal_response(init_work_stealing("thief", 8), unsolicited)
@@ -317,8 +352,42 @@ pub fn receiver_reserves_the_last_slot_before_requesting_a_single_batch_test() {
   list_len(after_first_response.pending_transfers) |> should.equal(0)
 }
 
+pub fn wrong_donor_rejection_cannot_consume_another_donor_reservation_test() {
+  let receiver = init_work_stealing("thief", 8)
+  let #(after_a_reservation, a_request_option) =
+    generate_steal_request(receiver, "donor-a", "shared-transfer", 1000)
+  let assert Some(a_request) = a_request_option
+  let #(after_b_reservation, b_request_option) =
+    generate_steal_request(
+      after_a_reservation,
+      "donor-b",
+      "shared-transfer",
+      1001,
+    )
+  let assert Some(b_request) = b_request_option
+  let donor_a = four_task_donor_for("donor-a")
+
+  // A request for donor-b is misrouted to donor-a and must not acknowledge donor-a.
+  let #(after_misroute, rejection) =
+    handle_steal_request(donor_a, b_request, 1002)
+  let after_rejection = apply_steal_response(after_b_reservation, rejection)
+  let #(after_a_response, a_response) =
+    handle_steal_request(after_misroute, a_request, 1003)
+  let recovered = apply_steal_response(after_rejection, a_response)
+
+  list_len(after_rejection.pending_transfers) |> should.equal(2)
+  rejection.status |> should.equal(TransferRejected)
+  total_cluster_queued_tasks(after_a_response) |> should.equal(2)
+  total_cluster_queued_tasks(recovered) |> should.equal(2)
+  list_len(recovered.pending_transfers) |> should.equal(1)
+}
+
 fn four_task_donor() -> WorkStealingEngine {
-  init_work_stealing("donor", 8)
+  four_task_donor_for("donor")
+}
+
+fn four_task_donor_for(node_id: String) -> WorkStealingEngine {
+  init_work_stealing(node_id, 8)
   |> enqueue_local_task(StealableTask("t1", "plan", 1, 10, "one"))
   |> enqueue_local_task(StealableTask("t2", "plan", 1, 10, "two"))
   |> enqueue_local_task(StealableTask("t3", "plan", 1, 10, "three"))
@@ -353,6 +422,7 @@ fn apply_empty_responses(engine, remaining) {
           [],
           0,
           remaining,
+          TransferAccepted,
         )
       let #(reserved, request) =
         generate_steal_request(

@@ -33,4 +33,5 @@ pub fn main() {
   work_stealing_test.apply_steal_response_requires_a_reserved_request_test()
   work_stealing_test.full_receiver_does_not_send_a_request_that_can_strand_donor_work_test()
   work_stealing_test.receiver_reserves_the_last_slot_before_requesting_a_single_batch_test()
+  work_stealing_test.wrong_donor_rejection_cannot_consume_another_donor_reservation_test()
 }
