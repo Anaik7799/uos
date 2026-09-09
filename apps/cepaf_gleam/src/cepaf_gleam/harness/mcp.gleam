@@ -33,6 +33,43 @@ fn refuse_frame(reason: String) {
   halt(1)
 }
 
+// Emitted when the frame is recoverable: the client sent one oversized request
+// and then a delimiter within budget, so the SESSION survives. `id` is null
+// because a rejected frame never yielded a trustworthy request id.
+fn reject_frame(reason: String) {
+  io.println(error(json.null(), -32_600, reason))
+}
+
+pub type DrainOutcome {
+  Drained
+  DrainFailed(String)
+}
+
+// B4: the -32600 branch in the handler was unreachable -- serve_loop matches the
+// newline FIRST, so exactly `frame_limit` payload bytes followed by LF are
+// ACCEPTED, and the next NON-LF byte is the overflow. Reaching that byte used to
+// halt the process, so one oversized request destroyed the session and its
+// in-memory execution state.
+//
+// The drain is BOUNDED in both dimensions, because an unbounded drain is a
+// denial of service: at most `frame_limit` further bytes (counting the offending
+// byte and any terminating LF), and the frame's EXISTING absolute deadline,
+// which is deliberately never reset -- resetting it on progress would let a
+// trickling client hold the transport open forever, which is the same attack
+// wearing a slower coat.
+fn drain_overflow(input: Input, started: Option(Int), drained: Int) -> DrainOutcome {
+  case next_byte(input, started) {
+    Ok(Some(<<10>>)) -> Drained
+    Ok(Some(_)) ->
+      case drained + 1 < frame_limit {
+        True -> drain_overflow(input, started, drained + 1)
+        False -> DrainFailed("frame_bound_unrecoverable:drain_byte_budget")
+      }
+    Ok(None) -> DrainFailed("frame_bound_unrecoverable:eof_during_drain")
+    Error(_) -> DrainFailed("frame_bound_unrecoverable:drain_deadline")
+  }
+}
+
 type Unit { Millisecond }
 @external(erlang, "erlang", "monotonic_time")
 fn monotonic_time(unit: Unit) -> Int
@@ -356,7 +393,14 @@ fn serve_loop(context: state, handler: fn(state, String) -> #(state, Option(Stri
     Ok(Some(byte)) -> case size < frame_limit {
       True -> serve_loop(context, handler, input, [byte, ..chunks], size + 1,
         case started { Some(_) -> started None -> Some(monotonic_time(Millisecond)) })
-      False -> refuse_frame("frame_bound")
+      // The offending byte is already consumed, so it counts against the budget.
+      False -> case drain_overflow(input, started, 1) {
+        Drained -> {
+          reject_frame("frame_bound")
+          serve_loop(context, handler, input, [], 0, None)
+        }
+        DrainFailed(reason) -> refuse_frame(reason)
+      }
     }
     Ok(None) -> Nil
     Error(reason) -> { io.println_error("harness: " <> reason) halt(1) }

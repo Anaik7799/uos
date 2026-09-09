@@ -45,6 +45,15 @@ pub const control_modules = [
   "cepaf_gleam@planning@sa_plan_bridge",
 ]
 
+// C4: the guardian at tools/ecology_process.ml bounds every effect's time,
+// output and process group, is invoked from ecology_capability_ffi.erl, and was
+// bound by NOTHING -- no path list, no control module. It could change while the
+// review, the task row, the candidate manifest and all nine control ids stayed
+// perfectly matched. These are control dependencies that are not BEAM modules,
+// so `module_info(md5)` cannot reach them; their digests are declared in the
+// grant, which the peer signs by hashing the proposal.
+pub const control_dependencies = ["tools/ecology_process.ml"]
+
 pub fn control_ids() -> json.Json {
   json.object(list.map(control_modules, fn(name) {
     let digest = metadata(atom.create(name), atom.create("module_info"), [atom.create("md5")])
@@ -159,6 +168,38 @@ pub fn control_ids_match(recorded: value.Value, actual: json.Json) -> Bool {
     _, _ -> False
   }
 }
+// Fails closed on every arm: a missing declaration, a missing file, an
+// unreadable file, an invalid digest or a mismatch all refuse admission. An
+// unverified dependency is never an admitted one.
+pub fn control_dependencies_match(recorded: value.Value) -> Result(Nil, String) {
+  case recorded {
+    value.Object(entries) -> {
+      use _ <- result.try(require(
+        list.length(entries) == list.length(control_dependencies)
+          && list.all(control_dependencies, fn(p) { result.is_ok(value.get(recorded, p)) }),
+        "control_dependency_set_mismatch",
+      ))
+      list.try_each(control_dependencies, fn(rel) {
+        use declared <- result.try(value.get(recorded, rel))
+        use expected <- result.try(case declared {
+          value.Text(hash) ->
+            case digest_valid(hash) {
+              True -> Ok(hash)
+              False -> Error("control_dependency_digest_invalid:" <> rel)
+            }
+          _ -> Error("control_dependency_digest_invalid:" <> rel)
+        })
+        use body <- result.try(
+          files.read(dev.root, rel)
+          |> result.map_error(fn(_) { "control_dependency_unreadable:" <> rel }),
+        )
+        require(files.digest(body) == expected, "control_dependency_digest_mismatch:" <> rel)
+      })
+    }
+    _ -> Error("control_dependencies_object_required")
+  }
+}
+
 fn text_field(document: value.Value, key: String) -> Result(String, String) {
   use found <- result.try(value.get(document, key))
   case found { value.Text(text) -> Ok(text) _ -> Error("review_string_field:" <> key) }
@@ -282,6 +323,8 @@ pub fn check(grant: Grant) -> Result(clock.Observation, String) {
   use recorded <- result.try(value.get(document, "loaded_control_ids"))
   use _ <- result.try(require(control_ids_match(recorded, control_ids()),
     "loaded_control_identity_mismatch"))
+  use recorded_dependencies <- result.try(value.get(document, "control_dependencies"))
+  use _ <- result.try(control_dependencies_match(recorded_dependencies))
   use now <- result.try(clock.observe())
   use _ <- result.try(validate_window(grant, now))
   Ok(now)
