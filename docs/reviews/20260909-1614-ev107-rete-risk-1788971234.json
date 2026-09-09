@@ -1,0 +1,171 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "ev107-rete-20260909-1614",
+    "plan_id": "uos/ev107-rete/20260909",
+    "task_id": "RETE",
+    "actor": "codex-ev107-rete",
+    "task_state": "executing",
+    "fractal_layer": 5,
+    "phase": "implementation",
+    "scope": "Bounded pure Gleam forward chaining with typed refusals, materialized static assertions and advisory verdict observations, tested against independent OCaml finite reference. No effect authority, UI, live dispatch or full EV107 admission.",
+    "class": "P1",
+    "score": 768,
+    "score_interval": [ 768, 768 ],
+    "observed_at": "2026-09-09T16:27:14Z",
+    "ready_since": "2026-09-09T16:27:14Z",
+    "valid_until": "2026-09-09T17:27:14Z",
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": [],
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Owned JJ child of sealed mesh candidate8152a497929d68f830385a1a887570f94ccebd77",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+          "sha256": "ef99830d561646b113376ecf60fc25810f20afc3f5d8d14f8dc2d647517580f7",
+          "observed_at": "2026-09-09T16:27:14Z"
+        },
+        {
+          "path": ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/rete_ul_verifier_test.gleam",
+          "sha256": "efde3c1eab0df5de0de9a10e2576fd58e5f50d4232d42539dcfca50798339bb4",
+          "observed_at": "2026-09-09T16:27:14Z"
+        }
+      ]
+    },
+    "factors": {
+      "criticality": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "A counted assertion can falsely imply that knowledge was derived.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/rete_ul_verifier_test.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Rule conclusions must remain advisory and truthful.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/rete_ul_verifier_test.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S4 O3 Det3 RPN36 with severity floor4.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/rete_ul_verifier_test.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "Candidate verifier and realized local Gleam/OTP plus independent OCaml reference.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/rete_ul_verifier_test.gleam"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Local bounded model repair with no production caller.",
+        "evidence_refs": [
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/src/cepaf_gleam/knowledge/rete_ul_verifier.gleam",
+          ".uos-workspaces/codex-ev-admission-20260909-0210/apps/cepaf_gleam/test/rete_ul_verifier_test.gleam"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-COUNT-WITHOUT-ASSERTION",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4,
+        "cause": "Matching rules only increment a count; their assertions are discarded.",
+        "effect": "No derived facts or transitive closure despite reported firing.",
+        "controls": "Candidate-bound RED chains; typed fixed-point execution; finite reference and quota falsifiers."
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "Pure forward-chaining verifier",
+      "control_action": "Apply static assertions and report matching advisory verdicts",
+      "losses": [ "L-FALSE-KNOWLEDGE" ],
+      "hazards": [ "H-FALSE-CHAINING" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "A matching assertion never enters working memory.",
+          "hazard_ids": [ "H-FALSE-CHAINING" ],
+          "constraint": "Compute a stable fact closure."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Malformed state or contradictory conclusions appear authoritative.",
+          "hazard_ids": [ "H-FALSE-CHAINING" ],
+          "constraint": "Validate bounded input; keep verdicts advisory; preserve original on refusal."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "A rule depends on a later-listed derived fact.",
+          "hazard_ids": [ "H-FALSE-CHAINING" ],
+          "constraint": "Reach a deterministic fixed point independently of rule listing."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Cyclic or oversized rules monopolize execution.",
+          "hazard_ids": [ "H-FALSE-CHAINING" ],
+          "constraint": "Bound facts, rules, metadata and work; each static rule fires at most once."
+        }
+      ]
+    },
+    "decision": {
+      "summary": "Repair materialized forward chaining within explicit finite resource bounds.",
+      "alternatives": [
+        "Keep the existing count-only behavior",
+        "Introduce production dispatch or a foreign rule engine"
+      ],
+      "assumptions": [
+        "Conditions retain existential matching over immutable facts; there are no variables, retractions or fresh-name generation.",
+        "Existing static consistency warnings remain conservative and are not complete logical consistency proofs."
+      ],
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "The existing math/rete module evaluates salience and has different fact and consequence semantics.",
+        "Matching gate verdicts do not authorize effects."
+      ],
+      "forecast": "Assertion chains become observable; bounded bad inputs refuse atomically.",
+      "falsifier": "A derived fact is missing, facts depend on rule order, a quota returns partial state, or a matching verdict executes an effect.",
+      "acceptance": [
+        "Actual RED missing-assertion and transitive-chain failures",
+        "Bounded input and work limits with preserved state on refusal",
+        "Finite independent OCaml oracle compared with compiled Gleam",
+        "Legacy tests and independent source review"
+      ],
+      "rollback": "Preserve immutable source and failure receipts; do not integrate failed candidates.",
+      "budget": "Realized native tools only, two BEAM schedulers, bounded private processes; no network or package installation.",
+      "reviewer": "Independent Codex reviewer and actual AGY scoped observation",
+      "residuals": [
+        "No RETE index performance claim, complete rule consistency proof, live dispatch, UI correctness or full EV107 admission."
+      ],
+      "supersedes": "New bounded task beneath the all-EV programme."
+    }
+  }
+]

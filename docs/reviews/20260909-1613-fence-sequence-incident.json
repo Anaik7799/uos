@@ -1,0 +1,43 @@
+{
+  "schema": "uos.fence-sequence-incident.v1",
+  "observed_at_epoch": 1788971053.640545,
+  "authority": "NONE",
+  "policy_ceiling": 93,
+  "new_ev_admissions": 0,
+  "incident": "The workspace fence check refused a stale heartbeat. A sequential tool batch nevertheless changed only the JJ description before inspecting that refusal. This was a sequencing error, not a passing pre-effect fence.",
+  "containment": "No source implementation or runtime effect followed that refusal. Root inspected the refusal, refreshed its actual session heartbeat and observed the current workspace epoch successfully before creating the next JJ child.",
+  "correction": "Dependent mutations must be separate inspected tool calls, or the orchestration must explicitly stop on nonzero status. A sequential await alone does not enforce success.",
+  "preserved_candidate": "8152a497929d68f830385a1a887570f94ccebd77",
+  "artifacts": [
+    {
+      "source": "/tmp/ev-root-mesh-seal-fence-1622.json",
+      "path": "docs/reviews/20260909-1613-fence-sequence-ev-root-mesh-seal-fence-1622.json",
+      "sha256": "4bc974c76144e3f111e4bde43af6a248c948835d4f12a5abf2016354380907bb"
+    },
+    {
+      "source": "/tmp/ev-root-mesh-seal-describe-1622.json",
+      "path": "docs/reviews/20260909-1613-fence-sequence-ev-root-mesh-seal-describe-1622.json",
+      "sha256": "4d8bfd04d0f3eb596468df5b171cac48fc1cda2bf77bd18069a2a4c3ba220927"
+    },
+    {
+      "source": "/tmp/ev-root-heartbeat-mesh-seal-1623.json",
+      "path": "docs/reviews/20260909-1613-fence-sequence-ev-root-heartbeat-mesh-seal-1623.json",
+      "sha256": "50b76fda4628c4bcdf4722ffdcec5585aac58c2ac6d9f52fb9a3443db8e25912"
+    },
+    {
+      "source": "/tmp/ev-root-mesh-seal-fence-corrected-1623.json",
+      "path": "docs/reviews/20260909-1613-fence-sequence-ev-root-mesh-seal-fence-corrected-1623.json",
+      "sha256": "99729f137116808b8f16ec4a935863db88bf001a173e9f3ca2f16bbf21fc4287"
+    },
+    {
+      "source": "/tmp/ev-root-new-after-mesh-seal-1624.json",
+      "path": "docs/reviews/20260909-1613-fence-sequence-ev-root-new-after-mesh-seal-1624.json",
+      "sha256": "0eb5b9b9fa37cdc6ba1509018f64d8ecdd6bc89fd3e9776a16a419613addd413"
+    },
+    {
+      "source": "/tmp/ev-root-agy-mesh-review-request-1625.json",
+      "path": "docs/reviews/20260909-1613-fence-sequence-ev-root-agy-mesh-review-request-1625.json",
+      "sha256": "5e724e2c18a6f54ff7de8c0bdba482d85ec263e9d3e05fe47375270f776f2c22"
+    }
+  ]
+}
