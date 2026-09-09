@@ -191,7 +191,7 @@ let checks out revision =
     one "mapping-observation" (fun c->c.termination=Exited 1) mapping_hold (script_argv mapping ["--observe";workspace;amendment])
   ] in
   let valid=List.for_all(function `Assoc x->List.assoc "valid" x=`Bool true|_->false) rows in
-  write(out^"/summary.json")(Yojson.Safe.pretty_to_string(`Assoc["schema",`String"uos.ev02-governance-checks/v3";"authority",`String"REPORT_ONLY";"admission",`String"NOT_GRANTED";"candidate_commit",`String revision;"source_bindings",`List bindings;"rows",`List rows;"valid",`Bool valid])^"\\n");
+  write(out^"/summary.json")(Yojson.Safe.pretty_to_string(`Assoc["schema",`String"uos.ev02-governance-checks/v3";"authority",`String"REPORT_ONLY";"admission",`String"NOT_GRANTED";"candidate_commit",`String revision;"source_bindings",`List bindings;"rows",`List rows;"valid",`Bool valid])^"\n");
   if valid then 0 else 1
 let () = match Array.to_list Sys.argv with
   | [_;"--harness-selftest"] -> harness_selftest ()
