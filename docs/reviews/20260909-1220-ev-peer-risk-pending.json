@@ -1,0 +1,193 @@
+[
+  {
+    "decision": {
+      "supersedes": "New child task under uos/ev-admission/20260909-0210 PROGRAM",
+      "residuals": [
+        "Routing identity is not authentication",
+        "Actor mailbox and node crash persistence are not bounded durable transport",
+        "Advisory deadman actions have no effect dispatcher",
+        "No live supervisor or network modifications"
+      ],
+      "acceptance": [
+        "RED then GREEN source and real OTP tests",
+        "Malformed/unknown/mismatched/replayed frames cannot incorrectly rearm freshness",
+        "Quota and failed transport reports preserve retained frames",
+        "Periodic actor tick evaluates freshness despite full outbox",
+        "Immutable candidate independently reviewed before task completion"
+      ],
+      "summary": "Implement bounded opaque peer loop with retained routed outbox, strict routing checks, replay-independent local deadman clock, and supervised actor. Parent PROGRAM coordinates later transport.",
+      "alternatives": [
+        "Promote recorded historical counts",
+        "Repair gaps and execute revision-bound checks"
+      ],
+      "assumptions": [
+        "User authorizes completing and admitting existing EVs; evidence requirements remain in force."
+      ],
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "Only synthetic EV999 exists in the legacy evidence table; actual EV evidence must be obtained."
+      ],
+      "forecast": "Negative tests will expose unsupported admission and fixed-positive verification; genuine runtime/formal obligations may require additional scoped work.",
+      "falsifier": "Any missing, tampered, stale, wrong-candidate or nonpassing evidence is accepted for admission.",
+      "rollback": "Preserve failed receipts and immutable work. Do not rewrite shared journal/cycle history or replace runtime without its own checked fence and recovery path.",
+      "budget": "Existing realized tools only; no package downloads or paid inference. Two build jobs, two BEAM schedulers per probe, bounded subprocess timeouts; stage-specific execution ceilings recorded with receipts.",
+      "reviewer": "Independent code review and actual Codex/AGY sovereign review; no model impersonation."
+    },
+    "factors": {
+      "criticality": {
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam"
+        ],
+        "rationale": "Requested admission is blocked by observed provenance and false-positive verification gaps.",
+        "value": 4,
+        "low": 4,
+        "high": 4
+      },
+      "stpa": {
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam"
+        ],
+        "rationale": "Observed printed deployment PASS and file-presence admission can assert safe completion without required behavior.",
+        "value": 5,
+        "low": 5,
+        "high": 5
+      },
+      "fmea": {
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam"
+        ],
+        "rationale": "S5 O3 Det4 RPN60; severity floor makes F5 for false system admission.",
+        "value": 5,
+        "low": 5,
+        "high": 5
+      },
+      "dependency": {
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam"
+        ],
+        "rationale": "Evidence and authority repairs gate all requested EV admissions.",
+        "value": 5,
+        "low": 5,
+        "high": 5
+      },
+      "impact": {
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam"
+        ],
+        "rationale": "Correct admission protects the shared fleet-wide control and evidence boundary.",
+        "value": 5,
+        "low": 5,
+        "high": 5
+      }
+    },
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Sibling child of sealed ef62623e; explicit scoped bytes observed",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          "sha256": "fec299362dae754656801a5a59c8763947054fa048e5d6db0afbc60036d2426d",
+          "observed_at": "2026-09-09T12:21:57Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+          "sha256": "67d3f4831f968faf4026ed5d5e8a3015d98f9f21e61d61018a6046f4253bd872",
+          "observed_at": "2026-09-09T12:21:57Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam",
+          "sha256": "887768b27f41b9e5531d4bdae2ee097e1cd0e622431dd1cb0b5dc29d42ee9de1",
+          "observed_at": "2026-09-09T12:21:57Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+          "sha256": "2b40cb70a185e96a8128e1babef752fab467655d22cd0b11f0bcf62b17bdee50",
+          "observed_at": "2026-09-09T12:21:57Z"
+        }
+      ]
+    },
+    "valid_until": "2026-09-09T13:21:57Z",
+    "ready_since": "2026-09-09T12:21:57Z",
+    "observed_at": "2026-09-09T12:21:57Z",
+    "scope": "New-only modules mesh_peer and mesh_peer_actor, tests and native staging in isolated peer-loop workspace; no production startup/network. Parent PROGRAM; own PEER_LOOP authority.",
+    "task_state": "pending",
+    "actor": "codex-ev98-peer-loop",
+    "task_id": "PEER_LOOP",
+    "plan_id": "uos/ev98-peer-loop/20260909",
+    "assessment_id": "ev98-peer-loop-1788956517",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 0,
+    "phase": "implementation",
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": [],
+    "class": "P1",
+    "score": 2500,
+    "score_interval": [ 2500, 2500 ],
+    "fmea_modes": [
+      {
+        "id": "FM-FALSE-ADMISSION",
+        "s": 5,
+        "o": 3,
+        "det": 4,
+        "rpn": 60,
+        "band": 5,
+        "cause": "Noncanonical writers and unobserved fixed-positive checks can be mistaken for runtime and formal evidence.",
+        "effect": "False system admission or unsafe downstream release.",
+        "controls": "Preserve history, use canonical Sa-plan, immutable candidates, negative controls, independent sovereign review and effect-time fencing."
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "EV admission programme owner and independent sovereign reviewers",
+      "control_action": "Repair and verify candidate capabilities, then record admission only for satisfied obligations",
+      "losses": [ "L-RISK-UNAUTHORIZED-EFFECT" ],
+      "hazards": [ "H-RISK-FALSE-CLEARANCE", "H-RISK-STALE-SELECTION" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Required runtime or formal checks are omitted before admission.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Every EV has explicit acceptance obligations and executed receipts."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Printouts, stale files, fabricated reviewers or quarantined claims grant admission.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Validate evidence content, digests, scope, candidate and independent review; no ceiling changes before review."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "A candidate or owner changes after observation.",
+          "hazard_ids": [ "H-RISK-STALE-SELECTION" ],
+          "constraint": "Use immutable JJ revisions and current task/workspace/integration/runtime fences at each effect."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Tests or workers outlive resource or ownership bounds.",
+          "hazard_ids": [ "H-RISK-STALE-SELECTION" ],
+          "constraint": "Bound subprocesses, outputs and lease durations; recheck before effects."
+        }
+      ]
+    }
+  }
+]

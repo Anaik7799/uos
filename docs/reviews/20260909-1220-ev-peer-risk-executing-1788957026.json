@@ -1,0 +1,213 @@
+[
+  {
+    "decision": {
+      "supersedes": "New child task under uos/ev-admission/20260909-0210 PROGRAM",
+      "residuals": [
+        "Routing identity is not authentication",
+        "Actor mailbox and node crash persistence are not bounded durable transport",
+        "Advisory deadman actions have no effect dispatcher",
+        "No live supervisor or network modifications"
+      ],
+      "acceptance": [
+        "RED then GREEN source and real OTP tests",
+        "Malformed/unknown/mismatched/replayed frames cannot incorrectly rearm freshness",
+        "Quota and failed transport reports preserve retained frames",
+        "Periodic actor tick evaluates freshness despite full outbox",
+        "Immutable candidate independently reviewed before task completion"
+      ],
+      "summary": "Implement bounded opaque peer loop with retained routed outbox, strict routing checks, replay-independent local deadman clock, and supervised actor. Parent PROGRAM coordinates later transport.",
+      "alternatives": [
+        "Promote recorded historical counts",
+        "Repair gaps and execute revision-bound checks"
+      ],
+      "assumptions": [
+        "User authorizes completing and admitting existing EVs; evidence requirements remain in force."
+      ],
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "Only synthetic EV999 exists in the legacy evidence table; actual EV evidence must be obtained."
+      ],
+      "forecast": "Negative tests will expose unsupported admission and fixed-positive verification; genuine runtime/formal obligations may require additional scoped work.",
+      "falsifier": "Any missing, tampered, stale, wrong-candidate or nonpassing evidence is accepted for admission.",
+      "rollback": "Preserve failed receipts and immutable work. Do not rewrite shared journal/cycle history or replace runtime without its own checked fence and recovery path.",
+      "budget": "Existing realized tools only; no package downloads or paid inference. Two build jobs, two BEAM schedulers per probe, bounded subprocess timeouts; stage-specific execution ceilings recorded with receipts.",
+      "reviewer": "Independent code review and actual Codex/AGY sovereign review; no model impersonation."
+    },
+    "factors": {
+      "criticality": {
+        "rationale": "Peer queue loss, wrong routing or stale activity could falsely indicate synchronized healthy peers; bounded private implementation and negative controls are required before integration.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/test/mesh_peer_test.gleam"
+        ],
+        "value": 4,
+        "low": 4,
+        "high": 4
+      },
+      "stpa": {
+        "rationale": "Peer queue loss, wrong routing or stale activity could falsely indicate synchronized healthy peers; bounded private implementation and negative controls are required before integration.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/test/mesh_peer_test.gleam"
+        ],
+        "value": 5,
+        "low": 5,
+        "high": 5
+      },
+      "fmea": {
+        "rationale": "Peer queue loss, wrong routing or stale activity could falsely indicate synchronized healthy peers; bounded private implementation and negative controls are required before integration.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/test/mesh_peer_test.gleam"
+        ],
+        "value": 5,
+        "low": 5,
+        "high": 5
+      },
+      "dependency": {
+        "rationale": "Peer queue loss, wrong routing or stale activity could falsely indicate synchronized healthy peers; bounded private implementation and negative controls are required before integration.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/test/mesh_peer_test.gleam"
+        ],
+        "value": 5,
+        "low": 5,
+        "high": 5
+      },
+      "impact": {
+        "rationale": "Peer queue loss, wrong routing or stale activity could falsely indicate synchronized healthy peers; bounded private implementation and negative controls are required before integration.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/test/mesh_peer_test.gleam"
+        ],
+        "value": 5,
+        "low": 5,
+        "high": 5
+      }
+    },
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Sibling child of sealed ef62623e; explicit scoped bytes observed",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+          "sha256": "fec299362dae754656801a5a59c8763947054fa048e5d6db0afbc60036d2426d",
+          "observed_at": "2026-09-09T12:30:25Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+          "sha256": "67d3f4831f968faf4026ed5d5e8a3015d98f9f21e61d61018a6046f4253bd872",
+          "observed_at": "2026-09-09T12:30:25Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam",
+          "sha256": "887768b27f41b9e5531d4bdae2ee097e1cd0e622431dd1cb0b5dc29d42ee9de1",
+          "observed_at": "2026-09-09T12:30:25Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+          "sha256": "2b40cb70a185e96a8128e1babef752fab467655d22cd0b11f0bcf62b17bdee50",
+          "observed_at": "2026-09-09T12:30:25Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_peer.gleam",
+          "sha256": "7da6dbbd59bcce149b565a79ec90f6177d3615a07e0f7c80cc0e07d47a341936",
+          "observed_at": "2026-09-09T12:30:25Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/test/mesh_peer_test.gleam",
+          "sha256": "fe73255dad161b2a7a393ccb9cae58b243dbbc3eda4dc1c988bf82791a0d1f57",
+          "observed_at": "2026-09-09T12:30:25Z"
+        }
+      ]
+    },
+    "valid_until": "2026-09-09T13:30:25Z",
+    "ready_since": "2026-09-09T12:30:25Z",
+    "observed_at": "2026-09-09T12:30:25Z",
+    "scope": "New-only modules mesh_peer and mesh_peer_actor, tests and native staging in isolated peer-loop workspace; no production startup/network. Parent PROGRAM; own PEER_LOOP authority.",
+    "task_state": "executing",
+    "actor": "codex-ev98-peer-loop",
+    "task_id": "PEER_LOOP",
+    "plan_id": "uos/ev98-peer-loop/20260909",
+    "assessment_id": "ev98-peer-loop-1788957026",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 0,
+    "phase": "implementation",
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": [],
+    "class": "P1",
+    "score": 2500,
+    "score_interval": [ 2500, 2500 ],
+    "fmea_modes": [
+      {
+        "id": "FM-FALSE-ADMISSION",
+        "s": 5,
+        "o": 3,
+        "det": 4,
+        "rpn": 60,
+        "band": 5,
+        "cause": "Noncanonical writers and unobserved fixed-positive checks can be mistaken for runtime and formal evidence.",
+        "effect": "False system admission or unsafe downstream release.",
+        "controls": "Preserve history, use canonical Sa-plan, immutable candidates, negative controls, independent sovereign review and effect-time fencing."
+      }
+    ],
+    "stpa_analysis": {
+      "controller": "EV admission programme owner and independent sovereign reviewers",
+      "control_action": "Repair and verify candidate capabilities, then record admission only for satisfied obligations",
+      "losses": [ "L-RISK-UNAUTHORIZED-EFFECT" ],
+      "hazards": [ "H-RISK-FALSE-CLEARANCE", "H-RISK-STALE-SELECTION" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Required runtime or formal checks are omitted before admission.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Every EV has explicit acceptance obligations and executed receipts."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Printouts, stale files, fabricated reviewers or quarantined claims grant admission.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Validate evidence content, digests, scope, candidate and independent review; no ceiling changes before review."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "A candidate or owner changes after observation.",
+          "hazard_ids": [ "H-RISK-STALE-SELECTION" ],
+          "constraint": "Use immutable JJ revisions and current task/workspace/integration/runtime fences at each effect."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Tests or workers outlive resource or ownership bounds.",
+          "hazard_ids": [ "H-RISK-STALE-SELECTION" ],
+          "constraint": "Bound subprocesses, outputs and lease durations; recheck before effects."
+        }
+      ]
+    }
+  }
+]
