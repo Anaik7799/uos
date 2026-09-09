@@ -1,0 +1,1 @@
+{"schema":"uos.ev-consistency.v1","status":"HOLD","authority":"NONE","error":"Failure(\"usage: ev_receipt validate WORKSPACE RELATIVE_BUNDLE EV_NUMBER IMMUTABLE_40_HEX_REVISION\")"}

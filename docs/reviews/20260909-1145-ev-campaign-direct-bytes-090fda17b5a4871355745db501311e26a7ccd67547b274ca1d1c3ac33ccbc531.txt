@@ -1,0 +1,1 @@
+file contracts/rules/20260908-0912-provenance-integrity-contract.md
