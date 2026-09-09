@@ -666,7 +666,7 @@ pub fn execute(cmd: UosCommand) -> Int {
       )
       io.println("")
 
-      case list.length(missing) > 0, list.length(verified) == total {
+      case missing != [], list.length(verified) == total {
         True, _ -> {
           io.println(
             "UOS Doctor result: FAIL - "
