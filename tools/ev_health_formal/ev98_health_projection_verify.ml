@@ -44,22 +44,43 @@ let verify_controls collision raw =
   require_order (member "canonical" raw)
 
 let digest_file path =
+  let stat = Unix.stat path in
+  if stat.Unix.st_kind <> Unix.S_REG || stat.Unix.st_size > 4 * 1024 * 1024
+  then fail "BEAM must be a bounded regular file";
   let channel = open_in_bin path in
   let digest = Cryptokit.hash_channel (Cryptokit.Hash.sha256 ()) channel in
   close_in channel;
   Cryptokit.transform_string (Cryptokit.Hexa.encode ()) digest
 
-let output_from_receipt receipt =
+let output_from_receipt receipt expected_output main =
+  let stat = Unix.stat receipt in
+  if stat.Unix.st_kind <> Unix.S_REG || stat.Unix.st_size > 4 * 1024 * 1024
+  then fail "receipt must be a bounded regular file";
   match J.from_file receipt with
   | `Assoc _ as json ->
-    (match member "output" json with `String output -> output | _ -> fail "receipt output missing")
+    if member "exit_code" json <> `Int 0 || member "failure" json <> `Null
+       || member "child_termination" json <> `Assoc ["kind", `String "EXITED"; "code", `Int 0]
+    then fail "receipt did not observe a successful child";
+    let argv =
+      match member "argv" json with
+      | `List values -> List.filter_map (function `String value -> Some value | _ -> None) values
+      | _ -> fail "receipt argv missing" in
+    if not (List.mem expected_output argv && List.mem "-s" argv && List.mem main argv)
+    then fail "receipt launch identity";
+    (match member "output" json with
+     | `String output ->
+       let digest = Cryptokit.hash_string (Cryptokit.Hash.sha256 ()) output
+         |> Cryptokit.transform_string (Cryptokit.Hexa.encode ()) in
+       if member "output_sha256" json <> `String digest then fail "receipt output digest";
+       output
+     | _ -> fail "receipt output missing")
   | _ -> fail "receipt root"
 
 let () =
   if Array.length Sys.argv <> 4 then fail "usage: RECEIPT BEAM EXPECTED_BEAM_SHA256";
   let receipt = Sys.argv.(1) and beam = Sys.argv.(2) and expected = Sys.argv.(3) in
   if digest_file beam <> expected then fail "compiled Gleam BEAM digest";
-  let output = output_from_receipt receipt in
+  let output = output_from_receipt receipt (Filename.dirname beam) "ev98_health_projection_runner" in
   if String.length output > 4 * 1024 * 1024 then fail "projection exceeds 4MiB";
   let lines = String.split_on_char '\n' output |> List.filter (fun x -> x <> "") in
   let seen = Hashtbl.create 3000 and header = ref false and collision = ref None and raw = ref None in

@@ -148,13 +148,14 @@ let select_without_writer_independent
   else if left.logical < right.logical then right
   else right
 
-let unsat_row name constraints =
+let unsat_row name finite_check constraints =
   let actual =
     match S.check (S.create ()) constraints with
     | `Sat -> "SAT" | `Unsat -> "UNSAT" | `Unknown -> "UNKNOWN"
   in
   { name; expected = "UNSAT"; actual; query_sha256 = query_sha256 constraints;
-    assignment = "none"; independently_validated = actual = "UNSAT" }
+    assignment = "finite_oracle=" ^ string_of_bool finite_check;
+    independently_validated = actual = "UNSAT" && finite_check }
 
 let sat_row name constraints validate =
   let solver = S.create () in
@@ -203,12 +204,13 @@ let finite_witness () =
     (Ev98_health_model.all_well_formed_pairs ())
 
 let rows () =
-  [ unsat_row "sample_dominance" [ full_range; negated_sample_dominance ];
-    unsat_row "logical_tiebreak" [ full_range; negated_logical_tiebreak ];
-    unsat_row "writer_tiebreak" [ full_range; negated_writer_tiebreak ];
-    unsat_row "commutativity" [ full_range; negated_commutativity ];
-    unsat_row "idempotence" [ full_range; negated_idempotence ];
-    unsat_row "associativity" [ full_range; negated_associativity ];
+  let finite = Ev98_health_model.laws_hold_by_enumeration () in
+  [ unsat_row "sample_dominance" finite [ full_range; negated_sample_dominance ];
+    unsat_row "logical_tiebreak" finite [ full_range; negated_logical_tiebreak ];
+    unsat_row "writer_tiebreak" finite [ full_range; negated_writer_tiebreak ];
+    unsat_row "commutativity" finite [ full_range; negated_commutativity ];
+    unsat_row "idempotence" finite [ full_range; negated_idempotence ];
+    unsat_row "associativity" finite [ full_range; negated_associativity ];
     sat_row "sanity_sample_witness"
       [ full_range; equal a.sample (int_value 2); equal b.sample (int_value 0);
         same_register (select a b) a ]
