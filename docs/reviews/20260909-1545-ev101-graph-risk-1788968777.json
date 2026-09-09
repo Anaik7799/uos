@@ -1,0 +1,185 @@
+[
+  {
+    "stpa_analysis": {
+      "controller": "Pure Gleam graph operations and component reviewer",
+      "control_action": "Update bounded graph and compute observed adjacency reciprocity",
+      "losses": [ "L-RISK-UNAUTHORIZED-EFFECT" ],
+      "hazards": [ "H-RISK-FALSE-CLEARANCE" ],
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "Mutation omits reciprocal adjacency or updated metrics.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Derive inbound links/count/score from canonical directed edge set."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "Duplicate or dangling endpoints inflate graph confidence.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Checked operations reject missing endpoints and preserve idempotence; metric checks actual reciprocity."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "Replacement node overwrites adjacency and stale derived data.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Define replacement semantics explicitly and rebuild dependent inbound edges and metrics atomically."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Caller supplies unbounded nodes, metadata or edges.",
+          "hazard_ids": [ "H-RISK-FALSE-CLEARANCE" ],
+          "constraint": "Bound graph traversal and node/string/list sizes before expensive validation; no silent truncation."
+        }
+      ]
+    },
+    "decision": {
+      "summary": "Repair bounded directed simple-graph adjacency, idempotence, replacement and observed reciprocity metrics with compatibility wrappers and typed refusal APIs.",
+      "alternatives": [
+        "Keep heuristic metrics and merely adjust displayed count",
+        "Bound and validate graph operations, then compare with independent finite edge-set oracle"
+      ],
+      "assumptions": [
+        "Parent PROGRAM authorizes only pure EV101 graph component repair in sibling child of52e013",
+        "Navigator reads existing public fields; historical misleading UI statements are outside this scope"
+      ],
+      "confidence": "analyst_estimate",
+      "counterevidence": [
+        "Existing five tests do not challenge edge idempotence, missing endpoints or reciprocity",
+        "Public constructors permit arbitrary externally assembled graph values"
+      ],
+      "forecast": "RED cases will expose count inflation, one-sided self-adjacency and false reciprocity; checked operations will preserve bounded graph invariants.",
+      "falsifier": "A successful bounded operation creates a duplicate/dangling/unreciprocated edge, incorrect count, or metric contradicting the edge-set oracle.",
+      "acceptance": [
+        "Observed RED defects before production edits",
+        "Duplicate, missing, self-edge and replacement tests",
+        "Boundary and malformed graph controls",
+        "Independent small graph edge-set oracle",
+        "Immutable candidate and independent review before task completion"
+      ],
+      "rollback": "Preserve immutable base and failures; isolate child and do not integrate or rewrite history.",
+      "budget": "Pure Gleam only; native OCaml staging; realized Gleam/directERTS; private stages; <=2 schedulers and <=30second bounded native child; no network/package downloads.",
+      "reviewer": "Parent independent bounded source review; no admission from this component.",
+      "residuals": [
+        "No full sheaf/cohomology formal proof",
+        "No live corpus integration",
+        "Legacy UI static claims remain outside scope",
+        "Public constructors require checked validation and do not confer invariant guarantees by themselves"
+      ],
+      "supersedes": "Separate Sa-plan REPAIR under parent uos/ev-admission/20260909-0210 PROGRAM; prior review tasks remain completed"
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-GRAPH-INTEGRITY",
+        "s": 3,
+        "o": 4,
+        "det": 3,
+        "rpn": 36,
+        "band": 4,
+        "cause": "Unconditional counter increment and one-sided adjacency updates.",
+        "effect": "Graph integrity failure and misleading consistency metrics.",
+        "controls": "Explicit graph bounds, canonical edge semantics, typed refusals, oracle tests and independent review."
+      }
+    ],
+    "score_interval": [ 216, 216 ],
+    "score": 216,
+    "factors": {
+      "criticality": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Incorrect graph metrics degrade knowledge navigation and invalidate graph evidence, but this task performs no production or admission effect.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/sheaf_engine.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/test/sheaf_engine_test.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/sheaf_navigator_view.gleam"
+        ]
+      },
+      "stpa": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Duplicate/missing/self-edge mutations can produce false structural-consistency indicators; direct oracle checks and bounded refusal constrain the graph.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/sheaf_engine.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/test/sheaf_engine_test.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/sheaf_navigator_view.gleam"
+        ]
+      },
+      "fmea": {
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "rationale": "S3 O4 Det3 RPN36 -> band4; repeated unvalidated mutations and shallow existing tests conceal graph inconsistency.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/sheaf_engine.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/test/sheaf_engine_test.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/sheaf_navigator_view.gleam"
+        ]
+      },
+      "dependency": {
+        "value": 2,
+        "low": 2,
+        "high": 2,
+        "rationale": "Pure graph repair is an independent EV101 component prerequisite; corpus and formal closure remain separate.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/sheaf_engine.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/test/sheaf_engine_test.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/sheaf_navigator_view.gleam"
+        ]
+      },
+      "impact": {
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "rationale": "Graph integrity and metrics affect the sole navigator caller and later graph consumers.",
+        "evidence_refs": [
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/sheaf_engine.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/test/sheaf_engine_test.gleam",
+          ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/sheaf_navigator_view.gleam"
+        ]
+      }
+    },
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Isolated parent-held peer workspace epoch2; fresh child of52e013; explicit scoped bytes",
+      "evidence": [
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/knowledge/sheaf_engine.gleam",
+          "sha256": "a50316dc4406d53decda76a11cd8960709271903b0f4cad283944647e1acaf4c",
+          "observed_at": "2026-09-09T15:46:16Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/test/sheaf_engine_test.gleam",
+          "sha256": "dd1cc36c626c91f665e54f5a3e6fa50c681ccb1c516eb7a36284897a61b10b56",
+          "observed_at": "2026-09-09T15:46:16Z"
+        },
+        {
+          "path": ".uos-workspaces/ev98-peer-loop-20260909/apps/cepaf_gleam/src/cepaf_gleam/ui/lustre/sheaf_navigator_view.gleam",
+          "sha256": "df1854d166e3c0a143bb744dc77b2be0d1cc7241ef3c0f6b78742f94824abfd5",
+          "observed_at": "2026-09-09T15:46:16Z"
+        }
+      ]
+    },
+    "valid_until": "2026-09-09T16:46:16Z",
+    "ready_since": "2026-09-09T15:46:16Z",
+    "observed_at": "2026-09-09T15:46:16Z",
+    "scope": "Pure sheaf_engine graph integrity, direct tests and native OCaml evidence; sibling child52e013; no UI/corpus/formal/admission mutation",
+    "class": "P2",
+    "task_state": "pending",
+    "actor": "codex-ev101-graph",
+    "task_id": "REPAIR",
+    "plan_id": "uos/ev101-graph-integrity/20260909",
+    "assessment_id": "ev101-graph-1788968777",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 0,
+    "phase": "implementation",
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": []
+  }
+]
