@@ -17,6 +17,14 @@ let unit_tests () =
  test "unique mutation"(fun()->require(Ev_campaign.replace_once "a-b-c" "b" "x"="a-x-c") "mutation result");
  test "missing mutation anchor"(fun()->refuses(fun()->ignore(Ev_campaign.replace_once "a" "b" "x")));
  test "ambiguous mutation anchor"(fun()->refuses(fun()->ignore(Ev_campaign.replace_once "b-b" "b" "x")));
+ test "reviewed wire module is staged"(fun()->require(List.mem "apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_wire.gleam" Ev98_recipe.sources) "required mesh_wire source omitted");
+ test "all twenty five codec acceptance calls are declared"(fun()->require(List.length(List.filter(String.starts_with ~prefix:"mesh_sync_codec_test.")Ev98_recipe.cases)=25) "codec acceptance denominator missing");
+ test "all original forty two case obligations remain"(fun()->require(List.length Ev98_recipe.baseline_cases=42 && List.for_all(fun c->List.mem c Ev98_recipe.cases)Ev98_recipe.baseline_cases) "baseline case lost");
+ test "combined case identifiers are unique"(fun()->require(List.length(List.sort_uniq String.compare Ev98_recipe.cases)=List.length Ev98_recipe.cases) "duplicate obligation");
+ test "acceptance updates are explicit baseline corrections"(fun()->
+   let paths=List.map(fun(p,_,_,_)->p)Ev98_recipe.acceptance_updates in
+   require(List.length paths=List.length(List.sort_uniq String.compare paths)) "duplicate acceptance update";
+   List.iter(fun(p,old,changed,why)->require(List.assoc_opt p Ev98_recipe.baseline_fixed=Some old && old<>changed && why<>"") "unbound acceptance update")Ev98_recipe.acceptance_updates);
  test "recipe executables are ELF"(fun()->List.iter(fun(name,path,_)->if name<>"boot" then
   let c=open_in_bin path in let magic=Fun.protect ~finally:(fun()->close_in_noerr c)(fun()->really_input_string c 4) in
   require(magic="\127ELF") ("recipe executable uses a wrapper: "^name)) Ev98_recipe.tools);
@@ -62,8 +70,8 @@ let () =
   require(get "formal" j=`String "Formal_unavailable") "formal credit invented";
   require(get "sovereign" j=`String "Sovereign_pending") "sovereign credit invented";
   require(get "authority" j=`String "NONE") "effect authority invented";
-  require(List.length(Yojson.Basic.Util.to_list(get "executed_cases" j))=42) "actual case coverage";
-  require(List.length(Yojson.Basic.Util.to_list(get "negative_controls" j))=3) "negative controls missing";
+  require(List.length(Yojson.Basic.Util.to_list(get "executed_cases" j))=List.length Ev98_recipe.cases) "actual case coverage";
+  require(List.length(Yojson.Basic.Util.to_list(get "negative_controls" j))=4) "negative controls missing";
   let actual=Yojson.Basic.Util.to_list(get "executed_cases" j) |> List.map Yojson.Basic.Util.to_string in
   require(actual=Ev98_recipe.cases) "recipe case order drift";
   let bindings=Yojson.Basic.Util.to_list(get "bindings" j) in

@@ -1,0 +1,92 @@
+{
+  "schema": "uos.ev98.recipe-codec.preliminary.v1",
+  "source_revision": "3904335b3a9aa4e5558bf85160081ffbe5dd756b",
+  "sources": [
+    {
+      "path": "tools/ev_receipts/ev98_recipe.ml",
+      "sha256": "122599f4e2922e8ac46fa79aad0ff996d1ec12dfe80cf1c6027e3628ef69773a"
+    },
+    {
+      "path": "tools/ev_receipts/ev_campaign.ml",
+      "sha256": "55b7b32e29f2b5cad7b182efe7e64d1c746c501cfa7956aff82a51774769aa0c"
+    },
+    {
+      "path": "tools/ev_receipts/campaign_test.ml",
+      "sha256": "e8ce51e13b4cd824537ad19ffad12dd0e2675aba09ad937551e40867ef561a6e"
+    }
+  ],
+  "receipts": [
+    {
+      "path": "docs/reviews/20260909-1302-ev98-recipe-codec-old-active-red.json",
+      "observed_path": "/tmp/ev-recipe-codec-old-active-observe.json",
+      "sha256": "6d7c3b805cba22e407a21fdd24b13a61793f80afbc46b68e2f69e310e8fb1797",
+      "bytes": 74042
+    },
+    {
+      "path": "docs/reviews/20260909-1302-ev98-recipe-codec-old-active-red.stderr.txt",
+      "observed_path": "/tmp/uos-ev98-campaign-7364cb.reserve.d/positive-compile.stderr",
+      "sha256": "6040862d8207df4923fdb0196fa0748b479fed2a31814ebff23bb193b6cd0ea3",
+      "bytes": 43799
+    },
+    {
+      "path": "docs/reviews/20260909-1302-ev98-recipe-codec-old-sandbox-clock-hold.json",
+      "observed_path": "/tmp/ev-recipe-codec-old-observe.json",
+      "sha256": "d886dab6fec5d7e1c4f4f5c413df042b85aac77cbd6a8f2aacde47ae7f5279e0",
+      "bytes": 2366
+    },
+    {
+      "path": "docs/reviews/20260909-1302-ev98-recipe-codec-old-expired-private-observation.json",
+      "observed_path": "/tmp/ev-recipe-codec-old-observe2.json",
+      "sha256": "7d73943a161e8f3eb3688595e43583ed2948c93087b43c345e3defa26c21a161",
+      "bytes": 74017
+    },
+    {
+      "path": "docs/reviews/20260909-1302-ev98-recipe-codec-unit-red-build.json",
+      "observed_path": "/tmp/ev-recipe-codec-unit-red-build.json",
+      "sha256": "6f1aa7f9f1eca547a599976508c3d4f04dd5c7e229450898ecf77c4d02ccacda",
+      "bytes": 2351
+    },
+    {
+      "path": "docs/reviews/20260909-1302-ev98-recipe-codec-unit-red-tests.json",
+      "observed_path": "/tmp/ev-recipe-codec-unit-red-tests.json",
+      "sha256": "c5d1596bdfa5c07084f2a4735631e597437223023cc9b08fa982b2e5d3ca421e",
+      "bytes": 2435
+    },
+    {
+      "path": "docs/reviews/20260909-1302-ev98-recipe-codec-unit-green-build.json",
+      "observed_path": "/tmp/ev-recipe-codec-unit-green-build.json",
+      "sha256": "2f4b92fcab23d0e5825349bb66b10dbd1e3b7d43fa1d9106df64670be7408f0c",
+      "bytes": 2374
+    },
+    {
+      "path": "docs/reviews/20260909-1302-ev98-recipe-codec-unit-green-tests.json",
+      "observed_path": "/tmp/ev-recipe-codec-unit-green-tests.json",
+      "sha256": "8f73c8f46e2db35bc29ca1b9fb495ef676fc675bfb0255e59d9726f96fb9db98",
+      "bytes": 2983
+    },
+    {
+      "path": "docs/reviews/20260909-1302-ev98-recipe-codec-receipt-regressions.json",
+      "observed_path": "/tmp/ev-recipe-codec-receipt-regressions.json",
+      "sha256": "23997e50700ed67f91ee55386aa4320d7f30b154d5afe8cd5340eae19cdf7ca9",
+      "bytes": 4472
+    },
+    {
+      "path": "docs/reviews/20260909-1302-ev98-recipe-codec-task-recovery.json",
+      "observed_path": "/tmp/ev-recipe-codec-recovery.json",
+      "sha256": "260b83e6249cd2373f7b53bf38b44726c4e3f2aad3f8afb249393ad9fe1d10f6",
+      "bytes": 4397
+    },
+    {
+      "path": "docs/reviews/20260909-1302-ev98-recipe-codec-task-reclaim.json",
+      "observed_path": "/tmp/ev-recipe-codec-reclaim.json",
+      "sha256": "bca7a26fe960187f197bb0cb18a1284da0eb5f78fe5e630ae8cfb53f1d227f35",
+      "bytes": 3077
+    }
+  ],
+  "old_recipe_candidate": "9c590e75b87e2bca63adb4af966e465269203b4d",
+  "limitations": [
+    "Preliminary 25 unit and 67 receipt controls only; combined codec and synchronization campaign pending",
+    "Expired queued observation is private evidence without execution authority; authorized post-recovery missing-module RED is separate",
+    "No admission or live runtime claim"
+  ]
+}

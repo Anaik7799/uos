@@ -123,10 +123,20 @@ let mutations = [
  "nonforward-deadman-time", "apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
  "case now_ms <= reg.last_eval_ms", "case now_ms == reg.last_eval_ms",
  "deadman_freshness_test.backward_tick_cannot_clear_a_trip_test";
+ "codec-physical-sample", "apps/cepaf_gleam/src/cepaf_gleam/crdt/mesh_sync.gleam",
+ "Integer(h.sample_epoch_us)", "Integer(reg.timestamp_us)",
+ "mesh_sync_codec_test.all_fields_and_forwarding_origin_roundtrip_test";
 ]
 let recipe_descriptor =
  let refs xs=`List(List.map(fun(p,h)->`Assoc["path",js p;"sha256",js h])xs) in
  `Assoc["id",js Ev98_recipe.id;"baseline",js Ev98_recipe.baseline;
+  "previous_baseline",js Ev98_recipe.previous_baseline;
+  "previous_recipe_sha256",js Ev98_recipe.previous_recipe_sha256;
+  "update_notes",strings Ev98_recipe.update_notes;
+  "baseline_cases",strings Ev98_recipe.baseline_cases;
+  "codec_cases",strings Ev98_recipe.codec_cases;"sync_cases",strings Ev98_recipe.sync_cases;
+  "baseline_acceptance_and_policy",refs Ev98_recipe.baseline_fixed;
+  "acceptance_updates",`List(List.map(fun(p,old,new_hash,why)->`Assoc["path",js p;"old_sha256",js old;"new_sha256",js new_hash;"requirement",js why])Ev98_recipe.acceptance_updates);
   "sources",strings Ev98_recipe.sources;"fixed_acceptance_and_policy",refs Ev98_recipe.fixed;
   "cases",strings Ev98_recipe.cases;"dependency_files",refs Ev98_recipe.dependency_files;
   "tools",`List(List.map(fun(n,p,h)->`Assoc["name",js n;"path",js p;"sha256",js h])Ev98_recipe.tools);
@@ -267,7 +277,7 @@ let observe ~workspace ~ev ~revision =
   "full_ev_runtime",js "NOT_ESTABLISHED";"admission",js "NOT_GRANTED";
   "scope",strings Ev98_recipe.sources;
   "limits",strings["Private single-host component execution only; no deployed mesh or effect-time fence";
-   "Finite acceptance cases and three mutants do not prove all EV98 behavior";
+   "Finite acceptance cases and designated mutants do not prove all EV98 behavior";
    "Local cooperative host observation; no invocation or sovereign authentication";
    "Executable and dependency hashes do not establish a reproducible release closure"];
   "started_at",`Float now;"finished_at",`Float(Unix.gettimeofday());

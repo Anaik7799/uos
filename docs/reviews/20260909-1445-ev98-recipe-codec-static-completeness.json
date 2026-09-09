@@ -1,0 +1,33 @@
+{
+  "preserved_at": "2026-09-09T14:15:45Z",
+  "observation": {
+    "schema": "uos.ev98.recipe-codec.static-controls.v1",
+    "checks": [
+      "baseline case sequence equals reviewed v1 source, not just its size",
+      "baseline acceptance and policy pairs equal reviewed v1 source",
+      "source declaration adds only the reviewed mesh_wire module",
+      "every actual exported codec test is declared in source order",
+      "codec acceptance digest matches reviewed file bytes",
+      "all declared cases have exactly one matching public function",
+      "all preexisting dependency bytes and tools remain pinned identically",
+      "fixed source and acceptance paths are unique",
+      "unique exact source anchor: queue-capacity",
+      "unique exact source anchor: physical-health-order",
+      "unique exact source anchor: nonforward-deadman-time",
+      "unique exact source anchor: codec-physical-sample"
+    ],
+    "declared_cases": 67,
+    "current_recipe_source_sha256": "122599f4e2922e8ac46fa79aad0ff996d1ec12dfe80cf1c6027e3628ef69773a",
+    "reviewed_v1_recipe_source_sha256": "5d96c9e948e3196b521f46b035868aae086885342cf157b3c5e41148d614de25",
+    "limits": "Static completeness only; does not replace final actual combined campaign or designated mutant execution"
+  },
+  "helper": {
+    "path": "/tmp/ev-recipe-codec-static-controls.ml",
+    "sha256": "f3c6d55d43bbb8e5bb4772285ee331bc62aef4052cf2e7b7021b57532fc6c019"
+  },
+  "native_interpreter": {
+    "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+    "sha256": "2cb8989363a58b9ca352ea1cd245bf0e8b8adb2c1c64e87b52cbea80bc3e4e0f"
+  },
+  "authority": "NONE"
+}
