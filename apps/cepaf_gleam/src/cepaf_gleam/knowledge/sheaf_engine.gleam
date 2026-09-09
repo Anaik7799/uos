@@ -205,7 +205,7 @@ fn shape(graph: SheafGraph) -> Result(Nil, GraphError) {
       + list.length(node.outbound_transclusions)
       + list.length(node.inbound_references)
     })
-  case references <= max_edges * 2 {
+  case references <= max_edges * 2 && edge_count(graph.nodes) <= max_edges {
     True -> Ok(Nil)
     False -> Error(EdgeLimit)
   }
