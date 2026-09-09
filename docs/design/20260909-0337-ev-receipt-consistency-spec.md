@@ -9,17 +9,32 @@ The native OCaml validator checks consistency of one EV's evidence bundle. Its o
 
 A fabricated or synthetic receipt can be consistent. This tool does **not** authenticate producer identity, prove that a reported invocation ran, interpret verifier output, establish acceptance completeness, or certify that a claimed formal proof refines the implementation. Those remain independent review obligations. Tests deliberately use synthetic invocations, demonstrating this boundary.
 
+Policy selection is caller-provided. Checking the selected policy's candidate bytes does not establish its canonical identity, applicability or completeness. Independent policy review remains required.
+
 ## Invocation and toolchain
 
 From the isolated workspace, build using the already-realized repository OCaml toolchain:
 
-```sh
-OCAMLPATH=/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib PATH=/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin:/usr/bin:/bin dune build --root tools/ev_receipts -j 2
-tools/ev_receipts/_build/default/receipt_test.exe /absolute/isolated/workspace
-tools/ev_receipts/_build/default/ev_receipt.exe validate /absolute/isolated/workspace relative/bundle.json 1 337f99137673d7866b958a38bd490fb876b2880f
+Set the compiler environment through the native OCaml launcher:
+
+```ocaml
+Unix.putenv "OCAMLPATH" "/home/an/NAS-setup/uos/toolchains/opam-ocaml/lib";
+Unix.putenv "PATH" "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin:/usr/bin:/bin";
 ```
 
-The tests print a fresh synthetic bundle path for the third command. Host `chronyc` access is required by the CLI. There is no clock bypass flag. The library's explicit `now` argument supports deterministic caller observations and tests; it does not supply authenticated time by itself. Missing dependencies are failures, never triggers for installation. Jujutsu is resolved through the existing repository `toolchains/nix-profile/bin/jj`; source observation uses read-only `--ignore-working-copy` operations and explicit file templates.
+The launcher executes these argument arrays directly, without shell interpretation:
+
+```ocaml
+[ "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/dune";
+  "build"; "--root"; "tools/ev_receipts"; "-j"; "2" ]
+[ "tools/ev_receipts/_build/default/receipt_test.exe";
+  "/absolute/isolated/workspace" ]
+[ "tools/ev_receipts/_build/default/ev_receipt.exe"; "validate";
+  "/absolute/isolated/workspace"; "relative/bundle.json"; "1";
+  "337f99137673d7866b958a38bd490fb876b2880f" ]
+```
+
+The tests print a fresh synthetic bundle path for the third command. Host `chronyc` access is required by the CLI. There is no clock bypass flag. The library's explicit `now` argument supports deterministic caller observations and tests; it does not supply authenticated time by itself. Missing dependencies are failures, never triggers for installation. Jujutsu is resolved through the existing repository `toolchains/nix-profile/bin/jj`; source observation uses read-only `--ignore-working-copy` operations and explicit file templates. The revision selector is `commit_id("FULLHEX")`, and its resolved `self.commit_id()` must equal the expected full ID before metadata and content are read. A configurable bare hexadecimal revset symbol is never used.
 
 ## Bundle schema
 
@@ -76,23 +91,25 @@ Formal result exact keys: `verifier`, `result`, `sorry_count`, `unsupported_coun
 | Resource | Bound |
 |---|---|
 | Each referenced file / JSON input | 1 MiB |
-| Aggregate referenced read bytes | 16 MiB |
+| Aggregate accepted content bytes | 16 MiB, including local reads, Jujutsu stdout and final rehashes |
 | Tracked references | Fewer than 512 before each read |
 | JSON depth / structural punctuation | 32 / 50,000 |
 | JSON string / schema string | 8192 / 1024 characters |
 | Path depth / path length | 24 / 1024 characters |
 | Source entries / set entries / controls | 128 / 256 / 32 |
 | Command arguments | 256, each a nonempty bounded string |
-| Jujutsu reader | 5 seconds and 1 MiB output per subprocess |
+| Jujutsu reader | Three subprocesses per candidate file: ID resolution, metadata, content; each at most 5 seconds and 1 MiB stdout, further limited by shared remaining time and bytes |
 | Host clock reader | 3 seconds and 8192 bytes per subprocess |
-| Validation checks | 120 seconds between stages; one bounded in-flight reader can add up to five seconds |
+| Validation checks | 120-second shared monotonic deadline, checked around every reader and used to cap every Jujutsu subprocess |
 | Invocation duration / maximum age | 1800 / 3600 seconds, finite ordered epoch seconds |
 
-The age bound is rechecked against monotonic elapsed time before success. Child reader processes use argument arrays, private process groups and bounded output. On failure their group is killed and the direct child is reaped. Escaped descendant processes and adversarial same-host process identity races are outside the cooperative reader model.
+The age bound is carried as `valid_until` and rechecked against the final host timestamp and monotonic elapsed time after the final chrony observation, before CLI success. The result reports `content_bytes_charged`. Host chrony stdout has its separate bound of two 8192-byte observations; filesystem metadata and EOF probes are not content bytes. A rejected subprocess read can observe up to one extra 8192-byte chunk before output overflow is detected.
+
+Local filesystem calls, process scheduling, cleanup and direct-child reaping require cooperative OS return. The 120-second budget is a checked execution deadline, not a hard wall-clock guarantee for blocked filesystem/kernel calls. Before each of the three Jujutsu phases, remaining time and bytes are checked; successful stdout is charged before another phase starts. Final local rehashes charge their declared body sizes before reading. Child readers use argument arrays, private process groups and bounded output. On failure their group is killed and the direct child is reaped. Escaped descendants and adversarial same-host process identity races remain outside the cooperative reader model.
 
 ## Verification scope and residual obligations
 
-The current test suite exercises 50 receipt/file/process cases plus six host-clock parser cases. Original permissive scaffold execution exposed 37 expected failures; the clock scaffold exposed five; a repeated-command-argument case exposed one overstrict guard before repair. Tests read genuine immutable Jujutsu source bytes, but all receipt producers and outputs are synthetic. No standalone mathematical model was added because it would not prove this parser, filesystem or process implementation correct. Full formal invocation evidence and independent review remain unrun for this validator.
+The current test suite exercises 50 receipt/file/process cases, six host-clock parser cases and ten independent-review regression cases. Original permissive scaffold execution exposed 37 expected failures; the clock scaffold exposed five; a repeated-command-argument case exposed one overstrict guard before repair. Independent review exposed a configurable revision symbol, final-clock expiry and incomplete resource accounting. A child-only conflicting alias regression and four boundary scaffold failures were observed before their repair. Actual Jujutsu metadata/content boundaries and an 8 MiB fixture whose final rehash exceeds the aggregate quota are also checked, including their specific rejection reasons. Tests read genuine immutable Jujutsu source bytes, but all receipt producers and outputs are synthetic. No standalone mathematical model was added because it would not prove this parser, filesystem or process implementation correct. Full formal invocation evidence and independent review remain separate.
 
 ## Comprehensive verification checklist
 

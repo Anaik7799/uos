@@ -140,3 +140,69 @@ let () =
   (replace "invocation"(replace "command"(strings["check";"--label";"check"])(member "invocation" runtime))runtime)formal));
  if !failures>0 then exit 1
 let ()=Printf.printf "FINAL consistency cases=%d clock cases=6 failed=%d; all receipts SYNTHETIC; authority=NONE\n%!" !checks !failures
+(* Review regression: immutable IDs must not be interpreted as user aliases. *)
+let () =
+ let selected="5f66dfa699a4d16f96cd218376f2b23c5b59db33" in
+ let config=path(prefix^"/jj-alias.toml") in
+ write config("[revset-aliases]\n\""^selected^"\" = \""^revision^"\"\n");
+ let previous=Sys.getenv_opt "JJ_CONFIG" in
+ Unix.putenv "JJ_CONFIG" config;
+ let result=Fun.protect ~finally:(fun()->Unix.putenv "JJ_CONFIG"(Option.value ~default:"" previous))(fun()->
+  try let bytes=Receipt_validator.candidate_bytes workspace selected "tools/ev_receipts/receipt_validator.ml" in
+   sha bytes="b08a77ba8d14016a0c0db7fcb34403b6533be8b60017812ce50f701999373875" with _->false) in
+ if not result then (incr failures;print_endline "FAIL immutable_revision_ignores_conflicting_symbol_alias")
+ else print_endline "PASS immutable_revision_ignores_conflicting_symbol_alias";
+ if !failures>0 then exit 1
+let review_cases=ref 1
+let review_case label expected f =
+ incr review_cases;
+ let accepted=try f();true with _->false in
+ if accepted=expected then Printf.printf "PASS %s\n%!"label
+ else(incr failures;Printf.printf "FAIL %s expected_accept=%b observed_accept=%b\n%!"label expected accepted)
+let review_rejection label expected f =
+ incr review_cases;
+ let observed=try f();"accepted" with Failure message->message|e->Printexc.to_string e in
+ if observed=expected then Printf.printf "PASS %s reason=%s\n%!"label observed
+ else(incr failures;Printf.printf "FAIL %s expected=%s observed=%s\n%!"label expected observed)
+let () =
+ let result=obj["valid_until",`Float 1000.;"status",s "EVIDENCE_CONSISTENT";"authority",s "NONE"] in
+ let final finished elapsed = ignore(Receipt_validator.finalize_observation ~now:999.8 ~finished ~elapsed ~clock_start:"first" ~clock_end:"second" result) in
+ review_case "final_clock_before_expiry" true(fun()->final 999.9 0.1);
+ review_case "final_clock_delay_crosses_expiry" false(fun()->final 1000.2 0.4);
+ review_case "final_clock_nonfinite" false(fun()->final infinity infinity);
+ let at=ref 0. in
+ let budget=Receipt_validator.make_budget ~clock:(fun()-> !at) ~seconds:1. ~bytes:20 () in
+ review_case "aggregate_accounts_candidate_and_rehash" false(fun()->
+  Receipt_validator.charge budget 8;Receipt_validator.charge budget 8;Receipt_validator.charge budget 8);
+ let budget=Receipt_validator.make_budget ~clock:(fun()-> !at) ~seconds:1. ~bytes:20 () in
+ review_case "aggregate_exact_boundary" true(fun()->Receipt_validator.charge budget 20);
+ review_case "deadline_between_metadata_and_content" false(fun()->
+  Receipt_validator.check_budget budget; (* metadata observation complete *)
+  at:=1.1;Receipt_validator.check_budget budget (* no content reader may start *));
+ if !failures>0 then exit 1
+let () =
+ let large_receipt kind offset original =
+  let template=List.hd(to_list(member "negative_controls" original)) in
+  let controls=List.init 4(fun n->
+   let output=reference(prefix^"/"^kind^"-large-"^string_of_int n^".out")
+     (String.make 1048576(Char.chr(Char.code 'A'+offset+n))) in
+   template |> replace "id"(s("negative-"^string_of_int n)) |> replace "output" output) in
+  replace "negative_controls"(arr controls)original in
+ let large=make_bundle(large_receipt "runtime" 0 runtime)(large_receipt "formal" 4 formal) in
+ write(path(prefix^"/large-bundle.json"))(Yojson.Basic.to_string large);
+ review_rejection "aggregate_includes_actual_final_rehash" "aggregate content byte quota" (fun()->
+  ignore(Receipt_validator.validate ~workspace ~bundle:(prefix^"/large-bundle.json") ~expected_ev:1 ~expected_revision:revision ~now));
+ let metadata_size=String.length("file "^source^"\n") in
+ review_rejection "candidate_content_refused_after_metadata_exhausts_bytes" "reader budget exhausted" (fun()->
+  let budget=Receipt_validator.make_budget ~bytes:(41+metadata_size)() in
+  ignore(Receipt_validator.candidate_bytes ~budget workspace revision source));
+ review_rejection "candidate_deadline_between_actual_metadata_and_content" "validation deadline" (fun()->
+  let current=ref None in
+  let clock()=match !current with Some b when b.Receipt_validator.remaining_bytes<=4096-41-metadata_size->2.|_->0. in
+  let budget=Receipt_validator.make_budget ~clock ~seconds:1. ~bytes:4096 () in
+  current:=Some budget;
+  ignore(Receipt_validator.candidate_bytes ~budget workspace revision source));
+ (* Restore the small fixture after the large-bundle falsifier. *)
+ ignore(valid());
+ Printf.printf "REVIEW FINAL original_cases=56 review_cases=%d failed=%d authority=NONE\n%!" !review_cases !failures;
+ if !failures>0 then exit 1

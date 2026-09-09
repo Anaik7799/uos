@@ -5,6 +5,17 @@ let sha bytes = Cryptokit.hash_string (Cryptokit.Hash.sha256 ()) bytes
 let hex n s = String.length s=n && String.for_all (function '0'..'9'|'a'..'f'->true|_->false) s
 let mono () = Mtime.Span.to_float_ns (Mtime_clock.elapsed ()) /. 1e9
 let finite x = match classify_float x with FP_nan|FP_infinite->false|_->true
+type budget = { clock : unit -> float; deadline : float; mutable remaining_bytes : int }
+let make_budget ?(clock=mono) ?(seconds=120.) ?(bytes=16777216) () =
+ require(finite seconds && seconds>0. && bytes>=0) "invalid reader budget";
+ let now=clock() in require(finite now) "invalid budget clock";
+ {clock;deadline=now+.seconds;remaining_bytes=bytes}
+let check_budget budget =
+ let now=budget.clock() in require(finite now && now<budget.deadline) "validation deadline"
+let charge budget bytes =
+ check_budget budget;
+ require(bytes>=0 && bytes<=budget.remaining_bytes) "aggregate content byte quota";
+ budget.remaining_bytes<-budget.remaining_bytes-bytes
 let assoc = function `Assoc xs->xs|_->failwith "expected object"
 let field key obj = try List.assoc key (assoc obj) with Not_found->failwith("missing key: "^key)
 let str = function `String s->require(String.length s>0 && String.length s<=1024 && not(String.contains s '\000')) "invalid string";s|_->failwith "expected string"
@@ -47,12 +58,14 @@ let safe_path path =
  pieces
 let same_stat a b = a.Unix.st_dev=b.Unix.st_dev && a.Unix.st_ino=b.Unix.st_ino && a.Unix.st_kind=b.Unix.st_kind &&
  a.Unix.st_size=b.Unix.st_size && a.Unix.st_mtime=b.Unix.st_mtime && a.Unix.st_ctime=b.Unix.st_ctime
-let read_regular workspace relative =
+let read_regular ?budget workspace relative =
+ Option.iter check_budget budget;
  let pieces=safe_path relative in
  let rec walk base=function []->failwith "empty path"|[name]->let p=base^"/"^name in
   let st=Unix.lstat p in require(st.Unix.st_kind=Unix.S_REG && st.Unix.st_size<=1048576) "nonregular or oversized input";p,st
  |name::rest->let p=base^"/"^name in require((Unix.lstat p).Unix.st_kind=Unix.S_DIR) "symlink or nondirectory path component";walk p rest in
  let path,before=walk workspace pieces in
+ Option.iter(fun b->charge b before.Unix.st_size)budget;
  let fd=Unix.openfile path [Unix.O_RDONLY;Unix.O_NONBLOCK] 0 in
  Fun.protect ~finally:(fun()->Unix.close fd)(fun()->
   require(same_stat before(Unix.fstat fd)) "file identity changed before read";
@@ -61,7 +74,7 @@ let read_regular workspace relative =
   read 0;
   let extra=Bytes.create 1 in require(Unix.read fd extra 0 1=0) "file grew";
   require(same_stat before(Unix.fstat fd) && same_stat before(Unix.lstat path)) "file changed during read";
-  ignore(walk workspace pieces);Bytes.to_string bytes)
+  ignore(walk workspace pieces);Option.iter check_budget budget;Bytes.to_string bytes)
 (* Bounded argv-only reader, adapted from tools/release_process.ml. No shell, stdin,
    network command, task operation or live evidence append is exposed. *)
 let run ~seconds ~limit exe args =
@@ -88,16 +101,26 @@ let run ~seconds ~limit exe args =
   require(!status=Some(Unix.WEXITED 0)) "read-only subprocess failed";
   Buffer.contents buf
  with e->stop();raise e
-let jj workspace args =
+let jj ?budget workspace args =
  let rec root p = if Sys.file_exists(p^"/toolchains/nix-profile/bin/jj") then p else
   let parent=Filename.dirname p in require(parent<>p) "pinned jj unavailable";root parent in
  let exe=root workspace ^"/toolchains/nix-profile/bin/jj" in
- run ~seconds:5. ~limit:1048576 exe (["--ignore-working-copy";"--no-pager";"--color";"never";"-R";workspace]@args)
-let candidate_bytes workspace revision path =
+ let seconds,limit=match budget with None->5.,1048576|Some b->
+  check_budget b;min 5. (b.deadline-.b.clock()),min 1048576 b.remaining_bytes in
+ require(seconds>0. && limit>0) "reader budget exhausted";
+ let output=run ~seconds ~limit exe (["--ignore-working-copy";"--no-pager";"--color";"never";"-R";workspace]@args) in
+ Option.iter(fun b->charge b(String.length output))budget;output
+let candidate_bytes ?budget workspace revision path =
+ let budget=Option.value ~default:(make_budget()) budget in
+ let query args=jj ~budget workspace args in
+ require(hex 40 revision) "invalid immutable commit ID";
+ let selector="commit_id(\""^revision^"\")" in
+ let resolved=query ["log";"-r";selector;"--no-graph";"-T";"self.commit_id() ++ \"\\n\""] in
+ require(resolved=revision^"\n") "resolved commit ID mismatch";
  ignore(safe_path path);
- let metadata=jj workspace ["file";"list";"-r";revision;"-T";"file_type ++ \" \" ++ path ++ \"\\n\"";"--";path] in
+ let metadata=query ["file";"list";"-r";selector;"-T";"file_type ++ \" \" ++ path ++ \"\\n\"";"--";path] in
  require(metadata="file "^path^"\n") "candidate source is missing, ambiguous, or nonregular";
- jj workspace ["file";"show";"-r";revision;"-T";"\"\"";"--";path]
+ query ["file";"show";"-r";selector;"-T";"\"\"";"--";path]
 let reference obj = keys ["path";"sha256"]obj;
  let p=str(field "path" obj) and h=str(field "sha256" obj) in ignore(safe_path p);require(hex 64 h) "invalid SHA256";p,h
 let period ~now obj =
@@ -118,11 +141,11 @@ let validate ~workspace ~bundle ~expected_ev ~expected_revision ~now =
  require(expected_ev>=1 && expected_ev<=109 && hex 40 expected_revision) "invalid expected identity";
  let workspace=Unix.realpath workspace in require((Unix.lstat workspace).Unix.st_kind=Unix.S_DIR && Sys.file_exists(workspace^"/.jj")) "Jujutsu workspace required";
  let earliest=ref now in
- let started=mono() and tracked=Hashtbl.create 32 and total=ref 0 in
- let read p = require(mono()-.started<120.) "validation deadline";
+ let started=mono() and tracked=Hashtbl.create 32 and budget=make_budget() in
+ let read p = check_budget budget;
  require(now +. (mono()-.started) -. !earliest <=3600.) "receipt expired during validation";
-  let b=read_regular workspace p in total:= !total+String.length b;
-  require(!total<=16777216 && Hashtbl.length tracked<512) "aggregate evidence quota";
+  let b=read_regular ~budget workspace p in
+  require(Hashtbl.length tracked<512) "tracked reference quota";
   (match Hashtbl.find_opt tracked p with Some h->require(h=sha b) "reused file changed"|None->Hashtbl.add tracked p(sha b));b in
  let referenced obj = let p,h=reference obj in let b=read p in require(sha b=h) "referenced bytes digest mismatch";p,h,b in
  let bundle_bytes=read bundle in let b=parse bundle_bytes in
@@ -133,12 +156,12 @@ let validate ~workspace ~bundle ~expected_ev ~expected_revision ~now =
  List.iter(fun p->ignore(safe_path p))scope;
  let manifest=list(field "source_manifest" b) in require(List.length manifest<=128 && manifest<>[]) "source manifest quota";
  let names=List.map(fun entry->let p,h,bytes=referenced entry in
-  require(sha(candidate_bytes workspace expected_revision p)=h) "source differs from immutable candidate";
+  require(sha(candidate_bytes ~budget workspace expected_revision p)=h) "source differs from immutable candidate";
   require(bytes<>"") "empty source";p)manifest in
  require(names=List.sort_uniq String.compare names && names=List.sort String.compare scope) "manifest must be sorted, unique and cover scope";
  let manifest_hash=sha(Yojson.Basic.to_string(field "source_manifest" b)) in
  let policy_path,policy_hash,_=referenced(field "policy" b) in
- require(sha(candidate_bytes workspace expected_revision policy_path)=policy_hash) "policy differs from immutable candidate";
+ require(sha(candidate_bytes ~budget workspace expected_revision policy_path)=policy_hash) "policy differs from immutable candidate";
  let _,rh,rb=referenced(field "runtime" b) and _,fh,fb=referenced(field "formal" b) in
  require(rh<>fh) "runtime and formal receipts must differ";
  let output reference = let _,h,bytes=referenced reference in require(bytes<>"") "empty invocation output";h in
@@ -168,16 +191,19 @@ let validate ~workspace ~bundle ~expected_ev ~expected_revision ~now =
    ignore(str(field "verifier" f));require(str(field "result" f)="PASS" && int(field "sorry_count" f)=0 && int(field "unsupported_count" f)=0 && strings ~empty:true(field "undeclared_axioms" f)=[]) "formal result unresolved");id,positive_output in
  let runtime_id,runtime_output=receipt "runtime" rb and formal_id,formal_output=receipt "formal" fb in
  require(runtime_id<>formal_id && runtime_output<>formal_output) "two keys reuse invocation or output";
- Hashtbl.iter(fun p h->require(sha(read_regular workspace p)=h) "evidence changed before result")tracked;
- require(mono()-.started<120.) "validation deadline";
+ Hashtbl.iter(fun p h->require(sha(read_regular ~budget workspace p)=h) "evidence changed before result")tracked;
+ check_budget budget;
  require(now +. (mono()-.started) -. !earliest <=3600.) "receipt expired during validation";
  `Assoc ["schema",`String "uos.ev-consistency.v1";"status",`String "EVIDENCE_CONSISTENT";"authority",`String "NONE";
   "ev",`Int expected_ev;"revision",`String expected_revision;"bundle_sha256",`String(sha bundle_bytes);
   "runtime_sha256",`String rh;"formal_sha256",`String fh;"source_manifest_sha256",`String manifest_hash;
   "policy_sha256",`String policy_hash;"acceptance_ids",`List(List.map(fun x->`String x)coverage);
+  "valid_until",`Float(!earliest+.3600.);"content_bytes_charged",`Int(16777216-budget.remaining_bytes);
   "limits",`List(List.map(fun x->`String x)["Synthetic or fabricated producer claims can be internally consistent; producer authenticity is not established.";
    "Listed source equality is checked against immutable Jujutsu bytes; semantic scope and acceptance completeness require independent review.";
    "Invocation execution and formal semantics are producer claims, not re-executed or authenticated here.";
+   "Policy selection is caller-provided; canonical policy identity and applicability are not established.";
+   "The shared byte budget includes local content, Jujutsu stdout and final rehashes; host-clock reads have a separate quota. Local filesystem calls require cooperative return and have no hard wall-clock guarantee.";
    "Trusted host and cooperative filesystem assumed; same-UID hostile races are not defeated.";
    "No task, runtime, review, integration or admission authority is granted."])]
 let validate_clock_text ~now body =
@@ -190,3 +216,11 @@ let validate_clock_text ~now body =
 let observe_clock () =
  let body=run ~seconds:3. ~limit:8192 "/usr/bin/chronyc" ["-c";"tracking"] in
  let now=Unix.gettimeofday() in validate_clock_text ~now body;now,sha body
+let finalize_observation ~now ~finished ~elapsed ~clock_start ~clock_end result =
+ require(finite now && finite finished && finite elapsed && elapsed>=0. && finished>=now) "invalid final observation time";
+ require(abs_float((finished-.now)-.elapsed)<0.25) "host clock stepped during validation";
+ let valid_until=number(field "valid_until" result) in
+ require(finished<=valid_until && now+.elapsed<=valid_until) "receipt expired during final clock observation";
+ `Assoc(assoc result@[
+  "observed_at",`Float now;"completed_at",`Float finished;"elapsed_seconds",`Float elapsed;
+  "host_clock_start_sha256",`String clock_start;"host_clock_end_sha256",`String clock_end])
