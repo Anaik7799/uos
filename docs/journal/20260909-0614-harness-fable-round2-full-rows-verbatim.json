@@ -1,0 +1,343 @@
+{
+  "artifact": "20260909-0614-harness-fable-round2-full-rows-verbatim",
+  "generated_at_utc": "2026-09-09T06:54:14Z",
+  "additive": true,
+  "admission": false,
+  "admission_vote": null,
+  "purpose": "Publish the exact already-delivered Fable round-2 rows that the 0644 artifact reported only as counts.",
+  "correction_of_prior_artifact": {
+    "artifact": "docs/journal/20260909-0644-harness-fable-round2-census-and-aspects.md",
+    "false_claim_1": "Full per-row tables are in the delegated report relayed to the coordinator board",
+    "truth_1": "No board message contains the full report; only paths and digests were relayed. No board message reference exists.",
+    "false_claim_2": "Fable listed extensive not-read and not-executed scope; that list is preserved in the markdown",
+    "truth_2": "The list was absent from that markdown. It is published verbatim here.",
+    "prior_artifacts_amended": false,
+    "false_claim_3": "D01-D28 counts published as ACCEPT_WITHIN_SCOPE 17, REVISE 8",
+    "truth_3": "Machine count of the delivered rows is ACCEPT_WITHIN_SCOPE 16, REVISE 9, UNKNOWN 3, REJECT 0. The published count was wrong by one; one REVISE was counted as ACCEPT_WITHIN_SCOPE. No Fable verdict was altered.",
+    "aspect_counts_matched": true
+  },
+  "provenance": {
+    "delegated_task_id": "ae32fc53b62c4686d",
+    "tool_use_id": "toolu_01M5N3r3Tr1QVYNu6GR7Uj5x",
+    "delivered_at_utc": "2026-09-09T06:43:56.006Z",
+    "extracted_from": "session transcript a65088e0-0f2b-497e-bd5c-97eeed9c3594.jsonl",
+    "duplicate_copies_compared_byte_for_byte": true,
+    "verbatim_body_sha256": "3786f3e5a16c82f31d91d2ecc4f4477708e68286dead3fec9bfe2eeafbc6f0c8",
+    "rows_authored_by_opus5": false,
+    "opus_rows_substituted": false,
+    "fable_verdicts_regenerated": false,
+    "html_entity_escapes_are_delivery_channel_neutralization_preserved_verbatim": true
+  },
+  "provider_identity": {
+    "self_reported_model": "claude-fable-5-1",
+    "cryptographically_provable": false,
+    "relationship": "delegated read-only subagent inside session session_01B9GiR9bF4d1Jv2aSMowAKC",
+    "sovereign_session": false,
+    "sa_plan_claim": false,
+    "board_write": false,
+    "peer_ack": false,
+    "impersonation_attempted": false,
+    "review_window_utc": [
+      "2026-09-09T06:32:13Z",
+      "2026-09-09T06:38:42Z"
+    ]
+  },
+  "source_identity": {
+    "jj_change": "xxsoxxwwqsrpmwkxwnkoryqwtmnvuzty",
+    "commit": "fb9e605e6f39482b12061663b05bc50931baba29",
+    "working_copy": "DIRTY",
+    "committed_candidate_exists": false
+  },
+  "decision_census_D01_D28": [
+    {
+      "decision": "D01",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "`governance/sources/20260909-0241-ecology-vm1-comparison-receipt.json` scope = read-only, no external writes; atlas `ucon.binding` state=planned \"not located/verified\"; `dev.gleam:605-659` read scope excludes external trees; UCon not invented."
+    },
+    {
+      "decision": "D02",
+      "verdict": "REVISE",
+      "basis": "`ecology/living_swarm.gleam:115` `Participant` type has exactly 26 variants (local enum, not bindings); \"discovery\" is a fixed list `mcp.gleam:233-255` (dev+peers+tracking names), not a capability inventory; atlas `holon_policy` is prose."
+    },
+    {
+      "decision": "D03",
+      "verdict": "REVISE",
+      "basis": "No client enforcement: `.claude/settings.json` has no `hooks` key (uses non-standard `uos_control_loop`, never executed by Claude Code); `.codex/hooks.json` self-declares advisory; contract \u00a79 leaves direct-tool exception open; this review ran on host tools because the harness refuses every non-granted identity (see 4)."
+    },
+    {
+      "decision": "D04",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Requirement only, no parity claimed: atlas `bootstrap_ready.zenoh`=`UNAVAILABLE_NOT_VERIFIED`; `zenoh/zmof_transport.gleam:83,87` prefixes `indrajaal/mcp/req|res`; `zenoh/client.gleam` has no MCP prefix; harness has no Zenoh path."
+    },
+    {
+      "decision": "D05",
+      "verdict": "REVISE",
+      "basis": "New non-Gleam control-adjacent code was authored in the bootstrap: `process.ml` (OCaml guardian, 04:12Z) and `ffi.erl` (Erlang port runner, `:119-160`); atlas `native.ocaml` says \"existing pinned analysis adapters\" and does not list `process.ml`."
+    },
+    {
+      "decision": "D06",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "atlas `compiler_layer.state`=PROPOSED, `general_gleam_native_translation`=NOT_AVAILABLE_NOT_CLAIMED; no kernel-IR module in `apps/cepaf_gleam/src` (grep empty)."
+    },
+    {
+      "decision": "D07",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "OCaml runs out-of-process (`process.ml` fork/setsid/execve, group kill, one-shot alarm, 1 MiB cap) so GC-root/NIF questions do not arise on this path; MAX via pixi subprocess `ffi.erl:233-244` with 64 KiB bound; NIF/Mojo lifecycle contracts remain UNKNOWN (atlas rows mapped)."
+    },
+    {
+      "decision": "D08",
+      "verdict": "REVISE",
+      "basis": "Effect-time fence is real: `dev.gleam:312-322` reads `sa_plan_task` + dependency-blocked count, `:250-274` requires executing/worker/attempt/deadline/blocked==0. But `bridge.gleam:627-736` still holds an in-memory Task/ObanJob model and `sdlc/sa_plan_engine.gleam:170 claim_task` exists (atlas falsifier \"no independent task store\"); harness reads the store via `/usr/bin/sqlite3` (`dev.gleam:55`) rather than the CLI."
+    },
+    {
+      "decision": "D09",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "`risk.json`: 2 assessments (ECOLOGY, HARNESSBOOT), class P1, score 768; UCA types present = {not_provided, provided_unsafe, wrong_timing, duration}; FMEA raw s/o/det/rpn/band (S4 O3 Det3 RPN36). Defect: every factor's `evidence_refs` is the same 28-path list; interval degenerate [768,768]."
+    },
+    {
+      "decision": "D10",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "`dev.gleam:445-470` re-samples clock after both observations, requires same `boot_id` and coordinator deadline &gt; now + required; receipts `fence_scope=cooperative_observation_not_atomic_authority`, `system_admission:false` (`:1541`). Residual: heartbeat renews 3600 s per call (`:592`) vs 70 s window."
+    },
+    {
+      "decision": "D11",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "`dev.gleam:1051-1173`: exclusive-create pending intent keyed by sha256(name+args) (`:946-948`, attempt excluded); pending-without-result -&gt; `effect_outcome_unknown_reconcile_without_retry`; `replay_receipt:1175-1210` refuses non-EXECUTED/non-passed; test `replay_preserves_failure_and_rejects_corrupt_or_unbound_receipts_test`. Cross-transport dedup untestable (no Zenoh). Source-only."
+    },
+    {
+      "decision": "D12",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "`files.gleam:88-100` rejects `.`,`..`,`\\\\`,NUL,&gt;512 B; `:102-118` parents must be directories via `link_info`; `:126-179` nlinks==1, \u2264262144 B, open-descriptor inode/dev match, pread bound, UTF-8; `:189-211` `[Exclusive,Sync]` + parent sync; `:227-263` double-digest CAS + rename; header `:1-3` admits parent-rename race."
+    },
+    {
+      "decision": "D13",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "`server.gleam:1373-1382` invalid UTF-8 -&gt; `Error(\"Invalid UTF-8 in file\")`; `bridge.gleam:951-985` literal argv, \u226416 args, \u226465536 B, NUL refused, pinned env + `UOS_SA_PLAN_DB`; `:1021-1041` attempt&gt;0; 5 boundary tests. Remaining legacy gap: `authz.gleam:14-17` default `AuditOnly`; `bridge.gleam:947` hardcodes a `_build/.../test/sa_plan_main.exe` path."
+    },
+    {
+      "decision": "D14",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "`mcp.gleam:206-207` notifications never dispatch; `:227-230` `initialize_required` (-32002); `schema():155-180` `additionalProperties:false`; frame 524288 B / 5000 ms (`:24-25,36-42`); `control_id()` = module md5 (`dev.gleam:134-142`) and my probe returned `00fe7e27a175b90928a1ba153c7fac56` = receipt; `reconcile_terminal:1493-1544`. Only the refusal path was observed at runtime by me."
+    },
+    {
+      "decision": "D15",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "`clock.gleam:77` bounded `/usr/bin/chronyc -c tracking` (2000 ms); reference age (\u22643600 s, `:28`) vs delivery (\u22643 s, `:30`) vs offset/uncertainty (`:32-38`) are separate fields; `dev.gleam:463` refuses cross-boot comparison. `final-test` shows offset 185 us, uncertainty 17593 us, reference_age 285.4 s."
+    },
+    {
+      "decision": "D16",
+      "verdict": "UNKNOWN",
+      "basis": "Only the literal role `\"development\"` exists in code (`dev.gleam:189,261,1327,1357`); production/standby have no representation; spec \u00a79 calls it a design proposal. Nothing to evaluate."
+    },
+    {
+      "decision": "D17",
+      "verdict": "REVISE",
+      "basis": "spec \u00a78 requires writer/durability/schema/replication/restore per state item; atlas `states` is 34 bare strings; all 30 rows have `state.replication`/`restore` = \"UNKNOWN until...\" literals; no replication symbols in `apps/cepaf_gleam/src` (mnesia/disk_log/replication_position/writer_epoch: none)."
+    },
+    {
+      "decision": "D18",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Conditional only; `ha/otp_release.gleam` is a typed `.rel/.appup` representation, not release_handler execution; atlas `release.dynamic` planned \"rehearsals unrun\"; no `release_handler`/`code:load_binary` in harness."
+    },
+    {
+      "decision": "D19",
+      "verdict": "REVISE",
+      "basis": "Names are hardcoded ceilings `ecology/daily_budget.gleam:43-47` (`z-ai/glm-5.3`, `moonshotai/kimi-k3`, `deepseek/deepseek-v4-pro-0813`, `deepseek-v4-flash-0731`, `google/gemma-4-31b-it`); no measured task-quality receipt binds \"prefer Gemma 4\" (I did not read `docs/journal/20260909-0331-*`, so its coverage is UNKNOWN)."
+    },
+    {
+      "decision": "D20",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "`daily_budget.gleam:9` 10_000_000_000 nano-USD/day, `:11` 250_000_000 per-call, `:106` worst_case \u2264 reservation, `:141-159` invoice cannot reduce reserved liability; module header `:1-2`: persistence/atomic reservation live elsewhere (UNKNOWN, unobserved); no OpenRouter receipt in `var/harness/effects/`."
+    },
+    {
+      "decision": "D21",
+      "verdict": "UNKNOWN",
+      "basis": "`openrouter_engine.gleam:1` \"No queue, retries, optimizer\"; atlas `models.routing` \"whole ecology binding pending\"; calibration needs runtime data that does not exist."
+    },
+    {
+      "decision": "D22",
+      "verdict": "REVISE",
+      "basis": "`tools/validation/openrouter_eval_{build,catalog,cli,expr,native,test,validate}.ml` exist; no Rete-UL implementation found in `engines/hermes/modules` (only wiki prose) or Gleam; atlas `rules.rete_ul` planned. The decision must not list Rete as covered."
+    },
+    {
+      "decision": "D23",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Policy holds; but `formal/lean/Denotational_Atlas_Cohomology.lean:55,62,74` contain `sorry` (0 top-level `axiom` across `formal/lean`); `Algebraic_Atlas_Intent.lean` clean (3 theorems). Harness binds no Lean/Quint invocation (atlas rows mapped)."
+    },
+    {
+      "decision": "D24",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "`var/releases/ecology/` holds 5 staged read-only release dirs separate from `build/dev`; `risk.json` ECOLOGY `task_state=available` \"not completed\"; `ucon.binding` planned."
+    },
+    {
+      "decision": "D25",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "`.codex/hooks.json` = SessionStart advisory + preflight; on the Claude surface there is no hook at all (`.claude/settings.json` non-standard key); `.agents/hooks.json`, `.gemini/hooks.json` not read. Decision text is accurate; enforcement absent."
+    },
+    {
+      "decision": "D26",
+      "verdict": "REVISE",
+      "basis": "`dev.gleam:1212-1231` enforces the exact 13 titles; spec \u00a722 ASCII/Mermaid pairs match by node/edge count (12/16, 8/10, 7/11) and atlas `diagrams` titles match; but atlas `traceability.aspects` is the same constant string on all 30 rows (no per-aspect map); no `20260909-*harness*` wiki/ZK docs exist."
+    },
+    {
+      "decision": "D27",
+      "verdict": "UNKNOWN",
+      "basis": "No standby node, no replication code, atlas `state.replication`/`release.dynamic` planned; spec \u00a721:403 itself marks RTO/loss UNKNOWN until tested."
+    },
+    {
+      "decision": "D28",
+      "verdict": "REVISE",
+      "basis": "No `var/harness/20260909-0412-bootstrap-completion-{intent,result}.json` exists; latest `final-test` (06:16:52Z, \"All 69 tests passed\", `admission NOT_GRANTED`) is stale: 1/28 manifest entries differ now (`harness_tracking_test.gleam` receipt `d87b1c1a8b2366e57530938a0f164bae6d9e8617dcc7cd26d035405282ee3413` vs now `cb0a339938a8ccd234fa9b8bd33accc1b04cc660f5eeaec589cad3420efbf63d`, modified 06:35:47Z); a `peer-claude-final-harness-source-frozen` prompt was dispatched while source still moved; all peer receipts `peer_acknowledged:false`."
+    }
+  ],
+  "decision_census_counts": {
+    "ACCEPT_WITHIN_SCOPE": 16,
+    "REVISE": 9,
+    "UNKNOWN": 3,
+    "REJECT": 0
+  },
+  "aspects_spec_section_7": [
+    {
+      "n": 1,
+      "aspect": "Substrate and hardware safety",
+      "status": "ACCEPT_WITHIN_SCOPE",
+      "observed_in_source": "`ops/kubernetes/nas-k8s-lab/src/spec.rs:192` serial unchanged; harness sources contain no device/storage references.",
+      "gap": "Interlock runtime test UNRUN (CHK-07)."
+    },
+    {
+      "n": 2,
+      "aspect": "Version control",
+      "status": "REVISE",
+      "observed_in_source": "Heartbeat uses pinned `jj --ignore-working-copy` (`dev.gleam:558-572`). Candidate is an uncommitted dirty working copy; `pub const root` hardcodes canonical checkout (`dev.gleam:27`).",
+      "gap": "No committed candidate to bind receipts; source moved during review."
+    },
+    {
+      "n": 3,
+      "aspect": "Purity and provenance",
+      "status": "REVISE",
+      "observed_in_source": "`dev.gleam:59-68 adapter_scope()` explicitly declares host `/usr/bin/{sqlite3,bash,chronyc}` (now declared, not hidden); external trees excluded (`finite_file_scope_excludes_credentials_and_external_trees_test`).",
+      "gap": "Host-path exception contradicts SC-NIX-DEVENV-001 inv.5 and has no governance manifest entry; dependency diff not checked by me."
+    },
+    {
+      "n": 4,
+      "aspect": "Supervision",
+      "status": "REVISE",
+      "observed_in_source": "`mcp.gleam:84-92 main()` is a bare loop; workers are `spawn_unlinked` (`dev.gleam:288-291`); no harness child in `uos_sup.gleam`; atlas `otp.supervision` planned.",
+      "gap": "The harness itself is unsupervised; restart budgets undeclared."
+    },
+    {
+      "n": 5,
+      "aspect": "Deterministic runtime",
+      "status": "UNKNOWN",
+      "observed_in_source": "`engines/zigvm` present; zero ZigVM references in harness; atlas `backends` lists `zigvm` as `admitted_deterministic_engine` but no capability row uses it.",
+      "gap": "\"admitted\" label unsupported by any row; nothing to evaluate."
+    },
+    {
+      "n": 6,
+      "aspect": "Evidence and analysis",
+      "status": "ACCEPT_WITHIN_SCOPE",
+      "observed_in_source": "`process.ml` guardian (process group, one-shot alarm, output cap); `sa_plan_main.exe` invoked with literal argv (`bridge.gleam:951-985`).",
+      "gap": "Per-call `ocaml` toplevel load; `hermes_bionic_bridge.gleam` not reviewed."
+    },
+    {
+      "n": 7,
+      "aspect": "Mathematical authority",
+      "status": "ACCEPT_WITHIN_SCOPE",
+      "observed_in_source": "No harness tool invokes Lean/Quint; `sorry` at `Denotational_Atlas_Cohomology.lean:55,62,74`; 0 axioms.",
+      "gap": "`formal.lean`/`formal.quint` rows mapped; no invocation receipts."
+    },
+    {
+      "n": 8,
+      "aspect": "Feedback and homeostasis",
+      "status": "ACCEPT_WITHIN_SCOPE",
+      "observed_in_source": "Observation (`bounded_observation :279-309`), decision (`evaluate_task_window :250-274`), authority (`fence_for :445-470`), effect (`effect :1051`) are separate; receipts `authority=OBSERVATION_ONLY`.",
+      "gap": "None at bootstrap scope."
+    },
+    {
+      "n": 9,
+      "aspect": "Inference",
+      "status": "ACCEPT_WITHIN_SCOPE",
+      "observed_in_source": "MAX isolated via pixi subprocess (`ffi.erl:233-244`); OpenRouter engine pure, price required pre-POST (`openrouter_engine.gleam:28,50`); no paid receipt.",
+      "gap": "Harness exposes no model tool; ecology binding pending."
+    },
+    {
+      "n": 10,
+      "aspect": "Mesh and observability",
+      "status": "REVISE",
+      "observed_in_source": "No Zenoh path in harness; receipts carry `intent_id`/`signature` but no `trace_id`/`span_id`.",
+      "gap": "spec \u00a72 envelope requires trace ID; C3I OTel contract unmet by harness receipts."
+    },
+    {
+      "n": 11,
+      "aspect": "Agent events",
+      "status": "REVISE",
+      "observed_in_source": "`agui/events.gleam` exists; harness emits no AG-UI lifecycle/tool/state/result events; `var/harness/effects/` is the only trail.",
+      "gap": "Events do not \"reflect actual transitions\" because none are emitted."
+    },
+    {
+      "n": 12,
+      "aspect": "Declarative UI",
+      "status": "UNKNOWN",
+      "observed_in_source": "`tracking.gleam:167` treats `dashboard` as catalog metadata; no UI module references harness.",
+      "gap": "No projection exists to assess."
+    },
+    {
+      "n": 13,
+      "aspect": "Interfaces",
+      "status": "REVISE",
+      "observed_in_source": "Only stdio MCP exists (`serverInfo uos-gleam-development-harness 0.1.0`); no Wisp route, TUI, or Zenoh; Claude client has no hook.",
+      "gap": "\"Same authority semantics\" untestable with one interface; legacy `server.gleam` (AuditOnly) still coexists."
+    },
+    {
+      "n": 14,
+      "aspect": "Navigation",
+      "status": "ACCEPT_WITHIN_SCOPE",
+      "observed_in_source": "Spec/packet carry full Tailnet FQDN links; GET of the spec URL returned HTTP 200, 30970 bytes at 06:36:58Z.",
+      "gap": "Byte-equality with local file not verified; wiki/ZK pages absent."
+    },
+    {
+      "n": 15,
+      "aspect": "Verification checklist",
+      "status": "REVISE",
+      "observed_in_source": "Receipts report scope/freshness (source manifest, start/end clocks, `admission NOT_GRANTED`); spec \u00a716 lists 18 checkpoints all OPEN.",
+      "gap": "Packet checklist (`:71-82`) is a 6-row summary, not the 18-item SC-CHECKLIST-001 structure."
+    },
+    {
+      "n": 16,
+      "aspect": "Knowledge triad",
+      "status": "REVISE",
+      "observed_in_source": "`journal_sections_valid` enforces 13 sections; `document_allowed :623-642` permits wiki/ZK writes.",
+      "gap": "No `20260909-*harness*` wiki/ZK docs exist; atlas per-row aspects constant. This review is message-only per root's read-only instruction; no journal file added."
+    },
+    {
+      "n": 17,
+      "aspect": "Durable execution",
+      "status": "REVISE",
+      "observed_in_source": "Tracking plan `uos/harness-features/20260909` (`tracking.gleam:18`), 396 feature intents / 218 results, mode `metadata_only_no_automatic_dispatch`; task fence reads canonical sqlite.",
+      "gap": "Second task model in `bridge.gleam:627-736` and `sdlc/sa_plan_engine.gleam:170`; direct `/usr/bin/sqlite3` reader alongside the CLI authority."
+    }
+  ],
+  "aspect_counts": {
+    "ACCEPT_WITHIN_SCOPE": 6,
+    "REVISE": 9,
+    "UNKNOWN": 2,
+    "REJECT": 0
+  },
+  "not_read_not_executed_verbatim": "Not read: bodies of `tracking.gleam`, `hermes_bionic_bridge.gleam`, `mcp/tools.gleam`, most of `server.gleam`, the four test bodies (names only), `uos_swarm/openrouter_worker.gleam`, `session_sync*`, `herdr`, `.agents/.gemini hooks.json`, atlas rows 2-30 in full (summarized fields only), the bodies of the Codex reviews (0510, 0539), the 0331/0356 journals, and round-1/Opus bodies (headings only). Not executed: `gleam build/test`, `sa-plan`, `km-gate`, `preflight`, any Zenoh, any OpenRouter or paid call, any jj command after 06:36Z. Runtime observations by me are limited to probes A-D above and one bounded HTTP GET; every other verdict is source-only.",
+  "open_gaps": [
+    "R2-1",
+    "R2-2",
+    "R2-3",
+    "R2-4",
+    "R2-5",
+    "R2-6",
+    "R2-7",
+    "N10"
+  ],
+  "limits": [
+    "Delivery is not admission.",
+    "No admission vote cast by either reviewer.",
+    "Fable runtime observation limited to probes A-D and one bounded HTTP GET; all other verdicts source-only.",
+    "No production, dashboard or harness change. Root's 28-file manifest untouched. No new paid route."
+  ]
+}
