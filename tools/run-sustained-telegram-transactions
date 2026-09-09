@@ -1,0 +1,64 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# [C3I-SIL6-MSTS] <c3i-tool><identity>run-sustained-telegram-transactions</identity>
+#   <compliance><stamp-controls>SC-HARNESS-TX-001, SC-DRIVE-001, SC-JIDOKA-001</stamp-controls></compliance>
+# </c3i-tool>
+#
+# Executes 5 sustained Telegram cybernetic transactions against the UOS Gleam/OTP 29 Harness.
+# Each transaction runs for >= 10.0 seconds with >= 5 sequential messages/interactions (25 messages total).
+
+ROOT_DIR="/home/an/NAS-setup/uos"
+cd "$ROOT_DIR/apps/cepaf_gleam"
+
+echo "================================================================================"
+echo "🛡️  UOS 5-TRANSACTION SUSTAINED TELEGRAM CYBERNETICS RUNNER (OTP 29)"
+echo "================================================================================"
+echo "Canonical Requirements:"
+echo "• 5 Distinct Transactions across all 4 operational domains (A, B, C, D)"
+echo "• Duration constraint: >= 10.0 seconds per transaction (>= 50 seconds total)"
+echo "• Message constraint:  >= 5 messages per transaction (>= 25 messages total)"
+echo "• Hardware safety constraint: HARD_DENIED_SYSTEM_OS_SERIAL = 25503L801736 enforced"
+echo "• Sa-Plan authority constraint: SC-SA-PLAN-001 / SC-JIDOKA-001 verified"
+echo "================================================================================"
+echo ""
+
+erl -pa build/dev/erlang/*/ebin -noshell -eval '
+    io:format("Starting 5 sustained transactions...~n~n"),
+    Report = cepaf_gleam@harness@telegram_transaction_runner:run_all_sustained_transactions(),
+    {transaction_suite_report, Executed, Passed, TotalMsgs, TotalDurS, AllGe10s, Records} = Report,
+
+    lists:foreach(fun(Rec) ->
+        {transaction_record, TxId, Title, Domain, Steps, MsgCount, DurMs, DurS, IsGe10s, HwOk} = Rec,
+        io:format("--------------------------------------------------------------------------------~n"),
+        io:format("TRANSACTION: ~s~n", [binary_to_list(TxId)]),
+        io:format("Title:       ~s~n", [binary_to_list(Title)]),
+        io:format("Domain:      ~s~n", [binary_to_list(Domain)]),
+        io:format("Duration:    ~.3f s (~p ms) [>= 10s: ~p]~n", [DurS, DurMs, IsGe10s]),
+        io:format("Messages:    ~p steps~n", [MsgCount]),
+        io:format("Hardware OS Enclave Locked: ~p~n", [HwOk]),
+        io:format("Steps Executed:~n"),
+        lists:foreach(fun(Step) ->
+            {transaction_step, StepNum, InCmd, _Reply, IntentId, ElapsedMs} = Step,
+            io:format("  [Step ~p] ~s (elapsed: ~p ms) -> Intent: ~s~n",
+                      [StepNum, binary_to_list(InCmd), ElapsedMs, binary_to_list(IntentId)])
+        end, Steps),
+        io:format("~n")
+    end, Records),
+
+    io:format("================================================================================~n"),
+    io:format("SUITE VERIFICATION SUMMARY:~n"),
+    io:format("• Transactions Executed: ~p / ~p PASSED~n", [Passed, Executed]),
+    io:format("• Total Messages Exchanged: ~p (>= 25 messages)~n", [TotalMsgs]),
+    io:format("• Total Duration:           ~.3f seconds (>= 50.0 seconds)~n", [TotalDurS]),
+    io:format("• All Transactions >= 10s:  ~p~n", [AllGe10s]),
+    io:format("================================================================================~n"),
+    case (Passed =:= 5) andalso AllGe10s andalso (TotalMsgs >= 25) of
+        true ->
+            io:format("RESULT: 100% GREEN (ALL 5 SUSTAINED TRANSACTIONS VERIFIED)~n"),
+            halt(0);
+        false ->
+            io:format("RESULT: FAIL (Constraints not satisfied)~n"),
+            halt(1)
+    end.
+'
