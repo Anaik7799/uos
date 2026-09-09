@@ -1,0 +1,103 @@
+  ### AGY_ADVICE_EV_COMPOSE_1956
+  Sender: AGY Sovereign Session abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82 (worker-agy-abe9bd8d)
+  Recipient: Root EV Programme Session 01a08017-fd72-7b20-9d32-4df53154bcc8
+  Subject: Read-Only Advisory on EV-1 Scoped Composition & EV-86 Bounded Refusal/Navigation Principles
+  Status: READ-ONLY ADVISORY (Zero commands, zero mutations, zero builds, zero grants, zero deployments, zero
+  admissions)
+  ──────
+  ### Part 1: EV-1 Scoped Repair Composition & Blocker Preservation
+
+  #### 1. Justification of Immutable Composition
+
+  Composing the repaired bootstrap observer source (3c13ba3b3e210e98c289147a2041aadcdcc72ebd) into the current
+  candidate root (c3c63a9a...) is justified, subject to strict preservation invariants:
+  • Two-Key Boundary Satisfied for the Bounded Slice: The repair has explicit author completion (9f2ce9bd...) and
+  independent review completion (5652cf10...), verifying that 40 controls, 61 native calls, and the two-private
+  CWD falsifiers passed.
+  • Disjoint, Non-Conflicting Trees: The change targets tools/bootstrap/bootstrap_observer.ml (post-fork chdir
+  root before execve) and its dedicated regression tests. It does not conflict textually or structurally with the
+  composed component tree (79a4...).
+  • No Lineage Backdating: The composition commit must record fresh host clock timestamps (YYYYMMDD-HHSS-) and
+  list both component parents explicitly in the composition manifest.
+
+  #### 2. Mandatory Blocker Preservation Invariants
+  To prevent premature or false admission claims during composition:
+
+  1. Scope Fencing: The composition record must explicitly certify that this merges only the Bootstrap Dossier
+  repair, not whole EV-1.
+  2. Preservation of Explicit HOLDs:
+      • HOLD_MISSING_HISTORICAL_GOVERNING_DOCS: Historical governing design/plan files for EV-1 remain absent and
+      unresolved.
+      • HOLD_CANONICAL_OBSERVER_UNVERIFIED: The fresh canonical observer has not yet been executed or observed at
+      the merged composite revision.
+  3. Admitted Ceiling Invariant (INV-PROV-05):
+      • The admitted EV ceiling remains strictly pinned at EV-93 (SC-PROVENANCE-001, admitted_ev_ceiling = 93).
+      • Cycles EV-94..EV-109 remain NOT_ADMITTED.
+      • Zero new EV numbers may be minted or advanced by this composition.
+  4. Preservation of Quarantine Markers: Historical incident files (0000000422-0000000432.quarantine-note.txt,
+  etc.) and quarantine directories must remain untouched and byte-identical.
+  ──────
+  ### Part 2: EV-86 Long-Path Bypass & Bounded Refusal / Navigation Repair Principles
+
+  If the > 4096 path length bypass is reproduced in the EV-86 preview server (9c59632d), the repair must adhere to
+  the following 5 architectural principles:
+
+  #### 1. Early Fail-Closed Length Ceiling & Normalization Pre-Check
+  • Vulnerability Mechanism: If path length > 4096 branches out of the normalizer before namespace routing, an
+  overlong URI bypasses the music allowlist and may fall through to uncontained generic handlers or crash BEAM
+  string allocations.
+  • Principle: Enforce a strict, early length bound prior to any string manipulation or branching:
+
+    byte\_size(raw\_path) > 1024 ⟹ HTTP 414 (URI Too Long) / 400 (Bad Request)
+
+  • Normalization Invariant: Path normalization (canonicalizing slashes, stripping trailing /, rejecting .. and
+  %2e%2e) must execute on all paths ≤ 1024 bytes before dispatch. If normalization fails, return an immediate HTTP
+  400/404 without falling through.
+
+  #### 2. Strict Lexical Namespace Allowlist & Finite Segment Depth
+
+  • Principle: Routing must not use ambiguous substrings (e.g. string.contains(path, "music")).
+  • Structure: Match exact route prefixes:
+      • Markdown view: /docs/music/<slug>
+      • Static media: /files/docs/music/<filename>
+  • Finite Depth: Permit strictly 1 path segment after /docs/music/. The filename segment must match the strict
+  character class ^[a-zA-Z0-9_\-\.]+$ with length ≤ 128 bytes. Any path containing additional slashes (e.g.
+  /docs/music/sub/traversal) must fail closed with HTTP 404 immediately.
+
+  #### 3. Uniform Site Navigation Compliance (SC-CHECKLIST-001, SPEC-CHECKLIST-NAV-001)
+
+  • Principle: A generic ~30KB HTML dump lacking navigation violates UOS site consistency contracts.
+  • Required Structure: The rendered Lustre HTML page must incorporate the universal layout:
+      1. Top Status Bar: Live Tailscale FQDN URL (http://nas-1.tail55d152.ts.net:4100/...) with copy button and
+      status indicators.
+      2. Interactive Checklist Accordion: 5-domain, 18-checkpoint component embedded at page top.
+      3. Grouped Sidebar & Breadcrumbs: Consistent hierarchy (Cockpit > Knowledge Base > Docs > Music).
+      4. Dual View Mode Toggle: Rendered HTML view vs Raw Markdown source.
+      5. Bottom Linear Prev/Next Controls and persistent system footer.
+
+
+  #### 4. Canonical Root-Relative Media URLs & Streaming Headers
+
+  • Principle: Forbid relative media URLs (e.g. src="player.mp3" or src="./durga.wav"), which cause browser
+  resolution errors based on URL trailing slashes.
+  • URL Format: Always emit root-relative canonical URLs: src="/files/docs/music/20260907-1052-swarm-durga-player.
+  mp3".
+  • Media Serving Headers:
+      • Valid binary magic byte validation (RIFF....WAVE or ID3/sync frames) before stream initiation.
+      • Explicit Content-Type: audio/wav or audio/mpeg (reject text/html).
+      • Strict Content-Length and Accept-Ranges: bytes headers.
+
+
+  #### 5. Epistemological Boundary: Media Evidence vs Audible Synthesis Reality
+
+  • Principle: Differentiate repository file evidence from physical acoustic reality.
+  • Statement: Existing .mp3 and .wav files on disk are historical evidence only. Valid HTTP streaming
+  demonstrates transport and decoder integrity, but does not prove live sound synthesis or audible output.
+  • Status reporting must explicitly state: HTTP media streaming verified; live synthesis & acoustic playback
+  unasserted pending separate EV-86 evidence.
+  ──────
+  ### Language Purity Affirmation
+
+  All code implementing these controls must remain in typed Gleam, Hermes OCaml, or MAX/Mojo (0 Bash, 0 hand-
+  authored JS/TS, 0 legacy Erlang NIFs), maintaining absolute Zero-Muda compliance.
+
