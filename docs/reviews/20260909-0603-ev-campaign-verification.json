@@ -1,0 +1,1062 @@
+{
+  "schema": "uos.ev-campaign-verification.v1",
+  "observed_at": "2026-09-09T06:08:03Z",
+  "source_revision": "01c5a09547d7ae060ae72cd4af995bdf0e325cd7",
+  "source_binding": {
+    "path": "docs/reviews/20260909-0603-ev-campaign-source-binding.json",
+    "sha256": "e778fde2737659e32f8f711d1e2ccecdacf810d6c06bbb6ebbc28f9fc2e47847",
+    "bytes": 1477
+  },
+  "campaign": {
+    "path": "docs/reviews/20260909-0603-ev-campaign-observed.json",
+    "sha256": "6ed8772ec9c62cb48041406575c024426b8b11a6ab3f4a386d9475ddf7a5807f",
+    "bytes": 139634
+  },
+  "native_receipts": [
+    {
+      "path": "docs/reviews/20260909-0603-ev-campaign-build.json",
+      "sha256": "f72150acd8d9b8e316c41099649c274c476683becdd3aca749a1d55e305f00e9",
+      "bytes": 1176
+    },
+    {
+      "path": "docs/reviews/20260909-0603-ev-campaign-cli.json",
+      "sha256": "0575c5610111523ac28ac756c1567c018e7a55692de59c2773cf478f4287616c",
+      "bytes": 2208
+    },
+    {
+      "path": "docs/reviews/20260909-0603-ev-campaign-unit.json",
+      "sha256": "405155d2c8034f2c9f6e537eba1c27e5de037089c5f183b58ec8dd1798877334",
+      "bytes": 1536
+    },
+    {
+      "path": "docs/reviews/20260909-0603-ev-campaign-validator-regression.json",
+      "sha256": "251a922dea77a363c5a5e9394d1ae8005267189b7b9d8f816ea24f36f0f423df",
+      "bytes": 3359
+    },
+    {
+      "path": "docs/reviews/20260909-0603-ev-campaign-reader-substitution-red.json",
+      "sha256": "3949540307249a56bfb3e741ed98b5b799e294f4592b07cfa9809c88c2e96683",
+      "bytes": 2226
+    },
+    {
+      "path": "docs/reviews/20260909-0603-ev-campaign-reader-substitution-green.json",
+      "sha256": "cd3796e32218e3943d3af7a61683e89d056f0b5d9a1a14a3c91037b1db05e77a",
+      "bytes": 2206
+    },
+    {
+      "path": "docs/reviews/20260909-0603-ev-campaign-initial-cli-red.json",
+      "sha256": "6ada90deba983aa70786032f3d20b0500dd38851d900b3dfd50e2e8cd4894da7",
+      "bytes": 182
+    },
+    {
+      "path": "docs/reviews/20260909-0603-ev-campaign-initial-dependency-failure.json",
+      "sha256": "030251ba5bec58ccb74ecd407149c817a7982f4544f091102a7164348d0e4e4a",
+      "bytes": 6314
+    },
+    {
+      "path": "docs/reviews/20260909-0603-ev-campaign-initial-mutant-grammar-failure.json",
+      "sha256": "906debd29d4ae2515e73cb693d6bb5810e76ba5f7185f518832af64d2caa0d6f",
+      "bytes": 70970
+    },
+    {
+      "path": "docs/reviews/20260909-0603-ev-campaign-reader-stream-failure.json",
+      "sha256": "9607b0b928c62111f440a0120b5f464c8d9c8eb1d2554b5aa5bf00e221d38520",
+      "bytes": 1354
+    }
+  ],
+  "compiled_artifacts": [
+    {
+      "path": "/tmp/uos-campaign-candidate-build/default/ev_receipt.exe",
+      "sha256": "6b191e65d3f8f656b490df60621f235482ad71905b1692de04353e469e60ec20",
+      "bytes": 5673312
+    },
+    {
+      "path": "/tmp/uos-campaign-candidate-build/default/campaign_test.exe",
+      "sha256": "aef37fbeb5c275ab967e8a2a936b15122d88b10347a3fb03de3dd5bc818f80c5",
+      "bytes": 5710248
+    },
+    {
+      "path": "/tmp/uos-campaign-candidate-build/default/receipt_test.exe",
+      "sha256": "c7699fdcd005bca057c18aa2a77cafadaa41c4ec179fd17f2f6f28c019b23a22",
+      "bytes": 5599440
+    }
+  ],
+  "durable_output_copies": [
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-0.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-ba0e3d40c3308cbe417e6cfe2e4a210ebfd5d46f5d8efcc16e0cec79b19ef20b.txt",
+        "sha256": "ba0e3d40c3308cbe417e6cfe2e4a210ebfd5d46f5d8efcc16e0cec79b19ef20b",
+        "bytes": 41
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-0.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-dea74958e084ad0079a3eeab411e5908e095e40a8d87269c6cbfd5b24d409d0a.txt",
+        "sha256": "dea74958e084ad0079a3eeab411e5908e095e40a8d87269c6cbfd5b24d409d0a",
+        "bytes": 247
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-0.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-41c52256eebf85937a88ad91e6151dca43c1d1db4606ee9a03d72f5f62c473a8.txt",
+        "sha256": "41c52256eebf85937a88ad91e6151dca43c1d1db4606ee9a03d72f5f62c473a8",
+        "bytes": 288
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-1.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-25a2d2adfd0932550d30a9045aac0c6838e1dc3c5fe87490e00db224e2f33c25.txt",
+        "sha256": "25a2d2adfd0932550d30a9045aac0c6838e1dc3c5fe87490e00db224e2f33c25",
+        "bytes": 61
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-1.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-1.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-25a2d2adfd0932550d30a9045aac0c6838e1dc3c5fe87490e00db224e2f33c25.txt",
+        "sha256": "25a2d2adfd0932550d30a9045aac0c6838e1dc3c5fe87490e00db224e2f33c25",
+        "bytes": 61
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-2.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-76a035fc3441331a25eceb4ad7c29c52e8ad8e8079a3788887ad32c33933f8f1.txt",
+        "sha256": "76a035fc3441331a25eceb4ad7c29c52e8ad8e8079a3788887ad32c33933f8f1",
+        "bytes": 9124
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-2.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-2.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-76a035fc3441331a25eceb4ad7c29c52e8ad8e8079a3788887ad32c33933f8f1.txt",
+        "sha256": "76a035fc3441331a25eceb4ad7c29c52e8ad8e8079a3788887ad32c33933f8f1",
+        "bytes": 9124
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-3.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-50aaf89e33c97c7fddc2fb72a257707159891bb74c381d6aff5497d8d9169367.txt",
+        "sha256": "50aaf89e33c97c7fddc2fb72a257707159891bb74c381d6aff5497d8d9169367",
+        "bytes": 63
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-3.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-3.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-50aaf89e33c97c7fddc2fb72a257707159891bb74c381d6aff5497d8d9169367.txt",
+        "sha256": "50aaf89e33c97c7fddc2fb72a257707159891bb74c381d6aff5497d8d9169367",
+        "bytes": 63
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-4.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-8c11774981bcd6806b3154a8c7ec0edab378750258a9259882323fe0e8dbad76.txt",
+        "sha256": "8c11774981bcd6806b3154a8c7ec0edab378750258a9259882323fe0e8dbad76",
+        "bytes": 6541
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-4.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-4.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-8c11774981bcd6806b3154a8c7ec0edab378750258a9259882323fe0e8dbad76.txt",
+        "sha256": "8c11774981bcd6806b3154a8c7ec0edab378750258a9259882323fe0e8dbad76",
+        "bytes": 6541
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-5.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-4d0bbcd3d88c72e9b56a5e801a4e63d9031613b91620766bf7e33fef8861eacd.txt",
+        "sha256": "4d0bbcd3d88c72e9b56a5e801a4e63d9031613b91620766bf7e33fef8861eacd",
+        "bytes": 59
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-5.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-5.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-4d0bbcd3d88c72e9b56a5e801a4e63d9031613b91620766bf7e33fef8861eacd.txt",
+        "sha256": "4d0bbcd3d88c72e9b56a5e801a4e63d9031613b91620766bf7e33fef8861eacd",
+        "bytes": 59
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-6.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-dccc4a14c8707c256d29b2698a02a1cf9cb58b425b557ad306ea1cb9e601036f.txt",
+        "sha256": "dccc4a14c8707c256d29b2698a02a1cf9cb58b425b557ad306ea1cb9e601036f",
+        "bytes": 5900
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-6.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-6.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-dccc4a14c8707c256d29b2698a02a1cf9cb58b425b557ad306ea1cb9e601036f.txt",
+        "sha256": "dccc4a14c8707c256d29b2698a02a1cf9cb58b425b557ad306ea1cb9e601036f",
+        "bytes": 5900
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-7.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-7212dcd38c171ca3fc9de549c4e0012a0e0e9b344c59ba2d887e2ad80ce8048b.txt",
+        "sha256": "7212dcd38c171ca3fc9de549c4e0012a0e0e9b344c59ba2d887e2ad80ce8048b",
+        "bytes": 67
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-7.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-7.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-7212dcd38c171ca3fc9de549c4e0012a0e0e9b344c59ba2d887e2ad80ce8048b.txt",
+        "sha256": "7212dcd38c171ca3fc9de549c4e0012a0e0e9b344c59ba2d887e2ad80ce8048b",
+        "bytes": 67
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-8.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-fec299362dae754656801a5a59c8763947054fa048e5d6db0afbc60036d2426d.txt",
+        "sha256": "fec299362dae754656801a5a59c8763947054fa048e5d6db0afbc60036d2426d",
+        "bytes": 11091
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-8.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-8.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-fec299362dae754656801a5a59c8763947054fa048e5d6db0afbc60036d2426d.txt",
+        "sha256": "fec299362dae754656801a5a59c8763947054fa048e5d6db0afbc60036d2426d",
+        "bytes": 11091
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-9.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-469583bcacab704541822713cf3f194c080d079b1f0c5b1aaa65cb6325792967.txt",
+        "sha256": "469583bcacab704541822713cf3f194c080d079b1f0c5b1aaa65cb6325792967",
+        "bytes": 65
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-9.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-9.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-469583bcacab704541822713cf3f194c080d079b1f0c5b1aaa65cb6325792967.txt",
+        "sha256": "469583bcacab704541822713cf3f194c080d079b1f0c5b1aaa65cb6325792967",
+        "bytes": 65
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-10.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-2b40cb70a185e96a8128e1babef752fab467655d22cd0b11f0bcf62b17bdee50.txt",
+        "sha256": "2b40cb70a185e96a8128e1babef752fab467655d22cd0b11f0bcf62b17bdee50",
+        "bytes": 8503
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-10.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-10.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-2b40cb70a185e96a8128e1babef752fab467655d22cd0b11f0bcf62b17bdee50.txt",
+        "sha256": "2b40cb70a185e96a8128e1babef752fab467655d22cd0b11f0bcf62b17bdee50",
+        "bytes": 8503
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-11.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-1263e483a884aa65faf81b6fb2c73243b1a023f08e21dd4c45a970a9722a657e.txt",
+        "sha256": "1263e483a884aa65faf81b6fb2c73243b1a023f08e21dd4c45a970a9722a657e",
+        "bytes": 56
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-11.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-11.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-1263e483a884aa65faf81b6fb2c73243b1a023f08e21dd4c45a970a9722a657e.txt",
+        "sha256": "1263e483a884aa65faf81b6fb2c73243b1a023f08e21dd4c45a970a9722a657e",
+        "bytes": 56
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-12.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-1e48182f8a94c44a3a9885f58adde2de8628d9a130ab9420c077f4653028d13b.txt",
+        "sha256": "1e48182f8a94c44a3a9885f58adde2de8628d9a130ab9420c077f4653028d13b",
+        "bytes": 13269
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-12.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-12.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-1e48182f8a94c44a3a9885f58adde2de8628d9a130ab9420c077f4653028d13b.txt",
+        "sha256": "1e48182f8a94c44a3a9885f58adde2de8628d9a130ab9420c077f4653028d13b",
+        "bytes": 13269
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-13.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-9dcafe85c0f3308fe425e91de4b07fb473d67ef280301e56e356f983697431ae.txt",
+        "sha256": "9dcafe85c0f3308fe425e91de4b07fb473d67ef280301e56e356f983697431ae",
+        "bytes": 56
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-13.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-13.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-9dcafe85c0f3308fe425e91de4b07fb473d67ef280301e56e356f983697431ae.txt",
+        "sha256": "9dcafe85c0f3308fe425e91de4b07fb473d67ef280301e56e356f983697431ae",
+        "bytes": 56
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-14.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e6ea49acee8d58d076087f2ebd6dcbdc738ba0883ee76f21b475ef2b1df3e138.txt",
+        "sha256": "e6ea49acee8d58d076087f2ebd6dcbdc738ba0883ee76f21b475ef2b1df3e138",
+        "bytes": 7218
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-14.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-14.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e6ea49acee8d58d076087f2ebd6dcbdc738ba0883ee76f21b475ef2b1df3e138.txt",
+        "sha256": "e6ea49acee8d58d076087f2ebd6dcbdc738ba0883ee76f21b475ef2b1df3e138",
+        "bytes": 7218
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-15.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-5c684fefe91b4c1e87f5a2f2d8e8ce452653f755cfc874d69cdc101990aa720f.txt",
+        "sha256": "5c684fefe91b4c1e87f5a2f2d8e8ce452653f755cfc874d69cdc101990aa720f",
+        "bytes": 57
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-15.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-15.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-5c684fefe91b4c1e87f5a2f2d8e8ce452653f755cfc874d69cdc101990aa720f.txt",
+        "sha256": "5c684fefe91b4c1e87f5a2f2d8e8ce452653f755cfc874d69cdc101990aa720f",
+        "bytes": 57
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-16.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-c9f10351c62d927277943ca9ec1a7c2f2fd3491f80d22ea1d892a0713eb5852d.txt",
+        "sha256": "c9f10351c62d927277943ca9ec1a7c2f2fd3491f80d22ea1d892a0713eb5852d",
+        "bytes": 2248
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-16.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-16.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-c9f10351c62d927277943ca9ec1a7c2f2fd3491f80d22ea1d892a0713eb5852d.txt",
+        "sha256": "c9f10351c62d927277943ca9ec1a7c2f2fd3491f80d22ea1d892a0713eb5852d",
+        "bytes": 2248
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-17.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-4e8dfebef99ab3094c7d80be76741ac47d6a041f7c9455c54ef290713287d391.txt",
+        "sha256": "4e8dfebef99ab3094c7d80be76741ac47d6a041f7c9455c54ef290713287d391",
+        "bytes": 53
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-17.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-17.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-4e8dfebef99ab3094c7d80be76741ac47d6a041f7c9455c54ef290713287d391.txt",
+        "sha256": "4e8dfebef99ab3094c7d80be76741ac47d6a041f7c9455c54ef290713287d391",
+        "bytes": 53
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-18.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-28b7fab329415f3cb48bd022f497bfdeb7a312e6ae19bb206ac35aeb961b8b83.txt",
+        "sha256": "28b7fab329415f3cb48bd022f497bfdeb7a312e6ae19bb206ac35aeb961b8b83",
+        "bytes": 2227
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-18.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-18.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-28b7fab329415f3cb48bd022f497bfdeb7a312e6ae19bb206ac35aeb961b8b83.txt",
+        "sha256": "28b7fab329415f3cb48bd022f497bfdeb7a312e6ae19bb206ac35aeb961b8b83",
+        "bytes": 2227
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-19.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-a5b52268779d09b2d1f6d13835d7e8d29e376f7d614242b1f5090bcf0b7b9582.txt",
+        "sha256": "a5b52268779d09b2d1f6d13835d7e8d29e376f7d614242b1f5090bcf0b7b9582",
+        "bytes": 59
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-19.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-19.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-a5b52268779d09b2d1f6d13835d7e8d29e376f7d614242b1f5090bcf0b7b9582.txt",
+        "sha256": "a5b52268779d09b2d1f6d13835d7e8d29e376f7d614242b1f5090bcf0b7b9582",
+        "bytes": 59
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-20.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-bdb4753d8a90403747cdb87258fa160d6df6ce49882f36892b3a6969f3ed0e0b.txt",
+        "sha256": "bdb4753d8a90403747cdb87258fa160d6df6ce49882f36892b3a6969f3ed0e0b",
+        "bytes": 3149
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-20.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-20.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-bdb4753d8a90403747cdb87258fa160d6df6ce49882f36892b3a6969f3ed0e0b.txt",
+        "sha256": "bdb4753d8a90403747cdb87258fa160d6df6ce49882f36892b3a6969f3ed0e0b",
+        "bytes": 3149
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-21.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-090fda17b5a4871355745db501311e26a7ccd67547b274ca1d1c3ac33ccbc531.txt",
+        "sha256": "090fda17b5a4871355745db501311e26a7ccd67547b274ca1d1c3ac33ccbc531",
+        "bytes": 68
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-21.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-21.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-090fda17b5a4871355745db501311e26a7ccd67547b274ca1d1c3ac33ccbc531.txt",
+        "sha256": "090fda17b5a4871355745db501311e26a7ccd67547b274ca1d1c3ac33ccbc531",
+        "bytes": 68
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-22.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-f764207e524b5c493252be58fc1a7e426dd92239f8d92bc43ae2e74fc50f8d57.txt",
+        "sha256": "f764207e524b5c493252be58fc1a7e426dd92239f8d92bc43ae2e74fc50f8d57",
+        "bytes": 9771
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-22.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-22.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-f764207e524b5c493252be58fc1a7e426dd92239f8d92bc43ae2e74fc50f8d57.txt",
+        "sha256": "f764207e524b5c493252be58fc1a7e426dd92239f8d92bc43ae2e74fc50f8d57",
+        "bytes": 9771
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-23.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-a7b96e29d1c8bcc1e6e0ad3a783bac25b80038a4ec0c79ae7923f562a5e4a85a.txt",
+        "sha256": "a7b96e29d1c8bcc1e6e0ad3a783bac25b80038a4ec0c79ae7923f562a5e4a85a",
+        "bytes": 33
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-23.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-23.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-a7b96e29d1c8bcc1e6e0ad3a783bac25b80038a4ec0c79ae7923f562a5e4a85a.txt",
+        "sha256": "a7b96e29d1c8bcc1e6e0ad3a783bac25b80038a4ec0c79ae7923f562a5e4a85a",
+        "bytes": 33
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-24.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-16981483da2c0eed23e5c33768a7ed956988019f42ba99d7359bc293f53dd94b.txt",
+        "sha256": "16981483da2c0eed23e5c33768a7ed956988019f42ba99d7359bc293f53dd94b",
+        "bytes": 1029
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-24.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-24.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-16981483da2c0eed23e5c33768a7ed956988019f42ba99d7359bc293f53dd94b.txt",
+        "sha256": "16981483da2c0eed23e5c33768a7ed956988019f42ba99d7359bc293f53dd94b",
+        "bytes": 1029
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-25.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-60680d8314e2ebb3350803502a3abcb6433203bf0f3cdcb48769426a0ec79233.txt",
+        "sha256": "60680d8314e2ebb3350803502a3abcb6433203bf0f3cdcb48769426a0ec79233",
+        "bytes": 36
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-25.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-25.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-60680d8314e2ebb3350803502a3abcb6433203bf0f3cdcb48769426a0ec79233.txt",
+        "sha256": "60680d8314e2ebb3350803502a3abcb6433203bf0f3cdcb48769426a0ec79233",
+        "bytes": 36
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-26.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169.txt",
+        "sha256": "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169",
+        "bytes": 8810
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-26.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/candidate-26.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169.txt",
+        "sha256": "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169",
+        "bytes": 8810
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/gleam-version.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-6924745f5e4067e48d67dc94a7e6abc38078692539072395457f8976ef692e38.txt",
+        "sha256": "6924745f5e4067e48d67dc94a7e6abc38078692539072395457f8976ef692e38",
+        "bytes": 13
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/gleam-version.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/gleam-version.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-6924745f5e4067e48d67dc94a7e6abc38078692539072395457f8976ef692e38.txt",
+        "sha256": "6924745f5e4067e48d67dc94a7e6abc38078692539072395457f8976ef692e38",
+        "bytes": 13
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/otp-version.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/otp-version.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-844cc745479b59c1ac1e3ad48720b5e9c7e1f2370cb81a8ef0a0e5411d35565f.txt",
+        "sha256": "844cc745479b59c1ac1e3ad48720b5e9c7e1f2370cb81a8ef0a0e5411d35565f",
+        "bytes": 59
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/otp-version.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-844cc745479b59c1ac1e3ad48720b5e9c7e1f2370cb81a8ef0a0e5411d35565f.txt",
+        "sha256": "844cc745479b59c1ac1e3ad48720b5e9c7e1f2370cb81a8ef0a0e5411d35565f",
+        "bytes": 59
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/positive-compile.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/positive-compile.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/positive-compile.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/positive-execute.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-b24d01b3900caeb65bb501e0b03dbe13fa179b05b0a8301bdd4f20de906e67ec.txt",
+        "sha256": "b24d01b3900caeb65bb501e0b03dbe13fa179b05b0a8301bdd4f20de906e67ec",
+        "bytes": 6570
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/positive-execute.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/positive-execute.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-b24d01b3900caeb65bb501e0b03dbe13fa179b05b0a8301bdd4f20de906e67ec.txt",
+        "sha256": "b24d01b3900caeb65bb501e0b03dbe13fa179b05b0a8301bdd4f20de906e67ec",
+        "bytes": 6570
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/queue-capacity-compile.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/queue-capacity-compile.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/queue-capacity-compile.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/queue-capacity-execute.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-55e0042199dc5e797b5274af8971e209fe1cc4abd1e850461417f9ac17817078.txt",
+        "sha256": "55e0042199dc5e797b5274af8971e209fe1cc4abd1e850461417f9ac17817078",
+        "bytes": 40626
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/queue-capacity-execute.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-a4f201f95f52e64c4136879f40548c17be90cbe3fb18f278f973649cfaf39fb0.txt",
+        "sha256": "a4f201f95f52e64c4136879f40548c17be90cbe3fb18f278f973649cfaf39fb0",
+        "bytes": 1025
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/queue-capacity-execute.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-7598fd115c8c57f7e430d06207315912be54e0215186d14584c26c3c2267699c.txt",
+        "sha256": "7598fd115c8c57f7e430d06207315912be54e0215186d14584c26c3c2267699c",
+        "bytes": 41651
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/physical-health-order-compile.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/physical-health-order-compile.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/physical-health-order-compile.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/physical-health-order-execute.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-d176296d6d7df9dc02d9dbbf86b3cb51233e5076d5e8f49106262e7e5bdbfe0b.txt",
+        "sha256": "d176296d6d7df9dc02d9dbbf86b3cb51233e5076d5e8f49106262e7e5bdbfe0b",
+        "bytes": 1358
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/physical-health-order-execute.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-f8974f22b71372676ad05b78b405181b4e2e514178f65ec872f0bf5e98d238c7.txt",
+        "sha256": "f8974f22b71372676ad05b78b405181b4e2e514178f65ec872f0bf5e98d238c7",
+        "bytes": 1025
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/physical-health-order-execute.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-4fb6abfc83ed7302b7e4bc3836673208baad74845b348352b4fa8987b1689ea5.txt",
+        "sha256": "4fb6abfc83ed7302b7e4bc3836673208baad74845b348352b4fa8987b1689ea5",
+        "bytes": 2383
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/nonforward-deadman-time-compile.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/nonforward-deadman-time-compile.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/nonforward-deadman-time-compile.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/nonforward-deadman-time-execute.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-160da9ae41683528ff77152a6ef83c366357ff57b0a2c991248f38b63fa5dd10.txt",
+        "sha256": "160da9ae41683528ff77152a6ef83c366357ff57b0a2c991248f38b63fa5dd10",
+        "bytes": 1316
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/nonforward-deadman-time-execute.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-aaf350d4699a2ec75907db4e320450e173d079ef2ba78a5fe33a28239ff3affa.txt",
+        "sha256": "aaf350d4699a2ec75907db4e320450e173d079ef2ba78a5fe33a28239ff3affa",
+        "bytes": 1025
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/nonforward-deadman-time-execute.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-cec596845f1bbd87bc4de8b7abcf21f719b8fd8e55c125a326eba49d203908b6.txt",
+        "sha256": "cec596845f1bbd87bc4de8b7abcf21f719b8fd8e55c125a326eba49d203908b6",
+        "bytes": 2341
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/queue-capacity/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-60476d51101e5847c95860a02164c26773543eac3ef4bac636d58af35e54fbb3.txt",
+        "sha256": "60476d51101e5847c95860a02164c26773543eac3ef4bac636d58af35e54fbb3",
+        "bytes": 11091
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/queue-capacity/src/ev98_campaign_runner.gleam",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-0f99afc18ee77b8fd2ab45c8fd9c024180cbcedbfff857f78c0ebfd7a4890c56.txt",
+        "sha256": "0f99afc18ee77b8fd2ab45c8fd9c024180cbcedbfff857f78c0ebfd7a4890c56",
+        "bytes": 377
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/physical-health-order/src/cepaf_gleam/crdt/health_bridge.gleam",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-8251b6df79b91c9d467a05538e816acf1eed0db3a10b8da8416fe456228c3a01.txt",
+        "sha256": "8251b6df79b91c9d467a05538e816acf1eed0db3a10b8da8416fe456228c3a01",
+        "bytes": 6541
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/physical-health-order/src/ev98_campaign_runner.gleam",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-d16d3331546a62a6450b559aeeb7c69981bc5c02e3dae2710d90215ffa6b1551.txt",
+        "sha256": "d16d3331546a62a6450b559aeeb7c69981bc5c02e3dae2710d90215ffa6b1551",
+        "bytes": 365
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/nonforward-deadman-time/src/cepaf_gleam/ha/deadman_freshness.gleam",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-4f1cfa713f2d38ac58f9b312621534f6e26a7452d028e095df132cb2d71f29cc.txt",
+        "sha256": "4f1cfa713f2d38ac58f9b312621534f6e26a7452d028e095df132cb2d71f29cc",
+        "bytes": 8503
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/nonforward-deadman-time/src/ev98_campaign_runner.gleam",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-fc68d9d598173c9c56dc350d2ecc1fd74028e8ef69d92310b52909060cc4d774.txt",
+        "sha256": "fc68d9d598173c9c56dc350d2ecc1fd74028e8ef69d92310b52909060cc4d774",
+        "bytes": 308
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/recipe.json",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-fe167923fa03f7e095dabc28cbadd98486fee1cddc0236e261ce9067f3ac0438.txt",
+        "sha256": "fe167923fa03f7e095dabc28cbadd98486fee1cddc0236e261ce9067f3ac0438",
+        "bytes": 24219
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/clock-start.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-7bfaef63667167225df0bb8ff99ef098c1bc9c02a5bd46741449489c2e6bb8cb.txt",
+        "sha256": "7bfaef63667167225df0bb8ff99ef098c1bc9c02a5bd46741449489c2e6bb8cb",
+        "bytes": 143
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-fc40d2.reserve.d/clock-end.output",
+      "durable": {
+        "path": "docs/reviews/20260909-0603-ev-campaign-bytes-0131bb679a5f9fbc47fd81ec7ff6d62856eb054010499a09335df2d89fad6e9b.txt",
+        "sha256": "0131bb679a5f9fbc47fd81ec7ff6d62856eb054010499a09335df2d89fad6e9b",
+        "bytes": 143
+      }
+    }
+  ],
+  "checks": {
+    "component_cases": 42,
+    "compiled_mutants_rejected": 3,
+    "unit_process_cases": 18,
+    "cli_cases": 7,
+    "receipt_consistency_regression_cases": 67
+  },
+  "authority": "NONE",
+  "formal": "Formal_unavailable",
+  "sovereign": "Sovereign_pending",
+  "task": "PRODUCER remains executing, attempt 1, independent review pending",
+  "limits": [
+    "Compiler/runtime binary and dependency hashes are observed; a reproducible release closure is not established",
+    "Private compiled binaries remain in /tmp; durable exact text outputs and mutant sources are copied by digest",
+    "No live mesh, authenticated effect fence, formal proof or EV admission is established"
+  ]
+}
