@@ -6,11 +6,29 @@ let rewrite argv flag consumed =
 
 let verb argv = if Array.length argv > 2 then Some argv.(2) else None
 
-let normalize argv =
-  if Array.length argv < 2
-     || String.length argv.(1) > 0 && argv.(1).[0] = '-'
-  then argv
+(* Exact help tokens are controls, never task/worker/result data. Inspect raw
+   argv before format extraction so a malformed --format cannot swallow help. *)
+let help_request argv =
+  let present = Array.exists (fun value -> value = "--help" || value = "-h")
+    (if Array.length argv > 1 then Array.sub argv 1 (Array.length argv - 1) else [||]) in
+  if not present then None
   else
+    let context = if Array.length argv < 2 then None else
+      match argv.(1) with
+      | "plan" | "task" | "job" | "oban" | "workflow" | "temporal"
+      | "work" | "docs" | "ui" | "agent" as noun -> Some noun
+      | "--claim" | "--complete" | "--task-release" -> Some "task"
+      | _ -> None in
+    let program = if Array.length argv = 0 then "sa-plan" else argv.(0) in
+    Some (Array.of_list ([program; "--help"] @ Option.to_list context))
+
+let normalize argv =
+  match help_request argv with
+  | Some help -> help
+  | None when Array.length argv < 2
+     || String.length argv.(1) > 0 && argv.(1).[0] = '-'
+    -> argv
+  | None ->
     match argv.(1), verb argv with
     | "help", _ -> rewrite argv "--help" 2
     | "version", _ -> rewrite argv "--version" 2
@@ -123,6 +141,9 @@ let validate argv =
           Error
             (Printf.sprintf "%s requires at least %d argument(s)" argv.(1)
                required)
+        else if argv.(1) = "--claim"
+          && (String.trim argv.(2) = "" || argv.(2).[0] = '-') then
+          Error "WORKER must be a nonempty identity, not an option"
         else
           let attempt_index =
             match argv.(1) with

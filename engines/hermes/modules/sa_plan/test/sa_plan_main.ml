@@ -15,7 +15,7 @@ let ensure_parent_dir path =
   if not (String.equal dir "" || String.equal dir ".") then
     try Core_unix.mkdir_p dir with _ -> ()
 
-let db_path =
+let db_path () =
   let path =
     match Sys.getenv "UOS_SA_PLAN_DB" with
     | Some p -> p
@@ -480,7 +480,10 @@ let main () =
     value
   in
   let without_format, format =
-    measured "decode" (fun () -> Sys.get_argv () |> Sa_plan_cli.extract_format)
+    measured "decode" (fun () ->
+      let raw = Sys.get_argv () in
+      let controls = Option.value (Sa_plan_cli.help_request raw) ~default:raw in
+      Sa_plan_cli.extract_format controls)
   in
   let argv = measured "normalize" (fun () -> Sa_plan_cli.normalize without_format) in
   let command = if Array.length argv > 1 then argv.(1) else "missing" in
@@ -497,7 +500,18 @@ let main () =
        Printf.eprintf "sa-plan: %s\n%!" message;
        exit 2
    | Ok () -> ());
-  let store = measured "store_open" (fun () -> or_fail (Store.open_db db_path)) in
+  (* Informational requests return before resolving or creating a database path. *)
+  if String.equal command "--help" || String.equal command "--version" then begin
+    measured "dispatch" (fun () ->
+      if String.equal command "--help" then
+        if Array.length argv > 2 then contextual_help argv.(2) else usage ()
+      else emit format
+        [ "version", "0.4.0"; "contract", "20260804";
+          "store", "sqlite"; "semantics", "at-least-once" ]);
+    log_pipeline ();
+    exit 0
+  end;
+  let store = measured "store_open" (fun () -> or_fail (Store.open_db (db_path ()))) in
   match
     try
       measured "dispatch" (fun () -> dispatch store format argv);

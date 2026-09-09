@@ -58,6 +58,12 @@ let contains text part =
   let rec at i = i + String.length part <= String.length text
     && (String.sub text i (String.length part) = part || at (i + 1)) in at 0
 let () =
+  let refused_receipt = temp ^ "/sa-plan-help-refused.json" in
+  let code, diagnostic = run ml [source ^ "/ev_native.ml"; "--receipt";
+    refused_receipt; "--"; "sa-plan"; "task"; "claim"; "--help"] in
+  check "Sa-plan option-style help refuses before child execution"
+    (code = 2 && contains diagnostic "refused before execution"
+      && not (Sys.file_exists refused_receipt));
   let occupied = temp ^ "/occupied.json" and forbidden = temp ^ "/forbidden-effect" in
   write_new occupied "preserved receipt\n";
   let code, _ = invoke ["--receipt"; occupied] ["mark"; forbidden] in

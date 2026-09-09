@@ -144,3 +144,26 @@ let () =
   ] in
   List.iter (fun args -> require "LAW CLI-MISSING-OR-MALFORMED-ATTEMPT-REJECTED"
     (Result.is_error (Sa_plan_cli.validate (Sa_plan_cli.normalize args)))) invalid
+
+let () =
+  let requests = [
+    [| "sa-plan"; "task"; "claim"; "--help" |];
+    [| "sa-plan"; "task"; "claim"; "worker"; "-h" |];
+    [| "sa-plan"; "--claim"; "--help" |];
+    [| "sa-plan"; "task"; "claim"; "worker"; "--format"; "--help" |];
+    [| "sa-plan"; "job"; "claim"; "queue"; "--help" |];
+    [| "sa-plan"; "task"; "complete"; "p"; "t"; "w"; "1"; "--help" |]
+  ] in
+  List.iter (fun args ->
+    let normalized = Sa_plan_cli.normalize args in
+    require "LAW CLI-HELP-CANNOT-NORMALIZE-TO-EFFECT"
+      (Array.length normalized >= 2 && normalized.(1) = "--help"
+       && Result.is_ok (Sa_plan_cli.validate normalized))) requests;
+  List.iter (fun worker ->
+    require "LAW CLI-OPTION-IS-NOT-CLAIM-WORKER"
+      (Result.is_error (Sa_plan_cli.validate [|"sa-plan";"--claim";worker|])))
+    ["--help";"-h";"--version";"--unknown";"";" "];
+  require "LAW CLI-ORDINARY-HELP-TEXT-PRESERVED"
+    (array_equal
+      (Sa_plan_cli.normalize [|"sa-plan";"task";"create";"p";"t";"n";"Explain --help usage"|])
+      [|"sa-plan";"--task-create";"p";"t";"n";"Explain --help usage"|])

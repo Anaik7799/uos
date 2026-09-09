@@ -46,6 +46,8 @@ let command tool args = match tool, args with
       @ ["-s"; "session_sync_cli"; "main"; "-s"; "init"; "stop";
          "-extra"; root ^ "/var/coordination/tri-agent"] @ args
   | "sa-plan", _ ->
+    require (not (List.exists (fun arg -> arg = "--help" || arg = "-h") args))
+      "Sa-plan option-style help is refused before execution; use sa-plan help <noun>";
     root ^ "/engines/hermes/_build/default/modules/sa_plan/test/sa_plan_main.exe", args
   | "risk", _ -> "/tmp/uos-ev-native-risk-20260909/default/validate.exe", args
   | "beam", compiled :: main :: arguments ->
