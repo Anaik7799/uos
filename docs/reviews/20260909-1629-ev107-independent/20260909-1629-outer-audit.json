@@ -1,0 +1,41 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+    "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+    "/tmp/ev107_review_audit.ml"
+  ],
+  "utc_started": 1788971290.76773,
+  "utc_finished": 1788971296.545693,
+  "elapsed_seconds": 5.777959261,
+  "deadline_seconds": 180.0,
+  "exit_code": 0,
+  "output": "/tmp/ev107-independent-1625/20260909-1630-ev107-independent-approval.json SHA256 f10b9ed74ba9f5a4c20760b0d1d2bfc9a17192c1674a5a1a9e6a56d5e0504f84 archives=54 mismatches=0\n",
+  "output_sha256": "7fff6c52a13c5e23330074ead679acf585b308729dac2ea30602c08a10cef365",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "otp_launch": {
+    "executable": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+    "environment": [
+      "PATH=/tmp/uos-ev-native-otp-ba4ade:/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin:/home/an/NAS-setup/uos/toolchains/nix-profile/bin:/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin:/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin:/usr/bin:/bin",
+      "ERL_FLAGS=+S 2:2 +A 2",
+      "ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "BINDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin",
+      "EMU=beam", "PROGNAME=erl",
+      "ERL_ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "ESCRIPT_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_USE_SERVER=false"
+    ],
+    "descendant_execution_audit": "NOT_PERFORMED_BY_ADAPTER"
+  },
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}
