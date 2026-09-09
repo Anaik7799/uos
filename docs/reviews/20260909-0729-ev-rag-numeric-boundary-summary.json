@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-09T05:29:00Z",
+  "task": {"plan_id": "uos/ev-rag-freshness/20260909", "task_id": "REPAIR", "worker": "codex-ev-rag-freshness", "attempt": 1, "state": "executing"},
+  "lineage": {
+    "immutable_base": "337f99137673d7866b958a38bd490fb876b2880f",
+    "reviewed_hold_candidate": "12b978fd0a140b36f9ca22d2489e3069b2b4851f",
+    "freshness_candidate": "cfd3afbae74f996d42321843cc48248cd3aaf956",
+    "numeric_boundary_candidate": "7d577676120e61c32c3901e56e82a36984f3a763"
+  },
+  "source_sha256": {
+    "apps/cepaf_gleam/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam": "85a3efa6b0f39d26c25b70b1aa344b6c67cdd94f827ac05c09fab2ec8c2865dc",
+    "apps/cepaf_gleam/test/rag_cache_mesh_test.gleam": "76768e06b2933aae0a0b15bdc4c47149e73242979c7766d045bdee9357e57c4d",
+    "apps/cepaf_gleam/test/ev_rag_freshness_runner.gleam": "ab13d45b4d77ac77d776d983247a09ad0fb172d9dbfebcdde1160aa8f68fb402"
+  },
+  "red_observation": {
+    "command_shape": "native Gleam compilation followed by OTP 29 erl -s ev_rag_freshness_runner main -s init stop",
+    "output_dir": "/tmp/uos-rag-numeric-red-20260909-0728",
+    "result": "accepted [1.0e100] semantic lookup raised Badarith in cosine_similarity",
+    "review_provenance": "/tmp/ev-rag-independent-rereview-20260909/boundary-tests.json"
+  },
+  "green_observation": {
+    "compile_output_dir": "/tmp/uos-rag-numeric-green-20260909-0731",
+    "runtime": "OTP 29 erl +S 2:2 -noshell -s ev_rag_freshness_runner main -s init stop",
+    "focused_checks": 16,
+    "result": "passed with no runner output",
+    "control": "existing normal analytic cosine and norm checks still pass; exact accepted [1.0e100] semantic match now returns CacheFresh with score >= 0.99"
+  },
+  "repair": {
+    "method": "scale-normalized norm and cosine",
+    "bound": "Each normalized coordinate has magnitude <= 1; because cache embeddings have at most 1024 dimensions, sum-of-squares and cosine numerator/denominator intermediates are bounded by 1024.",
+    "non_goal": "The repair does not lower the 1.0e100 acceptance limit or claim retrieval, inference, persistence, network, admission, or durable evidence."
+  },
+  "active_risk": {
+    "assessment": "docs/reviews/20260909-0734-ev-rag-numeric-boundary-risk.json",
+    "assessment_sha256": "41bc4d5d02cdd9a505bbc8cb59c647346008c8e054c2f87f1e6ab11050253449",
+    "status": "ACTIVE_OBSERVATION_PASS",
+    "observed_at": "2026-09-09T05:28:50Z",
+    "authority": "NONE",
+    "runtime_admission": "NOT_GRANTED",
+    "receipt": "/tmp/ev-rag-numeric-active-risk-20260909-0529.json"
+  },
+  "next_gate": "Independent re-review. REPAIR remains executing and cannot be completed or admitted by this receipt."
+}
