@@ -126,8 +126,10 @@ let scalar_assignment line =
   | Some at ->
       let key = String.trim (String.sub line 0 at) in
       let value = String.trim (String.sub line (at + 1) (String.length line - at - 1)) in
+      let inner = if String.length value < 2 then "" else String.sub value 1 (String.length value - 2) in
       if not (valid_key key) || String.length value < 2 || value.[0] <> '"' ||
          String.starts_with ~prefix:{|"""|} value ||
+         String.contains inner '"' || String.contains inner '\\' ||
          value.[String.length value - 1] <> '"' then bounded_error "unsupported-toml-scalar";
       key, line
 
@@ -165,7 +167,10 @@ let directives_from_superset ~budget path =
                   state := InDirective (Some (String.sub value 1 (String.length value - 2)), clauses)
             else match id with
               | None -> bounded_error "directive-field-before-id"
-              | Some _ -> state := InDirective (id, clause :: clauses)) lines;
+              | Some _ ->
+                  if List.exists (fun prior -> String.starts_with ~prefix:(key ^ " =") prior) clauses then
+                    bounded_error "duplicate-directive-key";
+                  state := InDirective (id, clause :: clauses)) lines;
   flush ();
   if List.length !directives > max_rules || has_duplicate (List.map (fun directive -> directive.directive_id) !directives) then
     bounded_error "directive-count-or-duplicate";
