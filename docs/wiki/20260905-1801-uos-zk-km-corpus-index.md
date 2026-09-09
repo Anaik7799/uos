@@ -246,6 +246,8 @@ The operational system coordinates across five distinct language tiers:
   - `[[wiki:20260909-2245-uos-ten-cycle-fractal-vector-and-agy-manifesto]]` [Ten-Cycle Fractal Vector & AGY Manifesto Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-2245-uos-ten-cycle-fractal-vector-and-agy-manifesto.md) Ten-Cycle Fractal Vector Evolution, Full Operational Surface & AGY Cognitive Manifesto Wiki
   - `[[zk:20260909-2205-adr-104-user-centric-operational-usecases-and-interaction-matrix]]` [ADR-104](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260909-2205-adr-104-user-centric-operational-usecases-and-interaction-matrix.md) User-Centric Operational Use Cases & Interaction Matrix
   - `[[wiki:20260909-2205-uos-telegram-user-centric-usecases-guide]]` [User-Centric Use Cases Guide Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-2205-uos-telegram-user-centric-usecases-guide.md) UOS Telegram User-Centric Operational Use Cases & Interaction Guide Wiki
+  - `[[zk:20260909-2215-adr-105-advanced-user-usecases-and-human-cybernetics]]` [ADR-105](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260909-2215-adr-105-advanced-user-usecases-and-human-cybernetics.md) Advanced User-Centric Cybernetic Use Cases & Operator Experience Evolution
+  - `[[wiki:20260909-2215-uos-telegram-advanced-user-usecases-guide]]` [Advanced User Use Cases Guide Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-2215-uos-telegram-advanced-user-usecases-guide.md) UOS Telegram Advanced User-Centric Cybernetic Use Cases Guide Wiki
 - Formal Proofs:
   - `[[zk:TwoLattice_STM]]` (`formal/lean/TwoLattice_STM.lean`)
   - `[[zk:Traceability]]` (`formal/lean/Traceability.lean`)
