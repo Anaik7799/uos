@@ -54,7 +54,42 @@ let finite n=match classify_float n with FP_nan|FP_infinite->false|_->true
 let canonical_int s upper=
   let n=try int_of_string s with _->raise(Refused "invalid corpus integer")in
   require(n>=0 && n<=upper && string_of_int n=s)"noncanonical/out-of-range corpus integer";n
-let validate bytes=raise(Refused "RED: validator not implemented")
+let validate bytes=
+  let json=parse bytes in
+  require(field "schema"json=`String "uos.ev-native-invocation.v1")"native receipt schema";
+  require(field "exit_code"json=`Int 0 && field "failure"json=`Null)"abnormal invocation";
+  let termination=field "child_termination"json in
+  require(field "kind"termination=`String "EXITED" && field "code"termination=`Int 0)"child not normally exited";
+  let args=match field "argv"json with`List xs->xs|_->raise(Refused "argv must be list")in
+  require(args<>[] && List.length args<=512)"argv bounds";
+  List.iter(fun j->let s=text j in require(String.length s<=4096 && not(String.contains s '\000'))"argv string bounds")args;
+  require(not(Filename.is_relative(text(List.hd args))))"argv executable not absolute";
+  let start=field "utc_started"json|>number and finish=field "utc_finished"json|>number
+  and elapsed=field "elapsed_seconds"json|>number and deadline=field "deadline_seconds"json|>number in
+  require(List.for_all finite[start;finish;elapsed;deadline])"nonfinite time";
+  require(start>=0. && finish>=start && deadline>0. && deadline<=60. && elapsed>=0. && elapsed<=deadline+.1. && finish-.start<=deadline+.1.)"invocation time bounds";
+  let output=field "output"json|>text in
+  require(String.length output<=max_output)"output byte limit";
+  require(field "output_sha256"json=`String(sha output))"output digest mismatch";
+  let lines=String.split_on_char '\n'output in require(List.length lines<=4096)"line limit";
+  let seen=Array.make 2048 false and cases=ref 0 and diagnostics=ref 0 in
+  List.iter(fun line->require(String.length line<=4096)"line byte limit";
+    if String.starts_with ~prefix:"RETE_CASE"line then begin
+      let e,s,o,f,n=match String.split_on_char '|'line with
+      |["RETE_CASE";e;s;o;f;n]->canonical_int e 63,canonical_int s 15,canonical_int o 1,canonical_int f 15,canonical_int n 6
+      |_->raise(Refused "malformed RETE_CASE row")in
+      let key=((e*16)+s)*2+o in require(not seen.(key))"duplicate corpus tuple";
+      seen.(key)<-true;incr cases;
+      let expected_facts,expected_fired=expected e s in
+      require(f=expected_facts && n=expected_fired)(Printf.sprintf "closure/count mismatch edge=%d seed=%d order=%d expected=%d,%d observed=%d,%d"e s o expected_facts expected_fired f n)
+    end else if line<>""then incr diagnostics)lines;
+  require(!cases=2048 && Array.for_all Fun.id seen)"incomplete corpus";
+  `Assoc["schema",`String "uos.ev107.rete-reference.v1";"status",`String "FINITE_CORPUS_CONSISTENT";
+    "authority",`String "NONE";"admission",`String "NOT_GRANTED";
+    "receipt_sha256",`String(sha bytes);"output_sha256",`String(sha output);
+    "cases",`Int !cases;"diagnostic_lines",`Int !diagnostics;
+    "algorithm",`String "Four-node reflexive transitive relation; fired count is present edges with reachable antecedent";
+    "limits",`List(List.map(fun s->`String s)["Finite64DAG edge masks16seed masks2orders only; no general Rete refinement proof";"Receipt consistency cannot authenticate producer, candidate, executable or source; external immutable bindings and actual replay required";"Matching corpus does not grant dispatch effects, formal authority or EV admission";"Input4MiB/output1MiB/depth64/nodes10000/lines4096/line4096; native declared deadline<=60s checked, not externally enforced by this reader";"Recorded finite ordered timestamps checked; freshness/NTP synchronization and transitive execution closure not established"])]
 
 (* Synthetic test producer uses a queue-based graph walk, not the relation
    algorithm above. These fixtures are never real runtime or admission evidence. *)
@@ -87,7 +122,7 @@ let self_test()=
  let body xs=String.concat "\n"xs^"\n"in
  run "omission" false(fixture(body(List.tl rows)));
  run "duplicate" false(fixture(body(List.hd rows::rows)));
- run "duplicate-replaces-missing" false(fixture(body(List.hd rows::List.tl(List.tl rows))));
+ run "duplicate-replaces-missing" false(fixture(body(List.hd rows::List.hd rows::List.tl(List.tl rows))));
  run "false-closure" false(fixture(body("RETE_CASE|0|0|0|1|0"::List.tl rows)));
  run "false-fired-count" false(fixture(body("RETE_CASE|0|0|0|0|1"::List.tl rows)));
  run "noncanonical-number" false(fixture(body("RETE_CASE|00|0|0|0|0"::List.tl rows)));
@@ -100,7 +135,9 @@ let self_test()=
  run "unbounded-child" false(set "deadline_seconds"(`Float 600.)good);
  run "elapsed-overrun" false(set "elapsed_seconds"(`Float 60.)good);
  run "regressing-time" false(set "utc_finished"(`Float 999.)good);
- run "nonfinite-time" false(set "utc_started"(`Float nan)good);
+ let without_start=match good with `Assoc xs->`Assoc(List.remove_assoc "utc_started"xs)|_->assert false in
+ let tail=Yojson.Safe.to_string without_start in
+ check "nonfinite-time" false("{\"utc_started\":1e999,"^String.sub tail 1(String.length tail-1));
  run "output-oversize" false(fixture(String.make(max_output+1)'x'));
  let serialized=Yojson.Safe.to_string good in
  check "duplicate-key" false("{\"exit_code\":1,"^String.sub serialized 1(String.length serialized-1));
@@ -109,6 +146,17 @@ let self_test()=
  check "malformed-json" false "{";
  check "oversize-json" false(String.make(max_receipt+1)' ');
  check "depth-limit" false(String.make 65 '['^"0"^String.make 65 ']');
+ let private_dir=Filename.temp_dir "ev107-oracle-synthetic-" "" in
+ let receipt=private_dir^"/receipt.json"in
+ let channel=open_out_bin receipt in output_string channel serialized;close_out channel;
+ check "regular-file-read" true(read_receipt receipt);
+ let refused_path name path=
+   let refused=try ignore(read_receipt path);false with Refused _->true in
+   require refused("self-test "^name);incr checks;Printf.printf "ORACLE_FIXTURE PASS %s\n%!"name in
+ Unix.symlink receipt(private_dir^"/link.json");refused_path "symlink-file-refusal"(private_dir^"/link.json");
+ refused_path "directory-refusal"private_dir;
+ Unix.mkfifo(private_dir^"/fifo")0o600;refused_path "fifo-refusal"(private_dir^"/fifo");
+ refused_path "relative-path-refusal" "receipt.json";
  Printf.printf "ORACLE_FIXTURE SUMMARY synthetic_only=true checks=%d PASS\n" !checks
 let ()=
  try match Array.to_list Sys.argv with
