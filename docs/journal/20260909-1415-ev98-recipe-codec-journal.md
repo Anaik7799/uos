@@ -1,6 +1,6 @@
 # EV98 closed campaign recipe: codec and synchronization obligations
 
-Observed update: 2026-09-09T15:28:17Z. Source candidate: `dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93`. Combined campaign passed and independent bounded recipe review approved; task remains executing for parent-owned completion.
+Observed update: 2026-09-09T15:30:38Z. Source candidate: `dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93`. Combined campaign passed, independent bounded recipe review approved, and RECIPE_CODEC completed at attempt 3 under explicit parent authorization.
 
 Tags: #fractal-l0 #fractal-l6 #fractal-l7 #zk-adr #zero-muda
 
@@ -27,6 +27,8 @@ Parent authorized composition after independent bounded approval of synchronizat
 The final eight-file OCaml project was extracted from full commit_id selection into private storage and built natively. Active validation passed at 15:17:14Z with 14 source references and assessment SHA-256 `f53f2c92865fecfaf9e87faef63c08f792a802a6254a18593bddb92fa71ff27e`. The compiled producer ran 76 exact positive invocations and four separately compiled designated assertion failures. Its 43 recorded child invocations and 568 byte bindings include 15 candidate inputs and the unchanged 128-file realized dependency set. A syscall trace independently classified 189 successful execve calls over 12 paths; every successful executable resolved to ELF. Failed executable lookups numbered 167 and did not execute wrappers.
 
 Independent recipe review approved the same immutable source. The reviewer rebuilt the eight-file OCaml project, ran 25 unit/process checks and 23 additional audit/replay groups, exercised four closed CLI refusals, rehashed all 568 bindings and 43 invocation output sets, and independently replayed the bound 76-case positive runner and four mutants. The reviewer did not redundantly compile the complete Gleam campaign, and the author did not rerun the reviewer's 23 private groups. Approval SHA-256 `69d86f77e041c4ae311564ba80712031e11666d525136be1ef17d11e147ff7b8` is preserved in [the independent approval record](http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20260909-1517-ev98-recipe-codec-independent-approval.json). Post-verification active validation passed at 15:24:11Z before this documentation-only handoff.
+
+Parent accepted the independent review and explicitly authorized completing RECIPE_CODEC. Fresh attempt-3 active validation passed at 15:29:36Z, then the exact canonical completion succeeded at 15:29:48Z before lease expiry. A read-only task query confirmed completed state at attempt 3. The [completion receipt](http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20260909-1512-ev98-recipe-codec-completed-attempt3.json) records the source, reviewed evidence and component-only scope; the [state observation](http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20260909-1539-ev98-recipe-codec-completed-state.json) confirms the canonical result. No lease rollover was necessary after review completed before the parent's cutoff.
 
 ## 4. Root Cause Analysis
 
@@ -71,7 +73,7 @@ Preserve actual missing-source compilation failures separately from semantic ass
 | Observability | Actual child status and output preservation | PASS |
 | Observability | Final tool/source/dependency/output hashes | PASS |
 | Observability | Live multi-host behavior | NOT ESTABLISHED |
-| Governance | Canonical attempt 3 | PASS |
+| Governance | Canonical attempt 3 | COMPLETED after fresh active check and parent authorization |
 | Governance | Owned JJ sibling | PASS |
 | Governance | Independent review | APPROVED |
 | Provenance | EV93 ceiling retained | PASS |
@@ -122,7 +124,7 @@ Omitted codec staging, weakened acceptance, stale source binding and overlong pr
 
 ## 13. Conclusion
 
-Candidate `dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93` has actual combined native observations, preserved negative evidence and independent bounded approval. RECIPE_CODEC remains executing at attempt 3 for parent-owned completion. Formal_unavailable, Sovereign_pending and NOT_GRANTED remain explicit result fields.
+Candidate `dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93` has actual combined native observations, preserved negative evidence and independent bounded approval. RECIPE_CODEC completed canonically at attempt 3 under explicit parent authorization. Formal_unavailable, Sovereign_pending and NOT_GRANTED remain explicit result fields; parent PROGRAM and downstream integration work continue separately.
 
 Previous: [Codec journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260909-1122-ev98-wire-codec-journal.md) · Next: [Final verification](http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20260909-1522-ev98-recipe-codec-verification.json).
 

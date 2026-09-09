@@ -1,0 +1,46 @@
+{
+  "schema": "uos.ev98.recipe-codec.completed.v1",
+  "source_revision": "dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93",
+  "task": "RECIPE_CODEC",
+  "plan": "uos/ev98-wire-codec/20260909",
+  "worker": "codex-ev98-recipe-codec",
+  "attempt": 3,
+  "state": "completed",
+  "scope": "Closed engine and codec component evidence producer only",
+  "references": [
+    {
+      "kind": "author_verification",
+      "path": "docs/reviews/20260909-1522-ev98-recipe-codec-verification.json",
+      "sha256": "507f26be14fb6e22088702eef3a245635070bb8946c794d5a4c4b304c9676461"
+    },
+    {
+      "kind": "independent_approval",
+      "path": "docs/reviews/20260909-1517-ev98-recipe-codec-independent-approval.json",
+      "sha256": "69d86f77e041c4ae311564ba80712031e11666d525136be1ef17d11e147ff7b8"
+    },
+    {
+      "kind": "fresh_active",
+      "path": "docs/reviews/20260909-1513-ev98-recipe-codec-completion-active.json",
+      "sha256": "24642d18007bd0a6adf68db33b79dc8ba01ae01e2a61de76353c4b246af7946e"
+    },
+    {
+      "kind": "canonical_completion",
+      "path": "docs/reviews/20260909-1512-ev98-recipe-codec-completed-attempt3.json",
+      "sha256": "31af50ce070d228fb83f6804ba933fc523b5b50f01d0cf239e16293c4b0f4b8e"
+    },
+    {
+      "kind": "completed_state",
+      "path": "docs/reviews/20260909-1539-ev98-recipe-codec-completed-state.json",
+      "sha256": "52a5253d4ece0aecb9708f05aab57f7aae6132364a7418656a911f5a5db97523"
+    }
+  ],
+  "journal": {
+    "path": "docs/journal/20260909-1415-ev98-recipe-codec-journal.md",
+    "sha256": "2b3f1723572e590edbd7ce1d5269f9b89957d5ba7b6e54ba0163896b7032651c"
+  },
+  "formal": "Formal_unavailable",
+  "sovereign": "Sovereign_pending",
+  "full_ev_runtime": "NOT_ESTABLISHED",
+  "admission": "NOT_GRANTED",
+  "downstream": "Parent owns transport, generator cardinality repair and integration review; this completed task does not claim those effects"
+}
