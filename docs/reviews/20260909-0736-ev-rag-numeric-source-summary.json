@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-09-09T05:35:00Z",
+  "task": {"plan_id": "uos/ev-rag-freshness/20260909", "task_id": "REPAIR", "worker": "codex-ev-rag-freshness", "attempt": 1, "state": "executing"},
+  "lineage": {
+    "immutable_base": "337f99137673d7866b958a38bd490fb876b2880f",
+    "freshness_candidate": "cfd3afbae74f996d42321843cc48248cd3aaf956",
+    "overflow_candidate": "7d577676120e61c32c3901e56e82a36984f3a763",
+    "tiny_numeric_candidate": "11fa5b0e561580081479420df54dd9a66d13153a"
+  },
+  "source_sha256": {
+    "apps/cepaf_gleam/src/cepaf_gleam/knowledge/rag_cache_mesh.gleam": "0dc918abb976b34802934cdfd0ccb7a18836198da62422316e18a4cf68392dcb",
+    "apps/cepaf_gleam/test/rag_cache_mesh_test.gleam": "0ce228fe12bda4dd366b32ff654d2c6f6a15c47e57eeea11eb0ad3a503b3d793",
+    "apps/cepaf_gleam/test/ev_rag_freshness_runner.gleam": "23ea5e8464856acc160086bd97e0634955f22d2aef7b4cee0823575c238a2174"
+  },
+  "numeric_repair_set": [
+    "accepted 1e100 embeddings use scale-normalized norm and cosine rather than raw squared sums",
+    "all nonzero scales use the normalized path; only exact zero receives zero-vector semantics",
+    "tiny analytic cosine is approximately 0.96",
+    "tiny accepted cache embedding produces CacheFresh",
+    "subnormal identity and exact-zero controls pass"
+  ],
+  "execution": {
+    "red_output_dir": "/tmp/uos-rag-tiny-red-20260909-0736",
+    "green_compile_output_dir": "/tmp/uos-rag-tiny-green-20260909-0739",
+    "toolchains": "realized Gleam 1.16.0 and OTP 29; native erl -s ev_rag_freshness_runner main -s init stop",
+    "focused_checks": 19,
+    "result": "passed",
+    "independent_probe": "/tmp/ev-rag-independent-numeric-review-20260909/numeric-tests.json"
+  },
+  "active_risk": {
+    "assessment": "docs/reviews/20260909-0735-ev-rag-tiny-numeric-risk.json",
+    "assessment_sha256": "06edc6c3633adf1c7f67bfc16904399a8e98ee97ec1a0fbbe09eb2019909b352",
+    "status": "ACTIVE_OBSERVATION_PASS",
+    "observed_at": "2026-09-09T05:34:58Z",
+    "authority": "NONE",
+    "runtime_admission": "NOT_GRANTED",
+    "receipt": "/tmp/ev-rag-tiny-active-risk-20260909-0535.json"
+  },
+  "limits": [
+    "No actual retrieval, embedding generation, inference, persistence, network, or admission is exercised.",
+    "Independent re-review is required; REPAIR remains executing."
+  ]
+}
