@@ -1,6 +1,10 @@
 let () =
  try
   match Array.to_list Sys.argv with
+  | [_;"observe";workspace;ev;revision] ->
+   let result=Ev_campaign.observe ~workspace ~ev:(int_of_string ev) ~revision in
+   print_endline(Yojson.Basic.to_string result);
+   if Receipt_validator.field "status" result<>`String "COMPONENT_OBSERVED" then exit 1
   | [_;"validate";workspace;bundle;ev;revision] ->
    let now,clock_start=Receipt_validator.observe_clock() in
    let began=Receipt_validator.mono() in
@@ -9,6 +13,6 @@ let () =
    let elapsed=Receipt_validator.mono()-.began in
    let final=Receipt_validator.finalize_observation ~now ~finished ~elapsed ~clock_start ~clock_end result in
    print_endline(Yojson.Basic.to_string final)
-  | _->failwith "usage: ev_receipt validate WORKSPACE RELATIVE_BUNDLE EV_NUMBER IMMUTABLE_40_HEX_REVISION"
+  | _->failwith "usage: ev_receipt validate WORKSPACE RELATIVE_BUNDLE EV_NUMBER IMMUTABLE_40_HEX_REVISION | observe WORKSPACE 98 IMMUTABLE_40_HEX_REVISION"
  with error ->
   print_endline(Yojson.Basic.to_string(`Assoc["schema",`String "uos.ev-consistency.v1";"status",`String "HOLD";"authority",`String "NONE";"error",`String(Printexc.to_string error)]));exit 1
