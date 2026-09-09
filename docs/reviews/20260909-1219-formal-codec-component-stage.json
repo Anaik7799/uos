@@ -1,0 +1,74 @@
+{
+  "schema": "uos.ev-formal-codec-stage.v1",
+  "observed_at": "2026-09-09T12:07:19Z",
+  "authority": "NONE",
+  "admitted_ev_ceiling": 93,
+  "new_ev_admissions": 0,
+  "composition_candidate": "9c590e75b87e2bca63adb4af966e465269203b4d",
+  "formal_source_candidate": "af6a3acc347a6393c317e2efc541d0cccde93a00",
+  "formal_evidence_candidate": "1463adbd3e9ec4af1052f6e520e073199c5e105e",
+  "codec_source_candidate": "5e1edaa7bb1b3b39a501e771720bc2ef63174a87",
+  "codec_evidence_candidate": "bdef6f29513bb8520cfbbc43badbd3c2e1d2dadd",
+  "formal_task": "COMPLETED_FINITE_MODEL_AND_OBSERVED_PROJECTION_SCOPE",
+  "codec_task": "COMPLETED_BOUNDED_CODEC_SCOPE",
+  "artifacts": [
+    {
+      "path": "docs/reviews/20260909-1219-formal-final-independent-approval.json",
+      "sha256": "5f5c0e95cc0cf46dc2b2dde7eec56bbade5fbbb49fb20ec4f82cc3f8af20e177",
+      "original_locator": "/tmp/ev-health-independent-final-review-20260909/20260909-1149-formal-independent-approval.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1219-codec-independent-approval.json",
+      "sha256": "140e515cffb98fff8a497cffdc6ff6c17c2c4ff6bfb580dd67a59759d2a177d5",
+      "original_locator": "/tmp/ev-codec-independent-review-20260909/20260909-1156-codec-independent-approval.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1219-formal-precomplete-active.json",
+      "sha256": "52192e957f18d74e7c5d3dbf8f9e958a2d55c0aefbb604ed229849baee57677e",
+      "original_locator": "/tmp/ev-formal-precomplete-active.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1219-formal-task-completed.json",
+      "sha256": "e2c11939702e2d8ed4dc9341355577b8343b98bef219abfd15ae7d52001d508e",
+      "original_locator": "/tmp/ev-formal-component-completed.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1219-codec-precomplete-active.json",
+      "sha256": "ecdfda36bd0273f86fc7041a6e028347ef48f98899e3ddc25a7186ee1c4d9aef",
+      "original_locator": "/tmp/ev-codec-precomplete-active-1202.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1219-codec-task-completed.json",
+      "sha256": "5e5d1f7443629339a75ab588909e0a3be6c67d1ac8ba065d2ebc63b6a7dfee38",
+      "original_locator": "/tmp/ev-codec-component-completed-1203.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1219-composed-formal-codec-active.json",
+      "sha256": "94010c1f1ec682a8646ad328c3c18764d24b28ef140d80af397f294ebf9a539d",
+      "original_locator": "/tmp/ev-root-composed-active-1204.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1219-compose-formal-codec-invocation.json",
+      "sha256": "6aaafde3b7ae52b680ce0613f206f045b3571f062950addc806dfde92cb0d199",
+      "original_locator": "/tmp/ev-compose-formal-codec-1204.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1219-agy-native-producer-board-observation.json",
+      "sha256": "fd23412c5af1e0b54d3595502cb1d9ea00e6db7b750c75e3a51783814c2f39c1",
+      "original_locator": "/home/an/NAS-setup/uos/var/coordination/tri-agent/events/0000001570.json"
+    },
+    {
+      "path": "docs/reviews/20260909-1219-agy-native-producer-ack.json",
+      "sha256": "2070c58308b1316ca68d51645c0dbe8c0bc4e89f216bd420ac7aed84d706c792",
+      "original_locator": "/tmp/ev-agy-producer-ack-1203.json"
+    }
+  ],
+  "limits": [
+    "Finite health algebra and pair projection do not establish full implementation refinement or transport correctness.",
+    "Codec verification does not establish network delivery, authentication or whole-mesh runtime behavior.",
+    "The composed campaign requires an explicit closed recipe update for the new mesh_wire source.",
+    "AGY board event is a cooperative scoped review of existing native/producer evidence, not an independently attested full rerun.",
+    "Task completion and review cannot grant runtime effects, canonical integration or EV admission.",
+    "Earlier shell-dependent formal replay and rejected verifier revisions remain historical limited evidence."
+  ]
+}

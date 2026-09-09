@@ -1,0 +1,21 @@
+{
+  "schema": "uos.ev98.health.direct-erts-projection.v1",
+  "observed_at": "2026-09-09T11:25:00Z",
+  "authority": "NONE",
+  "source_candidate": "f4724b11a95f405d0752d1bdfa87b369b9f9f3fa",
+  "task": {"plan_id": "uos/ev98-health-formal/20260909", "task_id": "FORMAL", "attempt": 2},
+  "compile": {
+    "outer_receipt": "/tmp/ev98-health-direct-build-1124-outer.json",
+    "inner_receipt": "/tmp/ev98-health-direct-build-1124.json",
+    "execve_trace": "/tmp/ev98-health-direct-build-1124.execve.log",
+    "execve_trace_sha256": "b401cbb8778ae62c232af1d6f6480d3e5622fd2c4583df40a7974affd8256e1a"
+  },
+  "runtime": {
+    "receipt": "/tmp/ev98-health-direct-projection-native-20260909-1125.json",
+    "receipt_sha256": "4e0721ee9a29b8b962076f9b38cbafb1c17a03fc2d5fcad9468cea047cc36d5b",
+    "beam": "/tmp/ev98-health-direct-projection-1124/ebin/ev98_health_projection_runner.beam",
+    "beam_sha256": "5b420b5e4fea8fd106fcce3403efc8173ec0a9a90818e0c0e27d8b64906025dc",
+    "verifier": "PASS: 54 records, 2862 pairs, closed finite triple compositions, malformed collision and raw-order controls"
+  },
+  "limits": ["Bounded candidate projection only.", "No EV admission or runtime authority."]
+}

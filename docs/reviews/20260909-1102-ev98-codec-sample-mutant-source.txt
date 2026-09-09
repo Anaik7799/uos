@@ -248,7 +248,7 @@ fn health_value(health: ClusterHealthMap) -> Value {
             Real(h.lyapunov_exponent),
             Boolean(h.is_stable),
             Text(h.breaker_state),
-            Integer(h.sample_epoch_us),
+            Integer(reg.timestamp_us),
           ]),
           Integer(reg.timestamp_us),
           Text(reg.writer),

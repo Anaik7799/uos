@@ -1,0 +1,20 @@
+#use "topfind";;
+#require "unix,yojson,cryptokit,str";;
+let root="/home/an/NAS-setup/uos"
+let ws=root^"/.uos-workspaces/ev98-wire-codec-20260909"
+let rev="5e1edaa7bb1b3b39a501e771720bc2ef63174a87"
+let stage="/tmp/ev98-codec-final-5e1edaa7"
+let read p=let c=open_in_bin p in let b=really_input_string c(in_channel_length c)in close_in c;b
+let sha s=Cryptokit.hash_string(Cryptokit.Hash.sha256())s |> Cryptokit.transform_string(Cryptokit.Hexa.encode())
+let rec mkdir p=if not(Sys.file_exists p)then(mkdir(Filename.dirname p);Unix.mkdir p 0o700)
+let write p b=mkdir(Filename.dirname p);let c=open_out_bin p in output_string c b;close_out c
+let reference p b=`Assoc["path",`String p;"sha256",`String(sha b);"bytes",`Int(String.length b)]
+let query args=let p=Filename.temp_file "ev98-codec-jj-" ".txt"in let fd=Unix.openfile p[Unix.O_WRONLY;Unix.O_TRUNC]0o600 in let exe=root^"/toolchains/nix-profile/bin/jj"in let pid=Unix.create_process exe(Array.of_list(exe::["--ignore-working-copy";"--no-pager";"--color";"never";"-R";ws]@args))Unix.stdin fd Unix.stderr in Unix.close fd;let _,s=Unix.waitpid[]pid in if s<>Unix.WEXITED 0 then failwith "JJ";read p
+let selector="commit_id(\""^rev^"\")"
+let ()=if query["log";"-r";selector;"--no-graph";"-T";"self.commit_id()"]<>rev then failwith "revision"
+let source_names=List.map(fun n->"src/cepaf_gleam/crdt/"^n^".gleam")["mesh_sync";"mesh_wire";"delta_state";"health_bridge";"delta_mesh_engine"]@["src/cepaf_gleam/ha/deadman_freshness.gleam"]@List.map(fun n->"test/"^n^".gleam")["mesh_sync_codec_test";"crdt_mesh_sync_test";"crdt_delta_state_test";"crdt_health_bridge_test";"delta_mesh_engine_test";"deadman_freshness_test";"ev98_codec_runner"]
+let source_records=List.map(fun relative->let p="apps/cepaf_gleam/"^relative in if query["file";"list";"-r";selector;"-T";"file_type ++ \" \" ++ path ++ \"\\n\"";"--";"root:"^p]<>"file "^p^"\n"then failwith "source type";let b=query["file";"show";"-r";selector;"--";"root:"^p]in if b<>read(ws^"/"^p)then failwith "working source changed";let target=if String.starts_with ~prefix:"test/" relative then "src/"^Filename.basename relative else relative in write(stage^"/"^target)b;reference p b)source_names
+let deps=ref[]
+let rec copy src dst=match(Unix.lstat src).st_kind with Unix.S_DIR->mkdir dst;Array.iter(fun n->copy(src^"/"^n)(dst^"/"^n))(Sys.readdir src)|Unix.S_REG->let b=read src in write dst b;deps:=reference dst b :: !deps|_->failwith "dependency type"
+let ()=List.iter(fun n->copy(root^"/apps/cepaf_gleam/build/dev/erlang/"^n)(stage^"/lib/"^n))["gleam_stdlib";"gleam_json";"gleeunit"];write(stage^"/gleam.toml")(read "/tmp/ev98-codec-green4/gleam.toml")
+let ()=Yojson.Basic.to_file(stage^"/source-binding.json")(`Assoc["revision",`String rev;"sources",`List source_records;"dependencies",`List !deps;"manifest",reference(stage^"/gleam.toml")(read(stage^"/gleam.toml"))]);Printf.printf "%s %d sources %d dependency files\n"stage(List.length source_records)(List.length !deps)

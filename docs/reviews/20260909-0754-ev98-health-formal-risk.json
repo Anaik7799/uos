@@ -1,0 +1,75 @@
+[
+  {
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "assessment_id": "ev98-health-formal-20260909-0754",
+    "plan_id": "uos/ev98-health-formal/20260909",
+    "task_id": "FORMAL",
+    "actor": "codex-ev98-health-formal",
+    "fractal_layer": 2,
+    "phase": "implementation",
+    "scope": "Create an isolated OCaml/Smtml bounded model and independent implementation-relation harness for the candidate-bound EV98 health-register ordering. The model is restricted to well-formed equal-key/equal-payload registers and unique-node extensional maps. It excludes source health-bridge behavior changes, unbounded solver execution, network, multi-host runtime, task completion, and EV admission.",
+    "task_state": "executing",
+    "dependencies": [],
+    "readiness": "ready",
+    "blockers": [],
+    "class": "P1",
+    "observed_at": "2026-09-09T06:03:50Z",
+    "ready_since": "2026-09-09T06:03:50Z",
+    "valid_until": "2026-09-09T07:03:50Z",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "c6c4bc3b6a3bda9c43ae6864335f91617a43ca35; descendant of immutable base 164aaff78c0e168e8936ea385581c5f78e0e889b",
+      "evidence": [
+        {"path": ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam", "sha256": "8c11774981bcd6806b3154a8c7ec0edab378750258a9259882323fe0e8dbad76", "observed_at": "2026-09-09T05:53:00Z"},
+        {"path": ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam", "sha256": "76a035fc3441331a25eceb4ad7c29c52e8ad8e8079a3788887ad32c33933f8f1", "observed_at": "2026-09-09T05:53:00Z"},
+        {"path": ".uos-workspaces/ev98-health-formal-20260909/engines/hermes/modules/hermes_harness/test_smtml_lattice.ml", "sha256": "036b53407d939c33ff0cc07d91bb8b65bc795f215a93f67b2cf7966124de040b", "observed_at": "2026-09-09T05:53:00Z"},
+        {"path": ".uos-workspaces/ev98-health-formal-20260909/engines/hermes/modules/hermes_harness/dune", "sha256": "95f7e00767f0d8d497a6797bd0458a003af789e0940ec0950ff8d972c253181d", "observed_at": "2026-09-09T05:53:00Z"}
+        ,{"path": ".uos-workspaces/ev98-health-formal-20260909/tools/ev_health_formal/ev98_health_model.ml", "sha256": "d1793af75c4b438b4fafb06a4d167df6db19e5e28894b9c19cf8d3a24165d405", "observed_at": "2026-09-09T06:03:00Z"}
+        ,{"path": ".uos-workspaces/ev98-health-formal-20260909/tools/ev_health_formal/ev98_health_smt.ml", "sha256": "5c881f02379faa18cc8084f23a8988a8a21abf34b948aa11a9ab1e7560d501d5", "observed_at": "2026-09-09T06:03:00Z"}
+        ,{"path": ".uos-workspaces/ev98-health-formal-20260909/tools/ev_health_formal/test_ev98_health_formal.ml", "sha256": "f99212ba5fe8d360718e532b1ce653941271c85c5e3cfe88479e3b87ac805e51", "observed_at": "2026-09-09T06:03:00Z"}
+        ,{"path": ".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/test/ev98_health_projection_runner.gleam", "sha256": "1a320a256005ad7811662b8e1afc2ce7725b3add85764eca3bdd61dcddf0c527", "observed_at": "2026-09-09T06:03:00Z"}
+      ]
+    },
+    "factors": {
+      "criticality": {"rationale": "Incorrect health merge ordering can represent stale telemetry as current cluster state.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam"]},
+      "stpa": {"rationale": "Unsafe controls are selecting logical version before sample time, nondeterministic equal-key collisions, or mistaking list representation order for extensional convergence.", "value": 5, "low": 5, "high": 5, "evidence_refs": [".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/delta_state.gleam"]},
+      "fmea": {"rationale": "FM-HM-ORDER and FM-HM-COLLISION are S5 O2 Det3, RPN30.", "value": 5, "low": 5, "high": 5, "evidence_refs": [".uos-workspaces/ev98-health-formal-20260909/engines/hermes/modules/hermes_harness/test_smtml_lattice.ml"]},
+      "dependency": {"rationale": "Smtml and OCaml are realized local dependencies; the solver runs only in a child test executable with bounded finite domain.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev98-health-formal-20260909/engines/hermes/modules/hermes_harness/dune"]},
+      "impact": {"rationale": "A candidate-bound independent relation can expose ordering regressions without claiming multi-host health authority.", "value": 4, "low": 4, "high": 4, "evidence_refs": [".uos-workspaces/ev98-health-formal-20260909/apps/cepaf_gleam/src/cepaf_gleam/crdt/health_bridge.gleam"]}
+    },
+    "score": 1600,
+    "score_interval": [1600, 1600],
+    "fmea_modes": [
+      {"id": "FM-HM-ORDER", "s": 5, "o": 2, "det": 3, "rpn": 30, "band": 5, "cause": "Comparator precedence differs from sample-time-first intended ordering.", "effect": "A stale sample can dominate a newer health observation.", "controls": "Symbolic and enumerated lexicographic ordering laws with a precedence mutant."},
+      {"id": "FM-HM-COLLISION", "s": 5, "o": 2, "det": 3, "rpn": 30, "band": 5, "cause": "Equal order keys carry unequal payloads or maps contain duplicate node keys.", "effect": "Raw merge becomes order-dependent despite CRDT convergence claims.", "controls": "Explicit malformed collision and raw-list controls; model applies only under well-formed preconditions."}
+    ],
+    "stpa_analysis": {
+      "controller": "Health-register merge model",
+      "control_action": "Select one telemetry register per node",
+      "losses": ["L-STALE-HEALTH", "L-NONCONVERGENT-MERGE"],
+      "hazards": ["H-SAMPLE-ORDER-REVERSED", "H-MALFORMED-COLLISION", "H-RAW-LIST-CLAIM"],
+      "ucas": [
+        {"type": "not_provided", "applicability": "applicable", "context": "No machine-checkable relation binds the intended ordering to the Gleam candidate.", "hazard_ids": ["H-SAMPLE-ORDER-REVERSED"], "constraint": "Enumerate candidate projections and compare against an independently expressed model."},
+        {"type": "provided_unsafe", "applicability": "applicable", "context": "A model proves commutativity without declaring equal-key/payload and unique-node preconditions.", "hazard_ids": ["H-MALFORMED-COLLISION"], "constraint": "Reject malformed collisions and compare maps extensionally."},
+        {"type": "wrong_timing", "applicability": "applicable", "context": "Logical version is allowed to outrank a genuinely later physical sample.", "hazard_ids": ["H-SAMPLE-ORDER-REVERSED"], "constraint": "Sample timestamp is the first ordering component."},
+        {"type": "duration", "applicability": "applicable", "context": "An unbounded solver may prevent reliable evidence production.", "hazard_ids": ["H-RAW-LIST-CLAIM"], "constraint": "Use finite rank domains and an isolated child executable only."}
+      ]
+    },
+    "decision": {
+      "summary": "Model a finite, well-formed lexicographic register algebra and extensional maps with Smtml AST assertions, plus an independent candidate projection relation.",
+      "alternatives": ["Unverified Gospel commentary", "Bounded Smtml model with independent finite enumeration and candidate projection"],
+      "assumptions": ["The candidate source remains byte-equal to the listed hashes during relation execution.", "Health maps are unique-node maps and equal keys denote equal payloads."],
+      "confidence": "analyst_estimate",
+      "counterevidence": ["Raw association-list representation order is not structurally commutative for disjoint maps."],
+      "forecast": "Negated ordering laws are UNSAT, non-vacuity witnesses are SAT, and at least two mutants are caught by SAT counterexamples.",
+      "falsifier": "An enumerated well-formed case disagrees with the model, a law negation is SAT, a witness is not SAT, or a mutant remains UNSAT.",
+      "acceptance": ["Focused executable emits named UNSAT laws, SAT witnesses, and mutant controls", "Independent enumeration agrees with all bounded candidate projections", "Candidate source and compiled projection hashes are recorded", "Native active check passes with claimed task attempt"],
+      "rollback": "Preserve candidates and evidence; do not complete, integrate, deploy, or admit.",
+      "budget": "Existing realized OCaml, Dune, Smtml, and Z3 linkage only; no downloads or authored SMT-LIB." ,
+      "reviewer": "Parent coordinator and independent reviewer.",
+      "residuals": ["Bounded algebra is not an actual multi-host runtime observation or full EV98 authority proof."],
+      "supersedes": "No prior formal slice candidate."
+    }
+  }
+]
