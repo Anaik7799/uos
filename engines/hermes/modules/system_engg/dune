@@ -23,12 +23,17 @@
  (name agent_dispatch_hook)
  (wrapped false)
  (modules agent_dispatch_hook)
- (libraries unix str yojson cryptokit))
+ (libraries unix str yojson cryptokit mtime.clock.os))
 
 (executable
  (name run_agent_dispatch_hook)
  (modules run_agent_dispatch_hook)
  (libraries agent_dispatch_hook unix yojson str cryptokit))
+
+(executable
+ (name test_agent_dispatch_hook)
+ (modules test_agent_dispatch_hook)
+ (libraries agent_dispatch_hook yojson))
 
 
 (executable

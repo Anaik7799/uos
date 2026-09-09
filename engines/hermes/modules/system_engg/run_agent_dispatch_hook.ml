@@ -5,17 +5,10 @@ let () =
   if List.mem "--self-test" args then
     exit (Agent_dispatch_hook.run_self_test ())
   else if List.mem "--intercept-mcp" args then begin
-    (* Read incoming payload from stdin *)
-    let buffer = Buffer.create 1024 in
-    (try
-      while true do
-        let line = input_line stdin in
-        Buffer.add_string buffer line;
-        Buffer.add_char buffer '\n'
-      done
-    with End_of_file -> ());
-    let payload = Buffer.contents buffer in
-    let verdict = Agent_dispatch_hook.validate_tool_payload payload in
+    let verdict = match Agent_dispatch_hook.read_payload Unix.stdin with
+      | Error refusal -> refusal
+      | Ok payload -> Agent_dispatch_hook.validate_tool_payload
+          ~require_authority:(List.mem "--enforce-dmc-tcm" args) payload in
     print_endline (Agent_dispatch_hook.render_verdict verdict);
     match verdict with
     | Agent_dispatch_hook.Pass _ -> exit 0

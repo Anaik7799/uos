@@ -1,11 +1,12 @@
-(* agent_dispatch_hook.ml — DMC & TCM Zero-Trust MCP Dispatch Interceptor
-   Validates pre-invocation tool payloads, checks Gospel/C-ABI invariants,
-   traps embedded NUL bytes (memchr code -2), rejects raw SQL injections,
-   and signs execution receipts into the evidence lattice. *)
+(* Bounded payload filter. Hashing is not signing and this module does not
+   acquire a task/runtime fence or establish DMC/TCM conformance. *)
 
 type validation_verdict =
   | Pass of { digest : string; timestamp : string }
   | FailClosed of { reason : string; error_code : int }
+
+let max_payload_bytes = 1_048_576
+let refuse error_code reason = FailClosed { reason; error_code }
 
 let contains_nul_byte s =
   String.contains s '\x00'
@@ -40,8 +41,11 @@ let get_iso_timestamp () =
     (tm.Unix.tm_year + 1900) (tm.Unix.tm_mon + 1) tm.Unix.tm_mday
     tm.Unix.tm_hour tm.Unix.tm_min tm.Unix.tm_sec
 
-let validate_tool_payload payload =
-  if contains_nul_byte payload then
+let validate_tool_payload ?(require_authority=false) payload =
+  if String.length payload > max_payload_bytes then
+    refuse (-4) "Payload exceeds the 1048576-byte input bound"
+  else if String.trim payload = "" then refuse (-7) "Empty tool payload"
+  else if contains_nul_byte payload then
     FailClosed {
       reason = "TRAFFIC_REJECTED: Embedded NUL byte trapped (memchr code -2)";
       error_code = -2;
@@ -51,24 +55,57 @@ let validate_tool_payload payload =
       reason = "TRAFFIC_REJECTED: Raw unparameterized SQL syntax detected";
       error_code = -3;
     }
+  else if require_authority then
+    refuse (-5) "DMC/TCM enforcement requires an authenticated effect-time fence adapter; this payload filter grants no authority"
   else
     Pass {
       digest = sha256_hex payload;
       timestamp = get_iso_timestamp ();
     }
 
+(* The caller supplies an exclusively owned input descriptor. Reads preserve
+   exact bytes and set it nonblocking; byte/time exhaustion fails closed. *)
+let read_payload ?(seconds=5.) fd =
+  let now () = Mtime.Span.to_float_ns (Mtime_clock.elapsed ()) /. 1e9 in
+  if seconds <= 0. || seconds > 5. || not (Float.is_finite seconds) then
+    Error (refuse (-6) "Invalid input deadline")
+  else
+    let deadline = now () +. seconds in
+    let buffer = Buffer.create 4096 and chunk = Bytes.create 4096 in
+    let rec read () =
+      let remaining = deadline -. now () in
+      if remaining <= 0. then Error (refuse (-6) "Tool input deadline exceeded")
+      else
+        try
+          let ready, _, _ = Unix.select [fd] [] [] remaining in
+          if ready = [] then read ()
+          else match Unix.read fd chunk 0 (Bytes.length chunk) with
+          | 0 -> Ok (Buffer.contents buffer)
+          | count ->
+            if Buffer.length buffer + count > max_payload_bytes then
+              Error (refuse (-4) "Payload exceeds the 1048576-byte input bound")
+            else (Buffer.add_subbytes buffer chunk 0 count; read ())
+        with
+        | Unix.Unix_error ((Unix.EINTR | Unix.EAGAIN | Unix.EWOULDBLOCK), _, _) -> read ()
+    in
+    try Unix.set_nonblock fd; read ()
+    with Unix.Unix_error _ -> Error (refuse (-8) "Tool input read failed")
+
 let render_verdict = function
   | Pass { digest; timestamp } ->
       `Assoc [
         ("verdict", `String "PASS");
-        ("dmc_coherence", `String "VERIFIED");
-        ("tcm_temporal_fence", `String "FENCE_ACQUIRED");
+        ("scope", `String "PAYLOAD_FILTER_ONLY");
+        ("authority", `String "NONE");
+        ("dmc_coherence", `String "UNVERIFIED");
+        ("tcm_temporal_fence", `String "NOT_ACQUIRED");
         ("payload_sha256", `String digest);
         ("receipt_timestamp", `String timestamp);
       ] |> Yojson.Safe.to_string
   | FailClosed { reason; error_code } ->
       `Assoc [
         ("verdict", `String "FAIL_CLOSED");
+        ("authority", `String "NONE");
         ("reason", `String reason);
         ("error_code", `Int error_code);
         ("halt_effect", `Bool true);
@@ -88,7 +125,7 @@ let run_self_test () =
   let pass3 = match v3 with Pass _ -> true | _ -> false in
 
   if pass1 && pass2 && pass3 then begin
-    print_endline "[SELF-TEST PASSED] DMC & TCM Zero-Trust Dispatch Interceptor operational.";
+    print_endline "[SELF-TEST PASSED] Three payload-filter examples; authority NONE, DMC/TCM enforcement unverified.";
     print_endline "  - Embedded NUL byte trapping: PASSED (code -2)";
     print_endline "  - Raw SQL injection defense: PASSED (code -3)";
     print_endline "  - Valid payload verification & SHA-256 digestion: PASSED";
