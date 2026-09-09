@@ -1,0 +1,13 @@
+(library
+ (name ev_receipts)
+ (wrapped false)
+ (modules receipt_validator)
+ (libraries unix yojson cryptokit mtime.clock.os))
+(executable
+ (name ev_receipt)
+ (modules ev_receipt)
+ (libraries ev_receipts))
+(executable
+ (name receipt_test)
+ (modules receipt_test)
+ (libraries ev_receipts))
