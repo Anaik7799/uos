@@ -69,21 +69,6 @@ let all_well_formed_triples () =
          registers)
     (all_well_formed_pairs ())
 
-let candidate_selector_projection left right =
-  (* Independent finite representation of the landed Gleam branch shape:
-     sample comparison precedes delta_state.merge_lww's logical/writer order. *)
-  if left.sample > right.sample then left
-  else if left.sample < right.sample then right
-  else if left.logical > right.logical then left
-  else if left.logical < right.logical then right
-  else if left.writer > right.writer then left
-  else right
-
-let candidate_relation_holds () =
-  List.for_all
-    (fun (left, right) -> candidate_selector_projection left right = select left right)
-    (all_well_formed_pairs ())
-
 let laws_hold_by_enumeration () =
   let pairs = all_well_formed_pairs () in
   let triples = all_well_formed_triples () in

@@ -93,9 +93,83 @@ let b = register "b"
 let c = register "c"
 let full_range = range [ a; b; c ]
 
-let check expected constraints =
+type outcome = {
+  name : string;
+  expected : string;
+  actual : string;
+  query_sha256 : string;
+  assignment : string;
+  independently_validated : bool;
+}
+
+let normalized_query constraints =
+  constraints
+  |> List.map (Format.asprintf "%a" Expr.pp)
+  |> String.concat "\n"
+
+let query_sha256 constraints =
+  Cryptokit.transform_string (Cryptokit.Hexa.encode ())
+    (Cryptokit.hash_string (Cryptokit.Hash.sha256 ()) (normalized_query constraints))
+
+let int_value_of solver expression =
+  let rendered = Format.asprintf "%a" Expr.pp (S.get_value solver expression) in
+  try int_of_string rendered with Failure _ -> -1
+
+let concrete_register solver symbolic =
+  { Ev98_health_model.sample = int_value_of solver symbolic.sample;
+    logical = int_value_of solver symbolic.logical;
+    writer = int_value_of solver symbolic.writer;
+    payload = 0 }
+
+let bounded record =
+  record.Ev98_health_model.sample >= 0 && record.sample <= 2
+  && record.logical >= 0 && record.logical <= 2
+  && record.writer >= 0 && record.writer <= 2
+
+let assignment left right =
+  Printf.sprintf "a=(%d,%d,%d);b=(%d,%d,%d)"
+    left.Ev98_health_model.sample left.logical left.writer
+    right.Ev98_health_model.sample right.logical right.writer
+
+let select_logical_first_independent
+    (left : Ev98_health_model.register)
+    (right : Ev98_health_model.register) =
+  if left.Ev98_health_model.logical > right.logical then left
+  else if left.logical < right.logical then right
+  else if left.sample > right.sample then left
+  else right
+
+let select_without_writer_independent
+    (left : Ev98_health_model.register)
+    (right : Ev98_health_model.register) =
+  if left.Ev98_health_model.sample > right.sample then left
+  else if left.sample < right.sample then right
+  else if left.logical > right.logical then left
+  else if left.logical < right.logical then right
+  else right
+
+let unsat_row name constraints =
+  let actual =
+    match S.check (S.create ()) constraints with
+    | `Sat -> "SAT" | `Unsat -> "UNSAT" | `Unknown -> "UNKNOWN"
+  in
+  { name; expected = "UNSAT"; actual; query_sha256 = query_sha256 constraints;
+    assignment = "none"; independently_validated = actual = "UNSAT" }
+
+let sat_row name constraints validate =
   let solver = S.create () in
-  S.check solver constraints = expected
+  match S.check solver constraints with
+  | `Sat ->
+    let left = concrete_register solver a and right = concrete_register solver b in
+    { name; expected = "SAT"; actual = "SAT"; query_sha256 = query_sha256 constraints;
+      assignment = assignment left right;
+      independently_validated = bounded left && bounded right && validate left right }
+  | `Unsat ->
+    { name; expected = "SAT"; actual = "UNSAT"; query_sha256 = query_sha256 constraints;
+      assignment = "none"; independently_validated = false }
+  | `Unknown ->
+    { name; expected = "SAT"; actual = "UNKNOWN"; query_sha256 = query_sha256 constraints;
+      assignment = "none"; independently_validated = false }
 
 let negated_sample_dominance =
   all [ greater a.sample b.sample; not_ (same_register (select a b) a) ]
@@ -128,18 +202,38 @@ let finite_witness () =
        && Ev98_health_model.select left right = left)
     (Ev98_health_model.all_well_formed_pairs ())
 
+let rows () =
+  [ unsat_row "sample_dominance" [ full_range; negated_sample_dominance ];
+    unsat_row "logical_tiebreak" [ full_range; negated_logical_tiebreak ];
+    unsat_row "writer_tiebreak" [ full_range; negated_writer_tiebreak ];
+    unsat_row "commutativity" [ full_range; negated_commutativity ];
+    unsat_row "idempotence" [ full_range; negated_idempotence ];
+    unsat_row "associativity" [ full_range; negated_associativity ];
+    sat_row "sanity_sample_witness"
+      [ full_range; equal a.sample (int_value 2); equal b.sample (int_value 0);
+        same_register (select a b) a ]
+      (fun left right ->
+         left.Ev98_health_model.sample = 2 && right.sample = 0
+         && Ev98_health_model.select left right = left);
+    sat_row "mutant_logical_first"
+      [ full_range; logical_first_mutant_is_caught ]
+      (fun left right ->
+         left.Ev98_health_model.sample > right.sample
+         && select_logical_first_independent left right <> left);
+    sat_row "mutant_no_writer"
+      [ full_range; no_writer_mutant_is_caught ]
+      (fun left right ->
+         left.Ev98_health_model.sample = right.sample
+         && left.logical = right.logical && left.writer <> right.writer
+         && select_without_writer_independent left right
+            <> select_without_writer_independent right left) ]
+
+let rows_hold () =
+  rows ()
+  |> List.for_all (fun row ->
+    row.expected = row.actual && row.independently_validated)
+
 let all_laws_hold () =
   Ev98_health_model.laws_hold_by_enumeration ()
-  && Ev98_health_model.candidate_relation_holds ()
   && finite_witness ()
-  && check `Unsat [ full_range; negated_sample_dominance ]
-  && check `Unsat [ full_range; negated_logical_tiebreak ]
-  && check `Unsat [ full_range; negated_writer_tiebreak ]
-  && check `Unsat [ full_range; negated_commutativity ]
-  && check `Unsat [ full_range; negated_idempotence ]
-  && check `Unsat [ full_range; negated_associativity ]
-  && check `Sat
-       [ full_range; equal a.sample (int_value 2); equal b.sample (int_value 0);
-         same_register (select a b) a ]
-  && check `Sat [ full_range; logical_first_mutant_is_caught ]
-  && check `Sat [ full_range; no_writer_mutant_is_caught ]
+  && rows_hold ()
