@@ -1,0 +1,46 @@
+{
+  "schema": "uos.review-completion.v1",
+  "plan": "uos/ev01-bootstrap-review/20260909",
+  "task": "REVIEW",
+  "worker": "codex-ev01-bootstrap-review",
+  "attempt": 1,
+  "state": "completed",
+  "source": "3c13ba3b3e210e98c289147a2041aadcdcc72ebd",
+  "review_evidence": "6fcefece575f1eb56bad2af2f3e44721927a2805",
+  "verdict_sha256": "4a8947c03e46765ba0a8ea8472a14c1b329355b30a18617e1371b2a2b7470798",
+  "whole_ev1": "NOT_APPROVED",
+  "authority": "NONE",
+  "verification_helper_failure": "Initial finalizer used 16MiB full-file bound for executable hashing and refused before writing evidence. Repaired helper streams executable hashes; JSON/document reads remain bounded. Both receipts retained.",
+  "records": [
+    {
+      "original": "/tmp/ev01-bootstrap-review-completed.json",
+      "durable": "docs/reviews/20260909-1851-ev01-bootstrap-review-completed.json",
+      "sha256": "39a0ad74606cd4c0820e3eb73e1742c06643d72838c88ce2e11676ffa30f8683"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-review-final-active.json",
+      "durable": "docs/reviews/20260909-1851-ev01-bootstrap-review-active.json",
+      "sha256": "9a39f20f2569fbec2289746f64f8a9774bc84a6a716477bcd802ce248c23e229"
+    },
+    {
+      "original": "/tmp/ev01_review_finalize.ml",
+      "durable": "docs/reviews/20260909-1851-ev01-bootstrap-review-finalizer.ml.txt",
+      "sha256": "e093e3bdeef549ffb1a898f8fafecbbe802016fdb1a1f0b42358aefc0c7ae7ea"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-independent-finalize-native.json",
+      "durable": "docs/reviews/20260909-1851-ev01-bootstrap-review-finalizer-read-bound-failure.json",
+      "sha256": "3f28ac5df2c878c806865687fec6e0ba25e4c17ffad4c36daaa0187b06576236"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-independent-finalize-native-2.json",
+      "durable": "docs/reviews/20260909-1851-ev01-bootstrap-review-finalizer-green.json",
+      "sha256": "7f791965214d9331bbab0d2a951a12113be5ba78e6e77aa4cdfc5bac6561a02a"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-review-head.json",
+      "durable": "docs/reviews/20260909-1851-ev01-bootstrap-review-evidence-head.json",
+      "sha256": "d8e26a95711a24366cf900ff87efc6793ed0d6d3164e391b9079df79244952e9"
+    }
+  ]
+}

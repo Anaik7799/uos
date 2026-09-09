@@ -1,0 +1,80 @@
+{
+  "schema": "uos.ev01.independent-finding.v1",
+  "source_candidate": "0a8c03c55f91cdf4279ff14503651227c9bb6010",
+  "severity": "P1",
+  "state": "HOLD_REPRODUCED_OBSERVER_READ_SIDE_MUTATION",
+  "finding": "Bootstrap_observer.command never changes child cwd to selected root. JJ startup loads cwd repository configuration before -R selects the observed fixture, bypassing selected-root secure-config preflight.",
+  "observation": "Actual observer returned PASS selecting a private fixture from canonical cwd with private XDG. Private config initialized metadata pointing to canonical .jj/repo. Canonical config-id and created metadata share mtime/ctime within child interval.",
+  "attribution": "Independent reviewer fixture invocation induced this observed behavior; not an unknown external writer. No canonical repair or cleanup performed.",
+  "limits": "No canonical before-inode snapshot, so exact before/after byte change is not asserted. Normal G-BOOT1 routes through root cwd and may avoid this mismatch, but the public observer's read-only contract does not restrict selected root to cwd.",
+  "next": "Parent obtaining required AGY advice before substantive fix/acceptance. Safe regression must use two private repositories for differing startup cwd and selected root. All further observer/JJ execution paused.",
+  "whole_ev1": "NOT_APPROVED; missing original lineage and full sovereign evidence remain separate blockers",
+  "authority": "NONE",
+  "records": [
+    {
+      "original": "/tmp/ev01-bootstrap-independent-cwd-incident.json",
+      "durable": "docs/reviews/20260909-1802-ev01-bootstrap-cwd-incident.json",
+      "sha256": "c1769be1f6ae5795d846eabb797a3f9adbcf0ac144a17112f1f97c50945164bb"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-independent-cwd-incident-native.json",
+      "durable": "docs/reviews/20260909-1802-ev01-bootstrap-cwd-incident-native.json",
+      "sha256": "60ed4bae255dc1936c1d6fcb57740b61675ca487cd2c2194872028d58e0d6eb0"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-independent-extra.json",
+      "durable": "docs/reviews/20260909-1802-ev01-bootstrap-cwd-failed-probe.json",
+      "sha256": "463e45d5f7fb3611068c785518b5041e1e0a54980842d85e2e9a61cb75650ca2"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-independent-extra-1800/baseline-independent.json",
+      "durable": "docs/reviews/20260909-1802-ev01-bootstrap-cwd-unexpected-pass.json",
+      "sha256": "c2a2ca25c353033c58c6a0e412d16729a8fe719564d4df86aacf9eeff798c505"
+    },
+    {
+      "original": "/tmp/ev01_bootstrap_independent_probe.ml",
+      "durable": "docs/reviews/20260909-1802-ev01-bootstrap-cwd-probe.ml.txt",
+      "sha256": "2f691566bb8a3a2b8c09d6e6ccc9ac9eac6887302b04fdb61482bfef32d41551"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-independent-extra-1800/observe.ml",
+      "durable": "docs/reviews/20260909-1802-ev01-bootstrap-cwd-child.ml.txt",
+      "sha256": "26dbaf3416ab51b2d2000cfe51f09afe5341688a26d4d12f27d87eab2e5182ab"
+    },
+    {
+      "original": "/tmp/ev01_bootstrap_independent_stage.ml",
+      "durable": "docs/reviews/20260909-1802-ev01-bootstrap-cwd-stage.ml.txt",
+      "sha256": "9235a5e60933ed6c002260d3074cbcdeafc278fe8f0543d459f12e6cffb37b1d"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-independent-stage.json",
+      "durable": "docs/reviews/20260909-1802-ev01-bootstrap-cwd-stage.json",
+      "sha256": "ab328c265e83a43e274f09d9aa85db8cfb6237c57c615ba715864387e479ccb0"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-independent-1756/bindings.json",
+      "durable": "docs/reviews/20260909-1802-ev01-bootstrap-cwd-source-bindings.json",
+      "sha256": "5df9b25d8fce575c334efd84d9da65362f6ac18f8a278aef7b4b3b4baa9f0e34"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-independent-1756/source-read-preflight.json",
+      "durable": "docs/reviews/20260909-1802-ev01-bootstrap-cwd-source-read-preflight.json",
+      "sha256": "1828772c7be30aaaeb950b420d753c5bafbee2a5fc6ee0141b92e0a1fe57c49f"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-independent-campaign.json",
+      "durable": "docs/reviews/20260909-1802-ev01-bootstrap-cwd-campaign-native.json",
+      "sha256": "b1283a83fdb07557c4ada26e39b7afcb673dae46e9ac8b3fa68b74bea1f61c19"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-318cee/verification.json",
+      "durable": "docs/reviews/20260909-1802-ev01-bootstrap-cwd-campaign.json",
+      "sha256": "c947adaf682d019172b11ca7681d68f6df4338acddf12d1ae9afaf6d02b3eb86"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-review-active.json",
+      "durable": "docs/reviews/20260909-1802-ev01-bootstrap-cwd-review-active.json",
+      "sha256": "eea11bacafae96b1de4e7200099b8dbc99c6fa37aa5cbafbf799ab005453c2c7"
+    }
+  ]
+}

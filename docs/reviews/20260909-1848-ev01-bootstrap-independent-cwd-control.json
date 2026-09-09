@@ -1,0 +1,2585 @@
+{
+  "schema": "uos.ev01.two-private-cwd-regression.v1",
+  "source_revision": "3c13ba3b3e210e98c289147a2041aadcdcc72ebd",
+  "mode": "green",
+  "status": "PRESERVATION_PASS",
+  "sources": [
+    {
+      "path": "tools/bootstrap/bootstrap_model.ml",
+      "sha256": "e1c516755a943d4ae476049616dfc5f0fa545f2a9f8d13fbd74066f0fe188dbd"
+    },
+    {
+      "path": "tools/bootstrap/bootstrap_observer.ml",
+      "sha256": "591b02bdbc560822ea3bb4ff54e057470f6ae092064af11456778fa4a2323eb1"
+    }
+  ],
+  "runner_sha256": "8feeeb44edd653095a0dcac7a753e1106fb9d2dcc0cdc6cd9da6e775d717e22b",
+  "driver_sha256": "134a7c9a496cd34ecda7478eb98b827ba137f265e38ce204a86c63068f792dbe",
+  "observations": [
+    {
+      "path": "/tmp/ev01-cwd-regression-70fce2/01-source.json",
+      "sha256": "e818b23d2ea14935e46a55cc58d11f64ed369e2a1ed85da501f149e2e8925850"
+    },
+    {
+      "path": "/tmp/ev01-cwd-regression-70fce2/02-source.json",
+      "sha256": "afa191775f89c4e8ee0d74fae34d0d3ac8b9ed952cec80150c1d97e612724e62"
+    },
+    {
+      "path": "/tmp/ev01-cwd-regression-70fce2/03-source.json",
+      "sha256": "48683bbe176d3d0e509137bf533006a358b42983d6fddb779f9e12f3c5e13f9a"
+    },
+    {
+      "path": "/tmp/ev01-cwd-regression-70fce2/04-init-private.json",
+      "sha256": "5aab4cb1d488c0407c031db4ed470fc91709b76956b38e59140521b64d101683"
+    },
+    {
+      "path": "/tmp/ev01-cwd-regression-70fce2/05-init-private.json",
+      "sha256": "3ad0d43b4ff3b9f48d6b2ece56698402ba8f5bad14719077e69e958718b91789"
+    },
+    {
+      "path": "/tmp/ev01-cwd-regression-70fce2/06-two-private-cwd.json",
+      "sha256": "f7a97f1e6edbdc6306b19bf0c320b66d030d67c98ca4ae3e20d381ef57149324"
+    }
+  ],
+  "control": {
+    "mode": "green",
+    "observer_passed": true,
+    "parent_cwd_preserved": true,
+    "expected_control": true,
+    "missing_child_cwd_refused": true,
+    "selected_before": [
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected",
+        "inode": 478147,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.8075392,
+        "ctime": 1788979618.8075392,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj",
+        "inode": 478148,
+        "mode": 509,
+        "size": 80,
+        "mtime": 1788979618.80965,
+        "ctime": 1788979618.80965,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo",
+        "inode": 478149,
+        "mode": 509,
+        "size": 160,
+        "mtime": 1788979618.8094532,
+        "ctime": 1788979618.8094532,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/index",
+        "inode": 478190,
+        "mode": 509,
+        "size": 120,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/index/changed_paths",
+        "inode": 478193,
+        "mode": 509,
+        "size": 40,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/index/op_links",
+        "inode": 478191,
+        "mode": 509,
+        "size": 80,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/index/op_links/00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "inode": 478198,
+        "mode": 384,
+        "size": 66,
+        "mtime": 1788979618.8094532,
+        "ctime": 1788979618.8094532,
+        "bytes_sha256": "cbd2f459d90e73aca76dd891ab9de0154dfaf7a48b36c65b4880c830a193675c"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/index/op_links/66a590d51568dc6e2b0ccb4fe414b5d6e5724303c2d84c814adfc2f1adb14b15c8a380c5df85a991cc8d1e34e25e428168085f1ae023612873fb5b4b068d3de7",
+        "inode": 478218,
+        "mode": 384,
+        "size": 66,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": "7c3bfcde5f0b8b34e79af99a90f80c1b61d2853074f6baca2d7d852f7b3bf257"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/index/segments",
+        "inode": 478192,
+        "mode": 509,
+        "size": 80,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/index/segments/0a6d78eff8f3635b3b34685c8c8895a986d44e44a1300e73979d03d9a598008ff847d6667568f47749f248c91de34d27905fa0bdeba66bff8a16a835716bc23d",
+        "inode": 478217,
+        "mode": 384,
+        "size": 144,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": "7b7f4e5522fb3cdab86a58ff0ddbbb77f0604b6b6c576ba524ad37415de13f97"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/index/segments/d27ad326963b75736b636adad9fb812eb3f2871e0efb4bc7db37d4b701a4282911eaaee91bed3a759e940769b667be1ed66f2d7f2f41ac3906b87ab7eec19c3a",
+        "inode": 478197,
+        "mode": 384,
+        "size": 84,
+        "mtime": 1788979618.8094532,
+        "ctime": 1788979618.8094532,
+        "bytes_sha256": "7dded0d7539a893e0a1314dd270a4c166b9e7d7b034255c27b4c6893f3fdbbc5"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/index/type",
+        "inode": 478194,
+        "mode": 436,
+        "size": 7,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": "37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/op_heads",
+        "inode": 478186,
+        "mode": 509,
+        "size": 80,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/op_heads/heads",
+        "inode": 478187,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.811828,
+        "ctime": 1788979618.811828,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/op_heads/heads/66a590d51568dc6e2b0ccb4fe414b5d6e5724303c2d84c814adfc2f1adb14b15c8a380c5df85a991cc8d1e34e25e428168085f1ae023612873fb5b4b068d3de7",
+        "inode": 478220,
+        "mode": 436,
+        "size": 0,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/op_heads/type",
+        "inode": 478189,
+        "mode": 436,
+        "size": 21,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": "b033b33ef05b48b699b625dd905e19e3ad154d4c9a393f0623e60d6179a233b8"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/op_store",
+        "inode": 478182,
+        "mode": 509,
+        "size": 100,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/op_store/operations",
+        "inode": 478184,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/op_store/operations/66a590d51568dc6e2b0ccb4fe414b5d6e5724303c2d84c814adfc2f1adb14b15c8a380c5df85a991cc8d1e34e25e428168085f1ae023612873fb5b4b068d3de7",
+        "inode": 478216,
+        "mode": 384,
+        "size": 218,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": "c86332468cce0f3847719e81a2786a5b7569956f002551fc9cf439ed223666b9"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/op_store/type",
+        "inode": 478185,
+        "mode": 436,
+        "size": 15,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": "ed58fb26ed304558ff125ef841b4ba29b7b0d94b810f1c5428312114ac4a0c1b"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/op_store/views",
+        "inode": 478183,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/op_store/views/e737bfa01774036be9186f2d8085cf673758c3b97161597556895cce3e1bdae57daf4d8353f2c0a9382fb7a25730b98834f9e44121975154d2e02b3259735e36",
+        "inode": 478215,
+        "mode": 384,
+        "size": 63,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": "9516bb8d11f6f718602a320b23c5c8524a696d9a84d1ba3f2410ff18734c083c"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store",
+        "inode": 478150,
+        "mode": 509,
+        "size": 120,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/extra",
+        "inode": 478178,
+        "mode": 509,
+        "size": 100,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/extra/482ae5a29fbe856c7272f2071b8b0f0359ee2d89ff392b8a900643fbd0836eccd067b8bf41909e206c90d45d6e7d8b6686b93ecaee5fe1a9060d87b672101310",
+        "inode": 478206,
+        "mode": 384,
+        "size": 8,
+        "mtime": 1788979618.80965,
+        "ctime": 1788979618.80965,
+        "bytes_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/extra/629f96a6144f3247beeec376d400b3df4df9a69c8fa614d0582b25b8ffc3b5ac432dcc142e99fc515af18f8e70cdc2914504add10923004a19c85c69d86765f3",
+        "inode": 478213,
+        "mode": 384,
+        "size": 52,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": "8a805caac2597eefae7160b62213699a435464edd0b0297caed200f15598d430"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/extra/heads",
+        "inode": 478180,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/extra/heads/629f96a6144f3247beeec376d400b3df4df9a69c8fa614d0582b25b8ffc3b5ac432dcc142e99fc515af18f8e70cdc2914504add10923004a19c85c69d86765f3",
+        "inode": 478214,
+        "mode": 436,
+        "size": 0,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git",
+        "inode": 478151,
+        "mode": 509,
+        "size": 180,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/HEAD",
+        "inode": 478172,
+        "mode": 436,
+        "size": 21,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/config",
+        "inode": 478174,
+        "mode": 436,
+        "size": 156,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": "a5dcd3fd34a4ce4ca39a98290078bc935b106d597e0f777863ff4bf2e364d671"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/description",
+        "inode": 478173,
+        "mode": 436,
+        "size": 77,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "47aad2f8621afc777c66085c31f5ed14656df9bcfa5a2ae445680f175d0d2d0c"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks",
+        "inode": 478154,
+        "mode": 509,
+        "size": 260,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/applypatch-msg.sample",
+        "inode": 478165,
+        "mode": 436,
+        "size": 1154,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "1ae81b995a5c8c54582e1977084babed1e947a5a5c247ad29563142e432955ab"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/commit-msg.sample",
+        "inode": 478164,
+        "mode": 436,
+        "size": 1274,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "b1451a4c89ee4406ba56f003a7e3d142e24a7452861fddddc23bfc77163c8650"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/docs.url",
+        "inode": 478155,
+        "mode": 436,
+        "size": 34,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "4424200fb80650f5063a3ec0a3864af4aaa3103f1319fe576b64d3bfc74f8a67"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/fsmonitor-watchman.sample",
+        "inode": 478163,
+        "mode": 436,
+        "size": 779,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "99ed87d785ada3687b4d86b8d9aa562f3430ce7061834e5381166b6a35a0d495"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/post-update.sample",
+        "inode": 478162,
+        "mode": 436,
+        "size": 570,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "e6d88132de729f20c45f66c2df51cc2e223a4b8b1512a2ce1cfdd0033ee53e53"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/pre-applypatch.sample",
+        "inode": 478161,
+        "mode": 436,
+        "size": 1355,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "4c9754cac1c73109e4113ffd76070ae528a42667a85135e87fb826d572d13a4c"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/pre-commit.sample",
+        "inode": 478159,
+        "mode": 436,
+        "size": 799,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "1dd0fb2a11956784eb184e72af2fd87feca9050903400f163b90d4db7f19ce78"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/pre-merge-commit.sample",
+        "inode": 478160,
+        "mode": 436,
+        "size": 716,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "fca192309544e8e23638bd0987be7a5d00e271599b55382c1c6a4812070da223"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/pre-push.sample",
+        "inode": 478158,
+        "mode": 436,
+        "size": 2002,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "57a2bf01f65b4c57180e96cd31ff737bd2c25a15ad483cab012a88994120dfab"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/pre-rebase.sample",
+        "inode": 478157,
+        "mode": 436,
+        "size": 1604,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "d7c629ddbaa5f984d21c97a14889599d2019230220d3459aa103648316500968"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/prepare-commit-msg.sample",
+        "inode": 478156,
+        "mode": 436,
+        "size": 1918,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "f804b4efd22ef832b49506a815a6a6b1103b8f77b6d6556fc3756232727396d8"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/info",
+        "inode": 478152,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/info/exclude",
+        "inode": 478153,
+        "mode": 436,
+        "size": 269,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "03f34bb198c0d7e18f31e8c4e39470ec222f62a01f2bf4ad24d0438a5c43a32d"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/objects",
+        "inode": 478166,
+        "mode": 509,
+        "size": 120,
+        "mtime": 1788979618.8103876,
+        "ctime": 1788979618.8103876,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/objects/4b",
+        "inode": 478204,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.80965,
+        "ctime": 1788979618.80965,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/objects/4b/825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "inode": 478203,
+        "mode": 292,
+        "size": 15,
+        "mtime": 1788979618.80965,
+        "ctime": 1788979618.80965,
+        "bytes_sha256": "e72602cad67ed061ec84b13e92568f873172efac19a512a1b561dbf54e2c8426"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/objects/fa",
+        "inode": 478209,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.8103876,
+        "ctime": 1788979618.8103876,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/objects/fa/b7c594ee7730a4b72aee678b3e164ef672f1ec",
+        "inode": 478208,
+        "mode": 292,
+        "size": 177,
+        "mtime": 1788979618.8103876,
+        "ctime": 1788979618.8103876,
+        "bytes_sha256": "a6aaa0732564c5053243bc23a7f56e53b36889f800748f350823a28c819d2228"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/objects/info",
+        "inode": 478167,
+        "mode": 509,
+        "size": 40,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/objects/pack",
+        "inode": 478168,
+        "mode": 509,
+        "size": 40,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/refs",
+        "inode": 478169,
+        "mode": 509,
+        "size": 100,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/refs/heads",
+        "inode": 478170,
+        "mode": 509,
+        "size": 40,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/refs/jj",
+        "inode": 478210,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/refs/jj/keep",
+        "inode": 478211,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/refs/jj/keep/fab7c594ee7730a4b72aee678b3e164ef672f1ec",
+        "inode": 478212,
+        "mode": 436,
+        "size": 41,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": "84caf3abd96614ddbadb2f5d724dd90cc1d8ae2588f483317f2db5c6fe817845"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/refs/tags",
+        "inode": 478171,
+        "mode": 509,
+        "size": 40,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git_target",
+        "inode": 478179,
+        "mode": 436,
+        "size": 3,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": "9a881b9b9f23849475296a8cd768ea1965bc3152df7118e60c145975af6aa58a"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/type",
+        "inode": 478181,
+        "mode": 436,
+        "size": 3,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": "9a881b9b9f23849475296a8cd768ea1965bc3152df7118e60c145975af6aa58a"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/submodule_store",
+        "inode": 478195,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/submodule_store/type",
+        "inode": 478196,
+        "mode": 436,
+        "size": 7,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": "37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/workspace_store",
+        "inode": 478199,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.8119645,
+        "ctime": 1788979618.8119645,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/workspace_store/index",
+        "inode": 478226,
+        "mode": 384,
+        "size": 18,
+        "mtime": 1788979618.8118942,
+        "ctime": 1788979618.8118942,
+        "bytes_sha256": "f44a8c8831608946f2daada373528f3f7f5a0d7e983afe3d530db1ff2da0b987"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/working_copy",
+        "inode": 478202,
+        "mode": 509,
+        "size": 100,
+        "mtime": 1788979618.8118942,
+        "ctime": 1788979618.8118942,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/working_copy/checkout",
+        "inode": 478221,
+        "mode": 384,
+        "size": 75,
+        "mtime": 1788979618.811828,
+        "ctime": 1788979618.811828,
+        "bytes_sha256": "f03b2eab1ea02dc09ed48614e75a20bc9b9537e33c6c745b1be8632ab5ace3b4"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/working_copy/tree_state",
+        "inode": 478223,
+        "mode": 384,
+        "size": 28,
+        "mtime": 1788979618.8118942,
+        "ctime": 1788979618.8118942,
+        "bytes_sha256": "2c8969a952d9c0962d28af18ec70f44aa9d4bf5aaf19184290bde307e43223b1"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/working_copy/type",
+        "inode": 478224,
+        "mode": 436,
+        "size": 5,
+        "mtime": 1788979618.8118942,
+        "ctime": 1788979618.8118942,
+        "bytes_sha256": "25bf8e1a2393f1108d37029b3df5593236c755742ec93465bbafa9b290bddcf6"
+      }
+    ],
+    "selected_after": [
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected",
+        "inode": 478147,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.8075392,
+        "ctime": 1788979618.8075392,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj",
+        "inode": 478148,
+        "mode": 509,
+        "size": 80,
+        "mtime": 1788979618.80965,
+        "ctime": 1788979618.80965,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo",
+        "inode": 478149,
+        "mode": 509,
+        "size": 160,
+        "mtime": 1788979618.8094532,
+        "ctime": 1788979618.8094532,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/index",
+        "inode": 478190,
+        "mode": 509,
+        "size": 120,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/index/changed_paths",
+        "inode": 478193,
+        "mode": 509,
+        "size": 40,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/index/op_links",
+        "inode": 478191,
+        "mode": 509,
+        "size": 80,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/index/op_links/00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "inode": 478198,
+        "mode": 384,
+        "size": 66,
+        "mtime": 1788979618.8094532,
+        "ctime": 1788979618.8094532,
+        "bytes_sha256": "cbd2f459d90e73aca76dd891ab9de0154dfaf7a48b36c65b4880c830a193675c"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/index/op_links/66a590d51568dc6e2b0ccb4fe414b5d6e5724303c2d84c814adfc2f1adb14b15c8a380c5df85a991cc8d1e34e25e428168085f1ae023612873fb5b4b068d3de7",
+        "inode": 478218,
+        "mode": 384,
+        "size": 66,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": "7c3bfcde5f0b8b34e79af99a90f80c1b61d2853074f6baca2d7d852f7b3bf257"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/index/segments",
+        "inode": 478192,
+        "mode": 509,
+        "size": 80,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/index/segments/0a6d78eff8f3635b3b34685c8c8895a986d44e44a1300e73979d03d9a598008ff847d6667568f47749f248c91de34d27905fa0bdeba66bff8a16a835716bc23d",
+        "inode": 478217,
+        "mode": 384,
+        "size": 144,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": "7b7f4e5522fb3cdab86a58ff0ddbbb77f0604b6b6c576ba524ad37415de13f97"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/index/segments/d27ad326963b75736b636adad9fb812eb3f2871e0efb4bc7db37d4b701a4282911eaaee91bed3a759e940769b667be1ed66f2d7f2f41ac3906b87ab7eec19c3a",
+        "inode": 478197,
+        "mode": 384,
+        "size": 84,
+        "mtime": 1788979618.8094532,
+        "ctime": 1788979618.8094532,
+        "bytes_sha256": "7dded0d7539a893e0a1314dd270a4c166b9e7d7b034255c27b4c6893f3fdbbc5"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/index/type",
+        "inode": 478194,
+        "mode": 436,
+        "size": 7,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": "37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/op_heads",
+        "inode": 478186,
+        "mode": 509,
+        "size": 80,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/op_heads/heads",
+        "inode": 478187,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.811828,
+        "ctime": 1788979618.811828,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/op_heads/heads/66a590d51568dc6e2b0ccb4fe414b5d6e5724303c2d84c814adfc2f1adb14b15c8a380c5df85a991cc8d1e34e25e428168085f1ae023612873fb5b4b068d3de7",
+        "inode": 478220,
+        "mode": 436,
+        "size": 0,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/op_heads/type",
+        "inode": 478189,
+        "mode": 436,
+        "size": 21,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": "b033b33ef05b48b699b625dd905e19e3ad154d4c9a393f0623e60d6179a233b8"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/op_store",
+        "inode": 478182,
+        "mode": 509,
+        "size": 100,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/op_store/operations",
+        "inode": 478184,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/op_store/operations/66a590d51568dc6e2b0ccb4fe414b5d6e5724303c2d84c814adfc2f1adb14b15c8a380c5df85a991cc8d1e34e25e428168085f1ae023612873fb5b4b068d3de7",
+        "inode": 478216,
+        "mode": 384,
+        "size": 218,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": "c86332468cce0f3847719e81a2786a5b7569956f002551fc9cf439ed223666b9"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/op_store/type",
+        "inode": 478185,
+        "mode": 436,
+        "size": 15,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": "ed58fb26ed304558ff125ef841b4ba29b7b0d94b810f1c5428312114ac4a0c1b"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/op_store/views",
+        "inode": 478183,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/op_store/views/e737bfa01774036be9186f2d8085cf673758c3b97161597556895cce3e1bdae57daf4d8353f2c0a9382fb7a25730b98834f9e44121975154d2e02b3259735e36",
+        "inode": 478215,
+        "mode": 384,
+        "size": 63,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": "9516bb8d11f6f718602a320b23c5c8524a696d9a84d1ba3f2410ff18734c083c"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store",
+        "inode": 478150,
+        "mode": 509,
+        "size": 120,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/extra",
+        "inode": 478178,
+        "mode": 509,
+        "size": 100,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/extra/482ae5a29fbe856c7272f2071b8b0f0359ee2d89ff392b8a900643fbd0836eccd067b8bf41909e206c90d45d6e7d8b6686b93ecaee5fe1a9060d87b672101310",
+        "inode": 478206,
+        "mode": 384,
+        "size": 8,
+        "mtime": 1788979618.80965,
+        "ctime": 1788979618.80965,
+        "bytes_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/extra/629f96a6144f3247beeec376d400b3df4df9a69c8fa614d0582b25b8ffc3b5ac432dcc142e99fc515af18f8e70cdc2914504add10923004a19c85c69d86765f3",
+        "inode": 478213,
+        "mode": 384,
+        "size": 52,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": "8a805caac2597eefae7160b62213699a435464edd0b0297caed200f15598d430"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/extra/heads",
+        "inode": 478180,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/extra/heads/629f96a6144f3247beeec376d400b3df4df9a69c8fa614d0582b25b8ffc3b5ac432dcc142e99fc515af18f8e70cdc2914504add10923004a19c85c69d86765f3",
+        "inode": 478214,
+        "mode": 436,
+        "size": 0,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git",
+        "inode": 478151,
+        "mode": 509,
+        "size": 180,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/HEAD",
+        "inode": 478172,
+        "mode": 436,
+        "size": 21,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/config",
+        "inode": 478174,
+        "mode": 436,
+        "size": 156,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": "a5dcd3fd34a4ce4ca39a98290078bc935b106d597e0f777863ff4bf2e364d671"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/description",
+        "inode": 478173,
+        "mode": 436,
+        "size": 77,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "47aad2f8621afc777c66085c31f5ed14656df9bcfa5a2ae445680f175d0d2d0c"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks",
+        "inode": 478154,
+        "mode": 509,
+        "size": 260,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/applypatch-msg.sample",
+        "inode": 478165,
+        "mode": 436,
+        "size": 1154,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "1ae81b995a5c8c54582e1977084babed1e947a5a5c247ad29563142e432955ab"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/commit-msg.sample",
+        "inode": 478164,
+        "mode": 436,
+        "size": 1274,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "b1451a4c89ee4406ba56f003a7e3d142e24a7452861fddddc23bfc77163c8650"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/docs.url",
+        "inode": 478155,
+        "mode": 436,
+        "size": 34,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "4424200fb80650f5063a3ec0a3864af4aaa3103f1319fe576b64d3bfc74f8a67"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/fsmonitor-watchman.sample",
+        "inode": 478163,
+        "mode": 436,
+        "size": 779,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "99ed87d785ada3687b4d86b8d9aa562f3430ce7061834e5381166b6a35a0d495"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/post-update.sample",
+        "inode": 478162,
+        "mode": 436,
+        "size": 570,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "e6d88132de729f20c45f66c2df51cc2e223a4b8b1512a2ce1cfdd0033ee53e53"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/pre-applypatch.sample",
+        "inode": 478161,
+        "mode": 436,
+        "size": 1355,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "4c9754cac1c73109e4113ffd76070ae528a42667a85135e87fb826d572d13a4c"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/pre-commit.sample",
+        "inode": 478159,
+        "mode": 436,
+        "size": 799,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "1dd0fb2a11956784eb184e72af2fd87feca9050903400f163b90d4db7f19ce78"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/pre-merge-commit.sample",
+        "inode": 478160,
+        "mode": 436,
+        "size": 716,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "fca192309544e8e23638bd0987be7a5d00e271599b55382c1c6a4812070da223"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/pre-push.sample",
+        "inode": 478158,
+        "mode": 436,
+        "size": 2002,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "57a2bf01f65b4c57180e96cd31ff737bd2c25a15ad483cab012a88994120dfab"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/pre-rebase.sample",
+        "inode": 478157,
+        "mode": 436,
+        "size": 1604,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "d7c629ddbaa5f984d21c97a14889599d2019230220d3459aa103648316500968"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/hooks/prepare-commit-msg.sample",
+        "inode": 478156,
+        "mode": 436,
+        "size": 1918,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "f804b4efd22ef832b49506a815a6a6b1103b8f77b6d6556fc3756232727396d8"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/info",
+        "inode": 478152,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/info/exclude",
+        "inode": 478153,
+        "mode": 436,
+        "size": 269,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": "03f34bb198c0d7e18f31e8c4e39470ec222f62a01f2bf4ad24d0438a5c43a32d"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/objects",
+        "inode": 478166,
+        "mode": 509,
+        "size": 120,
+        "mtime": 1788979618.8103876,
+        "ctime": 1788979618.8103876,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/objects/4b",
+        "inode": 478204,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.80965,
+        "ctime": 1788979618.80965,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/objects/4b/825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "inode": 478203,
+        "mode": 292,
+        "size": 15,
+        "mtime": 1788979618.80965,
+        "ctime": 1788979618.80965,
+        "bytes_sha256": "e72602cad67ed061ec84b13e92568f873172efac19a512a1b561dbf54e2c8426"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/objects/fa",
+        "inode": 478209,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.8103876,
+        "ctime": 1788979618.8103876,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/objects/fa/b7c594ee7730a4b72aee678b3e164ef672f1ec",
+        "inode": 478208,
+        "mode": 292,
+        "size": 177,
+        "mtime": 1788979618.8103876,
+        "ctime": 1788979618.8103876,
+        "bytes_sha256": "a6aaa0732564c5053243bc23a7f56e53b36889f800748f350823a28c819d2228"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/objects/info",
+        "inode": 478167,
+        "mode": 509,
+        "size": 40,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/objects/pack",
+        "inode": 478168,
+        "mode": 509,
+        "size": 40,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/refs",
+        "inode": 478169,
+        "mode": 509,
+        "size": 100,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/refs/heads",
+        "inode": 478170,
+        "mode": 509,
+        "size": 40,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/refs/jj",
+        "inode": 478210,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/refs/jj/keep",
+        "inode": 478211,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/refs/jj/keep/fab7c594ee7730a4b72aee678b3e164ef672f1ec",
+        "inode": 478212,
+        "mode": 436,
+        "size": 41,
+        "mtime": 1788979618.8105392,
+        "ctime": 1788979618.8105392,
+        "bytes_sha256": "84caf3abd96614ddbadb2f5d724dd90cc1d8ae2588f483317f2db5c6fe817845"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git/refs/tags",
+        "inode": 478171,
+        "mode": 509,
+        "size": 40,
+        "mtime": 1788979618.8083787,
+        "ctime": 1788979618.8083787,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/git_target",
+        "inode": 478179,
+        "mode": 436,
+        "size": 3,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": "9a881b9b9f23849475296a8cd768ea1965bc3152df7118e60c145975af6aa58a"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/store/type",
+        "inode": 478181,
+        "mode": 436,
+        "size": 3,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": "9a881b9b9f23849475296a8cd768ea1965bc3152df7118e60c145975af6aa58a"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/submodule_store",
+        "inode": 478195,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/submodule_store/type",
+        "inode": 478196,
+        "mode": 436,
+        "size": 7,
+        "mtime": 1788979618.8086145,
+        "ctime": 1788979618.8086145,
+        "bytes_sha256": "37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/workspace_store",
+        "inode": 478199,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979618.8119645,
+        "ctime": 1788979618.8119645,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/repo/workspace_store/index",
+        "inode": 478226,
+        "mode": 384,
+        "size": 18,
+        "mtime": 1788979618.8118942,
+        "ctime": 1788979618.8118942,
+        "bytes_sha256": "f44a8c8831608946f2daada373528f3f7f5a0d7e983afe3d530db1ff2da0b987"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/working_copy",
+        "inode": 478202,
+        "mode": 509,
+        "size": 100,
+        "mtime": 1788979618.8118942,
+        "ctime": 1788979618.8118942,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/working_copy/checkout",
+        "inode": 478221,
+        "mode": 384,
+        "size": 75,
+        "mtime": 1788979618.811828,
+        "ctime": 1788979618.811828,
+        "bytes_sha256": "f03b2eab1ea02dc09ed48614e75a20bc9b9537e33c6c745b1be8632ab5ace3b4"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/working_copy/tree_state",
+        "inode": 478223,
+        "mode": 384,
+        "size": 28,
+        "mtime": 1788979618.8118942,
+        "ctime": 1788979618.8118942,
+        "bytes_sha256": "2c8969a952d9c0962d28af18ec70f44aa9d4bf5aaf19184290bde307e43223b1"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/selected/.jj/working_copy/type",
+        "inode": 478224,
+        "mode": 436,
+        "size": 5,
+        "mtime": 1788979618.8118942,
+        "ctime": 1788979618.8118942,
+        "bytes_sha256": "25bf8e1a2393f1108d37029b3df5593236c755742ec93465bbafa9b290bddcf6"
+      }
+    ],
+    "startup_before": [
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup",
+        "inode": 478242,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1705413,
+        "ctime": 1788979619.1705413,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj",
+        "inode": 478243,
+        "mode": 509,
+        "size": 80,
+        "mtime": 1788979619.1722808,
+        "ctime": 1788979619.1722808,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo",
+        "inode": 478244,
+        "mode": 509,
+        "size": 180,
+        "mtime": 1788979619.2015414,
+        "ctime": 1788979619.2015414,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/config-id",
+        "inode": 478323,
+        "mode": 436,
+        "size": 20,
+        "mtime": 1788979619.2015414,
+        "ctime": 1788979619.2015414,
+        "bytes_sha256": "d1b3707fbdc6a22d16e95bf6b910646f5d9c2b3ed81bd637d454ffb9bb0948e4"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/index",
+        "inode": 478285,
+        "mode": 509,
+        "size": 120,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/index/changed_paths",
+        "inode": 478288,
+        "mode": 509,
+        "size": 40,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/index/op_links",
+        "inode": 478286,
+        "mode": 509,
+        "size": 80,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/index/op_links/00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "inode": 478293,
+        "mode": 384,
+        "size": 66,
+        "mtime": 1788979619.1721966,
+        "ctime": 1788979619.1721966,
+        "bytes_sha256": "cbd2f459d90e73aca76dd891ab9de0154dfaf7a48b36c65b4880c830a193675c"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/index/op_links/90a573c825466555cf8e1e62b70f796478aa3713353024c7dc2fb8008287ab060440f76f3592424d02f67b7a1a908039cb90403c0b7d51aab46adf4bae45ebc6",
+        "inode": 478313,
+        "mode": 384,
+        "size": 66,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": "72e726aefb8fc852808a51af74c8a03a4df9c9983e1e943b7662d11663492014"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/index/segments",
+        "inode": 478287,
+        "mode": 509,
+        "size": 80,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/index/segments/d27ad326963b75736b636adad9fb812eb3f2871e0efb4bc7db37d4b701a4282911eaaee91bed3a759e940769b667be1ed66f2d7f2f41ac3906b87ab7eec19c3a",
+        "inode": 478292,
+        "mode": 384,
+        "size": 84,
+        "mtime": 1788979619.1721966,
+        "ctime": 1788979619.1721966,
+        "bytes_sha256": "7dded0d7539a893e0a1314dd270a4c166b9e7d7b034255c27b4c6893f3fdbbc5"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/index/segments/e197e92133ea6844b7f370c7daaf51b5288c019ef5857d99a7dc169da2744652c3d9f03b46a7b3aa0563eb9b4dc55a65863e4a57d266f8ed2226254b5249c546",
+        "inode": 478312,
+        "mode": 384,
+        "size": 144,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": "0a1ef66a3ac3e4058f82a1bda716f9ebfec39fcff273c1a8f3bd27282fc65a91"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/index/type",
+        "inode": 478289,
+        "mode": 436,
+        "size": 7,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": "37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/op_heads",
+        "inode": 478281,
+        "mode": 509,
+        "size": 80,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/op_heads/heads",
+        "inode": 478282,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1747146,
+        "ctime": 1788979619.1747146,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/op_heads/heads/90a573c825466555cf8e1e62b70f796478aa3713353024c7dc2fb8008287ab060440f76f3592424d02f67b7a1a908039cb90403c0b7d51aab46adf4bae45ebc6",
+        "inode": 478315,
+        "mode": 436,
+        "size": 0,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/op_heads/type",
+        "inode": 478284,
+        "mode": 436,
+        "size": 21,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": "b033b33ef05b48b699b625dd905e19e3ad154d4c9a393f0623e60d6179a233b8"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/op_store",
+        "inode": 478277,
+        "mode": 509,
+        "size": 100,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/op_store/operations",
+        "inode": 478279,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/op_store/operations/90a573c825466555cf8e1e62b70f796478aa3713353024c7dc2fb8008287ab060440f76f3592424d02f67b7a1a908039cb90403c0b7d51aab46adf4bae45ebc6",
+        "inode": 478311,
+        "mode": 384,
+        "size": 218,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": "2f4efc58d748d950d025a1a40a6cc2982ddc2881a22bc412f6020f980dcbc178"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/op_store/type",
+        "inode": 478280,
+        "mode": 436,
+        "size": 15,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": "ed58fb26ed304558ff125ef841b4ba29b7b0d94b810f1c5428312114ac4a0c1b"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/op_store/views",
+        "inode": 478278,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/op_store/views/8372adbe5336b14bad81e966bcc17d13f96996d7d5648b2515448bca3908063766acdaf9cd478db8f4372f709d855c443c8abbceb2ca64bd8d4283f2acb19979",
+        "inode": 478310,
+        "mode": 384,
+        "size": 63,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": "d83493e8aa3849027d85a109fe39c1ea7e6be638f61fc71b1bdc45052e756d81"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store",
+        "inode": 478245,
+        "mode": 509,
+        "size": 120,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/extra",
+        "inode": 478273,
+        "mode": 509,
+        "size": 100,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/extra/482ae5a29fbe856c7272f2071b8b0f0359ee2d89ff392b8a900643fbd0836eccd067b8bf41909e206c90d45d6e7d8b6686b93ecaee5fe1a9060d87b672101310",
+        "inode": 478301,
+        "mode": 384,
+        "size": 8,
+        "mtime": 1788979619.1722808,
+        "ctime": 1788979619.1725414,
+        "bytes_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/extra/566ae273f3ad6dba5d8b8c53c2eea1e0093f10ecd8910e9929873609dd6ed02a14dc382279752f6ae1e088c1952e7fb3eec26cf185730dcfcb75d61ee146b047",
+        "inode": 478308,
+        "mode": 384,
+        "size": 52,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": "351664df8a39c19a23f2b04db6965461f2c34ce5b2a2b9493e67017c540ae181"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/extra/heads",
+        "inode": 478275,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/extra/heads/566ae273f3ad6dba5d8b8c53c2eea1e0093f10ecd8910e9929873609dd6ed02a14dc382279752f6ae1e088c1952e7fb3eec26cf185730dcfcb75d61ee146b047",
+        "inode": 478309,
+        "mode": 436,
+        "size": 0,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git",
+        "inode": 478246,
+        "mode": 509,
+        "size": 180,
+        "mtime": 1788979619.1714315,
+        "ctime": 1788979619.1714315,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/HEAD",
+        "inode": 478267,
+        "mode": 436,
+        "size": 21,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/config",
+        "inode": 478269,
+        "mode": 436,
+        "size": 156,
+        "mtime": 1788979619.1714315,
+        "ctime": 1788979619.1714315,
+        "bytes_sha256": "a5dcd3fd34a4ce4ca39a98290078bc935b106d597e0f777863ff4bf2e364d671"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/description",
+        "inode": 478268,
+        "mode": 436,
+        "size": 77,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "47aad2f8621afc777c66085c31f5ed14656df9bcfa5a2ae445680f175d0d2d0c"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks",
+        "inode": 478249,
+        "mode": 509,
+        "size": 260,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/applypatch-msg.sample",
+        "inode": 478260,
+        "mode": 436,
+        "size": 1154,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "1ae81b995a5c8c54582e1977084babed1e947a5a5c247ad29563142e432955ab"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/commit-msg.sample",
+        "inode": 478259,
+        "mode": 436,
+        "size": 1274,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "b1451a4c89ee4406ba56f003a7e3d142e24a7452861fddddc23bfc77163c8650"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/docs.url",
+        "inode": 478250,
+        "mode": 436,
+        "size": 34,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "4424200fb80650f5063a3ec0a3864af4aaa3103f1319fe576b64d3bfc74f8a67"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/fsmonitor-watchman.sample",
+        "inode": 478258,
+        "mode": 436,
+        "size": 779,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "99ed87d785ada3687b4d86b8d9aa562f3430ce7061834e5381166b6a35a0d495"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/post-update.sample",
+        "inode": 478257,
+        "mode": 436,
+        "size": 570,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "e6d88132de729f20c45f66c2df51cc2e223a4b8b1512a2ce1cfdd0033ee53e53"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/pre-applypatch.sample",
+        "inode": 478256,
+        "mode": 436,
+        "size": 1355,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "4c9754cac1c73109e4113ffd76070ae528a42667a85135e87fb826d572d13a4c"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/pre-commit.sample",
+        "inode": 478254,
+        "mode": 436,
+        "size": 799,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "1dd0fb2a11956784eb184e72af2fd87feca9050903400f163b90d4db7f19ce78"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/pre-merge-commit.sample",
+        "inode": 478255,
+        "mode": 436,
+        "size": 716,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "fca192309544e8e23638bd0987be7a5d00e271599b55382c1c6a4812070da223"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/pre-push.sample",
+        "inode": 478253,
+        "mode": 436,
+        "size": 2002,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "57a2bf01f65b4c57180e96cd31ff737bd2c25a15ad483cab012a88994120dfab"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/pre-rebase.sample",
+        "inode": 478252,
+        "mode": 436,
+        "size": 1604,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "d7c629ddbaa5f984d21c97a14889599d2019230220d3459aa103648316500968"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/prepare-commit-msg.sample",
+        "inode": 478251,
+        "mode": 436,
+        "size": 1918,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "f804b4efd22ef832b49506a815a6a6b1103b8f77b6d6556fc3756232727396d8"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/info",
+        "inode": 478247,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/info/exclude",
+        "inode": 478248,
+        "mode": 436,
+        "size": 269,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "03f34bb198c0d7e18f31e8c4e39470ec222f62a01f2bf4ad24d0438a5c43a32d"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/objects",
+        "inode": 478261,
+        "mode": 509,
+        "size": 120,
+        "mtime": 1788979619.1725414,
+        "ctime": 1788979619.1725414,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/objects/4b",
+        "inode": 478299,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1722808,
+        "ctime": 1788979619.1722808,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/objects/4b/825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "inode": 478298,
+        "mode": 292,
+        "size": 15,
+        "mtime": 1788979619.1722808,
+        "ctime": 1788979619.1722808,
+        "bytes_sha256": "e72602cad67ed061ec84b13e92568f873172efac19a512a1b561dbf54e2c8426"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/objects/97",
+        "inode": 478304,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1725414,
+        "ctime": 1788979619.1725414,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/objects/97/99dc7263b11cf63d1bccc798e9c24400516cb4",
+        "inode": 478303,
+        "mode": 292,
+        "size": 177,
+        "mtime": 1788979619.1725414,
+        "ctime": 1788979619.1725414,
+        "bytes_sha256": "d8ae1bda10c555a949b122cd96ad341058f3d3cf446ca180c13d085ba7411788"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/objects/info",
+        "inode": 478262,
+        "mode": 509,
+        "size": 40,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/objects/pack",
+        "inode": 478263,
+        "mode": 509,
+        "size": 40,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/refs",
+        "inode": 478264,
+        "mode": 509,
+        "size": 100,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/refs/heads",
+        "inode": 478265,
+        "mode": 509,
+        "size": 40,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/refs/jj",
+        "inode": 478305,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/refs/jj/keep",
+        "inode": 478306,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/refs/jj/keep/9799dc7263b11cf63d1bccc798e9c24400516cb4",
+        "inode": 478307,
+        "mode": 436,
+        "size": 41,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": "1c6e7bf89eecd43225b6f028d8b1a3de864b65c396fb74e57ec8599c5c3c1233"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/refs/tags",
+        "inode": 478266,
+        "mode": 509,
+        "size": 40,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git_target",
+        "inode": 478274,
+        "mode": 436,
+        "size": 3,
+        "mtime": 1788979619.1714315,
+        "ctime": 1788979619.1714315,
+        "bytes_sha256": "9a881b9b9f23849475296a8cd768ea1965bc3152df7118e60c145975af6aa58a"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/type",
+        "inode": 478276,
+        "mode": 436,
+        "size": 3,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": "9a881b9b9f23849475296a8cd768ea1965bc3152df7118e60c145975af6aa58a"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/submodule_store",
+        "inode": 478290,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/submodule_store/type",
+        "inode": 478291,
+        "mode": 436,
+        "size": 7,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": "37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/workspace_store",
+        "inode": 478294,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1748395,
+        "ctime": 1788979619.1748395,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/workspace_store/index",
+        "inode": 478321,
+        "mode": 384,
+        "size": 18,
+        "mtime": 1788979619.1747873,
+        "ctime": 1788979619.1747873,
+        "bytes_sha256": "f44a8c8831608946f2daada373528f3f7f5a0d7e983afe3d530db1ff2da0b987"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/working_copy",
+        "inode": 478297,
+        "mode": 509,
+        "size": 100,
+        "mtime": 1788979619.1747873,
+        "ctime": 1788979619.1747873,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/working_copy/checkout",
+        "inode": 478316,
+        "mode": 384,
+        "size": 75,
+        "mtime": 1788979619.1747146,
+        "ctime": 1788979619.1747146,
+        "bytes_sha256": "f727b7cfd75691dff052c591b0603e422086d412d3f1528284fb96233cda0d6c"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/working_copy/tree_state",
+        "inode": 478318,
+        "mode": 384,
+        "size": 28,
+        "mtime": 1788979619.1747873,
+        "ctime": 1788979619.1747873,
+        "bytes_sha256": "2c8969a952d9c0962d28af18ec70f44aa9d4bf5aaf19184290bde307e43223b1"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/working_copy/type",
+        "inode": 478319,
+        "mode": 436,
+        "size": 5,
+        "mtime": 1788979619.1747873,
+        "ctime": 1788979619.1747873,
+        "bytes_sha256": "25bf8e1a2393f1108d37029b3df5593236c755742ec93465bbafa9b290bddcf6"
+      }
+    ],
+    "startup_after": [
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup",
+        "inode": 478242,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1705413,
+        "ctime": 1788979619.1705413,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj",
+        "inode": 478243,
+        "mode": 509,
+        "size": 80,
+        "mtime": 1788979619.1722808,
+        "ctime": 1788979619.1722808,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo",
+        "inode": 478244,
+        "mode": 509,
+        "size": 180,
+        "mtime": 1788979619.2015414,
+        "ctime": 1788979619.2015414,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/config-id",
+        "inode": 478323,
+        "mode": 436,
+        "size": 20,
+        "mtime": 1788979619.2015414,
+        "ctime": 1788979619.2015414,
+        "bytes_sha256": "d1b3707fbdc6a22d16e95bf6b910646f5d9c2b3ed81bd637d454ffb9bb0948e4"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/index",
+        "inode": 478285,
+        "mode": 509,
+        "size": 120,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/index/changed_paths",
+        "inode": 478288,
+        "mode": 509,
+        "size": 40,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/index/op_links",
+        "inode": 478286,
+        "mode": 509,
+        "size": 80,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/index/op_links/00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+        "inode": 478293,
+        "mode": 384,
+        "size": 66,
+        "mtime": 1788979619.1721966,
+        "ctime": 1788979619.1721966,
+        "bytes_sha256": "cbd2f459d90e73aca76dd891ab9de0154dfaf7a48b36c65b4880c830a193675c"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/index/op_links/90a573c825466555cf8e1e62b70f796478aa3713353024c7dc2fb8008287ab060440f76f3592424d02f67b7a1a908039cb90403c0b7d51aab46adf4bae45ebc6",
+        "inode": 478313,
+        "mode": 384,
+        "size": 66,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": "72e726aefb8fc852808a51af74c8a03a4df9c9983e1e943b7662d11663492014"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/index/segments",
+        "inode": 478287,
+        "mode": 509,
+        "size": 80,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/index/segments/d27ad326963b75736b636adad9fb812eb3f2871e0efb4bc7db37d4b701a4282911eaaee91bed3a759e940769b667be1ed66f2d7f2f41ac3906b87ab7eec19c3a",
+        "inode": 478292,
+        "mode": 384,
+        "size": 84,
+        "mtime": 1788979619.1721966,
+        "ctime": 1788979619.1721966,
+        "bytes_sha256": "7dded0d7539a893e0a1314dd270a4c166b9e7d7b034255c27b4c6893f3fdbbc5"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/index/segments/e197e92133ea6844b7f370c7daaf51b5288c019ef5857d99a7dc169da2744652c3d9f03b46a7b3aa0563eb9b4dc55a65863e4a57d266f8ed2226254b5249c546",
+        "inode": 478312,
+        "mode": 384,
+        "size": 144,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": "0a1ef66a3ac3e4058f82a1bda716f9ebfec39fcff273c1a8f3bd27282fc65a91"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/index/type",
+        "inode": 478289,
+        "mode": 436,
+        "size": 7,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": "37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/op_heads",
+        "inode": 478281,
+        "mode": 509,
+        "size": 80,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/op_heads/heads",
+        "inode": 478282,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1747146,
+        "ctime": 1788979619.1747146,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/op_heads/heads/90a573c825466555cf8e1e62b70f796478aa3713353024c7dc2fb8008287ab060440f76f3592424d02f67b7a1a908039cb90403c0b7d51aab46adf4bae45ebc6",
+        "inode": 478315,
+        "mode": 436,
+        "size": 0,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/op_heads/type",
+        "inode": 478284,
+        "mode": 436,
+        "size": 21,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": "b033b33ef05b48b699b625dd905e19e3ad154d4c9a393f0623e60d6179a233b8"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/op_store",
+        "inode": 478277,
+        "mode": 509,
+        "size": 100,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/op_store/operations",
+        "inode": 478279,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/op_store/operations/90a573c825466555cf8e1e62b70f796478aa3713353024c7dc2fb8008287ab060440f76f3592424d02f67b7a1a908039cb90403c0b7d51aab46adf4bae45ebc6",
+        "inode": 478311,
+        "mode": 384,
+        "size": 218,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": "2f4efc58d748d950d025a1a40a6cc2982ddc2881a22bc412f6020f980dcbc178"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/op_store/type",
+        "inode": 478280,
+        "mode": 436,
+        "size": 15,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": "ed58fb26ed304558ff125ef841b4ba29b7b0d94b810f1c5428312114ac4a0c1b"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/op_store/views",
+        "inode": 478278,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/op_store/views/8372adbe5336b14bad81e966bcc17d13f96996d7d5648b2515448bca3908063766acdaf9cd478db8f4372f709d855c443c8abbceb2ca64bd8d4283f2acb19979",
+        "inode": 478310,
+        "mode": 384,
+        "size": 63,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": "d83493e8aa3849027d85a109fe39c1ea7e6be638f61fc71b1bdc45052e756d81"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store",
+        "inode": 478245,
+        "mode": 509,
+        "size": 120,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/extra",
+        "inode": 478273,
+        "mode": 509,
+        "size": 100,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/extra/482ae5a29fbe856c7272f2071b8b0f0359ee2d89ff392b8a900643fbd0836eccd067b8bf41909e206c90d45d6e7d8b6686b93ecaee5fe1a9060d87b672101310",
+        "inode": 478301,
+        "mode": 384,
+        "size": 8,
+        "mtime": 1788979619.1722808,
+        "ctime": 1788979619.1725414,
+        "bytes_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/extra/566ae273f3ad6dba5d8b8c53c2eea1e0093f10ecd8910e9929873609dd6ed02a14dc382279752f6ae1e088c1952e7fb3eec26cf185730dcfcb75d61ee146b047",
+        "inode": 478308,
+        "mode": 384,
+        "size": 52,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": "351664df8a39c19a23f2b04db6965461f2c34ce5b2a2b9493e67017c540ae181"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/extra/heads",
+        "inode": 478275,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/extra/heads/566ae273f3ad6dba5d8b8c53c2eea1e0093f10ecd8910e9929873609dd6ed02a14dc382279752f6ae1e088c1952e7fb3eec26cf185730dcfcb75d61ee146b047",
+        "inode": 478309,
+        "mode": 436,
+        "size": 0,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git",
+        "inode": 478246,
+        "mode": 509,
+        "size": 180,
+        "mtime": 1788979619.1714315,
+        "ctime": 1788979619.1714315,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/HEAD",
+        "inode": 478267,
+        "mode": 436,
+        "size": 21,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/config",
+        "inode": 478269,
+        "mode": 436,
+        "size": 156,
+        "mtime": 1788979619.1714315,
+        "ctime": 1788979619.1714315,
+        "bytes_sha256": "a5dcd3fd34a4ce4ca39a98290078bc935b106d597e0f777863ff4bf2e364d671"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/description",
+        "inode": 478268,
+        "mode": 436,
+        "size": 77,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "47aad2f8621afc777c66085c31f5ed14656df9bcfa5a2ae445680f175d0d2d0c"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks",
+        "inode": 478249,
+        "mode": 509,
+        "size": 260,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/applypatch-msg.sample",
+        "inode": 478260,
+        "mode": 436,
+        "size": 1154,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "1ae81b995a5c8c54582e1977084babed1e947a5a5c247ad29563142e432955ab"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/commit-msg.sample",
+        "inode": 478259,
+        "mode": 436,
+        "size": 1274,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "b1451a4c89ee4406ba56f003a7e3d142e24a7452861fddddc23bfc77163c8650"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/docs.url",
+        "inode": 478250,
+        "mode": 436,
+        "size": 34,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "4424200fb80650f5063a3ec0a3864af4aaa3103f1319fe576b64d3bfc74f8a67"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/fsmonitor-watchman.sample",
+        "inode": 478258,
+        "mode": 436,
+        "size": 779,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "99ed87d785ada3687b4d86b8d9aa562f3430ce7061834e5381166b6a35a0d495"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/post-update.sample",
+        "inode": 478257,
+        "mode": 436,
+        "size": 570,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "e6d88132de729f20c45f66c2df51cc2e223a4b8b1512a2ce1cfdd0033ee53e53"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/pre-applypatch.sample",
+        "inode": 478256,
+        "mode": 436,
+        "size": 1355,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "4c9754cac1c73109e4113ffd76070ae528a42667a85135e87fb826d572d13a4c"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/pre-commit.sample",
+        "inode": 478254,
+        "mode": 436,
+        "size": 799,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "1dd0fb2a11956784eb184e72af2fd87feca9050903400f163b90d4db7f19ce78"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/pre-merge-commit.sample",
+        "inode": 478255,
+        "mode": 436,
+        "size": 716,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "fca192309544e8e23638bd0987be7a5d00e271599b55382c1c6a4812070da223"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/pre-push.sample",
+        "inode": 478253,
+        "mode": 436,
+        "size": 2002,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "57a2bf01f65b4c57180e96cd31ff737bd2c25a15ad483cab012a88994120dfab"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/pre-rebase.sample",
+        "inode": 478252,
+        "mode": 436,
+        "size": 1604,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "d7c629ddbaa5f984d21c97a14889599d2019230220d3459aa103648316500968"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/hooks/prepare-commit-msg.sample",
+        "inode": 478251,
+        "mode": 436,
+        "size": 1918,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "f804b4efd22ef832b49506a815a6a6b1103b8f77b6d6556fc3756232727396d8"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/info",
+        "inode": 478247,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/info/exclude",
+        "inode": 478248,
+        "mode": 436,
+        "size": 269,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": "03f34bb198c0d7e18f31e8c4e39470ec222f62a01f2bf4ad24d0438a5c43a32d"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/objects",
+        "inode": 478261,
+        "mode": 509,
+        "size": 120,
+        "mtime": 1788979619.1725414,
+        "ctime": 1788979619.1725414,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/objects/4b",
+        "inode": 478299,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1722808,
+        "ctime": 1788979619.1722808,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/objects/4b/825dc642cb6eb9a060e54bf8d69288fbee4904",
+        "inode": 478298,
+        "mode": 292,
+        "size": 15,
+        "mtime": 1788979619.1722808,
+        "ctime": 1788979619.1722808,
+        "bytes_sha256": "e72602cad67ed061ec84b13e92568f873172efac19a512a1b561dbf54e2c8426"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/objects/97",
+        "inode": 478304,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1725414,
+        "ctime": 1788979619.1725414,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/objects/97/99dc7263b11cf63d1bccc798e9c24400516cb4",
+        "inode": 478303,
+        "mode": 292,
+        "size": 177,
+        "mtime": 1788979619.1725414,
+        "ctime": 1788979619.1725414,
+        "bytes_sha256": "d8ae1bda10c555a949b122cd96ad341058f3d3cf446ca180c13d085ba7411788"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/objects/info",
+        "inode": 478262,
+        "mode": 509,
+        "size": 40,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/objects/pack",
+        "inode": 478263,
+        "mode": 509,
+        "size": 40,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/refs",
+        "inode": 478264,
+        "mode": 509,
+        "size": 100,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/refs/heads",
+        "inode": 478265,
+        "mode": 509,
+        "size": 40,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/refs/jj",
+        "inode": 478305,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/refs/jj/keep",
+        "inode": 478306,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/refs/jj/keep/9799dc7263b11cf63d1bccc798e9c24400516cb4",
+        "inode": 478307,
+        "mode": 436,
+        "size": 41,
+        "mtime": 1788979619.1735413,
+        "ctime": 1788979619.1735413,
+        "bytes_sha256": "1c6e7bf89eecd43225b6f028d8b1a3de864b65c396fb74e57ec8599c5c3c1233"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git/refs/tags",
+        "inode": 478266,
+        "mode": 509,
+        "size": 40,
+        "mtime": 1788979619.1712618,
+        "ctime": 1788979619.1712618,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/git_target",
+        "inode": 478274,
+        "mode": 436,
+        "size": 3,
+        "mtime": 1788979619.1714315,
+        "ctime": 1788979619.1714315,
+        "bytes_sha256": "9a881b9b9f23849475296a8cd768ea1965bc3152df7118e60c145975af6aa58a"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/store/type",
+        "inode": 478276,
+        "mode": 436,
+        "size": 3,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": "9a881b9b9f23849475296a8cd768ea1965bc3152df7118e60c145975af6aa58a"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/submodule_store",
+        "inode": 478290,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/submodule_store/type",
+        "inode": 478291,
+        "mode": 436,
+        "size": 7,
+        "mtime": 1788979619.1715412,
+        "ctime": 1788979619.1715412,
+        "bytes_sha256": "37a8eec1ce19687d132fe29051dca629d164e2c4958ba141d5f4133a33f0688f"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/workspace_store",
+        "inode": 478294,
+        "mode": 509,
+        "size": 60,
+        "mtime": 1788979619.1748395,
+        "ctime": 1788979619.1748395,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/repo/workspace_store/index",
+        "inode": 478321,
+        "mode": 384,
+        "size": 18,
+        "mtime": 1788979619.1747873,
+        "ctime": 1788979619.1747873,
+        "bytes_sha256": "f44a8c8831608946f2daada373528f3f7f5a0d7e983afe3d530db1ff2da0b987"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/working_copy",
+        "inode": 478297,
+        "mode": 509,
+        "size": 100,
+        "mtime": 1788979619.1747873,
+        "ctime": 1788979619.1747873,
+        "bytes_sha256": null
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/working_copy/checkout",
+        "inode": 478316,
+        "mode": 384,
+        "size": 75,
+        "mtime": 1788979619.1747146,
+        "ctime": 1788979619.1747146,
+        "bytes_sha256": "f727b7cfd75691dff052c591b0603e422086d412d3f1528284fb96233cda0d6c"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/working_copy/tree_state",
+        "inode": 478318,
+        "mode": 384,
+        "size": 28,
+        "mtime": 1788979619.1747873,
+        "ctime": 1788979619.1747873,
+        "bytes_sha256": "2c8969a952d9c0962d28af18ec70f44aa9d4bf5aaf19184290bde307e43223b1"
+      },
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/startup/.jj/working_copy/type",
+        "inode": 478319,
+        "mode": 436,
+        "size": 5,
+        "mtime": 1788979619.1747873,
+        "ctime": 1788979619.1747873,
+        "bytes_sha256": "25bf8e1a2393f1108d37029b3df5593236c755742ec93465bbafa9b290bddcf6"
+      }
+    ],
+    "config_before": [
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/config",
+        "inode": 478322,
+        "mode": 448,
+        "size": 40,
+        "mtime": 1788979619.2015414,
+        "ctime": 1788979619.2015414,
+        "bytes_sha256": null
+      }
+    ],
+    "config_after": [
+      {
+        "path": "/tmp/ev01-cwd-regression-70fce2/config",
+        "inode": 478322,
+        "mode": 448,
+        "size": 40,
+        "mtime": 1788979619.2015414,
+        "ctime": 1788979619.2015414,
+        "bytes_sha256": null
+      }
+    ]
+  },
+  "canonical_observer_invocations": 0,
+  "authority": "NONE"
+}

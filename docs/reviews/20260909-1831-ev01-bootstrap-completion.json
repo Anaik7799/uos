@@ -1,0 +1,46 @@
+{
+  "classification": "VERIFICATION_DOSSIER_DELIVERED_WITH_EXPLICIT_EV1_BLOCKERS",
+  "plan": "uos/ev01-bootstrap/20260909",
+  "task": "VERIFY",
+  "task_title": "Full Bootstrap acceptance dossier, native falsifiers and G-BOOT1 gate repair",
+  "worker": "codex-ev01-bootstrap",
+  "attempt": 3,
+  "source": "3c13ba3b3e210e98c289147a2041aadcdcc72ebd",
+  "author_evidence": "f9edf656f74b01912a2727f50c90c6483878a444",
+  "independent_evidence": "6fcefece575f1eb56bad2af2f3e44721927a2805",
+  "independent_completion": "5652cf10b7feddb4a0187aef3591d53c58392b3b",
+  "whole_ev1": "HOLD",
+  "admission": "NOT_GRANTED",
+  "canonical_observer_replay": "NOT_RUN",
+  "risk_path": "docs/reviews/20260909-1816-ev01-bootstrap-risk-1788980056.json",
+  "risk_sha256": "ed37e037e0febd316733a21fef197434739a57b1fd7a9a3494e5930f2a3eef73",
+  "unresolved_acceptance": [
+    "Original governing design and implementation-plan lineage unresolved",
+    "No repaired-source canonical observer invocation; prior source-specific canonical evidence remains withdrawn for readiness",
+    "Full authenticated sovereign dossier assessment and admission not granted",
+    "Cooperative filesystem model does not establish hostile race safety or general noninterference",
+    "Release closure and general FFI process/output limits remain explicit"
+  ],
+  "records": [
+    {
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-1848-ev01-bootstrap-independent-approval.json",
+      "path": "docs/reviews/20260909-1831-ev01-bootstrap-completion-independent-approval.json",
+      "sha256": "4a8947c03e46765ba0a8ea8472a14c1b329355b30a18617e1371b2a2b7470798"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-completion-active.json",
+      "path": "docs/reviews/20260909-1831-ev01-bootstrap-completion-active.json",
+      "sha256": "e8cd4fcf5679c76187d658e499cd10c84d4408bdfcfc20b98a93236497be4da9"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-verify-completed-1855.json",
+      "path": "docs/reviews/20260909-1831-ev01-bootstrap-completion-receipt.json",
+      "sha256": "8f49f7cd787f7c1da7a019b36abbcfdc3c9f8c45fdaf9d0284befb04cad2ae0f"
+    },
+    {
+      "original": "/tmp/ev01-verify-scope-show-1853.json",
+      "path": "docs/reviews/20260909-1831-ev01-bootstrap-completion-task-scope.json",
+      "sha256": "b5c604eebebeec7dac3ba452b280cce3330778fffe3d5d96d2fb68cf9b2a8072"
+    }
+  ]
+}

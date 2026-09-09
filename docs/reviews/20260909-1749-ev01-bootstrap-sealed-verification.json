@@ -1,0 +1,10 @@
+{
+  "schema": "uos.ev01-sealed-evidence-check.v1",
+  "evidence_revision": "79561ad9243e47e27593018ec79bd2c0eb886d65",
+  "source_revision": "0a8c03c55f91cdf4279ff14503651227c9bb6010",
+  "status": "PASS",
+  "dossier_sha256": "481004715e01e87e6e1526059fd29b7376e45c3ed520d675b8636f61f08e8fcf",
+  "immutable_receipts_checked": 95,
+  "lossless_trace_archives_checked": 5,
+  "authority": "NONE"
+}

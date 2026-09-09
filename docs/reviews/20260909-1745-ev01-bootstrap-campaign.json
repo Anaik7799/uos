@@ -1,0 +1,1065 @@
+{
+  "schema": "uos.ev01-bootstrap-campaign.v1",
+  "candidate": "805b8667bfdf0616adbfe208ccd5bcb1045e8d9b",
+  "status": "COMPONENT_OBSERVATIONS_PASS",
+  "admission": "NOT_GRANTED",
+  "checks": 29,
+  "source_dependencies": [
+    {
+      "source": "candidate:tools/uos/src/main.gleam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/package/src/main.gleam",
+      "sha256": "db90cdce767bd100ef02197f481617c04884ae653fb2ea4f00c38bcc4a27495e"
+    },
+    {
+      "source": "candidate:tools/uos/src/uos.gleam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/package/src/uos.gleam",
+      "sha256": "1a775132572344d10babd28c337256cfa385dd1d7767d28212678116f6246f11"
+    },
+    {
+      "source": "candidate:tools/uos/src/uos_ffi.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/package/src/uos_ffi.erl",
+      "sha256": "4b82bf32b65abcfee62586d12afc26615e921918f19fed963630ed0d5096433b"
+    },
+    {
+      "source": "candidate:tools/uos/gleam.toml",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/package/gleam.toml",
+      "sha256": "9bbc8985a6adcc96d85960da8985e5a7c239779ed73d7899d059bdb51531bce4"
+    },
+    {
+      "source": "candidate:tools/uos/manifest.toml",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/package/manifest.toml",
+      "sha256": "31d4230acb254c521dc5c316de82f97afce7c3755f720a9f215a09088b97dd20"
+    },
+    {
+      "source": "candidate:tools/bootstrap/bootstrap_model.ml",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/tools/bootstrap/bootstrap_model.ml",
+      "sha256": "e1c516755a943d4ae476049616dfc5f0fa545f2a9f8d13fbd74066f0fe188dbd"
+    },
+    {
+      "source": "candidate:tools/bootstrap/bootstrap_model.mli",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/tools/bootstrap/bootstrap_model.mli",
+      "sha256": "86f1045c884a02acc1a22d0a529c3b7fa008d7ebf3ed9344b4b3053b94848c14"
+    },
+    {
+      "source": "candidate:tools/bootstrap/bootstrap_observer.ml",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/tools/bootstrap/bootstrap_observer.ml",
+      "sha256": "a742cd300842e36a991c0d787b4984d03a1164b76daf00151a723c801699a80d"
+    },
+    {
+      "source": "candidate:tools/bootstrap/bootstrap_observer.mli",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/tools/bootstrap/bootstrap_observer.mli",
+      "sha256": "aec6201a6d3e26a559051160b4d33dc9861007b0ab7c49cc098cefc431e9fbcb"
+    },
+    {
+      "source": "candidate:tools/bootstrap/bootstrap_check.ml",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/tools/bootstrap/bootstrap_check.ml",
+      "sha256": "4624f051e5fca17a6744ce9ac37c7e1a1b52e50138e036e077cb2d233f0f0a5d"
+    },
+    {
+      "source": "candidate:tools/bootstrap/test_bootstrap_model.ml",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/tools/bootstrap/test_bootstrap_model.ml",
+      "sha256": "1e38745279b3b72ca7cf5c6c298a9cb2bb3f78a2e8448f2827a07c9fedf2687f"
+    },
+    {
+      "source": "candidate:tools/bootstrap/dune",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/tools/bootstrap/dune",
+      "sha256": "b9cee66d7069673a08e6e382584992f2fa8d14d2f0ec7cb7e7a1111e23b08b0d"
+    },
+    {
+      "source": "candidate:tools/bootstrap/dune-project",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/tools/bootstrap/dune-project",
+      "sha256": "f8c72e5e3eec3b0ea37e620a36cfbb3a7dc21acb2dd4726afb27f05cfe3d9728"
+    },
+    {
+      "source": "candidate:tools/test_ev01_bootstrap.ml",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/test_ev01_bootstrap.ml",
+      "sha256": "2e0eefb32248be10b1c03b5c2ff074bc3c706482a9c7cf2a9403d0bded076ded"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/dict.mjs",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/dict.mjs",
+      "sha256": "c5789e2e8317d86e66126cc5b43ec7bfff73267f9327cd47806059af2374b608"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@@compile.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@@compile.erl",
+      "sha256": "c3dda42ad646bf321000099eacde4a4ef794c778f7f4994e71be00cd28217196"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@bit_array.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@bit_array.cache",
+      "sha256": "0c6d14350b54daf7d42a9c8ac25b884b7097c6892f75abe9ee3af9e4927efaa9"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@bit_array.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@bit_array.cache_meta",
+      "sha256": "282efc2aa42bd3aafbbe57908966114ea4e7ec86d2fba29dd6dabbe5da73257d"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@bit_array.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@bit_array.erl",
+      "sha256": "aa62aa249ea89b583116db8dc74053ebc03a7b7003d3683c6874305ab065d6a5"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@bool.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@bool.cache",
+      "sha256": "a0008b12d9c2b4d019766fbef151c818c81ef925371b7dd31ab96b0b96ce5ed0"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@bool.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@bool.cache_meta",
+      "sha256": "dfbd14796c32e063feb274cdd94c12b838b091b485b3201d4bd935069170fdd3"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@bool.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@bool.erl",
+      "sha256": "546fe85721f39502bf441874876369a9f8090aaee662ed6851ff6bfec2ffbc4b"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@bytes_tree.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@bytes_tree.cache",
+      "sha256": "ea6fa5356cb683d8dcbb7a20909adfca81e2a3928b9fc4ffa6ef3abf9e1387b8"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@bytes_tree.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@bytes_tree.cache_meta",
+      "sha256": "227ab8e29c2c6a64f17c030ad65094e0eda94e77b44aea5dc5c3a7435ebc4fc4"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@bytes_tree.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@bytes_tree.erl",
+      "sha256": "6e2ae15020ffcd50346561f08905928370af0bf605cbcacb3c8d637a71ed2609"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@dict.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@dict.cache",
+      "sha256": "9b22ca5d5a4f4b9ba48c795d66ed9861942e72c5028c040c21abc31c46fe10f6"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@dict.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@dict.cache_meta",
+      "sha256": "e555329d3db779ecb26ba9bfd5040ed7baf2b6edb3348b94c7d7f4fe63e7dcfd"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@dict.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@dict.erl",
+      "sha256": "312ef0fb36ee8e8b69f3b0f24da8e09de014067d56a43f08d78068dfae9f80b6"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@dynamic.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@dynamic.cache",
+      "sha256": "9ddefb2984347791d5d32eaef834d8f1a60e98c234ac8f454d39bd88e6808222"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@dynamic.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@dynamic.cache_meta",
+      "sha256": "9ab9fa074ec46d604cc905005d52a02c5b747aabca477b2ce67dca73f49d72b8"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@dynamic.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@dynamic.erl",
+      "sha256": "fa6d8e3d4e0438f018eeee2cb1ba6afb7e4189ae37b416267d27839ccda6229f"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@dynamic@decode.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@dynamic@decode.cache",
+      "sha256": "fdef23c3df8a5b635905b6a8a16a2cee0cf5f443b4c2a4950a1bd4fadddf1fc5"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@dynamic@decode.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@dynamic@decode.cache_meta",
+      "sha256": "2b8a6ff0f6f905605a2ab7cdd3679c6c4184821e8e7bb5b5640b5a8773864775"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@dynamic@decode.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@dynamic@decode.erl",
+      "sha256": "941d253a5062467262949faf40bfde8bee4fd7fd5b6d5abb03a3b94597cea9bb"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@float.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@float.cache",
+      "sha256": "03292bc6d2d562048f77ed3485ca7eea87d9f33084e360460c1b34fce0b8a009"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@float.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@float.cache_meta",
+      "sha256": "48b422e0cf3d9bd04ce89d40920570d02d75f465bff69c0fc7536e1d548af59b"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@float.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@float.erl",
+      "sha256": "b574ee7318eb24e73a7dd12f1fd0795fc96300d3cca6e54f36a1e3732e5ad459"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@function.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@function.cache",
+      "sha256": "9bdd52a16c2079dc39ef657d6ead868f6c004634ddaa34330ec9f68391c59b94"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@function.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@function.cache_meta",
+      "sha256": "23df5276a0c09f70e1977651775e0395af989e4b8f66959cd8654b5baa9897cc"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@function.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@function.erl",
+      "sha256": "319ad63f4af130ef501c39948117f80737e3e8637b576b8e055b17e3ececaccf"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@int.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@int.cache",
+      "sha256": "2c5fb6f01d738f6ec12fdca6817ee0e507e7631088be0d9464f6155cb0ebacf6"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@int.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@int.cache_meta",
+      "sha256": "a2a7f68e1ab98ee2626cad1e1d02970a5eb26fbfd859de5b8dcc9794074d6db8"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@int.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@int.erl",
+      "sha256": "4980239dea428c2f0af806f45bbbaaf84e078412fcfb9a86388487ef47c088a8"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@io.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@io.cache",
+      "sha256": "6c0c355b7850a000686582a791c1c1b07d4d879cc2e67b320a0eda2a1ac13ac5"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@io.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@io.cache_meta",
+      "sha256": "10a47d4de1485f14e33e00dab29c58c8a50f11994a7e51ca9f8bee54ea9fc580"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@io.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@io.erl",
+      "sha256": "4983172527793d75dfecc32bbb39b6a299b77562783ce1a88df8ae56ab7e8414"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@list.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@list.cache",
+      "sha256": "768161db5cbd0cdaa0264506dc17a63f0133e3c0ee8044c6cfde4bd55ddf2a1e"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@list.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@list.cache_meta",
+      "sha256": "6e85e4644552477ffa9aa8c6248dfd67ca6789c2cb0e42b6151b0fe065e7ed94"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@list.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@list.erl",
+      "sha256": "dc5601f1b5fef7d2ef3050bcb81f6362712ccaad31a61f4395584abf5f649839"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@option.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@option.cache",
+      "sha256": "8a45af05b59e68635f9bbde71d87e969f91c1cfb629b1322f3973b01cdd9020b"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@option.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@option.cache_meta",
+      "sha256": "d5eb46cb5d6880c5544c1aebbabc21902bbee3c680f093e1af8a6ed95b8166b5"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@option.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@option.erl",
+      "sha256": "7ded89128851e5963b163693a00430e9f88a4deaf0f9f42988f9c67b25a7d39f"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@order.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@order.cache",
+      "sha256": "202d58521df734cb39b9d6eabd57a2de51b4131f5d3d2657f65f86ed9160158d"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@order.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@order.cache_meta",
+      "sha256": "c88b6638be31218a55ea26747cdd4e8f8cf1175ecaace638ae5b57a4cd0c1bab"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@order.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@order.erl",
+      "sha256": "de1a90d556acfc2c4df267fe13f794c6f3a52a719ed36f738a32700fc78901c8"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@pair.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@pair.cache",
+      "sha256": "895acd0d8dfa696f1f31accdcc29c6b85903aa79cb2933e4af5f93685703323f"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@pair.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@pair.cache_meta",
+      "sha256": "b8b80795e386ffb84bc40ebdf4e2d991ee718517fee897abd88dc6df143e645b"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@pair.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@pair.erl",
+      "sha256": "af4df834aae0e6ec079e09ee44d98b56b8ac5618b65c98f3d47b4c3b3c3dc679"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@result.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@result.cache",
+      "sha256": "26b8cd904123cc41181247e0967856cc34a46c80794e19dec14466051166bfc5"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@result.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@result.cache_meta",
+      "sha256": "18e29afd4ccc45fcab01dda8d76b490cb2c0cfffcc7042b15e90b59327c10cbd"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@result.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@result.erl",
+      "sha256": "db82eb886e31672f22bf03846a79fd89f5ab2379b5da894af0afb8583bc00c6d"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@set.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@set.cache",
+      "sha256": "f64e01cfd65826793a8c0aa754395289bcab068edaf0c8096b11fe2b4d1a68c8"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@set.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@set.cache_meta",
+      "sha256": "f05c2cf54deabbee2713c7a6552e07064bee5229f4507cdcc41409bb3dd9b3e0"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@set.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@set.erl",
+      "sha256": "cba785f712650114400a11191208e3981d5d8869fcbf2a7679f9a8cd30f0a11d"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@string.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@string.cache",
+      "sha256": "03babb5e01a69d64da8bb9d96ed70c05fc29f21ab6211d180844fe3d8b750dab"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@string.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@string.cache_meta",
+      "sha256": "df7d4df0fe081f042038f92d5d9c041e8cc5be2e9bd98847a624843ceba6bb54"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@string.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@string.erl",
+      "sha256": "826350f1729b6f408c9a8b96a084b3bdef50f7d380fa43743a8c92c67d9b217c"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@string_tree.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@string_tree.cache",
+      "sha256": "d45b7c8aaa146981ab9051947b6200fc8ad973f6ae23b4d6db99328610e2ca74"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@string_tree.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@string_tree.cache_meta",
+      "sha256": "b40fc101471dc757f3c48c44938b9acef3cdb7a77072abfad09b16a6fcd368e3"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@string_tree.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@string_tree.erl",
+      "sha256": "d704d8f5c3d290955f047880b9495bc7858368304a6dce68e9252d22b7eb255c"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@uri.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@uri.cache",
+      "sha256": "2368b6e2eeb75a0ed2bc3f7356664a031be963181e287976c39b7faec06662cc"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@uri.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@uri.cache_meta",
+      "sha256": "a3c1080b287f760c4285f8b991affe5be4b6066b87e4282dc15f0cd5fb405257"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam@uri.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam@uri.erl",
+      "sha256": "ad7a80b782917dceb89269bc44dd67beaf8f6cc36d86d4f823eb83cc0ae7493e"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam_stdlib.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam_stdlib.erl",
+      "sha256": "898c1d0be32aeb8068b3617dc99b185d115c5356b861598f0727ed1dd20bf2fc"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/_gleam_artefacts/gleam_stdlib.mjs",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/_gleam_artefacts/gleam_stdlib.mjs",
+      "sha256": "9063e10234ff37b7852ba600ec1e6f2d4a92e5ac372e7dd184f3bb884b6544f3"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/ebin/gleam@bit_array.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/ebin/gleam@bit_array.beam",
+      "sha256": "31e17bd0fa64bf2ba928c96b89d9a38982c55ff2913486ceec55421830af1b33"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/ebin/gleam@bool.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/ebin/gleam@bool.beam",
+      "sha256": "cbff950049329be9440082354e6f5c7b9ee4f87180cabc33b176e619d6261d0f"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/ebin/gleam@bytes_tree.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/ebin/gleam@bytes_tree.beam",
+      "sha256": "cc24c74358681d1c5ca0a5a3b6f79ffa86f4a294e88cc61a6e00513ee354c20c"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/ebin/gleam@dict.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/ebin/gleam@dict.beam",
+      "sha256": "da9749effdc6e02dae8c914e4b437a46c4ec5653162fad4b925f171b89ceb34c"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/ebin/gleam@dynamic.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/ebin/gleam@dynamic.beam",
+      "sha256": "8e86aa3c621ae10d0dab30778670135592067cc4a99fc1296b7cdbb990408e94"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/ebin/gleam@dynamic@decode.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/ebin/gleam@dynamic@decode.beam",
+      "sha256": "17cdda60a00d9cbe3cd91ef6873935c8cb33f19dfb7f9ba4dd414ac753cae93c"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/ebin/gleam@float.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/ebin/gleam@float.beam",
+      "sha256": "efefd21bafd0236b4e1d646cb2bad34c56afbf75025309ed88f03830fb11bd9b"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/ebin/gleam@function.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/ebin/gleam@function.beam",
+      "sha256": "3e9361a9d71f328329d48ba6d7b21785f66cb92da50065a9bda0ce5e66cdb3f1"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/ebin/gleam@int.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/ebin/gleam@int.beam",
+      "sha256": "aec852e48513a8f932ba20d6abafa8d7ee1f2359dbd4e6fd4a2b49441cd831f5"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/ebin/gleam@io.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/ebin/gleam@io.beam",
+      "sha256": "ccce4354f87deac27f3be01c667851c49fa087344a73be9412cb7328a9045554"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/ebin/gleam@list.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/ebin/gleam@list.beam",
+      "sha256": "82178fb3b5ecc4ac7549c707114a78301961a3036c772251e7bb62f1067540f2"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/ebin/gleam@option.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/ebin/gleam@option.beam",
+      "sha256": "89dcaf4082d7b3baeaa8778267d85513f5d7c8e96b9674252517f03c2b6ef49e"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/ebin/gleam@order.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/ebin/gleam@order.beam",
+      "sha256": "fa86b3e362edc7d01ff57effe57987b75f6272989c43f226e5f3045667cac56c"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/ebin/gleam@pair.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/ebin/gleam@pair.beam",
+      "sha256": "f95a1023e82ddf91183c2891993434823a85f2c9eb3d290bdcfc20ed7cccf67d"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/ebin/gleam@result.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/ebin/gleam@result.beam",
+      "sha256": "295987b301fe36104e187d5340d75d7b0b144621afd490f3a93b2c48222390be"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/ebin/gleam@set.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/ebin/gleam@set.beam",
+      "sha256": "00fe422b23b4744bad89b7876a27521c0495bad34281c78aaaaa7491908fe2a5"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/ebin/gleam@string.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/ebin/gleam@string.beam",
+      "sha256": "463d2a0afb011ccabc1eb29a5d6f19cd77c771878712890229912243ba8a1a96"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/ebin/gleam@string_tree.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/ebin/gleam@string_tree.beam",
+      "sha256": "e5e99a075e6736c8301c5756fe4c1cc2e8667d33d53cead87e3d1430b3e8269b"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/ebin/gleam@uri.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/ebin/gleam@uri.beam",
+      "sha256": "da89f231739706565618ba6e08053208e737699ad66b7c5b65f130928775c2b6"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/ebin/gleam_stdlib.app",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/ebin/gleam_stdlib.app",
+      "sha256": "9150826ed84f34f30eb19e695091e0948a936dbf60ee449e15609b638a64c5c2"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/ebin/gleam_stdlib.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/ebin/gleam_stdlib.beam",
+      "sha256": "a42121267049c322efbad9adc0636cc90569fe5f3b8f732e25def63ad56a3c27"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/include/gleam@dynamic@decode_DecodeError.hrl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/include/gleam@dynamic@decode_DecodeError.hrl",
+      "sha256": "42fdc2120548b93d0fdf1058454162bf89c75b401841b34bfbdb9a4e9da3429d"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/include/gleam@dynamic@decode_Decoder.hrl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/include/gleam@dynamic@decode_Decoder.hrl",
+      "sha256": "6e84073ff788225669fee845163a3ebaecd239e47e9fa7468783f4422182dfc2"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/include/gleam@set_Set.hrl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/include/gleam@set_Set.hrl",
+      "sha256": "f4a015505149a51df8cdd189d7e63014497a3b9f172d2500d5cea69fc64b1515"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleam_stdlib/include/gleam@uri_Uri.hrl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleam_stdlib/include/gleam@uri_Uri.hrl",
+      "sha256": "dd83aade828a98af66050b5e6b033dfb183c1213841644e5edc245ad66a83c51"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/_gleam_artefacts/gleeunit/internal/gleeunit_gleam_panic_ffi.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/_gleam_artefacts/gleeunit/internal/gleeunit_gleam_panic_ffi.erl",
+      "sha256": "30ab1da8b8093a61f52aed7ebb9c8dc6544f46b3615e3d136b049529a195a620"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/_gleam_artefacts/gleeunit/internal/gleeunit_gleam_panic_ffi.mjs",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/_gleam_artefacts/gleeunit/internal/gleeunit_gleam_panic_ffi.mjs",
+      "sha256": "2712de784dfff2e7f67f2d83631c48f6424b2acbf58a0a20b39ffd0f247e61d5"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/_gleam_artefacts/gleeunit.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/_gleam_artefacts/gleeunit.cache",
+      "sha256": "5a09bcf824c0cb64784ab1af85e7d55f7ca82ea614cb26e23fa29808f8277a93"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/_gleam_artefacts/gleeunit.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/_gleam_artefacts/gleeunit.cache_meta",
+      "sha256": "3013daaca462ef509ffa64e8b92a33cae152d8296a25e350caddf67a033c66b6"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/_gleam_artefacts/gleeunit.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/_gleam_artefacts/gleeunit.erl",
+      "sha256": "7b23b188700a40a854b0bb069fe94d1546698be1c7e2968acaeae091ef8dd1e7"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/_gleam_artefacts/gleeunit@internal@gleam_panic.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/_gleam_artefacts/gleeunit@internal@gleam_panic.cache",
+      "sha256": "376125f37517f074a3fe20d0f68233812bc53157a47b304c2880cc27b7367f23"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/_gleam_artefacts/gleeunit@internal@gleam_panic.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/_gleam_artefacts/gleeunit@internal@gleam_panic.cache_meta",
+      "sha256": "5a305149d5ec335da547cfdad604125dd571f0fcfb7eb547a02732c1fc5e289d"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/_gleam_artefacts/gleeunit@internal@gleam_panic.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/_gleam_artefacts/gleeunit@internal@gleam_panic.erl",
+      "sha256": "6bd02d8cc12e7e5e192e20be1339c9d3f8a4afcb010d705dc73952685603de64"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/_gleam_artefacts/gleeunit@internal@reporting.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/_gleam_artefacts/gleeunit@internal@reporting.cache",
+      "sha256": "639b6f32d49cbf92f967fdc24a8547591ac48d4e3ddd08fcabcd3b9af0d177f5"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/_gleam_artefacts/gleeunit@internal@reporting.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/_gleam_artefacts/gleeunit@internal@reporting.cache_meta",
+      "sha256": "14f79805587a7ee071faa21108310d5ba87163cd8c9fd9bc618866678af8f5fb"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/_gleam_artefacts/gleeunit@internal@reporting.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/_gleam_artefacts/gleeunit@internal@reporting.erl",
+      "sha256": "4823d051602c749614a0580a9f3e8bf9ac1ee3510d61713b6173b7c354ef9d30"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/_gleam_artefacts/gleeunit@should.cache",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/_gleam_artefacts/gleeunit@should.cache",
+      "sha256": "0f19e460633073ee8d0ff118b43a7f802d4ebf61747cbe455b6cdf2e759defb9"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/_gleam_artefacts/gleeunit@should.cache_meta",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/_gleam_artefacts/gleeunit@should.cache_meta",
+      "sha256": "e8c71b3352e56b290e6e92a716e867a34e5f140c83854f7cc48304dea7291f35"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/_gleam_artefacts/gleeunit@should.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/_gleam_artefacts/gleeunit@should.erl",
+      "sha256": "0b0676cd8c8a023b22d55ad211743c4e5758dfe2e8d537054322968c51110668"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/_gleam_artefacts/gleeunit_ffi.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/_gleam_artefacts/gleeunit_ffi.erl",
+      "sha256": "b8f30b7a76f89d5dec18736fcd7509e079438b756e1fe46b376e55bf81745e8a"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/_gleam_artefacts/gleeunit_ffi.mjs",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/_gleam_artefacts/gleeunit_ffi.mjs",
+      "sha256": "4cbdee800ce10cf5c33d34676d72f93b013ee8d0bb25723275f421d0358029e6"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/_gleam_artefacts/gleeunit_progress.erl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/_gleam_artefacts/gleeunit_progress.erl",
+      "sha256": "4a0032e820a786dc2fbc0a14b7db9f866ab8b584edd8f7cf419f6298f8eff0a8"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/ebin/gleeunit.app",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/ebin/gleeunit.app",
+      "sha256": "83ab9e0b44c24cd51ecbf3f6fca524ba7836b8d8b44e948059feb9fdd5625384"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/ebin/gleeunit.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/ebin/gleeunit.beam",
+      "sha256": "b61769eb4cf68e9859972a83c29cfbb3c2c798189dc61c1c3e0075497f52b08d"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/ebin/gleeunit@internal@gleam_panic.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/ebin/gleeunit@internal@gleam_panic.beam",
+      "sha256": "26c0db3f31e53322b63b33061e0f817265b6ada2d5741c36c88d2d6b9be0964a"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/ebin/gleeunit@internal@reporting.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/ebin/gleeunit@internal@reporting.beam",
+      "sha256": "327e0414cd981afb4cb0a0296c2d2d4fefa84bbcc153da3ca757c22a9da8988e"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/ebin/gleeunit@should.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/ebin/gleeunit@should.beam",
+      "sha256": "27de378abb6ec577594b5261510fa73ef0c73a1082c9fc0f9cc97935d472146b"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/ebin/gleeunit_ffi.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/ebin/gleeunit_ffi.beam",
+      "sha256": "b470a14269723936c10b096a7d6d9d3e94b02555586faa36b5193f0b43e5e03b"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/ebin/gleeunit_gleam_panic_ffi.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/ebin/gleeunit_gleam_panic_ffi.beam",
+      "sha256": "9ddc89ff41fdfe7a33ecaa614dc8b8e345841cf3f85b740feda52a0d8fc207bb"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/ebin/gleeunit_progress.beam",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/ebin/gleeunit_progress.beam",
+      "sha256": "71db1284f897e4be53b3267afe649904d1234f910987310097911831da2b3afb"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/include/gleeunit@internal@gleam_panic_Assert.hrl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/include/gleeunit@internal@gleam_panic_Assert.hrl",
+      "sha256": "fd0bc2bcc4faf6c2ee5a26ff18ee53d92d651639b0dd945133740dbdda4fa0d9"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/include/gleeunit@internal@gleam_panic_AssertedExpression.hrl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/include/gleeunit@internal@gleam_panic_AssertedExpression.hrl",
+      "sha256": "599ab9c6951d9721dd8edcf6c428383d1c7017f0116a0a0c3de792754e32e0fa"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/include/gleeunit@internal@gleam_panic_BinaryOperator.hrl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/include/gleeunit@internal@gleam_panic_BinaryOperator.hrl",
+      "sha256": "4a4bb9a878af757df6c959f70b46bb4595ebafac2cbb0afb580ffff330cd7c48"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/include/gleeunit@internal@gleam_panic_Expression.hrl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/include/gleeunit@internal@gleam_panic_Expression.hrl",
+      "sha256": "70b5115dc20a773eb4a37c7c9d3cabd8d2e1de0124528986157031a60c6ec946"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/include/gleeunit@internal@gleam_panic_FunctionCall.hrl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/include/gleeunit@internal@gleam_panic_FunctionCall.hrl",
+      "sha256": "f5227ca4466ae1554f9ed6e5ceeeea0e584f13ef7221d7df77de83750d39b1dd"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/include/gleeunit@internal@gleam_panic_GleamPanic.hrl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/include/gleeunit@internal@gleam_panic_GleamPanic.hrl",
+      "sha256": "6abb45ceb505a6e66875b9e71786edb9d53f1377c4a9bd1fa1e485c7cb2aeea9"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/include/gleeunit@internal@gleam_panic_LetAssert.hrl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/include/gleeunit@internal@gleam_panic_LetAssert.hrl",
+      "sha256": "689909fb356db5bb75c7ad711296112fc39ab03ba470a900decc1d0ad2059153"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/include/gleeunit@internal@gleam_panic_Literal.hrl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/include/gleeunit@internal@gleam_panic_Literal.hrl",
+      "sha256": "1f1db586d94ce287f237aa1cffabea3dc96d5be493f62cbcc99e335ee39412af"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/include/gleeunit@internal@gleam_panic_OtherExpression.hrl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/include/gleeunit@internal@gleam_panic_OtherExpression.hrl",
+      "sha256": "16620c3aa9d644a92458f6e7282c643b99d0b61f001e1fbe65266b2e11122643"
+    },
+    {
+      "source": "/home/an/NAS-setup/uos/tools/uos/build/dev/erlang/gleeunit/include/gleeunit@internal@reporting_State.hrl",
+      "staged": "/tmp/ev01-bootstrap-campaign-8fbf94/lib/gleeunit/include/gleeunit@internal@reporting_State.hrl",
+      "sha256": "0a97a575b059315e4facc437123674cafb4946698512947787db5a47c433c2f2"
+    }
+  ],
+  "tools": [
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+      "actual": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/x86_64-pc-linux-gnu-ocamlrun-a100",
+      "sha256": "2cb8989363a58b9ca352ea1cd245bf0e8b8adb2c1c64e87b52cbea80bc3e4e0f"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+      "actual": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+      "sha256": "f63584aac3923ba0060b0795274846b6df425b17b7f2f45bc6368b81e3b2ad92"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_native.ml",
+      "actual": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_native.ml",
+      "sha256": "2674b8445c704c7fe9d22e23e7479d886779d4cab635e167723776e1124960b6"
+    },
+    {
+      "path": "/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj",
+      "actual": "/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj",
+      "sha256": "630fe2c54d0b9f53794aa37c1274a344e6067175ac9e8925087974fb3d0c4966"
+    },
+    {
+      "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "actual": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "sha256": "bd67dd9a907245330ed2959749d00345b7f9f3cfa7dbb109e970c16168e231a8"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+      "actual": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+      "sha256": "9d57b042c9f857ed898f4b99116ad8433bed2504619613c97d72a52288bef697"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/dune",
+      "actual": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/dune",
+      "sha256": "9b0a4d43cecade7d25cf0d524834bc4063d4c23497872d3d47c983f76d52170a"
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "/tmp/ev01-bootstrap-campaign-8fbf94/compiled/_gleam_artefacts/gleam@@compile.erl",
+      "sha256": "c3dda42ad646bf321000099eacde4a4ef794c778f7f4994e71be00cd28217196"
+    },
+    {
+      "path": "/tmp/ev01-bootstrap-campaign-8fbf94/compiled/_gleam_artefacts/main.cache",
+      "sha256": "25c5b93404036ffc74bfe3627c47c7bb922bd66186f5305cb41f74b8f1663730"
+    },
+    {
+      "path": "/tmp/ev01-bootstrap-campaign-8fbf94/compiled/_gleam_artefacts/main.cache_meta",
+      "sha256": "afb57bb4a8b421f063a027439d54bc5dc0c65ab839e210bbe2c4d6da04448cd3"
+    },
+    {
+      "path": "/tmp/ev01-bootstrap-campaign-8fbf94/compiled/_gleam_artefacts/main.erl",
+      "sha256": "2af8186b2301f742c8c68cc7df26232aa3bf4e3db6595b90d08462891ad77727"
+    },
+    {
+      "path": "/tmp/ev01-bootstrap-campaign-8fbf94/compiled/_gleam_artefacts/uos.cache",
+      "sha256": "b7609b1431016014555f78673289c877ec226e53bed7be1eed85034216b77a4a"
+    },
+    {
+      "path": "/tmp/ev01-bootstrap-campaign-8fbf94/compiled/_gleam_artefacts/uos.cache_meta",
+      "sha256": "738ec779877656843c72c1009ff438fd0db4a030278a252a549354deea427fc3"
+    },
+    {
+      "path": "/tmp/ev01-bootstrap-campaign-8fbf94/compiled/_gleam_artefacts/uos.erl",
+      "sha256": "7118196919e5da784e5a9a70f1a10603c41d4a0cb23881147ef491b3a0e6cc13"
+    },
+    {
+      "path": "/tmp/ev01-bootstrap-campaign-8fbf94/compiled/_gleam_artefacts/uos_ffi.erl",
+      "sha256": "4b82bf32b65abcfee62586d12afc26615e921918f19fed963630ed0d5096433b"
+    },
+    {
+      "path": "/tmp/ev01-bootstrap-campaign-8fbf94/compiled/ebin/main.beam",
+      "sha256": "736f400d9449407db54801ec5c080f8a526725cc4deb6addfaf172d5198a60d9"
+    },
+    {
+      "path": "/tmp/ev01-bootstrap-campaign-8fbf94/compiled/ebin/uos.beam",
+      "sha256": "8a770296e5995604d29fb7bcfc7e998c94a71db7b14bd0fe5fad3723542cdecd"
+    },
+    {
+      "path": "/tmp/ev01-bootstrap-campaign-8fbf94/compiled/ebin/uos_ffi.beam",
+      "sha256": "418585eaefac3a51fc6c9b2219436e898357d92f02ba777b8612b048a30462ff"
+    },
+    {
+      "path": "/tmp/ev01-bootstrap-campaign-8fbf94/compiled/include/main_Gate.hrl",
+      "sha256": "3f7fbb7383aab0b5e50101493748ff31c650d8dab6dbce1711cd7cf71575b038"
+    },
+    {
+      "path": "/tmp/ev01-bootstrap-campaign-8fbf94/model-build/default/test_bootstrap_model.bc",
+      "sha256": "9c369e0e3a277846f01fe39598299ec7bb910828edf10b8714a308f9365e7801"
+    },
+    {
+      "path": "/tmp/ev01-bootstrap-campaign-8fbf94/model-build/default/bootstrap_model.cma",
+      "sha256": "f22549c5ed580a586d948ddc8d3f5ef257cc0084e00b74b3bae5c7b8a8d59e33"
+    },
+    {
+      "path": "/tmp/ev01-bootstrap-campaign-8fbf94/model-build/default/bootstrap_observer.cma",
+      "sha256": "318fcce304352e63f1e21d81d957f9b3ad90852bf762238eee812da173c13c60"
+    },
+    {
+      "path": "/tmp/ev01-bootstrap-campaign-8fbf94/mutant-build/default/test_bootstrap_model.bc",
+      "sha256": "b1a7abbbef5f62e1ee0961a9dfde441cdfebb9ebe66752cb7c819de3348864a2"
+    },
+    {
+      "path": "/tmp/ev01-bootstrap-campaign-8fbf94/duplicate-build/default/test_bootstrap_model.bc",
+      "sha256": "6206e02df02eba89c2acc0fd8cb62d46e8ab10443f30bd50945199b89300a534"
+    }
+  ],
+  "observations": [
+    {
+      "label": "candidate",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/001-candidate.json",
+      "sha256": "fc99ac8c914c3fdc33d8c939af2deeca0a50c1c27413129cdf2e8858fbd6ecce"
+    },
+    {
+      "label": "candidate",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/002-candidate.json",
+      "sha256": "785a7551a48458422c35906e8dc8e7e58e07d639e7973709d00a38bc2862fe37"
+    },
+    {
+      "label": "candidate",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/003-candidate.json",
+      "sha256": "312755f720b9f76a0911568690246f15ed277acfc9088db435ea81a40d163095"
+    },
+    {
+      "label": "candidate",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/004-candidate.json",
+      "sha256": "8a73ae87befdb545103f2e4935af8aee6a6cbf2a73e9a3a75642df7facd48616"
+    },
+    {
+      "label": "candidate",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/005-candidate.json",
+      "sha256": "fddde6a5fe5c3de3aab23c9a6ef50eba7a0e5b46e8ddc239c773350f5ab538e6"
+    },
+    {
+      "label": "candidate",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/006-candidate.json",
+      "sha256": "64baa1ac256d2798255e2315d02d2086ca1add863ecad3d5b6e560bf0b3d1c03"
+    },
+    {
+      "label": "candidate",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/007-candidate.json",
+      "sha256": "cb64fc5b908307c82784e859798f835063859a374676d24033150a82ff951347"
+    },
+    {
+      "label": "candidate",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/008-candidate.json",
+      "sha256": "849864e45ba4d8e07472dc2972749682028e99eb9aaa7658b415f052f009884c"
+    },
+    {
+      "label": "candidate",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/009-candidate.json",
+      "sha256": "0d52f7927807cbbf32a0aae7dbecf0737424876e7b947b530e93c2c0a1609f1f"
+    },
+    {
+      "label": "candidate",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/010-candidate.json",
+      "sha256": "bd612f144d6dd571f4bc6caa30b047d814bba0a7f4a2a0344c6561afd0466dd1"
+    },
+    {
+      "label": "candidate",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/011-candidate.json",
+      "sha256": "bd3c8e0a95ccc79b83d00e59179d995d48fd548eafba2b5e2e2f488cda5a01d0"
+    },
+    {
+      "label": "candidate",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/012-candidate.json",
+      "sha256": "4da6ae1cfb92bf0055fa111fe8c53abb0748e6631e2b330257f41eb4770a0995"
+    },
+    {
+      "label": "candidate",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/013-candidate.json",
+      "sha256": "a17ba17c16d9742aa146768657ecf672a765e35db27e09324e2d905441ef40fe"
+    },
+    {
+      "label": "candidate",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/014-candidate.json",
+      "sha256": "84768b36a04d28a2ef78dbfb79df52cb2b688ba0c1858ac11c77b58e6c7dcb5d"
+    },
+    {
+      "label": "candidate",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/015-candidate.json",
+      "sha256": "af44d24d5783f3a8b5676c017e0aefa8261d9edec153c85950e362461454f95e"
+    },
+    {
+      "label": "compile-cli",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/016-compile-cli.json",
+      "sha256": "d40dbbe57a0fedb1f97845f41399a9d68786d21d5c354a9acc78a17bb9f9ce27"
+    },
+    {
+      "label": "compile-model-observer",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/017-compile-model-observer.json",
+      "sha256": "2b2e1860bc2b8c81746e4265b303ee4d3e03d1d3e9361a0bfdd7a08c386be9d2"
+    },
+    {
+      "label": "formal-truth-table",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/018-formal-truth-table.json",
+      "sha256": "99939be9173c22be79c5ac36dd08e194718267739bc5dbef0b74b09a1fdfd542"
+    },
+    {
+      "label": "absent-refuses",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/019-absent-refuses.json",
+      "sha256": "608fef7848cbcfbc55ab9f6025afbe6196acc5bf95aeb84c7906d3c6a64cb511"
+    },
+    {
+      "label": "empty-jj-refuses",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/020-empty-jj-refuses.json",
+      "sha256": "9cbb0b94a5ec53163a342c6069bb90042b6e601f372f4d3adcb2cfcee05e2962"
+    },
+    {
+      "label": "file-jj-refuses",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/021-file-jj-refuses.json",
+      "sha256": "262ae9b96922075655ba047bff8373737093da5bdcf36d50677829c8921e0087"
+    },
+    {
+      "label": "init-colocated",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/022-init-colocated.json",
+      "sha256": "d896592e591e5ab1d68f2c91fe342c88b522dc467d4000cf9ed4474fc9c2af7d"
+    },
+    {
+      "label": "colocated-refuses",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/023-colocated-refuses.json",
+      "sha256": "d2a8177d5f2991e25ea50cc543664263bbfc37b1f6704c73bca9d55a87acb75f"
+    },
+    {
+      "label": "init-standalone",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/024-init-standalone.json",
+      "sha256": "436cc78e78cfcbb8b79bf576f9e1d8bad10308d24b31ffa88c921b8610d07d99"
+    },
+    {
+      "label": "snapshot-a",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/025-snapshot-a.json",
+      "sha256": "1620113000a36503fa3ae260b7e47c9fcfe4a96a7c3d0f87b21c958d2f29f991"
+    },
+    {
+      "label": "current",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/026-current.json",
+      "sha256": "aeef9143a5e16d48ecacd3130d2daf977940da2ae7a20acc307fd338f5febc02"
+    },
+    {
+      "label": "standalone-passes",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/027-standalone-passes.json",
+      "sha256": "0bc59a1636d7302d87a562293bd4ad14f0475b4124b319e255d957c62f0e73e3"
+    },
+    {
+      "label": "current",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/028-current.json",
+      "sha256": "60ec5485ba8c717443ec18a32a93af8fcfe3a2907590134a8aec233456bc214b"
+    },
+    {
+      "label": "empty-git-marker-passes",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/029-empty-git-marker-passes.json",
+      "sha256": "b9cb3778d88c794704a3afec064eb77b04bd97d70331770a0cb28290de7da618"
+    },
+    {
+      "label": "git-file-refuses",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/030-git-file-refuses.json",
+      "sha256": "232315e86730dd834c562a16af1d5bf1b3e52750c7b84eb745a974d1f4a5cc97"
+    },
+    {
+      "label": "git-symlink-refuses",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/031-git-symlink-refuses.json",
+      "sha256": "50b89fe82e0aca697d341f4f6551dd8993d86edeec09cdc0943352fcbdfe3600"
+    },
+    {
+      "label": "unreadable-git-refuses",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/032-unreadable-git-refuses.json",
+      "sha256": "3de93c886497004aac586e7e156079437fe7a9715e5d702c8c07eb7c4ea05a1e"
+    },
+    {
+      "label": "nonempty-git-refuses",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/033-nonempty-git-refuses.json",
+      "sha256": "b3b5adec382c3c383e6b3bed0888004387d54482d9186c233deadd7c8b23f3a5"
+    },
+    {
+      "label": "external-store-refuses",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/034-external-store-refuses.json",
+      "sha256": "1415d7937e90dd29c9366018355716169097464bb4a9fe44a8d09c2986dbe9be"
+    },
+    {
+      "label": "bad-store-type-refuses",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/035-bad-store-type-refuses.json",
+      "sha256": "f73a9f2e7be26657fb63c06893b400a4aa6f11af48081da4f95ac16ae64a3e10"
+    },
+    {
+      "label": "symlink-store-refuses",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/036-symlink-store-refuses.json",
+      "sha256": "1a78f6f027fb224f73ac0c561e5ce0fe38a1073022ef8ac1e7a3dbb463bd8e30"
+    },
+    {
+      "label": "symlink-jj-refuses",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/037-symlink-jj-refuses.json",
+      "sha256": "a2e3fded922ecc2e7acf325652122555aa2bf2deb87ccbad3d2080acedfc0354"
+    },
+    {
+      "label": "corrupt-checkout-refuses",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/038-corrupt-checkout-refuses.json",
+      "sha256": "f4ae86cc10b5d1669bb0feb0715616d0a014135dea068aed6addbd67301d365b"
+    },
+    {
+      "label": "snapshot-alpha",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/039-snapshot-alpha.json",
+      "sha256": "b3509e4e651901325cb17e9937180a431d5dbccf3c526cf0fecd0ebb97a8164a"
+    },
+    {
+      "label": "current",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/040-current.json",
+      "sha256": "5788fc5d782ebf925f214223f19ef342c6da743fe12c44878914fa3fefb2d18a"
+    },
+    {
+      "label": "snapshot-beta",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/041-snapshot-beta.json",
+      "sha256": "97fab151b7ebd320d02fab56f93d3f0d2c3c3714440a75c35cde19e11a87fce6"
+    },
+    {
+      "label": "current",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/042-current.json",
+      "sha256": "78953b501d5f8da4e0e59c67e08d3086007f8b5a377aaf5c15e1ec3da83d3c86"
+    },
+    {
+      "label": "read-alpha",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/043-read-alpha.json",
+      "sha256": "b1b12dc9be2a836db12badf77f6c594679e73331ba80997c048ae951da1cded2"
+    },
+    {
+      "label": "read-beta",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/044-read-beta.json",
+      "sha256": "44f8ebc72db71174bfe29f0be47a56a994dbb524f9367ac952be30dac5ea0558"
+    },
+    {
+      "label": "workspace-add",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/045-workspace-add.json",
+      "sha256": "2147baf3c8d2e9c0a0491702c972dd04b9330cc9138ff8d81cdb541f3446901a"
+    },
+    {
+      "label": "additional-workspace-passes",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/046-additional-workspace-passes.json",
+      "sha256": "4029c714536ddec82507e72c25d41d47f078cc29c8eb8350faab746c5c8e0697"
+    },
+    {
+      "label": "snapshot-sibling",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/047-snapshot-sibling.json",
+      "sha256": "03a41d8564a0b6bfd554fa8d6b9082d38e9ddfe2d8772fe5f0175c441dc1a941"
+    },
+    {
+      "label": "corrupt-pointer-refuses",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/048-corrupt-pointer-refuses.json",
+      "sha256": "3ad206a78a6fce039dd3867c2c4254710d97009577dc0e7b177d22fd01e3609d"
+    },
+    {
+      "label": "nested-cli-resolves-root",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/049-nested-cli-resolves-root.json",
+      "sha256": "738a99790eda43db4234c4c7bf8fa2e54316dc3f232b7d33dbf0a8d1a317d63b"
+    },
+    {
+      "label": "checker-args-refuse",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/050-checker-args-refuse.json",
+      "sha256": "6e44ab30758f19d77ef07d2cdba20c513199f769a608b0ac218173a6a65e94e5"
+    },
+    {
+      "label": "compile-designated-mutant",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/051-compile-designated-mutant.json",
+      "sha256": "a041fda79b52e0900da0515e7fd0eab0ef21e7d1a9a335334789b01049935b86"
+    },
+    {
+      "label": "designated-mutant-fails",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/052-designated-mutant-fails.json",
+      "sha256": "cb8d1b37af6d00a92f520007705c8e45a315fc3009a2eb84c381805df344a034"
+    },
+    {
+      "label": "compile-duplicate-mutant",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/053-compile-duplicate-mutant.json",
+      "sha256": "88c7f3130ef3a34ec6887bf2b42eb9ab801103d700de5fd9b7ab49833390579e"
+    },
+    {
+      "label": "duplicate-mutant-fails",
+      "receipt": "/tmp/ev01-bootstrap-campaign-8fbf94/receipts/054-duplicate-mutant-fails.json",
+      "sha256": "41eb9e379c2f6c124922c006a95f04fd884880caf267a3f4e3ed713b97f86f47"
+    }
+  ],
+  "mutant_source_sha256": "220fda2a70bbdd6a164937f06b25e2e63748e45c5e75595a3b0c82c90a4ecf27",
+  "duplicate_mutant_source_sha256": "d8f8456dfad49ba7a9b52c7fcd53b42c2571578da5073fbcfc2df89debf1fad3"
+}

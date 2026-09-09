@@ -1,0 +1,54 @@
+#use "topfind";;
+#require "yojson,cryptokit,unix";;
+open Yojson.Safe.Util
+let root="/home/an/NAS-setup/uos"
+let ocamlrun=root^"/toolchains/opam-ocaml/bin/ocamlrun"
+let ocaml=root^"/toolchains/opam-ocaml/bin/ocaml"
+let adapter=root^"/.uos-workspaces/codex-ev-admission-20260909-0210/tools/ev_native.ml"
+let jj="/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj"
+let require b why=if not b then failwith why
+let read p=let c=open_in_bin p in let n=in_channel_length c in require(n<=16777216)"read bound";let b=really_input_string c n in close_in c;b
+let sha b=Cryptokit.transform_string(Cryptokit.Hexa.encode())(Cryptokit.hash_string(Cryptokit.Hash.sha256())b)
+let write p b=let c=open_out_gen[Open_wronly;Open_creat;Open_excl]0o600 p in output_string c b;close_out c
+let ()=require(Array.length Sys.argv=4)"usage SOURCE_BOOTSTRAP_DIR red|green FRESH_STAGE"
+let source=Sys.argv.(1) and mode=Sys.argv.(2) and stage=Sys.argv.(3)
+let ()=require(mode="red"||mode="green")"mode";require(not(Sys.file_exists stage) && not(Filename.is_relative stage))"fresh stage";Unix.mkdir stage 0o700
+let neutral=stage^"/neutral" and a=stage^"/selected-a"and b=stage^"/ambient-b"and config=stage^"/config"
+let ()=List.iter(fun p->Unix.mkdir p 0o700)[neutral;config]
+let invoke label cwd tool args=
+ require(String.starts_with ~prefix:(stage^"/")cwd)"every child cwd must be explicitly private";
+ let receipt=stage^"/"^label^".json"in
+ let fd=Unix.openfile(stage^"/"^label^".stdout")[Unix.O_WRONLY;Unix.O_CREAT;Unix.O_EXCL]0o600 and input=Unix.openfile "/dev/null"[Unix.O_RDONLY]0 in
+ let argv=[ocamlrun;ocaml;adapter;"--cwd";cwd;"--seconds";"15";"--receipt";receipt;"--";tool]@args in
+ let pid=Unix.create_process ocamlrun(Array.of_list argv)input fd fd in Unix.close input;Unix.close fd;
+ let _,status=Unix.waitpid[]pid in let j=Yojson.Safe.from_string(read receipt)in
+ require(status=Unix.WEXITED(member "exit_code"j|>to_int) && member "failure"j=`Null)"normal child outcome";
+ require(sha(member "output"j|>to_string)=(member "output_sha256"j|>to_string))"output digest";
+ j
+let rec snapshot base relative=
+ let path=if relative=""then base else base^"/"^relative in let s=Unix.lstat path in
+ let bytes,kind=match s.Unix.st_kind with Unix.S_REG->sha(read path),"regular"|Unix.S_DIR->"","directory"|Unix.S_LNK->Unix.readlink path,"symlink"|_->failwith "unexpected fixture type"in
+ `Assoc["path",`String relative;"kind",`String kind;"dev",`Int s.st_dev;"inode",`Int s.st_ino;"mode",`Int s.st_perm;"size",`Int s.st_size;"mtime",`Float s.st_mtime;"ctime",`Float s.st_ctime;"sha256_or_link",`String bytes]::
+ (if kind="directory"then Sys.readdir path|>Array.to_list|>List.sort String.compare|>List.concat_map(fun n->snapshot base(if relative=""then n else relative^"/"^n))else[])
+let fingerprint()=`Assoc["A",`List(snapshot a "");"B",`List(snapshot b "");"config",`List(snapshot config "")]
+let ()=
+ List.iteri(fun n p->let j=invoke("init-"^string_of_int n)neutral "native"["/usr/bin/env";"XDG_CONFIG_HOME="^config;"JJ_CONFIG=/dev/null";jj;"--no-pager";"git";"init";"--no-colocate";p]in require(member "exit_code"j=`Int 0)"private init") [a;b];
+ let id="01020304050607080900"in write(b^"/.jj/repo/config-id")id;
+ let metadata=config^"/jj/repos/"^id^"/metadata.binpb"in require(not(Sys.file_exists metadata))"ambient secure metadata initially absent";
+ let source_bindings=List.map(fun p->let path=source^"/"^p in `Assoc["path",`String path;"sha256",`String(sha(read path))])["bootstrap_model.ml";"bootstrap_observer.ml"]in
+ let driver=stage^"/observe.ml"in
+ write driver(Printf.sprintf "#use \"topfind\";;\n#require \"unix,mtime.clock.os,yojson\";;\n#directory %S;;\n#mod_use %S;;\n#mod_use %S;;\nlet ()=let before=Sys.getcwd()in let result=Bootstrap_observer.observe Sys.argv.(1)in let after=Sys.getcwd()in let status,revision=match result with Ok o->\"PASS\",o.revision|Error reason->\"REFUSED\",reason in print_endline(Yojson.Safe.to_string(`Assoc[\"status\",`String status;\"revision_or_reason\",`String revision;\"cwd_before\",`String before;\"cwd_after\",`String after]));exit(if status=\"PASS\"then 0 else 1)\n"source(source^"/bootstrap_model.ml")(source^"/bootstrap_observer.ml"));
+ let parent=Sys.getcwd()in let before=fingerprint()in
+ write(stage^"/before.json")(Yojson.Safe.pretty_to_string before);
+ let observation=invoke "observe"b "native"["/usr/bin/env";"XDG_CONFIG_HOME="^config;"JJ_CONFIG=/dev/null";ocamlrun;ocaml;driver;a]in
+ let after=fingerprint()in write(stage^"/after.json")(Yojson.Safe.pretty_to_string after);
+ require(Sys.getcwd()=parent)"review parent cwd changed";
+ require(member "exit_code"observation=`Int 0)"observer failed instead of normal isolated case";
+ let output=Yojson.Safe.from_string(member "output"observation|>to_string)in
+ require(member "status"output=`String "PASS" && member "cwd_before"output=`String b && member "cwd_after"output=`String b)"observer parent cwd not preserved";
+ let a_same=member "A"before=member "A"after and b_same=member "B"before=member "B"after and config_same=member "config"before=member "config"after in
+ let reproduced=if mode="red"then a_same && not b_same && not config_same && Sys.file_exists metadata else a_same && b_same && config_same && not(Sys.file_exists metadata)in
+ let report=`Assoc["schema",`String "uos.ev01.two-private-cwd.v1";"mode",`String mode;"expected_behavior_observed",`Bool reproduced;"source_bindings",`List source_bindings;"selected",`String a;"ambient_cwd",`String b;"private_config",`String config;"selected_unchanged",`Bool a_same;"ambient_unchanged",`Bool b_same;"config_unchanged",`Bool config_same;"observer_parent_cwd_unchanged",`Bool true;"reviewer_parent_cwd_unchanged",`Bool true;"observation_receipt_sha256",`String(sha(read(stage^"/observe.json")));"before_sha256",`String(sha(read(stage^"/before.json")));"after_sha256",`String(sha(read(stage^"/after.json")));"authority",`String "NONE";"canonical_observer_executed",`Bool false]in
+ write(stage^"/verification.json")(Yojson.Safe.pretty_to_string report);
+ require reproduced "private RED/GREEN behavior mismatch";
+ Printf.printf "PASS private %s: Aunchanged=%b Bunchanged=%b configunchanged=%b parentcwdunchanged=true\n"mode a_same b_same config_same
