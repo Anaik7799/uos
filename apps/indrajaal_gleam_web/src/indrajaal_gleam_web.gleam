@@ -57,6 +57,7 @@ import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
 import indrajaal/runtime_identity
+import indrajaal/music_files
 import indrajaal/homeostasis_http
 import indrajaal/ecology_http
 import cepaf_gleam/ecology/living_swarm_actor
@@ -98,6 +99,13 @@ fn serve() {
   let router = fn(req: Request(Connection)) -> Response(ResponseData) {
     let path = "/" <> string.join(request.path_segments(req), "/")
 
+    // Reserve the original music path before generic normalisation/file lookup.
+    case music_files.handles(req.path) {
+      True -> {
+        let reply = music_files.handle(music_files.configured_root(), req.method, req.path)
+        response.set_body(reply, mist.Bytes(bytes_tree.from_bit_array(reply.body)))
+      }
+      False ->
     case request.path_segments(req) {
       ["homeostasis"] | ["homeostasis", "evolution"]
       | ["homeostasis", "components"] | ["homeostasis", "terminal"]
@@ -1044,6 +1052,7 @@ fn serve() {
         |> response.set_body(mist.Bytes(bytes_tree.from_string(render_shell())))
         |> response.prepend_header("content-type", "text/html")
       }
+    }
     }
   }
 
