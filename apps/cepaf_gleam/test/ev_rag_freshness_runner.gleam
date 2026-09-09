@@ -17,4 +17,7 @@ pub fn main() {
   rag_cache_mesh_test.semantic_lookup_requires_matching_dimensions_test()
   rag_cache_mesh_test.semantic_lookup_refuses_extreme_embedding_without_arithmetic_test()
   rag_cache_mesh_test.accepted_embedding_boundary_has_stable_cosine_test()
+  rag_cache_mesh_test.tiny_nonzero_vectors_preserve_analytic_similarity_test()
+  rag_cache_mesh_test.tiny_accepted_embedding_can_semantically_match_test()
+  rag_cache_mesh_test.subnormal_identity_and_zero_vector_controls_test()
 }

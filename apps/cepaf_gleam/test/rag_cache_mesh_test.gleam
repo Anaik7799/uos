@@ -388,6 +388,44 @@ pub fn accepted_embedding_boundary_has_stable_cosine_test() {
   }
 }
 
+pub fn tiny_nonzero_vectors_preserve_analytic_similarity_test() {
+  let similarity =
+    rag_cache_mesh.cosine_similarity([3.0e-100, 4.0e-100], [4.0e-100, 3.0e-100])
+  should.be_true(similarity >=. 0.959 && similarity <=. 0.961)
+}
+
+pub fn tiny_accepted_embedding_can_semantically_match_test() {
+  let mesh = rag_cache_mesh.new(5, 0.85)
+  let mesh =
+    rag_cache_mesh.put(
+      mesh,
+      "tiny-accepted",
+      "cached tiny source",
+      [1.0e-100],
+      "response",
+      [],
+      10,
+      1000,
+      100,
+    )
+
+  case
+    rag_cache_mesh.lookup_semantic(mesh, "different query", [1.0e-100], 1050)
+  {
+    rag_cache_mesh.CacheFresh(_, score) -> should.be_true(score >=. 0.99)
+    _ -> should.fail()
+  }
+}
+
+pub fn subnormal_identity_and_zero_vector_controls_test() {
+  let subnormal_similarity =
+    rag_cache_mesh.cosine_similarity([1.0e-320], [1.0e-320])
+  should.be_true(subnormal_similarity >=. 0.99)
+
+  rag_cache_mesh.cosine_similarity([0.0, 0.0], [1.0, 0.0])
+  |> should.equal(0.0)
+}
+
 fn repeated_vector(remaining: Int) -> List(Float) {
   case remaining <= 0 {
     True -> []

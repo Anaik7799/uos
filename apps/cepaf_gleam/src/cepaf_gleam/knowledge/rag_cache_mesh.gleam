@@ -191,7 +191,7 @@ pub fn cosine_similarity(v1: List(Float), v2: List(Float)) -> Float {
     True -> {
       let scale1 = vector_scale(v1)
       let scale2 = vector_scale(v2)
-      case scale1 <=. 0.000001 || scale2 <=. 0.000001 {
+      case scale1 <=. 0.0 || scale2 <=. 0.0 {
         True -> 0.0
         False -> {
           let normalized1 = scale_vector(v1, scale1)
