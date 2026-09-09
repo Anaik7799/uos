@@ -19,6 +19,7 @@
 //// </c3i-module>
 //// =============================================================================
 
+import cepaf_gleam/ecology/andon
 import cepaf_gleam/ecology/harmonic_song.{
   render_song_ascii_sparkline, render_song_svg, song_to_json,
 }
@@ -35,6 +36,7 @@ import gleam/http/response.{type Response}
 import gleam/int
 import gleam/json
 import gleam/list
+import gleam/string
 import mist.{type Connection, type ResponseData}
 
 fn json_response(status: Int, body: String) -> Response(ResponseData) {
@@ -67,6 +69,13 @@ fn html_response(html: String) -> Response(ResponseData) {
   |> response.set_header("content-type", "text/html; charset=utf-8")
   |> response.set_header("cache-control", "no-store")
   |> response.set_header("access-control-allow-origin", "*")
+}
+
+fn escape_html_text(value: String) -> String {
+  value
+  |> string.replace("&", "&amp;")
+  |> string.replace("<", "&lt;")
+  |> string.replace(">", "&gt;")
 }
 
 /// Render full HTML page for the living swarm ecology cockpit with 18-checkpoint verification.
@@ -141,6 +150,11 @@ pub fn render_ecology_html(swarm: SwarmEcology) -> String {
       <br>Local cognition and diagnostics; backend availability and system admission require separate evidence.
     </p>
     <p id=\"ecology-refresh-status\" role=\"status\" aria-live=\"polite\">Initial snapshot; awaiting live refresh.</p>
+    <div class=\"card\"><h3>Shared service Andon</h3>
+      <pre id=\"ecology-service-andon\" aria-live=\"polite\" style=\"white-space:pre-wrap\">" <> escape_html_text(
+    andon.summary(swarm.service_andon),
+  ) <> "</pre>
+    </div>
 
     <!-- Comprehensive Verification Checklist Accordion (SC-CHECKLIST-001) -->
     <details class=\"checklist\" open>

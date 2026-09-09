@@ -1,0 +1,136 @@
+{
+  "schema_version": "uos.harness-review-receipt.v1",
+  "review_request_id": "agy-harness-1",
+  "reviewer_identity": {
+    "agent": "agy",
+    "model": "Antigravity / Gemini 2.5 Flash",
+    "session_id": "abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82",
+    "sa_plan_worker": "worker-agy-abe9bd8d"
+  },
+  "root_coordinator_session": "01a083d2-baa3-7783-8e45-5357cc9e96d8",
+  "target_packet": {
+    "path": "docs/design/20260909-0412-harness-evolution-review-packet.md",
+    "sha256": "99c41eb7c35749d28970ca3cab7e52bd488273eb7df96144902ac5b1625a4798",
+    "verified": true
+  },
+  "sa_plan_claim": {
+    "plan_id": "uos/ecology-harness-agy-review/20260909-0730",
+    "task_id": "AGY-HARNESS-REVIEW",
+    "attempt": 1,
+    "lease_until_ns": 1788935524410911447,
+    "status": "claimed"
+  },
+  "clock_evidence": {
+    "timestamp_utc": "2026-09-09T05:32:41Z",
+    "prefix": "20260909-0541",
+    "chrony_stratum": 3,
+    "system_time_offset_s": -0.000181595,
+    "root_dispersion_s": 0.002014415,
+    "uncertainty_s": 0.017575,
+    "leap_status": "Normal"
+  },
+  "vcs_evidence": {
+    "vcs": "jujutsu_standalone",
+    "commit_id": "7e6a6c24",
+    "change_id": "xxsoxxww",
+    "native_git_mutations": 0
+  },
+  "provenance_ceiling": {
+    "admitted_ev_ceiling": 93,
+    "unadmitted_ev_range": "EV-94..EV-109",
+    "new_ev_numbers_minted": 0,
+    "rule": "SC-PROVENANCE-001"
+  },
+  "decision_summary": {
+    "total": 28,
+    "accept_within_scope": 24,
+    "revise": 4,
+    "reject": 0,
+    "unknown": 0
+  },
+  "decisions": [
+    {"id": "D01", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D02", "verdict": "REVISE"},
+    {"id": "D03", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D04", "verdict": "REVISE"},
+    {"id": "D05", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D06", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D07", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D08", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D09", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D10", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D11", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D12", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D13", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D14", "verdict": "REVISE"},
+    {"id": "D15", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D16", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D17", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D18", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D19", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D20", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D21", "verdict": "REVISE"},
+    {"id": "D22", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D23", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D24", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D25", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D26", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D27", "verdict": "ACCEPT_WITHIN_SCOPE"},
+    {"id": "D28", "verdict": "REVISE"}
+  ],
+  "candidate_defects": [
+    {
+      "id": "DEF-01",
+      "severity": "CRITICAL_P1",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+      "line": 617,
+      "description": "apps/cepaf_gleam/test/harness_authority_test.gleam is listed in bootstrap_source_paths but absent from filesystem, causing capture_sources() to fail with file_unavailable",
+      "fix": "Commit harness_authority_test.gleam or remove from manifest until authored"
+    },
+    {
+      "id": "DEF-02",
+      "severity": "MAJOR_P1",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+      "line": 120,
+      "description": "Hardcoded worker and session equality checks lock out AGY and Claude workers from starting the harness",
+      "fix": "Parameterize load_binding() to validate authorized tri-agent sessions and worker roles"
+    },
+    {
+      "id": "DEF-03",
+      "severity": "MAJOR_P1",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+      "line": 159,
+      "description": "harness_finish schema requires 3 fields whereas development.gleam validate_arguments accepts only 1 field",
+      "fix": "Synchronize harness_finish parameter schemas across mcp.gleam and development.gleam"
+    },
+    {
+      "id": "DEF-04",
+      "severity": "MAJOR_P2",
+      "file": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+      "line": 533,
+      "description": "Zenoh integration is marked UNAVAILABLE_NOT_VERIFIED; topic naming and correlation deadlines are incomplete",
+      "fix": "Implement Zenoh request correlation and keep UNAVAILABLE status until verified"
+    }
+  ],
+  "seventeen_aspects_coverage": {
+    "A01_substrate_safety": "VERIFIED_PRESERVED",
+    "A02_version_control": "VERIFIED_PRESERVED",
+    "A03_purity_provenance": "VERIFIED_PRESERVED",
+    "A04_root_supervision": "VERIFIED_PRESERVED",
+    "A05_deterministic_runtime": "VERIFIED_PRESERVED",
+    "A06_evidence_analysis": "VERIFIED_PRESERVED",
+    "A07_mathematical_authority": "VERIFIED_PRESERVED",
+    "A08_feedback_homeostasis": "VERIFIED_PRESERVED",
+    "A09_isolated_inference": "VERIFIED_PRESERVED",
+    "A10_mesh_observability": "VERIFIED_PRESERVED",
+    "A11_agent_events": "VERIFIED_PRESERVED",
+    "A12_declarative_ui": "VERIFIED_PRESERVED",
+    "A13_multi_interface_access": "VERIFIED_PRESERVED",
+    "A14_tailnet_navigation": "VERIFIED_PRESERVED",
+    "A15_verification_checklist": "VERIFIED_PRESERVED",
+    "A16_knowledge_triad": "VERIFIED_PRESERVED",
+    "A17_durable_execution": "VERIFIED_PRESERVED"
+  },
+  "journal_artifact": "file:///home/an/.gemini/antigravity-cli/brain/abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82/20260909-0541-agy-harness-evolution-independent-review.md",
+  "system_admission": false
+}

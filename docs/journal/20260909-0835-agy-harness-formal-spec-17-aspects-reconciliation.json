@@ -1,0 +1,176 @@
+{
+  "schema": "uos.harness.formal_spec_17_aspects.reconciliation.v1",
+  "review_request_id": "agy-harness-1",
+  "root_session": "01a083d2-baa3-7783-8e45-5357cc9e96d8",
+  "reviewer_session": "abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82",
+  "worker_id": "worker-agy-abe9bd8d",
+  "timestamp_iso": "2026-09-09T06:35:00Z",
+  "formal_specification_reference": {
+    "path": "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md",
+    "section": "7. Seventeen system aspects",
+    "lines": "110-132"
+  },
+  "bootstrap_service_status": {
+    "reviewer_interface": "EXTERNAL_COOPERATIVE_AGENT",
+    "gleam_mcp_direct_pipe": "BOOTSTRAP_SERVICE_GAP",
+    "note": "Direct stdio Gleam MCP pipe is actively claimed by root launcher session 01a083d2; external reviewer actions are mediated via coordinator board events and Sa-plan tracking"
+  },
+  "root_progress_updates_acknowledged": {
+    "mcp_test_count": "69 targeted MCP checks passing (supersedes historical 46-test count)",
+    "status_receipt_consistency_fix": "Actively being applied by root before final proof",
+    "all_49_registration": "Executing via Gleam MCP; no feature completion or admission claimed",
+    "fable_n2_n3_repairs": "Fable N2 risk hash refresh and N3 manifest/write scope repaired; DEF-01..DEF-04 preserved as historical reviewed observations"
+  },
+  "seventeen_system_aspects_reconciliation": {
+    "summary": {
+      "specific_component_observed": 8,
+      "design_and_source_reviewed": 2,
+      "broad_unknown": 7
+    },
+    "aspects": [
+      {
+        "aspect_number": 1,
+        "name": "Substrate and hardware safety",
+        "formal_requirement": "Preserve host storage interlocks; harness cannot override denied devices.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED_BROAD_UNKNOWN",
+        "specific_component_observation": "ops/kubernetes/nas-k8s-lab/src/spec.rs locks NVMe serial 25503L801736; historical 7/7 checks passed",
+        "runtime_enforcement_at_candidate": "UNKNOWN (Cluster Ceph storage controller unrun by reviewer at candidate revision)"
+      },
+      {
+        "aspect_number": 2,
+        "name": "Version control",
+        "formal_requirement": "Preserve standalone JJ, source ownership and candidate identification.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED",
+        "specific_component_observation": "Standalone JJ working copy verified at candidate 7e6a6c24; zero native Git mutations executed",
+        "runtime_enforcement_at_candidate": "PARTIALLY_VERIFIED (Local workspace intact; multi-workspace concurrency unexercised)"
+      },
+      {
+        "aspect_number": 3,
+        "name": "Purity and provenance",
+        "formal_requirement": "Preserve excluded dependencies and read-only external source discipline.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED_BROAD_UNKNOWN",
+        "specific_component_observation": "0 Bevy, 0 Graphite, 0 foreign NIFs; external VM-1 sources read-only in governance/sources/; admitted ceiling EV-93 observed",
+        "runtime_enforcement_at_candidate": "UNKNOWN (Dynamic cluster-wide provenance enforcement unrun at candidate revision)"
+      },
+      {
+        "aspect_number": 4,
+        "name": "Supervision",
+        "formal_requirement": "Gleam/OTP owns the agent and service supervision hierarchy.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED_BROAD_UNKNOWN",
+        "specific_component_observation": "uos_sup.gleam root supervisor reviewed; OTP 29 process tree observed live on port 4100",
+        "runtime_enforcement_at_candidate": "UNKNOWN (Live supervisor crash-recovery and child restart budgets unexercised)"
+      },
+      {
+        "aspect_number": 5,
+        "name": "Deterministic runtime",
+        "formal_requirement": "ZigVM remains a contracted deterministic backend where admitted.",
+        "status": "DESIGN_AND_SOURCE_REVIEWED",
+        "specific_component_observation": "ZigVM VFS contracts and linear arena allocators reviewed in source",
+        "runtime_enforcement_at_candidate": "UNKNOWN (Zig deterministic runtime kernel unrun by reviewer at candidate revision)"
+      },
+      {
+        "aspect_number": 6,
+        "name": "Evidence and analysis",
+        "formal_requirement": "Hermes tools remain bounded evidence services under Gleam control.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED_BROAD_UNKNOWN",
+        "specific_component_observation": "Isolated /tmp SQLite verification executed in codex-ev-admission-20260909-0210 (20 unit / 6 CLI pass)",
+        "runtime_enforcement_at_candidate": "UNKNOWN (General differential parity algebra unrun at this candidate revision)"
+      },
+      {
+        "aspect_number": 7,
+        "name": "Mathematical authority",
+        "formal_requirement": "Actual Lean/Quint/solver evidence remains invocation-specific.",
+        "status": "DESIGN_AND_SOURCE_REVIEWED",
+        "specific_component_observation": "Traceability.lean coordinate proof and parity_frontier.qnt reviewed in source",
+        "runtime_enforcement_at_candidate": "UNKNOWN (Lean 4 compiler and Z3 solvers unrun by reviewer at candidate revision)"
+      },
+      {
+        "aspect_number": 8,
+        "name": "Feedback and homeostasis",
+        "formal_requirement": "Separate observation, decision, authority and effect.",
+        "status": "BROAD_UNKNOWN",
+        "specific_component_observation": "Prajna circuit breaker and Lyapunov trend detector models reviewed in source",
+        "runtime_enforcement_at_candidate": "UNKNOWN (Closed-loop autonomous feedback unexercised at candidate revision)"
+      },
+      {
+        "aspect_number": 9,
+        "name": "Inference",
+        "formal_requirement": "MAX/Mojo isolation and centrally controlled OpenRouter requests.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED",
+        "specific_component_observation": "MAX Mojo stdio pipe isolated; durable daily budget component implemented in tools/ecology_budget.ml + daily_budget.gleam (398 checks pass, zero paid calls made)",
+        "runtime_enforcement_at_candidate": "PARTIALLY_VERIFIED (Local component and budget reservation verified; remote provider inference unrun)"
+      },
+      {
+        "aspect_number": 10,
+        "name": "Mesh and observability",
+        "formal_requirement": "MCP/Zenoh adapters share identity, correlation and tracing.",
+        "status": "BROAD_UNKNOWN",
+        "specific_component_observation": "development.gleam:533 reports zenoh UNAVAILABLE_NOT_VERIFIED; Falsifier H1 shows 4100 renders static fixtures",
+        "runtime_enforcement_at_candidate": "UNKNOWN (Unified MCP-over-Zenoh telemetry unverified)"
+      },
+      {
+        "aspect_number": 11,
+        "name": "Agent events",
+        "formal_requirement": "Lifecycle, reasoning, tool, state and result events reflect actual transitions.",
+        "status": "BROAD_UNKNOWN",
+        "specific_component_observation": "32 event types defined in agui/events.gleam; Falsifier H1 shows 4100 AG-UI displays static demo events (01:42:10)",
+        "runtime_enforcement_at_candidate": "UNKNOWN (Live agent transition streaming unverified by reviewer)"
+      },
+      {
+        "aspect_number": 12,
+        "name": "Declarative UI",
+        "formal_requirement": "Components project typed harness state and uncertainty.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED",
+        "specific_component_observation": "4110 ecology dashboard truthfully projects uncertainty and disclaims absent external bindings",
+        "runtime_enforcement_at_candidate": "PARTIALLY_VERIFIED (Rendered 4110 HTML observed; full 233-component catalog unexercised)"
+      },
+      {
+        "aspect_number": 13,
+        "name": "Interfaces",
+        "formal_requirement": "Web, API, TUI, IDE and agent clients share the same authority semantics.",
+        "status": "BROAD_UNKNOWN",
+        "specific_component_observation": "ui/domain.gleam shared types reviewed in source",
+        "runtime_enforcement_at_candidate": "UNKNOWN (Multi-client live synchronized authority unexercised)"
+      },
+      {
+        "aspect_number": 14,
+        "name": "Navigation",
+        "formal_requirement": "Preserve full clickable Tailnet FQDN links and actual service identity.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED",
+        "specific_component_observation": "HTTP endpoints reachable at nas-1.tail55d152.ts.net on ports 4100 and 4110",
+        "runtime_enforcement_at_candidate": "PARTIALLY_VERIFIED (Local host reachable; peer runtime vm-1:8088 unverified)"
+      },
+      {
+        "aspect_number": 15,
+        "name": "Verification checklist",
+        "formal_requirement": "Every check reports its actual scope, freshness and result.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED",
+        "specific_component_observation": "4110 ecology dashboard truthfully marks 7 domains UNRUN and CHK-17 as NOT_ADMITTED",
+        "runtime_enforcement_at_candidate": "PARTIALLY_VERIFIED (4110 truthfulness verified; fleet-wide automated gate unrun)"
+      },
+      {
+        "aspect_number": 16,
+        "name": "Knowledge triad",
+        "formal_requirement": "Group journals and synchronize wiki/ZK/KM evidence without rewriting history.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED",
+        "specific_component_observation": "91 ZK ADRs + Master MOC enumerated; 13-section journal conventions upheld without historical mutation",
+        "runtime_enforcement_at_candidate": "PARTIALLY_VERIFIED (Knowledge graph enumerated; transclusion engine unexercised)"
+      },
+      {
+        "aspect_number": 17,
+        "name": "Durable execution",
+        "formal_requirement": "Sa-plan remains the canonical task/job/workflow authority.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED_BROAD_UNKNOWN",
+        "specific_component_observation": "tools/sa_plan_main.exe pull queue, leases, and task completion receipts verified locally in var/sa-plan/uos.sqlite3",
+        "runtime_enforcement_at_candidate": "UNKNOWN (Cluster-wide Oban worker pools and Temporal cadence orchestration unexercised)"
+      }
+    ]
+  },
+  "provenance_and_boundaries": {
+    "admitted_ev_ceiling": 93,
+    "unadmitted_range": "EV-94..EV-109",
+    "runtime_admission": "NOT_GRANTED",
+    "producer_source_edits": "NONE_BY_REVIEWER",
+    "deployment_effects": "NONE_BY_REVIEWER"
+  }
+}

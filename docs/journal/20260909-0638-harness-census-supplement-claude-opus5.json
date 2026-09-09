@@ -1,0 +1,363 @@
+{
+  "schema": "uos-harness-census-supplement/v1",
+  "request_id": "claude-fable-harness-1",
+  "kind": "ADDITIVE_SUPPLEMENT",
+  "authority": "REVIEW_ONLY",
+  "runtime_admission": "NOT_GRANTED",
+  "observed_at_utc": "2026-09-09T06:39:09Z",
+  "reviewer": {
+    "model": "claude-opus-5",
+    "is_requested_fable": false,
+    "board_identity": "a65088e0-0f2b-497e-bd5c-97eeed9c3594",
+    "sa_plan_task": "task-30"
+  },
+  "fable_round2": {
+    "status": "RUNNING_NOT_DELIVERED",
+    "requested_scope": "Full D01-D28 census, the 17 exact section-7 aspect names, spec sections 2/3/20/21, atlas cross-check, harness access attempt.",
+    "truthful_statement": "Fable round 2 was dispatched and is still executing at the time of this supplement. Its 28-row and 17-row coverage is NOT delivered here. The 28 and 17 rows below are THIS REVIEWER'S (Opus 5), not Fable's. Root's condition that completion remains pending while required review is outstanding therefore still applies.",
+    "delegation_limits": "Delegated read-only model instance inside session session_01B9GiR9bF4d1Jv2aSMowAKC; not an independent sovereign session; no Sa-plan claim, no board write, no peer ACK; identity is an unprovable model self-report."
+  },
+  "frozen_receipts_binding": {
+    "verified_independently": true,
+    "source_manifest_sha256": "17a361e92d2d50dc5ce435db199d1a89e2585550367ee4cae9cc66f07452cb58",
+    "matches_root_claim": true,
+    "manifest_entries": 28,
+    "manifest_entries_changed_on_disk": 0,
+    "frozen_confirmed": "0 of 28 manifest inputs differ from disk at 2026-09-09T06:39:09Z, so the frozen-source claim holds at this observation.",
+    "build": {
+      "path": "var/harness/effects/20260909-0412-bootstrap-tracking-completion-build-1-result.json",
+      "status": "EXECUTED",
+      "verification": "passed",
+      "admission": "NOT_GRANTED",
+      "observed_end": "2026-09-09T06:36:49.941738Z"
+    },
+    "test": {
+      "path": "var/harness/effects/20260909-0412-bootstrap-tracking-completion-test-1-result.json",
+      "status": "EXECUTED",
+      "verification": "passed",
+      "admission": "NOT_GRANTED",
+      "observed_end": "2026-09-09T06:36:54.282790Z"
+    },
+    "loaded_dispatch_module_md5": "00fe7e27a175b90928a1ba153c7fac56 (build and test agree)",
+    "check_count": "The token 70 appears in the TEST receipt detail and not in the build receipt detail, consistent with root's all-70-checks claim being a test-suite figure.",
+    "caveat": "These receipts evidence verification=passed against a digest-bound 28-input manifest. They do not establish candidate admission and root does not claim they do."
+  },
+  "harness_access": {
+    "available_to_reviewer": false,
+    "reason": "harness/development.gleam binding() admits one literal identity tuple (worker codex-01a083d2-harness, session 01a083d2-...). Any other caller receives development_bootstrap_grant_mismatch. Using it would require asserting root's identity, which packet line 9 forbids.",
+    "attempted_impersonation": false,
+    "mcp_reviewer_role": "None. mcp/authz.gleam exposes GuardianModes (audit_only, enforce, enforce_all, lockdown), a policy dimension, not a reviewer role.",
+    "finding": "N10 MEDIUM: the finite grant that makes the bootstrap safe also makes it un-reviewable through its own interface.",
+    "consequence": "All reviewer observations in this supplement are out-of-band (sha256sum, sqlite3, curl, file reads). They are observations about bytes, database rows and HTTP responses; they do NOT discharge the universal Gleam/MCP requirement."
+  },
+  "decision_matrix_opus5": [
+    {
+      "id": "D01",
+      "verdict": "UNKNOWN",
+      "basis": "Provenance of C3I/Indrajaal reuse not re-derived in this pass; VM-1 trees not read (read-only mandate honoured).",
+      "finding": null
+    },
+    {
+      "id": "D02",
+      "verdict": "UNKNOWN",
+      "basis": "26 participant models vs external bindings not separable from source alone; no runtime dispatch observed.",
+      "finding": null
+    },
+    {
+      "id": "D03",
+      "verdict": "REVISE",
+      "basis": "harness/clock.gleam:58, development.gleam:211,330,405,971,976,983,988 call host absolute paths directly; Gleam does not own the backend choice at these sites.",
+      "finding": "F1"
+    },
+    {
+      "id": "D04",
+      "verdict": "UNKNOWN",
+      "basis": "No live Zenoh equivalence observed; not exercised.",
+      "finding": null
+    },
+    {
+      "id": "D05",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "harness/{development,files,clock,value,mcp,peers}.gleam are Gleam; 1724 lines read in part.",
+      "finding": null
+    },
+    {
+      "id": "D06",
+      "verdict": "UNKNOWN",
+      "basis": "Kernel IR not exercised; no generated native artifact inspected.",
+      "finding": null
+    },
+    {
+      "id": "D07",
+      "verdict": "UNKNOWN",
+      "basis": "OCaml GC roots / Mojo lifecycle / NIF scheduling not exercised in this pass.",
+      "finding": null
+    },
+    {
+      "id": "D08",
+      "verdict": "REVISE",
+      "basis": "Grant is a hardcoded literal tuple read from caller-controlled environment variables (development.gleam:96-131).",
+      "finding": "F2"
+    },
+    {
+      "id": "D09",
+      "verdict": "UNKNOWN",
+      "basis": "Four UCA classes are declared in var/harness/20260909-0412-bootstrap-risk.json; their runtime enforcement was not observed.",
+      "finding": null
+    },
+    {
+      "id": "D10",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "development.gleam:187,196,255 label coordinator outcomes as observation without effect authority; wording is consistent with SYNC-03/04.",
+      "finding": null
+    },
+    {
+      "id": "D11",
+      "verdict": "UNKNOWN",
+      "basis": "Replay/idempotence path not exercised; attempt fencing present at development.gleam:156-164 but single-attempt by grant.",
+      "finding": "F3"
+    },
+    {
+      "id": "D12",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "files.gleam read/create/replace verified by reading: lstat+nlinks==1+size bound, open-descriptor inode/dev recheck, O_EXCL create, fsync file and parent, digest CAS re-read before rename, pending cleanup on failure. Limits are disclosed in the module header.",
+      "finding": "F4"
+    },
+    {
+      "id": "D13",
+      "verdict": "UNKNOWN",
+      "basis": "Legacy reader/adapter regressions not re-executed; no receipt re-derived at this revision.",
+      "finding": null
+    },
+    {
+      "id": "D14",
+      "verdict": "UNKNOWN",
+      "basis": "Finite stdio MCP interface not exercised; no live initialize/notification observed.",
+      "finding": null
+    },
+    {
+      "id": "D15",
+      "verdict": "REVISE",
+      "basis": "clock.gleam:23 policy max_evidence_age_us=3_600_000_000 is 30x the module's own strict_policy 120_000_000 with no stated rationale; the same field carries two distinct semantics at lines 78 and 86.",
+      "finding": "F5"
+    },
+    {
+      "id": "D16",
+      "verdict": "UNKNOWN",
+      "basis": "Three-role isolation not observed; no standby node inspected.",
+      "finding": null
+    },
+    {
+      "id": "D17",
+      "verdict": "UNKNOWN",
+      "basis": "Durability/replication of declared state not observed.",
+      "finding": null
+    },
+    {
+      "id": "D18",
+      "verdict": "UNKNOWN",
+      "basis": "appup/relup/sys semantics not exercised.",
+      "finding": null
+    },
+    {
+      "id": "D19",
+      "verdict": "UNKNOWN",
+      "basis": "Routing eligibility not exercised; no paid call made or observed by this reviewer.",
+      "finding": null
+    },
+    {
+      "id": "D20",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Ledger design and USD0.25 per-request liability are declared in the risk receipt; no paid call receipt exists under var/harness/. Absence of spend is consistent with the packet claim, and absence is not proof of enforcement.",
+      "finding": "F6"
+    },
+    {
+      "id": "D21",
+      "verdict": "UNKNOWN",
+      "basis": "No production binding or calibration observed.",
+      "finding": null
+    },
+    {
+      "id": "D22",
+      "verdict": "UNKNOWN",
+      "basis": "Rete-UL and native executions not re-run in this pass.",
+      "finding": null
+    },
+    {
+      "id": "D23",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Consistent with this reviewer's own independent Lean axiom audit discipline; no sorry/Admitted claimed in the packet.",
+      "finding": null
+    },
+    {
+      "id": "D24",
+      "verdict": "UNKNOWN",
+      "basis": "Ecology baseline separation not observed at runtime.",
+      "finding": null
+    },
+    {
+      "id": "D25",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Packet states hooks are advisory until independently observed; this matches what this reviewer verified separately for the .claude/.agents/.codex preflight hooks.",
+      "finding": null
+    },
+    {
+      "id": "D26",
+      "verdict": "REVISE",
+      "basis": "Packet §Verification checklist declares 18 checkpoints as a 6-row summary table, not the 5-domain 18-item structure SC-CHECKLIST-001 specifies; individual checkpoint states are not itemised.",
+      "finding": "F7"
+    },
+    {
+      "id": "D27",
+      "verdict": "UNKNOWN",
+      "basis": "No production/standby runtime behaviour observed.",
+      "finding": null
+    },
+    {
+      "id": "D28",
+      "verdict": "UNKNOWN",
+      "basis": "Bootstrap completion not observed; HARNESSBOOT is state=executing at review time.",
+      "finding": null
+    }
+  ],
+  "seventeen_aspects_section7": [
+    {
+      "n": 1,
+      "name": "Substrate and hardware safety",
+      "status": "UNKNOWN",
+      "observed": "Host storage interlock (denied NVMe serial) not exercised by this reviewer.",
+      "gap": "CHK-07-DRIVE UNRUN in every surface observed."
+    },
+    {
+      "n": 2,
+      "name": "Version control",
+      "status": "REVISE",
+      "observed": "Standalone JJ intact and no native git mutation observed. But the frozen source is a WORKING COPY, not a candidate: the packet and harness source were reviewed at digests, and Fable N1 showed development.gleam moved 843->1578->1663->1709 during review.",
+      "gap": "Candidate identification, which this aspect names, is absent; receipts bind manifests, not a change_id."
+    },
+    {
+      "n": 3,
+      "name": "Purity and provenance",
+      "status": "REVISE",
+      "observed": "No excluded dependency introduced. Three declared host adapters remain (sqlite3, bash at development.gleam:54,56 and chronyc at clock.gleam:77); the first two are disclosed in adapter_scope with all_adapters_pinned=false, chronyc is not.",
+      "gap": "One undisclosed host exception."
+    },
+    {
+      "n": 4,
+      "name": "Supervision",
+      "status": "UNKNOWN",
+      "observed": "Gleam/OTP supervision source present; no supervisor restart or failure isolation observed by this reviewer.",
+      "gap": ""
+    },
+    {
+      "n": 5,
+      "name": "Deterministic runtime",
+      "status": "UNKNOWN",
+      "observed": "Zig 0.16.0 resolves in-project; no ZigVM execution observed.",
+      "gap": ""
+    },
+    {
+      "n": 6,
+      "name": "Evidence and analysis",
+      "status": "ACCEPT_WITHIN_SCOPE",
+      "observed": "Hermes bounded evidence services present and, in this reviewer's separate work, exercised: dune build PASS, 27-law preflight_algebra suite 27/27.",
+      "gap": "Not exercised under Gleam control in this review."
+    },
+    {
+      "n": 7,
+      "name": "Mathematical authority",
+      "status": "ACCEPT_WITHIN_SCOPE",
+      "observed": "Invocation-specific framing is correct. Verified separately by this reviewer: Lean checks exit 0 with an axiom audit showing propext and Quot.sound only, no sorryAx; Quint inv_all NoError with anti-vacuity probes violating.",
+      "gap": "Those are this reviewer's own artifacts, not harness evidence."
+    },
+    {
+      "n": 8,
+      "name": "Feedback and homeostasis",
+      "status": "ACCEPT_WITHIN_SCOPE",
+      "observed": "Observation, decision, authority and effect are separated in the receipts: every one carries authority/admission fields and fence_scope cooperative_observation_not_atomic_authority.",
+      "gap": "Separation verified in receipt structure, not in running control loops."
+    },
+    {
+      "n": 9,
+      "name": "Inference",
+      "status": "UNKNOWN",
+      "observed": "MAX/Mojo isolation present (mojo executes via the in-project pixi env). No OpenRouter request observed; no paid receipt exists.",
+      "gap": ""
+    },
+    {
+      "n": 10,
+      "name": "Mesh and observability",
+      "status": "REVISE",
+      "observed": "MCP and coordinator envelopes do carry identity, trace_id, span_id and a chained digest - verified in my own board sends. Zenoh equivalence NOT observed.",
+      "gap": "D04's no-live-equivalence caveat stands."
+    },
+    {
+      "n": 11,
+      "name": "Agent events",
+      "status": "REJECT",
+      "observed": "H1: the canonical 4100 cockpit renders static demo_events under a panel titled Live, showing health=100% containers=16/16 with frozen timestamps, against 2 containers actually running. Events do NOT reflect actual transitions on that surface.",
+      "gap": "This is the one aspect with a falsified live observation."
+    },
+    {
+      "n": 12,
+      "name": "Declarative UI",
+      "status": "ACCEPT_WITHIN_SCOPE",
+      "observed": "The 4110 ecology surface projects typed state AND uncertainty honestly: it states external bindings are absent and marks 7 of 18 checkpoints UNRUN in this view.",
+      "gap": "Applies to 4110 only; 4100 fails it (see aspect 11)."
+    },
+    {
+      "n": 13,
+      "name": "Interfaces",
+      "status": "UNKNOWN",
+      "observed": "Web observed at 4100/4110. API, TUI, IDE and agent clients not exercised; whether they share authority semantics is unverified.",
+      "gap": ""
+    },
+    {
+      "n": 14,
+      "name": "Navigation",
+      "status": "ACCEPT_WITHIN_SCOPE",
+      "observed": "Tailnet FQDN links resolve: 4110/ecology 200, 4100/ 200, 4100/planning 200 at 06:38Z. Note 127.0.0.1:4110 returns 000, so 4110 is bound to the Tailscale interface only.",
+      "gap": "Service identity beyond HTTP 200 not verified."
+    },
+    {
+      "n": 15,
+      "name": "Verification checklist",
+      "status": "REVISE",
+      "observed": "4110 reports actual scope and freshness per checkpoint - the correct pattern. The review packet itself collapses 18 checkpoints into a 6-row summary (F7).",
+      "gap": "Inconsistent between surfaces."
+    },
+    {
+      "n": 16,
+      "name": "Knowledge triad",
+      "status": "ACCEPT_WITHIN_SCOPE",
+      "observed": "No history rewriting observed by this reviewer; all my artifacts are additive and prior ones preserved unamended at stable digests.",
+      "gap": "Wiki/ZK/KM synchronisation for the harness work not verified."
+    },
+    {
+      "n": 17,
+      "name": "Durable execution",
+      "status": "REVISE",
+      "observed": "Sa-plan is canonical and root reports 49/49 task/job/workflow registration. But sa_plan_job and sa_plan_workflow still carry no plan_id/task_id column; linkage is a JSON convention in args/input, and 58 of 129 jobs and 19 of 32 workflows carried no reference at my last check.",
+      "gap": "Join linkage is not queryable as a join."
+    }
+  ],
+  "aspect_source_caveat": "Names are taken verbatim from formal spec section 7 (line 110 onward). The spec's own closing line is preserved: 'This table specifies impact; it does not assert that all seventeen aspects are active.'",
+  "limits": [
+    "Delivery ACK is not admission and this is not an admission vote.",
+    "Fable round-2 coverage is OUTSTANDING; this supplement does not substitute for it.",
+    "18 of 28 census rows are UNKNOWN and 7 of 17 aspects are UNKNOWN - source-only review cannot do better without runtime access this reviewer does not have.",
+    "No production, dashboard or harness change was made. No new paid route.",
+    "EV ceiling 93 and EV-94..109 NOT_ADMITTED untouched."
+  ],
+  "verdict_counts": {
+    "UNKNOWN": 18,
+    "REVISE": 4,
+    "ACCEPT_WITHIN_SCOPE": 6
+  },
+  "aspect_counts": {
+    "UNKNOWN": 5,
+    "REVISE": 5,
+    "ACCEPT_WITHIN_SCOPE": 6,
+    "REJECT": 1
+  }
+}

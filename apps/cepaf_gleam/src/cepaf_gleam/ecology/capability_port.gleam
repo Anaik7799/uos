@@ -345,7 +345,7 @@ pub fn default_input(capability: String) -> String {
     "modular_max" ->
       "{\"operation\":\"linear_softmax\",\"features\":[2.0,-1.0],\"weights\":[[1.0,0.0],[0.0,1.0]],\"bias\":[0.5,-0.5]}"
     "openrouter_free" ->
-      "{\"model\":\"openrouter/free\",\"prompt\":\"Describe one bounded observation an autonomous supervisor should record.\",\"max_tokens\":128}"
+      "{\"model\":\"inclusionai/ling-3.0-flash-fin:free\",\"prompt\":\"Describe one bounded observation an autonomous supervisor should record.\",\"max_tokens\":256}"
     _ -> ""
   }
 }

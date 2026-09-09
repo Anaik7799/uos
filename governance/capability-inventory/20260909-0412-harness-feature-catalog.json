@@ -1,0 +1,1794 @@
+{
+  "schema_version": "uos.harness-feature-catalog.v1",
+  "cohort": "20260909-0412-harness-bootstrap",
+  "source_basis": "Operator mandate and actual Claude, delegated Fable and AGY reviews;52 explicit features include specification, algebraic-atlas and tracing gaps. Stages are declarations, not acceptance.",
+  "plan_id": "uos/harness-features/20260909",
+  "authority": "Canonical Sa-plan SQLite; catalog is a read-only design/progress projection, not execution authority",
+  "all_features_complete": false,
+  "system_admission": false,
+  "features": [
+    {
+      "feature_id": "time.observe",
+      "title": "Validated Gleam clock and distinct freshness domains",
+      "implementation_stage": "EXECUTED",
+      "requirements": [
+        "R08"
+      ],
+      "decisions": [
+        "D15"
+      ],
+      "dependencies": [],
+      "acceptance": [
+        "UTC/boot continuity, offset, uncertainty, reference-age and delivery-age predicates",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/clock.gleam",
+          "state": "EXECUTED",
+          "note": "harness/clock.gleam; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "files.read",
+      "title": "Bounded UTF-8 file reads through MCP",
+      "implementation_stage": "EXECUTED",
+      "requirements": [
+        "R06"
+      ],
+      "decisions": [
+        "D12",
+        "D13"
+      ],
+      "dependencies": [
+        "time.observe"
+      ],
+      "acceptance": [
+        "Bounded reads preserve bytes; invalid encoding/path never yields successful content",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/files.gleam",
+          "state": "EXECUTED",
+          "note": "harness/files.gleam; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "task.lifecycle",
+      "title": "Canonical Sa-plan authority and recoverable completion",
+      "implementation_stage": "IMPLEMENTED",
+      "requirements": [
+        "R07"
+      ],
+      "decisions": [
+        "D08",
+        "D10",
+        "D11"
+      ],
+      "dependencies": [
+        "time.observe"
+      ],
+      "acceptance": [
+        "One current attempt; completion receipt is recoverable; no independent task store",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam",
+          "state": "IMPLEMENTED",
+          "note": "planning/sa_plan_bridge.gleam; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "files.edit",
+      "title": "Task-scoped durable development edits",
+      "implementation_stage": "IMPLEMENTED",
+      "requirements": [
+        "R06",
+        "R16"
+      ],
+      "decisions": [
+        "D12"
+      ],
+      "dependencies": [
+        "files.read",
+        "task.lifecycle"
+      ],
+      "acceptance": [
+        "Expected digest conflict preserves the previous content; exclusive create never overwrites",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/files.gleam",
+          "state": "IMPLEMENTED",
+          "note": "harness/files.gleam; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "peers.review",
+      "title": "Actual peer discovery, identity and review receipts",
+      "implementation_stage": "EXECUTED",
+      "requirements": [
+        "R23",
+        "R24"
+      ],
+      "decisions": [
+        "D28"
+      ],
+      "dependencies": [
+        "task.lifecycle"
+      ],
+      "acceptance": [
+        "Delivery does not imply peer ACK; uncertain delivery is never automatically retried",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/peers.gleam",
+          "state": "EXECUTED",
+          "note": "harness/peers.gleam; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "otp.supervision",
+      "title": "OTP supervision as agent holon runtime",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R13"
+      ],
+      "decisions": [
+        "D03",
+        "D27"
+      ],
+      "dependencies": [
+        "task.lifecycle"
+      ],
+      "acceptance": [
+        "Restart intensity and dependency isolation hold under actual faults",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "PLANNED",
+          "note": "OTP inventory in specification section 5; no full capability completion or admission"
+        },
+        {
+          "kind": "independent_review",
+          "path": "docs/journal/20260909-0644-harness-fable-round2-census-and-aspects.json",
+          "state": "OPEN",
+          "note": "R2-2: Development MCP is a bare loop with unlinked workers and no uos_sup child; supervised fault recovery is not implemented."
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "R2-2: Development MCP is a bare loop with unlinked workers and no uos_sup child; supervised fault recovery is not implemented. Existing acceptance remains incomplete.",
+      "next_action": "Claim the canonical feature task when dependency and risk gates permit; address the linked review findings and append candidate-specific workflow evidence."
+    },
+    {
+      "feature_id": "models.daily_budget",
+      "title": "Aggregate OpenRouter ten-dollar daily liability ledger",
+      "implementation_stage": "MAPPED",
+      "requirements": [
+        "R09",
+        "R10"
+      ],
+      "decisions": [
+        "D20"
+      ],
+      "dependencies": [
+        "task.lifecycle",
+        "time.observe"
+      ],
+      "acceptance": [
+        "Admitted liabilities do not exceed USD10/day; uncertain spend remains reserved",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "MAPPED",
+          "note": "Earlier 398 native checks and bounded Gleam adapter; current MCP path pending; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "transport.zenoh",
+      "title": "Addressed Zenoh transport and MCP semantic parity",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R01",
+        "R03",
+        "R22"
+      ],
+      "decisions": [
+        "D04",
+        "D11"
+      ],
+      "dependencies": [
+        "task.lifecycle"
+      ],
+      "acceptance": [
+        "Two bridges, duplicate delivery, target isolation and correlation-deadline falsifiers pass",
+        "No feature completion from source/catalog presence or historical counts"
+      ],
+      "evidence": [
+        {
+          "kind": "reviewed_design",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md",
+          "state": "SPECIFIED",
+          "note": "Prefix/correlation mismatch remains"
+        }
+      ],
+      "dashboard": "Current complete feature surface NOT_VERIFIED",
+      "blocker": "Prefix/correlation mismatch remains",
+      "next_action": "Implement or re-observe through canonical Gleam harness and append workflow evidence"
+    },
+    {
+      "feature_id": "identity.grants",
+      "title": "General authenticated agent grants and effect-time fencing",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R01",
+        "R04",
+        "R05"
+      ],
+      "decisions": [
+        "D08",
+        "D10",
+        "D14"
+      ],
+      "dependencies": [
+        "task.lifecycle"
+      ],
+      "acceptance": [
+        "Different principals, roles, attempts and expired leases are enforced by authenticated transport",
+        "No feature completion from source/catalog presence or historical counts"
+      ],
+      "evidence": [
+        {
+          "kind": "reviewed_design",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md",
+          "state": "SPECIFIED",
+          "note": "Current grant is finite environment-asserted local trust"
+        },
+        {
+          "kind": "independent_review",
+          "path": "docs/journal/20260909-0644-harness-fable-round2-census-and-aspects.json",
+          "state": "OPEN",
+          "note": "N10/R2-6: Non-root reviewers are refused by the finite bootstrap grant; no admitted reviewer access path exists."
+        }
+      ],
+      "dashboard": "Current complete feature surface NOT_VERIFIED",
+      "blocker": "N10/R2-6: Non-root reviewers are refused by the finite bootstrap grant; no admitted reviewer access path exists. Existing acceptance remains incomplete.",
+      "next_action": "Claim the canonical feature task when dependency and risk gates permit; address the linked review findings and append candidate-specific workflow evidence."
+    },
+    {
+      "feature_id": "dashboard.ecology",
+      "title": "Live ecology dashboard and autonomous-loop observations",
+      "implementation_stage": "EXECUTED",
+      "requirements": [
+        "R05",
+        "R12",
+        "R22"
+      ],
+      "decisions": [
+        "D02",
+        "D24"
+      ],
+      "dependencies": [
+        "files.read"
+      ],
+      "acceptance": [
+        "Observe real cycle progression, errors, actual bindings and capability state without invented completion",
+        "No feature completion from source/catalog presence or historical counts"
+      ],
+      "evidence": [
+        {
+          "kind": "reviewed_design",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md",
+          "state": "SPECIFIED",
+          "note": "Live dashboard is being independently rechecked"
+        },
+        {
+          "kind": "independent_review",
+          "path": "docs/journal/20260909-0644-harness-fable-round2-census-and-aspects.json",
+          "state": "OPEN",
+          "note": "H1: Canonical4100 Live panel renders static demo_events and fixed health/container counters; peer observed2 running containers against16/16 rendered. The4110 ecology surface remains a local loop with no external system bindings."
+        }
+      ],
+      "dashboard": "http://nas-1.tail55d152.ts.net:4110/ecology",
+      "blocker": "H1: Canonical4100 Live panel renders static demo_events and fixed health/container counters; peer observed2 running containers against16/16 rendered. The4110 ecology surface remains a local loop with no external system bindings. Existing acceptance remains incomplete.",
+      "next_action": "Claim the canonical feature task when dependency and risk gates permit; address the linked review findings and append candidate-specific workflow evidence."
+    },
+    {
+      "feature_id": "tracking.sa_plan",
+      "title": "All-feature canonical SQLite task tracking",
+      "implementation_stage": "IMPLEMENTED",
+      "requirements": [
+        "R07",
+        "R22",
+        "R26"
+      ],
+      "decisions": [
+        "D08",
+        "D28"
+      ],
+      "dependencies": [
+        "task.lifecycle"
+      ],
+      "acceptance": [
+        "Every catalog feature has stable canonical task identity and dependencies, with no shadow task store",
+        "No feature completion from source/catalog presence or historical counts"
+      ],
+      "evidence": [
+        {
+          "kind": "reviewed_design",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md",
+          "state": "SPECIFIED",
+          "note": "New finite tracking adapter under development"
+        },
+        {
+          "kind": "independent_review",
+          "path": "docs/journal/20260909-0644-harness-fable-round2-census-and-aspects.json",
+          "state": "OPEN",
+          "note": "R2-4: Legacy in-memory task models and a second MCP server coexist; their non-authoritative scope and migration must be explicit."
+        }
+      ],
+      "dashboard": "Current complete feature surface NOT_VERIFIED",
+      "blocker": "R2-4: Legacy in-memory task models and a second MCP server coexist; their non-authoritative scope and migration must be explicit. Existing acceptance remains incomplete.",
+      "next_action": "Claim the canonical feature task when dependency and risk gates permit; address the linked review findings and append candidate-specific workflow evidence."
+    },
+    {
+      "feature_id": "provenance.vm1",
+      "title": "VM-1 C3I/Indrajaal/ZigVM provenance comparison",
+      "implementation_stage": "MAPPED",
+      "requirements": [
+        "R25"
+      ],
+      "decisions": [
+        "D01"
+      ],
+      "dependencies": [
+        "files.read"
+      ],
+      "acceptance": [
+        "Bind exact read-only source locators, revisions and sanitized evidence without unvetted ingestion",
+        "No feature completion from source/catalog presence or historical counts"
+      ],
+      "evidence": [
+        {
+          "kind": "reviewed_design",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md",
+          "state": "SPECIFIED",
+          "note": "Earlier comparison receipt does not prove all existing VM-1 services configured in UOS"
+        }
+      ],
+      "dashboard": "Current complete feature surface NOT_VERIFIED",
+      "blocker": "Earlier comparison receipt does not prove all existing VM-1 services configured in UOS",
+      "next_action": "Implement or re-observe through canonical Gleam harness and append workflow evidence"
+    },
+    {
+      "feature_id": "development.build",
+      "title": "Pinned Gleam development builds",
+      "implementation_stage": "IMPLEMENTED",
+      "requirements": [
+        "R16"
+      ],
+      "decisions": [
+        "D05",
+        "D14",
+        "D28"
+      ],
+      "dependencies": [
+        "files.edit"
+      ],
+      "acceptance": [
+        "Actual nonzero/timeout outcomes cannot become passing receipts",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+          "state": "IMPLEMENTED",
+          "note": "harness/development.gleam; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "state.ets",
+      "title": "ETS-backed capability state",
+      "implementation_stage": "MAPPED",
+      "requirements": [
+        "R18"
+      ],
+      "decisions": [
+        "D02",
+        "D17"
+      ],
+      "dependencies": [
+        "otp.supervision"
+      ],
+      "acceptance": [
+        "Atomic bounded operations preserve declared ownership; ETS is not automatic durable replication",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "MAPPED",
+          "note": "ecology capability service; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "ml.max",
+      "title": "Isolated MAX/Mojo inference service",
+      "implementation_stage": "MAPPED",
+      "requirements": [
+        "R15"
+      ],
+      "decisions": [
+        "D07",
+        "D24"
+      ],
+      "dependencies": [
+        "otp.supervision"
+      ],
+      "acceptance": [
+        "Shape, numeric tolerance, resources and failure isolation match contract",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "MAPPED",
+          "note": "Earlier real local MAX observation; new harness path pending; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "knowledge.triad",
+      "title": "Linked journal, wiki, ZK and KM artifacts",
+      "implementation_stage": "MAPPED",
+      "requirements": [
+        "R24"
+      ],
+      "decisions": [
+        "D26"
+      ],
+      "dependencies": [
+        "files.edit"
+      ],
+      "acceptance": [
+        "Projections preserve provenance, scope, source identity and unknowns",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "MAPPED",
+          "note": "Existing document corpora; full harness publishing/readback pending; no full capability completion or admission"
+        },
+        {
+          "kind": "independent_review",
+          "path": "docs/journal/20260909-0644-harness-fable-round2-census-and-aspects.json",
+          "state": "OPEN",
+          "note": "Full Fable per-decision/aspect tables were absent from saved round2 artifacts; exact raw tables requested before review closure."
+        },
+        {
+          "kind": "peer_review",
+          "path": "docs/journal/20260909-0614-harness-fable-round2-full-rows-verbatim.md",
+          "state": "EXECUTED",
+          "note": "Actual full 28 decisions and 17 aspects received and read; corrected 16 ACCEPT_WITHIN_SCOPE, 9 REVISE, 3 UNKNOWN. Delegated Fable is not a sovereign admission vote."
+        },
+        {
+          "kind": "artifact",
+          "path": "docs/wiki/20260909-0626-harness-evolution-completion-status.md",
+          "state": "EXECUTED",
+          "note": "Earlier49-feature status snapshot exists; not evidence of all-capability implementation."
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Full Fable rows and grouped journal/wiki/ZK artifacts now exist; global KM ingestion, index reconciliation and serving-byte verification remain unverified.",
+      "next_action": "Claim the canonical feature task when dependency and risk gates permit; address the linked review findings and append candidate-specific workflow evidence."
+    },
+    {
+      "feature_id": "clients.hooks",
+      "title": "Cross-agent hooks and policy parity",
+      "implementation_stage": "MAPPED",
+      "requirements": [
+        "R01",
+        "R23"
+      ],
+      "decisions": [
+        "D25"
+      ],
+      "dependencies": [
+        "identity.grants"
+      ],
+      "acceptance": [
+        "Every admitted operational surface uses the harness; reminders are not enforcement",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "MAPPED",
+          "note": "Codex advisory hook observed; universal interception not implemented; no full capability completion or admission"
+        },
+        {
+          "kind": "independent_review",
+          "path": "docs/journal/20260909-0644-harness-fable-round2-census-and-aspects.json",
+          "state": "OPEN",
+          "note": "R2-6: Universal no-host-fallback enforcement is absent. Claude corrected its earlier claim: .claude/.agents/.gemini uos_control_loop is not evidence of installed-client hook wiring; validate each actual client event."
+        },
+        {
+          "kind": "peer_runtime_receipt",
+          "path": "docs/journal/20260909-0703-harness-hooks-client-wiring-receipt.json",
+          "state": "EXECUTED",
+          "note": "Separate Claude task31; two real client sentinel checks and legacy preflight parser controls. Out-of-band bootstrap methods do not establish Gleam-only execution."
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Actual Claude Code2.1.266 SessionStart wiring was validated for UOS and NAS-parent configurations. Agents/Gemini client launch checks remain UNRUN; hooks are advisory and universal no-host-fallback enforcement is absent.",
+      "next_action": "Validate each remaining installed client and separately implement an admitted enforced MCP boundary."
+    },
+    {
+      "feature_id": "deployment.roles",
+      "title": "Isolated development, production and standby roles",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R16",
+        "R17"
+      ],
+      "decisions": [
+        "D16"
+      ],
+      "dependencies": [
+        "otp.supervision"
+      ],
+      "acceptance": [
+        "Code/tests run only in dev and production accepts only verified release artifacts",
+        "No feature completion from source/catalog presence or historical counts"
+      ],
+      "evidence": [
+        {
+          "kind": "reviewed_design",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md",
+          "state": "SPECIFIED",
+          "note": "Three-role deployment not observed"
+        }
+      ],
+      "dashboard": "Current complete feature surface NOT_VERIFIED",
+      "blocker": "Three-role deployment not observed",
+      "next_action": "Implement or re-observe through canonical Gleam harness and append workflow evidence"
+    },
+    {
+      "feature_id": "otp.catalog",
+      "title": "Complete installed OTP capability catalog",
+      "implementation_stage": "MAPPED",
+      "requirements": [
+        "R05",
+        "R12",
+        "R13"
+      ],
+      "decisions": [
+        "D02",
+        "D03"
+      ],
+      "dependencies": [
+        "otp.supervision"
+      ],
+      "acceptance": [
+        "Discover every installed OTP service with ownership, roles, resource bounds and actual availability",
+        "No feature completion from source/catalog presence or historical counts"
+      ],
+      "evidence": [
+        {
+          "kind": "reviewed_design",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md",
+          "state": "SPECIFIED",
+          "note": "Specification inventory is not live service binding"
+        },
+        {
+          "kind": "independent_review",
+          "path": "docs/journal/20260909-0644-harness-fable-round2-census-and-aspects.json",
+          "state": "OPEN",
+          "note": "R2-1: Atlas lacks an observed OTP/ERTS inventory and capability-specific coverage."
+        }
+      ],
+      "dashboard": "Current complete feature surface NOT_VERIFIED",
+      "blocker": "R2-1: Atlas lacks an observed OTP/ERTS inventory and capability-specific coverage. Existing acceptance remains incomplete.",
+      "next_action": "Claim the canonical feature task when dependency and risk gates permit; address the linked review findings and append candidate-specific workflow evidence."
+    },
+    {
+      "feature_id": "tracking.jobs",
+      "title": "Canonical per-feature durable job records",
+      "implementation_stage": "IMPLEMENTED",
+      "requirements": [
+        "R07",
+        "R09",
+        "R22"
+      ],
+      "decisions": [
+        "D08"
+      ],
+      "dependencies": [
+        "tracking.sa_plan"
+      ],
+      "acceptance": [
+        "Each feature has a content-bound canonical metadata job; actual worker status is separately observed",
+        "No feature completion from source/catalog presence or historical counts"
+      ],
+      "evidence": [
+        {
+          "kind": "reviewed_design",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md",
+          "state": "SPECIFIED",
+          "note": "Metadata registration is not a running worker or completion"
+        },
+        {
+          "kind": "independent_review",
+          "path": "docs/journal/20260909-0644-harness-fable-round2-census-and-aspects.json",
+          "state": "OPEN",
+          "note": "Native job rows lack direct plan_id/task_id foreign-key columns; current identity is a checked JSON convention."
+        }
+      ],
+      "dashboard": "Current complete feature surface NOT_VERIFIED",
+      "blocker": "Native job rows lack direct plan_id/task_id foreign-key columns; current identity is a checked JSON convention. Existing acceptance remains incomplete.",
+      "next_action": "Claim the canonical feature task when dependency and risk gates permit; address the linked review findings and append candidate-specific workflow evidence."
+    },
+    {
+      "feature_id": "tracking.temporal",
+      "title": "Sa-plan Temporal workflow lifecycle and history",
+      "implementation_stage": "IMPLEMENTED",
+      "requirements": [
+        "R07",
+        "R22",
+        "R26"
+      ],
+      "decisions": [
+        "D08",
+        "D11"
+      ],
+      "dependencies": [
+        "tracking.sa_plan"
+      ],
+      "acceptance": [
+        "Start each feature workflow, append digest-bound observations, check replay/conflicts and close only after acceptance",
+        "No feature completion from source/catalog presence or historical counts"
+      ],
+      "evidence": [
+        {
+          "kind": "reviewed_design",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md",
+          "state": "SPECIFIED",
+          "note": "Sa-plan local workflow service exists; feature wiring under development and runtime enforcement incomplete"
+        },
+        {
+          "kind": "independent_review",
+          "path": "docs/journal/20260909-0644-harness-fable-round2-census-and-aspects.json",
+          "state": "OPEN",
+          "note": "Local durable workflow history is operational for feature metadata; external Temporal workers and distributed recovery remain unverified. Native workflow rows lack direct plan_id/task_id foreign-key columns; preserve linkage limitations."
+        }
+      ],
+      "dashboard": "Current complete feature surface NOT_VERIFIED",
+      "blocker": "Local durable workflow history is operational for feature metadata; external Temporal workers and distributed recovery remain unverified. Native workflow rows lack direct plan_id/task_id foreign-key columns; preserve linkage limitations. Existing acceptance remains incomplete.",
+      "next_action": "Claim the canonical feature task when dependency and risk gates permit; address the linked review findings and append candidate-specific workflow evidence."
+    },
+    {
+      "feature_id": "review.independent",
+      "title": "Claude, Fable and AGY comprehensive decision review",
+      "implementation_stage": "EXECUTED",
+      "requirements": [
+        "R21",
+        "R24",
+        "R26"
+      ],
+      "decisions": [
+        "D01",
+        "D28"
+      ],
+      "dependencies": [
+        "peers.review"
+      ],
+      "acceptance": [
+        "Reconcile all D01-D28 and 17 aspects with actual reviewer identity, evidence and corrected inconsistencies",
+        "No feature completion from source/catalog presence or historical counts"
+      ],
+      "evidence": [
+        {
+          "kind": "reviewed_design",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md",
+          "state": "SPECIFIED",
+          "note": "Fable not yet observed; Claude and AGY follow-up/reconciliation pending"
+        },
+        {
+          "kind": "peer_review",
+          "path": "docs/journal/20260909-0614-harness-fable-round2-full-rows-verbatim.md",
+          "state": "EXECUTED",
+          "note": "Actual full 28 decisions and 17 aspects received and read; corrected 16 ACCEPT_WITHIN_SCOPE, 9 REVISE, 3 UNKNOWN. Delegated Fable is not a sovereign admission vote."
+        },
+        {
+          "kind": "peer_review",
+          "path": "docs/journal/20260909-0638-harness-census-supplement-claude-opus5.json",
+          "state": "EXECUTED",
+          "note": "Claude full source census and exact-aspect supplement; earlier source window, limited runtime checks, remaining findings retained."
+        },
+        {
+          "kind": "peer_review",
+          "path": "docs/journal/20260909-0835-agy-harness-formal-spec-17-aspects-reconciliation.json",
+          "state": "EXECUTED",
+          "note": "AGY exact formal-spec17-aspect reconciliation received; no whole-system admission."
+        }
+      ],
+      "dashboard": "Current complete feature surface NOT_VERIFIED",
+      "blocker": "Full Claude, delegated Fable and AGY reviews are received; reviewer grants, final immutable candidate review and closure of REVISE/UNKNOWN findings remain incomplete.",
+      "next_action": "Use the full peer rows and root reconciliation; independently verify each changed candidate through admitted reviewer services."
+    },
+    {
+      "feature_id": "development.verify",
+      "title": "Candidate-bound Gleam acceptance checks",
+      "implementation_stage": "EXECUTED",
+      "requirements": [
+        "R11",
+        "R16"
+      ],
+      "decisions": [
+        "D14",
+        "D28"
+      ],
+      "dependencies": [
+        "development.build"
+      ],
+      "acceptance": [
+        "Checks preserve actual outcomes and current source identity",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "apps/cepaf_gleam/test/harness_verification.gleam",
+          "state": "EXECUTED",
+          "note": "test/harness_verification.gleam; no full capability completion or admission"
+        },
+        {
+          "kind": "independent_review",
+          "path": "docs/journal/20260909-0644-harness-fable-round2-census-and-aspects.json",
+          "state": "OPEN",
+          "note": "R2-3: Current effect receipts lack trace_id/span_id; targeted PASS is not universal C3I conformance. R2-7: Canonical completion must be observed after review reconciliation; dispatched prompts are not peer ACKs."
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "R2-3: Current effect receipts lack trace_id/span_id; targeted PASS is not universal C3I conformance. R2-7: Canonical completion must be observed after review reconciliation; dispatched prompts are not peer ACKs. Existing acceptance remains incomplete.",
+      "next_action": "Claim the canonical feature task when dependency and risk gates permit; address the linked review findings and append candidate-specific workflow evidence."
+    },
+    {
+      "feature_id": "state.stm",
+      "title": "Two-lattice STM and concurrency semantics",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R21"
+      ],
+      "decisions": [
+        "D17",
+        "D23"
+      ],
+      "dependencies": [
+        "state.ets"
+      ],
+      "acceptance": [
+        "Committed histories refine the declared serial reference model",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "PLANNED",
+          "note": "Independent semantic evaluation exists; runtime integration pending; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "agents.superagents",
+      "title": "Composable superagents and selective capability activation",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R05",
+        "R12",
+        "R13"
+      ],
+      "decisions": [
+        "D02"
+      ],
+      "dependencies": [
+        "identity.grants",
+        "otp.catalog"
+      ],
+      "acceptance": [
+        "Each authenticated holon discovers full catalog and activates only authorized subsets",
+        "No feature completion from source/catalog presence or historical counts"
+      ],
+      "evidence": [
+        {
+          "kind": "reviewed_design",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md",
+          "state": "SPECIFIED",
+          "note": "General external holon capability activation unverified"
+        }
+      ],
+      "dashboard": "Current complete feature surface NOT_VERIFIED",
+      "blocker": "General external holon capability activation unverified",
+      "next_action": "Implement or re-observe through canonical Gleam harness and append workflow evidence"
+    },
+    {
+      "feature_id": "dashboard.completion",
+      "title": "Truthful feature and completion dashboard",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R05",
+        "R22",
+        "R24",
+        "R26"
+      ],
+      "decisions": [
+        "D26",
+        "D28"
+      ],
+      "dependencies": [
+        "tracking.sa_plan",
+        "tracking.temporal"
+      ],
+      "acceptance": [
+        "Display canonical per-feature task/job/workflow state, evidence age, gaps and review outcomes",
+        "No feature completion from source/catalog presence or historical counts"
+      ],
+      "evidence": [
+        {
+          "kind": "reviewed_design",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md",
+          "state": "SPECIFIED",
+          "note": "Feature completion projection not deployed or verified"
+        },
+        {
+          "kind": "independent_review",
+          "path": "docs/journal/20260909-0644-harness-fable-round2-census-and-aspects.json",
+          "state": "OPEN",
+          "note": "H2: No deployed live harness feature-completion panel; SQLite projection and report are not a deployed dashboard."
+        }
+      ],
+      "dashboard": "Current complete feature surface NOT_VERIFIED",
+      "blocker": "H2: No deployed live harness feature-completion panel; SQLite projection and report are not a deployed dashboard. Existing acceptance remains incomplete.",
+      "next_action": "Claim the canonical feature task when dependency and risk gates permit; address the linked review findings and append candidate-specific workflow evidence."
+    },
+    {
+      "feature_id": "toolchain.pins",
+      "title": "Repository-pinned and usable backend adapters",
+      "implementation_stage": "IMPLEMENTED",
+      "requirements": [
+        "R06",
+        "R14",
+        "R15",
+        "R25"
+      ],
+      "decisions": [
+        "D03",
+        "D07"
+      ],
+      "dependencies": [
+        "development.build"
+      ],
+      "acceptance": [
+        "Resolve and functionally probe every invoked adapter against pinned realized repository toolchains",
+        "No feature completion from source/catalog presence or historical counts"
+      ],
+      "evidence": [
+        {
+          "kind": "reviewed_design",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md",
+          "state": "SPECIFIED",
+          "note": "Known Gleam/JJ/env paths fixed; chronyc/sqlite3/bash remain explicit bootstrap host dependencies"
+        }
+      ],
+      "dashboard": "Current complete feature surface NOT_VERIFIED",
+      "blocker": "Known Gleam/JJ/env paths fixed; chronyc/sqlite3/bash remain explicit bootstrap host dependencies",
+      "next_action": "Implement or re-observe through canonical Gleam harness and append workflow evidence"
+    },
+    {
+      "feature_id": "probability.bayesian",
+      "title": "Bayesian inference capabilities",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R11"
+      ],
+      "decisions": [
+        "D21",
+        "D22"
+      ],
+      "dependencies": [
+        "development.verify"
+      ],
+      "acceptance": [
+        "Normalized posterior and declared approximation/calibration bounds",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "PLANNED",
+          "note": "Environment evaluation; agent policy integration pending; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "rules.rete_ul",
+      "title": "Rete-UL rule evaluation with independent oracle",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R11",
+        "R21"
+      ],
+      "decisions": [
+        "D22",
+        "D23"
+      ],
+      "dependencies": [
+        "development.verify"
+      ],
+      "acceptance": [
+        "Incremental result equals independent full recomputation including retraction",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "PLANNED",
+          "note": "Join/retract semantic examples do not validate Rete-UL algorithm; no full capability completion or admission"
+        },
+        {
+          "kind": "independent_review",
+          "path": "docs/journal/20260909-0644-harness-fable-round2-census-and-aspects.json",
+          "state": "OPEN",
+          "note": "R2-5: Reviewer found no complete Rete-UL implementation; semantic fixtures must not be credited as the full algorithm."
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "R2-5: Reviewer found no complete Rete-UL implementation; semantic fixtures must not be credited as the full algorithm. Existing acceptance remains incomplete.",
+      "next_action": "Claim the canonical feature task when dependency and risk gates permit; address the linked review findings and append candidate-specific workflow evidence."
+    },
+    {
+      "feature_id": "flight.f_prime",
+      "title": "F Prime modelling and runtime integration",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R05",
+        "R21"
+      ],
+      "decisions": [
+        "D01",
+        "D23"
+      ],
+      "dependencies": [
+        "development.verify"
+      ],
+      "acceptance": [
+        "Projection is not authoritative until official toolchain validation",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "PLANNED",
+          "note": "Backend unavailable unless independently observed; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "formal.lean",
+      "title": "Lean formal evidence service",
+      "implementation_stage": "MAPPED",
+      "requirements": [
+        "R21"
+      ],
+      "decisions": [
+        "D23"
+      ],
+      "dependencies": [
+        "development.verify"
+      ],
+      "acceptance": [
+        "No missing tool, timeout, sorry or undeclared axiom counts as proof",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "MAPPED",
+          "note": "Native evaluation receipts; complete harness binding pending; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "formal.quint",
+      "title": "Quint temporal modelling service",
+      "implementation_stage": "MAPPED",
+      "requirements": [
+        "R21"
+      ],
+      "decisions": [
+        "D23"
+      ],
+      "dependencies": [
+        "development.verify"
+      ],
+      "acceptance": [
+        "Bounds and actual invariant/counterexample outcomes remain explicit",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "MAPPED",
+          "note": "Native evaluation receipts; complete harness binding pending; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "native.mojo_generated",
+      "title": "Gleam-authored Mojo/MAX acceleration",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R14",
+        "R15"
+      ],
+      "decisions": [
+        "D06",
+        "D07"
+      ],
+      "dependencies": [
+        "development.verify",
+        "ml.max"
+      ],
+      "acceptance": [
+        "Generated implementation refines independent Gleam interpretation",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "PLANNED",
+          "note": "Generator not implemented; runtime lifecycle/toolchain must be pinned; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "state.replication",
+      "title": "Complete declared state replication",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R18",
+        "R19"
+      ],
+      "decisions": [
+        "D17"
+      ],
+      "dependencies": [
+        "state.stm",
+        "deployment.roles"
+      ],
+      "acceptance": [
+        "Single writer epoch and committed-prefix replay preserve all declared state",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "PLANNED",
+          "note": "No production/standby replication claimed; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "release.recovery",
+      "title": "Release migration, rollback and forward recovery",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R17",
+        "R20",
+        "R26"
+      ],
+      "decisions": [
+        "D18",
+        "D27"
+      ],
+      "dependencies": [
+        "deployment.roles",
+        "development.verify"
+      ],
+      "acceptance": [
+        "Rehearse incompatible state, failed upgrade, rollback and non-reversible effect reconciliation",
+        "No feature completion from source/catalog presence or historical counts"
+      ],
+      "evidence": [
+        {
+          "kind": "reviewed_design",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md",
+          "state": "SPECIFIED",
+          "note": "Release recovery UNRUN"
+        }
+      ],
+      "dashboard": "Current complete feature surface NOT_VERIFIED",
+      "blocker": "Release recovery UNRUN",
+      "next_action": "Implement or re-observe through canonical Gleam harness and append workflow evidence"
+    },
+    {
+      "feature_id": "verification.environment",
+      "title": "Environment and tool evaluation suite",
+      "implementation_stage": "EXECUTED",
+      "requirements": [
+        "R11",
+        "R21"
+      ],
+      "decisions": [
+        "D22",
+        "D23"
+      ],
+      "dependencies": [
+        "development.verify"
+      ],
+      "acceptance": [
+        "Re-run Gleam, OCaml, Mojo, Lean, Quint, STM, Bayesian, Rete and STPA/FMEA controls through harness",
+        "No feature completion from source/catalog presence or historical counts"
+      ],
+      "evidence": [
+        {
+          "kind": "reviewed_design",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md",
+          "state": "SPECIFIED",
+          "note": "Earlier native/synthetic suite is not complete current MCP integration"
+        },
+        {
+          "kind": "independent_review",
+          "path": "docs/journal/20260909-0644-harness-fable-round2-census-and-aspects.json",
+          "state": "OPEN",
+          "note": "R2-5: Rete semantic cases do not establish Rete-UL algorithm coverage."
+        }
+      ],
+      "dashboard": "Current complete feature surface NOT_VERIFIED",
+      "blocker": "R2-5: Rete semantic cases do not establish Rete-UL algorithm coverage. Existing acceptance remains incomplete.",
+      "next_action": "Claim the canonical feature task when dependency and risk gates permit; address the linked review findings and append candidate-specific workflow evidence."
+    },
+    {
+      "feature_id": "native.ocaml",
+      "title": "Gleam-authored native OCaml acceleration",
+      "implementation_stage": "MAPPED",
+      "requirements": [
+        "R14",
+        "R15"
+      ],
+      "decisions": [
+        "D06",
+        "D07"
+      ],
+      "dependencies": [
+        "development.verify",
+        "formal.lean"
+      ],
+      "acceptance": [
+        "FFI ownership, runtime locks and lifetime preserve Gleam semantics",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "MAPPED",
+          "note": "Existing pinned analysis adapters; general generator unavailable; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "models.coding",
+      "title": "Paid GLM, Kimi and DeepSeek coding models",
+      "implementation_stage": "IMPLEMENTED",
+      "requirements": [
+        "R10",
+        "R11"
+      ],
+      "decisions": [
+        "D19",
+        "D20"
+      ],
+      "dependencies": [
+        "models.daily_budget",
+        "verification.environment"
+      ],
+      "acceptance": [
+        "Route only by verified eligibility, budget and measured task quality",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "IMPLEMENTED",
+          "note": "Gleam worker/engine; no paid request observed in this session; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "models.decision",
+      "title": "Gemma 4 decision model eligibility",
+      "implementation_stage": "IMPLEMENTED",
+      "requirements": [
+        "R10",
+        "R11"
+      ],
+      "decisions": [
+        "D19",
+        "D20"
+      ],
+      "dependencies": [
+        "models.daily_budget",
+        "verification.environment"
+      ],
+      "acceptance": [
+        "Advice cannot grant effect authority; quality remains evaluation-bound",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "IMPLEMENTED",
+          "note": "Provider price-boundary regression repaired; paid activation pending; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "safety.stpa_fmea",
+      "title": "STPA and FMEA risk controls",
+      "implementation_stage": "MAPPED",
+      "requirements": [
+        "R07",
+        "R21"
+      ],
+      "decisions": [
+        "D09",
+        "D22"
+      ],
+      "dependencies": [
+        "task.lifecycle",
+        "formal.quint"
+      ],
+      "acceptance": [
+        "All four UCA classes and raw FMEA remain distinct; score never grants authority",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "MAPPED",
+          "note": "Actual active checks exist; heuristic legacy projections are not ML/formal measurements; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "twins.model",
+      "title": "Formal modelling and calibrated digital twins",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R18",
+        "R21"
+      ],
+      "decisions": [
+        "D23"
+      ],
+      "dependencies": [
+        "formal.lean",
+        "formal.quint"
+      ],
+      "acceptance": [
+        "Twin validity is scoped by calibration, observation age and declared assumptions",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "PLANNED",
+          "note": "Digital twin authority and calibration remain unimplemented; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "release.dynamic",
+      "title": "Tested dynamic OTP upgrades",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R17",
+        "R20"
+      ],
+      "decisions": [
+        "D18"
+      ],
+      "dependencies": [
+        "state.replication",
+        "release.recovery"
+      ],
+      "acceptance": [
+        "Upgrade preserves migration relation or fails into tested recovery",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "PLANNED",
+          "note": "Hot upgrade and standby rehearsals unrun; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "deployment.standby",
+      "title": "Production standby instance and release parity",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R18",
+        "R19"
+      ],
+      "decisions": [
+        "D16",
+        "D17",
+        "D27"
+      ],
+      "dependencies": [
+        "deployment.roles",
+        "state.replication"
+      ],
+      "acceptance": [
+        "Observe both production instances with matching admitted release and replicated committed prefix",
+        "No feature completion from source/catalog presence or historical counts"
+      ],
+      "evidence": [
+        {
+          "kind": "reviewed_design",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md",
+          "state": "SPECIFIED",
+          "note": "No verified standby observation"
+        }
+      ],
+      "dashboard": "Current complete feature surface NOT_VERIFIED",
+      "blocker": "No verified standby observation",
+      "next_action": "Implement or re-observe through canonical Gleam harness and append workflow evidence"
+    },
+    {
+      "feature_id": "models.routing",
+      "title": "Need-based adaptive OpenRouter engine",
+      "implementation_stage": "IMPLEMENTED",
+      "requirements": [
+        "R10",
+        "R11"
+      ],
+      "decisions": [
+        "D21"
+      ],
+      "dependencies": [
+        "models.coding",
+        "models.decision"
+      ],
+      "acceptance": [
+        "Feasible routes satisfy capability/privacy/budget constraints before utility ranking",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "IMPLEMENTED",
+          "note": "Current routing libraries; whole ecology binding pending; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "replication.failover",
+      "title": "Fenced failover and partition recovery",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R18",
+        "R19"
+      ],
+      "decisions": [
+        "D17",
+        "D27"
+      ],
+      "dependencies": [
+        "deployment.standby"
+      ],
+      "acceptance": [
+        "Primary loss and partition drills preserve one writer and unresolved liabilities",
+        "No feature completion from source/catalog presence or historical counts"
+      ],
+      "evidence": [
+        {
+          "kind": "reviewed_design",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md",
+          "state": "SPECIFIED",
+          "note": "Recovery and split-brain controls UNRUN"
+        }
+      ],
+      "dashboard": "Current complete feature surface NOT_VERIFIED",
+      "blocker": "Recovery and split-brain controls UNRUN",
+      "next_action": "Implement or re-observe through canonical Gleam harness and append workflow evidence"
+    },
+    {
+      "feature_id": "supervision.fractal",
+      "title": "Multilayer homeostatic supervisors and leveled queues",
+      "implementation_stage": "MAPPED",
+      "requirements": [
+        "R02",
+        "R09",
+        "R12",
+        "R26"
+      ],
+      "decisions": [
+        "D02",
+        "D09",
+        "D24"
+      ],
+      "dependencies": [
+        "otp.supervision",
+        "safety.stpa_fmea"
+      ],
+      "acceptance": [
+        "Observe fault propagation and bounded recovery at each L0-L9 control boundary",
+        "No feature completion from source/catalog presence or historical counts"
+      ],
+      "evidence": [
+        {
+          "kind": "reviewed_design",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md",
+          "state": "SPECIFIED",
+          "note": "Earlier local loop is not universal ecology autonomy"
+        }
+      ],
+      "dashboard": "Current complete feature surface NOT_VERIFIED",
+      "blocker": "Earlier local loop is not universal ecology autonomy",
+      "next_action": "Implement or re-observe through canonical Gleam harness and append workflow evidence"
+    },
+    {
+      "feature_id": "safety.fractal_tps",
+      "title": "Fractal TPS, Jidoka and Andon enforcement",
+      "implementation_stage": "MAPPED",
+      "requirements": [
+        "R04",
+        "R07",
+        "R09",
+        "R26"
+      ],
+      "decisions": [
+        "D09",
+        "D10"
+      ],
+      "dependencies": [
+        "safety.stpa_fmea",
+        "identity.grants"
+      ],
+      "acceptance": [
+        "All four UCA classes, raw FMEA and unauthorized effects are exercised across L0-L9",
+        "No feature completion from source/catalog presence or historical counts"
+      ],
+      "evidence": [
+        {
+          "kind": "reviewed_design",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md",
+          "state": "SPECIFIED",
+          "note": "Process guidance and source predicates do not prove runtime enforcement"
+        }
+      ],
+      "dashboard": "Current complete feature surface NOT_VERIFIED",
+      "blocker": "Process guidance and source predicates do not prove runtime enforcement",
+      "next_action": "Implement or re-observe through canonical Gleam harness and append workflow evidence"
+    },
+    {
+      "feature_id": "ruliad.explore",
+      "title": "Bounded ruliad exploration",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R09",
+        "R21"
+      ],
+      "decisions": [
+        "D02",
+        "D23"
+      ],
+      "dependencies": [
+        "models.routing"
+      ],
+      "acceptance": [
+        "Explicit finite step/node/memory bounds; no claim to realize the entire mathematical ruliad",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "PLANNED",
+          "note": "No runtime implementation admitted; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "ucon.binding",
+      "title": "Actual UCon and external ecology bindings",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R12"
+      ],
+      "decisions": [
+        "D01",
+        "D02",
+        "D24"
+      ],
+      "dependencies": [
+        "identity.grants",
+        "models.routing"
+      ],
+      "acceptance": [
+        "Local participant counters cannot stand in for external UCon behavior",
+        "Exercise authorized MCP path and failure/replay behavior at the same source identity",
+        "Bind fresh actual runtime and formal evidence; reconcile reviewer findings before feature completion"
+      ],
+      "evidence": [
+        {
+          "kind": "source_or_design_observation",
+          "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+          "state": "PLANNED",
+          "note": "External UCon binding not located/verified; no full capability completion or admission"
+        }
+      ],
+      "dashboard": "Full capability status on dashboard NOT_VERIFIED; finite MCP observation only where stated",
+      "blocker": "Complete MCP binding and candidate-bound end-to-end acceptance are not established",
+      "next_action": "Follow requirement and verification cases in algebraic atlas; preserve UNKNOWN evidence"
+    },
+    {
+      "feature_id": "formal.specification",
+      "title": "Denotational specification and implementation conformance",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R01",
+        "R21",
+        "R24"
+      ],
+      "decisions": [
+        "D03",
+        "D05",
+        "D08",
+        "D23",
+        "D26"
+      ],
+      "dependencies": [
+        "files.edit",
+        "review.independent"
+      ],
+      "acceptance": [
+        "Map every normative SHALL and scenario to an implemented operation or explicit gap",
+        "Reconcile duplicate task models/MCP servers and the scoped bootstrap exception",
+        "Verify each claimed state transition and formal invocation at an exact candidate"
+      ],
+      "evidence": [
+        {
+          "kind": "independent_review",
+          "path": "docs/journal/20260909-0644-harness-fable-round2-census-and-aspects.json",
+          "state": "OPEN",
+          "note": "R2-4/R2-6: Normative universal control and no-host-fallback requirements exceed implemented scope; legacy authority surfaces need explicit reconciliation."
+        }
+      ],
+      "dashboard": "Completion dashboard not deployed; show current Sa-plan projection and explicit acceptance gaps",
+      "blocker": "R2-4/R2-6: Normative universal control and no-host-fallback requirements exceed implemented scope; legacy authority surfaces need explicit reconciliation.",
+      "next_action": "Implement under canonical Sa-plan task authority through the Gleam harness; preserve declared versus verified status and bind independent observations."
+    },
+    {
+      "feature_id": "formal.algebraic_atlas",
+      "title": "Machine-checkable algebraic atlas and installed OTP inventory",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R13",
+        "R21",
+        "R24"
+      ],
+      "decisions": [
+        "D06",
+        "D07",
+        "D23",
+        "D26"
+      ],
+      "dependencies": [
+        "formal.specification",
+        "development.verify"
+      ],
+      "acceptance": [
+        "Encode the specification's nine algebraic structures with capability-specific domains, composition, laws and falsifiers",
+        "Replace repeated generic law/oracle strings with typed machine-checkable contracts and independent oracles",
+        "Observe the installed OTP/ERTS capabilities and map each to status/authorization/evidence",
+        "No source-only registry entry grants formal verification or admission"
+      ],
+      "evidence": [
+        {
+          "kind": "independent_review",
+          "path": "docs/journal/20260909-0644-harness-fable-round2-census-and-aspects.json",
+          "state": "OPEN",
+          "note": "R2-1: Current atlas is a partial capability registry; repeated law/oracle strings and absent installed OTP inventory do not encode the claimed algebra."
+        }
+      ],
+      "dashboard": "Completion dashboard not deployed; show current Sa-plan projection and explicit acceptance gaps",
+      "blocker": "R2-1: Current atlas is a partial capability registry; repeated law/oracle strings and absent installed OTP inventory do not encode the claimed algebra.",
+      "next_action": "Implement under canonical Sa-plan task authority through the Gleam harness; preserve declared versus verified status and bind independent observations."
+    },
+    {
+      "feature_id": "observability.tracing",
+      "title": "C3I trace and span identity in harness intents and receipts",
+      "implementation_stage": "PLANNED",
+      "requirements": [
+        "R06",
+        "R22"
+      ],
+      "decisions": [
+        "D04",
+        "D10",
+        "D14",
+        "D15"
+      ],
+      "dependencies": [
+        "task.lifecycle",
+        "development.verify"
+      ],
+      "acceptance": [
+        "Generate or validate nonzero128-bit trace_id and64-bit span_id through Gleam-owned ingress",
+        "Propagate parent/child identity through intent, native adapter, workflow and result receipts",
+        "Test malformed/zero/missing trace identities and replay consistency",
+        "Keep trace correlation separate from effect authorization"
+      ],
+      "evidence": [
+        {
+          "kind": "independent_review",
+          "path": "docs/journal/20260909-0644-harness-fable-round2-census-and-aspects.json",
+          "state": "OPEN",
+          "note": "R2-3: Harness effect receipts have intent_id/signature but lack trace_id/span_id required by the C3I envelope."
+        }
+      ],
+      "dashboard": "Completion dashboard not deployed; show current Sa-plan projection and explicit acceptance gaps",
+      "blocker": "R2-3: Harness effect receipts have intent_id/signature but lack trace_id/span_id required by the C3I envelope.",
+      "next_action": "Implement under canonical Sa-plan task authority through the Gleam harness; preserve declared versus verified status and bind independent observations."
+    }
+  ]
+}

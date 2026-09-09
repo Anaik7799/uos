@@ -306,7 +306,11 @@ pub type FractalNode {
 
 pub type EvidenceVerdict {
   DiscoveryOnlyEvidence(reason: String)
-  ParityReceipt(candidate_digest: String, reference_digest: String, matched: Bool)
+  ParityReceipt(
+    candidate_digest: String,
+    reference_digest: String,
+    matched: Bool,
+  )
   EvidenceRejected(reason: String)
 }
 
@@ -324,7 +328,8 @@ pub fn evaluate_evidence_boundary(
     True, True, True ->
       case candidate_digest == reference_digest {
         True -> ParityReceipt(candidate_digest, reference_digest, True)
-        False -> EvidenceRejected("Candidate digest diverges from reference digest")
+        False ->
+          EvidenceRejected("Candidate digest diverges from reference digest")
       }
     True, False, _ ->
       DiscoveryOnlyEvidence(
@@ -465,23 +470,125 @@ pub type BionicAspectBinding {
 
 pub fn all_17_aspect_bionic_bindings() -> List(BionicAspectBinding) {
   [
-    BionicAspectBinding(1, "Substrate & Hardware Safety", "spec.rs OS NVMe Drive Lock", "L0 Constitutional", "Active"),
-    BionicAspectBinding(2, "Standalone Jujutsu Monorepo", "Non-colocated .jj/ VCS", "L0 Governance", "Active"),
-    BionicAspectBinding(3, "Zero-Muda Purity", "0 Bevy, 0 Graphite, pure Erlang", "L1 Purity", "Active"),
-    BionicAspectBinding(4, "Gleam/OTP Supervision & Actors", "uos_sup.gleam 4-domain supervisor", "L4 System", "Active"),
-    BionicAspectBinding(5, "Deterministic Runtime Engine", "ZigVM Descriptor-Relative VFS", "L1 Kernel", "Active"),
-    BionicAspectBinding(6, "Formal Evidence & Analysis", "Hermes Gospel, Z3 & SQLite WAL", "L6 Evidence", "Active"),
-    BionicAspectBinding(7, "Mathematical Authority", "Lean 4 Coordinate Conservation", "L8 Math", "Active"),
-    BionicAspectBinding(8, "Biosemiotic Cybernetics", "Rocha Decoupled Semiotics", "L9 Semiotics", "Active"),
-    BionicAspectBinding(9, "Quarantined AI Inference", "Modular MAX/Mojo Python daemon", "L4 Service", "Active"),
-    BionicAspectBinding(10, "Mesh Telemetry & Communication", "Zenoh OoZ & MoZ backplane", "L4 Telemetry", "Active"),
-    BionicAspectBinding(11, "Agent Event Bus Protocol", "AG-UI 32-Event SSE Stream", "L6 Agent", "Active"),
-    BionicAspectBinding(12, "Declarative UI Component Catalog", "A2UI 233 Component Registry", "L2 Presentation", "Active"),
-    BionicAspectBinding(13, "Multi-Interface Accessibility", "Penta-Stack (Lustre/Wisp/TUI)", "L7 Interface", "Active"),
-    BionicAspectBinding(14, "Universal Tailscale FQDN Web Nav", "Tailscale FQDN http://nas-1:4100", "L7 Gateway", "Active"),
-    BionicAspectBinding(15, "Comprehensive Verification Checklist", "SC-CHECKLIST-001 5 Domains / 18 Checks", "L4 SRE", "Active"),
-    BionicAspectBinding(16, "Knowledge Management Triad", "KM Triad (Wiki, ZK, Living Ontology)", "L7 Knowledge", "Active"),
-    BionicAspectBinding(17, "Sa-Plan Durable Execution & Workflow", "Hermes Sa-Plan (12 suites, 235 laws)", "L3 Execution", "Active"),
+    BionicAspectBinding(
+      1,
+      "Substrate & Hardware Safety",
+      "spec.rs OS NVMe Drive Lock",
+      "L0 Constitutional",
+      "Active",
+    ),
+    BionicAspectBinding(
+      2,
+      "Standalone Jujutsu Monorepo",
+      "Non-colocated .jj/ VCS",
+      "L0 Governance",
+      "Active",
+    ),
+    BionicAspectBinding(
+      3,
+      "Zero-Muda Purity",
+      "0 Bevy, 0 Graphite, pure Erlang",
+      "L1 Purity",
+      "Active",
+    ),
+    BionicAspectBinding(
+      4,
+      "Gleam/OTP Supervision & Actors",
+      "uos_sup.gleam 4-domain supervisor",
+      "L4 System",
+      "Active",
+    ),
+    BionicAspectBinding(
+      5,
+      "Deterministic Runtime Engine",
+      "ZigVM Descriptor-Relative VFS",
+      "L1 Kernel",
+      "Active",
+    ),
+    BionicAspectBinding(
+      6,
+      "Formal Evidence & Analysis",
+      "Hermes Gospel, Z3 & SQLite WAL",
+      "L6 Evidence",
+      "Active",
+    ),
+    BionicAspectBinding(
+      7,
+      "Mathematical Authority",
+      "Lean 4 Coordinate Conservation",
+      "L8 Math",
+      "Active",
+    ),
+    BionicAspectBinding(
+      8,
+      "Biosemiotic Cybernetics",
+      "Rocha Decoupled Semiotics",
+      "L9 Semiotics",
+      "Active",
+    ),
+    BionicAspectBinding(
+      9,
+      "Quarantined AI Inference",
+      "Modular MAX/Mojo Python daemon",
+      "L4 Service",
+      "Active",
+    ),
+    BionicAspectBinding(
+      10,
+      "Mesh Telemetry & Communication",
+      "Zenoh OoZ & MoZ backplane",
+      "L4 Telemetry",
+      "Active",
+    ),
+    BionicAspectBinding(
+      11,
+      "Agent Event Bus Protocol",
+      "AG-UI 32-Event SSE Stream",
+      "L6 Agent",
+      "Active",
+    ),
+    BionicAspectBinding(
+      12,
+      "Declarative UI Component Catalog",
+      "A2UI 233 Component Registry",
+      "L2 Presentation",
+      "Active",
+    ),
+    BionicAspectBinding(
+      13,
+      "Multi-Interface Accessibility",
+      "Penta-Stack (Lustre/Wisp/TUI)",
+      "L7 Interface",
+      "Active",
+    ),
+    BionicAspectBinding(
+      14,
+      "Universal Tailscale FQDN Web Nav",
+      "Tailscale FQDN http://nas-1:4100",
+      "L7 Gateway",
+      "Active",
+    ),
+    BionicAspectBinding(
+      15,
+      "Comprehensive Verification Checklist",
+      "SC-CHECKLIST-001 5 Domains / 18 Checks",
+      "L4 SRE",
+      "Active",
+    ),
+    BionicAspectBinding(
+      16,
+      "Knowledge Management Triad",
+      "KM Triad (Wiki, ZK, Living Ontology)",
+      "L7 Knowledge",
+      "Active",
+    ),
+    BionicAspectBinding(
+      17,
+      "Sa-Plan Durable Execution & Workflow",
+      "Hermes Sa-Plan (12 suites, 235 laws)",
+      "L3 Execution",
+      "Active",
+    ),
   ]
 }
 

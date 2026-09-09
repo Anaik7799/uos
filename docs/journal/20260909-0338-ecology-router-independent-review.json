@@ -1,0 +1,240 @@
+{
+  "schema": "uos.ecology-router-independent-review.v1",
+  "created_at": "2026-09-09T03:29:10Z",
+  "review_window": "2026-09-09T03:15:45Z onward; primary source hashes observed at 03:20:04Z and 03:22:38Z",
+  "status": "SCOPED_REVIEW_COMPLETE_WITH_ACTIVATION_GATES",
+  "candidate_revision": null,
+  "parent_candidate_is_not_binding_for_new_staged_sources": true,
+  "plan": "uos/ecology-router-review/20260909-0345",
+  "task": "REVIEW",
+  "worker": "codex-ecology-router-review",
+  "attempt": 1,
+  "read_only_existing_sources": true,
+  "existing_source_edits": 0,
+  "runtime_mutations": 0,
+  "paid_calls": 0,
+  "network_calls": 0,
+  "vcs_mutations": 0,
+  "new_dependency_installs": 0,
+  "runtime_admission": false,
+  "paid_engine_operational_claim": false,
+  "source_observations": [
+    {
+      "path": "docs/design/20260909-0314-openrouter-engine-review-and-recommendation.md",
+      "reviewed_sha256_at_2026_09_09T03_22_38Z": "67e441a1c428683e9fe86c6e96a87cbd9a93e08f06069dce8f58010d6487bfc0",
+      "later_observed_sha256": "6a86f40d3669f94ce3ca368323b003b94d62ee49f8b2ecb38f70b3801890b6f5",
+      "later_observed_at": "2026-09-09T03:29:10Z",
+      "later_bytes": 17271,
+      "changed_during_staging": true,
+      "later_hash_is_not_automatic_review_approval": true
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/route.gleam",
+      "reviewed_sha256_at_2026_09_09T03_22_38Z": "4c858b2c3ad22dbc49aefb175c4f87aa32e633f4123a470c5d171c430ff652e5",
+      "later_observed_sha256": "8650ca5827231ac98f07c717565096cad59ef95010b96815d940856e8cc10040",
+      "later_observed_at": "2026-09-09T03:29:10Z",
+      "later_bytes": 24658,
+      "changed_during_staging": true,
+      "later_hash_is_not_automatic_review_approval": true
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_route_cli.gleam",
+      "reviewed_sha256_at_2026_09_09T03_22_38Z": "6049b0ac8a0ca9735eed5e5b33761a96d5fc0f8f5cefdad5e8599bef25aefc3f",
+      "later_observed_sha256": "6049b0ac8a0ca9735eed5e5b33761a96d5fc0f8f5cefdad5e8599bef25aefc3f",
+      "later_observed_at": "2026-09-09T03:29:10Z",
+      "later_bytes": 9791,
+      "changed_during_staging": false,
+      "later_hash_is_not_automatic_review_approval": true
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ai/intelligence_router.gleam",
+      "reviewed_sha256_at_2026_09_09T03_22_38Z": "faa8a5ca6cb1c290a84eb4a34c738cdd40b072451bc1b84cdca4fb56d40ddf5d",
+      "later_observed_sha256": "faa8a5ca6cb1c290a84eb4a34c738cdd40b072451bc1b84cdca4fb56d40ddf5d",
+      "later_observed_at": "2026-09-09T03:29:10Z",
+      "later_bytes": 11510,
+      "changed_during_staging": false,
+      "later_hash_is_not_automatic_review_approval": true
+    },
+    {
+      "path": "tools/ecology_budget.ml",
+      "reviewed_sha256_at_2026_09_09T03_22_38Z": "ce8b758f745e8179e22e164ecb21d06fb4ba89fcb8464166bd78ce752bb46063",
+      "later_observed_sha256": "0f9119704e90c3dbf16720e3f110071e63c5fa5b43f042ef149b966349c85139",
+      "later_observed_at": "2026-09-09T03:29:10Z",
+      "later_bytes": 21594,
+      "changed_during_staging": true,
+      "later_hash_is_not_automatic_review_approval": true
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/openrouter_worker.gleam",
+      "reviewed_sha256_at_2026_09_09T03_22_38Z": "2f676741be7056d71a651fcf8eaa6ad942c19f1d8c3a9546a1c3653285ab64a6",
+      "later_observed_sha256": "497a86fa3c43a67e0aacce5dd4356f260d60d66756c62a4fe732241a30e0a7c5",
+      "later_observed_at": "2026-09-09T03:29:10Z",
+      "later_bytes": 25031,
+      "changed_during_staging": true,
+      "later_hash_is_not_automatic_review_approval": true
+    },
+    {
+      "path": "apps/uos_swarm/test/openrouter_worker_test.gleam",
+      "reviewed_sha256_at_2026_09_09T03_22_38Z": "6ef39527d3a414c6a06a0aab4dc75a3cc3bd9beb3a390436bc4699a376f491bd",
+      "later_observed_sha256": "d593fbfb11d822831c0e9c3e5f7fea9ce9e4c268d69bc7a7ad12f1d8ce119f26",
+      "later_observed_at": "2026-09-09T03:29:10Z",
+      "later_bytes": 22990,
+      "changed_during_staging": true,
+      "later_hash_is_not_automatic_review_approval": true
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/external_capabilities.gleam",
+      "reviewed_sha256_at_2026_09_09T03_22_38Z": "f911198948997d3e3bfe27d2312a76a16ee5d42a72022733a9f54343698586f3",
+      "later_observed_sha256": "f911198948997d3e3bfe27d2312a76a16ee5d42a72022733a9f54343698586f3",
+      "later_observed_at": "2026-09-09T03:29:10Z",
+      "later_bytes": 2766,
+      "changed_during_staging": false,
+      "later_hash_is_not_automatic_review_approval": true
+    }
+  ],
+  "findings": [
+    {
+      "id": "RR-01",
+      "priority": "P1",
+      "status": "OPEN_ACTIVATION_GATE",
+      "references": [
+        "tools/ecology_budget.ml:191", "tools/ecology_budget.ml:247",
+        "tools/ecology_budget.ml:285",
+        "apps/uos_swarm/src/uos_swarm/openrouter_worker.gleam:558"
+      ],
+      "detail": "The persistent component and CLI accept a database locator, explicitly scope liability to this database, and do not supply task authority. Paid worker calls do not themselves consume a ledger grant. A per-database cap is not one global $10/day dispatch boundary.",
+      "activation_acceptance": "One canonical fenced owner derives request data, atomically reserves before each paid POST, refuses missing/corrupt storage and stale task attempts, and prevents duplicate POSTs and alternate-ledger bypass across all actor entrypoints. Observe concurrent callers and restart behavior against exact release bytes."
+    },
+    {
+      "id": "RR-02",
+      "priority": "P1",
+      "status": "LEGACY_PATH_MUST_NOT_AUTHORIZE_PAID_DISPATCH",
+      "references": [
+        "apps/uos_swarm/src/uos_swarm/route.gleam:681",
+        "apps/uos_swarm/src/uos_swarm/route.gleam:755",
+        "apps/uos_swarm/src/uos_swarm/route.gleam:769",
+        "apps/uos_swarm/src/uos_route_cli.gleam:193"
+      ],
+      "detail": "Legacy JSONL init overwrites totals, and charge performs unlocked read/check/append. Two readers of one epoch can both succeed with the same next epoch and the last line loses a charge. Negative charge input is not rejected. The whole module is not pure and its atomicity comments are not enforcement evidence.",
+      "activation_acceptance": "Retire this path from paid execution authority; expose canonical ledger observations through the CLI and describe only the selection core as pure. Never reuse old JSONL tests as evidence for the new global cap."
+    },
+    {
+      "id": "RR-03",
+      "priority": "P1",
+      "status": "PARTIALLY_REPAIRED_IN_STAGED_SOURCE",
+      "references": [
+        "tools/ecology_budget.ml:55",
+        "apps/uos_swarm/src/uos_swarm/openrouter_worker.gleam:237",
+        "apps/uos_swarm/src/uos_swarm/openrouter_worker.gleam:342"
+      ],
+      "detail": "At the initial snapshot the worker counted grapheme clusters, allowing a large combining-mark string through the nominal text bound, and the ledger trusted caller byte counts. A later source observation found an 8192 UTF-8-byte bound per field; this closes that specific source-level bypass. Exact serialized body/model/token/call binding and provider template assumptions remain integration gates.",
+      "activation_acceptance": "Derive actual system+user UTF-8 bytes and serialized-body bytes from the exact dispatched request; enforce 16384/65536/4096 bounds, bind body digest/model/tokens to a one-use grant, and exercise oversized Unicode, escaping, underreported metadata and request replacement refusal. Prove or conservatively bound provider template/reasoning token liability."
+    },
+    {
+      "id": "RR-04",
+      "priority": "P1",
+      "status": "OPEN_LEARNING_GATE",
+      "references": [
+        "apps/uos_swarm/src/uos_swarm/route.gleam:87",
+        "apps/uos_swarm/src/uos_swarm/route.gleam:205",
+        "apps/uos_swarm/src/uos_swarm/route.gleam:533"
+      ],
+      "detail": "Public posterior constructors and nonempty evidence-reference strings do not authenticate qualification. Repeated references can increment trials. Posterior mean and a minimum trial count do not establish a reliability confidence bound; declared priors must remain separate from independently verified outcomes.",
+      "activation_acceptance": "Resolve and authenticate task/candidate/model/class-bound receipts, enforce exactly-once consumption, validate posterior invariants, and use an explicit bounded calibration route for unknown models. Describe statistical thresholds accurately and do not count API success as coding/decision quality."
+    },
+    {
+      "id": "RR-05",
+      "priority": "P1",
+      "status": "SOURCE_REPAIRED_PEER_TESTS_REPORTED",
+      "references": [
+        "apps/uos_swarm/src/uos_swarm/openrouter_worker.gleam:570",
+        "apps/uos_swarm/src/uos_swarm/openrouter_worker.gleam:603",
+        "apps/cepaf_gleam/src/cepaf_gleam/ecology/external_capabilities.gleam:51"
+      ],
+      "detail": "Initially missing reported cost fell back to a catalog estimate and excess completion tokens were not independently rejected. Source follow-up at worker SHA497a86fa3c43a67e0aacce5dd4356f260d60d66756c62a4fe732241a30e0a7c5 confirms paid run now rejects missing cost, mismatched model, excess output tokens and reported cost above requested/hard USD0.25. Capabilities reports 55 focused tests passing; reviewer inspected the changes and test source, without rerunning or making paid calls.",
+      "activation_acceptance": "Bind final candidate tests to this repair. Retain reservation liability on ambiguous/failed outcomes; strict returned-receipt checks occur after billing and cannot alone enforce a prepaid global liability boundary. Keep estimates, accepted prices, reservations, reported spend and quality outcomes distinct."
+    },
+    {
+      "id": "RR-06",
+      "priority": "P2",
+      "status": "DOCUMENTATION_REFRESH_AND_PROVENANCE",
+      "references": [
+        "docs/design/20260909-0314-openrouter-engine-review-and-recommendation.md:20",
+        "docs/design/20260909-0314-openrouter-engine-review-and-recommendation.md:35",
+        "apps/cepaf_gleam/src/cepaf_gleam/ai/intelligence_router.gleam:300"
+      ],
+      "detail": "The recommendation accurately labels the paid adaptive engine unfinished and the other router a catalog projection. The selected-model dispatch repair is now in staged source. Current paid roster/endpoint facts were parent-observed; this reviewer did not find their durable raw metadata receipts during the initial search and did not re-fetch them.",
+      "activation_acceptance": "Update the historical dispatch finding with peer test/source evidence, bind public metadata URL/time/bytes to the roster, and keep projection budget_approved labels separate from effect authority. No model ranking claim should exceed measured UOS task evidence."
+    }
+  ],
+  "targeted_followup": {
+    "worker_sha256": "497a86fa3c43a67e0aacce5dd4356f260d60d66756c62a4fe732241a30e0a7c5",
+    "route_sha256": "8650ca5827231ac98f07c717565096cad59ef95010b96815d940856e8cc10040",
+    "worker_tests_sha256": "d593fbfb11d822831c0e9c3e5f7fea9ce9e4c268d69bc7a7ad12f1d8ce119f26",
+    "source_checks": [
+      "8192 UTF-8 bytes per field", "paid usage cost required",
+      "paid reply model identity", "paid output token maximum",
+      "paid reported cost maximum",
+      "free_only_remote veto in candidate eligibility"
+    ],
+    "peer": "/root/capabilities",
+    "peer_reported_focused_tests": 55,
+    "reviewer_reran_suite": false
+  },
+  "independent_arithmetic": [
+    {
+      "model": "z-ai/glm-5.3",
+      "assumed_prompt_tokens": 18432,
+      "max_output_tokens": 4096,
+      "worst_case_nanodollars": 43827200,
+      "less_than_fixed_reservation": true
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "assumed_prompt_tokens": 18432,
+      "max_output_tokens": 4096,
+      "worst_case_nanodollars": 116736000,
+      "less_than_fixed_reservation": true
+    },
+    {
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "assumed_prompt_tokens": 18432,
+      "max_output_tokens": 4096,
+      "worst_case_nanodollars": 40550400,
+      "less_than_fixed_reservation": true
+    },
+    {
+      "model": "deepseek/deepseek-v4-flash-0731",
+      "assumed_prompt_tokens": 18432,
+      "max_output_tokens": 4096,
+      "worst_case_nanodollars": 1935360,
+      "less_than_fixed_reservation": true
+    },
+    {
+      "model": "google/gemma-4-31b-it",
+      "assumed_prompt_tokens": 18432,
+      "max_output_tokens": 4096,
+      "worst_case_nanodollars": 3051520,
+      "less_than_fixed_reservation": true
+    }
+  ],
+  "arithmetic_limit": "Arithmetic is conditional on actual request byte/token bounds and accepted provider prices. It is not a tokenizer, billing or global dispatch proof.",
+  "verification": {
+    "source_review": "OBSERVED",
+    "selected_model_repair_source": "OBSERVED_STAGED",
+    "peer_regression_execution": "NOT_RUN_BY_REVIEWER",
+    "paid_network_calls": "NOT_RUN",
+    "global_budget_runtime": "NOT_RUN",
+    "formal_engine_proof": "NOT_RUN"
+  },
+  "journal": {
+    "path": "docs/journal/20260909-0338-ecology-router-independent-review.md",
+    "sha256": "93fffd7a081123266431bcc5b1e31609e80fdd15a1e2c817b47ef69b020733f0"
+  },
+  "limitations": [
+    "Review does not block waiting for ongoing peer implementation; changed file hashes require final candidate verification.",
+    "Source evidence and arithmetic are not system admission.",
+    "No raw provider metadata was independently fetched in this task.",
+    "Legacy/initial flaws are retained even when later staged code addresses them."
+  ]
+}

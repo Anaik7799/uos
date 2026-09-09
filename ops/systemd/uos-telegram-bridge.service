@@ -1,0 +1,16 @@
+[Unit]
+Description=UOS Telegram High-Performance Cybernetic Bridge (OCaml/Mojo Native)
+After=network-online.target c3i-zenoh-router-1.service
+Wants=network-online.target c3i-zenoh-router-1.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/an/NAS-setup/uos
+ExecStart=/home/an/NAS-setup/uos/tools/telegram_client.exe --poll
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

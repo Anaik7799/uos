@@ -15,24 +15,28 @@ MAX_FRAME = 65536
 MAX_DIM = 128
 
 
+class InvalidRequest(ValueError):
+    """Caller-local refusal; it must not stop the shared MAX service."""
+
+
 def infer(request):
     if not isinstance(request, dict) or request.get("operation") != "linear_softmax":
-        raise ValueError("operation must be linear_softmax")
+        raise InvalidRequest("operation must be linear_softmax")
     if set(request) != {"operation", "features", "weights", "bias"}:
-        raise ValueError("unexpected or missing request fields")
+        raise InvalidRequest("unexpected or missing request fields")
     features, weights, bias = request["features"], request["weights"], request["bias"]
     if not isinstance(features, list) or not 1 <= len(features) <= MAX_DIM:
-        raise ValueError("features must have 1..128 entries")
+        raise InvalidRequest("features must have 1..128 entries")
     if not isinstance(bias, list) or not 2 <= len(bias) <= MAX_DIM:
-        raise ValueError("bias must have 2..128 entries")
+        raise InvalidRequest("bias must have 2..128 entries")
     if not isinstance(weights, list) or len(weights) != len(features):
-        raise ValueError("weights must have one row per feature")
+        raise InvalidRequest("weights must have one row per feature")
     if any(not isinstance(row, list) or len(row) != len(bias) for row in weights):
-        raise ValueError("weights must have one column per class")
+        raise InvalidRequest("weights must have one column per class")
     values = features + bias + [v for row in weights for v in row]
     if any(isinstance(v, bool) or not isinstance(v, (int, float))
            or not math.isfinite(v) or abs(v) > 1e6 for v in values):
-        raise ValueError("values must be finite numbers of magnitude <= 1000000")
+        raise InvalidRequest("values must be finite numbers of magnitude <= 1000000")
 
     # Import and execute the real installed MAX engine; never use a Python
     # arithmetic fallback when the engine/compiler is unavailable.
@@ -79,7 +83,7 @@ def read_exact(length):
     while len(data) < length:
         chunk = sys.stdin.buffer.read(length - len(data))
         if not chunk:
-            raise ValueError("truncated frame")
+            raise InvalidRequest("truncated frame")
         data.extend(chunk)
     return bytes(data)
 
@@ -90,11 +94,13 @@ def main():
     try:
         size = struct.unpack(">I", read_exact(4))[0]
         if not 1 <= size <= MAX_FRAME:
-            raise ValueError("frame bound exceeded")
-        request = json.loads(read_exact(size), parse_constant=lambda _: (_ for _ in ()).throw(ValueError("nonfinite JSON")))
+            raise InvalidRequest("frame bound exceeded")
+        request = json.loads(read_exact(size), parse_constant=lambda _: (_ for _ in ()).throw(InvalidRequest("nonfinite JSON")))
         response = {"ok": True, "result": infer(request)}
+    except (InvalidRequest, json.JSONDecodeError, UnicodeDecodeError) as exc:
+        response = {"ok": False, "error": "invalid_request: " + str(exc)[:300]}
     except Exception as exc:
-        response = {"ok": False, "error": type(exc).__name__ + ": " + str(exc)[:300]}
+        response = {"ok": False, "error": "backend_failure: " + type(exc).__name__ + ": " + str(exc)[:300]}
     body = json.dumps(response, separators=(",", ":"), allow_nan=False).encode()
     sys.stdout.buffer.write(struct.pack(">I", len(body)) + body)
     sys.stdout.buffer.flush()

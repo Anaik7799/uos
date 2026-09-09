@@ -1,0 +1,680 @@
+{
+  "schema_version": "uos.ecology-harness-bootstrap-independent-review.v1",
+  "status": "REVIEW_COMPLETE_WITH_OPEN_IMPLEMENTATION_OBLIGATIONS",
+  "admission": "NOT_GRANTED",
+  "runtime_admission": "NOT_GRANTED",
+  "candidate_revision": null,
+  "observation": {
+    "timestamp_basis": "2026-09-09T05:00:10Z",
+    "source_hash_observed_at": "2026-09-09T05:02:20Z",
+    "source_snapshot_semantics": "Per-observation hashes of concurrently edited working sources; not an atomic release candidate.",
+    "reviewer": "/root/hooks"
+  },
+  "task": {
+    "plan_id": "uos/ecology-harness-bootstrap-review/20260909-0412",
+    "task_id": "BOOTREVIEW",
+    "worker": "codex-ecology-harness-bootstrap-review",
+    "attempt": 1,
+    "claimed_at": "2026-09-09T04:49:02Z",
+    "lease_until_ns": "1788932942453298210",
+    "completion_authority": "Sa-plan completion receipt is separate from this source-review artifact."
+  },
+  "scope": {
+    "existing_source": "READ_ONLY",
+    "owned_files": [
+      "docs/journal/20260909-0510-gleam-harness-bootstrap-independent-review.md",
+      "docs/journal/20260909-0510-gleam-harness-bootstrap-independent-review.json",
+      "docs/journal/20260909-0510-gleam-harness-bootstrap-independent-review-checks.json"
+    ],
+    "source_edits": 0,
+    "builds": 0,
+    "solver_or_compiler_fixture_runs": 0,
+    "model_calls": 0,
+    "paid_spend_usd": 0,
+    "production_operations": 0,
+    "service_starts": 0,
+    "vcs_mutations": 0,
+    "global_configuration_edits": 0,
+    "documentation_network": "Read-only primary documentation requests",
+    "operator_exception": "One-time development bootstrap only; return to MCP/Zenoh after working finite interface."
+  },
+  "review_coverage": {
+    "requirements": 26,
+    "acceptance_cases": 16,
+    "scenarios": 16,
+    "native_generation_cases": 6,
+    "fractal_layers": 10,
+    "canonical_aspects": 17,
+    "diagram_pairs": 3,
+    "atlas_state_labels": 34,
+    "source_hashes": 28,
+    "grouped_findings": 8
+  },
+  "source_manifest": [
+    {
+      "sha256": "742efded8012c671a79411162f786797042ca8d3bce350917605a1a8729f6aae",
+      "path": "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md"
+    },
+    {
+      "sha256": "9085d35c52e8f908b4c06935a8d4df7683566120472dda5274a8220cb6b42bdf",
+      "path": "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json"
+    },
+    {
+      "sha256": "b6f63f9a9901c8bfba92bd54fe3e4a5efe0af3d8d85be93c099acbc2a05f9ad5",
+      "path": "docs/design/diagrams/20260909-0412-harness-1.txt"
+    },
+    {
+      "sha256": "a7ee1b44d1cac7f734d9ea63fa5ecf8ca76c2604b2e222d14bb271a1b34df1e6",
+      "path": "docs/design/diagrams/20260909-0412-harness-1.mmd"
+    },
+    {
+      "sha256": "64b312129d05c4e36b8ed49c1af37d47c0fb51b887742aa28b37bd27ddec79e1",
+      "path": "docs/design/diagrams/20260909-0412-harness-2.txt"
+    },
+    {
+      "sha256": "9f5012201dec2a410ab7e6709160f9da5d986b70b207c2571892942cf1eb78e0",
+      "path": "docs/design/diagrams/20260909-0412-harness-2.mmd"
+    },
+    {
+      "sha256": "7efc65e7c65569a1f3dbe9f79e142eeea68745110b5a590aab115b21f368e392",
+      "path": "docs/design/diagrams/20260909-0412-harness-3.txt"
+    },
+    {
+      "sha256": "63cb78fb79ae73c83367d1603fd698206cca1eaa22b004c5d5d5fda8490f115e",
+      "path": "docs/design/diagrams/20260909-0412-harness-3.mmd"
+    },
+    {
+      "sha256": "41ac275f60df527344094d810be47886e0f7c789c095e4e718d138bacefb8f14",
+      "path": "contracts/rules/20260908-0551-release-assurance-sdlc-sre-sop.md"
+    },
+    {
+      "sha256": "c37f47c4d96f9bece262f3eeb05b51d29a19f8bbaf53ccfd6abae35cf18d7744",
+      "path": "contracts/rules/20260907-1559-risk-prioritization-sop.md"
+    },
+    {
+      "sha256": "9e93f49e44cb47e96ad18ef19e79d20fb32526a7582c2d57c06919fb36f7a37a",
+      "path": "docs/reviews/20260908-0551-release-17-aspect-and-source-review.md"
+    },
+    {
+      "sha256": "3d1ba3e6ef1d6ec888920c81986c1ac0b90c05c86843d3753d26c011a202c520",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam"
+    },
+    {
+      "sha256": "a83f54f5419d0e2a36cdb298daf277a96af8625cfcbd549aec1443e1b145a57e",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam"
+    },
+    {
+      "sha256": "c3f480bc64809d523580c15cf7b5480e7335755d0c6f055dd57a49f61ba1b4e0",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/authz.gleam"
+    },
+    {
+      "sha256": "288bb714c70f2ff8d9f1e83cb4b038b2d49a95fd9ba41640641b4fb054a62a4a",
+      "path": "apps/cepaf_gleam/src/mcp_authz_ffi.erl"
+    },
+    {
+      "sha256": "50102a453a97052b0aa5a4e42f8bc65548e34f3e901153deb96c89987b0c8204",
+      "path": "apps/cepaf_gleam/src/mcp_stdio_ffi.erl"
+    },
+    {
+      "sha256": "885184eebc001436cd86c24170be9c7e61c402d55f48661bc5d3d47c2e7020d9",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam_ffi.erl"
+    },
+    {
+      "sha256": "8f5a9766b15fcd1614777602c26ffbc3421211da985ce225322cc6e1d441508f",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam"
+    },
+    {
+      "sha256": "ea39820d592d68d10cbbb1fffa12dff7d0080c4d5eadcf327c80ef23077af8fd",
+      "path": "apps/cepaf_gleam/src/ecology_capability_ffi.erl"
+    },
+    {
+      "sha256": "e51b9980e3df2c0dff624f2ddeb62d4f2d523ff47bd1029cacd4842a0a2f6364",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/moz/client.gleam"
+    },
+    {
+      "sha256": "153309ffd84820812b2a30e118597236475778e729c6235dd5fe3a320b6fc493",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/bridge/zenoh_mcp.gleam"
+    },
+    {
+      "sha256": "92dd46ef46da65b6639056e66ee5f1a629aa0c3c9a5498a49503d94e1fa36f86",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/mcp_api.gleam"
+    },
+    {
+      "sha256": "9dc9cfaf4fe4d4ba76245d7948f243c779550effb66cea81e363e39074e0a33e",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/inference_api.gleam"
+    },
+    {
+      "sha256": "24e954765a80ec416fc67841c066bd65bcdac3added8991bf3928df3450260b1",
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/hermes_bionic_bridge.gleam"
+    },
+    {
+      "sha256": "ef2063bed6e69910a2bbebfb52506484c51e098849a73e973ddf9b181a10367e",
+      "path": "apps/cepaf_gleam/test/mcp_authz_wiring_test.gleam"
+    },
+    {
+      "sha256": "5b00bbbf89eca74c46f5e690111b9616378334e11f30dd0558e1c5dacc8a97c6",
+      "path": "apps/cepaf_gleam/test/mcp_runtime_truth_test.gleam"
+    },
+    {
+      "sha256": "f0b8fd579d8ed22c7a1fdf75a3dec7402ceff673894382bf640e3431e7dae8ad",
+      "path": "apps/cepaf_gleam/test/sa_plan_bridge_test.gleam"
+    },
+    {
+      "sha256": "b8e471721038ce4abc2e8dfa7f8f9e19e435296444955d653987e2ba640c8b8e",
+      "path": "engines/hermes/modules/sa_plan/test/sa_plan_main.ml"
+    }
+  ],
+  "findings": [
+    {
+      "id": "BR-01",
+      "priority": "P1",
+      "title": "Logical effect identity must survive task attempts",
+      "status": "REPAIRED_IN_SPECIFICATION_EXECUTION_UNRUN",
+      "evidence": [
+        "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md:36"
+      ],
+      "falsifier": "Lose reply after commit/POST, reclaim the task, replay through the other transport; observe no second effect and retained unresolved liability."
+    },
+    {
+      "id": "BR-02",
+      "priority": "P1",
+      "title": "Payload identity and AuditOnly are not transport-bound authority",
+      "status": "SIX_LEGACY_MUTATORS_CONTAINED_FINITE_SERVICE_PENDING",
+      "evidence": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/authz.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam:394"
+      ],
+      "falsifier": "Anonymous, wrong worker/task/attempt/environment, expired lease and forged epoch cannot dispatch a development effect."
+    },
+    {
+      "id": "BR-03",
+      "priority": "P1",
+      "title": "Sa-plan needs literal argv, actual exit status and completion attempt",
+      "status": "REPAIRED_IN_SOURCE_EXECUTION_UNRUN_BY_REVIEWER",
+      "evidence": [
+        "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam:932",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam:920",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam:841"
+      ],
+      "falsifier": "Shell metacharacters remain one literal argument; child nonzero exit, missing executable, invalid attempt and wrong ownership return non-passing results."
+    },
+    {
+      "id": "BR-04",
+      "priority": "P1",
+      "title": "Legacy reader representation repaired, path and frame bounds still open",
+      "status": "REPRESENTATION_REPAIRED_CONFINEMENT_AND_PEAK_BOUNDS_OPEN",
+      "evidence": [
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam:1329",
+        "apps/cepaf_gleam/src/cepaf_gleam/mcp/authz.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam_ffi.erl:412",
+        "apps/cepaf_gleam/src/mcp_stdio_ffi.erl"
+      ],
+      "falsifier": "Harmless synthetic aliases/traversal, invalid UTF-8, oversized file/line and unfinished line obey finite root, memory/output and deadline bounds."
+    },
+    {
+      "id": "BR-05",
+      "priority": "P1",
+      "title": "Zenoh prefix, addressing, correlation and pending lifecycle mismatch",
+      "status": "OPEN_SOURCE_DEFECT",
+      "evidence": [
+        "apps/cepaf_gleam/src/cepaf_gleam/moz/client.gleam",
+        "apps/cepaf_gleam/src/cepaf_gleam/bridge/zenoh_mcp.gleam"
+      ],
+      "details": {
+        "client_request_prefix": "indrajaal/l5/cog/mcp/req",
+        "client_response_prefix": "indrajaal/l5/cog/mcp/res",
+        "bridge_request_prefix": "indrajaal/mcp/request/",
+        "bridge_response_prefix": "indrajaal/mcp/response/",
+        "node_id_used_for_targeting": false,
+        "subscription_failure_checked": false,
+        "pending_removal_path_observed": false
+      },
+      "falsifier": "Two bridges, one addressed request, malformed topic, duplicate/late reply, lost subscription and repeated timeout cannot dispatch twice or grow pending state without bound."
+    },
+    {
+      "id": "BR-06",
+      "priority": "P2",
+      "title": "Heuristic fields are not measured ML or four-UCA safety evidence",
+      "status": "OPEN_SOURCE_TRUTH_GAP",
+      "evidence": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ui/wisp/inference_api.gleam"
+      ],
+      "correction": "Initial suspicion of an external pre-authorization model call was withdrawn after full source inspection: the reviewed AST routine is pure heuristic logic.",
+      "details": {
+        "fixed_ast_similarity": 0.94,
+        "fixed_centroid_dimension": 128,
+        "fixed_latency_us": 15,
+        "reviewed_stpa_patterns": [
+          "UCA-1",
+          "UCA-2"
+        ],
+        "legacy_severity_scale": "1..10"
+      },
+      "falsifier": "Receipts distinguish heuristic or declared constants from actual model/clock measurements, and canonical safety analysis records all four UCA classes and raw FMEA."
+    },
+    {
+      "id": "BR-07",
+      "priority": "P2",
+      "title": "Atlas projection and bootstrap end condition need concrete definitions",
+      "status": "PROPOSAL_DELIVERED",
+      "evidence": [
+        "docs/design/20260909-0412-gleam-harness-symbiosis-algebraic-atlas.json",
+        "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md:12"
+      ],
+      "falsifier": "Each finite installed capability has a typed entry and applicable evidence; successful BootstrapReady emits an end receipt for the direct-tool exception without claiming full admission."
+    },
+    {
+      "id": "BR-08",
+      "priority": "P2",
+      "title": "Native lifecycle contract and document rendering",
+      "status": "NATIVE_SCOPE_CORRECT_LIFECYCLE_AND_RENDERING_OBLIGATIONS_OPEN",
+      "evidence": [
+        "docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md:265"
+      ],
+      "details": {
+        "inline_mermaid_fences": "REPAIRED_IN_SOURCE",
+        "diagram_pairs": "MANUALLY_COMPARED_NODES_EDGES_LABELS",
+        "renderer_run": false,
+        "checklist_expandable_in_reviewed_spec": false
+      },
+      "falsifier": "Pinned native adapter initializes its runtime, declares process lifetime and loader dependencies, and rejects unsupported hot unload; actual document rendering exposes the required checklist."
+    }
+  ],
+  "aspects": [
+    {
+      "id": "A01",
+      "name": "Substrate & Hardware Storage Interlock",
+      "status": "PRESERVATION_REQUIRED_DEVICE_TESTS_UNRUN"
+    },
+    {
+      "id": "A02",
+      "name": "Standalone Jujutsu Monorepo Discipline",
+      "status": "REQUIREMENTS_REVIEWED_NO_VCS_MUTATION"
+    },
+    {
+      "id": "A03",
+      "name": "Zero-Muda Purity & Waste Elimination",
+      "status": "NO_INSTALL_OR_INGESTION_FULL_GATE_UNRUN"
+    },
+    {
+      "id": "A04",
+      "name": "Gleam/OTP 29 4-Domain Root Supervisor",
+      "status": "NEW_HARNESS_RUNTIME_EVIDENCE_PENDING"
+    },
+    {
+      "id": "A05",
+      "name": "ZigVM Deterministic Engine & 8 VFS Laws",
+      "status": "CONTRACT_SPECIFIED_VFS_TESTS_UNRUN"
+    },
+    {
+      "id": "A06",
+      "name": "Hermes Formal Evidence, Gospel & Z3",
+      "status": "BOUNDED_ADAPTER_SOURCE_REVIEWED_FORMAL_UNRUN"
+    },
+    {
+      "id": "A07",
+      "name": "Mathematical Authority & Conservation",
+      "status": "NORMATIVE_REQUIREMENTS_NOT_PROOF"
+    },
+    {
+      "id": "A08",
+      "name": "Biosemiotic Cybernetics & Rocha Cut",
+      "status": "PURE_DENOTATION_SPECIFIED_HEURISTIC_LABELS_OPEN"
+    },
+    {
+      "id": "A09",
+      "name": "Quarantined Modular MAX/Mojo Inference",
+      "status": "ISOLATION_AND_BUDGET_SPECIFIED_NO_NEW_CALL"
+    },
+    {
+      "id": "A10",
+      "name": "Zenoh OoZ & MoZ Mesh Telemetry Backplane",
+      "status": "OPEN_TRANSPORT_SOURCE_DEFECTS"
+    },
+    {
+      "id": "A11",
+      "name": "AG-UI 32-Event SSE Stream Protocol",
+      "status": "REQUIREMENTS_SPECIFIED_FULL_DELIVERY_UNRUN"
+    },
+    {
+      "id": "A12",
+      "name": "A2UI 233-Component Declarative Catalog",
+      "status": "PROJECTION_POLICY_SPECIFIED_COVERAGE_UNRUN"
+    },
+    {
+      "id": "A13",
+      "name": "Penta-Stack Multi-Interface Accessibility",
+      "status": "AUTHENTICATED_PARITY_UNRUN"
+    },
+    {
+      "id": "A14",
+      "name": "Universal Tailscale FQDN Web Navigation",
+      "status": "FULL_LOCATORS_PRESENT_REACHABILITY_UNTESTED"
+    },
+    {
+      "id": "A15",
+      "name": "Comprehensive Verification Checklist",
+      "status": "SCOPED_REVIEW_PRESENT_NEW_RUNTIME_GATE_UNRUN"
+    },
+    {
+      "id": "A16",
+      "name": "Knowledge Management Triad (Wiki/ZK/Ont)",
+      "status": "LINKED_REVIEW_PARENT_PUBLICATION_PENDING"
+    },
+    {
+      "id": "A17",
+      "name": "Sa-Plan & Bionic Durable Workflows",
+      "status": "REVIEW_TASK_OBSERVED_ADAPTER_SOURCE_REPAIRED_RECOVERY_UNRUN"
+    }
+  ],
+  "proposed_atlas_fields": [
+    {
+      "field": "identity",
+      "type_obligation": "CapabilityId, CapabilityVersion",
+      "status": "PROPOSED"
+    },
+    {
+      "field": "denotation",
+      "type_obligation": "Input/Output/Error ADTs, algebra/laws, refinement relation",
+      "status": "PROPOSED"
+    },
+    {
+      "field": "effects",
+      "type_obligation": "Pure | Read | Reserve | Write, finite resource scope",
+      "status": "PROPOSED"
+    },
+    {
+      "field": "authority",
+      "type_obligation": "AuthenticatedPrincipal, canonical TaskRef/Attempt/Lease/Epoch, Environment predicate",
+      "status": "PROPOSED"
+    },
+    {
+      "field": "activation",
+      "type_obligation": "Dependencies, activation/deactivation conditions",
+      "status": "PROPOSED"
+    },
+    {
+      "field": "ownership",
+      "type_obligation": "StateOwner, Supervisor, RestartBudget",
+      "status": "PROPOSED"
+    },
+    {
+      "field": "roles",
+      "type_obligation": "ExecutionRole Development | Production independently of AvailabilityRole Primary | Standby",
+      "status": "PROPOSED"
+    },
+    {
+      "field": "state",
+      "type_obligation": "Writer, SchemaVersion, Durability, ReplicationPosition/Checkpoint, RestoreProcedure, Sensitivity, Retention, RecoveryTest",
+      "status": "PROPOSED"
+    },
+    {
+      "field": "bounds",
+      "type_obligation": "Work, memory, output, concurrency, atom/table/queue and process limits as applicable",
+      "status": "PROPOSED"
+    },
+    {
+      "field": "clock",
+      "type_obligation": "UTC/Monotonic/EvidenceAge/SyncUncertainty, deadline and rollback policy",
+      "status": "PROPOSED"
+    },
+    {
+      "field": "backend",
+      "type_obligation": "Harness-selected allowed backends, realized toolchain, source/artifact digest",
+      "status": "PROPOSED"
+    },
+    {
+      "field": "abi",
+      "type_obligation": "Versioned codecs, runtime initialization/lifetime, memory ownership, error mapping",
+      "status": "PROPOSED"
+    },
+    {
+      "field": "transport",
+      "type_obligation": "Schema, target, trace/correlation, stable LogicalEffectId, replay/retry/reconciliation",
+      "status": "PROPOSED"
+    },
+    {
+      "field": "model",
+      "type_obligation": "Privacy, endpoint eligibility, canonical reservation authority, token/body/price bounds",
+      "status": "PROPOSED"
+    },
+    {
+      "field": "evidence",
+      "type_obligation": "Candidate, observed time, source/runtime/formal status, falsifier and recovery receipts",
+      "status": "PROPOSED"
+    },
+    {
+      "field": "coverage",
+      "type_obligation": "Requirements/scenarios/aspects and explicit Unknown/Unsupported; no empty-field pass",
+      "status": "PROPOSED"
+    }
+  ],
+  "proposed_bootstrap_ready_gates": [
+    {
+      "id": "B01",
+      "requirement": "Actual registered development MCP endpoint and exact build/tool identity",
+      "evidence_required": "CONNECTOR_OBSERVATION",
+      "status": "PROPOSED_NOT_EXECUTED_BY_REVIEWER"
+    },
+    {
+      "id": "B02",
+      "requirement": "Representative canonical task completes connector to Gleam to chosen backend to typed receipt",
+      "evidence_required": "END_TO_END_EXECUTION",
+      "status": "PROPOSED_NOT_EXECUTED_BY_REVIEWER"
+    },
+    {
+      "id": "B03",
+      "requirement": "Rooted bounded reads reject traversal/aliases/invalid UTF-8/oversize/partial-line timeout",
+      "evidence_required": "POSITIVE_AND_ADVERSARIAL_READS",
+      "status": "PROPOSED_NOT_EXECUTED_BY_REVIEWER"
+    },
+    {
+      "id": "B04",
+      "requirement": "Authenticated task/worker/attempt/lease/epoch/environment checked at effect time",
+      "evidence_required": "WRONG_STALE_ANONYMOUS_REFUSALS",
+      "status": "PROPOSED_NOT_EXECUTED_BY_REVIEWER"
+    },
+    {
+      "id": "B05",
+      "requirement": "Literal arguments and non-passing missing-tool/child-failure/timeout/output errors",
+      "evidence_required": "ACTUAL_COMMAND_FALSIFIERS",
+      "status": "PROPOSED_NOT_EXECUTED_BY_REVIEWER"
+    },
+    {
+      "id": "B06",
+      "requirement": "Unknown, legacy and unscoped tools refused; no unrestricted backend/command selection",
+      "evidence_required": "FINITE_EFFECT_BOUNDARY",
+      "status": "PROPOSED_NOT_EXECUTED_BY_REVIEWER"
+    },
+    {
+      "id": "B07",
+      "requirement": "Lost reply and replay cannot duplicate a logical effect; uncertainty retained",
+      "evidence_required": "DURABLE_EFFECT_RECONCILIATION",
+      "status": "PROPOSED_NOT_EXECUTED_BY_REVIEWER"
+    },
+    {
+      "id": "B08",
+      "requirement": "Development isolation and clock/resource/budget boundaries observed",
+      "evidence_required": "NO_PRODUCTION_EFFECT",
+      "status": "PROPOSED_NOT_EXECUTED_BY_REVIEWER"
+    },
+    {
+      "id": "B09",
+      "requirement": "Unavailable transport explicit; both transports require equivalent addressed correlated bounded semantics",
+      "evidence_required": "DECLARED_TRANSPORT_SCOPE",
+      "status": "PROPOSED_NOT_EXECUTED_BY_REVIEWER"
+    },
+    {
+      "id": "B10",
+      "requirement": "Successful finite gate records bootstrap end; later agent operations use MCP/Zenoh",
+      "evidence_required": "EXCEPTION_TERMINATION_AND_CLIENT_BOUNDARY",
+      "status": "PROPOSED_NOT_EXECUTED_BY_REVIEWER"
+    }
+  ],
+  "native_claims": {
+    "gleam_standard_targets": [
+      "erlang",
+      "javascript"
+    ],
+    "ocaml_mojo_generation": "Proposed bounded typed kernel compiler layer, not installed Gleam target",
+    "equality": "Exact discrete/error relation; numeric approximation only through explicit tolerance contract",
+    "default_execution": "Supervised process for unpredictable/runtime-managed work",
+    "native_nif_admission": "Exact pinned bounded runtime and ABI evidence required",
+    "mojo_host_lifecycle": "Current primary docs require runtime initialization for runtime-dependent hosted code and describe no shutdown API; pinned behavior untested here.",
+    "sources": [
+      {
+        "url": "https://gleam.run/documentation/gleam-toml-reference/",
+        "claim": "Standard target configuration is Erlang or JavaScript"
+      },
+      {
+        "url": "https://gleam.run/documentation/externals/",
+        "claim": "External implementation representation is not checked by the Gleam compiler"
+      },
+      {
+        "url": "https://www.erlang.org/doc/apps/erts/erl_nif.html",
+        "claim": "NIF execution is inside the VM and needs bounded safety"
+      },
+      {
+        "url": "https://mojolang.org/docs/tools/compilation/",
+        "claim": "Native shared library/C ABI support and hosted runtime lifetime"
+      },
+      {
+        "url": "https://max.modular.com/develop/custom-ops/",
+        "claim": "MAX custom operations integrate Mojo kernels"
+      }
+    ]
+  },
+  "dev_production_semantics": {
+    "execution_and_availability_roles": "INDEPENDENT",
+    "two_host_proposal": "Primary production node plus separate isolated development and production standby nodes on backup host",
+    "only_two_instances": "Stop development, load verified production release and restore state before standby readiness",
+    "ambiguous_leadership": "FAIL_CLOSED_WITHOUT_WITNESS_OR_EXCLUSIVE_FENCE",
+    "rollback": "Old binary alone is insufficient without schema/state/effect recovery evidence"
+  },
+  "risk": {
+    "preflight": {
+      "status": "PREFLIGHT_PASS",
+      "observed_at": "2026-09-09T04:48:38Z",
+      "assessment_sha256": "5c30c3998cb3012d17a3a0a8eea1fae1940b802ddc275615e3243faca6f0e1cb"
+    },
+    "initial_active": {
+      "status": "ACTIVE_OBSERVATION_PASS",
+      "observed_at": "2026-09-09T04:49:03Z",
+      "assessment_sha256": "58e2e7b82e4ae62f6a572b72cf87e39122aa09a499af09d6b8179a631b7edaa6"
+    },
+    "final_active": {
+      "status": "ACTIVE_OBSERVATION_PASS",
+      "authority": "NONE",
+      "runtime_admission": "NOT_GRANTED",
+      "observed_at": "2026-09-09T05:02:59Z",
+      "completed_at": "2026-09-09T05:02:59Z",
+      "elapsed_monotonic_seconds": 0.211705113,
+      "clock_start": {
+        "source": "chronyc tracking",
+        "abs_ntp_offset_seconds": 0.000276445,
+        "uncertainty_seconds": 0.017813564,
+        "reference_age_seconds": 1032.5327081680298,
+        "stratum": 3
+      },
+      "clock_end": {
+        "source": "chronyc tracking",
+        "abs_ntp_offset_seconds": 0.0002764,
+        "uncertainty_seconds": 0.017813698,
+        "reference_age_seconds": 1032.6405301094055,
+        "stratum": 3
+      },
+      "assessment_sha256": "9758c66e357b379f17242eac2ce01fd2ea31df61cbbbcb7991248c7ce8ac4fa4",
+      "evidence_files_checked": 4,
+      "sa_plan": {
+        "plan_id": "uos/ecology-harness-bootstrap-review/20260909-0412",
+        "snapshot_sha256": "d61251205f271f9e9f6f7080a69f1e4db93ff2c2b05e4e5b7827c70803bc8e18",
+        "tasks": [
+          {
+            "task_id": "BOOTREVIEW",
+            "state": "executing",
+            "worker": "codex-ecology-harness-bootstrap-review",
+            "lease_until_ns": "1788932942453298210",
+            "attempt": 1,
+            "completed_at_ns": null,
+            "result_present": false,
+            "dependencies": []
+          }
+        ],
+        "mode": "READONLY",
+        "lease_fencing_authority": "NOT_GRANTED"
+      },
+      "order": [],
+      "findings": [],
+      "limits": [
+        "Listed byte equality does not prove source completeness, runtime behavior or signed provenance.",
+        "Analysis prose, class judgments, cost ties and control effectiveness require qualified review.",
+        "Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.",
+        "Snapshot is confined to one complete plan; no global optimum is asserted."
+      ]
+    },
+    "raw_fmea": {
+      "severity": 4,
+      "occurrence": 3,
+      "detection_difficulty": 3,
+      "rpn": 36,
+      "band": 4,
+      "basis": "Analyst estimate, not observed failure rate"
+    },
+    "score": {
+      "criticality": 4,
+      "stpa": 4,
+      "fmea_band": 4,
+      "dependency": 4,
+      "impact": 3,
+      "product": 768,
+      "class": "P1",
+      "authority": "NONE"
+    },
+    "uca_types": [
+      "not_provided",
+      "provided_unsafe",
+      "wrong_timing",
+      "duration"
+    ]
+  },
+  "administration": {
+    "prior_mcp_discovery": {
+      "plan_id": "uos/ecology-harness-mcp-review/20260909-0406",
+      "task_id": "MCPDISCOVERY",
+      "worker": "codex-ecology-harness-mcp-review",
+      "attempt": 1,
+      "action": "RELEASED_NOT_COMPLETED",
+      "receipt": "released=true plan_id=uos/ecology-harness-mcp-review/20260909-0406 task=MCPDISCOVERY attempt=1\nsa-plan-pipeline {\"request_id\":\"sa-plan-1788929976733600787\",\"command\":\"--task-release\",\"authority\":\"report_only\",\"total_ns\":11986325,\"server_timing\":\"decode;dur=0.001, normalize;dur=0.001, validate;dur=0.001, store_open;dur=1.624, dispatch;dur=9.872, store_close;dur=0.469, total;dur=11.986\",\"stages\":[{\"name\":\"decode\",\"duration_ns\":1413,\"duration_ms\":0.001413},{\"name\":\"normalize\",\"duration_ns\":1483,\"duration_ms\":0.001483},{\"name\":\"validate\",\"duration_ns\":1062,\"duration_ms\":0.001062},{\"name\":\"store_open\",\"duration_ns\":1624436,\"duration_ms\":1.624436},{\"name\":\"dispatch\",\"duration_ns\":9872469,\"duration_ms\":9.872469000000001},{\"name\":\"store_close\",\"duration_ns\":468662,\"duration_ms\":0.468662}]}\n",
+      "endpoint_or_tool_verification": "NONE_ADDED"
+    }
+  },
+  "peer_observations": [
+    {
+      "source": "/root message",
+      "claim": "Reader RED/GREEN observed; bridge repair implemented",
+      "reviewer_status": "Source changes inspected; runtime tests not independently rerun"
+    },
+    {
+      "source": "/root message",
+      "claim": "Separate finite task-bound development MCP service being implemented",
+      "reviewer_status": "IN_PROGRESS_NOT_ATTESTED"
+    }
+  ],
+  "artifact": {
+    "journal_path": "docs/journal/20260909-0510-gleam-harness-bootstrap-independent-review.md",
+    "journal_sha256": "b16fd1f43c00cf507cbc899299e14a86226338a5274913bc48b5db1f7a50148a",
+    "receipt_path": "docs/journal/20260909-0510-gleam-harness-bootstrap-independent-review.json",
+    "tailnet_receipt": "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260909-0510-gleam-harness-bootstrap-independent-review.json",
+    "publication": "UNTESTED",
+    "checks_path": "docs/journal/20260909-0510-gleam-harness-bootstrap-independent-review-checks.json",
+    "checks_scope": "20 artifact consistency checks only; application/runtime tests not executed."
+  },
+  "limits": [
+    "Source inspection does not prove runtime behavior or complete authority interception.",
+    "The current atlas is a requirement/scenario projection; no per-capability installed inventory is certified.",
+    "No complete replication, failover, native compiler, model ranking or system admission is claimed.",
+    "No secret bytes or secret hashes were accessed.",
+    "Primary current documentation does not replace exact pinned toolchain execution evidence.",
+    "No new EV identifier was created."
+  ]
+}

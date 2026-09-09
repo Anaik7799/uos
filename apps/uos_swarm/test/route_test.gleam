@@ -109,7 +109,8 @@ pub fn free_remote_chosen_before_paid_test() {
     proven("openrouter/free/x", route.R3Advisory),
     proven("openrouter/paid/x", route.R3Advisory),
   ]
-  let policy = route.Policy(..loose_policy(), paid_enabled: True)
+  let policy =
+    route.Policy(..loose_policy(), paid_enabled: True, free_only_remote: False)
   let budget = Some(route.Budget(10.0, 0.0, 0, "test"))
   let d =
     route.route(
@@ -142,7 +143,8 @@ pub fn paid_refused_when_paid_enabled_false_test() {
       True,
     )
   let posteriors = [proven("openrouter/paid/x", route.R3Advisory)]
-  let policy = route.Policy(..loose_policy(), paid_enabled: False)
+  let policy =
+    route.Policy(..loose_policy(), paid_enabled: False, free_only_remote: False)
   let budget = Some(route.Budget(10.0, 0.0, 0, "test"))
   case
     route.route(policy, route.R3Advisory, [paid], posteriors, budget, 100, 100)
@@ -165,7 +167,8 @@ pub fn paid_refused_without_budget_even_when_enabled_test() {
       True,
     )
   let posteriors = [proven("openrouter/paid/x", route.R3Advisory)]
-  let policy = route.Policy(..loose_policy(), paid_enabled: True)
+  let policy =
+    route.Policy(..loose_policy(), paid_enabled: True, free_only_remote: False)
   let d =
     route.route(policy, route.R3Advisory, [paid], posteriors, None, 100, 100)
   case d {
@@ -186,7 +189,8 @@ pub fn paid_allowed_within_cap_and_refused_over_cap_test() {
       True,
     )
   let posteriors = [proven("openrouter/paid/x", route.R3Advisory)]
-  let policy = route.Policy(..loose_policy(), paid_enabled: True)
+  let policy =
+    route.Policy(..loose_policy(), paid_enabled: True, free_only_remote: False)
   // est cost ~= 100*0.001 + 100*0.001 = 0.2
   let within_cap = Some(route.Budget(1.0, 0.0, 0, "test"))
   case
@@ -221,6 +225,38 @@ pub fn paid_allowed_within_cap_and_refused_over_cap_test() {
   {
     route.Refuse(_) -> Nil
     route.Route(_, _, _) -> panic as "paid must be refused over the cap"
+  }
+}
+
+pub fn free_only_remote_refuses_paid_even_with_enabled_flag_and_budget_test() {
+  let paid =
+    route.Tier(
+      "openrouter/paid/x",
+      route.OpenRouter,
+      "paid/x",
+      Some(0.000001),
+      Some(0.000005),
+      True,
+      True,
+    )
+  let contradictory =
+    route.Policy(..loose_policy(), paid_enabled: True, free_only_remote: True)
+  let posteriors = [proven(paid.id, route.R3Advisory)]
+  let budget = Some(route.Budget(10.0, 0.0, 1, "test"))
+  case
+    route.route(
+      contradictory,
+      route.R3Advisory,
+      [paid],
+      posteriors,
+      budget,
+      100,
+      100,
+    )
+  {
+    route.Refuse(_) -> Nil
+    route.Route(_, _, _) ->
+      panic as "explicit free-only remote policy must veto paid OpenRouter"
   }
 }
 

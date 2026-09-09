@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+set -euo pipefail
+REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+ZIGVM_BIN="${REPO_ROOT}/engines/zigvm/zig-out/bin/zigvm"
+if [ ! -f "$ZIGVM_BIN" ]; then
+    echo "[zigvm] Building engine..." >&2
+    (cd "${REPO_ROOT}/engines/zigvm" && /nix/store/kbb1kfzlvqiwbcpw4sd2j3v63vqab3vg-zig-0.16.0/bin/zig build)
+fi
+exec "$ZIGVM_BIN" "$@"

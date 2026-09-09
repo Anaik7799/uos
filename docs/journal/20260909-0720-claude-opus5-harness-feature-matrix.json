@@ -1,0 +1,272 @@
+{
+  "schema": "uos-harness-feature-matrix/v1",
+  "request_id": "claude-fable-harness-1",
+  "follow_up": 2,
+  "review_status": "DELIVERED_NOT_APPROVAL",
+  "authority": "REVIEW_ONLY",
+  "runtime_admission": "NOT_GRANTED",
+  "observed_at_utc": "2026-09-09T05:42:34Z",
+  "reviewer": {
+    "model": "claude-opus-5",
+    "is_requested_fable": false,
+    "session": "session_01B9GiR9bF4d1Jv2aSMowAKC",
+    "board_identity": "a65088e0-0f2b-497e-bd5c-97eeed9c3594",
+    "is_root_coordinator": false,
+    "agy_review_included": false
+  },
+  "answers": {
+    "all_features_implemented": false,
+    "dashboard_truthful": "PARTIAL: 4110/ecology yes within declared scope; 4100 cockpit NO (H1); harness absent from both (H2)",
+    "completion_status": "INCOMPLETE: Sa-plan HARNESSBOOT observed state=executing attempt=1"
+  },
+  "dashboard_probes": [
+    {
+      "url": "http://nas-1.tail55d152.ts.net:4110/ecology",
+      "http": 200,
+      "bytes": 27545
+    },
+    {
+      "url": "http://nas-1.tail55d152.ts.net:4100/",
+      "http": 200,
+      "bytes": 77763
+    },
+    {
+      "url": "http://nas-1.tail55d152.ts.net:4100/planning",
+      "http": 200,
+      "bytes": 57501
+    },
+    {
+      "url": "http://127.0.0.1:4110/ecology",
+      "http": 0,
+      "bytes": 0,
+      "note": "not bound to loopback"
+    },
+    {
+      "url": "http://127.0.0.1:4100/",
+      "http": 200,
+      "bytes": 77763
+    }
+  ],
+  "matrix": [
+    {
+      "id": "C01",
+      "capability": "Gleam MCP development service (finite stdio interface)",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam (320 L); mcp/{server,tools,authz}.gleam",
+      "observed": "Source read only. No live initialize/notification observed by this reviewer; service not started.",
+      "status": "IMPLEMENTED",
+      "dashboard": "MISSING — neither 4100 nor 4110 renders any harness/MCP service state (grep: harness 0 hits on both pages)",
+      "blockers": "No started service in this review scope",
+      "falsifier": "Start it and observe an initialize handshake; absence of any surface means a dead service is indistinguishable from a healthy one on the dashboards"
+    },
+    {
+      "id": "C02",
+      "capability": "Bounded task-fenced file edit (compare/replace)",
+      "source": "harness/files.gleam:126-263",
+      "observed": "VERIFIED BY READING: lstat + nlinks==1 + 262144 bound, open-descriptor inode/dev recheck before pread, O_EXCL create, fsync of file and parent, digest CAS re-read before rename, pending cleanup on failure, symlinked parents refused",
+      "status": "IMPLEMENTED",
+      "dashboard": "MISSING",
+      "blockers": "Not executed in this pass; TOCTOU between second read and rename is disclosed in the module header",
+      "falsifier": "Rename the parent directory between the second read and the rename; the module states this needs a cooperative workspace lease"
+    },
+    {
+      "id": "C03",
+      "capability": "Clock policy (UTC / monotonic / boot / reference age / delivery age)",
+      "source": "harness/clock.gleam (138 L); uos_swarm/clock_contract.gleam",
+      "observed": "Source read only. Live chronyc sampling not exercised by this reviewer.",
+      "status": "IMPLEMENTED",
+      "dashboard": "MISSING — 'clock' appears 0 times on both pages",
+      "blockers": "F1 hardcoded /usr/bin/chronyc; F5 one policy field carries two semantics and is 30x looser than strict_policy",
+      "falsifier": "Run on a host without chrony: observe() returns bounded_clock_sampler_failed and no gate reports it"
+    },
+    {
+      "id": "C04",
+      "capability": "Sa-plan sole authority with attempt/lease/dependency fencing",
+      "source": "harness/development.gleam:96-164, 203-215; planning/sa_plan_bridge.gleam",
+      "observed": "OBSERVED: HARNESSBOOT state=executing worker=codex-01a083d2-harness attempt=1; risk assessment valid_until 06:09:11Z still valid at 05:32:44Z",
+      "status": "EXECUTED",
+      "dashboard": "MISSING — HARNESSBOOT appears 0 times on both dashboards",
+      "blockers": "F2 grant is seven getenv reads against one hardcoded tuple; environment is caller-controlled",
+      "falsifier": "Set the seven UOS_HARNESS_* variables in any local process to present the root coordinator identity"
+    },
+    {
+      "id": "C05",
+      "capability": "Stable logical effect identity across retries",
+      "source": "harness/development.gleam:148-164",
+      "observed": "NOT EXERCISED. attempt is pinned to 1 by the grant, so the retry path is unreachable in this configuration.",
+      "status": "PLANNED",
+      "dashboard": "MISSING",
+      "blockers": "F3",
+      "falsifier": "Set UOS_HARNESS_ATTEMPT=2: binding fails before any replay logic runs"
+    },
+    {
+      "id": "C06",
+      "capability": "OpenRouter paid routing under a USD10/UTC-day aggregate ledger",
+      "source": "ecology/openrouter_engine.gleam, ecology/daily_budget.gleam; tools/ecology_budget.ml",
+      "observed": "OBSERVED ABSENCE: no paid-call receipt exists under var/harness/. Design declared in the risk receipt budget/assumptions fields.",
+      "status": "PLANNED",
+      "dashboard": "PARTIAL — 'budget/openrouter' matches twice on each page, but no spend, reservation or remaining-balance figure is rendered",
+      "blockers": "F6 absence of spend cannot distinguish enforced from unexercised",
+      "falsifier": "Make a paid call without a reservation: no artifact would appear either, so the control is unobservable from outside"
+    },
+    {
+      "id": "C07",
+      "capability": "Ecology capability discovery and authorized activation",
+      "source": "ecology/living_swarm.gleam, ecology/capability_port.gleam",
+      "observed": "OBSERVED LIVE at 4110/ecology 05:42:34Z: 26 participants, 11 discoverable capabilities, observed cycle 8912, invocation receipts 8914; page states plainly 'Participant models share one ecology actor; external system bindings are absent.'",
+      "status": "EXECUTED",
+      "dashboard": "PRESENT at http://nas-1.tail55d152.ts.net:4110/ecology (HTTP 200, 27545 B)",
+      "blockers": "External bindings absent by the page's own statement",
+      "falsifier": "Query any of the 26 participants for an external system response; the page already asserts there is none"
+    },
+    {
+      "id": "C08",
+      "capability": "Shared service Andon (modular_max, openrouter_free)",
+      "source": "ecology/*",
+      "observed": "OBSERVED LIVE: both render 'ready'.",
+      "status": "EXECUTED",
+      "dashboard": "PRESENT at 4110/ecology",
+      "blockers": "'ready' is a readiness label, not an executed-request receipt",
+      "falsifier": "Disable the MAX daemon and reload: verify whether 'ready' changes"
+    },
+    {
+      "id": "C09",
+      "capability": "Comprehensive 18-checkpoint verification checklist on every surface",
+      "source": "contracts/rules/comprehensive-checklist-contract.md",
+      "observed": "OBSERVED LIVE at 4110: all 5 domains rendered, and 7 of 18 explicitly marked 'UNRUN in this view' (CHK-05,07,08,10,11,14,16). It does NOT claim a blanket pass.",
+      "status": "VERIFIED",
+      "dashboard": "PRESENT at 4110/ecology",
+      "blockers": "None for this item",
+      "falsifier": "Look for a claimed 18/18 green on that page: there is none"
+    },
+    {
+      "id": "C10",
+      "capability": "Dashboard shows CURRENT truthful state",
+      "source": "apps/cepaf_gleam/src/cepaf_gleam/agui/event_stream_widget.gleam:27-40",
+      "observed": "FALSIFIED ON THE CANONICAL COCKPIT. 4100 renders a panel titled 'AG-UI Event Stream (Live)' whose content is the static demo_events() list. Observed 05:42Z: it displays 'health=100% containers=16/16' with fixed timestamps 01:42:10.49x. Actual podman ps at the same moment: 2 containers (c3i-zenoh-router-1, c3i-docs-server); docker 0. The words demo/sample/synthetic/mock appear 0 times in the rendered page.",
+      "status": "EXECUTED (rendering) / FALSE (content)",
+      "dashboard": "PRESENT and MISLABELLED at http://nas-1.tail55d152.ts.net:4100/",
+      "blockers": "H1 below",
+      "falsifier": "Reload the page: identical timestamps every time. Stop both containers: it still reports 16/16."
+    },
+    {
+      "id": "C11",
+      "capability": "Harness evolution visible on a dashboard",
+      "source": "—",
+      "observed": "OBSERVED ABSENCE: 'harness' matches 0 times on both 4100 and 4110; HARNESSBOOT 0 times.",
+      "status": "PLANNED",
+      "dashboard": "MISSING ENTIRELY",
+      "blockers": "No surface exists",
+      "falsifier": "Ask either dashboard for harness bootstrap state; nothing answers"
+    },
+    {
+      "id": "C12",
+      "capability": "Native generation via constrained typed kernel IR",
+      "source": "—",
+      "observed": "NOT EXERCISED; no generated artifact inspected.",
+      "status": "UNKNOWN",
+      "dashboard": "MISSING",
+      "blockers": "Out of source-only scope",
+      "falsifier": "Produce a generated native artifact and diff its semantics against the Gleam source"
+    },
+    {
+      "id": "C13",
+      "capability": "Dev / production-primary / production-standby role isolation",
+      "source": "—",
+      "observed": "NOT OBSERVED; no standby node inspected.",
+      "status": "UNKNOWN",
+      "dashboard": "MISSING",
+      "blockers": "Out of scope; production is separate authority",
+      "falsifier": "Point a dev candidate at the standby role and see whether anything refuses it"
+    },
+    {
+      "id": "C14",
+      "capability": "Conditional hot upgrade (appup/relup/sys)",
+      "source": "—",
+      "observed": "NOT EXERCISED.",
+      "status": "UNKNOWN",
+      "dashboard": "MISSING",
+      "blockers": "Out of scope",
+      "falsifier": "Attempt a live upgrade with a native resource held open"
+    },
+    {
+      "id": "C15",
+      "capability": "Formal evaluation set (Lean, Quint, STM, Bayesian, Rete, STPA/FMEA)",
+      "source": "formal/, tools/validation/",
+      "observed": "NOT RE-RUN in this pass. This reviewer separately holds current evidence for Lean and Quint from its own work, not for Rete-UL.",
+      "status": "UNKNOWN",
+      "dashboard": "MISSING",
+      "blockers": "Packet itself flags Rete-UL as unverified",
+      "falsifier": "Execute Rete-UL against an independent oracle"
+    }
+  ],
+  "status_counts": {
+    "IMPLEMENTED": 3,
+    "EXECUTED": 3,
+    "PLANNED": 3,
+    "VERIFIED": 1,
+    "EXECUTED (rendering) / FALSE (content)": 1,
+    "UNKNOWN": 4
+  },
+  "findings": [
+    {
+      "id": "H1",
+      "severity": "HIGH",
+      "title": "Canonical cockpit renders static demo data under a panel titled Live",
+      "where": [
+        "apps/cepaf_gleam/src/cepaf_gleam/agui/event_stream_widget.gleam:27-40 (fn demo_events, doc comment: 'Create demo events showing a typical AG-UI lifecycle')",
+        "rendered at http://nas-1.tail55d152.ts.net:4100/ observed 2026-09-09T05:42:34Z, HTTP 200, 77763 B"
+      ],
+      "what": "The panel heading is 'AG-UI Event Stream (Live)'. Its content is the static demo_events list: fixed timestamps 01:42:10.496-.502 and the literal 'health=100% containers=16/16'. The words demo, sample, synthetic, illustrative and mock appear zero times in the rendered page, so a viewer has no way to tell this from live telemetry. The source is honest; the page is not.",
+      "observed": "podman ps at the same moment: 2 containers running (c3i-zenoh-router-1 Up 4 hours, c3i-docs-server Up 4 hours). docker: 0. The page claims 16/16 and health=100%.",
+      "falsifier": "Reload the page: the timestamps never change. Stop both containers: it still reports 16/16.",
+      "fix": "Either bind the panel to real telemetry, or label it 'Demo' in the rendered output and drop the word 'Live'. A health indicator that cannot be wrong is not a health indicator.",
+      "residual": "Any other panel sourced from demo_* helpers has the same exposure; this review checked one."
+    },
+    {
+      "id": "H2",
+      "severity": "MEDIUM",
+      "title": "Harness evolution has no dashboard surface at all",
+      "where": [
+        "http://nas-1.tail55d152.ts.net:4100/ (grep 'harness': 0)",
+        "http://nas-1.tail55d152.ts.net:4110/ecology (grep 'harness': 0, 'HARNESSBOOT': 0)"
+      ],
+      "what": "None of the bootstrap subject matter is visible anywhere: no MCP development service state, no HARNESSBOOT task state, no clock observation, no budget balance. The operator's question about dashboard truthfulness cannot be answered affirmatively for the harness because the harness is not shown.",
+      "observed": "Both pages fetched and text-extracted at 05:42:34Z; zero matches.",
+      "falsifier": "Kill the development MCP service: no dashboard changes, because none observes it.",
+      "fix": "Add a harness panel bound to the Sa-plan task row and the service heartbeat, or state explicitly that the harness is deliberately headless during bootstrap.",
+      "residual": "Dashboard changes are separate authority; this is a finding, not a request to change production."
+    },
+    {
+      "id": "H3",
+      "severity": "LOW",
+      "title": "False precision on the ecology cockpit",
+      "where": [
+        "http://nas-1.tail55d152.ts.net:4110/ecology"
+      ],
+      "what": "HARMONIC CONSONANCE is rendered as 43.08255132291642 % — 16 significant figures for a derived aesthetic metric.",
+      "observed": "Read directly from the live page at 05:42:34Z.",
+      "falsifier": "No measurement in this system carries 16 significant figures.",
+      "fix": "Round to the precision the input actually supports.",
+      "residual": "Cosmetic, but it invites reading a synthesised number as a measured one."
+    },
+    {
+      "id": "H4",
+      "severity": "INFO",
+      "title": "The ecology cockpit is materially honest and should be the pattern",
+      "where": [
+        "http://nas-1.tail55d152.ts.net:4110/ecology"
+      ],
+      "what": "It states 'Participant models share one ecology actor; external system bindings are absent', 'Local cognition and diagnostics; backend availability and system admission require separate evidence', and 'Initial snapshot; awaiting live refresh'. Its checklist marks 7 of 18 checkpoints 'UNRUN in this view' rather than claiming a blanket pass. CHK-01-TIME carries a host observation of 1788932570331637 us, which resolves to 2026-09-09T05:42:50Z, i.e. current.",
+      "observed": "Read directly from the live page.",
+      "falsifier": "None sought; this is a positive observation.",
+      "fix": "Apply the same disclosure discipline to the 4100 cockpit, which currently does the opposite (H1).",
+      "residual": "Honest labelling is not the same as verified behaviour; the page says so itself."
+    }
+  ],
+  "limits": [
+    "Dashboard changes and production effects remain separate authority; none performed.",
+    "Delivery ACK is not admission and not approval.",
+    "First-delivery findings F1-F7 stand unchanged.",
+    "EV ceiling 93 and EV-94..109 NOT_ADMITTED untouched."
+  ]
+}

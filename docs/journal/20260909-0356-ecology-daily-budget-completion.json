@@ -1,0 +1,386 @@
+{
+  "schema": "uos.ecology.daily-budget.component.v1",
+  "observed_at": "2026-09-09T03:38:56Z",
+  "plan_id": "uos/ecology-budget/20260909-0309",
+  "task_id": "DAILY-BUDGET",
+  "worker": "codex-ecology-supervision",
+  "attempt": 1,
+  "status": "COMPONENT_TESTS_PASSED",
+  "runtime_admission": "NOT_GRANTED",
+  "canonical_ledger_provisioned": false,
+  "network_calls": 0,
+  "tests": {
+    "native_checks": 398,
+    "gleam_tests": 6,
+    "facade_cases": 5,
+    "facade_invocations": 10,
+    "initial_oracle_checks": 55,
+    "initial_oracle_precedes_sqlite": true,
+    "shared_laws_each": 47,
+    "trace_seed": 20260909,
+    "trace_steps": 128,
+    "trace_observations": 256,
+    "concurrent_processes": 8,
+    "final_slot_grants": 2,
+    "final_slot_exhausted": 6,
+    "duplicate_grants": 1,
+    "duplicate_denials": 7,
+    "mutants_killed": 3,
+    "negative_signature_compile": "EXPECTED_FAILURE",
+    "journal_sections": 13
+  },
+  "toolchain": {
+    "ocaml": "5.5.0",
+    "gleam": "1.16.0",
+    "otp": "29",
+    "erts": "17.0.5",
+    "sqlite": "3.46.1",
+    "mojo": "1.0.0 (ed45d567)"
+  },
+  "budget": {
+    "scope": "ONE_DATABASE_ONLY",
+    "daily_limit_nanodollars": 10000000000,
+    "reservation_nanodollars": 250000000,
+    "actual_spend_nanodollars": null,
+    "refunds_supported": false,
+    "input_bytes": 16384,
+    "body_bytes": 65536,
+    "max_completion_tokens": 4096,
+    "template_allowance": 2048
+  },
+  "limits": {
+    "db_bytes": 33554432,
+    "wal_bytes": 8388608,
+    "shm_bytes": 1048576,
+    "busy_timeout_ms": 1000,
+    "cooperative_deadline_seconds": 30,
+    "suggested_caller_guardian_ms": 5000,
+    "suggested_output_bytes": 4096
+  },
+  "sources": [
+    {
+      "path": "tools/ecology_budget.ml",
+      "sha256": "f187a584c3ced3216478ae9b6d9d587c8fb0e999308ba4fcbc8d1a91ed844109",
+      "bytes": 22011
+    },
+    {
+      "path": "tools/ecology_budget.mojo",
+      "sha256": "f8801877171c2e0d301a6e06ba7e3f096bd5d152e2ee92990d4fb2ed14176c86",
+      "bytes": 1700
+    },
+    {
+      "path": "tools/validation/ecology_budget_test.ml",
+      "sha256": "07dbfe0764cbb184d38670fbdcf29d5c87e85348e35bd111f03636b1375590ae",
+      "bytes": 13005
+    },
+    {
+      "path": "tools/validation/ecology_budget_check.ml",
+      "sha256": "dc19e34cdb3c256403cfe405ffbe014b9403784fdf469265bca55a77d0741bbb",
+      "bytes": 4601
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/daily_budget.gleam",
+      "sha256": "67da3e67a765f7104274a7a667026d001ff9e34a97e74f5ea107e3fb3e38ffb8",
+      "bytes": 5018
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ecology_daily_budget_test.gleam",
+      "sha256": "68cd37575abc38d61e3bf594e79e1a04f69a13ab4eb16762e2525fb3be2328c1",
+      "bytes": 3801
+    },
+    {
+      "path": "docs/design/20260909-0309-ecology-daily-budget-contract.md",
+      "sha256": "df8d79c4e921f43ddf8724f072eecbc7fab2eeae0bf711cec2d74243aaae7aae",
+      "bytes": 12043
+    },
+    {
+      "path": "docs/journal/20260909-0356-ecology-daily-budget-completion.md",
+      "sha256": "f59d2c034d4cb1080539a4ac669098a95714bf69c9c6cf8d68127a3ae2789bf2",
+      "bytes": 13945
+    }
+  ],
+  "logs": [
+    {
+      "path": "/tmp/uos-ecology-budget-oracle.log",
+      "sha256": "719cbf2d9657fbdb4699081b3f6e509483132c5b3ab19346f6ed9a8b015e531b",
+      "content": "File \"./tools/ecology_budget.ml\", line 1:\nAlert ocaml_deprecated_auto_include: \nOCaml's lib directory layout changed in 5.0. The unix subdirectory has been\nautomatically added to the search path, but you should add -I +unix to the\ncommand-line to silence this alert (e.g. by adding unix to the list of\nlibraries in your dune file, or adding use_unix to your _tags file for\nocamlbuild, or using -package unix for ocamlfind).\n\nFile \"./tools/ecology_budget.ml\", line 1:\nError: Reference to undefined compilation unit `Unix'\nHint: This means that the interface of a module is loaded, but its implementation is not.\n      Found /home/an/dev/ver/zigvm/_opam/lib/ocaml/unix/unix.cma \n      in the load paths. Did you mean to load it using #load \"unix.cma\" \n      or by passing it as an argument to the toplevel?\n"
+    },
+    {
+      "path": "/tmp/uos-ecology-budget-oracle-2.log",
+      "sha256": "6d57d2e91ac820b49dacc697ef5ec87596ffcb2cbdb9600d3a0a2de4a2a71ae6",
+      "content": "{\"status\":\"PASS\",\"interpretation\":\"immutable_event_oracle\",\"checks\":55,\"network_calls\":0}\n"
+    },
+    {
+      "path": "/tmp/uos-ecology-budget-tests-1.log",
+      "sha256": "3e1d5274363b3a2874a84be763498d550f5723968cf9c568d40b851e8ec020f1",
+      "content": "File \"./tools/validation/ecology_budget_check.ml\", line 1:\nAlert ocaml_deprecated_auto_include: \nOCaml's lib directory layout changed in 5.0. The unix subdirectory has been\nautomatically added to the search path, but you should add -I +unix to the\ncommand-line to silence this alert (e.g. by adding unix to the list of\nlibraries in your dune file, or adding use_unix to your _tags file for\nocamlbuild, or using -package unix for ocamlfind).\nocamlfind: [WARNING] Package `mtime.clock.os': Deprecated, use the mtime.clock library.\nocamlfind: [WARNING] Package `mtime.clock.os': Deprecated, use the mtime.clock library.\nFile \"/tmp/uos-ecology-budget-tests-1/negative_conformance.ml\", line 1, characters 39-149:\n1 | module Broken : Ecology_budget.STORE = struct type t = unit let initialize ~now:_ _ = Ok () let observe ~now:_ _ = Error Ecology_budget.Ledger_io end\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nError: Signature mismatch:\n       ...\n       The value reserve is required but not provided\n       File \"/tmp/uos-ecology-budget-tests-1/ecology_budget.ml\", line 82, characters 2-74:\n         Expected declaration\nnegative_conformance=EXPECTED_COMPILE_FAILURE\nshared_laws oracle=47 sqlite=47\ndifferential seed=20260909 steps=128 observations=256\nconcurrency processes=8 final_slots=2 grants=2 exhausted=6 duplicate_grants=1 duplicate_denied=7\n{\"status\":\"PASS\",\"checks\":393,\"seed\":20260909,\"trace_steps\":128,\"race_processes\":8,\"mutants_killed\":3,\"network_calls\":0,\"budget_scope\":\"scratch_database_only\"}\n"
+    },
+    {
+      "path": "/tmp/uos-ecology-budget-tests-2.log",
+      "sha256": "2a00bddaf74afe3ad5a6df371567fb7fbe6a5eac8dffabc8dae0e9ce60121f1d",
+      "content": "File \"./tools/validation/ecology_budget_check.ml\", line 1:\nAlert ocaml_deprecated_auto_include: \nOCaml's lib directory layout changed in 5.0. The unix subdirectory has been\nautomatically added to the search path, but you should add -I +unix to the\ncommand-line to silence this alert (e.g. by adding unix to the list of\nlibraries in your dune file, or adding use_unix to your _tags file for\nocamlbuild, or using -package unix for ocamlfind).\nocamlfind: [WARNING] Package `mtime.clock.os': Deprecated, use the mtime.clock library.\nocamlfind: [WARNING] Package `mtime.clock.os': Deprecated, use the mtime.clock library.\nFile \"/tmp/uos-ecology-budget-tests-2/negative_conformance.ml\", line 1, characters 39-149:\n1 | module Broken : Ecology_budget.STORE = struct type t = unit let initialize ~now:_ _ = Ok () let observe ~now:_ _ = Error Ecology_budget.Ledger_io end\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nError: Signature mismatch:\n       ...\n       The value reserve is required but not provided\n       File \"/tmp/uos-ecology-budget-tests-2/ecology_budget.ml\", line 82, characters 2-74:\n         Expected declaration\nnegative_conformance=EXPECTED_COMPILE_FAILURE\nshared_laws oracle=47 sqlite=47\ndifferential seed=20260909 steps=128 observations=256\nconcurrency processes=8 final_slots=2 grants=2 exhausted=6 duplicate_grants=1 duplicate_denied=7\n{\"status\":\"PASS\",\"checks\":398,\"seed\":20260909,\"trace_steps\":128,\"race_processes\":8,\"mutants_killed\":3,\"network_calls\":0,\"sqlite_version\":\"3.46.1\",\"budget_scope\":\"scratch_database_only\"}\n"
+    },
+    {
+      "path": "/tmp/uos-ecology-budget-tests-final.log",
+      "sha256": "5795d6b1c3b632a172d7a82ceb2d3ee1888362eb8a18eeeef90e1df252dfe726",
+      "content": "File \"/tmp/uos-ecology-budget-tests-final/negative_conformance.ml\", line 1, characters 39-149:\n1 | module Broken : Ecology_budget.STORE = struct type t = unit let initialize ~now:_ _ = Ok () let observe ~now:_ _ = Error Ecology_budget.Ledger_io end\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nError: Signature mismatch:\n       ...\n       The value reserve is required but not provided\n       File \"/tmp/uos-ecology-budget-tests-final/ecology_budget.ml\", line 82, characters 2-74:\n         Expected declaration\nnegative_conformance=EXPECTED_COMPILE_FAILURE\nshared_laws oracle=47 sqlite=47\ndifferential seed=20260909 steps=128 observations=256\nconcurrency processes=8 final_slots=2 grants=2 exhausted=6 duplicate_grants=1 duplicate_denied=7\n{\"status\":\"PASS\",\"checks\":398,\"seed\":20260909,\"trace_steps\":128,\"race_processes\":8,\"mutants_killed\":3,\"network_calls\":0,\"sqlite_version\":\"3.46.1\",\"budget_scope\":\"scratch_database_only\"}\nFile \"/home/an/NAS-setup/uos/tools/ecology_process.ml\", line 1:\nAlert ocaml_deprecated_auto_include: \nOCaml's lib directory layout changed in 5.0. The unix subdirectory has been\nautomatically added to the search path, but you should add -I +unix to the\ncommand-line to silence this alert (e.g. by adding unix to the list of\nlibraries in your dune file, or adding use_unix to your _tags file for\nocamlbuild, or using -package unix for ocamlfind).\nFile \"/home/an/NAS-setup/uos/tools/ecology_process.ml\", line 1:\nAlert ocaml_deprecated_auto_include: \nOCaml's lib directory layout changed in 5.0. The unix subdirectory has been\nautomatically added to the search path, but you should add -I +unix to the\ncommand-line to silence this alert (e.g. by adding unix to the list of\nlibraries in your dune file, or adding use_unix to your _tags file for\nocamlbuild, or using -package unix for ocamlfind).\nFile \"/home/an/NAS-setup/uos/tools/ecology_process.ml\", line 1:\nAlert ocaml_deprecated_auto_include: \nOCaml's lib directory layout changed in 5.0. The unix subdirectory has been\nautomatically added to the search path, but you should add -I +unix to the\ncommand-line to silence this alert (e.g. by adding unix to the list of\nlibraries in your dune file, or adding use_unix to your _tags file for\nocamlbuild, or using -package unix for ocamlfind).\nFile \"/home/an/NAS-setup/uos/tools/ecology_process.ml\", line 1:\nAlert ocaml_deprecated_auto_include: \nOCaml's lib directory layout changed in 5.0. The unix subdirectory has been\nautomatically added to the search path, but you should add -I +unix to the\ncommand-line to silence this alert (e.g. by adding unix to the list of\nlibraries in your dune file, or adding use_unix to your _tags file for\nocamlbuild, or using -package unix for ocamlfind).\nFile \"/home/an/NAS-setup/uos/tools/ecology_process.ml\", line 1:\nAlert ocaml_deprecated_auto_include: \nOCaml's lib directory layout changed in 5.0. The unix subdirectory has been\nautomatically added to the search path, but you should add -I +unix to the\ncommand-line to silence this alert (e.g. by adding unix to the list of\nlibraries in your dune file, or adding use_unix to your _tags file for\nocamlbuild, or using -package unix for ocamlfind).\nFile \"/home/an/NAS-setup/uos/tools/ecology_process.ml\", line 1:\nAlert ocaml_deprecated_auto_include: \nOCaml's lib directory layout changed in 5.0. The unix subdirectory has been\nautomatically added to the search path, but you should add -I +unix to the\ncommand-line to silence this alert (e.g. by adding unix to the list of\nlibraries in your dune file, or adding use_unix to your _tags file for\nocamlbuild, or using -package unix for ocamlfind).\nFile \"/home/an/NAS-setup/uos/tools/ecology_process.ml\", line 1:\nAlert ocaml_deprecated_auto_include: \nOCaml's lib directory layout changed in 5.0. The unix subdirectory has been\nautomatically added to the search path, but you should add -I +unix to the\ncommand-line to silence this alert (e.g. by adding unix to the list of\nlibraries in your dune file, or adding use_unix to your _tags file for\nocamlbuild, or using -package unix for ocamlfind).\nFile \"/home/an/NAS-setup/uos/tools/ecology_process.ml\", line 1:\nAlert ocaml_deprecated_auto_include: \nOCaml's lib directory layout changed in 5.0. The unix subdirectory has been\nautomatically added to the search path, but you should add -I +unix to the\ncommand-line to silence this alert (e.g. by adding unix to the list of\nlibraries in your dune file, or adding use_unix to your _tags file for\nocamlbuild, or using -package unix for ocamlfind).\nFile \"/home/an/NAS-setup/uos/tools/ecology_process.ml\", line 1:\nAlert ocaml_deprecated_auto_include: \nOCaml's lib directory layout changed in 5.0. The unix subdirectory has been\nautomatically added to the search path, but you should add -I +unix to the\ncommand-line to silence this alert (e.g. by adding unix to the list of\nlibraries in your dune file, or adding use_unix to your _tags file for\nocamlbuild, or using -package unix for ocamlfind).\nFile \"/home/an/NAS-setup/uos/tools/ecology_process.ml\", line 1:\nAlert ocaml_deprecated_auto_include: \nOCaml's lib directory layout changed in 5.0. The unix subdirectory has been\nautomatically added to the search path, but you should add -I +unix to the\ncommand-line to silence this alert (e.g. by adding unix to the list of\nlibraries in your dune file, or adding use_unix to your _tags file for\nocamlbuild, or using -package unix for ocamlfind).\n{\"facade_status\":\"PASS\",\"equivalent_cases\":5,\"invocations\":10,\"normalized_fields\":[\"observed_us\",\"ledger_path\"]}\n"
+    },
+    {
+      "path": "/tmp/uos-ecology-budget-core-build-final.log",
+      "sha256": "374363fbae09abe42987213951c87f1546deea0d0687a50fb9eb6306d620701e",
+      "content": "warning: Unused imported item\n  ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/test/century_hud_test.gleam:6:3\n  │\n6 │   CenturyHudState, MathGates, TriSovereignStatus, init_century_hud, render_ansi,\n  │   ^^^^^^^^^^^^^^^ This imported constructor is never used\n\nHint: You can safely remove it.\n\nwarning: Unused imported item\n  ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/test/century_hud_test.gleam:6:20\n  │\n6 │   CenturyHudState, MathGates, TriSovereignStatus, init_century_hud, render_ansi,\n  │                    ^^^^^^^^^ This imported constructor is never used\n\nHint: You can safely remove it.\n\nwarning: Unused imported item\n  ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/test/century_hud_test.gleam:6:31\n  │\n6 │   CenturyHudState, MathGates, TriSovereignStatus, init_century_hud, render_ansi,\n  │                               ^^^^^^^^^^^^^^^^^^ This imported constructor is never used\n\nHint: You can safely remove it.\n\nwarning: Unused imported item\n  ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/test/chaos_immune_engine_test.gleam:6:44\n  │\n6 │   AntibodyNeutralized, AndonEmergencyHalt, HeartbeatJitter, HotReloadTriggered,\n  │                                            ^^^^^^^^^^^^^^^ This imported constructor is never used\n\nHint: You can safely remove it.\n\nwarning: Unused imported item\n  ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/test/deadman_freshness_test.gleam:7:3\n  │\n7 │   HeartbeatNominal, HeartbeatTripped, HeartbeatWarning,\n  │   ^^^^^^^^^^^^^^^^ This imported constructor is never used\n\nHint: You can safely remove it.\n\nwarning: Unused imported item\n  ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/test/deadman_freshness_test.gleam:7:21\n  │\n7 │   HeartbeatNominal, HeartbeatTripped, HeartbeatWarning,\n  │                     ^^^^^^^^^^^^^^^^ This imported constructor is never used\n\nHint: You can safely remove it.\n\nwarning: Unused imported item\n  ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/test/deadman_freshness_test.gleam:7:39\n  │\n7 │   HeartbeatNominal, HeartbeatTripped, HeartbeatWarning,\n  │                                       ^^^^^^^^^^^^^^^^ This imported constructor is never used\n\nHint: You can safely remove it.\n\nwarning: Unused imported item\n   ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/test/delta_mesh_engine_test.gleam:11:3\n   │\n11 │   SyncDelta, SyncDigest,\n   │   ^^^^^^^^^ This imported constructor is never used\n\nHint: You can safely remove it.\n\nwarning: Unused imported type\n   ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/test/intent_validator_test.gleam:10:3\n   │\n10 │   type ContainerIntent, type IntentConfig, ContainerIntent, IntentConfig,\n   │   ^^^^^^^^^^^^^^^^^^^^ This imported type is never used\n\nHint: You can safely remove it.\n\nwarning: Unused imported type\n   ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/test/multi_surface_verifier_test.gleam:15:3\n   │\n15 │   type ContainerIntent, type IntentConfig, ContainerIntent, IntentConfig,\n   │   ^^^^^^^^^^^^^^^^^^^^ This imported type is never used\n\nHint: You can safely remove it.\n\nwarning: Unused imported type\n   ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/test/multi_surface_verifier_test.gleam:15:25\n   │\n15 │   type ContainerIntent, type IntentConfig, ContainerIntent, IntentConfig,\n   │                         ^^^^^^^^^^^^^^^^^ This imported type is never used\n\nHint: You can safely remove it.\n\nwarning: Unused imported item\n  ┌─ /home/an/NAS-setup/uos/apps/cepaf_gleam/test/work_stealing_test.gleam:7:3\n  │\n7 │   RandomVictim, StealableTask, apply_steal_response, enqueue_local_task,\n  │   ^^^^^^^^^^^^ This imported constructor is never used\n\nHint: You can safely remove it.\n\n  Compiling cepaf_gleam\n   Compiled in 0.56s\n"
+    },
+    {
+      "path": "/tmp/uos-ecology-budget-core-test-final.log",
+      "sha256": "798eb5d6ec6a6cf3cb7221809c9b0970c539e1fe8854e59b030e5524316eac4c",
+      "content": "OTP=29 ERTS=17.0.5\n======================== EUnit ========================\nmodule 'ecology_daily_budget_test'\n  ecology_daily_budget_test: worst_provider_and_maximum_request_fit_fixed_reservation_test...[0.005 s] ok\n  ecology_daily_budget_test: provider_ceilings_are_exact_and_free_route_is_separate_test...ok\n  ecology_daily_budget_test: live_price_must_be_nonnegative_within_provider_ceiling_and_no_fee_test...ok\n  ecology_daily_budget_test: byte_count_is_utf8_and_caller_cannot_assert_smaller_size_test...[0.003 s] ok\n  ecology_daily_budget_test: invalid_identity_token_and_body_bounds_reject_test...ok\n  ecology_daily_budget_test: usage_outside_original_admission_rejects_without_refund_test...ok\n  [done in 0.026 s]\n=======================================================\n  All 6 tests passed.\n"
+    },
+    {
+      "path": "/tmp/uos-ecology-budget-mojo-oracle.log",
+      "sha256": "81ad22b1dc79f368711355161ef21754379da60e8d94d31bbf3cec80294b4cec",
+      "content": "[36:36:20260909,052954.533315:ERROR socket.cc:45] setsockopt: Operation not permitted (1)\nFailed to initialize Crashpad.  Crash reporting will not be available.  Cause: crashpad failed to start handler\n{\"status\":\"PASS\",\"interpretation\":\"immutable_event_oracle\",\"checks\":55,\"network_calls\":0}\n"
+    },
+    {
+      "path": "/tmp/uos-ecology-budget-preflight-receipt.json",
+      "sha256": "1860ff04ce8b7a872c55e1aedea4306a6eb77948749da4ac6ad4db85e5c3ebda",
+      "content": "{\"status\":\"PREFLIGHT_PASS\",\"authority\":\"NONE\",\"runtime_admission\":\"NOT_GRANTED\",\"observed_at\":\"2026-09-09T03:06:55Z\",\"completed_at\":\"2026-09-09T03:06:55Z\",\"elapsed_monotonic_seconds\":0.211688114,\"clock_start\":{\"source\":\"chronyc tracking\",\"abs_ntp_offset_seconds\":0.000412838,\"uncertainty_seconds\":0.016887105,\"reference_age_seconds\":253.25001573562622,\"stratum\":3},\"clock_end\":{\"source\":\"chronyc tracking\",\"abs_ntp_offset_seconds\":0.000412814,\"uncertainty_seconds\":0.016887265,\"reference_age_seconds\":253.35679459571838,\"stratum\":3},\"assessment_sha256\":\"c5c8148fe7e9502183e8a5ad2d70bd1da52651fd594e3fb4df485a604480a1a8\",\"evidence_files_checked\":3,\"sa_plan\":{\"plan_id\":\"uos/ecology-budget/20260909-0309\",\"snapshot_sha256\":\"2746f0f89561afeaa7e388d60183200c04d1515d7279ad8e286750bf6a022e4c\",\"tasks\":[{\"task_id\":\"DAILY-BUDGET\",\"state\":\"available\",\"worker\":null,\"lease_until_ns\":null,\"attempt\":0,\"completed_at_ns\":null,\"result_present\":false,\"dependencies\":[]}],\"mode\":\"READONLY\",\"lease_fencing_authority\":\"NOT_GRANTED\"},\"order\":[{\"task_id\":\"DAILY-BUDGET\",\"effective_class\":\"P1\",\"effective_score\":768,\"origins\":[\"DAILY-BUDGET\"]}],\"findings\":[],\"limits\":[\"Listed byte equality does not prove source completeness, runtime behavior or signed provenance.\",\"Analysis prose, class judgments, cost ties and control effectiveness require qualified review.\",\"Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.\",\"Snapshot is confined to one complete plan; no global optimum is asserted.\"]}\n"
+    },
+    {
+      "path": "/tmp/uos-ecology-budget-active-final-receipt.json",
+      "sha256": "5530d759f02e97c6541abfeea2fe0818cc8d426267a52c209b874f6b31bd6c5b",
+      "content": "{\"status\":\"ACTIVE_OBSERVATION_PASS\",\"authority\":\"NONE\",\"runtime_admission\":\"NOT_GRANTED\",\"observed_at\":\"2026-09-09T03:38:56Z\",\"completed_at\":\"2026-09-09T03:38:56Z\",\"elapsed_monotonic_seconds\":0.214108694,\"clock_start\":{\"source\":\"chronyc tracking\",\"abs_ntp_offset_seconds\":0.0009802809999999999,\"uncertainty_seconds\":0.0167176945,\"reference_age_seconds\":103.35935759544373,\"stratum\":3},\"clock_end\":{\"source\":\"chronyc tracking\",\"abs_ntp_offset_seconds\":0.0009801899999999999,\"uncertainty_seconds\":0.0167178435,\"reference_age_seconds\":103.46759557723999,\"stratum\":3},\"assessment_sha256\":\"45a4329a48ee852ba581fe63e5e9faa5a46d6d9e7ca00a1af8aeefa521255229\",\"evidence_files_checked\":7,\"sa_plan\":{\"plan_id\":\"uos/ecology-budget/20260909-0309\",\"snapshot_sha256\":\"82544ab1940696cdb1161586211f0ad43856b185cb28921eeaea0ea5b19aaa66\",\"tasks\":[{\"task_id\":\"DAILY-BUDGET\",\"state\":\"executing\",\"worker\":\"codex-ecology-supervision\",\"lease_until_ns\":\"1788926827772580570\",\"attempt\":1,\"completed_at_ns\":null,\"result_present\":false,\"dependencies\":[]}],\"mode\":\"READONLY\",\"lease_fencing_authority\":\"NOT_GRANTED\"},\"order\":[],\"findings\":[],\"limits\":[\"Listed byte equality does not prove source completeness, runtime behavior or signed provenance.\",\"Analysis prose, class judgments, cost ties and control effectiveness require qualified review.\",\"Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.\",\"Snapshot is confined to one complete plan; no global optimum is asserted.\"]}\n"
+    }
+  ],
+  "risk_assessment": [
+    {
+      "stpa_analysis": {
+        "controller": "Typed paid-request policy and OCaml reservation ledger",
+        "control_action": "Commit one fixed liability reservation before a separately authorized paid request",
+        "losses": [ "L-RISK-UNAUTHORIZED-EFFECT" ],
+        "hazards": [ "H-RISK-FALSE-CLEARANCE", "H-RISK-STALE-SELECTION" ],
+        "ucas": [
+          {
+            "type": "not_provided",
+            "applicability": "applicable",
+            "context": "A paid call dispatches without a durable reservation.",
+            "hazard_ids": [
+              "H-RISK-FALSE-CLEARANCE", "H-RISK-STALE-SELECTION"
+            ],
+            "constraint": "Root must require one fresh committed canonical grant before dispatch."
+          },
+          {
+            "type": "provided_unsafe",
+            "applicability": "applicable",
+            "context": "Duplicate IDs or concurrent read/update grant excess liability.",
+            "hazard_ids": [
+              "H-RISK-FALSE-CLEARANCE", "H-RISK-STALE-SELECTION"
+            ],
+            "constraint": "Atomic immediate transaction, unique IDs and independent cap/append-only checks."
+          },
+          {
+            "type": "wrong_timing",
+            "applicability": "applicable",
+            "context": "A stale task lease, clock rollback or old grant is reused.",
+            "hazard_ids": [
+              "H-RISK-FALSE-CLEARANCE", "H-RISK-STALE-SELECTION"
+            ],
+            "constraint": "Host clock ordering, single-use IDs and exact effect-time task recheck."
+          },
+          {
+            "type": "duration",
+            "applicability": "applicable",
+            "context": "A stalled request outlives its worker or uncertain spending is refunded.",
+            "hazard_ids": [
+              "H-RISK-FALSE-CLEARANCE", "H-RISK-STALE-SELECTION"
+            ],
+            "constraint": "Bounded process guardian and no refunds or retry grants."
+          }
+        ]
+      },
+      "decision": {
+        "residuals": [
+          "Root must provision and pin one canonical DB; separate files do not share the cap.",
+          "Root must bind actual body/model/provider price and exact Sa-plan authority before each paid effect.",
+          "Same-UID hostile filesystem or SQL modification is outside the trusted owner boundary.",
+          "No theorem admission, network evaluation or runtime deployment is claimed."
+        ],
+        "budget": "Existing pinned tools only; eight local concurrent test processes, <=4 BEAM schedulers; ledger DB32MiB/WAL8MiB/SHM1MiB, busy timeout1000ms, caller guardian suggested5000ms/4096bytes. Fixed250000000 nanodollars reservation; daily10000000000; no refunds.",
+        "acceptance": [
+          "398 native tests pass including actual eight-process races",
+          "Six Gleam policy tests and five OCaml/Mojo CLI equivalence cases pass",
+          "Three targeted mutants and a negative compile are rejected",
+          "No canonical provisioning, network call or deployment occurs in this slice"
+        ],
+        "falsifier": "A forty-first reservation or repeated call ID grants dispatch, rollback/missing state is accepted, or status labels reserved liability as actual spend.",
+        "forecast": "Concurrent final-slot and duplicate calls preserve liability and single grants; independent interpreter observations agree.",
+        "counterevidence": [
+          "Per-file tests do not establish a system-wide cap until every production driver pins one canonical ledger."
+        ],
+        "alternatives": [
+          "Accumulate post-call actual costs without atomic pre-reservation",
+          "Reserve USD0.25 before each paid call with no initial refunds"
+        ],
+        "summary": "Bounded immutable daily liability ledger, pure paid-request policy and independent tests; no canonical initialization or network calls",
+        "assumptions": [
+          "User authorizes implementation, bounded delegated coding, autonomous runtime operation and paid OpenRouter inference capped at an aggregate USD10 per UTC day, explicitly confirmed as $10 per day. Paid evaluation calls must first acquire fresh canonical ledger reservations and current Sa-plan task fencing."
+        ],
+        "confidence": "analyst_estimate",
+        "rollback": "Preserve prior scoped files and versioned running release; restore only owned source/artifact on failed verification.",
+        "reviewer": "Codex implementer plus bounded independent feature review; no implied system admission.",
+        "supersedes": null
+      },
+      "fmea_modes": [
+        {
+          "id": "FM-DAILY-BUDGET",
+          "cause": "Non-atomic budget observation, duplicate dispatch grants, caller-supplied day or implicit state recreation.",
+          "effect": "Paid requests can exceed the operator's daily ceiling or report reserved liability as actual spend.",
+          "controls": "BEGIN IMMEDIATE, unique call ID, fixed nanodollar amounts, append-only strict schema, host-derived clock, fail-closed missing state, oracle/race tests and root canonical binding.",
+          "s": 4,
+          "o": 3,
+          "det": 3,
+          "rpn": 36,
+          "band": 4
+        }
+      ],
+      "factors": {
+        "criticality": {
+          "rationale": "Operator's USD10/day ceiling requires an atomic durable reservation before paid dispatch.",
+          "value": 4,
+          "low": 4,
+          "high": 4,
+          "evidence_refs": [
+            "tools/ecology_budget.ml", "tools/ecology_budget.mojo",
+            "tools/validation/ecology_budget_test.ml",
+            "tools/validation/ecology_budget_check.ml",
+            "apps/cepaf_gleam/src/cepaf_gleam/ecology/daily_budget.gleam",
+            "apps/cepaf_gleam/test/ecology_daily_budget_test.gleam",
+            "docs/design/20260909-0309-ecology-daily-budget-contract.md"
+          ]
+        },
+        "stpa": {
+          "rationale": "Missing, repeated or stale grants can exceed the authorized budget.",
+          "value": 4,
+          "low": 4,
+          "high": 4,
+          "evidence_refs": [
+            "tools/ecology_budget.ml", "tools/ecology_budget.mojo",
+            "tools/validation/ecology_budget_test.ml",
+            "tools/validation/ecology_budget_check.ml",
+            "apps/cepaf_gleam/src/cepaf_gleam/ecology/daily_budget.gleam",
+            "apps/cepaf_gleam/test/ecology_daily_budget_test.gleam",
+            "docs/design/20260909-0309-ecology-daily-budget-contract.md"
+          ]
+        },
+        "fmea": {
+          "rationale": "S4 O3 Det3 RPN36 band4: concurrent lost updates, retries or missing state can exceed liability.",
+          "value": 4,
+          "low": 4,
+          "high": 4,
+          "evidence_refs": [
+            "tools/ecology_budget.ml", "tools/ecology_budget.mojo",
+            "tools/validation/ecology_budget_test.ml",
+            "tools/validation/ecology_budget_check.ml",
+            "apps/cepaf_gleam/src/cepaf_gleam/ecology/daily_budget.gleam",
+            "apps/cepaf_gleam/test/ecology_daily_budget_test.gleam",
+            "docs/design/20260909-0309-ecology-daily-budget-contract.md"
+          ]
+        },
+        "dependency": {
+          "rationale": "Paid adapter activation depends on a tested ledger and canonical-path binding.",
+          "value": 4,
+          "low": 4,
+          "high": 4,
+          "evidence_refs": [
+            "tools/ecology_budget.ml", "tools/ecology_budget.mojo",
+            "tools/validation/ecology_budget_test.ml",
+            "tools/validation/ecology_budget_check.ml",
+            "apps/cepaf_gleam/src/cepaf_gleam/ecology/daily_budget.gleam",
+            "apps/cepaf_gleam/test/ecology_daily_budget_test.gleam",
+            "docs/design/20260909-0309-ecology-daily-budget-contract.md"
+          ]
+        },
+        "impact": {
+          "rationale": "One canonical ledger is intended to bound all future production paid dispatches.",
+          "value": 3,
+          "low": 3,
+          "high": 3,
+          "evidence_refs": [
+            "tools/ecology_budget.ml", "tools/ecology_budget.mojo",
+            "tools/validation/ecology_budget_test.ml",
+            "tools/validation/ecology_budget_check.ml",
+            "apps/cepaf_gleam/src/cepaf_gleam/ecology/daily_budget.gleam",
+            "apps/cepaf_gleam/test/ecology_daily_budget_test.gleam",
+            "docs/design/20260909-0309-ecology-daily-budget-contract.md"
+          ]
+        }
+      },
+      "score_interval": [ 768, 768 ],
+      "score": 768,
+      "class": "P1",
+      "snapshot": {
+        "kind": "working_tree",
+        "reference": "Fresh exact scoped source snapshot; runtime observed separately.",
+        "evidence": [
+          {
+            "path": "tools/ecology_budget.ml",
+            "sha256": "f187a584c3ced3216478ae9b6d9d587c8fb0e999308ba4fcbc8d1a91ed844109",
+            "observed_at": "2026-09-09T03:34:54Z"
+          },
+          {
+            "path": "tools/ecology_budget.mojo",
+            "sha256": "f8801877171c2e0d301a6e06ba7e3f096bd5d152e2ee92990d4fb2ed14176c86",
+            "observed_at": "2026-09-09T03:34:54Z"
+          },
+          {
+            "path": "tools/validation/ecology_budget_test.ml",
+            "sha256": "07dbfe0764cbb184d38670fbdcf29d5c87e85348e35bd111f03636b1375590ae",
+            "observed_at": "2026-09-09T03:34:54Z"
+          },
+          {
+            "path": "tools/validation/ecology_budget_check.ml",
+            "sha256": "dc19e34cdb3c256403cfe405ffbe014b9403784fdf469265bca55a77d0741bbb",
+            "observed_at": "2026-09-09T03:34:54Z"
+          },
+          {
+            "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/daily_budget.gleam",
+            "sha256": "67da3e67a765f7104274a7a667026d001ff9e34a97e74f5ea107e3fb3e38ffb8",
+            "observed_at": "2026-09-09T03:34:54Z"
+          },
+          {
+            "path": "apps/cepaf_gleam/test/ecology_daily_budget_test.gleam",
+            "sha256": "68cd37575abc38d61e3bf594e79e1a04f69a13ab4eb16762e2525fb3be2328c1",
+            "observed_at": "2026-09-09T03:34:54Z"
+          },
+          {
+            "path": "docs/design/20260909-0309-ecology-daily-budget-contract.md",
+            "sha256": "df8d79c4e921f43ddf8724f072eecbc7fab2eeae0bf711cec2d74243aaae7aae",
+            "observed_at": "2026-09-09T03:34:54Z"
+          }
+        ]
+      },
+      "task_state": "executing",
+      "ready_since": "2026-09-09T03:34:54Z",
+      "valid_until": "2026-09-09T04:34:54Z",
+      "observed_at": "2026-09-09T03:34:54Z",
+      "phase": "implementation",
+      "scope": "Bounded immutable daily liability ledger, pure paid-request policy and independent tests; no canonical initialization or network calls",
+      "actor": "codex-ecology-supervision",
+      "task_id": "DAILY-BUDGET",
+      "plan_id": "uos/ecology-budget/20260909-0309",
+      "assessment_id": "DAILY-BUDGET-2026-09-09T03:34:54Z",
+      "schema_version": 1,
+      "policy": "SC-RISK-PRIORITY-001",
+      "fractal_layer": 4,
+      "readiness": "ready",
+      "blockers": [],
+      "dependencies": []
+    }
+  ],
+  "remaining": [
+    "Canonical provisioning and exclusive production path binding are root-owned.",
+    "Root must bind actual body/model/tokens/provider price and exact task authority before paid effects.",
+    "Scratch ledger tests do not establish aggregate activation.",
+    "Same-UID hostile file/schema mutation, power-loss injection and formal theorem proof are unverified.",
+    "No paid network call, release mutation or system admission occurred in this slice."
+  ]
+}

@@ -1,5 +1,7 @@
+import cepaf_gleam/ecology/andon
 import cepaf_gleam/ecology/living_swarm
 import gleam/http/request
+import gleam/list
 import gleam/string
 import gleeunit/should
 import indrajaal/ecology_http
@@ -37,4 +39,24 @@ pub fn supplied_live_cycle_is_rendered_without_reinitialization_test() {
   string.contains(html, "external system bindings are absent") |> should.be_true
   string.contains(html, "id=\"ecology-refresh-status\"") |> should.be_true
   string.contains(html, "Last displayed snapshot retained") |> should.be_true
+}
+
+pub fn shared_andon_reason_is_visible_and_html_escaped_test() {
+  let initial = living_swarm.init_living_swarm()
+  let state =
+    living_swarm.SwarmEcology(
+      ..initial,
+      service_andon: list.map(initial.service_andon, fn(service) {
+        andon.Service(
+          ..service,
+          reason: "http 404: <script>external error</script>",
+        )
+      }),
+    )
+  let html = ecology_http.render_ecology_html(state)
+  string.contains(html, "id=\"ecology-service-andon\"") |> should.be_true
+  string.contains(html, "openrouter_free: stopped") |> should.be_true
+  string.contains(html, "&lt;script&gt;external error&lt;/script&gt;")
+  |> should.be_true
+  string.contains(html, "<script>external error</script>") |> should.be_false
 }

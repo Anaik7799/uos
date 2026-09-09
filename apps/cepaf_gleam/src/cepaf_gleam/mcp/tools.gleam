@@ -734,10 +734,7 @@ pub fn get_tool_definitions() -> List(ToolDefinition) {
               "cost",
               json.object([
                 #("type", json.string("number")),
-                #(
-                  "description",
-                  json.string("Quantified cost/loss if failed"),
-                ),
+                #("description", json.string("Quantified cost/loss if failed")),
               ]),
             ),
           ]),
@@ -796,10 +793,7 @@ pub fn get_tool_definitions() -> List(ToolDefinition) {
             ),
           ]),
         ),
-        #(
-          "required",
-          json.array(["worker", "plan", "task_id"], json.string),
-        ),
+        #("required", json.array(["worker", "plan", "task_id"], json.string)),
       ]),
     ),
     ToolDefinition(
@@ -835,14 +829,31 @@ pub fn get_tool_definitions() -> List(ToolDefinition) {
               "result",
               json.object([
                 #("type", json.string("string")),
-                #("description", json.string("Task execution outcome or receipt")),
+                #(
+                  "description",
+                  json.string("Task execution outcome or receipt"),
+                ),
+              ]),
+            ),
+            #(
+              "attempt",
+              json.object([
+                #("type", json.string("integer")),
+                #("minimum", json.int(1)),
+                #(
+                  "description",
+                  json.string("Current canonical Sa-plan attempt"),
+                ),
               ]),
             ),
           ]),
         ),
         #(
           "required",
-          json.array(["plan", "task_id", "worker", "result"], json.string),
+          json.array(
+            ["plan", "task_id", "worker", "attempt", "result"],
+            json.string,
+          ),
         ),
       ]),
     ),
@@ -935,10 +946,7 @@ pub fn get_tool_definitions() -> List(ToolDefinition) {
             ),
           ]),
         ),
-        #(
-          "required",
-          json.array(["id", "name", "kind", "input"], json.string),
-        ),
+        #("required", json.array(["id", "name", "kind", "input"], json.string)),
       ]),
     ),
     // -- Modular MAX / Mojo High-Utility AI Models (SC-INF-001) --
@@ -982,7 +990,10 @@ pub fn get_tool_definitions() -> List(ToolDefinition) {
               "dependency_readiness",
               json.object([
                 #("type", json.string("string")),
-                #("description", json.string("Dependency status: ready / blocked")),
+                #(
+                  "description",
+                  json.string("Dependency status: ready / blocked"),
+                ),
               ]),
             ),
             #(
@@ -1017,14 +1028,38 @@ pub fn get_tool_definitions() -> List(ToolDefinition) {
                       "properties",
                       json.object([
                         #("id", json.object([#("type", json.string("string"))])),
-                        #("name", json.object([#("type", json.string("string"))])),
-                        #("layer", json.object([#("type", json.string("string"))])),
-                        #("score", json.object([#("type", json.string("number"))])),
-                        #("layer_rank", json.object([#("type", json.string("integer"))])),
-                        #("salience", json.object([#("type", json.string("number"))])),
-                        #("specificity", json.object([#("type", json.string("integer"))])),
-                        #("matched_conditions", json.object([#("type", json.string("integer"))])),
-                        #("action", json.object([#("type", json.string("string"))])),
+                        #(
+                          "name",
+                          json.object([#("type", json.string("string"))]),
+                        ),
+                        #(
+                          "layer",
+                          json.object([#("type", json.string("string"))]),
+                        ),
+                        #(
+                          "score",
+                          json.object([#("type", json.string("number"))]),
+                        ),
+                        #(
+                          "layer_rank",
+                          json.object([#("type", json.string("integer"))]),
+                        ),
+                        #(
+                          "salience",
+                          json.object([#("type", json.string("number"))]),
+                        ),
+                        #(
+                          "specificity",
+                          json.object([#("type", json.string("integer"))]),
+                        ),
+                        #(
+                          "matched_conditions",
+                          json.object([#("type", json.string("integer"))]),
+                        ),
+                        #(
+                          "action",
+                          json.object([#("type", json.string("string"))]),
+                        ),
                       ]),
                     ),
                   ]),
@@ -1064,7 +1099,10 @@ pub fn get_tool_definitions() -> List(ToolDefinition) {
               json.object([
                 #("type", json.string("array")),
                 #("items", json.object([#("type", json.string("string"))])),
-                #("description", json.string("List of candidate file changes or descriptions")),
+                #(
+                  "description",
+                  json.string("List of candidate file changes or descriptions"),
+                ),
               ]),
             ),
             #(
@@ -1095,7 +1133,10 @@ pub fn get_tool_definitions() -> List(ToolDefinition) {
               "raga",
               json.object([
                 #("type", json.string("string")),
-                #("description", json.string("Raga name (e.g. Durga, Bhairav, Yaman)")),
+                #(
+                  "description",
+                  json.string("Raga name (e.g. Durga, Bhairav, Yaman)"),
+                ),
               ]),
             ),
             #(
@@ -1130,21 +1171,32 @@ pub fn get_tool_definitions() -> List(ToolDefinition) {
               "code",
               json.object([
                 #("type", json.string("string")),
-                #("description", json.string("Source code snippet or AST payload")),
+                #(
+                  "description",
+                  json.string("Source code snippet or AST payload"),
+                ),
               ]),
             ),
             #(
               "language",
               json.object([
                 #("type", json.string("string")),
-                #("description", json.string("Programming language (gleam, rust, python, etc.)")),
+                #(
+                  "description",
+                  json.string(
+                    "Programming language (gleam, rust, python, etc.)",
+                  ),
+                ),
               ]),
             ),
             #(
               "strict_mode",
               json.object([
                 #("type", json.string("boolean")),
-                #("description", json.string("Whether strict fail-closed mode is enforced")),
+                #(
+                  "description",
+                  json.string("Whether strict fail-closed mode is enforced"),
+                ),
               ]),
             ),
           ]),
@@ -1171,7 +1223,10 @@ pub fn get_tool_definitions() -> List(ToolDefinition) {
               "limit",
               json.object([
                 #("type", json.string("integer")),
-                #("description", json.string("Maximum number of results to return (1..10)")),
+                #(
+                  "description",
+                  json.string("Maximum number of results to return (1..10)"),
+                ),
               ]),
             ),
           ]),
@@ -1223,4 +1278,3 @@ pub fn get_tool_definitions() -> List(ToolDefinition) {
     ),
   ]
 }
-

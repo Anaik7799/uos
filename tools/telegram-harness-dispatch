@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+# =============================================================================
+# [C3I-SIL6-MSTS] UOS Telegram Gleam Harness Dispatcher (SC-HARNESS-MCP-001)
+# =============================================================================
+# Authority: Pure Gleam/OTP 29 Harness (apps/cepaf_gleam)
+# Invokes cepaf_gleam@harness@telegram:handle_message/1 over BEAM
+# =============================================================================
+set -euo pipefail
+
+UOS_ROOT="/home/an/NAS-setup/uos"
+cd "${UOS_ROOT}"
+
+PAYLOAD="${1:-}"
+if [ -z "${PAYLOAD}" ]; then
+  PAYLOAD="$(cat)"
+fi
+
+if [ -z "${PAYLOAD}" ]; then
+  echo '{"error":"empty_payload"}' >&2
+  exit 1
+fi
+
+# Invoke compiled Gleam harness module on BEAM
+exec erl -noshell \
+  -pa apps/cepaf_gleam/build/dev/erlang/*/ebin \
+  -eval "
+io:setopts([{encoding, utf8}]),
+Payload = unicode:characters_to_binary(os:getenv(\"UOS_TG_PAYLOAD\")),
+case 'cepaf_gleam@harness@telegram':decode_inbound(Payload) of
+  {ok, Msg} ->
+    Resp = 'cepaf_gleam@harness@telegram':handle_message(Msg),
+    OutJson = 'cepaf_gleam@harness@telegram':encode_outbound(Resp),
+    io:put_chars(standard_io, [OutJson, $\n]);
+  {error, Err} ->
+    io:format(standard_error, \"Decode error: ~s~n\", [Err]),
+    init:stop(1)
+end,
+init:stop(0)." \
+  -env UOS_TG_PAYLOAD "${PAYLOAD}"

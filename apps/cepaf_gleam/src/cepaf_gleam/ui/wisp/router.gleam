@@ -58,6 +58,7 @@ import cepaf_gleam/ui/domain.{
   page_primary_clients, page_to_label, page_to_path,
 }
 import cepaf_gleam/ui/ecology_refresh
+import cepaf_gleam/ecology/andon
 import cepaf_gleam/services/max_inference_daemon as max_daemon
 import cepaf_gleam/services/mirage_migration_engine
 import cepaf_gleam/services/mirage_unikernel_daemon
@@ -3883,6 +3884,8 @@ pub fn ecology_snapshot_response(path: String,
             html.text(" · Participants "), html.span([attribute.id("ecology-participants")], [html.text(int.to_string(list.length(swarm.holons)))]),
             html.text(" · Invocation receipts "), html.span([attribute.id("ecology-invocations")], [html.text(int.to_string(swarm.invocation_sequence))])]),
           html.p([attribute.id("ecology-refresh-status"), attribute.attribute("role", "status"), attribute.attribute("aria-live", "polite")], [html.text("Initial snapshot; awaiting live refresh.")]),
+          html.h2([], [html.text("Shared service Andon")]),
+          html.pre([attribute.id("ecology-service-andon"), attribute.attribute("aria-live", "polite")], [html.text(andon.summary(swarm.service_andon))]),
           shell.kv_row("Scope", "Participant models in one ecology actor; external system bindings are absent. Effects and tasks remain under Sa-plan authority."),
           html.table([], [html.thead([], [html.tr([], list.map(["Holon", "Mode", "Selected", "Engaged", "Latest outcome"], fn(label) { html.th([], [html.text(label)]) }))]),
             html.tbody([attribute.id("ecology-participant-rows")], rows)]),

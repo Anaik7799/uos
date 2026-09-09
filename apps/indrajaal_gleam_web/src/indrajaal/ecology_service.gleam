@@ -12,6 +12,7 @@ import gleam/http/response.{type Response}
 import gleam/int
 import gleam/io
 import gleam/json
+import gleam/list
 import gleam/otp/static_supervisor
 import indrajaal/ecology_http
 import indrajaal/runtime_identity
@@ -63,6 +64,23 @@ pub fn main() {
     |> static_supervisor.add(living_swarm_actor.runtime_supervised(1000))
     |> static_supervisor.start
   let runtime = living_swarm_actor.runtime_subject()
+  // One actual bounded probe per backend on process startup. The actor keeps
+  // ticking during inference; failed probes leave that backend's Andon stopped.
+  // Later failures require an explicit typed recovery, never a blind timer reset.
+  list.each(["modular_max", "openrouter_free"], fn(capability) {
+    case living_swarm_actor.recover_service(
+      runtime, "indrajaal", capability,
+      capability_port.default_input(capability), 32_000,
+    ) {
+      Ok(outcome) -> outcome |> capability_port.outcome_to_json
+        |> json.to_string |> io.println
+      Error(reason) -> json.object([
+        #("capability", json.string(capability)),
+        #("status", json.string("unavailable")),
+        #("reason", json.string(reason)),
+      ]) |> json.to_string |> io.println
+    }
+  })
   let port = listen_port(4110)
   let assert Ok(_) = mist.new(fn(req) {
     handle_snapshot(req, living_swarm_actor.get_swarm(runtime, 250), runtime_identity.observe())

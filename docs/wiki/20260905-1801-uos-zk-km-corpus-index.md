@@ -231,6 +231,9 @@ The operational system coordinates across five distinct language tiers:
   - `[[zk:20260908-1915-adr-094-living-swarm-ecology-and-cybernetic-singing-engine]]` [ADR-094](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-1915-adr-094-living-swarm-ecology-and-cybernetic-singing-engine.md) Living 21-Holon Swarm Ecology, 11-Capability Substrate & Cybernetic Singing Harmony Engine
   - `[[zk:20260908-2020-adr-095-uos-c3i-indrajaal-triadic-unification-and-complete-migration]]` [ADR-095](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260908-2020-adr-095-uos-c3i-indrajaal-triadic-unification-and-complete-migration.md) UOS, C3I, Indrajaal & Intelitor Triadic Architecture Comparison and Complete Monorepo Ingestion & Integration
   - `[[zk:20260909-0525-adr-096-toolchain-preflight-denotational-semantics-and-verdict-algebra]]` [ADR-096](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260909-0525-adr-096-toolchain-preflight-denotational-semantics-and-verdict-algebra.md) Toolchain Preflight — Denotational Semantics and the Verdict Algebra
+  - `[[zk:20260909-0640-adr-097-unified-system-ontology-living-km-triad-dictionary-and-glossary-evolution]]` [ADR-097](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260909-0640-adr-097-unified-system-ontology-living-km-triad-dictionary-and-glossary-evolution.md) Unified System Ontology, Living KM Triad, Dictionary, and Glossary Evolution
+  - `[[zk:20260909-2035-adr-098-sovereign-telegram-gleam-harness-delegation]]` [ADR-098](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260909-2035-adr-098-sovereign-telegram-gleam-harness-delegation.md) Sovereign Telegram Message Delegation to UOS Gleam Harness
+  - `[[wiki:20260909-2035-uos-telegram-gleam-harness-architecture]]` [Telegram Architecture Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-2035-uos-telegram-gleam-harness-architecture.md) Sovereign Telegram Gleam Harness Architecture Guide
 - Formal Proofs:
   - `[[zk:TwoLattice_STM]]` (`formal/lean/TwoLattice_STM.lean`)
   - `[[zk:Traceability]]` (`formal/lean/Traceability.lean`)
@@ -274,6 +277,7 @@ The operational system coordinates across five distinct language tiers:
   - `[[zk:ADR-067]]` Fractal Symbiosis, Sa-Plan Sublimation & EV-91 Ratification ([ADR-067 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-1550-adr-067-fractal-symbiosis-sa-plan-sublimation-and-ev91-ratification.md))
   - `[[zk:ADR-068]]` Multidimensional Fractal Vectors & 10-Layer × 7-Surface Sa-Plan TPS Matrix ([ADR-068 Live View](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260907-1605-adr-068-multidimensional-fractal-vectors-sa-plan-tps-matrix.md))
   - `[[wiki:20260908-1325-tui-and-gui-manual-verification-guide]]` ([Manual TUI & GUI Verification Guide](http://nas-1.tail55d152.ts.net:4100/docs/manual/20260908-1325-tui-and-gui-manual-verification-guide.md))
+  - `[[wiki:20260909-0640-uos-system-ontology-dictionary-and-glossary-guide]]` ([System Ontology, Living KM Triad, Dictionary & Glossary Guide](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-0640-uos-system-ontology-dictionary-and-glossary-guide.md))
 
 
 

@@ -1,0 +1,343 @@
+{
+  "schema": "uos.ecology.clock-reuse-review.v1",
+  "observed_at": "2026-09-09T05:00:39Z",
+  "plan_id": "uos/ecology-clock-review/20260909-0439",
+  "task_id": "CLOCK-REVIEW",
+  "worker": "codex-ecology-supervision",
+  "attempt": 1,
+  "status": "READ_ONLY_REVIEW_COMPLETE",
+  "runtime_admission": "NOT_GRANTED",
+  "source_edits": 0,
+  "builds": 0,
+  "runtime_effects": 0,
+  "clock_tests": "UNRUN",
+  "existing_test_declarations": {
+    "clock_contract": 6,
+    "clock_guard": 12,
+    "clock_guard_fetch": 2
+  },
+  "engine_closure": "PENDING_SEPARATE_TASK",
+  "engine_final_active_receipt": "ABSENT_AFTER_INTERRUPTION",
+  "risk_assessment": [
+    {
+      "decision": {
+        "summary": "Read-only Gleam clock reuse review; observed code and API proposals only, all tests UNRUN by this worker, no source/build/runtime effects",
+        "alternatives": [
+          "Retain simulated counters without claiming operational credit",
+          "Wire tested backend execution with bounded supervision"
+        ],
+        "counterevidence": [
+          "Existing living swarm and capability port supply partial infrastructure, but several branches only count or probe."
+        ],
+        "assumptions": [
+          "User authorizes implementation, bounded delegated coding, autonomous runtime operation and paid OpenRouter inference capped at an aggregate USD10 per UTC day, explicitly confirmed as $10 per day. Paid evaluation calls must first acquire fresh canonical ledger reservations and current Sa-plan task fencing."
+        ],
+        "confidence": "analyst_estimate",
+        "forecast": "Observed dispatch receipts and restart tests will distinguish executing services from declared capability masks.",
+        "falsifier": "An unavailable backend reports engaged, a timeout blocks heartbeats, or a disabled capability performs work.",
+        "acceptance": [
+          "Scoped regressions reproduce and resolve identified defects",
+          "Real backend results, mask gates and bounded negative cases are observed",
+          "Autonomous heartbeat, failure isolation and recovery observed",
+          "Formal models and runtime receipts report their actual scope",
+          "Hooks load in the installed runtime",
+          "Grouped journal/wiki/ZK/KM record remaining gaps"
+        ],
+        "rollback": "Preserve prior scoped files and versioned running release; restore only owned source/artifact on failed verification.",
+        "reviewer": "Codex implementer plus bounded independent feature review; no implied system admission.",
+        "budget": "At most 3 delegated Codex workers, 4 BEAM schedulers per check; paid profiles at most4096 completion tokens/request and USD0.25 reserved liability per request in one canonical USD10/day ledger. No implicit paid fallback from free requests, no retries after uncertain spend, public synthetic evaluation inputs only, no unbounded solver or model invocation.",
+        "residuals": [
+          "Whole-system admission remains NOT_ADMITTED until independent revision-bound evidence; source tests cannot certify all runtime services."
+        ],
+        "supersedes": null
+      },
+      "score_interval": [
+        768,
+        768
+      ],
+      "score": 768,
+      "class": "P1",
+      "stpa_analysis": {
+        "control_action": "Dispatch a capability or advance an authorized evolutionary task",
+        "controller": "UOS ecology implementation and supervision",
+        "losses": [
+          "L-RISK-UNAUTHORIZED-EFFECT"
+        ],
+        "hazards": [
+          "H-RISK-FALSE-CLEARANCE",
+          "H-RISK-STALE-SELECTION"
+        ],
+        "ucas": [
+          {
+            "type": "not_provided",
+            "applicability": "applicable",
+            "context": "A necessary hazard repair is never selected.",
+            "hazard_ids": [
+              "H-RISK-FALSE-CLEARANCE",
+              "H-RISK-STALE-SELECTION"
+            ],
+            "constraint": "Check safety class and inherited prerequisite urgency before score."
+          },
+          {
+            "type": "provided_unsafe",
+            "applicability": "applicable",
+            "context": "A high score is mistaken for release authorization.",
+            "hazard_ids": [
+              "H-RISK-FALSE-CLEARANCE",
+              "H-RISK-STALE-SELECTION"
+            ],
+            "constraint": "Authorization and effect constraints precede ranking."
+          },
+          {
+            "type": "wrong_timing",
+            "applicability": "applicable",
+            "context": "Selection relies on a stale candidate or unfinished dependency.",
+            "hazard_ids": [
+              "H-RISK-FALSE-CLEARANCE",
+              "H-RISK-STALE-SELECTION"
+            ],
+            "constraint": "Re-observe and reject affected stale/blocked selection."
+          },
+          {
+            "type": "duration",
+            "applicability": "applicable",
+            "context": "An old worker keeps acting beyond its lease or budget.",
+            "hazard_ids": [
+              "H-RISK-FALSE-CLEARANCE",
+              "H-RISK-STALE-SELECTION"
+            ],
+            "constraint": "Recheck current owner, fencing, expiry and budget before effects."
+          }
+        ]
+      },
+      "fmea_modes": [
+        {
+          "id": "FM-CLOCK-REVIEW",
+          "cause": "Capability declaration, counters and actual backend outcomes are not bound end to end.",
+          "effect": "False capability success or stalled/unsupervised cognition.",
+          "controls": "Typed outcomes, fresh source hashes, bounded execution, actual runtime tests, exact Sa-plan claims and reversible staged release.",
+          "s": 4,
+          "o": 3,
+          "det": 3,
+          "rpn": 36,
+          "band": 4
+        }
+      ],
+      "factors": {
+        "criticality": {
+          "value": 4,
+          "low": 4,
+          "high": 4,
+          "rationale": "Requested autonomous runtime needs working capability boundaries before activation.",
+          "evidence_refs": [
+            "apps/uos_swarm/src/uos_swarm/clock_contract.gleam",
+            "apps/uos_swarm/src/uos_swarm/clock_guard.gleam",
+            "apps/uos_swarm/src/uos_swarm/clock_guard_fetch.gleam",
+            "apps/uos_swarm/src/clock_guard_ffi.erl",
+            "apps/uos_swarm/src/session_store_ffi.erl",
+            "apps/cepaf_gleam/src/cepaf_gleam/ha/freshness_monitor.gleam",
+            "apps/cepaf_gleam/src/cepaf_gleam/iam/freshness_monitor.gleam",
+            "apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+            "apps/cepaf_gleam/src/cepaf_gleam/ecology/openrouter_engine.gleam",
+            "apps/cepaf_gleam/test/ecology_openrouter_engine_test.gleam"
+          ]
+        },
+        "stpa": {
+          "value": 4,
+          "low": 4,
+          "high": 4,
+          "rationale": "Counters and backend-presence probes can misrepresent execution; current code must be observed and repaired.",
+          "evidence_refs": [
+            "apps/uos_swarm/src/uos_swarm/clock_contract.gleam",
+            "apps/uos_swarm/src/uos_swarm/clock_guard.gleam",
+            "apps/uos_swarm/src/uos_swarm/clock_guard_fetch.gleam",
+            "apps/uos_swarm/src/clock_guard_ffi.erl",
+            "apps/uos_swarm/src/session_store_ffi.erl",
+            "apps/cepaf_gleam/src/cepaf_gleam/ha/freshness_monitor.gleam",
+            "apps/cepaf_gleam/src/cepaf_gleam/iam/freshness_monitor.gleam",
+            "apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+            "apps/cepaf_gleam/src/cepaf_gleam/ecology/openrouter_engine.gleam",
+            "apps/cepaf_gleam/test/ecology_openrouter_engine_test.gleam"
+          ]
+        },
+        "fmea": {
+          "value": 4,
+          "low": 4,
+          "high": 4,
+          "rationale": "S4 O3 Det3 RPN36 band4: false execution evidence and blocked supervisor can cause service and evidence damage.",
+          "evidence_refs": [
+            "apps/uos_swarm/src/uos_swarm/clock_contract.gleam",
+            "apps/uos_swarm/src/uos_swarm/clock_guard.gleam",
+            "apps/uos_swarm/src/uos_swarm/clock_guard_fetch.gleam",
+            "apps/uos_swarm/src/clock_guard_ffi.erl",
+            "apps/uos_swarm/src/session_store_ffi.erl",
+            "apps/cepaf_gleam/src/cepaf_gleam/ha/freshness_monitor.gleam",
+            "apps/cepaf_gleam/src/cepaf_gleam/iam/freshness_monitor.gleam",
+            "apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+            "apps/cepaf_gleam/src/cepaf_gleam/ecology/openrouter_engine.gleam",
+            "apps/cepaf_gleam/test/ecology_openrouter_engine_test.gleam"
+          ]
+        },
+        "dependency": {
+          "value": 4,
+          "low": 4,
+          "high": 4,
+          "rationale": "Real capability execution and bounded workers are prerequisites of the requested continuous ecology.",
+          "evidence_refs": [
+            "apps/uos_swarm/src/uos_swarm/clock_contract.gleam",
+            "apps/uos_swarm/src/uos_swarm/clock_guard.gleam",
+            "apps/uos_swarm/src/uos_swarm/clock_guard_fetch.gleam",
+            "apps/uos_swarm/src/clock_guard_ffi.erl",
+            "apps/uos_swarm/src/session_store_ffi.erl",
+            "apps/cepaf_gleam/src/cepaf_gleam/ha/freshness_monitor.gleam",
+            "apps/cepaf_gleam/src/cepaf_gleam/iam/freshness_monitor.gleam",
+            "apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+            "apps/cepaf_gleam/src/cepaf_gleam/ecology/openrouter_engine.gleam",
+            "apps/cepaf_gleam/test/ecology_openrouter_engine_test.gleam"
+          ]
+        },
+        "impact": {
+          "value": 3,
+          "low": 3,
+          "high": 3,
+          "rationale": "One shared ecology runtime serves the requested participating holons.",
+          "evidence_refs": [
+            "apps/uos_swarm/src/uos_swarm/clock_contract.gleam",
+            "apps/uos_swarm/src/uos_swarm/clock_guard.gleam",
+            "apps/uos_swarm/src/uos_swarm/clock_guard_fetch.gleam",
+            "apps/uos_swarm/src/clock_guard_ffi.erl",
+            "apps/uos_swarm/src/session_store_ffi.erl",
+            "apps/cepaf_gleam/src/cepaf_gleam/ha/freshness_monitor.gleam",
+            "apps/cepaf_gleam/src/cepaf_gleam/iam/freshness_monitor.gleam",
+            "apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+            "apps/cepaf_gleam/src/cepaf_gleam/ecology/openrouter_engine.gleam",
+            "apps/cepaf_gleam/test/ecology_openrouter_engine_test.gleam"
+          ]
+        }
+      },
+      "snapshot": {
+        "kind": "working_tree",
+        "reference": "Fresh exact scoped source snapshot; runtime observed separately.",
+        "evidence": [
+          {
+            "path": "apps/uos_swarm/src/uos_swarm/clock_contract.gleam",
+            "sha256": "516c0d769cb3f5f8dc827d09fa62aef724686ca1565096ba1c55b5a912df311e",
+            "observed_at": "2026-09-09T05:00:38Z"
+          },
+          {
+            "path": "apps/uos_swarm/src/uos_swarm/clock_guard.gleam",
+            "sha256": "38987ae4ff5d16752aacfc070b4781ef095560a5d8480e4ac3c6e5a55700f9a4",
+            "observed_at": "2026-09-09T05:00:38Z"
+          },
+          {
+            "path": "apps/uos_swarm/src/uos_swarm/clock_guard_fetch.gleam",
+            "sha256": "520b58feafa08310f3bde5c83db1cd2813f0f6c161d011b07d73778923780380",
+            "observed_at": "2026-09-09T05:00:38Z"
+          },
+          {
+            "path": "apps/uos_swarm/src/clock_guard_ffi.erl",
+            "sha256": "cc7d1771d8976dc036fbd5011cb2a15746a324a22da8b6a1437b6016fa336251",
+            "observed_at": "2026-09-09T05:00:38Z"
+          },
+          {
+            "path": "apps/uos_swarm/src/session_store_ffi.erl",
+            "sha256": "72630cf09783dd4e78c855fd8411594a362b72a43901d5ebafba489846a44b20",
+            "observed_at": "2026-09-09T05:00:38Z"
+          },
+          {
+            "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/freshness_monitor.gleam",
+            "sha256": "0f02648ee112bdf21d0fe6559469d3144de55791ac59d97dcb8636f26a19a71e",
+            "observed_at": "2026-09-09T05:00:38Z"
+          },
+          {
+            "path": "apps/cepaf_gleam/src/cepaf_gleam/iam/freshness_monitor.gleam",
+            "sha256": "2b0df549ef40ade923858e5fa8f9e75fde58a47fc8015c8d2d919c33197414f0",
+            "observed_at": "2026-09-09T05:00:38Z"
+          },
+          {
+            "path": "apps/cepaf_gleam/src/cepaf_gleam/ha/deadman_freshness.gleam",
+            "sha256": "e036bd8086fec2443491e9794bccd00ddd38179a73da8bbdd6e69fcc948d80fe",
+            "observed_at": "2026-09-09T05:00:38Z"
+          },
+          {
+            "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/openrouter_engine.gleam",
+            "sha256": "ca926e374cbe89cacd3a929e10fa242a0814529055c71a954044d8d8ed47060a",
+            "observed_at": "2026-09-09T05:00:38Z"
+          },
+          {
+            "path": "apps/cepaf_gleam/test/ecology_openrouter_engine_test.gleam",
+            "sha256": "f21c12921b5a957871e234554d58b86ef512102bebb9135fbf76c38a224503bd",
+            "observed_at": "2026-09-09T05:00:38Z"
+          }
+        ]
+      },
+      "task_state": "executing",
+      "ready_since": "2026-09-09T05:00:38Z",
+      "valid_until": "2026-09-09T06:00:38Z",
+      "observed_at": "2026-09-09T05:00:38Z",
+      "phase": "implementation",
+      "scope": "Read-only Gleam clock reuse review; observed code and API proposals only, all tests UNRUN by this worker, no source/build/runtime effects",
+      "actor": "codex-ecology-supervision",
+      "task_id": "CLOCK-REVIEW",
+      "plan_id": "uos/ecology-clock-review/20260909-0439",
+      "assessment_id": "CLOCK-REVIEW-2026-09-09T05:00:38Z",
+      "schema_version": 1,
+      "policy": "SC-RISK-PRIORITY-001",
+      "fractal_layer": 4,
+      "readiness": "ready",
+      "blockers": [],
+      "dependencies": []
+    }
+  ],
+  "active_check": {
+    "status": "ACTIVE_OBSERVATION_PASS",
+    "authority": "NONE",
+    "runtime_admission": "NOT_GRANTED",
+    "observed_at": "2026-09-09T05:00:39Z",
+    "completed_at": "2026-09-09T05:00:40Z",
+    "elapsed_monotonic_seconds": 0.216741746,
+    "clock_start": {
+      "source": "chronyc tracking",
+      "abs_ntp_offset_seconds": 0.000333621,
+      "uncertainty_seconds": 0.017641373000000002,
+      "reference_age_seconds": 892.8516790866852,
+      "stratum": 3
+    },
+    "clock_end": {
+      "source": "chronyc tracking",
+      "abs_ntp_offset_seconds": 0.000333577,
+      "uncertainty_seconds": 0.017641507,
+      "reference_age_seconds": 892.9612510204315,
+      "stratum": 3
+    },
+    "assessment_sha256": "d57be01d3fcab2e889f570db375eb976359e8beaae848b691c845344b2e47ac2",
+    "evidence_files_checked": 10,
+    "sa_plan": {
+      "plan_id": "uos/ecology-clock-review/20260909-0439",
+      "snapshot_sha256": "33d306e5df1d95e5528765644cf181bf0ebf35723be9e502c3977a9c3a58d111",
+      "tasks": [
+        {
+          "task_id": "CLOCK-REVIEW",
+          "state": "executing",
+          "worker": "codex-ecology-supervision",
+          "lease_until_ns": "1788931600230723449",
+          "attempt": 1,
+          "completed_at_ns": null,
+          "result_present": false,
+          "dependencies": []
+        }
+      ],
+      "mode": "READONLY",
+      "lease_fencing_authority": "NOT_GRANTED"
+    },
+    "order": [],
+    "findings": [],
+    "limits": [
+      "Listed byte equality does not prove source completeness, runtime behavior or signed provenance.",
+      "Analysis prose, class judgments, cost ties and control effectiveness require qualified review.",
+      "Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.",
+      "Snapshot is confined to one complete plan; no global optimum is asserted."
+    ]
+  },
+  "journal": "docs/journal/20260909-0539-ecology-clock-reuse-review.md"
+}

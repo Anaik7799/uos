@@ -7,10 +7,11 @@
 //// - exact-model allowlist with a price ceiling per model (USD per token);
 //// - the live public price must be known and at or below the ceiling;
 //// - free-only by default; paid models need an explicit opt-in;
-//// - `max_tokens` <= 512 and estimated cost <= USD 0.02;
+//// - free requests <=512 tokens/USD0.02; explicit paid requests <=4096/USD0.25;
 //// - timeout 30 s; no credential -> `MissingCredential` before any request is built;
 //// - prompts must pass `sanitize_check` (no paths, source, fences or secrets).
 
+import gleam/bit_array
 import gleam/dynamic/decode
 import gleam/float
 import gleam/int
@@ -30,7 +31,15 @@ pub const max_tokens_ceiling = 512
 
 pub const budget_usd_ceiling = 0.02
 
+pub const paid_max_tokens_ceiling = 4096
+
+pub const paid_budget_usd_ceiling = 0.25
+
 pub const timeout_ms = 30_000
+
+/// A UTF-8 byte ceiling is independent of the existing grapheme limit. Two
+/// message strings therefore contribute at most 16 KiB of input text.
+pub const prompt_field_bytes_ceiling = 8192
 
 pub type Tier {
   Free
@@ -47,14 +56,94 @@ pub type Allowed {
   )
 }
 
+/// Explicit evaluation candidates, not learned rankings or spending authority.
+pub type Profile {
+  FreeAdvisory
+  CodingGlm
+  CodingKimi
+  CodingDeepSeek
+  CodingEfficient
+  DecisionGemma
+}
+
+pub fn profiles() -> List(Profile) {
+  [
+    FreeAdvisory,
+    CodingGlm,
+    CodingKimi,
+    CodingDeepSeek,
+    CodingEfficient,
+    DecisionGemma,
+  ]
+}
+
+pub fn profile_name(profile: Profile) -> String {
+  case profile {
+    FreeAdvisory -> "free_advisory"
+    CodingGlm -> "coding_glm"
+    CodingKimi -> "coding_kimi"
+    CodingDeepSeek -> "coding_deepseek"
+    CodingEfficient -> "coding_efficient"
+    DecisionGemma -> "decision_gemma"
+  }
+}
+
+pub fn profile_from_name(name: String) -> Result(Profile, Nil) {
+  list.find(profiles(), fn(profile) { profile_name(profile) == name })
+}
+
+pub fn profile_label(profile: Profile) -> String {
+  case profile {
+    FreeAdvisory -> "Free advisory · Ling Flash Fin"
+    CodingGlm -> "Coding · GLM 5.3"
+    CodingKimi -> "Coding · Kimi K3"
+    CodingDeepSeek -> "Coding · DeepSeek V4 Pro 0813"
+    CodingEfficient -> "Efficient coding · DeepSeek V4 Flash 0731"
+    DecisionGemma -> "Decision advice · Gemma 4 31B"
+  }
+}
+
+pub fn profile_model(profile: Profile) -> String {
+  case profile {
+    FreeAdvisory -> "inclusionai/ling-3.0-flash-fin:free"
+    CodingGlm -> "z-ai/glm-5.3"
+    CodingKimi -> "moonshotai/kimi-k3"
+    CodingDeepSeek -> "deepseek/deepseek-v4-pro-0813"
+    CodingEfficient -> "deepseek/deepseek-v4-flash-0731"
+    DecisionGemma -> "google/gemma-4-31b-it"
+  }
+}
+
+/// A per-request policy only. Paid use also needs the caller's durable reservation.
+pub fn profile_policy(profile: Profile) -> Policy {
+  case profile {
+    FreeAdvisory -> default_policy()
+    _ ->
+      Policy(
+        paid_max_tokens_ceiling,
+        paid_budget_usd_ceiling,
+        timeout_ms,
+        False,
+      )
+  }
+}
+
 /// Exact model ids, checked against the live public price list before each call.
+/// The 2026-09-09 profile caps are USD/token. DeepSeek Pro's accepted ceiling
+/// is higher than its public catalog minimum to admit observed ZDR endpoints.
 pub fn allowlist() -> List(Allowed) {
   [
     Allowed("openrouter/free", Free, 0.0, 0.0),
+    Allowed("inclusionai/ling-3.0-flash-fin:free", Free, 0.0, 0.0),
     Allowed("google/gemma-4-31b-it:free", Free, 0.0, 0.0),
     Allowed("nvidia/nemotron-3.5-lightning:free", Free, 0.0, 0.0),
     Allowed("minimax/minimax-m3:free", Free, 0.0, 0.0),
     Allowed("thinkingmachines/inkling:free", Free, 0.0, 0.0),
+    Allowed("z-ai/glm-5.3", Paid, 0.0000014, 0.0000044),
+    Allowed("moonshotai/kimi-k3", Paid, 0.000003, 0.000015),
+    Allowed("deepseek/deepseek-v4-pro-0813", Paid, 0.00000132, 0.00000396),
+    Allowed("deepseek/deepseek-v4-flash-0731", Paid, 0.000000065, 0.00000018),
+    Allowed("google/gemma-4-31b-it", Paid, 0.00000009, 0.00000034),
     Allowed("google/gemini-2.5-flash-lite", Paid, 0.0000001, 0.0000004),
     Allowed("openai/gpt-4.1-nano", Paid, 0.0000001, 0.0000004),
     Allowed(
@@ -179,6 +268,15 @@ const forbidden_fragments = [
 
 /// Refuse prompts that could carry private source, paths, fences or secrets, or are too long.
 pub fn sanitize_check(text: String) -> Result(Nil, Refusal) {
+  use _ <- result.try(
+    case
+      bit_array.byte_size(bit_array.from_string(text))
+      > prompt_field_bytes_ceiling
+    {
+      True -> Error(UnsanitizedPrompt("longer than 8192 UTF-8 bytes"))
+      False -> Ok(Nil)
+    },
+  )
   case string.length(text) > 2000 {
     True -> Error(UnsanitizedPrompt("longer than 2000 characters"))
     False ->
@@ -214,7 +312,11 @@ pub fn admit(
     True, Paid -> Error(FreeOnly(req.model))
     _, _ -> Ok(Nil)
   })
-  let ceiling = int.min(policy.max_tokens, max_tokens_ceiling)
+  let #(hard_tokens, hard_budget) = case allowed.tier, policy.free_only {
+    Paid, False -> #(paid_max_tokens_ceiling, paid_budget_usd_ceiling)
+    _, _ -> #(max_tokens_ceiling, budget_usd_ceiling)
+  }
+  let ceiling = int.min(policy.max_tokens, hard_tokens)
   use _ <- result.try(case req.max_tokens > ceiling || req.max_tokens < 1 {
     True -> Error(TooManyTokens(req.max_tokens, ceiling))
     False -> Ok(Nil)
@@ -238,7 +340,7 @@ pub fn admit(
   use _ <- result.try(sanitize_check(req.user))
   let prompt_tokens = estimate_prompt_tokens(req.system, req.user)
   let est = estimate_cost(price, prompt_tokens, req.max_tokens)
-  let budget = float.min(policy.budget_usd, budget_usd_ceiling)
+  let budget = float.min(policy.budget_usd, hard_budget)
   case est >. budget {
     True -> Error(OverBudget(est, budget))
     False ->
@@ -256,33 +358,96 @@ pub fn admit(
 
 /// OpenAI-compatible chat completion body: no tools, no streaming, deterministic.
 pub fn request_json(req: Request) -> String {
-  let provider = case string.ends_with(req.model, ":free") || req.model == "openrouter/free" {
-    True -> [#("provider", json.object([
-      #("max_price", json.object([
-        #("prompt", json.float(0.0)),
-        #("completion", json.float(0.0)),
-        #("request", json.float(0.0)),
-      ])),
-    ]))]
-    False -> []
-  }
-  json.object(list.append([
-    #("model", json.string(req.model)),
-    #(
-      "messages",
-      json.array([#("system", req.system), #("user", req.user)], fn(m) {
-        json.object([
-          #("role", json.string(m.0)),
-          #("content", json.string(m.1)),
-        ])
-      }),
-    ),
-    #("max_tokens", json.int(req.max_tokens)),
-    #("temperature", json.float(0.0)),
-    #("stream", json.bool(False)),
-    #("usage", json.object([#("include", json.bool(True))])),
-  ], provider))
+  let provider = request_policy_fields(req.model)
+  json.object(list.append(
+    [
+      #("model", json.string(req.model)),
+      #(
+        "messages",
+        json.array([#("system", req.system), #("user", req.user)], fn(m) {
+          json.object([
+            #("role", json.string(m.0)),
+            #("content", json.string(m.1)),
+          ])
+        }),
+      ),
+      #("max_tokens", json.int(req.max_tokens)),
+      #("temperature", json.float(0.0)),
+      #("stream", json.bool(False)),
+      #("usage", json.object([#("include", json.bool(True))])),
+    ],
+    provider,
+  ))
   |> json.to_string
+}
+
+fn request_policy_fields(model: String) -> List(#(String, Json)) {
+  case find_allowed(model) {
+    // Serialization grants no admission; `admit` rejects this before any POST.
+    Error(_) -> []
+    Ok(allowed) -> {
+      let provider = #(
+        "provider",
+        json.object([
+          #("zdr", json.bool(True)),
+          #(
+            "max_price",
+            json.object([
+              // OpenRouter max_price uses USD/million tokens, unlike our catalog.
+              #(
+                "prompt",
+                json.float(provider_price_units(allowed.prompt_ceiling)),
+              ),
+              #(
+                "completion",
+                json.float(provider_price_units(allowed.completion_ceiling)),
+              ),
+              #("request", json.float(0.0)),
+            ]),
+          ),
+        ]),
+      )
+      let reasoning = case model {
+        // This model always reasons. Disabling it would be an invalid request.
+        "z-ai/glm-5.3" -> [
+          #(
+            "reasoning",
+            json.object([
+              #("effort", json.string("low")),
+              #("exclude", json.bool(True)),
+            ]),
+          ),
+        ]
+        "moonshotai/kimi-k3"
+        | "deepseek/deepseek-v4-pro-0813"
+        | "deepseek/deepseek-v4-flash-0731"
+        | "google/gemma-4-31b-it" -> [reasoning_off()]
+        _ ->
+          case allowed.tier {
+            Free -> [reasoning_off()]
+            Paid -> []
+          }
+      }
+      list.prepend(reasoning, provider)
+    }
+  }
+}
+
+// Configured ceilings are whole nanoUSD/token values. Normalize on that grid
+// before converting to USD/M so binary rounding cannot exclude a provider
+// exactly at its authorized price (e.g.0.33999999999999997 instead of0.34).
+fn provider_price_units(per_token: Float) -> Float {
+  int.to_float(float.round(per_token *. 1_000_000_000.0)) /. 1000.0
+}
+
+fn reasoning_off() -> #(String, Json) {
+  #(
+    "reasoning",
+    json.object([
+      #("enabled", json.bool(False)),
+      #("exclude", json.bool(True)),
+    ]),
+  )
 }
 
 pub type Reply {
@@ -336,16 +501,24 @@ fn reply_decoder() -> decode.Decoder(Reply) {
 }
 
 pub fn decode_reply(body: String) -> Result(Reply, Refusal) {
-  use reply <- result.try(json.parse(body, reply_decoder())
-    |> result.map_error(fn(_) { BadResponse("missing or invalid completion fields") }))
+  use reply <- result.try(
+    json.parse(body, reply_decoder())
+    |> result.map_error(fn(_) {
+      BadResponse("missing or invalid completion fields")
+    }),
+  )
   let valid_cost = case reply.reported_cost_usd {
     Some(c) -> c >=. 0.0
     None -> True
   }
-  case string.trim(reply.model) != "" && string.trim(reply.content) != ""
-    && reply.prompt_tokens >= 0 && reply.completion_tokens > 0
+  case
+    string.trim(reply.model) != ""
+    && string.trim(reply.content) != ""
+    && reply.prompt_tokens >= 0
+    && reply.completion_tokens > 0
     && reply.total_tokens == reply.prompt_tokens + reply.completion_tokens
-    && valid_cost {
+    && valid_cost
+  {
     True -> Ok(reply)
     False -> Error(BadResponse("empty completion or inconsistent usage"))
   }
@@ -375,7 +548,9 @@ pub fn decode_prices(body: String) -> Result(List(Price), Refusal) {
   }
   json.parse(body, decode.field("data", decode.list(entry), decode.success))
   |> result.map_error(fn(e) { BadResponse(string.inspect(e)) })
-  |> result.map(fn(ps) { list.filter(ps, fn(p) { p.prompt >=. 0.0 && p.completion >=. 0.0 }) })
+  |> result.map(fn(ps) {
+    list.filter(ps, fn(p) { p.prompt >=. 0.0 && p.completion >=. 0.0 })
+  })
 }
 
 /// Cost from measured usage at the admitted price; the provider's own figure wins when present.
@@ -429,17 +604,83 @@ pub fn run(policy: Policy, io: Io, req: Request) -> Result(Outcome, Refusal) {
     c -> Error(HttpStatus(c, string.slice(body, 0, 120)))
   })
   use reply <- result.try(decode_reply(body))
+  use _ <- result.try(validate_paid_reply(policy, admitted, reply))
   Ok(Outcome(admitted, reply, actual_cost(reply, admitted.price), elapsed))
 }
 
-/// `run` gated by the global intelligence router (`uos_swarm/route`): first asks
-/// `route.route` for class `R3Advisory` with the tier universe built from the same live
-/// prices this call will use, so a route-level refusal (unproven tier, paid without a
-/// budget, etc.) is caught before any network round trip; a `Refuse` becomes
-/// `Error(RouteRefused(reason))`. When `route.route` admits a tier, this falls through to
-/// the unchanged `run`, whose own `admit` remains the authoritative allowlist/price/budget
-/// check for the actual dispatch. A paid decision out of `route.route` is only possible
-/// when the caller's `route_policy`/`budget` satisfy rule (d) in `uos_swarm/route`.
+/// A public catalog estimate cannot stand in for measured paid spend. These
+/// checks validate the returned receipt; the caller still owns its durable
+/// reservation, including liability for timed-out or rejected completions.
+fn validate_paid_reply(
+  policy: Policy,
+  admitted: Admitted,
+  reply: Reply,
+) -> Result(Nil, Refusal) {
+  case admitted.tier {
+    Free -> Ok(Nil)
+    Paid -> {
+      use cost <- result.try(case reply.reported_cost_usd {
+        Some(cost) -> Ok(cost)
+        None ->
+          Error(BadResponse("paid completion is missing reported usage cost"))
+      })
+      case reply.model != admitted.model {
+        True ->
+          Error(BadResponse("paid completion model differs from admitted model"))
+        False ->
+          case reply.completion_tokens > admitted.max_tokens {
+            True ->
+              Error(BadResponse("paid completion exceeds admitted max_tokens"))
+            False ->
+              case
+                cost >. float.min(policy.budget_usd, paid_budget_usd_ceiling)
+              {
+                True ->
+                  Error(BadResponse("paid reported cost exceeds request budget"))
+                False -> Ok(Nil)
+              }
+          }
+      }
+    }
+  }
+}
+
+/// OpenRouter candidates come from this worker's exact allowlist and current prices.
+/// Non-OpenRouter tier metadata is retained so such a selection is refused explicitly;
+/// this HTTP worker never substitutes a remote model for a selected local/CLI tier.
+pub fn route_tiers(prices: List(Price)) -> List(route.Tier) {
+  let other_tiers =
+    route.default_tiers([])
+    |> list.filter(fn(tier) { tier.provider != route.OpenRouter })
+  let remote_tiers =
+    list.filter_map(allowlist(), fn(allowed) {
+      use price <- result.try(find_price(prices, allowed.id))
+      case
+        price.prompt >=. 0.0
+        && price.completion >=. 0.0
+        && price.prompt <=. allowed.prompt_ceiling
+        && price.completion <=. allowed.completion_ceiling
+      {
+        False -> Error(PriceUnknown(allowed.id))
+        True ->
+          Ok(route.Tier(
+            "openrouter/" <> allowed.id,
+            route.OpenRouter,
+            allowed.id,
+            Some(price.prompt),
+            Some(price.completion),
+            True,
+            allowed.tier == Paid,
+          ))
+      }
+    })
+  list.append(other_tiers, remote_tiers)
+}
+
+/// Fetch public prices, select a proven R3 advisory tier, then dispatch exactly that
+/// OpenRouter model through `run` and its own admission checks. Route refusal prevents
+/// a completion POST, not the public metadata read. `route.Budget` is a caller-supplied
+/// estimate gate; this function does not reserve or charge a durable spend ledger.
 pub fn run_routed(
   policy: Policy,
   route_policy: route.Policy,
@@ -454,8 +695,7 @@ pub fn run_routed(
     Ok(#(code, body)) -> Error(HttpStatus(code, string.slice(body, 0, 120)))
     Error(e) -> Error(Transport(e))
   })
-  let live_prices = list.map(prices, fn(p) { #(p.id, p.prompt, p.completion) })
-  let tiers = route.default_tiers(live_prices)
+  let tiers = route_tiers(prices)
   let est_out = req.max_tokens
   let est_in = estimate_prompt_tokens(req.system, req.user)
   case
@@ -470,7 +710,13 @@ pub fn run_routed(
     )
   {
     route.Refuse(reason) -> Error(RouteRefused(reason))
-    route.Route(_, _, _) -> run(policy, io, req)
+    route.Route(selected, _, _) ->
+      case selected.provider {
+        route.OpenRouter ->
+          run(policy, io, Request(..req, model: selected.model))
+        _ ->
+          Error(RouteRefused("selected tier is not OpenRouter: " <> selected.id))
+      }
   }
 }
 

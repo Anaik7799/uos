@@ -67,8 +67,9 @@ let rec files root rel =
   need (List.length(String.split_on_char '/' rel)<=24) "directory depth bound";
   match (lstat path).st_kind with
   | S_REG -> need(safe_relative rel) "invalid relative file"; [rel]
-  | S_DIR -> Sys.readdir path |> Array.to_list |> List.sort String.compare
-      |> List.concat_map(fun name -> files root (if rel="" then name else rel^"/"^name))
+  | S_DIR -> let names=Sys.readdir path |> Array.to_list |> List.sort String.compare in
+      need(rel="" || names<>[]) "unexpected empty directory";
+      List.concat_map(fun name -> files root (if rel="" then name else rel^"/"^name)) names
   | _ -> failwith("unsupported inventory entry: "^path)
 let inventory root =
   let names=files root "" |> List.filter((<>)"release-manifest.json") in
@@ -196,7 +197,8 @@ let disk_preflight root needed =
   need(available>=needed+needed/5 && available-needed>=512*1024*1024) "disk headroom or 512MiB floor unavailable"
 let verify ?(staging=false) release =
   let root=realpath release in need(read(root^"/.uos-ecology-release")=marker) "release marker";
-  let m=read(root^"/release-manifest.json") |> Yojson.Safe.from_string in
+  let encoded=read(root^"/release-manifest.json") in let m=Yojson.Safe.from_string encoded in
+  need(encoded=json m) "non-canonical release manifest encoding";
   need(m|>member "schema"|>to_string="uos.ecology-release-manifest.v1") "release manifest schema";
   need(m|>member "application_admitted"|>to_bool=false) "package cannot grant admission";
   let candidate=m|>member "candidate_sha256"|>to_string in
@@ -221,6 +223,9 @@ let verify ?(staging=false) release =
   need(sha executable=(erl|>member "sha256"|>to_string)) "OTP executable changed";
   need(same erl (deps|>member "erl")) "OTP must match explicit hashed runtime dependency";
   need(same(otp_identity root executable)(otp|>member "identity")) "actual OTP identity changed";
+  let apps=m|>member "application_closure"|>member "applications"|>to_list
+    |>List.map(fun v->let n=to_string v in need(safe_relative n && not(String.contains n '/')) "invalid application name";n,"apps/"^n) in
+  need(same(verify_app_closure root executable apps)(m|>member "application_closure")) "packaged application closure changed";
   m
 let freeze root =
   List.iter(fun p->chmod(root^"/"^p)0o444)(files root "");
@@ -313,6 +318,11 @@ let selftest () =
   unlink path;check "verify-missing-file" refused_at_inventory;
   write path "tampered";check "verify-tampered-file" refused_at_inventory;
   unlink path;write path "fixture";
+  let empty=dir^"/unexpected-empty" in mkdir empty;
+  check "verify-unexpected-directory" (fun()->try ignore(verify ~staging:true dir);false with Failure e -> e="unexpected empty directory" | _->false);
+  rmdir empty;
+  unlink(dir^"/release-manifest.json");write(dir^"/release-manifest.json")(json m^" ");
+  check "verify-manifest-byte-tampering" (fun()->try ignore(verify ~staging:true dir);false with Failure e -> e="non-canonical release manifest encoding" | _->false);
   unlink(dir^"/release-manifest.json");
   let changed=obj(("application_admitted",`Bool true)::List.remove_assoc "application_admitted" (to_assoc m)) in
   write(dir^"/release-manifest.json")(json changed);

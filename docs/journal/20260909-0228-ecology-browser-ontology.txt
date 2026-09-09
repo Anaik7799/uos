@@ -1,0 +1,8 @@
+File "./tools/ecology_process.ml", line 1:
+Alert ocaml_deprecated_auto_include: 
+OCaml's lib directory layout changed in 5.0. The unix subdirectory has been
+automatically added to the search path, but you should add -I +unix to the
+command-line to silence this alert (e.g. by adding unix to the list of
+libraries in your dune file, or adding use_unix to your _tags file for
+ocamlbuild, or using -package unix for ocamlfind).
+Playwright ontology: 69 components, 33 interfaces, 304 commands, 62 events, 0 missing command/event OCaml bindings; upstream 3089 artifacts, 231 docs, 41 packages; runtime boundary COMPLETE, product parity PARTIAL (14 explicit gaps)

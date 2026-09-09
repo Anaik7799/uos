@@ -13,6 +13,8 @@ fn io(key, price, response) {
     fetch_prices: fn(_) { Ok(#(200, price)) },
     post: fn(_, body, _) {
       string.contains(body, "\"max_price\":{\"prompt\":0.0,\"completion\":0.0,\"request\":0.0}") |> should.be_true
+      string.contains(body, "\"zdr\":true") |> should.be_true
+      string.contains(body, "\"reasoning\":{\"enabled\":false,\"exclude\":true}") |> should.be_true
       Ok(#(200, response))
     },
     now_ms: fn() { 0 },

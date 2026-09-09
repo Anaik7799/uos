@@ -1,0 +1,198 @@
+{
+  "schema": "uos.ecology-evaluation-toolchain-review.v1",
+  "observed_at": "2026-09-09T03:49:07Z",
+  "plan": "uos/ecology-evaluation-review/20260909-0331",
+  "task": "EVALREVIEW",
+  "worker": "codex-ecology-evaluation-review",
+  "attempt": 1,
+  "status": "OBSERVED_TOOL_IDENTITIES_AND_REVIEWED_COMMAND_TEMPLATES",
+  "tools": [
+    {
+      "name": "gleam",
+      "entrypoint": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+      "realized_path": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+      "sha256": "9d57b042c9f857ed898f4b99116ad8433bed2504619613c97d72a52288bef697",
+      "bytes": 24440408,
+      "executable": true,
+      "identity_observation": "gleam 1.16.0"
+    },
+    {
+      "name": "ocaml",
+      "entrypoint": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+      "realized_path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+      "sha256": "f63584aac3923ba0060b0795274846b6df425b17b7f2f45bc6368b81e3b2ad92",
+      "bytes": 28040368,
+      "executable": true,
+      "identity_observation": "OCaml 5.5.0"
+    },
+    {
+      "name": "ocamlc",
+      "entrypoint": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlc",
+      "realized_path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlc.opt",
+      "sha256": "00f78789117b660082780c5a1b4a2d450a0b26723e548e881594bedc95e4c030",
+      "bytes": 18178584,
+      "executable": true,
+      "identity_observation": "stdlib locator observed; version belongs to same switch, independent compiler-version probe unrun"
+    },
+    {
+      "name": "lean",
+      "entrypoint": "/home/an/NAS-setup/uos/toolchains/lean-4.33.0/bin/lean",
+      "realized_path": "/home/an/NAS-setup/uos/toolchains/lean-4.33.0/bin/lean",
+      "sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+      "bytes": 9024,
+      "executable": true,
+      "identity_observation": "Lean 4.33.0 d8b18978322de05a8f3dba51ef03cf5461676c17"
+    },
+    {
+      "name": "quint",
+      "entrypoint": "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/quint",
+      "realized_path": "/nix/store/s90yin0j1q75gr8iyr11qxqzbjdssv25-quint-0.32.0/bin/quint",
+      "sha256": "190d69b28bd6ca6bd2f965e745b596b4b6b3ba7cb80e0b9e27ab36d8fe13f6f0",
+      "bytes": 572,
+      "executable": true,
+      "identity_observation": "0.32.0"
+    },
+    {
+      "name": "mojo",
+      "entrypoint": "/home/an/NAS-setup/uos/services/inference/max/.pixi/envs/default/bin/mojo",
+      "realized_path": "/home/an/NAS-setup/uos/services/inference/max/.pixi/envs/default/bin/mojo",
+      "sha256": "0bce743c710ca91b9513eb6bbe600dcce41892dd2b52f29427b17eeeb97d32fa",
+      "bytes": 138859080,
+      "executable": true,
+      "identity_observation": "Mojo 1.0.0 ed45d567"
+    },
+    {
+      "name": "erl",
+      "entrypoint": "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/erl",
+      "realized_path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/erl",
+      "sha256": "ef4292ee944622942f2e961553eae2222a9dce112eb7e5bfec04dcb9a0d54970",
+      "bytes": 635,
+      "executable": true,
+      "identity_observation": "OTP29 ERTS17.0.5; Nix erlang29.0.5"
+    },
+    {
+      "name": "z3",
+      "entrypoint": "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/z3",
+      "realized_path": "/nix/store/xv5zrxcpp6qj1lkbq1kxj5xfv017v39n-z3-4.16.0/bin/z3",
+      "sha256": "49162af210ee76b3e115e58b687c52f974d32124ce99dd8f42f2696af4a17b41",
+      "bytes": 37432584,
+      "executable": true,
+      "identity_observation": "version not independently run; realized path identifies4.16.0"
+    },
+    {
+      "name": "quint_rust_evaluator",
+      "entrypoint": "/nix/store/s90yin0j1q75gr8iyr11qxqzbjdssv25-quint-0.32.0/share/quint/rust-evaluator-v0.6.0/quint_evaluator",
+      "realized_path": "/nix/store/s90yin0j1q75gr8iyr11qxqzbjdssv25-quint-0.32.0/share/quint/rust-evaluator-v0.6.0/quint_evaluator",
+      "sha256": "d7238cee1e7d7db0c5ed93301661d2de29ecca1bfa46d83399aa53c70871c4a2",
+      "bytes": 2867760,
+      "executable": true,
+      "identity_observation": "--help executes; --version unsupported; v0.6.0 is frontend source-declared"
+    },
+    {
+      "name": "apalache_launcher",
+      "entrypoint": "/nix/store/s90yin0j1q75gr8iyr11qxqzbjdssv25-quint-0.32.0/share/quint/apalache-dist-0.56.1/apalache/bin/apalache-mc",
+      "realized_path": "/nix/store/s90yin0j1q75gr8iyr11qxqzbjdssv25-quint-0.32.0/share/quint/apalache-dist-0.56.1/apalache/bin/apalache-mc",
+      "sha256": "d1e845008e93b6297ad61a778ce2cfa57d26cb9e0e317a6e02fd441a76cd5938",
+      "bytes": 2845,
+      "executable": true,
+      "identity_observation": "present; not executed"
+    },
+    {
+      "name": "apalache_jar",
+      "entrypoint": "/nix/store/s90yin0j1q75gr8iyr11qxqzbjdssv25-quint-0.32.0/share/quint/apalache-dist-0.56.1/apalache/lib/apalache.jar",
+      "realized_path": "/nix/store/s90yin0j1q75gr8iyr11qxqzbjdssv25-quint-0.32.0/share/quint/apalache-dist-0.56.1/apalache/lib/apalache.jar",
+      "sha256": "4753c0ebb2cbb266e2c6ac19ab5ca3827d726cc80fd1fc5d7c1eeb64736cd60b",
+      "bytes": 135998905,
+      "executable": false,
+      "identity_observation": "present; not executed"
+    }
+  ],
+  "command_templates": [
+    {
+      "domain": "gleam",
+      "cwd": "<private task fixture directory>",
+      "argv_template": [
+        "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam", "build",
+        "--target", "erlang", "--warnings-as-errors"
+      ],
+      "invocation_executed_by_reviewer": false,
+      "quality_oracle": "Run generated module functions with actual OTP29 and compare every expected output; build exit0 alone is insufficient.",
+      "limit": "Fresh dependency-free gleam.toml; pinned Gleam/OTP29 PATH; external wall/output bounds. No offline flag exists in this build command."
+    },
+    {
+      "domain": "ocaml",
+      "cwd": "<private task fixture directory>",
+      "argv_template": [
+        "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml", "-noinit",
+        "-noprompt", "fixture.ml"
+      ],
+      "invocation_executed_by_reviewer": false,
+      "quality_oracle": "Execute only a fixed template containing rendered admitted AST; compare exact outputs to independent case expectations.",
+      "limit": "No model-provided #use/#require/import/directive or command; byte/token/depth/node bounds plus process timeout."
+    },
+    {
+      "domain": "mojo",
+      "cwd": "<private task fixture directory>",
+      "argv_template": [
+        "/home/an/NAS-setup/uos/services/inference/max/.pixi/envs/default/bin/mojo",
+        "run", "--num-threads", "1", "-O0", "fixture.mojo"
+      ],
+      "invocation_executed_by_reviewer": false,
+      "quality_oracle": "Compare native signed clamp outputs including negative/equal-bound/inside/outside cases.",
+      "limit": "Fixed imports/template; parsed expression AST only; do not invoke Pixi installation or shared NIF Makefile."
+    },
+    {
+      "domain": "lean",
+      "cwd": "<private task fixture directory>",
+      "argv_template": [
+        "/home/an/NAS-setup/uos/toolchains/lean-4.33.0/bin/lean", "-j", "1",
+        "-M", "256", "-T", "100000000", "--json", "fixture.lean"
+      ],
+      "invocation_executed_by_reviewer": false,
+      "quality_oracle": "The immutable theorem statement must be kernel checked; reject sorry/undeclared axioms and inspect theorem dependencies; false proof controls must fail.",
+      "limit": "T is allocation bound, not wall seconds. Use external wall bound; no Lake download/build. Tiny proof-choice case is not general proof competence."
+    },
+    {
+      "domain": "quint_scenarios",
+      "cwd": "<private task fixture directory>",
+      "argv_template": [
+        "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/quint", "test",
+        "fixture.qnt", "--backend=rust", "--seed=1", "--max-samples=1",
+        "--match=^case.*Test$"
+      ],
+      "invocation_executed_by_reviewer": false,
+      "quality_oracle": "Require exact nonzero expected test-name/count, wrong gate controls and independent predicate truth table.",
+      "limit": "Pinned wrapper must find bundled evaluator; missing backend fails preflight before any downloader branch. Scenario testing is not exhaustive model checking."
+    },
+    {
+      "domain": "quint_simulation",
+      "cwd": "<private task fixture directory>",
+      "argv_template": [
+        "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/quint", "run",
+        "fixture.qnt", "--backend=rust", "--seed=1", "--max-samples=100",
+        "--max-steps=20", "--n-threads=1", "--invariant=inv_all"
+      ],
+      "invocation_executed_by_reviewer": false,
+      "quality_oracle": "Require productive witness and a false invariant control that yields a counterexample.",
+      "limit": "Bounded seeded simulation only; default true invariant is not evidence. Verification/server lifecycle is a separate task."
+    }
+  ],
+  "model_calls": 0,
+  "network_calls": 0,
+  "builds": 0,
+  "system_admission": false,
+  "sha256_bytes_read": 385830765,
+  "hash_limits": {
+    "per_file_bytes": 167772160,
+    "total_bytes": 536870912,
+    "buffer_bytes": 65536
+  },
+  "boundaries": [
+    "Executable hashes do not attest full compiler shared-library closures.",
+    "Existing version/help probes do not establish case correctness.",
+    "Quint empty test selection can exit0 and must be rejected by the harness.",
+    "Mojo binary and Apalache JAR exceed128MiB; explicit larger streaming bounds were used.",
+    "The shared Mojo NIF Makefile writes runtime priv artifacts and hardcodes stale OTP29.0.6; it is not a safe evaluation runner.",
+    "Quint backend paths are already realized; source has download fallback, so missing-file checks must precede execution."
+  ]
+}

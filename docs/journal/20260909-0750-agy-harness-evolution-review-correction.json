@@ -1,0 +1,89 @@
+{
+  "schema": "uos.harness.review.correction.v1",
+  "review_request_id": "agy-harness-1",
+  "root_session": "01a083d2-baa3-7783-8e45-5357cc9e96d8",
+  "reviewer_session": "abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82",
+  "worker_id": "worker-agy-abe9bd8d",
+  "timestamp_iso": "2026-09-09T05:50:00Z",
+  "prior_receipt": {
+    "path": "docs/journal/20260909-0541-agy-harness-evolution-independent-review.json",
+    "sha256": "87a3c6531afc18c682ce5f43d7aad53581dfb2b64d0b5bd9ce5ae159668eb302",
+    "status": "PRESERVED_AS_RECORDED"
+  },
+  "prior_journal": {
+    "path": "docs/journal/20260909-0541-agy-harness-evolution-independent-review.md",
+    "sha256": "bd1f000213c6fdbae7916595ce5a5f37efc2c022898b99d018413d51945c1374",
+    "status": "PRESERVED_AS_RECORDED"
+  },
+  "corrections": {
+    "decision_summary": {
+      "total_decisions": 28,
+      "accept_within_scope": 23,
+      "revise": 5,
+      "reject": 0,
+      "unknown": 0,
+      "revised_decisions": [
+        {"id": "D02", "scope": "development bootstrap grant scoping", "rationale": "Finite single grant is deliberate security boundary; preserve non-caller-controlled identity while providing authenticated multi-agent delegation"},
+        {"id": "D04", "scope": "harness MCP argument schema", "rationale": "Schema alignment needed between mcp.gleam:159 and development.gleam:580 for harness_finish"},
+        {"id": "D14", "scope": "OpenRouter daily budget guard", "rationale": "USD 10/day limit currently in volatile memory; requires durable SQLite/Zenoh ledger"},
+        {"id": "D21", "scope": "multi-environment evaluation", "rationale": "Blocked by DEF-01: apps/cepaf_gleam/test/harness_authority_test.gleam absent during preflight"},
+        {"id": "D28", "scope": "strict provenance boundary", "rationale": "admitted_ev_ceiling = 93 strictly observed; EV94..109 remain NOT_ADMITTED"}
+      ]
+    },
+    "reviewer_model_identity": {
+      "metadata_model_label": "gemini-2.5-flash",
+      "terminal_model_label": "gemini-3.8-flash",
+      "actual_provider_runtime_evidence": "UNKNOWN",
+      "note": "Agent sandbox lacks cryptographic or runtime introspection API to sample underlying LLM provider endpoint/weights. Reported truthfully as UNKNOWN."
+    },
+    "canonical_17_aspects": {
+      "summary": {
+        "runtime_verified": 6,
+        "design_and_source_reviewed": 9,
+        "blocked_unknown": 1,
+        "unknown": 1
+      },
+      "aspects": [
+        {"aspect": "A01", "name": "Denotational Spec", "status": "DESIGN_AND_SOURCE_REVIEWED", "evidence": "Traceability.lean and Gospel contracts reviewed in source"},
+        {"aspect": "A02", "name": "Algebraic Atlas", "status": "DESIGN_AND_SOURCE_REVIEWED", "evidence": "Century_Harmony.lean and Sheaf_Presheaf.lean reviewed in source"},
+        {"aspect": "A03", "name": "Deterministic Runtime Kernel", "status": "DESIGN_AND_SOURCE_REVIEWED", "evidence": "ZigVM VFS and arena allocators reviewed in source"},
+        {"aspect": "A04", "name": "Bounded Kernels & FFI Safety", "status": "DESIGN_AND_SOURCE_REVIEWED", "evidence": "graphene_nif.erl facade and NVMe lock spec reviewed in source"},
+        {"aspect": "A05", "name": "Supervision & Authority", "status": "RUNTIME_VERIFIED", "evidence": "uos_sup.gleam process tree live on port 4100; Sa-plan authority verified"},
+        {"aspect": "A06", "name": "Fractal Jidoka & TPS Stop Lines", "status": "RUNTIME_VERIFIED", "evidence": "sa_plan_main.exe pull queues, leases, and receipts enforced"},
+        {"aspect": "A07", "name": "Clock Sync & Timing Invariants", "status": "RUNTIME_VERIFIED", "evidence": "Chrony Stratum 3 tracking observed; host offset -0.000181s"},
+        {"aspect": "A08", "name": "Replay Determinism & Parity Oracles", "status": "UNKNOWN", "evidence": "No fresh differential parity oracle test executed at this revision"},
+        {"aspect": "A09", "name": "OpenRouter Budget Enforcement", "status": "DESIGN_AND_SOURCE_REVIEWED", "evidence": "openrouter_worker.gleam code reviewed; memory tracking flagged"},
+        {"aspect": "A10", "name": "Multi-Environment Evaluation", "status": "BLOCKED_UNKNOWN", "evidence": "Blocked by DEF-01 missing test file; test suite halted"},
+        {"aspect": "A11", "name": "Dev/Prod/Standby Isolation", "status": "DESIGN_AND_SOURCE_REVIEWED", "evidence": "development.gleam bootstrap boundary reviewed in source"},
+        {"aspect": "A12", "name": "Standby Lifecycle & Hot Upgrade", "status": "DESIGN_AND_SOURCE_REVIEWED", "evidence": "BEAM OTP release upgrade design reviewed; not executed"},
+        {"aspect": "A13", "name": "SDLC/SRE Release Assurance", "status": "RUNTIME_VERIFIED", "evidence": "In-project preflight executed 31/31 PASS; G-CHECKLIST verified"},
+        {"aspect": "A14", "name": "Multi-Surface Triple-Interface", "status": "RUNTIME_VERIFIED", "evidence": "Observed live Lustre WebUI at 4100, Wisp REST, and Ecology at 4110"},
+        {"aspect": "A15", "name": "AG-UI 32-Event Protocol", "status": "DESIGN_AND_SOURCE_REVIEWED", "evidence": "agui/events.gleam reviewed; live event stream observed on 4100"},
+        {"aspect": "A16", "name": "A2UI Declarative Catalog", "status": "DESIGN_AND_SOURCE_REVIEWED", "evidence": "233 component specs reviewed; security allowlist verified"},
+        {"aspect": "A17", "name": "Sovereign Provenance & Admission", "status": "RUNTIME_VERIFIED", "evidence": "admitted_ev_ceiling = 93 strictly observed; candidate e2bb verified"}
+      ]
+    },
+    "sa_plan_authority_confirmation": {
+      "database": "var/sa-plan/uos.sqlite3",
+      "plan_id": "uos/ecology-harness-agy-review/20260909-0730",
+      "task_id": "AGY-HARNESS-REVIEW",
+      "task_name": "review/agy-harness",
+      "worker": "worker-agy-abe9bd8d",
+      "attempt": 1,
+      "state": "completed",
+      "receipt_bound": true
+    },
+    "defects_recheck_protocol": {
+      "DEF-01": "Missing test file caught during active disjoint repair; require recheck after root final candidate tests",
+      "DEF-02": "Single bootstrap grant confirmed deliberate security boundary; do not generalize caller-controlled identity",
+      "DEF-03": "Finish schema mismatch caught during active repair; require recheck after root final candidate tests",
+      "DEF-04": "Zenoh UNAVAILABLE_NOT_VERIFIED requires MoZ parity implementation"
+    }
+  },
+  "provenance": {
+    "admitted_ev_ceiling": 93,
+    "unadmitted_range": "EV-94..EV-109",
+    "runtime_admission": "NOT_GRANTED",
+    "source_mutations": "NONE_BY_REVIEWER"
+  }
+}

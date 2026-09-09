@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "created_at": "2026-09-09T02:59:41Z",
+  "sa_plan": {"plan": "uos/ecology-vm1-compare/20260909-0256", "task": "VM1-COMPARE", "worker": "codex-ecology-capabilities", "attempt": 1},
+  "scope": "Read-only current VM-1 runtime metadata, selected nonsecret Codex configuration and bounded ZigVM source inspection. No external writes, runtime fault injection, credential request, secret fingerprint, package provisioning or source ingestion.",
+  "observation_window_utc": "2026-09-09T02:51:32Z/2026-09-09T02:59:41Z",
+  "remote": {"host": "vm-1.tail55d152.ts.net", "observed_utc": "2026-09-09T02:59:41Z", "source_root": "/home/an/dev/ver/zigvm", "source_revision_binding": "UNESTABLISHED; moving external tree used only as read-only evidence"},
+  "sanitized_configuration": {
+    "reader": "/tmp/20260909-0256-vm1-config-fields.ml",
+    "returned_fields_only": ["model", "model_provider", "base_url", "wire_api", "env_key"],
+    "project_config": {"path": "/home/an/dev/ver/zigvm/.codex/config.toml", "present": true, "selected_fields": {}},
+    "user_config": {"path": "/home/an/.codex/config.toml", "present": true, "model": "gpt-5.6-terra", "openrouter_provider": {"base_url": "https://openrouter.ai/api/v1", "wire_api": "responses", "env_key_name": "OPENROUTER_API_KEY"}},
+    "selection_limit": "No root model_provider field was returned. A provider definition does not show that the current session selected it; CLI or runtime overrides were not inspected.",
+    "credential_availability": "NOT_INSPECTED: no auth, vault, environment or session file opened; no credential-bearing request made by this worker"
+  },
+  "runtime_observations": [
+    {"unit": "zigvm-harness-daemon.service", "state": "active/running", "main_pid": 3838239, "working_directory": "/home/an/dev/ver/zigvm", "executable": "/home/an/dev/ver/zigvm/_build/default/harness/zigvm_harness.exe (deleted)", "restart_count": 0, "latest_journal_metadata_utc": "2026-09-09T02:31:16Z", "limit": "No journal message contents read; activity does not prove a successful cycle. Deleted executable prevents binding current checkout source to the running process."},
+    {"unit": "c3i-sa-plan-default-scheduler.service", "state": "active/running", "main_pid": 3214317, "executable": "/home/an/dev/ver/c3i/sub-projects/c3i/sa-plan", "limit": "Separate C3I runtime; no task or effect-fence behavior tested."},
+    {"unit": "c3i-sa-plan-http.service", "state": "active/running", "main_pid": 3214311, "executable": "/home/an/dev/ver/c3i/sub-projects/c3i/sa-plan"},
+    {"unit": "c3i-sa-plan-inference.service", "state": "inactive/dead", "main_pid": 0},
+    {"unit": "zigvm-dashboard.service", "state": "active/running", "main_pid": 225573, "restart_count": 0},
+    {"unit": "zigvm-wiki-backend.service", "state": "active/running", "main_pid": 388618, "restart_count": 1879, "limit": "Cumulative restart count, not current restart frequency."},
+    {"unit": "c3i-zenoh-router.service", "state": "activating/auto-restart"},
+    {"unit": "zigvm-wiki.service", "state": "activating/auto-restart"},
+    {"ports": [4100, 4101], "process": "beam.smp", "pid": 999231, "working_directory": "/home/an/dev/ver/c3i/lib/cepaf_gleam", "executable": "/nix/store/ilmqgbhiraayfzkqwi0jvnrzzgkp3lz3-erlang-28.3/lib/erlang/erts-16.2/bin/beam.smp", "limit": "These listeners are C3I BEAM, not the ZigVM OCaml harness."},
+    {"url": "http://vm-1.tail55d152.ts.net:4100/health", "http_status": 200, "elapsed_seconds": 0.026408, "scope": "Liveness only; response body not collected."},
+    {"url": "http://vm-1.tail55d152.ts.net:4101/health", "result": "curl rejected apparent HTTP/0.9; http_code000", "scope": "Plain HTTP probe did not establish protocol or health; no weaker-protocol retry."}
+  ],
+  "current_source_findings": [
+    {"path": "harness/vsched.ml", "finding": "Parallel verification frontier gates a unit whose dependency failed without running its body; catches unit exceptions as failure; orders ready work by criticality, observed cost and identifier.", "status": "INSPECTED_NOT_EXECUTED"},
+    {"path": "harness/zigvm_harness.ml", "lines": "34457-34517,34655-34661,34765-34817", "finding": "Maintenance currency steps are independently exception-guarded and continue after errors. The registry is directly iterated. Daemon heartbeat is30 seconds, currency interval1800 seconds; production cycle_budget defaultsNone. Optional bounded daemon mode persists a pause when its budget is exhausted.", "status": "INSPECTED_NOT_EXECUTED"},
+    {"path": "scripts/jidoka_stratum_isolator.ml", "finding": "Explicit stub: no architectural boundary scan implemented; exits1 instead of claiming verification.", "status": "STUB_FAIL_CLOSED"},
+    {"path": "harness/artifact_snapshot.mli", "finding": "Typed complete build-artifact capture with missing/empty refusal and stability detection; explicitly does not make reads atomic against concurrent builds.", "status": "INSPECTED_NOT_EXECUTED"},
+    {"path": "harness/sa_plan/sa_plan_control_plane.mli", "finding": "Pure durable-state model includes owner/fence checks and lifecycle transitions. Its contract explicitly excludes durable-store and transport interpreter proof.", "status": "INSPECTED_NOT_EXECUTED"},
+    {"path": "harness/model_catalog.ml", "finding": "Advisory immutable catalog algebra; no route activation, credential, fetch or authority operation. It is not evidence of live OpenRouter inference.", "status": "INSPECTED_NOT_EXECUTED"}
+  ],
+  "uos_comparison": {
+    "source_snapshot": [
+      {"path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/andon.gleam", "sha256": "12f2ff0aa3bb5e2af4eb664bba95be2d31cd8859a9331e11b6ac4f0ed8bd5351"},
+      {"path": "apps/uos_swarm/src/uos_swarm/openrouter_worker.gleam", "sha256": "63e7c0042118a42b3d285e9db9ed608ac032e7ad5834d33ae148802115d2f3bf"}
+    ],
+    "shared_backend_jidoka": "UOS Andon starts MAX/OpenRouter stopped, checks typed backend outcomes, latches serious failures, and requires explicit recovery observation to return ready. It does not grant task/effect authority.",
+    "execution_isolation": "UOS living_swarm_actor checks holon masks, one pending worker and input bounds before guarded backend execution; this source inspection does not establish live release state.",
+    "openrouter": "UOS observed candidate uses chat/completions, exact free Fin allowlisting, live price checks, zero provider price caps, ZDRtrue, reasoning disabled, strict usable-content/cost checks. VM-1 Codex defines a Responses protocol provider. Neither protocol definition proves a currently successful request.",
+    "remaining_gaps": ["No fresh fault-injected verification of VM-1 live dependency gating or task fences.", "No candidate binding between current ZigVM source and deleted live harness executable.", "No authenticated VM-1 OpenRouter call by this worker.", "Whole-ecology task authorization must remain distinct from per-service readiness and advisory results."]
+  },
+  "checks": {
+    "initial_preflight": "HOLD RP-INVALID: task_state ready was not a valid enum; repaired to actual Sa-plan state available before claim.",
+    "preflight": "PREFLIGHT_PASS at2026-09-09T02:51:14Z",
+    "active": "ACTIVE_OBSERVATION_PASS at2026-09-09T02:51:32Z",
+    "handoff_check": "HOLD at03:02:43Z because Andon changed since initial source snapshot; re-observed current bytes matching uos_comparison.source_snapshot, then ACTIVE_OBSERVATION_PASS at03:03:10Z. Assessment SHA256780bf175c859284fd2968d48342b0b290d5b3a7221dd2d1a98b183d6f201cc4f.",
+    "source_tests": "NOT_RUN: read-only task; no external test or service invocation",
+    "runtime_admission": "NOT_GRANTED"
+  },
+  "related_public_diagnostic": "governance/sources/20260909-0209-ecology-openrouter-diagnostic-receipt.json",
+  "journal": "docs/journal/20260909-0241-ecology-vm1-comparison-codex-journal.md"
+}

@@ -1,0 +1,164 @@
+{
+  "schema": "uos.harness.tracking-implementation-handoff.v1",
+  "generated_at": "2026-09-09T06:23:25Z",
+  "status": "SOURCE_HANDED_TO_ROOT_69_TESTS_PASSED_FINAL_CONSISTENCY_FIX_PENDING",
+  "task": {
+    "plan": "uos/harness-tracking/bootstrap",
+    "id": "TRACKING",
+    "worker": "codex-ecology-capabilities",
+    "attempt": 1,
+    "state_at_observation": "executing",
+    "lease_until_ns": "1788940369435624072",
+    "completion_recorded": true,
+    "completion_response": {"completed": "true", "plan_id": "uos/harness-tracking/bootstrap", "task": "TRACKING", "attempt": "1"},
+    "completion_request_id": "sa-plan-1788935509166513812",
+    "completion_readback": {"state": "completed", "worker": "codex-ecology-capabilities", "attempt": "1"},
+    "completion_scope": "Source and handoff only; root owns status consistency repair/rerun, live registration and admission."
+  },
+  "authority_observation": {
+    "status": "ACTIVE_OBSERVATION_PASS",
+    "observed_at": "2026-09-09T06:23:25Z",
+    "assessment_sha256": "0de8dd04ffd906aef94cd1556e0786b2ff1662fff064f79e6e627bfd8fda0b4d",
+    "canonical_task_snapshot_sha256": "09b0595f5e7e51e12225adbf053dcbf201c4daf8e8f93e54c273fdadeac87419",
+    "abs_ntp_offset_seconds": 0.000171858,
+    "uncertainty_seconds": 0.01803636,
+    "effect_authority": "NONE",
+    "runtime_admission": "NOT_GRANTED"
+  },
+  "author_handoff": {
+    "formatter": "PASS",
+    "source": {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+      "sha256": "9bb3f023b3da625501a74bdbde4ea99bc075959fd065637a89aab1b2f0e6e7a9"
+    },
+    "tests": {
+      "path": "apps/cepaf_gleam/test/harness_tracking_test.gleam",
+      "sha256": "5b35287bf950fa648b1e931263c2208ecb494f5d5e30179ae614625973827b8d"
+    },
+    "source_owner_after_handoff": "/root",
+    "compiler_owner": "/root"
+  },
+  "closure_risk_checks": [
+    {
+      "observed_at": "2026-09-09T06:30:12Z",
+      "status": "HOLD",
+      "assessment_sha256": "7b640377044d05eead43a505100c39c3843657d0ee06feb8a5b027545c70454b",
+      "rules": ["RP-EVIDENCE", "RP-REFERENCE"],
+      "reason": "Raw var/harness runtime receipt paths are not admitted source evidence paths.",
+      "repair": "Bind the sanitized governance receipt containing exact raw receipt digests and scoped observations, source, journal and catalog.",
+      "completion_attempted_after_hold": false
+    },
+    {
+      "observed_at": "2026-09-09T06:31:33Z",
+      "status": "ACTIVE_OBSERVATION_PASS",
+      "assessment_sha256": "a19e1d160b3869bf5734e58ea4614c604dc972475dff64dbd8eb6e878b32c580",
+      "evidence_files_checked": 5,
+      "evidence_scope": "Sanitized governance receipt, source, focused tests, journal and fixed catalog.",
+      "effect_authority": "NONE",
+      "runtime_admission": "NOT_GRANTED"
+    }
+  ],
+  "later_source_observation": {
+    "observed_at": "2026-09-09T06:23:19Z",
+    "files": [
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+        "sha256": "1655c40eda58fbabdf01ad904d0f02cdf60f410319b5b8f3a493189ca3694e24"
+      },
+      {
+        "path": "apps/cepaf_gleam/test/harness_tracking_test.gleam",
+        "sha256": "d87b1c1a8b2366e57530938a0f164bae6d9e8617dcc7cd26d035405282ee3413"
+      },
+      {
+        "path": "governance/capability-inventory/20260909-0412-harness-feature-catalog.json",
+        "sha256": "e631c77fff18c202bb527545844a4834b0d3f4f53200f585878f95bd60652a4d"
+      },
+      {
+        "path": "docs/journal/20260909-0533-harness-sa-plan-schema-review-codex-journal.md",
+        "sha256": "dbe69eab858a4c1e15b79f3c9ba9e61ed35fa11857f4499c41125a9ac411007a"
+      }
+    ],
+    "tested_as_this_candidate": true,
+    "tested_source_manifest_sha256": "0520ef8cb804d16b05b534daef976922bc6237fe42bab2284ec6ba633ec0dc91"
+  },
+  "interface": {
+    "module": "cepaf_gleam/harness/tracking",
+    "functions": ["names()", "call(binding, name, args)"],
+    "tools": [
+      {"name": "harness_feature_initialize", "args": {}},
+      {"name": "harness_feature_sync", "args": {"feature_id": "catalog identity only"}},
+      {"name": "harness_feature_status", "args": {}}
+    ],
+    "plan_id": "uos/harness-features/20260909",
+    "queue": "harness-feature-review",
+    "declared_catalog_count": 49,
+    "workflow_service": "sa_plan_local_durable_history",
+    "external_temporal_runtime": "NOT_VERIFIED",
+    "worker_dispatch_enforcement": "NOT_ESTABLISHED_BY_QUEUE_NAME",
+    "acceptance_imported_from_catalog": false
+  },
+  "tests": {
+    "initial_focused_test_functions": 21,
+    "native_fixture_tests_authored_in": "Gleam",
+    "native_fixture_database_scope": "generated private /tmp paths",
+    "observed_build": "PASSED",
+    "observed_total_tests": 69,
+    "observed_tracking_tests": 21,
+    "observed_native_fixture_tests": 4,
+    "observed_end": "2026-09-09T06:16:52.382252Z",
+    "build_receipt": {
+      "path": "var/harness/effects/20260909-0412-bootstrap-tracking-final-build-1-result.json",
+      "sha256": "b0a3b0298120d6553745204f0a67af22122f8bd016b380af602258ccb7a97fd8"
+    },
+    "test_receipt": {
+      "path": "var/harness/effects/20260909-0412-bootstrap-tracking-final-test-1-result.json",
+      "sha256": "612e576ce81c15865488e066dbbfdb88e5e03164d036b81b9db8fb45c1a1621d"
+    },
+    "source_manifest_sha256": "0520ef8cb804d16b05b534daef976922bc6237fe42bab2284ec6ba633ec0dc91",
+    "final_consistency_fix_and_rerun": "OWNED_BY_ROOT_PENDING",
+    "prior_46_test_result_reused": false,
+    "actual_49_feature_registration": "PENDING_ROOT_MCP_INTEGRATION"
+  },
+  "followup_review": {
+    "status_consistency": "Root accepted missing creation-receipt requirement in status.task_ok; shared predicate and hidden-dependency mutation regression recommended without source edits.",
+    "task_lease_renewal": "No executing-task heartbeat or extension operation in inspected canonical CLI/store source.",
+    "supported_turnover_argv": [
+      ["task", "release", "PLAN", "TASK", "WORKER", "ORIGINAL_ATTEMPT"],
+      ["task", "claim", "WORKER", "PLAN", "LEASE_NS", "TASK"]
+    ],
+    "turnover_constraints": "Fresh preflight and exact new attempt/grant binding required; release then claim is not an atomic renewal. No mutation performed.",
+    "source_files": [
+      {"path": "engines/hermes/modules/sa_plan/test/sa_plan_cli.ml", "sha256": "f9114de058f91ef3c58f93eb8b534e9f40943e70b79274ab09bc5c4b78783335"},
+      {"path": "engines/hermes/modules/sa_plan/test/sa_plan_main.ml", "sha256": "b8e471721038ce4abc2e8dfa7f8f9e19e435296444955d653987e2ba640c8b8e"},
+      {"path": "engines/hermes/modules/sa_plan/sa_plan_store.mli", "sha256": "9e0f305a6895db16190dca80ff826009ea135916d29f31876881bf1dd73462f7"},
+      {"path": "engines/hermes/modules/sa_plan/sa_plan_store.ml", "sha256": "311084cf758cb74dd8e12db6d228ae234c5a00c09ea8bf2bb86f0006d09c702b"}
+    ]
+  },
+  "limits": [
+    "Multi-command registration is not one atomic database transaction.",
+    "Unknown dispatch outcome retains immutable intent and refuses automatic retry.",
+    "CLI omits job args and task dependency edges; creation receipt binding is narrower than independent stored-field readback.",
+    "Status is a sequence of bounded observations, not an atomic database snapshot.",
+    "Catalog evidence and implementation stages are declarations; feature acceptance remains false.",
+    "Local SQLite workflow history does not prove an external Temporal server or worker.",
+    "Finite cooperative bootstrap authority is not universal MCP enforcement or system admission."
+  ],
+  "effects": {
+    "direct_database_writes": 0,
+    "feature_workers_started": 0,
+    "feature_tasks_completed": 0,
+    "paid_calls": 0,
+    "packages_installed": 0,
+    "vcs_mutations": 0
+  },
+  "separate_pending_task": {
+    "plan": "uos/openrouter-evaluation/20260909-0323",
+    "task": "EVALUATION",
+    "attempt": 1,
+    "status": "LEASE_EXPIRED_FINAL_JOURNAL_PENDING",
+    "reclaim_required_before_completion": true
+  },
+  "journal": "docs/journal/20260909-0625-harness-feature-tracking-codex-journal.md",
+  "system_admission": false,
+  "admitted_ev_ceiling": 93
+}

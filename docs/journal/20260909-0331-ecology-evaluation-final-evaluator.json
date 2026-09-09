@@ -1,0 +1,455 @@
+{
+  "schema": "uos.ecology-evaluator-final-review.v1",
+  "observed_at": "2026-09-09T04:04:34Z",
+  "suite_sha256": "8310205c9520d6ed713caca62c2a28bfe99165eaa37df710c2858e8241b9b7c9",
+  "binary": {
+    "path": "/tmp/uos-openrouter-eval-8310205c9520d6ed713caca62c2a28bfe99165eaa37df710c2858e8241b9b7c9/openrouter_eval",
+    "sha256": "bd9ddb9faf8828f6684921ea7e53891113e4b7556c9822c3def36638b9fc2e48",
+    "bytes": 5715920
+  },
+  "reviewed_source_files": [
+    {
+      "path": "tools/validation/openrouter_eval_expr.mli",
+      "sha256": "a7a695c59c41fe9aceaa3b9852cef9e4876304babce12c401972554e8f33d133",
+      "bytes": 755
+    },
+    {
+      "path": "tools/validation/openrouter_eval_expr.ml",
+      "sha256": "074337899a5e489a6558d7fe9b5752a7d9344fe490eee760e9bcae30108c868e",
+      "bytes": 8598
+    },
+    {
+      "path": "tools/validation/openrouter_eval_catalog.ml",
+      "sha256": "ac4e0e0b2e1312aa7560f604b4d577750a7eeb5e6d2e54876258fa9cfa1d5a2b",
+      "bytes": 11302
+    },
+    {
+      "path": "tools/validation/openrouter_eval_validate.ml",
+      "sha256": "a50ac2347972ddca884d485825795d100257ea9a546a1e5aced057f2f727ac84",
+      "bytes": 8065
+    },
+    {
+      "path": "tools/validation/openrouter_eval_native.ml",
+      "sha256": "071dbab3d02f121df03151d227e2308d5107cc222f89bdcb02a03e7850adaa79",
+      "bytes": 12159
+    },
+    {
+      "path": "tools/validation/openrouter_eval_test.ml",
+      "sha256": "1c35b01f636ba31f8659372ae83cd2f40b58f655a61e95966e9959910994fc80",
+      "bytes": 7493
+    },
+    {
+      "path": "tools/validation/openrouter_eval_cli.ml",
+      "sha256": "459d676f95a5d220b05ec09944ff1019b8209e6b51531a714ae4c29c93abee8f",
+      "bytes": 3263
+    },
+    {
+      "path": "tools/ecology_process.ml",
+      "sha256": "cb5bc7a25b562ecc259696920f84f59e172b78842c3b53b3ed6173b2ab752ecf",
+      "bytes": 2905
+    },
+    {
+      "path": "tools/validation/openrouter_eval_build.ml",
+      "sha256": "33be28a244ab81edbb3e6e00fe83aa416ae60b5c8cb8b2a3035d22992a13e1cf",
+      "bytes": 2467
+    }
+  ],
+  "peer_output_files": [
+    {
+      "path": "/tmp/20260909-0323-eval-pure-final.json",
+      "sha256": "7a2102b441db60c8fee6655fb99916a8a6f97397b48dd809757336fdef3823b9",
+      "bytes": 4469
+    },
+    {
+      "path": "/tmp/20260909-0323-eval-native-final.json",
+      "sha256": "4f98f3f6f13ed947f9c167a14c90c45f68763c61fd60ce895c8295776221f2e4",
+      "bytes": 12495
+    },
+    {
+      "path": "/tmp/20260909-0323-eval-stale-compiled-control.json",
+      "sha256": "95c920faab9c74695f7bbd011fb1ca2f3bcb74366702930aaa3be2ab8230e51b",
+      "bytes": 133
+    }
+  ],
+  "pure_observation": {
+    "status": "passed",
+    "checks": 187,
+    "seed": 424242,
+    "laws": [
+      "ten-distinct-cases", "gleam-admission-v1:golden",
+      "gleam-admission-v1:semantic-mutant",
+      "gleam-admission-v1:markdown-refused",
+      "gleam-admission-v1:case-mismatch",
+      "gleam-admission-v1:render-homomorphism", "ocaml-fence-v1:golden",
+      "ocaml-fence-v1:semantic-mutant", "ocaml-fence-v1:markdown-refused",
+      "ocaml-fence-v1:case-mismatch", "ocaml-fence-v1:render-homomorphism",
+      "mojo-clamp-v1:golden", "mojo-clamp-v1:semantic-mutant",
+      "mojo-clamp-v1:markdown-refused", "mojo-clamp-v1:case-mismatch",
+      "mojo-clamp-v1:render-homomorphism", "lean-stale-v1:golden",
+      "lean-stale-v1:semantic-mutant", "lean-stale-v1:markdown-refused",
+      "lean-stale-v1:case-mismatch", "quint-capacity-v1:golden",
+      "quint-capacity-v1:semantic-mutant",
+      "quint-capacity-v1:markdown-refused",
+      "quint-capacity-v1:case-mismatch",
+      "quint-capacity-v1:render-homomorphism", "stm-cas-v1:golden",
+      "stm-cas-v1:semantic-mutant", "stm-cas-v1:markdown-refused",
+      "stm-cas-v1:case-mismatch", "bayesian-beta-v1:golden",
+      "bayesian-beta-v1:semantic-mutant",
+      "bayesian-beta-v1:markdown-refused", "bayesian-beta-v1:case-mismatch",
+      "rete-join-retract-v1:golden", "rete-join-retract-v1:semantic-mutant",
+      "rete-join-retract-v1:markdown-refused",
+      "rete-join-retract-v1:case-mismatch", "stpa-authority-v1:golden",
+      "stpa-authority-v1:semantic-mutant",
+      "stpa-authority-v1:markdown-refused",
+      "stpa-authority-v1:case-mismatch", "fmea-priority-v1:golden",
+      "fmea-priority-v1:semantic-mutant",
+      "fmea-priority-v1:markdown-refused", "fmea-priority-v1:case-mismatch",
+      "duplicate-envelope-key", "rejected-fragment:os.execute(1)",
+      "rejected-fragment:requested; True", "rejected-fragment:unknown",
+      "rejected-fragment:True\n#eval x",
+      "rejected-fragment:requested >= 0 // comment", "expression-byte-bound",
+      "expression-depth-bound", "expression-left-chain-depth-bound",
+      "type-mismatch", "lean-effect-injection", "quint-empty-not-witnessed",
+      "lean-undeclared-axiom-not-witnessed", "missing-tool-unsupported",
+      "twin-seed-0", "twin-seed-1", "twin-seed-2", "twin-seed-3",
+      "twin-seed-4", "twin-seed-5", "twin-seed-6", "twin-seed-7",
+      "twin-seed-8", "twin-seed-9", "twin-seed-10", "twin-seed-11",
+      "twin-seed-12", "twin-seed-13", "twin-seed-14", "twin-seed-15",
+      "twin-seed-16", "twin-seed-17", "twin-seed-18", "twin-seed-19",
+      "twin-seed-20", "twin-seed-21", "twin-seed-22", "twin-seed-23",
+      "twin-seed-24", "twin-seed-25", "twin-seed-26", "twin-seed-27",
+      "twin-seed-28", "twin-seed-29", "twin-seed-30", "twin-seed-31",
+      "twin-seed-32", "twin-seed-33", "twin-seed-34", "twin-seed-35",
+      "twin-seed-36", "twin-seed-37", "twin-seed-38", "twin-seed-39",
+      "twin-seed-40", "twin-seed-41", "twin-seed-42", "twin-seed-43",
+      "twin-seed-44", "twin-seed-45", "twin-seed-46", "twin-seed-47",
+      "twin-seed-48", "twin-seed-49", "twin-seed-50", "twin-seed-51",
+      "twin-seed-52", "twin-seed-53", "twin-seed-54", "twin-seed-55",
+      "twin-seed-56", "twin-seed-57", "twin-seed-58", "twin-seed-59",
+      "twin-seed-60", "twin-seed-61", "twin-seed-62", "twin-seed-63",
+      "twin-seed-64", "twin-seed-65", "twin-seed-66", "twin-seed-67",
+      "twin-seed-68", "twin-seed-69", "twin-seed-70", "twin-seed-71",
+      "twin-seed-72", "twin-seed-73", "twin-seed-74", "twin-seed-75",
+      "twin-seed-76", "twin-seed-77", "twin-seed-78", "twin-seed-79",
+      "twin-seed-80", "twin-seed-81", "twin-seed-82", "twin-seed-83",
+      "twin-seed-84", "twin-seed-85", "twin-seed-86", "twin-seed-87",
+      "twin-seed-88", "twin-seed-89", "twin-seed-90", "twin-seed-91",
+      "twin-seed-92", "twin-seed-93", "twin-seed-94", "twin-seed-95",
+      "twin-seed-96", "twin-seed-97", "twin-seed-98", "twin-seed-99",
+      "twin-seed-100", "twin-seed-101", "twin-seed-102", "twin-seed-103",
+      "twin-seed-104", "twin-seed-105", "twin-seed-106", "twin-seed-107",
+      "twin-seed-108", "twin-seed-109", "twin-seed-110", "twin-seed-111",
+      "twin-seed-112", "twin-seed-113", "twin-seed-114", "twin-seed-115",
+      "twin-seed-116", "twin-seed-117", "twin-seed-118", "twin-seed-119",
+      "twin-seed-120", "twin-seed-121", "twin-seed-122", "twin-seed-123",
+      "twin-seed-124", "twin-seed-125", "twin-seed-126", "twin-seed-127"
+    ],
+    "limit": "Expression interpretations share primitive operations; separate case oracles and native outputs establish semantic checks"
+  },
+  "native_observation": {
+    "status": "passed",
+    "cases": [
+      {
+        "case_id": "gleam-admission-v1",
+        "native": {
+          "status": "passed",
+          "tool": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+          "version": "gleam 1.16.0",
+          "detail": "Parsed fixed template passed native checking and behavioral assertions",
+          "identity": {
+            "path": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+            "realpath": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+            "bytes": 24440408,
+            "sha256": "9d57b042c9f857ed898f4b99116ad8433bed2504619613c97d72a52288bef697",
+            "closure_scope": "Executable or wrapper bytes; transitive libraries are not independently rehashed"
+          },
+          "executions": [
+            {
+              "exit_code": 0,
+              "elapsed_seconds": 0.063719122,
+              "output": "gleam 1.16.0\n"
+            },
+            {
+              "exit_code": 0,
+              "elapsed_seconds": 0.428423335,
+              "output": "  Resolving versions\n  Compiling openrouter_eval_fixture\n   Compiled in 0.26s\n    Running openrouter_eval_fixture.main\n"
+            }
+          ]
+        }
+      },
+      {
+        "case_id": "ocaml-fence-v1",
+        "native": {
+          "status": "passed",
+          "tool": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlopt",
+          "version": "5.5.0",
+          "detail": "Parsed fixed template passed native checking and behavioral assertions",
+          "identity": {
+            "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlopt",
+            "realpath": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlopt.opt",
+            "bytes": 22504792,
+            "sha256": "46277032bdb87755ce4bd9f20de18a7217f320fbb9b6129e7edd15571f7ee1a2",
+            "closure_scope": "Executable or wrapper bytes; transitive libraries are not independently rehashed"
+          },
+          "executions": [
+            {
+              "exit_code": 0,
+              "elapsed_seconds": 0.062576963,
+              "output": "5.5.0\n"
+            },
+            { "exit_code": 0, "elapsed_seconds": 0.139218224, "output": "" },
+            {
+              "exit_code": 0,
+              "elapsed_seconds": 0.077222604,
+              "output": "NATIVE_BEHAVIOR_PASS\n"
+            }
+          ]
+        }
+      },
+      {
+        "case_id": "mojo-clamp-v1",
+        "native": {
+          "status": "passed",
+          "tool": "/home/an/NAS-setup/uos/services/inference/max/.pixi/envs/default/bin/mojo",
+          "version": "Mojo 1.0.0 (ed45d567)",
+          "detail": "Parsed fixed template passed native checking and behavioral assertions",
+          "identity": {
+            "path": "/home/an/NAS-setup/uos/services/inference/max/.pixi/envs/default/bin/mojo",
+            "realpath": "/home/an/NAS-setup/uos/services/inference/max/.pixi/envs/default/bin/mojo",
+            "bytes": 138859080,
+            "sha256": "0bce743c710ca91b9513eb6bbe600dcce41892dd2b52f29427b17eeeb97d32fa",
+            "closure_scope": "Executable or wrapper bytes; transitive libraries are not independently rehashed"
+          },
+          "executions": [
+            {
+              "exit_code": 0,
+              "elapsed_seconds": 0.072178257,
+              "output": "Mojo 1.0.0 (ed45d567)\n"
+            },
+            {
+              "exit_code": 0,
+              "elapsed_seconds": 0.523927542,
+              "output": "Failed to initialize Crashpad.  Crash reporting will not be available.  Cause: while locating crashpad handler: unable to locate crashpad handler executable\nNATIVE_BEHAVIOR_PASS\n"
+            }
+          ]
+        }
+      },
+      {
+        "case_id": "lean-stale-v1",
+        "native": {
+          "status": "passed",
+          "tool": "/home/an/NAS-setup/uos/toolchains/lean-4.33.0/bin/lean",
+          "version": "Lean (version 4.33.0, x86_64-unknown-linux-gnu, commit d8b18978322de05a8f3dba51ef03cf5461676c17, Release)",
+          "detail": "Fixed theorem checked with only explicitly permitted foundational axioms propext/Quot.sound; actual dependencies in output",
+          "identity": {
+            "path": "/home/an/NAS-setup/uos/toolchains/lean-4.33.0/bin/lean",
+            "realpath": "/home/an/NAS-setup/uos/toolchains/lean-4.33.0/bin/lean",
+            "bytes": 9024,
+            "sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "closure_scope": "Executable or wrapper bytes; transitive libraries are not independently rehashed"
+          },
+          "executions": [
+            {
+              "exit_code": 0,
+              "elapsed_seconds": 0.098690472,
+              "output": "Lean (version 4.33.0, x86_64-unknown-linux-gnu, commit d8b18978322de05a8f3dba51ef03cf5461676c17, Release)\n"
+            },
+            {
+              "exit_code": 0,
+              "elapsed_seconds": 0.222142066,
+              "output": "'stale_after_commit' depends on axioms: [propext, Quot.sound]\n"
+            }
+          ]
+        }
+      },
+      {
+        "case_id": "quint-capacity-v1",
+        "native": {
+          "status": "passed",
+          "tool": "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/quint",
+          "version": "0.32.0",
+          "detail": "Seven named bounded scenarios executed; not exhaustive temporal verification",
+          "identity": {
+            "path": "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/quint",
+            "realpath": "/nix/store/s90yin0j1q75gr8iyr11qxqzbjdssv25-quint-0.32.0/bin/quint",
+            "bytes": 572,
+            "sha256": "190d69b28bd6ca6bd2f965e745b596b4b6b3ba7cb80e0b9e27ab36d8fe13f6f0",
+            "closure_scope": "Executable or wrapper bytes; transitive libraries are not independently rehashed"
+          },
+          "executions": [
+            {
+              "exit_code": 0,
+              "elapsed_seconds": 0.359745531,
+              "output": "0.32.0\n"
+            },
+            {
+              "exit_code": 0,
+              "elapsed_seconds": 0.536775861,
+              "output": "\n  openrouter_eval\n    ok behavior0Test passed 1 test(s)\n    ok behavior1Test passed 1 test(s)\n    ok behavior2Test passed 1 test(s)\n    ok behavior3Test passed 1 test(s)\n    ok behavior4Test passed 1 test(s)\n    ok behavior5Test passed 1 test(s)\n    ok productiveTest passed 1 test(s)\n\n  7 passing (13ms)\n"
+            }
+          ]
+        }
+      },
+      {
+        "case_id": "stm-cas-v1",
+        "native": {
+          "status": "not_required",
+          "tool": "",
+          "version": "",
+          "detail": "Independent OCaml behavioral oracle",
+          "identity": null,
+          "executions": []
+        }
+      },
+      {
+        "case_id": "bayesian-beta-v1",
+        "native": {
+          "status": "not_required",
+          "tool": "",
+          "version": "",
+          "detail": "Independent OCaml behavioral oracle",
+          "identity": null,
+          "executions": []
+        }
+      },
+      {
+        "case_id": "rete-join-retract-v1",
+        "native": {
+          "status": "not_required",
+          "tool": "",
+          "version": "",
+          "detail": "Independent relational semantics only; full Rete-UL network/unlinking is unsupported by the canonical naive matcher",
+          "identity": null,
+          "executions": []
+        }
+      },
+      {
+        "case_id": "stpa-authority-v1",
+        "native": {
+          "status": "not_required",
+          "tool": "",
+          "version": "",
+          "detail": "Independent OCaml behavioral oracle",
+          "identity": null,
+          "executions": []
+        }
+      },
+      {
+        "case_id": "fmea-priority-v1",
+        "native": {
+          "status": "not_required",
+          "tool": "",
+          "version": "",
+          "detail": "Independent OCaml behavioral oracle",
+          "identity": null,
+          "executions": []
+        }
+      }
+    ],
+    "controls": [
+      {
+        "control": "gleam-admission-v1:wrong-native-result",
+        "passed": true,
+        "detail": {
+          "status": "failed",
+          "tool": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+          "version": "gleam 1.16.0",
+          "detail": "Native failure, changed executable or missing nonvacuous execution witness",
+          "identity": {
+            "path": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+            "realpath": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+            "bytes": 24440408,
+            "sha256": "9d57b042c9f857ed898f4b99116ad8433bed2504619613c97d72a52288bef697",
+            "closure_scope": "Executable or wrapper bytes; transitive libraries are not independently rehashed"
+          },
+          "executions": [
+            {
+              "exit_code": 0,
+              "elapsed_seconds": 0.118926501,
+              "output": "gleam 1.16.0\n"
+            },
+            {
+              "exit_code": 1,
+              "elapsed_seconds": 1.076694584,
+              "output": "  Resolving versions\n  Compiling openrouter_eval_fixture\nwarning: Unused function argument\n  ┌─ /tmp/uos-openrouter-case-f5471d/src/openrouter_eval_fixture.gleam:1:18\n  │\n1 │ pub fn candidate(requested: Int, limit: Int, permitted: Bool) -> Bool { True }\n  │                  ^^^^^^^^^ This argument is never used\n\nHint: You can ignore it with an underscore: `_requested`.\n\nwarning: Unused function argument\n  ┌─ /tmp/uos-openrouter-case-f5471d/src/openrouter_eval_fixture.gleam:1:34\n  │\n1 │ pub fn candidate(requested: Int, limit: Int, permitted: Bool) -> Bool { True }\n  │                                  ^^^^^ This argument is never used\n\nHint: You can ignore it with an underscore: `_limit`.\n\nwarning: Unused function argument\n  ┌─ /tmp/uos-openrouter-case-f5471d/src/openrouter_eval_fixture.gleam:1:46\n  │\n1 │ pub fn candidate(requested: Int, limit: Int, permitted: Bool) -> Bool { True }\n  │                                              ^^^^^^^^^ This argument is never used\n\nHint: You can ignore it with an underscore: `_permitted`.\n\n   Compiled in 0.61s\n    Running openrouter_eval_fixture.main\n\u001b[31;1mruntime error\u001b[39m: let assert\u001b[0m\n\nPattern match failed, no pattern matched the value.\n\nunmatched value:\n  true\n\nstacktrace:\n  openrouter_eval_fixture.main\u001b[90m src/openrouter_eval_fixture.gleam:3\u001b[0m\n\n"
+            }
+          ]
+        }
+      },
+      {
+        "control": "lean-stale-v1:wrong-native-result",
+        "passed": true,
+        "detail": {
+          "status": "failed",
+          "tool": "/home/an/NAS-setup/uos/toolchains/lean-4.33.0/bin/lean",
+          "version": "Lean (version 4.33.0, x86_64-unknown-linux-gnu, commit d8b18978322de05a8f3dba51ef03cf5461676c17, Release)",
+          "detail": "Native failure, changed executable or missing nonvacuous execution witness",
+          "identity": {
+            "path": "/home/an/NAS-setup/uos/toolchains/lean-4.33.0/bin/lean",
+            "realpath": "/home/an/NAS-setup/uos/toolchains/lean-4.33.0/bin/lean",
+            "bytes": 9024,
+            "sha256": "e8baaa71855a616dc351028f3ad2200051b0671f423a1696a100e809302d5550",
+            "closure_scope": "Executable or wrapper bytes; transitive libraries are not independently rehashed"
+          },
+          "executions": [
+            {
+              "exit_code": 0,
+              "elapsed_seconds": 0.18074632,
+              "output": "Lean (version 4.33.0, x86_64-unknown-linux-gnu, commit d8b18978322de05a8f3dba51ef03cf5461676c17, Release)\n"
+            },
+            {
+              "exit_code": 1,
+              "elapsed_seconds": 0.474066358,
+              "output": "/tmp/uos-openrouter-case-8c67a8/fixture.lean:2:111: error: Tactic `rfl` failed: Expected the goal to be a binary relation\n\nHint: Reflexivity tactics can only be used on goals of the form `x ~ x` or `R x x`\n\nversion expected : Nat\nsame : version = expected\n⊢ version + 1 ≠ expected\n'stale_after_commit' depends on axioms: [sorryAx]\n"
+            }
+          ]
+        }
+      },
+      {
+        "control": "consumer-rejects-wrong-answer",
+        "passed": true,
+        "detail": { "exit_code": 1, "json_status": "failed" }
+      },
+      {
+        "control": "consumer-rejects-markdown",
+        "passed": true,
+        "detail": { "exit_code": 2, "json_status": "invalid" }
+      },
+      {
+        "control": "consumer-accepts-verified-answer",
+        "passed": true,
+        "detail": { "exit_code": 0, "json_status": "passed" }
+      },
+      {
+        "control": "missing-executable-refused",
+        "passed": true,
+        "detail": { "exit_code": 127 }
+      },
+      {
+        "control": "deadline",
+        "passed": true,
+        "detail": { "exit_code": 124, "elapsed_seconds": 0.113545528 }
+      },
+      {
+        "control": "quint-zero-tests",
+        "passed": true,
+        "detail": { "exit_code": 0, "output": "\n  empty_eval\n\n" }
+      }
+    ],
+    "seed": 424242
+  },
+  "stale_compiled_observation": {
+    "status": "invalid",
+    "reason": "evaluator source changed since compilation; rebuild before use",
+    "effect_authority": false
+  },
+  "stale_process_exit": {
+    "code": 2,
+    "attribution": "reported by executing capability owner; raw result independently read here"
+  },
+  "lean_axiom_policy": [ "propext", "Quot.sound" ],
+  "reviewer_native_reruns": 0,
+  "paid_calls": 0,
+  "quality_ranking": false,
+  "system_admission": false
+}

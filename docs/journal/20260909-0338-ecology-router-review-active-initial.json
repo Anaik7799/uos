@@ -1,0 +1,50 @@
+{
+  "status": "ACTIVE_OBSERVATION_PASS",
+  "authority": "NONE",
+  "runtime_admission": "NOT_GRANTED",
+  "observed_at": "2026-09-09T03:20:13Z",
+  "completed_at": "2026-09-09T03:20:14Z",
+  "elapsed_monotonic_seconds": 0.213190829,
+  "clock_start": {
+    "source": "chronyc tracking",
+    "abs_ntp_offset_seconds": 0.000469909,
+    "uncertainty_seconds": 0.0163212805,
+    "reference_age_seconds": 14.200783729553223,
+    "stratum": 3
+  },
+  "clock_end": {
+    "source": "chronyc tracking",
+    "abs_ntp_offset_seconds": 0.000469893,
+    "uncertainty_seconds": 0.0163214345,
+    "reference_age_seconds": 14.30955457687378,
+    "stratum": 3
+  },
+  "assessment_sha256": "706f5a1a363c028618771e3cdc5cdf5b701d85de2975a841d62919ee94f47f7a",
+  "evidence_files_checked": 5,
+  "sa_plan": {
+    "plan_id": "uos/ecology-router-review/20260909-0345",
+    "snapshot_sha256": "0dc61dd977a36c61b88acb77ae37612abecbc151aa5f054d7b40a32b6dd09b56",
+    "tasks": [
+      {
+        "task_id": "REVIEW",
+        "state": "executing",
+        "worker": "codex-ecology-router-review",
+        "lease_until_ns": "1788931190206779196",
+        "attempt": 1,
+        "completed_at_ns": null,
+        "result_present": false,
+        "dependencies": []
+      }
+    ],
+    "mode": "READONLY",
+    "lease_fencing_authority": "NOT_GRANTED"
+  },
+  "order": [],
+  "findings": [],
+  "limits": [
+    "Listed byte equality does not prove source completeness, runtime behavior or signed provenance.",
+    "Analysis prose, class judgments, cost ties and control effectiveness require qualified review.",
+    "Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.",
+    "Snapshot is confined to one complete plan; no global optimum is asserted."
+  ]
+}

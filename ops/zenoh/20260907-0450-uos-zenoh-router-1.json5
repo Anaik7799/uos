@@ -13,7 +13,11 @@
       storages: {
         a2a_board: { key_expr: "c3i/a2a/**", volume: "memory" },
         agui_events: { key_expr: "c3i/agui/events/**", volume: "memory" },
-        uos_tui: { key_expr: "uos/tui/**", volume: "memory" }
+        uos_tui: { key_expr: "uos/tui/**", volume: "memory" },
+        sutra_mesh: { key_expr: "indrajaal/sutra/**", volume: "memory" },
+        telegram_mesh: { key_expr: "indrajaal/telegram/**", volume: "memory" },
+        cog_mesh: { key_expr: "indrajaal/l5/cog/**", volume: "memory" },
+        otel_spans: { key_expr: "indrajaal/otel/**", volume: "memory" }
       }
     }
   },

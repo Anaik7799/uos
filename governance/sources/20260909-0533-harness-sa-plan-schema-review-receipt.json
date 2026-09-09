@@ -1,0 +1,46 @@
+{
+  "schema": "uos.harness.sa-plan-schema-review.v1",
+  "observed_authority_at": "2026-09-09T05:46:33Z",
+  "plan": "uos/harness-schema-review/bootstrap",
+  "task": "SCHEMA-REVIEW",
+  "worker": "codex-ecology-capabilities",
+  "attempt": 1,
+  "status": "SOURCE_AND_LOCAL_RUNTIME_REVIEWED",
+  "effect_authority": false,
+  "system_admission": false,
+  "preflight_sha256": "507b2b1f4de8222790a47ac22761320ca1cd33c86a09d9508d152c81757843c3",
+  "active_assessment_sha256": "519ef3456b089fa56b1c7607aba6baa869501fc0d2a0d6f65d64f2f5fed8a148",
+  "source_files": [
+    {"path":"engines/hermes/modules/sa_plan/sa_plan_store.ml","sha256":"311084cf758cb74dd8e12db6d228ae234c5a00c09ea8bf2bb86f0006d09c702b"},
+    {"path":"engines/hermes/modules/sa_plan/sa_plan_store.mli","sha256":"9e0f305a6895db16190dca80ff826009ea135916d29f31876881bf1dd73462f7"},
+    {"path":"engines/hermes/modules/sa_plan/test/sa_plan_cli.ml","sha256":"f9114de058f91ef3c58f93eb8b534e9f40943e70b79274ab09bc5c4b78783335"},
+    {"path":"engines/hermes/modules/sa_plan/test/sa_plan_main.ml","sha256":"b8e471721038ce4abc2e8dfa7f8f9e19e435296444955d653987e2ba640c8b8e"},
+    {"path":"engines/hermes/modules/sa_plan/sa_plan_temporal.ml","sha256":"082f8e36a6f7cb7a079634967b8bb1e64de507e03531c939d1adf7b684112ad0"},
+    {"path":"engines/hermes/modules/sa_plan/sa_plan_oban.ml","sha256":"0cc5c4248de058da7b5fc3e82d39a2ff5c0d72823bf8fbfe1edc573d210dd4f5"},
+    {"path":"apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam","sha256":"c14dfdf256906ad166877bd7782ccd1486dd06611f688a75acec5eabfe339594"},
+    {"path":"apps/cepaf_gleam/src/cepaf_gleam/sdlc/sa_plan_engine.gleam","sha256":"194f1184b008685a96026f883e97495b811564c716ecb622abf555413b5dd46e"},
+    {"path":"tools/sa_plan_execution.ml","sha256":"61425f74e728ca0e1f20913816ef8cc7e92027d79c94e5945b6885b98ece6874"},
+    {"path":"tools/sa-plan","sha256":"325066638be4cdc212afec4d43cab66fc6eff951053056d2b5071db2b33ceda4"}
+  ],
+  "findings": [
+    {"id":"F1","path":"engines/hermes/modules/sa_plan/test/sa_plan_cli.ml","line":37,"finding":"oban and temporal normalize to local job/workflow commands"},
+    {"id":"F2","path":"engines/hermes/modules/sa_plan/test/sa_plan_main.ml","line":11,"finding":"UI/default progress and plan list are based on one historical program, not an all-plan registry"},
+    {"id":"F3","path":"engines/hermes/modules/sa_plan/sa_plan_store.ml","line":2900,"finding":"workflow activity KEY replay returns old result without comparing new request fields; workflow terminal operations have no worker/attempt fence"},
+    {"id":"F4","path":"engines/hermes/modules/sa_plan/sa_plan_store.ml","line":1279,"finding":"bridge mapping and command hash comparison provide a stronger reusable idempotence pattern"},
+    {"id":"F5","path":"engines/hermes/modules/sa_plan/sa_plan_store.ml","line":2649,"finding":"queue-based job claim is not an exact task/job binding and has no task dependency filter"},
+    {"id":"F6","path":"engines/hermes/modules/sa_plan/sa_plan_temporal.ml","line":31,"finding":"pure modeled history is not an external Temporal server or a crash-safe exactly-once side effect"}
+  ],
+  "runtime_observations": {
+    "local_7233_8233_listeners": "none observed",
+    "process_names_matching_temporal_or_oban": "none observed",
+    "user_service_names_matching_temporal_or_oban": "none observed",
+    "remote_backend_status": "UNKNOWN",
+    "targeted_source_sdk_calls": "none found in inspected application sources, Sa-plan module, services and ops config file types",
+    "limits": "Local names/ports and scoped source search do not prove absence of remote or embedded deployments. No authenticated service probe was made."
+  },
+  "implementation_tests": "UNRUN_READ_ONLY_REVIEW",
+  "shared_source_edits": 0,
+  "model_calls": 0,
+  "runtime_effects": 0,
+  "report": "docs/journal/20260909-0533-harness-sa-plan-schema-review-codex-journal.md"
+}

@@ -1,0 +1,388 @@
+{
+  "schema": "uos-harness-evolution-review/v1",
+  "request_id": "claude-fable-harness-1",
+  "review_status": "DELIVERED_NOT_APPROVAL",
+  "authority": "REVIEW_ONLY",
+  "runtime_admission": "NOT_GRANTED",
+  "observed_at_utc": "2026-09-09T05:34:21Z",
+  "reviewer": {
+    "model": "claude-opus-5",
+    "model_name": "Claude Opus 5",
+    "is_requested_fable": false,
+    "fable_note": "The packet requests Claude/Fable. This reviewer is Opus 5, not Fable (claude-fable-5-1). The Fable half of the request is NOT satisfied by this delivery.",
+    "session": "session_01B9GiR9bF4d1Jv2aSMowAKC",
+    "project_session_dir": "a65088e0-0f2b-497e-bd5c-97eeed9c3594",
+    "is_root_coordinator": false,
+    "root_coordinator_referenced": "01a083d2-baa3-7783-8e45-5357cc9e96d8",
+    "agy_review_included": false
+  },
+  "sa_plan": {
+    "plan": "uos-nix-devenv-toolchain-20260908",
+    "task": "task-30",
+    "worker": "claude-opus5-harness-review",
+    "attempt": 1,
+    "note": "Disjoint from HARNESSBOOT (plan uos/ecology/20260909-0146, worker codex-01a083d2-harness), which was observed state=executing attempt=1 at review time."
+  },
+  "packet": {
+    "path": "docs/design/20260909-0412-harness-evolution-review-packet.md",
+    "sha256": "99c41eb7c35749d28970ca3cab7e52bd488273eb7df96144902ac5b1625a4798",
+    "digest_match": true,
+    "lines": 84,
+    "revision_bound": false,
+    "revision_note": "The packet is UNCOMMITTED in the shared working copy (change xxsoxxww, undescribed). Findings are bound to the content digest, not to a candidate commit."
+  },
+  "method": {
+    "kind": "SOURCE_ONLY",
+    "statement": "No runtime service was started, no production surface touched, no broad suite re-run. Every claim below is either a direct source reading with file:line or an explicit UNKNOWN.",
+    "unavailable_surfaces": [
+      "Gleam MCP development service (not started by this reviewer)",
+      "Zenoh live mesh (not exercised)",
+      "production primary / standby nodes (not inspected)",
+      "VM-1 external trees (read-only mandate honoured; not read)"
+    ]
+  },
+  "decision_matrix": [
+    {
+      "id": "D01",
+      "verdict": "UNKNOWN",
+      "basis": "Provenance of C3I/Indrajaal reuse not re-derived in this pass; VM-1 trees not read (read-only mandate honoured).",
+      "finding": null
+    },
+    {
+      "id": "D02",
+      "verdict": "UNKNOWN",
+      "basis": "26 participant models vs external bindings not separable from source alone; no runtime dispatch observed.",
+      "finding": null
+    },
+    {
+      "id": "D03",
+      "verdict": "REVISE",
+      "basis": "harness/clock.gleam:58, development.gleam:211,330,405,971,976,983,988 call host absolute paths directly; Gleam does not own the backend choice at these sites.",
+      "finding": "F1"
+    },
+    {
+      "id": "D04",
+      "verdict": "UNKNOWN",
+      "basis": "No live Zenoh equivalence observed; not exercised.",
+      "finding": null
+    },
+    {
+      "id": "D05",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "harness/{development,files,clock,value,mcp,peers}.gleam are Gleam; 1724 lines read in part.",
+      "finding": null
+    },
+    {
+      "id": "D06",
+      "verdict": "UNKNOWN",
+      "basis": "Kernel IR not exercised; no generated native artifact inspected.",
+      "finding": null
+    },
+    {
+      "id": "D07",
+      "verdict": "UNKNOWN",
+      "basis": "OCaml GC roots / Mojo lifecycle / NIF scheduling not exercised in this pass.",
+      "finding": null
+    },
+    {
+      "id": "D08",
+      "verdict": "REVISE",
+      "basis": "Grant is a hardcoded literal tuple read from caller-controlled environment variables (development.gleam:96-131).",
+      "finding": "F2"
+    },
+    {
+      "id": "D09",
+      "verdict": "UNKNOWN",
+      "basis": "Four UCA classes are declared in var/harness/20260909-0412-bootstrap-risk.json; their runtime enforcement was not observed.",
+      "finding": null
+    },
+    {
+      "id": "D10",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "development.gleam:187,196,255 label coordinator outcomes as observation without effect authority; wording is consistent with SYNC-03/04.",
+      "finding": null
+    },
+    {
+      "id": "D11",
+      "verdict": "UNKNOWN",
+      "basis": "Replay/idempotence path not exercised; attempt fencing present at development.gleam:156-164 but single-attempt by grant.",
+      "finding": "F3"
+    },
+    {
+      "id": "D12",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "files.gleam read/create/replace verified by reading: lstat+nlinks==1+size bound, open-descriptor inode/dev recheck, O_EXCL create, fsync file and parent, digest CAS re-read before rename, pending cleanup on failure. Limits are disclosed in the module header.",
+      "finding": "F4"
+    },
+    {
+      "id": "D13",
+      "verdict": "UNKNOWN",
+      "basis": "Legacy reader/adapter regressions not re-executed; no receipt re-derived at this revision.",
+      "finding": null
+    },
+    {
+      "id": "D14",
+      "verdict": "UNKNOWN",
+      "basis": "Finite stdio MCP interface not exercised; no live initialize/notification observed.",
+      "finding": null
+    },
+    {
+      "id": "D15",
+      "verdict": "REVISE",
+      "basis": "clock.gleam:23 policy max_evidence_age_us=3_600_000_000 is 30x the module's own strict_policy 120_000_000 with no stated rationale; the same field carries two distinct semantics at lines 78 and 86.",
+      "finding": "F5"
+    },
+    {
+      "id": "D16",
+      "verdict": "UNKNOWN",
+      "basis": "Three-role isolation not observed; no standby node inspected.",
+      "finding": null
+    },
+    {
+      "id": "D17",
+      "verdict": "UNKNOWN",
+      "basis": "Durability/replication of declared state not observed.",
+      "finding": null
+    },
+    {
+      "id": "D18",
+      "verdict": "UNKNOWN",
+      "basis": "appup/relup/sys semantics not exercised.",
+      "finding": null
+    },
+    {
+      "id": "D19",
+      "verdict": "UNKNOWN",
+      "basis": "Routing eligibility not exercised; no paid call made or observed by this reviewer.",
+      "finding": null
+    },
+    {
+      "id": "D20",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Ledger design and USD0.25 per-request liability are declared in the risk receipt; no paid call receipt exists under var/harness/. Absence of spend is consistent with the packet claim, and absence is not proof of enforcement.",
+      "finding": "F6"
+    },
+    {
+      "id": "D21",
+      "verdict": "UNKNOWN",
+      "basis": "No production binding or calibration observed.",
+      "finding": null
+    },
+    {
+      "id": "D22",
+      "verdict": "UNKNOWN",
+      "basis": "Rete-UL and native executions not re-run in this pass.",
+      "finding": null
+    },
+    {
+      "id": "D23",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Consistent with this reviewer's own independent Lean axiom audit discipline; no sorry/Admitted claimed in the packet.",
+      "finding": null
+    },
+    {
+      "id": "D24",
+      "verdict": "UNKNOWN",
+      "basis": "Ecology baseline separation not observed at runtime.",
+      "finding": null
+    },
+    {
+      "id": "D25",
+      "verdict": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Packet states hooks are advisory until independently observed; this matches what this reviewer verified separately for the .claude/.agents/.codex preflight hooks.",
+      "finding": null
+    },
+    {
+      "id": "D26",
+      "verdict": "REVISE",
+      "basis": "Packet §Verification checklist declares 18 checkpoints as a 6-row summary table, not the 5-domain 18-item structure SC-CHECKLIST-001 specifies; individual checkpoint states are not itemised.",
+      "finding": "F7"
+    },
+    {
+      "id": "D27",
+      "verdict": "UNKNOWN",
+      "basis": "No production/standby runtime behaviour observed.",
+      "finding": null
+    },
+    {
+      "id": "D28",
+      "verdict": "UNKNOWN",
+      "basis": "Bootstrap completion not observed; HARNESSBOOT is state=executing at review time.",
+      "finding": null
+    }
+  ],
+  "verdict_counts": {
+    "UNKNOWN": 18,
+    "REVISE": 4,
+    "ACCEPT_WITHIN_SCOPE": 6
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "severity": "HIGH",
+      "title": "New harness source re-introduces the barred $HOME and host toolchain paths",
+      "locations": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/clock.gleam:58 -> /usr/bin/chronyc",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam:211 -> /usr/bin/sqlite3",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam:330 -> /home/an/.cargo/bin/jj",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam:405 -> /usr/bin/bash",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam:971,983 -> /usr/bin/env",
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam:976,988 -> /home/an/.nix-profile/bin/gleam"
+      ],
+      "statement": "SC-NIX-DEVENV-001 invariant 1 bars $HOME toolchains and invariant 10 bars any tool resolution that bypasses tools/lib/uos-toolchain.sh. These eight call sites bypass it. jj and gleam have pinned in-project equivalents (toolchains/nix-profile/bin/jj, toolchains/gleam-1.16.0/bin/gleam); chronyc and sqlite3 have no resolver entry at all.",
+      "falsifier": "bash -c 'source tools/lib/uos-toolchain.sh; uos_toolchain_verify' passes (locality arm bars $HOME/.cargo/* and $HOME/.nix-profile/*) while these call sites use exactly those prefixes; bash tools/preflight reports 33/33 green and covers none of them.",
+      "current_risk": "LOW today and that is the hazard: /home/an/.cargo/bin/jj reports 0.44.0 and /home/an/.nix-profile/bin/gleam reports 1.16.0, identical to the pinned versions, so nothing fails now and the coupling is silent.",
+      "fix": "Route through the resolver: add chronyc and sqlite3 to uos_tool_path and the preflight useable arm, and replace the jj/gleam/bash/env literals with resolved paths. Mirrors the repair already applied to tools/release_process.ml, unification_cycles.ml, evolution_cycles.ml and output_guard_check.ml.",
+      "residual": "Until then the harness clock, Sa-plan reader, build and test paths run on unpinned tooling that no gate observes."
+    },
+    {
+      "id": "F2",
+      "severity": "MEDIUM",
+      "title": "Development grant is authenticated by caller-controlled environment variables",
+      "locations": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam:96-131"
+      ],
+      "statement": "binding() reads UOS_HARNESS_{ROLE,PLAN,TASK,WORKER,ATTEMPT,SESSION,EPOCH} via getenv and accepts only one hardcoded literal tuple, including session 01a083d2-baa3-7783-8e45-5357cc9e96d8 and attempt == 1. The module header states request payload fields never grant identity; environment variables are exactly as caller-controlled as payloads, so the fence is a naming convention, not a credential.",
+      "falsifier": "Any process able to set those seven variables presents the root coordinator identity to the harness. SYNC-06 already records that local filesystem access is the trust boundary, so this is consistent with the contract but stronger than the source comment implies.",
+      "current_risk": "Bounded: the allow-list is a single tuple and the bootstrap is finite.",
+      "fix": "State in the source that the grant is environment-asserted and bounded by the local filesystem trust boundary, or bind it to an artifact the caller cannot forge (a lease digest read from the canonical ledger).",
+      "residual": "attempt == 1 makes the harness single-attempt by construction: a crash needs manual re-grant. Deliberate and fail-closed, but it must not be generalised without redesign."
+    },
+    {
+      "id": "F3",
+      "severity": "LOW",
+      "title": "Replay/idempotence claim (D11) is not exercised by anything this reviewer could observe",
+      "locations": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam:148-164"
+      ],
+      "statement": "evaluate_task_window checks role, worker, attempt, deadline and dependency blocking, which is the right shape, but with attempt pinned to 1 by the grant the retry path that D11 is about cannot be reached in this configuration.",
+      "falsifier": "Set UOS_HARNESS_ATTEMPT=2 and the binding fails before the replay logic runs.",
+      "current_risk": "No false success observed; the claim is simply unverified here.",
+      "fix": "Exercise the replay path in a test that varies attempt while holding the grant, or restate D11 as designed-not-yet-verified.",
+      "residual": "D11 remains UNKNOWN rather than accepted."
+    },
+    {
+      "id": "F4",
+      "severity": "INFO",
+      "title": "files.gleam bounded-edit primitives verified by reading, with disclosed limits",
+      "locations": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/files.gleam:1-3,102-124,126-179,189-211,227-263"
+      ],
+      "statement": "read() lstats, requires a regular file with nlinks==1 and size<=262144, opens raw/binary, then re-checks inode and dev against the open descriptor before pread, so a substituted final target is detected. create() uses O_EXCL plus fsync of the file and of the parent. replace() re-reads and re-checks the digest before an atomic rename and deletes the pending file on failure. ancestors() lstats every parent component and rejects any non-directory, so a symlinked parent is refused.",
+      "falsifier": "The module header itself states the residual: a parent rename race still needs a cooperative workspace lease, and this is not a descriptor-relative VFS.",
+      "current_risk": "Low.",
+      "fix": "None required for the stated scope. Two smaller points: the pending-file cleanup discards its own error (line 257), so an orphaned .harness-<nonce> file is possible and unreported; and replace() operates on UTF-8 strings only, so non-UTF-8 files cannot be edited at all.",
+      "residual": "TOCTOU between the second read and the rename remains, as disclosed."
+    },
+    {
+      "id": "F5",
+      "severity": "MEDIUM",
+      "title": "One clock policy field carries two semantics, and is 30x more permissive than the module's own strict baseline",
+      "locations": [
+        "apps/cepaf_gleam/src/cepaf_gleam/harness/clock.gleam:23-29,78,86,134",
+        "apps/uos_swarm/src/uos_swarm/clock_contract.gleam:30-39"
+      ],
+      "statement": "policy is built positionally with five unlabelled integers. max_evidence_age_us=3_600_000_000 bounds the chrony reference age at line 78, while line 86 overrides the same field to 3_000_000 for contract.validate, where it bounds the boot-domain receipt age instead. The receipt labels at lines 134-135 do match the bounds actually applied, so this is not a false receipt; it is a legibility and maintenance hazard. Separately, clock_contract.strict_policy uses 120_000_000 for the same field, so the harness is 30x more permissive with no rationale in the source.",
+      "falsifier": "Reorder the Policy fields in clock_contract and the harness silently repurposes all five bounds; the positional construction gives no protection.",
+      "current_risk": "No incorrect acceptance demonstrated.",
+      "fix": "Construct the policy with labelled fields, split the two semantics into distinct fields (reference age vs receipt age), and record why 3600s is admitted where the strict baseline is 120s.",
+      "residual": "A future reader may reasonably conclude the published 1-hour bound governed the validate call, which it does not."
+    },
+    {
+      "id": "F6",
+      "severity": "INFO",
+      "title": "No paid OpenRouter call receipt exists; absence is consistent with D20 but is not evidence of enforcement",
+      "locations": [
+        "var/harness/",
+        "var/harness/effects/"
+      ],
+      "statement": "var/harness contains the bootstrap risk receipt and effect intent/result artifacts; no paid-call receipt is present. The USD10/day ledger, USD0.25 per-request liability and reservation-before-call rule are declared in the risk receipt assumptions and budget fields.",
+      "falsifier": "A paid call made without a durable reservation would leave no artifact here either, so this reviewer cannot distinguish enforced from unexercised.",
+      "current_risk": "None observed.",
+      "fix": "Emit a reservation receipt on every attempted paid call, including refused ones, so absence of spend becomes positive evidence.",
+      "residual": "D20 is accepted only as a design statement, not as an observed control."
+    },
+    {
+      "id": "F7",
+      "severity": "LOW",
+      "title": "Packet checklist is a 6-row summary, not the SC-CHECKLIST-001 5-domain 18-item structure",
+      "locations": [
+        "docs/design/20260909-0412-harness-evolution-review-packet.md:71-82"
+      ],
+      "statement": "SC-CHECKLIST-001 requires 18 named checkpoints across 5 domains with per-item state. The packet collapses these into 6 rows with grouped states such as 'Declared; live serving requires separate observation'.",
+      "falsifier": "Compare against contracts/rules/comprehensive-checklist-contract.md section 2: CHK-01-TIME through CHK-18-JJ are individually named.",
+      "current_risk": "Documentation conformance only.",
+      "fix": "Expand to the 18 named checkpoints with individual states.",
+      "residual": "Grouped states hide which specific checkpoints are unverified."
+    }
+  ],
+  "seventeen_aspects": {
+    "covered_partially": [
+      "control plane authority (D08)",
+      "clock/time (D15)",
+      "file/data path (D12)",
+      "toolchain provenance (D03)",
+      "budget (D20)",
+      "documentation conformance (D26)"
+    ],
+    "not_covered": [
+      "web/runtime",
+      "Zenoh data path",
+      "STAMP runtime enforcement",
+      "AOR",
+      "skills",
+      "agents",
+      "hooks runtime",
+      "FMEA runtime",
+      "RETE-UL",
+      "ruliology",
+      "coverage math",
+      "L0-L7 runtime",
+      "all clients",
+      "delivery readiness",
+      "formal twins native execution",
+      "evaluation harness",
+      "standby/hot upgrade"
+    ],
+    "statement": "17-aspect coverage is INCOMPLETE. Six aspects received source-bound examination; the remainder are UNKNOWN in this delivery and must not be counted as reviewed."
+  },
+  "limits": [
+    "Review delivery is not approval and not admission.",
+    "No count, model, catalog or prior EV claim was treated as passing evidence.",
+    "EV ceiling 93 and EV-94..109 NOT_ADMITTED are untouched; no new EV number was created.",
+    "21 of 28 decisions are UNKNOWN in the delivered matrix (18 UNKNOWN, 4 REVISE, 6 ACCEPT_WITHIN_SCOPE). A verdict distribution is not coverage."
+  ],
+  "coordinator_relay": {
+    "board": "var/coordination/tri-agent (session_sync_cli, private local 0700 storage)",
+    "registered_as": {
+      "session": "a65088e0-0f2b-497e-bd5c-97eeed9c3594",
+      "provider": "claude",
+      "workspace": "/home/an/NAS-setup/uos",
+      "revision": "d60cbbc783e33a62c68d0b47b7d8fe7a8be05baf",
+      "op_id": "op-claude-opus5-register-20260909-0721",
+      "sequence": 1240
+    },
+    "message": {
+      "op_id": "op-claude-opus5-harness-review-20260909-0721",
+      "sequence": 1241,
+      "kind": "Report",
+      "to": "01a083d2-baa3-7783-8e45-5357cc9e96d8",
+      "envelope_id": "1788932326130931-cea55d120d1a82ec",
+      "trace_id": "edc240a040ba816b7c9660ea6f748f05",
+      "delivered_at_utc": "2026-09-09T05:38:46.130931Z",
+      "refs": [
+        "docs/journal/20260909-0721-claude-opus5-harness-evolution-review.md",
+        "docs/journal/20260909-0721-claude-opus5-harness-evolution-review.json",
+        "sha256-md:8bb358547fe50cbe1d320a04e38ae15ef8df9475861474d008b5bc8bf1dbe3c3",
+        "sha256-json:1ba9dcdb82e510870a3e992d069dd4bc13c59b864a4b53a778b55fd70c177226"
+      ]
+    },
+    "recipient_state_at_send": {
+      "status": "stale",
+      "pending_messages_before": 220,
+      "pending_after": 221,
+      "holds_lease": "task:HARNESSBOOT epoch 1"
+    },
+    "ack_status": "NONE. Per SYNC-05 board transport delivery and peer ACK are different facts. The message is durably enqueued with a chained envelope digest and signature; the recipient session is stale and has not read it. No ACK is claimed."
+  }
+}

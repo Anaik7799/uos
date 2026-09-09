@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+# =============================================================================
+# [C3I-SIL6-MSTS] UOS Sovereign Cognitive Worker CLI Runner (SC-COG-001)
+# =============================================================================
+# Authority: Pure Gleam/OTP 29 Harness (apps/cepaf_gleam)
+# Invokes cepaf_gleam@harness@cognitive_worker on BEAM
+# =============================================================================
+set -euo pipefail
+
+UOS_ROOT="/home/an/NAS-setup/uos"
+cd "${UOS_ROOT}"
+
+MODE="${1:---poll}"
+
+case "${MODE}" in
+  --eval)
+    PAYLOAD="${2:-}"
+    if [ -z "${PAYLOAD}" ]; then
+      PAYLOAD="$(cat)"
+    fi
+    exec erl -noshell \
+      -pa apps/cepaf_gleam/build/dev/erlang/*/ebin \
+      -eval "
+    io:setopts([{encoding, utf8}]),
+    Payload = unicode:characters_to_binary(os:getenv(\"UOS_COG_PAYLOAD\")),
+    case 'cepaf_gleam@harness@cognitive_worker':decode_intent(Payload) of
+      {ok, Intent} ->
+        Decision = 'cepaf_gleam@harness@cognitive_worker':evaluate_intent(Intent),
+        OutJson = 'cepaf_gleam@harness@cognitive_worker':encode_decision(Decision),
+        io:put_chars(standard_io, [OutJson, $\n]);
+      {error, Err} ->
+        io:format(standard_error, \"Decode error: ~s~n\", [Err]),
+        init:stop(1)
+    end,
+    init:stop(0)." \
+      -env UOS_COG_PAYLOAD "${PAYLOAD}"
+    ;;
+
+  --poll)
+    exec erl -noshell \
+      -pa apps/cepaf_gleam/build/dev/erlang/*/ebin \
+      -eval "
+    io:setopts([{encoding, utf8}]),
+    Decisions = 'cepaf_gleam@harness@cognitive_worker':poll_zenoh_and_process(<<\"http://127.0.0.1:8080\">>),
+    Count = length(Decisions),
+    io:format(\"Processed ~p cognitive intents~n\", [Count]),
+    init:stop(0)."
+    ;;
+
+  --loop)
+    INTERVAL="${2:-3}"
+    echo "🧠 Starting UOS Gleam Cognitive Worker loop (interval: ${INTERVAL}s)..."
+    while true; do
+      erl -noshell \
+        -pa apps/cepaf_gleam/build/dev/erlang/*/ebin \
+        -eval "
+      io:setopts([{encoding, utf8}]),
+      Decisions = 'cepaf_gleam@harness@cognitive_worker':poll_zenoh_and_process(<<\"http://127.0.0.1:8080\">>),
+      Count = length(Decisions),
+      case Count of
+        0 -> ok;
+        N -> io:format(\"⚡ [cog-worker] Processed ~p cognitive intent(s)~n\", [N])
+      end,
+      init:stop(0)." || true
+      sleep "${INTERVAL}"
+    done
+    ;;
+
+  *)
+    echo "Usage: tools/cognitive-worker [--eval JSON | --poll | --loop [INTERVAL_S]]" >&2
+    exit 1
+    ;;
+esac

@@ -34,6 +34,7 @@ pub fn ecology_html_uses_observed_state_and_existing_shell_test() {
   |> should.be_true
   string.contains(result.body, "fetch('/api/v1/ecology/swarm'")
   |> should.be_true
+  string.contains(result.body, "openrouter_free: stopped") |> should.be_true
   response.get_header(result, "content-type")
   |> should.equal(Ok("text/html; charset=utf-8"))
 }

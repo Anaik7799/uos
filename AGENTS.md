@@ -184,6 +184,10 @@ A passing observation never replaces Sa-plan authority or effect-time fencing.
 Process guidance and report-only validation do not establish runtime scheduler enforcement.
 Respect the active session's scope, permission and delegation restrictions.
 
+### 5.7 Mandatory Gleam Harness Agent Boundary (`SC-HARNESS-MCP-001`)
+
+All agents MUST operate through the Gleam/OTP harness using MCP or admitted Zenoh ingress. Gleam owns agent/control/check/time policy and backend selection; bounded native services remain behind it. Source changes and tests run in development; production requires independently verified release and state authority. Follow [the operator-mandated contract](http://nas-1.tail55d152.ts.net:4100/files/contracts/rules/20260909-0412-gleam-harness-agent-operation-contract.md) and [formal specification](http://nas-1.tail55d152.ts.net:4100/files/docs/design/20260909-0412-gleam-harness-symbiosis-formal-spec.md). The explicitly approved one-time development bootstrap is scoped there; policy text and advisory hooks do not establish runtime enforcement or system admission.
+
 ## 6. Evidence, Gates, and Completion Semantics
 
 State transitions must advance strictly through:

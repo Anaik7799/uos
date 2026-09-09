@@ -665,7 +665,11 @@ pub fn claim_task(
           attempt: task.attempt + 1,
         ),
       )
-    Executing -> Error("Task already executing by worker: " <> option.unwrap(task.worker, "unknown"))
+    Executing ->
+      Error(
+        "Task already executing by worker: "
+        <> option.unwrap(task.worker, "unknown"),
+      )
     Completed -> Error("Task already completed")
     Blocked -> Error("Task blocked on dependencies")
     Deferred -> Error("Task deferred")
@@ -726,13 +730,18 @@ pub fn enqueue_oban_job(
 
 pub fn lock_oban_job(job: ObanJob) -> Result(ObanJob, String) {
   case job.state {
-    JobAvailable -> Ok(ObanJob(..job, state: JobExecuting, attempt: job.attempt + 1))
-    JobRetry -> Ok(ObanJob(..job, state: JobExecuting, attempt: job.attempt + 1))
+    JobAvailable ->
+      Ok(ObanJob(..job, state: JobExecuting, attempt: job.attempt + 1))
+    JobRetry ->
+      Ok(ObanJob(..job, state: JobExecuting, attempt: job.attempt + 1))
     _ -> Error("Oban job not available for locking")
   }
 }
 
-pub fn start_temporal_workflow(id: String, workflow_type: String) -> TemporalWorkflow {
+pub fn start_temporal_workflow(
+  id: String,
+  workflow_type: String,
+) -> TemporalWorkflow {
   TemporalWorkflow(
     id: id,
     workflow_type: workflow_type,
@@ -750,8 +759,7 @@ pub fn execute_temporal_activity(
   now_ns: Int,
 ) -> #(TemporalWorkflow, String) {
   // Check if activity was already executed in history (deterministic replay)
-  let cached =
-    list.find(wf.history, fn(ev) { ev.activity_id == activity_id })
+  let cached = list.find(wf.history, fn(ev) { ev.activity_id == activity_id })
 
   case cached {
     Ok(ev) -> #(wf, ev.result_payload)
@@ -792,12 +800,14 @@ pub fn verify_actor_ecosystem_completeness() -> Bool {
   let catalog = actor_ecosystem_catalog()
   let single_count = list.length(single_instance_actors())
   let multi_count = list.length(multi_instance_actors())
-  
+
   // Verify counts, non-empty catalog, and all layers represented (0..9)
   list.length(catalog) >= 20
   && single_count >= 12
   && multi_count >= 7
-  && list.all(catalog, fn(a) { a.layer >= 0 && a.layer <= 9 && a.max_concurrency > 0 })
+  && list.all(catalog, fn(a) {
+    a.layer >= 0 && a.layer <= 9 && a.max_concurrency > 0
+  })
 }
 
 pub fn serialize_aspects_json() -> String {
@@ -925,37 +935,49 @@ pub fn poka_yoke_validate_workflow(
 // CLI Execution Adapter for tools/sa-plan (Hermes OCaml Subsystem)
 // =============================================================================
 
-@external(erlang, "cepaf_gleam_ffi", "os_cmd")
-fn erl_os_cmd(cmd: String) -> Result(BitArray, String)
-
-@external(erlang, "cepaf_gleam_ffi", "file_read")
-fn erl_file_read(path: String) -> Result(BitArray, String)
+@external(erlang, "ecology_capability_ffi", "run_bounded")
+fn run_bounded(
+  path: String,
+  args: List(String),
+  timeout_ms: Int,
+) -> Result(#(Int, BitArray), String)
 
 /// Resolves the absolute or relative path to the tools/sa-plan binary.
 pub fn resolve_sa_plan_binary() -> String {
-  case erl_file_read("tools/sa-plan") {
-    Ok(_) -> "tools/sa-plan"
-    Error(_) ->
-      case erl_file_read("../../tools/sa-plan") {
-        Ok(_) -> "../../tools/sa-plan"
-        Error(_) -> "/home/an/NAS-setup/uos/tools/sa-plan"
-      }
-  }
+  "/home/an/NAS-setup/uos/engines/hermes/_build/default/modules/sa_plan/test/sa_plan_main.exe"
 }
 
 /// Executes tools/sa-plan with the specified argument list and returns standard output.
 pub fn run_sa_plan_cli(args: List(String)) -> Result(String, String) {
-  let bin = resolve_sa_plan_binary()
-  let joined_args = string.join(args, " ")
-  let cmd = bin <> " " <> joined_args
-  case erl_os_cmd(cmd) {
-    Ok(output_binary) -> {
-      case bit_array.to_string(output_binary) {
-        Ok(output_str) -> Ok(string.trim(output_str))
-        Error(_) -> Error("Failed to decode sa-plan output as UTF-8")
+  // Literal argv only. Pin the authority store even if the parent environment
+  // supplies another UOS_SA_PLAN_DB. Missing binaries never trigger a build.
+  case
+    list.length(args) <= 16
+    && list.all(args, fn(arg) {
+      string.byte_size(arg) <= 65_536 && !string.contains(arg, "\u{0}")
+    })
+  {
+    False -> Error("sa-plan argument bound")
+    True ->
+      case
+        run_bounded(
+          "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/env",
+          [
+            "UOS_SA_PLAN_DB=/home/an/NAS-setup/uos/var/sa-plan/uos.sqlite3",
+            resolve_sa_plan_binary(),
+            ..args
+          ],
+          10_000,
+        )
+      {
+        Ok(#(0, output)) ->
+          case bit_array.to_string(output) {
+            Ok(text) -> Ok(string.trim(text))
+            Error(_) -> Error("Failed to decode sa-plan output as UTF-8")
+          }
+        Ok(#(code, _)) -> Error("sa-plan exited " <> int.to_string(code))
+        Error(err) -> Error("Failed to execute sa-plan CLI: " <> err)
       }
-    }
-    Error(err) -> Error("Failed to execute sa-plan CLI: " <> err)
   }
 }
 
@@ -983,9 +1005,41 @@ pub fn complete_sa_task(
   plan: String,
   task_id: String,
   worker: String,
+  attempt: Int,
   result: String,
 ) -> Result(String, String) {
-  run_sa_plan_cli(["task", "complete", plan, task_id, worker, result])
+  case completion_arguments(plan, task_id, worker, attempt, result) {
+    Ok(args) -> run_sa_plan_cli(args)
+    Error(reason) -> Error(reason)
+  }
+}
+
+pub fn completion_arguments(
+  plan: String,
+  task_id: String,
+  worker: String,
+  attempt: Int,
+  receipt: String,
+) -> Result(List(String), String) {
+  case
+    attempt > 0
+    && list.all([plan, task_id, worker, receipt], fn(value) {
+      !string.is_empty(string.trim(value)) && !string.contains(value, "\u{0}")
+    })
+  {
+    True ->
+      Ok([
+        "task",
+        "complete",
+        plan,
+        task_id,
+        worker,
+        int.to_string(attempt),
+        receipt,
+      ])
+    False ->
+      Error("Completion requires a positive attempt and non-empty fields")
+  }
 }
 
 /// Enqueues an Oban background job into sa-plan.
@@ -1038,5 +1092,3 @@ pub fn jidoka_andon_topic() -> String {
 pub fn sa_plan_task_topic(task_id: String, operation: String) -> String {
   "indrajaal/planning/task/" <> task_id <> "/" <> operation
 }
-
-

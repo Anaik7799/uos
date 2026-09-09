@@ -6,7 +6,7 @@
 //// route(o) = argmin cost over tiers with P(adequate) >= theta(class), cost <= budget,
 //// authorized. Default remote free-only; no automatic paid fallback: a refused free route
 //// stays `Refuse`, it is never silently retried on a paid tier. Paid dispatch stays disabled
-//// unless a shared atomic aggregate `Budget` (the enforceable upper bound) is supplied and
+//// unless an aggregate `Budget` snapshot is supplied and
 //// `paid_enabled` is set. Unknown prices and unknown quality are never treated as zero cost or
 //// as a pass: a tier with `price_in`/`price_out` of `None` cannot be auto-dispatched, and a
 //// tier with no verified trials is "unproven", not adequate. Posteriors are per (tier, class)
@@ -27,17 +27,17 @@
 ////     doc lists a deterministic/script route for; every other class, including for a
 ////     `Deterministic` tier, needs ordinary verified-outcome proof.
 //// (d) paid tiers are eligible only if `paid_enabled` AND a `Budget` is given AND
-////     `spent + estimate <= cap` (the enforceable upper bound).
+////     `spent + estimate <= cap`. Paid OpenRouter also requires `free_only_remote: False`.
+////     This pure gate does not atomically reserve or charge durable liability; its caller
+////     must perform that operation before dispatch.
 //// (e) remote free tiers are preferred over paid ones: since a free tier costs 0.0 and the
 ////     router always picks the cheapest eligible tier, this holds automatically whenever both
 ////     are eligible.
 ////
-//// Module note: `default_tiers` mirrors `uos_swarm/openrouter_worker.allowlist()`'s paid
-//// model ids as a local constant rather than importing that module, because
-//// `openrouter_worker.run_routed` depends on this module for `Policy`/`Budget`/`route` and
-//// Gleam forbids import cycles. A drift between the two lists only changes which ids
-//// `default_tiers` offers as candidates; it never changes what `openrouter_worker.admit`
-//// actually allows to be dispatched (that check is authoritative and unaffected by this one).
+//// Module note: `default_tiers` retains a historical OpenRouter candidate list for legacy
+//// callers. `openrouter_worker.run_routed` now obtains OpenRouter candidates from its shared
+//// exact allowlist and current prices, preventing that execution path's catalog drift
+//// without an import cycle. The worker's admission check remains authoritative for POSTs.
 
 import gleam/dynamic/decode
 import gleam/float
@@ -94,9 +94,9 @@ pub type Posterior {
   )
 }
 
-/// The shared atomic aggregate budget: `cap_usd` is the enforceable upper bound, `spent_usd`
-/// the running total, `epoch` the ledger version this value was read at, `holder` the last
-/// writer.
+/// An aggregate budget observation: `cap_usd` is the configured upper bound, `spent_usd`
+/// the observed total, `epoch` its ledger version and `holder` its writer. Constructing or
+/// passing this immutable value does not reserve funds or authorize a network effect.
 pub type Budget {
   Budget(cap_usd: Float, spent_usd: Float, epoch: Int, holder: String)
 }
@@ -293,6 +293,9 @@ fn candidate_for(
   t: Tier,
 ) -> Result(Candidate, Nil) {
   use _ <- result.try(require(authorized(class, t)))
+  use _ <- result.try(require(
+    !{ t.provider == OpenRouter && t.paid && policy.free_only_remote },
+  ))
   case t.provider {
     Deterministic ->
       case adequate(policy, class, t, posteriors) {

@@ -1,0 +1,14 @@
+{
+  "schema": "uos.ecology-evaluation-review-task-completion.v1",
+  "plan_id": "uos/ecology-evaluation-review/20260909-0331",
+  "task_id": "EVALREVIEW",
+  "worker": "codex-ecology-evaluation-review",
+  "attempt": 1,
+  "result": {
+    "chunk_id": "b7247f",
+    "wall_time_seconds": 0.000004769,
+    "exit_code": 0,
+    "original_token_count": 197,
+    "output": "completed=true plan_id=uos/ecology-evaluation-review/20260909-0331 task=EVALREVIEW attempt=1\nsa-plan-pipeline {\"request_id\":\"sa-plan-1788926766260612927\",\"command\":\"--complete\",\"authority\":\"report_only\",\"total_ns\":11992521,\"server_timing\":\"decode;dur=0.002, normalize;dur=0.002, validate;dur=0.001, store_open;dur=1.683, dispatch;dur=9.837, store_close;dur=0.453, total;dur=11.993\",\"stages\":[{\"name\":\"decode\",\"duration_ns\":1683,\"duration_ms\":0.001683},{\"name\":\"normalize\",\"duration_ns\":1693,\"duration_ms\":0.001693},{\"name\":\"validate\",\"duration_ns\":1293,\"duration_ms\":0.001293},{\"name\":\"store_open\",\"duration_ns\":1683327,\"duration_ms\":1.683327},{\"name\":\"dispatch\",\"duration_ns\":9836756,\"duration_ms\":9.836755999999999},{\"name\":\"store_close\",\"duration_ns\":453212,\"duration_ms\":0.453212}]}\n"
+  }
+}

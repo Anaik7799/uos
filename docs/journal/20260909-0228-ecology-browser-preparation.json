@@ -1,0 +1,21 @@
+{
+  "schema": "uos.ecology-browser-preparation.v1",
+  "status": "PREPARED",
+  "browser_run": "UNRUN",
+  "application_admitted": false,
+  "reason": "Awaiting parent target-ready signal and expected declared candidate revision.",
+  "task": {"plan": "uos/ecology-browser/20260909-0228", "id": "BROWSER", "worker": "codex-ecology-browser", "attempt": 1},
+  "source": {"path": "tools/validation/ecology_browser_check.ml", "sha256": "c7b545d9e9068595a3c438046eaa6ea7cd0527b53c45b6f50b38fd65ff7a9e32"},
+  "executable": {"path": "/tmp/20260909-0228-ecology-browser-build/ecology-browser-check", "sha256": "6301836ac153e67b4370ff05f3b62ea7358fa96d168f1145864599022e499024"},
+  "unit_laws": {"status": "PASS", "checks": 14, "scope": "finite observation mutants, not browser evidence"},
+  "ontology": {"commands": 304, "events": 62, "missing_bindings": 0, "product_gaps": 14, "scope": "read-only external source oracle with installed API; output is not system admission"},
+  "compile_toolchain": "/nix/store/6qdx3qvjidcdwjdjyanl5fawv48j1nyr-uos-release-checker-dependencies",
+  "runtime_environment": {"HOME": "/home/an", "PATH": "/home/an/NAS-setup/uos/toolchains/nix-profile/bin:/usr/bin:/bin", "LANG": "C.UTF-8", "LD_LIBRARY_PATH": "/nix/store/6qdx3qvjidcdwjdjyanl5fawv48j1nyr-uos-release-checker-dependencies/lib"},
+  "invocation": "ecology-browser-check URL NEW_ABSOLUTE_OUTPUT /opt/google/chrome/chrome EXPECTED_40_HEX_REVISION",
+  "bounds": {"operation_seconds": 55, "browser_launch_ms": 12000, "navigation_ms": 8000, "sample_wait_seconds": 6.2, "screenshot_bytes": 8388608},
+  "preserved_failures": [
+    "Sa-plan rejected a single-segment plan name; corrected to uos/ecology-browser; preflight held until canonical plan/task creation succeeded.",
+    "Initial executable launch failed loading transitive host libnghttp2; explicit already-realized Nix library directory resolves the dependency. No package installed."
+  ],
+  "effects": "Only new verifier, private compilation/ontology artifacts and task evidence. No service, VCS, existing source or dependency installation mutation."
+}

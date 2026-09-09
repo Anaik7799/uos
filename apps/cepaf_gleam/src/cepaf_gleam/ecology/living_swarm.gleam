@@ -31,6 +31,7 @@
 ////
 //// STAMP: SC-HOLON-001, SC-BIO-EVO-001, SC-BIO-HARMONY-001, SC-ZERO-MUDA-001.
 
+import cepaf_gleam/ecology/andon
 import cepaf_gleam/ecology/capability_port.{
   type Outcome, Engaged, Masked, Unavailable,
 }
@@ -65,6 +66,7 @@ pub type SwarmEcology {
     is_harmonic: Bool,
     invocation_sequence: Int,
     receipts: List(CapabilityReceipt),
+    service_andon: List(andon.Service),
   )
 }
 
@@ -336,6 +338,7 @@ pub fn init_living_swarm() -> SwarmEcology {
     is_harmonic: False,
     invocation_sequence: 0,
     receipts: [],
+    service_andon: andon.initial(),
   )
 }
 
@@ -427,6 +430,7 @@ pub fn step_swarm_cycle_observed(
     is_harmonic: is_harmonic,
     invocation_sequence: ecology.invocation_sequence,
     receipts: ecology.receipts,
+    service_andon: ecology.service_andon,
   )
 }
 
@@ -455,12 +459,16 @@ pub fn invoke_capability(
   holon: SuperAgentHolon,
   capability_name: String,
 ) -> Result(SuperAgentHolon, String) {
-  let outcome =
-    capability_port.invoke(
-      holon.mask,
-      capability_name,
-      capability_port.default_input(capability_name),
-    )
+  let outcome = case andon.shared(capability_name) {
+    True ->
+      Unavailable(capability_name, "shared_service_requires_actor_dispatch")
+    False ->
+      capability_port.invoke(
+        holon.mask,
+        capability_name,
+        capability_port.default_input(capability_name),
+      )
+  }
   case outcome {
     Engaged(..) -> Ok(apply_outcome(holon, outcome))
     Unavailable(_, why) -> Error(why)
@@ -607,6 +615,7 @@ pub fn swarm_to_json(ecology: SwarmEcology) -> Json {
     ),
     #("invocation_sequence", json.int(ecology.invocation_sequence)),
     #("receipt_limit", json.int(receipt_limit)),
+    #("service_andon", json.array(ecology.service_andon, andon.to_json)),
     #(
       "receipts",
       json.array(ecology.receipts, fn(r) {

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# [C3I-SIL6-MSTS] Unified Telegram High-Performance Client Runner (SC-ZENOH-005, SC-ZMOF-001)
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+UOS_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+if [[ "${1:-}" == "--simd"* ]] || [[ "${1:-}" == "--mojo"* ]]; then
+  exec /home/an/.local/bin/pixi run --manifest-path "$UOS_ROOT/services/inference/max/pixi.toml" mojo run "$UOS_ROOT/services/inference/max/telegram_kernel.mojo" "$@"
+fi
+
+if [[ -x "$UOS_ROOT/tools/telegram_client.exe" ]]; then
+  exec "$UOS_ROOT/tools/telegram_client.exe" "$@"
+else
+  exec "$UOS_ROOT/toolchains/opam-ocaml/bin/ocamlfind" ocaml -package unix,sqlite3,yojson,bos,cryptokit "$UOS_ROOT/tools/telegram_client.ml" "$@"
+fi

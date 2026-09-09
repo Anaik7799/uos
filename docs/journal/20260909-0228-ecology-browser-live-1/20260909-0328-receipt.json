@@ -1,0 +1,112 @@
+{
+  "receipt_path": "/home/an/NAS-setup/uos/docs/journal/20260909-0228-ecology-browser-live-1/20260909-0328-receipt.json",
+  "observed_utc_seconds": 1788923136.285843,
+  "schema": "uos.ecology-browser-evidence.v1",
+  "status": "PASS",
+  "authority": "NONE",
+  "application_admitted": false,
+  "url": "http://nas-1.tail55d152.ts.net:4110/ecology",
+  "declared_candidate": "502a8cdd0d49fab09f411a04ac1ab7e7d3fb1910",
+  "source_sha256": "a726a1077af4b86b2e33e2d8c6936d64df60e2984786be5505f19c304b4be1d9",
+  "browser_executable": "/opt/google/chrome/chrome",
+  "driver_version": "1.59.0",
+  "resolver": "explicit canonical FQDN mapping to 100.87.7.78",
+  "samples": [
+    {
+      "elapsed_seconds": 0.808741603,
+      "cycle": 137,
+      "invocations": 139,
+      "participants": 26,
+      "row_ids": [
+        "ucon", "indrajaal", "hive-mind-decider", "hermes-rete-ul",
+        "lean4-oracle", "openrouter-advisory", "max-simd-tensor",
+        "prajna-homeostasis", "lyapunov-monitor", "freshness-bayan",
+        "circuit-breaker", "zenoh-mesh", "coordination-board",
+        "agui-event-stream", "constitution", "km-gate", "coord", "km-corpus",
+        "sa-plan-db", "events-store", "max-inference-daemon",
+        "solo5-sandbox", "work-stealing-pool", "agy-agent", "claude-agent",
+        "codex-agent"
+      ],
+      "andon": "modular_max: ready\nopenrouter_free: ready",
+      "refresh_state": "live",
+      "refresh_text": "Live snapshot. Last read 5:05:29 AM."
+    },
+    {
+      "elapsed_seconds": 7.159144952,
+      "cycle": 143,
+      "invocations": 145,
+      "participants": 26,
+      "row_ids": [
+        "ucon", "indrajaal", "hive-mind-decider", "hermes-rete-ul",
+        "lean4-oracle", "openrouter-advisory", "max-simd-tensor",
+        "prajna-homeostasis", "lyapunov-monitor", "freshness-bayan",
+        "circuit-breaker", "zenoh-mesh", "coordination-board",
+        "agui-event-stream", "constitution", "km-gate", "coord", "km-corpus",
+        "sa-plan-db", "events-store", "max-inference-daemon",
+        "solo5-sandbox", "work-stealing-pool", "agy-agent", "claude-agent",
+        "codex-agent"
+      ],
+      "andon": "modular_max: ready\nopenrouter_free: ready",
+      "refresh_state": "live",
+      "refresh_text": "Live snapshot. Last read 5:05:35 AM."
+    }
+  ],
+  "screenshots": [
+    {
+      "path": "/home/an/NAS-setup/uos/docs/journal/20260909-0228-ecology-browser-live-1/20260909-0328-initial.png",
+      "sha256": "cd3aab59af4e8d7da8ce0cfd679b33014dbc0744d10669472a3d952b94d1400f",
+      "bytes": 326721
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/docs/journal/20260909-0228-ecology-browser-live-1/20260909-0328-after-live-refresh.png",
+      "sha256": "cf28fa4a49cafc14c97ba5a9ef713c61657b47941a0a0f6aaf36fef5d5f8126d",
+      "bytes": 326687
+    }
+  ],
+  "identity_before": {
+    "schema": "uos.web-runtime-identity.v1",
+    "runtime_ready": true,
+    "identity_consistent": true,
+    "application_admitted": false,
+    "authority": "running VM observation; release metadata is declared, not attested",
+    "otp_release": "29",
+    "erts_version": "17.0.5",
+    "os_pid": "204594",
+    "run_id": "204594-1788922992203090",
+    "started_utc_us": 1788922992203090,
+    "observed_utc_us": 1788923129574755,
+    "vm_monotonic_elapsed_ms": 137372,
+    "declared_candidate_revision": "502a8cdd0d49fab09f411a04ac1ab7e7d3fb1910",
+    "declared_instance_id": "ecology-primary",
+    "declared_role": "primary",
+    "managed": true,
+    "scope": "VM identity only; application readiness, artifact binding and writer fencing require independent checks"
+  },
+  "identity_after": {
+    "schema": "uos.web-runtime-identity.v1",
+    "runtime_ready": true,
+    "identity_consistent": true,
+    "application_admitted": false,
+    "authority": "running VM observation; release metadata is declared, not attested",
+    "otp_release": "29",
+    "erts_version": "17.0.5",
+    "os_pid": "204594",
+    "run_id": "204594-1788922992203090",
+    "started_utc_us": 1788922992203090,
+    "observed_utc_us": 1788923136205980,
+    "vm_monotonic_elapsed_ms": 144003,
+    "declared_candidate_revision": "502a8cdd0d49fab09f411a04ac1ab7e7d3fb1910",
+    "declared_instance_id": "ecology-primary",
+    "declared_role": "primary",
+    "managed": true,
+    "scope": "VM identity only; application readiness, artifact binding and writer fencing require independent checks"
+  },
+  "browser_errors": [],
+  "violations": [],
+  "elapsed_seconds": 7.3130759460000005,
+  "limits": [
+    "One 1280x900 Chromium page; no whole-product or accessibility claim.",
+    "Read-only DOM and identity requests; no backend activation or service effects.",
+    "Runtime candidate is declared metadata; package attestation is a separate gate."
+  ]
+}

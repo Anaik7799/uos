@@ -1,0 +1,20 @@
+G = Gleam kernel source
+I = Validated typed IR
+R = Gleam reference evaluator
+C = OCaml generator and compiler
+M = Mojo generator and compiler
+B = Generated ABI bindings
+V = Gleam equivalence and resource checks
+A = Admitted native capability
+
+G --[bounded elaboration]--> I
+I --[reference semantics]--> R
+I --[OCaml lowering]--> C
+I --[Mojo lowering]--> M
+I --[ABI schema]--> B
+R --[oracle results]--> V
+C --[native results]--> V
+M --[native results]--> V
+B --[boundary evidence]--> V
+V --[verified artifact]--> A
+

@@ -24,12 +24,52 @@
       "kind": "journal",
       "path": "docs/journal/20260909-0231-ecology-capabilities-codex-journal.md",
       "agent": "codex-capabilities"
+    },
+    {
+      "kind": "journal",
+      "path": "docs/journal/20260909-0237-ecology-supervision-completion.md",
+      "agent": "codex-supervision"
+    },
+    {
+      "kind": "journal",
+      "path": "docs/journal/20260909-0257-ecology-jidoka-completion.md",
+      "agent": "codex-supervision"
+    },
+    {
+      "kind": "journal",
+      "path": "docs/journal/20260909-0214-ecology-openrouter-transport-codex-journal.md",
+      "agent": "codex-capabilities"
+    },
+    {
+      "kind": "journal",
+      "path": "docs/journal/20260909-0209-ecology-openrouter-diagnostic-codex-journal.md",
+      "agent": "codex-capabilities"
+    },
+    {
+      "kind": "journal",
+      "path": "docs/journal/20260909-0241-ecology-vm1-comparison-codex-journal.md",
+      "agent": "codex-capabilities"
+    },
+    {
+      "kind": "journal",
+      "path": "docs/journal/20260909-0254-ecology-release-journal.md",
+      "agent": "codex-hooks"
+    },
+    {
+      "kind": "journal",
+      "path": "docs/journal/20260909-0328-ecology-browser-journal.md",
+      "agent": "codex-hooks"
+    },
+    {
+      "kind": "design_review",
+      "path": "docs/design/20260909-0314-openrouter-engine-review-and-recommendation.md",
+      "agent": "codex-root"
     }
   ],
   "pending_groups": [
-    "supervision",
-    "transport",
-    "package",
+    "paid-profiles",
+    "daily-budget",
+    "independent-review",
     "root-runtime"
   ],
   "edges": [
@@ -47,7 +87,51 @@
       "from": "docs/design/20260909-0249-agentic-ecology-spec.json",
       "to": "docs/wiki/20260909-0249-agentic-ecology.md",
       "relation": "documented_by"
+    },
+    {
+      "from": "docs/journal/20260909-0237-ecology-supervision-completion.md",
+      "to": "docs/design/20260909-0314-openrouter-engine-review-and-recommendation.md",
+      "relation": "informs_review"
+    },
+    {
+      "from": "docs/journal/20260909-0257-ecology-jidoka-completion.md",
+      "to": "docs/design/20260909-0314-openrouter-engine-review-and-recommendation.md",
+      "relation": "informs_review"
+    },
+    {
+      "from": "docs/journal/20260909-0214-ecology-openrouter-transport-codex-journal.md",
+      "to": "docs/design/20260909-0314-openrouter-engine-review-and-recommendation.md",
+      "relation": "informs_review"
+    },
+    {
+      "from": "docs/journal/20260909-0209-ecology-openrouter-diagnostic-codex-journal.md",
+      "to": "docs/design/20260909-0314-openrouter-engine-review-and-recommendation.md",
+      "relation": "informs_review"
+    },
+    {
+      "from": "docs/journal/20260909-0241-ecology-vm1-comparison-codex-journal.md",
+      "to": "docs/design/20260909-0314-openrouter-engine-review-and-recommendation.md",
+      "relation": "informs_review"
+    },
+    {
+      "from": "docs/journal/20260909-0254-ecology-release-journal.md",
+      "to": "docs/design/20260909-0314-openrouter-engine-review-and-recommendation.md",
+      "relation": "informs_review"
+    },
+    {
+      "from": "docs/journal/20260909-0328-ecology-browser-journal.md",
+      "to": "docs/design/20260909-0314-openrouter-engine-review-and-recommendation.md",
+      "relation": "informs_review"
+    },
+    {
+      "from": "docs/design/20260909-0314-openrouter-engine-review-and-recommendation.md",
+      "to": "docs/design/20260909-0314-openrouter-engine-review-and-recommendation.md",
+      "relation": "informs_review"
     }
-  ]
+  ],
+  "paid_authorization": {
+    "usd_per_utc_day": 10,
+    "source": "explicit operator reply in this session",
+    "active_adaptive_dispatch": false
+  }
 }
-

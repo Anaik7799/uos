@@ -1,0 +1,55 @@
+{
+  "observed_at": "2026-09-09T02:29:14Z",
+  "plan_id": "uos/ecology-transport/20260909-0211",
+  "task_id": "TRANSPORT",
+  "worker": "codex-ecology-capabilities",
+  "attempt": 1,
+  "state": "SCOPED_IMPLEMENTATION_VERIFIED",
+  "runtime_admission": "NOT_GRANTED",
+  "snapshot": [
+    {
+      "path": "apps/uos_swarm/src/uos_openrouter_ffi.erl",
+      "sha256": "0fac69889267296abfb35a975a7d90081ee58c833c52634c36a1d8571e7cb552"
+    },
+    {
+      "path": "tools/validation/ecology_openrouter_transport_test.erl",
+      "sha256": "790b6e3011d2013c02a0e3854bab7a95af2a58db01f6c6d1ab75c8f1e140b312"
+    }
+  ],
+  "compile": "OTP29 production erlc +warnings_as_errors PASS",
+  "tests": {
+    "passed": 16,
+    "failed": 0,
+    "fixed_status_fragment_combinations": 85,
+    "chunk_fragment_combinations": 31,
+    "coverage": [
+      "HTTP200/206/401/429/500 all pass through wire counter",
+      "Length/chunked/close framing, truncation and ambiguity rejection",
+      "Endpoint allowlist and credential header injection rejection",
+      "Headers16384 / HTTP plaintext4194304 / body4194304 byte ceilings",
+      "Absolute timeout under continuous output and uncooperative recv",
+      "Caller-death cancellation kills socket owner",
+      "Errors contain no request or credentials"
+    ]
+  },
+  "live_observation": {
+    "endpoint": "https://openrouter.ai/api/v1/models",
+    "method": "GET",
+    "credential_used": false,
+    "tls_verify_peer": true,
+    "hostname_check": "https match for openrouter.ai",
+    "status": 200,
+    "body_bytes": 709193,
+    "elapsed_tool_seconds": 0.227085362,
+    "final_source_observed_at": "2026-09-09T02:27:00Z",
+    "sandbox_attempt": "tls_connect_failed; rerun through approved network access succeeded"
+  },
+  "active_check": "PASS at2026-09-09T02:27:35Z, exact worker/attempt and two current source hashes; no admission granted",
+  "limitations": [
+    "HTTP byte bound counts received plaintext, not encrypted TLS overhead or all internal OTP heap memory.",
+    "Compression, interim responses, chunk extensions and trailers fail closed; no redirects followed.",
+    "Completion semantics/free prices and actual credential-bearing request remain root-owned.",
+    "No universal resource-containment proof or complete UOS refinement is claimed."
+  ],
+  "journal": "docs/journal/20260909-0214-ecology-openrouter-transport-codex-journal.md"
+}

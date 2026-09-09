@@ -1,0 +1,144 @@
+{
+  "schema": "uos.harness-successor-grant-review.v1",
+  "review_id": "20260909-1751-agy-successor-grant-review",
+  "verdict": "REVISE",
+  "status": "PROPOSAL_V7_NOT_ACTIVATED_REVISE",
+  "observed_host_utc": "2026-09-09T18:27:30Z",
+  "reviewer": {
+    "session_id": "abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82",
+    "role": "independent_sovereign_peer_reviewer",
+    "worker": "worker-agy-abe9bd8d",
+    "plan_id": "uos/harness-admission-repair/20260909-1751",
+    "task_id": "ADMISSION-REVIEW",
+    "attempt": 1
+  },
+  "grant_proposal": {
+    "path": "var/harness/20260909-1751-admission-grant-proposal.json",
+    "sha256": "87857d5541863bc82f3418549d43a6b038587f9490cc85cca8260c08fb3975e4",
+    "grant_id": "20260909-1751-successor-root",
+    "target_session": "01a083d2-baa3-7783-8e45-5357cc9e96d8",
+    "target_worker": "codex-01a083d2-admission",
+    "host_id": "cd94f98268381d66d53599f7a786afebc88f0049dac3cab64cec563f77613cb7",
+    "boot_id": "1cb3ba2d-5600-44d5-b2d4-a88abea6b365",
+    "expires_utc_us": "1788981679339476",
+    "task_scope": {
+      "plan": "uos/harness-admission-repair/20260909-1751",
+      "task": "ADMISSION",
+      "read_paths_count": 20,
+      "write_paths_count": 14,
+      "source_paths_count": 14,
+      "test_modules_count": 6,
+      "risk_portfolio": "var/harness/20260909-1751-admission-current-risk.json"
+    },
+    "runtime_grant_status": "NOT_ACTIVATED_PENDING_V8_REPAIR"
+  },
+  "counterexample": {
+    "id": "CE-RESOURCE-SLASH-01",
+    "discovery": "Discovered before activation; no MCP mutation dispatched.",
+    "defect_mechanism": "admission.gleam:243 and 266 construct raw coordinator resource keys as 'task:' <> scope.plan <> '/' <> scope.task (e.g. 'task:uos/harness-admission-repair/20260909-1751/ADMISSION'). However, uos_swarm/session_sync.gleam:valid_resource passes the task suffix to identifier(), which explicitly restricts characters to [a-zA-Z0-9-_.:] and excludes forward slash (/). Consequently, valid_resource returns false on this key expression, and coordinator lease claims/releases fail-closed with invalid_resource.",
+    "remediation": "Unify coordinator resource generation via shared dev.task_resource, hashing the canonical JSON {'plan': plan, 'task': task} into 'task:' <> digest (where hex digits are strictly within [a-f0-9]), while retaining human-readable execution labels in receipts. Add a regression test calling the real coordinator validator and confirming separation of identical task names across different plans.",
+    "impact_on_grant": "v7 grant proposal cannot be activated. The impending fix modifies admission.gleam, development.gleam, and operations.gleam, invalidating the v7 loaded_control_ids and source digests."
+  },
+  "source_manifest": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "a0f0b017b28b6b13e8dff4a670e5f1a22a88ffd6a341c285333eb5ae02ef0009"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+      "sha256": "e3aa8a483218577391d566a56a24458fd740f68914ed63622011fd2b8c8971d3"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+      "sha256": "9a1c9a7569403409cf8d8c030fb51c9d039d848c47690a96340bdbf6882e9246"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/files.gleam",
+      "sha256": "e478adc77086491ffbdf3a9276c77a6a3d4366c5e6bf6d8af5a5bf0157f8900e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+      "sha256": "3fc0468cc51d2692dc9de73a22fc061f19e6f1e68ec234584aaf23ec913a91f7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam",
+      "sha256": "7d9d3e31c2ef06ceed016b7077cb5d466b6524bcc6cea35cdd8200a4439b70ae"
+    },
+    {
+      "path": "tools/preflight",
+      "sha256": "abf3ca8d82639908347a65dc31123dd1f6eb3c8de3c72483051c66b690fc543d"
+    },
+    {
+      "path": "tools/lib/uos-toolchain.sh",
+      "sha256": "6edb015a4beed7052dd560fbec0bce8a7dc2606addd360b66187c48844bb5d95"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+      "sha256": "2329439f9a3d205cd552ec4d1e4c6ba1bfe064c13e628c082e55a33caf0c0bd2"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam",
+      "sha256": "4585fea631be8a78c79dc57ac8069518c4a1f8299f0c385919f7e118a375f46c"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/successor_mcp.gleam",
+      "sha256": "eec42449cc0cc8a0bb6885738fcd160f77887f070d9a044730c1ac56a6435db0"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/harness_task_verification.gleam",
+      "sha256": "582398732c595e7d24383446cef45ceaa903fb8aa1ed8e6556c0879e5030c4c1"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/harness_successor_test.gleam",
+      "sha256": "70c1493d3bf7d3db456270171a684d8f678df7a5cad27ab7d8c13ef1a06f39db"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/harness_verification.gleam",
+      "sha256": "48e7110f5ac08c52800e643e485984e5fe6fefc45c3ccad44ee7b5f73b0be265"
+    }
+  ],
+  "build_evidence_v7": {
+    "receipt_path": "var/harness/20260909-1751-build-v7.json",
+    "tool_exit_code": 0,
+    "status": "HISTORICAL_V7_PASS_SUPERSEDED",
+    "source_snapshot_matches_disk": true
+  },
+  "test_evidence_v7": {
+    "receipt_path": "var/harness/20260909-1751-test-v7.json",
+    "tool_exit_code": 0,
+    "status": "HISTORICAL_V7_PASS_SUPERSEDED",
+    "total_passed": 80,
+    "total_failed": 0
+  },
+  "risk_assessment_v7": {
+    "portfolio_path": "var/harness/20260909-1751-admission-risk-v7.json",
+    "assessment_sha256": "10d9e68b6d679242ea0b5889dff076e71d20eb0c85d4343b790862a024fa20fe",
+    "active_check_status": "ACTIVE_OBSERVATION_PASS"
+  },
+  "loaded_control_status": {
+    "v7_loaded_control_ids": {
+      "cepaf_gleam@harness@admission": "041133e75b3d6063dca218f5b6f00ee2",
+      "cepaf_gleam@harness@operations": "f53aa644c11a1cdbfe4332fe434eb4cd",
+      "cepaf_gleam@harness@successor_mcp": "e5356fdb8801965bf875deecc7dd52af",
+      "cepaf_gleam@harness@mcp": "3e42d6fc287fa374b4d0bab4909b1268",
+      "cepaf_gleam@harness@development": "eae13730474e2e662ee4a1e0bd8c5814",
+      "cepaf_gleam@harness@clock": "d6c57d3d3824df1240d3545750e93781",
+      "cepaf_gleam@harness@files": "69192a6867b8cf847ef0ed67546c9d6d",
+      "cepaf_gleam@harness@value": "a0b2c57ba385f4d02a7ff07f11b959a6",
+      "cepaf_gleam@planning@sa_plan_bridge": "f4c306998a63943fab40ad3a4dd0073b"
+    },
+    "verdict_on_v7_controls": "FINAL_APPROVAL_WITHHELD_PENDING_V8_RECOMPILE"
+  },
+  "findings": [
+    "COUNTEREXAMPLE CONFIRMED: uos_swarm/session_sync.gleam:identifier restricts character sets to [a-zA-Z0-9-_.:], rejecting slashes. The direct construction 'task:' <> plan <> '/' <> task in admission.gleam:243 and 266 produces invalid coordinator resource identifiers that would be refused upon live claim.",
+    "Remediation through shared dev.task_resource hashing canonical JSON {'plan': plan, 'task': task} is sound and prevents both slash rejection and cross-plan task name aliasing.",
+    "The v7 grant proposal var/harness/20260909-1751-admission-grant-proposal.json is preserved as NOT_ACTIVATED / REVISE.",
+    "Final approval of loaded_control_ids is withheld pending Root's compilation of the resource key fix, generation of new build/test receipts (v8), and authoring of grant proposal v8."
+  ],
+  "limits_and_boundaries": [
+    "Proposal v7 is rejected for runtime activation; must be superseded by v8.",
+    "Cooperative development trust only; no cryptographic IAM or production admission.",
+    "Admitted EV ceiling remains strictly EV-93 (SC-PROVENANCE-001); EV-94..EV-109 remain NOT_ADMITTED; zero EV number changes authorized.",
+    "Zero paid external model calls; standalone Jujutsu (.jj/) VCS discipline strictly preserved."
+  ]
+}

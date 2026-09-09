@@ -1,0 +1,30 @@
+flowchart TD
+  A["Agents"]
+  I["MCP or Zenoh ingress"]
+  G["Gleam authority and intent core"]
+  P["Sa-plan"]
+  C["Algebraic capability atlas"]
+  D["Gleam dispatcher"]
+  O["OTP services"]
+  H["Hermes service"]
+  M["Modular service"]
+  N["Bounded native kernel"]
+  V["Gleam checks"]
+  K["Journal Wiki ZK KM"]
+  A -->|"intent"| I
+  I -->|"typed authenticated request"| G
+  G -->|"task and lease query"| P
+  P -->|"authority receipt"| G
+  G -->|"admitted effect plan"| D
+  C -->|"capability contracts"| D
+  D -->|"OTP execution"| O
+  D -->|"OCaml execution"| H
+  D -->|"Mojo MAX execution"| M
+  D -->|"admitted NIF execution"| N
+  O -->|"receipt"| V
+  H -->|"receipt"| V
+  M -->|"receipt"| V
+  N -->|"receipt"| V
+  V -->|"outcome"| A
+  V -->|"evidence"| K
+

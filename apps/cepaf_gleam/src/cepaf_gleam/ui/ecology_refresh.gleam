@@ -45,6 +45,8 @@ pub fn script() -> String {
       text('ecology-participants', state.total_holons);
       text('ecology-invocations', state.invocation_sequence);
       text('ecology-receipts-json', JSON.stringify(state, null, 2));
+      if (Array.isArray(state.service_andon)) text('ecology-service-andon', state.service_andon.map(service =>
+        service.capability + ': ' + service.phase + (service.reason ? ' — ' + service.reason : '')).join(String.fromCharCode(10)));
       if (state.song && Number.isFinite(state.song.harmonic_consonance))
         text('ecology-consonance', (state.song.harmonic_consonance * 100).toFixed(1));
       const table = byId('ecology-participant-rows');

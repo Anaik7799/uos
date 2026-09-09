@@ -2,6 +2,7 @@
 %% including headers and framing, not TLS overhead or a proof of OTP heap size.
 %% A monitored socket owner enforces one deadline across DNS/TLS/send/receive.
 -module(uos_openrouter_ffi).
+-include_lib("kernel/include/file.hrl").
 -export([has_api_key/0,api_key/0,https_get/2,https_post_json/4]).
 -export([read_response/2,bounded_call/2,validate_request/5]).
 -define(HEADER_LIMIT,16384).
@@ -11,9 +12,29 @@
 
 has_api_key()->case api_key() of {ok,_}->true;_->false end.
 api_key()->case os:getenv("OPENROUTER_API_KEY") of
-    false->{error,nil};
+    false->credential_file();
     V->K=unicode:characters_to_binary(string:trim(V)),
        case valid_key(K) of true->{ok,K};false->{error,nil} end
+end.
+%% systemd decrypts its encrypted credential outside the repository and exposes
+%% a service-private read-only mount. Never copy/hash/log credential contents.
+credential_file()->case os:getenv("CREDENTIALS_DIRECTORY") of
+    false->{error,nil};
+    Dir->case filename:pathtype(Dir) of
+        absolute->Path=filename:join(Dir,"openrouter_api_key"),
+            case file:read_file_info(Path) of
+                {ok,#file_info{type=regular,size=N}} when N>0,N=<8192->
+                    case file:open(Path,[read,raw,binary]) of
+                        {ok,F}->try case file:read(F,8193) of
+                            {ok,K}->case valid_key(K) of true->{ok,K};false->{error,nil} end;
+                            _->{error,nil}
+                        end after file:close(F) end;
+                        _->{error,nil}
+                    end;
+                _->{error,nil}
+            end;
+        _->{error,nil}
+    end
 end.
 https_get(U,T)->request(get,U,<<>>,<<>>,T).
 https_post_json(U,K,B,T)->request(post,U,K,B,T).

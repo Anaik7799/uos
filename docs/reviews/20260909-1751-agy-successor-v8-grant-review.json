@@ -1,0 +1,152 @@
+{
+  "schema": "uos.harness-successor-grant-review.v1",
+  "review_id": "20260909-1751-agy-successor-v8-grant-review",
+  "verdict": "APPROVE_DEV_TEST_SCOPE",
+  "status": "PROPOSAL_V8_APPROVED_FOR_DEV_TEST_SCOPE",
+  "observed_host_utc": "2026-09-09T18:40:00Z",
+  "reviewer": {
+    "session_id": "abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82",
+    "role": "independent_sovereign_peer_reviewer",
+    "worker": "worker-agy-abe9bd8d",
+    "plan_id": "uos/harness-admission-repair/20260909-1751",
+    "task_id": "ADMISSION-REVIEW",
+    "attempt": 1
+  },
+  "grant_proposal": {
+    "path": "var/harness/20260909-1751-admission-grant-proposal-v8.json",
+    "sha256": "fa2d046c7bd51defcfb09c8616de52c32de600d002ce431048a640abc482e296",
+    "grant_id": "20260909-1751-successor-root",
+    "target_session": "01a083d2-baa3-7783-8e45-5357cc9e96d8",
+    "target_worker": "codex-01a083d2-admission",
+    "host_id": "cd94f98268381d66d53599f7a786afebc88f0049dac3cab64cec563f77613cb7",
+    "boot_id": "1cb3ba2d-5600-44d5-b2d4-a88abea6b365",
+    "expires_utc_us": "1788982529893699",
+    "task_scope": {
+      "plan": "uos/harness-admission-repair/20260909-1751",
+      "task": "ADMISSION",
+      "read_paths_count": 20,
+      "write_paths_count": 14,
+      "source_paths_count": 14,
+      "test_modules_count": 6,
+      "risk_portfolio": "var/harness/20260909-1751-admission-current-risk.json"
+    },
+    "runtime_grant_status": "APPROVED_FOR_STARTING_LOCAL_DEV_MCP_INTEGRATION_TEST",
+    "supersedes_proposal": "var/harness/20260909-1751-admission-grant-proposal.json"
+  },
+  "counterexample_resolution": {
+    "id": "CE-RESOURCE-SLASH-01",
+    "status": "REVISED_AND_VERIFIED_IN_V8",
+    "remediation_verification": "Verified via var/harness/20260909-1751-resource-counterexample-v7.json and harness_successor_test: task_namespace_conforms_to_the_real_coordinator_and_separates_plans_test. Canonical JSON plan/task pair is hashed via shared dev.task_resource into task:<sha256>, producing coordinator-admissible resource identifiers strictly conforming to [a-zA-Z0-9-_.:] grammar without slashes, separating distinct plans."
+  },
+  "source_manifest": [
+    {
+      "path": "AGENTS.md",
+      "sha256": "a0f0b017b28b6b13e8dff4a670e5f1a22a88ffd6a341c285333eb5ae02ef0009"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+      "sha256": "eeecf5597182f8c4b5d46896e185cb2ce4df5837656cbea36a7313d0d8daff97"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+      "sha256": "9a1c9a7569403409cf8d8c030fb51c9d039d848c47690a96340bdbf6882e9246"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/files.gleam",
+      "sha256": "e478adc77086491ffbdf3a9276c77a6a3d4366c5e6bf6d8af5a5bf0157f8900e"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+      "sha256": "3fc0468cc51d2692dc9de73a22fc061f19e6f1e68ec234584aaf23ec913a91f7"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam",
+      "sha256": "7d9d3e31c2ef06ceed016b7077cb5d466b6524bcc6cea35cdd8200a4439b70ae"
+    },
+    {
+      "path": "tools/preflight",
+      "sha256": "abf3ca8d82639908347a65dc31123dd1f6eb3c8de3c72483051c66b690fc543d"
+    },
+    {
+      "path": "tools/lib/uos-toolchain.sh",
+      "sha256": "6edb015a4beed7052dd560fbec0bce8a7dc2606addd360b66187c48844bb5d95"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/admission.gleam",
+      "sha256": "ce04d239bdbbd5b39583a4c9c5f6d1ca0a1125fad8e2858476782a82895f7f72"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/operations.gleam",
+      "sha256": "64a70dd18a10476f386e2efad023e1190540506ad46c9fb3addc7470e8051372"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/successor_mcp.gleam",
+      "sha256": "eec42449cc0cc8a0bb6885738fcd160f77887f070d9a044730c1ac56a6435db0"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/harness_task_verification.gleam",
+      "sha256": "f9c7f32a8fd9c724286c768124d44c01e045af44d971d13dcb3c23fb96008d05"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/harness_successor_test.gleam",
+      "sha256": "f77c1c62501b760d36b5fd3be6a1dd5d660189f5ad8dc5158c64436c216e6f52"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/harness_verification.gleam",
+      "sha256": "48e7110f5ac08c52800e643e485984e5fe6fefc45c3ccad44ee7b5f73b0be265"
+    }
+  ],
+  "build_evidence_v8": {
+    "receipt_path": "var/harness/20260909-1751-build-v8.json",
+    "tool_exit_code": 0,
+    "status": "BUILD_OBSERVATION_PASS",
+    "source_snapshot_matches_disk": true,
+    "shared_build_interference_observed": true,
+    "note": "Shared build interference observed after initial compile; loaded IDs were observed after the successful v8 test and are recorded transparently."
+  },
+  "test_evidence_v8": {
+    "receipt_path": "var/harness/20260909-1751-test-v8.json",
+    "tool_exit_code": 0,
+    "status": "TEST_OBSERVATION_PASS",
+    "total_passed": 82,
+    "total_failed": 0
+  },
+  "risk_assessment_v8": {
+    "portfolio_path": "var/harness/20260909-1751-admission-risk-v8.json",
+    "assessment_sha256": "4439065e4ad2f96e9a5e7a73ce2a6f5a0b17ff46de6e43d0177b852332cc709b",
+    "active_check_status": "ACTIVE_OBSERVATION_PASS"
+  },
+  "loaded_control_status": {
+    "loaded_control_ids": {
+      "cepaf_gleam@harness@admission": "e3101dddde17c06604f921b85bcd7ce8",
+      "cepaf_gleam@harness@operations": "871eef35e2780916544c326e76478100",
+      "cepaf_gleam@harness@successor_mcp": "de6d6c5550d846a62f3b82dbf5fda721",
+      "cepaf_gleam@harness@mcp": "0efdd6d10b51cd3d7a4744e9767a32f8",
+      "cepaf_gleam@harness@development": "8dcc9e306e0af930319003dfe642c3ad",
+      "cepaf_gleam@harness@clock": "ad3366c8219bb360a9f447d840c839d2",
+      "cepaf_gleam@harness@files": "69192a6867b8cf847ef0ed67546c9d6d",
+      "cepaf_gleam@harness@value": "a0b2c57ba385f4d02a7ff07f11b959a6",
+      "cepaf_gleam@planning@sa_plan_bridge": "535320e7753e4bafa924bbee85a40843"
+    },
+    "verdict_on_v8_controls": "OBSERVED_MATCH_ACROSS_BUILD_TEST_AND_PROPOSAL"
+  },
+  "findings": [
+    "COUNTEREXAMPLE RESOLVED: CE-RESOURCE-SLASH-01 is verified fixed. apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam now hashes the canonical JSON {plan, task} structure into task:<sha256>, eliminating slashes from coordinator resource keys and successfully passing uos_swarm/session_sync.valid_resource validation.",
+    "PROPOSAL DIGEST VERIFIED: var/harness/20260909-1751-admission-grant-proposal-v8.json digest fa2d046c7bd51defcfb09c8616de52c32de600d002ce431048a640abc482e296 matches on-disk contents.",
+    "SOURCE MANIFEST VERIFIED: All 14 files in the source snapshot match current disk hashes byte-for-byte.",
+    "TEST RESULTS VERIFIED: All 82 targeted tests pass (0 failed) in var/harness/20260909-1751-test-v8.json, including regression test task_namespace_conforms_to_the_real_coordinator_and_separates_plans_test.",
+    "LOADED CONTROL IDS ALIGNED: The 9 loaded_control_ids in proposal v8 exactly match those recorded in build-v8.json (post-test observation) and test-v8.json.",
+    "SHARED BUILD INTERFERENCE DISCLOSED: Build interference observed after initial compile is documented transparently in build-v8 and does not affect the successful test observation or loaded IDs.",
+    "RISK ASSESSMENT ACTIVE PASS: var/harness/20260909-1751-admission-risk-v8.json verified via tools/risk-priority-check --active-check, confirming ACTIVE_OBSERVATION_PASS for both ADMISSION and ADMISSION-REVIEW tasks."
+  ],
+  "limits_and_boundaries": [
+    "APPROVAL SCOPE: This review grants APPROVE_DEV_TEST_SCOPE strictly for starting the scoped local development MCP integration test. It does NOT grant task completion, production authorization, or system/EV admission.",
+    "IMMUTABLE PREDECESSOR: HARNESSBOOT remains immutable; its historical completion is preserved and never reopened.",
+    "TRUST MODEL: Local launcher and filesystem permissions constitute a cooperative development boundary, not cryptographic IAM.",
+    "COOPERATIVE BOUNDARY: Sa-plan, coordinator, and source observations are cooperative and non-atomic across system boundaries.",
+    "SUPERVISION LIMIT: Bare MCP execution loop is not the requested full OTP supervisor; full supervisory integration remains a separate open feature.",
+    "RECOVERY EXERCISE REQUIRED: Attach, release, reclaim, and recovery must be exercised through MCP before closing the ADMISSION task.",
+    "FEATURE ISOLATION: All 52 broader feature tasks remain separate and blocked pending successful ADMISSION completion.",
+    "SYSTEM INVARIANTS: Zero native Git mutations (pure standalone Jujutsu .jj/ VCS discipline); admitted EV ceiling remains strictly EV-93 (SC-PROVENANCE-001); EV-94..EV-109 NOT_ADMITTED; zero paid external model calls."
+  ]
+}

@@ -16,9 +16,10 @@
 //// </uos-module>
 //// =============================================================================
 
+import cepaf_gleam/ecology/living_swarm_actor
 import cepaf_gleam/ha/homeostasis_evolution_engine
 import cepaf_gleam/ha/predictive_zenoh_stream
-import cepaf_gleam/ecology/living_swarm_actor
+import cepaf_gleam/harness/cognitive_worker
 import gleam/list
 import gleam/otp/actor
 import gleam/otp/static_supervisor as sup
@@ -120,6 +121,7 @@ pub fn uos_root_spec() -> RootSupervisorSpec {
           "fractal_l0_constitutional",
           "ha_lyapunov_proof",
           "homeostasis_evolution_engine",
+          "zenoh_cognitive_worker",
         ],
       ),
     ],
@@ -156,5 +158,6 @@ pub fn start_root_supervisor() -> Result(
   |> sup.add(predictive_zenoh_stream.supervised())
   |> sup.add(homeostasis_evolution_engine.supervised(0))
   |> sup.add(living_swarm_actor.runtime_supervised(1000))
+  |> sup.add(cognitive_worker.supervised("uos-gleam-cognitive-worker-1"))
   |> sup.start
 }

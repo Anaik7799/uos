@@ -1,0 +1,928 @@
+{
+  "test_log_evidence": [
+    {
+      "kind": "focused55PASS",
+      "local_path": "/tmp/20260909-0358-profiles-tests-final.log",
+      "sha256": "503dee215d7af435239ef824cf4ec44d21dff1530be18f8fd75df86b86a42726",
+      "captured_output": "======================== EUnit ========================\nmodule 'openrouter_worker_test'\n  openrouter_worker_test: free_model_is_admitted_under_default_policy_test...[0.015 s] ok\n  openrouter_worker_test: non_allowlisted_model_is_refused_test...ok\n  openrouter_worker_test: paid_model_refused_when_free_only_test...ok\n  openrouter_worker_test: paid_model_admitted_with_opt_in_within_budget_test...ok\n  openrouter_worker_test: token_ceiling_is_enforced_test...ok\n  openrouter_worker_test: policy_cannot_raise_the_ceilings_test...ok\n  openrouter_worker_test: unknown_live_price_is_refused_test...ok\n  openrouter_worker_test: live_price_above_ceiling_is_refused_test...ok\n  openrouter_worker_test: over_budget_is_refused_test...ok\n  openrouter_worker_test: prompt_hygiene_refuses_paths_source_and_secrets_test...[0.001 s] ok\n  openrouter_worker_test: the_lease_review_prompt_is_sanitized_test...ok\n  openrouter_worker_test: combining_marks_cannot_bypass_actual_utf8_request_bound_test...[0.003 s] ok\n  openrouter_worker_test: request_json_has_no_tools_and_bounded_tokens_test...ok\n  openrouter_worker_test: reply_decoding_reads_usage_provider_and_cost_test...ok\n  openrouter_worker_test: price_list_decoding_handles_string_prices_test...ok\n  openrouter_worker_test: actual_cost_prefers_provider_figure_test...ok\n  openrouter_worker_test: missing_credential_fails_closed_before_any_request_test...ok\n  openrouter_worker_test: run_returns_outcome_with_measured_cost_test...ok\n  openrouter_worker_test: non_200_status_is_a_refusal_test...ok\n  openrouter_worker_test: run_routed_refuses_when_route_refuses_test...[0.002 s] ok\n  openrouter_worker_test: explicit_profiles_preserve_free_default_and_exact_model_names_test...ok\n  openrouter_worker_test: paid_profiles_require_opt_in_and_support_4096_tokens_test...ok\n  openrouter_worker_test: paid_hard_token_timeout_and_lower_budget_limits_cannot_be_bypassed_test...ok\n  openrouter_worker_test: deepseek_pro_admits_eligible_zdr_price_but_refuses_above_cap_test...ok\n  openrouter_worker_test: request_provider_caps_use_million_token_units_and_zero_request_fees_test...ok\n  openrouter_worker_test: mandatory_glm_reasoning_is_bounded_without_invalid_disable_flag_test...ok\n  openrouter_worker_test: optional_reasoning_is_disabled_and_excluded_for_bounded_profiles_test...ok\n  openrouter_worker_test: routed_candidates_share_allowlist_and_reject_unknown_or_hiked_prices_test...ok\n  openrouter_worker_test: routed_dispatch_posts_selected_model_instead_of_original_request_model_test...ok\n  openrouter_worker_test: selected_non_openrouter_tier_never_posts_to_openrouter_test...ok\n  openrouter_worker_test: paid_route_selection_still_requires_worker_paid_opt_in_test...ok\n  openrouter_worker_test: selected_paid_profile_posts_exact_model_under_explicit_policy_test...ok\n  openrouter_worker_test: paid_completion_requires_actual_reported_cost_not_catalog_estimate_test...ok\n  openrouter_worker_test: paid_receipt_must_match_admitted_model_and_completion_limit_test...ok\n  openrouter_worker_test: paid_receipt_cannot_exceed_hard_or_requested_cost_budget_test...ok\n  [done in 0.128 s]\nmodule 'route_test'\n  route_test: deterministic_always_wins_r0_test...ok\n  route_test: unknown_price_is_ineligible_test...ok\n  route_test: unproven_tier_is_not_adequate_test...ok\n  route_test: free_remote_chosen_before_paid_test...ok\n  route_test: paid_refused_when_paid_enabled_false_test...ok\n  route_test: paid_refused_without_budget_even_when_enabled_test...ok\n  route_test: paid_allowed_within_cap_and_refused_over_cap_test...ok\n  route_test: free_only_remote_refuses_paid_even_with_enabled_flag_and_budget_test...ok\n  route_test: escalation_once_then_jidoka_test...ok\n  route_test: update_ignores_empty_evidence_test...ok\n  route_test: update_records_verified_pass_and_fail_test...ok\n  route_test: update_creates_new_posterior_when_absent_test...ok\n  route_test: r6_only_fable_test...ok\n  route_test: r5_only_codex_and_antigravity_flagged_unmetered_test...ok\n  route_test: decision_payload_route_fields_test...ok\n  route_test: decision_payload_refuse_fields_test...ok\n  route_test: default_tiers_shape_test...ok\n  route_test: budget_ledger_append_read_round_trip_test...[0.001 s] ok\n  route_test: budget_ledger_epoch_conflict_refusal_test...ok\n  route_test: budget_ledger_over_cap_refusal_test...ok\n  [done in 0.063 s]\n=======================================================\n  All 55 tests passed.\n\n"
+    },
+    {
+      "kind": "expected_wrong_model_failure",
+      "local_path": "/tmp/20260909-0358-profiles-negative-control.log",
+      "sha256": "cf825989c5035f87896f6a6b28acf8b2b9cbd7b5fcaa2145f190a365fd06f9ec",
+      "captured_output": "======================== EUnit ========================\nopenrouter_worker_test: routed_dispatch_posts_selected_model_instead_of_original_request_model_test...*failed*\nin function gleeunit@should:equal/2 (src/gleeunit/should.gleam, line 14)\nin call from openrouter_worker_test:'-routing_io/1-anonymous-4-'/4 (test/openrouter_worker_test.gleam, line 468)\nin call from uos_swarm@openrouter_worker:'-run/3-anonymous-5-'/5 (src/uos_swarm/openrouter_worker.gleam, line 608)\nin call from openrouter_worker_test:routed_dispatch_posts_selected_model_instead_of_original_request_model_test/0 (test/openrouter_worker_test.gleam, line 496)\nin call from eunit_test:run_testfun/1 (eunit_test.erl, line 83)\nin call from eunit_proc:run_test/1 (eunit_proc.erl, line 558)\nin call from eunit_proc:with_timeout/3 (eunit_proc.erl, line 382)\nin call from eunit_proc:handle_test/2 (eunit_proc.erl, line 541)\n**error:#{function => <<\"equal\">>,line => 10,\n  message =>\n      <<\"\\nOk(\\\"google/gemma-4-31b-it:free\\\")\\nshould equal\\nOk(\\\"inclusionai/ling-3.0-\"...>>,\n  module => <<\"gleeunit/should\">>,file => <<\"src/gleeunit/should.gleam\">>,\n  gleam_error => panic}\n  output:<<\"\">>\n\n=======================================================\n  Failed: 1.  Skipped: 0.  Passed: 0.\nEXPECTED_REJECTION: restored wrong-model dispatch was detected\n\n"
+    }
+  ],
+  "source_snapshot": [
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/openrouter_worker.gleam",
+      "sha256": "497a86fa3c43a67e0aacce5dd4356f260d60d66756c62a4fe732241a30e0a7c5"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/route.gleam",
+      "sha256": "8650ca5827231ac98f07c717565096cad59ef95010b96815d940856e8cc10040"
+    },
+    {
+      "path": "apps/uos_swarm/test/openrouter_worker_test.gleam",
+      "sha256": "d593fbfb11d822831c0e9c3e5f7fea9ce9e4c268d69bc7a7ad12f1d8ce119f26"
+    },
+    {
+      "path": "apps/uos_swarm/test/route_test.gleam",
+      "sha256": "ec19c3f2fb2cb4a83cbb30e569011f447290e85623f7ec9e79bbb132b0661b14"
+    }
+  ],
+  "profiles": [
+    {
+      "profile": "free_advisory",
+      "id": "inclusionai/ling-3.0-flash-fin:free",
+      "name": "inclusionAI: Ling 3.0 Flash Fin (free)",
+      "catalog_pricing_usd_per_token": { "prompt": "0", "completion": "0" },
+      "catalog_quote_usd_per_million": { "prompt": 0.0, "completion": 0.0 },
+      "accepted_cap_usd_per_million": {
+        "prompt": 0.0,
+        "completion": 0.0,
+        "request": 0.0
+      },
+      "context_length": 262144,
+      "reasoning": { "mandatory": false, "default_enabled": true },
+      "compatible_zdr_records": 1,
+      "distinct_compatible_provider_tags": 1,
+      "zdr_records": [
+        {
+          "provider": "Novita",
+          "tag": "novita",
+          "prompt_usd_per_token": "0",
+          "completion_usd_per_token": "0",
+          "request_price_field": "absent",
+          "max_completion_tokens": 32768,
+          "supports_reasoning": true,
+          "supports_tools": true
+        }
+      ]
+    },
+    {
+      "profile": "coding_glm",
+      "id": "z-ai/glm-5.3",
+      "name": "Z.ai: GLM 5.3",
+      "catalog_pricing_usd_per_token": {
+        "prompt": "0.0000014",
+        "completion": "0.0000044",
+        "input_cache_read": "0.00000026"
+      },
+      "catalog_quote_usd_per_million": { "prompt": 1.4, "completion": 4.4 },
+      "accepted_cap_usd_per_million": {
+        "prompt": 1.4,
+        "completion": 4.4,
+        "request": 0.0
+      },
+      "context_length": 1310720,
+      "reasoning": {
+        "mandatory": true,
+        "default_enabled": true,
+        "supported_efforts": [ "max", "high", "low" ],
+        "default_effort": "max"
+      },
+      "compatible_zdr_records": 18,
+      "distinct_compatible_provider_tags": 18,
+      "zdr_records": [
+        {
+          "provider": "Crusoe",
+          "tag": "crusoe/fp4",
+          "prompt_usd_per_token": "0.0000014",
+          "completion_usd_per_token": "0.0000044",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Sail Research",
+          "tag": "sail-research/fp8",
+          "prompt_usd_per_token": "0.0000014",
+          "completion_usd_per_token": "0.0000044",
+          "request_price_field": "absent",
+          "max_completion_tokens": 131072,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Inceptron",
+          "tag": "inceptron/fp4",
+          "prompt_usd_per_token": "0.00000125",
+          "completion_usd_per_token": "0.0000044",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Wafer",
+          "tag": "wafer",
+          "prompt_usd_per_token": "0.00000119",
+          "completion_usd_per_token": "0.0000044",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Makora",
+          "tag": "makora/fp4",
+          "prompt_usd_per_token": "0.00000135",
+          "completion_usd_per_token": "0.0000044",
+          "request_price_field": "absent",
+          "max_completion_tokens": 128000,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Decart",
+          "tag": "decart/fp4",
+          "prompt_usd_per_token": "0.00000119",
+          "completion_usd_per_token": "0.00000374",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Reka",
+          "tag": "reka/fp8",
+          "prompt_usd_per_token": "0.00000117",
+          "completion_usd_per_token": "0.00000396",
+          "request_price_field": "absent",
+          "max_completion_tokens": 235929,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "SiliconFlow",
+          "tag": "siliconflow/fp8",
+          "prompt_usd_per_token": "0.0000014",
+          "completion_usd_per_token": "0.0000044",
+          "request_price_field": "absent",
+          "max_completion_tokens": 262144,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Phala",
+          "tag": "phala",
+          "prompt_usd_per_token": "0.0000014",
+          "completion_usd_per_token": "0.0000044",
+          "request_price_field": "absent",
+          "max_completion_tokens": 131072,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Novita",
+          "tag": "novita/fp8",
+          "prompt_usd_per_token": "0.0000014",
+          "completion_usd_per_token": "0.0000044",
+          "request_price_field": "absent",
+          "max_completion_tokens": 131072,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Morph",
+          "tag": "morph/fp4",
+          "prompt_usd_per_token": "0.00000125",
+          "completion_usd_per_token": "0.0000044",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "DigitalOcean",
+          "tag": "digitalocean",
+          "prompt_usd_per_token": "0.0000014",
+          "completion_usd_per_token": "0.0000044",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Parasail",
+          "tag": "parasail/fp8",
+          "prompt_usd_per_token": "0.0000014",
+          "completion_usd_per_token": "0.0000044",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Modal",
+          "tag": "modal",
+          "prompt_usd_per_token": "0.0000014",
+          "completion_usd_per_token": "0.0000044",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Io Net",
+          "tag": "io-net/fp8",
+          "prompt_usd_per_token": "0.0000011875",
+          "completion_usd_per_token": "0.00000418",
+          "request_price_field": "absent",
+          "max_completion_tokens": 131072,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Fireworks",
+          "tag": "fireworks",
+          "prompt_usd_per_token": "0.0000014",
+          "completion_usd_per_token": "0.0000044",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "DeepInfra",
+          "tag": "deepinfra/fp4",
+          "prompt_usd_per_token": "0.0000012",
+          "completion_usd_per_token": "0.000004",
+          "request_price_field": "absent",
+          "max_completion_tokens": 131072,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Z.AI",
+          "tag": "z-ai/fp8",
+          "prompt_usd_per_token": "0.0000014",
+          "completion_usd_per_token": "0.0000044",
+          "request_price_field": "absent",
+          "max_completion_tokens": 131072,
+          "supports_reasoning": true,
+          "supports_tools": true
+        }
+      ]
+    },
+    {
+      "profile": "coding_kimi",
+      "id": "moonshotai/kimi-k3",
+      "name": "MoonshotAI: Kimi K3",
+      "catalog_pricing_usd_per_token": {
+        "prompt": "0.000003",
+        "completion": "0.000015",
+        "input_cache_read": "0.0000003"
+      },
+      "catalog_quote_usd_per_million": { "prompt": 3.0, "completion": 15.0 },
+      "accepted_cap_usd_per_million": {
+        "prompt": 3.0,
+        "completion": 15.0,
+        "request": 0.0
+      },
+      "context_length": 1048576,
+      "reasoning": {
+        "mandatory": false,
+        "default_enabled": true,
+        "supported_efforts": [ "max", "high", "low" ],
+        "default_effort": "max"
+      },
+      "compatible_zdr_records": 14,
+      "distinct_compatible_provider_tags": 14,
+      "zdr_records": [
+        {
+          "provider": "Makora",
+          "tag": "makora",
+          "prompt_usd_per_token": "0.00000255",
+          "completion_usd_per_token": "0.00001275",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Relace",
+          "tag": "relace/fp4",
+          "prompt_usd_per_token": "0.0000024",
+          "completion_usd_per_token": "0.000012",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": false
+        },
+        {
+          "provider": "Phala",
+          "tag": "phala",
+          "prompt_usd_per_token": "0.000003",
+          "completion_usd_per_token": "0.000015",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Sail Research",
+          "tag": "sail-research/fp4",
+          "prompt_usd_per_token": "0.0000026",
+          "completion_usd_per_token": "0.000013",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Wafer",
+          "tag": "wafer",
+          "prompt_usd_per_token": "0.000003",
+          "completion_usd_per_token": "0.00001275",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Parasail",
+          "tag": "parasail/fp4",
+          "prompt_usd_per_token": "0.000003",
+          "completion_usd_per_token": "0.000015",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Modal",
+          "tag": "modal/mxfp4",
+          "prompt_usd_per_token": "0.000003",
+          "completion_usd_per_token": "0.000015",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Together",
+          "tag": "together",
+          "prompt_usd_per_token": "0.000003",
+          "completion_usd_per_token": "0.000015",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "DeepInfra",
+          "tag": "deepinfra/bf16",
+          "prompt_usd_per_token": "0.00000285",
+          "completion_usd_per_token": "0.00001425",
+          "request_price_field": "absent",
+          "max_completion_tokens": 16384,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "DigitalOcean",
+          "tag": "digitalocean",
+          "prompt_usd_per_token": "0.00000285",
+          "completion_usd_per_token": "0.00001425",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Morph",
+          "tag": "morph/fp4",
+          "prompt_usd_per_token": "0.0000025",
+          "completion_usd_per_token": "0.000014",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Fireworks",
+          "tag": "fireworks",
+          "prompt_usd_per_token": "0.000003",
+          "completion_usd_per_token": "0.000015",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "BaseTen",
+          "tag": "baseten/fp8",
+          "prompt_usd_per_token": "0.000003",
+          "completion_usd_per_token": "0.000015",
+          "request_price_field": "absent",
+          "max_completion_tokens": 262144,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Moonshot AI",
+          "tag": "moonshotai/mxfp4",
+          "prompt_usd_per_token": "0.000003",
+          "completion_usd_per_token": "0.000015",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        }
+      ]
+    },
+    {
+      "profile": "coding_deepseek",
+      "id": "deepseek/deepseek-v4-pro-0813",
+      "name": "DeepSeek: DeepSeek V4 Pro 0813",
+      "catalog_pricing_usd_per_token": {
+        "prompt": "0.00000057948",
+        "completion": "0.00000173844",
+        "input_cache_read": "0.000000057948"
+      },
+      "catalog_quote_usd_per_million": {
+        "prompt": 0.57948,
+        "completion": 1.73844
+      },
+      "accepted_cap_usd_per_million": {
+        "prompt": 1.32,
+        "completion": 3.96,
+        "request": 0.0
+      },
+      "context_length": 1048576,
+      "reasoning": {
+        "mandatory": false,
+        "supported_efforts": [ "max", "high", "low" ],
+        "default_effort": "high"
+      },
+      "compatible_zdr_records": 13,
+      "distinct_compatible_provider_tags": 12,
+      "zdr_records": [
+        {
+          "provider": "Ionstream",
+          "tag": "ionstream/fp4",
+          "prompt_usd_per_token": "0.0000011",
+          "completion_usd_per_token": "0.0000033",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "CoreWeave",
+          "tag": "coreweave/fp8",
+          "prompt_usd_per_token": "0.00000131",
+          "completion_usd_per_token": "0.00000396",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "NextBit",
+          "tag": "nextbit/fp8",
+          "prompt_usd_per_token": "0.000001122",
+          "completion_usd_per_token": "0.000003366",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Sail Research",
+          "tag": "sail-research/fp4",
+          "prompt_usd_per_token": "0.00000132",
+          "completion_usd_per_token": "0.00000396",
+          "request_price_field": "absent",
+          "max_completion_tokens": 384000,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "BaseTen",
+          "tag": "baseten/fp4",
+          "prompt_usd_per_token": "0.00000132",
+          "completion_usd_per_token": "0.00000396",
+          "request_price_field": "absent",
+          "max_completion_tokens": 262144,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Parasail",
+          "tag": "parasail/fp8",
+          "prompt_usd_per_token": "0.00000132",
+          "completion_usd_per_token": "0.00000396",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Together",
+          "tag": "together",
+          "prompt_usd_per_token": "0.00000132",
+          "completion_usd_per_token": "0.00000396",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "DigitalOcean",
+          "tag": "digitalocean",
+          "prompt_usd_per_token": "0.00000132",
+          "completion_usd_per_token": "0.00000396",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "DeepInfra",
+          "tag": "deepinfra/fp8",
+          "prompt_usd_per_token": "0.0000013",
+          "completion_usd_per_token": "0.0000026",
+          "request_price_field": "absent",
+          "max_completion_tokens": 16384,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Novita",
+          "tag": "novita/fp8",
+          "prompt_usd_per_token": "0.00000099",
+          "completion_usd_per_token": "0.00000297",
+          "request_price_field": "absent",
+          "max_completion_tokens": 393216,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "SiliconFlow",
+          "tag": "siliconflow/fp8",
+          "prompt_usd_per_token": "0.00000132",
+          "completion_usd_per_token": "0.00000396",
+          "request_price_field": "absent",
+          "max_completion_tokens": 393216,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "BaseTen",
+          "tag": "baseten/fp4",
+          "prompt_usd_per_token": "0.00000132",
+          "completion_usd_per_token": "0.00000396",
+          "request_price_field": "absent",
+          "max_completion_tokens": 262144,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Fireworks",
+          "tag": "fireworks",
+          "prompt_usd_per_token": "0.00000132",
+          "completion_usd_per_token": "0.00000396",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        }
+      ]
+    },
+    {
+      "profile": "coding_efficient",
+      "id": "deepseek/deepseek-v4-flash-0731",
+      "name": "DeepSeek: DeepSeek V4 Flash 0731",
+      "catalog_pricing_usd_per_token": {
+        "prompt": "0.000000065",
+        "completion": "0.00000018",
+        "input_cache_read": "0.000000016"
+      },
+      "catalog_quote_usd_per_million": {
+        "prompt": 0.065,
+        "completion": 0.18
+      },
+      "accepted_cap_usd_per_million": {
+        "prompt": 0.065,
+        "completion": 0.18,
+        "request": 0.0
+      },
+      "context_length": 1310720,
+      "reasoning": {
+        "mandatory": false,
+        "default_enabled": true,
+        "supported_efforts": [ "max", "high", "low" ],
+        "default_effort": "high"
+      },
+      "compatible_zdr_records": 4,
+      "distinct_compatible_provider_tags": 4,
+      "zdr_records": [
+        {
+          "provider": "Relace",
+          "tag": "relace/fp4",
+          "prompt_usd_per_token": "0.000000065",
+          "completion_usd_per_token": "0.00000018",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "OpenInference",
+          "tag": "open-inference/fp8",
+          "prompt_usd_per_token": "0.00000005",
+          "completion_usd_per_token": "0.00000016",
+          "request_price_field": "absent",
+          "max_completion_tokens": 393216,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "Sail Research",
+          "tag": "sail-research/fp4",
+          "prompt_usd_per_token": "0.000000065",
+          "completion_usd_per_token": "0.00000018",
+          "request_price_field": "absent",
+          "max_completion_tokens": 943718,
+          "supports_reasoning": true,
+          "supports_tools": true
+        },
+        {
+          "provider": "DeepInfra",
+          "tag": "deepinfra/fp8",
+          "prompt_usd_per_token": "0.00000006",
+          "completion_usd_per_token": "0.00000018",
+          "request_price_field": "absent",
+          "max_completion_tokens": 384000,
+          "supports_reasoning": true,
+          "supports_tools": true
+        }
+      ]
+    },
+    {
+      "profile": "decision_gemma",
+      "id": "google/gemma-4-31b-it",
+      "name": "Google: Gemma 4 31B",
+      "catalog_pricing_usd_per_token": {
+        "prompt": "0.00000009",
+        "completion": "0.00000034",
+        "input_cache_read": "0.00000005"
+      },
+      "catalog_quote_usd_per_million": {
+        "prompt": 0.09,
+        "completion": 0.33999999999999997
+      },
+      "accepted_cap_usd_per_million": {
+        "prompt": 0.09,
+        "completion": 0.34,
+        "request": 0.0
+      },
+      "context_length": 262144,
+      "reasoning": { "mandatory": false, "default_enabled": false },
+      "compatible_zdr_records": 1,
+      "distinct_compatible_provider_tags": 1,
+      "zdr_records": [
+        {
+          "provider": "DeepInfra",
+          "tag": "deepinfra/turbo",
+          "prompt_usd_per_token": "0.00000009",
+          "completion_usd_per_token": "0.00000034",
+          "request_price_field": "absent",
+          "max_completion_tokens": 16384,
+          "supports_reasoning": true,
+          "supports_tools": false
+        }
+      ]
+    }
+  ],
+  "public_observations": [
+    {
+      "url": "https://openrouter.ai/api/v1/models",
+      "observed_at": "2026-09-09T03:05:38Z",
+      "local_snapshot": "/tmp/20260909-0358-openrouter-profiles-models.json",
+      "sha256": "aaab06c453b67c00ef806800013b311680971b39ad16b37f298853a372c7e32b",
+      "byte_size": 709193,
+      "entries": 431
+    },
+    {
+      "url": "https://openrouter.ai/api/v1/endpoints/zdr",
+      "observed_at": "2026-09-09T03:08:14Z",
+      "local_snapshot": "/tmp/20260909-0358-openrouter-profiles-zdr.json",
+      "sha256": "1567a7ed4bbdc8319df1229ef90a9c8a1171107c52a5dc37c18959895492062b",
+      "byte_size": 745720,
+      "entries": 841
+    }
+  ],
+  "schema_version": 1,
+  "created_at": "2026-09-09T03:26:08Z",
+  "sa_plan": {
+    "plan": "uos/ecology-model-profiles/20260909-0358",
+    "task": "PROFILES",
+    "worker": "codex-ecology-capabilities",
+    "attempt": 1
+  },
+  "scope": "Current public model evidence, read-only C3I/Indrajaal routing comparison, explicit free/paid advisory profiles, selected-model dispatch integrity, consistent free-only gating, UTF-8 input bounds and strict paid receipt validation. No adaptive engine, paid request, credential access, external mutation, release change or VCS operation by this worker.",
+  "authority": {
+    "user_paid_budget_usd_per_utc_day": 10.0,
+    "per_paid_request_liability_usd": 0.25,
+    "reservation_owner": "root-owned durable ledger and future dispatch integration",
+    "worker_paid_calls": 0,
+    "runtime_admission": "NOT_GRANTED",
+    "ev_ceiling": 93
+  },
+  "profile_policy": {
+    "free_default": {
+      "profile": "free_advisory",
+      "model": "inclusionai/ling-3.0-flash-fin:free",
+      "free_only": true,
+      "max_tokens": 512,
+      "budget_usd": 0.02,
+      "timeout_ms": 30000
+    },
+    "explicit_paid": {
+      "max_tokens": 4096,
+      "budget_usd": 0.25,
+      "timeout_ms": 30000,
+      "free_only": false
+    },
+    "input_bounds": {
+      "utf8_bytes_per_message": 8192,
+      "graphemes_per_message": 2000,
+      "system_plus_user_utf8_bytes": 16384,
+      "existing_path_source_credential_filters": "retained"
+    },
+    "provider": {
+      "zdr": true,
+      "max_price_request_usd": 0.0,
+      "prompt_completion_caps_unit": "USD per million tokens",
+      "privacy_or_guardrail_changes": "NONE"
+    },
+    "reasoning": {
+      "z-ai/glm-5.3": "mandatory; effort low; exclude true",
+      "other_curated_profiles": "optional; enabled false; exclude true"
+    },
+    "paid_receipt": [
+      "Reported usage.cost is required; catalog fallback is not accepted as measured paid spend",
+      "Returned model must equal admitted exact model",
+      "Completion tokens cannot exceed admitted max_tokens",
+      "Reported cost cannot exceed the smaller requested budget and hard0.25USD",
+      "Base decoder requires nonempty final answer and internally consistent nonnegative token usage"
+    ],
+    "cost_bound_rationale": "Parent reserves0.25USD per paid request. Conservative16384 input UTF-8 bytes plus2048 template allowance at highest curated input price3USD/M, plus4096 output tokens at highest price15USD/M, equals0.116736USD. This arithmetic is not a tokenizer theorem or a durable reservation; caller binding and unknown-outcome liability remain required.",
+    "limits": [
+      "Profiles supply bounded advisory requests, not arbitrary private-source export or code execution",
+      "No benchmark winner or learned ranking is asserted",
+      "The user budget is not enforced merely by constructing a Policy or route.Budget value",
+      "Transport, account eligibility and actual paid calls are root-owned integration evidence"
+    ]
+  },
+  "public_model_evidence": {
+    "pricing_interpretation": "API catalog quotes at the recorded snapshot, not guaranteed live minimum across providers. HTML model pages and endpoint discounts can differ. Accepted provider ceilings are separate policy values.",
+    "endpoint_query": "For each exact curated model, select public ZDR records with status0, max_completion_tokens>=4096 and prompt/completion prices at or below accepted caps. Counts refer to records, not distinct provider tags or authenticated availability.",
+    "deepseek_pro_adjustment": "No qualifying public ZDR record met its observed API quote0.57948/1.73844USD/M. Parent explicitly accepted caps1.32/3.96USD/M; these admit observed ZDR records including discounted Novita0.99/2.97 and DeepInfra1.30/2.60.",
+    "limitations": [
+      "Public ZDR metadata cannot establish account-specific guardrail, quota, capacity or request acceptance",
+      "Model-card coding/tool claims do not establish endpoint-specific tool or schema support",
+      "No public source payload or model weights were executed or imported as implementation"
+    ]
+  },
+  "primary_model_cards": [
+    {
+      "model": "z-ai/glm-5.3",
+      "urls": [
+        "https://openrouter.ai/z-ai/glm-5.3",
+        "https://huggingface.co/zai-org/GLM-5.3"
+      ],
+      "observation_window_utc": "2026-09-09T03:05:25Z/2026-09-09T03:15:49Z",
+      "finding": "Current GLM coding/engineering candidate; mandatory reasoning matches API metadata. Published capabilities are not a local benchmark."
+    },
+    {
+      "model": "moonshotai/kimi-k3",
+      "urls": [
+        "https://openrouter.ai/moonshotai/kimi-k3",
+        "https://huggingface.co/moonshotai/Kimi-K3"
+      ],
+      "observation_window_utc": "2026-09-09T03:05:25Z/2026-09-09T03:15:49Z",
+      "finding": "Current Kimi candidate for complex coding and repository/tool workflows. The present worker sends advisory text only; endpoint tool support must be checked separately."
+    },
+    {
+      "model": "deepseek/deepseek-v4-pro-0813",
+      "urls": [
+        "https://openrouter.ai/deepseek/deepseek-v4-pro-0813",
+        "https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro-0813"
+      ],
+      "observation_window_utc": "2026-09-09T03:05:25Z/2026-09-09T03:15:49Z",
+      "finding": "Current DeepSeek Pro coding candidate; Flash0731 is an independently priced efficient challenger, not an established quality equivalent."
+    },
+    {
+      "model": "google/gemma-4-31b-it",
+      "urls": [
+        "https://ai.google.dev/gemma/docs/core/model_card_4",
+        "https://openrouter.ai/google/gemma-4-31b-it"
+      ],
+      "observation_window_utc": "2026-09-09T03:05:25Z/2026-09-09T03:15:49Z",
+      "finding": "Dense30.7B/31B family candidate for decision advice; primary family evaluations support choosing it for comparison, not claiming a universal decision-quality winner.26B MoE is an efficiency alternative."
+    }
+  ],
+  "official_semantics": [
+    {
+      "url": "https://openrouter.ai/docs/guides/routing/provider-selection",
+      "finding": "provider.max_price prompt/completion use USD per million tokens; request caps per-request fees."
+    },
+    {
+      "url": "https://openrouter.ai/docs/guides/features/zdr",
+      "finding": "Request ZDR may tighten but cannot weaken account/guardrail ZDR; endpoint policy is relevant."
+    },
+    {
+      "url": "https://openrouter.ai/docs/guides/best-practices/reasoning-tokens",
+      "finding": "Reasoning tokens consume completion budget; exclude only hides reasoning, while optional reasoning can be disabled. Mandatory reasoning requires a supported effort."
+    }
+  ],
+  "routing_review": [
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/openrouter_worker.gleam",
+      "finding": "run_routed discarded selected tier and dispatched original request.model. Repaired to exact selected OpenRouter model and explicit refusal for other providers. OpenRouter route_tiers now derives from shared exact allowlist plus valid live prices.",
+      "status": "REPAIRED_FOCUSED_TESTED"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/route.gleam",
+      "finding": "free_only_remote was unused. Repaired to veto paid OpenRouter even if paid_enabled is true. CLI sovereign semantics preserved. Pure Budget documentation no longer implies atomic reservation.",
+      "status": "REPAIRED_FOCUSED_TESTED"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/route.gleam",
+      "finding": "Existing per-tier/class Beta adequacy, minimum trials, authority and cost filtering are reusable pure policy. Nonempty evidence references are not authenticated receipts. Legacy JSONL budget read/init/charge APIs are not safe aggregate paid authority; they remain outside this fix.",
+      "status": "INSPECTED_WITH_REMAINING_GATES"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ai/intelligence_router.gleam",
+      "lines": "152-166,208-304",
+      "finding": "Catalog projection uses first-match strategies and or_first fallback. Daily budget fields are not enforced by CostBoundedPaid. This module is not a durable dispatch owner.",
+      "status": "INSPECTED_NOT_MODIFIED"
+    },
+    {
+      "host": "vm-1.tail55d152.ts.net",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/lib/indrajaal/cortex/model_selector.ex",
+      "lines": "68-81,258-304",
+      "finding": "Separates task complexity, latency budget and quality floor. Quality/latency are static tier values; free and smart candidates share SynapseOpenRouter.model_for(task_type); premium roster is empty.",
+      "status": "READ_ONLY_EXTERNAL_SOURCE_UNBOUND_TO_RUNTIME"
+    },
+    {
+      "host": "vm-1.tail55d152.ts.net",
+      "path": "/home/an/dev/ver/c3i/sub-projects/c3i/lib/indrajaal/cortex/synapse/model_selector.ex",
+      "lines": "82-107,216-275",
+      "finding": "Fixed cost/latency/quality weights0.40/0.35/0.25 and old Llama3.1/Qwen2/Gemma2 free IDs. Useful boundary decomposition, no measured UOS online optimization evidence.",
+      "status": "READ_ONLY_EXTERNAL_SOURCE_UNBOUND_TO_RUNTIME"
+    }
+  ],
+  "verification": {
+    "compiler": {
+      "path": "toolchains/gleam-1.16.0/bin/gleam",
+      "version": "1.16.0",
+      "final_build": "PASS",
+      "reported_seconds": 0.41
+    },
+    "runtime": {
+      "path": "toolchains/nix-profile/bin/erl",
+      "otp": "29",
+      "erts": "17.0.5",
+      "schedulers": 4,
+      "async_threads": 4
+    },
+    "focused": {
+      "worker_tests": 35,
+      "router_tests": 20,
+      "total_passed": 55,
+      "total_failed": 0,
+      "scope": "Injected I/O and local pure policy; no paid network request"
+    },
+    "negative_control": {
+      "scope": "Only in isolated generated Erlang under /tmp/20260909-0358-profile-negative-control",
+      "mutation": "Restored original request.model in selected OpenRouter dispatch",
+      "expected": "Regression fails on Gemma original model versus Fin selected model",
+      "observed": "EXPECTED_REJECTION; one deliberately failing regression; canonical source and shared build artifacts untouched"
+    },
+    "preserved_initial_failures": [
+      "First build rejected test pipeline grouping and decoder arity; corrected before first50-test PASS",
+      "Later formatter rejected parentheses after Boolean negation; corrected to Gleam grouping before final55-test PASS"
+    ],
+    "paid_live_verification": "NOT_RUN_BY_THIS_WORKER",
+    "formal_engine_proof": "NOT_CLAIMED; earlier ecology finite twins do not prove adaptive paid dispatch"
+  },
+  "handoff_active_check": {"status":"ACTIVE_OBSERVATION_PASS","authority":"NONE","runtime_admission":"NOT_GRANTED","observed_at":"2026-09-09T03:32:18Z","completed_at":"2026-09-09T03:32:18Z","elapsed_monotonic_seconds":0.214019128,"clock_start":{"source":"chronyc tracking","abs_ntp_offset_seconds":0.000361141,"uncertainty_seconds":0.0173449605,"reference_age_seconds":738.3315346240997,"stratum":3},"clock_end":{"source":"chronyc tracking","abs_ntp_offset_seconds":0.000361125,"uncertainty_seconds":0.017345114499999998,"reference_age_seconds":738.4405617713928,"stratum":3},"assessment_sha256":"7a9531bc5203377ec2a4ae07f60b91686445e3a15a2b3ab81a21d3c8f9cd05eb","evidence_files_checked":4,"sa_plan":{"plan_id":"uos/ecology-model-profiles/20260909-0358","snapshot_sha256":"b4b8a0e4606abed9ef4ec58fedf7f2867a3dfdd11c40381208e5f77fc356707d","tasks":[{"task_id":"PROFILES","state":"executing","worker":"codex-ecology-capabilities","lease_until_ns":"1788926703401109586","attempt":1,"completed_at_ns":null,"result_present":false,"dependencies":[]}],"mode":"READONLY","lease_fencing_authority":"NOT_GRANTED"},"order":[],"findings":[],"limits":["Listed byte equality does not prove source completeness, runtime behavior or signed provenance.","Analysis prose, class judgments, cost ties and control effectiveness require qualified review.","Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.","Snapshot is confined to one complete plan; no global optimum is asserted."]},
+  "coordination": {
+    "compiler": "Root granted serialized uos_swarm build slot; released after both passing builds",
+    "independent_review": "Root found selected-model dispatch defect; hooks confirmed UTF-8 and paid-cost flaws then independently observed their repairs at worker SHA497a86fa; full release remains root-owned",
+    "vcs": "NO_MUTATION; concurrent JJ movement is not used as candidate evidence"
+  },
+  "related": {
+    "vm1_receipt": "governance/sources/20260909-0241-ecology-vm1-comparison-receipt.json",
+    "public_free_diagnostic": "governance/sources/20260909-0209-ecology-openrouter-diagnostic-receipt.json",
+    "recommendation": "docs/design/20260909-0314-openrouter-engine-review-and-recommendation.md",
+    "journal": "docs/journal/20260909-0308-ecology-model-profiles-codex-journal.md"
+  }
+}

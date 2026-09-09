@@ -1,0 +1,182 @@
+[
+  {
+    "factors": {
+      "criticality": {
+        "rationale": "Global budget and task authority must precede paid autonomous activation.",
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "evidence_refs": [
+          "docs/journal/20260909-0338-ecology-router-independent-review.md",
+          "docs/journal/20260909-0338-ecology-router-independent-review.json"
+        ]
+      },
+      "stpa": {
+        "rationale": "False approval can conflate component evidence with execution authority.",
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "evidence_refs": [
+          "docs/journal/20260909-0338-ecology-router-independent-review.md",
+          "docs/journal/20260909-0338-ecology-router-independent-review.json"
+        ]
+      },
+      "fmea": {
+        "rationale": "S4 O3 Det3 RPN36 is the analyst-estimated review omission/false-clearance risk.",
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "evidence_refs": [
+          "docs/journal/20260909-0338-ecology-router-independent-review.md",
+          "docs/journal/20260909-0338-ecology-router-independent-review.json"
+        ]
+      },
+      "dependency": {
+        "rationale": "Final paid activation depends on resolving or explicitly containing these findings.",
+        "value": 4,
+        "low": 4,
+        "high": 4,
+        "evidence_refs": [
+          "docs/journal/20260909-0338-ecology-router-independent-review.md",
+          "docs/journal/20260909-0338-ecology-router-independent-review.json"
+        ]
+      },
+      "impact": {
+        "rationale": "One canonical engine will serve multiple actors and holons.",
+        "value": 3,
+        "low": 3,
+        "high": 3,
+        "evidence_refs": [
+          "docs/journal/20260909-0338-ecology-router-independent-review.md",
+          "docs/journal/20260909-0338-ecology-router-independent-review.json"
+        ]
+      }
+    },
+    "fmea_modes": [
+      {
+        "id": "FM-REVIEW",
+        "cause": "Conflation of source claims, per-database budget receipts, task authority and global paid dispatch enforcement.",
+        "effect": "False readiness could permit uncapped or unauthenticated autonomous requests.",
+        "controls": "Read-only independent review, explicit stage/hash labels, early P1 reports, final activation criteria and canonical task checks.",
+        "s": 4,
+        "o": 3,
+        "det": 3,
+        "rpn": 36,
+        "band": 4
+      }
+    ],
+    "stpa_analysis": {
+      "ucas": [
+        {
+          "type": "not_provided",
+          "applicability": "applicable",
+          "context": "A global accounting or quality-authority gap is omitted before paid activation.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE", "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Inspect canonical call paths and report P1 acceptance gates promptly."
+        },
+        {
+          "type": "provided_unsafe",
+          "applicability": "applicable",
+          "context": "A component test or model reply is reported as global cap enforcement or verified task quality.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE", "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Separate authority, reservation, dispatch, returned receipt and verified outcome."
+        },
+        {
+          "type": "wrong_timing",
+          "applicability": "applicable",
+          "context": "A finding or approval mixes changing peer files or reuses the earlier runtime candidate.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE", "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Record per-file hashes and staged/final status; final candidate tests remain separate."
+        },
+        {
+          "type": "duration",
+          "applicability": "applicable",
+          "context": "Reviewer keeps changing scope, waits for unrelated work, or acts after lease expiry.",
+          "hazard_ids": [
+            "H-RISK-FALSE-CLEARANCE", "H-RISK-STALE-SELECTION"
+          ],
+          "constraint": "Finish the bounded review under its exact Sa-plan attempt; no runtime, paid or source effects."
+        }
+      ],
+      "control_action": "Report evidence-qualified findings without granting dispatch or release authority",
+      "controller": "Independent staged router and budget reviewer",
+      "losses": [ "L-RISK-UNAUTHORIZED-EFFECT" ],
+      "hazards": [ "H-RISK-FALSE-CLEARANCE", "H-RISK-STALE-SELECTION" ]
+    },
+    "decision": {
+      "residuals": [
+        "Global paid dispatch integration and formal proof are unrun by reviewer.",
+        "Peer implementation continues; final release requires candidate-bound verification.",
+        "Provider metadata was not independently re-fetched by reviewer."
+      ],
+      "budget": "Zero network/model calls; no installs/builds/service actions; bounded local file reads and five arithmetic checks; no new agents.",
+      "reviewer": "Independent Codex reviewer /root/hooks; implementation and final release verification owned by parent and feature peers.",
+      "rollback": "Correct only owned review artifacts; preserve initial findings and later repairs; parent retains all runtime and implementation ownership.",
+      "acceptance": [
+        "Inspect requested recommendation and canonical route/worker/budget paths with exact observed hashes",
+        "Report important authority and evidence gaps promptly",
+        "Distinguish repaired staged source, peer-reported tests and reviewer observations",
+        "Write timestamped journal and machine receipt with bounded activation criteria",
+        "Perform no paid, runtime, existing-source or VCS effects"
+      ],
+      "falsifier": "Review grants global dispatch authority from per-database tests, treats caller priors as verified outcomes, or claims a later mutable source hash was fully reviewed.",
+      "forecast": "Explicit global authority, request binding and receipt criteria prevent component-only evidence being mistaken for active paid engine enforcement.",
+      "assumptions": [
+        "Parent owns any separately authorized paid calibration; this reviewer is limited to read-only existing files and own task artifacts.",
+        "Peer sources are staged and may change; later hashes do not inherit review approval."
+      ],
+      "counterevidence": [
+        "Recommendation explicitly marks paid engine unfinished; observed worker repairs address several early findings.",
+        "SQLite component declares per-database scope; canonical integration is separate."
+      ],
+      "alternatives": [
+        "Report observed source gaps and bounded acceptance criteria now",
+        "Wait for ongoing implementation before reviewing a new candidate"
+      ],
+      "summary": "Read-only staged source review complete with explicit activation gates; no final-candidate or global-runtime approval",
+      "confidence": "analyst_estimate",
+      "supersedes": null
+    },
+    "phase": "review",
+    "score_interval": [ 768, 768 ],
+    "score": 768,
+    "class": "P1",
+    "snapshot": {
+      "kind": "working_tree",
+      "reference": "Fresh exact scoped source snapshot; runtime observed separately.",
+      "evidence": [
+        {
+          "path": "docs/journal/20260909-0338-ecology-router-independent-review.md",
+          "sha256": "93fffd7a081123266431bcc5b1e31609e80fdd15a1e2c817b47ef69b020733f0",
+          "observed_at": "2026-09-09T03:29:11Z"
+        },
+        {
+          "path": "docs/journal/20260909-0338-ecology-router-independent-review.json",
+          "sha256": "b2df292448cc9f43bc3a68fcbf437661f34dd992b4c26bdd33d7eff5811ffb84",
+          "observed_at": "2026-09-09T03:29:11Z"
+        }
+      ]
+    },
+    "task_state": "executing",
+    "ready_since": "2026-09-09T03:29:11Z",
+    "valid_until": "2026-09-09T04:29:11Z",
+    "observed_at": "2026-09-09T03:29:11Z",
+    "scope": "Independent staged source review of router, budget authority and recommendation; task artifacts only, no paid calls, source edits, runtime actions or VCS",
+    "actor": "codex-ecology-router-review",
+    "task_id": "REVIEW",
+    "plan_id": "uos/ecology-router-review/20260909-0345",
+    "assessment_id": "REVIEW-2026-09-09T03:29:11Z",
+    "schema_version": 1,
+    "policy": "SC-RISK-PRIORITY-001",
+    "fractal_layer": 4,
+    "readiness": "ready",
+    "blockers": [],
+    "dependencies": []
+  }
+]

@@ -1,0 +1,1015 @@
+{
+  "schema": "uos.harness.comprehensive-review.v1",
+  "generated_from_clock": "2026-09-09T06:37:50.399917Z",
+  "status": "SCOPED_RUNTIME_CHECKS_PASSED_PEER_SUPPLEMENT_PENDING",
+  "authority": "REVIEW_AND_METADATA_TRACKING_ONLY",
+  "root_session": "01a083d2-baa3-7783-8e45-5357cc9e96d8",
+  "authority_plan": "uos/ecology/20260909-0146",
+  "authority_task": "HARNESSBOOT",
+  "feature_plan": "uos/harness-features/20260909",
+  "all_features_implemented": false,
+  "system_admission": false,
+  "verified_features": 0,
+  "feature_count": 49,
+  "feature_catalog_sha256": "e631c77fff18c202bb527545844a4834b0d3f4f53200f585878f95bd60652a4d",
+  "workflow_service": "sa_plan_local_durable_history",
+  "external_temporal_runtime": "NOT_VERIFIED",
+  "decision_matrix": [
+    {
+      "id": "D01",
+      "title": "Canonical UOS reuses C3I/Indrajaal concepts and VM-1 as read-only evidence",
+      "challenge": "Check source provenance, no unvetted import, and that UCon integration is not invented.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "VM-1 receipt is read-only comparison evidence; no verified UCon binding or unvetted source ingestion.",
+      "claude": {
+        "id": "D01",
+        "verdict": "UNKNOWN",
+        "basis": "Provenance of C3I/Indrajaal reuse not re-derived in this pass; VM-1 trees not read (read-only mandate honoured).",
+        "finding": null
+      },
+      "agy": {
+        "id": "D01",
+        "canonical_title": "Canonical UOS reuses C3I/Indrajaal concepts and VM-1 as read-only evidence",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Source provenance checked; external trees read-only per policy §3"
+      },
+      "fable_findings": [],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D02",
+      "title": "Agentic holons discover the full capability set and activate authorized subsets",
+      "challenge": "Distinguish 26 local participant models from actual external system bindings.",
+      "root_disposition": "REVISE",
+      "basis": "26 participant models share a local actor. External holon bindings and fenced per-holon activation are unfinished.",
+      "claude": {
+        "id": "D02",
+        "verdict": "UNKNOWN",
+        "basis": "26 participant models vs external bindings not separable from source alone; no runtime dispatch observed.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D02",
+        "canonical_title": "Agentic holons discover the full capability set and activate authorized subsets",
+        "verdict": "REVISE",
+        "evidence": "Falsifier: 4110 dashboard displays 26 participants, but external system bindings are uninstantiated stubs; authorized activation sets must be explicitly fenced"
+      },
+      "fable_findings": [],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D03",
+      "title": "Gleam/OTP owns all agents, orchestration, policies, clock/check verdicts and backend choice",
+      "challenge": "Check actual direct-tool exceptions and client enforcement; documentation is not enforcement.",
+      "root_disposition": "REVISE",
+      "basis": "New control modules are Gleam; universal client enforcement is unfinished. Bootstrap host adapters and local development escape path remain explicit.",
+      "claude": {
+        "id": "D03",
+        "verdict": "REVISE",
+        "basis": "harness/clock.gleam:58, development.gleam:211,330,405,971,976,983,988 call host absolute paths directly; Gleam does not own the backend choice at these sites.",
+        "finding": "F1"
+      },
+      "agy": {
+        "id": "D03",
+        "canonical_title": "Gleam/OTP owns all agents, orchestration, policies, clock/check verdicts and backend choice",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "uos_sup.gleam owns root supervision; native adapters confined behind port boundaries"
+      },
+      "fable_findings": [
+        "F1-verdict",
+        "N4"
+      ],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D04",
+      "title": "MCP and admitted Zenoh share typed intents and receipts",
+      "challenge": "Existing Zenoh prefixes/correlation/targeting differ; no live equivalence claim.",
+      "root_disposition": "REVISE",
+      "basis": "Finite MCP is exercised. Zenoh targeting, correlation, deadlines and equivalence are unimplemented/unverified.",
+      "claude": {
+        "id": "D04",
+        "verdict": "UNKNOWN",
+        "basis": "No live Zenoh equivalence observed; not exercised.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D04",
+        "canonical_title": "MCP and admitted Zenoh share typed intents and receipts",
+        "verdict": "REVISE",
+        "evidence": "Falsifier: development.gleam:533 reports zenoh UNAVAILABLE_NOT_VERIFIED; topic mappings and reply correlation deadlines unverified"
+      },
+      "fable_findings": [],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D05",
+      "title": "All newly authored control implementation is Gleam",
+      "challenge": "Existing bounded native adapters are internal services; stock Gleam targets Erlang/JS only.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "New harness control and checks are authored in Gleam. Existing native adapters and bootstrap commands are disclosed; stock Gleam does not generate general OCaml/Mojo kernels.",
+      "claude": {
+        "id": "D05",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "harness/{development,files,clock,value,mcp,peers}.gleam are Gleam; 1724 lines read in part.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D05",
+        "canonical_title": "All newly authored control implementation is Gleam",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Pure Gleam control plane adhered to; native adapters internal only"
+      },
+      "fable_findings": [],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D06",
+      "title": "Native generation is proposed via a constrained typed kernel IR",
+      "challenge": "General Gleam-to-OCaml/Mojo/NIF translation is not implemented; reject unsupported constructs.",
+      "root_disposition": "UNKNOWN",
+      "basis": "A constrained kernel IR is specified; general native code generation has no verified implementation.",
+      "claude": {
+        "id": "D06",
+        "verdict": "UNKNOWN",
+        "basis": "Kernel IR not exercised; no generated native artifact inspected.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D06",
+        "canonical_title": "Native generation is proposed via a constrained typed kernel IR",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Scoped strictly to verified AST facades, no unverified general code generation"
+      },
+      "fable_findings": [],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D07",
+      "title": "Native ABI/runtime ownership gates preserve semantics",
+      "challenge": "Check OCaml runtime/GC roots, Mojo runtime lifecycle, short NIF scheduling and daemon defaults.",
+      "root_disposition": "UNKNOWN",
+      "basis": "Bounded adapters exist. Full OCaml GC/ABI ownership, Mojo lifecycle and native scheduling contracts lack candidate-bound end-to-end evidence.",
+      "claude": {
+        "id": "D07",
+        "verdict": "UNKNOWN",
+        "basis": "OCaml GC roots / Mojo lifecycle / NIF scheduling not exercised in this pass.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D07",
+        "canonical_title": "Native ABI/runtime ownership gates preserve semantics",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "MAX Mojo daemon isolated to supervised stdio pipe; pure Erlang Graphene facade"
+      },
+      "fable_findings": [],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D08",
+      "title": "Sa-plan is sole task/job/workflow authority",
+      "challenge": "Check actual claim/attempt/expiry/dependencies, full-plan risk and effect-time fences.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Canonical Sa-plan CLI performs metadata writes to SQLite. Local launcher trust and cooperative fences apply; this is not cryptographic workload identity.",
+      "claude": {
+        "id": "D08",
+        "verdict": "REVISE",
+        "basis": "Grant is a hardcoded literal tuple read from caller-controlled environment variables (development.gleam:96-131).",
+        "finding": "F2"
+      },
+      "agy": {
+        "id": "D08",
+        "canonical_title": "Sa-plan is sole task/job/workflow authority",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Enforced via tools/sa_plan_main.exe and var/sa-plan/uos.sqlite3"
+      },
+      "fable_findings": [
+        "N2"
+      ],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D09",
+      "title": "Fractal TPS/Jidoka limits scope and stops uncertain effects",
+      "challenge": "Validate all four STPA UCA classes, raw FMEA, dependency priority and bounded recovery.",
+      "root_disposition": "REVISE",
+      "basis": "Finite role/attempt/lease/replay checks stop invalid effects. All-layer Jidoka/TPS scheduler enforcement is not established.",
+      "claude": {
+        "id": "D09",
+        "verdict": "UNKNOWN",
+        "basis": "Four UCA classes are declared in var/harness/20260909-0412-bootstrap-risk.json; their runtime enforcement was not observed.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D09",
+        "canonical_title": "Fractal TPS/Jidoka limits scope and stops uncertain effects",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Fail-closed Andon stop line (error -32002) prevents unledgered side-effects"
+      },
+      "fable_findings": [],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D10",
+      "title": "Coordinator leases are cooperative; task/runtime/integration ownership differ",
+      "challenge": "No lease or ACK grants deployment/system admission; inspect stale-check timing.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Coordinator ownership is cooperative, separate from task/runtime/integration authority. Heartbeat observations are bounded; no ACK grants admission.",
+      "claude": {
+        "id": "D10",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "development.gleam:187,196,255 label coordinator outcomes as observation without effect authority; wording is consistent with SYNC-03/04.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D10",
+        "canonical_title": "Coordinator leases are cooperative; task/runtime/integration ownership differ",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Coordinator board leases and ACKs grant no deployment or system admission authority"
+      },
+      "fable_findings": [
+        "N6"
+      ],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D11",
+      "title": "Stable logical effect identity survives retries and task attempts",
+      "challenge": "Failed/corrupt/lost-result replay must not become success or dispatch twice.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Targeted replay/corrupt/failed-receipt controls and SQLite duplicate/progress behavior are tested. Arbitrary crash points and hostile multiwriter behavior remain unverified.",
+      "claude": {
+        "id": "D11",
+        "verdict": "UNKNOWN",
+        "basis": "Replay/idempotence path not exercised; attempt fencing present at development.gleam:156-164 but single-attempt by grant.",
+        "finding": "F3"
+      },
+      "agy": {
+        "id": "D11",
+        "canonical_title": "Stable logical effect identity survives retries and task attempts",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Append-only triggers and unique idempotency keys verified in SQLite"
+      },
+      "fable_findings": [
+        "N9"
+      ],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D12",
+      "title": "Development edits use bounded files and cooperative compare/replace",
+      "challenge": "Inspect path aliases, inode checks, byte bounds, exclusive create, fsync and parent-rename limitations.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Bounded descriptor checks, exclusive create, fsync and digest compare/replace are implemented. Parent-directory rename races and hostile writers remain outside this cooperative scope.",
+      "claude": {
+        "id": "D12",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "files.gleam read/create/replace verified by reading: lstat+nlinks==1+size bound, open-descriptor inode/dev recheck, O_EXCL create, fsync file and parent, digest CAS re-read before rename, pending cleanup on failure. Limits are disclosed in the module header.",
+        "finding": "F4"
+      },
+      "agy": {
+        "id": "D12",
+        "canonical_title": "Development edits use bounded files and cooperative compare/replace",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Atomic file writes, byte caps, and fsync sync verified"
+      },
+      "fable_findings": [
+        "N3",
+        "N4",
+        "N9"
+      ],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D13",
+      "title": "Existing legacy MCP UTF-8 reader and Sa-plan adapter are repaired",
+      "challenge": "Identity-as-Result crashed; shell-joined argv hid exit failures; attempt was absent. Verify regressions and remaining legacy gaps.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Legacy UTF-8 Result, literal argv, exit status and positive attempt regressions are tested. Legacy broad reads and other client surfaces remain gaps.",
+      "claude": {
+        "id": "D13",
+        "verdict": "UNKNOWN",
+        "basis": "Legacy reader/adapter regressions not re-executed; no receipt re-derived at this revision.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D13",
+        "canonical_title": "Existing legacy MCP UTF-8 reader and Sa-plan adapter are repaired",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Argv-only process creation and process status checks repaired"
+      },
+      "fable_findings": [],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D14",
+      "title": "New finite stdio MCP development interface",
+      "challenge": "Check initialization, notification behavior, finite schema, roles, loaded code identity, deadlines and terminal reconciliation.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Initialized finite MCP transport, deadlines and typed service dispatch are exercised. Environment-asserted bootstrap binding is not generalized secure identity.",
+      "claude": {
+        "id": "D14",
+        "verdict": "UNKNOWN",
+        "basis": "Finite stdio MCP interface not exercised; no live initialize/notification observed.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D14",
+        "canonical_title": "New finite stdio MCP development interface",
+        "verdict": "REVISE",
+        "evidence": "Falsifier: harness_finish argument schema mismatch between mcp.gleam:159 and development.gleam:580. Deliberate finite bootstrap grant confirmed as intentional security mechanism bounding caller identity"
+      },
+      "fable_findings": [
+        "N5",
+        "N8"
+      ],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D15",
+      "title": "Clock policy separates UTC, signed monotonic duration, boot coordinates, reference age and delivery age",
+      "challenge": "Inspect real chrony adapter and continuity; clocks from different hosts/boots cannot be subtracted.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Actual Gleam clock separates reference age, delivery age, boot identity and UTC. The earlier 30x comparison was withdrawn as a domain error.",
+      "claude": {
+        "id": "D15",
+        "verdict": "REVISE",
+        "basis": "clock.gleam:23 policy max_evidence_age_us=3_600_000_000 is 30x the module's own strict_policy 120_000_000 with no stated rationale; the same field carries two distinct semantics at lines 78 and 86.",
+        "finding": "F5"
+      },
+      "agy": {
+        "id": "D15",
+        "canonical_title": "Clock policy separates UTC, signed monotonic duration, boot coordinates, reference age and delivery age",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Separate non-aliasing clock types enforced; Chrony Stratum 3 host clock verified"
+      },
+      "fable_findings": [
+        "F5-refutation",
+        "N9"
+      ],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D16",
+      "title": "Development, production primary and production standby are distinct roles",
+      "challenge": "Two hosts can run three isolated nodes; a dev candidate must not silently become a prod standby.",
+      "root_disposition": "UNKNOWN",
+      "basis": "Development, production primary and standby roles are designed; a replicated multi-node production arrangement has not been provisioned or observed here.",
+      "claude": {
+        "id": "D16",
+        "verdict": "UNKNOWN",
+        "basis": "Three-role isolation not observed; no standby node inspected.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D16",
+        "canonical_title": "Development, production primary and production standby are distinct roles",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Node role separation strictly declared; no silent promotion of dev to standby"
+      },
+      "fable_findings": [],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D17",
+      "title": "Complete declared state requires explicit durability/replication",
+      "challenge": "OTP supervision alone does not replicate state or solve split-brain. Check leases, queues, liabilities, models and knowledge state.",
+      "root_disposition": "UNKNOWN",
+      "basis": "SQLite persistence of task/workflow metadata is observed. Full state replication, liabilities, checkpoints and split-brain recovery are unverified.",
+      "claude": {
+        "id": "D17",
+        "verdict": "UNKNOWN",
+        "basis": "Durability/replication of declared state not observed.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D17",
+        "canonical_title": "Complete declared state requires explicit durability/replication",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "SQLite durable stores and append-only event ledgers verified"
+      },
+      "fable_findings": [],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D18",
+      "title": "Hot loading is conditional on candidate-bound migration/recovery",
+      "challenge": "No general “Gleam/OTP implies safe live upgrade” claim. Check appup/relup/sys semantics and native resource limits.",
+      "root_disposition": "UNKNOWN",
+      "basis": "Conditional OTP upgrades and recovery are specified; no production appup/relup/state migration has been exercised.",
+      "claude": {
+        "id": "D18",
+        "verdict": "UNKNOWN",
+        "basis": "appup/relup/sys semantics not exercised.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D18",
+        "canonical_title": "Hot loading is conditional on candidate-bound migration/recovery",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Hot upgrades conditional on candidate-bound migration and recovery tests"
+      },
+      "fable_findings": [],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D19",
+      "title": "OpenRouter coding profiles use paid GLM/Kimi/DeepSeek, decisions prefer Gemma 4",
+      "challenge": "Price/capability eligibility and local task quality must drive routing; model names do not establish best quality.",
+      "root_disposition": "UNKNOWN",
+      "basis": "Paid GLM/Kimi/DeepSeek and Gemma4 profiles are specified/components exist. No paid call or environment-based best-model ranking was observed in this bootstrap.",
+      "claude": {
+        "id": "D19",
+        "verdict": "UNKNOWN",
+        "basis": "Routing eligibility not exercised; no paid call made or observed by this reviewer.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D19",
+        "canonical_title": "OpenRouter coding profiles use paid GLM/Kimi/DeepSeek, decisions prefer Gemma 4",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Price and capability eligibility tiers verified in ecology_budget.ml"
+      },
+      "fable_findings": [],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D20",
+      "title": "OpenRouter aggregate budget is USD 10 per UTC day",
+      "challenge": "Durable reservations, USD0.25 bounded call liability, unknown spend retained, no automatic retries/refunds. No paid call has been made in this session.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "USD10/day durable reservation component has earlier bounded evidence. Universal routing through that ledger remains unfinished; zero paid calls is not enforcement proof.",
+      "claude": {
+        "id": "D20",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "Ledger design and USD0.25 per-request liability are declared in the risk receipt; no paid call receipt exists under var/harness/. Absence of spend is consistent with the packet claim, and absence is not proof of enforcement.",
+        "finding": "F6"
+      },
+      "agy": {
+        "id": "D20",
+        "canonical_title": "OpenRouter aggregate budget is USD 10 per UTC day",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Durable reservation component implemented in tools/ecology_budget.ml + daily_budget.gleam (398 native checks passed in journal 0356); zero paid calls made"
+      },
+      "fable_findings": [],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D21",
+      "title": "Adaptive routing optimizes for agent need and measured evidence",
+      "challenge": "Pure Gleam engine and budget adapters exist; actual production binding/calibration is not yet verified.",
+      "root_disposition": "REVISE",
+      "basis": "Routing components need live production binding, measured quality calibration and evidence-based adaptation.",
+      "claude": {
+        "id": "D21",
+        "verdict": "UNKNOWN",
+        "basis": "No production binding or calibration observed.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D21",
+        "canonical_title": "Adaptive routing optimizes for agent need and measured evidence",
+        "verdict": "REVISE",
+        "evidence": "Falsifier: live production calibration and measured quality feedback loops are unverified; local heuristics lack empirical verification"
+      },
+      "fable_findings": [],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D22",
+      "title": "Environment-specific evaluation includes Gleam, OCaml, Mojo, Lean, Quint, STM, Bayesian, Rete, STPA/FMEA",
+      "challenge": "Separate synthetic semantic cases, actual native executions and algorithms not verified (notably Rete-UL).",
+      "root_disposition": "REVISE",
+      "basis": "Earlier synthetic and native component suites exist. Rete-UL implementation and the full requested environment evaluation remain incomplete.",
+      "claude": {
+        "id": "D22",
+        "verdict": "UNKNOWN",
+        "basis": "Rete-UL and native executions not re-run in this pass.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D22",
+        "canonical_title": "Environment-specific evaluation includes Gleam, OCaml, Mojo, Lean, Quint, STM, Bayesian, Rete, STPA/FMEA",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Evaluation scope accepted; noted that Rete-UL forward-chaining and Bayesian models are synthetic cases rather than verified native algorithms"
+      },
+      "fable_findings": [],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D23",
+      "title": "Formal authority is invocation/candidate-specific",
+      "challenge": "No sorry/Admitted/unknown tool outcome counts as proof; declared Lean axioms remain explicit.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Formal admission remains candidate/invocation-specific. No new Lean/Quint whole-harness proof or system admission is asserted.",
+      "claude": {
+        "id": "D23",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "Consistent with this reviewer's own independent Lean axiom audit discipline; no sorry/Admitted claimed in the packet.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D23",
+        "canonical_title": "Formal authority is invocation/candidate-specific",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Invocation-bound formal checks fail closed; no undeclared axioms admitted"
+      },
+      "fable_findings": [],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D24",
+      "title": "Existing ecology baseline remains separate from new harness admission",
+      "challenge": "Last earlier observation: real local MAX and free OpenRouter request; local loop does not prove the entire ecology/UCon has external bindings.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Running local ecology baseline remains distinct from this development harness and from externally bound UCon/whole-ecology autonomy.",
+      "claude": {
+        "id": "D24",
+        "verdict": "UNKNOWN",
+        "basis": "Ecology baseline separation not observed at runtime.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D24",
+        "canonical_title": "Existing ecology baseline remains separate from new harness admission",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Baseline local MAX/free OpenRouter loop does not imply external UCon bindings or new harness admission"
+      },
+      "fable_findings": [],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D25",
+      "title": "Hooks are advisory until independently observed as enforcing",
+      "challenge": "Installed Codex hook check passed earlier; this is not universal client bypass prevention.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Hooks remain advisory; earlier hook checks do not prove universal MCP bypass prevention.",
+      "claude": {
+        "id": "D25",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "Packet states hooks are advisory until independently observed; this matches what this reviewer verified separately for the .claude/.agents/.codex preflight hooks.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D25",
+        "canonical_title": "Hooks are advisory until independently observed as enforcing",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Client-side hooks acknowledged as advisory; server/runtime enforcement required"
+      },
+      "fable_findings": [],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D26",
+      "title": "Journal/wiki/ZK/KM and algebraic atlas preserve claims and uncertainty",
+      "challenge": "Check exact 13 journal sections, timestamps, L0–L9, all 17 aspects, matching ASCII/Mermaid and real links.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Timestamped specification, atlas, 18-item checklists and paired diagram sources preserve uncertainty. Frozen review packet retains its original checklist defect.",
+      "claude": {
+        "id": "D26",
+        "verdict": "REVISE",
+        "basis": "Packet §Verification checklist declares 18 checkpoints as a 6-row summary table, not the 5-domain 18-item structure SC-CHECKLIST-001 specifies; individual checkpoint states are not itemised.",
+        "finding": "F7"
+      },
+      "agy": {
+        "id": "D26",
+        "canonical_title": "Journal/wiki/ZK/KM and algebraic atlas preserve claims and uncertainty",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Standardized 13-section journals, timestamps, and matching diagrams upheld"
+      },
+      "fable_findings": [
+        "N5"
+      ],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D27",
+      "title": "Primary/backup SRE requires independent observations and tested recovery",
+      "challenge": "Source tests and component counts cannot substitute for actual production/standby runtime behavior.",
+      "root_disposition": "UNKNOWN",
+      "basis": "Production/standby failover and recovery have no fresh candidate-bound runtime evidence in this review.",
+      "claude": {
+        "id": "D27",
+        "verdict": "UNKNOWN",
+        "basis": "No production/standby runtime behaviour observed.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D27",
+        "canonical_title": "Primary/backup SRE requires independent observations and tested recovery",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Runtime observation required; static component counts cannot substitute for recovery tests"
+      },
+      "fable_findings": [],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    },
+    {
+      "id": "D28",
+      "title": "Bootstrap completion requires observed finite service acceptance and peer reconciliation",
+      "challenge": "Verify recoverable completion, current source-bound build/test receipts, explicit residual gaps and no claimed whole-system admission.",
+      "root_disposition": "PENDING_FINAL_PROOF",
+      "basis": "70 scoped checks and 49 live registrations/readback passed; full Fable supplement and canonical bootstrap task completion remain pending.",
+      "claude": {
+        "id": "D28",
+        "verdict": "UNKNOWN",
+        "basis": "Bootstrap completion not observed; HARNESSBOOT is state=executing at review time.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D28",
+        "canonical_title": "Bootstrap completion requires observed finite service acceptance and peer reconciliation",
+        "verdict": "REVISE",
+        "evidence": "Falsifier: Root MCP tests currently observed 46 PASS at 05:52:52 with final tracking pending; bootstrap completion requires peer reconciliation and clean candidate test receipts"
+      },
+      "fable_findings": [
+        "N1",
+        "N2",
+        "N7",
+        "N8"
+      ],
+      "fable_full_census": "REQUESTED_ADDITIVE_REVIEW_PENDING",
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion."
+    }
+  ],
+  "seventeen_canonical_aspects": [
+    {
+      "name": "1 Substrate and hardware safety",
+      "requirement": "Preserve host storage interlocks; harness cannot override denied devices.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "Protected storage was not exercised; no storage operation is authorized by this review."
+    },
+    {
+      "name": "2 Version control",
+      "requirement": "Preserve standalone JJ, source ownership and candidate identification.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "Standalone JJ remains governing; finite source digests, rather than a newly sealed immutable revision, bind current tests."
+    },
+    {
+      "name": "3 Purity and provenance",
+      "requirement": "Preserve excluded dependencies and read-only external source discipline.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "No new dependency/import was introduced by tracking; whole-tree purity gate was not rerun."
+    },
+    {
+      "name": "4 Supervision",
+      "requirement": "Gleam/OTP owns the agent and service supervision hierarchy.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "Finite development MCP process runs on OTP; full restart/failover tree remains unverified."
+    },
+    {
+      "name": "5 Deterministic runtime",
+      "requirement": "ZigVM remains a contracted deterministic backend where admitted.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "No new ZigVM kernel/VFS runtime verification."
+    },
+    {
+      "name": "6 Evidence and analysis",
+      "requirement": "Hermes tools remain bounded evidence services under Gleam control.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "Existing bounded native Sa-plan/validator adapters execute under Gleam control; broader Hermes services remain unmapped."
+    },
+    {
+      "name": "7 Mathematical authority",
+      "requirement": "Actual Lean/Quint/solver evidence remains invocation-specific.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "No new candidate-bound Lean/Quint/solver proof; UNKNOWN is retained."
+    },
+    {
+      "name": "8 Feedback and homeostasis",
+      "requirement": "Separate observation, decision, authority and effect.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "Earlier local ecology observations do not establish external holon homeostasis."
+    },
+    {
+      "name": "9 Inference",
+      "requirement": "MAX/Mojo isolation and centrally controlled OpenRouter requests.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "Earlier MAX/free-model and durable-budget evidence are component evidence; paid production routing remains unverified."
+    },
+    {
+      "name": "10 Mesh and observability",
+      "requirement": "MCP/Zenoh adapters share identity, correlation and tracing.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "MCP is exercised; admitted Zenoh equivalence and all-client tracing remain open."
+    },
+    {
+      "name": "11 Agent events",
+      "requirement": "Lifecycle, reasoning, tool, state and result events reflect actual transitions.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "Canonical cockpit has static demo events labelled Live, confirmed by independent review."
+    },
+    {
+      "name": "12 Declarative UI",
+      "requirement": "Components project typed harness state and uncertainty.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "Completion dashboard projection is missing; generated review/report does not imply a deployed dashboard."
+    },
+    {
+      "name": "13 Interfaces",
+      "requirement": "Web, API, TUI, IDE and agent clients share the same authority semantics.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "IDE/CLI/agent/Web surfaces do not yet share universally enforced harness authority."
+    },
+    {
+      "name": "14 Navigation",
+      "requirement": "Preserve full clickable Tailnet FQDN links and actual service identity.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "Peer observed HTTP200 at 4100/4110; publication of newly authored documents is not yet observed."
+    },
+    {
+      "name": "15 Verification checklist",
+      "requirement": "Every check reports its actual scope, freshness and result.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "Targeted test evidence is scoped; 18 checklist items and mathematical gates are not blanket passing."
+    },
+    {
+      "name": "16 Knowledge triad",
+      "requirement": "Group journals and synchronize wiki/ZK/KM evidence without rewriting history.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "New grouped artifacts preserve prior reviews and cross-links; global KM ingestion/sync is not verified."
+    },
+    {
+      "name": "17 Durable execution",
+      "requirement": "Sa-plan remains the canonical task/job/workflow authority.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "Canonical feature task/job/workflow/activity records are being read back through the Gleam harness."
+    }
+  ],
+  "peer_artifacts": [
+    {
+      "role": "Claude",
+      "path": "docs/journal/20260909-0721-claude-opus5-harness-evolution-review.json",
+      "sha256": "4e5958f8787228d55f5ca035d5e3793825f781d8e3c1a824b8715572a2dd2bf1"
+    },
+    {
+      "role": "Claude dashboard",
+      "path": "docs/journal/20260909-0720-claude-opus5-harness-feature-matrix.json",
+      "sha256": "de0c2b4c41c3a926603d5ff737a2d63e9374a1621b837159cccb94fdbe324db1"
+    },
+    {
+      "role": "AGY corrected census",
+      "path": "docs/journal/20260909-0815-agy-harness-evolution-canonical-reconciliation.json",
+      "sha256": "c20bb75e46d95c3467b4d6d05650e3bd733177a5c3943c8b0212f5c719269f4b"
+    },
+    {
+      "role": "Fable delegated",
+      "path": "docs/journal/20260909-0854-fable-delegated-review-and-reconciliation.json",
+      "sha256_reported_by_peer": "99370d30f39df647cc29a4ed226f5d360df4d37e5ed0dcd3cef8419d24787017",
+      "limits": [
+        "Delegated model, not a separate sovereign session or admission vote",
+        "Original UTC placeholder and shortened source hashes are not valid fresh evidence",
+        "Full census supplement requested"
+      ]
+    },
+    {
+      "role": "AGY exact17 aspects",
+      "path": "docs/journal/20260909-0835-agy-harness-formal-spec-17-aspects-reconciliation.json",
+      "sha256": "9d6ee8a59803a5a3a7d98a55c7cccceb25eb5dbb0a4532e5fff59b8e989cf217"
+    }
+  ],
+  "review_corrections": [
+    "Claude F5 reference-age versus delivery-age comparison withdrawn by Fable and reconciled.",
+    "AGY initial arithmetic and decision-ID mapping corrected additively; original artifacts preserved.",
+    "AGY alternative 17-aspect taxonomy is not the formal spec section7 taxonomy; exact mapping requested.",
+    "Raw Chrony/preflight/SQLite component tests do not establish all-layer TPS, full release assurance or harness system admission.",
+    "Source churn makes earlier 28/46/69-test receipts stale after later edits; final proof must match current finite manifest.",
+    "MCP prompt delivery is not review ACK; real visible responses and artifact reads provide bounded peer evidence.",
+    "Some peer checks used direct Python/Bash/OCaml outside the desired Gleam service boundary; this is a method nonconformance, not universal harness enforcement.",
+    "AGY exact formal-spec17-aspect mapping was returned additively in 20260909-0835 artifact. Broad claims remain restricted to component scope; earlier candidate and foreign-root tests are not new harness evidence."
+  ],
+  "remaining_high_priority": [
+    "Repair cockpit demo-as-live telemetry and deploy a truthful feature completion surface under a separate admitted runtime task.",
+    "Add secure caller grants and mandatory harness-only client enforcement.",
+    "Pin bootstrap host adapter exceptions and bind an isolated validated workspace.",
+    "Add verified Zenoh parity/correlation and runtime service bindings.",
+    "Bind adaptive OpenRouter workers to canonical daily reservations and calibrate on the environment suite.",
+    "Implement production/standby replication, failure recovery and compatible release migration.",
+    "Implement bounded native-generation backends and requested formal/algorithm services."
+  ],
+  "provenance": {
+    "admitted_ev_ceiling": 93,
+    "not_admitted": "EV-94..EV-109",
+    "new_ev_number_created": false
+  },
+  "finite_proof": {
+    "build_intent_id": "bootstrap-tracking-completion-build-1",
+    "test_intent_id": "bootstrap-tracking-completion-test-1",
+    "build_receipt": "var/harness/effects/20260909-0412-bootstrap-tracking-completion-build-1-result.json",
+    "test_receipt": "var/harness/effects/20260909-0412-bootstrap-tracking-completion-test-1-result.json",
+    "source_manifest_sha256": "17a361e92d2d50dc5ce435db199d1a89e2585550367ee4cae9cc66f07452cb58",
+    "source_manifest": [
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/value.gleam",
+        "sha256": "c5ed1c8f561dc083e230ee6e45a124639859419daa4fc9a9358dee6b0155fda2"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/files.gleam",
+        "sha256": "e478adc77086491ffbdf3a9276c77a6a3d4366c5e6bf6d8af5a5bf0157f8900e"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/clock.gleam",
+        "sha256": "a8df8dcb7767c89081b3431f0a6ddfc338f53fdfaa884315024af8482194325d"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+        "sha256": "b750bda8550c6684875217e2b048cd7a5fb4ea0f2f75baf04ceb4b46120e6e25"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+        "sha256": "3c737157417b145af952e643d1b460de697c3ed5496e3e24732205d79a6f550c"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/peers.gleam",
+        "sha256": "2a0ca519c89a1237d9d17aa8a692162a4ecdcee9bcc346237ed81c263bd8d456"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+        "sha256": "3fc0468cc51d2692dc9de73a22fc061f19e6f1e68ec234584aaf23ec913a91f7"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+        "sha256": "294cac68950b937b66e963acf3b8ad61e2b1b246a8488845db347352a5a911f2"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+        "sha256": "25bc773828e687d677d67abe9e7eba1d5e861d493ccd821efc79e078380da39e"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam",
+        "sha256": "7d9d3e31c2ef06ceed016b7077cb5d466b6524bcc6cea35cdd8200a4439b70ae"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/ecology_capability_ffi.erl",
+        "sha256": "ea39820d592d68d10cbbb1fffa12dff7d0080c4d5eadcf327c80ef23077af8fd"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam_ffi.erl",
+        "sha256": "885184eebc001436cd86c24170be9c7e61c402d55f48661bc5d3d47c2e7020d9"
+      },
+      {
+        "path": "apps/cepaf_gleam/test/harness_development_test.gleam",
+        "sha256": "2f2660b37a49ce59ad4d5c1bf5b374e3d7048a18d1ae16c22432ef2d2a22d0ef"
+      },
+      {
+        "path": "apps/cepaf_gleam/test/harness_authority_test.gleam",
+        "sha256": "d3960998cf24bb42183b0e9460b9aecf6bb8d238a26c64d261acb3ec15432c70"
+      },
+      {
+        "path": "apps/cepaf_gleam/test/harness_tracking_test.gleam",
+        "sha256": "778fa3697a9365d5785453d31932b929d584d7e594efabcc7d8a911ebb8bc6aa"
+      },
+      {
+        "path": "apps/cepaf_gleam/test/harness_sa_plan_boundary_test.gleam",
+        "sha256": "b073cf4e783200c78b1803dfe55e684a4eebec28509d08f912aa2b382e1fa565"
+      },
+      {
+        "path": "apps/cepaf_gleam/test/harness_verification.gleam",
+        "sha256": "48e7110f5ac08c52800e643e485984e5fe6fefc45c3ccad44ee7b5f73b0be265"
+      },
+      {
+        "path": "apps/cepaf_gleam/test/mcp_runtime_truth_test.gleam",
+        "sha256": "bc8e4d16659ea2fe2f7325d9e572775726ab4f86da896a0713b65234f5c37a50"
+      },
+      {
+        "path": "apps/cepaf_gleam/gleam.toml",
+        "sha256": "16981483da2c0eed23e5c33768a7ed956988019f42ba99d7359bc293f53dd94b"
+      },
+      {
+        "path": "apps/cepaf_gleam/manifest.toml",
+        "sha256": "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169"
+      },
+      {
+        "path": "apps/uos_swarm/src/session_sync_cli.gleam",
+        "sha256": "24be441a10362ed84dfed4c8e7c66f11f456a20aa7a066e2dc726d5b0e66c335"
+      },
+      {
+        "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+        "sha256": "3894c5b5e7c229d610d5e76ab35027dbac5161d422398a21761188b7a7fc0959"
+      },
+      {
+        "path": "apps/uos_swarm/src/uos_swarm/clock_contract.gleam",
+        "sha256": "516c0d769cb3f5f8dc827d09fa62aef724686ca1565096ba1c55b5a912df311e"
+      },
+      {
+        "path": "apps/uos_swarm/src/uos_swarm/clock_guard.gleam",
+        "sha256": "38987ae4ff5d16752aacfc070b4781ef095560a5d8480e4ac3c6e5a55700f9a4"
+      },
+      {
+        "path": "apps/uos_swarm/src/session_store_ffi.erl",
+        "sha256": "72630cf09783dd4e78c855fd8411594a362b72a43901d5ebafba489846a44b20"
+      },
+      {
+        "path": "tools/ecology_process.ml",
+        "sha256": "cb5bc7a25b562ecc259696920f84f59e172b78842c3b53b3ed6173b2ab752ecf"
+      },
+      {
+        "path": "tools/lib/uos-toolchain.sh",
+        "sha256": "6edb015a4beed7052dd560fbec0bce8a7dc2606addd360b66187c48844bb5d95"
+      },
+      {
+        "path": "governance/capability-inventory/20260909-0412-harness-feature-catalog.json",
+        "sha256": "e631c77fff18c202bb527545844a4834b0d3f4f53200f585878f95bd60652a4d"
+      }
+    ],
+    "source_manifest_unchanged": true,
+    "loaded_dispatch_module_md5": "00fe7e27a175b90928a1ba153c7fac56",
+    "observed_start": {
+      "utc": "2026-09-09T06:36:50.273085Z",
+      "utc_us": "1788935810273085",
+      "boot_us": "18132190000",
+      "host_id": "cd94f98268381d66d53599f7a786afebc88f0049dac3cab64cec563f77613cb7",
+      "boot_id": "1cb3ba2d-5600-44d5-b2d4-a88abea6b365",
+      "offset_us": 567,
+      "uncertainty_us": 17202,
+      "reference_age_us": 452893702,
+      "receipt_age_us": 60000,
+      "delivery_us": 64953,
+      "source": "chronyc:-c-tracking:reference-utc",
+      "reference_max_age_us": 3600000000,
+      "sample_max_delivery_us": 3000000,
+      "authority": "OBSERVATION_ONLY"
+    },
+    "observed_end": {
+      "utc": "2026-09-09T06:36:54.282790Z",
+      "utc_us": "1788935814282790",
+      "boot_us": "18136200000",
+      "host_id": "cd94f98268381d66d53599f7a786afebc88f0049dac3cab64cec563f77613cb7",
+      "boot_id": "1cb3ba2d-5600-44d5-b2d4-a88abea6b365",
+      "offset_us": 565,
+      "uncertainty_us": 17207,
+      "reference_age_us": 456903407,
+      "receipt_age_us": 60000,
+      "delivery_us": 66446,
+      "source": "chronyc:-c-tracking:reference-utc",
+      "reference_max_age_us": 3600000000,
+      "sample_max_delivery_us": 3000000,
+      "authority": "OBSERVATION_ONLY"
+    },
+    "test_count": 70,
+    "test_count_basis": "Actual EUnit detail: All 70 tests passed.",
+    "verification": "passed",
+    "admission": "NOT_GRANTED"
+  },
+  "feature_tracking": {
+    "snapshot": "governance/capability-inventory/20260909-0626-harness-feature-progress.json",
+    "observed_after": {
+      "utc": "2026-09-09T06:36:54.282790Z",
+      "utc_us": "1788935814282790",
+      "boot_us": "18136200000",
+      "host_id": "cd94f98268381d66d53599f7a786afebc88f0049dac3cab64cec563f77613cb7",
+      "boot_id": "1cb3ba2d-5600-44d5-b2d4-a88abea6b365",
+      "offset_us": 565,
+      "uncertainty_us": 17207,
+      "reference_age_us": 456903407,
+      "receipt_age_us": 60000,
+      "delivery_us": 66446,
+      "source": "chronyc:-c-tracking:reference-utc",
+      "reference_max_age_us": 3600000000,
+      "sample_max_delivery_us": 3000000,
+      "authority": "OBSERVATION_ONLY"
+    },
+    "observed_before": "2026-09-09T06:37:50.399917Z",
+    "features": 49,
+    "tasks_registered": 49,
+    "jobs_registered": 49,
+    "workflows_registered": 49,
+    "progress_current": 49,
+    "task_states": [
+      "available"
+    ],
+    "job_states": [
+      "available"
+    ],
+    "verified_acceptance": 0,
+    "workers_started": false,
+    "tracking_does_not_complete_tasks": true,
+    "edges_and_job_args": "CLI omits these fields; matched exact fenced creation receipts rather than claiming an independent database readback."
+  }
+}

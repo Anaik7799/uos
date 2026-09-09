@@ -43,7 +43,8 @@ pub fn absent_nif_is_not_advertised_and_call_fails_closed_test() {
       |> json.to_string
       |> string.contains("\"nif_runtime_status\":\"unavailable\"")
       |> should.be_true
-      let names = tools.operational_tool_definitions() |> list.map(fn(t) { t.name })
+      let names =
+        tools.operational_tool_definitions() |> list.map(fn(t) { t.name })
       names |> list.contains("plan_status") |> should.be_false
       names |> list.contains("system_health") |> should.be_false
       names |> list.contains("verification_run") |> should.be_false
@@ -58,7 +59,8 @@ pub fn absent_nif_is_not_advertised_and_call_fails_closed_test() {
       |> json.to_string
       |> string.contains("\"nif_runtime_status\":\"available\"")
       |> should.be_true
-      let names = tools.operational_tool_definitions() |> list.map(fn(t) { t.name })
+      let names =
+        tools.operational_tool_definitions() |> list.map(fn(t) { t.name })
       names |> list.contains("plan_status") |> should.be_true
     }
   }
@@ -75,6 +77,17 @@ pub fn missing_file_is_a_tool_error_test() {
     )
   response |> is_tool_error |> should.equal(Ok(True))
   response |> string.contains("enoent") |> should.be_true
+}
+
+pub fn existing_utf8_file_is_read_without_crashing_transport_test() {
+  let response =
+    tool_call(
+      "file-existing",
+      "read_file",
+      json.object([#("path", json.string("gleam.toml"))]),
+    )
+  response |> string.contains("cepaf_gleam") |> should.be_true
+  response |> string.contains("Invalid UTF-8") |> should.be_false
 }
 
 pub fn valid_string_integer_and_number_ids_are_preserved_test() {
@@ -243,5 +256,3 @@ pub fn sa_plan_durable_tools_advertised_test() {
   names |> list.contains("sa_job_enqueue") |> should.be_true
   names |> list.contains("sa_workflow_start") |> should.be_true
 }
-
-

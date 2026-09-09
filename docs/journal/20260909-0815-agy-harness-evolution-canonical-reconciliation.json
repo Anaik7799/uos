@@ -1,0 +1,112 @@
+{
+  "schema": "uos.harness.review.reconciliation.v2",
+  "review_request_id": "agy-harness-1",
+  "root_session": "01a083d2-baa3-7783-8e45-5357cc9e96d8",
+  "reviewer_session": "abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82",
+  "worker_id": "worker-agy-abe9bd8d",
+  "timestamp_iso": "2026-09-09T06:15:00Z",
+  "preservation": {
+    "prior_receipt_1": {
+      "path": "docs/journal/20260909-0541-agy-harness-evolution-independent-review.json",
+      "sha256": "87a3c6531afc18c682ce5f43d7aad53581dfb2b64d0b5bd9ce5ae159668eb302",
+      "status": "PRESERVED_UNTOUCHED"
+    },
+    "prior_receipt_2": {
+      "path": "docs/journal/20260909-0750-agy-harness-evolution-review-correction.json",
+      "sha256": "4cff801f1e92659cf928f9fef91cf7e1d9c3613f26562529fb6eebaa70ec47a2",
+      "status": "PRESERVED_UNTOUCHED"
+    }
+  },
+  "canonical_decisions_d01_d28": {
+    "summary": {
+      "total": 28,
+      "accept_within_scope": 23,
+      "revise": 5,
+      "reject": 0,
+      "unknown": 0
+    },
+    "decisions": [
+      {"id": "D01", "canonical_title": "Canonical UOS reuses C3I/Indrajaal concepts and VM-1 as read-only evidence", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "Source provenance checked; external trees read-only per policy §3"},
+      {"id": "D02", "canonical_title": "Agentic holons discover the full capability set and activate authorized subsets", "verdict": "REVISE", "evidence": "Falsifier: 4110 dashboard displays 26 participants, but external system bindings are uninstantiated stubs; authorized activation sets must be explicitly fenced"},
+      {"id": "D03", "canonical_title": "Gleam/OTP owns all agents, orchestration, policies, clock/check verdicts and backend choice", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "uos_sup.gleam owns root supervision; native adapters confined behind port boundaries"},
+      {"id": "D04", "canonical_title": "MCP and admitted Zenoh share typed intents and receipts", "verdict": "REVISE", "evidence": "Falsifier: development.gleam:533 reports zenoh UNAVAILABLE_NOT_VERIFIED; topic mappings and reply correlation deadlines unverified"},
+      {"id": "D05", "canonical_title": "All newly authored control implementation is Gleam", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "Pure Gleam control plane adhered to; native adapters internal only"},
+      {"id": "D06", "canonical_title": "Native generation is proposed via a constrained typed kernel IR", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "Scoped strictly to verified AST facades, no unverified general code generation"},
+      {"id": "D07", "canonical_title": "Native ABI/runtime ownership gates preserve semantics", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "MAX Mojo daemon isolated to supervised stdio pipe; pure Erlang Graphene facade"},
+      {"id": "D08", "canonical_title": "Sa-plan is sole task/job/workflow authority", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "Enforced via tools/sa_plan_main.exe and var/sa-plan/uos.sqlite3"},
+      {"id": "D09", "canonical_title": "Fractal TPS/Jidoka limits scope and stops uncertain effects", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "Fail-closed Andon stop line (error -32002) prevents unledgered side-effects"},
+      {"id": "D10", "canonical_title": "Coordinator leases are cooperative; task/runtime/integration ownership differ", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "Coordinator board leases and ACKs grant no deployment or system admission authority"},
+      {"id": "D11", "canonical_title": "Stable logical effect identity survives retries and task attempts", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "Append-only triggers and unique idempotency keys verified in SQLite"},
+      {"id": "D12", "canonical_title": "Development edits use bounded files and cooperative compare/replace", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "Atomic file writes, byte caps, and fsync sync verified"},
+      {"id": "D13", "canonical_title": "Existing legacy MCP UTF-8 reader and Sa-plan adapter are repaired", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "Argv-only process creation and process status checks repaired"},
+      {"id": "D14", "canonical_title": "New finite stdio MCP development interface", "verdict": "REVISE", "evidence": "Falsifier: harness_finish argument schema mismatch between mcp.gleam:159 and development.gleam:580. Deliberate finite bootstrap grant confirmed as intentional security mechanism bounding caller identity"},
+      {"id": "D15", "canonical_title": "Clock policy separates UTC, signed monotonic duration, boot coordinates, reference age and delivery age", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "Separate non-aliasing clock types enforced; Chrony Stratum 3 host clock verified"},
+      {"id": "D16", "canonical_title": "Development, production primary and production standby are distinct roles", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "Node role separation strictly declared; no silent promotion of dev to standby"},
+      {"id": "D17", "canonical_title": "Complete declared state requires explicit durability/replication", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "SQLite durable stores and append-only event ledgers verified"},
+      {"id": "D18", "canonical_title": "Hot loading is conditional on candidate-bound migration/recovery", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "Hot upgrades conditional on candidate-bound migration and recovery tests"},
+      {"id": "D19", "canonical_title": "OpenRouter coding profiles use paid GLM/Kimi/DeepSeek, decisions prefer Gemma 4", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "Price and capability eligibility tiers verified in ecology_budget.ml"},
+      {"id": "D20", "canonical_title": "OpenRouter aggregate budget is USD 10 per UTC day", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "Durable reservation component implemented in tools/ecology_budget.ml + daily_budget.gleam (398 native checks passed in journal 0356); zero paid calls made"},
+      {"id": "D21", "canonical_title": "Adaptive routing optimizes for agent need and measured evidence", "verdict": "REVISE", "evidence": "Falsifier: live production calibration and measured quality feedback loops are unverified; local heuristics lack empirical verification"},
+      {"id": "D22", "canonical_title": "Environment-specific evaluation includes Gleam, OCaml, Mojo, Lean, Quint, STM, Bayesian, Rete, STPA/FMEA", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "Evaluation scope accepted; noted that Rete-UL forward-chaining and Bayesian models are synthetic cases rather than verified native algorithms"},
+      {"id": "D23", "canonical_title": "Formal authority is invocation/candidate-specific", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "Invocation-bound formal checks fail closed; no undeclared axioms admitted"},
+      {"id": "D24", "canonical_title": "Existing ecology baseline remains separate from new harness admission", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "Baseline local MAX/free OpenRouter loop does not imply external UCon bindings or new harness admission"},
+      {"id": "D25", "canonical_title": "Hooks are advisory until independently observed as enforcing", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "Client-side hooks acknowledged as advisory; server/runtime enforcement required"},
+      {"id": "D26", "canonical_title": "Journal/wiki/ZK/KM and algebraic atlas preserve claims and uncertainty", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "Standardized 13-section journals, timestamps, and matching diagrams upheld"},
+      {"id": "D27", "canonical_title": "Primary/backup SRE requires independent observations and tested recovery", "verdict": "ACCEPT_WITHIN_SCOPE", "evidence": "Runtime observation required; static component counts cannot substitute for recovery tests"},
+      {"id": "D28", "canonical_title": "Bootstrap completion requires observed finite service acceptance and peer reconciliation", "verdict": "REVISE", "evidence": "Falsifier: Root MCP tests currently observed 46 PASS at 05:52:52 with final tracking pending; bootstrap completion requires peer reconciliation and clean candidate test receipts"}
+    ]
+  },
+  "canonical_17_aspects_strict": {
+    "summary": {
+      "runtime_verified": 4,
+      "design_and_source_reviewed": 9,
+      "unknown": 4
+    },
+    "aspects": [
+      {"aspect": "A01", "name": "Denotational Specification", "status": "DESIGN_AND_SOURCE_REVIEWED", "evidence": "Gospel contracts & Traceability.lean reviewed in source; not re-proved at candidate"},
+      {"aspect": "A02", "name": "Algebraic Atlas & Laws", "status": "DESIGN_AND_SOURCE_REVIEWED", "evidence": "Harmonic sheaf laws in Century_Harmony.lean reviewed in source"},
+      {"aspect": "A03", "name": "Deterministic Runtime Kernel", "status": "DESIGN_AND_SOURCE_REVIEWED", "evidence": "ZigVM VFS & arena allocator contracts reviewed in source"},
+      {"aspect": "A04", "name": "Bounded Kernels & FFI Safety", "status": "DESIGN_AND_SOURCE_REVIEWED", "evidence": "graphene_nif.erl facade & NVMe lock spec reviewed in source"},
+      {"aspect": "A05", "name": "Supervision & Authority Lifecycle", "status": "DESIGN_AND_SOURCE_REVIEWED", "evidence": "uos_sup.gleam reviewed; process tree live on 4100; live restart dynamics unexercised"},
+      {"aspect": "A06", "name": "Fractal Jidoka & TPS Stop Lines", "status": "RUNTIME_VERIFIED", "evidence": "sa_plan_main.exe pull queue, leases, and receipts verified by native execution"},
+      {"aspect": "A07", "name": "Clock Synchronization Invariants", "status": "RUNTIME_VERIFIED", "evidence": "Chrony Stratum 3 tracking verified (offset -0.000181s; drift <2s)"},
+      {"aspect": "A08", "name": "Replay Determinism & Parity Oracles", "status": "UNKNOWN", "evidence": "No fresh differential parity oracle test executed at this candidate revision"},
+      {"aspect": "A09", "name": "OpenRouter Daily Budget Guard", "status": "DESIGN_AND_SOURCE_REVIEWED", "evidence": "tools/ecology_budget.ml & daily_budget.gleam reviewed; 398 checks pass in journal 0356"},
+      {"aspect": "A10", "name": "Multi-Environment Evaluation", "status": "UNKNOWN", "evidence": "Multi-environment evaluation suite unrun by reviewer; blocked by DEF-01 in preflight"},
+      {"aspect": "A11", "name": "Dev / Prod / Standby Isolation", "status": "DESIGN_AND_SOURCE_REVIEWED", "evidence": "Bootstrap isolation boundary reviewed in source; multi-node network unverified"},
+      {"aspect": "A12", "name": "Standby Lifecycle & Hot Upgrade", "status": "UNKNOWN", "evidence": "BEAM release upgrade design reviewed; live hot reload unverified"},
+      {"aspect": "A13", "name": "SDLC / SRE Release Assurance", "status": "RUNTIME_VERIFIED", "evidence": "In-project preflight executed 31/31 PASS; tools/lib/uos-toolchain.sh verified"},
+      {"aspect": "A14", "name": "Multi-Surface Triple Interface", "status": "DESIGN_AND_SOURCE_REVIEWED", "evidence": "Rendered HTML inspected at 4100/4110; Falsifier H1 shows 4100 uses static demo events"},
+      {"aspect": "A15", "name": "AG-UI 32-Event Protocol", "status": "UNKNOWN", "evidence": "Schema reviewed in source; Falsifier H1 shows AG-UI panel on 4100 renders static demo events"},
+      {"aspect": "A16", "name": "A2UI Declarative Component Catalog", "status": "DESIGN_AND_SOURCE_REVIEWED", "evidence": "233 component schemas & security allowlist reviewed in catalog.gleam"},
+      {"aspect": "A17", "name": "Sovereign Provenance & Admission", "status": "RUNTIME_VERIFIED", "evidence": "SC-PROVENANCE-001 ceiling EV-93 enforced; EV94..109 confirmed NOT_ADMITTED"}
+    ]
+  },
+  "dashboard_falsifiers": {
+    "FALSIFIER_H1": {
+      "surface": "http://nas-1.tail55d152.ts.net:4100/ (Canonical Cockpit)",
+      "observed": "AG-UI 'Live' panel renders static demo_events timestamps 01:42:10; container indicator shows 16/16 containers healthy",
+      "ground_truth": "Actual host podman reports 2 containers running; AG-UI events are static fixtures",
+      "verdict": "Rendered cockpit HTML is a simulated visualization fixture, not measured runtime telemetry"
+    },
+    "FALSIFIER_H2": {
+      "surface": "http://nas-1.tail55d152.ts.net:4110/ecology (Ecology Cockpit)",
+      "observed": "Reports 26 participants and 11 capabilities, but explicitly disclaims absent external system bindings and marks 7 checklist domains UNRUN",
+      "ground_truth": "Local cognition/diagnostics only; participants share one local actor; external bindings uninstantiated",
+      "verdict": "Truthful disclosure of local-only diagnostic boundaries"
+    }
+  },
+  "authority_and_provenance": {
+    "sqlite_e2bb_evidence": "Conducted in /tmp/uos-store-verification-run-729981 for EV admission root 01a08017; confers NO harness admission for root 01a083d2",
+    "sa_plan_authority": {
+      "database": "var/sa-plan/uos.sqlite3",
+      "plan_id": "uos/ecology-harness-agy-review/20260909-0730",
+      "task_id": "AGY-HARNESS-REVIEW",
+      "worker": "worker-agy-abe9bd8d",
+      "state": "completed"
+    },
+    "admitted_ev_ceiling": 93,
+    "unadmitted_range": "EV-94..EV-109",
+    "runtime_admission": "NOT_GRANTED"
+  }
+}

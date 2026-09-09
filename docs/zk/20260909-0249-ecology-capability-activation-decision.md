@@ -16,6 +16,8 @@ Consequences: local analysis can continue when OpenRouter is unavailable. A fail
 
 The review falsifier `{choices:[]}` previously produced a successful empty model answer; strict decoding now refuses it. A child that calls `setsid()` escapes process-group cleanup, so that helper's claim is narrowed and managed service containment must be observed separately.
 
+The actual free model and MAX ports subsequently passed startup and controlled restart recovery on the canonical OTP29 service. The operator added10USD/day paid model authorization and requested a needs-based engine review. Extend the existing pure operation-class router with one durable reservation/receipt path; keep paid profiles explicit, keep model-quality claims tied to independently verified outcomes, and preserve the separate free path. [Review and recommendation](http://nas-1.tail55d152.ts.net:4100/docs/design/20260909-0314-openrouter-engine-review-and-recommendation.md) records the source findings and design. Paid/adaptive operation is not implied by a healthy free/MAX baseline.
+
 **Previous:** [Shared ecology wiki](http://nas-1.tail55d152.ts.net:4100/docs/docs/wiki/20260909-0249-agentic-ecology.md) · **Next:** [KM machine index](http://nas-1.tail55d152.ts.net:4100/files/governance/capability-inventory/20260909-0249-ecology-km-index.json)
 
 <details><summary>Verification checklist — 5 domains, 18 checkpoints</summary>
@@ -32,4 +34,3 @@ Domain 6 provenance: admitted EV ceiling remains 93. No EV or ADR number is mint
 </details>
 
 **UOS footer:** Local implementation and observed behavior have explicitly bounded scope; no whole-system admission.
-

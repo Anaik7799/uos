@@ -2355,6 +2355,145 @@ fn holon_meta_concepts() -> List(Concept) {
 }
 
 // ---------------------------------------------------------------------------
+// 21. Determinate Nix, In-Project Toolchain & Provenance Defense Vocabulary
+// ---------------------------------------------------------------------------
+
+fn toolchain_provenance_concepts() -> List(Concept) {
+  [
+    mk(
+      "nix:determinate-nix",
+      "Determinate Nix",
+      "niryāyaka-nix",
+      "निर्यायक-निक्स",
+      Governance,
+      0,
+      [3, 5],
+      "control-plane",
+      "The sole toolchain provisioning authority (SC-NIX-DEVENV-001); supplies hermetic profile symlink farms under toolchains/nix-profile without ad-hoc host dependencies.",
+      ["nix:devenv", "preflight:toolchain"],
+      "contracts/rules/20260908-2142-determinate-nix-devenv-mandate.md",
+    ),
+    mk(
+      "nix:devenv",
+      "devenv",
+      "vikāsa-paryāvaraṇa",
+      "विकास-पर्यावरण",
+      Governance,
+      0,
+      [3, 4],
+      "control-plane",
+      "Reproducible developer and test environment definition (devenv.nix, devenv.yaml) enforcing OTP 29 runtime pins and isolated test execution.",
+      ["nix:determinate-nix", "preflight:toolchain"],
+      "contracts/rules/20260908-2142-determinate-nix-devenv-mandate.md",
+    ),
+    mk(
+      "preflight:toolchain",
+      "In-Project Toolchain Preflight",
+      "upakaraṇa-prāg-parīkṣā",
+      "उपकरण-प्राग्-परीक्षा",
+      Runtime,
+      1,
+      [3, 15],
+      "runtime-plane",
+      "The repository-local gate (tools/preflight, G-PREFLIGHT, SC-TOOLCHAIN-INPROJECT-001) verifying that all 20 entrypoints execute under $UOS_ROOT and report valid status.",
+      ["nix:determinate-nix", "nix:devenv"],
+      "tools/lib/uos-toolchain.sh:uos_env",
+    ),
+    mk(
+      "provenance:admitted-ev-ceiling",
+      "Admitted EV Ceiling",
+      "svīkṛta-vikāsa-sīmā",
+      "स्वीकृत-विकास-सीमा",
+      Governance,
+      0,
+      [6, 16],
+      "control-plane",
+      "The machine-checked ceiling (admitted_ev_ceiling = 93, SC-PROVENANCE-001, INV-PROV-05) barring unadmitted EV numbers EV-94..EV-109 from claiming admission without fresh two-key verification.",
+      ["provenance:append-only-defense"],
+      "contracts/rules/20260908-0912-provenance-integrity-contract.md",
+    ),
+    mk(
+      "provenance:append-only-defense",
+      "Append-Only Trigger Defense",
+      "kevala-yojana-rakṣā",
+      "केवल-योजन-रक्षा",
+      Safety,
+      2,
+      [1, 6],
+      "data-plane",
+      "The fail-closed BEFORE INSERT triggers (*_no_replace) on cycle, ev_evidence, ev_verdict, merge_hold, and merge_hold_release that refuse SQLite REPLACE INTO even with recursive_triggers=OFF.",
+      ["provenance:admitted-ev-ceiling"],
+      "tools/km_provenance/km_chain.ml:schema",
+    ),
+    mk(
+      "formal:algebraic-atlas",
+      "Algebraic Atlas",
+      "bīja-gaṇitīya-māpa-citra",
+      "बीज-गणितीय-माप-चित्र",
+      Structure,
+      0,
+      [7, 16],
+      "structure-plane",
+      "The category-theoretic topology and sheaf cohomology model (H^1(Atlas, F) = 0) proving local-to-global intent gluing across fractal boundaries without inconsistency.",
+      ["formal:intent-based-config"],
+      "formal/lean/Denotational_Atlas_Cohomology.lean",
+    ),
+    mk(
+      "formal:intent-based-config",
+      "Intent-Based Configuration",
+      "saṅkalpa-mūlaka-vinyāsa",
+      "सङ्कल्प-मूलक-विन्यास",
+      Governance,
+      0,
+      [7, 17],
+      "control-plane",
+      "Declarative intent configuration (SC-FPP-INTENT-001) parsed and verified before runtime effect authorization, preventing invalid configuration transitions.",
+      ["formal:algebraic-atlas"],
+      "contracts/rules/20260906-0945-dmc-tcm-fprime-ontology-mandate.md",
+    ),
+    mk(
+      "inference:max-mojo-runner",
+      "MAX Mojo Dual-Surface Runner",
+      "max-mojo-dvividha-cālaka",
+      "मैक्स-मोजो-द्विविध-चालक",
+      Runtime,
+      4,
+      [9, 13],
+      "runtime-plane",
+      "Pure Mojo zero-bash runner (services/inference/max/uos_tui_webui_runner.mojo) separating component test examples from live integration verification, returning exit code 2 HOLD for unrun paths.",
+      ["preflight:toolchain"],
+      "services/inference/max/uos_tui_webui_runner.mojo",
+    ),
+    mk(
+      "swarm:living-ecology",
+      "Living Swarm Ecology",
+      "jīvanta-vrnda-pāristhitiki",
+      "जीवन्त-वृन्द-पारिस्थितिकी",
+      Intelligence,
+      6,
+      [8, 10],
+      "intelligence-plane",
+      "Multi-agent cybernetic ecology (ADR-094, apps/cepaf_gleam/src/cepaf_gleam/ecology/) with harmonic song synthesis, capability ports, and decentralized work-stealing.",
+      ["architecture:triadic-unification"],
+      "docs/zk/20260908-1915-adr-094-living-swarm-ecology-and-cybernetic-singing-engine.md",
+    ),
+    mk(
+      "architecture:triadic-unification",
+      "Triadic Unification",
+      "trayī-ekīkaraṇa",
+      "त्रयी-एकीकरण",
+      Structure,
+      0,
+      [4, 16],
+      "structure-plane",
+      "The unified architecture (ADR-095) consolidating C3I command cockpit, Indrajaal distributed mesh, and UOS standalone Jujutsu monorepo under a root OTP 29 supervisor.",
+      ["swarm:living-ecology"],
+      "docs/zk/20260908-2020-adr-095-uos-c3i-indrajaal-triadic-unification-and-complete-migration.md",
+    ),
+  ]
+}
+
+// ---------------------------------------------------------------------------
 // Registry
 // ---------------------------------------------------------------------------
 
@@ -2380,6 +2519,7 @@ pub fn concepts() -> List(Concept) {
     kosha_concepts(),
     music_concepts(),
     jj_concepts(),
+    toolchain_provenance_concepts(),
   ])
 }
 

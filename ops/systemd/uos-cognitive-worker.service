@@ -1,0 +1,16 @@
+[Unit]
+Description=UOS Sovereign Zenoh Cognitive Worker (Gleam/OTP 29)
+After=network-online.target c3i-zenoh-router-1.service uos-telegram-bridge.service
+Wants=network-online.target c3i-zenoh-router-1.service
+
+[Service]
+Type=simple
+WorkingDirectory=/home/an/NAS-setup/uos
+ExecStart=/home/an/NAS-setup/uos/tools/cognitive-worker --loop 2
+Restart=always
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=default.target

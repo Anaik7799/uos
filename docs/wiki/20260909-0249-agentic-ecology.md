@@ -8,7 +8,7 @@ Observed host UTC: 2026-09-09T02:16:49Z. Parent Sa-plan: `uos/ecology/20260909-0
 
 UCon and Indrajaal should use the same capability catalogue and supervised cognition service. Interface code alone does not create a continuously running intelligence loop. The old ecology HTTP adapter reconstructed state per request, and several capability branches counted invocation or executable presence without evaluating the requested operation. The replacement retains state, uses a bounded timer and records actual outcomes.
 
-The live port-4100 observation at intake identified an external legacy C3I process on OTP 27. Canonical source changes cannot alter that already-running process. A separate candidate release and observed runtime are required. The standalone UCon application has not been located; the `ucon` entry is a participant model until its external application binding is established.
+The live port-4100 observation at intake identified an external legacy C3I process on OTP 27. A separate canonical release now runs at [the live ecology](http://nas-1.tail55d152.ts.net:4110/ecology), on observed OTP29/ERTS17.0.5. Its actual MAX and free OpenRouter recovery receipts passed before and after a controlled service restart. The standalone UCon application has not been located; the `ucon` entry is a participant model until its external application binding is established.
 
 ## Participation and activation
 
@@ -56,12 +56,17 @@ Local ticks rotate across all participants. Bayesian/ETS input comes from observ
 |---|---|---|
 | HOOKS | Codex hook delegate | [Journal](http://nas-1.tail55d152.ts.net:4100/docs/journal/20260909-0248-codex-hooks-journal.md): supported schema, enabled/trusted exact handler |
 | CAPABILITIES | Codex capability delegate | [Journal](http://nas-1.tail55d152.ts.net:4100/docs/journal/20260909-0231-ecology-capabilities-codex-journal.md): input-sensitive compute, CAS, Lean/Quint |
-| SUPERVISION | Codex supervision delegate | Persistent actor, selective activation, truthful HTTP state; receipt indexed at closure |
-| TRANSPORT | Codex transport delegate | Bounded HTTPS parser and preserved refusal cases; receipt indexed at closure |
-| PACKAGE | Codex release delegate | Exact immutable package and dependency verification; receipt indexed at closure |
+| SUPERVISION | Codex supervision delegate | [Journal](http://nas-1.tail55d152.ts.net:4100/docs/journal/20260909-0237-ecology-supervision-completion.md): persistent actor, selective activation, truthful HTTP state |
+| TRANSPORT | Codex transport delegate | [Journal](http://nas-1.tail55d152.ts.net:4100/docs/journal/20260909-0214-ecology-openrouter-transport-codex-journal.md): bounded HTTPS parser and refusal cases |
+| PACKAGE | Codex release delegate | [Journal](http://nas-1.tail55d152.ts.net:4100/docs/journal/20260909-0254-ecology-release-journal.md): exact package and dependency verification |
+| JIDOKA | Codex supervision delegate | [Journal](http://nas-1.tail55d152.ts.net:4100/docs/journal/20260909-0257-ecology-jidoka-completion.md): shared stopped/recovering/ready gates and real recovery contract |
+| BROWSER | Codex browser delegate | [Journal](http://nas-1.tail55d152.ts.net:4100/docs/journal/20260909-0328-ecology-browser-journal.md):26 rows, advancing counters, zero browser errors, two ready backend gates |
+| VM1-COMPARE | Codex capability delegate | [Journal](http://nas-1.tail55d152.ts.net:4100/docs/journal/20260909-0241-ecology-vm1-comparison-codex-journal.md): source/runtime distinction and current sanitized provider configuration |
 | ECOLOGY | Root Codex | MAX computation, IO review, staged runtime, recovery and grouped closure evidence |
 
-OpenRouter returned HTTP 404 for the current account guardrail/data-policy restrictions. No account setting was weakened, no paid fallback was used, and no completion was credited. An installed credential alone is not availability evidence.
+Earlier free requests returned HTTP404 under endpoint/account policies; another response spent its bounded tokens on reasoning and had no final answer. Those failures were not credited. The explicit `inclusionai/ling-3.0-flash-fin:free` route with optional reasoning disabled now returns a nonempty answer and reported cost0 through the strict adapter. Its encrypted service credential also worked after a restart with inherited API keys explicitly removed. No account setting was changed.
+
+The operator subsequently authorized paid GLM/Kimi/DeepSeek coding candidates, Gemma4 decision support, and an aggregate budget of10USD/day. These are separate, explicit paid profiles; the deployed free capability remains zero-cost. The [OpenRouter engine review and recommendation](http://nas-1.tail55d152.ts.net:4100/docs/design/20260909-0314-openrouter-engine-review-and-recommendation.md) records the current routing defects, static C3I/Indrajaal defaults, candidate prices and proposed durable authority/budget/feedback path. A curated catalog or budget component alone is not an active adaptive engine.
 
 ## All seventeen system aspects
 
@@ -79,7 +84,7 @@ OpenRouter returned HTTP 404 for the current account guardrail/data-policy restr
 | A10 Zenoh telemetry | Existing shared mesh untouched; end-to-end ecology export UNRUN |
 | A11 AG-UI SSE | Shared state projections; entire 32-event protocol UNRUN |
 | A12 A2UI components | Ecology view scope; full catalogue verification UNRUN |
-| A13 Multi-interface accessibility | Wisp/Indrajaal state adapters; standalone UCon binding and human acceptance UNRUN |
+| A13 Multi-interface accessibility | Actual Chrome DOM/live-state check passed at one viewport; song-title clipping recorded. Standalone UCon binding and human acceptance UNRUN |
 | A14 Tailnet navigation | FQDN URLs; actual staged reachability recorded separately |
 | A15 Checklist | This document lists all 18 checkpoints without blanket passing badges |
 | A16 Knowledge triad | Wiki, ZK decision, machine spec, journals and KM index cross-linked |
@@ -101,4 +106,3 @@ Domain 6 provenance: admitted EV ceiling remains 93. No EV or ADR number is mint
 </details>
 
 **UOS footer:** Local implementation and observed behavior have explicitly bounded scope; no whole-system admission.
-

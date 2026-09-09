@@ -2,6 +2,7 @@
 //// cognition, truthful receipts and OTP recovery. Local state grants no effects.
 //// SC-HOLON-001 / SC-SA-PLAN-001 / SC-PROVENANCE-001 / SC-ZERO-MUDA-001.
 
+import cepaf_gleam/ecology/andon
 import cepaf_gleam/ecology/capability_port.{
   type Outcome, Engaged, Masked, Unavailable,
 }
@@ -45,6 +46,12 @@ pub type LivingSwarmActorMsg {
     input: String,
     reply_to: Subject(Outcome),
   )
+  ProbeHolonCapability(
+    holon_id: String,
+    capability_name: String,
+    input: String,
+    reply_to: Subject(Outcome),
+  )
   InvocationFinished(token: Reference, outcome: Outcome)
   SetHolonMode(
     holon_id: String,
@@ -71,6 +78,7 @@ pub type PendingInvocation {
     capability: String,
     guardian: Pid,
     reply: InvocationReply,
+    recovery: Bool,
   )
 }
 
@@ -203,9 +211,12 @@ pub fn handle_message(
         capability,
         capability_port.default_input(capability),
         HolonReply(reply),
+        False,
       )
     InvokeWithInput(id, capability, input, reply) ->
-      dispatch(state, id, capability, input, OutcomeReply(reply))
+      dispatch(state, id, capability, input, OutcomeReply(reply), False)
+    ProbeHolonCapability(id, capability, input, reply) ->
+      dispatch(state, id, capability, input, OutcomeReply(reply), True)
     SetHolonMode(id, mode, reply) ->
       change_activation(
         state,
@@ -223,15 +234,15 @@ pub fn handle_message(
     InvocationFinished(token, outcome) ->
       case state.pending {
         Some(pending) if pending.token == token -> {
-          let checked = case outcome {
-            Engaged(name, _, _, _)
-              | Unavailable(name, _)
-              | Masked(name)
-              if name != pending.capability
-            -> Unavailable(pending.capability, "backend_outcome_mismatch")
-            _ -> outcome
-          }
-          let next = complete(state, pending.holon_id, checked, pending.reply)
+          let checked = andon.checked_outcome(pending.capability, outcome)
+          let next =
+            complete_observed(
+              state,
+              pending.holon_id,
+              checked,
+              pending.reply,
+              pending.recovery,
+            )
           actor.continue(SwarmActorState(..next, pending: None))
         }
         _ -> actor.continue(state)
@@ -317,6 +328,7 @@ fn dispatch(
   capability: String,
   input: String,
   reply: InvocationReply,
+  recovery: Bool,
 ) -> actor.Next(SwarmActorState, LivingSwarmActorMsg) {
   case list.find(state.swarm.holons, fn(h) { h.id == id }) {
     Error(_) ->
@@ -350,33 +362,52 @@ fn dispatch(
               )
               |> actor.continue
             False -> {
-              let token = reference.new()
-              let owner = process.self()
-              let guardian =
-                process.spawn_unlinked(fn() {
-                  guard_invocation(
-                    owner,
-                    state.self_subject,
-                    token,
-                    state.worker_timeout_ms,
-                    holon.mask,
-                    capability,
-                    input,
-                    state.invoke_backend,
+              let gate = case recovery {
+                True ->
+                  andon.begin_recovery(state.swarm.service_andon, capability)
+                False ->
+                  andon.admission(state.swarm.service_andon, capability)
+                  |> result.map(fn(_) { state.swarm.service_andon })
+              }
+              case gate {
+                Error(reason) ->
+                  complete(state, id, Unavailable(capability, reason), reply)
+                  |> actor.continue
+                Ok(services) -> {
+                  let token = reference.new()
+                  let owner = process.self()
+                  let guardian =
+                    process.spawn_unlinked(fn() {
+                      guard_invocation(
+                        owner,
+                        state.self_subject,
+                        token,
+                        state.worker_timeout_ms,
+                        holon.mask,
+                        capability,
+                        input,
+                        state.invoke_backend,
+                      )
+                    })
+                  actor.continue(
+                    SwarmActorState(
+                      ..state,
+                      swarm: living_swarm.SwarmEcology(
+                        ..state.swarm,
+                        service_andon: services,
+                      ),
+                      pending: Some(PendingInvocation(
+                        token,
+                        id,
+                        capability,
+                        guardian,
+                        reply,
+                        recovery,
+                      )),
+                    ),
                   )
-                })
-              actor.continue(
-                SwarmActorState(
-                  ..state,
-                  pending: Some(PendingInvocation(
-                    token,
-                    id,
-                    capability,
-                    guardian,
-                    reply,
-                  )),
-                ),
-              )
+                }
+              }
             }
           }
       }
@@ -389,7 +420,38 @@ fn complete(
   outcome: Outcome,
   reply: InvocationReply,
 ) -> SwarmActorState {
-  let swarm = living_swarm.record_outcome(state.swarm, id, outcome)
+  complete_observed(state, id, outcome, reply, False)
+}
+
+fn complete_observed(
+  state: SwarmActorState,
+  id: String,
+  outcome: Outcome,
+  reply: InvocationReply,
+  recovery: Bool,
+) -> SwarmActorState {
+  let kind = case recovery {
+    True -> "recovery_probe"
+    False -> "requested"
+  }
+  let swarm = living_swarm.record_outcome_kind(state.swarm, id, kind, outcome)
+  let capability = case outcome {
+    Engaged(name, _, _, _) | Unavailable(name, _) | Masked(name) -> name
+  }
+  let service_andon =
+    andon.finish(
+      swarm.service_andon,
+      capability,
+      recovery,
+      andon.Receipt(
+        swarm.invocation_sequence,
+        swarm.cycle_counter,
+        living_swarm.observed_epoch_us(),
+        id,
+        outcome,
+      ),
+    )
+  let swarm = living_swarm.SwarmEcology(..swarm, service_andon: service_andon)
   case reply {
     OutcomeReply(subject) -> process.send(subject, outcome)
     HolonReply(subject) -> {
@@ -628,6 +690,21 @@ pub fn invoke(
 ) -> Result(Outcome, String) {
   query(subject, timeout_ms, fn(reply) {
     InvokeWithInput(id, capability, input, reply)
+  })
+}
+
+/// A stopped shared backend admits one actual bounded recovery call. A valid
+/// Engaged result clears its latch; failed probes keep it stopped. No blind
+/// reset, task authority, paid fallback or network mutation endpoint is provided.
+pub fn recover_service(
+  subject: Subject(LivingSwarmActorMsg),
+  id: String,
+  capability: String,
+  input: String,
+  timeout_ms: Int,
+) -> Result(Outcome, String) {
+  query(subject, timeout_ms, fn(reply) {
+    ProbeHolonCapability(id, capability, input, reply)
   })
 }
 

@@ -1,0 +1,98 @@
+{
+  "schema_version": "uos.review-artifact-check.v1",
+  "scope": "Reviewer document/JSON consistency only; not application, compiler or runtime tests",
+  "status": "PASS",
+  "checks": 20,
+  "results": [
+    {
+      "name": "journal_written_bytes",
+      "pass": true
+    },
+    {
+      "name": "receipt_written_object",
+      "pass": true
+    },
+    {
+      "name": "exact_13_sections",
+      "pass": true
+    },
+    {
+      "name": "expandable_checklist",
+      "pass": true
+    },
+    {
+      "name": "18_distinct_checkpoints",
+      "pass": true
+    },
+    {
+      "name": "28_unique_source_paths",
+      "pass": true
+    },
+    {
+      "name": "real_sha256_format",
+      "pass": true
+    },
+    {
+      "name": "17_aspects_exact_ids",
+      "pass": true
+    },
+    {
+      "name": "8_grouped_findings",
+      "pass": true
+    },
+    {
+      "name": "10_bootstrap_gates",
+      "pass": true
+    },
+    {
+      "name": "16_typed_field_groups",
+      "pass": true
+    },
+    {
+      "name": "no_admission_or_runtime_claim",
+      "pass": true
+    },
+    {
+      "name": "review_authority",
+      "pass": true
+    },
+    {
+      "name": "active_observation_pass",
+      "pass": true
+    },
+    {
+      "name": "fmea_raw_arithmetic",
+      "pass": true
+    },
+    {
+      "name": "journal_hash_binding",
+      "pass": true
+    },
+    {
+      "name": "no_source_vcs_runtime_mutations",
+      "pass": true
+    },
+    {
+      "name": "paired_diagrams_in_manifest",
+      "pass": true
+    },
+    {
+      "name": "native_scope_is_proposed",
+      "pass": true
+    },
+    {
+      "name": "full_tailnet_locator",
+      "pass": true
+    }
+  ],
+  "artifact_hashes": [
+    {
+      "sha256": "b16fd1f43c00cf507cbc899299e14a86226338a5274913bc48b5db1f7a50148a",
+      "path": "docs/journal/20260909-0510-gleam-harness-bootstrap-independent-review.md"
+    },
+    {
+      "sha256": "34bf74a6a04f04a6d038f975d5a66feea8ea21b3db12c4c358190f8b7593d47e",
+      "path": "docs/journal/20260909-0510-gleam-harness-bootstrap-independent-review.json"
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "schema": "uos.harness.grouped-artifact-index.v1",
+  "generated_at_utc": "2026-09-09T07:30:29.054561Z",
+  "cohort_clock": "2026-09-09T07:27:20.432947Z",
+  "tags": [
+    "#fractal-l0",
+    "#fractal-l1",
+    "#fractal-l2",
+    "#fractal-l3",
+    "#fractal-l4",
+    "#fractal-l5",
+    "#fractal-l6",
+    "#fractal-l7",
+    "#fractal-l8",
+    "#fractal-l9",
+    "#zk-adr",
+    "#zero-muda"
+  ],
+  "links": [
+    {
+      "kind": "journal",
+      "path": "docs/journal/20260909-0720-harness-comprehensive-review-journal.md",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260909-0720-harness-comprehensive-review-journal.md"
+    },
+    {
+      "kind": "review",
+      "path": "docs/journal/20260909-0720-harness-comprehensive-review-reconciliation.json",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260909-0720-harness-comprehensive-review-reconciliation.json"
+    },
+    {
+      "kind": "progress",
+      "path": "governance/capability-inventory/20260909-0720-harness-feature-progress.json",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/governance/capability-inventory/20260909-0720-harness-feature-progress.json"
+    },
+    {
+      "kind": "wiki",
+      "path": "docs/wiki/20260909-0720-harness-evolution-completion-status.md",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/wiki/20260909-0720-harness-evolution-completion-status.md"
+    },
+    {
+      "kind": "zk",
+      "path": "docs/zk/20260909-0720-harness-reviews-and-execution-evidence.md",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/docs/zk/20260909-0720-harness-reviews-and-execution-evidence.md"
+    },
+    {
+      "kind": "km",
+      "path": "governance/capability-inventory/20260909-0720-harness-km-artifact-index.json",
+      "url": "http://nas-1.tail55d152.ts.net:4100/files/governance/capability-inventory/20260909-0720-harness-km-artifact-index.json"
+    }
+  ],
+  "peer_artifacts": [
+    {
+      "role": "Claude",
+      "path": "docs/journal/20260909-0721-claude-opus5-harness-evolution-review.json",
+      "sha256": "4e5958f8787228d55f5ca035d5e3793825f781d8e3c1a824b8715572a2dd2bf1"
+    },
+    {
+      "role": "Claude dashboard",
+      "path": "docs/journal/20260909-0720-claude-opus5-harness-feature-matrix.json",
+      "sha256": "de0c2b4c41c3a926603d5ff737a2d63e9374a1621b837159cccb94fdbe324db1"
+    },
+    {
+      "role": "AGY corrected census",
+      "path": "docs/journal/20260909-0815-agy-harness-evolution-canonical-reconciliation.json",
+      "sha256": "c20bb75e46d95c3467b4d6d05650e3bd733177a5c3943c8b0212f5c719269f4b"
+    },
+    {
+      "role": "Fable delegated",
+      "path": "docs/journal/20260909-0854-fable-delegated-review-and-reconciliation.json",
+      "sha256_reported_by_peer": "99370d30f39df647cc29a4ed226f5d360df4d37e5ed0dcd3cef8419d24787017",
+      "limits": [
+        "Historical preliminary artifact only; its placeholder/short hashes are not fresh evidence",
+        "Superseded by actual full verbatim28/17 rows",
+        "Delegated model is not a sovereign admission vote"
+      ]
+    },
+    {
+      "role": "AGY exact17 aspects",
+      "path": "docs/journal/20260909-0835-agy-harness-formal-spec-17-aspects-reconciliation.json",
+      "sha256": "9d6ee8a59803a5a3a7d98a55c7cccceb25eb5dbb0a4532e5fff59b8e989cf217"
+    },
+    {
+      "role": "Claude complete supplement",
+      "path": "docs/journal/20260909-0638-harness-census-supplement-claude-opus5.json",
+      "sha256": "bad5a77e163b5e1c4b6656ef67e49228e6b43156b08a30c8b2425a90d0268391"
+    },
+    {
+      "role": "Fable full verbatim28/17 rows",
+      "path": "docs/journal/20260909-0614-harness-fable-round2-full-rows-verbatim.md",
+      "sha256": "26d6d5f3c93ad4695c68b2c9ce9823e620aa463f57783226ebbf0f7d005d2100",
+      "root_readback": true,
+      "identity": "Claude-delegated claude-fable-5-1, not a separate sovereign session"
+    },
+    {
+      "role": "Claude installed hook wiring",
+      "path": "docs/journal/20260909-0703-harness-hooks-client-wiring-receipt.json",
+      "sha256": "3bfc008a3fb0b6e3928a809d521d155d410aa98dda23824863a50ad29a4333e1",
+      "root_readback": true
+    }
+  ],
+  "history_preserved": [
+    "docs/journal/20260909-0626-harness-review-and-tracking-journal.md",
+    "docs/journal/20260909-0626-harness-evolution-review-reconciliation.json",
+    "governance/capability-inventory/20260909-0626-harness-feature-progress.json"
+  ],
+  "global_km_ingestion": "NOT_VERIFIED",
+  "web_publication": "NOT_VERIFIED",
+  "system_admission": false
+}

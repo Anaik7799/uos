@@ -1,0 +1,20 @@
+flowchart TD
+  D["Development runtime"]
+  T["Development verification"]
+  R["Admitted release"]
+  P["Production primary"]
+  S["Production standby"]
+  L["Writer fencing authority"]
+  K["Knowledge and evidence"]
+  D -->|"candidate and test state"| T
+  T -->|"candidate-bound evidence"| R
+  R -->|"compatible upgrade or restart"| P
+  R -->|"same production release"| S
+  P -->|"committed state replication"| S
+  S -->|"replication acknowledgement"| P
+  L -->|"exclusive writer epoch"| P
+  L -->|"fenced promotion decision"| S
+  T -->|"verification receipts"| K
+  P -->|"runtime observations"| K
+  S -->|"replica observations"| K
+

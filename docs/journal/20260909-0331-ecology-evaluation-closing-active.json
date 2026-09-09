@@ -1,0 +1,50 @@
+{
+  "status": "ACTIVE_OBSERVATION_PASS",
+  "authority": "NONE",
+  "runtime_admission": "NOT_GRANTED",
+  "observed_at": "2026-09-09T04:05:01Z",
+  "completed_at": "2026-09-09T04:05:01Z",
+  "elapsed_monotonic_seconds": 0.21480395,
+  "clock_start": {
+    "source": "chronyc tracking",
+    "abs_ntp_offset_seconds": 0.000457003,
+    "uncertainty_seconds": 0.0178219235,
+    "reference_age_seconds": 640.5242943763733,
+    "stratum": 3
+  },
+  "clock_end": {
+    "source": "chronyc tracking",
+    "abs_ntp_offset_seconds": 0.000456979,
+    "uncertainty_seconds": 0.017822069500000003,
+    "reference_age_seconds": 640.6334044933319,
+    "stratum": 3
+  },
+  "assessment_sha256": "5557e44959ab1bac45d5def8e4f9e79a082d7c89700bba8315c1f0b9333edd9f",
+  "evidence_files_checked": 12,
+  "sa_plan": {
+    "plan_id": "uos/ecology-evaluation-review/20260909-0331",
+    "snapshot_sha256": "b6257fde4c3f56541d6c6407f888a40ae4bed1d63cc73bed82d91a972464f477",
+    "tasks": [
+      {
+        "task_id": "EVALREVIEW",
+        "state": "executing",
+        "worker": "codex-ecology-evaluation-review",
+        "lease_until_ns": "1788932107253592801",
+        "attempt": 1,
+        "completed_at_ns": null,
+        "result_present": false,
+        "dependencies": []
+      }
+    ],
+    "mode": "READONLY",
+    "lease_fencing_authority": "NOT_GRANTED"
+  },
+  "order": [],
+  "findings": [],
+  "limits": [
+    "Listed byte equality does not prove source completeness, runtime behavior or signed provenance.",
+    "Analysis prose, class judgments, cost ties and control effectiveness require qualified review.",
+    "Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.",
+    "Snapshot is confined to one complete plan; no global optimum is asserted."
+  ]
+}

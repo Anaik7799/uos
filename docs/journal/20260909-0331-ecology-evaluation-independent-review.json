@@ -1,0 +1,331 @@
+{
+  "remaining_gates": [
+    "Executed frozen paid engine and guard boundaries",
+    "Actual durable receipt-loss/restart retention",
+    "Bind each request to synthetic case and suite SHA",
+    "Single-consumption authenticated quality before posterior update",
+    "Per-domain model calibration outcomes including failures, uncertainty, cost and reserved liability"
+  ],
+  "artifacts": [
+    {
+      "sha256": "cfdb346795b3db4707b625d32a6bdf17962565c9c2e5119c9880490891fe04f3",
+      "path": "docs/journal/20260909-0331-ecology-evaluation-independent-review.md"
+    },
+    {
+      "sha256": "61445425424984c6ff822ba4afbbb96c569f7a5af0df1d8dfb47597fdd2c3050",
+      "path": "docs/journal/20260909-0331-ecology-evaluation-toolchains.json"
+    },
+    {
+      "sha256": "c5b824cf384d2ecb4f2b811262eb94092c2829cb07ce2a9be297ec7688c684b9",
+      "path": "docs/journal/20260909-0331-ecology-evaluation-review-risk.json"
+    },
+    {
+      "sha256": "5010a57ab425ad87d7adc36d6fa1c5fd179ff8fba07ca654f1eedf22f3445a2e",
+      "path": "docs/journal/20260909-0331-ecology-evaluation-review-administrative.json"
+    },
+    {
+      "path": "docs/journal/20260909-0331-ecology-evaluation-final-evaluator.json",
+      "sha256": "3e3cc55dc5a4cf5887e4c16239e27f816f50dd6fce8df7aac341f8037a10e0e0",
+      "bytes": 20819
+    }
+  ],
+  "cases": [
+    {
+      "case_id": "gleam-admission-v1",
+      "domain": "Gleam",
+      "independent_oracle": "70 finite expected admission outputs and actual native assertions",
+      "claim_limit": "Expression repair only",
+      "reviewer_native_execution": "UNRUN"
+    },
+    {
+      "case_id": "ocaml-fence-v1",
+      "domain": "OCaml",
+      "independent_oracle": "Independent lease/token/version predicate, boundary and seeded cases",
+      "claim_limit": "Finite tests, not all-state proof",
+      "reviewer_native_execution": "UNRUN"
+    },
+    {
+      "case_id": "mojo-clamp-v1",
+      "domain": "Mojo",
+      "independent_oracle": "Signed clamp across 42 examples including equal bounds",
+      "claim_limit": "Fixed numeric kernel",
+      "reviewer_native_execution": "UNRUN"
+    },
+    {
+      "independent_oracle": "Kernel check of fixed theorem with only explicitly declared propext/Quot.sound, actual axiom output inspected",
+      "case_id": "lean-stale-v1",
+      "domain": "Lean",
+      "claim_limit": "Four-tactic grammar, not general proof generation",
+      "reviewer_native_execution": "UNRUN"
+    },
+    {
+      "case_id": "quint-capacity-v1",
+      "domain": "Quint",
+      "independent_oracle": "Six predicate cases and productive two-acquisition scenario with all seven names",
+      "claim_limit": "Bounded scenarios, not exhaustive temporal verification",
+      "reviewer_native_execution": "UNRUN"
+    },
+    {
+      "case_id": "stm-cas-v1",
+      "domain": "STM",
+      "independent_oracle": "Accepted trace true,false,true,false,true and final version7/value14",
+      "claim_limit": "CAS relation, not live ETS concurrency",
+      "reviewer_native_execution": "UNRUN"
+    },
+    {
+      "case_id": "bayesian-beta-v1",
+      "domain": "Bayesian",
+      "independent_oracle": "Alpha5, beta4, exact mean5/9, one ignored unknown",
+      "claim_limit": "Posterior arithmetic, not authenticated quality",
+      "reviewer_native_execution": "UNRUN"
+    },
+    {
+      "case_id": "rete-join-retract-v1",
+      "domain": "Rete",
+      "independent_oracle": "Independent relational join before/after p2 retraction",
+      "claim_limit": "Full Rete-UL network and unlinking unsupported",
+      "reviewer_native_execution": "UNRUN"
+    },
+    {
+      "case_id": "stpa-authority-v1",
+      "domain": "STPA",
+      "independent_oracle": "Four UCA classes, execute=false, authority=sa_plan",
+      "claim_limit": "Fixed synthetic classification",
+      "reviewer_native_execution": "UNRUN"
+    },
+    {
+      "case_id": "fmea-priority-v1",
+      "domain": "FMEA",
+      "independent_oracle": "Canonical raw1..5 products5/48/50, safety class/dependency readiness, no effect authority",
+      "claim_limit": "Fixed synthetic prioritization",
+      "reviewer_native_execution": "UNRUN"
+    }
+  ],
+  "findings": [
+    {
+      "id": "ER-01",
+      "status": "SCOPED_METHOD_ACCEPTABLE",
+      "finding": "Ten constrained cases cannot establish broad language, formal, Rete-UL or safety proficiency.",
+      "falsifier": "A transport success or malformed/no-op answer must not count as verified quality; retain pass@1 and every cost-bearing attempt."
+    },
+    {
+      "id": "ER-02",
+      "status": "NONVACUITY_REPAIR_PRESENT",
+      "finding": "Shared primitive interpretation is not independent; catalog oracles and native assertions are separate. Quint zero-test success is explicitly rejected.",
+      "falsifier": "Wrong native answers, no selected Quint tests, missing tools, timeouts and unsupported results must not pass."
+    },
+    {
+      "finding": "Frozen suite fingerprint, actual stale-executable refusal, before/after executable hashes and failure exit consumer controls inspected",
+      "status": "REPAIRED_SOURCE_AND_PEER_EXECUTION_OBSERVED",
+      "id": "ER-03",
+      "falsifier": "Old executable/new source or failed result JSON with process exit zero must not be consumed as a quality pass."
+    },
+    {
+      "id": "ER-04",
+      "status": "P1_SOURCE_REPAIRED_EXECUTION_PENDING",
+      "finding": "Exact authorized task, READONLY Sa-plan snapshot, prepared immutable worker body, source equality and candidate/module evidence are present.",
+      "falsifier": "Wrong task/attempt, expired lease, mutated body or source, missing prepared artifact or replay must not reserve or POST."
+    },
+    {
+      "id": "ER-05",
+      "status": "RESIDUAL_SCOPE_DISCLOSED",
+      "finding": "Canonical atomic liability and cooperative parent-lifetime serialization are different guarantees.",
+      "falsifier": "Parent loss may release the cooperative lock but must not erase reservations or authorize retries of uncertain calls."
+    },
+    {
+      "id": "ER-06",
+      "status": "SOURCE_BOUNDARY_REVIEWED",
+      "finding": "Credential remains in transport closure/header; provider billing/template assumptions do not become proven account-wide enforcement.",
+      "falsifier": "Credential bytes must not enter argv/evidence; excessive/unknown receipt cannot refund liability or count as verified completion."
+    }
+  ],
+  "peer_native_observations": {
+    "final_all_native_pass": true,
+    "followup": [
+      "Final frozen evaluator JSON inspected:187 pure checks,5 native positives,8 controls pass",
+      "Stale compiled result invalid; process exit2 attributed to executor",
+      "Lean512MiB; explicitly permitted propext/Quot.sound only; first256MiB failure preserved"
+    ],
+    "owner": "/root/capabilities",
+    "attribution": "collaboration reports, not native runs executed by this reviewer",
+    "first_trial": [
+      "Gleam/OCaml/Quint PASS",
+      "Wrong Gleam and Lean and zero-test Quint rejected",
+      "Mojo missing standard-library setup", "Lean256MiB exceeded memory"
+    ]
+  },
+  "final_evaluator": {
+    "path": "docs/journal/20260909-0331-ecology-evaluation-final-evaluator.json",
+    "sha256": "3e3cc55dc5a4cf5887e4c16239e27f816f50dd6fce8df7aac341f8037a10e0e0",
+    "bytes": 20819
+  },
+  "status": "SCOPED_REVIEW_COMPLETE_EVALUATOR_COMPONENT_OBSERVED_PAID_ENGINE_STAGED",
+  "final_observed_at": "2026-09-09T04:04:34Z",
+  "schema": "uos.ecology-evaluation-independent-review.v1",
+  "observed_at": "2026-09-09T04:01:23Z",
+  "plan_id": "uos/ecology-evaluation-review/20260909-0331",
+  "task_id": "EVALREVIEW",
+  "worker": "codex-ecology-evaluation-review",
+  "attempt": 1,
+  "system_admission": false,
+  "release_approval": false,
+  "paid_call_authority": false,
+  "source_observation_scope": "Individual current hashes observed during peer implementation; not a source/build atomicity or release claim",
+  "source_files": [
+    {
+      "path": "tools/validation/openrouter_eval_expr.mli",
+      "sha256": "a7a695c59c41fe9aceaa3b9852cef9e4876304babce12c401972554e8f33d133",
+      "bytes": 755,
+      "observed_at": "2026-09-09T04:01:23Z",
+      "classification": "reviewed staged source; not an atomic release snapshot"
+    },
+    {
+      "path": "tools/validation/openrouter_eval_expr.ml",
+      "sha256": "074337899a5e489a6558d7fe9b5752a7d9344fe490eee760e9bcae30108c868e",
+      "bytes": 8598,
+      "observed_at": "2026-09-09T04:01:23Z",
+      "classification": "reviewed staged source; not an atomic release snapshot"
+    },
+    {
+      "path": "tools/validation/openrouter_eval_catalog.ml",
+      "sha256": "ac4e0e0b2e1312aa7560f604b4d577750a7eeb5e6d2e54876258fa9cfa1d5a2b",
+      "bytes": 11302,
+      "observed_at": "2026-09-09T04:01:23Z",
+      "classification": "reviewed staged source; not an atomic release snapshot"
+    },
+    {
+      "path": "tools/validation/openrouter_eval_validate.ml",
+      "sha256": "a50ac2347972ddca884d485825795d100257ea9a546a1e5aced057f2f727ac84",
+      "bytes": 8065,
+      "observed_at": "2026-09-09T04:01:23Z",
+      "classification": "reviewed staged source; not an atomic release snapshot"
+    },
+    {
+      "path": "tools/validation/openrouter_eval_native.ml",
+      "sha256": "071dbab3d02f121df03151d227e2308d5107cc222f89bdcb02a03e7850adaa79",
+      "bytes": 12159,
+      "observed_at": "2026-09-09T04:01:23Z",
+      "classification": "reviewed staged source; not an atomic release snapshot"
+    },
+    {
+      "path": "tools/validation/openrouter_eval_test.ml",
+      "sha256": "1c35b01f636ba31f8659372ae83cd2f40b58f655a61e95966e9959910994fc80",
+      "bytes": 7493,
+      "observed_at": "2026-09-09T04:01:23Z",
+      "classification": "reviewed staged source; not an atomic release snapshot"
+    },
+    {
+      "path": "tools/validation/openrouter_eval_cli.ml",
+      "sha256": "459d676f95a5d220b05ec09944ff1019b8209e6b51531a714ae4c29c93abee8f",
+      "bytes": 3263,
+      "observed_at": "2026-09-09T04:01:23Z",
+      "classification": "reviewed staged source; not an atomic release snapshot"
+    },
+    {
+      "path": "tools/validation/openrouter_eval_build.ml",
+      "sha256": "33be28a244ab81edbb3e6e00fe83aa416ae60b5c8cb8b2a3035d22992a13e1cf",
+      "bytes": 2467,
+      "observed_at": "2026-09-09T04:01:23Z",
+      "classification": "reviewed staged source; not an atomic release snapshot"
+    },
+    {
+      "path": "tools/ecology_openrouter.ml",
+      "sha256": "6e0bcf8ba46d48c8719c2cf786259a6530d44759c85b3bbd9c46c69efedf7b86",
+      "bytes": 15008,
+      "observed_at": "2026-09-09T04:01:23Z",
+      "classification": "reviewed staged source; not an atomic release snapshot"
+    },
+    {
+      "path": "tools/ecology_budget.ml",
+      "sha256": "f187a584c3ced3216478ae9b6d9d587c8fb0e999308ba4fcbc8d1a91ed844109",
+      "bytes": 22011,
+      "observed_at": "2026-09-09T04:01:23Z",
+      "classification": "reviewed staged source; not an atomic release snapshot"
+    },
+    {
+      "path": "tools/ecology_process.ml",
+      "sha256": "cb5bc7a25b562ecc259696920f84f59e172b78842c3b53b3ed6173b2ab752ecf",
+      "bytes": 2905,
+      "observed_at": "2026-09-09T04:01:23Z",
+      "classification": "reviewed staged source; not an atomic release snapshot"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/ecology_openrouter_cli.erl",
+      "sha256": "6a12e7494acf1f065b31721f1e1973491e1f7f2c36fa5e1044775ffca49b9eb2",
+      "bytes": 4947,
+      "observed_at": "2026-09-09T04:01:23Z",
+      "classification": "reviewed staged source; not an atomic release snapshot"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/openrouter_engine.gleam",
+      "sha256": "ca926e374cbe89cacd3a929e10fa242a0814529055c71a954044d8d8ed47060a",
+      "bytes": 4139,
+      "observed_at": "2026-09-09T04:01:23Z",
+      "classification": "reviewed staged source; not an atomic release snapshot"
+    },
+    {
+      "path": "apps/cepaf_gleam/src/cepaf_gleam/ecology/daily_budget.gleam",
+      "sha256": "67da3e67a765f7104274a7a667026d001ff9e34a97e74f5ea107e3fb3e38ffb8",
+      "bytes": 5018,
+      "observed_at": "2026-09-09T04:01:23Z",
+      "classification": "reviewed staged source; not an atomic release snapshot"
+    },
+    {
+      "path": "apps/cepaf_gleam/test/ecology_openrouter_engine_test.gleam",
+      "sha256": "f21c12921b5a957871e234554d58b86ef512102bebb9135fbf76c38a224503bd",
+      "bytes": 8279,
+      "observed_at": "2026-09-09T04:01:23Z",
+      "classification": "reviewed staged source; not an atomic release snapshot"
+    },
+    {
+      "path": "tools/validation/ecology_openrouter_check.ml",
+      "sha256": "1991fede008f00a86f55cd2bc2c60fa9a0937ba6ed28c3ae358a0a0835d0cf3b",
+      "bytes": 3396,
+      "observed_at": "2026-09-09T04:01:23Z",
+      "classification": "reviewed staged source; not an atomic release snapshot"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_swarm/openrouter_worker.gleam",
+      "sha256": "17397d82b16906b7f7d0b2304a09a297af769f2972c0a8376a5db791115d218e",
+      "bytes": 25448,
+      "observed_at": "2026-09-09T04:01:23Z",
+      "classification": "reviewed staged source; not an atomic release snapshot"
+    },
+    {
+      "path": "apps/uos_swarm/src/uos_openrouter_ffi.erl",
+      "sha256": "cd7ab025e1796505d48dddcd1ac8d3be617c46ce95796e2bda30446e4c2921e1",
+      "bytes": 11393,
+      "observed_at": "2026-09-09T04:01:23Z",
+      "classification": "reviewed staged source; not an atomic release snapshot"
+    }
+  ],
+  "guard_observations": [
+    "One fixed canonical ledger; no alternate locator in finite scope schema",
+    "Finite explicitly authorized root task/worker/attempt",
+    "READONLY fixed Sa-plan/dependency queries",
+    "Body prepared from verified immutable release worker before reserve",
+    "Exact body and current source comparison before reservation",
+    "Three task fences around credential/catalog/reservation/POST",
+    "One POST and no retry/refund branch",
+    "Post-parent-crash WIP safety is not claimed",
+    "Key in closure/header, absent argv and evidence; no key bytes read by reviewer"
+  ],
+  "reviewer_effect_counts": {
+    "network_requests": 0,
+    "model_calls": 0,
+    "paid_calls": 0,
+    "implementation_fixture_builds": 0,
+    "runtime_changes": 0,
+    "vcs_mutations": 0,
+    "existing_source_edits": 0,
+    "dependency_installs": 0
+  },
+  "administrative_validation": "Required isolated Sa-plan/risk administration and owned artifact checks only",
+  "limits": [
+    "Tool entrypoint hashes do not attest full shared-library closures",
+    "Provider-template allowance is an assumption with returned-usage validation",
+    "Canonical-ledger liability is not provider-account-wide billing enforcement",
+    "Peer reports and source repairs do not substitute for final candidate execution",
+    "No new EV number or system admission"
+  ]
+}

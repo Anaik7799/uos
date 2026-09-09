@@ -19,6 +19,7 @@ import cepaf_gleam/planning/sa_plan_bridge
 import cepaf_gleam/services/max_inference_daemon as max_daemon
 import cepaf_gleam/ui/wisp/inference_api
 import cepaf_gleam/ui/wisp/router as wisp_router
+import gleam/bit_array
 import gleam/dynamic/decode
 import gleam/int
 import gleam/io
@@ -222,7 +223,10 @@ pub fn check_fractal_jidoka_violation(
   raw_line: String,
 ) -> Result(Nil, String) {
   let bypass_decoder = {
-    use b <- decode.subfield(["params", "arguments", "bypass_sa_plan"], decode.bool)
+    use b <- decode.subfield(
+      ["params", "arguments", "bypass_sa_plan"],
+      decode.bool,
+    )
     decode.success(b)
   }
   let unledgered_decoder = {
@@ -230,7 +234,10 @@ pub fn check_fractal_jidoka_violation(
     decode.success(u)
   }
   let shadow_decoder = {
-    use s <- decode.subfield(["params", "arguments", "shadow_plan"], decode.bool)
+    use s <- decode.subfield(
+      ["params", "arguments", "shadow_plan"],
+      decode.bool,
+    )
     decode.success(s)
   }
 
@@ -260,11 +267,7 @@ pub fn check_fractal_jidoka_violation(
 
   case is_bypass || is_unledgered || is_shadow || ast_blocked {
     True ->
-      sa_plan_bridge.enforce_fractal_jidoka(
-        "AutonomousAgent",
-        name,
-        False,
-      )
+      sa_plan_bridge.enforce_fractal_jidoka("AutonomousAgent", name, False)
     False -> Ok(Nil)
   }
 }
@@ -286,7 +289,10 @@ pub fn verify_mutating_action_preflight(
     decode.success(c)
   }
   let risk_decoder = {
-    use r <- decode.subfield(["params", "arguments", "risk_score"], decode.float)
+    use r <- decode.subfield(
+      ["params", "arguments", "risk_score"],
+      decode.float,
+    )
     decode.success(r)
   }
   let contention_decoder = {
@@ -320,11 +326,7 @@ pub fn verify_mutating_action_preflight(
   }
 
   let forecast = case json.parse(raw_line, risk_decoder) {
-    Ok(r) ->
-      fractal_forecast.LayerForecast(
-        ..base_forecast,
-        risk_score: r,
-      )
+    Ok(r) -> fractal_forecast.LayerForecast(..base_forecast, risk_score: r)
     Error(_) -> base_forecast
   }
 
@@ -338,7 +340,9 @@ pub fn verify_mutating_action_preflight(
       "ready",
       4,
     )
-  case stpa_rep.gate_decision == "ANDON_STOP_BLOCKED" || stpa_rep.severity >= 9 {
+  case
+    stpa_rep.gate_decision == "ANDON_STOP_BLOCKED" || stpa_rep.severity >= 9
+  {
     True ->
       fractal_forecast.PreflightVetoed(
         certificate_id: "CERT-STPA-" <> action,
@@ -387,10 +391,14 @@ fn execute_tool(
             True -> {
               case verify_mutating_action_preflight(name, raw_line) {
                 fractal_forecast.PreflightApproved(_, _, _, _, _) -> {
-                  case tools.unavailable_reason(name) {
-                    Some(reason) -> tool_unavailable(id, name, reason)
-                    None -> execute_available_tool(name, id, raw_line)
-                  }
+                  // Legacy payload identities do not establish effect authority.
+                  // Only the separately task-bound development harness may
+                  // expose its finite development effects.
+                  error_response(
+                    id,
+                    -32_003,
+                    "Transport-bound task authority unavailable; legacy mutation refused",
+                  )
                 }
                 fractal_forecast.PreflightVetoed(_, _, _, reason, _risk) -> {
                   error_response(id, -32_001, "Preflight veto: " <> reason)
@@ -651,7 +659,10 @@ fn tool_forecast_predict(id: Option(json.Json), raw_line: String) -> String {
     decode.success(l)
   }
   let horizon_decoder = {
-    use h <- decode.subfield(["params", "arguments", "horizon_seconds"], decode.int)
+    use h <- decode.subfield(
+      ["params", "arguments", "horizon_seconds"],
+      decode.int,
+    )
     decode.success(h)
   }
   let layer = case json.parse(raw_line, layer_decoder) {
@@ -699,7 +710,7 @@ fn tool_forecast_predict(id: Option(json.Json), raw_line: String) -> String {
         json.to_string(
           fractal_forecast.layer_forecast_to_json(
             fractal_forecast.predict_l2_component(
-              [0.55, 0.58, 0.56, 0.60, 0.62, 0.61, 0.63, 0.62],
+              [0.55, 0.58, 0.56, 0.6, 0.62, 0.61, 0.63, 0.62],
               horizon,
             ),
           ),
@@ -735,7 +746,7 @@ fn tool_forecast_predict(id: Option(json.Json), raw_line: String) -> String {
         json.to_string(
           fractal_forecast.layer_forecast_to_json(
             fractal_forecast.predict_l5_cognitive(
-              [0.45, 0.48, 0.50, 0.47, 0.52, 0.49, 0.51, 0.50],
+              [0.45, 0.48, 0.5, 0.47, 0.52, 0.49, 0.51, 0.5],
               horizon,
             ),
           ),
@@ -759,7 +770,7 @@ fn tool_forecast_predict(id: Option(json.Json), raw_line: String) -> String {
         json.to_string(
           fractal_forecast.layer_forecast_to_json(
             fractal_forecast.predict_l7_federation(
-              [0.08, 0.09, 0.07, 0.08, 0.10, 0.09, 0.08, 0.09],
+              [0.08, 0.09, 0.07, 0.08, 0.1, 0.09, 0.08, 0.09],
               horizon,
             ),
           ),
@@ -799,9 +810,18 @@ fn tool_forecast_predict(id: Option(json.Json), raw_line: String) -> String {
 
 fn tool_preflight_check(id: Option(json.Json), raw_line: String) -> String {
   let decoder = {
-    use actor <- decode.subfield(["params", "arguments", "actor"], decode.string)
-    use action <- decode.subfield(["params", "arguments", "action"], decode.string)
-    use benefit <- decode.subfield(["params", "arguments", "benefit"], decode.float)
+    use actor <- decode.subfield(
+      ["params", "arguments", "actor"],
+      decode.string,
+    )
+    use action <- decode.subfield(
+      ["params", "arguments", "action"],
+      decode.string,
+    )
+    use benefit <- decode.subfield(
+      ["params", "arguments", "benefit"],
+      decode.float,
+    )
     use cost <- decode.subfield(["params", "arguments", "cost"], decode.float)
     decode.success(#(actor, action, benefit, cost))
   }
@@ -887,6 +907,10 @@ fn tool_sa_task_claim(id: Option(json.Json), raw_line: String) -> String {
 }
 
 fn tool_sa_task_complete(id: Option(json.Json), raw_line: String) -> String {
+  let attempt_decoder = {
+    use a <- decode.subfield(["params", "arguments", "attempt"], decode.int)
+    decode.success(a)
+  }
   let plan_decoder = {
     use p <- decode.subfield(["params", "arguments", "plan"], decode.string)
     decode.success(p)
@@ -908,19 +932,22 @@ fn tool_sa_task_complete(id: Option(json.Json), raw_line: String) -> String {
     json.parse(raw_line, plan_decoder),
     json.parse(raw_line, task_id_decoder),
     json.parse(raw_line, worker_decoder),
-    json.parse(raw_line, result_decoder)
+    json.parse(raw_line, result_decoder),
+    json.parse(raw_line, attempt_decoder)
   {
-    Ok(plan), Ok(task_id), Ok(worker), Ok(result) -> {
-      case sa_plan_bridge.complete_sa_task(plan, task_id, worker, result) {
+    Ok(plan), Ok(task_id), Ok(worker), Ok(result), Ok(attempt) -> {
+      case
+        sa_plan_bridge.complete_sa_task(plan, task_id, worker, attempt, result)
+      {
         Ok(out) -> tool_content_response(id, out)
         Error(err) -> tool_error_response(id, err)
       }
     }
-    _, _, _, _ ->
+    _, _, _, _, _ ->
       error_response(
         id,
         -32_602,
-        "Missing required parameters: plan, task_id, worker, result",
+        "Missing required parameters: plan, task_id, worker, attempt, result",
       )
   }
 }
@@ -957,7 +984,9 @@ fn tool_sa_job_enqueue(id: Option(json.Json), raw_line: String) -> String {
     Ok(job_id), Ok(name), Ok(queue), Ok(worker), Ok(args) -> {
       case sa_plan_bridge.poka_yoke_validate_job(queue, worker, args) {
         Ok(Nil) -> {
-          case sa_plan_bridge.enqueue_sa_job(job_id, name, queue, worker, args) {
+          case
+            sa_plan_bridge.enqueue_sa_job(job_id, name, queue, worker, args)
+          {
             Ok(out) -> tool_content_response(id, out)
             Error(err) -> tool_error_response(id, err)
           }
@@ -1028,15 +1057,24 @@ fn tool_stpa_fmea_hazard(id: Option(json.Json), raw_line: String) -> String {
     decode.success(a)
   }
   let component_decoder = {
-    use c <- decode.subfield(["params", "arguments", "component"], decode.string)
+    use c <- decode.subfield(
+      ["params", "arguments", "component"],
+      decode.string,
+    )
     decode.success(c)
   }
   let context_decoder = {
-    use ctx <- decode.subfield(["params", "arguments", "context"], decode.string)
+    use ctx <- decode.subfield(
+      ["params", "arguments", "context"],
+      decode.string,
+    )
     decode.success(ctx)
   }
   let crit_decoder = {
-    use cr <- decode.subfield(["params", "arguments", "criticality"], decode.int)
+    use cr <- decode.subfield(
+      ["params", "arguments", "criticality"],
+      decode.int,
+    )
     decode.success(cr)
   }
   let dep_decoder = {
@@ -1134,11 +1172,17 @@ fn tool_rete_rule_conflict(id: Option(json.Json), raw_line: String) -> String {
 
 fn tool_ruliad_branch_eval(id: Option(json.Json), raw_line: String) -> String {
   let src_decoder = {
-    use s <- decode.subfield(["params", "arguments", "source_branch"], decode.string)
+    use s <- decode.subfield(
+      ["params", "arguments", "source_branch"],
+      decode.string,
+    )
     decode.success(s)
   }
   let tgt_decoder = {
-    use t <- decode.subfield(["params", "arguments", "target_branch"], decode.string)
+    use t <- decode.subfield(
+      ["params", "arguments", "target_branch"],
+      decode.string,
+    )
     decode.success(t)
   }
   let changes_decoder = {
@@ -1224,7 +1268,10 @@ fn tool_ast_anomaly_detect(id: Option(json.Json), raw_line: String) -> String {
     decode.success(l)
   }
   let strict_decoder = {
-    use s <- decode.subfield(["params", "arguments", "strict_mode"], decode.bool)
+    use s <- decode.subfield(
+      ["params", "arguments", "strict_mode"],
+      decode.bool,
+    )
     decode.success(s)
   }
 
@@ -1268,7 +1315,10 @@ fn tool_zk_transclude(id: Option(json.Json), raw_line: String) -> String {
   tool_adapter_response(id, max_daemon.zk_result_to_json(rep))
 }
 
-fn tool_lyapunov_trend_predict(id: Option(json.Json), raw_line: String) -> String {
+fn tool_lyapunov_trend_predict(
+  id: Option(json.Json),
+  raw_line: String,
+) -> String {
   let telem_decoder = {
     use t <- decode.subfield(
       ["params", "arguments", "telemetry"],
@@ -1323,7 +1373,7 @@ fn tool_lyapunov_trend_predict(id: Option(json.Json), raw_line: String) -> Strin
 fn read_file_as_string(path: String) -> Result(String, String) {
   case erl_file_read(path) {
     Ok(bits) -> {
-      case bit_array_to_string(bits) {
+      case bit_array.to_string(bits) {
         Ok(s) -> Ok(s)
         Error(_) -> Error("Invalid UTF-8 in file")
       }
@@ -1331,9 +1381,6 @@ fn read_file_as_string(path: String) -> Result(String, String) {
     Error(e) -> Error(e)
   }
 }
-
-@external(erlang, "gleam_stdlib", "identity")
-fn bit_array_to_string(bits: BitArray) -> Result(String, Nil)
 
 fn tool_content_response(id: Option(json.Json), text: String) -> String {
   success_response(

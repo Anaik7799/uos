@@ -46,6 +46,22 @@ pub fn registry_has_at_least_389_concepts_after_holon_meta_test() {
   })
 }
 
+pub fn registry_has_at_least_399_concepts_after_toolchain_provenance_test() {
+  { list.length(system_ontology.concepts()) >= 399 } |> should.be_true
+  let ids = [
+    "nix:determinate-nix", "nix:devenv", "preflight:toolchain",
+    "provenance:admitted-ev-ceiling", "provenance:append-only-defense",
+    "formal:algebraic-atlas", "formal:intent-based-config",
+    "inference:max-mojo-runner", "swarm:living-ecology",
+    "architecture:triadic-unification",
+  ]
+  list.each(ids, fn(id) {
+    let assert Ok(c) = system_ontology.resolve(id)
+    c.id |> should.equal(id)
+    { c.devanagari != "" } |> should.be_true
+  })
+}
+
 pub fn jujutsu_domain_has_at_least_26_concepts_test() {
   { list.length(system_ontology.by_domain(system_ontology.Vcs)) >= 26 }
   |> should.be_true

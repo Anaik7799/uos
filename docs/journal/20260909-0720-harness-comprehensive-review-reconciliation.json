@@ -1,0 +1,1808 @@
+{
+  "schema": "uos.harness.comprehensive-review.v2",
+  "generated_from_clock": "2026-09-09T07:30:29.054561Z",
+  "status": "REVIEW_COMPLETE_WITH_SCOPED_EVIDENCE_FEATURES_OPEN",
+  "authority": "REVIEW_AND_METADATA_TRACKING_ONLY",
+  "root_session": "01a083d2-baa3-7783-8e45-5357cc9e96d8",
+  "authority_plan": "uos/ecology/20260909-0146",
+  "authority_task": "HARNESSBOOT",
+  "feature_plan": "uos/harness-features/20260909",
+  "all_features_implemented": false,
+  "system_admission": false,
+  "verified_features": 0,
+  "feature_count": 52,
+  "feature_catalog_sha256": "387f4792a012528114ebc2625aea2cd0e0e19cb1815ab713fe55be31a82fe43f",
+  "workflow_service": "sa_plan_local_durable_history",
+  "external_temporal_runtime": "NOT_VERIFIED",
+  "decision_matrix": [
+    {
+      "id": "D01",
+      "title": "Canonical UOS reuses C3I/Indrajaal concepts and VM-1 as read-only evidence",
+      "challenge": "Check source provenance, no unvetted import, and that UCon integration is not invented.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "VM-1 receipt is read-only comparison evidence; no verified UCon binding or unvetted source ingestion.",
+      "claude": {
+        "id": "D01",
+        "verdict": "UNKNOWN",
+        "basis": "Provenance of C3I/Indrajaal reuse not re-derived in this pass; VM-1 trees not read (read-only mandate honoured).",
+        "finding": null
+      },
+      "agy": {
+        "id": "D01",
+        "canonical_title": "Canonical UOS reuses C3I/Indrajaal concepts and VM-1 as read-only evidence",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Source provenance checked; external trees read-only per policy §3"
+      },
+      "fable_findings": [],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D01",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "`governance/sources/20260909-0241-ecology-vm1-comparison-receipt.json` scope = read-only, no external writes; atlas `ucon.binding` state=planned \"not located/verified\"; `dev.gleam:605-659` read scope excludes external trees; UCon not invented."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D02",
+      "title": "Agentic holons discover the full capability set and activate authorized subsets",
+      "challenge": "Distinguish 26 local participant models from actual external system bindings.",
+      "root_disposition": "REVISE",
+      "basis": "26 participant models share a local actor. External holon bindings and fenced per-holon activation are unfinished.",
+      "claude": {
+        "id": "D02",
+        "verdict": "UNKNOWN",
+        "basis": "26 participant models vs external bindings not separable from source alone; no runtime dispatch observed.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D02",
+        "canonical_title": "Agentic holons discover the full capability set and activate authorized subsets",
+        "verdict": "REVISE",
+        "evidence": "Falsifier: 4110 dashboard displays 26 participants, but external system bindings are uninstantiated stubs; authorized activation sets must be explicitly fenced"
+      },
+      "fable_findings": [],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D02",
+        "verdict": "REVISE",
+        "basis": "`ecology/living_swarm.gleam:115` `Participant` type has exactly 26 variants (local enum, not bindings); \"discovery\" is a fixed list `mcp.gleam:233-255` (dev+peers+tracking names), not a capability inventory; atlas `holon_policy` is prose."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D03",
+      "title": "Gleam/OTP owns all agents, orchestration, policies, clock/check verdicts and backend choice",
+      "challenge": "Check actual direct-tool exceptions and client enforcement; documentation is not enforcement.",
+      "root_disposition": "REVISE",
+      "basis": "New control modules are Gleam; universal client enforcement is unfinished. Bootstrap host adapters and local development escape path remain explicit.",
+      "claude": {
+        "id": "D03",
+        "verdict": "REVISE",
+        "basis": "harness/clock.gleam:58, development.gleam:211,330,405,971,976,983,988 call host absolute paths directly; Gleam does not own the backend choice at these sites.",
+        "finding": "F1"
+      },
+      "agy": {
+        "id": "D03",
+        "canonical_title": "Gleam/OTP owns all agents, orchestration, policies, clock/check verdicts and backend choice",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "uos_sup.gleam owns root supervision; native adapters confined behind port boundaries"
+      },
+      "fable_findings": [
+        "F1-verdict",
+        "N4"
+      ],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D03",
+        "verdict": "REVISE",
+        "basis": "No client enforcement: `.claude/settings.json` has no `hooks` key (uses non-standard `uos_control_loop`, never executed by Claude Code); `.codex/hooks.json` self-declares advisory; contract §9 leaves direct-tool exception open; this review ran on host tools because the harness refuses every non-granted identity (see 4)."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D04",
+      "title": "MCP and admitted Zenoh share typed intents and receipts",
+      "challenge": "Existing Zenoh prefixes/correlation/targeting differ; no live equivalence claim.",
+      "root_disposition": "REVISE",
+      "basis": "Finite MCP is exercised. Zenoh targeting, correlation, deadlines and equivalence are unimplemented/unverified.",
+      "claude": {
+        "id": "D04",
+        "verdict": "UNKNOWN",
+        "basis": "No live Zenoh equivalence observed; not exercised.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D04",
+        "canonical_title": "MCP and admitted Zenoh share typed intents and receipts",
+        "verdict": "REVISE",
+        "evidence": "Falsifier: development.gleam:533 reports zenoh UNAVAILABLE_NOT_VERIFIED; topic mappings and reply correlation deadlines unverified"
+      },
+      "fable_findings": [],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D04",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "Requirement only, no parity claimed: atlas `bootstrap_ready.zenoh`=`UNAVAILABLE_NOT_VERIFIED`; `zenoh/zmof_transport.gleam:83,87` prefixes `indrajaal/mcp/req|res`; `zenoh/client.gleam` has no MCP prefix; harness has no Zenoh path."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D05",
+      "title": "All newly authored control implementation is Gleam",
+      "challenge": "Existing bounded native adapters are internal services; stock Gleam targets Erlang/JS only.",
+      "root_disposition": "REVISE",
+      "basis": "Core orchestration is Gleam, but this bootstrap also authored an OCaml process guardian and Erlang FFI. The all-new-code-is-Gleam claim is not satisfied. General Gleam-to-native translation remains unimplemented.",
+      "claude": {
+        "id": "D05",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "harness/{development,files,clock,value,mcp,peers}.gleam are Gleam; 1724 lines read in part.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D05",
+        "canonical_title": "All newly authored control implementation is Gleam",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Pure Gleam control plane adhered to; native adapters internal only"
+      },
+      "fable_findings": [],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D05",
+        "verdict": "REVISE",
+        "basis": "New non-Gleam control-adjacent code was authored in the bootstrap: `process.ml` (OCaml guardian, 04:12Z) and `ffi.erl` (Erlang port runner, `:119-160`); atlas `native.ocaml` says \"existing pinned analysis adapters\" and does not list `process.ml`."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D06",
+      "title": "Native generation is proposed via a constrained typed kernel IR",
+      "challenge": "General Gleam-to-OCaml/Mojo/NIF translation is not implemented; reject unsupported constructs.",
+      "root_disposition": "UNKNOWN",
+      "basis": "A constrained kernel IR is specified; general native code generation has no verified implementation.",
+      "claude": {
+        "id": "D06",
+        "verdict": "UNKNOWN",
+        "basis": "Kernel IR not exercised; no generated native artifact inspected.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D06",
+        "canonical_title": "Native generation is proposed via a constrained typed kernel IR",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Scoped strictly to verified AST facades, no unverified general code generation"
+      },
+      "fable_findings": [],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D06",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "atlas `compiler_layer.state`=PROPOSED, `general_gleam_native_translation`=NOT_AVAILABLE_NOT_CLAIMED; no kernel-IR module in `apps/cepaf_gleam/src` (grep empty)."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D07",
+      "title": "Native ABI/runtime ownership gates preserve semantics",
+      "challenge": "Check OCaml runtime/GC roots, Mojo runtime lifecycle, short NIF scheduling and daemon defaults.",
+      "root_disposition": "UNKNOWN",
+      "basis": "Bounded adapters exist. Full OCaml GC/ABI ownership, Mojo lifecycle and native scheduling contracts lack candidate-bound end-to-end evidence.",
+      "claude": {
+        "id": "D07",
+        "verdict": "UNKNOWN",
+        "basis": "OCaml GC roots / Mojo lifecycle / NIF scheduling not exercised in this pass.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D07",
+        "canonical_title": "Native ABI/runtime ownership gates preserve semantics",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "MAX Mojo daemon isolated to supervised stdio pipe; pure Erlang Graphene facade"
+      },
+      "fable_findings": [],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D07",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "OCaml runs out-of-process (`process.ml` fork/setsid/execve, group kill, one-shot alarm, 1 MiB cap) so GC-root/NIF questions do not arise on this path; MAX via pixi subprocess `ffi.erl:233-244` with 64 KiB bound; NIF/Mojo lifecycle contracts remain UNKNOWN (atlas rows mapped)."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D08",
+      "title": "Sa-plan is sole task/job/workflow authority",
+      "challenge": "Check actual claim/attempt/expiry/dependencies, full-plan risk and effect-time fences.",
+      "root_disposition": "REVISE",
+      "basis": "New harness mutations use canonical Sa-plan CLI and observed task fences; legacy in-memory task models/another MCP server coexist. Universal exclusivity and secure workload identity remain unverified. Direct readonly SQLite fence observations are disclosed.",
+      "claude": {
+        "id": "D08",
+        "verdict": "REVISE",
+        "basis": "Grant is a hardcoded literal tuple read from caller-controlled environment variables (development.gleam:96-131).",
+        "finding": "F2"
+      },
+      "agy": {
+        "id": "D08",
+        "canonical_title": "Sa-plan is sole task/job/workflow authority",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Enforced via tools/sa_plan_main.exe and var/sa-plan/uos.sqlite3"
+      },
+      "fable_findings": [
+        "N2"
+      ],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D08",
+        "verdict": "REVISE",
+        "basis": "Effect-time fence is real: `dev.gleam:312-322` reads `sa_plan_task` + dependency-blocked count, `:250-274` requires executing/worker/attempt/deadline/blocked==0. But `bridge.gleam:627-736` still holds an in-memory Task/ObanJob model and `sdlc/sa_plan_engine.gleam:170 claim_task` exists (atlas falsifier \"no independent task store\"); harness reads the store via `/usr/bin/sqlite3` (`dev.gleam:55`) rather than the CLI."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D09",
+      "title": "Fractal TPS/Jidoka limits scope and stops uncertain effects",
+      "challenge": "Validate all four STPA UCA classes, raw FMEA, dependency priority and bounded recovery.",
+      "root_disposition": "REVISE",
+      "basis": "Finite role/attempt/lease/replay checks stop invalid effects. All-layer Jidoka/TPS scheduler enforcement is not established.",
+      "claude": {
+        "id": "D09",
+        "verdict": "UNKNOWN",
+        "basis": "Four UCA classes are declared in var/harness/20260909-0412-bootstrap-risk.json; their runtime enforcement was not observed.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D09",
+        "canonical_title": "Fractal TPS/Jidoka limits scope and stops uncertain effects",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Fail-closed Andon stop line (error -32002) prevents unledgered side-effects"
+      },
+      "fable_findings": [],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D09",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "`risk.json`: 2 assessments (ECOLOGY, HARNESSBOOT), class P1, score 768; UCA types present = {not_provided, provided_unsafe, wrong_timing, duration}; FMEA raw s/o/det/rpn/band (S4 O3 Det3 RPN36). Defect: every factor's `evidence_refs` is the same 28-path list; interval degenerate [768,768]."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D10",
+      "title": "Coordinator leases are cooperative; task/runtime/integration ownership differ",
+      "challenge": "No lease or ACK grants deployment/system admission; inspect stale-check timing.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Coordinator ownership is cooperative, separate from task/runtime/integration authority. Heartbeat observations are bounded; no ACK grants admission.",
+      "claude": {
+        "id": "D10",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "development.gleam:187,196,255 label coordinator outcomes as observation without effect authority; wording is consistent with SYNC-03/04.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D10",
+        "canonical_title": "Coordinator leases are cooperative; task/runtime/integration ownership differ",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Coordinator board leases and ACKs grant no deployment or system admission authority"
+      },
+      "fable_findings": [
+        "N6"
+      ],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D10",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "`dev.gleam:445-470` re-samples clock after both observations, requires same `boot_id` and coordinator deadline &gt; now + required; receipts `fence_scope=cooperative_observation_not_atomic_authority`, `system_admission:false` (`:1541`). Residual: heartbeat renews 3600 s per call (`:592`) vs 70 s window."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D11",
+      "title": "Stable logical effect identity survives retries and task attempts",
+      "challenge": "Failed/corrupt/lost-result replay must not become success or dispatch twice.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Targeted replay/corrupt/failed-receipt controls and SQLite duplicate/progress behavior are tested. Arbitrary crash points and hostile multiwriter behavior remain unverified.",
+      "claude": {
+        "id": "D11",
+        "verdict": "UNKNOWN",
+        "basis": "Replay/idempotence path not exercised; attempt fencing present at development.gleam:156-164 but single-attempt by grant.",
+        "finding": "F3"
+      },
+      "agy": {
+        "id": "D11",
+        "canonical_title": "Stable logical effect identity survives retries and task attempts",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Append-only triggers and unique idempotency keys verified in SQLite"
+      },
+      "fable_findings": [
+        "N9"
+      ],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D11",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "`dev.gleam:1051-1173`: exclusive-create pending intent keyed by sha256(name+args) (`:946-948`, attempt excluded); pending-without-result -&gt; `effect_outcome_unknown_reconcile_without_retry`; `replay_receipt:1175-1210` refuses non-EXECUTED/non-passed; test `replay_preserves_failure_and_rejects_corrupt_or_unbound_receipts_test`. Cross-transport dedup untestable (no Zenoh). Source-only."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D12",
+      "title": "Development edits use bounded files and cooperative compare/replace",
+      "challenge": "Inspect path aliases, inode checks, byte bounds, exclusive create, fsync and parent-rename limitations.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Bounded descriptor checks, exclusive create, fsync and digest compare/replace are implemented. Parent-directory rename races and hostile writers remain outside this cooperative scope.",
+      "claude": {
+        "id": "D12",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "files.gleam read/create/replace verified by reading: lstat+nlinks==1+size bound, open-descriptor inode/dev recheck, O_EXCL create, fsync file and parent, digest CAS re-read before rename, pending cleanup on failure. Limits are disclosed in the module header.",
+        "finding": "F4"
+      },
+      "agy": {
+        "id": "D12",
+        "canonical_title": "Development edits use bounded files and cooperative compare/replace",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Atomic file writes, byte caps, and fsync sync verified"
+      },
+      "fable_findings": [
+        "N3",
+        "N4",
+        "N9"
+      ],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D12",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "`files.gleam:88-100` rejects `.`,`..`,`\\\\`,NUL,&gt;512 B; `:102-118` parents must be directories via `link_info`; `:126-179` nlinks==1, ≤262144 B, open-descriptor inode/dev match, pread bound, UTF-8; `:189-211` `[Exclusive,Sync]` + parent sync; `:227-263` double-digest CAS + rename; header `:1-3` admits parent-rename race."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D13",
+      "title": "Existing legacy MCP UTF-8 reader and Sa-plan adapter are repaired",
+      "challenge": "Identity-as-Result crashed; shell-joined argv hid exit failures; attempt was absent. Verify regressions and remaining legacy gaps.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Legacy UTF-8 Result, literal argv, exit status and positive attempt regressions are tested. Legacy broad reads and other client surfaces remain gaps.",
+      "claude": {
+        "id": "D13",
+        "verdict": "UNKNOWN",
+        "basis": "Legacy reader/adapter regressions not re-executed; no receipt re-derived at this revision.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D13",
+        "canonical_title": "Existing legacy MCP UTF-8 reader and Sa-plan adapter are repaired",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Argv-only process creation and process status checks repaired"
+      },
+      "fable_findings": [],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D13",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "`server.gleam:1373-1382` invalid UTF-8 -&gt; `Error(\"Invalid UTF-8 in file\")`; `bridge.gleam:951-985` literal argv, ≤16 args, ≤65536 B, NUL refused, pinned env + `UOS_SA_PLAN_DB`; `:1021-1041` attempt&gt;0; 5 boundary tests. Remaining legacy gap: `authz.gleam:14-17` default `AuditOnly`; `bridge.gleam:947` hardcodes a `_build/.../test/sa_plan_main.exe` path."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D14",
+      "title": "New finite stdio MCP development interface",
+      "challenge": "Check initialization, notification behavior, finite schema, roles, loaded code identity, deadlines and terminal reconciliation.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Initialized finite MCP transport, deadlines and typed service dispatch are exercised. Environment-asserted bootstrap binding is not generalized secure identity.",
+      "claude": {
+        "id": "D14",
+        "verdict": "UNKNOWN",
+        "basis": "Finite stdio MCP interface not exercised; no live initialize/notification observed.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D14",
+        "canonical_title": "New finite stdio MCP development interface",
+        "verdict": "REVISE",
+        "evidence": "Falsifier: harness_finish argument schema mismatch between mcp.gleam:159 and development.gleam:580. Deliberate finite bootstrap grant confirmed as intentional security mechanism bounding caller identity"
+      },
+      "fable_findings": [
+        "N5",
+        "N8"
+      ],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D14",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "`mcp.gleam:206-207` notifications never dispatch; `:227-230` `initialize_required` (-32002); `schema():155-180` `additionalProperties:false`; frame 524288 B / 5000 ms (`:24-25,36-42`); `control_id()` = module md5 (`dev.gleam:134-142`) and my probe returned `00fe7e27a175b90928a1ba153c7fac56` = receipt; `reconcile_terminal:1493-1544`. Only the refusal path was observed at runtime by me."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D15",
+      "title": "Clock policy separates UTC, signed monotonic duration, boot coordinates, reference age and delivery age",
+      "challenge": "Inspect real chrony adapter and continuity; clocks from different hosts/boots cannot be subtracted.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Actual Gleam clock separates reference age, delivery age, boot identity and UTC. The earlier 30x comparison was withdrawn as a domain error.",
+      "claude": {
+        "id": "D15",
+        "verdict": "REVISE",
+        "basis": "clock.gleam:23 policy max_evidence_age_us=3_600_000_000 is 30x the module's own strict_policy 120_000_000 with no stated rationale; the same field carries two distinct semantics at lines 78 and 86.",
+        "finding": "F5"
+      },
+      "agy": {
+        "id": "D15",
+        "canonical_title": "Clock policy separates UTC, signed monotonic duration, boot coordinates, reference age and delivery age",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Separate non-aliasing clock types enforced; Chrony Stratum 3 host clock verified"
+      },
+      "fable_findings": [
+        "F5-refutation",
+        "N9"
+      ],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D15",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "`clock.gleam:77` bounded `/usr/bin/chronyc -c tracking` (2000 ms); reference age (≤3600 s, `:28`) vs delivery (≤3 s, `:30`) vs offset/uncertainty (`:32-38`) are separate fields; `dev.gleam:463` refuses cross-boot comparison. `final-test` shows offset 185 us, uncertainty 17593 us, reference_age 285.4 s."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D16",
+      "title": "Development, production primary and production standby are distinct roles",
+      "challenge": "Two hosts can run three isolated nodes; a dev candidate must not silently become a prod standby.",
+      "root_disposition": "UNKNOWN",
+      "basis": "Development, production primary and standby roles are designed; a replicated multi-node production arrangement has not been provisioned or observed here.",
+      "claude": {
+        "id": "D16",
+        "verdict": "UNKNOWN",
+        "basis": "Three-role isolation not observed; no standby node inspected.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D16",
+        "canonical_title": "Development, production primary and production standby are distinct roles",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Node role separation strictly declared; no silent promotion of dev to standby"
+      },
+      "fable_findings": [],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D16",
+        "verdict": "UNKNOWN",
+        "basis": "Only the literal role `\"development\"` exists in code (`dev.gleam:189,261,1327,1357`); production/standby have no representation; spec §9 calls it a design proposal. Nothing to evaluate."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D17",
+      "title": "Complete declared state requires explicit durability/replication",
+      "challenge": "OTP supervision alone does not replicate state or solve split-brain. Check leases, queues, liabilities, models and knowledge state.",
+      "root_disposition": "REVISE",
+      "basis": "Actual task/job/workflow metadata persists in canonical SQLite. Full typed state schemas, replication ownership, split-brain controls and restore evidence are missing.",
+      "claude": {
+        "id": "D17",
+        "verdict": "UNKNOWN",
+        "basis": "Durability/replication of declared state not observed.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D17",
+        "canonical_title": "Complete declared state requires explicit durability/replication",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "SQLite durable stores and append-only event ledgers verified"
+      },
+      "fable_findings": [],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D17",
+        "verdict": "REVISE",
+        "basis": "spec §8 requires writer/durability/schema/replication/restore per state item; atlas `states` is 34 bare strings; all 30 rows have `state.replication`/`restore` = \"UNKNOWN until...\" literals; no replication symbols in `apps/cepaf_gleam/src` (mnesia/disk_log/replication_position/writer_epoch: none)."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D18",
+      "title": "Hot loading is conditional on candidate-bound migration/recovery",
+      "challenge": "No general “Gleam/OTP implies safe live upgrade” claim. Check appup/relup/sys semantics and native resource limits.",
+      "root_disposition": "UNKNOWN",
+      "basis": "Conditional OTP upgrades and recovery are specified; no production appup/relup/state migration has been exercised.",
+      "claude": {
+        "id": "D18",
+        "verdict": "UNKNOWN",
+        "basis": "appup/relup/sys semantics not exercised.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D18",
+        "canonical_title": "Hot loading is conditional on candidate-bound migration/recovery",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Hot upgrades conditional on candidate-bound migration and recovery tests"
+      },
+      "fable_findings": [],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D18",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "Conditional only; `ha/otp_release.gleam` is a typed `.rel/.appup` representation, not release_handler execution; atlas `release.dynamic` planned \"rehearsals unrun\"; no `release_handler`/`code:load_binary` in harness."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D19",
+      "title": "OpenRouter coding profiles use paid GLM/Kimi/DeepSeek, decisions prefer Gemma 4",
+      "challenge": "Price/capability eligibility and local task quality must drive routing; model names do not establish best quality.",
+      "root_disposition": "REVISE",
+      "basis": "GLM/Kimi/DeepSeek and Gemma4 profiles exist, but no current measured environment comparison establishes the best coding or decision model. Paid production harness routing remains unverified.",
+      "claude": {
+        "id": "D19",
+        "verdict": "UNKNOWN",
+        "basis": "Routing eligibility not exercised; no paid call made or observed by this reviewer.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D19",
+        "canonical_title": "OpenRouter coding profiles use paid GLM/Kimi/DeepSeek, decisions prefer Gemma 4",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Price and capability eligibility tiers verified in ecology_budget.ml"
+      },
+      "fable_findings": [],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D19",
+        "verdict": "REVISE",
+        "basis": "Names are hardcoded ceilings `ecology/daily_budget.gleam:43-47` (`z-ai/glm-5.3`, `moonshotai/kimi-k3`, `deepseek/deepseek-v4-pro-0813`, `deepseek-v4-flash-0731`, `google/gemma-4-31b-it`); no measured task-quality receipt binds \"prefer Gemma 4\" (I did not read `docs/journal/20260909-0331-*`, so its coverage is UNKNOWN)."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D20",
+      "title": "OpenRouter aggregate budget is USD 10 per UTC day",
+      "challenge": "Durable reservations, USD0.25 bounded call liability, unknown spend retained, no automatic retries/refunds. No paid call has been made in this session.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "USD10/day durable reservation components have earlier bounded evidence; universal inference routing through that ledger remains unfinished. No direct new-harness chargeable OpenRouter effect was dispatched by root; reviewer client billing was not independently audited.",
+      "claude": {
+        "id": "D20",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "Ledger design and USD0.25 per-request liability are declared in the risk receipt; no paid call receipt exists under var/harness/. Absence of spend is consistent with the packet claim, and absence is not proof of enforcement.",
+        "finding": "F6"
+      },
+      "agy": {
+        "id": "D20",
+        "canonical_title": "OpenRouter aggregate budget is USD 10 per UTC day",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Durable reservation component implemented in tools/ecology_budget.ml + daily_budget.gleam (398 native checks passed in journal 0356); zero paid calls made"
+      },
+      "fable_findings": [],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D20",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "`daily_budget.gleam:9` 10_000_000_000 nano-USD/day, `:11` 250_000_000 per-call, `:106` worst_case ≤ reservation, `:141-159` invoice cannot reduce reserved liability; module header `:1-2`: persistence/atomic reservation live elsewhere (UNKNOWN, unobserved); no OpenRouter receipt in `var/harness/effects/`."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D21",
+      "title": "Adaptive routing optimizes for agent need and measured evidence",
+      "challenge": "Pure Gleam engine and budget adapters exist; actual production binding/calibration is not yet verified.",
+      "root_disposition": "REVISE",
+      "basis": "Routing components need live production binding, measured quality calibration and evidence-based adaptation.",
+      "claude": {
+        "id": "D21",
+        "verdict": "UNKNOWN",
+        "basis": "No production binding or calibration observed.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D21",
+        "canonical_title": "Adaptive routing optimizes for agent need and measured evidence",
+        "verdict": "REVISE",
+        "evidence": "Falsifier: live production calibration and measured quality feedback loops are unverified; local heuristics lack empirical verification"
+      },
+      "fable_findings": [],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D21",
+        "verdict": "UNKNOWN",
+        "basis": "`openrouter_engine.gleam:1` \"No queue, retries, optimizer\"; atlas `models.routing` \"whole ecology binding pending\"; calibration needs runtime data that does not exist."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D22",
+      "title": "Environment-specific evaluation includes Gleam, OCaml, Mojo, Lean, Quint, STM, Bayesian, Rete, STPA/FMEA",
+      "challenge": "Separate synthetic semantic cases, actual native executions and algorithms not verified (notably Rete-UL).",
+      "root_disposition": "REVISE",
+      "basis": "Earlier synthetic and native component suites exist. Rete-UL implementation and the full requested environment evaluation remain incomplete.",
+      "claude": {
+        "id": "D22",
+        "verdict": "UNKNOWN",
+        "basis": "Rete-UL and native executions not re-run in this pass.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D22",
+        "canonical_title": "Environment-specific evaluation includes Gleam, OCaml, Mojo, Lean, Quint, STM, Bayesian, Rete, STPA/FMEA",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Evaluation scope accepted; noted that Rete-UL forward-chaining and Bayesian models are synthetic cases rather than verified native algorithms"
+      },
+      "fable_findings": [],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D22",
+        "verdict": "REVISE",
+        "basis": "`tools/validation/openrouter_eval_{build,catalog,cli,expr,native,test,validate}.ml` exist; no Rete-UL implementation found in `engines/hermes/modules` (only wiki prose) or Gleam; atlas `rules.rete_ul` planned. The decision must not list Rete as covered."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D23",
+      "title": "Formal authority is invocation/candidate-specific",
+      "challenge": "No sorry/Admitted/unknown tool outcome counts as proof; declared Lean axioms remain explicit.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Formal admission remains candidate/invocation-specific. No new Lean/Quint whole-harness proof or system admission is asserted.",
+      "claude": {
+        "id": "D23",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "Consistent with this reviewer's own independent Lean axiom audit discipline; no sorry/Admitted claimed in the packet.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D23",
+        "canonical_title": "Formal authority is invocation/candidate-specific",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Invocation-bound formal checks fail closed; no undeclared axioms admitted"
+      },
+      "fable_findings": [],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D23",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "Policy holds; but `formal/lean/Denotational_Atlas_Cohomology.lean:55,62,74` contain `sorry` (0 top-level `axiom` across `formal/lean`); `Algebraic_Atlas_Intent.lean` clean (3 theorems). Harness binds no Lean/Quint invocation (atlas rows mapped)."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D24",
+      "title": "Existing ecology baseline remains separate from new harness admission",
+      "challenge": "Last earlier observation: real local MAX and free OpenRouter request; local loop does not prove the entire ecology/UCon has external bindings.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Running local ecology baseline remains distinct from this development harness and from externally bound UCon/whole-ecology autonomy.",
+      "claude": {
+        "id": "D24",
+        "verdict": "UNKNOWN",
+        "basis": "Ecology baseline separation not observed at runtime.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D24",
+        "canonical_title": "Existing ecology baseline remains separate from new harness admission",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Baseline local MAX/free OpenRouter loop does not imply external UCon bindings or new harness admission"
+      },
+      "fable_findings": [],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D24",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "`var/releases/ecology/` holds 5 staged read-only release dirs separate from `build/dev`; `risk.json` ECOLOGY `task_state=available` \"not completed\"; `ucon.binding` planned."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D25",
+      "title": "Hooks are advisory until independently observed as enforcing",
+      "challenge": "Installed Codex hook check passed earlier; this is not universal client bypass prevention.",
+      "root_disposition": "ACCEPT_WITHIN_SCOPE",
+      "basis": "Claude Code2.1.266 loaded SessionStart sentinels in UOS and NAS-parent configurations after a separate task31 repair. Agents/Gemini installed-client checks remain UNRUN. These hooks are advisory.",
+      "claude": {
+        "id": "D25",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "Packet states hooks are advisory until independently observed; this matches what this reviewer verified separately for the .claude/.agents/.codex preflight hooks.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D25",
+        "canonical_title": "Hooks are advisory until independently observed as enforcing",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Client-side hooks acknowledged as advisory; server/runtime enforcement required"
+      },
+      "fable_findings": [],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D25",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "basis": "`.codex/hooks.json` = SessionStart advisory + preflight; on the Claude surface there is no hook at all (`.claude/settings.json` non-standard key); `.agents/hooks.json`, `.gemini/hooks.json` not read. Decision text is accurate; enforcement absent."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D26",
+      "title": "Journal/wiki/ZK/KM and algebraic atlas preserve claims and uncertainty",
+      "challenge": "Check exact 13 journal sections, timestamps, L0–L9, all 17 aspects, matching ASCII/Mermaid and real links.",
+      "root_disposition": "REVISE",
+      "basis": "Timestamped grouped journal/wiki/ZK artifacts and ASCII/Mermaid sources exist, but the atlas is a partial registry with generic laws, no full nine-algebra encoding or installed OTP inventory. Frozen packet checklist defect and global KM conformance remain open.",
+      "claude": {
+        "id": "D26",
+        "verdict": "REVISE",
+        "basis": "Packet §Verification checklist declares 18 checkpoints as a 6-row summary table, not the 5-domain 18-item structure SC-CHECKLIST-001 specifies; individual checkpoint states are not itemised.",
+        "finding": "F7"
+      },
+      "agy": {
+        "id": "D26",
+        "canonical_title": "Journal/wiki/ZK/KM and algebraic atlas preserve claims and uncertainty",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Standardized 13-section journals, timestamps, and matching diagrams upheld"
+      },
+      "fable_findings": [
+        "N5"
+      ],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D26",
+        "verdict": "REVISE",
+        "basis": "`dev.gleam:1212-1231` enforces the exact 13 titles; spec §22 ASCII/Mermaid pairs match by node/edge count (12/16, 8/10, 7/11) and atlas `diagrams` titles match; but atlas `traceability.aspects` is the same constant string on all 30 rows (no per-aspect map); no `20260909-*harness*` wiki/ZK docs exist."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D27",
+      "title": "Primary/backup SRE requires independent observations and tested recovery",
+      "challenge": "Source tests and component counts cannot substitute for actual production/standby runtime behavior.",
+      "root_disposition": "UNKNOWN",
+      "basis": "Production/standby failover and recovery have no fresh candidate-bound runtime evidence in this review.",
+      "claude": {
+        "id": "D27",
+        "verdict": "UNKNOWN",
+        "basis": "No production/standby runtime behaviour observed.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D27",
+        "canonical_title": "Primary/backup SRE requires independent observations and tested recovery",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "evidence": "Runtime observation required; static component counts cannot substitute for recovery tests"
+      },
+      "fable_findings": [],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D27",
+        "verdict": "UNKNOWN",
+        "basis": "No standby node, no replication code, atlas `state.replication`/`release.dynamic` planned; spec §21:403 itself marks RTO/loss UNKNOWN until tested."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    },
+    {
+      "id": "D28",
+      "title": "Bootstrap completion requires observed finite service acceptance and peer reconciliation",
+      "challenge": "Verify recoverable completion, current source-bound build/test receipts, explicit residual gaps and no claimed whole-system admission.",
+      "root_disposition": "READY_FOR_FINITE_COMPLETION",
+      "basis": "All three reviewers' full decision/aspect tables were received and reconciled. Current28-input candidate passes70 tests and52 canonical registrations/readbacks are required. Canonical HARNESSBOOT completion must be separately observed; no feature/system admission.",
+      "claude": {
+        "id": "D28",
+        "verdict": "UNKNOWN",
+        "basis": "Bootstrap completion not observed; HARNESSBOOT is state=executing at review time.",
+        "finding": null
+      },
+      "agy": {
+        "id": "D28",
+        "canonical_title": "Bootstrap completion requires observed finite service acceptance and peer reconciliation",
+        "verdict": "REVISE",
+        "evidence": "Falsifier: Root MCP tests currently observed 46 PASS at 05:52:52 with final tracking pending; bootstrap completion requires peer reconciliation and clean candidate test receipts"
+      },
+      "fable_findings": [
+        "N1",
+        "N2",
+        "N7",
+        "N8"
+      ],
+      "acceptance": "Use the linked feature acceptance criteria and fresh candidate-specific runtime/formal evidence; design acceptance is not feature completion.",
+      "fable": {
+        "id": "D28",
+        "verdict": "REVISE",
+        "basis": "No `var/harness/20260909-0412-bootstrap-completion-{intent,result}.json` exists; latest `final-test` (06:16:52Z, \"All 69 tests passed\", `admission NOT_GRANTED`) is stale: 1/28 manifest entries differ now (`harness_tracking_test.gleam` receipt `d87b1c1a8b2366e57530938a0f164bae6d9e8617dcc7cd26d035405282ee3413` vs now `cb0a339938a8ccd234fa9b8bd33accc1b04cc660f5eeaec589cad3420efbf63d`, modified 06:35:47Z); a `peer-claude-final-harness-source-frozen` prompt was dispatched while source still moved; all peer receipts `peer_acknowledged:false`."
+      },
+      "peer_observation_limit": "Each peer basis preserves its original source/time window. Root reconciliation supersedes stale absence/count/clock claims explicitly; review acceptance is not implementation or an admission vote."
+    }
+  ],
+  "seventeen_canonical_aspects": [
+    {
+      "name": "1 Substrate and hardware safety",
+      "requirement": "Preserve host storage interlocks; harness cannot override denied devices.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "Storage interlock behavior was not exercised by this scoped review; no storage effect is authorized.",
+      "claude": {
+        "n": 1,
+        "name": "Substrate and hardware safety",
+        "status": "UNKNOWN",
+        "observed": "Host storage interlock (denied NVMe serial) not exercised by this reviewer.",
+        "gap": "CHK-07-DRIVE UNRUN in every surface observed."
+      },
+      "fable": {
+        "number": 1,
+        "name": "Substrate and hardware safety",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "observations": "`ops/kubernetes/nas-k8s-lab/src/spec.rs:192` serial unchanged; harness sources contain no device/storage references. | Interlock runtime test UNRUN (CHK-07)."
+      },
+      "agy": {
+        "aspect_number": 1,
+        "name": "Substrate and hardware safety",
+        "formal_requirement": "Preserve host storage interlocks; harness cannot override denied devices.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED_BROAD_UNKNOWN",
+        "specific_component_observation": "ops/kubernetes/nas-k8s-lab/src/spec.rs locks NVMe serial 25503L801736; historical 7/7 checks passed",
+        "runtime_enforcement_at_candidate": "UNKNOWN (Cluster Ceph storage controller unrun by reviewer at candidate revision)"
+      }
+    },
+    {
+      "name": "2 Version control",
+      "requirement": "Preserve standalone JJ, source ownership and candidate identification.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "Finite28-file SHA-256 manifests bind tests; no newly sealed immutable JJ candidate or production release is claimed.",
+      "claude": {
+        "n": 2,
+        "name": "Version control",
+        "status": "REVISE",
+        "observed": "Standalone JJ intact and no native git mutation observed. But the frozen source is a WORKING COPY, not a candidate: the packet and harness source were reviewed at digests, and Fable N1 showed development.gleam moved 843->1578->1663->1709 during review.",
+        "gap": "Candidate identification, which this aspect names, is absent; receipts bind manifests, not a change_id."
+      },
+      "fable": {
+        "number": 2,
+        "name": "Version control",
+        "verdict": "REVISE",
+        "observations": "Heartbeat uses pinned `jj --ignore-working-copy` (`dev.gleam:558-572`). Candidate is an uncommitted dirty working copy; `pub const root` hardcodes canonical checkout (`dev.gleam:27`). | No committed candidate to bind receipts; source moved during review."
+      },
+      "agy": {
+        "aspect_number": 2,
+        "name": "Version control",
+        "formal_requirement": "Preserve standalone JJ, source ownership and candidate identification.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED",
+        "specific_component_observation": "Standalone JJ working copy verified at candidate 7e6a6c24; zero native Git mutations executed",
+        "runtime_enforcement_at_candidate": "PARTIALLY_VERIFIED (Local workspace intact; multi-workspace concurrency unexercised)"
+      }
+    },
+    {
+      "name": "3 Purity and provenance",
+      "requirement": "Preserve excluded dependencies and read-only external source discipline.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "Host bash/sqlite3/chronyc and new OCaml/Erlang bootstrap adapters remain exceptions; external trees are read-only. Whole-tree purity was not rerun.",
+      "claude": {
+        "n": 3,
+        "name": "Purity and provenance",
+        "status": "REVISE",
+        "observed": "No excluded dependency introduced. Three declared host adapters remain (sqlite3, bash at development.gleam:54,56 and chronyc at clock.gleam:77); the first two are disclosed in adapter_scope with all_adapters_pinned=false, chronyc is not.",
+        "gap": "One undisclosed host exception."
+      },
+      "fable": {
+        "number": 3,
+        "name": "Purity and provenance",
+        "verdict": "REVISE",
+        "observations": "`dev.gleam:59-68 adapter_scope()` explicitly declares host `/usr/bin/{sqlite3,bash,chronyc}` (now declared, not hidden); external trees excluded (`finite_file_scope_excludes_credentials_and_external_trees_test`). | Host-path exception contradicts SC-NIX-DEVENV-001 inv.5 and has no governance manifest entry; dependency diff not checked by me."
+      },
+      "agy": {
+        "aspect_number": 3,
+        "name": "Purity and provenance",
+        "formal_requirement": "Preserve excluded dependencies and read-only external source discipline.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED_BROAD_UNKNOWN",
+        "specific_component_observation": "0 Bevy, 0 Graphite, 0 foreign NIFs; external VM-1 sources read-only in governance/sources/; admitted ceiling EV-93 observed",
+        "runtime_enforcement_at_candidate": "UNKNOWN (Dynamic cluster-wide provenance enforcement unrun at candidate revision)"
+      }
+    },
+    {
+      "name": "4 Supervision",
+      "requirement": "Gleam/OTP owns the agent and service supervision hierarchy.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "The current MCP loop is not integrated into the root OTP supervisor and uses unlinked workers; restart budgets/fault recovery remain open.",
+      "claude": {
+        "n": 4,
+        "name": "Supervision",
+        "status": "UNKNOWN",
+        "observed": "Gleam/OTP supervision source present; no supervisor restart or failure isolation observed by this reviewer.",
+        "gap": ""
+      },
+      "fable": {
+        "number": 4,
+        "name": "Supervision",
+        "verdict": "REVISE",
+        "observations": "`mcp.gleam:84-92 main()` is a bare loop; workers are `spawn_unlinked` (`dev.gleam:288-291`); no harness child in `uos_sup.gleam`; atlas `otp.supervision` planned. | The harness itself is unsupervised; restart budgets undeclared."
+      },
+      "agy": {
+        "aspect_number": 4,
+        "name": "Supervision",
+        "formal_requirement": "Gleam/OTP owns the agent and service supervision hierarchy.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED_BROAD_UNKNOWN",
+        "specific_component_observation": "uos_sup.gleam root supervisor reviewed; OTP 29 process tree observed live on port 4100",
+        "runtime_enforcement_at_candidate": "UNKNOWN (Live supervisor crash-recovery and child restart budgets unexercised)"
+      }
+    },
+    {
+      "name": "5 Deterministic runtime",
+      "requirement": "ZigVM remains a contracted deterministic backend where admitted.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "No new candidate-bound ZigVM kernel or descriptor-relative VFS verification.",
+      "claude": {
+        "n": 5,
+        "name": "Deterministic runtime",
+        "status": "UNKNOWN",
+        "observed": "Zig 0.16.0 resolves in-project; no ZigVM execution observed.",
+        "gap": ""
+      },
+      "fable": {
+        "number": 5,
+        "name": "Deterministic runtime",
+        "verdict": "UNKNOWN",
+        "observations": "`engines/zigvm` present; zero ZigVM references in harness; atlas `backends` lists `zigvm` as `admitted_deterministic_engine` but no capability row uses it. | \"admitted\" label unsupported by any row; nothing to evaluate."
+      },
+      "agy": {
+        "aspect_number": 5,
+        "name": "Deterministic runtime",
+        "formal_requirement": "ZigVM remains a contracted deterministic backend where admitted.",
+        "status": "DESIGN_AND_SOURCE_REVIEWED",
+        "specific_component_observation": "ZigVM VFS contracts and linear arena allocators reviewed in source",
+        "runtime_enforcement_at_candidate": "UNKNOWN (Zig deterministic runtime kernel unrun by reviewer at candidate revision)"
+      }
+    },
+    {
+      "name": "6 Evidence and analysis",
+      "requirement": "Hermes tools remain bounded evidence services under Gleam control.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "Gleam uses bounded native evidence adapters; full Hermes capability admission is not established.",
+      "claude": {
+        "n": 6,
+        "name": "Evidence and analysis",
+        "status": "ACCEPT_WITHIN_SCOPE",
+        "observed": "Hermes bounded evidence services present and, in this reviewer's separate work, exercised: dune build PASS, 27-law preflight_algebra suite 27/27.",
+        "gap": "Not exercised under Gleam control in this review."
+      },
+      "fable": {
+        "number": 6,
+        "name": "Evidence and analysis",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "observations": "`process.ml` guardian (process group, one-shot alarm, output cap); `sa_plan_main.exe` invoked with literal argv (`bridge.gleam:951-985`). | Per-call `ocaml` toplevel load; `hermes_bionic_bridge.gleam` not reviewed."
+      },
+      "agy": {
+        "aspect_number": 6,
+        "name": "Evidence and analysis",
+        "formal_requirement": "Hermes tools remain bounded evidence services under Gleam control.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED_BROAD_UNKNOWN",
+        "specific_component_observation": "Isolated /tmp SQLite verification executed in codex-ev-admission-20260909-0210 (20 unit / 6 CLI pass)",
+        "runtime_enforcement_at_candidate": "UNKNOWN (General differential parity algebra unrun at this candidate revision)"
+      }
+    },
+    {
+      "name": "7 Mathematical authority",
+      "requirement": "Actual Lean/Quint/solver evidence remains invocation-specific.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "No new actual Lean/Quint whole-harness invocation/proof. Review-reported sorry obligations are not passing evidence.",
+      "claude": {
+        "n": 7,
+        "name": "Mathematical authority",
+        "status": "ACCEPT_WITHIN_SCOPE",
+        "observed": "Invocation-specific framing is correct. Verified separately by this reviewer: Lean checks exit 0 with an axiom audit showing propext and Quot.sound only, no sorryAx; Quint inv_all NoError with anti-vacuity probes violating.",
+        "gap": "Those are this reviewer's own artifacts, not harness evidence."
+      },
+      "fable": {
+        "number": 7,
+        "name": "Mathematical authority",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "observations": "No harness tool invokes Lean/Quint; `sorry` at `Denotational_Atlas_Cohomology.lean:55,62,74`; 0 axioms. | `formal.lean`/`formal.quint` rows mapped; no invocation receipts."
+      },
+      "agy": {
+        "aspect_number": 7,
+        "name": "Mathematical authority",
+        "formal_requirement": "Actual Lean/Quint/solver evidence remains invocation-specific.",
+        "status": "DESIGN_AND_SOURCE_REVIEWED",
+        "specific_component_observation": "Traceability.lean coordinate proof and parity_frontier.qnt reviewed in source",
+        "runtime_enforcement_at_candidate": "UNKNOWN (Lean 4 compiler and Z3 solvers unrun by reviewer at candidate revision)"
+      }
+    },
+    {
+      "name": "8 Feedback and homeostasis",
+      "requirement": "Separate observation, decision, authority and effect.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "Finite observed clocks/fences separate observation, decision and effect; 26 local participant models do not establish external holon homeostasis.",
+      "claude": {
+        "n": 8,
+        "name": "Feedback and homeostasis",
+        "status": "ACCEPT_WITHIN_SCOPE",
+        "observed": "Observation, decision, authority and effect are separated in the receipts: every one carries authority/admission fields and fence_scope cooperative_observation_not_atomic_authority.",
+        "gap": "Separation verified in receipt structure, not in running control loops."
+      },
+      "fable": {
+        "number": 8,
+        "name": "Feedback and homeostasis",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "observations": "Observation (`bounded_observation :279-309`), decision (`evaluate_task_window :250-274`), authority (`fence_for :445-470`), effect (`effect :1051`) are separate; receipts `authority=OBSERVATION_ONLY`. | None at bootstrap scope."
+      },
+      "agy": {
+        "aspect_number": 8,
+        "name": "Feedback and homeostasis",
+        "formal_requirement": "Separate observation, decision, authority and effect.",
+        "status": "BROAD_UNKNOWN",
+        "specific_component_observation": "Prajna circuit breaker and Lyapunov trend detector models reviewed in source",
+        "runtime_enforcement_at_candidate": "UNKNOWN (Closed-loop autonomous feedback unexercised at candidate revision)"
+      }
+    },
+    {
+      "name": "9 Inference",
+      "requirement": "MAX/Mojo isolation and centrally controlled OpenRouter requests.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "Budget, MAX and model components have earlier scoped evidence; universal paid routing, measured selection and liability reconciliation remain unfinished.",
+      "claude": {
+        "n": 9,
+        "name": "Inference",
+        "status": "UNKNOWN",
+        "observed": "MAX/Mojo isolation present (mojo executes via the in-project pixi env). No OpenRouter request observed; no paid receipt exists.",
+        "gap": ""
+      },
+      "fable": {
+        "number": 9,
+        "name": "Inference",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "observations": "MAX isolated via pixi subprocess (`ffi.erl:233-244`); OpenRouter engine pure, price required pre-POST (`openrouter_engine.gleam:28,50`); no paid receipt. | Harness exposes no model tool; ecology binding pending."
+      },
+      "agy": {
+        "aspect_number": 9,
+        "name": "Inference",
+        "formal_requirement": "MAX/Mojo isolation and centrally controlled OpenRouter requests.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED",
+        "specific_component_observation": "MAX Mojo stdio pipe isolated; durable daily budget component implemented in tools/ecology_budget.ml + daily_budget.gleam (398 checks pass, zero paid calls made)",
+        "runtime_enforcement_at_candidate": "PARTIALLY_VERIFIED (Local component and budget reservation verified; remote provider inference unrun)"
+      }
+    },
+    {
+      "name": "10 Mesh and observability",
+      "requirement": "MCP/Zenoh adapters share identity, correlation and tracing.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "MCP is exercised, while Zenoh parity and trace_id/span_id in new receipts remain absent.",
+      "claude": {
+        "n": 10,
+        "name": "Mesh and observability",
+        "status": "REVISE",
+        "observed": "MCP and coordinator envelopes do carry identity, trace_id, span_id and a chained digest - verified in my own board sends. Zenoh equivalence NOT observed.",
+        "gap": "D04's no-live-equivalence caveat stands."
+      },
+      "fable": {
+        "number": 10,
+        "name": "Mesh and observability",
+        "verdict": "REVISE",
+        "observations": "No Zenoh path in harness; receipts carry `intent_id`/`signature` but no `trace_id`/`span_id`. | spec §2 envelope requires trace ID; C3I OTel contract unmet by harness receipts."
+      },
+      "agy": {
+        "aspect_number": 10,
+        "name": "Mesh and observability",
+        "formal_requirement": "MCP/Zenoh adapters share identity, correlation and tracing.",
+        "status": "BROAD_UNKNOWN",
+        "specific_component_observation": "development.gleam:533 reports zenoh UNAVAILABLE_NOT_VERIFIED; Falsifier H1 shows 4100 renders static fixtures",
+        "runtime_enforcement_at_candidate": "UNKNOWN (Unified MCP-over-Zenoh telemetry unverified)"
+      }
+    },
+    {
+      "name": "11 Agent events",
+      "requirement": "Lifecycle, reasoning, tool, state and result events reflect actual transitions.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "Canonical4100 AG-UI Live panel renders demo events according to source/runtime peer review; no new harness AG-UI lifecycle stream.",
+      "claude": {
+        "n": 11,
+        "name": "Agent events",
+        "status": "REJECT",
+        "observed": "H1: the canonical 4100 cockpit renders static demo_events under a panel titled Live, showing health=100% containers=16/16 with frozen timestamps, against 2 containers actually running. Events do NOT reflect actual transitions on that surface.",
+        "gap": "This is the one aspect with a falsified live observation."
+      },
+      "fable": {
+        "number": 11,
+        "name": "Agent events",
+        "verdict": "REVISE",
+        "observations": "`agui/events.gleam` exists; harness emits no AG-UI lifecycle/tool/state/result events; `var/harness/effects/` is the only trail. | Events do not \"reflect actual transitions\" because none are emitted."
+      },
+      "agy": {
+        "aspect_number": 11,
+        "name": "Agent events",
+        "formal_requirement": "Lifecycle, reasoning, tool, state and result events reflect actual transitions.",
+        "status": "BROAD_UNKNOWN",
+        "specific_component_observation": "32 event types defined in agui/events.gleam; Falsifier H1 shows 4100 AG-UI displays static demo events (01:42:10)",
+        "runtime_enforcement_at_candidate": "UNKNOWN (Live agent transition streaming unverified by reviewer)"
+      }
+    },
+    {
+      "name": "12 Declarative UI",
+      "requirement": "Components project typed harness state and uncertainty.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "No deployed harness completion dashboard; the SQLite projection and linked report are available development artifacts.",
+      "claude": {
+        "n": 12,
+        "name": "Declarative UI",
+        "status": "ACCEPT_WITHIN_SCOPE",
+        "observed": "The 4110 ecology surface projects typed state AND uncertainty honestly: it states external bindings are absent and marks 7 of 18 checkpoints UNRUN in this view.",
+        "gap": "Applies to 4110 only; 4100 fails it (see aspect 11)."
+      },
+      "fable": {
+        "number": 12,
+        "name": "Declarative UI",
+        "verdict": "UNKNOWN",
+        "observations": "`tracking.gleam:167` treats `dashboard` as catalog metadata; no UI module references harness. | No projection exists to assess."
+      },
+      "agy": {
+        "aspect_number": 12,
+        "name": "Declarative UI",
+        "formal_requirement": "Components project typed harness state and uncertainty.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED",
+        "specific_component_observation": "4110 ecology dashboard truthfully projects uncertainty and disclaims absent external bindings",
+        "runtime_enforcement_at_candidate": "PARTIALLY_VERIFIED (Rendered 4110 HTML observed; full 233-component catalog unexercised)"
+      }
+    },
+    {
+      "name": "13 Interfaces",
+      "requirement": "Web, API, TUI, IDE and agent clients share the same authority semantics.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "Universal secure peer/IDE/API/Web/TUI grants and enforced harness-only routing are incomplete.",
+      "claude": {
+        "n": 13,
+        "name": "Interfaces",
+        "status": "UNKNOWN",
+        "observed": "Web observed at 4100/4110. API, TUI, IDE and agent clients not exercised; whether they share authority semantics is unverified.",
+        "gap": ""
+      },
+      "fable": {
+        "number": 13,
+        "name": "Interfaces",
+        "verdict": "REVISE",
+        "observations": "Only stdio MCP exists (`serverInfo uos-gleam-development-harness 0.1.0`); no Wisp route, TUI, or Zenoh; Claude client has no hook. | \"Same authority semantics\" untestable with one interface; legacy `server.gleam` (AuditOnly) still coexists."
+      },
+      "agy": {
+        "aspect_number": 13,
+        "name": "Interfaces",
+        "formal_requirement": "Web, API, TUI, IDE and agent clients share the same authority semantics.",
+        "status": "BROAD_UNKNOWN",
+        "specific_component_observation": "ui/domain.gleam shared types reviewed in source",
+        "runtime_enforcement_at_candidate": "UNKNOWN (Multi-client live synchronized authority unexercised)"
+      }
+    },
+    {
+      "name": "14 Navigation",
+      "requirement": "Preserve full clickable Tailnet FQDN links and actual service identity.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "Full Tailnet links are authored. Prior spec HTTP200 was observed; final-document byte-serving verification is separate.",
+      "claude": {
+        "n": 14,
+        "name": "Navigation",
+        "status": "ACCEPT_WITHIN_SCOPE",
+        "observed": "Tailnet FQDN links resolve: 4110/ecology 200, 4100/ 200, 4100/planning 200 at 06:38Z. Note 127.0.0.1:4110 returns 000, so 4110 is bound to the Tailscale interface only.",
+        "gap": "Service identity beyond HTTP 200 not verified."
+      },
+      "fable": {
+        "number": 14,
+        "name": "Navigation",
+        "verdict": "ACCEPT_WITHIN_SCOPE",
+        "observations": "Spec/packet carry full Tailnet FQDN links; GET of the spec URL returned HTTP 200, 30970 bytes at 06:36:58Z. | Byte-equality with local file not verified; wiki/ZK pages absent."
+      },
+      "agy": {
+        "aspect_number": 14,
+        "name": "Navigation",
+        "formal_requirement": "Preserve full clickable Tailnet FQDN links and actual service identity.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED",
+        "specific_component_observation": "HTTP endpoints reachable at nas-1.tail55d152.ts.net on ports 4100 and 4110",
+        "runtime_enforcement_at_candidate": "PARTIALLY_VERIFIED (Local host reachable; peer runtime vm-1:8088 unverified)"
+      }
+    },
+    {
+      "name": "15 Verification checklist",
+      "requirement": "Every check reports its actual scope, freshness and result.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "70 targeted tests pass. The18 checklist items retain scope/UNKNOWN obligations; no all-C1–C8 or four-math-gate pass.",
+      "claude": {
+        "n": 15,
+        "name": "Verification checklist",
+        "status": "REVISE",
+        "observed": "4110 reports actual scope and freshness per checkpoint - the correct pattern. The review packet itself collapses 18 checkpoints into a 6-row summary (F7).",
+        "gap": "Inconsistent between surfaces."
+      },
+      "fable": {
+        "number": 15,
+        "name": "Verification checklist",
+        "verdict": "REVISE",
+        "observations": "Receipts report scope/freshness (source manifest, start/end clocks, `admission NOT_GRANTED`); spec §16 lists 18 checkpoints all OPEN. | Packet checklist (`:71-82`) is a 6-row summary, not the 18-item SC-CHECKLIST-001 structure."
+      },
+      "agy": {
+        "aspect_number": 15,
+        "name": "Verification checklist",
+        "formal_requirement": "Every check reports its actual scope, freshness and result.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED",
+        "specific_component_observation": "4110 ecology dashboard truthfully marks 7 domains UNRUN and CHK-17 as NOT_ADMITTED",
+        "runtime_enforcement_at_candidate": "PARTIALLY_VERIFIED (4110 truthfulness verified; fleet-wide automated gate unrun)"
+      }
+    },
+    {
+      "name": "16 Knowledge triad",
+      "requirement": "Group journals and synchronize wiki/ZK/KM evidence without rewriting history.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "Final grouped artifacts preserve historical49 snapshots and corrected full peer tables; global KM ingestion is not verified.",
+      "claude": {
+        "n": 16,
+        "name": "Knowledge triad",
+        "status": "ACCEPT_WITHIN_SCOPE",
+        "observed": "No history rewriting observed by this reviewer; all my artifacts are additive and prior ones preserved unamended at stable digests.",
+        "gap": "Wiki/ZK/KM synchronisation for the harness work not verified."
+      },
+      "fable": {
+        "number": 16,
+        "name": "Knowledge triad",
+        "verdict": "REVISE",
+        "observations": "`journal_sections_valid` enforces 13 sections; `document_allowed :623-642` permits wiki/ZK writes. | No `20260909-*harness*` wiki/ZK docs exist; atlas per-row aspects constant. This review is message-only per root's read-only instruction; no journal file added."
+      },
+      "agy": {
+        "aspect_number": 16,
+        "name": "Knowledge triad",
+        "formal_requirement": "Group journals and synchronize wiki/ZK/KM evidence without rewriting history.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED",
+        "specific_component_observation": "91 ZK ADRs + Master MOC enumerated; 13-section journal conventions upheld without historical mutation",
+        "runtime_enforcement_at_candidate": "PARTIALLY_VERIFIED (Knowledge graph enumerated; transclusion engine unexercised)"
+      }
+    },
+    {
+      "name": "17 Durable execution",
+      "requirement": "Sa-plan remains the canonical task/job/workflow authority.",
+      "root_status": "PARTIAL_OR_UNKNOWN",
+      "evidence_scope": "52 canonical tasks/jobs/local workflows/current progress records are required and observed separately. External Temporal workers, dispatch and distributed recovery are unverified.",
+      "claude": {
+        "n": 17,
+        "name": "Durable execution",
+        "status": "REVISE",
+        "observed": "Sa-plan is canonical and root reports 49/49 task/job/workflow registration. But sa_plan_job and sa_plan_workflow still carry no plan_id/task_id column; linkage is a JSON convention in args/input, and 58 of 129 jobs and 19 of 32 workflows carried no reference at my last check.",
+        "gap": "Join linkage is not queryable as a join."
+      },
+      "fable": {
+        "number": 17,
+        "name": "Durable execution",
+        "verdict": "REVISE",
+        "observations": "Tracking plan `uos/harness-features/20260909` (`tracking.gleam:18`), 396 feature intents / 218 results, mode `metadata_only_no_automatic_dispatch`; task fence reads canonical sqlite. | Second task model in `bridge.gleam:627-736` and `sdlc/sa_plan_engine.gleam:170`; direct `/usr/bin/sqlite3` reader alongside the CLI authority."
+      },
+      "agy": {
+        "aspect_number": 17,
+        "name": "Durable execution",
+        "formal_requirement": "Sa-plan remains the canonical task/job/workflow authority.",
+        "status": "SPECIFIC_COMPONENT_OBSERVED_BROAD_UNKNOWN",
+        "specific_component_observation": "tools/sa_plan_main.exe pull queue, leases, and task completion receipts verified locally in var/sa-plan/uos.sqlite3",
+        "runtime_enforcement_at_candidate": "UNKNOWN (Cluster-wide Oban worker pools and Temporal cadence orchestration unexercised)"
+      }
+    }
+  ],
+  "peer_artifacts": [
+    {
+      "role": "Claude",
+      "path": "docs/journal/20260909-0721-claude-opus5-harness-evolution-review.json",
+      "sha256": "4e5958f8787228d55f5ca035d5e3793825f781d8e3c1a824b8715572a2dd2bf1"
+    },
+    {
+      "role": "Claude dashboard",
+      "path": "docs/journal/20260909-0720-claude-opus5-harness-feature-matrix.json",
+      "sha256": "de0c2b4c41c3a926603d5ff737a2d63e9374a1621b837159cccb94fdbe324db1"
+    },
+    {
+      "role": "AGY corrected census",
+      "path": "docs/journal/20260909-0815-agy-harness-evolution-canonical-reconciliation.json",
+      "sha256": "c20bb75e46d95c3467b4d6d05650e3bd733177a5c3943c8b0212f5c719269f4b"
+    },
+    {
+      "role": "Fable delegated",
+      "path": "docs/journal/20260909-0854-fable-delegated-review-and-reconciliation.json",
+      "sha256_reported_by_peer": "99370d30f39df647cc29a4ed226f5d360df4d37e5ed0dcd3cef8419d24787017",
+      "limits": [
+        "Historical preliminary artifact only; its placeholder/short hashes are not fresh evidence",
+        "Superseded by actual full verbatim28/17 rows",
+        "Delegated model is not a sovereign admission vote"
+      ]
+    },
+    {
+      "role": "AGY exact17 aspects",
+      "path": "docs/journal/20260909-0835-agy-harness-formal-spec-17-aspects-reconciliation.json",
+      "sha256": "9d6ee8a59803a5a3a7d98a55c7cccceb25eb5dbb0a4532e5fff59b8e989cf217"
+    },
+    {
+      "role": "Claude complete supplement",
+      "path": "docs/journal/20260909-0638-harness-census-supplement-claude-opus5.json",
+      "sha256": "bad5a77e163b5e1c4b6656ef67e49228e6b43156b08a30c8b2425a90d0268391"
+    },
+    {
+      "role": "Fable full verbatim28/17 rows",
+      "path": "docs/journal/20260909-0614-harness-fable-round2-full-rows-verbatim.md",
+      "sha256": "26d6d5f3c93ad4695c68b2c9ce9823e620aa463f57783226ebbf0f7d005d2100",
+      "root_readback": true,
+      "identity": "Claude-delegated claude-fable-5-1, not a separate sovereign session"
+    },
+    {
+      "role": "Claude installed hook wiring",
+      "path": "docs/journal/20260909-0703-harness-hooks-client-wiring-receipt.json",
+      "sha256": "3bfc008a3fb0b6e3928a809d521d155d410aa98dda23824863a50ad29a4333e1",
+      "root_readback": true
+    }
+  ],
+  "review_corrections": [
+    "Claude F5 reference-age versus delivery-age comparison withdrawn by Fable and reconciled.",
+    "AGY initial arithmetic and decision-ID mapping corrected additively; original artifacts preserved.",
+    "Raw Chrony/preflight/SQLite component tests do not establish all-layer TPS, full release assurance or harness system admission.",
+    "Source churn makes earlier 28/46/69-test receipts stale after later edits; final proof must match current finite manifest.",
+    "MCP prompt delivery is not review ACK; real visible responses and artifact reads provide bounded peer evidence.",
+    "Some peer checks used direct Python/Bash/OCaml outside the desired Gleam service boundary; this is a method nonconformance, not universal harness enforcement.",
+    "AGY exact formal-spec17-aspect mapping was returned additively in 20260909-0835 artifact. Broad claims remain restricted to component scope; earlier candidate and foreign-root tests are not new harness evidence.",
+    "Fable round2 count-only summaries asserted17 ACCEPT/8 REVISE/3 UNKNOWN and falsely implied full rows on the board. Actual retrieved full rows show16 ACCEPT_WITHIN_SCOPE/9 REVISE/3 UNKNOWN; originals preserved.",
+    "Fable observations about absent wiki/ZK and missing Claude hooks were true at its source window; later artifacts and two actual installed-client checks supersede those absence claims. Other clients remain UNRUN.",
+    "Fable earlier69-test candidate and Claude's independently matched70-test17a361 manifest are historical; current final catalog/evidence digest is bound to fresh70-test proof below.",
+    "Claude hook repair used direct client/Python/Bash/native methods because its harness grant was unavailable. This is a recorded bootstrap boundary exception/nonconformance, not universal Gleam-only enforcement.",
+    "Peer-reported collateral removal of four untracked OCaml intermediates and an inspected empty .git directory was outside root28-input scope; root did not perform or independently re-verify those removals. Shell command substitution during peer document generation prompted an explicit stop.",
+    "The actual bootstrap completion result path is bootstrap-completion.json; the reviewer guessed a -result filename. Lack of a guessed path alone is not a completion falsifier.",
+    "AGY's tools/sa_plan_main.exe locator is incorrect; the actual backend is engines/hermes/_build/default/modules/sa_plan/test/sa_plan_main.exe with the canonical DB environment forced. Foreign-workspace SQLite checks and rendered OTP labels do not certify this candidate."
+  ],
+  "remaining_high_priority": [
+    {
+      "features": [
+        "dashboard.ecology",
+        "dashboard.completion"
+      ],
+      "finding": "H1/H2",
+      "work": "Remove demo-as-live status claims, then deploy an actual canonical feature/acceptance projection under a separately fenced runtime task."
+    },
+    {
+      "features": [
+        "identity.grants",
+        "clients.hooks",
+        "tracking.sa_plan",
+        "task.lifecycle"
+      ],
+      "finding": "N10/R2-4/R2-6",
+      "work": "Admit secure reviewer/agent grants and sole Sa-plan execution routing; reconcile legacy models and verify every client. Advisory hooks do not enforce it."
+    },
+    {
+      "features": [
+        "otp.supervision",
+        "otp.catalog",
+        "observability.tracing"
+      ],
+      "finding": "R2-2/R2-3",
+      "work": "Integrate harness into OTP supervision, observe restart budgets and inventory, and add trace/span-correlated receipts."
+    },
+    {
+      "features": [
+        "formal.specification",
+        "formal.algebraic_atlas"
+      ],
+      "finding": "R2-1",
+      "work": "Encode capability-specific denotations, algebra laws/oracles, state schemas and17-aspect/OTP mappings; preserve current registry as partial."
+    },
+    {
+      "features": [
+        "models.daily_budget",
+        "models.routing",
+        "models.coding",
+        "models.decision",
+        "verification.environment"
+      ],
+      "finding": "D19-D22",
+      "work": "Bind actual inference workers to shared reservations; measure model quality using real environment/tool acceptance cases."
+    },
+    {
+      "features": [
+        "transport.zenoh",
+        "ucon.binding",
+        "agents.superagents"
+      ],
+      "finding": "D02/D04/D24",
+      "work": "Verify VM1 services and actual holon bindings, identity/deadline/correlation and capability activation."
+    },
+    {
+      "features": [
+        "deployment.roles",
+        "deployment.standby",
+        "state.replication",
+        "replication.failover",
+        "release.dynamic",
+        "release.recovery"
+      ],
+      "finding": "D16-D18/D27",
+      "work": "Provision isolated three roles and verify restore, partition handling, migration and rollback before production."
+    },
+    {
+      "features": [
+        "rules.rete_ul",
+        "probability.bayesian",
+        "state.stm",
+        "flight.f_prime",
+        "ruliad.explore",
+        "formal.lean",
+        "formal.quint",
+        "twins.model",
+        "native.ocaml",
+        "native.mojo_generated"
+      ],
+      "finding": "D06/D07/D22/D23",
+      "work": "Implement and verify requested algorithm/formal/native/twin services; no component fixture substitutes for the complete algorithm."
+    }
+  ],
+  "provenance": {
+    "admitted_ev_ceiling": 93,
+    "not_admitted": "EV-94..EV-109",
+    "new_ev_number_created": false
+  },
+  "finite_proof": {
+    "build_intent_id": "bootstrap-reconciled52-build-1",
+    "test_intent_id": "bootstrap-reconciled52-test-1",
+    "build_receipt": "var/harness/effects/20260909-0412-bootstrap-reconciled52-build-1-result.json",
+    "test_receipt": "var/harness/effects/20260909-0412-bootstrap-reconciled52-test-1-result.json",
+    "source_manifest_sha256": "5cb19149c66aa686ca1205b5a6bf69e339497691624cc646875d5de91fc12d1d",
+    "source_manifest": [
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/value.gleam",
+        "sha256": "c5ed1c8f561dc083e230ee6e45a124639859419daa4fc9a9358dee6b0155fda2"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/files.gleam",
+        "sha256": "e478adc77086491ffbdf3a9276c77a6a3d4366c5e6bf6d8af5a5bf0157f8900e"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/clock.gleam",
+        "sha256": "a8df8dcb7767c89081b3431f0a6ddfc338f53fdfaa884315024af8482194325d"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/development.gleam",
+        "sha256": "ce1d86106f514768600d7efe3fcd0ceeb0faa471ffe9c822c4175a98df3de3f2"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/mcp.gleam",
+        "sha256": "3c737157417b145af952e643d1b460de697c3ed5496e3e24732205d79a6f550c"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/peers.gleam",
+        "sha256": "2a0ca519c89a1237d9d17aa8a692162a4ecdcee9bcc346237ed81c263bd8d456"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/harness/tracking.gleam",
+        "sha256": "3fc0468cc51d2692dc9de73a22fc061f19e6f1e68ec234584aaf23ec913a91f7"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/server.gleam",
+        "sha256": "294cac68950b937b66e963acf3b8ad61e2b1b246a8488845db347352a5a911f2"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/mcp/tools.gleam",
+        "sha256": "25bc773828e687d677d67abe9e7eba1d5e861d493ccd821efc79e078380da39e"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam/planning/sa_plan_bridge.gleam",
+        "sha256": "7d9d3e31c2ef06ceed016b7077cb5d466b6524bcc6cea35cdd8200a4439b70ae"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/ecology_capability_ffi.erl",
+        "sha256": "ea39820d592d68d10cbbb1fffa12dff7d0080c4d5eadcf327c80ef23077af8fd"
+      },
+      {
+        "path": "apps/cepaf_gleam/src/cepaf_gleam_ffi.erl",
+        "sha256": "885184eebc001436cd86c24170be9c7e61c402d55f48661bc5d3d47c2e7020d9"
+      },
+      {
+        "path": "apps/cepaf_gleam/test/harness_development_test.gleam",
+        "sha256": "2f2660b37a49ce59ad4d5c1bf5b374e3d7048a18d1ae16c22432ef2d2a22d0ef"
+      },
+      {
+        "path": "apps/cepaf_gleam/test/harness_authority_test.gleam",
+        "sha256": "d3960998cf24bb42183b0e9460b9aecf6bb8d238a26c64d261acb3ec15432c70"
+      },
+      {
+        "path": "apps/cepaf_gleam/test/harness_tracking_test.gleam",
+        "sha256": "9ccba7398644dc718c99d44203521c7986ef2fa180b15f4f6ef5d41ef5583d1c"
+      },
+      {
+        "path": "apps/cepaf_gleam/test/harness_sa_plan_boundary_test.gleam",
+        "sha256": "b073cf4e783200c78b1803dfe55e684a4eebec28509d08f912aa2b382e1fa565"
+      },
+      {
+        "path": "apps/cepaf_gleam/test/harness_verification.gleam",
+        "sha256": "48e7110f5ac08c52800e643e485984e5fe6fefc45c3ccad44ee7b5f73b0be265"
+      },
+      {
+        "path": "apps/cepaf_gleam/test/mcp_runtime_truth_test.gleam",
+        "sha256": "bc8e4d16659ea2fe2f7325d9e572775726ab4f86da896a0713b65234f5c37a50"
+      },
+      {
+        "path": "apps/cepaf_gleam/gleam.toml",
+        "sha256": "16981483da2c0eed23e5c33768a7ed956988019f42ba99d7359bc293f53dd94b"
+      },
+      {
+        "path": "apps/cepaf_gleam/manifest.toml",
+        "sha256": "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169"
+      },
+      {
+        "path": "apps/uos_swarm/src/session_sync_cli.gleam",
+        "sha256": "24be441a10362ed84dfed4c8e7c66f11f456a20aa7a066e2dc726d5b0e66c335"
+      },
+      {
+        "path": "apps/uos_swarm/src/uos_swarm/session_sync.gleam",
+        "sha256": "3894c5b5e7c229d610d5e76ab35027dbac5161d422398a21761188b7a7fc0959"
+      },
+      {
+        "path": "apps/uos_swarm/src/uos_swarm/clock_contract.gleam",
+        "sha256": "516c0d769cb3f5f8dc827d09fa62aef724686ca1565096ba1c55b5a912df311e"
+      },
+      {
+        "path": "apps/uos_swarm/src/uos_swarm/clock_guard.gleam",
+        "sha256": "38987ae4ff5d16752aacfc070b4781ef095560a5d8480e4ac3c6e5a55700f9a4"
+      },
+      {
+        "path": "apps/uos_swarm/src/session_store_ffi.erl",
+        "sha256": "72630cf09783dd4e78c855fd8411594a362b72a43901d5ebafba489846a44b20"
+      },
+      {
+        "path": "tools/ecology_process.ml",
+        "sha256": "cb5bc7a25b562ecc259696920f84f59e172b78842c3b53b3ed6173b2ab752ecf"
+      },
+      {
+        "path": "tools/lib/uos-toolchain.sh",
+        "sha256": "6edb015a4beed7052dd560fbec0bce8a7dc2606addd360b66187c48844bb5d95"
+      },
+      {
+        "path": "governance/capability-inventory/20260909-0412-harness-feature-catalog.json",
+        "sha256": "387f4792a012528114ebc2625aea2cd0e0e19cb1815ab713fe55be31a82fe43f"
+      }
+    ],
+    "source_manifest_unchanged": true,
+    "loaded_dispatch_module_md5": "cc4cf97a4832fd52747aa31af2ac06b7",
+    "observed_start": {
+      "utc": "2026-09-09T07:27:14.143873Z",
+      "utc_us": "1788938834143873",
+      "boot_us": "21156060000",
+      "host_id": "cd94f98268381d66d53599f7a786afebc88f0049dac3cab64cec563f77613cb7",
+      "boot_id": "1cb3ba2d-5600-44d5-b2d4-a88abea6b365",
+      "offset_us": 253,
+      "uncertainty_us": 17032,
+      "reference_age_us": 383267214,
+      "receipt_age_us": 70000,
+      "delivery_us": 69248,
+      "source": "chronyc:-c-tracking:reference-utc",
+      "reference_max_age_us": 3600000000,
+      "sample_max_delivery_us": 3000000,
+      "authority": "OBSERVATION_ONLY"
+    },
+    "observed_end": {
+      "utc": "2026-09-09T07:27:20.432947Z",
+      "utc_us": "1788938840432947",
+      "boot_us": "21162350000",
+      "host_id": "cd94f98268381d66d53599f7a786afebc88f0049dac3cab64cec563f77613cb7",
+      "boot_id": "1cb3ba2d-5600-44d5-b2d4-a88abea6b365",
+      "offset_us": 253,
+      "uncertainty_us": 17038,
+      "reference_age_us": 389556288,
+      "receipt_age_us": 60000,
+      "delivery_us": 62890,
+      "source": "chronyc:-c-tracking:reference-utc",
+      "reference_max_age_us": 3600000000,
+      "sample_max_delivery_us": 3000000,
+      "authority": "OBSERVATION_ONLY"
+    },
+    "test_count": 70,
+    "test_count_basis": "Actual EUnit detail: All 70 tests passed.",
+    "test_distribution": {
+      "development": 15,
+      "authority": 17,
+      "tracking": 22,
+      "sa_plan_boundary": 5,
+      "legacy_mcp_truth": 11,
+      "real_private_sqlite_fixtures_within_tracking": 4
+    },
+    "verification": "passed",
+    "admission": "NOT_GRANTED"
+  },
+  "feature_tracking": {
+    "snapshot": "governance/capability-inventory/20260909-0720-harness-feature-progress.json",
+    "observed_after": "2026-09-09T07:27:20.432947Z",
+    "observed_before": "2026-09-09T07:30:29.054561Z",
+    "features": 52,
+    "tasks_registered": 52,
+    "jobs_registered": 52,
+    "workflows_registered": 52,
+    "progress_current": 52,
+    "task_states": [
+      "available"
+    ],
+    "job_states": [
+      "available"
+    ],
+    "verified_acceptance": 0,
+    "workers_started": false,
+    "tracking_does_not_complete_tasks": true,
+    "edges_and_job_args": "CLI omits these fields; matched exact fenced creation receipts rather than claiming independent database readback.",
+    "snapshot_semantics": "bounded_sequential_observations_not_atomic"
+  },
+  "cohort_clock": {
+    "utc": "2026-09-09T07:27:20.432947Z",
+    "utc_us": "1788938840432947",
+    "boot_us": "21162350000",
+    "host_id": "cd94f98268381d66d53599f7a786afebc88f0049dac3cab64cec563f77613cb7",
+    "boot_id": "1cb3ba2d-5600-44d5-b2d4-a88abea6b365",
+    "offset_us": 253,
+    "uncertainty_us": 17038,
+    "reference_age_us": 389556288,
+    "receipt_age_us": 60000,
+    "delivery_us": 62890,
+    "source": "chronyc:-c-tracking:reference-utc",
+    "reference_max_age_us": 3600000000,
+    "sample_max_delivery_us": 3000000,
+    "authority": "OBSERVATION_ONLY"
+  },
+  "authority_attempt": 2,
+  "formal_specification_conformance": "PARTIAL_REVISE",
+  "algebraic_atlas_conformance": "PARTIAL_REGISTRY_NOT_ENCODED_ALGEBRA",
+  "bootstrap_completion": {
+    "state_at_document_creation": "READY_FOR_SCOPED_CANONICAL_COMPLETION_NOT_YET_OBSERVED",
+    "task_scope": "Approved development bootstrap: formal specification, Gleam MCP reader, bounded task-fenced edit/build/test and clock services",
+    "result_path": "var/harness/20260909-0412-bootstrap-completion.json",
+    "successor_grant": "NOT_GRANTED",
+    "terminal_gate": "Read actual canonical task and durable result. Completion of HARNESSBOOT does not complete ECOLOGY or any feature."
+  },
+  "fable_decision_counts": {
+    "ACCEPT_WITHIN_SCOPE": 16,
+    "REVISE": 9,
+    "UNKNOWN": 3
+  },
+  "claude_decision_counts": {
+    "UNKNOWN": 18,
+    "REVISE": 4,
+    "ACCEPT_WITHIN_SCOPE": 6
+  },
+  "hook_validation": {
+    "schema": "uos.hooks.client-wiring.receipt.v1",
+    "sa_plan": {
+      "plan_id": "uos-nix-devenv-toolchain-20260908",
+      "task_id": "task-31",
+      "task_name": "uos/nix-devenv-toolchain/agent-hooks-client-wiring-repair",
+      "worker": "claude-opus5-hooks-repair",
+      "attempt": 1,
+      "lease_until_ns": 1788940216768685800
+    },
+    "observed_at_utc": "2026-09-09T07:06:16Z",
+    "authority": "NONE",
+    "system_admission": "NOT_GRANTED",
+    "defect": {
+      "summary": "All four agent hook surfaces stored SessionStart commands under a non-standard top-level key uos_control_loop.PreInvocation. Claude Code reads 'hooks'; that key was never read, so the hooks had never fired on any surface.",
+      "found_by": "Fable delegated review D03/D25",
+      "prior_claim_corrected": "'wired on three surfaces' was overstated: the payload was tested, the wiring was not."
+    },
+    "modified_paths": [
+      {
+        "path": "/home/an/NAS-setup/uos/.claude/settings.json",
+        "sha256_after": "0071dfd81ab4eb70a3f6d26b4b575a6682aef92c7019f7c51af75dbc5352562f"
+      },
+      {
+        "path": "/home/an/NAS-setup/.claude/settings.json",
+        "sha256_after": "ce06eb2331e6f0ff88afa5a9eefb29927c6c499763c1cd685f27162889db63ac"
+      },
+      {
+        "path": "/home/an/NAS-setup/uos/.agents/hooks.json",
+        "sha256_after": "f778e76dce83874b4a11ad7ba2c60a09dd3cb497941451e22d2beffc912e2df6"
+      },
+      {
+        "path": "/home/an/NAS-setup/uos/.gemini/hooks.json",
+        "sha256_after": "cd0e896ed78b6fdd5f537c3c26d44d8cc4d7a878dff75e1a040b97e1fb9fc04d"
+      },
+      {
+        "path": "/home/an/NAS-setup/uos/tools/preflight",
+        "sha256_after": "b99db67df9a132b107977adf726d8316124337e74831b7d121b491ba730495ea"
+      }
+    ],
+    "schema_migration": "uos_control_loop.PreInvocation[] -> hooks.SessionStart[].hooks[]. Output shape on the two Claude surfaces aligned to .codex/hooks.json (hookSpecificOutput.additionalContext) so the advisory reaches the model rather than only the user display. .agents/.gemini command payloads preserved byte-for-byte.",
+    "installed_client_validation": {
+      "method": "Real invocation of the installed client binary, not manual command execution.",
+      "binary": "/home/an/.local/bin/claude",
+      "version": "2.1.266 (Claude Code)",
+      "probe": "a temporary sentinel command appended to the same hooks.SessionStart array, then 'claude -p' run non-interactively in the target cwd; sentinel file inspected; sentinel removed afterwards.",
+      "runs": [
+        {
+          "cwd": "/home/an/NAS-setup/uos",
+          "sentinel_position": "first",
+          "fired_at_utc": "2026-09-09T06:58:02Z",
+          "result": "FIRED"
+        },
+        {
+          "cwd": "/home/an/NAS-setup",
+          "sentinel_position": "first",
+          "fired_at_utc": "2026-09-09T06:58:16Z",
+          "result": "FIRED"
+        },
+        {
+          "cwd": "/home/an/NAS-setup/uos",
+          "sentinel_position": "LAST, after the preflight arm",
+          "fired_at_utc": "2026-09-09T06:58:33Z",
+          "result": "FIRED",
+          "why": "proves the loader executes every entry in the array, not only the first"
+        }
+      ],
+      "surfaces_validated": [
+        ".claude/settings.json (uos)",
+        ".claude/settings.json (NAS-setup)"
+      ],
+      "surfaces_NOT_validated": [
+        ".agents/hooks.json",
+        ".gemini/hooks.json"
+      ],
+      "not_validated_reason": "Those clients were not started here. Their schema was migrated to the shape .codex and .claude both use, and their command payloads were pipe-tested and preserved byte-for-byte, but no running .agents/.gemini client was observed loading them. UNVALIDATED, not passing.",
+      "sentinels_removed": true,
+      "residue_check": "no 'hook-fired' string remains in any settings file"
+    },
+    "legacy_shell_parser_repair": {
+      "file": "tools/preflight",
+      "arm": "--max-age freshness path",
+      "defect": "top-level receipt fields were extracted with an unanchored greedy sed expression. On a single-line receipt the leading .* matches the LAST occurrence, i.e. the final ROW's status. A receipt whose top-level status was FAIL reported PASS whenever its last row happened to be PASS.",
+      "observed_wrong_output": "PASS (cached receipt, age 112s, 2 failures)",
+      "fix": "anchored every top-level extraction to the JSON prologue, plus a fail-closed guard that refuses an unparseable receipt instead of falling through to a comparison that silently succeeds",
+      "regression_tests": [
+        {
+          "case": "real FAIL receipt",
+          "before": "reported PASS",
+          "after": "'last receipt is FAIL', exit 1"
+        },
+        {
+          "case": "PASS receipt whose LAST row is FAIL",
+          "after": "PASS, exit 0 (mirror image also correct)"
+        },
+        {
+          "case": "receipt written in a drifted format (pretty-printed)",
+          "after": "'receipt UNPARSEABLE', exit 1 (fail closed)"
+        }
+      ],
+      "defect_class": "an observable coarser than the property being enforced - the same class this review has been reporting throughout"
+    },
+    "collateral_repairs_to_reach_a_green_preflight": [
+      {
+        "what": "deleted 4 untracked OCaml intermediates under tools/ (telegram_client.cmi/.cmx, validation/telegram_client_test.cmi/.cmx)",
+        "why": "tracked/tools-tree arm FAIL; build artifacts, regenerable"
+      },
+      {
+        "what": "removed /home/an/NAS-setup/uos/.git",
+        "why": "vcs/no-git-marker arm FAIL; standalone non-colocated jj admits no git marker and it breaks bare nix flake",
+        "inspected_before_removal": "EMPTY directory, 0 entries, no objects; git rev-list refused it as 'not a repository'. Nothing was destroyed.",
+        "recurrence": "this marker has now been recreated by an unidentified external actor twice (04:01 and 07:12 local). The preflight vcs arm DETECTS it; nothing prevents it. NOT closed."
+      }
+    ],
+    "preflight_after": "PASS (31 checks)",
+    "out_of_band_bootstrap_methods_used": [
+      "sa-plan task state read with /usr/bin/sqlite3 directly, because 'sa-plan plan list' returned only one legacy plan and did not surface uos-nix-devenv-toolchain-20260908",
+      "Fable round-2 rows recovered from the session transcript JSONL, because no board message and no file held them",
+      "installed-client validation used 'claude -p' non-interactively; the harness MCP route was unavailable to this reviewer (N10)"
+    ],
+    "limits": [
+      "The hooks are ADVISORY. They emit additionalContext; they do not block, gate, or enforce anything.",
+      "No enforced behavior has been observed. Wiring is validated; enforcement is NOT claimed.",
+      "Root's 28-input manifest was not touched. No production runtime change.",
+      "Not admission. No admission vote."
+    ]
+  },
+  "artifact_paths": {
+    "journal": "docs/journal/20260909-0720-harness-comprehensive-review-journal.md",
+    "review": "docs/journal/20260909-0720-harness-comprehensive-review-reconciliation.json",
+    "progress": "governance/capability-inventory/20260909-0720-harness-feature-progress.json",
+    "wiki": "docs/wiki/20260909-0720-harness-evolution-completion-status.md",
+    "zk": "docs/zk/20260909-0720-harness-reviews-and-execution-evidence.md",
+    "km": "governance/capability-inventory/20260909-0720-harness-km-artifact-index.json"
+  },
+  "bootstrap_method_exceptions": [
+    "One-time user-approved local development bootstrap for missing tools and qualified changed-source risk assessment",
+    "Environment-asserted finite attempt2 grant; no cryptographic workload identity",
+    "New bounded OCaml guardian and Erlang FFI; host bash/sqlite3/chronyc",
+    "Peer direct host/client probes because admitted reviewer grant missing",
+    "No production deployment, feature worker start or general automatic continuation established"
+  ],
+  "risk": {
+    "assessment_sha256": "4db5c8a18c808577cb60b721a58d9573de4e2c9ea8cbb67ac6e260a02745904f",
+    "priority": 768,
+    "raw_fmea": {
+      "s": 4,
+      "o": 3,
+      "det": 3,
+      "rpn": 36
+    },
+    "uncertainty": "analyst estimates, not calibrated incident rates",
+    "parent_readiness": "needs_evidence",
+    "negative_history": [
+      "source hash refresh rejected pending qualified reassessment",
+      "turnover priority tie and sensitivity HOLD preserved",
+      "attempt1 released before expiry, attempt2 claimed only after valid readiness preflight"
+    ],
+    "runtime_admission": "NOT_GRANTED"
+  },
+  "peer_final_observation": {
+    "observed_before": "2026-09-09T07:30:29.054561Z",
+    "claude_visible_stop_acknowledged": true,
+    "claude_transport_peer_acknowledged": false,
+    "scope": "Visible response confirms full Fable rows, corrected counts, hook limits and stop. Protocol delivery is not an admission ACK."
+  }
+}
