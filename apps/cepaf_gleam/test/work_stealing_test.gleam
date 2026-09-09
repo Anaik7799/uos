@@ -3,11 +3,11 @@
 //// =============================================================================
 
 import cepaf_gleam/ha/work_stealing.{
-  HeaviestQueueFirst, LyapunovDivergentFirst, NodeQueueState,
-  RandomVictim, StealableTask, apply_steal_response, enqueue_local_task,
-  generate_steal_request, handle_steal_request, init_work_stealing,
-  select_victim_node, should_initiate_steal, total_cluster_queued_tasks,
-  update_peer_queue,
+  HeaviestQueueFirst, LyapunovDivergentFirst, NodeQueueState, RandomVictim,
+  StealResponse, StealableTask, WorkStealingEngine, apply_steal_response,
+  enqueue_local_task, generate_steal_request, handle_steal_request,
+  init_work_stealing, select_victim_node, should_initiate_steal,
+  total_cluster_queued_tasks, update_peer_queue,
 }
 import gleam/option.{Some}
 import gleeunit
@@ -115,8 +115,10 @@ pub fn work_stealing_request_and_transfer_handshake_test() {
 
   let thief_engine = init_work_stealing("nas-1", 8)
 
-  let steal_req = generate_steal_request(thief_engine, "vm-1", 1000)
-  let #(updated_donor, steal_resp) = handle_steal_request(donor_engine, steal_req, 1000)
+  let steal_req =
+    generate_steal_request(thief_engine, "vm-1", "transfer-1", 1000)
+  let #(updated_donor, steal_resp) =
+    handle_steal_request(donor_engine, steal_req, 1000)
 
   // Half of donor queue stolen (4 / 2 = 2 tasks)
   list_len(steal_resp.stolen_tasks) |> should.equal(2)
@@ -127,6 +129,83 @@ pub fn work_stealing_request_and_transfer_handshake_test() {
   total_cluster_queued_tasks(updated_thief) |> should.equal(2)
   updated_thief.steal_history_count |> should.equal(2)
   updated_thief.last_steal_epoch_us |> should.equal(1000)
+}
+
+pub fn apply_steal_response_is_idempotent_for_a_replayed_transfer_test() {
+  let task1 = StealableTask("t1", "plan", 1, 10, "payload-1")
+  let task2 = StealableTask("t2", "plan", 2, 20, "payload-2")
+  let donor =
+    init_work_stealing("donor", 8)
+    |> enqueue_local_task(task1)
+    |> enqueue_local_task(task2)
+    |> enqueue_local_task(StealableTask("t3", "plan", 3, 30, "payload-3"))
+    |> enqueue_local_task(StealableTask("t4", "plan", 4, 40, "payload-4"))
+  let thief = init_work_stealing("thief", 8)
+  let request = generate_steal_request(thief, "donor", "transfer-2", 1000)
+  let #(_, response) = handle_steal_request(donor, request, 1000)
+
+  let after_first = apply_steal_response(thief, response)
+  let after_replay = apply_steal_response(after_first, response)
+
+  // Replaying the same transfer must not create duplicate local work.
+  total_cluster_queued_tasks(after_replay) |> should.equal(2)
+  after_replay.steal_history_count |> should.equal(2)
+}
+
+pub fn apply_steal_response_deduplicates_tasks_inside_one_transfer_test() {
+  let task = StealableTask("same", "plan", 1, 10, "payload")
+  let response =
+    StealResponse("donor", "thief", "transfer-3", [task, task], 0, 1000)
+
+  let accepted = apply_steal_response(init_work_stealing("thief", 8), response)
+
+  // One transfer cannot create two local copies of one logical task.
+  total_cluster_queued_tasks(accepted) |> should.equal(1)
+  accepted.steal_history_count |> should.equal(1)
+}
+
+pub fn apply_steal_response_keeps_distinct_plan_task_identities_test() {
+  let plan_a = StealableTask("same-id", "plan-a", 1, 10, "a")
+  let plan_b = StealableTask("same-id", "plan-b", 1, 10, "b")
+  let response =
+    StealResponse(
+      "donor",
+      "thief",
+      "transfer-4",
+      [plan_a, plan_b, plan_a],
+      0,
+      1000,
+    )
+
+  let accepted = apply_steal_response(init_work_stealing("thief", 8), response)
+
+  // Same task IDs from different plans remain distinct while the duplicate is rejected.
+  total_cluster_queued_tasks(accepted) |> should.equal(2)
+  accepted.steal_history_count |> should.equal(2)
+}
+
+pub fn apply_steal_response_remains_replay_safe_after_accepted_work_leaves_test() {
+  let task = StealableTask("task", "plan", 1, 10, "payload")
+  let response = StealResponse("donor", "thief", "transfer-5", [task], 0, 1000)
+  let first = apply_steal_response(init_work_stealing("thief", 8), response)
+  let drained = WorkStealingEngine(..first, local_queue: [])
+
+  let replay = apply_steal_response(drained, response)
+
+  // A receipt remains in the model after the accepted task is completed elsewhere.
+  total_cluster_queued_tasks(replay) |> should.equal(0)
+  replay.steal_history_count |> should.equal(1)
+}
+
+pub fn apply_steal_response_rejects_a_response_for_another_recipient_test() {
+  let task = StealableTask("task", "plan", 1, 10, "payload")
+  let response =
+    StealResponse("donor", "other-node", "transfer-6", [task], 0, 1000)
+
+  let rejected = apply_steal_response(init_work_stealing("thief", 8), response)
+
+  total_cluster_queued_tasks(rejected) |> should.equal(0)
+  rejected.steal_history_count |> should.equal(0)
 }
 
 fn list_len(l: List(a)) -> Int {

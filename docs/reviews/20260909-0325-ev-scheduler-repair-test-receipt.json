@@ -1,0 +1,48 @@
+{
+  "receipt_id": "ev-scheduler-repair-20260909-0325",
+  "status": "PASS_AT_SCOPED_COMPILED_GLEAM_TEST_SCOPE",
+  "candidate_parent": "337f99137673d7866b958a38bd490fb876b2880f",
+  "scope": [
+    "apps/cepaf_gleam/src/cepaf_gleam/ha/heijunka_scheduler.gleam",
+    "apps/cepaf_gleam/src/cepaf_gleam/ha/work_stealing.gleam",
+    "apps/cepaf_gleam/test/heijunka_scheduler_test.gleam",
+    "apps/cepaf_gleam/test/work_stealing_test.gleam"
+  ],
+  "source_sha256": {
+    "heijunka_scheduler": "4618bb5374e713300f6ae411821f8ee21b9349e8fa57940c5dafc88cab6446af",
+    "work_stealing": "cbf14040381cccd68efbed4f46a902f111f98352ec26f67359f7dbb29d9e0499",
+    "heijunka_scheduler_test": "6eac6f5c31c571820055a70261c45c56d808c81af4cf9988db0e83a1f58f0c6b",
+    "work_stealing_test": "7397353b05034b6d40041781341a112747d12b9a4050027d94cd7e7c544e2392"
+  },
+  "realized_toolchains": {
+    "gleam": {"version": "1.16.0", "path": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam"},
+    "otp": {"release": "29", "erl": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/bin/erl"},
+    "erl_flags": "+S 2:2"
+  },
+  "realized_dependency_inputs": {
+    "manifest_lock": {"path": "apps/cepaf_gleam/manifest.toml", "sha256": "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169"},
+    "package_identities": {"path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/packages/packages.toml", "sha256": "1994a51f5880a49ef32df7dd23797f4d350824f991ea74f37d9c24eeee8c35c2", "source": "realized root build input; reused read-only"},
+    "gleeunit": {"path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleeunit/ebin/gleeunit.app", "sha256": "2edcb0c547c8cc82edc03e59e8f4adbce7dde35c2a77d8988c5ac3400d026a4c"},
+    "gleam_stdlib": {"path": "/home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang/gleam_stdlib/ebin/gleam_stdlib.app", "sha256": "564f6680ff5714b74a507b0daa249eb12959218a3d409997a1b85b8f71ab9388"}
+  },
+  "red": [
+    {"test": "pull_batch_respects_remaining_concurrency_after_prior_leases_test", "result": "FAIL_EXPECTED", "observation": "third pull returned two tasks after four active leases at controller capacity four"},
+    {"test": "reclaim_expired_preserves_original_task_identity_test", "result": "FAIL_EXPECTED", "observation": "reclaim returned plan_id reclaimed, priority 0, and payload {} instead of the original queued task"},
+    {"test": "apply_steal_response_is_idempotent_for_a_replayed_transfer_test", "result": "FAIL_EXPECTED", "observation": "replay raised local queue and steal history from two to four"}
+  ],
+  "green": {
+    "compile": {"result": "PASS", "command": "gleam compile-package --target erlang --package . --out /tmp/ev-scheduler-repair-compile-final-0324 --lib /home/an/NAS-setup/uos/apps/cepaf_gleam/build/dev/erlang", "output": "Fresh isolated compilation of local application/test sources against realized dependency artifacts completed."},
+    "tests": {"result": "PASS", "count": 13, "modules": ["heijunka_scheduler_test: 7", "work_stealing_test: 6"], "execution": "Each compiled Gleam test function was invoked under OTP 29 with the local candidate ebin first on the code path."},
+    "format": {"result": "PASS", "command": "gleam format --check on the four scoped Gleam files"}
+  },
+  "blocked_or_unrun": {
+    "gleam_test_cli": "UNRUN: the normal command attempted dependency resolution for glisten at repo.hex.pm and was stopped before download. The direct compiler route above uses only the recorded realized dependency artifacts.",
+    "formal_property": "UNRUN: no directly relevant formal property or caller beyond the direct Gleam tests was found at the immutable base.",
+    "runtime_deployment": "UNRUN and out of scope."
+  },
+  "limitations": [
+    "The full package compiler emits pre-existing unrelated warnings; no new scoped warnings were observed.",
+    "Task-ID deduplication assumes each task ID identifies one logical transfer.",
+    "This receipt is candidate test evidence only and grants no EV admission, integration, deployment, or Sa-plan completion authority."
+  ]
+}

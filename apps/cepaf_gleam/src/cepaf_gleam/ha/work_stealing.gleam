@@ -58,6 +58,8 @@ pub type NodeQueueState {
 pub type StealRequest {
   StealRequest(
     initiator_node: String,
+    donor_node: String,
+    transfer_id: String,
     max_tasks: Int,
     epoch_us: Int,
   )
@@ -67,9 +69,20 @@ pub type StealRequest {
 pub type StealResponse {
   StealResponse(
     donor_node: String,
+    recipient_node: String,
+    transfer_id: String,
     stolen_tasks: List(StealableTask),
     remaining_queue_depth: Int,
     epoch_us: Int,
+  )
+}
+
+/// Durable-for-model receipt that fences a response to one receiver and transfer.
+pub type AcceptedTransfer {
+  AcceptedTransfer(
+    donor_node: String,
+    recipient_node: String,
+    transfer_id: String,
   )
 }
 
@@ -81,6 +94,7 @@ pub type WorkStealingEngine {
     active_workers: Int,
     capacity: Int,
     peer_queues: List(NodeQueueState),
+    accepted_transfers: List(AcceptedTransfer),
     steal_history_count: Int,
     last_steal_epoch_us: Int,
   )
@@ -97,6 +111,7 @@ pub fn init_work_stealing(
     active_workers: 0,
     capacity: capacity,
     peer_queues: [],
+    accepted_transfers: [],
     steal_history_count: 0,
     last_steal_epoch_us: 0,
   )
@@ -126,9 +141,7 @@ pub fn should_initiate_steal(engine: WorkStealingEngine) -> Bool {
   let is_idle = engine.active_workers < engine.capacity
   let has_no_local_work = list.is_empty(engine.local_queue)
   let has_eligible_peers =
-    list.any(engine.peer_queues, fn(p) {
-      list.length(p.queue) > 1
-    })
+    list.any(engine.peer_queues, fn(p) { list.length(p.queue) > 1 })
   is_idle && has_no_local_work && has_eligible_peers
 }
 
@@ -138,9 +151,7 @@ pub fn select_victim_node(
   strategy: StealStrategy,
 ) -> Option(String) {
   let candidates =
-    list.filter(engine.peer_queues, fn(p) {
-      list.length(p.queue) > 1
-    })
+    list.filter(engine.peer_queues, fn(p) { list.length(p.queue) > 1 })
 
   case strategy {
     HeaviestQueueFirst -> {
@@ -178,13 +189,16 @@ pub fn select_victim_node(
 /// Generate a steal request for a targeted victim.
 pub fn generate_steal_request(
   engine: WorkStealingEngine,
-  _victim_node: String,
+  victim_node: String,
+  transfer_id: String,
   now_us: Int,
 ) -> StealRequest {
   let available_slots = engine.capacity - engine.active_workers
   let max_to_steal = int.max(1, available_slots / 2)
   StealRequest(
     initiator_node: engine.local_node_id,
+    donor_node: victim_node,
+    transfer_id: transfer_id,
     max_tasks: max_to_steal,
     epoch_us: now_us,
   )
@@ -197,19 +211,17 @@ pub fn handle_steal_request(
   now_us: Int,
 ) -> #(WorkStealingEngine, StealResponse) {
   let queue_len = list.length(engine.local_queue)
-  
+
   case queue_len > 1 {
     True -> {
       let steal_quota = int.min(req.max_tasks, queue_len / 2)
       let #(stolen, remaining) = list.split(engine.local_queue, steal_quota)
-      let updated_engine =
-        WorkStealingEngine(
-          ..engine,
-          local_queue: remaining,
-        )
+      let updated_engine = WorkStealingEngine(..engine, local_queue: remaining)
       let resp =
         StealResponse(
           donor_node: engine.local_node_id,
+          recipient_node: req.initiator_node,
+          transfer_id: req.transfer_id,
           stolen_tasks: stolen,
           remaining_queue_depth: list.length(remaining),
           epoch_us: now_us,
@@ -220,6 +232,8 @@ pub fn handle_steal_request(
       let resp =
         StealResponse(
           donor_node: engine.local_node_id,
+          recipient_node: req.initiator_node,
+          transfer_id: req.transfer_id,
           stolen_tasks: [],
           remaining_queue_depth: queue_len,
           epoch_us: now_us,
@@ -234,22 +248,52 @@ pub fn apply_steal_response(
   engine: WorkStealingEngine,
   resp: StealResponse,
 ) -> WorkStealingEngine {
-  let count = list.length(resp.stolen_tasks)
-  let updated_queue = list.append(engine.local_queue, resp.stolen_tasks)
-  WorkStealingEngine(
-    ..engine,
-    local_queue: updated_queue,
-    steal_history_count: engine.steal_history_count + count,
-    last_steal_epoch_us: resp.epoch_us,
-  )
+  let receipt =
+    AcceptedTransfer(resp.donor_node, resp.recipient_node, resp.transfer_id)
+  let is_recipient = resp.recipient_node == engine.local_node_id
+  let already_accepted =
+    list.any(engine.accepted_transfers, fn(accepted) { accepted == receipt })
+  case is_recipient && !already_accepted {
+    False -> engine
+    True -> {
+      let new_tasks = unseen_tasks(resp.stolen_tasks, engine.local_queue)
+      let count = list.length(new_tasks)
+      WorkStealingEngine(
+        ..engine,
+        local_queue: list.append(engine.local_queue, new_tasks),
+        accepted_transfers: [receipt, ..engine.accepted_transfers],
+        steal_history_count: engine.steal_history_count + count,
+        last_steal_epoch_us: resp.epoch_us,
+      )
+    }
+  }
+}
+
+fn unseen_tasks(
+  tasks: List(StealableTask),
+  known_tasks: List(StealableTask),
+) -> List(StealableTask) {
+  case tasks {
+    [] -> []
+    [task, ..remaining] -> {
+      case
+        list.any(known_tasks, fn(known) { same_task_identity(known, task) })
+      {
+        True -> unseen_tasks(remaining, known_tasks)
+        False -> [task, ..unseen_tasks(remaining, [task, ..known_tasks])]
+      }
+    }
+  }
+}
+
+fn same_task_identity(left: StealableTask, right: StealableTask) -> Bool {
+  left.plan_id == right.plan_id && left.task_id == right.task_id
 }
 
 /// Calculate total queued tasks across the entire cluster visible to this engine.
 pub fn total_cluster_queued_tasks(engine: WorkStealingEngine) -> Int {
   let local_count = list.length(engine.local_queue)
   let peer_count =
-    list.fold(engine.peer_queues, 0, fn(acc, p) {
-      acc + list.length(p.queue)
-    })
+    list.fold(engine.peer_queues, 0, fn(acc, p) { acc + list.length(p.queue) })
   local_count + peer_count
 }

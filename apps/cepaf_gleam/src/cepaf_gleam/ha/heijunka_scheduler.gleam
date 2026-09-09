@@ -23,7 +23,9 @@
 //// </c3i-module>
 //// =============================================================================
 
-import cepaf_gleam/ha/lyapunov_controller.{type LyapunovController, compute_batch_size}
+import cepaf_gleam/ha/lyapunov_controller.{
+  type LyapunovController, compute_batch_size,
+}
 import gleam/int
 import gleam/list
 
@@ -40,8 +42,9 @@ pub type QueuedTask {
 /// Active task execution lease.
 pub type TaskLease {
   TaskLease(
-    task_id: String,
+    task: QueuedTask,
     worker_id: String,
+    attempt: Int,
     claimed_at_us: Int,
     lease_until_us: Int,
   )
@@ -51,6 +54,7 @@ pub type TaskLease {
 pub type HeijunkaQueue {
   HeijunkaQueue(
     pending_tasks: List(QueuedTask),
+    deferred_tasks: List(QueuedTask),
     active_leases: List(TaskLease),
     max_queue_depth: Int,
   )
@@ -60,6 +64,7 @@ pub type HeijunkaQueue {
 pub fn init_queue(max_depth: Int) -> HeijunkaQueue {
   HeijunkaQueue(
     pending_tasks: [],
+    deferred_tasks: [],
     active_leases: [],
     max_queue_depth: max_depth,
   )
@@ -70,8 +75,12 @@ pub fn enqueue_task(
   queue: HeijunkaQueue,
   task: QueuedTask,
 ) -> Result(HeijunkaQueue, String) {
-  case list.length(queue.pending_tasks) >= queue.max_queue_depth {
-    True -> Error("Heijunka queue depth exceeded: max " <> int.to_string(queue.max_queue_depth))
+  case queue_load(queue) >= queue.max_queue_depth {
+    True ->
+      Error(
+        "Heijunka queue depth exceeded: max "
+        <> int.to_string(queue.max_queue_depth),
+      )
     False -> {
       let sorted_tasks =
         [task, ..queue.pending_tasks]
@@ -86,20 +95,28 @@ pub fn pull_batch(
   queue: HeijunkaQueue,
   ctrl: LyapunovController,
   worker_id: String,
+  attempt: Int,
   lease_duration_us: Int,
   now_us: Int,
 ) -> #(HeijunkaQueue, List(QueuedTask)) {
-  let allowed_batch = compute_batch_size(ctrl)
+  let remaining_concurrency =
+    int.max(0, ctrl.concurrency_limit - list.length(queue.active_leases))
+  let allowed_batch = int.min(compute_batch_size(ctrl), remaining_concurrency)
   case allowed_batch <= 0 {
     True -> #(queue, [])
     False -> {
-      let taken = list.take(queue.pending_tasks, allowed_batch)
-      let remaining = list.drop(queue.pending_tasks, allowed_batch)
+      let available_tasks =
+        list.append(queue.pending_tasks, queue.deferred_tasks)
+      let taken = list.take(available_tasks, allowed_batch)
+      let remaining = list.drop(available_tasks, allowed_batch)
+      let #(pending_tasks, deferred_tasks) =
+        list.split(remaining, queue.max_queue_depth)
       let new_leases =
         list.map(taken, fn(t) {
           TaskLease(
-            task_id: t.task_id,
+            task: t,
             worker_id: worker_id,
+            attempt: attempt,
             claimed_at_us: now_us,
             lease_until_us: now_us + lease_duration_us,
           )
@@ -108,7 +125,8 @@ pub fn pull_batch(
       let updated_queue =
         HeijunkaQueue(
           ..queue,
-          pending_tasks: remaining,
+          pending_tasks: pending_tasks,
+          deferred_tasks: deferred_tasks,
           active_leases: list.append(queue.active_leases, new_leases),
         )
       #(updated_queue, taken)
@@ -117,33 +135,43 @@ pub fn pull_batch(
 }
 
 /// Release or complete a task lease.
-pub fn complete_task(queue: HeijunkaQueue, task_id: String) -> HeijunkaQueue {
+pub fn complete_task(
+  queue: HeijunkaQueue,
+  task_id: String,
+  worker_id: String,
+  attempt: Int,
+) -> HeijunkaQueue {
   let remaining_leases =
-    list.filter(queue.active_leases, fn(l) { l.task_id != task_id })
+    list.filter(queue.active_leases, fn(l) {
+      l.task.task_id != task_id
+      || l.worker_id != worker_id
+      || l.attempt != attempt
+    })
   HeijunkaQueue(..queue, active_leases: remaining_leases)
 }
 
 /// Reclaim expired leases back into the pending task list.
-pub fn reclaim_expired(
-  queue: HeijunkaQueue,
-  now_us: Int,
-) -> HeijunkaQueue {
+pub fn reclaim_expired(queue: HeijunkaQueue, now_us: Int) -> HeijunkaQueue {
   let #(expired, active) =
     list.partition(queue.active_leases, fn(l) { now_us > l.lease_until_us })
 
-  let reclaimed_tasks =
-    list.map(expired, fn(l) {
-      QueuedTask(
-        task_id: l.task_id,
-        plan_id: "reclaimed",
-        priority: 0,
-        payload_json: "{}",
-      )
-    })
+  let reclaimed_tasks = list.map(expired, fn(l) { l.task })
+  let retained_tasks =
+    list.append(
+      reclaimed_tasks,
+      list.append(queue.pending_tasks, queue.deferred_tasks),
+    )
+  let #(pending_tasks, deferred_tasks) =
+    list.split(retained_tasks, queue.max_queue_depth)
 
   HeijunkaQueue(
-    pending_tasks: list.append(reclaimed_tasks, queue.pending_tasks),
+    pending_tasks: pending_tasks,
+    deferred_tasks: deferred_tasks,
     active_leases: active,
     max_queue_depth: queue.max_queue_depth,
   )
+}
+
+fn queue_load(queue: HeijunkaQueue) -> Int {
+  list.length(queue.pending_tasks) + list.length(queue.deferred_tasks)
 }
