@@ -2,7 +2,7 @@
   "schema": "uos.ev98.health-formal.followup.v1",
   "observed_at": "2026-09-09T06:12:02Z",
   "authority": "NONE",
-  "candidate": "working-tree descendant; independent review required",
+  "candidate": "f4724b11; independent review required",
   "source_sha256": {
     "health_bridge": "8c11774981bcd6806b3154a8c7ec0edab378750258a9259882323fe0e8dbad76",
     "delta_state": "76a035fc3441331a25eceb4ad7c29c52e8ad8e8079a3788887ad32c33933f8f1",
