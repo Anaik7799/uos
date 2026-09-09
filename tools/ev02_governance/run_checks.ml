@@ -189,9 +189,28 @@ let stage_write root rel bytes =
   let fd = Unix.openfile target [Unix.O_WRONLY;Unix.O_CREAT;Unix.O_EXCL;Unix.O_CLOEXEC] 0o600 in
   let channel = Unix.out_channel_of_descr fd in
   Fun.protect ~finally:(fun () -> close_out_noerr channel) (fun () -> output_string channel bytes; flush channel)
+let staged_bytes root rel expected =
+  let path = Filename.concat root rel in
+  let listed = Unix.lstat path in
+  requires (listed.Unix.st_kind = Unix.S_REG && listed.Unix.st_size = String.length expected) ("staged-type-or-size:" ^ rel);
+  let fd = Unix.openfile path [Unix.O_RDONLY;Unix.O_NONBLOCK;Unix.O_CLOEXEC] 0 in
+  Fun.protect ~finally:(fun () -> Unix.close fd) (fun () ->
+    let opened = Unix.fstat fd in
+    requires (opened.Unix.st_dev = listed.Unix.st_dev && opened.Unix.st_ino = listed.Unix.st_ino) ("staged-identity:" ^ rel);
+    let bytes = Bytes.create opened.Unix.st_size in
+    let rec read offset =
+      if offset < Bytes.length bytes then begin
+        let n = Unix.read fd bytes offset (Bytes.length bytes - offset) in
+        requires (n > 0) ("staged-short-read:" ^ rel); read (offset + n)
+      end in
+    read 0;
+    let after = Unix.fstat fd in
+    requires (after.Unix.st_dev = opened.Unix.st_dev && after.Unix.st_ino = opened.Unix.st_ino &&
+      (Unix.lstat path).Unix.st_ino = opened.Unix.st_ino && Bytes.to_string bytes = expected) ("staged-tamper:" ^ rel))
 let stage_inputs revision =
   let root = private_stage () in
   let total = ref 0 in
+  let sealed = ref [] in
   let amendment = candidate_bytes revision amendment_rel in
   let files = amendment_files amendment in
   let rels = superset_rel :: amendment_rel ::
@@ -204,10 +223,13 @@ let stage_inputs revision =
       requires (!total + String.length bytes <= max_staged_bytes) "candidate-input-byte-quota";
       total := !total + String.length bytes;
       stage_write root rel bytes;
+      sealed := (rel, bytes) :: !sealed;
       `Assoc["path",`String rel;"candidate_kind",`String kind;"sha256",`String(sha bytes);"bytes",`Int(String.length bytes)]
     end else
       `Assoc["path",`String rel;"candidate_kind",`String kind;"status",`String "UNSTAGED_HOLD"]) rels in
-  root, Filename.concat root amendment_rel, bindings
+  root, Filename.concat root amendment_rel, bindings, List.rev !sealed
+let verify_staged_manifest root sealed =
+  List.iter (fun (rel, bytes) -> staged_bytes root rel bytes) sealed
 
 let harness_selftest () =
   let f=Filename.temp_file "ev02-harness-" ".ml" in
@@ -240,18 +262,28 @@ let () = match Sys.argv.(1) with
   requires (large.termination=Output_limit && slow.termination=Timeout && eof.termination=Timeout) "quota-or-deadline";
   requires (descendant.termination=Exited 0 && descendant.elapsed<0.3 && not (Sys.file_exists marker)) "descendant-held-writer";
   requires (match start.termination with Start_failure _ -> true | _ -> false) "startup-failure";
-  print_endline {|{"schema":"uos.ev02-harness/v2","status":"PASS","cases":8}|}
+  let staged_root = private_stage () in
+  let staged_rel = "governance/agents/policy/superset.toml" and staged_value = "[[directive]]\nid = \"DIR-X\"\n" in
+  stage_write staged_root staged_rel staged_value;
+  verify_staged_manifest staged_root [staged_rel, staged_value];
+  let channel = open_out_bin (Filename.concat staged_root staged_rel) in output_string channel "tampered"; close_out channel;
+  let refused = try verify_staged_manifest staged_root [staged_rel, staged_value]; false with Failure _ -> true in
+  requires refused "post-seal-staged-tamper";
+  print_endline {|{"schema":"uos.ev02-harness/v2","status":"PASS","cases":9}|}
 
 let checks out revision =
   if Sys.file_exists out then failwith "nonexclusive-output"; Unix.mkdir out 0o700;
   let bindings = bind_candidate revision in
-  let staged_root, staged_amendment, input_bindings = stage_inputs revision in
+  let staged_root, staged_amendment, input_bindings, sealed = stage_inputs revision in
   let one id expect validate argv = let c=run~seconds:10. argv in row out id argv (expect c && validate c) c in
-  let rows=[
-    one "mapping-selftest" (fun c->c.termination=Exited 0) (structured~schema:"uos.ev02-directive-mapping/v1"~status:"PASS"~cases:5) (script_argv mapping ["--selftest"]);
-    one "mapping-fixture-selftest" (fun c->c.termination=Exited 0) (structured~schema:"uos.ev02-directive-mapping/v1"~status:"PASS"~cases:12) (script_argv mapping ["--fixture-selftest"]);
-    one "mapping-observation" (fun c->c.termination=Exited 1) mapping_hold (script_argv mapping ["--observe";staged_root;staged_amendment])
-  ] in
+  let first = one "mapping-selftest" (fun c->c.termination=Exited 0) (structured~schema:"uos.ev02-directive-mapping/v1"~status:"PASS"~cases:5) (script_argv mapping ["--selftest"]) in
+  let second = one "mapping-fixture-selftest" (fun c->c.termination=Exited 0) (structured~schema:"uos.ev02-directive-mapping/v1"~status:"PASS"~cases:12) (script_argv mapping ["--fixture-selftest"]) in
+  verify_staged_manifest staged_root sealed;
+  let observed = run ~seconds:10. (script_argv mapping ["--observe";staged_root;staged_amendment]) in
+  let post_seal = try verify_staged_manifest staged_root sealed; true with Failure _ -> false in
+  let third = row out "mapping-observation" (script_argv mapping ["--observe";staged_root;staged_amendment])
+    (observed.termination=Exited 1 && mapping_hold observed && post_seal) observed in
+  let rows=[first; second; third] in
   let valid=List.for_all(function `Assoc x->List.assoc "valid" x=`Bool true|_->false) rows in
   write(out^"/summary.json")(Yojson.Safe.pretty_to_string(`Assoc["schema",`String"uos.ev02-governance-checks/v4";"authority",`String"REPORT_ONLY";"admission",`String"NOT_GRANTED";"candidate_commit",`String revision;"source_bindings",`List bindings;"candidate_input_bindings",`List input_bindings;"rows",`List rows;"valid",`Bool valid])^"\n");
   if valid then 0 else 1
