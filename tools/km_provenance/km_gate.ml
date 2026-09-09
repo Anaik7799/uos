@@ -88,10 +88,57 @@ let metrics_json () =
 
 (* --- verdict ----------------------------------------------------------- *)
 
+(* D6: SC-PROVENANCE-001 section 4 lists "Cycle chain digests recompute |
+   CHAIN_BROKEN" as a gate check, and the gate did not perform it. So --gate
+   answered PASS while --verify-chain on the SAME store answered CHAIN_BROKEN,
+   and an operator running the composite check got a green light over a broken
+   chain. A gate that omits one of its declared rules is an observable coarser
+   than the property it claims to enforce -- the defect class this whole
+   subsystem exists to catch.
+
+   D8: CHK-23-NOMINT ("no new EV number is minted while the range above the
+   ceiling is under review", INV-PROV-05) was declared in the checklist contract
+   and implemented by nothing. That is why EV-110 and EV-111 could be appended
+   to governance/ev-manifest.tsv without any check noticing. *)
+let ev_manifest_max () =
+  let path = "governance/ev-manifest.tsv" in
+  if not (Sys.file_exists path) then None
+  else
+    let ic = open_in path in
+    Fun.protect ~finally:(fun () -> close_in ic) (fun () ->
+      let hi = ref 0 in
+      (try
+         while true do
+           let line = input_line ic in
+           match String.index_opt line '\t' with
+           | None -> ()
+           | Some i ->
+             (match int_of_string_opt (String.trim (String.sub line 0 i)) with
+              | Some n when n > !hi -> hi := n
+              | _ -> ())
+         done
+       with End_of_file -> ());
+      if !hi = 0 then None else Some !hi)
+
 let gate () =
   let (json, reports, gap, dups, entropy) = metrics_json () in
   let findings = ref [] in
   let add rule detail = findings := `Assoc ["rule", `String rule; "detail", `String detail] :: !findings in
+  let chain_status =
+    let db = Km_chain.open_db () in
+    Fun.protect ~finally:(fun () -> Km_chain.close db) (fun () ->
+      let (rows, bad) = Km_chain.verify db in
+      if bad <> [] then
+        add "CHAIN_BROKEN"
+          (Printf.sprintf "%d of %d cycle rows do not recompute their content digest; first: %s"
+             (List.length bad) rows (List.nth bad 0));
+      if bad = [] then "CHAIN_INTACT" else "CHAIN_BROKEN") in
+  (match ev_manifest_max () with
+   | Some hi when hi > Km_metrics.admitted_ev_ceiling ->
+     add "KMP-NOMINT"
+       (Printf.sprintf
+          "governance/ev-manifest.tsv lists EV-%d above the admitted ceiling of %d;            INV-PROV-05 bars minting a new EV number while the range above the ceiling            is under review (CHK-23-NOMINT)" hi Km_metrics.admitted_ev_ceiling)
+   | _ -> ());
   if gap <> None then add "KMP-GAP" "ADR numbering is not contiguous from 1";
   if dups <> [] then add "KMP-DUP" "duplicate ADR numbers present";
   if entropy < 2.5 then
@@ -108,7 +155,9 @@ let gate () =
            r.Km_metrics.marked r.Km_metrics.quarantined_total)) reports;
   let status = if !findings = [] then "PASS" else "HOLD" in
   let merged = match json with
-    | `Assoc kv -> `Assoc (("status", `String status) :: ("findings", `List (List.rev !findings)) :: kv)
+    | `Assoc kv -> `Assoc (("status", `String status)
+                           :: ("findings", `List (List.rev !findings))
+                           :: ("cycle_chain", `String chain_status) :: kv)
     | j -> j in
   print_json merged;
   if status = "PASS" then 0 else 1
