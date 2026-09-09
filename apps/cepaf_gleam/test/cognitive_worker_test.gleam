@@ -141,13 +141,13 @@ pub fn evaluate_general_intent_test() {
 
   let decision = evaluate_intent(intent)
   decision.intent_id |> should.equal("cog-107")
-  decision.reply_markdown |> string.contains("Cognitive Worker Synthesis") |> should.be_true
+  decision.reply_markdown |> string.contains("AGY Sovereign Agent Synthesis") |> should.be_true
 }
 
 pub fn actor_message_handling_test() {
   let state = init_worker("test-worker-1")
   state.worker_id |> should.equal("test-worker-1")
-  state.processed_count |> should.equal(0)
+  state.intents_processed |> should.equal(0)
 
   let intent =
     CognitiveIntent(
@@ -173,7 +173,7 @@ pub fn actor_get_status_test() {
 
   let assert Ok(status) = process.receive(sub, 500)
   status.worker_id |> should.equal("test-worker-2")
-  status.processed_count |> should.equal(0)
+  status.intents_processed |> should.equal(0)
 }
 
 pub fn decode_zenoh_intents_array_test() {

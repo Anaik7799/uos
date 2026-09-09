@@ -174,3 +174,7 @@ pub fn zenoh_status() -> String
 /// Close the Zenoh session.
 @external(erlang, "c3i_nif", "zenoh_close")
 pub fn zenoh_close() -> String
+
+/// Check if the native Rust NIF runtime is loaded.
+@external(erlang, "c3i_nif", "runtime_loaded")
+pub fn runtime_loaded() -> Bool

@@ -125,7 +125,7 @@ pub fn call(state: State, name: String, args: value.Value) -> #(State, Result(js
 fn dispatch(state: State, name: String, args: value.Value) -> #(State, Result(json.Json, String)) {
   case name {
     "harness_status" -> #(state, status(state))
-    "harness_clock" -> #(state, clock.observe() |> result.map(clock.to_json))
+    "harness_clock" -> #(state, a.check(state.grant) |> result.map(clock.to_json))
     "harness_reconcile" -> {
       let outcome = {
         use intent <- result.try(ops.text(args, "intent_id"))
@@ -136,7 +136,7 @@ fn dispatch(state: State, name: String, args: value.Value) -> #(State, Result(js
       }
       case outcome {
         Ok(receipt) -> #(State(..state, execution: None, unresolved: False), Ok(receipt))
-        Error(e) -> #(State(..state, unresolved: True), Error(e))
+        Error(e) -> #(State(..state, unresolved: state.unresolved || a.outcome_unknown(e)), Error(e))
       }
     }
     "harness_heartbeat" -> {
@@ -170,7 +170,7 @@ fn dispatch(state: State, name: String, args: value.Value) -> #(State, Result(js
           }
           case selected {
             Ok(execution) -> #(State(..state, execution: Some(execution), unresolved: False), Ok(a.observe_execution(execution)))
-            Error(e) -> #(State(..state, unresolved: True), Error(e))
+            Error(e) -> #(State(..state, unresolved: state.unresolved || a.outcome_unknown(e)), Error(e))
           }
         }
       }
@@ -194,12 +194,13 @@ fn active_call(state: State, execution: a.Execution, name: String, args: value.V
       let outcome = ops.text(args, "intent_id") |> result.try(ops.release(execution, _))
       case outcome {
         Ok(receipt) -> #(State(..state, execution: None, unresolved: False), Ok(receipt))
-        Error(e) -> #(State(..state, unresolved: True), Error(e))
+        Error(e) -> #(State(..state, unresolved: state.unresolved || a.outcome_unknown(e)), Error(e))
       }
     }
+    "harness_finish" if state.unresolved -> #(state, Error("unresolved_operation_stop_line"))
     "harness_finish" -> case ops.finish(execution, args) {
       Ok(receipt) -> #(State(..state, execution: None, unresolved: False), Ok(receipt))
-      Error(e) -> #(State(..state, unresolved: True), Error(e))
+      Error(e) -> #(State(..state, unresolved: state.unresolved || a.outcome_unknown(e)), Error(e))
     }
     "harness_write_file" | "harness_build" | "harness_test" ->
       case state.unresolved {
@@ -207,8 +208,7 @@ fn active_call(state: State, execution: a.Execution, name: String, args: value.V
         False -> {
           let outcome = ops.effect(execution, name, args)
           case outcome {
-            Error(e) -> #(State(..state, unresolved: string.starts_with(e, "effect_unverified:")
-              || string.contains(e, "unknown_effect_outcome")), outcome)
+            Error(e) -> #(State(..state, unresolved: state.unresolved || a.outcome_unknown(e)), outcome)
             Ok(_) -> #(state, outcome)
           }
         }

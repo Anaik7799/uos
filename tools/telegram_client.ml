@@ -470,44 +470,51 @@ let parse_zenoh_entries out =
     | _ -> []
   with _ -> []
 
+let outbound_mutex = Mutex.create ()
+
 let check_outbound_zenoh ~token ~default_chat ~zenoh_endpoint =
-  try
-    let url = zenoh_endpoint ^ "/c3i/a2a/telegram/outbound" in
-    let cmd = Bos.Cmd.(v "curl" % "-s" % url) in
-    match Bos.OS.Cmd.run_out cmd |> Bos.OS.Cmd.to_string with
-    | Ok out when String.trim out <> "" && out <> "[]" ->
-        let entries = parse_zenoh_entries out in
-        List.iter (fun entry ->
-          try
-            let json =
-              match member "value" entry with
-              | `String s ->
-                  (try Yojson.Safe.from_string (decode_zenoh_payload s)
-                   with _ -> Yojson.Safe.from_string s)
-              | `Assoc _ as obj -> obj
-              | other -> other
-            in
-            let text = member "text" json |> to_string in
-            let chat_id =
-              match member "chat_id" json with
-              | `String s -> s
-              | `Int i -> string_of_int i
-              | `Intlit s -> s
-              | _ -> default_chat
-            in
-            let parse_mode =
-              match member "parse_mode" json with
-              | `String s -> Some s
-              | _ -> None
-            in
-            let chunks = chunk_text text in
-            List.iter (fun ch -> ignore (send_message ~token ~chat_id ?parse_mode ch)) chunks;
-            let del_cmd = Bos.Cmd.(v "curl" % "-s" % "-X" % "DELETE" % url) in
-            ignore (Bos.OS.Cmd.run del_cmd)
-          with _ -> ()
-        ) entries
-    | _ -> ()
-  with _ -> ()
+  Mutex.lock outbound_mutex;
+  Fun.protect ~finally:(fun () -> Mutex.unlock outbound_mutex) (fun () ->
+    try
+      let url = zenoh_endpoint ^ "/c3i/a2a/telegram/outbound" in
+      let cmd = Bos.Cmd.(v "curl" % "-s" % url) in
+      match Bos.OS.Cmd.run_out cmd |> Bos.OS.Cmd.to_string with
+      | Ok out when String.trim out <> "" && out <> "[]" ->
+          let entries = parse_zenoh_entries out in
+          List.iter (fun entry ->
+            try
+              let json =
+                match member "value" entry with
+                | `String s ->
+                    (try Yojson.Safe.from_string (decode_zenoh_payload s)
+                     with _ -> Yojson.Safe.from_string s)
+                | `Assoc _ as obj -> obj
+                | other -> other
+              in
+              let text = member "text" json |> to_string in
+              let chat_id =
+                match member "chat_id" json with
+                | `String s -> s
+                | `Int i -> string_of_int i
+                | `Intlit s -> s
+                | _ -> default_chat
+              in
+              let parse_mode =
+                match member "parse_mode" json with
+                | `String s -> Some s
+                | _ -> None
+              in
+              let chunks = chunk_text text in
+              Printf.printf "⚡ [edge-outbound] Delivering response (%d bytes, %d chunk(s)) to chat %s...\n%!"
+                (String.length text) (List.length chunks) chat_id;
+              List.iter (fun ch -> ignore (send_message ~token ~chat_id ?parse_mode ch)) chunks;
+              let del_cmd = Bos.Cmd.(v "curl" % "-s" % "-X" % "DELETE" % url) in
+              ignore (Bos.OS.Cmd.run del_cmd)
+            with _ -> ()
+          ) entries
+      | _ -> ()
+    with _ -> ()
+  )
 
 let check_sutra_matrix_relay ~token ~default_chat ~zenoh_endpoint =
   try
@@ -562,6 +569,19 @@ let check_sutra_matrix_relay ~token ~default_chat ~zenoh_endpoint =
         ) entries
     | _ -> ()
   with _ -> ()
+
+let start_outbound_dequeue_thread ~token ~default_chat ~zenoh_endpoint =
+  Thread.create (fun () ->
+    Printf.printf "⚡ [edge-outbound] Dedicated Outbound Dequeue Worker active (50ms tick interval)\n%!";
+    while true do
+      (try
+         check_outbound_zenoh ~token ~default_chat ~zenoh_endpoint;
+         check_sutra_matrix_relay ~token ~default_chat ~zenoh_endpoint;
+       with ex ->
+         Printf.eprintf "[!] Outbound worker error: %s\n%!" (Printexc.to_string ex));
+      Unix.sleepf 0.05
+    done
+  ) ()
 
 (* ----------------------------------------------------------------------------
    7. Inbound Update Processor & Dispatch Loop
@@ -829,12 +849,13 @@ let () =
         Printf.printf "[poll] Cycle finished, processed %d update(s)\n" n
       end else begin
         Printf.printf "🚀 Starting continuous Telegram OCaml client daemon...\n%!";
+        let _ = start_outbound_dequeue_thread ~token ~default_chat ~zenoh_endpoint in
         while true do
           (try
              let _ = poll_once ~token ~zenoh_endpoint () in ()
            with ex ->
              Printf.eprintf "[!] Error in poll loop: %s\n%!" (Printexc.to_string ex));
-          Unix.sleep 2
+          Unix.sleep 1
         done
       end
 

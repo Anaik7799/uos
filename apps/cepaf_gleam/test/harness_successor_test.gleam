@@ -177,3 +177,67 @@ pub fn approved_review_cannot_authorize_a_different_proposal_or_scope_test() {
   a.validate_review(value.Object([#("session", value.Text("root-session")), ..fields]),
     review, proposal) |> should.be_error
 }
+
+pub fn refused_task_selection_preserves_a_usable_mcp_session_test() {
+  let ready = mcp.State(..mcp.initial(grant()), initialized: True)
+  let args = value.Object([
+    #("plan", value.Text("uos/does-not-exist")), #("task", value.Text("clock")),
+    #("intent_id", value.Text("typo")),
+  ])
+  let #(after, outcome) = mcp.call(ready, "harness_claim", args)
+  outcome |> should.equal(Error("task_not_in_reviewed_grant"))
+  after |> should.equal(ready)
+  a.outcome_unknown("task_not_in_reviewed_grant") |> should.be_false
+  a.outcome_unknown("intent_id") |> should.be_false
+  a.outcome_unknown("claim_outcome_unknown:backend_timeout") |> should.be_true
+  a.outcome_unknown("release_outcome_unknown:readback") |> should.be_true
+  a.outcome_unknown("unknown_effect_outcome_requires_reconciliation") |> should.be_true
+}
+pub fn grant_lease_covers_the_full_operation_horizon_test() {
+  let now = 1_000_000_000
+  a.grant_budget_valid(now + 2_000_000, now, 65_000) |> should.be_false
+  a.grant_budget_valid(now + 65_000_000, now, 65_000) |> should.be_false
+  a.grant_budget_valid(now + 65_000_001, now, 65_000) |> should.be_true
+  a.grant_budget_valid(now, now, 0) |> should.be_false
+  a.grant_budget_valid(now + 1, now, 0) |> should.be_true
+  a.grant_budget_valid(now + 86_400_000_001, now, 0) |> should.be_false
+  a.grant_budget_valid(now + 70_000_001, now, 70_001) |> should.be_false
+  a.grant_budget_valid(now + 1, now, -1) |> should.be_false
+}
+pub fn completed_review_requires_the_exact_canonical_artifact_result_test() {
+  let b = dev.Binding("development", "uos/review/plan", "review", "peer", 2, "peer-session", 1)
+  let hash = string.repeat("a", 64)
+  let row = dev.TaskRecord("completed", Some("peer"), 2, None, 0,
+    Some("uos.harness-peer-review.v1:" <> hash), Some(123))
+  a.review_task_matches(b, row, hash) |> should.be_true
+  a.review_task_matches(b, row, string.repeat("b", 64)) |> should.be_false
+  a.review_task_matches(b, dev.TaskRecord(..row, state: "executing"), hash) |> should.be_false
+  a.review_task_matches(b, dev.TaskRecord(..row, result: Some("old review done")), hash) |> should.be_false
+  a.review_task_matches(b, dev.TaskRecord(..row, worker: Some("root")), hash) |> should.be_false
+  a.review_task_matches(dev.Binding(..b, attempt: 3), row, hash) |> should.be_false
+}
+pub fn nested_grant_objects_have_order_independent_unique_key_semantics_test() {
+  let left = value.Object([#("tasks", value.Array([value.Object([
+    #("plan", value.Text("uos/test")), #("task", value.Text("one")),
+  ])]))])
+  let right = value.Object([#("tasks", value.Array([value.Object([
+    #("task", value.Text("one")), #("plan", value.Text("uos/test")),
+  ])]))])
+  a.same_value(left, right) |> should.be_true
+  a.same_value(left, value.Object([#("tasks", value.Array([]))])) |> should.be_false
+  a.same_value(value.Object([#("key", value.Text("x")), #("key", value.Text("x"))]),
+    value.Object([#("key", value.Text("x")), #("key", value.Text("x"))])) |> should.be_false
+  a.same_value(value.Array([value.Integer(1), value.Integer(2)]),
+    value.Array([value.Integer(2), value.Integer(1)])) |> should.be_false
+}
+pub fn task_completion_cannot_bypass_an_unresolved_effect_test() {
+  let b = dev.Binding("development", scope().plan, scope().task, grant().worker, 1, grant().session, 1)
+  let e = a.Execution(grant(), scope(), b, scope().portfolio)
+  let state = mcp.State(grant(), True, False, Some(e), True)
+  let args = value.Object([
+    #("intent_id", value.Text("finish")), #("journal_path", value.Text("journal")),
+    #("build_intent_id", value.Text("build")), #("test_intent_id", value.Text("test")),
+    #("verification_path", value.Text("verification")),
+  ])
+  mcp.call(state, "harness_finish", args) |> should.equal(#(state, Error("unresolved_operation_stop_line")))
+}

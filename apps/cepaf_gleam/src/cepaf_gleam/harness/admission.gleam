@@ -137,11 +137,19 @@ pub fn decode_grant(path: String, body: String) -> Result(Grant, String) {
   Ok(Grant(fields.2, path, files.digest(body), fields.3, fields.4, fields.5,
     fields.6, expiry, fields.8, fields.9, fields.10))
 }
-pub fn validate_window(grant: Grant, observed: clock.Observation) -> Result(Nil, String) {
+pub fn grant_budget_valid(expires_us: Int, now_us: Int, required_ms: Int) -> Bool {
+  now_us >= 0 && required_ms >= 0 && required_ms <= 70_000
+    && expires_us > now_us + required_ms * 1000
+    && expires_us - now_us <= 86_400_000_000
+}
+pub fn validate_window_for(grant: Grant, observed: clock.Observation, required_ms: Int) -> Result(Nil, String) {
   let current = observed.sample.observed
   require(grant.host == current.domain.host_id && grant.boot == current.domain.boot_id
-    && grant.expires_us > current.utc_us
-    && grant.expires_us - current.utc_us <= 86_400_000_000, "grant_host_boot_or_expiry")
+    && grant_budget_valid(grant.expires_us, current.utc_us, required_ms),
+    "grant_host_boot_expiry_or_operation_window")
+}
+pub fn validate_window(grant: Grant, observed: clock.Observation) -> Result(Nil, String) {
+  validate_window_for(grant, observed, 0)
 }
 pub fn control_ids_match(recorded: value.Value, actual: json.Json) -> Bool {
   case recorded, json.parse(json.to_string(actual), value.decoder()) {
@@ -161,9 +169,50 @@ fn same_object(left: value.Value, right: value.Value) -> Bool {
       list.length(a) == list.length(b)
       && list.length(list.unique(list.map(a, fn(p) { p.0 }))) == list.length(a)
       && list.length(list.unique(list.map(b, fn(p) { p.0 }))) == list.length(b)
-      && list.all(a, fn(p) { value.get(right, p.0) == Ok(p.1) })
+      && list.all(a, fn(p) {
+        case value.get(right, p.0) { Ok(v) -> same_value(p.1, v) Error(_) -> False }
+      })
     _, _ -> False
   }
+}
+pub fn same_value(left: value.Value, right: value.Value) -> Bool {
+  case left, right {
+    value.Object(_), value.Object(_) -> same_object(left, right)
+    value.Array(a), value.Array(b) ->
+      list.length(a) == list.length(b)
+      && list.all(list.zip(a, b), fn(p) { same_value(p.0, p.1) })
+    _, _ -> left == right
+  }
+}
+pub fn outcome_unknown(reason: String) -> Bool {
+  list.any(["claim_outcome_unknown:", "attachment_outcome_unknown:",
+    "release_outcome_unknown:", "completion_outcome_unknown:",
+    "effect_unverified:", "reconciliation_outcome_unknown:"],
+    fn(prefix) { string.starts_with(reason, prefix) })
+    || string.contains(reason, "unknown_effect_outcome")
+}
+pub fn review_task_matches(binding: dev.Binding, row: dev.TaskRecord, digest: String) -> Bool {
+  digest_valid(digest) && dev.terminal_matches(binding, row, "uos.harness-peer-review.v1:" <> digest)
+}
+fn check_review_task(document: value.Value, reviewed: value.Value, digest: String) -> Result(Nil, String) {
+  use expected <- result.try(value.get(document, "review_task"))
+  use plan <- result.try(text_field(expected, "plan"))
+  use task <- result.try(text_field(expected, "task"))
+  use reviewer <- result.try(value.get(reviewed, "reviewer"))
+  use actual_plan <- result.try(text_field(reviewer, "plan_id"))
+  use actual_task <- result.try(text_field(reviewer, "task_id"))
+  use worker <- result.try(text_field(reviewer, "worker"))
+  use session <- result.try(text_field(reviewer, "session_id"))
+  use attempt <- result.try(value.get(reviewer, "attempt"))
+  use attempt <- result.try(case attempt { value.Integer(n) if n > 0 -> Ok(n) _ -> Error("review_attempt") })
+  use grant_worker <- result.try(text_field(document, "worker"))
+  use _ <- result.try(require(dev.valid_identifier(plan) && string.starts_with(plan, "uos/")
+    && dev.valid_identifier(task) && task != "HARNESSBOOT"
+    && actual_plan == plan && actual_task == task && component(worker)
+    && worker != grant_worker, "review_task_binding"))
+  let binding = dev.Binding("development", plan, task, worker, attempt, session, 1)
+  use row <- result.try(dev.read_task(binding))
+  require(review_task_matches(binding, row, digest), "canonical_review_completion_digest")
 }
 pub fn validate_review(
   document: value.Value,
@@ -202,7 +251,13 @@ pub fn validate_review(
     |> value.set("review_sha256", review_hash)
     |> value.set("proposal_path", value.Text(proposal_path))
     |> value.set("proposal_sha256", value.Text(proposal_hash))
-  require(same_object(document, expected), "grant_differs_from_reviewed_proposal")
+  let differing = case document {
+    value.Object(fields) -> list.find(fields, fn(p) {
+      case value.get(expected, p.0) { Ok(v) -> !same_value(p.1, v) Error(_) -> True }
+    }) |> result.map(fn(p) { p.0 }) |> result.unwrap("object_shape_or_duplicate_key")
+    _ -> "object_shape"
+  }
+  require(same_object(document, expected), "grant_differs_from_reviewed_proposal:$." <> differing)
 }
 pub fn check(grant: Grant) -> Result(clock.Observation, String) {
   use body <- result.try(files.read(dev.root, grant.path))
@@ -223,6 +278,7 @@ pub fn check(grant: Grant) -> Result(clock.Observation, String) {
   use proposal <- result.try(json.parse(proposal_body, value.decoder())
     |> result.map_error(fn(_) { "proposal_json" }))
   use _ <- result.try(validate_review(document, review_document, proposal))
+  use _ <- result.try(check_review_task(document, review_document, grant.review_sha256))
   use recorded <- result.try(value.get(document, "loaded_control_ids"))
   use _ <- result.try(require(control_ids_match(recorded, control_ids()),
     "loaded_control_identity_mismatch"))
@@ -301,47 +357,61 @@ pub fn state_assessment(execution: Execution, state: String, suffix: String) -> 
 }
 pub fn attach(grant: Grant, scope: Scope, intent: String) -> Result(Execution, String) {
   use _ <- result.try(require(intent_valid(intent), "intent_id"))
+  use now <- result.try(check(grant))
+  use _ <- result.try(validate_window_for(grant, now, 70_000))
   use _ <- result.try(heartbeat(grant))
   let base = dev.Binding("development", scope.plan, scope.task, grant.worker, 1, grant.session, 1)
   use row <- result.try(dev.read_task(base))
   use _ <- result.try(require(row.state == "executing" && row.worker == Some(grant.worker) && row.attempt > 0,
     "attach_requires_current_owned_attempt"))
-  let preliminary = Execution(grant, scope, dev.Binding(..base, attempt: row.attempt), scope.portfolio)
-  use current_risk <- result.try(state_assessment(preliminary, "executing", intent <> "-attach"))
-  use _ <- result.try(risk_check(current_risk, scope, grant.worker, row.attempt, True))
-  use raw <- result.try(coordinate(["claim", grant.session, dev.task_resource(base), "3600", grant.id <> "-" <> intent <> "-coordinate"]))
-  use epoch <- result.try(json.parse(raw, decode.field("epoch", decode.int, decode.success))
-    |> result.map_error(fn(_) { "coordinator_claim_outcome_unknown" }))
-  let binding = dev.Binding(..base, attempt: row.attempt, epoch: epoch)
-  use _ <- result.try(dev.fence(binding))
-  Ok(Execution(grant, scope, binding, scope.portfolio))
+  let outcome = {
+    let preliminary = Execution(grant, scope, dev.Binding(..base, attempt: row.attempt), scope.portfolio)
+    use current_risk <- result.try(state_assessment(preliminary, "executing", intent <> "-attach"))
+    use _ <- result.try(risk_check(current_risk, scope, grant.worker, row.attempt, True))
+    use raw <- result.try(coordinate(["claim", grant.session, dev.task_resource(base), "3600", grant.id <> "-" <> intent <> "-coordinate"]))
+    use epoch <- result.try(json.parse(raw, decode.field("epoch", decode.int, decode.success))
+      |> result.map_error(fn(_) { "coordinator_claim_outcome_unknown" }))
+    let active = Execution(..preliminary, binding: dev.Binding(..base, attempt: row.attempt, epoch: epoch))
+    use _ <- result.try(fence(active, 0))
+    Ok(active)
+  }
+  result.map_error(outcome, fn(e) { "attachment_outcome_unknown:" <> e })
 }
 pub fn claim(grant: Grant, scope: Scope, intent: String) -> Result(Execution, String) {
   use _ <- result.try(require(intent_valid(intent), "intent_id"))
+  use now <- result.try(check(grant))
+  use _ <- result.try(validate_window_for(grant, now, 70_000))
   use _ <- result.try(heartbeat(grant))
   use _ <- result.try(risk_check(scope.portfolio, scope, grant.worker, 0, False))
   let begin_path = "var/harness/" <> grant.id <> "-" <> intent <> "-claim-intent.json"
   let body = json.object([#("plan", json.string(scope.plan)), #("task", json.string(scope.task)),
     #("worker", json.string(grant.worker)), #("grant_sha256", json.string(grant.digest))]) |> json.to_string
-  // An existing intent is reconciled explicitly; never blindly repeat a claim.
-  use _ <- result.try(files.create(dev.root, begin_path, body))
-  use _ <- result.try(sa.run_sa_plan_cli(["task", "claim", grant.worker, scope.plan, "3600000000000", scope.task]))
-  let base = dev.Binding("development", scope.plan, scope.task, grant.worker, 1, grant.session, 1)
-  use row <- result.try(dev.read_task(base))
-  use _ <- result.try(require(row.state == "executing" && row.worker == Some(grant.worker), "claim_outcome_unknown"))
-  let interim = Execution(grant, scope, dev.Binding(..base, attempt: row.attempt), scope.portfolio)
-  use risk <- result.try(state_assessment(interim, "executing", intent))
-  use _ <- result.try(risk_check(risk, scope, grant.worker, row.attempt, True))
-  use raw <- result.try(coordinate(["claim", grant.session, dev.task_resource(base), "3600", grant.id <> "-" <> intent <> "-coordinate"]))
-  use epoch <- result.try(json.parse(raw, decode.field("epoch", decode.int, decode.success))
-    |> result.map_error(fn(_) { "coordinator_claim_outcome_unknown" }))
-  let active = Execution(..interim, risk_path: risk, binding: dev.Binding(..interim.binding, epoch: epoch))
-  use _ <- result.try(dev.fence(active.binding))
-  Ok(active)
+  // Once an intent may exist, only explicit ownership reconciliation can resume.
+  use _ <- result.try(files.create(dev.root, begin_path, body)
+    |> result.map_error(fn(e) { "claim_outcome_unknown:intent:" <> e }))
+  let outcome = {
+    use _ <- result.try(sa.run_sa_plan_cli(["task", "claim", grant.worker, scope.plan, "3600000000000", scope.task]))
+    let base = dev.Binding("development", scope.plan, scope.task, grant.worker, 1, grant.session, 1)
+    use row <- result.try(dev.read_task(base))
+    use _ <- result.try(require(row.state == "executing" && row.worker == Some(grant.worker), "claim_outcome_unknown"))
+    let interim = Execution(grant, scope, dev.Binding(..base, attempt: row.attempt), scope.portfolio)
+    use risk <- result.try(state_assessment(interim, "executing", intent))
+    use _ <- result.try(risk_check(risk, scope, grant.worker, row.attempt, True))
+    use raw <- result.try(coordinate(["claim", grant.session, dev.task_resource(base), "3600", grant.id <> "-" <> intent <> "-coordinate"]))
+    use epoch <- result.try(json.parse(raw, decode.field("epoch", decode.int, decode.success))
+      |> result.map_error(fn(_) { "coordinator_claim_outcome_unknown" }))
+    let active = Execution(..interim, risk_path: risk, binding: dev.Binding(..interim.binding, epoch: epoch))
+    use _ <- result.try(fence(active, 0))
+    Ok(active)
+  }
+  result.map_error(outcome, fn(e) { "claim_outcome_unknown:" <> e })
 }
 pub fn fence(execution: Execution, duration_ms: Int) -> Result(dev.Fence, String) {
+  use _ <- result.try(require(duration_ms >= 0 && duration_ms <= 65_000, "operation_window_bound"))
   use _ <- result.try(check(execution.grant))
-  dev.fence_for(execution.binding, duration_ms + 5000)
+  use proof <- result.try(dev.fence_for(execution.binding, duration_ms + 5000))
+  use _ <- result.try(validate_window_for(execution.grant, proof.clock, duration_ms + 5000))
+  Ok(proof)
 }
 pub fn observe_execution(execution: Execution) -> json.Json {
   json.object([#("plan", json.string(execution.scope.plan)), #("task", json.string(execution.scope.task)),

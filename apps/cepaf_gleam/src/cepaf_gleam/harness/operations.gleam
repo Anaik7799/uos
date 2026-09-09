@@ -205,6 +205,9 @@ pub fn assess(execution: a.Execution, args: value.Value) -> Result(a.Execution, 
 pub fn release(execution: a.Execution, intent: String) -> Result(json.Json, String) {
   use _ <- result.try(a.require(a.intent_valid(intent), "intent_id"))
   use _ <- result.try(a.fence(execution, 5000))
+  release_after_fence(execution, intent) |> result.map_error(fn(e) { "release_outcome_unknown:" <> e })
+}
+fn release_after_fence(execution: a.Execution, intent: String) -> Result(json.Json, String) {
   use _ <- result.try(sa.run_sa_plan_cli(["task", "release", execution.scope.plan, execution.scope.task,
     execution.binding.worker, int.to_string(execution.binding.attempt)]))
   use row <- result.try(dev.read_task(execution.binding))
@@ -275,13 +278,19 @@ pub fn finish(execution: a.Execution, args: value.Value) -> Result(json.Json, St
   use _ <- result.try(a.fence(execution, 10_000))
   use current <- result.try(capture(execution.scope))
   use _ <- result.try(a.require(current == candidate, "source_changed_before_completion"))
-  use _ <- result.try(files.create(dev.root, effect_path(execution, intent, "completion-intent"), prepared))
+  use _ <- result.try(files.create(dev.root, effect_path(execution, intent, "completion-intent"), prepared)
+    |> result.map_error(fn(e) { "completion_outcome_unknown:prepared:" <> e }))
+  finish_after_prepare(execution, intent, prepared)
+    |> result.map_error(fn(e) { "completion_outcome_unknown:" <> e })
+}
+fn finish_after_prepare(execution: a.Execution, intent: String, prepared: String) -> Result(json.Json, String) {
   let result_id = "uos.harness-successor-completion.v1:" <> files.digest(prepared)
   use _ <- result.try(sa.complete_sa_task(execution.scope.plan, execution.scope.task, execution.binding.worker,
     execution.binding.attempt, result_id))
   use row <- result.try(dev.read_task(execution.binding))
   use _ <- result.try(a.require(row.state == "completed" && row.attempt == execution.binding.attempt
     && row.result == Some(result_id) && row.completed_at_ns != None, "completion_outcome_unknown"))
+  use _ <- result.try(a.check(execution.grant))
   use _ <- result.try(a.coordinate(["release", execution.binding.session, dev.task_resource(execution.binding),
     int.to_string(execution.binding.epoch), execution.grant.id <> "-" <> intent <> "-complete-release"]))
   let receipt = json.object([#("state", json.string("completed")), #("result", json.string(result_id)),

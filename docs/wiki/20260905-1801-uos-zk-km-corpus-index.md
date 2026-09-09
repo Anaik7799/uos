@@ -129,7 +129,7 @@ The operational system coordinates across five distinct language tiers:
 ## §4.0 Bi-Directional Transclusion Registry
 
 - Permanent MOC: `[[zk:20260905-1801-moc-uos-unified-master]]`
-- ADR Directory (99 records, `ADR-001`..`ADR-099`, enumerated from `docs/zk/` on 2026-09-09).
+- ADR Directory (100 records, `ADR-001`..`ADR-100`, enumerated from `docs/zk/` on 2026-09-09).
   Sixteen records marked **NOT_ADMITTED** assert ratification of `EV-94`..`EV-109`,
   which the [`AGENTS.md`](http://nas-1.tail55d152.ts.net:4100/files/AGENTS.md) provenance caveat
   places in the quarantined evidence range; see
@@ -236,6 +236,8 @@ The operational system coordinates across five distinct language tiers:
   - `[[wiki:20260909-2035-uos-telegram-gleam-harness-architecture]]` [Telegram Architecture Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-2035-uos-telegram-gleam-harness-architecture.md) Sovereign Telegram Gleam Harness Architecture Guide
   - `[[zk:20260909-2100-adr-099-maximal-gleam-autonomous-cognitive-processing]]` [ADR-099](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260909-2100-adr-099-maximal-gleam-autonomous-cognitive-processing.md) Maximal Gleam/OTP 29 Autonomous Cognitive Processing & In-Process OODA Loop Substrate
   - `[[wiki:20260909-2100-uos-maximal-gleam-cognitive-architecture]]` [Maximal Gleam Architecture Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-2100-uos-maximal-gleam-cognitive-architecture.md) Maximal Gleam/OTP 29 Autonomous Cognitive Architecture
+  - `[[zk:20260909-2200-adr-100-performance-nifs-omni-telegram-and-agy-processing]]` [ADR-100](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260909-2200-adr-100-performance-nifs-omni-telegram-and-agy-processing.md) High-Performance Native NIF Acceleration, Omnipresent Telegram Access & AGY Sovereign Cognitive Engine
+  - `[[wiki:20260909-2200-uos-performance-nifs-telegram-agy-architecture]]` [Performance NIFs & AGY Architecture Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-2200-uos-performance-nifs-telegram-agy-architecture.md) High-Performance Native NIF Acceleration, Omnipresent Telegram Access & AGY Engine Architecture
 - Formal Proofs:
   - `[[zk:TwoLattice_STM]]` (`formal/lean/TwoLattice_STM.lean`)
   - `[[zk:Traceability]]` (`formal/lean/Traceability.lean`)

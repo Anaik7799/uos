@@ -24,6 +24,15 @@ pub const initial = State(False, False)
 pub const frame_limit = 524_288
 pub const frame_timeout_ms = 5000
 
+// A bounded protocol error precedes closure. Never drain an unbounded hostile
+// frame, and never dispatch a handler for an oversized request. The client must
+// reconnect and reconcile canonical task state; EOF does not grant a retry.
+fn refuse_frame(reason: String) {
+  io.println(error(json.null(), -32_600, reason))
+  io.println_error("harness: " <> reason)
+  halt(1)
+}
+
 type Unit { Millisecond }
 @external(erlang, "erlang", "monotonic_time")
 fn monotonic_time(unit: Unit) -> Int
@@ -347,7 +356,7 @@ fn serve_loop(context: state, handler: fn(state, String) -> #(state, Option(Stri
     Ok(Some(byte)) -> case size < frame_limit {
       True -> serve_loop(context, handler, input, [byte, ..chunks], size + 1,
         case started { Some(_) -> started None -> Some(monotonic_time(Millisecond)) })
-      False -> { io.println_error("harness: frame bound") halt(1) }
+      False -> refuse_frame("frame_bound")
     }
     Ok(None) -> Nil
     Error(reason) -> { io.println_error("harness: " <> reason) halt(1) }
