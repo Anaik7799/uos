@@ -128,11 +128,16 @@ let rules_from_json ~budget path =
   let raw = read_regular ~budget path in
   let json = try Yojson.Basic.from_string raw with Yojson.Json_error _ -> bounded_error "mapping-json" in
   match json with
-  | `Assoc fields -> begin match List.assoc_opt "rules" fields with
+  | `Assoc fields ->
+      let allowed = ["schema"; "authority"; "historical_lineage"; "admission"; "normalization_base"; "rules"; "limits"] in
+      let exact key expected = match List.assoc_opt key fields with Some (`String value) -> value = expected | _ -> false in
+      let limits = match List.assoc_opt "limits" fields with Some (`List values) -> List.for_all (function `String _ -> true | _ -> false) values | _ -> false in
+      if List.length fields <> List.length allowed || has_duplicate (List.map fst fields) || List.exists (fun (key, _) -> not (contains allowed key)) fields ||
+         not (exact "schema" "uos.ev02.current-directive-rule-amendment/v1") ||
+         not (exact "authority" "CURRENT_AMENDMENT_PROPOSAL") || not (exact "historical_lineage" "MISSING_HISTORICAL_LINEAGE") ||
+         not (exact "admission" "NOT_GRANTED") || not (exact "normalization_base" ".claude/rules") || not limits then bounded_error "mapping-schema";
+      begin match List.assoc_opt "rules" fields with
       | Some (`List rows) ->
-          let allowed = ["schema"; "authority"; "historical_lineage"; "admission"; "normalization_base"; "rules"; "limits"] in
-          if has_duplicate (List.map fst fields) || List.exists (fun (key, _) -> not (contains allowed key)) fields then
-            bounded_error "mapping-schema";
           if List.length rows > max_rules then bounded_error "mapping-row-count";
           rows |> List.map (function
             | `List [`String id; `String file; `String anchor] -> { id; file; anchor }
