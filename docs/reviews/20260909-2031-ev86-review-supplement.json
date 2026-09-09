@@ -1,0 +1,40 @@
+{
+  "records": [
+    {
+      "source": "/tmp/ev86-close-fence-2030.json",
+      "durable": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2031-ev86-review-stale-fence.json",
+      "sha256": "4af19a192855bc3cb4e6bf87b8b8ba472116e5ff90c67e880e879e98206d59b7"
+    },
+    {
+      "source": "/tmp/ev86-close-fence-2029.json",
+      "durable": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2031-ev86-review-fence-argv-refusal.json",
+      "sha256": "30892fe1f37ca790acbc3b87c82c54cc33addb5597837b8719186315295d6628"
+    },
+    {
+      "source": "/tmp/ev86-http-observation-77d306/http-server.log",
+      "durable": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2031-ev86-review-server-log.txt",
+      "sha256": "d7d9a34076aea2888bf712880de7fd2113d29d6dad521e3db4aa10ed249a265f"
+    },
+    {
+      "source": "/tmp/ev86-independent-2016/full-lib/mist/_gleam_artefacts/mist_ffi.erl",
+      "durable": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2031-ev86-review-mist-ffi.txt",
+      "sha256": "b6ffd52630d7827580aa88b913f67c5f42a76e1c3005a21c2e3336b0ed705ca0"
+    },
+    {
+      "source": "/tmp/ev86-independent-2016/full-lib/mist/_gleam_artefacts/mist@internal@http.erl",
+      "durable": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2031-ev86-review-mist-http.txt",
+      "sha256": "1e316e2603e70ac62a6a2eb83328f9280e9c632c0737e06874ccb5b6cd41afad"
+    },
+    {
+      "source": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/lib/stdlib-8.0.3/src/uri_string.erl",
+      "durable": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2031-ev86-review-uri-parser.txt",
+      "sha256": "75aa660e1a85a7875cd39c2e5d66d3cf59fa7e003e8513699e8eaafe57fde19a"
+    },
+    {
+      "source": "/tmp/ev86-independent-2016/review_http.ml",
+      "durable": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2031-ev86-review-capture-helper.ml",
+      "sha256": "1b684b596651f4d2477657fdf44182b4403c58ffab70a50fea4b2130c20fd17a"
+    }
+  ],
+  "note": "server-log.txt is tracked lossless copy of ignored .log locator in HOLD report. Other records preserve exact parser source and capture ordering; no new execution."
+}

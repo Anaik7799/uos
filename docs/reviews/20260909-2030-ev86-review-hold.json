@@ -1,0 +1,124 @@
+{
+  "schema": "uos.ev86.independent-hold.v1",
+  "observed_at": "2026-09-09T20:30:45Z",
+  "candidate": "7774d111070091c49c8af2a08cb430f8153bf59d",
+  "verdict": "HOLD",
+  "authority": "NONE",
+  "interruption": "Coordinator reported automatic security classification; subsequent work limited to saved-artifact/source reads, then authorized documentation and task closure. No subsequent requests, probes, network or source repair.",
+  "finding": "4096 bytes bounds Mist-produced request.path before application normalization, not original HTTP request-target. Mist URI parsing retains only path/query; original target boundary remains unestablished.",
+  "source_lines": [
+    "music_files.gleam185,670", "indrajaal_gleam_web.gleam101,103,107",
+    "mist@internal@http.erl414,444,453,523", "mist_ffi.erl97-109",
+    "stdlib uri_string.erl1115-1128"
+  ],
+  "direct_groups_passed": 17,
+  "saved_http_successes": 12,
+  "failed_case": "doubled-leading-slash expected404 comparison",
+  "actual_failed_status": null,
+  "actual_failed_response_saved": false,
+  "capture_limitation": "review_http.ml30 asserts status before raw response write39; actual status/body unknown",
+  "http_unrun": 10,
+  "limits": [
+    "No tested long-original-target bypass",
+    "Main-branch projection only; production serve not started",
+    "No playback, network-security assessment, full EV approval or admission",
+    "Private compile has3 unused-import warnings from reviewer projection"
+  ],
+  "records": [
+    {
+      "source": "/tmp/ev86-independent-2016/review-bindings.json",
+      "durable": ".uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2030-ev86-review-bindings.json",
+      "sha256": "7732f039e60053d8a10f2daad0800080ac7f629b896810ed7ec6d57990b4d6ed"
+    },
+    {
+      "source": "/tmp/ev86-review-compile.json",
+      "durable": ".uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2030-ev86-review-compile.json",
+      "sha256": "dab75176603be99b211b53d5b5324e046bf193a981eaa24e5a2ccf3622753518"
+    },
+    {
+      "source": "/tmp/ev86-review-tests.json",
+      "durable": ".uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2030-ev86-review-tests.json",
+      "sha256": "6dd519fe7cd7cb53af92c7b3faafbd2fd957c26c1b34f2d738ffe02719ce2291"
+    },
+    {
+      "source": "/tmp/ev86-review-http.json",
+      "durable": ".uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2030-ev86-review-http-failure.json",
+      "sha256": "fa065e383bb16025a99b671126ee4823da4501280cc3a66b4f5224bed54dce60"
+    },
+    {
+      "source": "/tmp/ev86-close-active-2031.json",
+      "durable": ".uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2030-ev86-review-active.json",
+      "sha256": "8d5c8056dfbd34ba12bda12ac255d5f43d8bdda3a7f39e6cd477611d09abafb1"
+    },
+    {
+      "source": "/tmp/ev86-close-fence-2031.json",
+      "durable": ".uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2030-ev86-review-fence.json",
+      "sha256": "20b412f7af8ade193b830993b034a5232790523dee32098d9719a8690443fcb5"
+    },
+    {
+      "source": "/tmp/ev86-http-observation-77d306/http-backslash.response",
+      "durable": ".uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2030-ev86-review-http-backslash.response",
+      "sha256": "0f295df0a532f46e371370e4a58bb8f949034e9953249fdef6acd3ee0853e816"
+    },
+    {
+      "source": "/tmp/ev86-http-observation-77d306/http-exact-unrelated-fallback.response",
+      "durable": ".uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2030-ev86-review-http-exact-unrelated-fallback.response",
+      "sha256": "bf39953b7b522e63ca181e04feb14dbccfd33fa603e01a943c6205e020d7f5b1"
+    },
+    {
+      "source": "/tmp/ev86-http-observation-77d306/http-head.response",
+      "durable": ".uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2030-ev86-review-http-head.response",
+      "sha256": "43c96252021830128c4a42594cf9b0491b9bfb941a6e4d6390a7dd054cadfd21"
+    },
+    {
+      "source": "/tmp/ev86-http-observation-77d306/http-method.response",
+      "durable": ".uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2030-ev86-review-http-method.response",
+      "sha256": "f823a1fd5ca94b422d8fc0569849b1c3a2d2d5ff43155a07b85d9c673b2f6440"
+    },
+    {
+      "source": "/tmp/ev86-http-observation-77d306/http-missing.response",
+      "durable": ".uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2030-ev86-review-http-missing.response",
+      "sha256": "0f295df0a532f46e371370e4a58bb8f949034e9953249fdef6acd3ee0853e816"
+    },
+    {
+      "source": "/tmp/ev86-http-observation-77d306/http-mp3.response",
+      "durable": ".uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2030-ev86-review-http-mp3.response",
+      "sha256": "d5b9b05b0b7d98a4ad1d2988eafafb5869783d282a191ddbdec13a6505a9e278"
+    },
+    {
+      "source": "/tmp/ev86-http-observation-77d306/http-percent.response",
+      "durable": ".uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2030-ev86-review-http-percent.response",
+      "sha256": "0f295df0a532f46e371370e4a58bb8f949034e9953249fdef6acd3ee0853e816"
+    },
+    {
+      "source": "/tmp/ev86-http-observation-77d306/http-player.response",
+      "durable": ".uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2030-ev86-review-http-player.response",
+      "sha256": "d71669bbdafacaf668f344e924bce77481678d6d21a418299d3287701ba0acbf"
+    },
+    {
+      "source": "/tmp/ev86-http-observation-77d306/http-server.log",
+      "durable": ".uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2030-ev86-review-http-server.log",
+      "sha256": "d7d9a34076aea2888bf712880de7fd2113d29d6dad521e3db4aa10ed249a265f"
+    },
+    {
+      "source": "/tmp/ev86-http-observation-77d306/http-studio.response",
+      "durable": ".uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2030-ev86-review-http-studio.response",
+      "sha256": "f7d153e16366dd4508305241f6c5516919fbd197aca9526900e97fafce6f3b48"
+    },
+    {
+      "source": "/tmp/ev86-http-observation-77d306/http-traversal.response",
+      "durable": ".uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2030-ev86-review-http-traversal.response",
+      "sha256": "0f295df0a532f46e371370e4a58bb8f949034e9953249fdef6acd3ee0853e816"
+    },
+    {
+      "source": "/tmp/ev86-http-observation-77d306/http-unrelated-fallback.response",
+      "durable": ".uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2030-ev86-review-http-unrelated-fallback.response",
+      "sha256": "bf39953b7b522e63ca181e04feb14dbccfd33fa603e01a943c6205e020d7f5b1"
+    },
+    {
+      "source": "/tmp/ev86-http-observation-77d306/http-wav.response",
+      "durable": ".uos-workspaces/ev98-peer-loop-20260909/docs/reviews/20260909-2030-ev86-review-http-wav.response",
+      "sha256": "06784026943d4608c1edc1b7f2e34183e0b21bc1aa5198ffd5a7c805b272054b"
+    }
+  ]
+}
