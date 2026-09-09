@@ -162,17 +162,31 @@ let execute cwd seconds receipt input tool args =
     Fun.protect ~finally:(fun () -> Option.iter (fun (_, ch) -> close_out_noerr ch) reserved)
       (fun () ->
         let code, output, observation = run cwd seconds input executable args in
-        print_string output; flush stdout;
-        if code <> 0 then prerr_endline ("native invocation exited " ^ string_of_int code);
-        try
-          Option.iter (fun target -> write_receipt target observation) reserved;
+        let attempt label action =
+          try action (); None
+          with error -> Some (label ^ ": " ^ Printexc.to_string error) in
+        (* Neither delivery channel may prevent the other from retaining the
+           already-observed child outcome. A closed pipe is a delivery failure,
+           never evidence that the child effect did not happen. *)
+        let receipt_error = attempt "receipt persistence" (fun () ->
+          Option.iter (fun target -> write_receipt target observation) reserved) in
+        let output_error = attempt "output forwarding" (fun () ->
+          print_string output; flush stdout) in
+        let errors = List.filter_map Fun.id [receipt_error; output_error] in
+        if errors = [] then begin
+          if code <> 0 then ignore (attempt "diagnostic forwarding" (fun () ->
+            prerr_endline ("native invocation exited " ^ string_of_int code)));
           code
-        with error ->
-          prerr_endline (Printf.sprintf
-            "AFTER_EXECUTION_RECEIPT_FAILURE: child outcome %d is retained above; do not infer that effects were absent or automatically retry: %s"
-            code (Printexc.to_string error));
-          prerr_endline (Yojson.Safe.to_string observation);
-          125)
+        end else begin
+          (* If stderr is closed too, exit 125 still signals an indeterminate
+             delivery outcome; no automatic retry is authorized. *)
+          ignore (attempt "post-execution diagnostic forwarding" (fun () ->
+            prerr_endline (Printf.sprintf
+              "AFTER_EXECUTION_REPORTING_FAILURE: child outcome %d; effects may have completed, do not automatically retry: %s"
+              code (String.concat "; " errors));
+            prerr_endline (Yojson.Safe.to_string observation)));
+          125
+        end)
   with error -> prerr_endline (Printexc.to_string error); 2
 let () =
   let open Cmdliner in

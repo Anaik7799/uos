@@ -20,14 +20,18 @@ let read path =
       if n > 8_388_608 then failwith "test output exceeded bound";
       really_input_string ic n)
 let counter = ref 0
-let run executable args =
+let run ?(closed_stdout=false) executable args =
   incr counter;
   let out = Printf.sprintf "%s/process-%02d.txt" temp !counter in
   let fd = Unix.openfile out [Unix.O_WRONLY; Unix.O_CREAT; Unix.O_EXCL] 0o600 in
   let pid = Unix.fork () in
   if pid = 0 then begin
     ignore (Unix.setsid ()); Unix.chdir temp;
-    Unix.dup2 fd Unix.stdout; Unix.dup2 fd Unix.stderr; Unix.close fd;
+    if closed_stdout then begin
+      let r, w = Unix.pipe () in Unix.close r;
+      Unix.dup2 w Unix.stdout; Unix.close w
+    end else Unix.dup2 fd Unix.stdout;
+    Unix.dup2 fd Unix.stderr; Unix.close fd;
     Unix.execv executable (Array.of_list (Bos.Cmd.(v executable %% of_list args) |> Bos.Cmd.to_list))
   end;
   Unix.close fd;
@@ -64,6 +68,14 @@ let () =
   let observation = Yojson.Safe.from_file receipt in
   check "successful child outcome and effect are retained"
     (code = 0 && Sys.file_exists marker && field "exit_code" observation = `Int 0);
+  let receipt = temp ^ "/closed-output.json" and marker = temp ^ "/closed-output-effect" in
+  let code, diagnostic = run ~closed_stdout:true ml
+    [source ^ "/ev_native.ml"; "--receipt"; receipt; "--"; "native"; child; "mark"; marker] in
+  let observation = Yojson.Safe.from_file receipt in
+  check "closed stdout cannot prevent post-execution receipt persistence"
+    (code = 125 && Sys.file_exists marker && field "exit_code" observation = `Int 0
+      && field "output" observation = `String "effect observed\n"
+      && contains diagnostic "AFTER_EXECUTION_REPORTING_FAILURE");
   let receipt = temp ^ "/signal.json" in
   let code, _ = invoke ["--receipt"; receipt] ["signal"] in
   let outcome = field "child_termination" (Yojson.Safe.from_file receipt) in
