@@ -393,6 +393,9 @@ pub fn verify_reports_the_exact_failure_on_a_tampered_copy_test() {
 
   // Work on a scratch copy: temporarily drop the append-only triggers,
   // then edit body_json for sequence 2 directly.
+  // close_v2 can defer final closing until statement garbage collection;
+  // settle this private writer before copying main/WAL/SHM bytes.
+  let assert Ok(Nil) = raw_exec(db, "PRAGMA wal_checkpoint(TRUNCATE);")
   let copy = db_path()
   let assert Ok(Nil) = copy_file(db, copy)
   let assert Ok(Nil) =

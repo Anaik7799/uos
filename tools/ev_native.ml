@@ -48,7 +48,7 @@ let command tool args = match tool, args with
   | "sa-plan", _ ->
     root ^ "/engines/hermes/_build/default/modules/sa_plan/test/sa_plan_main.exe", args
   | "risk", _ -> "/tmp/uos-ev-native-risk-20260909/default/validate.exe", args
-  | "beam", [compiled; main] ->
+  | "beam", compiled :: main :: arguments ->
     require (not (Filename.is_relative compiled)) "compiled directory must be absolute";
     require (main <> "" && String.for_all (function
       | 'a'..'z' | '0'..'9' | '_' -> true | _ -> false) main) "invalid Gleam main name";
@@ -58,6 +58,7 @@ let command tool args = match tool, args with
     require (Sys.file_exists (output ^ "/" ^ main ^ ".beam")) "compiled main absent";
     pinned "erl", ["-noshell"; "-noinput"; "-pa"] @ paths
       @ ["-pa"; output; "-s"; main; "main"; "-s"; "init"; "stop"]
+      @ (if arguments = [] then [] else "-extra" :: arguments)
   | ("gleam" | "mojo" | "jj" | "dune"), _ -> pinned tool, args
   | "chronyc", _ -> "/usr/bin/chronyc", args
   | "native", executable :: rest ->

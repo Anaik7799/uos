@@ -30,20 +30,37 @@ fn number(value: String) -> Result(Int, String) {
   int.parse(value) |> result.replace_error("expected an integer")
 }
 
-fn respond(outcome: Result(String, String)) -> Nil {
+pub type CliError {
+  CommandFailed(String)
+  VerificationFailed(store.VerifyReport)
+}
+
+/// The exit status and JSON are derived from the same typed command outcome.
+pub fn response(outcome: Result(String, CliError)) -> #(Int, String) {
   case outcome {
-    Ok(text) -> io.println(text)
-    Error(error) -> {
-      io.println(
-        json.to_string(
-          json.object([
-            #("ok", json.bool(False)),
-            #("error", json.string(error)),
-          ]),
-        ),
-      )
-      halt(1)
-    }
+    Ok(text) -> #(0, text)
+    Error(VerificationFailed(report)) -> #(
+      1,
+      json.to_string(store.verify_report_json(report)),
+    )
+    Error(CommandFailed(error)) -> #(
+      1,
+      json.to_string(
+        json.object([
+          #("ok", json.bool(False)),
+          #("error", json.string(error)),
+        ]),
+      ),
+    )
+  }
+}
+
+fn respond(outcome: Result(String, CliError)) -> Nil {
+  let #(status, text) = response(outcome)
+  io.println(text)
+  case status {
+    0 -> Nil
+    _ -> halt(status)
   }
 }
 
@@ -76,16 +93,27 @@ fn execute(
   })
 }
 
-pub fn run(args: List(String)) -> Result(String, String) {
+pub fn run(args: List(String)) -> Result(String, CliError) {
+  case args {
+    ["verify", db] -> {
+      use report <- result.try(
+        store.verify_file(db)
+        |> result.map_error(fn(error) {
+          CommandFailed(store.error_to_string(error))
+        }),
+      )
+      case report.ok {
+        True -> Ok(json.to_string(store.verify_report_json(report)))
+        False -> Error(VerificationFailed(report))
+      }
+    }
+    _ -> run_other(args) |> result.map_error(CommandFailed)
+  }
+}
+
+fn run_other(args: List(String)) -> Result(String, String) {
   case args {
     ["schema"] -> Ok(store.schema_sql())
-    ["verify", db] ->
-      with_store(db, fn(opened) {
-        store.verify(opened)
-        |> result.map(fn(report) {
-          json.to_string(store.verify_report_json(report))
-        })
-      })
     ["migrate", events_dir, db] ->
       with_store(db, fn(opened) {
         store.migrate_from_journal(events_dir, opened)

@@ -39,12 +39,14 @@
 //// STAMP: SC-TUI-COORD-001; SC-FPP-INTENT-001; SC-DB-001. #fractal-l2
 //// #fractal-l3 #zero-muda
 
+import gleam/dynamic.{type Dynamic}
 import gleam/int
 import gleam/json.{type Json}
 import gleam/list
 import gleam/result
 import gleam/set
 import gleam/string
+import gleam/uri
 import simplifile
 import uos_swarm/board
 import uos_swarm/session_sync as sync
@@ -68,6 +70,14 @@ pub type Cell {
 
 @external(erlang, "session_store_ffi", "open")
 fn ffi_open(path: String) -> Result(Conn, String)
+
+// esqlite accepts a charlist filename. Percent-encoding below ensures this
+// conversion is ASCII-only and prevents path bytes from becoming URI options.
+@external(erlang, "erlang", "binary_to_list")
+fn ascii_charlist(text: String) -> List(Int)
+
+@external(erlang, "esqlite3", "open")
+fn ffi_open_uri(path: List(Int)) -> Result(Conn, Dynamic)
 
 @external(erlang, "session_store_ffi", "exec")
 fn ffi_exec(conn: Conn, sql: String) -> Result(Int, String)
@@ -148,6 +158,7 @@ pub type VerifyReport {
     chain_ok: Bool,
     digest_ok: Bool,
     triggers_present: Bool,
+    trigger_definitions_ok: Bool,
     unique_operations: Bool,
     failures: List(String),
   )
@@ -161,6 +172,7 @@ pub fn verify_report_json(report: VerifyReport) -> Json {
     #("chain_ok", json.bool(report.chain_ok)),
     #("digest_ok", json.bool(report.digest_ok)),
     #("triggers_present", json.bool(report.triggers_present)),
+    #("trigger_definitions_ok", json.bool(report.trigger_definitions_ok)),
     #("unique_operations", json.bool(report.unique_operations)),
     #("failures", json.array(report.failures, json.string)),
   ])
@@ -196,19 +208,42 @@ CREATE TABLE IF NOT EXISTS events (
   inserted_utc_us INTEGER NOT NULL
 );
 
-CREATE TRIGGER IF NOT EXISTS events_no_update
+CREATE TABLE IF NOT EXISTS quarantine (
+  id INTEGER PRIMARY KEY,
+  raw TEXT NOT NULL,
+  reason TEXT NOT NULL,
+  recorded_utc_us INTEGER NOT NULL
+);
+" <> string.join(
+    list.map(trigger_specs(), fn(spec) {
+      string.replace(spec.1, "CREATE TRIGGER ", "CREATE TRIGGER IF NOT EXISTS ")
+      <> ";\n"
+    }),
+    "\n",
+  )
+}
+
+// SQLite stores CREATE TRIGGER without IF NOT EXISTS or the final semicolon.
+// Pin the actual definitions, not only names: a same-named no-op is no guard.
+fn trigger_specs() -> List(#(String, String)) {
+  [
+    #(
+      "events_no_update",
+      "CREATE TRIGGER events_no_update
 BEFORE UPDATE ON events
 BEGIN
   SELECT RAISE(ABORT, 'events are append-only');
-END;
-
-CREATE TRIGGER IF NOT EXISTS events_no_delete
+END",
+    ),
+    #(
+      "events_no_delete",
+      "CREATE TRIGGER events_no_delete
 BEFORE DELETE ON events
 BEGIN
   SELECT RAISE(ABORT, 'events are append-only');
-END;
-
-CREATE TRIGGER IF NOT EXISTS events_chain
+END",
+    ),
+    #("events_chain", "CREATE TRIGGER events_chain
 BEFORE INSERT ON events
 WHEN NOT (
   NEW.sequence = (SELECT COALESCE(MAX(sequence), 0) + 1 FROM events)
@@ -219,16 +254,12 @@ WHEN NOT (
 )
 BEGIN
   SELECT RAISE(ABORT, 'events chain violated: sequence or previous_digest does not extend the current head');
-END;
-
--- `events_no_delete` alone does NOT make the table append-only: SQLite fires
--- DELETE triggers for the implicit delete of `INSERT OR REPLACE` only when
--- `PRAGMA recursive_triggers` is ON, and its default is OFF. A raw
--- `INSERT OR REPLACE` reusing an existing `operation_id` or `digest` would
--- therefore drop the historical row silently (measured on a scratch copy,
--- review wf_5f54e14c-28b). This BEFORE INSERT guard refuses any insert that
--- collides with a stored row, so the REPLACE never reaches its delete.
-CREATE TRIGGER IF NOT EXISTS events_no_replace
+END"),
+    // REPLACE's implicit deletion skips DELETE triggers when recursive_triggers
+    // is off. Refuse the collision before that deletion can occur.
+    #(
+      "events_no_replace",
+      "CREATE TRIGGER events_no_replace
 BEFORE INSERT ON events
 WHEN EXISTS (
   SELECT 1 FROM events
@@ -238,15 +269,56 @@ WHEN EXISTS (
 )
 BEGIN
   SELECT RAISE(ABORT, 'events are append-only: an insert may not reuse a stored sequence, operation_id or digest');
-END;
+END",
+    ),
+  ]
+}
 
-CREATE TABLE IF NOT EXISTS quarantine (
-  id INTEGER PRIMARY KEY,
-  raw TEXT NOT NULL,
-  reason TEXT NOT NULL,
-  recorded_utc_us INTEGER NOT NULL
-);
-"
+/// Inspect an existing absolute database path through SQLite mode=ro. No DDL,
+/// journal-mode change, or metadata initialization is performed. All inspection
+/// queries share one read transaction, which closes before the report returns.
+/// SQLite may manage WAL reader sidecars; this is not an immutable file snapshot.
+pub fn verify_file(path: String) -> Result(VerifyReport, StoreError) {
+  use _ <- result.try(
+    case
+      string.starts_with(path, "/")
+      && !string.contains(path, "\u{0}")
+      && string.byte_size(path) <= 1024
+    {
+      True -> Ok(Nil)
+      False ->
+        Error(OpenError("verification requires a bounded absolute file path"))
+    },
+  )
+  let encoded =
+    path
+    |> string.split("/")
+    |> list.map(uri.percent_encode)
+    |> string.join("/")
+  let sqlite_uri = "file://" <> encoded <> "?mode=ro&cache=private"
+  use conn <- result.try(
+    ffi_open_uri(ascii_charlist(sqlite_uri))
+    |> result.map_error(fn(error) { OpenError(string.inspect(error)) }),
+  )
+  let opened = Store(conn, path)
+  let outcome = {
+    use _ <- result.try(
+      ffi_exec(conn, "BEGIN") |> result.map_error(StorageError),
+    )
+    use schema <- result.try(
+      run(opened, "SELECT value FROM meta WHERE key = 'schema'", []),
+    )
+    use _ <- result.try(case schema {
+      [[CellText(value)]] if value == sync.genesis -> Ok(Nil)
+      _ -> Error(SchemaError("missing or incompatible meta.schema"))
+    })
+    verify(opened)
+  }
+  let closed = close(opened)
+  case outcome {
+    Error(error) -> Error(error)
+    Ok(report) -> closed |> result.replace(report)
+  }
 }
 
 /// Open (creating if absent) a SQLite store at `path`, apply the schema,
@@ -558,11 +630,15 @@ pub fn verify(store: Store) -> Result(VerifyReport, StoreError) {
   use trigger_rows <- result.try(
     run(
       store,
-      "SELECT name FROM sqlite_master WHERE type = 'trigger' AND name IN ('events_no_update', 'events_no_delete', 'events_chain', 'events_no_replace')",
+      "SELECT name, sql FROM sqlite_master WHERE type = 'trigger' AND name IN ('events_no_update', 'events_no_delete', 'events_chain', 'events_no_replace')",
       [],
     ),
   )
   let triggers_present = list.length(trigger_rows) == 4
+  let trigger_definitions_ok =
+    list.all(trigger_specs(), fn(spec) {
+      list.contains(trigger_rows, [CellText(spec.0), CellText(spec.1)])
+    })
   let #(_, _, failures, _) =
     list.fold(rows, #(0, sync.genesis, [], set.new()), fn(acc, row) {
       let #(expected_sequence, expected_previous, fails, seen_ops) = acc
@@ -627,7 +703,14 @@ pub fn verify(store: Store) -> Result(VerifyReport, StoreError) {
       ..failures
     ]
   }
-  let failures = list.reverse(failures)
+  let failures =
+    failures
+    |> add_if(
+      !trigger_definitions_ok,
+      "trigger_definitions",
+      "append-only trigger definitions do not match this candidate's required schema",
+    )
+    |> list.reverse
   let failed = fn(check: String) {
     list.any(failures, fn(entry) { entry.0 == check })
   }
@@ -638,6 +721,7 @@ pub fn verify(store: Store) -> Result(VerifyReport, StoreError) {
     chain_ok: !failed("chain") && !failed("malformed"),
     digest_ok: !failed("digest") && !failed("malformed"),
     triggers_present: triggers_present,
+    trigger_definitions_ok: trigger_definitions_ok,
     unique_operations: !failed("duplicate"),
     failures: list.map(failures, fn(entry) { entry.1 }),
   ))
