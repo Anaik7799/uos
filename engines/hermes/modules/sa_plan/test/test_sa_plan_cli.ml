@@ -167,3 +167,15 @@ let () =
     (array_equal
       (Sa_plan_cli.normalize [|"sa-plan";"task";"create";"p";"t";"n";"Explain --help usage"|])
       [|"sa-plan";"--task-create";"p";"t";"n";"Explain --help usage"|])
+
+let () =
+  List.iter (fun worker ->
+    require "LAW CLI-JOB-OPTION-IS-NOT-CLAIM-WORKER"
+      (Result.is_error (Sa_plan_cli.validate [|"sa-plan";"--job-claim";"q";worker|])))
+    ["--help";"-h";"--version";"--unknown";"";" "];
+  List.iter (fun (noun, verb) ->
+    List.iter (fun worker -> require "LAW CLI-JOB-ALIASES-VALIDATE-WORKER"
+      (Result.is_error (Sa_plan_cli.validate
+        (Sa_plan_cli.normalize [|"sa-plan";noun;verb;"q";worker|]))))
+      ["--version";"--unknown";"";" "])
+    ["job","claim";"job","run";"oban","claim";"oban","run"]

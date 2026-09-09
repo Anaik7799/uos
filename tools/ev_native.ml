@@ -48,6 +48,18 @@ let command tool args = match tool, args with
   | "sa-plan", _ ->
     require (not (List.exists (fun arg -> arg = "--help" || arg = "-h") args))
       "Sa-plan option-style help is refused before execution; use sa-plan help <noun>";
+    let rec without_format = function
+      | "--format" :: _format :: rest -> without_format rest
+      | value :: rest -> value :: without_format rest
+      | [] -> [] in
+    let worker = match without_format args with
+      | "task" :: "claim" :: worker :: _ | "--claim" :: worker :: _ -> Some worker
+      | ("job" | "oban") :: ("claim" | "run") :: _queue :: worker :: _
+      | "--job-claim" :: _queue :: worker :: _ -> Some worker
+      | _ -> None in
+    Option.iter (fun identity ->
+      require (String.trim identity <> "" && identity.[0] <> '-')
+        "Sa-plan option/empty WORKER refused before execution") worker;
     root ^ "/engines/hermes/_build/default/modules/sa_plan/test/sa_plan_main.exe", args
   | "risk", _ -> "/tmp/uos-ev-native-risk-20260909/default/validate.exe", args
   | "beam", compiled :: main :: arguments ->

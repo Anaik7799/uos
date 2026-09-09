@@ -141,8 +141,10 @@ let validate argv =
           Error
             (Printf.sprintf "%s requires at least %d argument(s)" argv.(1)
                required)
-        else if argv.(1) = "--claim"
-          && (String.trim argv.(2) = "" || argv.(2).[0] = '-') then
+        else if (match argv.(1) with
+          | "--claim" -> String.trim argv.(2) = "" || argv.(2).[0] = '-'
+          | "--job-claim" -> String.trim argv.(3) = "" || argv.(3).[0] = '-'
+          | _ -> false) then
           Error "WORKER must be a nonempty identity, not an option"
         else
           let attempt_index =

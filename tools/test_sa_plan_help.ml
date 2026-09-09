@@ -120,6 +120,14 @@ let database = temp ^ "/private.sqlite3"
 let must name args = let code, output = run ~database name executable args in
   if code <> 0 then failwith (name ^ ": " ^ output); output
 let () =
+  List.iteri (fun index args ->
+    let code, output = run ~database:missing_db (Printf.sprintf "job-invalid-%02d" index) executable args in
+    check "job and Oban option workers refuse before store initialization"
+      (code = 2 && contains output "WORKER" && not (contains output "store_open")
+        && not (Sys.file_exists (Filename.dirname missing_db))))
+    [["job";"claim";"q";"--version"];["job";"run";"q";"--unknown"];
+     ["oban";"claim";"q";""];["oban";"run";"q";" "];
+     ["--job-claim";"q";"--unknown"]];
   ignore (must "create-plan" ["plan"; "create"; "private"; "private/help"; "Private help regression"]);
   ignore (must "create-task" ["task"; "create"; "private"; "t"; "private/help/task"; "Private task"]);
   let before = hash (read database) in
@@ -138,6 +146,12 @@ let () =
   ignore (must "positive-release" ["task"; "release"; "private"; "t"; "private-worker"; "1"]);
   let state = must "released" ["--format"; "json"; "task"; "show"; "private"; "t"] in
   check "fenced private release restores available state" (contains state "\"state\":\"available\"" && contains state "\"attempt\":\"1\"");
+  ignore (must "enqueue-private-job" ["job";"enqueue";"j";"private/help/job";"q";"worker";"{}"]);
+  let before = hash (read database) in
+  let invalid_code, _ = run ~database "existing-job-invalid" executable ["oban";"run";"q";"--version"] in
+  check "invalid job worker leaves an existing queued job unchanged" (invalid_code = 2 && hash (read database) = before);
+  let claimed = must "positive-job-claim" ["job";"claim";"q";"private-worker"] in
+  check "ordinary private job claim remains executable" (contains claimed "lease_owner=private-worker" && contains claimed "attempt=1");
   write (temp ^ "/source-observation.json") (Yojson.Safe.pretty_to_string (`Assoc [
     "sources", `List (List.rev !sources); "checks_passed", `Int !checks;
     "executable_sha256", `String (hash_file executable); "authority", `String "NONE";

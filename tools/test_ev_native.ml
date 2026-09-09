@@ -64,6 +64,17 @@ let () =
   check "Sa-plan option-style help refuses before child execution"
     (code = 2 && contains diagnostic "refused before execution"
       && not (Sys.file_exists refused_receipt));
+  List.iteri (fun index args ->
+    let receipt = temp ^ "/sa-plan-worker-refused-" ^ string_of_int index ^ ".json" in
+    let code, diagnostic = run ml ([source ^ "/ev_native.ml"; "--receipt";
+      receipt; "--"; "sa-plan"] @ args) in
+    check "Sa-plan task/job option workers refuse before child execution"
+      (code = 2 && contains diagnostic "WORKER refused before execution"
+        && not (Sys.file_exists receipt)))
+    [["task";"claim";"--unknown"];
+     ["--format";"json";"job";"claim";"q";"--version"];
+     ["oban";"run";"q";""];
+     ["--job-claim";"q";" "]];
   let occupied = temp ^ "/occupied.json" and forbidden = temp ^ "/forbidden-effect" in
   write_new occupied "preserved receipt\n";
   let code, _ = invoke ["--receipt"; occupied] ["mark"; forbidden] in
