@@ -615,15 +615,9 @@ let process_single_update ~token ~zenoh_endpoint update =
          let _ = zenoh_put ~endpoint:zenoh_endpoint "indrajaal/l5/cog/intent/req" inbound_payload_str in
          let _ = zenoh_put ~endpoint:zenoh_endpoint "indrajaal/sutra/telegram/relay" inbound_payload_str in
 
-         (* Delegate all message handling to the UOS Gleam Harness *)
-         Printf.printf "⚙️ [harness] Delegating message %Ld to UOS Gleam Harness...\n%!" msg_id;
-         (match dispatch_to_gleam_harness inbound_payload_str with
-          | Some (reply_text, parse_mode) ->
-              Printf.printf "📤 [harness] Received reply from Gleam harness (%d chars)\n%!" (String.length reply_text);
-              let chunks = chunk_text reply_text in
-              List.iter (fun ch -> ignore (send_message ~token ~chat_id ?parse_mode ch)) chunks
-          | None ->
-              Printf.eprintf "⚠️ [harness] Gleam harness dispatch returned None for msg %Ld\n%!" msg_id);
+         (* Forward all messages to the UOS Gleam Cognitive Worker via Zenoh mesh *)
+         Printf.printf "⚙️ [cog-mesh] Forwarded message %Ld from @%s to indrajaal/l5/cog/intent/req (UOS Gleam)\n%!" msg_id from_user;
+         check_outbound_zenoh ~token ~default_chat:chat_id ~zenoh_endpoint;
          ());
 
     (* Case 2: Callback Query from Inline Keyboard *)

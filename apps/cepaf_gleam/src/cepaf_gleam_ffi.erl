@@ -11,6 +11,7 @@
 -export([to_string/1, to_int/1, to_float/1, to_bool/1]).
 -export([system_time_seconds/0, base64_decode/1, url_encode/1, get_env/1]).
 -export([pi_port_open/3, pi_port_send/2, pi_port_close/1]).
+-export([http_get/1, http_put/3, http_delete/1]).
 
 %% @doc Execute a REST request over Podman Unix Domain Socket
 podman_uds_request(Path, Method, Endpoint, Body) ->
@@ -464,9 +465,7 @@ base64_decode(Input) ->
     end.
 
 url_encode(Input) ->
-    uri_string:compose_query([{<<"v">>, Input}]),
-    %% Simple percent encoding
-    unicode:characters_to_binary(http_uri:encode(binary_to_list(Input))).
+    uri_string:quote(Input).
 
 get_env(Name) ->
     case os:getenv(binary_to_list(Name)) of
@@ -508,4 +507,60 @@ pi_port_close(Port) ->
         ok
     catch
         _:_ -> ok
+    end.
+
+%% @doc Native OTP inets httpc GET (zero subprocess, zero curl)
+http_get(UrlBinary) ->
+    try
+        inets:start(),
+        Url = unicode:characters_to_list(UrlBinary),
+        case httpc:request(get, {Url, []}, [{timeout, 5000}], [{body_format, binary}]) of
+            {ok, {{_, 200, _}, _Headers, Body}} -> {ok, Body};
+            {ok, {{_, Status, _}, _Headers, _Body}} ->
+                {error, list_to_binary(io_lib:format("http_status_~p", [Status]))};
+            {error, Reason} ->
+                {error, unicode:characters_to_binary(io_lib:format("~p", [Reason]))}
+        end
+    catch
+        _:CatchReason ->
+            {error, unicode:characters_to_binary(io_lib:format("http_get crash: ~p", [CatchReason]))}
+    end.
+
+%% @doc Native OTP inets httpc PUT (zero subprocess, zero curl)
+http_put(UrlBinary, ContentTypeBinary, BodyBinary) ->
+    try
+        inets:start(),
+        Url = unicode:characters_to_list(UrlBinary),
+        ContentType = unicode:characters_to_list(ContentTypeBinary),
+        Body = case is_binary(BodyBinary) of
+            true -> BodyBinary;
+            false -> unicode:characters_to_binary(BodyBinary)
+        end,
+        case httpc:request(put, {Url, [], ContentType, Body}, [{timeout, 5000}], [{body_format, binary}]) of
+            {ok, {{_, Status, _}, _Headers, _Body}} when Status >= 200, Status < 300 -> {ok, nil};
+            {ok, {{_, Status, _}, _Headers, _Body}} ->
+                {error, list_to_binary(io_lib:format("http_status_~p", [Status]))};
+            {error, Reason} ->
+                {error, unicode:characters_to_binary(io_lib:format("~p", [Reason]))}
+        end
+    catch
+        _:CatchReason ->
+            {error, unicode:characters_to_binary(io_lib:format("http_put crash: ~p", [CatchReason]))}
+    end.
+
+%% @doc Native OTP inets httpc DELETE (zero subprocess, zero curl)
+http_delete(UrlBinary) ->
+    try
+        inets:start(),
+        Url = unicode:characters_to_list(UrlBinary),
+        case httpc:request(delete, {Url, []}, [{timeout, 5000}], [{body_format, binary}]) of
+            {ok, {{_, Status, _}, _Headers, _Body}} when Status >= 200, Status < 300 -> {ok, nil};
+            {ok, {{_, Status, _}, _Headers, _Body}} ->
+                {error, list_to_binary(io_lib:format("http_status_~p", [Status]))};
+            {error, Reason} ->
+                {error, unicode:characters_to_binary(io_lib:format("~p", [Reason]))}
+        end
+    catch
+        _:CatchReason ->
+            {error, unicode:characters_to_binary(io_lib:format("http_delete crash: ~p", [CatchReason]))}
     end.

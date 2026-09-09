@@ -10,6 +10,13 @@ set -euo pipefail
 UOS_ROOT="/home/an/NAS-setup/uos"
 cd "${UOS_ROOT}"
 
+PINNED_ERL="/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/erl"
+if [ -x "${PINNED_ERL}" ]; then
+  ERL_BIN="${PINNED_ERL}"
+else
+  ERL_BIN="$(which erl)"
+fi
+
 MODE="${1:---poll}"
 
 case "${MODE}" in
@@ -18,7 +25,7 @@ case "${MODE}" in
     if [ -z "${PAYLOAD}" ]; then
       PAYLOAD="$(cat)"
     fi
-    exec erl -noshell \
+    exec "${ERL_BIN}" -noshell \
       -pa apps/cepaf_gleam/build/dev/erlang/*/ebin \
       -eval "
     io:setopts([{encoding, utf8}]),
@@ -37,7 +44,7 @@ case "${MODE}" in
     ;;
 
   --poll)
-    exec erl -noshell \
+    exec "${ERL_BIN}" -noshell \
       -pa apps/cepaf_gleam/build/dev/erlang/*/ebin \
       -eval "
     io:setopts([{encoding, utf8}]),
@@ -48,22 +55,14 @@ case "${MODE}" in
     ;;
 
   --loop)
-    INTERVAL="${2:-3}"
-    echo "🧠 Starting UOS Gleam Cognitive Worker loop (interval: ${INTERVAL}s)..."
-    while true; do
-      erl -noshell \
-        -pa apps/cepaf_gleam/build/dev/erlang/*/ebin \
-        -eval "
-      io:setopts([{encoding, utf8}]),
-      Decisions = 'cepaf_gleam@harness@cognitive_worker':poll_zenoh_and_process(<<\"http://127.0.0.1:8080\">>),
-      Count = length(Decisions),
-      case Count of
-        0 -> ok;
-        N -> io:format(\"⚡ [cog-worker] Processed ~p cognitive intent(s)~n\", [N])
-      end,
-      init:stop(0)." || true
-      sleep "${INTERVAL}"
-    done
+    INTERVAL_S="${2:-1}"
+    INTERVAL_MS=$(( INTERVAL_S * 1000 ))
+    echo "🧠 Starting UOS Gleam Persistent Cognitive Worker (BEAM OTP 29, poll interval: ${INTERVAL_MS}ms)..."
+    exec "${ERL_BIN}" -noshell \
+      -pa apps/cepaf_gleam/build/dev/erlang/*/ebin \
+      -eval "
+    io:setopts([{encoding, utf8}]),
+    'cepaf_gleam@harness@cognitive_worker':run_loop(<<\"http://127.0.0.1:8080\">>, ${INTERVAL_MS})."
     ;;
 
   *)

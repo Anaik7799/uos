@@ -188,3 +188,72 @@ pub fn decode_zenoh_intents_array_test() {
   first.user |> should.equal("Avi")
   first.text |> should.equal("system health")
 }
+
+pub fn evaluate_directive_help_test() {
+  let intent =
+    CognitiveIntent(
+      intent_id: "cog-help-1",
+      source: "telegram",
+      user: "Avi",
+      chat_id: "142270921",
+      text: "/help",
+      timestamp_ms: 1788978900000,
+    )
+  let decision = evaluate_intent(intent)
+  decision.intent_id |> should.equal("cog-help-1")
+  decision.reply_markdown |> string.contains("Available Operator Directives") |> should.be_true
+  decision.actions |> list.contains("show_directive_reference") |> should.be_true
+}
+
+pub fn evaluate_directive_status_test() {
+  let intent =
+    CognitiveIntent(
+      intent_id: "cog-status-1",
+      source: "telegram",
+      user: "Avi",
+      chat_id: "142270921",
+      text: "/status",
+      timestamp_ms: 1788978900000,
+    )
+  let decision = evaluate_intent(intent)
+  decision.intent_id |> should.equal("cog-status-1")
+  decision.reply_markdown |> string.contains("UOS Cluster Telemetry") |> should.be_true
+  decision.actions |> list.contains("query_zenoh") |> should.be_true
+}
+
+pub fn evaluate_directive_cockpit_test() {
+  let intent =
+    CognitiveIntent(
+      intent_id: "cog-cockpit-1",
+      source: "telegram",
+      user: "Avi",
+      chat_id: "142270921",
+      text: "/cockpit",
+      timestamp_ms: 1788978900000,
+    )
+  let decision = evaluate_intent(intent)
+  decision.intent_id |> should.equal("cog-cockpit-1")
+  decision.reply_markdown |> string.contains("nas-1.tail55d152.ts.net:4100") |> should.be_true
+}
+
+pub fn evaluate_identity_query_test() {
+  let intent =
+    CognitiveIntent(
+      intent_id: "cog-id-1",
+      source: "telegram",
+      user: "Avi",
+      chat_id: "142270921",
+      text: "who are you?",
+      timestamp_ms: 1788978900000,
+    )
+  let decision = evaluate_intent(intent)
+  decision.intent_id |> should.equal("cog-id-1")
+  decision.reply_markdown |> string.contains("UOS Sovereign Cybernetic Harness") |> should.be_true
+  decision.actions |> list.contains("respond_identity") |> should.be_true
+}
+
+pub fn actor_tick_handling_test() {
+  let state = init_worker("test-worker-3")
+  let _next = handle_message(state, cognitive_worker.Tick)
+  state.worker_id |> should.equal("test-worker-3")
+}

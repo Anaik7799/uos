@@ -43,7 +43,7 @@ The Unified Operational System (UOS) integrates three foundational corpora into 
   +------------------------------+                +------------------------------+
   | Hermes Wiki Engine           |  transclusion  | ZigVM Zettelkasten           |
   | engines/hermes/modules/      |<-------------->| docs/zk/                     |
-  |   hermes_wiki                |  [[wiki:...]]  | ADR-001..ADR-098 & MOCs      |
+  |   hermes_wiki                |  [[wiki:...]]  | ADR-001..ADR-099 & MOCs      |
   | AST, TyXML, Gospel,          |                | ADR-071..086 NOT_ADMITTED    |
   | Similarity                   |                |                              |
   +--------------+---------------+                +---------------+--------------+
@@ -76,11 +76,11 @@ graph TD
    - Bidirectional transclusion syntax `[[wiki:...]]` and similarity graph calculation (`wiki_similarity.ml`).
    - Server-side typed TyXML rendering without client JavaScript.
 2. **ZigVM Zettelkasten** (`docs/zk/`):
-   - Permanent Architectural Decision Records ([`ADR-001`](file:///home/an/NAS-setup/uos/docs/zk/20260904-150139-adr-001-closed-rete-fact-schema-and-strict-typing-invariant.md) through [`ADR-091`](file:///home/an/NAS-setup/uos/docs/zk/20260908-1630-adr-091-pure-gleam-mojo-intent-atlas-web-tui-testing.md)); 91 records, fully enumerated in [§2.2](#22-complete-decision-record-index).
+   - Permanent Architectural Decision Records ([`ADR-001`](file:///home/an/NAS-setup/uos/docs/zk/20260904-150139-adr-001-closed-rete-fact-schema-and-strict-typing-invariant.md) through [`ADR-099`](file:///home/an/NAS-setup/uos/docs/zk/20260909-2100-adr-099-maximal-gleam-autonomous-cognitive-processing.md)); 99 records, fully enumerated in [§2.2](#22-complete-decision-record-index).
    - Core Maps of Content ([`MOC-001`](file:///home/an/NAS-setup/uos/docs/zk/20260904-150212-moc-001-living-architecture-and-multi-agent-system-governance.md) through [`MOC-007`](file:///home/an/NAS-setup/uos/docs/zk/20260904-150849-moc-007-formal-verification-and-correctness-guarantees.md));
    - Topological Invariant Records ([`INV-001`](file:///home/an/NAS-setup/uos/docs/zk/20260904-150854-inv-001-two-party-cryptographic-signing-ceremony-and-tamper-evidence.md) through [`INV-006`](file:///home/an/NAS-setup/uos/docs/zk/20260904-150919-inv-006-zero-warning-and-zero-muda-compilation-gate.md)).
-   - **Contiguity**: 91/91 ADRs present, strictly contiguous, no gaps.
-   - **Traceability**: All 91 ADRs link to their respective authority.
+   - **Contiguity**: 99/99 ADRs present, strictly contiguous, no gaps.
+   - **Traceability**: All 99 ADRs link to their respective authority.
 3. **C3I Living Ontology & Evidence Plane** (`docs/wiki/`, `governance/`):
    - STAMP/STPA safety lattices, SQLite living catalogs, and 13D trace coordinates.
    - Dual-lattice STM non-interference proved in Lean 4 (`formal/lean/TwoLattice_STM.lean`).
@@ -266,6 +266,7 @@ record stays outside the quarantine range.
 | **ADR-096** | <span class="badge badge-fractal">#fractal-l0</span> | outside quarantine | [Toolchain Preflight — Denotational Semantics and the Verdict Algebra](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260909-0525-adr-096-toolchain-preflight-denotational-semantics-and-verdict-algebra.md) | [`20260909-0525-adr-096-toolchain-preflight-denotational-semantics-and-verdict-algebra.md`](file:///home/an/NAS-setup/uos/docs/zk/20260909-0525-adr-096-toolchain-preflight-denotational-semantics-and-verdict-algebra.md) |
 | **ADR-097** | <span class="badge badge-fractal">#fractal-l0</span> | outside quarantine | [Unified System Ontology, Living KM Triad, Dictionary, and Glossary Evolution](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260909-0640-adr-097-unified-system-ontology-living-km-triad-dictionary-and-glossary-evolution.md) | [`20260909-0640-adr-097-unified-system-ontology-living-km-triad-dictionary-and-glossary-evolution.md`](file:///home/an/NAS-setup/uos/docs/zk/20260909-0640-adr-097-unified-system-ontology-living-km-triad-dictionary-and-glossary-evolution.md) |
 | **ADR-098** | <span class="badge badge-fractal">#fractal-l5</span> | outside quarantine | [Sovereign Telegram Message Delegation to UOS Gleam Harness](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260909-2035-adr-098-sovereign-telegram-gleam-harness-delegation.md) | [`20260909-2035-adr-098-sovereign-telegram-gleam-harness-delegation.md`](file:///home/an/NAS-setup/uos/docs/zk/20260909-2035-adr-098-sovereign-telegram-gleam-harness-delegation.md) |
+| **ADR-099** | <span class="badge badge-fractal">#fractal-l5</span> | outside quarantine | [Maximal Gleam/OTP 29 Autonomous Cognitive Processing & In-Process OODA Loop Substrate](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260909-2100-adr-099-maximal-gleam-autonomous-cognitive-processing.md) | [`20260909-2100-adr-099-maximal-gleam-autonomous-cognitive-processing.md`](file:///home/an/NAS-setup/uos/docs/zk/20260909-2100-adr-099-maximal-gleam-autonomous-cognitive-processing.md) |
 
 [^q]: `NOT_ADMITTED` — the record asserts ratification of an EV cycle above
 `EV-93`, which the `AGENTS.md` provenance caveat places in the quarantined

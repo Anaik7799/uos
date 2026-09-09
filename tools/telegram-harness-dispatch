@@ -20,8 +20,15 @@ if [ -z "${PAYLOAD}" ]; then
   exit 1
 fi
 
+PINNED_ERL="/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/erl"
+if [ -x "${PINNED_ERL}" ]; then
+  ERL_BIN="${PINNED_ERL}"
+else
+  ERL_BIN="$(which erl)"
+fi
+
 # Invoke compiled Gleam harness module on BEAM
-exec erl -noshell \
+exec "${ERL_BIN}" -noshell \
   -pa apps/cepaf_gleam/build/dev/erlang/*/ebin \
   -eval "
 io:setopts([{encoding, utf8}]),

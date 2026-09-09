@@ -1,0 +1,54 @@
+{
+  "schema": "uos.harness-formal-state-laws.v1",
+  "title": "Unified Operational System (UOS) Successor Harness Admission State Laws",
+  "plan": "uos/harness-admission-repair/20260909-1751",
+  "task": "ADMISSION",
+  "observed_host_utc": "2026-09-09T18:50:00Z",
+  "provenance_ceiling": "EV-93",
+  "zero_muda_purity": {
+    "bevy": 0,
+    "graphite": 0,
+    "graphene_nifs": 0,
+    "paid_model_tokens": 0
+  },
+  "formal_invariants": [
+    {
+      "id": "INV-ADM-01-GRANT-IMMUTABILITY",
+      "statement": "An unreviewed, modified, or self-asserted grant cannot activate. The grant document must be equal to the reviewed proposal with review_sha256, proposal_path, and proposal_sha256 bound, validated via same_object/2.",
+      "falsifier": "A grant differing by even one field, whitespace object mutation, or unreviewed scope activates successfully."
+    },
+    {
+      "id": "INV-ADM-02-PEER-SEPARATION",
+      "statement": "The reviewer session_id must strictly differ from the grant target session_id (reviewer.session_id != document.session). Self-review is strictly rejected fail-closed.",
+      "falsifier": "An agent generates and signs its own review under identical session identity, resulting in passing validation."
+    },
+    {
+      "id": "INV-ADM-03-EXPLICIT-VERDICT",
+      "statement": "Only the explicit verdict APPROVE_DEV_TEST_SCOPE is admissible. REVISE, PENDING, or any other verdict fails closed with review_verdict error.",
+      "falsifier": "A review with verdict REVISE or non-conforming status allows successor MCP startup or task claim."
+    },
+    {
+      "id": "INV-ADM-04-RESOURCE-GRAMMAR",
+      "statement": "Task resources bound to the coordinator must strictly conform to coordinator regex [a-zA-Z0-9-_.:] with zero slashes. Hash canonical JSON {plan, task} into task:<sha256>.",
+      "falsifier": "A resource key containing raw plan slashes passes session_sync valid_resource check or is committed to coordinator."
+    },
+    {
+      "id": "INV-ADM-05-EFFECT-IDEMPOTENCY",
+      "statement": "Every mutating operation (build, test, write) requires unique intent_id. Replays of identical signatures return cached results without re-execution. Incomplete effects force explicit reconciliation.",
+      "falsifier": "An effect with the same intent_id executes side-effects twice or overwrites prior receipt bytes with differing output."
+    },
+    {
+      "id": "INV-ADM-06-TERMINAL-COMPLETION",
+      "statement": "Task completion via harness_finish requires 13-section journal, verified attestation matching exact candidate manifest and build/test receipt hashes, active risk check PASS, and canonical Sa-plan complete update.",
+      "falsifier": "A task completes in Sa-plan without valid 13-section journal, with stale build/test receipts, or without active risk pass."
+    }
+  ],
+  "algebraic_state_transitions": [
+    "UNINITIALIZED -> (initialize) -> INITIALIZED",
+    "INITIALIZED -> (harness_attach | harness_claim) -> EXECUTING",
+    "EXECUTING -> (harness_build | harness_test | harness_write_file) -> EXECUTING (receipts generated)",
+    "EXECUTING -> (harness_release) -> RELEASED (task state available)",
+    "EXECUTING -> (harness_finish) -> COMPLETED (task state completed, Sa-plan result committed)",
+    "COMPLETED -> (harness_reconcile | ops.recover) -> COMPLETED (idempotent recovery receipt)"
+  ]
+}
