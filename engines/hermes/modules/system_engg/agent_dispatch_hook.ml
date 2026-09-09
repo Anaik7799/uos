@@ -8,6 +8,16 @@ type validation_verdict =
 let max_payload_bytes = 1_048_576
 let refuse error_code reason = FailClosed { reason; error_code }
 
+type command = Self_test | Intercept of { require_authority : bool }
+
+let parse_arguments = function
+  | ["--self-test"] -> Ok Self_test
+  | ["--intercept-mcp"] -> Ok (Intercept { require_authority = false })
+  | ["--intercept-mcp"; "--enforce-dmc-tcm"]
+  | ["--enforce-dmc-tcm"; "--intercept-mcp"] ->
+      Ok (Intercept { require_authority = true })
+  | _ -> Error (refuse (-9) "Invalid or conflicting dispatch modes")
+
 let contains_nul_byte s =
   String.contains s '\x00'
 

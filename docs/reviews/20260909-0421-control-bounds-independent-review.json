@@ -1,0 +1,35 @@
+{
+  "schema": "uos.independent-development-review.v1",
+  "recorded_at": "2026-09-09T04:15:21Z",
+  "candidate": "2d6f907d59179358aebda2d202feadd1fabfe474",
+  "parent_reviewed_candidate": "31e238cb7cb440ec8d17e28df7e021522d6fb3a6",
+  "reviewer": "/root/homeostasis_change_review",
+  "decision": "APPROVED_FOR_BOUNDED_DEVELOPMENT_INTEGRATION",
+  "authority": "NO_EV_ADMISSION_OR_DEPLOYMENT",
+  "scope": ["32-entry proposal retention", "exact terminal retirement", "monotonic proposal instance sequence", "integer fractional token refill", "saturation credit discard", "time-normalized queue derivatives", "typed constructor bounds and callers"],
+  "observations": {
+    "source_hashes_independently_checked": 6,
+    "refill_combinations_independently_executed": 400,
+    "independent_refill_failures": 0,
+    "candidate_suite_tests": 79,
+    "candidate_suite_verification": "Receipt read by reviewer; not independently rerun by reviewer",
+    "runtime": "OTP 29 / ERTS 17.0.5",
+    "clean_evidence_child_observed": "21876162"
+  },
+  "completion_check": {
+    "status": "ACTIVE_OBSERVATION_PASS",
+    "observed_at": "2026-09-09T04:15:21Z",
+    "plan": "uos/ev-control-bounds/20260909",
+    "task": "BOUNDS",
+    "worker": "codex-ev-control-bounds",
+    "attempt": 1,
+    "assessment_sha256": "2160a44e55c265d2a02fa813829ac50dc63a18b1feb5e328472bd06296bf76bc",
+    "evidence_files_checked": 3,
+    "ntp_absolute_offset_seconds": 0.00073159,
+    "effect_fencing_authority": "NOT_GRANTED_BY_OBSERVATION"
+  },
+  "remaining_outside_approval": ["payload-byte limits", "applied-history bounds", "authenticated authority", "cross-restart durability", "formal refinement", "actual runtime pool actuation"],
+  "provenance_note": "Earlier test invocation receipts remain historical observations with their original invocation provenance. Onward generated automation uses OCaml, Gleam or Mojo and no Bash.",
+  "fractal_tags": ["#fractal-l0", "#fractal-l4", "#zero-muda", "#zk-adr"],
+  "navigation": "http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20260909-0421-control-bounds-independent-review.json"
+}

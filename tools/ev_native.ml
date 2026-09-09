@@ -18,8 +18,10 @@ let pinned name = match name with
   | "mojo" -> root ^ "/services/inference/max/.pixi/envs/default/bin/mojo"
   | _ -> failwith ("unknown native tool: " ^ name)
 let env () =
+  (* Keep the already-installed OCaml compiler's native linker search paths.
+     These are recorded below, not represented as a reproducible release closure. *)
   let inherited = ["HOME"; "XDG_RUNTIME_DIR"; "DBUS_SESSION_BUS_ADDRESS";
-    "SSL_CERT_FILE"; "NIX_SSL_CERT_FILE"] |> List.filter_map (fun key ->
+    "SSL_CERT_FILE"; "NIX_SSL_CERT_FILE"; "LIBRARY_PATH"; "LD_LIBRARY_PATH"] |> List.filter_map (fun key ->
       Option.map (fun value -> key ^ "=" ^ value) (Sys.getenv_opt key)) in
   Array.of_list ([
     "PATH=" ^ tc ^ "/nix-profile/bin:" ^ tc ^ "/gleam-1.16.0/bin:"
@@ -68,7 +70,16 @@ let command tool args = match tool, args with
   | _ -> failwith "unsupported command or argument shape"
 let status_code = function
   | Unix.WEXITED code -> code
-  | Unix.WSIGNALED signal | Unix.WSTOPPED signal -> 128 + signal
+  (* OCaml's portable signal constants can be negative. Preserve the actual
+     termination below; 125 means the child did not return a normal exit code. *)
+  | Unix.WSIGNALED _ | Unix.WSTOPPED _ -> 125
+let termination = function
+  | None -> `Assoc ["kind", `String "UNOBSERVED"]
+  | Some (Unix.WEXITED code) -> `Assoc ["kind", `String "EXITED"; "code", `Int code]
+  | Some (Unix.WSIGNALED signal) ->
+      `Assoc ["kind", `String "SIGNALED"; "ocaml_portable_signal", `Int signal]
+  | Some (Unix.WSTOPPED signal) ->
+      `Assoc ["kind", `String "STOPPED"; "ocaml_portable_signal", `Int signal]
 let ignore_missing_process f = try f () with Unix.Unix_error (Unix.ESRCH, _, _) -> ()
 let run cwd seconds input executable args =
   require (seconds > 0. && seconds <= 240.) "seconds must be within (0,240]";
@@ -113,6 +124,9 @@ let run cwd seconds input executable args =
           with Unix.Unix_error ((Unix.EAGAIN | Unix.EWOULDBLOCK | Unix.EINTR), _, _) -> ()
       done
     with error -> reason := Some (Printexc.to_string error); terminate ());
+  (* Reap the direct child above and contain any descendants still in its
+     process group. Deliberate session escape is outside this local adapter. *)
+  ignore_missing_process (fun () -> Unix.kill (-pid) Sys.sigkill);
   let output = Buffer.contents buffer in
   let code = match !reason, !status with
     | Some _, _ -> 124 | None, Some result -> status_code result | _ -> 125 in
@@ -124,24 +138,41 @@ let run cwd seconds input executable args =
     "utc_started", `Float utc_started; "utc_finished", `Float (Unix.gettimeofday ());
     "elapsed_seconds", `Float (mono () -. started); "deadline_seconds", `Float seconds;
     "exit_code", `Int code; "output", `String output; "output_sha256", `String (digest output);
+    "child_termination", termination !status;
     "failure", (match !reason with None -> `Null | Some value -> `String value);
     "clock_synchronization", `String "NOT_CHECKED_BY_ADAPTER";
+    "inherited_linker_paths", `Assoc (List.filter_map (fun key ->
+      Option.map (fun value -> key, `String value) (Sys.getenv_opt key))
+      ["LIBRARY_PATH"; "LD_LIBRARY_PATH"]);
+    "reproducible_release_closure", `String "NOT_ESTABLISHED";
     "scope", `String "Invocation observation only; no candidate or producer authentication"] in
   code, output, receipt
-let write_new path json =
+let reserve_receipt path =
   let fd = Unix.openfile path [Unix.O_WRONLY; Unix.O_CREAT; Unix.O_EXCL] 0o600 in
-  let channel = Unix.out_channel_of_descr fd in
-  Fun.protect ~finally:(fun () -> close_out_noerr channel) (fun () ->
-    output_string channel (Yojson.Safe.pretty_to_string json ^ "\n");
-    flush channel; Unix.fsync fd)
+  Unix.set_close_on_exec fd;
+  fd, Unix.out_channel_of_descr fd
+let write_receipt (fd, channel) json =
+  output_string channel (Yojson.Safe.pretty_to_string json ^ "\n");
+  flush channel; Unix.fsync fd
 let execute cwd seconds receipt input tool args =
   try
     let executable, args = command tool args in
-    let code, output, observation = run cwd seconds input executable args in
-    Option.iter (fun path -> write_new path observation) receipt;
-    print_string output; flush stdout;
-    if code <> 0 then prerr_endline ("native invocation exited " ^ string_of_int code);
-    code
+    (* An unusable receipt destination must refuse before any child effect. *)
+    let reserved = Option.map reserve_receipt receipt in
+    Fun.protect ~finally:(fun () -> Option.iter (fun (_, ch) -> close_out_noerr ch) reserved)
+      (fun () ->
+        let code, output, observation = run cwd seconds input executable args in
+        print_string output; flush stdout;
+        if code <> 0 then prerr_endline ("native invocation exited " ^ string_of_int code);
+        try
+          Option.iter (fun target -> write_receipt target observation) reserved;
+          code
+        with error ->
+          prerr_endline (Printf.sprintf
+            "AFTER_EXECUTION_RECEIPT_FAILURE: child outcome %d is retained above; do not infer that effects were absent or automatically retry: %s"
+            code (Printexc.to_string error));
+          prerr_endline (Yojson.Safe.to_string observation);
+          125)
   with error -> prerr_endline (Printexc.to_string error); 2
 let () =
   let open Cmdliner in

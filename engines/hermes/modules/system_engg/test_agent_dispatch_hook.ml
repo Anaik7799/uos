@@ -29,6 +29,16 @@ let () =
   check "enforcement flag cannot be satisfied by a payload filter"
     (match validate_tool_payload ~require_authority:true valid with
      | FailClosed {error_code=(-5);_}->true|_->false);
+  let invalid args = match parse_arguments args with
+    | Error (FailClosed {error_code=(-9);_}) -> true | _ -> false in
+  check "mixed self-test and enforcement modes rejected"
+    (invalid ["--self-test";"--intercept-mcp";"--enforce-dmc-tcm"]);
+  check "unknown dispatch option rejected" (invalid ["--intercept-mcp";"--unknown"]);
+  check "enforcement without intercept rejected" (invalid ["--enforce-dmc-tcm"]);
+  check "duplicate dispatch option rejected" (invalid ["--intercept-mcp";"--intercept-mcp"]);
+  check "enforcement ordering preserves authority requirement"
+    (parse_arguments ["--intercept-mcp";"--enforce-dmc-tcm"] = Ok (Intercept {require_authority=true})
+      && parse_arguments ["--enforce-dmc-tcm";"--intercept-mcp"] = Ok (Intercept {require_authority=true}));
   let r,w=Unix.pipe () in
   let exact="first\r\nsecond\n" in
   ignore(Unix.write_substring w exact 0 (String.length exact));Unix.close w;
