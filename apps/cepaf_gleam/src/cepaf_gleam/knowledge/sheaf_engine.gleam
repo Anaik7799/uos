@@ -20,7 +20,27 @@
 import gleam/float
 import gleam/int
 import gleam/list
+import gleam/result
 import gleam/string
+
+/// Bounds for the in-memory directed simple graph, including self-links.
+pub const max_nodes = 64
+
+pub const max_edges = 256
+
+pub const max_id_bytes = 256
+
+pub const max_text_bytes = 1024
+
+pub const max_tags = 16
+
+pub type GraphError {
+  NodeLimit
+  EdgeLimit
+  MetadataLimit
+  InvalidGraph
+  MissingNode(String)
+}
 
 /// Document category in the KM Triad.
 pub type SheafDocType {
@@ -44,7 +64,9 @@ pub type SheafNode {
   )
 }
 
-/// Sheaf hypergraph containing interconnected KM artifacts.
+/// Legacy public record for a bounded directed knowledge graph. The score is
+/// adjacency reciprocity, not a mathematical cohomology or corpus-truth proof.
+/// Prefer checked operations; public record construction alone is unvalidated.
 pub type SheafGraph {
   SheafGraph(
     nodes: List(SheafNode),
@@ -130,53 +152,197 @@ pub fn init_sheaf_graph() -> SheafGraph {
       centrality_score: 0.94,
     )
 
-  SheafGraph(
-    nodes: [adr77, adr76, adr75, wiki_moc, stamp_sil6],
-    total_transclusions: 7,
-    cohomology_score: 0.985,
-  )
+  rebuild([adr77, adr76, adr75, wiki_moc, stamp_sil6])
 }
 
-/// Add or update a node in the sheaf graph.
-pub fn add_node(graph: SheafGraph, node: SheafNode) -> SheafGraph {
+// Traversal stops at limit+1; do not take unbounded list lengths first.
+fn within(items: List(a), remaining: Int) -> Bool {
+  case items {
+    [] -> True
+    [_, ..rest] -> remaining > 0 && within(rest, remaining - 1)
+  }
+}
+
+fn unique(items: List(String)) -> Bool {
+  case items {
+    [] -> True
+    [first, ..rest] -> !list.contains(rest, first) && unique(rest)
+  }
+}
+
+fn valid_id(id: String) -> Bool {
+  id != "" && string.byte_size(id) <= max_id_bytes
+}
+
+fn node_shape(node: SheafNode) -> Result(Nil, GraphError) {
+  case
+    within(node.tags, max_tags)
+    && within(node.outbound_transclusions, max_nodes)
+    && within(node.inbound_references, max_nodes)
+    && valid_id(node.id)
+    && string.byte_size(node.title) <= max_text_bytes
+    && string.byte_size(node.fractal_layer) <= max_text_bytes
+    && list.all(node.tags, fn(t) { string.byte_size(t) <= max_text_bytes })
+    && list.all(node.outbound_transclusions, valid_id)
+    && list.all(node.inbound_references, valid_id)
+    && node.centrality_score >=. 0.0
+    && node.centrality_score <=. 1.0
+  {
+    True -> Ok(Nil)
+    False -> Error(MetadataLimit)
+  }
+}
+
+fn shape(graph: SheafGraph) -> Result(Nil, GraphError) {
+  use _ <- result.try(case within(graph.nodes, max_nodes) {
+    True -> Ok(Nil)
+    False -> Error(NodeLimit)
+  })
+  use _ <- result.try(list.try_each(graph.nodes, node_shape))
+  let references =
+    list.fold(graph.nodes, 0, fn(n, node) {
+      n
+      + list.length(node.outbound_transclusions)
+      + list.length(node.inbound_references)
+    })
+  case references <= max_edges * 2 {
+    True -> Ok(Nil)
+    False -> Error(EdgeLimit)
+  }
+}
+
+fn edge_count(nodes: List(SheafNode)) -> Int {
+  list.fold(nodes, 0, fn(n, node) {
+    n + list.length(node.outbound_transclusions)
+  })
+}
+
+/// Validate public record constructors before using them as a graph. Cached
+/// fields must match the actual reciprocal adjacency; externally built values
+/// are not trusted merely because they have the SheafGraph type.
+pub fn validate_graph(graph: SheafGraph) -> Result(Nil, GraphError) {
+  use _ <- result.try(shape(graph))
+  let count = edge_count(graph.nodes)
+  case count > max_edges {
+    True -> Error(EdgeLimit)
+    False ->
+      case
+        compute_cohomology_consistency(graph) == 1.0
+        && graph.total_transclusions == count
+        && graph.cohomology_score == 1.0
+      {
+        True -> Ok(Nil)
+        False -> Error(InvalidGraph)
+      }
+  }
+}
+
+fn rebuild(nodes: List(SheafNode)) -> SheafGraph {
+  let updated =
+    list.map(nodes, fn(node) {
+      let inbound =
+        list.filter_map(nodes, fn(source) {
+          case list.contains(source.outbound_transclusions, node.id) {
+            True -> Ok(source.id)
+            False -> Error(Nil)
+          }
+        })
+      SheafNode(..node, inbound_references: list.sort(inbound, string.compare))
+    })
+  let graph = SheafGraph(updated, edge_count(updated), 0.0)
+  SheafGraph(..graph, cohomology_score: compute_cohomology_consistency(graph))
+}
+
+/// Replace metadata and outgoing edges for this ID. Existing edges from other
+/// nodes are retained. The input inbound_references is a bounded cache field,
+/// ignored and rebuilt from all outgoing edges. Missing targets and duplicate
+/// outgoing IDs are refused; self-links are allowed and counted once.
+pub fn try_add_node(
+  graph: SheafGraph,
+  node: SheafNode,
+) -> Result(SheafGraph, GraphError) {
+  use _ <- result.try(validate_graph(graph))
+  use _ <- result.try(node_shape(node))
+  use _ <- result.try(case unique(node.outbound_transclusions) {
+    True -> Ok(Nil)
+    False -> Error(InvalidGraph)
+  })
   let filtered = list.filter(graph.nodes, fn(n) { n.id != node.id })
-  SheafGraph(..graph, nodes: [node, ..filtered])
+  use _ <- result.try(case list.length(filtered) < max_nodes {
+    True -> Ok(Nil)
+    False -> Error(NodeLimit)
+  })
+  let nodes = [node, ..filtered]
+  use _ <- result.try(
+    list.try_each(node.outbound_transclusions, fn(target) {
+      case list.any(nodes, fn(n) { n.id == target }) {
+        True -> Ok(Nil)
+        False -> Error(MissingNode(target))
+      }
+    }),
+  )
+  case edge_count(nodes) <= max_edges {
+    True -> Ok(rebuild(nodes))
+    False -> Error(EdgeLimit)
+  }
 }
 
-/// Add a bidirectional transclusion link between two nodes in the sheaf.
+/// Compatibility wrapper: any checked refusal returns the original graph.
+/// Use try_add_node when a caller needs the reason for refusal.
+pub fn add_node(graph: SheafGraph, node: SheafNode) -> SheafGraph {
+  result.unwrap(try_add_node(graph, node), graph)
+}
+
+/// Compatibility wrapper for a directed edge and its reciprocal inbound index.
+/// Any checked refusal preserves the complete original graph.
 pub fn add_transclusion(
   graph: SheafGraph,
   from_id: String,
   to_id: String,
 ) -> SheafGraph {
-  let updated_nodes =
-    list.map(graph.nodes, fn(n) {
-      case n.id == from_id {
-        True -> {
-          let outs = case list.contains(n.outbound_transclusions, to_id) {
-            True -> n.outbound_transclusions
-            False -> [to_id, ..n.outbound_transclusions]
-          }
-          SheafNode(..n, outbound_transclusions: outs)
-        }
-        False ->
-          case n.id == to_id {
-            True -> {
-              let ins = case list.contains(n.inbound_references, from_id) {
-                True -> n.inbound_references
-                False -> [from_id, ..n.inbound_references]
-              }
-              SheafNode(..n, inbound_references: ins)
-            }
-            False -> n
-          }
-      }
-    })
-  SheafGraph(
-    ..graph,
-    nodes: updated_nodes,
-    total_transclusions: graph.total_transclusions + 1,
+  result.unwrap(try_add_transclusion(graph, from_id, to_id), graph)
+}
+
+pub fn try_add_transclusion(
+  graph: SheafGraph,
+  from_id: String,
+  to_id: String,
+) -> Result(SheafGraph, GraphError) {
+  use _ <- result.try(validate_graph(graph))
+  use _ <- result.try(case valid_id(from_id) && valid_id(to_id) {
+    True -> Ok(Nil)
+    False -> Error(MetadataLimit)
+  })
+  use source <- result.try(
+    list.find(graph.nodes, fn(n) { n.id == from_id })
+    |> result.map_error(fn(_) { MissingNode(from_id) }),
   )
+  use _ <- result.try(case list.any(graph.nodes, fn(n) { n.id == to_id }) {
+    True -> Ok(Nil)
+    False -> Error(MissingNode(to_id))
+  })
+  case list.contains(source.outbound_transclusions, to_id) {
+    True -> Ok(graph)
+    False ->
+      case graph.total_transclusions < max_edges {
+        False -> Error(EdgeLimit)
+        True ->
+          Ok(
+            rebuild(
+              list.map(graph.nodes, fn(n) {
+                case n.id == from_id {
+                  True ->
+                    SheafNode(..n, outbound_transclusions: [
+                      to_id,
+                      ..n.outbound_transclusions
+                    ])
+                  False -> n
+                }
+              }),
+            ),
+          )
+      }
+  }
 }
 
 /// Lookup all transcluded neighbor nodes for a given node.
@@ -184,6 +350,13 @@ pub fn lookup_transclusions(
   graph: SheafGraph,
   node_id: String,
 ) -> List(SheafNode) {
+  case validate_graph(graph) {
+    Error(_) -> []
+    Ok(_) -> lookup_valid(graph, node_id)
+  }
+}
+
+fn lookup_valid(graph: SheafGraph, node_id: String) -> List(SheafNode) {
   case list.find(graph.nodes, fn(n) { n.id == node_id }) {
     Ok(target) -> {
       list.filter(graph.nodes, fn(n) {
@@ -197,6 +370,21 @@ pub fn lookup_transclusions(
 
 /// Execute fast semantic query matching titles, tags, and content keywords.
 pub fn semantic_search(
+  graph: SheafGraph,
+  query: String,
+  min_relevance: Float,
+) -> List(QueryResult) {
+  case validate_graph(graph) {
+    Error(_) -> []
+    Ok(_) ->
+      case string.byte_size(query) <= max_text_bytes {
+        True -> search_valid(graph, query, min_relevance)
+        False -> []
+      }
+  }
+}
+
+fn search_valid(
   graph: SheafGraph,
   query: String,
   min_relevance: Float,
@@ -229,13 +417,11 @@ pub fn semantic_search(
 
       case total_score >=. min_relevance {
         True ->
-          Ok(
-            QueryResult(
-              node: n,
-              relevance_score: total_score,
-              transclusion_chain: n.outbound_transclusions,
-            ),
-          )
+          Ok(QueryResult(
+            node: n,
+            relevance_score: total_score,
+            transclusion_chain: n.outbound_transclusions,
+          ))
         False -> Error(Nil)
       }
     })
@@ -245,27 +431,48 @@ pub fn semantic_search(
   })
 }
 
-/// Compute Sheaf Cohomology Gluing Consistency: ratio of matched bidirectional links.
+/// Observed reciprocal-adjacency ratio, not mathematical sheaf cohomology.
+/// Each distinct outgoing edge with exactly one reciprocal inbound entry counts
+/// two matched adjacency entries. Dangling, one-sided and duplicate entries add
+/// to the denominator without matching. Isolated nodes do not inflate the score.
+/// Empty well-shaped graphs score 1; malformed IDs/over-budget graphs score 0.
+/// The historic field/function name remains for source compatibility.
 pub fn compute_cohomology_consistency(graph: SheafGraph) -> Float {
-  let total_nodes = list.length(graph.nodes)
-  case total_nodes == 0 {
-    True -> 1.0
-    False -> {
-      let consistency_sum =
-        list.fold(graph.nodes, 0.0, fn(acc, n) {
-          let out_count = list.length(n.outbound_transclusions)
-          case out_count == 0 {
-            True -> acc +. 1.0
-            False -> {
-              let valid_targets =
-                list.count(n.outbound_transclusions, fn(out_id) {
-                  list.any(graph.nodes, fn(cand) { cand.id == out_id })
+  case shape(graph) {
+    Error(_) -> 0.0
+    Ok(_) ->
+      case unique(list.map(graph.nodes, fn(n) { n.id })) {
+        False -> 0.0
+        True -> {
+          let total =
+            list.fold(graph.nodes, 0, fn(acc, n) {
+              acc
+              + list.length(n.outbound_transclusions)
+              + list.length(n.inbound_references)
+            })
+          let matched =
+            list.fold(graph.nodes, 0, fn(acc, source) {
+              acc
+              + 2
+              * list.count(source.outbound_transclusions, fn(target_id) {
+                list.count(source.outbound_transclusions, fn(id) {
+                  id == target_id
                 })
-              acc +. int.to_float(valid_targets) /. int.to_float(out_count)
-            }
+                == 1
+                && list.any(graph.nodes, fn(target) {
+                  target.id == target_id
+                  && list.count(target.inbound_references, fn(id) {
+                    id == source.id
+                  })
+                  == 1
+                })
+              })
+            })
+          case total {
+            0 -> 1.0
+            _ -> int.to_float(matched) /. int.to_float(total)
           }
-        })
-      consistency_sum /. int.to_float(total_nodes)
-    }
+        }
+      }
   }
 }
