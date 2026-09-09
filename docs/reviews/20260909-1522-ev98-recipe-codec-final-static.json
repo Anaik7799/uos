@@ -1,0 +1,22 @@
+{
+  "schema": "uos.ev98.recipe-codec.static-controls.v1",
+  "checks": [
+    "baseline case sequence equals reviewed v1 source, not just its size",
+    "baseline acceptance and policy pairs equal reviewed v1 source",
+    "source declaration adds only the reviewed mesh_wire module",
+    "every actual exported codec test is declared in source order",
+    "codec acceptance digest matches reviewed file bytes",
+    "all declared cases have exactly one matching public function",
+    "all preexisting dependency bytes and tools remain pinned identically",
+    "fixed source and acceptance paths are unique",
+    "every staged source and test import resolves inside the closed module or dependency set",
+    "unique exact source anchor: queue-capacity",
+    "unique exact source anchor: physical-health-order",
+    "unique exact source anchor: nonforward-deadman-time",
+    "unique exact source anchor: codec-physical-sample"
+  ],
+  "declared_cases": 76,
+  "current_recipe_source_sha256": "3a983cf37167d89af4986d40490c956a1d16cb2bcd8282e957d51ed302d347a7",
+  "reviewed_v1_recipe_source_sha256": "5d96c9e948e3196b521f46b035868aae086885342cf157b3c5e41148d614de25",
+  "limits": "Static completeness only; does not replace final actual combined campaign or designated mutant execution"
+}

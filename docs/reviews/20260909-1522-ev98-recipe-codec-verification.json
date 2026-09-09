@@ -1,0 +1,1223 @@
+{
+  "schema": "uos.ev98.recipe-codec.verification.v1",
+  "observed_at": "2026-09-09T15:20:22Z",
+  "source_revision": "dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93",
+  "source_binding": {
+    "path": "docs/reviews/20260909-1522-ev98-recipe-codec-source-binding.json",
+    "sha256": "dd1e84518fb3a3a8df88361a1d7630f382ded601c16abf627f33f592d4199e90",
+    "bytes": 1476
+  },
+  "campaign": {
+    "path": "docs/reviews/20260909-1522-ev98-recipe-codec-observed.json",
+    "sha256": "ccdbd1457f9ad376af98de1434bc9988aa2a35301091caf470de18c2040d8645",
+    "bytes": 177484
+  },
+  "native_receipts": [
+    {
+      "path": "docs/reviews/20260909-1522-ev98-recipe-codec-final-build.json",
+      "sha256": "dae86c4a96c11c28e932fa991e65c2167376a54db30935dd5966b39afce328cb",
+      "bytes": 2286
+    },
+    {
+      "path": "docs/reviews/20260909-1522-ev98-recipe-codec-final-unit.json",
+      "sha256": "b4cf2a3f3348c2e68c93217e96f3d216df3387cb4e84345c0075d4f2a1edc875",
+      "bytes": 2998
+    },
+    {
+      "path": "docs/reviews/20260909-1522-ev98-recipe-codec-final-cli.json",
+      "sha256": "9afe71d695b60049eec8667992fbc54defca5e92fc0c06ead655171c4c7b4d81",
+      "bytes": 3408
+    },
+    {
+      "path": "docs/reviews/20260909-1522-ev98-recipe-codec-final-static.json",
+      "sha256": "421f340baad29d32e4cbe0ee45e0f5ea8f7a8d6a5f432ce02f4628a8119127b0",
+      "bytes": 1279
+    },
+    {
+      "path": "docs/reviews/20260909-1522-ev98-recipe-codec-final-exec-trace.txt",
+      "sha256": "fec76726d79f66cfc5b18ee1a916910e3f878197b3517746a8bcda1d101889ca",
+      "bytes": 140583
+    },
+    {
+      "path": "docs/reviews/20260909-1522-ev98-recipe-codec-final-trace-audit.json",
+      "sha256": "d4b8998f206c827b770c560b6b6064865a7068fd975220ab4a319244de621279",
+      "bytes": 3838
+    },
+    {
+      "path": "docs/reviews/20260909-1522-ev98-recipe-codec-final-active.json",
+      "sha256": "89409eaa8d0d2f28af467ccb5f9140a99acb0dce4ff1f6edbc99f62a081a3c8f",
+      "bytes": 4077
+    },
+    {
+      "path": "docs/reviews/20260909-1522-ev98-recipe-codec-sync-independent-approval.json",
+      "sha256": "287b419f76f5a1b1fbc2468d3b41b9d8acd319a5d8cbf35d1825276d7d87bc92",
+      "bytes": 7352
+    },
+    {
+      "path": "docs/reviews/20260909-1522-ev98-recipe-codec-final-receipt-regressions.json",
+      "sha256": "29690454b14d1ac05a649b3e988d629e25b0b67f235284e5fc7265ac98fd1164",
+      "bytes": 4508
+    }
+  ],
+  "compiled_artifacts": [
+    {
+      "path": "/tmp/ev-recipe-codec-final-build/default/ev_receipt.exe",
+      "sha256": "6a291776d9af849fe159c438597faec40f693c7d1dda599d1af687247d61ee06",
+      "bytes": 5696368
+    },
+    {
+      "path": "/tmp/ev-recipe-codec-final-build/default/campaign_test.exe",
+      "sha256": "6ea49a9c4b051766d580a3977729165e9dd4529b831b87c03089c78c414cfcd7",
+      "bytes": 5753496
+    },
+    {
+      "path": "/tmp/ev-recipe-codec-final-build/default/receipt_test.exe",
+      "sha256": "c7699fdcd005bca057c18aa2a77cafadaa41c4ec179fd17f2f6f28c019b23a22",
+      "bytes": 5599440
+    }
+  ],
+  "durable_output_copies": [
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-0.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-5b432372b89a406e367f2e0506278d69a127ad3ce653fd9b591b7cb34588c86a.txt",
+        "sha256": "5b432372b89a406e367f2e0506278d69a127ad3ce653fd9b591b7cb34588c86a",
+        "bytes": 41
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-0.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-dea74958e084ad0079a3eeab411e5908e095e40a8d87269c6cbfd5b24d409d0a.txt",
+        "sha256": "dea74958e084ad0079a3eeab411e5908e095e40a8d87269c6cbfd5b24d409d0a",
+        "bytes": 247
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-0.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-323bc1e6fed50fa43047de851a0308a7485589bc0c8fd4492a45a7412c2cec96.txt",
+        "sha256": "323bc1e6fed50fa43047de851a0308a7485589bc0c8fd4492a45a7412c2cec96",
+        "bytes": 288
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-1.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-25a2d2adfd0932550d30a9045aac0c6838e1dc3c5fe87490e00db224e2f33c25.txt",
+        "sha256": "25a2d2adfd0932550d30a9045aac0c6838e1dc3c5fe87490e00db224e2f33c25",
+        "bytes": 61
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-1.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-1.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-25a2d2adfd0932550d30a9045aac0c6838e1dc3c5fe87490e00db224e2f33c25.txt",
+        "sha256": "25a2d2adfd0932550d30a9045aac0c6838e1dc3c5fe87490e00db224e2f33c25",
+        "bytes": 61
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-2.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-76a035fc3441331a25eceb4ad7c29c52e8ad8e8079a3788887ad32c33933f8f1.txt",
+        "sha256": "76a035fc3441331a25eceb4ad7c29c52e8ad8e8079a3788887ad32c33933f8f1",
+        "bytes": 9124
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-2.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-2.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-76a035fc3441331a25eceb4ad7c29c52e8ad8e8079a3788887ad32c33933f8f1.txt",
+        "sha256": "76a035fc3441331a25eceb4ad7c29c52e8ad8e8079a3788887ad32c33933f8f1",
+        "bytes": 9124
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-3.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-50aaf89e33c97c7fddc2fb72a257707159891bb74c381d6aff5497d8d9169367.txt",
+        "sha256": "50aaf89e33c97c7fddc2fb72a257707159891bb74c381d6aff5497d8d9169367",
+        "bytes": 63
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-3.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-3.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-50aaf89e33c97c7fddc2fb72a257707159891bb74c381d6aff5497d8d9169367.txt",
+        "sha256": "50aaf89e33c97c7fddc2fb72a257707159891bb74c381d6aff5497d8d9169367",
+        "bytes": 63
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-4.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-8c11774981bcd6806b3154a8c7ec0edab378750258a9259882323fe0e8dbad76.txt",
+        "sha256": "8c11774981bcd6806b3154a8c7ec0edab378750258a9259882323fe0e8dbad76",
+        "bytes": 6541
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-4.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-4.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-8c11774981bcd6806b3154a8c7ec0edab378750258a9259882323fe0e8dbad76.txt",
+        "sha256": "8c11774981bcd6806b3154a8c7ec0edab378750258a9259882323fe0e8dbad76",
+        "bytes": 6541
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-5.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-4d0bbcd3d88c72e9b56a5e801a4e63d9031613b91620766bf7e33fef8861eacd.txt",
+        "sha256": "4d0bbcd3d88c72e9b56a5e801a4e63d9031613b91620766bf7e33fef8861eacd",
+        "bytes": 59
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-5.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-5.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-4d0bbcd3d88c72e9b56a5e801a4e63d9031613b91620766bf7e33fef8861eacd.txt",
+        "sha256": "4d0bbcd3d88c72e9b56a5e801a4e63d9031613b91620766bf7e33fef8861eacd",
+        "bytes": 59
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-6.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-5ad7dfef1c5600546957b8f590e8b12a0b75f9b274fc5b88810a207c935a6146.txt",
+        "sha256": "5ad7dfef1c5600546957b8f590e8b12a0b75f9b274fc5b88810a207c935a6146",
+        "bytes": 16023
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-6.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-6.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-5ad7dfef1c5600546957b8f590e8b12a0b75f9b274fc5b88810a207c935a6146.txt",
+        "sha256": "5ad7dfef1c5600546957b8f590e8b12a0b75f9b274fc5b88810a207c935a6146",
+        "bytes": 16023
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-7.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-d966fbba2c7fa784c9a8947e43b013f9e161c45be32406d872cb3e64f30e5a00.txt",
+        "sha256": "d966fbba2c7fa784c9a8947e43b013f9e161c45be32406d872cb3e64f30e5a00",
+        "bytes": 59
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-7.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-7.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-d966fbba2c7fa784c9a8947e43b013f9e161c45be32406d872cb3e64f30e5a00.txt",
+        "sha256": "d966fbba2c7fa784c9a8947e43b013f9e161c45be32406d872cb3e64f30e5a00",
+        "bytes": 59
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-8.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-887768b27f41b9e5531d4bdae2ee097e1cd0e622431dd1cb0b5dc29d42ee9de1.txt",
+        "sha256": "887768b27f41b9e5531d4bdae2ee097e1cd0e622431dd1cb0b5dc29d42ee9de1",
+        "bytes": 5865
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-8.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-8.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-887768b27f41b9e5531d4bdae2ee097e1cd0e622431dd1cb0b5dc29d42ee9de1.txt",
+        "sha256": "887768b27f41b9e5531d4bdae2ee097e1cd0e622431dd1cb0b5dc29d42ee9de1",
+        "bytes": 5865
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-9.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-7212dcd38c171ca3fc9de549c4e0012a0e0e9b344c59ba2d887e2ad80ce8048b.txt",
+        "sha256": "7212dcd38c171ca3fc9de549c4e0012a0e0e9b344c59ba2d887e2ad80ce8048b",
+        "bytes": 67
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-9.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-9.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-7212dcd38c171ca3fc9de549c4e0012a0e0e9b344c59ba2d887e2ad80ce8048b.txt",
+        "sha256": "7212dcd38c171ca3fc9de549c4e0012a0e0e9b344c59ba2d887e2ad80ce8048b",
+        "bytes": 67
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-10.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-05aa33ffb9318a5d7bcde2b72d30f2495757a33abdc28d843e27f3005aacdbde.txt",
+        "sha256": "05aa33ffb9318a5d7bcde2b72d30f2495757a33abdc28d843e27f3005aacdbde",
+        "bytes": 13593
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-10.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-10.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-05aa33ffb9318a5d7bcde2b72d30f2495757a33abdc28d843e27f3005aacdbde.txt",
+        "sha256": "05aa33ffb9318a5d7bcde2b72d30f2495757a33abdc28d843e27f3005aacdbde",
+        "bytes": 13593
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-11.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-469583bcacab704541822713cf3f194c080d079b1f0c5b1aaa65cb6325792967.txt",
+        "sha256": "469583bcacab704541822713cf3f194c080d079b1f0c5b1aaa65cb6325792967",
+        "bytes": 65
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-11.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-11.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-469583bcacab704541822713cf3f194c080d079b1f0c5b1aaa65cb6325792967.txt",
+        "sha256": "469583bcacab704541822713cf3f194c080d079b1f0c5b1aaa65cb6325792967",
+        "bytes": 65
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-12.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-2b40cb70a185e96a8128e1babef752fab467655d22cd0b11f0bcf62b17bdee50.txt",
+        "sha256": "2b40cb70a185e96a8128e1babef752fab467655d22cd0b11f0bcf62b17bdee50",
+        "bytes": 8503
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-12.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-12.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-2b40cb70a185e96a8128e1babef752fab467655d22cd0b11f0bcf62b17bdee50.txt",
+        "sha256": "2b40cb70a185e96a8128e1babef752fab467655d22cd0b11f0bcf62b17bdee50",
+        "bytes": 8503
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-13.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-1263e483a884aa65faf81b6fb2c73243b1a023f08e21dd4c45a970a9722a657e.txt",
+        "sha256": "1263e483a884aa65faf81b6fb2c73243b1a023f08e21dd4c45a970a9722a657e",
+        "bytes": 56
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-13.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-13.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-1263e483a884aa65faf81b6fb2c73243b1a023f08e21dd4c45a970a9722a657e.txt",
+        "sha256": "1263e483a884aa65faf81b6fb2c73243b1a023f08e21dd4c45a970a9722a657e",
+        "bytes": 56
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-14.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-de5dc4bcf33a89cc30adce1ed559c69b431e2bc063307345a861fde07fdc784f.txt",
+        "sha256": "de5dc4bcf33a89cc30adce1ed559c69b431e2bc063307345a861fde07fdc784f",
+        "bytes": 19535
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-14.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-14.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-de5dc4bcf33a89cc30adce1ed559c69b431e2bc063307345a861fde07fdc784f.txt",
+        "sha256": "de5dc4bcf33a89cc30adce1ed559c69b431e2bc063307345a861fde07fdc784f",
+        "bytes": 19535
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-15.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-9dcafe85c0f3308fe425e91de4b07fb473d67ef280301e56e356f983697431ae.txt",
+        "sha256": "9dcafe85c0f3308fe425e91de4b07fb473d67ef280301e56e356f983697431ae",
+        "bytes": 56
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-15.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-15.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-9dcafe85c0f3308fe425e91de4b07fb473d67ef280301e56e356f983697431ae.txt",
+        "sha256": "9dcafe85c0f3308fe425e91de4b07fb473d67ef280301e56e356f983697431ae",
+        "bytes": 56
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-16.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e6ea49acee8d58d076087f2ebd6dcbdc738ba0883ee76f21b475ef2b1df3e138.txt",
+        "sha256": "e6ea49acee8d58d076087f2ebd6dcbdc738ba0883ee76f21b475ef2b1df3e138",
+        "bytes": 7218
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-16.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-16.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e6ea49acee8d58d076087f2ebd6dcbdc738ba0883ee76f21b475ef2b1df3e138.txt",
+        "sha256": "e6ea49acee8d58d076087f2ebd6dcbdc738ba0883ee76f21b475ef2b1df3e138",
+        "bytes": 7218
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-17.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-5c684fefe91b4c1e87f5a2f2d8e8ce452653f755cfc874d69cdc101990aa720f.txt",
+        "sha256": "5c684fefe91b4c1e87f5a2f2d8e8ce452653f755cfc874d69cdc101990aa720f",
+        "bytes": 57
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-17.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-17.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-5c684fefe91b4c1e87f5a2f2d8e8ce452653f755cfc874d69cdc101990aa720f.txt",
+        "sha256": "5c684fefe91b4c1e87f5a2f2d8e8ce452653f755cfc874d69cdc101990aa720f",
+        "bytes": 57
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-18.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-c9f10351c62d927277943ca9ec1a7c2f2fd3491f80d22ea1d892a0713eb5852d.txt",
+        "sha256": "c9f10351c62d927277943ca9ec1a7c2f2fd3491f80d22ea1d892a0713eb5852d",
+        "bytes": 2248
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-18.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-18.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-c9f10351c62d927277943ca9ec1a7c2f2fd3491f80d22ea1d892a0713eb5852d.txt",
+        "sha256": "c9f10351c62d927277943ca9ec1a7c2f2fd3491f80d22ea1d892a0713eb5852d",
+        "bytes": 2248
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-19.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-4e8dfebef99ab3094c7d80be76741ac47d6a041f7c9455c54ef290713287d391.txt",
+        "sha256": "4e8dfebef99ab3094c7d80be76741ac47d6a041f7c9455c54ef290713287d391",
+        "bytes": 53
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-19.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-19.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-4e8dfebef99ab3094c7d80be76741ac47d6a041f7c9455c54ef290713287d391.txt",
+        "sha256": "4e8dfebef99ab3094c7d80be76741ac47d6a041f7c9455c54ef290713287d391",
+        "bytes": 53
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-20.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-28b7fab329415f3cb48bd022f497bfdeb7a312e6ae19bb206ac35aeb961b8b83.txt",
+        "sha256": "28b7fab329415f3cb48bd022f497bfdeb7a312e6ae19bb206ac35aeb961b8b83",
+        "bytes": 2227
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-20.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-20.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-28b7fab329415f3cb48bd022f497bfdeb7a312e6ae19bb206ac35aeb961b8b83.txt",
+        "sha256": "28b7fab329415f3cb48bd022f497bfdeb7a312e6ae19bb206ac35aeb961b8b83",
+        "bytes": 2227
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-21.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-a5b52268779d09b2d1f6d13835d7e8d29e376f7d614242b1f5090bcf0b7b9582.txt",
+        "sha256": "a5b52268779d09b2d1f6d13835d7e8d29e376f7d614242b1f5090bcf0b7b9582",
+        "bytes": 59
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-21.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-21.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-a5b52268779d09b2d1f6d13835d7e8d29e376f7d614242b1f5090bcf0b7b9582.txt",
+        "sha256": "a5b52268779d09b2d1f6d13835d7e8d29e376f7d614242b1f5090bcf0b7b9582",
+        "bytes": 59
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-22.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-bdb4753d8a90403747cdb87258fa160d6df6ce49882f36892b3a6969f3ed0e0b.txt",
+        "sha256": "bdb4753d8a90403747cdb87258fa160d6df6ce49882f36892b3a6969f3ed0e0b",
+        "bytes": 3149
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-22.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-22.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-bdb4753d8a90403747cdb87258fa160d6df6ce49882f36892b3a6969f3ed0e0b.txt",
+        "sha256": "bdb4753d8a90403747cdb87258fa160d6df6ce49882f36892b3a6969f3ed0e0b",
+        "bytes": 3149
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-23.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-090fda17b5a4871355745db501311e26a7ccd67547b274ca1d1c3ac33ccbc531.txt",
+        "sha256": "090fda17b5a4871355745db501311e26a7ccd67547b274ca1d1c3ac33ccbc531",
+        "bytes": 68
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-23.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-23.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-090fda17b5a4871355745db501311e26a7ccd67547b274ca1d1c3ac33ccbc531.txt",
+        "sha256": "090fda17b5a4871355745db501311e26a7ccd67547b274ca1d1c3ac33ccbc531",
+        "bytes": 68
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-24.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-f764207e524b5c493252be58fc1a7e426dd92239f8d92bc43ae2e74fc50f8d57.txt",
+        "sha256": "f764207e524b5c493252be58fc1a7e426dd92239f8d92bc43ae2e74fc50f8d57",
+        "bytes": 9771
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-24.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-24.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-f764207e524b5c493252be58fc1a7e426dd92239f8d92bc43ae2e74fc50f8d57.txt",
+        "sha256": "f764207e524b5c493252be58fc1a7e426dd92239f8d92bc43ae2e74fc50f8d57",
+        "bytes": 9771
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-25.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-3f1f92ed20852b991f5327bd092641f4a31c72f3154383a0cd34649b90925105.txt",
+        "sha256": "3f1f92ed20852b991f5327bd092641f4a31c72f3154383a0cd34649b90925105",
+        "bytes": 54
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-25.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-25.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-3f1f92ed20852b991f5327bd092641f4a31c72f3154383a0cd34649b90925105.txt",
+        "sha256": "3f1f92ed20852b991f5327bd092641f4a31c72f3154383a0cd34649b90925105",
+        "bytes": 54
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-26.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-140eddbe3e47c4e1b3e24daca0416dd681bdc9413e23b298caa0be56b0af16f0.txt",
+        "sha256": "140eddbe3e47c4e1b3e24daca0416dd681bdc9413e23b298caa0be56b0af16f0",
+        "bytes": 12805
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-26.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-26.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-140eddbe3e47c4e1b3e24daca0416dd681bdc9413e23b298caa0be56b0af16f0.txt",
+        "sha256": "140eddbe3e47c4e1b3e24daca0416dd681bdc9413e23b298caa0be56b0af16f0",
+        "bytes": 12805
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-27.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-a7b96e29d1c8bcc1e6e0ad3a783bac25b80038a4ec0c79ae7923f562a5e4a85a.txt",
+        "sha256": "a7b96e29d1c8bcc1e6e0ad3a783bac25b80038a4ec0c79ae7923f562a5e4a85a",
+        "bytes": 33
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-27.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-27.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-a7b96e29d1c8bcc1e6e0ad3a783bac25b80038a4ec0c79ae7923f562a5e4a85a.txt",
+        "sha256": "a7b96e29d1c8bcc1e6e0ad3a783bac25b80038a4ec0c79ae7923f562a5e4a85a",
+        "bytes": 33
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-28.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-16981483da2c0eed23e5c33768a7ed956988019f42ba99d7359bc293f53dd94b.txt",
+        "sha256": "16981483da2c0eed23e5c33768a7ed956988019f42ba99d7359bc293f53dd94b",
+        "bytes": 1029
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-28.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-28.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-16981483da2c0eed23e5c33768a7ed956988019f42ba99d7359bc293f53dd94b.txt",
+        "sha256": "16981483da2c0eed23e5c33768a7ed956988019f42ba99d7359bc293f53dd94b",
+        "bytes": 1029
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-29.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-60680d8314e2ebb3350803502a3abcb6433203bf0f3cdcb48769426a0ec79233.txt",
+        "sha256": "60680d8314e2ebb3350803502a3abcb6433203bf0f3cdcb48769426a0ec79233",
+        "bytes": 36
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-29.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-29.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-60680d8314e2ebb3350803502a3abcb6433203bf0f3cdcb48769426a0ec79233.txt",
+        "sha256": "60680d8314e2ebb3350803502a3abcb6433203bf0f3cdcb48769426a0ec79233",
+        "bytes": 36
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-30.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169.txt",
+        "sha256": "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169",
+        "bytes": 8810
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-30.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/candidate-30.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169.txt",
+        "sha256": "b9727adbbb2bfb167348da0c7eaa8f3dbdda3b4fd49a456dbb031279944a5169",
+        "bytes": 8810
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/gleam-version.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-6924745f5e4067e48d67dc94a7e6abc38078692539072395457f8976ef692e38.txt",
+        "sha256": "6924745f5e4067e48d67dc94a7e6abc38078692539072395457f8976ef692e38",
+        "bytes": 13
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/gleam-version.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/gleam-version.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-6924745f5e4067e48d67dc94a7e6abc38078692539072395457f8976ef692e38.txt",
+        "sha256": "6924745f5e4067e48d67dc94a7e6abc38078692539072395457f8976ef692e38",
+        "bytes": 13
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/otp-version.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/otp-version.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-844cc745479b59c1ac1e3ad48720b5e9c7e1f2370cb81a8ef0a0e5411d35565f.txt",
+        "sha256": "844cc745479b59c1ac1e3ad48720b5e9c7e1f2370cb81a8ef0a0e5411d35565f",
+        "bytes": 59
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/otp-version.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-844cc745479b59c1ac1e3ad48720b5e9c7e1f2370cb81a8ef0a0e5411d35565f.txt",
+        "sha256": "844cc745479b59c1ac1e3ad48720b5e9c7e1f2370cb81a8ef0a0e5411d35565f",
+        "bytes": 59
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/positive-compile.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/positive-compile.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/positive-compile.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/positive-execute.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-0b81e4892e132d14ee7330dc0ea5234d257eb357ab1c0a2a452de0deaeec43a6.txt",
+        "sha256": "0b81e4892e132d14ee7330dc0ea5234d257eb357ab1c0a2a452de0deaeec43a6",
+        "bytes": 12002
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/positive-execute.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/positive-execute.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-0b81e4892e132d14ee7330dc0ea5234d257eb357ab1c0a2a452de0deaeec43a6.txt",
+        "sha256": "0b81e4892e132d14ee7330dc0ea5234d257eb357ab1c0a2a452de0deaeec43a6",
+        "bytes": 12002
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/queue-capacity-compile.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/queue-capacity-compile.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/queue-capacity-compile.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/queue-capacity-execute.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-21797f1a3dc50c6d9ecb61548618ba93b3d9fb982f2ecf98145ffdd0965f174f.txt",
+        "sha256": "21797f1a3dc50c6d9ecb61548618ba93b3d9fb982f2ecf98145ffdd0965f174f",
+        "bytes": 40626
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/queue-capacity-execute.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-a4f201f95f52e64c4136879f40548c17be90cbe3fb18f278f973649cfaf39fb0.txt",
+        "sha256": "a4f201f95f52e64c4136879f40548c17be90cbe3fb18f278f973649cfaf39fb0",
+        "bytes": 1025
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/queue-capacity-execute.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-77f5678d1fc4c627a5dbb6f20948724ff83c9604ae3ed5e2d04e4b2a0e50271d.txt",
+        "sha256": "77f5678d1fc4c627a5dbb6f20948724ff83c9604ae3ed5e2d04e4b2a0e50271d",
+        "bytes": 41651
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/physical-health-order-compile.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/physical-health-order-compile.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/physical-health-order-compile.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/physical-health-order-execute.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-1e7c846d430c8f1fc05bee16f8b8698f30da27ecc9de7ea5edf2097547607271.txt",
+        "sha256": "1e7c846d430c8f1fc05bee16f8b8698f30da27ecc9de7ea5edf2097547607271",
+        "bytes": 1358
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/physical-health-order-execute.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-f8974f22b71372676ad05b78b405181b4e2e514178f65ec872f0bf5e98d238c7.txt",
+        "sha256": "f8974f22b71372676ad05b78b405181b4e2e514178f65ec872f0bf5e98d238c7",
+        "bytes": 1025
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/physical-health-order-execute.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-64944eeb0094e86b9d5bc92f06225c0b519e8995efb17500f74bc9fdcb6c8d95.txt",
+        "sha256": "64944eeb0094e86b9d5bc92f06225c0b519e8995efb17500f74bc9fdcb6c8d95",
+        "bytes": 2383
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/nonforward-deadman-time-compile.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/nonforward-deadman-time-compile.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/nonforward-deadman-time-compile.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/nonforward-deadman-time-execute.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-160da9ae41683528ff77152a6ef83c366357ff57b0a2c991248f38b63fa5dd10.txt",
+        "sha256": "160da9ae41683528ff77152a6ef83c366357ff57b0a2c991248f38b63fa5dd10",
+        "bytes": 1316
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/nonforward-deadman-time-execute.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-aaf350d4699a2ec75907db4e320450e173d079ef2ba78a5fe33a28239ff3affa.txt",
+        "sha256": "aaf350d4699a2ec75907db4e320450e173d079ef2ba78a5fe33a28239ff3affa",
+        "bytes": 1025
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/nonforward-deadman-time-execute.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-cec596845f1bbd87bc4de8b7abcf21f719b8fd8e55c125a326eba49d203908b6.txt",
+        "sha256": "cec596845f1bbd87bc4de8b7abcf21f719b8fd8e55c125a326eba49d203908b6",
+        "bytes": 2341
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/codec-physical-sample-compile.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/codec-physical-sample-compile.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/codec-physical-sample-compile.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855.txt",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/codec-physical-sample-execute.stdout",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-6926ad3e3de83f67659f3b31846685ea22ed7c8af7e827ac5ce46a541fa01825.txt",
+        "sha256": "6926ad3e3de83f67659f3b31846685ea22ed7c8af7e827ac5ce46a541fa01825",
+        "bytes": 3956
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/codec-physical-sample-execute.stderr",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-b498a122b0dbeb8101a60f2f2ba98cf37b8919765cf49083aa788f941ed24e76.txt",
+        "sha256": "b498a122b0dbeb8101a60f2f2ba98cf37b8919765cf49083aa788f941ed24e76",
+        "bytes": 1025
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/codec-physical-sample-execute.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-9b056e70ede555d480e35aac57be23aeede3487c9f7d47e56d93c9ef80e6ef97.txt",
+        "sha256": "9b056e70ede555d480e35aac57be23aeede3487c9f7d47e56d93c9ef80e6ef97",
+        "bytes": 4981
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/queue-capacity/src/cepaf_gleam/crdt/delta_mesh_engine.gleam",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-a16f9bf73b4f93234f9ae7fab15855e953b9731e74b65f0fac550d2f6c9eeccb.txt",
+        "sha256": "a16f9bf73b4f93234f9ae7fab15855e953b9731e74b65f0fac550d2f6c9eeccb",
+        "bytes": 13593
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/queue-capacity/src/ev98_campaign_runner.gleam",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-0f99afc18ee77b8fd2ab45c8fd9c024180cbcedbfff857f78c0ebfd7a4890c56.txt",
+        "sha256": "0f99afc18ee77b8fd2ab45c8fd9c024180cbcedbfff857f78c0ebfd7a4890c56",
+        "bytes": 377
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/physical-health-order/src/cepaf_gleam/crdt/health_bridge.gleam",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-8251b6df79b91c9d467a05538e816acf1eed0db3a10b8da8416fe456228c3a01.txt",
+        "sha256": "8251b6df79b91c9d467a05538e816acf1eed0db3a10b8da8416fe456228c3a01",
+        "bytes": 6541
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/physical-health-order/src/ev98_campaign_runner.gleam",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-d16d3331546a62a6450b559aeeb7c69981bc5c02e3dae2710d90215ffa6b1551.txt",
+        "sha256": "d16d3331546a62a6450b559aeeb7c69981bc5c02e3dae2710d90215ffa6b1551",
+        "bytes": 365
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/nonforward-deadman-time/src/cepaf_gleam/ha/deadman_freshness.gleam",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-4f1cfa713f2d38ac58f9b312621534f6e26a7452d028e095df132cb2d71f29cc.txt",
+        "sha256": "4f1cfa713f2d38ac58f9b312621534f6e26a7452d028e095df132cb2d71f29cc",
+        "bytes": 8503
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/nonforward-deadman-time/src/ev98_campaign_runner.gleam",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-fc68d9d598173c9c56dc350d2ecc1fd74028e8ef69d92310b52909060cc4d774.txt",
+        "sha256": "fc68d9d598173c9c56dc350d2ecc1fd74028e8ef69d92310b52909060cc4d774",
+        "bytes": 308
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/codec-physical-sample/src/cepaf_gleam/crdt/mesh_sync.gleam",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-0024d1ac35950beaece1763fbc093e7364c20e8ddd8a2995c75f1fc5a16c647c.txt",
+        "sha256": "0024d1ac35950beaece1763fbc093e7364c20e8ddd8a2995c75f1fc5a16c647c",
+        "bytes": 16022
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/codec-physical-sample/src/ev98_campaign_runner.gleam",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-045e1bdd8b2e70ca09f96029e5dcf027b1d5ce8fd76d6ac2217edece81624a6e.txt",
+        "sha256": "045e1bdd8b2e70ca09f96029e5dcf027b1d5ce8fd76d6ac2217edece81624a6e",
+        "bytes": 327
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/recipe.json",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-6f04ed07947f0823ba87a9af933da1dbf99b2b90d17151cea5d7ccaba51edb25.txt",
+        "sha256": "6f04ed07947f0823ba87a9af933da1dbf99b2b90d17151cea5d7ccaba51edb25",
+        "bytes": 35371
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/clock-start.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-1c163f47b49c1d9eea75f2de979f5d7a2400390b616a0a748a6983eada35e59d.txt",
+        "sha256": "1c163f47b49c1d9eea75f2de979f5d7a2400390b616a0a748a6983eada35e59d",
+        "bytes": 143
+      }
+    },
+    {
+      "observed_path": "/tmp/uos-ev98-campaign-cefdc5.reserve.d/clock-end.output",
+      "durable": {
+        "path": "docs/reviews/20260909-1522-ev98-recipe-codec-bytes-5b04a298b4576bf705cdece41e7aef4fe60e1b72a727305d636e274303a93926.txt",
+        "sha256": "5b04a298b4576bf705cdece41e7aef4fe60e1b72a727305d636e274303a93926",
+        "bytes": 143
+      }
+    }
+  ],
+  "checks": {
+    "component_cases": 76,
+    "baseline_case_ids": 42,
+    "codec_cases": 25,
+    "sync_cases": 9,
+    "compiled_designated_mutants": 4,
+    "unit_process_cases": 25,
+    "cli_cases": 7,
+    "static_completeness_cases": 13,
+    "receipt_consistency_cases": 67
+  },
+  "authority": "NONE",
+  "formal": "Formal_unavailable",
+  "sovereign": "Sovereign_pending",
+  "task": "RECIPE_CODEC remains executing; independent review pending",
+  "limits": [
+    "Private component execution only, no deployed mesh or authenticated effect fence",
+    "Formal slice requires its own separately reviewed invocation; this producer retains Formal_unavailable",
+    "Native tool and artifact hashes do not establish a reproducible release closure",
+    "Previous wrapper-dependent and expired observations remain historical and do not gain authority",
+    "Downstream integration obligation: tools/generate_ev_recovery_runner.ml enumerates exported tests in 16 modules but requires exactly168; new sync exports require separate reviewed regeneration repair. Existing fixed168 runner remains executable. This task leaves the guard and curated set unchanged"
+  ]
+}

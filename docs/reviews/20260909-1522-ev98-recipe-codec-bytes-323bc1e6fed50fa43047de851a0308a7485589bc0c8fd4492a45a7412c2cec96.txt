@@ -1,0 +1,4 @@
+Warning: Per-repo config not found. Generating an empty one.
+Per-repo config is stored in the same directory as your user config for security reasons.
+If you work across multiple computers, you may want to keep your user config directory in sync.
+dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93

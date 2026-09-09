@@ -1,0 +1,46 @@
+{
+  "revision": "dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93",
+  "source_stage": "/tmp/ev-recipe-codec-final-source-dc2beed6",
+  "sources": [
+    {
+      "path": "tools/ev_receipts/dune",
+      "sha256": "938562c7c23d206b162d091dea25d57480926ad200567c1b0bc2e08f71bb3069",
+      "bytes": 397
+    },
+    {
+      "path": "tools/ev_receipts/dune-project",
+      "sha256": "5b9ddbed029d927ab3c93a9ee634b3d054cbbdc0ea8c0ed86683bc1b3ed2b35f",
+      "bytes": 39
+    },
+    {
+      "path": "tools/ev_receipts/receipt_validator.ml",
+      "sha256": "9f4ceda788586cc6aa79ae99cd33a01ec68523395fbfca3759f66d960be09618",
+      "bytes": 18844
+    },
+    {
+      "path": "tools/ev_receipts/receipt_test.ml",
+      "sha256": "cb468098880d893ad07c4940ffb18723d3559873cf5da15550ed9916792134b6",
+      "bytes": 16487
+    },
+    {
+      "path": "tools/ev_receipts/ev_receipt.ml",
+      "sha256": "a9418d5dd7e0321549affcdae2e978afc8b748314dfe2eb170c9b5da87565913",
+      "bytes": 1222
+    },
+    {
+      "path": "tools/ev_receipts/ev_campaign.ml",
+      "sha256": "55b7b32e29f2b5cad7b182efe7e64d1c746c501cfa7956aff82a51774769aa0c",
+      "bytes": 20185
+    },
+    {
+      "path": "tools/ev_receipts/ev98_recipe.ml",
+      "sha256": "3a983cf37167d89af4986d40490c956a1d16cb2bcd8282e957d51ed302d347a7",
+      "bytes": 26041
+    },
+    {
+      "path": "tools/ev_receipts/campaign_test.ml",
+      "sha256": "e8ce51e13b4cd824537ad19ffad12dd0e2675aba09ad937551e40867ef561a6e",
+      "bytes": 8626
+    }
+  ]
+}

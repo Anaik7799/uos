@@ -1,10 +1,10 @@
 # EV98 closed campaign recipe: codec and synchronization obligations
 
-Observed update: 2026-09-09T14:02:15Z. Task remains executing; final combined campaign and independent review are pending.
+Observed update: 2026-09-09T15:20:55Z. Source candidate: `dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93`. Combined campaign passed; task remains executing pending independent recipe review.
 
 Tags: #fractal-l0 #fractal-l6 #fractal-l7 #zk-adr #zero-muda
 
-Navigation: [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [Preliminary observations](http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20260909-1302-ev98-recipe-codec-preliminary.json).
+Navigation: [Cockpit](http://nas-1.tail55d152.ts.net:4100/) · [Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Wiki](http://nas-1.tail55d152.ts.net:4100/wiki) · [Final verification](http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20260909-1522-ev98-recipe-codec-verification.json).
 
 ## 1. Scope & Trigger
 
@@ -22,13 +22,17 @@ An authorized post-recovery v1 observation reproduced the missing-module compile
 
 While waiting for final synchronization review, parent renewed workspace epoch 2 through approximately 15:31 UTC. A pre-release check correctly held on the earlier source assessment, which preceded the three recipe edits; that HOLD is preserved. Refreshing all 14 current source references passed at 14:32:44Z. Exact attempt 2 was released while quiescent, available preflight passed, and canonical claim returned attempt 3. Active validation passed at 14:33:34Z; task lease ends at 15:33:16Z. This is a bounded authority handoff, not task completion or admission.
 
+Parent authorized composition after independent bounded approval of synchronization source `0d9bd0a8a8ecf26014904975a5e8e9a6c97d8d8d`. A new two-parent JJ change combined that immutable source with the preserved recipe change; neither shared parent was rewritten. The final binding verified exact engine/test bytes, retained every original public test function, and derived nine added synchronization exports. Only the engine acceptance file changed among original fixed inputs: old SHA-256 `1e48182f8a94c44a3a9885f58adde2de8628d9a130ab9420c077f4653028d13b`, reviewed replacement `de5dc4bcf33a89cc30adce1ed559c69b431e2bc063307345a861fde07fdc784f`. Its old/new pair and correction rationale are part of the recipe descriptor.
+
+The final eight-file OCaml project was extracted from full commit_id selection into private storage and built natively. Active validation passed at 15:17:14Z with 14 source references and assessment SHA-256 `f53f2c92865fecfaf9e87faef63c08f792a802a6254a18593bddb92fa71ff27e`. The compiled producer ran 76 exact positive invocations and four separately compiled designated assertion failures. Its 43 recorded child invocations and 568 byte bindings include 15 candidate inputs and the unchanged 128-file realized dependency set. A syscall trace independently classified 189 successful execve calls over 12 paths; every successful executable resolved to ELF. Failed executable lookups numbered 167 and did not execute wrappers.
+
 ## 4. Root Cause Analysis
 
 A closed staging recipe is an executable dependency declaration. Integrating a source import without updating that declaration prevents the component campaign from executing, even when a separately staged codec suite passes. Acceptance hashes must also distinguish authorized requirement corrections from arbitrary test replacement. Preserving the original list and declaring old/new hashes with a reason keeps that distinction reviewable.
 
 ## 5. Fix Taxonomy
 
-Recipe v2 retains the 42 baseline case IDs and baseline acceptance digests literally. Codec acceptance is an additive fixed file and explicit list of 25 calls. The acceptance-update carrier records the original digest, replacement digest and requirement rationale for each reviewed correction. The fourth mutant substitutes logical register time for physical sample time in the actual encoder; only the designated compiled roundtrip assertion failure qualifies as rejection.
+Recipe v2 retains the 42 baseline case IDs and baseline acceptance digests literally. Codec acceptance is an additive fixed file and explicit list of 25 calls; nine reviewed synchronization calls are also explicit. The acceptance-update carrier records the original digest, replacement digest and requirement rationale for the engine-test correction. The fourth mutant substitutes logical register time for physical sample time in the actual encoder; only the designated compiled roundtrip assertion failure qualifies as rejection. Final recipe digest: `6f04ed07947f0823ba87a9af933da1dbf99b2b90d17151cea5d7ccaba51edb25`.
 
 ## 6. Patterns & Anti-Patterns Discovered
 
@@ -40,10 +44,12 @@ Preserve actual missing-source compilation failures separately from semantic ass
 |---|---|---|
 | Old recipe against composed codec | HOLD; actual Unknown module compilation | Preserved post-recovery red |
 | New producer control against old recipe | Assertion failed: required mesh_wire source omitted | Preserved red |
-| Updated producer unit/process controls | 25 PASS | Preliminary working bytes match private build |
+| Updated producer unit/process controls | 25 PASS | Fresh immutable native build |
 | Receipt consistency regressions | 67 PASS | Private synthetic fixture |
 | Static recipe completeness | 13 PASS | Direct v1 sequence/hash comparison, every codec export, closed import set, unchanged tool/dependency pins and unique mutation anchors |
-| Combined codec and synchronization campaign | PENDING | Awaiting reviewed synchronization bytes |
+| Combined codec and synchronization campaign | 76 PASS | Exact 42 baseline +25 codec +9 synchronization IDs |
+| Designated mutants | 4 compiled and rejected by named assertions | Original three controls plus physical-sample codec loss |
+| Native execution trace | 189 successful calls, 12 ELF paths | All successful traced execve paths resolve to ELF |
 | Independent recipe review | PENDING | Not an author approval |
 
 <details><summary>18-checkpoint verification structure</summary>
@@ -52,16 +58,16 @@ Preserve actual missing-source compilation failures separately from semantic ass
 |---|---|---|
 | Metadata | Timestamp and clock evidence | PASS |
 | Metadata | Tailscale navigation | PASS |
-| Metadata | Final immutable source binding | PENDING |
+| Metadata | Final immutable source binding | PASS |
 | Purity/storage | Native OCaml producer | PASS |
 | Purity/storage | No dependency provisioning | PASS |
 | Purity/storage | Private fixtures only | PASS |
 | Testing | Observed old-recipe failure | PASS |
-| Testing | Exact combined positive denominator | PENDING |
-| Testing | Compiled codec-loss negative | PENDING |
+| Testing | Exact combined positive denominator | PASS |
+| Testing | Compiled codec-loss negative | PASS |
 | Testing | Full formal proof | NOT ESTABLISHED |
 | Observability | Actual child status and output preservation | PASS |
-| Observability | Final tool/source/dependency/output hashes | PENDING |
+| Observability | Final tool/source/dependency/output hashes | PASS |
 | Observability | Live multi-host behavior | NOT ESTABLISHED |
 | Governance | Canonical attempt 3 | PASS |
 | Governance | Owned JJ sibling | PASS |
@@ -79,15 +85,34 @@ Preserve actual missing-source compilation failures separately from semantic ass
 
 The producer remains closed to caller-selected policy, commands, coverage and supplied execution logs. It extracts exact commit_id bytes with the pinned native Jujutsu binary, stages the declared dependency closure, compiles and executes its own fixed runner, and rehashes artifacts and captured output. The expanded recipe changes what that fixed campaign observes, not the authority of an observation.
 
+Editable ASCII source:
+
+```text
+[Recipe and revision] --select--> [Immutable bytes]
+[Immutable bytes] --stage--> [Private native run]
+[Private native run] --observe--> [Outputs and outcomes]
+[Outputs and outcomes] --bind--> [Component report]
+```
+
+Editable Mermaid source with the same nodes, edges and labels:
+
+```mermaid
+flowchart LR
+  A[Recipe and revision] -->|select| B[Immutable bytes]
+  B -->|stage| C[Private native run]
+  C -->|observe| D[Outputs and outcomes]
+  D -->|bind| E[Component report]
+```
+
 ## 10. Remaining Gaps
 
-Final SYNC_STATUS source/test integration, combined execution and independent review are pending. Pre-integration review identified three-peer coverage invalidation after an incoming merge and an existing watermark assertion that still expected no recovery response. Root additionally identified stale ACK/delta observations overwriting a previously learned remote frontier. Those findings remain with the separate source owner before final recipe pinning. Full EV98 deployed transport, authenticated producer invocation, effect-time fencing, complete formal semantics and sovereign admission remain outside this component recipe. Native executable hashes do not establish a reproducible dynamic-library release closure. The separate finite health-order formal slice retains its own invocation and applicability requirements.
+Independent recipe review is pending. Pre-integration review identified three-peer coverage invalidation after an incoming merge and an existing watermark assertion that still expected no recovery response. Root additionally identified stale ACK/delta observations overwriting a previously learned remote frontier. Those findings were repaired and independently reviewed in the separate synchronization source before final recipe binding. Full EV98 deployed transport, authenticated producer invocation, effect-time fencing, complete formal semantics and sovereign admission remain outside this component recipe. Native executable hashes do not establish a reproducible dynamic-library release closure. The separate finite health-order formal slice retains its own invocation and applicability requirements. Parent's transport work is separate and is not staged or credited by this producer.
 
 Downstream integration obligation: `tools/generate_ev_recovery_runner.ml` lexically enumerates exported test functions in 16 modules and requires exactly 168. Added synchronization exports change that denominator, so regeneration needs a separate reviewed correction. The existing fixed 168-case runner can still execute. RECIPE_CODEC does not alter that generator, its cardinality guard, curated module set or runner.
 
 ## 11. Metrics Summary
 
-The proposed source denominator changes from five modules to six. Positive obligations change from 42 to 67 before the separately reviewed synchronization additions. Designated mutants change from three to four. Preliminary producer controls are 25 passing cases; receipt consistency remains 67 passing synthetic cases. Final combined counts will be recorded only after actual execution.
+The declared source set changes from five modules to six. Positive invocations change from 42 to 76: all 42 original IDs in their original order, 25 codec calls and nine synchronization additions. The old two-node entrypoint now invokes the full-exchange test, so 76 unique entrypoint IDs do not mean 76 independent properties. Designated mutants change from three to four. Twenty-five producer controls, 67 synthetic receipt regressions, seven CLI checks and 13 static completeness checks pass. Exact source/tool/dependency/output accounting contains 568 bindings and 43 campaign child invocations.
 
 ## 12. STAMP & Constitutional Alignment
 
@@ -95,8 +120,8 @@ Omitted codec staging, weakened acceptance, stale source binding and overlong pr
 
 ## 13. Conclusion
 
-The recipe update has observed red and preliminary green controls. RECIPE_CODEC remains executing at attempt 3, pending the combined immutable campaign and independent review. Formal_unavailable, Sovereign_pending and NOT_GRANTED remain explicit result fields.
+Candidate `dc2beed684a2b2ae4e34f69c9fd96420e2ca0f93` has actual combined native observations and preserved negative evidence. RECIPE_CODEC remains executing at attempt 3 pending independent recipe review and parent-owned completion. Formal_unavailable, Sovereign_pending and NOT_GRANTED remain explicit result fields.
 
-Previous: [Codec journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260909-1122-ev98-wire-codec-journal.md) · Next: [Preliminary observations](http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20260909-1302-ev98-recipe-codec-preliminary.json).
+Previous: [Codec journal](http://nas-1.tail55d152.ts.net:4100/files/docs/journal/20260909-1122-ev98-wire-codec-journal.md) · Next: [Final verification](http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20260909-1522-ev98-recipe-codec-verification.json).
 
 UOS evidence footer: bounded component work · authority NONE · EV93 admitted ceiling.
