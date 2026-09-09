@@ -1,0 +1,24 @@
+#use "topfind";;
+#require "unix,yojson,cryptokit,mtime.clock.os";;
+#directory "/tmp/ev-campaign-independent-direct-review-20260909/build/default/.ev_receipts.objs/byte";;
+#load "/tmp/ev-campaign-independent-direct-review-20260909/build/default/ev_receipts.cma";;
+(* @agent_intent: Stage only the immutable local capture checker and static
+   fixture driver. HTTP driver setup is never executed. *)
+let ws="/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210"
+let candidate="7db92a8d1bbb1b280c8dc120fd1d54eba4187f09"
+let stage=Filename.temp_dir ~temp_dir:"/tmp" "ev86-root-capture-review-" ""
+let paths=["tools/ev86_music_http.ml";"tools/test_ev86_capture.ml"]
+let bindings=List.map(fun path->
+ let bytes=Receipt_validator.candidate_bytes ws candidate path in
+ Receipt_validator.require(String.length bytes<65536)"source bound";
+ let destination=stage^"/"^Filename.basename path in Ev_campaign.write destination bytes;
+ `Assoc["candidate",`String candidate;"source",`String path;"staged",`String destination;
+ "sha256",`String(Receipt_validator.sha bytes)])paths
+let ()=Ev_campaign.write(stage^"/bindings.json")(Yojson.Basic.pretty_to_string(`List bindings)^"\n")
+let executable="/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun"
+let output=Receipt_validator.run ~seconds:15. ~limit:1_048_576 executable
+ ["/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml";ws^"/tools/ev_native.ml";
+ "--cwd";stage;"--seconds";"10";"--receipt";stage^"/native.json";"--";"ocaml";
+ stage^"/test_ev86_capture.ml";stage^"/ev86_music_http.ml"]
+let ()=Ev_campaign.write(stage^"/driver-output.txt")output;
+ Printf.printf "%s\n%s" stage output

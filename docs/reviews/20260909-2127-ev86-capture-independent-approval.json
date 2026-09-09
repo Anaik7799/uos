@@ -1,0 +1,69 @@
+{
+  "schema": "uos.ev86-capture-independent.v1",
+  "candidate": "7db92a8d1bbb1b280c8dc120fd1d54eba4187f09",
+  "plan": "uos/ev-admission/20260909-0210",
+  "task": "PROGRAM",
+  "attempt": 7,
+  "status": "BOUNDED_STATIC_CAPTURE_PASS",
+  "checks": 7,
+  "source_bindings": [
+    {
+      "candidate": "7db92a8d1bbb1b280c8dc120fd1d54eba4187f09",
+      "source": "tools/ev86_music_http.ml",
+      "staged": "/tmp/ev86-root-capture-review-8bf4eb/ev86_music_http.ml",
+      "sha256": "6c2387aa55fa7389952c2e092bdca49676c1a01ff814023c29e121a66d906348"
+    },
+    {
+      "candidate": "7db92a8d1bbb1b280c8dc120fd1d54eba4187f09",
+      "source": "tools/test_ev86_capture.ml",
+      "staged": "/tmp/ev86-root-capture-review-8bf4eb/test_ev86_capture.ml",
+      "sha256": "6724ff75f661dde6f91e8a3e908e0d003e8448e7b7b07c7ccddbb5ec92640bd3"
+    }
+  ],
+  "whole_ev86": "HOLD",
+  "admission": "NOT_GRANTED",
+  "new_admissions": 0,
+  "policy_ceiling": 93,
+  "no_network_test": true,
+  "artifacts": [
+    {
+      "path": "docs/reviews/20260909-2127-ev86-capture-independent-observations.json",
+      "sha256": "aa22a0d7b5e44ea9e336a53ba5df05530f6670606e57bc4eebd80a79a593282c"
+    },
+    {
+      "path": "docs/reviews/20260909-2127-ev86-capture-independent-agy-table-transcript.json",
+      "sha256": "2cbdc38bdb6935e53b05827431a3b846e198cbb18f3fd6075fa1a8804c22acc4"
+    },
+    {
+      "path": "docs/reviews/20260909-2127-ev86-capture-independent-agy-table-advice.txt",
+      "sha256": "1b3536fea6e8c4682d14614d6ca124e1f6c55c06ffa134d94e1cd86ecce4ec5a"
+    },
+    {
+      "path": "docs/reviews/20260909-2127-ev86-capture-independent-driver.ml.txt",
+      "sha256": "4e43c786a1975ab7fdba9a76bf2df551d8215404b151bb3404b8f404214fc63b"
+    },
+    {
+      "path": "docs/reviews/20260909-2127-ev86-capture-independent-recorder.ml.txt",
+      "sha256": "91ba101f9a71251882bb6350eb18230ecec4366146b8879dfca8ad0dca882ba8"
+    },
+    {
+      "path": "docs/reviews/20260909-2127-ev86-capture-independent-active-tool.json",
+      "sha256": "46c8ddf7680a808889ca07cf3a2aebcc08bc4809552138af5cc149fb18d6ca22"
+    },
+    {
+      "path": "docs/reviews/20260909-2127-ev86-capture-independent-fence.json",
+      "sha256": "d020a3c74043e89e5fc5364e02dde592be107ef8d467617dc87e33e47e1d746a"
+    }
+  ],
+  "scope": "Exact candidate post-receive checker projection; raw bytes saved before status/framing/MIME/length/HEAD assertions. Same author fixtures independently executed; no new independent generator or full HTTP proof.",
+  "source_review": "The two Gleam deltas from7774 are comments only; HTTP helper moves raw save before all assertions and separates the post-receive checker. A preliminary diff named the wrong main path and warned; corrected exact path diff confirms comment-only.",
+  "remaining": "Case13 actual response still unknown,10 subsequent cases unrun, original raw-target/exact-alias acceptance and synthesis/playback unproved. Local capture repair does not resolve them.",
+  "agy_ev02_advice": {
+    "marker": "AGY_ADVICE_EV02_TABLE_BINDING_2038",
+    "authority": "UNSIGNED_ADVISORY_ONLY",
+    "adopted": "Explicit parser table state; exact candidate input closure; reject unsupported syntax; actualLF JSON; post-seal tamper control.",
+    "qualifications": "Use actual[[directive]] grammar, not invented[directives.id]. Distinct repeated directive records are valid; duplicate same-ID rejects. Preserve safe unrelated-table boundaries and full rule-directory inventory obligations, including symlink kinds. No wholeEV2 or fullTOML claim."
+  },
+  "risk_refresh_limit": "The separate lineage-risk planning artifact was written without a new immediate fence; the preceding archival heartbeat was about122seconds old. It granted no effect authority. The refreshed143-file assessment and new heartbeat/fence passed before this replay/archival sequence; the lapse is not relabeled fresh.",
+  "tags": [ "fractal-l0", "fractal-l5", "zk-adr", "zero-muda" ]
+}

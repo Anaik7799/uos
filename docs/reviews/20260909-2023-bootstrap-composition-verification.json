@@ -1,0 +1,60 @@
+{
+  "schema": "uos.bootstrap-composition-verification.v1",
+  "observed_at": "2026-09-09T20:13:23Z",
+  "candidate": "b112a47c40cf04c37a282366ee976cb5aba86f9c",
+  "parents": [
+    "0501050026e6157d7dbe84039477a053aa728b90",
+    "9f2ce9bd5c14317826e4d2059ce0e8affeef5cb1",
+    "5652cf10b7feddb4a0187aef3591d53c58392b3b"
+  ],
+  "bootstrap_source": "3c13ba3b3e210e98c289147a2041aadcdcc72ebd",
+  "scope": "Bounded observer, G-BOOT1 and private composition observations",
+  "status": "COMPONENT_OBSERVATIONS_PASS",
+  "whole_ev1": "HOLD",
+  "admission": "NOT_GRANTED",
+  "new_ev_admissions": 0,
+  "policy_ceiling": 93,
+  "campaign_checks": 40,
+  "campaign_native_invocations": 61,
+  "source_dependency_bindings": 135,
+  "prior_component_source_pairs_unchanged": 13,
+  "canonical_observer_invocations": 0,
+  "programme": {
+    "plan": "uos/ev-admission/20260909-0210",
+    "task": "PROGRAM",
+    "worker": "codex-ev-admission-01a08017",
+    "attempt": 7,
+    "lease_until_ns": "1788991557218033706"
+  },
+  "artifacts": [
+    {
+      "path": "docs/reviews/20260909-2023-bootstrap-composition-observations.json",
+      "sha256": "9d7a2b8966513af60e45628472e1ef3061fa095ce953dc66801ef20823105180",
+      "bytes": 638236
+    },
+    {
+      "path": "docs/reviews/20260909-2023-bootstrap-composition-agy-transcript.json",
+      "sha256": "e5b99c6c07b52d4589cce1df8545e0feb1e0c746326bba49622549ab86039bed",
+      "bytes": 17493
+    },
+    {
+      "path": "docs/reviews/20260909-2023-bootstrap-composition-agy-advice.txt",
+      "sha256": "2dd4301928f0196a85f03f84c9c7811fa353f31159e5baef2a5211f38c23e695",
+      "bytes": 6365
+    },
+    {
+      "path": "docs/reviews/20260909-2023-bootstrap-composition-recorder.ml.txt",
+      "sha256": "371cc38826851f6246cda7f488cca6d53b550b8d1e688b116bd17fd2e6684302",
+      "bytes": 18709
+    }
+  ],
+  "advice_record": "docs/reviews/20260909-2023-bootstrap-composition-agy-observation.json",
+  "remaining": [
+    "Missing original governing design/plan lineage, without invented backdated supersession.",
+    "No fresh final-candidate canonical observer observation; all new observer fixtures are private.",
+    "No whole-EV sovereign admission or complete release closure.",
+    "Cooperative filesystem and bounded Boolean-model scope remain; no hostile-race or general noninterference proof.",
+    "Current risk assessment expired at19:55 and correctly returned HOLD before dependent renew/seal operations. It was refreshed and passed before those operations.",
+    "Programme attempt6 was released before expiry, available preflight passed, attempt7 claimed and ACTIVE passed; no task-completion claim."
+  ]
+}

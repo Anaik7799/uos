@@ -1,0 +1,73 @@
+{
+  "schema": "uos.canonical-bootstrap-archival.v1",
+  "archived_at": "2026-09-09T20:54:32Z",
+  "observation": {
+    "schema": "uos.canonical-bootstrap-observation.v1",
+    "observer_code_revision": "b112a47c40cf04c37a282366ee976cb5aba86f9c",
+    "started_epoch": 1788986534.371952,
+    "finished_epoch": 1788986534.463739,
+    "caller_cwd": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210",
+    "caller_cwd_preserved": true,
+    "details": {
+      "status": "OBSERVED_STANDALONE_JJ",
+      "observed_repository_root": "/home/an/NAS-setup/uos",
+      "observed_repository_revision": "f01c3fb123811e1726d646bb477d287058115072",
+      "facts": [
+        "workspace_marker", "repository_metadata",
+        "no_workspace_git_metadata", "no_repository_git_metadata",
+        "internal_git_store", "root_observed", "git_root_observed",
+        "revision_observed", "snapshot_stable"
+      ],
+      "markers": [
+        {
+          "path": "/home/an/NAS-setup/uos/.git",
+          "kind": "UNEXPLAINED_EMPTY_DIRECTORY",
+          "mode": 365,
+          "mtime": 1788986533.971143,
+          "ctime": 1788986533.971143
+        }
+      ]
+    },
+    "admission": "NOT_GRANTED",
+    "scope": "Nine cooperative structural facts only; original operator gate, absent-marker wording, whole-system census and historical lineage remain separate"
+  },
+  "raw_receipt_sha256": "3819b04965d007804bc465e73242659ce8eae549595494b1e29c68cdc65f4d39",
+  "artifacts": [
+    {
+      "path": "docs/reviews/20260909-2032-canonical-bootstrap-observation-receipt.json",
+      "sha256": "3819b04965d007804bc465e73242659ce8eae549595494b1e29c68cdc65f4d39"
+    },
+    {
+      "path": "docs/reviews/20260909-2032-canonical-bootstrap-observation-driver.ml.txt",
+      "sha256": "4584d9e1d7bdfeecbdc9404b5f8e0f28aabfa1d71e7cc442f58ac5c3f0595e66"
+    },
+    {
+      "path": "docs/reviews/20260909-2032-canonical-bootstrap-observation-recorder.ml.txt",
+      "sha256": "ee194780f5c24639b9198dd1163392dc819b588be9cdaaaf63cdbd12eaef29da"
+    },
+    {
+      "path": "docs/reviews/20260909-2032-canonical-bootstrap-observation-scope-recorder-sandbox-refusal.json",
+      "sha256": "4fe442e5c2cf830676a9601e65b8cc4ca643a72d0bda7f511bf3da21995b5620"
+    },
+    {
+      "path": "docs/reviews/20260909-2032-canonical-bootstrap-observation-scope-recorder-permitted.json",
+      "sha256": "c7862817b2ac5de3da808906597ebdee22054d6b0d1574b9f15f45c5e57977e0"
+    }
+  ],
+  "whole_ev1": "HOLD",
+  "policy_ceiling": 93,
+  "new_admissions": 0,
+  "scope_reconciliation": "docs/reviews/20260909-2021-original-governing-scope-reconciliation.json",
+  "limits": [
+    "The observer code is b112, while observed canonical source is f01c3fb123811e1726d646bb477d287058115072; neither is substituted for the other.",
+    "Nine cooperative structural facts pass; this is not full working-tree cleanliness, source census, snapshot conservation or original G-BOOT1 operator authorization.",
+    "The top-level.git is an observed empty0555 directory. Its timestamp is recorded, but creator/purpose and original required absence are not established.",
+    "Metadata was stable during the bounded observer window; continuous quiescence and hostile-race noninterference are not established.",
+    "No canonical source, metadata cleanup, runtime deployment or admission mutation was requested by this driver."
+  ],
+  "fresh_archive_checks": {
+    "active_stdout": "{\"status\":\"ACTIVE_OBSERVATION_PASS\",\"authority\":\"NONE\",\"runtime_admission\":\"NOT_GRANTED\",\"observed_at\":\"2026-09-09T20:54:30Z\",\"completed_at\":\"2026-09-09T20:54:30Z\",\"elapsed_monotonic_seconds\":0.037863495,\"clock_start\":{\"source\":\"chronyc tracking\",\"abs_ntp_offset_seconds\":0.001539902,\"uncertainty_seconds\":0.01928053,\"reference_age_seconds\":205.7430284023285,\"stratum\":3},\"clock_end\":{\"source\":\"chronyc tracking\",\"abs_ntp_offset_seconds\":0.001539817,\"uncertainty_seconds\":0.019280583,\"reference_age_seconds\":205.77506732940674,\"stratum\":3},\"assessment_sha256\":\"c90cf48ca503bd0a29c070c79dfdf75631ec4736e08021b23fa90874deba3adb\",\"evidence_files_checked\":136,\"sa_plan\":{\"plan_id\":\"uos/ev-admission/20260909-0210\",\"snapshot_sha256\":\"f4dc07a17f5a989925d2133c92e13e8f09c89eadf058905856c680ca554ce987\",\"tasks\":[{\"task_id\":\"PROGRAM\",\"state\":\"executing\",\"worker\":\"codex-ev-admission-01a08017\",\"lease_until_ns\":\"1788991557218033706\",\"attempt\":7,\"completed_at_ns\":null,\"result_present\":false,\"dependencies\":[]}],\"mode\":\"READONLY\",\"lease_fencing_authority\":\"NOT_GRANTED\"},\"order\":[],\"findings\":[],\"limits\":[\"Listed byte equality does not prove source completeness, runtime behavior or signed provenance.\",\"Analysis prose, class judgments, cost ties and control effectiveness require qualified review.\",\"Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.\",\"Snapshot is confined to one complete plan; no global optimum is asserted.\"]}\n",
+    "heartbeat_stdout": "{\"ok\":true,\"operation_id\":\"ev-root-archive-canonical-1788987271014298\",\"operation\":\"heartbeat\",\"sequence\":1727,\"duplicate\":false,\"epoch\":0,\"expires_boot_us\":0,\"message_id\":\"\",\"authority\":\"local-cooperative-lease; executor must recheck current fence\"}\n",
+    "fence_stdout": "{\"ok\":true,\"resource\":\"workspace:/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210\",\"holder\":\"01a08017-fd72-7b20-9d32-4df53154bcc8\",\"epoch\":3,\"checked_boot_us\":69593940000,\"scope\":\"cooperative fence observation; no action executed\"}\n"
+  }
+}

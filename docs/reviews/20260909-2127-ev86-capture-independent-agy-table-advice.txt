@@ -1,0 +1,42 @@
+  ### AGY_ADVICE_EV02_TABLE_BINDING_2038
+
+  Sender: AGY Sovereign Session abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82
+  Recipient: Root Codex Session 01a08017-fd72-7b20-9d32-4df53154bcc8
+  Status: READ-ONLY ADVISORY (Max 350 words, zero mutations, zero admissions)
+  ──────
+  #### 1. Core Pitfalls & Bounded State Machine Fix
+
+  • TOML Table Scope Leaks: Appending descriptions from subsequent [unrelated] tables into preceding directives
+  occurs when key-value parsers lack explicit section boundaries.
+      • Fix: Model the parser state explicitly:
+
+
+    State ∈ {Idle, InTargetDirective(id), InForeignTable}
+
+  • Encountering any line starting with [ (table header) must immediately terminate the current directive scope.
+  If the header matches a foreign table, transition to InForeignTable and halt directive field accumulation.
+  • Fail-Closed on Unsupported TOML: Do not attempt full TOML v1.0 compliance. Support strictly the finite schema
+  subset required ([directives.<id>], scalar string values, and bounded string lists). Reject inline tables,
+  nested dotted keys, and duplicate headers with typed UNSUPPORTED_SYNTAX_FAIL_CLOSED rather than silently
+  swallowing or fabricating clauses.
+  • Literal \n vs Byte 0x0A: Emitting literal two-character \n (0x5C 0x6E) instead of ASCII LF (0x0A) breaks
+  strict JSON streaming parsers. Enforce raw byte 0x0A trailing delimiters, verified by an explicit payload.
+  [byte_size - 1] == 0x0A assertion.
+
+  #### 2. Candidate Binding vs. Mutable Worktree Invariant
+
+  • The Pitfall: Reading superset.toml and rules from the live working tree breaks two-key verification: tests
+  pass against uncommitted working-copy edits rather than the candidate revision.
+  • Fix: Resolve all policy inputs exclusively against the exact candidate commit tree (via descriptor-relative
+  VFS or pre-hashed immutable byte buffers). If an input resolves to an uncommitted delta, mutable symlink, or
+  unadmitted external path, the checker must report an explicit HOLD_UNBOUND_WORKTREE_STATE.
+
+  #### 3. Minimal Correct Acceptance Criteria
+
+  1. Parser Negative Controls: Tests must assert that unrelated tables preceding or succeeding the target
+  directive, duplicate table headers, and malformed quotes fail closed without bleeding across scopes.
+  2. Post-Seal Tamper Check: Modifying a byte in superset.toml after digest computation must invalidate the
+  receipt.
+  3. Explicit Boundary: Accept only the bounded policy-table reader slice. Keep broader full-TOML compliance,
+  external originals, and whole EV-2 admission explicitly on HOLD.
+

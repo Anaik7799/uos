@@ -1,0 +1,86 @@
+{
+  "schema": "uos.ev01-native-trace.v1",
+  "status": "PASS",
+  "trace": "/tmp/ev01-bootstrap-raw-bytecode-1729.execve.log",
+  "trace_sha256": "d0a9d8d7ef07c3912cc79ed5e4305485b834de1b85849396738bf7030cfc36e6",
+  "successful_execs": 265,
+  "failed_lookups": 67,
+  "executables": [
+    {
+      "path": "/bin/tput",
+      "resolved": "/usr/bin/tput",
+      "sha256": "568b559c40262dcb851aed26115767ca646b4269118a0c93ded7d2dd5c565ec6"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+      "resolved": "/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin/gleam",
+      "sha256": "9d57b042c9f857ed898f4b99116ad8433bed2504619613c97d72a52288bef697"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/jj",
+      "resolved": "/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj",
+      "sha256": "630fe2c54d0b9f53794aa37c1274a344e6067175ac9e8925087974fb3d0c4966"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/nix-profile/bin/nproc",
+      "resolved": "/nix/store/3qgy8q2j64v2m9jy3a5jmssacbblhd4r-coreutils-9.11/bin/coreutils",
+      "sha256": "4889ee74963e175225b91d8e2160372d9932e1a4056b080eb8e3ae5474c1e87f"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/dune",
+      "resolved": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/dune",
+      "sha256": "9b0a4d43cecade7d25cf0d524834bc4063d4c23497872d3d47c983f76d52170a"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlc.opt",
+      "resolved": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlc.opt",
+      "sha256": "00f78789117b660082780c5a1b4a2d450a0b26723e548e881594bedc95e4c030"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamldep.opt",
+      "resolved": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamldep.opt",
+      "sha256": "fad9d80c54f4926c37cb92db0bdc946473c654a2477bd04616642fa83dbc2fba"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+      "resolved": "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/x86_64-pc-linux-gnu-ocamlrun-a100",
+      "sha256": "2cb8989363a58b9ca352ea1cd245bf0e8b8adb2c1c64e87b52cbea80bc3e4e0f"
+    },
+    {
+      "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/escript",
+      "resolved": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin/escript",
+      "sha256": "985522721e68d744f021d43146a3d3e739d4da039280f03f6763987140774a24"
+    },
+    {
+      "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp",
+      "resolved": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/beam.smp",
+      "sha256": "632442f4075f4014172cd95f18151a5b4c048c483a7fb3c10577826cdb3b8966"
+    },
+    {
+      "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup",
+      "resolved": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erl_child_setup",
+      "sha256": "e9a620ec4fcd8fb2ac55dfd9a8b0c59ee52ef363454c6502ff26efa2f5476025"
+    },
+    {
+      "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "resolved": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "sha256": "bd67dd9a907245330ed2959749d00345b7f9f3cfa7dbb109e970c16168e231a8"
+    },
+    {
+      "path": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost",
+      "resolved": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/inet_gethost",
+      "sha256": "ca4553748665924716d883b9be80e8a4648565c9108ae22a4e56b9f9467b86e0"
+    },
+    {
+      "path": "/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj",
+      "resolved": "/nix/store/vzrnnii3369cn2a2bgdlkx9gh6m297fj-jujutsu-0.44.0/bin/jj",
+      "sha256": "630fe2c54d0b9f53794aa37c1274a344e6067175ac9e8925087974fb3d0c4966"
+    },
+    {
+      "path": "/usr/bin/tput",
+      "resolved": "/usr/bin/tput",
+      "sha256": "568b559c40262dcb851aed26115767ca646b4269118a0c93ded7d2dd5c565ec6"
+    }
+  ],
+  "scope": "Actual successful execve paths and current ELF bytes; no shared-library release-closure or hostile-host authenticity claim"
+}

@@ -1,0 +1,42 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/home/an/NAS-setup/uos",
+  "argv": [
+    "/tmp/uos-ev-native-risk-20260909/default/validate.exe",
+    "--active-check",
+    "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/docs/reviews/20260909-1854-ev01-bootstrap-risk-1788979434.json",
+    "VERIFY", "codex-ev01-bootstrap", "3"
+  ],
+  "utc_started": 1788979446.143761,
+  "utc_finished": 1788979446.220518,
+  "elapsed_seconds": 0.07675659299999998,
+  "deadline_seconds": 30.0,
+  "exit_code": 0,
+  "output": "{\"status\":\"ACTIVE_OBSERVATION_PASS\",\"authority\":\"NONE\",\"runtime_admission\":\"NOT_GRANTED\",\"observed_at\":\"2026-09-09T18:44:06Z\",\"completed_at\":\"2026-09-09T18:44:06Z\",\"elapsed_monotonic_seconds\":0.021150811,\"clock_start\":{\"source\":\"chronyc tracking\",\"abs_ntp_offset_seconds\":0.000334433,\"uncertainty_seconds\":0.0172269525,\"reference_age_seconds\":658.4911966323853,\"stratum\":3},\"clock_end\":{\"source\":\"chronyc tracking\",\"abs_ntp_offset_seconds\":0.000334428,\"uncertainty_seconds\":0.0172269675,\"reference_age_seconds\":658.5061075687408,\"stratum\":3},\"assessment_sha256\":\"13abd5f8f169823c1214116504af209196cda2a2e102794d3fe66f5d22dc5844\",\"evidence_files_checked\":22,\"sa_plan\":{\"plan_id\":\"uos/ev01-bootstrap/20260909\",\"snapshot_sha256\":\"7c267accbade461ab3428af2501c7b1060aa20bdff5c0eaf76ed7b421a14513c\",\"tasks\":[{\"task_id\":\"VERIFY\",\"state\":\"executing\",\"worker\":\"codex-ev01-bootstrap\",\"lease_until_ns\":\"1788982659842022773\",\"attempt\":3,\"completed_at_ns\":null,\"result_present\":false,\"dependencies\":[]}],\"mode\":\"READONLY\",\"lease_fencing_authority\":\"NOT_GRANTED\"},\"order\":[],\"findings\":[],\"limits\":[\"Listed byte equality does not prove source completeness, runtime behavior or signed provenance.\",\"Analysis prose, class judgments, cost ties and control effectiveness require qualified review.\",\"Observation is not atomic with a later Sa-plan claim/effect; recheck authority and fencing then.\",\"Snapshot is confined to one complete plan; no global optimum is asserted.\"]}\n",
+  "output_sha256": "830878fdbb81cad3c72cf6f2999d54353d85f216bf02b8664133be389d9de6f6",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "otp_launch": {
+    "executable": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+    "environment": [
+      "PATH=/tmp/uos-ev-native-otp-8e283d:/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin:/home/an/NAS-setup/uos/toolchains/nix-profile/bin:/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin:/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin:/usr/bin:/bin",
+      "ERL_FLAGS=+S 2:2 +A 2",
+      "ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "BINDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin",
+      "EMU=beam", "PROGNAME=erl",
+      "ERL_ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "ESCRIPT_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_USE_SERVER=false"
+    ],
+    "descendant_execution_audit": "NOT_PERFORMED_BY_ADAPTER"
+  },
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

@@ -1,0 +1,598 @@
+{
+  "current_authority": {
+    "state": "EXECUTING_PENDING_INDEPENDENT_REVIEW",
+    "attempt": 2,
+    "worker": "codex-ev01-bootstrap",
+    "lease_until_ns": "1788979534945953895",
+    "active_at": "2026-09-09T17:45:49Z",
+    "assessment_sha256": "27b12085993ed9a8571a8d2cbea6f08b89efd2e7f8b2289688fe4db362536d84",
+    "receipts": [
+      {
+        "path": "docs/reviews/20260909-1749-ev01-bootstrap-prerelease-active.json",
+        "sha256": "6c2ae5e16ee4b48c302ec23396f6242906624d0bbe8f5cb99710c4b308600399"
+      },
+      {
+        "path": "docs/reviews/20260909-1749-ev01-bootstrap-release-attempt1.json",
+        "sha256": "e0d0652c3da4414a8a145830eec0d2372c00898bfcd5473db99235a09b2edad2"
+      },
+      {
+        "path": "docs/reviews/20260909-1749-ev01-bootstrap-reclaim-preflight.json",
+        "sha256": "f08abbefa8dbf1d1ee7a71e25ea5bdb9e3be0708633f969180ffb5272dde9445"
+      },
+      {
+        "path": "docs/reviews/20260909-1749-ev01-bootstrap-reclaim-attempt2.json",
+        "sha256": "0881a21a74e1419ad3f8f022386d91ab0b4663cc500131b045d85604de2fada3"
+      },
+      {
+        "path": "docs/reviews/20260909-1749-ev01-bootstrap-active-attempt2.json",
+        "sha256": "355ba05fdb501b299c2248460f1443cfaac24f6dbb7c0c7c25071c736529bc80"
+      }
+    ]
+  },
+  "schema": "uos.ev01-bootstrap-dossier.v1",
+  "observed_epoch": 1788975800.186612,
+  "ev": 1,
+  "source_candidate": "0a8c03c55f91cdf4279ff14503651227c9bb6010",
+  "context_candidate": "8152a497929d68f830385a1a887570f94ccebd77",
+  "status": "SOVEREIGN_REVIEW_DOSSIER_WITH_BLOCKERS",
+  "admission": "NOT_GRANTED",
+  "facet_ids": "Derived verification facets of existing invariant, not invented historical acceptance IDs or new EV numbers",
+  "acceptance_matrix": [
+    {
+      "facet": "scope_identity",
+      "authority_basis": "Scope inventory cycles[0], resolution decisions[0], AGENTS sections1/4",
+      "status": "AGREED_SCOPE_ONLY",
+      "evidence": [
+        "docs/reviews/20260909-0511-ev-scope-resolution.json:15"
+      ],
+      "limits": "Bootstrap standalone JJ scope retained; E01 snapshot and UI-cycle aliases are not substituted."
+    },
+    {
+      "facet": "original_governing_design_and_plan",
+      "authority_basis": "AGENTS section2 references1/2",
+      "status": "MISSING_AUTHORITY_CONTEXT",
+      "evidence": [
+        "docs/reviews/20260909-1720-ev01-bootstrap-final-historical-design-search.json",
+        "docs/reviews/20260909-1720-ev01-bootstrap-final-historical-plan-search.json"
+      ],
+      "limits": "Both exact original paths absent in current candidate and no changes at those paths in ancestors of8152. The0817 implementation plan and metadata receipt do not establish equivalent lineage or supersession."
+    },
+    {
+      "facet": "INV-BOOT-JJ-NON-COLOCATED:operational_repository",
+      "authority_basis": "Agreed EV1 invariant; AGENTS sections1/4",
+      "status": "PRIVATE_BEHAVIOR_AND_CANONICAL_OBSERVATION_PASS",
+      "evidence": [
+        "docs/reviews/20260909-1720-ev01-bootstrap-final-campaign.json",
+        "docs/reviews/20260909-1720-ev01-bootstrap-final-canonical-observation.json"
+      ],
+      "limits": "Fresh pinned JJ init, actual root/git-root/revision, snapshots and exact old/new bytes, sibling workspace isolation observed privately. Canonical revision8647567e490de0f36e921b0798ba0b045f162ba8 observed with source-bound candidate observer. Earlier changed-directory refusals came from this observer inducing secure-config initialization, not proven external concurrent revision changes."
+    },
+    {
+      "facet": "read_only_JJ_configuration_preflight",
+      "authority_basis": "Read-only observation scope and pinned JJ0.44 secure_config implementation",
+      "status": "PASS_WITH_COOPERATIVE_FILESYSTEM_LIMIT",
+      "evidence": [
+        "docs/reviews/20260909-1720-ev01-bootstrap-final-campaign.json",
+        "docs/reviews/20260909-1720-ev01-bootstrap-final-canonical-trace.log.json",
+        "docs/reviews/20260909-1720-ev01-bootstrap-final-config-side-effect-diagnostic.json"
+      ],
+      "limits": "40 controls include no migration/initialization/rewrite. Before JJ, require either no config-id/legacy config, or20-hex ID and exact bounded protobuf path match in existing inherited config context. Canonical trace shows no write-open/rename/unlink/mkdir calls. Earlier private-XDG design wrote canonical .jj/repo/config-id via JJ; source805 approval was withdrawn. No hostile concurrent filesystem guarantee or kernel sandbox is asserted."
+    },
+    {
+      "facet": "INV-BOOT-JJ-NON-COLOCATED:semantic_noncolocation",
+      "authority_basis": "Agreed invariant and parent policy interpretation",
+      "status": "PRIVATE_BEHAVIOR_PASS",
+      "evidence": [
+        "docs/reviews/20260909-1720-ev01-bootstrap-final-campaign.json"
+      ],
+      "limits": "Real colocated JJ, Git files/symlinks/nonempty or unreadable directories and external/symlink stores refuse. Empty .git directory is allowed only as reported non-operational unexplained marker; metadata and internal-store operations remain required."
+    },
+    {
+      "facet": "G-BOOT1:actual_integrated_gate",
+      "authority_basis": "tools/uos/src/main.gleam G-BOOT1 enforces bootstrap invariant",
+      "status": "PASS_AT_SOURCE",
+      "evidence": [
+        "docs/reviews/20260909-1720-ev01-bootstrap-final-campaign.json",
+        "docs/reviews/20260909-1720-ev01-bootstrap-final-red-empty-marker.json",
+        "docs/reviews/20260909-1720-ev01-bootstrap-final-red-file-marker.json",
+        "docs/reviews/20260909-1720-ev01-bootstrap-final-red-colocated.json"
+      ],
+      "limits": "Actual compiled Gleam CLI executes exact staged OCaml observer and propagates exits. No tools/uos-cli shell wrapper or deployment performed."
+    },
+    {
+      "facet": "formal_predicate_and_interpreter",
+      "authority_basis": "Common obligation machine-verifiable formal specification at candidate",
+      "status": "BOUNDED_EXECUTABLE_MODEL_PASS",
+      "evidence": [
+        "docs/reviews/20260909-1720-ev01-bootstrap-final-campaign.json"
+      ],
+      "limits": "Nine-fact conjunction/multiplicity predicate, all512 Boolean assignments/reverse order,9216 missing/duplicate falsifiers and2048 twin-seed observations. Two actually compiled mutants fail distinct designated assertions. This exhausts the finite predicate domain, not all JJ/filesystem histories or adversarial races; interpreter correspondence still needs independent review."
+    },
+    {
+      "facet": "candidate_and_native_execution_binding",
+      "authority_basis": "Common fresh immutable candidate/runtime obligation",
+      "status": "PASS_WITH_EXPLICIT_CLOSURE_LIMITS",
+      "evidence": [
+        "docs/reviews/20260909-1720-ev01-bootstrap-final-campaign.json",
+        "docs/reviews/20260909-1720-ev01-bootstrap-final-native-trace-audit.json"
+      ],
+      "limits": "Exact commit_id source extraction,121 Gleam dependency files, source/artifact/output hashes,61 child receipts. Trace321 successful execs/16 ELF paths. Shared-library release closure, authenticated producer and hostile-host integrity are not established."
+    },
+    {
+      "facet": "sovereign_review_and_effect_authority",
+      "authority_basis": "Common authenticated independent Codex+AGY and relevant fences",
+      "status": "PENDING",
+      "evidence": [
+        "docs/reviews/20260909-1720-ev01-bootstrap-final-claim.json",
+        "docs/reviews/20260909-1720-ev01-bootstrap-final-active.json"
+      ],
+      "limits": "Own VERIFY attempt1/current workspace lease supports bounded task execution only. Independent source review and authenticated Codex+AGY complete-dossier review remain pending. No integration/runtime/ceiling/admission effect granted."
+    }
+  ],
+  "receipts": [
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-campaign.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/verification.json",
+      "sha256": "7ee4fc3c4d529449a563c8bb2efbf6dbf2961c02f84a6f7582befee5a982e3b3"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-000-candidate.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/001-candidate.json",
+      "sha256": "8d44b098b4607a8c70f776cdead3c8b5a3d88adf04a9ec9ea5fd3d2777fd26f5"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-001-candidate.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/002-candidate.json",
+      "sha256": "30d0e7febc4a392cb1e9cdd1a79dd1727721e73d95f262ca99f4f960d2312ac8"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-002-candidate.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/003-candidate.json",
+      "sha256": "a784cac0fa40632ba581446700eb848c822c16a63ab655083597e037d72fb7d6"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-003-candidate.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/004-candidate.json",
+      "sha256": "1a62e2845fe5da6e844ee6953fcf84a351269d542fa6a80aa672e55c77cf80c7"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-004-candidate.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/005-candidate.json",
+      "sha256": "4bbd5bf3c6435711dacf52712e59df5471528b8a5b0e864741aea07235b461bd"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-005-candidate.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/006-candidate.json",
+      "sha256": "8569832f205fd74153f6b2a97dcb14252746ebedfe85143843431c06a80a6e44"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-006-candidate.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/007-candidate.json",
+      "sha256": "079a2dfd214f334f4012b3a0c522445f7ef93782d67b4531f98b5f9dfa748a12"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-007-candidate.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/008-candidate.json",
+      "sha256": "ffdbcac4381fa6e330b8185171d5ece35cb52ed862cdad4514b512f4f9a05e26"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-008-candidate.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/009-candidate.json",
+      "sha256": "c89b9624f4c8a527709a2d659fde134011b32820967c1876b2191b190be39c91"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-009-candidate.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/010-candidate.json",
+      "sha256": "024c28c6580d7df9b6ad8ea3d7e0e5a0447589260237bc584b5b14200c2dbab2"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-010-candidate.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/011-candidate.json",
+      "sha256": "2f290b3af8ed1cab5dae8453597c6b015c7daf988854f2100f01f8aab2f73c3c"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-011-candidate.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/012-candidate.json",
+      "sha256": "4cfa981319cfa64593284e40ca510e81f76509a23beae451609506b8592fccf2"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-012-candidate.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/013-candidate.json",
+      "sha256": "1ac2c20ea83d949cf4f7eff5e752bdf38d7df9abc130698b3b5614a61d30644c"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-013-candidate.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/014-candidate.json",
+      "sha256": "201c1c4318c63e8e88e38230c1b8651696635933c6b4b8ac9eb94373dae2047f"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-014-candidate.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/015-candidate.json",
+      "sha256": "cbc7b6899efee0755da5e1e26465a399680bc5a3bbbddd89f77627ce26a673dc"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-015-compile-cli.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/016-compile-cli.json",
+      "sha256": "29fc8575e5a8a5ade776f7dd6b00133edca2cf8a894ebdcd361fb43988a78a25"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-016-compile-model-observer.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/017-compile-model-observer.json",
+      "sha256": "3527478c789561f0c65b24f84f2845b97468f8108748acb0e40c8071de6e4424"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-017-formal-truth-table.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/018-formal-truth-table.json",
+      "sha256": "a21b720ebdccdea74698d6544fde69e6579b56b4ec1e10b390ad5bed6ab6f61a"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-018-absent-refuses.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/019-absent-refuses.json",
+      "sha256": "6ec3a64e35e00d107a5f2b2283a6089ee5d4dbe6c58000b733d80c6e1eeb89d2"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-019-empty-jj-refuses.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/020-empty-jj-refuses.json",
+      "sha256": "70f51d20009035a34593fc622f8e42f3b468f626fa88bf7f648b27434d8e7209"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-020-file-jj-refuses.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/021-file-jj-refuses.json",
+      "sha256": "6d17a7fa0dd9a1711f48ecbfd3352fb87b0f50d774875d090c0f5825e738fef5"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-021-init-colocated.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/022-init-colocated.json",
+      "sha256": "e24fdd24be50ec885dc749617657ff286ef073494893a5b2c297b8d2d1f7944d"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-022-colocated-refuses.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/023-colocated-refuses.json",
+      "sha256": "5929ffdf0b372cdec58a95247364125aa4b5d4cb87515ff748b2d2f105a9fdfc"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-023-init-standalone.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/024-init-standalone.json",
+      "sha256": "8319a4be676285213aa99fe8704bf618e11d2fe1bd1d9c2133afc085308bc4c8"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-024-snapshot-a.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/025-snapshot-a.json",
+      "sha256": "026554e376225b5e5dadb4a4fdbc95166eefd88ecd7c75d6b95e8cbf5eb01c84"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-025-current.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/026-current.json",
+      "sha256": "03337870e58b8662b561e2cd0c1fd250d6ec26e3b996260b5615246fd1f8da1a"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-026-standalone-passes.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/027-standalone-passes.json",
+      "sha256": "69cdd6460ebcccade474e5fd7e34566af5dbaaec8d66f1402353b8cece2992ec"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-027-current.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/028-current.json",
+      "sha256": "0082bf0b4c47b647c5f93b4c42a4f659f6277ffe43e55b9c4f0ea1ec4c23dabf"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-028-legacy-config-migration-refuses.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/029-legacy-config-migration-refuses.json",
+      "sha256": "b5c0f47d391185f673296a86c926624a82e7182c3fef02b142261d5558fdb0f5"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-029-missing-secure-metadata-refuses.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/030-missing-secure-metadata-refuses.json",
+      "sha256": "1e4899e2e0b98428017fe86a5fab0f17d282e091b85207642fec1a11c46c6f88"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-030-malformed-config-id-refuses.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/031-malformed-config-id-refuses.json",
+      "sha256": "31f02590603fbcc5fdb2a5e8747faf56af1b5a3524c66f2c407916cebc961d50"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-031-existing-secure-config-passes.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/032-existing-secure-config-passes.json",
+      "sha256": "75ad3484e423705105627c72e66c56798837f8aa83e03f685f2b4117ece5d741"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-032-relocated-secure-config-refuses.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/033-relocated-secure-config-refuses.json",
+      "sha256": "adc2e5ee636571945351aed60a2ef84b9294190096b168b52a23cb00a31e260d"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-033-malformed-secure-metadata-refuses.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/034-malformed-secure-metadata-refuses.json",
+      "sha256": "44135396eb19ffc30ca694c2f726db0e2129f2012d95649216b50f56be379ceb"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-034-workspace-config-initialization-refuses.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/035-workspace-config-initialization-refuses.json",
+      "sha256": "dca26c889b9615f84d62b5779389b8154b06acb1efb31a3c5d8b586b0be7e803"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-035-empty-git-marker-passes.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/036-empty-git-marker-passes.json",
+      "sha256": "404f05e762d8be31a7e8b8e373c15e8151c388a0caf1c173c9084849aea4a144"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-036-git-file-refuses.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/037-git-file-refuses.json",
+      "sha256": "8a9312f9ca83df855e4541315612acf6796c180248ba5d9da2e7f4641ce70c12"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-037-git-symlink-refuses.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/038-git-symlink-refuses.json",
+      "sha256": "64f8e3a677b0fa1ab2fe086a25386f6b1eeee21c5dc322e971462c91878d7b56"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-038-unreadable-git-refuses.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/039-unreadable-git-refuses.json",
+      "sha256": "1f0149a965c2dc3029c4caa451724d8bf789ba3ee0f41ba221bdc2287249c0a8"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-039-nonempty-git-refuses.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/040-nonempty-git-refuses.json",
+      "sha256": "15459152fda7cc1e4ed8c08a8128ad6c3cf8004b6d28c99dea4cb6c86bc02da1"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-040-external-store-refuses.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/041-external-store-refuses.json",
+      "sha256": "4f4e4ac31414a6f7b463c3ee93f78c220ecbbe86db0f71853c7eed879340fa67"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-041-bad-store-type-refuses.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/042-bad-store-type-refuses.json",
+      "sha256": "693f32ddc252aa3152b93102f858f625e8eeb096e9596af8d7f447dd440c67e6"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-042-symlink-store-refuses.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/043-symlink-store-refuses.json",
+      "sha256": "0b11b043fd3f0c564bdd91a17ebb748cc5cd78176f9b56fd487d1ab2a4d75a04"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-043-symlink-jj-refuses.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/044-symlink-jj-refuses.json",
+      "sha256": "09c63bbe13eed6ee2c4b141abe92bb226ddcf0ce4d710cffbe57c4aabe1098f8"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-044-corrupt-checkout-refuses.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/045-corrupt-checkout-refuses.json",
+      "sha256": "3570aadf6c3c896c294c11d4d31e163e5b10f0516f3ac261cb812eb83b3281f6"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-045-snapshot-alpha.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/046-snapshot-alpha.json",
+      "sha256": "d3909d8086f4a1e7ae83394f7ea59d47b7d5dae41a5a6bd88de948ca47deea70"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-046-current.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/047-current.json",
+      "sha256": "79bd3407644a1325b3a0b5f08ac2236e50ab8e08e33e58a708013f3bfc32264c"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-047-snapshot-beta.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/048-snapshot-beta.json",
+      "sha256": "747b727a53365992008739c69386170475bdef9a137bf42a100a7a7ce1bc03a6"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-048-current.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/049-current.json",
+      "sha256": "de5a4f238b24362243156498ee42778d24193e1a4682afaafb7b25c0a8d06b84"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-049-read-alpha.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/050-read-alpha.json",
+      "sha256": "cd754cc03216dfa26509a3585ebee74efcd4092c7122d6a99575d57a0244b490"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-050-read-beta.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/051-read-beta.json",
+      "sha256": "afddf90b3ae72b2f702efc5d96df006ceba463040a35cb917fe04ed32ead28b0"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-051-workspace-add.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/052-workspace-add.json",
+      "sha256": "edea5168dfdc6989fd19c8a920d98a98549414d06928aaf471774eb2010b0ab0"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-052-additional-workspace-passes.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/053-additional-workspace-passes.json",
+      "sha256": "d9a7c932ee7be1035a236f911f48388052cea5a1a560b3fc771daac9ff8721ea"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-053-snapshot-sibling.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/054-snapshot-sibling.json",
+      "sha256": "98ff9ee51e1e0032786f342cdcb3671607923b267b3cb01236058ba9926ffbc2"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-054-corrupt-pointer-refuses.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/055-corrupt-pointer-refuses.json",
+      "sha256": "e1aac84210cc15a593025db2db6f14dc54855068b43dd881644d734f0e406e6a"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-055-nested-cli-resolves-root.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/056-nested-cli-resolves-root.json",
+      "sha256": "9bc97fdf8a27e62cc609bf26cb8d390e7d628e1d908081f9607a555ed5c0d445"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-056-checker-args-refuse.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/057-checker-args-refuse.json",
+      "sha256": "62ad28ae8dd6d6541a325365eb77da5890cc3c100ee6053b5bc32c41fa50b2f2"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-057-compile-designated-mutant.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/058-compile-designated-mutant.json",
+      "sha256": "25a36598b9d9e4093b9562f9fb5e2a76089eda85e14dfb5e7b02b5e1f40a39e7"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-058-designated-mutant-fails.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/059-designated-mutant-fails.json",
+      "sha256": "445e45b4a382ec1551df5658071ff08808ca03ce7573b302bf8b169212491628"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-059-compile-duplicate-mutant.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/060-compile-duplicate-mutant.json",
+      "sha256": "cbe0be0d4a4cef37d8991e57637f71416d8fff5a5daf23c804d3803ef31dfb98"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-060-duplicate-mutant-fails.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-60e463/receipts/061-duplicate-mutant-fails.json",
+      "sha256": "95827822a76aa6be992bca112beedb80c5b66c0330bbf5be5163de527dec85ee"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-native-trace-audit.json",
+      "source_path": "/tmp/ev01-bootstrap-config-1740-audit.json",
+      "sha256": "b928bf05921916df543065e92c94ddc6fa6b03379f9f816825e959258a0d7953"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-native-execve.log.json",
+      "source_path": "/tmp/ev01-bootstrap-config-1740.execve.log",
+      "sha256": "f149b3f205ac94e3d6e68eee6ed8042dc2ab733464c08aac4114bd9f40ddf555",
+      "raw_sha256": "7752d0c284884399400bf7830f8285083731301c3e82c38e5295e1649185b7a7",
+      "encoding": "Lossless JSON raw_utf8; .log patterns are ignored by JJ"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-campaign-invocation.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-config-1740.json",
+      "sha256": "99741dc339440fc8788eda6190509e2f13503815a16885f7678666c1ae523a0f"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-canonical-observation.json",
+      "source_path": "/tmp/ev01-bootstrap-canonical-final-1742.json",
+      "sha256": "e854ff84c61612edc6c0ecd12167a84d3ccba00ced9022760f92360a13eb170c"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-canonical-trace.log.json",
+      "source_path": "/tmp/ev01-bootstrap-canonical-final-1742.trace",
+      "sha256": "3e45bc3d184a6b6729c11a8a08b29f04b56f46a5d8fa41850493472560514c58",
+      "raw_sha256": "8e77fe30c84e905bab3c8dfc4c1c6406473287cdd811d67c0dc3fac1e3d53c1a",
+      "encoding": "Lossless JSON raw_utf8; .log patterns are ignored by JJ"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-canonical-exec-audit.json",
+      "source_path": "/tmp/ev01-bootstrap-canonical-final-1742-audit.json",
+      "sha256": "d52066b64337522c0b9903a44573ce9c7da406ffd33ee9f4487b1e0db0b914ea"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-config-side-effect-diagnostic.json",
+      "source_path": "/tmp/ev01-bootstrap-canonical-diagnostic-1735.json",
+      "sha256": "e73605baae0634cb813350ff2920fcca8ca89dfd307c813e4233cadbde72d3e8"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-config-side-effect-filetrace.log.json",
+      "source_path": "/tmp/ev01-bootstrap-canonical-1736.files.log",
+      "sha256": "25f75f0b1182674ab688e199a44f5f8fedec1e5594cec4370902079bace7f5cf",
+      "raw_sha256": "15ab2330d164ab4ef1a2827c12338ec5a5418836f067bfa5332ecc16024d3498",
+      "encoding": "Lossless JSON raw_utf8; .log patterns are ignored by JJ"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-config-side-effect-wrapper-invocation.json",
+      "source_path": "/tmp/ev01-bootstrap-canonical-filetrace-1736.json",
+      "sha256": "0f9bd89396c043d61028299103955ecc246a037685f1b17f79f20aad34a6a292"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-canonical-changed-refusal.json",
+      "source_path": "/tmp/ev01-bootstrap-canonical-observation-1729.json",
+      "sha256": "f0c28c80577a146189b2223706c6860bf2ef8aa73295fa860fd0af3ae5818db4"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-historical-design-search.json",
+      "source_path": "/tmp/ev01-bootstrap-design-lineage-1730.json",
+      "sha256": "be2663bf144d9730a6548b2099e9e1e9504f41efa34f2b0f6444c8ebd129c9ba"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-historical-plan-search.json",
+      "source_path": "/tmp/ev01-bootstrap-plan-lineage-1724.json",
+      "sha256": "8f11bd93b61dc3901207cd07ee09e60c133765138212728f2c2bb7d03978e8db"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-initial-preflight.json",
+      "source_path": "/tmp/ev01-bootstrap-preflight.json",
+      "sha256": "004e8ad5b35bd1715a272ba4904c5e42a76c629d8aa9c93e69b3d23a7ba49665"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-claim.json",
+      "source_path": "/tmp/ev01-bootstrap-claim.json",
+      "sha256": "fec5d5258b2e03e863ff0f61c5164879e859f8bf91d0137d7503132f142ba75d"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-active.json",
+      "source_path": "/tmp/ev01-bootstrap-active-config-1739.json",
+      "sha256": "eed7805dbc3165ec7e5010e1d2cc2e1519c03a26c8874100f03241f2a829ebbb"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-red-empty-marker.json",
+      "source_path": "/tmp/ev01-bootstrap-red-empty-dir.json",
+      "sha256": "67993a3671aa80e70dea44f462cdd23248629441a32ebfb5bbdabc9c1b9d74cd"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-red-file-marker.json",
+      "source_path": "/tmp/ev01-bootstrap-red-marker-file.json",
+      "sha256": "cd108af27488a4c8579d7c3fddb32d45696ab21382854f898ffb777f67136601"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-red-colocated.json",
+      "source_path": "/tmp/ev01-bootstrap-red-colocated.json",
+      "sha256": "2cd91fd3fe6966748f6e08114ee2d5f393b1ad2c42b67a98062af92f1b2256f4"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-red-valid-standalone.json",
+      "source_path": "/tmp/ev01-bootstrap-red-standalone.json",
+      "sha256": "d2c9b879f7e2525f9e8eabebedb10d75688f49db5c656fcf8e319b35b1b700f4"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-strict-marker-overreach.json",
+      "source_path": "/tmp/ev01-bootstrap-observer-second.json",
+      "sha256": "393d0216a35376fb2fcfb7ff2db8eed80b3b5285946aab4b3f42f44e2870c546"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-configuration-refusal.json",
+      "source_path": "/tmp/ev01-bootstrap-observer-semantic.json",
+      "sha256": "99263e7ab413ab6e185a2b894343550da41d9d92ad2cc750ca8dfe5a0e4d3a81"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-loader-harness-failure.json",
+      "source_path": "/tmp/ev01-bootstrap-observer-first.json",
+      "sha256": "4762257b9978ab2d5311e3f9b1cee91715ac3d205552ecfe590cfa427c178084"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-parser-harness-failure.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-first-1719.json",
+      "sha256": "45de2e1aa415e6072eba8d2601d403a399d40a5193ca312180e772f827d1a643"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-atime-harness-failure.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-second-1720.json",
+      "sha256": "9e69b46a5a3a39620c7231c289554a20b41f131abde646696c41b8a95fd44673"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-native-linker-shell-run.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-final-1724.json",
+      "sha256": "fbf1c6e9b72abd0bf7ce3e0a61b2cfbe25dc8abd97557276aa7156c8afe4430c"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-native-linker-shell-execve.log.json",
+      "source_path": "/tmp/ev01-bootstrap-final-1724.execve.log",
+      "sha256": "1444a5829daccb9323eb0305d6384cdf758457dceff729b748bfff45771ca2a4",
+      "raw_sha256": "fc614e05a4f28d5296b600e16afa286ee485a42817763ac1b0402fc7a9f2cba4",
+      "encoding": "Lossless JSON raw_utf8; .log patterns are ignored by JJ"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-bytecode-launcher-shell-run.json",
+      "source_path": "/tmp/ev01-bootstrap-campaign-direct-1726.json",
+      "sha256": "0c5e32dac929cf77a5097f8b4e911085eae2f4719de48525e4b940fab52fb089"
+    },
+    {
+      "path": "docs/reviews/20260909-1720-ev01-bootstrap-final-bytecode-launcher-shell-execve.log.json",
+      "source_path": "/tmp/ev01-bootstrap-direct-1726.execve.log",
+      "sha256": "b98493b815b03b71be30280727474dc8df7866d5345eaf23714a4042d0f3363a",
+      "raw_sha256": "5aebf6ad836d29cb7bc5b97b601251b08629db2675f3ce1b2d1bc89badd834b7",
+      "encoding": "Lossless JSON raw_utf8; .log patterns are ignored by JJ"
+    }
+  ],
+  "parent_plan": "uos/ev-admission/20260909-0210",
+  "execution_plan": "uos/ev01-bootstrap/20260909",
+  "task": "VERIFY",
+  "attempt": 1
+}

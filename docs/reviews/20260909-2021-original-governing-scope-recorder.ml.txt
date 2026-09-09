@@ -1,0 +1,249 @@
+#use "topfind";;
+#require "unix,yojson,cryptokit,mtime.clock.os,str";;
+#directory "/tmp/ev-campaign-independent-direct-review-20260909/build/default/.ev_receipts.objs/byte";;
+#load "/tmp/ev-campaign-independent-direct-review-20260909/build/default/ev_receipts.cma";;
+(* @agent_intent: Record external-document discovery metadata and qualified
+   advisory decisions. External document contents are neither read nor hashed.
+   @laws: exclusive new files; bounded local reads; fresh task and workspace
+   observations immediately before archival effects; no admission mutation. *)
+let ws="/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210"
+let root="/home/an/NAS-setup/uos"
+let candidate="b112a47c40cf04c37a282366ee976cb5aba86f9c"
+let session="01a08017-fd72-7b20-9d32-4df53154bcc8"
+let agy="abe9bd8d-f0be-4ea7-81a8-9cc6d3901e82"
+let require=Receipt_validator.require
+let sha=Receipt_validator.sha
+let f=Yojson.Basic.Util.member
+let string=Yojson.Basic.Util.to_string
+let budget=Receipt_validator.make_budget ~seconds:90. ~bytes:4_194_304 ()
+let read=Ev_campaign.read_file budget
+let json bytes=Yojson.Basic.from_string bytes
+let strings xs=`List(List.map(fun s->`String s)xs)
+let ()=require(Sys.getcwd()=ws)"wrong recorder cwd"
+let transcript=read "/tmp/ev-agy-originals-2030-tool-transcript.json"
+let t=json transcript
+let identity part=f part t|>f "output"|>string|>json|>f "result"|>f "agent"|>f "agent_session"|>f "value"|>string
+let ()=require(identity "before"=agy && identity "after"=agy)"AGY identity changed"
+let pane=f "pane" t|>f "output"|>string
+let marker="  ### AGY_ADVICE_ORIGINALS_AND_PATH_SCOPE_2027\n"
+let start=try Str.search_backward(Str.regexp_string marker)pane(String.length pane)with Not_found->failwith"actual advice absent"
+let stop=try Str.search_forward(Str.regexp_string "────────────────────────────────")pane(start+String.length marker)with Not_found->String.length pane
+let advice=String.sub pane start(stop-start)
+let contains body needle=try ignore(Str.search_forward(Str.regexp_string needle)body 0);true with Not_found->false
+let ()=List.iter(fun s->require(contains advice s)("incomplete advice "^s))[agy;"External Originals";"HOLD_RAW_HTTP_TARGET";"1024"]
+let ext="/home/an/NAS-setup/docs/"
+let external_paths=[
+ "design/2026-09-05-uos-standalone-jujutsu-monorepo-design.md";
+ "design/2026-09-05-uos-standalone-jujutsu-monorepo-implementation-plan.md";
+ "design/2026-09-05-uos-source-feature-traceability-catalog.md";
+ "design/2026-09-05-uos-formal-mandate-spec.json";
+ "design/2026-09-05-uos-formal-mandate-spec.schema.json";
+ "journal/2026-09-05-uos-consolidation-context-journal.md";
+ "design/2026-09-05-uos-agent-policy-capability-superset-mapping.md";
+ "design/2026-09-05-uos-agent-capability-inventory.json";
+ "design/2026-09-05-uos-planning-bundle-index.md"]
+let stat_metadata path=
+ let s=Unix.lstat path in require(s.st_kind=Unix.S_REG && s.st_size<=1_048_576)"external metadata shape/bound";
+ `Assoc["locator",`String path;"kind",`String "regular";"bytes",`Int s.st_size;
+ "device",`Int s.st_dev;"inode",`Int s.st_ino;"mode",`String(Printf.sprintf "%04o" s.st_perm);
+ "mtime_epoch",`Float s.st_mtime;"ctime_epoch",`Float s.st_ctime;
+ "content_sha256",`Null;"source_revision",`Null;"writer_quiescence",`String "UNKNOWN";
+ "classification",`String "EXTERNAL_REFERENCE_UNFROZEN_NOT_IMPORTED"]
+let metadata=List.map(fun p->stat_metadata(ext^p))external_paths
+let boundary_paths=["/home/an/NAS-setup/.git";"/home/an/NAS-setup/.jj";"/home/an/.git";"/home/an/.jj"]
+let boundaries=List.map(fun path->
+ let observed=try let s=Unix.lstat path in `Assoc["present",`Bool true;"kind",`String(match s.st_kind with Unix.S_DIR->"directory"|Unix.S_REG->"regular"|_->"other")]
+ with Unix.Unix_error(Unix.ENOENT,_,_)->`Assoc["present",`Bool false]in
+ `Assoc["path",`String path;"observation",observed])boundary_paths
+let local_paths=["AGENTS.md";"docs/reviews/20260909-0511-ev-scope-resolution.json";
+ "docs/design/20260906-1649-codex-master-session-handover.md";
+ "migration/evidence/preflight.md";"migration/evidence/parent-boundary.md";
+ ".codex/rules/20260908-2142-determinate-nix-devenv-mandate.md";
+ "tools/bootstrap/bootstrap_model.ml";"tools/bootstrap/bootstrap_observer.ml";"tools/uos/src/main.gleam"]
+let local_bindings=List.map(fun path->
+ let bytes=Receipt_validator.candidate_bytes ws candidate path in
+ require(sha(read(ws^"/"^path))=sha bytes)("current local source differs "^path);
+ `Assoc["candidate",`String candidate;"path",`String path;"sha256",`String(sha bytes)])local_paths
+let prior_scope=json(read(ws^"/docs/reviews/20260909-0511-ev-scope-resolution.json"))
+let ()=require(f "new_admissions" prior_scope=`Int 0 && f "authority" prior_scope=`String "REPORT_ONLY")"prior scope status changed"
+let rows=[
+ (1,"system universe/authority; source, target and prohibited-set identities; Task1","Bootstrap: standalone non-colocated JJ",190);
+ (2,"revision/tree/provenance; external identities, sanitized snapshots and denominators; Tasks2-3","Governance and38 directive families",191);
+ (3,"plane/surface and authority crossings; Task3A","Source freeze and sanitized ancestry",192);
+ (4,"subsystem/component ownership and AS-IS/TO-BE disposition across C01-C18","Gleam control plane and actor runtime",193);
+ (5,"capability/feature/requirement ontology and first independent three-review wave","Hermes oracle and evidence store",194);
+ (6,"module/file/generated artifact source class, license, digest and target","ZigVM runtime and bytecode engine",195);
+ (7,"public symbol/type/language boundary classification","Kubernetes and secondary storage allocation",196);
+ (8,"interactions and timeout/cancel/idempotency/replay/failure semantics","Zero-Muda audit",197);
+ (9,"data/fact/event/rule and differential oracle obligations","Consolidations",198);
+ (10,"algebra/carrier/transformation, laws/cost and second review wave","Symbiosis",199);
+ (11,"formal/security/safety obligations, assumptions and stop controls","Unified MCP control loop",200);
+ (12,"scenario/test/generator/mutant denominator and adverse/oracle coverage","Modular MAX worker",201);
+ (13,"runtime/deployment resources, hardware, SLO and recovery","OTP29 root supervisor",202);
+ (14,"fresh observation/evidence/KPI atoms, drift and rollout","Hermes parity suites",203);
+ (15,"atomic8D/13-point admission, zero semantic loss, third review and main","System admission and storage cutover",204)]
+let conflicts=List.map(fun(ev,original,later,line)->`Assoc["ev",`Int ev;
+ "original_analyst_summary",`String original;"original_plan_line",`Int line;
+ "later_handover_summary",`String later;"relation",`String "NO_VERIFIED_SUPERSESSION_OR_EQUIVALENCE";
+ "required_disposition",`String "Retain both obligations in a namespaced crosswalk until exact sovereign reconciliation; do not promote by numeric identifier alone"] )rows
+let ocamlrun=root^"/toolchains/opam-ocaml/bin/ocamlrun"
+let ocaml=root^"/toolchains/opam-ocaml/bin/ocaml"
+let invoke args=Receipt_validator.run ~seconds:30. ~limit:1_048_576 ocamlrun(ocaml::(ws^"/tools/ev_native.ml")::"--"::args)
+let active=invoke["risk";"--active-check";".uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-2057-ev-admission-native-risk-1788984357.json";"PROGRAM";"codex-ev-admission-01a08017";"7"]
+let ()=require(f "status"(json active)=`String "ACTIVE_OBSERVATION_PASS")"active refused"
+let operation="ev-originals-record-"^Printf.sprintf "%.0f"(Unix.gettimeofday()*.1e6)
+let heartbeat=invoke["coordinator";"heartbeat";session;candidate;"task:PROGRAM-attempt7,scope-reconciliation";operation]
+let ()=require(f "ok"(json heartbeat)=`Bool true)"heartbeat refused"
+let fence=invoke["coordinator";"check";session;"workspace:"^ws;"3"]
+let ()=require(f "ok"(json fence)=`Bool true)"fence refused"
+let ()=
+ let now=Unix.gettimeofday()in let g=Unix.gmtime now in
+ let stamp=Printf.sprintf "%04d%02d%02d-%02d%02d"(g.tm_year+1900)(g.tm_mon+1)g.tm_mday g.tm_hour g.tm_sec in
+ let utc=Printf.sprintf "%04d-%02d-%02dT%02d:%02d:%02dZ"(g.tm_year+1900)(g.tm_mon+1)g.tm_mday g.tm_hour g.tm_min g.tm_sec in
+ let prefix="docs/reviews/"^stamp^"-original-governing-scope"in
+ let write suffix bytes=let path=prefix^suffix in Ev_campaign.write(ws^"/"^path)bytes;
+ `Assoc["path",`String path;"sha256",`String(sha bytes);"bytes",`Int(String.length bytes)]in
+ let artifacts=[write "-agy-transcript.json" transcript;write "-agy-advice.txt" advice;
+ write "-recorder.ml.txt"(read "/tmp/ev_record_original_scope_2031.ml")]in
+ let record=`Assoc["schema",`String "uos.original-governing-scope-discovery.v1";"observed_at",`String utc;
+ "candidate",`String candidate;"observer",`String session;"plan",`String "uos/ev-admission/20260909-0210";
+ "task",`String "PROGRAM";"attempt",`Int 7;"authority",`String "REPORT_ONLY";
+ "status",`String "ORIGINALS_LOCATED_EXTERNAL_PROVENANCE_AND_SCOPE_HOLD";
+ "policy_ceiling",`Int 93;"new_ev_admissions",`Int 0;"external_content_ingested",`Bool false;
+ "external_metadata",`List metadata;"boundary_metadata",`List boundaries;"local_candidate_bindings",`List local_bindings;
+ "crosswalk_kind",`String "Analyst paraphrases from bounded source reads; not an imported original or machine-proven semantic equivalence";
+ "ev_scope_conflicts",`List conflicts;
+ "bootstrap_obligations",strings["Classify existing target before any initialization.";"Observe parent authority and exclusion, with exact root and no dual VCS.";"Require exactJJ0.44.0 or reviewed update.";"Original Task1 requires top-level.git absent; current observer permits an explicitly empty marker.";"Bind operation/change/commit identities and integration/bootstrap; main remains separately gated.";"Conflict-free candidate and tracked-secret/state exclusion remain separate checks.";"OriginalEV1 source/target/prohibited-set completeness and cycle snapshot conservation remain obligations, not just nine structural facts."];
+ "gate_collision",`Assoc["id",`String "G-BOOT1";"original",`String "Explicit operator authorization";
+ "current_implementation",`String "Bounded structural JJ observation";"status",`String "SEMANTIC_COLLISION_NOT_RESOLVED_BY_PASS"];
+ "advice",`Assoc["reviewer",`String agy;"marker",`String "AGY_ADVICE_ORIGINALS_AND_PATH_SCOPE_2027";
+ "authentication",`String "Herdr identity before/after; unsigned advisory with race, not cryptographic attestation";
+ "adopted",strings["Read-only external evidence and current-dated conflict record.";"Retain EV86 parsed-path scope, failure and UNRUN evidence; do not bypass the safety interruption.";"Capture response before asserting its expected status in the evidence helper."];
+ "qualified_or_rejected",strings["AGY2015 advice assumed absent originals and narrowEV1 scope; discovery invalidates that premise.";"No proof was supplied that the bounded structural checks supersede or ratify original obligations.";"Nix mandate section3 item7 documents encountering existing empty.git markers and requiring explicit path URLs; it does not establish who created the marker or why.";"Original no.git wording and current permitted empty marker remain distinct. No canonical marker was changed.";"AGY1024-byte statement is incorrect for source7774; the implemented application-path ceiling is4096.";"No bounded transport request-target or flooding protection is inferred from Mist/httpc references."]];
+ "ev86",`Assoc["candidate",`String "7774d111070091c49c8af2a08cb430f8153bf59d";
+ "status",`String "HOLD_RAW_HTTP_TARGET_NOT_BOUNDED_BY_APPLICATION_LAYER";
+ "independent_direct_groups_passed",`Int 17;"saved_http_responses",`Int 12;
+ "case13",`String "Expected404 assertion failed before saving actual status/body; actual response unknown";
+ "subsequent_unrun_cases",`Int 10;"long_target_bypass_demonstrated",`Bool false;
+ "interruption",`String "Automatic cybersecurity classification interrupted reviewer; subsequent source/saved-artifact-only work and local capture repair do not bypass it"];
+ "risk_delta",`Assoc["class",`String "P1";"s",`Int 5;"o",`Int 3;"det",`Int 4;"rpn",`Int 60;
+ "cause",`String "Identifier reuse and unqualified advice could silently erase original acceptance obligations.";
+ "controls",strings["Append-only namespaced crosswalk; whole-EV HOLD; retain prior observed component results at their actual scope.";"No external import, canonical.git mutation, runtime cutover or sovereign admission from this discovery."]];
+ "fresh_checks",`Assoc["active_stdout",`String active;"heartbeat_stdout",`String heartbeat;"fence_stdout",`String fence];
+ "artifacts",`List artifacts;
+ "next_discriminating_checks",strings["Review original bundle status and authentic historical admission/supersession references without importing its contents.";"Recover exact source writer/quiescence, permissible snapshot identity and sanitized provenance before any original is ingested.";"Require an explicit reviewed semantic crosswalk covering all original15 refinements and latercapabilities; no newEVnumber.";"Observe final-candidate canonical Bootstrap facts only after read-only configuration and candidate binding preflight; keep originalabsence/snapshot/authority checks separate."]]
+ in
+ let manifest=prefix^"-reconciliation.json"in
+ Ev_campaign.write(ws^"/"^manifest)(Yojson.Basic.pretty_to_string record^"\n");
+ let journal="docs/journal/"^stamp^"-original-governing-scope-reconciliation.md"in
+ let heading="# "^stamp^" Original governing scope discovery\n\nObserved UTC: "^utc^". #fractal-l0 #fractal-l1 #fractal-l5 #zk-adr #zero-muda\n\n[Planning](http://nas-1.tail55d152.ts.net:4100/planning) · [Reconciliation](http://nas-1.tail55d152.ts.net:4100/files/"^manifest^") · [Prior scope](http://nas-1.tail55d152.ts.net:4100/files/docs/reviews/20260909-0511-ev-scope-resolution.json). Private evidence; publication unverified.\n\n"in
+ let body={|## 1. Scope & Trigger
+
+Continue the existing all-EV programme and consult AGY before admission decisions. A bounded filename search found the original governing bundle in the parent NAS documents tree.
+
+## 2. Pre-State Assessment
+
+The selected UOS tree lacked the referenced originals. Earlier scope agreement used a later handover and was report-only. The new discovery changes the missing-file diagnosis to external, unfrozen provenance and a substantive scope conflict.
+
+## 3. Execution Detail
+
+Read bounded original plan, mapping and mandate sections without importing or hashing external content. Observe nine exact file locators and filesystem metadata. Bind nine local comparison artifacts to immutable source b112. Record all fifteen original refinement labels against the later capability labels as analyst paraphrases, with no equivalence or supersession claim.
+
+## 4. Root Cause Analysis
+
+Identical EV numbers were used for different classification and capability schemes. Original G-BOOT1 means operator authorization, while the current gate checks JJ structure. A passing structural predicate cannot discharge the other meaning. Original Task1 requires no top-level .git; the current observer explicitly permits an empty marker. The later Nix rule documents existing markers but does not prove their creation purpose.
+
+## 5. Fix Taxonomy
+
+Evidence recovery by locator, current-dated scope reconciliation and qualified peer advice. This record repairs the known inventory diagnosis and prevents unsupported closure; it does not create normative supersession or mutate historical source.
+
+## 6. Patterns & Anti-Patterns Discovered
+
+An old modification time is not writer quiescence. An external planning hash or historical PASS string is not current admission. Current working labels and original obligations need an explicit crosswalk; successful component tests must retain their actual scope.
+
+## 7. Verification Matrix
+
+| Observation | Result | Boundary |
+|---|---|---|
+| Original bundle discovery |Nine regular files located |Metadata only; source revision/quiescence unknown |
+| Original versus laterEV labels |Fifteen differences recorded |Analyst reading, no semantic equivalence proved |
+| Local comparison bytes |Nine bound to b112 |No local comparison source changed |
+| G-BOOT1 identifier |Semantic collision |Operator authorization differs from structure |
+| Empty.git explanation |Later Nix rule documents presence |Creation purpose and original acceptance remain unresolved |
+| EV86 independent evidence |17 direct groups,12 savedHTTPresponses pass |Case13 assertion failed with response unsaved;10 laterUNRUN |
+| Admission |HOLD |Zero newEVadmissions, ceiling93 unchanged |
+
+## 8. Files Modified
+
+New timestamped reconciliation, qualified AGY transcript/advice, recorder source copy and this journal in the private root workspace. External originals, canonical .git, Telegram files and runtime services were untouched.
+
+## 9. Architectural Observations
+
+The original plan defines refinement obligations across the system, while the later handover numbers capabilities. The original policy table has38 semantic families with source subjects and admission gates, but explicitly calls itself a moving-source planning baseline. It is a useful reference and remains unadmitted.
+
+## 10. Remaining Gaps
+
+External source identity, writer quiescence, sanitation and ingestion verification remain open. No authentic supersession of the original15-cycle scope was found. Canonical Bootstrap observation, full source/target/prohibited-set census, snapshot conservation, actual operator-gate evidence and sovereign review remain separate. EV86 original-target behavior, synthesis and acoustic playback remain unproved.
+
+## 11. Metrics Summary
+
+Nine external file metadata observations; nine immutable local bindings; fifteen scope comparisons; zero external file-body imports or hashes; zero newEVadmissions. Component counts are preserved, not added to a whole-system score.
+
+## 12. STAMP & Constitutional Alignment
+
+P1 false-admission exposure remains S5/O3/Det4, RPN60 and severity floor5. Required evidence omission, unsafe scope substitution, stale-source timing and premature review termination remain relevant unsafe-control-action types. Fresh task and workspace observations precede writes. The automated reviewer interruption is preserved; only read-only evidence assessment and local capture-helper repair continue within that scope.
+
+## 13. Conclusion
+
+The originals are located, and their unresolved obligations are visible. The programme continues with verified component work while preserving whole-EV admission holds.
+
+## Comprehensive verification checklist
+
+<details><summary>Domain1 — Metadata and navigation</summary>
+
+- [x] CHK-01-TIME — Host UTC and clock check recorded.
+- [x] CHK-02-TAIL — Full Tailnet links; publication unverified.
+- [x] CHK-03-FRACT — Applicable fractal tags.
+- [x] CHK-04-KM — Prior and current evidence linked.
+
+</details>
+<details><summary>Domain2 — Purity and storage</summary>
+
+- [x] CHK-05-MUDA — Native OCaml recorder; no Bash.
+- [ ] CHK-06-GRAPH — Fleet purity outside this observation.
+- [ ] CHK-07-DRIVE — Hardware interlock not exercised.
+
+</details>
+<details><summary>Domain3 — Tests and mathematics</summary>
+
+- [ ] CHK-08-C1C8 — Whole-system categories open.
+- [ ] CHK-09-MATH — Semantic conservation unproved.
+- [ ] CHK-10-9MOD — Complete release test matrix open.
+- [x] CHK-11-REGR — Prior passing and failing observations preserved at their actual scope.
+
+</details>
+<details><summary>Domain4 — Runtime and observability</summary>
+
+- [ ] CHK-12-GLEAM — No new runtime observation in this record.
+- [x] CHK-13-HERMES — Bounded OCaml archival checks executed.
+- [ ] CHK-14-ZIGVM — Kernel acceptance separate.
+- [ ] CHK-15-MAX — Inference acceptance separate.
+- [ ] CHK-16-OTEL — Production trace correlation unverified.
+
+</details>
+<details><summary>Domain5 — Governance and VCS</summary>
+
+- [ ] CHK-17-SOV — Scope ratification and whole-EV admission open.
+- [x] CHK-18-JJ — Exact immutable local source bindings.
+
+</details>
+<details><summary>Domain6 — Provenance</summary>
+
+Original external files remain unfrozen references. Historical and current scopes are both preserved; no backdating, source substitution, gate renaming or ceiling change is claimed.
+
+</details>
+
+[Planning](http://nas-1.tail55d152.ts.net:4100/planning). UOS footer: discovery and bounded component observations; whole-system admission pending.
+|}in
+ Ev_campaign.write(ws^"/"^journal)(heading^body);
+ Printf.printf "%s\n%s\nmanifest_sha256 %s\n"manifest journal(sha(Yojson.Basic.pretty_to_string record^"\n"))

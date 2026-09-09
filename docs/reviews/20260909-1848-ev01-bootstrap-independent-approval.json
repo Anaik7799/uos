@@ -1,0 +1,459 @@
+{
+  "schema": "uos.ev01.independent-review.v1",
+  "source_candidate": "3c13ba3b3e210e98c289147a2041aadcdcc72ebd",
+  "held_predecessor": "0a8c03c55f91cdf4279ff14503651227c9bb6010",
+  "verdict": "APPROVED_BOUNDED_OBSERVER_AND_GBOOT1",
+  "authority": "NONE",
+  "whole_ev1": "NOT_APPROVED",
+  "admission": "NOT_GRANTED",
+  "campaign_checks": 40,
+  "native_invocations": 61,
+  "independently_rehashed_source_dependency_count": 135,
+  "independently_rehashed_artifacts": 17,
+  "independently_rehashed_tools": 7,
+  "successor_changes": [
+    "tools/bootstrap/bootstrap_observer.ml",
+    "tools/bootstrap/bootstrap_observer.mli",
+    "tools/test_ev01_bootstrap_cwd.ml"
+  ],
+  "independent_controls": [
+    "Old source RED: A unchanged, private startup B and config changed",
+    "New source GREEN: full A/B/config fingerprints unchanged",
+    "Observer and reviewer parent cwd unchanged",
+    "Replayed author missing child cwd refusal without side effects",
+    "All retained 40 campaign checks including 2 compiled designated mutants"
+  ],
+  "review": [
+    "Child chdir selected root occurs before exec; failures exit127; parent cwd unchanged",
+    "Secure config preflight bound to inherited configuration context and pinned realized JJ topology",
+    "Only raw bytecode Dune targets with -without-runtime, explicit native ocamlrun and direct ERTS",
+    "AGY_ADVICE_EV_CWD_1833 received and hash-bound before successor acceptance"
+  ],
+  "incident_attribution": "Reviewer initial harness omitted --cwd and induced startup configuration mutation during old observer invocation. Canonical before-inode was not captured; no claim of byte-content change. Original incident and old HOLD remain preserved. No canonical cleanup or observer replay performed.",
+  "limits": [
+    "Cooperative filesystem checks do not prove hostile-race safety or general filesystem noninterference",
+    "No canonical observer invocation in this repaired review",
+    "Existing G-BOOT1 FFI generic process/output behavior is not a general resource or process-tree proof",
+    "Raw-bytecode recipe inspected and actual native receipts rehashed; this review did not independently retrace every transitive exec or dynamic library",
+    "Empty .git directory is only an explicitly unexplained nonoperational marker, not proof of original lineage",
+    "Missing governing historical plan/design paths and full sovereign dossier remain unresolved",
+    "Bounded Boolean model and observed fixtures are not whole EV1 proof or admission"
+  ],
+  "records": [
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/verification.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-campaign.json",
+      "sha256": "6202b4f23b52dc1505ce951aa262573d7b19d2f58c80f6bd881f8f0b72f6ec29"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-successor-independent-campaign.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-campaign-native.json",
+      "sha256": "552640d47dc7823359ea6f2f9a08f4e3da71d6cf10ba4d7946be624dc2a51505"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-independent-1843/bindings.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-source-bindings.json",
+      "sha256": "f9ca0b4b557352c34ba2b7aff388802104cf5e33ceb1813cfe8ab0e6e59daf76"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-independent-1843/source-read-preflight.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-source-preflight.json",
+      "sha256": "1828772c7be30aaaeb950b420d753c5bafbee2a5fc6ee0141b92e0a1fe57c49f"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-successor-independent-stage.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-stage-native.json",
+      "sha256": "d59bf1ddeca9bddd4feadcde6c5c11a3390816c8f79fe5d97d5f48c774721df2"
+    },
+    {
+      "original": "/tmp/ev01_bootstrap_independent_stage.ml",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-stage.ml.txt",
+      "sha256": "133b11f4ebaf74ceb2cfe2dee5bac73ddc6430cdc41750e966b00dc5f7b23be9"
+    },
+    {
+      "original": "/tmp/ev01_two_private_cwd.ml",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-two-private-probe.ml.txt",
+      "sha256": "5fd770303d3821962832be2368a5509adfb93553e663ec796add11064732bb51"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-successor-cwd-control.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-cwd-control-native.json",
+      "sha256": "09d5e20c5d2ea2c7f1b3a3f7b5002fe437f2809f57f28061bc80b89967b2a816"
+    },
+    {
+      "original": "/tmp/ev01-cwd-regression-70fce2/verification.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-cwd-control.json",
+      "sha256": "0f791bd21f1610a3b300a4280e6de3edf8cc62ea07501c5e2cb2df333ef6fee0"
+    },
+    {
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-1831-agy-advice-and-program-recovery-corrected-advice.txt",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-agy-advice.txt",
+      "sha256": "a34dde1e0208348f68d2f04c25d5a91ccd16b0f719b75e31d76410e577d7ee2d"
+    },
+    {
+      "original": "/home/an/NAS-setup/uos/.uos-workspaces/codex-ev-admission-20260909-0210/docs/reviews/20260909-1831-agy-advice-and-program-recovery-observation.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-agy-observation.json",
+      "sha256": "6b342cdd30450ed1cfe89edfdede60eaee5454e0c66c2a8b9cc5ffff0378eeff"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-private-recovery-active.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-active.json",
+      "sha256": "6d72508bc57b4c63bb6552b191f17ada71a4a3013051870a6246477d70812d94"
+    },
+    {
+      "original": "/tmp/ev01-two-private-red-1840/verification.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-red-verification.json",
+      "sha256": "ea45aa383813bcb5cf96cee9a118942d0d04baf1c3d7dab6babebf28191c9486"
+    },
+    {
+      "original": "/tmp/ev01-two-private-red-1840/before.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-red-before.json",
+      "sha256": "3b36fd271199045f728412b6734aeb4e75bcda8baf4331b466b9990f223b4002"
+    },
+    {
+      "original": "/tmp/ev01-two-private-red-1840/after.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-red-after.json",
+      "sha256": "0ba3aa284a76d514a5f3b75e025b4db44523672acda643c6be6bbd0953fce697"
+    },
+    {
+      "original": "/tmp/ev01-two-private-red-1840/observe.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-red-observe.json",
+      "sha256": "be1e77632f45a3cfb8abec9dfb409373287fc9e5cfd3b83013ec178444616eaf"
+    },
+    {
+      "original": "/tmp/ev01-two-private-red-1840/observe.ml",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-red-observe.ml",
+      "sha256": "7da4c6ae878d7216e0945cfcb3bd9fa5ebeab7e5ad37a25363f713fae7901995"
+    },
+    {
+      "original": "/tmp/ev01-two-private-green-1844/verification.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-green-verification.json",
+      "sha256": "82361816b75b53b9ae23c58aa2df2755f6c7ec5daa47aba74173d748e8459a26"
+    },
+    {
+      "original": "/tmp/ev01-two-private-green-1844/before.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-green-before.json",
+      "sha256": "a070679f21c02acd1a8d3cc71d71f664313c3e64ffc50d16e2731501030922f9"
+    },
+    {
+      "original": "/tmp/ev01-two-private-green-1844/after.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-green-after.json",
+      "sha256": "a070679f21c02acd1a8d3cc71d71f664313c3e64ffc50d16e2731501030922f9"
+    },
+    {
+      "original": "/tmp/ev01-two-private-green-1844/observe.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-green-observe.json",
+      "sha256": "1170b9db9b346df08b7e694d684e10169ac2576f3f382953df904eedf1a7f0c3"
+    },
+    {
+      "original": "/tmp/ev01-two-private-green-1844/observe.ml",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-green-observe.ml",
+      "sha256": "41318999a089a41462a3ee07b6b044f519234bd4f076712b22fc08ce96217ce5"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/001-candidate.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-000.json",
+      "sha256": "babdad1e52bf1b77647440efb22d3c4c70285d6a4a15aadee4ea4ac04150df51"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/002-candidate.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-001.json",
+      "sha256": "2191827baffc4c4bde60b34041b9fe8e5fcdf26695257e369c32568237e6b346"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/003-candidate.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-002.json",
+      "sha256": "187d24ab1610136987a75c7e326ca879b7a6908dd9a1d6c32600a0d0619f57bd"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/004-candidate.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-003.json",
+      "sha256": "52bf9ab5409a02d40e6c0780c46aac07ceeec045ae0ffd63b316bc6418533a83"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/005-candidate.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-004.json",
+      "sha256": "dc5b87df9e3cc2de0fb4a28126046873f80309cb70a57767560d8f5511075a4d"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/006-candidate.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-005.json",
+      "sha256": "ba3e4c556ce7f37543f4a7367269dc00b31ec9d1fa681ed8d83f9a4721def2a8"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/007-candidate.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-006.json",
+      "sha256": "f98bebaf01ae65b203bf30f5eca61c36ef68ae8329befe70a78c0e0b1b6da3d6"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/008-candidate.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-007.json",
+      "sha256": "050c7566fa814abad1da2081f42df7bd8f14bae78dcb8988a92c4032f83b6550"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/009-candidate.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-008.json",
+      "sha256": "abada635595bbb10345792296db5ce5f380ee8a7325421250e9b388ffd421a92"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/010-candidate.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-009.json",
+      "sha256": "32a017f0c7eb56232f5f5d08ec022148fbc0094fe38bf17ba7153a94a1236c5f"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/011-candidate.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-010.json",
+      "sha256": "bf3206f360c8727bf4b15c8afcb4bfa71d7a244ecb51ad1c57b577ae743ce500"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/012-candidate.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-011.json",
+      "sha256": "9e4e33bf66d6edde69bbbbe2cbd3f1e2ad89293cf748472f001ad6ea2714c502"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/013-candidate.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-012.json",
+      "sha256": "c338b54e0817cb042683748131f9838d99fdb17b8d30b48c9d7da0d7b51178e6"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/014-candidate.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-013.json",
+      "sha256": "5f730934ee4d97e56407738f3408a85580a0044a4f5ebcd108a5293a2710a008"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/015-candidate.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-014.json",
+      "sha256": "b7a32a6b22e8406dfadaeca3ca8be84dd23641e792417dcab5f33c8babdd7c70"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/016-compile-cli.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-015.json",
+      "sha256": "5f79b78e09d7668ca730b7f18c789e721d03ca2501490aa408bf9063e6719701"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/017-compile-model-observer.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-016.json",
+      "sha256": "0f871593b6e2f0290e31ff77eae2607d76945f2e1e54048327c6edda583ac7e2"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/018-formal-truth-table.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-017.json",
+      "sha256": "4098c7e2a1c80377fba01a325f0046260bce41c75da69f39166c99f04ac784eb"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/019-absent-refuses.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-018.json",
+      "sha256": "412c5d9340e863650b265b0c0b7d750e0aa4904be390b0ac298237a000e43dc5"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/020-empty-jj-refuses.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-019.json",
+      "sha256": "7a49a4a4648275cb826b8963ace5def1a1b0956f9c83489cb9e3e1e9d056b712"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/021-file-jj-refuses.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-020.json",
+      "sha256": "7b82abd811ea45841f67fdb52d793779746b5a1dcf53c30281da41e12663a718"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/022-init-colocated.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-021.json",
+      "sha256": "ec665e684cdebd9a38473c2ff9a3a8cfdbe8ad7dd89874cc9f2228867ac64d05"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/023-colocated-refuses.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-022.json",
+      "sha256": "56617fa18a0620a2b9c03e5b1ddba608f2120167fb9d8630a005316626029930"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/024-init-standalone.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-023.json",
+      "sha256": "3ea6b6b6b6b1bb12b0fc0476e857a2642a9eb4e49d2382b5df26b63a438e0777"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/025-snapshot-a.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-024.json",
+      "sha256": "0646680d1af726e1c1e02785a2332fc9389642350f20d5fb0ce70ab1f741bc11"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/026-current.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-025.json",
+      "sha256": "0467854a5f5305a4cbc481618c0d030c3e9106ecfba28d12c31db0ca65cd8620"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/027-standalone-passes.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-026.json",
+      "sha256": "830ee1193aedb7bc7609a64b9bd449d8b30f7d4f3345b656aaca038a302f9a82"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/028-current.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-027.json",
+      "sha256": "0ef0605ed093623602b87bac958ea955a68be55d3e10cf989ad9f15f2e301464"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/029-legacy-config-migration-refuses.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-028.json",
+      "sha256": "d2bc708624e665bcde7a33cfa6ae6573af2de2a66c2dc5519cb136007963a95f"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/030-missing-secure-metadata-refuses.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-029.json",
+      "sha256": "2d436c191faa15d7b8be0d63677e29162802d3d0b2b8f8547d031ffbb031d7c7"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/031-malformed-config-id-refuses.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-030.json",
+      "sha256": "d910119dd5ec0c128e178bd97d6e95d2faeaf03c2b63171acef1b85376091cef"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/032-existing-secure-config-passes.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-031.json",
+      "sha256": "bb517700f54a1eaaaf8159aa110c72d290d13eadbcffb26562ea8656a912c099"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/033-relocated-secure-config-refuses.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-032.json",
+      "sha256": "7af7975f4690b3da329fceab5030c95dc79c7ebceb0c1b8362773bb4868efc7f"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/034-malformed-secure-metadata-refuses.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-033.json",
+      "sha256": "82ada07c9c7f1cab6dbc863b61e3cf37d2e817dd8b4a8a8b2168e70535c38b7c"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/035-workspace-config-initialization-refuses.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-034.json",
+      "sha256": "5e5fecbd8d1d75c9e59ab9837d37946cf041f9326be6839dd01db216ade8a6f3"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/036-empty-git-marker-passes.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-035.json",
+      "sha256": "5363852d7c77bc386f1c145b3669927c43592b2a115f8fc583e8a0cb8e6fc0b1"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/037-git-file-refuses.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-036.json",
+      "sha256": "0c4566145fdade059a9a1c5a6077274a3acf981c25cc1ddcc37d1356e25d15d8"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/038-git-symlink-refuses.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-037.json",
+      "sha256": "2e166c2f00e41ea3a97996b6ff6b5b543ea0419d78782bdb8f5b1858f4baaaa6"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/039-unreadable-git-refuses.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-038.json",
+      "sha256": "86463c503b90bcd556e97a6f9b9ed6bf4f27ab02832dae064ac50ff1a8de4d4c"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/040-nonempty-git-refuses.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-039.json",
+      "sha256": "dac68c6a6b56f74472b1bb5ae2651a7c216f906d538827c1d0288bfc4a2a98a3"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/041-external-store-refuses.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-040.json",
+      "sha256": "afd9064916e3476b3a24475fcf9a6ef99b0005f8486f6e8487687f73f030020d"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/042-bad-store-type-refuses.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-041.json",
+      "sha256": "8cda564040e6cf55eaffcce55dde1ff5856361934d61be0c385cfd6ae95f4d7b"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/043-symlink-store-refuses.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-042.json",
+      "sha256": "41fa65282979eb3e5af186318b1824ad63346fc143eb36107eab5411483097eb"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/044-symlink-jj-refuses.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-043.json",
+      "sha256": "adb468e8477dae225969201645921485847faa4fd6b3921b9e8555cf5b618046"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/045-corrupt-checkout-refuses.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-044.json",
+      "sha256": "ea2ff5ce6a4d9d82957039842e9b2fe0ec1fffab2471252f7997ac09c437047e"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/046-snapshot-alpha.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-045.json",
+      "sha256": "3021d9ca6cada582a8f7a296cec1799798772caff91a83ec65cccb8c01a4b3d9"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/047-current.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-046.json",
+      "sha256": "472f65051a5776fb89832f548ccec623b702716bb452e0d31340cb2939f2497b"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/048-snapshot-beta.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-047.json",
+      "sha256": "42b2c0ef586900ea3cf4b97ad644cabbb96f1b9666cacb5cba84700f47d6c9fe"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/049-current.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-048.json",
+      "sha256": "a19406b43a727a685c17b60c6ca52e35d300fa270311e46014bc716964197a3e"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/050-read-alpha.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-049.json",
+      "sha256": "26e7e1eae5e91d91604a364bc962c49f3870027732118391b937d2fa333120d1"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/051-read-beta.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-050.json",
+      "sha256": "62d776523f4b523eacb010527da957becc8a7fd91096d449dbaf0034333e3283"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/052-workspace-add.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-051.json",
+      "sha256": "2b521a824571f472643c6441af8907f901d221d95acb6d40979d3041883478b8"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/053-additional-workspace-passes.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-052.json",
+      "sha256": "ca8ca1e6505d528db02bd441aa20f23d88e91db07021b739d6ed1d100c33c0f0"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/054-snapshot-sibling.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-053.json",
+      "sha256": "e300732201e45a10c92758165632fff588a79b25f8569f46125cb2425cccbd54"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/055-corrupt-pointer-refuses.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-054.json",
+      "sha256": "e931ff2a31f21f8be967a51a3b23fddb20773ef1198d5c76b61022f12e2b986e"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/056-nested-cli-resolves-root.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-055.json",
+      "sha256": "18b419bfd4b1d196b9fca28371ac47966b4d56c4000ce41026fabbb3f6f394f9"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/057-checker-args-refuse.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-056.json",
+      "sha256": "45630d8ef0f2081e458b4fb53f2d3815e466ae54a825138c31e3d82345de5225"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/058-compile-designated-mutant.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-057.json",
+      "sha256": "b9b7059451a12396ae074ebb048e978d57801e875a21e9bd4ef66ea6d3b85df0"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/059-designated-mutant-fails.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-058.json",
+      "sha256": "fb702cf75bcedc90dd5da3bbe629ceb522854d26fc7c1f437a7c0e48a1b801b4"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/060-compile-duplicate-mutant.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-059.json",
+      "sha256": "d32e10e0ff96de6854e15acd52b9d199e893a2791e970bd956ba1d3e4bf65bca"
+    },
+    {
+      "original": "/tmp/ev01-bootstrap-campaign-77500e/receipts/061-duplicate-mutant-fails.json",
+      "durable": "docs/reviews/20260909-1848-ev01-bootstrap-independent-invocation-060.json",
+      "sha256": "d9e47911ee15d628235610e679f9a0a44ca7f1fbe30873cff5b8badd0173516c"
+    }
+  ]
+}
