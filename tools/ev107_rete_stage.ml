@@ -11,7 +11,7 @@ let budget = Receipt_validator.make_budget ~seconds:30. ~bytes:67_108_864 ()
 let binding source staged bytes = `Assoc ["source",`String source;"staged",`String staged;"sha256",`String(Receipt_validator.sha bytes);"bytes",`Int(String.length bytes)]
 let () =
  require (not(Filename.is_relative target) && not(Sys.file_exists target)) "fresh absolute target required";
- let paths = ["src/cepaf_gleam/knowledge/rete_ul_verifier.gleam";"test/rete_ul_verifier_test.gleam";"test/ev107_rete_closure_test.gleam";"test/ev107_rete_runner.gleam"] in
+ let paths = ["src/cepaf_gleam/knowledge/rete_ul_verifier.gleam";"test/rete_ul_verifier_test.gleam";"test/ev107_rete_closure_test.gleam";"test/ev107_rete_runner.gleam";"test/ev107_rete_projection.gleam"] in
  let sources = List.map (fun path -> let source="apps/cepaf_gleam/"^path in
   let bytes=Receipt_validator.candidate_bytes workspace revision source in
   let staged=target^"/package/"^path in Ev_campaign.write staged bytes;binding ("candidate:"^source) staged bytes) paths in
