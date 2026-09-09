@@ -1,0 +1,15 @@
+(library
+ (name ev98_health_formal)
+ (wrapped false)
+ (modules ev98_health_model ev98_health_smt)
+ (libraries smtml))
+
+(executable
+ (name test_ev98_health_formal)
+ (modules test_ev98_health_formal)
+ (libraries ev98_health_formal))
+
+(executable
+ (name ev98_health_smt_child)
+ (modules ev98_health_smt_child)
+ (libraries ev98_health_formal))
