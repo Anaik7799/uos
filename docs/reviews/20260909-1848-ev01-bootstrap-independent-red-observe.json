@@ -1,0 +1,44 @@
+{
+  "schema": "uos.ev-native-invocation.v1",
+  "authority": "NONE",
+  "cwd": "/tmp/ev01-two-private-red-1840/ambient-b",
+  "argv": [
+    "/usr/bin/env", "XDG_CONFIG_HOME=/tmp/ev01-two-private-red-1840/config",
+    "JJ_CONFIG=/dev/null",
+    "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocamlrun",
+    "/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin/ocaml",
+    "/tmp/ev01-two-private-red-1840/observe.ml",
+    "/tmp/ev01-two-private-red-1840/selected-a"
+  ],
+  "utc_started": 1788979203.925091,
+  "utc_finished": 1788979204.229567,
+  "elapsed_seconds": 0.30447638499999996,
+  "deadline_seconds": 15.0,
+  "exit_code": 0,
+  "output": "{\"status\":\"PASS\",\"revision_or_reason\":\"2e758ead17baa438130c0c66418d349c51991b47\",\"cwd_before\":\"/tmp/ev01-two-private-red-1840/ambient-b\",\"cwd_after\":\"/tmp/ev01-two-private-red-1840/ambient-b\"}\n",
+  "output_sha256": "2a2f24747858b6b7e1d93877f59b253080bb4760f558ca32de0c5e7ac54b5b36",
+  "child_termination": { "kind": "EXITED", "code": 0 },
+  "failure": null,
+  "clock_synchronization": "NOT_CHECKED_BY_ADAPTER",
+  "otp_launch": {
+    "executable": "/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+    "environment": [
+      "PATH=/tmp/uos-ev-native-otp-544baf:/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/bin:/home/an/NAS-setup/uos/toolchains/nix-profile/bin:/home/an/NAS-setup/uos/toolchains/gleam-1.16.0/bin:/home/an/NAS-setup/uos/toolchains/opam-ocaml/bin:/usr/bin:/bin",
+      "ERL_FLAGS=+S 2:2 +A 2",
+      "ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "BINDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin",
+      "EMU=beam", "PROGNAME=erl",
+      "ERL_ROOTDIR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang",
+      "ESCRIPT_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_EMULATOR=/nix/store/96cqahwqjxzx4pywz1bj53apncjmhhdg-erlang-29.0.5/lib/erlang/erts-17.0.5/bin/erlexec",
+      "ERLC_USE_SERVER=false"
+    ],
+    "descendant_execution_audit": "NOT_PERFORMED_BY_ADAPTER"
+  },
+  "inherited_linker_paths": {
+    "LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:/home/an/.local/lib:",
+    "LD_LIBRARY_PATH": "/home/an/.local/lib:/home/an/.local/lib:"
+  },
+  "reproducible_release_closure": "NOT_ESTABLISHED",
+  "scope": "Invocation observation only; no candidate or producer authentication"
+}

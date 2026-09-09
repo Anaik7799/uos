@@ -1,0 +1,12 @@
+[
+  {
+    "directory": "/home/an/NAS-setup/uos/.jj/repo",
+    "config_id_sha256": "de2db32e3b98254ec83c035864f583e79d64073e81836a963b0d508a4272c2b6",
+    "metadata_sha256": "69404a0e8edcbb25f3861baba450f6e4c8deaad3f4d0697571591e68692bfe89",
+    "state": "EXISTING_MATCHING_PATH"
+  },
+  {
+    "directory": "/home/an/NAS-setup/uos/.uos-workspaces/ev98-wire-codec-20260909/.jj",
+    "state": "NO_CONFIG"
+  }
+]

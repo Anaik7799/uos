@@ -1,0 +1,28 @@
+{
+  "schema": "uos.ev01.two-private-cwd.v1",
+  "mode": "red",
+  "expected_behavior_observed": true,
+  "source_bindings": [
+    {
+      "path": "/tmp/ev01-bootstrap-independent-1756/source/tools/bootstrap/bootstrap_model.ml",
+      "sha256": "e1c516755a943d4ae476049616dfc5f0fa545f2a9f8d13fbd74066f0fe188dbd"
+    },
+    {
+      "path": "/tmp/ev01-bootstrap-independent-1756/source/tools/bootstrap/bootstrap_observer.ml",
+      "sha256": "1dab60d28a6e036b302371937190a6f79fd8c6e22c7bedcd0f7f44edb0937167"
+    }
+  ],
+  "selected": "/tmp/ev01-two-private-red-1840/selected-a",
+  "ambient_cwd": "/tmp/ev01-two-private-red-1840/ambient-b",
+  "private_config": "/tmp/ev01-two-private-red-1840/config",
+  "selected_unchanged": true,
+  "ambient_unchanged": false,
+  "config_unchanged": false,
+  "observer_parent_cwd_unchanged": true,
+  "reviewer_parent_cwd_unchanged": true,
+  "observation_receipt_sha256": "be1e77632f45a3cfb8abec9dfb409373287fc9e5cfd3b83013ec178444616eaf",
+  "before_sha256": "3b36fd271199045f728412b6734aeb4e75bcda8baf4331b466b9990f223b4002",
+  "after_sha256": "0ba3aa284a76d514a5f3b75e025b4db44523672acda643c6be6bbd0953fce697",
+  "authority": "NONE",
+  "canonical_observer_executed": false
+}
