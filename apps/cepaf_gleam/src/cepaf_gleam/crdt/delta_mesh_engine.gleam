@@ -27,7 +27,7 @@
 
 import cepaf_gleam/crdt/delta_state.{
   type MeshDeltaState, type NodeId, increment_clock, new_mesh_delta_state,
-  orset_add, pncounter_increment,
+  dominates, orset_add, pncounter_increment,
 }
 import cepaf_gleam/crdt/health_bridge.{
   type ClusterHealthMap, empty_health_map, evaluate_quorum, record_health_from,
@@ -124,7 +124,11 @@ pub fn record_worker_active(
       task_counters: new_tasks,
       leader_lease: old_state.leader_lease,
     )
-  DeltaMeshEngine(..engine, local_mesh_state: new_mesh)
+  DeltaMeshEngine(
+    ..engine,
+    local_mesh_state: new_mesh,
+    peers: invalidate_peer_coverage(engine.peers),
+  )
 }
 
 /// Record a local health metric observation.
@@ -166,6 +170,7 @@ pub fn record_local_health(
         ..engine,
         local_health_map: new_health,
         local_mesh_state: mesh,
+        peers: invalidate_peer_coverage(engine.peers),
       )
     }
   }
@@ -240,6 +245,13 @@ pub fn handle_incoming_message(
     )
   case msg {
     SyncDigest(from_node, remote_clock, _count, _epoch) -> {
+      let peer_status = case clocks_equal(
+        engine.local_mesh_state.vector_clock,
+        remote_clock,
+      ) {
+        True -> Synchronized
+        False -> Reconciling
+      }
       case requires_delta_sync(engine.local_mesh_state, remote_clock) {
         True -> {
           let delta_msg =
@@ -254,7 +266,7 @@ pub fn handle_incoming_message(
             mark_peer_status(
               engine.peers,
               from_node,
-              Synchronized,
+              peer_status,
               current_epoch_us,
             )
           let updated_engine = DeltaMeshEngine(..queued, peers: updated_peers)
@@ -273,7 +285,7 @@ pub fn handle_incoming_message(
             mark_peer_status(
               engine.peers,
               from_node,
-              Synchronized,
+              peer_status,
               current_epoch_us,
             )
           let updated_engine = DeltaMeshEngine(..queued, peers: updated_peers)
@@ -281,7 +293,11 @@ pub fn handle_incoming_message(
         }
       }
     }
-    SyncDelta(from_node, _, _, _) -> {
+    SyncDelta(from_node, remote_state, _, _) -> {
+      let remote_covers_local = dominates(
+        remote_state.vector_clock,
+        engine.local_mesh_state.vector_clock,
+      )
       let #(merged_mesh, merged_health, ack) =
         reconcile_remote_delta(
           engine.local_node_id,
@@ -295,7 +311,10 @@ pub fn handle_incoming_message(
         mark_peer_status(
           engine.peers,
           from_node,
-          Synchronized,
+          case remote_covers_local {
+            True -> Synchronized
+            False -> Reconciling
+          },
           current_epoch_us,
         )
       let updated_engine =
@@ -307,18 +326,71 @@ pub fn handle_incoming_message(
         )
       Ok(#(updated_engine, [ack]))
     }
-    SyncAck(from_node, _, _, _) -> {
-      let updated_peers =
-        mark_peer_status(
-          engine.peers,
-          from_node,
-          Synchronized,
-          current_epoch_us,
-        )
-      let updated_engine = DeltaMeshEngine(..engine, peers: updated_peers)
-      Ok(#(updated_engine, []))
+    SyncAck(from_node, applied_clock, _, _) -> {
+      let clocks_match = clocks_equal(
+        engine.local_mesh_state.vector_clock,
+        applied_clock,
+      )
+      case clocks_match {
+        True -> {
+          let updated_peers =
+            mark_peer_status(
+              engine.peers,
+              from_node,
+              Synchronized,
+              current_epoch_us,
+            )
+          Ok(#(DeltaMeshEngine(..engine, peers: updated_peers), []))
+        }
+        False -> {
+          let follow_up = case requires_delta_sync(
+            engine.local_mesh_state,
+            applied_clock,
+          ) {
+            True ->
+              SyncDelta(
+                from_node: engine.local_node_id,
+                delta_state: engine.local_mesh_state,
+                health_map: engine.local_health_map,
+                epoch_us: current_epoch_us,
+              )
+            False ->
+              generate_sync_digest(
+                engine.local_node_id,
+                engine.local_mesh_state,
+                current_epoch_us,
+              )
+          }
+          use queued <- result.try(enqueue_outbound(engine, follow_up))
+          let updated_peers =
+            mark_peer_status(
+              queued.peers,
+              from_node,
+              Reconciling,
+              current_epoch_us,
+            )
+          Ok(#(DeltaMeshEngine(..queued, peers: updated_peers), [follow_up]))
+        }
+      }
     }
   }
+}
+
+fn clocks_equal(left, right) -> Bool {
+  dominates(left, right) && dominates(right, left)
+}
+
+fn invalidate_peer_coverage(
+  peers: List(PeerSyncEndpoint),
+) -> List(PeerSyncEndpoint) {
+  list.map(peers, fn(peer) {
+    PeerSyncEndpoint(
+      node_id: peer.node_id,
+      tailscale_fqdn: peer.tailscale_fqdn,
+      last_sync_epoch_us: peer.last_sync_epoch_us,
+      status: Reconciling,
+    )
+  })
 }
 
 fn mark_peer_status(
