@@ -1,10 +1,15 @@
 {
-  "uos_control_loop": {
-    "PreInvocation": [
+  "description": "UOS session-start policy reminder; advisory only, with no enforcement or admission claim. Migrated from the non-standard top-level key `uos_control_loop`/`PreInvocation`, which no client reads, to the `hooks.SessionStart` shape used by .codex/hooks.json and .claude/settings.json. Command payloads preserved byte-for-byte. NOT validated against a running .agents/.gemini client.",
+  "hooks": {
+    "SessionStart": [
       {
-        "command": "test -d /home/an/NAS-setup/uos/.jj && printf '%s\\n' '{\"injectSteps\":[{\"ephemeralMessage\":\"UOS uses standalone Jujutsu. Consult AGENTS.md for Zero-Muda, OTP and evidence requirements.\"}]}'",
-        "timeout": 5,
-        "type": "command"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "test -d /home/an/NAS-setup/uos/.jj && printf '%s\\n' '{\"injectSteps\":[{\"ephemeralMessage\":\"UOS uses standalone Jujutsu. Consult AGENTS.md for Zero-Muda, OTP and evidence requirements.\"}]}'",
+            "timeout": 5
+          }
+        ]
       }
     ]
   }

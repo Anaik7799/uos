@@ -1,0 +1,127 @@
+{
+  "schema": "uos.hooks.client-wiring.receipt.v1",
+  "sa_plan": {
+    "plan_id": "uos-nix-devenv-toolchain-20260908",
+    "task_id": "task-31",
+    "task_name": "uos/nix-devenv-toolchain/agent-hooks-client-wiring-repair",
+    "worker": "claude-opus5-hooks-repair",
+    "attempt": 1,
+    "lease_until_ns": 1788940216768685809
+  },
+  "observed_at_utc": "2026-09-09T07:06:16Z",
+  "authority": "NONE",
+  "system_admission": "NOT_GRANTED",
+  "defect": {
+    "summary": "All four agent hook surfaces stored SessionStart commands under a non-standard top-level key uos_control_loop.PreInvocation. Claude Code reads 'hooks'; that key was never read, so the hooks had never fired on any surface.",
+    "found_by": "Fable delegated review D03/D25",
+    "prior_claim_corrected": "'wired on three surfaces' was overstated: the payload was tested, the wiring was not."
+  },
+  "modified_paths": [
+    {
+      "path": "/home/an/NAS-setup/uos/.claude/settings.json",
+      "sha256_after": "0071dfd81ab4eb70a3f6d26b4b575a6682aef92c7019f7c51af75dbc5352562f"
+    },
+    {
+      "path": "/home/an/NAS-setup/.claude/settings.json",
+      "sha256_after": "ce06eb2331e6f0ff88afa5a9eefb29927c6c499763c1cd685f27162889db63ac"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.agents/hooks.json",
+      "sha256_after": "f778e76dce83874b4a11ad7ba2c60a09dd3cb497941451e22d2beffc912e2df6"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/.gemini/hooks.json",
+      "sha256_after": "cd0e896ed78b6fdd5f537c3c26d44d8cc4d7a878dff75e1a040b97e1fb9fc04d"
+    },
+    {
+      "path": "/home/an/NAS-setup/uos/tools/preflight",
+      "sha256_after": "b99db67df9a132b107977adf726d8316124337e74831b7d121b491ba730495ea"
+    }
+  ],
+  "schema_migration": "uos_control_loop.PreInvocation[] -> hooks.SessionStart[].hooks[]. Output shape on the two Claude surfaces aligned to .codex/hooks.json (hookSpecificOutput.additionalContext) so the advisory reaches the model rather than only the user display. .agents/.gemini command payloads preserved byte-for-byte.",
+  "installed_client_validation": {
+    "method": "Real invocation of the installed client binary, not manual command execution.",
+    "binary": "/home/an/.local/bin/claude",
+    "version": "2.1.266 (Claude Code)",
+    "probe": "a temporary sentinel command appended to the same hooks.SessionStart array, then 'claude -p' run non-interactively in the target cwd; sentinel file inspected; sentinel removed afterwards.",
+    "runs": [
+      {
+        "cwd": "/home/an/NAS-setup/uos",
+        "sentinel_position": "first",
+        "fired_at_utc": "2026-09-09T06:58:02Z",
+        "result": "FIRED"
+      },
+      {
+        "cwd": "/home/an/NAS-setup",
+        "sentinel_position": "first",
+        "fired_at_utc": "2026-09-09T06:58:16Z",
+        "result": "FIRED"
+      },
+      {
+        "cwd": "/home/an/NAS-setup/uos",
+        "sentinel_position": "LAST, after the preflight arm",
+        "fired_at_utc": "2026-09-09T06:58:33Z",
+        "result": "FIRED",
+        "why": "proves the loader executes every entry in the array, not only the first"
+      }
+    ],
+    "surfaces_validated": [
+      ".claude/settings.json (uos)",
+      ".claude/settings.json (NAS-setup)"
+    ],
+    "surfaces_NOT_validated": [
+      ".agents/hooks.json",
+      ".gemini/hooks.json"
+    ],
+    "not_validated_reason": "Those clients were not started here. Their schema was migrated to the shape .codex and .claude both use, and their command payloads were pipe-tested and preserved byte-for-byte, but no running .agents/.gemini client was observed loading them. UNVALIDATED, not passing.",
+    "sentinels_removed": true,
+    "residue_check": "no 'hook-fired' string remains in any settings file"
+  },
+  "legacy_shell_parser_repair": {
+    "file": "tools/preflight",
+    "arm": "--max-age freshness path",
+    "defect": "top-level receipt fields were extracted with an unanchored greedy sed expression. On a single-line receipt the leading .* matches the LAST occurrence, i.e. the final ROW's status. A receipt whose top-level status was FAIL reported PASS whenever its last row happened to be PASS.",
+    "observed_wrong_output": "PASS (cached receipt, age 112s, 2 failures)",
+    "fix": "anchored every top-level extraction to the JSON prologue, plus a fail-closed guard that refuses an unparseable receipt instead of falling through to a comparison that silently succeeds",
+    "regression_tests": [
+      {
+        "case": "real FAIL receipt",
+        "before": "reported PASS",
+        "after": "'last receipt is FAIL', exit 1"
+      },
+      {
+        "case": "PASS receipt whose LAST row is FAIL",
+        "after": "PASS, exit 0 (mirror image also correct)"
+      },
+      {
+        "case": "receipt written in a drifted format (pretty-printed)",
+        "after": "'receipt UNPARSEABLE', exit 1 (fail closed)"
+      }
+    ],
+    "defect_class": "an observable coarser than the property being enforced - the same class this review has been reporting throughout"
+  },
+  "collateral_repairs_to_reach_a_green_preflight": [
+    {
+      "what": "deleted 4 untracked OCaml intermediates under tools/ (telegram_client.cmi/.cmx, validation/telegram_client_test.cmi/.cmx)",
+      "why": "tracked/tools-tree arm FAIL; build artifacts, regenerable"
+    },
+    {
+      "what": "removed /home/an/NAS-setup/uos/.git",
+      "why": "vcs/no-git-marker arm FAIL; standalone non-colocated jj admits no git marker and it breaks bare nix flake",
+      "inspected_before_removal": "EMPTY directory, 0 entries, no objects; git rev-list refused it as 'not a repository'. Nothing was destroyed.",
+      "recurrence": "this marker has now been recreated by an unidentified external actor twice (04:01 and 07:12 local). The preflight vcs arm DETECTS it; nothing prevents it. NOT closed."
+    }
+  ],
+  "preflight_after": "PASS (31 checks)",
+  "out_of_band_bootstrap_methods_used": [
+    "sa-plan task state read with /usr/bin/sqlite3 directly, because 'sa-plan plan list' returned only one legacy plan and did not surface uos-nix-devenv-toolchain-20260908",
+    "Fable round-2 rows recovered from the session transcript JSONL, because no board message and no file held them",
+    "installed-client validation used 'claude -p' non-interactively; the harness MCP route was unavailable to this reviewer (N10)"
+  ],
+  "limits": [
+    "The hooks are ADVISORY. They emit additionalContext; they do not block, gate, or enforce anything.",
+    "No enforced behavior has been observed. Wiring is validated; enforcement is NOT claimed.",
+    "Root's 28-input manifest was not touched. No production runtime change.",
+    "Not admission. No admission vote."
+  ]
+}

@@ -63,14 +63,23 @@ if [ -n "$PF_MAX_AGE" ]; then
     echo "NO RECEIPT at $latest (run: bash tools/preflight --receipt)"
     exit 1
   fi
+  # NOTE: these extractions MUST stay anchored to the top-level prologue.
+  # An unanchored `.*"key"` is greedy and reads the LAST match on the line,
+  # which for a single-line receipt is a per-ROW field, not the receipt field.
   now="$(date -u +%s)"
-  written="$(sed -n 's/.*"epoch_s":\([0-9]*\).*/\1/p' "$latest" | head -1)"
-  status="$(sed -n 's/.*"status":"\([A-Z]*\)".*/\1/p' "$latest" | head -1)"
+  written="$(sed -n 's/^{[^{]*"epoch_s":\([0-9]*\).*/\1/p' "$latest" | head -1)"
+  status="$(sed -n 's/^{[^{]*"status":"\([A-Z]*\)".*/\1/p' "$latest" | head -1)"
   self_now="$(sha256sum "$0" | cut -d" " -f1)"
   lib_now="$(sha256sum tools/lib/uos-toolchain.sh | cut -d" " -f1)"
-  self_was="$(sed -n 's/.*"preflight_sha256":"\([0-9a-f]*\).*/\1/p' "$latest" | head -1)"
-  lib_was="$(sed -n 's/.*"resolver_sha256":"\([0-9a-f]*\).*/\1/p' "$latest" | head -1)"
+  self_was="$(sed -n 's/^{[^{]*"preflight_sha256":"\([0-9a-f]*\).*/\1/p' "$latest" | head -1)"
+  lib_was="$(sed -n 's/^{[^{]*"resolver_sha256":"\([0-9a-f]*\).*/\1/p' "$latest" | head -1)"
   age=$(( now - ${written:-0} ))
+  # Fail closed on an unparseable receipt. The extractions above depend on the
+  # writer's exact spacing; if the format ever drifts, an empty capture must
+  # refuse rather than fall through to a comparison that silently succeeds.
+  if [ -z "$written" ] || [ -z "$status" ] || [ -z "$self_was" ] || [ -z "$lib_was" ]; then
+    echo "receipt UNPARSEABLE -- top-level fields not extractable from $latest"; exit 1
+  fi
   if [ "$status" != "PASS" ]; then
     echo "last receipt is $status (age ${age}s)"; exit 1
   fi
@@ -80,7 +89,7 @@ if [ -n "$PF_MAX_AGE" ]; then
   if [ "$self_now" != "$self_was" ] || [ "$lib_now" != "$lib_was" ]; then
     echo "receipt INVALID -- checker changed since it was written"; exit 1
   fi
-  echo "PASS (cached receipt, age ${age}s, $(sed -n 's/.*"failures":\([0-9]*\).*/\1/p' "$latest" | head -1) failures)"
+  echo "PASS (cached receipt, age ${age}s, $(sed -n 's/^{[^{]*"failures":\([0-9]*\).*/\1/p' "$latest" | head -1) failures)"
   exit 0
 fi
 
