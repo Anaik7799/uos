@@ -17,6 +17,7 @@
 //// =============================================================================
 
 import cepaf_gleam/ecology/daily_budget as budget
+import cepaf_gleam/harness/egress_redactor
 import gleam/bit_array
 import gleam/dynamic/decode
 import gleam/int
@@ -125,6 +126,29 @@ pub fn post_openrouter(
       #("max_tokens", json.int(max_tokens)),
     ])
     |> json.to_string
+
+  // EGRESS GUARD, at the transport boundary and on the WHOLE ASSEMBLED PAYLOAD.
+  //
+  // egress_redactor existed before this and was referenced by nothing except its
+  // own test -- a guard that is not wired is not a guard. The serial also reached
+  // an outbound payload once through a FIXTURE RESPONSE while the ground-truth
+  // block above had already been redacted, so checking any single field is not
+  // enough: the secret arrives through whichever field nobody checked.
+  //
+  // Refusal is fail-closed and deliberate. A prohibited identifier in an outbound
+  // body is not something to quietly strip and send anyway -- silently sanitising
+  // would hide that a caller is assembling payloads it should not.
+  use _egress <- result.try(case
+    string.contains(payload_json, egress_redactor.denied_os_nvme_serial)
+  {
+    True ->
+      Error(
+        "egress refused: outbound payload carries the prohibited system "
+        <> "identifier. It is not needed to evaluate a conversation; use "
+        <> egress_redactor.redacted_serial_placeholder,
+      )
+    False -> Ok(Nil)
+  })
 
   // Generate unique valid call_id and strictly verify daily_budget admission
   let call_id = "gemma4-" <> int.to_string(ffi_system_time_nanos())

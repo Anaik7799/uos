@@ -268,6 +268,11 @@ const forbidden_fragments = [
   #("UOS_BOARD_KEY", "credential name"),
   #("BEGIN ", "key material marker"),
   #("password", "secret word"),
+  // The host OS NVMe serial. Canonical definition and the interlock that uses
+  // it: ops/kubernetes/nas-k8s-lab/src/spec.rs (HARD_DENIED_SYSTEM_OS_SERIAL).
+  // Repeated here rather than imported because uos_swarm does not depend on
+  // cepaf_gleam; the two copies are checked against spec.rs by the egress laws.
+  #("25503L801736", "host OS NVMe serial"),
 ]
 
 /// Refuse prompts that could carry private source, paths, fences or secrets, or are too long.

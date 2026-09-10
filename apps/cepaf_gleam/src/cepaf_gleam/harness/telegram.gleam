@@ -472,7 +472,7 @@ fn query_sutra_status() -> String {
 
 fn query_storage_status() -> String {
   "🔒 *Hardware Storage Enclave Guard*\n\n"
-  <> "• Root OS NVMe Serial: `25503L801736` (🔒 HARD-DENIED from OSD Wipe)\n"
+  <> "• Root OS NVMe Serial: `[REDACTED_SYSTEM_OS_SERIAL]` (🔒 HARD-DENIED from OSD Wipe)\n"
   <> "• Ceph OSD Allocation: Isolated on non-system NVMe pools\n"
   <> "• Invariant Status: 🟢 ENFORCED (`SPEC-ROOK-CEPH-NVME-001`)\n"
   <> "• Host Node: `nas-1` (Linux 6.6-nas)\n\n"
@@ -544,7 +544,7 @@ fn query_zk(args: List(String)) -> String {
 fn query_checklist_status() -> String {
   "✅ *UOS Comprehensive Verification Scorecard (SC-CHECKLIST-001)*\n\n"
   <> "• Domain 1 (Metadata/Tailscale/KM): 🟢 PASS (4/4)\n"
-  <> "• Domain 2 (Zero-Muda & Storage): 🟢 PASS (3/3, 25503L801736 Locked)\n"
+  <> "• Domain 2 (Zero-Muda & Storage): 🟢 PASS (3/3, [REDACTED_SYSTEM_OS_SERIAL] Locked)\n"
   <> "• Domain 3 (C1-C8 & Math Gates): 🟢 PASS (4/4, >10,636 Tests Green)\n"
   <> "• Domain 4 (Cross-Language Control): 🟢 PASS (5/5, Gleam+ZigVM+Hermes)\n"
   <> "• Domain 5 (Tri-Sov & Jujutsu): 🟢 PASS (2/2, Standalone .jj/)\n\n"

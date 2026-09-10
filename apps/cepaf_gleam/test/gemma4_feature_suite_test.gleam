@@ -414,3 +414,26 @@ pub fn modality6_provenance_recording_structure_test() {
   eval.model_used |> should.equal("google/gemma-4-26b-a4b-it")
   should.be_true(eval.latency_ms > 0)
 }
+
+// The serial reached an outbound payload through a FIXTURE RESPONSE while the
+// ground-truth block had already been redacted. Checking one field is not
+// enough, so this asserts on the property at the transport boundary: a
+// prohibited identifier anywhere in the assembled payload is refused, and the
+// refusal is fail-closed rather than a silent strip.
+pub fn outbound_payload_carrying_the_denied_serial_is_refused_test() {
+  // A guard that is not wired is not a guard: this is the wiring, not the
+  // redactor in isolation.
+  let leaked =
+    "Outbound Bot Response:\nHARD_DENIED_SYSTEM_OS_SERIAL = "
+    <> egress_redactor.denied_os_nvme_serial
+    <> " (Locked)"
+  telegram_openrouter.post_openrouter("google/gemma-4-31b-it", leaked, 64)
+  |> should.be_error
+
+  // and the redactor removes it wholly, not merely its prefix
+  let sanitized = egress_redactor.redact_system_secrets(leaked)
+  string.contains(sanitized, egress_redactor.denied_os_nvme_serial)
+  |> should.be_false
+  string.contains(sanitized, egress_redactor.redacted_serial_placeholder)
+  |> should.be_true
+}

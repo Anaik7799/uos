@@ -777,7 +777,7 @@ pub fn format_ecology_summary() -> String {
   "🐝 *UOS Rich Multi-Agent Ecology (7 Canonical Holon Profiles)*\n\n"
   <> "1. 👑 `agy_sovereign_coordinator` [L0 Constitutional / L5 Cognitive]\n"
   <> "   • *Role:* Sovereign Cognitive Architect & Swarm Coordinator\n"
-  <> "   • *Aspects:* A04, A08, A11, A16, A17 | *Capabilities:* 3 | *2oo3 Required:* Yes\n\n"
+  <> "   • *Aspects:* A04, A08, A11, A16, A17 | *Capabilities:* 3 | *2oo3 Required:* False\n\n"
   <> "2. 🛡️ `sre_homeostasis_overseer` [L9 SRE Homeostasis / L4 System]\n"
   <> "   • *Role:* Autonomous SRE & Self-Healing Homeostasis Overseer\n"
   <> "   • *Aspects:* A04, A08, A10 | *Capabilities:* 3 | *2oo3 Required:* False\n\n"

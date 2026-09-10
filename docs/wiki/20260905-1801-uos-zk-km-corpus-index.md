@@ -254,6 +254,8 @@ The operational system coordinates across five distinct language tiers:
   - `[[wiki:20260909-2225-uos-telegram-domain-d-collaboration-guide]]` [Domain D Collaboration Guide Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-2225-uos-telegram-domain-d-collaboration-guide.md) UOS Telegram Domain D Team Collaboration & Voice Cybernetics Guide Wiki
   - `[[zk:20260909-2235-adr-108-full-feature-implementation-and-simulator-suite]]` [ADR-108](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260909-2235-adr-108-full-feature-implementation-and-simulator-suite.md) Full 48-Feature Implementation, Multimodal Simulator & Codex Ratification
   - `[[wiki:20260909-2235-uos-telegram-full-implementation-and-simulator-guide]]` [Full Implementation & Simulator Guide Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260909-2235-uos-telegram-full-implementation-and-simulator-guide.md) UOS Telegram Full 48-Feature Implementation, Multimodal Simulator & Codex Operations Guide Wiki
+  - `[[zk:20260910-0820-adr-109-system-aspects-and-agentic-ecology-ratification]]` [ADR-109](http://nas-1.tail55d152.ts.net:4100/docs/zk/20260910-0820-adr-109-system-aspects-and-agentic-ecology-ratification.md) System Aspects Evolution, Capability Semilattices & Rich Agentic Ecology Ratification
+  - `[[wiki:20260910-0820-uos-system-aspects-and-rich-agentic-ecology]]` [System Aspects & Rich Agentic Ecology Wiki](http://nas-1.tail55d152.ts.net:4100/docs/wiki/20260910-0820-uos-system-aspects-and-rich-agentic-ecology.md) UOS System Aspects Evolution and Rich Agentic Ecology Guide Wiki
 - Formal Proofs:
   - `[[zk:TwoLattice_STM]]` (`formal/lean/TwoLattice_STM.lean`)
   - `[[zk:Traceability]]` (`formal/lean/Traceability.lean`)

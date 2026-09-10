@@ -16,6 +16,7 @@
 //// </c3i-module>
 //// =============================================================================
 
+import cepaf_gleam/harness/egress_redactor
 import gleam/bit_array
 import gleam/dynamic/decode
 import gleam/int
@@ -214,7 +215,22 @@ pub fn send_single_message(
   }
 }
 
-fn build_send_payload(chat_id: String, text: String, parse_mode: Option(String)) -> String {
+/// Builds the exact JSON body sent to the Telegram Bot API.
+///
+/// The egress guard lives HERE, not at the call sites. Roughly a hundred
+/// modules mention the denied host OS NVMe serial -- interlock comparisons,
+/// negative fixtures, local HUD rendering -- and auditing each caller is the
+/// wrong shape of check: a caller added tomorrow inherits no guard. Every byte
+/// this module sends to api.telegram.org is formed here, by both the primary
+/// send and its plaintext fallback, so a payload that leaves unredacted is a
+/// payload that never passed through this function.
+///
+/// Redaction rather than refusal: these are operator-facing ops reports, and
+/// one may legitimately be ABOUT the storage interlock. The placeholder is
+/// visible in the delivered message, so an upstream leak is reported to the
+/// operator rather than silently swallowed.
+pub fn build_send_payload(chat_id: String, text: String, parse_mode: Option(String)) -> String {
+  let text = egress_redactor.redact_system_secrets(text)
   let base_fields = [
     #("chat_id", json.string(chat_id)),
     #("text", json.string(text)),

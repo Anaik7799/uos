@@ -109,6 +109,15 @@ pub fn prompt_hygiene_refuses_paths_source_and_secrets_test() {
   w.sanitize_check("abstract design question") |> should.equal(Ok(Nil))
 }
 
+/// The host OS NVMe serial is the one identifier canonical policy names as
+/// hard-denied (ops/kubernetes/nas-k8s-lab/src/spec.rs), yet this checker
+/// refused paths and credentials and let it through. Falsifier: drop the
+/// fragment from `forbidden_fragments`.
+pub fn prompt_hygiene_refuses_the_denied_os_nvme_serial_test() {
+  w.sanitize_check("which bay holds 25503L801736?")
+  |> should.equal(Error(w.UnsanitizedPrompt("host OS NVMe serial")))
+}
+
 pub fn the_lease_review_prompt_is_sanitized_test() {
   let r = req("google/gemma-4-31b-it:free")
   w.sanitize_check(r.system) |> should.equal(Ok(Nil))

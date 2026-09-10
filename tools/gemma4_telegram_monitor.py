@@ -42,6 +42,57 @@ Key System Invariants:
 
 import subprocess
 
+# --- egress guard ------------------------------------------------------------
+# The serial reached this file's outbound payload through a FIXTURE RESPONSE,
+# not through the ground-truth block that had already been redacted -- redacting
+# one appearance while another field still carried it. So the check is on the
+# FINAL ASSEMBLED PAYLOAD, at the transport boundary, and not on any intermediate
+# string.
+#
+# The denied value is read from the canonical Rust constant rather than written
+# here, so this guard never becomes another copy of the thing it protects.
+_SPEC_RS = "ops/kubernetes/nas-k8s-lab/src/spec.rs"
+
+
+def _repo_root() -> str:
+    """This file lives in <root>/tools/."""
+    return os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def _denied_identifiers(root: str = ".") -> list:
+    """Read prohibited-export identifiers from their canonical definition."""
+    found = []
+    try:
+        with open(os.path.join(root, _SPEC_RS), "r", encoding="utf-8") as fh:
+            for line in fh:
+                if "HARD_DENIED_SYSTEM_OS_SERIAL" in line and "=" in line:
+                    parts = line.split('"')
+                    if len(parts) >= 2 and parts[1].strip():
+                        found.append(parts[1].strip())
+    except OSError:
+        # Fail closed: if the canonical source cannot be read, we cannot know
+        # what to withhold, so no egress is permitted.
+        raise RuntimeError(
+            "egress guard cannot read %s; refusing to send with an unknown "
+            "denied-identifier set" % _SPEC_RS)
+    if not found:
+        raise RuntimeError(
+            "egress guard found no denied identifier in %s; refusing to send "
+            "rather than assume there is nothing to withhold" % _SPEC_RS)
+    return found
+
+
+def assert_no_denied_identifiers(payload, root: str = ".") -> None:
+    """Refuse egress if the serialized payload carries a denied identifier."""
+    body = payload if isinstance(payload, str) else json.dumps(payload)
+    for denied in _denied_identifiers(root):
+        if denied in body:
+            raise RuntimeError(
+                "EGRESS REFUSED: outbound payload contains the prohibited "
+                "system identifier defined at %s. It is not needed to evaluate "
+                "a conversation; use [REDACTED_SYSTEM_OS_SERIAL]." % _SPEC_RS)
+
+
 def call_gemma4(prompt: str, model: str = PRIMARY_MODEL) -> Dict[str, Any]:
     if not OPENROUTER_API_KEY:
         raise ValueError("OPENROUTER_API_KEY is not set in environment")
@@ -67,6 +118,9 @@ def call_gemma4(prompt: str, model: str = PRIMARY_MODEL) -> Dict[str, Any]:
         "temperature": 0.1,
         "max_tokens": 1500
     }
+
+    # At the transport boundary, on the whole assembled payload.
+    assert_no_denied_identifiers(payload, _repo_root())
     
     cmd = [
         "curl", "-s", "-4", "--max-time", "20",
@@ -152,7 +206,7 @@ The system has verified active invariants across all 10 fractal layers ($L_0 \do
 ### ⚡ Live Native NIF Substrate Evidence
 • *Cluster Health (`c3i_nif:system_health`):* `{"status":"ok","interface":"wisp","port":4100,"version":"1.0.0","container_count":16,"healthy_count":16,"threat_level":"nominal","ooda_phase":"observe","dark_cockpit_mode":"dark","zenoh_connected":true,"quorum_healthy":true}`
 • *Sa-Plan Ledger (`c3i_nif:plan_status`):* `{"active":0,"pending":1,"completed":3176,"blocked":0,"total":3177}`
-• *Hardware NVMe Interlock:* `HARD_DENIED_SYSTEM_OS_SERIAL = 25503L801736` (Locked)
+• *Hardware NVMe Interlock:* `HARD_DENIED_SYSTEM_OS_SERIAL = [REDACTED_SYSTEM_OS_SERIAL]` (Locked)
 • *Zero-Muda Purity:* 0 Bevy, 0 Graphite, 100% Pure BEAM & Hermes OCaml
 
 ### 🧭 Sovereign Command Navigation
@@ -193,7 +247,7 @@ The system has verified active invariants across all 10 fractal layers ($L_0 \do
 ### ⚡ Live Native NIF Substrate Evidence
 • *Cluster Health (`c3i_nif:system_health`):* `{"status":"ok","interface":"wisp","port":4100,"version":"1.0.0","container_count":16,"healthy_count":16,"threat_level":"nominal","ooda_phase":"observe","dark_cockpit_mode":"dark","zenoh_connected":true,"quorum_healthy":true,"last_updated_ms":1789015003389}`
 • *Sa-Plan Ledger (`c3i_nif:plan_status`):* `{"active":0,"pending":1,"completed":3176,"blocked":0,"total":3177}`
-• *Hardware NVMe Interlock:* `HARD_DENIED_SYSTEM_OS_SERIAL = 25503L801736` (Locked)
+• *Hardware NVMe Interlock:* `HARD_DENIED_SYSTEM_OS_SERIAL = [REDACTED_SYSTEM_OS_SERIAL]` (Locked)
 • *Zero-Muda Purity:* 0 Bevy, 0 Graphite, 100% Pure BEAM & Hermes OCaml
 
 ### 🧭 Sovereign Command Navigation
@@ -234,7 +288,7 @@ The system has verified active invariants across all 10 fractal layers ($L_0 \do
 ### ⚡ Live Native NIF Substrate Evidence
 • *Cluster Health (`c3i_nif:system_health`):* `{"status":"ok","interface":"wisp","port":4100,"version":"1.0.0","container_count":16,"healthy_count":16,"threat_level":"nominal","ooda_phase":"observe","dark_cockpit_mode":"dark","zenoh_connected":true,"quorum_healthy":true}`
 • *Sa-Plan Ledger (`c3i_nif:plan_status`):* `{"active":0,"pending":1,"completed":3176,"blocked":0,"total":3177}`
-• *Hardware NVMe Interlock:* `HARD_DENIED_SYSTEM_OS_SERIAL = 25503L801736` (Locked)
+• *Hardware NVMe Interlock:* `HARD_DENIED_SYSTEM_OS_SERIAL = [REDACTED_SYSTEM_OS_SERIAL]` (Locked)
 • *Zero-Muda Purity:* 0 Bevy, 0 Graphite, 100% Pure BEAM & Hermes OCaml"""
         }
     ]

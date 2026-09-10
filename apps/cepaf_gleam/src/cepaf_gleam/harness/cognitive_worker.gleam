@@ -542,7 +542,7 @@ pub fn handle_directive(trimmed: String, intent: CognitiveIntent) -> CognitiveDe
       let reply =
         "✅ *UOS Comprehensive Verification Scorecard (SC-CHECKLIST-001)*\n\n"
         <> "• Domain 1 (Metadata/Tailscale/KM): 🟢 PASS (4/4)\n"
-        <> "• Domain 2 (Zero-Muda & Storage): 🟢 PASS (3/3, 25503L801736 Locked)\n"
+        <> "• Domain 2 (Zero-Muda & Storage): 🟢 PASS (3/3, [REDACTED_SYSTEM_OS_SERIAL] Locked)\n"
         <> "• Domain 3 (C1-C8 & Math Gates): 🟢 PASS (4/4, >10,636 Tests Green)\n"
         <> "• Domain 4 (Cross-Language Control): 🟢 PASS (5/5, Gleam+ZigVM+Hermes)\n"
         <> "• Domain 5 (Tri-Sov & Jujutsu): 🟢 PASS (2/2, Standalone .jj/)\n\n"
@@ -688,7 +688,7 @@ pub fn handle_conversational(trimmed: String, intent: CognitiveIntent) -> Cognit
             <> "• *Supervisor:* BEAM OTP 29 (`uos_sup.gleam` 4-Domain Root)\n"
             <> "• *Memory RSS:* ~3.4 MB (Bridge) / ~45 MB (BEAM Core)\n"
             <> "• *Zero-Muda Status:* 🟢 Pure (0 Bevy, 0 Graphite)\n"
-            <> "• *Hardware Interlock:* 🔒 OS Drive (`25503L801736`) Locked\n"
+            <> "• *Hardware Interlock:* 🔒 OS Drive (`[REDACTED_SYSTEM_OS_SERIAL]`) Locked\n"
             <> "• *Zenoh Backplane:* 🟢 Active on :7447 (TCP) / :8080 (REST)\n\n"
             <> "Assessment: Cluster operating well within nominal SIL-6 stability envelopes. Lyapunov exponents stable."
           CognitiveDecision(
@@ -819,7 +819,7 @@ fn query_cluster_status() -> String {
   <> "• *Zenoh PubSub:* `" <> zenoh_raw <> "`\n"
   <> "• *High Availability:* `" <> ha_raw <> "`\n"
   <> "• *Zero-Muda Purity:* 🟢 100% (0 Bevy, 0 Graphite, 0 curl subprocesses)\n"
-  <> "• *Hardware Interlock:* 🔒 OS Drive (`25503L801736`) Locked\n"
+  <> "• *Hardware Interlock:* 🔒 OS Drive (`[REDACTED_SYSTEM_OS_SERIAL]`) Locked\n"
   <> "• *Host Tailnet FQDN:* `http://nas-1.tail55d152.ts.net:4100`"
 }
 
@@ -931,7 +931,7 @@ fn query_zk_detail(adr_id: String) -> String {
 
 fn query_storage_detail() -> String {
   "🔒 *Hardware & OS Storage Safety Interlock*\n\n"
-  <> "• *Host Serial:* `HARD_DENIED_SYSTEM_OS_SERIAL = \"25503L801736\"`\n"
+  <> "• *Host Serial:* `HARD_DENIED_SYSTEM_OS_SERIAL = \"[REDACTED_SYSTEM_OS_SERIAL]\"`\n"
   <> "• *Protection Level:* HARD DENY (OS NVMe Drive Wiping & OSD Allocation Permanently Locked)\n"
   <> "• *Verification Oracle:* `ops/kubernetes/nas-k8s-lab/src/spec.rs` (7/7 Checks PASS)\n"
   <> "• *Status:* 🟢 Inviolable Hardware Lock Active"

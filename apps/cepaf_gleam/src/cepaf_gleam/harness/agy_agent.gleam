@@ -250,7 +250,7 @@ fn format_agy_markdown(
   <> "• *Sa-Plan Ledger (`c3i_nif:plan_status`):* `"
   <> plan_json
   <> "`\n"
-  <> "• *Hardware NVMe Interlock:* `HARD_DENIED_SYSTEM_OS_SERIAL = 25503L801736` (Locked)\n"
+  <> "• *Hardware NVMe Interlock:* `HARD_DENIED_SYSTEM_OS_SERIAL = [REDACTED_SYSTEM_OS_SERIAL]` (Locked)\n"
   <> "• *Zero-Muda Purity:* 0 Bevy, 0 Graphite, 100% Pure BEAM & Hermes OCaml\n\n"
   <> command_section
   <> "🔗 [Cockpit Dashboard](http://nas-1.tail55d152.ts.net:4100/) | "

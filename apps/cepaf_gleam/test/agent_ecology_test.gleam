@@ -125,9 +125,12 @@ pub fn ecology_markdown_formatters_test() {
   string.contains(summary, "sre_homeostasis_overseer") |> should.be_true
 
   let detail_agy = format_profile_detail("agy_sovereign_coordinator")
-  string.contains(detail_agy, "Sovereign Cognitive Architect") |> should.be_true
-  string.contains(detail_agy, "2oo3 Constitutional Quorum Required") |> should.be_true
+  string.contains(detail_agy, "AGY Sovereign Coordinator") |> should.be_true
+  string.contains(detail_agy, "Single-Agent Safe Dispatch") |> should.be_true
   string.contains(detail_agy, "plan_status") |> should.be_true
+
+  let detail_sec = format_profile_detail("security_hardware_guardian")
+  string.contains(detail_sec, "2oo3 Constitutional Quorum Required") |> should.be_true
 
   let detail_unknown = format_profile_detail("unknown_agent")
   string.contains(detail_unknown, "Unknown agent profile ID") |> should.be_true
