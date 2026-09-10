@@ -525,8 +525,39 @@ let read_evidence db =
    by trigger, so a wrong attribution can never be corrected -- only appended
    around. The attributor is now supplied by the caller and refused if absent,
    because an unattributed provenance row is worth less than no row. *)
+(* D5, reported in the seventeen-aspect sweep and fixed here.
+   `admit` reduced to  exists(a) && exists(b) && s = s : nothing bound the
+   revision to the workspace, so evidence recorded at "fictional-revision-0000"
+   and admission computed at the same string returned ADMITTED. Demonstrated on
+   an isolated copy: EV-1 admitted, derived ceiling 1, keyed to AGENTS.md and
+   flake.nix, at a revision that never existed.
+
+   The revision is now supplied by the wrapper from the pinned jj -- the same
+   split used by tools/atlas-check for the OTP facts, so toolchain resolution
+   stays in the shell library that owns it rather than growing a second resolver
+   here. Absent, it FAILS CLOSED: an unbound revision is not a revision. *)
+let workspace_revision () =
+  match Sys.getenv_opt "UOS_WORKSPACE_REVISION" with
+  | Some r when String.trim r <> "" -> Some (String.trim r)
+  | _ -> None
+
+let require_workspace_revision claimed =
+  match workspace_revision () with
+  | None ->
+    Error
+      "no workspace revision observed: set UOS_WORKSPACE_REVISION from the        pinned jj (tools/km-gate does this). An unbound revision is not a revision."
+  | Some actual when String.trim claimed <> actual ->
+    Error
+      (Printf.sprintf
+         "revision %S is not the workspace revision %S; evidence and admission           must be bound to the tree they are computed against"
+         (String.trim claimed) actual)
+  | Some _ -> Ok ()
+
 let ev_record ev revision runtime_ref formal_ref recorded_by =
   require (String.trim recorded_by <> "") "recorded_by is required";
+  (match require_workspace_revision revision with
+   | Error e -> raise (Invalid e)
+   | Ok () -> ());
   let db = Km_chain.open_db () in
   Fun.protect ~finally:(fun () -> Km_chain.close db) (fun () ->
     let stmt = Sqlite3.prepare db
@@ -543,6 +574,9 @@ let ev_record ev revision runtime_ref formal_ref recorded_by =
     0)
 
 let ev_admission revision =
+  match require_workspace_revision revision with
+  | Error e -> print_json (`Assoc ["status", `String "REFUSED"; "detail", `String e]); 2
+  | Ok () ->
   let db = Km_chain.open_db () in
   Fun.protect ~finally:(fun () -> Km_chain.close db) (fun () ->
     let evidence = read_evidence db in

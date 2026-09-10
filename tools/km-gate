@@ -12,4 +12,11 @@ cd "$km_repo"
 DUNE_CACHE=disabled timeout --kill-after=2s 120s dune build -j 1 \
   --root "$km_repo/tools/km_provenance" --build-dir "$km_build" ./km_gate.exe
 if (( $# == 0 )); then set -- --gate; fi
+# D5: the revision the EV predicate binds against is OBSERVED here, from the
+# pinned jj, and never taken from the caller. Resolution stays in the shell
+# library that owns toolchain identity; the OCaml core refuses if it is absent.
+if [ -x "$km_repo/toolchains/nix-profile/bin/jj" ]; then
+  UOS_WORKSPACE_REVISION="$("$km_repo/toolchains/nix-profile/bin/jj"     --ignore-working-copy --repository "$km_repo" log -r @ --no-graph -T commit_id 2>/dev/null || true)"
+  export UOS_WORKSPACE_REVISION
+fi
 timeout --kill-after=2s 60s "$km_build/default/km_gate.exe" "$@"

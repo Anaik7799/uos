@@ -62,3 +62,17 @@
  (name atlas_check)
  (modules atlas_check)
  (libraries yojson atlas_algebra))
+
+; Task-authority health. Pure, like the other cores here: it reads no database
+; and samples no clock, so every law is about MEANING. tools/lease-health
+; supplies the rows and the instant.
+
+(library
+ (name lease_health)
+ (wrapped false)
+ (modules lease_health))
+
+(executable
+ (name test_lease_health)
+ (modules test_lease_health)
+ (libraries lease_health hermes_harness_suite_telemetry))

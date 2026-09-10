@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# Task-authority health for the canonical Sa-plan store.
+#
+# REPORT ONLY. It never releases, reclaims or completes anything. An expired
+# lease is a point-in-time observable; whether the worker is gone is a liveness
+# property this tool cannot see, and acting on the first as though it were the
+# second is how in-flight work gets corrupted. The verdict says UNKNOWN and
+# means it.
+set -euo pipefail
+
+UOS_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$UOS_ROOT"
+DB="${UOS_SA_PLAN_DB:-$UOS_ROOT/var/sa-plan/uos.sqlite3}"
+[ -f "$DB" ] || { echo "lease-health: no store at $DB" >&2; exit 2; }
+
+NOW_NS=$(date +%s%N)
+
+# Ask the store for executing rows only; the pure core decides what is a finding.
+/usr/bin/sqlite3 -separator '|' "$DB" \
+  "select plan_id,id,state,coalesce(worker,''),coalesce(lease_until_ns,0)
+     from sa_plan_task where state='executing';" \
+| awk -F'|' -v now="$NOW_NS" '
+  {
+    plan=$1; task=$2; worker=$4; lease=$5+0
+    bad=0
+    if (lease > 0 && lease < now) {
+      age=int((now-lease)/1000000000)
+      printf "EXPIRED   %s/%s worker=%s age=%ds quiescence=UNKNOWN\n", plan, task, worker, age
+      expired++
+    }
+    if (worker == "" || substr(worker,1,1) == "-") {
+      printf "IDENTITY  %s/%s worker=\"%s\" is not an identity\n", plan, task, worker
+      ident++
+    }
+    rows++
+  }
+  END {
+    printf "\nexecuting rows: %d   expired leases: %d   invalid worker identities: %d\n",
+           rows+0, expired+0, ident+0
+    printf "authority: REPORT_ONLY. Expiry is NOT evidence the worker is gone;\n"
+    printf "reclaiming is the owner'"'"'s decision with evidence, per SYNC-12.\n"
+    exit (expired+0 > 0 || ident+0 > 0) ? 1 : 0
+  }'
