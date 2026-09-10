@@ -101,10 +101,23 @@ pub fn admit(
                   // `input_size` is BYTES and `prompt_nanodollars` is a
                   // per-TOKEN price, which reads like a unit conflation and was
                   // filed as a defect on 2026-09-10 before being withdrawn. It
-                  // is deliberate and sound: a token is never fewer than one
-                  // byte, so token_count <= byte_count and charging bytes at
-                  // the token rate is a genuine UPPER bound -- which is what
-                  // `worst_case` means. The cost is that the bound is roughly
+                  // deliberate. It is NOT, however, the theorem the first
+                  // version of this comment claimed. Codex corrected it on
+                  // 2026-09-10: "a token is never fewer than one byte" is not a
+                  // universal proof, because automatically inserted BOS and
+                  // turn-delimiter tokens consume ZERO input bytes. The
+                  // inequality actually required is
+                  //     billed_prompt_tokens <= input_utf8_bytes + template_token_allowance
+                  // which is exactly what the allowance below is for. For Gemma
+                  // text that holds -- byte-fallback BPE, a dedicated whitespace
+                  // token, and merges that only reduce counts -- but it is an
+                  // assumption about the SERVED tokenizer and template, not a
+                  // proof, and the provider bills on its own reported usage.
+                  // It also FAILS for multimodal: an image reference is a few
+                  // dozen bytes and bills hundreds of vision tokens, so this
+                  // becomes an UNDERestimate the moment such a payload is
+                  // admitted. Any multimodal support must bring its own cost
+                  // model first. The cost is that the bound is roughly
                   // 4x conservative at typical byte-per-token ratios, so the
                   // reservation ceiling binds about 4x earlier than a
                   // token-accurate estimate would. That is a deliberate

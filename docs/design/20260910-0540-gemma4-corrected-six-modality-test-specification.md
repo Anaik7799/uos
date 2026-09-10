@@ -75,6 +75,60 @@ What also survives: the intent was **undocumented**, which is why I misread it,
 and the bound is ~4× conservative for text so the reservation ceiling binds ~4×
 early. Both are now stated in a comment at the site.
 
+### 0.c Codex went further than AGY: the ledger is not on the Gemma path
+
+`reservations` holding 0 rows does **not** mean no calls were made. It means **no
+calls through the ledger**. Codex found at least three Gemma paths that bypass the
+budget engine entirely:
+
+| Path | What it checks | What it does not |
+|---|---|---|
+| `telegram_openrouter.gleam:129` → HTTP FFI | endpoint, credentials, timeout, body size | **no reservation, no Sa-plan claim** |
+| `openrouter_worker_cli.gleam:165` | invokes `w.run` directly | ledger |
+| `tools/gemma4_telegram_monitor.py` | separate Python POST | ledger |
+
+So neither "blocked" nor "unexercised" was right. **The ledger is not on the
+path.** That is a more serious finding than the one I filed and withdrew, and it
+makes M3's "spends nothing" assertion unsupportable as written — an unchanged
+reservation count says nothing about a dispatch that never consults reservations.
+
+---
+
+## 0.d Three live defects in committed source, all verified here
+
+Codex found these; I confirmed each before relaying. They are **not** spec issues.
+
+**L1 — the denied NVMe serial is transmitted to a third party.**
+`telegram_openrouter.gleam:46` places `HARD_DENIED_SYSTEM_OS_SERIAL =
+'25503L801736'` verbatim into `uos_ground_truth_catalog`, which line ~107
+concatenates into the **system prompt** posted to OpenRouter. The exact property
+M5 proposed to test is already violated, on a path that runs whenever the cockpit
+bot evaluates a conversation. A clean *user* prompt does not prevent it. **This
+wants an owner ahead of any test suite.**
+
+**L2 — the new `egress_redactor` does not redact, and its test confirms it.**
+`egress_redactor.gleam:47` replaces only the **prefix marker**:
+
+```
+input    : authorization: Bearer sk-or-v1-9f3ab77c2e5d41
+redacted : authorization: Bearer [REDACTED]_9f3ab77c2e5d41
+```
+
+The secret body survives verbatim; restoring the known prefix reconstructs it.
+`gemma4_feature_suite_test.gleam:292` asserts only that the *prefix* is absent, so
+it passes over a payload that still carries the secret. **A prefix standing for a
+secret** — the defect class again, inside brand-new code written to implement my
+own M5.
+
+**L3 — an invented lease passes the fence.**
+`tool_fenced_dispatcher.gleam:89` validates `string.trim(lease.worker) != ""`,
+`lease.fencing_token > 0`, and `lease.lease_until_ns > current_time_ns`. All three
+are **caller-supplied**. No canonical claim, owner or epoch is consulted. Any
+nonempty string, positive integer and future timestamp passes. Codex's phrasing is
+the right one: **a plausible lease record is the coarser observable; actual
+authority is the property.** My M2 tested only the *no-lease* case and would have
+missed this entirely.
+
 ---
 
 ## 1. What changed, and why
@@ -102,7 +156,9 @@ it. **A modality with no killed mutant is decoration and does not ship.**
 ### M1 — Multimodal · DEFERRED
 
 - **Blocked by:** `daily_budget.gleam:13`, `max_input_bytes = 16_384`. A single rack-caddy JPEG exceeds it.
-- **Also UNKNOWN:** whether the configured provider serves Gemma 4 multimodally. Not assumed either way.
+- **No longer UNKNOWN, and worse than deferred:** per Google's model card, **Gemma 4 31B has no native audio**. M1's audio half targets a capability the chosen variant does not have. Name the exact variant before specifying anything.
+- **Transport, not just bounds:** raising `max_input_bytes` does **not** add multimodal support — the request type and serializer carry **string content only** (`openrouter_worker.gleam:174, 367`). A JPEG need not exceed 16 KiB either, so the byte bound was never the whole story.
+- **Perception oracle required (Codex):** replace or drop the image while holding the accompanying text fixed; an image-dependent answer must change or fail. Without that, a "multimodal" pass may be the text alone.
 - **BLOCKING precondition, added on AGY's finding:** `worst_case` must gain a modality-aware cost model **before** any multimodal payload is admitted. Today it charges bytes at the per-token rate, which is an upper bound for text and an **underestimate** for images and audio, where a few dozen bytes of reference bill hundreds of vision tokens. Admitting M1 against the current model would under-reserve precisely where tokens cost most.
 - **Precondition:** a recorded governance decision on the byte bound (§3), then a provider capability probe whose result is recorded as an observation.
 - **Status until then:** `UNRUN`. Not `FAIL`, not `PASS`.
@@ -111,7 +167,10 @@ it. **A modality with no killed mutant is decoration and does not ship.**
 
 - **Subject:** the fence, not the model.
 - **Property:** a syntactically valid tool-call proposal naming `sa-plan`, `c3i_nif` or `zigvm` is accepted as *advice* and produces **no effect** without a typed authorization and a live Sa-plan claim.
-- **Falsifier:** feed a well-formed proposal for `sa-plan task complete` through the advisory path and observe whether any task row changes. If one does, the test has found the defect it exists for.
+- **Falsifier (mine, insufficient alone):** feed a well-formed proposal for `sa-plan task complete` through the advisory path and observe whether any task row changes.
+- **Falsifier (Codex's, and the one that matters):** supply an **invented but well-formed lease** — nonempty worker, positive fencing token, future expiry. It passes today (L3). The no-lease case misses this.
+- **Positive control, required:** a legitimately **authorized** call through the same consumer must succeed. `CLAUDE.md` §6 permits effects *with* typed authorization, so "a passing autonomous call proves a failed fence" was too categorical; without the positive control the suite cannot tell a working fence from a broken consumer.
+- **Also insufficient:** unchanged task rows cannot establish absence of NIF, filesystem or ZigVM effects.
 - **Mutation:** remove the authorization check; the test must fail.
 - **Authority basis:** `CLAUDE.md` §6; `SC-JIDOKA-001` (`-32002`).
 
@@ -119,8 +178,8 @@ it. **A modality with no killed mutant is decoration and does not ship.**
 
 - **Subject:** the bound, not the context window.
 - **Property:** `admit` with `input` of `max_input_bytes + 1` returns `Error("invalid_request: byte_bound")`, reserves nothing, and spends nothing.
-- **Falsifier:** assert `reservations` row count is unchanged across the refusal.
-- **Mutation:** raise the bound in the test build; the refusal test must fail.
+- **Falsifier (mine, inadequate — Codex):** an unchanged `reservations` count cannot establish zero spend. `admit` is **pure**, so a POST-then-refuse ordering would leave both the `byte_bound` error and the unchanged count intact. And per §0.c the ledger is not even on the Gemma path. Observe the **actual transport boundary**: zero dispatches and zero grants for this refusal.
+- **Mutation, corrected:** my proposed mutant was self-defeating — if the fixture is computed from `max_input_bytes + 1`, raising that constant raises the fixture too and the mutant survives. **Hold the fixture and every other admission condition fixed** when changing the implementation bound.
 - **Recorded arithmetic**, so a later reader need not redo it:
 
   | Case | `worst_case` | vs reservation $0.25 | vs SYNC-09 $0.02 |
@@ -135,6 +194,7 @@ it. **A modality with no killed mutant is decoration and does not ship.**
 - **Subject:** the public record, never the private trace.
 - **Property:** an advisory response carries Claim / Evidence / Source / Risk / Quality; a low-information response is rejected.
 - **Revised on AGY's objection.** I had read SC-HIVE-DECISION-001 as barring any test-time assertion on reasoning. It does not: it governs what the **permanent hive decision ledger collects**, not what a harness may observe while a test runs. The corrected constraint is narrower — a test **MAY** assert on reasoning structure at test time; it **MUST NOT** persist private chain-of-thought into the ledger, into a receipt, or into any published artifact.
+- **Insufficient on its own (Codex):** field **presence** establishes neither quality nor the contract's required identity, task, revision and epoch binding. **Falsifier:** retain every field but substitute unrelated evidence, an expired reference, or another candidate's evidence — presence-checking passes.
 - **Mutation:** strip the Evidence field; the test must fail.
 
 ### M5 — No repository secret leaves in an outbound payload · RUNS TODAY
