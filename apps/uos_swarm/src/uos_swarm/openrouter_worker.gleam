@@ -38,8 +38,10 @@ pub const paid_budget_usd_ceiling = 0.25
 pub const timeout_ms = 30_000
 
 /// A UTF-8 byte ceiling is independent of the existing grapheme limit. Two
-/// message strings therefore contribute at most 16 KiB of input text.
-pub const prompt_field_bytes_ceiling = 8192
+/// message strings therefore contribute at most 2 MiB of input text.
+pub const prompt_field_bytes_ceiling = 1_048_576
+
+pub const prompt_field_chars_ceiling = 1_048_576
 
 pub type Tier {
   Free
@@ -136,6 +138,7 @@ pub fn allowlist() -> List(Allowed) {
     Allowed("openrouter/free", Free, 0.0, 0.0),
     Allowed("inclusionai/ling-3.0-flash-fin:free", Free, 0.0, 0.0),
     Allowed("google/gemma-4-31b-it:free", Free, 0.0, 0.0),
+    Allowed("google/gemma-4-26b-a4b-it:free", Free, 0.0, 0.0),
     Allowed("nvidia/nemotron-3.5-lightning:free", Free, 0.0, 0.0),
     Allowed("minimax/minimax-m3:free", Free, 0.0, 0.0),
     Allowed("thinkingmachines/inkling:free", Free, 0.0, 0.0),
@@ -144,6 +147,7 @@ pub fn allowlist() -> List(Allowed) {
     Allowed("deepseek/deepseek-v4-pro-0813", Paid, 0.00000132, 0.00000396),
     Allowed("deepseek/deepseek-v4-flash-0731", Paid, 0.000000065, 0.00000018),
     Allowed("google/gemma-4-31b-it", Paid, 0.00000009, 0.00000034),
+    Allowed("google/gemma-4-26b-a4b-it", Paid, 0.00000009, 0.00000034),
     Allowed("google/gemini-2.5-flash-lite", Paid, 0.0000001, 0.0000004),
     Allowed("openai/gpt-4.1-nano", Paid, 0.0000001, 0.0000004),
     Allowed(
@@ -268,24 +272,39 @@ const forbidden_fragments = [
 
 /// Refuse prompts that could carry private source, paths, fences or secrets, or are too long.
 pub fn sanitize_check(text: String) -> Result(Nil, Refusal) {
-  use _ <- result.try(
-    case
-      bit_array.byte_size(bit_array.from_string(text))
-      > prompt_field_bytes_ceiling
-    {
-      True -> Error(UnsanitizedPrompt("longer than 8192 UTF-8 bytes"))
-      False -> Ok(Nil)
-    },
-  )
-  case string.length(text) > 2000 {
-    True -> Error(UnsanitizedPrompt("longer than 2000 characters"))
-    False ->
+  case string.length(text) > prompt_field_chars_ceiling {
+    True ->
+      Error(
+        UnsanitizedPrompt(
+          "longer than "
+          <> int.to_string(prompt_field_chars_ceiling)
+          <> " characters",
+        ),
+      )
+    False -> {
+      use _ <- result.try(
+        case
+          bit_array.byte_size(bit_array.from_string(text))
+          > prompt_field_bytes_ceiling
+        {
+          True ->
+            Error(
+              UnsanitizedPrompt(
+                "longer than "
+                <> int.to_string(prompt_field_bytes_ceiling)
+                <> " UTF-8 bytes",
+              ),
+            )
+          False -> Ok(Nil)
+        },
+      )
       case
         list.find(forbidden_fragments, fn(f) { string.contains(text, f.0) })
       {
         Ok(#(_, why)) -> Error(UnsanitizedPrompt(why))
         Error(_) -> Ok(Nil)
       }
+    }
   }
 }
 

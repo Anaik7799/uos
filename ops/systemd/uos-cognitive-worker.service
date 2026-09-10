@@ -1,5 +1,5 @@
 [Unit]
-Description=UOS Sovereign Zenoh Cognitive Worker (Gleam/OTP 29)
+Description=UOS Sovereign Zenoh Cognitive Worker & Direct Telegram Outbound (Gleam/OTP 29)
 After=network-online.target c3i-zenoh-router-1.service uos-telegram-bridge.service
 Wants=network-online.target c3i-zenoh-router-1.service
 
@@ -9,6 +9,7 @@ WorkingDirectory=/home/an/NAS-setup/uos
 ExecStart=/home/an/NAS-setup/uos/tools/cognitive-worker --loop 1
 Restart=always
 RestartSec=5
+PassEnvironment=OPENROUTER_API_KEY TELEGRAM_BOT_TOKEN TELEGRAM_TOKEN TELEGRAM_CHAT_ID
 StandardOutput=journal
 StandardError=journal
 

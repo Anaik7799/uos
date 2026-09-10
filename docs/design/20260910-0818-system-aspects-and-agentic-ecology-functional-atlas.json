@@ -1,0 +1,334 @@
+{
+  "schema_version": 1,
+  "status": "ADMITTED",
+  "atlas_id": "20260910-0818-system-aspects-and-agentic-ecology-functional-atlas",
+  "specification_path": "docs/design/20260910-0815-system-aspects-and-agentic-ecology-denotational-spec.md",
+  "authority": "sa-plan:uos/system-aspects-agentic-ecology/20260910-0810:T03",
+  "created_utc": "2026-09-10T08:18:00Z",
+  "control_language": "gleam",
+  "runtime": "otp_29",
+  "contracts": [
+    "SC-SYSTEM-ASPECTS-001",
+    "SC-AGENT-CAPABILITY-001",
+    "SC-FRACTAL-ECOLOGY-001",
+    "SC-CHECKLIST-001"
+  ],
+  "seventeen_system_aspects": [
+    {
+      "id": "A01",
+      "name": "Substrate & Hardware Safety",
+      "domain": "Infrastructure",
+      "layer": "L0",
+      "language": "rust",
+      "governing_file": "ops/kubernetes/nas-k8s-lab/src/spec.rs",
+      "invariants": ["HARD_DENIED_SYSTEM_OS_SERIAL = '25503L801736'", "fail_closed_on_destructive_intent"],
+      "tools": ["system_health", "disk_status", "prajna_trip"]
+    },
+    {
+      "id": "A02",
+      "name": "Version Control Discipline",
+      "domain": "Version Control",
+      "layer": "L4",
+      "language": "jujutsu",
+      "governing_file": ".jj/",
+      "invariants": ["standalone_non_colocated", "0_native_git_mutations", "monotonic_oplog"],
+      "tools": ["jj_status", "jj_log", "jj_describe", "jj_new"]
+    },
+    {
+      "id": "A03",
+      "name": "Zero-Muda Purity & Provenance",
+      "domain": "Governance",
+      "layer": "L0",
+      "language": "gleam_ocaml",
+      "governing_file": "contracts/rules/muda-waste-reduction.md",
+      "invariants": ["0_bevy", "0_graphite", "0_foreign_nifs", "0_compiler_warnings_in_src"],
+      "tools": ["muda_check", "provenance_verify", "two_key_admit"]
+    },
+    {
+      "id": "A04",
+      "name": "Supervision & Actor Hierarchy",
+      "domain": "Supervision",
+      "layer": "L4",
+      "language": "gleam_otp",
+      "governing_file": "apps/cepaf_gleam/src/cepaf_gleam/uos_sup.gleam",
+      "invariants": ["root_4_domain_isolation", "bounded_restart_budgets", "typed_mailboxes"],
+      "tools": ["sup_status", "actor_restart", "mailbox_inspect"]
+    },
+    {
+      "id": "A05",
+      "name": "Deterministic Runtime Engine",
+      "domain": "Kernel",
+      "layer": "L4",
+      "language": "zig",
+      "governing_file": "engines/zigvm",
+      "invariants": ["descriptor_relative_vfs", "linear_arenas", "0_gc_pauses", "8_laws_of_determinism"],
+      "tools": ["zigvm_step", "vfs_openat", "arena_reset"]
+    },
+    {
+      "id": "A06",
+      "name": "Formal Evidence & Analysis",
+      "domain": "Evidence Plane",
+      "layer": "L8",
+      "language": "ocaml",
+      "governing_file": "engines/hermes",
+      "invariants": ["gospel_pre_post_conditions", "sqlite_wal_append_only", "differential_parity_algebra"],
+      "tools": ["hermes_verify", "gospel_check", "parity_algebra"]
+    },
+    {
+      "id": "A07",
+      "name": "Mathematical Authority",
+      "domain": "Formal Proof",
+      "layer": "L0",
+      "language": "lean4_quint",
+      "governing_file": "formal/lean/Traceability.lean",
+      "invariants": ["delta_t13_conserved_zero", "two_lattice_stm_isolation", "quint_parity_simulation"],
+      "tools": ["lean_check", "quint_verify", "z3_smt_solve"]
+    },
+    {
+      "id": "A08",
+      "name": "Feedback, Semiotics & Homeostasis",
+      "domain": "Control Theory",
+      "layer": "L9",
+      "language": "gleam",
+      "governing_file": "apps/cepaf_gleam/src/cepaf_gleam/prajna/circuit_breaker.gleam",
+      "invariants": ["prajna_circuit_breaker", "windowed_lyapunov_trend", "2oo3_constitutional_consensus"],
+      "tools": ["circuit_breaker_status", "lyapunov_metric", "consensus_vote"]
+    },
+    {
+      "id": "A09",
+      "name": "Quarantined AI Inference",
+      "domain": "Inference Tier",
+      "layer": "L5",
+      "language": "mojo_python",
+      "governing_file": "services/inference/max/max_worker.py",
+      "invariants": ["max_stdio_pipe_quarantine", "daily_budget_16kib_input_bound", "decision_envelope_ledger"],
+      "tools": ["max_infer", "openrouter_eval", "budget_gate"]
+    },
+    {
+      "id": "A10",
+      "name": "Mesh Telemetry & Observability",
+      "domain": "Network Plane",
+      "layer": "L7",
+      "language": "zenoh_gleam",
+      "governing_file": "apps/cepaf_gleam/src/cepaf_gleam/ui/zenoh_otel.gleam",
+      "invariants": ["zenoh_pubsub_sole_transport", "ooz_otel_over_zenoh", "moz_mcp_over_zenoh", "w3c_128bit_trace_id"],
+      "tools": ["zenoh_publish", "zenoh_subscribe", "otel_span_record"]
+    },
+    {
+      "id": "A11",
+      "name": "Agent Event Bus Protocol",
+      "domain": "Agent Plane",
+      "layer": "L5",
+      "language": "gleam",
+      "governing_file": "apps/cepaf_gleam/src/cepaf_gleam/agui/events.gleam",
+      "invariants": ["32_canonical_events", "7_event_categories", "sse_websocket_streaming"],
+      "tools": ["agui_emit", "agui_subscribe", "agui_history"]
+    },
+    {
+      "id": "A12",
+      "name": "Declarative UI Component Catalog",
+      "domain": "Presentation",
+      "layer": "L2",
+      "language": "gleam",
+      "governing_file": "apps/cepaf_gleam/src/cepaf_gleam/ui/web/dashboard_views.gleam",
+      "invariants": ["233_component_types", "declarative_json_specs_only", "zero_client_js"],
+      "tools": ["a2ui_render", "a2ui_validate", "a2ui_catalog_list"]
+    },
+    {
+      "id": "A13",
+      "name": "Multi-Interface Accessibility",
+      "domain": "Interface Tier",
+      "layer": "L7",
+      "language": "gleam",
+      "governing_file": "apps/cepaf_gleam/src/cepaf_gleam/ui/domain.gleam",
+      "invariants": ["penta_stack_parity", "lustre_ssr_4100", "wisp_rest_4100", "ansi_tui", "telegram_48_directives"],
+      "tools": ["web_serve", "api_dispatch", "tui_render", "telegram_route"]
+    },
+    {
+      "id": "A14",
+      "name": "Universal Tailscale Web Navigation",
+      "domain": "Network Routing",
+      "layer": "L7",
+      "language": "http",
+      "governing_file": "contracts/rules/tailscale-web-fqdn-mandate.md",
+      "invariants": ["tailnet_fqdn_links", "base_url_nas1_4100", "clickable_markdown_and_html"],
+      "tools": ["tailscale_resolve", "fqdn_format"]
+    },
+    {
+      "id": "A15",
+      "name": "Comprehensive Verification Checklist",
+      "domain": "Quality Assurance",
+      "layer": "L9",
+      "language": "gleam_ocaml",
+      "governing_file": "contracts/rules/comprehensive-checklist-contract.md",
+      "invariants": ["5_domains_18_checkpoints", "accordion_on_every_page", "tools_uos_checklist_gate"],
+      "tools": ["checklist_eval", "gate_g_checklist", "doctor_ev19"]
+    },
+    {
+      "id": "A16",
+      "name": "Knowledge Management Triad",
+      "domain": "Knowledge Plane",
+      "layer": "L8",
+      "language": "markdown_ocaml",
+      "governing_file": "engines/hermes/modules/hermes_wiki",
+      "invariants": ["hermes_wiki_transclusion", "zigvm_zk_adr001_109", "c3i_living_ontology", "yyyymmdd_hhss_prefix"],
+      "tools": ["wiki_render", "zk_adr_read", "ontology_query"]
+    },
+    {
+      "id": "A17",
+      "name": "Durable Execution & Workflow",
+      "domain": "Execution Plane",
+      "layer": "L3",
+      "language": "ocaml_sqlite",
+      "governing_file": "tools/sa-plan",
+      "invariants": ["sc_sa_plan_001_exclusive_authority", "sc_jidoka_001_andon_halt_32002", "heijunka_pull_leases"],
+      "tools": ["sa_plan_claim", "sa_plan_complete", "sa_plan_select"]
+    }
+  ],
+  "agent_capability_profiles": [
+    {
+      "id": "agy_sovereign_coordinator",
+      "name": "AGY Sovereign Coordinator",
+      "kind": "Singleton",
+      "layer": "L6",
+      "aspects": ["A04", "A11", "A13", "A17"],
+      "capabilities": [
+        "swarm_orchestration",
+        "tri_sovereign_consensus",
+        "agui_stream_publishing",
+        "sa_plan_dispatch",
+        "nlp_task_decomposition"
+      ],
+      "tool_allowlist": [
+        "plan_status", "plan_get", "plan_add", "plan_update",
+        "agui_emit", "system_health", "system_dashboard"
+      ],
+      "requires_2oo3": false,
+      "max_token_budget": 8192,
+      "sla_latency_ms": 5
+    },
+    {
+      "id": "sre_homeostasis_overseer",
+      "name": "SRE Homeostasis Overseer",
+      "kind": "Singleton",
+      "layer": "L9",
+      "aspects": ["A01", "A08", "A15"],
+      "capabilities": [
+        "lyapunov_trend_detection",
+        "prajna_circuit_breaker_control",
+        "deadman_freshness_supervision",
+        "dark_cockpit_failsafe",
+        "chaos_injection_defense"
+      ],
+      "tool_allowlist": [
+        "prajna_health", "system_immune", "dark_cockpit_mode",
+        "integrity_check", "evolution_metrics", "cpig_score"
+      ],
+      "requires_2oo3": true,
+      "max_token_budget": 4096,
+      "sla_latency_ms": 10
+    },
+    {
+      "id": "security_hardware_guardian",
+      "name": "Security & Hardware Enclave Guardian",
+      "kind": "Singleton",
+      "layer": "L0",
+      "aspects": ["A01", "A03", "A08"],
+      "capabilities": [
+        "drive_serial_enclave_lock",
+        "egress_credential_redaction",
+        "destructive_command_veto",
+        "constitutional_2oo3_verification",
+        "ephemeral_token_rotation"
+      ],
+      "tool_allowlist": [
+        "storage_status", "hardware_lock_verify", "token_rotate",
+        "quorum_verify", "redactor_scrub"
+      ],
+      "requires_2oo3": true,
+      "max_token_budget": 2048,
+      "sla_latency_ms": 2
+    },
+    {
+      "id": "multimodal_edge_ingestor",
+      "name": "Multimodal Edge Ingestor",
+      "kind": "ElasticSwarm",
+      "layer": "L7",
+      "aspects": ["A10", "A13"],
+      "capabilities": [
+        "acoustic_vibration_spectrum_codec",
+        "vision_rack_caddy_cv",
+        "voice_biometric_quorum_codec",
+        "telegram_multimodal_simulation"
+      ],
+      "tool_allowlist": [
+        "encode_acoustic", "analyze_caddy_vision", "verify_voice_quorum",
+        "telegram_simulate_event"
+      ],
+      "requires_2oo3": false,
+      "max_token_budget": 16384,
+      "sla_latency_ms": 15
+    },
+    {
+      "id": "formal_verifier_oracle",
+      "name": "Formal Verifier Oracle",
+      "kind": "Singleton",
+      "layer": "L8",
+      "aspects": ["A06", "A07", "A15"],
+      "capabilities": [
+        "lean4_theorem_validation",
+        "quint_parity_simulation",
+        "gospel_contract_checking",
+        "z3_smt_bounded_solving",
+        "differential_parity_algebra"
+      ],
+      "tool_allowlist": [
+        "verification_run", "lean_check", "quint_verify",
+        "z3_solve", "gospel_assert"
+      ],
+      "requires_2oo3": false,
+      "max_token_budget": 4096,
+      "sla_latency_ms": 50
+    },
+    {
+      "id": "knowledge_sheaf_curator",
+      "name": "Knowledge Sheaf Curator",
+      "kind": "Singleton",
+      "layer": "L8",
+      "aspects": ["A16"],
+      "capabilities": [
+        "hermes_wiki_transclusion",
+        "zk_adr_cataloging",
+        "living_ontology_sheaf_sync",
+        "holographic_semantic_search",
+        "timestamp_mandate_enforcement"
+      ],
+      "tool_allowlist": [
+        "knowledge_search", "zk_read_note", "zk_author_note",
+        "wiki_render_node", "ontology_sync"
+      ],
+      "requires_2oo3": false,
+      "max_token_budget": 8192,
+      "sla_latency_ms": 20
+    },
+    {
+      "id": "quarantined_inference_worker",
+      "name": "Quarantined AI Inference Worker",
+      "kind": "ElasticSwarm",
+      "layer": "L5",
+      "aspects": ["A09"],
+      "capabilities": [
+        "modular_max_mojo_rpc",
+        "openrouter_gemma4_client",
+        "daily_budget_gate_enforcement",
+        "decision_envelope_ledger_emitter"
+      ],
+      "tool_allowlist": [
+        "infer_gemma4", "budget_check_reservation", "emit_decision_envelope"
+      ],
+      "requires_2oo3": false,
+      "max_token_budget": 16384,
+      "sla_latency_ms": 5
+    }
+  ]
+}

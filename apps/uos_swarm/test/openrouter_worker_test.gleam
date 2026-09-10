@@ -96,8 +96,16 @@ pub fn prompt_hygiene_refuses_paths_source_and_secrets_test() {
   |> should.equal(Error(w.UnsanitizedPrompt("code fence")))
   w.sanitize_check("key sk-or-v1-abc")
   |> should.equal(Error(w.UnsanitizedPrompt("credential pattern")))
-  w.sanitize_check(string.repeat("a", 2001))
-  |> should.equal(Error(w.UnsanitizedPrompt("longer than 2000 characters")))
+  w.sanitize_check(string.repeat("a", w.prompt_field_chars_ceiling + 1))
+  |> should.equal(
+    Error(
+      w.UnsanitizedPrompt(
+        "longer than "
+        <> int.to_string(w.prompt_field_chars_ceiling)
+        <> " characters",
+      ),
+    ),
+  )
   w.sanitize_check("abstract design question") |> should.equal(Ok(Nil))
 }
 
@@ -109,12 +117,28 @@ pub fn the_lease_review_prompt_is_sanitized_test() {
   string.contains(r.user, "coord") |> should.be_false
 }
 
+pub fn gemma_4_26b_is_in_allowlist_test() {
+  let list = w.allowlist()
+  let assert Ok(free) = list.find(list, fn(a) { a.id == "google/gemma-4-26b-a4b-it:free" })
+  free.tier |> should.equal(w.Free)
+  let assert Ok(paid) = list.find(list, fn(a) { a.id == "google/gemma-4-26b-a4b-it" })
+  paid.tier |> should.equal(w.Paid)
+}
+
 pub fn combining_marks_cannot_bypass_actual_utf8_request_bound_test() {
   // One user-perceived character can hold thousands of combining code points.
-  let oversized = "a" <> string.repeat("\u{0301}", 4096)
+  let oversized = "a" <> string.repeat("\u{0301}", 524_288)
   string.length(oversized) |> should.equal(1)
   w.sanitize_check(oversized)
-  |> should.equal(Error(w.UnsanitizedPrompt("longer than 8192 UTF-8 bytes")))
+  |> should.equal(
+    Error(
+      w.UnsanitizedPrompt(
+        "longer than "
+        <> int.to_string(w.prompt_field_bytes_ceiling)
+        <> " UTF-8 bytes",
+      ),
+    ),
+  )
   let io =
     w.Io(..routing_io("moonshotai/kimi-k3"), post: fn(_, _, _) {
       panic as "oversized UTF-8 input must not POST"
@@ -122,7 +146,15 @@ pub fn combining_marks_cannot_bypass_actual_utf8_request_bound_test() {
   let request =
     w.Request("moonshotai/kimi-k3", "bounded advice", oversized, 4096)
   w.run(w.profile_policy(w.CodingKimi), io, request)
-  |> should.equal(Error(w.UnsanitizedPrompt("longer than 8192 UTF-8 bytes")))
+  |> should.equal(
+    Error(
+      w.UnsanitizedPrompt(
+        "longer than "
+        <> int.to_string(w.prompt_field_bytes_ceiling)
+        <> " UTF-8 bytes",
+      ),
+    ),
+  )
 }
 
 pub fn request_json_has_no_tools_and_bounded_tokens_test() {

@@ -7,6 +7,7 @@
 //// Governs all inbound Telegram messages, directives, planning queries,
 //// deterministic runtime executions, and cognitive mesh dispatch.
 
+import cepaf_gleam/harness/agent_ecology
 import cepaf_gleam/harness/telegram_collab
 import cepaf_gleam/harness/telegram_creative
 import cepaf_gleam/harness/telegram_ops
@@ -112,13 +113,15 @@ fn handle_directive(cmd_text: String, _inbound: InboundMessage) -> String {
       <> "Governed by the **UOS Gleam/OTP 29 Harness** (`apps/cepaf_gleam`).\n\n"
       <> "*Domain A: Foundational SRE & Operations (ADR-104)*\n"
       <> "• `/status` - Live cluster telemetry & service health\n"
-      <> "• `/storage` - NVMe 25503L801736 hardware safety enclave lock\n"
+      <> "• `/storage` - NVMe [REDACTED_SYSTEM_OS_SERIAL] hardware safety enclave lock\n"
       <> "• `/dark` - Dark cockpit autonomic isolation protocol\n"
       <> "• `/andon [confirm <id>]` - Emergency Andon stop line\n"
       <> "• `/zigvm [eval <expr>|version]` - Deterministic runtime execution\n"
       <> "• `/plan` - Current active tasks in Sa-plan ledger\n"
+      <> "• `/aspects [id]` - 17 canonical System Aspects & verification gates (ADR-109)\n"
+      <> "• `/ecology [id]` - Rich Multi-Agent Ecology & capability lattices (ADR-109)\n"
       <> "• `/sutra` - Sutra Matrix homeserver CS v1.18 status\n"
-      <> "• `/zk [query]` - ZK architectural decision records (108 ADRs)\n"
+      <> "• `/zk [query]` - ZK architectural decision records (109 ADRs)\n"
       <> "• `/checklist` - 18/18 Comprehensive Verification Scorecard\n"
       <> "• `/cockpit` - Open Tailscale FQDN Web Cockpit links\n"
       <> "• `/approval <plan> <task> <title>` - 2oo3 constitutional approval\n\n"
@@ -251,6 +254,20 @@ fn handle_directive(cmd_text: String, _inbound: InboundMessage) -> String {
     "/acoustic-hud" -> telegram_collab.handle_acoustic_hud(args)
     "/retro" -> telegram_collab.handle_retro(args)
     "/gameday" -> telegram_collab.handle_gameday(args)
+
+    // ADR-109: System Aspects & Rich Multi-Agent Ecology
+    "/aspects" -> {
+      case args {
+        [code, ..] -> agent_ecology.format_aspect_detail(code)
+        [] -> agent_ecology.format_aspects_summary()
+      }
+    }
+    "/ecology" -> {
+      case args {
+        [agent_id, ..] -> agent_ecology.format_profile_detail(agent_id)
+        [] -> agent_ecology.format_ecology_summary()
+      }
+    }
 
     _ ->
       "⚠️ Unknown directive: `"

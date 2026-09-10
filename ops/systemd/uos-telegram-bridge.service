@@ -1,5 +1,5 @@
 [Unit]
-Description=UOS Telegram High-Performance Cybernetic Bridge (OCaml/Mojo Native)
+Description=UOS Telegram High-Performance Inbound Bridge (OCaml/Mojo Native)
 After=network-online.target c3i-zenoh-router-1.service
 Wants=network-online.target c3i-zenoh-router-1.service
 

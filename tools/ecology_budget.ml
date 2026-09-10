@@ -31,7 +31,8 @@ let ceilings = [
   "moonshotai/kimi-k3",(3000,15000);
   "deepseek/deepseek-v4-pro-0813",(1320,3960);
   "deepseek/deepseek-v4-flash-0731",(65,180);
-  "google/gemma-4-31b-it",(90,340)]
+  "google/gemma-4-31b-it",(90,340);
+  "google/gemma-4-26b-a4b-it",(90,340)]
 
 module type REQUEST = sig
   type t
@@ -57,8 +58,8 @@ module Request : REQUEST = struct
       String.for_all(function 'a'..'z'|'A'..'Z'|'0'..'9'|'.'|'-'|'_'|':'->true|_->false)call_id in
     if not valid_id then Error(Invalid_request "call_id")
     else if tokens<1 || tokens>4096 then Error(Invalid_request "max_tokens")
-    else if input<0 || input>16384 then Error(Invalid_request "input_bytes")
-    else if body<1 || body<input || body>65536 then Error(Invalid_request "body_bytes")
+    else if input<0 || input>max_input_bytes then Error(Invalid_request "input_bytes")
+    else if body<1 || body<input || body>max_body_bytes then Error(Invalid_request "body_bytes")
     else match List.assoc_opt model ceilings with
       | None -> Error(Invalid_request "model")
       | Some(prompt,completion) ->
@@ -138,7 +139,7 @@ end
 let oracle_selftest () =
   let module L=Make_laws(Oracle) in
   let count=L.run "oracle" in
-  let bad_cases=[("",1,0,1);("bad/id",1,0,1);("ok",0,0,1);("ok",4097,0,1);("ok",1,16385,20000);("ok",1,5,4);("ok",1,0,65537)] in
+  let bad_cases=[("",1,0,1);("bad/id",1,0,1);("ok",0,0,1);("ok",4097,0,1);("ok",1,1048577,2000000);("ok",1,5,4);("ok",1,0,4194305)] in
   List.iter(fun(id,tokens,input,body)->match Request.make ~call_id:id ~model:"z-ai/glm-5.3" ~max_tokens:tokens ~input_bytes:input ~body_bytes:body with
     | Error(Invalid_request _)->()|_->failwith "B9 smart constructor accepted invalid input")bad_cases;
   if Request.worst_case(fixture "worst")<>116_736_000L then failwith "price arithmetic";
@@ -176,7 +177,7 @@ let quoted value="'"^value^"'" (* Only the finite source-owned model constants u
 let price_case side="CASE model "^String.concat " "(List.map(fun(model,prices)->"WHEN "^quoted model^" THEN "^string_of_int(side prices))ceilings)^" ELSE -1 END"
 let schema = [
   "budget_meta","CREATE TABLE budget_meta (id INTEGER PRIMARY KEY CHECK(id=1), version INTEGER NOT NULL CHECK(version=1), initialized_us INTEGER NOT NULL CHECK(initialized_us>=0 AND initialized_us<=8000000000000000), daily_limit_nd INTEGER NOT NULL CHECK(daily_limit_nd=10000000000), reservation_nd INTEGER NOT NULL CHECK(reservation_nd=250000000)) STRICT";
-  "reservations","CREATE TABLE reservations (call_id TEXT PRIMARY KEY NOT NULL CHECK(length(call_id)>=1 AND length(call_id)<=128 AND call_id NOT GLOB '*[^a-zA-Z0-9._:-]*' AND instr(call_id,char(0))=0), utc_day TEXT NOT NULL CHECK(length(utc_day)=10), observed_us INTEGER NOT NULL CHECK(observed_us>=0 AND observed_us<=8000000000000000), model TEXT NOT NULL CHECK(model IN ("^String.concat ","(List.map(fun(model,_)->quoted model)ceilings)^")), max_tokens INTEGER NOT NULL CHECK(max_tokens>=1 AND max_tokens<=4096), input_bytes INTEGER NOT NULL CHECK(input_bytes>=0 AND input_bytes<=16384), body_bytes INTEGER NOT NULL CHECK(body_bytes>=1 AND body_bytes>=input_bytes AND body_bytes<=65536), worst_case_nd INTEGER NOT NULL CHECK(worst_case_nd>=0 AND worst_case_nd<=250000000), amount_nd INTEGER NOT NULL CHECK(amount_nd=250000000), CHECK(utc_day IS strftime('%Y-%m-%d',observed_us/1000000,'unixepoch')), CHECK(worst_case_nd=(input_bytes+2048)*("^price_case fst^")+max_tokens*("^price_case snd^"))) STRICT";
+  "reservations","CREATE TABLE reservations (call_id TEXT PRIMARY KEY NOT NULL CHECK(length(call_id)>=1 AND length(call_id)<=128 AND call_id NOT GLOB '*[^a-zA-Z0-9._:-]*' AND instr(call_id,char(0))=0), utc_day TEXT NOT NULL CHECK(length(utc_day)=10), observed_us INTEGER NOT NULL CHECK(observed_us>=0 AND observed_us<=8000000000000000), model TEXT NOT NULL CHECK(model IN ("^String.concat ","(List.map(fun(model,_)->quoted model)ceilings)^")), max_tokens INTEGER NOT NULL CHECK(max_tokens>=1 AND max_tokens<=4096), input_bytes INTEGER NOT NULL CHECK(input_bytes>=0 AND input_bytes<=1048576), body_bytes INTEGER NOT NULL CHECK(body_bytes>=1 AND body_bytes>=input_bytes AND body_bytes<=4194304), worst_case_nd INTEGER NOT NULL CHECK(worst_case_nd>=0 AND worst_case_nd<=250000000), amount_nd INTEGER NOT NULL CHECK(amount_nd=250000000), CHECK(utc_day IS strftime('%Y-%m-%d',observed_us/1000000,'unixepoch')), CHECK(worst_case_nd=(input_bytes+2048)*("^price_case fst^")+max_tokens*("^price_case snd^"))) STRICT";
   "reservations_day","CREATE INDEX reservations_day ON reservations(utc_day)";
   "reservations_time","CREATE INDEX reservations_time ON reservations(observed_us)";
   "meta_no_update","CREATE TRIGGER meta_no_update BEFORE UPDATE ON budget_meta BEGIN SELECT RAISE(ABORT,'append_only'); END";

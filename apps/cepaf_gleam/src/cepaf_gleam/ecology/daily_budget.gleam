@@ -44,6 +44,7 @@ pub fn provider_ceiling(model: String) -> Result(Price, String) {
     "moonshotai/kimi-k3" -> Ok(Price(3000, 15_000, 0))
     "deepseek/deepseek-v4-pro-0813" -> Ok(Price(1320, 3960, 0))
     "deepseek/deepseek-v4-flash-0731" -> Ok(Price(65, 180, 0))
+    "google/gemma-4-26b-a4b-it" -> Ok(Price(90, 340, 0))
     "google/gemma-4-31b-it" -> Ok(Price(90, 340, 0))
     _ -> Error("invalid_request: paid_model")
   }

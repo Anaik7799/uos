@@ -35,6 +35,8 @@ pub fn provider_ceilings_are_exact_and_free_route_is_separate_test() {
   |> should.equal(Ok(budget.Price(65, 180, 0)))
   budget.provider_ceiling("google/gemma-4-31b-it")
   |> should.equal(Ok(budget.Price(90, 340, 0)))
+  budget.provider_ceiling("google/gemma-4-26b-a4b-it")
+  |> should.equal(Ok(budget.Price(90, 340, 0)))
   budget.provider_ceiling("inclusionai/ling-3.0-flash-fin:free")
   |> should.be_error
   budget.provider_ceiling("unknown") |> should.be_error
@@ -79,8 +81,8 @@ pub fn byte_count_is_utf8_and_caller_cannot_assert_smaller_size_test() {
     "utf8",
     "z-ai/glm-5.3",
     1,
-    string.repeat("é", 8193),
-    input(20_000),
+    string.repeat("é", 524_289),
+    input(1_050_000),
     budget.Price(1, 1, 0),
   )
   |> should.be_error
@@ -102,7 +104,7 @@ pub fn invalid_identity_token_and_body_bounds_reject_test() {
     )
     |> should.be_error
   })
-  list.each(["", "x", input(65_537)], fn(body) {
+  list.each(["", "x", input(4_194_305)], fn(body) {
     budget.admit("valid", "z-ai/glm-5.3", 1, "xx", body, budget.Price(1, 1, 0))
     |> should.be_error
   })

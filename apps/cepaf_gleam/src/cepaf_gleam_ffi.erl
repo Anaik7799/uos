@@ -11,7 +11,7 @@
 -export([to_string/1, to_int/1, to_float/1, to_bool/1]).
 -export([system_time_seconds/0, base64_decode/1, url_encode/1, get_env/1]).
 -export([pi_port_open/3, pi_port_send/2, pi_port_close/1]).
--export([http_get/1, http_put/3, http_delete/1]).
+-export([http_get/1, http_put/3, http_delete/1, http_post/5, spawn_task/1, get_preference/1]).
 
 %% @doc Execute a REST request over Podman Unix Domain Socket
 podman_uds_request(Path, Method, Endpoint, Body) ->
@@ -564,3 +564,82 @@ http_delete(UrlBinary) ->
         _:CatchReason ->
             {error, unicode:characters_to_binary(io_lib:format("http_delete crash: ~p", [CatchReason]))}
     end.
+
+%% @doc Spawn an asynchronous background task on BEAM (SC-COG-001)
+spawn_task(Fun) when is_function(Fun, 0) ->
+    erlang:spawn(fun() ->
+        try
+            Fun()
+        catch
+            Class:Reason:Stack ->
+                io:format(standard_error, "spawn_task error: ~p:~p~n~p~n", [Class, Reason, Stack])
+        end
+    end),
+    ok.
+
+%% @doc Native OTP inets httpc POST with TLS verification (zero subprocess, zero curl)
+http_post(UrlBinary, HeadersList, ContentTypeBinary, BodyBinary, TimeoutMs) ->
+    try
+        ssl:start(),
+        inets:start(),
+        SslOpts = [
+            {verify, verify_peer},
+            {cacerts, public_key:cacerts_get()},
+            {customize_hostname_check, [{match_fun, public_key:pkix_verify_hostname_match_fun(https)}]}
+        ],
+        Url = unicode:characters_to_list(UrlBinary),
+        ContentType = unicode:characters_to_list(ContentTypeBinary),
+        Headers = [{unicode:characters_to_list(K), unicode:characters_to_list(V)} || {K, V} <- HeadersList],
+        Body = case is_binary(BodyBinary) of
+            true -> BodyBinary;
+            false -> unicode:characters_to_binary(BodyBinary, utf8)
+        end,
+        Timeout = case is_integer(TimeoutMs) andalso TimeoutMs > 0 of
+            true -> TimeoutMs;
+            false -> 10000
+        end,
+        case httpc:request(post, {Url, Headers, ContentType, Body}, [{ssl, SslOpts}, {timeout, Timeout}], [{body_format, binary}]) of
+            {ok, {{_, Status, _}, _RespHeaders, RespBody}} ->
+                {ok, {Status, RespBody}};
+            {error, Reason} ->
+                {error, unicode:characters_to_binary(io_lib:format("~p", [Reason]))}
+        end
+    catch
+        _:CatchReason ->
+            {error, unicode:characters_to_binary(io_lib:format("http_post crash: ~p", [CatchReason]))}
+    end.
+
+%% @doc Retrieve preference from env, state.sqlite3, or Smriti.db
+get_preference(KeyBinary) ->
+    KeyStr = binary_to_list(KeyBinary),
+    UpperKey = string:to_upper(KeyStr),
+    case os:getenv(UpperKey) of
+        Val when is_list(Val), Val =/= "" ->
+            {ok, unicode:characters_to_binary(string:trim(Val))};
+        _ ->
+            DbPaths = ["var/telegram/state.sqlite3", "/home/an/NAS-setup/uos/var/telegram/state.sqlite3"],
+            find_in_sqlite(DbPaths, KeyBinary)
+    end.
+
+find_in_sqlite([], _KeyBinary) -> {error, <<"not_found">>};
+find_in_sqlite([DbPath | Rest], KeyBinary) ->
+    case filelib:is_regular(DbPath) of
+        true ->
+            case esqlite3:open(DbPath) of
+                {ok, Conn} ->
+                    Res = case catch esqlite3:q(Conn, "SELECT value FROM preferences WHERE key = ?", [KeyBinary]) of
+                        [[V]] when is_binary(V), V =/= <<>> -> {ok, V};
+                        _ -> not_found
+                    end,
+                    esqlite3:close(Conn),
+                    case Res of
+                        {ok, Val} -> {ok, Val};
+                        _ -> find_in_sqlite(Rest, KeyBinary)
+                    end;
+                _ -> find_in_sqlite(Rest, KeyBinary)
+            end;
+        false ->
+            find_in_sqlite(Rest, KeyBinary)
+    end.
+
+

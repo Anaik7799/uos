@@ -472,49 +472,10 @@ let parse_zenoh_entries out =
 
 let outbound_mutex = Mutex.create ()
 
-let check_outbound_zenoh ~token ~default_chat ~zenoh_endpoint =
-  Mutex.lock outbound_mutex;
-  Fun.protect ~finally:(fun () -> Mutex.unlock outbound_mutex) (fun () ->
-    try
-      let url = zenoh_endpoint ^ "/c3i/a2a/telegram/outbound" in
-      let cmd = Bos.Cmd.(v "curl" % "-s" % url) in
-      match Bos.OS.Cmd.run_out cmd |> Bos.OS.Cmd.to_string with
-      | Ok out when String.trim out <> "" && out <> "[]" ->
-          let entries = parse_zenoh_entries out in
-          List.iter (fun entry ->
-            try
-              let json =
-                match member "value" entry with
-                | `String s ->
-                    (try Yojson.Safe.from_string (decode_zenoh_payload s)
-                     with _ -> Yojson.Safe.from_string s)
-                | `Assoc _ as obj -> obj
-                | other -> other
-              in
-              let text = member "text" json |> to_string in
-              let chat_id =
-                match member "chat_id" json with
-                | `String s -> s
-                | `Int i -> string_of_int i
-                | `Intlit s -> s
-                | _ -> default_chat
-              in
-              let parse_mode =
-                match member "parse_mode" json with
-                | `String s -> Some s
-                | _ -> None
-              in
-              let chunks = chunk_text text in
-              Printf.printf "⚡ [edge-outbound] Delivering response (%d bytes, %d chunk(s)) to chat %s...\n%!"
-                (String.length text) (List.length chunks) chat_id;
-              List.iter (fun ch -> ignore (send_message ~token ~chat_id ?parse_mode ch)) chunks;
-              let del_cmd = Bos.Cmd.(v "curl" % "-s" % "-X" % "DELETE" % url) in
-              ignore (Bos.OS.Cmd.run del_cmd)
-            with _ -> ()
-          ) entries
-      | _ -> ()
-    with _ -> ()
-  )
+let check_outbound_zenoh ~token:_ ~default_chat:_ ~zenoh_endpoint:_ =
+  (* Outbound Telegram delivery migrated completely to UOS Gleam Harness (SC-OUTBOUND-001).
+     Subprocess curl polling loop permanently retired to eliminate Muda (SC-MUDA-001). *)
+  ()
 
 let check_sutra_matrix_relay ~token ~default_chat ~zenoh_endpoint =
   try
@@ -570,18 +531,8 @@ let check_sutra_matrix_relay ~token ~default_chat ~zenoh_endpoint =
     | _ -> ()
   with _ -> ()
 
-let start_outbound_dequeue_thread ~token ~default_chat ~zenoh_endpoint =
-  Thread.create (fun () ->
-    Printf.printf "⚡ [edge-outbound] Dedicated Outbound Dequeue Worker active (50ms tick interval)\n%!";
-    while true do
-      (try
-         check_outbound_zenoh ~token ~default_chat ~zenoh_endpoint;
-         check_sutra_matrix_relay ~token ~default_chat ~zenoh_endpoint;
-       with ex ->
-         Printf.eprintf "[!] Outbound worker error: %s\n%!" (Printexc.to_string ex));
-      Unix.sleepf 0.05
-    done
-  ) ()
+let start_outbound_dequeue_thread ~token:_ ~default_chat:_ ~zenoh_endpoint:_ =
+  Printf.printf "⚡ [edge-outbound] Native Gleam Outbound Delivery Active (OCaml 50ms curl loop retired)\n%!"
 
 (* ----------------------------------------------------------------------------
    7. Inbound Update Processor & Dispatch Loop
@@ -637,7 +588,6 @@ let process_single_update ~token ~zenoh_endpoint update =
 
          (* Forward all messages to the UOS Gleam Cognitive Worker via Zenoh mesh *)
          Printf.printf "⚙️ [cog-mesh] Forwarded message %Ld from @%s to indrajaal/l5/cog/intent/req (UOS Gleam)\n%!" msg_id from_user;
-         check_outbound_zenoh ~token ~default_chat:chat_id ~zenoh_endpoint;
          ());
 
     (* Case 2: Callback Query from Inline Keyboard *)
@@ -714,7 +664,6 @@ let poll_once ~token ~zenoh_endpoint () =
       let updates = member "result" res |> to_list in
       List.iter (process_single_update ~token ~zenoh_endpoint) updates;
       let default_chat = get_preference "telegram_chat_id" in
-      check_outbound_zenoh ~token ~default_chat ~zenoh_endpoint;
       check_sutra_matrix_relay ~token ~default_chat ~zenoh_endpoint;
       List.length updates
   | _ ->
@@ -848,8 +797,7 @@ let () =
         let n = poll_once ~token ~zenoh_endpoint () in
         Printf.printf "[poll] Cycle finished, processed %d update(s)\n" n
       end else begin
-        Printf.printf "🚀 Starting continuous Telegram OCaml client daemon...\n%!";
-        let _ = start_outbound_dequeue_thread ~token ~default_chat ~zenoh_endpoint in
+        Printf.printf "🚀 Starting continuous Telegram Inbound Bridge (Outbound governed by UOS Gleam Harness)...\n%!";
         while true do
           (try
              let _ = poll_once ~token ~zenoh_endpoint () in ()

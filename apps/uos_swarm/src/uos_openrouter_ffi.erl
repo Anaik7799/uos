@@ -45,7 +45,7 @@ validate_request(M,U,K,B,T)->
         true->case {M,U} of
             {get,<<"https://openrouter.ai/api/v1/models">>}->{ok,<<"/api/v1/models">>};
             {post,<<"https://openrouter.ai/api/v1/chat/completions">>}->
-                case valid_key(K) andalso is_binary(B) andalso byte_size(B)=<65536 of
+                case valid_key(K) andalso is_binary(B) andalso byte_size(B)=<?BODY_LIMIT of
                     true->{ok,<<"/api/v1/chat/completions">>};
                     false->{error,<<"invalid_credential_or_request_bound">>}
                 end;
