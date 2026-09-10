@@ -98,6 +98,18 @@ pub fn admit(
               {
                 False -> Error("invalid_request: provider_price")
                 True -> {
+                  // `input_size` is BYTES and `prompt_nanodollars` is a
+                  // per-TOKEN price, which reads like a unit conflation and was
+                  // filed as a defect on 2026-09-10 before being withdrawn. It
+                  // is deliberate and sound: a token is never fewer than one
+                  // byte, so token_count <= byte_count and charging bytes at
+                  // the token rate is a genuine UPPER bound -- which is what
+                  // `worst_case` means. The cost is that the bound is roughly
+                  // 4x conservative at typical byte-per-token ratios, so the
+                  // reservation ceiling binds about 4x earlier than a
+                  // token-accurate estimate would. That is a deliberate
+                  // fail-safe, not an accident; stated here so the next reader
+                  // does not file the same false defect.
                   let worst_case =
                     { input_size + template_token_allowance }
                     * ceiling.prompt_nanodollars
