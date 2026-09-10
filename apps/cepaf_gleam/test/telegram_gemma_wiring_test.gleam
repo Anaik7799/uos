@@ -3,8 +3,10 @@
 //// =============================================================================
 
 import cepaf_gleam/harness/cognitive_worker.{
-  CognitiveIntent, evaluate_intent, query_tri_agent_board_detail,
-  query_tri_agent_board_summary, query_tri_agent_peers,
+  CognitiveIntent, evaluate_intent, execute_harness_tool,
+  extract_directives_from_response, handle_conversational_offline_gateway,
+  query_tri_agent_board_detail, query_tri_agent_board_summary,
+  query_tri_agent_peers, strip_directive_lines,
 }
 import cepaf_gleam/harness/conversation_memory
 import cepaf_gleam/harness/egress_redactor
@@ -149,3 +151,129 @@ pub fn telegram_multimodal_acoustic_fft_test() {
   output |> string.contains("acoustic_vibration") |> should.be_true
   output |> string.contains("1240.0") |> should.be_true
 }
+
+pub fn telegram_directive_extractor_test() {
+  let text =
+    "I have analyzed the UOS system state.\n"
+    <> "Here is the cluster status:\n"
+    <> "DIRECTIVE: /status\n"
+    <> "And here are the latest swarm messages:\n"
+    <> "DIRECTIVE: /board\n"
+    <> "DIRECTIVE: /tool query_immune_status\n"
+    <> "DIRECTIVE: storage\n"
+    <> "All systems are operating nominally."
+
+  let dirs = extract_directives_from_response(text)
+  dirs |> should.equal(["/status", "/board", "/tool query_immune_status", "/storage"])
+
+  let stripped = strip_directive_lines(text)
+  stripped |> string.contains("DIRECTIVE:") |> should.be_false
+  stripped |> string.contains("I have analyzed the UOS system state.") |> should.be_true
+  stripped |> string.contains("All systems are operating nominally.") |> should.be_true
+}
+
+pub fn telegram_autonomous_offline_gateway_generic_query_test() {
+  envoy.set("UOS_TEST_MODE", "1")
+  let chat_id = "test-offline-generic-chat"
+  let _ = conversation_memory.clear_history(conversation_memory.default_db_path, chat_id)
+
+  let intent =
+    CognitiveIntent(
+      intent_id: "cog-offline-generic-1",
+      source: "telegram",
+      user: "Avi",
+      chat_id: chat_id,
+      text: "show me what is happening in the uos system",
+      timestamp_ms: 1788978910000,
+    )
+
+  let decision = evaluate_intent(intent)
+  decision.ooda_phase |> should.equal("Completed")
+  decision.reply_markdown |> string.contains("Deterministic Autonomous Directive Gateway") |> should.be_true
+  decision.reply_markdown |> string.contains("UOS Cluster Telemetry") |> should.be_true
+  decision.reply_markdown |> string.contains("Tri-Agent Swarm Message Board") |> should.be_true
+
+  // Verify direct gateway invocation
+  let direct_decision = handle_conversational_offline_gateway("status", intent)
+  direct_decision.reply_markdown |> string.contains("UOS Cluster Telemetry") |> should.be_true
+
+  // Verify memory persistence across turn
+  let history = conversation_memory.get_recent_history(conversation_memory.default_db_path, chat_id, 5)
+  history |> should.not_equal([])
+}
+
+pub fn telegram_autonomous_offline_gateway_storage_query_test() {
+  envoy.set("UOS_TEST_MODE", "1")
+  let intent =
+    CognitiveIntent(
+      intent_id: "cog-offline-storage-1",
+      source: "telegram",
+      user: "Avi",
+      chat_id: "test-offline-storage-chat",
+      text: "check storage nvme and disk pools",
+      timestamp_ms: 1788978911000,
+    )
+
+  let decision = evaluate_intent(intent)
+  decision.ooda_phase |> should.equal("Completed")
+  decision.reply_markdown |> string.contains("Deterministic Autonomous Directive Gateway: /storage") |> should.be_true
+  decision.reply_markdown |> string.contains(egress_redactor.redacted_serial_placeholder) |> should.be_true
+  decision.reply_markdown |> string.contains(egress_redactor.denied_os_nvme_serial) |> should.be_false
+}
+
+pub fn telegram_execute_harness_tools_expanded_test() {
+  // Immune and metabolic
+  let immune = execute_harness_tool("query_immune_status", "{}")
+  immune |> should.be_ok
+
+  // FMEA report
+  let fmea = execute_harness_tool("query_fmea_report", "{}")
+  fmea |> should.be_ok
+
+  // HA status
+  let ha = execute_harness_tool("query_ha_status", "{}")
+  ha |> should.be_ok
+
+  // Modular MAX inference tier
+  let inf = execute_harness_tool("query_inference_tier", "{}")
+  inf |> should.be_ok
+  case inf {
+    Ok(json_str) -> json_str |> string.contains("Modular MAX") |> should.be_true
+    Error(_) -> panic as "expected ok"
+  }
+
+  // Voice status
+  let voice = execute_harness_tool("query_voice_status", "{}")
+  voice |> should.be_ok
+
+  // OODA loop phase
+  let ooda = execute_harness_tool("query_ooda_phase", "{}")
+  ooda |> should.be_ok
+
+  // 13D trace coordinates
+  let trace = execute_harness_tool("query_traces_recent", "{}")
+  trace |> should.be_ok
+
+  // Multimodal rack cv and acoustic fft
+  let cv = execute_harness_tool("query_rack_cv", "{}")
+  cv |> should.be_ok
+  case cv {
+    Ok(s) -> {
+      s |> string.contains(egress_redactor.redacted_serial_placeholder) |> should.be_true
+      s |> string.contains(egress_redactor.denied_os_nvme_serial) |> should.be_false
+    }
+    Error(_) -> panic as "expected ok"
+  }
+
+  let acoustic = execute_harness_tool("query_acoustic_fft", "{}")
+  acoustic |> should.be_ok
+
+  // Verification and checklist
+  let chk = execute_harness_tool("query_checklist", "{}")
+  chk |> should.be_ok
+  case chk {
+    Ok(s) -> s |> string.contains("18/18 GREEN") |> should.be_true
+    Error(_) -> panic as "expected ok"
+  }
+}
+

@@ -6,6 +6,7 @@ import cepaf_gleam/harness/cognitive_worker.{
   CognitiveIntent, GetWorkerStatus, ProcessIntent, decode_intent, encode_decision,
   evaluate_intent, handle_message, init_worker,
 }
+import envoy
 import gleam/erlang/process
 import gleam/list
 import gleam/string
@@ -61,6 +62,7 @@ pub fn encode_decision_test() {
 }
 
 pub fn evaluate_cluster_health_intent_test() {
+  envoy.set("UOS_TEST_MODE", "1")
   let intent =
     CognitiveIntent(
       intent_id: "cog-103",
@@ -79,6 +81,7 @@ pub fn evaluate_cluster_health_intent_test() {
 }
 
 pub fn evaluate_saplan_intent_test() {
+  envoy.set("UOS_TEST_MODE", "1")
   let intent =
     CognitiveIntent(
       intent_id: "cog-104",
@@ -96,6 +99,7 @@ pub fn evaluate_saplan_intent_test() {
 }
 
 pub fn evaluate_formal_math_intent_test() {
+  envoy.set("UOS_TEST_MODE", "1")
   let intent =
     CognitiveIntent(
       intent_id: "cog-105",
@@ -113,6 +117,7 @@ pub fn evaluate_formal_math_intent_test() {
 }
 
 pub fn evaluate_zigvm_intent_test() {
+  envoy.set("UOS_TEST_MODE", "1")
   let intent =
     CognitiveIntent(
       intent_id: "cog-106",
@@ -129,6 +134,7 @@ pub fn evaluate_zigvm_intent_test() {
 }
 
 pub fn evaluate_general_intent_test() {
+  envoy.set("UOS_TEST_MODE", "1")
   let intent =
     CognitiveIntent(
       intent_id: "cog-107",
@@ -141,7 +147,8 @@ pub fn evaluate_general_intent_test() {
 
   let decision = evaluate_intent(intent)
   decision.intent_id |> should.equal("cog-107")
-  decision.reply_markdown |> string.contains("AGY Sovereign Agent Synthesis") |> should.be_true
+  decision.reply_markdown |> string.contains("Deterministic Autonomous Directive Gateway") |> should.be_true
+  decision.reply_markdown |> string.contains("UOS Cluster Telemetry") |> should.be_true
 }
 
 pub fn actor_message_handling_test() {

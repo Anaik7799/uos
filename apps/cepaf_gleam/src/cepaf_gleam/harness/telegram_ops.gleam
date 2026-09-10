@@ -24,7 +24,7 @@ pub fn handle_resuscitate(args: List(String)) -> String {
   <> target
   <> "`\n"
   <> "• *Strategy:* Quorum Replicated Storage Restitution\n"
-  <> "• *Storage Guard:* Root OS NVMe `25503L801736` Verified Locked (Read-Only)\n"
+  <> "• *Storage Guard:* Root OS NVMe `[REDACTED_SYSTEM_OS_SERIAL]` Verified Locked (Read-Only)\n"
   <> "• *Workspace:* Instantiating `.uos-workspaces/dr-"
   <> target
   <> "`\n"

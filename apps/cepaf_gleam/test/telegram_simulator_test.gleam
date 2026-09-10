@@ -14,7 +14,7 @@ pub fn telegram_domain_a_simulation_test() {
 
   let storage_msg = telegram_simulator.simulate_text_directive(2, "/storage")
   let storage_resp = telegram.handle_message(storage_msg)
-  string.contains(storage_resp.text, telegram_simulator.hard_denied_system_os_serial)
+  string.contains(storage_resp.text, "[REDACTED_SYSTEM_OS_SERIAL]")
   |> should.equal(True)
   string.contains(storage_resp.text, "HARD-DENIED") |> should.equal(True)
 
@@ -32,7 +32,7 @@ pub fn telegram_domain_b_simulation_test() {
   let resp = telegram.handle_message(resuscitate_msg)
   string.contains(resp.text, "Disaster Recovery Resuscitation")
   |> should.equal(True)
-  string.contains(resp.text, "25503L801736") |> should.equal(True)
+  string.contains(resp.text, "[REDACTED_SYSTEM_OS_SERIAL]") |> should.equal(True)
 
   let chaos_msg =
     telegram_simulator.simulate_text_directive(12, "/chaos inject zenoh-peer")
@@ -83,7 +83,7 @@ pub fn telegram_domain_c_simulation_test() {
   let resp3 = telegram.handle_message(rack_msg)
   string.contains(resp3.text, "Computer Vision Server Rack Diagnostic")
   |> should.equal(True)
-  string.contains(resp3.text, "25503L801736") |> should.equal(True)
+  string.contains(resp3.text, "[REDACTED_SYSTEM_OS_SERIAL]") |> should.equal(True)
 
   let acoustic_msg =
     telegram_simulator.simulate_text_directive(24, "/acoustic fan-02")

@@ -223,11 +223,15 @@ pub fn run_full_simulation_sweep() -> SimulationReport {
   let storage_msg = simulate_text_directive(999, "/storage")
   let storage_resp = telegram.handle_message(storage_msg)
   let lock_ok =
-    string.contains(storage_resp.text, hard_denied_system_os_serial)
+    {
+      string.contains(storage_resp.text, "[REDACTED_SYSTEM_OS_SERIAL]")
+      || string.contains(storage_resp.text, hard_denied_system_os_serial)
+    }
     && {
       string.contains(storage_resp.text, "HARD-DENIED")
       || string.contains(storage_resp.text, "ENFORCED")
       || string.contains(storage_resp.text, "LOCKED")
+      || string.contains(storage_resp.text, "Locked")
     }
 
   SimulationReport(
