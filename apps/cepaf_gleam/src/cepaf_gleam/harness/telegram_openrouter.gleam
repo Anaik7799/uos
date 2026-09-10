@@ -17,11 +17,13 @@
 //// =============================================================================
 
 import cepaf_gleam/ecology/daily_budget as budget
+import cepaf_gleam/harness/conversation_memory.{type ChatMessage}
 import cepaf_gleam/harness/egress_redactor
 import gleam/bit_array
 import gleam/dynamic/decode
 import gleam/int
 import gleam/json
+import gleam/list
 import gleam/result
 import gleam/string
 
@@ -79,10 +81,11 @@ fn ffi_post_json(
 @external(erlang, "cepaf_gleam_ffi", "system_time_nanos")
 fn ffi_system_time_nanos() -> Int
 
-/// Pure Gleam HTTP POST to OpenRouter using native BEAM TLS (uos_openrouter_ffi).
-pub fn post_openrouter(
+/// Core JSON payload dispatcher with fail-closed egress redactor and daily_budget gating.
+fn dispatch_payload_json(
   model: String,
-  prompt: String,
+  input_for_budget: String,
+  payload_json: String,
   max_tokens: Int,
 ) -> Result(String, String) {
   // Strictly gate model through daily_budget provider ceiling
@@ -92,6 +95,65 @@ pub fn post_openrouter(
   )
 
   let url_bytes = bit_array.from_string("https://openrouter.ai/api/v1/chat/completions")
+
+  // EGRESS GUARD on the WHOLE ASSEMBLED PAYLOAD. Fail-closed.
+  use _egress <- result.try(case
+    string.contains(payload_json, egress_redactor.denied_os_nvme_serial)
+  {
+    True ->
+      Error(
+        "egress refused: outbound payload carries the prohibited system "
+        <> "identifier. It is not needed to evaluate a conversation; use "
+        <> egress_redactor.redacted_serial_placeholder,
+      )
+    False -> Ok(Nil)
+  })
+
+  // Generate unique valid call_id and strictly verify daily_budget admission
+  let call_id = "gemma4-" <> int.to_string(ffi_system_time_nanos())
+  use _reservation <- result.try(
+    budget.admit(
+      call_id,
+      model,
+      max_tokens,
+      input_for_budget,
+      payload_json,
+      ceiling,
+    )
+    |> result.map_error(fn(err) { "daily_budget admission rejected: " <> err }),
+  )
+
+  use key_bytes <- result.try(case ffi_api_key() {
+    Ok(k) -> Ok(k)
+    Error(_) -> Error("OPENROUTER_API_KEY missing or invalid in environment")
+  })
+
+  let body_bytes = bit_array.from_string(payload_json)
+
+  case ffi_post_json(url_bytes, key_bytes, body_bytes, 3_000) {
+    Ok(#(200, resp_bytes)) -> {
+      case bit_array.to_string(resp_bytes) {
+        Ok(resp_str) -> parse_openrouter_content(resp_str)
+        Error(_) -> Error("Failed to decode response bytes to UTF-8 string")
+      }
+    }
+    Ok(#(status, resp_bytes)) -> {
+      let err_body = bit_array.to_string(resp_bytes) |> result.unwrap("")
+      Error("OpenRouter returned HTTP " <> int.to_string(status) <> ": " <> err_body)
+    }
+    Error(err_bytes) -> {
+      let err_str = bit_array.to_string(err_bytes) |> result.unwrap("transport_error")
+      Error("OpenRouter BEAM TLS transport error: " <> err_str)
+    }
+  }
+}
+
+/// Pure Gleam HTTP POST to OpenRouter using native BEAM TLS (uos_openrouter_ffi).
+pub fn post_openrouter(
+  model: String,
+  prompt: String,
+  max_tokens: Int,
+) -> Result(String, String) {
   let payload_json =
     json.object([
       #("model", json.string(model)),
@@ -127,64 +189,84 @@ pub fn post_openrouter(
     ])
     |> json.to_string
 
-  // EGRESS GUARD, at the transport boundary and on the WHOLE ASSEMBLED PAYLOAD.
-  //
-  // egress_redactor existed before this and was referenced by nothing except its
-  // own test -- a guard that is not wired is not a guard. The serial also reached
-  // an outbound payload once through a FIXTURE RESPONSE while the ground-truth
-  // block above had already been redacted, so checking any single field is not
-  // enough: the secret arrives through whichever field nobody checked.
-  //
-  // Refusal is fail-closed and deliberate. A prohibited identifier in an outbound
-  // body is not something to quietly strip and send anyway -- silently sanitising
-  // would hide that a caller is assembling payloads it should not.
-  use _egress <- result.try(case
-    string.contains(payload_json, egress_redactor.denied_os_nvme_serial)
-  {
-    True ->
-      Error(
-        "egress refused: outbound payload carries the prohibited system "
-        <> "identifier. It is not needed to evaluate a conversation; use "
-        <> egress_redactor.redacted_serial_placeholder,
-      )
-    False -> Ok(Nil)
-  })
+  dispatch_payload_json(model, prompt, payload_json, max_tokens)
+}
 
-  // Generate unique valid call_id and strictly verify daily_budget admission
-  let call_id = "gemma4-" <> int.to_string(ffi_system_time_nanos())
-  use _reservation <- result.try(
-    budget.admit(
-      call_id,
-      model,
-      max_tokens,
-      prompt,
-      payload_json,
-      ceiling,
-    )
-    |> result.map_error(fn(err) { "daily_budget admission rejected: " <> err }),
-  )
+/// Dispatches multi-turn chat messages to OpenRouter Gemma 4.
+pub fn post_chat_openrouter(
+  model: String,
+  prompt_input: String,
+  messages: List(json.Json),
+  max_tokens: Int,
+) -> Result(String, String) {
+  let payload_json =
+    json.object([
+      #("model", json.string(model)),
+      #("messages", json.array(messages, fn(x) { x })),
+      #("temperature", json.float(0.2)),
+      #("max_tokens", json.int(max_tokens)),
+    ])
+    |> json.to_string
 
-  use key_bytes <- result.try(case ffi_api_key() {
-    Ok(k) -> Ok(k)
-    Error(_) -> Error("OPENROUTER_API_KEY missing or invalid in environment")
-  })
+  dispatch_payload_json(model, prompt_input, payload_json, max_tokens)
+}
 
-  let body_bytes = bit_array.from_string(payload_json)
+/// Front-line conversational synthesis powered by Gemma 4 with multi-turn context and live telemetry.
+pub fn generate_conversational_response(
+  user_query: String,
+  history: List(ChatMessage),
+  telemetry_summary: String,
+) -> Result(String, String) {
+  let system_prompt =
+    "You are AGY (Google DeepMind Antigravity), the sovereign autonomous AI agent and cognitive coordinator for the Unified Operational System (UOS) on Telegram (@c3i_talk_bot).\n"
+    <> "Role: Sovereign Cognitive Architect, Swarm Coordinator (#fractal-l5), and Cluster SRE.\n\n"
+    <> "UOS System Real-Time Telemetry & Context:\n"
+    <> telemetry_summary
+    <> "\n\n"
+    <> "UOS Architecture Ground Truth & Rules:\n"
+    <> "1. Canonical 17 System Aspects (A01-A17) across 10 Fractal Layers (L0-L9).\n"
+    <> "2. Zero-Muda Purity: 0 Bevy, 0 Graphite, 100% Pure BEAM OTP 29 & Hermes OCaml.\n"
+    <> "3. Hardware NVMe Safety: The Root OS NVMe Serial is locked ([REDACTED_SYSTEM_OS_SERIAL]) and hard-denied from any wipe or modification.\n"
+    <> "4. Sa-Plan canonical authority in var/sa-plan/uos.sqlite3 (SC-SA-PLAN-001, SC-JIDOKA-001).\n"
+    <> "5. Tri-Agent Swarm Governance: AGY, Claude, and Codex coordinate on var/coordination/tri-agent/.\n"
+    <> "6. 48 Telegram Directives across Domains A (SRE), B (Disaster Recovery), C (Creative/FinOps), D (Voice/Collab).\n\n"
+    <> "Instructions:\n"
+    <> "- Address the user directly in an authoritative, helpful, cybernetic tone.\n"
+    <> "- When the user asks generic queries like 'show me what is happening in the uos system', summarize the actual live telemetry, cluster health, active plans, aspects, and mesh state accurately.\n"
+    <> "- Maintain context with previous conversation turns.\n"
+    <> "- Format key entities and metrics with GitHub-flavored markdown (bold, code blocks, lists).\n"
+    <> "- Keep responses focused, concise, and structured for mobile Telegram viewing.\n"
 
-  case ffi_post_json(url_bytes, key_bytes, body_bytes, 20_000) {
-    Ok(#(200, resp_bytes)) -> {
-      case bit_array.to_string(resp_bytes) {
-        Ok(resp_str) -> parse_openrouter_content(resp_str)
-        Error(_) -> Error("Failed to decode response bytes to UTF-8 string")
+  let history_msgs =
+    list.map(history, fn(msg) {
+      json.object([
+        #("role", json.string(msg.role)),
+        #("content", json.string(msg.content)),
+      ])
+    })
+
+  let user_msg =
+    json.object([
+      #("role", json.string("user")),
+      #("content", json.string(user_query)),
+    ])
+
+  let all_messages = [
+    json.object([
+      #("role", json.string("system")),
+      #("content", json.string(system_prompt)),
+    ]),
+    ..list.append(history_msgs, [user_msg])
+  ]
+
+  // Try primary Gemma 4 model, fall back to fallback model
+  case post_chat_openrouter(primary_model, user_query, all_messages, 1200) {
+    Ok(res) -> Ok(res)
+    Error(e1) -> {
+      case post_chat_openrouter(fallback_model, user_query, all_messages, 1200) {
+        Ok(res2) -> Ok(res2)
+        Error(e2) -> Error("Both Gemma 4 models failed: " <> e1 <> " | " <> e2)
       }
-    }
-    Ok(#(status, resp_bytes)) -> {
-      let err_body = bit_array.to_string(resp_bytes) |> result.unwrap("")
-      Error("OpenRouter returned HTTP " <> int.to_string(status) <> ": " <> err_body)
-    }
-    Error(err_bytes) -> {
-      let err_str = bit_array.to_string(err_bytes) |> result.unwrap("transport_error")
-      Error("OpenRouter BEAM TLS transport error: " <> err_str)
     }
   }
 }

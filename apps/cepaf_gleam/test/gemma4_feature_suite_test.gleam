@@ -21,6 +21,7 @@ import cepaf_gleam/harness/egress_redactor
 import cepaf_gleam/harness/multimodal_features as mm
 import cepaf_gleam/harness/telegram_openrouter
 import cepaf_gleam/harness/tool_fenced_dispatcher as td
+import gleam/json
 import gleam/list
 import gleam/option.{None, Some}
 import gleam/string
@@ -437,3 +438,20 @@ pub fn outbound_payload_carrying_the_denied_serial_is_refused_test() {
   string.contains(sanitized, egress_redactor.redacted_serial_placeholder)
   |> should.be_true
 }
+
+pub fn modality3_post_chat_openrouter_egress_guard_test() {
+  // Verifies that multi-turn chat payloads also enforce the fail-closed egress redactor
+  let leaked_msg =
+    json.object([
+      #("role", json.string("user")),
+      #("content", json.string("Check drive " <> egress_redactor.denied_os_nvme_serial)),
+    ])
+  telegram_openrouter.post_chat_openrouter(
+    "google/gemma-4-31b-it",
+    "prompt input",
+    [leaked_msg],
+    64,
+  )
+  |> should.be_error
+}
+
