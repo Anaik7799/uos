@@ -335,3 +335,23 @@ pub fn region_health_fields_accessible_test() {
   rh.latency_ms |> should.equal(42)
   rh.reachable |> should.be_true()
 }
+
+// ---------------------------------------------------------------------------
+// 10. Tailnet Mesh Peering Tests
+// ---------------------------------------------------------------------------
+
+pub fn init_tailnet_mesh_test() {
+  let state = zenoh_federation.init_tailnet_mesh()
+  state.local_region |> should.equal("nas-1")
+  state.healthy_regions |> should.equal(2)
+  state.federation_mode |> should.equal(FullFederation)
+  list.length(state.regions) |> should.equal(2)
+}
+
+pub fn init_tailnet_node_mesh_test() {
+  let state = zenoh_federation.init_tailnet_node_mesh("nas-1")
+  state.local_node |> should.equal("nas-1")
+  list.length(state.nodes) |> should.equal(2)
+  state.quorum_size |> should.equal(2)
+}
+

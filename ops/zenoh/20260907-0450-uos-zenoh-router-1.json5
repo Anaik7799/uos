@@ -5,7 +5,12 @@
 {
   mode: "router",
   listen: { endpoints: ["tcp/0.0.0.0:7447"] },
-  connect: { endpoints: [] },
+  connect: {
+    endpoints: [
+      "tcp/100.78.98.18:7447",
+      "tcp/vm-1.tail55d152.ts.net:7447"
+    ]
+  },
   plugins: {
     rest: { http_port: 8080 },
     // Memory storages make the message board queryable over Zenoh GET (REST and native).

@@ -459,6 +459,71 @@ pub fn init(local_region: String) -> FederationState {
   )
 }
 
+/// Construct the canonical 2-node Tailnet mesh federation state (nas-1 and vm-1).
+pub fn init_tailnet_mesh() -> FederationState {
+  let nas1 =
+    Region(
+      id: "nas-1",
+      name: "NAS-1 Primary Host",
+      zenoh_endpoint: "tcp/100.87.7.78:7447",
+      healthy: True,
+      node_count: 1,
+      leader_node: "nas-1",
+      last_heartbeat: 0,
+    )
+  let vm1 =
+    Region(
+      id: "vm-1",
+      name: "VM-1 Peer Runtime Host",
+      zenoh_endpoint: "tcp/100.78.98.18:7447",
+      healthy: True,
+      node_count: 1,
+      leader_node: "vm-1",
+      last_heartbeat: 0,
+    )
+  let regions = [nas1, vm1]
+  let total = list.fold(regions, 0, fn(acc, r) { acc + r.node_count })
+  FederationState(
+    regions: regions,
+    local_region: "nas-1",
+    total_nodes: total,
+    healthy_regions: 2,
+    federation_mode: FullFederation,
+    consensus_protocol: "2oo2-tailnet",
+  )
+}
+
+/// Construct the canonical Tailnet node-level mesh federation state with nas-1 and vm-1.
+pub fn init_tailnet_node_mesh(local_id: String) -> NodeFederationState {
+  let nas1 =
+    FederationNode(
+      node_id: "nas-1",
+      region: "tailnet-home",
+      endpoint: "tcp/100.87.7.78:7447",
+      role: Primary,
+      health: 1.0,
+      last_seen_ms: 0,
+      version_vector: [#("nas-1", 1)],
+    )
+  let vm1 =
+    FederationNode(
+      node_id: "vm-1",
+      region: "tailnet-home",
+      endpoint: "tcp/100.78.98.18:7447",
+      role: Backup,
+      health: 1.0,
+      last_seen_ms: 0,
+      version_vector: [#("vm-1", 1)],
+    )
+  NodeFederationState(
+    local_node: local_id,
+    local_region: "tailnet-home",
+    nodes: [nas1, vm1],
+    quorum_size: 2,
+    partition_detected: False,
+  )
+}
+
 // ---------------------------------------------------------------------------
 // Region management
 // ---------------------------------------------------------------------------

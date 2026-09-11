@@ -7,7 +7,11 @@
 -define(DEADLINE_MS, 7000).
 
 probe(Url) when Url =:= <<"http://vm-1.tail55d152.ts.net:4100/api/health">>;
-                Url =:= <<"http://vm-1.tail55d152.ts.net:8088/api/health">> ->
+                Url =:= <<"http://vm-1.tail55d152.ts.net:4100/health">>;
+                Url =:= <<"http://vm-1.tail55d152.ts.net:8088/api/health">>;
+                Url =:= <<"http://vm-1.tail55d152.ts.net:8089/health">>;
+                Url =:= <<"http://vm-1.tail55d152.ts.net:8089/healthz">>;
+                Url =:= <<"http://vm-1.tail55d152.ts.net:8080/healthz">> ->
     %% Do not permit mutable PATH to replace the observation oracle.
     Executable = "/usr/bin/curl",
     case filelib:is_regular(Executable) of
@@ -40,8 +44,12 @@ bounded_probe(Executable, Url, Parent) ->
     %% This is the operator-specified and SSH/HTTP-observed Tailnet address.
     %% Preserve the FQDN Host header while refusing a poisoned DNS destination.
     Resolve = case Url of
-        <<"http://vm-1.tail55d152.ts.net:4100/api/health">> ->
+        <<"http://vm-1.tail55d152.ts.net:4100/", _/binary>> ->
             "vm-1.tail55d152.ts.net:4100:100.78.98.18";
+        <<"http://vm-1.tail55d152.ts.net:8089/", _/binary>> ->
+            "vm-1.tail55d152.ts.net:8089:100.78.98.18";
+        <<"http://vm-1.tail55d152.ts.net:8080/", _/binary>> ->
+            "vm-1.tail55d152.ts.net:8080:100.78.98.18";
         _ -> "vm-1.tail55d152.ts.net:8088:100.78.98.18"
     end,
     Args = ["--disable", "--proto", "=http", "--noproxy", "*",
