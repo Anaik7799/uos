@@ -8,6 +8,9 @@ from max_kernel import (
     compute_finite_time_lyapunov_exponent, estimate_time_to_cascade,
     simd_stpa_fmea_hazard_eval, simd_rete_conflict_resolution,
     simd_ruliad_branchial_distance, simd_shruti_harmonic_synthesis,
+    rmsnorm_tensor, swiglu_activation,
+    simd_rotary_position_embedding, simd_scaled_dot_product_attention,
+    simd_temporal_convolution_1d,
 )
 from std.math import sqrt
 
@@ -104,6 +107,44 @@ def main():
     ratios.append(1.5); amps.append(2.0)
     # 240*1*1 + 240*1.5*2*2 = 240 + 1440 = 1680
     failures += check("shruti harmonic energy", simd_shruti_harmonic_synthesis(240.0, ratios, amps), 1680.0, 1e-2)
+
+    # 13. Deep Transformer & Neural Attention Tests
+    var v_const = List[Float32]()
+    var g_ones = List[Float32]()
+    for _ in range(4):
+        v_const.append(2.0)
+        g_ones.append(1.0)
+    var rms_out = rmsnorm_tensor(v_const, g_ones, 0.0)
+    failures += check("rmsnorm uniform[0]", rms_out[0], 1.0, 1e-5)
+    failures += check("rmsnorm len", Float32(len(rms_out)), 4.0, 0.0)
+
+    failures += check("swiglu(0, 10)", swiglu_activation(0.0, 10.0), 0.0, 1e-5)
+    failures += check("swiglu(1, 2)", swiglu_activation(1.0, 2.0), 1.4621172, 1e-4)
+
+    # At pos 0, RoPE is identity (phi=0 => cos=1, sin=0)
+    var rope_p0 = simd_rotary_position_embedding(v_const, 10000.0, 0)
+    failures += check("rope pos 0 identity[0]", rope_p0[0], 2.0, 1e-5)
+    failures += check("rope pos 0 identity[1]", rope_p0[1], 2.0, 1e-5)
+
+    # Scaled Dot-Product Attention: single key/val equals query => softmax weight 1.0 => output equals value
+    var att_keys = List[List[Float32]]()
+    var att_vals = List[List[Float32]]()
+    att_keys.append(v_const.copy())
+    att_vals.append(v_const.copy())
+    var att_out = simd_scaled_dot_product_attention(v_const, att_keys, att_vals, 4.0)
+    failures += check("attention single-key[0]", att_out[0], 2.0, 1e-5)
+    failures += check("attention single-key[3]", att_out[3], 2.0, 1e-5)
+
+    # Causal 1D Convolution: sig=[1,2,3,4], kern=[0.5, 0.25]
+    var sig = List[Float32]()
+    sig.append(1.0); sig.append(2.0); sig.append(3.0); sig.append(4.0)
+    var kern = List[Float32]()
+    kern.append(0.5); kern.append(0.25)
+    var conv_out = simd_temporal_convolution_1d(sig, kern)
+    failures += check("conv1d[0]", conv_out[0], 0.5, 1e-5)
+    failures += check("conv1d[1]", conv_out[1], 1.25, 1e-5)
+    failures += check("conv1d[2]", conv_out[2], 2.0, 1e-5)
+    failures += check("conv1d[3]", conv_out[3], 2.75, 1e-5)
 
     print("")
     if failures == 0:

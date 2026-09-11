@@ -31,7 +31,7 @@
 #   5. High-Throughput FMEA Risk Classifier
 # ==============================================================================
 
-from std.math import exp, sqrt, log2
+from std.math import exp, sqrt, log2, cos, sin
 from std.sys import simd_width_of
 
 comptime float_simd_width = simd_width_of[DType.float32]()
@@ -380,4 +380,94 @@ def simd_shruti_harmonic_synthesis(
         total_energy += freq * amplitudes[i] * amplitudes[i]
         
     return total_energy
+
+# ------------------------------------------------------------------------------
+# 13. High-Utility Model 8: Deep Transformer & Neural Attention Tensors
+# ------------------------------------------------------------------------------
+
+def rmsnorm_tensor(v: List[Float32], gamma: List[Float32], eps: Float32) -> List[Float32]:
+    """Root Mean Square Layer Normalization (RMSNorm) used in Gemma & Llama."""
+    var n = len(v)
+    var result = List[Float32]()
+    if n == 0:
+        return result^
+    var sum_sq: Float32 = 0.0
+    for i in range(n):
+        sum_sq += v[i] * v[i]
+    var rms = sqrt((sum_sq / Float32(n)) + eps)
+    for i in range(n):
+        var g: Float32 = 1.0
+        if i < len(gamma):
+            g = gamma[i]
+        result.append((v[i] / rms) * g)
+    return result^
+
+def swiglu_activation(gate: Float32, up: Float32) -> Float32:
+    """SwiGLU feedforward activation: Swish(gate) * up."""
+    var swish = gate / (1.0 + exp(-gate))
+    return swish * up
+
+def simd_rotary_position_embedding(x: List[Float32], theta_base: Float32, pos: Int) -> List[Float32]:
+    """Apply Rotary Position Embedding (RoPE) to an embedding vector."""
+    var n = len(x)
+    var result = List[Float32]()
+    for i in range(n):
+        result.append(x[i])
+    var half_dim = n // 2
+    for i in range(half_dim):
+        var idx1 = i * 2
+        var idx2 = idx1 + 1
+        var freq = 1.0 / (theta_base ** (Float32(idx1) / Float32(n)))
+        var phi = Float32(pos) * freq
+        var c = cos(phi)
+        var s = sin(phi)
+        var x0 = x[idx1]
+        var x1 = x[idx2]
+        result[idx1] = (x0 * c) - (x1 * s)
+        result[idx2] = (x0 * s) + (x1 * c)
+    return result^
+
+def simd_scaled_dot_product_attention(
+    q: List[Float32],
+    keys: List[List[Float32]],
+    values: List[List[Float32]],
+    d_k: Float32
+) -> List[Float32]:
+    """Multi-token Scaled Dot-Product Attention: Softmax(Q * K^T / sqrt(d_k)) * V."""
+    var seq_len = len(keys)
+    var out = List[Float32]()
+    if seq_len == 0 or len(values) == 0:
+        return out^
+    var dim = len(q)
+    for _ in range(dim):
+        out.append(0.0)
+    var scale = 1.0 / sqrt(d_k)
+    var scores = List[Float32]()
+    for i in range(seq_len):
+        var dot = simd_dot_product(q, keys[i])
+        scores.append(dot * scale)
+    var weights = softmax_tensor(scores)
+    for i in range(seq_len):
+        var w = weights[i]
+        for j in range(dim):
+            if j < len(values[i]):
+                out[j] += w * values[i][j]
+    return out^
+
+def simd_temporal_convolution_1d(signal: List[Float32], kernel: List[Float32]) -> List[Float32]:
+    """1D Causal Temporal Convolution for streaming telemetry & sensor analysis."""
+    var n = len(signal)
+    var k_len = len(kernel)
+    var result = List[Float32]()
+    if n == 0 or k_len == 0:
+        return result^
+    for t in range(n):
+        var acc: Float32 = 0.0
+        var max_j = k_len
+        if t + 1 < max_j:
+            max_j = t + 1
+        for j in range(max_j):
+            acc += signal[t - j] * kernel[j]
+        result.append(acc)
+    return result^
 
