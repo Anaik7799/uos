@@ -1,0 +1,74 @@
+{
+  "carrier": "uos-decision-record/v1",
+  "phase": "completed",
+  "decision_id": "DR-20260911-2315-L0FABLE-CORTEX-SAPLAN-SOVEREIGN-EXECUTION",
+  "identity_scope": {
+    "hive": "uos-tui-swarm",
+    "tenant": "uos",
+    "actor_kind": "model-agent (uos_swarm decision-record CLI)",
+    "actor_id": "L0-fable",
+    "provider_model": {
+      "provider": "anthropic",
+      "model": "claude-fable-5-1",
+      "self_report": true
+    }
+  },
+  "task_authority": {
+    "plan_id": "uos/cortex-saplan/20260911-2315",
+    "tasks": [
+      "task-0",
+      "task-1",
+      "task-2",
+      "task-3",
+      "task-4",
+      "task-5"
+    ],
+    "authority": "sa-plan",
+    "worker": "L0-fable",
+    "ledger_path": "var/sa-plan/uos.sqlite3"
+  },
+  "policy_refs": [
+    "SC-COG-001",
+    "SC-SA-PLAN-001",
+    "SC-JIDOKA-001",
+    "SC-POODAVR-001",
+    "SC-FPRIME-001",
+    "CHK-07-DRIVE",
+    "SC-MUDA-001",
+    "SYNC-11"
+  ],
+  "evidence_choice": {
+    "observations": [
+      {
+        "source": "c3i_reference",
+        "value": "Cortex Worker.fs, MetabolicGovernor.fs, VectorStore.fs, TopologyEngine.fs, TokenBucket.fs analyzed from VM-1",
+        "grade": "Measured"
+      },
+      {
+        "source": "gleam_test",
+        "value": "cortex_saplan_multimodality_test passed 20/20 in 0.093s; cortex_saplan_full_integration_test passed 5/5",
+        "grade": "Measured"
+      },
+      {
+        "source": "ocaml_dune",
+        "value": "cortex_saplan_contract.mli & .ml compiled with dune build @check (0 errors)",
+        "grade": "Measured"
+      },
+      {
+        "source": "rust_nif",
+        "value": "cortex_nif cargo check passed with 0 errors; HARD_DENIED_SYSTEM_OS_SERIAL = '25503L801736' enforced",
+        "grade": "Measured"
+      },
+      {
+        "source": "max_mojo",
+        "value": "cortex_scorer.py --selftest PASS; cortex_simd_ranker.mojo AVX-512 SIMD vector ranking verified",
+        "grade": "Measured"
+      }
+    ],
+    "selected": "Full polyglot distribution with F Prime POODAVR cybernetic loop and 8-modality testing suite under L0-fable execution authority."
+  },
+  "completed": {
+    "observed_at": "2026-09-11T23:15:00Z",
+    "outcome": "integrated: Cortex & Sa-Plan fully operational; all 6 sa-plan tasks completed by L0-fable; 25/25 tests pass; 18/18 checklist gates pass."
+  }
+}
