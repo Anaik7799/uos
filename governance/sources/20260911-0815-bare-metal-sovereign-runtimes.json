@@ -1,0 +1,160 @@
+{
+  "schema_version": "1.0.0",
+  "contract_id": "SPEC-SAMVID-VAJRAVYUHA-001",
+  "name": "samvid_vajravyuha_bare_metal_runtimes",
+  "sanskrit_name": "संविद् वज्रव्यूह",
+  "timestamp": "20260911-0815-",
+  "status": "RATIFIED",
+  "authority": "UOS-CANONICAL-AGENT-POLICY",
+  "tailscale_base_url": "http://nas-1.tail55d152.ts.net:4100",
+  "total_holons": 7,
+  "holons": [
+    {
+      "holon_id": "H0",
+      "sanskrit_name": "वज्र-अधिष्ठान",
+      "transliteration": "Vajra-Adhisthana",
+      "english_name": "Bare-Metal Substrate & Deterministic Kernel",
+      "engine": "ZigVM",
+      "language": "Zig 0.16.0",
+      "source_root": "engines/zigvm",
+      "optimization_profile": "ReleaseFast / ReleaseSafe",
+      "memory_model": "Linear Allocation Arenas (Zero GC)",
+      "vfs_backend": "Descriptor-Relative Race-Free VFS",
+      "isolation_level": "DAL-A / SIL-6 Native Kernel",
+      "hardware_interlocks": {
+        "locked_nvme_serial": "25503L801736",
+        "enforcement_path": "ops/kubernetes/nas-k8s-lab/src/spec.rs",
+        "rule": "HARD_DENIED_SYSTEM_OS_SERIAL"
+      },
+      "max_latency_budget_us": 100
+    },
+    {
+      "holon_id": "H1",
+      "sanskrit_name": "रस-धातु",
+      "transliteration": "Rasa-Dhatu",
+      "english_name": "Hardware SIMD Tensor & Neural Inference Fabric",
+      "engine": "Modular MAX / Bare-Metal Mojo",
+      "language": "Mojo 1.0.0 (Native LLVM)",
+      "source_root": "services/inference/max",
+      "optimization_profile": "AVX-512 / AVX2 / ARM Neon SIMD",
+      "vector_width": "comptime simd_width_of[DType.float32]()",
+      "core_modules": [
+        "services/inference/max/max_kernel.mojo",
+        "services/inference/max/max_batch_processor.mojo",
+        "services/inference/max/max_worker.py"
+      ],
+      "capabilities": [
+        "SIMD Dot Product & Cosine Similarity (< 0.5 us)",
+        "Top-K Embedding Matrix Ranker (< 15 us)",
+        "Multi-Token Batch Feed-Forward (RMSNorm + SwiGLU, < 25 us)",
+        "GGUF Q4_0 & Q8_0 SIMD Block Dequantization",
+        "Local Gemma 2B Transformer Blocks on Bare Metal (0 Python)"
+      ],
+      "max_latency_budget_us": 30
+    },
+    {
+      "holon_id": "H2",
+      "sanskrit_name": "केवल-कोश",
+      "transliteration": "Kevala-Kosa",
+      "english_name": "Isolated Deterministic Micro-Runtimes & Unikernels",
+      "engine": "MirageOS / Solo5 Tender",
+      "language": "OCaml 5.5.0 Unikernel",
+      "source_root": "engines/hermes/modules/hermes_mirage",
+      "optimization_profile": "Single-Address-Space Library OS",
+      "boot_time_ms": "< 10 ms",
+      "attack_surface": "Zero Shell, Zero POSIX Fork/Exec, Memory Safe",
+      "core_modules": [
+        "mirage_signatures.ml",
+        "mirage_memory_block.ml",
+        "mirage_merkle_kv.ml",
+        "mirage_solo5_tender.ml",
+        "mirage_interceptor.ml"
+      ],
+      "max_latency_budget_us": 10000
+    },
+    {
+      "holon_id": "H3",
+      "sanskrit_name": "प्रमाण-विवेक",
+      "transliteration": "Pramana-Viveka",
+      "english_name": "Formal Verification, Rete-UL & Differential Evidence",
+      "engine": "Hermes Engine",
+      "language": "OCaml 5.5.0 & Lean 4.33.0",
+      "source_root": "engines/hermes",
+      "components": [
+        "Gospel Contract Formal Specifications",
+        "Rete-UL Forward-Chaining Forward Rule Engine (< 0.6 ms)",
+        "SQLite WAL Append-Only Evidence Store",
+        "Lean 4 13D Metric Conservation Checker"
+      ],
+      "max_latency_budget_us": 1000
+    },
+    {
+      "holon_id": "H4",
+      "sanskrit_name": "प्राण-व्यूह",
+      "transliteration": "Prana-Vyuha",
+      "english_name": "Supervisory Life-Pulse, Intent & Fast OODA Ring",
+      "engine": "Pure Gleam / BEAM OTP 29",
+      "language": "Gleam 1.16.0 / Erlang 29.0.5",
+      "source_root": "apps/cepaf_gleam",
+      "supervision": "uos_sup.gleam Root 4-Domain Supervisor",
+      "state_machines": [
+        "Fast OODA Ring (< 1.5 ms cycle time)",
+        "Prajna Circuit Breakers (H_C >= 0.85)",
+        "Lyapunov Stability Trend Detector",
+        "Defense Threat Assessment (DEFCON 1 to 4)",
+        "Decentralized Work-Stealing Mesh"
+      ],
+      "max_latency_budget_us": 2000
+    },
+    {
+      "holon_id": "H5",
+      "sanskrit_name": "प्रत्यक्ष-रक्षा",
+      "transliteration": "Pratyaksa-Raksa",
+      "english_name": "Real-Time Tri-Agent Surveillance & Jidoka Fencing",
+      "engine": "Gleam Tri-Agent Monitor & Hermes Interceptor",
+      "language": "Gleam & OCaml",
+      "modules": [
+        "apps/cepaf_gleam/src/cepaf_gleam/ha/tri_agent_monitor.gleam",
+        "engines/hermes/bin/run_agent_dispatch_hook.exe",
+        "tools/sa-plan"
+      ],
+      "surveillance_targets": [
+        "Claude 3.7 Sonnet Proposals",
+        "Codex / GPT-4o Proposals",
+        "AGY Remote Proposals",
+        "OpenRouter Model Calls"
+      ],
+      "interception_rules": [
+        "SC-JIDOKA-001: Un-leased Plan Mutation Halt (-32002)",
+        "SC-SURVEILLANCE-001: Data Exfiltration Trap (-32005)",
+        "SC-MUDA-001: Zero-Muda Barred Code Rejection (-32006)",
+        "2oo3 Constitutional Consensus Verification (-32003)"
+      ],
+      "max_latency_budget_us": 500
+    },
+    {
+      "holon_id": "H6",
+      "sanskrit_name": "चक्र-संचरण",
+      "transliteration": "Cakra-Sancarana",
+      "english_name": "Universal Mesh Telemetry & Distributed Observability",
+      "engine": "Zenoh Pub/Sub Mesh & W3C OTel",
+      "transport": "Zero-Copy Zenoh Daemon",
+      "topic_namespace": "indrajaal/**",
+      "tracing_standard": "W3C 128-Bit TraceID with Microsecond UTC ISO 8601 Timestamps",
+      "max_latency_budget_us": 1000
+    }
+  ],
+  "operational_census_summary": {
+    "total_workloads": 42,
+    "local_sovereign_workloads": 39,
+    "local_sovereign_percentage": 92.86,
+    "gleam_otp_workloads": 16,
+    "gleam_otp_percentage": 38.10,
+    "modular_max_mojo_workloads": 16,
+    "modular_max_mojo_percentage": 38.10,
+    "zigvm_hermes_workloads": 7,
+    "zigvm_hermes_percentage": 16.67,
+    "external_cloud_advisory_workloads": 3,
+    "external_cloud_advisory_percentage": 7.14
+  }
+}
