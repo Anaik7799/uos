@@ -10,8 +10,6 @@ param(
     [switch]$NoReboot = $false
 )
 
-$ErrorActionPreference = "Stop"
-
 Write-Host "==============================================================================" -ForegroundColor Cyan
 Write-Host "[UOS-DEPLOY] TURNKEY PROVISIONING & REBOOT ORCHESTRATION (razr15-1)" -ForegroundColor Cyan
 Write-Host "Timestamp: $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss K')" -ForegroundColor Cyan
@@ -26,9 +24,10 @@ if (-not $isAdmin) {
 
 $nas1Key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMMewbASbkM+twLcsqnapyPzDLI08UlHhZFiRN8QCp01 an@nas-1"
 $vm1Key  = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIANEVh3rGVj7FyOcgeKMjAptJzcEWceoCmkVzYLxrrIY an@vm-1"
+$bothKeys = "$nas1Key`n$vm1Key`n"
 
 # 1. Deploy Hardened .wslconfig (Prevents VM Idle Shutdown)
-Write-Host "`n[1/7] Deploying hardened .wslconfig to host profile..." -ForegroundColor Yellow
+Write-Host "`n[1/6] Deploying hardened .wslconfig to host profile..." -ForegroundColor Yellow
 $userProfile = [System.Environment]::GetFolderPath([System.Environment+SpecialFolder]::UserProfile)
 $wslConfigPath = Join-Path $userProfile ".wslconfig"
 $wslConfigContent = @"
@@ -52,20 +51,20 @@ Set-Content -Path $wslConfigPath -Value $wslConfigContent -Encoding UTF8 -Force
 Write-Host "  [PASS] Hardened .wslconfig deployed (vmIdleTimeout=-1)." -ForegroundColor Green
 
 # 2. Authorize Keys in Windows Host OpenSSH (Both User & Administrators group)
-Write-Host "`n[2/7] Authorizing nas-1 and vm-1 ED25519 keys in Windows OpenSSH..." -ForegroundColor Yellow
+Write-Host "`n[2/6] Authorizing nas-1 and vm-1 ED25519 keys in Windows OpenSSH..." -ForegroundColor Yellow
 
 # User authorized_keys
 $winUserSshDir = Join-Path $userProfile ".ssh"
 if (-not (Test-Path $winUserSshDir)) { New-Item -ItemType Directory -Path $winUserSshDir -Force | Out-Null }
 $winUserAuthKeys = Join-Path $winUserSshDir "authorized_keys"
-Set-Content -Path $winUserAuthKeys -Value "$nas1Key`n$vm1Key" -Encoding ascii -Force
+Set-Content -Path $winUserAuthKeys -Value $bothKeys -Encoding ascii -Force
 Write-Host "  [PASS] User authorized_keys updated: $winUserAuthKeys" -ForegroundColor Green
 
 # Administrators group authorized_keys with strict ACLs
 $progDataSsh = "C:\ProgramData\ssh"
 if (-not (Test-Path $progDataSsh)) { New-Item -ItemType Directory -Path $progDataSsh -Force | Out-Null }
 $adminAuthKeys = Join-Path $progDataSsh "administrators_authorized_keys"
-Set-Content -Path $adminAuthKeys -Value "$nas1Key`n$vm1Key" -Encoding ascii -Force
+Set-Content -Path $adminAuthKeys -Value $bothKeys -Encoding ascii -Force
 
 # Windows OpenSSH requires exact ACL: Administrators:F and SYSTEM:F, no inheritance
 icacls.exe $adminAuthKeys /inheritance:r /grant "Administrators:F" /grant "SYSTEM:F" | Out-Null
@@ -73,26 +72,26 @@ Write-Host "  [PASS] administrators_authorized_keys configured with strict ACL."
 
 # Ensure Windows sshd service is running and restarted
 try {
-    Set-Service -Name sshd -StartupType Automatic
-    Restart-Service -Name sshd -Force
+    Set-Service -Name sshd -StartupType Automatic -ErrorAction SilentlyContinue
+    Restart-Service -Name sshd -Force -ErrorAction SilentlyContinue
     Write-Host "  [PASS] Windows OpenSSH (sshd) service restarted." -ForegroundColor Green
 } catch {
     Write-Warning "Could not restart Windows sshd service: $_"
 }
 
-# 3. Configure WSL2 /etc/wsl.conf and Boot Entrypoint
-Write-Host "`n[3/7] Ingesting hardened /etc/wsl.conf and boot entrypoint into WSL2..." -ForegroundColor Yellow
+# 3. Configure WSL2 via Verbatim Single-Quoted Script Piped to wsl.exe
+Write-Host "`n[3/6] Ingesting hardened /etc/wsl.conf, boot hook, and SSH keys into WSL2..." -ForegroundColor Yellow
 
-$wslBashScript = @"
+$setupScript = @'
 mkdir -p /root/.ssh /etc/ssh/sshd_config.d /dev/net /usr/local/bin /var/log
 
-# Create TUN device
+# 1. Create TUN device for Tailscale
 if [ ! -c /dev/net/tun ]; then
     mknod /dev/net/tun c 10 200 || true
     chmod 666 /dev/net/tun || true
 fi
 
-# Write /etc/wsl.conf
+# 2. Write /etc/wsl.conf
 cat << 'EOF' > /etc/wsl.conf
 [boot]
 systemd=true
@@ -114,16 +113,16 @@ enabled=true
 appendWindowsPath=false
 EOF
 
-# Write /usr/local/bin/uos-boot-entrypoint.sh
+# 3. Write /usr/local/bin/uos-boot-entrypoint.sh
 cat << 'EOF' > /usr/local/bin/uos-boot-entrypoint.sh
 #!/usr/bin/env bash
 set -u
 LOG_FILE="/var/log/uos-boot-entrypoint.log"
-exec >> "\$LOG_FILE" 2>&1
+exec >> "$LOG_FILE" 2>&1
 
 echo "=============================================================================="
 echo "[UOS-BOOT] AUTONOMOUS WSL2 BOOT ENTRYPOINT INITIALIZING"
-echo "Timestamp: \$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+echo "Timestamp: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
 echo "=============================================================================="
 
 # 1. TUN Device Creation for Tailscale
@@ -160,11 +159,11 @@ tailscale up --hostname=razr15-wsl2 --accept-routes --ssh 2>/dev/null || true
 
 # 5. Start UOS Instance 2 Daemon
 INSTANCE2_SCRIPT="/home/an/uos/ops/nodes/razr15-1-wsl2/start-instance2.sh"
-if [ -f "\$INSTANCE2_SCRIPT" ] && ! pgrep -f "start-instance2.sh" >/dev/null; then
+if [ -f "$INSTANCE2_SCRIPT" ] && ! pgrep -f "start-instance2.sh" >/dev/null; then
     if id an &>/dev/null; then
-        su - an -c "bash \$INSTANCE2_SCRIPT" >/var/log/uos-instance2.log 2>&1 &
+        su - an -c "bash $INSTANCE2_SCRIPT" >/var/log/uos-instance2.log 2>&1 &
     else
-        bash "\$INSTANCE2_SCRIPT" >/var/log/uos-instance2.log 2>&1 &
+        bash "$INSTANCE2_SCRIPT" >/var/log/uos-instance2.log 2>&1 &
     fi
 fi
 
@@ -175,7 +174,7 @@ if ! pgrep -f "uos-network-watchdog" >/dev/null; then
             PRIMARY_NAS="100.87.7.78"
             while true; do
                 sleep 30
-                if ! ping -c 1 -W 3 "\$PRIMARY_NAS" &>/dev/null; then
+                if ! ping -c 1 -W 3 "$PRIMARY_NAS" &>/dev/null; then
                     [ ! -c /dev/net/tun ] && mkdir -p /dev/net && mknod /dev/net/tun c 10 200 && chmod 666 /dev/net/tun
                     service tailscaled status &>/dev/null || service tailscaled restart &>/dev/null || tailscaled &
                     tailscale up --hostname=razr15-wsl2 --accept-routes --ssh &>/dev/null || true
@@ -190,7 +189,7 @@ exit 0
 EOF
 chmod 755 /usr/local/bin/uos-boot-entrypoint.sh
 
-# Configure Dual-Port SSH Daemon (22 & 2222)
+# 4. Configure Dual-Port SSH Daemon (22 & 2222)
 cat << 'EOF' > /etc/ssh/sshd_config.d/60-uos-mesh.conf
 Port 22
 Port 2222
@@ -206,34 +205,36 @@ TCPKeepAlive yes
 UseDNS no
 EOF
 
-# Inject authorized keys for root
-echo '$nas1Key' >> /root/.ssh/authorized_keys
-echo '$vm1Key' >> /root/.ssh/authorized_keys
+# 5. Inject authorized keys for root
+mkdir -p /root/.ssh
+echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMMewbASbkM+twLcsqnapyPzDLI08UlHhZFiRN8QCp01 an@nas-1" >> /root/.ssh/authorized_keys
+echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIANEVh3rGVj7FyOcgeKMjAptJzcEWceoCmkVzYLxrrIY an@vm-1" >> /root/.ssh/authorized_keys
 sort -u /root/.ssh/authorized_keys -o /root/.ssh/authorized_keys
 chmod 700 /root/.ssh && chmod 600 /root/.ssh/authorized_keys
 
-# Inject authorized keys for existing linux users
+# 6. Inject authorized keys for all existing Linux users
 for u in an abhij ubuntu; do
-    if id "\$u" &>/dev/null; then
-        uhome=\$(getent passwd "\$u" | cut -d: -f6)
-        mkdir -p "\$uhome/.ssh"
-        echo '$nas1Key' >> "\$uhome/.ssh/authorized_keys"
-        echo '$vm1Key' >> "\$uhome/.ssh/authorized_keys"
-        sort -u "\$uhome/.ssh/authorized_keys" -o "\$uhome/.ssh/authorized_keys"
-        chmod 700 "\$uhome/.ssh" && chmod 600 "\$uhome/.ssh/authorized_keys"
-        chown -R "\$u:\$u" "\$uhome/.ssh"
+    if id "$u" &>/dev/null; then
+        uhome=$(getent passwd "$u" | cut -d: -f6)
+        mkdir -p "$uhome/.ssh"
+        echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMMewbASbkM+twLcsqnapyPzDLI08UlHhZFiRN8QCp01 an@nas-1" >> "$uhome/.ssh/authorized_keys"
+        echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIANEVh3rGVj7FyOcgeKMjAptJzcEWceoCmkVzYLxrrIY an@vm-1" >> "$uhome/.ssh/authorized_keys"
+        sort -u "$uhome/.ssh/authorized_keys" -o "$uhome/.ssh/authorized_keys"
+        chmod 700 "$uhome/.ssh" && chmod 600 "$uhome/.ssh/authorized_keys"
+        chown -R "$u:$u" "$uhome/.ssh"
     fi
 done
 
-# Restart SSH inside WSL2
+# 7. Restart OpenSSH inside WSL2
 service ssh restart 2>/dev/null || /usr/sbin/sshd 2>/dev/null || true
-"@
+'@
 
-wsl -u root bash -c "$wslBashScript"
+# Pipe directly into WSL2
+$setupScript | wsl -u root bash
 Write-Host "  [PASS] WSL2 wsl.conf, boot entrypoint, and SSH configuration injected." -ForegroundColor Green
 
 # 4. Synchronize Portproxy (Port 2222 -> WSL2) & Firewall Rules
-Write-Host "`n[4/7] Configuring Windows Port Forwarding and Firewall..." -ForegroundColor Yellow
+Write-Host "`n[4/6] Configuring Windows Port Forwarding and Firewall..." -ForegroundColor Yellow
 try {
     $wslIp = (wsl hostname -I).Trim().Split(" ")[0]
     if ($wslIp) {
@@ -242,7 +243,7 @@ try {
         Write-Host "  [PASS] Portproxy active: 0.0.0.0:2222 -> $wslIp:2222" -ForegroundColor Green
     }
 } catch {
-    Write-Warning "Portproxy error: $_"
+    Write-Warning "Portproxy notice: $_"
 }
 
 New-NetFirewallRule -DisplayName "UOS WSL2 SSH 2222" -Direction Inbound -LocalPort 2222 -Protocol TCP -Action Allow -ErrorAction SilentlyContinue | Out-Null
@@ -250,7 +251,7 @@ New-NetFirewallRule -DisplayName "UOS WSL2 Health 8088" -Direction Inbound -Loca
 Write-Host "  [PASS] Windows Firewall rules configured for 2222 and 8088." -ForegroundColor Green
 
 # 5. Register Windows SYSTEM Scheduled Task for Cold Boot
-Write-Host "`n[5/7] Registering Cold-Boot Autostart Scheduled Task under NT AUTHORITY\SYSTEM..." -ForegroundColor Yellow
+Write-Host "`n[5/6] Registering Cold-Boot Autostart Scheduled Task under NT AUTHORITY\SYSTEM..." -ForegroundColor Yellow
 $taskName = "UOS_WSL2_ColdBoot_Autostart"
 $action = New-ScheduledTaskAction -Execute "wsl.exe" -Argument "-u root -- /bin/bash /usr/local/bin/uos-boot-entrypoint.sh"
 $triggerBoot  = New-ScheduledTaskTrigger -AtStartup
@@ -281,7 +282,7 @@ try {
 }
 
 # 6. Test Trigger the Task
-Write-Host "`n[6/7] Invoking scheduled task immediately to initialize environment..." -ForegroundColor Yellow
+Write-Host "`n[6/6] Invoking scheduled task immediately to initialize environment..." -ForegroundColor Yellow
 Start-ScheduledTask -TaskName $taskName
 Start-Sleep -Seconds 3
 $taskState = (Get-ScheduledTask -TaskName $taskName).State
