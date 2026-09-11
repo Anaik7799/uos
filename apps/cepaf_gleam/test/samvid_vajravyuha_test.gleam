@@ -3,8 +3,9 @@
 //// =============================================================================
 
 import cepaf_gleam/ha/samvid_vajravyuha.{
-  canonical_holons, gleam_and_max_ratio, init_vajravyuha,
-  local_processing_ratio, render_ansi_summary, state_to_json,
+  LocalGemma4Mojo, canonical_holons, gleam_and_max_ratio, init_vajravyuha,
+  local_processing_ratio, render_ansi_summary, reroute_intercepted_workload,
+  state_to_json, target_to_string,
 }
 import gleam/json
 import gleam/list
@@ -44,4 +45,14 @@ pub fn json_serialization_test() {
   should.be_true(string.contains(json_str, "\"sanskrit_title\":\"संविद् वज्रव्यूह\""))
   should.be_true(string.contains(json_str, "\"total_workloads\":42"))
   should.be_true(string.contains(json_str, "\"local_workloads\":39"))
+  should.be_true(string.contains(json_str, "\"gemma4_status\":\"BARE_METAL_ONLINE\""))
+}
+
+pub fn gemma4_reroute_test() {
+  let #(target, explanation) =
+    reroute_intercepted_workload("Claude", "EW Blackout / Network Severed")
+  should.equal(target, LocalGemma4Mojo)
+  should.equal(target_to_string(target), "LOCAL_GEMMA4_MOJO")
+  should.be_true(string.contains(explanation, "H1_RASA_DHATU"))
+  should.be_true(string.contains(explanation, "Bare-Metal Gemma 4 Mojo Kernel"))
 }

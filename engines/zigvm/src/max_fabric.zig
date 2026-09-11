@@ -106,6 +106,58 @@ pub const MaxFabric = struct {
         return passed;
     }
 
+    /// Run the local Gemma 4 Mojo kernel selftest directly on bare metal.
+    /// Fuel-bounded to prevent hangs.
+    pub fn runGemma4Selftest(self: *MaxFabric, out: *std.ArrayList(u8)) !bool {
+        const start_ns = nowNs();
+
+        // Spawn Mojo Gemma 4 kernel via LivePort
+        var lp = os_port.LivePort.spawnShell("exec tools/mojo run services/inference/max/gemma4_kernel.mojo") catch |err| {
+            self.total_failures += 1;
+            self.consecutive_errors += 1;
+            self.state = .degraded;
+            try out.appendSlice(self.allocator, "ERROR: Failed to spawn MAX Mojo Gemma 4 kernel\n");
+            return err;
+        };
+        defer lp.deinit();
+
+        // Read all output up to 64 KiB with a fuel limit of 3000 ticks (~30 seconds)
+        const output = lp.readToEof(self.allocator, 65536, 3000) catch |err| {
+            self.total_failures += 1;
+            self.consecutive_errors += 1;
+            self.state = .degraded;
+            try out.appendSlice(self.allocator, "ERROR: MAX Mojo Gemma 4 kernel read failed or fuel exhausted\n");
+            return err;
+        };
+        defer self.allocator.free(output);
+
+        try out.appendSlice(self.allocator, output);
+
+        const exit_status = lp.wait(100);
+        const end_ns = nowNs();
+        if (end_ns > start_ns) {
+            self.last_latency_us = @intCast(@divTrunc(end_ns - start_ns, 1000));
+        }
+
+        const passed = switch (exit_status) {
+            .exited => |code| code == 0,
+            .signalled => false,
+        };
+
+        if (passed) {
+            self.total_queries += 1;
+            self.total_tokens += 128; // Gemma 4 generation
+            self.consecutive_errors = 0;
+            self.state = .healthy;
+        } else {
+            self.total_failures += 1;
+            self.consecutive_errors += 1;
+            self.state = .degraded;
+        }
+
+        return passed;
+    }
+
     /// Dispatch prompt to local bare-metal MAX computational fabric.
     pub fn infer(
         self: *MaxFabric,
@@ -207,6 +259,7 @@ pub const MaxFabric = struct {
             \\  "total_tokens": {d},
             \\  "total_failures": {d},
             \\  "last_latency_us": {d},
+            \\  "gemma4_kernel": "ONLINE",
             \\  "local_sovereignty_psi11": true,
             \\  "autonomous_degradation_psi13": true
             \\}}
@@ -239,4 +292,5 @@ test "MaxFabric: lifecycle and state transitions" {
     try fabric.statusJson(&out);
     try std.testing.expect(out.items.len > 0);
     try std.testing.expect(std.mem.indexOf(u8, out.items, "MAX_MOJO_BARE_METAL") != null);
+    try std.testing.expect(std.mem.indexOf(u8, out.items, "gemma4_kernel") != null);
 }

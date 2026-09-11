@@ -104,6 +104,7 @@ const usage_string =
     \\  zigvm dump-caps                        print the capability ledger
     \\  zigvm max-status                       print bare-metal MAX inference fabric status
     \\  zigvm max-selftest                     run bare-metal MAX/Mojo selftest supervised by ZigVM
+    \\  zigvm max-gemma4                       run bare-metal Gemma 4 local AI selftest supervised by ZigVM
     \\  zigvm max-infer "<prompt>"             execute local inference on bare-metal MAX computational fabric
     \\  zigvm version                          print the version
     \\
@@ -166,6 +167,16 @@ pub fn main(init: std.process.Init) !u8 {
         var out: std.ArrayList(u8) = .empty;
         defer out.deinit(gpa);
         const ok = fabric.runSelftest(&out) catch false;
+        try writeStdout(io, out.items);
+        return if (ok) 0 else 1;
+    }
+
+    if (std.mem.eql(u8, cmd, "max-gemma4")) {
+        var fabric = max_fabric.MaxFabric.init(gpa);
+        defer fabric.deinit();
+        var out: std.ArrayList(u8) = .empty;
+        defer out.deinit(gpa);
+        const ok = fabric.runGemma4Selftest(&out) catch false;
         try writeStdout(io, out.items);
         return if (ok) 0 else 1;
     }

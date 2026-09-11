@@ -102,14 +102,14 @@ Together, **Saṁvid Vajravyūha** designates the **Sovereign Adamantine Cyberne
 |  [HOLON 1: RASA-DHATU - रस-धातु] (Hardware SIMD Tensor & Neural Inference Fabric)                   |
 |  * Modular MAX / Bare-Metal Mojo Kernel     * SIMD Vector Dot Product & Cosine Similarity (AVX-512)  |
 |  * Top-K Embedding Matrix Ranker (< 15 µs)   * Multi-Token Batch Feed-Forward (RMSNorm + SwiGLU)     |
-|  * GGUF Q4_0 & Q8_0 SIMD Block Dequant      * Gemma 2B Local Transformer Blocks on Metal (0 Python)  |
+|  * GGUF Q4_0 & Q8_0 SIMD Block Dequant      * Gemma 4 Architecture: GQA, RoPE-500k, Sliding-Window  |
 |  +------------------------------------------------------------------------------------------------+  |
 |                                                  | Memory Arenas & Syscall Facade                    |
 |                                                  v                                                   |
 |  [HOLON 0: VAJRA-ADHISTHANA - वज्र-अधिष्ठान] (Bare-Metal Substrate & Deterministic Kernel)            |
 |  * ZigVM Pure Zig Deterministic Kernel      * Descriptor-Relative Race-Free VFS Backend              |
 |  * Linear Allocation Arenas (Zero GC)       * Fuel-Bounded Child Process Ports (os_port.zig)         |
-|  * Direct Hardware Storage Lock (spec.rs)   * MAX Fabric Controller (max_fabric.zig)                 |
+|  * Direct Hardware Storage Lock (spec.rs)   * MAX Fabric Controller (zigvm max-gemma4 / max-status)  |
 +======================================================================================================+
 ```
 
@@ -154,7 +154,7 @@ graph TD
         M2["AVX-512 / AVX2 SIMD Embeddings & Cosine Ranker"]
         M3["Multi-Token Batch Feed-Forward (RMSNorm + SwiGLU)"]
         M4["GGUF Q4_0 & Q8_0 SIMD Block Dequantization"]
-        M5["Gemma 2B Local Transformer Layers (Bare Metal)"]
+        M5["Gemma 4 Architecture (GQA + RoPE-500k + Sliding-Window)"]
     end
 
     subgraph H0["Holon 0: Vajra-Adhiṣṭhāna (वज्र-अधिष्ठान) - Deterministic Kernel"]

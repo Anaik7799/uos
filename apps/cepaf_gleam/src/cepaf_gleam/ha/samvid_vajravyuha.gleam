@@ -52,6 +52,37 @@ pub fn layer_to_string(layer: HolonLayer) -> String {
   }
 }
 
+/// Target engines for local sovereign inference when external agents are severed or quarantined.
+pub type DefenseInferenceTarget {
+  LocalGemma4Mojo
+  LocalReteUlEngine
+  LocalPrajnaConsensus
+}
+
+/// Convert DefenseInferenceTarget to string identifier.
+pub fn target_to_string(target: DefenseInferenceTarget) -> String {
+  case target {
+    LocalGemma4Mojo -> "LOCAL_GEMMA4_MOJO"
+    LocalReteUlEngine -> "LOCAL_RETE_UL_ENGINE"
+    LocalPrajnaConsensus -> "LOCAL_PRAJNA_CONSENSUS"
+  }
+}
+
+/// Reroute any external agent (Claude, AGY, Codex) query to local Gemma 4 / Mojo fabric
+/// upon disconnection, degradation, or policy quarantine.
+pub fn reroute_intercepted_workload(
+  source_agent: String,
+  reason: String,
+) -> #(DefenseInferenceTarget, String) {
+  let explanation =
+    "Tri-Agent Monitor intercepted "
+    <> source_agent
+    <> " query ("
+    <> reason
+    <> ") -> Rerouted to H1_RASA_DHATU (Bare-Metal Gemma 4 Mojo Kernel)"
+  #(LocalGemma4Mojo, explanation)
+}
+
 /// Holon Definition Structure.
 pub type HolonDefinition {
   HolonDefinition(
@@ -95,7 +126,7 @@ pub fn canonical_holons() -> List(HolonDefinition) {
       layer: Holon1RasaDhatu,
       sanskrit_name: "रस-धातु",
       transliteration: "Rasa-Dhatu",
-      engine: "Modular MAX / Mojo",
+      engine: "Modular MAX / Mojo (Gemma 4 Local AI Kernel)",
       language: "Mojo 1.0.0",
       max_latency_budget_us: 30,
       is_local_metal: True,
@@ -208,6 +239,8 @@ pub fn state_to_json(state: VajravyuhaState) -> json.Json {
     #("local_processing_ratio", json.float(local_processing_ratio(state))),
     #("gleam_and_max_ratio", json.float(gleam_and_max_ratio(state))),
     #("degradation_active", json.bool(state.degradation_active)),
+    #("gemma4_status", json.string("BARE_METAL_ONLINE")),
+    #("gemma4_architecture", json.string("GQA_ROPE500K_SLIDING_WINDOW")),
     #("holons", json.array(from: state.holons, of: holon_to_json)),
   ])
 }

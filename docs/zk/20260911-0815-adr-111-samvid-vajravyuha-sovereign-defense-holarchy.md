@@ -37,7 +37,8 @@ The holarchy is structured into 7 self-similar, mutually reinforcing holons runn
    - Modular MAX & Bare-Metal Mojo (`services/inference/max`).
    - Hardware CPU vectorization (`comptime float_simd_width` for AVX2/AVX-512/Neon).
    - Dense embedding dot products ($< 0.2\text{µs}$), Top-K SIMD matrix ranker ($< 15\text{µs}$), multi-token batch feed-forward (RMSNorm + SwiGLU, $< 25\text{µs}$).
-   - GGUF Q4_0 & Q8_0 SIMD dequantization; local Gemma 2B execution on metal with **0 Python** in the data path.
+   - GGUF Q4_0 & Q8_0 SIMD dequantization; **Bare-Metal Gemma 4 Architecture Kernel** (`gemma4_kernel.mojo`) with Grouped Query Attention (GQA), Rotary Position Embeddings (RoPE with $\theta = 500{,}000$), Sliding-Window Attention ($W = 4096$), RMSNorm, and SwiGLU FFN on metal with **0 Python** in the data path.
+   - Supervised and invoked by ZigVM via `zigvm max-gemma4` and `max_fabric.zig`.
 
 3. **Holon 2: केवल-कोश (Kevala-Kośa) — Isolated Deterministic Unikernels**:
    - OCaml MirageOS & Solo5 Tender (`engines/hermes/modules/hermes_mirage`).
