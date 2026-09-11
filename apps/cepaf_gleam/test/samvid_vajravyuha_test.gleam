@@ -3,8 +3,9 @@
 //// =============================================================================
 
 import cepaf_gleam/ha/samvid_vajravyuha.{
-  LocalGemma4Mojo, canonical_holons, gleam_and_max_ratio, init_vajravyuha,
-  local_processing_ratio, render_ansi_summary, reroute_intercepted_workload,
+  GpuGemma4Mojo, LocalGemma4Mojo, canonical_holons, canonical_instances,
+  gleam_and_max_ratio, init_vajravyuha, local_processing_ratio,
+  render_ansi_summary, reroute_intercepted_workload, reroute_to_gpu_workload,
   state_to_json, target_to_string,
 }
 import gleam/json
@@ -15,6 +16,11 @@ import gleeunit/should
 pub fn canonical_holons_count_test() {
   let holons = canonical_holons()
   should.equal(list.length(holons), 7)
+}
+
+pub fn canonical_instances_count_test() {
+  let instances = canonical_instances()
+  should.equal(list.length(instances), 3)
 }
 
 pub fn local_processing_ratio_test() {
@@ -46,6 +52,8 @@ pub fn json_serialization_test() {
   should.be_true(string.contains(json_str, "\"total_workloads\":42"))
   should.be_true(string.contains(json_str, "\"local_workloads\":39"))
   should.be_true(string.contains(json_str, "\"gemma4_status\":\"BARE_METAL_ONLINE\""))
+  should.be_true(string.contains(json_str, "\"razr15-1\""))
+  should.be_true(string.contains(json_str, "\"has_gpu\":true"))
 }
 
 pub fn gemma4_reroute_test() {
@@ -55,4 +63,13 @@ pub fn gemma4_reroute_test() {
   should.equal(target_to_string(target), "LOCAL_GEMMA4_MOJO")
   should.be_true(string.contains(explanation, "H1_RASA_DHATU"))
   should.be_true(string.contains(explanation, "Bare-Metal Gemma 4 Mojo Kernel"))
+}
+
+pub fn gpu_reroute_test() {
+  let #(target, explanation) =
+    reroute_to_gpu_workload("Codex", "Deep Tensor Processing Requested")
+  should.equal(target, GpuGemma4Mojo)
+  should.equal(target_to_string(target), "GPU_GEMMA4_MOJO")
+  should.be_true(string.contains(explanation, "razr15-1 WSL2 GPU"))
+  should.be_true(string.contains(explanation, "Tensor Cores"))
 }

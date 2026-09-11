@@ -55,6 +55,7 @@ pub fn layer_to_string(layer: HolonLayer) -> String {
 /// Target engines for local sovereign inference when external agents are severed or quarantined.
 pub type DefenseInferenceTarget {
   LocalGemma4Mojo
+  GpuGemma4Mojo
   LocalReteUlEngine
   LocalPrajnaConsensus
 }
@@ -63,6 +64,7 @@ pub type DefenseInferenceTarget {
 pub fn target_to_string(target: DefenseInferenceTarget) -> String {
   case target {
     LocalGemma4Mojo -> "LOCAL_GEMMA4_MOJO"
+    GpuGemma4Mojo -> "GPU_GEMMA4_MOJO"
     LocalReteUlEngine -> "LOCAL_RETE_UL_ENGINE"
     LocalPrajnaConsensus -> "LOCAL_PRAJNA_CONSENSUS"
   }
@@ -81,6 +83,84 @@ pub fn reroute_intercepted_workload(
     <> reason
     <> ") -> Rerouted to H1_RASA_DHATU (Bare-Metal Gemma 4 Mojo Kernel)"
   #(LocalGemma4Mojo, explanation)
+}
+
+/// Reroute complex reasoning to Instance 2 (razr15-1 WSL2 GPU) for hardware-accelerated inference.
+pub fn reroute_to_gpu_workload(
+  source_agent: String,
+  reason: String,
+) -> #(DefenseInferenceTarget, String) {
+  let explanation =
+    "Tri-Agent Monitor rerouted "
+    <> source_agent
+    <> " deep reasoning ("
+    <> reason
+    <> ") -> Instance 2: razr15-1 WSL2 GPU (MAX + GPU + Gemma 4 Tensor Cores)"
+  #(GpuGemma4Mojo, explanation)
+}
+
+/// Node Instance Definition in the multi-instance mesh topology.
+pub type NodeInstance {
+  NodeInstance(
+    id: String,
+    hostname: String,
+    tailscale_ip: String,
+    port: Int,
+    role: String,
+    has_gpu: Bool,
+    gpu_model: String,
+    is_active: Bool,
+  )
+}
+
+/// Return the canonical node instances of UOS.
+pub fn canonical_instances() -> List(NodeInstance) {
+  [
+    NodeInstance(
+      id: "instance-0",
+      hostname: "nas-1",
+      tailscale_ip: "100.87.7.78",
+      port: 4100,
+      role: "Primary Controller & Storage (CPU Bare Metal)",
+      has_gpu: False,
+      gpu_model: "None (CPU AVX2/AVX-512)",
+      is_active: True,
+    ),
+    NodeInstance(
+      id: "instance-1",
+      hostname: "vm-1",
+      tailscale_ip: "100.78.98.18",
+      port: 8088,
+      role: "Peer Runtime Host (Virtual Bare Metal)",
+      has_gpu: False,
+      gpu_model: "None",
+      is_active: True,
+    ),
+    NodeInstance(
+      id: "instance-2",
+      hostname: "razr15-1",
+      tailscale_ip: "100.114.9.28",
+      port: 8088,
+      role: "Instance 2: Deep AI & Tensor Acceleration (WSL2 GPU)",
+      has_gpu: True,
+      gpu_model: "NVIDIA GeForce RTX Laptop GPU (WSL2 /dev/dxg)",
+      is_active: True,
+    ),
+  ]
+}
+
+/// Serialize NodeInstance to JSON.
+pub fn instance_to_json(inst: NodeInstance) -> json.Json {
+  json.object([
+    #("id", json.string(inst.id)),
+    #("hostname", json.string(inst.hostname)),
+    #("tailscale_ip", json.string(inst.tailscale_ip)),
+    #("port", json.int(inst.port)),
+    #("role", json.string(inst.role)),
+    #("has_gpu", json.bool(inst.has_gpu)),
+    #("gpu_model", json.string(inst.gpu_model)),
+    #("is_active", json.bool(inst.is_active)),
+  ])
 }
 
 /// Holon Definition Structure.
@@ -241,6 +321,7 @@ pub fn state_to_json(state: VajravyuhaState) -> json.Json {
     #("degradation_active", json.bool(state.degradation_active)),
     #("gemma4_status", json.string("BARE_METAL_ONLINE")),
     #("gemma4_architecture", json.string("GQA_ROPE500K_SLIDING_WINDOW")),
+    #("instances", json.array(from: canonical_instances(), of: instance_to_json)),
     #("holons", json.array(from: state.holons, of: holon_to_json)),
   ])
 }

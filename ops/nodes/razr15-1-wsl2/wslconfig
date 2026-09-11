@@ -1,0 +1,17 @@
+# ==============================================================================
+# [C3I-SIL6-MSTS] Windows Host .wslconfig for razr15-1 (Instance 2)
+# ==============================================================================
+# Location on Windows Host: C:\Users\abhij\.wslconfig
+# Allocates high-performance GPU and memory bounds for Modular MAX & Gemma 4
+# ==============================================================================
+
+[wsl2]
+memory=16GB
+processors=12
+swap=4GB
+localhostForwarding=true
+nestedVirtualization=true
+guiApplications=false
+
+# GPU Driver Pass-Through
+# Uses NVIDIA WSL driver with DirectX / CUDA hardware interlock (/dev/dxg)

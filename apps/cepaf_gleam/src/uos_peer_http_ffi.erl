@@ -11,7 +11,10 @@ probe(Url) when Url =:= <<"http://vm-1.tail55d152.ts.net:4100/api/health">>;
                 Url =:= <<"http://vm-1.tail55d152.ts.net:8088/api/health">>;
                 Url =:= <<"http://vm-1.tail55d152.ts.net:8089/health">>;
                 Url =:= <<"http://vm-1.tail55d152.ts.net:8089/healthz">>;
-                Url =:= <<"http://vm-1.tail55d152.ts.net:8080/healthz">> ->
+                Url =:= <<"http://vm-1.tail55d152.ts.net:8080/healthz">>;
+                Url =:= <<"http://razr15-1.tail55d152.ts.net:8088/health">>;
+                Url =:= <<"http://razr15-1.tail55d152.ts.net:8088/api/health">>;
+                Url =:= <<"http://razr15-1.tail55d152.ts.net:4102/health">> ->
     %% Do not permit mutable PATH to replace the observation oracle.
     Executable = "/usr/bin/curl",
     case filelib:is_regular(Executable) of
@@ -50,6 +53,12 @@ bounded_probe(Executable, Url, Parent) ->
             "vm-1.tail55d152.ts.net:8089:100.78.98.18";
         <<"http://vm-1.tail55d152.ts.net:8080/", _/binary>> ->
             "vm-1.tail55d152.ts.net:8080:100.78.98.18";
+        <<"http://vm-1.tail55d152.ts.net:", _/binary>> ->
+            "vm-1.tail55d152.ts.net:8088:100.78.98.18";
+        <<"http://razr15-1.tail55d152.ts.net:4102/", _/binary>> ->
+            "razr15-1.tail55d152.ts.net:4102:100.114.9.28";
+        <<"http://razr15-1.tail55d152.ts.net:", _/binary>> ->
+            "razr15-1.tail55d152.ts.net:8088:100.114.9.28";
         _ -> "vm-1.tail55d152.ts.net:8088:100.78.98.18"
     end,
     Args = ["--disable", "--proto", "=http", "--noproxy", "*",

@@ -2640,6 +2640,7 @@ fn render_planning_dashboard() -> String {
       var nodes = [
         {id: 'nas-1 (Tailnet 100.87.7.78)', up: true},
         {id: 'vm-1 (Tailnet 100.78.98.18)', up: true},
+        {id: 'razr15-1 WSL2 GPU (Tailnet 100.114.9.28)', up: true},
         {id: 'zenoh-mesh', up: true},
         {id: 'hermes-oracle', up: true}
       ];
@@ -2701,7 +2702,7 @@ fn render_planning_dashboard() -> String {
         safety: 'Apoptosis interlock armed. Protected NVMe serial 25503L801736 strictly barred from OSD wiping. Zero memory leakage.',
         enforcer: 'All 8 fractal enforcer layers active. Zero violations recorded across L0-L7.',
         graph: 'State machine verified acyclic. Formal topological order preserved. SCC count: 1.',
-        orch: 'Zenoh mesh transport active on nas-1 (100.87.7.78:4100). Peer node vm-1 reachable.',
+        orch: 'Zenoh mesh active on nas-1 (100.87.7.78:4100). Peer vm-1 reachable. Instance 2 razr15-1 WSL2 GPU online.',
         chaya: 'Digital twin telemetry synchronized with zero divergence.',
         startup: 'Boot phase duration: 8.2s (below 8.9s target). Zero compilation warnings.',
         chat: 'Agent event stream active. Connected to C3I backplane.'

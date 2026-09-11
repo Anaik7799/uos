@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "document_id": "20260911-0900-razr15-instance2-gpu-node",
+  "timestamp": "2026-09-11T07:42:00Z",
+  "authority": "UOS-CANONICAL-AGENT-POLICY",
+  "fractal_layer": "L4_SYSTEM",
+  "node_topology": {
+    "instance_index": 2,
+    "instance_id": "razr15-1-wsl2",
+    "hostname": "razr15-1",
+    "wsl_hostname": "razr15-2",
+    "platform": "WSL2 on Windows 11",
+    "tailscale_fqdn": "http://razr15-1.tail55d152.ts.net:8088",
+    "tailscale_ip_windows": "100.114.9.28",
+    "tailscale_ip_wsl2": "100.117.25.70",
+    "primary_port": 8088,
+    "web_port": 4102,
+    "zenoh_port": 7447
+  },
+  "hardware_acceleration": {
+    "has_gpu": true,
+    "gpu_device": "NVIDIA GeForce RTX Laptop GPU",
+    "driver_interface": "/dev/dxg (DirectX / CUDA)",
+    "warp_size": 32,
+    "tensor_cores": true,
+    "vram_mb": 8192,
+    "execution_framework": "Modular MAX / Mojo (max/v26.5.0, mojo/v1.0.0)"
+  },
+  "workload_assignment": {
+    "holon_affinity": "H1_RASA_DHATU",
+    "model_target": "Gemma 4 (GQA + RoPE-500k + Sliding-Window Attention)",
+    "execution_mode": "GPU Bare-Metal Tensor Accelerators",
+    "defense_degradation_role": "Deep Tensor Coprocessor for Autonomous Defcon-1"
+  },
+  "compliance": {
+    "zero_muda": "0 Bevy, 0 Graphite, 0 foreign NIFs",
+    "safety_contracts": [
+      "SC-DEFENSE-CONSTITUTION-001",
+      "SC-INF-MOJO-001",
+      "SC-JIDOKA-001",
+      "SC-CHECKLIST-001"
+    ]
+  }
+}
