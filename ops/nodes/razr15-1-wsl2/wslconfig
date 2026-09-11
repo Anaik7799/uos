@@ -1,17 +1,25 @@
 # ==============================================================================
-# [C3I-SIL6-MSTS] Windows Host .wslconfig for razr15-1 (Instance 2)
+# [C3I-SIL6-MSTS] Hardened Windows Host .wslconfig for razr15-1 (Instance 2)
 # ==============================================================================
 # Location on Windows Host: C:\Users\abhij\.wslconfig
-# Allocates high-performance GPU and memory bounds for Modular MAX & Gemma 4
+# Allocates high-performance GPU, memory, and prevents VM idle termination
 # ==============================================================================
 
 [wsl2]
-memory=16GB
+memory=12GB
 processors=12
-swap=4GB
+swap=8GB
 localhostForwarding=true
 nestedVirtualization=true
 guiApplications=false
+gpuSupport=true
+pageReporting=true
 
-# GPU Driver Pass-Through
-# Uses NVIDIA WSL driver with DirectX / CUDA hardware interlock (/dev/dxg)
+# Prevent VM idle shutdown
+vmIdleTimeout=-1
+
+# Performance & Network Hardening
+[experimental]
+autoMemoryReclaim=gradual
+sparseVhd=true
+autoProxy=true
